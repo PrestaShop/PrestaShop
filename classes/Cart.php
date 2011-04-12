@@ -1243,24 +1243,6 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * @param Discount $discountObj
-	 * @return bool
-	 * @deprecated
-	 */
-	public function hasProductInCategory($discountObj)
-	{
-		Tools::displayAsDeprecated();
-		$products = $this->getProducts();
-		$categories = Discount::getCategories($discountObj->id);
-		foreach ($products AS $product)
-		{
-			if (Product::idIsOnCategoryId($product['id_product'], $categories))
-				return true;
-		}
-		return false;
-	}
-
-	/**
 	* Return useful informations for cart
 	*
 	* @return array Cart details
@@ -1310,35 +1292,6 @@ class CartCore extends ObjectModel
 			'total_tax' => $total_tax,
 			'total_price_without_tax' => $this->getOrderTotal(false),
 			'free_ship' => (int)$total_free_ship);
-	}
-
-	/**
-	* Return carts thats have not been converted in orders
-	*
-	* @param string $dateFrom Select only cart updated after this date
-	* @param string $dateTo Select only cart updated before this date
-	* @return array Carts
-	* @deprecated
-	*/
-	static function getNonOrderedCarts($dateFrom, $dateTo)
-	{
-		Tools::displayAsDeprecated();
-		if (!Validate::isDate($dateFrom) OR !Validate::isDate($dateTo))
-			die (Tools::displayError());
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT cart.`id_cart`, cart.`date_upd`, c.`id_customer` AS id_customer, c.`lastname` AS customer_lastname, c.`firstname` AS customer_firstname,
-		SUM(cp.`quantity`) AS nb_products,
-		COUNT(cd.`id_cart`) AS nb_discounts
-		FROM `'._DB_PREFIX_.'cart` cart
-		LEFT JOIN `'._DB_PREFIX_.'cart_product` cp ON cart.`id_cart` = cp.`id_cart`
-		LEFT JOIN `'._DB_PREFIX_.'cart_discount` cd ON cart.`id_cart` = cd.`id_cart`
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON cart.`id_customer` = c.`id_customer`
-		WHERE cart.`id_cart` NOT IN (SELECT `id_cart` FROM `'._DB_PREFIX_.'orders`)
-		AND TO_DAYS(cart.`date_upd`) >= TO_DAYS(\''.pSQL(strftime('%Y-%m-%d %H:%M:%S', strtotime($dateFrom))).'\')
-		AND TO_DAYS(cart.`date_upd`) <= TO_DAYS(\''.pSQL(strftime('%Y-%m-%d %H:%M:%S', strtotime($dateTo))).'\')
-		GROUP BY cart.`id_cart`, cp.`id_cart`, cd.`id_cart`
-		ORDER BY cart.`date_upd` DESC');
 	}
 
 	public function checkQuantities()
@@ -1500,14 +1453,6 @@ class CartCore extends ObjectModel
 	static public function replaceZeroByShopName($echo, $tr)
 	{
 		return ($echo == '0' ? Configuration::get('PS_SHOP_NAME') : $echo);
-	}
-
-	/* DEPRECATED */
-	public function getCustomeremail()
-	{
-		Tools::displayAsDeprecated();
-		$customer = new Customer((int)($this->id_customer));
-		return $customer->email;
 	}
 
 	public function duplicate()

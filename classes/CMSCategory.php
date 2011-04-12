@@ -398,16 +398,6 @@ class CMSCategoryCore extends ObjectModel
 	{
 		return self::getChildren(1, $id_lang, $active);
 	}
-	/**
-	 * @deprecated
-	**/
-	static public function getRootCMSCategory($id_lang = NULL)
-	{
-		Tools::displayAsDeprecated();
-		//get idLang
-		$id_lang = is_null($id_lang) ? _USER_ID_LANG_ : (int)($id_lang);
-		return new CMSCategory (1, $id_lang);
-	}
 
 	static public function getChildren($id_parent, $id_lang, $active = true)
 	{
@@ -516,27 +506,6 @@ class CMSCategoryCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($id_lang).')
 			WHERE `name` LIKE \'%'.pSQL($query).'%\' AND c.`id_cms_category` != 1');
 	}
-	
-	/**
-	  * Retrieve CMSCategory by name and parent CMSCategory id
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param string  $CMSCategory_name Searched CMSCategory name
-	  * @param integer $id_parent_CMSCategory parent CMSCategory ID
-	  * @return array Corresponding CMSCategory
-	  *	@deprecated
-	  */
-	static public function searchByNameAndParentCMSCategoryId($id_lang, $CMSCategory_name, $id_parent_CMSCategory)
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance()->getRow('
-		SELECT c.*, cl.*
-	    FROM `'._DB_PREFIX_.'cms_category` c
-	    LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($id_lang).') 
-	    WHERE `name`  LIKE \''.pSQL($CMSCategory_name).'\' 
-		AND c.`id_cms_category` != 1 
-		AND c.`id_parent` = '.(int)($id_parent_CMSCategory));
-	}
 
 	/**
 	  * Get Each parent CMSCategory of this CMSCategory until the root CMSCategory
@@ -566,23 +535,6 @@ class CMSCategoryCore extends ObjectModel
 				return $categories;
 			$idCurrent = $result[0]['id_parent'];
 		}
-	}
-	/**
-	* Specify if a CMSCategory already in base
-	*
-	* @param $id_cms_category CMSCategory id
-	* @return boolean
-	*	@deprecated
-	*/
-	static public function CMSCategoryExists($id_cms_category)
-	{
-		Tools::displayAsDeprecated();
-		$row = Db::getInstance()->getRow('
-		SELECT `id_cms_category`
-		FROM '._DB_PREFIX_.'cms_category c
-		WHERE c.`id_cms_category` = '.(int)($id_cms_category));
-
-		return isset($row['id_cms_category']);
 	}
 	
 	public function updatePosition($way, $position)

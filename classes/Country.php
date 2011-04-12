@@ -233,17 +233,6 @@ class CountryCore extends ObjectModel
 		return ((int)($result['id_country']));
 	}
 
-	
-	/**
-	 * @param $id_country
-	 * @deprecated
-	 */
-	static public function getNeedIdentifcationNumber($id_country)
-	{
-		Tools::displayAsDeprecated();
-		return self::isNeedDniByCountryId($id_country);
-	}
-
 	static public function getNeedZipCode($id_country)
 	{
 		if (!(int)($id_country))

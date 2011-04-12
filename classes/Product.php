@@ -579,26 +579,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated
-	 * @param string $reference
-	 */
-	public static function getByReference($reference)
-	{
-		Tools::displayAsDeprecated();
-		if (!Validate::isReference($reference))
-			die(Tools::displayError());
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_product`
-		FROM `'._DB_PREFIX_.'product` p
-		WHERE p.`reference` = \''.pSQL($reference).'\'');
-		if (!isset($result['id_product']))
-			return false;
-
-		return new self((int)$result['id_product']);
-	}
-
-	/**
 	 * addToCategories add this product to the category/ies if not exists.
 	 *
 	 * @param mixed $categories id_category or array of id_category
@@ -807,33 +787,6 @@ class ProductCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`)
 		WHERE pl.`id_lang` = '.(int)($id_lang).'
 		ORDER BY pl.`name`');
-	}
-
-	/**
-	  * Return the products in the same category than the default category of the instancied product
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return array Products
-	  * @deprecated
-	  */
-	public function getDefaultCategoryProducts($idLang = NULL, $limit = NULL)
-	{
-		Tools::displayAsDeprecated();
-		//get idLang
-		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.`id_product`, pl.`description_short`set, pl.`link_rewrite`, pl.`name`, i.`id_image`
-		FROM `'._DB_PREFIX_.'category_product` cp
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = cp.id_product)
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)
-		WHERE cp.id_category = ' . (int)($this->id_category_default) . '
-		AND id_lang = ' . (int)($idLang) . '
-		AND p.`active` = 1
-		AND i.`cover` = 1
-		'. (is_null($limit) ? '' : ' LIMIT 0 , ' . (int)($limit)));
-		return $result;
 	}
 
 	public function isNew()
@@ -1116,18 +1069,6 @@ class ProductCore extends ObjectModel
 		return
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product` = '.(int)($this->id)) &&
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang` WHERE `id_customization_field` NOT IN (SELECT id_customization_field FROM `'._DB_PREFIX_.'customization_field`)');
-	}
-
-	/**
-	* Delete product quantity discounts
-	*
-	* @return array Deletion result
-	* @deprecated
-	*/
-	public function deleteQuantityDiscounts()
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_quantity` WHERE `id_product` = '.(int)($this->id));
 	}
 
 	/**
@@ -1566,22 +1507,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get categories where product is indexed
-	*
-	* @param integer $id_product Product id
-	* @return array Categories where product is indexed
-	* @deprecated
-	*/
-	public static function getIndexedCategories($id_product)
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance()->ExecuteS('
-		SELECT `id_category`
-		FROM `'._DB_PREFIX_.'category_product`
-		WHERE `id_product` = '.(int)($id_product));
-	}
-
-	/**
 	* Get product images and legends
 	*
 	* @param integer $id_lang Language id for multilingual legends
@@ -1609,51 +1534,6 @@ class ProductCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'image`
 		WHERE `id_product` = '.(int)($id_product).'
 		AND `cover` = 1');
-	}
-
-	/**
-	* Get reduction value for a given product
-	* *****************************************
-	* ** Kept for retro-compatibility issues **
-	* *****************************************
-	* You should use getPriceStatic() instead (with the parameter $only_reduc set to true)
-	*
-	* @param array $result SQL result with reduction informations
-	* @param boolean $wt With taxes or not (optional)
-	* @return float Reduction value in euros
-	*/
-	/*  */
-	public static function getReductionValue($reduction_price, $reduction_percent, $date_from, $date_to, $product_price, $usetax, $taxrate)
-	{
-		Tools::displayAsDeprecated();
-
-		// Avoid an error with 1970-01-01
-		if (!Validate::isDate($date_from) OR !Validate::isDate($date_to))
-			return 0;
-		$currentDate = date('Y-m-d H:i:s');
-		if ($date_from != $date_to AND ($currentDate > $date_to OR $currentDate < $date_from))
-			return 0;
-
-		// reduction values
-		if (!$usetax)
-			$reduction_price /= (1 + ($taxrate / 100));
-
-		// make the reduction
-		if ($reduction_price AND $reduction_price > 0)
-		{
-			if ($reduction_price >= $product_price)
-				$ret = $product_price;
-			else
-				$ret = $reduction_price;
-		}
-		elseif ($reduction_percent AND $reduction_percent > 0)
-		{
-			if ($reduction_percent >= 100)
-				$ret = $product_price;
-			else
-				$ret = $product_price * $reduction_percent / 100;
-		}
-		return isset($ret) ? $ret : 0;
 	}
 
 	/**
@@ -1907,15 +1787,6 @@ class ProductCore extends ObjectModel
 	public function getPrice($tax = true, $id_product_attribute = NULL, $decimals = 6, $divisor = NULL, $only_reduc = false, $usereduc = true, $quantity = 1)
 	{
 		return self::getPriceStatic((int)($this->id), $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function getIdProductAttributeMostExpsensive()
-	{
-		Tools::displayAsDeprecated();
-		return $this->getIdProductAttributeMostExpensive();
 	}
 
 	public function getIdProductAttributeMostExpensive()
@@ -2749,34 +2620,6 @@ class ProductCore extends ObjectModel
 		return $customizedDatas;
 	}
 
-
-	/**
-	 * @param int $id_customization
-	 * @return bool
-	 * @deprecated
-	 */
-	public function deleteCustomizedDatas($id_customization)
-	{
-		Tools::displayAsDeprecated();
-		if (Pack::isPack((int)($product['id_product'])))
-		{
-			$products_pack = Pack::getItems((int)($product['id_product']), (int)(Configuration::get('PS_LANG_DEFAULT')));
-			foreach($products_pack AS $product_pack)
-			{
-				$tab_product_pack['id_product'] = (int)($product_pack->id);
-				$tab_product_pack['id_product_attribute'] = self::getDefaultAttribute($tab_product_pack['id_product'], 1);
-				$tab_product_pack['cart_quantity'] = (int)($product_pack->pack_quantity * $product['cart_quantity']);
-				self::updateQuantity($tab_product_pack);
-			}
-		}
-		if (($result = Db::getInstance()->ExecuteS('SELECT `value` FROM `'._DB_PREFIX_.'customized_data` WHERE `id_customization` = '.(int)($id_customization).' AND `type` = '._CUSTOMIZE_FILE_)) === false)
-			return false;
-		foreach ($result AS $row)
-			if (!@unlink(_PS_UPLOAD_DIR_.$row['value']) OR !@unlink(_PS_UPLOAD_DIR_.$row['value'].'_small'))
-				return false;
-		return (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)($id_customization)) AND Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customized_data` WHERE `id_customization` = '.(int)($id_customization)));
-	}
-
 	public static function addCustomizationPrice(&$products, &$customizedDatas)
 	{
 		foreach ($products AS &$productUpdate)
@@ -3062,15 +2905,6 @@ class ProductCore extends ObjectModel
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_category` AS id FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)$this->id);
 		return $result;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function getBasicPrice()
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `price` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)($this->id));
 	}
 
 	public static function getUrlRewriteInformations($id_product)

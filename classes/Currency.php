@@ -295,24 +295,6 @@ class CurrencyCore extends ObjectModel
 		$this->update();
 	}
 
-	/**
- 	* @deprecated
-	**/
-	static public function refreshCurrenciesGetDefault($data, $isoCodeSource, $idCurrency)
-	{
-		Tools::displayAsDeprecated();
-
-		$defaultCurrency = new Currency($idCurrency);
-
-		/* Change defaultCurrency rate if not as currency of feed source */
-		if ($defaultCurrency->iso_code != $isoCodeSource)
-			foreach ($data->currency AS $obj)
-				if ($defaultCurrency->iso_code == strval($obj['iso_code']))
-					$defaultCurrency->conversion_rate = round((float)($obj['rate']), 6);
-
-		return $defaultCurrency;
-	}
-
 	public static function getDefaultCurrency()
 	{
 		$id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');

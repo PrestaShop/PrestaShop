@@ -337,23 +337,6 @@ class DiscountCore extends ObjectModel
 		}
 		return 0;
     }
-
-	/**
-	 * @param int $id_category_product
-	 * @param int $id_category_discount
-	 * @return bool
-	 * @deprecated
-	 */
-	static public function isParentCategoryProductDiscount($id_category_product, $id_category_discount)
-	{
-		Tools::displayAsDeprecated();
-		$category = new Category((int)($id_category_product));
-		$parentCategories = $category->getParentsCategories();
-		foreach($parentCategories AS $parentCategory)
-			if($id_category_discount == $parentCategory['id_category'])
-				return true;
-		return false;
-	}
   
 	static public function getCategories($id_discount)
 	{
