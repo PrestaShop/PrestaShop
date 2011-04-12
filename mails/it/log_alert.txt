@@ -1,0 +1,11 @@
+Salve,
+		
+Nuovo messaggio di avviso 
+	
+Purtroppo è stato registrato un nuovo messaggio di avviso.
+
+Puoi controllarlo nel tuo Back office > Strumenti > Log del nostro sito.
+		
+{shop_name} - {shop_url}
+
+{shop_url} powered by PrestaShop™

@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>[{shop_name}] Nouvelle commande</title>
+</head>
+<body>
+	<table style="font-family:Verdana,sans-serif; font-size:11px; color:#374953; width: 550px;">
+		<tr>
+			<td align="left">
+				<a href="{shop_url}" title="{shop_name}"><img alt="{shop_name}" src="{shop_logo}" style="border:none;" ></a>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left"><strong style="color:#DB3484;">{firstname} {lastname}</strong> vient de passer une commande.</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">D&eacute;tails</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left">
+				Commande <strong><span style="color:#DB3484;">{order_name}</span> pass&eacute;e le {date}</strong>
+				<br />Paiement : <strong>{payment}</strong>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left">
+				<table style="width:100%; font-family:Verdana,sans-serif; font-size:11px; color:#374953;">
+					<tr style="background-color:#B9BABE; text-align:center;">
+						<th style="width:15%; padding: 0.6em 0;">R&eacute;f&eacute;rence</th>
+						<th>Article</th>
+						<th style="width:15%; padding: 0.6em 0;">Prix unitaire</th>
+						<th style="width:15%; padding: 0.6em 0;">Quantit&eacute;</th>
+						<th style="width:20%; padding: 0.6em 0;">Prix total</th>
+					</tr>
+						{items}
+					<tr style="text-align:right;">
+						<td colspan="4" style="background-color:#B9BABE; padding:0.6em 0.4em;">Produits</td>
+						<td style="background-color:#B9BABE; padding:0.6em 0.4em;">{total_products}</td>
+					</tr>
+					<tr style="text-align:right;">
+						<td colspan="4" style="background-color:#EBECEE; padding:0.6em 0.4em;">R&eacute;ductions</td>
+						<td style="background-color:#EBECEE; padding:0.6em 0.4em;">{total_discounts}</td>
+					</tr>
+					<tr style="text-align:right;">
+						<td colspan="4" style="background-color:#EBECEE; padding:0.6em 0.4em;">Emballage cadeau</td>
+						<td style="background-color:#EBECEE; padding:0.6em 0.4em;">{total_wrapping}</td>
+					</tr>					
+					<tr style="text-align:right;">
+						<td colspan="4" style="background-color:#DDE2E6; padding:0.6em 0.4em;">Frais de port</td>
+						<td style="background-color:#DDE2E6; padding:0.6em 0.4em;">{total_shipping}</td>
+					</tr>
+					<tr style="text-align:right; font-weight:bold;">
+						<td colspan="4" style="background-color:#F1AECF; padding:0.6em 0.4em;">Total</td>
+						<td style="background-color:#F1AECF; padding:0.6em 0.4em;">{total_paid}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">Transport</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left">
+				Transporteur : <strong>{carrier}</strong>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td>
+				<table style="width:100%; font-family:Verdana,sans-serif; font-size:11px; color:#374953;">
+					<tr style="background-color:#B9BABE; text-transform:uppercase;">
+						<th style="text-align:left; padding: 0.3em 1em;">Adresse de livraison</th>
+						<th style="text-align:left; padding: 0.3em 1em;">Adresse de facturation</th>
+					</tr>
+					<tr>
+						<td style="padding:0.5em 0 0.5em 0.5em; background-color:#EBECEE;">
+							{delivery_company}
+							<br><span style="color:#DB3484; font-weight:bold;">{delivery_firstname} {delivery_lastname}</span>
+							<br>{delivery_address1}
+							<br>{delivery_address2}
+							<br>{delivery_city} {delivery_postal_code}
+							<br>{delivery_country} {delivery_state}
+							<br>{delivery_phone}
+							<br>{delivery_other}
+						</td>
+						<td style="padding:0.5em 0 0.5em 0.5em; background-color:#EBECEE;">
+							{invoice_company}
+							<br><span style="color:#DB3484; font-weight:bold;">{invoice_firstname} {invoice_lastname}</span>
+							<br>{invoice_address1}
+							<br>{invoice_address2}
+							<br>{invoice_city} {invoice_postal_code}
+							<br>{invoice_country} {invoice_state}
+							<br>{invoice_phone}
+							<br>{invoice_other}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">Message client</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="left">
+				<strong>{message}</strong>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td align="center" style="font-size:10px; border-top: 1px solid #D9DADE;">
+				<a href="{shop_url}" style="color:#DB3484; font-weight:bold; text-decoration:none;">{shop_name}</a> propuls&eacute; par <a href="http://www.prestashop.com/" style="text-decoration:none; color:#374953;">PrestaShop™</a>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

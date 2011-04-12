@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>dateofdelivery</name>
+	<displayName>Date of delivery</displayName>
+	<version>1.0</version>
+	<description>Displays an approximate date of delivery</description>
+	<author>PrestaShop</author>
+	<tab>shipping_logistics</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

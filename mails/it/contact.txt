@@ -1,0 +1,11 @@
+Hai ricevuto un messaggio da un cliente tramite il tuo negozio: {shop_name}
+
+Dettagli del messaggio:
+
+Indirizzo e-mail: {email}
+
+Messaggio:
+
+{message}
+
+{shop_url} powered by PrestaShop™

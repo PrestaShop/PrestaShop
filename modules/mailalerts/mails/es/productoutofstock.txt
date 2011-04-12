@@ -1,0 +1,10 @@
+Hola,
+
+El producto {product} es pronto fuera de stock.
+De hecho, la ruptura de stock de {last_qty} ha sido superado.
+Existencias restantes: {qty}
+
+Se aconseja abrir administrador del producto Producto a fin de reponer el inventario.
+
+
+{shop_url} desarrollado por PrestaShop™

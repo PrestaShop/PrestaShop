@@ -1,0 +1,30 @@
+/* Block editorial */
+.editorial_block { margin-bottom: 2em }
+.editorial_block .rte { background: transparent none repeat scroll 0 0 }
+.editorial_block h1 {
+	background: none;
+	padding: 0;
+	margin-bottom: 1em
+}
+.editorial_block h2 {
+	font-size: 1.1em;
+    margin: 1em 0;
+	text-transform: none;
+	line-height: 1.2em;
+	padding: 0;
+	padding-bottom: 10px;
+	background: none;
+	color: #5D717E
+}
+.editorial_block p { padding-top: 0.4em }
+#editorial_block_center p { padding-left: 0 }
+
+#editorial_image_legend {
+	color: #AAAAAA;
+    font-size: 6pt;
+    font-style: italic;
+    margin: 0;
+    padding-left: 0;
+    text-align: center;
+}
+

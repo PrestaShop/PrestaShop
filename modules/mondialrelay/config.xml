@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>mondialrelay</name>
+	<displayName>Mondial Relay</displayName>
+	<version>1.3</version>
+	<description>Deliver in Relay points</description>
+	<author></author>
+	<tab>shipping_logistics</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

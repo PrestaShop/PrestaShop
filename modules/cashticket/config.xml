@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>cashticket</name>
+	<displayName>CashTicket</displayName>
+	<version>1.2</version>
+	<description>Accepts payments by CashTicket</description>
+	<author></author>
+	<tab>payments_gateways</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

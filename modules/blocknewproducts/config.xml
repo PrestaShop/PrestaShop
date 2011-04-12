@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>blocknewproducts</name>
+	<displayName>New products block</displayName>
+	<version>0.9</version>
+	<description>Displays a block featuring newly added products.</description>
+	<author>PrestaShop</author>
+	<tab>front_office_features</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

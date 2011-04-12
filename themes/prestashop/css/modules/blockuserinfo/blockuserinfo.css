@@ -1,0 +1,27 @@
+/* block top user information */
+#header_right #header_user {
+	float: right;
+	width: 535px;
+	text-align: right;
+	margin-right: 6px
+}
+#header_user p { color: #595a5e }
+#header_user span { font-weight: bold }
+#header_user ul { margin-top: 0.3em }
+#header_user li {
+	float: right;
+	line-height: 2em;
+	margin-left: 0.5em;
+	white-space: nowrap
+}
+#header_user #shopping_cart, #header_user #your_account { font-size: 0.9em }
+#header_user li#your_account { margin-left: 0 }
+#header_user #shopping_cart a, #header_user #your_account a {
+	background-repeat: no-repeat;
+	background-position: top left;
+	padding: 2px 0 4px 26px;
+	height: 20px;
+	text-decoration: none
+}
+#header_user #shopping_cart a { background-image: url('../../../img/icon/cart.gif') }
+#header_user #your_account a { background-image: url('../../../img/icon/my-account.gif') }

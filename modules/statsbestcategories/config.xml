@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>statsbestcategories</name>
+	<displayName>Best categories</displayName>
+	<version>1</version>
+	<description>A list of the best categories</description>
+	<author>PrestaShop</author>
+	<tab>analytics_stats</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

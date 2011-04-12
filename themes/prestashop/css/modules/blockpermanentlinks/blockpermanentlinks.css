@@ -1,0 +1,24 @@
+/* block top links */
+ul#header_links {
+	margin: 0.4em 0.3em 0 0;
+	list-style-type: none;
+	float: left
+}
+#header_links li {
+	float: left;
+	width: 66px
+}
+#header_links a {
+	display: block;
+	height: 15px;
+	color: #595a5e;
+	padding-top: 19px;
+	text-align: center;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-color: transparent
+}
+#header_links #header_link_sitemap a { background-image: url('../../../img/icon/sitemap.gif') }
+#header_links #header_link_contact a { background-image: url('../../../img/icon/contact.gif') }
+#header_links #header_link_bookmark a { background-image: url('../../../img/icon/star.gif') }

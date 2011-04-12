@@ -1,0 +1,9 @@
+Bonjour,
+
+Le produit {product} est bientôt en rupture de stock.
+En effet, le seuil de rupture de stock de {last_qty} a été dépassé.
+Stock restant : {qty}
+
+Nous vous conseillons de vous rendre sur la fiche du produit afin de renouveler vos stocks.
+
+{shop_url} réalisé par PrestaShop™

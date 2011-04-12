@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>iadvize</name>
+	<displayName>iAdvize</displayName>
+	<version>1.0</version>
+	<description>Offer an interactive live chat to your customers</description>
+	<author></author>
+	<tab>front_office_features</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

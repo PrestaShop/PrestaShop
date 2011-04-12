@@ -1,0 +1,39 @@
+Bonjour,
+
+Vous avez reçu une nouvelle commande de {firstname} {lastname} sur {shop_name}.
+
+Commande : {order_name}
+Date : {date}
+Transporteur : {carrier}
+Mode de paiement : {payment}
+Bons d'achat et réductions : {total_discounts}
+Frais d'expédition : {total_shipping}
+Total produits : {total_products}
+Emballage cadeau: {total_wrapping}
+Total TTC : {total_paid}
+
+Adresse de livraison :
+
+{delivery_company}
+{delivery_firstname} {delivery_lastname}
+{delivery_address1}
+{delivery_address2}
+{delivery_postal_code} {delivery_city}
+{delivery_country} {delivery_state}
+{delivery_other}
+
+Adresse de facturation :
+
+{invoice_company}
+{invoice_firstname} {invoice_lastname}
+{invoice_address1}
+{invoice_address2}
+{invoice_postal_code} {invoice_city}
+{invoice_country} {invoice_state}
+{invoice_other}
+
+Message client :
+
+{message}
+
+{shop_url} réalisé par PrestaShop™

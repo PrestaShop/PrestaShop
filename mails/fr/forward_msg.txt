@@ -1,0 +1,5 @@
+{employee} souhaite vous transférer cette discussion.
+Commentaire: {comment}
+ 
+{messages}
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>statscatalog</name>
+	<displayName>Catalog statistics</displayName>
+	<version>1</version>
+	<description>General statistics about your catalog.</description>
+	<author>PrestaShop</author>
+	<tab>analytics_stats</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

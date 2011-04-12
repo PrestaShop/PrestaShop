@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>reverso</name>
+	<displayName>ReversoForm</displayName>
+	<version>1.0</version>
+	<description>Fill Authentication form with ReversoForm</description>
+	<author></author>
+	<tab>front_office_features</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries>fr</limited_countries>
+</module>

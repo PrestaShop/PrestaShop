@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>blockadvertising</name>
+	<displayName>Block advertising</displayName>
+	<version>0.2</version>
+	<description>Adds a block to display an advertisement.</description>
+	<author>PrestaShop</author>
+	<tab>advertising_marketing</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

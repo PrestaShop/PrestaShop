@@ -1,0 +1,39 @@
+*, body{margin:0;padding:0}
+body 
+{
+	font-family:90%/1em 'Lucida Grande', Verdana, sans-serif;
+}
+ 
+#maintenance
+{
+	width:450px;
+	margin:35px auto 0 auto;
+	padding:12px 0;
+	background:#fff;
+	text-align:center;
+	text-transform:none;
+	font-weight:normal;
+	letter-spacing:0;
+	color: #C73178;
+}
+
+#message 
+{
+	width:450px;
+	margin-top:35px;
+	padding:12px 15px;
+	border-top:1px dotted #666;
+	border-bottom:1px dotted #666;
+	background:#F9E3EE;
+	text-align:justify;
+	font:90%/1em 'Lucida Grande', Verdana, sans-serif;
+	text-transform:none;
+	font-weight:normal;
+	letter-spacing:0;
+	color:#C73178;
+}
+
+#message img
+{
+	padding:30px;
+}

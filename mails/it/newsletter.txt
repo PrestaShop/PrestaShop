@@ -1,0 +1,9 @@
+Newsletter da {shop_name}
+
+Messaggio
+
+{message}
+
+
+
+{shop_url} powered by PrestaShop™

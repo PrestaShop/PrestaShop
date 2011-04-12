@@ -1,0 +1,7 @@
+Hallo,
+
+{shop_name} bietet Ihnen an, diesen Link an Ihre Freunde zu senden, damit diese Ihre Wunschliste sehen können {wishlist} :
+
+{message}
+
+{shop_url} realisiert mit PrestaShop™

@@ -1,0 +1,5 @@
+Danke, dass Sie bei {shop_name} eingekauft haben. Waren Sie mit Ihrem Einkauf und unserem Service zufrieden? Hier können Sie {shop_name} bewerten, wir freuen uns auf Ihr
+Feedback: {rating_url}
+
+{shop_url} powered by PrestaShop™
+

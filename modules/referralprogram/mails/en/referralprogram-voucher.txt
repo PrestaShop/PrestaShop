@@ -1,0 +1,12 @@
+Hi {firstname} {lastname},
+
+We inform you about the generation of a voucher to your name regarding your sponsorship.
+
+Here is the code of your voucher : {voucher_num}, with an amount of {voucher_amount}.
+Simply copy/paste this code during the payment process for your next order.
+
+Thank you for shopping at {shop_name}.
+
+
+
+{shop_url} powered by PrestaShop™

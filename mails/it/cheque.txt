@@ -1,0 +1,22 @@
+Salve {firstname} {lastname},
+
+Il tuo ordine {order_name} è stato eseguito con successo, e sarà inviato appena ricevuto il pagamento.
+
+Ricorda che hai scelto di pagare con assegno. Invia il pagamento:
+
+- dell'importo di {total_paid}
+
+- pagabile all'ordine di {cheque_name}
+
+- inviato a {cheque_address}
+
+Puoi rivedere l'ordine e scaricare la fattura dalla sezione "Cronologia ordini" del tuo account cliccando su "Il mio account" nel nostro sito web.
+Se hai un account ospite, puoi seguire il tuo ordine in questa pagina: {shop_url}guest-tracking.php
+
+Grazie di aver acquistato con {shop_name}.
+
+
+{shop_name} - {shop_url}
+
+
+{shop_url} powered by PrestaShop™

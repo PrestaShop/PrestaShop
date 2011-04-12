@@ -1,0 +1,9 @@
+Hallo {firstname} {lastname},
+ 
+Sie sind einer unserer besten Kunden, desshalb möchten wir Ihnen für Ihr Vertrauen danken.
+
+Als Anerkennung für Ihre Treue möchten wir Ihnen einen Rabatt über {amount}% für Ihre nächste Bestellung geben! Dieses Angebot gilt nur noch {days}, Tage, also warten Sie nicht länger!
+ 
+Hier ist Ihr Gutschein: {voucher_num}
+
+Geben Sie diesen Code in Ihrem Warenkorb-Fenster ein, um Ihren Rabatt zu erhalten.

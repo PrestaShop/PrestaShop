@@ -1,0 +1,13 @@
+Salve {firstname} {lastname},
+ 
+Abbiamo notato che durante la tua ultima visita a {shop_name}, non hai convalidato un ordine che avevi iniziato.
+
+Il tuo carrello è stato salvato, puoi riprendere l'ordine visitando il nostro negozio:
+
+{shop_url}
+
+Come incentivo, possiamo offrirti uno sconto del {amount}% nel tuo prossimo ordine! Questa offerta è valida per {days} giorni, quindi approfittane subito!
+ 
+Ecco il tuo buono: {voucher_num}
+
+Inserisci questo codice nel tuo carrello per ottenere lo sconto.

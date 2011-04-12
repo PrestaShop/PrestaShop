@@ -1,0 +1,15 @@
+¡{firstname_friend} {lastname_friend}, Únete a nosotros!
+
+Su amigo {firstname} {lastname} patrocinado por usted en el sitio {shop_url}.
+
+¡Conviértete en su ahijado, para ganar un bono de {discount}!
+
+Para nosotros, nada más simple, vaya a abordar los siguientes:
+
+{shop_url}{link}
+
+Recuerde que debe especificar el correo electrónico a tu amigo como patrocinador en el registro: {email}.
+
+
+
+{shop_url} dirigida por PrestaShop™

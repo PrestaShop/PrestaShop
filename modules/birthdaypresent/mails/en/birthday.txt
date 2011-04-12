@@ -1,0 +1,7 @@
+Hi {firstname} {lastname},
+
+{shop_name} wants to wish you a Happy Birthday and offers you a present.
+A surprise is waiting for you... log now on your account to see your discount voucher. And put it to good use!
+
+
+{shop_url} Powered by PrestaShop™

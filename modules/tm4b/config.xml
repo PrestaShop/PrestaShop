@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>tm4b</name>
+	<displayName>SMS Tm4b</displayName>
+	<version>1.1</version>
+	<description>Sends an SMS for each new order</description>
+	<author>PrestaShop</author>
+	<tab>administration</tab>
+	<confirmUninstall>Are you sure you want to delete your info?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

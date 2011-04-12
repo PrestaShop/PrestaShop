@@ -1,0 +1,113 @@
+/* Special style for block cart*/
+#cart_block .block_content { padding: 6px 6px 2px }
+#cart_block h4 { background-image: url('../../../img/block_header_exclusive_cart.png') }
+#cart_block h4 span {
+	text-transform: none;
+	font-size: 0.8em;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: left top;
+	padding-left: 10px
+}
+#cart_block h4 span#block_cart_collapse { background-image: url('../../../img/icon/sort_asc_white.png') }
+#cart_block h4 span#block_cart_expand { background-image: url('../../../img/icon/sort_desc_white.png') }
+#cart_block #cart_block_no_products { margin: 0.5em 0 }
+#cart_block dl dt a,
+ #cart_block dl dt span.quantity-formated { float: left }
+#cart_block dl { font-size: 0.9em }
+#cart_block dt { padding-top: 0.4em }
+#cart_block dl span.quantity-formated { padding-right: 1px }
+#cart_block dt, #cart_block dd {
+	clear: both;
+	margin-top: 0.2em
+}
+#cart_block dt { 
+	width: 175px;
+	text-align: right
+}
+#cart_block dd { width: 155px }
+#cart_block dd { 
+	margin-left: 1em; 
+	margin-right: 1em; 
+	font-style: italic 
+}
+#cart_block dl dt a { font-weight: bold }
+#cart_block a.ajax_cart_block_remove_link {
+	width: 11px;
+	height: 13px;
+	margin-left: 6px;
+	float: right;
+	font-size: 0;
+	display: block;
+	background: transparent url('../../../img/icon/delete.gif') no-repeat left bottom
+}
+#cart_block a.ajax_cart_block_remove_link:hover { text-decoration: none }
+#cart_block p { clear: both }
+#cart_block p span {
+	clear: right;
+	float: left;
+	text-align: right
+}
+#cart_block li { clear: both }
+#cart_block span.price {
+	color: white;
+	float: right
+}
+#cart_block dl span.price {
+	font-weight: normal;
+	color: white;
+	float: none
+}
+
+#cart_block_wrapping_cost, #cart_block_shipping_cost, #cart_block_tax_cost, #cart_block_total { padding-right: 1.3em }
+
+#cart_block table#vouchers {
+	margin-top: 0.5em;
+	border-top: 1px solid white;
+	height: 3em;
+	padding-top: 0.4em;
+	margin-bottom: 0.5em;
+	clear: both
+}
+ #cart_block p#cart-prices {
+	clear: both;
+	margin-top: 8px;
+	margin-bottom: 2em;
+	display: block;
+	padding-top: 0.4em;
+	border-top: 1px solid white
+}
+#cart_block table#vouchers td {
+	padding: 0;
+	border: 0;
+	height: 1.5em
+}
+#cart_block table#vouchers td.price {
+	color: white;
+	font-size: 1em;
+	font-weight: normal;
+	width: 37%;
+	text-align: right
+}
+#cart_block table#vouchers td.delete {
+	width: 9%;
+	text-align: right
+}
+#cart_block table#vouchers td.delete img { margin: 0 }
+#cart_block p#cart-buttons {
+	height: 1.6em;
+	margin: 0 -0.3em
+}
+#cart_block p#cart-buttons a { float: left }
+#cart_block p#cart-buttons a#button_order_cart { float: right }
+#cart_block .cart_block_customizations {
+	margin-left: 6px;
+	list-style-type: square
+}
+#cart_block #cart-price-precisions {
+	margin-top: 0.5em;
+	padding-top: 0.4em;
+	border-top: 1px solid white;
+	font-size: 0.9em;
+	height: 2em
+}

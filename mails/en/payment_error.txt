@@ -1,0 +1,14 @@
+Hi {firstname} {lastname},
+
+There is a problem with your payment for order #{id_order}. Please contact us at your earliest convenience.
+
+Your order will not be shipped until we have resolved this problem. 
+
+You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website.
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™

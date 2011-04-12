@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>criteo</name>
+	<displayName>Criteo</displayName>
+	<version>1.0</version>
+	<description>Criteo product export and tag display.</description>
+	<author></author>
+	<tab>advertising_marketing</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

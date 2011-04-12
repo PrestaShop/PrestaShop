@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>sekeywords</name>
+	<displayName>Search engine keywords</displayName>
+	<version>1</version>
+	<description>Display which keywords have led visitors to your website.</description>
+	<author>PrestaShop</author>
+	<tab>analytics_stats</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

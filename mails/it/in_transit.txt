@@ -1,0 +1,16 @@
+Salve {firstname} {lastname},
+
+Il tuo ordine è attualmente in viaggio.
+
+Puoi controllare la posizione del tuo pacco cliccando nel link seguente: {followup}
+
+Puoi anche rivedere questo ordine e scaricare la tua fattura dalla sezione "Cronologia ordine" del tuo account cliccando su "Il mio account" nel nostro sito web. 
+Se hai un account ospite, puoi seguire l'ordine in questa pagina: {shop_url}guest-tracking.php
+
+Grazie per aver acquistato con {shop_name}!
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™

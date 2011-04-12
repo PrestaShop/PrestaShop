@@ -1,0 +1,41 @@
+Hola,
+
+Has un nuevo orden de {firstname} {lastname} en {shop_name}.
+
+Orden: {order_name}
+Puesto en: {date}
+Carrier: {carrier}
+De pago: {payment}
+Descuentos: {total_discounts}
+Gastos de envío: {total_shipping}
+Productos: {total_products}
+Envolver regalos: {total_wrapping}
+Total pagado: {total_paid}
+
+Dirección de entrega:
+
+{delivery_company}
+{delivery_firstname} {delivery_lastname}
+{delivery_address1}
+{delivery_address2}
+{delivery_postal_code} {delivery_city}
+{delivery_country} {delivery_state}
+{delivery_other}
+
+Dirección de facturación:
+
+{invoice_company}
+{invoice_firstname} {invoice_lastname}
+{invoice_address1}
+{invoice_address2}
+{invoice_postal_code} {invoice_city}
+{invoice_country} {invoice_state}
+{invoice_other}
+
+Mensaje al cliente:
+
+{message}
+
+
+
+{shop_url} desarrollado por PrestaShop™

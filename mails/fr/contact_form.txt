@@ -1,0 +1,12 @@
+Votre message a bien été envoyé à notre service client.
+
+Votre message:
+
+{message}
+
+
+Nous vous répondrons dés que possible.
+
+Cordialement,
+
+{shop_url} réalisé avec PrestaShop™

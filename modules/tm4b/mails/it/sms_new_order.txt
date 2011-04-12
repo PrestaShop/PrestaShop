@@ -1,0 +1,5 @@
+{shop_name}
+Cliente: {firstname} {lastname}
+Ordine: {order_name}
+Pagamento: {payment}
+Totale TI: ({total_paid} {currency})

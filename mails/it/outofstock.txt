@@ -1,0 +1,14 @@
+	Salve {firstname} {lastname},
+		
+	La cronologia del tuo ordine n.{id_order} 
+	
+Purtroppo, uno o più articoli del tuo ordine n.{id_order} sono al momento esauriti. Questo può provocare un leggero ritardo nella consegna. Ti preghiamo di scusarci e ti assicuriamo che stiamo facendo di tutto per risolvere il problema.
+
+Puoi rivedere questo ordine e scaricare la fattura dalla sezione "Cronologia ordine" del tuo account cliccando su "Il mio account" nel nostro sito web.
+Se hai un account ospite, puoi seguire il tuo ordine in questa pagina: {shop_url}guest-tracking.php
+		
+	{shop_name} - {shop_url}
+
+
+
+	{shop_url} powered by PrestaShop™

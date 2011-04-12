@@ -1,0 +1,3 @@
+Hola,
+
+Esto es una prueba de correo desde tu tienda Prestashop.

@@ -1,0 +1,16 @@
+	Hi {firstname} {lastname},
+
+	Your guest account has been transformed into a customer account:
+
+	E-mail address: {email}
+	Password: {passwd}
+
+
+	You can access your account on our website: {shop_url}
+
+	Please be careful when sharing these login details with others.
+
+
+
+	{shop_url} powered by PrestaShop™
+

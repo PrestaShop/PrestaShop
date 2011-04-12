@@ -1,0 +1,10 @@
+Hallo {firstname} {lastname},
+ 
+Danke für Ihre Bestellung bei {shop_name}
+ 
+Als Dankeschön möchten wir Ihnen einen Rabatt über {amount}% auf Ihre nächste Bestellung geben! Dieses Angebot gilt nur noch {days} Tage, also warten Sie nicht länger!
+
+
+Hier ist Ihr Gutschein: {voucher_num}
+
+Geben Sie diesen Code in Ihrem Warenkorb-Fenster ein, um Ihren Rabatt zu erhalten.

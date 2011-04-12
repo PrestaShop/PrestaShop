@@ -1,0 +1,5 @@
+/* category.tpl */
+body#category #subcategories li { height: 136px; width: 108px; margin-right: 3px }
+div.cat_desc { margin: 0 1em }
+body#category div#subcategories .inline_list a img { display: inline }
+#category img#categoryImage { margin-top: 1em }

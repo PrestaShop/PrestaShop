@@ -1,0 +1,16 @@
+/* module blockwishlist */
+#wishlist_block #wishlist_block_list dl.products {
+	font-size: 10px;
+	border-bottom: 1px solid #fff;
+	margin: 0 0 5px 0;
+	padding: 3px 0 5px
+}
+#wishlist_block div.block_content #wishlist_block_list dl.products dt a.cart_block_product_name { font-weight: bold }
+#wishlist_block div.block_content #wishlist_block_list dl.products dt { margin: 2px 0 }
+#wishlist_block div.block_content #wishlist_block_list dl.products dt a.ajax_cart_block_remove_link { float: right }
+#wishlist_block div.block_content #wishlist_block_list dl.products dd {
+	font-style: italic;
+	margin: 0 0 0 10px
+}
+#wishlist_block div.block_content p select#wishlists { width: 140px }
+#wishlist_block div.block_content p a.exclusive { margin: 5px auto 0 auto }

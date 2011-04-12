@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>gcheckout</name>
+	<displayName>Google Checkout</displayName>
+	<version>1.1</version>
+	<description>Google Checkout API implementation</description>
+	<author>PrestaShop</author>
+	<tab>payments_gateways</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

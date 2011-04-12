@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>gsitemap</name>
+	<displayName>Google sitemap</displayName>
+	<version>1.6</version>
+	<description>Generate your Google sitemap file</description>
+	<author>PrestaShop</author>
+	<tab>seo</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

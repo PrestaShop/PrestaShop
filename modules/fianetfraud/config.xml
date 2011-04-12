@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>fianetfraud</name>
+	<displayName>FIA-NET - SystÃ¨me d\'Analyse des Commandes</displayName>
+	<version>1.1</version>
+	<description>ProtÃ©gez vous contre la fraude Ã  la carte bancaire sans perturber l\'acte d\'achat</description>
+	<author></author>
+	<tab>payment_security</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries>fr</limited_countries>
+</module>

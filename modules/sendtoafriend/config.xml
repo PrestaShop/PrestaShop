@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>sendtoafriend</name>
+	<displayName>Send to a Friend module</displayName>
+	<version>1.1</version>
+	<description>Allows customers to send a product link to a friend.</description>
+	<author>PrestaShop</author>
+	<tab>front_office_features</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

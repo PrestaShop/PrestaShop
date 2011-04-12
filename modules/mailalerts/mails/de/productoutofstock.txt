@@ -1,0 +1,12 @@
+Hallo,
+
+Das Produkt {product} ist fast ausverkauft.
+The remaining stock is now less than the specified minimum of {last_qty}.
+Remaining stock : {qty}
+
+
+Verbleibender Lagerbestand: {qty}
+
+Wir raten Ihnen, die Produktseite im Administrator zu öffnen, um Ihren Lagerbestand aufzufüllen.
+
+{shop_url} powered by PrestaShop™

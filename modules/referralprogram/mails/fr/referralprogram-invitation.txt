@@ -1,0 +1,15 @@
+{firstname_friend} {lastname_friend}, rejoignez-nous !
+
+Votre ami(e) {firstname} {lastname} vous a parrainé depuis le site {shop_url}.
+
+Devenez son(sa) filleul(e) afin de gagner un bon d'achat de {discount}!
+
+Pour nous rejoindre, rien de plus simple, rendez-vous à l'adresse suivante :
+
+{shop_url}{link}
+
+N'oubliez pas d'y préciser l'email de votre ami en tant que parrain lors de votre inscription : {email}.
+
+
+
+{shop_url} réalisé par PrestaShop™

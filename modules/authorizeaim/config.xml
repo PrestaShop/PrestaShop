@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>authorizeaim</name>
+	<displayName>Authorize.net AIM (Advanced Integration Method)</displayName>
+	<version>1.0</version>
+	<description>Receive payment with Authorize.net</description>
+	<author></author>
+	<tab>payments_gateways</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

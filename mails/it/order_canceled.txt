@@ -1,0 +1,14 @@
+Salve {firstname} {lastname},
+
+Riguardo al tuo ordine n.{id_order}:
+
+Il tuo ordine è stato cancellato.
+
+Puoi rivedere questo ordine e scaricare la tua fattura dalla sezione "Cronologia ordine" del tuo account cliccando su "Il mio account" nel nostro sito web. 
+Se hai un account ospite, puoi seguire l'ordine in questa pagina: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™

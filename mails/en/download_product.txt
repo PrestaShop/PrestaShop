@@ -1,0 +1,11 @@
+{firstname} {lastname}, thank you for your order on {shop_name}!
+
+You have {nbProducts} product(s) to download.
+
+Below are direct links to these products:
+{virtualProducts}
+
+You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website. 
+If you have a guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+{shop_url} powered by PrestaShop™
