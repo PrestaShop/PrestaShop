@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>graphxmlswfcharts</name>
+	<displayName>XML/SWF Charts</displayName>
+	<version>1</version>
+	<description>XML/SWF Charts is a simple, yet powerful tool using Adobe Flash to create attractive web charts and graphs from dynamic data.</description>
+	<author>PrestaShop</author>
+	<tab>administration</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

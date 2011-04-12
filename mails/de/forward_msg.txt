@@ -1,0 +1,4 @@
+{employee} wollte Ihnen diesen Chat weiterleiten.
+Kommentar: {comment}
+ 
+{messages}

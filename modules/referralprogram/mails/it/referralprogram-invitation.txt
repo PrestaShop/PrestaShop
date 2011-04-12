@@ -1,0 +1,15 @@
+{firstname_friend} {lastname_friend}, iscriviti!
+
+Il tuo amico {firstname} {lastname} vuole presentarti su {shop_url}.
+
+Fatti presentare e vinci un buono sconto di {discount}!
+
+E' facilissimo iscriversi. Basta cliccare nel link seguente:
+
+{shop_url}{link}
+
+Quando ti iscrivi, non dimenticare di indicare la mail dell'amico/a che ti ha presentato: {email}.
+
+
+
+{shop_url} powered by PrestaShop™

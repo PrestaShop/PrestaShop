@@ -1,0 +1,8 @@
+Bonjour,
+
+Vous avez reçu un nouveau message concernant la commande n°{id_order} :
+{message}
+
+
+
+{shop_url} réalisé par PrestaShop™

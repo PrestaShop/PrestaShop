@@ -1,0 +1,12 @@
+Bonjour {firstname} {lastname},
+
+Un problème a été constaté pour le paiement de votre commande {id_order}.
+
+Vous pouvez à tout moment accéder au suivi de votre commande dans la rubrique "Mon compte" du site.
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

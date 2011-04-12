@@ -1,0 +1,9 @@
+Congratulazioni!
+
+L'amico che hai presentato, {sponsored_firstname} {sponsored_lastname} ha effettuato il suo primo ordine su {shop_url} !
+
+Siamo lieti di offrirti un buono sconto del valore di {discount_display} (voucher # {discount_name}) che puoi utilizzare sul tuo prossimo ordine.
+
+
+
+{shop_url} powered by PrestaShop™

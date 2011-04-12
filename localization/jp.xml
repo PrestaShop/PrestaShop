@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Japan" version="1.0">
+	<currencies>
+		<currency name="Yen" iso_code="JPY" iso_code_num="392" sign="¥" blank="1" conversion_rate="113.786" format="1" decimals="0" />
+	</currencies>
+	<languages>
+		<language iso_code="ja" />
+	</languages>
+	<taxes>
+		<tax id="1" name="消費税 JP 5%" rate="5" />
+		
+		<taxRulesGroup name="JP Standard Rate (5%)">
+			<taxRule iso_code_country="jp" id_tax="1" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="匁" />
+		<unit type="volume" value="升" />
+		<unit type="short_distance" value="曲尺" />
+		<unit type="base_distance" value="丈" />
+	</units>
+</localizationPack>

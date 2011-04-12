@@ -1,0 +1,3 @@
+	Bonjour,
+	
+	Voici un mail de test de votre boutique PrestaShop™.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>treepodia</name>
+	<displayName>Treepodia</displayName>
+	<version>1.2</version>
+	<description>Cover your entire catalog with product videos in 24 hours.</description>
+	<author></author>
+	<tab>front_office_features</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

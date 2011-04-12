@@ -1,0 +1,49 @@
+/* MFR081108 - Shipping Preferences */
+#shipping_now {
+	width:99%;
+	height:25px;
+	border:1px solid lightgrey;
+	margin-top:5;
+	padding-top:10px;
+}
+
+#shipping_div {
+	width:100%;
+}
+
+#shipping_dates {
+	width:100%;
+	float:left;
+	border:1px solid lightgrey;
+}
+
+#shipping_dates div {
+	height:25px;
+	width:24.9%;
+	margin-top:5px;
+	float:left;
+	padding-top:10px;
+}
+
+#shipping_hours {
+	float:left;
+	width:100%;
+	border:1px solid lightgrey;
+	margin-top:5px;
+}
+
+#shipping_hours div {
+	height:31px;
+	width:19.9%;
+	float:left;
+	padding-top:10px;
+}
+
+.title {
+ 	margin:5px;	
+ 	font-size:1.1em;
+	font-weight:bold;
+	color:#993300;
+}
+
+#shipping_pref input {border:none;}

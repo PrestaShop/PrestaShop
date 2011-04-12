@@ -1,0 +1,41 @@
+.shippingList {
+	width: 400px;
+	float: right;
+}
+.shippingList li {
+	margin: 5px;
+	display: block;
+	clear: both;
+}
+.shipLabel {
+	width: 230px;
+	float: left;
+	text-align: left;
+}
+.selectShipping {
+	width: 100px;
+}
+.settingsList {
+	width: 400px;
+	float: left;
+	margin-right: 10px;
+}
+.settingsList li {
+	display: block;
+	padding: 5px;
+	clear: both;
+}
+.upsLabel {
+	width: 170px;
+	float: left;
+	text-align: left;
+}
+.upsInput {
+	float: left;
+}
+.upsSubmit {
+	text-align: center;
+}
+.addMethodForm {
+	margin-bottom: 10px;
+}

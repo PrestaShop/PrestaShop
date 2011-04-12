@@ -1,0 +1,11 @@
+Sie haben eine Nachricht von einem Kunden über Ihren Shop erhalten: {shop_name}
+
+Details der Nachricht:
+
+E-Mail-Adresse: {email}
+
+Nachricht:
+
+{message}
+
+{shop_url} powered by PrestaShopâ„¢

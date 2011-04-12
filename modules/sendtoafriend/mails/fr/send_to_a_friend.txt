@@ -1,0 +1,13 @@
+Bonjour {name},
+
+
+{customer} vous envoie un lien vers un produit qui pourrait vous intéresser.</h1>
+
+Il s'agit de {product} : {product_link}
+
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

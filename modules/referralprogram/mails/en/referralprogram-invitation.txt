@@ -1,0 +1,15 @@
+{firstname_friend} {lastname_friend}, join us!
+
+Your friend {firstname} {lastname} wants to sponsor you on {shop_url}.
+
+Get sponsored and win a discount voucher of {discount}!
+
+It's very easy to sign up. Just click on the following link:
+
+{shop_url}{link}
+
+When signing up, don't forget to provide the e-mail address of your sponsoring friend: {email}.
+
+
+
+{shop_url} powered by PrestaShop™

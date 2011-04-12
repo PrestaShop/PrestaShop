@@ -1,0 +1,66 @@
+#order-opc .opc_status {
+	border: 1px solid #d0d3d8;
+	background: #D0D1D5 url('../img/form_bg.jpg') repeat-x top left;
+	font-size: 12px;
+}
+
+.opc_float {
+	float:left;
+	width: 49%;
+}
+
+.opc_float_status {
+	float: left;
+	width: 45%;
+	padding: 10px;
+}
+
+#order-opc #login_form {
+	width: 100%;
+	clear: none;
+} 
+
+#order-opc #login_form p.text {
+	height: 3.4em;
+	margin-left: 4em;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#order-opc #login_form a { color: #374853 }
+#order-opc input#SubmitLogin { margin: 0 }
+#order-opc #login_form p.submit {
+	margin-right: 0;
+	text-align: left;
+	padding-left: 17%!important;
+}
+#order-opc p.lost_password { padding-left: 4em }
+#order-opc p.submit span { padding-right: 0.5em }
+#order-opc #login_form label {
+	float: none;
+	clear: both;
+	display: block;
+	text-align: left;
+	width: 100%;
+	margin-bottom: 0.3em;
+}
+
+#order-opc textarea#message { width: 42em }
+
+#order-opc sup { color: red; }
+
+#order-opc div.opc-overlay {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: url('../img/ajax-loader.gif') #666 no-repeat center center;
+	opacity: 0.7;
+	filter : alpha(opacity=70); /* IE < 8 */
+	-moz-opacity : 0.7; 
+    -ms-filter: "alpha(opacity=70)"; /* IE 8 */
+	z-index: 99;
+}
+
+#order-opc div.opc-main-block { position: relative }

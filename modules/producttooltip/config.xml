@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>producttooltip</name>
+	<displayName>Product tooltips</displayName>
+	<version>1.0</version>
+	<description>Show how many people are watching a product page, last sale and last cart add.</description>
+	<author>PrestaShop</author>
+	<tab>front_office_features</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

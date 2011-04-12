@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>ogone</name>
+	<displayName>Ogone</displayName>
+	<version>2.0</version>
+	<description></description>
+	<author></author>
+	<tab>payments_gateways</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

@@ -1,0 +1,41 @@
+Hi,
+
+You've a new order from {firstname} {lastname} on {shop_name}.
+
+Order: {order_name}
+Placed on : {date}
+Carrier : {carrier}
+Payment: {payment}
+Discounts: {total_discounts}
+Shipping: {total_shipping}
+Products: {total_products}
+Gift-wrapping: {total_wrapping}
+Total paid: {total_paid}
+
+Delivery address:
+
+{delivery_company}
+{delivery_firstname} {delivery_lastname}
+{delivery_address1}
+{delivery_address2}
+{delivery_postal_code} {delivery_city}
+{delivery_country} {delivery_state}
+{delivery_other}
+
+Billing address:
+
+{invoice_company}
+{invoice_firstname} {invoice_lastname}
+{invoice_address1}
+{invoice_address2}
+{invoice_postal_code} {invoice_city}
+{invoice_country} {invoice_state}
+{invoice_other}
+
+Customer message:
+
+{message}
+
+
+
+{shop_url} powered by PrestaShop™

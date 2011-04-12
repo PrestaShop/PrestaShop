@@ -1,0 +1,12 @@
+Your message has been correctly sent to our Customer Service.
+
+Your message:
+
+{message}
+
+
+We will answer as soon as possible.
+
+Regards,
+
+{shop_url} powered by PrestaShop™

@@ -1,0 +1,349 @@
+/* POS CSS Install */  
+
+body {
+	height: 100%;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background-color: #FFF;
+	color: #333;
+}
+
+a {
+	color: #C73178;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+a:hover {
+	color: #333;
+	font-weight: normal;
+	text-decoration: underline;
+}
+
+img {
+	margin-right: 10px;
+}
+
+a img {
+	border: 0px;
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+input, select {
+	font-family: Arial, Verdana, sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	margin: 2px 0 2px 0;
+}
+
+#required {
+	color: #C73178;
+}
+
+
+/* STRUCTURE */
+
+#page {
+	width: 100%;
+}
+
+#container {
+	margin-top: 10px;
+	padding: 10px 0 0 0;
+	background: #FFF;
+}
+
+#container-inner {	
+	width: 940px;
+	margin: 0 auto 0 auto;
+	padding: 0;
+	text-align: left;
+}
+
+#content {
+	float: right;
+	width: 697px;
+	border-left: 1px solid #65B821;
+	min-height: 380px;
+	margin: 0 0 20px 0;
+	padding: 5px 14px;
+}
+
+#sidebar {
+	float: left;
+	width: 200px;
+	padding: 5px 0 0 0;
+}
+
+
+/* HEADER */
+
+#header {
+	background-color: #DFF5CD;
+}
+
+#header table{
+	margin-left: 240px;
+
+}
+
+#frame {
+	color: #666;
+	width: 860px;
+	text-align: right;
+	padding-top: 50px;
+	padding-right: 10px;
+	padding-left: 20px;
+	margin-top: 30px;
+	float: right;
+}
+
+#frame  a{
+	color: #666;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+#frame a:hover {
+	color: #333;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+#spanTitle {
+	margin-top: -5px;
+	font-size: 23px;
+	float: left;
+	color: #555;
+}
+
+
+/* WELCOME */
+
+#welcome {
+	margin-bottom: 2em;
+}
+
+#welcome h3 {
+	font-size: 115%;
+}
+
+#welcome p {
+	margin: 1.5em 180px 1em 0;
+	line-height: 1.5em;
+}
+
+#welcome ul {
+	margin: 0 190px 0 20px;
+	padding: 0;
+	list-style: none;
+}
+
+#welcome ul li {
+	margin: 0 0 10px 0;
+	padding: 0 0 0 26px;
+	font-size: 110%;
+	line-height: 1.3em;
+	font-weight: normal;
+	color: #666;
+	background: url(../img/install/icon-checksm_gris.gif) no-repeat 0 4px;
+}
+
+/* CONTENT */
+
+#content h1 {
+	margin: 0 0 12px 0;
+	padding: 0;
+	border-bottom: 1.5px solid #65B821;
+	color: #666;
+	font-size: 1.5em;
+}
+
+#content h1 .faint {
+	background: #65B821;
+	width: inherit;
+	margin: 0 0.4em 0 0;
+	padding: 0 0.2em 0 0.2em;
+	color: #fff;
+	text-align: center;
+}
+
+#content h2 {
+	color: #C73178;
+	font-size: 1.3em;
+	border-bottom: 2px solid #F4D7E4;
+	margin: 12px 0 12px 0;
+}
+
+#content h3 {
+	margin: 0;
+	color: #C73178;
+}
+
+/* TABLE */
+
+.table {
+	width: 450px;
+	margin: 0 0 20px 0;
+	padding: 0;
+	border: 1px solid #F4D7E4;
+	border-collapse: collapse;
+}
+
+.table th, .table td {
+	margin: 0;
+	padding: 5px;
+	border-bottom: 1px inset #F0EADA;
+}
+
+.table td {
+	text-align: center;
+}
+
+
+/* FORM TABLE */
+
+table.form-table {
+	width: 550px;
+	margin-top: 0.65em;
+	padding: 0;
+	border-collapse: collapse;
+}
+
+table.form-table th, 
+table.form-table td {
+	margin: 0;
+	padding: 8px;
+	border-bottom: 1px dotted #F4D7E4;
+}
+
+table.form-table th {
+	width: 135px;
+	padding-top: 12px;
+	text-align: right;
+	vertical-align: top;
+	color: #333;
+}
+
+table.form-table td p.note {
+	margin: 0;
+	padding: 2px 0 2px 0;
+	font-family: "Lucida Grande", Arial, Verdana, sans-serif;
+	font-size: 90%;
+	font-weight: normal;
+	color: #666;
+}
+
+/* HELP BOXES : HINT TO HIDE AND REVEAL PASSWORDS */
+
+.reveal {
+	height: 50px;
+	font-size: 12px;
+	color: #333;
+	padding: 9px 10px 2px 10px;
+}
+
+/* ERROR */
+
+#content div.alert {
+	width: 450px;
+	margin: 15px 0;
+	padding: 10px 15px;
+	border-top : 1px dotted #666;
+	border-bottom: 1px dotted #666;
+	background: #F9E3EE;
+}
+
+#content div.error h4 {
+	margin: 0;
+	padding: 0 0 0 20px;
+	font-family: "Lucida Grande", Verdana, sans-serif;
+	font-size: 110%;
+	text-transform: none;
+	font-weight: normal;
+	letter-spacing: 0;
+	text-align: left;
+	color: #C73178;
+	border: none;
+	background: url(../img/install/warning.gif) no-repeat 0 0;
+}
+
+#content div.error ol {
+	margin: 15px 0 0 0;
+	padding-bottom: 0;
+	color: #C73178;
+	font-weight: normal;
+}
+
+
+/* WAITING */
+
+#waiting {
+	margin: 10px;
+	display: none;
+	width: 230px;
+	background: #FFF;
+	border: 1px #666 dotted;
+	padding: 10px;
+}
+
+
+/* INFOS */
+
+#infos {
+	width : 320px;
+	margin-left: 20px;
+	border: 1px solid #65B821;
+	background-color: #DFF5CD;
+	font-weight: normal;
+	padding: 10px;
+}
+
+
+/* SIDEBAR */
+
+#sidebar div {
+	vertical-align: middle;
+	margin: auto 0 5px 0;
+	line-height: 27px;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #666;
+}
+
+#sidebar .number {
+	line-height: 60px;
+	float: left;
+	height: 62px;
+	padding: 5px;
+	font-size: 4.0em;
+}
+
+#sidebar .step {
+	float: right;
+	width: 140px;
+	height: 60px;
+	padding: 5px; 
+	border: 1px solid #F4D7E4;
+}
+
+
+/* FOOTER */
+
+#footer {
+	clear: both;
+	margin: 0;
+	padding: 8px 5px 20px 5px;
+	border-top: 1px solid #F4D7E4;
+	text-align: center;
+	font-size: 90%;
+	line-height: 1em;
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>importerosc</name>
+	<displayName>Importer osCommerce</displayName>
+	<version>1.0</version>
+	<description>This module allows you to import from osCommerce to Prestashop.</description>
+	<author>PrestaShop</author>
+	<tab>migration_tools</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

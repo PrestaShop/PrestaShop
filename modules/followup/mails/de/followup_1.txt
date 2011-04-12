@@ -1,0 +1,11 @@
+Uns ist aufgefallen, dass Sie bei Ihrem letzten Besuch auf {shop_name} Ihre Bestellung nicht abgeschlossen haben.
+
+Ihr Warenkorb wurde gespeichert, Sie können Ihre Bestellung abschließen, indem Sie auf unsere Shop-Seite gehen:
+
+{shop_url}
+
+Als Anreiz erhalten Sie einen Rabatt über {amount}% auf Ihre nächste Bestellung! Dieses Angebot gilt nur noch {days} Tage, also warten Sie nicht länger!
+ 
+Hier ist Ihr Gutschein: {voucher_num}
+
+Geben Sie diesen Code in Ihrem Warenkorb-Fenster ein, um Ihren Rabatt zu erhalten.

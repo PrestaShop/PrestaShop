@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>paypal</name>
+	<displayName>PayPal</displayName>
+	<version>2.4</version>
+	<description>Accepts payments by credit cards (CB, Visa, MasterCard, Amex, Aurore, Cofinoga, 4 stars) with PayPal.</description>
+	<author></author>
+	<tab>payments_gateways</tab>
+	<confirmUninstall>Are you sure you want to delete your details?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

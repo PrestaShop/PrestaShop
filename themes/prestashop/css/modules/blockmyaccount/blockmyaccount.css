@@ -1,0 +1,14 @@
+/* block myaccount */
+#left_column div.myaccount, #right_column div.myaccount { background: #f6dce8 url('../../../img/block_footer_myaccount.jpg') no-repeat bottom left }
+div.myaccount h4 { background: #971d58 url('../../../img/block_header_myaccount.jpg') no-repeat top left }
+div.myaccount h4 a, div.myaccount h4 { color: white }
+div.myaccount, div.myaccount a { color: #5d0630 }
+div.myaccount ul.bullet { margin-top: 0.6em }
+div.myaccount ul.bullet li { background-image: url('../../../img/bullet_myaccount.gif') }
+div.myaccount ul.bullet .icon { display: none }
+div.myaccount p.logout { padding: 0.3em 0 0.3em 2em }
+div.myaccount p.logout, div.myaccount p.logout a { color: #dd2a81 }
+div.myaccount p.logout a { text-decoration: underline }
+div.myaccount p.logout a:hover { text-decoration: none }
+div.myaccount .block_content { background: #f6dce8 url('../../../img/block_bg_myaccount.jpg') repeat-x bottom left; border-left: 1px solid #f6dce8; border-right: 1px solid #f6dce8; }
+.account_input { margin-left: 0; width: 15em; }

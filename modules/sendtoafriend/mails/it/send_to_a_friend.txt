@@ -1,0 +1,13 @@
+Salve {name},
+
+
+{customer} ti ha inviato un link per un prodotto che potrebbe interessarti.
+
+{product}: {product_link}
+
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™

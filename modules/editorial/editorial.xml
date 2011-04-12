@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<editorial>
+	<header>
+	</header>
+	<body>
+		<title_1>Lorem ipsum dolor sit amet</title_1>
+		<title_2>Lorem ipsum dolor sit amet</title_2>
+		<subheading_1>Excepteur sint occaecat cupidatat non proident</subheading_1>
+		<subheading_2>Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</subheading_2>
+		<paragraph_1>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&lt;/p&gt;</paragraph_1>
+		<paragraph_2>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;</paragraph_2>
+		<home_logo_link>http://www.prestashop.com</home_logo_link>
+		<logo_subheading_1>Excepteur sint prestashop cupidatat non proident</logo_subheading_1>
+		<logo_subheading_2>Lorem ipsum presta shop amet</logo_subheading_2>
+	</body>
+</editorial>

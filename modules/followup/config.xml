@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>followup</name>
+	<displayName>Customer follow-up</displayName>
+	<version>1.0</version>
+	<description>Follow-up with your customers with daily customized e-mails.</description>
+	<author>PrestaShop</author>
+	<tab>advertising_marketing</tab>
+	<confirmUninstall>Are you sure you want to delete all settings and your logs?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

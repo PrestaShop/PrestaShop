@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>trustedshops</name>
+	<displayName>Trusted Shops Customer Rating</displayName>
+	<version>1.1</version>
+	<description>Boost consumer confidence and turn more shoppers into buyers.</description>
+	<author></author>
+	<tab>payment_security</tab>
+	<confirmUninstall>Are you sure you want to delete all your settings?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

@@ -1,0 +1,13 @@
+Hi {name},
+
+
+{customer} has sent you a link to a product that (s)he thinks may interest you.
+
+{product}: {product_link}
+
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™

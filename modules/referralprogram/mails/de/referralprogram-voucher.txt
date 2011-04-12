@@ -1,0 +1,12 @@
+Hallo {firstname} {lastname},
+
+Wir freuen uns, Ihnen mitteilen zu können, dass ein Gutschein auf Ihren Namen in Ihrer Bestellung Nr. {id_order} zur Verfügung steht.
+
+Hier ist der Code für Ihren Gutschein: {voucher_num} über {voucher_amount}.
+Bitte kopieren Sie diesen Code einfach und setzen ihn beim Zahlungsvorgang Ihrer nächsten Bestellung ein.
+
+Danke für Ihren Kauf bei {shop_name}.
+
+
+
+{shop_url} powered by PrestaShop™

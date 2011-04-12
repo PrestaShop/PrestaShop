@@ -1,0 +1,12 @@
+Salve {firstname} {lastname},
+
+Vogliamo informarti della creazione di una nota di credito a tuo nome dell'ordine n.{id_order}.
+
+Puoi rivedere questa nota di credito e scaricare la fattura dalla sezione "Controllo ordini" del tuo account cliccando su "Il mio account" nel nostro sito web.
+
+Grazie di aver acquistato con {shop_name}.
+
+{shop_name} - {shop_url}
+
+
+{shop_url} powered by PrestaShop™

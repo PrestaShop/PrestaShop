@@ -1,0 +1,10 @@
+Bonjour {firstname} {lastname},
+
+Vous avez reçu un nouveau message concernant la commande n°{id_order} :
+{message}
+
+Vous pouvez à tout moment consulter vos anciens messages dans votre suivi de commande.
+
+
+
+{shop_url} réalisé par PrestaShop™

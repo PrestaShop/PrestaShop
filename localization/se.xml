@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Sweden" version="1.0">
+	<currencies>
+		<currency name="Krona" iso_code="SEK" iso_code_num="752" sign="kr" blank="1" conversion_rate="9.14651" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="sv" />
+	</languages>
+	<taxes>
+		<tax id="1" name="Moms SE 25%" rate="25" />
+		<tax id="2" name="Moms SE 12%" rate="12" />
+		<tax id="3" name="Moms SE 6%" rate="6" />
+		
+		<taxRulesGroup name="SE Standard Rate (25%)">
+			<taxRule iso_code_country="se" id_tax="1" />
+		</taxRulesGroup>
+		
+		<taxRulesGroup name="SE Reduced Rate (12%)">
+			<taxRule iso_code_country="se" id_tax="2" />
+		</taxRulesGroup>
+		
+		<taxRulesGroup name="SE Super Reduced Rate (6%)">
+			<taxRule iso_code_country="se" id_tax="3" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>blockcategories</name>
+	<displayName>Categories block</displayName>
+	<version>2.0</version>
+	<description>Adds a block featuring product categories.</description>
+	<author>PrestaShop</author>
+	<tab>front_office_features</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

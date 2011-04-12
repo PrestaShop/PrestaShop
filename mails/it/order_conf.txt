@@ -1,0 +1,43 @@
+﻿Salve {firstname} {lastname}, grazie del tuo ordine su {shop_name}!
+
+Dettagli dell'ordine
+
+	Ordine: {order_name} eseguito il {date}
+	Pagamento: {payment}
+
+	Prodotti: {total_products}
+	Sconti: {total_discounts}
+	Spedizione: {total_shipping}
+	Carta regalo: {total_wrapping}
+	Totale: {total_paid}
+
+
+Spedizione
+
+	Mezzo di spedizione: {carrier}
+
+	Indirizzo di consegna:
+
+	{delivery_company}
+	{delivery_firstname} {delivery_lastname}
+	{delivery_address1}
+	{delivery_address2}
+	{delivery_postal_code} {delivery_city}
+	{delivery_country} {delivery_state}
+	{delivery_other}
+
+	Indirizzo di fatturazione:
+
+	{invoice_company}
+	{invoice_vat_number}
+	{invoice_firstname} {invoice_lastname}
+	{invoice_address1}
+	{invoice_address2}
+	{invoice_postal_code} {invoice_city}
+	{invoice_country} {invoice_state}
+	{invoice_other}
+
+Puoi rivedere questo ordine e scaricare la fattura dalla sezione "Cronologia ordine" del tuo account cliccando su "Il mio account" nel nostro sito web. 
+Se hai un account ospite, puoi seguire il tuo ordine in questa pagina: {shop_url}guest-tracking.php
+
+{shop_url} powered by PrestaShop™

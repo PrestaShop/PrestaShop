@@ -1,0 +1,11 @@
+Wir vermissen Sie bei {shop_name}
+
+Hallo {firstname} {lastname},
+ 
+Sie sind einer unserer besten Kunden, seit {days_threshold} Tagen haben Sie nichts mehr bestellt.
+
+Wir möchten Ihnen für Ihr Vertrauen danken und Ihnen einen Rabatt über {amount}% für Ihre nächste Bestellung geben! Dieses Angebot gilt nur noch {days} days, Tage, also warten Sie nicht länger!
+ 
+Hier ist Ihr Gutschein: {voucher_num}
+
+Geben Sie diesen Code in Ihrem Warenkorb-Fenster ein, um Ihren Rabatt zu erhalten.

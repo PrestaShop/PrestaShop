@@ -1,0 +1,9 @@
+Bonjour
+
+Suite à votre inscription à notre newsletter, nous avons le plaisir de vous offrir le bon de réduction suivant : {discount}
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

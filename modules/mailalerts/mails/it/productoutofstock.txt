@@ -1,0 +1,11 @@
+Salve,
+
+Il prodotto {product} è quasi esaurito.
+La quantità rimanente è adesso inferiore del minimo previsto di {last_qty}.
+Stock rimanente: {qty}
+
+Ti consigliamo di aprire la Pagina Prodotto dell'admin prodotti per rifornire il tuo inventorio.
+
+
+
+{shop_url} powered by PrestaShop™

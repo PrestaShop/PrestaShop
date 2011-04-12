@@ -1,0 +1,11 @@
+We miss you at {shop_name}
+
+Hello {firstname} {lastname},
+ 
+You are one of our best customers, however you have not ordered for {days_threshold} days.
+
+We wish to thank you for the trust you have placed in us and want to give you a discount of {amount}% valid on your next order! This offer is valid for {days} days, so do not waste a moment!
+ 
+Here is your coupon: {voucher_num}
+
+Enter this code in your shopping cart to get your discount.

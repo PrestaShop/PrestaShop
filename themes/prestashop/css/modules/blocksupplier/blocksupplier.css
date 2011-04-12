@@ -1,0 +1,7 @@
+/* Block supplier */
+.blocksupplier ul { padding: 4px 0 6px }
+.blocksupplier select {
+	width: 100%;
+	margin: 0
+}
+

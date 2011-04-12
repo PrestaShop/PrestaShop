@@ -1,0 +1,10 @@
+Hallo,
+
+Das Produkt {product} ist nun verfügbar.
+Der Artikel ist nun wieder auf Lager.
+
+Gehen Sie auf die Produktseite, indem Sie auf diesen Link klicken: {product}
+
+Sie können ihn gleich in Ihrem Online-Shop bestellen.
+
+{shop_url} powered by PrestaShop™

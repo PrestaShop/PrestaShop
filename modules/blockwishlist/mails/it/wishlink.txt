@@ -1,0 +1,7 @@
+Salve,
+
+{shop_name} ti invita a inviare questo link ai tuoi amici, così che possano vedere la tua lista dei desideri {wishlist} :
+
+{message}
+
+{shop_url} realised by PrestaShop™

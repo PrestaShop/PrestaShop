@@ -1,0 +1,12 @@
+Salve,
+
+Il prodotto {product} è ora disponibile.
+Infatti l'articolo è di nuovo in magazzino.
+
+Puoi accedere alla pagina del prodotto su: {product_link}
+
+Puoi ordinarlo fin d'ora dal nostro negozio online.
+
+
+
+{shop_url} powered by PrestaShop™

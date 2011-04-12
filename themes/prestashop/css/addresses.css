@@ -1,0 +1,53 @@
+/* adresses */
+div.addresses {
+	border: 1px solid #d0d3d8;
+	background: #D0D1D5 url('../img/form_bg.jpg') repeat-x top left;
+	padding: 0.6em;
+	position: relative;
+	width: 544px
+}
+div.addresses h3 { margin: 0 }
+div.addresses p.checkbox input {
+	margin-top: 0!important;
+	margin-top: -3px
+}
+div.addresses ul.item { clear: both }
+ul.address {
+	background-color: white;
+	float: left;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin-left: 0.25em;
+	padding-bottom: 0.6em;
+	margin-bottom: 1em;
+	position: relative;
+	width: 268px
+}
+ul.address li {
+	padding-left: 1.4em;
+	margin-top: 0.6em
+}
+li.address_title {
+	margin-top: 0!important;
+	background-color: #d0d1d5;
+	color: #374853;
+	font-weight: bold;
+	height: 27px;
+	font-size: 1.2em;
+	line-height: 1.9em
+}
+ul.item li.address_title { background-image: url('../img/address_alias_left.gif') }
+ul.alternate_item li.address_title { background-image: url('../img/address_alias_right.gif') }
+li.address_name,
+ li.address_update a,
+ li.address_delete a { color: #dd2a81 }
+li.address_name,
+ li.address_company { font-weight: bold }
+li.address_update,
+ li.address_delete {
+	background: transparent url('../img/bullet_myaccount.gif') no-repeat 0 0.5em!important;
+	background: transparent url('../img/bullet_myaccount.gif') no-repeat 0 0.4em;
+	margin-left: 1.4em
+}
+#center_column .address_add { padding: 1em 0 }

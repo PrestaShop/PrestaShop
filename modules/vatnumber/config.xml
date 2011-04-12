@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>vatnumber</name>
+	<displayName>European VAT number</displayName>
+	<version>1</version>
+	<description>Enable the management of VAT number.</description>
+	<author>PrestaShop</author>
+	<tab>billing_invoicing</tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

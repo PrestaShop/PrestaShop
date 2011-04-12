@@ -1,0 +1,24 @@
+/* block top search */
+#header_right #search_block_top {
+	float: right;
+	background: #e5e6e7 url('../../../img/block_search_bg.jpg') no-repeat top right;
+	margin-bottom: 11px;
+	width: 336px;
+	height: 28px
+}
+#header_right #search_block_top p { padding: 0.4em 0 0.4em 1em }
+#header_right #search_block_top label, #header_right #search_block_top input { float: left }
+#header_right #search_block_top label {
+	background: transparent url('../../../img/icon/search.gif') no-repeat 0 2px;
+	float: left;
+	width: 19px;
+	height: 18px;
+	display: block
+}
+#header_right #search_block_top input.search_query { width: 12em }
+
+
+/* block left column "Quick search" */
+#search_block_left input { margin: 2px 0 0 0 }
+#search_block_left .search_query { width: 11em }
+#search_button { display: inline }

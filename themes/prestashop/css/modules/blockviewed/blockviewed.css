@@ -1,0 +1,6 @@
+/* Block Viewed Products */
+div#viewed-products_block_left div.block_content ul.products li { 
+	margin-top: 0;
+	padding: 4px 0 0 
+}
+div#viewed-products_block_left div.block_content ul.products li img { margin-right: 7px }

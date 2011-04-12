@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>blockcurrencies</name>
+	<displayName>Currency block</displayName>
+	<version>0.1</version>
+	<description>Adds a block for selecting a currency.</description>
+	<author>PrestaShop</author>
+	<tab>front_office_features</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

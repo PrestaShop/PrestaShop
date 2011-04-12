@@ -1,0 +1,14 @@
+Hola {firstname} {lastname},
+	
+En referencia a tu pedido #{id_order}: 
+
+El pago de tu pedido fue recibido CORRECTAMENTE .
+
+Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (historial de pedidos).
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+Gracias por comprar en {shop_name}.
+
+{shop_url} desarrollado por PrestaShop®

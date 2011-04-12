@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>bankwire</name>
+	<displayName>Bank Wire</displayName>
+	<version>0.5</version>
+	<description>Accept payments by bank wire.</description>
+	<author>PrestaShop</author>
+	<tab>payments_gateways</tab>
+	<confirmUninstall>Are you sure you want to delete your details?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>

@@ -1,0 +1,9 @@
+Salve {firstname} {lastname},
+ 
+Grazie del tuo ordine su {shop_name}
+ 
+Per ringraziarti, vogliamo offrirti uno sconto del {amount}% sul tuo prossimo ordine! Questa offerta è valida per {days} giorni, quindi approfittane subito!
+ 
+Ecco il tuo buono: {voucher_num}
+
+Inserisci questo codice nel carrello per ottenere lo sconto.

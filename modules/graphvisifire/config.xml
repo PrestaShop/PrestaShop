@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>graphvisifire</name>
+	<displayName>Visifire</displayName>
+	<version>1</version>
+	<description>Visifire is a set of open source data visualization components - powered by Microsoft Silverlight 2 beta 2.</description>
+	<author>PrestaShop</author>
+	<tab>administration</tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+</module>

@@ -1,0 +1,13 @@
+Hola {name},
+
+
+{customer} te ha enviado un vínculo a un producto que él piensa que pueden interesarle.
+
+{product}: {product_link}
+
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} desarrollado por PrestaShop™

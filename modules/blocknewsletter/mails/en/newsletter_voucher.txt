@@ -1,0 +1,9 @@
+Hi
+
+Regarding your newsletter subscription, we have the pleasure to offer you the following voucher: {discount}
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} Powered by PrestaShop™

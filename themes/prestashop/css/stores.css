@@ -1,0 +1,65 @@
+#stores-table {
+	border: 1px solid #999;
+	width: 100%;
+	border-collapse: collapse;
+	display: none;
+}
+
+#stores-table tr td {
+	height: 95px;
+}
+
+#stores-table tr th, #stores-table tr td {
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	padding: 5px;
+}
+
+#stores-table tr td.num {
+	font-size: 16px;
+}
+
+#stores-table tr td.distance, #stores-table tr td.num {
+	text-align: center;
+}
+
+#stores-table tr th {
+	text-align: center;
+	height: 20px;
+	line-height: 20px;
+}
+
+div.store-small {
+	border: 1px solid #CCC;
+	padding: 5px;
+	width: 200px;
+	margin-bottom: 10px;
+}
+
+#map {
+	width: 556px;
+	height: 375px;
+	margin: 15px auto;
+}
+
+#locationSelect {
+	width: 350px;
+	visibility: hidden;
+}
+
+#stores_loader {
+	margin-left: 5px;
+	display: none;
+}
+
+#store_hours {
+	font-weight: bold;
+	text-decoration: underline;
+	width: 80px; 
+	height: 15px;
+	display: block;
+}
+
+#addressInput {
+	width: 350px;
+}

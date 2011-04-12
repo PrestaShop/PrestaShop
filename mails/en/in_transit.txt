@@ -1,0 +1,16 @@
+Hi {firstname} {lastname},
+
+Your order is currently in transit.
+
+You can track your package by clicking on the following link: {followup}
+
+You can also review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website. 
+If you have a guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+Thank you for shopping with {shop_name}!
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™
