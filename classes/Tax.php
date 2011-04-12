@@ -77,96 +77,6 @@ class TaxCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated zones are not related to a tax
-	 */
-	public static function checkTaxZone($id_tax, $id_zone)
-	{
-		Tools::displayAsDeprecated();
-		return true;
-	}
-
-	/**
-	 * @deprecated states are not related to a tax. Check TaxRules.
-	 */
-	public function getStates()
-	{
-	    Tools::displayAsDeprecated();
-	    return false;
-	}
-
-	/**
-	 * @deprecated states are not related to a tax. Check TaxRules.
-	 */
-	public function getState($id_state)
-	{
-		Tools::displayAsDeprecated();
-		return false;
-	}
-
-	/**
-	 * @deprecated states are not related to a tax. Check TaxRules.
-	 */
-	public function addState($id_state)
-	{
-		Tools::displayAsDeprecated();
-		return true;
-	}
-
-
-	/**
-	 * @deprecated states are not related to a tax. Check TaxRules.
-	 */
-	public function deleteState($id_state)
-	{
-	    Tools::displayAsDeprecated();
-	    return true;
-	}
-
-	/**
-	 * Get all zones
-	 *
-	 * @return array Zones
-	 * @deprecated zones are not related to a tax
-	 */
-	public function getZones()
-	{
-	    Tools::displayAsDeprecated();
-		return false;
-	}
-
-	/**
-	 * Get a specific zones
-	 *
-	 * @return array Zone
-	 * @deprecated zones are not related to a tax
-	 */
-	public function getZone($id_zone)
-	{
-	    Tools::displayAsDeprecated();
-		return false;
-	}
-
-	/**
-	 * Add zone
-	 * @deprecated zones are not related to a tax
-	 */
-	public function addZone($id_zone)
-	{
-	    Tools::displayAsDeprecated();
-		return true;
-	}
-
-	/**
-	 * Delete zone
-	 * @deprecated zones are not related to a tax
-	 */
-	public function deleteZone($id_zone)
-	{
-	    Tools::displayAsDeprecated();
-		return true;
-	}
-
-	/**
 	* Get all available taxes
 	*
 	* @return array Taxes
@@ -186,70 +96,6 @@ class TaxCore extends ObjectModel
 		return !Configuration::get('PS_TAX');
 	}
 
-	/*
-	 * @deprecated zones are not related to a tax
-	 */
-	static public function zoneHasTax($id_tax, $id_zone)
-	{
-	    Tools::displayAsDeprecated();
-		return true;
-	}
-
-
-
-	/**
-	 * @deprecated states are not related to a tax. Check TaxRules.
-	 */
-	static public function getRateByState($id_state, $active = 1)
-	{
-	    Tools::displayAsDeprecated();
-        return false;
-	}
-
-	/**
-	 *  Return the applicable tax rate depending of the country and state
-	 * @deprecated use getApplicableTaxRate
-	 * @param integer $id_tax
-	 * @param float $productTax
-	 * @param integer $id_address
-	 *
-	 * @return float taxe_rate
-	 */
-	static public function getApplicableTax($id_tax, $productTax, $id_address = NULL)
-	{
-		Tools::displayAsDeprecated();
-		return Tax::getApplicableTaxRate($id_tax, $productTax, $id_address);
-	}
-
-	/**
-	 *  Return the applicable tax rate depending of the country and state
-	 *
-	 * @param integer $id_tax
-	 * @param float $productTax
-	 * @param integer $id_address
-	 *
-	 * @return float taxe_rate
-	 */
-	public static function getApplicableTaxRate($id_tax, $productTax, $id_address = NULL)
-	{
-	    Tools::displayAsDeprecated();
-		global $cart, $cookie, $defaultCountry;
-
-		return $productTax;
-	}
-
-	static public function getTaxIdByRate($rate, $active = 1)
-	{
-	    Tools::displayAsDeprecated();
-		$tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT t.`id_tax`
-			FROM `'._DB_PREFIX_.'tax` t
-			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.id_tax = tl.id_tax)
-			WHERE t.`rate` = '.(float)($rate).
-			($active == 1 ? ' AND t.`active` = 1' : ''));
-		return $tax ? (int)($tax['id_tax']) : false;
-	}
-
 	public static function getTaxIdByName($tax_name, $active =1)
 	{
 		$tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -260,16 +106,6 @@ class TaxCore extends ObjectModel
 			($active == 1 ? ' AND t.`active` = 1' : ''));
 
 		return $tax ? (int)($tax['id_tax']) : false;
-	}
-
-	static public function getDataByProductId($id_product)
-	{
-	    Tools::displayAsDeprecated();
-
-        $tax_rate = Tax::getProductTaxRate((int)$id_product);
-        $id_tax = Tax::getTaxIdByRate($tax_rate);
-
-		return array('id_tax' => $id_tax, 'rate' => $tax_rate);
 	}
 
 	/**

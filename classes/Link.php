@@ -136,21 +136,6 @@ class LinkCore
 		return _PS_BASE_URL_.__PS_BASE_URI__.'manufacturer.php?id_manufacturer='.(int)($id_manufacturer);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public function getCustomLink($id_custom, $page, $prefix = '~', $alias = NULL, $id_lang = NULL)
-	{
-		Tools::displayAsDeprecated();
-		if (is_object($id_custom))
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_custom->id).$prefix.$id_custom->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.$page.'?id_custom='.(int)($id_custom->id));
-		if ($alias)
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_custom).$prefix.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.$page.'?id_custom='.(int)($id_custom));
-		return _PS_BASE_URL_.__PS_BASE_URI__.$page.'?id_custom='.(int)($id_custom);
-	}
-
 	public function getImageLink($name, $ids, $type = NULL)
 	{
 		global $protocol_content;
@@ -261,38 +246,6 @@ class LinkCore
 					$switchLangLink = $switchLangLink.'&amp;id_lang='.$id_lang;
 			}
 		return $switchLangLink;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function getLanguageLinkAdmin($id_lang)
-	{
-		Tools::displayAsDeprecated();
-		return $this->getUrlWith('id_lang', (int)($id_lang));
-	}
-
-	/**
-	 * This function return the current url with a new parameter key=value
-	 * @param mixed $key 
-	 * @param mixed $val 
-	 * @return url with &key=val (or ?key=val)
-	 * @deprectated
-	 */
-	public function getUrlWith($key, $val)
-	{
-		// This function does not use rewrite
-		Tools::displayAsDeprecated();
-		$n = 0;
-		$url = str_replace('index.php', '', htmlentities($this->url, ENT_QUOTES, 'UTF-8'));
-
-		foreach ($_GET as $k => $value)
-			// adminlang is an hand-written param in BO
-			if ($k != 'adminlang')
-				if (!is_array($value) AND $k != $key AND Tools::isSubmit($k))
-					$url .= ((!$n++) ? '?' : '&amp;').urlencode($k).($value ? '='.urlencode($value) : '');
-		
-		return $url.($n ? '&amp;' : '?').urlencode($key).'='.urlencode($val);
 	}
 
 	public function goPage($url, $p)

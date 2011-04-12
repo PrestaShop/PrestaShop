@@ -193,23 +193,6 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Get several configuration values (in multiple languages)
-	  *
-	  * @param array $keys Keys wanted
-	  * @return array Values in multiple languages
-	  * @deprecated
-	  */
-	static public function getMultipleInt($keys)
-	{
-		Tools::displayAsDeprecated();
-		$languages = Language::getLanguages();
-		$resultsArray = array();
-		foreach($languages as $language)
-			$resultsArray[$language['id_lang']] = self::getMultiple($keys, $language['id_lang']);
-		return $resultsArray;
-	}
-
-	/**
 	  * Insert configuration key and value into database
 	  *
 	  * @param string $key Key

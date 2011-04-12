@@ -819,46 +819,6 @@ class ToolsCore
 		return self::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public static function getCategoriesTotal()
-	{
-		Tools::displayAsDeprecated();
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_category`) AS total FROM `'._DB_PREFIX_.'category`');
-		return (int)($row['total']);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function getProductsTotal()
-	{
-		Tools::displayAsDeprecated();
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_product`) AS total FROM `'._DB_PREFIX_.'product`');
-		return (int)($row['total']);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function getCustomersTotal()
-	{
-		Tools::displayAsDeprecated();
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_customer`) AS total FROM `'._DB_PREFIX_.'customer`');
-		return (int)($row['total']);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function getOrdersTotal()
-	{
-		Tools::displayAsDeprecated();
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_order`) AS total FROM `'._DB_PREFIX_.'orders`');
-		return (int)($row['total']);
-	}
-
 	/*
 	** Historyc translation function kept for compatibility
 	** Removing soon
@@ -968,15 +928,6 @@ class ToolsCore
 		return $date;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public static function getExactTime()
-	{
-		Tools::displayAsDeprecated();
-		return time()+microtime();
-	}
-
 	static function strtolower($str)
 	{
 		if (is_array($str))
@@ -1048,46 +999,6 @@ class ToolsCore
 	public static function isEmpty($field)
 	{
 		return ($field === '' OR $field === NULL);
-	}
-
-	/**
-	* @deprecated
-	**/
-	public static function getTimezones($select = false)
-	{
-		Tools::displayAsDeprecated();
-
-		static $_cache = 0;
-
-		// One select
-		if ($select)
-		{
-			// No cache
-			if (!$_cache)
-			{
-				$tmz = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT `name` FROM '._DB_PREFIX_.'timezone WHERE id_timezone = '.(int)($select));
-				$_cache = $tmz['name'];
-			}
-			return $_cache;
-		}
-
-		// Multiple select
-		$tmz = Db::getInstance(_PS_USE_SQL_SLAVE_)->s('SELECT * FROM '._DB_PREFIX_.'timezone');
-		$tab = array();
-		foreach ($tmz as $timezone)
-			$tab[$timezone['id_timezone']] = str_replace('_', ' ', $timezone['name']);
-		return $tab;
-	}
-
-	/**
-	* @deprecated
-	**/
-	public static function ps_set_magic_quotes_runtime($var)
-	{
-		Tools::displayAsDeprecated();
-
-		if (function_exists('set_magic_quotes_runtime'))
-			set_magic_quotes_runtime($var);
 	}
 
 	public static function ps_round($value, $precision = 0)
