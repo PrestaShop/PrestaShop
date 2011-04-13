@@ -364,7 +364,7 @@ class DiscountCore extends ObjectModel
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_category` WHERE `id_discount`='.(int)($this->id));
 		foreach($categories AS $category)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->ExecuteS('
 			SELECT `id_discount` 
 			FROM `'._DB_PREFIX_.'discount_category`
 			WHERE `id_discount`='.(int)($this->id).' AND `id_category`='.(int)($category));

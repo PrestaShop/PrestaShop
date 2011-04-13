@@ -449,7 +449,7 @@ class		WishList extends ObjectModel
 			$quantity > $result['quantity'])
 			return (false);
 
-			Db::getInstance()->Execute('
+			Db::getInstance()->ExecuteS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'wishlist_product_cart`
 			WHERE `id_wishlist_product`='.(int)($result['id_wishlist_product']).' AND `id_cart`='.(int)($id_cart)

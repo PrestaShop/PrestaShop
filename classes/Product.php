@@ -2310,7 +2310,7 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateTags($id_product_old, $id_product_new)
 	{
-		$resource = Db::getInstance()->Execute('SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)($id_product_old));
+		$resource = Db::getInstance()->ExecuteS('SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)($id_product_old));
 		if (!Db::getInstance()->NumRows())
 			return true;
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`) VALUES';
@@ -2322,7 +2322,7 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateDownload($id_product_old, $id_product_new)
 	{
-		$resource = Db::getInstance()->Execute('SELECT `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active` FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.(int)($id_product_old));
+		$resource = Db::getInstance()->ExecuteS('SELECT `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active` FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.(int)($id_product_old));
 		if (!Db::getInstance()->NumRows())
 			return true;
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES';
@@ -2819,7 +2819,7 @@ class ProductCore extends ObjectModel
 		if (isset(self::$_incat[md5($sql)]))
 			return self::$_incat[md5($sql)];
 
-		if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute($sql))
+		if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql))
 			return false;
 		self::$_incat[md5($sql)] =  (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
 		return self::$_incat[md5($sql)];
