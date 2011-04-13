@@ -521,7 +521,7 @@ class AdminProducts extends AdminTab
 								Tools::getValue('attribute_location'),
 								Tools::getValue('attribute_upc'),
 								Tools::getValue('minimal_quantity'));
-								if ($id_reason = (int)Tools::getValue('id_mvt_reason'))
+								if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0)
 								{
 									$reason = new StockMvtReason((int)$id_reason);
 									$qty = Tools::getValue('attribute_mvt_quantity') * $reason->sign; 
@@ -1163,7 +1163,7 @@ class AdminProducts extends AdminTab
 					$this->copyFromPost($object, $this->table);
 					if ($object->update())
 					{					
-						if ($id_reason = (int)Tools::getValue('id_mvt_reason'))
+						if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('mvt_quantity') > 0)
 						{
 							$reason = new StockMvtReason((int)$id_reason);
 							$qty = Tools::getValue('mvt_quantity') * $reason->sign; 
