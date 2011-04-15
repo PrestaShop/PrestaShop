@@ -370,73 +370,49 @@ class AdminHome extends AdminTab
 		echo '
 				</tbody>
 			</table>
-	
-		</div>';
+		</div>
+		<div id="column_right">
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$.ajax({
+						url: "ajax.php",
+						dataType: "json",
+						data: "getAdminHomeElement",
+						success: function(json) {
+							$(\'#partner_preactivation\').fadeOut(\'slow\', function() {
+								$(\'#partner_preactivation\').html(json.partner_preactivation);
+								$(\'#partner_preactivation\').fadeIn(\'slow\');
+							});
+							
+							$(\'#discover_prestashop\').fadeOut(\'slow\', function() {
+								$(\'#discover_prestashop\').html(json.discover_prestashop);
+								$(\'#discover_prestashop\').fadeIn(\'slow\');
+							});
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown)
+						{
+							$(\'#adminpresentation\').fadeOut(\'slow\');
+							$(\'#partner_preactivation\').fadeOut(\'slow\');	
+							$(\'#discover_prestashop\').fadeOut(\'slow\');
+						}
+					});
+				});
+			</script>
+			<div id="partner_preactivation">
+				<p class="center"><img src="../img/loader.gif" alt="" /> '.translate('Loading...').'</p>
+			</div>
+		';
 
-		echo '
-		<div id="column_right">';
-	
-		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$cookie->id_lang.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
-		$content = explode('|', $content);
-		if ($content[0] == 'OK')
-		{
-			echo $content[2];
-			$content[1] = explode('#%#', $content[1]);
-			foreach ($content[1] as $partnerPopUp)
-				if ($partnerPopUp)
-				{
-					$partnerPopUp = explode('%%', $partnerPopUp);
-					if (!Configuration::get('PS_PREACTIVATION_'.strtoupper($partnerPopUp[0])))
-					{
-						echo $partnerPopUp[1];
-						Configuration::updateValue('PS_PREACTIVATION_'.strtoupper($partnerPopUp[0]), 'TRUE');
-					}
-				}
-		}
-	
 		if (Tools::isSubmit('hideOptimizationTips'))
 			Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1);
 			
 		$this->_displayOptimizationTips();
 
-		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$content = @file_get_contents('https://www.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$cookie->id_lang, false, $context);
-		$content = explode('|', $content);
-		if ($content[0] == 'OK')
-			echo $content[1];
-		else
-			echo '
-				<div id="table_info_link" class="admin-box2">
-					<h5>'.$this->l('PrestaShop Link').'</h5>
-					<ul id="prestashop_link" class="admin-home-box-list">
-						<li>
-							<p>'.$this->l('Discover the latest official guide :').'</p>
-							<a href="http://www.prestashop.com/download/Userguide_'.(in_array($isoUser, array('en', 'es', 'fr')) ? $isoUser : 'en').'.pdf" target="_blank">'.$this->l('User Guide PrestaShop 1.4').'</a>
-							<a href="http://www.prestashop.com/download/Techguide_'.(in_array($isoUser, array('fr', 'es')) ? $isoUser : 'fr').'.pdf" target="_blank">'.$this->l('Technical Documentation').'</a>
-						</li>
-						<li>
-							<p>'.$this->l('Use the PrestaShop forum & discover a great community').' !</p>
-							<a href="http://www.prestashop.com/forums/" target="_blank">'.$this->l('Go to forums.prestashop.com').'</a>
-						</li>
-						<li>
-							<p>'.$this->l('Enhance your Shop with new templates & modules').'</p>
-							<a href="http://addons.prestashop.com" target="_blank">'.$this->l('Go to addons.prestashop.com').'</a>
-						</li>
-					</ul>
-				</div>';
-
-		if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
-			echo '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://www.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
-
-		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$content = @file_get_contents('https://www.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$cookie->id_lang, false, $context);
-		$content = explode('|', $content);
-		if ($content[0] == 'OK')
-			echo $content[1];
-
-
-		echo '</div>
+		echo '
+			<div id="discover_prestashop">
+				<p class="center"><img src="../img/loader.gif" alt="" /> '.translate('Loading...').'</p>
+			</div>
+		</div>
 		<div class="clear"></div>';
 	
 		echo Module::hookExec('backOfficeHome');
