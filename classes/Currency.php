@@ -213,6 +213,7 @@ class CurrencyCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'currency` c ON c.`id_currency` = mc.`id_currency`
 		WHERE c.`deleted` = 0
 		AND mc.`id_module` = '.(int)($id_module).'
+		AND c.`active` = 1 
 		ORDER BY c.`name` ASC');
 	}
 
