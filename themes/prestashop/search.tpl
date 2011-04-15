@@ -38,7 +38,7 @@
 		{if isset($search_query) && $search_query}
 			{l s='No results found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
 		{elseif isset($search_tag) && $search_tag}
-			{l s='No results found for your search'}&nbsp;"{$tag|escape:'htmlall':'UTF-8'}"
+			{l s='No results found for your search'}&nbsp;"{$search_tag|escape:'htmlall':'UTF-8'}"
 		{else}
 			{l s='Please type a search keyword'}
 		{/if}
