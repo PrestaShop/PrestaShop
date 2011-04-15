@@ -896,7 +896,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_attribute_id` int(10) unsigned default NULL,
   `product_name` varchar(255) NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL default '0',
-  `product_quantity_in_stock` int(10) unsigned NOT NULL default 0,
+  `product_quantity_in_stock` int(10) NOT NULL default 0,
   `product_quantity_refunded` int(10) unsigned NOT NULL default '0',
   `product_quantity_return` int(10) unsigned NOT NULL default '0',
   `product_quantity_reinjected` int(10) unsigned NOT NULL default 0,
