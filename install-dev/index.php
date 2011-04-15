@@ -97,7 +97,7 @@ if ($lm->getIncludeTradFilename())
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Cache" content="no store" />
 	<meta http-equiv="Expires" content="-1" />
-	<title><?php echo lang('PrestaShop '.INSTALL_VERSION.' Installer')?></title>
+	<title><?php echo lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?></title>
 	<link rel="stylesheet" type="text/css" media="all" href="view.css"/>
 	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/jquery-1.4.4.min.js"></script>
 	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/ajaxfileupload.js"></script>
@@ -609,7 +609,7 @@ if ($lm->getIncludeTradFilename())
 						return '';
 					}
 
-					$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
+					$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 3)));
 					$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/partners.php?version=1.0', false, $context);
 					if ($content && $content[0] == '<')
 					{
@@ -829,7 +829,6 @@ if ($lm->getIncludeTradFilename())
 			$countNonNative = 0;
 				if ($oldversion !== false)
 				{
-					include_once(realpath(INSTALL_PATH.'/../config').'/settings.inc.php');
 					include_once(realpath(INSTALL_PATH.'/../config').'/config.inc.php');
 					$moduleList = Module::getNonNativeModuleList();
 					$moduleNonNativeLi = '<ul>';
