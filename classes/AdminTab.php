@@ -472,7 +472,7 @@ abstract class AdminTabCore
 	{
 		$dir = null;
 		/* Deleting object images and thumbnails (cache) */
-		if (key_exists('dir', $this->fieldImageSettings) AND $this->fieldImageSettings['dir'].'/')
+		if (key_exists('dir', $this->fieldImageSettings))
 		{
 			$dir = $this->fieldImageSettings['dir'].'/';
 			if (file_exists(_PS_IMG_DIR_.$dir.$id.'.'.$this->imageType) AND !unlink(_PS_IMG_DIR_.$dir.$id.'.'.$this->imageType))
