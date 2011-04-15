@@ -524,7 +524,7 @@ class ProductCore extends ObjectModel
 	public static function updateDefaultAttribute($id_product)
 	{
 		$id_product_attribute = self::getDefaultAttribute($id_product);
-		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_default_attribute = '.(int)($id_product_attribute).' WHERE id_product = '.(int)($id_product_attribute).' LIMIT 1');
+		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_default_attribute = '.(int)($id_product_attribute).' WHERE id_product = '.(int)($id_product).' LIMIT 1');
 	}
 
 	public function validateFieldsLang($die = true, $errorReturn = false)
