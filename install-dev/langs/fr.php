@@ -268,3 +268,18 @@ $_LANG['Your shop version is now'] = 'La version de votre boutique est maintenan
 $_LANG['New features in PrestaShop v'] = 'Nouvelles fonctionnalités dans PrestaShop v';
 $_LANG['Beware, your settings look correct but are not optimal, if you encounter problems (upgrade too long, memory error...), please ask your hosting provider to increase the values of these parameters (max_execution_time & memory_limit).'] = 'Attention, votre paramètres semblent corrects mais ne sont pas optimaux, si jamais vous rencontrez des soucis (mise à jour qui se bloque avant la fin, erreur de mémoire...), merci de demander à votre hébergeur d\'augmenter les valeurs de ces paramètres (max_execution_time & memory_limit).';
 $_LANG['We strongly recommend that you inform your hosting provider to modify the settings before process to the update.'] = 'Nous vous recommandons fortement de prévenir votre hébergeur avant de procéder à la mise à jour afin qu\'il modifie ces paramètres PHP.';
+$_LANG['Module compatibility'] = 'Compatibilité Modules';
+$_LANG['It\'s dangerous to keep non-native modules activated during the update. If you really want to take this risk, uncheck the following box.'] = 'Il est déconseillé de laisser les modules non natif activé durant la mise à jour? Si vous voulez réellement prendre ce risque, désactivez la case suivante.';
+$_LANG['You will be able to manually reactivate them in your back-office, once the update process has succeeded.'] = 'Vous pourrez ensuite les réactiver manuellement dans le back-office, une fois le processus de mise à jour terminé.';
+$_LANG['Ok, please desactivate the following modules, I will reactivate them later.'] = 'D\'accord, désactivez automatiquement les modules suivant, je les réactiverait moi-même plus tard.';
+$_LANG['Theme compatibility'] = 'Compatibilité du thème';
+$_LANG['Before updating, you need to check that your theme is compatible with version'] = 'Avant la mise à jour, vous avez besoin de vérifier que votre thème reste compatible avec la version';
+$_LANG['of PrestaShop.'] = 'de PrestaShop';
+$_LANG['Link to the validator'] = 'Lien vers le validateur';
+$_LANG['Online Theme Validator'] = 'Validateur de Theme en ligne';
+$_LANG['If your theme is not valid, you may experience some problems in your front-office aspect, but don\'t panic ! To solve this, you can make it compatible by correcting the validators errors or by using a theme compatible with '] = 'Si votre thème n\'est pas valide, vous pourrez rencontrer quelques problèmes d\'affichage de votre site, mais inutile de paniquer ! Vous pouvez le rendre compatible en corrigeant les erreurs signalées par le validateur ou en utilisant un thème compatible avec la version' ;
+$_LANG['version'] = '';
+
+
+
+

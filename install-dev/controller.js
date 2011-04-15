@@ -37,6 +37,7 @@ validShopInfos = false;
 upgradeCertify = false;
 dropdb=false;
 application="install";
+customModule="desactivate";
 
 function nextTab()
 {
@@ -838,7 +839,7 @@ function doUpgrade()
 	   url: "model.php",
 	   cache: false,
 	   data:
-	   	"method=doUpgrade"
+	   	"method=doUpgrade&customModule=" + customModule+ ""
 	   ,
 	   success: function(ret)
 	   {
@@ -1028,5 +1029,13 @@ $(document).ready(
 		$('#set_license').click(function() {
 			checkLicenseButton(this);
 		});
+		$("#customModuleDesactivation").bind('click',
+			function(){
+				if($("#customModuleDesactivation")[0].checked)
+					customModule = 'desactivate';
+				else
+					customModule = 'take the risk';
+			}
+		)
 	}
 );

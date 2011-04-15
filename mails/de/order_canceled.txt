@@ -5,7 +5,7 @@ Zu Ihrer Bestellung Nr.{id_order}:
 Ihre Bestellung wurde abgebrochen.
 
 Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken. 
-Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung auf dieser Webseite verfolgen. {shop_url}guest-tracking.php
+Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung auf dieser Webseite verfolgen. {shop_url}gast-bestellverfolgung.php
 
 {shop_name} - {shop_url}
 

@@ -541,7 +541,7 @@ div#noJavaScript{
 	text-align: center;
 }
 
-a#access, a#access_update{
+a#access, a#access_update, span#box_admin{
 	display:block;
 	width:300px;
 	height:150px;

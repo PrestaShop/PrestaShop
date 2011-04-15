@@ -826,9 +826,43 @@ if ($lm->getIncludeTradFilename())
 				{
 					return strnatcmp($a['version'], $b['version']);
 				}
+			$countNonNative = 0;
+				if ($oldversion !== false)
+				{
+					include_once(realpath(INSTALL_PATH.'/../config').'/settings.inc.php');
+					include_once(realpath(INSTALL_PATH.'/../config').'/config.inc.php');
+					$moduleList = Module::getNonNativeModuleList();
+					$moduleNonNativeLi = '<ul>';
+					foreach($moduleList as $module)
+						if($module['active'])
+						{
+							$countNonNative++;
+							$moduleNonNativeLi .= '<li>'.$module['name'].'</li>';
+						}
+					$moduleNonNativeLi .= '</ul>';	
+				}
+				if($countNonNative)
+				{
+					echo '<br /><br />
+					<h2>'.lang('Module compatibility').'</h2>';
+					echo '<div style="font-weight: bold; background-color: #ffdeb7; color: #000; padding: 10px; border: 1px solid #999; margin-top: 10px;">
+					<p><img src="../img/admin/warning.gif" alt="" style="vertical-align: middle;" /> '.lang('It\'s dangerous to keep non-native modules activated during the update. If you really want to take this risk, uncheck the following box.').'</p>
+					</div>
+					<p>'.lang('You will be able to manually reactivate them in your back-office, once the update process has succeeded.').'</p>
+					<input id="customModuleDesactivation" type="checkbox" checked="checked" value="1" name="customModuleDesactivation" /> <label for="customModuleDesactivation">'
+					.lang('Ok, please desactivate the following modules, I will reactivate them later.').' : </label>';
+					echo $moduleNonNativeLi;
+	
+				}
+
+				echo '<h2>'.lang('Theme compatibility').'</h2>';
+				echo '<p>'.lang('Before updating, you need to check that your theme is compatible with version').' <b>'.INSTALL_VERSION.'</b> '.lang('of PrestaShop.').'</p>
+	<p><b>'.lang('In this aim, use our').'</b> <a target="_blank" href="http://validator.prestashop.com?version='.INSTALL_VERSION.'" title="'.lang('Link to the validator').'"><b>'.lang('Online Theme Validator').'</b></a>.'.'</p>';
+	echo '<p>'.lang('If your theme is not valid, you may experience some problems in your front-office aspect, but don\'t panic ! To solve this, you can make it compatible by correcting the validators errors or by using a theme compatible with ').' '.INSTALL_VERSION.' '.lang('version').'.</p>';
 				
-				echo '<br /><br />
-				<h2>'.lang('Details about this upgrade').' (v'.INSTALL_VERSION.')</h2>
+				echo '<h2>'.lang('Let\'s go!').'</h2>
+				<p>'.lang('Click on the "Next" button to start the upgrade, this can take several minutes,').' <u style="font-weight: bold; text-decoration: underline;">'.lang('do not close the window and be patient.').'</u></p>';
+				echo '<h2>'.lang('Details about this upgrade').' (v'.INSTALL_VERSION.')</h2>
 				<p>'.
 				lang('Thank you, you will be able to continue the upgrade process by clicking on the "Next" button.').'<br /><br />'.
 				lang('PrestaShop is upgrading your shop one version after the other, the following upgrade files will be processed:').'
@@ -938,10 +972,8 @@ if ($lm->getIncludeTradFilename())
 					echo '<img src="../img/admin/error2.png" alt="" style="vertical-align: middle;" /> '.lang('We strongly recommend that you inform your hosting provider to modify the settings before process to the update.');
 					
 				echo '
-				</div><br />
+				</div><br />';
 				
-				<h2>'.lang('Let\'s go!').'</h2>
-				<p>'.lang('Click on the "Next" button to start the upgrade, this can take several minutes,').' <u style="font-weight: bold; text-decoration: underline;">'.lang('do not close the window and be patient.').'</u></p>';
 				
 				?>
 			</div>
@@ -1034,6 +1066,11 @@ if ($lm->getIncludeTradFilename())
 					<span class="description"><?php echo lang('Find your store as your future customers will see!'); ?></span>
 					<span class="message"><?php echo lang('Discover your store'); ?></span>
 				</a>
+				<span href="#" id="access" class="BO" target="_blank">
+					<span class="title"><?php echo lang('Back Office'); ?></span>
+					<span class="description"><?php echo lang('Manage your store with your back office. Manage your orders and customers, add modules, change your theme, etc...'); ?></span>
+					<span class="message"><?php echo lang('Manage your store'); ?></span>
+				</span>
 			</div>
 			<?php
 			if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>

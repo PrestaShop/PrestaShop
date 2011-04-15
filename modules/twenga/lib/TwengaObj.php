@@ -191,6 +191,7 @@ class TwengaObj
 			self::$arr_api_url['orderExist'] = 'http://rts.twenga.com/api/Order/Exist';
 			self::$arr_api_url['orderValidate'] = 'http://rts.twenga.com/api/Order/Validate';
 			self::$arr_api_url['orderCancel'] = 'http://rts.twenga.com/api/Order/Cancel';
+			self::$arr_api_url['addFeed'] = 'https://rts.twenga.com/api/Site/AddFeed';
 			
 			if(self::PARTNER_AUTH_KEY === NULL)
 				throw new TwengaException(self::$translation_object->l('To activate the Twenga plugin, "PARTNER_AUTH_KEY" contant must be set. Default installation of Prestashop contains this value.', basename(__FILE__, '.php')));
@@ -222,7 +223,7 @@ class TwengaObj
 	 * @param array $params
 	 * @param boolean $authentication
 	 * @throws TwengaException in case of cURL error.
-	 * @return array with status code and response of the cURL reponse.
+	 * @return array with status code and response of the cURL request.
 	 */
 	private static function executeQuery($query, array $params = array(), $authentication = true)
 	{
@@ -299,10 +300,32 @@ class TwengaObj
 		} catch (Exception $e) {
 			throw new TwengaException(self::$translation_object->l($e->getMessage(),basename(__FILE__, '.php')), $e->getCode());
 		}
-			
 		return (array)$obj_xml;
 	}
-	
+
+	public function addFeed($params = array())
+	{
+		require_once realpath(self::$base_dir.'/TwengaAddFeed.php');
+		$params['key'] = self::$hashkey;
+		$params['PARTNER_AUTH_KEY'] = self::PARTNER_AUTH_KEY;
+		try {
+			self::checkParams(__FUNCTION__, $params);
+		} catch (TwengaFieldsException $e) {
+			throw $e;
+		}
+		$str_params = self::buildUrlToQuery(self::$arr_api_url[__FUNCTION__],$params);
+		try {
+			$response = self::executeQuery($str_params);
+			self::checkStatusCode($response['status_code']);
+			$obj_xml = self::parseXml($response['response']);
+		} catch (TwengaException $e) {
+			throw $e;
+		} catch (Exception $e) {
+			throw new TwengaException(self::$translation_object->l($e->getMessage(),basename(__FILE__, '.php')), $e->getCode());
+		}
+		return ((string)$obj_xml->message === 'true') ? true : false;
+	}
+
 	/**
 	 * @param array $params
 	 * @throws TwengaFieldsException
