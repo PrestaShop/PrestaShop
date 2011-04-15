@@ -46,7 +46,7 @@ function desactivate_custom_modules()
 		}
 	}
 	Module::disableByName($uninstallMe);
-	foreach ($modules AS $module)
+	foreach ($aModule AS $module)
 	{
 		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
 		if (!file_exists($file))
