@@ -110,7 +110,7 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.4:';
+	 	$this->version = '1.5';
 		
 	 	parent::__construct();
 	
@@ -316,7 +316,9 @@ class Twenga extends PaymentModule
 			}
 			if(!$bool_save)
 				$this->_errors[] = $this->l('Authentication failed.')."<br />\n"
-					.$this->l('Please review the e-mail sent by Twenga after subscription. If error still occurred, contact Twenga service.');
+				.$this->l('Please review the e-mail sent by Twenga after subscription. If error still occurred, contact Twenga service.');
+			else
+				self::$obj_twenga->addFeed(array('feed_url' => $this->feed_url));
 		}
 	}
 

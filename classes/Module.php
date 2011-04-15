@@ -166,6 +166,27 @@ abstract class ModuleCore
 	}
 
 	/**
+	 * This function enable module $name. If an $name is an array, 
+	 * this will enable all of them
+	 * 
+	 * @param array|string $name 
+	 * @return true if succeed
+	 * @since 1.4.1
+	 */
+	public static function enableByName($name) 
+	{
+		if (!is_array($name))
+			$name = array($name);
+
+		foreach ($name as $k=>$v)
+			$name[$k] = '"'.pSQL($v).'"';
+
+		return Db::getInstance()->Execute('
+		UPDATE `'._DB_PREFIX_.'module`
+		SET `active`= 1
+		WHERE `name` IN ('.implode(',',$name).')');
+	}
+	/**
 	 * Called when module is set to active
 	 */
 	public function enable()
@@ -177,14 +198,33 @@ abstract class ModuleCore
 	}
 	
 	/**
+	 * This function disable module $name. If an $name is an array, 
+	 * this will disable all of them
+	 * 
+	 * @param array|string $name 
+	 * @return true if succeed
+	 * @since 1.4.1
+	 */
+	public static function disableByName($name) 
+	{
+		if (!is_array($name))
+			$name = array($name);
+
+		foreach ($name as $k=>$v)
+			$name[$k] = '"'.pSQL($v).'"';
+
+		return Db::getInstance()->Execute('
+		UPDATE `'._DB_PREFIX_.'module`
+		SET `active`= 0
+		WHERE `name` IN ('.implode(',',$name).')');
+	}
+	
+	/**
 	 * Called when module is set to deactive
 	 */
 	public function disable() 
 	{
-		return Db::getInstance()->Execute('
-		UPDATE `'._DB_PREFIX_.'module`
-		SET `active`= 0
-		WHERE `name` = \''.pSQL($this->name).'\'');
+		return Module::disableByName($this->name);
 	}
 
 	/**
@@ -481,7 +521,7 @@ abstract class ModuleCore
 		$modules = scandir(_PS_MODULE_DIR_);
 		foreach ($modules AS $name)
 		{
-			if (Tools::file_exists_cache($moduleFile = _PS_MODULE_DIR_.'/'.$name.'/'.$name.'.php'))
+			if (Tools::file_exists_cache($moduleFile = _PS_MODULE_DIR_.$name.'/'.$name.'.php'))
 			{
 				if (!Validate::isModuleName($name))
 					die(Tools::displayError().' (Module '.$name.')');
@@ -489,6 +529,33 @@ abstract class ModuleCore
 			}
 		}
 		return $moduleList;
+	}
+
+	/**
+		* Return non native module
+		*
+		* @param int $position Take only positionnables modules
+		* @return array Modules
+		*/
+	public static function getNonNativeModuleList()
+	{
+		$modulesDirOnDisk = Module::getModulesDirOnDisk();
+
+		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		$nativeModules = simplexml_load_file($module_list_xml);
+		$nativeModules = $nativeModules->modules;
+		foreach ($nativeModules as $nativeModulesType)
+			if (in_array($nativeModulesType['type'],array('native','partner')))
+			{
+				$arrNativeModules[] = '""';
+				foreach ($nativeModulesType->module as $module)
+					$arrNativeModules[] = '"'.pSQL($module['name']).'"';
+			}
+
+		return Db::getInstance()->ExecuteS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'module` m
+			WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
 	}
 
 	/**

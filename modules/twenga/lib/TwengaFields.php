@@ -162,7 +162,7 @@ abstract class TwengaFields
 	public function getField($name)
 	{
 		if (!is_array($this->fields))
-			throw new TwengaFieldsException(Tools::displayError('For get a field you have to saved some fields !'));
+			throw new TwengaFieldsException(Tools::displayError('To get a field you have to saved some fields !'));
 		if(!key_exists($name, $this->fields))
 			throw new TwengaFieldsException(Tools::displayError('The field').' <b>'.$name.'</b> '.Tools::displayError('doesn\'t exist.'));
 		return $this->fields[$name];

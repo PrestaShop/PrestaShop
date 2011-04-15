@@ -523,7 +523,7 @@ abstract class AdminTabCore
 				if (Validate::isLoadedObject($object = $this->loadObject()) AND isset($this->fieldImageSettings))
 				{
 					// check if request at least one object with noZeroObject
-					if (isset($object->noZeroObject) AND sizeof($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
+					if (isset($object->noZeroObject) AND sizeof(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 					else
 					{

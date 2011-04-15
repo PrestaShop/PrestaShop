@@ -801,7 +801,7 @@ INSERT INTO `PREFIX_meta_lang` (`id_meta`, `id_lang`, `title`, `description`, `k
 (5, 4, 'Hersteller', 'Herstellerliste', 'Hersteller', 'hersteller'),
 (6, 4, 'Neue Produkte', 'Unsere neuen Produkte', 'neu, Produkte', 'neue-Produkte'),
 (7, 4, 'Kennwort vergessen', 'Geben Sie die E-Mailadresse ein, die Sie zum Einloggen benutzen, damit Sie eine E-Mail mit dem neuen Kennwort erhalt', 'vergessen, Kennwort, E-Mail, neu, Reset', 'kennwort-wiederherstellung'),
-(8, 4, 'Preise fallen', 'Unsere Sonderangebote', 'besonders, Preise fallen', 'preise-fallen'),
+(8, 4, 'Angebote', 'Unsere Sonderangebote', 'besonders, Angebote', 'angebote'),
 (9, 4, 'Sitemap', 'Verloren? Finden Sie, was Sie suchen', 'sitemap', 'sitemap'),
 (10, 4, 'Zulieferer', 'Zuliefererliste', 'Zulieferer', 'zulieferer'),
 (11, 4, 'Adresse', '', '', 'adresse'),

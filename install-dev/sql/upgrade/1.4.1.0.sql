@@ -19,4 +19,9 @@ UPDATE `PREFIX_cms_lang` set link_rewrite = "uber-uns" where link_rewrite like "
 
 ALTER TABLE `PREFIX_connections` CHANGE `ip_address` `ip_address` BIGINT NULL DEFAULT NULL;
 
+
+UPDATE `PREFIX_meta_lang`
+SET `title` = 'Angebote', `keywords` = 'besonders, Angebote', `url_rewrite` = 'angebote' WHERE url_rewrite = 'preise-fallen';
+
+
 /* PHP:alter_cms_block(); */;

@@ -23,10 +23,19 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<style>
+input.myButtonTricksTS
+{
+	font-size:9px !important;
+	font-weight:bolder;
+	cursor:pointer;
+	padding:3px;
+}
+</style>
 <div class="trustedshops-form" style="text-align:center;border:1px solid #ccc;padding:10px;">
 	<div style="float:left;width:72px;">
 		<form name="formSiegel" method="post" action="https://www.trustedshops.com/shop/certificate.php" target="_blank">
-			<input type="image" style="border:0;margin:10px 0 0 0;" border="0" src="{$module_dir}/img/seal.png" title="{l s='Trusted Shops Seal of Approval - Click to verify.' mod='trustedshops'}">
+			<input type="image" style="border:0;margin:10px 0 0 0;" border="0" src="{$module_dir}img/siegel.gif" title="{l s='Trusted Shops Seal of Approval - Click to verify.' mod='trustedshops'}">
 			<input name="shop_id" type="hidden" value="{$buyer_protection.shop_id}">
 		</form>
 	</div>
@@ -45,7 +54,7 @@
 	</div>
 	<div class="clear"></div>
 	<div style="text-align:right;width:100%;">
-		<input type="submit" id="btnProtect" style="display:inline-block;"name="btnProtect" class="button" value="{l s='Register for Trusted Shops Buyer Protection' mod='trustedshops'}"/>
+		<input class="myButtonTricksTS" type="submit" id="btnProtect" style="display:inline-block;" name="btnProtect" value="{l s='Register for Trusted Shops Buyer Protection' mod='trustedshops'}"/>
 	</div>
 	</form>
 </div>

@@ -339,7 +339,7 @@ class Hipay extends PaymentModule
     <fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Hipay').'</legend>
     '.$this->l('Hipay is a secure electronic wallet which has the European Bank approval. Hipay offer you many opportunities without need to negotiate with a bank. Easy and free to use, Hipay\'s solution of the implementation is a real asset for an e-commerce website that wants to expand in Europe: secure payment by international card, local payment solutions, bank transfers...').'
 			<br />
-			<br />'.$this->l('Notice: if you want to refund a payment, please log in to your Hipay account then go to Merchant Management > Sales management.').'
+			<!-- <br />'.$this->l('Notice: if you want to refund a payment, please log in to your Hipay account then go to Merchant Management > Sales management.').'-->
 		</fieldset>
 		<div class="clear">&nbsp;</div>
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Configuration').'</legend>

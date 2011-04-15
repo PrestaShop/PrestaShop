@@ -33,7 +33,8 @@ if (function_exists('date_default_timezone_set'))
 
 define('_PS_MODULE_DIR_', realpath(INSTALL_PATH).'/../modules/');
 define('_PS_INSTALLER_PHP_UPGRADE_DIR_', 'php/');
-
+// desactivate non-native module 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'desactivatecustommodules.php');
 // utf-8 conversion if needed (before v0.9.8.1 utf-8 was badly supported)
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'utf8.php');
 // Configuration cleaner in order to get unique configuration names
@@ -196,6 +197,9 @@ if(!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
 
 $sqlContent = '';
+if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
+	desactivate_custom_modules();
+
 foreach($neededUpgradeFiles AS $version)
 {
 	$file = INSTALL_PATH.'/sql/upgrade/'.$version.'.sql';
