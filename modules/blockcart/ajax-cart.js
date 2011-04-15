@@ -173,7 +173,7 @@ var ajaxCart = {
 			$('.filled').removeClass('filled');
 		}
 		else
-			$('.ajax_add_to_cart_button').attr('disabled', 'disabled');
+			$(callerElement).attr('disabled', 'disabled');
 
 		if ($('#cart_block #cart_block_list').hasClass('collapsed'))
 			this.expand();
@@ -220,7 +220,7 @@ var ajaxCart = {
 				if (addedFromProductPage)
 					$('body#product p#add_to_cart input').removeAttr('disabled').addClass('exclusive').removeClass('exclusive_disabled');
 				else
-					$('.ajax_add_to_cart_button').removeAttr('disabled');
+					$(callerElement).removeAttr('disabled');
 			}
 		});
 	},
