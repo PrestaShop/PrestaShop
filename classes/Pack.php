@@ -82,10 +82,9 @@ class PackCore extends Product
 
 	public static function isInStock($id_product)
 	{
-		// Not enough, the quantity must be > to the item quantity of the pack, not just > 0
 		$items = self::getItems((int)($id_product), Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($items AS $item)
-			if ($item->quantity == 0 AND !$item->isAvailableWhenOutOfStock((int)($item->out_of_stock)))
+			if ($item->quantity < $item->pack_quantity AND !$item->isAvailableWhenOutOfStock((int)($item->out_of_stock)))
 				return false;
 		return true;
 	}
