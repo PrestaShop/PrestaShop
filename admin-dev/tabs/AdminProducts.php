@@ -45,7 +45,7 @@ class AdminProducts extends AdminTab
 		$this->view = false;
 		$this->duplicate = true;
 		$this->imageType = 'jpg';
-
+		
 		$this->fieldsDisplay = array(
 			'id_product' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 20),
 			'image' => array('title' => $this->l('Photo'), 'align' => 'center', 'image' => 'p', 'width' => 45, 'orderby' => false, 'filter' => false, 'search' => false),
@@ -350,7 +350,13 @@ class AdminProducts extends AdminTab
 						$id_category = Tools::getValue('id_category');
 						$category_url = empty($id_category) ? '' : '&id_category='.$id_category;
 
-						$this->deleteImage($object->id);
+						if ($this->table == 'product')
+						{
+							$product = new Product($object->id);
+							$product->deleteImages();
+						}else
+							$this->deleteImage($object->id);
+							
 						if ($this->deleted)
 						{
 							$object->deleted = 1;
