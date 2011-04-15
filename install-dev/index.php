@@ -877,7 +877,7 @@ if ($lm->getIncludeTradFilename())
 						if ($file != '.' AND $file != '..')
 						{
 							$version = str_replace('.sql', '', $file);							
-							if (version_compare($version, _PS_VERSION_) == 1 AND version_compare(INSTALL_VERSION, $version) != -1)
+							if (version_compare($version, $oldversion) == 1 AND version_compare(INSTALL_VERSION, $version) != -1)
 							{
 								$major = false;
 								if (in_array($version, array('0.9.7.2', '1.0.0.8', '1.1.0.5', '1.2.5.0', '1.3.0.10', '1.4.0.17')))
