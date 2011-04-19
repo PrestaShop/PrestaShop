@@ -30,6 +30,9 @@ abstract class ObjectModelCore
 	/** @var integer Object id */
 	public $id;
 
+	/** @var integer lang id */
+	protected $id_lang = NULL;
+	
 	/** @var string SQL Table name */
 	protected $table = NULL;
 
@@ -99,6 +102,11 @@ abstract class ObjectModelCore
 	 */
 	public function __construct($id = NULL, $id_lang = NULL)
 	{
+		if ($id_lang != NULL && Validate::isLoadedObject(new Language($id_lang)))
+			$this->id_lang = $id_lang;
+		elseif ($id_lang != NULL)
+			die(Tools::displayError());
+			
 	 	/* Connect to database and check SQL table/identifier */
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
 			die(Tools::displayError());
@@ -329,29 +337,35 @@ abstract class ObjectModelCore
 	 		die(Tools::displayError());
 
 		$fields = array();
-		$languages = Language::getLanguages();
-		$defaultLanguage = Configuration::get('PS_LANG_DEFAULT');
-		foreach ($languages as $language)
-		{
-			$fields[$language['id_lang']]['id_lang'] = $language['id_lang'];
-			$fields[$language['id_lang']][$this->identifier] = (int)($this->id);
-			foreach ($fieldsArray as $field)
-			{
-	 			/* Check fields validity */
-			 	if (!Validate::isTableOrIdentifier($field))
-	 				die(Tools::displayError());
 
-				/* Copy the field, or the default language field if it's both required and empty */
-				if (isset($this->{$field}[$language['id_lang']]) AND !empty($this->{$field}[$language['id_lang']]))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$language['id_lang']]);
-				elseif (in_array($field, $this->fieldsRequiredLang))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$defaultLanguage]);
-				else
-					$fields[$language['id_lang']][$field] = '';
-			}
-		}
+		if($this->id_lang == NULL)
+			foreach (Language::getLanguages() as $language)
+				$this->makeTranslationFields($fields, $fieldsArray, $language['id_lang']);
+		else
+			$this->makeTranslationFields($fields, $fieldsArray, $this->id_lang);
 
 		return $fields;
+	}
+
+	protected function makeTranslationFields(&$fields, &$fieldsArray, $id_language)
+	{
+		$fields[$id_language]['id_lang'] = $id_language;
+		$fields[$id_language][$this->identifier] = (int)($this->id);
+		foreach ($fieldsArray as $field)
+		{
+			/* Check fields validity */
+			if (!Validate::isTableOrIdentifier($field))
+				die(Tools::displayError());
+
+			/* Copy the field, or the default language field if it's both required and empty */
+			if ((!$this->id_lang AND isset($this->{$field}[$id_language]) AND !empty($this->{$field}[$id_language])) 
+			OR ($this->id_lang AND isset($this->$field) AND !empty($this->$field)))
+				$fields[$id_language][$field] = $this->id_lang ? pSQL($this->$field) : pSQL($this->{$field}[$id_language]);
+			elseif (in_array($field, $this->fieldsRequiredLang))
+				$fields[$id_language][$field] = $this->id_lang ? pSQL($this->$field) : pSQL($this->{$field}[Configuration::get('PS_LANG_DEFAULT')]);
+			else
+				$fields[$id_language][$field] = '';
+		}
 	}
 
 	/**
