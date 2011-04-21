@@ -3556,7 +3556,7 @@ class AdminProducts extends AdminTab
 				</td>
 			</div>
 		</tr>';
-
+		// param multipleSeparator:'||' ajouté à cause de bug dans lib autocomplete
 		echo '<script type="text/javascript">
 								urlToCall = null;
 								/* function autocomplete */
@@ -3571,6 +3571,7 @@ class AdminProducts extends AdminTab
 											mustMatch:true,
 											scroll:false,
 											cacheLength:0,
+											multipleSeparator:\'||\', 
 											formatItem: function(item) {
 												return item[1]+\' - \'+item[0];
 											}

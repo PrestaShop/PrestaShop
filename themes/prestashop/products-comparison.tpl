@@ -67,10 +67,10 @@
 				{/if}
 				<!-- availability -->
 				<p class="comparison_availability_statut">
-					{if !(($product->quantity == 0 && !$product->available_later) OR ($product->quantity != 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}
+					{if !(($product->quantity <= 0 && !$product->available_later) OR ($product->quantity != 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}
 						<span id="availability_label">{l s='Availability:'}</span>
-						<span id="availability_value"{if $product->quantity == 0} class="warning-inline"{/if}>
-							{if $product->quantity == 0}
+						<span id="availability_value"{if $product->quantity <= 0} class="warning-inline"{/if}>
+							{if $product->quantity <= 0}
 								{if $allow_oosp}
 									{$product->available_later|escape:'htmlall':'UTF-8'}
 								{else}
