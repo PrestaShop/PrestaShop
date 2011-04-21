@@ -119,12 +119,13 @@ class PackCore extends Product
 	public static function getPacksTable($id_product, $id_lang, $full = false, $limit = NULL)
 	{
 		$packs = Db::getInstance()->getValue('
-		SELECT GROUP_CONCAT(a.`id_product_pack`, ",")
+		SELECT GROUP_CONCAT(a.`id_product_pack`)
 		FROM `'._DB_PREFIX_.'pack` a
-		WHERE a.`id_product_item` = '.(int)$id_product.')');
+		WHERE a.`id_product_item` = '.(int)$id_product);
+
 		if (!(int)$packs)
 			return array();
-		
+
 		$sql = '
 		SELECT p.*, pl.*, i.`id_image`, il.`legend`, t.`rate`
 		FROM `'._DB_PREFIX_.'product` p
