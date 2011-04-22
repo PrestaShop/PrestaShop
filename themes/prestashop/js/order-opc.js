@@ -593,7 +593,7 @@ $(function() {
 		$.ajax({
            type: 'POST',
            url: orderOpcUrl,
-           async: true,
+           async: false,
            cache: false,
            dataType : "json",
            data: 'ajax=true&method=updateMessage&message=' + encodeURIComponent($('#message').val()) + '&token=' + static_token ,
