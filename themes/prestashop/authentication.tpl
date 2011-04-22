@@ -130,7 +130,7 @@ $(function(){ldelim}
 						<input type="radio" name="id_gender" id="id_gender2" value="2" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == '2'}checked="checked"{/if}>
 						<label for="id_gender2" class="top">{l s='Ms.'}</label>
 					</p>
-					<p class="required text">
+										<p class="required text">
 						<label for="firstname">{l s='First name'}</label>
 						<input type="text" class="text" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}">
 						<input type="hidden" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}">
@@ -188,31 +188,38 @@ $(function(){ldelim}
 					</p>
 					{/if}
 					<h3>{l s='Delivery address'}</h3>
+					{foreach from=$dlv_all_fields item=field_name}
+					{if $field_name eq "company"}
 					<p class="text">
 						<label for="company">{l s='Company'}</label>
 						<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
 					</p>
+					{elseif $field_name eq "vat_number"}
 					<div id="vat_number" style="display:none;">
 						<p class="text">
 							<label for="vat_number">{l s='VAT number'}</label>
 							<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
 						</p>
 					</div>
+					{elseif $field_name eq "address1"}
 					<p class="required text">
 						<label for="address1">{l s='Address'}</label>
 						<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}">
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "postcode"}
 					<p class="required postcode text">
 						<label for="postcode">{l s='Zip / Postal Code'}</label>
 						<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());">
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "city"}
 					<p class="required text">
 						<label for="city">{l s='City'}</label>
 						<input type="text" class="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{/if}">
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "country"}
 					<p class="required select">
 						<label for="id_country">{l s='Country'}</label>
 						<select name="id_country" id="id_country">
@@ -223,6 +230,7 @@ $(function(){ldelim}
 						</select>
 						<sup>*</sup>
 					</p>
+					{* DEBUG: elseif $field_name eq "state" *}
 					<p class="required id_state select">
 						<label for="id_state">{l s='State'}</label>
 						<select name="id_state" id="id_state">
@@ -230,11 +238,12 @@ $(function(){ldelim}
 						</select>
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "phone"}
 					<p class="text">
 						<label for="phone">{l s='Phone'}</label>
 						<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"> <sup style="color:red;">*</sup>
 					</p>
-					
+					{/if}{/foreach}
 					<p class="text submit">
 						<input type="submit" class="button" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'}">
 					</p>
@@ -331,45 +340,55 @@ $(function(){ldelim}
 	</fieldset>
 	<fieldset class="account_creation">
 		<h3>{l s='Your address'}</h3>
+		{foreach from=$dlv_all_fields item=field_name}
+		{if $field_name eq "company"}
 		<p class="text">
 			<label for="company">{l s='Company'}</label>
 			<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
 		</p>
+		{elseif $field_name eq "vat_number"}
 		<div id="vat_number" style="display:none;">
 			<p class="text">
 				<label for="vat_number">{l s='VAT number'}</label>
 				<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
 			</p>
 		</div>
+		{elseif $field_name eq "firstname"}
 		<p class="required text">
 			<label for="firstname">{l s='First name'}</label>
 			<input type="text" class="text" id="firstname" name="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq "lastname"}
 		<p class="required text">
 			<label for="lastname">{l s='Last name'}</label>
 			<input type="text" class="text" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq "address1"}
 		<p class="required text">
 			<label for="address1">{l s='Address'}</label>
 			<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq "address2"}
 		<p class="text">
 			<label for="address2">{l s='Address (Line 2)'}</label>
 			<input type="text" class="text" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
 		</p>
+		{elseif $field_name eq "postcode"}
 		<p class="required postcode text">
 			<label for="postcode">{l s='Zip / Postal Code'}</label>
 			<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq "city"}
 		<p class="required text">
 			<label for="city">{l s='City'}</label>
 			<input type="text" class="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{/if}" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq "country"}
 		<p class="required select">
 			<label for="id_country">{l s='Country'}</label>
 			<select name="id_country" id="id_country">
@@ -380,6 +399,7 @@ $(function(){ldelim}
 			</select>
 			<sup>*</sup>
 		</p>
+		{* DEBUG: elseif $field_name eq "state" *}
 		<p class="required id_state select">
 			<label for="id_state">{l s='State'}</label>
 			<select name="id_state" id="id_state">
@@ -387,6 +407,8 @@ $(function(){ldelim}
 			</select>
 			<sup>*</sup>
 		</p>
+		{/if}
+		{/foreach}
 		<p class="textarea">
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>

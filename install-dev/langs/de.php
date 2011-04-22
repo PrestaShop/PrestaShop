@@ -140,7 +140,7 @@ $_LANG['Update is complete!'] = 'Aktualisierung beendet!';
 $_LANG['Upgrade: get the latest stable version!'] = 'Aktualisierung: Installieren Sie die neueste Version von PrestaShop';
 $_LANG['Verify now!'] = 'Testen der SQL-Verbindung';
 $_LANG['Verify system compatibility'] = 'Systemkompatibilität';
-$_LANG['WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt).'] = 'VORSICHT: Aus Sicherheitsgründen löschen Sie bitte den Ordner \'/install\' und die readme-Dateien (readme_fr.txt, readme_en.txt, readme_es.txt).';
+$_LANG['WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'] = 'VORSICHT: Aus Sicherheitsgründen löschen Sie bitte den Ordner \'/install\' und die readme-Dateien (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).';
 $_LANG['Warning: a manual backup is HIGHLY recommended before continuing!'] = 'Vorsicht: eine manuelle Sicherung ist UNERLÄSSLICH, bevor mit der Aktualisierung der PrestaShop-Anwendung begonnen wird, um jeglichen versehentlichen Datenverlust zu verhindern';
 $_LANG['Welcome'] = 'Willkommen';
 $_LANG['Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.'] = 'Bienvenue dans l\'installation de PrestaShop '.INSTALL_VERSION;
@@ -279,7 +279,7 @@ $_LANG['Link to the validator'] = 'Link zum Validator';
 $_LANG['Online Theme Validator'] = 'Online Themenvalidator';
 $_LANG['If your theme is not valid, you may experience some problems in your front-office aspect, but don\'t panic ! To solve this, you can make it compatible by correcting the validators errors or by using a theme compatible with '] = 'Sollte Ihr Thema nicht kompatibel sein, könnten einige Probleme im Front-End auftreten. Sie können die Kompatibilität wieder einstellen, indem Sie im Backend Unter Einstellungen die entsprechende Einstellung treffen';
 $_LANG['version'] = 'Version';
-
+$_LANG['In this aim, use our'] = 'Verwenden Sie dazu unseren';
 
 
 

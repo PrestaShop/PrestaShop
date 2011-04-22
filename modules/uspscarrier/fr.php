@@ -24,6 +24,8 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_7545c5d3ad246a683a197a2903a4d5e6'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_b089be65fd32939f1bf1c4aeff1a7457'] = 'Non rectangular';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f8320b26d30ab433c5a54546d21f414c'] = 'False';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f827cf462f62848df37c5e1e94a4da74'] = 'True';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_386aad80d82f8245e9ef80352a2240e8'] = 'Tous les articles en un seul paquet';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_f35eb2a913a3fd6fd8e661012cf0ebd8'] = 'Découper un article par paquet';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f57cff5425b6e64843c5f066c5b310d0'] = 'Statut du module USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_09bdd414ce843927aa3dceadc8bce034'] = 'Le transporteur USPS est fonctionnel !';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_ec8b84c83dfee20afa4c2f35245a254b'] = 'Le transporteur USPS n\'est pas encore complètement configuré, vous devez :';
@@ -63,6 +65,8 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_8d2ee0603dfce09b57d60db628cde269'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_795de10b1bdcb843b3703c63ad577fc6'] = 'Choisissez le type de paquet par défaut';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_93c8645dbbc33cf8d126266a827a5501'] = 'Machinable';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_67cd0f5256c40c16a6cfd6effe3ab06b'] = 'Choisissez si cela peut être traité par une machine ou non par défaut';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_8d6bd50f3fe3ee2f4513066c25e5fb4a'] = 'Mode de calcul';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_c5238c5f72dee585afdf4bddf6de518e'] = 'Utilisation du mode de calcul : \"Tous les articles dans un seul paquet\" utilisera automatiquement la taille des emballages par défaut, le type d\'emballage et de livraison. Les configurations spécifiques pour les catégories ou un produit ne seront pas utilisées.';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_5cdd307ba6e260beb4801c0c10e22a3a'] = 'Service de livraison';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_78945de8de090e90045d299651a68a9b'] = 'Disponible';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_2d25c72c1b18e562f6654fff8e11711e'] = 'Non disponible';

@@ -48,6 +48,7 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_90b95ae88150c6a34c4129dc4f1ebbd
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c15b40b8c535191f6f0b6f9beaced3cf'] = 'Seguro complementario N4';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_b67a442fff3ca0a03ea253b0668f946d'] = 'Seguro complementario N5';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_33cbd0d8b6476501f55a8320481ec0f1'] = 'Lista de países :';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_aef71ba4fd060dea2e2c76d1b5076caf'] = 'Puede elegir varios países pulsando Ctrl mientras selecciona los países';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_0309a6c666a7a803fdb9db95de71cf01'] = 'Francia';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_6c1674d14bf5f95742f572cddb0641a7'] = 'Bélgica';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_06630c890abadde9228ea818ce52b621'] = 'Luxemburgo';
@@ -120,6 +121,7 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_6c530987d533793b0f25fb18807b69c
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_3d2da0d2e731d59465a92f13216cf82d'] = 'La página señas';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_06b3355cd8a61603396c7e453bdb1025'] = 'Dirección vacía: ¿está seguro de haber introducio una dirección válida en la página Señas?';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Problemas para obtener las direcciones de servicio web MondialRelay: los servidores de Mondial Relay pueden estar fuera de servicio';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'No hay Punto de entrega cerca de su domicilio, por favor cambie su dirección o utilice otro modo de transporte';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = '(sin IVA)';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = '(IVA incluido)';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = '¡Gratis!';

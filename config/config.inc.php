@@ -42,8 +42,9 @@ ini_set('upload_max_filesize', '100M');
 ini_set('default_charset', 'utf-8');
 ini_set('magic_quotes_runtime', 0);
 
-/* Correct Apache charset */
-header('Content-Type: text/html; charset=utf-8');
+// correct Apache charset (except if it's too late 
+if(!headers_sent())
+	header('Content-Type: text/html; charset=utf-8');
 
 /* No settings file? goto installer...*/
 if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
@@ -58,10 +59,12 @@ require_once(dirname(__FILE__).'/settings.inc.php');
 
 /* Include all defines */
 require_once(dirname(__FILE__).'/defines.inc.php');
-/* Defines are not in defines.inc.php file for no conflicts in installer */
-define('_PS_MAGIC_QUOTES_GPC_',         get_magic_quotes_gpc());
-define('_PS_MODULE_DIR_',           _PS_ROOT_DIR_.'/modules/');
-define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
+if (!defined('_PS_MAGIC_QUOTES_GPC_'))
+	define('_PS_MAGIC_QUOTES_GPC_',         get_magic_quotes_gpc());
+if (!defined('_PS_MODULE_DIR_'))
+	define('_PS_MODULE_DIR_',           _PS_ROOT_DIR_.'/modules/');
+if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
+	define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 
 /* Autoload */
 require_once(dirname(__FILE__).'/autoload.php');

@@ -1593,26 +1593,40 @@ class ProductCore extends ObjectModel
 		}
 		$quantity = ($id_cart AND $cart_quantity) ? $cart_quantity : $quantity;
 		$id_currency = (int)(Validate::isLoadedObject($cur_cart) ? $cur_cart->id_currency : ((isset($cookie->id_currency) AND (int)($cookie->id_currency)) ? $cookie->id_currency : Configuration::get('PS_CURRENCY_DEFAULT')));
-		if (!$id_address)
-			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 
-		if (Tax::excludeTaxeOption())
-			$usetax = false;
 
+		// retrieve address informations
       $id_country = (int)Country::getDefaultCountryId();
 		$id_state = 0;
 		$id_county = 0;
-		$id_state = 0;
 
 
-		$address_infos = Address::getCountryAndState($id_address);
-		if ($address_infos['id_country'])
+		if (!$id_address)
 		{
-			$id_country = (int)($address_infos['id_country']);
-			$id_state = (int)($address_infos['id_state']);
-			$id_county = (int)County::getIdCountyByZipCode($address_infos['id_state'], $address_infos['postcode']);
+			if ($id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
+			{
+				$address_infos = Address::getCountryAndState($id_address);
+				if ($address_infos['id_country'])
+				{
+					$id_country = (int)($address_infos['id_country']);
+					$id_state = (int)($address_infos['id_state']);
+					$postcode = (int)$address_infos['postcode'];
+
+					$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
+				}
+			} else if (isset($cookie->id_country)) {
+				// fetch address from cookie
+		      $id_country = (int)$cookie->id_country;
+				$id_state = (int)$cookie->id_state;
+				$postcode = (int)$cookie->postcode;
+
+				$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
+			}
 
 		}
+
+		if (Tax::excludeTaxeOption())
+			$usetax = false;
 
 		if ($usetax != false AND !empty($address_infos['vat_number']) AND $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY') AND Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
@@ -1649,7 +1663,7 @@ class ProductCore extends ObjectModel
 			$product_attribute_label = 'NULL';
 		else
 			$product_attribute_label = ($id_product_attribute === false ? 'false' : $id_product_attribute);
-		$cacheId = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_group.'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0');
+		$cacheId = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$id_county.'-'.$id_group.'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.$with_ecotax;
 
 		if (isset(self::$_prices[$cacheId]))
 			return self::$_prices[$cacheId];
@@ -1658,13 +1672,13 @@ class ProductCore extends ObjectModel
 		$cacheId2 = $id_product.'-'.$id_product_attribute;
 		if (!isset(self::$_pricesLevel2[$cacheId2]))
 			self::$_pricesLevel2[$cacheId2] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT p.`price`, p.`ecotax`,
-			'.($id_product_attribute ? 'pa.`price`' : 'IFNULL((SELECT pa.price FROM `'._DB_PREFIX_.'product_attribute` pa WHERE id_product = '.(int)($id_product).' AND default_on = 1), 0)').' AS attribute_price
+			SELECT p.`price`,
+			'.($id_product_attribute ? 'pa.`price`' : 'IFNULL((SELECT pa.price FROM `'._DB_PREFIX_.'product_attribute` pa WHERE id_product = '.(int)($id_product).' AND default_on = 1), 0)').' AS attribute_price,
+			'.($id_product_attribute ? 'pa.`ecotax`' : 'p.`ecotax`').'
 			FROM `'._DB_PREFIX_.'product` p
 			'.($id_product_attribute ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.`id_product_attribute` = '.(int)($id_product_attribute) : '').'
 			WHERE p.`id_product` = '.(int)($id_product));
 		$result = self::$_pricesLevel2[$cacheId2];
-
 
 		// Cache for specific prices
 		$cacheId3 = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_group.'-'.$quantity;
@@ -2310,12 +2324,12 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateTags($id_product_old, $id_product_new)
 	{
-		$resource = Db::getInstance()->ExecuteS('SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)($id_product_old));
+		$tags = Db::getInstance()->ExecuteS('SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)($id_product_old));
 		if (!Db::getInstance()->NumRows())
 			return true;
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`) VALUES';
-		while ($row = Db::getInstance()->nextRow($resource))
-			$query .= ' ('.(int)($id_product_new).', '.(int)($row['id_tag']).'),';
+		foreach($tags as $tag)
+			$query .= ' ('.(int)($id_product_new).', '.(int)($tag['id_tag']).'),';
 		$query = rtrim($query, ',');
 		return Db::getInstance()->Execute($query);
 	}

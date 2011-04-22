@@ -288,16 +288,24 @@ class OrderCore extends ObjectModel
 		$this->total_products -= $productPriceWithoutTax;
 		$this->total_products_wt -= $productPrice;
 		$this->total_shipping = $cart->getOrderShippingCost();
+
 		/* It's temporary fix for 1.3 version... */
 		if ($orderDetail->product_quantity_discount != '0.000000')
 			$this->total_paid -= ($productPrice + $shippingDiff);
 		else
 			$this->total_paid = $cart->getOrderTotal();
+
 		$this->total_paid_real -= ($productPrice + $shippingDiff);
 
 		/* Prevent from floating precision issues (total_products has only 2 decimals) */
 		if ($this->total_products < 0)
 			$this->total_products = 0;
+
+		if ($this->total_paid < 0)
+			$this->total_paid = 0;
+
+		if ($this->total_paid_real < 0)
+			$this->total_paid_real = 0;
 
 		/* Prevent from floating precision issues */
 		$this->total_paid = number_format($this->total_paid, 2, '.', '');

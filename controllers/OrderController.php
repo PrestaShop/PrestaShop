@@ -122,6 +122,19 @@ class OrderControllerCore extends ParentOrderController
 		}
 	}
 
+	private function processAddressFormat()
+	{
+		$delivery = new Address((int)(self::$cart->id_address_delivery));
+		$invoice = new Address((int)(self::$cart->id_address_invoice));
+
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($invoice->id_country);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($delivery->id_country);
+
+		self::$smarty->assign('inv_adr_fields', $inv_adr_fields);
+		self::$smarty->assign('dlv_adr_fields', $dlv_adr_fields);
+
+	}
+
 	public function displayContent()
 	{
 		parent::displayContent();
@@ -132,6 +145,7 @@ class OrderControllerCore extends ParentOrderController
 				self::$smarty->display(_PS_THEME_DIR_.'shopping-cart.tpl');
 				break;
 			case 1:
+				$this->processAddressFormat();
 				self::$smarty->display(_PS_THEME_DIR_.'order-address.tpl');
 				break;
 			case 2:
@@ -161,6 +175,7 @@ class OrderControllerCore extends ParentOrderController
 			Tools::redirect('order.php?step=1');
 		$delivery = new Address((int)(self::$cart->id_address_delivery));
 		$invoice = new Address((int)(self::$cart->id_address_invoice));
+
 		if ($delivery->deleted OR $invoice->deleted)
 		{
 			if ($delivery->deleted)

@@ -38,7 +38,7 @@
 <table style="font-size: 9px;">
 	{foreach $days_datas as $one_day}
 	<tr>
-		<td style="width: 70px;">{l s=$one_day['day']}</td>
+		<td style="width: 70px;">{$one_day['day']}</td>
 		<td>{$one_day['hours']}</td>
 	</tr>
 	{/foreach}

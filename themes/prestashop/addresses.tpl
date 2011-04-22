@@ -36,23 +36,25 @@
 <h1>{l s='My addresses'}</h1>
 <p>{l s='Please configure the desired billing and delivery addresses to be preselected when placing an order. You may also add additional addresses, useful for sending gifts or receiving your order at the office.'}</p>
 
-{if $addresses}
+{if $ordered_fields}
 <div class="addresses">
 	<h3>{l s='Your addresses are listed below.'}</h3>
 	<p>{l s='Be sure to update them if they have changed.'}</p>
-
+	{assign var="adrs_style" value=$addresses_style}
 	{foreach from=$addresses item=address name=myLoop}
 	<ul class="address {if $smarty.foreach.myLoop.last}last_item{elseif $smarty.foreach.myLoop.first}first_item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{else}item{/if}">
 		<li class="address_title">{$address.alias}</li>
-		{if $address.company}<li class="address_company">{$address.company}</li>{/if}
-		{if $address.vat_number}<li class="address_company">{$address.vat_number}</li>{/if}
-		<li class="address_name">{$address.firstname} {$address.lastname}</li>
-		<li class="address_address1">{$address.address1}</li>
-		{if $address.address2}<li class="address_address2">{$address.address2}</li>{/if}
-		<li class="address_city">{$address.postcode} {$address.city}</li>
-		<li class="address_country">{$address.country}{if isset($address.state)} ({$address.state}){/if}</li>
-		{if $address.phone}<li class="address_phone">{$address.phone}</li>{/if}
-		{if $address.phone_mobile}<li class="address_phone_mobile">{$address.phone_mobile}</li>{/if}
+		{foreach from=$ordered_fields name=adr_loop item=field_item}
+		{if $field_item eq "company" && $address.company}<li class="address_company">{$address.company}</li>
+		{elseif $field_item eq "vat_number" && $address.vat_number}<li class="address_company">{$address.vat_number}</li>
+		{elseif $field_item eq "address2" && $address.address2}<li class="address_address2">{$address.address2}</li>
+		{elseif $field_item eq "phone" && $address.phone}<li class="address_phone">{$address.phone}</li>
+		{elseif $field_item eq "phone_mobile" && $address.phone_mobile}<li class="address_phone_mobile">{$address.phone_mobile}</li>
+		{else}
+			{assign var=address_words value=" "|explode:$field_item} 
+			<li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$address.$word_item|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
+		{/if}
+		{/foreach}
 		<li class="address_update"><a href="{$link->getPageLink('address.php', true)}?id_address={$address.id_address|intval}" title="{l s='Update'}">{l s='Update'}</a></li>
 		<li class="address_delete"><a href="{$link->getPageLink('address.php', true)}?id_address={$address.id_address|intval}&amp;delete" onclick="return confirm('{l s='Are you sure?'}');" title="{l s='Delete'}">{l s='Delete'}</a></li>
 	</ul>

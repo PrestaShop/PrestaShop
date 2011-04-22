@@ -90,7 +90,7 @@ class AdminEmployees extends AdminTab
 			return;
 		$profiles = Profile::getProfiles((int)($cookie->id_lang));
 
-		echo '<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
+		echo '<script type="text/javascript" src="'._PS_JS_DIR_.'/jquery/jquery-colorpicker.js"></script>
 		 	 <script type="text/javascript">
 				var employeePage = true;
 		 	 </script>
@@ -118,8 +118,9 @@ class AdminEmployees extends AdminTab
 					<input type="text" size="33" name="email" value="'.htmlentities($this->getFieldValue($obj, 'email'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
 				</div><div class="clear">&nbsp;</div>
 				<label>'.$this->l('Back office color:').' </label>
-				<div class="margin-form">
-					<input type="color" data-hex="true" class="color mColorPickerInput" name="bo_color" value="'.htmlentities($this->getFieldValue($obj, 'bo_color'), ENT_COMPAT, 'UTF-8').'" />
+				<div class="margin-form">';
+				// Note : width= fix Firefox 4 display bug related to colorpicker librarie
+				echo '<input type="color" width="50px" data-hex="true" class="color mColorPickerInput" name="bo_color" value="'.htmlentities($this->getFieldValue($obj, 'bo_color'), ENT_COMPAT, 'UTF-8').'" />
 					<p>'.$this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")</p>
 				</div><div class="clear">&nbsp;</div>
 				<label>'.$this->l('Language:').' </label>

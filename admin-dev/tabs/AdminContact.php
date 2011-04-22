@@ -59,6 +59,7 @@ class AdminContact extends AdminPreferences
 			'PS_SHOP_FAX' => array('title' => $this->l('Fax:'), 'validation' => 'isGenericName', 'size' => 30, 'type' => 'text'),
 		);
 		parent::__construct();
+
 	}
 
 	public function postProcess()

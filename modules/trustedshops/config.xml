@@ -2,7 +2,7 @@
 <module>
 	<name>trustedshops</name>
 	<displayName>Trusted Shops Customer Rating</displayName>
-	<version>1.1</version>
+	<version>1.2</version>
 	<description>Boost consumer confidence and turn more shoppers into buyers.</description>
 	<author></author>
 	<tab>payment_security</tab>

@@ -74,6 +74,8 @@ define('_PS_MAIL_DIR_',             _PS_ROOT_DIR_.'/mails/');
 define('_PS_ALL_THEMES_DIR_',       _PS_ROOT_DIR_.'/themes/');
 define('_PS_THEME_DIR_',            _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
 define('_PS_IMG_DIR_',              _PS_ROOT_DIR_.'/img/');
+if (!defined('_PS_MODULE_DIR_'))
+	define('_PS_MODULE_DIR_',              _PS_ROOT_DIR_.'/modules/');
 define('_PS_CAT_IMG_DIR_',          _PS_IMG_DIR_.'c/');
 define('_PS_STORE_IMG_DIR_',		_PS_IMG_DIR_.'st/');
 define('_PS_PROD_IMG_DIR_',         _PS_IMG_DIR_.'p/');
@@ -95,6 +97,10 @@ define('_PS_PEAR_XML_PARSER_PATH_', _PS_TOOL_DIR_.'pear_xml_parser/');
 /* settings php */
 define('_PS_TRANS_PATTERN_',            '(.*[^\\\\])');
 define('_PS_MIN_TIME_GENERATE_PASSWD_', '360');
+if (!defined('_PS_MAGIC_QUOTES_GPC_'))
+	define('_PS_MAGIC_QUOTES_GPC_',         get_magic_quotes_gpc());
+if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
+	define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 
 define('_CAN_LOAD_FILES_', 1);
 

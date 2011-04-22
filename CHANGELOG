@@ -24,6 +24,261 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.4
 --------------------------------
 ####################################
+#   v1.4.1.0 - 6030 (2011-04-21)  #
+####################################
+
+	Added Features:
+
+	[+] Installer : Adding address format table
+	[+] Installer : Thanks to Michael Bangiev for german installer translation \!
+	[+] Installer : When upgrading, you can now automatically desactivate non-native modules
+	[+] Installer : added link to the online theme validator
+
+	[+] FO : Adding address formating for stores
+
+	[+] BO : Adding address formating
+	[+] BO : Adding address formating
+	[+] BO : Adding address formating
+	[+] BO : Adding address formating
+	[+] BO : Adding address formating
+	[+] BO : Adding address formating
+	[+] BO : added methods to enable/disable one or more module by name
+	[+] BO : added static method to get non native module list in ModuleCore class
+
+	[+] CORE : allow to load interface with the autoload
+
+	[+] WS : add column in the PREFIX_webservice_account table
+
+	[+] TR : translation wording
+
+	Improved/changed features:
+
+	[*] Project : added new tinyMCE version
+	[*] Project : remove old tinyMC version
+
+	[*] INSTALLER : Can manage HTML in preactivation text
+	[*] Installer : added readme_it, readme_de, and CHANGELOG to the file-to-delete list
+
+	[*] FO : #PSCFI-1537 corrects address block error
+	[*] FO : Cached queries
+	[*] FO : Display label can desactivated + Tax & Shipping simulator
+	[*] FO : Fixed link to delete customer product picture when friendly url + canonical are activated
+	[*] FO : Using geocoding for itinerary
+	[*] FO : corrects smarty2 compliance
+	[*] FO : in category view, products for which the default combination is out of stock but other combinations are still available no longer display an 'Out of stock' message.
+	[*] FO : in product view, accessories now display a message if they are out of stock or out of the default combination.
+	[*] FO : setMedia called now only in init()
+
+	[*] BO :  Adding store infos templatization
+	[*] BO :  Adding store infos templatization
+	[*] BO :  keeping cart status on refresh
+	[*] BO : #8341 Wording: changing depth and package spelling
+	[*] BO : #8345 Deleting unused vars
+	[*] BO : #8406 Adding method to get protocol
+	[*] BO : #8406 removing hard coded http
+	[*] BO : #8419 Adding attachment name check
+	[*] BO : #8438 corrects use of uninstanciated value
+	[*] BO : #8440 restores quantity display
+	[*] BO : #8459 filtering arrow keys
+	[*] BO : #8486 changing getProtocol
+	[*] BO : #8486 changing getProtocol
+	[*] BO : #8569 removing bad redirect & cookie path for ajaxfilemanager
+	[*] BO : #8693 Adding back to category link on add doc attachment
+	[*] BO : #PSCFI-1294 wording: corrects Pproduct
+	[*] BO : Adding market place group to AdminModules
+	[*] BO : Adding missing else case
+	[*] BO : Adding store infos templatization
+	[*] BO : Adding translate for contact, Bug tracker, forum
+	[*] BO : Corrects die error is state is used
+	[*] BO : cleaning
+	[*] BO : improve loading of home page of Back office
+	[*] BO : now admin tabs defined in module use now translation in their module directory
+	[*] BO : orders don t disappear anymore if authorized localhost client
+	[*] BO : revert: Adding missing else case
+	[*] BO : reverting
+	[*] BO : reverting wording
+	[*] BO : setting re-ordeing regexp to 99 max
+	[*] BO : unsetting var after use
+	[*] BO : updating iso state code according to ISO_3166-2
+	[*] BO : wording
+
+	[*] MO : Bug fixed #PSCFI-1370 - Adding possibility to choose calcul mode for shipping cost in USPS module
+	[*] MO : Display option for eKomi module
+	[*] MO : added weight filter - removing the restriction on cache table
+	[*] MO : improvements on carriercompare (Shipping estimation) module
+	[*] MO : themeinstallator - exported themes archives now have a random md5 filename
+
+	Fixed bugs:
+
+	[-] Project : Fixed bug #PSCFI-1208 - MODULE_DIR (relative path) should be replaced with PS_MODULE_DIR (full path)
+	[-] Project : fixed json_encode and json_decode calls
+
+	[-] INSTALLER : Bug fixed on checkbox preactivation system
+	[-] INSTALLER : Preactivation prechecked bug has been fixed
+	[-] Installer : Bug Fixed #8585 - Wrong currency for reduction inserted to ps_specific_price
+	[-] Installer : Bug Fixed #PSCFI-1266 - 1.3 price reductions not applied to all groups on 1.4 upgrade
+	[-] Installer : Fixed #PSCFI-1466 - undefined constant _PS_VERSION_ was used instead of $oldversion
+	[-] Installer : Fixed #PSCFI-1496 - var name corrected in desactivatecustommodule.php
+	[-] Installer : Fixed #PSCFI-1500 - PREFIX_ / ps_ in installer
+	[-] Installer : Fixed about-us german url rewrite
+	[-] Installer : fixed bug #8477 - German friendly URLs have uppercase letters
+	[-] Installer : fixed bug #PSCFI-1381 - svn5784 upgrade sql error and cannot complete upgrade - Cannot redeclare alter_cms_block() previously declared
+	[-] Installer : fixed bug #PSCFI-1500
+	[-] Installer : fixed bug if CMS module is not installed
+
+	[-] FO : #PSCFI-1374 Fixed a bug concerning the cart without taxes
+	[-] FO : Bug Fixed #8315 - Incorrect tax for counties
+	[-] FO : Bug Fixed #PSCFI-1459 - Problem in tax summary (tax excl + ecotax)
+	[-] FO : Bug Fixed #PSCFI-1460 - Combination + overriden EcoTax
+	[-] FO : Bug Fixed #PSCFI-1516 - Incorrect cache key in price calculation
+	[-] FO : Bug fixed #8293 - Wrong price round for product
+	[-] FO : Bug fixed default picture missing in product comparison
+	[-] FO : CSS and JS files not available (404) are now empty, haven't code html of 404 page of Prestashop
+	[-] FO : Fixed #7752 - now customer image will be deleted if they remove product they attached to a product
+	[-] FO : Fixed #8418 HTTPS issue with _SERVER['HTTPS']
+	[-] FO : Fixed #PSCFI-1118 add to cart with customization
+	[-] FO : Fixed #PSCFI-1215 blockbestsellers now correctly constructs links to best-sale page
+	[-] FO : Fixed #PSCFI-1220 wrong call to setMedia()
+	[-] FO : Fixed #PSCFI-1269 undefined variable
+	[-] FO : Fixed #PSCFI-733 - fatal error when disabling shop
+	[-] FO : Fixed bug #PSCFI-1201 - Product quantities were not displayed when they should be.
+	[-] FO : Fixed bug #PSCFI-1373 - Bug with the update function when an id_lang was passed to the construct function.
+	[-] FO : Fixed bug on ssl pages
+	[-] FO : Fixed login issue when special ssl configuration
+	[-] FO : Hours can now be translated for the store locator
+	[-] FO : Remove debug comment
+	[-] FO : Smarty 2 compatibility
+	[-] FO : Use default country for default taxes
+	[-] FO : deleted the string "!" which didn't make sense in the sentence "Assign an address title for future reference".
+	[-] FO : fixed a bug when a customer have on his cookie a disabled currency
+	[-] FO : fixed bug #7991 - fixed a bug where the 'add to cart' button was still active for accessories on product pages when they are out of stock, and fixed a bug where out of stock message for products was not displayed.
+	[-] FO : fixed bug #8042 - logo and favicon were not cached properly
+	[-] FO : fixed bug #8363 - Availability in cart (green dot) wrong for products with stock 0
+	[-] FO : fixed bug #8389 - Category page not work
+	[-] FO : fixed bug #8436 - State select is invalid HTML
+	[-] FO : fixed bug #8479 - Smarty error on lines 147 and 168 of themes/prestashop/address.tpl
+	[-] FO : fixed bug #8492 - Error in cms.php?id_cms_category=1
+	[-] FO : fixed bug #8536 - Incompleted end tag
+	[-] FO : fixed bug #8555 - 1.4.0.17 h1 overlaps a background bar
+	[-] FO : fixed bug #8577 - shipping bug order OPC
+	[-] FO : fixed bug #8631 - CMS page links to other languages ignores URL rewrite (always unfriendly URL)
+	[-] FO : fixed bug #PSCFI-1290 - One Page Checkout calculates gift_price in two different ways - one right, one wrong
+	[-] FO : fixed bug #PSCFI-1296 - cart_summary is not updated after deleting items
+	[-] FO : fixed bug #PSCFI-1303 - Tag pagination with specific characters
+	[-] FO : fixed bug #PSCFI-1315 - Bug authentication and not installed newsletter module
+	[-] FO : fixed bug #PSCFI-1317 - 5 step checkout is missing address information in checkout window
+	[-] FO : fixed bug #PSCFI-1369 - svn5760 typo ("mob") in ajax.php
+	[-] FO : fixed bug #PSCFI-1395 - PackCore static function "IsInStock" doesn't work for packs
+	[-] FO : fixed bug #PSCFI-1400 - no css for search pages
+	[-] FO : fixed bug #PSCFI-1475 - An error occured because of an undefined variable $tag. The variable has been renamed as $search_tag to fix it.
+	[-] FO : fixed bug #PSCFI-1489 - Clicking on "Add to cart" - Button disables all "Add to cart"
+	[-] FO : fixed bug #PSCFI-151 - Full category list displays then shrinks
+	[-] FO : fixed bug #PSCFI-1543 - theme: "out of stock" condition may not be EXACTLY zero
+	[-] FO : fixed bug #PSCFI-1548 - Error in getPacksTable sql query
+	[-] FO : fixed bug PSCFI-1455 - Class "warning-inline" doesn't exist. Changed to "warning_inline"
+	[-] FO : fixed bug live edit now display correctly
+	[-] FO : fixed many call to unexisting css and js file after an update
+	[-] FO : fixed stylesheet bug and CCC feature
+	[-] FO :fixed a translation bug in French
+
+	[-] BO : Bug Fixed #PSCFI-1481 - IncludeTab and active action
+	[-] BO : Fix on preactivation process
+	[-] BO : Fixed #1205 error on updating product
+	[-] BO : Fixed #8513, #7932, #8040 about mail translation loss, thanks to sorsand rodt
+	[-] BO : Fixed #PSCFI-1191 - url rewrite for home page
+	[-] BO : Fixed #PSCFI-1222 - product order
+	[-] BO : Fixed #PSCFI-1394 bug while cleaning connection pages
+	[-] BO : Fixed #PSCFI-1485 - strict standard
+	[-] BO : Fixed #PSCFI-1512 - thanks to Melinda for fixing the filtering module system :)
+	[-] BO : Fixed #PSCFI-1517 - colorpicker.js issue on firefox 4
+	[-] BO : Fixed #PSCFI-1518 - now you can translate modules in a custom theme using the AdminTranslations tools
+	[-] BO : Fixed #PSCFI-858 upload flag for a language
+	[-] BO : Fixed #PSCFI-999 - generate a correct htaccess for cms and category cms
+	[-] BO : Fixed 8452 - mysql_close is not called if invalid link ressource
+	[-] BO : Fixed bug #PSCFI-1254 - Filtering manufacturers by activity would generate an incorrect sql query
+	[-] BO : Fixed bug - sql error when duplicate product
+	[-] BO : Fixed login issue when special ssl configuration
+	[-] BO : Localization pack can now be imported locally if no internet connection is available
+	[-] BO : Now .tpl are translate in root theme folder
+	[-] BO : Now when a language is added, the translation in the default language is automatically copied to the new language.
+	[-] BO : Rouding issues with float 149.42 - 149.42 = -0.0000000000012
+	[-] BO : added array_change_key_case for module translation compatibility
+	[-] BO : fixed #PSCFI-1207 - language pack import not possible with safari 5 on osx 10.6.6 and 10.6.7
+	[-] BO : fixed bad redirection
+	[-] BO : fixed bug #8391 - Currency symbol not shown in admin/products
+	[-] BO : fixed bug #8393 - Pagination was broken.
+	[-] BO : fixed bug #8414 - meta-keywords saving error
+	[-] BO : fixed bug #8563 - BO: change country to one without states
+	[-] BO : fixed bug #8576 - Illegal offset type in admin modules page
+	[-] BO : fixed bug #8636 - Fatal error during address importation
+	[-] BO : fixed bug #8649 - Suppliers Description validates wrong
+	[-] BO : fixed bug #PSCFI-1356 - Unknown object in AdminProduct due to typo
+	[-] BO : fixed bug #PSCFI-1372 - svn5757 tinymce.inc.js misses some plugins
+	[-] BO : fixed bug #PSCFI-1380 - sorting sub-categories by name in the table make back to parent category
+	[-] BO : fixed bug #PSCFI-1429 - Deleting products does not remove image files
+	[-] BO : fixed bug #PSCFI-1431 - Import error if html tag in CSV
+	[-] BO : fixed bug #PSCFI-1461 - Product updateDefaultAttribute function - small typo
+	[-] BO : fixed bug #PSCFI-1468 - Unable to delete Tax
+	[-] BO : fixed bug #PSCFI-1469 - BO Modules UI wrong collapse icon
+	[-] BO : fixed bug #PSCFI-1471 - UK localization xml was missing
+	[-] BO : fixed bug #PSCFI-1523 - Bug in saving mail subjects between translations
+	[-] BO : fixed bug #PSCFI-1560 - Carrier filter in AdminCarts Tab
+	[-] BO : fixed bug PSCFI-1557 - If a product's name include a comma, it cannot be added to a "pack" product
+	[-] BO : fixed bug in stock movements where clicking 'reset' would display an error.
+	[-] BO : fixed bug interface in AdminCountries tab
+	[-] BO : fixed bug on modules autocomplete search
+	[-] BO : fixed bug on modules filters
+	[-] BO : fixed bug scollTo bug when install new module
+	[-] BO : fixed mail subject translation (utf8, htmlentities, quotes)
+	[-] BO : fixed notice errors on product comaprison feature
+	[-] BO : install fix (now works)
+	[-] BO : liveEdit when open_basedir restriction
+	[-] BO : module can't be now transplanted anywhere, just where it can
+	[-] BO :fixed a translation bug, name files are translated with the content
+
+	[-] Classes : fixed bug #8599
+	[-] Classes : fixed bug #PSCFI-1358 - Undefined index in Tools::displayasdeprecated
+	[-] Classes : fixed bug #PSCFI-1358 - Undefined index in Tools::displayasdeprecated (another one)
+	[-] Classes : fixed bug #PSCFI-1384 - error in Class configuration
+	[-] Classes : fixed bug #PSCFI-1391 - "Reset" link on "Categories block v2.0" causes "Max depth" to be lost
+	[-] Classes : you can define encoding to strlen() method of Tools class
+
+	[-] Core : fixed bug #PSCFI-1397 - .htaccess in /download is missing
+	[-] Core : fixed little bug on validation method for iso code of state
+
+	[-] MO : Bug fixed #PSCFI-1370 - Fix on USPS module for FirstClassMailType
+	[-] MO : Translations fixed on module Twenga
+	[-] MO : TrustedShops - Integration certificate enable features
+	[-] MO : TrustedShops - Missing {literal} tags
+	[-] MO : TrustedShops, Fix a notice when a certificat doesn't exist for a language, add new translations and fix a image display
+	[-] MO : add a sentence in module producttooltip in order to indicate that statdata module must be active (PSCFI-1206)
+	[-] MO : change the way to save the serialize array, use Tools::htmlentitiesUTF8 for save in database.
+	[-] MO : fixed bug #8374 - Featured Products block issue
+	[-] MO : fixed bug #8544 - Mail alert bug
+	[-] MO : fixed bug #8567 - Search Stats not working on 1.4.0.17
+	[-] MO : fixed bug #8581 - BlockLink - SQL Error
+	[-] MO : fixed bug #PSCFI-1321 - _clearCache error in blockcategories
+	[-] MO : fixed bug #PSCFI-1378 - Socolissimo validate.php collect wrong data
+	[-] MO : fixed bug in template for productcomment module
+	[-] MO : fixed bug on DejaLa module
+	[-] MO : incorrect index array in followup.php for email
+	[-] MO : rename field id_block_cms to id_cms_block
+
+	[-] WS : Fixing PHP 5.3 compatibility bug
+	[-] WS : add the error number when a webservice error is set
+
+	[-] TR : Fixed german translation
+	[-] TR : fix german translation, thanks to the community
+	[-] TR : fixed fr mispelling at first login (please delete install dir and move admin)
+
+	[-] LO : Currency format
+
+	Deprecated methods:
+
+	[~] FO : Link->getUrlWith is deprecated
+
+
+####################################
 #   v1.4.0.17 - 5552 (2011-03-16)  #
 ####################################
 

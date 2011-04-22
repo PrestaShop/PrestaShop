@@ -531,7 +531,7 @@ class AdminModules extends AdminTab
 			}		
 			
 			if ($showCountryModules)		
-				if (isset($module->limited_countries) AND ((is_array($module->limited_countries) AND !in_array(strtolower($isoCountryDefault), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($isoCountryDefault) != strval($module->limited_countries))))
+				if (isset($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($isoCountryDefault), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($isoCountryDefault) != strval($module->limited_countries))))
 					unset($modules[$key]);
 			
 			if (!empty($filterName))

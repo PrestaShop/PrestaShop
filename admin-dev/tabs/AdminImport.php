@@ -1291,7 +1291,7 @@ class AdminImport extends AdminTab
 		return sizeof($tmp);
 	}
 
-	private function _usortFiles($a, $b)
+	private static function _usortFiles($a, $b)
 	{
 		$a = strrev(substr(strrev($a), 0, 14));
 		$b = strrev(substr(strrev($b), 0, 14));

@@ -84,15 +84,23 @@ function reloadContent()
 		ajaxLoaderOn = 1;
 	}
 	
-	ajaxQuery = $.ajax(
+	data = $('#layered_form').serialize();
+	$('.layered_slider').each( function () {
+		data += '&'+$(this).attr('id')+'='+$(this).slider('values', 0)+'_'+$(this).slider('values', 1);
+	});
+	
+ajaxQuery = $.ajax(
 	{
 		type: 'GET',
 		url: baseDir + 'modules/blocklayered/blocklayered-ajax.php',
-		data: $('#layered_form').serialize(),
+		data: data,
+		dataType: 'json',
 		success: function(result)
 		{
-			$('#layered_block_left').after($(result)[0]).remove();
-			$('#product_list').html($(result)[1]);
+			$('#layered_block_left').after('<div id="tmp_layered_block_left"></div>').remove();
+			$('#tmp_layered_block_left').html(result.filtersBlock).attr('id', 'layered_block_left');
+
+			$('#product_list').html(result.productList).html();
 			$('#product_list').css('opacity', '1');
 			ajaxLoaderOn = 0;
 		}
@@ -100,3 +108,22 @@ function reloadContent()
 	
 	ajaxQueries.push(ajaxQuery);
 }
+
+/*
+function initSlider(type, min, max, values, unit)
+{
+	$('#layered_'+type+'_slider').slider({
+		range: true,
+		min: min,
+		max: max,
+		values: [ values[0], values[1]],
+		slide: function( event, ui ) {
+			$('#layered_'+type+'_range').html(ui.values[ 0 ] + unit + ' - ' + ui.values[ 1 ] + unit);
+		},
+		stop: function () {
+			reloadContent();
+		}
+	});
+	$('#layered_'+type+'_range').html($('#layered_'+type+'_slider').slider('values', 0 ) +unit+'-'+$('#layered_'+type+'_slider').slider('values', 1)+unit );
+}
+*/

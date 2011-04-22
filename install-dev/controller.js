@@ -911,10 +911,12 @@ $(document).ready(
 			}
 		);
 		$("#loader").ajaxComplete(
-			function()
+			function(e, xhr, settings)
 			{
 				$(this).fadeOut();
 				$(".lockedForAjax").removeAttr("disabled").removeClass("disabled").removeClass("lockedForAjax");
+				if (settings.url.substr(0, 17) == 'preactivation.php' && step == 1)
+					$("#btNext[disabled!=1], #btBack[disabled!=1]").attr("disabled", "disabled").addClass("disabled").addClass("lockedForAjax");
 			}
 		);
 		//set actions on clicks

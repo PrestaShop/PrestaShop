@@ -48,6 +48,7 @@ $_MODULE['<{loyalty}prestashop>loyalty_928666bdf20510dfa5c58393b77f1798'] = 'Val
 $_MODULE['<{loyalty}prestashop>loyalty_a9be824aae4f2381a27b7c699b1e041e'] = 'En attente de validation';
 $_MODULE['<{loyalty}prestashop>loyalty_78945de8de090e90045d299651a68a9b'] = 'Disponibles';
 $_MODULE['<{loyalty}prestashop>loyalty_4cb08bf5ad3d3c7b010dde725a078b28'] = 'Déjà convertis';
+$_MODULE['<{loyalty}prestashop>loyalty_df05c2db84dacb19b599b489bf3963db'] = 'Non disponible sur les remises';
 $_MODULE['<{loyalty}prestashop>loyalty_01371a1d58e9234c0b9dbc08cf54fa8b'] = 'Non valables sur les promotions';
 $_MODULE['<{loyalty}prestashop>loyalty_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mon compte';
 $_MODULE['<{loyalty}prestashop>loyalty_c540093e64d84440025b2d8201f04336'] = 'Mes points de fidélité';

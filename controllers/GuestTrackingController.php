@@ -58,7 +58,8 @@ class GuestTrackingControllerCore extends FrontController
 			    $products = $order->getProducts();
 			    $customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
 			    Product::addCustomizationPrice($products, $customizedDatas);
-		
+	
+			    $this->processAddressFormat($addressDelivery, $addressInvoice);	
 			    self::$smarty->assign(array(
 			    	'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			    	'order' => $order,
@@ -123,5 +124,16 @@ class GuestTrackingControllerCore extends FrontController
 		parent::displayContent();
 		
 		self::$smarty->display(_PS_THEME_DIR_.'guest-tracking.tpl');
+	}
+
+	private function processAddressFormat(Address $delivery, Address $invoice)
+	{
+
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($invoice->id_country);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($delivery->id_country);
+
+		self::$smarty->assign('inv_adr_fields', $inv_adr_fields);
+		self::$smarty->assign('dlv_adr_fields', $dlv_adr_fields);
+
 	}
 }

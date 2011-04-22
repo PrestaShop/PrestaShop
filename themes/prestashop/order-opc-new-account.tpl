@@ -180,50 +180,48 @@
 				</p>
 				{/if}
 				<h3>{l s='Delivery address'}</h3>
+				{foreach from=$dlv_all_fields item=field_name}
+				{if $field_name eq "company"}
 				<p class="text">
 					<label for="company">{l s='Company'}</label>
 					<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
 				</p>
-				<div id="vat_number_block" style="display:none;">
-					<p class="text">
-						<label for="vat_number">{l s='VAT number'}</label>
-						<input type="text" class="text" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
-					</p>
-				</div>
-				<p class="required text dni">
-					<label for="dni">{l s='Identification number'}</label>
-					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
-					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-				</p>
+				{elseif $field_name eq "firstname"}
 				<p class="required text">
 					<label for="firstname">{l s='First name'}</label>
 					<input type="text" class="text" id="firstname" name="firstname" value="{if isset($guestInformations) && $guestInformations.firstname}{$guestInformations.firstname}{/if}" />
 					<sup>*</sup>
 				</p>
+				{elseif $field_name eq "lastname"}
 				<p class="required text">
 					<label for="lastname">{l s='Last name'}</label>
 					<input type="text" class="text" id="lastname" name="lastname" value="{if isset($guestInformations) && $guestInformations.lastname}{$guestInformations.lastname}{/if}" />
 					<sup>*</sup>
 				</p>
+				{elseif $field_name eq "address1"}
 				<p class="required text">
 					<label for="address1">{l s='Address'}</label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($guestInformations) && $guestInformations.address1}{$guestInformations.address1}{/if}" />
 					<sup>*</sup>
 				</p>
+				{elseif $field_name eq "address2"}
 				<p class="text is_customer_param">
 					<label for="address2">{l s='Address (Line 2)'}</label>
 					<input type="text" class="text" name="address2" id="address2" value="" />
 				</p>
+				{elseif $field_name eq "postcode"}
 				<p class="required postcode text">
 					<label for="postcode">{l s='Zip / Postal code'}</label>
 					<input type="text" class="text" name="postcode" id="postcode" value="{if isset($guestInformations) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					<sup>*</sup>
 				</p>
+				{elseif $field_name eq "city"}
 				<p class="required text">
 					<label for="city">{l s='City'}</label>
 					<input type="text" class="text" name="city" id="city" value="{if isset($guestInformations) && $guestInformations.city}{$guestInformations.city}{/if}" />
 					<sup>*</sup>
 				</p>
+				{elseif $field_name eq "country"}
 				<p class="required select">
 					<label for="id_country">{l s='Country'}</label>
 					<select name="id_country" id="id_country">
@@ -233,6 +231,20 @@
 						{/foreach}
 					</select>
 					<sup>*</sup>
+				</p>
+				{elseif $field_name eq "vat_number"}	
+				<div id="vat_number_block" style="display:none;">
+					<p class="text">
+						<label for="vat_number">{l s='VAT number'}</label>
+						<input type="text" class="text" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
+					</p>
+				</div>
+				{/if}
+				{/foreach}
+				<p class="required text dni">
+					<label for="dni">{l s='Identification number'}</label>
+					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 				</p>
 				<p class="required id_state select">
 					<label for="id_state">{l s='State'}</label>
@@ -254,7 +266,7 @@
 					<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="" />
 				</p>
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
-				
+
 				<p class="checkbox is_customer_param">
 					<input type="checkbox" name="invoice_address" id="invoice_address" />
 					<label for="invoice_address"><b>{l s='Please use another address for invoice'}</b></label>
@@ -262,10 +274,13 @@
 				
 				<div id="opc_invoice_address" class="is_customer_param">
 					<h3>{l s='Invoice address'}</h3>
+					{foreach from=$inv_all_fields item=field_name}
+					{if $field_name eq "company"}
 					<p class="text is_customer_param">
 						<label for="company_invoice">{l s='Company'}</label>
 						<input type="text" class="text" id="company_invoice" name="company_invoice" value="" />
 					</p>
+					{elseif $field_name eq "vat_number"}
 					<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">
 						<p class="text">
 							<label for="vat_number_invoice">{l s='VAT number'}</label>
@@ -277,35 +292,42 @@
 						<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</p>
+					{elseif $field_name eq "firstname"}
 					<p class="required text">
 						<label for="firstname_invoice">{l s='First name'}</label>
 						<input type="text" class="text" id="firstname_invoice" name="firstname_invoice" value="" />
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "lastname"}
 					<p class="required text">
 						<label for="lastname_invoice">{l s='Last name'}</label>
 						<input type="text" class="text" id="lastname_invoice" name="lastname_invoice" value="" />
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "address1"}
 					<p class="required text">
 						<label for="address1_invoice">{l s='Address'}</label>
 						<input type="text" class="text" name="address1_invoice" id="address1_invoice" value="" />
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "address2"}
 					<p class="text is_customer_param">
 						<label for="address2_invoice">{l s='Address (Line 2)'}</label>
 						<input type="text" class="text" name="address2_invoice" id="address2_invoice" value="" />
 					</p>
+					{elseif $field_name eq "postcode"}
 					<p class="required postcode text">
 						<label for="postcode_invoice">{l s='Zip / Postal Code'}</label>
 						<input type="text" class="text" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "city"}
 					<p class="required text">
 						<label for="city_invoice">{l s='City'}</label>
 						<input type="text" class="text" name="city_invoice" id="city_invoice" value="" />
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "country"}
 					<p class="required select">
 						<label for="id_country_invoice">{l s='Country'}</label>
 						<select name="id_country_invoice" id="id_country_invoice">
@@ -316,6 +338,7 @@
 						</select>
 						<sup>*</sup>
 					</p>
+					{elseif $field_name eq "state"}
 					<p class="required id_state_invoice select" style="display:none;">
 						<label for="id_state_invoice">{l s='State'}</label>
 						<select name="id_state_invoice" id="id_state_invoice">
@@ -323,6 +346,8 @@
 						</select>
 						<sup>*</sup>
 					</p>
+					{/if}
+					{/foreach}
 					<p class="textarea is_customer_param">
 						<label for="other_invoice">{l s='Additional information'}</label>
 						<textarea name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>

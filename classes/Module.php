@@ -539,6 +539,7 @@ abstract class ModuleCore
 		*/
 	public static function getNonNativeModuleList()
 	{
+		$db = Db::getInstance();
 		$modulesDirOnDisk = Module::getModulesDirOnDisk();
 
 		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
@@ -552,7 +553,7 @@ abstract class ModuleCore
 					$arrNativeModules[] = '"'.pSQL($module['name']).'"';
 			}
 
-		return Db::getInstance()->ExecuteS('
+		return $db->ExecuteS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'module` m
 			WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
