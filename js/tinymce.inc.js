@@ -1,7 +1,9 @@
 	tinyMCE.init({
-		mode : "textareas",
+		mode : "specific_textareas",
 		theme : "advanced",
 		skin:"cirkuit",
+		editor_selector : "rte",
+		editor_deselector : "noEditor",
 		plugins : "safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview",
 		// Theme options
 		theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",

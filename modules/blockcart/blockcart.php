@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -42,7 +42,7 @@ class BlockCart extends Module
 		$this->displayName = $this->l('Cart block');
 		$this->description = $this->l('Adds a block containing the customer\'s shopping cart.');
 	}
-	
+
 	public function smartyAssigns(&$smarty, &$params)
 	{
 		global $errors, $cookie;
@@ -62,7 +62,7 @@ class BlockCart extends Module
 		}
 		else
 			$taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
-		
+
 		$useTax = !($taxCalculationMethod == PS_TAX_EXC);
 
 		$products = $params['cart']->getProducts(true);
@@ -72,13 +72,13 @@ class BlockCart extends Module
 
 		$wrappingCost = (float)($params['cart']->getOrderTotal($useTax, Cart::ONLY_WRAPPING));
 		$totalToPay = $params['cart']->getOrderTotal($useTax);
-		
+
 		if ($useTax AND Configuration::get('PS_TAX_DISPLAY') == 1)
 		{
 			$totalToPayWithoutTaxes = $params['cart']->getOrderTotal(false);
 			$smarty->assign('tax_cost', Tools::displayPrice($totalToPay - $totalToPayWithoutTaxes, $currency));
 		}
-		
+
 		$smarty->assign(array(
 			'products' => $products,
 			'customizedDatas' => Product::getAllCustomizedDatas((int)($params['cart']->id)),
@@ -88,7 +88,7 @@ class BlockCart extends Module
 			'nb_total_products' => (int)($nbTotalProducts),
 			'shipping_cost' => Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::ONLY_SHIPPING), $currency),
 			'show_wrapping' => $wrappingCost > 0 ? true : false,
-			'show_tax' => (int)(Configuration::get('PS_TAX_DISPLAY')) == 1 ? true : false,
+			'show_tax' => (int)(Configuration::get('PS_TAX_DISPLAY') == 1 && $smarty->getConfigVars('use_taxes')),
 			'wrapping_cost' => Tools::displayPrice($wrappingCost, $currency),
 			'product_total' => Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::BOTH_WITHOUT_SHIPPING), $currency),
 			'total' => Tools::displayPrice($totalToPay, $currency),
@@ -125,7 +125,7 @@ class BlockCart extends Module
 		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				
+
 				<label>'.$this->l('Ajax cart').'</label>
 				<div class="margin-form">
 					<input type="radio" name="ajax" id="ajax_on" value="1" '.(Tools::getValue('ajax', Configuration::get('PS_BLOCK_CART_AJAX')) ? 'checked="checked" ' : '').'/>
@@ -134,7 +134,7 @@ class BlockCart extends Module
 					<label class="t" for="ajax_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p class="clear">'.$this->l('Activate AJAX mode for cart (compatible with the default theme)').'</p>
 				</div>
-				
+
 				<center><input type="submit" name="submitBlockCart" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>
 		</form>';
@@ -157,11 +157,10 @@ class BlockCart extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
-	
+
 		global $smarty;
 		$smarty->assign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
 		$this->smartyAssigns($smarty, $params);
-
 		return $this->display(__FILE__, 'blockcart.tpl');
 	}
 
@@ -174,20 +173,21 @@ class BlockCart extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
-		
+
 		global $smarty;
 		$this->smartyAssigns($smarty, $params);
 		$res = $this->display(__FILE__, 'blockcart-json.tpl');
 		return $res;
 	}
-	
+
 	public function hookHeader()
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
-		
+
 		Tools::addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 			Tools::addJS(($this->_path).'ajax-cart.js');
 	}
 }
+

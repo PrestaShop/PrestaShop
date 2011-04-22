@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <style>
+{literal}
 input.myButtonTricksTS
 {
 	font-size:9px !important;
@@ -31,6 +32,7 @@ input.myButtonTricksTS
 	cursor:pointer;
 	padding:3px;
 }
+{/literal}
 </style>
 <div class="trustedshops-form" style="text-align:center;border:1px solid #ccc;padding:10px;">
 	<div style="float:left;width:72px;">
@@ -58,3 +60,4 @@ input.myButtonTricksTS
 	</div>
 	</form>
 </div>
+

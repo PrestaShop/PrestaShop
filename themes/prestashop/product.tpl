@@ -253,7 +253,7 @@ var fieldRequired = '{l s='Please fill in all required fields' js=1}';
 					<span class="our_price_display">
 					{if $priceDisplay >= 0 && $priceDisplay <= 2}
 						<span id="our_price_display">{convertPrice price=$productPrice}</span>
-							{if $tax_enabled}
+							{if $tax_enabled  && $display_tax_label == 1}
 								{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 							{/if}
 					{/if}
@@ -269,7 +269,7 @@ var fieldRequired = '{l s='Please fill in all required fields' js=1}';
 					{if $priceDisplay >= 0 && $priceDisplay <= 2}
 						{if $productPriceWithoutRedution > $productPrice}
 							<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
-								{if $tax_enabled}
+								{if $tax_enabled && $display_tax_label == 1}
 									{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 								{/if}
 						{/if}
@@ -459,7 +459,7 @@ var fieldRequired = '{l s='Please fill in all required fields' js=1}';
 								{/if}
 							</p>
 						</li>
-		
+
 					{/foreach}
 					</ul>
 				</div>
@@ -492,7 +492,7 @@ var fieldRequired = '{l s='Please fill in all required fields' js=1}';
 						<li class="customizationUploadLine{if $field.required} required{/if}">{assign var='key' value='pictures_'|cat:$product->id|cat:'_'|cat:$field.id_customization_field}
 							{if isset($pictures.$key)}<div class="customizationUploadBrowse">
 									<img src="{$pic_dir}{$pictures.$key}_small" alt="" />
-									<a href="{$link->getProductDeletePictureLink($product,{$field.id_customization_field})}" title="{l s='Delete'}" >
+									<a href="{* $link->getProductDeletePictureLink($product,{$field.id_customization_field})*}" title="{l s='Delete'}" >
 										<img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="customization_delete_icon" width="11" height="13" />
 									</a>
 								</div>{/if}

@@ -56,6 +56,9 @@ class CountryCore extends ObjectModel
 	/** @var string Zip Code Format */
 	public		$zip_code_format;
 
+	/** @var boolean Display or not the tax incl./tax excl. mention in the front office */
+	public $display_tax_label = true;
+
 	/** @var boolean Status for delivery */
 	public		$active = true;
 
@@ -63,9 +66,9 @@ class CountryCore extends ObjectModel
 
 	protected 	$tables = array ('country', 'country_lang');
 
- 	protected 	$fieldsRequired = array('id_zone', 'id_currency', 'iso_code', 'contains_states', 'need_identification_number');
+ 	protected 	$fieldsRequired = array('id_zone', 'id_currency', 'iso_code', 'contains_states', 'need_identification_number', 'display_tax_label');
  	protected 	$fieldsSize = array('iso_code' => 3);
- 	protected 	$fieldsValidate = array('id_zone' => 'isUnsignedId', 'id_currency' => 'isUnsignedId', 'call_prefix' => 'isInt', 'iso_code' => 'isLanguageIsoCode', 'active' => 'isBool', 'contains_states' => 'isBool', 'need_identification_number' => 'isBool', 'need_zip_code' => 'isBool', 'zip_code_format' => 'isZipCodeFormat');
+ 	protected 	$fieldsValidate = array('id_zone' => 'isUnsignedId', 'id_currency' => 'isUnsignedId', 'call_prefix' => 'isInt', 'iso_code' => 'isLanguageIsoCode', 'active' => 'isBool', 'contains_states' => 'isBool', 'need_identification_number' => 'isBool', 'need_zip_code' => 'isBool', 'zip_code_format' => 'isZipCodeFormat', 'display_tax_label' => 'isBool');
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 64);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
@@ -93,6 +96,7 @@ class CountryCore extends ObjectModel
 		$fields['need_identification_number'] = (int)($this->need_identification_number);
 		$fields['need_zip_code'] = (int)($this->need_zip_code);
 		$fields['zip_code_format'] = $this->zip_code_format;
+		$fields['display_tax_label'] = $this->display_tax_label;
 		return $fields;
 	}
 
@@ -291,27 +295,27 @@ class CountryCore extends ObjectModel
         AND `id_lang` = '.(int)$id_lang
         );
     }
-    
+
 	public function isNeedDni()
 	{
 		return (bool)self::isNeedDniByCountryId($this->id);
 	}
-	
+
 	static public function isNeedDniByCountryId($id_country)
 	{
 		return (bool)Db::getInstance()->getValue('
-			SELECT `need_identification_number` 
+			SELECT `need_identification_number`
 			FROM `'._DB_PREFIX_.'country`
 			WHERE `id_country` = '.(int)$id_country);
 	}
-	
+
 	static public function containsStates($id_country)
 	{
 		return (bool)Db::getInstance()->getValue('
-			SELECT `contains_states` 
+			SELECT `contains_states`
 			FROM `'._DB_PREFIX_.'country`
 			WHERE `id_country` = '.(int)$id_country);
 	}
-	
+
 }
 

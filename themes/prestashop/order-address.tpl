@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,9 +31,91 @@
 	var orderProcess = 'order';
 	{/if}
 	var addresses = new Array();
+	var addresses_values = new Array();
 	{foreach from=$addresses key=k item=address}
 		addresses[{$address.id_address|intval}] = new Array('{$address.company|addslashes}', '{$address.firstname|addslashes}', '{$address.lastname|addslashes}', '{$address.address1|addslashes}', '{$address.address2|addslashes}', '{$address.postcode|addslashes}', '{$address.city|addslashes}', '{$address.country|addslashes}', '{$address.state|default:''|addslashes}');
+		addresses_values[{$address.id_address|intval}] = {ldelim}
+								company: '{$address.company|addslashes}'
+								,firstname: '{$address.firstname|addslashes}'
+								,lastname: '{$address.lastname|addslashes}'
+								,address1: '{$address.address1|addslashes}'
+								,address2: '{$address.address2|addslashes}'
+								,postcode: '{$address.postcode|addslashes}'
+								,city: '{$address.city|addslashes}'
+								,country: '{$address.country|addslashes}'
+								,state: '{$address.state|default:''|addslashes}'
+							{rdelim};
 	{/foreach}
+
+
+	var address_format = {ldelim}
+				invoice:[
+	{if isset($inv_adr_fields)}
+		{foreach from=$inv_adr_fields item=inv_field name=inv_loop}
+					{if !$smarty.foreach.inv_loop.first},{/if}"{$inv_field}"
+		{/foreach}
+	{/if}
+				]
+				, delivery:
+					[
+	{if isset($dlv_adr_fields)}
+		{foreach from=$dlv_adr_fields item=dlv_field name=dlv_loop}
+					{if !$smarty.foreach.dlv_loop.first},{/if}"{$dlv_field}"
+		{/foreach}
+	{/if}
+					]
+				{rdelim};
+
+
+
+	function buildAddressBlock(id_address, address_type, dest_comp)
+	{ldelim}
+		var adr_titles_vals = {ldelim}
+						'invoice': "{l s='Your billing address'}"
+						, 'delivery': "{l s='Your delivery address'}"
+					{rdelim};
+
+		var li_content = addresses_values[id_address];
+		var fields_name = ["title"];
+
+		fields_name = fields_name.concat(address_format[address_type]);
+		fields_name = fields_name.concat(["update"]);
+
+		dest_comp.html('');
+
+		li_content["title"] = adr_titles_vals[address_type];
+		li_content["update"] = '<a href="{$link->getPageLink('address.php', true)}?id_address={$address.id_address|intval}&amp;back=order.php&amp;step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">{l s='Update'}</a>';
+
+
+		appendAddressLis(dest_comp, fields_name, li_content);
+	{rdelim}
+
+	function appendAddressLis(dest_comp, fields_name, values)
+	{ldelim}
+
+		for (var item in fields_name)
+		{ldelim}
+			var name = fields_name[item];
+			var new_li = document.createElement('li');
+			new_li.className = 'address_'+ name;
+			new_li.innerHTML = getFieldValue(name, values);
+			dest_comp.append(new_li);
+		{rdelim}
+
+	{rdelim}
+
+	function getFieldValue(field_name, values)
+	{ldelim}
+		var reg=new RegExp("[ ]+", "g");
+
+		var items=field_name.split(reg);
+		var vals = new Array();
+
+		for (var field_item in items)
+			vals.push(values[items[field_item]]);
+		return vals.join(" ");
+	{rdelim}
+
 //]]>
 </script>
 
@@ -81,24 +163,8 @@
 		</p>
 		<div class="clear"></div>
 		<ul class="address item" id="address_delivery">
-			<li class="address_title">{l s='Your delivery address'}</li>
-			<li class="address_company"></li>
-			<li class="address_name"></li>
-			<li class="address_address1"></li>
-			<li class="address_address2"></li>
-			<li class="address_city"></li>
-			<li class="address_country"></li>
-			<li class="address_update"><a href="{$link->getPageLink('address.php', true)}?id_address={$address.id_address|intval}&amp;back=order.php&amp;step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">{l s='Update'}</a></li>
 		</ul>
 		<ul class="address alternate_item" id="address_invoice">
-			<li class="address_title">{l s='Your billing address'}</li>
-			<li class="address_company"></li>
-			<li class="address_name"></li>
-			<li class="address_address1"></li>
-			<li class="address_address2"></li>
-			<li class="address_city"></li>
-			<li class="address_country"></li>
-			<li class="address_update"><a href="{$link->getPageLink('address.php', true)}?id_address={$address.id_address|intval}&amp;back=order.php&amp;step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">{l s='Update'}</a></li>
 		</ul>
 		<br class="clear" />
 		<p class="address_add submit">
@@ -122,3 +188,4 @@
 {else}
 </div>
 {/if}
+

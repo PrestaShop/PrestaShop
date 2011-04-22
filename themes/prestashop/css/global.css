@@ -348,6 +348,7 @@ div.table_block {
 	margin: 0 auto 2em;
 	width: 541px
 }
+.std {font-size: 11px;}
 table.std {
 	border-spacing: 0;
 	border-collapse: collapse;

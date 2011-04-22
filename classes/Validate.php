@@ -251,7 +251,7 @@ class ValidateCore
 	
 	static public function isStateIsoCode($isoCode)
 	{
-		return preg_match('/^[a-z0-9]{2}((-)[a-z0-9]{1,3})?$/ui', $isoCode);
+		return preg_match('/^[a-z0-9]{2,3}((-)[a-z0-9]{1,3})?$/ui', $isoCode);
 	}
 	
 	static public function isNumericIsoCode($isoCode)

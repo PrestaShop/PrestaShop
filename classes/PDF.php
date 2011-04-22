@@ -278,23 +278,51 @@ class PDFCore extends PDF_PageGroupCore
 		$pdf->SetY(25);
 		$pdf->SetFont(self::fontname(), '', 9);
 
-		if (!empty($delivery_address->company))
+
+
+		$ordered_adr_fields = AddressFormat::getOrderedAddressFields($invoice_address->id_country);
+ 
+		$optional_fields = array(
+						'address2' => 1
+						, 'company' => 1
+					);
+		$ignore_fields = array(
+						'phone'	=> 1
+						, 'mobile_phone' =>1
+					);
+
+		foreach ($ordered_adr_fields as $adr_line)
 		{
-			$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->company), 0, 'L');
-			$pdf->Ln(5);
+			$line_fields = explode(" ", trim($adr_line));
+			$tmp_dlv_vals = array();
+		
+			foreach($line_fields as $field_name)
+			{
+				// if not skip 
+				if (!isset($ignore_fields[$field_name]))
+				{
+					$tmp_dlv = $delivery_address->{$field_name};
+					
+					if (!((empty($tmp_dlv) || $tmp_dlv == '') && isset($optional_fields[$field_name])))
+					{
+						$tmp_dlv = ($field_name == "country") ? $tmp_dlv.($deliveryState ? ' - '.$deliveryState->name : ''): $tmp_dlv;
+						$tmp_dlv_vals[] = Tools::iconv('utf-8', self::encoding(), $tmp_dlv);
+					}
+				}
+			}
+			$str_dlv_vals = implode(" ", $tmp_dlv_vals);
+
+			$need_nl = false;
+			if (!empty($str_dlv_vals) && $str_dlv_vals != '' && $str_dlv_vals != ' ')
+			{
+				$need_nl = true;
+				$pdf->Cell($width, 10, $str_dlv_vals, 0, 'L');
+			}
+
+			if ($need_nl)
+				$pdf->Ln(5);
+
 		}
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->firstname).' '.Tools::iconv('utf-8', self::encoding(), $delivery_address->lastname), 0, 'L');
-		$pdf->Ln(5);
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->address1), 0, 'L');
-		$pdf->Ln(5);
-		if (!empty($delivery_address->address2))
-		{
-			$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->address2), 0, 'L');
-			$pdf->Ln(5);
-		}
-		$pdf->Cell($width, 10, $delivery_address->postcode.' '.Tools::iconv('utf-8', self::encoding(), $delivery_address->city), 0, 'L');
-		$pdf->Ln(5);
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->country.($deliveryState ? ' - '.$deliveryState->name : '')), 0, 'L');
 
 		/*
 		 * display order information
@@ -403,6 +431,17 @@ class PDFCore extends PDF_PageGroupCore
 		$delivery_address = new Address((int)($order->id_address_delivery));
 		$deliveryState = $delivery_address->id_state ? new State($delivery_address->id_state) : false;
 
+		$ordered_adr_fields = AddressFormat::getOrderedAddressFields($invoice_address->id_country);
+ 
+		$optional_fields = array(
+						'address2' => 1
+						, 'company' => 1
+					);
+		$ignore_fields = array(
+						'phone'	=> 1
+						, 'mobile_phone' =>1
+					);
+		
 		$width = 100;
 
 		$pdf->SetX(10);
@@ -413,30 +452,53 @@ class PDFCore extends PDF_PageGroupCore
 		$pdf->Ln(5);
 		$pdf->SetFont(self::fontname(), '', 9);
 
-		if (!empty($delivery_address->company) OR !empty($invoice_address->company))
+
+		foreach ($ordered_adr_fields as $adr_line)
 		{
-			$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->company), 0, 'L');
-			$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $invoice_address->company), 0, 'L');
-			$pdf->Ln(5);
+			$line_fields = explode(" ", trim($adr_line));
+
+			$tmp_inv_vals = array();
+			$tmp_dlv_vals = array();
+		
+			foreach($line_fields as $field_name)
+			{
+				// if not skip 
+				if (!isset($ignore_fields[$field_name]))
+				{
+					$tmp_inv = $invoice_address->{$field_name};
+					$tmp_dlv = $delivery_address->{$field_name};
+					if (!((empty($tmp_inv) || $tmp_inv == '') && isset($optional_fields[$field_name])))
+					{
+						$tmp_inv = ($field_name == "country") ? $tmp_inv.($deliveryState ? ' - '.$deliveryState->name : ''): $tmp_inv;
+						$tmp_inv_vals[] = Tools::iconv('utf-8', self::encoding(), $tmp_inv);
+					}
+					if (!((empty($tmp_dlv) || $tmp_dlv == '') && isset($optional_fields[$field_name])))
+					{
+						$tmp_dlv = ($field_name == "country") ? $tmp_dlv.($deliveryState ? ' - '.$deliveryState->name : ''): $tmp_dlv;
+						$tmp_dlv_vals[] = Tools::iconv('utf-8', self::encoding(), $tmp_dlv);
+					}
+				}
+			}
+			$str_inv_vals = implode(" ", $tmp_inv_vals);
+			$str_dlv_vals = implode(" ", $tmp_dlv_vals);
+
+			$need_nl = false;
+			if (!empty($str_dlv_vals) && $str_dlv_vals != '' && $str_dlv_vals != ' ')
+			{
+				$need_nl = true;
+				$pdf->Cell($width, 10, $str_dlv_vals, 0, 'L');
+			}
+			if (!empty($str_inv_vals) && $str_inv_vals != '' && $str_inv_vals != ' ')
+			{
+				$need_nl = true;
+				$pdf->Cell($width, 10, $str_inv_vals, 0, 'L');
+			}
+
+			if ($need_nl)
+				$pdf->Ln(5);
+
 		}
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->firstname).' '.Tools::iconv('utf-8', self::encoding(), $delivery_address->lastname), 0, 'L');
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $invoice_address->firstname).' '.Tools::iconv('utf-8', self::encoding(), $invoice_address->lastname), 0, 'L');
-		$pdf->Ln(5);
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->address1), 0, 'L');
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $invoice_address->address1), 0, 'L');
-		$pdf->Ln(5);
-		if (!empty($invoice_address->address2) OR !empty($delivery_address->address2))
-		{
-			$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->address2), 0, 'L');
-			$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $invoice_address->address2), 0, 'L');
-			$pdf->Ln(5);
-		}
-		$pdf->Cell($width, 10, $delivery_address->postcode.' '.Tools::iconv('utf-8', self::encoding(), $delivery_address->city), 0, 'L');
-		$pdf->Cell($width, 10, $invoice_address->postcode.' '.Tools::iconv('utf-8', self::encoding(), $invoice_address->city), 0, 'L');
-		$pdf->Ln(5);
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $delivery_address->country.($deliveryState ? ' - '.$deliveryState->name : '')), 0, 'L');
-		$pdf->Cell($width, 10, Tools::iconv('utf-8', self::encoding(), $invoice_address->country.($invoiceState ? ' - '.$invoiceState->name : '')), 0, 'L');
-		$pdf->Ln(5);
+
 
 		if (Configuration::get('VATNUMBER_MANAGEMENT') AND !empty($invoice_address->vat_number))
 		{

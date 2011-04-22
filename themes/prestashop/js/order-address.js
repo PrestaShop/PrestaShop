@@ -69,22 +69,10 @@ function updateAddressDisplay(addressType)
 {	
 	if (addresses.length <= 0)
 		return false;
-	
+
 	var idAddress = $('select#id_address_' + addressType + '').val();
-	$('ul#address_' + addressType + ' li.address_company').html(addresses[idAddress][0]);
-	if(addresses[idAddress][0] == '')
-		$('ul#address_' + addressType + ' li.address_company').hide();
-	else
-		$('ul#address_' + addressType + ' li.address_company').show();
-	$('ul#address_' + addressType + ' li.address_name').html(addresses[idAddress][1] + ' ' + addresses[idAddress][2]);
-	$('ul#address_' + addressType + ' li.address_address1').html(addresses[idAddress][3]);
-	$('ul#address_' + addressType + ' li.address_address2').html(addresses[idAddress][4]);
-	if(addresses[idAddress][4] == '')
-		$('ul#address_' + addressType + ' li.address_address2').hide();
-	else
-		$('ul#address_' + addressType + ' li.address_address2').show();
-	$('ul#address_' + addressType + ' li.address_city').html(addresses[idAddress][5] + ' ' + addresses[idAddress][6]);
-	$('ul#address_' + addressType + ' li.address_country').html(addresses[idAddress][7] + (addresses[idAddress][8] != '' ? ' (' + addresses[idAddress][8] +')' : ''));
+	buildAddressBlock(idAddress, addressType, $('#address_'+ addressType));
+
 	// change update link
 	var link = $('ul#address_' + addressType + ' li.address_update a').attr('href');
 	var expression = /id_address=\d+/;
@@ -105,7 +93,7 @@ function updateAddresses()
            dataType : "json",
            data: 'processAddress=true&step=2&ajax=true&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice+ '&token=' + static_token ,
            success: function(jsonData)
-           {
+           	{
            		if (jsonData.hasError)
 				{
 					var errors = '';
@@ -115,7 +103,7 @@ function updateAddresses()
 							errors += jsonData.errors[error] + "\n";
 					alert(errors);
 				}
-			},
+		},
            error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
        });
 }

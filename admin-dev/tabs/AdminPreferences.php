@@ -270,6 +270,7 @@ class AdminPreferences extends AdminTab
 							$val[$language['id_lang']] = isset($values['cast']) ? $values['cast'](Tools::getValue($field.'_'.$language['id_lang'])) : Tools::getValue($field.'_'.$language['id_lang']);
 					else
 						$val = isset($values['cast']) ? $values['cast'](Tools::getValue($field)) : Tools::getValue($field);
+
 					Configuration::updateValue($field, $val);
 				}
 				Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
@@ -303,10 +304,11 @@ class AdminPreferences extends AdminTab
 		$tab['db_prefix'] = _DB_PREFIX_;
 		$tab['db_user'] = _DB_USER_;
 		$tab['db_passwd'] = '';
+
 		return $tab;
 	}
 
-	private function	getDivLang($fields)
+	private function getDivLang($fields)
 	{
 		$tab = array();
 		foreach ($fields AS $key => $field)
@@ -347,6 +349,7 @@ class AdminPreferences extends AdminTab
 			if (isset($field['required']) AND $field['required'])
 				$required = true;
 			$val = $this->getVal($confValues, $key);
+
 			if (!in_array($field['type'], array('image', 'radio', 'container', 'container_end')) OR isset($field['show']))
 				echo '<div style="clear: both; padding-top:15px;">'.($field['title'] ? '<label >'.$field['title'].'</label>' : '').'<div class="margin-form" style="padding-top:5px;">';
 

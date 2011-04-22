@@ -685,27 +685,22 @@ class AdminOrders extends AdminTab
 					<a href="?tab=AdminAddresses&id_address='.$addressDelivery->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=1' : '').'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)($cookie->id_employee)).'&back='.urlencode($_SERVER['REQUEST_URI']).'"><img src="../img/admin/edit.gif" /></a>
 					<a href="http://maps.google.com/maps?f=q&hl='.$currentLanguage->iso_code.'&geocode=&q='.$addressDelivery->address1.' '.$addressDelivery->postcode.' '.$addressDelivery->city.($addressDelivery->id_state ? ' '.$deliveryState->name: '').'" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
 				</div>
-				'. (!empty($addressDelivery->company) ? $addressDelivery->company.'<br />' : '') .$addressDelivery->firstname.' '.$addressDelivery->lastname.'<br />
-				'.$addressDelivery->address1.'<br />'. (!empty($addressDelivery->address2) ? $addressDelivery->address2.'<br />' : '') .'
-				'.$addressDelivery->postcode.' '.$addressDelivery->city.'<br />
-				'.$addressDelivery->country.($addressDelivery->id_state ? ' - '.$deliveryState->name : '').'<br />
-				'.(!empty($addressDelivery->phone) ? $addressDelivery->phone.'<br />' : '').'
-				'.(!empty($addressDelivery->phone_mobile) ? $addressDelivery->phone_mobile.'<br />' : '').'
-				'.(!empty($addressDelivery->other) ? '<hr />'.$addressDelivery->other.'<br />' : '').'
-			</fieldset>
+				'.$this->displayAddressDetail($addressDelivery)
+//				. (!empty($addressDelivery->company) ? $addressDelivery->company.'<br />' : '') .$addressDelivery->firstname.' '.$addressDelivery->lastname.'<br />
+//				'.$addressDelivery->address1.'<br />'. (!empty($addressDelivery->address2) ? $addressDelivery->address2.'<br />' : '') .'
+//				'.$addressDelivery->postcode.' '.$addressDelivery->city.'<br />
+//				'.$addressDelivery->country.($addressDelivery->id_state ? ' - '.$deliveryState->name : '').'<br />
+//				'.(!empty($addressDelivery->phone) ? $addressDelivery->phone.'<br />' : '').'
+//				'.(!empty($addressDelivery->phone_mobile) ? $addressDelivery->phone_mobile.'<br />' : '').'
+//				'.(!empty($addressDelivery->other) ? '<hr />'.$addressDelivery->other.'<br />' : '').'
+			.'</fieldset>
 		</div>
 		<div style="float: left; margin-left: 40px">
 			<fieldset style="width: 400px;">
 				<legend><img src="../img/admin/invoice.gif" alt="'.$this->l('Invoice address').'" />'.$this->l('Invoice address').'</legend>
 				<div style="float: right"><a href="?tab=AdminAddresses&id_address='.$addressInvoice->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=2' : '').'&back='.urlencode($_SERVER['REQUEST_URI']).'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)($cookie->id_employee)).'"><img src="../img/admin/edit.gif" /></a></div>
-				'. (!empty($addressInvoice->company) ? $addressInvoice->company.'<br />' : '').(!empty($addressInvoice->vat_number) ? $addressInvoice->vat_number.'<br />' : '').$addressInvoice->firstname.' '.$addressInvoice->lastname.'<br />
-				'.$addressInvoice->address1.'<br />'. (!empty($addressInvoice->address2) ? $addressInvoice->address2.'<br />' : '') .'
-				'.$addressInvoice->postcode.' '.$addressInvoice->city.'<br />
-				'.$addressInvoice->country.($addressInvoice->id_state ? ' - '.$invoiceState->name : '').'<br />
-				'.(!empty($addressInvoice->phone) ? $addressInvoice->phone.'<br />' : '').'
-				'.(!empty($addressInvoice->phone_mobile) ? $addressInvoice->phone_mobile.'<br />' : '').'
-				'.(!empty($addressInvoice->other) ? '<hr />'.$addressInvoice->other.'<br />' : '').'
-			</fieldset>
+				'.$this->displayAddressDetail($addressInvoice)
+			.'</fieldset>
 		</div>
 		<div class="clear">&nbsp;</div>';
 
@@ -933,6 +928,60 @@ class AdminOrders extends AdminTab
 		</div>';
 		echo '<div class="clear">&nbsp;</div>';
 		echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+	}
+
+	public function displayAddressDetail($address)
+	{
+		$optional_fields = array(
+						'company' => 1
+						, 'phone' => 1
+						, 'phone_mobile' => 1
+						, 'address2' => 1
+					);
+		$out = '';
+		$address_datas = AddressFormat::getAddressCountryFormat($address->id_country);
+
+		$field_other = $address->other;
+		$lines_out = $address->getOrderedValues(array(
+									'spacer' => ' '
+									, 'optional' => $optional_fields
+								)
+								, $address_datas);
+
+		$out = implode("<br />", $lines_out) .((!(is_null($field_other) || $field_other == '')  )? '<hr />'.$field_other: ''); 
+		return $out;
+	}
+
+	/**
+	* returns String array values according to the given string pattern
+	*
+	*/
+
+	public function getOrderedValues($address, $pattern, array $given_values = null)
+	{
+		$out = array();
+		if (!empty($fields) && $fields != '' && !is_null($address))
+		{
+			$sep = "\n";
+			$line_sep = ' ';
+			$lines = explode($sep, $pattern);
+			foreach ($lines as $one_line)
+			{
+				if(!empty($one_line) && $one_line!= '')
+				{
+					$tmp_values = array();
+					$words = explode($line_sep, trim($one_line));
+					$tmp_words = array();
+
+					// String append instead of Array append
+					foreach ($words as $one_word)
+						$tmp_values[$one_word] = (is_null($given_values)) ? $address->{$one_word} : $given_values[$one_word];
+
+					$out[] = array($tmp_values, implode(' ', $tmp_values));
+				}
+			}
+		}
+		return $out;
 	}
 
 	public function display()

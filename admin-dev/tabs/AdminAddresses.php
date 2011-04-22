@@ -62,7 +62,7 @@ class AdminAddresses extends AdminTab
 		'address1' => array('title' => $this->l('Address'), 'width' => 200),
 		'postcode' => array('title' => $this->l('Postcode/ Zip Code'), 'align' => 'right', 'width' => 50),
 		'city' => array('title' => $this->l('City'), 'width' => 150),
-		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
+		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'id_country'));
 
 		parent::__construct();
 	}
@@ -275,6 +275,13 @@ class AdminAddresses extends AdminTab
 						<input type="text" size="33" name="email" value="'.htmlentities(Tools::getValue('email'), ENT_COMPAT, 'UTF-8').'" style="text-transform: lowercase;" /> <sup>*</sup>
 					</div>';
 				}
+				echo '
+					<label for="dni">'.$this->l('Identification Number').'</label>
+					<div class="margin-form">
+					<input type="text" name="dni" id="dni" value="'.htmlentities($this->getFieldValue($obj, 'dni'), ENT_COMPAT, 'UTF-8').'" />
+					<p>'.$this->l('DNI / NIF / NIE').'</p>
+					</div>';
+
 				echo '<label>'.$this->l('Alias').'</label>
 				<div class="margin-form">
 					<input type="text" size="33" name="alias" value="'.htmlentities($this->getFieldValue($obj, 'alias'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
@@ -282,142 +289,215 @@ class AdminAddresses extends AdminTab
 				</div>';
 				break;
 		}
-		if ($this->addressType != 'manufacturer')
-		{
-				echo '<label>'.$this->l('Company').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="company" value="'.htmlentities($this->getFieldValue($obj, 'company'), ENT_COMPAT, 'UTF-8').'" />
-					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-				</div>';
+		$addresses_fields = $this->processAddressFormat();
+		$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
 
-				if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-					echo '<div id="vat_area" style="display: visible">';
-				else if(Configuration::get('VATNUMBER_MANAGEMENT'))
-					echo '<div id="vat_area" style="display: hidden">';
-				else
-					echo'<div style="display: none;">';
+
+		foreach($addresses_fields as $addr_field_item)
+		{
+			if ($addr_field_item == 'company')
+			{
+				if ($this->addressType != 'manufacturer')
+				{
+					echo '<label>'.$this->l('Company').'</label>
+						<div class="margin-form">
+						<input type="text" size="33" name="company" value="'.htmlentities($this->getFieldValue($obj, 'company'), ENT_COMPAT, 'UTF-8').'" />
+						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+						</div>';
+
+					if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
+						echo '<div id="vat_area" style="display: visible">';
+					else if(Configuration::get('VATNUMBER_MANAGEMENT'))
+						echo '<div id="vat_area" style="display: hidden">';
+					else
+						echo'<div style="display: none;">';
 
 					echo '<label>'.$this->l('VAT number').'</label>
-					<div class="margin-form">
+						<div class="margin-form">
 						<input type="text" size="33" name="vat_number" value="'.htmlentities($this->getFieldValue($obj, 'vat_number'), ENT_COMPAT, 'UTF-8').'" />
-					</div>
-					</div>';
-		}
+						</div>
+						</div>';
+				}
+			}
+			elseif ($addr_field_item == 'lastname')
+			{
 				echo '
-				<label>'.$this->l('Last name').'</label>
-				<div class="margin-form">
+					<label>'.$this->l('Last name').'</label>
+					<div class="margin-form">
 					<input type="text" size="33" name="lastname" value="'.htmlentities($this->getFieldValue($obj, 'lastname'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
 					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>
-				</div>
-				<label>'.$this->l('First name').'</label>
-				<div class="margin-form">
+					</div>';
+			}
+			elseif ($addr_field_item == 'firstname')
+			{
+
+				echo '
+					<label>'.$this->l('First name').'</label>
+					<div class="margin-form">
 					<input type="text" size="33" name="firstname" value="'.htmlentities($this->getFieldValue($obj, 'firstname'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
 					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>
-				</div>
-				<label for="dni">'.$this->l('Identification Number').'</label>
-				<div class="margin-form">
-					<input type="text" name="dni" id="dni" value="'.htmlentities($this->getFieldValue($obj, 'dni'), ENT_COMPAT, 'UTF-8').'" />
-					<p>'.$this->l('DNI / NIF / NIE').'</p>
-				</div>
-				<label>'.$this->l('Address').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="address1" value="'.htmlentities($this->getFieldValue($obj, 'address1'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-				</div>
-				<label>'.$this->l('Address').' (2):</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="address2" value="'.htmlentities($this->getFieldValue($obj, 'address2'), ENT_COMPAT, 'UTF-8').'" />
-				</div>
-				<label>'.$this->l('Postcode/ Zip Code').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="postcode" value="'.htmlentities($this->getFieldValue($obj, 'postcode'), ENT_COMPAT, 'UTF-8').'" />
-				</div>
-				<label>'.$this->l('City').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="city" value="'.htmlentities($this->getFieldValue($obj, 'city'), ENT_COMPAT, 'UTF-8').'" style="text-transform: uppercase;" /> <sup>*</sup>
-				</div>
-				<label>'.$this->l('Country').'</label>
-				<div class="margin-form">
-					<select name="id_country" id="id_country" />';
-		$selectedCountry = $this->getFieldValue($obj, 'id_country');
-		foreach ($this->countriesArray AS $id_country => $name)
-			echo '		<option value="'.$id_country.'"'.((!$selectedCountry AND Configuration::get('PS_COUNTRY_DEFAULT') == $id_country) ? ' selected="selected"' : ($selectedCountry == $id_country ? ' selected="selected"' : '')).'>'.$name.'</option>';
-		echo '		</select> <sup>*</sup>
-				</div>';
-		
-				$id_country_ajax = (int)$this->getFieldValue($obj, 'id_country');
-		
-		echo '
-				<script type="text/javascript">
-				$(document).ready(function(){
-					ajaxStates ();
-					$(\'#id_country\').change(function() {
-						ajaxStates ();
-					});
-					function ajaxStates ()
-					{
-						$.ajax({
-						  url: "ajax.php",
-						  cache: false,
-						  data: "ajaxStates=1&id_country="+$(\'#id_country\').val()+"&id_state="+$(\'#id_state\').val(),
-						  success: function(html)
-						  {
-						  	if (html == \'false\')
-						  	{
-						  		$("#contains_states").fadeOut();
-						  		$(\'#id_state option[value=0]\').attr("selected", "selected");
-						  	}
-						  	else
-						  	{
-						  		$("#id_state").html(html);
-						  		$("#contains_states").fadeIn();
-						  		$(\'#id_state option[value='.(int)$obj->id_state.']\').attr("selected", "selected");
-						  	}
-						  }
-						});
-						
-						';
-					if (file_exists(_MODULE_DIR_.'vatnumber/ajax.php'))
-					echo '	$.ajax({
-							type: "GET",
-							url: "'._MODULE_DIR_.'vatnumber/ajax.php?id_country="+$(\'#id_country\').val(),
-							success: function(isApplicable)
-							{
-								if(isApplicable == 1)
-									$(\'#vat_area\').show();
-								else
-									$(\'#vat_area\').hide();
-							}
-						});';
-			echo '	};
-				});
-				
-				</script>
-				<div id="contains_states" '.(!Country::containsStates((int)$selectedCountry) ? 'style="display:none;"' : '').'>
-					<label>'.$this->l('State').'</label>
+					</div>';
+			}
+			elseif ($addr_field_item == 'address1')
+			{
+
+				echo '
+					<label>'.$this->l('Address').'</label>
 					<div class="margin-form">
-						<select name="id_state" id="id_state">
-						</select>
-					</div>
+					<input type="text" size="33" name="address1" value="'.htmlentities($this->getFieldValue($obj, 'address1'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
+					</div>';
+			}
+			elseif ($addr_field_item == 'address2')
+			{
+
+				echo '
+					<label>'.$this->l('Address').' (2):</label>
+									     <div class="margin-form">
+												      <input type="text" size="33" name="address2" value="'.htmlentities($this->getFieldValue($obj, 'address2'), ENT_COMPAT, 'UTF-8').'" />
+															      </div>';
+			}
+			elseif ($addr_field_item == 'postcode')
+			{
+
+				echo '
+					<label>'.$this->l('Postcode/ Zip Code').'</label>
+					<div class="margin-form">
+					<input type="text" size="33" name="postcode" value="'.htmlentities($this->getFieldValue($obj, 'postcode'), ENT_COMPAT, 'UTF-8').'" />
+					</div>';
+			}
+			elseif ($addr_field_item == 'city')
+			{
+
+				echo '
+					<label>'.$this->l('City').'</label>
+					<div class="margin-form">
+					<input type="text" size="33" name="city" value="'.htmlentities($this->getFieldValue($obj, 'city'), ENT_COMPAT, 'UTF-8').'" style="text-transform: uppercase;" /> <sup>*</sup>
+					</div>';
+			}
+			elseif ($addr_field_item == 'country')
+			{
+
+				echo '
+					<label>'.$this->l('Country').'</label>
+					<div class="margin-form">
+					<select name="id_country" id="id_country" />';
+				$selectedCountry = $this->getFieldValue($obj, 'id_country');
+				foreach ($this->countriesArray AS $id_country => $name)
+					echo '		<option value="'.$id_country.'"'.((!$selectedCountry AND Configuration::get('PS_COUNTRY_DEFAULT') == $id_country) ? ' selected="selected"' : ($selectedCountry == $id_country ? ' selected="selected"' : '')).'>'.$name.'</option>';
+				echo '		</select> <sup>*</sup>
+					</div>';
+
+
+			echo '
+				<div id="contains_states" '.(!Country::containsStates((int)$selectedCountry) ? 'style="display:none;"' : '').'>
+				<label>'.$this->l('State').'</label>
+				<div class="margin-form">
+				<select name="id_state" id="id_state">
+				</select>
 				</div>
+				</div>';
+
+
+				$id_country_ajax = (int)$this->getFieldValue($obj, 'id_country');
+
+				echo '
+					<script type="text/javascript">
+					$(document).ready(function(){
+							ajaxStates ();
+							$(\'#id_country\').change(function() {
+								ajaxStates ();
+								});
+							function ajaxStates ()
+							{
+								$.ajax({
+									url: "ajax.php",
+									cache: false,
+									data: "ajaxStates=1&id_country="+$(\'#id_country\').val()+"&id_state="+$(\'#id_state\').val(),
+									success: function(html)
+										{
+											if (html == \'false\')
+											{
+												$("#contains_states").fadeOut();
+												$(\'#id_state option[value=0]\').attr("selected", "selected");
+}
+											else
+											{
+												$("#id_state").html(html);
+												$("#contains_states").fadeIn();
+												$(\'#id_state option[value='.(int)$obj->id_state.']\').attr("selected", "selected");
+											}
+										}
+									}); ';
+		if (file_exists(_MODULE_DIR_.'vatnumber/ajax.php'))
+			echo '	$.ajax({
+					type: "GET",
+					url: "'._MODULE_DIR_.'vatnumber/ajax.php?id_country="+$(\'#id_country\').val(),
+					success: function(isApplicable)
+						{
+							if(isApplicable == 1)
+								$(\'#vat_area\').show();
+							else
+								$(\'#vat_area\').hide();
+						}
+					});';
+		echo '	}; }); </script>';
+		}
+
+	} // End foreach
+			echo '
 				<label>'.$this->l('Home phone').'</label>
 				<div class="margin-form">
 					<input type="text" size="33" name="phone" value="'.htmlentities($this->getFieldValue($obj, 'phone'), ENT_COMPAT, 'UTF-8').'" />
-				</div>
+				</div>';
+			
+			echo '
 				<label>'.$this->l('Mobile phone').'</label>
 				<div class="margin-form">
 					<input type="text" size="33" name="phone_mobile" value="'.htmlentities($this->getFieldValue($obj, 'phone_mobile'), ENT_COMPAT, 'UTF-8').'" />
-				</div>
+				</div>';
+
+			
+			echo '
 				<label>'.$this->l('Other').'</label>
 				<div class="margin-form">
 					<textarea name="other" cols="36" rows="4">'.htmlentities($this->getFieldValue($obj, 'other'), ENT_COMPAT, 'UTF-8').'</textarea>
 					<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-				</div>
+				</div>';
+
+			echo '
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
+			</fieldset>';
+		echo '
 		</form>';
+	}
+
+	protected function processAddressFormat()
+	{
+		$tmp_addr = new Address((int)Tools::getValue("id_address"));
+		$selectedCountry = (!is_null($tmp_addr)) ? $tmp_addr->id_country : (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry);
+
+		$inv_all_fields = array();
+		$dlv_all_fields = array();
+
+		$out = array();
+
+		foreach (array('inv','dlv') as $adr_type)
+		{
+			foreach (${$adr_type.'_adr_fields'} as $fields_line)
+				foreach(explode(' ',$fields_line) as $field_item)
+					${$adr_type.'_all_fields'}[] = trim($field_item);
+
+
+			$out[$adr_type.'_adr_fields'] =  ${$adr_type.'_adr_fields'};
+			$out[$adr_type.'_all_fields'] =  ${$adr_type.'_all_fields'};
+		}
+
+		return $out;
 	}
 }
 

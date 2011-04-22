@@ -134,7 +134,7 @@ class SearchControllerCore extends FrontController
 		parent::setMedia();
 		
 		if (!$this->instantSearch AND !$this->ajaxSearch)
-			Tools::addCSS(_THEME_CSS_DIR_.'product-list.css');
+			Tools::addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 }
 

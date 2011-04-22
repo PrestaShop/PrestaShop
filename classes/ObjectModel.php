@@ -452,7 +452,15 @@ abstract class ObjectModelCore
 		return ((is_array($_FIELDS) AND array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field);
 	}
 
+	/**
+	* TODO: refactor rename all calls to this to validateController
+	*/
 	public function validateControler($htmlentities = true)
+	{
+		return $this->validateController($htmlentities);
+	}
+
+	public function validateController($htmlentities = true)
 	{
 		$errors = array();
 

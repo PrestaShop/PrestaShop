@@ -684,13 +684,13 @@ class CartCore extends ObjectModel
 		self::$_nbProducts = NULL;
 		if ((int)($id_customization))
 		{
-			$productTotalQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity` 
-				FROM `'._DB_PREFIX_.'cart_product` 
+			$productTotalQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity`
+				FROM `'._DB_PREFIX_.'cart_product`
 				WHERE `id_product` = '.(int)($id_product).' AND `id_product_attribute` = '.(int)($id_product_attribute)));
-			$customizationQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity` 
-				FROM `'._DB_PREFIX_.'customization` 
-				WHERE `id_cart` = '.(int)($this->id).' 
-					AND `id_product` = '.(int)($id_product).' 
+			$customizationQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity`
+				FROM `'._DB_PREFIX_.'customization`
+				WHERE `id_cart` = '.(int)($this->id).'
+					AND `id_product` = '.(int)($id_product).'
 					AND `id_product_attribute` = '.(int)($id_product_attribute)));
 			if (!$this->_deleteCustomization((int)($id_customization), (int)($id_product), (int)($id_product_attribute)))
 				return false;
@@ -719,7 +719,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * Delete a customization from the cart. If customization is a Picture (type=2), 
+	 * Delete a customization from the cart. If customization is a Picture (type=2),
 	 * then the image is also deleted
 	 *
 	 * @param integer $id_customization
@@ -729,7 +729,7 @@ class CartCore extends ObjectModel
 	{
 		$result = true;
 		$customization = Db::getInstance()->getRow('SELECT *
-			FROM `'._DB_PREFIX_.'customization` 
+			FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_customization` = '.(int)($id_customization));
 
 		if ($customization and sizeof($customization))
@@ -737,7 +737,7 @@ class CartCore extends ObjectModel
 			$custData = Db::getInstance()->getRow('SELECT *
 				FROM `'._DB_PREFIX_.'customized_data`
 				WHERE `id_customization` = '.(int)($id_customization));
-			
+
 			if (isset($custData['type']) and $custData['type'] == 0)
 				$result &= $this->deletePictureToProduct($id_product,$custData['value']);
 
@@ -748,15 +748,15 @@ class CartCore extends ObjectModel
 			if($result)
 				$result &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'cart_product`
 					SET `quantity` = `quantity` - '.(int)($customization['quantity']).'
-					WHERE `id_cart` = '.(int)($this->id).' 
-					AND `id_product` = '.(int)($id_product).((int)($id_product_attribute) ? ' 
+					WHERE `id_cart` = '.(int)($this->id).'
+					AND `id_product` = '.(int)($id_product).((int)($id_product_attribute) ? '
 					AND `id_product_attribute` = '.(int)($id_product_attribute) : ''));
 
 			if (!$result)
 				return false;
 
-			return Db::getInstance()->Execute('DELETE 
-				FROM `'._DB_PREFIX_.'customization` 
+			return Db::getInstance()->Execute('DELETE
+				FROM `'._DB_PREFIX_.'customization`
 				WHERE `id_customization` = '.(int)($id_customization));
 		}
 
@@ -829,8 +829,10 @@ class CartCore extends ObjectModel
 
 				if ($withTaxes)
 				{
-				    $total_price = ($total_price - $total_ecotax) * (1 + (float)(Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100);
-					$total_price = Tools::ps_round($total_price - $total_ecotax, 2);
+				   $total_price = ($total_price - $total_ecotax) * (1 + (float)(Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100);
+				   $total_ecotax = $total_ecotax * (1 + Tax::getProductEcotaxRate((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) / 100);
+					$total_price = Tools::ps_round($total_price + $total_ecotax, 2);
+
 				}
 			}
 			else
@@ -971,18 +973,12 @@ class CartCore extends ObjectModel
 		// If no carrier, select default one
 		if (!$id_carrier)
 			$id_carrier = $this->id_carrier;
-		if (empty($id_carrier))
-		{
-			$carrier = new Carrier((int)(Configuration::get('PS_CARRIER_DEFAULT')), Configuration::get('PS_LANG_DEFAULT'));
 
-			if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT AND (Carrier::checkDeliveryPriceByWeight((int)(Configuration::get('PS_CARRIER_DEFAULT')), $this->getTotalWeight(), $id_zone)))
-			OR ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE AND (Carrier::checkDeliveryPriceByPrice((int)(Configuration::get('PS_CARRIER_DEFAULT')), $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, (int)($this->id_currency)))))
-			{
+		if ($id_carrier && !$this->isCarrierInRange($id_carrier, $id_zone))
+			$id_carrier = '';
+
+		if (empty($id_carrier) && $this->isCarrierInRange(Configuration::get('PS_CARRIER_DEFAULT'), $id_zone))
 				$id_carrier = (int)(Configuration::get('PS_CARRIER_DEFAULT'));
-			}
-
-			unset($carrier);
-		}
 
 		if (empty($id_carrier))
 		{
@@ -1255,6 +1251,7 @@ class CartCore extends ObjectModel
 		$invoice = new Address((int)($this->id_address_invoice));
 
 		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
+
 		if ($total_tax < 0)
 			$total_tax = 0;
 
@@ -1539,6 +1536,32 @@ class CartCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customer` cu
 			LEFT JOIN `'._DB_PREFIX_.'cart` ca ON (ca.`id_customer` = cu.`id_customer`)
 			WHERE ca.`id_cart` = '.(int)$id_cart);
+	}
+
+	/**
+	 * isCarrierInRange
+	 *
+	 * Check if the specified carrier is in range
+	 *
+	 * @id_carrier int
+	 * @id_zone int
+	 */
+	public function isCarrierInRange($id_carrier, $id_zone)
+	{
+		$carrier = new Carrier((int)$id_carrier, Configuration::get('PS_LANG_DEFAULT'));
+		$is_in_zone = false;
+		$order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
+
+		if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT
+		AND (Carrier::checkDeliveryPriceByWeight((int)$id_carrier, $this->getTotalWeight(), $id_zone)))
+		OR ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE
+		AND (Carrier::checkDeliveryPriceByPrice((int)$id_carrier, $order_total, $id_zone, (int)($this->id_currency)))))
+		{
+			$is_in_zone = true;
+		}
+
+		unset($carrier);
+		return $is_in_zone;
 	}
 }
 

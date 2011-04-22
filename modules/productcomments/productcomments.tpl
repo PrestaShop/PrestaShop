@@ -55,7 +55,7 @@
 			<div style="float: left; margin-left: 20px; margin-bottom: 10px;">
 			{$c.name|escape:'html':'UTF-8'}<br />
 			{section loop=6 step=1 start=1 name=average}
-				<input class="auto-submit-star" disabled="disabled" type="radio" name="{$c.name|escape:'html':'UTF-8'}_{$smarty.section.average.index}" value="{$smarty.section.average.index}" {if $averages[$c.id_product_comment_criterion]|round neq 0 and $smarty.section.average.index eq $averages[$c.id_product_comment_criterion]|round}checked="checked"{/if} />
+				<input class="auto-submit-star" disabled="disabled" type="radio" name="{$c.name|escape:'html':'UTF-8'}_{$smarty.section.average.index}" value="{$smarty.section.average.index}" {if isset($averages[$c.id_product_comment_criterion]) AND $averages[$c.id_product_comment_criterion]|round neq 0 AND $smarty.section.average.index eq $averages[$c.id_product_comment_criterion]|round}checked="checked"{/if} />
 			{/section}
 			</div>
 		{/foreach}

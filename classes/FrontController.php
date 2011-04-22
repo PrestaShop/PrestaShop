@@ -71,7 +71,7 @@ class FrontControllerCore
 	public function init()
 	{
 		global $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files;
-		
+
 		$css_files = array();
 		$js_files = array();
 
@@ -135,7 +135,10 @@ class FrontControllerCore
 			if ($cart->OrderExists())
 				unset($cookie->id_cart, $cart);
 			/* Delete product of cart, if user can't make an order from his country */
-			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND !in_array(strtoupper($cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND $cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1)
+			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND 
+					!in_array(strtoupper($cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND 
+					$cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 AND
+					!self::isInWhitelistForGeolocation())
 				unset($cookie->id_cart, $cart);
 			elseif ($cookie->id_customer != $cart->id_customer OR $cookie->id_lang != $cart->id_lang OR $cookie->id_currency != $cart->id_currency)
 			{
@@ -203,6 +206,15 @@ class FrontControllerCore
 
 		Product::initPricesComputation();
 
+		$display_tax_label = $defaultCountry->display_tax_label;
+		if ($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
+		{
+			$infos = Address::getCountryAndState((int)($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+			$country = new Country((int)$infos['id_country']);
+			if (Validate::isLoadedObject($country))
+				$display_tax_label = $country->display_tax_label;
+		}
+
 		$smarty->assign(array(
 			'link' => $link,
 			'cart' => $cart,
@@ -225,6 +237,7 @@ class FrontControllerCore
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'roundMode' => (int)Configuration::get('PS_PRICE_ROUND_MODE'),
 			'use_taxes' => (int)Configuration::get('PS_TAX'),
+			'display_tax_label' => (bool)$display_tax_label,
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE')
@@ -275,7 +288,7 @@ class FrontControllerCore
 		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
 				die(Tools::displayError());
-		
+
 
 		$this->iso = $iso;
 		$this->setMedia();
@@ -284,7 +297,7 @@ class FrontControllerCore
 	/* Display a maintenance page if shop is closed */
 	protected function displayMaintenancePage()
 	{
-		
+
 		if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 		{
 			header('HTTP/1.1 503 temporarily overloaded');
@@ -297,7 +310,7 @@ class FrontControllerCore
 	protected function displayRestrictedCountryPage()
 	{
 		global $smarty;
-		
+
 		header('HTTP/1.1 503 temporarily overloaded');
 		$smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
 		exit;
@@ -306,7 +319,7 @@ class FrontControllerCore
 	protected function canonicalRedirection()
 	{
 		global $link, $cookie;
-		
+
 		if (Configuration::get('PS_CANONICAL_REDIRECT'))
 		{
 			// Automatically redirect to the canonical URL if needed
@@ -392,13 +405,13 @@ class FrontControllerCore
 	public function setMedia()
 	{
 		global $cookie;
-		
+
 		Tools::addCSS(_THEME_CSS_DIR_.'global.css', 'all');
 		Tools::addJS(array(_PS_JS_DIR_.'tools.js', _PS_JS_DIR_.'jquery/jquery-1.4.4.min.js', _PS_JS_DIR_.'jquery/jquery.easing.1.3.js'));
 		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
 			Tools::addJS(array(
-							_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js', 
+							_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js',
 							_PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js',
 							_PS_JS_DIR_.'hookLiveEdit.js')
 							);
@@ -453,7 +466,7 @@ class FrontControllerCore
 			if (Configuration::get('PS_JS_THEME_CACHE'))
 				Tools::cccJs();
 		}
-		
+
 		self::$smarty->assign('css_files', $css_files);
 		self::$smarty->assign('js_files', array_unique($js_files));
 		self::$smarty->display(_PS_THEME_DIR_.'header.tpl');

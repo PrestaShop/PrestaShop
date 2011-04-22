@@ -168,6 +168,145 @@ class AddressCore extends ObjectModel
 		}
 	}
 
+	/**
+	* Returns fields required for an address in an array hash 
+	* @return array hash values 
+	*/
+	public static function getFieldsValidate()
+	{
+		$tmp_addr = new Address();
+		$out = ($tmp_addr->fieldsValidate);
+
+		unset($tmp_addr);
+		return $out;
+	}
+
+
+	/**
+	* Returns selected fields required for an address in an array according to a selection hash
+	* @return array String values 
+	*/
+	public static function getDispFieldsValidate()
+	{
+		$out = array();
+		$remove_fields = array(
+					'id_customer'	=> 1
+					,'id_manufacturer' => 1
+					,'id_supplier'	=> 1
+					,'deleted'=> 1
+					,'dni' => 1
+					,'vat_number' => 1
+					,'other' => 1
+
+				);
+
+		$fields_hash = self::getFieldsValidate();
+		foreach (array_keys($fields_hash) as $field_item)
+		{
+			if (!isset($remove_fields[$field_item]))
+			{
+				if ($field_item == 'id_country')
+					$field_item = 'country';
+				elseif($field_item == 'id_state')
+					$field_item = 'state';
+
+				$out[] = $field_item;	
+			}
+		}
+		return $out;
+	}
+
+
+	/**
+	* Returns values ordered in an array according to given fields
+	* @param array $config set options for the method formated as
+		$config =  array(
+				'spacer'	=> ' '
+				, 'optional'	=> array(
+								'company' 	=> 1
+								,'phone'	=> 1
+							)
+				, 'ignore'	=> array(
+								'phone_mobile'	=> 1
+							)
+				, 'return_set'	=> true (true: hash return, false: String array)
+			)
+	* @param String $pattern lines of each needed fields \n splitted
+	* @param array $values optionnal given values
+	* @return array field values or hash values 
+	*/
+	public static function getOrderedValuesFromArray($config, $pattern, array $values = null) 
+	{
+		$tmp_address = new Address();
+		$out = $tmp_address->getOrderedValues($config, $pattern, $values);
+		unset($tmp_address);
+		return $out;
+	}
+
+
+	/**
+	* Returns values ordered in an array according to given fields
+	* @param array $config set options for the method formated as
+		$config =  array(
+				'spacer'	=> ' '
+				, 'optional'	=> array(
+								'company' 	=> 1
+								,'phone'	=> 1
+								,'phone_mobile'	=> 1
+							)
+				, 'return_set'	=> true
+			)
+	* @param String $address_datas lines of each needed fields \n splitted
+	* @param array $given_values optionnal given values
+	* @return array field values or values in a hash
+	*/
+
+	public function getOrderedValues(array $config, $address_datas, array $given_values = null)
+	{
+
+		$spacer = $config["spacer"]; 		// String used for joining lines_out
+		$optional_fields = (isset($config["optional"]))? $config["optional"] : array(); // array hash tells which fields are optional
+
+		$ignore = (isset($config["ignore"]))? $config["ignore"] : array();		// array hash tells which fields are ignored
+
+
+		$return_set = (!empty($config["return_set"])) ? $config["return_set"] : false;	
+
+		$line_breaker = "\n";			// used in address_datas format
+
+
+		$lines_out = array();
+		$fields_lines = explode($line_breaker, $address_datas);
+
+		foreach ($fields_lines as $one_line)
+			if(!empty($one_line) && $one_line!= '')
+			{
+				$tmp_values = array();
+				$val_added = false;
+
+				$words = explode(' ', trim($one_line));
+				$tmp_words = array();
+
+				foreach ($words as $one_word)
+				{
+					if (!isset($ignore[$one_word]))
+					{
+						$one_word = trim($one_word);
+						$val = (is_null($given_values)) ? $this->{$one_word} : $given_values[$one_word]; 
+						if ((!empty($val) && $val != '') || ((empty($val) || $val == '') && (isset($optional_fields[$one_word]) != 1)))
+						{
+							$tmp_values[$one_word] = $val; 
+							$val_added = true;
+						}
+					}			
+				}
+				if ($val_added)
+					$lines_out[] = ($return_set) ? $tmp_values : implode($spacer, $tmp_values);
+			}	
+		return $lines_out;
+	}
+
+
 	public function getFields()
 	{
 		parent::validateFields();
@@ -197,9 +336,9 @@ class AddressCore extends ObjectModel
 		return $fields;
 	}
 
-	public function validateControler($htmlentities = true)
+	public function validateController($htmlentities = true)
 	{
-		$errors = parent::validateControler($htmlentities);
+		$errors = parent::validateController($htmlentities);
 		if (!Configuration::get('VATNUMBER_CHECKING'))
 			return $errors;
 		include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');

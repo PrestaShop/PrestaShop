@@ -51,6 +51,27 @@ class AddressesControllerCore extends FrontController
 		if (!Validate::isLoadedObject($customer))
 			die(Tools::displayError('Customer not found'));
 		self::$smarty->assign('addresses', $customer->getAddresses((int)(self::$cookie->id_lang)));
+
+		$values = array();
+		$customer_address = $customer->getAddresses((int)(self::$cookie->id_lang));
+
+		foreach($customer_address as $addr_item)
+			$ordered_fields = AddressFormat::getOrderedAddressFields($addr_item['id_country']);
+
+		self::$smarty->assign('addresses_style', array(
+								'company' => 'address_company'
+								,'vat_number' => 'address_company'
+								,'firstname' => 'address_name'
+								,'lastname' => 'address_name'
+								,'address1' => 'address_address1'
+								,'address2' => 'address_address2'
+								,'city' => 'address_city'
+								,'country' => 'address_country'
+								,'phone' => 'address_phone'
+								,'phone_mobile' => 'address_phone_mobile'
+								,'alias' => 'address_title'
+							));
+		self::$smarty->assign('ordered_fields', $ordered_fields);
 	}
 	
 	public function displayContent()

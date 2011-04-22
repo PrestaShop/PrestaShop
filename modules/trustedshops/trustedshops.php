@@ -45,10 +45,10 @@ class TrustedShops extends Module
 		global $smarty;
 		$this->name = 'trustedshops';
 		$this->tab = 'payment_security';
-		$this->version = 1.1;
-		
+		$this->version = 1.2;
+
 		parent::__construct();
-		
+
 		if (empty(self::$objects_list))
 		{
 			TSBuyerProtection::setTranslationObject($this);
@@ -59,20 +59,20 @@ class TrustedShops extends Module
 			self::$objects_list[0]->setModuleName($this->name);
 			self::$objects_list[0]->setSmarty($smarty);
 		}
-		
+
 		if (!extension_loaded('soap'))
 			$this->warnings[] = $this->l('This module requires the SOAP PHP extension to function properly.');
-		
+
 		foreach (self::$objects_list as $object)
 		{
 			$this->limited_countries = array_merge($this->limited_countries, $object->limited_countries);
 			if(!empty($object->warnings))
 				$this->warnings = array_merge($this->warnings, $object->warnings);
 		}
-		
+
 		if (!empty($this->warnings))
 			$this->warning = implode(',<br />', $this->warnings).'.';
-			
+
 		$this->displayName = $this->l('Trusted Shops Customer Rating');
 		$this->description = $this->l('Boost consumer confidence and turn more shoppers into buyers.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete all your settings?');
@@ -85,7 +85,7 @@ class TrustedShops extends Module
 		{
 			$return = $object->install();
 			if (!$return)
-				break; 
+				break;
 		}
 		$return = ($return) ? (parent::install() AND $this->registerHook('orderConfirmation') AND $this->registerHook('newOrder') AND $this->registerHook('rightColumn') AND $this->registerHook('paymentTop') AND $this->registerHook('orderConfirmation')) : $return;
 		$id_hook = Hook::get('payment');
@@ -100,7 +100,7 @@ class TrustedShops extends Module
 		{
 			$return = $object->uninstall();
 			if (!$return)
-				break; 
+				break;
 		}
 		$return = ($return) ? parent::uninstall() : $return;
 		return $return;
@@ -122,14 +122,14 @@ class TrustedShops extends Module
 		foreach($tabs['title'] as $key=>$title)
 			$out .= '<li id="menuTab'.$key.'" class="menuTabButton'.( (int)$key === (int)Tools::getValue('id_tab') ? ' selected' : '' ).'">'.($key+1).'. '.$title.'</li>';
 		$out .= '</ul>';
-		
+
 		// Display content Tabs
 		$out .= '<div id="tabList">';
 		foreach($tabs['content'] as $key=>$content)
 			$out .= '<div id="menuTab'.$key.'Sheet" class="tabItem'.( (int)$key === (int)Tools::getValue('id_tab') ? ' selected' : '' ).'">'.$content.'</div>';
 		$out .= '<br clear="left" />'.$this->displayCSSJSTab();
-		
-		// Check If each object (display as Tab) contains errors message of 
+
+		// Check If each object (display as Tab) contains errors message of
 		$this->checkObjectsErrorsOrConfirmations();
 		return ( !empty($this->errors) ? $this->displayErrors() : $this->displayConfirmations() ).$out;
 	}
@@ -162,10 +162,10 @@ class TrustedShops extends Module
 		</script>
 		';
 	}
-	
+
 	/**
 	 * Check If each object (display as Tab) contains errors message of
-	 *  
+	 *
 	 * @return void
 	 */
 	private function checkObjectsErrorsOrConfirmations()
@@ -231,3 +231,4 @@ class TrustedShops extends Module
 		return $return;
 	}
 }
+

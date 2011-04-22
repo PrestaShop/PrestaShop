@@ -8,6 +8,7 @@ $_MODULE['<{trustedshops}prestashop>display_products_a53a5a9f38f31d62a791717b943
 $_MODULE['<{trustedshops}prestashop>display_products_b3c25d2f94cf87ece3dbb2907318520c'] = 'La protection acheteur Trusted Shops sécurise votre achat en ligne. J’accepte le transfert et la';
 $_MODULE['<{trustedshops}prestashop>display_products_536a056b710e94b16169efd17a4a657b'] = 'sauvegarde';
 $_MODULE['<{trustedshops}prestashop>display_products_2dc4be4d5564180e6df95d5a5a679195'] = 'de mon adresse email pour le traitement de la protection acheteur par Trusted Shops.';
+$_MODULE['<{trustedshops}prestashop>display_products_229eb04083e06f419f9ac494329f957d'] = 'Conditions';
 $_MODULE['<{trustedshops}prestashop>display_products_4ccaceceffe4b5e58f6a7a7ed3ced4c4'] = 'pour la protection acheteur.';
 $_MODULE['<{trustedshops}prestashop>order-confirmation-tsbp-classic_7b5406da2d5f15923d6b01d3264c5619'] = 'Sceau Trusted Shops - Cliquez pour le verifier.';
 $_MODULE['<{trustedshops}prestashop>order-confirmation-tsbp-classic_4052048c767f22e9071c3e6f404d00c6'] = 'En tant que membre Trusted Shops, nous vous offrons un service complémentaire exceptionnel: la garantie de remboursement Trusted Shops. Les frais relatifs à cette garantie sont entièrement à notre charge, alors n\'hésitez pas, il vous suffit de vous inscrire.';

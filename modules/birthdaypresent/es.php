@@ -4,7 +4,7 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_c2796655c25e1b0b8582716036aece08'] = 'Regalo de cumpleaños';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d1f5899bf2af57ed816390d9d740daf6'] = 'Haga a sus clientes regalos de cumpleaños automáticamente';
-$_MODULE['<{birthdaypresent}prestashop>birthdaypresent_42f95f1b218dda65c23c52fcb205f1ed'] = 'Cree un vale descuento para los clientes que celebren su cumpleaños y que pueda usarse una sola vez';
+$_MODULE['<{birthdaypresent}prestashop>birthdaypresent_ccfcf858237a83953c1ac03b5abde35e'] = 'Crear un bono para los clientes que celebran su cumpleaños y que tiene por lo menos un pedido válido';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_4d3d769b812b6faa6b76e1a8abaece2d'] = 'Activo';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_52292d2f9c39936bc72fbd47a3060df3'] = 'Adicionalemente, debe establecer una regla CRON que pida el archivo';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_f7e78e04cba74c610354e91e622cc105'] = 'todos los días';
@@ -24,5 +24,5 @@ $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_7b6ac3f2cdb42a4462ff7ca3c
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_410008089d5bb723438103a84d48a59c'] = 'Para alcanzar este objetivo usted puede organizar:';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_3e788301a1b0ce341aa5ce15bc520545'] = 'Operaciones puntuales: recompensas comerciales (ofertas especiales personalizadas, producto o servicios ofrecidos), recompensas no comerciales (prioridad en el envío  de un pedido  o de un producto), recompensas pecuniarias (enlaces, cupones del descuento, prioridad en el reembolso...).';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_f299b58558601a85c98a2d1d7867d523'] = 'Operaciones sostenibles: las tarjetas de fidelidad o de puntos, que no sólo justifican la comunicación entre el comerciante y el cliente, pero también ofrecen ventajas a los clientes (ofertas, descuentos privados).';
-$_MODULE['<{birthdaypresent}prestashop>birthdaypresent_2ac84f3e753fa299ebe4a6dfe57f1d9c'] = 'Estas operaciones animan a los clientes a comprar y también a volver a la tienda virtual regularmente.';
-$_MODULE['<{birthdaypresent}prestashop>birthdaypresent_38241c5ab16ef8f1ba73460ecd0469e8'] = '¡Su regalo de cumpleaños!';
+$_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d434c183a411611f50fa7e121b0f6565'] = 'Estas operaciones animan a los clientes a comprar y también a volver a su tienda en línea frecuentemente.';
+$_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d46bd07675d08116e85f8a4c7866de53'] = '¡Su regalo de cumpleaños!';

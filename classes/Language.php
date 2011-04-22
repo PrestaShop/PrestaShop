@@ -277,6 +277,7 @@ class LanguageCore extends ObjectModel
 				$langTables[] = $t;
 		
 		Db::getInstance()->Execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
+		$return = true;
 		foreach($langTables as $name)
 		{
 			$fields = '';
@@ -293,8 +294,9 @@ class LanguageCore extends ObjectModel
 					$sql .= '(SELECT `'.$column['Field'].'` FROM `'.$name.'` tl WHERE tl.`id_lang` = @id_lang_default AND tl.`'.$identifier.'` = `'.str_replace('_lang', '', $name).'`.`'.$identifier.'`), ';
 				$sql = rtrim($sql, ', ');
 			$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.str_replace('_lang', '', $name).'`) ;';
-			Db::getInstance()->Execute(pSQL($sql));
+			$return &= Db::getInstance()->Execute(pSQL($sql));
 		}
+		return $return;
 	}
 
 	public static function recurseDeleteDir($dir)

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,17 +31,17 @@ class AuthControllerCore extends FrontController
 	{
 		$this->ssl = true;
 		$this->php_self = 'authentication.php';
-	
+
 		parent::__construct();
 	}
-	
+
 	public function preProcess()
 	{
 		parent::preProcess();
-		
+
 		if (self::$cookie->isLogged() AND !Tools::isSubmit('ajax'))
 			Tools::redirect('my-account.php');
-		
+
 		if (Tools::getValue('create_account'))
 		{
 			$create_account = 1;
@@ -54,7 +54,7 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid e-mail address');
 			elseif (Customer::customerExists($email))
 			{
-				$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.'); 
+				$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.');
 				$_POST['email'] = $_POST['email_create'];
 				unset($_POST['email_create']);
 			}
@@ -63,6 +63,7 @@ class AuthControllerCore extends FrontController
 				$create_account = 1;
 				self::$smarty->assign('email_create', Tools::safeOutput($email));
 				$_POST['email'] = $email;
+
 			}
 		}
 
@@ -70,7 +71,7 @@ class AuthControllerCore extends FrontController
 		{
 			$create_account = 1;
 			if (Tools::isSubmit('submitAccount'))
-				self::$smarty->assign('email_create', 1); 
+				self::$smarty->assign('email_create', 1);
 			/* New Guest customer */
 			if (!Tools::getValue('is_new_customer') AND !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 				$this->errors[] = Tools::displayError('You cannot create a guest account.');
@@ -190,7 +191,7 @@ class AuthControllerCore extends FrontController
 								if (Tools::isSubmit('ajax'))
 								{
 									$return = array(
-										'hasError' => !empty($this->errors), 
+										'hasError' => !empty($this->errors),
 										'errors' => $this->errors,
 										'isSaved' => true,
 										'id_customer' => (int)self::$cookie->id_customer,
@@ -215,7 +216,7 @@ class AuthControllerCore extends FrontController
 				if (Tools::isSubmit('ajax'))
 				{
 					$return = array(
-						'hasError' => !empty($this->errors), 
+						'hasError' => !empty($this->errors),
 						'errors' => $this->errors,
 						'isSaved' => false,
 						'id_customer' => 0
@@ -224,7 +225,7 @@ class AuthControllerCore extends FrontController
 				}
 			}
 		}
-		
+
 		if (Tools::isSubmit('SubmitLogin'))
 		{
 			Module::hookExec('beforeAuthentication');
@@ -262,6 +263,7 @@ class AuthControllerCore extends FrontController
 					if (Configuration::get('PS_CART_FOLLOWING') AND (empty(self::$cookie->id_cart) OR Cart::getNbProducts(self::$cookie->id_cart) == 0))
 						self::$cookie->id_cart = (int)(Cart::lastNoneOrderedCart((int)($customer->id)));
 					/* Update cart address */
+					self::$cart->id_carrier = 0;
 					self::$cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
 					self::$cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
 					self::$cart->update();
@@ -277,7 +279,7 @@ class AuthControllerCore extends FrontController
 			if (Tools::isSubmit('ajax'))
 			{
 				$return = array(
-					'hasError' => !empty($this->errors), 
+					'hasError' => !empty($this->errors),
 					'errors' => $this->errors,
 					'token' => Tools::getToken(false)
 				);
@@ -290,10 +292,10 @@ class AuthControllerCore extends FrontController
 			/* Select the most appropriate country */
 			if (isset($_POST['id_country']) AND is_numeric($_POST['id_country']))
 				$selectedCountry = (int)($_POST['id_country']);
-			/* FIXME : language iso and country iso are not similar, 
+			/* FIXME : language iso and country iso are not similar,
 			 * maybe an associative table with country an language can resolve it,
 			 * But for now it's a bug !
-			 * @see : bug #6968 
+			 * @see : bug #6968
 			 * @link:http://www.prestashop.com/bug_tracker/view/6968/
 			elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 			{
@@ -321,7 +323,7 @@ class AuthControllerCore extends FrontController
 				'HOOK_CREATE_ACCOUNT_TOP' => Module::hookExec('createAccountTop')
 			));
 		}
-		
+
 		/* Generate years, months and days */
 		if (isset($_POST['years']) AND is_numeric($_POST['years']))
 			$selectedYears = (int)($_POST['years']);
@@ -333,7 +335,7 @@ class AuthControllerCore extends FrontController
 		if (isset($_POST['days']) AND is_numeric($_POST['days']))
 			$selectedDays = (int)($_POST['days']);
 		$days = Tools::dateDays();
-		
+
 		self::$smarty->assign(array(
 			'years' => $years,
 			'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
@@ -344,18 +346,18 @@ class AuthControllerCore extends FrontController
 		));
 		self::$smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		Tools::addCSS(_THEME_CSS_DIR_.'authentication.css');
 		Tools::addJS(array(_THEME_JS_DIR_.'tools/statesManagement.js', _PS_JS_DIR_.'jquery/jquery-typewatch.pack.js'));
 	}
-	
+
 	public function process()
 	{
 		parent::process();
-		
+
 		$back = Tools::getValue('back');
 		$key = Tools::safeOutput(Tools::getValue('key'));
 		if (!empty($key))
@@ -367,7 +369,7 @@ class AuthControllerCore extends FrontController
 			{
 				$countries = Country::getCountries((int)(self::$cookie->id_lang), true);
 				self::$smarty->assign(array(
-					'inOrderProcess' => true, 
+					'inOrderProcess' => true,
 					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 					'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
 					'countries' => $countries
@@ -375,12 +377,35 @@ class AuthControllerCore extends FrontController
 			}
 		}
 	}
-		
+
 	public function displayContent()
 	{
+		$this->processAddressFormat();
+
 		parent::displayContent();
 		self::$smarty->display(_PS_THEME_DIR_.'authentication.tpl');
 	}
-}
 
+	protected function processAddressFormat()
+	{
+		$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry);
+
+		$inv_all_fields = array();
+		$dlv_all_fields = array();
+
+
+		foreach (array('inv','dlv') as $adr_type)
+		{
+			foreach (${$adr_type.'_adr_fields'} as $fields_line)
+				foreach(explode(' ',$fields_line) as $field_item)
+					${$adr_type.'_all_fields'}[] = trim($field_item);
+
+			self::$smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
+			self::$smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
+
+		}
+	}
+}
 

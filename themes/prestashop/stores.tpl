@@ -27,6 +27,8 @@
 {capture name=path}{l s='Our stores'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
+<script src="http://maps.google.com/maps/api/js?sensor=true">// DEBUG </script>
+
 <h1>{l s='Our stores'}</h1>
 
 {if $simplifiedStoresDiplay}

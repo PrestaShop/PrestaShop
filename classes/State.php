@@ -185,9 +185,20 @@ class StateCore extends ObjectModel
         );
     }
 
-   public static function hasCounties($id_state)
-   {
-   	return sizeof(County::getCounties((int)$id_state));
-  	}
+	public static function hasCounties($id_state)
+	{
+		return sizeof(County::getCounties((int)$id_state));
+	}
+	
+	public static function getIdZone($id_state)
+	{
+		if (!Validate::isUnsignedId($id_state))
+			die(Tools::displayError());
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT `id_zone`
+		FROM `'._DB_PREFIX_.'state`
+		WHERE `id_state` = '.(int)($id_state));
+	}
 }
 
