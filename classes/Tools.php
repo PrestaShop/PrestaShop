@@ -749,6 +749,8 @@ class ToolsCore
 		if (empty($pipe))
 			$pipe = '>';
 
+		$fullPath = '';
+
 		if ($categoryType === 'products')
 		{
 			$category = Db::getInstance()->getRow('
@@ -766,7 +768,6 @@ class ToolsCore
 				ORDER BY c.level_depth ASC
 				LIMIT '.(int)$category['level_depth']);
 
-				$fullPath = '';
 				$n = 1;
 				$nCategories = (int)sizeof($categories);
 				foreach ($categories AS $category)
