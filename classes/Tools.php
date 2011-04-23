@@ -653,6 +653,20 @@ class ToolsCore
 					return self::completeMetaTags($row, $row['meta_title']);
 				}
 			}
+			
+			/* CMS category specifics meta tags */
+			elseif ($id_cms = self::getValue('id_cms_category'))
+			{
+				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+				SELECT `meta_title`, `meta_description`, `meta_keywords`
+				FROM `'._DB_PREFIX_.'cms_category_lang`
+				WHERE id_lang = '.(int)($id_lang).' AND id_cms_category = '.(int)($id_cms));
+				if ($row)
+				{
+					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+					return self::completeMetaTags($row, $row['meta_title']);
+				}
+			}
 		}
 
 		/* Default meta tags */
