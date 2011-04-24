@@ -88,7 +88,7 @@ class AdminEmails extends AdminPreferences
 				var textSendError= "'.$this->l('Error: please check your configuration').'";
 				var errorMail = "'.$this->l('This email address is wrong!').'";
 			</script>
-			<script type="text/javascript" src="'._PS_JS_DIR_.'/sendMailTest.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'sendMailTest.js"></script>
 			<div style="clear: both; padding-top: 15px;">
 				<label>'.$this->l('Send a test e-mail to').'</label>
 				<div class="margin-form">
