@@ -1189,7 +1189,7 @@ class ToolsCore
 		if (strlen($css_content) > 0)
 		{
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content);
-			$css_content = preg_replace_callback('#url\(\'?([^\)\']*)\'?\)#s',array('Tools', 'replaceByAbsoluteURL'), $css_content);
+			$css_content = preg_replace_callback('#url\((?:\'|")?([^\)\'"]*)(?:\'|")?\)#s',array('Tools', 'replaceByAbsoluteURL'), $css_content);
 
 			$css_content = preg_replace('#\s+#',' ',$css_content);
 			$css_content = str_replace("\t", '', $css_content);
