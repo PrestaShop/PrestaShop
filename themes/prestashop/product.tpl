@@ -341,7 +341,7 @@ var fieldRequired = '{l s='Please fill in all required fields' js=1}';
 				</span>
 			</p>
 
-			<!-- number of item in stock OR isset($combination.list)-->
+			<!-- number of item in stock -->
 			{if (($display_qties == 1 OR $product->quantity <= $last_qties) && !$PS_CATALOG_MODE && $product->available_for_order)}
 			<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>
 				<span id="quantityAvailable">{$product->quantity|intval}</span>
