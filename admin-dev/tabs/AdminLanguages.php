@@ -320,7 +320,7 @@ class AdminLanguages extends AdminTab
 		var noLangPack = "<img src=\"'._PS_IMG_.'admin/information.png\" alt=\"\" /> '.$this->l('No language pack available on prestashop.com for this ISO code').'";
 		var download = "'.$this->l('Download').'";
 		</script>
-		<script type="text/javascript" src="'._PS_JS_DIR_.'/checkLangPack.js"></script>
+		<script type="text/javascript" src="'._PS_JS_DIR_.'checkLangPack.js"></script>
 		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/world.gif" />'.$this->l('Languages').'</legend>
