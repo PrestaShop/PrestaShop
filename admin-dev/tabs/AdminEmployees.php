@@ -179,7 +179,7 @@ class AdminEmployees extends AdminTab
 	{
 		global $cookie;
 		
-		if (Tools::isSubmit('deleteemployee') OR Tools::isSubmit('status'))
+		if (Tools::isSubmit('deleteemployee') OR Tools::isSubmit('status') OR Tools::isSubmit('statusemployee'))
 		{
 			if ($cookie->id_employee == Tools::getValue('id_employee'))
 			{
@@ -193,16 +193,9 @@ class AdminEmployees extends AdminTab
 					$this->_errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
 					return false;
 			}
-
 		}
 		elseif (Tools::isSubmit('submitAddemployee'))
 		{
-			if ($cookie->id_employee == Tools::getValue('id_employee') && Tools::getvalue('active') == 0)
-			{
-				$this->_errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
-				return false;
-			}
-		
 			$employee = new Employee(Tools::getValue('id_employee'));
 			if (!(int)$this->tabAccess['edit'])
 				$_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
