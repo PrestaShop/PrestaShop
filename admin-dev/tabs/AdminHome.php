@@ -49,18 +49,18 @@ class AdminHome extends AdminTab
 		
 		$htaccessAfterUpdate = 2;
 		$htaccessOptimized = (Configuration::get('PS_HTACCESS_CACHE_CONTROL') ? 2 : 0);
-		if (!file_exists(dirname(__FILE__).'/../.htaccess'))
+		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
 		{
 			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
 				$htaccessOptimized = 1;
 		}
 		else
 		{
-			$stat = stat(dirname(__FILE__).'/../.htaccess');
+			$stat = stat(dirname(__FILE__).'/../../.htaccess');
 			$dateUpdHtaccess = Db::getInstance()->getValue('SELECT date_upd FROM '._DB_PREFIX_.'configuration WHERE name = "PS_HTACCESS_CACHE_CONTROL"');
 			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL') AND strtotime($dateUpdHtaccess) > $stat['mtime'])
 				$htaccessOptimized = 1;
-				
+			
 			$dateUpdate = Configuration::get('PS_LAST_SHOP_UPDATE');
 			if ($dateUpdate AND strtotime($dateUpdate) > $stat['mtime'])
 				$htaccessAfterUpdate = 0;

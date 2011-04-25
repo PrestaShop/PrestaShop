@@ -109,7 +109,7 @@ class AdminCMSCategories extends AdminTab
 			}
 		}
 		/* Change object statuts (active, inactive) */
-		elseif (isset($_GET['status']) AND Tools::getValue($this->identifier))
+		elseif (isset($_GET['statuscms_category']) AND Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
