@@ -95,17 +95,18 @@ XML;
 		else
 			$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__, '1.00', 'daily', date('Y-m-d'));
 		
+		/* CMS Generator */
 		if (Configuration::get('GSITEMAP_ALL_CMS') OR !Module::isInstalled('blockcms'))
 			$sql_cms = '
-			SELECT DISTINCT cl.id_cms, cl.link_rewrite, cl.id_lang
-			FROM '._DB_PREFIX_.'cms_lang cl
+			SELECT DISTINCT '.(Configuration::get('PS_REWRITING_SETTINGS') ? 'cl.id_cms, cl.link_rewrite, cl.id_lang' : 'cl.id_cms').
+			' FROM '._DB_PREFIX_.'cms_lang cl
 			LEFT JOIN '._DB_PREFIX_.'lang l ON (cl.id_lang = l.id_lang)
 			WHERE l.`active` = 1
 			ORDER BY cl.id_cms, cl.id_lang ASC';
 		elseif (Module::isInstalled('blockcms'))
 			$sql_cms = '
-			SELECT DISTINCT cl.id_cms, cl.link_rewrite, cl.id_lang
-			FROM '._DB_PREFIX_.'cms_block_page b
+			SELECT DISTINCT '.(Configuration::get('PS_REWRITING_SETTINGS') ? 'cl.id_cms, cl.link_rewrite, cl.id_lang' : 'cl.id_cms').
+			' FROM '._DB_PREFIX_.'cms_block_page b
 			LEFT JOIN '._DB_PREFIX_.'cms_lang cl ON (b.id_cms = cl.id_cms)
 			LEFT JOIN '._DB_PREFIX_.'lang l ON (cl.id_lang = l.id_lang)
 			WHERE l.`active` = 1
@@ -113,20 +114,33 @@ XML;
 		
 		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql_cms);
 		foreach($cmss AS $cms)
-			$this->_addSitemapNode($xml, $link->getCMSLink((int)($cms['id_cms']), $cms['link_rewrite'], false, (int)($cms['id_lang'])), '0.8', 'daily');
+		{
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $link->getCMSLink((int)($cms['id_cms']), $cms['link_rewrite'], false, (int)($cms['id_lang'])) : $link->getCMSLink((int)($cms['id_cms']));
+			$this->_addSitemapNode($xml, $tmpLink, '0.8', 'daily');				
+		}
 		
-		$categories = Db::getInstance()->ExecuteS('
-		SELECT c.id_category, c.level_depth, link_rewrite, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') AS date_upd, cl.id_lang
-		FROM '._DB_PREFIX_.'category c
-		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON c.id_category = cl.id_category
-		LEFT JOIN '._DB_PREFIX_.'lang l ON cl.id_lang = l.id_lang
-		WHERE l.`active` = 1 AND c.`active` = 1 AND c.id_category != 1
-		ORDER BY cl.id_category, cl.id_lang ASC');
+		/* Categories Generator */
+		if(Configuration::get('PS_REWRITING_SETTINGS'))
+			$categories = Db::getInstance()->ExecuteS('
+			SELECT c.id_category, c.level_depth, link_rewrite, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') AS date_upd, cl.id_lang
+			FROM '._DB_PREFIX_.'category c
+			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON c.id_category = cl.id_category
+			LEFT JOIN '._DB_PREFIX_.'lang l ON cl.id_lang = l.id_lang
+			WHERE l.`active` = 1 AND c.`active` = 1 AND c.id_category != 1
+			ORDER BY cl.id_category, cl.id_lang ASC');
+		else
+			$categories = Db::getInstance()->ExecuteS(
+			'SELECT c.id_category, c.level_depth, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') AS date_upd
+			FROM '._DB_PREFIX_.'category c 
+			ORDER BY c.id_category ASC');			
+
+		
 		foreach($categories as $category)
 		{
 			if (($priority = 0.9 - ($category['level_depth'] / 10)) < 0.1)
 				$priority = 0.1;
-			$tmpLink = $link->getCategoryLink((int)($category['id_category']), $category['link_rewrite'], (int)($category['id_lang']));
+			
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $link->getCategoryLink((int)($category['id_category']), $category['link_rewrite'], (int)($category['id_lang'])) : $link->getCategoryLink((int)($category['id_category']));
 			
 			$this->_addSitemapNode($xml, htmlspecialchars($tmpLink), $priority, 'weekly', substr($category['date_upd'], 0, 10));
       	}
@@ -171,9 +185,14 @@ XML;
 			'supplier' => false, 
 			'store' => false);
 
-		foreach ($pages AS $page => $ssl)
-			foreach($langs as $lang)
-				$this->_addSitemapNode($xml, $link->getPageLink($page.'.php', $ssl, $lang['id_lang']), '0.5', 'monthly');
+
+			if(Configuration::get('PS_REWRITING_SETTINGS'))		
+				foreach ($pages AS $page => $ssl)		
+					foreach($langs as $lang)
+						$this->_addSitemapNode($xml, $link->getPageLink($page.'.php', $ssl, $lang['id_lang']), '0.5', 'monthly');
+			else
+				foreach($pages AS $page => $ssl)
+					$this->_addSitemapNode($xml, $link->getPageLink($page.'.php', $ssl), '0.5', 'monthly');
 
         $xmlString = $xml->asXML();
 		
