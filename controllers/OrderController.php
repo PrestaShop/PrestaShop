@@ -67,7 +67,7 @@ class OrderControllerCore extends ParentOrderController
 		}
 
 		if (!self::$cookie->isLogged(true) AND in_array($this->step, array(1, 2, 3)))
-			Tools::redirect('authentication.php?back=order.php?step='.$this->step);
+			Tools::redirect('authentication.php?back='.urlencode('order.php?step='.$this->step));
 
 		if ($this->nbProducts)
 			self::$smarty->assign('virtual_cart', $isVirtualCart);
