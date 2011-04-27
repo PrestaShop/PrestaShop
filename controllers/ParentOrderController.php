@@ -218,7 +218,7 @@ class ParentOrderControllerCore extends FrontController
 			
 		if (Validate::isInt(Tools::getValue('id_carrier')) AND sizeof(Carrier::checkCarrierZone((int)(Tools::getValue('id_carrier')), (int)($id_zone))))
 			self::$cart->id_carrier = (int)(Tools::getValue('id_carrier'));
-		elseif (!self::$cart->isVirtualCart() AND (int)(Tools::getValue('id_carrier')) != 0)
+		elseif (!self::$cart->isVirtualCart() AND (int)(Tools::getValue('id_carrier')) == 0)
 			$this->errors[] = Tools::displayError('Invalid carrier or no carrier selected');
 		
 		Module::hookExec('processCarrier', array('cart' => self::$cart));
