@@ -89,7 +89,7 @@ XML;
 		
 		$xml = new SimpleXMLElement($xmlString);
 
-		if (Configuration::get('PS_REWRITING_SETTINGS'))
+		if (Configuration::get('PS_REWRITING_SETTINGS') AND count($langs) > 1)
 			foreach($langs as $lang)
 				$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__.$lang['iso_code'].'/', '1.00', 'daily', date('Y-m-d'));
 		else
