@@ -23,7 +23,7 @@
 		file_browser_callback : "ajaxfilemanager",
 		entity_encoding: "raw",
 		convert_urls : false,
-        language : iso,
+        language : iso
 		
 	});
 
