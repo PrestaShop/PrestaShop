@@ -612,15 +612,17 @@ class ToolsCore
 			elseif ($id_manufacturer = self::getValue('id_manufacturer'))
 			{
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'manufacturer_lang`
-				WHERE id_lang = '.(int)($id_lang).' AND id_manufacturer = '.(int)($id_manufacturer));
+				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
+				FROM `'._DB_PREFIX_.'manufacturer_lang` ml
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (ml.`id_manufacturer` = m.`id_manufacturer`)
+				WHERE ml.id_lang = '.(int)($id_lang).' AND ml.id_manufacturer = '.(int)($id_manufacturer));
 				if ($row)
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['meta_description']);
-					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['meta_title']);
+					if (!empty($row['meta_title']))
+						$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+					return self::completeMetaTags($row, $row['name']);
 				}
 			}
 
@@ -628,15 +630,18 @@ class ToolsCore
 			elseif ($id_supplier = self::getValue('id_supplier'))
 			{
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'supplier_lang`
-				WHERE id_lang = '.(int)($id_lang).' AND id_supplier = '.(int)($id_supplier));
+				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
+				FROM `'._DB_PREFIX_.'supplier_lang` sl
+				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (sl.`id_supplier` = s.`id_supplier`)
+				WHERE sl.id_lang = '.(int)($id_lang).' AND sl.id_supplier = '.(int)($id_supplier));
+
 				if ($row)
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['meta_description']);
-					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['meta_title']);
+					if (!empty($row['meta_title']))
+						$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+					return self::completeMetaTags($row, $row['name']);
 				}
 			}
 
@@ -1256,18 +1261,21 @@ class ToolsCore
 		//overriding of modules js files
 		foreach ($js_uri AS $key => &$file)
 		{
-			$different = 0;
-			$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-			if ($different && file_exists($override_path))
-				$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-			else
+			if (!preg_match('/^http(s?):\/\//i', $file))
 			{
-				// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-				$url_data = parse_url($file);
-				$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-				// check if js files exists
-				if (!file_exists($file_uri))
-					unset($js_uri[$key]);
+				$different = 0;
+				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
+				if ($different && file_exists($override_path))
+					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
+				else
+				{
+					// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
+					$url_data = parse_url($file);
+					$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+					// check if js files exists
+					if (!file_exists($file_uri))
+						unset($js_uri[$key]);
+				}
 			}
 		}
 

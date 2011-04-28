@@ -32,9 +32,13 @@ function regenerate_level_depth()
 	foreach($cats as $cat)
 	{
 		$category = new Category((int)$cat['id_category']);
-		$catParent = new Category((int)$category->id_parent);
-		$category->level_depth = $catParent->level_depth +1;
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'category` SET `level_depth` = '.(int)$category->level_depth.' WHERE `id_category` = '.(int)$category->id);
+		// if the category has no parent, it's the home
+		if ((int)$category->id_parent != 0)
+		{
+			$catParent = new Category((int)$category->id_parent);
+			$category->level_depth = $catParent->level_depth +1;
+			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'category` SET `level_depth` = '.(int)$category->level_depth.' WHERE `id_category` = '.(int)$category->id);
+		}
 	}
 
 	Category::regenerateEntireNtree();
