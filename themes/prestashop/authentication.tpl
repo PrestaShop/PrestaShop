@@ -230,7 +230,6 @@ $(function(){ldelim}
 						</select>
 						<sup>*</sup>
 					</p>
-					{* DEBUG: elseif $field_name eq "state" *}
 					<p class="required id_state select">
 						<label for="id_state">{l s='State'}</label>
 						<select name="id_state" id="id_state">
@@ -244,19 +243,26 @@ $(function(){ldelim}
 						<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"> <sup style="color:red;">*</sup>
 					</p>
 					{/if}{/foreach}
-					<p class="text submit">
-						<input type="submit" class="button" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'}">
-					</p>
-					
-					<p class="required text">
-						<span><sup>*</sup>{l s='Required field'}</span>
-					</p>
+
 					
 					<input type="hidden" name="alias" id="alias" value="{l s='My address'}">
 					<input type="hidden" name="is_new_customer" id="is_new_customer" value="0">
 					<!-- END Account -->
 				</div>
 			</fieldset>
+			<fieldset class="account_creation dni">
+				<h3>{l s='Tax identification'}</h3>
+	
+				<p class="required text">
+					<label for="dni">{l s='Identification number'}</label>
+					<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+				</p>
+			</fieldset>
+			<p class="cart_navigation required submit">		
+				<span><sup>*</sup>{l s='Required field'}</span>			
+				<input type="submit" class="button" name="submitGuestAccount" id="submitGuestAccount" style="float:right" value="{l s='Continue'}">
+			</p>
 		</form>
 	{/if}
 {else}
@@ -399,7 +405,6 @@ $(function(){ldelim}
 			</select>
 			<sup>*</sup>
 		</p>
-		{* DEBUG: elseif $field_name eq "state" *}
 		<p class="required id_state select">
 			<label for="id_state">{l s='State'}</label>
 			<select name="id_state" id="id_state">
