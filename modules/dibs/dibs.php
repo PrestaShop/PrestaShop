@@ -81,7 +81,7 @@ class dibs extends PaymentModule
 	 * @var array
 	 */
 	public static $dibs_subscription_link = array(
-		'en'	=> 'http://www.dibspayment.com/order/uk_request/',
+		'en'	=> 'http://www.dibspayment.com/order/uk_request_2eng',
 		'da'	=> 'http://www.dibs.dk/bestil/step1/?productid=234&producttype=240',
 		'sv'	=> 'http://www.dibs.se/bestall/step1/?productid=339&producttype=340',
 		'no'	=> 'http://www.dibs.no/bestill/step1/?productid=349&producttype=350',
