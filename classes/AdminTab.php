@@ -228,7 +228,7 @@ abstract class AdminTabCore
 		global $currentIndex, $cookie;
 
 		// Include other tab in current tab
-		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view')));
+		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))){}
 
 		// Include current tab
 		elseif ((Tools::getValue('submitAdd'.$this->table) AND sizeof($this->_errors)) OR isset($_GET['add'.$this->table]))
@@ -321,6 +321,7 @@ abstract class AdminTabCore
 		if (!isset($this->_includeTab) OR !is_array($this->_includeTab))
 			return ;
 		$key = 0;
+		$inc = false;
 		foreach ($this->_includeTab as $subtab => $extraVars)
 		{
 			/* New tab loading */
