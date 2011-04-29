@@ -458,8 +458,13 @@ abstract class ModuleCore
 				$needNewConfigFile = true;
 			if ($useConfig AND $xml_exist)
 			{
+				libxml_use_internal_errors(true);
 				$xml_module = simplexml_load_file($configFile);
-				if ((int)$xml_module->need_instance == 0 AND !$needNewConfigFile)
+				foreach (libxml_get_errors() as $error)
+					$errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
+				libxml_clear_errors();
+				
+				if (!count($errors) AND (int)$xml_module->need_instance == 0 AND !$needNewConfigFile)
 				{
 					$file = _PS_MODULE_DIR_.$module.'/'.Language::getIsoById($cookie->id_lang).'.php';
 					if (Tools::file_exists_cache($file) AND include_once($file))
@@ -976,11 +981,11 @@ abstract class ModuleCore
 		$xml = '<?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>'.$this->name.'</name>
-	<displayName>'.html_entity_decode(addslashes($this->displayName), ENT_COMPAT, 'UTF-8').'</displayName>
+	<displayName>'.Tools::htmlentitiesUTF8($this->displayName).'</displayName>
 	<version>'.$this->version.'</version>
-	<description>'.html_entity_decode(addslashes(strip_tags($this->description)), ENT_COMPAT, 'UTF-8').'</description>
-	<author>'.html_entity_decode(addslashes(strip_tags($this->author)), ENT_COMPAT, 'UTF-8').'</author>
-	<tab>'.html_entity_decode(addslashes($this->tab), ENT_COMPAT, 'UTF-8').'</tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall>'.$this->confirmUninstall.'</confirmUninstall>' : '').'
+	<description>'.Tools::htmlentitiesUTF8($this->description).'</description>
+	<author>'.Tools::htmlentitiesUTF8($this->author).'</author>
+	<tab>'.Tools::htmlentitiesUTF8($this->tab).'</tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall>'.$this->confirmUninstall.'</confirmUninstall>' : '').'
 	<is_configurable>'.(int)method_exists($this, 'getContent').'</is_configurable>
 	<need_instance>'.$need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(sizeof($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
