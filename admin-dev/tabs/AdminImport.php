@@ -540,8 +540,8 @@ class AdminImport extends AdminTab
 					$res = $category->update();
 
 				// If no id_category or update failed
-				if (!$res AND $res = $category->add())
-					$category->addGroups(array(1));
+				if (!$res)
+					$res = $category->add();
 			}
 			//copying images of categories
 			if (isset($category->image) AND !empty($category->image))

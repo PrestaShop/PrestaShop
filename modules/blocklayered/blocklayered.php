@@ -849,4 +849,5 @@ if (!isset($doneCategories[(int)$id_category]['p']))
 		
 		return $products;
 	}
+
 }

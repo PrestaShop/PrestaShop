@@ -102,6 +102,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_for_13version.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_cms_block.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_blocklink.php');
+
 //old version detection
 global $oldversion;
 $oldversion = false;
