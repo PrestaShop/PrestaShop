@@ -48,7 +48,7 @@ class ThemeInstallator extends Module
 	public function __construct()
 	{
 		$this->name = 'themeinstallator';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		if (version_compare(_PS_VERSION_, 1.4) >= 0)
 			$this->tab = 'administration';
@@ -442,6 +442,7 @@ class ThemeInstallator extends Module
 			$hookedModule[] = strval($row['module']);
 			$hook[] = strval($row['hook']);
 			$position[] = strval($row['position']);
+			$exceptions[] = (isset($row['exceptions']) ? explode(',', strval($row['exceptions'])) : array());
 		}
 
 		if (file_exists(_IMPORT_FOLDER_.'doc') AND sizeof($xml->docs->doc) != 0)
@@ -515,9 +516,15 @@ class ThemeInstallator extends Module
 					$count = -1;
 					while (isset($hookedModule[++$count]))
 						if ($hookedModule[$count] == $row)
+						{
 							Db::getInstance()->Execute('
 								INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
 								VALUES ('.(int)$obj->id.', '.(int)Hook::get($hook[$count]).', '.(int)$position[$count].')');
+							foreach ($exceptions[$count] as $file_name)
+								Db::getInstance()->Execute('
+									INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, `id_hook`, `file_name`)
+									VALUES ('.(int)$obj->id.', '.(int)Hook::get($hook[$count]).', "'.pSQL($file_name).'")');
+						}
 				}
 		}
 		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages())
@@ -876,6 +883,8 @@ class ThemeInstallator extends Module
 			$hook->addAttribute('module', $array[0]);
 			$hook->addAttribute('hook', $array[1]);
 			$hook->addAttribute('position', $array[2]);
+			if (!empty($array[3]))
+				$hook->addAttribute('exceptions', $array[3]);
 		}
 		
 		$images = $theme->addChild('images');
@@ -903,11 +912,16 @@ class ThemeInstallator extends Module
 		$this->native_modules = self::getTheNativeModules();
 		$this->module_list = Db::getInstance()->ExecuteS('SELECT id_module, name, active FROM `'._DB_PREFIX_.'module`');
 		$this->hook_list = Db::getInstance()->ExecuteS('
-			SELECT a.id_hook, a.name as name_hook, c.position, c.id_module, d.name as name_module
+			SELECT a.id_hook, a.name as name_hook, c.position, c.id_module, d.name as name_module, GROUP_CONCAT(hme.file_name, ",") as exceptions
 			FROM `'._DB_PREFIX_.'hook` a
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` c ON c.id_hook = a.id_hook
-			LEFT JOIN `'._DB_PREFIX_.'module` d ON (c.id_module = d.id_module)
+			LEFT JOIN `'._DB_PREFIX_.'module` d ON c.id_module = d.id_module
+			LEFT OUTER JOIN `'._DB_PREFIX_.'hook_module_exceptions` hme ON (hme.id_module = c.id_module AND hme.id_hook = a.id_hook)
+			GROUP BY id_module, id_hook
 			ORDER BY name_module');
+		foreach ($this->hook_list as &$row)
+			$row['exceptions'] = trim(preg_replace('/(,,+)/', ',', $row['exceptions']), ',');
+			
 	}
 
 	/*
@@ -954,11 +968,11 @@ class ThemeInstallator extends Module
 		foreach ($this->to_install as $string)
 			foreach ($this->hook_list as $tmp)
 				if ($tmp['name_module'] == $string)
-					$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'];
+					$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
 		foreach ($this->to_enable as $string)
 			foreach ($this->hook_list as $tmp)
 				if ($tmp['name_module'] == $string)
-					$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'];
+					$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
 	}
 	
 	/*
