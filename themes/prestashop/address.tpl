@@ -90,6 +90,11 @@ $(function(){ldelim}
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 		</p>
+		<p class="required text dni">
+			<label for="dni">{l s='Identification number'}</label>
+			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'htmlall':'UTF-8'}{/if}{/if}" />
+			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+		</p>
 	{if $vat_display == 2}
 		<div id="vat_area">
 	{elseif $vat_display == 1}
@@ -104,40 +109,43 @@ $(function(){ldelim}
 			</p>
 		</div>
 		</div>
+		{foreach from=$ordered_adr_fields item=field_name}
+		{if $field_name eq 'firstname'}
 		<p class="required text">
 			<label for="firstname">{l s='First name'}</label>
-			<input type="text" name="firstname" id="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{else}{if isset($address->firstname)}{$address->firstname|escape:'htmlall':'UTF-8'}{/if}{/if}" />
+			<input type="text" name="firstname" id="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{elseif isset($address->firstname)}{$address->firstname|escape:'htmlall':'UTF-8'}{/if}" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq 'lastname'}
 		<p class="required text">
 			<label for="lastname">{l s='Last name'}</label>
 			<input type="text" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{else}{if isset($address->lastname)}{$address->lastname|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 			<sup>*</sup>
 		</p>
-		<p class="required text dni">
-			<label for="dni">{l s='Identification number'}</label>
-			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'htmlall':'UTF-8'}{/if}{/if}" />
-			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-		</p>
+		{elseif $field_name eq 'address1'}
 		<p class="required text">
 			<label for="address1">{l s='Address'}</label>
 			<input type="text" id="address1" name="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{else}{if isset($address->address1)}{$address->address1|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq 'address2'}
 		<p class="required text">
 			<label for="address2">{l s='Address (Line 2)'}</label>
 			<input type="text" id="address2" name="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{else}{if isset($address->address2)}{$address->address2|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 		</p>
+		{elseif $field_name eq 'postcode'}
 		<p class="required postcode text">
 			<label for="postcode">{l s='Zip / Postal Code'}</label>
 			<input type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'htmlall':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq 'city'}
 		<p class="required text">
 			<label for="city">{l s='City'}</label>
 			<input type="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{else}{if isset($address->city)}{$address->city|escape:'htmlall':'UTF-8'}{/if}{/if}" maxlength="64" />
 			<sup>*</sup>
 		</p>
+		{elseif $field_name eq 'country'}
 		<p class="required select">
 			<label for="id_country">{l s='Country'}</label>
 			<select id="id_country" name="id_country">{$countries_list}</select>
@@ -175,6 +183,9 @@ $(function(){ldelim}
 			</select>
 			<sup>*</sup>
 		</p>
+		{/if}
+		{/foreach}
+
 		<p class="textarea">
 			<label for="other">{l s='Additional information'}</label>
 			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'htmlall':'UTF-8'}{/if}{/if}</textarea>

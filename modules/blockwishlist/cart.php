@@ -28,6 +28,7 @@
 require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 require_once(dirname(__FILE__).'/WishList.php');
+require_once(dirname(__FILE__).'/blockwishlist.php');
 
 $errors = array();
 
@@ -53,7 +54,8 @@ if ($cookie->isLogged())
 		if(!isset($cookie->id_wishlist) OR $cookie->id_wishlist == '')
 		{
 			$wishlist = new WishList();
-			$wishlist->name = 'My WishList';
+			$modWishlist = new BlockWishList();
+			$wishlist->name = $modWishlist->l('My wishlist');
 			$wishlist->id_customer = (int)($cookie->id_customer);
 			list($us, $s) = explode(' ', microtime());
 			srand($s * $us);

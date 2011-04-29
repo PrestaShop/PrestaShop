@@ -748,9 +748,14 @@ class AdminTranslations extends AdminTab
 					if ($lang_packs!== false && $lang_packs != '' && $lang_packs = Tools::jsonDecode($lang_packs))
 					{
 						echo 	'<select id="params_import_language" name="params_import_language">';
+						echo '<optgroup label="'.$this->l('Add a language').'">';
+						$alreadyInstalled = '<optgroup label="'.$this->l('Update a language').'">';
 						foreach($lang_packs AS $lang_pack)
 							if (!Language::isInstalled($lang_pack->iso_code))
 								echo '<option value="'.$lang_pack->iso_code.'|'.$lang_pack->version.'">'.$lang_pack->name.'</option>';
+							else 
+								$alreadyInstalled.='<option value="'.$lang_pack->iso_code.'|'.$lang_pack->version.'">'.$lang_pack->name.'</option>';
+						echo '</optgroup>'.$alreadyInstalled.'</optgroup>';
 						echo 	'</select>';
 					}
 					echo '	</div>

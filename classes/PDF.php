@@ -439,7 +439,8 @@ class PDFCore extends PDF_PageGroupCore
 					);
 		$ignore_fields = array(
 						'phone'	=> 1
-						, 'mobile_phone' =>1
+						, 'mobile_phone' => 1
+						, 'state_iso' => 1
 					);
 		
 		$width = 100;
@@ -469,12 +470,12 @@ class PDFCore extends PDF_PageGroupCore
 					$tmp_dlv = $delivery_address->{$field_name};
 					if (!((empty($tmp_inv) || $tmp_inv == '') && isset($optional_fields[$field_name])))
 					{
-						$tmp_inv = ($field_name == "country") ? $tmp_inv.($deliveryState ? ' - '.$deliveryState->name : ''): $tmp_inv;
+						$tmp_inv = ($field_name == "country") ? $tmp_inv.($deliveryState ? ' - '.$deliveryState->iso_code : ''): $tmp_inv;
 						$tmp_inv_vals[] = Tools::iconv('utf-8', self::encoding(), $tmp_inv);
 					}
 					if (!((empty($tmp_dlv) || $tmp_dlv == '') && isset($optional_fields[$field_name])))
 					{
-						$tmp_dlv = ($field_name == "country") ? $tmp_dlv.($deliveryState ? ' - '.$deliveryState->name : ''): $tmp_dlv;
+						$tmp_dlv = ($field_name == "country") ? $tmp_dlv.($deliveryState ? ' - '.$deliveryState->iso_code : ''): $tmp_dlv;
 						$tmp_dlv_vals[] = Tools::iconv('utf-8', self::encoding(), $tmp_dlv);
 					}
 				}

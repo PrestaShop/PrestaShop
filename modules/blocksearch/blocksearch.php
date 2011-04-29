@@ -81,7 +81,7 @@ class BlockSearch extends Module
 	{
 		global $smarty;
 		$smarty->assign('ENT_QUOTES', ENT_QUOTES);
-		$smarty->assign('search_ssl', (int)(isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
+		$smarty->assign('search_ssl', (int)(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
 		
 		$ajaxSearch=(int)(Configuration::get('PS_SEARCH_AJAX'));
 		$smarty->assign('ajaxsearch', $ajaxSearch);

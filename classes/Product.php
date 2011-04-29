@@ -1594,35 +1594,34 @@ class ProductCore extends ObjectModel
 		$quantity = ($id_cart AND $cart_quantity) ? $cart_quantity : $quantity;
 		$id_currency = (int)(Validate::isLoadedObject($cur_cart) ? $cur_cart->id_currency : ((isset($cookie->id_currency) AND (int)($cookie->id_currency)) ? $cookie->id_currency : Configuration::get('PS_CURRENCY_DEFAULT')));
 
-
 		// retrieve address informations
-      $id_country = (int)Country::getDefaultCountryId();
+		$id_country = (int)Country::getDefaultCountryId();
 		$id_state = 0;
 		$id_county = 0;
-
-
+	    
 		if (!$id_address)
+			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+			
+		if ($id_address)
 		{
-			if ($id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
+			$address_infos = Address::getCountryAndState($id_address);
+			if ($address_infos['id_country'])
 			{
-				$address_infos = Address::getCountryAndState($id_address);
-				if ($address_infos['id_country'])
-				{
-					$id_country = (int)($address_infos['id_country']);
-					$id_state = (int)($address_infos['id_state']);
-					$postcode = (int)$address_infos['postcode'];
-
-					$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
-				}
-			} else if (isset($cookie->id_country)) {
-				// fetch address from cookie
-		      $id_country = (int)$cookie->id_country;
-				$id_state = (int)$cookie->id_state;
-				$postcode = (int)$cookie->postcode;
+				$id_country = (int)($address_infos['id_country']);
+				$id_state = (int)($address_infos['id_state']);
+				$postcode = (int)$address_infos['postcode'];
 
 				$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
 			}
+		}
+		elseif (isset($cookie->id_country)) 
+		{
+			// fetch address from cookie
+			$id_country = (int)$cookie->id_country;
+			$id_state = (int)$cookie->id_state;
+			$postcode = (int)$cookie->postcode;
 
+			$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
 		}
 
 		if (Tax::excludeTaxeOption())

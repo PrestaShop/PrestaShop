@@ -9,7 +9,6 @@
 		<module name="blockcategories"/>
 		<module name="blockcms"/>
 		<module name="blockcurrencies"/>
-		<module name="blockinfos"/>
 		<module name="blocklanguages"/>
 		<module name="blocklayered"/>
 		<module name="blocklink"/>
@@ -26,11 +25,10 @@
 		<module name="blocksupplier"/>
 		<module name="blocktags"/>
 		<module name="blockuserinfo"/>
-		<module name="blockvariouslinks"/>
 		<module name="blockviewed"/>
 		<module name="blockwishlist"/>
-		<module name="canonicalurl"/>
 		<module name="cashondelivery"/>
+		<module name="carriercompare"/>
 		<module name="cheque"/>
 		<module name="crossselling"/>
 		<module name="dateofdelivery"/>
@@ -74,7 +72,6 @@
 		<module name="statsequipment"/>
 		<module name="statsforecast"/>
 		<module name="statsgeolocation"/>
-		<module name="statshome"/>
 		<module name="statslive"/>
 		<module name="statsnewsletter"/>
 		<module name="statsorigin"/>
@@ -110,7 +107,6 @@
 		<module name="ogone"/>
 		<module name="paysafecard"/>
 		<module name="paypal"/>
-		<module name="paypalapi"/>
 		<module name="reverso"/>
 		<module name="secuvad"/>
 		<module name="socolissimo"/>

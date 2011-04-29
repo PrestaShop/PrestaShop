@@ -332,7 +332,7 @@ INSERT INTO `PREFIX_country_lang` (`id_country`, `id_lang`, `name`) VALUES
 (14, 1, 'Poland'),(14, 2, 'Pologne'),(14, 3, 'Polonia'),(15, 1, 'Portugal'),(15, 2, 'Portugal'),(15, 3, 'Portugal'),
 (16, 1, 'Czech Republic'),(16, 2, 'République Tchèque'),(16, 3, 'República Checa'),(17, 1, 'United Kingdom'),(17, 2, 'Royaume-Uni'),(17, 3, 'Reino Unido'),
 (18, 1, 'Sweden'),(18, 2, 'Suède'),(18, 3, 'Suecia'),(19, 1, 'Switzerland'),(19, 2, 'Suisse'),(19, 3, 'Suiza'),(20, 1, 'Denmark'),
-(20, 2, 'Danemark'),(20, 3, 'Dinamarca'),(21, 1, 'USA'),(21, 2, 'États-Unis'),(21, 3, 'EE.UU.'),(22, 1, 'HongKong'),(22, 2, 'Hong-Kong'),
+(20, 2, 'Danemark'),(20, 3, 'Dinamarca'),(21, 1, 'United States'),(21, 2, 'États-Unis'),(21, 3, 'EE.UU.'),(22, 1, 'HongKong'),(22, 2, 'Hong-Kong'),
 (22, 3, 'Hong Kong'),(23, 1, 'Norway'),(23, 2, 'Norvège'),(23, 3, 'Noruega'),(24, 1, 'Australia'),(24, 2, 'Australie'),(24, 3, 'Australia'),
 (25, 1, 'Singapore'),(25, 2, 'Singapour'),(25, 3, 'Singapur'),(26, 1, 'Ireland'),(26, 2, 'Eire'),(26, 3, 'Irlanda'),(27, 1, 'New Zealand'),
 (27, 2, 'Nouvelle-Zélande'),(27, 3, 'Nueva Zelanda'),(28, 1, 'South Korea'),(28, 2, 'Corée du Sud'),(28, 3, 'Corea del Sur'),(29, 1, 'Israel'),
@@ -1029,10 +1029,9 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 INSERT INTO `PREFIX_address_format` (`id_country`, `format`)
 (SELECT `id_country` as id_country, 'firstname lastname\ncompany\nvat_number\naddress1\naddress2\npostcode city\ncountry\nphone' as format FROM `PREFIX_country`);
 
-UPDATE `PREFIX_address_format` set `format`='firstname lastname
-company
-address1
-address2
-city state postcode 
+UPDATE `PREFIX_address_format` set `format`='company
+firstname lastname
+address1 address2
+city state_iso postcode 
 country
 phone' where `id_country`=21;

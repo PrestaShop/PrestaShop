@@ -146,6 +146,7 @@ class FeatureValueCore extends ObjectModel
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.`id_feature_value` = fv.`id_feature_value`)
 		WHERE `value` = \''.pSQL($name).'\'
 		AND fv.`id_feature` = '.(int)$id_feature.'
+		AND fv.`custom` = 0
 		GROUP BY fv.`id_feature_value` LIMIT 1');
 
 		if (!isset($rq[0]['id_feature_value']) OR !$id_feature_value = (int)$rq[0]['id_feature_value'])

@@ -319,7 +319,7 @@ abstract class AdminTabCore
 	public function includeSubTab($methodname, $actions = array())
 	{
 		if (!isset($this->_includeTab) OR !is_array($this->_includeTab))
-			return ;
+			return false;
 		$key = 0;
 		$inc = false;
 		foreach ($this->_includeTab as $subtab => $extraVars)
@@ -1553,7 +1553,7 @@ abstract class AdminTabCore
 		global $currentIndex, $cookie, $tab;
 
 		if (!isset($this->_fieldsOptions) OR !sizeof($this->_fieldsOptions))
-			return ;
+			return false;
 
 		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
 		$this->_languages = Language::getLanguages(false);

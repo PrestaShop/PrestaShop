@@ -60,6 +60,8 @@ class AddressFormatCore extends ObjectModel
 		$out = true;
 		$addr_f_validate = Address::getFieldsValidate();
 
+		$addr_f_validate['state_iso'] = 1;		// adding state iso code into allowed fields
+
 		$fields_format = explode("\n", $this->format);
 		foreach($fields_format as $field_line)
 		{
@@ -73,20 +75,30 @@ class AddressFormatCore extends ObjectModel
 		}
 		return $out;
 	}
+
+
 	
 	/**
 	 * Returns address format fields in array by country
 	 * 
-	 * @param Integer PS_COUNTRY.id 
+	 * @param Integer PS_COUNTRY.id if null using default country 
 	 * @return Array String field address format
 	 */
-	public static function getOrderedAddressFields($id_country)
+	public static function getOrderedAddressFields($id_country = 0, $split_all = false)
 	{
 		$out = array();
 		$field_set = explode("\n", self::getAddressCountryFormat($id_country));
 		foreach ($field_set as $field_item)
 		{
-			$out[] = trim($field_item);
+		// 	$field_item = trim($field_item);
+			
+			if ($split_all)
+			{
+				foreach(explode(' ',$field_item) as $word_item)
+					$out[] = trim($word_item);
+			}
+			else
+				$out[] = trim($field_item);
 		}
 		return $out;
 	}
@@ -97,9 +109,16 @@ class AddressFormatCore extends ObjectModel
 	 * @param Integer PS_COUNTRY.id 
 	 * @return String field address format
 	 */
-	public static function getAddressCountryFormat($id_country)
+	public static function getAddressCountryFormat($id_country = 0)
 	{
-		$out = ''; 
+		$out = '';
+		$id_country = (int) $id_country;
+
+ 		if ($id_country <= 0)
+		{
+			$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
+		}
+
 		$tmp_obj = new AddressFormat();
 		$tmp_obj->id_country = $id_country;
 		$out = $tmp_obj->getFormat($tmp_obj->id_country);
@@ -131,7 +150,7 @@ class AddressFormatCore extends ObjectModel
 		FROM `'._DB_PREFIX_.$this->table.'`
 		WHERE `id_country` = '.(int)($id_country));
 
-		return isset($result['format']) ? $result['format'] : false;
+		return isset($result['format']) ? trim($result['format']) : '';
 	}
 }
 

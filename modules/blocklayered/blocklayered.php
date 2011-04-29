@@ -251,8 +251,8 @@ if (!$params['category']->active)
 				break;
 				case 'id_attribute_group':
 					$queryFilters .= ' AND p.id_product IN ( SELECT pa.`id_product`
-										FROM `ps_product_attribute_combination` pac
-										LEFT JOIN `ps_product_attribute` pa
+										FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+										LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 										ON (pa.`id_product_attribute` = pac.`id_product_attribute`) WHERE ';
 										
 					foreach ($filterValues AS $filterValue)
@@ -260,10 +260,10 @@ if (!$params['category']->active)
 					$queryFilters = rtrim($queryFilters, 'OR ').')';
 				break;
 				case 'category':
-					$parent = new category($id_parent);
+					$parent = new Category($id_parent);
 					if (!sizeof($selectedFilters['category']))
                          $queryFilters .= ' AND p.id_product IN ( SELECT id_product FROM '._DB_PREFIX_.'category_product cp 
-                         LEFT JOIN ps_category c ON (c.id_category = cp.id_category) 
+                         LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category) 
                          WHERE 1 AND c.nleft >= parent->nleft AND c.nright <= parent->nright';
 					else
 					{

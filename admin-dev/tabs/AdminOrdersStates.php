@@ -139,7 +139,7 @@ class AdminOrdersStates extends AdminTab
 				</div>
 				<label>'.$this->l('Color:').' </label>
 				<div class="margin-form">
-					<input type="color" data-hex="true" class="color mColorPickerInput" name="color" value="'.htmlentities($this->getFieldValue($obj, 'color'), ENT_COMPAT, 'UTF-8').'" />
+					<input width="20px" type="color" data-hex="true" class="color mColorPickerInput" name="color" value="'.htmlentities($this->getFieldValue($obj, 'color'), ENT_COMPAT, 'UTF-8').'" />
 					<p>'.$this->l('Status will be highlighted in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")</p>
 				</div>
 				<div class="margin-form">
