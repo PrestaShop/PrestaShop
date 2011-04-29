@@ -256,6 +256,15 @@ class AddressControllerCore extends FrontController
 			'select_address' => (int)(Tools::getValue('select_address'))
 		));
 	}
+
+	protected function _processAddressFormat()
+	{
+
+		$id_country = is_null($this->_address)? 0 : (int)$this->_address->id_country;
+
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, $split_all = true);
+		self::$smarty->assign('ordered_adr_fields', $dlv_adr_fields);
+	}
 	
 	public function displayHeader()
 	{
@@ -266,6 +275,8 @@ class AddressControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
+
+		$this->_processAddressFormat();
 		self::$smarty->display(_PS_THEME_DIR_.'address.tpl');
 	}
 	

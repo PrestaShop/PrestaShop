@@ -692,7 +692,7 @@ class AdminOrders extends AdminTab
 //				'.$addressDelivery->country.($addressDelivery->id_state ? ' - '.$deliveryState->name : '').'<br />
 //				'.(!empty($addressDelivery->phone) ? $addressDelivery->phone.'<br />' : '').'
 //				'.(!empty($addressDelivery->phone_mobile) ? $addressDelivery->phone_mobile.'<br />' : '').'
-//				'.(!empty($addressDelivery->other) ? '<hr />'.$addressDelivery->other.'<br />' : '').'
+				.(!empty($addressDelivery->other) ? '<hr />'.$addressDelivery->other.'<br />' : '')
 			.'</fieldset>
 		</div>
 		<div style="float: left; margin-left: 40px">
@@ -700,6 +700,8 @@ class AdminOrders extends AdminTab
 				<legend><img src="../img/admin/invoice.gif" alt="'.$this->l('Invoice address').'" />'.$this->l('Invoice address').'</legend>
 				<div style="float: right"><a href="?tab=AdminAddresses&id_address='.$addressInvoice->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=2' : '').'&back='.urlencode($_SERVER['REQUEST_URI']).'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)($cookie->id_employee)).'"><img src="../img/admin/edit.gif" /></a></div>
 				'.$this->displayAddressDetail($addressInvoice)
+				.(!empty($addressInvoice->other) ? '<hr />'.$addressInvoice->other.'<br />' : '')
+
 			.'</fieldset>
 		</div>
 		<div class="clear">&nbsp;</div>';
@@ -930,7 +932,7 @@ class AdminOrders extends AdminTab
 		echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 	}
 
-	public function displayAddressDetail($address)
+	public function displayAddressDetail($addressDelivery)
 	{
 		$optional_fields = array(
 						'company' => 1
@@ -938,49 +940,66 @@ class AdminOrders extends AdminTab
 						, 'phone_mobile' => 1
 						, 'address2' => 1
 					);
+
+		$out_field_sep = ' ';
+		$out_line_sep = '<br />';
 		$out = '';
-		$address_datas = AddressFormat::getAddressCountryFormat($address->id_country);
+		$lines_out = array();
 
-		$field_other = $address->other;
-		$lines_out = $address->getOrderedValues(array(
-									'spacer' => ' '
-									, 'optional' => $optional_fields
-								)
-								, $address_datas);
+		$address_datas = explode("\n", AddressFormat::getAddressCountryFormat($addressDelivery->id_country));
 
-		$out = implode("<br />", $lines_out) .((!(is_null($field_other) || $field_other == '')  )? '<hr />'.$field_other: ''); 
+		foreach ($address_datas as $fields_line)
+		{
+			$fields_arr = array();
+			$is_empty = true;
+			foreach(explode(' ',$fields_line) as $field_item)
+				{
+					$field_item = trim($field_item);
+					if (!empty($addressDelivery->$field_item))
+					{
+						$fields_arr[] = $this->_getAddressFieldValue($addressDelivery, $field_item);
+						$is_empty = false;
+					}
+					else
+					{
+						if (!isset($optional_fields[$field_item]))
+						{
+							$fields_arr[] = $this->_getAddressFieldValue($addressDelivery, $field_item);
+							$is_empty = false;
+						}
+					}
+				}
+			if (!$is_empty)
+			{
+				$tmp_line = implode($out_field_sep, $fields_arr);
+				$line_out[] = $tmp_line;
+			}
+		}
+
+		$out = implode($out_line_sep, $line_out);
 		return $out;
 	}
 
-	/**
-	* returns String array values according to the given string pattern
-	*
-	*/
-
-	public function getOrderedValues($address, $pattern, array $given_values = null)
+	private function _getAddressFieldValue(Address $address, $field_name)
 	{
-		$out = array();
-		if (!empty($fields) && $fields != '' && !is_null($address))
-		{
-			$sep = "\n";
-			$line_sep = ' ';
-			$lines = explode($sep, $pattern);
-			foreach ($lines as $one_line)
+		$out = '';
+		if(!empty($field_name) && $field_name!= '' && !is_null($address))
+			switch($field_name)
 			{
-				if(!empty($one_line) && $one_line!= '')
-				{
-					$tmp_values = array();
-					$words = explode($line_sep, trim($one_line));
-					$tmp_words = array();
+				// Note: add other cases as needed
+				case 'state':
+					$deliveryState = new State((int)($address->id_state));
+					$out = (isset($deliveryState->name)) ? ' - '.$deliveryState->name : '';
+					break;
+				case 'state_iso':
+					$deliveryState = new State((int)($address->id_state));
+					$out = (isset($deliveryState->iso_code)) ? ' - '.$deliveryState->iso_code : '';
+					break;
 
-					// String append instead of Array append
-					foreach ($words as $one_word)
-						$tmp_values[$one_word] = (is_null($given_values)) ? $address->{$one_word} : $given_values[$one_word];
+				default:
+					$out = $address->$field_name;
 
-					$out[] = array($tmp_values, implode(' ', $tmp_values));
-				}
 			}
-		}
 		return $out;
 	}
 

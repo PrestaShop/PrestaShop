@@ -80,7 +80,7 @@ class Treepodia extends Module
 
 	private function _getShopURL()
 	{
-		return ((Configuration::get('PS_SSL_ENABLED') OR (isset($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? Tools::getShopDomainSsl() : Tools::getShopDomain()).__PS_BASE_URI__;
+		return ((Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? Tools::getShopDomainSsl() : Tools::getShopDomain()).__PS_BASE_URI__;
 	}
 
 	public function generateXmlFlow()

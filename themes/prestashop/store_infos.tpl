@@ -36,10 +36,10 @@
 <br />
 <span id="store_hours">{l s='Hours:'}</span>
 <table style="font-size: 9px;">
-	{foreach $days_datas as $one_day}
+	{foreach from=$days_datas  item=one_day}
 	<tr>
-		<td style="width: 70px;">{$one_day['day']}</td>
-		<td>{$one_day['hours']}</td>
+		<td style="width: 70px;">{$one_day.day}</td>
+		<td>{$one_day.hours}</td>
 	</tr>
 	{/foreach}
 </table>

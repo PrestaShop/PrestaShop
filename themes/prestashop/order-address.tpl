@@ -44,6 +44,8 @@
 								,city: '{$address.city|addslashes}'
 								,country: '{$address.country|addslashes}'
 								,state: '{$address.state|default:''|addslashes}'
+								,state_iso: '{$address.state_iso|default:''|addslashes}'
+
 							{rdelim};
 	{/foreach}
 
@@ -66,14 +68,19 @@
 					]
 				{rdelim};
 
+	function getAddressesTitles()
+	{ldelim}
+		return {ldelim}
+						'invoice': "{l s='Your billing address'}"
+						, 'delivery': "{l s='Your delivery address'}"
+			{rdelim};
+
+	{rdelim}
 
 
 	function buildAddressBlock(id_address, address_type, dest_comp)
 	{ldelim}
-		var adr_titles_vals = {ldelim}
-						'invoice': "{l s='Your billing address'}"
-						, 'delivery': "{l s='Your delivery address'}"
-					{rdelim};
+		var adr_titles_vals = getAddressesTitles();
 
 		var li_content = addresses_values[id_address];
 		var fields_name = ["title"];

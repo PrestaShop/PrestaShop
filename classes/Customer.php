@@ -305,7 +305,7 @@ class CustomerCore extends ObjectModel
 	public function getAddresses($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT a.*, cl.`name` AS country, s.name AS state
+		SELECT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
 		FROM `'._DB_PREFIX_.'address` a
 		LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)

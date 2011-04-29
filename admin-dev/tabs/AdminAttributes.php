@@ -92,7 +92,7 @@ class AdminAttributes extends AdminTab
 				<div id="colorAttributeProperties" style="'.((Validate::isLoadedObject($obj) AND $obj->isColorAttribute()) ? 'display: block;' : 'display: none;').'">
 					<label>'.$this->l('Color').'</label>
 					<div class="margin-form">
-						<input type="color" data-hex="true" class="color mColorPickerInput" name="color" value="'.(Tools::getValue('color', $color) ? htmlentities(Tools::getValue('color', $color)) : '#000000').'" /> <sup>*</sup>
+						<input width="20px" type="color" data-hex="true" class="color mColorPickerInput" name="color" value="'.(Tools::getValue('color', $color) ? htmlentities(Tools::getValue('color', $color)) : '#000000').'" /> <sup>*</sup>
 						<p class="clear">'.$this->l('HTML colors only (e.g.,').' "lightblue", "#CC6600")</p>
 					</div>
 					<label>'.$this->l('Texture:').' </label>

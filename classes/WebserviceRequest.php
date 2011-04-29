@@ -219,7 +219,7 @@ class WebserviceRequestCore
 		$display_errors = strtolower(ini_get('display_errors')) != 'off';
 		
 		// Error handler
-		set_error_handler(array('WebserviceRequest', 'webserviceErrorHandler'));
+		set_error_handler(array($this, 'webserviceErrorHandler'));
 		ini_set('html_errors', 'off');
 		$this->_wsUrl = Tools::getHttpHost(true).__PS_BASE_URI__.'api/';
 		
