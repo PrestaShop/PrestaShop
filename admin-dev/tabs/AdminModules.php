@@ -671,7 +671,7 @@ class AdminModules extends AdminTab
 			  	</tr>
 			</table>
 			</form>';
-		
+		echo $this->displaySelectedFilter();
 		if ($tab_module = Tools::getValue('tab_module'))
 			if (array_key_exists($tab_module, $this->listTabModules))
 				$goto = $tab_module;
@@ -869,6 +869,34 @@ class AdminModules extends AdminTab
 	public function refresh()
 	{
 		return file_put_contents($this->_moduleCacheFile, Tools::file_get_contents('http://www.prestashop.com/xml/modules_list.xml'));
+	}
+	
+	public function displaySelectedFilter()
+	{
+		global $cookie;
+		$selected_filter = '';
+		$id_employee = (int)($cookie->id_employee);
+		
+		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)($cookie->id_employee));
+		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)($cookie->id_employee));
+		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)($cookie->id_employee));
+		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)($cookie->id_employee));
+		$selected_filter .= ($showTypeModules == 'allModules' ? $this->l('All Modules').' - ' : '').
+							($showTypeModules == 'nativeModules' ? $this->l('Native Modules').' - ' : '').
+							($showTypeModules == 'partnerModules' ? $this->l('Partners Modules').' - ' : '').
+							($showTypeModules == 'otherModules' ? $this->l('Others Modules').' - ' : '').
+							($showInstalledModules == 'installedUninstalled' ? $this->l('Installed & Uninstalled').' - ' : '').
+							($showInstalledModules == 'installed' ? $this->l('Installed Modules').' - ' : '').
+							($showInstalledModules == 'unistalled' ? $this->l('Uninstalled Modules').' - ' : '').
+							($showEnabledModules == 'enabledDisabled' ? $this->l('Enabled & Disabled').' - ' : '').
+							($showEnabledModules == 'enabled' ? $this->l('Enabled Modules').' - ' : '').
+							($showEnabledModules == 'disabled' ? $this->l('Disabled Modules').' - ' : '').
+							($showCountryModules === 1 ? $this->l('Current country:').' '.$nameCountryDefault.' - ' : '').
+							($showCountryModules === 0 ? $this->l('All countries').' - ' : '');
+
+		if (strlen($selected_filter) != 0)
+			$selected_filter = '<div class="hint" style="display:block;background:#DDE9F7 no-repeat 6px 5px url(../img/admin/filter.png);"><b>'.$this->l('Selected filters').' : </b>'.rtrim($selected_filter, ' - ').'</div>';
+		return $selected_filter;
 	}
 	
 	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
