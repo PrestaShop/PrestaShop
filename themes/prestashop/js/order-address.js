@@ -77,7 +77,10 @@ function updateAddressesDisplay(first_view)
 }
 
 function updateAddressDisplay(addressType)
-{	
+{
+	if (typeof(addresses) == 'undefined')
+		return false;
+	
 	if (addresses.length <= 0)
 		return false;
 
