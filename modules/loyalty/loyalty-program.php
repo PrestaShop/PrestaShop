@@ -131,7 +131,6 @@ if ($ids_discount = LoyaltyModule::getDiscountByIdCustomer((int)($cookie->id_cus
 	foreach ($ids_discount AS $key => $discount)
 	{
 		$discounts[$key] = new Discount((int)$discount['id_discount'], (int)($cookie->id_lang));
-		$discounts[$key]->date_add = $discount['date_add'];
 		$discounts[$key]->orders = LoyaltyModule::getOrdersByIdDiscount((int)$discount['id_discount']);
 	}
 }
