@@ -30,7 +30,7 @@ include(dirname(__FILE__).'/init.php');
 
 $cookie = new Cookie('ps');
 if (!$cookie->isLogged())
-	Tools::redirect('authentication.php?back=order-follow.php');
+	Tools::redirect('index.php/authentication?back=order-follow.php');
 
 if (isset($_GET['id_order_return']) AND Validate::isUnsignedId($_GET['id_order_return']))
 	$orderReturn = new OrderReturn((int)($_GET['id_order_return']));

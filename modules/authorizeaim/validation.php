@@ -60,7 +60,7 @@ if (!isset($response[7]) OR !isset($response[3]) OR !isset($response[9]))
 }
 
 if ($response[0] == 3)
-	Tools::redirect('order.php?step=3&aimerror=1');
+	Tools::redirect('index.php/order?step=3&aimerror=1');
 else 
 {
 	/* Does the cart exist and is valid? */
@@ -82,6 +82,6 @@ else
 	else
 		$authorizeaim->validateOrder((int)$cart->id, _PS_OS_ERROR_, (float)$response[9], $authorizeaim->displayName, $message);
 
-	Tools::redirect('order-confirmation.php?id_module='.(int)$authorizeaim->id.'&id_cart='.(int)$cart->id.'&key='.$customer->secure_key);
+	Tools::redirect('index.php/order-confirmation?id_module='.(int)$authorizeaim->id.'&id_cart='.(int)$cart->id.'&key='.$customer->secure_key);
 }
 

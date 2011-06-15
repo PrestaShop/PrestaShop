@@ -1,6 +1,7 @@
+
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,4 +27,6 @@
 */
 
 require(dirname(__FILE__).'/config/config.inc.php');
-ControllerFactory::getController('IndexController')->run();
+$dispatcher = new Dispatcher();
+$dispatcher->dispatch();
+

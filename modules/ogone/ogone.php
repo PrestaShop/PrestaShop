@@ -186,7 +186,7 @@ class Ogone extends PaymentModule
 		else
 			$smarty->assign('status', 'failed');
 		$link = new Link();
-		$smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $link->getPageLink('contact-form.php', true) : Tools::getHttpHost(true).'contact-form.php'));
+		$smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $link->getPageLink('contact-form', true) : Tools::getHttpHost(true).'contact-form'));
 		return $this->display(__FILE__, 'hookorderconfirmation.tpl');
 	}
 	

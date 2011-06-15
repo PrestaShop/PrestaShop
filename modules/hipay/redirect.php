@@ -33,7 +33,7 @@ include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/hipay.php');
 
 if (!$cookie->isLogged(true))
-    Tools::redirect('authentication.php?back=order.php');
+    Tools::redirect('index.php/authentication?back=order.php');
 
 $hipay = new HiPay();
 $hipay->payment();

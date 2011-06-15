@@ -31,7 +31,7 @@ include(dirname(__FILE__).'/trackingfront.php');
 
 $tf = new TrackingFront();
 if (!$tf->active)
-	Tools::redirect('404.php');
+	Tools::redirect('index.php/404');
 $tf->postProcess();
 echo $tf->isLogged() ? $tf->displayAccount() : $tf->displayLogin();
 

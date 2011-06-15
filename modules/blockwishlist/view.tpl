@@ -71,7 +71,7 @@
 			<a class="button_small clear" href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)}" title="{l s='View' mod='blockwishlist'}">{l s='View' mod='blockwishlist'}</a>
 			{if isset($product.attribute_quantity) AND $product.attribute_quantity >= 1 OR !isset($product.attribute_quantity) AND $product.product_quantity >= 1}
 			{if !$ajax}
-			<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart.php')}" method="post">
+			<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart')}" method="post">
 			<p class="hidden">
 				<input type="hidden" name="id_product" value="{$product.id_product|intval}" id="product_page_product_id"  />
 				<input type="hidden" name="add" value="1" />

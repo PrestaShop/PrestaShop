@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -70,7 +70,7 @@ class CartControllerCore extends FrontController
 
 	public function includeCartModule()
 	{
-		require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'); 
+		require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php');
 	}
 
 	public function preProcess()
@@ -216,7 +216,7 @@ class CartControllerCore extends FrontController
 					{
 						$queryString = Tools::safeOutput(Tools::getValue('query', NULL));
 						if ($queryString AND !Configuration::get('PS_CART_REDIRECT'))
-							Tools::redirect('search.php?search='.$queryString);
+							Tools::redirect('index.php?controller=search&search='.$queryString);
 						if (isset($_SERVER['HTTP_REFERER']))
 						{
 							// Redirect to previous page
@@ -227,7 +227,7 @@ class CartControllerCore extends FrontController
 					}
 				}
 				if (Tools::getValue('ajax') != 'true' AND !sizeof($this->errors))
-					Tools::redirect('order.php?'.(isset($idProduct) ? 'ipa='.(int)($idProduct) : ''));
+					Tools::redirect('index.php?controller=order&'.(isset($idProduct) ? 'ipa='.(int)($idProduct) : ''));
 
 			}
 		}
@@ -239,3 +239,4 @@ class CartControllerCore extends FrontController
 		self::$smarty->display(_PS_THEME_DIR_.'errors.tpl');
 	}
 }
+

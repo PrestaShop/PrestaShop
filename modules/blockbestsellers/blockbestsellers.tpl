@@ -26,7 +26,7 @@
 
 <!-- MODULE Block best sellers -->
 <div id="best-sellers_block_right" class="block products_block">
-	<h4><a href="{$link->getPageLink('best-sales.php')}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
+	<h4><a href="{$link->getPageLink('best-sales')}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
 	<div class="block_content">
 	{if $best_sellers|@count > 0}
 		<ul class="product_images">
@@ -38,7 +38,7 @@
 			<dt class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$product.link}" title="{$product.name|escape:'htmlall':'UTF-8'}">{$product.name|strip_tags:'UTF-8'|escape:'htmlall':'UTF-8'}</a></dt>
 		{/foreach}
 		</dl>
-		<p><a href="{$link->getPageLink('best-sales.php')}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
+		<p><a href="{$link->getPageLink('best-sales')}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
 	{else}
 		<p>{l s='No best sellers at this time' mod='blockbestsellers'}</p>
 	{/if}

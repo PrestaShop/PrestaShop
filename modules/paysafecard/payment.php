@@ -31,11 +31,11 @@ include(dirname(__FILE__).'/paysafecard.php');
 $module = new PaysafeCard();
 
 if (!$cart->id OR $cart->id_customer == 0 OR $cart->id_address_delivery == 0 OR $cart->id_address_invoice == 0 OR !$module->active)
-	Tools::redirect('order.php?step=3');
+	Tools::redirect('index.php/order?step=3');
 
 $currency = new Currency($cart->id_currency);
 if (!$module->isCurrencyActive($currency->iso_code))
-	Tools::redirect('order.php?step=3');
+	Tools::redirect('index.php/order?step=3');
 
 $amount = number_format((float)($cart->getOrderTotal(true, Cart::BOTH)), 2, '.','');
 if (Tools::getValue('hash') != md5(Configuration::get($module->prefix.'SALT') + $amount + $currency->iso_code)) 
@@ -95,7 +95,7 @@ if ($state == _PS_OS_ERROR_)
 else 
 {
 	$order = new Order($module->currentOrder);
-	Tools::redirect('order-confirmation.php?id_cart='.(int)($cart->id).'&id_module='.(int)($module->id).'&id_order='.(int)($module->currentOrder).'&key='.$order->secure_key);
+	Tools::redirect('index.php/order-confirmation?id_cart='.(int)($cart->id).'&id_module='.(int)($module->id).'&id_order='.(int)($module->currentOrder).'&key='.$order->secure_key);
 }
 
 

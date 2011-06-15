@@ -26,7 +26,7 @@
 
 <!-- MODULE Block new products -->
 <div id="new-products_block_right" class="block products_block">
-	<h4><a href="{$link->getPageLink('new-products.php')}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a></h4>
+	<h4><a href="{$link->getPageLink('new-products')}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a></h4>
 	<div class="block_content">
 	{if $new_products !== false}
 		<ul class="product_images clearfix">
@@ -42,7 +42,7 @@
 			{if $newproduct.description_short}<dd class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$newproduct.link}">{$newproduct.description_short|strip_tags:'UTF-8'|truncate:50:'...'}</a>&nbsp;<a href="{$newproduct.link}"><img src="{$img_dir}bullet.gif" alt="&gt;&gt;" width="10" height="7" /></a></dd>{/if}
 		{/foreach}
 		</dl>
-		<p><a href="{$link->getPageLink('new-products.php')}" title="{l s='All new products' mod='blocknewproducts'}" class="button_large">{l s='All new products' mod='blocknewproducts'}</a></p>
+		<p><a href="{$link->getPageLink('new-products')}" title="{l s='All new products' mod='blocknewproducts'}" class="button_large">{l s='All new products' mod='blocknewproducts'}</a></p>
 	{else}
 		<p>{l s='No new products at this time' mod='blocknewproducts'}</p>
 	{/if}

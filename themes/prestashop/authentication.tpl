@@ -79,7 +79,7 @@ $(function(){ldelim}
 {include file="$tpl_dir./errors.tpl"}
 
 {if !isset($email_create)}
-	<form action="{$link->getPageLink('authentication.php', true)}" method="post" id="create-account_form" class="std">
+	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std">
 		<fieldset>
 			<h3>{l s='Create your account'}</h3>
 			<h4>{l s='Enter your e-mail address to create an account'}.</h4>
@@ -94,7 +94,7 @@ $(function(){ldelim}
 			</p>
 		</fieldset>
 	</form>
-	<form action="{$link->getPageLink('authentication.php', true)}" method="post" id="login_form" class="std">
+	<form action="{$link->getPageLink('authentication', true)}" method="post" id="login_form" class="std">
 		<fieldset>
 			<h3>{l s='Already registered ?'}</h3>
 			<p class="text">
@@ -109,11 +109,11 @@ $(function(){ldelim}
 				{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
 				<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
 			</p>
-			<p class="lost_password"><a href="{$link->getPageLink('password.php')}">{l s='Forgot your password?'}</a></p>
+			<p class="lost_password"><a href="{$link->getPageLink('password')}', ">{l s='Forgot your password?'}</a></p>
 		</fieldset>
 	</form>
 	{if isset($inOrderProcess) && $inOrderProcess && $PS_GUEST_CHECKOUT_ENABLED}
-		<form action="{$link->getPageLink('authentication.php', true)}?back={$back}" method="post" id="new_account_form" class="std">
+		<form action="{$link->getPageLink('authentication', true)}?back={$back}" method="post" id="new_account_form" class="std">
 			<fieldset>
 				<h3>{l s='Instant Checkout'}</h3>
 				<div id="opc_account_form" style="display: block; ">
@@ -266,7 +266,7 @@ $(function(){ldelim}
 		</form>
 	{/if}
 {else}
-<form action="{$link->getPageLink('authentication.php', true)}" method="post" id="account-creation_form" class="std">
+<form action="{$link->getPageLink('authentication', true)}" method="post" id="account-creation_form" class="std">
 	{$HOOK_CREATE_ACCOUNT_TOP}
 	<fieldset class="account_creation">
 		<h3>{l s='Your personal information'}</h3>

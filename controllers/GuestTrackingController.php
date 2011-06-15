@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -30,15 +30,15 @@ class GuestTrackingControllerCore extends FrontController
 	public function preProcess()
 	{
 		parent::preProcess();
-		
+
 		if (self::$cookie->isLogged())
-			Tools::redirect('history.php');
+			Tools::redirect('index.php?controller=history');
 	}
-	
+
 	public function process()
 	{
 		parent::process();
-		
+
 		if ($id_order = Tools::getValue('id_order') AND $email = Tools::getValue('email'))
 		{
 			$order = new Order((int)$id_order);
@@ -58,8 +58,7 @@ class GuestTrackingControllerCore extends FrontController
 			    $products = $order->getProducts();
 			    $customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
 			    Product::addCustomizationPrice($products, $customizedDatas);
-	
-			    $this->processAddressFormat($addressDelivery, $addressInvoice);	
+
 			    self::$smarty->assign(array(
 			    	'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			    	'order' => $order,
@@ -86,7 +85,7 @@ class GuestTrackingControllerCore extends FrontController
 			    	self::$smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
 			    self::$smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
 			    Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
-				
+
 				if (Tools::isSubmit('submitTransformGuestToCustomer'))
 				{
 					if (!Validate::isPasswd(Tools::getValue('password')))
@@ -104,25 +103,25 @@ class GuestTrackingControllerCore extends FrontController
 				/* Handle brute force attacks */
 				sleep(1);
 		}
-		
+
 		self::$smarty->assign(array(
 			'action' => 'guest-tracking.php',
 			'errors' => $this->errors
 		));
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
-		
+
 		Tools::addCSS(_THEME_CSS_DIR_.'history.css');
 		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();
-		
+
 		self::$smarty->display(_PS_THEME_DIR_.'guest-tracking.tpl');
 	}
 
@@ -137,3 +136,4 @@ class GuestTrackingControllerCore extends FrontController
 
 	}
 }
+

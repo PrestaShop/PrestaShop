@@ -340,7 +340,7 @@ class MondialRelay extends Module
 			{
 				
 				if (empty($_POST['MR_Selected_Num_'.$cart->id_carrier])) // Case error : the customer didn't choose a 'relais' but selected Relais Colis TNT as a carrier 
-					Tools::redirect('order.php?step=2&mr_null');
+					Tools::redirect('index.php/order?step=2&mr_null');
 				else
 				{
 					Db::getInstance()->delete(_DB_PREFIX_.'mr_selected','id_cart = "'.(int)($cart->id).'"');

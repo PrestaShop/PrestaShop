@@ -30,7 +30,7 @@ include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/gcheckout.php');
 
 if (!$cookie->isLogged(true))
-    Tools::redirect('authentication.php?back=order.php');
+    Tools::redirect('index.php/authentication?back=order.php');
 elseif (!$cart->getOrderTotal(true, Cart::BOTH))
 	Tools::displayError('Error: Empty cart');
 

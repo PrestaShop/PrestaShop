@@ -39,7 +39,7 @@ $smarty->assign(array(
 	'id_module' => $id_module,
 	'id_cart' => $id_cart,
 	'key' => $key,
-	'ogone_link' => (method_exists($link, 'getPageLink') ? $link->getPageLink('my-account.php') : _PS_BASE_URL_.'my-account.php')
+	'ogone_link' => (method_exists($link, 'getPageLink') ? $link->getPageLink('my-account') : _PS_BASE_URL_.'my-account')
 	));
 echo $ogone->display(__FILE__, 'waiting.tpl');
 

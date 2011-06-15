@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,11 +31,11 @@ class PasswordControllerCore extends FrontController
 {
 	public function __construct()
 	{
-		$this->php_self = 'password.php';
-	
+		$this->php_self = 'password';
+
 		parent::__construct();
 	}
-	
+
 	public function process()
 	{
 		parent::process();
@@ -55,13 +55,13 @@ class PasswordControllerCore extends FrontController
 					if ((strtotime($customer->last_passwd_gen.'+'.(int)($min_time = Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0)
 						$this->errors[] = Tools::displayError('You can regenerate your password only each').' '.(int)($min_time).' '.Tools::displayError('minute(s)');
 					else
-					{	
-						if (Mail::Send((int)(self::$cookie->id_lang), 'password_query', Mail::l('Password query confirmation'), 
-						array('{email}' => $customer->email, 
-							  '{lastname}' => $customer->lastname, 
+					{
+						if (Mail::Send((int)(self::$cookie->id_lang), 'password_query', Mail::l('Password query confirmation'),
+						array('{email}' => $customer->email,
+							  '{lastname}' => $customer->lastname,
 							  '{firstname}' => $customer->firstname,
-							  '{url}' => self::$link->getPageLink('password.php', true).'?token='.$customer->secure_key.'&id_customer='.(int)$customer->id),
-						$customer->email, 
+							  '{url}' => self::$link->getPageLink('password', true).'?token='.$customer->secure_key.'&id_customer='.(int)$customer->id),
+						$customer->email,
 						$customer->firstname.' '.$customer->lastname))
 							self::$smarty->assign(array('confirmation' => 2, 'email' => $customer->email));
 						else
@@ -78,20 +78,20 @@ class PasswordControllerCore extends FrontController
 				$customer = new Customer();
 				$customer->getByemail($email);
 				if ((strtotime($customer->last_passwd_gen.'+'.(int)($min_time = Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0)
-					Tools::redirect('authentication.php?error_regen_pwd');
+					Tools::redirect('index.php?controller=authentication&error_regen_pwd');
 				else
 				{
 					$customer->passwd = Tools::encrypt($password = Tools::passwdGen((int)(MIN_PASSWD_LENGTH)));
 					$customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 					if ($customer->update())
 					{
-						if (Mail::Send((int)(self::$cookie->id_lang), 'password', Mail::l('Your password'), 
-						array('{email}' => $customer->email, 
-							  '{lastname}' => $customer->lastname, 
-							  '{firstname}' => $customer->firstname, 
-							  '{passwd}' => $password), 
-						$customer->email, 
-						$customer->firstname.' '.$customer->lastname)) 
+						if (Mail::Send((int)(self::$cookie->id_lang), 'password', Mail::l('Your password'),
+						array('{email}' => $customer->email,
+							  '{lastname}' => $customer->lastname,
+							  '{firstname}' => $customer->firstname,
+							  '{passwd}' => $password),
+						$customer->email,
+						$customer->firstname.' '.$customer->lastname))
 							self::$smarty->assign(array('confirmation' => 1, 'email' => $customer->email));
 						else
 							$this->errors[] = Tools::displayError('Error occured when sending the e-mail.');
@@ -106,7 +106,7 @@ class PasswordControllerCore extends FrontController
 		elseif (($token = Tools::getValue('token')) || ($id_customer = Tools::getValue('id_customer')))
 			$this->errors[] = Tools::displayError('We cannot regenerate your password with the data you submitted');
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();

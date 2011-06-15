@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/../../init.php');
 include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 
 if (!$cookie->isLogged())
-	Tools::redirect('authentication.php?back=modules/referralprogram/referralprogram-program.php');
+	Tools::redirect('index.php/authentication?back=modules/referralprogram/referralprogram-program.php');
 
 Tools::addCSS(_PS_CSS_DIR_.'thickbox.css', 'all');
 Tools::addJS(array(_PS_JS_DIR_.'jquery/thickbox-modified.js',_PS_JS_DIR_.'jquery/jquery.idTabs.modified.js'));

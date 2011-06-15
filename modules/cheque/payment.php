@@ -33,7 +33,7 @@ include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/cheque.php');
 
 if (!$cookie->isLogged(true))
-    Tools::redirect('authentication.php?back=order.php');
+    Tools::redirect('index.php/authentication?back=order.php');
 	
 $cheque = new Cheque();
 echo $cheque->execPayment($cart);

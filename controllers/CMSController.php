@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -30,14 +30,14 @@ class CmsControllerCore extends FrontController
 	public $assignCase;
 	public $cms;
 	public $cms_category;
-	
+
 	public function preProcess()
 	{
 		if ($id_cms = (int)Tools::getValue('id_cms'))
-		    $this->cms = new CMS($id_cms, self::$cookie->id_lang); 
+		    $this->cms = new CMS($id_cms, self::$cookie->id_lang);
 		elseif ($id_cms_category = (int)Tools::getValue('id_cms_category'))
-		    $this->cms_category = new CMSCategory($id_cms_category, self::$cookie->id_lang); 
-			
+		    $this->cms_category = new CMSCategory($id_cms_category, self::$cookie->id_lang);
+
 		// Automatically redirect to the canonical URL if the current in is the right one
 		// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
 		if ($this->cms AND $canonicalURL = self::$link->getCMSLink($this->cms))
@@ -56,17 +56,17 @@ class CmsControllerCore extends FrontController
 					die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.'">'.$canonicalURL.'</a>');
 				Tools::redirectLink($canonicalURL);
 			}
-		
+
 		parent::preProcess();
-		
+
 		/* assignCase (1 = CMS page, 2 = CMS category) */
 		if (Validate::isLoadedObject($this->cms) AND ($this->cms->active OR (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id) AND file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php'))))
 			$this->assignCase = 1;
 		elseif (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;
 		else
-			Tools::redirect('404.php');
-		
+			Tools::redirect('index.php?controller=404');
+
 		if((int)(Configuration::get('PS_REWRITING_SETTINGS')))
 		{
     	    $rewrite_infos = (isset($id_cms) AND !isset($id_cms_category)) ? CMS::getUrlRewriteInformations($id_cms) : CMSCategory::getUrlRewriteInformations($id_cms_category);
@@ -81,17 +81,17 @@ class CmsControllerCore extends FrontController
 		    self::$smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
-		
+
 		if ($this->assignCase == 1)
 			Tools::addJS(_THEME_JS_DIR_.'cms.js');
-		
+
 		Tools::addCSS(_THEME_CSS_DIR_.'cms.css');
 	}
-	
+
 	public function process()
 	{
 		parent::process();
@@ -117,10 +117,11 @@ class CmsControllerCore extends FrontController
 			));
 		}
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();
 		self::$smarty->display(_PS_THEME_DIR_.'cms.tpl');
 	}
 }
+

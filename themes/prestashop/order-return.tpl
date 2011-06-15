@@ -93,11 +93,11 @@
 <p class="bold">{l s='REMINDER:'}</p>
 <div>
 	- {l s='All products must be returned in their original packaging without damage or wear.'}
-	<br />- {l s='Please print out the'} <a href="{$link->getPageLink('pdf-order-return.php', true)}?id_order_return={$orderRet->id|intval}">{l s='PDF document'}</a> {l s='and slip it into your package.'}
-	<br />- {l s='Please see PDF document'} (<a href="{$link->getPageLink('pdf-order-return.php', true)}?id_order_return={$orderRet->id|intval}">{l s='for the correct address'}</a>)
+	<br />- {l s='Please print out the'} <a href="{$link->getPageLink('pdf-order-return', true)}?id_order_return={$orderRet->id|intval}">{l s='PDF document'}</a> {l s='and slip it into your package.'}
+	<br />- {l s='Please see PDF document'} (<a href="{$link->getPageLink('pdf-order-return', true)}?id_order_return={$orderRet->id|intval}">{l s='for the correct address'}</a>)
 	<br /><br />
 	{l s='Upon receiving your package, you will be notified by e-mail. We will then begin processing the reimbursement of your order total.'}
-	<br /><br /><a href="{$link->getPageLink('contact-form.php', true)}">{l s='Let us know if you have any questions.'}</a>
+	<br /><br /><a href="{$link->getPageLink('contact-form', true)}">{l s='Let us know if you have any questions.'}</a>
 	<br />
 	<p class="bold">{l s='If the conditions of return listed above are not respected, we reserve the right to refuse your package and/or reimbursement.'}</p>
 </div>

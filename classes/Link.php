@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -43,17 +43,17 @@ class LinkCore
 
 	/**
 	 * This function returns a link to delete a customization picture file
-	 * 
-	 * @param mixed $product 
-	 * @param mixed $id_picture 
+	 *
+	 * @param mixed $product
+	 * @param mixed $id_picture
 	 * @return void
 	 */
 	public function getProductDeletePictureLink($product, $id_picture){
 		if (is_object($product))
 			return ($this->allow == 1)?(_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink().((isset($product->category) AND !empty($product->category) AND $product->category != 'home') ? $product->category.'/' : '').(int)$product->id.'-'.$product->link_rewrite.($product->ean13 ? '-'.$product->ean13 : '').'.html?deletePicture='.$id_picture) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'product.php?id_product='.(int)$product->id).'&amp;deletePicture='.$id_picture;
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$product->id).'&amp;deletePicture='.$id_picture;
 		else
-			return _PS_BASE_URL_.__PS_BASE_URI__.'product.php?id_product='.(int)$product.'&amp;deletePicture='.$id_picture;
+			return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$product.'&amp;deletePicture='.$id_picture;
 	}
 
 	/**
@@ -67,73 +67,73 @@ class LinkCore
 	{
 		if (is_object($id_product))
 			return ($this->allow == 1)?(_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)$id_lang).((isset($id_product->category) AND !empty($id_product->category) AND $id_product->category != 'home') ? $id_product->category.'/' : '').(int)$id_product->id.'-'.$id_product->link_rewrite.($id_product->ean13 ? '-'.$id_product->ean13 : '').'.html') :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'product.php?id_product='.(int)$id_product->id);
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$id_product->id);
 		elseif ($alias)
 			return ($this->allow == 1)?(_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)$id_lang).(($category AND $category != 'home') ? ($category.'/') : '').(int)$id_product.'-'.$alias.($ean13 ? '-'.$ean13 : '').'.html') :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'product.php?id_product='.(int)$id_product);
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$id_product);
 		else
-			return _PS_BASE_URL_.__PS_BASE_URI__.'product.php?id_product='.(int)$id_product;
+			return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$id_product;
 	}
 
 	public function getCategoryLink($id_category, $alias = NULL, $id_lang = NULL)
 	{
 		if (is_object($id_category))
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_category->id).'-'.$id_category->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'category.php?id_category='.(int)($id_category->id));
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=category&id_category='.(int)($id_category->id));
 		if ($alias)
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_category).'-'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'category.php?id_category='.(int)($id_category));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'category.php?id_category='.(int)($id_category);
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=category&id_category='.(int)($id_category));
+		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=category&id_category='.(int)($id_category);
 	}
 
 	public function getCMSCategoryLink($id_category, $alias = NULL, $id_lang = NULL)
 	{
 		if (is_object($id_category))
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/category/'.(int)($id_category->id).'-'.$id_category->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'cms.php?id_cms_category='.(int)($id_category->id));
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=cms&id_cms_category='.(int)($id_category->id));
 		if ($alias)
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/category/'.(int)($id_category).'-'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'cms.php?id_cms_category='.(int)($id_category));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'cms.php?id_cms_category='.(int)($id_category);
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=cms&id_cms_category='.(int)($id_category));
+		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=cms&id_cms_category='.(int)($id_category);
 	}
 
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = NULL)
 	{
 		$base = (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
-	
+
 		if (is_object($cms))
 		{
-			return ($this->allow == 1) ? 
+			return ($this->allow == 1) ?
 				($base.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/'.(int)($cms->id).'-'.$cms->link_rewrite) :
-				($base.__PS_BASE_URI__.'cms.php?id_cms='.(int)($cms->id));
+				($base.__PS_BASE_URI__.'index.php?controller=cms&id_cms='.(int)($cms->id));
 		}
-		
+
 		if ($alias)
 			return ($this->allow == 1) ? ($base.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/'.(int)($cms).'-'.$alias) :
-			($base.__PS_BASE_URI__.'cms.php?id_cms='.(int)($cms));
-		return $base.__PS_BASE_URI__.'cms.php?id_cms='.(int)($cms);
+			($base.__PS_BASE_URI__.'index.php?controller=cms&id_cms='.(int)($cms));
+		return $base.__PS_BASE_URI__.'index.php?controller=cms&id_cms='.(int)($cms);
 	}
 
 	public function getSupplierLink($id_supplier, $alias = NULL, $id_lang = NULL)
 	{
 		if (is_object($id_supplier))
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_supplier->id).'__'.$id_supplier->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'supplier.php?id_supplier='.(int)($id_supplier->id));
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=supplier&id_supplier='.(int)($id_supplier->id));
 		if ($alias)
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_supplier).'__'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'supplier.php?id_supplier='.(int)($id_supplier));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'supplier.php?id_supplier='.(int)($id_supplier);
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=supplier&id_supplier='.(int)($id_supplier));
+		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=supplier&id_supplier='.(int)($id_supplier);
 	}
 
 	public function getManufacturerLink($id_manufacturer, $alias = NULL, $id_lang = NULL)
 	{
 		if (is_object($id_manufacturer))
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_manufacturer->id).'_'.$id_manufacturer->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'manufacturer.php?id_manufacturer='.(int)($id_manufacturer->id));
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=manufacturer&id_manufacturer='.(int)($id_manufacturer->id));
 		if ($alias)
 			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_manufacturer).'_'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'manufacturer.php?id_manufacturer='.(int)($id_manufacturer));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'manufacturer.php?id_manufacturer='.(int)($id_manufacturer);
+			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=manufacturer&id_manufacturer='.(int)($id_manufacturer));
+		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=manufacturer&id_manufacturer='.(int)($id_manufacturer);
 	}
 
 	public function getImageLink($name, $ids, $type = NULL)
@@ -145,7 +145,7 @@ class LinkCore
 			$uri_path = _THEME_PROD_DIR_.$ids.($type ? '-'.$type : '').'.jpg';
 		return $protocol_content.Tools::getMediaServer($uri_path).$uri_path;
 	}
-	
+
 	public function getMediaLink($filepath)
 	{
 		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
@@ -165,7 +165,7 @@ class LinkCore
 		foreach ($result as $row)
 			self::$cache['page'][$row['page'].'.php_'.$cookie->id_lang] = $this->getLangLink((int)$cookie->id_lang).$row['url_rewrite'];
 	}
-	
+
 	public function getPageLink($filename, $ssl = false, $id_lang = NULL)
 	{
 		global $cookie;
@@ -196,7 +196,7 @@ class LinkCore
 			{
 				$uri_path = '';
 				if ($filename != 'index.php')
-					$uri_path = $filename;
+					$uri_path = 'index.php?controller='.$filename;
 			}
 			self::$cache['page'][$filename.'_'.$id_lang] = $uri_path;
 		}
@@ -232,7 +232,7 @@ class LinkCore
 		parse_str($_SERVER['QUERY_STRING'], $queryTab);
 		unset($queryTab['isolang']);
 		$query = http_build_query($queryTab);
-		
+
 		if (!empty($query) OR !$this->allow)
 			$query = '?'.$query;
 
@@ -292,16 +292,17 @@ class LinkCore
 	{
 		return $url.(!strstr($url, '?') ? '?' : '&').'orderby='.urlencode($orderby).'&orderway='.urlencode($orderway);
 	}
-	
+
 	protected function getLangLink($id_lang = NULL)
 	{
 		if (!$this->allow OR Language::countActiveLanguages() <= 1)
 			return '';
-			
+
 		global $cookie;
 		if (!$id_lang)
 			$id_lang = (int)$cookie->id_lang;
-		
+
 		return Language::getIsoById((int)$id_lang).'/';
 	}
 }
+

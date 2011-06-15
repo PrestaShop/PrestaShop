@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,4 +26,15 @@
 */
 
 require(dirname(__FILE__).'/config/config.inc.php');
-ControllerFactory::getController('OrderOpcController')->run();
+Tools::displayFileAsDeprecated();
+
+// init front controller in order to use Tools::redirect
+$controller = new FrontController();
+$controller->init();
+
+$params = $_SERVER['QUERY_STRING'];
+if (!empty($params))
+	$params = '?'.$params;
+
+Tools::redirect('index.php/order-opc'.$params);
+

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,42 +31,42 @@ class FreeOrder extends PaymentModule {}
 class ParentOrderControllerCore extends FrontController
 {
 	public $nbProducts;
-	
+
 	public function __construct()
 	{
 		$this->ssl = true;
 		parent::__construct();
-		
+
 		/* Disable some cache related bugs on the cart/order */
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	}
-	
+
 	public function init()
 	{
 		parent::init();
 		$this->nbProducts = self::$cart->nbProducts();
 	}
-	
+
 	public function preProcess()
 	{
 		global $isVirtualCart;
-		
+
 		parent::preProcess();
-		
+
 		// Redirect to the good order process
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND strpos($_SERVER['PHP_SELF'], 'order.php') === false)
-			Tools::redirect('order.php');
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 AND strpos($_SERVER['PHP_SELF'], 'order-opc.php') === false)
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND Tools::getValue('controller') != 'order')
+			Tools::redirect('index.php?controller=order');
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 AND Tools::getValue('controller') != 'order-opc')
 		{
 			if (isset($_GET['step']) AND $_GET['step'] == 3)
-				Tools::redirect('order-opc.php?isPaymentStep=true');
-			Tools::redirect('order-opc.php');
+				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');
+			Tools::redirect('index.php?controller=order-opc');
 		}
-		
+
 		if (Configuration::get('PS_CATALOG_MODE'))
 			$this->errors[] = Tools::displayError('This store has not accepted your new order.');
-		
+
 		if (Tools::isSubmit('submitReorder') AND $id_order = (int)Tools::getValue('id_order'))
 		{
 			$oldCart = new Cart(Order::getCartIdStatic((int)$id_order, (int)self::$cookie->id_customer));
@@ -80,11 +80,11 @@ class ParentOrderControllerCore extends FrontController
 				self::$cookie->id_cart = $duplication['cart']->id;
 				self::$cookie->write();
 				if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
-					Tools::redirect('order-opc.php');
-				Tools::redirect('order.php');
+					Tools::redirect('index.php?controller=order-opc');
+				Tools::redirect('index.php?controller=order');
 			}
 		}
-		
+
 		if ($this->nbProducts)
 		{
 			if (Tools::isSubmit('submitAddDiscount') AND Tools::getValue('discount_name'))
@@ -105,7 +105,7 @@ class ParentOrderControllerCore extends FrontController
 					if (!sizeof($this->errors))
 					{
 						self::$cart->addDiscount((int)($discount->id));
-						Tools::redirect('order-opc.php');
+						Tools::redirect('index.php?controller=order-opc');
 					}
 				}
 				self::$smarty->assign(array(
@@ -116,21 +116,21 @@ class ParentOrderControllerCore extends FrontController
 			elseif (isset($_GET['deleteDiscount']) AND Validate::isUnsignedId($_GET['deleteDiscount']))
 			{
 				self::$cart->deleteDiscount((int)($_GET['deleteDiscount']));
-				Tools::redirect('order-opc.php');
+				Tools::redirect('index.php?controller=order-opc');
 			}
-			
+
 			/* Is there only virtual product in cart */
 			if ($isVirtualCart = self::$cart->isVirtualCart())
 				$this->_setNoCarrier();
 		}
-		
+
 		self::$smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
-		
+
 		// Adding CSS style sheet
 		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
 		Tools::addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
@@ -145,9 +145,9 @@ class ParentOrderControllerCore extends FrontController
 			Tools::addJS(_THEME_JS_DIR_.'cart-summary.js');
 			Tools::addJS(_PS_JS_DIR_.'jquery/jquery-typewatch.pack.js');
 		}
-		
+
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
@@ -162,7 +162,7 @@ class ParentOrderControllerCore extends FrontController
 		}
 		return false;
 	}
-	
+
 	protected function _updateMessage($messageContent)
 	{
 		if ($messageContent)
@@ -194,7 +194,7 @@ class ParentOrderControllerCore extends FrontController
     	}
 		return true;
 	}
-	
+
 	protected function _processCarrier()
 	{
 		self::$cart->recyclable = (int)(Tools::getValue('recyclable'));
@@ -206,7 +206,7 @@ class ParentOrderControllerCore extends FrontController
 			else
 				self::$cart->gift_message = strip_tags($_POST['gift_message']);
 		}
-		
+
 		if (isset(self::$cookie->id_customer) AND self::$cookie->id_customer)
 		{
 			$address = new Address((int)(self::$cart->id_address_delivery));
@@ -215,21 +215,21 @@ class ParentOrderControllerCore extends FrontController
 		}
 		else
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-			
+
 		if (Validate::isInt(Tools::getValue('id_carrier')) AND sizeof(Carrier::checkCarrierZone((int)(Tools::getValue('id_carrier')), (int)($id_zone))))
 			self::$cart->id_carrier = (int)(Tools::getValue('id_carrier'));
 		elseif (!self::$cart->isVirtualCart() AND (int)(Tools::getValue('id_carrier')) == 0)
 			$this->errors[] = Tools::displayError('Invalid carrier or no carrier selected');
-		
+
 		Module::hookExec('processCarrier', array('cart' => self::$cart));
-		
+
 		return self::$cart->update();
 	}
-	
+
 	protected function _assignSummaryInformations()
 	{
 		global $currency;
-		
+
 		if (file_exists(_PS_SHIP_IMG_DIR_.(int)(self::$cart->id_carrier).'.jpg'))
 			self::$smarty->assign('carrierPicture', 1);
 		$summary = self::$cart->getSummaryDetails();
@@ -273,11 +273,11 @@ class ParentOrderControllerCore extends FrontController
 			'HOOK_SHOPPING_CART_EXTRA' => Module::hookExec('shoppingCartExtra', $summary)
 		));
 	}
-	
+
 	protected function _assignAddress()
 	{
 		if (!Customer::getAddressesTotalById((int)(self::$cookie->id_customer)))
-			Tools::redirect('address.php?back=order.php?step=1');
+			Tools::redirect('index.php?controller=address&back=order.php&step=1');
 		$customer = new Customer((int)(self::$cookie->id_customer));
 		if (Validate::isLoadedObject($customer))
 		{
@@ -319,14 +319,14 @@ class ParentOrderControllerCore extends FrontController
 		if ($oldMessage = Message::getMessageByCartId((int)(self::$cart->id)))
 			self::$smarty->assign('oldMessage', $oldMessage['message']);
 	}
-	
+
 	protected function _assignCarrier()
 	{
 		$customer = new Customer((int)(self::$cookie->id_customer));
 		$address = new Address((int)(self::$cart->id_address_delivery));
 		$id_zone = Address::getZoneById((int)($address->id));
 		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups());
-		
+
 		$checked = 0;
 		if (Validate::isUnsignedInt(self::$cart->id_carrier) AND self::$cart->id_carrier)
 		{
@@ -342,14 +342,14 @@ class ParentOrderControllerCore extends FrontController
 			'HOOK_BEFORECARRIER' => Module::hookExec('beforeCarrier', array('carriers' => $carriers))
 		));
 	}
-	
+
 	protected function _assignWrappingAndTOS()
 	{
 		// Wrapping fees
 		$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
 		$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
 		$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
-		
+
 		// TOS
 		$cms = new CMS((int)(Configuration::get('PS_CONDITIONS_CMS_ID')), (int)(self::$cookie->id_lang));
 		$this->link_conditions = self::$link->getCMSLink($cms, $cms->link_rewrite, true);
@@ -357,7 +357,7 @@ class ParentOrderControllerCore extends FrontController
 			$this->link_conditions .= '?content_only=1';
 		else
 			$this->link_conditions .= '&content_only=1';
-		
+
 		self::$smarty->assign(array(
 			'checkedTOS' => (int)(self::$cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
@@ -370,7 +370,7 @@ class ParentOrderControllerCore extends FrontController
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, new Currency((int)(self::$cookie->id_currency))),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, new Currency((int)(self::$cookie->id_currency)))));
 	}
-	
+
 	protected function _assignPayment()
 	{
 		self::$smarty->assign(array(
@@ -378,7 +378,7 @@ class ParentOrderControllerCore extends FrontController
 			'HOOK_PAYMENT' => Module::hookExecPayment()
 		));
 	}
-	
+
 	/**
 	 * Set id_carrier to 0 (no shipping price)
 	 *
@@ -389,3 +389,4 @@ class ParentOrderControllerCore extends FrontController
 		self::$cart->update();
 	}
 }
+
