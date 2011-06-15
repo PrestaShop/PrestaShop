@@ -54,7 +54,7 @@ class ProductControllerCore extends FrontController
 	{
 		if ($id_product = (int)Tools::getValue('id_product'))
 			$this->product = new Product($id_product, true, self::$cookie->id_lang);
-			
+
 		if (!Validate::isLoadedObject($this->product))
 		{
 			header('HTTP/1.1 404 Not Found');
@@ -67,6 +67,7 @@ class ProductControllerCore extends FrontController
 			if (Validate::isLoadedObject($this->product))
 			{
 				$canonicalURL = self::$link->getProductLink($this->product);
+				p($canonicalURL);
 				if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 				{
 					header('HTTP/1.0 301 Moved');

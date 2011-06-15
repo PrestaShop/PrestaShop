@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc.php', true)}{else}{$link->getPageLink('order.php', true)}{/if}" method="post" class="submit">
+<form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 	<input type="hidden" value="{$order->id}" name="id_order">
 	<h4>
 		{l s='Order placed on'} {dateFormat date=$order->date_add full=0}
@@ -65,7 +65,7 @@
 {if $invoice AND $invoiceAllowed}
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-	<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a .PDF file'}</a>
+	<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a .PDF file'}</a>
 </p>
 {/if}
 {if $order->recyclable}
@@ -102,7 +102,7 @@
 	{/foreach}
 </ul>
 {$HOOK_ORDERDETAILDISPLAYED}
-{if !$is_guest}<form action="{$link->getPageLink('order-follow.php', true)}" method="post">{/if}
+{if !$is_guest}<form action="{$link->getPageLink('order-follow', true)}" method="post">{/if}
 <div id="order-detail-content" class="table_block">
 	<table class="std">
 		<thead>
@@ -231,10 +231,10 @@
 						<td class="bold">
 							<label for="cb_{$product.id_order_detail|intval}">
 								{if $product.download_hash && $invoice}
-									<a href="{$link->getPageLink('get-file.php', true)}?key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}{if isset($is_guest) && $is_guest}&id_order={$order->id}&secure_key={$order->secure_key}{/if}" title="{l s='download this product'}">
+									<a href="{$link->getPageLink('get-file', true)}?key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}{if isset($is_guest) && $is_guest}&id_order={$order->id}&secure_key={$order->secure_key}{/if}" title="{l s='download this product'}">
 										<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Download product'}" />
 									</a>
-									<a href="{$link->getPageLink('get-file.php', true)}?key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}{if isset($is_guest) && $is_guest}&id_order={$order->id}&secure_key={$order->secure_key}{/if}" title="{l s='download this product'}">
+									<a href="{$link->getPageLink('get-file', true)}?key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}{if isset($is_guest) && $is_guest}&id_order={$order->id}&secure_key={$order->secure_key}{/if}" title="{l s='download this product'}">
 										{$product.product_name|escape:'htmlall':'UTF-8'}
 									</a>
 								{else}
@@ -337,7 +337,7 @@
 			</ol>
 		</div>
 	{/if}
-	<form action="{$link->getPageLink('order-detail.php', true)}" method="post" class="std" id="sendOrderMessage">
+	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
 		<p class="bold">{l s='Add a message:'}</p>
 		<p>{l s='If you would like to add a comment about your order, please write it below.'}</p>
 		<p class="textarea">

@@ -47,6 +47,6 @@
 			<input type="hidden" name="payerID" value="{$payerID|escape:'htmlall'|stripslashes}" />
 			<input type="submit" id="submitLogin" name="submitLogin" class="button" value="{l s='Log in' mod='paypal'}" />
 		</p>
-		<p class="lost_password center"><a href="{$link->getPageLink('password.php')}">{l s='Forgot your password?' mod='paypal'}</a></p>
+		<p class="lost_password center"><a href="{$link->getPageLink('password')}">{l s='Forgot your password?' mod='paypal'}</a></p>
 	</fieldset>
 </form>

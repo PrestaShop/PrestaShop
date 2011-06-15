@@ -33,11 +33,11 @@
 		<br /><br />- {l s='mail to' mod='cheque'} <span class="bold">{if $chequeAddress}{$chequeAddress}{else}___________{/if}</span>
 		<br /><br />{l s='An e-mail has been sent to you with this information.' mod='cheque'}
 		<br /><br /><span class="bold">{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</span>
-		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact-form.php', true)}">{l s='customer support' mod='cheque'}</a>.
+		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact-form', true)}">{l s='customer support' mod='cheque'}</a>.
 	</p>
 {else}
 	<p class="warning">
 		{l s='We noticed a problem with your order. If you think this is an error, you can contact our' mod='cheque'} 
-		<a href="{$link->getPageLink('contact-form.php', true)}">{l s='customer support' mod='cheque'}</a>.
+		<a href="{$link->getPageLink('contact-form', true)}">{l s='customer support' mod='cheque'}</a>.
 	</p>
 {/if}

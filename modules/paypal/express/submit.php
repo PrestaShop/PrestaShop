@@ -88,7 +88,7 @@ function displayProcess($payerID)
 
 	$cookie->paypal_token = strval($cookie->paypal_token);
 	$cookie->paypal_payer_id = $payerID;
-	Tools::redirect('order.php?step=1&back=paypal');
+	Tools::redirect('index.php/order?step=1&back=paypal');
 }
 
 function displayConfirm()

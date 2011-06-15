@@ -84,7 +84,7 @@ class OrderDetailControllerCore extends FrontController
 						'{message}' => $message->message),
 						$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
 					if (Tools::getValue('ajax') != 'true')
-						Tools::redirect('order-detail.php?id_order='.(int)($idOrder));
+						Tools::redirect('index.php?controller=order-detail&id_order='.(int)($idOrder));
 				}
 				else
 				{

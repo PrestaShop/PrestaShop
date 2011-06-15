@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,5 +25,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(dirname(__FILE__).'/config/config.inc.php');
-ControllerFactory::getController('BestSalesController')->run();
+require(dirname(__FILE__).'/config/config.inc.php');
+Tools::displayFileAsDeprecated();
+
+// init front controller in order to use Tools::redirect
+$controller = new FrontController();
+$controller->init();
+
+$params = $_SERVER['QUERY_STRING'];
+if (!empty($params))
+	$params = '?'.$params;
+
+Tools::redirect('index.php/best-sales'.$params);
+

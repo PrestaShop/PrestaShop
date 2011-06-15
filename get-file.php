@@ -68,7 +68,7 @@ if ($cookie->isLoggedBack() AND Tools::getValue('file'))
 	}
 
 	if (!file_exists($file))
-		Tools::redirect('index.php');
+		Tools::redirect('index.php/index');
 }
 else
 {
@@ -78,7 +78,7 @@ else
 	$cookie = new Cookie('ps');
 	Tools::setCookieLanguage();
 	if (!$cookie->isLogged() AND !Tools::getValue('secure_key') AND !Tools::getValue('id_order'))
-		Tools::redirect('authentication.php?back=get-file.php&key='.$key);
+		Tools::redirect('index.php/authentication?back=get-file.php&key='.$key);
 	elseif (!$cookie->isLogged() AND Tools::getValue('secure_key') AND Tools::getValue('id_order'))
 	{
 		$order = new Order((int)Tools::getValue('id_order'));

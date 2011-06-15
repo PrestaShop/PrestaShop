@@ -42,7 +42,7 @@ class CompareControllerCore extends FrontController
 		$postProducts = isset($product_list) ? rtrim($product_list,'|') : '';
 
 		if (!Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-				return Tools::redirect('404.php');
+				return Tools::redirect('index.php?controller=404');
 
 		if ($postProducts)
 		{

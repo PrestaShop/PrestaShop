@@ -185,6 +185,9 @@ XML;
 			'supplier' => false, 
 			'store' => false);
 
+		foreach ($pages AS $page => $ssl)
+			foreach($langs as $lang)
+				$this->_addSitemapNode($xml, $link->getPageLink($page, $ssl, $lang['id_lang']), '0.5', 'monthly');
 
 			if(Configuration::get('PS_REWRITING_SETTINGS'))		
 				foreach ($pages AS $page => $ssl)		

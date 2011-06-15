@@ -59,7 +59,7 @@
 {/if}
 
 {if !$opc}
-	<p class="cart_navigation"><a href="{$link->getPageLink('order.php', true)}?step=2" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a></p>
+	<p class="cart_navigation"><a href="{$link->getPageLink('order', true)}?step=2" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a></p>
 {else}
 	</div>
 {/if}

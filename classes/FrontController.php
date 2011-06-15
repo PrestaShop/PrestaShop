@@ -92,7 +92,7 @@ class FrontControllerCore
 		$link = new Link();
 
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
-			Tools::redirect('authentication.php'.($this->authRedirection ? '?back='.$this->authRedirection : ''));
+			Tools::redirect('index.php/authentication'.($this->authRedirection ? '?back='.$this->authRedirection : ''));
 
 		/* Theme is missing or maintenance */
 		if (!is_dir(_PS_THEME_DIR_))

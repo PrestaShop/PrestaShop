@@ -33,7 +33,7 @@ include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/bankwire.php');
 
 if (!$cookie->isLogged(true))
-    Tools::redirect('authentication.php?back=order.php');
+    Tools::redirect('index.php/authentication?back=order.php');
 $bankwire = new BankWire();
 echo $bankwire->execPayment($cart);
 

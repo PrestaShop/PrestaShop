@@ -35,7 +35,7 @@ include_once(dirname(__FILE__).'/LoyaltyModule.php');
 include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
 
 if (!$cookie->isLogged())
-	Tools::redirect('authentication.php?back=modules/loyalty/loyalty-program.php');
+	Tools::redirect('index.php/authentication?back=modules/loyalty/loyalty-program.php');
 
 Tools::addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
 Tools::addJS(array(_PS_JS_DIR_.'jquery/jquery.dimensions.js',_PS_JS_DIR_.'jquery/jquery.cluetip.js'));

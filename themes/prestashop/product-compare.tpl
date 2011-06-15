@@ -31,7 +31,7 @@
 	var max_item = "{l s='You cannot add more than' js=1} {$comparator_max_item} {l s='product(s) in the product comparator' js=1}";
 //]]>
 </script>
-	<form method="get" action="{$link->getPageLink('products-comparison.php', true)}" onsubmit="return checkBeforeComparison();">
+	<form method="get" action="{$link->getPageLink('products-comparison', true)}" onsubmit="return checkBeforeComparison();">
 		<p>
 		<input type="submit" class="button" value="{l s='Compare'}" style="float:right" />
 		<input type="hidden" name="compare_product_list" class="compare_product_list" value="" />

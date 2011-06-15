@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('order.php', true)}">{l s='Your shopping cart' mod='paypal'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='PayPal' mod='paypal'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('order', true)}">{l s='Your shopping cart' mod='paypal'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='PayPal' mod='paypal'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Order summary' mod='paypal'}</h2>
@@ -54,7 +54,7 @@
 		<b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='paypal'}.</b>
 	</p>
 	<p class="cart_navigation">
-		<a href="{$link->getPageLink('order.php', true)}?step=3" class="button_large">{l s='Other payment methods' mod='paypal'}</a>
+		<a href="{$link->getPageLink('order', true)}?step=3" class="button_large">{l s='Other payment methods' mod='paypal'}</a>
 		<input type="submit" name="submitPayment" value="{l s='I confirm my order' mod='paypal'}" class="exclusive_large" />
 	</p>
 </form>

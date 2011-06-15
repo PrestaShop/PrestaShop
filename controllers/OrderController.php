@@ -67,7 +67,7 @@ class OrderControllerCore extends ParentOrderController
 		}
 
 		if (!self::$cookie->isLogged(true) AND in_array($this->step, array(1, 2, 3)))
-			Tools::redirect('authentication.php?back='.urlencode('order.php?step='.$this->step));
+			Tools::redirect('index.php?controller=authentication&back=order.php?step='.$this->step);
 
 		if ($this->nbProducts)
 			self::$smarty->assign('virtual_cart', $isVirtualCart);
@@ -109,10 +109,10 @@ class OrderControllerCore extends ParentOrderController
 					{
 						$email = self::$cookie->email;
 						self::$cookie->logout(); // If guest we clear the cookie for security reason
-						Tools::redirect('guest-tracking.php?id_order='.(int)$id_order.'&email='.urlencode($email));
+						Tools::redirect('index.php?controller=guest-tracking&id_order='.(int)$id_order.'&email='.urlencode($email));
 					}
 					else
-						Tools::redirect('history.php');
+						Tools::redirect('index.php?controller=history');
 				}
 				$this->_assignPayment();
 				break;
@@ -172,7 +172,7 @@ class OrderControllerCore extends ParentOrderController
 		global $isVirtualCart;
 
 		if ($this->step >= 2 AND (!self::$cart->id_address_delivery OR !self::$cart->id_address_invoice))
-			Tools::redirect('order.php?step=1');
+			Tools::redirect('index.php?controller=order&step=1');
 		$delivery = new Address((int)(self::$cart->id_address_delivery));
 		$invoice = new Address((int)(self::$cart->id_address_invoice));
 
@@ -182,10 +182,10 @@ class OrderControllerCore extends ParentOrderController
 				unset(self::$cart->id_address_delivery);
 			if ($invoice->deleted)
 				unset(self::$cart->id_address_invoice);
-			Tools::redirect('order.php?step=1');
+			Tools::redirect('index.php?controller=order&step=1');
 		}
 		elseif ($this->step >= 3 AND !self::$cart->id_carrier AND !$isVirtualCart)
-			Tools::redirect('order.php?step=2');
+			Tools::redirect('index.php?controller=order&step=2');
 	}
 
 	/*
@@ -241,7 +241,7 @@ class OrderControllerCore extends ParentOrderController
 
 		self::$smarty->assign('cart', self::$cart);
 		if (self::$cookie->is_guest)
-			Tools::redirect('order.php?step=2');
+			Tools::redirect('index.php?controller=order?step=2');
 	}
 
 	/* Carrier step */
@@ -268,7 +268,7 @@ class OrderControllerCore extends ParentOrderController
 
 		// Redirect instead of displaying payment modules if any module are grefted on
 		Hook::backBeforePayment('order.php?step=3');
-		
+
 		/* We may need to display an order summary */
 		self::$smarty->assign(self::$cart->getSummaryDetails());
 		self::$smarty->assign(array(
@@ -276,7 +276,7 @@ class OrderControllerCore extends ParentOrderController
 			'taxes_enabled' => (int)(Configuration::get('PS_TAX'))
 		));
 		self::$cookie->checkedTOS = '1';
-		
+
 		parent::_assignPayment();
 	}
 }

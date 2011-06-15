@@ -63,7 +63,7 @@ if (isset($return['SIGNATURE']) AND isset($return['CENAME']) AND isset($return['
 					if (!$cart->update())
 						Tools::redirect();
 					else
-						Tools::redirect('order.php?step=3');
+						Tools::redirect('index.php/order?step=3');
 				}
 				else
 					echo '<div class="alert error"><img src="' . _PS_IMG_ . 'admin/forbbiden.gif" alt="nok" />&nbsp;'.$so->displaySoError('999').'

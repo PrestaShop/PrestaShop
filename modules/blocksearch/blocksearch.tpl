@@ -27,7 +27,7 @@
 <!-- Block search module -->
 <div id="search_block_left" class="block exclusive">
 	<h4>{l s='Search' mod='blocksearch'}</h4>
-	<form method="get" action="{$link->getPageLink('search.php', true)}" id="searchbox">
+	<form method="get" action="{$link->getPageLink('search', true)}" id="searchbox">
 		<p class="block_content">
 			<label for="search_query_block">{l s='Enter a product name' mod='blocksearch'}</label>
 			<input type="hidden" name="orderby" value="position" />
@@ -62,7 +62,7 @@
 			if($(this).val().length > 0){
 				stopInstantSearchQueries();
 				instantSearchQuery = $.ajax({
-				url: '{/literal}{if $search_ssl == 1}{$link->getPageLink('search.php', true)}{else}{$link->getPageLink('search.php')}{/if}{literal}',
+				url: '{/literal}{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}{literal}',
 				data: 'instantSearch=1&id_lang={/literal}{$cookie->id_lang}{literal}&q='+$(this).val(),
 				dataType: 'html',
 				success: function(data){
@@ -98,7 +98,7 @@
 		$('document').ready( function() {
 			$("#search_query_block")
 				.autocomplete(
-					'{/literal}{if $search_ssl == 1}{$link->getPageLink('search.php', true)}{else}{$link->getPageLink('search.php')}{/if}{literal}', {
+					'{/literal}{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}{literal}', {
 						minChars: 3,
 						max: 10,
 						width: 500,

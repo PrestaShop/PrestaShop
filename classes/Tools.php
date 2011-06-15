@@ -58,6 +58,9 @@ class ToolsCore
 			global $link;
 			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
 				$url = substr($url, strlen($baseUri));
+			if (strpos($url, 'index.php/') !== FALSE && strpos($url, 'index.php/') == 0)
+				$url = substr($url, strlen('index.php/'));
+
 			$explode = explode('?', $url);
 			$url = $link->getPageLink($explode[0], true);
 			if (isset($explode[1]))
@@ -84,6 +87,8 @@ class ToolsCore
 			global $link;
 			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
 				$url = substr($url, strlen(__PS_BASE_URI__));
+			if (strpos($url, 'index.php/') !== FALSE && strpos($url, 'index.php/') == 0)
+				$url = substr($url, strlen('index.php/'));
 			$explode = explode('?', $url);
 			$url = $link->getPageLink($explode[0]);
 			if (isset($explode[1]))
@@ -1302,7 +1307,7 @@ class ToolsCore
 				Tools::addCSS($file, $media_type);
 			return true;
 		}
-		
+
 		//overriding of modules css files
 		$different = 0;
 		$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
@@ -1411,7 +1416,7 @@ class ToolsCore
 		}
 	}
 
-	
+
 	/**
 	* Combine Compress and Cache (ccc) JS calls
 	*/
@@ -1429,17 +1434,17 @@ class ToolsCore
 		foreach ($js_files as $filename)
 		{
 			$expr = explode(':', $filename);
-			
+
 			if ($expr[0] == 'http')
-				$js_external_files[] = $filename;	
-			else 
+				$js_external_files[] = $filename;
+			else
 			{
 				$infos = array();
 				$infos['uri'] = $filename;
 				$url_data = parse_url($filename);
 				$infos['path'] =_PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 				$js_files_infos[] = $infos;
-	
+
 				$js_files_date = max(
 					file_exists($infos['path']) ? filemtime($infos['path']) : 0,
 					$js_files_date
@@ -1479,7 +1484,7 @@ class ToolsCore
 		// rebuild the original js_files array
 		$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
 		$js_files = array_merge(array($protocol_link.Tools::getMediaServer($url).$url), $js_external_files);
-		
+
 	}
 
 	public static function getMediaServer($filename)
@@ -1711,16 +1716,12 @@ FileETag INode MTime Size
 	 */
 	public static function displayAsDeprecated()
 	{
-		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
-		{
-			$backtrace = debug_backtrace();
-			$callee = next($backtrace);
-			trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
+		$backtrace = debug_backtrace();
+		$callee = next($backtrace);
+		$error = 'Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />';
+		$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
 
-			$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
-
-			Logger::addLog($message, 3, $callee['class']);
-		}
+		self::throwDeprecated($error, $message, $callee['class']);
 	}
 
 	/**
@@ -1728,14 +1729,30 @@ FileETag INode MTime Size
 	 */
 	public static function displayParameterAsDeprecated($parameter)
 	{
+		$backtrace = debug_backtrace();
+		$callee = next($backtrace);
+		$error = 'Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />';
+		$message = Tools::displayError('The parameter').' '.$parameter.' '.Tools::displayError(' in function ').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['Line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
+
+		self::throwDeprecated($error, $message, $callee['class']);
+	}
+
+	public static function displayFileAsDeprecated()
+	{
+		$backtrace = debug_backtrace();
+		$callee = current($backtrace);
+		$error = 'File <strong>'.$callee['file'].'</strong> is deprecated<br />';
+		$message = Tools::displayError('The file').' '.$callee['file'].' '.Tools::displayError('is deprecated and will be removed in the next major version.');
+
+		self::throwDeprecated($error, $message, $callee['class']);
+	}
+
+	protected static function throwDeprecated($error, $message, $class)
+	{
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
-			$backtrace = debug_backtrace();
-			$callee = next($backtrace);
-			trigger_error('Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />', E_USER_WARNING);
-
-			$message = Tools::displayError('The parameter').' '.$parameter.' '.Tools::displayError(' in function ').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['Line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
-			Logger::addLog($message, 3, $callee['class']);
+			trigger_error($error, E_USER_WARNING);
+			Logger::addLog($message, 3, $class);
 		}
 	}
 
@@ -1776,7 +1793,7 @@ FileETag INode MTime Size
 			$s = str_replace($char, '\\'.$char, $s);
 		return $s;
 	}
-	
+
 	public static function str_replace_once($needle , $replace , $haystack)
 	{
 		$pos = strpos($haystack, $needle);

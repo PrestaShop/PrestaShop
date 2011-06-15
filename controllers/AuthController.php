@@ -40,7 +40,7 @@ class AuthControllerCore extends FrontController
 		parent::preProcess();
 
 		if (self::$cookie->isLogged() AND !Tools::isSubmit('ajax'))
-			Tools::redirect('my-account.php');
+			Tools::redirect('index.php?controller=my-account');
 
 		if (Tools::getValue('create_account'))
 		{
@@ -203,7 +203,7 @@ class AuthControllerCore extends FrontController
 								}
 								if ($back = Tools::getValue('back'))
 									Tools::redirect($back);
-								Tools::redirect('my-account.php');
+								Tools::redirect('index.php?controller=my-account');
 							}
 						}
 					}
@@ -272,7 +272,7 @@ class AuthControllerCore extends FrontController
 					{
 						if ($back = Tools::getValue('back'))
 							Tools::redirect($back);
-						Tools::redirect('my-account.php');
+						Tools::redirect('index.php?controller=my-account');
 					}
 				}
 			}

@@ -27,7 +27,7 @@
 <!-- Block search module TOP -->
 <div id="search_block_top">
 
-	<form method="get" action="{$link->getPageLink('search.php')}" id="searchbox">
+	<form method="get" action="{$link->getPageLink('search')}" id="searchbox">
 		<p>
 			<label for="search_query_top"><!-- image on background --></label>
 			<input type="hidden" name="orderby" value="position" />
@@ -62,7 +62,7 @@
 			if($(this).val().length > 0){
 				stopInstantSearchQueries();
 				instantSearchQuery = $.ajax({
-				url: '{/literal}{if $search_ssl == 1}{$link->getPageLink('search.php', true)}{else}{$link->getPageLink('search.php')}{/if}{literal}',
+				url: '{/literal}{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}{literal}',
 				data: 'instantSearch=1&id_lang={/literal}{$cookie->id_lang}{literal}&q='+$(this).val(),
 				dataType: 'html',
 				success: function(data){
@@ -98,7 +98,7 @@
 		$('document').ready( function() {
 			$("#search_query_top")
 				.autocomplete(
-					'{/literal}{if $search_ssl == 1}{$link->getPageLink('search.php', true)}{else}{$link->getPageLink('search.php')}{/if}{literal}', {
+					'{/literal}{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}{literal}', {
 						minChars: 3,
 						max: 10,
 						width: 500,

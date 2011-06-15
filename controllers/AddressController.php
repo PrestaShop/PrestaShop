@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -38,19 +38,19 @@ class AddressControllerCore extends FrontController
 		$this->php_self = 'address.php';
 		$this->authRedirection = 'addresses.php';
 		$this->ssl = true;
-	
+
 		parent::__construct();
 	}
-	
+
 	public function preProcess()
 	{
 		parent::preProcess();
-		
+
 		if ($back = Tools::getValue('back'))
 			self::$smarty->assign('back', Tools::safeOutput($back));
 		if ($mod = Tools::getValue('mod'))
 			self::$smarty->assign('mod', Tools::safeOutput($mod));
-		
+
 		if (Tools::isSubmit('ajax') AND Tools::isSubmit('type'))
 		{
 			if (Tools::getValue('type') == 'delivery')
@@ -62,7 +62,7 @@ class AddressControllerCore extends FrontController
 		}
 		else
 			$id_address = (int)Tools::getValue('id_address', 0);
-		
+
 		if ($id_address)
 		{
 			$this->_address = new Address((int)$id_address);
@@ -75,7 +75,7 @@ class AddressControllerCore extends FrontController
 					if (self::$cart->id_address_delivery == $this->_address->id)
 						unset(self::$cart->id_address_delivery);
 					if ($this->_address->delete())
-						Tools::redirect('addresses.php');
+						Tools::redirect('index.php?controller=addresses');
 					$this->errors[] = Tools::displayError('This address cannot be deleted.');
 				}
 				self::$smarty->assign(array('address' => $this->_address, 'id_address' => (int)$id_address));
@@ -83,7 +83,7 @@ class AddressControllerCore extends FrontController
 			elseif (Tools::isSubmit('ajax'))
 				exit;
 			else
-				Tools::redirect('addresses.php');
+				Tools::redirect('index.php?controller=addresses');
 		}
 		if (Tools::isSubmit('submitAddress'))
 		{
@@ -135,7 +135,7 @@ class AddressControllerCore extends FrontController
 
 			if ((int)($country->contains_states) AND !(int)($address->id_state))
 				$this->errors[] = Tools::displayError('This country requires a state selection.');
-			
+
 			if (!sizeof($this->errors))
 			{
 				if (isset($id_address))
@@ -153,7 +153,7 @@ class AddressControllerCore extends FrontController
 							if (self::$cart->id_address_delivery == $address_old->id)
 								unset(self::$cart->id_address_delivery);
 						}
-						
+
 						if ($address_old->isUsed())
 							$address_old->delete();
 						else
@@ -164,8 +164,8 @@ class AddressControllerCore extends FrontController
 					}
 				}
 				elseif (self::$cookie->is_guest)
-					Tools::redirect('addresses.php');
-				
+					Tools::redirect('index.php?controller=addresses');
+
 				if ($result = $address->save())
 				{
 					if ((bool)(Tools::getValue('select_address', false)) == true OR (Tools::isSubmit('ajax') AND Tools::getValue('type') == 'invoice'))
@@ -177,7 +177,7 @@ class AddressControllerCore extends FrontController
 					if (Tools::isSubmit('ajax'))
 					{
 						$return = array(
-							'hasError' => !empty($this->errors), 
+							'hasError' => !empty($this->errors),
 							'errors' => $this->errors,
 							'id_address_delivery' => self::$cart->id_address_delivery,
 							'id_address_invoice' => self::$cart->id_address_invoice
@@ -201,26 +201,26 @@ class AddressControllerCore extends FrontController
 		if (Tools::isSubmit('ajax') AND sizeof($this->errors))
 		{
 			$return = array(
-				'hasError' => !empty($this->errors), 
+				'hasError' => !empty($this->errors),
 				'errors' => $this->errors
 			);
 			die(Tools::jsonEncode($return));
 		}
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		Tools::addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
-	
+
 	public function process()
 	{
 		parent::process();
 
 		/* Secure restriction for guest */
 		if (self::$cookie->is_guest)
-			Tools::redirect('addresses.php');
+			Tools::redirect('index.php?controller=addresses');
 
 		if (Tools::isSubmit('id_country') AND Tools::getValue('id_country') != NULL AND is_numeric(Tools::getValue('id_country')))
 			$selectedCountry = (int)Tools::getValue('id_country');
@@ -234,7 +234,7 @@ class AddressControllerCore extends FrontController
 		}
 		else
 			$selectedCountry = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-			
+
 		$countries = Country::getCountries((int)self::$cookie->id_lang, true);
 		$countriesList = '';
 		foreach ($countries AS $country)
@@ -257,21 +257,12 @@ class AddressControllerCore extends FrontController
 		));
 	}
 
-	protected function _processAddressFormat()
-	{
-
-		$id_country = is_null($this->_address)? 0 : (int)$this->_address->id_country;
-
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, $split_all = true);
-		self::$smarty->assign('ordered_adr_fields', $dlv_adr_fields);
-	}
-	
 	public function displayHeader()
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayHeader();
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();
@@ -279,7 +270,7 @@ class AddressControllerCore extends FrontController
 		$this->_processAddressFormat();
 		self::$smarty->display(_PS_THEME_DIR_.'address.tpl');
 	}
-	
+
 	public function displayFooter()
 	{
 		if (Tools::getValue('ajax') != 'true')
