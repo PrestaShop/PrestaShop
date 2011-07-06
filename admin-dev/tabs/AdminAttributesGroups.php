@@ -45,7 +45,6 @@ class AdminAttributesGroups extends AdminTab
 		$this->fieldsDisplay = array(
 			'name' => array('title' => $this->l('Name'), 'width' => 140, 'filter_key' => 'b!name'),
 			'attribute' => array('title' => $this->l('Attributes'), 'width' => 240, 'orderby' => false, 'search' => false));
-		$this->shopLinkType = 'group_shop';
 		parent::__construct();
 	}
 

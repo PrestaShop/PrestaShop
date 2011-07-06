@@ -36,7 +36,6 @@ class AdminAttributes extends AdminTab
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
-		$this->shopLinkType = 'group_shop';
 		$this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
 
 		parent::__construct();
