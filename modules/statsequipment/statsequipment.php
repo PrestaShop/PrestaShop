@@ -149,7 +149,7 @@ class StatsEquipment extends ModuleGraph
 						LEFT JOIN `'._DB_PREFIX_.'connections` c ON g.`id_guest` = c.`id_guest`
 						WHERE 1
 							'.$this->sqlShopRestriction(false, 'c').'
-							c.`date_add` BETWEEN ';
+							AND c.`date_add` BETWEEN ';
 				$this->_query2 = ' GROUP BY g.`id_web_browser`';
 			break;
 
@@ -161,7 +161,7 @@ class StatsEquipment extends ModuleGraph
 						LEFT JOIN `'._DB_PREFIX_.'connections` c ON g.`id_guest` = c.`id_guest`
 						WHERE 1
 							'.$this->sqlShopRestriction(false, 'c').'
-							c.`date_add` BETWEEN ';
+							AND c.`date_add` BETWEEN ';
 				$this->_query2 = ' GROUP BY g.`id_operating_system`';
 			 break;
 		}
