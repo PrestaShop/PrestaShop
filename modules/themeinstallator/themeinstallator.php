@@ -524,6 +524,9 @@ class ThemeInstallator extends Module
 		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages())
 			$msg .= '<br /><b>'.$this->l('Images have been correctly updated in database').'</b><br />';
 
+		$theme = new Theme();
+		$theme->name = pSQL($this->xml['name']);
+		$theme->add();
 		$this->_msg .= parent::displayConfirmation($msg);
 		$this->_html .= '
 			<input type="submit" class="button" name="submitThemes" value="'.$this->l('Previous').'" />
