@@ -1,9 +1,0 @@
-Newsletter de {shop_name} 
-
-Mensaje
-
-{message}
-
-
-
-{shop_url} desarrollado por PrestaShop®

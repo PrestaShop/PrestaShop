@@ -1,3 +1,0 @@
-Write a review and rate us at {rating_url}
-
-{shop_url} powered by PrestaShop™
