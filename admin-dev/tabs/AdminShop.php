@@ -67,9 +67,9 @@ class AdminShop extends AdminTab
 	
 	public function postProcess()
 	{
-		if (Tools::isSubmit('delete'.$this->table) OR Tools::isSubmit('status') OR Tools::isSubmit('status'.$this->table))
+		if (Tools::isSubmit('delete'.$this->table) OR ((Tools::isSubmit('status') OR Tools::isSubmit('status'.$this->table)) && $this->loadObject()->active))
 		{
-			if(Shop::getTotalShops() == 1)
+			if (Shop::getTotalShops() == 1)
 			{
 				$this->_errors[] = Tools::displayError('You cannot delete or disable the last shop.');
 				return false;
