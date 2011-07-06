@@ -1,0 +1,6 @@
+Hola {firstname} {lastname},
+
+{shop_name} les desea un feliz cumpleaños y le ofrece un regalo.
+Una sorpresa le espera ... Registrarse ahora en su cuenta para ver su bono de descuento. Y ponerlo a buen uso!
+
+{shop_url} Powered by PrestaShop™

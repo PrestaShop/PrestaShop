@@ -1,0 +1,5 @@
+{shop_name}
+Dieser Artikel ist bald ausverkauft:
+Ref.: {product_ref}
+Id: {product_id}
+Menge: {qty}

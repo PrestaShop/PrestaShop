@@ -1,0 +1,12 @@
+Hallo {firstname} {lastname}, danke für Ihren Einkauf bei {shop_name}.
+ 
+Produkt (e) zum Download
+ 
+Es liegen für Sie {nbProducts} Produkt (e) zum Download bereit.
+ 
+Hier sind direkte Links zu diesen Produkten: {virtualProducts}
+ 
+Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken.
+Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung im Abschnitt "Bestellverfolgung Gast" auf unserer Webseite verfolgen.
+ 
+{shop_name} powered with PrestaShop™

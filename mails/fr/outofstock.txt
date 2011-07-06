@@ -1,0 +1,12 @@
+Bonjour {firstname} {lastname},
+
+Votre commande {id_order} est bien enregistrée mais nécessite un réapprovisionnement.
+
+Vous pouvez accéder à tout moment au suivi de votre commande dans la rubrique "Mon compte".
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

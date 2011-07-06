@@ -1,0 +1,10 @@
+Bonjour {firstname} {lastname},
+
+Nous vous informons que vous venez d'obtenir un bon d'achat suite à votre parrainage. 
+
+Voici le numéro de votre bon : {voucher_num}, d'un montant total de {voucher_amount}.
+Copiez-collez ce code dans le panier de votre prochain achat avant de régler la commande.
+
+
+
+{shop_url} réalisé par PrestaShop™

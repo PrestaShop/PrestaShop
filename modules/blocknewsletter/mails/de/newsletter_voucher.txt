@@ -1,0 +1,8 @@
+Hallo
+
+Sie haben unseren Newsletter abonniert, wir freuen uns, Ihnen den folgenden Gutschein zu schenken: {discount}
+
+{shop_name} - {shop_url}
+
+
+{shop_name} powered with PrestaShop™ 

@@ -1,0 +1,7 @@
+Ihre Nachricht wurde korrekt an unseren Kundendienst weitergeleitet.
+ 
+Ihre Nachricht: {message}
+ 
+Wir werden so schnell wie möglich antworten.
+ 
+{shop_name} powered with PrestaShop™

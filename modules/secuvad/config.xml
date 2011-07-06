@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>secuvad</name>
+	<displayName><![CDATA[Secuvad module]]></displayName>
+	<version><![CDATA[2.0.1]]></version>
+	<description><![CDATA[Solution fighting against online fraud]]></description>
+	<author><![CDATA[]]></author>
+	<tab><![CDATA[payment_security]]></tab>
+	<confirmUninstall>Are you sure you want to delete this module?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

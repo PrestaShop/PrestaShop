@@ -1,0 +1,9 @@
+Congratulations!
+
+Your sponsored friend, {sponsored_firstname} {sponsored_lastname} has placed his or her first order on {shop_url} !
+
+We are pleased to offer you a voucher worth {discount_display} (voucher # {discount_name}) that you can use on your next order.
+
+
+
+{shop_url} réalisé par PrestaShop™

@@ -1,0 +1,10 @@
+Messaggio da {shop_name}
+
+Salve {firstname} {lastname},
+
+Hai ricevuto un nuovo messaggio riguardo all'ordine n.{id_order}:
+{message}
+
+
+
+{shop_url} powered by PrestaShop™

@@ -1,0 +1,8 @@
+Hi,
+
+{firstname} {lastname} indicated you may want to see his/her wishlist {wishlist} :
+{message}
+
+
+
+{shop_url} Powered by PrestaShop™

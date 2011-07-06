@@ -1,0 +1,176 @@
+div.PS_MRFormType 
+{
+	width:100%;
+	margin-top:20px;
+}
+
+div.PS_MRFormType fieldset > ul
+{
+	list-style-type: none;
+}
+
+div.PS_MRFormType fieldset > ul > li
+{
+	margin-top:10px;
+}
+
+div.PS_MRFormType fieldset > ul > li > span.indication
+{
+	font-style:italic;
+	font-size:11px;
+	margin-left:5px;
+}
+
+div.PS_MRFormType fieldset > ul > li.PS_MRSubmit
+{
+	text-align:center;
+}
+
+div.PS_MRSubmitButton
+{
+	text-align:center;
+	margin-top:20px;
+}
+
+div.PS_MRFormType fieldset > ul > li.PS_MRRequireFields
+{
+	display:block;
+	text-align:right;
+	margin-right:10px;
+}
+
+tr.PS_MRErrorList td
+{
+	border: 1px solid #EC9B9B;
+	background-color: #FFE2E3;
+	color: #383838;
+	font-weight: 700;
+	line-height: 18px;
+	text-align:center;
+}
+
+tr.PS_MRSuccessList td
+{
+	border: 1px solid #72CB67;
+	background-color: #DFFAD3;
+	color: #383838;
+	font-weight: 700;
+	line-height: 18px;
+	text-align:center;
+}
+
+table#PS_MRHistoriqueTableList
+{
+	text-align:center;	
+}
+
+table#PS_MRHistoriqueTableList tr > td > img
+{
+	margin-bottom:5px;
+}
+
+table#PS_MRHistoriqueTableList
+{
+	width:100%;
+}
+
+table#PS_MRHistoriqueTableList tr
+{
+	height:30px;
+}
+
+div#otherErrors
+{
+	display:none;
+}
+
+div#otherErrors span
+{
+	text-align:left;
+}
+
+div#PS_MRUnRemovedItem
+{
+	display:none;
+	color:#FF0000;
+}
+
+.shippingList {
+	width: 400px;
+	float: right;
+}
+.shippingList li {
+	margin: 5px;
+	display: block;
+	clear: both;
+}
+.shipLabel {
+	width: 230px;
+	float: left;
+	text-align: left;
+}
+.selectShipping {
+	width: 100px;
+}
+.settingsList {
+	width: 400px;
+	float: left;
+	margin-right: 10px;
+}
+.settingsList li {
+	display: block;
+	padding: 5px;
+	clear: both;
+}
+.upsLabel {
+	width: 170px;
+	float: left;
+	text-align: left;
+}
+.upsInput {
+	float: left;
+}
+.upsSubmit {
+	text-align: center;
+}
+.addMethodForm {
+	margin-bottom: 10px;
+}
+
+table#orders
+{
+	width:100%;
+}
+			
+table#orders td
+{
+		text-align:center;
+		height: 30px;		
+}
+			
+table#orders th
+{
+		text-align:center;
+		height: 40px;
+}			
+			
+table#orders th.fixed
+{
+		width:70px;
+}
+			
+table#orders tr
+{
+		text-align:center;
+}
+			
+div.submit_button
+{
+		margin-top:10px;
+		text-align:center;
+}
+
+div.PS_MRLoader
+{
+	display:none;
+}

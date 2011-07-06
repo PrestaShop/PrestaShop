@@ -1,0 +1,5 @@
+{shop_name}
+Questo prodotto sarà presto non disponibile:
+Rif: {product_ref}
+Id: {product_id}
+Qtà: {qty}

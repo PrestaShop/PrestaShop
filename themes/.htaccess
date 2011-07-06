@@ -1,0 +1,3 @@
+<FilesMatch "(?i)^.*\.tpl$">
+Deny from all
+</FilesMatch>

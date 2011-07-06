@@ -1,0 +1,12 @@
+Hola,
+
+Producto {product} ya está disponible.
+De hecho, el tema es una vez más en acciones.
+
+Puede acceder a la página del producto en este enlace: {product_link}
+
+Puede solicitar ahora mismo en nuestra tienda on-line.
+
+
+
+{shop_url} powered by PrestaShop™

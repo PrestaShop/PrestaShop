@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>watermark</name>
+	<displayName><![CDATA[Watermark]]></displayName>
+	<version><![CDATA[0.1]]></version>
+	<description><![CDATA[Protect image by watermark.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<confirmUninstall>Are you sure you want to delete your details ?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

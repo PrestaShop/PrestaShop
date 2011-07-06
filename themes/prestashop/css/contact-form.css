@@ -1,0 +1,8 @@
+/* contact-form.tpl */
+body#contact-form div#center_column form input#email,
+ body#contact-form div#center_column form select#id_contact,
+ body#contact-form div#center_column form textarea#message { width: 50% }
+form.std p.desc_contact span.like_input {
+	width: 366px;
+	text-align: left
+}

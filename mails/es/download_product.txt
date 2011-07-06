@@ -1,0 +1,13 @@
+{firstname} {lastname}, gracias por comprar en {shop_name}!
+
+Tienes {nbProducts} producto(s) para descargar.
+
+Este es el acceso directo:
+{virtualProducts}
+
+
+Puedes revisar este pedido y descargar la factura desde la sección "Seguimiento de Pedido" de tu cuenta pulsando en "Mi cuenta" en nuestra web.
+Si tienes una cuenta invitado, puedes seguir tu pedido en esta página: {shop_url}guest-tracking.php?id_order={id_order}
+
+
+{shop_url} desarrollado por PrestaShop®

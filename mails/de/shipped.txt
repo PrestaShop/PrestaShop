@@ -1,0 +1,11 @@
+Hallo {firstname} {lastname},
+ 
+Der Verlauf Ihrer Bestellung Nr.{id_order}
+ 
+Ihre Bestellung wurde versendet.
+Sie erhalten in Kürze eine URL, auf die Sie klicken können, um den Lieferfortschritt Ihrer Sendung zu verfolgen.
+ 
+Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken.
+Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung im Abschnitt "Bestellverfolgung Gast" auf unserer Webseite verfolgen.
+ 
+{shop_name} powered with PrestaShop™ 

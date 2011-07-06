@@ -1,0 +1,11 @@
+Hi,
+
+The product {product} is nearly out of stock.
+The remaining stock is now less than the specified minimum of {last_qty}.
+Remaining stock : {qty}
+
+You are advised to open the product's admin Product Page in order to replenish your inventory.
+
+
+
+{shop_url} powered by PrestaShop™

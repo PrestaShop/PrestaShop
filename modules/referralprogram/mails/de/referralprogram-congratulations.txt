@@ -1,0 +1,8 @@
+Herzlichen Glückwunsch!
+
+Ihr empfohlener Freund, {sponsored_firstname} {sponsored_lastname} hat seine erste Bestellung bei {shop_url} ausgeführt !
+
+Wir freuen uns, Ihnen einen Gutschein über {discount_display} (voucher # {discount_name}) schenken zu dürfen, den Sie bei Ihrer nächsten Bestellung einlösen können.
+
+
+{shop_name} powered with PrestaShop™ 

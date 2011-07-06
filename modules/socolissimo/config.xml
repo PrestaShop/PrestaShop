@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>socolissimo</name>
+	<displayName><![CDATA[So Colissimo]]></displayName>
+	<version><![CDATA[2.0]]></version>
+	<description><![CDATA[Offer your customers, different delivery methods with LaPoste.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[shipping_logistics]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries>fr</limited_countries>
+</module>

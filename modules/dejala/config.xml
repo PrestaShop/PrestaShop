@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>dejala</name>
+	<displayName><![CDATA[Dejala.com : Courier delivery]]></displayName>
+	<version><![CDATA[1.4]]></version>
+	<description><![CDATA[Lets Dejala.com handle your deliveries by courier]]></description>
+	<author><![CDATA[]]></author>
+	<tab><![CDATA[shipping_logistics]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries>fr</limited_countries>
+</module>

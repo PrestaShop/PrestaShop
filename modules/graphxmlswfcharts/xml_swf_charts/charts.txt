@@ -1,0 +1,1 @@
+XML/SWF Charts.php V5----------------------------------Copyright (c) 2003-2008, maani.us----------------------------------XML/SWF Charts is a shareware. See this web page for more information:http://www.maani.us/xml_charts/See this web page for licensing information:http://www.maani.us/xml_charts/index.php?menu=License

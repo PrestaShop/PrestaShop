@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Iran" version="1.0">
+	<currencies>
+		<currency name="Rial" iso_code="IRR" iso_code_num="364" sign="﷼" blank="1" conversion_rate="13,921.14" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="fa" />
+	</languages>
+	<taxes>
+		<tax id="1" name="VAT IR 3%" rate="3" />
+		
+		<taxRulesGroup name="IR Standard Rate (3%)">
+			<taxRule iso_code_country="ir" id_tax="1" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="in" />
+		<unit type="base_distance" value="ft" />
+		<unit type="long_distance" value="mi" />
+	</units>
+</localizationPack>

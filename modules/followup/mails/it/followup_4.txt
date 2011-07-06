@@ -1,0 +1,11 @@
+Ci manchi a {shop_name}
+
+Salve {firstname} {lastname},
+ 
+Sei uno dei nostri clienti migliori, però sono {days_threshold} giorni che non effettui un ordine.
+
+Vogliamo ringraziarti per la fiducia che ci hai accordato e vogliamo offrirti uno sconto del {amount}% valido sul tuo prossimo ordine! Questa offerta è valida per {days} giorni, quindi approfittane subito!
+ 
+Ecco il tuo buono: {voucher_num}
+
+Inserisci questo codice nel tuo carrello per ottenere il tuo sconto.

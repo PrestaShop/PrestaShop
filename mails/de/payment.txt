@@ -1,0 +1,9 @@
+Hallo {firstname} {lastname},
+ 
+Ihre Bestellung Nr.{id_order} Verlauf
+ 
+Wir haben Ihre Zahlung dankend erhalten. 
+ 
+Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken.
+ 
+{shop_name} powered with PrestaShop™ 

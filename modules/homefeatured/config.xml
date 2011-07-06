@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>homefeatured</name>
+	<displayName><![CDATA[Featured Products on the homepage]]></displayName>
+	<version><![CDATA[0.9]]></version>
+	<description><![CDATA[Displays Featured Products in the middle of your homepage.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[front_office_features]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

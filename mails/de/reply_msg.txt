@@ -1,0 +1,4 @@
+{reply}
+
+Bitte antworten Sie nicht auf diese Nachricht mit Ihrem E-Mail-Client, wir würden diese Nachricht nicht erhalten.
+Um zu antworten, verwenden Sie bitte ausschließlich folgenden Link: {link}.

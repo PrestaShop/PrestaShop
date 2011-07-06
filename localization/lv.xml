@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Latvia" version="1.0">
+	<currencies>
+		<currency name="Lats" iso_code="LVL" iso_code_num="428" sign="Ls" blank="1" conversion_rate="0.709095" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="lv" />
+	</languages>
+	<taxes>
+		<tax id="1" name="PVN LV 21%" rate="21" />
+		<tax id="2" name="PVN LV 10%" rate="10" />
+		
+		<taxRulesGroup name="LV Standard Rate (21%)">
+			<taxRule iso_code_country="be" id_tax="1" />
+			<taxRule iso_code_country="bg" id_tax="1" />
+			<taxRule iso_code_country="cz" id_tax="1" />
+			<taxRule iso_code_country="dk" id_tax="1" />
+			<taxRule iso_code_country="de" id_tax="1" />
+			<taxRule iso_code_country="ee" id_tax="1" />
+			<taxRule iso_code_country="gr" id_tax="1" />
+			<taxRule iso_code_country="es" id_tax="1" />
+			<taxRule iso_code_country="fr" id_tax="1" />
+			<taxRule iso_code_country="ie" id_tax="1" />
+			<taxRule iso_code_country="it" id_tax="1" />
+			<taxRule iso_code_country="cy" id_tax="1" />
+			<taxRule iso_code_country="lv" id_tax="1" />
+			<taxRule iso_code_country="lt" id_tax="1" />
+			<taxRule iso_code_country="lu" id_tax="1" />
+			<taxRule iso_code_country="hu" id_tax="1" />
+			<taxRule iso_code_country="mt" id_tax="1" />
+			<taxRule iso_code_country="nl" id_tax="1" />
+			<taxRule iso_code_country="at" id_tax="1" />
+			<taxRule iso_code_country="pl" id_tax="1" />
+			<taxRule iso_code_country="pt" id_tax="1" />
+			<taxRule iso_code_country="ro" id_tax="1" />
+			<taxRule iso_code_country="si" id_tax="1" />
+			<taxRule iso_code_country="sk" id_tax="1" />
+			<taxRule iso_code_country="fi" id_tax="1" />
+			<taxRule iso_code_country="se" id_tax="1" />
+			<taxRule iso_code_country="uk" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="LV Reduced Rate (10%)">
+			<taxRule iso_code_country="be" id_tax="2" />
+			<taxRule iso_code_country="bg" id_tax="2" />
+			<taxRule iso_code_country="cz" id_tax="2" />
+			<taxRule iso_code_country="dk" id_tax="2" />
+			<taxRule iso_code_country="de" id_tax="2" />
+			<taxRule iso_code_country="ee" id_tax="2" />
+			<taxRule iso_code_country="gr" id_tax="2" />
+			<taxRule iso_code_country="es" id_tax="2" />
+			<taxRule iso_code_country="fr" id_tax="2" />
+			<taxRule iso_code_country="ie" id_tax="2" />
+			<taxRule iso_code_country="it" id_tax="2" />
+			<taxRule iso_code_country="cy" id_tax="2" />
+			<taxRule iso_code_country="lv" id_tax="2" />
+			<taxRule iso_code_country="lt" id_tax="2" />
+			<taxRule iso_code_country="lu" id_tax="2" />
+			<taxRule iso_code_country="hu" id_tax="2" />
+			<taxRule iso_code_country="mt" id_tax="2" />
+			<taxRule iso_code_country="nl" id_tax="2" />
+			<taxRule iso_code_country="at" id_tax="2" />
+			<taxRule iso_code_country="pl" id_tax="2" />
+			<taxRule iso_code_country="pt" id_tax="2" />
+			<taxRule iso_code_country="ro" id_tax="2" />
+			<taxRule iso_code_country="si" id_tax="2" />
+			<taxRule iso_code_country="sk" id_tax="2" />
+			<taxRule iso_code_country="fi" id_tax="2" />
+			<taxRule iso_code_country="se" id_tax="2" />
+			<taxRule iso_code_country="uk" id_tax="2" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="LV Foodstuff Rate (21%)">
+			<taxRule iso_code_country="be" id_tax="1" />
+			<taxRule iso_code_country="bg" id_tax="1" />
+			<taxRule iso_code_country="cz" id_tax="1" />
+			<taxRule iso_code_country="dk" id_tax="1" />
+			<taxRule iso_code_country="de" id_tax="1" />
+			<taxRule iso_code_country="ee" id_tax="1" />
+			<taxRule iso_code_country="gr" id_tax="1" />
+			<taxRule iso_code_country="es" id_tax="1" />
+			<taxRule iso_code_country="fr" id_tax="1" />
+			<taxRule iso_code_country="ie" id_tax="1" />
+			<taxRule iso_code_country="it" id_tax="1" />
+			<taxRule iso_code_country="cy" id_tax="1" />
+			<taxRule iso_code_country="lv" id_tax="1" />
+			<taxRule iso_code_country="lt" id_tax="1" />
+			<taxRule iso_code_country="lu" id_tax="1" />
+			<taxRule iso_code_country="hu" id_tax="1" />
+			<taxRule iso_code_country="mt" id_tax="1" />
+			<taxRule iso_code_country="nl" id_tax="1" />
+			<taxRule iso_code_country="at" id_tax="1" />
+			<taxRule iso_code_country="pl" id_tax="1" />
+			<taxRule iso_code_country="pt" id_tax="1" />
+			<taxRule iso_code_country="ro" id_tax="1" />
+			<taxRule iso_code_country="si" id_tax="1" />
+			<taxRule iso_code_country="sk" id_tax="1" />
+			<taxRule iso_code_country="fi" id_tax="1" />
+			<taxRule iso_code_country="se" id_tax="1" />
+			<taxRule iso_code_country="uk" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="LV Books Rate (10%)">
+			<taxRule iso_code_country="be" id_tax="2" />
+			<taxRule iso_code_country="bg" id_tax="2" />
+			<taxRule iso_code_country="cz" id_tax="2" />
+			<taxRule iso_code_country="dk" id_tax="2" />
+			<taxRule iso_code_country="de" id_tax="2" />
+			<taxRule iso_code_country="ee" id_tax="2" />
+			<taxRule iso_code_country="gr" id_tax="2" />
+			<taxRule iso_code_country="es" id_tax="2" />
+			<taxRule iso_code_country="fr" id_tax="2" />
+			<taxRule iso_code_country="ie" id_tax="2" />
+			<taxRule iso_code_country="it" id_tax="2" />
+			<taxRule iso_code_country="cy" id_tax="2" />
+			<taxRule iso_code_country="lv" id_tax="2" />
+			<taxRule iso_code_country="lt" id_tax="2" />
+			<taxRule iso_code_country="lu" id_tax="2" />
+			<taxRule iso_code_country="hu" id_tax="2" />
+			<taxRule iso_code_country="mt" id_tax="2" />
+			<taxRule iso_code_country="nl" id_tax="2" />
+			<taxRule iso_code_country="at" id_tax="2" />
+			<taxRule iso_code_country="pl" id_tax="2" />
+			<taxRule iso_code_country="pt" id_tax="2" />
+			<taxRule iso_code_country="ro" id_tax="2" />
+			<taxRule iso_code_country="si" id_tax="2" />
+			<taxRule iso_code_country="sk" id_tax="2" />
+			<taxRule iso_code_country="fi" id_tax="2" />
+			<taxRule iso_code_country="se" id_tax="2" />
+			<taxRule iso_code_country="uk" id_tax="2" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

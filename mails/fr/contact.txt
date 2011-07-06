@@ -1,0 +1,11 @@
+Vous avez reçu un message de la part d'un client depuis votre boutique {shop_name}
+
+Informations
+
+Adresse électronique : {email}
+
+Message
+
+{message}
+
+{shop_url} réalisé par PrestaShop™

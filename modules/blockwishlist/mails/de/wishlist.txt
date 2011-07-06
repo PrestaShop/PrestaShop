@@ -1,0 +1,8 @@
+Hallo,
+
+{firstname} {lastname} hat angegeben, dass Sie seine/ ihr Wunschliste sehen möchten {wishlist} :
+{message}
+
+
+
+{shop_name} powered with PrestaShop™ 

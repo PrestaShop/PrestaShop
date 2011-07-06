@@ -1,0 +1,12 @@
+Bonjour {firstname} {lastname},
+
+Nous vous informons de la génération d'un avoir à votre nom relatif à votre commande n°{id_order}.
+
+Vous pouvez accéder à cet avoir et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site {shop_url}
+
+Merci et à bientôt sur {shop_name}.
+
+{shop_name} - {shop_url}
+
+
+{shop_url} réalisé par PrestaShop™

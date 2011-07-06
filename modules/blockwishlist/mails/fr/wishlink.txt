@@ -1,0 +1,7 @@
+Bonjour,
+
+{shop_name} vous invite &agrave; envoyer ce lien à vos amis qui pourront alors consulter votre liste de cadeaux {wishlist} :
+
+{message}
+
+{shop_url} réalisé par PrestaShop™

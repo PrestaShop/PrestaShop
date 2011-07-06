@@ -1,0 +1,10 @@
+Hallo,
+		
+Neue Log-Warnung
+	
+Leider wurde eine neue Log-Warnung gespeichert.
+
+Sie können sie einsehen in Ihrem Back Office > Tools > Anmeldung auf Ihrer Website.		
+{shop_name} - {shop_url}
+
+{shop_url} powered by PrestaShop™

@@ -1,0 +1,6 @@
+Le site suivant {shop_url} a désactivé/supprimé son module Twenga.
+Pays concerné {shop_country} Prestashop du marchand.
+
+Le marchand est {trader_email}.
+
+L’équipe Prestashop

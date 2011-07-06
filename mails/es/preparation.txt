@@ -1,0 +1,13 @@
+Hola {firstname} {lastname},
+	
+Sobre tu pedido #{id_order}:
+
+Estamos preparando tu pedido.
+
+Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (historial de pedidos).
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+{shop_url} desarrollado por PrestaShop®

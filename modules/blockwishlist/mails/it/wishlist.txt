@@ -1,0 +1,8 @@
+Salve,
+
+{firstname} {lastname} ha detto che potresti voler vedere la sua lista dei desideri {wishlist} :
+{message}
+
+
+
+{shop_url} Powered by PrestaShop™

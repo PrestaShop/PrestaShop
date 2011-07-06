@@ -1,0 +1,11 @@
+Hi,
+		
+New log alert
+	
+Unfortunately, new log alert message has been saved.
+
+You can check this on your Back office > Tools > Log on our Website.
+		
+{shop_name} - {shop_url}
+
+{shop_url} powered by PrestaShop™

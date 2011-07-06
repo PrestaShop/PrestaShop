@@ -1,0 +1,9 @@
+Bonjour {firstname} {lastname},
+ 
+Vous faites partie de nos meilleurs clients et à ce titre, nous souhaitons vous remercier pour la confiance dont vous nous faites part.
+
+A titre exceptionnel, nous vous accordons une remise de {amount}% valable sur votre prochaine commande ! Cette offre est valable {days} jours, ne perdez plus un instant !
+ 
+Voici votre bon de réduction : {voucher_num}
+
+Saisissez ce code dans votre panier afin d'obtenir votre réduction.

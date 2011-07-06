@@ -1,0 +1,875 @@
+/*
+* jQuery UI CSS Framework
+* Copyright (c) 2008 AUTHORS.txt (http://ui.jquery.com/about)
+* Dual licensed under the MIT (MIT-LICENSE.txt) and GPL (GPL-LICENSE.txt) licenses.
+* To view and modify this theme, visit http://themeroller.com/?ctl=themeroller&tr=&ffDefault=Trebuchet+MS,+Tahoma,+Verdana,+Arial,+sans-serif&fwDefault=bold&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=f6a828&bgTextureHeader=12_gloss_wave.png&bgImgOpacityHeader=35&borderColorHeader=e78f08&fcHeader=ffffff&iconColorHeader=ffffff&bgColorContent=eeeeee&bgTextureContent=03_highlight_soft.png&bgImgOpacityContent=100&borderColorContent=dddddd&fcContent=333333&iconColorContent=222222&bgColorDefault=f6f6f6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=100&borderColorDefault=cccccc&fcDefault=1c94c4&iconColorDefault=ef8c08&bgColorHover=fdf5ce&bgTextureHover=02_glass.png&bgImgOpacityHover=100&borderColorHover=fbcb09&fcHover=c77405&iconColorHover=ef8c08&bgColorActive=ffffff&bgTextureActive=02_glass.png&bgImgOpacityActive=65&borderColorActive=fbd850&fcActive=eb8f00&iconColorActive=ef8c08&bgColorHighlight=ffe45c&bgTextureHighlight=03_highlight_soft.png&bgImgOpacityHighlight=75&borderColorHighlight=fed22f&fcHighlight=363636&iconColorHighlight=228ef1&bgColorError=b81900&bgTextureError=08_diagonals_thick.png&bgImgOpacityError=18&borderColorError=cd0a0a&fcError=ffffff&iconColorError=ffd27a&bgColorOverlay=666666&bgTextureOverlay=08_diagonals_thick.png&bgImgOpacityOverlay=20&opacityOverlay=50&bgColorShadow=000000&bgTextureShadow=01_flat.png&bgImgOpacityShadow=10&opacityShadow=20&thicknessShadow=5px&offsetTopShadow=-5px&offsetLeftShadow=-5px&cornerRadiusShadow=5px
+*/
+
+.ui-widget {
+font-family:Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+font-size:1.1em;
+}
+.ui-widget-header {
+background:#F6A828 url(f6a828.png) repeat-x scroll 50% 50%;
+border:1px solid #E78F08;
+color:#FFFFFF;
+font-weight:bold;
+}
+.ui-widget-header a {
+color:#FFFFFF;
+}
+.ui-widget-content {
+background:#EEEEEE url(eeeeee.png) repeat-x scroll 50% 0;
+border:1px solid #DDDDDD;
+color:#333333;
+display:none;
+}
+.ui-widget-content a {
+color:#488c40;
+text-decoration: underline;
+}
+.ui-state-default, .ui-widget-content .ui-state-default {
+background:#F6F6F6 url(f6f6f6.png) repeat-x scroll 50% 50%;
+border:1px solid #CCCCCC;
+color:#812143;
+outline-color:-moz-use-text-color;
+outline-style:none;
+outline-width:medium;
+}
+.ui-state-default a {
+color:#812143;
+outline-color:-moz-use-text-color;
+outline-style:none;
+outline-width:medium;
+text-decoration:none;
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus {
+background:#F6F6F6 url(f6f6f6.png) repeat-x scroll 50% 50%;
+border:1px solid #CCCCCC;
+color:#812143;
+outline-color:-moz-use-text-color;
+outline-style:none;
+outline-width:medium;
+}
+.ui-state-hover a {
+color:#812143;
+outline-color:-moz-use-text-color;
+outline-style:none;
+outline-width:medium;
+text-decoration:none;
+}
+.ui-state-active, .ui-widget-content .ui-state-active {
+background:#F6F6F6 url(f6f6f6.png) repeat-x scroll 50% 50%;
+border:1px solid #CCCCCC;
+color:#812143;
+outline-color:-moz-use-text-color;
+outline-style:none;
+outline-width:medium;
+}
+.ui-state-active a {
+color:#812143;
+outline-color:-moz-use-text-color;
+outline-style:none;
+outline-width:medium;
+text-decoration:none;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight {
+background:#FFE45C url(ffe45c.png) repeat-x scroll 50% 0;
+border:1px solid #FED22F;
+color:#363636;
+}
+.ui-state-error, .ui-widget-content .ui-state-error {
+background:#B81900 url(b81900.png) repeat scroll 50% 50%;
+border:1px solid #CD0A0A;
+color:#FFFFFF;
+}
+.ui-state-error-text, .ui-widget-content .ui-state-error-text {
+color:#FFFFFF;
+}
+.ui-state-disabled, .ui-widget-content .ui-state-disabled {
+background-image:none;
+opacity:0.35;
+}
+.ui-priority-primary, .ui-widget-content .ui-priority-primary {
+font-weight:bold;
+}
+.ui-priority-secondary, .ui-widget-content .ui-priority-secondary {
+font-weight:normal;
+opacity:0.7;
+}
+.ui-icon {
+background-image:url(222222.png);
+height:16px;
+width:16px;
+}
+.ui-widget-content .ui-icon {
+background-image:url(icons222222.png);
+}
+.ui-widget-header .ui-icon {
+background-image:url(iconsffffff.png);
+}
+.ui-state-default .ui-icon {
+background-image:url(iconsef8c08.png);
+}
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {
+background-image:url(iconsef8c08.png);
+}
+.ui-state-active .ui-icon {
+background-image: url("../../../img/admin/less.png");
+background-repeat: no-repeat;
+}
+.ui-state-highlight .ui-icon {
+background-image:url(icons228ef1.png);
+}
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {
+background-image:url(iconsffd27a.png);
+}
+.ui-icon-carat-1-n {
+background-position:0 0;
+}
+.ui-icon-carat-1-ne {
+background-position:-16px 0;
+}
+.ui-icon-carat-1-e {
+background-position:-32px 0;
+}
+.ui-icon-carat-1-se {
+background-position:-48px 0;
+}
+.ui-icon-carat-1-s {
+background-position:-64px 0;
+}
+.ui-icon-carat-1-sw {
+background-position:-80px 0;
+}
+.ui-icon-carat-1-w {
+background-position:-96px 0;
+}
+.ui-icon-carat-1-nw {
+background-position:-112px 0;
+}
+.ui-icon-carat-2-n-s {
+background-position:-128px 0;
+}
+.ui-icon-carat-2-e-w {
+background-position:-144px 0;
+}
+.ui-icon-triangle-1-n {
+background-position:0 -16px;
+}
+.ui-icon-triangle-1-ne {
+background-position:-16px -16px;
+}
+.ui-icon-triangle-1-e {
+background-position:-32px -16px;
+}
+.ui-icon-triangle-1-se {
+background-position:-48px -16px;
+}
+.ui-icon-triangle-1-s {
+background-image: url('../../../img/admin/more.png');
+}
+.ui-state-default .ui-icon-triangle-1-e
+{
+background-image: url('../../../img/admin/more.png');
+background-position: 3px 4px;
+background-repeat: no-repeat;
+}
+.ui-state-default .ui-icon-triangle-1-s 
+{
+background-image: url('../../../img/admin/less.png');
+background-position: 0px 4px;
+background-repeat: no-repeat;
+}
+.ui-icon-triangle-1-sw {
+background-position:-80px -16px;
+}
+.ui-icon-triangle-1-w {
+background-position:-96px -16px;
+}
+.ui-icon-triangle-1-nw {
+background-position:-112px -16px;
+}
+.ui-icon-triangle-2-n-s {
+background-position:-128px -16px;
+}
+.ui-icon-triangle-2-e-w {
+background-position:-144px -16px;
+}
+.ui-icon-arrow-1-n {
+background-position:0 -32px;
+}
+.ui-icon-arrow-1-ne {
+background-position:-16px -32px;
+}
+.ui-icon-arrow-1-e {
+background-position:-32px -32px;
+}
+.ui-icon-arrow-1-se {
+background-position:-48px -32px;
+}
+.ui-icon-arrow-1-s {
+background-position:-64px -32px;
+}
+.ui-icon-arrow-1-sw {
+background-position:-80px -32px;
+}
+.ui-icon-arrow-1-w {
+background-position:-96px -32px;
+}
+.ui-icon-arrow-1-nw {
+background-position:-112px -32px;
+}
+.ui-icon-arrow-2-n-s {
+background-position:-128px -32px;
+}
+.ui-icon-arrow-2-ne-sw {
+background-position:-144px -32px;
+}
+.ui-icon-arrow-2-e-w {
+background-position:-160px -32px;
+}
+.ui-icon-arrow-2-se-nw {
+background-position:-176px -32px;
+}
+.ui-icon-arrowstop-1-n {
+background-position:-192px -32px;
+}
+.ui-icon-arrowstop-1-e {
+background-position:-208px -32px;
+}
+.ui-icon-arrowstop-1-s {
+background-position:-224px -32px;
+}
+.ui-icon-arrowstop-1-w {
+background-position:-240px -32px;
+}
+.ui-icon-arrowthick-1-n {
+background-position:0 -48px;
+}
+.ui-icon-arrowthick-1-ne {
+background-position:-16px -48px;
+}
+.ui-icon-arrowthick-1-e {
+background-position:-32px -48px;
+}
+.ui-icon-arrowthick-1-se {
+background-position:-48px -48px;
+}
+.ui-icon-arrowthick-1-s {
+background-position:-64px -48px;
+}
+.ui-icon-arrowthick-1-sw {
+background-position:-80px -48px;
+}
+.ui-icon-arrowthick-1-w {
+background-position:-96px -48px;
+}
+.ui-icon-arrowthick-1-nw {
+background-position:-112px -48px;
+}
+.ui-icon-arrowthick-2-n-s {
+background-position:-128px -48px;
+}
+.ui-icon-arrowthick-2-ne-sw {
+background-position:-144px -48px;
+}
+.ui-icon-arrowthick-2-e-w {
+background-position:-160px -48px;
+}
+.ui-icon-arrowthick-2-se-nw {
+background-position:-176px -48px;
+}
+.ui-icon-arrowthickstop-1-n {
+background-position:-192px -48px;
+}
+.ui-icon-arrowthickstop-1-e {
+background-position:-208px -48px;
+}
+.ui-icon-arrowthickstop-1-s {
+background-position:-224px -48px;
+}
+.ui-icon-arrowthickstop-1-w {
+background-position:-240px -48px;
+}
+.ui-icon-arrowreturnthick-1-w {
+background-position:0 -64px;
+}
+.ui-icon-arrowreturnthick-1-n {
+background-position:-16px -64px;
+}
+.ui-icon-arrowreturnthick-1-e {
+background-position:-32px -64px;
+}
+.ui-icon-arrowreturnthick-1-s {
+background-position:-48px -64px;
+}
+.ui-icon-arrowreturn-1-w {
+background-position:-64px -64px;
+}
+.ui-icon-arrowreturn-1-n {
+background-position:-80px -64px;
+}
+.ui-icon-arrowreturn-1-e {
+background-position:-96px -64px;
+}
+.ui-icon-arrowreturn-1-s {
+background-position:-112px -64px;
+}
+.ui-icon-arrowrefresh-1-w {
+background-position:-128px -64px;
+}
+.ui-icon-arrowrefresh-1-n {
+background-position:-144px -64px;
+}
+.ui-icon-arrowrefresh-1-e {
+background-position:-160px -64px;
+}
+.ui-icon-arrowrefresh-1-s {
+background-position:-176px -64px;
+}
+.ui-icon-arrow-4 {
+background-position:0 -80px;
+}
+.ui-icon-arrow-4-diag {
+background-position:-16px -80px;
+}
+.ui-icon-extlink {
+background-position:-32px -80px;
+}
+.ui-icon-newwin {
+background-position:-48px -80px;
+}
+.ui-icon-refresh {
+background-position:-64px -80px;
+}
+.ui-icon-shuffle {
+background-position:-80px -80px;
+}
+.ui-icon-transfer-e-w {
+background-position:-96px -80px;
+}
+.ui-icon-transferthick-e-w {
+background-position:-112px -80px;
+}
+.ui-icon-folder-collapsed {
+background-position:0 -96px;
+}
+.ui-icon-folder-open {
+background-position:-16px -96px;
+}
+.ui-icon-document {
+background-position:-32px -96px;
+}
+.ui-icon-document-b {
+background-position:-48px -96px;
+}
+.ui-icon-note {
+background-position:-64px -96px;
+}
+.ui-icon-mail-closed {
+background-position:-80px -96px;
+}
+.ui-icon-mail-open {
+background-position:-96px -96px;
+}
+.ui-icon-suitcase {
+background-position:-112px -96px;
+}
+.ui-icon-comment {
+background-position:-128px -96px;
+}
+.ui-icon-person {
+background-position:-144px -96px;
+}
+.ui-icon-print {
+background-position:-160px -96px;
+}
+.ui-icon-trash {
+background-position:-176px -96px;
+}
+.ui-icon-locked {
+background-position:-192px -96px;
+}
+.ui-icon-unlocked {
+background-position:-208px -96px;
+}
+.ui-icon-bookmark {
+background-position:-224px -96px;
+}
+.ui-icon-tag {
+background-position:-240px -96px;
+}
+.ui-icon-home {
+background-position:0 -112px;
+}
+.ui-icon-flag {
+background-position:-16px -112px;
+}
+.ui-icon-calendar {
+background-position:-32px -112px;
+}
+.ui-icon-cart {
+background-position:-48px -112px;
+}
+.ui-icon-pencil {
+background-position:-64px -112px;
+}
+.ui-icon-clock {
+background-position:-80px -112px;
+}
+.ui-icon-disk {
+background-position:-96px -112px;
+}
+.ui-icon-calculator {
+background-position:-112px -112px;
+}
+.ui-icon-zoomin {
+background-position:-128px -112px;
+}
+.ui-icon-zoomout {
+background-position:-144px -112px;
+}
+.ui-icon-search {
+background-position:-160px -112px;
+}
+.ui-icon-wrench {
+background-position:-176px -112px;
+}
+.ui-icon-gear {
+background-position:-192px -112px;
+}
+.ui-icon-heart {
+background-position:-208px -112px;
+}
+.ui-icon-star {
+background-position:-224px -112px;
+}
+.ui-icon-link {
+background-position:-240px -112px;
+}
+.ui-icon-cancel {
+background-position:0 -128px;
+}
+.ui-icon-plus {
+background-position:-16px -128px;
+}
+.ui-icon-plusthick {
+background-position:-32px -128px;
+}
+.ui-icon-minus {
+background-position:-48px -128px;
+}
+.ui-icon-minusthick {
+background-position:-64px -128px;
+}
+.ui-icon-close {
+background-position:-80px -128px;
+}
+.ui-icon-closethick {
+background-position:-96px -128px;
+}
+.ui-icon-key {
+background-position:-112px -128px;
+}
+.ui-icon-lightbulb {
+background-position:-128px -128px;
+}
+.ui-icon-scissors {
+background-position:-144px -128px;
+}
+.ui-icon-clipboard {
+background-position:-160px -128px;
+}
+.ui-icon-copy {
+background-position:-176px -128px;
+}
+.ui-icon-contact {
+background-position:-192px -128px;
+}
+.ui-icon-image {
+background-position:-208px -128px;
+}
+.ui-icon-video {
+background-position:-224px -128px;
+}
+.ui-icon-alert {
+background-position:0 -144px;
+}
+.ui-icon-info {
+background-position:-16px -144px;
+}
+.ui-icon-notice {
+background-position:-32px -144px;
+}
+.ui-icon-help {
+background-position:-48px -144px;
+}
+.ui-icon-check {
+background-position:-64px -144px;
+}
+.ui-icon-bullet {
+background-position:-80px -144px;
+}
+.ui-icon-radio-off {
+background-position:-96px -144px;
+}
+.ui-icon-radio-on {
+background-position:-112px -144px;
+}
+.ui-icon-play {
+background-position:0 -160px;
+}
+.ui-icon-pause {
+background-position:-16px -160px;
+}
+.ui-icon-seek-next {
+background-position:-32px -160px;
+}
+.ui-icon-seek-prev {
+background-position:-48px -160px;
+}
+.ui-icon-seek-end {
+background-position:-64px -160px;
+}
+.ui-icon-seek-first {
+background-position:-80px -160px;
+}
+.ui-icon-stop {
+background-position:-96px -160px;
+}
+.ui-icon-eject {
+background-position:-112px -160px;
+}
+.ui-icon-volume-off {
+background-position:-128px -160px;
+}
+.ui-icon-volume-on {
+background-position:-144px -160px;
+}
+.ui-icon-power {
+background-position:0 -176px;
+}
+.ui-icon-signal-diag {
+background-position:-16px -176px;
+}
+.ui-icon-signal {
+background-position:-32px -176px;
+}
+.ui-icon-battery-0 {
+background-position:-48px -176px;
+}
+.ui-icon-battery-1 {
+background-position:-64px -176px;
+}
+.ui-icon-battery-2 {
+background-position:-80px -176px;
+}
+.ui-icon-battery-3 {
+background-position:-96px -176px;
+}
+.ui-icon-circle-plus {
+background-position:0 -192px;
+}
+.ui-icon-circle-minus {
+background-position:-16px -192px;
+}
+.ui-icon-circle-close {
+background-position:-32px -192px;
+}
+.ui-icon-circle-triangle-e {
+background-position:-48px -192px;
+}
+.ui-icon-circle-triangle-s {
+background-position:-64px -192px;
+}
+.ui-icon-circle-triangle-w {
+background-position:-80px -192px;
+}
+.ui-icon-circle-triangle-n {
+background-position:-96px -192px;
+}
+.ui-icon-circle-arrow-e {
+background-position:-112px -192px;
+}
+.ui-icon-circle-arrow-s {
+background-position:-128px -192px;
+}
+.ui-icon-circle-arrow-w {
+background-position:-144px -192px;
+}
+.ui-icon-circle-arrow-n {
+background-position:-160px -192px;
+}
+.ui-icon-circle-zoomin {
+background-position:-176px -192px;
+}
+.ui-icon-circle-zoomout {
+background-position:-192px -192px;
+}
+.ui-icon-circle-check {
+background-position:-208px -192px;
+}
+.ui-icon-circlesmall-plus {
+background-position:0 -208px;
+}
+.ui-icon-circlesmall-minus {
+background-position:-16px -208px;
+}
+.ui-icon-circlesmall-close {
+background-position:-32px -208px;
+}
+.ui-icon-squaresmall-plus {
+background-position:-48px -208px;
+}
+.ui-icon-squaresmall-minus {
+background-position:-64px -208px;
+}
+.ui-icon-squaresmall-close {
+background-position:-80px -208px;
+}
+.ui-icon-grip-dotted-vertical {
+background-position:0 -224px;
+}
+.ui-icon-grip-dotted-horizontal {
+background-position:-16px -224px;
+}
+.ui-icon-grip-solid-vertical {
+background-position:-32px -224px;
+}
+.ui-icon-grip-solid-horizontal {
+background-position:-48px -224px;
+}
+.ui-icon-gripsmall-diagonal-se {
+background-position:-64px -224px;
+}
+.ui-icon-grip-diagonal-se {
+background-position:-80px -224px;
+}
+.ui-corner-tl {
+-moz-border-radius-topleft:4px;
+}
+.ui-corner-tr {
+-moz-border-radius-topright:4px;
+}
+.ui-corner-bl {
+-moz-border-radius-bottomleft:4px;
+}
+.ui-corner-br {
+-moz-border-radius-bottomright:4px;
+}
+.ui-corner-top {
+-moz-border-radius-topleft:4px;
+-moz-border-radius-topright:4px;
+}
+.ui-corner-bottom {
+-moz-border-radius-bottomleft:4px;
+-moz-border-radius-bottomright:4px;
+}
+.ui-corner-right {
+-moz-border-radius-bottomright:4px;
+-moz-border-radius-topright:4px;
+}
+.ui-corner-left {
+-moz-border-radius-bottomleft:4px;
+-moz-border-radius-topleft:4px;
+}
+.ui-corner-all {
+-moz-border-radius-bottomleft:4px;
+-moz-border-radius-bottomright:4px;
+-moz-border-radius-topleft:4px;
+-moz-border-radius-topright:4px;
+}
+.ui-widget-overlay {
+background:#666666 url(666666.png) repeat scroll 50% 50%;
+opacity:0.5;
+}
+.ui-widget-shadow {
+-moz-border-radius-bottomleft:5px;
+-moz-border-radius-bottomright:5px;
+-moz-border-radius-topleft:5px;
+-moz-border-radius-topright:5px;
+background:#000000 url(000000.png) repeat-x scroll 50% 50%;
+margin:-5px 0 0 -5px;
+opacity:0.2;
+padding:5px;
+}
+
+.ui-datepicker {
+padding:0.2em 0.2em 0;
+width:17em;
+z-index:99;
+}
+.ui-datepicker-header {
+padding:0.2em 0;
+position:relative;
+}
+.ui-datepicker-prev, .ui-datepicker-next {
+height:1.8em;
+position:absolute;
+top:2px;
+width:1.8em;
+}
+.ui-datepicker-prev:hover, .ui-datepicker-next:hover {
+top:1px;
+}
+.ui-datepicker-prev {
+left:2px;
+}
+.ui-datepicker-next {
+right:2px;
+}
+.ui-datepicker-prev:hover {
+left:1px;
+}
+.ui-datepicker-next:hover {
+right:1px;
+}
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span {
+display:block;
+left:50%;
+margin-left:-8px;
+margin-top:-8px;
+position:absolute;
+top:50%;
+}
+.ui-datepicker-title {
+line-height:1.8em;
+margin:0 2.3em;
+text-align:center;
+}
+.ui-datepicker-title select {
+float:left;
+font-size:1em;
+margin:1px 0;
+}
+.ui-datepicker select.ui-datepicker-month-year {
+width:100%;
+}
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+width:49%;
+}
+.ui-datepicker-title select.ui-datepicker-year {
+float:right;
+}
+.ui-datepicker table {
+border-collapse:collapse;
+font-size:0.9em;
+margin:0 0 0.4em;
+width:100%;
+}
+.ui-datepicker th {
+font-weight:bold;
+padding:0.7em 0.3em;
+text-align:center;
+}
+.ui-datepicker td span, .ui-datepicker td a {
+display:block;
+padding:0.2em;
+text-align:right;
+text-decoration:none;
+}
+.ui-datepicker-buttonpane {
+background-image:none;
+border-bottom:0 none;
+border-left:0 none;
+border-right:0 none;
+margin:0.7em 0 0;
+padding:0 0.2em;
+}
+.ui-datepicker-buttonpane button {
+cursor:pointer;
+float:right;
+margin:0.5em 0.2em 0.4em;
+overflow:visible;
+padding:0.2em 0.6em 0.3em;
+width:auto;
+}
+.ui-datepicker-buttonpane button.ui-datepicker-current {
+float:left;
+}
+.ui-datepicker.ui-datepicker-multi {
+width:auto;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+float:left;
+}
+.ui-datepicker-multi .ui-datepicker-group table {
+margin:0 auto 0.4em;
+width:95%;
+}
+.ui-datepicker-multi-2 .ui-datepicker-group {
+width:50%;
+}
+.ui-datepicker-multi-3 .ui-datepicker-group {
+width:33.3%;
+}
+.ui-datepicker-multi-4 .ui-datepicker-group {
+width:25%;
+}
+.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header {
+border-left-width:0;
+}
+.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header {
+border-left-width:0;
+}
+.ui-datepicker-multi .ui-datepicker-buttonpane {
+clear:left;
+}
+.ui-datepicker-rtl {
+direction:rtl;
+}
+.ui-datepicker-rtl .ui-datepicker-prev {
+left:auto;
+right:2px;
+}
+.ui-datepicker-rtl .ui-datepicker-next {
+left:2px;
+right:auto;
+}
+.ui-datepicker-rtl .ui-datepicker-prev:hover {
+left:auto;
+right:1px;
+}
+.ui-datepicker-rtl .ui-datepicker-next:hover {
+left:1px;
+right:auto;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane {
+clear:right;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button {
+float:left;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current {
+float:right;
+}
+.ui-datepicker-rtl .ui-datepicker-group {
+float:right;
+}
+.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header {
+border-left-width:1px;
+border-right-width:0;
+}
+.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header {
+border-left-width:1px;
+border-right-width:0;
+}
+.ui-datepicker-cover {
+display:block;
+height:200px;
+left:-4px;
+position:absolute;
+top:-4px;
+width:200px;
+z-index:-1;
+}
+.ui-accordion { width: 100%; }
+.ui-accordion .ui-accordion-header { cursor: pointer; position: relative;zoom: 1; }
+.ui-accordion .ui-accordion-li-fix { display: inline; }
+.ui-accordion .ui-accordion-header-active { border-bottom: 0 !important; }
+.ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .2em ; }
+.ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: 5px; top: 50%; margin-top: -8px; }
+.ui-accordion .ui-accordion-content { border-top: 0; margin-top: -2px; position: relative;overflow: auto; display: none; }
+.ui-accordion .ui-accordion-content-active { display: block; }

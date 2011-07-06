@@ -1,0 +1,4 @@
+{employee} wanted to forward this chat to you.
+Comment: {comment}
+ 
+{messages}

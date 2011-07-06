@@ -1,0 +1,4 @@
+{employee} en espera para seguir esta conversación contigo:.
+Comentario: {comment}
+ 
+{messages}

@@ -1,0 +1,14 @@
+Hola {firstname} {lastname},
+
+Tu pedido está en camino.
+Puedes seguir su ubicación actual haciendo clic en este enlace: {followup}
+
+También puedes revisar tus pedidos y descargar tus facturas desde tu "Historial de Pedidos" dentro de tu cuenta. 
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+Gracias por comprar en {shop_name}!
+
+{shop_name} - {shop_url}
+
+
+{shop_url} desarrollado por PrestaShop®

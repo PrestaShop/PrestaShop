@@ -1,0 +1,3 @@
+	Hello,
+	
+	This is a test mail from your PrestaShop™ online shop.

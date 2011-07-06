@@ -1,0 +1,17 @@
+Hola {firstname} {lastname},
+		
+Incidencia en tu pedido #{id_order}
+	
+Desgraciadamente, uno o mas productos de tu pedido #{id_order} se encuentran actualmente fuera de stock. 
+Esto puede originar un retraso en el envío. Por favor, acepta nuestras disculpas y puedes estar seguro que trabajaremos lo más rápidamente posible para solucionarlo.
+
+
+
+Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (historial de pedidos). 
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+		
+	{shop_name} - {shop_url}
+
+
+
+{shop_url} desarrollado por PrestaShop®
