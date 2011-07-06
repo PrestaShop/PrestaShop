@@ -1837,7 +1837,7 @@ abstract class AdminTabCore
 			$id_shop = Shop::getCurrentShop(true);
 
 		if ($id_lang)
-			$defaultValue = ($obj->id AND isset($obj->{$key}[(int)$id_shop][$id_lang])) ? $obj->{$key}[(int)$id_shop][$id_lang] : '';
+			$defaultValue = ($obj->id AND isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
 		else
 			$defaultValue = isset($obj->{$key}) ? $obj->{$key} : '';
 
