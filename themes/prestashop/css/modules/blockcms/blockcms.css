@@ -1,0 +1,14 @@
+#footer .block_various_links { list-style: none }
+#footer .block_various_links li a { text-decoration: none }
+#footer .block_various_links li {
+	display: inline;
+	border-left: 1px solid #888;
+	padding: 0 2px 0 4px
+}
+#footer .block_various_links li.first_item {
+	border: none;
+	padding-left: 0
+}
+
+/* Block CMS links */
+.informations_block_left .block_content { padding-top: 3px }

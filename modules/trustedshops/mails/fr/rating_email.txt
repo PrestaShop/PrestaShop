@@ -1,0 +1,3 @@
+Merci pour votre achat chez {shop_name}. Etes vous satisfait du service chez {shop_name}? Vous pouvez donner votre avis et nous évaluer sur {rating_url}
+
+{shop_url} réalisé par PrestaShop™

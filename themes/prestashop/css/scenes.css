@@ -1,0 +1,134 @@
+/* Cluetip design */
+
+.cluetip-product_scene {
+		text-align:left;
+		background-color:white;
+		padding:10px;
+		border:1px solid gray;
+		background:#F1F2F4 url(../img/block_bg.jpg) repeat-x scroll left bottom;
+		opacity:0.95;
+	}
+	
+	.cluetip-product_scene #cluetip-close{
+		text-align:right;
+		float:right;
+	}
+	
+	.cluetip-product_scene h4{
+		float:left;
+		font-size:1.6em;
+		margin-bottom:5px;
+		width:175px;
+	}
+	
+	.cluetip-product_scene a{
+		float:left;
+		margin-top:2px;
+	}
+	
+	.cluetip-product_scene p.description{
+		float:left;
+		width:170px;
+		margin-left:15px;
+	}
+	
+	.cluetip-product_scene div.prices{
+		float:left;
+		width:90px;
+		text-align:right;
+	}
+	
+	.cluetip-product_scene .new {
+		background:transparent url(../img/flag_new_bg.jpg) repeat-x scroll 0% 50%;
+		border:1px solid #488C40;
+		clear:both;
+		color:white;
+		display:inline;
+		font-size:0.45em;
+		font-weight:bold;
+		margin:8px;
+		padding:0pt 0.4em;
+		text-transform:uppercase;
+		vertical-align:0.3em;
+	}
+	.cluetip-product_scene .on_sale, .cluetip-product_scene .discount {
+		color:#DA0F00;
+		display:block;
+		font-weight:bold;
+		text-transform:uppercase;
+	}
+
+/* END Cluetip design */
+
+#scenes .screen_scene {
+	margin:0 auto;
+}
+
+#scenes a.cluetip{
+	display:block;
+	position:absolute;
+	text-decoration:none;
+}
+
+/*TMP*/
+#scenes .cluetip span{
+	background:transparent url(../img/icon/cible.gif) no-repeat scroll center center;
+	color:black;
+	display:block;
+	font-size:1.1em;
+	font-weight:bold;
+	height:23px;
+	padding-top:5px;
+	text-align:center;
+	width:23px;
+}
+/*TMP*/
+.thumbs_banner{
+	margin:10px auto;
+	width:100%;
+}
+
+.thumbs_banner .space-keeper{
+	width:25px;
+	float:left;
+	display:block;
+	height:100%;
+}
+
+.thumbs_banner .space-keeper a.prev{
+	background:transparent url(../img/icon/serial_scroll_left.gif);
+	display:none;
+	width:25px;
+	text-align:center;
+	font-size:1.5em;
+	text-decoration:none;
+	background-color:#EEE;
+}
+#scenes_list{
+	overflow:hidden;
+	width:504px;
+	float:left;
+	border:1px solid #EEE;
+}
+#scenes_list ul{
+	list-style-type:none;
+}
+
+#scenes_list li{
+	float:left;
+}
+
+#scenes_list a{
+	display:block;
+}
+
+.thumbs_banner a.next {
+	background:transparent url(../img/icon/serial_scroll_right.gif);
+	width:25px;
+	float:left;
+	display:block;
+	text-align:center;
+	font-size:1.5em;
+	text-decoration:none;
+	background-color:#DDD;
+}

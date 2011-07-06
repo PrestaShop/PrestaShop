@@ -1,0 +1,10 @@
+Hallo {firstname} {lastname},
+ 
+Der Verlauf Ihrer Bestellung Nr.{id_order}
+ 
+Ihr Bestellbetrag wurde rückerstattet.
+ 
+Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken.
+Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung im Abschnitt "Bestellverfolgung Gast" auf unserer Webseite verfolgen.
+ 
+{shop_name} powered with PrestaShop™ 

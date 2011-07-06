@@ -1,0 +1,16 @@
+Hola {firstname} {lastname},
+
+
+Hay un problema con tu pago para el pedido: #{id_order}. Por favor, ponte en contacto con nosotros en cuanto puedas.
+
+Tu pedido no será enviado hasta que resolvamos este problema. 
+
+
+Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (historial de pedidos). 
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} desarrollado por PrestaShop®

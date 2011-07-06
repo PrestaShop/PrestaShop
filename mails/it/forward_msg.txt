@@ -1,0 +1,4 @@
+{employee} desidera inviarti questa chat.
+Commento: {comment}
+ 
+{messages}

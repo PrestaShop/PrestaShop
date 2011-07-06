@@ -1,0 +1,29 @@
+	{firstname} {lastname}, gracias por realizar su pedido en {shop_name}!
+		
+	Detalles del Pedido
+
+	Pedido: {order_name} realizado el {date}
+	Forma de Pago: {payment}
+	
+	Total Productos: {total_products}
+	Descuentos: {total_discounts}
+	Gastos Envío: {total_shipping}
+	Total: {total_paid}
+	
+	
+	Envios
+		
+	Transporte: {carrier}
+	
+	Dirección de Entrega:
+	{delivery_block_txt}
+	
+	Direccion de Facturación:
+	{invoice_block_txt}
+		
+	Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (historial de pedidos).
+	If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+	
+	Gracias por comprar en {shop_name}.
+
+	{shop_url} desarrollado por PrestaShop®

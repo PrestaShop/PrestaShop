@@ -1,0 +1,4 @@
+{reply}
+
+Non rispondere a questo messaggio usando la tua e-mail cliente, il tuo messaggio non ci arriverebbe.
+Per rispondere, usa esclusivamente il link seguente: {link}

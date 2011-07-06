@@ -1,0 +1,14 @@
+Salve {firstname} {lastname},
+
+Vorremmo informarti della creazione di un buono sconto a tuo nome in seguito al tuo ordine n.{id_order}.
+
+Ecco il codice del tuo buono: {voucher_num}, per l'importo di {voucher_amount}.
+
+Basta che durante il processo di pagamento del prossimo ordine tu copi/incolli questo codice.
+
+Grazie di aver acquistato a {shop_name}.
+
+{shop_name} - {shop_url}
+
+
+{shop_url} powered by PrestaShop™

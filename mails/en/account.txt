@@ -1,0 +1,20 @@
+Hi {firstname} {lastname},
+
+Thank you for creating your account at {shop_name}.
+
+Your account login details :
+
+E-mail address: {email}
+Password: {passwd}
+ 
+You can now place orders on our Website: {shop_url}
+
+Safety Tips:
+
+* Keep your account details safe.
+* Do not disclose your login details to anyone.
+* Change your password regularly.
+* Should you suspect someone is using your account illegally, please notify us immediately.
+
+
+{shop_url} powered by PrestaShop™

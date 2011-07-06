@@ -1,0 +1,11 @@
+Hallo {firstname} {lastname},
+ 
+Verlauf Ihrer Bestellung Nr.{id_order}
+ 
+Damit werden Sie über die Erstellung eines Gutscheins auf Ihrem Namen nach Ihrer Bestellung Nr. informiert.{id_order}.
+ 
+Hier ist der Code Ihres Gutscheins: {voucher_num}, über einen Betrag von {voucher_amount}.
+Für Ihre nächste Bestellung müssen Sie diesen Code einfach nur während des Bezahlvorgangs kopieren.
+ 
+{shop_name} powered with PrestaShop™ 
+

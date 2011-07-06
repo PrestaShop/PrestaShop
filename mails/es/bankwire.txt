@@ -1,0 +1,20 @@
+Hola {firstname} {lastname},
+
+Tu pedido #{id_order} ha sido recibido correctamente, y será enviado en cuanto recibamos el pago.
+Por favor, recuerda que has seleccionado transferencia bancaria. Envíala a:
+
+{bankwire_owner}
+
+{bankwire_details}
+
+Total Pedido: {total_paid}
+
+Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (sección "Historial de Pedidos").
+If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+
+Muchas gracias por comprar en {shop_name}.
+
+{shop_name} - {shop_url}
+
+
+{shop_url} powered by PrestaShop®

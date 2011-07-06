@@ -1,0 +1,4 @@
+/* Block newsletter */
+div#newsletter_block_left div.block_content { padding: 1em 0; text-align: center }
+div#newsletter_block_left div.block_content p { padding: 0.3em 0; text-align: center }
+div#newsletter_block_left div.block_content input.button_mini { margin: 1em auto 0em auto }

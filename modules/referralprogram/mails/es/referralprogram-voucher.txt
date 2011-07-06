@@ -1,0 +1,10 @@
+Hola {firstname} {lastname},
+
+Le informamos de que usted acaba de obtener una orden de compra después de su remisión.
+
+Aquí está su número de comprobante: {voucher_num}, de un total de {voucher_amount} euros.
+Copia y pega este código en la canasta de tu próxima compra antes de ajustar el orden.
+
+
+
+{shop_url} dirigida por PrestaShop™

@@ -1,0 +1,10 @@
+Bonjour,
+
+Le produit {product} est de nouveau disponible.
+En effet, le stock a été réaprovisionné.
+
+Vous pouvez accéder à la page produit à ce lien: {product_link}
+
+Vous pouvez donc de nouveau commander ce produit depuis notre catalogue en ligne.
+
+{shop_url} réalisé par PrestaShop™

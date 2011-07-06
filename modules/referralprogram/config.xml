@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>referralprogram</name>
+	<displayName><![CDATA[Customer referral program]]></displayName>
+	<version><![CDATA[1.5]]></version>
+	<description><![CDATA[Integrate a referral program system into your shop.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[advertising_marketing]]></tab>
+	<confirmUninstall>All sponsors and friends will be deleted. Are you sure you want to uninstall this module?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

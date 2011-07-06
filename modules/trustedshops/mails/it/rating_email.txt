@@ -1,0 +1,3 @@
+Scrivi una recensione e dacci un voto su {rating_url}
+
+{shop_url} powered by PrestaShop™

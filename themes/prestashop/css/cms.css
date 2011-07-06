@@ -1,0 +1,10 @@
+#admin-action-cms {
+	background-color: #DFFAD3;
+	border: 1px solid #72CB67;
+	color: #374853;
+	margin-bottom: 10px;
+	padding: 4px;
+}
+
+#admin-action-cms input.exclusive { float:right }
+

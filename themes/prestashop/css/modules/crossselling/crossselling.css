@@ -1,0 +1,44 @@
+div#crossselling {
+	padding-top: 10px;
+	clear: both;
+	margin-bottom: 10px
+}
+#crossselling {
+	margin: 0 auto 0;
+	height: 170px;
+	width: 100%
+}
+#crossselling_noscroll {
+	margin: 0 auto 0;
+	height: 120px;
+	width: 100%
+}
+#crossselling_list {
+	overflow: hidden;
+	float: left;
+	width: 96%
+}
+#crossselling_list ul {
+	padding-left: 0;
+	list-style-type: none
+}
+#crossselling_list li {
+	float: left;
+	margin: 0 3px;
+	cursor: pointer;
+	text-align: center;
+	width: 100px;
+	overflow: hidden
+}
+#crossselling_list li a { margin: auto }
+#crossselling_scroll_left,
+ #crossselling_scroll_right {
+	background: url('../../../img/thumbs_left.gif') no-repeat center;
+	text-indent: -3000px;
+	display: block;
+	width: 9px;
+	height: 18px;
+	float: left;
+	margin-top: 30px
+}
+#crossselling_scroll_right { background-image: url('../../../img/thumbs_right.gif') }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Argentina" version="1.0">
+	<currencies>
+		<currency name="Argentina Peso" iso_code="ARS" iso_code_num="032" sign="ARS" blank="1" conversion_rate="5.39" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="ag" />
+	</languages>
+	<taxes>
+		<tax id="1" name="IVA AR 21%" rate="21" />
+		
+		<taxRulesGroup name="AR Standard rate (21%)">
+            <taxRule iso_code_country="ar" id_tax="1" />
+        </taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="libra" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="pie" />
+		<unit type="base_distance" value="cuadra" />
+		<unit type="long_distance" value="braza" />
+	</units>
+</localizationPack>

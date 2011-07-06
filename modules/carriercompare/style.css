@@ -1,0 +1,14 @@
+#compare_shipping .center {text-align: center;}
+
+#compare_shipping #availableCarriers_table {
+	width: 95%;
+	margin: auto;
+}
+
+#compare_shipping ul#carriercompare_errors_list {
+	color: red;
+}
+
+#compare_shipping ul#carriercompare_errors_list li {
+	margin-left: 30px;
+}

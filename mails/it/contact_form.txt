@@ -1,0 +1,12 @@
+Il tuo messaggio è stato correttamente inviato al nostro Servizio Clienti.
+
+Il tuo messaggio:
+
+{message}
+
+
+Risponderemo quanto prima.
+
+Cordialmente,
+
+{shop_url} powered by PrestaShop™

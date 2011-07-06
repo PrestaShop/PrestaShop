@@ -1,0 +1,10 @@
+Hallo {firstname} {lastname},
+ 
+Der Verlauf Ihrer Bestellung Nr.{id_order}
+ 
+Leider sind ein oder mehrere Artikel aus Ihrer Bestellung Nr. {id_order} derzeit nicht auf Lager. Dies kann zu einer leichten Verzögerung bei Auslieferung führen. Wir entschuldigen uns und versichern Ihnen, dass wir alles dafür tun werden, um dies zu ändern.
+ 
+Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken.
+Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung im Abschnitt "Bestellverfolgung Gast" auf unserer Webseite verfolgen.
+ 
+{shop_name} powered with PrestaShop™ 

@@ -1,0 +1,6 @@
+/* my-account.tpl */
+#my-account #center_column ul { margin: 2em 0 }
+#my-account #center_column li { 
+	list-style: none; 
+	margin: 2em 1.5em 
+}

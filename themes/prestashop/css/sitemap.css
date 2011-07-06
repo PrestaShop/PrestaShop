@@ -1,0 +1,20 @@
+/* sitemap.tpl */
+#sitemap_content { margin-left: 5em }
+div.sitemap_block {
+	padding: 0;
+	float: left;
+	width: 33%;
+	min-height: 120px;
+	_height: 120px
+}
+div.sitemap_block ul { text-align: left }
+div.sitemap_block h3, .categTree h3 {
+	margin-top: 1em;
+	margin-bottom: 1em
+}
+div.categTree {
+	float: left;
+	margin-top: 25px;
+	margin-bottom: 1em;
+	margin-left: 5em
+}

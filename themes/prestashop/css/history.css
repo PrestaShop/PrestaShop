@@ -1,0 +1,45 @@
+/* history.tpl*/
+#block-history { color: #374853 }
+.color-myaccount { color: #dd2a81 }
+#block-history table#order-list { border: none }
+#block-history table#order-list thead th { background-image: url('../img/block_myaccount_header_large.gif') }
+#block-history table#order-list thead th { color: white }
+#block-history table#order-list tbody { background: #D0D1D5 url('../img/form_bg.jpg') repeat-x top left }
+#block-history table#order-list tbody tr td { background-color: white }
+#block-history table#order-list td.history_link {
+	white-space: nowrap;
+	text-align: right
+}
+#block-history #block-order-detail {
+	border-top: 2px #dd2a81 solid;
+	border-bottom: 2px #dd2a81 solid;
+	padding: 0.5em;
+	background: #D0D1D5 url('../img/form_bg.jpg') repeat-x top left
+}
+#block-history #block-order-detail p {
+	padding-left: 0;
+	padding-right: 0
+}
+#order-detail-content {
+	clear: both;
+	margin-top: 1.5em
+}
+#order-detail-content tbody tr { height: 3em }
+#order-detail-content tfoot td { border: none }
+#order-detail-content table td input.order_qte_input { display: none }
+#order-detail-content table td.order_cb input { border: none }
+#order-detail-content table td span.order_qte_span {
+	width: 100%;
+	display: block
+}
+#block-history #block-order-detail h4 { font-size: 1.4em }
+#block-history #block-order-detail #sendOrderMessage p { padding: 0 4px 0 1px }
+#block-history #block-order-detail textarea {
+	margin: 0 auto;
+	width: 100%
+}
+#ordermsg textarea {
+	margin: 0;
+	padding: 0;
+	width: 528px;
+}

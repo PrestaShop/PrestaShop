@@ -1,0 +1,5 @@
+{shop_name}
+Client : {firstname} {lastname}
+Commande : {order_name}
+Mode de paiement : {payment}
+Total TTC : ({total_paid} {currency})

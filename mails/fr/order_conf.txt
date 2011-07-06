@@ -1,0 +1,28 @@
+Bonjour {firstname} {lastname}, merci d'avoir passé commande chez {shop_name} !
+
+Détails de la commande
+
+	Commande : {order_name} passée le {date}
+	Mode de paiement : {payment}
+
+	Produits : {total_products}
+	Bons d'achat et réductions : {total_discounts}
+	Emballage Cadeau : {total_wrapping}
+	Frais d'expédition : {total_shipping}
+	Total payé : {total_paid}
+
+
+Livraison
+
+	Transporteur : {carrier}
+
+	Adresse de livraison :
+	{delivery_block_txt}
+
+	Adresse de facturation :
+	{invoice_block_txt}
+
+Vous pouvez accéder au suivi de votre commande et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site.
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse: {shop_url}guest-tracking.php
+
+{shop_url} réalisé par PrestaShop™

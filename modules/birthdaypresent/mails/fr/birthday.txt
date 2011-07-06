@@ -1,0 +1,7 @@
+Bonjour {firstname} {lastname},
+
+{shop_name} vous souhaite un très bon anniversaire et vous offre un cadeau.
+Une surprise vous attend... Connectez-vous dès maintenant sur votre compte pour accéder à votre bon de réduction. Faites-en bon usage!
+
+
+{shop_url} Réalisé par PrestaShop™

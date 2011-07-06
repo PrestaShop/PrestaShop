@@ -1,0 +1,9 @@
+¡Felicidades!
+
+¡Su ahijado {sponsored_firstname} {sponsored_lastname} hizo su primera compra en nuestro sitio {shop_url}!
+
+Estamos encantados de ofrecerle un vale {discount_display} (con el código de cupón: {discount_name}), usted puede utilizar durante su próxima compra.
+
+
+
+{shop_url} dirigida por PrestaShop™

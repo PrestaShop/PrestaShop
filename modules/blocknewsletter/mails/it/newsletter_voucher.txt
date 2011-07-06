@@ -1,0 +1,8 @@
+Salve
+
+Per quanto riguarda l'iscrizione alla newsletter, abbiamo il piacere di offrirvi il seguente buono: {discount}
+
+{shop_name} - {shop_url}
+
+
+{shop_url} Powered by PrestaShop™

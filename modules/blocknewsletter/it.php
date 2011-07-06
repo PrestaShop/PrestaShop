@@ -1,0 +1,58 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ffb7e666a70151215b4c55c6268d7d72'] = 'Newsletter';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_416f61a2ce16586f8289d41117a2554e'] = 'la tua e-mail';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b26917587d98330d93f87808fc9d7267'] = 'Iscriviti';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_4182c8f19d40c7ca236a5f4f83faeb6b'] = 'Cancellati';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_9e31b08a00c1ed653bcaa517dee84714'] = 'Blocco newsletter ';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ba457fab18d697d978befb95e827eb91'] = 'Aggiunge un blocco per l\'iscrizione alla newsletter';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_179bbcbd2e1104cdf9dcecd91264a961'] = 'Sei sicuro di voler eliminare tutti i tuoi contatti?';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_f0e9c1e3969d351170373b5cec2131c2'] = 'Codice del buono non valido';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ff0a3b7f3daef040faf89a88fdac01b7'] = 'Aggiornato con successo';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a3399c10bd24eba0b78fbd595c51f81a'] = 'Visualizzazione di configurazione in una nuova pagina?';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a6105c0a611b41b08f1209506350279e'] = 'sì';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_7fa3b767c460b54a2be4d49030b349c7'] = 'no';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b68ae6efae2fca059754c27ff94494cd'] = 'Invio di e-mail di conferma dopo l\'iscrizione?';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_506e58042922bff5bd753dc612e84f5b'] = 'Codice buono di benvenuto ';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_de3bd7faad12c79178b1b22bf6119e35'] = 'Lascia vuoto per disattivare';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_06933067aafd48425d67bcb01bba5cb6'] = 'Aggiorna';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_6e659c47c94d1e1dc7121859f43fb2b0'] = 'Indirizzo e-mail non valido';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_9e6df6e72be5be5b8ff962ee3406907e'] = 'Indirizzo e-mail non registrato';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_29003419c075963848f1907174bdc224'] = 'Errore durante la cancellazione dell\'iscrizione';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_f7dc297e2a139ab4f5a771825b46df43'] = 'Cancellazione dell\'iscrizione riuscita';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_8dc3b88902df97bb96930282e56ed381'] = 'Indirizzo e-mail già registrato';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b7d9eb38dd2e375648ab08e224e22e43'] = 'Errore durante l\'iscrizione';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ed3cd7b3cc134222fa70602921ec27e1'] = 'Iscrizione riuscita';
+$_MODULE['<{newsletter}prestashop>newsletter_ffb7e666a70151215b4c55c6268d7d72'] = 'Newsletter';
+$_MODULE['<{newsletter}prestashop>newsletter_804a924e464fd21ed92f820224c4091d'] = 'Genera un file. CSV per invii di massa';
+$_MODULE['<{newsletter}prestashop>newsletter_c3987e4cac14a8456515f0d200da04ee'] = 'Tutti i paesi';
+$_MODULE['<{newsletter}prestashop>newsletter_fa01fd956e87307bce4c90a0de9b0437'] = 'Paese dei clienti';
+$_MODULE['<{newsletter}prestashop>newsletter_c0859b0a5241dff468da2a9a93c3284f'] = 'Opera un filtro sul paese dei clienti.';
+$_MODULE['<{newsletter}prestashop>newsletter_2198f293f5e1e95dddeff819fbca0975'] = 'Iscritti alla newsletter';
+$_MODULE['<{newsletter}prestashop>newsletter_99006a61d48499231e1be92241cf772a'] = 'Filtro iscritti newsletter.';
+$_MODULE['<{newsletter}prestashop>newsletter_7e3a51a56ddd2846e21c33f05e0aea6f'] = 'Tutti i clienti';
+$_MODULE['<{newsletter}prestashop>newsletter_39f7a3e2b56e9bfd753ba6325533a127'] = 'Iscritti';
+$_MODULE['<{newsletter}prestashop>newsletter_011d8c5d94f729f013963d856cd78745'] = 'Non iscritti';
+$_MODULE['<{newsletter}prestashop>newsletter_793ee192a9124cd6f529460eef17d3e5'] = 'Iscritti opt-in';
+$_MODULE['<{newsletter}prestashop>newsletter_7b15c043d66fecc45c8752592aa38e38'] = 'Sottoscrittori opt-in filtri';
+$_MODULE['<{newsletter}prestashop>newsletter_82e5e0bc0f9c776c98253d569c111c0f'] = 'Nessun cliente trovato con questi filtri!';
+$_MODULE['<{newsletter}prestashop>newsletter_d526d090aa22242fa5f6acfccc6bd007'] = 'Il file. CSV è stato esportato con successo';
+$_MODULE['<{newsletter}prestashop>newsletter_55caa4828d4e935c2ba9f1558f1c4edd'] = 'cliente trovato';
+$_MODULE['<{newsletter}prestashop>newsletter_48e3d5f66961b621c78f709afcd7d437'] = 'Scarica il file';
+$_MODULE['<{newsletter}prestashop>newsletter_faa1115fbab933e7178ee43ce1590977'] = '. ATTENZIONE: Se si tenta di aprire questo file .csv con Excel, non dimenticare di scegliere la codifica UTF-8 o puoi vedere caratteri strani';
+$_MODULE['<{newsletter}prestashop>newsletter_81573e0ea79138f02fd2cee94786d7e9'] = 'Errore: impossibile scrivere a';
+$_MODULE['<{newsletter}prestashop>newsletter_8d550e9bf69bfc7a09be6eeb1622ae23'] = 'Modulo diviso in due tipologie:';
+$_MODULE['<{newsletter}prestashop>newsletter_23e8f8a55548b88bfbdcd1f6ba26a010'] = 'Le persone che si sono iscritte usando il blocco BlockNewsletter nel front office.';
+$_MODULE['<{newsletter}prestashop>newsletter_27d1ec406fd2baf49d03f81a4bb41122'] = 'Questo sarà un elenco di indirizzi email delle persone che si recano nel tuo negozio non per diventare un cliente, ma per ottenere la tua newsletter. Utilizzando il seguente \"Esporta iscritti alla newsletter\" genererà un file. CSV sulla base dei dati abbonati BlockNewsletter.';
+$_MODULE['<{newsletter}prestashop>newsletter_74ca54506cdbc82e3aa763ba91b8fa39'] = 'I clienti che hanno risposto \"sì\" per ricevere una newsletter nel loro profilo del cliente.';
+$_MODULE['<{newsletter}prestashop>newsletter_1aa14f5a6423dbde1ef2cfe4734980b4'] = 'La sezione seguente \"Esporta clienti\" filtra a quali clienti si desidera inviare una newsletter.';
+$_MODULE['<{newsletter}prestashop>newsletter_b192ab83a19105bbf1e2d1fab548249a'] = 'Export Newsletter Iscritti';
+$_MODULE['<{newsletter}prestashop>newsletter_a60401e616125189d78605b2ddd7ff45'] = 'Genera un file. CSV sulla base dei dati abbonati BlockNewsletter.';
+$_MODULE['<{newsletter}prestashop>newsletter_dbb392a2dc9b38722e69f6032faea73e'] = 'Esporta file. CSV';
+$_MODULE['<{newsletter}prestashop>newsletter_4713ef5f2d6fc1e8f088c850e696a04b'] = 'Esporta clienti';
+$_MODULE['<{newsletter}prestashop>newsletter_2f5a2bf1a10d25a408a8bab945e4dd3c'] = 'Genera un file. CSV dai dati account clienti';
+
+?>

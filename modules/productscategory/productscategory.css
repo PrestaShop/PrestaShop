@@ -1,0 +1,51 @@
+h2.productscategory_h2 {
+	font-size: 1em;
+	line-height: 1.8em;
+}
+
+#productscategory {
+	margin: 2em auto 0;
+	height: 120px;
+	width: 100%;
+}
+
+#productscategory_noscroll {
+	height: 120px;
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+#productscategory_list {
+	overflow: hidden;
+	float: left;
+	width: 96%;
+}
+
+#productscategory_list ul {
+	padding-left: 0;
+	list-style-type: none;
+}
+
+#productscategory_list li {
+	float: left;
+	margin: 0 3px;
+	cursor: pointer;
+	text-align: center;
+	width: 100px;
+	overflow: hidden;
+	line-height: 20px;
+}
+
+#productscategory_list li a { margin: auto; }
+
+#productscategory_scroll_left, #productscategory_scroll_right {
+	background: url('img/thumbs_left.gif') no-repeat center;
+	text-indent: -3000px;
+	display: block;
+	width: 9px;
+	height: 18px;
+	float: left;
+	margin-top: 30px;
+}
+
+#productscategory_scroll_right { background-image: url('img/thumbs_right.gif'); }

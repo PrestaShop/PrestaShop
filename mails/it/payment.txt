@@ -1,0 +1,13 @@
+	Salve {firstname} {lastname},
+		
+	La tua cronologia dell'ordine n.{id_order} 
+	
+	Il pagamento per il tuo ordine è stato elaborato.
+
+	Puoi rivedere questo ordine e scaricare la fattura dalla sezione "Cronologia ordine" del tuo account cliccando su "Il mio account" nel nostro sito web.
+
+	{shop_name} - {shop_url}
+
+	Grazie di aver acquistato con {shop_name}.
+
+	{shop_url} powered by PrestaShop™

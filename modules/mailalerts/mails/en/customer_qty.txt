@@ -1,0 +1,12 @@
+Hi,
+
+Product {product} is now available.
+Indeed, the item is once again in-stock.
+
+You can access the product page on: {product_link}
+
+You can order it right now from our on-line shop.
+
+
+
+{shop_url} powered by PrestaShop™

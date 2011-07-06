@@ -1,0 +1,7 @@
+Salve {firstname} {lastname},
+
+{shop_name} ti augura Buon Compleanno e vuole farti un regalo.
+Ti aspetta una sorpresa... collegati subito al tuo account per vedere il tuo buono sconto!
+
+
+{shop_url} Powered by PrestaShop™

@@ -1,0 +1,16 @@
+/* Block specials */
+.blockspecials ul { padding-top: 5px }
+.blockspecials ul li {
+	float: left;
+	clear: none;
+	padding: 0;
+	width: 48%
+}
+.blockspecials p.product_image { margin-right: 0.3em }
+.blockspecials p {
+	padding: 0.3em 0 0 0;
+	margin: 0;
+	text-align: center;
+	clear: both
+}
+.blockspecials p a { margin: 0 auto }

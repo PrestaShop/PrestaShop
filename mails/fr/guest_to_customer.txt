@@ -1,0 +1,13 @@
+Bonjour {firstname} {lastname},
+		
+Votre compte invité a été transformé en compte client
+
+Adresse électronique : {email}
+Mot de passe : {passwd}
+
+Vous pouvez accéder à votre compte sur notre site Internet :
+{shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

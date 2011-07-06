@@ -1,0 +1,12 @@
+Hallo {firstname} {lastname},
+ 
+Ihr Gast-Konto wurde in ein Kunden-Konto umgewandelt
+ 
+E-Mail-Adresse: {email}
+Kennword: {passwd}
+ 
+Bitte seien Sie vorsichtig bei der gemeinsamen Nutzung dieser Login-Daten mit anderen.
+
+Sie können auf Ihr Konto auf unserer Webseite zugreifen: {shop_url}
+ 
+{shop_name} powered with PrestaShop™

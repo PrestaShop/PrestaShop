@@ -1,0 +1,20 @@
+Salve {firstname} {lastname},
+
+Grazie di aver creato un account con {shop_name}.
+
+I tuoi dati di login dell'account:
+
+Indirizzo e-mail: {email}
+Password: {passwd}
+ 
+Adesso puoi effettuare ordini nel nostro sito web: {shop_url}
+
+Consigli di sicurezza:
+
+* Tieni al sicuro i dati del tuo account.
+* Non far sapere a nessuno i tuoi dati di login.
+* Cambia regolarmente la tua password.
+* Se sospetti che qualcuno stia utilizzando illegalmente il tuo account, avvertici immediatamente.
+
+
+{shop_url} powered by PrestaShop™

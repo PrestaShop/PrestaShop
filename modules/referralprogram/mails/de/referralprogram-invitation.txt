@@ -1,0 +1,12 @@
+{firstname_friend} {lastname_friend}, machen Sie mit!
+
+Ihr Freund {firstname} {lastname} möchte Sie empfehlen auf {shop_url}.
+
+Lassen Sie sich empfehlen und erhalten Sie einen Ermäßigungsgutschein {discount}!
+
+Klicken Sie einfach hier, um sich anzumelden!
+{shop_url}{link}
+
+Vergessen Sie bei der Anmeldung bitte nicht, die E-Mail-Adresse Ihres Freundes anzugeben: {email}.
+
+{shop_url} powered by PrestaShop™

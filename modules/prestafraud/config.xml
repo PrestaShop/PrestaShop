@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>prestafraud</name>
+	<displayName><![CDATA[PrestaShop Security]]></displayName>
+	<version><![CDATA[0.99]]></version>
+	<description><![CDATA[Protect your store from fraudulent payments]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[payment_security]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

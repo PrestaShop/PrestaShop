@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>themeinstallator</name>
+	<displayName><![CDATA[Import/export a theme]]></displayName>
+	<version><![CDATA[1.4]]></version>
+	<description><![CDATA[Export or Install a theme and its modules on your shop.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

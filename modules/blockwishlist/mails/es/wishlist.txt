@@ -1,0 +1,8 @@
+Hola,
+
+{firstname} {lastname} le sugiere a ver su lista de deseos {wishlist}:
+{message}
+
+
+
+{shop_url} desarrollado por PrestaShop®

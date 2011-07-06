@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Ukraine" version="1.0">
+	<currencies>
+		<currency name="Hryvnia" iso_code="UAH" iso_code_num="980" sign="₴" blank="1" conversion_rate="10.8304" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="uk" />
+	</languages>
+	<taxes>
+		<tax id="1" name="ПДВ UA 20%" rate="20" />
+		
+		<taxRulesGroup name="UA Standard Rate (20%)">
+			<taxRule iso_code_country="ua" id_tax="1" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

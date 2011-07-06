@@ -1,0 +1,20 @@
+Hallo {firstname} {lastname},
+ 
+Ihre Bestellung Nr.{id_order} Verlauf
+ 
+Ihre Bestellung wurde erfolgreich aufgenommen und wird, sobald die Zahlung eingegangen ist, versendet.
+ 
+Bitte beachten Sie, dass Sie die Banküberweisung für Ihre Zahlung gewählt haben. Bitte senden Sie Ihre Banküberweisung an:
+
+{bankwire_owner}
+
+{bankwire_details}
+
+{bankwire_address}
+
+Der Gesamtbetrag der Bestellung ist {total_paid}
+ 
+Sie können diese Bestellung ansehen und Ihre Rechnung aus dem Abschnitt "Bestellverlauf" Ihres Kontos downloaden, indem Sie auf unserer Webseite auf "Mein Konto" klicken.
+Wenn Sie ein Gast-Konto haben, können Sie Ihre Bestellung im Abschnitt "Bestellverfolgung Gast" auf unserer Webseite verfolgen.
+ 
+{shop_name} powered with PrestaShop™ 

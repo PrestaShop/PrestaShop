@@ -1,0 +1,59 @@
+/* Block categories */
+#categories_block_left .tree { padding-left: 0.5em }
+#categories_block_left .tree li {
+	border: none;
+	padding-top: 5px;
+	padding-left: 15px;
+	background: none;
+	margin-left: 0;
+	font-weight: bold;
+	font-size: 13px;
+	line-height: 13px
+}
+#categories_block_left .tree li.last { padding-bottom: 0 }
+#categories_block_left .tree ul { padding: 2px 0 0 }
+#categories_block_left .tree li li {
+	padding: 1px 0 1px 15px;
+	background: none;
+	font-size: 11px;
+	font-weight: normal
+}
+#categories_block_left .tree li li.last { padding-bottom: 0 }
+#categories_block_left .tree li li li {
+	padding-left: 15px;
+	font-size: 9px
+}
+#categories_block_left .tree a {
+	padding-left: 0;
+	color: #374853
+}
+#categories_block_left .tree a:hover { text-decoration: none }
+#categories_block_left ul.tree a.selected {
+	color: #488c40;
+	font-weight: bold
+}
+#categories_block_left span.grower {
+	display: block;
+	float: left;
+	background-position: 0 3px;
+	background-repeat: no-repeat;
+	width: 9px;
+	height: 15px;
+	margin: 0 0 0 -12px!important;
+	margin: 0 0 0 -8px;
+	padding: 0
+}
+#categories_block_left span.OPEN { background-image: url('../../../img/icon/less.gif') }
+#categories_block_left span.CLOSE { background-image: url('../../../img/icon/more.gif') }
+
+div.blockcategories_footer h4{ background:url('../../../img/block_footer_page.gif') repeat-x scroll left top;text-align:center;}
+div.blockcategories_footer { background:url('../../../img/block_footer_page_footer.png') repeat-x scroll left bottom #bdc2c9;padding-bottom:5px}
+div.blockcategories_footer h4 a{color:#ffffff;font-weight:normal;text-decoration:none}
+div.blockcategories_footer .category_footer{ background-image:url('../../../img/block_bg.jpg');}
+div.category_footer{ background:none;text-align:center;border:none; }
+
+#footer div.category_footer h4 a{color: #666666;}
+#footer div.category_footer .list{float:left;}
+#footer div.category_footer .list  ul.tree li{background:none;border-left:none;}
+
+#footer .footer_logo{float: left;width: 188px;}

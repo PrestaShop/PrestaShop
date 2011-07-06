@@ -1,0 +1,4 @@
+/* Block logo payment */
+.paiement_logo_block { width: 191px; text-align: center; margin-bottom: 1.5em }
+.paiement_logo_block a { text-decoration: none }
+.paiement_logo_block img { margin: 0 0.5em }

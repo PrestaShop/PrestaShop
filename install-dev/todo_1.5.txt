@@ -1,0 +1,1 @@
+Add ALTER id_shop in upgrades for modules pagenotfound, sekeywords and statssearch

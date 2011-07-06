@@ -1,0 +1,18 @@
+Hallo {firstname} {lastname},
+ 
+Ihre Konto-Login-Details
+ 
+E-Mail-Adresse: {email}
+Kennwort: {passwd}
+ 
+Sicherheitstipps:
+
+* Schützen Sie Ihre Kontodetails.
+* Geben Sie Ihre Login-Details nicht an Dritte weiter.
+* Ändern Sie Ihr Kennwort regelmäßig.
+* Falls Sie vermuten, dass jemand Ihr Konto unerlaubt benutzt,   benachrichtigen Sie uns bitte sofort.
+ 
+Sie können nun Bestellungen auf unserer Webseite vornehmen: {shop_name}.
+ 
+{shop_name} powered with PrestaShop™ 
+

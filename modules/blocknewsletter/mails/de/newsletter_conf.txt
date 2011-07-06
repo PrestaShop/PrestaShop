@@ -1,0 +1,7 @@
+Hallo
+
+Danke für Ihre Anmeldung zu unserem Newsletter.
+
+
+
+{shop_url} powered by PrestaShop™

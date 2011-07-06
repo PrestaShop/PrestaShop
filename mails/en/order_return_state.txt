@@ -1,0 +1,11 @@
+Hi {firstname} {lastname},
+
+Your return order #{id_order_return} history has changed in "{state_order_return}".
+
+You can review this order return in the "Order history" section of your account by clicking "My account" on our Website.
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} powered by PrestaShop™

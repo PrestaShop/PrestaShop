@@ -1,0 +1,21 @@
+Bonjour {firstname} {lastname},
+
+Nous avons bien enregistré votre commande {order_name}.
+Celle-ci vous sera envoyée dès réception de votre paiement.
+
+Pour rappel, vous avez choisi de régler votre commande par chèque, merci de nous transmettre votre règlement :
+
+- d'un montant de {total_paid}
+
+- à l'ordre de {cheque_name}
+
+- à {cheque_address}
+
+Vous pouvez accéder &agrave; tout moment au suivi de votre commande et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site {shop_url}
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse: {shop_url}guest-tracking.php
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

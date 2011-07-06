@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Hungary" version="1.0">
+	<currencies>
+		<currency name="Forint" iso_code="HUF" iso_code_num="348" sign="Ft‎" blank="1" conversion_rate="276.334" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="hu" />
+	</languages>
+	<taxes>
+		<tax id="1" name="ÁFA HU 25%" rate="25" />
+		<tax id="2" name="ÁFA HU 18%" rate="18" />
+		<tax id="3" name="ÁFA HU 5%" rate="5" />
+		
+		<taxRulesGroup name="HU Standard Rate (25%)">
+			<taxRule iso_code_country="be" id_tax="1" />
+			<taxRule iso_code_country="bg" id_tax="1" />
+			<taxRule iso_code_country="cz" id_tax="1" />
+			<taxRule iso_code_country="dk" id_tax="1" />
+			<taxRule iso_code_country="de" id_tax="1" />
+			<taxRule iso_code_country="ee" id_tax="1" />
+			<taxRule iso_code_country="gr" id_tax="1" />
+			<taxRule iso_code_country="es" id_tax="1" />
+			<taxRule iso_code_country="fr" id_tax="1" />
+			<taxRule iso_code_country="ie" id_tax="1" />
+			<taxRule iso_code_country="it" id_tax="1" />
+			<taxRule iso_code_country="cy" id_tax="1" />
+			<taxRule iso_code_country="lv" id_tax="1" />
+			<taxRule iso_code_country="lt" id_tax="1" />
+			<taxRule iso_code_country="lu" id_tax="1" />
+			<taxRule iso_code_country="hu" id_tax="1" />
+			<taxRule iso_code_country="mt" id_tax="1" />
+			<taxRule iso_code_country="nl" id_tax="1" />
+			<taxRule iso_code_country="at" id_tax="1" />
+			<taxRule iso_code_country="pl" id_tax="1" />
+			<taxRule iso_code_country="pt" id_tax="1" />
+			<taxRule iso_code_country="ro" id_tax="1" />
+			<taxRule iso_code_country="si" id_tax="1" />
+			<taxRule iso_code_country="sk" id_tax="1" />
+			<taxRule iso_code_country="fi" id_tax="1" />
+			<taxRule iso_code_country="se" id_tax="1" />
+			<taxRule iso_code_country="uk" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="HU Reduced Rate (18%)">
+			<taxRule iso_code_country="be" id_tax="2" />
+			<taxRule iso_code_country="bg" id_tax="2" />
+			<taxRule iso_code_country="cz" id_tax="2" />
+			<taxRule iso_code_country="dk" id_tax="2" />
+			<taxRule iso_code_country="de" id_tax="2" />
+			<taxRule iso_code_country="ee" id_tax="2" />
+			<taxRule iso_code_country="gr" id_tax="2" />
+			<taxRule iso_code_country="es" id_tax="2" />
+			<taxRule iso_code_country="fr" id_tax="2" />
+			<taxRule iso_code_country="ie" id_tax="2" />
+			<taxRule iso_code_country="it" id_tax="2" />
+			<taxRule iso_code_country="cy" id_tax="2" />
+			<taxRule iso_code_country="lv" id_tax="2" />
+			<taxRule iso_code_country="lt" id_tax="2" />
+			<taxRule iso_code_country="lu" id_tax="2" />
+			<taxRule iso_code_country="hu" id_tax="2" />
+			<taxRule iso_code_country="mt" id_tax="2" />
+			<taxRule iso_code_country="nl" id_tax="2" />
+			<taxRule iso_code_country="at" id_tax="2" />
+			<taxRule iso_code_country="pl" id_tax="2" />
+			<taxRule iso_code_country="pt" id_tax="2" />
+			<taxRule iso_code_country="ro" id_tax="2" />
+			<taxRule iso_code_country="si" id_tax="2" />
+			<taxRule iso_code_country="sk" id_tax="2" />
+			<taxRule iso_code_country="fi" id_tax="2" />
+			<taxRule iso_code_country="se" id_tax="2" />
+			<taxRule iso_code_country="uk" id_tax="2" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="HU Super Reduced Rate (5%)">
+			<taxRule iso_code_country="be" id_tax="3" />
+			<taxRule iso_code_country="bg" id_tax="3" />
+			<taxRule iso_code_country="cz" id_tax="3" />
+			<taxRule iso_code_country="dk" id_tax="3" />
+			<taxRule iso_code_country="de" id_tax="3" />
+			<taxRule iso_code_country="ee" id_tax="3" />
+			<taxRule iso_code_country="gr" id_tax="3" />
+			<taxRule iso_code_country="es" id_tax="3" />
+			<taxRule iso_code_country="fr" id_tax="3" />
+			<taxRule iso_code_country="ie" id_tax="3" />
+			<taxRule iso_code_country="it" id_tax="3" />
+			<taxRule iso_code_country="cy" id_tax="3" />
+			<taxRule iso_code_country="lv" id_tax="3" />
+			<taxRule iso_code_country="lt" id_tax="3" />
+			<taxRule iso_code_country="lu" id_tax="3" />
+			<taxRule iso_code_country="hu" id_tax="3" />
+			<taxRule iso_code_country="mt" id_tax="3" />
+			<taxRule iso_code_country="nl" id_tax="3" />
+			<taxRule iso_code_country="at" id_tax="3" />
+			<taxRule iso_code_country="pl" id_tax="3" />
+			<taxRule iso_code_country="pt" id_tax="3" />
+			<taxRule iso_code_country="ro" id_tax="3" />
+			<taxRule iso_code_country="si" id_tax="3" />
+			<taxRule iso_code_country="sk" id_tax="3" />
+			<taxRule iso_code_country="fi" id_tax="3" />
+			<taxRule iso_code_country="se" id_tax="3" />
+			<taxRule iso_code_country="uk" id_tax="3" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="HU Foodstuff Rate (25%)">
+			<taxRule iso_code_country="be" id_tax="1" />
+			<taxRule iso_code_country="bg" id_tax="1" />
+			<taxRule iso_code_country="cz" id_tax="1" />
+			<taxRule iso_code_country="dk" id_tax="1" />
+			<taxRule iso_code_country="de" id_tax="1" />
+			<taxRule iso_code_country="ee" id_tax="1" />
+			<taxRule iso_code_country="gr" id_tax="1" />
+			<taxRule iso_code_country="es" id_tax="1" />
+			<taxRule iso_code_country="fr" id_tax="1" />
+			<taxRule iso_code_country="ie" id_tax="1" />
+			<taxRule iso_code_country="it" id_tax="1" />
+			<taxRule iso_code_country="cy" id_tax="1" />
+			<taxRule iso_code_country="lv" id_tax="1" />
+			<taxRule iso_code_country="lt" id_tax="1" />
+			<taxRule iso_code_country="lu" id_tax="1" />
+			<taxRule iso_code_country="hu" id_tax="1" />
+			<taxRule iso_code_country="mt" id_tax="1" />
+			<taxRule iso_code_country="nl" id_tax="1" />
+			<taxRule iso_code_country="at" id_tax="1" />
+			<taxRule iso_code_country="pl" id_tax="1" />
+			<taxRule iso_code_country="pt" id_tax="1" />
+			<taxRule iso_code_country="ro" id_tax="1" />
+			<taxRule iso_code_country="si" id_tax="1" />
+			<taxRule iso_code_country="sk" id_tax="1" />
+			<taxRule iso_code_country="fi" id_tax="1" />
+			<taxRule iso_code_country="se" id_tax="1" />
+			<taxRule iso_code_country="uk" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="HU Books Rate (5%)">
+			<taxRule iso_code_country="be" id_tax="3" />
+			<taxRule iso_code_country="bg" id_tax="3" />
+			<taxRule iso_code_country="cz" id_tax="3" />
+			<taxRule iso_code_country="dk" id_tax="3" />
+			<taxRule iso_code_country="de" id_tax="3" />
+			<taxRule iso_code_country="ee" id_tax="3" />
+			<taxRule iso_code_country="gr" id_tax="3" />
+			<taxRule iso_code_country="es" id_tax="3" />
+			<taxRule iso_code_country="fr" id_tax="3" />
+			<taxRule iso_code_country="ie" id_tax="3" />
+			<taxRule iso_code_country="it" id_tax="3" />
+			<taxRule iso_code_country="cy" id_tax="3" />
+			<taxRule iso_code_country="lv" id_tax="3" />
+			<taxRule iso_code_country="lt" id_tax="3" />
+			<taxRule iso_code_country="lu" id_tax="3" />
+			<taxRule iso_code_country="hu" id_tax="3" />
+			<taxRule iso_code_country="mt" id_tax="3" />
+			<taxRule iso_code_country="nl" id_tax="3" />
+			<taxRule iso_code_country="at" id_tax="3" />
+			<taxRule iso_code_country="pl" id_tax="3" />
+			<taxRule iso_code_country="pt" id_tax="3" />
+			<taxRule iso_code_country="ro" id_tax="3" />
+			<taxRule iso_code_country="si" id_tax="3" />
+			<taxRule iso_code_country="sk" id_tax="3" />
+			<taxRule iso_code_country="fi" id_tax="3" />
+			<taxRule iso_code_country="se" id_tax="3" />
+			<taxRule iso_code_country="uk" id_tax="3" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

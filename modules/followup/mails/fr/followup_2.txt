@@ -1,0 +1,9 @@
+Bonjour {firstname} {lastname},
+ 
+Merci pour votre commande chez {shop_name}
+ 
+Merci pour votre commande, ? titre exceptionnel, nous vous accordons une remise de {amount}% sur votre prochaine commande ! Cette offre est valable {days} jours, ne perdez plus un instant !
+ 
+Voici votre bon de réduction : {voucher_num}
+
+Saisissez ce code dans votre panier afin d'obtenir votre réduction.

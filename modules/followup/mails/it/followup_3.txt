@@ -1,0 +1,9 @@
+Salve {firstname} {lastname},
+ 
+Sei uno dei nostri migliori clienti e per questo vogliamo ringraziarti per la fiducia che ci accordi.
+
+Come apprezzamento della tua fedeltà, vogliamo offrirti uno sconto del {amount}% valido per il tuo prossimo ordine! Questa offerta è valida per {days} giorni, quindi approfittane subito!
+ 
+Ecco il tuo buono: {voucher_num}
+
+Inserisci questo codice nel tuo carrello per ottenere lo sconto.

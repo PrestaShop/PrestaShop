@@ -1,0 +1,12 @@
+Hola {firstname} {lastname},
+
+Te informamos que se ha generado un vale de compra a tu favor desde el pedido  #{id_order}.
+
+Puedes revisar este recibo y descargar la factura desde la sección "Seguimiento de Pedido" de tu cuenta pulsando en "Mi cuenta" en nuestra web.
+
+Gracias por comprar en {shop_name}.
+
+{shop_name} - {shop_url}
+
+
+{shop_url} desarrollado por PrestaShop®

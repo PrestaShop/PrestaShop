@@ -1,0 +1,8 @@
+Hola {firstname} {lastname},
+
+Has recibido un nuevo mensaje sobre el pedido #{id_order}:
+
+{message}
+
+
+{shop_url} desarrollado por PrestaShop®
