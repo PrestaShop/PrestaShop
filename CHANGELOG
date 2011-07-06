@@ -24,6 +24,16 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.4
 --------------------------------
 ####################################
+#   v1.5.0.0 - 7536 (2011-07-06)  #
+####################################
+
+	Added Features:
+	
+	[+] Project : new feature, multi-shop
+	
+	[+] FO : add dispatcher
+
+####################################
 #   v1.4.3.0 - 7119 (2011-06-16)  #
 ####################################
 
