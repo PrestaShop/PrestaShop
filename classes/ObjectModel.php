@@ -156,8 +156,6 @@ abstract class ObjectModelCore
 								{
 									if (!is_array($this->{$key}))
 										$this->{$key} = array();
-									if ($this->langMultiShop AND $id_shop)
-										$this->{$key}[$row['id_shop']][$row['id_lang']] = stripslashes($value);
 									else
 										$this->{$key}[$row['id_lang']] = stripslashes($value);
 								}
