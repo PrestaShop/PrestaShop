@@ -48,7 +48,7 @@ class StatsSearch extends ModuleGraph
 				FROM `'._DB_PREFIX_.'statssearch`
 				WHERE 1
 					'.$this->sqlShopRestriction().'
-					`date_add` BETWEEN ';
+					AND `date_add` BETWEEN ';
 
 		$this->_query2 = 'GROUP BY `keywords`
 				HAVING occurences > 1

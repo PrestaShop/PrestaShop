@@ -143,7 +143,7 @@ class StatsRegistrations extends ModuleGraph
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE 1
 				'.$this->sqlShopRestriction(true).'
-				`date_add` BETWEEN';
+				AND `date_add` BETWEEN';
 		$this->_titles['main'] = $this->l('Number of customer accounts created');
 		$this->setDateGraph($layers, true);
 	}

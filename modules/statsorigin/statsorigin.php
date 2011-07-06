@@ -58,7 +58,7 @@ class StatsOrigin extends ModuleGraph
 				FROM '._DB_PREFIX_.'connections
 				WHERE 1
 					'.$this->sqlShopRestriction().'
-					date_add BETWEEN '.$dateBetween;
+					AND date_add BETWEEN '.$dateBetween;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql, false);
 		$websites = array($directLink => 0);
 		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))

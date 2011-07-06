@@ -123,12 +123,12 @@ class StatsVisits extends ModuleGraph
 					FROM `'._DB_PREFIX_.'connections`
 					WHERE 1
 						'.$this->sqlShopRestriction().'
-						`date_add` BETWEEN ';
+						AND `date_add` BETWEEN ';
 				$this->_query[1] = 'SELECT date_add, COUNT(DISTINCT `id_guest`) as total
 					FROM `'._DB_PREFIX_.'connections`
 					WHERE 1
 						'.$this->sqlShopRestriction().'
-						`date_add` BETWEEN ';
+						AND `date_add` BETWEEN ';
 				break;
 		}
 	}
