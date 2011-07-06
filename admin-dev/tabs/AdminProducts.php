@@ -1232,6 +1232,7 @@ class AdminProducts extends AdminTab
 				$this->copyFromPost($object, $this->table);
 				if ($object->add())
 				{
+					$this->updateAssoShop((int)$object->id);
 					$this->updateAccessories($object);
 					if (!$this->updatePackItems($object))
 						$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');

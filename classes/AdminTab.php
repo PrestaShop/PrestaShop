@@ -848,14 +848,15 @@ abstract class AdminTabCore
 		}
 	}
 	
-	protected function updateAssoGroupShop()
+	protected function updateAssoGroupShop($id_object = false)
 	{
 		$assos = array();
 		foreach ($_POST AS $k => $row)
 		{
-			if (!preg_match('/^checkBoxGroupShopAsso_'.$this->table.'_([0-9]+)_([0-9]+)$/Ui', $k, $res))
+			if (!preg_match('/^checkBoxGroupShopAsso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
 				continue;
-			$assos[] = array('id_object' => $res[1], 'id_group_shop' => (int)$res[2]);
+			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
+			$assos[] = array('id_object' => (int)$id_asso_object, 'id_group_shop' => (int)$res[2]);
 		}
 		if (!sizeof($assos))
 			return;
@@ -871,13 +872,13 @@ abstract class AdminTabCore
 			
 			foreach ($_POST AS $k => $row)
 			{
-				if (!preg_match('/^checkBoxShopAsso_'.$this->table.'_([0-9]+)_([0-9]+)$/Ui', $k, $res))
+				if (!preg_match('/^checkBoxShopAsso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
 					continue;
-				$assos[] = array('id_object' => $res[1], 'id_shop' => (int)$res[2]);
+				$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
+				$assos[] = array('id_object' => (int)$id_asso_object, 'id_shop' => (int)$res[2]);
 			}
 			if (!sizeof($assos))
 				return;
-			
 			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_shop'.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 			foreach ($assos AS $asso)
 				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_shop(`'.pSQL($this->identifier).'`, id_shop)
