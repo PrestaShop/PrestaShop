@@ -271,11 +271,12 @@ class ShopCore extends ObjectModel
 	
 	public static function getExcludedUris()
 	{
-		$directories = scandir(dirname(__FILE__).'/../');
+		$dirname = dirname(__FILE__);
+		$directories = scandir($dirname.'/../');
 		$not_uri = array();
 		foreach ($directories AS $directory)
-			if (is_dir(dirname(__FILE__).'/../'.$directory) AND (!preg_match ('/^\./', $directory)))
-				$not_uri[] = '/'.$directory.'/';
+			if (is_dir($dirname.'/../'.$directory) AND (!preg_match ('/^\./', $directory)))
+				$not_uri[] = $directory;
 		return $not_uri;
 	}
 	

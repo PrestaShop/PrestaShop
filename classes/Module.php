@@ -186,7 +186,6 @@ abstract class ModuleCore
 		$this->id = Db::getInstance()->Insert_ID();
 		
 		$this->enable(true);
-		$this->id = Db::getInstance()->Insert_ID();
 		return true;
 	}
 
@@ -199,18 +198,21 @@ abstract class ModuleCore
 	{
 		if (!Validate::isUnsignedId($this->id))
 			return false;
-		$result = Db::getInstance()->ExecuteS('
-		SELECT `id_hook`
-		FROM `'._DB_PREFIX_.'hook_module` hm
-		WHERE `id_module` = '.(int)($this->id));
+
+		$sql = 'SELECT id_hook
+				FROM '._DB_PREFIX_.'hook_module hm
+				WHERE id_module = '.(int)$this->id;
+		$result = Db::getInstance()->ExecuteS($sql);
 		foreach	($result AS $row)
 		{
-			Db::getInstance()->Execute('
-			DELETE FROM `'._DB_PREFIX_.'hook_module`
-			WHERE `id_module` = '.(int)($this->id).'
-			AND `id_hook` = '.(int)($row['id_hook']));
+			$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
+					WHERE `id_module` = '.(int)$this->id.'
+						AND `id_hook` = '.(int)$row['id_hook'];
+			Db::getInstance()->Execute($sql);
 			$this->cleanPositions($row['id_hook']);
 		}
+		$this->disable(true);
+
 		return Db::getInstance()->Execute('
 			DELETE FROM `'._DB_PREFIX_.'module`
 			WHERE `id_module` = '.(int)($this->id));
@@ -244,7 +246,7 @@ abstract class ModuleCore
 		$sql = 'SELECT id_shop
 				FROM '._DB_PREFIX_.'module_shop
 				WHERE id_module = '.$this->id.'
-					'.(($list) ? 'AND id_shop IN('.implode(', ', $list).')' : '');
+					'.((!$forceAll) ? 'AND id_shop IN('.implode(', ', $list).')' : '');
 		$items = array();
 		if ($results = Db::getInstance($sql)->executeS($sql))
 			foreach ($results as $row)
@@ -286,8 +288,10 @@ abstract class ModuleCore
 	 */
 	public function disable($forceAll = false) 
 	{
-		$list = Shop::getListOfID($this->shopID, $this->shopGroupID);
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'module_shop WHERE id_module = '.$this->id.' AND id_shop IN('.implode(', ', $list).')');
+		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop 
+				WHERE id_module = '.$this->id.'
+					'.((!$foreAll) ? ' AND id_shop IN('.implode(', ', Shop::getListOfID($this->shopID, $this->shopGroupID)).')' : '');
+		Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -382,12 +386,23 @@ abstract class ModuleCore
 	/**
 	  * Unregister module from hook
 	  *
-	  * @param int $id_hook Hook id
+	  * @param int $id_hook Hook id (can be a hook name since 1.5.0)
 	  * @param array $shopList List of shop
 	  * @return boolean result
 	  */
 	public function unregisterHook($hook_id, $shopList = null)
 	{
+		// Get hook id if a name is given as argument
+		if (!is_numeric($hook_id))
+		{
+			$sql = 'SELECT `id_hook`
+					FROM `'._DB_PREFIX_.'hook`
+					WHERE `name` = \''.pSQL($hook_id).'\'';
+			$hook_id = Db::getInstance()->getValue($sql);
+			if (!$hook_id)
+				return false;
+		}
+
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
 				WHERE `id_module` = '.(int)$this->id.'
 					AND `id_hook` = '.(int)$hook_id

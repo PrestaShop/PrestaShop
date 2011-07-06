@@ -149,12 +149,12 @@ class BlockLayered extends Module
 				Configuration::updateValue('PS_LAYERED_BITLY_USERNAME', Tools::getValue('bitly_username'));
 				Configuration::updateValue('PS_LAYERED_BITLY_API_KEY', Tools::getValue('bitly_api_key'));
 				Configuration::updateValue('PS_LAYERED_SHARE', Tools::getValue('share_url'));
-			$html .= '
-			<div class="conf confirm">
-				<img src="../img/admin/ok.gif" alt="" title="" />
-				'.$this->l('Settings saved successfully').'
-			</div>';
-		}
+				$html .= '
+				<div class="conf confirm">
+					<img src="../img/admin/ok.gif" alt="" title="" />
+					'.$this->l('Settings saved successfully').'
+				</div>';
+			}
 			else
 			{
 				$html .= '
@@ -283,20 +283,19 @@ class BlockLayered extends Module
 	public function getProductByFilters($selectedFilters = array())
 	{
 		global $cookie;
-		
+
 		if (!empty($this->products))
 			return $this->products;
-		
+
 		/* If the current category isn't defined of if it's homepage, we have nothing to display */
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
 		if ($id_parent == 1)
 			return;
-		
+
 		if (!sizeof($selectedFilters['category']))
 			$selectedFilters['category'][] = $id_parent;
-		
+
 		$queryFilters = '';
-		
 		foreach ($selectedFilters AS $key => $filterValues)
 		{
 			if (!sizeof($filterValues))
@@ -304,7 +303,7 @@ class BlockLayered extends Module
 
 			preg_match('/^(.*[^_0-9])/', $key, $res);
 			$key = $res[1];
-			
+
 			switch ($key)
 			{
 				case 'id_feature':
@@ -341,17 +340,17 @@ class BlockLayered extends Module
 						$queryFilters = rtrim($queryFilters, 'OR ').')';
 					}
 				break;
-				
+
 				case 'quantity':
 					if (sizeof($selectedFilters['quantity']) == 2)
 						break;
 					$queryFilters .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '=' : '>').' 0';
 				break;
-				
+
 				case 'manufacturer':
 					$queryFilters .= ' AND p.id_manufacturer IN ('.implode($selectedFilters['manufacturer'], ',').')';
 				break;
-					
+
 				case 'condition':
 					if (sizeof($selectedFilters['condition']) == 3)
 						break;
@@ -360,7 +359,7 @@ class BlockLayered extends Module
 						$queryFilters .= '\''.$cond.'\',';
 					$queryFilters = rtrim($queryFilters, ',').')';
 				break;
-				
+
 				case 'weight':
 					$queryFilters .= ' AND p.`weight` BETWEEN '.(float)($selectedFilters['weight'][0] - 0.001).' AND '.(float)($selectedFilters['weight'][1] + 0.001);
 				break;
@@ -378,25 +377,28 @@ class BlockLayered extends Module
 		SELECT COUNT(p.`id_product`) AS total
 		FROM `'._DB_PREFIX_.'product` p
 		WHERE 1 '.$queryFilters);
-		
+
 		$this->nbr_products = isset($result) ? $result['total'] : 0;
-		
+
 		$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
 
-		$sql = '
-		SELECT p.id_product, p.out_of_stock, p.available_for_order, p.quantity, p.minimal_quantity, p.id_category_default, p.customizable, p.show_price, p.`weight`,
-		p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer,
-		DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
-		FROM '._DB_PREFIX_.'product p
-		LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product)
-		LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
-		LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
-		LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
-		WHERE p.`active` = 1 AND pl.id_lang = '.(int)$cookie->id_lang.$queryFilters
-		.' ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby')).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
-		' LIMIT '.(((int)(Tools::getValue('p', 1)) - 1) * $n.','.$n);
+		$sql = 'SELECT p.id_product, p.out_of_stock, p.available_for_order, p.quantity, p.minimal_quantity, p.id_category_default, p.customizable, p.show_price, p.`weight`,
+					p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer,
+					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
+				FROM '._DB_PREFIX_.'product p
+				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product AND pl.id_shop = '.Shop::getCurrentShop(true).')
+				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
+				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
+				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
+				WHERE p.`active` = 1
+					AND pl.id_lang = '.(int)$cookie->id_lang.'
+					AND ps.id_shop = '.Shop::getCurrentShop(true)
+					.$queryFilters.
+				' ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby')).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
+				' LIMIT '.(((int)(Tools::getValue('p', 1)) - 1) * $n.','.$n);
 		$this->products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-		
+
 		return $this->products;
 	}
 	
@@ -412,7 +414,7 @@ class BlockLayered extends Module
 
 		/* First we need to get all subcategories of current category */
 		$category = new Category((int)$id_parent);
-		
+
 		$subCategories = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.id_category, c.id_parent, cl.name
 		FROM '._DB_PREFIX_.'category c
@@ -426,7 +428,7 @@ class BlockLayered extends Module
 
 		$whereC = rtrim($whereC, 'OR ').')';
 		$productsSQL = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`weight`, s.quantity
+		SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`weight`, s.quantity,
 		(SELECT GROUP_CONCAT(`id_category`) FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`) as ids_cat,
 			(SELECT GROUP_CONCAT(`id_feature_value`) FROM `'._DB_PREFIX_.'feature_product` fp WHERE fp.`id_product` = p.`id_product`) as ids_feat,
 			(SELECT GROUP_CONCAT(DISTINCT(pac.`id_attribute`)) 
@@ -708,7 +710,7 @@ class BlockLayered extends Module
 
 		
 		$params = '?';
-		foreach($_GET as $key => $val)
+		foreach ($_GET as $key => $val)
 			$params .= $key.'='.$val.'&';
 		
 		$share_url = $link->getCategoryLink((int)$category->id, $category->link_rewrite[(int)$cookie->id_lang], (int)$cookie->id_lang).rtrim($params, '&');
