@@ -168,8 +168,7 @@ class ShopCore extends ObjectModel
 				FROM '._DB_PREFIX_.'group_shop gs
 				LEFT JOIN '._DB_PREFIX_.'shop s
 					ON (s.id_group_shop = gs.id_group_shop)
-				WHERE s.active = 1
-					AND s.deleted = 0
+				WHERE s.deleted = 0
 					AND gs.deleted = 0
 				ORDER BY gs.name, s.name';
 		if ($results = Db::getInstance()->ExecuteS($sql))
@@ -225,6 +224,22 @@ class ShopCore extends ObjectModel
 						$results[] = $shopData;
 				}
 		return $results;
+	}
+	
+	/**
+	 * Return a shop ID from shop name
+	 * 
+	 * @param string $name
+	 * @return int
+	 */
+	public static function getIdByName($name)
+	{
+		Shop::loadShops();
+		foreach (self::$shops as $groupData)
+			foreach ($groupData['shops'] as $shopID => $shopData)
+				if (Tools::strtolower($shopData['name']) == Tools::strtolower($name))
+					return $shopID;
+		return false;
 	}
 	
 	/**
@@ -536,7 +551,8 @@ class ShopCore extends ObjectModel
 		{
 			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.htmlspecialchars($groupData['name']).'</option>';
 			foreach ($groupData['shops'] as $sID => $shopData)
-				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
+				if ($shopData['active'])
+					$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
 		}
 		$html .= '</select>';
 

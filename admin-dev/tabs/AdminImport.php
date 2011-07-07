@@ -79,7 +79,6 @@ class AdminImport extends AdminTab
 		switch ((int)(Tools::getValue('entity')))
 		{
 			case $this->entities[$this->l('Combinations')]:
-
 				self::$required_fields = array('id_product', 'options');
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')), 
@@ -109,159 +108,179 @@ class AdminImport extends AdminTab
 					'weight' => 0,
 					'default_on' => 0
 				);
-
-				break;
+			break;
 
 			case $this->entities[$this->l('Categories')]:
-
 				$this->available_fields = array(
-				'no' => array('label' => $this->l('Ignore this column')),
-				'id' => array('label' => $this->l('ID')),
-				'active' => array('label' => $this->l('Active (0/1)')),
-				'name' => array('label' => $this->l('Name *')),
-				'parent' => array('label' => $this->l('Parent category')),
-				'description' => array('label' => $this->l('Description')),
-				'meta_title' => array('label' => $this->l('Meta-title')),
-				'meta_keywords' => array('label' => $this->l('Meta-keywords')),
-				'meta_description' => array('label' => $this->l('Meta-description')),
-				'link_rewrite' => array('label' => $this->l('URL rewritten')),
-				'image' => array('label' => $this->l('Image URL')));
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'active' => array('label' => $this->l('Active (0/1)')),
+					'name' => array('label' => $this->l('Name *')),
+					'parent' => array('label' => $this->l('Parent category')),
+					'description' => array('label' => $this->l('Description')),
+					'meta_title' => array('label' => $this->l('Meta-title')),
+					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
+					'meta_description' => array('label' => $this->l('Meta-description')),
+					'link_rewrite' => array('label' => $this->l('URL rewritten')),
+					'image' => array('label' => $this->l('Image URL')),
+				);
 
 				self::$default_values = array('active' => '1', 'parent' => '1', 'link_rewrite' => '');
-
-				break;
+			break;
 
 			case $this->entities[$this->l('Products')]:
-
 				self::$validators['image'] = array('AdminImport', 'split');
 
 				$this->available_fields = array(
-				'no' => array('label' => $this->l('Ignore this column')),
-				'id' => array('label' => $this->l('ID')),
-				'active' => array('label' => $this->l('Active (0/1)')),
-				'name' => array('label' => $this->l('Name *')),
-				'category' => array('label' => $this->l('Categories (x,y,z...)')),
-				'price_tex' => array('label' => $this->l('Price tax excl.')),
-				'price_tin' => array('label' => $this->l('Price tax incl.')),
-				'id_tax_rules_group' => array('label' => $this->l('Tax rules id')),
-				'wholesale_price' => array('label' => $this->l('Wholesale price')),
-				'on_sale' => array('label' => $this->l('On sale (0/1)')),
-				'reduction_price' => array('label' => $this->l('Discount amount')),
-				'reduction_percent' => array('label' => $this->l('Discount percent')),
-				'reduction_from' => array('label' => $this->l('Discount from (yyyy-mm-dd)')),
-				'reduction_to' => array('label' => $this->l('Discount to (yyyy-mm-dd)')),
-				'reference' => array('label' => $this->l('Reference #')),
-				'supplier_reference' => array('label' => $this->l('Supplier reference #')),
-				'supplier' => array('label' => $this->l('Supplier')),
-				'manufacturer' => array('label' => $this->l('Manufacturer')),
-				'ean13' => array('label' => $this->l('EAN13')),
-				'upc' => array('label' => $this->l('UPC')),
-				'ecotax' => array('label' => $this->l('Ecotax')),
-				'weight' => array('label' => $this->l('Weight')),
-				'quantity' => array('label' => $this->l('Quantity')),
-				'description_short' => array('label' => $this->l('Short description')),
-				'description' => array('label' => $this->l('Description')),
-				'tags' => array('label' => $this->l('Tags (x,y,z...)')),
-				'meta_title' => array('label' => $this->l('Meta-title')),
-				'meta_keywords' => array('label' => $this->l('Meta-keywords')),
-				'meta_description' => array('label' => $this->l('Meta-description')),
-				'link_rewrite' => array('label' => $this->l('URL rewritten')),
-				'available_now' => array('label' => $this->l('Text when in-stock')),
-				'available_later' => array('label' => $this->l('Text if back-order allowed')),
-				'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
-				'delete_existing_images' => array(
-											'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
-											'help' => $this->l('If you do not specify this column and you specify the column images, all images of the product will be replaced by those specified in the import file')),
-				'feature' => array('label' => $this->l('Feature')),
-				'online_only' => array('label' => $this->l('Only available online')),
-				'condition' => array('label' => $this->l('Condition')));
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'active' => array('label' => $this->l('Active (0/1)')),
+					'name' => array('label' => $this->l('Name *')),
+					'category' => array('label' => $this->l('Categories (x,y,z...)')),
+					'price_tex' => array('label' => $this->l('Price tax excl.')),
+					'price_tin' => array('label' => $this->l('Price tax incl.')),
+					'id_tax_rules_group' => array('label' => $this->l('Tax rules id')),
+					'wholesale_price' => array('label' => $this->l('Wholesale price')),
+					'on_sale' => array('label' => $this->l('On sale (0/1)')),
+					'reduction_price' => array('label' => $this->l('Discount amount')),
+					'reduction_percent' => array('label' => $this->l('Discount percent')),
+					'reduction_from' => array('label' => $this->l('Discount from (yyyy-mm-dd)')),
+					'reduction_to' => array('label' => $this->l('Discount to (yyyy-mm-dd)')),
+					'reference' => array('label' => $this->l('Reference #')),
+					'supplier_reference' => array('label' => $this->l('Supplier reference #')),
+					'supplier' => array('label' => $this->l('Supplier')),
+					'manufacturer' => array('label' => $this->l('Manufacturer')),
+					'ean13' => array('label' => $this->l('EAN13')),
+					'upc' => array('label' => $this->l('UPC')),
+					'ecotax' => array('label' => $this->l('Ecotax')),
+					'weight' => array('label' => $this->l('Weight')),
+					'quantity' => array('label' => $this->l('Quantity')),
+					'description_short' => array('label' => $this->l('Short description')),
+					'description' => array('label' => $this->l('Description')),
+					'tags' => array('label' => $this->l('Tags (x,y,z...)')),
+					'meta_title' => array('label' => $this->l('Meta-title')),
+					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
+					'meta_description' => array('label' => $this->l('Meta-description')),
+					'link_rewrite' => array('label' => $this->l('URL rewritten')),
+					'available_now' => array('label' => $this->l('Text when in-stock')),
+					'available_later' => array('label' => $this->l('Text if back-order allowed')),
+					'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
+					'delete_existing_images' => array(
+						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
+						'help' => $this->l('If you do not specify this column and you specify the column images, all images of the product will be replaced by those specified in the import file')
+					),
+					'feature' => array('label' => $this->l('Feature')),
+					'online_only' => array('label' => $this->l('Only available online')),
+					'condition' => array('label' => $this->l('Condition')),
+					'shop' => array(
+						'label' => $this->l('ID / Name of shop'), 
+						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
+					),
+				);
 
 				self::$default_values = array(
-				'id_category' => array(1),
-				'id_category_default' => 1,
-				'active' => '1',
-				'quantity' => 0,
-				'price' => 0,
-				'id_tax_rules_group' => 0,
-				'description_short' => array((int)(Configuration::get('PS_LANG_DEFAULT')) => ''),
-				'link_rewrite' => array((int)(Configuration::get('PS_LANG_DEFAULT')) => ''),
-				'online_only' => 0,
-				'condition' => 'new');
-
-				break;
+					'id_category' => array(1),
+					'id_category_default' => 1,
+					'active' => '1',
+					'quantity' => 0,
+					'price' => 0,
+					'id_tax_rules_group' => 0,
+					'description_short' => array((int)(Configuration::get('PS_LANG_DEFAULT')) => ''),
+					'link_rewrite' => array((int)(Configuration::get('PS_LANG_DEFAULT')) => ''),
+					'online_only' => 0,
+					'condition' => 'new',
+					'shop' => Configuration::get('PS_SHOP_DEFAULT'),
+				);
+			break;
 
 			case $this->entities[$this->l('Customers')]:
-
 				//Overwrite required_fields AS only email is required whereas other entities
 				self::$required_fields = array('email', 'passwd', 'lastname', 'firstname');
 
 				$this->available_fields = array(
-				'no' => array('label' => $this->l('Ignore this column')),
-				'id' => array('label' => $this->l('ID')),
-				'active' => array('label' => $this->l('Active  (0/1)')),
-				'id_gender' => array('label' => $this->l('Gender ID (Mr = 1, Ms = 2, else 9)')),
-				'email' => array('label' => $this->l('E-mail *')),
-				'passwd' => array('label' => $this->l('Password *')),
-				'birthday' => array('label' => $this->l('Birthday (yyyy-mm-dd)')),
-				'lastname' => array('label' => $this->l('Lastname *')),
-				'firstname' => array('label' => $this->l('Firstname *')),
-				'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
-				'optin' => array('label' => $this->l('Opt in (0/1)')));
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'active' => array('label' => $this->l('Active  (0/1)')),
+					'id_gender' => array('label' => $this->l('Gender ID (Mr = 1, Ms = 2, else 9)')),
+					'email' => array('label' => $this->l('E-mail *')),
+					'passwd' => array('label' => $this->l('Password *')),
+					'birthday' => array('label' => $this->l('Birthday (yyyy-mm-dd)')),
+					'lastname' => array('label' => $this->l('Lastname *')),
+					'firstname' => array('label' => $this->l('Firstname *')),
+					'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
+					'optin' => array('label' => $this->l('Opt in (0/1)')),
+					'id_shop' => array(
+						'label' => $this->l('ID / Name of shop'), 
+						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
+					),
+				);
 
-				self::$default_values = array('active' => '1');
-
+				self::$default_values = array(
+					'active' => '1',
+					'id_shop' => Configuration::get('PS_SHOP_DEFAULT'),
+				);
 			break;
-			case $this->entities[$this->l('Addresses')]:
 
+			case $this->entities[$this->l('Addresses')]:
 				//Overwrite required_fields
 				self::$required_fields = array('lastname', 'firstname', 'address1', 'postcode', 'country', 'city');
 
 				$this->available_fields = array(
-				'no' => array('label' => $this->l('Ignore this column')),
-				'id' => array('label' => $this->l('ID')),
-				'alias' => array('label' => $this->l('Alias *')),
-				'active' => array('label' => $this->l('Active  (0/1)')),
-				'customer_email' => array('label' => $this->l('Customer e-mail')),
-				'manufacturer' => array('label' => $this->l('Manufacturer')),
-				'supplier' => array('label' => $this->l('Supplier')),
-				'company' => array('label' => $this->l('Company')),
-				'lastname' => array('label' => $this->l('Lastname *')),
-				'firstname' => array('label' => $this->l('Firstname *')),
-				'address1' => array('label' => $this->l('Address 1 *')),
-				'address2' => array('label' => $this->l('Address 2')),
-				'postcode' => array('label' => $this->l('Postcode*/ Zipcode*')),
-				'city' => array('label' => $this->l('City *')),
-				'country' => array('label' => $this->l('Country *')),
-				'state' => array('label' => $this->l('State')),
-				'other' => array('label' => $this->l('Other')),
-				'phone' => array('label' => $this->l('Phone')),
-				'phone_mobile' => array('label' => $this->l('Mobile Phone')),
-				'vat_number' => array('label' => $this->l('VAT number')));
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'alias' => array('label' => $this->l('Alias *')),
+					'active' => array('label' => $this->l('Active  (0/1)')),
+					'customer_email' => array('label' => $this->l('Customer e-mail')),
+					'manufacturer' => array('label' => $this->l('Manufacturer')),
+					'supplier' => array('label' => $this->l('Supplier')),
+					'company' => array('label' => $this->l('Company')),
+					'lastname' => array('label' => $this->l('Lastname *')),
+					'firstname' => array('label' => $this->l('Firstname *')),
+					'address1' => array('label' => $this->l('Address 1 *')),
+					'address2' => array('label' => $this->l('Address 2')),
+					'postcode' => array('label' => $this->l('Postcode*/ Zipcode*')),
+					'city' => array('label' => $this->l('City *')),
+					'country' => array('label' => $this->l('Country *')),
+					'state' => array('label' => $this->l('State')),
+					'other' => array('label' => $this->l('Other')),
+					'phone' => array('label' => $this->l('Phone')),
+					'phone_mobile' => array('label' => $this->l('Mobile Phone')),
+					'vat_number' => array('label' => $this->l('VAT number')),
+				);
 
 				self::$default_values = array('alias' => 'Alias', 'postcode' => 'X');
-
 			break;
+
 			case $this->entities[$this->l('Manufacturers')]:
 			case $this->entities[$this->l('Suppliers')]:
-
 				//Overwrite validators AS name is not MultiLangField
 				self::$validators = array(
-				'description' => array('AdminImport', 'createMultiLangField'),
-				'description_short' => array('AdminImport', 'createMultiLangField'),
-				'meta_title' => array('AdminImport', 'createMultiLangField'),
-				'meta_keywords' => array('AdminImport', 'createMultiLangField'),
-				'meta_description' => array('AdminImport', 'createMultiLangField'));
+					'description' => array('AdminImport', 'createMultiLangField'),
+					'description_short' => array('AdminImport', 'createMultiLangField'),
+					'meta_title' => array('AdminImport', 'createMultiLangField'),
+					'meta_keywords' => array('AdminImport', 'createMultiLangField'),
+					'meta_description' => array('AdminImport', 'createMultiLangField'),
+				);
 
 				$this->available_fields = array(
-				'no' => array('label' => $this->l('Ignore this column')),
-				'id' => array('label' => $this->l('ID')),
-				'active' => array('label' => $this->l('Active (0/1)')),
-				'name' => array('label' => $this->l('Name *')),
-				'description' => array('label' => $this->l('Description')),
-				'short_description' => array('label' => $this->l('Short description')),
-				'meta_title' => array('label' => $this->l('Meta-title')),
-				'meta_keywords' => array('label' => $this->l('Meta-keywords')),
-				'meta_description' => array('label' => $this->l('Meta-description')));
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'active' => array('label' => $this->l('Active (0/1)')),
+					'name' => array('label' => $this->l('Name *')),
+					'description' => array('label' => $this->l('Description')),
+					'short_description' => array('label' => $this->l('Short description')),
+					'meta_title' => array('label' => $this->l('Meta-title')),
+					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
+					'meta_description' => array('label' => $this->l('Meta-description')),
+					'shop' => array(
+						'label' => $this->l('ID / Name of group shop'), 
+						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
+					),
+				);
+				
+				self::$default_values = array(
+					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
+				);
 			break;
 		}
 		parent::__construct();
@@ -727,6 +746,7 @@ class AdminImport extends AdminTab
 				// check quantity
 				if ($product->quantity == NULL)
 					$product->quantity = 0;
+					
 				// If id product AND id product already in base, trying to update
 				if ($product->id AND Product::existsInDatabase((int)($product->id)))
 				{
@@ -748,6 +768,21 @@ class AdminImport extends AdminTab
 			}
 			else
 			{
+				// Associate product to shop
+				if (Tools::isMultiShopActivated() && $product->shop)
+				{
+					$product->shop = explode(',', $product->shop);
+					$shops = array();
+					foreach ($product->shop as $shop)
+					{
+						$shop = trim($shop);
+						if (!is_numeric($shop))
+							$shop = Shop::getIdByName($shop);
+						$shops[] = $shop;
+					}
+					$product->associateTo($shops);
+				}
+				
 				// SpecificPrice (only the basic reduction feature is supported by the import)
 				if ((isset($info['reduction_price']) AND $info['reduction_price'] > 0) OR (isset($info['reduction_percent']) AND $info['reduction_percent'] > 0))
 				{
@@ -930,9 +965,20 @@ class AdminImport extends AdminTab
 			if ($customer->passwd)
 				$customer->passwd = md5(_COOKIE_KEY_.$customer->passwd);
 
+			// Associate product to shop
+			if (Tools::isMultiShopActivated() && $customer->id_shop)
+			{
+				if (!is_numeric($customer->id_shop))
+					$customer->id_shop = Shop::getIdByName($customer->id_shop);
+			}
+			else
+				$customer->id_shop = Configuration::get('PS_SHOP_DEFAULT');
+
 			$res = false;
 			if (($fieldError = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true AND ($langFieldError = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$customer->id_group_shop = Shop::getGroupFromShop($customer->id_shop);
+				
 				if ($customer->id AND $customer->customerIdExists($customer->id))
 					$res = $customer->update();
 				if (!$res)
@@ -1104,7 +1150,26 @@ class AdminImport extends AdminTab
 					$res = $manufacturer->update();
 				if (!$res)
 					$res = $manufacturer->add();
+					
+				if ($res)
+				{
+					// Associate supplier to group shop
+					if (Tools::isMultiShopActivated() && $manufacturer->shop)
+					{
+						$manufacturer->shop = explode(',', $manufacturer->shop);
+						$shops = array();
+						foreach ($manufacturer->shop as $shop)
+						{
+							$shop = trim($shop);
+							if (!is_numeric($shop))
+								$shop = GroupShop::getIdByName($shop);
+							$shops[] = $shop;
+						}
+						$manufacturer->associateTo($shops, 'group_shop');
+					}
+				}
 			}
+
 			if (!$res)
 			{
 				$this->_errors[] = mysql_error().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
@@ -1136,8 +1201,26 @@ class AdminImport extends AdminTab
 					$res = $supplier->update();
 				if (!$res)
 					$res = $supplier->add();
+
 				if (!$res)
 					$this->_errors[] = mysql_error().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				else
+				{
+					// Associate supplier to group shop
+					if (Tools::isMultiShopActivated() && $supplier->shop)
+					{
+						$supplier->shop = explode(',', $supplier->shop);
+						$shops = array();
+						foreach ($supplier->shop as $shop)
+						{
+							$shop = trim($shop);
+							if (!is_numeric($shop))
+								$shop = GroupShop::getIdByName($shop);
+							$shops[] = $shop;
+						}
+						$supplier->associateTo($shops, 'group_shop');
+					}
+				}
 			}
 			else
 			{

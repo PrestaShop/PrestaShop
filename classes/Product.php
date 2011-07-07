@@ -363,6 +363,14 @@ class ProductCore extends ObjectModel
 
 		return $fields;
 	}
+	
+	public function add($autodate = true, $nullValues = false)
+	{
+		if (!parent::add($autodate, $nullValues))
+			return false;
+		$this->setStock($this->quantity);
+		return true;
+	}
 
 	/**
 	* Check then return multilingual fields for database interaction
