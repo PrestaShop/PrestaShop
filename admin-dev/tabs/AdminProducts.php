@@ -1245,8 +1245,6 @@ class AdminProducts extends AdminTab
 							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
 						elseif ($id_image = $this->addProductImage($object))
 						{
-							$object->setStock($object->quantity);
-							
 							Hook::addProduct($object);
 							Search::indexation(false);
 

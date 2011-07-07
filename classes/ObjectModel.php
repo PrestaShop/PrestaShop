@@ -237,13 +237,13 @@ abstract class ObjectModelCore
 				}
 		}
 		
-		if(!Tools::isMultishopActivated())
+		if (!Tools::isMultishopActivated())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
-				$result &= $this->associateTo(array((int)Shop::getCurrentShop(true)), 'shop');
+				$result &= $this->associateTo(Shop::getCurrentShop(true), 'shop');
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
-				$result &= $this->associateTo(array((int)Shop::getCurrentGroupShop()), 'group_shop');
+				$result &= $this->associateTo(Shop::getCurrentGroupShop(), 'group_shop');
 		}
 		return $result;
 	}
