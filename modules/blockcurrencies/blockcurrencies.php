@@ -74,8 +74,7 @@ class BlockCurrencies extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
+		Tools::addCSS(($this->_path).'blockcurrencies.css', 'all');
 	}
 }
 

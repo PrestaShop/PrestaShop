@@ -137,8 +137,7 @@ class BlockPaymentLogo extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockpaymentlogo.css', 'all');
+		Tools::addCSS(($this->_path).'blockpaymentlogo.css', 'all');
 	}
 
 }

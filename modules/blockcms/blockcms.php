@@ -748,8 +748,7 @@ class BlockCms extends Module
 	
 	public function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockcms.css', 'all');
+		Tools::addCSS(($this->_path).'blockcms.css', 'all');
 	}
 	
 	public function getL($key)

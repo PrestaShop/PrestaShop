@@ -176,8 +176,7 @@ class productsCategory extends Module
 	
 	public function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS($this->_path.'productscategory.css', 'all');
-		$context->controller->addJS(array($this->_path.'productscategory.js', _PS_JS_DIR_.'jquery/jquery.serialScroll-1.2.2-min.js'));
+		Tools::addCSS($this->_path.'productscategory.css', 'all');
+		Tools::addJS(array($this->_path.'productscategory.js', _PS_JS_DIR_.'jquery/jquery.serialScroll-1.2.2-min.js'));
 	}
 }

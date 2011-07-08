@@ -31,10 +31,6 @@ class LinkCore
 	protected $allow;
 	protected $url;
 	public static $cache = array('page' => array());
-	
-	public $protocol_link;
-	public $protocol_content;
-	public $useSSL;
 
 	/**
 	  * Constructor (initialization only)
