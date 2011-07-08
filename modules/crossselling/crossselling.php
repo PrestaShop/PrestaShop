@@ -96,7 +96,8 @@ class CrossSelling extends Module
 	
 	public function hookHeader()
 	{
-		Tools::addCSS(($this->_path).'crossselling.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'crossselling.css', 'all');
 	}
 
 	/**

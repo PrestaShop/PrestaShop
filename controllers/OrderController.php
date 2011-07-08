@@ -260,8 +260,6 @@ class OrderControllerCore extends ParentOrderController
 	/* Carrier step */
 	protected function _assignCarrier()
 	{
-		global $defaultCountry;
-
 		if (isset(self::$cookie->id_customer))
 			$customer = new Customer((int)(self::$cookie->id_customer));
 		else

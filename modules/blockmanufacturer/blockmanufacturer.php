@@ -128,6 +128,7 @@ class BlockManufacturer extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blockmanufacturer.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blockmanufacturer.css', 'all');
 	}	
 }

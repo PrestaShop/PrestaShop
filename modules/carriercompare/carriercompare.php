@@ -56,8 +56,9 @@ class CarrierCompare extends Module
 		$fileName = explode(DIRECTORY_SEPARATOR, $_SERVER['PHP_SELF']);
 		if ($fileName[(sizeof($fileName)-1)] != 'order.php')
 			return;
-		Tools::addCSS(($this->_path).'style.css', 'all');
-		Tools::addJS(($this->_path).'carriercompare.js');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'style.css', 'all');
+		$context->controller->addJS(($this->_path).'carriercompare.js');
 	}
 
 	/*

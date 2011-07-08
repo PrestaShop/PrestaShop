@@ -81,10 +81,11 @@ class BlockLayered extends Module
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
 		if ($id_parent == 1)
 			return;
-		Tools::addJS(($this->_path).'blocklayered.js');
-		Tools::addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
-		Tools::addCSS(($this->_path).'blocklayered.css', 'all');
-		Tools::addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addJS(($this->_path).'blocklayered.js');
+		$context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
+		$context->controller->addCSS(($this->_path).'blocklayered.css', 'all');
+		$context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
 		
 	}
 		

@@ -80,22 +80,23 @@ class BlockSearch extends Module
 	 */
 	private function _hookCommon($params)
 	{
-		global $smarty;
-		$smarty->assign('ENT_QUOTES', ENT_QUOTES);
-		$smarty->assign('search_ssl', (int)(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
+		$context = Context::getContext();
+
+		$context->controller->smarty->assign('ENT_QUOTES', ENT_QUOTES);
+		$context->controller->smarty->assign('search_ssl', (int)(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
 		
 		$ajaxSearch=(int)(Configuration::get('PS_SEARCH_AJAX'));
-		$smarty->assign('ajaxsearch', $ajaxSearch);
+		$context->controller->smarty->assign('ajaxsearch', $ajaxSearch);
 
 		$instantSearch = (int)(Configuration::get('PS_INSTANT_SEARCH'));
-		$smarty->assign('instantsearch', $instantSearch);
+		$context->controller->smarty->assign('instantsearch', $instantSearch);
 		if ($ajaxSearch)
 		{
-			Tools::addCSS(_PS_CSS_DIR_.'jquery.autocomplete.css');
-			Tools::addJS(_PS_JS_DIR_.'jquery/jquery.autocomplete.js');
+			$context->controller->addCSS(_PS_CSS_DIR_.'jquery.autocomplete.css');
+			$context->controller->addJS(_PS_JS_DIR_.'jquery/jquery.autocomplete.js');
 		}
-		Tools::addCSS(_THEME_CSS_DIR_.'product_list.css');
-		Tools::addCSS(($this->_path).'blocksearch.css', 'all');
+		$context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
+		$context->controller->addCSS(($this->_path).'blocksearch.css', 'all');
 		return true;
 	}
 }
