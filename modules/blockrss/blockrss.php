@@ -160,8 +160,7 @@ class Blockrss extends Module
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockrss.css', 'all');
+		Tools::addCSS(($this->_path).'blockrss.css', 'all');
 	}
 }
 

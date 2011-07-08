@@ -37,9 +37,8 @@ include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
 if (!$cookie->isLogged())
 	Tools::redirect('index.php?controller=authentication&back=modules/loyalty/loyalty-program.php');
 
-$context = Context::getContext();
-$context->controller->addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
-$context->controller->addJS(array(_PS_JS_DIR_.'jquery/jquery.dimensions.js',_PS_JS_DIR_.'jquery/jquery.cluetip.js'));
+Tools::addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
+Tools::addJS(array(_PS_JS_DIR_.'jquery/jquery.dimensions.js',_PS_JS_DIR_.'jquery/jquery.cluetip.js'));
 
 $customerPoints = (int)(LoyaltyModule::getPointsByCustomer((int)($cookie->id_customer)));
 

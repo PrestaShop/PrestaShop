@@ -74,8 +74,7 @@ class BlockUserInfo extends Module
 	
 	public function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockuserinfo.css', 'all');
+		Tools::addCSS(($this->_path).'blockuserinfo.css', 'all');
 	}
 }
 

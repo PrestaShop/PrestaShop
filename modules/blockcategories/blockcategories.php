@@ -323,9 +323,8 @@ class BlockCategories extends Module
 
 	public function hookHeader()
 	{
-		$context = Context::getContext();
-		$context->controller->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
-		$context->controller->addCSS(($this->_path).'blockcategories.css', 'all');
+		Tools::addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
+		Tools::addCSS(($this->_path).'blockcategories.css', 'all');
 	}
 
 	private function _clearBlockcategoriesCache()

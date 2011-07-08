@@ -52,10 +52,6 @@ class FrontControllerCore
 	public static $initialized = false;
 
 	protected static $currentCustomerGroups;
-	
-	public $css_files;
-	public $js_files;
-	public $nb_items_per_page;
 
 	public function __construct()
 	{
@@ -76,7 +72,7 @@ class FrontControllerCore
 
 	public function init()
 	{
-		global $smarty, $iso, $defaultCountry;
+		global $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files;
 
 		if (self::$initialized)
 			return;
@@ -85,8 +81,8 @@ class FrontControllerCore
 		$this->id_current_shop = (int)Shop::getCurrentShop();
 		$this->id_current_group_shop = (int)Shop::getCurrentGroupShop();
 
-		$this->css_files = array();
-		$this->js_files = array();
+		$css_files = array();
+		$js_files = array();
 
 		if ($this->ssl AND (empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off') AND Configuration::get('PS_SSL_ENABLED'))
 		{
@@ -325,29 +321,6 @@ class FrontControllerCore
 
 		$this->iso = $iso;
 		$this->setMedia();
-		
-		
-		//$defaultCountry
-		if (isset($cookie->id_customer) && (int)$cookie->id_customer)
-			$customer = new Customer($cookie->id_customer);
-		else
-			$customer = new Customer();
-		
-		if($cookie->id_country)
-			$customer->geoloc_id_country = (int)$cookie->id_country;
-		if($cookie->id_state)
-			$customer->geoloc_id_state = (int)$cookie->id_state;
-		if($cookie->postcode)
-			$customer->geoloc_postcode = (int)$cookie->postcode;
-		
-		$context = Context::getContext();
-		$context->customer = $customer;
-		$context->cart = $cart;
-		$context->link = $link;
-		$context->cookie = $cookie;
-		$context->currency = $currency;
-		$context->controller = $this;
-		$context->language = $ps_language;
 	}
 
 	/* Display a maintenance page if shop is closed */
@@ -458,16 +431,16 @@ class FrontControllerCore
 	{
 		global $cookie;
 
-		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
-		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery-1.4.4.min.js', _PS_JS_DIR_.'jquery/jquery.easing.1.3.js', _PS_JS_DIR_.'tools.js'));
+		Tools::addCSS(_THEME_CSS_DIR_.'global.css', 'all');
+		Tools::addJS(array(_PS_JS_DIR_.'jquery/jquery-1.4.4.min.js', _PS_JS_DIR_.'jquery/jquery.easing.1.3.js', _PS_JS_DIR_.'tools.js'));
 		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
-			$this->addJS(array(
+			Tools::addJS(array(
 							_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js',
 							_PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js',
 							_PS_JS_DIR_.'hookLiveEdit.js')
 							);
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css');
+			Tools::addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css');
 		}
 	}
 
@@ -483,6 +456,8 @@ class FrontControllerCore
 
 	public function displayHeader()
 	{
+		global $css_files, $js_files;
+
 		if (!self::$initialized)
 			$this->init();
 
@@ -510,15 +485,15 @@ class FrontControllerCore
 		{
 			// CSS compressor management
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
-				$this->css_files = Tools::cccCSS($this->css_files);
+				Tools::cccCss();
 
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Tools::cccJs($this->js_files);
+				Tools::cccJs();
 		}
 
-		self::$smarty->assign('css_files', $this->css_files);
-		self::$smarty->assign('js_files', array_unique($this->js_files));
+		self::$smarty->assign('css_files', $css_files);
+		self::$smarty->assign('js_files', array_unique($js_files));
 		self::$smarty->display(_PS_THEME_DIR_.'header.tpl');
 	}
 
@@ -638,98 +613,5 @@ class FrontControllerCore
 					$allowed = true;
 		return $allowed;
 	}
-	
-	/**
-	 * addCSS allows you to add stylesheet at any time.
-	 *
-	 * @param mixed $css_uri
-	 * @param string $css_media_type
-	 * @return true
-	 */
-	public function addCSS($css_uri, $css_media_type = 'all')
-	{
-		if (is_array($css_uri))
-		{
-			foreach ($css_uri as $file => $media_type)
-				$this->addCSS($file, $media_type);
-			return true;
-		}
-		
-		//overriding of modules css files
-		$different = 0;
-		$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
-		if ($different && file_exists($override_path))
-			$css_uri = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
-		else
-		{
-			// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-			$url_data = parse_url($css_uri);
-			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-			// check if css files exists
-			if (!file_exists($file_uri))
-				return true;
-		}
-
-		// detect mass add
-		$css_uri = array($css_uri => $css_media_type);
-
-		// adding file to the big array...
-		if (is_array($this->css_files))
-			$this->css_files = array_merge($this->css_files, $css_uri);
-		else
-			$this->css_files = $css_uri;
-
-		return true;
-	}
-	
-	/**
-	 * addJS load a javascript file in the header
-	 *
-	 * @param mixed $js_uri
-	 * @return void
-	 */
-	public static function addJS($js_uri)
-	{
-		if(!isset($this->js_files))
-			$this->js_files = array();
-		// avoid useless operation...
-		if (in_array($js_uri, $this->js_files))
-			return true;
-
-		// detect mass add
-		if (!is_array($js_uri) && !in_array($js_uri, $this->js_files))
-			$js_uri = array($js_uri);
-		else
-			foreach($js_uri as $key => $js)
-				if (in_array($js, $this->js_files))
-					unset($js_uri[$key]);
-
-		//overriding of modules js files
-		foreach ($js_uri AS $key => &$file)
-		{
-			if (!preg_match('/^http(s?):\/\//i', $file))
-			{
-				$different = 0;
-				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				if ($different && file_exists($override_path))
-					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				else
-				{
-					// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-					$url_data = parse_url($file);
-					$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-					// check if js files exists
-					if (!file_exists($file_uri))
-						unset($js_uri[$key]);
-				}
-			}
-		}
-
-		// adding file to the big array...
-		$this->js_files = array_merge($this->js_files, $js_uri);
-
-		return true;
-	}
-	
 }
 
