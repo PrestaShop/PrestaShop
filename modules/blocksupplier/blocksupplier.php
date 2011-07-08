@@ -133,7 +133,8 @@ class BlockSupplier extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blocksupplier.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blocksupplier.css', 'all');
 	}
 }
 

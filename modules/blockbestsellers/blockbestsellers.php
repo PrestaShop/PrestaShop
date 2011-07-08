@@ -120,13 +120,13 @@ class BlockBestSellers extends Module
 	{
 		return $this->hookRightColumn($params);
 	}
-	
 
 	public function hookHeader($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		Tools::addCSS(($this->_path).'blockbestsellers.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blockbestsellers.css', 'all');
 	}
 }
 

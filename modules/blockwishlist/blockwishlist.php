@@ -171,7 +171,8 @@ class BlockWishList extends Module
 	
 	public function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blockwishlist.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
 		return $this->display(__FILE__, 'blockwishlist-header.tpl');
 	}
 

@@ -86,7 +86,8 @@ class BlockMyAccount extends Module
 	}
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blockmyaccount.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blockmyaccount.css', 'all');
 	}
 }
 

@@ -290,17 +290,17 @@ class ProductCore extends ObjectModel
 
 	public	function __construct($id_product = NULL, $full = false, $id_lang = NULL, $id_shop = NULL)
 	{
-		global $cart;
-
 		parent::__construct($id_product, $id_lang, $id_shop);
+		$context = Context::getContext();
+		
 		if ($full AND $this->id)
 		{
 			$this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
 			$this->manufacturer_name = Manufacturer::getNameById((int)$this->id_manufacturer);
 			$this->supplier_name = Supplier::getNameById((int)$this->id_supplier);
 			self::$_tax_rules_group[$this->id] = $this->id_tax_rules_group;
-			if (is_object($cart) AND $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != NULL)
-				$this->tax_rate = Tax::getProductTaxRate($this->id, $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			if (is_object($context->cart) AND $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != NULL)
+				$this->tax_rate = Tax::getProductTaxRate($this->id, $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			else
 				$this->tax_rate = Tax::getProductTaxRate($this->id, NULL);
 			$this->new = $this->isNew();
@@ -412,30 +412,22 @@ class ProductCore extends ObjectModel
 		return $fields;
 	}
 
-	public static function initPricesComputation($id_customer = NULL)
+	public static function initPricesComputation($customer = NULL)
 	{
-		global $cookie;
-
-		if ($id_customer)
+		if ($customer)
 		{
-			$customer = new Customer((int)($id_customer));
 			if (!Validate::isLoadedObject($customer))
 				die(Tools::displayError());
-			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
-		}
-		elseif ($cookie->id_customer)
-		{
-			$customer = new Customer((int)($cookie->id_customer));
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
 		}
 		else
 			self::$_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
 	}
 
-	public static function getTaxCalculationMethod($id_customer = NULL)
+	public static function getTaxCalculationMethod($customer = NULL)
 	{
-		if ($id_customer)
-			self::initPricesComputation((int)($id_customer));
+		if ($customer)
+			self::initPricesComputation((int)($customer));
 		return (int)(self::$_taxCalculationMethod);
 	}
 
@@ -1455,15 +1447,15 @@ class ProductCore extends ObjectModel
 		return Product::getProductsProperties((int)$id_lang, $result);
 	}
 
-	static protected function _getProductIdByDate($beginning, $ending)
+	static protected function _getProductIdByDate($beginning, $ending, $context = null)
 	{
-		global $cookie, $cart;
+		if (!$context)
+			$context = Context::getContext();
 
-		$id_group = $cookie->id_customer ? (int)(Customer::getDefaultGroupId((int)($cookie->id_customer))) : _PS_DEFAULT_CUSTOMER_GROUP_;
-		$id_address = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+		$id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 		$ids = Address::getCountryAndState($id_address);
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-		return SpecificPrice::getProductIdByDate((int)(Shop::getCurrentShop()), (int)($cookie->id_currency), $id_country, $id_group, $beginning, $ending);
+		return SpecificPrice::getProductIdByDate(Shop::getCurrentShop(), $context->currency->id, $id_country, $context->customer->id_default_group, $beginning, $ending);
 	}
 
 	/**
@@ -1742,10 +1734,13 @@ class ProductCore extends ObjectModel
 	* @return float Product price
 	*/
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = NULL, $decimals = 6, $divisor = NULL, $only_reduc = false,
-	$usereduc = true, $quantity = 1, $forceAssociatedTax = false, $id_customer = NULL, $id_cart = NULL, $id_address = NULL, &$specificPriceOutput = NULL, $with_ecotax = TRUE)
+	$usereduc = true, $quantity = 1, $forceAssociatedTax = false, $id_customer = NULL, $id_cart = NULL, $id_address = NULL, &$specificPriceOutput = NULL, 
+	$with_ecotax = TRUE, $context = null)
 	{
-   		global $cookie, $cart;
-        $cur_cart = $cart;
+		if (!$context)
+   			$context = Context::getContext();
+   			
+        $cur_cart = $context->cart;
 
         if (isset($divisor))
             Tools::displayParameterAsDeprecated('divisor');
@@ -1753,18 +1748,16 @@ class ProductCore extends ObjectModel
 		if (!Validate::isBool($usetax) OR !Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
 		// Initializations
-		if (!$id_customer)
-			$id_customer = ((Validate::isCookie($cookie) AND isset($cookie->id_customer) AND $cookie->id_customer) ? (int)($cookie->id_customer) : NULL);
-		$id_group = $id_customer ? (int)(Customer::getDefaultGroupId($id_customer)) : _PS_DEFAULT_CUSTOMER_GROUP_;
+		$id_group = $context->customer->id_default_group;
 		if (!is_object($cur_cart) OR (Validate::isUnsignedInt($id_cart) AND $id_cart))
 		{
 			/*
 			* When a user (e.g., guest, customer, Google...) is on PrestaShop, he has already its cart as the global (see /init.php)
 			* When a non-user calls directly this method (e.g., payment module...) is on PrestaShop, he does not have already it BUT knows the cart ID
 			*/
-			if (!$id_cart AND !Validate::isCookie($cookie))
+			if (!$id_cart)
 				die(Tools::displayError());
-			$cur_cart = $id_cart ? new Cart((int)($id_cart)) : new Cart((int)($cookie->id_cart));
+			$cur_cart = new Cart($id_cart);
 		}
 
 		if ((int)($id_cart))
@@ -1778,7 +1771,7 @@ class ProductCore extends ObjectModel
 			$cart_quantity = self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)];
 		}
 		$quantity = ($id_cart AND $cart_quantity) ? $cart_quantity : $quantity;
-		$id_currency = (int)(Validate::isLoadedObject($cur_cart) ? $cur_cart->id_currency : ((isset($cookie->id_currency) AND (int)($cookie->id_currency)) ? $cookie->id_currency : Configuration::get('PS_CURRENCY_DEFAULT')));
+		$id_currency = (int)(Validate::isLoadedObject($context->currency) ? $context->currency->id : Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		// retrieve address informations
 		$id_country = (int)Country::getDefaultCountryId();
@@ -1800,12 +1793,11 @@ class ProductCore extends ObjectModel
 				$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
 			}
 		}
-		elseif (isset($cookie->id_country))
+		elseif (isset($context->customer->geoloc_id_country))
 		{
-			// fetch address from cookie
-			$id_country = (int)$cookie->id_country;
-			$id_state = (int)$cookie->id_state;
-			$postcode = (int)$cookie->postcode;
+			$id_country = (int)$context->customer->geoloc_id_country;
+			$id_state = (int)$context->customer->id_state;
+			$postcode = (int)$context->customer->postcode;
 
 			$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
 		}
@@ -1952,20 +1944,17 @@ class ProductCore extends ObjectModel
 		return Tools::displayPrice(Tools::convertPrice($price, $currency), $currency);
 	}
 
-	public static function isDiscounted($id_product, $quantity = 1)
+	public static function isDiscounted($id_product, $quantity = 1, $context = null)
 	{
-		global $cookie, $cart;
-
-		$id_customer = ((Validate::isCookie($cookie) AND isset($cookie->id_customer) AND $cookie->id_customer) ? (int)($cookie->id_customer) : NULL);
-		$id_group = $id_customer ? (int)(Customer::getDefaultGroupId($id_customer)) : _PS_DEFAULT_CUSTOMER_GROUP_;
-		$cart_quantity = !$cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		$id_group = $context->customer->id_default_group;
+		$cart_quantity = !$context->cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(`quantity`)
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE `id_product` = '.(int)($id_product).' AND `id_cart` = '.(int)($cart->id)
+			WHERE `id_product` = '.(int)($id_product).' AND `id_cart` = '.(int)($context->cart->id)
 		);
 		$quantity = $cart_quantity ? $cart_quantity : $quantity;
-		$id_currency = (int)(Validate::isLoadedObject($cart) ? $cart->id_currency : ((isset($cookie->id_currency) AND (int)($cookie->id_currency)) ? $cookie->id_currency : Configuration::get('PS_CURRENCY_DEFAULT')));
-		$ids = Address::getCountryAndState((int)($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+		$id_currency = (int)$context->currency->id;
+		$ids = Address::getCountryAndState((int)($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
 		$id_shop = (int)(Shop::getCurrentShop());
 		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity);
@@ -2203,9 +2192,10 @@ class ProductCore extends ObjectModel
 		return $productObj->addStockMvt(-(int)$product['cart_quantity'], (int)_STOCK_MOVEMENT_ORDER_REASON_, (int)$product['id_product_attribute'], (int)$id_order, NULL);
 	}
 
-	public static function reinjectQuantities(&$orderDetail, $quantity)
+	public static function reinjectQuantities(&$orderDetail, $quantity, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		if (!Validate::isLoadedObject($orderDetail))
 			die(Tools::displayError());
 
@@ -2213,12 +2203,12 @@ class ProductCore extends ObjectModel
 		{
 			$products_pack = Pack::getItems((int)($orderDetail->product_id), (int)(Configuration::get('PS_LANG_DEFAULT')));
 			foreach($products_pack AS $product_pack)
-				if (!$product_pack->addStockMvt((int)($product_pack->pack_quantity * $quantity), _STOCK_MOVEMENT_ORDER_REASON_, (int)$product_pack->id_product_attribute, (int)$orderDetail->id_order, (int)$cookie->id_employee))
+				if (!$product_pack->addStockMvt((int)($product_pack->pack_quantity * $quantity), _STOCK_MOVEMENT_ORDER_REASON_, (int)$product_pack->id_product_attribute, (int)$orderDetail->id_order, (int)$context->employee->id))
 					return false;
 		}
 
 		$product = new Product((int)$orderDetail->product_id);
-		if (!$product->addStockMvt((int)$quantity, _STOCK_MOVEMENT_ORDER_REASON_, (int)$orderDetail->product_attribute_id, (int)$orderDetail->id_order, (int)$cookie->id_employee))
+		if (!$product->addStockMvt((int)$quantity, _STOCK_MOVEMENT_ORDER_REASON_, (int)$orderDetail->product_attribute_id, (int)$orderDetail->id_order, (int)$context->employee->id))
 			return false;
 
 		$orderDetail->product_quantity_reinjected += (int)($quantity);
@@ -2346,9 +2336,7 @@ class ProductCore extends ObjectModel
 	* @return array Product accessories
 	*/
 	public function getAccessories($id_lang, $active = true, $id_shop = false)
-	{
-		global	$link, $cookie;
-		
+	{	
 		if (!$id_shop)
 			$id_shop_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
 		else
@@ -2751,10 +2739,11 @@ class ProductCore extends ObjectModel
 	/**
 	* Get the link of the product page of this product
 	*/
-	public function getLink()
+	public function getLink($context = null)
 	{
-		global $link;
-		return $link->getProductLink($this);
+		if (!$context)
+   			$context = Context::getContext();
+		return $context->link->getProductLink($this);
 	}
 
 	public function getTags($id_lang)
@@ -2890,19 +2879,16 @@ class ProductCore extends ObjectModel
 	** Customization management
 	*/
 
-	public static function getAllCustomizedDatas($id_cart, $id_lang = null)
+	public static function getAllCustomizedDatas($id_cart, $id_lang = null, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+    		$context = Context::getContext();
+
 		// No need to query if there isn't any real cart!
 		if (!$id_cart)
 			return false;
-		if (!$id_lang AND !is_null($cookie) AND $cookie->id_lang)
-			$id_lang = $cookie->id_lang;
-		else
-		{
-			$cart = new Cart((int)($id_cart));
-			$id_lang = (int)($cart->id_lang);
-		}
+		if (!$id_lang)
+			$id_lang = $context->language->id;
 
 		if (!$result = Db::getInstance()->ExecuteS('
 			SELECT cd.`id_customization`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`, cd.`type`, cd.`index`, cd.`value`, cfl.`name`
@@ -2924,34 +2910,6 @@ class ProductCore extends ObjectModel
 			$customizedDatas[(int)($row['id_product'])][(int)($row['id_product_attribute'])][(int)($row['id_customization'])]['quantity_returned'] = (int)($row['quantity_returned']);
 		}
 		return $customizedDatas;
-	}
-
-
-	/**
-	 * @param int $id_customization
-	 * @return bool
-	 * @deprecated
-	 */
-	public function deleteCustomizedDatas($id_customization)
-	{
-		Tools::displayAsDeprecated();
-		if (Pack::isPack((int)($product['id_product'])))
-		{
-			$products_pack = Pack::getItems((int)($product['id_product']), (int)(Configuration::get('PS_LANG_DEFAULT')));
-			foreach($products_pack AS $product_pack)
-			{
-				$tab_product_pack['id_product'] = (int)($product_pack->id);
-				$tab_product_pack['id_product_attribute'] = self::getDefaultAttribute($tab_product_pack['id_product'], 1);
-				$tab_product_pack['cart_quantity'] = (int)($product_pack->pack_quantity * $product['cart_quantity']);
-				self::updateQuantity($tab_product_pack);
-			}
-		}
-		if (($result = Db::getInstance()->ExecuteS('SELECT `value` FROM `'._DB_PREFIX_.'customized_data` WHERE `id_customization` = '.(int)($id_customization).' AND `type` = '._CUSTOMIZE_FILE_)) === false)
-			return false;
-		foreach ($result AS $row)
-			if (!@unlink(_PS_UPLOAD_DIR_.$row['value']) OR !@unlink(_PS_UPLOAD_DIR_.$row['value'].'_small'))
-				return false;
-		return (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)($id_customization)) AND Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customized_data` WHERE `id_customization` = '.(int)($id_customization)));
 	}
 
 	public static function addCustomizationPrice(&$products, &$customizedDatas)

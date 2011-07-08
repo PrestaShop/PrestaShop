@@ -78,7 +78,8 @@ class BlockPermanentLinks extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blockpermanentlinks.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blockpermanentlinks.css', 'all');
 	}
 }
 

@@ -313,6 +313,7 @@ class Editorial extends Module
 	
 	public function hookHeader()
 	{
-		Tools::addCSS(($this->_path).'editorial.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'editorial.css', 'all');
 	}
 }
