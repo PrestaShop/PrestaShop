@@ -683,7 +683,8 @@ abstract class ObjectModelCore
 		{
 			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.$this->table.'_'.$assoc[$this->table]['type'].'` AS multi_shop_'.$this->table.' ON (main.'.$this->identifier.' = '.'multi_shop_'.$this->table.'.'.$this->identifier.')';
 			$class_name = WebserviceRequest::$ws_current_classname;
-			foreach ($class_name::$shopIDs as $id_shop)
+			$vars = get_class_vars($classname);
+			foreach ($vars['shopIDs'] as $id_shop)
 				$OR[] = ' multi_shop_'.$this->table.'.id_shop = '.$id_shop.' ';
 			$multi_shop_filter = ' AND ('.implode('OR', $OR).') ';
 			$sql_filter = $multi_shop_filter.' '.$sql_filter;
