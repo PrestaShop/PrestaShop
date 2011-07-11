@@ -1109,16 +1109,16 @@ class shopimporter extends ImportModule
 		return true;
 	}
 
-	public function cleanPositions($table)
+	public function cleanPositions($table, $shopList = null)
 	{
-		if($table == 'category')
+		if ($table == 'category')
 		{
 			//clean category position
 			$cat = Category::getCategories(1, false, false);
 			foreach($cat AS $i => $categ)
 				Category::cleanPositions((int)($categ['id_category']));
 		}
-		if($table == 'product')
+		if ($table == 'product')
 		{
 			//clean products position
 			$cat = Category::getCategories(1, false, false);

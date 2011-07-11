@@ -53,13 +53,13 @@ class VatNumber extends Module
 		return (parent::uninstall() AND Configuration::updateValue('VATNUMBER_MANAGEMENT', 0));
 	}
 	
-	public function enable()
+	public function enable($forceAll = false)
 	{
 		parent::enable();
 		Configuration::updateValue('VATNUMBER_MANAGEMENT', 1);
 	}
 	
-	public function disable()
+	public function disable($forceAll = false)
 	{
 		parent::disable();
 		Configuration::updateValue('VATNUMBER_MANAGEMENT', 0);
