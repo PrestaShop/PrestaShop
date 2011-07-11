@@ -290,7 +290,7 @@ abstract class ModuleCore
 	{
 		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop 
 				WHERE id_module = '.$this->id.'
-					'.((!$foreAll) ? ' AND id_shop IN('.implode(', ', Shop::getListOfID($this->shopID, $this->shopGroupID)).')' : '');
+					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', Shop::getListOfID($this->shopID, $this->shopGroupID)).')' : '');
 		Db::getInstance()->execute($sql);
 	}
 
