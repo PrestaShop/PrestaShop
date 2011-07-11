@@ -40,21 +40,21 @@ class OrderSlipControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'history.css');
-		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
-		Tools::addJS(array(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js',_THEME_JS_DIR_.'history.js'));
+		$this->addCSS(_THEME_CSS_DIR_.'history.css');
+		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js',_THEME_JS_DIR_.'history.js'));
 	}
 	
 	public function process()
 	{
 		parent::process();
-		self::$smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)(self::$cookie->id_customer)));
+		$this->smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)(self::$cookie->id_customer)));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-slip.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'order-slip.tpl');
 	}
 }
 

@@ -76,31 +76,31 @@ class OrderFollowControllerCore extends FrontController
 
 		$ordersReturn = OrderReturn::getOrdersReturn((int)(self::$cookie->id_customer));
 		if (Tools::isSubmit('errorQuantity'))
-			self::$smarty->assign('errorQuantity', true);
+			$this->smarty->assign('errorQuantity', true);
 		elseif (Tools::isSubmit('errorMsg'))
-			self::$smarty->assign('errorMsg', true);
+			$this->smarty->assign('errorMsg', true);
 		elseif (Tools::isSubmit('errorDetail1'))
-			self::$smarty->assign('errorDetail1', true);
+			$this->smarty->assign('errorDetail1', true);
 		elseif (Tools::isSubmit('errorDetail2'))
-			self::$smarty->assign('errorDetail2', true);
+			$this->smarty->assign('errorDetail2', true);
 		elseif (Tools::isSubmit('errorNotReturnable'))
-			self::$smarty->assign('errorNotReturnable',true);
+			$this->smarty->assign('errorNotReturnable',true);
 
-		self::$smarty->assign('ordersReturn', $ordersReturn);
+		$this->smarty->assign('ordersReturn', $ordersReturn);
 	}
 	
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'history.css');
-		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
-		Tools::addJS(array(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js', _THEME_JS_DIR_.'history.js'));
+		$this->addCSS(_THEME_CSS_DIR_.'history.css');
+		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js', _THEME_JS_DIR_.'history.js'));
 	}
 
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-follow.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'order-follow.tpl');
 	}
 }
 

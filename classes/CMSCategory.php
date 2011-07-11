@@ -177,8 +177,11 @@ class CMSCategoryCore extends ObjectModel
 		);
 	}
 
-	static public function getRecurseCategory($id_lang = _USER_ID_LANG_, $current = 1, $active = 1, $links = 0, $id_shop = false)
+	static public function getRecurseCategory($id_lang = _USER_ID_LANG_, $current = 1, $active = 1, $links = 0, $id_shop = false, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+			
 		$category = Db::getInstance()->getRow('
 		SELECT c.`id_cms_category`, c.`id_parent`, c.`level_depth`, cl.`name`, cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'cms_category` c
@@ -203,10 +206,9 @@ class CMSCategoryCore extends ObjectModel
 		ORDER BY c.`position`');
 		if ($links == 1)
 		{
-			$link = new Link();
 			$category['link'] = $link->getCMSCategoryLink($current, $category['link_rewrite']);
 			foreach($category['cms'] as $key => $cms)
-				$category['cms'][$key]['link'] = $link->getCMSLink($cms['id_cms'], $cms['link_rewrite']);
+				$category['cms'][$key]['link'] = $context->link->getCMSLink($cms['id_cms'], $cms['link_rewrite']);
 		}
 		return $category;
 	}

@@ -35,7 +35,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	{
 		parent::preProcess();
 		if ($this->nbProducts)
-			self::$smarty->assign('virtual_cart', false);
+			$this->smarty->assign('virtual_cart', false);
 		$this->isLogged = (bool)((int)(self::$cookie->id_customer) AND Customer::customerIdExistsStatic((int)(self::$cookie->id_customer)));
 		
 		if (self::$cart->nbProducts())
@@ -122,7 +122,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									include_once(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php');
 									$blockUserInfo = new BlockUserInfo();
 								}
-								self::$smarty->assign('isVirtualCart', self::$cart->isVirtualCart());
+								$this->smarty->assign('isVirtualCart', self::$cart->isVirtualCart());
 								$this->_processAddressFormat();
 								$this->_assignAddress();
 								// Wrapping fees
@@ -131,7 +131,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
 								$return = array(
 									'summary' => self::$cart->getSummaryDetails(),
-									'order_opc_adress' => self::$smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
+									'order_opc_adress' => $this->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookTop(array()) : ''),
 									'carrier_list' => $this->_getCarrierList(),
 									'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
@@ -218,11 +218,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		parent::setMedia();
 		
 		// Adding CSS style sheet
-		Tools::addCSS(_THEME_CSS_DIR_.'order-opc.css');
+		$this->addCSS(_THEME_CSS_DIR_.'order-opc.css');
 		// Adding JS files
-		Tools::addJS(_THEME_JS_DIR_.'order-opc.js');
-		Tools::addJs(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
-		Tools::addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
+		$this->addJS(_THEME_JS_DIR_.'order-opc.js');
+		$this->addJS(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
+		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 	
 	public function process()
@@ -234,7 +234,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
 		$countries = Country::getCountries((int)(self::$cookie->id_lang), true);
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'isLogged' => $this->isLogged,
 			'isGuest' => isset(self::$cookie->is_guest) ? self::$cookie->is_guest : 0,
 			'countries' => $countries,
@@ -247,7 +247,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$years = Tools::dateYears();
 		$months = Tools::dateMonths();
 		$days = Tools::dateDays();
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'years' => $years,
 			'months' => $months,
 			'days' => $days,
@@ -255,7 +255,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		
 		/* Load guest informations */
 		if ($this->isLogged AND self::$cookie->is_guest)
-			self::$smarty->assign('guestInformations', $this->_getGuestInformations());
+			$this->smarty->assign('guestInformations', $this->_getGuestInformations());
 		
 		if ($this->isLogged)
 			$this->_assignAddress(); // ADDRESS
@@ -265,7 +265,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->_assignPayment();
 		Tools::safePostVars();
 		
-		self::$smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$this->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
 	
 	public function displayHeader()
@@ -279,7 +279,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		parent::displayContent();
 	
 		$this->_processAddressFormat();
-		self::$smarty->display(_PS_THEME_DIR_.'order-opc.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'order-opc.tpl');
 	}
 	
 	public function displayFooter()
@@ -330,7 +330,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->isLogged)
 		{
 			$carriers = Carrier::getCarriersForOrder(Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT')));
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 				'checked' => $this->_setDefaultCarrierSelection($carriers),
 				'carriers' => $carriers,
 				'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
@@ -344,7 +344,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	
 	protected function _assignPayment()
 	{
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 		    'HOOK_TOP_PAYMENT' => ($this->isLogged ? Module::hookExec('paymentTop') : ''),
 			'HOOK_PAYMENT' => $this->_getPaymentMethods()
 		));
@@ -448,8 +448,8 @@ class OrderOpcControllerCore extends ParentOrderController
 				foreach(explode(' ',$fields_line) as $field_item)
 					${$adr_type.'_all_fields'}[] = trim($field_item);
 
-			self::$smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
-			self::$smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
+			$this->smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
+			$this->smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
 
 		}
 	}

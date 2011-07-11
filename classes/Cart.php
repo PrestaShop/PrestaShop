@@ -72,6 +72,10 @@ class CartCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
+	public 		$checkedTos = false;
+	public		$pictures;
+	public		$textFields;
+	
 	protected static $_nbProducts = array();
 	protected static $_isVirtualCart = array();
 

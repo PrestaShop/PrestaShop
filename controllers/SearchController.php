@@ -43,11 +43,10 @@ class SearchControllerCore extends FrontController
 	public function preProcess()
 	{
 		parent::preProcess();
-		
+
 		$query = urldecode(Tools::getValue('q'));
 		if ($this->ajaxSearch)
 		{
-			self::$link = new Link();
 			$searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true, true, (int)$this->id_current_shop);
 			foreach ($searchResults AS &$product)
 				$product['product_link'] = self::$link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
@@ -63,7 +62,7 @@ class SearchControllerCore extends FrontController
 			Module::hookExec('search', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 			'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 			'search_products' => $search['result'],
 			'nbProducts' => $search['total'],
@@ -80,7 +79,7 @@ class SearchControllerCore extends FrontController
 			Module::hookExec('search', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 			'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 			'search_products' => $search['result'],
 			'nbProducts' => $search['total'],
@@ -93,7 +92,7 @@ class SearchControllerCore extends FrontController
 			$this->pagination($nbProducts);
 			$result = Search::searchTag((int)(self::$cookie->id_lang), $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay, false, true, (int)$this->id_current_shop);
 			Module::hookExec('search', array('expr' => $tag, 'total' => sizeof($result)));
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 			'search_tag' => $tag,
 			'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 			'search_products' => $result,
@@ -102,13 +101,13 @@ class SearchControllerCore extends FrontController
 		}
 		else
 		{
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 			'products' => array(),
 			'search_products' => array(),
 			'pages_nb' => 1,
 			'nbProducts' => 0));
 		}
-		self::$smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
+		$this->smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
 	}
 	
 	public function displayHeader()
@@ -116,13 +115,13 @@ class SearchControllerCore extends FrontController
 		if (!$this->instantSearch AND !$this->ajaxSearch)
 			parent::displayHeader();
 		else
-			self::$smarty->assign('static_token', Tools::getToken(false));
+			$this->smarty->assign('static_token', Tools::getToken(false));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'search.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'search.tpl');
 	}
 	
 	public function displayFooter()
@@ -136,7 +135,7 @@ class SearchControllerCore extends FrontController
 		parent::setMedia();
 		
 		if (!$this->instantSearch AND !$this->ajaxSearch)
-			Tools::addCSS(_THEME_CSS_DIR_.'product_list.css');
+			$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 }
 

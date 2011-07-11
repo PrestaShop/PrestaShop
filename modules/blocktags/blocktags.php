@@ -119,7 +119,8 @@ class BlockTags extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blocktags.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blocktags.css', 'all');
 	}
 
 }

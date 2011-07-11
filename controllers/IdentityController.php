@@ -84,7 +84,7 @@ class IdentityControllerCore extends FrontController
 					{
 						self::$cookie->customer_lastname = $customer->lastname;
 						self::$cookie->customer_firstname = $customer->firstname;
-						self::$smarty->assign('confirmation', 1);
+						$this->smarty->assign('confirmation', 1);
 					}
 					else
 						$this->errors[] = Tools::displayError('Cannot update information');
@@ -100,7 +100,7 @@ class IdentityControllerCore extends FrontController
 			$birthday = array('-', '-', '-');
 
 		/* Generate years, months and days */
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'years' => Tools::dateYears(),
 			'sl_year' => $birthday[0],
 			'months' => Tools::dateMonths(),
@@ -110,19 +110,19 @@ class IdentityControllerCore extends FrontController
 			'errors' => $this->errors
 		));
 		
-		self::$smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$this->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
 	
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'identity.css');
+		$this->addCSS(_THEME_CSS_DIR_.'identity.css');
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'identity.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'identity.tpl');
 	}
 }
 

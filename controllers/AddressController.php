@@ -47,9 +47,9 @@ class AddressControllerCore extends FrontController
 		parent::preProcess();
 		
 		if ($back = Tools::getValue('back'))
-			self::$smarty->assign('back', Tools::safeOutput($back));
+			$this->smarty->assign('back', Tools::safeOutput($back));
 		if ($mod = Tools::getValue('mod'))
-			self::$smarty->assign('mod', Tools::safeOutput($mod));
+			$this->smarty->assign('mod', Tools::safeOutput($mod));
 		
 		if (Tools::isSubmit('ajax') AND Tools::isSubmit('type'))
 		{
@@ -78,7 +78,7 @@ class AddressControllerCore extends FrontController
 						Tools::redirect('index.php?controller=addresses');
 					$this->errors[] = Tools::displayError('This address cannot be deleted.');
 				}
-				self::$smarty->assign(array('address' => $this->_address, 'id_address' => (int)$id_address));
+				$this->smarty->assign(array('address' => $this->_address, 'id_address' => (int)$id_address));
 			}
 			elseif (Tools::isSubmit('ajax'))
 				exit;
@@ -222,7 +222,7 @@ class AddressControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
+		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 	
 	public function process()
@@ -252,17 +252,17 @@ class AddressControllerCore extends FrontController
 			$countriesList .= '<option value="'.(int)($country['id_country']).'" '.($country['id_country'] == $selectedCountry ? 'selected="selected"' : '').'>'.htmlentities($country['name'], ENT_COMPAT, 'UTF-8').'</option>';
 
 		if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-			self::$smarty->assign('vat_display', 2);
+			$this->smarty->assign('vat_display', 2);
 		else if(Configuration::get('VATNUMBER_MANAGEMENT'))
-			self::$smarty->assign('vat_display', 1);
+			$this->smarty->assign('vat_display', 1);
 		else
-			self::$smarty->assign('vat_display', 0);
+			$this->smarty->assign('vat_display', 0);
 
-		self::$smarty->assign('ajaxurl', _MODULE_DIR_);
+		$this->smarty->assign('ajaxurl', _MODULE_DIR_);
 		
-		self::$smarty->assign('vatnumber_ajax_call', (int)file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'));
+		$this->smarty->assign('vatnumber_ajax_call', (int)file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'));
 		
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'countries_list' => $countriesList,
 			'countries' => $countries,
 			'errors' => $this->errors,
@@ -277,7 +277,7 @@ class AddressControllerCore extends FrontController
 		$id_country = is_null($this->_address)? 0 : (int)$this->_address->id_country;
 
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, $split_all = true);
-		self::$smarty->assign('ordered_adr_fields', $dlv_adr_fields);
+		$this->smarty->assign('ordered_adr_fields', $dlv_adr_fields);
 	}
 	
 	public function displayHeader()
@@ -291,7 +291,7 @@ class AddressControllerCore extends FrontController
 		parent::displayContent();
 
 		$this->_processAddressFormat();
-		self::$smarty->display(_PS_THEME_DIR_.'address.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'address.tpl');
 	}
 	
 	public function displayFooter()

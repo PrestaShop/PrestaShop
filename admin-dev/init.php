@@ -35,14 +35,11 @@ if (isset($_GET['logout']))
 
 if (!$cookie->isLoggedBack())
 {
-	
 	$destination = substr($_SERVER['REQUEST_URI'], strlen(dirname($_SERVER['SCRIPT_NAME'])) + 1);
 	Tools::redirectAdmin('login.php'.(empty($destination) || ($destination == 'index.php?logout') ? '' : '?redirect='.$destination));
 }
 else
 {
-	$link = new Link();
-
 	$currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
 	if ($back = Tools::getValue('back'))
 		$currentIndex .= '&back='.urlencode($back);
@@ -50,12 +47,14 @@ else
 	/* Server Params */
 	$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 	$protocol_content = (isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+	$link = new Link($protocol_link, $protocol_content);
 	define('_PS_BASE_URL_', Tools::getShopDomain(true));
 	define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 	$employee = new Employee((int)$cookie->id_employee);
 	$cookie->id_lang = (int)$employee->id_lang;
-	$iso = strtolower(Language::getIsoById($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT')));
+	$language = new Language($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
+	$iso = $language->iso_code;
 	include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 	include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
 	include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
@@ -90,4 +89,10 @@ else
 		unset($parseQuery['setShopContext']);
 		Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery));
 	}
+	
+	$context = Context::getContext();
+	$context->employee = $employee;
+	$context->cookie = $cookie;
+	$context->link = $link;
+	$context->language = $language;
 }

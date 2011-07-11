@@ -114,7 +114,7 @@ class OrderDetailControllerCore extends FrontController
 				$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
 
 				if ($order->total_discounts > 0)
-					self::$smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
+					$this->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
 				$products = $order->getProducts();
 
 				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
@@ -122,7 +122,7 @@ class OrderDetailControllerCore extends FrontController
 
 				$customer = new Customer($order->id_customer);
 
-				self::$smarty->assign(array(
+				$this->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
 					'return_allowed' => (int)($order->isReturnable()),
@@ -150,8 +150,8 @@ class OrderDetailControllerCore extends FrontController
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 					'customizedDatas' => $customizedDatas));
 				if ($carrier->url AND $order->shipping_number)
-					self::$smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-				self::$smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
+					$this->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
+				$this->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
 				Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
 				
 				unset($carrier);
@@ -173,7 +173,7 @@ class OrderDetailControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-detail.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'order-detail.tpl');
 	}
 
 	public function displayFooter()

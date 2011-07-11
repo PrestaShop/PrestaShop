@@ -318,21 +318,20 @@ class MailAlerts extends Module
 			$this->sendCustomerAlert((int)$result['id_product'], (int)$params['id_product_attribute']);
 	}
 	
-	public function sendCustomerAlert($id_product, $id_product_attribute)
+	public function sendCustomerAlert($id_product, $id_product_attribute, $context = null)
 	{
-		global $cookie, $link;
-
-		$link = new Link();
+		if (!$context)
+			$context = Context::getContext();
 		
 		$customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT id_customer, customer_email
 		FROM `'._DB_PREFIX_.'mailalert_customer_oos`
 		WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
 		
-		$product = new Product((int)$id_product, false, (int)$cookie->id_lang);
+		$product = new Product((int)$id_product, false, (int)$context->language->id);
 		$templateVars = array(
 			'{product}' => (is_array($product->name) ? $product->name[(int)Configuration::get('PS_LANG_DEFAULT')] : $product->name),
-			'{product_link}' => $link->getProductLink($product)
+			'{product_link}' => $context->link->getProductLink($product)
 		);
 		foreach ($customers AS $cust)
 		{
@@ -347,9 +346,8 @@ class MailAlerts extends Module
 				$customer_email = $cust['customer_email'];
 				$customer_id = 0;
 			}
-			$id_lang = (is_object($cookie) AND isset($cookie->id_lang)) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
-			$iso = Language::getIsoById((int)$id_lang);
-			
+			$iso = $context->language->iso_code;
+
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.txt') AND file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.html'))
 				Mail::Send((int)(Configuration::get('PS_LANG_DEFAULT')), 'customer_qty', Mail::l('Product available'), $templateVars, strval($customer_email), NULL, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			if ($customer_id)

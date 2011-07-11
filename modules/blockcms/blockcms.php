@@ -131,16 +131,17 @@ class BlockCms extends Module
 		return array_merge($this->getBlocksCMS(self::LEFT_COLUMN), $this->getBlocksCMS(self::RIGHT_COLUMN));
 	}
 
-	static public function getCMStitlesFooter()
+	static public function getCMStitlesFooter($context = null)
 	{
-		global $cookie;
-		
+		if (!$context)
+			$context = Context::getContext();
+
 		$footerCms = Configuration::get('FOOTER_CMS');
 		if (empty($footerCms))
 			return array();
 		$cmsCategories = explode('|', $footerCms);
 		$content = array();
-		$link = new Link();
+
 		foreach ($cmsCategories AS $cmsCategory)
 		{
 			$ids = explode('_', $cmsCategory);
@@ -151,9 +152,9 @@ class BlockCms extends Module
 				FROM `'._DB_PREFIX_.'cms_category_lang` cl
 				INNER JOIN `'._DB_PREFIX_.'cms_category` c ON (cl.`id_cms_category` = c.`id_cms_category`)
 				WHERE cl.`id_cms_category` = '.(int)$ids[1].' AND (c.`active` = 1 OR c.`id_cms_category` = 1)
-				AND cl.`id_lang` = '.(int)$cookie->id_lang);
+				AND cl.`id_lang` = '.(int)$context->language->id);
 				
-				$content[$cmsCategory]['link'] = $link->getCMSCategoryLink((int)$ids[1], $query['link_rewrite']);
+				$content[$cmsCategory]['link'] = $context->link->getCMSCategoryLink((int)$ids[1], $query['link_rewrite']);
 				$content[$cmsCategory]['meta_title'] = $query['name'];
 			}
 			elseif (!$ids[0])
@@ -163,9 +164,9 @@ class BlockCms extends Module
 				FROM `'._DB_PREFIX_.'cms_lang` cl
 				INNER JOIN `'._DB_PREFIX_.'cms` c ON (cl.`id_cms` = c.`id_cms`)
 				WHERE cl.`id_cms` = '.(int)$ids[1].' AND c.`active` = 1
-				AND cl.`id_lang` = '.(int)$cookie->id_lang);
+				AND cl.`id_lang` = '.(int)$context->language->id);
 				
-				$content[$cmsCategory]['link'] = $link->getCMSLink((int)$ids[1], $query['link_rewrite']);
+				$content[$cmsCategory]['link'] = $context->link->getCMSLink((int)$ids[1], $query['link_rewrite']);
 				$content[$cmsCategory]['meta_title'] = $query['meta_title'];
 			}
 		}
@@ -173,9 +174,10 @@ class BlockCms extends Module
 		return $content;
 	}
 
-	static public function getCMStitles($location)
+	static public function getCMStitles($location, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
 		$id_current_shop = Shop::getCurrentShop();
 		$cmsCategories = Db::getInstance()->ExecuteS('
@@ -183,11 +185,11 @@ class BlockCms extends Module
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 		INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)($cookie->id_lang).' AND bcl.`id_lang` = '.(int)($cookie->id_lang).' AND bc.id_shop='.(int)$id_current_shop.'
+		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bc.id_shop='.(int)$id_current_shop.'
 		ORDER BY `position`');
 		
 		$content = array();
-		$link = new Link();
+
 		if (is_array($cmsCategories) AND sizeof($cmsCategories))
 			foreach ($cmsCategories AS $cmsCategory)
 			{
@@ -199,14 +201,14 @@ class BlockCms extends Module
 				FROM `'._DB_PREFIX_.'cms_block_page` bcp 
 				INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON (bcp.`id_cms` = cl.`id_cms`)
 				INNER JOIN `'._DB_PREFIX_.'cms` c ON (bcp.`id_cms` = c.`id_cms`)
-				WHERE bcp.`id_cms_block` = '.(int)$cmsCategory['id_cms_block'].' AND cl.`id_lang` = '.(int)$cookie->id_lang.' AND bcp.`is_category` = 0 AND c.`active` = 1
+				WHERE bcp.`id_cms_block` = '.(int)$cmsCategory['id_cms_block'].' AND cl.`id_lang` = '.(int)$context->language->id.' AND bcp.`is_category` = 0 AND c.`active` = 1
 				ORDER BY `position`');
 				
 				$links = array();
 				if (sizeof($content[$key]['cms']))
 					foreach ($content[$key]['cms'] AS $row)
 					{
-						$row['link'] = $link->getCMSLink((int)($row['id_cms']), $row['link_rewrite']);
+						$row['link'] = $context->link->getCMSLink((int)($row['id_cms']), $row['link_rewrite']);
 						$links[] = $row;
 					}
 	
@@ -217,20 +219,20 @@ class BlockCms extends Module
 				FROM `'._DB_PREFIX_.'cms_block_page` bcp 
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (bcp.`id_cms` = cl.`id_cms_category`)
 				WHERE bcp.`id_cms_block` = '.(int)$cmsCategory['id_cms_block'].'
-				AND cl.`id_lang` = '.(int)$cookie->id_lang.'
+				AND cl.`id_lang` = '.(int)$context->language->id.'
 				AND bcp.`is_category` = 1');
 				
 				$links = array();
 				if (sizeof($content[$key]['categories']))
 					foreach ($content[$key]['categories'] as $row)
 					{
-						$row['link'] = $link->getCMSCategoryLink((int)$row['id_cms'], $row['link_rewrite']);
+						$row['link'] = $context->link->getCMSCategoryLink((int)$row['id_cms'], $row['link_rewrite']);
 						$links[] = $row;
 					}
 	
 				$content[$key]['categories'] = $links;
 				$content[$key]['name'] = $cmsCategory['block_name'];
-				$content[$key]['category_link'] = $link->getCMSCategoryLink((int)$cmsCategory['id_cms_category'], $cmsCategory['link_rewrite']);
+				$content[$key]['category_link'] = $context->link->getCMSCategoryLink((int)$cmsCategory['id_cms_category'], $cmsCategory['link_rewrite']);
 				$content[$key]['category_name'] = $cmsCategory['category_name'];
 			}
 
@@ -748,7 +750,8 @@ class BlockCms extends Module
 	
 	public function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blockcms.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blockcms.css', 'all');
 	}
 	
 	public function getL($key)

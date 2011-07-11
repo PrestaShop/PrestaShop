@@ -33,13 +33,13 @@ $ogone = new Ogone();
 $id_module = $ogone->id;
 $id_cart = Tools::getValue('orderID');
 $key = Db::getInstance()->getValue('SELECT secure_key FROM '._DB_PREFIX_.'customer WHERE id_customer = '.(int)$cookie->id_customer);
-$link = new Link();
+$context = Context::getContext;
 
 $smarty->assign(array(
 	'id_module' => $id_module,
 	'id_cart' => $id_cart,
 	'key' => $key,
-	'ogone_link' => (method_exists($link, 'getPageLink') ? $link->getPageLink('my-account') : _PS_BASE_URL_.'my-account')
+	'ogone_link' => (method_exists($context->link, 'getPageLink') ? $context->link->getPageLink('my-account') : _PS_BASE_URL_.'my-account')
 	));
 echo $ogone->display(dirname(__FILE__), 'waiting.tpl');
 

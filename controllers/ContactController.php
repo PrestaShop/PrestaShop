@@ -41,7 +41,7 @@ class ContactControllerCore extends FrontController
 
 		if (self::$cookie->isLogged())
 		{
-			self::$smarty->assign('isLogged', 1);
+			$this->smarty->assign('isLogged', 1);
 			$customer = new Customer((int)(self::$cookie->id_customer));
 			if (!Validate::isLoadedObject($customer))
 				die(Tools::displayError('Customer not found'));
@@ -68,8 +68,8 @@ class ContactControllerCore extends FrontController
 
 			foreach ($products as $key => $val)
 				$orderedProductList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_product')) == $key ? 'selected' : '').' >'.$val.'</option>';
-			self::$smarty->assign('orderList', $orderList);
-			self::$smarty->assign('orderedProductList', $orderedProductList);
+			$this->smarty->assign('orderList', $orderList);
+			$this->smarty->assign('orderedProductList', $orderedProductList);
 		}
 
 		if (Tools::isSubmit('submitMessage'))
@@ -152,7 +152,7 @@ class ContactControllerCore extends FrontController
 					ORDER BY date_add DESC');
 				if ($old_message == htmlentities($message, ENT_COMPAT, 'UTF-8'))
 				{
-					self::$smarty->assign('alreadySent', 1);
+					$this->smarty->assign('alreadySent', 1);
 					$contact->email = '';
 					$contact->customer_service = 0;
 				}
@@ -160,7 +160,7 @@ class ContactControllerCore extends FrontController
 				{
 					if (Mail::Send((int)(self::$cookie->id_lang), 'contact', Mail::l('Message from contact form'), array('{email}' => $from, '{message}' => stripslashes($message)), $contact->email, $contact->name, $from, ((int)(self::$cookie->id_customer) ? $customer->firstname.' '.$customer->lastname : ''), $fileAttachment)
 						AND Mail::Send((int)(self::$cookie->id_lang), 'contact_form', Mail::l('Your message has been correctly sent'), array('{message}' => stripslashes($message)), $from))
-						self::$smarty->assign('confirmation', 1);
+						$this->smarty->assign('confirmation', 1);
 					else
 						$this->errors[] = Tools::displayError('An error occurred while sending message.');
 				}
@@ -210,7 +210,7 @@ class ContactControllerCore extends FrontController
 						{
 							if (empty($contact->email))
 								Mail::Send((int)(self::$cookie->id_lang), 'contact_form', Mail::l('Your message has been correctly sent'), array('{message}' => stripslashes($message)), $from);
-							self::$smarty->assign('confirmation', 1);
+							$this->smarty->assign('confirmation', 1);
 						}
 						else
 							$this->errors[] = Tools::displayError('An error occurred while sending message.');
@@ -227,7 +227,7 @@ class ContactControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'contact-form.css');
+		$this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
 	}
 
 	public function process()
@@ -235,7 +235,7 @@ class ContactControllerCore extends FrontController
 		parent::process();
 
 		$email = Tools::safeOutput(Tools::getValue('from', ((isset(self::$cookie) AND isset(self::$cookie->email) AND Validate::isEmail(self::$cookie->email)) ? self::$cookie->email : '')));
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'errors' => $this->errors,
 			'email' => $email,
 			'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD')
@@ -247,9 +247,9 @@ class ContactControllerCore extends FrontController
 			$customerThread = Db::getInstance()->getRow('
 			SELECT cm.* FROM '._DB_PREFIX_.'customer_thread cm
 			WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop='.(int)$this->id_current_shop.' AND token = \''.pSQL($token).'\'');
-			self::$smarty->assign('customerThread', $customerThread);
+			$this->smarty->assign('customerThread', $customerThread);
 		}
-		self::$smarty->assign(array('contacts' => Contact::getContacts((int)self::$cookie->id_lang, (int)$this->id_current_shop),
+		$this->smarty->assign(array('contacts' => Contact::getContacts((int)self::$cookie->id_lang, (int)$this->id_current_shop),
 		'message' => html_entity_decode(Tools::getValue('message'))
 		));
 	}
@@ -258,7 +258,7 @@ class ContactControllerCore extends FrontController
 	{
 		$_POST = array_merge($_POST, $_GET);
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'contact-form.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'contact-form.tpl');
 	}
 }
 

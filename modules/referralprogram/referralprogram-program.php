@@ -35,8 +35,9 @@ include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 if (!$cookie->isLogged())
 	Tools::redirect('index.php?controller=authentication&back=modules/referralprogram/referralprogram-program.php');
 
-Tools::addCSS(_PS_CSS_DIR_.'thickbox.css', 'all');
-Tools::addJS(array(_PS_JS_DIR_.'jquery/thickbox-modified.js',_PS_JS_DIR_.'jquery/jquery.idTabs.modified.js'));
+$context = Context::getContext();
+$context->controller->addCSS(_PS_CSS_DIR_.'thickbox.css', 'all');
+$context->controller->addJS(array(_PS_JS_DIR_.'jquery/thickbox-modified.js',_PS_JS_DIR_.'jquery/jquery.idTabs.modified.js'));
 
 include(dirname(__FILE__).'/../../header.php');
 

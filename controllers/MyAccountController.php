@@ -40,24 +40,24 @@ class MyAccountControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'my-account.css');
+		$this->addCSS(_THEME_CSS_DIR_.'my-account.css');
 	}
 	
 	public function process()
 	{
 		parent::process();
 		
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),
 			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN'))
 		));
-		self::$smarty->assign('HOOK_CUSTOMER_ACCOUNT', Module::hookExec('customerAccount'));
+		$this->smarty->assign('HOOK_CUSTOMER_ACCOUNT', Module::hookExec('customerAccount'));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'my-account.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'my-account.tpl');
 	}
 }
 

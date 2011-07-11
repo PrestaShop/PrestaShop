@@ -123,7 +123,7 @@ class StoresControllerCore extends FrontController
 						$smarty->assign('days_datas', $days_datas);
 						$smarty->assign('id_country', $store['id_country']);
 					
-						$other .= self::$smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
+						$other .= $this->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 					}
 					
 					$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
@@ -192,7 +192,7 @@ class StoresControllerCore extends FrontController
 		global $link;
 		parent::process();
 				
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'defaultLat' => (float)Configuration::get('PS_STORES_CENTER_LAT'),
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
 			'searchUrl' => $link->getPageLink('stores')
@@ -202,15 +202,15 @@ class StoresControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'stores.css');
+		$this->addCSS(_THEME_CSS_DIR_.'stores.css');
 		if (!Configuration::get('PS_STORES_SIMPLIFIED'))
-			Tools::addJS(_THEME_JS_DIR_.'stores.js');
-		Tools::addJS('http://maps.google.com/maps/api/js?sensor=true');
+			$this->addJS(_THEME_JS_DIR_.'stores.js');
+		$this->addJS('http://maps.google.com/maps/api/js?sensor=true');
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'stores.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'stores.tpl');
 	}
 }

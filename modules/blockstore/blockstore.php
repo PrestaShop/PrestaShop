@@ -71,7 +71,8 @@ class BlockStore extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS($this->_path.'/blockstore.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS($this->_path.'/blockstore.css', 'all');
 	}
 	
 	public function postProcess()

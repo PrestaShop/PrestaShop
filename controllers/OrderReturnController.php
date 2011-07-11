@@ -55,7 +55,7 @@ class OrderReturnControllerCore extends FrontController
 				if (Validate::isLoadedObject($order))
 				{
 					$state = new OrderReturnState((int)($orderRet->state));
-					self::$smarty->assign(array(
+					$this->smarty->assign(array(
 						'orderRet' => $orderRet,
 						'order' => $order,
 						'state_name' => $state->name[(int)(self::$cookie->id_lang)],
@@ -72,7 +72,7 @@ class OrderReturnControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Cannot find this order return');
 		}
 
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'errors' => $this->errors,
 			'nbdaysreturn' => (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'))
 		));
@@ -87,7 +87,7 @@ class OrderReturnControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-return.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'order-return.tpl');
 	}
 	
 	public function displayFooter()

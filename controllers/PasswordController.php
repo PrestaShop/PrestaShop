@@ -63,7 +63,7 @@ class PasswordControllerCore extends FrontController
 							  '{url}' => self::$link->getPageLink('password', true, NULL, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id)),
 						$customer->email, 
 						$customer->firstname.' '.$customer->lastname))
-							self::$smarty->assign(array('confirmation' => 2, 'email' => $customer->email));
+							$this->smarty->assign(array('confirmation' => 2, 'email' => $customer->email));
 						else
 							$this->errors[] = Tools::displayError('Error occurred when sending the e-mail.');
 					}
@@ -92,7 +92,7 @@ class PasswordControllerCore extends FrontController
 							  '{passwd}' => $password), 
 						$customer->email, 
 						$customer->firstname.' '.$customer->lastname)) 
-							self::$smarty->assign(array('confirmation' => 1, 'email' => $customer->email));
+							$this->smarty->assign(array('confirmation' => 1, 'email' => $customer->email));
 						else
 							$this->errors[] = Tools::displayError('Error occurred when sending the e-mail.');
 					}
@@ -110,7 +110,7 @@ class PasswordControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'password.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'password.tpl');
 	}
 }
 

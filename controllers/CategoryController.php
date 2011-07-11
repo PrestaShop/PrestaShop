@@ -32,14 +32,14 @@ class CategoryControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(array(
+		$this->addCSS(array(
 			_PS_CSS_DIR_.'jquery.cluetip.css' => 'all',
 			_THEME_CSS_DIR_.'scenes.css' => 'all',
 			_THEME_CSS_DIR_.'category.css' => 'all',
 			_THEME_CSS_DIR_.'product_list.css' => 'all'));
 
 		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-			Tools::addJS(_THEME_JS_DIR_.'products-comparison.js');
+			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
 	public function displayHeader()
@@ -83,7 +83,7 @@ class CategoryControllerCore extends FrontController
 				foreach ($rewrite_infos AS $infos)
 					$default_rewrite[$infos['id_lang']] = self::$link->getCategoryLink((int)$id_category, $infos['link_rewrite'], $infos['id_lang']);
 
-				self::$smarty->assign('lang_rewrite_urls', $default_rewrite);
+				$this->smarty->assign('lang_rewrite_urls', $default_rewrite);
 			}
 	}
 	
@@ -99,13 +99,13 @@ class CategoryControllerCore extends FrontController
 			elseif (!$this->category->checkAccess((int)(self::$cookie->id_customer)))
 				$this->errors[] = Tools::displayError('You do not have access to this category.');
 			elseif (!$this->category->active)
-				self::$smarty->assign('category', $this->category);
+				$this->smarty->assign('category', $this->category);
 			else
 			{
 				$rewrited_url = self::$link->getCategoryLink((int)$this->category->id, $this->category->link_rewrite);
 
 				/* Scenes  (could be externalised to another controler if you need them */
-				self::$smarty->assign('scenes', Scene::getScenes((int)($this->category->id), (int)(self::$cookie->id_lang), true, false));
+				$this->smarty->assign('scenes', Scene::getScenes((int)($this->category->id), (int)(self::$cookie->id_lang), true, false));
 				
 				/* Scenes images formats */
 				if ($sceneImageTypes = ImageType::getImagesTypes('scenes'))
@@ -117,18 +117,18 @@ class CategoryControllerCore extends FrontController
 						elseif ($sceneImageType['name'] == 'large_scene')
 							$largeSceneImageType = $sceneImageType;
 					}
-					self::$smarty->assign('thumbSceneImageType', isset($thumbSceneImageType) ? $thumbSceneImageType : NULL);
-					self::$smarty->assign('largeSceneImageType', isset($largeSceneImageType) ? $largeSceneImageType : NULL);
+					$this->smarty->assign('thumbSceneImageType', isset($thumbSceneImageType) ? $thumbSceneImageType : NULL);
+					$this->smarty->assign('largeSceneImageType', isset($largeSceneImageType) ? $largeSceneImageType : NULL);
 				}
 
 				$this->category->description = nl2br2($this->category->description);
 				$subCategories = $this->category->getSubCategories((int)(self::$cookie->id_lang));
-				self::$smarty->assign('category', $this->category);	
+				$this->smarty->assign('category', $this->category);	
 				
 				if (isset($subCategories) AND !empty($subCategories) AND $subCategories)
 				{
-					self::$smarty->assign('subcategories', $subCategories);
-					self::$smarty->assign(array(
+					$this->smarty->assign('subcategories', $subCategories);
+					$this->smarty->assign(array(
 						'subcategories_nb_total' => sizeof($subCategories),
 						'subcategories_nb_half' => ceil(sizeof($subCategories) / 2)));
 				}
@@ -136,10 +136,10 @@ class CategoryControllerCore extends FrontController
 				{
 					$nbProducts = $this->category->getProducts(NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 					$this->pagination((int)$nbProducts);
-					self::$smarty->assign('nb_products', (int)$nbProducts);
+					$this->smarty->assign('nb_products', (int)$nbProducts);
 					$cat_products = $this->category->getProducts((int)(self::$cookie->id_lang), (int)($this->p), (int)($this->n), $this->orderBy, $this->orderWay);
 				}
-				self::$smarty->assign(array(
+				$this->smarty->assign(array(
 					'products' => (isset($cat_products) AND $cat_products) ? $cat_products : NULL,
 					'id_category' => (int)($this->category->id),
 					'id_category_parent' => (int)($this->category->id_parent),
@@ -154,7 +154,7 @@ class CategoryControllerCore extends FrontController
 			}
 		}
 
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'allow_oosp' => (int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')),
 			'comparator_max_item' => (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')),
 			'suppliers' => Supplier::getSuppliers()
@@ -164,7 +164,7 @@ class CategoryControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'category.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'category.tpl');
 	}
 }
 

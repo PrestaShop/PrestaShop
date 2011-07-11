@@ -113,7 +113,8 @@ class BlockNewProducts extends Module
 		
 	public function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blocknewproducts.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
 	}
 
 }
