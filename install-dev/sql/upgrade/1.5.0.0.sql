@@ -284,4 +284,20 @@ INSERT INTO PREFIX_stock (id_product, id_product_attribute, id_group_shop, id_sh
 UPDATE PREFIX_stock_mvt sm SET sm.id_stock = (SELECT s.id_stock FROM PREFIX_stock s WHERE s.id_product = sm.id_product AND s.id_product_attribute = sm.id_product_attribute);
 ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;
 
+CREATE TABLE `PREFIX_referrer_shop` (
+  `id_referrer` int(10) unsigned NOT NULL auto_increment,
+  `id_shop` int(10) unsigned NOT NULL default '1',
+  `cache_visitors` int(11) default NULL,
+  `cache_visits` int(11) default NULL,
+  `cache_pages` int(11) default NULL,
+  `cache_registrations` int(11) default NULL,
+  `cache_orders` int(11) default NULL,
+  `cache_sales` decimal(17,2) default NULL,
+  `cache_reg_rate` decimal(5,4) default NULL,
+  `cache_order_rate` decimal(5,4) default NULL,
+  PRIMARY KEY  (`id_referrer`, `id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_referrer_shop` (`id_referrer`, `id_shop`) SELECT `id_referrer`, 1 FROM `PREFIX_referrer`;
+ALTER TABLE `PREFIX_referrer` DROP `cache_visitors`, DROP `cache_visits`, DROP `cache_pages`, DROP `cache_registrations`, DROP `cache_orders`, DROP `cache_sales`, DROP `cache_reg_rate`, DROP `cache_order_rate`;
+
 /* PHP:create_multistore(); */

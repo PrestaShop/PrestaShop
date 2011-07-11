@@ -287,9 +287,7 @@ class AdminCustomers extends AdminTab
 		}
 		else
 			$countBetterCustomers = '-';
-		
-		$shop = new Shop((int)$customer->id_shop);
-		
+
 		echo '
 		<fieldset style="width:400px;float: left"><div style="float: right"><a href="'.$currentIndex.'&addcustomer&id_customer='.$customer->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
 			<span style="font-weight: bold; font-size: 14px;">'.$customer->firstname.' '.$customer->lastname.'</span>
@@ -299,7 +297,7 @@ class AdminCustomers extends AdminTab
 			'.$this->l('Registration date:').' '.Tools::displayDate($customer->date_add, (int)($cookie->id_lang), true).'<br />
 			'.$this->l('Last visit:').' '.($customerStats['last_visit'] ? Tools::displayDate($customerStats['last_visit'], (int)($cookie->id_lang), true) : $this->l('never')).'<br />
 			'.($countBetterCustomers != '-' ? $this->l('Rank: #').' '.(int)$countBetterCustomers.'<br />' : '')
-			.(Tools::isMultiShopActivated() ? '<br />'.$this->l('Shop:').' '.$shop->name : '').'
+			.(Tools::isMultiShopActivated() ? '<br />'.$this->l('Shop:').' '.Shop::getInstance($customer->id_shop)->name : '').'
 		</fieldset>
 		<fieldset style="width:300px;float:left;margin-left:50px">
 			<div style="float: right">
@@ -662,6 +660,7 @@ class AdminCustomers extends AdminTab
                     </tr>';
             echo '</table><div class="clear">&nbsp;</div>';
         }
+
         if (sizeof($referrers))    
         {
             echo '<h2>'.$this->l('Referrers').'</h2>
@@ -669,11 +668,13 @@ class AdminCustomers extends AdminTab
                 <tr>
                     <th style="width: 200px">'.$this->l('Date').'</th>
                     <th style="width: 200px">'.$this->l('Name').'</th>
+                    '.((Tools::isMultiShopActivated())? '<th style="width: 200px">'.$this->l('Shop').'</th>' : '').'
                 </tr>';
             foreach ($referrers as $referrer)
                 echo '<tr>
                         <td>'.Tools::displayDate($referrer['date_add'], (int)($cookie->id_lang), true).'</td>
                         <td>'.$referrer['name'].'</td>
+                        '.((Tools::isMultiShopActivated())? '<td>'.$referrer['shop_name'].'</td>' : '').'
                     </tr>';
             echo '</table><div class="clear">&nbsp;</div>';
         }

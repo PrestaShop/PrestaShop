@@ -25,6 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+define('PS_ADMIN_DIR', getcwd());
 include_once(dirname(__FILE__).'/../config/config.inc.php');
 $cookie = new Cookie('psAdmin');
 
