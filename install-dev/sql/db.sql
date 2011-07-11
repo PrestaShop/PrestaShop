@@ -1313,14 +1313,6 @@ CREATE TABLE `PREFIX_referrer` (
   `base_fee` decimal(5,2) NOT NULL default '0.00',
   `percent_fee` decimal(5,2) NOT NULL default '0.00',
   `click_fee` decimal(5,2) NOT NULL default '0.00',
-  `cache_visitors` int(11) default NULL,
-  `cache_visits` int(11) default NULL,
-  `cache_pages` int(11) default NULL,
-  `cache_registrations` int(11) default NULL,
-  `cache_orders` int(11) default NULL,
-  `cache_sales` decimal(17,2) default NULL,
-  `cache_reg_rate` decimal(5,4) default NULL,
-  `cache_order_rate` decimal(5,4) default NULL,
   `date_add` datetime NOT NULL,
   PRIMARY KEY  (`id_referrer`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1329,6 +1321,20 @@ CREATE TABLE `PREFIX_referrer_cache` (
   `id_connections_source` int(11) unsigned NOT NULL,
   `id_referrer` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id_connections_source`, `id_referrer`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_referrer_shop` (
+  `id_referrer` int(10) unsigned NOT NULL auto_increment,
+  `id_shop` int(10) unsigned NOT NULL default '1',
+  `cache_visitors` int(11) default NULL,
+  `cache_visits` int(11) default NULL,
+  `cache_pages` int(11) default NULL,
+  `cache_registrations` int(11) default NULL,
+  `cache_orders` int(11) default NULL,
+  `cache_sales` decimal(17,2) default NULL,
+  `cache_reg_rate` decimal(5,4) default NULL,
+  `cache_order_rate` decimal(5,4) default NULL,
+  PRIMARY KEY  (`id_referrer`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_scene` (

@@ -915,7 +915,7 @@ table.permissions td {
 }
 
 #header_shoplist select.shopList{
-    background-image: url("../../../img/t/AdminShop.gif");
+    background-image: url("../img/t/AdminShop.gif");
     background-position: 1px 50%;
     background-repeat: no-repeat;
     padding: 1px 1px 1px 14px;

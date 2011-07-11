@@ -51,15 +51,16 @@ class PageCore extends ObjectModel
 	 */
 	public static function getCurrentId()
 	{
-		$phpSelf = isset($_SERVER['PHP_SELF']) ? substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)) : '';
-		$pageTypeID = Page::getPageTypeByName($phpSelf);
+		$controller = Dispatcher::$controller;
+		$pageTypeID = Page::getPageTypeByName($controller);
 		
 		// Some pages must be distinguished in order to record exactly what is being seen
+		// @todo dispatcher module
 		$specialArray = array(
-			'product.php' => 'id_product',
-			'category.php' => 'id_category',
-			'order.php' => 'step',
-			'manufacturer.php' => 'id_manufacturer',
+			'product' => 'id_product',
+			'category' => 'id_category',
+			'order' => 'step',
+			'manufacturer' => 'id_manufacturer',
 		);
 
 		$where = '';
@@ -67,9 +68,9 @@ class PageCore extends ObjectModel
 			'id_page_type' =>	$pageTypeID,
 		);
 
-		if (array_key_exists($phpSelf, $specialArray))
+		if (array_key_exists($controller, $specialArray))
 		{
-			$objectID = Tools::getValue($specialArray[$phpSelf]);
+			$objectID = Tools::getValue($specialArray[$controller]);
 			$where = ' AND `id_object` = '.(int)$objectID;
 			$insertData['id_object'] = $objectID;
 		}

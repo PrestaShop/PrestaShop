@@ -59,7 +59,12 @@ class AdminReferrers extends AdminTab
 	 	$this->edit = true;
 		$this->delete = true;
 
-		$this->_select = 'IF(cache_orders > 0, ROUND(cache_sales/cache_orders, 2), 0) as cart, (cache_visits*click_fee) as fee0, (cache_orders*base_fee) as fee1, (cache_sales*percent_fee/100) as fee2';
+		$this->_select = 'SUM(rs.cache_visitors) AS cache_visitors, SUM(rs.cache_visits) AS cache_visits, SUM(rs.cache_pages) AS cache_pages,
+							SUM(rs.cache_registrations) AS cache_registrations, SUM(rs.cache_orders) AS cache_orders, SUM(rs.cache_sales) AS cache_sales,
+							IF(rs.cache_orders > 0, ROUND(rs.cache_sales/rs.cache_orders, 2), 0) as cart, (rs.cache_visits*click_fee) as fee0,
+							(rs.cache_orders*base_fee) as fee1, (rs.cache_sales*percent_fee/100) as fee2';
+		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'referrer_shop rs ON a.id_referrer = rs.id_referrer '.Shop::sqlRestriction(false, 'rs');
+		$this->_group = 'GROUP BY rs.id_referrer';
 		$this->fieldsDisplay = array(
 			'id_referrer' => array('title' => $this->l('ID'), 'width' => 25, 'align' => 'center'),
 			'name' => array('title' => $this->l('Name'), 'width' => 80),
@@ -263,8 +268,14 @@ class AdminReferrers extends AdminTab
 				<div class="margin-form">
 					<input type="text" size="8" name="percent_fee" value="'.number_format((float)($this->getFieldValue($obj, 'percent_fee')), 2).'" />
 					<p>'.$this->l('Percent of the sales.').'</p>
-				</div>
-			</fieldset>
+				</div>';
+			if (Tools::isMultiShopActivated())
+			{
+				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
+				$this->displayAssoShop();
+				echo '</div>';
+			}
+			echo '</fieldset>
 			<br class="clear" />
 			<fieldset><legend onclick="$(\'#tracking_help\').slideToggle();" style="cursor: pointer;"><img src="../img/admin/help.png" /> '.$this->l('Help').'</legend>
 			<div id="tracking_help" style="display: none;">
@@ -363,6 +374,7 @@ class AdminReferrers extends AdminTab
 				</div>
 			</div>
 			</fieldset>
+			<br class="clear" />
 		</form>';
 	}
 	

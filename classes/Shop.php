@@ -71,6 +71,7 @@ class ShopCore extends ObjectModel
 		'stock' => 					array('type' => 'fk_shop', 'primary' => 'id_stock'),
 		'product' => 				array('type' => 'shop'),
 		'product_lang' => 			array('type' => 'fk_shop'),
+		'referrer' => 				array('type' => 'shop'),
 		'store' => 					array('type' => 'shop'),
 		'webservice_account' => 	array('type' => 'shop'),
 	);
@@ -101,6 +102,17 @@ class ShopCore extends ObjectModel
 		$fields['active'] = (int)$this->active;
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
+	}
+	
+	/**
+	 * Get an instance of a shop
+	 *
+	 * @param int $id shop ID
+	 * @return Shop
+	 */
+	public static function getInstance($id)
+	{
+		return new Shop($id);
 	}
 	
 	public static function getAssoTables()

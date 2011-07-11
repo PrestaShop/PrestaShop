@@ -2053,7 +2053,7 @@ abstract class AdminTabCore
 			$html = '<table class="table" cellpadding="0" cellspacing="0">
 						<tr><th>'.$this->l('Shop').'</th><th>'.$this->l('Association').'</th></tr>';
 			foreach ($shops AS $shop)
-				$html .= '<tr><td>'.$shop['name'].'</td><td><input type="checkbox" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shop['id_shop'].'" id="checkedBox_'.$shop['id_shop'].'" '.((isset($assos[$shop['id_shop']]) AND in_array($this->id, $assos[$shop['id_shop']])) ? 'checked="checked"' : '').'></td></tr>';
+				$html .= '<tr><td>'.$shop['name'].'</td><td><input type="checkbox" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shop['id_shop'].'" id="checkedBox_'.$shop['id_shop'].'" '.(((isset($assos[$shop['id_shop']]) AND in_array($this->_object->id, $assos[$shop['id_shop']]))  || !$this->_object->id) ? 'checked="checked"' : '').'></td></tr>';
 			$html .= '</table>';
 		}
 		echo $html;
