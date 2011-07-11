@@ -69,7 +69,7 @@ class OrderControllerCore extends ParentOrderController
 			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step));
 
 		if ($this->nbProducts)
-			self::$smarty->assign('virtual_cart', $isVirtualCart);
+			$this->smarty->assign('virtual_cart', $isVirtualCart);
 	}
 
 	public function displayHeader()
@@ -86,7 +86,7 @@ class OrderControllerCore extends ParentOrderController
 		switch ((int)$this->step)
 		{
 			case -1;
-				self::$smarty->assign('empty', 1);
+				$this->smarty->assign('empty', 1);
 				break;
 			case 1:
 				$this->_assignAddress();
@@ -134,7 +134,7 @@ class OrderControllerCore extends ParentOrderController
 		$invoiceAddressFields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
 		$deliveryAddressFields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
 		
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'inv_adr_fields' => $invoiceAddressFields,
 			'dlv_adr_fields' => $deliveryAddressFields));
 	}
@@ -145,7 +145,7 @@ class OrderControllerCore extends ParentOrderController
 
 		parent::displayContent();
 		
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'currencySign' => $currency->sign,
 			'currencyRate' => $currency->conversion_rate,
 			'currencyFormat' => $currency->format,
@@ -155,20 +155,20 @@ class OrderControllerCore extends ParentOrderController
 		switch ((int)$this->step)
 		{
 			case -1:
-				self::$smarty->display(_PS_THEME_DIR_.'shopping-cart.tpl');
+				$this->smarty->display(_PS_THEME_DIR_.'shopping-cart.tpl');
 				break;
 			case 1:
 				$this->processAddressFormat();
-				self::$smarty->display(_PS_THEME_DIR_.'order-address.tpl');
+				$this->smarty->display(_PS_THEME_DIR_.'order-address.tpl');
 				break;
 			case 2:
-				self::$smarty->display(_PS_THEME_DIR_.'order-carrier.tpl');
+				$this->smarty->display(_PS_THEME_DIR_.'order-carrier.tpl');
 				break;
 			case 3:
-				self::$smarty->display(_PS_THEME_DIR_.'order-payment.tpl');
+				$this->smarty->display(_PS_THEME_DIR_.'order-payment.tpl');
 				break;
 			default:
-				self::$smarty->display(_PS_THEME_DIR_.'shopping-cart.tpl');
+				$this->smarty->display(_PS_THEME_DIR_.'shopping-cart.tpl');
 				break;
 		}
 	}
@@ -237,7 +237,7 @@ class OrderControllerCore extends ParentOrderController
 
 		if (sizeof($this->errors))
 		{
-			self::$smarty->assign('errors', $this->errors);
+			$this->smarty->assign('errors', $this->errors);
 			$this->_assignCarrier();
 			$this->step = 2;
 			$this->displayContent();
@@ -252,7 +252,7 @@ class OrderControllerCore extends ParentOrderController
 	{
 		parent::_assignAddress();
 
-		self::$smarty->assign('cart', self::$cart);
+		$this->smarty->assign('cart', self::$cart);
 		if (self::$cookie->is_guest)
 			Tools::redirect('index.php?controller=order&step=2');
 	}
@@ -260,8 +260,6 @@ class OrderControllerCore extends ParentOrderController
 	/* Carrier step */
 	protected function _assignCarrier()
 	{
-		global $defaultCountry;
-
 		if (isset(self::$cookie->id_customer))
 			$customer = new Customer((int)(self::$cookie->id_customer));
 		else
@@ -271,7 +269,7 @@ class OrderControllerCore extends ParentOrderController
 		// Assign wrapping and TOS
 		$this->_assignWrappingAndTOS();
 
-		self::$smarty->assign('is_guest' ,(isset(self::$cookie->is_guest) ? self::$cookie->is_guest : 0));
+		$this->smarty->assign('is_guest' ,(isset(self::$cookie->is_guest) ? self::$cookie->is_guest : 0));
 	}
 
 	/* Payment step */
@@ -283,8 +281,8 @@ class OrderControllerCore extends ParentOrderController
 		Hook::backBeforePayment('order.php?step=3');
 		
 		/* We may need to display an order summary */
-		self::$smarty->assign(self::$cart->getSummaryDetails());
-		self::$smarty->assign(array(
+		$this->smarty->assign(self::$cart->getSummaryDetails());
+		$this->smarty->assign(array(
 			'total_price' => (float)($orderTotal),
 			'taxes_enabled' => (int)(Configuration::get('PS_TAX'))
 		));

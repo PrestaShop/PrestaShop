@@ -183,17 +183,18 @@ class Ogone extends PaymentModule
 	
 	public function hookOrderConfirmation($params)
 	{
-		global $smarty, $cookie;
+		if (!$context)
+			$context = Context::getContext();		
 		
 		if ($params['objOrder']->module != $this->name)
 			return;
 		
 		if ($params['objOrder']->valid)
-			$smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
+			$context->controller->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
 		else
-			$smarty->assign('status', 'failed');
-		$link = new Link();
-		$smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $link->getPageLink('contact', true) : Tools::getHttpHost(true).'contact'));
+			$context->controller->smarty->assign('status', 'failed');
+
+		$context->controller->smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $context->link->getPageLink('contact', true) : Tools::getHttpHost(true).'contact'));
 		return $this->display(dirname(__FILE__), 'hookorderconfirmation.tpl');
 	}
 	

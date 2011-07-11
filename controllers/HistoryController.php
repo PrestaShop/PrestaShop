@@ -40,9 +40,9 @@ class HistoryControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'history.css');
-		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
-		Tools::addJS(array(
+		$this->addCSS(_THEME_CSS_DIR_.'history.css');
+		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+		$this->addJS(array(
 			_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js', 
 			_THEME_JS_DIR_.'history.js',
 			_THEME_JS_DIR_.'tools.js'));
@@ -59,7 +59,7 @@ class HistoryControllerCore extends FrontController
 				if (Validate::isLoadedObject($myOrder))
 					$order['virtual'] = $myOrder->isVirtual(false);
 			}
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'orders' => $orders,
 			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 			'slowValidation' => Tools::isSubmit('slowvalidation')
@@ -69,7 +69,7 @@ class HistoryControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'history.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'history.tpl');
 	}
 }
 

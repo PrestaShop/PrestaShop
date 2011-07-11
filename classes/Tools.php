@@ -268,10 +268,8 @@ class ToolsCore
 	/**
 	* Change language in cookie while clicking on a flag
 	*/
-	public static function setCookieLanguage()
+	public static function setCookieLanguage($cookie)
 	{
-		global $cookie;
-
 		/* If language does not exist or is disabled, erase it */
 		if ($cookie->id_lang)
 		{
@@ -309,18 +307,16 @@ class ToolsCore
 		return $iso;
 	}
 
-	public static function switchLanguage()
+	public static function switchLanguage($context = null)
 	{
-		global $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
 		if ($id_lang = (int)(self::getValue('id_lang')) AND Validate::isUnsignedId($id_lang))
-			$cookie->id_lang = $id_lang;
+			$context->cookie->id_lang = $id_lang;
 	}
 
-	public static function setCurrency()
+	public static function setCurrency($cookie)
 	{
-		global $cookie;
-
 		if (self::isSubmit('SubmitCurrency'))
 			if (isset($_POST['id_currency']) AND is_numeric($_POST['id_currency']))
 			{
@@ -1387,108 +1383,42 @@ class ToolsCore
 		return false;
 	}
 
-	/**
+		/**
 	 * addJS load a javascript file in the header
 	 *
+	 * @deprecated as of 1.5 use FrontController->addJS()
 	 * @param mixed $js_uri
 	 * @return void
 	 */
 	public static function addJS($js_uri)
 	{
-		global $js_files;
-		if(!isset($js_files))
-			$js_files = array();
-		// avoid useless operation...
-		if (in_array($js_uri, $js_files))
-			return true;
-
-		// detect mass add
-		if (!is_array($js_uri) && !in_array($js_uri, $js_files))
-			$js_uri = array($js_uri);
-		else
-			foreach($js_uri as $key => $js)
-				if (in_array($js, $js_files))
-					unset($js_uri[$key]);
-
-		//overriding of modules js files
-		foreach ($js_uri AS $key => &$file)
-		{
-			if (!preg_match('/^http(s?):\/\//i', $file))
-			{
-				$different = 0;
-				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				if ($different && file_exists($override_path))
-					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				else
-				{
-					// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-					$url_data = parse_url($file);
-					$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-					// check if js files exists
-					if (!file_exists($file_uri))
-						unset($js_uri[$key]);
-				}
-			}
-		}
-
-		// adding file to the big array...
-		$js_files = array_merge($js_files, $js_uri);
-
-		return true;
+		Tools::displayAsDeprecated();
+		$context = Context::getContext();
+		$context->controller->addJs($js_uri);
 	}
-
+	
 	/**
 	 * addCSS allows you to add stylesheet at any time.
 	 *
+	 * @deprecated as of 1.5 use FrontController->addCSS()
 	 * @param mixed $css_uri
 	 * @param string $css_media_type
 	 * @return true
 	 */
 	public static function addCSS($css_uri, $css_media_type = 'all')
 	{
-		global $css_files;
-
-		if (is_array($css_uri))
-		{
-			foreach ($css_uri as $file => $media_type)
-				Tools::addCSS($file, $media_type);
-			return true;
-		}
-		
-		//overriding of modules css files
-		$different = 0;
-		$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
-		if ($different && file_exists($override_path))
-			$css_uri = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
-		else
-		{
-			// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-			$url_data = parse_url($css_uri);
-			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-			// check if css files exists
-			if (!file_exists($file_uri))
-				return true;
-		}
-
-		// detect mass add
-		$css_uri = array($css_uri => $css_media_type);
-
-		// adding file to the big array...
-		if (is_array($css_files))
-			$css_files = array_merge($css_files, $css_uri);
-		else
-			$css_files = $css_uri;
-
-		return true;
+		Tools::displayAsDeprecated();
+		$context = Context::getContext();
+		$context->controller->addCSS($css_uri, $css_media_type);
 	}
-
 
 	/**
 	* Combine Compress and Cache CSS (ccc) calls
 	*
+	* @param array css_files
+	* @return array processed css_files
 	*/
-	public static function cccCss() {
-		global $css_files;
+	public static function cccCss($css_files) {
 		//inits
 		$css_files_by_media = array();
 		$compressed_css_files = array();
@@ -1562,14 +1492,17 @@ class ToolsCore
 			$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
 			$css_files[$protocolLink.Tools::getMediaServer($url).$url] = $media;
 		}
+		return $css_files;
 	}
 
 	
 	/**
 	* Combine Compress and Cache (ccc) JS calls
+	* 
+	* @param array js_files
+	* @return array processed js_files
 	*/
-	public static function cccJS() {
-		global $js_files;
+	public static function cccJS($js_files) {
 		//inits
 		$compressed_js_files_not_found = array();
 		$js_files_infos = array();
@@ -1632,7 +1565,7 @@ class ToolsCore
 
 		// rebuild the original js_files array
 		$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
-		$js_files = array_merge(array($protocolLink.Tools::getMediaServer($url).$url), $js_external_files);
+		return array_merge(array($protocolLink.Tools::getMediaServer($url).$url), $js_external_files);
 		
 	}
 

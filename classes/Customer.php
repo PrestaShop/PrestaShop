@@ -43,7 +43,7 @@ class CustomerCore extends ObjectModel
 	public		$id_gender = 9;
 
 	/** @var integer Default group ID */
-	public		$id_default_group;
+	public		$id_default_group = _PS_DEFAULT_CUSTOMER_GROUP_;
 
 	/** @var string Lastname */
 	public 		$lastname;
@@ -93,7 +93,11 @@ class CustomerCore extends ObjectModel
 	public		$years;
 	public		$days;
 	public		$months;
-
+	
+	public		$geoloc_id_country;
+	public		$geoloc_id_state;
+	public		$geoloc_postcode;
+	
 	protected $tables = array ('customer');
 
  	protected 	$fieldsRequired = array('lastname', 'passwd', 'firstname', 'email');

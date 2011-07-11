@@ -45,7 +45,7 @@ class AuthControllerCore extends FrontController
 		if (Tools::getValue('create_account'))
 		{
 			$create_account = 1;
-			self::$smarty->assign('email_create', 1);
+			$this->smarty->assign('email_create', 1);
 		}
 
 		if (Tools::isSubmit('SubmitCreate'))
@@ -61,7 +61,7 @@ class AuthControllerCore extends FrontController
 			else
 			{
 				$create_account = 1;
-				self::$smarty->assign('email_create', Tools::safeOutput($email));
+				$this->smarty->assign('email_create', Tools::safeOutput($email));
 				$_POST['email'] = $email;
 
 			}
@@ -71,7 +71,7 @@ class AuthControllerCore extends FrontController
 		{
 			$create_account = 1;
 			if (Tools::isSubmit('submitAccount'))
-				self::$smarty->assign('email_create', 1);
+				$this->smarty->assign('email_create', 1);
 			/* New Guest customer */
 			if (!Tools::getValue('is_new_customer', 1) AND !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 				$this->errors[] = Tools::displayError('You cannot create a guest account.');
@@ -170,7 +170,7 @@ class AuthControllerCore extends FrontController
 									array('{firstname}' => $customer->firstname, '{lastname}' => $customer->lastname, '{email}' => $customer->email, '{passwd}' => Tools::getValue('passwd')), $customer->email, $customer->firstname.' '.$customer->lastname))
 										$this->errors[] = Tools::displayError('Cannot send email');
 								}
-								self::$smarty->assign('confirmation', 1);
+								$this->smarty->assign('confirmation', 1);
 								self::$cookie->id_customer = (int)($customer->id);
 								self::$cookie->customer_lastname = $customer->lastname;
 								self::$cookie->customer_firstname = $customer->firstname;
@@ -310,14 +310,14 @@ class AuthControllerCore extends FrontController
 				$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
 			$countries = Country::getCountries((int)(self::$cookie->id_lang), true, NULL, $this->id_current_shop);
 
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 				'countries' => $countries,
 				'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
 				'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
 			));
 
 			/* Call a hook to display more information on form */
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 				'HOOK_CREATE_ACCOUNT_FORM' => Module::hookExec('createAccountForm'),
 				'HOOK_CREATE_ACCOUNT_TOP' => Module::hookExec('createAccountTop')
 			));
@@ -335,7 +335,7 @@ class AuthControllerCore extends FrontController
 			$selectedDays = (int)($_POST['days']);
 		$days = Tools::dateDays();
 
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'years' => $years,
 			'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
 			'months' => $months,
@@ -343,14 +343,14 @@ class AuthControllerCore extends FrontController
 			'days' => $days,
 			'sl_day' => (isset($selectedDays) ? $selectedDays : 0)
 		));
-		self::$smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$this->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
 
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'authentication.css');
-		Tools::addJS(array(_THEME_JS_DIR_.'tools/statesManagement.js', _PS_JS_DIR_.'jquery/jquery-typewatch.pack.js'));
+		$this->addCSS(_THEME_CSS_DIR_.'authentication.css');
+		$this->addJS(array(_THEME_JS_DIR_.'tools/statesManagement.js', _PS_JS_DIR_.'jquery/jquery-typewatch.pack.js'));
 	}
 
 	public function process()
@@ -363,11 +363,11 @@ class AuthControllerCore extends FrontController
 			$back .= (strpos($back, '?') !== false ? '&' : '?').'key='.$key;
 		if (!empty($back))
 		{
-			self::$smarty->assign('back', Tools::safeOutput($back));
+			$this->smarty->assign('back', Tools::safeOutput($back));
 			if (strpos($back, 'order.php') !== false)
 			{
 				$countries = Country::getCountries((int)(self::$cookie->id_lang), true);
-				self::$smarty->assign(array(
+				$this->smarty->assign(array(
 					'inOrderProcess' => true,
 					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 					'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
@@ -382,7 +382,7 @@ class AuthControllerCore extends FrontController
 		$this->processAddressFormat();
 
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'authentication.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'authentication.tpl');
 	}
 
 	protected function processAddressFormat()
@@ -401,7 +401,7 @@ class AuthControllerCore extends FrontController
 				$addressItems[] = trim($fieldName);
 				
 		foreach (array('inv', 'dlv') as $addressType)
-			self::$smarty->assign(array($addressType.'_adr_fields' => $addressFormat, $addressType.'_all_fields' => $addressItems));
+			$this->smarty->assign(array($addressType.'_adr_fields' => $addressFormat, $addressType.'_all_fields' => $addressItems));
 		}
 	}
 

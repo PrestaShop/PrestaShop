@@ -210,12 +210,11 @@ class BlockAdvertising extends Module
 	*/
 	function hookRightColumn($params)
 	{
-		global $smarty, $protocol_content;
-
-		Tools::addCSS($this->_path.'blockadvertising.css', 'all');
-		$smarty->assign('image', $protocol_content.$this->adv_img);
-		$smarty->assign('adv_link', $this->adv_link);
-		$smarty->assign('adv_title', $this->adv_title);
+		$context = Context::getContext();
+		$context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
+		$context->controller->smarty->assign('image', $context->link->protocol_content.$this->adv_img);
+		$context->controller->smarty->assign('adv_link', $this->adv_link);
+		$context->controller->smarty->assign('adv_title', $this->adv_title);
 
 		return $this->display(__FILE__, 'blockadvertising.tpl');
 	}

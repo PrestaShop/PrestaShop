@@ -108,7 +108,7 @@ class ParentOrderControllerCore extends FrontController
 						Tools::redirect('index.php?controller=order-opc');
 					}
 				}
-				self::$smarty->assign(array(
+				$this->smarty->assign(array(
 					'errors' => $this->errors,
 					'discount_name' => Tools::safeOutput($discountName)
 				));
@@ -124,7 +124,7 @@ class ParentOrderControllerCore extends FrontController
 				$this->_setNoCarrier();
 		}
 		
-		self::$smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+		$this->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
 	}
 	
 	public function setMedia()
@@ -132,18 +132,18 @@ class ParentOrderControllerCore extends FrontController
 		parent::setMedia();
 		
 		// Adding CSS style sheet
-		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
-		Tools::addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
+		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 
 		// Adding JS files
-		Tools::addJS(_THEME_JS_DIR_.'tools.js');
+		$this->addJS(_THEME_JS_DIR_.'tools.js');
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND Tools::getValue('step') == 1) OR Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
-			Tools::addJS(_THEME_JS_DIR_.'order-address.js');
-		Tools::addJS(_PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js');
+			$this->addJS(_THEME_JS_DIR_.'order-address.js');
+		$this->addJS(_PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) OR Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 		{
-			Tools::addJS(_THEME_JS_DIR_.'cart-summary.js');
-			Tools::addJS(_PS_JS_DIR_.'jquery/jquery-typewatch.pack.js');
+			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
+			$this->addJS(_PS_JS_DIR_.'jquery/jquery-typewatch.pack.js');
 		}
 		
 	}
@@ -231,7 +231,7 @@ class ParentOrderControllerCore extends FrontController
 		global $currency;
 		
 		if (file_exists(_PS_SHIP_IMG_DIR_.(int)(self::$cart->id_carrier).'.jpg'))
-			self::$smarty->assign('carrierPicture', 1);
+			$this->smarty->assign('carrierPicture', 1);
 		$summary = self::$cart->getSummaryDetails();
 		$customizedDatas = Product::getAllCustomizedDatas((int)(self::$cart->id));
 
@@ -257,14 +257,14 @@ class ParentOrderControllerCore extends FrontController
 					$total_free_ship = 0;
 					break;
 				}
-			self::$smarty->assign('free_ship', $total_free_ship);
+			$this->smarty->assign('free_ship', $total_free_ship);
 		}
 		// for compatibility with 1.2 themes
 		foreach($summary['products'] AS $key => $product)
 			$summary['products'][$key]['quantity'] = $product['cart_quantity'];
 
-		self::$smarty->assign($summary);
-		self::$smarty->assign(array(
+		$this->smarty->assign($summary);
+		$this->smarty->assign(array(
 			'token_cart' => Tools::getToken(false),
 			'isVirtualCart' => self::$cart->isVirtualCart(),
 			'productNumber' => self::$cart->nbProducts(),
@@ -280,7 +280,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyRate' => $currency->conversion_rate,
 			'currencyFormat' => $currency->format,
 			'currencyBlank' => $currency->blank));
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'HOOK_SHOPPING_CART' => Module::hookExec('shoppingCart', $summary),
 			'HOOK_SHOPPING_CART_EXTRA' => Module::hookExec('shoppingCartExtra', $summary)
 		));
@@ -315,7 +315,7 @@ class ParentOrderControllerCore extends FrontController
 				
 				unset($tmpAddress);
 			}
-			self::$smarty->assign(array(
+			$this->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));
 
@@ -339,7 +339,7 @@ class ParentOrderControllerCore extends FrontController
 			{
 				$deliveryAddress = new Address((int)(self::$cart->id_address_delivery));
 				if (Validate::isLoadedObject($deliveryAddress) AND ($deliveryAddress->id_customer == $customer->id))
-					self::$smarty->assign('delivery', $deliveryAddress);
+					$this->smarty->assign('delivery', $deliveryAddress);
 			}
 
 			/* If invoice address is valid in cart, assign it to Smarty */
@@ -347,11 +347,11 @@ class ParentOrderControllerCore extends FrontController
 			{
 				$invoiceAddress = new Address((int)(self::$cart->id_address_invoice));
 				if (Validate::isLoadedObject($invoiceAddress) AND ($invoiceAddress->id_customer == $customer->id))
-					self::$smarty->assign('invoice', $invoiceAddress);
+					$this->smarty->assign('invoice', $invoiceAddress);
 			}
 		}
 		if ($oldMessage = Message::getMessageByCartId((int)(self::$cart->id)))
-			self::$smarty->assign('oldMessage', $oldMessage['message']);
+			$this->smarty->assign('oldMessage', $oldMessage['message']);
 	}
 	
 	protected function _assignCarrier()
@@ -361,7 +361,7 @@ class ParentOrderControllerCore extends FrontController
 		$id_zone = Address::getZoneById((int)($address->id));
 		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups());
 
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'checked' => $this->_setDefaultCarrierSelection($carriers),
 			'carriers' => $carriers,
 			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
@@ -385,7 +385,7 @@ class ParentOrderControllerCore extends FrontController
 		else
 			$this->link_conditions .= '&content_only=1';
 		
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'checkedTOS' => (int)(self::$cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
@@ -400,7 +400,7 @@ class ParentOrderControllerCore extends FrontController
 	
 	protected function _assignPayment()
 	{
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 		    'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
 			'HOOK_PAYMENT' => Module::hookExecPayment()
 		));

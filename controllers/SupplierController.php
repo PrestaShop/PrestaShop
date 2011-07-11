@@ -32,7 +32,7 @@ class SupplierControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'product_list.css');
+		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 	
 	public function process()
@@ -44,7 +44,7 @@ class SupplierControllerCore extends FrontController
 			{
 				$nbProducts = $this->supplier->getProducts($id_supplier, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);
-				self::$smarty->assign(array(
+				$this->smarty->assign(array(
 					'nb_products' => $nbProducts,
 					'products' => $this->supplier->getProducts($id_supplier, (int)self::$cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 					'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
@@ -70,7 +70,7 @@ class SupplierControllerCore extends FrontController
 				foreach ($data AS &$item)
 					$item['image'] = (!file_exists($imgDir.'/'.$item['id_supplier'].'-medium.jpg')) ? 
 						Language::getIsoById((int)(self::$cookie->id_lang)).'-default' :	$item['id_supplier'];
-				self::$smarty->assign(array(
+				$this->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbSuppliers' => $nbProducts,
 				'mediumSize' => Image::getSize('medium'),
@@ -79,7 +79,7 @@ class SupplierControllerCore extends FrontController
 				));
 			}
 			else
-				self::$smarty->assign('nbSuppliers', 0);
+				$this->smarty->assign('nbSuppliers', 0);
 		}
 	}
 	
@@ -93,9 +93,9 @@ class SupplierControllerCore extends FrontController
 	{
 		parent::displayContent();
 		if ($this->supplier)
-			self::$smarty->display(_PS_THEME_DIR_.'supplier.tpl');
+			$this->smarty->display(_PS_THEME_DIR_.'supplier.tpl');
 		else
-			self::$smarty->display(_PS_THEME_DIR_.'supplier-list.tpl');
+			$this->smarty->display(_PS_THEME_DIR_.'supplier-list.tpl');
 	}
 	
 }

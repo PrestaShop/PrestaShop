@@ -170,7 +170,8 @@ abstract class AdminTabCore
 	public function __construct()
 	{
 		global $cookie;
-
+		$context = Context::getContext();
+		$context->tab = $this;
 		$this->id = Tab::getCurrentTabId();
 		$this->_conf = array(
 		1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -480,10 +481,11 @@ abstract class AdminTabCore
 	 * Overload this method for custom checking
 	 *
 	 * @param integer $id Object id used for deleting images
-	 * TODO This function will soon be deprecated. Use ObjectModel->deleteImage instead.
+	 * @deprecated As of 1.5 use ObjectModel->deleteImage instead.
 	 */
 	public function deleteImage($id)
 	{
+		Tools::displayAsDeprecated();
 		$dir = null;
 		/* Deleting object images and thumbnails (cache) */
 		if (key_exists('dir', $this->fieldImageSettings))

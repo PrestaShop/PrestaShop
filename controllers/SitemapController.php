@@ -37,27 +37,27 @@ class SitemapControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'sitemap.css');
-		Tools::addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
+		$this->addCSS(_THEME_CSS_DIR_.'sitemap.css');
+		$this->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
 	}
 	
 	public function process()
 	{
 		parent::process();
-		self::$smarty->assign('categoriesTree', Category::getRootCategory(NULL, (int)$this->id_current_shop)->recurseLiteCategTree(0));
-		self::$smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory(_USER_ID_LANG_, 1, 1, 1, (int)$this->id_current_shop));
-		self::$smarty->assign('voucherAllowed', (int)(Configuration::get('PS_VOUCHERS')));
+		$this->smarty->assign('categoriesTree', Category::getRootCategory(NULL, (int)$this->id_current_shop)->recurseLiteCategTree(0));
+		$this->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory(_USER_ID_LANG_, 1, 1, 1, (int)$this->id_current_shop));
+		$this->smarty->assign('voucherAllowed', (int)(Configuration::get('PS_VOUCHERS')));
 		$blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
 		$blocksupplier = Module::getInstanceByName('blocksupplier');
-		self::$smarty->assign('display_manufacturer_link', (((int)$blockmanufacturer->id) ? true : false));
-		self::$smarty->assign('display_supplier_link', (((int)$blocksupplier->id) ? true : false));
-		self::$smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
-		self::$smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
+		$this->smarty->assign('display_manufacturer_link', (((int)$blockmanufacturer->id) ? true : false));
+		$this->smarty->assign('display_supplier_link', (((int)$blocksupplier->id) ? true : false));
+		$this->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
+		$this->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'sitemap.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'sitemap.tpl');
 	}
 }

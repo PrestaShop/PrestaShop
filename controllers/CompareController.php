@@ -30,7 +30,7 @@ class CompareControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'/comparator.css');
+		$this->addCSS(_THEME_CSS_DIR_.'/comparator.css');
 	}
 
 	public function process()
@@ -96,25 +96,24 @@ class CompareControllerCore extends FrontController
 
 					$hasProduct = true;
 					$ordered_features = Feature::getFeaturesForComparison($ids, self::$cookie->id_lang);
-					self::$smarty->assign(array(
+					$this->smarty->assign(array(
 						'ordered_features' => $ordered_features,
 						'product_features' => $listFeatures,
 						'products' => $listProducts,
-						'link' => new Link(),
 						'width' => $width,
 						'homeSize' => Image::getSize('home')
 					));
-					self::$smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Module::hookExec('extraProductComparison', array('list_ids_product' => $ids)));
+					$this->smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Module::hookExec('extraProductComparison', array('list_ids_product' => $ids)));
 				}
 			}
 		}
-		self::$smarty->assign('hasProduct', $hasProduct);
+		$this->smarty->assign('hasProduct', $hasProduct);
 	}
 
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'products-comparison.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
 }
 

@@ -278,7 +278,8 @@ class Blocknewsletter extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blocknewsletter.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blocknewsletter.css', 'all');
 	}
 }
 

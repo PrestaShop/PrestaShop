@@ -31,14 +31,20 @@ class LinkCore
 	protected $allow;
 	protected $url;
 	public static $cache = array('page' => array());
+	
+	public $protocol_link;
+	public $protocol_content;
+	public $useSSL;
 
 	/**
 	  * Constructor (initialization only)
 	  */
-	public function __construct()
+	public function __construct($protocol_link = null, $protocol_content = null)
 	{
 		$this->allow = (int)Configuration::get('PS_REWRITING_SETTINGS');
 		$this->url = $_SERVER['SCRIPT_NAME'];
+		$this->protocol_link = $protocol_link;
+		$this->protocol_content = $protocol_content;
 	}
 
 	/**
@@ -146,8 +152,6 @@ class LinkCore
 	 */
 	public function getImageLink($name, $ids, $type = NULL)
 	{
-		global $protocol_content;
-
 		// legacy mode
 		if (Configuration::get('PS_LEGACY_IMAGES') 
 			&& (file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'.jpg')))
@@ -168,7 +172,7 @@ class LinkCore
 				$uri_path = _THEME_PROD_DIR_.Image::getImgFolderStatic($id_image).$id_image.($type ? '-'.$type : '').'.jpg';
 		}
 		
-		return $protocol_content.Tools::getMediaServer($uri_path).$uri_path;
+		return $this->protocol_content.Tools::getMediaServer($uri_path).$uri_path;
 	}
 
 	public function getMediaLink($filepath)

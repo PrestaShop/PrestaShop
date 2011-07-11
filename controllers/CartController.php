@@ -253,6 +253,6 @@ class CartControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'errors.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'errors.tpl');
 	}
 }

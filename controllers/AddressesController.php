@@ -40,8 +40,8 @@ class AddressesControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
-		Tools::addJS(_THEME_JS_DIR_.'tools.js');
+		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+		$this->addJS(_THEME_JS_DIR_.'tools.js');
 	}
 	
 	public function process()
@@ -56,7 +56,7 @@ class AddressesControllerCore extends FrontController
 			die(Tools::displayError('Customer not found'));
 			
 		// Retro Compatibility Theme < 1.4.1
-		self::$smarty->assign('addresses', $customer->getAddresses((int)(self::$cookie->id_lang)));
+		$this->smarty->assign('addresses', $customer->getAddresses((int)(self::$cookie->id_lang)));
 		
 		$customerAddressesDetailed = $customer->getAddresses((int)(self::$cookie->id_lang));
 		
@@ -81,7 +81,7 @@ class AddressesControllerCore extends FrontController
     if (($key = array_search('Country:name', $ordered_fields)))
        $ordered_fields[$key] = 'country';
 
-		self::$smarty->assign('addresses_style', array(
+		$this->smarty->assign('addresses_style', array(
 								'company' => 'address_company'
 								,'vat_number' => 'address_company'
 								,'firstname' => 'address_name'
@@ -95,7 +95,7 @@ class AddressesControllerCore extends FrontController
 								,'alias' => 'address_title'
 							));
 							
-		self::$smarty->assign(array(
+		$this->smarty->assign(array(
 			'multipleAddresses' => $multipleAddressesFormated,
 			'ordered_fields' => $ordered_fields));
 		unset($customer);
@@ -104,7 +104,7 @@ class AddressesControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'addresses.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'addresses.tpl');
 	}
 }
 

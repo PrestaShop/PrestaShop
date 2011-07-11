@@ -68,7 +68,8 @@ class BlockLanguages extends Module
 	
 	function hookHeader($params)
 	{
-		Tools::addCSS(($this->_path).'blocklanguages.css', 'all');
+		$context = Context::getContext();
+		$context->controller->addCSS(($this->_path).'blocklanguages.css', 'all');
 	}
 }
 
