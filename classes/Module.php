@@ -783,9 +783,8 @@ abstract class ModuleCore
 				continue;
 
 			$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-			foreach ($exceptions AS $exception)
-				if (strstr(basename($_SERVER['PHP_SELF']).'?'.$_SERVER['QUERY_STRING'], $exception))
-					continue 2;
+			if (in_array(Dispatcher::$controller, $exceptions))
+				continue;
 
 			if (is_callable(array($moduleInstance, 'hook'.$hook_name)))
 			{

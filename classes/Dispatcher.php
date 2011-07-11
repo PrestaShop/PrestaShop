@@ -2,7 +2,7 @@
 
 class DispatcherCore
 {
-	public $controllers;
+	public static $controllers = array();
 	public static $controller;
 
 	function __construct()
@@ -15,24 +15,24 @@ class DispatcherCore
 		self::$controller = $this->getController();
 
 		self::$controller = str_replace('-', '', strtolower(self::$controller));
-		if (!isset($this->controllers[self::$controller]))
+		if (!isset(self::$controllers[self::$controller]))
 			self::$controller = 'index';
-		ControllerFactory::getController($this->controllers[self::$controller])->run();
+		ControllerFactory::getController(self::$controllers[self::$controller])->run();
 	}
 
-	protected function loadControllers()
+	public static function loadControllers()
 	{
 		$controller_files = scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'controllers');
-		foreach($controller_files as $controller_filename)
+		foreach ($controller_files as $controller_filename)
 		{
 			if (substr($controller_filename, -14, 14) == 'Controller.php')
-				$this->controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
+				self::$controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
 		}
 
 		// add default controller
-		$this->controllers['index'] = 'IndexController';
-		$this->controllers['authentication'] = $this->controllers['auth'];
-		$this->controllers['productscomparison'] = $this->controllers['compare'];
+		self::$controllers['index'] = 'IndexController';
+		self::$controllers['authentication'] = self::$controllers['auth'];
+		self::$controllers['productscomparison'] = self::$controllers['compare'];
 	}
 
 	public function getController()

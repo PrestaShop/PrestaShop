@@ -126,7 +126,7 @@ class AdminModulesPositions extends AdminTab
 									$this->_errors[] = Tools::displayError('No valid value for field exceptions');
 	
 							// Add files exceptions
-							if (!$module->editExceptions($id_hook, $exception, array($id)))
+							if (!$module->editExceptions($id_hook, $exception, Shop::getListFromContext()))
 								$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						}
 						
@@ -320,7 +320,6 @@ class AdminModulesPositions extends AdminTab
 						'.($instance->version ? ' v'.((int)($instance->version) == $instance->version? sprintf('%.1f', $instance->version) : (float)($instance->version)) : '').'<br />'.$instance->description.'
 					</label></td>
 						<td width="60">';
-					if ($canMove)
 						echo '
 							<a href="'.$currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&editGraft'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>
 							<a href="'.$currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&deleteGraft'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
@@ -409,15 +408,44 @@ class AdminModulesPositions extends AdminTab
 					echo '
 					</select><sup> *</sup>
 				</div>';
+					
+		echo <<<EOF
+			<script type="text/javascript">
+			//<![CDATA
+			function position_exception_add(shopID)
+			{
+				var listValue = $('#em_list_'+shopID).val();
+				var inputValue = $('#em_text_'+shopID).val();
+				var r = new RegExp('(^|,) *'+listValue+' *(,|$)');
+				if (!r.test(inputValue))
+					$('#em_text_'+shopID).val(inputValue + ((inputValue.trim()) ? ', ' : '') + listValue);
+			}
+			
+			function position_exception_remove(shopID)
+			{
+				var listValue = $('#em_list_'+shopID).val();
+				var inputValue = $('#em_text_'+shopID).val();
+				var r = new RegExp('(^|,) *'+listValue+' *(,|$)');
+				if (r.test(inputValue))
+				{
+					var rep = '';
+					if (new RegExp(listValue+' *,').test(inputValue))
+						rep = ',';
+					$('#em_text_'+shopID).val(inputValue.replace(r, rep));
+				}
+			}
+			//]]>
+			</script>
+EOF;
 
 		// Manage exceptions
 		if (!$exceptsDiff)
 		{
 			echo '<label>'.$this->l('Exceptions').' :</label>
-					<div class="margin-form">
-						<input type="text" name="exceptions" size="40" '.(!empty($excepts) ? 'value="'.$excepts.'"' : '').'><br />Ex: identity.php, history.php, order.php, product.php<br /><br />
-						'.$this->l('Please specify those files for which you do not want the module to be displayed').'.<br />
-						'.$this->l('These files are located in your base directory').', '.$this->l('e.g., ').' <b>identity.php</b>.<br />
+					<div class="margin-form">';
+			$this->displayModuleExceptionList($excepts, 0);
+
+			echo $this->l('Please specify those files for which you do not want the module to be displayed').'.<br />
 						'.$this->l('Please type each filename separated by a comma').'.
 						<br /><br />
 					</div>';
@@ -428,13 +456,9 @@ class AdminModulesPositions extends AdminTab
 					<div class="margin-form">';
 			foreach ($exceptsList as $shopID => $fileList)
 			{
-				echo '<input type="text" name="exceptions['.$shopID.']" size="40" value="' . implode(', ', $fileList) . '">';
-				$shop = new Shop($shopID);
-				echo ' ('.htmlspecialchars($shop->name).')<br /><br />';
+				$this->displayModuleExceptionList($fileList, $shopID);
 			}
-			echo 'Ex: identity.php, history.php, order.php, product.php<br /><br />
-						'.$this->l('Please specify those files for which you do not want the module to be displayed').'.<br />
-						'.$this->l('These files are located in your base directory').', '.$this->l('e.g., ').' <b>identity.php</b>.<br />
+			echo $this->l('Please specify those files for which you do not want the module to be displayed').'.<br />
 						'.$this->l('Please type each filename separated by a comma').'.
 						<br /><br />
 					</div>';
@@ -455,5 +479,26 @@ class AdminModulesPositions extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
+	}
+	
+	public function displayModuleExceptionList($fileList, $shopID)
+	{
+		if (!is_array($fileList))
+			$fileList = ($fileList) ? array($fileList) : array();
+
+		echo '<input type="text" name="exceptions['.$shopID.']" size="40" value="' . implode(', ', $fileList) . '" id="em_text_'.$shopID.'">';
+		if ($shopID)
+			echo ' ('.Shop::getInstance($shopID)->name.')';
+		echo '<br /><select id="em_list_'.$shopID.'">';
+		
+		// @todo do something better with controllers
+		Dispatcher::loadControllers();
+		ksort(Dispatcher::$controllers);
+		foreach (Dispatcher::$controllers as $k => $v)
+		{
+			echo '<option value="'.$k.'">'.$k.'</option>';
+		}
+		echo '</select> <input type="button" class="button" value="'.$this->l('Add').'" onclick="position_exception_add('.$shopID.')" /> 
+				<input type="button" class="button" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shopID.')" /><br /><br />';
 	}
 }
