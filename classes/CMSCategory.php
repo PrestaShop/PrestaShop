@@ -145,13 +145,13 @@ class CMSCategoryCore extends ObjectModel
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL)
+	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, $context = null)
 	{
-		global $link;
-
+		if (!$context)
+			$context = Context::getContext();
 		//get idLang
-		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
-
+		$idLang = is_null($idLang) ? $context->language->id : (int)($idLang);
+		
 		//recursivity for subcategories
 		$children = array();
 		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($idLang, true) AND sizeof($subcats))
@@ -167,10 +167,9 @@ class CMSCategoryCore extends ObjectModel
 				}
 			}
 
-
 		return array(
 			'id' => $this->id_cms_category,
-			'link' => $link->getCMSCategoryLink($this->id, $this->link_rewrite),
+			'link' => $context->link->getCMSCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
 			'children' => $children
@@ -215,7 +214,6 @@ class CMSCategoryCore extends ObjectModel
 
 	static public function recurseCMSCategory($categories, $current, $id_cms_category = 1, $id_selected = 1, $is_html = 0)
 	{
-		global $currentIndex;
 		$html = '<option value="'.$id_cms_category.'"'.(($id_selected == $id_cms_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).self::hideCMSCategoryPosition(stripslashes($current['infos']['name'])).'</option>';
 		if ($is_html == 0)
@@ -359,7 +357,6 @@ class CMSCategoryCore extends ObjectModel
 	  */
 	public function getSubCategories($id_lang, $active = true)
 	{
-	 	global $cookie;
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 
@@ -477,20 +474,19 @@ class CMSCategoryCore extends ObjectModel
 		return $result['link_rewrite'];
 	}
 
-	public function getLink()
+	public function getLink($context = null)
 	{
-		global $link;
-		return $link->getCMSCategoryLink($this->id, $this->link_rewrite);
+		if (!$context)
+			$context = Context::getContext();
+		return $context->link->getCMSCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL)
+	public function getName($id_lang = NULL, $context = null)
 	{
 		if (!$id_lang)
 		{
-			global $cookie;
-
-			if (isset($this->name[$cookie->id_lang]))
-				$id_lang = $cookie->id_lang;
+			if (isset($this->name[$context->language->id]))
+				$id_lang = $context->language->id;
 			else
 				$id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		}

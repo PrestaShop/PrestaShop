@@ -189,10 +189,10 @@ class CategoryCore extends ObjectModel
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL)
+	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, $context = null)
 	{
-		global $link;
-
+		if (!$context)
+			$context = Context::getContext();
 		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
 
 		$children = array();
@@ -210,7 +210,7 @@ class CategoryCore extends ObjectModel
 
 		return array(
 			'id' => (int)$this->id_category,
-			'link' => $link->getCategoryLink((int)$this->id, $this->link_rewrite),
+			'link' => $context->link->getCategoryLink((int)$this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
 			'children' => $children
@@ -219,7 +219,6 @@ class CategoryCore extends ObjectModel
 
 	static public function recurseCategory($categories, $current, $id_category = 1, $id_selected = 1)
 	{
-		global $currentIndex;
 		echo '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		if (isset($categories[$id_category]))
@@ -414,7 +413,6 @@ class CategoryCore extends ObjectModel
 	  */
 	public function getSubCategories($id_lang, $active = true)
 	{
-	 	global $cookie;
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 
@@ -453,10 +451,11 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $checkAccess set to false to return all products (even if customer hasn't access)
 	  * @return mixed Products or number of products
 	  */
-	public function getProducts($id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $random = false, $randomNumberProducts = 1, $checkAccess = true, $id_shop = null)
+	public function getProducts($id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $random = false, $randomNumberProducts = 1, $checkAccess = true, $id_shop = null, $context = null)
 	{
-		global $cookie;
-		if (!$checkAccess OR !$this->checkAccess($cookie->id_customer))
+		if (!$context)
+			$context = Context::getContext();
+		if (!$checkAccess OR !$this->checkAccess($context->customer->id))
 			return false;	
 		
 		if (!$id_shop)
@@ -520,7 +519,7 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+					AND tr.`id_country` = '.(int)$context->country->id.'
 					AND tr.`id_state` = 0)
 	    		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
@@ -719,22 +718,24 @@ class CategoryCore extends ObjectModel
 		return $result['link_rewrite'];
 	}
 
-	public function getLink()
+	public function getLink($context = null)
 	{
-		global $link;
-		return $link->getCategoryLink($this->id, $this->link_rewrite);
+		if (!$context)
+			$context = Context::getContext();
+		return $context->link->getCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL, $id_shop = false)
+	public function getName($id_lang = NULL, $id_shop = false, $context = null)
 	{
 		if (!$id_shop)
 			$id_shop = (int)Shop::getCurrentShop(true);
 		if (!$id_lang)
 		{
-			global $cookie;
+			if (!$context)
+				$context = Context::getContext();
 
-			if (isset($this->name[(int)$id_shop][$cookie->id_lang]))
-				$id_lang = $cookie->id_lang;
+			if (isset($this->name[(int)$id_shop][$context->language->id]))
+				$id_lang = $context->language->id;
 			else
 				$id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		}

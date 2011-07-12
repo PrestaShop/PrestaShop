@@ -95,4 +95,5 @@ else
 	$context->cookie = $cookie;
 	$context->link = $link;
 	$context->language = $language;
+	$context->country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
 }

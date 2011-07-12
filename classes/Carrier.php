@@ -388,14 +388,14 @@ class CarrierCore extends ObjectModel
 		return $carriers;
 	}
 
-	public static function getCarriersForOrder($id_zone, $groups = NULL)
+	public static function getCarriersForOrder($id_zone, $groups = NULL, $context = null)
 	{
-		global $cookie, $cart;
-
+		if (!$context)
+			$context = Context::getContext();
 		if (is_array($groups) AND !empty($groups))
-			$result = Carrier::getCarriers((int)$cookie->id_lang, true, false, (int)$id_zone, $groups, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+			$result = Carrier::getCarriers((int)$context->language->id, true, false, (int)$id_zone, $groups, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		else
-			$result = Carrier::getCarriers((int)$cookie->id_lang, true, false, (int)$id_zone, array(1), PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+			$result = Carrier::getCarriers((int)$context->language->id, true, false, (int)$id_zone, array(1), PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		$resultsArray = array();
 
 		foreach ($result AS $k => $row)
@@ -420,8 +420,8 @@ class CarrierCore extends ObjectModel
 					$id_zone = (int)$defaultCountry->id_zone;
 
 				// Get only carriers that have a range compatible with cart
-					if (($shippingMethod == Carrier::SHIPPING_METHOD_WEIGHT AND (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone)))
-						OR ($shippingMethod == Carrier::SHIPPING_METHOD_PRICE AND (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $cart->id_currency))))
+					if (($shippingMethod == Carrier::SHIPPING_METHOD_WEIGHT AND (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $context->cart->getTotalWeight(), $id_zone)))
+						OR ($shippingMethod == Carrier::SHIPPING_METHOD_PRICE AND (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $context->cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $context->currency->id))))
 					{
 						unset($result[$k]);
 						continue ;
@@ -430,8 +430,8 @@ class CarrierCore extends ObjectModel
 			}
 			
 			$row['name'] = (strval($row['name']) != '0' ? $row['name'] : Configuration::get('PS_SHOP_NAME'));
-			$row['price'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier']));
-			$row['price_tax_exc'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier'], false));
+			$row['price'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $context->cart->getOrderShippingCost((int)$row['id_carrier']));
+			$row['price_tax_exc'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $context->cart->getOrderShippingCost((int)$row['id_carrier'], false));
 			$row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)($row['id_carrier']).'.jpg') ? _THEME_SHIP_DIR_.(int)($row['id_carrier']).'.jpg' : '';
 
 			// If price is false, then the carrier is unavailable (carrier module)

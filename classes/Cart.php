@@ -333,13 +333,17 @@ class CartCore extends ObjectModel
 	 *
 	 * @result array Products
 	 */
-	public function getProducts($refresh = false, $id_product = false)
+	public function getProducts($refresh = false, $id_product = false, $context = null)
 	{
 		if (!$this->id)
 			return array();
 		// Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
 		if ($this->_products !== NULL AND !$refresh)
 			return $this->_products;
+
+		if (!$context)
+			$context = Context::getContext();
+		
 		$sql = '
 		SELECT cp.`id_product_attribute`, cp.`id_product`, cu.`id_customization`, cp.`quantity` AS cart_quantity, cu.`quantity` AS customization_quantity, pl.`name`,
 		pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`,
@@ -356,7 +360,7 @@ class CartCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = cp.`id_product_attribute`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-			AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+			AND tr.`id_country` = '.(int)$context->country->id.'
 			AND tr.`id_state` = 0)
 	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang.')
@@ -640,13 +644,13 @@ class CartCore extends ObjectModel
 	/*
 	** Customization management
 	*/
-	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up')
+	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up', $context = null)
 	{
-		global $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
 		/* Getting datas */
-		$files = $cookie->getFamily('pictures_'.(int)($id_product).'_');
-		$textFields = $cookie->getFamily('textFields_'.(int)($id_product).'_');
+		$files = $context->cookie->getFamily('pictures_'.(int)($id_product).'_');
+		$textFields = $context->cookie->getFamily('textFields_'.(int)($id_product).'_');
 		/* Customization addition */
 		if (count($files) > 0 OR count($textFields) > 0)
 			return $this->_addCustomization((int)$id_product, (int)$id_product_attribute, $files, $textFields, (int)$quantity);
@@ -973,10 +977,10 @@ class CartCore extends ObjectModel
 	* @param integer $id_carrier Carrier ID (default : current carrier)
 	* @return float Shipping total
 	*/
-    function getOrderShippingCost($id_carrier = NULL, $useTax = true)
+    function getOrderShippingCost($id_carrier = NULL, $useTax = true, $context = null)
     {
-		global $defaultCountry;
-
+		if (!$context)
+			$context = Context::getContext();
 		if ($this->isVirtualCart())
 			return 0;
 
@@ -1022,6 +1026,7 @@ class CartCore extends ObjectModel
 		else
 		{
 			// This method can be called from the backend, and $defaultCountry won't be defined
+			$defaultCountry = $context->country;
 			if (!Validate::isLoadedObject($defaultCountry))
 				$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 			$id_zone = (int)$defaultCountry->id_zone;
@@ -1228,10 +1233,10 @@ class CartCore extends ObjectModel
 	*
 	* @return mixed Return a string if an error occurred and false otherwise
 	*/
-	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, $id_group_shop = false, $id_shop = false)
+	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, $id_group_shop = false, $id_shop = false, $context = null)
 	{
-		global $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
 		if (!$order_total)
 			 return Tools::displayError('Cannot add voucher if order is free.');
 		if (!$discountObj->active)
@@ -1244,7 +1249,7 @@ class CartCore extends ObjectModel
 		if ($checkCartDiscount
 			AND (
 				$this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user
-				OR (Order::getDiscountsCustomer((int)($cookie->id_customer), $discountObj->id) + $this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user) >= $discountObj->quantity_per_user
+				OR (Order::getDiscountsCustomer((int)($context->customer->id), $discountObj->id) + $this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user) >= $discountObj->quantity_per_user
 				)
 			)
 			return Tools::displayError('You cannot use this voucher anymore (usage limit attained).');
@@ -1272,7 +1277,7 @@ class CartCore extends ObjectModel
 
 		if (($discountObj->id_customer OR $discountObj->id_group) AND ($this->id_customer != $discountObj->id_customer AND !in_array($discountObj->id_group, $groups)))
 		{
-			if (!$cookie->isLogged())
+			if (!$context->cookie->isLogged())
 				return Tools::displayError('You cannot use this voucher.').' - '.Tools::displayError('Please log in.');
 			return Tools::displayError('You cannot use this voucher.');
 		}
@@ -1329,9 +1334,10 @@ class CartCore extends ObjectModel
 	*
 	* @return array Cart details
 	*/
-	function getSummaryDetails()
+	function getSummaryDetails($context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
 		$delivery = new Address((int)($this->id_address_delivery));
 		$invoice = new Address((int)($this->id_address_invoice));
@@ -1359,7 +1365,7 @@ class CartCore extends ObjectModel
 			'delivery_state' => State::getNameById($delivery->id_state),
 			'invoice' => $invoice,
 			'invoice_state' => State::getNameById($invoice->id_state),
-			'carrier' => new Carrier((int)($this->id_carrier), $cookie->id_lang),
+			'carrier' => new Carrier($this->id_carrier, $context->language->id),
 			'products' => $this->getProducts(false),
 			'discounts' => $this->getDiscounts(false, true),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
@@ -1480,17 +1486,18 @@ class CartCore extends ObjectModel
 	*
 	* @return bool Always true
 	*/
-	public function addPictureToProduct($id_product, $index, $identifier)
+	public function addPictureToProduct($id_product, $index, $identifier, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
 		$varName = 'pictures_'.(int)($id_product).'_'.(int)($index);
-		if ($cookie->$varName)
+		if ($context->cookie->$varName)
 		{
-			@unlink(_PS_UPLOAD_DIR_.$cookie->$varName);
-			@unlink(_PS_UPLOAD_DIR_.$cookie->$varName.'_small');
+			@unlink(_PS_UPLOAD_DIR_.$context->cookie->$varName);
+			@unlink(_PS_UPLOAD_DIR_.$context->cookie->$varName.'_small');
 		}
-		$cookie->$varName = $identifier;
+		$context->cookie->$varName = $identifier;
 		return true;
 	}
 
@@ -1499,13 +1506,14 @@ class CartCore extends ObjectModel
 	*
 	* @return bool Always true
 	*/
-	public function addTextFieldToProduct($id_product, $index, $textValue)
+	public function addTextFieldToProduct($id_product, $index, $textValue, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		$textValue = str_replace(array("\n", "\r"), '', nl2br($textValue));
 		$textValue = str_replace('\\', '\\\\', $textValue);
 		$textValue = str_replace('\'', '\\\'', $textValue);
-		$cookie->{'textFields_'.(int)($id_product).'_'.(int)($index)} = $textValue;
+		$context->cookie->{'textFields_'.(int)($id_product).'_'.(int)($index)} = $textValue;
 		return true;
 	}
 
@@ -1514,11 +1522,12 @@ class CartCore extends ObjectModel
 	*
 	* @return bool Always true
 	*/
-	public function deleteTextFieldFromProduct($id_product, $index)
+	public function deleteTextFieldFromProduct($id_product, $index, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
-		unset($cookie->{'textFields_'.(int)($id_product).'_'.(int)($index)});
+		unset($context->cookie->{'textFields_'.(int)($id_product).'_'.(int)($index)});
 		return true;
 	}
 
@@ -1527,29 +1536,31 @@ class CartCore extends ObjectModel
 	*
 	* @return bool
 	*/
-	public function deletePictureToProduct($id_product, $index)
+	public function deletePictureToProduct($id_product, $index, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
 		$varName = 'pictures_'.(int)($id_product).'_'.(int)($index);
 		// if cookie->varName is empty, use index which is the name of the picture
-		$picture = !empty($cookie->$varName)?$cookie->$varName:$index;
+		$picture = !empty($context->cookie->$varName) ? $context->cookie->$varName : $index;
 		if ($picture)
 		{
 			if (!@unlink(_PS_UPLOAD_DIR_.$picture) OR !@unlink(_PS_UPLOAD_DIR_.$picture.'_small'))
 				return false;
-			unset($cookie->$varName);
+			unset($context->cookie->$varName);
 			return true;
 		}
 		return false;
 	}
 
-	static public function deleteCustomizationInformations($id_product)
+	static public function deleteCustomizationInformations($id_product, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
-		$cookie->unsetFamily('pictures_'.(int)($id_product).'_');
-		$cookie->unsetFamily('textFields_'.(int)($id_product).'_');
+		$context->cookie->unsetFamily('pictures_'.(int)($id_product).'_');
+		$context->cookie->unsetFamily('textFields_'.(int)($id_product).'_');
 		return true;
 	}
 

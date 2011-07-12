@@ -59,11 +59,11 @@ class ConnectionsSourceCore extends ObjectModel
 		return $result;
 	}
 	
-	public static function logHttpReferer()
+	public static function logHttpReferer($context = null)
 	{
-		global $cookie;
-
-		if (!isset($cookie->id_connections) OR !Validate::isUnsignedId($cookie->id_connections))
+		if (!$context)
+			$context = Context::getContext();
+		if (!isset($context->cookie->id_connections) OR !Validate::isUnsignedId($context->cookie->id_connections))
 			return false;
 		if (!isset($_SERVER['HTTP_REFERER']) AND !Configuration::get('TRACKING_DIRECT_TRAFFIC'))
 			return false;

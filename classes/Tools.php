@@ -341,15 +341,17 @@ class ToolsCore
 	* Return price with currency sign for a given product
 	*
 	* @param float $price Product price
-	* @param object $currency Current currency (object, id_currency, NULL => getCurrent())
+	* @param object $currency Current currency (object, id_currency, NULL => context currency)
 	* @return string Price correctly formated (sign, decimal separator...)
 	*/
-	public static function displayPrice($price, $currency = NULL, $no_utf8 = false)
+	public static function displayPrice($price, $currency = NULL, $no_utf8 = false, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		if ($currency === NULL)
-			$currency = Currency::getCurrent();
-		/* if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js) */
-		if (is_int($currency))
+			$currency = $context->currency;
+		// if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+		elseif (is_int($currency))
 			$currency = Currency::getCurrencyInstance((int)($currency));
 		$c_char = (is_array($currency) ? $currency['sign'] : $currency->sign);
 		$c_format = (is_array($currency) ? $currency['format'] : $currency->format);
@@ -404,10 +406,12 @@ class ToolsCore
 	* @param object $currency Current currency object
 	* @param boolean $to_currency convert to currency or from currency to default currency
 	*/
-	public static function convertPrice($price, $currency = NULL, $to_currency = true)
+	public static function convertPrice($price, $currency = NULL, $to_currency = true, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		if ($currency === NULL)
-			$currency = Currency::getCurrent();
+			$currency = $context->currency;
 		elseif (is_numeric($currency))
 			$currency = Currency::getCurrencyInstance($currency);
 

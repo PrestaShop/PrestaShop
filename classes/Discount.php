@@ -276,7 +276,7 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $order_total_products Total cart products amount
 	  * @return mixed Return a float value or '!' if reduction is 'Shipping free'
 	  */
-	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, $id_group_shop = false, $id_shop = false)
+	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, $id_group_shop = false, $id_shop = false, $context = null)
 	{
 		$totalAmount = 0;
 
@@ -323,7 +323,9 @@ class DiscountCore extends ObjectModel
 			/* Absolute value */
 			case 2:
 				// An "absolute" voucher is available in one currency only
-				$currency = ((int)$cart->id_currency ? Currency::getCurrencyInstance($cart->id_currency) : Currency::getCurrent());
+				if (!$context)
+					$context = Context::getContext();
+				$currency = ((int)$cart->id_currency ? Currency::getCurrencyInstance($cart->id_currency) : $context->currency);
 				if ($this->id_currency != $currency->id)
 					return 0;
 
