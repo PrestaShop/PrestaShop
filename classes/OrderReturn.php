@@ -132,10 +132,10 @@ class OrderReturnCore extends ObjectModel
 		return (int)($data['total']);
 	}
 	
-	static public function getOrdersReturn($customer_id, $order_id = false, $no_denied = false)
+	static public function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, $context = null)
 	{
-		global $cookie;
-		
+		if (!$context)
+			$context = Context::getContext();
 		$data = Db::getInstance()->ExecuteS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_return`
@@ -146,7 +146,7 @@ class OrderReturnCore extends ObjectModel
 		foreach ($data AS $k => $or)
 		{
 			$state = new OrderReturnState($or['state']);
-			$data[$k]['state_name'] = $state->name[$cookie->id_lang];
+			$data[$k]['state_name'] = $state->name[$context->language->id];
 		}
 		return $data;
 	}

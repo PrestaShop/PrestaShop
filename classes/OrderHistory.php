@@ -127,8 +127,10 @@ class OrderHistoryCore extends ObjectModel
 		return new OrderState($id_order_state, Configuration::get('PS_LANG_DEFAULT'));
 	}
 
-	public function addWithemail($autodate = true, $templateVars = false)
+	public function addWithemail($autodate = true, $templateVars = false, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		$lastOrderState = $this->getLastOrderState($this->id_order);
 		
 		if (!parent::add($autodate))
@@ -157,7 +159,6 @@ class OrderHistoryCore extends ObjectModel
 			// An additional email is sent the first time a virtual item is validated
 			if ($virtualProducts = $order->getVirtualProducts() AND (!$lastOrderState OR !$lastOrderState->logable) AND $newOrderState = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT')) AND $newOrderState->logable)
 			{
-				global $smarty;
 				$assign = array();
 				foreach ($virtualProducts AS $key => $virtualProduct)
 				{
@@ -173,10 +174,10 @@ class OrderHistoryCore extends ObjectModel
 					if ($product_download->nb_downloadable != 0)
 						$assign[$key]['downloadable'] = $product_download->nb_downloadable;
 				}
-				$smarty->assign('virtualProducts', $assign);
-				$smarty->assign('id_order', $order->id);
+				$context->smarty->assign('virtualProducts', $assign);
+				$context->smarty->assign('id_order', $order->id);
 				$iso = Language::getIsoById((int)($order->id_lang));
-				$links = $smarty->fetch(_PS_MAIL_DIR_.$iso.'/download-product.tpl');
+				$links = $context->smarty->fetch(_PS_MAIL_DIR_.$iso.'/download-product.tpl');
 				$tmpArray = array('{nbProducts}' => count($virtualProducts), '{virtualProducts}' => $links);
 				$data = array_merge ($data, $tmpArray);
 				global $_LANGMAIL;

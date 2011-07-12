@@ -102,10 +102,8 @@ abstract class ModuleCore
 	 *
 	 * @param string $name Module unique name
 	 */
-	public function __construct($name = NULL)
+	public function __construct($name = null)
 	{
-		global $cookie;
-
 		// Search the module shop context
 		list($shopID, $shopGroupID) = Shop::retrieveContext();
 		$this->setShopID($shopID);
@@ -491,9 +489,7 @@ abstract class ModuleCore
 			if (substr(realpath($filePath), 0, strlen($realpathModuleDir)) == $realpathModuleDir)
 			{
 				self::$classInModule[$currentClass] = substr(dirname($filePath), strlen($realpathModuleDir)+1);
-
-				$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)(Configuration::get('PS_LANG_DEFAULT')) : (int)($cookie->id_lang);
-				$file = _PS_MODULE_DIR_.self::$classInModule[$currentClass].'/'.Language::getIsoById($id_lang).'.php';
+				$file = _PS_MODULE_DIR_.self::$classInModule[$currentClass].'/'.$context->getContext()->language->iso_code.'.php';
 				if (Tools::file_exists_cache($file) AND include_once($file))
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 			}
@@ -556,7 +552,7 @@ abstract class ModuleCore
 	  */
 	public static function getModulesOnDisk($useConfig = false)
 	{
-		global $cookie, $_MODULES;
+		global $_MODULES;
 
 		$moduleList = array();
 		$moduleListCursor = 0;
@@ -582,7 +578,7 @@ abstract class ModuleCore
 
 				if (!count($errors) AND (int)$xml_module->need_instance == 0 AND !$needNewConfigFile)
 				{
-					$file = _PS_MODULE_DIR_.$module.'/'.Language::getIsoById($cookie->id_lang).'.php';
+					$file = _PS_MODULE_DIR_.$module.'/'.$context->getContext()->language->iso_code.'.php';
 					if (Tools::file_exists_cache($file) AND include_once($file))
 						if(isset($_MODULE) AND is_array($_MODULE))
 							$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
@@ -731,15 +727,15 @@ abstract class ModuleCore
 	 */
 	public static function hookExec($hook_name, $hookArgs = array(), $id_module = NULL)
 	{
-		global $cart, $cookie;
+		$context = Context::getContext();
 		if ((!empty($id_module) AND !Validate::isUnsignedId($id_module)) OR !Validate::isHookName($hook_name))
 			die(Tools::displayError());
 
 		$live_edit = false;
 		if (!isset($hookArgs['cookie']) OR !$hookArgs['cookie'])
-			$hookArgs['cookie'] = $cookie;
+			$hookArgs['cookie'] = $context->cookie;
 		if (!isset($hookArgs['cart']) OR !$hookArgs['cart'])
-			$hookArgs['cart'] = $cart;
+			$hookArgs['cart'] = $context->cart;
 		$hook_name = strtolower($hook_name);
 
 		if (!isset(self::$_hookModulesCache))
@@ -815,17 +811,16 @@ abstract class ModuleCore
 
 	public static function hookExecPayment()
 	{
-		global $cart, $cookie;
-		$hookArgs = array('cookie' => $cookie, 'cart' => $cart);
-		$id_customer = (int)($cookie->id_customer);
-		$billing = new Address((int)($cart->id_address_invoice));
+		$context = Context::getContext();
+		$hookArgs = array('cookie' => $context->cookie, 'cart' => $context->cart);
+		$billing = new Address((int)($context->cart->id_address_invoice));
 		$output = '';
 		$list = Shop::getListFromContext();
 		$sql = 'SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 				FROM `'._DB_PREFIX_.'module_country` mc
 				LEFT JOIN `'._DB_PREFIX_.'module` m ON m.`id_module` = mc.`id_module`
 				INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module`)
-				INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group` AND cg.`id_customer` = '.(int)($id_customer).')
+				INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group` AND cg.`id_customer` = '.(int)$context->customer->id.')
 				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \'payment\'
@@ -900,10 +895,9 @@ abstract class ModuleCore
 		if (self::$_generateConfigXmlMode)
 			return $string;
 		
-		global $_MODULES, $_MODULE, $cookie;
+		global $_MODULES, $_MODULE;
 
-		$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)(Configuration::get('PS_LANG_DEFAULT')) : (int)($cookie->id_lang);
-		$file = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php';
+		$file = _PS_MODULE_DIR_.$this->name.'/'.$context->getContext()->language->iso_code.'.php';
 		if (Tools::file_exists_cache($file) AND include_once($file))
 			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 		
@@ -1104,23 +1098,23 @@ abstract class ModuleCore
 
 	public static function display($file, $template, $cacheId = NULL, $compileId = NULL)
 	{
-		global $smarty;
+		$context = Context::getContext();
 
 		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
 		{
-			$previousTemplate = $smarty->currentTemplate;
-			$smarty->currentTemplate = substr(basename($template), 0, -4);
+			$previousTemplate = $context->smarty->currentTemplate;
+			$context->smarty->currentTemplate = substr(basename($template), 0, -4);
 		}
-		$smarty->assign('module_dir', __PS_BASE_URI__.'modules/'.basename($file, '.php').'/');
+		$context->smarty->assign('module_dir', __PS_BASE_URI__.'modules/'.basename($file, '.php').'/');
 		if (($overloaded = self::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === NULL)
 			$result = Tools::displayError('No template found for module').' '.basename($file,'.php');
 		else
 		{
-			$smarty->assign('module_template_dir', ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/');
-			$result = $smarty->fetch(($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template, $cacheId, $compileId);
+			$context->smarty->assign('module_template_dir', ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/');
+			$result = $context->smarty->fetch(($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template, $cacheId, $compileId);
 		}
 		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
-			$smarty->currentTemplate = $previousTemplate;
+			$context->smarty->currentTemplate = $previousTemplate;
 		return $result;
 	}
 
@@ -1131,26 +1125,25 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = NULL, $compileId = NULL)
 	{
-		global $smarty;
+		$context = Context::getContext();
 
 		/* Use Smarty 3 API calls */
 		if (!Configuration::get('PS_FORCE_SMARTY_2')) /* PHP version > 5.1.2 */
-			return $smarty->isCached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
+			return $context->smarty->isCached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
 		/* or keep a backward compatibility if PHP version < 5.1.2 */
 		else
-			return $smarty->is_cached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
+			return $context->smarty->is_cached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
 	}
 
 	protected function _clearCache($template, $cacheId = NULL, $compileId = NULL)
 	{
-		global $smarty;
-
+		$context = Context::getContext();
 		/* Use Smarty 3 API calls */
 		if (!Configuration::get('PS_FORCE_SMARTY_2')) /* PHP version > 5.1.2 */
-			return $smarty->clearCache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
+			return $context->smarty->clearCache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
 		/* or keep a backward compatibility if PHP version < 5.1.2 */
 		else
-			return $smarty->clear_cache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
+			return $context->smarty->clear_cache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
 	}
 	
 	protected function _generateConfigXml()

@@ -90,8 +90,6 @@ abstract class PaymentModuleCore extends Module
 	*/
 	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, $id_group_shop = false, $id_shop = false)
 	{
-		global $cart;
-		
 		$cart = new Cart((int)($id_cart));
 		// Does order already exists ?
 		if (Validate::isLoadedObject($cart) AND $cart->OrderExists() == false)
@@ -501,7 +499,7 @@ abstract class PaymentModuleCore extends Module
 	public function getCurrency($current_id_currency = NULL)
 	{
 		if (!(int)$current_id_currency)
-			global $cookie;
+			$current_id_currency = Context::getContext()->currency->id;
 
 		if (!$this->currencies)
 			return false;
@@ -515,13 +513,7 @@ abstract class PaymentModuleCore extends Module
 			$currencies = Currency::getPaymentCurrenciesSpecial($this->id);
 			$currency = $currencies['id_currency'];
 			if ($currency == -1)
-			{
-				// not use $cookie if $current_id_currency is set
-				if ((int)$current_id_currency)
-					$id_currency = (int)$current_id_currency;
-				else
-					$id_currency = (int)($cookie->id_currency);
-			}
+				$id_currency = (int)$current_id_currency;
 			elseif ($currency == -2)
 				$id_currency = (int)(Configuration::get('PS_CURRENCY_DEFAULT'));
 			else

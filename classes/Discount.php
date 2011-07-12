@@ -229,10 +229,10 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $id_customer Customer ID
 	  * @return array Discounts
 	  */
-	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false)
+	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false, $context = null)
     {
-		global $cart;
-
+		if (!$context)
+			$context = Context::getContext();
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
         SELECT d.*, dtl.`name` AS `type`, dl.`description`
 		FROM `'._DB_PREFIX_.'discount` d
@@ -249,7 +249,7 @@ class DiscountCore extends ObjectModel
 			if ($discount['quantity_per_user'])
 			{
 				$quantity_used = Order::getDiscountsCustomer((int)($id_customer), (int)($discount['id_discount']));
-				if (isset($cart) AND isset($cart->id))
+				if (isset($context->cart) AND $context->cart->id)
 					$quantity_used += $cart->getDiscountsCustomer((int)($discount['id_discount']));
 				$discount['quantity_for_user'] = $discount['quantity_per_user'] - $quantity_used;
 			}

@@ -34,7 +34,6 @@ class LinkCore
 	
 	public $protocol_link;
 	public $protocol_content;
-	public $useSSL;
 
 	/**
 	  * Constructor (initialization only)
@@ -180,9 +179,10 @@ class LinkCore
 		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
 	}
 
-	public function preloadPageLinks()
+	public function preloadPageLinks($context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		if ($this->allow != 1)
 			return;
 
@@ -190,16 +190,17 @@ class LinkCore
 		SELECT page, url_rewrite
 		FROM `'._DB_PREFIX_.'meta` m
 		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta)
-		WHERE id_lang = '.(int)$cookie->id_lang);
+		WHERE id_lang = '.(int)$context->language->id);
 		foreach ($result as $row)
-			self::$cache['page'][$row['page'].'.php_'.$cookie->id_lang] = $this->getLangLink((int)$cookie->id_lang).$row['url_rewrite'];
+			self::$cache['page'][$row['page'].'.php_'.$context->language->id] = $this->getLangLink($context->language->id).$row['url_rewrite'];
 	}
 
-	public function getPageLink($filename, $ssl = false, $id_lang = NULL, $request = NULL)
+	public function getPageLink($filename, $ssl = false, $id_lang = NULL, $request = NULL, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		if ($id_lang == NULL)
-			$id_lang = (int)($cookie->id_lang);
+			$id_lang = (int)$context->language->id;
 
 		if (array_key_exists($filename.'_'.$id_lang, self::$cache['page']) AND !empty(self::$cache['page'][$filename.'_'.$id_lang]))
 			$uri_path = self::$cache['page'][$filename.'_'.$id_lang];
@@ -244,9 +245,10 @@ class LinkCore
 	  * @param integer $id_lang Language ID
 	  * @return string link
 	  */
-	public function getLanguageLink($id_lang)
+	public function getLanguageLink($id_lang, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		$matches = array();
 		$request = $_SERVER['REQUEST_URI'];
 		preg_match('#^/([a-z]{2})/([^\?]*).*$#', $request, $matches);
@@ -268,7 +270,7 @@ class LinkCore
 
 		$switchLangLink = $this->getPageLink(substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)), false, $id_lang).$query;
 		if (!$this->allow)
-			if ($id_lang != $cookie->id_lang)
+			if ($id_lang != $context->language->id)
 			{
 				if (strpos($switchLangLink,'id_lang'))
 					$switchLangLink = preg_replace('`id_lang=[0-9]*`','id_lang='.$id_lang,$switchLangLink);
@@ -355,15 +357,16 @@ class LinkCore
 		return $url.(!strstr($url, '?') ? '?' : '&').'orderby='.urlencode($orderby).'&orderway='.urlencode($orderway);
 	}
 
-	protected function getLangLink($id_lang = NULL)
+	protected function getLangLink($id_lang = NULL, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		if (!$this->allow OR Language::countActiveLanguages() <= 1)
 			return '';
 
-		global $cookie;
 		if (!$id_lang)
-			$id_lang = (int)$cookie->id_lang;
+			$id_lang = $context->language->id;
 
-		return Language::getIsoById((int)$id_lang).'/';
+		return Language::getIsoById($id_lang).'/';
 	}
 }
