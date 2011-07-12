@@ -44,36 +44,34 @@ class AdminStockMvt extends AdminTab
 		'employee' => array('title' => $this->l('Employee'), 'width' => 100, 'havingFilter' => true),
 		);
 		
-		global $cookie;
+		$context = Context::getContext();
 		
 		$this->_select = 'CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason';
 		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock '.Shop::sqlSharedStock('stock', Shop::getCurrentShop(), Shop::getCurrentGroupShop()).'
-							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
-							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (a.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$cookie->id_lang.')
+							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$context->language->id.')
+							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (a.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$context->language->id.')
 							LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
-							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$cookie->id_lang.')';
+							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$context->language->id.')';
 		$this->_group = 'GROUP BY a.id_stock_mvt';
 		parent::__construct();
 	}
 
 	public function postProcess()
 	{
-		global $cookie;
 		if (Tools::isSubmit('rebuildStock'))
-			StockMvt::addMissingMvt((int)$cookie->id_employee, false);
+			StockMvt::addMissingMvt($context->employee->id, false);
 		return parent::postProcess();
 	}
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$dl = 'name';
-		echo '<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'&addstock_mvt_reason" method="post">
+		echo '<form action="'.$this->currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'&addstock_mvt_reason" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/search.gif" />'.$this->l('Stock Movement').'</legend>
 				<label>'.$this->l('Name:').'</label>
@@ -102,11 +100,10 @@ class AdminStockMvt extends AdminTab
 	
 	public function viewstock_mvt()
 	{
-		global $cookie;
-		
+		$context = Context::getContext();
 		$stockMvt = new StockMvt((int)Tools::getValue('id_stock_mvt'));
-		$product = new Product((int)$stockMvt->id_product, true,  (int)$cookie->id_lang);
-		$movements = $product->getStockMvts((int)$cookie->id_lang);
+		$product = new Product((int)$stockMvt->id_product, true, $context->language->id);
+		$movements = $product->getStockMvts($context->language->id);
 
 			echo '<h2>'.$this->l('Stock Movements for').' '.$product->name.'</h2>
 			<table cellspacing="0" cellpadding="0" class="table widthfull">
@@ -130,7 +127,7 @@ class AdminStockMvt extends AdminTab
 					<td>'.$mvt['reason'].'</td>
 					<td>'.$mvt['employee'].'</td>
 					<td>#'.$mvt['id_order'].'</td>
-					<td>'.Tools::displayDate($mvt['date_add'], (int)($cookie->id_lang)).'</td>
+					<td>'.Tools::displayDate($mvt['date_add'], $context->language->id).'</td>
 				</tr>';
 			}
 			echo '</table>';
@@ -138,9 +135,8 @@ class AdminStockMvt extends AdminTab
 	
 	public function display()
 	{
-		global $currentIndex, $cookie;
-		
 		$old_post = false;
+		$context = Context::getContext();
 		
 		if (!isset($_GET['addstock_mvt_reason']) OR (Tools::isSubmit('submitAddstock_mvt_reason') AND Tools::getValue('id_stock_mvt_reason')))
 		{
@@ -153,7 +149,7 @@ class AdminStockMvt extends AdminTab
 			if (!isset($_GET['view'.$this->table]))
 				echo '
 				<fieldset>
-					<form method="post" action="'.$currentIndex.'&token='.$this->token.'&rebuildMvt=1">
+					<form method="post" action="'.$this->currentIndex.'&token='.$this->token.'&rebuildMvt=1">
 						<label for="stock_rebuild">'.$this->l('Calculate the movement of inventory missing').'</label>
 						<div class="margin-form">
 							<input class="button" type="submit" name="rebuildStock" value="'.$this->l('Submit').'" />
@@ -182,7 +178,7 @@ class AdminStockMvt extends AdminTab
 												'sign' => array('title' => $this->l('Sign'), 'width' => 15, 'align' => 'center', 'type' => 'select',  'icon' => array(-1 => 'arrow_down.png', 1 => 'arrow_up.png'), 'orderby' => false),
 												'name' => array('title' => $this->l('Name'), 'width' => 500));
 		
-		$reasons = StockMvtReason::getStockMvtReasons((int)$cookie->id_lang);
+		$reasons = StockMvtReason::getStockMvtReasons($context->language->id);
 		$this->_fieldsOptions = array('PS_STOCK_MVT_REASON_DEFAULT' => array('title' => $this->l('Default Stock Movement reason:'), 
 												'cast' => 'intval', 
 												'type' => 'select', 

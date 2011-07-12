@@ -24,20 +24,71 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+/**
+ * @since 1.5.0
+ */
 class ContextCore
 {
+	/**
+	 * @var Context
+	 */
 	protected static $instance;
 
+	/**
+	 * @var Cart
+	 */
 	public $cart;
+	
+	/**
+	 * @var Customer
+	 */
 	public $customer;
+	
+	/**
+	 * @var Cookie
+	 */
 	public $cookie;
+	
+	/**
+	 * @var Link
+	 */
 	public $link;
+	
+	/**
+	 * @var Country
+	 */
 	public $country;
+	
+	/**
+	 * @var Employee
+	 */
 	public $employee;
+	
+	/**
+	 * @var Controller
+	 */
 	public $controller;
-	public $lang;
+	
+	/**
+	 * @var Language
+	 */
+	public $language;
+	
+	/**
+	 * @var Currency
+	 */
 	public $currency;
+	
+	/**
+	 * @var AdminTab
+	 */
 	public $tab;
+	
+	/**
+	 * @var Shop
+	 */
+	public $shop;
 	
 	/**
 	 * Create a context without singleton constraint
@@ -48,7 +99,7 @@ class ContextCore
 								$link = null,
 								$country = null,
 								$employee = null,
-								$lang = null,
+								$language = null,
 								$currency = null,
 								$tab = null)
 	{
@@ -58,7 +109,7 @@ class ContextCore
 		$this->link = $link;
 		$this->country = $country;
 		$this->employee = $employee;
-		$this->lang = $lang;
+		$this->language = $language;
 		$this->currency = $currency;
 		$this->tab = $tab;
 	}

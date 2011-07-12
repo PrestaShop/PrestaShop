@@ -144,13 +144,15 @@ function submitConfirm()
 
 function submitAccount()
 {
-	global $cookie, $errors, $smarty;
+	global $errors;
+	
+	$context = Context::getContext();
 	$email = Tools::getValue('email');
 	if (empty($email) OR !Validate::isEmail($email))
 		$errors[] = Tools::displayError('e-mail not valid');
 	elseif (!Validate::isPasswd(Tools::getValue('passwd')))
 		$errors[] = Tools::displayError('invalid password');
-	elseif (Customer::customerExists($email, false, true, (int)Shop::getCurrentGroupShop(), (int)Shop::getCurrentShop()))
+	elseif (Customer::customerExists($email))
 		$errors[] = Tools::displayError('someone has already registered with this e-mail address');	
 	elseif (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) AND !(Tools::getValue('months') == '' AND Tools::getValue('days') == '' AND Tools::getValue('years') == ''))
 		$errors[] = Tools::displayError('invalid birthday');
@@ -180,15 +182,15 @@ function submitAccount()
 					$errors[] = Tools::displayError('an error occurred while creating your address');
 				else
 				{
-					if (Mail::Send((int)($cookie->id_lang), 'account', Mail::l('Welcome!'), 
+					if (Mail::Send($context->language->id, 'account', Mail::l('Welcome!'), 
 					array('{firstname}' => $customer->firstname, '{lastname}' => $customer->lastname, '{email}' => $customer->email, '{passwd}' => Tools::getValue('passwd')), $customer->email, $customer->firstname.' '.$customer->lastname))
-						$smarty->assign('confirmation', 1);
-					$cookie->id_customer = (int)($customer->id);
-					$cookie->customer_lastname = $customer->lastname;
-					$cookie->customer_firstname = $customer->firstname;
-					$cookie->passwd = $customer->passwd;
-					$cookie->logged = 1;
-					$cookie->email = $customer->email;
+						$context->controller->smarty->assign('confirmation', 1);
+					$context->cookie->id_customer = (int)($customer->id);
+					$context->cookie->customer_lastname = $customer->lastname;
+					$context->cookie->customer_firstname = $customer->firstname;
+					$context->cookie->passwd = $customer->passwd;
+					$context->cookie->logged = 1;
+					$context->cookie->email = $customer->email;
 					Module::hookExec('createAccount', array(
 						'_POST' => $_POST,
 						'newCustomer' => $customer
@@ -205,7 +207,7 @@ function submitAccount()
 
 function submitLogin()
 {
-	global $cookie, $errors;
+	global $errors;
 
 	$passwd = trim(Tools::getValue('passwd'));
 	$email = trim(Tools::getValue('email'));
@@ -222,21 +224,21 @@ function submitLogin()
 	else
 	{
 		$customer = new Customer();
-		$authentication = $customer->getByemail(trim($email), trim($passwd), (int)Shop::getCurrentGroupShop(), (int)Shop::getCurrentShop());
+		$authentication = $customer->getByemail(trim($email), trim($passwd));
 		/* Handle brute force attacks */
 		sleep(1);
 		if (!$authentication OR !$customer->id)
 			$errors[] = Tools::displayError('authentication failed');
 		else
 		{
-			$cookie->id_customer = (int)($customer->id);
-			$cookie->customer_lastname = $customer->lastname;
-			$cookie->customer_firstname = $customer->firstname;
-			$cookie->logged = 1;
-			$cookie->passwd = $customer->passwd;
-			$cookie->email = $customer->email;
-			if (Configuration::get('PS_CART_FOLLOWING') AND (empty($cookie->id_cart) OR Cart::getNbProducts($cookie->id_cart) == 0))
-				$cookie->id_cart = Cart::lastNoneOrderedCart($customer->id);
+			$context->cookie->id_customer = (int)($customer->id);
+			$context->cookie->customer_lastname = $customer->lastname;
+			$context->cookie->customer_firstname = $customer->firstname;
+			$context->cookie->logged = 1;
+			$context->cookie->passwd = $customer->passwd;
+			$context->cookie->email = $customer->email;
+			if (Configuration::get('PS_CART_FOLLOWING') AND (empty($context->cookie->id_cart) OR Cart::getNbProducts($context->cookie->id_cart) == 0))
+				$context->cookie->id_cart = Cart::lastNoneOrderedCart($customer->id);
 			Module::hookExec('authentication');
 
 			// Next !
@@ -383,7 +385,7 @@ else
 			unset($cookie->paypal_token);
 			Tools::redirect('modules/paypal/express/submit.php');
 		}
-		if (Customer::customerExists($email, false, true, (int)Shop::getCurrentGroupShop(), (int)Shop::getCurrentShop()) OR Tools::isSubmit('submitLogin'))
+		if (Customer::customerExists($email) OR Tools::isSubmit('submitLogin'))
 			displayLogin();
 		displayAccount();
 	}

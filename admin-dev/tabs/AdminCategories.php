@@ -220,11 +220,8 @@ class AdminCategories extends AdminTab
 			return;
 		$active = $this->getFieldValue($obj, 'active');
 		$customer_groups = $obj->getGroups();
-		if (Shop::getContextType() == Shop::CONTEXT_SHOP)
-		{
-			$shop = new Shop(Shop::getCurrentShop());
-			$id_category = $shop->id_category;
-		}
+		if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
+			$id_category = $context->shop->id_category;
 		else
 			$id_category = (int)Tools::getValue('id_parent');
 

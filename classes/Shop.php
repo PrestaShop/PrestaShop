@@ -253,30 +253,33 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get group of current shop
 	 * 
-	 * @param bool $asObject If false, return only the ID of the group
 	 * @return GroupShop
 	 */
 	public function getGroup($asObject = false)
 	{
-		if (!$asObject)
-			return $this->id_group_shop;
-
 		if (!$this->group)
 			$this->group = new GroupShop($this->id_group_shop);
 		return $this->group;
 	}
 
 	/**
-	 * Get current shop ID.
+	 * Get current shop ID
 	 *
-	 * @param bool $forceContext If true and if no shop is selected in context, get default shop ID
 	 * @return int
 	 */
-	public static function getID($forceContext = false)
+	public function getID()
 	{
-		if (!$this->id && $forceContext)
-			return (int)Configuration::get('PS_SHOP_DEFAULT');
 		return (int)$this->id;
+	}
+	
+	/**
+	 * Get current shop group ID
+	 *
+	 * @return int
+	 */
+	public function getGroupID()
+	{
+		return (int)$this->id_group_shop;
 	}
 
 	/**
@@ -571,7 +574,7 @@ class ShopCore extends ObjectModel
 			$alias .= '.';
 
 		if (is_null($shopID))
-			$shopID = Shop::getCurrentShop(true);
+			$shopID = Context::getContext()->shop->getID();
 
 		if (!$shopID)
 			return ($shopGroupID) ? ' AND '.$alias.'id_group_shop = '.(int)$shopGroupID : '';

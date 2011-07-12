@@ -1375,7 +1375,7 @@ class ProductCore extends ObjectModel
 	public static function getNewProducts($id_lang, $pageNumber = 0, $nbProducts = 10, $count = false, $orderBy = NULL, $orderWay = NULL, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Shop::getCurrentShop();
+			$id_shop = Context::getContext()->shop->getID();
 		if ($pageNumber < 0) $pageNumber = 0;
 		if ($nbProducts < 1) $nbProducts = 10;
 		if (empty($orderBy) || $orderBy == 'position') $orderBy = 'date_add';
@@ -1456,7 +1456,7 @@ class ProductCore extends ObjectModel
 		$id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 		$ids = Address::getCountryAndState($id_address);
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-		return SpecificPrice::getProductIdByDate(Shop::getCurrentShop(), $context->currency->id, $id_country, $context->customer->id_default_group, $beginning, $ending);
+		return SpecificPrice::getProductIdByDate($context->shop->getID(), $context->currency->id, $id_country, $context->customer->id_default_group, $beginning, $ending);
 	}
 
 	/**
@@ -1523,7 +1523,7 @@ class ProductCore extends ObjectModel
 		if (!Validate::isBool($count))
 			die(Tools::displayError());
 
-		if (is_null($id_shop)) $id_shop = Shop::getCurrentShop(true);
+		if (is_null($id_shop)) $id_shop = Context::getContext()->shop->getID();
 		if ($pageNumber < 0) $pageNumber = 0;
 		if ($nbProducts < 1) $nbProducts = 10;
 		if (empty($orderBy) || $orderBy == 'position') $orderBy = 'price';
@@ -1810,9 +1810,7 @@ class ProductCore extends ObjectModel
 		if ($usetax != false AND !empty($address_infos['vat_number']) AND $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY') AND Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
 
-		$id_shop = (int)(Shop::getCurrentShop());
-
-		return Product::priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country,  $id_state, $id_county, $id_currency, $id_group, $quantity, $usetax, $decimals, $only_reduc,
+		return Product::priceCalculation($context->shop->getID(), $id_product, $id_product_attribute, $id_country,  $id_state, $id_county, $id_currency, $id_group, $quantity, $usetax, $decimals, $only_reduc,
 		$usereduc, $with_ecotax, $specificPriceOutput);
 	}
 
@@ -1950,6 +1948,9 @@ class ProductCore extends ObjectModel
 
 	public static function isDiscounted($id_product, $quantity = 1, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+
 		$id_group = $context->customer->id_default_group;
 		$cart_quantity = !$context->cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(`quantity`)
@@ -1960,8 +1961,7 @@ class ProductCore extends ObjectModel
 		$id_currency = (int)$context->currency->id;
 		$ids = Address::getCountryAndState((int)($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-		$id_shop = (int)(Shop::getCurrentShop());
-		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity);
+		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->getID(), $id_currency, $id_country, $id_group, $quantity);
 	}
 
 	/**
@@ -2084,7 +2084,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!$this->id)
 			return ;
-		$shop = Shop::getCurrentShop(true);
+		$shop = Context::getContext()->shop->getID();
 
 		// For retrocompatibility
 		$id_product_attribute = (int)$id_product_attribute;
@@ -2157,7 +2157,7 @@ class ProductCore extends ObjectModel
 		if (!$this->id)
 			return 0;
 
-		$shop = Shop::getCurrentShop(true);
+		$shop = Context::getContext()->shop->getID();
 		$sql = 'SELECT quantity
 				FROM '._DB_PREFIX_.'stock
 				WHERE id_product = '.$this->id.'

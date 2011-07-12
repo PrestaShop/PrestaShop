@@ -147,19 +147,18 @@ class SearchCore
 
 	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, $id_shop = false, $context = null)
 	{
-		global $cookie;
 		if (!$context)
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 		
 		// Only use cookie if id_customer is not present
 		if ($useCookie)
-			$id_customer = $cookie->id_customer;
+			$id_customer = $context->customer->id;
 		else
 			$id_customer = 0;
 		
 		if (!$id_shop)
-			$id_shop = Shop::getCurrentShop();
+			$id_shop = $context->shop->getID();
 
 		// TODO : smart page management
 		if ($pageNumber < 1) $pageNumber = 1;
@@ -541,7 +540,7 @@ class SearchCore
 	 		$shops = array($context->shop->getID());
 	 	if (!is_array($shops))
 	 		$shops = array($shops);
-	 	
+
 		// Only use cookie if id_customer is not present
 		if ($useCookie)
 			$id_customer = (int)$context->customer->id;

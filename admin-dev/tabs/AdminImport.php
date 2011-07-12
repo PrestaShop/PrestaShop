@@ -589,7 +589,6 @@ class AdminImport extends AdminTab
 
 	public function productImport()
 	{
-		global $cookie;
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$defaultLanguageId = (int)(Configuration::get('PS_LANG_DEFAULT'));
@@ -788,7 +787,8 @@ class AdminImport extends AdminTab
 				{
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = (int)($product->id);
-					$specificPrice->id_shop = (int)(Shop::getCurrentShop());
+					// @todo multishop specific price import
+					$specificPrice->id_shop = $context->shop->getID();
 					$specificPrice->id_currency = 0;
 					$specificPrice->id_country = 0;
 					$specificPrice->id_group = 0;
@@ -849,7 +849,7 @@ class AdminImport extends AdminTab
 				
 				if (isset($product->image) AND is_array($product->image) and sizeof($product->image))
 				{
-					$productHasImages = (bool)Image::getImages((int)($cookie->id_lang), (int)($product->id));
+					$productHasImages = (bool)Image::getImages($context->language->id, (int)($product->id));
 					foreach ($product->image AS $key => $url)
 						if (!empty($url))
 						{
@@ -1239,9 +1239,9 @@ class AdminImport extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
+		$context = Context::getContext();
 		if ((Tools::getValue('import')) AND (isset($this->_warnings) AND !sizeof($this->_warnings)))
 			echo '<div class="module_confirmation conf confirm"><img src="../img/admin/ok.gif" alt="" title="" style="margin-right:5px; float:left;" />'.$this->l('The .CSV file has been imported into your shop.').'</div>';
 
@@ -1270,7 +1270,7 @@ class AdminImport extends AdminTab
 		echo '
 		<fieldset class="width3">
 			<legend><img src="../img/admin/import.gif" />'.$this->l('Upload').'</legend>
-			<form action="'.$currentIndex.'&token='.$this->token.'" method="POST" enctype="multipart/form-data">
+			<form action="'.$this->currentIndex.'&token='.$this->token.'" method="POST" enctype="multipart/form-data">
 				<label class="clear">'.$this->l('Select a file').' </label>
 				<div class="margin-form">
 					<input name="file" type="file" /><br />'.$this->l('You can also upload your file by FTP and put it in').' '.realpath(dirname(__FILE__).'/../import/').'.
@@ -1295,7 +1295,7 @@ class AdminImport extends AdminTab
 		{
 			echo '
 			<div class="space">
-					<form id="preview_import" action="'.$currentIndex.'&token='.$this->token.'" method="post" style="display:inline" enctype="multipart/form-data" class="clear" onsubmit="if ($(\'#truncate\').get(0).checked) {if (confirm(\''.$this->l('Are you sure you want to delete', __CLASS__, true, false).'\' + \' \' + $(\'#entity > option:selected\').text().toLowerCase() + \''.$this->l('?', __CLASS__, true, false).'\')){this.submit();} else {return false;}}">
+					<form id="preview_import" action="'.$this->currentIndex.'&token='.$this->token.'" method="post" style="display:inline" enctype="multipart/form-data" class="clear" onsubmit="if ($(\'#truncate\').get(0).checked) {if (confirm(\''.$this->l('Are you sure you want to delete', __CLASS__, true, false).'\' + \' \' + $(\'#entity > option:selected\').text().toLowerCase() + \''.$this->l('?', __CLASS__, true, false).'\')){this.submit();} else {return false;}}">
 						<fieldset style="float: left; width: 550px">
 							<legend><img src="../img/admin/import.gif" />'.$this->l('Import').'</legend>
 							<label class="clear">'.$this->l('Select which entity to import:').' </label>
@@ -1321,7 +1321,7 @@ class AdminImport extends AdminTab
 							<div class="margin-form">
 								<select name="iso_lang">';
 							foreach ($this->_languages AS $lang)
-								echo '<option value="'.$lang['iso_code'].'" '.($lang['id_lang'] == $cookie->id_lang ? 'selected="selected"' : '').'>'.$lang['name'].'</option>';
+								echo '<option value="'.$lang['iso_code'].'" '.($lang['id_lang'] == $context->language->id ? 'selected="selected"' : '').'>'.$lang['name'].'</option>';
 							echo '</select></div><label for="convert" class="clear">'.$this->l('iso-8859-1 encoded file').' </label>
 							<div class="margin-form">
 								<input name="convert" id="convert" type="checkbox" style="margin-top: 6px;"/>
@@ -1360,7 +1360,7 @@ class AdminImport extends AdminTab
 				<script type="text/javascript">
 					$("select#entity").change( function() {
 						$("#entitie").html($("#entity > option:selected").text().toLowerCase());
-						$.getJSON("'.dirname($currentIndex).'/ajax.php", 
+						$.getJSON("'.dirname($this->currentIndex).'/ajax.php", 
 							{
 							getAvailableFields:1,
 							entity: $("#entity").val()},
@@ -1473,7 +1473,6 @@ class AdminImport extends AdminTab
 
 	public function displayCSV()
 	{
-		global $currentIndex;
 		$importMatchs = Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'import_match');
 		
 		echo '
@@ -1512,7 +1511,7 @@ class AdminImport extends AdminTab
 			$res[] = '\''.$elem.'\'';
 
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post" id="import_form" name="import_form">
+		<form action="'.$this->currentIndex.'&token='.$this->token.'" method="post" id="import_form" name="import_form">
 			'.$this->l('Skip').' <input type="text" size="2" name="skip" value="0" /> '.$this->l('lines').'.
 			<input type="hidden" name="csv" value="'.Tools::getValue('csv').'" />
 			<input type="hidden" name="convert" value="'.Tools::getValue('convert').'" />
@@ -1626,8 +1625,6 @@ class AdminImport extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (Tools::isSubmit('submitFileUpload'))
 		{
 			if (isset($_FILES['file']) AND !empty($_FILES['file']['error']))
@@ -1662,7 +1659,7 @@ class AdminImport extends AdminTab
 			elseif (!file_exists($_FILES['file']['tmp_name']) OR !@move_uploaded_file($_FILES['file']['tmp_name'], dirname(__FILE__).'/../import/'.$_FILES['file']['name'].'.'.date('Ymdhis')))
 				$this->_errors[] = $this->l('an error occurred while uploading and copying file');
 			else
-				Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=18');
+				Tools::redirectAdmin($this->currentIndex.'&token='.Tools::getValue('token').'&conf=18');
 		}
 		elseif (Tools::isSubmit('submitImportFile'))
 			$this->displayCSV();

@@ -286,17 +286,12 @@ class AdminModules extends AdminTab
 									$toolbar .= '<tr>
 										<th colspan="4">
 											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
-									if (Shop::getContextType() == Shop::CONTEXT_SHOP)
-									{
-										$shop = new Shop((int)Shop::getCurrentShop());
-										$toolbar .= 'shop <b>'.$shop->name.'</b>';
-									}
-									elseif (Shop::getContextType() == Shop::CONTEXT_GROUP)
-									{
-										$group_shop = new GroupShop((int)Shop::getCurrentGroupShop());
-										$toolbar .= 'all shops of group shop <b>'.$group_shop->name.'</b>';
-									}
-									elseif (Shop::getContextType() == Shop::CONTEXT_ALL)
+									$context = Context::getContext();
+									if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
+										$toolbar .= 'shop <b>'.$context->shop->name.'</b>';
+									elseif ($context->shop->getContextType() == Shop::CONTEXT_GROUP)
+										$toolbar .= 'all shops of group shop <b>'.$context->shop->getGroup()->name.'</b>';
+									else
 										$toolbar .= 'all shops';
 									$toolbar .= '</th>
 									</tr>';

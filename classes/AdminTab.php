@@ -1190,7 +1190,7 @@ abstract class AdminTabCore
 				$assos = GroupShop::getAssoTables();
 				if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
 					$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = $context->shop->getGroup();
+				$idenfierShop = $context->shop->getGroupID();
 			}
 			if (isset($filterKey))
 				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.'='.(int)$idenfierShop.')';

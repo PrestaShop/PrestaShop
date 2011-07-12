@@ -1169,7 +1169,7 @@ class AdminProducts extends AdminTab
 			/* Update an existing product */
 			if (isset($id) AND !empty($id))
 			{
-				$object = new $this->className($id, false, NULL, Shop::getCurrentShop(true));
+				$object = new $this->className($id);
 				if (Validate::isLoadedObject($object))
 				{
 					$this->_removeTaxFromEcotax();
@@ -1402,7 +1402,7 @@ class AdminProducts extends AdminTab
 	{
 		global $currentIndex, $cookie;
 		
-		$id_shop = Shop::getCurrentShop(true);
+		$id_shop = Context::getContext()->shop->getID();
 		
 		if (($id_category = (int)Tools::getValue('id_category')))
 			$currentIndex .= '&id_category='.$id_category;
@@ -3816,7 +3816,7 @@ class AdminProducts extends AdminTab
 		if ($id = (int)(Tools::getValue($this->identifier)) AND Validate::isUnsignedId($id))
 		{
 			if (!$this->_object)
-				$this->_object = new $this->className($id, false, NULL, (int)Shop::getCurrentShop(true));
+				$this->_object = new $this->className($id);
 			if (Validate::isLoadedObject($this->_object))
 				return $this->_object;
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');

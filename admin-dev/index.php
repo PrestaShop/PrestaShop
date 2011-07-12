@@ -78,18 +78,12 @@ if (empty($tab) and !sizeof($_POST))
 		{
 			echo '
 			<span style="float:right">'.translate('You are currently view/configure your store for').' <b>';
-			if (Shop::getContextType() == Shop::CONTEXT_ALL)
+			if (Context::getContext()->shop->getContextType() == Shop::CONTEXT_ALL)
 				echo 'all shops';
-			elseif (Shop::getContextType() == Shop::CONTEXT_GROUP)
-			{
-				$group_shop = new GroupShop((int)Shop::getCurrentGroupShop());
-				echo 'all shops of group shop <b>'.$group_shop->name.'</b>';
-			}
-			elseif (Shop::getContextType() == Shop::CONTEXT_SHOP)
-			{
-				$shop = new Shop((int)Shop::getCurrentShop());
-				echo  'shop <b>'.$shop->name.'</b>';
-			}
+			elseif (Context::getContext()->shop->getContextType() == Shop::CONTEXT_GROUP)
+				echo 'all shops of group shop <b>'.Context::getContext()->shop->getGroup()->name.'</b>';
+			elseif (Context::getContext()->shop->getContextType() == Shop::CONTEXT_SHOP)
+				echo  'shop <b>'.Context::getContext()->shop->name.'</b>';
 			echo '</b>
 			</span>&nbsp;';
 		}

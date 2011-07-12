@@ -75,7 +75,7 @@ class SearchControllerCore extends FrontController
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
-			$search = Search::find((int)(self::$cookie->id_lang), $query, $this->p, $this->n, $this->orderBy, $this->orderWay, false, true, (int)$this->id_current_shop);
+			$search = Search::find((int)(self::$cookie->id_lang), $query, false, $this->p, $this->n, $this->orderBy, $this->orderWay, true, (int)$this->id_current_shop);
 			Module::hookExec('search', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
@@ -90,7 +90,7 @@ class SearchControllerCore extends FrontController
 		{
 			$nbProducts = (int)(Search::searchTag((int)(self::$cookie->id_lang), $tag, true));
 			$this->pagination($nbProducts);
-			$result = Search::searchTag((int)(self::$cookie->id_lang), $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay, false, true, (int)$this->id_current_shop);
+			$result = Search::searchTag((int)(self::$cookie->id_lang), $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay, true, (int)$this->id_current_shop);
 			Module::hookExec('search', array('expr' => $tag, 'total' => sizeof($result)));
 			$this->smarty->assign(array(
 			'search_tag' => $tag,

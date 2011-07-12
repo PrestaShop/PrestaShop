@@ -116,13 +116,13 @@ class ProductSaleCore
 	** @param integer $nbProducts Number of products to return (optional)
 	** @return array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
 	*/
-	static public function getBestSalesLight($id_lang, $pageNumber = 0, $nbProducts = 10, $id_shop = null)
+	static public function getBestSalesLight($id_lang, $pageNumber = 0, $nbProducts = 10, $id_shop = null, $context = null)
 	{
-	 	global $link;
-
+		if (!$context)
+			$context = Context::getContext();
 		if ($pageNumber < 0) $pageNumber = 0;
 		if ($nbProducts < 1) $nbProducts = 10;
-		if (is_null($id_shop)) $id_shop = Shop::getCurrentShop();
+		if (is_null($id_shop)) $id_shop = $context->shop->getID();
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sqlGroups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -150,7 +150,7 @@ class ProductSaleCore
 
 		foreach ($result AS &$row)
 		{
-		 	$row['link'] = $link->getProductLink($row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
+		 	$row['link'] = $context->link->getProductLink($row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
 		 	$row['id_image'] = Product::defineProductImage($row, $id_lang);
 		}
 		return $result;
