@@ -159,10 +159,10 @@ abstract class ModuleGraphCore extends Module
 	
 	protected function csvExport($datas)
 	{
-		global $cookie;
-
-		$this->setEmployee(intval($cookie->id_employee));
-		$this->setLang(intval($cookie->id_lang));
+		$context = Context::getContext();
+		
+		$this->setEmployee($context->employee->id);
+		$this->setLang($context->language->id);
 
 		$layers = isset($datas['layers']) ?  $datas['layers'] : 1;
 		if (isset($datas['option']))
@@ -257,16 +257,14 @@ abstract class ModuleGraphCore extends Module
 		
 	public function engine($params)
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		if (!($render = Configuration::get('PS_STATS_RENDER')))
 			return Tools::displayError('No graph engine selected');
 		if (!file_exists(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			return Tools::displayError('Graph engine selected is unavailable.');
 			
-		global $cookie;
-		$id_employee = (int)($cookie->id_employee);
-		$id_lang = (int)($cookie->id_lang);
+		$id_employee = (int)($context->employee->id);
+		$id_lang = (int)($context->language->id);
 
 		if (!isset($params['layers']))
 			$params['layers'] = 1;
@@ -291,10 +289,7 @@ abstract class ModuleGraphCore extends Module
 	protected static function getEmployee($employee = null)
 	{
 		if (!$employee)
-		{
-			global $cookie;
-			$employee = new Employee((int)($cookie->id_employee));
-		}
+			$employee = $context->employee;
 		
 		if (empty($employee->stats_date_from) OR empty($employee->stats_date_to) OR $employee->stats_date_from == '0000-00-00' OR $employee->stats_date_to == '0000-00-00')
 		{

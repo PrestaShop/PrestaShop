@@ -53,10 +53,7 @@ class PackCore extends Product
 
 	public static function noPackPrice($id_product)
 	{
-		global $cookie;
-
 		$sum = 0;
-
 		$price_display_method = !self::$_taxCalculationMethod;
 		$items = self::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($items as $item)

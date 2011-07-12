@@ -329,7 +329,6 @@ class OrderCore extends ObjectModel
 				return false;
 			if (count($this->getProductsDetail()) == 0)
 			{
-				global $cookie;
 				$history = new OrderHistory();
 				$history->id_order = (int)($this->id);
 				$history->changeIdOrderState(_PS_OS_CANCELED_, (int)($this->id));
@@ -627,10 +626,11 @@ class OrderCore extends ObjectModel
 	 * @param boolean $showHiddenStatus Display or not hidden order statuses
 	 * @return array Customer orders
 	 */
-	static public function getCustomerOrders($id_customer, $showHiddenStatus = false)
+	static public function getCustomerOrders($id_customer, $showHiddenStatus = false, $context = null)
     {
-		global $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
+    	
     	$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
         SELECT o.*, (SELECT SUM(od.`product_quantity`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products
         FROM `'._DB_PREFIX_.'orders` o
@@ -646,7 +646,7 @@ class OrderCore extends ObjectModel
 				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`
 				FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
-				INNER JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)($cookie->id_lang).')
+				INNER JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$context->language->id.')
 			WHERE oh.`id_order` = '.(int)($val['id_order']).(!$showHiddenStatus ? ' AND os.`hidden` != 1' : '').'
 				ORDER BY oh.`date_add` DESC, oh.`id_order_history` DESC
 			LIMIT 1');
@@ -685,16 +685,17 @@ class OrderCore extends ObjectModel
 			'.((int)$limit ? 'LIMIT 0, '.(int)$limit : ''));
 	}
 
-	static public function getOrdersWithInformations($limit = NULL)
+	static public function getOrdersWithInformations($limit = NULL, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
 		$sql = 'SELECT *, (
 					SELECT `name`
 					FROM `'._DB_PREFIX_.'order_history` oh
 					LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = oh.`id_order_state`)
 					WHERE oh.`id_order` = o.`id_order`
-					AND osl.`id_lang` = '.(int)$cookie->id_lang.'
+					AND osl.`id_lang` = '.(int)$context->language->id.'
 					ORDER BY oh.`date_add` DESC
 					LIMIT 1
 				) AS `state_name`

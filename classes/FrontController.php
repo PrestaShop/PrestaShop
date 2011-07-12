@@ -102,17 +102,16 @@ class FrontControllerCore
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
+		/* Loading default country */
+		$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 		/* Theme is missing or maintenance */
 		if (!is_dir(_PS_THEME_DIR_))
 			die(Tools::displayError('Current theme unavailable. Please check your theme directory name and permissions.'));
 		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' AND !(int)(Configuration::get('PS_SHOP_ENABLE')))
 			$this->maintenance = true;
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
-			$defaultCountry = $this->geolocationManagement();
-
-		/* Loading default country */
-		if (!isset($defaultCountry) && Validate::isLoadedObject($defaultCountry))
-			$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+			if ($newDefault = $this->geolocationManagement() && Validate::isLoadedObject($newDefault))
+				$defaultCountry = $newDefault;
 			
 		// Switch language if needed and init cookie language
 		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
@@ -371,13 +370,12 @@ class FrontControllerCore
 
 	protected function canonicalRedirection()
 	{
-		global $link, $cookie;
-
+		$context = Context::getContext();
 		// Automatically redirect to the canonical URL if needed
 		if (isset($this->php_self) AND !empty($this->php_self))
 		{
 			// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
-			$canonicalURL = $link->getPageLink($this->php_self, $this->ssl, $cookie->id_lang);
+			$canonicalURL = $context->link->getPageLink($this->php_self, $this->ssl, $context->language->id_lang);
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', (($this->ssl AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
@@ -395,14 +393,14 @@ class FrontControllerCore
 
 	protected function geolocationManagement()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
+		
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
 			/* Check if Maxmind Database exists */
 			if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
 			{
-				if (!isset($cookie->iso_code_country) OR (isset($cookie->iso_code_country) AND !in_array(strtoupper($cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
+				if (!isset($context->country->iso_code) OR (isset($context->country->iso_code) AND !in_array(strtoupper($context->country->iso_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
           			include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
@@ -422,17 +420,17 @@ class FrontControllerCore
 					}
 					elseif (is_object($record))
 					{
-						$cookie->iso_code_country = strtoupper($record->country_code);
+						$context->country->iso_code = strtoupper($record->country_code);
 						$hasBeenSet = true;
 					}
 				}
 
-				if (isset($cookie->iso_code_country) AND (int)($id_country = Country::getByIso(strtoupper($cookie->iso_code_country))))
+				if (isset($context->country->iso_code) AND (int)($id_country = Country::getByIso(strtoupper($context->cookie->iso_code_country))))
 				{
 					/* Update defaultCountry */
 					$defaultCountry = new Country($id_country);
 					if (isset($hasBeenSet) AND $hasBeenSet)
-						$cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
+						$context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $defaultCountry;
 				}
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)

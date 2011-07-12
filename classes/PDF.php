@@ -104,11 +104,7 @@ class PDFCore extends PDF_PageGroupCore
 	*/
 	public function __construct($orientation='P', $unit='mm', $format='A4')
 	{
-		global $cookie;
-
-		if (!isset($cookie) OR !is_object($cookie))
-			$cookie->id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
-		self::$_iso = strtoupper(Language::getIsoById($cookie->id_lang));
+		self::$_iso = strtoupper(Context::getContext()->language->iso_code);
 		FPDF::FPDF($orientation, $unit, $format);
 		$this->_initPDFFonts();
 	}
@@ -139,8 +135,7 @@ class PDFCore extends PDF_PageGroupCore
 	*/
 	public function Header()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		$conf = Configuration::getMultiple(array('PS_SHOP_NAME', 'PS_SHOP_ADDR1', 'PS_SHOP_CODE', 'PS_SHOP_CITY', 'PS_SHOP_COUNTRY', 'PS_SHOP_STATE'));
 		$conf['PS_SHOP_NAME'] = isset($conf['PS_SHOP_NAME']) ? Tools::iconv('utf-8', self::encoding(), $conf['PS_SHOP_NAME']) : 'Your company';
 		$conf['PS_SHOP_ADDR1'] = isset($conf['PS_SHOP_ADDR1']) ? Tools::iconv('utf-8', self::encoding(), $conf['PS_SHOP_ADDR1']) : 'Your company';
@@ -161,9 +156,9 @@ class PDFCore extends PDF_PageGroupCore
 		elseif (self::$orderSlip)
 			$this->Cell(77, 10, self::l('SLIP #').' '.sprintf('%06d', self::$orderSlip->id), 0, 1, 'R');
 		elseif (self::$delivery)
-			$this->Cell(77, 10, self::l('DELIVERY SLIP #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_DELIVERY_PREFIX', (int)($cookie->id_lang))).sprintf('%06d', self::$delivery), 0, 1, 'R');
+			$this->Cell(77, 10, self::l('DELIVERY SLIP #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_DELIVERY_PREFIX', $context->language->id)).sprintf('%06d', self::$delivery), 0, 1, 'R');
 		elseif (self::$order->invoice_number)
-			$this->Cell(77, 10, self::l('INVOICE #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_INVOICE_PREFIX', (int)($cookie->id_lang))).sprintf('%06d', self::$order->invoice_number), 0, 1, 'R');
+			$this->Cell(77, 10, self::l('INVOICE #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_INVOICE_PREFIX', $context->language->id)).sprintf('%06d', self::$order->invoice_number), 0, 1, 'R');
 		else
 			$this->Cell(77, 10, self::l('ORDER #').' '.sprintf('%06d', self::$order->id), 0, 1, 'R');
    }
@@ -481,11 +476,12 @@ class PDFCore extends PDF_PageGroupCore
 	* @param object $order Order
 	* @param string $mode Download or display (optional)
 	*/
-	public static function invoice($order, $mode = 'D', $multiple = false, &$pdf = NULL, $slip = false, $delivery = false)
+	public static function invoice($order, $mode = 'D', $multiple = false, &$pdf = NULL, $slip = false, $delivery = false, $context = null)
 	{
-	 	global $cookie;
+	 	if (!$context)
+	 		$context = Context::getContext();
 
-		if (!Validate::isLoadedObject($order) OR (!$cookie->id_employee AND (!OrderState::invoiceAvailable($order->getCurrentState()) AND !$order->invoice_number)))
+		if (!Validate::isLoadedObject($order) OR (!$context->employee->id AND (!OrderState::invoiceAvailable($order->getCurrentState()) AND !$order->invoice_number)))
 			die('Invalid order or invalid order state');
 		self::$order = $order;
 		self::$orderSlip = $slip;
@@ -560,9 +556,9 @@ class PDFCore extends PDF_PageGroupCore
 		if (self::$orderSlip)
 			$pdf->Cell(0, 6, self::l('SLIP #').' '.sprintf('%06d', self::$orderSlip->id).' '.self::l('from') . ' ' .Tools::displayDate(self::$orderSlip->date_upd, self::$order->id_lang), 1, 2, 'L', 1);
 		elseif (self::$delivery)
-			$pdf->Cell(0, 6, self::l('DELIVERY SLIP #').Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_DELIVERY_PREFIX', (int)($cookie->id_lang))).sprintf('%06d', self::$delivery).' '.self::l('from') . ' ' .Tools::displayDate(self::$order->delivery_date, self::$order->id_lang), 1, 2, 'L', 1);
+			$pdf->Cell(0, 6, self::l('DELIVERY SLIP #').Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_DELIVERY_PREFIX', $context->language->id)).sprintf('%06d', self::$delivery).' '.self::l('from') . ' ' .Tools::displayDate(self::$order->delivery_date, self::$order->id_lang), 1, 2, 'L', 1);
 		else
-			$pdf->Cell(0, 6, self::l('INVOICE #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_INVOICE_PREFIX', (int)($cookie->id_lang))).sprintf('%06d', self::$order->invoice_number).' '.self::l('from') . ' ' .Tools::displayDate(self::$order->invoice_date, self::$order->id_lang), 1, 2, 'L', 1);
+			$pdf->Cell(0, 6, self::l('INVOICE #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_INVOICE_PREFIX', $context->language->id)).sprintf('%06d', self::$order->invoice_number).' '.self::l('from') . ' ' .Tools::displayDate(self::$order->invoice_date, self::$order->id_lang), 1, 2, 'L', 1);
 		$pdf->Cell(55, 6, self::l('Order #').' '.sprintf('%06d', self::$order->id), 'L', 0);
 		$pdf->Cell(70, 6, self::l('Carrier:').($order->gift ? ' '.Tools::iconv('utf-8', self::encoding(), $carrier->name) : ''), 'L');
 		$pdf->Cell(0, 6, self::l('Payment method:'), 'LR');
@@ -1092,8 +1088,7 @@ class PDFCore extends PDF_PageGroupCore
 
 	static protected function l($string)
 	{
-		global $cookie;
-		$iso = Language::getIsoById((isset($cookie->id_lang) AND Validate::isUnsignedId($cookie->id_lang)) ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
+		$iso = Context::getContext()->language->iso_code;
 
 		if (@!include(_PS_TRANSLATIONS_DIR_.$iso.'/pdf.php'))
 			die('Cannot include PDF translation language file : '._PS_TRANSLATIONS_DIR_.$iso.'/pdf.php');

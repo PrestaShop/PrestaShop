@@ -614,11 +614,11 @@ class CustomerCore extends ObjectModel
 		return self::$_defaultGroupId[(int)($id_customer)];
 	}
 
-	static public function getCurrentCountry($id_customer)
+	static public function getCurrentCountry($id_customer, $context = null)
 	{
-		global $cart;
-
-		if (!$cart OR !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
+		if (!$context)
+			$context = Context::getContext();
+		if (!$context->cart OR !$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
 			$id_address = (int)(Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)($id_customer).' AND `deleted` = 0 ORDER BY `id`'));
 		else
 			$id_address = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};

@@ -201,18 +201,19 @@ class MailCore
 	 * 
 	 * @param string $string raw sentence (write directly in file)
 	 */
-	static public function l($string)
+	static public function l($string, $context = null)
 	{
-		global $_LANGMAIL, $cookie;
-		
+		global $_LANGMAIL;
+		if (!$context)
+			$context = Context::getContext();
+			
 		$key = str_replace('\'', '\\\'', $string);
-		$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)Configuration::get('PS_LANG_DEFAULT') : (int)$cookie->id_lang;
 
-		$file_core = _PS_ROOT_DIR_.'/mails/'.Language::getIsoById((int)$id_lang).'/lang.php';
+		$file_core = _PS_ROOT_DIR_.'/mails/'.$context->language->iso_code.'/lang.php';
 		if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL))
 			include_once($file_core);
 
-		$file_theme = _PS_THEME_DIR_.'mails/'.Language::getIsoById((int)$id_lang).'/lang.php';
+		$file_theme = _PS_THEME_DIR_.'mails/'.$context->language->iso_code.'/lang.php';
 		if (Tools::file_exists_cache($file_theme))
 			include_once($file_theme);
 
