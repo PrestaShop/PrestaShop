@@ -96,9 +96,6 @@ class FrontControllerCore
 		}
 
 		ob_start();
-		
-		/* Loading default country */
-		$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 
 		$cookie = new Cookie('ps');
 				
@@ -111,8 +108,12 @@ class FrontControllerCore
 		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' AND !(int)(Configuration::get('PS_SHOP_ENABLE')))
 			$this->maintenance = true;
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
-			$this->geolocationManagement();
+			$defaultCountry = $this->geolocationManagement();
 
+		/* Loading default country */
+		if (!isset($defaultCountry) && Validate::isLoadedObject($defaultCountry))
+			$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+			
 		// Switch language if needed and init cookie language
 		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
 			$_GET['id_lang'] = $id_lang;
@@ -135,7 +136,6 @@ class FrontControllerCore
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 
-		global $currency;
 		$currency = Tools::setCurrency($cookie);
 
 		$_MODULES = array();
@@ -324,12 +324,9 @@ class FrontControllerCore
 			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
 				die(Tools::displayError());
 
-
 		$this->iso = $iso;
 		$this->setMedia();
 		
-		
-		//$defaultCountry
 		if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 			$customer = new Customer($cookie->id_customer);
 		else
@@ -350,6 +347,7 @@ class FrontControllerCore
 		$context->currency = $currency;
 		$context->controller = $this;
 		$context->language = $ps_language;
+		$context->country = $defaultCountry;
 	}
 
 	/* Display a maintenance page if shop is closed */
@@ -366,10 +364,8 @@ class FrontControllerCore
 	/* Display a specific page if the user country is not allowed */
 	protected function displayRestrictedCountryPage()
 	{
-		global $smarty;
-
 		header('HTTP/1.1 503 temporarily overloaded');
-		$smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
+		$this->smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
 		exit;
 	}
 
@@ -399,7 +395,7 @@ class FrontControllerCore
 
 	protected function geolocationManagement()
 	{
-		global $cookie, $smarty;
+		global $cookie;
 
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
@@ -419,7 +415,7 @@ class FrontControllerCore
 						if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 							$this->restrictedCountry = true;
 						elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-							$smarty->assign(array(
+							$this->smarty->assign(array(
 								'restricted_country_mode' => true,
 								'geolocation_country' => $record->country_name
 							));
@@ -437,11 +433,12 @@ class FrontControllerCore
 					$defaultCountry = new Country($id_country);
 					if (isset($hasBeenSet) AND $hasBeenSet)
 						$cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
+					return $defaultCountry;
 				}
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 					$this->restrictedCountry = true;
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-					$smarty->assign(array(
+					$this->smarty->assign(array(
 						'restricted_country_mode' => true,
 						'geolocation_country' => 'Undefined'
 					));
@@ -450,6 +447,7 @@ class FrontControllerCore
 			else
 				Configuration::updateValue('PS_GEOLOCATION_ENABLED', 0);
 		}
+		return false;
 	}
 
 	public function preProcess()
@@ -458,8 +456,6 @@ class FrontControllerCore
 
 	public function setMedia()
 	{
-		global $cookie;
-
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
 		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery-1.4.4.min.js', _PS_JS_DIR_.'jquery/jquery.easing.1.3.js', _PS_JS_DIR_.'tools.js'));
 		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
@@ -526,7 +522,6 @@ class FrontControllerCore
 
 	public function displayFooter()
 	{
-		global $cookie;
 		if (!self::$initialized)
 			$this->init();
 

@@ -145,9 +145,11 @@ class SearchCore
 		return $string;
 	}
 
-	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, $id_shop = false)
+	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, $id_shop = false, $context = null)
 	{
 		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 		
 		// Only use cookie if id_customer is not present
@@ -262,7 +264,7 @@ class SearchCore
 		FROM '._DB_PREFIX_.'product p
 		INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop='.(int)$id_shop.')
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+		                                           AND tr.`id_country` = '.(int)$context->country->id.'
 	                                           	   AND tr.`id_state` = 0)
 	    LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
@@ -277,7 +279,7 @@ class SearchCore
 		FROM '._DB_PREFIX_.'product p
 		INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop='.(int)$id_shop.')
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+		                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 	                                           	   AND tr.`id_state` = 0)
 	    LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
@@ -531,13 +533,13 @@ class SearchCore
 		$queryArray3 = array();
 	}
 
-	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true)
+	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, $context = null)
 	{
-	 	global $link, $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
 		// Only use cookie if id_customer is not present
 		if ($useCookie)
-			$id_customer = (int)$cookie->id_customer;
+			$id_customer = (int)$context->customer->id;
 		else
 			$id_customer = 0;
 	 	
@@ -573,7 +575,7 @@ class SearchCore
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+		                                           AND tr.`id_country` = '.(int)$context->country->id.'
 	                                           	   AND tr.`id_state` = 0)
 	    LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)

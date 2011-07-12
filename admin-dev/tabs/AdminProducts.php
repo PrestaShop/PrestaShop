@@ -36,7 +36,8 @@ class AdminProducts extends AdminTab
 	public function __construct()
 	{
 		global $currentIndex;
-
+		$context = Context::getContext();
+		
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
@@ -63,7 +64,7 @@ class AdminProducts extends AdminTab
 		LEFT JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = a.id_product AND stock.id_product_attribute = 0 '.Shop::sqlSharedStock('stock').'
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 		LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)Country::getDefaultCountryId().' AND tr.`id_state` = 0)
+		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)
 	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
 		$this->_select = 'cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, stock.quantity AS quantity';
@@ -1017,6 +1018,8 @@ class AdminProducts extends AdminTab
 					throw new Exception(Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png'));
 				}
 
+				if (!$image->createImgFolder())
+					throw new Exception(Tools::displayError('An error occurred during new folder creation'));
 				if (!imageResize($subdir.$file, _PS_PROD_IMG_DIR_.$image->getImgPath().'.jpg'))
 				{
 					$image->delete();
@@ -1662,13 +1665,13 @@ class AdminProducts extends AdminTab
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
 	{
 		global $currentIndex;
-
+		$context = Context::getContext();
 		if (!($obj = $this->loadObject()))
 			return;
 		$specificPrices = SpecificPrice::getByProductId((int)($obj->id));
 		$specificPricePriorities = SpecificPrice::getPriority((int)($obj->id));
-		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$taxRate = TaxRulesGroup::getTaxesRate($obj->id_tax_rules_group, Configuration::get('PS_COUNTRY_DEFAULT'), 0, 0);
+
+		$taxRate = TaxRulesGroup::getTaxesRate($obj->id_tax_rules_group, $context->country->id, 0, 0);
 
 		$tmp = array();
 		foreach ($shops as $shop)
@@ -1699,11 +1702,11 @@ class AdminProducts extends AdminTab
 					<th class="cell border" style="width: 12%;">'.$this->l('Currency').'</th>
 					<th class="cell border" style="width: 11%;">'.$this->l('Country').'</th>
 					<th class="cell border" style="width: 13%;">'.$this->l('Group').'</th>
-					<th class="cell border" style="width: 12%;">'.$this->l('Price').' '.($default_country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
+					<th class="cell border" style="width: 12%;">'.$this->l('Price').' '.($context->country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
 					<th class="cell border" style="width: 10%;">'.$this->l('Reduction').'</th>
 					<th class="cell border" style="width: 15%;">'.$this->l('Period').'</th>
 					<th class="cell border" style="width: 10%;">'.$this->l('From (quantity)').'</th>
-					<th class="cell border" style="width: 15%;">'.$this->l('Final price').' '.($default_country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
+					<th class="cell border" style="width: 15%;">'.$this->l('Final price').' '.($context->country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
 					<th class="cell border" style="width: 2%;">'.$this->l('Action').'</th>
 				</tr>
 			</thead>
@@ -1818,8 +1821,7 @@ class AdminProducts extends AdminTab
 	{
 		if (!($product = $this->loadObject()))
 			return;
-		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		$context = Context::getContext();
 
 		echo '
 		<a href="#" onclick="$(\'#add_specific_price\').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /> '.$this->l('Add a new specific price').'</a>
@@ -1869,7 +1871,7 @@ class AdminProducts extends AdminTab
 			</div>
 
 			<label>'.$this->l('Product price');
-				if ($default_country->display_tax_label)
+				if ($context->country->display_tax_label)
 					echo ' '.$this->l('(tax excl.):');
 			echo '</label>
 			<div class="margin-form">
@@ -2102,9 +2104,9 @@ class AdminProducts extends AdminTab
 	{
 		parent::displayForm(false);
 		global $currentIndex, $cookie, $link;
+		$context = Context::getContext();
 
-		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$iso = Language::getIsoById((int)($cookie->id_lang));
+		$context->country->getIsoById((int)($cookie->id_lang));
 		$has_attribute = $obj->hasAttributes();
 		$qty = $obj->getStock();
 		$cover = Product::getCover($obj->id);
@@ -2525,7 +2527,7 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>';
 					$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
-					$taxesRatesByGroup = TaxRulesGroup::getAssociatedTaxRatesByIdCountry(Country::getDefaultCountryId());
+					$taxesRatesByGroup = TaxRulesGroup::getAssociatedTaxRatesByIdCountry($context->country->id);
 					$ecotaxTaxRate = Tax::getProductEcotaxRate();
 					echo '<script type="text/javascript">';
 					echo 'noTax = '.(Tax::excludeTaxeOption() ? 'true' : 'false'), ";\n";
@@ -2575,7 +2577,7 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>';
 
-				if ($default_country->display_tax_label)
+				if ($context->country->display_tax_label)
 				{
 					echo '
 						<tr '.(Tax::excludeTaxeOption() ? 'style="display:none"' : '' ).'>
@@ -2592,7 +2594,7 @@ class AdminProducts extends AdminTab
 						<td class="col-left">'.$this->l('Unit price without tax:').'</td>
 						<td style="padding-bottom:5px;">
 							'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="'.($this->getFieldValue($obj, 'unit_price_ratio') != 0 ? Tools::ps_round($this->getFieldValue($obj, 'price') / $this->getFieldValue($obj, 'unit_price_ratio'), 2) : 0).'" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); unitPriceWithTax(\'unit\');"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <input size="6" maxlength="10" id="unity" name="unity" type="text" value="'.htmlentities($this->getFieldValue($obj, 'unity'), ENT_QUOTES, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>'.
-							(Configuration::get('PS_TAX') && $default_country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($obj, 'unity').'</span> '.$this->l('with tax') : '').'</span>
+							(Configuration::get('PS_TAX') && $context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($obj, 'unity').'</span> '.$this->l('with tax') : '').'</span>
 							<p>'.$this->l('Eg. $15 per Lb').'</p>
 						</td>
 					</tr>
@@ -2605,15 +2607,15 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td class="col-left"><b>'.$this->l('Final retail price:').'</b></td>
 						<td style="padding-bottom:5px;">
-							<span style="'.($default_country->display_tax_label ? '' : 'display:none').'">
+							<span style="'.($context->country->display_tax_label ? '' : 'display:none').'">
 							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPrice" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'> ('.$this->l('tax incl.').')</span>
 							</span>
 							<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'>';
 
-							if ($default_country->display_tax_label)
+							if ($context->country->display_tax_label)
 								echo ' / ';
 
-							 echo ($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.($default_country->display_tax_label ? '('.$this->l('tax excl.').')' : '').'</span>
+							 echo ($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.($context->country->display_tax_label ? '('.$this->l('tax excl.').')' : '').'</span>
 						</td>
 					</tr>
 					<tr>
@@ -2681,7 +2683,7 @@ class AdminProducts extends AdminTab
 						<td class="col-left">'.$this->l('Additional shipping cost:').'</td>
 						<td style="padding-bottom:5px;">
 							<input type="text" name="additional_shipping_cost" value="'.($this->getFieldValue($obj, 'additional_shipping_cost')).'" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
-							if ($default_country->display_tax_label)
+							if ($context->country->display_tax_label)
 								echo ' ('.$this->l('tax excl.').')';
 
 					echo '<p>'.$this->l('Carrier tax will be applied.').'</p>
@@ -3136,14 +3138,15 @@ class AdminProducts extends AdminTab
 	function displayFormAttributes($obj, $languages, $defaultLanguage)
 	{
 		global $currentIndex, $cookie;
-
+		$context = Context::getContext();
+		
 		$attributeJs = array();
 		$attributes = Attribute::getAttributes((int)($cookie->id_lang), true);
 		foreach ($attributes AS $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$attributes_groups = AttributeGroup::getAttributesGroups((int)($cookie->id_lang));
-		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+
 		
 		$images = Image::getImages((int)($cookie->id_lang), $obj->id);
 		if ($obj->id)
@@ -3227,7 +3230,7 @@ class AdminProducts extends AdminTab
 				</select>
 				<span id="span_impact">&nbsp;&nbsp;'.$this->l('of').'&nbsp;&nbsp;'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'
 					<input type="text" size="6" name="attribute_price" id="attribute_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); calcImpactPriceTI();"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
-					if ($default_country->display_tax_label)
+					if ($context->country->display_tax_label)
 					{
 						echo ' '.$this->l('(tax excl.)').'<span '.(Tax::excludeTaxeOption() ? 'style="display:none"' : '' ).'> '.$this->l('or').' '.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'
 							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); calcImpactPriceTE();"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('(tax incl.)').'</span> '.$this->l('final product price will be set to').' '.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="attribute_new_total_price">0.00</span>'.($currency->format % 2 == 0 ? $currency->sign.' ' : '');

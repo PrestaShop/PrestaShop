@@ -67,8 +67,6 @@ class CurrencyCore extends ObjectModel
 	protected 	$table = 'currency';
 	protected 	$identifier = 'id_currency';
 
-	/** @var Currency Current currency */
-	static protected	$current = NULL;
 	/** @var array Currency cache */
 	static protected	$currencies = array();
 
@@ -353,18 +351,16 @@ class CurrencyCore extends ObjectModel
 
 	}
 
+	/**
+	 * Get current currency
+	 * 
+	 * @deprecated use $context->currency instead
+	 * @return Currency
+	 */
 	static public function getCurrent()
 	{
-		global $cookie;
-
-		if (!self::$current)
-		{
-			if (isset($cookie->id_currency) AND $cookie->id_currency)
-				self::$current = new Currency((int)($cookie->id_currency));
-			else
-				self::$current = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
-		}
-		return self::$current;
+		Tools::displayAsDeprecated();
+		return Context::getContext()->currency;
 	}
 
 	static public function getCurrencyInstance($id)

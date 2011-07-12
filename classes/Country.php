@@ -280,20 +280,14 @@ class CountryCore extends ObjectModel
 	/**
 	 * Returns the default country Id
 	 *
+	 * @deprecated use $context->country->id instead
 	 * @return integer default country id
 	 */
 	public static function getDefaultCountryId()
 	{
-		global $cookie;
-
-		if (Configuration::get('PS_GEOLOCATION_ENABLED') AND Validate::isLanguageIsoCode($cookie->iso_code_country))
-			$id_country = (int)Country::getByIso($cookie->iso_code_country);
-		else
-			$id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-
-		return $id_country;
+		Tools::displayAsDeprecated();
+		return Context::getContext()->country->id;
 	}
-
 
     public static function getCountriesByZoneId($id_zone, $id_lang, $id_shop = false)
     {

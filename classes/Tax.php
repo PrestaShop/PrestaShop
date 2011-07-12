@@ -279,7 +279,7 @@ class TaxCore extends ObjectModel
 	 */
 	public static function getProductTaxRate($id_product, $id_address = NULL)
 	{
-  	      $id_country = (int)Country::getDefaultCountryId();
+  	     $id_country = (int)Context::getContext()->country->id;
          $id_state = 0;
          $id_county = 0;
          $rate = 0;
@@ -288,7 +288,7 @@ class TaxCore extends ObjectModel
              $address_infos = Address::getCountryAndState($id_address);
          	 if ($address_infos['id_country'])
              {
-	          		$id_country = (int)($address_infos['id_country']);
+	          	$id_country = (int)($address_infos['id_country']);
 	               $id_state = (int)$address_infos['id_state'];
 	               $id_county = (int)County::getIdCountyByZipCode($address_infos['id_state'], $address_infos['postcode']);
              }
@@ -305,7 +305,7 @@ class TaxCore extends ObjectModel
 
 	public static function getProductEcotaxRate($id_address = NULL)
 	{
-  	      $id_country = (int)Country::getDefaultCountryId();
+  	     $id_country = (int)Context::getContext()->country->id;
          $id_state = 0;
          $id_county = 0;
          $rate = 0;
@@ -350,7 +350,7 @@ class TaxCore extends ObjectModel
 
 	public static function getCarrierTaxRate($id_carrier, $id_address = NULL)
 	{
-        $id_country = (int)Country::getDefaultCountryId();
+        $id_country = (int)Context::getContext()->country->id;
         $id_state = 0;
         $id_county = 0;
         if (!empty($id_address))
@@ -358,7 +358,7 @@ class TaxCore extends ObjectModel
              $address_infos = Address::getCountryAndState($id_address);
          	 if ($address_infos['id_country'])
              {
-	           		 $id_country = (int)($address_infos['id_country']);
+	           		$id_country = (int)($address_infos['id_country']);
              	    $id_state = (int)$address_infos['id_state'];
  	                $id_county = (int)County::getIdCountyByZipCode($address_infos['id_state'], $address_infos['postcode']);
              }
