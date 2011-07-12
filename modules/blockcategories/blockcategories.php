@@ -140,8 +140,7 @@ class BlockCategories extends Module
 
 	public function hookLeftColumn($params)
 	{
-		global $smarty, $cookie;
-
+		$context = Context::getContext();
 		$id_current_shop = $this->shopID;
 
 		$id_customer = (int)($params['cookie']->id_customer);
@@ -185,35 +184,35 @@ class BlockCategories extends Module
 			unset($resultIds);
 			//TODO clean that
 			$res = $blockCategTree;
-			$shopcurrentroot = Shop::getCurrentRootCategory();
-			if($blockCategTree['id'] != Shop::getCurrentRootCategory())
+			$shopcurrentroot = $context->shop->id_category;
+			if ($blockCategTree['id'] != $shopcurrentroot)
 				$blockCategTree = $this->cleanTree($blockCategTree['children']);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 
 			if (Tools::isSubmit('id_category'))
 			{
-				$cookie->last_visited_category = $id_category;
-				$smarty->assign('currentCategoryId', $cookie->last_visited_category);
+				$context->cookie->last_visited_category = $id_category;
+				$context->controller->smarty->assign('currentCategoryId', $context->cookie->last_visited_category);
 			}
 			if (Tools::isSubmit('id_product'))
 			{
-				if (!isset($cookie->last_visited_category) OR !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $cookie->last_visited_category))))
+				if (!isset($context->cookie->last_visited_category) OR !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $context->cookie->last_visited_category))))
 				{
 					$product = new Product($id_product);
 					if (isset($product) AND Validate::isLoadedObject($product))
-						$cookie->last_visited_category = (int)($product->id_category_default);
+						$context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$smarty->assign('currentCategoryId', (int)($cookie->last_visited_category));
+				$context->controller->smarty->assign('currentCategoryId', (int)($context->cookie->last_visited_category));
 			}
-			$smarty->assign('blockCategTree', $blockCategTree);
+			$context->controller->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories.tpl'))
-				$smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+				$context->controller->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
-				$smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$smarty->assign('isDhtml', $isDhtml);
+				$context->controller->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$context->controller->smarty->assign('isDhtml', $isDhtml);
 		}
-		$smarty->cache_lifetime = 31536000; // 1 Year
+		$context->controller->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;
@@ -221,8 +220,7 @@ class BlockCategories extends Module
 
 	public function hookFooter($params)
 	{
-		global $smarty, $cookie;
-
+		$context = Context::getContext();
 		$id_current_shop = $this->shopID;
 		
 		$id_customer = (int)($params['cookie']->id_customer);
@@ -262,43 +260,43 @@ class BlockCategories extends Module
 				$nbrColumns=3;
 			$numberColumn = abs(sizeof($result)/$nbrColumns);
 			$widthColumn= floor(100/$nbrColumns);
-			$smarty->assign('numberColumn', $numberColumn);
-			$smarty->assign('widthColumn', $widthColumn);
+			$context->controller->smarty->assign('numberColumn', $numberColumn);
+			$context->controller->smarty->assign('widthColumn', $widthColumn);
 			
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents);
 			unset($resultIds);
 			//TODO clean that
 			$res = $blockCategTree;
-			if($blockCategTree['id'] != Shop::getCurrentRootCategory())
+			if($blockCategTree['id'] != $context->shop->id_category)
 				$blockCategTree = $this->cleanTree($blockCategTree['children']);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 
 			if (Tools::isSubmit('id_category'))
 			{
-				$cookie->last_visited_category = $id_category;
-				$smarty->assign('currentCategoryId', $cookie->last_visited_category);
+				$context->cookie->last_visited_category = $id_category;
+				$context->controller->smarty->assign('currentCategoryId', $context->cookie->last_visited_category);
 			}
 			if (Tools::isSubmit('id_product'))
 			{
-				if (!isset($cookie->last_visited_category) OR !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $cookie->last_visited_category))))
+				if (!isset($context->cookie->last_visited_category) OR !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $context->cookie->last_visited_category))))
 				{
 					$product = new Product($id_product);
 					if (isset($product) AND Validate::isLoadedObject($product))
-						$cookie->last_visited_category = (int)($product->id_category_default);
+						$context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$smarty->assign('currentCategoryId', (int)($cookie->last_visited_category));
+				$context->controller->smarty->assign('currentCategoryId', (int)($context->cookie->last_visited_category));
 			}
-			$smarty->assign('blockCategTree', $blockCategTree);
+			$context->controller->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_footer.tpl'))
-				$smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+				$context->controller->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
-				$smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$smarty->assign('isDhtml', $isDhtml);
+				$context->controller->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$context->controller->smarty->assign('isDhtml', $isDhtml);
 		}
-		$smarty->cache_lifetime = 31536000; // 1 Year
+		$context->controller->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;
@@ -306,7 +304,7 @@ class BlockCategories extends Module
 	
 	public function cleanTree($categories)
 	{
-		$id_category_root = (int)Shop::getCurrentRootCategory();
+		$id_category_root = Context::getContext()->shop->id_category;
 		foreach ($categories AS $row)
 		{
 			if ($row['id'] == $id_category_root)

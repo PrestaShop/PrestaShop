@@ -240,10 +240,10 @@ abstract class ObjectModelCore
 		if (!Tools::isMultishopActivated())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
-				$result &= $this->associateTo(Shop::getCurrentShop(true), 'shop');
+				$result &= $this->associateTo(Context::getContext()->shop->getID(), 'shop');
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
-				$result &= $this->associateTo(Shop::getCurrentGroupShop(), 'group_shop');
+				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
 		}
 		return $result;
 	}
@@ -284,7 +284,7 @@ abstract class ObjectModelCore
 							die(Tools::displayError());
 							
 					if ($this->langMultiShop)
-						$field['id_shop'] = ($this->id_shop ? $this->id_shop : Shop::getCurrentShop(true));
+						$field['id_shop'] = ($this->id_shop ? $this->id_shop : Context::getContext()->shop->getID());
 
 					// used to insert missing lang entries
 					$where_lang = '`'.pSQL($this->identifier).'` = '.(int)$this->id.
@@ -739,7 +739,7 @@ abstract class ObjectModelCore
 	public function isAssociatedToShop($id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Shop::getCurrentShop();
+			$id_shop = Context::getContext()->shop->getID();
 			
 		$sql = 'SELECT id_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_shop`
@@ -782,7 +782,7 @@ abstract class ObjectModelCore
 	public function isAssociatedToGroupShop($id_group_shop = null)
 	{
 		if (is_null($id_group_shop))
-			$id_shop = Shop::getCurrentGroupShop();
+			$id_group_shop = Context::getContext()->shop->getGroupID();
 		
 		$sql = 'SELECT id_group_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_group_shop`

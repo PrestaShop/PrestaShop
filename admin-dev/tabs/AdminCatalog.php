@@ -176,7 +176,7 @@ class AdminCatalog extends AdminTab
 			if (!$id_category)
 			{
 				$home = true;
-				$id_category = Context::getContext()->shop->id_category1;
+				$id_category = Context::getContext()->shop->id_category;
 			}
 			$catalog_tabs = array('category', 'product');
 			// Cleaning links

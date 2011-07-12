@@ -535,7 +535,7 @@ class CartCore extends ObjectModel
 	 */
 	public	function updateQty($quantity, $id_product, $id_product_attribute = NULL, $id_customization = false, $operator = 'up', $id_shop = NULL, $id_group_shop = NULL)
 	{
-		if (is_null($id_shop)) $id_shop = Shop::getCurrentShop(true);
+		if (is_null($id_shop)) $id_shop = Context::getContext()->shop->getID();
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;

@@ -82,8 +82,8 @@ class FrontControllerCore
 			return;
 		self::$initialized = true;
 		
-		$this->id_current_shop = (int)Shop::getCurrentShop();
-		$this->id_current_group_shop = (int)Shop::getCurrentGroupShop();
+		$this->id_current_shop = Context::getContext()->shop->getID();
+		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
 
 		$this->css_files = array();
 		$this->js_files = array();

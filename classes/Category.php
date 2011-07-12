@@ -728,7 +728,7 @@ class CategoryCore extends ObjectModel
 	public function getName($id_lang = NULL, $id_shop = false, $context = null)
 	{
 		if (!$id_shop)
-			$id_shop = (int)Shop::getCurrentShop(true);
+			$id_shop = Context::getContext()->shop->getID();
 		if (!$id_lang)
 		{
 			if (!$context)

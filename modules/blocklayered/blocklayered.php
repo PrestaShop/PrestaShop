@@ -283,10 +283,10 @@ class BlockLayered extends Module
 	
 	public function getProductByFilters($selectedFilters = array())
 	{
-		global $cookie;
-
 		if (!empty($this->products))
 			return $this->products;
+			
+		$context = Context::getContext();
 
 		/* If the current category isn't defined of if it's homepage, we have nothing to display */
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
@@ -387,15 +387,14 @@ class BlockLayered extends Module
 					p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer, s.quantity,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product AND pl.id_shop = '.Shop::getCurrentShop(true).')
+				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product AND ps.id_shop = '.$this->shopID.'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product AND pl.id_shop = '.$this->shopID.')
 				LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product AND s.id_product_attribute = 0 '.Shop::sqlSharedStock('s').'
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
-				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
+				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)$context->language->id.')
 				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
 				WHERE p.`active` = 1
-					AND pl.id_lang = '.(int)$cookie->id_lang.'
-					AND ps.id_shop = '.Shop::getCurrentShop(true)
+					AND pl.id_lang = '.(int)$context->language->id
 					.$queryFilters.
 				' ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby')).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
 				' LIMIT '.(((int)(Tools::getValue('p', 1)) - 1) * $n.','.$n);

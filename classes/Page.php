@@ -125,7 +125,7 @@ class PageCore extends ObjectModel
 				'id_page' =>		(int)$id_page,
 				'counter' =>		1,
 				'id_shop' =>		$context->shop->getID(),
-				'id_group_shop' =>	$context->shop->getGroup(),
+				'id_group_shop' =>	$context->shop->getGroupID(),
 			), 'INSERT');
 	}
 }
