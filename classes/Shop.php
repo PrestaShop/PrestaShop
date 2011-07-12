@@ -36,16 +36,26 @@ class ShopCore extends ObjectModel
 	public	$active;
 	public	$id_category;
 	public	$deleted;
-	
-	private static $current_base_uri;
-	private static $current_theme_name;
+
+	protected $base_uri;
+	protected $theme_name;
+
+	/**
+	 * @var GroupShop
+	 */
+	protected $group;
+
+	//private static $current_base_uri;
+	//private static $current_theme_name;
 	private static $id_current_shop;
 	private static $id_current_group_shop;
 	private static $id_current_root_category;
-	
+
 	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('active' => 'isBool',
- 												 'name' => 'isGenericName');
+ 	protected $fieldsValidate = array(
+ 		'active' => 'isBool',
+		'name' => 'isGenericName',
+ 	);
 	protected $table = 'shop';
 	protected $identifier = 'id_shop';
 
@@ -75,7 +85,7 @@ class ShopCore extends ObjectModel
 		'store' => 					array('type' => 'shop'),
 		'webservice_account' => 	array('type' => 'shop'),
 	);
-	
+
 	protected	$webserviceParameters = array(
 		'fields' => array(
 			'id_group_shop' => array('xlink_resource' => 'shop_groups'),
@@ -83,14 +93,14 @@ class ShopCore extends ObjectModel
 			'id_theme' => array(),
 		),
 	);
-	
+
 	/**
 	 * There are 3 kinds of shop context : shop, group shop and general
 	 */
 	const CONTEXT_SHOP = 1;
 	const CONTEXT_GROUP = 2;
 	const CONTEXT_ALL = 3;
-	
+
 	public function getFields()
 	{
 		parent::validateFields();
@@ -103,30 +113,14 @@ class ShopCore extends ObjectModel
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
 	}
-	
-	/**
-	 * Get an instance of a shop
-	 *
-	 * @param int $id shop ID
-	 * @return Shop
-	 */
-	public static function getInstance($id)
-	{
-		return new Shop($id);
-	}
-	
-	public static function getAssoTables()
-	{
-		return self::$assoTables;
-	}
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
 		$res = parent::add();
-		Shop::loadShops(true);
+		Shop::cacheShops(true);
 		return $res;
 	}
-	
+
 	public function delete()
 	{
 		if (!$res = parent::delete())
@@ -150,20 +144,173 @@ class ShopCore extends ObjectModel
 			$res &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
 		}
 		
-		Shop::loadShops(true);
+		Shop::cacheShops(true);
 
 		return $res;
 	}
+
+	/**
+	 * Get a new instance of a shop
+	 *
+	 * @param int $id shop ID
+	 * @return Shop
+	 */
+	public static function getInstance($id)
+	{
+		return new Shop($id);
+	}
+
+	/**
+	 * Find the shop from current domain / uri and get an instance of this shop
+	 * 
+	 * @return Shop
+	 */
+	public static function initialize()
+	{
+		// Get list of excluded uri
+		$dirname = dirname(__FILE__);
+		$directories = scandir($dirname.'/../');
+		$excluded_uris = array();
+		foreach ($directories AS $directory)
+			if (is_dir($dirname.'/../'.$directory) AND (!preg_match ('/^\./', $directory)))
+				$excluded_uris[] = $directory;
+
+		// Parse request_uri
+		preg_match('/^'.Tools::pRegexp(_PS_DIRECTORY_, '/').'([a-z0-9]+)\/.*$/Ui', $_SERVER['REQUEST_URI'], $res);
+		$uri = (isset($res[1]) AND !in_array($res[1], $excluded_uris)) ? $res[1] : '';
+
+		if (!$id_shop = Tools::getValue('id_shop'))
+		{
+			// Find current shop from URL
+			$db = Db::getInstance();
+			$sql = 'SELECT s.id_shop
+					FROM '._DB_PREFIX_.'shop_url su
+					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
+					WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\'
+						AND uri=\''.pSQL($uri).'\'
+						AND s.active = 1
+						AND s.deleted = 0';
+			if (!$id_shop = $db->getValue($sql))
+				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+		}
+
+		// Get instance of found shop
+		$shop = new Shop($id_shop);
+		if (!Validate::isLoadedObject($shop))
+			die(Tools::displayError());
+		return $shop;
+	}
 	
 	/**
-	 * Check if shop is the same as default shop in configuration
+	 * Load some additional data of current shop (theme name, shop uri)
 	 * 
-	 * @param int $shopID
 	 * @return bool
 	 */
-	public static function isDefaultShop($shopID)
+	protected function loadShopInfos()
 	{
-		return ($shopID == Configuration::get('PS_SHOP_DEFAULT'));
+		$sql = 'SELECT su.uri, t.name
+				FROM '._DB_PREFIX_.'shop s
+				LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
+				LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
+				WHERE s.id_shop = '.$this->id.'
+					AND s.active = 1
+					AND s.deleted = 0
+					AND su.main = 1';
+		if (!$row = Db::getInstance()->getRow($sql))
+			return false;
+
+		$this->theme_name = $row['name'];
+		$this->base_uri = $row['uri'];
+		return true;
+	}
+	
+	/**
+	 * Get shop theme name
+	 * 
+	 * @return string
+	 */
+	public function getTheme()
+	{
+		if (!$this->theme_name)
+			$this->loadShopInfos();
+		return $this->theme_name;
+	}
+	
+	/**
+	 * 
+	 * Get shop URI
+	 * 
+	 * @param bool $with_base
+	 * @return string
+	 */
+	public function getBaseURI($with_base = true)
+	{
+		if (!$this->theme_name)
+			$this->loadShopInfos();
+		return ($with_base ? _PS_DIRECTORY_ : '').$this->base_uri;
+	}
+	
+	/**
+	 * Get group of current shop
+	 * 
+	 * @param bool $asObject If false, return only the ID of the group
+	 * @return GroupShop
+	 */
+	public function getGroup($asObject = false)
+	{
+		if (!$asObject)
+			return $this->id_group_shop;
+
+		if (!$this->group)
+			$this->group = new GroupShop($this->id_group_shop);
+		return $this->group;
+	}
+
+	/**
+	 * Get current shop ID.
+	 *
+	 * @param bool $forceContext If true and if no shop is selected in context, get default shop ID
+	 * @return int
+	 */
+	public static function getID($forceContext = false)
+	{
+		if (!$this->id && $forceContext)
+			return (int)Configuration::get('PS_SHOP_DEFAULT');
+		return (int)$this->id;
+	}
+
+	/**
+	 * Get root category of current shop
+	 * 
+	 * @return int
+	 */
+	public function getRootCategory()
+	{
+		return $this->id_category;
+	}
+
+	/**
+	 * Get list of shop's urls
+	 * 
+	 * @return array
+	 */
+	public function getUrls()
+	{
+		$sql = 'SELECT *
+				FROM '._DB_PREFIX.'shop_url
+				WHERE active = 1
+					AND id_shop='.(int)$this->id;
+		return Db::getInstance()->ExecuteS($sql);
+	}
+	
+	/**
+	 * Check if current shop ID is the same as default shop in configuration
+	 * 
+	 * @return bool
+	 */
+	public function isDefaultShop()
+	{
+		return ($this->id == Configuration::get('PS_SHOP_DEFAULT'));
 	}
 	
 	/**
@@ -171,7 +318,7 @@ class ShopCore extends ObjectModel
 	 * 
 	 * @param bool $refresh
 	 */
-	public static function loadShops($refresh = false)
+	public static function cacheShops($refresh = false)
 	{
 		if (self::$shops && !$refresh)
 			return;
@@ -208,11 +355,14 @@ class ShopCore extends ObjectModel
 		}
 	}
 	
-	public function getUrls()
+	/**
+	 * Get list of associated tables to shop
+	 *
+	 * @return array
+	 */
+	public static function getAssoTables()
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
-																				FROM '._DB_PREFIX.'shop_url
-																				WHERE active=1 AND id_shop='.(int)$this->id);
+		return self::$assoTables;
 	}
 	
 	/**
@@ -224,7 +374,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getShops($active = true, $id_group_shop = null, $getAsListID = false)
 	{
-		Shop::loadShops();
+		Shop::cacheShops();
 		$results = array();
 		foreach (self::$shops as $groupID => $groupData)
 			foreach ($groupData['shops'] as $id => $shopData)
@@ -246,7 +396,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getIdByName($name)
 	{
-		Shop::loadShops();
+		Shop::cacheShops();
 		foreach (self::$shops as $groupData)
 			foreach ($groupData['shops'] as $shopID => $shopData)
 				if (Tools::strtolower($shopData['name']) == Tools::strtolower($name))
@@ -262,99 +412,6 @@ class ShopCore extends ObjectModel
 		return count(Shop::getShops($active));
 	}
 	
-	public static function setCurrentShop()
-	{
-		$excluded_uris = self::getExcludedUris();
-		preg_match('/^'.Tools::pRegexp(_PS_DIRECTORY_, '/').'([a-z0-9]+)\/.*$/Ui', $_SERVER['REQUEST_URI'], $res);
-		if (isset($res[1]) AND !in_array($res[1], $excluded_uris))
-			$uri = $res[1];
-		else
-			$uri = '';
-
-		if (!$id_shop = (int)Tools::getValue('id_shop'))
-		{
-			$id_shop = Db::getInstance()->getValue('SELECT s.id_shop
-													FROM '._DB_PREFIX_.'shop_url su
-													LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
-													WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\' AND uri=\''.pSQL($uri).'\' AND s.active=1 AND s.deleted=0');
-			if (!$id_shop)
-				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
-		}
-
-		$res = Db::getInstance()->getRow('SELECT s.id_shop, s.id_group_shop, s.id_category, su.uri, t.name
-													FROM '._DB_PREFIX_.'shop s
-													LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-													LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
-													WHERE s.id_shop='.(int)$id_shop.' AND s.active=1 AND s.deleted=0 AND su.main=1');
-
-		$id_shop = (int)$res['id_shop'];
-		$id_group_shop = (int)$res['id_group_shop'];
-		self::$id_current_shop = (int)$id_shop;
-		self::$id_current_group_shop = (int)$id_group_shop;
-		self::$id_current_root_category = (int)$res['id_category'];
-		self::$current_base_uri = (!empty($res['uri']) ? $res['uri'].'/' : '' );
-		self::$current_theme_name = $res['name'];
-	}
-	
-	public static function getExcludedUris()
-	{
-		$dirname = dirname(__FILE__);
-		$directories = scandir($dirname.'/../');
-		$not_uri = array();
-		foreach ($directories AS $directory)
-			if (is_dir($dirname.'/../'.$directory) AND (!preg_match ('/^\./', $directory)))
-				$not_uri[] = $directory;
-		return $not_uri;
-	}
-	
-	public static function getCurrentTheme()
-	{
-		return self::$current_theme_name;
-	}
-	
-	public static function getCurrentBaseURI($with_base = true)
-	{
-		return ($with_base ? _PS_DIRECTORY_ : '').self::$current_base_uri;
-	}
-	
-	public static function getCurrentGroupShop()
-	{
-		return Shop::retrieveContext('group');
-	}
-
-	/**
-	 * Get current shop ID.
-	 *
-	 * @param bool $forceContext If true and if no shop is selected in context, get default shop ID
-	 * @return int
-	 */
-	public static function getCurrentShop($forceContext = false)
-	{
-		$shopID = Shop::retrieveContext('shop');
-		if (!$shopID && $forceContext)
-			$shopID = (int)Configuration::get('PS_SHOP_DEFAULT');
-		return $shopID;
-	}
-	
-	public function getTheme($entity = false, $id = false)
-	{
-		return Db::getInstance()->getValue('SELECT t.name
-														FROM '._DB_PREFIX_.'shop s
-														LEFT JOIN '._DB_PREFIX_.'theme t ON (s.id_theme = t.id_theme)
-														WHERE id_shop='.(int)$this->id);
-
-	}
-	
-	public static function getCurrentRootCategory()
-	{
-		return self::$id_current_root_category;
-	}
-	
-	public function getRootCategory()
-	{
-		return $this->id_category;
-	}
-	
 	/**
 	 * Retrieve group ID of a shop
 	 * 
@@ -363,7 +420,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getGroupFromShop($shopID, $asID = true)
 	{
-		Shop::loadShops();
+		Shop::cacheShops();
 		foreach (self::$shops as $groupID => $groupData)
 			if (array_key_exists($shopID, $groupData['shops']))
 				return ($asID) ? $groupID : $groupData;
@@ -371,14 +428,14 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * If the shop group has a the option "share_datas" activated, get all shops ID of this group, else get current shop ID
+	 * If the shop group has the option "share_datas" activated, get all shops ID of this group, else get current shop ID
 	 * 
 	 * @param int $shopID
 	 * @return array
 	 */
 	public static function getSharedShops($shopID)
 	{
-		Shop::loadShops();
+		Shop::cacheShops();
 		foreach (self::$shops as $groupData)
 			if (array_key_exists($shopID, $groupData['shops']) && $groupData['share_datas'])
 				return array_keys($groupData['shops']);
@@ -519,7 +576,7 @@ class ShopCore extends ObjectModel
 		if (!$shopID)
 			return ($shopGroupID) ? ' AND '.$alias.'id_group_shop = '.(int)$shopGroupID : '';
 
-		Shop::loadShops();
+		Shop::cacheShops();
 		foreach (self::$shops as $groupID => $groupData)
 			if (array_key_exists($shopID, $groupData['shops']) && $groupData['share_stock'])
 				return ' AND '.$alias.'id_group_shop = '.$groupID;
@@ -533,7 +590,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getTree()
 	{
-		Shop::loadShops();
+		Shop::cacheShops();
 		return self::$shops;
 	}
 	

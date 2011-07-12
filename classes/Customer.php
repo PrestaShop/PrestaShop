@@ -276,7 +276,7 @@ class CustomerCore extends ObjectModel
 	 	$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
-					'.Shop::sqlRestriction(true, null, $id_shop, $id_group_shop).
+					'.Shop::sqlRestriction(true).
 					($ignoreGuest ? 'AND `is_guest` = 0' : '');
 		$result = Db::getInstance()->getRow($sql);
 

@@ -426,6 +426,7 @@ class ThemeInstallator extends Module
 		$hookedModule = array();
 		$position = array();
 		$msg = '';
+		$shopID = Context::getContext()->shop->getID();
 		
 		foreach ($this->xml->modules->hooks->hook as $row)
 		{
@@ -455,17 +456,17 @@ class ThemeInstallator extends Module
 						WHERE `name` = \''.pSQL($row).'\'');
 				else if (!$obj OR !$obj->install())
 					continue;
-				Db::getInstance()->Execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.(int)Shop::getCurrentShop().')');
+				Db::getInstance()->Execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
 				$msg .= '<i>- '.pSQL($row).'</i><br />';
 				Db::getInstance()->Execute('
 					DELETE FROM `'._DB_PREFIX_.'hook_module` 
-					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.(int)Shop::getCurrentShop());
+					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.$shopID);
 				$count = -1;
 				while (isset($hookedModule[++$count]))
 					if ($hookedModule[$count] == $row)
 						Db::getInstance()->Execute('
 							INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
-							VALUES ('.(int)$obj->id.', '.(int)Shop::getCurrentShop().', '.(int)Hook::get($hook[$count]).', '.(int)$position[$count].')');
+							VALUES ('.(int)$obj->id.', '.$shopID.', '.(int)Hook::get($hook[$count]).', '.(int)$position[$count].')');
 			}
 		if (($val = (int)(Tools::getValue('nativeModules'))) != 1)
 		{
@@ -482,7 +483,7 @@ class ThemeInstallator extends Module
 						$msg .= '<i>- '.pSQL($row).'</i><br />';
 				Db::getInstance()->Execute('
 					DELETE FROM `'._DB_PREFIX_.'module_shop` 
-					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.(int)Shop::getCurrentShop(true));
+					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.$shopID);
 					}
 				}
 			$flag = 0;
@@ -496,7 +497,7 @@ class ThemeInstallator extends Module
 							UPDATE `'._DB_PREFIX_.'module`
 							SET `active`= 1
 							WHERE `name` = \''.pSQL($row).'\'');
-						Db::getInstance()->Execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.(int)Shop::getCurrentShop(true).')');
+						Db::getInstance()->Execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
 					}
 					else if (!is_object($obj) OR !$obj->install())
 						continue ;
@@ -505,19 +506,19 @@ class ThemeInstallator extends Module
 					$msg .= '<i>- '.pSQL($row).'</i><br />';
 					Db::getInstance()->Execute('
 						DELETE FROM `'._DB_PREFIX_.'hook_module` 
-						WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.(int)Shop::getCurrentShop(true));
+						WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.$shopID);
 					$count = -1;
 					while (isset($hookedModule[++$count]))
 						if ($hookedModule[$count] == $row)
 						{
 							Db::getInstance()->Execute('
 								INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
-								VALUES ('.(int)$obj->id.', '.(int)Shop::getCurrentShop(true).', '.(int)Hook::get($hook[$count]).', '.(int)$position[$count].')');
+								VALUES ('.(int)$obj->id.', '.$shopID.', '.(int)Hook::get($hook[$count]).', '.(int)$position[$count].')');
 							foreach ($exceptions[$count] as $filename)
 								if (!empty($filename))
 									Db::getInstance()->Execute('
 										INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, id_shop, `id_hook`, `file_name`)
-										VALUES ('.(int)$obj->id.', '.(int)Shop::getCurrentShop(true).', '.(int)Hook::get($hook[$count]).', "'.pSQL($filename).'")');
+										VALUES ('.(int)$obj->id.', '.$shopID.', '.(int)Hook::get($hook[$count]).', "'.pSQL($filename).'")');
 						}
 				}
 		}

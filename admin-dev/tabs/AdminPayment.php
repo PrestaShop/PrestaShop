@@ -31,9 +31,9 @@ class AdminPayment extends AdminTab
 	
 	public function __construct()
 	{
-		global $cookie;
-		/* Get all modules then select only payment ones*/
+		$shopID = Context::getContext()->shop->getID();
 
+		/* Get all modules then select only payment ones*/
 		$modules = Module::getModulesOnDisk();
 		foreach ($modules AS $module)
 			
@@ -43,19 +43,19 @@ class AdminPayment extends AdminTab
 				{
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->country = array();
-					$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)$module->id.' AND `id_shop`='.Shop::getCurrentShop(true));
+					$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
 					foreach ($countries as $country)
 						$module->country[] = $country['id_country'];
 						
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->currency = array();
-					$currencies = DB::getInstance()->ExecuteS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)$module->id.' AND `id_shop`='.Shop::getCurrentShop(true));
+					$currencies = DB::getInstance()->ExecuteS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
 					foreach ($currencies as $currency)
 						$module->currency[] = $currency['id_currency'];
 						
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->group = array();
-					$groups = DB::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)$module->id.' AND `id_shop`='.Shop::getCurrentShop(true));
+					$groups = DB::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
 					foreach ($groups as $group)
 						$module->group[] = $group['id_group'];
 				}
@@ -84,12 +84,13 @@ class AdminPayment extends AdminTab
 	
 	private function saveRestrictions($type)
 	{
-		global $currentIndex, $cookie;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop='.Shop::getCurrentShop(true));
+		global $currentIndex;
+
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop='.Context::getContext()->shop->getID());
 		foreach ($this->paymentModules as $module)
 			if ($module->active AND isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)
-					$values[] = '('.(int)$module->id.', '.Shop::getCurrentShop(true).', '.(int)$selected.')';
+					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID().', '.(int)$selected.')';
 		if (sizeof($values))
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
 		Tools::redirectAdmin($currentIndex.'&conf=4'.'&token='.$this->token);
