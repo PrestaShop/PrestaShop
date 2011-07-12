@@ -95,7 +95,7 @@ class AdminThemes extends AdminPreferences
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		$id_shop = (int)Shop::getCurrentShop(true);
+		$id_shop = Context::getContext()->shop->getID();
  		$this->_fieldsAppearance = array(
 			'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time(), 'pos' => 'before')),
 			'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => ((file_exists(_PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg')) ? _PS_IMG_.'logo_mail-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),

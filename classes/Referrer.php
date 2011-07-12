@@ -71,7 +71,6 @@ class ReferrerCore extends ObjectModel
 	{
 		parent::validateFields();
 
-		$fields['id_shop'] = (!$this->id_shop) ? Shop::getCurrentShop(true) : (int)$this->id_shop;
 		$fields['name'] = pSQL($this->name);
 		$fields['passwd'] = pSQL($this->passwd);
 		$fields['http_referer_regexp'] = pSQL($this->http_referer_regexp, true);

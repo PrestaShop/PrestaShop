@@ -118,7 +118,7 @@ abstract class ObjectModelCore
 			die(Tools::displayError());
 		
 		if ($this->langMultiShop AND $id_shop == NULL)
-			$id_shop = (int)Shop::getCurrentShop(true);
+			$id_shop = Context::getContext()->shop->getID();
 		if ($id_shop AND $this->langMultiShop)
 			$this->id_shop = $id_shop;
 	 	/* Connect to database and check SQL table/identifier */
@@ -683,7 +683,7 @@ abstract class ObjectModelCore
 		{
 			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.$this->table.'_'.$assoc[$this->table]['type'].'` AS multi_shop_'.$this->table.' ON (main.'.$this->identifier.' = '.'multi_shop_'.$this->table.'.'.$this->identifier.')';
 			$class_name = WebserviceRequest::$ws_current_classname;
-			$vars = get_class_vars($classname);
+			$vars = get_class_vars($class_name);
 			foreach ($vars['shopIDs'] as $id_shop)
 				$OR[] = ' multi_shop_'.$this->table.'.id_shop = '.$id_shop.' ';
 			$multi_shop_filter = ' AND ('.implode('OR', $OR).') ';

@@ -34,8 +34,6 @@ class AdminCategories extends AdminTab
 
 	public function __construct()
 	{
-		global $cookie;
-		
 		$this->table = 'category';
 	 	$this->className = 'Category';
 	 	$this->lang = true;
@@ -61,8 +59,6 @@ class AdminCategories extends AdminTab
 
 	public function displayList($token = NULL)
 	{
-		global $currentIndex;
-		
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader($token);
 		if (!sizeof($this->_list))
@@ -77,8 +73,9 @@ class AdminCategories extends AdminTab
 
 	public function display($token = NULL)
 	{
-		global $currentIndex, $cookie;
-		$this->getList((int)($cookie->id_lang), !$cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, (int)Shop::getCurrentShop(true));
+		$context = Context::getContext();
+
+		$this->getList((int)($context->language->id), !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $context->shop->getID());
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subcategory')))).' '.$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
 		if ($this->tabAccess['add'] === '1')
 			echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?tab=AdminCatalog&add'.$this->table.'&id_parent='.$this->_category->id.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new subcategory').'</a>';
@@ -89,9 +86,8 @@ class AdminCategories extends AdminTab
 
 	public function postProcess($token = NULL)
 	{
-		global $cookie, $currentIndex;
-
-		$this->tabAccess = Profile::getProfileAccess($cookie->profile, $this->id);
+		$context = Context::getContext();
+		$this->tabAccess = Profile::getProfileAccess($context->employee->id_profile, $this->id);
 
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
@@ -123,7 +119,7 @@ class AdminCategories extends AdminTab
 								$target = '&id_category='.(int)($matches[1]);
 						}
 						Module::hookExec('categoryUpdate');
-						Tools::redirectAdmin($currentIndex.'&conf=5'.$target.'&token='.Tools::getValue('token'));
+						Tools::redirectAdmin($this->currentIndex.'&conf=5'.$target.'&token='.Tools::getValue('token'));
 					}
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
@@ -151,10 +147,10 @@ class AdminCategories extends AdminTab
 							$object->deleteImage();
 							$object->deleted = 1;
 							if ($object->update())
-								Tools::redirectAdmin($currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
+								Tools::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
 						}
 						elseif ($object->delete())
-							Tools::redirectAdmin($currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
+							Tools::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
 						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
@@ -173,7 +169,7 @@ class AdminCategories extends AdminTab
 			if (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin($currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
+				Tools::redirectAdmin($this->currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
 		}
 		/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))
@@ -188,7 +184,7 @@ class AdminCategories extends AdminTab
 					if ($result)
 					{
 						$category->cleanPositions((int)(Tools::getValue('id_category')));
-						Tools::redirectAdmin($currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCatalog').'&id_category='.(int)(Tools::getValue('id_category')));
+						Tools::redirectAdmin($this->currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCatalog').'&id_category='.(int)(Tools::getValue('id_category')));
 					}
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 
@@ -217,9 +213,9 @@ class AdminCategories extends AdminTab
 
 	public function displayForm($token = NULL)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
+		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$active = $this->getFieldValue($obj, 'active');
@@ -233,7 +229,7 @@ class AdminCategories extends AdminTab
 			$id_category = (int)Tools::getValue('id_parent');
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.($token!=NULL ? $token : $this->token).'" method="post" enctype="multipart/form-data">
+		<form action="'.$this->currentIndex.'&submitAdd'.$this->table.'=1&token='.($token!=NULL ? $token : $this->token).'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab-categories.gif" />'.$this->l('Category').'</legend>
 				<label>'.$this->l('Name:').' </label>
@@ -256,7 +252,7 @@ class AdminCategories extends AdminTab
 				<label>'.$this->l('Parent category:').' </label>
 				<div class="margin-form">
 					<select name="id_parent">';
-		$categories = Category::getCategories((int)$cookie->id_lang, false);
+		$categories = Category::getCategories((int)$context->language->id, false);
 		Category::recurseCategory($categories, $categories[0][1], 1, ($obj->id ? $this->getFieldValue($obj, 'id_parent') : $id_category));
 		echo '
 					</select>
@@ -272,7 +268,7 @@ class AdminCategories extends AdminTab
 				</div>
 				<label>'.$this->l('Image:').' </label>
 				<div class="margin-form">';
-		echo 		$this->displayImage($obj->id, _PS_IMG_DIR_.'c/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)), true);
+		echo 		$this->displayImage($obj->id, _PS_IMG_DIR_.'c/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$context->employee->id), true);
 		echo '	<br /><input type="file" name="image" />
 					<p>'.$this->l('Upload category logo from your computer').'</p>
 				</div>
@@ -317,7 +313,7 @@ class AdminCategories extends AdminTab
 				</div>
 				<label>'.$this->l('Groups access:').' </label>
 				<div class="margin-form">';
-					$groups = Group::getGroups((int)($cookie->id_lang));
+					$groups = Group::getGroups((int)($context->language->id));
 					if (sizeof($groups))
 					{
 						echo '

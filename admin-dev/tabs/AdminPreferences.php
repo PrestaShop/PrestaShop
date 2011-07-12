@@ -222,7 +222,7 @@ class AdminPreferences extends AdminTab
 		{
 			if (Tools::isSubmit('submitAppearanceconfiguration'))
 			{
-				$id_shop = Shop::getCurrentShop(true);
+				$id_shop = Context::getContext()->shop->getID();
 				if (isset($_FILES['PS_LOGO']['tmp_name']) AND $_FILES['PS_LOGO']['tmp_name'])
 				{
 					if ($error = checkImage($_FILES['PS_LOGO'], 300000))
@@ -242,7 +242,7 @@ class AdminPreferences extends AdminTab
 						$this->_errors[] = $error;
 					if (!$tmpName == tempnam(_PS_TMP_IMG_DIR_, 'PS_MAIL') OR !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmpName))
 						return false;
-					if ($id_shop = Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail.jpg'))
+					if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail.jpg'))
 						$this->_errors[] = 'an error occurred during logo copy';
 					if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg'))
 						$this->_errors[] = 'an error occurred during logo copy';

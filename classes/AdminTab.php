@@ -1127,22 +1127,22 @@ abstract class AdminTabCore
 	 */
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
 	{
-		global $cookie;
+		$context = Context::getContext();
 		
 		/* Manage default params values */
 		if (empty($limit))
-			$limit = ((!isset($cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $cookie->{$this->table.'_pagination'});
+			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $context->cookie->{$this->table.'_pagination'});
 
 		if (!Validate::isTableOrIdentifier($this->table))
 			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
 
 		if (empty($orderBy))
-			$orderBy = $cookie->__get($this->table.'Orderby') ? $cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+			$orderBy = $context->cookie->__get($this->table.'Orderby') ? $context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
 		if (empty($orderWay))
-			$orderWay = $cookie->__get($this->table.'Orderway') ? $cookie->__get($this->table.'Orderway') : 'ASC';
+			$orderWay = $context->cookie->__get($this->table.'Orderway') ? $context->cookie->__get($this->table.'Orderway') : 'ASC';
 
 		$limit = (int)(Tools::getValue('pagination', $limit));
-		$cookie->{$this->table.'_pagination'} = $limit;
+		$context->cookie->{$this->table.'_pagination'} = $limit;
 
 		/* Check params validity */
 		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay)
@@ -1176,21 +1176,21 @@ abstract class AdminTabCore
 			$whereShop = Shop::sqlRestriction($this->shopShareDatas, 'a', null, null, $this->shopLinkType);
 		}
 		$filterShop = '';
-		if (($context_type = Shop::getContextType()) != Shop::CONTEXT_ALL)
+		if ($context->shop->getContextType() != Shop::CONTEXT_ALL)
 		{
-			if ($context_type == Shop::CONTEXT_SHOP)
+			if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
 			{
 				$assos = Shop::getAssoTables();
 				if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'shop')
 					$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = Shop::getCurrentShop();
+				$idenfierShop = $context->shop->getID();
 			}
-			elseif ($context_type == Shop::CONTEXT_GROUP)
+			elseif ($context->shop->getContextType() == Shop::CONTEXT_GROUP)
 			{
 				$assos = GroupShop::getAssoTables();
 				if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
 					$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = Shop::getCurrentGroupShop();
+				$idenfierShop = $context->shop->getGroup();
 			}
 			if (isset($filterKey))
 				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.'='.(int)$idenfierShop.')';
@@ -1833,12 +1833,14 @@ abstract class AdminTabCore
 	 * @param integer $id_lang Language id (optional)
 	 * @return string
 	 */
-	protected function getFieldValue($obj, $key, $id_lang = NULL, $id_shop = NULL)
+	protected function getFieldValue($obj, $key, $id_lang = NULL, $context = NULL)
 	{
-		global $cookie;
+		$id_shop = ($context) ? $context->shop->getID() : null;
+		if (!$context)
+			$context = Context::getContext();
 
 		if (!$id_shop AND $obj->isLangMultishop())
-			$id_shop = Shop::getCurrentShop(true);
+			$id_shop = $context->shop->getID();
 
 		if ($id_lang)
 			$defaultValue = ($obj->id AND isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
@@ -2066,10 +2068,8 @@ abstract class AdminTabCore
 	{
 		if (!Tools::isMultiShopActivated())
 			return;
-		if (!$id_shop = Shop::getCurrentShop())
-			$id_shop = Configuration::get('PS_SHOP_DEFAULT');
-		$shop = new Shop((int)$id_shop);
-		return $this->l('This field will be changed for the shop:').' '.$shop->name;
+
+		return $this->l('This field will be changed for the shop:').' '.Context::getContext()->shop->name;
 	}
 	
 	protected function displayAssoGroupShop($field_name = 'name')

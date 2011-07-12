@@ -179,13 +179,12 @@ class BlockCms extends Module
 		if (!$context)
 			$context = Context::getContext();
 
-		$id_current_shop = Shop::getCurrentShop();
 		$cmsCategories = Db::getInstance()->ExecuteS('
 		SELECT bc.`id_cms_block`, bc.`id_cms_category`, bc.`display_store`, ccl.`link_rewrite`, ccl.`name` category_name, bcl.`name` block_name
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 		INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bc.id_shop='.(int)$id_current_shop.'
+		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bc.id_shop='.$context->shop->getID().'
 		ORDER BY `position`');
 		
 		$content = array();

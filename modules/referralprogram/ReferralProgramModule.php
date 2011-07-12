@@ -186,8 +186,8 @@ class ReferralProgramModule extends ObjectModel
 	{
 		if (empty($email) OR !Validate::isEmail($email))
 			die (Tools::displayError('Email invalid.'));
-//			$return_id = false, $ignoreGuest = true, $id_group_shop = false, $id_shop = false
-		if ($checkCustomer === true AND Customer::customerExists($email, false, true, (int)Shop::getCurrentGroupShop(), (int)Shop::getCurrentShop()))
+
+		if ($checkCustomer === true AND Customer::customerExists($email))
 			return false;
 		$result = Db::getInstance()->getRow('
 		SELECT s.`id_referralprogram`

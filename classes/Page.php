@@ -108,13 +108,14 @@ class PageCore extends ObjectModel
 	public static function setPageViewed($id_page)
 	{
 		$id_date_range = DateRange::getCurrentRange();
+		$context = Context::getContext();
 		
 		// Try to increment the visits counter
 		$sql = 'UPDATE `'._DB_PREFIX_.'page_viewed`
 				SET `counter` = `counter` + 1
 				WHERE `id_date_range` = '.(int)$id_date_range.'
 					AND `id_page` = '.(int)$id_page.'
-					AND `id_shop` = ' . Shop::getCurrentShop();
+					AND `id_shop` = ' . $context->shop->getID();
 		Db::getInstance()->Execute($sql);
 
 		// If no one has seen the page in this date range, it is added
@@ -123,8 +124,8 @@ class PageCore extends ObjectModel
 				'id_date_range' =>	(int)$id_date_range,
 				'id_page' =>		(int)$id_page,
 				'counter' =>		1,
-				'id_shop' =>		Shop::getCurrentShop(),
-				'id_group_shop' =>	Shop::getCurrentGroupShop(),
+				'id_shop' =>		$context->shop->getID(),
+				'id_group_shop' =>	$context->shop->getGroup(),
 			), 'INSERT');
 	}
 }

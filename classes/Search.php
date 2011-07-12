@@ -405,8 +405,8 @@ class SearchCore
 		// Every indexed words are cached into a PHP array 
 		$wordIdsByWord = array();
 		$wordIds = Db::getInstance()->ExecuteS('
-		SELECT sw.id_word, sw.word, id_lang, id_shop
-		FROM '._DB_PREFIX_.'search_word sw', false);
+		SELECT id_word, word, id_lang, id_shop
+		FROM '._DB_PREFIX_.'search_word', false);
 		$wordIdsByWord = array();
 		while ($wordId = $db->nextRow($wordIds))
 		{
@@ -533,10 +533,15 @@ class SearchCore
 		$queryArray3 = array();
 	}
 
-	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, $context = null)
+	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, $shops = null, $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
+	 	if (is_null($shops))
+	 		$shops = array($context->shop->getID());
+	 	if (!is_array($shops))
+	 		$shops = array($shops);
+	 	
 		// Only use cookie if id_customer is not present
 		if ($useCookie)
 			$id_customer = (int)$context->customer->id;
@@ -552,45 +557,46 @@ class SearchCore
 
 		if ($count)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT COUNT(DISTINCT pt.`id_product`) nb
-			FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
-			WHERE p.`active` = 1
-			AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
-				SELECT id_group FROM '._DB_PREFIX_.'customer_group
-				WHERE id_customer = '.(int)$id_customer.')').'
-			AND t.`name` LIKE \'%'.pSQL($tag).'%\'');
-			return isset($result['nb']) ? $result['nb'] : 0;
+			$sql = 'SELECT COUNT(DISTINCT pt.`id_product`) nb
+					FROM `'._DB_PREFIX_.'product` p
+					INNER JOIN '._DB_PREFIX_.'product_shop ps ON p.id_product = ps.id_product AND ps.id_shop IN ('.implode(', ', $shops).')
+					LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
+					LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
+					WHERE p.`active` = 1
+						AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+							SELECT id_group FROM '._DB_PREFIX_.'customer_group
+							WHERE id_customer = '.(int)$id_customer.')').'
+						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
-		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT DISTINCT p.*, pl.`description_short`, pl.`link_rewrite`, pl.`name`, tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
-			DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
-		FROM `'._DB_PREFIX_.'product` p
-		INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)$context->country->id.'
-	                                           	   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-		LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
-		WHERE p.`active` = 1
-		AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
-			SELECT id_group FROM '._DB_PREFIX_.'customer_group
-			WHERE id_customer = '.(int)$id_customer.')').'
-		AND t.`name` LIKE \'%'.pSQL($tag).'%\'
-		ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
-		LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize);
-		if (!$result) return false;
+
+		$sql = 'SELECT DISTINCT p.*, pl.`description_short`, pl.`link_rewrite`, pl.`name`, tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
+					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
+				FROM `'._DB_PREFIX_.'product` p
+				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop IN ('.implode(', ', $shops).'))
+				INNER JOIN '._DB_PREFIX_.'product_shop ps ON p.id_product = ps.id_product AND ps.id_shop IN ('.implode(', ', $shops).')
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+					AND tr.`id_country` = '.(int)$context->country->id.'
+					AND tr.`id_state` = 0)
+	    		LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
+				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
+				WHERE p.`active` = 1
+					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+						SELECT id_group FROM '._DB_PREFIX_.'customer_group
+						WHERE id_customer = '.(int)$id_customer.')').'
+					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
+				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
+				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql))
+			return false;
 
 		return Product::getProductsProperties((int)$id_lang, $result);
 	}

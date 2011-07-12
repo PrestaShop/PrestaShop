@@ -2089,7 +2089,7 @@ class ProductCore extends ObjectModel
 		// For retrocompatibility
 		$id_product_attribute = (int)$id_product_attribute;
 		$quantity = (int)$quantity;
-		if (Shop::isDefaultShop($shop))
+		if (Shop::getInstance($shop)->isDefaultShop())
 		{
 			if ($id_product_attribute)
 			{

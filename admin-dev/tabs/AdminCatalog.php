@@ -50,7 +50,7 @@ class AdminCatalog extends AdminTab
 	{
 		/* Get current category */
 		$id_category = abs(Tools::getValue('id_category'));
-		$shop = new Shop(Shop::getCurrentShop(true));
+		$shop = Context::getContext()->shop;
 		if (!$id_category)
 			$id_category = $shop->id_category;
 		else if ($id_category != $shop->id_category)
@@ -58,18 +58,18 @@ class AdminCatalog extends AdminTab
 			// Check if current category is "inside" shop default category
 			$sql = 'SELECT nleft, nright FROM '._DB_PREFIX_.'category
 					WHERE id_category = '.$shop->id_category;
-			if ($result = Db::getInstance()->getRow($sql))
+			if ($interval = Category::getInterval($shop->id_category))
 			{
 				$sql = 'SELECT id_category FROM '._DB_PREFIX_.'category
 						WHERE id_category = '.(int)$id_category.'
-							AND nleft >= '.$result['nleft'].'
-							AND nright <= '.$result['nright'];
+							AND nleft >= '.$interval['nleft'].'
+							AND nright <= '.$interval['nright'];
 				if (!Db::getInstance()->getValue($sql))
 					$id_category = $shop->id_category;
 			}
 		}
 
-		self::$_category = new Category($id_category, NULL, Shop::getCurrentShop(true));
+		self::$_category = new Category($id_category);
 		if (!Validate::isLoadedObject(self::$_category))
 			die('Category cannot be loaded');
 
@@ -176,13 +176,7 @@ class AdminCatalog extends AdminTab
 			if (!$id_category)
 			{
 				$home = true;
-				if (Shop::getContextType() == Shop::CONTEXT_SHOP)
-				{
-					$shop = new Shop((int)Shop::getCurrentShop());
-					$id_category = $shop->id_category;
-				}
-				else
-					$id_category = 1;
+				$id_category = Context::getContext()->shop->id_category1;
 			}
 			$catalog_tabs = array('category', 'product');
 			// Cleaning links

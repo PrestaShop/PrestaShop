@@ -92,10 +92,11 @@ function ppp($var) {
 function ddd($var) {
 	Tools::d($var);
 }
+
 /* Set the current Shop */
-Shop::setCurrentShop();
-define('_THEME_NAME_', Shop::getCurrentTheme());
-define('__PS_BASE_URI__', Shop::getCurrentBaseURI());
+Context::getContext()->shop = Shop::initialize();
+define('_THEME_NAME_', Context::getContext()->shop->getTheme());
+define('__PS_BASE_URI__', Context::getContext()->shop->getBaseURI());
 
 /* Include all defines */
 require_once(dirname(__FILE__).'/defines.inc.php');
