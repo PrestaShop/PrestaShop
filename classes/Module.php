@@ -825,8 +825,8 @@ abstract class ModuleCore
 				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \'payment\'
 					AND mc.id_country = '.(int)($billing->id_country).'
-					AND mc.id_shop = '.(int)Shop::getCurrentShop().'
-					AND mg.id_shop = '.(int)Shop::getCurrentShop().'
+					AND mc.id_shop = '.$context->shop->getID().'
+					AND mg.id_shop = '.$context->shop->getID().'
 					AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 					AND hm.id_shop IN('.implode(', ', $list).')
 				GROUP BY hm.id_hook, hm.id_module
@@ -835,7 +835,7 @@ abstract class ModuleCore
 		if ($result)
 			foreach ($result AS $k => $module)
 				if (($moduleInstance = Module::getInstanceByName($module['name'])) AND is_callable(array($moduleInstance, 'hookpayment')))
-					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id, (int)Shop::getCurrentShop()))))
+					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
 						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
 		return $output;
 	}
