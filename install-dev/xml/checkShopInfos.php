@@ -37,9 +37,9 @@ include(INSTALL_PATH.'/../classes/Db.php');
 include(INSTALL_PATH.'/../classes/Tools.php');
 include_once(INSTALL_PATH.'/../config/settings.inc.php');
 
-Shop::setCurrentShop();
-define('_THEME_NAME_', Shop::getCurrentTheme());
-define('__PS_BASE_URI__', Shop::getCurrentBaseURI());
+Context::getContext()->shop = Shop::initialize();
+define('_THEME_NAME_', Context::getContext()->shop->getTheme());
+define('__PS_BASE_URI__', Context::getContext()->shop->getBaseURI());
 
 function isFormValid()
 {
