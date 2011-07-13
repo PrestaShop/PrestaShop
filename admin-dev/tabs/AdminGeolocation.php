@@ -39,7 +39,7 @@ class AdminGeolocation extends AdminTab
 			$this->displayWarning($this->l('In order to use Geolocation, please download').' <a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.$this->l('and decompress it into tools/geoip/ directory'));
 		
 		echo '
-		<form method="POST" action="'.$currentIndex.'&token='.Tools::getValue('token').'">
+		<form method="POST" action="'.self::$currentIndex.'&token='.Tools::getValue('token').'">
 			<fieldset>
 				<legend><img src="../img/admin/world.gif" alt="" /> '.$this->l('Geolocation by IP').'</legend>
 				
@@ -58,7 +58,7 @@ class AdminGeolocation extends AdminTab
 		';
 		$allowedCountries = explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'));
 		echo '
-		<form method="POST" action="'.$currentIndex.'&token='.Tools::getValue('token').'">
+		<form method="POST" action="'.self::$currentIndex.'&token='.Tools::getValue('token').'">
 			<fieldset style="margin-top:10px;">
 				<legend><img src="../img/admin/world.gif" alt="" /> '.$this->l('Options').'</legend>
 				
@@ -116,7 +116,7 @@ class AdminGeolocation extends AdminTab
 			</fieldset>
 		</form>
 		
-		<form method="POST" action="'.$currentIndex.'&token='.Tools::getValue('token').'">
+		<form method="POST" action="'.self::$currentIndex.'&token='.Tools::getValue('token').'">
 			<fieldset style="margin-top:10px;">
 				<legend><img src="../img/admin/world.gif" alt="" /> '.$this->l('Whitelist of IP addresses').'</legend>
 				
@@ -146,7 +146,7 @@ class AdminGeolocation extends AdminTab
 			if ($this->_isGeoLiteCityAvailable())
 			{
 				Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
-				Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 			else
 				$this->_errors[] = Tools::displayError('Geolocation database is unavailable.');
@@ -161,7 +161,7 @@ class AdminGeolocation extends AdminTab
 				Configuration::updateValue('PS_GEOLOCATION_BEHAVIOR', (!(int)(Tools::getValue('PS_GEOLOCATION_BEHAVIOR')) ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_));
 				Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
 				Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
-				Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 		}
 		
@@ -172,7 +172,7 @@ class AdminGeolocation extends AdminTab
 			else
 			{	
 				Configuration::updateValue('PS_GEOLOCATION_WHITELIST', str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST'))));
-				Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 		}
 		

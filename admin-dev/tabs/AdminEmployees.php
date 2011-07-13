@@ -96,9 +96,9 @@ class AdminEmployees extends AdminTab
 		 	 </script>
 
 		
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.((int)$this->tabAccess['view'] ? '' : '&updateemployee&id_employee='.(int)$obj->id).'" method="post" enctype="multipart/form-data" autocomplete="off">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.((int)$this->tabAccess['view'] ? '' : '&updateemployee&id_employee='.(int)$obj->id).'" method="post" enctype="multipart/form-data" autocomplete="off">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
-		'.((int)$this->tabAccess['view'] ? '' : '<input type="hidden" name="back" value="'.$currentIndex.'&token='.$this->token.'&updateemployee&id_employee='.(int)$obj->id.'" />').'
+		'.((int)$this->tabAccess['view'] ? '' : '<input type="hidden" name="back" value="'.self::$currentIndex.'&token='.$this->token.'&updateemployee&id_employee='.(int)$obj->id.'" />').'
 			<fieldset class="width3"><legend><img src="../img/admin/nav-user.gif" />'.$this->l('Employees').'</legend>
 				<label>'.$this->l('Last name:').' </label>
 				<div class="margin-form">

@@ -76,11 +76,11 @@ class AdminStates extends AdminTab
 									if ($this->deleted)
 									{
 										$object->deleted = 1;
-										if ($object->update()) Tools::redirectAdmin($currentIndex.'&conf=1&token='.$token);
+										if ($object->update()) Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
 									}
 									else if ($object->delete())
 									{
-										Tools::redirectAdmin($currentIndex.'&conf=1&token='.$token);
+										Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
 									}
 									$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 								}
@@ -107,7 +107,7 @@ class AdminStates extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/world.gif" />'.$this->l('States').'</legend>
 				<label>'.$this->l('Name:').' </label>

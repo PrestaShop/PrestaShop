@@ -215,7 +215,7 @@ abstract class AdminStatsTab extends AdminPreferences
 		{
 			foreach ($modules AS $module)
 				if ($moduleInstance = Module::getInstanceByName($module['name']))
-					echo '<h4><img src="../modules/'.$module['name'].'/logo.gif" /><a href="'.$currentIndex.'&token='.Tools::getValue('token').'&module='.$module['name'].'">'.$moduleInstance->displayName.'</a></h4>';
+					echo '<h4><img src="../modules/'.$module['name'].'/logo.gif" /><a href="'.self::$currentIndex.'&token='.Tools::getValue('token').'&module='.$module['name'].'">'.$moduleInstance->displayName.'</a></h4>';
 		}
 		else
 			echo $this->l('No module installed', 'AdminStatsTab');

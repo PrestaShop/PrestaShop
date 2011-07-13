@@ -56,7 +56,7 @@ class AdminAttributesGroups extends AdminTab
 			OR isset($_GET['updateattribute']) OR isset($_GET['addattribute']))
 		{
 			$this->adminAttributes->displayForm($this->token);
-			echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 		}
 		else
 		{
@@ -80,7 +80,7 @@ class AdminAttributesGroups extends AdminTab
 			 	{
 					$object = new $this->className();
 					if ($object->deleteSelection($_POST[$this->table.'Box']))
-						Tools::redirectAdmin($currentIndex.'&conf=2'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
 				else
@@ -104,8 +104,8 @@ class AdminAttributesGroups extends AdminTab
 	{
 		global $currentIndex, $cookie;
 
-		echo '<br /><a href="'.$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Add attributes group').'</b></a><br />
-		<a href="'.$currentIndex.'&addattribute&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add attribute').'</a><br /><br />
+		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Add attributes group').'</b></a><br />
+		<a href="'.self::$currentIndex.'&addattribute&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add attribute').'</a><br /><br />
 		'.$this->l('Click on the group name to view its attributes. Click again to hide them.').'<br /><br />';
 		if ($this->_list === false)
 			Tools::displayError('No elements found');
@@ -143,9 +143,9 @@ class AdminAttributesGroups extends AdminTab
 								.$attribute['name'].'
 							</td>
 							<td class="center">
-								<a href="'.$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&updateattribute&token='.$this->token.'">
+								<a href="'.self::$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&updateattribute&token='.$this->token.'">
 								<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;
-								<a href="'.$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&deleteattribute&token='.$this->token.'"
+								<a href="'.self::$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&deleteattribute&token='.$this->token.'"
 								onclick="return confirm(\''.$this->l('Delete attribute', __CLASS__, true, false).' : '.$attribute['name'].'?\');">
 								<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
 							</td>
@@ -154,15 +154,15 @@ class AdminAttributesGroups extends AdminTab
 			echo '
 					</table>
 					<p><input type="Submit" class="button" name="submitDelattribute" value="'.$this->l('Delete selection').'"
-					onclick="changeFormParam(this.form, \''.$currentIndex.'\', '.$id.'); return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>
+					onclick="changeFormParam(this.form, \''.self::$currentIndex.'\', '.$id.'); return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>
 					</div>
 					</td>';
 
 			echo '
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center">
-					<a href="'.$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.$this->token.'">
+					<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.$this->token.'">
 					<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;
-					<a href="'.$currentIndex.'&id_'.$this->table.'='.$id.'&delete'.$this->table.'&token='.$this->token.'" onclick="return confirm(\''.$this->l('Delete item', __CLASS__, true, false).' : '.$tr['name'].'?\');">
+					<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$id.'&delete'.$this->table.'&token='.$this->token.'" onclick="return confirm(\''.$this->l('Delete item', __CLASS__, true, false).' : '.$tr['name'].'?\');">
 					<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
 				</td>
 			</tr>';
@@ -180,7 +180,7 @@ class AdminAttributesGroups extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/asterisk.gif" />'.$this->l('Attributes group').'</legend>
 				<label>'.$this->l('Name:').' </label>

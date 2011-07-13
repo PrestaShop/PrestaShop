@@ -177,7 +177,7 @@ class AdminCustomerThreads extends AdminTab
 					Mail::Send($ct->id_lang, 'reply_msg', Mail::l('An answer to your message is available'), $params, Tools::getValue('msg_email'), NULL, NULL, NULL, $fileAttachment);
 					$ct->status = 'closed';
 					$ct->update();
-					Tools::redirectAdmin($currentIndex.'&id_customer_thread='.(int)$id_customer_thread.'&viewcustomer_thread&token='.Tools::getValue('token'));
+					Tools::redirectAdmin(self::$currentIndex.'&id_customer_thread='.(int)$id_customer_thread.'&viewcustomer_thread&token='.Tools::getValue('token'));
 				}
 				else
 					$this->_errors[] = Tools::displayError('An error occurred, your message was not sent.  Please contact your system administrator.');
@@ -241,7 +241,7 @@ class AdminCustomerThreads extends AdminTab
 					<h3 style="overflow:hidden;line-height:25px;color:#812143;height:25px;margin:0;">&nbsp;'.$val['name'].'</h3>'.
 					($dim > 6 ? '' : '<p style="overflow:hidden;line-height:15px;height:45px;margin:0;padding:0 5px;">'.$val['description'].'</p>').
 					($totalThread == 0 ? '<h3 style="padding:0 5px;margin:0;height:23px;line-height:23px;background-color:#DEDEDE">'.$this->l('No new message').'</h3>' 
-					: '<a href="'.$currentIndex.'&token='.Tools::getValue('token').'&id_customer_thread='.$id_customer_thread.'&viewcustomer_thread" style="padding:0 5px;display:block;height:23px;line-height:23px;border:0;" class="button">'.$totalThread.' '.($totalThread > 1 ? $this->l('new messages'): $this->l('new message')).'</a>').'
+					: '<a href="'.self::$currentIndex.'&token='.Tools::getValue('token').'&id_customer_thread='.$id_customer_thread.'&viewcustomer_thread" style="padding:0 5px;display:block;height:23px;line-height:23px;border:0;" class="button">'.$totalThread.' '.($totalThread > 1 ? $this->l('new messages'): $this->l('new message')).'</a>').'
 				</div>';
 		}
 		echo '</div>';
@@ -349,7 +349,7 @@ class AdminCustomerThreads extends AdminTab
 		else
 		{
 			$output = '<div style="font-size:11px">
-			'.($id_employee ? '<a href="'.Tools::getHttpHost(true).$currentIndex.'&token='.Tools::getAdminToken('AdminCustomerThreads'.(int)(Tab::getIdFromClassName('AdminCustomerThreads')).(int)($id_employee)).'&id_customer_thread='.(int)$message['id_customer_thread'].'&viewcustomer_thread">'.$this->l('View this thread').'</a><br />' : '').'
+			'.($id_employee ? '<a href="'.Tools::getHttpHost(true).self::$currentIndex.'&token='.Tools::getAdminToken('AdminCustomerThreads'.(int)(Tab::getIdFromClassName('AdminCustomerThreads')).(int)($id_employee)).'&id_customer_thread='.(int)$message['id_customer_thread'].'&viewcustomer_thread">'.$this->l('View this thread').'</a><br />' : '').'
 			<b>'.$this->l('Sent by:').'</b> '.(!empty($message['customer_name']) ? $message['customer_name'].' ('.$message['email'].')' : $message['email'])
 			.((!empty($message['id_customer']) AND empty($message['employee_name'])) ? '<br /><b>'.$this->l('Customer ID:').'</b> '.(int)($message['id_customer']).'<br />' : '')
 			.((!empty($message['id_order']) AND empty($message['employee_name'])) ? '<br /><b>'.$this->l('Order #').':</b> '.(int)($message['id_order']).'<br />' : '')
@@ -466,7 +466,7 @@ class AdminCustomerThreads extends AdminTab
 				
 		if ($nextThread)
 			echo $this->displayButton('
-			<a href="'.$currentIndex.'&id_customer_thread='.(int)$nextThread.'&viewcustomer_thread&token='.$this->token.'">
+			<a href="'.self::$currentIndex.'&id_customer_thread='.(int)$nextThread.'&viewcustomer_thread&token='.$this->token.'">
 				<img src="../img/admin/next-msg.png" title="'.$this->l('Go to the oldest next unanswered message').'" style="margin-bottom: 10px;" />
 				<br />'.$this->l('Answer to the next unanswered message in this category').' &gt;
 			</a>');
@@ -477,33 +477,33 @@ class AdminCustomerThreads extends AdminTab
 
 		if ($thread->status != "closed")
 			echo $this->displayButton('
-			<a href="'.$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
+			<a href="'.self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
 				<img src="../img/admin/msg-ok.png" style="margin-bottom:10px" />
 				<br />'.$this->l('Set this message as handled').'
 			</a>');
 			
 		if ($thread->status != "pending1")
 			echo $this->displayButton('
-			<a href="'.$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
+			<a href="'.self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
 				<img src="../img/admin/msg-pending.png" style="margin-bottom:10px" />
 				<br />'.$this->l('Declare this message').'<br />'.$this->l('as "pending 1"').'<br />'.$this->l('(will be answered later)').'
 			</a>');
 		else
 			echo $this->displayButton('
-			<a href="'.$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
+			<a href="'.self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
 				<img src="../img/admin/msg-is-pending.png" style="margin-bottom:10px" />
 				<br />'.$this->l('Click here to disable pending status').'
 			</a>');
 			
 		if ($thread->status != "pending2")
 			echo $this->displayButton('
-			<a href="'.$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
+			<a href="'.self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
 				<img src="../img/admin/msg-pending.png" style="margin-bottom:10px" />
 				<br />'.$this->l('Declare this message').'<br />'.$this->l('as "pending 2"').'<br />'.$this->l('(will be answered later)').'
 			</a>');
 		else
 			echo $this->displayButton('
-			<a href="'.$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
+			<a href="'.self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token.'">
 				<img src="../img/admin/msg-is-pending.png" style="margin-bottom:10px" />
 				<br />'.$this->l('Click here to disable pending status').'
 			</a>');

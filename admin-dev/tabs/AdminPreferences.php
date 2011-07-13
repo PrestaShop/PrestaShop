@@ -149,7 +149,7 @@ class AdminPreferences extends AdminTab
 				if ($val = Tools::getValue('PS_THEME'))
 				{
 					if (rewriteSettingsFile(NULL, $val, NULL))
-						Tools::redirectAdmin($this->currentIndex.'&conf=6'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 					else
 						$this->_errors[] = Tools::displayError('Cannot access settings file.');
 				}
@@ -277,7 +277,7 @@ class AdminPreferences extends AdminTab
 			if (!sizeof($this->_errors))
 			{
 				$this->submitConfiguration($fields);
-				Tools::redirectAdmin($this->currentIndex.'&conf=6'.'&token='.$this->token);
+				Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 			}
 		}
 	}
@@ -347,7 +347,7 @@ class AdminPreferences extends AdminTab
 					$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 			}
 		</script>
-		<form action="'.$this->currentIndex.'&submit'.$name.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submit'.$name.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 			<fieldset><legend><img src="../img/admin/'.strval($icon).'.gif" />'.$tabname.'</legend>';
 		foreach ($fields AS $key => $field)
 		{

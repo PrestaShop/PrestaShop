@@ -63,7 +63,7 @@ class AdminAttributes extends AdminTab
 			$strAttributesGroups .= '"'.$attribute_group['id_attribute_group'].'" : '.$attribute_group['is_color_group'].',';
 		echo $strAttributesGroups.'};
 		</script>
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.($token ? $token : $this->token).'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.($token ? $token : $this->token).'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_attribute" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/asterisk.gif" />'.$this->l('Attribute').'</legend>
 				<label>'.$this->l('Name:').' </label>
@@ -141,7 +141,7 @@ class AdminAttributes extends AdminTab
 			 	{
 					$object = new $this->className();
 					if ($object->deleteSelection($_POST[$this->table.$_POST['groupid'].'Box']))
-						Tools::redirectAdmin($currentIndex.'&conf=2'.'&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.($token ? $token : $this->token));
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
 				else

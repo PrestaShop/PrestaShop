@@ -39,9 +39,11 @@ if (!$cookie->isLoggedBack())
 	Tools::redirectAdmin('login.php'.(empty($destination) || ($destination == 'index.php?logout') ? '' : '?redirect='.$destination));
 }
 
+// Set current index 
 $currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
 if ($back = Tools::getValue('back'))
 	$currentIndex .= '&back='.urlencode($back);
+AdminTab::$currentIndex = $currentIndex;
 
 /* Server Params */
 $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
@@ -57,9 +59,6 @@ $iso = $language->iso_code;
 include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
-
-/* attribute id_lang is often needed, so we create a constant for performance reasons */
-define('_USER_ID_LANG_', (int)$cookie->id_lang);
 
 $path = dirname(__FILE__).'/themes/';
 if (empty($employee->bo_theme) OR !file_exists($path.$employee->bo_theme.'/admin.css'))

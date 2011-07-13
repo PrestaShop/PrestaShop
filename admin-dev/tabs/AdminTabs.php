@@ -60,7 +60,7 @@ class AdminTabs extends AdminTab
 		{
 			global $currentIndex;
 			if ($tab->move($direction))
-				Tools::redirectAdmin($currentIndex.'&token='.$this->token);
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
 		else
 		{
@@ -84,9 +84,9 @@ class AdminTabs extends AdminTab
 				$tab = $arrayTabs[$i];
 				echo '<th style="text-align:center;">'.stripslashes($tab['name']).'<br />';
 				if ($i)
-					echo '<a href="'.$currentIndex.'&id_tab='.$tab['id_tab'].'&move=l&token='.$this->token.'"><img src="../img/admin/previous.gif" /></a>&nbsp;';
+					echo '<a href="'.self::$currentIndex.'&id_tab='.$tab['id_tab'].'&move=l&token='.$this->token.'"><img src="../img/admin/previous.gif" /></a>&nbsp;';
 				if ($i < sizeof($arrayTabs) - 1)
-					echo '<a href="'.$currentIndex.'&id_tab='.$tab['id_tab'].'&move=r&token='.$this->token.'"><img src="../img/admin/next.gif" /></a></th>';
+					echo '<a href="'.self::$currentIndex.'&id_tab='.$tab['id_tab'].'&move=r&token='.$this->token.'"><img src="../img/admin/next.gif" /></a></th>';
 			}
 			echo '
 				</tr>
@@ -118,7 +118,7 @@ class AdminTabs extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 		'.($obj->position ? '<input type="hidden" name="position" value="'.$obj->position.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab.gif" />'.$this->l('Tabs').'</legend>

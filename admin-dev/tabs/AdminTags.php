@@ -70,7 +70,7 @@ class AdminTags extends AdminTab
 		$products2 = $obj->getProducts(false);
 		
 		echo '
-		<form id="formTag" action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" class="width5">
+		<form id="formTag" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" class="width5">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/t/AdminTags.gif" />'.$this->l('Tag').'</legend>
 				<label>'.$this->l('Name').' </label>

@@ -193,18 +193,18 @@ class CategoryCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
+		$idLang = is_null($idLang) ? $context->language->id : (int)$idLang;
 
 		$children = array();
-		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories((int)$idLang, true) AND sizeof($subcats))
+		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($idLang, true) AND sizeof($subcats))
 			foreach ($subcats AS &$subcat)
 			{
 				if (!$subcat['id_category'])
 					break;
 				elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray))
 				{
-					$categ = new Category((int)$subcat['id_category'], (int)$idLang);
-					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, (int)$idLang, $excludedIdsArray);
+					$categ = new Category((int)$subcat['id_category'], $idLang);
+					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $idLang, $excludedIdsArray);
 				}
 			}
 
@@ -574,13 +574,13 @@ class CategoryCore extends ObjectModel
 		return self::getChildren(1, $id_lang, $active);
 	}
 
-	static public function getRootCategory($id_lang = NULL, $id_shop = false)
+	static public function getRootCategory($id_lang = NULL, $id_shop = false, $context = null)
 	{
 		if (!$id_shop)
 			$id_shop = Configuration::get('PS_SHOP_DEFAULT');
-		$shop = new Shop((int)$id_shop);
+		$shop = new Shop($id_shop);
 		
-		return new Category ((int)$shop->id_category, is_null($id_lang) ? (int)_USER_ID_LANG_ : (int)($id_lang));
+		return new Category ($shop->id_category, is_null($id_lang) ? $context->language->id : $id_lang);
 	}
 
 	/**
@@ -790,19 +790,19 @@ class CategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($idLang = null)
+	public function getParentsCategories($idLang = null, $context = null)
 	{
 		//get idLang
-		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
+		$idLang = is_null($idLang) ? $context->language->id : $idLang;
 
 		$categories = null;
-		$idCurrent = (int)($this->id);
+		$idCurrent = $this->id;
 		while (true)
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)($idLang).')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$idLang.')
 				WHERE c.`id_category` = '.(int)$idCurrent.' AND c.`id_parent` != 0
 			');
 

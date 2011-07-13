@@ -165,12 +165,12 @@ class AdminCustomers extends AdminTab
 							$parent_id = (int)(Tools::getValue('id_parent', 1));
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token);
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token);
 							// Save and back to parent
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-								Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token);
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token);
 							// Default behavior (save and back)
-							Tools::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token);
 						}
 					}
 					else
@@ -229,7 +229,7 @@ class AdminCustomers extends AdminTab
 				if(Customer::customerExists($customer->email))
 					$this->_errors[] = Tools::displayError('This customer already exist as non-guest.');
 				elseif ($customer->transformToCustomer(Tools::getValue('id_lang', Configuration::get('PS_LANG_DEFAULT'))))
-					Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
 				else
 					$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
 			}
@@ -244,7 +244,7 @@ class AdminCustomers extends AdminTab
 			$update = Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
 			if (!$update)
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			Tools::redirectAdmin($currentIndex.'&token='.$this->token);	
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);	
 
 		}elseif (Tools::isSubmit('changeOptinVal') AND Tools::getValue('id_customer'))
 		{
@@ -255,7 +255,7 @@ class AdminCustomers extends AdminTab
 			$update = Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
 			if (!$update)
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			Tools::redirectAdmin($currentIndex.'&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
 		
 		return parent::postProcess();
@@ -289,7 +289,7 @@ class AdminCustomers extends AdminTab
 			$countBetterCustomers = '-';
 
 		echo '
-		<fieldset style="width:400px;float: left"><div style="float: right"><a href="'.$currentIndex.'&addcustomer&id_customer='.$customer->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
+		<fieldset style="width:400px;float: left"><div style="float: right"><a href="'.self::$currentIndex.'&addcustomer&id_customer='.$customer->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
 			<span style="font-weight: bold; font-size: 14px;">'.$customer->firstname.' '.$customer->lastname.'</span>
 			<img src="../img/admin/'.($customer->id_gender == 2 ? 'female' : ($customer->id_gender == 1 ? 'male' : 'unknown')).'.gif" style="margin-bottom: 5px" /><br />
 			<a href="mailto:'.$customer->email.'" style="text-decoration: underline; color: blue">'.$customer->email.'</a><br /><br />
@@ -301,7 +301,7 @@ class AdminCustomers extends AdminTab
 		</fieldset>
 		<fieldset style="width:300px;float:left;margin-left:50px">
 			<div style="float: right">
-				<a href="'.$currentIndex.'&addcustomer&id_customer='.$customer->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a>
+				<a href="'.self::$currentIndex.'&addcustomer&id_customer='.$customer->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a>
 			</div>
 			'.$this->l('Newsletter:').' '.($customer->newsletter ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').'<br />
 			'.$this->l('Opt-in:').' '.($customer->optin ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').'<br />
@@ -678,7 +678,7 @@ class AdminCustomers extends AdminTab
                     </tr>';
             echo '</table><div class="clear">&nbsp;</div>';
         }
-        echo '<a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to customer list').'</a><br />';
+        echo '<a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to customer list').'</a><br />';
     }
 
 	public function displayForm($isMainTab = true)
@@ -694,7 +694,7 @@ class AdminCustomers extends AdminTab
 		$groups = Group::getGroups($this->_defaultFormLanguage, true);
 		
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" autocomplete="off">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" autocomplete="off">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab-customers.gif" />'.$this->l('Customer').'</legend>
 				<label>'.$this->l('Gender:').' </label>

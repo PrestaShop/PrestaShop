@@ -53,7 +53,7 @@ class AdminFeaturesValues extends AdminTab
 
 		echo '
 		<h2>'.$this->l('Add a new feature value').'</h2>
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.Tools::getValue('token').'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.Tools::getValue('token').'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_feature_value" value="'.$obj->id.'" />' : '').'
 			<fieldset class="width2">
 				<legend><img src="../img/t/AdminFeatures.gif" />'.$this->l('Add a new feature value').'</legend>
@@ -103,7 +103,7 @@ class AdminFeaturesValues extends AdminTab
 			 	{
 					$object = new $this->className();
 					if ($object->deleteSelection($_POST[$this->table.$_POST['groupid'].'Box']))
-						Tools::redirectAdmin($currentIndex.'&conf=2'.'&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.($token ? $token : $this->token));
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
 				else

@@ -176,10 +176,12 @@ class CMSCategoryCore extends ObjectModel
 		);
 	}
 
-	static public function getRecurseCategory($id_lang = _USER_ID_LANG_, $current = 1, $active = 1, $links = 0, $id_shop = false, $context = null)
+	static public function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, $id_shop = false, $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
+			
+		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 			
 		$category = Db::getInstance()->getRow('
 		SELECT c.`id_cms_category`, c.`id_parent`, c.`level_depth`, cl.`name`, cl.`link_rewrite`
@@ -399,16 +401,6 @@ class CMSCategoryCore extends ObjectModel
 	{
 		return self::getChildren(1, $id_lang, $active);
 	}
-	/**
-	 * @deprecated
-	**/
-	static public function getRootCMSCategory($id_lang = NULL)
-	{
-		Tools::displayAsDeprecated();
-		//get idLang
-		$id_lang = is_null($id_lang) ? _USER_ID_LANG_ : (int)($id_lang);
-		return new CMSCategory (1, $id_lang);
-	}
 
 	static public function getChildren($id_parent, $id_lang, $active = true)
 	{
@@ -544,20 +536,22 @@ class CMSCategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($idLang = null)
+	public function getParentsCategories($idLang = null, $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		//get idLang
-		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
+		$idLang = is_null($idLang) ? $context->language->id : $idLang;
 
 		$categories = null;
-		$idCurrent = (int)($this->id);
+		$idCurrent = $this->id;
 		while (true)
 		{
 			$query = '
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'cms_category` c
-				LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($idLang).')
-				WHERE c.`id_cms_category` = '.$idCurrent.' AND c.`id_parent` != 0
+				LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)$idLang.')
+				WHERE c.`id_cms_category` = '.(int)$idCurrent.' AND c.`id_parent` != 0
 			';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
 

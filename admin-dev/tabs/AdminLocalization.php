@@ -79,7 +79,7 @@ class AdminLocalization extends AdminPreferences
 				if (!$localizationPack->loadLocalisationPack($pack, $selection))
 					$this->_errors = array_merge($this->_errors, $localizationPack->getErrors());
 				else
-					Tools::redirectAdmin($currentIndex.'&conf=23&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);
 			}
 			
 			
@@ -93,7 +93,7 @@ class AdminLocalization extends AdminPreferences
 
 		$this->_displayForm('localization', $this->_fieldsLocalization, $this->l('Localization'), 'width2', 'localization');
 		echo '<br />
-		<form method="post" action="'.$currentIndex.'&token='.$this->token.'" class="width2" enctype="multipart/form-data">
+		<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'" class="width2" enctype="multipart/form-data">
 		<fieldset>
 			<legend><img src="../img/admin/localization.gif" />'.$this->l('Localization pack import').'</legend>
 			<div style="clear: both; padding-top: 15px;">

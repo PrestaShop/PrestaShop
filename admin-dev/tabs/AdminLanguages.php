@@ -136,7 +136,7 @@ class AdminLanguages extends AdminTab
 					elseif ($object->id == $cookie->id_lang)
 						$this->_errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
 					elseif ($this->deleteNoPictureImages((int)(Tools::getValue('id_lang'))) AND $object->delete())
-						Tools::redirectAdmin($currentIndex.'&conf=1'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
 				}
 				else
 					$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
@@ -283,9 +283,9 @@ class AdminLanguages extends AdminTab
 				{
 					$tmp = explode('!', $key);
 					$key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
-					echo '<td class="pointer '.(isset($params['align']) ? $params['align'] : '').'" onclick="document.location = \''.$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'\'">';
+					echo '<td class="pointer '.(isset($params['align']) ? $params['align'] : '').'" onclick="document.location = \''.self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'\'">';
 					if (isset($params['active']) AND isset($tr[$key]))
-						echo '<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&'.$params['active'].'&token='.($token != NULL ? $token : $this->token).'"><img src="../img/admin/'.$active['img'].'.gif" alt="active" title="'.$active['title'].'" /></a>';
+						echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$params['active'].'&token='.($token != NULL ? $token : $this->token).'"><img src="../img/admin/'.$active['img'].'.gif" alt="active" title="'.$active['title'].'" /></a>';
 					elseif (isset($params['image']))
 						echo cacheImage(_PS_IMG_DIR_.$params['image'].'/'.$id.(isset($tr['id_image']) ? '-'.(int)($tr['id_image']) : '').'.'.$this->imageType, $this->table.'_mini_'.$id.'.'.$this->imageType, 45, $this->imageType);
 					elseif (isset($tr[$key]))
@@ -299,11 +299,11 @@ class AdminLanguages extends AdminTab
 					echo '<td class="center">';
 					if ($this->edit)
 						echo '
-						<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != NULL ? $token : $this->token).'">
+						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != NULL ? $token : $this->token).'">
 						<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>';
 					if ($this->delete)
 						echo '
-						<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != NULL ? $token : $this->token).'" onclick="return confirm(\''.$this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?', __CLASS__, true, false).'\');">
+						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != NULL ? $token : $this->token).'" onclick="return confirm(\''.$this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?', __CLASS__, true, false).'\');">
 						<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>';
 					echo '</td>';
 				}
@@ -328,7 +328,7 @@ class AdminLanguages extends AdminTab
 		var download = "'.$this->l('Download').'";
 		</script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'checkLangPack.js"></script>
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/world.gif" />'.$this->l('Languages').'</legend>
 				<input type="hidden" value="'._PS_VERSION_.'" name="ps_version" id="ps_version" />

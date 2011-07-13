@@ -96,13 +96,13 @@ class AdminCMSContent extends AdminTab
 		if (((Tools::isSubmit('submitAddcms_category') OR Tools::isSubmit('submitAddcms_categoryAndStay')) AND sizeof($this->adminCMSCategories->_errors)) OR isset($_GET['updatecms_category']) OR isset($_GET['addcms_category']))
 		{
 			$this->adminCMSCategories->displayForm($this->token);
-			echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 			
 		}
 		elseif (((Tools::isSubmit('submitAddcms') OR Tools::isSubmit('submitAddcmsAndStay')) AND sizeof($this->adminCMS->_errors)) OR isset($_GET['updatecms']) OR isset($_GET['addcms']))
 		{
 			$this->adminCMS->displayForm($this->token);
-			echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 		
 		}
 		else

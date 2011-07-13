@@ -66,7 +66,7 @@ class AdminInvoices extends AdminTab
 		echo '
 		<h2>'.$this->l('Print PDF invoices').'</h2>
 		<fieldset style="float:left;width:300px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('By date').'</legend>
-			<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 				<label style="width:90px">'.$this->l('From:').' </label>
 				<div class="margin-form" style="padding-left:100px">
 					<input type="text" size="4" maxlength="10" name="date_from" value="'.(date('Y-m-d')).'" style="width: 120px;" /> <sup>*</sup>
@@ -84,7 +84,7 @@ class AdminInvoices extends AdminTab
 			</form>
 		</fieldset>
 		<fieldset style="float:left;width: 500px;margin-left:10px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('By statuses').'</legend>
-			<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 				<label style="width:90px">'.$this->l('Statuses').' :</label>
 				<div class="margin-form" style="padding-left:100px">
 					<ul>';

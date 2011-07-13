@@ -44,7 +44,7 @@ class AdminGenerator extends AdminTab
 
 		// Htaccess
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		<fieldset><legend><img src="../img/admin/htaccess.gif" />'.$this->l('Htaccess file generation').'</legend>
 		<p><b>'.$this->l('Warning:').'</b> '.$this->l('this tool can ONLY be used if you are hosted by an Apache web server. Please ask your webhost.').'</p>
 		<p>'.$this->l('This tool will automatically generate a ".htaccess" file that will give you the ability to do URL rewriting and to catch 404 errors.').'</p>
@@ -81,7 +81,7 @@ class AdminGenerator extends AdminTab
 
 		// Robots
 		echo '<br /><br />
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		<fieldset><legend><img src="../img/admin/robots.gif" />'.$this->l('Robots file generation').'</legend>
 		<p><b>'.$this->l('Warning:').' </b>'.$this->l('Your file robots.txt MUST be in your website\'s root directory and nowhere else.').'</p>
 		<p>'.$this->l('eg: http://www.yoursite.com/robots.txt').'.</p>
@@ -118,7 +118,7 @@ class AdminGenerator extends AdminTab
 				Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
 				Configuration::updateValue('PS_HTACCESS_SPECIFIC',  Tools::getValue('ps_htaccess_specific'), true);
 				if (Tools::generateHtaccess($this->_htFile, Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), Tools::getValue('ps_htaccess_specific')))
-					Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				$this->_errors[] = $this->l('Cannot write into file:').' <b>'.$this->_htFile.'</b><br />'.$this->l('Please check write permissions.');
 			}
 			else
@@ -164,7 +164,7 @@ class AdminGenerator extends AdminTab
 					fwrite($writeFd, "\n");
 
 					fclose($writeFd);
-					Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
 			} else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');

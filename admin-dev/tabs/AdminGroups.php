@@ -67,7 +67,7 @@ class AdminGroups extends AdminTab
 		$categories = Category::getSimpleCategories((int)($cookie->id_lang));
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab-groups.gif" />'.$this->l('Group').'</legend>
 				<label>'.$this->l('Name:').' </label>
@@ -106,7 +106,7 @@ class AdminGroups extends AdminTab
 						<tr>
 							<td>'.Tools::htmlentitiesUTF8($groupReduction['category_name']).'</td>
 							<td><input type="hidden" name="gr_id_group_reduction[]" value="'.(int)($groupReduction['id_group_reduction']).'" /><input type="text" name="gr_reduction[]" value="'.($groupReduction['reduction'] * 100).'" /></td>
-							<td><a href="'.$currentIndex.'&deleteGroupReduction&id_group_reduction='.(int)($groupReduction['id_group_reduction']).'&id_group='.(int)($obj->id).'&token='.$this->token.'"><img src="" alt="'.$this->l('Delete').'" /></a></td>
+							<td><a href="'.self::$currentIndex.'&deleteGroupReduction&id_group_reduction='.(int)($groupReduction['id_group_reduction']).'&id_group='.(int)($obj->id).'&token='.$this->token.'"><img src="" alt="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 				echo '</table>';
 			}
@@ -141,7 +141,7 @@ class AdminGroups extends AdminTab
 		if ($obj->id)
 		{
 			echo '
-			<form action="'.$currentIndex.'&update'.$this->table.'&id_group='.$obj->id.'&token='.$this->token.'" method="post" class="width3">
+			<form action="'.self::$currentIndex.'&update'.$this->table.'&id_group='.$obj->id.'&token='.$this->token.'" method="post" class="width3">
 				<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />
 				<fieldset><legend><img src="../img/admin/tab-groups.gif" />'.$this->l('New group discount').'</legend>
 					<label>'.$this->l('Category:').' </label>
@@ -176,7 +176,7 @@ class AdminGroups extends AdminTab
 		
 		echo '
 		<fieldset style="width: 400px">
-			<div style="float: right"><a href="'.$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
+			<div style="float: right"><a href="'.self::$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
 			<span style="font-weight: bold; font-size: 14px;">'.strval($obj->name[(int)($cookie->id_lang)]).'</span>
 			<div class="clear">&nbsp;</div>
 			'.$this->l('Discount:').' '.(float)($obj->reduction).$this->l('%').'
@@ -295,7 +295,7 @@ class AdminGroups extends AdminTab
 					if (!$groupReduction->delete())
 						$this->_errors[] = Tools::displayError('An error occurred while deleting the group reduction');
 					else
-						Tools::redirectAdmin($currentIndex.'&update'.$this->table.'&id_group='.(int)(Tools::getValue('id_group')).'&conf=1&token='.$token);
+						Tools::redirectAdmin(self::$currentIndex.'&update'.$this->table.'&id_group='.(int)(Tools::getValue('id_group')).'&conf=1&token='.$token);
 				}
 			}
 			else
@@ -322,7 +322,7 @@ class AdminGroups extends AdminTab
 					if (!$groupReduction->add())
 						$this->_errors[] = Tools::displayError('An error occurred while adding a category group reduction.');
 					else
-						Tools::redirectAdmin($currentIndex.'&update'.$this->table.'&id_group='.(int)(Tools::getValue('id_group')).'&conf=3&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&update'.$this->table.'&id_group='.(int)(Tools::getValue('id_group')).'&conf=3&token='.$this->token);
 				}
 			}
 			else
@@ -367,7 +367,7 @@ class AdminGroups extends AdminTab
 					else
 					{
 						if ($object->delete())
-							Tools::redirectAdmin($currentIndex.'&conf=1&token='.$token);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
 						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}

@@ -47,9 +47,9 @@ class AdminImageResize extends AdminTab
 					$this->_errors = Tools::displayError('An error occurred while copying image.').' '.stripslashes($imageType['name']);
 				// Save and stay on same form
 				if (Tools::getValue('saveandstay') == 'on')
-					Tools::redirectAdmin($currentIndex.'&id_product='.Tools::getValue('id_product').'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=1&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));
+					Tools::redirectAdmin(self::$currentIndex.'&id_product='.Tools::getValue('id_product').'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=1&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));
 				// Default behavior (save and back)
-				Tools::redirectAdmin($currentIndex.'&id_category='.(int)(Tools::getValue('id_category')).'&conf='.(int)(Tools::getValue('conf')).'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));
+				Tools::redirectAdmin(self::$currentIndex.'&id_category='.(int)(Tools::getValue('id_category')).'&conf='.(int)(Tools::getValue('conf')).'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));
 		} else
 			parent::postProcess();
 	}
@@ -68,7 +68,7 @@ class AdminImageResize extends AdminTab
 		<script type="text/javascript" src="../js/cropper/dragdrop.js"></script>
 		<script type="text/javascript" src="../js/cropper/cropper.js"></script>
 		<script type="text/javascript" src="../js/cropper/loader.js"></script>
-		<form enctype="multipart/form-data"  method="post" action="'.$currentIndex.'&imageresize&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'">
+		<form enctype="multipart/form-data"  method="post" action="'.self::$currentIndex.'&imageresize&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'">
 			<input type="hidden" name="id_product" value="'.Tools::getValue('id_product').'" />
 			<input type="hidden" name="id_category" value="'.Tools::getValue('id_category').'" />
 			<input type="hidden" name="saveandstay" value="'.Tools::getValue('submitAddAndStay').'" />

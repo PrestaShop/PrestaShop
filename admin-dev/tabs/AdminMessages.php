@@ -154,7 +154,7 @@ class AdminMessages extends AdminTab
 					
 			foreach ($this->_list AS $k => &$item)
 				if ($item['id_order'] == '--')
-					$this->_list[$k]['last_message'] .= ' <a class="iframe" onclick="$(this).parent().attr(\'onclick\', \'return false\');" href="'.$currentIndex.'&token='.Tools::getAdminToken('AdminMessages'.(int)(Tab::getIdFromClassName('AdminMessages')).(int)($cookie->id_employee)).'&ajax=1&id_cart='.(int)$this->_list[$k]['id_cart'].'" title="'.$this->l('View details').'"><img src="../img/admin/details.gif" alt="'.$this->l('View details').'" /></a>';
+					$this->_list[$k]['last_message'] .= ' <a class="iframe" onclick="$(this).parent().attr(\'onclick\', \'return false\');" href="'.self::$currentIndex.'&token='.Tools::getAdminToken('AdminMessages'.(int)(Tab::getIdFromClassName('AdminMessages')).(int)($cookie->id_employee)).'&ajax=1&id_cart='.(int)$this->_list[$k]['id_cart'].'" title="'.$this->l('View details').'"><img src="../img/admin/details.gif" alt="'.$this->l('View details').'" /></a>';
 					
 			echo '
 			<link href="'._PS_CSS_DIR_.'jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />

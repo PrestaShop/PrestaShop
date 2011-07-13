@@ -105,12 +105,12 @@ class AdminModules extends AdminTab
 		if (Tools::isSubmit('filterModules'))
 		{
 			$this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
-			Tools::redirectAdmin($currentIndex.'&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
 		elseif (Tools::isSubmit('resetFilterModules'))
 		{
 			$this->resetFilterModules();
-			Tools::redirectAdmin($currentIndex.'&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
 		if (Tools::isSubmit('active'))
 		{
@@ -120,7 +120,7 @@ class AdminModules extends AdminTab
 				if (Validate::isLoadedObject($module))
 				{
 					$module->enable();
-					Tools::redirectAdmin($currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
 				} else
 					$this->_errors[] = Tools::displayError('Cannot load module object');
 			} else
@@ -134,7 +134,7 @@ class AdminModules extends AdminTab
 				if (Validate::isLoadedObject($module))
 				{
 					$module->disable();
-					Tools::redirectAdmin($currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
 				} else
 					$this->_errors[] = Tools::displayError('Cannot load module object');
 			} else
@@ -149,7 +149,7 @@ class AdminModules extends AdminTab
 				{
 					if ($module->uninstall())
 						if ($module->install())
-							Tools::redirectAdmin($currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
 						else
 							$this->_errors[] = Tools::displayError('Cannot install module');
 					else
@@ -223,9 +223,9 @@ class AdminModules extends AdminTab
 				{
 					$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
 					$this->recursiveDeleteOnDisk($moduleDir);
-					Tools::redirectAdmin($currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
+					Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
 				}
-				Tools::redirectAdmin($currentIndex.'&token='.$this->token);
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
@@ -262,7 +262,7 @@ class AdminModules extends AdminTab
 						{
 							if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
 							{
-								$backlink = $currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
+								$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
 								$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
 								$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
 								
@@ -323,7 +323,7 @@ class AdminModules extends AdminTab
 				}
 			}
 			if ($return)
-				Tools::redirectAdmin($currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+				Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
 		}
 	}
 
@@ -347,7 +347,7 @@ class AdminModules extends AdminTab
 		
 		@unlink($file);
 		if ($success)
-			Tools::redirectAdmin($currentIndex.'&conf=8'.'&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 	
 	public function display()
@@ -386,7 +386,7 @@ class AdminModules extends AdminTab
 						module_list += \'|\'+modules[i].value;
 					}
 				}
-				document.location.href=\''.$currentIndex.'&token='.$this->token.'&\'+action+\'=\'+module_list.substring(1, module_list.length);
+				document.location.href=\''.self::$currentIndex.'&token='.$this->token.'&\'+action+\'=\'+module_list.substring(1, module_list.length);
 			}	
 			$(\'document\').ready( function() {
 				$(\'input[name="filtername"]\').autocomplete(moduleList, {
@@ -599,7 +599,7 @@ class AdminModules extends AdminTab
 			<img src="https://addons.prestashop.com/modules.php?'.(isset($_SERVER['SERVER_ADDR']) ? 'server='.ip2long($_SERVER['SERVER_ADDR']).'&' : '').'mods='.$serialModules.'" alt="Add" class="middle" />
 			'.$this->l('Add a module from PrestaShop Addons').'
 		</a>';
-		echo '<form action="'.$currentIndex.'&token='.$this->token.'" method="post" id="filternameForm" style="float:right"><input type="text" name="filtername" value="'.Tools::htmlentitiesUTF8(Tools::getValue('filtername')).'" /> <input type="submit" value="'.$this->l('Search').'" class="button" /></form>
+		echo '<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" id="filternameForm" style="float:right"><input type="text" name="filtername" value="'.Tools::htmlentitiesUTF8(Tools::getValue('filtername')).'" /> <input type="submit" value="'.$this->l('Search').'" class="button" /></form>
 		<div class="clear">&nbsp;</div>
 		<div id="module_install" style="width:900px; '.((Tools::isSubmit('submitDownload') OR Tools::isSubmit('submitDownload2')) ? '' : 'display: none;').'">
 			<fieldset>
@@ -607,7 +607,7 @@ class AdminModules extends AdminTab
 				<p>'.$this->l('The module must be either a zip file or a tarball.').'</p>
 				<hr />
 				<div style="float:right;margin-right:50px;border-left:solid 1px #DFD5C3">
-					<form action="'.$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
+					<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
 						<label style="width: 100px">'.$this->l('Module file').'</label>
 						<div class="margin-form" style="padding-left: 140px">
 							<input type="file" name="file" />
@@ -619,7 +619,7 @@ class AdminModules extends AdminTab
 					</form>
 				</div>
 				<div>
-				<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+				<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 					<label style="width: 100px">'.$this->l('Module URL').'</label>
 					<div class="margin-form" style="padding-left: 140px">
 						<input type="text" name="url" style="width: 200px;" value="'.(Tools::getValue('url') ? Tools::getValue('url') : 'http://').'" />
@@ -650,7 +650,7 @@ class AdminModules extends AdminTab
 		foreach ($orderModule AS $tabModule)
 			foreach ($tabModule AS $module)
 				if ($module->active AND isset($module->warning) && $module->warning)
-					$warnings[] ='<a href="'.$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'">'.$module->displayName.'</a> - '.stripslashes(pSQL($module->warning));
+					$warnings[] ='<a href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'">'.$module->displayName.'</a> - '.stripslashes(pSQL($module->warning));
 		$this->displayWarning($warnings);
 		echo '<form method="POST">
 			<table cellpadding="0" cellspacing="0" style="width:100%;;margin-bottom:5px;">
@@ -811,16 +811,16 @@ class AdminModules extends AdminTab
 						echo '</td>
 						<td class="center" style="width:60px" rowspan="2">';
 					if ($module->id)
-						echo '<a href="'.$currentIndex.'&token='.$this->token.'&module_name='.$module->name.'&'.($module->active ? 'enable=0' : 'enable=1').'">';
+						echo '<a href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.$module->name.'&'.($module->active ? 'enable=0' : 'enable=1').'">';
 					echo $img;
 					if ($module->id)
 						'</a>';
-					$href = $currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
+					$href = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
 					echo '
 						</td>
 						<td class="center" width="120" rowspan="2">'.((!$module->id)
 						? '<input type="button" class="button small" name="Install" value="'.$this->l('Install').'"
-						onclick="javascript:document.location.href=\''.$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'\'">'
+						onclick="javascript:document.location.href=\''.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'\'">'
 						: '<input type="button" class="button small" name="Uninstall" value="'.$this->l('Uninstall').'"
 						onclick="'.((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'if(confirm(\''.addslashes($module->confirmUninstall).'\')) ').'document.location.href=\''.$href.'\'' : $module->onclickOption('uninstall', $href)).'">').'</td>
 						
@@ -880,19 +880,19 @@ class AdminModules extends AdminTab
 		global $currentIndex;
 		
 		$return = '';
-		$href = $currentIndex.'&token='.$this->token.'&module_name='.
+		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.
 			urlencode($module->name).'&tab_module='.$module->tab;
 
 		if ($module->id)
-			$return .= '<a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'" '.((Tools::isMultiShopActivated()) ? 'title="'.htmlspecialchars($module->active ? $this->l('Disable this module') : $this->l('Enable this module for all shops')).'"' : '').'>'.($module->active ? $this->l('Disable') : $this->l('Enable')).'</a>&nbsp;&nbsp;';
+			$return .= '<a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'" '.((Tools::isMultiShopActivated()) ? 'title="'.htmlspecialchars($module->active ? $this->l('Disable this module') : $this->l('Enable this module for all shops')).'"' : '').'>'.($module->active ? $this->l('Disable') : $this->l('Enable')).'</a>&nbsp;&nbsp;';
 		
 		if ($module->id AND $module->active)
-			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Reset').'</a>&nbsp;&nbsp;';
+			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Reset').'</a>&nbsp;&nbsp;';
 		
 		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Tools::isMultiShopActivated()))
-			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Configure').'</a>&nbsp;&nbsp;';
+			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Configure').'</a>&nbsp;&nbsp;';
 			
-		$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $href).'"' : '').' onclick="return confirm(\''.$this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?').'\');" href="'.$currentIndex.'&deleteModule='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Delete').'</a>&nbsp;&nbsp;';
+		$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $href).'"' : '').' onclick="return confirm(\''.$this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?').'\');" href="'.self::$currentIndex.'&deleteModule='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Delete').'</a>&nbsp;&nbsp;';
 		
 		return $return;
 	}

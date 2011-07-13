@@ -99,7 +99,7 @@ class AdminCarriers extends AdminTab
 				});
 			});
 		</script>
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/delivery.gif" />'.$this->l('Carriers').'</legend>
 				<label>'.$this->l('Company:').' </label>
@@ -309,7 +309,7 @@ class AdminCarriers extends AdminTab
 							elseif ($this->postImage($objectNew->id))
 								{
 									$this->changeZones($objectNew->id);
-									Tools::redirectAdmin($currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
+									Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
 								}
 						}
 						else
@@ -332,7 +332,7 @@ class AdminCarriers extends AdminTab
 						{
 							$this->changeZones($object->id);
 							$this->changeGroups($object->id);
-							Tools::redirectAdmin($currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
 						}
 					}
 					else

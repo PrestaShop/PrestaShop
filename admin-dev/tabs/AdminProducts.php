@@ -37,7 +37,7 @@ class AdminProducts extends AdminTab
 	{
 		global $currentIndex;
 		$context = Context::getContext();
-		
+
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
@@ -173,7 +173,6 @@ class AdminProducts extends AdminTab
 	public function postProcess($token = NULL)
 	{
 		global $cookie, $currentIndex;
-
 		/* Add a new product */
 		if (Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndStay') OR  Tools::isSubmit('submitAddProductAndPreview'))
 		{
@@ -260,7 +259,7 @@ class AdminProducts extends AdminTab
 						if (!sizeof($this->_errors))
 						{
 							$attachment->add();
-							Tools::redirectAdmin($currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=6&token='.($token ? $token : $this->token));
+							Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=6&token='.($token ? $token : $this->token));
 						}
 						else
 							$this->_errors[] = Tools::displayError('Invalid file');
@@ -275,7 +274,7 @@ class AdminProducts extends AdminTab
 			if ($this->tabAccess['edit'] === '1')
 				if ($id = (int)(Tools::getValue($this->identifier)))
 					if (Attachment::attachToProduct($id, $_POST['attachments']))
-						Tools::redirectAdmin($currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&tabs=6&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&tabs=6&token='.($token ? $token : $this->token));
 		}
 
 		/* Product duplication */
@@ -310,7 +309,7 @@ class AdminProducts extends AdminTab
 						{
 							Hook::addProduct($product);
 							Search::indexation(false);
-							Tools::redirectAdmin($currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token));
+							Tools::redirectAdmin(self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token));
 						}
 					}
 					else
@@ -328,7 +327,7 @@ class AdminProducts extends AdminTab
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->toggleStatus())
-						Tools::redirectAdmin($currentIndex.'&conf=5'.((($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
 				}
@@ -358,10 +357,10 @@ class AdminProducts extends AdminTab
 							$object->deleteImages();
 							$object->deleted = 1;
 							if ($object->update())
-								Tools::redirectAdmin($currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url);
+								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url);
 						}
 						elseif ($object->delete())
-							Tools::redirectAdmin($currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url);
 						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
@@ -405,7 +404,7 @@ class AdminProducts extends AdminTab
 							$id_category = Tools::getValue('id_category');
 							$category_url = empty($id_category) ? '' : '&id_category='.$id_category;
 
-							Tools::redirectAdmin($currentIndex.'&conf=2&token='.$token.$category_url);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.$category_url);
 						}
 						$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 					}
@@ -439,7 +438,7 @@ class AdminProducts extends AdminTab
 					}
 					@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
 					@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
-					Tools::redirectAdmin($currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1'.'&token='.($token ? $token : $this->token));
+					Tools::redirectAdmin(self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1'.'&token='.($token ? $token : $this->token));
 				}
 
 				/* Update product image/legend */
@@ -467,7 +466,7 @@ class AdminProducts extends AdminTab
 						$productId = (int)(Tools::getValue('id_product'));
 						@unlink(_PS_TMP_IMG_DIR_.'/product_'.$productId.'.jpg');
 						@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$productId.'.jpg');
-						Tools::redirectAdmin($currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&tabs=1'.'&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&tabs=1'.'&token='.($token ? $token : $this->token));
 					}
 				}
 
@@ -475,7 +474,7 @@ class AdminProducts extends AdminTab
 				elseif (isset($_GET['imgPosition']) AND isset($_GET['imgDirection']))
 				{
 					$image->positionImage((int)(Tools::getValue('imgPosition')), (int)(Tools::getValue('imgDirection')));
-					Tools::redirectAdmin($currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1&token='.($token ? $token : $this->token));
+					Tools::redirectAdmin(self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1&token='.($token ? $token : $this->token));
 				}
 			}
 			else
@@ -570,7 +569,7 @@ class AdminProducts extends AdminTab
 					{
 						if (!$product->cache_default_attribute)
 							Product::updateDefaultAttribute($product->id);
-						Tools::redirectAdmin($currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token));
 					}
 				}
 			}
@@ -592,7 +591,7 @@ class AdminProducts extends AdminTab
 					else
 						Product::updateDefaultAttribute($id_product);
 
-					Tools::redirectAdmin($currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
+					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
 				}
 				else
 					$this->_errors[] = Tools::displayError('Cannot delete attribute');
@@ -613,7 +612,7 @@ class AdminProducts extends AdminTab
 						$product->cache_default_attribute = 0;
 						$product->update();
 					}
-					Tools::redirectAdmin($currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
+					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
 				}
 				else
 					$this->_errors[] = Tools::displayError('Cannot delete attributes');
@@ -627,7 +626,7 @@ class AdminProducts extends AdminTab
 			{
 				$product->deleteDefaultAttributes();
 				$product->setDefaultAttribute((int)(Tools::getValue('id_product_attribute')));
-				Tools::redirectAdmin($currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
+				Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
 			}
 			else
 				$this->_errors[] = Tools::displayError('Cannot make default attribute');
@@ -668,7 +667,7 @@ class AdminProducts extends AdminTab
 						}
 					}
 					if (!sizeof($this->_errors))
-						Tools::redirectAdmin($currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=4&conf=4&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=4&conf=4&token='.($token ? $token : $this->token));
 				}
 				else
 					$this->_errors[] = Tools::displayError('Product must be created before adding features.');
@@ -711,7 +710,7 @@ class AdminProducts extends AdminTab
 							$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 					}
 				if (!sizeof($this->_errors))
-					Tools::redirectAdmin($currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&update'.$this->table.'&tabs=2&token='.($token ? $token : $this->token));
+					Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&update'.$this->table.'&tabs=2&token='.($token ? $token : $this->token));
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
@@ -748,7 +747,7 @@ class AdminProducts extends AdminTab
 					if (!$specificPrice->add())
 						$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 					else
-						Tools::redirectAdmin($currentIndex.'&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token));
 				}
 			}
 			else
@@ -768,7 +767,7 @@ class AdminProducts extends AdminTab
 					if (!$specificPrice->delete())
 						$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
 					else
-						Tools::redirectAdmin($currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token));
 				}
 			}
 			else
@@ -785,12 +784,12 @@ class AdminProducts extends AdminTab
 				if (!SpecificPrice::setPriorities($priorities))
 					$this->_errors[] = Tools::displayError('An error occurred while updating priorities.');
 				else
-					Tools::redirectAdmin($currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token));
+					Tools::redirectAdmin(self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token));
 			}
 			elseif (!SpecificPrice::setSpecificPriority((int)($obj->id), $priorities))
 				$this->_errors[] = Tools::displayError('An error occurred while setting priorities.');
 			else
-				Tools::redirectAdmin($currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token));
+				Tools::redirectAdmin(self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token));
 		}
 		/* Customization management */
 		elseif (Tools::isSubmit('submitCustomizationConfiguration'))
@@ -809,7 +808,7 @@ class AdminProducts extends AdminTab
 					if (!sizeof($this->_errors) AND !$product->update())
 						$this->_errors[] = Tools::displayError('An error occurred while updating customization configuration.');
 					if (!sizeof($this->_errors))
-						Tools::redirectAdmin($currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token));
 				}
 				else
 					$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -829,7 +828,7 @@ class AdminProducts extends AdminTab
 					if (!sizeof($this->_errors) AND !$product->updateLabels())
 						$this->_errors[] = Tools::displayError('An error occurred while updating customization.');
 					if (!sizeof($this->_errors))
-						Tools::redirectAdmin($currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token));
 				}
 				else
 					$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -846,7 +845,7 @@ class AdminProducts extends AdminTab
 			if (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin($currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
 		}
 		else
 			parent::postProcess(true);
@@ -1197,7 +1196,7 @@ class AdminProducts extends AdminTab
 							Hook::updateProduct($object);
 							Search::indexation(false);
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) AND is_int($id_image) AND $id_image)
-								Tools::redirectAdmin($currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') OR Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
+								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') OR Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
 
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
@@ -1214,10 +1213,10 @@ class AdminProducts extends AdminTab
 							} else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') OR ($id_image AND $id_image !== true)) // Save and stay on same form
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								Tools::redirectAdmin($currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token));
+								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token));
 
 							// Default behavior (save and back)
-							Tools::redirectAdmin($currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token).'&onredirigeici');
+							Tools::redirectAdmin(self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token).'&onredirigeici');
 						}
 					}
 					else
@@ -1267,12 +1266,12 @@ class AdminProducts extends AdminTab
 							}
 
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) AND is_int($id_image) AND $id_image)
-								Tools::redirectAdmin($currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
+								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								Tools::redirectAdmin($currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token));
+								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token));
 							// Default behavior (save and back)
-							Tools::redirectAdmin($currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=3&token='.($token ? $token : $this->token));
+							Tools::redirectAdmin(self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=3&token='.($token ? $token : $this->token));
 						}
 					}
 					else
@@ -1401,9 +1400,8 @@ class AdminProducts extends AdminTab
 	public function display($token = NULL)
 	{
 		global $currentIndex, $cookie;
-		
+
 		$id_shop = Context::getContext()->shop->getID();
-		
 		if (($id_category = (int)Tools::getValue('id_category')))
 			$currentIndex .= '&id_category='.$id_category;
 		$this->getList((int)($cookie->id_lang), !$cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $id_shop);
@@ -1413,12 +1411,11 @@ class AdminProducts extends AdminTab
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).' '.
 		$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
 		if ($this->tabAccess['add'] === '1')
-			echo '<a href="'.$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
+			echo '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
 		echo '<div style="margin:10px;">';
 		$this->displayList($token);
 		$this->displayAssoShop();
 		echo '</div>';
-		
 	}
 
 	/**
@@ -1561,7 +1558,7 @@ class AdminProducts extends AdminTab
 		</script>
 		<script src="../js/tabpane.js" type="text/javascript"></script>
 		<link type="text/css" rel="stylesheet" href="../css/tabpane.css" />
-		<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post" enctype="multipart/form-data" name="product" id="product">
+		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" enctype="multipart/form-data" name="product" id="product">
 			'.$this->_displayDraftWarning($obj->active).'
 
 			<input type="hidden" name="tabs" id="tabs" value="0" />
@@ -1742,7 +1739,7 @@ class AdminProducts extends AdminTab
 					<td class="cell border">'.$period.'</td>
 					<td class="cell border">'.$specificPrice['from_quantity'].'</th>
 					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specificPrice, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border"><a href="'.$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td>
+					<td class="cell border"><a href="'.self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td>
 				</tr>';
 				$i++;
 			}
@@ -3060,25 +3057,25 @@ class AdminProducts extends AdminTab
 								if ($image['position'] == $imagesTotal)
 									echo '<span>[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
 								else
-									echo '<span>[ <a onclick="return hideLink();" href="'.$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+									echo '<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
 							}
 							elseif ($image['position'] == $imagesTotal)
 								echo '
-									<span>[ <a onclick="return hideLink();" href="'.$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
+									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
 									<span>[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
 							else
 								echo '
-									<span>[ <a onclick="return hideLink();" href="'.$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
-									<span>[ <a onclick="return hideLink();" href="'.$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
+									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
 							echo '</td>';
 							if(Tools::isMultiShopActivated())
 								foreach ($shops AS $shop)
 									echo '<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';
 							echo '	
-								<td class="center"><a href="'.$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
+								<td class="center"><a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
 								<td class="center">
-									<a href="'.$currentIndex.'&id_image='.$image['id_image'].'&editImage&tabs=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/edit.gif" alt="'.$this->l('Modify this image').'" title="'.$this->l('Modify this image').'" /></a>
-									<a href="'.$currentIndex.'&id_image='.$image['id_image'].'&deleteImage&tabs=1&token='.($token ? $token : $this->token).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
+									<a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&editImage&tabs=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/edit.gif" alt="'.$this->l('Modify this image').'" title="'.$this->l('Modify this image').'" /></a>
+									<a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&deleteImage&tabs=1&token='.($token ? $token : $this->token).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
 								</td>
 							</tr>';
 						}
@@ -3410,13 +3407,13 @@ class AdminProducts extends AdminTab
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
 							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\'); calcImpactPriceTI();" /></a>&nbsp;
-							'.(!$product_attribute['default_on'] ? '<a href="'.$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'">
+							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
-							<a href="'.$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /></a></td>
 						</tr>';
 					}
-					echo '<tr><td colspan="7" align="center"><a href="'.$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
+					echo '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
 				}
 				else
 					echo '<tr><td colspan="7" align="center"><i>'.$this->l('No combination yet').'.</i></td></tr>';

@@ -50,7 +50,7 @@ class AdminDeliverySlip extends AdminTab
 		$output = '
 		<h2>'.$this->l('Print PDF delivery slips').'</h2>
 		<fieldset>
-			<form action="'.$currentIndex.'&submitPrint=1&token='.$this->token.'" method="post">
+			<form action="'.self::$currentIndex.'&submitPrint=1&token='.$this->token.'" method="post">
 				<label>'.$this->l('From:').' </label>
 				<div class="margin-form">
 					<input type="text" size="4" maxlength="10" name="date_from" value="'.(date('Y-m-d')).'" style="width: 120px;" /> <sup>*</sup>

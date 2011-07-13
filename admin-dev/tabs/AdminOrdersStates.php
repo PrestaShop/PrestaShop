@@ -115,7 +115,7 @@ class AdminOrdersStates extends AdminTab
 			return;
 
 		echo '<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/time.gif" />'.$this->l('Order statuses').'</legend>
 				<label>'.$this->l('Status name:').' </label>

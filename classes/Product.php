@@ -829,33 +829,6 @@ class ProductCore extends ObjectModel
 		ORDER BY pl.`name`');
 	}
 
-	/**
-	  * Return the products in the same category than the default category of the instancied product
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return array Products
-	  * @deprecated
-	  */
-	public function getDefaultCategoryProducts($idLang = NULL, $limit = NULL)
-	{
-		Tools::displayAsDeprecated();
-		//get idLang
-		$idLang = is_null($idLang) ? _USER_ID_LANG_ : (int)($idLang);
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.`id_product`, pl.`description_short`set, pl.`link_rewrite`, pl.`name`, i.`id_image`
-		FROM `'._DB_PREFIX_.'category_product` cp
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = cp.id_product)
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)
-		WHERE cp.id_category = ' . (int)($this->id_category_default) . '
-		AND id_lang = ' . (int)($idLang) . '
-		AND p.`active` = 1
-		AND i.`cover` = 1
-		'. (is_null($limit) ? '' : ' LIMIT 0 , ' . (int)($limit)));
-		return $result;
-	}
-
 	public function isNew()
 	{
 		$result = Db::getInstance()->ExecuteS('
@@ -866,7 +839,6 @@ class ProductCore extends ObjectModel
 		');
 		return sizeof($result) > 0;
 	}
-
 
 	public function productAttributeExists($attributesList, $currentProductAttribute = false)
 	{

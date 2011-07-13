@@ -93,7 +93,7 @@ class AdminPayment extends AdminTab
 					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID().', '.(int)$selected.')';
 		if (sizeof($values))
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
-		Tools::redirectAdmin($currentIndex.'&conf=4'.'&token='.$this->token);
+		Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
 	}
 
 	public function display()
@@ -141,7 +141,7 @@ class AdminPayment extends AdminTab
 		$irow = 0;
 
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post" id="form_'.$nameId.'">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" id="form_'.$nameId.'">
 			<fieldset>
 				<legend><img src="../img/admin/'.$icon.'.gif" />'.$title.'</legend>
 				<p>'.$desc.'<br />'.$this->youEditFieldFor().'<p>

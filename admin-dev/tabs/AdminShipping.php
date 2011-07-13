@@ -76,7 +76,7 @@ class AdminShipping extends AdminTab
 						Configuration::updateValue($field, call_user_func($function, Tools::getValue($field)));
 					}
 
-					Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 				}
 			}
 			else
@@ -113,7 +113,7 @@ class AdminShipping extends AdminTab
 						$priceList = rtrim($priceList, ',');
 						/* Update delivery prices */
 						$carrier->addDeliveryPrice($priceList);
-						Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 					}
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating fees (cannot load carrier object).');
@@ -147,7 +147,7 @@ class AdminShipping extends AdminTab
 		unset($confKeys['PS_SHIPPING_METHOD']);
 
 		echo '
-		<form action="'.$currentIndex.'&submitHandling'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitHandling'.$this->table.'=1&token='.$this->token.'" method="post">
 			<fieldset>
 				<legend><img src="../img/admin/delivery.gif" />'.$this->l('Handling').'</legend>';
 
@@ -215,7 +215,7 @@ class AdminShipping extends AdminTab
 		
 		echo '<br /><br />
 		<h2>'.$this->l('Fees by carrier, geographical zone, and ranges').'</h2>
-		<form action="'.$currentIndex.'&token='.$this->token.'" id="fees" name="fees" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" id="fees" name="fees" method="post">
 			<fieldset>
 				<legend><img src="../img/admin/delivery.gif" />'.$this->l('Fees').'</legend>';
 		

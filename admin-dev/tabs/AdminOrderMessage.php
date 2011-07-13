@@ -52,7 +52,7 @@ class AdminOrderMessage extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'&submitAdd'.$this->table.'=1" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'&submitAdd'.$this->table.'=1" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/email.gif" />'.$this->l('Order messages').'</legend>
 				<label>'.$this->l('Name:').' </label>

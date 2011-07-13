@@ -64,7 +64,7 @@ class AdminPerformance extends AdminTab
 				{
 					$settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([0-9])\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $settings);
 					if (file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $settings))
-						Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+						Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 					else
 						$this->_errors[] = Tools::displayError('Cannot overwrite settings file.');
 				}
@@ -85,7 +85,7 @@ class AdminPerformance extends AdminTab
 				if (!sizeof($this->_errors))
 				{
 					if (MCached::addServer(pSQL(Tools::getValue('memcachedIp')), (int)Tools::getValue('memcachedPort'), (int)Tools::getValue('memcachedWeight')))
-						Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+						Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 					else
 						$this->_errors[] = Tools::displayError('Cannot add Memcached server');
 				}
@@ -98,7 +98,7 @@ class AdminPerformance extends AdminTab
 			if ($this->tabAccess['add'] === '1')
 			{
 				if (MCached::deleteServer((int)Tools::getValue('deleteMemcachedServer')))
-					Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 				else
 					$this->_errors[] = Tools::displayError('Error in deleting Memcached server');
 			}
@@ -137,7 +137,7 @@ class AdminPerformance extends AdminTab
 					if (file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $settings))
 					{
 						Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
-						Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+						Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 					}
 					else
 						$this->_errors[] = Tools::displayError('Cannot overwrite settings file.');
@@ -160,7 +160,7 @@ class AdminPerformance extends AdminTab
 				)
 					$this->_errors[] = Tools::displayError('Unknown error.');
 				else
-					Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -185,7 +185,7 @@ class AdminPerformance extends AdminTab
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
-					Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 				}
 			}
 			else
@@ -197,7 +197,7 @@ class AdminPerformance extends AdminTab
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', 0));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
-				Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -246,7 +246,7 @@ class AdminPerformance extends AdminTab
 		';
 		
 		echo '
-		<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
+		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
 			<fieldset>
 				<legend><img src="../img/admin/prefs.gif" /> '.$this->l('Smarty').'</legend>
 				
@@ -270,7 +270,7 @@ class AdminPerformance extends AdminTab
 		</form>';
 		
 		echo '
-		<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
+		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
 			<fieldset>
 				<legend><img src="../img/admin/arrow_in.png" /> '.$this->l('CCC (Combine, Compress and Cache)').'</legend>
 				<p>'.$this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.').'</p>
@@ -325,7 +325,7 @@ class AdminPerformance extends AdminTab
 			</fieldset>
 		</form>';
 		
-		echo '<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
+		echo '<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
 			<fieldset>
 				<legend><img src="../img/admin/subdomain.gif" /> '.$this->l('Media servers (used only with CCC)').'</legend>
 				<p>'.$this->l('You must enter another domain or subdomain in order to use cookieless static content.').'</p>
@@ -353,7 +353,7 @@ class AdminPerformance extends AdminTab
 		echo '
 		<fieldset style="margin-top:10px;">
 			<legend><img src="../img/admin/computer_key.png" /> '.$this->l('Ciphering').'</legend>
-			<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post">
+			<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post">
 				<p>'.$this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.').'</p>
 				<label>'.$this->l('Algorithm').' </label>
 				<div class="margin-form">
@@ -373,7 +373,7 @@ class AdminPerformance extends AdminTab
 		$depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
 		echo '<fieldset style="margin-top: 10px;">
 				<legend><img src="../img/admin/computer_key.png" /> '.$this->l('Caching').'</legend>
-				<form action="'.$currentIndex.'&token='.Tools::getValue('token').'"  method="post">
+				<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'"  method="post">
 					<label>'.$this->l('Use cache:').' </label>
 					<div class="margin-form">
 						<input type="radio" name="active" id="active_on" value="1" '.(_PS_CACHE_ENABLED_ ? 'checked="checked" ' : '').'/>
@@ -404,7 +404,7 @@ class AdminPerformance extends AdminTab
 						<a id="addMemcachedServer" href="#" ><img src="../img/admin/add.gif" />'.$this->l('Add server').'</a>
 					</div>
 					<div id="formMemcachedServer" style="margin-top: 10px; display:none;">
-						<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post">
+						<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post">
 							<label>'.$this->l('IP Address:').' </label>
 							<div class="margin-form">
 								<input type="text" name="memcachedIp" />
@@ -441,7 +441,7 @@ class AdminPerformance extends AdminTab
 							<td>'.$server['port'].'</td>
 							<td>'.$server['weight'].'</td>
 							<td>
-								<a href="'.$currentIndex.'&token='.Tools::getValue('token').'&deleteMemcachedServer='.(int)$server['id_memcached_server'].'" ><img src="../img/admin/delete.gif" /></a>
+								<a href="'.self::$currentIndex.'&token='.Tools::getValue('token').'&deleteMemcachedServer='.(int)$server['id_memcached_server'].'" ><img src="../img/admin/delete.gif" /></a>
 							</td>
 						</tr>';
 				echo '

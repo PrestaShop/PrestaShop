@@ -489,7 +489,7 @@ abstract class ModuleCore
 			if (substr(realpath($filePath), 0, strlen($realpathModuleDir)) == $realpathModuleDir)
 			{
 				self::$classInModule[$currentClass] = substr(dirname($filePath), strlen($realpathModuleDir)+1);
-				$file = _PS_MODULE_DIR_.self::$classInModule[$currentClass].'/'.$context->getContext()->language->iso_code.'.php';
+				$file = _PS_MODULE_DIR_.self::$classInModule[$currentClass].'/'.Context::getContext()->language->iso_code.'.php';
 				if (Tools::file_exists_cache($file) AND include_once($file))
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 			}
@@ -578,7 +578,7 @@ abstract class ModuleCore
 
 				if (!count($errors) AND (int)$xml_module->need_instance == 0 AND !$needNewConfigFile)
 				{
-					$file = _PS_MODULE_DIR_.$module.'/'.$context->getContext()->language->iso_code.'.php';
+					$file = _PS_MODULE_DIR_.$module.'/'.Context::getContext()->language->iso_code.'.php';
 					if (Tools::file_exists_cache($file) AND include_once($file))
 						if(isset($_MODULE) AND is_array($_MODULE))
 							$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;

@@ -73,7 +73,7 @@ class AdminGroupShop extends AdminTab
 		else
 			$disabled = '';
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend>'.$this->l('GroupShop').'</legend><span class="hint" name="help_box" style="display:block;">'.$this->l('You can\'t edit GroupShop when you have more than one Shop').'</span><br />
 				<label for="name">'.$this->l('GroupShop name').'</label>
