@@ -124,12 +124,13 @@ abstract class ObjectModelCore
 	 	/* Connect to database and check SQL table/identifier */
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
 			die(Tools::displayError());
+		$db = Db::getInstance();
 		$this->identifier = pSQL($this->identifier);
 		/* Load object from database if object id is present */
 		if ($id)
 		{
 			if (!isset(self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang]))
-				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = Db::getInstance()->getRow('
+				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = $db->getRow('
 				SELECT *
 				FROM `'._DB_PREFIX_.$this->table.'` a '.
 				($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
@@ -145,7 +146,7 @@ abstract class ObjectModelCore
 				
 				if (!$id_lang AND method_exists($this, 'getTranslationsFieldsChild'))
 				{
-					$result = Db::getInstance()->ExecuteS('SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
+					$result = $db->ExecuteS('SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
 																	WHERE `'.$this->identifier.'` = '.(int)$id
 																	.(($this->langMultiShop AND $id_shop) ? ' AND `id_shop`='.(int)$id_shop : ''));
 					if ($result)

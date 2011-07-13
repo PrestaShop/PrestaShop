@@ -579,9 +579,8 @@ class CategoryCore extends ObjectModel
 		if (!$id_shop)
 			$id_shop = Configuration::get('PS_SHOP_DEFAULT');
 		$shop = new Shop((int)$id_shop);
-		$id_category = $shop->getRootCategory();
 		
-		return new Category ((int)$id_category, is_null($id_lang) ? (int)_USER_ID_LANG_ : (int)($id_lang));
+		return new Category ((int)$shop->id_category, is_null($id_lang) ? (int)_USER_ID_LANG_ : (int)($id_lang));
 	}
 
 	/**

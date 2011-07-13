@@ -40,7 +40,7 @@ class ManufacturerControllerCore extends FrontController
 		if ($id_manufacturer = Tools::getValue('id_manufacturer'))
 		{
 			$this->manufacturer = new Manufacturer((int)$id_manufacturer, self::$cookie->id_lang);
-			if (Validate::isLoadedObject($this->manufacturer) AND $this->manufacturer->active AND $this->manufacturer->isAssociatedToGroupShop((int)$this->id_current_shop))
+			if (Validate::isLoadedObject($this->manufacturer) AND $this->manufacturer->active AND $this->manufacturer->isAssociatedToGroupShop())
 			{
 				$nbProducts = $this->manufacturer->getProducts($id_manufacturer, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);

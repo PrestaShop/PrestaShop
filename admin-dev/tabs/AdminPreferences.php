@@ -29,14 +29,13 @@ class AdminPreferences extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
 		$timezones = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT name FROM '._DB_PREFIX_.'timezone');
 		$taxes[] = array('id' => 0, 'name' => $this->l('None'));
-		foreach (Tax::getTaxes((int)($cookie->id_lang)) as $tax)
+		foreach (Tax::getTaxes($context->language->id) as $tax)
 			$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);
 
 		$order_process_type = array(
@@ -71,7 +70,7 @@ class AdminPreferences extends AdminTab
 				'name' => $this->l('None')
 			)
 		);
-		foreach (CMS::listCms($cookie->id_lang) as $cms_file)
+		foreach (CMS::listCms($context->language->id) as $cms_file)
 			$cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
 
 		$this->_fieldsGeneral = array(
@@ -117,8 +116,6 @@ class AdminPreferences extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (isset($_POST['submitGeneral'.$this->table]))
 		{
 			Module::hookExec('categoryUpdate'); // We call this hook, for regenerate cache of categories
@@ -152,7 +149,7 @@ class AdminPreferences extends AdminTab
 				if ($val = Tools::getValue('PS_THEME'))
 				{
 					if (rewriteSettingsFile(NULL, $val, NULL))
-						Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+						Tools::redirectAdmin($this->currentIndex.'&conf=6'.'&token='.$this->token);
 					else
 						$this->_errors[] = Tools::displayError('Cannot access settings file.');
 				}
@@ -169,12 +166,10 @@ class AdminPreferences extends AdminTab
 	  * Update settings in database and configuration files
 	  *
 	  * @params array $fields Fields settings
-	  *
-	  * @global string $currentIndex Current URL in order to keep current Tab
 	  */
 	protected function _postConfig($fields)
 	{
-		global $currentIndex, $smarty;
+		global $smarty;
 
 		$languages = Language::getLanguages(false);
 		if (!Configuration::get('PS_FORCE_SMARTY_2'))
@@ -282,7 +277,7 @@ class AdminPreferences extends AdminTab
 			if (!sizeof($this->_errors))
 			{
 				$this->submitConfiguration($fields);
-				Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+				Tools::redirectAdmin($this->currentIndex.'&conf=6'.'&token='.$this->token);
 			}
 		}
 	}
@@ -330,13 +325,10 @@ class AdminPreferences extends AdminTab
 	  *
 	  * @params string $name Form name
 	  * @params array $fields Fields settings
-	  *
-	  * @global string $currentIndex Current URL in order to keep current Tab
 	  */
 	protected function _displayForm($name, $fields, $tabname, $size, $icon)
 	{
-		global $currentIndex;
-
+		$context = Context::getContext();
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
 		$confValues = $this->getConf($fields, $languages);
@@ -355,7 +347,7 @@ class AdminPreferences extends AdminTab
 					$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 			}
 		</script>
-		<form action="'.$currentIndex.'&submit'.$name.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form action="'.$this->currentIndex.'&submit'.$name.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 			<fieldset><legend><img src="../img/admin/'.strval($icon).'.gif" />'.$tabname.'</legend>';
 		foreach ($fields AS $key => $field)
 		{
@@ -376,7 +368,7 @@ class AdminPreferences extends AdminTab
 				echo '<div class="margin-form" style="padding-top:5px;">';
 			}
 
-			$isDisabled = (isset($field['visibility']) && $field['visibility'] > Shop::getContextType()) ? true : false;
+			$isDisabled = (isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
 
 			/* Display the appropriate input type for each field */
 			switch ($field['type'])

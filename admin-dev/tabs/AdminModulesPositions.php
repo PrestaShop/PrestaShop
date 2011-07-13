@@ -31,8 +31,6 @@ class AdminModulesPositions extends AdminTab
 
 	public function postProcess()
 	{
-		global	$currentIndex;
-
 		// Getting key value for display
 		if (Tools::getValue('show_modules') AND strval(Tools::getValue('show_modules')) != 'all')
 			$this->displayKey = (int)(Tools::getValue('show_modules'));
@@ -48,7 +46,7 @@ class AdminModulesPositions extends AdminTab
 				if (Validate::isLoadedObject($module))
 				{
 					$module->updatePosition($id_hook, (int)(Tools::getValue('direction')));
-					Tools::redirectAdmin($currentIndex.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+					Tools::redirectAdmin($this->currentIndex.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 				else
 					$this->_errors[] = Tools::displayError('module cannot be loaded');
@@ -89,7 +87,7 @@ class AdminModulesPositions extends AdminTab
 					elseif (!$module->registerExceptions($id_hook, $excepts, Shop::getListFromContext()))
 						$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					else
-						Tools::redirectAdmin($currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+						Tools::redirectAdmin($this->currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 			}
 			else
@@ -131,7 +129,7 @@ class AdminModulesPositions extends AdminTab
 						}
 						
 						if (!$this->_errors)
-							Tools::redirectAdmin($currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+							Tools::redirectAdmin($this->currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 					}
 					else
 					{
@@ -146,7 +144,7 @@ class AdminModulesPositions extends AdminTab
 						if (!$module->editExceptions($id_hook, $exceptions, Shop::getListFromContext()))
 							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						else
-							Tools::redirectAdmin($currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+							Tools::redirectAdmin($this->currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 					}
 				}
 			}
@@ -172,7 +170,7 @@ class AdminModulesPositions extends AdminTab
 					if (!$module->unregisterHook($id_hook, Shop::getListFromContext()) OR !$module->unregisterExceptions($id_hook, Shop::getListFromContext()))
 						$this->_errors[] = Tools::displayError('An error occurred while deleting module from hook.');
 					else
-						Tools::redirectAdmin($currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+						Tools::redirectAdmin($this->currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 			}
 			else
@@ -202,7 +200,7 @@ class AdminModulesPositions extends AdminTab
 					}
 				}
 				if (!sizeof($this->_errors))
-					Tools::redirectAdmin($currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+					Tools::redirectAdmin($this->currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 			}
 		}
 	}
@@ -217,9 +215,7 @@ class AdminModulesPositions extends AdminTab
 
 	public function displayList()
 	{
-		global $currentIndex;
-
-		$link = new Link();
+		$context = Context::getContext();
 		$admin_dir = dirname($_SERVER['PHP_SELF']);
 		$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
 		
@@ -231,13 +227,13 @@ class AdminModulesPositions extends AdminTab
 		</script>
 		<script type="text/javascript" src="../js/admin-dnd.js"></script>
 		';
-		echo '<a href="'.$currentIndex.'&addToHook'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Transplant a module').'</b></a><br /><br />';
+		echo '<a href="'.$this->currentIndex.'&addToHook'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Transplant a module').'</b></a><br /><br />';
 
 		// Print select list
 		echo '
 		<form>
 			'.$this->l('Show').' :
-			<select id="show_modules" onChange="autoUrl(\'show_modules\', \''.$currentIndex.'&token='.$this->token.'&show_modules=\')">
+			<select id="show_modules" onChange="autoUrl(\'show_modules\', \''.$this->currentIndex.'&token='.$this->token.'&show_modules=\')">
 				<option value="all">'.$this->l('All modules').'&nbsp;</option>
 				<option>---------------</option>';
 				$modules = Module::getModulesInstalled();
@@ -253,26 +249,26 @@ class AdminModulesPositions extends AdminTab
 			echo '
 			</select>
 			<br /><br />
-			<input type="checkbox" id="hook_position" onclick="autoUrlNoList(\'hook_position\', \''.$currentIndex.'&token='.$this->token.'&show_modules='.(int)(Tools::getValue('show_modules')).'&hook_position=\')" '.(Tools::getValue('hook_position') ? 'checked="checked" ' : '').' />&nbsp;<label class="t" for="hook_position">'.$this->l('Display non-positionable hook').'</label>
+			<input type="checkbox" id="hook_position" onclick="autoUrlNoList(\'hook_position\', \''.$this->currentIndex.'&token='.$this->token.'&show_modules='.(int)(Tools::getValue('show_modules')).'&hook_position=\')" '.(Tools::getValue('hook_position') ? 'checked="checked" ' : '').' />&nbsp;<label class="t" for="hook_position">'.$this->l('Display non-positionable hook').'</label>
 		</form>
 		
 		<fieldset style="width:250px;float:right"><legend>'.$this->l('Live edit').'</legend>';
-		if (Tools::isMultiShopActivated() && Shop::getContextType() != Shop::CONTEXT_SHOP)
+		if (Tools::isMultiShopActivated() && $context->shop->getContextType() != Shop::CONTEXT_SHOP)
 			echo '<p>'.$this->l('You have to select a shop to use live edit').'</p>';
 		else
 			echo '<p>'.$this->l('By clicking here you will be redirected to the front office of your shop to move and delete modules directly.').'</p>
 				<br>
-				<a href="'.$link->getPageLink('index').'&live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).((Tools::isMultiShopActivated()) ? '&id_shop='.Context::getContext()->shop->getID() : '').'" target="_blank" class="button">'.$this->l('Run LiveEdit').'</a>';
+				<a href="'.$context->link->getPageLink('index').'&live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).((Tools::isMultiShopActivated()) ? '&id_shop='.Context::getContext()->shop->getID() : '').'" target="_blank" class="button">'.$this->l('Run LiveEdit').'</a>';
 		echo '</fieldset>';
 
 		// Print hook list
-		echo '<form method="post" action="'.$currentIndex.'&token='.$this->token.'">';
+		echo '<form method="post" action="'.$this->currentIndex.'&token='.$this->token.'">';
 		$irow = 0;
 		$hooks = Hook::getHooks(!(int)(Tools::getValue('hook_position')));
 
 		echo '<div id="unhook_button_position_top"><input class="button floatr" type="submit" name="unhookform" value="'.$this->l('Unhook the selection').'"/></div>';
 
-		$canMove = (Tools::isMultiShopActivated() && Shop::getContextType() != Shop::CONTEXT_SHOP) ? false : true;
+		$canMove = (Tools::isMultiShopActivated() && $context->shop->getContextType() != Shop::CONTEXT_SHOP) ? false : true;
 		if (!$canMove)
 			echo '<br /><div><b>'.$this->l('If you want to order / move following data, please go in shop context (select a shop in shop list)').'</b></div>';
 		foreach ($hooks AS $hook)
@@ -307,8 +303,8 @@ class AdminModulesPositions extends AdminTab
 						echo '
 						<td class="positions" width="40">'.(int)($position).'</td>
 						<td'.(($canMove && $nbModules >= 2) ? ' class="dragHandle"' : '').' id="td_'.$hook['id_hook'].'_'.$instance->id.'" width="40">
-							'.(($canMove) ? '<a'.($position == 1 ? ' style="display: none;"' : '' ).' href="'.$currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&direction=0&token='.$this->token.'&changePosition='.rand().'#'.$hook['name'].'"><img src="../img/admin/up.gif" alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a><br />
-							<a '.($position == count($instances) ? ' style="display: none;"' : '').'href="'.$currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&direction=1&token='.$this->token.'&changePosition='.rand().'#'.$hook['name'].'"><img src="../img/admin/down.gif" alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>' : '').'
+							'.(($canMove) ? '<a'.($position == 1 ? ' style="display: none;"' : '' ).' href="'.$this->currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&direction=0&token='.$this->token.'&changePosition='.rand().'#'.$hook['name'].'"><img src="../img/admin/up.gif" alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a><br />
+							<a '.($position == count($instances) ? ' style="display: none;"' : '').'href="'.$this->currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&direction=1&token='.$this->token.'&changePosition='.rand().'#'.$hook['name'].'"><img src="../img/admin/down.gif" alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>' : '').'
 						</td>
 						<td style="padding-left: 10px;"><label class="lab_modules_positions" for="mod'.$hook['id_hook'].'_'.$instance->id.'">
 						';
@@ -321,8 +317,8 @@ class AdminModulesPositions extends AdminTab
 					</label></td>
 						<td width="60">';
 						echo '
-							<a href="'.$currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&editGraft'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>
-							<a href="'.$currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&deleteGraft'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
+							<a href="'.$this->currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&editGraft'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>
+							<a href="'.$this->currentIndex.'&id_module='.$instance->id.'&id_hook='.$hook['id_hook'].'&deleteGraft'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token.'"><img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
 							<input type="checkbox" id="mod'.$hook['id_hook'].'_'.$instance->id.'" class="hook'.$hook['id_hook'].'" onclick="hookCheckboxes('.$hook['id_hook'].', 1, this)" name="unhooks[]" value="'.$hook['id_hook'].'_'.$instance->id.'"/>';
 						echo '
 						</td>
@@ -337,7 +333,6 @@ class AdminModulesPositions extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 
 		$id_module = (int)(Tools::getValue('id_module'));
@@ -346,7 +341,7 @@ class AdminModulesPositions extends AdminTab
 		{
 			// Check auth for this page
 			if (!$id_module || !$id_hook)
-				Tools::redirectAdmin($currentIndex . '&token='.$this->token);
+				Tools::redirectAdmin($this->currentIndex . '&token='.$this->token);
 				
 			$sql = 'SELECT id_module
 					FROM '._DB_PREFIX_.'hook_module
@@ -354,7 +349,7 @@ class AdminModulesPositions extends AdminTab
 						AND id_hook = '.$id_hook.'
 						AND id_shop IN('.implode(', ', ShopCore::getListFromContext()).')';
 			if (!Db::getInstance()->getValue($sql))
-				Tools::redirectAdmin($currentIndex . '&token='.$this->token);
+				Tools::redirectAdmin($this->currentIndex . '&token='.$this->token);
 
 			$slModule = Module::getInstanceById($id_module);
 			$exceptsList = $slModule->getExceptions($id_hook, true);
@@ -386,7 +381,7 @@ class AdminModulesPositions extends AdminTab
 		$modules = $instances;
 		$hooks = Hook::getHooks(0);
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">';
+		<form action="'.$this->currentIndex.'&token='.$this->token.'" method="post">';
 		if ($this->displayKey)
 			echo '<input type="hidden" name="show_modules" value="'.$this->displayKey.'" />';
 		echo '<fieldset style="width:700px"><legend><img src="../img/t/AdminModulesPositions.gif" />'.$this->l('Transplant a module').'</legend>

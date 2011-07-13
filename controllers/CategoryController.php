@@ -51,7 +51,7 @@ class CategoryControllerCore extends FrontController
 	public function preProcess()
 	{
 		if ($id_category = (int)Tools::getValue('id_category'))
-			$this->category = new Category($id_category, self::$cookie->id_lang, (int)$this->id_current_shop);
+			$this->category = new Category($id_category, self::$cookie->id_lang);
 		if (!Validate::isLoadedObject($this->category))
 		{
 			header('HTTP/1.1 404 Not Found');

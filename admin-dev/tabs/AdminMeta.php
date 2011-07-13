@@ -133,7 +133,7 @@ class AdminMeta extends AdminTab
 				foreach ($this->_languages as $language)
 					echo '
 					<div id="url_rewrite_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<input style="width:300px" type="text" name="url_rewrite_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($meta, 'url_rewrite', (int)($language['id_lang']), (int)$cookie->id_current_shop), ENT_COMPAT, 'UTF-8').'" />
+						<input style="width:300px" type="text" name="url_rewrite_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($meta, 'url_rewrite', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 						<p class="clear" style="width:300px">'.$this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php').'</p>
 					</div>';

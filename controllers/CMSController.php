@@ -60,7 +60,7 @@ class CmsControllerCore extends FrontController
 		parent::preProcess();
 		
 		/* assignCase (1 = CMS page, 2 = CMS category) */
-		if (Validate::isLoadedObject($this->cms) AND ($this->cms->isAssociatedToShop((int)$this->id_current_shop) AND $this->cms->active OR (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id) AND file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php'))))
+		if (Validate::isLoadedObject($this->cms) AND ($this->cms->isAssociatedToShop() AND $this->cms->active OR (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id) AND file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php'))))
 			$this->assignCase = 1;
 		elseif (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;
