@@ -68,7 +68,7 @@ class AdminTaxes extends AdminTab
 		$states = State::getStates((int)$cookie->id_lang);
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/dollar.gif" />'.$this->l('Taxes').'</legend>
 				<label>'.$this->l('Name:').' </label>
@@ -129,7 +129,7 @@ class AdminTaxes extends AdminTab
 								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
 							elseif ($this->postImage($object->id))
 								{
-									Tools::redirectAdmin($currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
+									Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
 								}
 						}
 						else
@@ -150,7 +150,7 @@ class AdminTaxes extends AdminTab
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 						elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
 						{
-							Tools::redirectAdmin($currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
 						}
 					}
 					else
@@ -173,7 +173,7 @@ class AdminTaxes extends AdminTab
             $_cacheLang['DeleteItem'] = $this->l('This tax is currently in use in a tax rule. Are you sure?');
 
 		echo '
-			<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].'\');">
+			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].'\');">
 			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
 	}
 
@@ -183,7 +183,7 @@ class AdminTaxes extends AdminTab
 
         $confirm = ($value AND TaxRule::isTaxInUse($id)) ? 'onclick="return confirm(\''. $this->l('This tax is currently in use in a tax rule. If you continue this tax will be removed from the tax rule, are you sure?').'\')"' : '';
 
-	    echo '<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.
+	    echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.
 	        ((int)$id_category AND (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token!=NULL ? $token : $this->token).'" '.$confirm.'>
 	        <img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
 	        alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';

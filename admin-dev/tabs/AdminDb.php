@@ -64,7 +64,7 @@ class AdminDb extends AdminPreferences
 						if ($value)
 							$settings['_'.Tools::strtoupper($k).'_'] = $value;
 				 	rewriteSettingsFile(NULL, NULL, $settings);
-				 	Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+				 	Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 				}
 			}
 			else
@@ -106,7 +106,7 @@ class AdminDb extends AdminPreferences
 		$this->_displayForm('database', $this->_fieldsDatabase, $this->l('Database'), 'width2', 'database_gear');
 		$engines = $this->_getEngines();
 		$irow = 0;
-		echo '<br /><fieldset class="width2"><legend>'.$this->l('MySQL Engine').'</legend><form name="updateEngine" action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post"><table cellspacing="0" cellpadding="0" class="table width2 clear">
+		echo '<br /><fieldset class="width2"><legend>'.$this->l('MySQL Engine').'</legend><form name="updateEngine" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post"><table cellspacing="0" cellpadding="0" class="table width2 clear">
 				<tr><th><input type="checkbox" onclick="checkDelBoxes(this.form, \'tablesBox[]\', this.checked)" class="noborder" name="checkme"></th><th>'.$this->l('Table').'</th><th>'.$this->l('Table Engine').'</th></tr>';
 		$tables_status = $this->_getTablesStatus();
 		foreach ($tables_status AS $table)

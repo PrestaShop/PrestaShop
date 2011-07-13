@@ -38,11 +38,11 @@ if (empty($tab) and !sizeof($_POST))
 	$_POST['token'] = Tools::getAdminTokenLite($tab);
 }
 
-	if ($id_tab = checkingTab($tab))
+	if ($adminObj = checkingTab($tab))
 	{
     	$isoUser = Language::getIsoById(intval($cookie->id_lang));
 		$tabs = array();
-		recursiveTab($id_tab);
+		recursiveTab($adminObj->id);
 		$tabs = array_reverse($tabs);
 		$bread = '';
 

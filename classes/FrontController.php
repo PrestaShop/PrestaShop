@@ -122,10 +122,6 @@ class FrontControllerCore
 		Tools::switchLanguage();
 		Tools::setCookieLanguage($cookie);
 
-		/* attribute id_lang is often needed, so we create a constant for performance reasons */
-		if (!defined('_USER_ID_LANG_'))
-			define('_USER_ID_LANG_', (int)$cookie->id_lang);
-
 		if (isset($_GET['logout']) OR ($cookie->logged AND Customer::isBanned((int)$cookie->id_customer)))
 		{
 			$cookie->logout();
@@ -153,12 +149,13 @@ class FrontControllerCore
 					$cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 AND
 					!self::isInWhitelistForGeolocation())
 				unset($cookie->id_cart, $cart);
-			elseif ($cookie->id_customer != $cart->id_customer OR $cookie->id_lang != $cart->id_lang OR $cookie->id_currency != $cart->id_currency)
+			// update cart values
+			elseif ($cookie->id_customer != $cart->id_customer OR $cookie->id_lang != $cart->id_lang OR $currency->id != $cart->id_currency)
 			{
 				if ($cookie->id_customer)
 					$cart->id_customer = (int)($cookie->id_customer);
 				$cart->id_lang = (int)($cookie->id_lang);
-				$cart->id_currency = (int)($cookie->id_currency);
+				$cart->id_currency = (int)$currency->id;
 				$cart->update();
 			}
 			/* Select an address if not set */
@@ -212,14 +209,16 @@ class FrontControllerCore
 
 		if (Validate::isLoadedObject($currency))
 			$smarty->ps_currency = $currency;
-		if (Validate::isLoadedObject($ps_language = new Language((int)$cookie->id_lang)))
-			$smarty->ps_language = $ps_language;
+		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
+			$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+		$smarty->ps_language = $language;
+		$context->language = $language;
 
 		/* get page name to display it in body id */
 		$pathinfo = pathinfo(__FILE__);
 		$page_name = Dispatcher::$controller;
 		$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
-		$smarty->assign(Tools::getMetaTags($cookie->id_lang, $page_name));
+		$smarty->assign(Tools::getMetaTags($language->id, $page_name));
 		$smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
 		/* Breadcrumb */
@@ -228,15 +227,14 @@ class FrontControllerCore
 
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$link = new Link($protocol_link, $protocol_content);
+		$context->link = $link;
 
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
-		$link = new Link($protocol_link, $protocol_content);
-		$context->link = $link;
-		$context->language = $ps_language;
 		$link->preloadPageLinks();
 		$this->canonicalRedirection();
 
@@ -262,7 +260,7 @@ class FrontControllerCore
 			'tpl_dir' => _PS_THEME_DIR_,
 			'modules_dir' => _MODULE_DIR_,
 			'mail_dir' => _MAIL_DIR_,
-			'lang_iso' => $ps_language->iso_code,
+			'lang_iso' => $language->iso_code,
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace('\'', '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),

@@ -166,7 +166,7 @@ class AdminReferrers extends AdminTab
 				echo '
 				<div style="float: left; margin-right: 20px;">
 					<fieldset style="width:630px"><legend><img src="../img/admin/tab-preferences.gif" /> '.$this->l('Settings').'</legend>
-						<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post">
+						<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post">
 							<label>'.$this->l('Save direct traffic').'</label>
 							<div class="float" style="margin-left: 200px;">
 								<label class="t" for="tracking_dt_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
@@ -181,13 +181,13 @@ class AdminReferrers extends AdminTab
 							<input type="submit" class="button" value="'.$this->l('   Save   ').'" name="submitSettings" />
 						</form>
 						<hr />
-						<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post">
+						<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post">
 						<p class="bold">'.$this->l('Indexation').'</p>
 						<p>'.$this->l('There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can refresh this index by clicking on the button below. Be aware that it may take a long time and it is only needed if you modified or added a referrer and if you want your changes to be retroactive.').'</p>
 						<input type="submit" class="button" value="'.$this->l('Refresh index').'" name="submitRefreshIndex" />
 						</form>
 						<hr />
-						<form action="'.$currentIndex.'&token='.Tools::getValue('token').'" method="post">
+						<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post">
 						<p class="bold">'.$this->l('Cache').'</p>
 						<p>'.$this->l('For you to sort and filter your data, it is cached. You can refresh the cache by clicking on the button below.').'</p>
 						<input type="submit" class="button" value="'.$this->l('Refresh cache').'" name="submitRefreshCache" />
@@ -213,7 +213,7 @@ class AdminReferrers extends AdminTab
 		if (Tools::isSubmit('submitSettings'))
 			if ($this->tabAccess['edit'] === '1')
 				if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int)(Tools::getValue('tracking_dt'))))
-					Tools::redirectAdmin($currentIndex.'&conf=4&token='.Tools::getValue('token'));
+					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.Tools::getValue('token'));
 
 		if (ModuleGraph::getDateBetween() != Configuration::get('PS_REFERRERS_CACHE_LIKE') OR Tools::isSubmit('submitRefreshCache'))
 			Referrer::refreshCache();
@@ -235,7 +235,7 @@ class AdminReferrers extends AdminTab
 		$uri = Tools::getHttpHost(true, true).__PS_BASE_URI__;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/affiliation.png" /> '.$this->l('Affiliate').'</legend>
 				<label>'.$this->l('Name').'</label>
@@ -470,11 +470,11 @@ class AdminReferrers extends AdminTab
 				}
 				echo '
 				<td class="center" style="width: 60px">
-					<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'">
+					<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'">
 					<img src="../img/admin/details.gif" border="0" alt="'.$this->l('View').'" title="'.$this->l('View').'" /></a>
-					<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'">
+					<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'">
 					<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>
-					<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.addslashes($this->l('Delete item ?')).'\');">
+					<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.addslashes($this->l('Delete item ?')).'\');">
 					<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
 				</tr>';
 			}

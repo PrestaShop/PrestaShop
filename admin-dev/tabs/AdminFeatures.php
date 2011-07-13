@@ -53,7 +53,7 @@ class AdminFeatures extends AdminTab
 			OR isset($_GET['updatefeature_value']) OR isset($_GET['addfeature_value']))
 		{
 			$this->adminFeaturesValues->displayForm($this->token);
-			echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" alt="" /> '.$this->l('Back to the features list').'</a><br />';
+			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" alt="" /> '.$this->l('Back to the features list').'</a><br />';
 		}
 		else
 		{
@@ -68,8 +68,8 @@ class AdminFeatures extends AdminTab
 		global $currentIndex;
 
 		echo '<br />
-			<a href="'.$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Add a new feature').'</b></a><br />
-			<a href="'.$currentIndex.'&addfeature_value&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new feature value').'</a><br /><br />
+			<a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Add a new feature').'</b></a><br />
+			<a href="'.self::$currentIndex.'&addfeature_value&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new feature value').'</a><br /><br />
 		'.$this->l('Click on a feature name to view its values and then click again if you want to hide them.').'<br /><br />';
 
 		$this->displayListHeader();
@@ -102,9 +102,9 @@ class AdminFeatures extends AdminTab
 					<td class="center"><input type="checkbox" name="feature_value'.$id.'Box[]" value="'.$feature['id_feature_value'].'" class="noborder" /></td>
 					<td>'.$feature['value'].'</td>
 					<td class="center">
-						<a href="'.$currentIndex.'&id_feature_value='.$feature['id_feature_value'].'&updatefeature_value&token='.$this->token.'">
+						<a href="'.self::$currentIndex.'&id_feature_value='.$feature['id_feature_value'].'&updatefeature_value&token='.$this->token.'">
 						<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;
-						<a href="'.$currentIndex.'&id_feature_value='.$feature['id_feature_value'].'&deletefeature_value&token='.$this->token.'"
+						<a href="'.self::$currentIndex.'&id_feature_value='.$feature['id_feature_value'].'&deletefeature_value&token='.$this->token.'"
 						onclick="return confirm(\''.$this->l('Delete value', __CLASS__, true, false).' #'.$feature['id_feature_value'].'?\');">
 						<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
 					</td>
@@ -122,9 +122,9 @@ class AdminFeatures extends AdminTab
 
 			echo '
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center">
-					<a href="'.$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.$this->token.'">
+					<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.$this->token.'">
 					<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;
-					<a href="'.$currentIndex.'&id_'.$this->table.'='.$id.'&delete'.$this->table.'&token='.$this->token.'" onclick="return confirm(\''.$this->l('Delete item', __CLASS__, true, false).' #'.$id.'?\');">
+					<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$id.'&delete'.$this->table.'&token='.$this->token.'" onclick="return confirm(\''.$this->l('Delete item', __CLASS__, true, false).' #'.$id.'?\');">
 					<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
 				</td>
 			</tr>';
@@ -144,7 +144,7 @@ class AdminFeatures extends AdminTab
 
 		echo '
 		<h2>'.$this->l('Add a new feature').'</h2>
-		<form action="'.$currentIndex.'&token='.$this->token.'"" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'"" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset class="width2">
 				<legend><img src="../img/t/AdminFeatures.gif" />'.$this->l('Add a new feature').'</legend>
@@ -195,7 +195,7 @@ class AdminFeatures extends AdminTab
 			 	{
 					$object = new $this->className();
 					if ($object->deleteSelection($_POST[$this->table.'Box']))
-						Tools::redirectAdmin($currentIndex.'&conf=2'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
 				else

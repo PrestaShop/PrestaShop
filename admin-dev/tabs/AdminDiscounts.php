@@ -142,8 +142,8 @@ class AdminDiscounts extends AdminTab
 								if ($back = Tools::getValue('back'))
 									Tools::redirectAdmin(urldecode($back).'&conf=4');
 								if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
-									Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
-								Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&token='.$token);
+									Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&token='.$token);
 							}
 						}
 						else
@@ -166,7 +166,7 @@ class AdminDiscounts extends AdminTab
 						if (!$object->add(true, false, $categories))
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 						elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
-							Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
+							Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
 					}
 					else
 						$this->_errors[] = Tools::displayError('You do not have permission to add here.');
@@ -217,7 +217,7 @@ class AdminDiscounts extends AdminTab
 				discountType();
 			});
 		</script>
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" id="discount" name="discount" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" id="discount" name="discount" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/coupon.gif" />'.$this->l('Vouchers').'</legend>
 				<label>'.$this->l('Code:').' </label>

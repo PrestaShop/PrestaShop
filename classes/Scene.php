@@ -181,21 +181,23 @@ class SceneCore extends ObjectModel
 	*
 	* @return array Products
 	*/
-	static public function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true)
+	static public function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true, $context = null)
 	{
-		$id_lang = is_null($id_lang) ? _USER_ID_LANG_ : (int)($id_lang);
+		if (!$context)
+			$context = Context::getContext();
+		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
 		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'scene_category` sc
 		LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
 		LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
-		WHERE sc.id_category = '.(int)($id_category).'	AND sl.id_lang = '.(int)($id_lang).($onlyActive ? ' AND s.active = 1' : '').'
+		WHERE sc.id_category = '.(int)$id_category.'	AND sl.id_lang = '.(int)$id_lang.($onlyActive ? ' AND s.active = 1' : '').'
 		ORDER BY sl.name ASC');
 		
 		if (!$liteResult AND $scenes)
 			foreach($scenes AS &$scene)
-				$scene = new Scene((int)($scene['id_scene']), (int)($id_lang), false, $hideScenePosition);
+				$scene = new Scene($scene['id_scene'], $id_lang, false, $hideScenePosition);
 		return $scenes;
 	}
 	
@@ -204,28 +206,28 @@ class SceneCore extends ObjectModel
 	*
 	* @return array Products
 	*/
-	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true)
+	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true, $context = null)
 	{
 		global $link;
-		
-		$id_lang = is_null($id_lang) ? _USER_ID_LANG_ : (int)($id_lang);
+		if (!$context)
+			$context = Context::getContext();
+		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 		
 		$products = Db::getInstance()->ExecuteS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'scene_products` s
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = s.id_product)
-		WHERE s.id_scene = '.(int)($this->id).($onlyActive ? ' AND p.active = 1' : ''));
+		WHERE s.id_scene = '.(int)$this->id.($onlyActive ? ' AND p.active = 1' : ''));
 		
 		if (!$liteResult AND $products)
 			foreach ($products AS &$product)
 			{
-				$product['details'] = new Product((int)($product['id_product']), !$liteResult, (int)($id_lang));
-				$product['link'] = $link->getProductLink((int)($product['details']->id), $product['details']->link_rewrite, $product['details']->category, $product['details']->ean13);
-				$cover = Product::getCover((int)($product['details']->id));
+				$product['details'] = new Product($product['id_product'], !$liteResult, $id_lang);
+				$product['link'] = $link->getProductLink($product['details']->id, $product['details']->link_rewrite, $product['details']->category, $product['details']->ean13);
+				$cover = Product::getCover($product['details']->id);
 				if(is_array($cover))
 					$product = array_merge($cover, $product);
 			}
-		
 		return $products;
 	}
 	

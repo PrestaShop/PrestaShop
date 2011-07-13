@@ -127,7 +127,7 @@ class AdminCounty extends AdminTab
 		}
 
 		echo $this->renderJS().
-		'<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		'<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" id="id_county" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/world.gif" />'.$this->l('Counties').'</legend>';
 

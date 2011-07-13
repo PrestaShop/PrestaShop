@@ -145,7 +145,7 @@ class AdminScenes extends AdminTab
 			
 		echo
 		'</script>
-		<form id="scenesForm" action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
+		<form id="scenesForm" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/photo.gif" />'.$this->l('Image Maps').'</legend>';
 		echo '

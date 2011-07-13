@@ -62,7 +62,7 @@ class AdminImages extends AdminTab
 		 	if ($this->tabAccess['edit'] === '1')
 		 	{
 				if ($this->_regenerateThumbnails(Tools::getValue('type'), Tools::getValue('erase')))
-					Tools::redirectAdmin($currentIndex.'&conf=9'.'&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=9'.'&token='.$this->token);
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -89,7 +89,7 @@ class AdminImages extends AdminTab
 		echo $obj->id ? $this->displayWarning($this->l('After modification, do not forget to regenerate thumbnails')) : '';
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset>
 				<legend><img src="../img/admin/picture.gif" />'.$this->l('Images').'</legend><br />
@@ -186,7 +186,7 @@ class AdminImages extends AdminTab
 		'.$this->l('Regenerates thumbnails for all existing product images').'.<br /><br />';
 		$this->displayWarning($this->l('Please be patient, as this can take several minutes').'<br />'.$this->l('Be careful! Manually generated thumbnails will be erased by automatically generated thumbnails.'));
 		echo '
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 			<fieldset class="width2">
 				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Regenerate thumbnails').'</legend><br />
 				<label>'.$this->l('Select image').'</label>
@@ -413,7 +413,7 @@ class AdminImages extends AdminTab
 		<br /><h2 class="space">'.$this->l('Move images').'</h2>'.
 		$this->l('A new storage system for product images is now used by PrestaShop. It offers better performance if your shop has a very large number of products.').'<br />'.
 		'<br />
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 			<fieldset class="width3">
 				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Move images').'</legend><br />'.
 				$this->l('You can choose to keep your images stored in the previous system - nothing wrong with that.').'<br />'.
@@ -439,6 +439,6 @@ class AdminImages extends AdminTab
 		$result = Image::moveToNewFileSystem($this->max_execution_time);
 		if ($result === 'timeout')
 			$this->_errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
-		Tools::redirectAdmin($currentIndex.'&conf=25'.'&token='.$this->token);
+		Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
 	}
 }

@@ -76,7 +76,7 @@ class AdminCurrencies extends AdminTab
 					if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
 						$this->_errors[] = $this->l('You can\'t delete the default currency');
 					elseif ($object->delete())
-						Tools::redirectAdmin($currentIndex.'&conf=1'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
 					else
 						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 				}
@@ -95,7 +95,7 @@ class AdminCurrencies extends AdminTab
 					if ($object->active AND $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
 						$this->_errors[] = $this->l('You can\'t disable the default currency');
 					elseif ($object->toggleStatus())
-						Tools::redirectAdmin($currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
 				}
@@ -113,12 +113,12 @@ class AdminCurrencies extends AdminTab
 				if ($key == 'PS_CURRENCY_DEFAULT')
 					Currency::refreshCurrencies();
 			}
-			Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 		}
 		elseif (Tools::isSubmit('submitExchangesRates'))
 		{
 			if (!$this->_errors[] = Currency::refreshCurrencies())
-				Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+				Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 		}
 		else
 			parent::postProcess();
@@ -130,7 +130,7 @@ class AdminCurrencies extends AdminTab
 
 		parent::displayOptionsList();
 		echo '<br /><br />
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 			<fieldset>
 			<legend><img src="../img/admin/exchangesrate.gif" />'.$this->l('Currency rates').'</legend>
 			<label>'.$this->l('Update currency rates').'</label>
@@ -153,7 +153,7 @@ class AdminCurrencies extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/money.gif" />'.$this->l('Currencies').'</legend>
 				<label>'.$this->l('Currency:').' </label>

@@ -37,7 +37,7 @@ abstract class AdminTabCore
 	protected $identifier = false;
 
 	/** @var string Tab name */
-	public $name;
+	public $className;
 
 	/** @var string Security token */
 	public $token;
@@ -141,7 +141,7 @@ abstract class AdminTabCore
 	/** @var string specificConfirmDelete */
 	public $specificConfirmDelete = NULL;
 	
-	public $currentIndex = '';
+	public static $currentIndex;
 
 	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms');
 
@@ -171,9 +171,15 @@ abstract class AdminTabCore
 
 	public function __construct()
 	{
-		global $cookie;
+		global $cookie, $currentIndex;
 		$context = Context::getContext();
 		$context->tab = $this;
+		
+				/*$currentIndex = $_SERVER['SCRIPT_NAME'].($tab ? '?tab='.$tab : '');
+				if ($back = Tools::getValue('back'))
+					$currentIndex .= '&back='.urlencode($back);
+				$this->currentIndex = $currentIndex;*/
+		
 		$this->id = Tab::getCurrentTabId();
 		$this->_conf = array(
 		1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -1709,7 +1715,7 @@ abstract class AdminTabCore
 		<script type="text/javascript">
 			id_language = Number('.$defaultLanguage.');
 		</script>
-		<form action="'.$this->currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">
+		<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">
 			<fieldset>';
 				echo (isset($this->optionTitle) ? '<legend>
 					<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" />'
@@ -2033,7 +2039,7 @@ abstract class AdminTabCore
 		{
 			$html = '
 			<table cellpadding="0" cellspacing="0" class="table">
-			<form name="updateAssoShop" action="'.$this->currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
+			<form name="updateAssoShop" action="'.self::$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
 			<input type="hidden" name="assoShopClass" value="'.$this->className.'" />
 						<tr>
 							<th style="width: 200px">'.$this->l('Shop association').'</th>';
@@ -2091,7 +2097,7 @@ abstract class AdminTabCore
 			$assos[$row['id_group_shop']][] = $row[$this->identifier];
 		if (!$this->_object)
 		{
-			$html = '<form name="updateAssoGroupShop" action="'.$this->currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
+			$html = '<form name="updateAssoGroupShop" action="'.self::$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
 			<input type="hidden" name="assoGroupShopClass" value="'.$this->className.'" />
 			<table cellpadding="0" cellspacing="0" class="table">
 						<tr>

@@ -119,7 +119,7 @@ class AdminCategories extends AdminTab
 								$target = '&id_category='.(int)($matches[1]);
 						}
 						Module::hookExec('categoryUpdate');
-						Tools::redirectAdmin($this->currentIndex.'&conf=5'.$target.'&token='.Tools::getValue('token'));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$target.'&token='.Tools::getValue('token'));
 					}
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
@@ -147,10 +147,10 @@ class AdminCategories extends AdminTab
 							$object->deleteImage();
 							$object->deleted = 1;
 							if ($object->update())
-								Tools::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
+								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
 						}
 						elseif ($object->delete())
-							Tools::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
+							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)($object->id_parent));
 						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
@@ -169,7 +169,7 @@ class AdminCategories extends AdminTab
 			if (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin($this->currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
 		}
 		/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))
@@ -184,7 +184,7 @@ class AdminCategories extends AdminTab
 					if ($result)
 					{
 						$category->cleanPositions((int)(Tools::getValue('id_category')));
-						Tools::redirectAdmin($this->currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCatalog').'&id_category='.(int)(Tools::getValue('id_category')));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCatalog').'&id_category='.(int)(Tools::getValue('id_category')));
 					}
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 
@@ -226,7 +226,7 @@ class AdminCategories extends AdminTab
 			$id_category = (int)Tools::getValue('id_parent');
 
 		echo '
-		<form action="'.$this->currentIndex.'&submitAdd'.$this->table.'=1&token='.($token!=NULL ? $token : $this->token).'" method="post" enctype="multipart/form-data">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.($token!=NULL ? $token : $this->token).'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab-categories.gif" />'.$this->l('Category').'</legend>
 				<label>'.$this->l('Name:').' </label>

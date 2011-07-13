@@ -122,7 +122,7 @@ class AdminBackup extends AdminTab
 			echo '<br />'.$this->l('Back-up file should automatically download.');
 			echo '<br /><br />'.$this->l('If not,').' <b><a href="'.$url.'">'.$this->l('please click here!').'</a></b>';
 			echo '<iframe width="0" height="0" scrolling="no" frameborder="0" src="'.$url.'"></iframe>';
-			echo '<br /><br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			echo '<br /><br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 		}
 		elseif ($object->error)
 			$this->_errors[] = $object->error;
@@ -150,7 +150,7 @@ class AdminBackup extends AdminTab
 			
 		if ($showForm)
 			echo '
-			<form action="'.$currentIndex.'&add'.$this->table.'&token='.$this->token.'" method="post" style="text-align: center;">
+			<form action="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'" method="post" style="text-align: center;">
 				<input type="submit" class="button" value="'.$this->l('I read the disclaimer - Create a new Backup').'" style="padding: 10px; font-weight: bold; border: 1px solid;" />
 			</form>';
 			

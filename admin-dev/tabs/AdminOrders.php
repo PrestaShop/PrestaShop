@@ -135,7 +135,7 @@ class AdminOrders extends AdminTab
 							'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
 							'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : ''));
 					if ($history->addWithemail(true, $templateVars))
-						Tools::redirectAdmin($currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
 					$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 				}
 			}
@@ -178,7 +178,7 @@ class AdminOrders extends AdminTab
 						if (!$message->add())
 							$this->_errors[] = Tools::displayError('An error occurred while sending message.');
 						elseif ($message->private)
-							Tools::redirectAdmin($currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
 						elseif (Validate::isLoadedObject($customer = new Customer($id_customer)))
 						{
 							$order = new Order((int)($message->id_order));
@@ -186,7 +186,7 @@ class AdminOrders extends AdminTab
 							{
 								$varsTpl = array('{lastname}' => $customer->lastname, '{firstname}' => $customer->firstname, '{id_order}' => $message->id_order, '{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $message->message : nl2br2($message->message)));
 								if (@Mail::Send((int)($order->id_lang), 'order_merchant_comment', Mail::l('New message regarding your order'), $varsTpl, $customer->email, $customer->firstname.' '.$customer->lastname))
-									Tools::redirectAdmin($currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
+									Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
 							}
 						}
 						$this->_errors[] = Tools::displayError('An error occurred while sending e-mail to customer.');
@@ -345,7 +345,7 @@ class AdminOrders extends AdminTab
 
 				// Redirect if no errors
 				if (!sizeof($this->_errors))
-					Tools::redirectAdmin($currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
@@ -483,9 +483,9 @@ class AdminOrders extends AdminTab
 		$row = array_shift($history);
 
 		if ($prevOrder = Db::getInstance()->getValue('SELECT id_order FROM '._DB_PREFIX_.'orders WHERE id_order < '.(int)$order->id.' ORDER BY id_order DESC'))
-			$prevOrder = '<a href="'.$currentIndex.'&token='.Tools::getValue('token').'&vieworder&id_order='.$prevOrder.'"><img style="width:24px;height:24px" src="../img/admin/arrow-left.png" /></a>';
+			$prevOrder = '<a href="'.self::$currentIndex.'&token='.Tools::getValue('token').'&vieworder&id_order='.$prevOrder.'"><img style="width:24px;height:24px" src="../img/admin/arrow-left.png" /></a>';
 		if ($nextOrder = Db::getInstance()->getValue('SELECT id_order FROM '._DB_PREFIX_.'orders WHERE id_order > '.(int)$order->id.' ORDER BY id_order ASC'))
-			$nextOrder = '<a href="'.$currentIndex.'&token='.Tools::getValue('token').'&vieworder&id_order='.$nextOrder.'"><img style="width:24px;height:24px" src="../img/admin/arrow-right.png" /></a>';
+			$nextOrder = '<a href="'.self::$currentIndex.'&token='.Tools::getValue('token').'&vieworder&id_order='.$nextOrder.'"><img style="width:24px;height:24px" src="../img/admin/arrow-right.png" /></a>';
 
 
 		if ($order->total_paid != $order->total_paid_real)
@@ -545,7 +545,7 @@ class AdminOrders extends AdminTab
 
 		/* Display status form */
 		echo '
-			<form action="'.$currentIndex.'&view'.$this->table.'&token='.$this->token.'" method="post" style="text-align:center;">
+			<form action="'.self::$currentIndex.'&view'.$this->table.'&token='.$this->token.'" method="post" style="text-align:center;">
 				<select name="id_order_state">';
 		$currentStateTab = $order->getCurrentStateFull($cookie->id_lang);
 		foreach ($states AS $state)
@@ -642,7 +642,7 @@ class AdminOrders extends AdminTab
 			/* Display shipping number field */
 			if ($carrier->url && $order->hasBeenShipped())
 			 echo '
-				<form action="'.$currentIndex.'&view'.$this->table.'&token='.$this->token.'" method="post" style="margin-top:10px;">
+				<form action="'.self::$currentIndex.'&view'.$this->table.'&token='.$this->token.'" method="post" style="margin-top:10px;">
 					<input type="text" name="shipping_number" value="'. $order->shipping_number.'" />
 					<input type="hidden" name="id_order" value="'.$order->id.'" />
 					<input type="submit" name="submitShippingNumber" value="'.$this->l('Set shipping number').'" class="button" />
@@ -719,7 +719,7 @@ class AdminOrders extends AdminTab
 		// List of products
 		echo '
 		<a name="products"><br /></a>
-		<form action="'.$currentIndex.'&submitCreditSlip&vieworder&token='.$this->token.'" method="post" onsubmit="return orderDeleteProduct(\''.$this->l('Cannot return this product').'\', \''.$this->l('Quantity to cancel is greater than quantity available').'\');">
+		<form action="'.self::$currentIndex.'&submitCreditSlip&vieworder&token='.$this->token.'" method="post" onsubmit="return orderDeleteProduct(\''.$this->l('Cannot return this product').'\', \''.$this->l('Quantity to cancel is greater than quantity available').'\');">
 			<input type="hidden" name="id_order" value="'.$order->id.'" />
 			<fieldset style="width: 868px; ">
 				<legend><img src="../img/admin/cart.gif" alt="'.$this->l('Products').'" />'.$this->l('Products').'</legend>
@@ -942,7 +942,7 @@ class AdminOrders extends AdminTab
 		echo '</fieldset>
 		</div>';
 		echo '<div class="clear">&nbsp;</div>';
-		echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+		echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 	}
 
 	public function displayAddressDetail($addressDelivery)

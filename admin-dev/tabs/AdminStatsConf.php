@@ -64,7 +64,7 @@ class AdminStatsConf extends AdminPreferences
 			'month' => $this->l('Month'),
 			'year' => $this->l('Year'));
 		
-		echo '<form action="'.$currentIndex.'&token='.$this->token.'&submitSettings=1" method="post">
+		echo '<form action="'.self::$currentIndex.'&token='.$this->token.'&submitSettings=1" method="post">
 			<fieldset><legend><img src="../img/admin/tab-preferences.gif" />'.$this->l('Settings').'</legend>';
 				
 		#Graph Engines

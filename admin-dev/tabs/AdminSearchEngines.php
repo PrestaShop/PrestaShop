@@ -52,7 +52,7 @@ class AdminSearchEngines extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend>'.$this->l('Referrer').'</legend>
 				<label>'.$this->l('Server').' </label>

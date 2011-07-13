@@ -78,7 +78,7 @@ class AdminTaxRulesGroup extends AdminTab
 
         $param_product = Tools::getValue('id_product') ? '&id_product='.Tools::getValue('id_product') : '';
 
-        echo '<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.$param_product.'" method="post">
+        echo '<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.$param_product.'" method="post">
 		        '.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
     			<fieldset><legend><img src="../img/admin/dollar.gif" />'.$this->l('Tax Rules').'</legend>
     			<input type="hidden" name="tabs" id="tabs" value="0" />
@@ -515,14 +515,14 @@ class AdminTaxRulesGroup extends AdminTab
 
 								// Save and stay on same form
 								if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-									Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
+									Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
 
 								// Default behavior (save and back)
 								$id_product = (int)Tools::getValue('id_product');
 								if ($id_product)
     								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));
 
-								Tools::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
+								Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
 							}
 						}
 						else
@@ -547,16 +547,16 @@ class AdminTaxRulesGroup extends AdminTab
 							$this->afterAdd($object);
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
 
 
 							$id_product = (int)Tools::getValue('id_product');
 							if ($id_product)
    								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));
 
-							Tools::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
+							Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
 							// Default behavior (save and back)
-							Tools::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
+							Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
 						}
 					}
 					else

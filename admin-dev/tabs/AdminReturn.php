@@ -70,7 +70,7 @@ class AdminReturn extends AdminTab
 						if ((int)($orderReturn->countProduct()) > 1)
 						{
 							if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0))))
-								Tools::redirectAdmin($currentIndex.'&conf=4token='.$this->token);
+								Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
 							else
 								$this->_errors[] = Tools::displayError('An error occurred while deleting an order return detail.');
 						}
@@ -104,7 +104,7 @@ class AdminReturn extends AdminTab
 						'{id_order_return}' => $id_order_return,
 						'{state_order_return}' => $orderReturnState->name[(int)(Configuration::get('PS_LANG_DEFAULT'))]);
 						Mail::Send((int)($cookie->id_lang), 'order_return_state', Mail::l('Your order return state has changed'), $vars, $customer->email, $customer->firstname.' '.$customer->lastname);
-						Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 					}
 				}
 				else
@@ -126,7 +126,7 @@ class AdminReturn extends AdminTab
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$this->displayForm();
-				echo '<br /><br /><a href="'.$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+				echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 			}
 			else
 				echo $this->l('You do not have permission to edit here');
@@ -152,7 +152,7 @@ class AdminReturn extends AdminTab
 				$id = $tr['id_'.$this->table];
 				echo '<tr'.($irow++ % 2 ? ' class="alt_row"' : '').' '.((isset($state->color) AND $this->colorOnBackground) ? 'style="background-color: '.$state->color.'"' : '').'><td></td>';
 				foreach ($this->fieldsDisplay AS $key => $params)
-					echo '<td class="pointer" onclick="document.location = \''.$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'\'"'.'>'.$tr[$key].'</td>';
+					echo '<td class="pointer" onclick="document.location = \''.self::$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'\'"'.'>'.$tr[$key].'</td>';
 				echo '</tr>';
 			}
 	}
@@ -166,7 +166,7 @@ class AdminReturn extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<input type="hidden" name="id_order" value="'.$obj->id_order.'" />
 			<input type="hidden" name="id_customer" value="'.$obj->id_customer.'" />
@@ -226,7 +226,7 @@ class AdminReturn extends AdminTab
 						<td>'.$returnedCustomization['reference'].'</td>
 						<td class="center">'.$returnedCustomization['name'].'</td>
 						<td class="center">'.(int)($returnedCustomization['product_quantity']).'</td>
-						<td class="center"><a href="'.$currentIndex.'&deleteorder_return_detail&id_order_detail='.$returnedCustomization['id_order_detail'].'&id_customization='.$returnedCustomization['id_customization'].'&id_order_return='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/delete.gif"></a></td>
+						<td class="center"><a href="'.self::$currentIndex.'&deleteorder_return_detail&id_order_detail='.$returnedCustomization['id_order_detail'].'&id_customization='.$returnedCustomization['id_customization'].'&id_order_return='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/delete.gif"></a></td>
 					</tr>';
 					$customizationDatas = &$allCustomizedDatas[(int)($returnedCustomization['product_id'])][(int)($returnedCustomization['product_attribute_id'])][(int)($returnedCustomization['id_customization'])]['datas'];
 					foreach ($customizationDatas AS $type => $datas)
@@ -267,7 +267,7 @@ class AdminReturn extends AdminTab
 						<td>'.$product['product_reference'].'</td>
 						<td class="center">'.$product['product_name'].'</td>
 						<td class="center">'.$product['product_quantity'].'</td>
-						<td class="center"><a href="'.$currentIndex.'&deleteorder_return_detail&id_order_detail='.$product['id_order_detail'].'&id_order_return='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/delete.gif"></a></td>
+						<td class="center"><a href="'.self::$currentIndex.'&deleteorder_return_detail&id_order_detail='.$product['id_order_detail'].'&id_order_return='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/delete.gif"></a></td>
 					</tr>';
 
 			echo '

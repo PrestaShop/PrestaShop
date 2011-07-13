@@ -127,7 +127,7 @@ class AdminTranslations extends AdminTab
 				fwrite($fd, '$_'.$tab.'[\''.pSQL($key, true).'\'] = \''.pSQL($value, true).'\';'."\n");
 			fwrite($fd, "\n?>");
 			fclose($fd);
-			Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
 		else
 			die('Cannot write language file');
@@ -161,7 +161,7 @@ class AdminTranslations extends AdminTab
 			}
 		}
 		if ($bool)
-			Tools::redirectLink($currentIndex.'&conf=14&token='.$this->token);
+			Tools::redirectLink(self::$currentIndex.'&conf=14&token='.$this->token);
 		$this->_errors[] = $this->l('a part of the data has been copied but some language files could not be found or copied');
 	}
 	
@@ -246,7 +246,7 @@ class AdminTranslations extends AdminTab
 					if (!Language::checkAndAddLanguage($iso_code))
 						$conf = 20;
 				}
-				Tools::redirectAdmin($currentIndex.'&conf='.(isset($conf) ? $conf : '15').'&token='.$this->token);
+				Tools::redirectAdmin(self::$currentIndex.'&conf='.(isset($conf) ? $conf : '15').'&token='.$this->token);
 			}
 			$this->_errors[] = Tools::displayError('Archive cannot be extracted.');
 		}
@@ -273,7 +273,7 @@ class AdminTranslations extends AdminTab
 							$conf = 20;
 						if (!unlink($file))
 							$this->_errors[] = Tools::displayError('Cannot delete archive');
-						Tools::redirectAdmin($currentIndex.'&conf='.(isset($conf) ? $conf : '15').'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf='.(isset($conf) ? $conf : '15').'&token='.$this->token);
 					}
 					$this->_errors[] = Tools::displayError('Archive cannot be extracted.');
 					if (!unlink($file))
@@ -551,7 +551,7 @@ class AdminTranslations extends AdminTab
 					
 					foreach ($arr_find_and_write as $key=>$value)
 						$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
-					Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
 			}
 			else
@@ -680,7 +680,7 @@ class AdminTranslations extends AdminTab
 			}
 		}
 		if (count($this->_errors) == 0)
-			Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token.$params_redirect);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.$params_redirect);
 	}
 	public function display()
 	{
@@ -717,7 +717,7 @@ class AdminTranslations extends AdminTab
 					</a>';
 			echo '<input type="hidden" name="token" value="'.$this->token.'" /></form></fieldset>
 			<br /><br /><h2>'.$this->l('Translation exchange').'</h2>';
-			echo '<form action="'.$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
+			echo '<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
 			<fieldset class="width3">
 				<legend>
 					<img src="../img/admin/import.gif" />'.$this->l('Add / Update a language').'
@@ -755,7 +755,7 @@ class AdminTranslations extends AdminTab
 			echo '	</div>
 			</fieldset>
 			</form><br /><br />';
-			echo '<form action="'.$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
+			echo '<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
 				<fieldset class="width3">
 					<legend>
 						<img src="../img/admin/import.gif" />'.$this->l('Import a language pack manually').'
@@ -768,7 +768,7 @@ class AdminTranslations extends AdminTab
 				</fieldset>
 			</form>
 			<br /><br />
-			<form action="'.$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
+			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
 				<fieldset class="width3"><legend><img src="../img/admin/export.gif" />'.$this->l('Export a language').'</legend>
 					<p>'.$this->l('Export data from one language to a file (language pack).').'<br />'.
 					$this->l('Choose the theme from which you want to export translations.').'<br />
@@ -790,7 +790,7 @@ class AdminTranslations extends AdminTab
 			<br /><br />';
 			$allLanguages = Language::getLanguages(false);
 			echo '
-			<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 				<fieldset class="width3"><legend><img src="../img/admin/copy_files.gif" />'.$this->l('Copy').'</legend>
 					<p>'.$this->l('Copies data from one language to another.').'<br />'.
 					$this->l('Be careful, as it will replace all existing data for the destination language!').'<br />'.
@@ -996,7 +996,7 @@ class AdminTranslations extends AdminTab
 		if (!$this->suhosin_limit_exceed)
 		{
 			$str_output .= '
-			<form method="post" action="'.$currentIndex.'&submitTranslationsFront=1&token='.$this->token.'" class="form">';
+			<form method="post" action="'.self::$currentIndex.'&submitTranslationsFront=1&token='.$this->token.'" class="form">';
 			$str_output .= $this->displayToggleButton(sizeof($_LANG) >= $count);
 			$str_output .= $this->displayAutoTranslate();
 			$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsFront" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
@@ -1075,7 +1075,7 @@ class AdminTranslations extends AdminTab
 		if (!$this->suhosin_limit_exceed)
 		{
 			$str_output .= '
-			<form method="post" action="'.$currentIndex.'&submitTranslationsBack=1&token='.$this->token.'" class="form">';
+			<form method="post" action="'.self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token.'" class="form">';
 			$str_output .= $this->displayToggleButton();
 			$str_output .= $this->displayAutoTranslate();
 			$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsBack" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
@@ -1154,7 +1154,7 @@ class AdminTranslations extends AdminTab
 		if (!$this->suhosin_limit_exceed)
 		{
 			$str_output .= '
-			<form method="post" action="'.$currentIndex.'&submitTranslationsErrors=1&lang='.$lang.'&token='.$this->token.'" class="form">
+			<form method="post" action="'.self::$currentIndex.'&submitTranslationsErrors=1&lang='.$lang.'&token='.$this->token.'" class="form">
 			<input type="submit" name="submitTranslationsErrors" value="'.$this->l('Update translations').'" class="button" /><br /><br />
 			<table cellpadding="0" cellspacing="0" class="table">';
 			ksort($stringToTranslate);
@@ -1197,7 +1197,7 @@ class AdminTranslations extends AdminTab
 		if (!$this->suhosin_limit_exceed)
 		{
 			$str_output .= $this->l('Fields to translate').' : <b>'.$count.'</b>. '.$this->l('Click on the titles to open fieldsets').'.<br /><br />
-			<form method="post" action="'.$currentIndex.'&submitTranslationsFields=1&token='.$this->token.'" class="form">';
+			<form method="post" action="'.self::$currentIndex.'&submitTranslationsFields=1&token='.$this->token.'" class="form">';
 			$str_output .= $this->displayToggleButton();
 			$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsFields" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
 			foreach ($classArray AS $className => $rules)
@@ -1569,7 +1569,7 @@ class AdminTranslations extends AdminTab
 
 		// display form
 		$str_output .= '
-		<form method="post" action="'.$currentIndex.'&token='.$this->token.'&type=mails&lang='.$obj_lang->iso_code.'" class="form">';
+		<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'&type=mails&lang='.$obj_lang->iso_code.'" class="form">';
 		$str_output .= $this->displayToggleButton();
 		$str_output .= $this->displaySubmitButtons(Tools::getValue('type'));
 		$str_output .= '<br/><br/>';
@@ -1785,7 +1785,7 @@ class AdminTranslations extends AdminTab
 			if (!$this->suhosin_limit_exceed)
 			{
 				$str_output .= '
-				<form method="post" action="'.$currentIndex.'&submitTranslationsModules=1&token='.$this->token.'" class="form">';
+				<form method="post" action="'.self::$currentIndex.'&submitTranslationsModules=1&token='.$this->token.'" class="form">';
 				$str_output .= $this->displayToggleButton();
 				$str_output .= $this->displayAutoTranslate();
 				$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsModules" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
@@ -1873,7 +1873,7 @@ class AdminTranslations extends AdminTab
 		if (!$this->suhosin_limit_exceed)
 		{
 			$str_output .= '
-			<form method="post" action="'.$currentIndex.'&submitTranslationsPDF=1&token='.$this->token.'" class="form">
+			<form method="post" action="'.self::$currentIndex.'&submitTranslationsPDF=1&token='.$this->token.'" class="form">
 					<script type="text/javascript">
 						var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 						var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';

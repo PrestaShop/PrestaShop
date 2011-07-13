@@ -71,7 +71,7 @@ class AdminStockMvt extends AdminTab
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$dl = 'name';
-		echo '<form action="'.$this->currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'&addstock_mvt_reason" method="post">
+		echo '<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'&addstock_mvt_reason" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/search.gif" />'.$this->l('Stock Movement').'</legend>
 				<label>'.$this->l('Name:').'</label>
@@ -149,7 +149,7 @@ class AdminStockMvt extends AdminTab
 			if (!isset($_GET['view'.$this->table]))
 				echo '
 				<fieldset>
-					<form method="post" action="'.$this->currentIndex.'&token='.$this->token.'&rebuildMvt=1">
+					<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'&rebuildMvt=1">
 						<label for="stock_rebuild">'.$this->l('Calculate the movement of inventory missing').'</label>
 						<div class="margin-form">
 							<input class="button" type="submit" name="rebuildStock" value="'.$this->l('Submit').'" />

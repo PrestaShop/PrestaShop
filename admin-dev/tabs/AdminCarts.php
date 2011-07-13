@@ -336,7 +336,7 @@ class AdminCarts extends AdminTab
 		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false).$id.' ?)';
 		
 		echo '
-			<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].'\');">
+			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].'\');">
 			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>
 		';
 	}

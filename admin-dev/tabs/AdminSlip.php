@@ -75,7 +75,7 @@ class AdminSlip extends AdminTab
 		
 		echo '
 		<fieldset style="float:left;width:280px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('Print PDF').'</legend>
-			<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 				<label style="width:90px">'.$this->l('From:').' </label>
 				<div class="margin-form" style="padding-left:100px">
 					<input type="text" size="4" maxlength="10" name="date_from" value="'.date('Y-m-01').'" style="width: 120px;" />
@@ -110,7 +110,7 @@ class AdminSlip extends AdminTab
 				<a href="pdf.php?id_order_slip='.$tr['id_order_slip'].'">
 				<img src="../img/admin/details.gif" border="0" alt="'.$this->l('View').'" title="'.$this->l('View').'" /></a>';
 				echo '
-				<a href="'.$currentIndex.'&id_'.$this->table.'='.$tr['id_order_slip'].'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, true, false).$tr['id_order_slip'].$this->l('?', __CLASS__, true, false).'\');">
+				<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$tr['id_order_slip'].'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, true, false).$tr['id_order_slip'].$this->l('?', __CLASS__, true, false).'\');">
 				<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>';
 				echo '</td>';
 				echo '</tr>';

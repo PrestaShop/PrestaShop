@@ -235,9 +235,15 @@ function recursiveTab($id_tab)
 		recursiveTab($adminTab['id_parent']);
 }
 
+/**
+ * Returns a new Tab object
+ * 
+ * @param string $tab class name
+ * @return mixed(AdminTab, bool) tab object or false if failed
+ */
 function checkingTab($tab)
 {
-	global $adminObj, $cookie;
+	global $cookie;
 
 	$tab = trim($tab);
 	if (!Validate::isTabName($tab))
@@ -268,7 +274,7 @@ function checkingTab($tab)
 		echo $adminObj->displayErrors();
 		return false;
 	}
-	return $row['id_tab'];
+	return $adminObj;
 }
 
 function checkTabRights($id_tab)

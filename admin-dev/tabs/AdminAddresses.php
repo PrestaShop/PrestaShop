@@ -233,7 +233,7 @@ class AdminAddresses extends AdminTab
 			return;
 
 		echo '
-		<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.((int)($obj->id) ? '<input type="hidden" name="id_'.$this->table.'" value="'.(int)($obj->id).'" />' : '').'
 		'.(($id_order = (int)(Tools::getValue('id_order'))) ? '<input type="hidden" name="id_order" value="'.(int)($id_order).'" />' : '').'
 		'.(($address_type = (int)(Tools::getValue('address_type'))) ? '<input type="hidden" name="address_type" value="'.(int)($address_type).'" />' : '').'
