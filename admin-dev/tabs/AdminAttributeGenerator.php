@@ -71,8 +71,6 @@ class AdminAttributeGenerator extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		$this->product = new Product((int)(Tools::getValue('id_product')));
 
 		if (isset($_POST['generate']))
@@ -103,9 +101,8 @@ class AdminAttributeGenerator extends AdminTab
 
 	static private function displayAndReturnAttributeJs()
 	{
-		global $cookie;
-
-		$attributes = Attribute::getAttributes((int)($cookie->id_lang), true);
+		$context = Context::getContext();
+		$attributes = Attribute::getAttributes($context->language->id, true);
 		$attributeJs = array();
 		foreach ($attributes AS $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
@@ -178,10 +175,9 @@ class AdminAttributeGenerator extends AdminTab
 
 	private function displayGroupeTable($attributeJs, $attributesGroups)
 	{
-		global $cookie;
+		$context = Context::getContext();
 
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$combinationsGroups = $this->product->getAttributesGroups((int)($cookie->id_lang));
+		$combinationsGroups = $this->product->getAttributesGroups($context->language->id);
 		$attributes = array();
         $impacts = self::getAttributesImpacts($this->product->id);
 		foreach ($combinationsGroups AS &$combination)
@@ -206,7 +202,7 @@ class AdminAttributeGenerator extends AdminTab
 					<thead>
 						<tr>
 							<th id="tab_h1" style="width: 150px">'.htmlspecialchars(stripslashes($attributeGroup['name'])).'</th>
-							<th id="tab_h2" style="width: 350px" colspan="2">'.$this->l('Price impact').' ('.$currency->sign.')'.'</th>
+							<th id="tab_h2" style="width: 350px" colspan="2">'.$this->l('Price impact').' ('.$context->currency->sign.')'.'</th>
 							<th style="width: 150px">'.$this->l('Weight impact').' ('.Configuration::get('PS_WEIGHT_UNIT').')'.'</th>
 						</tr>
 					</thead>
@@ -222,11 +218,11 @@ class AdminAttributeGenerator extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 
 		$jsAttributes = self::displayAndReturnAttributeJs();
-		$attributesGroups = AttributeGroup::getAttributesGroups((int)($cookie->id_lang));
+		$attributesGroups = AttributeGroup::getAttributesGroups($context->language->id);
 		$this->product = new Product((int)(Tools::getValue('id_product')));
 
 		// JS Init
@@ -276,7 +272,7 @@ class AdminAttributeGenerator extends AdminTab
 			<script type="text/javascript" src="../js/attributesBack.js"></script>
 			<form enctype="multipart/form-data" method="post" id="generator" action="'.self::$currentIndex.'&&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(int)(Tools::getValue('id_category')).'&attributegenerator&token='.Tools::getValue('token').'">
 				<fieldset style="margin-bottom: 35px;"><legend><img src="../img/admin/asterisk.gif" />'.$this->l('Attributes generator').'</legend>'.
-				$this->l('Add or modify attributes for product:').' <b>'.$this->product->name[$cookie->id_lang].'</b>
+				$this->l('Add or modify attributes for product:').' <b>'.$this->product->name[$context->language->id].'</b>
 					<br /><br />
                     ';
         echo '

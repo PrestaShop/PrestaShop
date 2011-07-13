@@ -35,8 +35,7 @@ class AdminAddresses extends AdminTab
 	
 	public function __construct()
 	{
-	 	global $cookie;
-	 	
+		$context = Context::getContext();
 	 	$this->table = 'address';
 	 	$this->className = 'Address';
 	 	$this->lang = false;
@@ -49,9 +48,9 @@ class AdminAddresses extends AdminTab
 			$this->deleted = true;
 		$this->_select = 'cl.`name` as country';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON 
-		(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)($cookie->id_lang).')';
+		(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$context->language->id.')';
 		
-		$countries = Country::getCountries((int)($cookie->id_lang));
+		$countries = Country::getCountries($context->language->id);
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
 
@@ -162,12 +161,10 @@ class AdminAddresses extends AdminTab
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
 	{
 	 	parent::getList($id_lang, $orderBy, $orderWay, $start, $limit);
-		
-		global $cookie;
-		
+		$context = Context::getContext();
 	 	/* Manage default params values */
 	 	if (empty($limit))
-			$limit = ((!isset($cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $cookie->{$this->table.'_pagination'});
+			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $context->cookie->{$this->table.'_pagination'});
 			
 	 	if (!Validate::isTableOrIdentifier($this->table))
 	 		die('filter is corrupted');
@@ -176,7 +173,7 @@ class AdminAddresses extends AdminTab
 	 	if (empty($orderWay))
 			$orderWay = Tools::getValue($this->table.'Orderway', 'ASC');
 		$limit = (int)(Tools::getValue('pagination', $limit));
-		$cookie->{$this->table.'_pagination'} = $limit;
+		$context->cookie->{$this->table.'_pagination'} = $limit;
 		
 		/* Check params validity */
 		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay) 
@@ -226,9 +223,8 @@ class AdminAddresses extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
-		
+		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -260,7 +256,7 @@ class AdminAddresses extends AdminTab
 				if ($obj->id)
 				{
 					$customer = new Customer($obj->id_customer);
-					$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($cookie->id_employee));
+					$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id);
 					echo '
 					<label>'.$this->l('Customer').'</label>
 					<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.$tokenCustomer.'">'.$customer->lastname.' '.$customer->firstname.' ('.$customer->email.')</a></div>
