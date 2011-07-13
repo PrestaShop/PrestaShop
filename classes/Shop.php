@@ -460,7 +460,7 @@ class ShopCore extends ObjectModel
 					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
 
 				// Parse shopContext cookie value (E.g. s-2, g-4)
-				$split = explode('-', Context::getContext()->cookie);
+				$split = explode('-', Context::getContext()->cookie->shopContext);
 				$shopID = $shopGroupID = '';
 				if (count($split) == 2)
 				{
