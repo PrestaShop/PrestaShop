@@ -45,12 +45,6 @@ class ShopCore extends ObjectModel
 	 */
 	protected $group;
 
-	//private static $current_base_uri;
-	//private static $current_theme_name;
-	private static $id_current_shop;
-	private static $id_current_group_shop;
-	private static $id_current_root_category;
-
 	protected $fieldsSize = array('name' => 64);
  	protected $fieldsValidate = array(
  		'active' => 'isBool',
@@ -220,7 +214,7 @@ class ShopCore extends ObjectModel
 			return false;
 
 		$this->theme_name = $row['name'];
-		$this->base_uri = $row['uri'];
+		$this->base_uri = ($row['uri']) ? $row['uri'].'/' : '';
 		return true;
 	}
 	
@@ -315,7 +309,17 @@ class ShopCore extends ObjectModel
 	{
 		return ($this->id == Configuration::get('PS_SHOP_DEFAULT'));
 	}
-	
+
+	/**
+	 * Get list of associated tables to shop
+	 *
+	 * @return array
+	 */
+	public static function getAssoTables()
+	{
+		return self::$assoTables;
+	}
+
 	/**
 	 * Load list of groups and shops, and cache it
 	 * 
@@ -357,17 +361,7 @@ class ShopCore extends ObjectModel
 			}
 		}
 	}
-	
-	/**
-	 * Get list of associated tables to shop
-	 *
-	 * @return array
-	 */
-	public static function getAssoTables()
-	{
-		return self::$assoTables;
-	}
-	
+
 	/**
 	 * Get shops list
 	 *
@@ -390,7 +384,7 @@ class ShopCore extends ObjectModel
 				}
 		return $results;
 	}
-	
+
 	/**
 	 * Return a shop ID from shop name
 	 * 
@@ -406,7 +400,7 @@ class ShopCore extends ObjectModel
 					return $shopID;
 		return false;
 	}
-	
+
 	/**
 	 * @return int Total of shops
 	 */
@@ -414,7 +408,7 @@ class ShopCore extends ObjectModel
 	{
 		return count(Shop::getShops($active));
 	}
-	
+
 	/**
 	 * Retrieve group ID of a shop
 	 * 
@@ -449,23 +443,24 @@ class ShopCore extends ObjectModel
 	 * Retrieve the current shop context in FO or BO
 	 * 
 	 * @param string null|shop|group
+	 * @param bool If true, this method will return default shop ID if no shop was found in context (for BO)
 	 * @return array(id_shop, id_group_shop)|int
 	 */
-	public static function retrieveContext($type = null)
+	public static function getContext($type = null, $useDefault = false)
 	{
 		static $executed = false, $shopID = 0, $shopGroupID = 0;
+
 		if (!$executed)
 		{
+			$context = Context::getContext();
 			if (defined('PS_ADMIN_DIR'))
 			{
-				global $cookie;
-
 				// While cookie is not instancied in admin, we wait ...
-				if (!$cookie)
+				if (!isset($context->cookie))
 					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
 
 				// Parse shopContext cookie value (E.g. s-2, g-4)
-				$split = explode('-', $cookie->shopContext);
+				$split = explode('-', Context::getContext()->cookie);
 				$shopID = $shopGroupID = '';
 				if (count($split) == 2)
 				{
@@ -480,11 +475,17 @@ class ShopCore extends ObjectModel
 			}
 			else
 			{
-				$shopID = (int)self::$id_current_shop;
-				$shopGroupID = (int)self::$id_current_group_shop;
+				$shopID = $context->shop->getID();
+				$shopGroupID = $context->shop->getGroupID();
 			}
 			$executed = true;
 		}
+
+		if ($useDefault && !$shopID)
+			$shopID = Configuration::get('PS_SHOP_DEFAULT');
+		if ($useDefault && !$shopGroupID)
+			$shopID = Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT'));
+		
 		if ($type == 'shop')
 			return $shopID;
 		else if ($type == 'group')
@@ -519,7 +520,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getListFromContext()
 	{
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		return Shop::getListOfID($shopID, $shopGroupID);
 	}
 	
@@ -528,9 +529,9 @@ class ShopCore extends ObjectModel
 	 * 
 	 * @return int
 	 */
-	public static function getContextType()
+	public function getContextType()
 	{
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		if ($shopID)
 			return Shop::CONTEXT_SHOP;
 		else if ($shopGroupID)
@@ -548,9 +549,9 @@ class ShopCore extends ObjectModel
 
 		$restriction = '';
 		if (is_null($shopID))
-			$shopID = Shop::retrieveContext('shop');
+			$shopID = Shop::getContext('shop');
 		if (is_null($shopGroupID))
-			$shopGroupID = Shop::retrieveContext('group');
+			$shopGroupID = Shop::getContext('group');
 
 		if ($type == 'group_shop')
 		{
@@ -607,7 +608,7 @@ class ShopCore extends ObjectModel
 		$tree = Shop::getTree();
 		
 		// Get default value
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		if ($shopID)
 			$value = 's-'.$shopID;
 		else if ($shopGroupID)

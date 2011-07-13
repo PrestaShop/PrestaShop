@@ -188,7 +188,7 @@ class FrontControllerCore
 			$cart->id_currency = (int)($cookie->id_currency);
 			$cart->id_guest = (int)($cookie->id_guest);
 			$cart->id_group_shop = (int)$this->id_current_group_shop;
-			$cart->id_shop = (int)$this->id_current_shop;
+			$cart->id_shop = $this->id_current_shop;
 			if ($cookie->id_customer)
 			{
 				$cart->id_customer = (int)($cookie->id_customer);
@@ -276,7 +276,7 @@ class FrontControllerCore
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE'),
-			'id_current_shop' => (int)$this->id_current_shop,
+			'id_current_shop' => $this->id_current_shop,
 			'id_current_group_shop' => (int)$this->id_current_group_shop
 		));
 

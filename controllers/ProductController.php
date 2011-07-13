@@ -102,7 +102,7 @@ class ProductControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Product not found');
 		else
 		{
-			if (!Validate::isLoadedObject($this->product) OR !$this->product->isAssociatedToShop((int)$this->id_current_shop)
+			if (!Validate::isLoadedObject($this->product) OR !$this->product->isAssociatedToShop()
 				OR (!$this->product->active AND (Tools::getValue('adtoken') != Tools::encrypt('PreviewProduct'.$this->product->id))
 				|| !file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php')))
 			{
@@ -160,16 +160,16 @@ class ProductControllerCore extends FrontController
 					if (isset($regs[2]) AND is_numeric($regs[2]))
 					{
 						if (Product::idIsOnCategoryId((int)($this->product->id), array('0' => array('id_category' => (int)($regs[2])))))
-							$category = new Category((int)($regs[2]), (int)self::$cookie->id_lang, (int)$this->id_current_shop);
+							$category = new Category((int)($regs[2]), (int)self::$cookie->id_lang);
 					}
 					elseif (isset($regs[5]) AND is_numeric($regs[5]))
 					{
 						if (Product::idIsOnCategoryId((int)($this->product->id), array('0' => array('id_category' => (int)($regs[5])))))
-							$category = new Category((int)($regs[5]), (int)self::$cookie->id_lang, (int)$this->id_current_shop);
+							$category = new Category((int)($regs[5]), (int)self::$cookie->id_lang);
 					}
 				}
 				if (!$category)
-					$category = new Category($this->product->id_category_default, (int)self::$cookie->id_lang, (int)$this->id_current_shop);
+					$category = new Category($this->product->id_category_default, (int)self::$cookie->id_lang);
 
 				if (isset($category) AND Validate::isLoadedObject($category))
 				{

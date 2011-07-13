@@ -103,7 +103,7 @@ class ContactControllerCore extends FrontController
 				else
 				{
 					$customer = new Customer();
-					$customer->getByEmail($from, NULL, (int)$this->id_current_group_shop, (int)$this->id_current_shop);
+					$customer->getByEmail($from);
 				}
 
 				$contact = new Contact($id_contact, self::$cookie->id_lang);

@@ -372,7 +372,7 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function deleteFromContext($key)
 	{
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		if (!$shopID && !$shopGroupID)
 			return;
 
@@ -395,7 +395,7 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function hasContext($key, $langID, $context)
 	{
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $langID, null, $shopID))
 			return true;
 		else if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $langID, $shopGroupID))
@@ -424,7 +424,7 @@ class ConfigurationCore extends ObjectModel
 	 */
 	protected static function getShopFromContext(&$id_group_shop, &$id_shop)
 	{
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		if (is_null($id_shop))
 			$id_shop = $shopID;
 		if (is_null($id_group_shop))

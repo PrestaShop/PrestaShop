@@ -40,7 +40,7 @@ class SupplierControllerCore extends FrontController
 		if ($id_supplier = Tools::getValue('id_supplier'))
 		{
 			$this->supplier = new Supplier((int)$id_supplier, self::$cookie->id_lang);
-			if (Validate::isLoadedObject($this->supplier) AND $this->supplier->active AND $this->supplier->isAssociatedToGroupShop((int)$this->id_current_shop))
+			if (Validate::isLoadedObject($this->supplier) AND $this->supplier->active AND $this->supplier->isAssociatedToGroupShop())
 			{
 				$nbProducts = $this->supplier->getProducts($id_supplier, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);

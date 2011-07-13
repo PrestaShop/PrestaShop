@@ -132,7 +132,7 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid date of birth');
 			if (!sizeof($this->errors))
 			{
-				if (Customer::customerExists(Tools::getValue('email'), false, true, (int)$this->id_current_group_shop, (int)$this->id_current_shop))
+				if (Customer::customerExists(Tools::getValue('email')))
 					$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.');
 				if (Tools::isSubmit('newsletter'))
 				{

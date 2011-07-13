@@ -105,7 +105,7 @@ class CartControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Product not found');
 			else
 			{
-				$producToAdd = new Product((int)($idProduct), true, (int)self::$cookie->id_lang, (int)$this->id_current_shop);
+				$producToAdd = new Product((int)($idProduct), true, (int)self::$cookie->id_lang);
 				if ((!$producToAdd->id OR !$producToAdd->active) AND !$delete)
 					if (Tools::getValue('ajax') == 'true')
 						die('{"hasError" : true, "errors" : ["'.Tools::displayError('Product is no longer available.', false).'"]}');

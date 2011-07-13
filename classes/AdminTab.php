@@ -140,6 +140,8 @@ abstract class AdminTabCore
 
 	/** @var string specificConfirmDelete */
 	public $specificConfirmDelete = NULL;
+	
+	public $currentIndex = '';
 
 	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms');
 
@@ -1692,21 +1694,22 @@ abstract class AdminTabCore
 	 */
 	public function displayOptionsList()
 	{
-		global $currentIndex, $cookie, $tab;
+		global $tab;
 
+		$context = Context::getContext();
 		if (!isset($this->_fieldsOptions) OR !sizeof($this->_fieldsOptions))
 			return false;
 		
 		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
 		$this->_languages = Language::getLanguages(false);
-		$tab = Tab::getTab((int)$cookie->id_lang, Tab::getIdFromClassName($tab));
+		$tab = Tab::getTab($context->language->id, Tab::getIdFromClassName($tab));
 		echo '<br /><br />';
 		echo (isset($this->optionTitle) ? '<h2>'.$this->optionTitle.'</h2>' : '');
 		echo '
 		<script type="text/javascript">
 			id_language = Number('.$defaultLanguage.');
 		</script>
-		<form action="'.$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">
+		<form action="'.$this->currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">
 			<fieldset>';
 				echo (isset($this->optionTitle) ? '<legend>
 					<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" />'
@@ -1719,7 +1722,7 @@ abstract class AdminTabCore
 				if (!Validate::isCleanHtml($val))
 					$val = Configuration::get($key);
 
-			$isDisabled = (isset($field['visibility']) && $field['visibility'] > Shop::getContextType()) ? true : false;
+			$isDisabled = (isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
 
 			echo $this->getHtmlDefaultConfigurationValue($key, $this->_languages);
 			echo '<label>'.$field['title'].' </label>
@@ -2002,8 +2005,6 @@ abstract class AdminTabCore
 	
 	protected function warnDomainName()
 	{
-		global $currentIndex;
-
 		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') AND $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
 			$this->displayWarning($this->l('Your are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
 			$this->l('This one is different from the main shop domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
@@ -2013,15 +2014,15 @@ abstract class AdminTabCore
 	
 	protected function displayAssoShop($field_name = 'name')
 	{
-		global $currentIndex, $cookie;
-		if (!Tools::isMultiShopActivated() || (!$this->_object && Shop::getContextType() != Shop::CONTEXT_ALL))
+		$context = Context::getContext();
+		if (!Tools::isMultiShopActivated() || (!$this->_object && $context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		$shops = Shop::getShops();
 		$objects = Db::getInstance()->ExecuteS('SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'`
 															FROM `'._DB_PREFIX_.pSQL($this->table).'`a '.
 															(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$cookie->id_lang : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
+															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
 		$assos = array();
 		$res = Db::getInstance()->ExecuteS('SELECT id_shop, `'.pSQL($this->identifier).'`
 														FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`');
@@ -2032,7 +2033,7 @@ abstract class AdminTabCore
 		{
 			$html = '
 			<table cellpadding="0" cellspacing="0" class="table">
-			<form name="updateAssoShop" action="'.$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
+			<form name="updateAssoShop" action="'.$this->currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
 			<input type="hidden" name="assoShopClass" value="'.$this->className.'" />
 						<tr>
 							<th style="width: 200px">'.$this->l('Shop association').'</th>';
@@ -2074,15 +2075,14 @@ abstract class AdminTabCore
 	
 	protected function displayAssoGroupShop($field_name = 'name')
 	{
-		global $currentIndex, $cookie;
-		
-		if (!Tools::isMultiShopActivated() || (!$this->_object && Shop::getContextType() != Shop::CONTEXT_ALL))
+		$context = Context::getContext();
+		if (!Tools::isMultiShopActivated() || (!$this->_object && $context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		$objects = Db::getInstance()->ExecuteS('SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'` 
 															FROM `'._DB_PREFIX_.pSQL($this->table).'` a'.
 															(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$cookie->id_lang : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
+															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
 		$groups_shop = GroupShop::getGroupShops();
 		$assos = array();
 		$res = Db::getInstance()->ExecuteS('SELECT id_group_shop, `'.pSQL($this->identifier).'`
@@ -2091,7 +2091,7 @@ abstract class AdminTabCore
 			$assos[$row['id_group_shop']][] = $row[$this->identifier];
 		if (!$this->_object)
 		{
-			$html = '<form name="updateAssoGroupShop" action="'.$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
+			$html = '<form name="updateAssoGroupShop" action="'.$this->currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
 			<input type="hidden" name="assoGroupShopClass" value="'.$this->className.'" />
 			<table cellpadding="0" cellspacing="0" class="table">
 						<tr>
@@ -2157,21 +2157,22 @@ abstract class AdminTabCore
 	 */
 	protected function getHtmlDefaultConfigurationValue($key, $languages)
 	{
+		$context = Context::getContext();
 		if (Configuration::isLangKey($key))
 		{
 			$testContext = false;
 			foreach ($languages as $lang)
-				if ((Shop::getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
-					|| (Shop::getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
+				if (($context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
+					|| ($context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
 						$testContext = true;
 		}
 		else
 		{
-			$testContext = ((Shop::getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
-							|| (Shop::getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
+			$testContext = (($context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
+							|| ($context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
 		}
 		
-		if (Tools::isMultiShopActivated() && Shop::getContextType() != Shop::CONTEXT_ALL && $testContext)
+		if (Tools::isMultiShopActivated() && $context->shop->getContextType() != Shop::CONTEXT_ALL && $testContext)
 		{
 			echo '<div class="multishop_config">';
 				echo '<a href="#" title="'.$this->l('Click here to use default value for this field').'"><img src="../img/admin/multishop_config.png" /></a>';
@@ -2192,7 +2193,7 @@ abstract class AdminTabCore
 		$languages = Language::getLanguages(false);
 		foreach ($fields as $key => $options)
 		{
-			if (isset($options['visibility']) && $options['visibility'] > Shop::getContextType())
+			if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
 				continue;
 				
 			if (Tools::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))

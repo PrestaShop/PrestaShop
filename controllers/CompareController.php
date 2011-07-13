@@ -58,14 +58,14 @@ class CompareControllerCore extends FrontController
 
 				foreach ($ids AS $k => &$id)
 				{
-					$curProduct = new Product((int)$id, true, (int)self::$cookie->id_lang,(int)$this->id_current_shop);
-					if (!$curProduct->active OR !$curProduct->isAssociatedToShop((int)$this->id_current_shop))
+					$curProduct = new Product((int)$id, true, (int)self::$cookie->id_lang);
+					if (!$curProduct->active OR !$curProduct->isAssociatedToShop())
 					{
 						unset($ids[$k]);
 						continue;
 					}
 
-					if (!$curProduct->active OR !$curProduct->isAssociatedToShop((int)$this->id_current_shop))
+					if (!$curProduct->active OR !$curProduct->isAssociatedToShop())
 					{
 						unset($ids[$k]);
 						continue;

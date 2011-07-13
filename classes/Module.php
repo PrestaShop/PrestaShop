@@ -105,7 +105,7 @@ abstract class ModuleCore
 	public function __construct($name = null)
 	{
 		// Search the module shop context
-		list($shopID, $shopGroupID) = Shop::retrieveContext();
+		list($shopID, $shopGroupID) = Shop::getContext();
 		$this->setShopID($shopID);
 		$this->setShopGroupID($shopGroupID);
 
