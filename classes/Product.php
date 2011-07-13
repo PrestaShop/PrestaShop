@@ -3075,11 +3075,12 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->ExecuteS('SELECT `id_customization_field`, `type` FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product` = '.(int)($this->id).' AND `required` = 1');
 	}
 
-	public function hasAllRequiredCustomizableFields()
+	public function hasAllRequiredCustomizableFields($context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
-		$fields = array_merge($cookie->getFamily('pictures_'.(int)($this->id)), $cookie->getFamily('textFields_'.(int)($this->id)));
+		$fields = array_merge($context->cookie->getFamily('pictures_'.(int)($this->id)), $context->cookie->getFamily('textFields_'.(int)($this->id)));
 		if (($requiredFields = $this->getRequiredCustomizableFields()) === false)
 			return false;
 		$prefix = array(_CUSTOMIZE_FILE_ => 'pictures_'.(int)($this->id).'_', _CUSTOMIZE_TEXTFIELD_ => 'textFields_'.(int)($this->id).'_');

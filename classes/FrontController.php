@@ -81,10 +81,12 @@ class FrontControllerCore
 		if (self::$initialized)
 			return;
 		self::$initialized = true;
+
+		$context = Context::getContext();
 		
 		$this->id_current_shop = Context::getContext()->shop->getID();
 		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
-
+		
 		$this->css_files = array();
 		$this->js_files = array();
 
@@ -233,7 +235,8 @@ class FrontControllerCore
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 		$link = new Link($protocol_link, $protocol_content);
-
+		$context->link = $link;
+		$context->language = $ps_language;
 		$link->preloadPageLinks();
 		$this->canonicalRedirection();
 
@@ -338,14 +341,12 @@ class FrontControllerCore
 		if($cookie->postcode)
 			$customer->geoloc_postcode = (int)$cookie->postcode;
 		
-		$context = Context::getContext();
+
 		$context->customer = $customer;
 		$context->cart = $cart;
-		$context->link = $link;
 		$context->cookie = $cookie;
 		$context->currency = $currency;
 		$context->controller = $this;
-		$context->language = $ps_language;
 		$context->country = $defaultCountry;
 	}
 
@@ -375,7 +376,7 @@ class FrontControllerCore
 		if (isset($this->php_self) AND !empty($this->php_self))
 		{
 			// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
-			$canonicalURL = $context->link->getPageLink($this->php_self, $this->ssl, $context->language->id_lang);
+			$canonicalURL = $context->link->getPageLink($this->php_self, $this->ssl, $context->language->id);
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', (($this->ssl AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
