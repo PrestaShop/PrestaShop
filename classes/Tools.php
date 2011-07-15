@@ -55,11 +55,10 @@ class ToolsCore
 	* @param string $url Desired URL
 	* @param string $baseUri Base URI (optional)
 	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__)
+	public static function redirect($url, $baseUri = __PS_BASE_URI__, $context = null)
 	{
 		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
 		{
-			global $link;
 			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
 				$url = substr($url, strlen($baseUri));
 			if (strpos($url, 'index.php?controller=') !== FALSE && strpos($url, 'index.php/') == 0) {
@@ -69,7 +68,7 @@ class ToolsCore
 			}
 
 			$explode = explode('?', $url);
-			$url = $link->getPageLink($explode[0], true);
+			$url = $context->link->getPageLink($explode[0], true);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
 			$baseUri = '';
@@ -91,17 +90,15 @@ class ToolsCore
 	{
 		if (!preg_match('@^https?://@i', $url))
 		{
-			global $link;
 			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
 				$url = substr($url, strlen(__PS_BASE_URI__));
 			if (strpos($url, 'index.php?controller=') !== FALSE && strpos($url, 'index.php/') == 0)
 				$url = substr($url, strlen('index.php?controller='));
 			$explode = explode('?', $url);
-			$url = $link->getPageLink($explode[0]);
+			$url = $context->link->getPageLink($explode[0]);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
 		}
-
 		header('Location: '.$url);
 		exit;
 	}
@@ -528,12 +525,11 @@ class ToolsCore
 	*
 	* @param integer $code Error code
 	*/
-	public static function displayError($string = 'Fatal error', $htmlentities = true)
+	public static function displayError($string = 'Fatal error', $htmlentities = true, $context = null)
 	{
-		global $_ERRORS, $cookie;
+		global $_ERRORS;
 
-		$iso = strtolower(Language::getIsoById((is_object($cookie) AND $cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT')));
-		@include_once(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
+		@include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/errors.php');
 
 		if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $string == 'Fatal error')
 			return ('<pre>'.print_r(debug_backtrace(), true).'</pre>');
@@ -715,8 +711,6 @@ class ToolsCore
 	*/
 	public static function getHomeMetaTags($id_lang, $page_name)
 	{
-		global $cookie;
-
 		/* Metas-tags */
 		$metas = Meta::getMetaByPage($page_name, $id_lang);
 		$ret['meta_title'] = (isset($metas['title']) AND $metas['title']) ? $metas['title'].' - '.Configuration::get('PS_SHOP_NAME') : Configuration::get('PS_SHOP_NAME');
@@ -726,16 +720,17 @@ class ToolsCore
 	}
 
 
-	public static function completeMetaTags($metaTags, $defaultValue)
+	public static function completeMetaTags($metaTags, $defaultValue, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 
 		if ($metaTags['meta_title'] == NULL)
 			$metaTags['meta_title'] = $defaultValue.' - '.Configuration::get('PS_SHOP_NAME');
 		if ($metaTags['meta_description'] == NULL)
-			$metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', (int)($cookie->id_lang)) ? Configuration::get('PS_META_DESCRIPTION', (int)($cookie->id_lang)) : '';
+			$metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
 		if ($metaTags['meta_keywords'] == NULL)
-			$metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', (int)($cookie->id_lang)) ? Configuration::get('PS_META_KEYWORDS', (int)($cookie->id_lang)) : '';
+			$metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
 		return $metaTags;
 	}
 
@@ -754,13 +749,14 @@ class ToolsCore
 	*
 	* @param string $token token to encrypt
 	*/
-	public static function getToken($page = true)
+	public static function getToken($page = true, $context = null)
 	{
-		global $cookie;
+		if (!$context)
+			$context = Context::getContext();
 		if ($page === true)
-			return (self::encrypt($cookie->id_customer.$cookie->passwd.$_SERVER['SCRIPT_NAME']));
+			return (self::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
 		else
-			return (self::encrypt($cookie->id_customer.$cookie->passwd.$page));
+			return (self::encrypt($context->customer->id.$context->customer->passwd.$page));
 	}
 
 	/**
@@ -772,10 +768,11 @@ class ToolsCore
 	{
 		return !empty($string) ? self::encrypt($string) : false;
 	}
-	public static function getAdminTokenLite($tab)
+	public static function getAdminTokenLite($tab, $context = null)
 	{
-		global $cookie;
-		return Tools::getAdminToken($tab.(int)Tab::getIdFromClassName($tab).(int)$cookie->id_employee);
+		if (!$context)
+			$context = Context::getContext();
+		return Tools::getAdminToken($tab.(int)Tab::getIdFromClassName($tab).(int)$context->employee->id);
 	}
 
 	/**
@@ -786,10 +783,11 @@ class ToolsCore
 	* @param boolean $linkOntheLastItem Put or not a link on the current category
 	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
 	*/
-	public static function getPath($id_category, $path = '', $linkOntheLastItem = false, $categoryType = 'products')
+	public static function getPath($id_category, $path = '', $linkOntheLastItem = false, $categoryType = 'products', $context = null)
 	{
-		global $link, $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
+			
 		if ($id_category == 1)
 			return '<span class="navigation_end">'.$path.'</span>';
 
@@ -812,7 +810,7 @@ class ToolsCore
 				SELECT c.id_category, cl.name, cl.link_rewrite
 				FROM '._DB_PREFIX_.'category c
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-				WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)($cookie->id_lang).' AND c.id_category != 1
+				WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$context->language->id.' AND c.id_category != 1
 				ORDER BY c.level_depth ASC
 				LIMIT '.(int)$category['level_depth']);
 
@@ -821,7 +819,7 @@ class ToolsCore
 				foreach ($categories AS $category)
 				{
 					$fullPath .=
-					(($n < $nCategories OR $linkOntheLastItem) ? '<a href="'.self::safeOutput($link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+					(($n < $nCategories OR $linkOntheLastItem) ? '<a href="'.self::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
 					(($n < $nCategories OR $linkOntheLastItem) ? '</a>' : '').
 					(($n++ != $nCategories OR !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
@@ -832,10 +830,10 @@ class ToolsCore
 		}
 		elseif ($categoryType === 'CMS')
 		{
-			$category = new CMSCategory((int)($id_category), (int)($cookie->id_lang));
+			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
 				die(self::displayError());
-			$categoryLink = $link->getCMSCategoryLink($category);
+			$categoryLink = $context->link->getCMSCategoryLink($category);
 
 			if ($path != $category->name)
 				$fullPath .= '<a href="'.self::safeOutput($categoryLink).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
@@ -849,16 +847,17 @@ class ToolsCore
 	/**
 	* @param string [optionnal] $type_cat defined what type of categories is used (products or cms)
 	*/
-	public static function getFullPath($id_category, $end, $type_cat = 'products')
+	public static function getFullPath($id_category, $end, $type_cat = 'products', $context = null)
 	{
-		global $cookie;
-
+		if (!$context)
+			$context = Context::getContext();
+			
 		$pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 
 		if($type_cat === 'products')
-		    $category = new Category((int)($id_category), (int)($cookie->id_lang));
+		    $category = new Category($id_category, $context->language->id);
 		else if ($type_cat === 'CMS')
-		    $category = new CMSCategory((int)($id_category), (int)($cookie->id_lang));
+		    $category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
 			$id_category = 1;
@@ -914,11 +913,10 @@ class ToolsCore
 	*/
 	public static function historyc_l($key, $translations)
 	{
-		global $cookie;
 		if (!$translations OR !is_array($translations))
 			die(self::displayError());
 		$iso = strtoupper(Language::getIsoById($cookie->id_lang));
-		$lang = key_exists($iso, $translations) ? $translations[$iso] : false;
+		$lang = key_exists($context->language->iso_code, $translations) ? $translations[$context->language->iso_code] : false;
 		return (($lang AND is_array($lang) AND key_exists($key, $lang)) ? stripslashes($lang[$key]) : $key);
 	}
 
@@ -1375,7 +1373,7 @@ class ToolsCore
 
 	public static function replaceByAbsoluteURL($matches)
 	{
-		global $current_css_file, $protocol_link;
+		global $current_css_file;
 		
 		$protocolLink = Tools::getCurrentUrlProtocolPrefix();
 		
@@ -1857,10 +1855,11 @@ FileETag INode MTime Size
 		}
 	}
 
-	public static function enableCache($level = 1)
+	public static function enableCache($level = 1, $context = null)
 	{
-		global $smarty;
-
+		if (!$context)
+			$context = Context::getContext();
+		$smarty = $context->controller->smarty;
 		if (!Configuration::get('PS_SMARTY_CACHE'))
 			return;
 		if ($smarty->force_compile == 0 AND $smarty->caching == $level)
@@ -1871,10 +1870,12 @@ FileETag INode MTime Size
 		$smarty->caching = (int)($level);
 	}
 
-	public static function restoreCacheSettings()
+	public static function restoreCacheSettings($context = null)
 	{
-		global $smarty;
-
+		if (!$context)
+			$context = Context::getContext();
+		$smarty = $context->controller->smarty;
+		
 		if (isset(self::$_forceCompile))
 			$smarty->force_compile = (int)(self::$_forceCompile);
 		if (isset(self::$_caching))

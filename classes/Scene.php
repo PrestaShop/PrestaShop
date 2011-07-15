@@ -208,7 +208,6 @@ class SceneCore extends ObjectModel
 	*/
 	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true, $context = null)
 	{
-		global $link;
 		if (!$context)
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
@@ -223,7 +222,7 @@ class SceneCore extends ObjectModel
 			foreach ($products AS &$product)
 			{
 				$product['details'] = new Product($product['id_product'], !$liteResult, $id_lang);
-				$product['link'] = $link->getProductLink($product['details']->id, $product['details']->link_rewrite, $product['details']->category, $product['details']->ean13);
+				$product['link'] = $context->link->getProductLink($product['details']->id, $product['details']->link_rewrite, $product['details']->category, $product['details']->ean13);
 				$cover = Product::getCover($product['details']->id);
 				if(is_array($cover))
 					$product = array_merge($cover, $product);

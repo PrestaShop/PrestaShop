@@ -100,7 +100,7 @@ class FrontControllerCore
 		ob_start();
 
 		$cookie = new Cookie('ps');
-				
+		$context->cookie = $cookie;
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
@@ -110,7 +110,7 @@ class FrontControllerCore
 		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' AND !(int)(Configuration::get('PS_SHOP_ENABLE')))
 			$this->maintenance = true;
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
-			if ($newDefault = $this->geolocationManagement() && Validate::isLoadedObject($newDefault))
+			if (($newDefault = $this->geolocationManagement($defaultCountry)) && Validate::isLoadedObject($newDefault))
 				$defaultCountry = $newDefault;
 			
 		// Switch language if needed and init cookie language
@@ -388,10 +388,10 @@ class FrontControllerCore
 		}
 	}
 
-	protected function geolocationManagement()
+	protected function geolocationManagement($defaultCountry)
 	{
 		$context = Context::getContext();
-		
+
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
 			/* Check if Maxmind Database exists */
@@ -403,7 +403,7 @@ class FrontControllerCore
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
 
 					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
-					$record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
+					$record = geoip_record_by_addr($gi, '81.57.72.226');//Tools::getRemoteAddr());
 
 					if (is_object($record)) 
 					{
@@ -425,11 +425,11 @@ class FrontControllerCore
 					}
 				}
 
-				if (isset($context->cookie->iso_code_country) 
-					&& (int)($id_country = Country::getByIso(strtoupper($context->cookie->iso_code_country))))
+				if (isset($context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($context->cookie->iso_code_country))))
 				{
 					/* Update defaultCountry */
-					$defaultCountry = new Country($id_country);
+					if($defaultCountry->iso_code != $context->cookie->iso_code_country)
+						$defaultCountry = new Country($id_country);
 					if (isset($hasBeenSet) AND $hasBeenSet)
 						$context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $defaultCountry;

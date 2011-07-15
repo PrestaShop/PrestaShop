@@ -141,15 +141,15 @@ class OrderControllerCore extends ParentOrderController
 
 	public function displayContent()
 	{
-		global $currency;
+		$context = Context::getContext();
 
 		parent::displayContent();
 		
 		$this->smarty->assign(array(
-			'currencySign' => $currency->sign,
-			'currencyRate' => $currency->conversion_rate,
-			'currencyFormat' => $currency->format,
-			'currencyBlank' => $currency->blank,
+			'currencySign' => $context->currency->sign,
+			'currencyRate' => $context->currency->conversion_rate,
+			'currencyFormat' => $context->currency->format,
+			'currencyBlank' => $context->currency->blank,
 		));
 
 		switch ((int)$this->step)

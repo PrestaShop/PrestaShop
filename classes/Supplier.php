@@ -113,8 +113,6 @@ class SupplierCore extends ObjectModel
 	  */
 	static public function getSuppliers($getNbProducts = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
 	{
-			global $cookie;
-
 		if (!$id_lang)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');
 		$query = 'SELECT s.*, sl.`description`';

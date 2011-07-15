@@ -161,10 +161,11 @@ class TagCore extends ObjectModel
 	 	return $result;
 	}
 	
-	public function getProducts($associated = true)
+	public function getProducts($associated = true, $context = null)
 	{
-		global $cookie;
-		$id_lang = $this->id_lang ? $this->id_lang : $cookie->id_lang;
+		if (!$context)
+			$context = Context::getContext();
+		$id_lang = $this->id_lang ? $this->id_lang : $context->language->id;
 		
 		if (!$this->id AND $associated)
 			return array();
