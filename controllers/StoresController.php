@@ -36,8 +36,8 @@ class StoresControllerCore extends FrontController
 	
 	public function preProcess()
 	{
-		global $smarty, $cookie;
-		
+		$context = Context::getContext();
+				
 		$simplifiedStoreLocator = Configuration::get('PS_STORES_SIMPLIFIED');
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
@@ -51,7 +51,7 @@ class StoresControllerCore extends FrontController
 			LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-			WHERE s.active = 1 AND cl.id_lang = '.(int)($cookie->id_lang).' AND ss.id_shop='.(int)$this->id_current_shop);
+			WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop='.(int)$this->id_current_shop);
 			
 			foreach ($stores AS &$store)
 				$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
@@ -66,7 +66,7 @@ class StoresControllerCore extends FrontController
 				LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 				LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 				LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-				WHERE s.active = 1 AND cl.id_lang = '.(int)($cookie->id_lang).' AND ss.id_shop='.(int)$this->id_current_shop);
+				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop='.(int)$this->id_current_shop);
 			}
 			else
 			{
@@ -80,7 +80,7 @@ class StoresControllerCore extends FrontController
 				LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 				LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 				LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-				WHERE s.active = 1 AND cl.id_lang = '.(int)($cookie->id_lang).' AND ss.id_shop='.(int)$this->id_current_shop.'
+				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop='.(int)$this->id_current_shop.'
 				HAVING distance < '.(int)($distance).'
 				ORDER BY distance ASC
 				LIMIT 0,20');
@@ -120,8 +120,8 @@ class StoresControllerCore extends FrontController
 							$hours_datas['hours'] = $hours[(int)($i) - 1];
 							$days_datas[] = $hours_datas;
 						}
-						$smarty->assign('days_datas', $days_datas);
-						$smarty->assign('id_country', $store['id_country']);
+						$this->smarty->assign('days_datas', $days_datas);
+						$this->smarty->assign('id_country', $store['id_country']);
 					
 						$other .= $this->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 					}
@@ -143,10 +143,10 @@ class StoresControllerCore extends FrontController
 				die($dom->saveXML());
 			}
 			else
-				$smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
+				$this->smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
 		}
 		
-		$smarty->assign(array('distance_unit' => $distanceUnit, 'simplifiedStoresDiplay' => $simplifiedStoreLocator, 'stores' => $stores, 'mediumSize' => Image::getSize('medium')));
+		$this->smarty->assign(array('distance_unit' => $distanceUnit, 'simplifiedStoresDiplay' => $simplifiedStoreLocator, 'stores' => $stores, 'mediumSize' => Image::getSize('medium')));
 	}
 
 	private function _processStoreAddress($store)
@@ -189,13 +189,12 @@ class StoresControllerCore extends FrontController
 
 	public function process()
 	{
-		global $link;
 		parent::process();
 				
 		$this->smarty->assign(array(
 			'defaultLat' => (float)Configuration::get('PS_STORES_CENTER_LAT'),
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
-			'searchUrl' => $link->getPageLink('stores')
+			'searchUrl' => Context::getContext()->link->getPageLink('stores')
 		));
 	}
 

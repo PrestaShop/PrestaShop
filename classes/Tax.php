@@ -231,8 +231,6 @@ class TaxCore extends ObjectModel
 	public static function getApplicableTaxRate($id_tax, $productTax, $id_address = NULL)
 	{
 	    Tools::displayAsDeprecated();
-		global $cart, $cookie, $defaultCountry;
-
 		return $productTax;
 	}
 

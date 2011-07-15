@@ -78,11 +78,11 @@ class TabCore extends ObjectModel
 		return false;
 	}
 	
-	static public function initAccess($id_tab)
+	static public function initAccess($id_tab, $context = null)
 	{
-	 	/* Cookie's loading */
-	 	global $cookie;
-	 	if (!is_object($cookie) OR !$cookie->profile)
+		if (!$context)
+			$context = Context::getContext();
+	 	if (!$context->employee->id_profile)
 	 		return false;
 	 	/* Profile selection */
 	 	$profiles = Db::getInstance()->ExecuteS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile');
@@ -92,7 +92,7 @@ class TabCore extends ObjectModel
 	 	$query = 'INSERT INTO `'._DB_PREFIX_.'access` VALUES ';
 	 	foreach ($profiles AS $profile)
 	 	{
-	 	 	$rights = (((int)($profile['id_profile']) == 1 OR (int)($profile['id_profile']) == $cookie->profile) ? 1 : 0);
+	 	 	$rights = (((int)($profile['id_profile']) == 1 OR (int)($profile['id_profile']) == $context->employee->id_profile) ? 1 : 0);
 	 	 	$query .= ($profile === $profiles[0] ? '' : ', ').'('.(int)($profile['id_profile']).', '.(int)($id_tab).', '.$rights.', '.$rights.', '.$rights.', '.$rights.')';
 	 	}
 	 	return Db::getInstance()->Execute($query);
