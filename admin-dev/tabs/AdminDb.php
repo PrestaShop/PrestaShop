@@ -45,8 +45,6 @@ class AdminDb extends AdminPreferences
 	
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (isset($_POST['submitDatabase'.$this->table]))
 		{
 		 	if ($this->tabAccess['edit'] === '1')	 	
@@ -101,7 +99,6 @@ class AdminDb extends AdminPreferences
 
 	public function display()
 	{
-		global $currentIndex;
 		echo $this->displayWarning($this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.')).'<br />';
 		$this->_displayForm('database', $this->_fieldsDatabase, $this->l('Database'), 'width2', 'database_gear');
 		$engines = $this->_getEngines();

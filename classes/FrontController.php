@@ -104,8 +104,6 @@ class FrontControllerCore
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
-		/* Loading default country */
-		$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 		/* Theme is missing or maintenance */
 		if (!is_dir(_PS_THEME_DIR_))
 			die(Tools::displayError('Current theme unavailable. Please check your theme directory name and permissions.'));
@@ -399,7 +397,7 @@ class FrontControllerCore
 			/* Check if Maxmind Database exists */
 			if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
 			{
-				if (!isset($context->country->iso_code) OR (isset($context->country->iso_code) AND !in_array(strtoupper($context->country->iso_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
+				if (!isset($context->cookie->iso_code_country) OR (isset($context->cookie->iso_code_country) AND !in_array(strtoupper($context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
           			include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
@@ -407,24 +405,28 @@ class FrontControllerCore
 					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
 					$record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
 
-					if (is_object($record) AND !in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND !self::isInWhitelistForGeolocation())
+					if (is_object($record)) 
 					{
-						if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
-							$this->restrictedCountry = true;
-						elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-							$this->smarty->assign(array(
-								'restricted_country_mode' => true,
-								'geolocation_country' => $record->country_name
-							));
-					}
-					elseif (is_object($record))
-					{
-						$context->country->iso_code = strtoupper($record->country_code);
-						$hasBeenSet = true;
+						if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND !self::isInWhitelistForGeolocation())
+						{
+							if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
+								$this->restrictedCountry = true;
+							elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
+								$this->smarty->assign(array(
+									'restricted_country_mode' => true,
+									'geolocation_country' => $record->country_name
+								));
+						}
+						else
+						{
+							$context->cookie->iso_code_country = strtoupper($record->country_code);
+							$hasBeenSet = true;
+						}
 					}
 				}
 
-				if (isset($context->country->iso_code) AND (int)($id_country = Country::getByIso(strtoupper($context->cookie->iso_code_country))))
+				if (isset($context->cookie->iso_code_country) 
+					&& (int)($id_country = Country::getByIso(strtoupper($context->cookie->iso_code_country))))
 				{
 					/* Update defaultCountry */
 					$defaultCountry = new Country($id_country);

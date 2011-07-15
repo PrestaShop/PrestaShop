@@ -65,8 +65,6 @@ class AdminCurrencies extends AdminTab
 	
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (isset($_GET['delete'.$this->table]))
 		{
 			if ($this->tabAccess['delete'] === '1')
@@ -126,8 +124,6 @@ class AdminCurrencies extends AdminTab
 
 	public function displayOptionsList()
 	{
-		global	$currentIndex;
-
 		parent::displayOptionsList();
 		echo '<br /><br />
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
@@ -146,7 +142,6 @@ class AdminCurrencies extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))

@@ -94,5 +94,5 @@ $context->cookie = $cookie;
 $context->link = $link;
 $context->language = $language;
 $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-$context->country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+$context->country = $defaultCountry;
 $context->shop = new Shop(Shop::getContext('shop', true));

@@ -50,8 +50,6 @@ class AdminAttributesGroups extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		if ((isset($_POST['submitAddattribute']) AND sizeof($this->adminAttributes->_errors))
 			OR isset($_GET['updateattribute']) OR isset($_GET['addattribute']))
 		{
@@ -66,10 +64,8 @@ class AdminAttributesGroups extends AdminTab
 	}
 	
 	public function postProcess()
-	{
-	 	global	$cookie, $currentIndex;
-		
-		$this->adminAttributes->tabAccess = Profile::getProfileAccess($cookie->profile, $this->id);
+	{	
+		$this->adminAttributes->tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, $this->id);
 		$this->adminAttributes->postProcess($this->token);
 
 		if(Tools::getValue('submitDel'.$this->table))
@@ -102,8 +98,6 @@ class AdminAttributesGroups extends AdminTab
 	/* Report to AdminTab::displayList() for more details */
 	public function displayList()
 	{
-		global $currentIndex, $cookie;
-
 		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Add attributes group').'</b></a><br />
 		<a href="'.self::$currentIndex.'&addattribute&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add attribute').'</a><br /><br />
 		'.$this->l('Click on the group name to view its attributes. Click again to hide them.').'<br /><br />';
@@ -132,7 +126,7 @@ class AdminAttributesGroups extends AdminTab
 							<th width="100%">'.$this->l('Attribute').'</th>
 							<th>'.$this->l('Actions').'</th>
 						</tr>';
-			$attributes = AttributeGroup::getAttributes((int)($cookie->id_lang), $id);
+			$attributes = AttributeGroup::getAttributes(Context::getContext()->language->id, $id);
 			foreach ($attributes AS $attribute)
 			{
 				echo '
@@ -173,7 +167,6 @@ class AdminAttributesGroups extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))

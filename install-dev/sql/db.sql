@@ -608,6 +608,7 @@ CREATE TABLE `PREFIX_employee` (
   `bo_theme` varchar(32) default NULL,
   `bo_uimode` ENUM('hover','click') default 'click',
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `show_screencast` tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id_employee`),
   KEY `employee_login` (`email`,`passwd`),
   KEY `id_employee_passwd` (`id_employee`,`passwd`),

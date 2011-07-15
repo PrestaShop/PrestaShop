@@ -136,8 +136,6 @@ class AdminCatalog extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		if (((Tools::isSubmit('submitAddcategory') OR Tools::isSubmit('submitAddcategoryAndStay')) AND sizeof($this->adminCategories->_errors)) OR isset($_GET['updatecategory']) OR isset($_GET['addcategory']))
 		{
 			$this->adminCategories->displayForm($this->token);
@@ -180,10 +178,10 @@ class AdminCatalog extends AdminTab
 			}
 			$catalog_tabs = array('category', 'product');
 			// Cleaning links
-			$catBarIndex = $currentIndex;
+			$catBarIndex = self::$currentIndex;
 			foreach ($catalog_tabs AS $tab)
 				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) 
-					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', $currentIndex);
+					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
 					
 			echo '<div class="cat_bar"><span style="color: #3C8534;">'.$this->l('Current category').' :</span>&nbsp;&nbsp;&nbsp;'.getPath($catBarIndex, $id_category, '', '', 'catalog', $home).'</div>';
 			echo '<h2>'.$this->l('Categories').'</h2>';

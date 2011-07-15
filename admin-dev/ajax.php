@@ -32,6 +32,8 @@ require_once(dirname(__FILE__).'/init.php');
 
 require_once(PS_ADMIN_DIR.'/tabs/AdminCounty.php');
 
+$context = Context::getContext();
+
 if (isset($_GET['changeParentUrl']))
 	echo '<script type="text/javascript">parent.parent.document.location.href = "'.addslashes(urldecode(Tools::getValue('changeParentUrl'))).'";</script>';
 if (isset($_GET['installBoughtModule']))
@@ -122,8 +124,6 @@ if (isset($_GET['ajaxProductAccessories']))
 
 if (isset($_GET['ajaxDiscountCustomers']))
 {
-	global $cookie;
-
 	$currentIndex = 'index.php?tab=AdminDiscounts';
 	$jsonArray = array();
 	$filter = Tools::getValue('filter');
@@ -146,7 +146,7 @@ if (isset($_GET['ajaxDiscountCustomers']))
 	$groups = Db::getInstance()->ExecuteS('
 	SELECT g.`id_group`, gl.`name`
 	FROM `'._DB_PREFIX_.'group` g
-	LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($cookie->id_lang).')
+	LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($context->language->id).')
 	WHERE '.(Validate::isUnsignedInt($filter) ? 'g.`id_group` = '.(int)($filter) : 'gl.`name` LIKE "%'.pSQL($filter).'%"
 	'.((Validate::isBool_Id($filter) AND $filterArray[0] == 1) ? 'OR g.`id_group` = '.(int)($filterArray[1]) : '')).'
 	ORDER BY gl.`name` ASC
@@ -165,9 +165,9 @@ if (isset($_GET['ajaxDiscountCustomers']))
 }
 
 if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
-	readfile('http://addons.prestashop.com/adminmodules.php?lang='.Language::getIsoById($cookie->id_lang));
+	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 if (Tools::getValue('page') == 'themes'  AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
-	readfile('http://addons.prestashop.com/adminthemes.php?lang='.Language::getIsoById($cookie->id_lang));
+	readfile('http://addons.prestashop.com/adminthemes.php?lang='.$context->language->iso_code);
 
 if ($step = (int)(Tools::getValue('ajaxProductTab')))
 {
@@ -388,26 +388,24 @@ if (Tools::isSubmit('submitCustomerNote') AND $id_customer = (int)Tools::getValu
 
 if (Tools::getValue('form_language_id'))
 {
-	if (!($cookie->employee_form_lang = (int)(Tools::getValue('form_language_id'))))
+	if (!($context->cookie->employee_form_lang = (int)(Tools::getValue('form_language_id'))))
 		die ('Error while updating cookie.');
 	die ('Form language updated.');
 }
 
 if (Tools::getValue('submitPublishProduct'))
 {
-	global $cookie;
-
 	if (Tools::getIsset('id_product'))
 	{
 		$id_product = (int)(Tools::getValue('id_product'));
 		$id_tab_catalog = (int)(Tab::getIdFromClassName('AdminCatalog'));
-		$token = Tools::getAdminToken('AdminCatalog'.(int)($id_tab_catalog).(int)($cookie->id_employee));
+		$token = Tools::getAdminToken('AdminCatalog'.(int)($id_tab_catalog).(int)$context->employee->id);
 		$bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.$token;
 
 		if (Tools::getValue('redirect'))
 			die($bo_product_url);
 
-		$profileAccess = Profile::getProfileAccess((int)$cookie->profile, $id_tab_catalog);
+		$profileAccess = Profile::getProfileAccess($context->employee->id_profile, $id_tab_catalog);
 		if($profileAccess['edit'])
 		{
 			$product = new Product((int)(Tools::getValue('id_product')));
@@ -431,19 +429,17 @@ if (Tools::getValue('submitPublishProduct'))
 
 if (Tools::getValue('submitPublishCMS'))
 {
-	global $cookie;
-
 	if (Tools::getIsset('id_cms'))
 	{
 		$id_cms = (int)(Tools::getValue('id_cms'));
 		$id_tab_cms = (int)(Tab::getIdFromClassName('AdminCMSContent'));
-		$token = Tools::getAdminToken('AdminCMSContent'.(int)($id_tab_cms).(int)($cookie->id_employee));
+		$token = Tools::getAdminToken('AdminCMSContent'.(int)($id_tab_cms).(int)$context->employee->id);
 		$bo_cms_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCMSContent&id_cms='.(int)$id_cms.'&updatecms&token='.$token;
 
 		if (Tools::getValue('redirect'))
 			die($bo_cms_url);
 
-		$profileAccess = Profile::getProfileAccess((int)$cookie->profile, $id_tab_cms);
+		$profileAccess = Profile::getProfileAccess($context->employee->id_profile, $id_tab_cms);
 		if($profileAccess['edit'])
 		{
 			$cms = new CMS((int)(Tools::getValue('id_cms')));
@@ -506,8 +502,8 @@ if (Tools::isSubmit('loadImportMatchs'))
 
 if (Tools::isSubmit('toggleScreencast'))
 {
-	global $cookie;
-	$cookie->show_screencast = (int)(!(bool)$cookie->show_screencast);
+	$context->employee->show_screencast = (int)(!(bool)$context->employee->show_screencast);
+	$context->employee->save();
 }
 
 if (Tools::isSubmit('ajaxAddZipCode') OR Tools::isSubmit('ajaxRemoveZipCode'))
