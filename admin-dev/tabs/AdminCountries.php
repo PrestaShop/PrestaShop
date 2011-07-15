@@ -31,8 +31,6 @@ class AdminCountries extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
-
 	 	$this->table = 'country';
 	 	$this->className = 'Country';
 	 	$this->lang = true;
@@ -50,7 +48,7 @@ class AdminCountries extends AdminTab
 		'a!active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'a!active'));
 
 		$this->optionTitle = $this->l('Countries options');
-		$this->_fieldsOptions = array('PS_COUNTRY_DEFAULT' => array('title' => $this->l('Default country:'), 'desc' => $this->l('The default country used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_country', 'list' => Country::getCountries((int)($cookie->id_lang))));
+		$this->_fieldsOptions = array('PS_COUNTRY_DEFAULT' => array('title' => $this->l('Default country:'), 'desc' => $this->l('The default country used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_country', 'list' => Country::getCountries(Context::getContext()->language->id)));
 		parent::__construct();
 	}
 
@@ -126,7 +124,6 @@ class AdminCountries extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 		
 		$defaultLayout = '';

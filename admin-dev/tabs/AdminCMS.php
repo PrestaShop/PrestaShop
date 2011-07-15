@@ -75,11 +75,10 @@ class AdminCMS extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 		
 		$obj = $this->loadObject(true);
-		$iso = Language::getIsoById((int)($cookie->id_lang));
 		$divLangName = 'meta_title¤meta_description¤meta_keywords¤ccontent¤link_rewrite';
 
 		echo '
@@ -92,7 +91,7 @@ class AdminCMS extends AdminTab
 		echo '<label>'.$this->l('CMS Category:').' </label>
 				<div class="margin-form">
 					<select name="id_cms_category">';
-		$categories = CMSCategory::getCategories((int)($cookie->id_lang), false);
+		$categories = CMSCategory::getCategories($context->language->id, false);
 		CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, $this->getFieldValue($obj, 'id_cms_category'));
 		echo '
 					</select>
@@ -168,9 +167,7 @@ class AdminCMS extends AdminTab
 			'.$this->_displayDraftWarning($obj->active).'
 		</form>';
 		// TinyMCE
-		global $cookie;
-		$iso = Language::getIsoById((int)($cookie->id_lang));
-		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
+		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$context->language->iso_code.'.js') ? $context->language->iso_code : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
 			<script type="text/javascript">	
@@ -184,12 +181,12 @@ class AdminCMS extends AdminTab
 	
 	public function display($token = NULL)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		
 		if (($id_cms_category = (int)Tools::getValue('id_cms_category')))
 			$currentIndex .= '&id_cms_category='.$id_cms_category;
-		$this->getList((int)($cookie->id_lang), !$cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$cookie->__get($this->table.'Orderway') ? 'ASC' : NULL);
-		//$this->getList((int)($cookie->id_lang));
+		$this->getList($context->language->id, !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL);
+
 		if (!$id_cms_category)
 			$id_cms_category = 1;
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('No pages found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('pages') : $this->l('page')))).' '.
@@ -201,9 +198,7 @@ class AdminCMS extends AdminTab
 	}
 	
 	public function displayList($token = NULL)
-	{
-		global $currentIndex;
-		
+	{	
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader($token);
 		if (!sizeof($this->_list))
@@ -218,11 +213,10 @@ class AdminCMS extends AdminTab
 
 	function postProcess()
 	{
-		global $cookie, $link, $currentIndex;
-		
-		if (Tools::isSubmit('viewcms') AND ($id_cms = (int)(Tools::getValue('id_cms'))) AND $cms = new CMS($id_cms, (int)($cookie->id_lang)) AND Validate::isLoadedObject($cms))
+		$context = Context::getContext();
+		if (Tools::isSubmit('viewcms') AND ($id_cms = (int)(Tools::getValue('id_cms'))) AND $cms = new CMS($id_cms, $context->language->id) AND Validate::isLoadedObject($cms))
 		{
-			$redir = $link->getCMSLink($cms);
+			$redir = $context->link->getCMSLink($cms);
 			if (!$cms->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -282,7 +276,7 @@ class AdminCMS extends AdminTab
 						$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
 					elseif (Tools::isSubmit('submitAddcmsAndPreview'))
 					{
-						$preview_url = $link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->_defaultFormLanguage), (int)($cookie->id_lang));
+						$preview_url = $context->link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->_defaultFormLanguage), $context->language->id);
 						if (!$cms->active)
 						{
 							$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -304,7 +298,7 @@ class AdminCMS extends AdminTab
 						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
 					elseif (Tools::isSubmit('submitAddcmsAndPreview'))
 					{
-						$preview_url = $link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->_defaultFormLanguage), (int)($cookie->id_lang));
+						$preview_url = $context->link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->_defaultFormLanguage), $context->language->id);
 						if (!$cms->active)
 						{
 							$admin_dir = dirname($_SERVER['PHP_SELF']);

@@ -37,13 +37,11 @@
 	$catalog = new AdminCatalog();
 	$adminProducts = new AdminProducts();
 
-	global $cookie;
-
 	echo '			<tr>
 						<td class="col-left"><label for="id_category_default" class="t">'.$adminProducts->getL('Default category:').'</label></td>
 						<td>
 							<select id="id_category_default" name="id_category_default" onchange="checkDefaultCategory(this.value);">';
-		$categories = Category::getCategories((int)($cookie->id_lang), false);
+		$categories = Category::getCategories(Context::getContext()->language->id, false);
 		Category::recurseCategory($categories, $categories[0][1], 1, (int)(Tools::getValue('id_category_default')));
 		echo '			</select>
 						</td>

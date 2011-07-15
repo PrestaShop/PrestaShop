@@ -300,4 +300,6 @@ CREATE TABLE `PREFIX_referrer_shop` (
 INSERT INTO `PREFIX_referrer_shop` (`id_referrer`, `id_shop`) SELECT `id_referrer`, 1 FROM `PREFIX_referrer`;
 ALTER TABLE `PREFIX_referrer` DROP `cache_visitors`, DROP `cache_visits`, DROP `cache_pages`, DROP `cache_registrations`, DROP `cache_orders`, DROP `cache_sales`, DROP `cache_reg_rate`, DROP `cache_order_rate`;
 
+ALTER TABLE PREFIX_employee ADD `show_screencast` tinyint(1) unsigned NOT NULL default '1';
+
 /* PHP:create_multistore(); */

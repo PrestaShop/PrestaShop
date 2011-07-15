@@ -114,7 +114,6 @@ Configuration::loadConfiguration();
 Language::loadLanguages();
 
 /* Loading default country */
-global $defaultCountry;
 $defaultCountry = new Country((int)(Configuration::get('PS_COUNTRY_DEFAULT')), Configuration::get('PS_LANG_DEFAULT'));
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */

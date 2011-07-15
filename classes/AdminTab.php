@@ -142,6 +142,8 @@ abstract class AdminTabCore
 	public $specificConfirmDelete = NULL;
 	
 	public static $currentIndex;
+	
+	public $smarty;
 
 	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms');
 
@@ -1591,7 +1593,6 @@ abstract class AdminTabCore
 		}
 	}
 
-
 	protected function _displayEnableLink($token, $id, $value, $active,  $id_category = NULL, $id_product = NULL)
 	{
 	    echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
@@ -1600,7 +1601,7 @@ abstract class AdminTabCore
 	        alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
 	}
 
-    protected function 	_displayDuplicate($token = NULL, $id)
+    protected function _displayDuplicate($token = NULL, $id)
     {
         $_cacheLang['Duplicate'] = $this->l('Duplicate');
 		$_cacheLang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, TRUE, FALSE);
@@ -1664,15 +1665,13 @@ abstract class AdminTabCore
 	 */
 	public function displayOptionsList()
 	{
-		global $tab;
-
 		$context = Context::getContext();
 		if (!isset($this->_fieldsOptions) OR !sizeof($this->_fieldsOptions))
 			return false;
 		
-		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
+		$defaultLanguage = (int)$context->language->id;
 		$this->_languages = Language::getLanguages(false);
-		$tab = Tab::getTab($context->language->id, Tab::getIdFromClassName($tab));
+		$tab = Tab::getTab($defaultLanguage, $this->id);
 		echo '<br /><br />';
 		echo (isset($this->optionTitle) ? '<h2>'.$this->optionTitle.'</h2>' : '');
 		echo '

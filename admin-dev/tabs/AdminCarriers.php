@@ -33,8 +33,6 @@ class AdminCarriers extends AdminTab
 
 	public function __construct()
 	{
-		global $cookie;
-
 	 	$this->table = 'carrier';
 	 	$this->className = 'Carrier';
 	 	$this->lang = true;
@@ -82,12 +80,10 @@ class AdminCarriers extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
 			return;
-		$currentLanguage = (int)($cookie->id_lang);
 
 		echo '<script type="text/javascript">
 			$(document).ready(function(){
@@ -139,7 +135,7 @@ class AdminCarriers extends AdminTab
 	</div>
 				<label>'.$this->l('Group access').'</label>
 				<div class="margin-form">';
-					$groups = Group::getGroups((int)($cookie->id_lang));
+					$groups = Group::getGroups(Context::getContext()->language->id));
 					if (sizeof($groups))
 					{
 						echo '
@@ -274,8 +270,6 @@ class AdminCarriers extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 		 	/* Checking fields validity */

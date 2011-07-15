@@ -148,15 +148,13 @@ class AdminHome extends AdminTab
 	}
 	public function display()
 	{
-		global $cookie;
+		$context = Context::getContext();
 		$this->warnDomainName();
 
 		$tab = get_class();
 		$protocol = (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')?'https':'http';
-		$isoDefault = Language::getIsoById(intval(Configuration::get('PS_LANG_DEFAULT')));
-		$isoUser = Language::getIsoById(intval($cookie->id_lang));
-		$isoCountry = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
+		$isoUser = $context->language->iso_code;
+		$currency = $context->currency;
 		echo '<div>
 		<h1>'.$this->l('Dashboard').'</h1>
 		<hr style="background-color: #812143;color: #812143;" />
@@ -172,9 +170,7 @@ class AdminHome extends AdminTab
 		}
 	  echo '</div>';
 	
-	  	if (!isset($cookie->show_screencast))
-	  		$cookie->show_screencast = true;
-	  	if ($cookie->show_screencast)
+	  	if ($context->employee->show_screencast)
 			echo'
 			<div id="adminpresentation">
 				<iframe src="'.$protocol.'://screencasts.prestashop.com/screencast.php?iso_lang='.Tools::strtolower($isoUser).'" style="border:none;width:100%;height:420px;" scrolling="no"></iframe>

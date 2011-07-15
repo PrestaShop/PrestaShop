@@ -111,8 +111,6 @@ class AdminBackup extends AdminTab
 	*/
 	public function viewbackup()
 	{
-		global $currentIndex;
-
 		if (!($object = $this->loadObject()))
 			return;
 		if ($object->id)
@@ -131,8 +129,6 @@ class AdminBackup extends AdminTab
 
 	public function displayHowTo($showForm = true)
 	{
-		global $currentIndex;
-
 		echo '
 		<div class="error width1" style="float: left; margin-right: 10px;">
 			<p>'.$this->l('Disclaimer before creating a new Backup').'</p>
@@ -176,8 +172,6 @@ class AdminBackup extends AdminTab
 	
 	public function displayList()
 	{
-		global $currentIndex;
-
 		// Test if the backup dir is writable
 		if(!is_writable(PS_ADMIN_DIR.'/backups/'))
 			$this->displayWarning($this->l('"Backups" Directory in admin directory must be writeable (CHMOD 755 / 777)'));
@@ -190,7 +184,7 @@ class AdminBackup extends AdminTab
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
 	{
-		global $cookie;
+		$context = Context::getContext();
 		
 		if (!Validate::isTableOrIdentifier($this->table))
 			die('filter is corrupted');
@@ -223,9 +217,9 @@ class AdminBackup extends AdminTab
 				$orderWay = 'desc';
 		}
 		if (empty($limit))
-			$limit = ((!isset($cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $cookie->{$this->table.'_pagination'});
+			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $context->cookie->{$this->table.'_pagination'});
 		$limit = (int)(Tools::getValue('pagination', $limit));
-		$cookie->{$this->table.'_pagination'} = $limit;
+		$context->cookie->{$this->table.'_pagination'} = $limit;
 
 		/* Determine offset from current page */
 		if (!empty($_POST['submitFilter'.$this->table]) AND	is_numeric($_POST['submitFilter'.$this->table]))

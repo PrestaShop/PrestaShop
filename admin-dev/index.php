@@ -42,7 +42,7 @@ if (empty($tab) and !sizeof($_POST))
 	{
     	$isoUser = Language::getIsoById(intval($cookie->id_lang));
 		$tabs = array();
-		recursiveTab($adminObj->id);
+		$tabs = recursiveTab($adminObj->id, $tabs);
 		$tabs = array_reverse($tabs);
 		$bread = '';
 
@@ -116,7 +116,7 @@ if (empty($tab) and !sizeof($_POST))
 						}
 						elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 OR strncmp($key, $adminObj->table.'Orderway', 12) === 0)
 							$cookie->$key = $value;
-
+				$adminObj->smarty = $smarty;
 				$adminObj->displayConf();
 				$adminObj->postProcess();
 				$adminObj->displayErrors();

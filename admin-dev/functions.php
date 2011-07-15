@@ -52,9 +52,8 @@ function bindDatepicker($id, $time)
 // id can be a identifier or an array of identifiers
 function includeDatepicker($id, $time = false)
 {
-	global $cookie;
 	echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>';
-	$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)($cookie->id_lang));
+	$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
 	if ($iso != 'en')
 		echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/datepicker/ui/i18n/ui.datepicker-'.$iso.'.js"></script>';
 	echo '<script type="text/javascript">';
@@ -132,8 +131,7 @@ function	displayDate($sqlDate, $withTime = false)
   */
 function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryType = 'catalog', $home = false)
 {
-	global $cookie;
-	
+	$context = Context::getContext();
 	if ($categoryType == 'catalog')
 	{			
 		$category = Db::getInstance()->getRow('
@@ -146,7 +144,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			SELECT c.id_category, cl.name, cl.link_rewrite
 			FROM '._DB_PREFIX_.'category c
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$cookie->id_lang.($home ? ' AND c.id_category='.$id_category : '').'
+			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$context->language->id.($home ? ' AND c.id_category='.$id_category : '').'
 			GROUP BY c.id_category
 			ORDER BY c.level_depth ASC
 			LIMIT '.(!$home ? (int)($category['level_depth'] + 1) : 1));
@@ -155,9 +153,9 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			$nCategories = (int)sizeof($categories);
 			foreach ($categories AS $category)
 			{
-				$edit = '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'addcategory').'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.(($category['id_category'] == 1  || $home) ? 'home' : 'edit').'.gif" alt="" /></a> ';
+				$edit = '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'addcategory').'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.(($category['id_category'] == 1  || $home) ? 'home' : 'edit').'.gif" alt="" /></a> ';
 				$fullPath .= $edit.
-				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 				(!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
 				($n < $nCategories ? '</a>' : '').
 				(($n++ != $nCategories OR !empty($path)) ? ' > ' : '');
@@ -168,17 +166,17 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 	}
 	elseif ($categoryType == 'cms')
 	{
-		$category = new CMSCategory($id_category, (int)($cookie->id_lang));
+		$category = new CMSCategory($id_category, $context->language->id);
 		if (!$category->id)
 			return $path;
 
 		$name = ($highlight != NULL) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
-		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
+		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)$context->employee->id).'">
 				<img src="../img/admin/edit.gif" alt="Modify" /></a> ';
 		if ($category->id == 1)
-			$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
+			$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)$context->employee->id).'">
 					<img src="../img/admin/home.gif" alt="Home" /></a> ';
-		$path = $edit.'<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
+		$path = $edit.'<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)$context->employee->id).'">
 		'.$name.'</a> > '.$path;
 		if ($category->id == 1)
 			return substr($path, 0, strlen($path) - 3);
@@ -225,14 +223,13 @@ function translate($string)
 	return str_replace('"', '&quot;', stripslashes($str));
 }
 
-function recursiveTab($id_tab)
+function recursiveTab($id_tab, $tabs)
 {
-	global $cookie, $tabs;
-	
-	$adminTab = Tab::getTab((int)$cookie->id_lang, $id_tab);
+	$adminTab = Tab::getTab((int)Context::getContext()->language->id, $id_tab);
 	$tabs[]= $adminTab;
 	if ($adminTab['id_parent'] > 0)
-		recursiveTab($adminTab['id_parent']);
+		$tabs = recursiveTab($adminTab['id_parent'], $tabs);
+	return $tabs;
 }
 
 /**
@@ -243,8 +240,6 @@ function recursiveTab($id_tab)
  */
 function checkingTab($tab)
 {
-	global $cookie;
-
 	$tab = trim($tab);
 	if (!Validate::isTabName($tab))
 		return false;
@@ -268,7 +263,7 @@ function checkingTab($tab)
 		return false;
 	}
 	$adminObj = new $tab;
-	if (!$adminObj->viewAccess() AND ($adminObj->table != 'employee' OR $cookie->id_employee != Tools::getValue('id_employee') OR !Tools::isSubmit('updateemployee')))
+	if (!$adminObj->viewAccess() AND ($adminObj->table != 'employee' OR Context::getContext()->employee->id != Tools::getValue('id_employee') OR !Tools::isSubmit('updateemployee')))
 	{
 		$adminObj->_errors = array(Tools::displayError('Access denied'));
 		echo $adminObj->displayErrors();
@@ -279,11 +274,10 @@ function checkingTab($tab)
 
 function checkTabRights($id_tab)
 {
-	global $cookie;
 	static $tabAccesses = NULL;
 	
 	if ($tabAccesses === NULL)
-		$tabAccesses =  Profile::getProfileAccesses($cookie->profile);
+		$tabAccesses =  Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
 
 	if (isset($tabAccesses[(int)($id_tab)]['view']))
 		return ($tabAccesses[(int)($id_tab)]['view'] === '1');

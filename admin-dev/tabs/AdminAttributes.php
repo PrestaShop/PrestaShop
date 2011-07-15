@@ -43,12 +43,9 @@ class AdminAttributes extends AdminTab
 
 	/**
 	 * Display form
-	 *
-	 * @global string $currentIndex Current URL in order to keep current Tab
 	 */
 	public function displayForm($token = NULL)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -127,12 +124,9 @@ class AdminAttributes extends AdminTab
 
 	/**
 	 * Manage page processing
-	 *
-	 * @global string $currentIndex Current URL in order to keep current Tab
 	 */
 	public function postProcess($token = NULL)
 	{
-		global $currentIndex;
 		if (Tools::getValue('submitDel'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')
