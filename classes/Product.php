@@ -519,7 +519,7 @@ class ProductCore extends ObjectModel
 					FROM '._DB_PREFIX_.'product_attribute pa'
 					.($minimumQuantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 					' WHERE pa.id_product = '.(int)$id_product
-						.($minimumQuantity > 0 ? ' AND s.quantity >= '.(int)$minimumQuantity : '');
+						.($minimumQuantity > 0 ? ' AND stock.quantity >= '.(int)$minimumQuantity : '');
 			$result = Db::getInstance()->getRow($sql);
 		}
 			
@@ -1290,7 +1290,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function getAttributeCombinaisons($id_lang)
 	{
-		$sql = 'SELECT pa.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name, a.`id_attribute`, pa.`unit_price_impact`, s.quantity
+		$sql = 'SELECT pa.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name, a.`id_attribute`, pa.`unit_price_impact`, stock.quantity
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
@@ -1298,6 +1298,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN '._DB_PREFIX_.'stock s ON pa.id_product = s.id_product AND pa.id_product_attribute = s.id_product_attribute
+				'.Product::sqlStock('pa', 'pa').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				ORDER BY pa.`id_product_attribute`';
 		return Db::getInstance()->ExecuteS($sql);
@@ -1530,12 +1531,12 @@ class ProductCore extends ObjectModel
 			return (int)($result['nb']);
 		}
 
-		$sql = 'SELECT p.*, s.quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
+		$sql = 'SELECT p.*, stock.quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)
 				'.Shop::sqlAsso('product', 'p', $context).'
+				'.Product::sqlStock('p', 0, false, $context).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('pl', $context).')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')

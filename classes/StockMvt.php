@@ -88,7 +88,7 @@ class StockMvtCore extends ObjectModel
 	public static function addMissingMvt($id_employee)
 	{
 		// Search missing stock movement on products without attributes
-		$sql = 'SELECT s.id_stock, (s.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
+		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
 				FROM '._DB_PREFIX_.'product p
 				'.Product::sqlStock('p', null, true).'
 				LEFT JOIN '._DB_PREFIX_.'stock_mvt sm ON s.id_stock = sm.id_stock
@@ -102,9 +102,9 @@ class StockMvtCore extends ObjectModel
 		$products_without_attributes = Db::getInstance()->ExecuteS($sql);
 
 		// Search missing stock movement on products with attributes
-		$sql = 'SELECT s.id_stock, (s.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
+		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
 				FROM '._DB_PREFIX_.'product_attribute pa
-				INNER JOIN '._DB_PREFIX_.'stock s ON s.id_product = pa.id_product AND s.id_product_attribute = pa.id_product_attribute
+				'.Product::sqlStock('pa', 'pa', true).'
 				LEFT JOIN '._DB_PREFIX_.'stock_mvt sm ON s.id_stock = sm.id_stock
 				WHERE s.id_product_attribute > 0
 					AND (

@@ -427,9 +427,9 @@ class BlockLayered extends Module
 		foreach ($subCategories AS $subcategory)
 				$whereC .= ' cp.`id_category` = '.(int)$subcategory['id_category'].' OR ';
 
-		$whereC = rtrim($whereC, 'OR ')'';
+		$whereC = rtrim($whereC, 'OR ');
 		$productsSQL = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`weight`, s.quantity,
+		SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`weight`, stock.quantity,
 		(SELECT GROUP_CONCAT(`id_category`) FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`) as ids_cat,
 			(SELECT GROUP_CONCAT(`id_feature_value`) FROM `'._DB_PREFIX_.'feature_product` fp WHERE fp.`id_product` = p.`id_product`) as ids_feat,
 			(SELECT GROUP_CONCAT(DISTINCT(pac.`id_attribute`)) 
