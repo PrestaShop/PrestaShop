@@ -40,8 +40,7 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	public function postProcess()
 	{
-		global $cookie, $currentIndex;
-		
+		$context = Context::getContext();		
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) OR !Validate::isDate($to = Tools::getValue('datepickerTo')))
@@ -82,17 +81,16 @@ abstract class AdminStatsTab extends AdminPreferences
 		}
 		if (isset($from) AND isset($to) AND !sizeof($this->_errors))
 		{
-			$employee = new Employee($cookie->id_employee);
-			$employee->stats_date_from = $from;
-			$employee->stats_date_to = $to;
-			$employee->update();
+			$context->employee->stats_date_from = $from;
+			$context->employee->stats_date_to = $to;
+			$context->employee->update();
 			Tools::redirectAdmin($_SERVER['REQUEST_URI']);
 		}
 		if (Tools::getValue('submitSettings'))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
 			{
-				$currentIndex .= '&module='.Tools::getValue('module');
+				self::$currentIndex .= '&module='.Tools::getValue('module');
 				$this->_postConfig($this->_fieldsSettings);
 			}
 			else
@@ -104,8 +102,6 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	protected function displayEngines()
 	{
-		global $currentIndex, $cookie;
-		
 		$graphEngine = Configuration::get('PS_STATS_RENDER');
 		$gridEngine = Configuration::get('PS_STATS_GRID_RENDER');
 		$arrayGraphEngines = ModuleGraphEngine::getGraphEngines();
@@ -141,10 +137,10 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	protected function getDate()
 	{
-		global $cookie;
-		$year = isset($cookie->stats_year) ? $cookie->stats_year : date('Y');
-		$month = isset($cookie->stats_month) ? sprintf('%02d', $cookie->stats_month) : '%';
-		$day = isset($cookie->stats_day) ? sprintf('%02d', $cookie->stats_day) : '%';
+		$context = Context::getContext();
+		$year = isset($context->cookie->stats_year) ? $context->cookie->stats_year : date('Y');
+		$month = isset($context->cookie->stats_month) ? sprintf('%02d', $context->cookie->stats_month) : '%';
+		$day = isset($context->cookie->stats_day) ? sprintf('%02d', $context->cookie->stats_day) : '%';
 		return $year.'-'.$month.'-'.$day;
 	}
 	
@@ -161,9 +157,7 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	public static function displayCalendarStatic($translations)
 	{
-		global $cookie;
-		$employee = new Employee($cookie->id_employee);
-
+		$context = Context::getContext();
 		includeDatepicker(array('datepickerFrom', 'datepickerTo'));
 		return '
 		<fieldset style="width: 200px; font-size:13px;"><legend><img src="../img/admin/date.png" /> '.$translations['Calendar'].'</legend>
@@ -175,8 +169,8 @@ abstract class AdminStatsTab extends AdminPreferences
 					<input type="submit" name="submitDateDayPrev" class="button" value="'.$translations['Day'].'-1" style="margin-top:2px">
 					<input type="submit" name="submitDateMonthPrev" class="button" value="'.$translations['Month'].'-1" style="margin-top:2px">
 					<input type="submit" name="submitDateYearPrev" class="button" value="'.$translations['Year'].'-1" style="margin-top:2px">
-					<p>'.(isset($translations['From']) ? $translations['From'] : 'From:').' <input type="text" name="datepickerFrom" id="datepickerFrom" value="'.Tools::getValue('datepickerFrom', $employee->stats_date_from).'"></p>
-					<p>'.(isset($translations['To']) ? $translations['To'] : 'To:').' <input type="text" name="datepickerTo" id="datepickerTo" value="'.Tools::getValue('datepickerTo', $employee->stats_date_to).'"></p>
+					<p>'.(isset($translations['From']) ? $translations['From'] : 'From:').' <input type="text" name="datepickerFrom" id="datepickerFrom" value="'.Tools::getValue('datepickerFrom', $context->employee->stats_date_from).'"></p>
+					<p>'.(isset($translations['To']) ? $translations['To'] : 'To:').' <input type="text" name="datepickerTo" id="datepickerTo" value="'.Tools::getValue('datepickerTo', $context->employee->stats_date_to).'"></p>
 					<input type="submit" name="submitDatePicker" class="button" value="'.(isset($translations['Save']) ? $translations['Save'] : '   Save   ').'" />
 				</form>
 			</div>
@@ -207,7 +201,6 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	public function displayMenu()
 	{
-		global $currentIndex, $cookie;
 		$modules = $this->getModules();
 
 		echo '<fieldset style="width: 200px"><legend><img src="../img/admin/navigation.png" /> '.$this->l('Navigation', 'AdminStatsTab').'</legend>';

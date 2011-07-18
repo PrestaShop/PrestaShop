@@ -24,13 +24,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-global $cookie;
-
 include(dirname(__FILE__).'/blockcart.php');
-
-$cart = new Cart((int)($cookie->id_cart));
-$cart->id_lang = (int)($cookie->id_lang);
-
+$context = Context::getContext();
 $blockCart = new BlockCart();
-echo $blockCart->hookAjaxCall(array('cookie' => $cookie, 'cart' => $cart));
+echo $blockCart->hookAjaxCall(array('cookie' => $context->cookie, 'cart' => $context->cart));

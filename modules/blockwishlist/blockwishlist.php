@@ -108,8 +108,6 @@ class BlockWishList extends Module
 	
 	private function _displayFormView()
 	{
-		global $cookie;
-
 		$customers = Customer::getCustomers();
 		if (!sizeof($customers))
 			return;
@@ -178,7 +176,8 @@ class BlockWishList extends Module
 
 	public function hookRightColumn($params)
 	{
-		global $smarty, $errors;
+		global $errors;
+		$context = Context::getContext();
 
 		require_once(dirname(__FILE__).'/WishList.php');
 		if ($params['cookie']->isLogged())
@@ -197,7 +196,7 @@ class BlockWishList extends Module
 			}
 			else
 				$id_wishlist = $params['cookie']->id_wishlist;
-			$smarty->assign(array(
+			$context->controller->smarty->assign(array(
 				'id_wishlist' => $id_wishlist,
 				'isLogged' => true,
 				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $params['cookie']->id_customer, $params['cookie']->id_lang, null, true)),
@@ -205,7 +204,7 @@ class BlockWishList extends Module
 				'ptoken' => Tools::getToken(false)));
 		}
 		else
-			$smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
+			$context->controller->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
 		return ($this->display(__FILE__, 'blockwishlist.tpl'));
 	}
 
@@ -216,15 +215,13 @@ class BlockWishList extends Module
 
 	public function hookProductActions($params)
 	{
-		global $smarty;
-		
-		$smarty->assign('id_product', (int)(Tools::getValue('id_product')));
+		$context = Context::getContext();
+		$context->controller->smarty->assign('id_product', (int)(Tools::getValue('id_product')));
 		return ($this->display(__FILE__, 'blockwishlist-extra.tpl'));
 	}
 	
 	public function hookCustomerAccount($params)
 	{
-		global $smarty;
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 	
@@ -235,19 +232,19 @@ class BlockWishList extends Module
 	
 	private function _displayProducts($id_wishlist)
 	{
-		global $cookie, $link;
+		$context = Context::getContext();
 		include_once(dirname(__FILE__).'/WishList.php');
 		
-		$wishlist = new WishList((int)($id_wishlist));
-		$products = WishList::getProductByIdCustomer((int)($id_wishlist), (int)($wishlist->id_customer), (int)($cookie->id_lang));
+		$wishlist = new WishList($id_wishlist);
+		$products = WishList::getProductByIdCustomer($id_wishlist, $wishlist->id_customer, $context->language->id);
 		for ($i = 0; $i < sizeof($products); ++$i)
 		{
-			$obj = new Product((int)($products[$i]['id_product']), false, (int)($cookie->id_lang));
+			$obj = new Product((int)($products[$i]['id_product']), false, $context->language->id);
 			if (!Validate::isLoadedObject($obj))
 				continue;
 			else
 			{
-				$images = $obj->getImages((int)($cookie->id_lang));
+				$images = $obj->getImages($context->language->id);
 				foreach ($images AS $k => $image)
 				{
 					if ($image['cover'])
@@ -257,7 +254,7 @@ class BlockWishList extends Module
 					}
 				}
 				if (!isset($products[$i]['cover']))
-					$products[$i]['cover'] = Language::getIsoById((int)($cookie->id_lang)).'-default';
+					$products[$i]['cover'] = $context->language->iso_code.'-default';
 			}
 		}
 		$this->_html .= '

@@ -112,8 +112,6 @@ class BlockAdvertising extends Module
 	 */
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		$errors = '';
 		if (Tools::isSubmit('submitDeleteImgConf'))
 			$this->_deleteCurrentImg();	
@@ -167,7 +165,7 @@ class BlockAdvertising extends Module
 	 */
 	public function getContent()
 	{
-		global $protocol_content;
+		$context = Context::getContext();
 		
 		$this->postProcess();
 		$output = '';
@@ -177,7 +175,7 @@ class BlockAdvertising extends Module
 <a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">';
 		if ($this->adv_img)
 		{
-			$output .= '<img src="'.$protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
+			$output .= '<img src="'.$context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
 			$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
 		}
 		else

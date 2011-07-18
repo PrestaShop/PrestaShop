@@ -65,15 +65,15 @@ class authorizeAIM extends PaymentModule
 
 	public function hookOrderConfirmation($params)
 	{
-		global $smarty; 
+		$context = Context::getContext(); 
 
 		if ($params['objOrder']->module != $this->name) 
 			return;
 
 		if ($params['objOrder']->getCurrentState() != _PS_OS_ERROR_) 
-			$smarty->assign(array('status' => 'ok', 'id_order' => intval($params['objOrder']->id)));
+			$context->controller->smarty->assign(array('status' => 'ok', 'id_order' => intval($params['objOrder']->id)));
 		else
-			$smarty->assign('status', 'failed');
+			$context->controller->smarty->assign('status', 'failed');
 
 		return $this->display(__FILE__, 'hookorderconfirmation.tpl'); 
 	}
@@ -135,7 +135,7 @@ class authorizeAIM extends PaymentModule
 
 	public function hookPayment($params)
 	{
-		global $cookie, $smarty;
+		$context = Context::getContext();
 
 		if (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off' AND Configuration::get('PS_SSL_ENABLED'))
 		{
@@ -156,8 +156,8 @@ class authorizeAIM extends PaymentModule
 			$authorizeAIMParams['x_amount'] = number_format($params['cart']->getOrderTotal(true, 3), 2, '.', '');
 			$authorizeAIMParams['x_address'] = $invoiceAddress->address1.' '.$invoiceAddress->address2;
 			$authorizeAIMParams['x_zip'] = $invoiceAddress->postcode;
-			$authorizeAIMParams['x_first_name'] = $customer->firstname;
-			$authorizeAIMParams['x_last_name'] = $customer->lastname;
+			$authorizeAIMParams['x_first_name'] = $context->customer->firstname;
+			$authorizeAIMParams['x_last_name'] = $context->customer->lastname;
 			
 			$isFailed = Tools::getValue('aimerror');
 
@@ -167,9 +167,9 @@ class authorizeAIM extends PaymentModule
 			$cards['discover'] = Configuration::get('AUTHORIZE_AIM_CARD_DISCOVER') == 'on' ? 1 : 0;
 			$cards['ax'] = Configuration::get('AUTHORIZE_AIM_CARD_AX') == 'on' ? 1 : 0;
 
-			$smarty->assign('p', $authorizeAIMParams);
-			$smarty->assign('cards', $cards);
-			$smarty->assign('isFailed', $isFailed);
+			$context->controller->smarty->assign('p', $authorizeAIMParams);
+			$context->controller->smarty->assign('cards', $cards);
+			$context->controller->smarty->assign('isFailed', $isFailed);
 
 			return $this->display(__FILE__, 'authorizeaim.tpl');
 		}

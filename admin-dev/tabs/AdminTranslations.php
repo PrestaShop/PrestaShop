@@ -110,8 +110,6 @@ class AdminTranslations extends AdminTab
 
 	protected function writeTranslationFile($type, $path, $mark = false, $fullmark = false)
 	{
-		global $currentIndex;
-
 		if ($fd = fopen($path, 'w'))
 		{
 			unset($_POST['submitTranslations'.$type], $_POST['lang']);
@@ -135,8 +133,6 @@ class AdminTranslations extends AdminTab
 
 	public function submitCopyLang()
 	{
-		global $currentIndex;
-
 		if (!($fromLang = strval(Tools::getValue('fromLang'))) OR !($toLang = strval(Tools::getValue('toLang'))))
 			$this->_errors[] = $this->l('you must select 2 languages in order to copy data from one to another');
 		elseif (!($fromTheme = strval(Tools::getValue('fromTheme'))) OR !($toTheme = strval(Tools::getValue('toTheme'))))
@@ -191,8 +187,6 @@ class AdminTranslations extends AdminTab
 	}
 	public function submitExportLang()
 	{
-		global $currentIndex;
-
 		$lang = strtolower(Tools::getValue('iso_code'));
 		$theme = strval(Tools::getValue('theme'));
 		if ($lang AND $theme)
@@ -229,8 +223,6 @@ class AdminTranslations extends AdminTab
 	}
 	public function submitImportLang()
 	{
-		global $currentIndex;
-
 		if (!isset($_FILES['file']['tmp_name']) OR !$_FILES['file']['tmp_name'])
 			$this->_errors[] = Tools::displayError('No file selected');
 		else
@@ -254,8 +246,6 @@ class AdminTranslations extends AdminTab
 	
 	public function submitAddLang()
 	{
-		global $currentIndex;
-
 		$arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
@@ -428,8 +418,6 @@ class AdminTranslations extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (Tools::isSubmit('submitCopyLang'))
 		{
 		 	if ($this->tabAccess['add'] === '1')
@@ -582,7 +570,6 @@ class AdminTranslations extends AdminTab
 	 */
 	protected function submitTranslationsMails ($id_lang)
 	{
-		global $currentIndex;
 		$obj_lang = new Language($id_lang);
 		$params_redirect = (Tools::isSubmit('submitTranslationsMailsAndStay') ? '&lang='.Tools::getValue('lang').'&type='.Tools::getValue('type') : '');
 		
@@ -684,8 +671,7 @@ class AdminTranslations extends AdminTab
 	}
 	public function display()
 	{
-		global $currentIndex, $cookie;
-
+		$context = Context::getContext();
 		$translations = array(
 			'front' => $this->l('Front Office translations'),
 			'back' => $this->l('Back Office translations'),
@@ -794,7 +780,7 @@ class AdminTranslations extends AdminTab
 				<fieldset class="width3"><legend><img src="../img/admin/copy_files.gif" />'.$this->l('Copy').'</legend>
 					<p>'.$this->l('Copies data from one language to another.').'<br />'.
 					$this->l('Be careful, as it will replace all existing data for the destination language!').'<br />'.
-					$this->l('If necessary').', <b><a href="index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)($cookie->id_employee)).'">'.$this->l('first create a new language').'</a></b>.</p>
+					$this->l('If necessary').', <b><a href="index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$context->employee->id).'">'.$this->l('first create a new language').'</a></b>.</p>
 					<div style="float:left;">
 						<p>
 							<div style="width:75px; font-weight:bold; float:left;">'.$this->l('From:').'</div>
@@ -951,7 +937,6 @@ class AdminTranslations extends AdminTab
 
 	public function displayFormFront($lang)
 	{
-		global $currentIndex;
 		$_LANG = $this->fileExists(_PS_THEME_DIR_.'lang', Tools::strtolower($lang).'.php', '_LANG');
 		$str_output = '';
 		
@@ -1034,7 +1019,6 @@ class AdminTranslations extends AdminTab
 
 	public function displayFormBack($lang)
 	{
-		global $currentIndex;
 		$_LANGADM = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'admin.php', '_LANGADM');
 		$str_output = '';
 		/* List templates to parse */
@@ -1108,7 +1092,6 @@ class AdminTranslations extends AdminTab
 
 	public function displayFormErrors($lang)
 	{
-		global $currentIndex;
 		$_ERRORS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'errors.php', '_ERRORS');
 		
 		$str_output = '';
@@ -1167,7 +1150,6 @@ class AdminTranslations extends AdminTab
 
 	public function displayFormFields($lang)
 	{
-		global $currentIndex;
 		$_FIELDS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'fields.php', '_FIELDS');
 
 		$str_output = '';
@@ -1487,8 +1469,6 @@ class AdminTranslations extends AdminTab
 	}
 	public function displayFormMails($lang, $noDisplay = false)
 	{
-		global $cookie, $currentIndex;
-		
 		$core_mails = array();
 		$module_mails = array();
 		$theme_mails = array();
@@ -1662,8 +1642,6 @@ class AdminTranslations extends AdminTab
 
 	protected function writeSubjectTranslationFile($sub, $path, $mark = false, $fullmark = false)
 	{
-		global $currentIndex;
-
 		if ($fd = @fopen($path, 'w'))
 		{
 			//$tab = ($fullmark ? Tools::strtoupper($fullmark) : 'LANG').($mark ? Tools::strtoupper($mark) : '');
@@ -1746,7 +1724,7 @@ class AdminTranslations extends AdminTab
 	}
 	public function displayFormModules($lang)
 	{
-		global $currentIndex, $_MODULES;
+		global $_MODULES;
 		
 		$array_lang_src = Language::getLanguages(false);
 		$str_output = '';
@@ -1837,8 +1815,6 @@ class AdminTranslations extends AdminTab
 
 	public function displayFormPDF()
 	{
-		global $currentIndex;
-
 		$lang = Tools::strtolower(Tools::getValue('lang'));
 		$_LANG = array();
 		$str_output = '';

@@ -46,8 +46,6 @@ class AdminShipping extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		/* Handling settings */
 		if (isset($_POST['submitHandling'.$this->table]))
 		{
@@ -138,8 +136,6 @@ class AdminShipping extends AdminTab
 
 	public function displayFormHandling()
 	{
-		global $currentIndex;
-
 		$confKeys = $this->_fieldsHandling;
 		foreach ($confKeys AS $key => $confKey)
 			$getConf[] = $key;
@@ -195,8 +191,6 @@ class AdminShipping extends AdminTab
 
 	public function displayFormFees()
 	{
-		global $currentIndex;
-
 		$carrierArray = array();
 		$id_carrier = Tools::getValue('id_carrier');
 		$carriers = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);

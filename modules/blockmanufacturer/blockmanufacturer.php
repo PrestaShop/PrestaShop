@@ -54,11 +54,11 @@ class BlockManufacturer extends Module
    
     function hookLeftColumn($params)
     {
-		global $smarty, $link;
+		$context = Context::getContext();
 		//$getNbProducts = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $id_shop = false
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'manufacturers' => Manufacturer::getManufacturers(false, 0, true, false, false, false, $this->shopGroupID),
-			'link' => $link,
+			'link' => $context->link,
 			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
 			'text_list_nb' => Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'),
 			'form_list' => Configuration::get('MANUFACTURER_DISPLAY_FORM'),

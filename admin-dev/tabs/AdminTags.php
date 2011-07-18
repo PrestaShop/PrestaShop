@@ -29,8 +29,6 @@ class AdminTags extends AdminTab
 {
 	public function  __construct()
 	{
-		global $cookie;
-		
 		$this->table = 'tag';
 		$this->className = 'Tag';
 		$this->edit = true;
@@ -61,7 +59,6 @@ class AdminTags extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))

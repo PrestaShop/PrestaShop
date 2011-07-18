@@ -155,14 +155,14 @@ class Cheque extends PaymentModule
 		if (!$this->_checkCurrency($cart))
 			Tools::redirect('index.php?controller=order');
 
-		global $cookie, $smarty;
+		$context = Context::getContext();
 		
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'nbProducts' => $cart->nbProducts(),
 			'cust_currency' => $cart->id_currency,
 			'currencies' => $this->getCurrency((int)$cart->id_currency),
 			'total' => $cart->getOrderTotal(true, Cart::BOTH),
-			'isoCode' => Language::getIsoById((int)($cookie->id_lang)),
+			'isoCode' => $context->language->iso_code,
 			'chequeName' => $this->chequeName,
 			'chequeAddress' => nl2br2($this->address),
 			'this_path' => $this->_path,
@@ -179,9 +179,8 @@ class Cheque extends PaymentModule
 		if (!$this->_checkCurrency($params['cart']))
 			return ;
 
-		global $smarty;
-
-		$smarty->assign(array(
+		$context = Context::getContext();
+		$context->controller->smarty->assign(array(
 			'this_path' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
@@ -193,10 +192,10 @@ class Cheque extends PaymentModule
 		if (!$this->active)
 			return ;
 
-		global $smarty;
+		$context = Context::getContext();
 		$state = $params['objOrder']->getCurrentState();
 		if ($state == _PS_OS_CHEQUE_ OR $state == _PS_OS_OUTOFSTOCK_)
-			$smarty->assign(array(
+			$context->controller->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'chequeName' => $this->chequeName,
 				'chequeAddress' => nl2br2($this->address),
@@ -204,7 +203,7 @@ class Cheque extends PaymentModule
 				'id_order' => $params['objOrder']->id
 			));
 		else
-			$smarty->assign('status', 'failed');
+			$context->controller->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 	
@@ -212,7 +211,6 @@ class Cheque extends PaymentModule
 	{
 		$currency_order = new Currency((int)($cart->id_currency));
 		$currencies_module = $this->getCurrency((int)$cart->id_currency);
-		$currency_default = Configuration::get('PS_CURRENCY_DEFAULT');
 
 		if (is_array($currencies_module))
 			foreach ($currencies_module AS $currency_module)

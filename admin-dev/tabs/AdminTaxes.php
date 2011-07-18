@@ -29,7 +29,6 @@ class AdminTaxes extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
 	 	$this->table = 'tax';
 	 	$this->className = 'Tax';
 	 	$this->lang = true;
@@ -59,13 +58,13 @@ class AdminTaxes extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$zones = Zone::getZones(true);
-		$states = State::getStates((int)$cookie->id_lang);
+		$states = State::getStates($context->language->id);
 
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
@@ -104,8 +103,6 @@ class AdminTaxes extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if(Tools::getValue('submitAdd'.$this->table))
 		{
 		 	/* Checking fields validity */
@@ -164,8 +161,6 @@ class AdminTaxes extends AdminTab
 
 	protected function _displayDeleteLink($token = NULL, $id)
 	{
-	    global $currentIndex;
-
 		$_cacheLang['Delete'] = $this->l('Delete', __CLASS__, TRUE, FALSE);
 
    		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, TRUE, FALSE).$id.' ?)';
@@ -179,8 +174,6 @@ class AdminTaxes extends AdminTab
 
 	protected function _displayEnableLink($token, $id, $value, $active,  $id_category = NULL, $id_product = NULL)
 	{
-	    global $currentIndex;
-
         $confirm = ($value AND TaxRule::isTaxInUse($id)) ? 'onclick="return confirm(\''. $this->l('This tax is currently in use in a tax rule. If you continue this tax will be removed from the tax rule, are you sure?').'\')"' : '';
 
 	    echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.

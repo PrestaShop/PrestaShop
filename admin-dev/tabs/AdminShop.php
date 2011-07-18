@@ -30,7 +30,7 @@ class AdminShop extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
+		$context = Context::getContext();
 
 	 	$this->table = 'shop';
 	 	$this->className = 'Shop';
@@ -40,7 +40,7 @@ class AdminShop extends AdminTab
 		
 	 	$this->_select = 'gs.name group_shop_name, cl.name category_name';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'group_shop` gs ON (a.id_group_shop = gs.id_group_shop)
-	 						 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$cookie->id_lang.')';
+	 						 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$context->language->id.')';
 	 	$this->_group = 'GROUP BY id_shop';
 
 		$this->fieldsDisplay = array(
@@ -80,7 +80,7 @@ class AdminShop extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm($isMainTab);
 		
 		if (!($obj = $this->loadObject(true)))
@@ -111,7 +111,7 @@ class AdminShop extends AdminTab
 		echo '<label for="id_category">'.$this->l('Category root').'</label>
 					<div class="margin-form">
 						<select id="id_category" name="id_category">';
-		$categories = Category::getCategories((int)$cookie->id_lang, false);
+		$categories = Category::getCategories($context->language->id, false);
 		Category::recurseCategory($categories, $categories[0][1], 1, $obj->id_category);
 
 		echo '		

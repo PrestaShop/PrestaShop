@@ -86,7 +86,6 @@ class AdminShopUrl extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm($isMainTab = true);
 		
 		if (!($obj = $this->loadObject(true)))

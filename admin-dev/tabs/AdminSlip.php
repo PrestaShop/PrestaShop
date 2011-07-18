@@ -66,10 +66,9 @@ class AdminSlip extends AdminTab
 
 	public function display()
 	{
-		global $cookie, $currentIndex;		
-
+		$context = Context::getContext();
 		echo '<div style="float:left;width:600px">';
-		$this->getList((int)($cookie->id_lang), !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
+		$this->getList($context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
 		$this->displayList();
 		echo '</div>';
 		
@@ -95,7 +94,6 @@ class AdminSlip extends AdminTab
 	
 	public function displayListContent($token = NULL)
 	{
-		global $currentIndex, $cookie;
 		$irow = 0;
 		if ($this->_list)
 			foreach ($this->_list AS $tr)

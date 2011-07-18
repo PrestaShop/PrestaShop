@@ -57,12 +57,12 @@ class BlockLanguages extends Module
 	*/
 	function hookTop($params)
 	{
-		global $smarty;
+		$context = Context::getContext();
 
 		$languages = Language::getLanguages(true, $this->shopID);
 		if (!sizeof($languages))
 			return '';
-		$smarty->assign('languages', $languages);
+		$context->controller->smarty->assign('languages', $languages);
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
 	

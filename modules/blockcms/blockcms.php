@@ -115,14 +115,14 @@ class BlockCms extends Module
 	
 	private function getBlocksCMS($location)
 	{
-		global $cookie;
+		$context = Context::getContext();
 		
 		return Db::getInstance()->ExecuteS('
 		SELECT bc.`id_cms_block`, bcl.`name` block_name, ccl.`name` category_name, bc.`position`, bc.`id_cms_category`, bc.`display_store`
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 		INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-		WHERE ccl.`id_lang` = '.(int)$cookie->id_lang.' AND bc.`location` = '.(int)$location.' AND bcl.`id_lang` = '.(int)$cookie->id_lang.'
+		WHERE ccl.`id_lang` = '.(int)$context->language->id.' AND bc.`location` = '.(int)$location.' AND bcl.`id_lang` = '.(int)$context->language->id.'
 		ORDER BY bc.`position`');
 	}
 	
@@ -299,8 +299,7 @@ class BlockCms extends Module
 
 	private function _displayForm()
 	{
-		global $currentIndex, $cookie;
-		
+		$context = Context::getContext();		
 		$cms_blocks_left = $this->getBlocksCMS(0);
 		$cms_blocks_right = $this->getBlocksCMS(1);
 
@@ -311,7 +310,7 @@ class BlockCms extends Module
 		<fieldset>
 			<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('CMS block configuration').'</legend>
 
-			<p><a href="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMS"><img src="'._PS_ADMIN_IMG_.'add.gif" alt="" /> '.$this->l('Add a new CMS block').'</a></p>';
+			<p><a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMS"><img src="'._PS_ADMIN_IMG_.'add.gif" alt="" /> '.$this->l('Add a new CMS block').'</a></p>';
 			
 		$this->_html .= '<div style="width:440px; float:left; margin-right:10px;" ><h3>'.$this->l('List of Left CMS blocks').'</h3>';
 		if (sizeof($cms_blocks_left))
@@ -337,14 +336,14 @@ class BlockCms extends Module
 						<td width="30%" class="center">'.(empty($cms_block['block_name']) ? $cms_block['category_name'] : $cms_block['block_name']).'</td>
 						<td width="30%" class="center">'.$cms_block['category_name'].'</td>
 						<td class="center pointer dragHandle">
-							<a'.(($cms_block['position'] == (sizeof($cms_blocks_left) - 1) OR sizeof($cms_blocks_left) == 1) ? ' style="display: none;"' : '').' href="'.$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.(($cms_block['position'] == (sizeof($cms_blocks_left) - 1) OR sizeof($cms_blocks_left) == 1) ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/down.gif" alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>
-							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/up.gif" alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>
 						</td>
 						<td width="10%" class="center">
-							<a href="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
-							<a href="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
+							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
+							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 						</td>
 					</tr>';
 			}
@@ -380,14 +379,14 @@ class BlockCms extends Module
 						<td width="30%" class="center">'.(empty($cms_block['block_name']) ? $cms_block['category_name'] : $cms_block['block_name']).'</td>
 						<td width="30%" class="center">'.$cms_block['category_name'].'</td>
 						<td class="center pointer dragHandle">
-							<a'.(($cms_block['position'] == (sizeof($cms_blocks_right) - 1) OR sizeof($cms_blocks_right) == 1) ? ' style="display: none;"' : '').' href="'.$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.(($cms_block['position'] == (sizeof($cms_blocks_right) - 1) OR sizeof($cms_blocks_right) == 1) ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/down.gif" alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>
-							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/up.gif" alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>
 						</td>
 						<td width="10%" class="center">
-							<a href="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
-							<a href="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
+							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
+							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 						</td>
 					</tr>';
 			}
@@ -410,7 +409,7 @@ class BlockCms extends Module
 					<th width="3%">'.$this->l('ID').'</th>
 					<th width="94%">'.$this->l('Name').'</th>
 				</tr>';
-			$this->displayRecurseCheckboxes(CMSCategory::getRecurseCategory($cookie->id_lang), explode('|', Configuration::get('FOOTER_CMS')));
+			$this->displayRecurseCheckboxes(CMSCategory::getRecurseCategory($context->language->id), explode('|', Configuration::get('FOOTER_CMS')));
 		$this->_html .= '
 			</table>
 			<p class="center"><input type="submit" class="button" name="submitFooterCMS" value="'.$this->l('Save').'" /></p>
@@ -420,8 +419,7 @@ class BlockCms extends Module
 
 	private function _displayAddForm()
 	{
-		global $currentIndex, $cookie;
-
+		$context = Context::getContext();
 		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$divLangName = 'name';
@@ -460,7 +458,7 @@ class BlockCms extends Module
 			<label for="id_category">'.$this->l('Choose a CMS category:').'</label>
 			<div class="margin-form">
 				<select name="id_category" id="id_category" onchange="CMSCategory_js($(this).val(), \''.$this->secure_key.'\')">';
-		$categories = CMSCategory::getCategories((int)($cookie->id_lang), false);
+		$categories = CMSCategory::getCategories($context->language->id, false);
 		$this->_html .= CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, ($cmsBlock != NULL ? $cmsBlock[0]['id_cms_category'] : 1), 1);
 		$this->_html .= '
 				</select>
@@ -487,7 +485,7 @@ class BlockCms extends Module
 		$this->_html .=	'<div id="cms_subcategories"></div>
 			<p class="center">
 				<input type="submit" class="button" name="submitBlockCMS" value="'.$this->l('Save').'" />
-				<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
+				<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
 			</p>';
 		
 		$this->_html .= '
@@ -568,13 +566,11 @@ class BlockCms extends Module
 				SET `position` = '.((int)Tools::getValue('position')).'
 				WHERE `id_cms_block` = '.(int)Tools::getValue('id_cms_block'));
 		}
-		Tools::redirectAdmin($currentIndex.'index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+		Tools::redirectAdmin(AdminTab::$currentIndex.'index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 	}
 	
 	private function _postProcess()
 	{
-		global $currentIndex;
-	
 		if (Tools::isSubmit('submitBlockCMS'))
 		{
 			$position = Db::getInstance()->getValue('
@@ -641,9 +637,9 @@ class BlockCms extends Module
 					VALUES('.(int)$id_cms_block.', '.(int)$cms_properties[1].', '.(int)$cms_properties[0].')');
 				}
 			if (Tools::isSubmit('addBlockCMS'))
-				Tools::redirectAdmin($currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMSConfirmation');
+				Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMSConfirmation');
 			elseif (Tools::isSubmit('editBlockCMS'))
-				Tools::redirectAdmin($currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMSConfirmation');
+				Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMSConfirmation');
 		}
 		elseif (Tools::isSubmit('deleteBlockCMS') AND Tools::getValue('id_cms_block'))
 		{
@@ -664,7 +660,7 @@ class BlockCms extends Module
 				DELETE FROM `'._DB_PREFIX_.'cms_block_page` 
 				WHERE `id_cms_block` = '.(int)(Tools::getValue('id_cms_block')));
 				
-				Tools::redirectAdmin($currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMSConfirmation');
+				Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMSConfirmation');
 			}
 			else
 				$this->_html .= $this->displayError($this->l('Error: you are trying to delete a non-existent block cms'));
@@ -705,10 +701,9 @@ class BlockCms extends Module
 	
 	public function hookLeftColumn()
 	{
-		global $smarty;
-	
+		$context = Context::getContext();	
 		$cms_titles = self::getCMStitles(self::LEFT_COLUMN);
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 			'theme_dir' => _PS_THEME_DIR_
@@ -718,10 +713,10 @@ class BlockCms extends Module
 	
 	public function hookRightColumn()
 	{
-		global $smarty;
+		$context = Context::getContext();
 
 		$cms_titles = self::getCMStitles(self::RIGHT_COLUMN);
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 			'theme_dir' => _PS_THEME_DIR_
@@ -731,12 +726,12 @@ class BlockCms extends Module
 	
 	public function hookFooter()
 	{
-		global $smarty;
+		$context = Context::getContext();
 		
 		if (Configuration::get('FOOTER_BLOCK_ACTIVATION'))
 		{
 			$cms_titles = self::getCMStitlesFooter();
-			$smarty->assign(array(
+			$context->controller->smarty->assign(array(
 				'block' => 0,
 				'cmslinks' => $cms_titles,
 				'theme_dir' => _PS_THEME_DIR_,

@@ -96,12 +96,11 @@ class BlockNewProducts extends Module
 
 	public function hookRightColumn($params)
 	{
-		global $smarty;
-	
+		$context = Context::getContext();
 		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
 		if (!$newProducts AND !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
-		$smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
+		$context->controller->smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
 
 		return $this->display(__FILE__, 'blocknewproducts.tpl');
 	}

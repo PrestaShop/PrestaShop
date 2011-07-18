@@ -49,7 +49,7 @@ class BirthdayPresent extends Module
 		
 	public function getContent()
 	{
-		global $cookie, $currentIndex;
+		$context = Context::getContext();
 		
 		if (Tools::isSubmit('submitBirthday'))
 		{
@@ -57,7 +57,7 @@ class BirthdayPresent extends Module
 			Configuration::updateValue('BIRTHDAY_DISCOUNT_TYPE', (int)(Tools::getValue('id_discount_type')));
 			Configuration::updateValue('BIRTHDAY_DISCOUNT_VALUE', (float)(Tools::getValue('discount_value')));
 			Configuration::updateValue('BIRTHDAY_MINIMAL_ORDER', (float)(Tools::getValue('minimal_order')));
-			Tools::redirectAdmin($currentIndex.'&configure=birthdaypresent&token='.Tools::getValue('token').'&conf=4');
+			Tools::redirectAdmin(AdminTab::$currentIndex.'&configure=birthdaypresent&token='.Tools::getValue('token').'&conf=4');
 		}
 		
 		$this->_html = '
@@ -73,7 +73,7 @@ class BirthdayPresent extends Module
 				<label>'.$this->l('Type').'</label>
 				<div class="margin-form">
 					<select name="id_discount_type">';
-		$discountTypes = Discount::getDiscountTypes((int)($cookie->id_lang));
+		$discountTypes = Discount::getDiscountTypes($context->language->id);
 		foreach ($discountTypes AS $discountType)
 			$this->_html .= '<option value="'.(int)($discountType['id_discount_type']).'"'.((Configuration::get('BIRTHDAY_DISCOUNT_TYPE') == $discountType['id_discount_type']) ? ' selected="selected"' : '').'>'.$discountType['name'].'</option>';
 		$this->_html .= '
