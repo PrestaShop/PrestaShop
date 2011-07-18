@@ -29,8 +29,6 @@ class AdminDeliverySlip extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
-
 		$this->table = 'delivery';
 		
 		$this->optionTitle = $this->l('Delivery slips options');
@@ -44,7 +42,6 @@ class AdminDeliverySlip extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 		
 		$output = '
@@ -79,8 +76,6 @@ class AdminDeliverySlip extends AdminTab
 	
 	public function postProcess()
 	{
-		global $currentIndex;
-		
 		if (Tools::getValue('submitPrint'))
 		{
 			if (!Validate::isDate($_POST['date_from']))

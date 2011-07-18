@@ -29,6 +29,7 @@ class AdminMeta extends AdminTab
 {
 	public function __construct()
 	{
+		$context = Context::getContext();
 	 	$this->table = 'meta';
 	 	$this->className = 'Meta';
 		$this->lang = true;
@@ -42,11 +43,10 @@ class AdminMeta extends AdminTab
 			'url_rewrite' => array('title' => $this->l('Friendly URL'), 'width' => 120)
 		);
 		
-		global $cookie;
 		$this->optionTitle = $this->l('URLs Setup');
 		$this->_fieldsOptions = array(
 			'PS_HOMEPAGE_PHP_SELF' => array('title' => $this->l('Homepage file'), 'desc' => $this->l('Usually "index.php", but may be different for a few hosts.'), 'type' => 'string', 'size' => 50),
-			'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$cookie->id_employee).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+			'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 		);
 		if (!Tools::getValue('__PS_BASE_URI__'))
@@ -62,7 +62,6 @@ class AdminMeta extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 		
 		if (!($meta = $this->loadObject(true)))

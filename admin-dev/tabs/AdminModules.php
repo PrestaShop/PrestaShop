@@ -79,9 +79,8 @@ class AdminModules extends AdminTab
 	
 	public function postProcess()
 	{
-		global $currentIndex, $cookie;
-
-		$id_employee = (int)($cookie->id_employee);
+		$context = Context::getContext();
+		$id_employee = (int)$context->employee->id;
 		$filter_conf = Configuration::getMultiple(array(
 												'PS_SHOW_TYPE_MODULES_'.$id_employee,
 												'PS_SHOW_COUNTRY_MODULES_'.$id_employee,
@@ -310,7 +309,7 @@ class AdminModules extends AdminTab
 								$module_errors[] = $name;
 						}
 						if ($key != 'configure' AND isset($_GET['bpay']))
-							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)($cookie->id_employee)));
+							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$context->employee->id));
 					}
 				if (sizeof($module_errors))
 				{
@@ -329,7 +328,6 @@ class AdminModules extends AdminTab
 
 	function extractArchive($file)
 	{
-		global $currentIndex;
 		$success = false;
 		if (substr($file, -4) == '.zip')
 		{
@@ -358,13 +356,11 @@ class AdminModules extends AdminTab
 
 	public function displayJavascript()
 	{
-		global $currentIndex;
-
 		echo '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>
 			<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js"></script>
 
 		<script type="text/javascript">
-			function getPrestaStore(){if (getE("prestastore").style.display!=\'block\')return;$.post("'.dirname($currentIndex).'/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
+			function getPrestaStore(){if (getE("prestastore").style.display!=\'block\')return;$.post("'.dirname(self::$currentIndex).'/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
 			function truncate_author(author)
 			{
 				return ((author.length > '.self::$MAX_DISP_AUTHOR.') ? author.substring(0, '.self::$MAX_DISP_AUTHOR.')+"..." : author);
@@ -466,17 +462,16 @@ class AdminModules extends AdminTab
 
 	public function displayList()
 	{
-		global $currentIndex, $cookie;
-	
+		$context = Context::getContext();	
 		$modulesAuthors = array();	
 		$autocompleteList = 'var moduleList = [';
 		
-		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)($cookie->id_employee));
-		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)($cookie->id_employee));
-		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)($cookie->id_employee));
-		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)($cookie->id_employee));
+		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id);
+		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id);
+		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id);
+		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id);
 
-		$nameCountryDefault = Country::getNameById($cookie->id_lang, Configuration::get('PS_COUNTRY_DEFAULT'));
+		$nameCountryDefault = Country::getNameById($context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
 		$isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 		
 		$serialModules = '';
@@ -877,8 +872,6 @@ class AdminModules extends AdminTab
 	
 	public function displayOptions($module)
 	{
-		global $currentIndex;
-		
 		$return = '';
 		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.
 			urlencode($module->name).'&tab_module='.$module->tab;
@@ -912,14 +905,14 @@ class AdminModules extends AdminTab
 	
 	public function displaySelectedFilter()
 	{
-		global $cookie;
+		$context = Context::getContext();
 		$selected_filter = '';
-		$id_employee = (int)($cookie->id_employee);
+		$id_employee = (int)$context->employee->id;
 		
-		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)($cookie->id_employee));
-		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)($cookie->id_employee));
-		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)($cookie->id_employee));
-		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)($cookie->id_employee));
+		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id);
+		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id);
+		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id);
+		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id);
 		$selected_filter .= ($showTypeModules == 'allModules' ? $this->l('All Modules').' - ' : '').
 							($showTypeModules == 'nativeModules' ? $this->l('Native Modules').' - ' : '').
 							($showTypeModules == 'partnerModules' ? $this->l('Partners Modules').' - ' : '').
@@ -940,22 +933,20 @@ class AdminModules extends AdminTab
 	
 	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
 	{
-		global $cookie;
-		
-		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)($cookie->id_employee), $module_type);
-		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)($cookie->id_employee), $country_module_value);
-		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)($cookie->id_employee), $module_install);
-		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)($cookie->id_employee), $module_status);
+		$context = Context::getContext();		
+		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id, $module_type);
+		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id, $country_module_value);
+		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id, $module_install);
+		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id, $module_status);
 	}
 	
 	private function resetFilterModules()
 	{
-		global $cookie;
-		
-		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)($cookie->id_employee), 'allModules');
-		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)($cookie->id_employee), 0);
-		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)($cookie->id_employee), 'installedUninstalled');
-		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)($cookie->id_employee), 'enabledDisabled');
+		$context = Context::getContext();		
+		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id, 'allModules');
+		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id, 0);
+		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id, 'installedUninstalled');
+		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id, 'enabledDisabled');
 	}
 	
 }

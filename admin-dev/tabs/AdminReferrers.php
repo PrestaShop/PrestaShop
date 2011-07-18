@@ -91,9 +91,8 @@ class AdminReferrers extends AdminTab
 	
 	public function displayJavascript()
 	{
-		global $cookie, $currentIndex;
-		
-		$products = Product::getSimpleProducts((int)($cookie->id_lang));
+		$context = Context::getContext();
+		$products = Product::getSimpleProducts($context->language->id);
 		$productsArray = array();
 		foreach ($products as $product)
 			$productsArray[] = $product['id_product'];
@@ -132,7 +131,7 @@ class AdminReferrers extends AdminTab
 					{
 						referrerStatus[id_referrer] = true;
 						for (var i = 0; i < productIds.length; ++i)
-							$.getJSON("'.dirname($currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)($cookie->id_employee).',token:"'.Tools::getValue('token').'",id_referrer:id_referrer,id_product:productIds[i]},
+							$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)$context->employee->id.',token:"'.Tools::getValue('token').'",id_referrer:id_referrer,id_product:productIds[i]},
 								function(result) {
 									var newLine = newProductLine(id_referrer, result[0]);
 									$(newLine).hide().insertAfter(getE(\'trid_\'+id_referrer)).fadeIn();
@@ -151,8 +150,6 @@ class AdminReferrers extends AdminTab
 	
 	public function display()
 	{
-		global $currentIndex;
-		
 		if (!Tools::isSubmit('viewreferrer'))
 			echo $this->displayJavascript();
 		
@@ -202,8 +199,6 @@ class AdminReferrers extends AdminTab
 	
 	public function postProcess()
 	{
-		global $currentIndex;
-		
 		if ($this->enableCalendar())
 		{
 			$calendarTab = new AdminStats();
@@ -225,7 +220,6 @@ class AdminReferrers extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
@@ -380,7 +374,7 @@ class AdminReferrers extends AdminTab
 	
 	public function viewreferrer()
 	{
-		global $cookie, $currentIndex;
+		$context = Context::getContext();
 		$referrer = new Referrer((int)(Tools::getValue('id_referrer')));
 
 		$displayTab = array(
@@ -400,7 +394,7 @@ class AdminReferrers extends AdminTab
 		<script type="text/javascript">
 			function updateConversionRate(id_product)
 			{
-				$.getJSON("'.dirname($currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)($cookie->id_employee).',token:"'.Tools::getValue('token').'",id_referrer:'.$referrer->id.',id_product:id_product},
+				$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)$context->employee->id.',token:"'.Tools::getValue('token').'",id_referrer:'.$referrer->id.',id_product:id_product},
 					function(j) {';
 		foreach ($displayTab as $key => $value)
 			echo '$("#'.$key.'").html(j[0].'.$key.');';
@@ -412,8 +406,8 @@ class AdminReferrers extends AdminTab
 			{
 				var form = document.layers ? document.forms.product : document.product;
 				var filter = form.filterProduct.value;
-				$.getJSON("'.dirname($currentIndex).'/ajax.php",
-					{ajaxReferrers:1,ajaxFillProducts:1,id_employee:'.(int)($cookie->id_employee).',token:"'.Tools::getValue('token').'",id_lang:'.(int)($cookie->id_lang).',filter:filter},
+				$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",
+					{ajaxReferrers:1,ajaxFillProducts:1,id_employee:'.(int)$context->employee->id.',token:"'.Tools::getValue('token').'",id_lang:'.(int)$context->language->id.',filter:filter},
 					function(j) {
 						
 						form.selectProduct.length = j.length + 1;
@@ -447,8 +441,6 @@ class AdminReferrers extends AdminTab
 	
 	public function displayListContent($token = NULL)
 	{
-		global $currentIndex;
-
 		$irow = 0;
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		if ($this->_list)

@@ -84,8 +84,6 @@ class AdminPayment extends AdminTab
 	
 	private function saveRestrictions($type)
 	{
-		global $currentIndex;
-
 		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop='.Context::getContext()->shop->getID());
 		foreach ($this->paymentModules as $module)
 			if ($module->active AND isset($_POST[$module->name.'_'.$type.'']))
@@ -98,15 +96,14 @@ class AdminPayment extends AdminTab
 
 	public function display()
 	{
-		global $cookie;
-		
+		$context = Context::getContext();		
 		$displayRestrictions = false;
 		
 		$currencies = Currency::getCurrencies();
-		$countries = Country::getCountries((int)($cookie->id_lang));
-		$groups = Group::getGroups((int)($cookie->id_lang));
+		$countries = Country::getCountries($context->language->id);
+		$groups = Group::getGroups($context->language->id);
 		
-		$tokenModules = Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)($cookie->id_employee));
+		$tokenModules = Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$context->employee->id);
 		echo '<h2 class="space">'.$this->l('Payment modules list').'</h2>';
 		if (isset($this->paymentModules[0]))
 		echo '<input type="button" class="button" onclick="document.location=\'index.php?tab=AdminModules&token='.$tokenModules.'&module_name='.$this->paymentModules[0]->name.'&tab_module=payments_gateways\'" value="'.$this->l('Click to see the list of payment modules.').'" /><br>';
@@ -137,7 +134,6 @@ class AdminPayment extends AdminTab
 	
 	public function displayModuleRestrictions($items, $title, $nameId, $desc, $icon)
 	{
-		global $currentIndex;
 		$irow = 0;
 
 		echo '

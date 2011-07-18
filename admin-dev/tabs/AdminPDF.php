@@ -31,9 +31,6 @@ class AdminPDF extends AdminPreferences
 {
 	public function __construct()
 	{
-		global $cookie;
-
-		$lang = strtoupper(Language::getIsoById($cookie->id_lang));
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -82,8 +79,6 @@ class AdminPDF extends AdminPreferences
 		parent::__construct();
 	}
 
-	
-
 	public function postProcess()
 	{
 		if (isset($_POST['submitPDF'.$this->table]))
@@ -104,11 +99,9 @@ class AdminPDF extends AdminPreferences
 
 	public function display()
 	{
-		global $cookie;
-
-		$language = new Language((int)($cookie->id_lang));
-		if (!Validate::isLoadedObject($language))
+		$context = Context::getContext();
+		if (!Validate::isLoadedObject($context->language))
 			die(Tools::displayError());
-		$this->_displayForm('PDF', $this->_fieldsPDF, $this->l('PDF settings for the current language:').' '.$language->name, 'width2', 'pdf');
+		$this->_displayForm('PDF', $this->_fieldsPDF, $this->l('PDF settings for the current language:').' '.$context->language->name, 'width2', 'pdf');
 	}
 }

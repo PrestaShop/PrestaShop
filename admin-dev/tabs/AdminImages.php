@@ -56,7 +56,6 @@ class AdminImages extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
 		if (Tools::getValue('submitRegenerate'.$this->table))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
@@ -80,7 +79,6 @@ class AdminImages extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
@@ -166,13 +164,9 @@ class AdminImages extends AdminTab
 
 	/**
 	  * Display form for thumbnails regeneration
-	  *
-	  * @global string $currentIndex Current URL in order to keep current Tab
 	  */
 	public function displayRegenerate()
 	{
-	 	global $currentIndex;
-
 		$types = array(
 			'categories' => $this->l('Categories'),
 			'manufacturers' => $this->l('Manufacturers'),
@@ -407,8 +401,6 @@ class AdminImages extends AdminTab
 	 */
 	public function displayMoveImages()
 	{
-	 	global $currentIndex;
-
 		echo '
 		<br /><h2 class="space">'.$this->l('Move images').'</h2>'.
 		$this->l('A new storage system for product images is now used by PrestaShop. It offers better performance if your shop has a very large number of products.').'<br />'.
@@ -433,7 +425,6 @@ class AdminImages extends AdminTab
 	 */
 	private function _moveImagesToNewFileSystem()
 	{
-		global $currentIndex;
 		ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
 		$this->max_execution_time = (int)ini_get('max_execution_time');		
 		$result = Image::moveToNewFileSystem($this->max_execution_time);

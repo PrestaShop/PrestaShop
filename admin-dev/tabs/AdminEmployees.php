@@ -32,8 +32,7 @@ class AdminEmployees extends AdminTab
  
 	public function __construct()
 	{
-	 	global $cookie;
-	 	
+		$context = Context::getContext();
 	 	$this->table = 'employee';
 	 	$this->className = 'Employee';
 	 	$this->lang = false;
@@ -41,9 +40,9 @@ class AdminEmployees extends AdminTab
 	 	$this->delete = true;		
  		$this->_select = 'pl.`name` AS profile';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile` 
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)($cookie->id_lang).')';
+		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$context->language->id.')';
 		
-		$profiles = Profile::getProfiles((int)($cookie->id_lang));
+		$profiles = Profile::getProfiles($context->language->id);
 		if (!$profiles)
 			$this->_errors[] = Tools::displayError('No profile');
 		else
@@ -83,12 +82,12 @@ class AdminEmployees extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
 			return;
-		$profiles = Profile::getProfiles((int)($cookie->id_lang));
+		$profiles = Profile::getProfiles($context->language->id);
 
 		echo '<script type="text/javascript" src="'._PS_JS_DIR_.'/jquery/jquery-colorpicker.js"></script>
 		 	 <script type="text/javascript">
@@ -177,11 +176,10 @@ class AdminEmployees extends AdminTab
 	
 	public function postProcess()
 	{
-		global $cookie;
-		
+		$context = Context::getContext();		
 		if (Tools::isSubmit('deleteemployee') OR Tools::isSubmit('status') OR Tools::isSubmit('statusemployee'))
 		{
-			if ($cookie->id_employee == Tools::getValue('id_employee'))
+			if ($context->employee->id == Tools::getValue('id_employee'))
 			{
 				$this->_errors[] = Tools::displayError('You cannot disable or delete your own account.');
 				return false;

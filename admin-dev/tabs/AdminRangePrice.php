@@ -66,12 +66,11 @@ class AdminRangePrice extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
-
+		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = $context->currency;
 
 		$carrierArray = array();
 		$carriers = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);

@@ -127,8 +127,6 @@ class AdminInformation extends AdminTab
 	
 	public function display()
 	{
-		global $currentIndex;
-		
 		echo '
 		<h2>'.$this->l('Information').'</h2>
 		<fieldset>

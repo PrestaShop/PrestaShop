@@ -29,8 +29,6 @@ class AdminInvoices extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
-
 		$this->table = 'invoice';
 
 		$this->optionTitle = $this->l('Invoice options');
@@ -45,9 +43,8 @@ class AdminInvoices extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
-
-		$statuses = OrderState::getOrderStates($cookie->id_lang);
+		$context = Context::getContext();
+		$statuses = OrderState::getOrderStates($context->language->id);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT COUNT(*) as nbOrders, (
 			SELECT oh.id_order_state
@@ -117,8 +114,6 @@ class AdminInvoices extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (Tools::isSubmit('submitPrint'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
