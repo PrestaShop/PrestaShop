@@ -63,9 +63,10 @@ class BlockStore extends Module
 	
 	function hookRightColumn($params)
 	{
-		global $smarty;
+		$context = Context::getContext();
 		
-		$smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
+		
+		$context->controller->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		return $this->display(__FILE__, 'blockstore.tpl');
 	}
 	

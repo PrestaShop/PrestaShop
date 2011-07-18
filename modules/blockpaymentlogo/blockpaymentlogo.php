@@ -64,8 +64,7 @@ class BlockPaymentLogo extends Module
 
 	public function getContent()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		$html = '
 		<h2>'.$this->l('Payment logo').'</h2>
 		';
@@ -77,7 +76,7 @@ class BlockPaymentLogo extends Module
 				$html .= $this->displayConfirmation($this->l('Settings are updated'));
 			}
 		
-		$cmss = CMS::listCms((int)($cookie->id_lang));
+		$cmss = CMS::listCms($context->language->id);
 		
 		if (!sizeof($cmss))
 			$html .= $this->displayError($this->l('No CMS page is available'));
@@ -113,14 +112,14 @@ class BlockPaymentLogo extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 		
-		global $smarty, $cookie;
+		$context = Context::getContext();
 		
 		if (!Configuration::get('PS_PAYMENT_LOGO_CMS_ID'))
 			return;
-		$cms = new CMS((int)(Configuration::get('PS_PAYMENT_LOGO_CMS_ID')), (int)($cookie->id_lang));
+		$cms = new CMS(Configuration::get('PS_PAYMENT_LOGO_CMS_ID'), $context->language->id);
 		if (!Validate::isLoadedObject($cms))
 			return;
-		$smarty->assign('cms_payement_logo', $cms);
+		$context->controller->smarty->assign('cms_payement_logo', $cms);
 		return $this->display(__FILE__, 'blockpaymentlogo.tpl');
 	}
 	

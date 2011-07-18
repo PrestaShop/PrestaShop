@@ -125,7 +125,7 @@ class AdminScenes extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
@@ -139,7 +139,7 @@ class AdminScenes extends AdminTab
 			echo 'startingData = new Array();'."\n";
 			foreach ($obj->getProducts() as $key => $product)
 			{
-				$productObj = new Product((int)($product['id_product']), true, (int)($cookie->id_lang));
+				$productObj = new Product($product['id_product'], true, $context->language->id);
 				echo 'startingData['.$key.'] = new Array(\''.$productObj->name.'\', '.$product['id_product'].', '.$product['x_axis'].', '.$product['y_axis'].', '.$product['zone_width'].', '.$product['zone_height'].');';
 			}
 			
@@ -235,7 +235,7 @@ class AdminScenes extends AdminTab
 									<th>'.$this->l('ID').'</th>
 									<th>'.$this->l('Image map name:').'</th>
 								</tr>';
-					$categories = Category::getCategories((int)($cookie->id_lang), false);
+					$categories = Category::getCategories($context->language->id, false);
 					$done = array();
 					$index = array();
 					if (Tools::isSubmit('categories'))

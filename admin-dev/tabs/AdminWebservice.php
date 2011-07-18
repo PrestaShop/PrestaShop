@@ -97,7 +97,6 @@ class AdminWebservice extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -227,8 +226,7 @@ echo '
 
 	public function display()
 	{
-	global $currentIndex, $cookie;
-
+		$context = Context::getContext();
 		// Include other tab in current tab
 		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))){}
 
@@ -246,7 +244,7 @@ echo '
 		}
 		elseif (isset($_GET['update'.$this->table]))
 		{
-			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $cookie->id_employee == Tools::getValue('id_employee')))
+			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $context->employee->id == Tools::getValue('id_employee')))
 			{
 				$this->displayForm();
 				if ($this->tabAccess['view'])
@@ -262,7 +260,7 @@ echo '
 		{
 			$this->checkForWarning();
 			
-			$this->getList((int)$cookie->id_lang);
+			$this->getList($context->language->id);
 			$this->displayList();
 			
 			$this->displayRequiredFields();

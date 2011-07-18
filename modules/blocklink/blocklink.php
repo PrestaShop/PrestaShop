@@ -83,14 +83,14 @@ class BlockLink extends Module
 	
 	public function hookLeftColumn($params)
 	{
-	 	global $cookie, $smarty;
+	 	$context = Context::getContext();
 	 	$links = $this->getLinks();
 		
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'blocklink_links' => $links,
-			'title' => Configuration::get('PS_BLOCKLINK_TITLE', $cookie->id_lang),
+			'title' => Configuration::get('PS_BLOCKLINK_TITLE', $context->language->id),
 			'url' => Configuration::get('PS_BLOCKLINK_URL'),
-			'lang' => 'text_'.$cookie->id_lang
+			'lang' => 'text_'.$context->language->id
 		));
 	 	if (!$links)
 			return false;
@@ -255,7 +255,6 @@ class BlockLink extends Module
 	
 	private function _displayForm()
 	{
-	 	global $cookie;
 	 	/* Language */
 	 	$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
@@ -329,15 +328,14 @@ class BlockLink extends Module
 	private function _list()
 	{
 	 	$links = $this->getLinks();
-	 
-	 	global $currentIndex, $cookie, $adminObj;
+	 	$context = Context::getContext();
 	 	$languages = Language::getLanguages();
 	 	if ($links)
 	 	{
 	 		$this->_html .= '
 			<script type="text/javascript">
-				var currentUrl = \''.$currentIndex.'&configure='.$this->name.'\';
-				var token=\''.$adminObj->token.'\';
+				var currentUrl = \''.AdminTab::$currentIndex.'&configure='.$this->name.'\';
+				var token=\''.$context->tab->token.'\';
 				var links = new Array();';
 	 		foreach ($links AS $link)
 	 		{
@@ -371,7 +369,7 @@ class BlockLink extends Module
 				$this->_html .= '
 				<tr>
 					<td>'.$link['id'].'</td>
-					<td>'.$link['text_'.$cookie->id_lang].'</td>
+					<td>'.$link['text_'.$context->language->id].'</td>
 					<td>'.$link['url'].'</td>
 					<td>
 						<img src="../img/admin/edit.gif" alt="" title="" onclick="linkEdition('.$link['id'].')" style="cursor: pointer" />

@@ -60,13 +60,13 @@ class BlockCurrencies extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 	
-		global $smarty;
+		$context = Context::getContext();
 		
 		$id_current_shop = $this->shopID;
 		$currencies = Currency::getCurrencies(false, 1, $id_current_shop);
 		if (!sizeof($currencies))
 			return '';
-		$smarty->assign('currencies', $currencies);
+		$context->controller->smarty->assign('currencies', $currencies);
 		return $this->display(__FILE__, 'blockcurrencies.tpl');
 	}
 	

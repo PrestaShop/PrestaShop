@@ -124,7 +124,7 @@ class BlockCategories extends Module
 
 	public function getTree($resultParents, $resultIds, $maxDepth, $id_category = 1, $currentDepth = 0)
 	{
-		global $link;
+		$context = Context::getContext();
 
 		$children = array();
 		if (isset($resultParents[$id_category]) AND sizeof($resultParents[$id_category]) AND ($maxDepth == 0 OR $currentDepth < $maxDepth))
@@ -132,7 +132,7 @@ class BlockCategories extends Module
 				$children[] = $this->getTree($resultParents, $resultIds, $maxDepth, $subcat['id_category'], $currentDepth + 1);
 		if (!isset($resultIds[$id_category]))
 			return false;
-		$return = array('id' => $id_category, 'link' => $link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
+		$return = array('id' => $id_category, 'link' => $context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
 					 'name' => $resultIds[$id_category]['name'], 'desc'=> $resultIds[$id_category]['description'],
 					 'children' => $children);
 		return $return;

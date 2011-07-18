@@ -160,6 +160,7 @@ class Blocknewsletter extends Module
  	 */
  	private function newsletterRegistration()
  	{
+ 		$context = Context::getContext();
 	 	if (empty($_POST['email']) OR !Validate::isEmail($_POST['email']))
 			return $this->error = $this->l('Invalid e-mail address');
 
@@ -194,11 +195,9 @@ class Blocknewsletter extends Module
 			/* If the user ins't a customer */
 			elseif ($registerStatus == -1)
 			{
-				global $cookie;
-				
 				$sql = 'INSERT INTO '._DB_PREFIX_.'newsletter (id_shop, id_group_shop, email, newsletter_date_add, ip_registration_newsletter, http_referer)
 						VALUES ('.$this->shopID.', '.$this->shopGroupID.', \''.pSQL($_POST['email']).'\', NOW(), \''.pSQL(Tools::getRemoteAddr()).'\', 
-							(SELECT c.http_referer FROM '._DB_PREFIX_.'connections c WHERE c.id_guest = '.(int)($cookie->id_guest).' ORDER BY c.date_add DESC LIMIT 1)
+							(SELECT c.http_referer FROM '._DB_PREFIX_.'connections c WHERE c.id_guest = '.(int)$context->customer->id.' ORDER BY c.date_add DESC LIMIT 1)
 						)';
 				if (!Db::getInstance()->Execute($sql))
 					return $this->error = $this->l('Error during subscription');
@@ -224,10 +223,9 @@ class Blocknewsletter extends Module
 
 	private function sendVoucher($email)
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		if ($discount = Configuration::get('NW_VOUCHER_CODE'))
-			return Mail::Send((int)($cookie->id_lang), 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $discount), $email, NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+			return Mail::Send($context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $discount), $email, NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
 		return false;
 	}
 
@@ -238,14 +236,14 @@ class Blocknewsletter extends Module
  	
  	function hookLeftColumn($params)
  	{
-		global $smarty;
+		$context = Context::getContext();
 
 		if (Tools::isSubmit('submitNewsletter'))
 		{
 			$this->newsletterRegistration();
 			if ($this->error)
 			{
-				$smarty->assign(array('color' => 'red',
+				$context->controller->smarty->assign(array('color' => 'red',
 										'msg' => $this->error,
 										'nw_value' => isset($_POST['email']) ? pSQL($_POST['email']) : false,
 										'nw_error' => true,
@@ -254,27 +252,15 @@ class Blocknewsletter extends Module
 			elseif ($this->valid)
 			{
 				if (Configuration::get('NW_CONFIRMATION_EMAIL') AND isset($_POST['action']) AND (int)($_POST['action']) == 0)
-					Mail::Send((int)($params['cookie']->id_lang), 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($_POST['email']), NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
-				$smarty->assign(array('color' => 'green',
+					Mail::Send($params['cookie']->id_lang, 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($_POST['email']), NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+				$context->controller->smarty->assign(array('color' => 'green',
 										'msg' => $this->valid,
 										'nw_error' => false));
 			}
 		}
-		$smarty->assign('this_path', $this->_path);
+		$context->controller->smarty->assign('this_path', $this->_path);
  	 	return $this->display(__FILE__, 'blocknewsletter.tpl');
  	}
-
-	public function confirmation()
-	{
-		global $smarty;
-
-		return $this->display(__FILE__, 'newsletter.tpl');
-	}
-
-	public function externalNewsletter(/*$params*/)
-	{
-		return $this->hookLeftColumn($params);
-	}
 	
 	function hookHeader($params)
 	{

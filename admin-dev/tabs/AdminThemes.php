@@ -112,8 +112,6 @@ class AdminThemes extends AdminPreferences
 
 	public function display()
 	{
-		global $currentIndex;
-		
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
 		{
 			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.'logo.jpg');
@@ -161,7 +159,6 @@ class AdminThemes extends AdminPreferences
 	*/
 	private function _isThemeCompatible($theme_dir)
 	{
-		global $cookie;
 		$all_errors='';
 		$return=true;
 		$check_version=AdminThemes::$check_features_version;

@@ -67,8 +67,6 @@ class AdminStatuses extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		if (!Tools::isSubmit('updateorder_return_state') AND !Tools::isSubmit('submitAddorder_return_state'))
 		{
 			echo '<h2>'.$this->l('Order statuses').'</h2>';

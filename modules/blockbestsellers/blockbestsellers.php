@@ -99,7 +99,7 @@ class BlockBestSellers extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 
-		global $smarty;
+		$context = Context::getContext();
 		$currency = new Currency((int)($params['cookie']->id_currency));
 		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 5);
 		if (!$bestsellers AND !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
@@ -110,7 +110,7 @@ class BlockBestSellers extends Module
 			$bestseller['price'] = Tools::displayPrice(Product::getPriceStatic((int)($bestseller['id_product'])), $currency);
 			$best_sellers[] = $bestseller;
 		}
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'best_sellers' => $best_sellers,
 			'mediumSize' => Image::getSize('medium')));
 		return $this->display(__FILE__, 'blockbestsellers.tpl');

@@ -52,8 +52,6 @@ class AdminStatsConf extends AdminPreferences
 	
 	public function display()
 	{
-		global $currentIndex, $cookie;
-		
 		$graphEngine = Configuration::get('PS_STATS_RENDER');
 		$gridEngine = Configuration::get('PS_STATS_GRID_RENDER');
 		$autoclean = Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN');

@@ -66,21 +66,20 @@ class CarrierCompare extends Module
 	 */
 	public function hookShoppingCart($params)
 	{
-		global $cookie, $smarty, $currency;
-
-		if ($cookie->id_customer)
+		$context = Context::getContext();
+		if ($context->customer->id)
 			return;
 
-		$smarty->assign(array(
-			'countries' => Country::getCountries((int)$cookie->id_lang),
+		$context->controller->smarty->assign(array(
+			'countries' => Country::getCountries($context->language->id),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
-			'id_country' => (isset($cookie->id_country) ? $cookie->id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
-			'id_state' => (isset($cookie->id_state) ? $cookie->id_state : 0),
-			'zipcode' => (isset($cookie->postcode) ? $cookie->postcode : ''),
-			'currencySign' => $currency->sign,
-			'currencyRate' => $currency->conversion_rate,
-			'currencyFormat' => $currency->format,
-			'currencyBlank' => $currency->blank
+			'id_country' => (isset($context->customer->geoloc_id_country) ? $context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
+			'id_state' => (isset($context->customer->geoloc_id_state) ? $context->customer->geoloc_id_state : 0),
+			'zipcode' => (isset($context->customer->geoloc_postcode) ? $context->customer->geoloc_postcode : ''),
+			'currencySign' => $context->currency->sign,
+			'currencyRate' => $context->currency->conversion_rate,
+			'currencyFormat' => $context->currency->format,
+			'currencyBlank' => $context->currency->blank
 		));
 
 		return $this->display(__FILE__, 'carriercompare.tpl');
@@ -102,8 +101,6 @@ class CarrierCompare extends Module
 	*/
 	public function getCarriersListByIdZone($id_country, $id_state = 0)
 	{
-		global $cart, $smarty;
-
 		$id_zone = 0;
 		if ($id_state != 0)
 			$id_zone = State::getIdZone($id_state);
@@ -117,8 +114,7 @@ class CarrierCompare extends Module
 
 	public function saveSelection($id_country, $id_state, $zipcode, $id_carrier)
 	{
-		global $cart, $cookie;
-
+		$context = Context::getContext();
 		$errors = array();
 
 		if (!Validate::isInt($id_state))
@@ -144,11 +140,11 @@ class CarrierCompare extends Module
 		if (sizeof($errors))
 			return $errors;
 
-		$cookie->id_country = $id_country;
-		$cookie->id_state = $id_state;
-		$cookie->postcode = $zipcode;
-		$cart->id_carrier = $id_carrier;
-		if (!$cart->update())
+		$context->cookie->id_country = $id_country;
+		$context->cookie->id_state = $id_state;
+		$context->cookie->postcode = $zipcode;
+		$context->cart->id_carrier = $id_carrier;
+		if (!$context->cart->update())
 			return array($this->l('Can\'t update the cart'));
 		return array();
 	}

@@ -59,14 +59,14 @@ class BlockUserInfo extends Module
 	{
 		if (!$this->active)
 			return;
-		global $smarty, $cookie, $cart;
-		$smarty->assign(array(
-			'cart' => $cart,
-			'cart_qties' => $cart->nbProducts(),
-			'logged' => $cookie->isLogged(),
-			'customerName' => ($cookie->logged ? $cookie->customer_firstname.' '.$cookie->customer_lastname : false),
-			'firstName' => ($cookie->logged ? $cookie->customer_firstname : false),
-			'lastName' => ($cookie->logged ? $cookie->customer_lastname : false),
+		$context = Context::getContext();
+		$context->controller->smarty->assign(array(
+			'cart' => $context->cart,
+			'cart_qties' => $context->cart->nbProducts(),
+			'logged' => $context->cookie->isLogged(),
+			'customerName' => ($context->cookie->logged ? $context->customer->first_name.' '.$context->customer->lastname : false),
+			'firstName' => ($context->cookie->logged ? $context->customer->firstname : false),
+			'lastName' => ($context->cookie->logged ? $context->customer->lastname : false),
 			'order_process' => Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc' : 'order'
 		));
 		return $this->display(__FILE__, 'blockuserinfo.tpl');

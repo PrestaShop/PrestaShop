@@ -31,8 +31,6 @@ class AdminSearchConf extends AdminPreferences
 {
 	public function __construct()
 	{
-		global $cookie;
-
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 

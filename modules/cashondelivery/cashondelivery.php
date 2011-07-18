@@ -58,8 +58,7 @@ class CashOnDelivery extends PaymentModule
 		if (!$this->active)
 			return ;
 
-		global $smarty;
-
+		$context = Context::getContext();
 		// Check if cart has product download
 		foreach ($params['cart']->getProducts() AS $product)
 		{
@@ -68,7 +67,7 @@ class CashOnDelivery extends PaymentModule
 				return false;
 		}
 
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'this_path' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));

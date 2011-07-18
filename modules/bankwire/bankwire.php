@@ -169,9 +169,9 @@ class BankWire extends PaymentModule
 		if (!$this->_checkCurrency($cart))
 			Tools::redirect('index.php?controller=order');
 
-		global $cookie, $smarty;
+		$context = Context::getContext();
 
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'nbProducts' => $cart->nbProducts(),
 			'cust_currency' => $cart->id_currency,
 			'currencies' => $this->getCurrency((int)$cart->id_currency),
@@ -190,9 +190,9 @@ class BankWire extends PaymentModule
 		if (!$this->_checkCurrency($params['cart']))
 			return ;
 
-		global $smarty;
+		$context = Context::getContext();
 
-		$smarty->assign(array(
+		$context->controller->smarty->assign(array(
 			'this_path' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
@@ -204,10 +204,10 @@ class BankWire extends PaymentModule
 		if (!$this->active)
 			return ;
 
-		global $smarty;
+		$context = Context::getContext();
 		$state = $params['objOrder']->getCurrentState();
 		if ($state == _PS_OS_BANKWIRE_ OR $state == _PS_OS_OUTOFSTOCK_)
-			$smarty->assign(array(
+			$context->controller->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'bankwireDetails' => nl2br2($this->details),
 				'bankwireAddress' => nl2br2($this->address),
@@ -216,7 +216,7 @@ class BankWire extends PaymentModule
 				'id_order' => $params['objOrder']->id
 			));
 		else
-			$smarty->assign('status', 'failed');
+			$context->controller->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 	
