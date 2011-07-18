@@ -252,7 +252,7 @@ class ShopCore extends ObjectModel
 	public function getGroup($asObject = false)
 	{
 		if (!$this->group)
-			$this->group = new GroupShop($this->id_group_shop);
+			$this->group = new GroupShop($this->getGroupID());
 		return $this->group;
 	}
 
@@ -261,11 +261,11 @@ class ShopCore extends ObjectModel
 	 *
 	 * @return int
 	 */
-	public function getID()
+	public function getID($useDefault = false)
 	{
-		return (int)$this->id;
+		return (!$this->id && $useDefault) ? (int)Configuration::get('PS_SHOP_DEFAULT') : (int)$this->id;
 	}
-	
+
 	/**
 	 * Get current shop group ID
 	 *
@@ -273,6 +273,8 @@ class ShopCore extends ObjectModel
 	 */
 	public function getGroupID()
 	{
+		if (defined('PS_ADMIN_DIR'))
+			return Shop::getContextGroupID();
 		return (int)$this->id_group_shop;
 	}
 
@@ -281,9 +283,9 @@ class ShopCore extends ObjectModel
 	 * 
 	 * @return int
 	 */
-	public function getRootCategory()
+	public function getCategory()
 	{
-		return $this->id_category;
+		return ($this->id_category) ? $this->id_category : 1;
 	}
 
 	/**
@@ -296,10 +298,10 @@ class ShopCore extends ObjectModel
 		$sql = 'SELECT *
 				FROM '._DB_PREFIX.'shop_url
 				WHERE active = 1
-					AND id_shop='.(int)$this->id;
+					AND id_shop = '.(int)$this->id;
 		return Db::getInstance()->ExecuteS($sql);
 	}
-	
+
 	/**
 	 * Check if current shop ID is the same as default shop in configuration
 	 * 
@@ -438,60 +440,6 @@ class ShopCore extends ObjectModel
 				return array_keys($groupData['shops']);
 		return array($shopID);
 	}
-
-	/**
-	 * Retrieve the current shop context in FO or BO
-	 * 
-	 * @param string null|shop|group
-	 * @param bool If true, this method will return default shop ID if no shop was found in context (for BO)
-	 * @return array(id_shop, id_group_shop)|int
-	 */
-	public static function getContext($type = null, $useDefault = false)
-	{
-		static $executed = false, $shopID = 0, $shopGroupID = 0;
-
-		if (!$executed)
-		{
-			$context = Context::getContext();
-			if (defined('PS_ADMIN_DIR'))
-			{
-				// While cookie is not instancied in admin, we wait ...
-				if (!isset($context->cookie))
-					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
-
-				// Parse shopContext cookie value (E.g. s-2, g-4)
-				$split = explode('-', Context::getContext()->cookie->shopContext);
-				$shopID = $shopGroupID = '';
-				if (count($split) == 2)
-				{
-					if ($split[0] == 's')
-						$shopID = (int)$split[1];
-					else if ($split[0] == 'g')
-						$shopGroupID = (int)$split[1];				
-	
-					if ($shopID && !$shopGroupID)
-						$shopGroupID = Shop::getGroupFromShop($shopID);
-				}
-			}
-			else
-			{
-				$shopID = $context->shop->getID();
-				$shopGroupID = $context->shop->getGroupID();
-			}
-			$executed = true;
-		}
-
-		if ($useDefault && !$shopID)
-			$shopID = Configuration::get('PS_SHOP_DEFAULT');
-		if ($useDefault && !$shopGroupID)
-			$shopID = Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT'));
-		
-		if ($type == 'shop')
-			return $shopID;
-		else if ($type == 'group')
-			return $shopGroupID;
-		return array($shopID, $shopGroupID);
-	}
 	
 	/**
 	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
@@ -514,14 +462,83 @@ class ShopCore extends ObjectModel
 	}
 	
 	/**
+	 * Retrieve the current shop context in FO or BO
+	 * 
+	 * @param string null|shop|group
+	 * @return array(id_shop, id_group_shop)|int
+	 */
+	public static function getContext($type = null)
+	{
+		static $executed = false, $shopID = 0, $shopGroupID = 0;
+
+		if (!$executed)
+		{
+			$context = Context::getContext();
+			if (defined('PS_ADMIN_DIR'))
+			{
+				// While cookie is not instancied in admin, we wait ...
+				if (!isset($context->cookie))
+					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
+
+				// Parse shopContext cookie value (E.g. s-2, g-4)
+				$split = explode('-', Context::getContext()->cookie->shopContext);
+				if (count($split) == 2)
+				{
+					if ($split[0] == 's')
+						$shopID = (int)$split[1];
+					else if ($split[0] == 'g')
+						$shopGroupID = (int)$split[1];
+
+					if ($shopID && !$shopGroupID)
+						$shopGroupID = Shop::getGroupFromShop($shopID);
+				}
+			}
+			else
+			{
+				$shopID = (int)$context->shop->id_shop;
+				$shopGroupID = (int)$context->shop->id_group_shop;
+			}
+			$executed = true;
+		}
+
+		if ($type == 'shop')
+			return $shopID;
+		else if ($type == 'group')
+			return $shopGroupID;
+		return array($shopID, $shopGroupID);
+	}
+	
+	/**
+	 * Get ID shop from context
+	 * 
+	 * @return int
+	 */
+	public static function getContextID()
+	{
+		return Shop::getContext('shop');
+	}
+	
+	/**
+	 * Get ID shop from context
+	 * 
+	 * @return int
+	 */
+	public static function getContextGroupID()
+	{
+		return Shop::getContext('group');
+	}
+	
+	/**
 	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
 	 * 
+	 * @param Context $context
 	 * @return array
 	 */
-	public static function getListFromContext()
+	public static function getListFromContext(Context $context = null)
 	{
-		list($shopID, $shopGroupID) = Shop::getContext();
-		return Shop::getListOfID($shopID, $shopGroupID);
+		if (!$context)
+			$context = Context::getContext();
+		return Shop::getListOfID($context->shop->getID(), $context->shop->getGroupID());
 	}
 	
 	/**
@@ -569,14 +586,15 @@ class ShopCore extends ObjectModel
 		return $restriction;
 	}
 	
-	public static function sqlSharedStock($alias = null, $shopID = null, $shopGroupID = null)
+	public static function sqlSharedStock($alias = null, Context $context = null)
 	{
 		if ($alias)
 			$alias .= '.';
+		if (!$context)
+			$context = Context::getContext();
 
-		if (is_null($shopID))
-			$shopID = Context::getContext()->shop->getID();
-
+		$shopID = $context->shop->getID();
+		$shopGroupID = $context->shop->getGroupID();
 		if (!$shopID)
 			return ($shopGroupID) ? ' AND '.$alias.'id_group_shop = '.(int)$shopGroupID : '';
 
@@ -585,6 +603,41 @@ class ShopCore extends ObjectModel
 			if (array_key_exists($shopID, $groupData['shops']) && $groupData['share_stock'])
 				return ' AND '.$alias.'id_group_shop = '.$groupID;
 		return ' AND '.$alias.'id_shop = '.$shopID;
+	}
+
+	/**
+	 * Add an SQL JOIN in query between a table and its associated table in multishop
+	 *
+	 * @param string $table Table name (E.g. product, module, etc.)
+	 * @param string $alias Alias of table
+	 * @param Context $context
+	 * @return string
+	 */
+	public static function sqlAsso($table, $alias, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
+
+		$assoTables = Shop::getAssoTables();
+		if (!isset($assoTables[$table]) || $assoTables[$table]['type'] != 'shop')
+			return ;
+
+		$sql = ' LEFT JOIN '._DB_PREFIX_.$table.'_shop asso_shop_'.$table.'
+					ON asso_shop_'.$table.'.id_'.$table.' = '.$alias.'.id_'.$table.'
+					AND asso_shop_'.$table.'.id_shop IN('.implode(', ', Shop::getListFromContext($context)).') ';
+		return $sql;
+	}
+
+	/**
+	 * Add a restriction on id_shop for multishop lang table
+	 *
+	 * @param string $alias
+	 * @param Context $context
+	 * @return string
+	 */
+	public static function sqlLang($alias, Context $context = null)
+	{
+		return ' AND '.$alias.'.id_shop = '.$context->shop->getID(true). ' ';
 	}
 	
 	/**

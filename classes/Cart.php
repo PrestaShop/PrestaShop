@@ -348,7 +348,7 @@ class CartCore extends ObjectModel
 		SELECT cp.`id_product_attribute`, cp.`id_product`, cu.`id_customization`, cp.`quantity` AS cart_quantity, cu.`quantity` AS customization_quantity, pl.`name`,
 		pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`,
 		p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`, p.`active`, p.`date_add`, p.`date_upd`, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity,
-		t.`id_tax`, tl.`name` AS tax, t.`rate`, pa.`price` AS price_attribute, s.quantity,
+		t.`id_tax`, tl.`name` AS tax, t.`rate`, pa.`price` AS price_attribute, stock.quantity,
         pa.`ecotax` AS ecotax_attr, i.`id_image`, il.`legend`, pl.`link_rewrite`, cl.`link_rewrite` AS category, CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id,
         IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
         IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
@@ -378,7 +378,7 @@ class CartCore extends ObjectModel
 		)
 		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.')
-		LEFT JOIN '._DB_PREFIX_.'stock s ON cp.id_product = s.id_product AND cp.id_product_attribute = s.id_product_attribute '.Shop::sqlSharedStock('s').'
+		'.Product::sqlStock('cp', 'cp').'
 		WHERE cp.`id_cart` = '.(int)$this->id.'
 		'.($id_product ? ' AND cp.`id_product` = '.(int)$id_product : '').'
 		AND p.`id_product` IS NOT NULL
@@ -533,13 +533,15 @@ class CartCore extends ObjectModel
 	 * @param integer $id_product_attribute Attribute ID if needed
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
-	public	function updateQty($quantity, $id_product, $id_product_attribute = NULL, $id_customization = false, $operator = 'up', $id_shop = NULL, $id_group_shop = NULL)
+	public	function updateQty($quantity, $id_product, $id_product_attribute = NULL, $id_customization = false, $operator = 'up', Context $context = null)
 	{
-		if (is_null($id_shop)) $id_shop = Context::getContext()->shop->getID();
+		if (!$context)
+			$context = Context::getContext();
+
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;
-		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $id_shop);
+		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $context->shop->getID());
 
 		/* If we have a product combination, the minimal quantity is set with the one of this combination */
 		if (!empty($id_product_attribute))
@@ -568,12 +570,10 @@ class CartCore extends ObjectModel
 			{
 				if ($operator == 'up')
 				{
-					$sql = 'SELECT p.out_of_stock, s.quantity
+					$sql = 'SELECT p.out_of_stock, stock.quantity
 							FROM '._DB_PREFIX_.'product p
-							LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product
-							WHERE s.id_product = '.$id_product.'
-								AND s.id_product_attribute = '.$id_product_attribute
-								.Shop::sqlSharedStock('s', $id_shop, $id_group_shop);
+							'.Product::sqlStock('p', $id_product_attribute, true, $context).'
+							WHERE p.id_product = '.$id_product;
 					$result2 = Db::getInstance()->getRow($sql);
 					$productQty = (int)$result2['quantity'];
 					$newQty = (int)$result['quantity'] + (int)$quantity;
@@ -611,12 +611,10 @@ class CartCore extends ObjectModel
 			/* Add product to the cart */
 			else
 			{
-				$sql = 'SELECT p.out_of_stock, s.quantity
+				$sql = 'SELECT p.out_of_stock, stock.quantity
 						FROM '._DB_PREFIX_.'product p
-						LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product
-						WHERE s.id_product = '.$id_product.'
-							AND s.id_product_attribute = '.$id_product_attribute
-							.Shop::sqlSharedStock('s', $id_shop, $id_group_shop);
+						'.Product::sqlStock('p', $id_product_attribute, true, $context).'
+						WHERE p.id_product = '.$id_product;
 				$result2 = Db::getInstance()->getRow($sql);
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
 					if ((int)$quantity > $result2['quantity'])
@@ -1602,9 +1600,12 @@ class CartCore extends ObjectModel
 			return false;
 		$success = true;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
+
+		$newContext = Context::cloneContext();
+		$newContext->shop = new Shop($cart->id_shop);
 		foreach ($products AS $product)
-			$success &= $cart->updateQty($product['quantity'], (int)$product['id_product'], (int)$product['id_product_attribute'], NULL, 'up', (int)$cart->id_shop, (int)$cart->id_group_shop);
-		
+			$success &= $cart->updateQty($product['quantity'], (int)$product['id_product'], (int)$product['id_product_attribute'], NULL, 'up', $newContext);
+
 		// Customized products
 		$customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *

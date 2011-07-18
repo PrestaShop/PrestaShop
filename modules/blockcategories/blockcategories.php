@@ -184,7 +184,7 @@ class BlockCategories extends Module
 			unset($resultIds);
 			//TODO clean that
 			$res = $blockCategTree;
-			$shopcurrentroot = $context->shop->id_category;
+			$shopcurrentroot = $context->shop->getCategory();
 			if ($blockCategTree['id'] != $shopcurrentroot)
 				$blockCategTree = $this->cleanTree($blockCategTree['children']);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
@@ -268,7 +268,7 @@ class BlockCategories extends Module
 			unset($resultIds);
 			//TODO clean that
 			$res = $blockCategTree;
-			if($blockCategTree['id'] != $context->shop->id_category)
+			if($blockCategTree['id'] != $context->shop->getCategory())
 				$blockCategTree = $this->cleanTree($blockCategTree['children']);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
@@ -304,7 +304,7 @@ class BlockCategories extends Module
 	
 	public function cleanTree($categories)
 	{
-		$id_category_root = Context::getContext()->shop->id_category;
+		$id_category_root = Context::getContext()->shop->getCategory();
 		foreach ($categories AS $row)
 		{
 			if ($row['id'] == $id_category_root)

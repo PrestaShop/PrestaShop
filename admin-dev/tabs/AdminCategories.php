@@ -75,7 +75,7 @@ class AdminCategories extends AdminTab
 	{
 		$context = Context::getContext();
 
-		$this->getList((int)($context->language->id), !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $context->shop->getID());
+		$this->getList((int)($context->language->id), !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $context->shop->getID(true));
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subcategory')))).' '.$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
 		if ($this->tabAccess['add'] === '1')
 			echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?tab=AdminCatalog&add'.$this->table.'&id_parent='.$this->_category->id.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new subcategory').'</a>';
@@ -93,7 +93,7 @@ class AdminCategories extends AdminTab
 		{
 			if ($id_category = (int)(Tools::getValue('id_category')))
 			{
-				if (!Category::checkBeforeMove($id_category, $this->_category->id))
+				if (!Category::checkBeforeMove($id_category, $this->_category->id_parent))
 				{
 					$this->_errors[] = Tools::displayError('Category cannot be moved here');
 					return false;
@@ -221,7 +221,7 @@ class AdminCategories extends AdminTab
 		$active = $this->getFieldValue($obj, 'active');
 		$customer_groups = $obj->getGroups();
 		if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
-			$id_category = $context->shop->id_category;
+			$id_category = $context->shop->getCategory();
 		else
 			$id_category = (int)Tools::getValue('id_parent');
 

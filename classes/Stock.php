@@ -54,13 +54,13 @@ class Stock extends ObjectModel
 		return $fields;
 	}
 
-	public static function getStockId($id_product, $id_product_attribute, $shopID = null)
+	public static function getStockId($id_product, $id_product_attribute, $shopID)
 	{
 		$sql = 'SELECT id_stock
 				FROM '._DB_PREFIX_.'stock
 				WHERE id_product = '.(int)$id_product.'
-					AND id_product_attribute = '.(int)$id_product_attribute
-					.Shop::sqlSharedStock('', $shopID);
+					AND id_product_attribute = '.(int)$id_product_attribute.'
+					AND id_shop = '.(int)$shopID;
 		return (int)Db::getInstance()->getValue($sql);
 	}
 }

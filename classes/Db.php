@@ -75,7 +75,7 @@ abstract class DbCore
 	 * Get Db object instance (Singleton)
 	 *
 	 * @param boolean $master Decides wether the connection to be returned by the master server or the slave server
-	 * @return object Db instance
+	 * @return Db instance
 	 */
 	public static function getInstance($master = 1)
 	{
