@@ -52,20 +52,20 @@ class AdminCatalog extends AdminTab
 		$id_category = abs(Tools::getValue('id_category'));
 		$shop = Context::getContext()->shop;
 		if (!$id_category)
-			$id_category = $shop->id_category;
-		else if ($id_category != $shop->id_category)
+			$id_category = $shop->getCategory();
+		else if ($id_category != $shop->getCategory())
 		{
 			// Check if current category is "inside" shop default category
 			$sql = 'SELECT nleft, nright FROM '._DB_PREFIX_.'category
-					WHERE id_category = '.$shop->id_category;
-			if ($interval = Category::getInterval($shop->id_category))
+					WHERE id_category = '.$shop->getCategory();
+			if ($interval = Category::getInterval($shop->getCategory()))
 			{
 				$sql = 'SELECT id_category FROM '._DB_PREFIX_.'category
 						WHERE id_category = '.(int)$id_category.'
 							AND nleft >= '.$interval['nleft'].'
 							AND nright <= '.$interval['nright'];
 				if (!Db::getInstance()->getValue($sql))
-					$id_category = $shop->id_category;
+					$id_category = $shop->getCategory();
 			}
 		}
 
@@ -139,7 +139,7 @@ class AdminCatalog extends AdminTab
 		if (((Tools::isSubmit('submitAddcategory') OR Tools::isSubmit('submitAddcategoryAndStay')) AND sizeof($this->adminCategories->_errors)) OR isset($_GET['updatecategory']) OR isset($_GET['addcategory']))
 		{
 			$this->adminCategories->displayForm($this->token);
-			echo '<br /><br /><a href="'.self::currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
 		}
 		elseif (((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND sizeof($this->adminProducts->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
 		{
@@ -174,7 +174,7 @@ class AdminCatalog extends AdminTab
 			if (!$id_category)
 			{
 				$home = true;
-				$id_category = Context::getContext()->shop->id_category;
+				$id_category = Context::getContext()->shop->getCategory();
 			}
 			$catalog_tabs = array('category', 'product');
 			// Cleaning links

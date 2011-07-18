@@ -44,7 +44,7 @@ class SitemapControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		$this->smarty->assign('categoriesTree', Category::getRootCategory(NULL, $this->id_current_shop)->recurseLiteCategTree(0));
+		$this->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
 		$this->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory(Context::getContext()->language->id, 1, 1, 1, $this->id_current_shop));
 		$this->smarty->assign('voucherAllowed', (int)Configuration::get('PS_VOUCHERS'));
 		$blockmanufacturer = Module::getInstanceByName('blockmanufacturer');

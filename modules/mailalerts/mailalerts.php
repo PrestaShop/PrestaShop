@@ -480,13 +480,12 @@ class MailAlerts extends Module
 		)
 			die (Tools::displayError());
 
-		$sql = 'SELECT ma.`id_product`, s.quantity AS product_quantity, pl.`name`, ma.`id_product_attribute`
+		$sql = 'SELECT ma.`id_product`, stock.quantity AS product_quantity, pl.`name`, ma.`id_product_attribute`
 				FROM `'._DB_PREFIX_.'mailalert_customer_oos` ma
 				JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ma.`id_product`
-				JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product`
-				LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product AND s.id_product_attribute = 0 '.Shop::sqlSharedStock('s').'
-				WHERE ma.`id_customer` = '.$id_customer.'
-					AND pl.`id_lang` = '.(int)$id_lang;
+				JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product` AND pl.`id_lang` = '.$id_lang.Shop::sqlLang('pl').'
+				'.Product::sqlStock('p', 0).'
+				WHERE ma.`id_customer` = '.$id_customer;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		if (empty($products) === true OR !sizeof($products))
 			return array();
@@ -504,8 +503,8 @@ class MailAlerts extends Module
 					FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 					LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
 					LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
-					LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)($id_lang).')
-					LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)($id_lang).')
+					LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.$id_lang.')
+					LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.$id_lang.')
 					LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
 					WHERE pac.`id_product_attribute` = '.(int)($products[$i]['id_product_attribute']));
 				$products[$i]['attributes_small'] = '';
@@ -515,9 +514,9 @@ class MailAlerts extends Module
 				$products[$i]['attributes_small'] = rtrim($products[$i]['attributes_small'], ', ');
 				
 				// cover
-				$attrgrps = $obj->getAttributesGroups((int)($id_lang));
+				$attrgrps = $obj->getAttributesGroups($id_lang);
 				foreach ($attrgrps AS $attrgrp)
-					if ($attrgrp['id_product_attribute'] == (int)($products[$i]['id_product_attribute']) AND $images = Product::_getAttributeImageAssociations((int)($attrgrp['id_product_attribute'])))
+					if ($attrgrp['id_product_attribute'] == $products[$i]['id_product_attribute'] AND $images = Product::_getAttributeImageAssociations((int)($attrgrp['id_product_attribute'])))
 					{
 						$products[$i]['cover'] = $obj->id.'-'.array_pop($images);
 						break;
@@ -525,7 +524,7 @@ class MailAlerts extends Module
 			}
 			if (!isset($products[$i]['cover']) OR !$products[$i]['cover'])
 			{
-				$images = $obj->getImages((int)($id_lang));
+				$images = $obj->getImages($id_lang);
 				foreach ($images AS $k => $image)
 					if ($image['cover'])
 					{

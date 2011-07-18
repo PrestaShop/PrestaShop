@@ -384,12 +384,12 @@ class BlockLayered extends Module
 		$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
 
 		$sql = 'SELECT p.id_product, p.out_of_stock, p.available_for_order, p.minimal_quantity, p.id_category_default, p.customizable, p.show_price, p.`weight`,
-					p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer, s.quantity,
+					p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer, stock.quantity,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product AND ps.id_shop = '.$this->shopID.'
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product AND pl.id_shop = '.$this->shopID.')
-				LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product AND s.id_product_attribute = 0 '.Shop::sqlSharedStock('s').'
+				'.Shop::sqlAsso('product', 'p', $context).'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::sqlLang('pl', $context).')
+				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
 				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)$context->language->id.')
 				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
@@ -427,7 +427,7 @@ class BlockLayered extends Module
 		foreach ($subCategories AS $subcategory)
 				$whereC .= ' cp.`id_category` = '.(int)$subcategory['id_category'].' OR ';
 
-		$whereC = rtrim($whereC, 'OR ').')';
+		$whereC = rtrim($whereC, 'OR ')'';
 		$productsSQL = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`weight`, s.quantity,
 		(SELECT GROUP_CONCAT(`id_category`) FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`) as ids_cat,
@@ -437,8 +437,8 @@ class BlockLayered extends Module
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = pac.`id_product_attribute`) 
 				WHERE pa.`id_product` = p.`id_product` ) as ids_attr
 		FROM '._DB_PREFIX_.'product p 
-		LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product AND s.id_product_attribute = 0 '.Shop::sqlSharedStock('s').'
-		WHERE p.`active` = 1 AND p.`id_product` IN ( SELECT id_product FROM `'._DB_PREFIX_.'category_product` cp WHERE'.$whereC, false);
+		'.Product::sqlStock('p', 0).'
+		WHERE p.`active` = 1 AND p.`id_product` IN ( SELECT id_product FROM `'._DB_PREFIX_.'category_product` cp WHERE'.$whereC.')', false);
 
 		$products = array();
 		$db = Db::getInstance();

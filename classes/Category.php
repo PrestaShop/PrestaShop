@@ -451,18 +451,13 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $checkAccess set to false to return all products (even if customer hasn't access)
 	  * @return mixed Products or number of products
 	  */
-	public function getProducts($id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $random = false, $randomNumberProducts = 1, $checkAccess = true, $id_shop = null, $context = null)
+	public function getProducts($id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $random = false, $randomNumberProducts = 1, $checkAccess = true, $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 		if (!$checkAccess OR !$this->checkAccess($context->customer->id))
 			return false;	
-		
-		if (!$id_shop)
-			$id_shop_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
-		else
-			$id_shop_lang = (int)$id_shop;
-		
+
 		if ($p < 1) $p = 1;
 
 		if (empty($orderBy))
@@ -498,24 +493,23 @@ class CategoryCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(cp.`id_product`) AS total
 					FROM `'._DB_PREFIX_.'product` p
-					'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
+					'.Shop::sqlAsso('product', 'p', $context).'
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)($this->id).
 					($active ? ' AND p.`active` = 1' : '').
-					($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').
 					($id_supplier ? 'AND p.id_supplier = '.(int)($id_supplier) : '');
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, s.quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default, DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
+		$sql = 'SELECT p.*, stock.quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default, DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
 					(p.`price` * IF(t.`rate`,((100 + (t.`rate`))/100),1)) AS orderprice
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
-				'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND default_on = 1)
-				LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product AND s.id_product_attribute = IFNULL(pa.id_product_attribute, 0) '.Shop::sqlSharedStock('s', $id_shop).'
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.' AND cl.`id_shop` = '.(int)$id_shop_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.`id_shop` = '.(int)$id_shop_lang.')
+				'.Shop::sqlAsso('product', 'p', $context).'
+				'.Product::sqlStock('p', 'pa', false, $context).'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('cl', $context).')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('pl', $context).')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -526,8 +520,7 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE cp.`id_category` = '.(int)($this->id)
 					.($active ? ' AND p.`active` = 1' : '')
-					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
-					.($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '');
+					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
@@ -576,11 +569,11 @@ class CategoryCore extends ObjectModel
 
 	static public function getRootCategory($id_lang = NULL, $id_shop = false, $context = null)
 	{
-		if (!$id_shop)
-			$id_shop = Configuration::get('PS_SHOP_DEFAULT');
-		$shop = new Shop($id_shop);
+		if (!$context)
+			$context = Context::getContext();
+		$shop = new Shop($context->shop->getID(true));
 		
-		return new Category ($shop->id_category, is_null($id_lang) ? $context->language->id : $id_lang);
+		return new Category($shop->getCategory(), is_null($id_lang) ? $context->language->id : $id_lang);
 	}
 
 	/**
@@ -724,21 +717,19 @@ class CategoryCore extends ObjectModel
 		return $context->link->getCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL, $id_shop = false, $context = null)
+	public function getName($id_lang = NULL, $context = null)
 	{
-		if (!$id_shop)
-			$id_shop = Context::getContext()->shop->getID();
 		if (!$id_lang)
 		{
 			if (!$context)
 				$context = Context::getContext();
 
-			if (isset($this->name[(int)$id_shop][$context->language->id]))
+			if (isset($this->name[$context->language->id]))
 				$id_lang = $context->language->id;
 			else
 				$id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		}
-		return isset($this->name[(int)$id_shop][$id_lang]) ? $this->name[(int)$id_shop][$id_lang] : '';
+		return isset($this->name[$id_lang]) ? $this->name[$id_lang] : '';
 	}
 
 	/**

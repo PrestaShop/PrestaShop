@@ -47,8 +47,8 @@ class AdminStockMvt extends AdminTab
 		$context = Context::getContext();
 		
 		$this->_select = 'CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason';
-		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock '.Shop::sqlSharedStock('stock', Shop::getCurrentShop(), Shop::getCurrentGroupShop()).'
-							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$context->language->id.')
+		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock '.Shop::sqlSharedStock('stock').'
+							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$context->language->id.' AND pl.id_shop = '.$context->shop->getID(true).')
 							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (a.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$context->language->id.')
 							LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)

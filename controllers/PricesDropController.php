@@ -49,7 +49,7 @@ class PricesDropControllerCore extends FrontController
 		$this->pagination($nbProducts);
 
 		$this->smarty->assign(array(
-			'products' => Product::getPricesDrop((int)self::$cookie->id_lang, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay, false, false, (int)$this->id_current_shop),
+			'products' => Product::getPricesDrop((int)self::$cookie->id_lang, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => $nbProducts,
 			'homeSize' => Image::getSize('home')

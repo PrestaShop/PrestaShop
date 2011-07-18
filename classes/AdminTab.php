@@ -861,7 +861,7 @@ abstract class AdminTabCore
 		}
 		if (!sizeof($assos))
 			return;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_group_shop'.($id_object ? ' WHERE id_object='.(int)$id_object : ''));
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_group_shop'.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 		foreach ($assos AS $asso)
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_group_shop(`'.pSQL($this->identifier).'`, id_group_shop)
 												VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_group_shop'].')');
@@ -1170,25 +1170,28 @@ abstract class AdminTabCore
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
 			$whereShop = Shop::sqlRestriction($this->shopShareDatas, 'a', null, null, $this->shopLinkType);
 		}
+
 		$filterShop = '';
-		if ($context->shop->getContextType() != Shop::CONTEXT_ALL)
+		if (Context::shop() != Shop::CONTEXT_ALL)
 		{
-			if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
+			$assos = Shop::getAssoTables();
+			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 			{
-				$assos = Shop::getAssoTables();
-				if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'shop')
-					$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = $context->shop->getID();
+				$filterKey = $assos[$this->table]['type'];
+				$idenfierShop = Shop::getListFromContext();
 			}
-			elseif ($context->shop->getContextType() == Shop::CONTEXT_GROUP)
+			else if (Context::shop() == Shop::CONTEXT_GROUP)
 			{
 				$assos = GroupShop::getAssoTables();
 				if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
+				{
 					$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = $context->shop->getGroupID();
+					$idenfierShop = array($context->shop->getGroupID());
+				}
 			}
+
 			if (isset($filterKey))
-				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.'='.(int)$idenfierShop.')';
+				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		}
 		
 		/* Query in order to get results with all fields */
@@ -1206,7 +1209,6 @@ abstract class AdminTabCore
 			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
 			LIMIT '.(int)($start).','.(int)($limit);
-		//p($sql);
 		$this->_list = Db::getInstance()->ExecuteS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 
@@ -1691,7 +1693,7 @@ abstract class AdminTabCore
 				if (!Validate::isCleanHtml($val))
 					$val = Configuration::get($key);
 
-			$isDisabled = (isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
+			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
 
 			echo $this->getHtmlDefaultConfigurationValue($key, $this->_languages);
 			echo '<label>'.$field['title'].' </label>
@@ -2021,7 +2023,7 @@ abstract class AdminTabCore
 			$html = '<table class="table" cellpadding="0" cellspacing="0">
 						<tr><th>'.$this->l('Shop').'</th><th>'.$this->l('Association').'</th></tr>';
 			foreach ($shops AS $shop)
-				$html .= '<tr><td>'.$shop['name'].'</td><td><input type="checkbox" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shop['id_shop'].'" id="checkedBox_'.$shop['id_shop'].'" '.(((isset($assos[$shop['id_shop']]) AND in_array($this->_object->id, $assos[$shop['id_shop']]))  || !$this->_object->id) ? 'checked="checked"' : '').'></td></tr>';
+				$html .= '<tr><td>'.$shop['name'].'</td><td><input type="checkbox" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shop['id_shop'].'" id="checkedBox_'.$shop['id_shop'].'" '.(((isset($assos[$shop['id_shop']]) AND in_array($this->_object->id, $assos[$shop['id_shop']])) || !$this->_object->id) ? 'checked="checked"' : '').'></td></tr>';
 			$html .= '</table>';
 		}
 		echo $html;
@@ -2081,7 +2083,7 @@ abstract class AdminTabCore
 			$html = '<table class="table" cellpadding="0" cellspacing="0">
 						<tr><th>'.$this->l('Shop').'</th><th>'.$this->l('Association').'</th></tr>';
 			foreach ($groups_shop as $group_shop)
-				$html .= '<tr><td>'.$group_shop['name'].'</td><td><input type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$group_shop['id_group_shop'].'" id="checkedBox_'.$group_shop['id_group_shop'].'" '.((isset($assos[$group_shop['id_group_shop']]) AND in_array($this->id, $assos[$group_shop['id_group_shop']])) ? 'checked="checked"' : '').'></td></tr>';
+				$html .= '<tr><td>'.$group_shop['name'].'</td><td><input type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$group_shop['id_group_shop'].'" id="checkedBox_'.$group_shop['id_group_shop'].'" '.(((isset($assos[$group_shop['id_group_shop']]) AND in_array($this->_object->id, $assos[$group_shop['id_group_shop']])) || !$this->_object->id) ? 'checked="checked"' : '').'></td></tr>';
 			$html .= '</table>';	
 		}
 		echo $html;

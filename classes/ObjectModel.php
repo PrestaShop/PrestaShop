@@ -35,6 +35,8 @@ abstract class ObjectModelCore
 	
 	protected $id_shop = NULL;
 	
+	private $getShopFromContext = true;
+	
 	/** @var string SQL Table name */
 	protected $table = NULL;
 
@@ -116,11 +118,16 @@ abstract class ObjectModelCore
 			$this->id_lang = $id_lang;
 		elseif ($id_lang != NULL)
 			die(Tools::displayError());
-		
-		if ($this->langMultiShop AND $id_shop == NULL)
-			$id_shop = Context::getContext()->shop->getID();
-		if ($id_shop AND $this->langMultiShop)
-			$this->id_shop = $id_shop;
+
+		if ($id_shop && $this->langMultiShop)
+		{
+			$this->id_shop = (int)$id_shop;
+			$this->getShopFromContext = false;
+		}
+
+		if ($this->langMultiShop && !$this->id_shop)
+			$this->id_shop = Context::getContext()->shop->getID(true);
+
 	 	/* Connect to database and check SQL table/identifier */
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
 			die(Tools::displayError());
@@ -130,12 +137,15 @@ abstract class ObjectModelCore
 		if ($id)
 		{
 			if (!isset(self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang]))
-				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = $db->getRow('
-				SELECT *
-				FROM `'._DB_PREFIX_.$this->table.'` a '.
-				($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
-				.' WHERE 1 AND a.`'.$this->identifier.'` = '.(int)$id.
-				(($this->langMultiShop AND $id_shop AND $id_lang) ? ' AND b.id_shop='.(int)$id_shop : ''));
+			{
+				$sql = 'SELECT *
+						FROM `'._DB_PREFIX_.$this->table.'` a '.
+						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
+						.' WHERE 1 AND a.`'.$this->identifier.'` = '.(int)$id.
+							(($this->id_shop AND $id_lang) ? ' AND b.id_shop='.$this->id_shop : '');
+				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = $db->getRow($sql);
+			}
+
 			$result = self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang];
 			if ($result)
 			{
@@ -146,9 +156,10 @@ abstract class ObjectModelCore
 				
 				if (!$id_lang AND method_exists($this, 'getTranslationsFieldsChild'))
 				{
-					$result = $db->ExecuteS('SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
-																	WHERE `'.$this->identifier.'` = '.(int)$id
-																	.(($this->langMultiShop AND $id_shop) ? ' AND `id_shop`='.(int)$id_shop : ''));
+					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
+							WHERE `'.$this->identifier.'` = '.(int)$id
+							.(($this->id_shop) ? ' AND `id_shop` = '.$this->id_shop : '');
+					$result = $db->ExecuteS($sql);
 					if ($result)
 						foreach ($result as $row)
 							foreach ($row AS $key => $value)
@@ -157,8 +168,7 @@ abstract class ObjectModelCore
 								{
 									if (!is_array($this->{$key}))
 										$this->{$key} = array();
-									else
-										$this->{$key}[$row['id_lang']] = stripslashes($value);
+									$this->{$key}[$row['id_lang']] = stripslashes($value);
 								}
 							}
 				}
@@ -224,17 +234,17 @@ abstract class ObjectModelCore
 					 	if (!Validate::isTableOrIdentifier($key))
 			 				die(Tools::displayError());
 					$field[$this->identifier] = (int)$this->id;
-					$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT') && $result;
+
 					if (isset($assos[$this->table.'_lang']) && $assos[$this->table.'_lang']['type'] == 'fk_shop')
 					{
 						foreach ($shops as $id_shop)
 						{
-							if ($this->id_shop == (int)$id_shop)
-								continue;
 							$field['id_shop'] = (int)$id_shop;
-							$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT') && $result;
+							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
 						}
 					}
+					else
+						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
 				}
 		}
 		
@@ -252,7 +262,7 @@ abstract class ObjectModelCore
 	/**
 	 * Update current object to database
 	 *
-	 * return boolean Update result
+	 * @return boolean Update result
 	 */
 	public function update($nullValues = false)
 	{
@@ -283,20 +293,34 @@ abstract class ObjectModelCore
 					foreach ($field as $key => $value)
 						if (!Validate::isTableOrIdentifier($key))
 							die(Tools::displayError());
-							
+
+					// If this table is linked to multishop system, update / insert for all shops from context
 					if ($this->langMultiShop)
-						$field['id_shop'] = ($this->id_shop ? $this->id_shop : Context::getContext()->shop->getID());
+					{
+						$listShops = ($this->id_shop && !$this->getShopFromContext) ? array($this->id_shop) : Shop::getListFromContext();
+						foreach ($listShops as $shop)
+						{
+							$field['id_shop'] = $shop;
+							$where = pSQL($this->identifier).' = '.(int)$this->id
+										.' AND id_lang = '.(int)$field['id_lang']
+										.' AND id_shop = '.$field['id_shop'];
 
-					// used to insert missing lang entries
-					$where_lang = '`'.pSQL($this->identifier).'` = '.(int)$this->id.
-												' AND `id_lang` = '.(int)$field['id_lang'].
-												(($this->langMultiShop AND $this->id_shop) ? ' AND `id_shop`='.$this->id_shop : '');
-
-					$lang_found = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE '. $where_lang);
-					if (!$lang_found)
-						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->table).'_lang WHERE '.$where))
+								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', $where);
+							else
+								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+						}
+					}
+					// If this table is not linked to multishop system ...
 					else
-						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', $where_lang);
+					{
+						$where = pSQL($this->identifier).' = '.(int)$this->id
+									.' AND id_lang = '.(int)$field['id_lang'];
+						if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->table).'_lang WHERE '.$where))
+							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', $where);
+						else
+							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+					}
 				}
 			}
 		}

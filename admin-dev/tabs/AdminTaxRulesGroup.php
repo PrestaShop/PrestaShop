@@ -102,7 +102,7 @@ class AdminTaxRulesGroup extends AdminTab
 		if (Tools::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
-			$this->displayAssoShop();
+			$this->displayAssoGroupShop();
 			echo '</div>';
 		}
 		echo '
@@ -507,6 +507,9 @@ class AdminTaxRulesGroup extends AdminTab
 								$result = $object->update();
 								$this->afterUpdate($object);
 							}
+							
+							if ($object->id)
+								$this->updateAssoGroupShop($object->id);
 							if (!$result)
 								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 							elseif ($this->postImage($object->id) AND !sizeof($this->_errors))
@@ -549,7 +552,7 @@ class AdminTaxRulesGroup extends AdminTab
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
 
-
+							$this->updateAssoGroupShop($object->id);
 							$id_product = (int)Tools::getValue('id_product');
 							if ($id_product)
    								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)));

@@ -366,7 +366,7 @@ class AdminPreferences extends AdminTab
 				echo '<div class="margin-form" style="padding-top:5px;">';
 			}
 
-			$isDisabled = (isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
+			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
 
 			/* Display the appropriate input type for each field */
 			switch ($field['type'])

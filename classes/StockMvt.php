@@ -90,14 +90,13 @@ class StockMvtCore extends ObjectModel
 		// Search missing stock movement on products without attributes
 		$sql = 'SELECT s.id_stock, (s.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
 				FROM '._DB_PREFIX_.'product p
-				INNER JOIN '._DB_PREFIX_.'stock s ON s.id_product = p.id_product
+				'.Product::sqlStock('p', null, true).'
 				LEFT JOIN '._DB_PREFIX_.'stock_mvt sm ON s.id_stock = sm.id_stock
 				WHERE (
 					SELECT COUNT(*) FROM '._DB_PREFIX_.'stock s2
 					WHERE s2.id_product = p.id_product
 						AND s2.id_product_attribute > 0
 				) = 0
-					'.Shop::sqlSharedStock('s').'
 				GROUP BY s.id_product, s.id_shop
 				HAVING qty <> 0';
 		$products_without_attributes = Db::getInstance()->ExecuteS($sql);

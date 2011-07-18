@@ -30,90 +30,42 @@
  */
 class ContextCore
 {
-	/**
-	 * @var Context
-	 */
+	/** @var Context */
 	protected static $instance;
 
-	/**
-	 * @var Cart
-	 */
+	/** @var Cart */
 	public $cart;
-	
-	/**
-	 * @var Customer
-	 */
+
+	/** @var Customer */
 	public $customer;
-	
-	/**
-	 * @var Cookie
-	 */
+
+	/** @var Cookie */
 	public $cookie;
-	
-	/**
-	 * @var Link
-	 */
+
+	/** @var Link */
 	public $link;
-	
-	/**
-	 * @var Country
-	 */
+
+	/** @var Country */
 	public $country;
-	
-	/**
-	 * @var Employee
-	 */
+
+	/** @var Employee */
 	public $employee;
-	
-	/**
-	 * @var Controller
-	 */
+
+	/** @var Controller */
 	public $controller;
-	
-	/**
-	 * @var Language
-	 */
+
+	/** @var Language */
 	public $language;
-	
-	/**
-	 * @var Currency
-	 */
+
+	/** @var Currency */
 	public $currency;
-	
-	/**
-	 * @var AdminTab
-	 */
+
+	/** @var AdminTab */
 	public $tab;
-	
-	/**
-	 * @var Shop
-	 */
+
+	/** @var Shop */
 	public $shop;
-	
-	/**
-	 * Create a context without singleton constraint
-	 */
-	public function __construct($cart = null, 
-								$customer = null,
-								$cookie = null,
-								$link = null,
-								$country = null,
-								$employee = null,
-								$language = null,
-								$currency = null,
-								$tab = null)
-	{
-		$this->cart = $cart;
-		$this->customer = $customer;
-		$this->cookie = $cookie;
-		$this->link = $link;
-		$this->country = $country;
-		$this->employee = $employee;
-		$this->language = $language;
-		$this->currency = $currency;
-		$this->tab = $tab;
-	}
-	
+
 	/**
 	 * Get a singleton context
 	 *
@@ -122,7 +74,27 @@ class ContextCore
 	public static function getContext()
 	{
 		if (!isset(self::$instance))
-			self::$instance = new self();
+			self::$instance = new Context();
 		return self::$instance;
+	}
+	
+	/**
+	 * Clone current context (
+	 * 
+	 * @return Context
+	 */
+	public function cloneContext()
+	{
+		return clone($this);
+	}
+	
+	/**
+	 * @return int Shop context type (Shop::CONTEXT_ALL, etc.)
+	 */
+	public static function shop()
+	{
+		if (!self::$instance->shop->getContextType())
+			return Shop::CONTEXT_ALL;
+		return self::$instance->shop->getContextType();
 	}
 }

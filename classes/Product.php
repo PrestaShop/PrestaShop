@@ -390,7 +390,7 @@ class ProductCore extends ObjectModel
 		{
 			$fields[$language['id_lang']]['id_lang'] = $language['id_lang'];
 			$fields[$language['id_lang']][$this->identifier] = (int)($this->id);
-			$fields[$language['id_lang']]['id_shop'] = (int)$this->id_shop;
+			$fields[$language['id_lang']]['id_shop'] = (int)$this->id_shop; // @todo ID shop in product ???
 			$fields[$language['id_lang']]['description'] = (isset($this->description[$language['id_lang']])) ? pSQL($this->description[$language['id_lang']], true) : '';
 			$fields[$language['id_lang']]['description_short'] = (isset($this->description_short[$language['id_lang']])) ? pSQL($this->description_short[$language['id_lang']], true) : '';
 			foreach ($fieldsArray as $field)
@@ -507,9 +507,9 @@ class ProductCore extends ObjectModel
 	{
 		$sql = 'SELECT pa.id_product_attribute
 				FROM '._DB_PREFIX_.'product_attribute pa'
-				.($minimumQuantity > 0 ? ' LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = pa.id_product AND pa.id_product_attribute = s.id_product_attribute '.Shop::sqlSharedStock('s') : '').
+				.($minimumQuantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 				' WHERE pa.default_on = 1 '
-					.($minimumQuantity > 0 ? ' AND s.quantity >= '.(int)$minimumQuantity : '').
+					.($minimumQuantity > 0 ? ' AND stock.quantity >= '.(int)$minimumQuantity : '').
 					' AND pa.id_product = '.(int)$id_product;
 		$result = Db::getInstance()->getRow($sql);
 
@@ -517,7 +517,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT pa.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa'
-					.($minimumQuantity > 0 ? ' LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = pa.id_product AND pa.id_product_attribute = s.id_product_attribute '.Shop::sqlSharedStock('s') : '').
+					.($minimumQuantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 					' WHERE pa.id_product = '.(int)$id_product
 						.($minimumQuantity > 0 ? ' AND s.quantity >= '.(int)$minimumQuantity : '');
 			$result = Db::getInstance()->getRow($sql);
@@ -1490,12 +1490,12 @@ class ProductCore extends ObjectModel
 	* @param boolean $count Only in order to get total number (optional)
 	* @return array Prices drop
 	*/
-	public static function getPricesDrop($id_lang, $pageNumber = 0, $nbProducts = 10, $count = false, $orderBy = NULL, $orderWay = NULL, $beginning = false, $ending = false, $id_shop = null)
+	public static function getPricesDrop($id_lang, $pageNumber = 0, $nbProducts = 10, $count = false, $orderBy = NULL, $orderWay = NULL, $beginning = false, $ending = false, Context $context = null)
 	{
 		if (!Validate::isBool($count))
 			die(Tools::displayError());
 
-		if (is_null($id_shop)) $id_shop = Context::getContext()->shop->getID();
+		if (is_null($context)) $context = Context::getContext();
 		if ($pageNumber < 0) $pageNumber = 0;
 		if ($nbProducts < 1) $nbProducts = 10;
 		if (empty($orderBy) || $orderBy == 'position') $orderBy = 'price';
@@ -1516,9 +1516,8 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)
+					'.Shop::sqlAsso('product', 'p', $context).'
 					WHERE p.`active` = 1
-						AND ps.id_shop='.(int)$id_shop.'
 						AND p.`show_price` = 1
 						'.((!$beginning AND !$ending) ? ' AND p.`id_product` IN('.((is_array($ids_product) AND sizeof($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
 						AND p.`id_product` IN (
@@ -1536,8 +1535,8 @@ class ProductCore extends ObjectModel
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)
-				LEFT JOIN '._DB_PREFIX_.'stock s ON p.id_product = s.id_product AND s.id_product_attribute = 0 '.Shop::sqlSharedStock('s', $id_shop).'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop = '.(int)$id_shop.')
+				'.Shop::sqlAsso('product', 'p', $context).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('pl', $context).')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -1546,7 +1545,6 @@ class ProductCore extends ObjectModel
 	    		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				WHERE p.`active` = 1
-					AND ps.id_shop = '.(int)$id_shop.'
 					AND p.`show_price` = 1
 					'.((!$beginning AND !$ending) ? ' AND p.`id_product` IN ('.((is_array($ids_product) AND sizeof($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
 					AND p.`id_product` IN (
@@ -2047,6 +2045,33 @@ class ProductCore extends ObjectModel
 	}
 	
 	/**
+	 * Create JOIN query with 'stock' table
+	 * 
+	 * @param string $productAlias Alias of product table
+	 * @param string|int $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
+	 * @param bool $innerJoin LEFT JOIN or INNER JOIN
+	 * @param Context $context
+	 * @return string
+	 */
+	public static function sqlStock($productAlias, $productAttribute = 0, $innerJoin = false, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
+		if (!is_null($productAttribute))
+		{
+			if (is_numeric($productAttribute))
+				$sql .= ' AND stock.id_product_attribute = '.$productAttribute;
+			else if (is_string($productAttribute))
+				$sql .= ' AND stock.id_product_attribute = '.pSQL($productAttribute).'.id_product_attribute';
+		}
+		$sql .= Shop::sqlSharedStock('stock', $context) . ' ';
+		
+		return $sql;
+	}
+	
+	/**
 	 * Set the stock quantity of current product
 	 * 
 	 * @since 1.5.0
@@ -2088,7 +2113,7 @@ class ProductCore extends ObjectModel
 		// Change stock quantity on product attribute
 		if ($id_product_attribute)
 		{
-			if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID()))
+			if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID(true)))
 			{
 				$sql = 'UPDATE '._DB_PREFIX_.'stock
 						SET quantity = '.(($update) ? 'quantity + '. $quantity : $quantity).'
@@ -2106,7 +2131,7 @@ class ProductCore extends ObjectModel
 		}
 		
 		// Change stock quantity on product
-		if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID()))
+		if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID(true)))
 		{
 			$sql = 'UPDATE '._DB_PREFIX_.'stock
 					SET quantity = '.(($update) ? 'quantity + '. $quantity : $quantity).'
@@ -2142,7 +2167,7 @@ class ProductCore extends ObjectModel
 				FROM '._DB_PREFIX_.'stock
 				WHERE id_product = '.$this->id.'
 					AND id_product_attribute = '.(int)$id_product_attribute
-					.Shop::sqlSharedStock();
+					.Shop::sqlSharedStock('', $context);
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
@@ -2260,9 +2285,9 @@ class ProductCore extends ObjectModel
 	public function getAttributesGroups($id_lang)
 	{
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name,
-					a.`color` AS attribute_color, pa.`id_product_attribute`, s.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`, pa.`minimal_quantity`
+					a.`color` AS attribute_color, pa.`id_product_attribute`, stock.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`, pa.`minimal_quantity`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
-				LEFT JOIN '._DB_PREFIX_.'stock s ON s.id_product = pa.id_product AND s.id_product_attribute = pa.id_product_attribute '.Shop::sqlSharedStock('s').'
+				'.Product::sqlStock('pa', 'pa').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
@@ -3154,7 +3179,7 @@ class ProductCore extends ObjectModel
 
 		// Add a new stock movement
 		$stockMvt = new StockMvt();
-		$stockMvt->id_stock = Stock::getStockId($this->id, $id_product_attribute, $this->id_shop);
+		$stockMvt->id_stock = Stock::getStockId($this->id, $id_product_attribute, Context::getContext()->shop->getID(true));
 		$stockMvt->id_product = $this->id;
 		$stockMvt->id_product_attribute = (int)$id_product_attribute;
 		$stockMvt->id_order = (int)$id_order;

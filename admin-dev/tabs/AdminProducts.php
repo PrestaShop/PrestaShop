@@ -59,14 +59,14 @@ class AdminProducts extends AdminTab
 
 		/* Join categories table */
 		$this->_category = AdminCatalog::getCurrentCategory();
-		$this->_join = '
-		LEFT JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = a.id_product AND stock.id_product_attribute = 0 '.Shop::sqlSharedStock('stock').'
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+		$this->_join = Product::sqlStock('a').'
+			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
+			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)
+	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
-		$this->_select = 'cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, stock.quantity AS quantity';
+		$this->_select = 'cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, SUM(stock.quantity) AS quantity';
+		$this->_group = 'GROUP BY stock.id_product';
 
 		parent::__construct();
 	}
@@ -1395,11 +1395,12 @@ class AdminProducts extends AdminTab
 	public function display($token = NULL)
 	{
 		$context = Context::getContext();
-		$id_shop = $context->shop->getID();
-		if (($id_category = (int)Tools::getValue('id_category')))
-			$currentIndex .= '&id_category='.$id_category;
-		$this->getList($context->language->id, !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $id_shop);
-		$id_category = (Tools::getValue('id_category',1));
+
+		if ($id_category = (int)Tools::getValue('id_category'))
+			AdminTab::$currentIndex .= '&id_category='.$id_category;
+		$this->getList($context->language->id, !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $context->shop->getID(true));
+
+		$id_category = Tools::getValue('id_category', 1);
 		if (!$id_category)
 			$id_category = 1;
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).' '.

@@ -96,7 +96,7 @@ class HomeFeatured extends Module
 
 		$category = new Category(1, Configuration::get('PS_LANG_DEFAULT'));
 		$nb = (int)(Configuration::get('HOME_FEATURED_NBR'));
-		$products = $category->getProducts((int)$params['cookie']->id_lang, 1, ($nb ? $nb : 10), NULL, NULL, false, true, false, 1, true, $this->shopID);
+		$products = $category->getProducts((int)$params['cookie']->id_lang, 1, ($nb ? $nb : 10));
 		$smarty->assign(array(
 		'products' => $products,
 		'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),

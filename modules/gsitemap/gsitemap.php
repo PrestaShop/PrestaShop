@@ -191,7 +191,7 @@ XML;
 		}
 		
 		/* Categories Generator */
-		$limits = Category::getInterval($shop->id_category);
+		$limits = Category::getInterval($shop->getCategory());
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
 			$sql = 'SELECT c.id_category, c.level_depth, link_rewrite, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') AS date_upd, cl.id_lang
