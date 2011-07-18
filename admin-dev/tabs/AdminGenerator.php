@@ -38,8 +38,6 @@ class AdminGenerator extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		$languages = Language::getLanguages(false);
 
 		// Htaccess
@@ -108,8 +106,6 @@ class AdminGenerator extends AdminTab
 
 	function postProcess()
 	{
-		global $currentIndex;
-
 		if (Tools::isSubmit('submitHtaccess'))
 		{
 			if ($this->tabAccess['edit'] === '1')

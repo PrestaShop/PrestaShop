@@ -29,8 +29,8 @@ class AdminMessages extends AdminTab
 {
 	public function __construct()
 	{
-	 	global $cookie;
-	 	$this->table = 'order';
+		$context = Context::getContext();
+		$this->table = 'order';
 	 	$this->className = 'Order';
 	 	$this->view = 'noActionColumn';
 		$this->colorOnBackground = true;
@@ -40,7 +40,7 @@ class AdminMessages extends AdminTab
 
 		/* Manage default params values */
 		if (empty($limit))
-			$limit = ((!isset($cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $cookie->{$this->table.'_pagination'});
+			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $context->cookie->{$this->table.'_pagination'});
 
 		if (!Validate::isTableOrIdentifier($this->table))
 			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
@@ -54,7 +54,7 @@ class AdminMessages extends AdminTab
 			$orderWay = Tools::getValue($this->table.'Orderway', 'ASC');		
 
 		$limit = (int)(Tools::getValue('pagination', $limit));
-		$cookie->{$this->table.'_pagination'} = $limit;
+		$context->cookie->{$this->table.'_pagination'} = $limit;
 
 		/* Check params validity */
 		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay)
@@ -76,7 +76,7 @@ class AdminMessages extends AdminTab
 		SELECT SQL_CALC_FOUND_ROWS m.id_message, m.id_cart, m.id_employee, IF(m.id_order > 0, m.id_order, \'--\') id_order, m.message, m.private, m.date_add, CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS customer,
 		c.id_customer, count(m.id_message) nb_messages, (SELECT message FROM '._DB_PREFIX_.'message WHERE id_order = m.id_order ORDER BY date_add DESC LIMIT 1) last_message,
 		(SELECT COUNT(m2.id_message) FROM '._DB_PREFIX_.'message m2 WHERE 1 AND m2.id_customer != 0 AND m2.id_order = m.id_order AND m2.id_message NOT IN 
-		(SELECT mr2.id_message FROM '._DB_PREFIX_.'message_readed mr2 WHERE mr2.id_employee = '.(int)($cookie->id_employee).') GROUP BY m2.id_order) nb_messages_not_read_by_me
+		(SELECT mr2.id_message FROM '._DB_PREFIX_.'message_readed mr2 WHERE mr2.id_employee = '.(int)$context->employee->id.') GROUP BY m2.id_order) nb_messages_not_read_by_me
 		FROM '._DB_PREFIX_.'message m
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_order = m.id_order)
 		LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = m.id_customer)
@@ -98,8 +98,7 @@ class AdminMessages extends AdminTab
 
 	public function display()
 	{
-		global $cookie, $currentIndex;
-
+		$context = Context::getContext();
 		if (isset($_GET['ajax']) && !empty($_GET['id_cart']))
 		{
 			ob_clean();
@@ -129,7 +128,7 @@ class AdminMessages extends AdminTab
 					</tr>
 					<tr>
 						<td>'.$this->l('Date:').'</td>
-						<td>'.Tools::displayDate($message['date_add'], (int)$cookie->id_lang, true).'</td>
+						<td>'.Tools::displayDate($message['date_add'], $context->language->id, true).'</td>
 					</tr>
 				</table>
 				<p>'.$this->l('Message:').' '.Tools::htmlentitiesUTF8($message['message']).'</p>
@@ -139,7 +138,7 @@ class AdminMessages extends AdminTab
 			die;
 		}
 		elseif (isset($_GET['view'.$this->table]) AND !empty($_GET['id_order']) AND $_GET['id_order'] != '--')
-			Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)($_GET['id_order']).'&vieworder'.'&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+			Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)($_GET['id_order']).'&vieworder'.'&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id));
 		else
 		{
 			if (isset($_GET['id_order']) AND (empty($_GET['id_order']) OR $_GET['id_order'] == '--'))
@@ -154,7 +153,7 @@ class AdminMessages extends AdminTab
 					
 			foreach ($this->_list AS $k => &$item)
 				if ($item['id_order'] == '--')
-					$this->_list[$k]['last_message'] .= ' <a class="iframe" onclick="$(this).parent().attr(\'onclick\', \'return false\');" href="'.self::$currentIndex.'&token='.Tools::getAdminToken('AdminMessages'.(int)(Tab::getIdFromClassName('AdminMessages')).(int)($cookie->id_employee)).'&ajax=1&id_cart='.(int)$this->_list[$k]['id_cart'].'" title="'.$this->l('View details').'"><img src="../img/admin/details.gif" alt="'.$this->l('View details').'" /></a>';
+					$this->_list[$k]['last_message'] .= ' <a class="iframe" onclick="$(this).parent().attr(\'onclick\', \'return false\');" href="'.self::$currentIndex.'&token='.Tools::getAdminToken('AdminMessages'.(int)(Tab::getIdFromClassName('AdminMessages')).(int)$context->employee->id).'&ajax=1&id_cart='.(int)$this->_list[$k]['id_cart'].'" title="'.$this->l('View details').'"><img src="../img/admin/details.gif" alt="'.$this->l('View details').'" /></a>';
 					
 			echo '
 			<link href="'._PS_CSS_DIR_.'jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />

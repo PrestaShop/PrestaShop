@@ -31,9 +31,6 @@ class AdminLocalization extends AdminPreferences
 {
 	public function __construct()
 	{
-		global $cookie;
-
-		$lang = strtoupper(Language::getIsoById($cookie->id_lang));
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -52,8 +49,6 @@ class AdminLocalization extends AdminPreferences
 
 	public function postProcess()
 	{
-		global $currentIndex;
-
 		if (isset($_POST['submitLocalization'.$this->table]))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
@@ -89,8 +84,6 @@ class AdminLocalization extends AdminPreferences
 
 	public function display()
 	{
-		global $currentIndex;
-
 		$this->_displayForm('localization', $this->_fieldsLocalization, $this->l('Localization'), 'width2', 'localization');
 		echo '<br />
 		<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'" class="width2" enctype="multipart/form-data">

@@ -29,8 +29,7 @@ class AdminGeolocation extends AdminTab
 {
 	public function display()
 	{
-		global $currentIndex, $cookie;
-		
+		$context = Context::getContext();		
 		echo '
 		<h2>'.$this->l('Geolocation').'</h2>
 		';
@@ -98,7 +97,7 @@ class AdminGeolocation extends AdminTab
 						</thead>
 						<tbody>
 		';
-		foreach (Country::getCountries(intval($cookie->id_lang)) AS $country)
+		foreach (Country::getCountries($context->language->id) AS $country)
 			echo '
 				<tr>
 					<td><input type="checkbox" name="countries[]" value="'.strtoupper(Tools::htmlentitiesUTF8($country['iso_code'])).'" '.(in_array(strtoupper($country['iso_code']), $allowedCountries) ? 'checked="checked"' : '').' /></td>
@@ -139,8 +138,6 @@ class AdminGeolocation extends AdminTab
 	
 	public function postProcess()
 	{
-		global $currentIndex;
-		
 		if (Tools::isSubmit('submitGeolocationConfiguration'))
 		{
 			if ($this->_isGeoLiteCityAvailable())

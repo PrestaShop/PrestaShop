@@ -63,7 +63,6 @@ class AdminGroupShop extends AdminTab
 		
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm($isMainTab);
 		
 		if (!($obj = $this->loadObject(true)))

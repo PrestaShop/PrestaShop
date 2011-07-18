@@ -91,8 +91,6 @@ class AdminCMSContent extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		if (((Tools::isSubmit('submitAddcms_category') OR Tools::isSubmit('submitAddcms_categoryAndStay')) AND sizeof($this->adminCMSCategories->_errors)) OR isset($_GET['updatecms_category']) OR isset($_GET['addcms_category']))
 		{
 			$this->adminCMSCategories->displayForm($this->token);

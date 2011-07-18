@@ -58,13 +58,13 @@ class AdminGroups extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
 			return;
-		$groupReductions = $obj->id ? GroupReduction::getGroupReductions($obj->id, (int)($cookie->id_lang)) : array();
-		$categories = Category::getSimpleCategories((int)($cookie->id_lang));
+		$groupReductions = $obj->id ? GroupReduction::getGroupReductions($obj->id, $context->language->id) : array();
+		$categories = Category::getSimpleCategories($context->language->id);
 
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
@@ -167,17 +167,15 @@ class AdminGroups extends AdminTab
 
 	public function viewgroup()
 	{
-		global $cookie;
-		
+		$context = Context::getContext();		
 		$currentIndex = 'index.php?tab=AdminGroups';
 		if (!($obj = $this->loadObject(true)))
 			return;
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		
 		echo '
 		<fieldset style="width: 400px">
-			<div style="float: right"><a href="'.self::$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
-			<span style="font-weight: bold; font-size: 14px;">'.strval($obj->name[(int)($cookie->id_lang)]).'</span>
+			<div style="float: right"><a href="'.$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
+			<span style="font-weight: bold; font-size: 14px;">'.strval($obj->name[(int)$context->language->id]).'</span>
 			<div class="clear">&nbsp;</div>
 			'.$this->l('Discount:').' '.(float)($obj->reduction).$this->l('%').'
 		</fieldset>
@@ -257,16 +255,16 @@ class AdminGroups extends AdminTab
 					<td class="center">'.$imgGender.'</td>
 					<td>'.stripslashes($customer['lastname']).' '.stripslashes($customer['firstname']).'</td>
 					<td>'.stripslashes($customer['email']).'<a href="mailto:'.stripslashes($customer['email']).'"> <img src="../img/admin/email_edit.gif" alt="'.$this->l('Write to this customer').'" /></a></td>
-					<td>'.Tools::displayDate($customer['birthday'], (int)($cookie->id_lang)).'</td>
-					<td>'.Tools::displayDate($customer['date_add'], (int)($cookie->id_lang)).'</td>
+					<td>'.Tools::displayDate($customer['birthday'], $context->language->id).'</td>
+					<td>'.Tools::displayDate($customer['date_add'], $context->language->id).'</td>
 					<td>'.Order::getCustomerNbOrders($customer['id_customer']).'</td>
 					<td class="center"><img src="../img/admin/'.($customer['active'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></td>
 					<td class="center" width="60px">
-						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($cookie->id_employee)).'">
+						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id).'">
 						<img src="../img/admin/details.gif" alt="'.$this->l('View orders').'" /></a>
-						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&addcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($cookie->id_employee)).'">
+						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&addcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id).'">
 						<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this customer').'" /></a>
-						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&deletecustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&deletecustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 						<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this customer').'" /></a>
 					</td>
 				</tr>';
@@ -279,8 +277,6 @@ class AdminGroups extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
-		
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
 		if (Tools::isSubmit('deleteGroupReduction'))

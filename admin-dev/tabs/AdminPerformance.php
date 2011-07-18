@@ -29,8 +29,6 @@ class AdminPerformance extends AdminTab
 {
 	public function postProcess()
 	{
-		global $currentIndex;
-		
 		if (Tools::isSubmit('submitCaching'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -207,8 +205,6 @@ class AdminPerformance extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		$warnings = array();
 		if (!extension_loaded('memcache'))
 			$warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').' <a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';

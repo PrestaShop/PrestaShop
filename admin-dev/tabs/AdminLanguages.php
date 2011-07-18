@@ -120,8 +120,7 @@ class AdminLanguages extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex, $cookie;
-
+		$context = Context::getContext();
 		if (isset($_GET['delete'.$this->table]))
 		{
 			if ($this->tabAccess['delete'] === '1') 	
@@ -133,7 +132,7 @@ class AdminLanguages extends AdminTab
 						$this->_errors[] = $this->l('You cannot delete the English language as it is a system requirement, you can only deactivate it.');
 					if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
 						$this->_errors[] = $this->l('you cannot delete the default language');
-					elseif ($object->id == $cookie->id_lang)
+					elseif ($object->id == clan)
 						$this->_errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
 					elseif ($this->deleteNoPictureImages((int)(Tools::getValue('id_lang'))) AND $object->delete())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
@@ -150,7 +149,7 @@ class AdminLanguages extends AdminTab
 			{
 				if (in_array(Configuration::get('PS_LANG_DEFAULT'), $_POST[$this->table.'Box']))
 					$this->_errors[] = $this->l('you cannot delete the default language');
-				elseif (in_array($cookie->id_lang, $_POST[$this->table.'Box']))
+				elseif (in_array($context->language->id, $_POST[$this->table.'Box']))
 					$this->_errors[] = $this->l('you cannot delete the language currently in use, please change languages before deleting');
 				else
 				{
@@ -244,8 +243,6 @@ class AdminLanguages extends AdminTab
 	
 	public function displayList()
 	{
-		global $currentIndex;
-		
 		$this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
 		parent::displayList();
 		$languages = Language::getLanguages(false);
@@ -253,8 +250,6 @@ class AdminLanguages extends AdminTab
 	
 	public function displayListContent($token=NULL)
 	{
-		global $currentIndex;
-
 		$irow = 0;
 		if ($this->_list)
 			
@@ -313,7 +308,6 @@ class AdminLanguages extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))

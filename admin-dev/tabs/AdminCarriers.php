@@ -135,7 +135,7 @@ class AdminCarriers extends AdminTab
 	</div>
 				<label>'.$this->l('Group access').'</label>
 				<div class="margin-form">';
-					$groups = Group::getGroups(Context::getContext()->language->id));
+					$groups = Group::getGroups(Context::getContext()->language->id);
 					if (sizeof($groups))
 					{
 						echo '

@@ -45,7 +45,6 @@ class AdminOrderMessage extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex;
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))

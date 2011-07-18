@@ -31,12 +31,11 @@ class AdminEmails extends AdminPreferences
 {
 	public function __construct()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
-		foreach (Contact::getContacts((int)$cookie->id_lang) AS $contact)
+		foreach (Contact::getContacts($context->language->id) AS $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
  		$this->_fieldsEmail = array(

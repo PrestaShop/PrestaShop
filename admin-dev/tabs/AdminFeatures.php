@@ -47,8 +47,6 @@ class AdminFeatures extends AdminTab
 
 	public function display()
 	{
-		global $currentIndex;
-
 		if ((isset($_POST['submitAddfeature_value']) AND sizeof($this->adminFeaturesValues->_errors))
 			OR isset($_GET['updatefeature_value']) OR isset($_GET['addfeature_value']))
 		{
@@ -65,8 +63,6 @@ class AdminFeatures extends AdminTab
 	/* Report to AdminTab::displayList() for more details */
 	public function displayList()
 	{
-		global $currentIndex;
-
 		echo '<br />
 			<a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> <b>'.$this->l('Add a new feature').'</b></a><br />
 			<a href="'.self::$currentIndex.'&addfeature_value&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new feature value').'</a><br /><br />
@@ -136,7 +132,6 @@ class AdminFeatures extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -183,8 +178,8 @@ class AdminFeatures extends AdminTab
 
 	public function postProcess()
 	{
-	 	global	$cookie, $currentIndex;
-		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($cookie->profile, $this->id);
+		$context = Context::getContext();
+		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($context->employee->id_profile, $this->id);
 		$this->adminFeaturesValues->postProcess($this->token);
 
 		if(Tools::getValue('submitDel'.$this->table))

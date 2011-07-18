@@ -35,7 +35,6 @@ class AdminProducts extends AdminTab
 
 	public function __construct()
 	{
-		global $currentIndex;
 		$context = Context::getContext();
 
 		$this->table = 'product';
@@ -120,10 +119,9 @@ class AdminProducts extends AdminTab
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
 	{
-		global $cookie;
-
-		$orderByPriceFinal = (empty($orderBy) ? ($cookie->__get($this->table.'Orderby') ? $cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
-		$orderWayPriceFinal = (empty($orderWay) ? ($cookie->__get($this->table.'Orderway') ? $cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
+		$context = Context::getContext();
+		$orderByPriceFinal = (empty($orderBy) ? ($context->cookie->__get($this->table.'Orderby') ? $context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
+		$orderWayPriceFinal = (empty($orderWay) ? ($context->cookie->__get($this->table.'Orderway') ? $context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
 		if ($orderByPriceFinal == 'price_final')
 		{
 			$orderBy = 'id_'.$this->table;
@@ -172,7 +170,7 @@ class AdminProducts extends AdminTab
 	 */
 	public function postProcess($token = NULL)
 	{
-		global $cookie, $currentIndex;
+		$context = Context::getContext();
 		/* Add a new product */
 		if (Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndStay') OR  Tools::isSubmit('submitAddProductAndPreview'))
 		{
@@ -525,7 +523,7 @@ class AdminProducts extends AdminTab
 									Tools::getValue('minimal_quantity'));
 								if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0 AND $id_reason > 0)
 								{
-									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $cookie->id_employee))
+									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $context->employee->id))
 										$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 								}
 								Hook::updateProductAttribute((int)$id_product_attribute);
@@ -1083,16 +1081,13 @@ class AdminProducts extends AdminTab
 
 	/**
 	 * Add or update a product
-	 *
-	 * @global string $currentIndex Current URL in order to keep current Tab
 	 */
 	public function submitAddProduct($token = NULL)
 	{
-		global $cookie, $currentIndex, $link;
-
+		$context = Context::getContext();
 		$className = 'Product';
 		$rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
-		$defaultLanguage = new Language((int)(Configuration::get('PS_LANG_DEFAULT')));
+		$defaultLanguage = $context->language;
 		$languages = Language::getLanguages(false);
 
 		/* Check required fields */
@@ -1177,7 +1172,7 @@ class AdminProducts extends AdminTab
 					{
 						if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND Tools::getValue('mvt_quantity') > 0 AND $id_reason > 0)
 						{
-							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, NULL, NULL, (int)$cookie->id_employee))
+							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, NULL, NULL, $context->employee->id))
 								$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 						}
 						$this->updateAccessories($object);
@@ -1201,7 +1196,7 @@ class AdminProducts extends AdminTab
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
 							{
-								$preview_url = ($link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', (int)($cookie->id_lang)), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), (int)($cookie->id_lang))));
+								$preview_url = ($context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $context->language->id)));
 								if (!$object->active)
 								{
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -1253,7 +1248,7 @@ class AdminProducts extends AdminTab
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
 							{
-								$preview_url = ($link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', (int)($cookie->id_lang)), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), (int)($cookie->id_lang))));
+								$preview_url = ($context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $context->language->id)));
 								if (!$obj->active)
 								{
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -1399,12 +1394,11 @@ class AdminProducts extends AdminTab
 
 	public function display($token = NULL)
 	{
-		global $currentIndex, $cookie;
-
-		$id_shop = Context::getContext()->shop->getID();
+		$context = Context::getContext();
+		$id_shop = $context->shop->getID();
 		if (($id_category = (int)Tools::getValue('id_category')))
 			$currentIndex .= '&id_category='.$id_category;
-		$this->getList((int)($cookie->id_lang), !$cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $id_shop);
+		$this->getList($context->language->id, !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $id_shop);
 		$id_category = (Tools::getValue('id_category',1));
 		if (!$id_category)
 			$id_category = 1;
@@ -1426,8 +1420,6 @@ class AdminProducts extends AdminTab
 	 */
 	public function displayList($token = NULL)
 	{
-		global $currentIndex;
-
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader($token);
 		if (!sizeof($this->_list))
@@ -1520,11 +1512,11 @@ class AdminProducts extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $link, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 
 		if ($id_category_back = (int)(Tools::getValue('id_category')))
-			$currentIndex .= '&id_category='.$id_category_back;
+			self::$currentIndex .= '&id_category='.$id_category_back;
 
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -1532,7 +1524,7 @@ class AdminProducts extends AdminTab
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		if ($obj->id)
-			$currentIndex .= '&id_product='.$obj->id;
+			self::$currentIndex .= '&id_product='.$obj->id;
 
 		echo '
 		<h3>'.$this->l('Current product:').' <span id="current_product" style="font-weight: normal;">'.$this->l('no name').'</span></h3>
@@ -1589,7 +1581,7 @@ class AdminProducts extends AdminTab
 			echo ' 	if (toload[id]) {
 							toload[id] = false;
 							$.post(
-								"'.dirname($currentIndex).'/ajax.php", {
+								"'.dirname(self::$currentIndex).'/ajax.php", {
 									ajaxProductTab: id, id_product: '.$obj->id.',
 									token: \''.Tools::getValue('token').'\',
 									id_category: '.(int)(Tools::getValue('id_category')).'},
@@ -1625,9 +1617,9 @@ class AdminProducts extends AdminTab
 
 		if (Tools::getValue('id_category') > 1)
 		{
-			$productIndex = preg_replace('/(&id_product=[0-9]*)/', '', $currentIndex);
+			$productIndex = preg_replace('/(&id_product=[0-9]*)/', '', self::$currentIndex);
 			echo '<br /><br />
-			<a href="'.$productIndex.($this->token ? '&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)) : '').'">
+			<a href="'.$productIndex.($this->token ? '&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id) : '').'">
 				<img src="../img/admin/arrow2.gif" /> '.$this->l('Back to the category').'
 			</a><br />';
 		}
@@ -1635,17 +1627,15 @@ class AdminProducts extends AdminTab
 
 	function displayFormPrices($obj, $languages, $defaultLanguage)
 	{
-		global $cookie, $currentIndex;
-
+		$context = Context::getContext();
 		if ($obj->id)
 		{
 			$shops = Shop::getShops();
 			$currencies = Currency::getCurrencies();
-			$countries = Country::getCountries((int)($cookie->id_lang));
-			$groups = Group::getGroups((int)($cookie->id_lang));
-			$defaultCurrency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
-			$this->_displaySpecificPriceAdditionForm($defaultCurrency, $shops, $currencies, $countries, $groups);
-			$this->_displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups);
+			$countries = Country::getCountries($context->language->id);
+			$groups = Group::getGroups($context->language->id);
+			$this->_displaySpecificPriceAdditionForm( $context->currency, $shops, $currencies, $countries, $groups);
+			$this->_displaySpecificPriceModificationForm( $context->currency, $shops, $currencies, $countries, $groups);
 		}
 		else
 			echo '<b>'.$this->l('You must save this product before adding specific prices').'.</b>';
@@ -1661,7 +1651,6 @@ class AdminProducts extends AdminTab
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
 	{
-		global $currentIndex;
 		$context = Context::getContext();
 		if (!($obj = $this->loadObject()))
 			return;
@@ -2028,12 +2017,12 @@ class AdminProducts extends AdminTab
 
 	function displayFormAttachments($obj, $languages, $defaultLanguage)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$languages = Language::getLanguages(false);
-		$attach1 = Attachment::getAttachments($cookie->id_lang, $obj->id, true);
-		$attach2 = Attachment::getAttachments($cookie->id_lang, $obj->id, false);
+		$attach1 = Attachment::getAttachments($context->language->id, $obj->id, true);
+		$attach2 = Attachment::getAttachments($context->language->id, $obj->id, false);
 
 				echo '
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
@@ -2100,10 +2089,8 @@ class AdminProducts extends AdminTab
 	function displayFormInformations($obj, $currency)
 	{
 		parent::displayForm(false);
-		global $currentIndex, $cookie, $link;
 		$context = Context::getContext();
 
-		$context->country->getIsoById((int)($cookie->id_lang));
 		$has_attribute = $obj->hasAttributes();
 		$qty = $obj->getStock();
 		$cover = Product::getCover($obj->id);
@@ -2117,7 +2104,7 @@ class AdminProducts extends AdminTab
 					updateCurrentText();
 					updateFriendlyURL();
 					$.ajax({
-						url: "'.dirname($currentIndex).'/ajax.php",
+						url: "'.dirname(self::$currentIndex).'/ajax.php",
 						dataType: "json",
 						data: "ajaxProductManufacturers=1",
 						success: function(j) {
@@ -2134,7 +2121,7 @@ class AdminProducts extends AdminTab
 
 					});
 					$.ajax({
-						url: "'.dirname($currentIndex).'/ajax.php",
+						url: "'.dirname(self::$currentIndex).'/ajax.php",
 						dataType: "json",
 						data: "ajaxProductSuppliers=1",
 						success: function(j) {
@@ -2163,7 +2150,7 @@ class AdminProducts extends AdminTab
 		$preview_url = '';
 		if (isset($obj->id))
 		{
-			$preview_url = ($link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), (int)($cookie->id_lang))));
+			$preview_url = ($link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), $context->language->id)));
 			if (!$obj->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -2180,7 +2167,7 @@ class AdminProducts extends AdminTab
 			<a href="'.$preview_url.'" target="_blank"><img src="../img/admin/details.gif" alt="'.$this->l('View product in shop').'" title="'.$this->l('View product in shop').'" /> '.$this->l('View product in shop').'</a>';
 
 			if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
-				echo '&nbsp;-&nbsp;<a href="index.php?tab=AdminStats&module=statsproduct&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminStats'.(int)(Tab::getIdFromClassName('AdminStats')).(int)($cookie->id_employee)).'"><img src="../modules/statsproduct/logo.gif" alt="'.$this->l('View product sales').'" title="'.$this->l('View product sales').'" /> '.$this->l('View product sales').'</a>';
+				echo '&nbsp;-&nbsp;<a href="index.php?tab=AdminStats&module=statsproduct&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminStats'.(int)(Tab::getIdFromClassName('AdminStats')).(int)$context->employee->id).'"><img src="../modules/statsproduct/logo.gif" alt="'.$this->l('View product sales').'" title="'.$this->l('View product sales').'" /> '.$this->l('View product sales').'</a>';
 		}
 		echo '
 			<hr class="clear"/>
@@ -2302,7 +2289,7 @@ class AdminProducts extends AdminTab
 			echo '				<option value="'.$id_manufacturer.'" selected="selected">'.Manufacturer::getNameById($id_manufacturer).'</option>
 								<option disabled="disabled">----------</option>';
 		echo '
-							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminManufacturers&addmanufacturer&token='.Tools::getAdminToken('AdminManufacturers'.(int)(Tab::getIdFromClassName('AdminManufacturers')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete product information entered?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
+							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminManufacturers&addmanufacturer&token='.Tools::getAdminToken('AdminManufacturers'.(int)(Tab::getIdFromClassName('AdminManufacturers')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete product information entered?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
 						</td>
 					</tr>
 					<tr>
@@ -2314,7 +2301,7 @@ class AdminProducts extends AdminTab
 			echo '				<option value="'.$id_supplier.'" selected="selected">'.Supplier::getNameById($id_supplier).'</option>
 								<option disabled="disabled">----------</option>';
 		echo '
-							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminSuppliers&addsupplier&token='.Tools::getAdminToken('AdminSuppliers'.(int)(Tab::getIdFromClassName('AdminSuppliers')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
+							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminSuppliers&addsupplier&token='.Tools::getAdminToken('AdminSuppliers'.(int)(Tab::getIdFromClassName('AdminSuppliers')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
 						</td>
 					</tr>
 				</table>
@@ -2552,11 +2539,11 @@ class AdminProducts extends AdminTab
 
 				echo '</select>
 
-				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)($cookie->id_employee)).'&id_product='.(int)$obj->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
+				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)$context->employee->id).'&id_product='.(int)$obj->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
 				';
 				if (Tax::excludeTaxeOption())
 				{
-					echo '<span style="margin-left:10px; color:red;">'.$this->l('Taxes are currently disabled').'</span> (<b><a href="index.php?tab=AdminTaxes&token='.Tools::getAdminToken('AdminTaxes'.(int)(Tab::getIdFromClassName('AdminTaxes')).(int)($cookie->id_employee)).'">'.$this->l('Tax options').'</a></b>)';
+					echo '<span style="margin-left:10px; color:red;">'.$this->l('Taxes are currently disabled').'</span> (<b><a href="index.php?tab=AdminTaxes&token='.Tools::getAdminToken('AdminTaxes'.(int)(Tab::getIdFromClassName('AdminTaxes')).(int)$context->employee->id).'">'.$this->l('Tax options').'</a></b>)';
 					echo '<input type="hidden" value="'.(int)($this->getFieldValue($obj, 'id_tax_rules_group')).'" name="id_tax_rules_group" />';
 				}
 
@@ -2631,7 +2618,7 @@ class AdminProducts extends AdminTab
 								<td style="padding-bottom:5px;">
 									<select id="id_mvt_reason" name="id_mvt_reason">
 										<option value="-1">--</option>';
-							$reasons = StockMvtReason::getStockMvtReasons((int)$cookie->id_lang);
+							$reasons = StockMvtReason::getStockMvtReasons($context->language->id);
 
 							foreach ($reasons AS $reason)
 								echo '<option rel="'.$reason['sign'].'" value="'.$reason['id_stock_mvt_reason'].'" '.(Configuration::get('PS_STOCK_MVT_REASON_DEFAULT') == $reason['id_stock_mvt_reason'] ? 'selected="selected"' : '').'>'.$reason['name'].'</option>';
@@ -2718,7 +2705,7 @@ class AdminProducts extends AdminTab
 						<td style="padding-bottom:5px;">
 							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0" '.((int)($this->getFieldValue($obj, 'out_of_stock')) == 0 ? 'checked="checked"' : '').'/> <label for="out_of_stock_1" class="t" id="label_out_of_stock_1">'.$this->l('Deny orders').'</label>
 							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" '.($this->getFieldValue($obj, 'out_of_stock') == 1 ? 'checked="checked"' : '').'/> <label for="out_of_stock_2" class="t" id="label_out_of_stock_2">'.$this->l('Allow orders').'</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)($cookie->id_employee)).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
 						</td>
 					</tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
@@ -2820,7 +2807,7 @@ class AdminProducts extends AdminTab
 				echo '	<p class="clear">'.$this->l('Tags separated by commas (e.g., dvd, dvd player, hifi)').'</p>
 						</td>
 					</tr>';
-				$accessories = Product::getAccessoriesLight((int)($cookie->id_lang), $obj->id);
+				$accessories = Product::getAccessoriesLight($context->language->id, $obj->id);
 
 				if ($postAccessories = Tools::getValue('inputAccessories'))
 				{
@@ -2893,8 +2880,7 @@ class AdminProducts extends AdminTab
 			<br />
 			</div>';
 			// TinyMCE
-		global $cookie;
-		$iso = Language::getIsoById((int)($cookie->id_lang));
+		$iso = $context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
@@ -2923,7 +2909,7 @@ class AdminProducts extends AdminTab
 
 	function displayFormImages($obj, $token = NULL)
 	{
-		global $cookie, $currentIndex, $attributeJs, $images;
+		global $attributeJs, $images;
 
 		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
 		echo '
@@ -2988,7 +2974,7 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td colspan="2" style="text-align:center;">';
 						echo '<input type="hidden" name="resizer" value="auto" />';
-					$images = Image::getImages((int)($cookie->id_lang), $obj->id);
+					$images = Image::getImages($context->language->id, $obj->id);
 					$imagesTotal = Image::getImagesTotal($obj->id);
 
 							if (isset($obj->id) AND sizeof($images))
@@ -3023,7 +3009,7 @@ class AdminProducts extends AdminTab
 							echo '<script type="text/javascript">
 											$(window).ready(function() {
 												$(\'.image_shop\').change(function() {
-													$.post("'.dirname($currentIndex).'/ajax.php",
+													$.post("'.dirname(self::$currentIndex).'/ajax.php",
 														{updateProductImageShopAsso: 1, id_image:$(this).attr("name"), id_shop: $(this).val(), active:$(this).attr("checked")});
 												});
 											});
@@ -3094,7 +3080,7 @@ class AdminProducts extends AdminTab
 				var modifyattributegroup = \''.addslashes(html_entity_decode($this->l('Modify this attribute combination'), ENT_COMPAT, 'UTF-8')).'\';
 				attrs[0] = new Array(0, \'---\');';
 
-			$attributes = Attribute::getAttributes((int)($cookie->id_lang), true);
+			$attributes = Attribute::getAttributes($context->language->id, true);
 			$attributeJs = array();
 
 			foreach ($attributes AS $k => $attribute)
@@ -3114,13 +3100,12 @@ class AdminProducts extends AdminTab
 
 	public function initCombinationImagesJS()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 
 		$content = 'var combination_images = new Array();';
-		if (!$allCombinationImages = $obj->getCombinationImages((int)($cookie->id_lang)))
+		if (!$allCombinationImages = $obj->getCombinationImages($context->language->id))
 			return $content;
 		foreach ($allCombinationImages AS $id_product_attribute => $combinationImages)
 		{
@@ -3134,18 +3119,17 @@ class AdminProducts extends AdminTab
 
 	function displayFormAttributes($obj, $languages, $defaultLanguage)
 	{
-		global $currentIndex, $cookie;
 		$context = Context::getContext();
 		
 		$attributeJs = array();
-		$attributes = Attribute::getAttributes((int)($cookie->id_lang), true);
+		$attributes = Attribute::getAttributes($context->language->id, true);
 		foreach ($attributes AS $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$attributes_groups = AttributeGroup::getAttributesGroups((int)($cookie->id_lang));
+		$attributes_groups = AttributeGroup::getAttributesGroups($context->language->id);
 
 		
-		$images = Image::getImages((int)($cookie->id_lang), $obj->id);
+		$images = Image::getImages($context->language->id, $obj->id);
 		if ($obj->id)
 			{
 				echo '
@@ -3160,7 +3144,7 @@ class AdminProducts extends AdminTab
 			<table cellpadding="5">
 				<tr>
 					<td colspan="2"><b>'.$this->l('Add or modify combinations for this product').'</b> -
-					&nbsp;<a href="index.php?tab=AdminCatalog&id_product='.$obj->id.'&id_category='.(int)(Tools::getValue('id_category')).'&attributegenerator&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="'.$this->l('Product combinations generator').'" />&nbsp;'.$this->l('Product combinations generator').'</a>
+					&nbsp;<a href="index.php?tab=AdminCatalog&id_product='.$obj->id.'&id_category='.(int)(Tools::getValue('id_category')).'&attributegenerator&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="'.$this->l('Product combinations generator').'" />&nbsp;'.$this->l('Product combinations generator').'</a>
 					</td>
 				</tr>
 			</table>
@@ -3275,7 +3259,7 @@ class AdminProducts extends AdminTab
 				<td style="padding-bottom:5px;">
 					<select id="id_mvt_reason" name="id_mvt_reason">
 						<option value="-1">--</option>';
-			$reasons = StockMvtReason::getStockMvtReasons((int)$cookie->id_lang);
+			$reasons = StockMvtReason::getStockMvtReasons($context->language->id);
 			foreach ($reasons AS $reason)
 				echo '<option rel="'.$reason['sign'].'" value="'.$reason['id_stock_mvt_reason'].'" '.(Configuration::get('PS_STOCK_MVT_REASON_DEFAULT') == $reason['id_stock_mvt_reason'] ? 'selected="selected"' : '').'>'.$reason['name'].'</option>';
 			echo '</select>
@@ -3348,11 +3332,11 @@ class AdminProducts extends AdminTab
 			if ($obj->id)
 			{
 				/* Build attributes combinaisons */
-				$combinaisons = $obj->getAttributeCombinaisons((int)($cookie->id_lang));
+				$combinaisons = $obj->getAttributeCombinaisons($context->language->id);
 				$groups = array();
 				if (is_array($combinaisons))
 				{
-					$combinationImages = $obj->getCombinationImages((int)($cookie->id_lang));
+					$combinationImages = $obj->getCombinationImages($context->language->id);
 					foreach ($combinaisons AS $k => $combinaison)
 					{
 						$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
@@ -3407,13 +3391,13 @@ class AdminProducts extends AdminTab
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
 							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\'); calcImpactPriceTI();" /></a>&nbsp;
-							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'">
+							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
-							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /></a></td>
 						</tr>';
 					}
-					echo '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
+					echo '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
 				}
 				else
 					echo '<tr><td colspan="7" align="center"><i>'.$this->l('No combination yet').'.</i></td></tr>';
@@ -3453,7 +3437,7 @@ class AdminProducts extends AdminTab
 								echo '
 								</select>
 								&nbsp;&nbsp;<input type="submit" value="'.$this->l('OK').'" name="submitAdd'.$this->table.'AndStay" class="button" />
-								&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?tab=AdminAttributesGroups&token='.Tools::getAdminToken('AdminAttributesGroups'.(int)(Tab::getIdFromClassName('AdminAttributesGroups')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/asterisk.gif" alt="" /> '.$this->l('Color attribute management').'</a>
+								&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?tab=AdminAttributesGroups&token='.Tools::getAdminToken('AdminAttributesGroups'.(int)(Tab::getIdFromClassName('AdminAttributesGroups')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/asterisk.gif" alt="" /> '.$this->l('Color attribute management').'</a>
 								<p >'.$this->l('Activate the color choice by selecting a color attribute group.').'</p>
 							</td>
 						</tr>
@@ -3465,12 +3449,12 @@ class AdminProducts extends AdminTab
 
 	function displayFormFeatures($obj)
 	{
-		global $cookie, $currentIndex;
+		$context = Context::getContext();
 		parent::displayForm();
 
 		if ($obj->id)
 		{
-			$feature = Feature::getFeatures((int)($cookie->id_lang));
+			$feature = Feature::getFeatures($context->language->id);
 			$ctab = '';
 			foreach ($feature AS $tab)
 				$ctab .= 'ccustom_'.$tab['id_feature'].'¤';
@@ -3490,7 +3474,7 @@ class AdminProducts extends AdminTab
 			</table>
 			<hr style="width:100%;" /><br />';
 			// Header
-			$nb_feature = Feature::nbFeatures((int)($cookie->id_lang));
+			$nb_feature = Feature::nbFeatures($context->language->id);
 			echo '
 			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:900px;">
 				<tr>
@@ -3516,7 +3500,7 @@ class AdminProducts extends AdminTab
 						if ($tab_products['id_feature'] == $tab_features['id_feature'])
 							$current_item = $tab_products['id_feature_value'];
 
-					$featureValues = FeatureValue::getFeatureValuesWithLang((int)$cookie->id_lang, (int)$tab_features['id_feature']);
+					$featureValues = FeatureValue::getFeatureValuesWithLang($context->language->id, (int)$tab_features['id_feature']);
 
 					echo '
 					<tr>
@@ -3540,7 +3524,7 @@ class AdminProducts extends AdminTab
 						echo '</select>';
 					}
 					else
-						echo '<input type="hidden" name="feature_'.$tab_features['id_feature'].'_value" value="0" /><span style="font-size: 10px; color: #666;">'.$this->l('N/A').' - <a href="index.php?tab=AdminFeatures&addfeature_value&id_feature='.(int)$tab_features['id_feature'].'&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)($cookie->id_employee)).'" style="color: #666; text-decoration: underline;">'.$this->l('Add pre-defined values first').'</a></span>';
+						echo '<input type="hidden" name="feature_'.$tab_features['id_feature'].'_value" value="0" /><span style="font-size: 10px; color: #666;">'.$this->l('N/A').' - <a href="index.php?tab=AdminFeatures&addfeature_value&id_feature='.(int)$tab_features['id_feature'].'&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$context->employee->id).'" style="color: #666; text-decoration: underline;">'.$this->l('Add pre-defined values first').'</a></span>';
 
 					echo '
 						</td>
@@ -3564,7 +3548,7 @@ class AdminProducts extends AdminTab
 			echo '</table>
 			<hr style="width:100%;" />
 			<div style="text-align:center;">
-				<a href="index.php?tab=AdminFeatures&addfeature&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)($cookie->id_employee)).'" onclick="return confirm(\''.$this->l('You will lose all modifications not saved, you may want to save modifications first?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="new_features" title="'.$this->l('Add a new feature').'" />&nbsp;'.$this->l('Add a new feature').'</a>
+				<a href="index.php?tab=AdminFeatures&addfeature&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('You will lose all modifications not saved, you may want to save modifications first?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="new_features" title="'.$this->l('Add a new feature').'" />&nbsp;'.$this->l('Add a new feature').'</a>
 			</div>';
 		}
 		else
@@ -3581,10 +3565,9 @@ class AdminProducts extends AdminTab
 
 	private function displayPack(Product $obj)
 	{
-		global $currentIndex, $cookie;
-
+		$context = Context::getContext();
 		$boolPack = (($obj->id AND Pack::isPack($obj->id)) OR Tools::getValue('ppack')) ? true : false;
-		$packItems = $boolPack ? Pack::getItems($obj->id, $cookie->id_lang) : array();
+		$packItems = $boolPack ? Pack::getItems($obj->id, $context->language->id) : array();
 
 		echo '
 		<tr>
@@ -3809,7 +3792,6 @@ class AdminProducts extends AdminTab
 	 */
 	protected function loadObject($opt = false)
 	{
-		global $cookie;
 		if ($id = (int)(Tools::getValue($this->identifier)) AND Validate::isUnsignedId($id))
 		{
 			if (!$this->_object)

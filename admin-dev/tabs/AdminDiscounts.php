@@ -29,8 +29,7 @@ class AdminDiscounts extends AdminTab
 {
 	public function __construct()
 	{
-		global $cookie;
-	 	
+		$context = Context::getContext();	 	
 		$this->table = 'discount';
 	 	$this->className = 'Discount';
 	 	$this->lang = true;
@@ -43,10 +42,10 @@ class AdminDiscounts extends AdminTab
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'currency` c ON (c.`id_currency` = a.`id_currency`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type` dt ON (dt.`id_discount_type` = a.`id_discount_type`)
 						LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.`id_shop` = a.`id_shop`)
-						LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)($cookie->id_lang).')';
+						LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)$context->language->id.')';
 		
 		$typesArray = array();
-		$types = Discount::getDiscountTypes((int)($cookie->id_lang));
+		$types = Discount::getDiscountTypes($context->language->id);
 		foreach ($types AS $type)
 			$typesArray[$type['id_discount_type']] = $type['name'];
 			
@@ -78,7 +77,6 @@ class AdminDiscounts extends AdminTab
 
 	public function postProcess()
 	{
-		global $currentIndex, $cookie;
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
 		if ($discountName = Tools::getValue('name') AND Validate::isDiscountName($discountName) AND Discount::discountExists($discountName, Tools::getValue('id_discount')))
@@ -180,7 +178,7 @@ class AdminDiscounts extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		global $currentIndex, $cookie;
+		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
@@ -232,7 +230,7 @@ class AdminDiscounts extends AdminTab
 				<div class="margin-form">
 					<select name="id_discount_type" id="id_discount_type" onchange="free_shipping()">
 						<option value="0">'.$this->l('-- Choose --').'</option>';
-		$discountTypes = Discount::getDiscountTypes((int)($cookie->id_lang));
+		$discountTypes = Discount::getDiscountTypes($context->language->id);
 		foreach ($discountTypes AS $discountType)
 			echo '<option value="'.(int)($discountType['id_discount_type']).'"'.
 			(($this->getFieldValue($obj, 'id_discount_type') == $discountType['id_discount_type']) ? ' selected="selected"' : '').'>'.$discountType['name'].'</option>';
@@ -284,7 +282,7 @@ class AdminDiscounts extends AdminTab
 		$done = array();
 		$index = array();
 		$indexedCategories =  isset($_POST['categoryBox']) ? $_POST['categoryBox'] : ($obj->id ? Discount::getCategories($obj->id) : array());
-		$categories = Category::getCategories((int)($cookie->id_lang), false);
+		$categories = Category::getCategories($context->language->id, false);
 		foreach ($indexedCategories AS $k => $row)
 			$index[] = $row['id_category'];
 		$this->recurseCategoryForInclude((int)(Tools::getValue($this->identifier)), $index, $categories, $categories[0][1], 1, $obj->id);
