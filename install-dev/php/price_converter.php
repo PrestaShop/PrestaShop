@@ -34,7 +34,7 @@ function convert_product_price()
 		$taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
 	$resource = DB::getInstance()->ExecuteS('SELECT `id_product`, `price`, `id_tax` FROM `'._DB_PREFIX_.'product`', false);
 	if (!$resource)
-		die(mysql_error());
+		die(Db::getInstance()->getMsgError());
 	while ($row = DB::getInstance()->nextRow($resource))
 		if ($row['id_tax'])
 		{

@@ -204,7 +204,7 @@ class MySQLCore extends Db
 			return mysql_insert_id($this->_link);
 		return false;
 	}
-	
+
 	public function	Affected_Rows()
 	{
 		if ($this->_link)
@@ -228,11 +228,10 @@ class MySQLCore extends Db
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns the text of the error message from previous MySQL operation
 	 *
-	 * @acces public
 	 * @return string error
 	 */
 	public function getMsgError($query = false)
