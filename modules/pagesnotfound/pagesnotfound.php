@@ -156,7 +156,7 @@ class Pagesnotfound extends Module
 		{
 			$http_referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 			if (empty($http_referer) OR Validate::isAbsoluteUrl($http_referer))
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_group_shop`) VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.$this->shopID.', '.$this->shopGroupID.')');
+				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_group_shop`) VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.$this->context->shop->getID().', '.$this->context->shop->getGroupID().')');
 		}
 	}
 }

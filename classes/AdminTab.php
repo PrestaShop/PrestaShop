@@ -1171,28 +1171,25 @@ abstract class AdminTabCore
 			$whereShop = Shop::sqlRestriction($this->shopShareDatas, 'a', null, null, $this->shopLinkType);
 		}
 
-		$filterShop = '';
-		if (Context::shop() != Shop::CONTEXT_ALL)
+		$assos = Shop::getAssoTables();
+		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 		{
-			$assos = Shop::getAssoTables();
-			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+			$filterKey = $assos[$this->table]['type'];
+			$idenfierShop = Shop::getListFromContext();
+		}
+		else if (Context::shop() == Shop::CONTEXT_GROUP)
+		{
+			$assos = GroupShop::getAssoTables();
+			if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
 			{
 				$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = Shop::getListFromContext();
+				$idenfierShop = array($context->shop->getGroupID());
 			}
-			else if (Context::shop() == Shop::CONTEXT_GROUP)
-			{
-				$assos = GroupShop::getAssoTables();
-				if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
-				{
-					$filterKey = $assos[$this->table]['type'];
-					$idenfierShop = array($context->shop->getGroupID());
-				}
-			}
-
-			if (isset($filterKey))
-				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		}
+
+		$filterShop = '';
+		if (isset($filterKey))
+			$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		
 		/* Query in order to get results with all fields */
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS

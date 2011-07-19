@@ -57,19 +57,16 @@ class BlockLanguages extends Module
 	*/
 	function hookTop($params)
 	{
-		$context = Context::getContext();
-
-		$languages = Language::getLanguages(true, $this->shopID);
+		$languages = Language::getLanguages(true, $this->context->shop->getID());
 		if (!sizeof($languages))
 			return '';
-		$context->controller->smarty->assign('languages', $languages);
+		$this->context->controller->smarty->assign('languages', $languages);
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blocklanguages.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blocklanguages.css', 'all');
 	}
 }
 

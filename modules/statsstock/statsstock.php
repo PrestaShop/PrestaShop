@@ -59,17 +59,7 @@ class StatsStock extends Module
 		$ru = $currentIndex.'&module='.$this->name.'&token='.Tools::getValue('token');
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$filter = ((int)$cookie->statsstock_id_category ? ' AND p.id_product IN (SELECT cp.id_product FROM '._DB_PREFIX_.'category_product cp WHERE cp.id_category = '.(int)$cookie->statsstock_id_category.')' : '');
-		
-		$joinProduct = $whereProduct = '';
-		if ($this->shopID || $this->shopGroupID)
-		{
-			$joinProduct = ' LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product ';
-			if ($this->shopID)
-				$whereProduct = ' AND ps.id_shop = '.$this->shopID;
-			else if ($this->shopGroupID)
-				$whereProduct = ' AND ps.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.')';
-		}
-
+	
 		$sql = 'SELECT p.id_product, p.reference, pl.name,
 				IFNULL((
 					SELECT AVG(pa.wholesale_price)
@@ -85,10 +75,10 @@ class StatsStock extends Module
 					FROM '._DB_PREFIX_.'product_attribute pa WHERE p.id_product = pa.id_product
 				), p.wholesale_price * p.quantity) as stockvalue
 				FROM '._DB_PREFIX_.'product p
-				'.$joinProduct.'
+				'.Shop::sqlAsso('product', 'p', true, $this->context).'
 				INNER JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
 				WHERE 1 = 1
-				'.$filter.$whereProduct;
+				'.$filter;
 		$products = Db::getInstance()->ExecuteS($sql);
 
 		echo '

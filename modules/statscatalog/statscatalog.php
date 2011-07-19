@@ -147,15 +147,7 @@ class StatsCatalog extends Module
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)';
 			$this->_where = ' AND cp.`id_category` = '.$id_category;
 		}
-		
-		if ($this->shopID || $this->shopGroupID)
-		{
-			$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product';
-			if ($this->shopID)
-				$this->_where .= ' AND ps.id_shop = ' . $this->shopID;
-			else if ($this->shopGroupID)
-				$this->_where .= ' AND ps.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.')';
-		}
+		$this->_join .= Shop::sqlAsso('product', 'p', true, $this->context);
 
 		$result1 = $this->getQuery1(true);
 		$total = $result1['total'];

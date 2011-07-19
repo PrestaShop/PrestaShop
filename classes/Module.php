@@ -90,24 +90,19 @@ abstract class ModuleCore
 	 * @var array used by AdminTab to determine which lang file to use (admin.php or module lang file)
 	 */
 	public static $classInModule	= array();
-	
-	/** @var int */
-	protected $shopID;
-	
-	/** @var int */
-	protected $shopGroupID;
+
+	/** @var Context */
+	protected $context;
 
 	/**
 	 * Constructor
 	 *
 	 * @param string $name Module unique name
+	 * @param Context $context
 	 */
-	public function __construct($name = null)
+	public function __construct($name = null, Context $context = null)
 	{
-		// Search the module shop context
-		list($shopID, $shopGroupID) = Shop::getContext();
-		$this->setShopID($shopID);
-		$this->setShopGroupID($shopGroupID);
+		$this->context = ($context) ? $context : Context::getContext();
 
 		if ($this->name == NULL)
 			$this->name = $this->id;
@@ -115,7 +110,7 @@ abstract class ModuleCore
 		{
 			if (self::$modulesCache == NULL AND !is_array(self::$modulesCache))
 			{
-				$list = Shop::getListOfID($this->shopID, $this->shopGroupID);
+				$list = Shop::getListOfID($this->context);
 
 				// Join clause is done to check if the module is activated in current shop context
 				$sql = 'SELECT m.id_module, m.name, (
@@ -142,26 +137,10 @@ abstract class ModuleCore
 			}
 		}
 	}
-	
-	/**
-	 * @param int $id Set shopID property
-	 */
-	public function setShopID($id)
-	{
-		$this->shopID = (int)$id;
-	}
-	
-	/**
-	 * @param int $id Set shopGroupID property
-	 */
-	public function setShopGroupID($id)
-	{
-		$this->shopGroupID = (int)$id;
-	}
-	
+
 	protected function sqlShopRestriction($share = false, $alias = null)
 	{
-		return Shop::sqlRestriction($share, $alias, $this->shopID, $this->shopGroupID, 'shop');
+		return Shop::sqlRestriction($share, $alias, $this->context, 'shop');
 	}
 
 	/**
@@ -240,7 +219,7 @@ abstract class ModuleCore
 	 */
 	public function enable($forceAll = false)
 	{
-		$list = Shop::getListOfID($this->shopID, $this->shopGroupID);
+		$list = Shop::getListOfID($this->context);
 		$sql = 'SELECT id_shop
 				FROM '._DB_PREFIX_.'module_shop
 				WHERE id_module = '.$this->id.'
@@ -288,7 +267,7 @@ abstract class ModuleCore
 	{
 		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop 
 				WHERE id_module = '.$this->id.'
-					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', Shop::getListOfID($this->shopID, $this->shopGroupID)).')' : '');
+					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', Shop::getListOfID($this->context)).')' : '');
 		Db::getInstance()->execute($sql);
 	}
 
@@ -916,7 +895,7 @@ abstract class ModuleCore
 	 */
 	public function updatePosition($id_hook, $way, $position = NULL)
 	{
-		$list = ShopCore::getListOfID($this->shopID, $this->shopGroupID);
+		$list = ShopCore::getListOfID($this->context);
 		foreach ($list as $shopID)
 		{
 			$sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`

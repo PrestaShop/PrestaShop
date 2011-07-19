@@ -75,18 +75,14 @@ class StatsCheckUp extends Module
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 		$employee = new Employee((int)($cookie->id_employee));
 		$prop30 = ((strtotime($employee->stats_date_to.' 23:59:59') - strtotime($employee->stats_date_from.' 00:00:00')) / 60 / 60 / 24) / 30;
+		
+		$shopID = $this->context->shop->getID();
+		$shopGroupID = $this->context->shop->getGroupID();
 
 		// Get languages
 		$sql = 'SELECT l.*
-				FROM '._DB_PREFIX_.'lang l';
-		if ($this->shopID || $this->shopGroupID)
-		{
-			$sql .= ' LEFT JOIN '._DB_PREFIX_.'lang_shop ls ON ls.id_lang = l.id_lang';
-			if ($this->shopID)
-				$sql .= ' WHERE ls.id_shop = ' . $this->shopID;
-			else if ($this->shopGroupID)
-				$sql .= ' WHERE ls.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.')';
-		}
+				FROM '._DB_PREFIX_.'lang l'
+				.Shop::sqlAsso('lang', 'l', true, $this->context);
 		$languages = $db->ExecuteS($sql);
 
 		$arrayColors = array(
@@ -109,40 +105,19 @@ class StatsCheckUp extends Module
 		elseif ($cookie->checkup_order == 3)
 			$orderBy = 'nbSales DESC';
 
-		// Generate SQL restrictions for products stats per shop
-		$joinProduct = $joinImage = $whereProduct = $whereImage = $whereOrder = '';
-		if ($this->shopID || $this->shopGroupID)
-		{
-			$joinProduct = ' LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product ';
-			$joinImage = ' LEFT JOIN '._DB_PREFIX_.'image_shop ishop ON ishop.id_image = i.id_image ';
-			if ($this->shopID)
-			{
-				$whereProduct = ' WHERE ps.id_shop = '.$this->shopID;
-				$whereImage = ' AND ishop.id_shop = '.$this->shopID;
-				$whereOrder = ' AND o.id_shop = '.$this->shopID;
-			}
-			else if ($this->shopGroupID)
-			{
-				$whereProduct = ' WHERE ps.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.')';
-				$whereImage = ' AND ishop.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.')';
-				$whereOrder = ' AND o.id_group_shop = '.$this->shopGroupID;
-			}
-		}
-
 		// Get products stats
 		$sql = 'SELECT p.id_product, p.active, pl.name, (
 					SELECT COUNT(*)
 					FROM '._DB_PREFIX_.'image i
-					'.$joinImage.'
+					'.Shop::sqlAsso('image', 'i', true, $this->context).'
 					WHERE i.id_product = p.id_product
-						'.$whereImage.'
 				) as nbImages, (
 					SELECT SUM(od.product_quantity)
 					FROM '._DB_PREFIX_.'orders o
 					LEFT JOIN '._DB_PREFIX_.'order_detail od ON o.id_order = od.id_order
 					WHERE od.product_id = p.id_product
 						AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween().'
-						'.$whereOrder.'
+						'.$this->sqlShopRestriction().'
 				) as nbSales, IFNULL((
 					SELECT SUM(pa.quantity)
 					FROM '._DB_PREFIX_.'product_attribute pa
@@ -150,8 +125,7 @@ class StatsCheckUp extends Module
 				), p.quantity) as stock
 				FROM '._DB_PREFIX_.'product p
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
-				'.$joinProduct.'
-				'.$whereProduct.'
+				'.Shop::sqlAsso('product', 'p', true, $this->context).'
 				ORDER BY '.$orderBy;
 		$result = $db->ExecuteS($sql);
 
