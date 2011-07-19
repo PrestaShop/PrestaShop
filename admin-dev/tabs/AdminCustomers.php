@@ -153,7 +153,7 @@ class AdminCustomers extends AdminTab
 						$shop = new Shop((int)$object->id_shop);
 						$object->id_group_shop = (int)$shop->id_group_shop;
 						if (!$object->add())
-							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
+							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 						elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND !sizeof($this->_errors) AND $this->_redirect)
 						{
 							// Add Associated groups

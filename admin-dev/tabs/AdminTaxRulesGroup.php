@@ -541,7 +541,7 @@ class AdminTaxRulesGroup extends AdminTab
 						$object = new $this->className();
 						$this->copyFromPost($object, $this->table);
 						if (!$object->add())
-							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
+							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 						elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND !sizeof($this->_errors) AND $this->_redirect)
 						{
 							$parent_id = (int)(Tools::getValue('id_parent', 1));

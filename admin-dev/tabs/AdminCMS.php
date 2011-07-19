@@ -235,7 +235,7 @@ class AdminCMS extends AdminTab
 			$cms = new CMS((int)(Tools::getValue('id_cms')));
 			$cms->cleanPositions($cms->id_cms_category);
 			if (!$cms->delete())
-				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
+				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=1&token='.Tools::getAdminTokenLite('AdminCMSContent'));
 		}/* Delete multiple objects */
@@ -273,7 +273,7 @@ class AdminCMS extends AdminTab
 					$cms = new CMS();
 					$this->copyFromPost($cms, 'cms');
 					if (!$cms->add())
-						$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
+						$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 					elseif (Tools::isSubmit('submitAddcmsAndPreview'))
 					{
 						$preview_url = $context->link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->_defaultFormLanguage), $context->language->id);
@@ -295,7 +295,7 @@ class AdminCMS extends AdminTab
 					$cms = new CMS($id_cms);
 					$this->copyFromPost($cms, 'cms');
 					if (!$cms->update())
-						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
+						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 					elseif (Tools::isSubmit('submitAddcmsAndPreview'))
 					{
 						$preview_url = $context->link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->_defaultFormLanguage), $context->language->id);
