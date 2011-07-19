@@ -64,7 +64,7 @@ class BlockUserInfo extends Module
 			'cart' => $context->cart,
 			'cart_qties' => $context->cart->nbProducts(),
 			'logged' => $context->cookie->isLogged(),
-			'customerName' => ($context->cookie->logged ? $context->customer->first_name.' '.$context->customer->lastname : false),
+			'customerName' => ($context->cookie->logged ? $context->customer->firstname.' '.$context->customer->lastname : false),
 			'firstName' => ($context->cookie->logged ? $context->customer->firstname : false),
 			'lastName' => ($context->cookie->logged ? $context->customer->lastname : false),
 			'order_process' => Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc' : 'order'

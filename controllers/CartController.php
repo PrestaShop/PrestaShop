@@ -43,12 +43,12 @@ class CartControllerCore extends FrontController
 						$groups = $context->customer->getGroups();
 					else
 						$groups = array(1);
-					if ((int)self::$cart->id_address_delivery)
-						$deliveryAddress = new Address(self::$cart->id_address_delivery);
-					$result = array('carriers' => Carrier::getCarriersForOrder((int)Country::getIdZone((isset($deliveryAddress) AND (int)$deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT')), $groups));
+					if ($context->cart->id_address_delivery)
+						$deliveryAddress = new Address($context->cart->id_address_delivery);
+					$result = array('carriers' => Carrier::getCarriersForOrder(Country::getIdZone((isset($deliveryAddress) AND (int)$deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT')), $groups));
 				}
-				$result['summary'] = self::$cart->getSummaryDetails();
-				$result['customizedDatas'] = Product::getAllCustomizedDatas((int)(self::$cart->id));
+				$result['summary'] = $context->cart->getSummaryDetails();
+				$result['customizedDatas'] = Product::getAllCustomizedDatas($context->cart->id);
 				$result['HOOK_SHOPPING_CART'] = Module::hookExec('shoppingCart', $result['summary']);
 				$result['HOOK_SHOPPING_CART_EXTRA'] = Module::hookExec('shoppingCartExtra', $result['summary']);
 				die(Tools::jsonEncode($result));
@@ -74,23 +74,23 @@ class CartControllerCore extends FrontController
 	public function preProcess()
 	{
 		parent::preProcess();
-
-		$orderTotal = self::$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-		$this->cartDiscounts = self::$cart->getDiscounts();
+		$context = Context::getContext();
+		$orderTotal = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$this->cartDiscounts = $context->cart->getDiscounts();
 		foreach ($this->cartDiscounts AS $k => $this->cartDiscount)
-			if ($error = self::$cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, self::$cart->getProducts(), false, (int)$this->id_current_group_shop, (int)$this->id_current_shop))
-				self::$cart->deleteDiscount((int)($this->cartDiscount['id_discount']));
+			if ($error = $context->cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, $context->cart->getProducts(), false, (int)$this->id_current_group_shop, (int)$this->id_current_shop))
+				$context->cart->deleteDiscount($this->cartDiscount['id_discount']);
 
 		$add = Tools::getIsset('add') ? 1 : 0;
 		$delete = Tools::getIsset('delete') ? 1 : 0;
 
 		if (Configuration::get('PS_TOKEN_ENABLE') == 1 &&
 			strcasecmp(Tools::getToken(false), strval(Tools::getValue('token'))) &&
-			self::$cookie->isLogged() === true)
+			$context->cookie->isLogged() === true)
 			$this->errors[] = Tools::displayError('Invalid token');
 
 		// Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
-		if (($add OR Tools::getIsset('update') OR $delete) AND isset($_COOKIE[self::$cookie->getName()]))
+		if (($add OR Tools::getIsset('update') OR $delete) AND isset($_COOKIE[$context->cookie->getName()]))
 		{
 			//get the values
 			$idProduct = (int)(Tools::getValue('id_product', NULL));
@@ -103,7 +103,7 @@ class CartControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Product not found');
 			else
 			{
-				$producToAdd = new Product((int)($idProduct), true, (int)self::$cookie->id_lang);
+				$producToAdd = new Product($idProduct, true, $context->language->id);
 				if ((!$producToAdd->id OR !$producToAdd->active) AND !$delete)
 					if (Tools::getValue('ajax') == 'true')
 						die('{"hasError" : true, "errors" : ["'.Tools::displayError('Product is no longer available.', false).'"]}');
@@ -139,14 +139,14 @@ class CartControllerCore extends FrontController
 					/* Check vouchers compatibility */
 					if ($add AND (($producToAdd->specificPrice AND (float)($producToAdd->specificPrice['reduction'])) OR $producToAdd->on_sale))
 					{
-						$discounts = self::$cart->getDiscounts();
+						$discounts = $context->cart->getDiscounts();
 						$hasUndiscountedProduct = null;
 						foreach($discounts as $discount)
 						{
 							if(is_null($hasUndiscountedProduct))
 							{
 								$hasUndiscountedProduct = false;
-								foreach(self::$cart->getProducts() as $product)
+								foreach($context->cart->getProducts() as $product)
 									if($product['reduction_applies'] === false)
 									{
 										$hasUndiscountedProduct = true;
@@ -166,23 +166,23 @@ class CartControllerCore extends FrontController
 						if ($add AND $qty >= 0)
 						{
 							/* Product addition to the cart */
-							if (!isset(self::$cart->id) OR !self::$cart->id)
+							if (!$context->cart->id)
 							{
-								self::$cart->add();
-								if (self::$cart->id)
-									self::$cookie->id_cart = (int)(self::$cart->id);
+								$context->cart->add();
+								if ($context->cart->id)
+									$context->cookie->id_cart = (int)$context->cart->id;
 							}
 							if ($add AND !$producToAdd->hasAllRequiredCustomizableFields() AND !$customizationId)
 								$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
 							if (!sizeof($this->errors))
 							{
-								$updateQuantity = self::$cart->updateQty((int)($qty), (int)($idProduct), (int)($idProductAttribute), $customizationId, Tools::getValue('op', 'up'));
+								$updateQuantity = $context->cart->updateQty($qty, $idProduct, $idProductAttribute, $customizationId, Tools::getValue('op', 'up'));
 
 								if ($updateQuantity < 0)
 								{
 									/* if product has attribute, minimal quantity is set with minimal quantity of attribute*/
 									if ((int)$idProductAttribute)
-										$minimal_quantity = Attribute::getAttributeMinimalQty((int)$idProductAttribute);
+										$minimal_quantity = Attribute::getAttributeMinimalQty($idProductAttribute);
 									else
 										$minimal_quantity = $producToAdd->minimal_quantity;
 									if (Tools::getValue('ajax') == 'true')
@@ -205,7 +205,7 @@ class CartControllerCore extends FrontController
 						}
 						elseif ($delete)
 						{
-							if (self::$cart->deleteProduct((int)($idProduct), (int)($idProductAttribute), (int)($customizationId)))
+							if ($context->cart->deleteProduct($idProduct, $idProductAttribute, $customizationId))
 								if (!Cart::getNbProducts((int)(self::$cart->id)))
 								{
 									self::$cart->id_carrier = 0;
