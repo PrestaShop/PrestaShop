@@ -27,7 +27,7 @@
 
 abstract class CacheCore
 {
-	
+	/** @var Cache */
 	protected static $_instance;
 	protected $_keysCached;
 	protected $_tablesCached = array();
@@ -43,6 +43,10 @@ abstract class CacheCore
 												'guest',
 												'pagenotfound',
 												'page_viewed');
+	
+	/**
+	 * @return Cache
+	 */
 	public static function getInstance()
 	{	
 		if(!isset(self::$_instance))

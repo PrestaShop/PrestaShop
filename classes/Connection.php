@@ -114,7 +114,7 @@ class ConnectionCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `id_guest` = '.(int)($cookie->id_guest).'
 					AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
-					AND id_shop = '.Shop::sqlRestriction().'
+					'.Shop::sqlRestriction(true).'
 				ORDER BY `date_add` DESC';
 		$result = Db::getInstance()->getRow($sql);
 		if (!$result['id_guest'] AND (int)($cookie->id_guest))

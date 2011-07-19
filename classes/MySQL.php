@@ -46,7 +46,8 @@ class MySQLCore extends Db
 	}
 	
 	/* do not remove, useful for some modules */
-	public function set_db($db_name) {
+	public function set_db($db_name)
+	{
 		return mysql_select_db($db_name, $this->_link);
 	}
 	
@@ -86,24 +87,9 @@ class MySQLCore extends Db
 
 	public function	getValue($query, $use_cache = 1)
 	{
-		$query .= ' LIMIT 1';
-		$this->_result = false;
-		$this->_lastQuery = $query;
-		if ($use_cache AND _PS_CACHE_ENABLED_)
-			if ($result = Cache::getInstance()->get(md5($query)))
-			{
-				$this->_lastCached = true;
-				return $result;
-			}
-		if ($this->_link AND $this->_result = mysql_query($query, $this->_link) AND is_array($tmpArray = mysql_fetch_assoc($this->_result)))
-		{ 
-			$this->_lastCached = false;
-			$result =  array_shift($tmpArray);
-			if($use_cache AND _PS_CACHE_ENABLED_)
-				Cache::getInstance()->setQuery($query, $result);
-			return $result;
-		}
-		return false;
+		if (!$result = $this->getRow($query, $use_cache))
+			return false;
+		return array_shift($result);
 	}
 	
 	public function	Execute($query, $use_cache = 1)
@@ -267,6 +253,14 @@ class MySQLCore extends Db
 	public function getVersion()
 	{
 		return mysql_get_server_info();
+	}
+	
+	/**
+	 * @see DbCore::escape()
+	 */
+	public function escape($str)
+	{
+		return mysql_real_escape_string($str, $this->_link);
 	}
 
 	static public function tryToConnect($server, $user, $pwd, $db)

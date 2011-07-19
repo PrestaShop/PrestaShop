@@ -251,11 +251,19 @@ abstract class DbCore
 	abstract public function getVersion();
 	
 	/**
-		 * Alias of Db::getInstance()->ExecuteS
-		 *
-		 * @acces string query The query to execute
-		 * @return array Array of line returned by MySQL
-		 */
+	 * Protect string against SQL injections
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	abstract public function escape($str);
+	
+	/**
+	 * Alias of Db::getInstance()->ExecuteS
+	 *
+	 * @acces string query The query to execute
+	 * @return array Array of line returned by MySQL
+	 */
 	static public function s($query, $use_cache = 1)
 	{
 		return Db::getInstance()->ExecuteS($query, true, $use_cache);
@@ -313,7 +321,7 @@ function pSQL($string, $htmlOK = false)
 	if (!is_numeric($string))
 	{
 		$link = Db::getInstance()->getRessource();
-		$string = _PS_MYSQL_REAL_ESCAPE_STRING_ ? mysql_real_escape_string($string, $link) : addslashes($string);
+		$string = _PS_MYSQL_REAL_ESCAPE_STRING_ ? Db::getInstance()->escape($string, $link) : addslashes($string);
 		if (!$htmlOK)
 			$string = strip_tags(nl2br2($string));
 	}
