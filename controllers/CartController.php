@@ -78,8 +78,8 @@ class CartControllerCore extends FrontController
 		$orderTotal = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$this->cartDiscounts = $context->cart->getDiscounts();
 		foreach ($this->cartDiscounts AS $k => $this->cartDiscount)
-			if ($error = $context->cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, $context->cart->getProducts(), false, (int)$this->id_current_group_shop, (int)$this->id_current_shop))
-				$context->cart->deleteDiscount($this->cartDiscount['id_discount']);
+			if ($error = self::$cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, $context->$cart->getProducts(), false))
+				$context->cart->deleteDiscount((int)($this->cartDiscount['id_discount']));
 
 		$add = Tools::getIsset('add') ? 1 : 0;
 		$delete = Tools::getIsset('delete') ? 1 : 0;
@@ -220,7 +220,7 @@ class CartControllerCore extends FrontController
 					{
 						$discountObj = new Discount((int)($discount['id_discount']), (int)(self::$cookie->id_lang));
 
-						if ($error = self::$cart->checkDiscountValidity($discountObj, $discounts, self::$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), self::$cart->getProducts(), false, (int)$this->id_current_group_shop, (int)$this->id_current_shop))
+						if ($error = self::$cart->checkDiscountValidity($discountObj, $discounts, self::$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), self::$cart->getProducts(), false))
 						{
 							self::$cart->deleteDiscount((int)($discount['id_discount']));
 							self::$cart->update();

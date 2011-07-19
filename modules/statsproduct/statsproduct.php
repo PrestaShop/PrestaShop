@@ -103,7 +103,7 @@ class StatsProduct extends ModuleGraph
 					(SELECT SUM(pa.quantity) FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.id_product = p.id_product), p.quantity) as quantity
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.`id_product` = pl.`id_product`
-				'.Shop::sqlAsso('product', 'p', true, $this->context).'
+				'.$this->context->shop->sqlAsso('product', 'p', true).'
 				'.(Tools::getValue('id_category') ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`' : '').'
 				WHERE pl.`id_lang` = '.(int)($id_lang).'
 					'.(Tools::getValue('id_category') ? 'AND cp.id_category = '.(int)(Tools::getValue('id_category')) : '').'

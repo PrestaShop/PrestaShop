@@ -198,12 +198,15 @@ class CustomerCore extends ObjectModel
 	  *
 	  * @return array Customers
 	  */
-	static public function getCustomers()
+	static public function getCustomers(Context $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+
 		$sql = 'SELECT `id_customer`, `email`, `firstname`, `lastname`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE 1 
-					'.Shop::sqlRestriction(true).'
+					'.$context->shop->sqlRestriction(true).'
 				ORDER BY `id_customer` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
@@ -215,16 +218,19 @@ class CustomerCore extends ObjectModel
 	  * @param string $passwd Password is also checked if specified
 	  * @return Customer instance
 	  */
-	public function getByEmail($email, $passwd = NULL, $id_group_shop = null, $id_shop = null)
+	public function getByEmail($email, $passwd = NULL, Context $context = null)
 	{
 	 	if (!Validate::isEmail($email) OR ($passwd AND !Validate::isPasswd($passwd)))
 	 		die (Tools::displayError());
+	 		
+	 	if (!$context)
+	 		$context = Context::getContext();
 
 	 	$sql = 'SELECT *
 				FROM `'._DB_PREFIX_	.'customer`
 				WHERE `active` = 1
 					AND `email` = \''.pSQL($email).'\'
-					'.Shop::sqlRestriction(true, null, $id_shop, $id_group_shop).'
+					'.$context->shop->sqlRestriction(true).'
 					'.(isset($passwd) ? 'AND `passwd` = \''.md5(_COOKIE_KEY_.$passwd).'\'' : '').'
 					AND `deleted` = 0
 					AND `is_guest` = 0';
@@ -268,15 +274,18 @@ class CustomerCore extends ObjectModel
 	  * @param $ignoreGuest boolean, for exclure guest customer
 	  * @return Customer ID if found, false otherwise
 	  */
-	static public function customerExists($email, $return_id = false, $ignoreGuest = true, $id_group_shop = null, $id_shop = null)
+	static public function customerExists($email, $return_id = false, $ignoreGuest = true, Context $context = null)
 	{
 	 	if (!Validate::isEmail($email))
 	 		die (Tools::displayError());
+	 		
+	 	if (!$context)
+	 		$context = Context::getContext();
 
 	 	$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
-					'.Shop::sqlRestriction(true).
+					'.$context->shop->sqlRestriction(true).
 					($ignoreGuest ? 'AND `is_guest` = 0' : '');
 		$result = Db::getInstance()->getRow($sql);
 
@@ -441,8 +450,11 @@ class CustomerCore extends ObjectModel
 	  * @param string $query Searched string
 	  * @return array Corresponding customers
 	  */
-	public static function searchByName($query)
+	public static function searchByName($query, Context $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+		
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE (
@@ -450,7 +462,7 @@ class CustomerCore extends ObjectModel
 						OR `id_customer` LIKE \'%'.pSQL($query).'%\'
 						OR `lastname` LIKE \'%'.pSQL($query).'%\'
 						OR `firstname` LIKE \'%'.pSQL($query).'%\'
-					)'.Shop::sqlRestriction(true);
+					)'.$context->shop->sqlRestriction(true);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 

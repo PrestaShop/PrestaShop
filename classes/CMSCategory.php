@@ -176,35 +176,36 @@ class CMSCategoryCore extends ObjectModel
 		);
 	}
 
-	static public function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, $id_shop = false, Context $context = null)
+	static public function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 			
-		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
-			
-		$category = Db::getInstance()->getRow('
-		SELECT c.`id_cms_category`, c.`id_parent`, c.`level_depth`, cl.`name`, cl.`link_rewrite`
-		FROM `'._DB_PREFIX_.'cms_category` c
-		JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
-		WHERE c.`id_cms_category` = '.(int)($current).'
-		AND `id_lang` = '.(int)($id_lang));
-		$result = Db::getInstance()->ExecuteS('
-		SELECT c.`id_cms_category`
-		FROM `'._DB_PREFIX_.'cms_category` c
-		WHERE c.`id_parent` = '.(int)($current).
-		($active ? ' AND c.`active` = 1' : ''));
+		$id_lang = is_null($id_lang) ? $context->language->id : (int)$id_lang;
+
+		$sql = 'SELECT c.`id_cms_category`, c.`id_parent`, c.`level_depth`, cl.`name`, cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'cms_category` c
+				JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
+					WHERE c.`id_cms_category` = '.(int)$current.'
+					AND `id_lang` = '.$id_lang;
+		$category = Db::getInstance()->getRow($sql);
+
+		$sql = 'SELECT c.`id_cms_category`
+				FROM `'._DB_PREFIX_.'cms_category` c
+				WHERE c.`id_parent` = '.(int)$current.
+					($active ? ' AND c.`active` = 1' : '');
+		$result = Db::getInstance()->ExecuteS($sql);
 		foreach ($result as $row)
 			$category['children'][] = self::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
-		$category['cms'] = Db::getInstance()->ExecuteS('
-		SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
-		FROM `'._DB_PREFIX_.'cms` c
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'cms_shop cs ON (cs.id_cms = c.id_cms)' : '').'
-		JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
-		WHERE `id_cms_category` = '.(int)($current).'
-		'.($id_shop ? ' AND cs.id_shop='.(int)$id_shop : '').'
-		AND cl.`id_lang` = '.(int)($id_lang).($active ? ' AND c.`active` = 1' : '').'
-		ORDER BY c.`position`');
+
+		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'cms` c
+				'.$context->shop->sqlAsso('cms', 'c').'
+				JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
+				WHERE `id_cms_category` = '.(int)$current.'
+				AND cl.`id_lang` = '.$id_lang.($active ? ' AND c.`active` = 1' : '').'
+				ORDER BY c.`position`';
+		$category['cms'] = Db::getInstance()->ExecuteS($sql);
 		if ($links == 1)
 		{
 			$category['link'] = $link->getCMSCategoryLink($current, $category['link_rewrite']);

@@ -75,7 +75,7 @@ class StatsStock extends Module
 					FROM '._DB_PREFIX_.'product_attribute pa WHERE p.id_product = pa.id_product
 				), p.wholesale_price * p.quantity) as stockvalue
 				FROM '._DB_PREFIX_.'product p
-				'.Shop::sqlAsso('product', 'p', true, $this->context).'
+				'.$this->context->shop->sqlAsso('product', 'p', true).'
 				INNER JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
 				WHERE 1 = 1
 				'.$filter;

@@ -82,9 +82,9 @@ class AdminModulesPositions extends AdminTab
 				// Adding vars...
 				else
 				{
-					if (!$module->registerHook($hook->name, Shop::getListFromContext()))
+					if (!$module->registerHook($hook->name, Context::getContext()->shop->getListOfID()))
 						$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
-					elseif (!$module->registerExceptions($id_hook, $excepts, Shop::getListFromContext()))
+					elseif (!$module->registerExceptions($id_hook, $excepts, Context::getContext()->shop->getListOfID()))
 						$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
@@ -124,7 +124,7 @@ class AdminModulesPositions extends AdminTab
 									$this->_errors[] = Tools::displayError('No valid value for field exceptions');
 	
 							// Add files exceptions
-							if (!$module->editExceptions($id_hook, $exception, Shop::getListFromContext()))
+							if (!$module->editExceptions($id_hook, $exception, Context::getContext()->shop->getListOfID()))
 								$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						}
 						
@@ -141,7 +141,7 @@ class AdminModulesPositions extends AdminTab
 								$this->_errors[] = Tools::displayError('No valid value for field exceptions');
 
 						// Add files exceptions
-						if (!$module->editExceptions($id_hook, $exceptions, Shop::getListFromContext()))
+						if (!$module->editExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
 							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						else
 							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
@@ -167,7 +167,7 @@ class AdminModulesPositions extends AdminTab
 					$this->_errors[] = Tools::displayError('Hook cannot be loaded.');
 				else
 				{
-					if (!$module->unregisterHook($id_hook, Shop::getListFromContext()) OR !$module->unregisterExceptions($id_hook, Shop::getListFromContext()))
+					if (!$module->unregisterHook($id_hook, Context::getContext()->shop->getListOfID()) OR !$module->unregisterExceptions($id_hook, Context::getContext()->shop->getListOfID()))
 						$this->_errors[] = Tools::displayError('An error occurred while deleting module from hook.');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
@@ -347,7 +347,7 @@ class AdminModulesPositions extends AdminTab
 					FROM '._DB_PREFIX_.'hook_module
 					WHERE id_module = '.$id_module.'
 						AND id_hook = '.$id_hook.'
-						AND id_shop IN('.implode(', ', ShopCore::getListFromContext()).')';
+						AND id_shop IN('.implode(', ', Context::getContext()->shop->getListOfID()).')';
 			if (!Db::getInstance()->getValue($sql))
 				Tools::redirectAdmin(self::$currentIndex . '&token='.$this->token);
 

@@ -308,7 +308,7 @@ class AuthControllerCore extends FrontController
 			}*/
 			if (!isset($selectedCountry))
 				$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-			$countries = Country::getCountries((int)(self::$cookie->id_lang), true, NULL, $this->id_current_shop);
+			$countries = Country::getCountries((int)(self::$cookie->id_lang), true);
 
 			$this->smarty->assign(array(
 				'countries' => $countries,

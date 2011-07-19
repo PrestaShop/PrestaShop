@@ -135,9 +135,9 @@ class ReferrerCore extends ObjectModel
 	 * 
 	 * @param int $id_product
 	 * @param int $employee
-	 * @param int $shopID Since 1.5.0
+	 * @param Context $context
 	 */
-	public function getStatsVisits($id_product = null, $employee = null, $shopID = null)
+	public function getStatsVisits($id_product, $employee, Shop $shop)
 	{
 		$join = $where = '';
 		if ($id_product)
@@ -160,8 +160,8 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
 				'.$join.'
 				WHERE cs.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.Shop::sqlRestriction(false, 'rs', $shopID).'
-					'.Shop::sqlRestriction(false, 'c', $shopID).'
+					'.$shop->sqlRestriction(false, 'rs').'
+					'.$shop->sqlRestriction(false, 'c').'
 					AND rc.id_referrer = '.(int)$this->id
 					.$where;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -172,9 +172,9 @@ class ReferrerCore extends ObjectModel
 	 * 
 	 * @param int $id_product
 	 * @param int $employee
-	 * @param int $shopID Since 1.5.0
+	 * @param Context $context
 	 */
-	public function getRegistrations($id_product = null, $employee = null, $shopID = null)
+	public function getRegistrations($id_product, $employee, Shop $shop)
 	{
 		$join = $where = '';
 		if ($id_product)
@@ -195,9 +195,9 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'customer cu ON cu.id_customer = g.id_customer
 				'.$join.'
 				WHERE cu.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.Shop::sqlRestriction(false, 'rs', $shopID).'
-					'.Shop::sqlRestriction(false, 'c', $shopID).'
-					'.Shop::sqlRestriction(true, 'cu', $shopID).'
+					'.$shop->sqlRestriction(false, 'rs').'
+					'.$shop->sqlRestriction(false, 'c').'
+					'.$shop->sqlRestriction(true, 'cu').'
 					AND cu.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)($this->id)
 					.$where;
@@ -210,9 +210,9 @@ class ReferrerCore extends ObjectModel
 	 * 
 	 * @param int $id_product
 	 * @param int $employee
-	 * @param int $shopID Since 1.5.0
+	 * @param Context $context
 	 */
-	public function getStatsSales($id_product = null, $employee = null, $shopID = null)
+	public function getStatsSales($id_product, $employee, Shop $shop)
 	{
 		$join = $where = '';
 		if ($id_product)
@@ -230,9 +230,9 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders oo ON oo.id_customer = g.id_customer
 				'.$join.'
 				WHERE oo.invoice_date BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.Shop::sqlRestriction(false, 'rs', $shopID).'
-					'.Shop::sqlRestriction(false, 'c', $shopID).'
-					'.Shop::sqlRestriction(true, 'oo', $shopID).'
+					'.$shop->sqlRestriction(false, 'rs').'
+					'.$shop->sqlRestriction(false, 'c').'
+					'.$shop->sqlRestriction(true, 'oo').'
 					AND oo.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)($this->id).'
 					AND oo.valid = 1'
@@ -249,7 +249,7 @@ class ReferrerCore extends ObjectModel
 			$sql = 'SELECT COUNT(id_order) AS orders, SUM(total_paid_real / conversion_rate) AS sales
 					FROM '._DB_PREFIX_.'orders
 					WHERE id_order IN ('.implode($implode, ',').')
-						'.Shop::sqlRestriction(true, '', $shopID).'
+						'.$shop->sqlRestriction(true).'
 						AND valid = 1';
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		}
@@ -275,9 +275,10 @@ class ReferrerCore extends ObjectModel
 				if (!$referrer->isAssociatedToShop($shopID))
 					continue;
 
-				$statsVisits = $referrer->getStatsVisits(null, $employee, $shopID);
-				$registrations = $referrer->getRegistrations(null, $employee, $shopID);
-				$statsSales = $referrer->getStatsSales(null, $employee, $shopID);
+				$shop = new Shop($shopID);
+				$statsVisits = $referrer->getStatsVisits(null, $employee, $shop);
+				$registrations = $referrer->getRegistrations(null, $employee, $shop);
+				$statsSales = $referrer->getStatsSales(null, $employee, $shop);
 
 				Db::getInstance()->autoExecute(_DB_PREFIX_.'referrer_shop', array(
 					'cache_visitors' =>		$statsVisits['uniqs'],

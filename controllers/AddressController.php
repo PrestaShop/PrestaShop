@@ -245,7 +245,7 @@ class AddressControllerCore extends FrontController
 		else
 			$selectedCountry = (int)Configuration::get('PS_COUNTRY_DEFAULT');
 			
-		$countries = Country::getCountries((int)self::$cookie->id_lang, true, NULL, $this->id_current_shop);
+		$countries = Country::getCountries((int)self::$cookie->id_lang, true);
 		$countriesList = '';
 		foreach ($countries AS $country)
 			$countriesList .= '<option value="'.(int)($country['id_country']).'" '.($country['id_country'] == $selectedCountry ? 'selected="selected"' : '').'>'.htmlentities($country['name'], ENT_COMPAT, 'UTF-8').'</option>';

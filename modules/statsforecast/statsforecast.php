@@ -512,7 +512,7 @@ class StatsForecast extends Module
 		$langValues = '';
 		$sql = 'SELECT l.id_lang, l.iso_code
 				FROM `'._DB_PREFIX_.'lang` l
-				'.Shop::sqlAsso('lang', 'l', true, $this->context).'
+				'.$this->context->shop->sqlAsso('lang', 'l', true).'
 				WHERE l.active = 1';
 		$languages = Db::getInstance()->ExecuteS($sql);
 		foreach ($languages as $language)

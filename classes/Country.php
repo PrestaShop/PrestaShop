@@ -118,7 +118,7 @@ class CountryCore extends ObjectModel
 	  * @param boolean $active return only active coutries
 	  * @return array Countries and corresponding zones
 	  */
-	static public function getCountries($id_lang, $active = false, $containStates = NULL, $id_shop = false)
+	static public function getCountries($id_lang, $active = false, $containStates = NULL, Context $context = null)
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
@@ -128,17 +128,16 @@ class CountryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'state` s
 		ORDER BY s.`name` ASC');
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT cl.*,c.*, cl.`name` AS country, z.`name` AS zone
-		FROM `'._DB_PREFIX_.'country` c
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'country_shop cs ON (cs.id_country = c.id_country)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)($id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
-		WHERE 1
-		'.($active ? ' AND c.active = 1' : '')
-		.($id_shop ? ' AND cs.id_shop='.(int)$id_shop : '')
-		.(!is_null($containStates) ? 'AND c.`contains_states` = '.(int)($containStates) : '').'
-		ORDER BY cl.name ASC');
+		$sql = 'SELECT cl.*,c.*, cl.`name` AS country, z.`name` AS zone
+				FROM `'._DB_PREFIX_.'country` c
+				'.$context->shop->sqlAsso('country', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
+				WHERE 1'
+					.($active ? ' AND c.active = 1' : '')
+					.(!is_null($containStates) ? 'AND c.`contains_states` = '.(int)($containStates) : '').'
+		ORDER BY cl.name ASC';
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		$countries = array();
 		foreach ($result AS &$country)
 			$countries[$country['id_country']] = $country;
@@ -289,19 +288,19 @@ class CountryCore extends ObjectModel
 		return Context::getContext()->country->id;
 	}
 
-    public static function getCountriesByZoneId($id_zone, $id_lang, $id_shop = false)
+    public static function getCountriesByZoneId($id_zone, $id_lang, Context $context = null)
     {
         if (empty($id_zone) OR empty($id_lang))
             die(Tools::displayError());
-        return Db::getInstance()->ExecuteS('
-        SELECT DISTINCT c.*, cl.*
-        FROM `'._DB_PREFIX_.'country` c
-        '.($id_shop ? ' LEFT JOIN '._DB_PREFIX_.'country_shop cs ON (cs.id_country = c.id_country)' : '').'
-        LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
-        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-        WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
-        '.($id_shop ? ' AND cs.id_shop='.(int)$id_shop : '').'
-        AND `id_lang` = '.(int)$id_lang);
+            
+		$sql = ' SELECT DISTINCT c.*, cl.*
+        		FROM `'._DB_PREFIX_.'country` c
+				'.$context->shop->sqlAsso('country', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
+		        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
+        		WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
+        			AND `id_lang` = '.(int)$id_lang;
+        return Db::getInstance()->ExecuteS($sql);
     }
 
 	public function isNeedDni()

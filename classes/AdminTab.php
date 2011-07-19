@@ -1124,6 +1124,7 @@ abstract class AdminTabCore
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
 	{
 		$context = Context::getContext();
+
 		/* Manage default params values */
 		if (empty($limit))
 			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $context->cookie->{$this->table.'_pagination'});
@@ -1168,14 +1169,14 @@ abstract class AdminTabCore
 			$selectShop = ', shop.name as shop_name ';
 			$joinShop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
-			$whereShop = Shop::sqlRestriction($this->shopShareDatas, 'a', null, null, $this->shopLinkType);
+			$whereShop = $context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
 		$assos = Shop::getAssoTables();
 		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 		{
 			$filterKey = $assos[$this->table]['type'];
-			$idenfierShop = Shop::getListFromContext();
+			$idenfierShop = $context->shop->getListOfID();
 		}
 		else if (Context::shop() == Shop::CONTEXT_GROUP)
 		{
