@@ -260,6 +260,14 @@ class MySQLCore extends Db
 			die(Tools::displayError((mysql_error())));
 		}
 	}
+	
+	/**
+	 * @see DbCore::getVersion()
+	 */
+	public function getVersion()
+	{
+		return mysql_get_server_info();
+	}
 
 	static public function tryToConnect($server, $user, $pwd, $db)
 	{

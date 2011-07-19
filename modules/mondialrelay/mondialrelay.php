@@ -732,7 +732,7 @@ class MondialRelay extends Module
 
 			Db::getInstance()->Execute($query);
 		
-			$mainInsert = mysql_insert_id();
+			$mainInsert = Db::getInstance()->Insert_ID();
 			$default = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "configuration WHERE name = 'PS_CARRIER_DEFAULT'");
 			$check   = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "carrier");
 			$checkD = array();
@@ -756,7 +756,7 @@ class MondialRelay extends Module
 				(`url`, `name`, `active`, `is_module`, `range_behavior`)
 				VALUES(NULL, "'.pSQL('mondialrelay').'", "1", "1", "1")');
 
-			$get   = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'carrier` WHERE `id_carrier` = "' . mysql_insert_id() . '"');
+			$get   = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'carrier` WHERE `id_carrier` = "' . Db::getInstance()->Insert_ID() . '"');
 			Db::getInstance()->Execute('UPDATE `' . _DB_PREFIX_ . 'mr_method` SET `id_carrier` = "' . (int)($get['id_carrier']) . '" WHERE `id_mr_method` = "' . pSQL($mainInsert) . '"');
 			$weight_coef = Configuration::get('MR_WEIGHT_COEF');
 			$range_weight = array('24R' => array(0, 20000 / $weight_coef), 'DRI' => array(20000 / $weight_coef, 130000 / $weight_coef), 'LD1' => array(0, 60000 / $weight_coef), 'LDS' => array(30000 / $weight_coef, 130000 / $weight_coef));

@@ -244,6 +244,13 @@ abstract class DbCore
 	abstract public function nextRow($result = false);
 	
 	/**
+	 * Get database version
+	 * 
+	 * @return string
+	 */
+	abstract public function getVersion();
+	
+	/**
 		 * Alias of Db::getInstance()->ExecuteS
 		 *
 		 * @acces string query The query to execute
