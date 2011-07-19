@@ -85,11 +85,10 @@ class BlockSpecials extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		
-		$context = Context::getContext();
-		if (!$special = Product::getRandomSpecial((int)($params['cookie']->id_lang), false, false, $this->shopID) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
+
+		if (!$special = Product::getRandomSpecial((int)($params['cookie']->id_lang), false, false, $this->context->shop->getID()) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
 			return;
-		$context->controller->smarty->assign(array(
+		$this->context->controller->smarty->assign(array(
 			'special' => $special,
 			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
 			'mediumSize' => Image::getSize('medium')
@@ -107,8 +106,7 @@ class BlockSpecials extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockspecials.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockspecials.css', 'all');
 	}
 }
 

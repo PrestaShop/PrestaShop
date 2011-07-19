@@ -99,24 +99,13 @@ class StatsProduct extends ModuleGraph
 
 	private function getProducts($id_lang)
 	{
-		$joinShop = $whereShop = '';
-		if ($this->shopID || $this->shopGroupID)
-		{
-			$joinShop = ' LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product ';
-			if ($this->shopID)
-				$whereShop = ' ps.id_shop = '.$this->shopID.' AND ';
-			else if ($this->shopGroupID)
-				$whereShop = 'ps.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.') AND';
-		}
-		
 		$sql = 'SELECT p.`id_product`, p.reference, pl.`name`, IFNULL(
 					(SELECT SUM(pa.quantity) FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.id_product = p.id_product), p.quantity) as quantity
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.`id_product` = pl.`id_product`
-				'.$joinShop.'
+				'.Shop::sqlAsso('product', 'p', true, $this->context).'
 				'.(Tools::getValue('id_category') ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`' : '').'
-				WHERE '.$whereShop.'
-					pl.`id_lang` = '.(int)($id_lang).'
+				WHERE pl.`id_lang` = '.(int)($id_lang).'
 					'.(Tools::getValue('id_category') ? 'AND cp.id_category = '.(int)(Tools::getValue('id_category')) : '').'
 				ORDER BY pl.`name`';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);

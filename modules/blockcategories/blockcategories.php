@@ -124,15 +124,13 @@ class BlockCategories extends Module
 
 	public function getTree($resultParents, $resultIds, $maxDepth, $id_category = 1, $currentDepth = 0)
 	{
-		$context = Context::getContext();
-
 		$children = array();
 		if (isset($resultParents[$id_category]) AND sizeof($resultParents[$id_category]) AND ($maxDepth == 0 OR $currentDepth < $maxDepth))
 			foreach ($resultParents[$id_category] as $subcat)
 				$children[] = $this->getTree($resultParents, $resultIds, $maxDepth, $subcat['id_category'], $currentDepth + 1);
 		if (!isset($resultIds[$id_category]))
 			return false;
-		$return = array('id' => $id_category, 'link' => $context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
+		$return = array('id' => $id_category, 'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
 					 'name' => $resultIds[$id_category]['name'], 'desc'=> $resultIds[$id_category]['description'],
 					 'children' => $children);
 		return $return;
@@ -141,7 +139,7 @@ class BlockCategories extends Module
 	public function hookLeftColumn($params)
 	{
 		$context = Context::getContext();
-		$id_current_shop = $this->shopID;
+		$id_current_shop = $context->shop->getID();
 
 		$id_customer = (int)($params['cookie']->id_customer);
 		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
@@ -220,8 +218,8 @@ class BlockCategories extends Module
 
 	public function hookFooter($params)
 	{
-		$context = Context::getContext();
-		$id_current_shop = $this->shopID;
+		$context = $this->context;
+		$id_current_shop = $context->shop->getID();
 		
 		$id_customer = (int)($params['cookie']->id_customer);
 		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
@@ -321,9 +319,8 @@ class BlockCategories extends Module
 
 	public function hookHeader()
 	{
-		$context = Context::getContext();
-		$context->controller->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
-		$context->controller->addCSS(($this->_path).'blockcategories.css', 'all');
+		$this->context->controller->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
+		$this->context->controller->addCSS(($this->_path).'blockcategories.css', 'all');
 	}
 
 	private function _clearBlockcategoriesCache()

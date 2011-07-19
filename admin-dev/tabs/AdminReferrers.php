@@ -59,12 +59,11 @@ class AdminReferrers extends AdminTab
 	 	$this->edit = true;
 		$this->delete = true;
 
-		$this->_select = 'SUM(rs.cache_visitors) AS cache_visitors, SUM(rs.cache_visits) AS cache_visits, SUM(rs.cache_pages) AS cache_pages,
-							SUM(rs.cache_registrations) AS cache_registrations, SUM(rs.cache_orders) AS cache_orders, SUM(rs.cache_sales) AS cache_sales,
-							IF(rs.cache_orders > 0, ROUND(rs.cache_sales/rs.cache_orders, 2), 0) as cart, (rs.cache_visits*click_fee) as fee0,
-							(rs.cache_orders*base_fee) as fee1, (rs.cache_sales*percent_fee/100) as fee2';
-		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'referrer_shop rs ON a.id_referrer = rs.id_referrer '.Shop::sqlRestriction(false, 'rs');
-		$this->_group = 'GROUP BY rs.id_referrer';
+		$this->_select = 'SUM(sa.cache_visitors) AS cache_visitors, SUM(sa.cache_visits) AS cache_visits, SUM(sa.cache_pages) AS cache_pages,
+							SUM(sa.cache_registrations) AS cache_registrations, SUM(sa.cache_orders) AS cache_orders, SUM(sa.cache_sales) AS cache_sales,
+							IF(sa.cache_orders > 0, ROUND(sa.cache_sales/sa.cache_orders, 2), 0) as cart, (sa.cache_visits*click_fee) as fee0,
+							(sa.cache_orders*base_fee) as fee1, (sa.cache_sales*percent_fee/100) as fee2';
+		$this->_group = 'GROUP BY sa.id_referrer';
 		$this->fieldsDisplay = array(
 			'id_referrer' => array('title' => $this->l('ID'), 'width' => 25, 'align' => 'center'),
 			'name' => array('title' => $this->l('Name'), 'width' => 80),

@@ -1517,7 +1517,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::sqlAsso('product', 'p', $context).'
+					'.Shop::sqlAsso('product', 'p', true, $context).'
 					WHERE p.`active` = 1
 						AND p.`show_price` = 1
 						'.((!$beginning AND !$ending) ? ' AND p.`id_product` IN('.((is_array($ids_product) AND sizeof($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
@@ -1535,7 +1535,7 @@ class ProductCore extends ObjectModel
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
-				'.Shop::sqlAsso('product', 'p', $context).'
+				'.Shop::sqlAsso('product', 'p', true, $context).'
 				'.Product::sqlStock('p', 0, false, $context).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('pl', $context).')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)

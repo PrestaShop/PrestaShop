@@ -149,16 +149,6 @@ class StatsBestProducts extends ModuleGrid
 		$dateBetween = $this->getDate();
 		$arrayDateBetween = explode(' AND ', $dateBetween);
 
-		$joinShop = $whereShop = '';
-		if ($this->shopID || $this->shopGroupID)
-		{
-			$joinShop = ' LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product ';
-			if ($this->shopID)
-				$whereShop = ' ps.id_shop = '.$this->shopID.' AND ';
-			else if ($this->shopGroupID)
-				$whereShop = 'ps.id_shop IN (SELECT id_shop FROM '._DB_PREFIX_.'shop WHERE id_group_shop = '.$this->shopGroupID.') AND';
-		}
-		
 		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS p.reference, p.id_product, pl.name, ROUND(AVG(od.product_price / o.conversion_rate), 2) as avgPriceSold, 
 				IFNULL((SELECT SUM(pa.quantity) FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.id_product = p.id_product GROUP BY pa.id_product), p.quantity) as quantity,
 				IFNULL(SUM(od.product_quantity), 0) AS totalQuantitySold,
@@ -174,12 +164,11 @@ class StatsBestProducts extends ModuleGrid
 					AND dr.time_end BETWEEN '.$dateBetween.'
 				) AS totalPageViewed
 				FROM '._DB_PREFIX_.'product p
-				'.$joinShop.'
+				'.Shop::sqlAsso('product', 'p', true, $this->context).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)($this->getLang()).')
 				LEFT JOIN '._DB_PREFIX_.'order_detail od ON od.product_id = p.id_product
 				LEFT JOIN '._DB_PREFIX_.'orders o ON od.id_order = o.id_order
-				WHERE '.$whereShop.'
-					p.active = 1
+				WHERE p.active = 1
 					AND o.valid = 1
 					AND o.invoice_date BETWEEN '.$dateBetween.'
 				GROUP BY od.product_id';

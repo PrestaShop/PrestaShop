@@ -449,8 +449,11 @@ class ShopCore extends ObjectModel
 	 * @param bool $share If true and if $shopID is set, list shops with share data too
 	 * @return array
 	 */
-	public static function getListOfID($shopID, $shopGroupID, $share = false)
+	public static function getListOfID(Context $context, $share = false)
 	{
+		$shopID = $context->shop->getID();
+		$shopGroupID = $context->shop->getGroupID();
+
 		if ($shopID)
 			$list = (!$share) ? array($shopID) : Shop::getSharedShops($shopID);
 		else if ($shopGroupID)
@@ -531,14 +534,11 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
 	 * 
-	 * @param Context $context
 	 * @return array
 	 */
-	public static function getListFromContext(Context $context = null)
+	public static function getListFromContext()
 	{
-		if (!$context)
-			$context = Context::getContext();
-		return Shop::getListOfID($context->shop->getID(), $context->shop->getGroupID());
+		return Shop::getListOfID(Context::getContext());
 	}
 	
 	/**
@@ -556,7 +556,7 @@ class ShopCore extends ObjectModel
 		return Shop::CONTEXT_ALL;
 	}
 	
-	public static function sqlRestriction($share = false, $alias = null, $shopID = null, $shopGroupID = null, $type = 'shop')
+	public static function sqlRestriction($share = false, $alias = null, Context $context = null, $type = 'shop')
 	{
 		if ($type != 'shop' && $type != 'group_shop')
 			$type = 'shop';
@@ -565,10 +565,10 @@ class ShopCore extends ObjectModel
 			$alias .= '.';
 
 		$restriction = '';
-		if (is_null($shopID))
-			$shopID = Shop::getContext('shop');
-		if (is_null($shopGroupID))
-			$shopGroupID = Shop::getContext('group');
+		if (!$context)
+			$context = Context::getContext();
+		$shopID = $context->shop->getID();
+		$shopGroupID = $context->shop->getGroupID();
 
 		if ($type == 'group_shop')
 		{
@@ -580,7 +580,7 @@ class ShopCore extends ObjectModel
 		else
 		{
 			if ($shopID || $shopGroupID)
-				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getListOfID($shopID, $shopGroupID, $share)).')';
+				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getListOfID($context, $share)).')';
 		}
 		
 		return $restriction;
@@ -610,21 +610,26 @@ class ShopCore extends ObjectModel
 	 *
 	 * @param string $table Table name (E.g. product, module, etc.)
 	 * @param string $alias Alias of table
+	 * @param bool $innerJoin Use or not INNER JOIN
 	 * @param Context $context
 	 * @return string
 	 */
-	public static function sqlAsso($table, $alias, Context $context = null)
+	public static function sqlAsso($table, $alias, $innerJoin = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 
+		$tableAlias = ' asso_shop_'.$table;
+		if (strpos($table, '.') !== false)
+			list($tableAlias, $table) = explode('.', $table);
+			
 		$assoTables = Shop::getAssoTables();
 		if (!isset($assoTables[$table]) || $assoTables[$table]['type'] != 'shop')
 			return ;
 
-		$sql = ' LEFT JOIN '._DB_PREFIX_.$table.'_shop asso_shop_'.$table.'
-					ON asso_shop_'.$table.'.id_'.$table.' = '.$alias.'.id_'.$table.'
-					AND asso_shop_'.$table.'.id_shop IN('.implode(', ', Shop::getListFromContext($context)).') ';
+		$sql = (($innerJoin) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$tableAlias.'
+					ON '.$tableAlias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
+					AND '.$tableAlias.'.id_shop IN('.implode(', ', Shop::getListFromContext($context)).') ';
 		return $sql;
 	}
 

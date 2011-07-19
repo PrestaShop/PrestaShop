@@ -59,14 +59,11 @@ class BlockCurrencies extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-	
-		$context = Context::getContext();
-		
-		$id_current_shop = $this->shopID;
-		$currencies = Currency::getCurrencies(false, 1, $id_current_shop);
+
+		$currencies = Currency::getCurrencies(false, 1, $this->context->shop->getID());
 		if (!sizeof($currencies))
 			return '';
-		$context->controller->smarty->assign('currencies', $currencies);
+		$this->context->controller->smarty->assign('currencies', $currencies);
 		return $this->display(__FILE__, 'blockcurrencies.tpl');
 	}
 	
@@ -74,8 +71,7 @@ class BlockCurrencies extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
 	}
 }
 

@@ -362,7 +362,7 @@ class ReferralProgram extends Module
 		if (!Validate::isLoadedObject($discount))
 			return false;
 			
-		if ($params['cart']->checkDiscountValidity($discount, $params['cart']->getDiscounts(), $params['cart']->getOrderTotal(true, Cart::ONLY_PRODUCTS), $params['cart']->getProducts(), false, $this->shopID, $this->shopGroupID)===false)
+		if ($params['cart']->checkDiscountValidity($discount, $params['cart']->getDiscounts(), $params['cart']->getOrderTotal(true, Cart::ONLY_PRODUCTS), $params['cart']->getProducts(), false, $this->context->shop->getID(), $this->context->shop->getGroupID())===false)
 		{
 			global $smarty;
 			$smarty->assign(array('discount_display' => Discount::display($discount->value, $discount->id_discount_type, new Currency($params['cookie']->id_currency)), 'discount' => $discount));
@@ -438,7 +438,7 @@ class ReferralProgram extends Module
 			return false;
 		
 		$sponsor = new Customer();
-		if ($sponsor = $sponsor->getByEmail($sponsorEmail, NULL, $this->shopGroupID, $this->shopID))
+		if ($sponsor = $sponsor->getByEmail($sponsorEmail, NULL, $this->context->shop->getGroupID(), $this->context->shop->getID()))
 		{
 			include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 

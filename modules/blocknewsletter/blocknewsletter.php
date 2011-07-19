@@ -140,13 +140,13 @@ class Blocknewsletter extends Module
  	{
  		$sql = 'SELECT `email` FROM '._DB_PREFIX_.'newsletter
  				WHERE `email` = \''.pSQL($customerEmail).'\'
- 					AND id_shop = '.$this->shopID;
+ 					AND id_shop = '.$this->context->shop->getID();
  	 	if (Db::getInstance()->getRow($sql))
  	 		return 1;
 
  		$sql = 'SELECT `newsletter` FROM '._DB_PREFIX_.'customer
  				WHERE `email` = \''.pSQL($customerEmail).'\'
- 				AND id_shop = '.$this->shopID;
+ 				AND id_shop = '.$this->context->shop->getID();
 		if (!$registered = Db::getInstance()->getRow($sql))
 			return -1;
 
@@ -160,7 +160,6 @@ class Blocknewsletter extends Module
  	 */
  	private function newsletterRegistration()
  	{
- 		$context = Context::getContext();
 	 	if (empty($_POST['email']) OR !Validate::isEmail($_POST['email']))
 			return $this->error = $this->l('Invalid e-mail address');
 
@@ -173,14 +172,14 @@ class Blocknewsletter extends Module
 	 	 	/* If the user ins't a customer */
 	 	 	elseif ($registerStatus == 1)
 	 	 	{
-			  	if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->shopID))
+			  	if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID()))
 	 	 			return $this->error = $this->l('Error during unsubscription');
 	 	 		return $this->valid = $this->l('Unsubscription successful');
 	 	 	}
 	 	 	/* If the user is a customer */
 	 	 	elseif ($registerStatus == 2)
 	 		{
-	 	 		if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->shopID))
+	 	 		if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID()))
 	 	 			return $this->error = $this->l('Error during unsubscription');
 	 	 		return $this->valid = $this->l('Unsubscription successful');
 	 	 	}
@@ -196,8 +195,8 @@ class Blocknewsletter extends Module
 			elseif ($registerStatus == -1)
 			{
 				$sql = 'INSERT INTO '._DB_PREFIX_.'newsletter (id_shop, id_group_shop, email, newsletter_date_add, ip_registration_newsletter, http_referer)
-						VALUES ('.$this->shopID.', '.$this->shopGroupID.', \''.pSQL($_POST['email']).'\', NOW(), \''.pSQL(Tools::getRemoteAddr()).'\', 
-							(SELECT c.http_referer FROM '._DB_PREFIX_.'connections c WHERE c.id_guest = '.(int)$context->customer->id.' ORDER BY c.date_add DESC LIMIT 1)
+						VALUES ('.$this->context->shop->getID().', '.$this->context->shop->getGroupID().', \''.pSQL($_POST['email']).'\', NOW(), \''.pSQL(Tools::getRemoteAddr()).'\', 
+							(SELECT c.http_referer FROM '._DB_PREFIX_.'connections c WHERE c.id_guest = '.(int)$this->context->customer->id.' ORDER BY c.date_add DESC LIMIT 1)
 						)';
 				if (!Db::getInstance()->Execute($sql))
 					return $this->error = $this->l('Error during subscription');
@@ -211,7 +210,7 @@ class Blocknewsletter extends Module
 				$sql = 'UPDATE '._DB_PREFIX_.'customer
 						SET `newsletter` = 1, newsletter_date_add = NOW(), `ip_registration_newsletter` = \''.pSQL(Tools::getRemoteAddr()).'\'
 						WHERE `email` = \''.pSQL($_POST['email']).'\'
-							AND id_shop = '.$this->shopID;
+							AND id_shop = '.$this->context->shop->getID();
 			 	if (!Db::getInstance()->Execute($sql))
 	 	 			return $this->error = $this->l('Error during subscription');
 				$this->sendVoucher(pSQL($_POST['email']));

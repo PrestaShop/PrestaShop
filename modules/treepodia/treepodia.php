@@ -253,7 +253,7 @@ XML;
 				}
 			}
 
-			$quantityDiscounts = SpecificPrice::getQuantityDiscounts((int)$sqlProduct['id_product'], $this->shopID, 0, 0, 0);
+			$quantityDiscounts = SpecificPrice::getQuantityDiscounts((int)$sqlProduct['id_product'], $this->context->shop->getGroupID(), 0, 0, 0);
 
 			foreach ($quantityDiscounts AS $quantityDiscount)
 			{
