@@ -57,6 +57,8 @@ class ToolsCore
 	*/
 	public static function redirect($url, $baseUri = __PS_BASE_URI__, Context $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
 		{
 			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)

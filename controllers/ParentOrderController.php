@@ -360,9 +360,10 @@ class ParentOrderControllerCore extends FrontController
 	
 	protected function _assignCarrier()
 	{
+		$context = Context::getContext();
 		$address = new Address($context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
-		$carriers = Carrier::getCarriersForOrder($id_zone, Context::getContext()->customer->id->getGroups());
+		$carriers = Carrier::getCarriersForOrder($id_zone, $context->customer->getGroups());
 
 		$this->smarty->assign(array(
 			'checked' => $this->_setDefaultCarrierSelection($carriers),
