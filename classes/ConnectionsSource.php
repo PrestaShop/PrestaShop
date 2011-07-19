@@ -59,7 +59,7 @@ class ConnectionsSourceCore extends ObjectModel
 		return $result;
 	}
 	
-	public static function logHttpReferer($context = null)
+	public static function logHttpReferer(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

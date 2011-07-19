@@ -426,7 +426,7 @@ class ThemeInstallator extends Module
 		$hookedModule = array();
 		$position = array();
 		$msg = '';
-		$shopID = Context::getContext()->shop->getID();
+		$shopID = $this->context->shop->getID();
 		
 		foreach ($this->xml->modules->hooks->hook as $row)
 		{

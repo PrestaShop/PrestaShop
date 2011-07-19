@@ -140,10 +140,8 @@ XML;
      * @param string $filename
      * @return bool
      */
-    private function generateSitemap($shopID, $filename = '', $replaceUrl = array(), $context = null)
+    private function generateSitemap($shopID, $filename = '', $replaceUrl = array())
     {
-		if (!$context)
-			$context = Context::getContext();
 		$langs = Language::getLanguages();
 		$shop = new Shop($shopID);
 		if (!$shop->id)
@@ -186,7 +184,7 @@ XML;
 		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		foreach ($cmss AS $cms)
 		{
-			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $context->link->getCMSLink((int)$cms['id_cms'], $cms['link_rewrite'], false, (int)$cms['id_lang']) : $context->link->getCMSLink((int)$cms['id_cms']);
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $this->context->link->getCMSLink((int)$cms['id_cms'], $cms['link_rewrite'], false, (int)$cms['id_lang']) : $this->context->link->getCMSLink((int)$cms['id_cms']);
 			$this->_addSitemapNode($xml, $tmpLink, '0.8', 'daily');				
 		}
 		
@@ -221,7 +219,7 @@ XML;
 			if (($priority = 0.9 - ($category['level_depth'] / 10)) < 0.1)
 				$priority = 0.1;
 			
-			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang']) : $context->link->getCategoryLink((int)$category['id_category']);	
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $this->context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang']) : $this->context->link->getCategoryLink((int)$category['id_category']);	
 			$this->_addSitemapNode($xml, $tmpLink, $priority, 'weekly', substr($category['date_upd'], 0, 10));
 		}
 
@@ -250,7 +248,7 @@ XML;
 			if (($priority = 0.7 - ($product['level_depth'] / 10)) < 0.1)
 				$priority = 0.1;
 
-			$tmpLink = $context->link->getProductLink((int)($product['id_product']), $product['link_rewrite'], $product['category'], $product['ean13'], (int)($product['id_lang']));
+			$tmpLink = $this->context->link->getProductLink((int)($product['id_product']), $product['link_rewrite'], $product['category'], $product['ean13'], (int)($product['id_lang']));
 			$sitemap = $this->_addSitemapNode($xml, $tmpLink, $priority, 'weekly', substr($product['date_upd'], 0, 10));
 			$sitemap = $this->_addSitemapNodeImage($sitemap, $product);
 		}
@@ -279,10 +277,10 @@ XML;
 		if(Configuration::get('PS_REWRITING_SETTINGS'))		
 			foreach ($pages AS $page => $ssl)		
 				foreach($langs as $lang)
-					$this->_addSitemapNode($xml, $context->link->getPageLink($page, $ssl, $lang['id_lang']), '0.5', 'monthly');
+					$this->_addSitemapNode($xml, $this->context->link->getPageLink($page, $ssl, $lang['id_lang']), '0.5', 'monthly');
 		else
 			foreach($pages AS $page => $ssl)
-				$this->_addSitemapNode($xml, $context->link->getPageLink($page, $ssl), '0.5', 'monthly');
+				$this->_addSitemapNode($xml, $this->context->link->getPageLink($page, $ssl), '0.5', 'monthly');
 
         $xmlString = $xml->asXML();
         
@@ -316,12 +314,10 @@ XML;
 		return $sitemap;
 	}
 	
-	private function _addSitemapNodeImage($xml, $product, $context = null)
+	private function _addSitemapNodeImage($xml, $product)
 	{
-		if (!$context)
-			$context = Context::getContext();
 		$image = $xml->addChild('image', null, 'http://www.google.com/schemas/sitemap-image/1.1');
-		$image->addChild('loc', htmlspecialchars($context->link->getImageLink($product['link_rewrite'], (int)$product['id_product'].'-'.(int)$product['id_image'])), 'http://www.google.com/schemas/sitemap-image/1.1');
+		$image->addChild('loc', htmlspecialchars($this->context->link->getImageLink($product['link_rewrite'], (int)$product['id_product'].'-'.(int)$product['id_image'])), 'http://www.google.com/schemas/sitemap-image/1.1');
 		
 		$legend_image = preg_replace('/(&+)/i', '&amp;', $product['legend_image']);
 		$image->addChild('caption', $legend_image, 'http://www.google.com/schemas/sitemap-image/1.1');

@@ -333,7 +333,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @result array Products
 	 */
-	public function getProducts($refresh = false, $id_product = false, $context = null)
+	public function getProducts($refresh = false, $id_product = false, Context $context = null)
 	{
 		if (!$this->id)
 			return array();
@@ -642,7 +642,7 @@ class CartCore extends ObjectModel
 	/*
 	** Customization management
 	*/
-	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up', $context = null)
+	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up', Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -975,7 +975,7 @@ class CartCore extends ObjectModel
 	* @param integer $id_carrier Carrier ID (default : current carrier)
 	* @return float Shipping total
 	*/
-    function getOrderShippingCost($id_carrier = NULL, $useTax = true, $context = null)
+    function getOrderShippingCost($id_carrier = NULL, $useTax = true, Context $context = null)
     {
 		if (!$context)
 			$context = Context::getContext();
@@ -1231,7 +1231,7 @@ class CartCore extends ObjectModel
 	*
 	* @return mixed Return a string if an error occurred and false otherwise
 	*/
-	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, $id_group_shop = false, $id_shop = false, $context = null)
+	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, $id_group_shop = false, $id_shop = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1332,7 +1332,7 @@ class CartCore extends ObjectModel
 	*
 	* @return array Cart details
 	*/
-	function getSummaryDetails($context = null)
+	function getSummaryDetails(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1484,7 +1484,7 @@ class CartCore extends ObjectModel
 	*
 	* @return bool Always true
 	*/
-	public function addPictureToProduct($id_product, $index, $identifier, $context = null)
+	public function addPictureToProduct($id_product, $index, $identifier, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1504,7 +1504,7 @@ class CartCore extends ObjectModel
 	*
 	* @return bool Always true
 	*/
-	public function addTextFieldToProduct($id_product, $index, $textValue, $context = null)
+	public function addTextFieldToProduct($id_product, $index, $textValue, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1520,7 +1520,7 @@ class CartCore extends ObjectModel
 	*
 	* @return bool Always true
 	*/
-	public function deleteTextFieldFromProduct($id_product, $index, $context = null)
+	public function deleteTextFieldFromProduct($id_product, $index, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1534,7 +1534,7 @@ class CartCore extends ObjectModel
 	*
 	* @return bool
 	*/
-	public function deletePictureToProduct($id_product, $index, $context = null)
+	public function deletePictureToProduct($id_product, $index, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1552,7 +1552,7 @@ class CartCore extends ObjectModel
 		return false;
 	}
 
-	static public function deleteCustomizationInformations($id_product, $context = null)
+	static public function deleteCustomizationInformations($id_product, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

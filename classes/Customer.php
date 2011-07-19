@@ -614,7 +614,7 @@ class CustomerCore extends ObjectModel
 		return self::$_defaultGroupId[(int)($id_customer)];
 	}
 
-	static public function getCurrentCountry($id_customer, $context = null)
+	static public function getCurrentCountry($id_customer, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

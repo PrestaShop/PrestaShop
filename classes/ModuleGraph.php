@@ -286,7 +286,7 @@ abstract class ModuleGraphCore extends Module
 		return call_user_func(array($render, 'hookGraphEngine'), $params, $drawer);
 	}
 	
-	protected static function getEmployee($employee = null, $context = null)
+	protected static function getEmployee($employee = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

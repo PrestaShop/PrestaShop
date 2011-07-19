@@ -115,7 +115,7 @@ class Criteo extends Module
 			}
 	}
 
-	public static function buildCSV($context = null)
+	public static function buildCSV(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -184,7 +184,7 @@ class Criteo extends Module
 		echo $html;
 	}
 
-	public static function buildXML($context = null)
+	public static function buildXML(Context $context = null)
 	{
 		global $country_infos;
 		if (!$context)

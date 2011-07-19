@@ -201,7 +201,7 @@ class MailCore
 	 * 
 	 * @param string $string raw sentence (write directly in file)
 	 */
-	static public function l($string, $context = null)
+	static public function l($string, Context $context = null)
 	{
 		global $_LANGMAIL;
 		if (!$context)

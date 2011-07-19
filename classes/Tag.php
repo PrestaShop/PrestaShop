@@ -161,7 +161,7 @@ class TagCore extends ObjectModel
 	 	return $result;
 	}
 	
-	public function getProducts($associated = true, $context = null)
+	public function getProducts($associated = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

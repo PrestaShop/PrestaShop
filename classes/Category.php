@@ -189,7 +189,7 @@ class CategoryCore extends ObjectModel
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, $context = null)
+	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -451,7 +451,7 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $checkAccess set to false to return all products (even if customer hasn't access)
 	  * @return mixed Products or number of products
 	  */
-	public function getProducts($id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $random = false, $randomNumberProducts = 1, $checkAccess = true, $context = null)
+	public function getProducts($id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $random = false, $randomNumberProducts = 1, $checkAccess = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -567,7 +567,7 @@ class CategoryCore extends ObjectModel
 		return self::getChildren(1, $id_lang, $active);
 	}
 
-	static public function getRootCategory($id_lang = NULL, $id_shop = false, $context = null)
+	static public function getRootCategory($id_lang = NULL, $id_shop = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -710,14 +710,14 @@ class CategoryCore extends ObjectModel
 		return $result['link_rewrite'];
 	}
 
-	public function getLink($context = null)
+	public function getLink(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 		return $context->link->getCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL, $context = null)
+	public function getName($id_lang = NULL, Context $context = null)
 	{
 		if (!$id_lang)
 		{
@@ -781,7 +781,7 @@ class CategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($idLang = null, $context = null)
+	public function getParentsCategories($idLang = null, Context $context = null)
 	{
 		//get idLang
 		$idLang = is_null($idLang) ? $context->language->id : $idLang;
