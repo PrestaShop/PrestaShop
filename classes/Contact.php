@@ -73,17 +73,21 @@ class ContactCore extends ObjectModel
 	  * Return available contacts
 	  *
 	  * @param integer $id_lang Language ID
+	  * @param Context
 	  * @return array Contacts
 	  */
-	static public function getContacts($id_lang, $id_shop = false)
+	static public function getContacts($id_lang, Context $context = null)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'contact` c
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'contact_shop cs ON (cs.id_contact = c.id_contact)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
-		WHERE cl.`id_lang` = '.(int)($id_lang).($id_shop ? ' AND cs.id_shop='.(int)$id_shop : '').'
-		ORDER BY `name` ASC');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'contact` c
+				'.$context->shop->sqlAsso('contact', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
+				WHERE cl.`id_lang` = '.(int)$id_lang.'
+				ORDER BY `name` ASC';
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 }
 

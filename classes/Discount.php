@@ -511,12 +511,17 @@ class DiscountCore extends ObjectModel
 		return Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)$id_discount);
 	}
 	
-	public function availableWithShop($id_group_shop, $id_shop)
+	public function availableWithShop(Context $context = null)
 	{
-		return Db::getInstance()->getValue('SELECT d.id_discount
-														FROM '._DB_PREFIX_.'discount d
-														LEFT JOIN '._DB_PREFIX_.'group_shop gs ON (gs.id_group_shop=d.id_group_shop)
-														WHERE d.id_discount='.(int)$this->id.' AND (d.id_shop='.(int)$id_shop.' OR (d.id_group_shop='.(int)$id_group_shop.' AND gs.share_datas=1))');
+		if (!$context)
+			$context = Context::getContext();
+
+		// @todo share datas on discount ? Utility of this function ?
+		$sql = 'SELECT id_discount
+				FROM '._DB_PREFIX_.'discount
+				WHERE id_discount='.(int)$this->id
+					.$context->shop->sqlRestriction(true);
+		return Db::getInstance()->getValue($sql);
 	}
 }
 

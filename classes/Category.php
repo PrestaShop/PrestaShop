@@ -368,7 +368,7 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $active return only active categories
 	  * @return array Categories
 	  */
-	static public function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '',$sql_limit = '', $id_shop = false)
+	static public function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
@@ -493,7 +493,7 @@ class CategoryCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(cp.`id_product`) AS total
 					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::sqlAsso('product', 'p', true, $context).'
+					'.$context->shop->sqlAsso('product', 'p', true).'
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)($this->id).
 					($active ? ' AND p.`active` = 1' : '').
@@ -506,10 +506,10 @@ class CategoryCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND default_on = 1)
-				'.Shop::sqlAsso('product', 'p', true, $context).'
+				'.$context->shop->sqlAsso('product', 'p', true).'
 				'.Product::sqlStock('p', 'pa', false, $context).'
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('cl', $context).')
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::sqlLang('pl', $context).')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -567,13 +567,12 @@ class CategoryCore extends ObjectModel
 		return self::getChildren(1, $id_lang, $active);
 	}
 
-	static public function getRootCategory($id_lang = NULL, $id_shop = false, Context $context = null)
+	static public function getRootCategory($id_lang = NULL, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$shop = new Shop($context->shop->getID(true));
-		
-		return new Category($shop->getCategory(), is_null($id_lang) ? $context->language->id : $id_lang);
+
+		return new Category($context->shop->getCategory(), is_null($id_lang) ? $context->language->id : $id_lang);
 	}
 
 	/**

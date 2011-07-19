@@ -82,7 +82,7 @@ class StatsCheckUp extends Module
 		// Get languages
 		$sql = 'SELECT l.*
 				FROM '._DB_PREFIX_.'lang l'
-				.Shop::sqlAsso('lang', 'l', true, $this->context);
+				.$this->context->shop->sqlAsso('lang', 'l', true);
 		$languages = $db->ExecuteS($sql);
 
 		$arrayColors = array(
@@ -109,7 +109,7 @@ class StatsCheckUp extends Module
 		$sql = 'SELECT p.id_product, p.active, pl.name, (
 					SELECT COUNT(*)
 					FROM '._DB_PREFIX_.'image i
-					'.Shop::sqlAsso('image', 'i', true, $this->context).'
+					'.$this->context->shop->sqlAsso('image', 'i', true).'
 					WHERE i.id_product = p.id_product
 				) as nbImages, (
 					SELECT SUM(od.product_quantity)
@@ -125,7 +125,7 @@ class StatsCheckUp extends Module
 				), p.quantity) as stock
 				FROM '._DB_PREFIX_.'product p
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
-				'.Shop::sqlAsso('product', 'p', true, $this->context).'
+				'.$this->context->shop->sqlAsso('product', 'p', true).'
 				ORDER BY '.$orderBy;
 		$result = $db->ExecuteS($sql);
 

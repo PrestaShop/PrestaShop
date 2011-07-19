@@ -249,7 +249,7 @@ class ContactControllerCore extends FrontController
 			WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop='.(int)$this->id_current_shop.' AND token = \''.pSQL($token).'\'');
 			$this->smarty->assign('customerThread', $customerThread);
 		}
-		$this->smarty->assign(array('contacts' => Contact::getContacts((int)self::$cookie->id_lang, (int)$this->id_current_shop),
+		$this->smarty->assign(array('contacts' => Contact::getContacts((int)self::$cookie->id_lang),
 		'message' => html_entity_decode(Tools::getValue('message'))
 		));
 	}

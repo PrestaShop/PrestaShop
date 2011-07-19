@@ -180,15 +180,18 @@ class CurrencyCore extends ObjectModel
 	  *
 	  * @return array Currencies
 	  */
-	static public function getCurrencies($object = false, $active = 1, $id_shop = false)
+	static public function getCurrencies($object = false, $active = 1, Context $context = null)
 	{
-		$tab = Db::getInstance()->ExecuteS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'currency` c
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'currency_shop cs ON (c.id_currency = cs.id_currency)' : '').'
-		WHERE `deleted` = 0
-		'.($active == 1 ? 'AND c.`active` = 1' : '').($id_shop ? ' AND cs.id_shop='.(int)$id_shop : '').'
-		ORDER BY `name` ASC');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'currency` c
+				'.$context->shop->sqlAsso('currency', 'c').'
+				WHERE `deleted` = 0'
+					.($active == 1 ? ' AND c.`active` = 1' : '').'
+				ORDER BY `name` ASC';
+		$tab = Db::getInstance()->ExecuteS($sql);
 		if ($object)
 			foreach ($tab as $key => $currency)
 				$tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);

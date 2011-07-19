@@ -1231,7 +1231,7 @@ class CartCore extends ObjectModel
 	*
 	* @return mixed Return a string if an error occurred and false otherwise
 	*/
-	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, $id_group_shop = false, $id_shop = false, Context $context = null)
+	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1255,8 +1255,8 @@ class CartCore extends ObjectModel
 			return Tools::displayError('This voucher is not yet valid');
 		if (strtotime($discountObj->date_to) < time())
 			return Tools::displayError('This voucher has expired.');
-		if ($id_group_shop AND $id_shop)
-			if (!$discountObj->availableWithShop((int)$id_group_shop, (int)$id_shop))
+		if (!$context->shop->inGlobalContext())
+			if (!$discountObj->availableWithShop($context))
 				return Tools::displayError('This voucher is not available with this shop.');
 		if (sizeof($discounts) >= 1 AND $checkCartDiscount)
 		{
@@ -1427,7 +1427,7 @@ class CartCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders o ON (c.`id_cart` = o.`id_cart`)
 				WHERE c.`id_customer` = '.(int)($id_customer).'
 					AND o.`id_cart` IS NULL
-					'.Shop::sqlRestriction(true, 'c').'
+					'.Context::getContext()->shop->sqlRestriction(true, 'c').'
 				ORDER BY c.`date_upd` DESC';
 	 	if (!$id_cart = Db::getInstance()->getValue($sql))
 	 		return false;

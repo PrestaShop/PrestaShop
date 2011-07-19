@@ -98,7 +98,7 @@ class ParentOrderControllerCore extends FrontController
 					$discount = new Discount((int)(Discount::getIdByName($discountName)));
 					if (Validate::isLoadedObject($discount))
 					{
-						if ($tmpError = $context->cart->checkDiscountValidity($discount, $context->cart->getDiscounts(), $context->cart->getOrderTotal(), $context->cart->getProducts(), true, (int)$this->id_current_group_shop, (int)$this->id_current_shop))
+						if ($tmpError = $context->cart->checkDiscountValidity($discount, $context->cart->getDiscounts(), $context->cart->getOrderTotal(), $context->cart->getProducts(), true))
 							$this->errors[] = $tmpError;
 					}
 					else

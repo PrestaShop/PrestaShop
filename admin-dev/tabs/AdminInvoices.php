@@ -54,7 +54,7 @@ class AdminInvoices extends AdminTab
 			LIMIT 1
 		) id_order_state
 		FROM '._DB_PREFIX_.'orders o
-		WHERE o.id_shop IN('.implode(', ', Shop::getListFromContext()).')
+		WHERE o.id_shop IN('.implode(', ', $context->shop->getListOfID()).')
 		GROUP BY id_order_state');
 		$statusStats = array();
 		foreach ($result as $row)

@@ -118,12 +118,15 @@ class AttributeCore extends ObjectModel
 	 * @param integer $qty Quantity needed
 	 * @return boolean Quantity is available or not
 	 */
-	static public function checkAttributeQty($id_product_attribute, $qty)
-	{ 
+	static public function checkAttributeQty($id_product_attribute, $qty, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
+
 		$sql = 'SELECT quantity
 				FROM '._DB_PREFIX_.'stock
 				WHERE id_product_attribute = '.(int)$id_product_attribute
-					.Shop::sqlSharedStock();
+					.$context->shop->sqlSharedStock();
 		$result = (int)Db::getInstance()->getValue($sql);
 
 		return ($result AND $qty <= $result);

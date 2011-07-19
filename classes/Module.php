@@ -110,7 +110,7 @@ abstract class ModuleCore
 		{
 			if (self::$modulesCache == NULL AND !is_array(self::$modulesCache))
 			{
-				$list = Shop::getListOfID($this->context);
+				$list = $this->context->shop->getListOfID();
 
 				// Join clause is done to check if the module is activated in current shop context
 				$sql = 'SELECT m.id_module, m.name, (
@@ -140,7 +140,7 @@ abstract class ModuleCore
 
 	protected function sqlShopRestriction($share = false, $alias = null)
 	{
-		return Shop::sqlRestriction($share, $alias, $this->context, 'shop');
+		return $this->context->shop->sqlRestriction($share, $alias, 'shop');
 	}
 
 	/**
@@ -219,7 +219,7 @@ abstract class ModuleCore
 	 */
 	public function enable($forceAll = false)
 	{
-		$list = Shop::getListOfID($this->context);
+		$list = $this->context->shop->getListOfID();
 		$sql = 'SELECT id_shop
 				FROM '._DB_PREFIX_.'module_shop
 				WHERE id_module = '.$this->id.'
@@ -267,7 +267,7 @@ abstract class ModuleCore
 	{
 		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop 
 				WHERE id_module = '.$this->id.'
-					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', Shop::getListOfID($this->context)).')' : '');
+					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', $this->context->shop->getListOfID()).')' : '');
 		Db::getInstance()->execute($sql);
 	}
 
@@ -608,7 +608,7 @@ abstract class ModuleCore
 		// Get modules information from database
 		if (!empty($moduleNameList))
 		{
-			$list = Shop::getListFromContext();		
+			$list = Context::getContext()->shop->getListOfID();		
 
 			$sql = 'SELECT m.id_module, m.name, (
 						SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
@@ -720,7 +720,7 @@ abstract class ModuleCore
 		if (!isset(self::$_hookModulesCache))
 		{
 			$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
-			$list = Shop::getListFromContext();
+			$list = $context->shop->getListOfID();
 
 			$sql = 'SELECT h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`
 					FROM `'._DB_PREFIX_.'module` m
@@ -794,7 +794,7 @@ abstract class ModuleCore
 		$hookArgs = array('cookie' => $context->cookie, 'cart' => $context->cart);
 		$billing = new Address((int)($context->cart->id_address_invoice));
 		$output = '';
-		$list = Shop::getListFromContext();
+		$list = Context::getContext()->shop->getListOfID();
 		$sql = 'SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 				FROM `'._DB_PREFIX_.'module_country` mc
 				LEFT JOIN `'._DB_PREFIX_.'module` m ON m.`id_module` = mc.`id_module`
@@ -895,7 +895,7 @@ abstract class ModuleCore
 	 */
 	public function updatePosition($id_hook, $way, $position = NULL)
 	{
-		$list = ShopCore::getListOfID($this->context);
+		$list = $this->context->shop->getListOfID();
 		foreach ($list as $shopID)
 		{
 			$sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
@@ -1003,7 +1003,7 @@ abstract class ModuleCore
 			self::$exceptionsCache = array();
 			$sql = 'SELECT *
 					FROM `'._DB_PREFIX_.'hook_module_exceptions`
-					WHERE id_shop IN ('.implode(', ', Shop::getListFromContext()).')';
+					WHERE id_shop IN ('.implode(', ', Context::getContext()->shop->getListOfID()).')';
 			$result = Db::getInstance()->ExecuteS($sql);
 			foreach ($result as $row)
 			{
@@ -1022,7 +1022,7 @@ abstract class ModuleCore
 		if (!$dispatch)
 		{
 			$files = array();
-			foreach (Shop::getListFromContext() as $shopID)
+			foreach (Context::getContext()->shop->getListOfID() as $shopID)
 				if (isset(self::$exceptionsCache[$key], self::$exceptionsCache[$key][$shopID]))
 					foreach (self::$exceptionsCache[$key][$shopID] as $file)
 						if (!in_array($file, $files))
@@ -1032,7 +1032,7 @@ abstract class ModuleCore
 		else
 		{
 			$list = array();
-			foreach (Shop::getListFromContext() as $shopID)
+			foreach (Context::getContext()->shop->getListOfID() as $shopID)
 				if (isset(self::$exceptionsCache[$key], self::$exceptionsCache[$key][$shopID]))
 					$list[$shopID] = self::$exceptionsCache[$key][$shopID];
 			return $list;
