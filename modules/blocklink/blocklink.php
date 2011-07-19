@@ -86,7 +86,7 @@ class BlockLink extends Module
 	 	$context = Context::getContext();
 	 	$links = $this->getLinks();
 		
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'blocklink_links' => $links,
 			'title' => Configuration::get('PS_BLOCKLINK_TITLE', $context->language->id),
 			'url' => Configuration::get('PS_BLOCKLINK_URL'),

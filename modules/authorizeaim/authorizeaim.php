@@ -71,9 +71,9 @@ class authorizeAIM extends PaymentModule
 			return;
 
 		if ($params['objOrder']->getCurrentState() != _PS_OS_ERROR_) 
-			$context->controller->smarty->assign(array('status' => 'ok', 'id_order' => intval($params['objOrder']->id)));
+			$context->smarty->assign(array('status' => 'ok', 'id_order' => intval($params['objOrder']->id)));
 		else
-			$context->controller->smarty->assign('status', 'failed');
+			$context->smarty->assign('status', 'failed');
 
 		return $this->display(__FILE__, 'hookorderconfirmation.tpl'); 
 	}
@@ -167,9 +167,9 @@ class authorizeAIM extends PaymentModule
 			$cards['discover'] = Configuration::get('AUTHORIZE_AIM_CARD_DISCOVER') == 'on' ? 1 : 0;
 			$cards['ax'] = Configuration::get('AUTHORIZE_AIM_CARD_AX') == 'on' ? 1 : 0;
 
-			$context->controller->smarty->assign('p', $authorizeAIMParams);
-			$context->controller->smarty->assign('cards', $cards);
-			$context->controller->smarty->assign('isFailed', $isFailed);
+			$context->smarty->assign('p', $authorizeAIMParams);
+			$context->smarty->assign('cards', $cards);
+			$context->smarty->assign('isFailed', $isFailed);
 
 			return $this->display(__FILE__, 'authorizeaim.tpl');
 		}

@@ -190,11 +190,11 @@ class Ogone extends PaymentModule
 			return;
 		
 		if ($params['objOrder']->valid)
-			$context->controller->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
+			$context->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
 		else
-			$context->controller->smarty->assign('status', 'failed');
+			$context->smarty->assign('status', 'failed');
 
-		$context->controller->smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $context->link->getPageLink('contact', true) : Tools::getHttpHost(true).'contact'));
+		$context->smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $context->link->getPageLink('contact', true) : Tools::getHttpHost(true).'contact'));
 		return $this->display(dirname(__FILE__), 'hookorderconfirmation.tpl');
 	}
 	

@@ -107,7 +107,7 @@ class BlockTags extends Module
 			return false;
 		foreach ($tags AS &$tag)
 			$tag['class'] = 'tag_level'.($tag['times'] > BLOCKTAGS_MAX_LEVEL ? BLOCKTAGS_MAX_LEVEL : $tag['times']);
-		$context->controller->smarty->assign('tags', $tags);
+		$context->smarty->assign('tags', $tags);
 		
 		return $this->display(__FILE__, 'blocktags.tpl');
 	}

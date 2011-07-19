@@ -70,7 +70,7 @@ class CarrierCompare extends Module
 		if ($context->customer->id)
 			return;
 
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'countries' => Country::getCountries($context->language->id),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
 			'id_country' => (isset($context->customer->geoloc_id_country) ? $context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),

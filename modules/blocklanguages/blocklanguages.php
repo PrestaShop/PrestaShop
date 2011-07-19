@@ -60,7 +60,7 @@ class BlockLanguages extends Module
 		$languages = Language::getLanguages(true, $this->context->shop->getID());
 		if (!sizeof($languages))
 			return '';
-		$this->context->controller->smarty->assign('languages', $languages);
+		$this->context->smarty->assign('languages', $languages);
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
 	

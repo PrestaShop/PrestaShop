@@ -684,14 +684,13 @@ class CarrierCore extends ObjectModel
 		return false;
 	}
 
-	public function getRangeSuffix()
+	public function getRangeSuffix($context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		$suffix = Configuration::get('PS_WEIGHT_UNIT');
 		if ($this->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE)
-		{
-			$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-			$suffix = $currency->sign;
-		}
+			$suffix = $context->currency->sign;
 		return $suffix;
 	}
 

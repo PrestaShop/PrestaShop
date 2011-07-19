@@ -1522,7 +1522,7 @@ class AdminProducts extends AdminTab
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = $context->currency;
 
 		if ($obj->id)
 			self::$currentIndex .= '&id_product='.$obj->id;
@@ -3126,7 +3126,7 @@ class AdminProducts extends AdminTab
 		$attributes = Attribute::getAttributes($context->language->id, true);
 		foreach ($attributes AS $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = $context->currency;
 		$attributes_groups = AttributeGroup::getAttributesGroups($context->language->id);
 
 		

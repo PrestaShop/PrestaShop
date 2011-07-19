@@ -66,7 +66,7 @@ class BlockStore extends Module
 		$context = Context::getContext();
 		
 		
-		$context->controller->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
+		$context->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		return $this->display(__FILE__, 'blockstore.tpl');
 	}
 	

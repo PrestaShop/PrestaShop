@@ -63,7 +63,7 @@ class BlockCurrencies extends Module
 		$currencies = Currency::getCurrencies(false, 1, $this->context->shop->getID());
 		if (!sizeof($currencies))
 			return '';
-		$this->context->controller->smarty->assign('currencies', $currencies);
+		$this->context->smarty->assign('currencies', $currencies);
 		return $this->display(__FILE__, 'blockcurrencies.tpl');
 	}
 	

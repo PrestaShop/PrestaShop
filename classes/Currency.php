@@ -366,7 +366,7 @@ class CurrencyCore extends ObjectModel
 	static public function getCurrencyInstance($id)
 	{
 		if (!array_key_exists($id, self::$currencies))
-			self::$currencies[(int)($id)] = new Currency((int)($id));
+			self::$currencies[(int)($id)] = new Currency($id);
 		return self::$currencies[(int)($id)];
 	}
 }

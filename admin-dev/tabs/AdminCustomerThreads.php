@@ -550,7 +550,7 @@ class AdminCustomerThreads extends AdminTab
 							<td align="center"><a href="?tab=AdminOrders&id_order='.$order['id_order'].'&vieworder&token='.$tokenOrders.'"><img src="../img/admin/details.gif" /></a></td>
 						</tr>';
 					echo '</table>
-					<h3 style="color:green;font-weight:700;margin-top:10px">'.$this->l('Validated Orders:').' '.$countOK.' '.$this->l('for').' '.Tools::displayPrice($totalOK, new Currency(Configuration::get('PS_CURRENCY_DEFAULT'))).'</h3>
+					<h3 style="color:green;font-weight:700;margin-top:10px">'.$this->l('Validated Orders:').' '.$countOK.' '.$this->l('for').' '.Tools::displayPrice($totalOK, $context->currency).'</h3>
 					</div>';
 				}
 			}

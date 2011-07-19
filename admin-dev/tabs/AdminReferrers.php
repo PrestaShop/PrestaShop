@@ -440,8 +440,8 @@ class AdminReferrers extends AdminTab
 	
 	public function displayListContent($token = NULL)
 	{
+		$context = Context::getContext();
 		$irow = 0;
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		if ($this->_list)
 			foreach ($this->_list AS $tr)
 			{
@@ -452,7 +452,7 @@ class AdminReferrers extends AdminTab
 				{
 					echo '<td onclick="showProductLines('.$id.');" class="pointer '.(isset($params['align']) ? $params['align'] : '').'">'.(isset($params['prefix']) ? $params['prefix'] : '');
 					if (isset($tr[$key]) AND isset($params['price']))
-						echo Tools::displayPrice($tr[$key], $currency);
+						echo Tools::displayPrice($tr[$key], $context->currency);
 					elseif (isset($tr[$key]))
 						echo $tr[$key];
 					else

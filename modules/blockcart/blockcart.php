@@ -161,8 +161,8 @@ class BlockCart extends Module
 			return;
 
 		$context = Context::getContext();
-		$context->controller->smarty->assign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
-		$this->smartyAssigns($context->controller->smarty, $params);
+		$context->smarty->assign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
+		$this->smartyAssigns($context->smarty, $params);
 		return $this->display(__FILE__, 'blockcart.tpl');
 	}
 
@@ -177,7 +177,7 @@ class BlockCart extends Module
 			return;
 
 		$context = Context::getContext();
-		$this->smartyAssigns($context->controller->smarty, $params);
+		$this->smartyAssigns($context->smarty, $params);
 		$res = $this->display(__FILE__, 'blockcart-json.tpl');
 		return $res;
 	}

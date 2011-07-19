@@ -50,15 +50,15 @@ class AddressesControllerCore extends FrontController
 		
 		$multipleAddressesFormated = array();
 		$ordered_fields = array();
-		$customer = new Customer((int)(self::$cookie->id_customer));
-		
+		$customer = $context->customer;
+
 		if (!Validate::isLoadedObject($customer))
 			die(Tools::displayError('Customer not found'));
 			
 		// Retro Compatibility Theme < 1.4.1
-		$this->smarty->assign('addresses', $customer->getAddresses((int)(self::$cookie->id_lang)));
+		$this->smarty->assign('addresses', $customer->getAddresses($context->language->id));
 		
-		$customerAddressesDetailed = $customer->getAddresses((int)(self::$cookie->id_lang));
+		$customerAddressesDetailed = $customer->getAddresses($context->language->id);
 		
 		$total = 0;
 		foreach($customerAddressesDetailed as $addressDetailed)
@@ -74,12 +74,12 @@ class AddressesControllerCore extends FrontController
 			++$total;
 			
 			// Retro theme < 1.4.2
-      $ordered_fields = AddressFormat::getOrderedAddressFields($addressDetailed['id_country']);
+      		$ordered_fields = AddressFormat::getOrderedAddressFields($addressDetailed['id_country']);
 		}
 		
 		// Retro theme 1.4.2
-    if (($key = array_search('Country:name', $ordered_fields)))
-       $ordered_fields[$key] = 'country';
+    	if (($key = array_search('Country:name', $ordered_fields)))
+       		$ordered_fields[$key] = 'country';
 
 		$this->smarty->assign('addresses_style', array(
 								'company' => 'address_company'
@@ -98,7 +98,6 @@ class AddressesControllerCore extends FrontController
 		$this->smarty->assign(array(
 			'multipleAddresses' => $multipleAddressesFormated,
 			'ordered_fields' => $ordered_fields));
-		unset($customer);
 	}
 	
 	public function displayContent()

@@ -138,7 +138,7 @@ class FrontControllerCore
 		/* Cart already exists */
 		if ((int)$cookie->id_cart)
 		{
-			$cart = new Cart((int)$cookie->id_cart);
+			$cart = new Cart($cookie->id_cart);
 			if ($cart->OrderExists())
 				unset($cookie->id_cart, $cart, $cookie->checkedTOS);
 			/* Delete product of cart, if user can't make an order from his country */

@@ -45,7 +45,7 @@ class AddressControllerCore extends FrontController
 	public function preProcess()
 	{
 		parent::preProcess();
-		
+		$context = Context::getContext();
 		if ($back = Tools::getValue('back'))
 			$this->smarty->assign('back', Tools::safeOutput($back));
 		if ($mod = Tools::getValue('mod'))
@@ -202,11 +202,10 @@ class AddressControllerCore extends FrontController
 		}
 		elseif (!$id_address)
 		{
-			$customer = new Customer((int)(self::$cookie->id_customer));
-			if (Validate::isLoadedObject($customer))
+			if (Validate::isLoadedObject($context->customer))
 			{
-				$_POST['firstname'] = $customer->firstname;
-				$_POST['lastname'] = $customer->lastname;
+				$_POST['firstname'] = $context->customer->firstname;
+				$_POST['lastname'] = $context->customer->lastname;
 			}
 		}
 		if (Tools::isSubmit('ajax') AND sizeof($this->errors))

@@ -210,9 +210,9 @@ class BlockAdvertising extends Module
 	{
 		$context = Context::getContext();
 		$context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
-		$context->controller->smarty->assign('image', $context->link->protocol_content.$this->adv_img);
-		$context->controller->smarty->assign('adv_link', $this->adv_link);
-		$context->controller->smarty->assign('adv_title', $this->adv_title);
+		$context->smarty->assign('image', $context->link->protocol_content.$this->adv_img);
+		$context->smarty->assign('adv_link', $this->adv_link);
+		$context->smarty->assign('adv_title', $this->adv_title);
 
 		return $this->display(__FILE__, 'blockadvertising.tpl');
 	}

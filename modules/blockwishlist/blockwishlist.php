@@ -196,7 +196,7 @@ class BlockWishList extends Module
 			}
 			else
 				$id_wishlist = $params['cookie']->id_wishlist;
-			$context->controller->smarty->assign(array(
+			$context->smarty->assign(array(
 				'id_wishlist' => $id_wishlist,
 				'isLogged' => true,
 				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $params['cookie']->id_customer, $params['cookie']->id_lang, null, true)),
@@ -204,7 +204,7 @@ class BlockWishList extends Module
 				'ptoken' => Tools::getToken(false)));
 		}
 		else
-			$context->controller->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
+			$context->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
 		return ($this->display(__FILE__, 'blockwishlist.tpl'));
 	}
 
@@ -216,7 +216,7 @@ class BlockWishList extends Module
 	public function hookProductActions($params)
 	{
 		$context = Context::getContext();
-		$context->controller->smarty->assign('id_product', (int)(Tools::getValue('id_product')));
+		$context->smarty->assign('id_product', (int)(Tools::getValue('id_product')));
 		return ($this->display(__FILE__, 'blockwishlist-extra.tpl'));
 	}
 	

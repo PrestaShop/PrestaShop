@@ -394,7 +394,7 @@ class Dejala extends CarrierModule
 	{
 		$context = Context::getContext();
 
-		//$context->controller->smarty->assign('country', $this->dejalaConfig->country);
+		//$context->smarty->assign('country', $this->dejalaConfig->country);
 		$output = $this->display(__FILE__, 'dejala_header.tpl');
 		if (!empty($_POST))
 		{
@@ -424,14 +424,14 @@ class Dejala extends CarrierModule
 
 		$errors = array();
 		$outputMain = '';
-		$context->controller->smarty->assign("djl_mode", $this->dejalaConfig->mode);
-		$context->controller->smarty->assign("disabled", '');
+		$context->smarty->assign("djl_mode", $this->dejalaConfig->mode);
+		$context->smarty->assign("disabled", '');
 		if ($this->dejalaConfig->mode == 'PROD')
-			$context->controller->smarty->assign("disabled", 'disabled="disabled"');
+			$context->smarty->assign("disabled", 'disabled="disabled"');
 		if (true !== extension_loaded('curl'))
 		{
 			$errors[] = $this->l('This module requires php extension cURL to function properly. Please install the php extension "cURL" first.');
-			$context->controller->smarty->assign("disabled", 'disabled="disabled"');
+			$context->smarty->assign("disabled", 'disabled="disabled"');
 		}
 
 		$registered = TRUE;
@@ -453,7 +453,7 @@ class Dejala extends CarrierModule
 			}
 		}
 
-		$context->controller->smarty->assign("registered", $registered?"1":"0");
+		$context->smarty->assign("registered", $registered?"1":"0");
 		
 
 		if (!isset($_GET['cat']) || ($_GET['cat']==='home') || ($_GET['cat']===''))
@@ -461,19 +461,19 @@ class Dejala extends CarrierModule
 		else
 			$currentTab=$_GET['cat'];
 			
-		$context->controller->smarty->assign("currentTab", $currentTab);
-		$context->controller->smarty->assign("moduleConfigURL", 'index.php?tab=AdminModules&configure=dejala&token='.$_GET['token']);
-		$context->controller->smarty->assign("formAction", $_SERVER['REQUEST_URI']);
+		$context->smarty->assign("currentTab", $currentTab);
+		$context->smarty->assign("moduleConfigURL", 'index.php?tab=AdminModules&configure=dejala&token='.$_GET['token']);
+		$context->smarty->assign("formAction", $_SERVER['REQUEST_URI']);
 		$outputMenu = $this->display(__FILE__, 'dejala_menu.tpl');
 
 		if ($currentTab==='home') 
 		{
-			$context->controller->smarty->assign("login", html_entity_decode(Configuration::get('PS_SHOP_EMAIL'), ENT_COMPAT, 'UTF-8'));
+			$context->smarty->assign("login", html_entity_decode(Configuration::get('PS_SHOP_EMAIL'), ENT_COMPAT, 'UTF-8'));
 			if ($registered)
 			{
-				$context->controller->smarty->assign("visibility_status", $this->dejalaConfig->visibility_status);
-				$context->controller->smarty->assign("visible_users_list", $this->dejalaConfig->visible_users_list);
-				$context->controller->smarty->assign("store_login", html_entity_decode($this->dejalaConfig->login, ENT_COMPAT, 'UTF-8'));
+				$context->smarty->assign("visibility_status", $this->dejalaConfig->visibility_status);
+				$context->smarty->assign("visible_users_list", $this->dejalaConfig->visible_users_list);
+				$context->smarty->assign("store_login", html_entity_decode($this->dejalaConfig->login, ENT_COMPAT, 'UTF-8'));
 				$smartifyErrors = $this->smartyfyStoreAttributes();
 				if (isset($smartifyErrors) && count($smartifyErrors))
 					$errors = $smartifyErrors;
@@ -483,7 +483,7 @@ class Dejala extends CarrierModule
 				$shopName = Configuration::get('PS_SHOP_NAME');
 				if (strlen($shopName) >= 15)
 					$shopName = substr($shopName, 0, 15);
-				$context->controller->smarty->assign("store_name", html_entity_decode($shopName, ENT_COMPAT, 'UTF-8'));
+				$context->smarty->assign("store_name", html_entity_decode($shopName, ENT_COMPAT, 'UTF-8'));
 			}
 			$outputMain = $this->display(__FILE__, 'dejala_home.tpl');
 		}
@@ -496,7 +496,7 @@ class Dejala extends CarrierModule
 			{
 				foreach ($contacts as $contactName=>$contactData) {
 					foreach ($contactData as $key=>$value) {
-						$context->controller->smarty->assign($contactName.'_'.$key, $value);
+						$context->smarty->assign($contactName.'_'.$key, $value);
 					}
 				}
 			}
@@ -510,7 +510,7 @@ class Dejala extends CarrierModule
 			if ('200' == $responseArray['status'])
 			{
 				foreach ($location as $key=>$value)
-					$context->controller->smarty->assign($key, $value);
+					$context->smarty->assign($key, $value);
 				
 				$outputMain = $this->display(__FILE__, 'dejala_location.tpl');
 			}
@@ -523,7 +523,7 @@ class Dejala extends CarrierModule
 			if ('200' == $responseArray['status'])
 			{
 				foreach ($processes as $key=>$value)
-					$context->controller->smarty->assign($key, $value);
+					$context->smarty->assign($key, $value);
 					
 				$outputMain = $this->display(__FILE__, 'dejala_processes.tpl');
 			}
@@ -544,7 +544,7 @@ class Dejala extends CarrierModule
 					$product['public_price'] = number_format(round($product['price'] + $product['margin'], 2), 2, '.', '');
 					$product['public_price_notax'] = number_format(round($product['public_price']/$vat_factor, 2), 2, '.', '');
 				}
-				$context->controller->smarty->assign('products', $products);
+				$context->smarty->assign('products', $products);
 				$outputMain = $this->display(__FILE__, 'dejala_products.tpl');
 			}
 		}
@@ -582,10 +582,10 @@ class Dejala extends CarrierModule
 						$delivery['delivery_time'] = date('H\hi', $delivery['delivery_utc']);
 					}
 				}
-				$context->controller->smarty->assign('formAction', __PS_BASE_URI__ . 'modules/' . $this->name . '/deliveries_csv.php');
-				$context->controller->smarty->assign('defaultDateFrom', date('01/m/Y'));
-				$context->controller->smarty->assign('defaultDateTo', date('d/m/Y'));
-				$context->controller->smarty->assign('deliveries', $deliveries);
+				$context->smarty->assign('formAction', __PS_BASE_URI__ . 'modules/' . $this->name . '/deliveries_csv.php');
+				$context->smarty->assign('defaultDateFrom', date('01/m/Y'));
+				$context->smarty->assign('defaultDateTo', date('d/m/Y'));
+				$context->smarty->assign('deliveries', $deliveries);
 				$outputMain = $this->display(__FILE__, 'dejala_deliveries.tpl');
 			}
 		}
@@ -608,9 +608,9 @@ class Dejala extends CarrierModule
 					$m_status['checked'] = '0';
 				$orderStatuses[] = $m_status;
 			}
-			$context->controller->smarty->assign('statuses', $orderStatuses);
+			$context->smarty->assign('statuses', $orderStatuses);
 
-			$context->controller->smarty->assign('trigerringStatuses', $this->dejalaConfig->trigerringStatuses);
+			$context->smarty->assign('trigerringStatuses', $this->dejalaConfig->trigerringStatuses);
 			$outputMain = $this->display(__FILE__, 'dejala_technical_options.tpl');
 		}
 
@@ -639,20 +639,20 @@ class Dejala extends CarrierModule
 			$errors[] = $this->l('An error occurred while getting store, please try again later or contact Dejala.com');
 		else
 		{
-			$context->controller->smarty->assign("account_balance", $storeAttrs['account_balance']);
-			$context->controller->smarty->assign("store_name", $storeAttrs['name']);
+			$context->smarty->assign("account_balance", $storeAttrs['account_balance']);
+			$context->smarty->assign("store_name", $storeAttrs['name']);
 
 			// Check if account exists in production
 			$responsePing = $djlUtil->ping($this->dejalaConfig, 'PROD');
 			if ('200' == $responsePing['status'])
-				$context->controller->smarty->assign('isLiveReady', '1');
+				$context->smarty->assign('isLiveReady', '1');
 			else
 			{
-				$context->controller->smarty->assign('isLiveReady', '0');
+				$context->smarty->assign('isLiveReady', '0');
 				if (isset($storeAttrs['attributes']) && isset($storeAttrs['attributes']['request_live']) && ($storeAttrs['attributes']['request_live']=='true'))
-					$context->controller->smarty->assign('isLiveRequested', '1');
+					$context->smarty->assign('isLiveRequested', '1');
 				else
-					$context->controller->smarty->assign('isLiveRequested', '0');
+					$context->smarty->assign('isLiveRequested', '0');
 			}
 		}
 		return ($errors);
@@ -682,26 +682,26 @@ class Dejala extends CarrierModule
 		$response = $djlUtil->getStoreAttributes($this->dejalaConfig, $store);
 		if ($response['status'] == 200)
 		{
-			$context->controller->smarty->assign('nb_days', $store['attributes']['nb_days_displayed']);
-			$context->controller->smarty->assign('delivery_delay', $store['attributes']['delivery_delay']);
+			$context->smarty->assign('nb_days', $store['attributes']['nb_days_displayed']);
+			$context->smarty->assign('delivery_delay', $store['attributes']['delivery_delay']);
 			if (isset($store['attributes']['delivery_partial']))
-				$context->controller->smarty->assign('delivery_partial', $store['attributes']['delivery_partial']);
+				$context->smarty->assign('delivery_partial', $store['attributes']['delivery_partial']);
 		}
 
 		$wday_selected = array(1, 1, 1, 1, 1, 1, 1);
 
-		$context->controller->smarty->assign('timetable_css', _MODULE_DIR_.$this->name.'/timetable.css');
-		$context->controller->smarty->assign("timetable_js", _MODULE_DIR_.$this->name.'/timetable.js');
-		$context->controller->smarty->assign("weekdayLabels", $this->wday_labels);
-		$context->controller->smarty->assign("weekdaySelected", $wday_selected);
+		$context->smarty->assign('timetable_css', _MODULE_DIR_.$this->name.'/timetable.css');
+		$context->smarty->assign("timetable_js", _MODULE_DIR_.$this->name.'/timetable.js');
+		$context->smarty->assign("weekdayLabels", $this->wday_labels);
+		$context->smarty->assign("weekdaySelected", $wday_selected);
 
 
 		$calendar = array();
 		$response = $djlUtil->getStoreCalendar($this->dejalaConfig, $calendar);
 		if ($response['status'] == 200) 
 		{
-			$context->controller->smarty->assign("calendar", $calendar);
-			$context->controller->smarty->assign("timetableTpl", dirname(__FILE__)."/dejala_picking_timetable.tpl");
+			$context->smarty->assign("calendar", $calendar);
+			$context->smarty->assign("timetableTpl", dirname(__FILE__)."/dejala_picking_timetable.tpl");
 		}
 		$output = $output . $this->display(__FILE__, 'dejala_delivery_options.tpl');
 
@@ -871,8 +871,8 @@ class Dejala extends CarrierModule
 
 
 		$this->mylog("date$=" . $this->logValue($dates,1));
-		$context->controller->smarty->assign('nb_days', $nbDeliveryDates);
-		$context->controller->smarty->assign('dates', $dates);
+		$context->smarty->assign('nb_days', $nbDeliveryDates);
+		$context->smarty->assign('dates', $dates);
 		for ($i=0; $i < 24; $i++)
 		{
 			$endHour = (($i+$electedProduct['timelimit'])%24);
@@ -880,10 +880,10 @@ class Dejala extends CarrierModule
 				$endHour = 24;
 			$hourLabels[] = $i . 'h-' . $endHour . 'h';
 		}
-		$context->controller->smarty->assign('hourLabels', $hourLabels);
+		$context->smarty->assign('hourLabels', $hourLabels);
 
-		$context->controller->smarty->assign('timetable_css', _MODULE_DIR_.$this->name.'/timetable.css');
-		$context->controller->smarty->assign("timetable_js", _MODULE_DIR_.$this->name.'/timetable.js');
+		$context->smarty->assign('timetable_css', _MODULE_DIR_.$this->name.'/timetable.css');
+		$context->smarty->assign("timetable_js", _MODULE_DIR_.$this->name.'/timetable.js');
 
 		$this->mylog("electedCarrier->id=" . $this->logValue($djlCarrier->id));
 		$mCarrier = $djlCarrier;
@@ -896,9 +896,9 @@ class Dejala extends CarrierModule
 
 		$resultsArray[] = $row;
 
-		$context->controller->smarty->assign('carriers', $resultsArray);
-		$context->controller->smarty->assign('my_carrier_selected', (isset($cart->id_carrier) && $cart->id_carrier == $djlCarrier->id)) ;
-		$context->controller->smarty->assign('product', $electedProduct);
+		$context->smarty->assign('carriers', $resultsArray);
+		$context->smarty->assign('my_carrier_selected', (isset($cart->id_carrier) && $cart->id_carrier == $djlCarrier->id)) ;
+		$context->smarty->assign('product', $electedProduct);
 
 
 		$djlCart = new DejalaCart($cart->id);
@@ -915,21 +915,21 @@ class Dejala extends CarrierModule
 			{
 				if ($l_date['value'] == $deliveryDateSelected) 
 				{
-					$context->controller->smarty->assign("deliveryDateIndexSelected", $l_key);
-					$context->controller->smarty->assign("deliveryDateSelected", $deliveryDateSelected);
-					$context->controller->smarty->assign("deliveryHourSelected", $m_hour);
+					$context->smarty->assign("deliveryDateIndexSelected", $l_key);
+					$context->smarty->assign("deliveryDateSelected", $deliveryDateSelected);
+					$context->smarty->assign("deliveryHourSelected", $m_hour);
 					$setDefaultDate = FALSE;
 				}
 			}
 		}
 		if ($setDefaultDate) 
 		{
-			$context->controller->smarty->assign("deliveryDateIndexSelected", 0);
-			$context->controller->smarty->assign("deliveryDateSelected", date("Y/m/d", $dateUtc));
-			$context->controller->smarty->assign("deliveryHourSelected", (int)(date("H", $dateUtc)));
+			$context->smarty->assign("deliveryDateIndexSelected", 0);
+			$context->smarty->assign("deliveryDateSelected", date("Y/m/d", $dateUtc));
+			$context->smarty->assign("deliveryHourSelected", (int)(date("H", $dateUtc)));
 		}
 
-		$context->controller->smarty->assign("isCartOutOfStock", $isCartOutOfStock);
+		$context->smarty->assign("isCartOutOfStock", $isCartOutOfStock);
 		if (!$isCartOutOfStock) 
 		{
 			$buffer = $this->display(__FILE__, 'dejala_carrier.tpl');
@@ -937,7 +937,7 @@ class Dejala extends CarrierModule
 		}
 		else
 		{
-			$context->controller->smarty->assign('nostock_info', $this->l('I will select my shipping date when my product is available.'));
+			$context->smarty->assign('nostock_info', $this->l('I will select my shipping date when my product is available.'));
 			$buffer = $this->display(__FILE__, 'dejala_carrier_nostock.tpl');
 		}
 		return $buffer;
