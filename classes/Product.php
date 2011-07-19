@@ -2065,10 +2065,10 @@ class ProductCore extends ObjectModel
 			if (is_numeric($productAttribute))
 				$sql .= ' AND stock.id_product_attribute = '.$productAttribute;
 			else if (is_string($productAttribute))
-				$sql .= ' AND stock.id_product_attribute = '.pSQL($productAttribute).'.id_product_attribute';
+				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
 		}
 		$sql .= Shop::sqlSharedStock('stock', $context) . ' ';
-		
+
 		return $sql;
 	}
 	
