@@ -78,7 +78,7 @@ class TabCore extends ObjectModel
 		return false;
 	}
 	
-	static public function initAccess($id_tab, $context = null)
+	static public function initAccess($id_tab, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

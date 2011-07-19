@@ -55,7 +55,7 @@ class ToolsCore
 	* @param string $url Desired URL
 	* @param string $baseUri Base URI (optional)
 	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__, $context = null)
+	public static function redirect($url, $baseUri = __PS_BASE_URI__, Context $context = null)
 	{
 		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
 		{
@@ -304,7 +304,7 @@ class ToolsCore
 		return $iso;
 	}
 
-	public static function switchLanguage($context = null)
+	public static function switchLanguage(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -341,7 +341,7 @@ class ToolsCore
 	* @param object $currency Current currency (object, id_currency, NULL => context currency)
 	* @return string Price correctly formated (sign, decimal separator...)
 	*/
-	public static function displayPrice($price, $currency = NULL, $no_utf8 = false, $context = null)
+	public static function displayPrice($price, $currency = NULL, $no_utf8 = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -403,7 +403,7 @@ class ToolsCore
 	* @param object $currency Current currency object
 	* @param boolean $to_currency convert to currency or from currency to default currency
 	*/
-	public static function convertPrice($price, $currency = NULL, $to_currency = true, $context = null)
+	public static function convertPrice($price, $currency = NULL, $to_currency = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -525,7 +525,7 @@ class ToolsCore
 	*
 	* @param integer $code Error code
 	*/
-	public static function displayError($string = 'Fatal error', $htmlentities = true, $context = null)
+	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
 		global $_ERRORS;
 
@@ -720,7 +720,7 @@ class ToolsCore
 	}
 
 
-	public static function completeMetaTags($metaTags, $defaultValue, $context = null)
+	public static function completeMetaTags($metaTags, $defaultValue, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -749,7 +749,7 @@ class ToolsCore
 	*
 	* @param string $token token to encrypt
 	*/
-	public static function getToken($page = true, $context = null)
+	public static function getToken($page = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -768,7 +768,7 @@ class ToolsCore
 	{
 		return !empty($string) ? self::encrypt($string) : false;
 	}
-	public static function getAdminTokenLite($tab, $context = null)
+	public static function getAdminTokenLite($tab, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -783,7 +783,7 @@ class ToolsCore
 	* @param boolean $linkOntheLastItem Put or not a link on the current category
 	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
 	*/
-	public static function getPath($id_category, $path = '', $linkOntheLastItem = false, $categoryType = 'products', $context = null)
+	public static function getPath($id_category, $path = '', $linkOntheLastItem = false, $categoryType = 'products', Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -847,7 +847,7 @@ class ToolsCore
 	/**
 	* @param string [optionnal] $type_cat defined what type of categories is used (products or cms)
 	*/
-	public static function getFullPath($id_category, $end, $type_cat = 'products', $context = null)
+	public static function getFullPath($id_category, $end, $type_cat = 'products', Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1855,7 +1855,7 @@ FileETag INode MTime Size
 		}
 	}
 
-	public static function enableCache($level = 1, $context = null)
+	public static function enableCache($level = 1, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1870,7 +1870,7 @@ FileETag INode MTime Size
 		$smarty->caching = (int)($level);
 	}
 
-	public static function restoreCacheSettings($context = null)
+	public static function restoreCacheSettings(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

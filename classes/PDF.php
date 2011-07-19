@@ -476,7 +476,7 @@ class PDFCore extends PDF_PageGroupCore
 	* @param object $order Order
 	* @param string $mode Download or display (optional)
 	*/
-	public static function invoice($order, $mode = 'D', $multiple = false, &$pdf = NULL, $slip = false, $delivery = false, $context = null)
+	public static function invoice($order, $mode = 'D', $multiple = false, &$pdf = NULL, $slip = false, $delivery = false, Context $context = null)
 	{
 	 	if (!$context)
 	 		$context = Context::getContext();

@@ -229,7 +229,7 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $id_customer Customer ID
 	  * @return array Discounts
 	  */
-	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false, $context = null)
+	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false, Context $context = null)
     {
 		if (!$context)
 			$context = Context::getContext();
@@ -276,7 +276,7 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $order_total_products Total cart products amount
 	  * @return mixed Return a float value or '!' if reduction is 'Shipping free'
 	  */
-	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, $id_group_shop = false, $id_shop = false, $context = null)
+	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, $id_group_shop = false, $id_shop = false, Context $context = null)
 	{
 		$totalAmount = 0;
 

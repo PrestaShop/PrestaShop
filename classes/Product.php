@@ -288,7 +288,7 @@ class ProductCore extends ObjectModel
 		),
 	);
 
-	public	function __construct($id_product = NULL, $full = false, $id_lang = NULL, $id_shop = NULL, $context = NULL)
+	public	function __construct($id_product = NULL, $full = false, $id_lang = NULL, $id_shop = NULL, Context $context = NULL)
 	{
 		parent::__construct($id_product, $id_lang, $id_shop);
 		if (!$context)
@@ -1421,7 +1421,7 @@ class ProductCore extends ObjectModel
 		return Product::getProductsProperties((int)$id_lang, $result);
 	}
 
-	static protected function _getProductIdByDate($beginning, $ending, $context = null)
+	static protected function _getProductIdByDate($beginning, $ending, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1707,7 +1707,7 @@ class ProductCore extends ObjectModel
 	*/
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = NULL, $decimals = 6, $divisor = NULL, $only_reduc = false,
 	$usereduc = true, $quantity = 1, $forceAssociatedTax = false, $id_customer = NULL, $id_cart = NULL, $id_address = NULL, &$specificPriceOutput = NULL, 
-	$with_ecotax = TRUE, $context = null)
+	$with_ecotax = TRUE, Context $context = null)
 	{
 		if (!$context)
    			$context = Context::getContext();
@@ -1908,7 +1908,7 @@ class ProductCore extends ObjectModel
 		return self::$_prices[$cacheId];
 	}
 
-	public static function convertAndFormatPrice($price, $currency = false, $context = null)
+	public static function convertAndFormatPrice($price, $currency = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1917,7 +1917,7 @@ class ProductCore extends ObjectModel
 		return Tools::displayPrice(Tools::convertPrice($price, $currency), $currency);
 	}
 
-	public static function isDiscounted($id_product, $quantity = 1, $context = null)
+	public static function isDiscounted($id_product, $quantity = 1, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -2081,7 +2081,7 @@ class ProductCore extends ObjectModel
 	 * @param bool $update
 	 * @param Context $context
 	 */
-	public function setStock($quantity, $id_product_attribute = 0, $update = false, $context = null)
+	public function setStock($quantity, $id_product_attribute = 0, $update = false, Context $context = null)
 	{
 		if (!$this->id)
 			return ;
@@ -2157,7 +2157,7 @@ class ProductCore extends ObjectModel
 	 * @param Context $context
 	 * @return int
 	 */
-	public function getStock($id_product_attribute = 0, $context = null)
+	public function getStock($id_product_attribute = 0, Context $context = null)
 	{
 		if (!$this->id)
 			return 0;
@@ -2202,7 +2202,7 @@ class ProductCore extends ObjectModel
 		return $productObj->addStockMvt(-(int)$product['cart_quantity'], (int)_STOCK_MOVEMENT_ORDER_REASON_, (int)$product['id_product_attribute'], (int)$id_order, NULL);
 	}
 
-	public static function reinjectQuantities(&$orderDetail, $quantity, $context = null)
+	public static function reinjectQuantities(&$orderDetail, $quantity, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -2749,7 +2749,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Get the link of the product page of this product
 	*/
-	public function getLink($context = null)
+	public function getLink(Context $context = null)
 	{
 		if (!$context)
    			$context = Context::getContext();
@@ -2773,7 +2773,7 @@ class ProductCore extends ObjectModel
 		return Language::getIsoById((int)$id_lang).'-default';
 	}
 
-	public static function getProductProperties($id_lang, $row, $context = null)
+	public static function getProductProperties($id_lang, $row, Context $context = null)
 	{
 		if (!$row['id_product'])
 			return false;
@@ -2889,7 +2889,7 @@ class ProductCore extends ObjectModel
 	** Customization management
 	*/
 
-	public static function getAllCustomizedDatas($id_cart, $id_lang = null, $context = null)
+	public static function getAllCustomizedDatas($id_cart, $id_lang = null, Context $context = null)
 	{
 		if (!$context)
     		$context = Context::getContext();
@@ -3081,7 +3081,7 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->ExecuteS('SELECT `id_customization_field`, `type` FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product` = '.(int)($this->id).' AND `required` = 1');
 	}
 
-	public function hasAllRequiredCustomizableFields($context = null)
+	public function hasAllRequiredCustomizableFields(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

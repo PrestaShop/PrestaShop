@@ -626,7 +626,7 @@ class OrderCore extends ObjectModel
 	 * @param boolean $showHiddenStatus Display or not hidden order statuses
 	 * @return array Customer orders
 	 */
-	static public function getCustomerOrders($id_customer, $showHiddenStatus = false, $context = null)
+	static public function getCustomerOrders($id_customer, $showHiddenStatus = false, Context $context = null)
     {
 		if (!$context)
 			$context = Context::getContext();
@@ -685,7 +685,7 @@ class OrderCore extends ObjectModel
 			'.((int)$limit ? 'LIMIT 0, '.(int)$limit : ''));
 	}
 
-	static public function getOrdersWithInformations($limit = NULL, $context = null)
+	static public function getOrdersWithInformations($limit = NULL, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

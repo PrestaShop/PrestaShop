@@ -235,7 +235,7 @@ class AddressFormatCore extends ObjectModel
 	 * @addressFormat is the format
 	 * @return double Array
 	 */
-	public static function getFormattedAddressFieldsValues($address, $addressFormat, $context = null)
+	public static function getFormattedAddressFieldsValues($address, $addressFormat, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

@@ -145,7 +145,7 @@ class SearchCore
 		return $string;
 	}
 
-	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, $id_shop = false, $context = null)
+	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, $id_shop = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -532,7 +532,7 @@ class SearchCore
 		$queryArray3 = array();
 	}
 
-	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, $shops = null, $context = null)
+	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, $shops = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

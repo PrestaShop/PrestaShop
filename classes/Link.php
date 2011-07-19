@@ -179,7 +179,7 @@ class LinkCore
 		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
 	}
 
-	public function preloadPageLinks($context = null)
+	public function preloadPageLinks(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -195,7 +195,7 @@ class LinkCore
 			self::$cache['page'][$row['page'].'.php_'.$context->language->id] = $this->getLangLink($context->language->id).$row['url_rewrite'];
 	}
 
-	public function getPageLink($filename, $ssl = false, $id_lang = NULL, $request = NULL, $context = null)
+	public function getPageLink($filename, $ssl = false, $id_lang = NULL, $request = NULL, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -245,7 +245,7 @@ class LinkCore
 	  * @param integer $id_lang Language ID
 	  * @return string link
 	  */
-	public function getLanguageLink($id_lang, $context = null)
+	public function getLanguageLink($id_lang, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -357,7 +357,7 @@ class LinkCore
 		return $url.(!strstr($url, '?') ? '?' : '&').'orderby='.urlencode($orderby).'&orderway='.urlencode($orderway);
 	}
 
-	protected function getLangLink($id_lang = NULL, $context = null)
+	protected function getLangLink($id_lang = NULL, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

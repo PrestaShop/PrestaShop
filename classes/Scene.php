@@ -181,7 +181,7 @@ class SceneCore extends ObjectModel
 	*
 	* @return array Products
 	*/
-	static public function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true, $context = null)
+	static public function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -206,7 +206,7 @@ class SceneCore extends ObjectModel
 	*
 	* @return array Products
 	*/
-	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true, $context = null)
+	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

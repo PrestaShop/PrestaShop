@@ -512,7 +512,7 @@ abstract class ObjectModelCore
 		return true;
 	}
 
-	static public function displayFieldName($field, $className = __CLASS__, $htmlentities = true, $context = null)
+	static public function displayFieldName($field, $className = __CLASS__, $htmlentities = true, Context $context = null)
 	{
 		global $_FIELDS;
 		@include(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php');

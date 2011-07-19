@@ -49,8 +49,6 @@ class BirthdayPresent extends Module
 		
 	public function getContent()
 	{
-		$context = Context::getContext();
-		
 		if (Tools::isSubmit('submitBirthday'))
 		{
 			Configuration::updateValue('BIRTHDAY_ACTIVE', (int)(Tools::getValue('bp_active')));
@@ -73,7 +71,7 @@ class BirthdayPresent extends Module
 				<label>'.$this->l('Type').'</label>
 				<div class="margin-form">
 					<select name="id_discount_type">';
-		$discountTypes = Discount::getDiscountTypes($context->language->id);
+		$discountTypes = Discount::getDiscountTypes($this->context->language->id);
 		foreach ($discountTypes AS $discountType)
 			$this->_html .= '<option value="'.(int)($discountType['id_discount_type']).'"'.((Configuration::get('BIRTHDAY_DISCOUNT_TYPE') == $discountType['id_discount_type']) ? ' selected="selected"' : '').'>'.$discountType['name'].'</option>';
 		$this->_html .= '

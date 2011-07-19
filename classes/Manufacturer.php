@@ -273,7 +273,7 @@ class ManufacturerCore extends ObjectModel
 		return Tools::link_rewrite($this->name, false);
 	}
 
-	static public function getProducts($id_manufacturer, $id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $context = null)
+	static public function getProducts($id_manufacturer, $id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

@@ -145,7 +145,7 @@ class CMSCategoryCore extends ObjectModel
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, $context = null)
+	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -176,7 +176,7 @@ class CMSCategoryCore extends ObjectModel
 		);
 	}
 
-	static public function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, $id_shop = false, $context = null)
+	static public function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, $id_shop = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -466,14 +466,14 @@ class CMSCategoryCore extends ObjectModel
 		return $result['link_rewrite'];
 	}
 
-	public function getLink($context = null)
+	public function getLink(Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 		return $context->link->getCMSCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL, $context = null)
+	public function getName($id_lang = NULL, Context $context = null)
 	{
 		if (!$id_lang)
 		{
@@ -536,7 +536,7 @@ class CMSCategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($idLang = null, $context = null)
+	public function getParentsCategories($idLang = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();

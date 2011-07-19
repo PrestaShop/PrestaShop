@@ -127,7 +127,7 @@ class OrderHistoryCore extends ObjectModel
 		return new OrderState($id_order_state, Configuration::get('PS_LANG_DEFAULT'));
 	}
 
-	public function addWithemail($autodate = true, $templateVars = false, $context = null)
+	public function addWithemail($autodate = true, $templateVars = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
