@@ -65,6 +65,9 @@ class ContextCore
 
 	/** @var Shop */
 	public $shop;
+	
+	/** @var Smarty */
+	public $smarty;
 
 	/**
 	 * Get a singleton context

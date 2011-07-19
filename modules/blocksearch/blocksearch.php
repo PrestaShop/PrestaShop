@@ -82,14 +82,14 @@ class BlockSearch extends Module
 	{
 		$context = Context::getContext();
 
-		$context->controller->smarty->assign('ENT_QUOTES', ENT_QUOTES);
-		$context->controller->smarty->assign('search_ssl', (int)(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
+		$context->smarty->assign('ENT_QUOTES', ENT_QUOTES);
+		$context->smarty->assign('search_ssl', (int)(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
 		
 		$ajaxSearch=(int)(Configuration::get('PS_SEARCH_AJAX'));
-		$context->controller->smarty->assign('ajaxsearch', $ajaxSearch);
+		$context->smarty->assign('ajaxsearch', $ajaxSearch);
 
 		$instantSearch = (int)(Configuration::get('PS_INSTANT_SEARCH'));
-		$context->controller->smarty->assign('instantsearch', $instantSearch);
+		$context->smarty->assign('instantsearch', $instantSearch);
 		if ($ajaxSearch)
 		{
 			$context->controller->addCSS(_PS_CSS_DIR_.'jquery.autocomplete.css');

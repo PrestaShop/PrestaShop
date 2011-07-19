@@ -61,7 +61,7 @@ class BlockSupplier extends Module
 	function hookLeftColumn($params)
 	{
 		$context = Context::getContext();
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'suppliers' => Supplier::getSuppliers(false),
 			'link' => $context->link,
 			'text_list' => Configuration::get('SUPPLIER_DISPLAY_TEXT'),

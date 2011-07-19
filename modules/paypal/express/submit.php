@@ -184,7 +184,7 @@ function submitAccount()
 				{
 					if (Mail::Send($context->language->id, 'account', Mail::l('Welcome!'), 
 					array('{firstname}' => $customer->firstname, '{lastname}' => $customer->lastname, '{email}' => $customer->email, '{passwd}' => Tools::getValue('passwd')), $customer->email, $customer->firstname.' '.$customer->lastname))
-						$context->controller->smarty->assign('confirmation', 1);
+						$context->smarty->assign('confirmation', 1);
 					$context->cookie->id_customer = (int)($customer->id);
 					$context->cookie->customer_lastname = $customer->lastname;
 					$context->cookie->customer_firstname = $customer->firstname;

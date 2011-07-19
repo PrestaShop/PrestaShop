@@ -33,11 +33,9 @@ class AdminShipping extends AdminTab
 	public function __construct()
 	{
 	 	$this->table = 'delivery';
- 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
  		$this->_fieldsHandling = array(
-		'PS_SHIPPING_HANDLING' => array('title' => $this->l('Handling charges'), 'suffix' => $currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
-		'PS_SHIPPING_FREE_PRICE' => array('title' => $this->l('Free shipping starts at'), 'suffix' => $currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
+		'PS_SHIPPING_HANDLING' => array('title' => $this->l('Handling charges'), 'suffix' => $context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
+		'PS_SHIPPING_FREE_PRICE' => array('title' => $this->l('Free shipping starts at'), 'suffix' => $context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
 		'PS_SHIPPING_FREE_WEIGHT' => array('title' => $this->l('Free shipping starts at'), 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'validation' => 'isUnsignedFloat', 'cast' => 'floatval'),
 		'PS_SHIPPING_METHOD' => array('title' => $this->l('Billing'), 'validation' => 'isBool', 'cast' => 'intval'));
 
@@ -193,7 +191,7 @@ class AdminShipping extends AdminTab
 	{
 		$carrierArray = array();
 		$id_carrier = Tools::getValue('id_carrier');
-		$carriers = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+		$carriers = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), true , false,false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		foreach ($carriers AS $carrier)
 			if (!$carrier['is_free'])
 				$carrierArray[] = array(
@@ -227,8 +225,7 @@ class AdminShipping extends AdminTab
 					<tr>
 						<th>'.$this->l('Zone / Range').'</th>';
 
-				$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-				
+				$currency = $context->currency;
 				$rangeObj = $carrierSelected->getRangeObject();
 				$rangeTable = $carrierSelected->getRangeTable();
 				$suffix = $carrierSelected->getRangeSuffix();

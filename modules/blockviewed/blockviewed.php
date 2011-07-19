@@ -167,7 +167,7 @@ class BlockViewed extends Module
 			if (!sizeof($productsViewedObj))
 				return ;
 
-			$context->controller->smarty->assign(array(
+			$context->smarty->assign(array(
 				'productsViewedObj' => $productsViewedObj,
 				'mediumSize' => Image::getSize('medium')));
 

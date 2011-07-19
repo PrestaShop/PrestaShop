@@ -703,7 +703,7 @@ class BlockCms extends Module
 	{
 		$context = Context::getContext();	
 		$cms_titles = self::getCMStitles(self::LEFT_COLUMN);
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 			'theme_dir' => _PS_THEME_DIR_
@@ -716,7 +716,7 @@ class BlockCms extends Module
 		$context = Context::getContext();
 
 		$cms_titles = self::getCMStitles(self::RIGHT_COLUMN);
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 			'theme_dir' => _PS_THEME_DIR_
@@ -731,7 +731,7 @@ class BlockCms extends Module
 		if (Configuration::get('FOOTER_BLOCK_ACTIVATION'))
 		{
 			$cms_titles = self::getCMStitlesFooter();
-			$context->controller->smarty->assign(array(
+			$context->smarty->assign(array(
 				'block' => 0,
 				'cmslinks' => $cms_titles,
 				'theme_dir' => _PS_THEME_DIR_,

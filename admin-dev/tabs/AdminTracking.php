@@ -149,7 +149,6 @@ class AdminTracking extends AdminTab
 					'status' => array('title' => $this->l('Status')),
 					'action' => array('title' => $this->l('Actions'))
 				));
-			$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 			echo '
 			<table class="table" cellpadding="0" cellspacing="0">
 				<tr>';
@@ -169,7 +168,7 @@ class AdminTracking extends AdminTab
 					<td align="center">'.($product->manufacturer_name != NULL ? stripslashes($product->manufacturer_name) : '--').'</td>
 					<td>'.$product->reference.'</td>
 					<td><a href="index.php?tab=AdminCatalog&id_product='.$product->id.'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'">'.stripslashes($product->name).'</a></td>
-					<td>'.Tools::displayPrice($product->getPrice(), $currency).'</td>
+					<td>'.Tools::displayPrice($product->getPrice(), $context->currency).'</td>
 					<td>'.(float)$taxrate.'% </td>
 					<td align="center">'.$product->quantity.'</td>
 					<td align="center">'.$product->weight.' '.Configuration::get('PS_WEIGHT_UNIT').'</td>
@@ -209,7 +208,6 @@ class AdminTracking extends AdminTab
 					'action' => array('title' => $this->l('Actions'))
 				));
 
-			$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 			echo '
 			<table class="table" cellpadding="0" cellspacing="0">
 				<tr>';
@@ -241,7 +239,7 @@ class AdminTracking extends AdminTab
 					<td align="center">'.($prod['manufacturer_name'] != NULL ? stripslashes($prod['manufacturer_name']) : '--').'</td>
 					<td>'.$prod['reference'].'</td>
 					<td><a href="index.php?tab=AdminCatalog&id_product='.$prod['id_product'].'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'">'.stripslashes($prod['name']).' ('.$prod['combination_name'].')'.'</a></td>
-					<td>'.Tools::displayPrice(Product::getPriceStatic((int)($prod['id_product']), true, $prod['id_product_attribute']), $currency).'</td>
+					<td>'.Tools::displayPrice(Product::getPriceStatic((int)($prod['id_product']), true, $prod['id_product_attribute']), $context->currency).'</td>
 					<td>'.(float)$taxrate.'% </td>
 					<td align="center">'.$prod['quantity'].'</td>
 					<td align="center">'.($prod['weight'] + $prod['product_weight']).' '.Configuration::get('PS_WEIGHT_UNIT').'</td>

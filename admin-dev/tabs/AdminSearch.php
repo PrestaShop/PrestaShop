@@ -190,7 +190,6 @@ class AdminSearch extends AdminTab
 	{
 		$context = Context::getContext();
 		self::$currentIndex = 'index.php';
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$query = trim(Tools::getValue('bo_query'));
 		$nbCategories = $nbProducts = $nbCustomers = 0;
 		
@@ -223,7 +222,7 @@ class AdminSearch extends AdminTab
 					<td align="center">'.($product['manufacturer_name'] != NULL ? stripslashes($product['manufacturer_name']) : '--').'</td>
 					<td>'.$product['reference'].'</td>
 					<td><a href="'.self::$currentIndex.'?tab=AdminCatalog&id_product='.$product['id_product'].'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'">'.stripslashes($product['nameh']).'</a></td>
-					<td>'.Tools::displayPrice($product['price'], $currency).'</td>
+					<td>'.Tools::displayPrice($product['price'], $context->currency).'</td>
 					<td>'.stripslashes($product['tax_name']).'</td>
 					<td align="center">'.$product['quantity'].'</td>
 					<td align="center">'.$product['weight'].' '.Configuration::get('PS_WEIGHT_UNIT').'</td>

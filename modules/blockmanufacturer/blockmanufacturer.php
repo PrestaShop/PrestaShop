@@ -56,7 +56,7 @@ class BlockManufacturer extends Module
     {
 		$context = Context::getContext();
 		//$getNbProducts = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $id_shop = false
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'manufacturers' => Manufacturer::getManufacturers(false, 0, true, false, false, false, $this->context->shop->getGroupID()),
 			'link' => $context->link,
 			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),

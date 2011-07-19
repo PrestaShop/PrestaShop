@@ -330,7 +330,7 @@ class AdminOrders extends AdminTab
 							$this->_errors[] = Tools::displayError('Cannot generate voucher');
 						else
 						{
-							$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+							$currency = $context->currency;
 							$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
 							$params['{voucher_num}'] = $voucher->name;
 							@Mail::Send((int)($order->id_lang), 'voucher', Mail::l('New voucher regarding your order'), $params, $customer->email, $customer->firstname.' '.$customer->lastname);
@@ -472,7 +472,7 @@ class AdminOrders extends AdminTab
 		$messages = Message::getMessagesByOrderId($order->id, true);
 		$states = OrderState::getOrderStates($context->language->id);
 		$currency = new Currency($order->id_currency);
-		$currentLanguage = new Language($context->language->id);
+		$currentLanguage = $context->language;
 		$currentState = OrderHistory::getLastOrderState($order->id);
 		$sources = ConnectionsSource::getOrderSources($order->id);
 		$cart = Cart::getCartByOrderId($order->id);

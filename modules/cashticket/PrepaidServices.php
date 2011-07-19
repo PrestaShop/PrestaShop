@@ -555,7 +555,7 @@ abstract class PrepaidServices extends PaymentModule
 		if ($amount > $this->max_amount)
 			return false;
 
-		$context->controller->smarty->assign(array('pic_url' => _MODULE_DIR_.'/'.$this->name.'/img/payment-logo.png',
+		$context->smarty->assign(array('pic_url' => _MODULE_DIR_.'/'.$this->name.'/img/payment-logo.png',
 							 'payment_name' => $this->displayName,
 							 'module_name' => $this->name));
 
@@ -570,7 +570,7 @@ abstract class PrepaidServices extends PaymentModule
 		if ($params['objOrder']->module != $this->name)
 			return;
 
-		$context->controller->smarty->assign('payment_name', $this->displayName);
+		$context->smarty->assign('payment_name', $this->displayName);
 		return $this->display(__FILE__, $this->name.'-confirmation.tpl');
 	}
 
@@ -598,7 +598,7 @@ abstract class PrepaidServices extends PaymentModule
 		// if the disposition is not "active"
 		if ($res[5] != PrepaidServicesAPI::DISPOSITION_DISPOSED && $res[5] != PrepaidServicesAPI::DISPOSITION_DEBITED)
 		{
-			$context->controller->smarty->assign(array('disposition_state' => $res[5], 'payment_name' => $order->payment));
+			$context->smarty->assign(array('disposition_state' => $res[5], 'payment_name' => $order->payment));
 			return $this->display($this->module_dir.'/'.$this->name, 'disposition-error.tpl');
 		}
 
@@ -629,7 +629,7 @@ abstract class PrepaidServices extends PaymentModule
 		if (Tools::getIsset('pp_error'))
 			$error_msg = $this->_getErrorMsgFromErrorCode(Tools::getValue('pp_error'));
 
-		$context->controller->smarty->assign(array('action' => Tools::safeOutput($_SERVER['PHP_SELF']).'?'.$_SERVER['QUERY_STRING'],
+		$context->smarty->assign(array('action' => Tools::safeOutput($_SERVER['PHP_SELF']).'?'.$_SERVER['QUERY_STRING'],
 							   'payment_name' => $order->payment,
 							   'error' => $error_msg,
 							   'currency' => $currency->getSign('right'),

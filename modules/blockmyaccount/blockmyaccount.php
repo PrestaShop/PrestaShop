@@ -61,7 +61,7 @@ class BlockMyAccount extends Module
 		$context = Context::getContext();
 		if (!$params['cookie']->isLogged())
 			return false;
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),
 			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
 			'HOOK_BLOCK_MY_ACCOUNT' => Module::hookExec('myAccountBlock')

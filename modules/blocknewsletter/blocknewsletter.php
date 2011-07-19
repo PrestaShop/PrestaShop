@@ -242,7 +242,7 @@ class Blocknewsletter extends Module
 			$this->newsletterRegistration();
 			if ($this->error)
 			{
-				$context->controller->smarty->assign(array('color' => 'red',
+				$context->smarty->assign(array('color' => 'red',
 										'msg' => $this->error,
 										'nw_value' => isset($_POST['email']) ? pSQL($_POST['email']) : false,
 										'nw_error' => true,
@@ -252,12 +252,12 @@ class Blocknewsletter extends Module
 			{
 				if (Configuration::get('NW_CONFIRMATION_EMAIL') AND isset($_POST['action']) AND (int)($_POST['action']) == 0)
 					Mail::Send($params['cookie']->id_lang, 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($_POST['email']), NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
-				$context->controller->smarty->assign(array('color' => 'green',
+				$context->smarty->assign(array('color' => 'green',
 										'msg' => $this->valid,
 										'nw_error' => false));
 			}
 		}
-		$context->controller->smarty->assign('this_path', $this->_path);
+		$context->smarty->assign('this_path', $this->_path);
  	 	return $this->display(__FILE__, 'blocknewsletter.tpl');
  	}
 	

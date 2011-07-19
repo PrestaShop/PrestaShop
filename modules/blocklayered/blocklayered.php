@@ -715,7 +715,7 @@ class BlockLayered extends Module
 		
 		$share_url = $context->link->getCategoryLink((int)$category->id, $category->link_rewrite[(int)$context->language->id], $context->language->id).rtrim($params, '&');
 				
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 		'display_share' => (int)Configuration::get('PS_LAYERED_SHARE'),
 		'share_url' => $this->getShortLink($share_url),
 		'layered_use_checkboxes' => (int)Configuration::get('PS_LAYERED_NAVIGATION_CHECKBOXES'),
@@ -756,7 +756,7 @@ class BlockLayered extends Module
 		if ($stop > $pages_nb)
 			$stop = (int)($pages_nb);
 			
-		$context->controller->smarty->assign('nb_products', $nbProducts);
+		$context->smarty->assign('nb_products', $nbProducts);
 		$pagination_infos = array(
 			'pages_nb' => (int)($pages_nb),
 			'p' => (int)($p),
@@ -766,15 +766,15 @@ class BlockLayered extends Module
 			'stop' => (int)($stop),
 			'nArray' => $nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50)
 		);
-		$context->controller->smarty->assign($pagination_infos);
+		$context->smarty->assign($pagination_infos);
 		
-		$context->controller->smarty->assign('products', $products);
+		$context->smarty->assign('products', $products);
 		
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */
 		return Tools::jsonEncode(array(
 			'filtersBlock' => $this->generateFiltersBlock($selectedFilters),
-			'productList' => $context->controller->smarty->fetch(_PS_THEME_DIR_.'product-list.tpl'),
-			'pagination' => $context->controller->smarty->fetch(_PS_THEME_DIR_.'pagination.tpl')
+			'productList' => $context->smarty->fetch(_PS_THEME_DIR_.'product-list.tpl'),
+			'pagination' => $context->smarty->fetch(_PS_THEME_DIR_.'pagination.tpl')
 		));
 	//	return '<div id="layered_ajax_column">'.$this->generateFiltersBlock($selectedFilters).'</div><div id="layered_ajax_products">'.$smarty->fetch(_PS_THEME_DIR_.'product-list.tpl').'</div>';	
 	}

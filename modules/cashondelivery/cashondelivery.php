@@ -67,7 +67,7 @@ class CashOnDelivery extends PaymentModule
 				return false;
 		}
 
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'this_path' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));

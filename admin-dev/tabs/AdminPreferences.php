@@ -451,8 +451,7 @@ class AdminPreferences extends AdminTab
 				break;
 
 				case 'price':
-					$default_currency = new Currency((int)(Configuration::get("PS_CURRENCY_DEFAULT")));
-					echo $default_currency->getSign('left').'<input type="'.$field['type'].'" size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" '.(($isDisabled) ? 'disabled="disabled"' : '').' />'.$default_currency->getSign('right').' '.$this->l('(tax excl.)');
+					echo $context->currency->getSign('left').'<input type="'.$field['type'].'" size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" '.(($isDisabled) ? 'disabled="disabled"' : '').' />'.$context->currency->getSign('right').' '.$this->l('(tax excl.)');
 				break;
 
 				case 'textLang':

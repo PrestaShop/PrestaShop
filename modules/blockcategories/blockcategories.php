@@ -186,11 +186,10 @@ class BlockCategories extends Module
 			if ($blockCategTree['id'] != $shopcurrentroot)
 				$blockCategTree = $this->cleanTree($blockCategTree['children']);
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
-
 			if (Tools::isSubmit('id_category'))
 			{
 				$context->cookie->last_visited_category = $id_category;
-				$context->controller->smarty->assign('currentCategoryId', $context->cookie->last_visited_category);
+				$context->smarty->assign('currentCategoryId', $context->cookie->last_visited_category);
 			}
 			if (Tools::isSubmit('id_product'))
 			{
@@ -200,17 +199,17 @@ class BlockCategories extends Module
 					if (isset($product) AND Validate::isLoadedObject($product))
 						$context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$context->controller->smarty->assign('currentCategoryId', (int)($context->cookie->last_visited_category));
+				$context->smarty->assign('currentCategoryId', (int)($context->cookie->last_visited_category));
 			}
-			$context->controller->smarty->assign('blockCategTree', $blockCategTree);
+			$context->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories.tpl'))
-				$context->controller->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+				$context->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
-				$context->controller->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$context->controller->smarty->assign('isDhtml', $isDhtml);
+				$context->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$context->smarty->assign('isDhtml', $isDhtml);
 		}
-		$context->controller->smarty->cache_lifetime = 31536000; // 1 Year
+		$context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;
@@ -258,8 +257,8 @@ class BlockCategories extends Module
 				$nbrColumns=3;
 			$numberColumn = abs(sizeof($result)/$nbrColumns);
 			$widthColumn= floor(100/$nbrColumns);
-			$context->controller->smarty->assign('numberColumn', $numberColumn);
-			$context->controller->smarty->assign('widthColumn', $widthColumn);
+			$context->smarty->assign('numberColumn', $numberColumn);
+			$context->smarty->assign('widthColumn', $widthColumn);
 			
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents);
@@ -274,7 +273,7 @@ class BlockCategories extends Module
 			if (Tools::isSubmit('id_category'))
 			{
 				$context->cookie->last_visited_category = $id_category;
-				$context->controller->smarty->assign('currentCategoryId', $context->cookie->last_visited_category);
+				$context->smarty->assign('currentCategoryId', $context->cookie->last_visited_category);
 			}
 			if (Tools::isSubmit('id_product'))
 			{
@@ -284,17 +283,17 @@ class BlockCategories extends Module
 					if (isset($product) AND Validate::isLoadedObject($product))
 						$context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$context->controller->smarty->assign('currentCategoryId', (int)($context->cookie->last_visited_category));
+				$context->smarty->assign('currentCategoryId', (int)($context->cookie->last_visited_category));
 			}
-			$context->controller->smarty->assign('blockCategTree', $blockCategTree);
+			$context->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_footer.tpl'))
-				$context->controller->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+				$context->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
-				$context->controller->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$context->controller->smarty->assign('isDhtml', $isDhtml);
+				$context->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$context->smarty->assign('isDhtml', $isDhtml);
 		}
-		$context->controller->smarty->cache_lifetime = 31536000; // 1 Year
+		$context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;

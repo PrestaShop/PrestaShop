@@ -95,5 +95,4 @@ $context->link = $link;
 $context->language = $language;
 $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 $context->country = $defaultCountry;
-$context->smarty = $smarty;
 $context->shop = new Shop(Shop::getContextID());

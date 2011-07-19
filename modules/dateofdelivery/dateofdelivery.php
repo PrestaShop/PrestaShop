@@ -111,7 +111,7 @@ class DateOfDelivery extends Module
 		foreach ($params['carriers'] as $carrier)
 			$datesDelivery[(int)($carrier['id_carrier'])] = $this->_getDatesOfDelivery((int)($carrier['id_carrier']), $oos);
 		
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'datesDelivery' => $datesDelivery,
 			'id_carrier' => ($params['cart']->id_carrier ? (int)($params['cart']->id_carrier) : (int)(Configuration::get('PS_CARRIER_DEFAULT')))
 		));
@@ -134,7 +134,7 @@ class DateOfDelivery extends Module
 		if (!is_array($datesDelivery) OR !sizeof($datesDelivery))
 			return ;
 			
-		$context->controller->smarty->assign('datesDelivery', $datesDelivery);
+		$context->smarty->assign('datesDelivery', $datesDelivery);
 		
 		return $this->display(__FILE__, 'orderDetail.tpl');
 	}

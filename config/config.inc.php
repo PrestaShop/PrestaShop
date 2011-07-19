@@ -122,6 +122,7 @@ if (function_exists('date_default_timezone_set'))
 
 /* Smarty */
 require_once(dirname(__FILE__).'/smarty.config.inc.php');
+Context::getContext()->smarty = $smarty;
 /* Possible value are true, false, 'URL'
  (for 'URL' append SMARTY_DEBUG as a parameter to the url)
  default is false for production environment */

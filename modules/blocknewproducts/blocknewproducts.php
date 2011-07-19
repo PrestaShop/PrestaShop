@@ -100,7 +100,7 @@ class BlockNewProducts extends Module
 		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
 		if (!$newProducts AND !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
-		$context->controller->smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
+		$context->smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
 
 		return $this->display(__FILE__, 'blocknewproducts.tpl');
 	}

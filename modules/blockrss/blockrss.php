@@ -148,7 +148,7 @@ class Blockrss extends Module
 						$rss_links[] = array('title' => $item->title, 'url' => $item->link);
 		
 		// Display smarty
-		$context->controller->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
+		$context->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
 
  	 	return $this->display(__FILE__, 'blockrss.tpl');
  	}

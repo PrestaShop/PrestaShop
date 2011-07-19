@@ -60,7 +60,7 @@ class BlockUserInfo extends Module
 		if (!$this->active)
 			return;
 		$context = Context::getContext();
-		$context->controller->smarty->assign(array(
+		$context->smarty->assign(array(
 			'cart' => $context->cart,
 			'cart_qties' => $context->cart->nbProducts(),
 			'logged' => $context->cookie->isLogged(),
