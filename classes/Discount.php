@@ -276,7 +276,7 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $order_total_products Total cart products amount
 	  * @return mixed Return a float value or '!' if reduction is 'Shipping free'
 	  */
-	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, $id_group_shop = false, $id_shop = false, Context $context = null)
+	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, Context $context = null)
 	{
 		$totalAmount = 0;
 
@@ -294,11 +294,10 @@ class DiscountCore extends ObjectModel
 		$date_end = strtotime($this->date_to);
 		if ((time() < $date_start OR time() > $date_end) AND !$cart->OrderExists()) return 0;
 
-		if ($id_group_shop AND $id_shop)
-			if (!$this->availableWithShop($id_group_shop, $id_shop))
-				return 0;
+		if (!$this->availableWithShop(Context::getContext()->shop))
+			return 0;
 		$products = $cart->getProducts();
-		$categories = Discount::getCategories((int)($this->id));
+		$categories = Discount::getCategories((int)$this->id);
 		$in_category = false;
 
 		foreach ($products AS $product)
@@ -511,16 +510,16 @@ class DiscountCore extends ObjectModel
 		return Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)$id_discount);
 	}
 	
-	public function availableWithShop(Context $context = null)
+	public function availableWithShop(Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 
 		// @todo share datas on discount ? Utility of this function ?
 		$sql = 'SELECT id_discount
 				FROM '._DB_PREFIX_.'discount
 				WHERE id_discount='.(int)$this->id
-					.$context->shop->sqlRestriction(true);
+					.$shop->sqlRestriction(true);
 		return Db::getInstance()->getValue($sql);
 	}
 }

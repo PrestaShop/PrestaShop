@@ -142,7 +142,7 @@ abstract class ObjectModelCore
 						FROM `'._DB_PREFIX_.$this->table.'` a '.
 						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
 						.' WHERE 1 AND a.`'.$this->identifier.'` = '.(int)$id.
-							(($this->id_shop AND $id_lang) ? ' AND b.id_shop='.$this->id_shop : '');
+							(($this->id_shop AND $id_lang) ? ' AND b.id_shop = '.$this->id_shop : '');
 				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = $db->getRow($sql);
 			}
 
@@ -768,7 +768,8 @@ abstract class ObjectModelCore
 			
 		$sql = 'SELECT id_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_shop`
-				WHERE `'.$this->identifier.'`='.(int)$this->id.' AND id_shop='.(int)$id_shop;
+				WHERE `'.$this->identifier.'` = '.(int)$this->id.'
+					AND id_shop = '.(int)$id_shop;
 		return (bool)Db::getInstance()->getValue($sql);
 	}
 
@@ -789,7 +790,7 @@ abstract class ObjectModelCore
 		
 		foreach ($id_shops as $id_shop)
 		{
-			if (!$this->isAssociatedToShop((int)$id_shop))
+			if (!$this->isAssociatedToShop($id_shop))
 				$sql .= '('.(int)$this->id.','.(int)$id_shop.'),';
 		}
 		

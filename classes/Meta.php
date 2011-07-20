@@ -95,29 +95,33 @@ class MetaCore extends ObjectModel
 		ORDER BY page ASC');
 	}
 
-	static public function getMetasByIdLang($id_lang, $id_shop = false)
+	static public function getMetasByIdLang($id_lang, Context $context = null)
 	{
-		if (!$id_shop)
-			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'meta` m
-		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
-		WHERE ml.`id_lang` = '.(int)($id_lang).
-		($id_shop ? ' AND ml.id_shop='.(int)$id_shop : '').'
-		ORDER BY page ASC');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'meta` m
+				LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
+				WHERE ml.`id_lang` = '.(int)$id_lang
+					.$context->shop->sqlLang('ml').
+				'ORDER BY page ASC';
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		
 	}
 	
-	static public function getMetaByPage($page, $id_lang, $id_shop = false)
+	static public function getMetaByPage($page, $id_lang, Context $context = null)
 	{
-		if (!$id_shop)
-			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT *
-		FROM '._DB_PREFIX_.'meta m
-		LEFT JOIN '._DB_PREFIX_.'meta_lang ml on (m.id_meta = ml.id_meta)
-		WHERE m.page = \''.pSQL($page).'\' AND ml.id_lang = '.(int)($id_lang));
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT *
+				FROM '._DB_PREFIX_.'meta m
+				LEFT JOIN '._DB_PREFIX_.'meta_lang ml on (m.id_meta = ml.id_meta)
+				WHERE m.page = \''.pSQL($page).'\'
+					AND ml.id_lang = '.(int)$id_lang
+					.$context->shop->sqlLang('ml');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 
 	public function update($nullValues = false)

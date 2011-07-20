@@ -184,7 +184,7 @@ class BlockCms extends Module
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 		INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bc.id_shop='.$context->shop->getID().'
+		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bc.id_shop = '.$context->shop->getID(true).'
 		ORDER BY `position`');
 		
 		$content = array();

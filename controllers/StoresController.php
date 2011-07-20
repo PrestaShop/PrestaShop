@@ -51,7 +51,7 @@ class StoresControllerCore extends FrontController
 			LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-			WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop='.(int)$this->id_current_shop);
+			WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop);
 			
 			foreach ($stores AS &$store)
 				$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
@@ -66,7 +66,7 @@ class StoresControllerCore extends FrontController
 				LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 				LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 				LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop='.(int)$this->id_current_shop);
+				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop);
 			}
 			else
 			{
@@ -80,7 +80,7 @@ class StoresControllerCore extends FrontController
 				LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 				LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 				LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop='.(int)$this->id_current_shop.'
+				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop.'
 				HAVING distance < '.(int)($distance).'
 				ORDER BY distance ASC
 				LIMIT 0,20');

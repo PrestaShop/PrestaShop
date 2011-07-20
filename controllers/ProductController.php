@@ -231,7 +231,7 @@ class ProductControllerCore extends FrontController
 					'HOOK_PRODUCT_TAB_CONTENT' =>  Module::hookExec('productTabContent')
 				));
 
-				$images = $this->product->getImages((int)self::$cookie->id_lang, (int)$this->id_current_shop);
+				$images = $this->product->getImages((int)self::$cookie->id_lang);
 				$productImages = array();
 				foreach ($images AS $k => $image)
 				{

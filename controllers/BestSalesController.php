@@ -37,11 +37,11 @@ class BestSalesControllerCore extends FrontController
 	public function process()
 	{
 		$this->productSort();
-		$nbProducts = (int)(ProductSale::getNbSales((int)$this->id_current_shop));
+		$nbProducts = (int)ProductSale::getNbSales();
 		$this->pagination($nbProducts);
 		
 		$this->smarty->assign(array(
-			'products' => ProductSale::getBestSales((int)(self::$cookie->id_lang), (int)($this->p) - 1, (int)($this->n), $this->orderBy, $this->orderWay, (int)$this->id_current_shop),
+			'products' => ProductSale::getBestSales((int)self::$cookie->id_lang, (int)$this->p - 1, (int)$this->n, $this->orderBy, $this->orderWay),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => $nbProducts,
 			'homeSize' => Image::getSize('home')

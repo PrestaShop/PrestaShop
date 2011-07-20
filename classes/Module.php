@@ -804,8 +804,8 @@ abstract class ModuleCore
 				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \'payment\'
 					AND mc.id_country = '.(int)($billing->id_country).'
-					AND mc.id_shop = '.$context->shop->getID().'
-					AND mg.id_shop = '.$context->shop->getID().'
+					AND mc.id_shop = '.$context->shop->getID(true).'
+					AND mg.id_shop = '.$context->shop->getID(true).'
 					AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 					AND hm.id_shop IN('.implode(', ', $list).')
 				GROUP BY hm.id_hook, hm.id_module
@@ -895,8 +895,7 @@ abstract class ModuleCore
 	 */
 	public function updatePosition($id_hook, $way, $position = NULL)
 	{
-		$list = $this->context->shop->getListOfID();
-		foreach ($list as $shopID)
+		foreach ($this->context->shop->getListOfID() as $shopID)
 		{
 			$sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
 					FROM `'._DB_PREFIX_.'hook_module` hm

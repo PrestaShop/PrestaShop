@@ -84,7 +84,7 @@ class AdminPayment extends AdminTab
 	
 	private function saveRestrictions($type)
 	{
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop='.Context::getContext()->shop->getID());
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop = '.Context::getContext()->shop->getID(true));
 		foreach ($this->paymentModules as $module)
 			if ($module->active AND isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)

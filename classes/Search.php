@@ -145,7 +145,7 @@ class SearchCore
 		return $string;
 	}
 
-	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, $id_shop = false, Context $context = null)
+	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position', $orderWay = 'desc', $ajax = false, $useCookie = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -156,9 +156,6 @@ class SearchCore
 			$id_customer = $context->customer->id;
 		else
 			$id_customer = 0;
-		
-		if (!$id_shop)
-			$id_shop = $context->shop->getID();
 
 		// TODO : smart page management
 		if ($pageNumber < 1) $pageNumber = 1;
@@ -180,8 +177,8 @@ class SearchCore
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 					WHERE sw.id_lang = '.(int)$id_lang.'
-					AND sw.id_shop = '.(int)$id_shop.'
-					AND sw.word LIKE 
+						AND sw.id_shop = '.$context->shop->getID(true).'
+						AND sw.word LIKE 
 					'.($word[0] == '-'
 						? ' \''.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
 						: '\''.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
@@ -203,23 +200,25 @@ class SearchCore
 				FROM '._DB_PREFIX_.'search_word sw
 				LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 				WHERE sw.id_lang = '.(int)$id_lang.'
-				AND sw.id_shop = '.(int)$id_shop.'
-				AND si.id_product = p.id_product
-				AND ('.implode(' OR ', $scoreArray).')
+					AND sw.id_shop = '.$context->shop->getID(true).'
+					AND si.id_product = p.id_product
+					AND ('.implode(' OR ', $scoreArray).')
 			) position';
 
-		$result = $db->ExecuteS('
-		SELECT cp.`id_product`
-		FROM `'._DB_PREFIX_.'category_group` cg
-		INNER JOIN `'._DB_PREFIX_.'category_product` cp ON cp.`id_category` = cg.`id_category`
-		INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
-		INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
-		INNER JOIN `'._DB_PREFIX_.'product_shop` ps ON (p.id_product = ps.id_product)
-		WHERE c.`active` = 1 AND p.`active` = 1 AND indexed = 1 AND ps.id_shop='.(int)$id_shop.'
-		AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
-			SELECT id_group FROM '._DB_PREFIX_.'customer_group
-			WHERE id_customer = '.(int)$id_customer.'
-		)'), false);
+		$sql = 'SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_group` cg
+				INNER JOIN `'._DB_PREFIX_.'category_product` cp ON cp.`id_category` = cg.`id_category`
+				INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
+				INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
+				'.$context->shop->sqlAsso('product', 'p').'
+				WHERE c.`active` = 1
+					AND p.`active` = 1
+					AND indexed = 1
+					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
+						SELECT id_group FROM '._DB_PREFIX_.'customer_group
+						WHERE id_customer = '.(int)$id_customer.'
+					)');
+		$result = $db->ExecuteS($sql, false);
 		
 		$eligibleProducts = array();
 		while ($row = $db->nextRow($result))
@@ -247,44 +246,44 @@ class SearchCore
 
 		if ($ajax)
 		{
-			return $db->ExecuteS('
-			SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
-				cl.link_rewrite crewrite, pl.link_rewrite prewrite '.$score.'
-			FROM '._DB_PREFIX_.'product p
-			INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop='.(int)$id_shop.')
-			INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.' AND cl.id_shop='.(int)$id_shop.')
-			WHERE p.`id_product` '.$productPool.'
-			ORDER BY position DESC LIMIT 10');
+			$sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
+						cl.link_rewrite crewrite, pl.link_rewrite prewrite '.$score.'
+					FROM '._DB_PREFIX_.'product p
+					INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+					INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
+					WHERE p.`id_product` '.$productPool.'
+					ORDER BY position DESC LIMIT 10';
+			return $db->ExecuteS($sql);
 		}
 		
-		$queryResults = '
-		SELECT p.*, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.', DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
-		FROM '._DB_PREFIX_.'product p
-		INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop='.(int)$id_shop.')
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)$context->country->id.'
-	                                           	   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-		WHERE p.`id_product` '.$productPool.'
-		'.($orderBy ? 'ORDER BY  '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
-		LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
+		$sql = 'SELECT p.*, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
+					tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.', DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
+				FROM '._DB_PREFIX_.'product p
+				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		        	AND tr.`id_country` = '.(int)$context->country->id.'
+	            	AND tr.`id_state` = 0)
+	    		LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				WHERE p.`id_product` '.$productPool.'
+				'.($orderBy ? 'ORDER BY  '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
+				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
+		$result = $db->ExecuteS($sql);
 
-		$result = $db->ExecuteS($queryResults);
-		$total = $db->getValue('SELECT COUNT(*)
-		FROM '._DB_PREFIX_.'product p
-		INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop='.(int)$id_shop.')
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-	                                           	   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-		WHERE p.`id_product` '.$productPool);
+		$sql = 'SELECT COUNT(*)
+				FROM '._DB_PREFIX_.'product p
+				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		        	AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+	            	AND tr.`id_state` = 0)
+	   			LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				WHERE p.`id_product` '.$productPool;
+		$total = $db->getValue($sql);
 		
 		if (!$result)
 			$resultProperties = false;
@@ -387,13 +386,13 @@ class SearchCore
 		);
 
 		// All the product not yet indexed are retrieved
-		$products = $db->ExecuteS('
-		SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname, pl.id_shop
-		FROM '._DB_PREFIX_.'product p
-		LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
-		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang AND pl.id_shop = cl.id_shop)
-		LEFT JOIN '._DB_PREFIX_.'manufacturer m ON m.id_manufacturer = p.id_manufacturer
-		WHERE p.indexed = 0', false);
+		$sql = 'SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname, pl.id_shop
+				FROM '._DB_PREFIX_.'product p
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
+				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang AND pl.id_shop = cl.id_shop)
+				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON m.id_manufacturer = p.id_manufacturer
+				WHERE p.indexed = 0';
+		$products = $db->ExecuteS($sql, false);
 
 		// Those are kind of global variables required to save the processed data in the database every X occurences, in order to avoid overloading MySQL
 		$countWords = 0;
@@ -532,14 +531,10 @@ class SearchCore
 		$queryArray3 = array();
 	}
 
-	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, $shops = null, Context $context = null)
+	public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false, $useCookie = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
-	 	if (is_null($shops))
-	 		$shops = array($context->shop->getID());
-	 	if (!is_array($shops))
-	 		$shops = array($shops);
 
 		// Only use cookie if id_customer is not present
 		if ($useCookie)
@@ -558,7 +553,7 @@ class SearchCore
 		{
 			$sql = 'SELECT COUNT(DISTINCT pt.`id_product`) nb
 					FROM `'._DB_PREFIX_.'product` p
-					INNER JOIN '._DB_PREFIX_.'product_shop ps ON p.id_product = ps.id_product AND ps.id_shop IN ('.implode(', ', $shops).')
+					'.$context->shop->sqlAsso('product', 'p', true).'
 					LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 					LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
@@ -574,8 +569,8 @@ class SearchCore
 		$sql = 'SELECT DISTINCT p.*, pl.`description_short`, pl.`link_rewrite`, pl.`name`, tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
 				FROM `'._DB_PREFIX_.'product` p
-				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.' AND pl.id_shop IN ('.implode(', ', $shops).'))
-				INNER JOIN '._DB_PREFIX_.'product_shop ps ON p.id_product = ps.id_product AND ps.id_shop IN ('.implode(', ', $shops).')
+				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`

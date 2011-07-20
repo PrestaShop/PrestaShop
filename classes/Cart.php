@@ -1255,9 +1255,8 @@ class CartCore extends ObjectModel
 			return Tools::displayError('This voucher is not yet valid');
 		if (strtotime($discountObj->date_to) < time())
 			return Tools::displayError('This voucher has expired.');
-		if (!$context->shop->inGlobalContext())
-			if (!$discountObj->availableWithShop($context))
-				return Tools::displayError('This voucher is not available with this shop.');
+		if (!$discountObj->availableWithShop($context->shop))
+			return Tools::displayError('This voucher is not available with this shop.');
 		if (sizeof($discounts) >= 1 AND $checkCartDiscount)
 		{
 			if (!$discountObj->cumulable)

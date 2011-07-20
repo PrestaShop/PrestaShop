@@ -783,8 +783,11 @@ class ProductCore extends ObjectModel
 	* @param string $orderWay Way for ordering (ASC or DESC)
 	* @return array Products details
 	*/
-	public static function getProducts($id_lang, $start, $limit, $orderBy, $orderWay, $id_category = false, $only_active = false, $id_shop = false)
+	public static function getProducts($id_lang, $start, $limit, $orderBy, $orderWay, $id_category = false, $only_active = false, Context $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+
 		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay))
 			die (Tools::displayError());
 		if ($orderBy == 'id_product' OR	$orderBy == 'price' OR	$orderBy == 'date_add')
@@ -794,39 +797,40 @@ class ProductCore extends ObjectModel
 		elseif ($orderBy == 'position')
 			$orderByPrefix = 'c';
 
-		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.*, pl.* , t.`rate` AS tax_rate, m.`name` AS manufacturer_name, s.`name` AS supplier_name
-		FROM `'._DB_PREFIX_.'product` p
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		   AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-		   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-		LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)'.
-		($id_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` c ON (c.`id_product` = p.`id_product`)' : '').'
-		WHERE pl.`id_lang` = '.(int)($id_lang).
-		($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').
-		($id_category ? ' AND c.`id_category` = '.(int)($id_category) : '').
-		($only_active ? ' AND p.`active` = 1' : '').'
-		ORDER BY '.(isset($orderByPrefix) ? pSQL($orderByPrefix).'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
-		($limit > 0 ? ' LIMIT '.(int)($start).','.(int)($limit) : '')
-		);
+		$sql = 'SELECT p.*, pl.* , t.`rate` AS tax_rate, m.`name` AS manufacturer_name, s.`name` AS supplier_name
+				FROM `'._DB_PREFIX_.'product` p
+				'.$context->shop->sqlAsso('product', 'p', true).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		 		  AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+		 		  AND tr.`id_state` = 0)
+	  		 	LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)'.
+				($id_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` c ON (c.`id_product` = p.`id_product`)' : '').'
+				WHERE pl.`id_lang` = '.(int)$id_lang.
+					($id_category ? ' AND c.`id_category` = '.(int)$id_category : '').
+					($only_active ? ' AND p.`active` = 1' : '').'
+				ORDER BY '.(isset($orderByPrefix) ? pSQL($orderByPrefix).'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
+				($limit > 0 ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		if($orderBy == 'price')
 			Tools::orderbyPrice($rq,$orderWay);
 		return ($rq);
 	}
 
-	public static function getSimpleProducts($id_lang, $id_shop = false)
+	public static function getSimpleProducts($id_lang, Context $context = null)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.`id_product`, pl.`name`
-		FROM `'._DB_PREFIX_.'product` p
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`)
-		WHERE pl.`id_lang` = '.(int)($id_lang).($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').'
-		ORDER BY pl.`name`');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT p.`id_product`, pl.`name`
+				FROM `'._DB_PREFIX_.'product` p
+				'.$context->shop->sqlAsso('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
+				WHERE pl.`id_lang` = '.(int)($id_lang).'
+				ORDER BY pl.`name`';
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
 	public function isNew()
@@ -1345,10 +1349,11 @@ class ProductCore extends ObjectModel
 	* @param integer $nbProducts Number of products to return (optional)
 	* @return array New products
 	*/
-	public static function getNewProducts($id_lang, $pageNumber = 0, $nbProducts = 10, $count = false, $orderBy = NULL, $orderWay = NULL, $id_shop = null)
+	public static function getNewProducts($id_lang, $pageNumber = 0, $nbProducts = 10, $count = false, $orderBy = NULL, $orderWay = NULL, Context $context = null)
 	{
-		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID();
+		if (!$context)
+			$context = Context::getContext();
+
 		if ($pageNumber < 0) $pageNumber = 0;
 		if ($nbProducts < 1) $nbProducts = 10;
 		if (empty($orderBy) || $orderBy == 'position') $orderBy = 'date_add';
@@ -1367,9 +1372,8 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
+					'.$context->shop->sqlAsso('product', 'p', true).'
 					WHERE `active` = 1
-						'.($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').'
 						AND DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
 						AND p.`id_product` IN (
 							SELECT cp.`id_product`
@@ -1384,18 +1388,17 @@ class ProductCore extends ObjectModel
 					i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name, DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
 					(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice, pa.id_product_attribute
 				FROM `'._DB_PREFIX_.'product` p
-				'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).(($id_shop) ? ' AND pl.id_shop = '.(int)$id_shop : '').')
+				'.$context->shop->sqlAsso('product', 'p', true).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-				   AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+				   AND tr.`id_country` = '.(int)$context->country->id.'
 				   AND tr.`id_state` = 0)
 	  		  	LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				WHERE p.`active` = 1 
-					'.($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').'
 					AND DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
@@ -1438,46 +1441,47 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id
 	* @return array Special
 	*/
-	public static function getRandomSpecial($id_lang, $beginning = false, $ending = false, $id_shop = false)
+	public static function getRandomSpecial($id_lang, $beginning = false, $ending = false, Context $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+
         $currentDate = date('Y-m-d H:i:s');
-		$ids_product = self::_getProductIdByDate((!$beginning ? $currentDate : $beginning), (!$ending ? $currentDate : $ending));
+		$ids_product = self::_getProductIdByDate((!$beginning ? $currentDate : $beginning), (!$ending ? $currentDate : $ending), $context);
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sqlGroups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
 		// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
-		$sql = '
-		SELECT p.id_product
-		FROM `'._DB_PREFIX_.'product` p
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
-		WHERE 1
-		AND p.`active` = 1 '.($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').'
-		AND p.`id_product` IN ('.implode(', ', $ids_product).')
-		AND p.`id_product` IN (
-			SELECT cp.`id_product`
-			FROM `'._DB_PREFIX_.'category_group` cg
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-			WHERE cg.`id_group` '.$sqlGroups.'
-		)
-		ORDER BY RAND()';
+		$sql = 'SELECT p.id_product
+				FROM `'._DB_PREFIX_.'product` p
+				'.$context->shop->sqlAsso('product', 'p', true).'
+				WHERE p.`active` = 1
+					AND p.`id_product` IN ('.implode(', ', $ids_product).')
+					AND p.`id_product` IN (
+						SELECT cp.`id_product`
+						FROM `'._DB_PREFIX_.'category_group` cg
+						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+						WHERE cg.`id_group` '.$sqlGroups.'
+					)
+				ORDER BY RAND()';
 		$id_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 
 		if (!$id_product)
 			return false;
 
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`,  p.`upc`,
-			i.`id_image`, il.`legend`, t.`rate`
-		FROM `'._DB_PREFIX_.'product` p
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-	                                           	   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		WHERE p.id_product = '.(int)$id_product);
+		$sql = 'SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`,  p.`upc`,
+					i.`id_image`, il.`legend`, t.`rate`
+				FROM `'._DB_PREFIX_.'product` p
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		       		AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+	            	AND tr.`id_state` = 0)
+	    		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				WHERE p.id_product = '.(int)$id_product;
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
 		return Product::getProductProperties($id_lang, $row);
 	}
@@ -1496,7 +1500,7 @@ class ProductCore extends ObjectModel
 		if (!Validate::isBool($count))
 			die(Tools::displayError());
 
-		if (is_null($context)) $context = Context::getContext();
+		if (!$context) $context = Context::getContext();
 		if ($pageNumber < 0) $pageNumber = 0;
 		if ($nbProducts < 1) $nbProducts = 10;
 		if (empty($orderBy) || $orderBy == 'position') $orderBy = 'price';
@@ -1508,7 +1512,7 @@ class ProductCore extends ObjectModel
 		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay))
 			die (Tools::displayError());
 		$currentDate = date('Y-m-d H:i:s');
-		$ids_product = self::_getProductIdByDate((!$beginning ? $currentDate : $beginning), (!$ending ? $currentDate : $ending));
+		$ids_product = self::_getProductIdByDate((!$beginning ? $currentDate : $beginning), (!$ending ? $currentDate : $ending), $context);
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sqlGroups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -1615,15 +1619,18 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id for multilingual legends
 	* @return array Product images and legends
 	*/
-	public function	getImages($id_lang, $id_shop = false)
+	public function	getImages($id_lang, Context $context = null)
 	{
-		return Db::getInstance()->ExecuteS('
-		SELECT i.`cover`, i.`id_image`, il.`legend`
-		FROM `'._DB_PREFIX_.'image` i
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'image_shop iss ON (i.id_image = iss.id_image)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
-		WHERE i.`id_product` = '.(int)($this->id).' '.($id_shop ? ' AND iss.id_shop='.(int)$id_shop : '').'
-		ORDER BY `position`');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT i.`cover`, i.`id_image`, il.`legend`
+				FROM `'._DB_PREFIX_.'image` i
+				'.$context->shop->sqlAsso('image', 'i', true).'
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				WHERE i.`id_product` = '.(int)$this->id.'
+				ORDER BY `position`';
+		return Db::getInstance()->ExecuteS($sql);
 	}
 
 	/**
@@ -1631,14 +1638,17 @@ class ProductCore extends ObjectModel
 	*
 	* @return array Product cover image
 	*/
-	public static function getCover($id_product, $id_shop = false)
+	public static function getCover($id_product, Context $context = null)
 	{
-		return Db::getInstance()->getRow('
-		SELECT i.`id_image`
-		FROM `'._DB_PREFIX_.'image` i
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'image_shop iss ON (i.id_image = iss.id_image)' : '').'
-		WHERE i.`id_product` = '.(int)($id_product).($id_shop ? ' AND iss.id_shop='.(int)$id_shop : '').'
-		AND i.`cover` = 1');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT i.`id_image`
+				FROM `'._DB_PREFIX_.'image` i
+				'.$context->shop->sqlAsso('image', 'i', true).'
+				WHERE i.`id_product` = '.(int)($id_product).'
+				AND i.`cover` = 1';
+		return Db::getInstance()->getRow($sql);
 	}
 
 	/**
@@ -2328,15 +2338,18 @@ class ProductCore extends ObjectModel
 	* @param integer $id_product Product id
 	* @return array Product accessories
 	*/
-	public static function getAccessoriesLight($id_lang, $id_product, $id_shop = false)
+	public static function getAccessoriesLight($id_lang, $id_product, Context $context = null)
 	{
-		return Db::getInstance()->ExecuteS('
-		SELECT p.`id_product`, p.`reference`, pl.`name`
-		FROM `'._DB_PREFIX_.'accessory`
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= `id_product_2`)
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).')
-		WHERE `id_product_1` = '.(int)$id_product.($id_shop ? ' AND ps.id_shop='.(int)$id_shop : ''));
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT p.`id_product`, p.`reference`, pl.`name`
+				FROM `'._DB_PREFIX_.'accessory`
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= `id_product_2`)
+				'.$context->shop->sqlAsso('product', 'p', true).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				WHERE `id_product_1` = '.(int)$id_product;
+		return Db::getInstance()->ExecuteS($sql);
 	}
 
 	/**
@@ -2345,34 +2358,29 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id
 	* @return array Product accessories
 	*/
-	public function getAccessories($id_lang, $active = true, $id_shop = false)
-	{	
-		if (!$id_shop)
-			$id_shop_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
-		else
-			$id_shop_lang = (int)$id_shop;
+	public function getAccessories($id_lang, $active = true, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
-		i.`id_image`, il.`legend`, t.`rate`, m.`name` as manufacturer_name, cl.`name` AS category_default, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-		INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
-		FROM `'._DB_PREFIX_.'accessory`
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = `id_product_2`
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).' AND pl.id_shop='.(int)$id_shop_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)($id_lang).' AND cl.id_shop='.(int)$id_shop_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-	                                           	   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		WHERE `id_product_1` = '.(int)($this->id).
-		($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').
-		($active ? ' AND p.`active` = 1' : ''));
-
-		if (!$result)
+		$sql = 'SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
+					i.`id_image`, il.`legend`, t.`rate`, m.`name` as manufacturer_name, cl.`name` AS category_default, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
+					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
+				FROM `'._DB_PREFIX_.'accessory`
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = `id_product_2`
+				'.$context->shop->sqlAsso('product', 'p', true).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		        	AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+	            	AND tr.`id_state` = 0)
+	    		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				WHERE `id_product_1` = '.(int)($this->id).
+				($active ? ' AND p.`active` = 1' : '');
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql))
 			return false;
 
 		return $this->getProductsProperties($id_lang, $result);
@@ -2498,27 +2506,31 @@ class ProductCore extends ObjectModel
 	* @param string $query Search query
 	* @return array Matching products
 	*/
-	public static function searchByName($id_lang, $query, $id_shop = false)
+	public static function searchByName($id_lang, $query, Context $context = null)
 	{
-		$result = Db::getInstance()->ExecuteS('
-		SELECT p.`id_product`, pl.`name`, pl.`link_rewrite`, p.`weight`, p.`active`, p.`ecotax`, i.`id_image`, p.`reference`, p.`cache_is_pack`,
-		il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name
-		FROM `'._DB_PREFIX_.'category_product` cp
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
-		'.($id_shop ? 'LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product)' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		   AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-		   AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`) AND i.`cover` = 1
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
-		WHERE pl.`name` LIKE \'%'.pSQL($query).'%\' OR p.`reference` LIKE \'%'.pSQL($query).'%\' OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
-		'.($id_shop ? ' AND ps.id_shop='.(int)$id_shop : '').'
-		GROUP BY `id_product`
-		ORDER BY pl.`name` ASC');
+		if (!$context)
+			$context = Context::getContext();
+
+		$sql = 'SELECT p.`id_product`, pl.`name`, pl.`link_rewrite`, p.`weight`, p.`active`, p.`ecotax`, i.`id_image`, p.`reference`, p.`cache_is_pack`,
+					il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name
+				FROM `'._DB_PREFIX_.'category_product` cp
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
+				'.$context->shop->sqlAsso('product', 'p', true).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		   			AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+		   			AND tr.`id_state` = 0)
+	    		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`) AND i.`cover` = 1
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				WHERE pl.`name` LIKE \'%'.pSQL($query).'%\'
+					OR p.`reference` LIKE \'%'.pSQL($query).'%\'
+					OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
+				GROUP BY `id_product`
+				ORDER BY pl.`name` ASC';
+		$result = Db::getInstance()->ExecuteS($sql);
 
 		if (!$result)
 			return false;
