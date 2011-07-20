@@ -185,7 +185,7 @@ class ShopCore extends ObjectModel
 						AND s.active = 1
 						AND s.deleted = 0';
 			if (!$id_shop = $db->getValue($sql))
-				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+				$id_shop = (int)Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name = \'PS_SHOP_DEFAULT\'');
 		}
 
 		// Get instance of found shop
@@ -496,6 +496,8 @@ class ShopCore extends ObjectModel
 			}
 			else
 			{
+				if (!isset($context->shop))
+					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
 				$shopID = (int)$context->shop->id_shop;
 				$shopGroupID = (int)$context->shop->id_group_shop;
 			}

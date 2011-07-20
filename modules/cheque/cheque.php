@@ -164,7 +164,7 @@ class Cheque extends PaymentModule
 			'total' => $cart->getOrderTotal(true, Cart::BOTH),
 			'isoCode' => $context->language->iso_code,
 			'chequeName' => $this->chequeName,
-			'chequeAddress' => nl2br2($this->address),
+			'chequeAddress' => Tools::nl2br($this->address),
 			'this_path' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
@@ -198,7 +198,7 @@ class Cheque extends PaymentModule
 			$context->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'chequeName' => $this->chequeName,
-				'chequeAddress' => nl2br2($this->address),
+				'chequeAddress' => Tools::nl2br($this->address),
 				'status' => 'ok',
 				'id_order' => $params['objOrder']->id
 			));

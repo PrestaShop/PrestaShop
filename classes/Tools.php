@@ -2094,7 +2094,17 @@ FileETag INode MTime Size
 	public static function url($begin, $end)
 	{
 		return $begin.((strpos($begin, '?') !== false) ? '&' : '?').$end;
-		
+	}
+
+	/**
+	 * Convert \n and \r\n and \r to <br />
+	 *
+	 * @param string $string String to transform
+	 * @return string New string
+	 */
+	public static function nl2br($str)
+	{
+		return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
 	}
 }
 

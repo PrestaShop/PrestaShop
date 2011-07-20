@@ -127,7 +127,7 @@ class BlockLink extends Module
 	public function addLink()
 	{
 	 	/* Url registration */
-	 	if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink VALUES (NULL, \''.pSQL($_POST['url']).'\', '.((isset($_POST['newWindow']) AND $_POST['newWindow']) == 'on' ? 1 : 0).')') OR !$lastId = mysql_insert_id())
+	 	if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink VALUES (NULL, \''.pSQL($_POST['url']).'\', '.((isset($_POST['newWindow']) AND $_POST['newWindow']) == 'on' ? 1 : 0).')') OR !$lastId = Db::getInstance()->Insert_ID())
 	 		return false;
 	 	/* Multilingual text */
 	 	$languages = Language::getLanguages();

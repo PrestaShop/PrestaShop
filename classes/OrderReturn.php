@@ -65,7 +65,7 @@ class OrderReturnCore extends ObjectModel
 		$fields['state'] = pSQL($this->state);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['question'] = pSQL(nl2br2($this->question), true);
+		$fields['question'] = pSQL(Tools::nl2br($this->question), true);
 		return $fields;
 	}
 	
