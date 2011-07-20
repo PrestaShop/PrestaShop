@@ -134,12 +134,12 @@ abstract class DbCore
 	/**
 	 * Try a connection
 	 */
-	abstract static public function tryToConnect($server, $user, $pwd, $db);
+	//abstract static public function tryToConnect($server, $user, $pwd, $db);
 	
 	/**
 	 * Try to change UTF8
 	 */
-	abstract static public function tryUTF8($server, $user, $pwd);
+	//abstract static public function tryUTF8($server, $user, $pwd);
 
 	/**
 	 * Get Db object instance
