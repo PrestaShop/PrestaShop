@@ -86,7 +86,7 @@ class BlockSpecials extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 
-		if (!$special = Product::getRandomSpecial((int)($params['cookie']->id_lang), false, false, $this->context->shop->getID()) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
+		if (!$special = Product::getRandomSpecial((int)$params['cookie']->id_lang) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
 			return;
 		$this->context->smarty->assign(array(
 			'special' => $special,

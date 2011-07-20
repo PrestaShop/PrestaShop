@@ -140,13 +140,13 @@ class Blocknewsletter extends Module
  	{
  		$sql = 'SELECT `email` FROM '._DB_PREFIX_.'newsletter
  				WHERE `email` = \''.pSQL($customerEmail).'\'
- 					AND id_shop = '.$this->context->shop->getID();
+ 					AND id_shop = '.$this->context->shop->getID(true);
  	 	if (Db::getInstance()->getRow($sql))
  	 		return 1;
 
  		$sql = 'SELECT `newsletter` FROM '._DB_PREFIX_.'customer
  				WHERE `email` = \''.pSQL($customerEmail).'\'
- 				AND id_shop = '.$this->context->shop->getID();
+ 					AND id_shop = '.$this->context->shop->getID(true);
 		if (!$registered = Db::getInstance()->getRow($sql))
 			return -1;
 
@@ -172,14 +172,14 @@ class Blocknewsletter extends Module
 	 	 	/* If the user ins't a customer */
 	 	 	elseif ($registerStatus == 1)
 	 	 	{
-			  	if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID()))
+			  	if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
 	 	 			return $this->error = $this->l('Error during unsubscription');
 	 	 		return $this->valid = $this->l('Unsubscription successful');
 	 	 	}
 	 	 	/* If the user is a customer */
 	 	 	elseif ($registerStatus == 2)
 	 		{
-	 	 		if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID()))
+	 	 		if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
 	 	 			return $this->error = $this->l('Error during unsubscription');
 	 	 		return $this->valid = $this->l('Unsubscription successful');
 	 	 	}
@@ -210,7 +210,7 @@ class Blocknewsletter extends Module
 				$sql = 'UPDATE '._DB_PREFIX_.'customer
 						SET `newsletter` = 1, newsletter_date_add = NOW(), `ip_registration_newsletter` = \''.pSQL(Tools::getRemoteAddr()).'\'
 						WHERE `email` = \''.pSQL($_POST['email']).'\'
-							AND id_shop = '.$this->context->shop->getID();
+							AND id_shop = '.$this->context->shop->getID(true);
 			 	if (!Db::getInstance()->Execute($sql))
 	 	 			return $this->error = $this->l('Error during subscription');
 				$this->sendVoucher(pSQL($_POST['email']));

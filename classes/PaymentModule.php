@@ -88,7 +88,7 @@ abstract class PaymentModuleCore extends Module
 	* @param string $paymentMethod Payment method (eg. 'Credit card')
 	* @param string $message Message to attach to order
 	*/
-	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, $id_group_shop = false, $id_shop = false)
+	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
 	{
 		$cart = new Cart((int)($id_cart));
 		// Does order already exists ?
@@ -108,8 +108,8 @@ abstract class PaymentModuleCore extends Module
 			$order->id_lang = (int)($cart->id_lang);
 			$order->id_cart = (int)($cart->id);
 			
-			$order->id_group_shop = (int)($id_group_shop ? $id_group_shop : $cart->id_group_shop);
-			$order->id_shop = (int)($id_shop ? $id_shop : $cart->id_shop);
+			$order->id_shop = (int)($shop->getID() ? $shop->getID() : $cart->id_shop);
+			$order->id_group_shop = (int)($shop->getID() ? $shop->getGroupID() : $cart->id_group_shop);
 			
 			$customer = new Customer((int)($order->id_customer));
 			$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));

@@ -59,16 +59,17 @@ class ShopUrlCore extends ObjectModel
 	
 	public static function getShopUrls($id_shop = false)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
-														FROM '._DB_PREFIX_.'shop_url
-														WHERE 1
-														'.($id_shop ? ' AND id_shop='.(int)$id_shop : ''));
+		$sql = 'SELECT *
+				FROM '._DB_PREFIX_.'shop_url
+				WHERE 1
+					'.($id_shop ? ' AND id_shop = '.(int)$id_shop : '');
+		return Db::getInstance()->ExecuteS();
 	}
 		
 	public function setMain()
 	{
-		$res = Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'shop_url SET main=0 WHERE id_shop='.(int)$this->id_shop);
-		$res &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'shop_url SET main=1 WHERE id_shop_url='.(int)$this->id);
+		$res = Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'shop_url SET main=0 WHERE id_shop = '.(int)$this->id_shop);
+		$res &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'shop_url SET main=1 WHERE id_shop_url = '.(int)$this->id);
 		return $res;
 	}
 		
@@ -87,16 +88,20 @@ class ShopUrlCore extends ObjectModel
 		if (!self::$main_domain)
 			self::$main_domain = Db::getInstance()->getValue('SELECT domain
 															FROM '._DB_PREFIX_.'shop_url
-															WHERE main=1 AND id_shop='.Context::getContext()->shop->getID());
+															WHERE main=1 AND id_shop = '.Context::getContext()->shop->getID());
 		return self::$main_domain;
 	}
 	
 	public static function getMainShopDomainSSL()
 	{
 		if (!self::$main_domain)
-			self::$main_domain = Db::getInstance()->getValue('SELECT domain
-																												FROM '._DB_PREFIX_.'shop_url
-																												WHERE main=1 AND id_shop='.Context::getContext()->shop->getID());
+		{
+			$sql = 'SELECT domain
+					FROM '._DB_PREFIX_.'shop_url
+					WHERE main = 1
+						AND id_shop='.Context::getContext()->shop->getID(true);
+			self::$main_domain = Db::getInstance()->getValue($sql);
+		}
 		return	self::$main_domain_ssl;
 	}
 }

@@ -694,7 +694,7 @@ class AdminProducts extends AdminTab
 					if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
 					{
 						$specificPrice = new SpecificPrice((int)($id_specific_price));
-						$specificPrice->id_shop = (int)($id_shops[$key]);
+						$specificPrice->id_shop = (int)$id_shops[$key];
 						$specificPrice->id_currency = (int)($id_currencies[$key]);
 						$specificPrice->id_country = (int)($id_countries[$key]);
 						$specificPrice->id_group = (int)($id_groups[$key]);
@@ -732,7 +732,7 @@ class AdminProducts extends AdminTab
 				{
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = $id_product;
-					$specificPrice->id_shop = (int)($id_shop);
+					$specificPrice->id_shop = (int)$id_shop;
 					$specificPrice->id_currency = (int)($id_currency);
 					$specificPrice->id_country = (int)($id_country);
 					$specificPrice->id_group = (int)($id_group);

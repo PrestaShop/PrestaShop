@@ -231,10 +231,11 @@ class CurrencyCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID();
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT mc.*
-		FROM `'._DB_PREFIX_.'module_currency` mc
-		WHERE mc.`id_module` = '.(int)$id_module.' AND mc.`id_shop`='.(int)$id_shop);
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'module_currency`
+				WHERE `id_module` = '.(int)$id_module.'
+					AND `id_shop`='.(int)$id_shop;
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
 	static public function getCurrency($id_currency)

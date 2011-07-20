@@ -258,7 +258,7 @@ class AdminModulesPositions extends AdminTab
 		else
 			echo '<p>'.$this->l('By clicking here you will be redirected to the front office of your shop to move and delete modules directly.').'</p>
 				<br>
-				<a href="'.$context->link->getPageLink('index').'&live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).((Tools::isMultiShopActivated()) ? '&id_shop='.Context::getContext()->shop->getID() : '').'" target="_blank" class="button">'.$this->l('Run LiveEdit').'</a>';
+				<a href="'.$context->link->getPageLink('index').'&live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).'" target="_blank" class="button">'.$this->l('Run LiveEdit').'</a>';
 		echo '</fieldset>';
 
 		// Print hook list

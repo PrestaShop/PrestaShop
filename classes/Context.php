@@ -30,43 +30,69 @@
  */
 class ContextCore
 {
-	/** @var Context */
+	/**
+	 * @var Context
+	 */
 	protected static $instance;
 
-	/** @var Cart */
+	/**
+	 * @var Cart
+	 */
 	public $cart;
 
-	/** @var Customer */
+	/**
+	 * @var Customer
+	 */
 	public $customer;
 
-	/** @var Cookie */
+	/**
+	 * @var Cookie
+	 */
 	public $cookie;
 
-	/** @var Link */
+	/**
+	 * @var Link
+	 */
 	public $link;
 
-	/** @var Country */
+	/**
+	 * @var Country
+	 */
 	public $country;
 
-	/** @var Employee */
+	/**
+	 * @var Employee
+	 */
 	public $employee;
 
-	/** @var Controller */
+	/**
+	 * @var Controller
+	 */
 	public $controller;
 
-	/** @var Language */
+	/**
+	 * @var Language
+	 */
 	public $language;
 
-	/** @var Currency */
+	/**
+	 * @var Currency
+	 */
 	public $currency;
 
-	/** @var AdminTab */
+	/**
+	 * @var AdminTab
+	 */
 	public $tab;
 
-	/** @var Shop */
+	/**
+	 * @var Shop
+	 */
 	public $shop;
 	
-	/** @var Smarty */
+	/**
+	 * @var Smarty
+	 */
 	public $smarty;
 
 	/**

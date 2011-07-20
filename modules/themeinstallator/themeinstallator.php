@@ -460,7 +460,7 @@ class ThemeInstallator extends Module
 				$msg .= '<i>- '.pSQL($row).'</i><br />';
 				Db::getInstance()->Execute('
 					DELETE FROM `'._DB_PREFIX_.'hook_module` 
-					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.$shopID);
+					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop = '.$shopID);
 				$count = -1;
 				while (isset($hookedModule[++$count]))
 					if ($hookedModule[$count] == $row)
@@ -483,7 +483,7 @@ class ThemeInstallator extends Module
 						$msg .= '<i>- '.pSQL($row).'</i><br />';
 				Db::getInstance()->Execute('
 					DELETE FROM `'._DB_PREFIX_.'module_shop` 
-					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.$shopID);
+					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop = '.$shopID);
 					}
 				}
 			$flag = 0;
@@ -506,7 +506,7 @@ class ThemeInstallator extends Module
 					$msg .= '<i>- '.pSQL($row).'</i><br />';
 					Db::getInstance()->Execute('
 						DELETE FROM `'._DB_PREFIX_.'hook_module` 
-						WHERE `id_module` = '.pSQL($obj->id).' AND id_shop='.$shopID);
+						WHERE `id_module` = '.pSQL($obj->id).' AND id_shop = '.$shopID);
 					$count = -1;
 					while (isset($hookedModule[++$count]))
 						if ($hookedModule[$count] == $row)

@@ -112,17 +112,17 @@ class ContactControllerCore extends FrontController
 						$id_customer_thread = (int)Tools::getValue('id_customer_thread')
 						AND (int)Db::getInstance()->getValue('
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
-						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop='.(int)$this->id_current_shop.' AND token = \''.pSQL(Tools::getValue('token')).'\'')
+						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->id_current_shop.' AND token = \''.pSQL(Tools::getValue('token')).'\'')
 					) OR (
 						$id_customer_thread = (int)Db::getInstance()->getValue('
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
-						WHERE cm.email = \''.pSQL($from).'\' AND cm.id_shop='.(int)$this->id_current_shop.' AND cm.id_order = '.(int)(Tools::getValue('id_order')).'')
+						WHERE cm.email = \''.pSQL($from).'\' AND cm.id_shop = '.(int)$this->id_current_shop.' AND cm.id_order = '.(int)(Tools::getValue('id_order')).'')
 					)))
 				{
 					$fields = Db::getInstance()->ExecuteS('
 					SELECT cm.id_customer_thread, cm.id_contact, cm.id_customer, cm.id_order, cm.id_product, cm.email
 					FROM '._DB_PREFIX_.'customer_thread cm
-					WHERE email = \''.pSQL($from).'\' AND cm.id_shop='.(int)$this->id_current_shop.' AND ('.
+					WHERE email = \''.pSQL($from).'\' AND cm.id_shop = '.(int)$this->id_current_shop.' AND ('.
 						($customer->id ? 'id_customer = '.(int)($customer->id).' OR ' : '').'
 						id_order = '.(int)(Tools::getValue('id_order')).')');
 					$score = 0;
@@ -148,7 +148,7 @@ class ContactControllerCore extends FrontController
 				}
 				$old_message = Db::getInstance()->getValue('
 					SELECT cm.message FROM '._DB_PREFIX_.'customer_message cm
-					WHERE cm.id_customer_thread = '.(int)($id_customer_thread).'AND cm.id_shop='.(int)$this->id_current_shop.'
+					WHERE cm.id_customer_thread = '.(int)($id_customer_thread).'AND cm.id_shop = '.(int)$this->id_current_shop.'
 					ORDER BY date_add DESC');
 				if ($old_message == htmlentities($message, ENT_COMPAT, 'UTF-8'))
 				{
@@ -246,7 +246,7 @@ class ContactControllerCore extends FrontController
 		{
 			$customerThread = Db::getInstance()->getRow('
 			SELECT cm.* FROM '._DB_PREFIX_.'customer_thread cm
-			WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop='.(int)$this->id_current_shop.' AND token = \''.pSQL($token).'\'');
+			WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->id_current_shop.' AND token = \''.pSQL($token).'\'');
 			$this->smarty->assign('customerThread', $customerThread);
 		}
 		$this->smarty->assign(array('contacts' => Contact::getContacts((int)self::$cookie->id_lang),
