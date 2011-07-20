@@ -156,7 +156,7 @@ class AdminCustomerThreads extends AdminTab
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->message = Tools::htmlentitiesutf8(nl2br2(Tools::getValue('reply_message')));
+				$cm->message = Tools::htmlentitiesutf8(Tools::nl2br(Tools::getValue('reply_message')));
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 				if (isset($_FILES) AND !empty($_FILES['joinFile']['name']) AND $_FILES['joinFile']['error'] != 0)
 					$this->_errors[] = Tools::displayError('An error occurred with the file upload.');
@@ -170,7 +170,7 @@ class AdminCustomerThreads extends AdminTab
 						$fileAttachment['mime'] = $_FILES['joinFile']['type'];
 					}
 					$params = array(
-						'{reply}' => nl2br2(Tools::getValue('reply_message')),
+						'{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
 						'{link}' => Tools::url($context->link->getPageLink('contact', true), 'id_customer_thread='.(int)($ct->id).'&token='.$ct->token),
 					);
 					Mail::Send($ct->id_lang, 'reply_msg', Mail::l('An answer to your message is available'), $params, Tools::getValue('msg_email'), NULL, NULL, NULL, $fileAttachment);

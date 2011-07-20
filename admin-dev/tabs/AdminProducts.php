@@ -2151,7 +2151,7 @@ class AdminProducts extends AdminTab
 		$preview_url = '';
 		if (isset($obj->id))
 		{
-			$preview_url = ($link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), $context->language->id)));
+			$preview_url = ($context->link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), $context->language->id)));
 			if (!$obj->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);

@@ -75,23 +75,9 @@ require_once(dirname(__FILE__).'/autoload.php');
 
 if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 	define('_PS_MAGIC_QUOTES_GPC_',         get_magic_quotes_gpc());
-if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
-	define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 
-/* aliases */
-function p($var) {
-	return (Tools::p($var));
-}
-function d($var) {
-	Tools::d($var);
-}
-
-function ppp($var) {
-	return (Tools::p($var));
-}
-function ddd($var) {
-	Tools::d($var);
-}
+// Include some alias functions
+include_once(dirname(__FILE__).'/alias.php');
 
 /* Set the current Shop */
 Context::getContext()->shop = Shop::initialize();

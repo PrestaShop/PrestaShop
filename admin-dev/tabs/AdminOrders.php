@@ -181,7 +181,7 @@ class AdminOrders extends AdminTab
 							$order = new Order((int)($message->id_order));
 							if (Validate::isLoadedObject($order))
 							{
-								$varsTpl = array('{lastname}' => $customer->lastname, '{firstname}' => $customer->firstname, '{id_order}' => $message->id_order, '{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $message->message : nl2br2($message->message)));
+								$varsTpl = array('{lastname}' => $customer->lastname, '{firstname}' => $customer->firstname, '{id_order}' => $message->id_order, '{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $message->message : Tools::nl2br($message->message)));
 								if (@Mail::Send((int)($order->id_lang), 'order_merchant_comment', Mail::l('New message regarding your order'), $varsTpl, $customer->email, $customer->firstname.' '.$customer->lastname))
 									Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
 							}
@@ -682,7 +682,7 @@ class AdminOrders extends AdminTab
 				 '.($order->gift ? '<img src="../img/admin/enabled.gif" />
 			</div>
 			<div style="clear: left; margin: 0px 42px 0px 42px; padding-top: 2px;">
-				'.(!empty($order->gift_message) ? '<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>'.$this->l('Message:').'</b><br />'.nl2br2($order->gift_message).'</div>' : '') : '<img src="../img/admin/disabled.gif" />').'
+				'.(!empty($order->gift_message) ? '<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>'.$this->l('Message:').'</b><br />'.Tools::nl2br($order->gift_message).'</div>' : '') : '<img src="../img/admin/disabled.gif" />').'
 			</div>
 		</fieldset>';
 
@@ -901,7 +901,7 @@ class AdminOrders extends AdminTab
 				echo $this->l('At').' <i>'.Tools::displayDate($message['date_add'], $context->language->id, true);
 				echo '</i> '.$this->l('from').' <b>'.(($message['elastname']) ? ($message['efirstname'].' '.$message['elastname']) : ($message['cfirstname'].' '.$message['clastname'])).'</b>';
 				echo ((int)($message['private']) == 1 ? '<span style="color:red; font-weight:bold;">'.$this->l('Private:').'</span>' : '');
-				echo '<p>'.nl2br2($message['message']).'</p>';
+				echo '<p>'.Tools::nl2br($message['message']).'</p>';
 				echo '</div>';
 				echo '<br />';
 			}

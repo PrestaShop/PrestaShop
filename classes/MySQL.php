@@ -27,30 +27,30 @@
 
 class MySQLCore extends Db
 {
+	/**
+	 * @see DbCore::connect()
+	 */
 	public function	connect()
 	{
-		if (!defined('_PS_DEBUG_SQL_'))
-			define('_PS_DEBUG_SQL_', false);
-		if ($this->_link = mysql_connect($this->_server, $this->_user, $this->_password))
-		{
-			if(!$this->set_db($this->_database))
-				die(Tools::displayError('The database selection cannot be made.'));
-		}
-		else
+		if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
+			define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
+		
+		if (!$this->_link = mysql_connect($this->_server, $this->_user, $this->_password))
 			die(Tools::displayError('Link to database cannot be established.'));
-		/* UTF-8 support */
+
+		if (!$this->set_db($this->_database))
+			die(Tools::displayError('The database selection cannot be made.'));
+
+		// UTF-8 support
 		if (!mysql_query('SET NAMES \'utf8\'', $this->_link))
 			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
-		// removed SET GLOBAL SQL_MODE : we can't do that (see PSCFI-1548)
+
 		return $this->_link;
 	}
 	
-	/* do not remove, useful for some modules */
-	public function set_db($db_name)
-	{
-		return mysql_select_db($db_name, $this->_link);
-	}
-	
+	/**
+	 * @see DbCore::disconnect()
+	 */
 	public function	disconnect()
 	{
 		if ($this->_link)
@@ -58,193 +58,60 @@ class MySQLCore extends Db
 		$this->_link = false;
 	}
 	
-	public function	getRow($query, $use_cache = 1)
-	{
-		$query .= ' LIMIT 1';
-		$this->_result = false;
-		$this->_lastQuery = $query;
-		if($use_cache AND _PS_CACHE_ENABLED_)
-			if ($result = Cache::getInstance()->get(md5($query)))
-			{
-				$this->_lastCached = true;
-				return $result;
-			}
-		if ($this->_link)
-			if ($this->_result = mysql_query($query, $this->_link))
-			{
-				$this->_lastCached = false;
-				if (_PS_DEBUG_SQL_)
-					$this->displayMySQLError($query);
-				$result = mysql_fetch_assoc($this->_result);
-				if ($use_cache = 1 AND _PS_CACHE_ENABLED_)
-					Cache::getInstance()->setQuery($query, $result);
-				return $result;
-			}
-		if (_PS_DEBUG_SQL_)
-			$this->displayMySQLError($query);
-		return false;
-	}
-
-	public function	getValue($query, $use_cache = 1)
-	{
-		if (!$result = $this->getRow($query, $use_cache))
-			return false;
-		return array_shift($result);
-	}
-	
-	public function	Execute($query, $use_cache = 1)
-	{
-		$this->_result = false;
-		if ($this->_link)
-		{
-			$this->_result = mysql_query($query, $this->_link);
-			if (_PS_DEBUG_SQL_)
-				$this->displayMySQLError($query);
-			if ($use_cache AND _PS_CACHE_ENABLED_)
-				Cache::getInstance()->deleteQuery($query);
-			return $this->_result;
-		}
-		if (_PS_DEBUG_SQL_)
-			$this->displayMySQLError($query);
-		return false;
-	}
-	
 	/**
-	 * ExecuteS return the result of $query as array, 
-	 * or as mysqli_result if $array set to false
-	 * 
-	 * @param string $query query to execute
-	 * @param boolean $array return an array instead of a mysql_result object
-	 * @param int $use_cache if query has been already executed, use its result
-	 * @return array or result object 
+	 * @see DbCore::_query()
 	 */
-	public function	ExecuteS($query, $array = true, $use_cache = 1)
+	protected function _query($sql)
 	{
-		$this->_result = false;
-		$this->_lastQuery = $query;
-		if ($use_cache AND _PS_CACHE_ENABLED_)
-			if ($array AND ($result = Cache::getInstance()->get(md5($query))))
-			{
-				$this->_lastCached = true;
-				return $result;
-			}
-		if ($this->_link && $this->_result = mysql_query($query, $this->_link))
-		{
-			$this->_lastCached = false;
-			if (_PS_DEBUG_SQL_)
-				$this->displayMySQLError($query);
-			if (!$array)
-				return $this->_result;
-			$resultArray = array();
-			// Only SELECT queries and a few others return a valid resource usable with mysql_fetch_assoc
-			if ($this->_result !== true)
-				while ($row = mysql_fetch_assoc($this->_result))
-					$resultArray[] = $row;
-			if ($use_cache AND _PS_CACHE_ENABLED_)	
-				Cache::getInstance()->setQuery($query, $resultArray);
-			return $resultArray;
-		}
-		if (_PS_DEBUG_SQL_)
-			$this->displayMySQLError($query);
-		return false;
+		return mysql_query($sql, $this->_link);
 	}
 
+	/**
+	 * @see DbCore::nextRow()
+	 */
 	public function nextRow($result = false)
 	{
 		return mysql_fetch_assoc($result ? $result : $this->_result);
 	}
 	
-	public function	delete($table, $where = false, $limit = false, $use_cache = 1)
+	/**
+	 * @see DbCore::_numRows()
+	 */
+	protected function _numRows($result)
 	{
-		$this->_result = false;
-		if ($this->_link)
-		{
-			$query  = 'DELETE FROM `'.pSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)($limit) : '');
-			$res =  mysql_query($query, $this->_link);
-			if ($use_cache AND _PS_CACHE_ENABLED_)
-				Cache::getInstance()->deleteQuery($query);
-			return $res;
-		}
-			
-		return false;
+		return mysql_num_rows($result);
 	}
 	
-	public function	NumRows()
-	{
-		if (!$this->_lastCached AND $this->_link AND $this->_result)
-		{
-			$nrows = mysql_num_rows($this->_result);
-			if (_PS_CACHE_ENABLED_)
-				Cache::getInstance()->setNumRows(md5($this->_lastQuery), $nrows);
-			return $nrows;
-		}
-		elseif (_PS_CACHE_ENABLED_ AND $this->_lastCached)
-		{
-			return Cache::getInstance()->getNumRows(md5($this->_lastQuery));
-		}
-	}
-	
+	/**
+	 * @see DbCore::Insert_ID()
+	 */
 	public function	Insert_ID()
 	{
-		if ($this->_link)
-			return mysql_insert_id($this->_link);
-		return false;
-	}
-
-	public function	Affected_Rows()
-	{
-		if ($this->_link)
-			return mysql_affected_rows($this->_link);
-		return false;
-	}
-
-	protected function q($query, $use_cache = 1)
-	{
-		global $webservice_call;
-		$this->_result = false;
-		if ($this->_link)
-		{
-			$result =  mysql_query($query, $this->_link);
-			$this->_lastQuery = $query;
-			if ($webservice_call)
-				$this->displayMySQLError($query);
-			if ($use_cache AND _PS_CACHE_ENABLED_)
-				Cache::getInstance()->deleteQuery($query);
-			return $result;
-		}
-		return false;
+		mysql_insert_id($this->_link);
 	}
 
 	/**
-	 * Returns the text of the error message from previous MySQL operation
-	 *
-	 * @return string error
+	 * @see DbCore::Affected_Rows()
+	 */
+	public function	Affected_Rows()
+	{
+		return mysql_affected_rows($this->_link);
+	}
+
+	/**
+	 * @see DbCore::getMsgError()
 	 */
 	public function getMsgError($query = false)
 	{
-		return mysql_error();
+		return mysql_error($this->_link);
 	}
 
+	/**
+	 * @see DbCore::getNumberError()
+	 */
 	public function getNumberError()
 	{
-		return mysql_errno();
-	}
-
-	public function displayMySQLError($query = false)
-	{
-		global $webservice_call;
-		if ($webservice_call && mysql_errno())
-		{
-			WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.mysql_error().'. Query was : '.$query, 97);
-		}
-		elseif (_PS_DEBUG_SQL_ AND mysql_errno() AND !defined('PS_INSTALLATION_IN_PROGRESS'))
-		{
-			if ($query)
-			{
-				die(Tools::displayError(mysql_error().'<br /><br /><pre>'.$query.'</pre>'));
-			}
-			die(Tools::displayError((mysql_error())));
-		}
+		return mysql_errno($this->_link);
 	}
 	
 	/**
@@ -252,17 +119,28 @@ class MySQLCore extends Db
 	 */
 	public function getVersion()
 	{
-		return mysql_get_server_info();
+		return mysql_get_server_info($this->_link);
 	}
 	
 	/**
-	 * @see DbCore::escape()
+	 * @see DbCore::_escape()
 	 */
-	public function escape($str)
+	public function _escape($str)
 	{
-		return mysql_real_escape_string($str, $this->_link);
+		return _PS_MYSQL_REAL_ESCAPE_STRING_ ? mysql_real_escape_string($str, $this->_link) : addslashes($str);
+	}
+	
+	/**
+	 * @see DbCore::set_db()
+	 */
+	public function set_db($db_name)
+	{
+		return mysql_select_db($db_name, $this->_link);
 	}
 
+	/**
+	 * @see DbCore::tryToConnect()
+	 */
 	static public function tryToConnect($server, $user, $pwd, $db)
 	{
 		if (!$link = @mysql_connect($server, $user, $pwd))
@@ -273,6 +151,9 @@ class MySQLCore extends Db
 		return 0;
 	}
 
+	/**
+	 * @see DbCore::tryUTF8()
+	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
 		$link = @mysql_connect($server, $user, $pwd);
