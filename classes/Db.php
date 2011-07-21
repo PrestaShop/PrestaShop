@@ -39,9 +39,6 @@ abstract class DbCore
 	/** @var string Database password (eg. can be empty !) */
 	protected $_password;
 
-	/** @var string Database type (MySQL, PgSQL) */
-	protected $_type;
-
 	/** @var string Database name */
 	protected $_database;
 
@@ -61,8 +58,19 @@ abstract class DbCore
 			// array('server' => '192.168.0.15', 'user' => 'rep', 'password' => '123456', 'database' => 'rep'),
 			// array('server' => '192.168.0.3', 'user' => 'myuser', 'password' => 'mypassword', 'database' => 'mydatabase'),
 	);
-	
+
+	/**
+	 * Store last executed query
+	 * 
+	 * @var string
+	 */
 	protected $_lastQuery;
+	
+	/**
+	 * Last cached query
+	 * 
+	 * @var string
+	 */
 	protected $_lastCached;
 	
 	/**
@@ -161,8 +169,13 @@ abstract class DbCore
 		}
 
 		if (!isset(self::$_instance[$idServer]))
-			self::$_instance[$idServer] = new MySQL(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
-		
+		{
+			$class = _DB_TYPE_;
+			if (!class_exists($class))
+				$class = 'MySQL';
+			self::$_instance[$idServer] = new $class(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
+		}
+
 		return self::$_instance[$idServer];
 	}
 
@@ -419,7 +432,7 @@ abstract class DbCore
 		$this->_lastQuery = $sql;
 		if ($use_cache AND _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);
-			return $result;
+		return $result;
 	}
 
 	/**

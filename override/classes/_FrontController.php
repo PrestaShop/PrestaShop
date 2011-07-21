@@ -243,9 +243,9 @@ class FrontController extends FrontControllerCore
 			$totalSize += filesize($file);
 			
 		$totalQueryTime = 0;
-		foreach (Db::getInstance()->queriesTime as $time)
-			$totalQueryTime += $time;
-			
+		foreach (Db::getInstance()->queries as $data)
+			$totalQueryTime += $data['time'];
+
 		$hooktime = Module::getHookTime();
 		arsort($hooktime);
 		$totalHookTime = 0;
@@ -302,17 +302,11 @@ class FrontController extends FrontControllerCore
 				<li>displayContent: '.$this->displayMemoryColor(($this->_memory[5] - $this->_memory[4])).'</li><li>displayFooter: '.$this->displayMemoryColor(($this->_memory[6] - $this->_memory[5])).'</li>
 			</ul>';
 		echo '</div>';
-		
-		$countByTypes = '';
-		foreach (Db::getInstance()->countTypes as $type => $count)
-			if ($count)
-				$countByTypes .= '<li>'.$count.' x '.$type.'</li>';
-		$countByTypes = rtrim($countByTypes, ' |');
-		
+
 		echo '
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>SQL Queries</b>: '.$this->displaySQLQueries(Db::getInstance()->count).'
-			<ul>'.$countByTypes.'</ul>
+			<b>DB type</b>: '.get_class(Db::getInstance()).'
+			<br /><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).'
 			<br /><b>Time spent querying</b>: '.$this->displayLoadTimeColor($totalQueryTime).'
 		</div>
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
@@ -336,15 +330,14 @@ class FrontController extends FrontControllerCore
 			</ul>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="stopwatch">Stopwatch (with SQL_NO_CACHE)</a></h3>';
-		$queries = Db::getInstance()->queriesTime;
-		arsort($queries);
-		foreach ($queries as $q => $time)
-			echo $hr.'<b '.$this->getTimeColor($time * 1000).'>'.round($time * 1000, 3).' ms</b> '.$q;
+		<h3><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></h3>';
+		$queries = Db::getInstance()->queries;
+		foreach ($queries as $data)
+			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.$data['query'];
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="doubles">Doubles (IDs replaced by "XX")</a></h3>';
-		$queries = Db::getInstance()->queries;
+		<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.count(Db::getInstance()->uniqQueries).')</a></h3>';
+		$queries = Db::getInstance()->uniqQueries;
 		arsort($queries);
 		foreach ($queries as $q => $nb)
 			echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
