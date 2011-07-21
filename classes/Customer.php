@@ -94,9 +94,15 @@ class CustomerCore extends ObjectModel
 	public		$days;
 	public		$months;
 	
+	/** @var int customer id_country as determined by geolocation */
 	public		$geoloc_id_country;
+	/** @var int customer id_state as determined by geolocation */
 	public		$geoloc_id_state;
+	/** @var string customer postcode as determined by geolocation */
 	public		$geoloc_postcode;
+	
+	/** @var boolean is the customer logged in */
+	public		$logged = 0;
 	
 	protected $tables = array ('customer');
 
@@ -712,4 +718,22 @@ class CustomerCore extends ObjectModel
 			$this->passwd = Tools::encrypt($passwd);
 		return true;
 	}
+	
+	/**
+	  * Check customer informations and return customer validity
+	  *
+	  * @parma boolean $withGuest 
+	  * @return boolean customer validity
+	  */
+	public function isLogged($withGuest = false)
+	{
+		if (!$withGuest AND $this->is_guest == 1)
+			return false;
+		
+		/* Customer is valid only if it can be load and if object password is the same as database one */
+	 	if ($this->logged == 1 AND $this->id AND Validate::isUnsignedId($this->id) AND self::checkPassword($this->id, $this->passwd))
+        	return true;
+        return false;
+	}
+	
 }

@@ -47,13 +47,13 @@ class DiscountControllerCore extends FrontController
 			if ($discount['quantity_for_user'])
 				$nbDiscounts++;
 
-		$this->smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
+		self::$smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'discount.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'discount.tpl');
 	}
 }
 

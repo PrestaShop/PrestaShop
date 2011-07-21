@@ -44,7 +44,7 @@ class ManufacturerControllerCore extends FrontController
 			{
 				$nbProducts = $this->manufacturer->getProducts($id_manufacturer, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'nb_products' => $nbProducts,
 					'products' => $this->manufacturer->getProducts($id_manufacturer, (int)self::$cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 					'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
@@ -71,7 +71,7 @@ class ManufacturerControllerCore extends FrontController
 				foreach ($data AS &$item)
 					$item['image'] = (!file_exists($imgDir.'/'.$item['id_manufacturer'].'-medium.jpg')) ? 
 						Language::getIsoById((int)(self::$cookie->id_lang)).'-default' :	$item['id_manufacturer'];
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbManufacturers' => $nbProducts,
 				'mediumSize' => Image::getSize('medium'),
@@ -80,7 +80,7 @@ class ManufacturerControllerCore extends FrontController
 				));
 			}
 			else
-				$this->smarty->assign('nbManufacturers', 0);
+				self::$smarty->assign('nbManufacturers', 0);
 		}
 	}
 	
@@ -94,9 +94,9 @@ class ManufacturerControllerCore extends FrontController
 	{
 		parent::displayContent();
 		if ($this->manufacturer)
-			$this->smarty->display(_PS_THEME_DIR_.'manufacturer.tpl');
+			self::$smarty->display(_PS_THEME_DIR_.'manufacturer.tpl');
 		else
-			$this->smarty->display(_PS_THEME_DIR_.'manufacturer-list.tpl');
+			self::$smarty->display(_PS_THEME_DIR_.'manufacturer-list.tpl');
 	}
 	
 }

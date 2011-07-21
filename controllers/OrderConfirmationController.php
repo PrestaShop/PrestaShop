@@ -68,7 +68,7 @@ class OrderConfirmationControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'is_guest' => self::$cookie->is_guest,
 			'HOOK_ORDER_CONFIRMATION' => Hook::orderConfirmation((int)($this->id_order)),
 			'HOOK_PAYMENT_RETURN' => Hook::paymentReturn((int)($this->id_order), (int)($this->id_module))
@@ -76,7 +76,7 @@ class OrderConfirmationControllerCore extends FrontController
 		
 		if (self::$cookie->is_guest)
 		{
-			$this->smarty->assign(array(
+			self::$smarty->assign(array(
 				'id_order' => $this->id_order,
 				'id_order_formatted' => sprintf('#%06d', $this->id_order)
 			));
@@ -88,7 +88,7 @@ class OrderConfirmationControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'order-confirmation.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'order-confirmation.tpl');
 	}
 }
 

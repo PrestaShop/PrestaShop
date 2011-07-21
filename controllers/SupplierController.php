@@ -44,7 +44,7 @@ class SupplierControllerCore extends FrontController
 			{
 				$nbProducts = $this->supplier->getProducts($id_supplier, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'nb_products' => $nbProducts,
 					'products' => $this->supplier->getProducts($id_supplier, (int)self::$cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 					'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
@@ -70,7 +70,7 @@ class SupplierControllerCore extends FrontController
 				foreach ($data AS &$item)
 					$item['image'] = (!file_exists($imgDir.'/'.$item['id_supplier'].'-medium.jpg')) ? 
 						Language::getIsoById((int)(self::$cookie->id_lang)).'-default' :	$item['id_supplier'];
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbSuppliers' => $nbProducts,
 				'mediumSize' => Image::getSize('medium'),
@@ -79,7 +79,7 @@ class SupplierControllerCore extends FrontController
 				));
 			}
 			else
-				$this->smarty->assign('nbSuppliers', 0);
+				self::$smarty->assign('nbSuppliers', 0);
 		}
 	}
 	
@@ -93,9 +93,9 @@ class SupplierControllerCore extends FrontController
 	{
 		parent::displayContent();
 		if ($this->supplier)
-			$this->smarty->display(_PS_THEME_DIR_.'supplier.tpl');
+			self::$smarty->display(_PS_THEME_DIR_.'supplier.tpl');
 		else
-			$this->smarty->display(_PS_THEME_DIR_.'supplier-list.tpl');
+			self::$smarty->display(_PS_THEME_DIR_.'supplier-list.tpl');
 	}
 	
 }

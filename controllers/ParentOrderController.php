@@ -109,7 +109,7 @@ class ParentOrderControllerCore extends FrontController
 						Tools::redirect('index.php?controller=order-opc');
 					}
 				}
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'errors' => $this->errors,
 					'discount_name' => Tools::safeOutput($discountName)
 				));
@@ -125,7 +125,7 @@ class ParentOrderControllerCore extends FrontController
 				$this->_setNoCarrier();
 		}
 		
-		$this->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+		self::$smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
 	}
 	
 	public function setMedia()
@@ -234,7 +234,7 @@ class ParentOrderControllerCore extends FrontController
 	{
 		$context = Context::getContext();
 		if (file_exists(_PS_SHIP_IMG_DIR_.$context->cart->id_carrier.'.jpg'))
-			$this->smarty->assign('carrierPicture', 1);
+			self::$smarty->assign('carrierPicture', 1);
 		$summary = $context->cart->getSummaryDetails();
 		$customizedDatas = Product::getAllCustomizedDatas($context->cart->id);
 
@@ -260,14 +260,14 @@ class ParentOrderControllerCore extends FrontController
 					$total_free_ship = 0;
 					break;
 				}
-			$this->smarty->assign('free_ship', $total_free_ship);
+			self::$smarty->assign('free_ship', $total_free_ship);
 		}
 		// for compatibility with 1.2 themes
 		foreach($summary['products'] AS $key => $product)
 			$summary['products'][$key]['quantity'] = $product['cart_quantity'];
 
-		$this->smarty->assign($summary);
-		$this->smarty->assign(array(
+		self::$smarty->assign($summary);
+		self::$smarty->assign(array(
 			'token_cart' => Tools::getToken(false),
 			'isVirtualCart' => $context->cart->isVirtualCart(),
 			'productNumber' => $context->cart->nbProducts(),
@@ -283,7 +283,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyRate' => $context->currency->conversion_rate,
 			'currencyFormat' => $context->currency->format,
 			'currencyBlank' => $context->currency->blank));
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'HOOK_SHOPPING_CART' => Module::hookExec('shoppingCart', $summary),
 			'HOOK_SHOPPING_CART_EXTRA' => Module::hookExec('shoppingCartExtra', $summary)
 		));
@@ -319,7 +319,7 @@ class ParentOrderControllerCore extends FrontController
 				
 				unset($tmpAddress);
 			}
-			$this->smarty->assign(array(
+			self::$smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));
 
@@ -343,7 +343,7 @@ class ParentOrderControllerCore extends FrontController
 			{
 				$deliveryAddress = new Address((int)($context->cart->id_address_delivery));
 				if (Validate::isLoadedObject($deliveryAddress) AND ($deliveryAddress->id_customer == $customer->id))
-					$this->smarty->assign('delivery', $deliveryAddress);
+					self::$smarty->assign('delivery', $deliveryAddress);
 			}
 
 			/* If invoice address is valid in cart, assign it to Smarty */
@@ -351,11 +351,11 @@ class ParentOrderControllerCore extends FrontController
 			{
 				$invoiceAddress = new Address((int)($context->cart->id_address_invoice));
 				if (Validate::isLoadedObject($invoiceAddress) AND ($invoiceAddress->id_customer == $customer->id))
-					$this->smarty->assign('invoice', $invoiceAddress);
+					self::$smarty->assign('invoice', $invoiceAddress);
 			}
 		}
 		if ($oldMessage = Message::getMessageByCartId((int)($context->cart->id)))
-			$this->smarty->assign('oldMessage', $oldMessage['message']);
+			self::$smarty->assign('oldMessage', $oldMessage['message']);
 	}
 	
 	protected function _assignCarrier()
@@ -365,7 +365,7 @@ class ParentOrderControllerCore extends FrontController
 		$id_zone = Address::getZoneById($address->id);
 		$carriers = Carrier::getCarriersForOrder($id_zone, $context->customer->getGroups());
 
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'checked' => $this->_setDefaultCarrierSelection($carriers),
 			'carriers' => $carriers,
 			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
@@ -390,7 +390,7 @@ class ParentOrderControllerCore extends FrontController
 		else
 			$this->link_conditions .= '&content_only=1';
 		
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'checkedTOS' => (int)($context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
@@ -405,7 +405,7 @@ class ParentOrderControllerCore extends FrontController
 	
 	protected function _assignPayment()
 	{
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 		    'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
 			'HOOK_PAYMENT' => Module::hookExecPayment()
 		));

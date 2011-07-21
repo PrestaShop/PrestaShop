@@ -339,8 +339,17 @@ class CartCore extends ObjectModel
 			return array();
 		// Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
 		if ($this->_products !== NULL AND !$refresh)
+		{
+			// Return product row with specified ID if it exists
+			if (is_int($id_product))
+			{
+				foreach ($this->_products as $product)
+					if ($product['id_product'] == $id_product) 
+						return array($product);
+				return array();
+			}
 			return $this->_products;
-
+		}
 		if (!$context)
 			$context = Context::getContext();
 		
@@ -632,7 +641,7 @@ class CartCore extends ObjectModel
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
 		$this->update(true);
-
+		
 		if ($product->customizable)
 			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, $operator);
 		else
@@ -642,16 +651,26 @@ class CartCore extends ObjectModel
 	/*
 	** Customization management
 	*/
-	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up', Context $context = null)
+	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up')
 	{
-		if (!$context)
-			$context = Context::getContext();
-		/* Getting datas */
-		$files = $context->cookie->getFamily('pictures_'.(int)($id_product).'_');
-		$textFields = $context->cookie->getFamily('textFields_'.(int)($id_product).'_');
-		/* Customization addition */
-		if (count($files) > 0 OR count($textFields) > 0)
-			return $this->_addCustomization((int)$id_product, (int)$id_product_attribute, $files, $textFields, (int)$quantity);
+		// Link customization to product combination when it is first added to cart
+		if (empty($id_customization))
+		{
+			$customization = $this->getProductCustomization($id_product, null, false);
+			foreach ($customization as $field)
+			{
+				if ($field['quantity'] == 0)
+				{
+					Db::getInstance()->Execute('
+					UPDATE `'._DB_PREFIX_.'customization` 
+					SET `quantity` = '.(int)($quantity).', 
+						`id_product_attribute` = '.(int)$id_product_attribute.',
+						`in_cart` = 1
+					WHERE `id_customization` = '.(int)$field['id_customization']);
+				}
+			}
+		}
+			
 		/* Deletion */
 		if (!empty($id_customization) AND (int)($quantity) < 1)
 			return $this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute);
@@ -663,7 +682,10 @@ class CartCore extends ObjectModel
 			{
 				if ($operator == 'down' AND (int)($result['quantity']) - (int)($quantity) < 1)
 					return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)$id_customization);
-				return Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization));
+				return Db::getInstance()->Execute('
+					UPDATE `'._DB_PREFIX_.'customization` 
+					SET `quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)($quantity).'
+					WHERE `id_customization` = '.(int)($id_customization));
 			}
 		}
 		// refresh cache of self::_products
@@ -672,33 +694,46 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public function _addCustomization($id_product, $id_product_attribute, $files, $textFields, $quantity)
+	public function _addCustomization($id_product, $id_product_attribute, $index, $type, $field, $quantity, $id_customization = null)
 	{
-		if (!is_array($files) OR !is_array($textFields))
-			die(Tools::displayError());
-		/* Copying them inside the db */
-		if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'customization` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`) VALUES ('.(int)($this->id).', '.(int)($id_product).', '.(int)($id_product_attribute).', '.(int)($quantity).')'))
-			return false;
-		if (!$id_customization = Db::getInstance()->Insert_ID())
-			return false;
-		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`) VALUES ';
-		if (count($files))
-			foreach ($files AS $key => $filename)
+		$exising_customization = Db::getInstance()->getRow('
+			SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity FROM `'._DB_PREFIX_.'customization` cu
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd
+			ON cu.`id_customization` = cd.`id_customization`
+			WHERE cu.id_cart = '.(int)$this->id.'
+			AND cu.id_product = '.(int)$id_product.'
+			AND type = '.(int)$type.'
+			AND `index` = '.(int)$index.'
+			AND in_cart = 0');
+		
+		// If the customization field is alreay filled, delete it 
+		if ($exising_customization) 
+		{
+			if ($exising_customization['type'] == $type && $exising_customization['index'] == $index)
 			{
-				$tmp = explode('_', $key);
-				$query .= '('.(int)($id_customization).', '._CUSTOMIZE_FILE_.', '.$tmp[2].', \''.$filename.'\'), ';
+				Db::getInstance()->Execute('
+					DELETE FROM `'._DB_PREFIX_.'customized_data` 
+					WHERE id_customization = '.(int)$exising_customization['id_customization'].'
+					AND type = '.(int)$exising_customization['type'].'
+					AND `index` = '.(int)$exising_customization['index']);
+				if ($type == _CUSTOMIZE_FILE_)
+				{
+					@unlink(_PS_UPLOAD_DIR_.$exising_customization['value']);
+					@unlink(_PS_UPLOAD_DIR_.$exising_customization['value'].'_small');
+				}
 			}
-		if (count($textFields))
-			foreach ($textFields AS $key => $textFieldValue)
-			{
-				$tmp = explode('_', $key);
-				$query .= '('.(int)($id_customization).', '._CUSTOMIZE_TEXTFIELD_.', '.$tmp[2].', \''.$textFieldValue.'\'), ';
-			}
-		$query = rtrim($query, ', ');
+			$id_customization = $exising_customization['id_customization'];
+		}else
+		{
+			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'customization` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`) VALUES ('.(int)($this->id).', '.(int)($id_product).', '.(int)($id_product_attribute).', '.(int)($quantity).')');
+			$id_customization = Db::getInstance()->Insert_ID();			
+		}
+
+		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`) VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSql($field).'\')';
+
 		if (!$result = Db::getInstance()->Execute($query))
 			return false;
-		/* Deleting customized informations from the cart (we just copied them inside the db) */
-		return Cart::deleteCustomizationInformations((int)($id_product));
+		return true;
 	}
 
 	/**
@@ -777,7 +812,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * Delete a customization from the cart. If customization is a Picture (type=2),
+	 * Delete a customization from the cart. If customization is a Picture,
 	 * then the image is also deleted
 	 *
 	 * @param integer $id_customization
@@ -796,8 +831,9 @@ class CartCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'customized_data`
 				WHERE `id_customization` = '.(int)($id_customization));
 
+			// Delete customization picture if necessary
 			if (isset($custData['type']) and $custData['type'] == 0)
-				$result &= $this->deletePictureToProduct($id_product,$custData['value']);
+				$result &= (@unlink(_PS_UPLOAD_DIR_.$custData['value']) && @unlink(_PS_UPLOAD_DIR_.$custData['value'].'_small'));
 
 			$result &= Db::getInstance()->execute('DELETE
 				FROM `'._DB_PREFIX_.'customized_data`
@@ -1274,7 +1310,7 @@ class CartCore extends ObjectModel
 
 		if (($discountObj->id_customer OR $discountObj->id_group) AND ($this->id_customer != $discountObj->id_customer AND !in_array($discountObj->id_group, $groups)))
 		{
-			if (!$context->cookie->isLogged())
+			if (!$context->customer->isLogged())
 				return Tools::displayError('You cannot use this voucher.').' - '.Tools::displayError('Please log in.');
 			return Tools::displayError('You cannot use this voucher.');
 		}
@@ -1479,26 +1515,6 @@ class CartCore extends ObjectModel
 	}
 
 	/*
-	* Add customer's pictures
-	*
-	* @return bool Always true
-	*/
-	public function addPictureToProduct($id_product, $index, $identifier, Context $context = null)
-	{
-		if (!$context)
-			$context = Context::getContext();
-
-		$varName = 'pictures_'.(int)($id_product).'_'.(int)($index);
-		if ($context->cookie->$varName)
-		{
-			@unlink(_PS_UPLOAD_DIR_.$context->cookie->$varName);
-			@unlink(_PS_UPLOAD_DIR_.$context->cookie->$varName.'_small');
-		}
-		$context->cookie->$varName = $identifier;
-		return true;
-	}
-
-	/*
 	* Add customer's text
 	*
 	* @return bool Always true
@@ -1529,28 +1545,50 @@ class CartCore extends ObjectModel
 	}
 
 	/*
+	* Add customer's pictures
+	*
+	* @return bool Always true
+	*/
+	public function addPictureToProduct($id_product, $index, $type, $field)
+	{
+		$product_array = $this->getProducts(false, $id_product);
+		$id_customization = $this->_addCustomization($id_product, 0, $index, $type, $field, 0);		
+	}
+	
+	/*
 	* Remove a customer's picture
 	*
 	* @return bool
 	*/
-	public function deletePictureToProduct($id_product, $index, Context $context = null)
+	public function deletePictureToProduct($id_product, $index)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
-		$varName = 'pictures_'.(int)($id_product).'_'.(int)($index);
-		// if cookie->varName is empty, use index which is the name of the picture
-		$picture = !empty($context->cookie->$varName) ? $context->cookie->$varName : $index;
-		if ($picture)
-		{
-			if (!@unlink(_PS_UPLOAD_DIR_.$picture) OR !@unlink(_PS_UPLOAD_DIR_.$picture.'_small'))
-				return false;
-			unset($context->cookie->$varName);
-			return true;
-		}
-		return false;
+		$product_array = $this->getProducts(false, $id_product);
+		
+		if (isset($product_array[0]) && $product = $product_array[0])
+			return $this->_deleteCustomization($product['id_customization'], $id_product, $product['id_product_attribute']);
 	}
-
+	
+	/**
+	 * Return custom pictures in this cart for a specified product
+	 *
+	 * @param int $id_product
+	 * @return array result rows
+	 */
+	public function getProductCustomization($id_product, $type = null, $in_cart = false)
+	{
+		$result = Db::getInstance()->ExecuteS('
+			SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity FROM `'._DB_PREFIX_.'customization` cu
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd
+			ON cu.`id_customization` = cd.`id_customization`
+			WHERE cu.id_cart = '.(int)$this->id.'
+			AND cu.id_product = '.(int)$id_product.
+			($type == 0 ? ' AND type = 0' : '').
+			($type == 1 ? ' AND type = 1' : '').
+			' AND in_cart = '.($in_cart ? '1' : '0')
+		);
+		return $result;
+	}
+	
 	static public function deleteCustomizationInformations($id_product, Context $context = null)
 	{
 		if (!$context)

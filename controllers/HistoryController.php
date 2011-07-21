@@ -59,7 +59,7 @@ class HistoryControllerCore extends FrontController
 				if (Validate::isLoadedObject($myOrder))
 					$order['virtual'] = $myOrder->isVirtual(false);
 			}
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'orders' => $orders,
 			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 			'slowValidation' => Tools::isSubmit('slowvalidation')
@@ -69,7 +69,7 @@ class HistoryControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'history.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'history.tpl');
 	}
 }
 

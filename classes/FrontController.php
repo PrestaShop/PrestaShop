@@ -28,7 +28,7 @@
 class FrontControllerCore
 {
 	public $errors = array();
-	public $smarty;
+	protected static $smarty;
 	protected static $cookie;
 	protected static $link;
 	protected static $cart;
@@ -101,6 +101,12 @@ class FrontControllerCore
 
 		$cookie = new Cookie('ps');
 		$context->cookie = $cookie;
+		
+		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$link = new Link($protocol_link, $protocol_content);
+		$context->link = $link;
+		
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
@@ -132,9 +138,7 @@ class FrontControllerCore
 		}
 
 		$currency = Tools::setCurrency($cookie);
-
 		$_MODULES = array();
-
 		/* Cart already exists */
 		if ((int)$cookie->id_cart)
 		{
@@ -204,7 +208,7 @@ class FrontControllerCore
 		setlocale(LC_CTYPE, $locale);
 		setlocale(LC_TIME, $locale);
 		setlocale(LC_NUMERIC, 'en_US.UTF-8');
-
+		
 		if (Validate::isLoadedObject($currency))
 			$smarty->ps_currency = $currency;
 		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
@@ -222,11 +226,6 @@ class FrontControllerCore
 		/* Breadcrumb */
 		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 		$smarty->assign('navigationPipe', $navigationPipe);
-
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$link = new Link($protocol_link, $protocol_content);
-		$context->link = $link;
 
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
@@ -306,10 +305,10 @@ class FrontControllerCore
 			else
 				$smarty->assign($assignKey, $assignValue);
 
-		// setting properties from global var
+		// shortcuts to context objects
 		self::$cookie = $cookie;
 		self::$cart = $cart;
-		$this->smarty = $smarty;
+		self::$smarty = $smarty;
 		self::$link = $link;
 
 		if ($this->maintenance)
@@ -326,7 +325,10 @@ class FrontControllerCore
 		$this->setMedia();
 		
 		if (isset($cookie->id_customer) && (int)$cookie->id_customer)
+		{
 			$customer = new Customer($cookie->id_customer);
+			$customer->logged = $cookie->logged;
+		}
 		else
 			$customer = new Customer();
 		
@@ -340,7 +342,6 @@ class FrontControllerCore
 
 		$context->customer = $customer;
 		$context->cart = $cart;
-		$context->cookie = $cookie;
 		$context->currency = $currency;
 		$context->controller = $this;
 		$context->country = $defaultCountry;
@@ -352,7 +353,7 @@ class FrontControllerCore
 		if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 		{
 			header('HTTP/1.1 503 temporarily overloaded');
-			$this->smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
+			self::$smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
 			exit;
 		}
 	}
@@ -361,7 +362,7 @@ class FrontControllerCore
 	protected function displayRestrictedCountryPage()
 	{
 		header('HTTP/1.1 503 temporarily overloaded');
-		$this->smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
 		exit;
 	}
 
@@ -412,7 +413,7 @@ class FrontControllerCore
 							if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 								$this->restrictedCountry = true;
 							elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-								$this->smarty->assign(array(
+								self::$smarty->assign(array(
 									'restricted_country_mode' => true,
 									'geolocation_country' => $record->country_name
 								));
@@ -437,7 +438,7 @@ class FrontControllerCore
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 					$this->restrictedCountry = true;
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-					$this->smarty->assign(array(
+					self::$smarty->assign(array(
 						'restricted_country_mode' => true,
 						'geolocation_country' => 'Undefined'
 					));
@@ -475,19 +476,19 @@ class FrontControllerCore
 	public function displayContent()
 	{
 		Tools::safePostVars();
-		$this->smarty->assign('errors', $this->errors);
+		self::$smarty->assign('errors', $this->errors);
 	}
 
 	public function displayHeader()
 	{
 		if (!self::$initialized)
 			$this->init();
-
+		$context = Context::getContext();
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'time' => time(),
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'static_token' => Tools::getToken(false),
@@ -497,7 +498,7 @@ class FrontControllerCore
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only')
 		));
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'HOOK_HEADER' => Module::hookExec('header'),
 			'HOOK_TOP' => Module::hookExec('top'),
 			'HOOK_LEFT_COLUMN' => Module::hookExec('leftColumn')
@@ -514,9 +515,9 @@ class FrontControllerCore
 				$this->js_files = Tools::cccJs($this->js_files);
 		}
 
-		$this->smarty->assign('css_files', $this->css_files);
-		$this->smarty->assign('js_files', array_unique($this->js_files));
-		$this->smarty->display(_PS_THEME_DIR_.'header.tpl');
+		self::$smarty->assign('css_files', $this->css_files);
+		self::$smarty->assign('js_files', array_unique($this->js_files));
+		self::$smarty->display(_PS_THEME_DIR_.'header.tpl');
 	}
 
 	public function displayFooter()
@@ -524,16 +525,16 @@ class FrontControllerCore
 		if (!self::$initialized)
 			$this->init();
 
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => self::$cart)),
 			'HOOK_FOOTER' => Module::hookExec('footer'),
 			'content_only' => (int)(Tools::getValue('content_only'))));
-		$this->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'footer.tpl');
 		//live edit
 		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
-			$this->smarty->assign(array('ad' => $ad, 'live_edit' => true));
-			$this->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
+			self::$smarty->assign(array('ad' => $ad, 'live_edit' => true));
+			self::$smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
 		}
 		else
 			Tools::displayError();
@@ -560,7 +561,7 @@ class FrontControllerCore
 		if (!in_array($this->orderWay, $orderWayValues))
 			$this->orderWay = $orderWayValues[0];
 
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'orderby' => $this->orderBy,
 			'orderway' => $this->orderWay,
 			'orderbydefault' => $orderByValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_BY'))],
@@ -596,7 +597,7 @@ class FrontControllerCore
 		$stop = (int)($this->p + $range);
 		if ($stop > $pages_nb)
 			$stop = (int)($pages_nb);
-		$this->smarty->assign('nb_products', $nbProducts);
+		self::$smarty->assign('nb_products', $nbProducts);
 		$pagination_infos = array(
 			'pages_nb' => (int)($pages_nb),
 			'p' => (int)($this->p),
@@ -606,7 +607,7 @@ class FrontControllerCore
 			'start' => (int)($start),
 			'stop' => (int)($stop)
 		);
-		$this->smarty->assign($pagination_infos);
+		self::$smarty->assign($pagination_infos);
 	}
 
 	public static function getCurrentCustomerGroups()

@@ -78,7 +78,7 @@ class CmsControllerCore extends FrontController
     		        self::$link->getCMSCategoryLink($id_cms_category, $infos['link_rewrite'], $infos['id_lang']);
     			$default_rewrite[$infos['id_lang']] = $arr_link;
     		}
-		    $this->smarty->assign('lang_rewrite_urls', $default_rewrite);
+		    self::$smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
 	}
 	
@@ -96,12 +96,12 @@ class CmsControllerCore extends FrontController
 	{
 		parent::process();
 		$parent_cat = new CMSCategory(1, (int)(self::$cookie->id_lang));
-		$this->smarty->assign('id_current_lang', self::$cookie->id_lang);
-		$this->smarty->assign('home_title', $parent_cat->name);
-		$this->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
+		self::$smarty->assign('id_current_lang', self::$cookie->id_lang);
+		self::$smarty->assign('home_title', $parent_cat->name);
+		self::$smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
 		if ($this->assignCase == 1)
 		{
-			$this->smarty->assign(array(
+			self::$smarty->assign(array(
 				'cms' => $this->cms,
 				'content_only' => (int)(Tools::getValue('content_only')),
 				'path' => ((isset($this->cms->id_cms_category) AND $this->cms->id_cms_category) ? Tools::getFullPath((int)($this->cms->id_cms_category), $this->cms->meta_title, 'CMS') : Tools::getFullPath(1, $this->cms->meta_title, 'CMS'))
@@ -109,7 +109,7 @@ class CmsControllerCore extends FrontController
 		}
 		elseif ($this->assignCase == 2)
 		{
-			$this->smarty->assign(array(
+			self::$smarty->assign(array(
 				'category' => $this->cms_category,
 				'sub_category' => $this->cms_category->getSubCategories((int)(self::$cookie->id_lang)),
 				'cms_pages' => CMS::getCMSPages((int)(self::$cookie->id_lang), (int)($this->cms_category->id) ),
@@ -121,6 +121,6 @@ class CmsControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'cms.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'cms.tpl');
 	}
 }

@@ -116,7 +116,6 @@ if (empty($tab) and !sizeof($_POST))
 						}
 						elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 OR strncmp($key, $adminObj->table.'Orderway', 12) === 0)
 							$cookie->$key = $value;
-				$adminObj->smarty = $smarty;
 				$adminObj->displayConf();
 				$adminObj->postProcess();
 				$adminObj->displayErrors();

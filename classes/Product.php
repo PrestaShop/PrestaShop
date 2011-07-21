@@ -416,11 +416,7 @@ class ProductCore extends ObjectModel
 	public static function initPricesComputation($customer = NULL)
 	{
 		if ($customer)
-		{
-			if (!Validate::isLoadedObject($customer))
-				die(Tools::displayError());
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
-		}
 		else
 			self::$_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
 	}
@@ -1738,7 +1734,7 @@ class ProductCore extends ObjectModel
 			* When a non-user calls directly this method (e.g., payment module...) is on PrestaShop, he does not have already it BUT knows the cart ID
 			* When called from the back office, cart ID can be inexistant
 			*/
-			if (!$id_cart &&!isset($context->tab))
+			if (!$id_cart &&!isset($context->employee))
 				die(Tools::displayError());
 			$cur_cart = new Cart($id_cart);
 		}
@@ -2901,29 +2897,27 @@ class ProductCore extends ObjectModel
 	** Customization management
 	*/
 
-	public static function getAllCustomizedDatas($id_cart, $id_lang = null, Context $context = null)
+	public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true)
 	{
-		if (!$context)
-    		$context = Context::getContext();
-
 		// No need to query if there isn't any real cart!
 		if (!$id_cart)
 			return false;
 		if (!$id_lang)
-			$id_lang = $context->language->id;
+			$id_lang = Context::getContext()->language->id;
 
 		if (!$result = Db::getInstance()->ExecuteS('
 			SELECT cd.`id_customization`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`, cd.`type`, cd.`index`, cd.`value`, cfl.`name`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			NATURAL JOIN `'._DB_PREFIX_.'customization` c
 			LEFT JOIN `'._DB_PREFIX_.'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = '.(int)($id_lang).')
-			WHERE c.`id_cart` = '.(int)$id_cart.'
+			WHERE c.`id_cart` = '.(int)$id_cart.
+			($only_in_cart ? ' AND c.`in_cart` = 1' : '').'
 			ORDER BY `id_product`, `id_product_attribute`, `type`, `index`'))
 			return false;
 		$customizedDatas = array();
 		foreach ($result AS $row)
 			$customizedDatas[(int)($row['id_product'])][(int)($row['id_product_attribute'])][(int)($row['id_customization'])]['datas'][(int)($row['type'])][] = $row;
-		if (!$result = Db::getInstance()->ExecuteS('SELECT `id_product`, `id_product_attribute`, `id_customization`, `quantity`, `quantity_refunded`, `quantity_returned` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int)($id_cart)))
+		if (!$result = Db::getInstance()->ExecuteS('SELECT `id_product`, `id_product_attribute`, `id_customization`, `quantity`, `quantity_refunded`, `quantity_returned` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int)($id_cart).($only_in_cart ? ' AND `in_cart` = 1' : '')))
 			return false;
 		foreach ($result AS $row)
 		{
@@ -3107,7 +3101,7 @@ class ProductCore extends ObjectModel
 				return false;
 		return true;
 	}
-
+	
 	/**
 	* Specify if a product is already in database
 	*

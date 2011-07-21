@@ -76,17 +76,17 @@ class OrderFollowControllerCore extends FrontController
 
 		$ordersReturn = OrderReturn::getOrdersReturn((int)(self::$cookie->id_customer));
 		if (Tools::isSubmit('errorQuantity'))
-			$this->smarty->assign('errorQuantity', true);
+			self::$smarty->assign('errorQuantity', true);
 		elseif (Tools::isSubmit('errorMsg'))
-			$this->smarty->assign('errorMsg', true);
+			self::$smarty->assign('errorMsg', true);
 		elseif (Tools::isSubmit('errorDetail1'))
-			$this->smarty->assign('errorDetail1', true);
+			self::$smarty->assign('errorDetail1', true);
 		elseif (Tools::isSubmit('errorDetail2'))
-			$this->smarty->assign('errorDetail2', true);
+			self::$smarty->assign('errorDetail2', true);
 		elseif (Tools::isSubmit('errorNotReturnable'))
-			$this->smarty->assign('errorNotReturnable',true);
+			self::$smarty->assign('errorNotReturnable',true);
 
-		$this->smarty->assign('ordersReturn', $ordersReturn);
+		self::$smarty->assign('ordersReturn', $ordersReturn);
 	}
 	
 	public function setMedia()
@@ -100,7 +100,7 @@ class OrderFollowControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'order-follow.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'order-follow.tpl');
 	}
 }
 

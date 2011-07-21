@@ -122,7 +122,8 @@ class CountryCore extends ObjectModel
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
-
+		if (!$context)
+			$context = Context::getContext();
 		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'state` s

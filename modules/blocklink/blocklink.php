@@ -335,7 +335,7 @@ class BlockLink extends Module
 	 		$this->_html .= '
 			<script type="text/javascript">
 				var currentUrl = \''.AdminTab::$currentIndex.'&configure='.$this->name.'\';
-				var token=\''.$context->tab->token.'\';
+				var token=\''.Tools::getValue('token').'\';
 				var links = new Array();';
 	 		foreach ($links AS $link)
 	 		{
