@@ -141,14 +141,15 @@ class ProductControllerCore extends FrontController
 				elseif (isset($_GET['deletePicture']) AND !$context->cart->deletePictureToProduct($this->product->id, Tools::getValue('deletePicture')))
 					$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
-				$files = self::$cart->getProductCustomization($this->product->id, 0, false);
+				$files = self::$cart->getProductCustomization($this->product->id, _CUSTOMIZE_FILE_, true);
 				$pictures = array();
 				foreach($files as $file)
 					$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
 
-				$textFields = self::$cookie->getFamily('textFields_'.(int)($this->product->id));
-				foreach ($textFields as $key => $textField)
-					$textFields[$key] = str_replace('<br />', "\n", $textField);
+				$texts = self::$cart->getProductCustomization($this->product->id, _CUSTOMIZE_TEXTFIELD_, true);
+				$textFields = array();
+				foreach ($texts as $textField)
+					$textFields['textFields_'.$this->product->id.'_'.$textField['index']] = str_replace('<br />', "\n", $textField['value']);
 				self::$smarty->assign(array(
 					'pictures' => $pictures,
 					'textFields' => $textFields));
@@ -391,7 +392,6 @@ class ProductControllerCore extends FrontController
 			if ($fieldId['type'] == _CUSTOMIZE_FILE_)
 				$authorizedFileFields[(int)($fieldId['id_customization_field'])] = 'file'.(int)($fieldId['id_customization_field']);
 		$indexes = array_flip($authorizedFileFields);
-		$id_customization = null;
 		foreach ($_FILES AS $fieldName => $file)
 			if (in_array($fieldName, $authorizedFileFields) AND isset($file['tmp_name']) AND !empty($file['tmp_name']))
 			{
@@ -412,7 +412,7 @@ class ProductControllerCore extends FrontController
 				else
 				{
 					// Store customization in database
-					$cart->addPictureToProduct($this->product->id, $indexes[$fieldName], 0, $fileName);
+					$cart->addPictureToProduct($this->product->id, $indexes[$fieldName], _CUSTOMIZE_FILE_, $fileName);
 				}
 				unlink($tmpName);
 			}
@@ -434,10 +434,10 @@ class ProductControllerCore extends FrontController
 				if (!Validate::isMessage($value))
 					$this->errors[] = Tools::displayError('Invalid message');
 				else
-					$cart->addTextFieldToProduct((int)($this->product->id), $indexes[$fieldName], $value);
+					$cart->addTextFieldToProduct($this->product->id, $indexes[$fieldName], _CUSTOMIZE_TEXTFIELD_, $value);
 			}
 			elseif (in_array($fieldName, $authorizedTextFields) AND empty($value))
-				$cart->deleteTextFieldFromProduct((int)($this->product->id), $indexes[$fieldName]);
+				$cart->deleteCustomizationToProduct((int)($this->product->id), $indexes[$fieldName]);
 	}
 
 	public function formTargetFormat()
