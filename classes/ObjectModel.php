@@ -219,6 +219,7 @@ abstract class ObjectModelCore
 
 		if (!$result)
 			return false;
+
 		/* Get object id in database */
 		$this->id = Db::getInstance()->Insert_ID();
 		$assos = Shop::getAssoTables();

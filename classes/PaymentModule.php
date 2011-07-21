@@ -91,6 +91,8 @@ abstract class PaymentModuleCore extends Module
 	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
 	{
 		$cart = new Cart((int)($id_cart));
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 		// Does order already exists ?
 		if (Validate::isLoadedObject($cart) AND $cart->OrderExists() == false)
 		{

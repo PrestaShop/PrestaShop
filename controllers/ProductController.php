@@ -89,7 +89,7 @@ class ProductControllerCore extends FrontController
 				foreach ($rewrite_infos AS $infos)
 					$default_rewrite[$infos['id_lang']] = $context->link->getProductLink((int)$id_product, $infos['link_rewrite'], $infos['category_rewrite'], $infos['ean13'], (int)$infos['id_lang']);
 
-				$this->smarty->assign('lang_rewrite_urls', $default_rewrite);
+				self::$smarty->assign('lang_rewrite_urls', $default_rewrite);
 			}
 	}
 
@@ -113,33 +113,44 @@ class ProductControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('You do not have access to this product.');
 			else
 			{
-				$this->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)($this->product->id)));
+				self::$smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)($this->product->id)));
 
 				if (!$this->product->active)
-					$this->smarty->assign('adminActionDisplay', true);
+					self::$smarty->assign('adminActionDisplay', true);
 
 				/* rewrited url set */
 				$rewrited_url = $context->link->getProductLink($this->product->id, $this->product->link_rewrite);
 
 				/* Product pictures management */
 				require_once('images.inc.php');
-				$this->smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
+				self::$smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
 				if (Tools::isSubmit('submitCustomizedDatas'))
 				{
+					// If cart has not been saved, we need to do it so that customization fields can have an id_cart
+					// We check that the cookie exists first to avoid ghost carts
+					if (!$context->cart->id && isset($_COOKIE[$context->cookie->getName()]))
+					{
+						$context->cart->add();
+						$context->cookie->id_cart = (int)$context->cart->id;
+					}
 					$this->pictureUpload($this->product, $context->cart);
 					$this->textRecord($this->product, $context->cart);
 					$this->formTargetFormat();
 				}
-				elseif (isset($_GET['deletePicture']) AND !$context->cart->deletePictureToProduct((int)($this->product->id), (int)(Tools::getValue('deletePicture'))))
+				elseif (isset($_GET['deletePicture']) AND !$context->cart->deletePictureToProduct($this->product->id, Tools::getValue('deletePicture')))
 					$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
-				$files = self::$cookie->getFamily('pictures_'.(int)($this->product->id));
+				$files = self::$cart->getProductCustomization($this->product->id, 0, false);
+				$pictures = array();
+				foreach($files as $file)
+					$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
+
 				$textFields = self::$cookie->getFamily('textFields_'.(int)($this->product->id));
 				foreach ($textFields as $key => $textField)
 					$textFields[$key] = str_replace('<br />', "\n", $textField);
-				$this->smarty->assign(array(
-					'pictures' => $files,
+				self::$smarty->assign(array(
+					'pictures' => $pictures,
 					'textFields' => $textFields));
 
 				$productPriceWithTax = Product::getPriceStatic($id_product, true, NULL, 6);
@@ -173,7 +184,7 @@ class ProductControllerCore extends FrontController
 
 				if (isset($category) AND Validate::isLoadedObject($category))
 				{
-					$this->smarty->assign(array(
+					self::$smarty->assign(array(
 					'path' => Tools::getPath((int)$category->id, $this->product->name, true),
 					'category' => $category,
 					'subCategories' => $category->getSubCategories((int)(self::$cookie->id_lang), true),
@@ -182,9 +193,9 @@ class ProductControllerCore extends FrontController
 					'return_category_name' => Tools::safeOutput($category->name)));
 				}
 				else
-					$this->smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
+					self::$smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
 
-				$this->smarty->assign('return_link', (isset($category->id) AND $category->id) ? Tools::safeOutput($context->link->getCategoryLink($category)) : 'javascript: history.back();');
+				self::$smarty->assign('return_link', (isset($category->id) AND $category->id) ? Tools::safeOutput($context->link->getCategoryLink($category)) : 'javascript: history.back();');
 
 				$lang = Configuration::get('PS_LANG_DEFAULT');
 				if (Pack::isPack((int)($this->product->id), (int)($lang)) AND !Pack::isInStock((int)($this->product->id), (int)($lang)))
@@ -197,14 +208,14 @@ class ProductControllerCore extends FrontController
 
 				// Tax
 				$tax = (float)(Tax::getProductTaxRate((int)($this->product->id), $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-				$this->smarty->assign('tax_rate', $tax);
+				self::$smarty->assign('tax_rate', $tax);
 
 				$ecotax_rate = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
                 $ecotaxTaxAmount = Tools::ps_round($this->product->ecotax, 2);
 				if (Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX'))
 					$ecotaxTaxAmount = Tools::ps_round($ecotaxTaxAmount * (1 + $ecotax_rate / 100), 2);
 
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'quantity_discounts' => $this->formatQuantityDiscounts(SpecificPrice::getQuantityDiscounts((int)($this->product->id), $this->id_current_shop, (int)(self::$cookie->id_currency), $id_country, $id_group), $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false), (float)($tax)),
 					'product' => $this->product,
 					'ecotax_tax_inc' => $ecotaxTaxAmount,
@@ -221,7 +232,7 @@ class ProductControllerCore extends FrontController
 					'group_reduction' => $group_reduction,
 					'col_img_dir' => _PS_COL_IMG_DIR_,
 				));
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'HOOK_EXTRA_LEFT' => Module::hookExec('extraLeft'),
 					'HOOK_EXTRA_RIGHT' => Module::hookExec('extraRight'),
 					'HOOK_PRODUCT_OOS' => Hook::productOutOfStock($this->product),
@@ -237,7 +248,7 @@ class ProductControllerCore extends FrontController
 				{
 					if ($image['cover'])
 					{
-						$this->smarty->assign('mainImage', $images[0]);
+						self::$smarty->assign('mainImage', $images[0]);
 						$cover = $image;
 						$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$image['id_image']) : $image['id_image']);
 						$cover['id_image_only'] = (int)($image['id_image']);
@@ -247,14 +258,14 @@ class ProductControllerCore extends FrontController
 				if (!isset($cover))
 					$cover = array('id_image' => $context->language->iso_code.'-default', 'legend' => 'No picture', 'title' => 'No picture');
 				$size = Image::getSize('large');
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'cover' => $cover,
 					'imgWidth' => (int)($size['width']),
 					'mediumSize' => Image::getSize('medium'),
 					'largeSize' => Image::getSize('large'),
 					'accessories' => $this->product->getAccessories((int)(self::$cookie->id_lang))));
 				if (sizeof($productImages))
-					$this->smarty->assign('images', $productImages);
+					self::$smarty->assign('images', $productImages);
 
 				/* Attributes / Groups & colors */
 				$colors = array();
@@ -328,7 +339,7 @@ class ProductControllerCore extends FrontController
 						$combinations[$id_product_attribute]['list'] = $attributeList;
 					}
 
-					$this->smarty->assign(array(
+					self::$smarty->assign(array(
 						'groups' => $groups,
 						'combinaisons' => $combinations, /* Kept for compatibility purpose only */
 						'combinations' => $combinations,
@@ -336,18 +347,18 @@ class ProductControllerCore extends FrontController
 						'combinationImages' => $combinationImages));
 				}
 
-				$this->smarty->assign(array(
+				self::$smarty->assign(array(
 					'no_tax' => Tax::excludeTaxeOption() OR !Tax::getProductTaxRate((int)$this->product->id, $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}),
 					'customizationFields' => $this->product->getCustomizationFields((int)(self::$cookie->id_lang))
 				));
 
 				// Pack management
-				$this->smarty->assign('packItems', $this->product->cache_is_pack ? Pack::getItemTable($this->product->id, (int)(self::$cookie->id_lang), true) : array());
-				$this->smarty->assign('packs', Pack::getPacksTable($this->product->id, (int)(self::$cookie->id_lang), true, 1));
+				self::$smarty->assign('packItems', $this->product->cache_is_pack ? Pack::getItemTable($this->product->id, (int)(self::$cookie->id_lang), true) : array());
+				self::$smarty->assign('packs', Pack::getPacksTable($this->product->id, (int)(self::$cookie->id_lang), true, 1));
 			}
 		}
 
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'ENT_NOQUOTES' => ENT_NOQUOTES,
 			'outOfStockAllowed' => (int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')),
 			'errors' => $this->errors,
@@ -368,18 +379,19 @@ class ProductControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'product.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'product.tpl');
 	}
 
 	public function pictureUpload(Product $product, Cart $cart)
 	{
-		if (!$fieldIds = $this->product->getCustomizationFieldIds())
+		if (!$fieldIds = $product->getCustomizationFieldIds())
 			return false;
 		$authorizedFileFields = array();
 		foreach ($fieldIds AS $fieldId)
 			if ($fieldId['type'] == _CUSTOMIZE_FILE_)
 				$authorizedFileFields[(int)($fieldId['id_customization_field'])] = 'file'.(int)($fieldId['id_customization_field']);
 		$indexes = array_flip($authorizedFileFields);
+		$id_customization = null;
 		foreach ($_FILES AS $fieldName => $file)
 			if (in_array($fieldName, $authorizedFileFields) AND isset($file['tmp_name']) AND !empty($file['tmp_name']))
 			{
@@ -398,7 +410,10 @@ class ProductControllerCore extends FrontController
 				elseif (!chmod(_PS_UPLOAD_DIR_.$fileName, 0777) OR !chmod(_PS_UPLOAD_DIR_.$fileName.'_small', 0777))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
 				else
-					$cart->addPictureToProduct((int)($this->product->id), $indexes[$fieldName], $fileName);
+				{
+					// Store customization in database
+					$cart->addPictureToProduct($this->product->id, $indexes[$fieldName], 0, $fileName);
+				}
 				unlink($tmpName);
 			}
 		return true;
@@ -432,8 +447,8 @@ class ProductControllerCore extends FrontController
 			if (strncmp($field, 'group_', 6) == 0)
 				$customizationFormTarget = preg_replace('/&group_([[:digit:]]+)=([[:digit:]]+)/', '', $customizationFormTarget);
 		if (isset($_POST['quantityBackup']))
-			$this->smarty->assign('quantityBackup', (int)($_POST['quantityBackup']));
-		$this->smarty->assign('customizationFormTarget', $customizationFormTarget);
+			self::$smarty->assign('quantityBackup', (int)($_POST['quantityBackup']));
+		self::$smarty->assign('customizationFormTarget', $customizationFormTarget);
 	}
 
 	public function formatQuantityDiscounts($specificPrices, $price, $taxRate)

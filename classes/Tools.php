@@ -1861,7 +1861,7 @@ FileETag INode MTime Size
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$smarty = $context->controller->smarty;
+		$smarty = $context->smarty;
 		if (!Configuration::get('PS_SMARTY_CACHE'))
 			return;
 		if ($smarty->force_compile == 0 AND $smarty->caching == $level)
@@ -1876,12 +1876,11 @@ FileETag INode MTime Size
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$smarty = $context->controller->smarty;
 		
 		if (isset(self::$_forceCompile))
-			$smarty->force_compile = (int)(self::$_forceCompile);
+			$context->smarty->force_compile = (int)(self::$_forceCompile);
 		if (isset(self::$_caching))
-			$smarty->caching = (int)(self::$_caching);
+			$context->smarty->caching = (int)(self::$_caching);
 	}
 
 	public static function isCallable($function)

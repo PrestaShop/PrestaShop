@@ -48,7 +48,7 @@ class CartControllerCore extends FrontController
 					$result = array('carriers' => Carrier::getCarriersForOrder(Country::getIdZone((isset($deliveryAddress) AND (int)$deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT')), $groups));
 				}
 				$result['summary'] = $context->cart->getSummaryDetails();
-				$result['customizedDatas'] = Product::getAllCustomizedDatas($context->cart->id);
+				$result['customizedDatas'] = Product::getAllCustomizedDatas($context->cart->id, null, true);
 				$result['HOOK_SHOPPING_CART'] = Module::hookExec('shoppingCart', $result['summary']);
 				$result['HOOK_SHOPPING_CART_EXTRA'] = Module::hookExec('shoppingCartExtra', $result['summary']);
 				die(Tools::jsonEncode($result));
@@ -78,7 +78,7 @@ class CartControllerCore extends FrontController
 		$orderTotal = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$this->cartDiscounts = $context->cart->getDiscounts();
 		foreach ($this->cartDiscounts AS $k => $this->cartDiscount)
-			if ($error = self::$cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, $context->$cart->getProducts(), false))
+			if ($error = self::$cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, $context->cart->getProducts(), false))
 				$context->cart->deleteDiscount((int)($this->cartDiscount['id_discount']));
 
 		$add = Tools::getIsset('add') ? 1 : 0;
@@ -251,6 +251,6 @@ class CartControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'errors.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'errors.tpl');
 	}
 }

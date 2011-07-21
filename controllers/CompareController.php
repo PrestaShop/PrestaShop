@@ -96,24 +96,24 @@ class CompareControllerCore extends FrontController
 
 					$hasProduct = true;
 					$ordered_features = Feature::getFeaturesForComparison($ids, self::$cookie->id_lang);
-					$this->smarty->assign(array(
+					self::$smarty->assign(array(
 						'ordered_features' => $ordered_features,
 						'product_features' => $listFeatures,
 						'products' => $listProducts,
 						'width' => $width,
 						'homeSize' => Image::getSize('home')
 					));
-					$this->smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Module::hookExec('extraProductComparison', array('list_ids_product' => $ids)));
+					self::$smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Module::hookExec('extraProductComparison', array('list_ids_product' => $ids)));
 				}
 			}
 		}
-		$this->smarty->assign('hasProduct', $hasProduct);
+		self::$smarty->assign('hasProduct', $hasProduct);
 	}
 
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'products-comparison.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
 }
 

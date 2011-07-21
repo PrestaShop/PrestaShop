@@ -120,10 +120,10 @@ class StoresControllerCore extends FrontController
 							$hours_datas['hours'] = $hours[(int)($i) - 1];
 							$days_datas[] = $hours_datas;
 						}
-						$this->smarty->assign('days_datas', $days_datas);
-						$this->smarty->assign('id_country', $store['id_country']);
+						self::$smarty->assign('days_datas', $days_datas);
+						self::$smarty->assign('id_country', $store['id_country']);
 					
-						$other .= $this->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
+						$other .= self::$smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 					}
 					
 					$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
@@ -143,10 +143,10 @@ class StoresControllerCore extends FrontController
 				die($dom->saveXML());
 			}
 			else
-				$this->smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
+				self::$smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
 		}
 		
-		$this->smarty->assign(array('distance_unit' => $distanceUnit, 'simplifiedStoresDiplay' => $simplifiedStoreLocator, 'stores' => $stores, 'mediumSize' => Image::getSize('medium')));
+		self::$smarty->assign(array('distance_unit' => $distanceUnit, 'simplifiedStoresDiplay' => $simplifiedStoreLocator, 'stores' => $stores, 'mediumSize' => Image::getSize('medium')));
 	}
 
 	private function _processStoreAddress($store)
@@ -191,7 +191,7 @@ class StoresControllerCore extends FrontController
 	{
 		parent::process();
 				
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'defaultLat' => (float)Configuration::get('PS_STORES_CENTER_LAT'),
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
 			'searchUrl' => Context::getContext()->link->getPageLink('stores')
@@ -210,6 +210,6 @@ class StoresControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'stores.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'stores.tpl');
 	}
 }

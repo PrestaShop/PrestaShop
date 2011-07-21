@@ -174,7 +174,6 @@ abstract class AdminTabCore
 	public function __construct()
 	{
 		$context = Context::getContext();
-		$context->tab = $this;
 		
 		$this->id = Tab::getCurrentTabId();
 		$this->_conf = array(

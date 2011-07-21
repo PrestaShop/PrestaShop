@@ -47,17 +47,17 @@ class MyAccountControllerCore extends FrontController
 	{
 		parent::process();
 		
-		$this->smarty->assign(array(
+		self::$smarty->assign(array(
 			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),
 			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN'))
 		));
-		$this->smarty->assign('HOOK_CUSTOMER_ACCOUNT', Module::hookExec('customerAccount'));
+		self::$smarty->assign('HOOK_CUSTOMER_ACCOUNT', Module::hookExec('customerAccount'));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		$this->smarty->display(_PS_THEME_DIR_.'my-account.tpl');
+		self::$smarty->display(_PS_THEME_DIR_.'my-account.tpl');
 	}
 }
 
