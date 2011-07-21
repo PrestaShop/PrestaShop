@@ -87,7 +87,7 @@ class MySQLCore extends Db
 	 */
 	public function	Insert_ID()
 	{
-		mysql_insert_id($this->_link);
+		return mysql_insert_id($this->_link);
 	}
 
 	/**
