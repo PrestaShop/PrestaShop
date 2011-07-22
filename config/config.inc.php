@@ -76,9 +76,6 @@ require_once(dirname(__FILE__).'/autoload.php');
 if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 	define('_PS_MAGIC_QUOTES_GPC_',         get_magic_quotes_gpc());
 
-// Include some alias functions
-include_once(dirname(__FILE__).'/alias.php');
-
 /* Set the current Shop */
 Context::getContext()->shop = Shop::initialize();
 define('_THEME_NAME_', Context::getContext()->shop->getTheme());
