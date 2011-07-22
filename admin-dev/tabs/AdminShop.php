@@ -156,6 +156,7 @@ class AdminShop extends AdminTab
 				'module_currency' => $this->l('Payment module currency restrictions'),
 				'product' => $this->l('Products'),
 				'product_lang' => $this->l('Products lang'),
+				'scene' => $this->l('Scenes'),
 				'stock' => $this->l('Stock'),
 				'store' => $this->l('Stores'),
 				'zone' => $this->l('Zones'),

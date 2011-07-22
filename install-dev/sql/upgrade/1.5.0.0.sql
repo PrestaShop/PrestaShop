@@ -306,4 +306,11 @@ ALTER TABLE `PREFIX_cart_product` ADD `id_shop` INT NOT NULL DEFAULT '1' AFTER `
 
 ALTER TABLE `PREFIX_customization` ADD `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
+CREATE TABLE `PREFIX_scene_shop` (
+`id_scene` INT( 11 ) UNSIGNED NOT NULL ,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+PRIMARY KEY (`id_scene`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
 /* PHP:create_multistore(); */
