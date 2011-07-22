@@ -71,6 +71,25 @@ class AdminGroupShop extends AdminTab
 			$disabled = 'disabled="disabled"';
 		else
 			$disabled = '';
+
+		echo <<<EOF
+		<script type="text/javascript">
+		//<![CDATA[
+		$().ready(function()
+		{
+			$('input[name=share_order]').attr('disabled', true);
+			$('input[name=share_customer], input[name=share_stock]').click(function()
+			{
+				var disabled = ($('input[name=share_customer]').attr('checked') && $('input[name=share_stock]').attr('checked')) ? false : true;
+				$('input[name=share_order]').attr('disabled', disabled);
+				if (disabled)
+					$('#share_order_off').attr('checked', true);
+			});
+		});
+		//]]>
+		</script>
+EOF;
+
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
@@ -79,21 +98,29 @@ class AdminGroupShop extends AdminTab
 				<div class="margin-form">
 					<input type="text" name="name" id="name" value="'.$this->getFieldValue($obj, 'name').'" />
 				</div>
-				<label for="share_datas">'.$this->l('Share datas').'</label>
+				<label for="share_customer">'.$this->l('Share customers').'</label>
 				<div class="margin-form">
-					<input type="radio" name="share_datas" '.$disabled.' id="share_datas_on" value="1" '.($this->getFieldValue($obj, 'share_datas') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="share_datas_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="share_datas" '.$disabled.' id="share_datas_off" value="0" '.(!$this->getFieldValue($obj, 'share_datas') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('Share customers, orders and carts between shops of this group').'</p>
+					<input type="radio" name="share_customer" '.$disabled.' id="share_customer_on" value="1" '.($this->getFieldValue($obj, 'share_customer') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="share_customer_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
+					<input type="radio" name="share_customer" '.$disabled.' id="share_customer_off" value="0" '.(!$this->getFieldValue($obj, 'share_customer') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="ashare_customer_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
+					<p>'.$this->l('Share customers between shops of this group').'</p>
 				</div>
 				<label for="share_stock">'.$this->l('Share stock').'</label>
 				<div class="margin-form">
 					<input type="radio" name="share_stock" '.$disabled.' id="share_stock_on" value="1" '.($this->getFieldValue($obj, 'share_stock') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="share_stock_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="share_stock" '.$disabled.' id="share_datas_off" value="0" '.(!$this->getFieldValue($obj, 'share_stock') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
+					<input type="radio" name="share_stock" '.$disabled.' id="share_stock_off" value="0" '.(!$this->getFieldValue($obj, 'share_stock') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="share_stock_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Sare stock between shops of this group').'</p>
+				</div>
+				<label for="share_order">'.$this->l('Share orders').'</label>
+				<div class="margin-form">
+					<input type="radio" name="share_order" '.$disabled.' id="share_order_on" value="1" '.($this->getFieldValue($obj, 'share_order') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="share_order_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
+					<input type="radio" name="share_order" '.$disabled.' id="share_order_off" value="0" '.(!$this->getFieldValue($obj, 'share_order') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="share_order_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
+					<p>'.$this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and stock)').'</p>
 				</div>
 				<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">

@@ -1167,9 +1167,8 @@ city State:name postcode
 Country:name
 phone' where `id_country`=21;
 
-INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`, `deleted`) VALUES (1, 'Default', 1, 0);
+INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`, `deleted`, `share_stock`, `share_customer`, `share_order`) VALUES (1, 'Default', 1, 0, 0, 0, 0);
 INSERT INTO `PREFIX_shop` (`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`) VALUES (1, 1, 'Default', 1, 1, 1, 0);
 INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, 'PS_SHOP_DEFAULT', '1', NOW(), NOW());
-INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, 'PS_GROUP_SHOP_DEFAULT', '1', NOW(), NOW());
 
 INSERT INTO `PREFIX_theme` (`id_theme`, `name`) VALUES (1, 'prestashop');

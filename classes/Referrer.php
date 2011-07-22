@@ -197,7 +197,7 @@ class ReferrerCore extends ObjectModel
 				WHERE cu.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
 					'.$shop->sqlRestriction(false, 'rs').'
 					'.$shop->sqlRestriction(false, 'c').'
-					'.$shop->sqlRestriction(true, 'cu').'
+					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
 					AND cu.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)($this->id)
 					.$where;
@@ -232,7 +232,7 @@ class ReferrerCore extends ObjectModel
 				WHERE oo.invoice_date BETWEEN '.ModuleGraph::getDateBetween($employee).'
 					'.$shop->sqlRestriction(false, 'rs').'
 					'.$shop->sqlRestriction(false, 'c').'
-					'.$shop->sqlRestriction(true, 'oo').'
+					'.$shop->sqlRestriction(Shop::SHARE_ORDER, 'oo').'
 					AND oo.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)($this->id).'
 					AND oo.valid = 1'
@@ -249,7 +249,7 @@ class ReferrerCore extends ObjectModel
 			$sql = 'SELECT COUNT(id_order) AS orders, SUM(total_paid_real / conversion_rate) AS sales
 					FROM '._DB_PREFIX_.'orders
 					WHERE id_order IN ('.implode($implode, ',').')
-						'.$shop->sqlRestriction(true).'
+						'.$shop->sqlRestriction(Shop::SHARE_ORDER).'
 						AND valid = 1';
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		}

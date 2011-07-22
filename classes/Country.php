@@ -122,8 +122,10 @@ class CountryCore extends ObjectModel
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
-		if (!$context)
-			$context = Context::getContext();
+
+	 	if (!$context)
+	 		$context = Context::getContext();
+
 		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'state` s
@@ -131,7 +133,7 @@ class CountryCore extends ObjectModel
 
 		$sql = 'SELECT cl.*,c.*, cl.`name` AS country, z.`name` AS zone
 				FROM `'._DB_PREFIX_.'country` c
-				'.$context->shop->sqlAsso('country', 'c').'
+				'.$context->shop->sqlAsso('country', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
 				WHERE 1'
@@ -296,7 +298,7 @@ class CountryCore extends ObjectModel
             
 		$sql = ' SELECT DISTINCT c.*, cl.*
         		FROM `'._DB_PREFIX_.'country` c
-				'.$context->shop->sqlAsso('country', 'c').'
+				'.$context->shop->sqlAsso('country', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
 		        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
         		WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')

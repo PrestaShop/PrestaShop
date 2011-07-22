@@ -210,7 +210,7 @@ class SearchCore
 				INNER JOIN `'._DB_PREFIX_.'category_product` cp ON cp.`id_category` = cg.`id_category`
 				INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
 				INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
-				'.$context->shop->sqlAsso('product', 'p').'
+				'.$context->shop->sqlAsso('product', 'p', false).'
 				WHERE c.`active` = 1
 					AND p.`active` = 1
 					AND indexed = 1
@@ -553,7 +553,7 @@ class SearchCore
 		{
 			$sql = 'SELECT COUNT(DISTINCT pt.`id_product`) nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->sqlAsso('product', 'p', true).'
+					'.$context->shop->sqlAsso('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 					LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
@@ -570,7 +570,7 @@ class SearchCore
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
 				FROM `'._DB_PREFIX_.'product` p
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
-				'.$context->shop->sqlAsso('product', 'p').'
+				'.$context->shop->sqlAsso('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`

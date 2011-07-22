@@ -493,7 +493,7 @@ class CategoryCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(cp.`id_product`) AS total
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->sqlAsso('product', 'p', true).'
+					'.$context->shop->sqlAsso('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)($this->id).
 					($active ? ' AND p.`active` = 1' : '').
@@ -506,7 +506,7 @@ class CategoryCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND default_on = 1)
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				'.Product::sqlStock('p', 'pa', false, $context).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')

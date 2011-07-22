@@ -192,6 +192,7 @@ CREATE TABLE `PREFIX_cart_discount` (
 CREATE TABLE `PREFIX_cart_product` (
   `id_cart` int(10) unsigned NOT NULL,
   `id_product` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `id_product_attribute` int(10) unsigned default NULL,
   `quantity` int(10) unsigned NOT NULL default '0',
   `date_add` datetime NOT NULL,
@@ -1694,7 +1695,8 @@ CREATE TABLE `PREFIX_address_format` (
 CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
   `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `share_datas` TINYINT(1) NOT NULL,
+  `share_customer` TINYINT(1) NOT NULL,
+  `share_order` TINYINT(1) NOT NULL,
   `share_stock` TINYINT(1) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',

@@ -57,7 +57,7 @@ class BlockManufacturer extends Module
 		$context = Context::getContext();
 
 		$context->smarty->assign(array(
-			'manufacturers' => Manufacturer::getManufacturers(false, 0, true, false, false, false, $this->context->shop->getGroupID()),
+			'manufacturers' => Manufacturer::getManufacturers(),
 			'link' => $context->link,
 			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
 			'text_list_nb' => Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'),

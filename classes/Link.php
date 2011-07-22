@@ -68,16 +68,22 @@ class LinkCore
 	  * @param string $alias Friendly URL (only if $id_OBJ is the object)
 	  * @return string link
 	  */
-	public function getProductLink($id_product, $alias = NULL, $category = NULL, $ean13 = NULL, $id_lang = NULL)
+	public function getProductLink($id_product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null)
 	{
+		$url = _PS_BASE_URL_.__PS_BASE_URI__;
+		
+		// @todo use specific method ?
+		if ($id_shop && ($shop = Shop::getShop($id_shop)))
+			$url = 'http://'.$shop['domain'].'/'.$shop['uri'];
+		
 		if (is_object($id_product))
-			return ($this->allow == 1)?(_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)$id_lang).((isset($id_product->category) AND !empty($id_product->category) AND $id_product->category != 'home') ? $id_product->category.'/' : '').(int)$id_product->id.'-'.$id_product->link_rewrite.($id_product->ean13 ? '-'.$id_product->ean13 : '').'.html') :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$id_product->id);
+			return ($this->allow == 1)?($url.$this->getLangLink((int)$id_lang).((isset($id_product->category) AND !empty($id_product->category) AND $id_product->category != 'home') ? $id_product->category.'/' : '').(int)$id_product->id.'-'.$id_product->link_rewrite.($id_product->ean13 ? '-'.$id_product->ean13 : '').'.html') :
+			($url.'index.php?controller=product&id_product='.(int)$id_product->id);
 		elseif ($alias)
-			return ($this->allow == 1)?(_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)$id_lang).(($category AND $category != 'home') ? ($category.'/') : '').(int)$id_product.'-'.$alias.($ean13 ? '-'.$ean13 : '').'.html') :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$id_product);
+			return ($this->allow == 1)?($url.$this->getLangLink((int)$id_lang).(($category AND $category != 'home') ? ($category.'/') : '').(int)$id_product.'-'.$alias.($ean13 ? '-'.$ean13 : '').'.html') :
+			($url.'index.php?controller=product&id_product='.(int)$id_product);
 		else
-			return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$id_product;
+			return $url.'index.php?controller=product&id_product='.(int)$id_product;
 	}
 
 	public function getCategoryLink($id_category, $alias = NULL, $id_lang = NULL)

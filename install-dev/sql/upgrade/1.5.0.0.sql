@@ -2,13 +2,14 @@ SET NAMES 'utf8';
 CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
   `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `share_datas` TINYINT(1) NOT NULL,
+  `share_order` TINYINT(1) NOT NULL,
+  `share_stock` TINYINT(1) NOT NULL,
   `share_stock` TINYINT(1) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`) VALUES (1, 'Default', 1);
+INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`, `deleted`, `share_stock`, `share_customer`, `share_order`) VALUES (1, 'Default', 1, 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   `id_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -30,7 +31,6 @@ ALTER TABLE `PREFIX_configuration` DROP INDEX `name` , ADD INDEX `name` ( `name`
 ALTER TABLE `PREFIX_configuration` ADD INDEX (`id_group_shop`);
 ALTER TABLE `PREFIX_configuration` ADD INDEX (`id_shop`);
 INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, 'PS_SHOP_DEFAULT', '1', NOW(), NOW());
-INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, 'PS_GROUP_SHOP_DEFAULT', '1', NOW(), NOW());
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -301,5 +301,7 @@ INSERT INTO `PREFIX_referrer_shop` (`id_referrer`, `id_shop`) SELECT `id_referre
 ALTER TABLE `PREFIX_referrer` DROP `cache_visitors`, DROP `cache_visits`, DROP `cache_pages`, DROP `cache_registrations`, DROP `cache_orders`, DROP `cache_sales`, DROP `cache_reg_rate`, DROP `cache_order_rate`;
 
 ALTER TABLE PREFIX_employee ADD `show_screencast` tinyint(1) unsigned NOT NULL default '1';
+
+ALTER TABLE `PREFIX_cart_product` ADD `id_shop` INT NOT NULL DEFAULT '1' AFTER `id_product`;
 
 /* PHP:create_multistore(); */

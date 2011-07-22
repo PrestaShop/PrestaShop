@@ -32,14 +32,16 @@ class GroupShopCore extends ObjectModel
 {
 	public	$name;
 	public	$active;
-	public	$share_datas;
+	public	$share_customer;
+	public	$share_order;
 	public	$share_stock;
 	public	$deleted;
 	
 	protected	$fieldsSize = array('name' => 64);
  	protected	$fieldsValidate = array(
  					'active' => 'isBool',
- 					'share_datas' => 'isBool',
+ 					'share_customer' => 'isBool',
+ 					'share_order' => 'isBool',
  					'share_stock' => 'isBool',
  					'name' => 'isGenericName',
  				);
@@ -63,8 +65,9 @@ class GroupShopCore extends ObjectModel
 		parent::validateFields();
 
 		$fields['name'] = pSQL($this->name);
-		$fields['share_datas'] = (int)$this->share_datas;
+		$fields['share_customer'] = (int)$this->share_customer;
 		$fields['share_stock'] = (int)$this->share_stock;
+		$fields['share_order'] = ($fields['share_customer'] && $fields['share_stock']) ? (int)$this->share_order : false;
 		$fields['active'] = (int)$this->active;
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
