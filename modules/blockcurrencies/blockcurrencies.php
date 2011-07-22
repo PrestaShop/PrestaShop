@@ -60,7 +60,7 @@ class BlockCurrencies extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 
-		$currencies = Currency::getCurrencies(false, 1, $this->context);
+		$currencies = Currency::getCurrencies();
 		if (!sizeof($currencies))
 			return '';
 		$this->context->smarty->assign('currencies', $currencies);

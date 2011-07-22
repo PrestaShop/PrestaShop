@@ -98,6 +98,8 @@ abstract class AdminTabCore
 	
 	/** @var bool */
 	public $shopShareDatas = false;
+	
+	public $shopAssoName = 'name';
 
 	/** @var array Cache for query results */
 	protected $_list = array();
@@ -275,9 +277,9 @@ abstract class AdminTabCore
 			$this->includeSubTab('display');
 			$assos_shop = Shop::getAssoTables();
 			if (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'shop')
-				$this->displayAssoShop();
+				$this->displayAssoShop($this->shopAssoName);
 			elseif (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'group_shop')
-				$this->displayAssoGroupShop();
+				$this->displayAssoGroupShop($this->shopAssoName);
 		}
 	}
 
@@ -1971,17 +1973,18 @@ abstract class AdminTabCore
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
 	
-	protected function displayAssoShop($field_name = 'name')
+	protected function displayAssoShop($field_name = 'name', $selectName = null)
 	{
 		$context = Context::getContext();
 		if (!Tools::isMultiShopActivated() || (!$this->_object && $context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		$shops = Shop::getShops();
-		$objects = Db::getInstance()->ExecuteS('SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'`
-															FROM `'._DB_PREFIX_.pSQL($this->table).'`a '.
-															(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
+		$sql = 'SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'`
+				FROM `'._DB_PREFIX_.pSQL($this->table).'`a '.
+				(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
+				' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : '');
+		$objects = Db::getInstance()->ExecuteS($sql);
 		$assos = array();
 		$res = Db::getInstance()->ExecuteS('SELECT id_shop, `'.pSQL($this->identifier).'`
 														FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`');

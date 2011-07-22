@@ -42,12 +42,15 @@ class AdminCarriers extends AdminTab
  		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 's');
 
 		$this->fieldsDisplay = array(
-		'id_carrier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Name'), 'width' => 100),
-		'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 's', 'orderby' => false, 'search' => false),
-		'delay' => array('title' => $this->l('Delay'), 'width' => 300, 'orderby' => false),
-		'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
-		'is_free' => array('title' => $this->l('Is Free'), 'align' => 'center', 'icon' => array(0 => 'disabled.gif', 1 => 'enabled.gif', 'default' => 'disabled.gif'), 'type' => 'bool', 'orderby' => false));
+			'id_carrier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Name'), 'width' => 100),
+			'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 's', 'orderby' => false, 'search' => false),
+			'delay' => array('title' => $this->l('Delay'), 'width' => 300, 'orderby' => false),
+			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'is_free' => array('title' => $this->l('Is Free'), 'align' => 'center', 'icon' => array(0 => 'disabled.gif', 1 => 'enabled.gif', 'default' => 'disabled.gif'), 'type' => 'bool', 'orderby' => false)
+		);
+		
+		$this->_group = 'GROUP BY a.id_carrier';
 		
 		$this->optionTitle = $this->l('Carrier options');
 		$this->_fieldsOptions = array(

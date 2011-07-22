@@ -541,8 +541,6 @@ CREATE TABLE `PREFIX_delivery` (
 
 CREATE TABLE `PREFIX_discount` (
   `id_discount` int(10) unsigned NOT NULL auto_increment,
-  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_discount_type` int(10) unsigned NOT NULL,
   `behavior_not_exhausted` TINYINT(3) DEFAULT '1',
   `id_customer` int(10) unsigned NOT NULL,
@@ -562,8 +560,6 @@ CREATE TABLE `PREFIX_discount` (
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
   PRIMARY KEY  (`id_discount`),
-  KEY `id_group_shop` (`id_group_shop`),
-  KEY `id_shop` (`id_shop`),
   KEY `discount_name` (`name`),
   KEY `discount_customer` (`id_customer`),
   KEY `id_discount_type` (`id_discount_type`)
@@ -1896,5 +1892,12 @@ CREATE TABLE `PREFIX_scene_shop` (
 `id_scene` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_scene`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_discount_shop` (
+`id_discount` INT( 11 ) UNSIGNED NOT NULL ,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+PRIMARY KEY (`id_discount`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

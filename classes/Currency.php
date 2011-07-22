@@ -180,14 +180,14 @@ class CurrencyCore extends ObjectModel
 	  *
 	  * @return array Currencies
 	  */
-	static public function getCurrencies($object = false, $active = 1, Context $context = null)
+	static public function getCurrencies($object = false, $active = 1, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = new Shop(Context::getContext()->shop->getID(true));
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'currency` c
-				'.$context->shop->sqlAsso('currency', 'c', false).'
+				'.$shop->sqlAsso('currency', 'c', false).'
 				WHERE `deleted` = 0'
 					.($active == 1 ? ' AND c.`active` = 1' : '').'
 				ORDER BY `name` ASC';
