@@ -489,6 +489,7 @@ CREATE TABLE `PREFIX_customization` (
   `quantity` int(10) NOT NULL,
   `quantity_refunded` INT NOT NULL DEFAULT '0',
   `quantity_returned` INT NOT NULL DEFAULT '0',
+  `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id_customization`,`id_cart`,`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

@@ -172,6 +172,7 @@ class CartControllerCore extends FrontController
 								if ($context->cart->id)
 									$context->cookie->id_cart = (int)$context->cart->id;
 							}
+
 							if ($add AND !$producToAdd->hasAllRequiredCustomizableFields() AND !$customizationId)
 								$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
 							if (!sizeof($this->errors))
