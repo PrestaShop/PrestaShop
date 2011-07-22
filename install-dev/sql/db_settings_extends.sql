@@ -294,8 +294,8 @@ INSERT INTO `PREFIX_attribute_impact` (`id_attribute_impact`, `id_product`, `id_
 (9, 1, 7, 0, 0.00),(10, 1, 20, 0, 0.00),(11, 1, 6, 0, 0.00),(12, 1, 18, 0, 0.00);
 
 INSERT INTO `PREFIX_scene` (`id_scene`, `active`) VALUES (1, 1),(2, 1),(3, 1);
-
 INSERT INTO `PREFIX_scene_category` (`id_scene`, `id_category`) VALUES (1, 2),(2, 2),(3, 4);
+INSERT INTO `PREFIX_scene_shop` (`id_scene`, `id_shop`) VALUES (1, 1),(2, 1),(3, 1);
 
 INSERT INTO `PREFIX_scene_lang` (`id_scene`, `id_lang`, `name`) VALUES
 (1, 1, 'The iPods Nano'),(1, 2, 'Les iPods Nano'),(1, 3, 'El iPod Nano'),(1, 4, 'Die iPods Nano'),(1, 5, 'Gli iPod Nano'),

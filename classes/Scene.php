@@ -187,13 +187,16 @@ class SceneCore extends ObjectModel
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
-		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT s.*
-		FROM `'._DB_PREFIX_.'scene_category` sc
-		LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
-		LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
-		WHERE sc.id_category = '.(int)$id_category.'	AND sl.id_lang = '.(int)$id_lang.($onlyActive ? ' AND s.active = 1' : '').'
-		ORDER BY sl.name ASC');
+		$sql = 'SELECT s.*
+				FROM `'._DB_PREFIX_.'scene_category` sc
+				LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
+				'.$context->shop->sqlAsso('scene', 's').'
+				LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
+				WHERE sc.id_category = '.(int)$id_category.'
+					AND sl.id_lang = '.(int)$id_lang
+					.($onlyActive ? ' AND s.active = 1' : '').'
+				ORDER BY sl.name ASC';
+		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		
 		if (!$liteResult AND $scenes)
 			foreach($scenes AS &$scene)

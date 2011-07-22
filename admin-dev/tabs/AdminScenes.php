@@ -36,6 +36,8 @@ class AdminScenes extends AdminTab
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
+	 	
+	 	$this->_group = 'GROUP BY a.id_scene';
 		
 		$this->fieldImageSettings = array(
 			array('name' => 'image', 'dir' => 'scenes'),
@@ -43,9 +45,9 @@ class AdminScenes extends AdminTab
 		);
 				
 		$this->fieldsDisplay = array(
-		'id_scene' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Image Maps'), 'width' => 150),
-		'active' => array('title' => $this->l('Activated'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'id_scene' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Image Maps'), 'width' => 150, 'filter_key' => 'b!name'),
+			'active' => array('title' => $this->l('Activated'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 	
 		parent::__construct();
@@ -225,6 +227,13 @@ class AdminScenes extends AdminTab
 				echo '<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg" /><br />';
 			echo '</div>
 				 ';
+			
+			if (Tools::isMultiShopActivated())
+			{
+				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
+				$this->displayAssoShop();
+				echo '</div>';
+			}
 
 			echo '<label>'.$this->l('Category:').' </label>
 					<div class="margin-form">

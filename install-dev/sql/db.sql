@@ -1891,3 +1891,10 @@ CREATE TABLE `PREFIX_webservice_account_shop` (
 PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_scene_shop` (
+`id_scene` INT( 11 ) UNSIGNED NOT NULL ,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+PRIMARY KEY (`id_scene`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
