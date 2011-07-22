@@ -280,10 +280,10 @@ class StatsForecast extends Module
 					.$this->sqlShopRestriction(false, 'c');
 		$visitors = Db::getInstance()->getValue($sql);
 
-		$sql = 'SELECT COUNT(DISTINCT id_customer)
+		$sql = 'SELECT COUNT(DISTINCT g.id_customer)
 				FROM '._DB_PREFIX_.'connections c
 				INNER JOIN '._DB_PREFIX_.'guest g ON c.id_guest = g.id_guest
-				WHERE c.id_customer != 0
+				WHERE g.id_customer != 0
 					AND c.date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.$this->sqlShopRestriction(false, 'c');
 		$customers = Db::getInstance()->getValue($sql);
