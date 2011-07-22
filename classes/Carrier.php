@@ -73,6 +73,8 @@ class CarrierCore extends ObjectModel
 
 	/** @var boolean Need Range */
 	public		$need_range = 0;
+	
+	protected	$langMultiShop = true;
 
  	protected 	$fieldsRequired = array('name', 'active');
  	protected 	$fieldsSize = array('name' => 64);
@@ -342,16 +344,16 @@ class CarrierCore extends ObjectModel
 			if ($ids == '')
 				return (array());
 		}
-		$sql = '
-			SELECT c.*, cl.delay
-			FROM `'._DB_PREFIX_.'carrier` c
-			LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = '.(int)($id_lang).')
-			LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz  ON (cz.`id_carrier` = c.`id_carrier`)'.
-			($id_zone ? 'LEFT JOIN `'._DB_PREFIX_.'zone` z  ON (z.`id_zone` = '.(int)($id_zone).')' : '').'
-			WHERE c.`deleted` '.($delete ? '= 1' : ' = 0').
-			($active ? ' AND c.`active` = 1' : '').
-			($id_zone ? ' AND cz.`id_zone` = '.(int)($id_zone).'
-			AND z.`active` = 1 ' : ' ');
+
+		$sql = 'SELECT c.*, cl.delay
+				FROM `'._DB_PREFIX_.'carrier` c
+				LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz  ON (cz.`id_carrier` = c.`id_carrier`)'.
+				($id_zone ? 'LEFT JOIN `'._DB_PREFIX_.'zone` z  ON (z.`id_zone` = '.(int)$id_zone.')' : '').'
+				WHERE c.`deleted` = '.($delete ? '1' : '0').
+					($active ? ' AND c.`active` = 1' : '').
+					($id_zone ? ' AND cz.`id_zone` = '.(int)$id_zone.'
+					AND z.`active` = 1 ' : ' ');
 		switch ($modules_filters)
 		{
 			case 1 :

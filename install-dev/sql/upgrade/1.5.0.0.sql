@@ -119,9 +119,6 @@ CREATE TABLE `PREFIX_currency_shop` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_currency_shop` (id_shop, id_currency) (SELECT 1, id_currency FROM PREFIX_currency);
 
-ALTER TABLE `PREFIX_discount` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_discount`, ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`;
-ALTER TABLE `PREFIX_discount` ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
-
 ALTER TABLE `PREFIX_cart` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_cart` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`, ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
 
 ALTER TABLE `PREFIX_customer` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_customer` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`, ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
@@ -312,5 +309,15 @@ CREATE TABLE `PREFIX_scene_shop` (
 PRIMARY KEY (`id_scene`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_scene_shop` (id_shop, id_scene) (SELECT 1, id_scene FROM PREFIX_scene);
+
+CREATE TABLE `PREFIX_discount_shop` (
+`id_discount` INT( 11 ) UNSIGNED NOT NULL ,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+PRIMARY KEY (`id_discount`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_discount_shop` (id_shop, id_discount) (SELECT 1, id_discount FROM PREFIX_discount);
+
 
 /* PHP:create_multistore(); */

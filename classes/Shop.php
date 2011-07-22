@@ -63,6 +63,7 @@ class ShopCore extends ObjectModel
 		'contact' => 				array('type' => 'shop'),
 		'country' => 				array('type' => 'shop'),
 		'currency' => 				array('type' => 'shop'),
+		'discount' => 				array('type' => 'shop'),
 		'hook_module' =>			array('type' => 'fk_shop'),
 		'hook_module_exceptions' =>	array('type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'),
 		'image' => 					array('type' => 'shop'),

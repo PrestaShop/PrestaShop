@@ -144,6 +144,7 @@ class AdminShop extends AdminTab
 				'contact' => $this->l('Contact'),
 				'country' => $this->l('Countries'),
 				'currency' => $this->l('Currencies'),
+				'discount' => $this->l('Discounts'),
 				'image' => $this->l('Images'),
 				'lang' => $this->l('Langs'),
 				'manufacturer' => $this->l('Manufacturers'),

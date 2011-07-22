@@ -36,9 +36,9 @@ class AdminDiscounts extends AdminTab
 	 	$this->edit = true;
 	 	$this->delete = true;
 	 	$this->_select = 'dtl.`name` AS discount_type, s.name shop_name,
-		IF(a.id_discount_type = 1, CONCAT(a.value, " %"),
-		IF(a.id_discount_type = 2, CONCAT(a.value, " ", c.sign),
-		"--")) as strvalue';
+			IF(a.id_discount_type = 1, CONCAT(a.value, " %"),
+			IF(a.id_discount_type = 2, CONCAT(a.value, " ", c.sign),
+			"--")) as strvalue';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'currency` c ON (c.`id_currency` = a.`id_currency`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type` dt ON (dt.`id_discount_type` = a.`id_discount_type`)
 						LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.`id_shop` = a.`id_shop`)
@@ -50,19 +50,20 @@ class AdminDiscounts extends AdminTab
 			$typesArray[$type['id_discount_type']] = $type['name'];
 			
 		$this->fieldsDisplay = array(
-		'id_discount' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Code'), 'width' => 85, 'prefix' => '<span class="discount_name">', 'suffix' => '</span>', 'filter_key' => 'a!name'),
-		'shop_name' => array('title' => $this->l('Shop'), 'width' => 85, 'filter_key' => 's!name'),
-		'description' => array('title' => $this->l('Description'), 'width' => 100, 'filter_key' => 'b!description'),
-		'discount_type' => array('title' => $this->l('Type'), 'type' => 'select', 'select' => $typesArray, 'filter_key' => 'dt!id_discount_type'),
-		'strvalue' => array('title' => $this->l('Value'), 'width' => 50, 'align' => 'right', 'filter_key' => 'a!value'),
-		'quantity' => array('title' => $this->l('Qty'), 'width' => 40, 'align' => 'right'),
-		'date_to' => array('title' => $this->l('To'), 'width' => 60, 'type' => 'date', 'align' => 'right'),
-		'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false));
+			'id_discount' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Code'), 'width' => 85, 'prefix' => '<span class="discount_name">', 'suffix' => '</span>', 'filter_key' => 'a!name'),
+			'shop_name' => array('title' => $this->l('Shop'), 'width' => 85, 'filter_key' => 's!name'),
+			'description' => array('title' => $this->l('Description'), 'width' => 100, 'filter_key' => 'b!description'),
+			'discount_type' => array('title' => $this->l('Type'), 'type' => 'select', 'select' => $typesArray, 'filter_key' => 'dt!id_discount_type'),
+			'strvalue' => array('title' => $this->l('Value'), 'width' => 50, 'align' => 'right', 'filter_key' => 'a!value'),
+			'quantity' => array('title' => $this->l('Qty'), 'width' => 40, 'align' => 'right'),
+			'date_to' => array('title' => $this->l('To'), 'width' => 60, 'type' => 'date', 'align' => 'right'),
+			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+		);
 	
 		$this->optionTitle = $this->l('Discounts options');
 		$this->_fieldsOptions = array(
-		'PS_VOUCHERS' => array('title' => $this->l('Enable vouchers:'), 'desc' => $this->l('Allow the use of vouchers in shop'), 'cast' => 'intval', 'type' => 'bool'),
+			'PS_VOUCHERS' => array('title' => $this->l('Enable vouchers:'), 'desc' => $this->l('Allow the use of vouchers in shop'), 'cast' => 'intval', 'type' => 'bool'),
 		);
 		parent::__construct();
 	}
@@ -445,8 +446,14 @@ class AdminDiscounts extends AdminTab
 					<input type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Enable or disable voucher').'</p>
-				</div>
-				<div class="margin-form">
+				</div>';
+				if (Tools::isMultiShopActivated())
+				{
+					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
+					$this->displayAssoShop();
+					echo '</div>';
+				}
+		echo '	<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>

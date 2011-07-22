@@ -28,10 +28,6 @@
 class DiscountCore extends ObjectModel
 {
 	public		$id;
-
-	public		$id_group_shop;
-	
-	public		$id_shop;
 	
 	/** @var integer Customer id only if discount is reserved */
 	public		$id_customer;
@@ -132,8 +128,6 @@ class DiscountCore extends ObjectModel
 	{
 		parent::validateFields();
 
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['id_shop'] = (int)$this->id_shop;
 		$fields['id_customer'] = (int)($this->id_customer);
 		$fields['id_group'] = (int)($this->id_group);
 		$fields['id_currency'] = (int)($this->id_currency);
@@ -260,13 +254,12 @@ class DiscountCore extends ObjectModel
 
 	public function usedByCustomer($id_customer)
 	{
-		return Db::getInstance()->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'order_discount` od
-		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (od.`id_order` = o.`id_order`)
-		WHERE od.`id_discount` = '.(int)($this->id).'
-		AND o.`id_customer` = '.(int)($id_customer)
-		);
+		$sql = 'SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'order_discount` od
+				LEFT JOIN `'._DB_PREFIX_.'orders` o ON (od.`id_order` = o.`id_order`)
+				WHERE od.`id_discount` = '.(int)$this->id.'
+					AND o.`id_customer` = '.(int)$id_customer;
+		return Db::getInstance()->getValue($sql);
 	}
 
 	/**
@@ -278,23 +271,25 @@ class DiscountCore extends ObjectModel
 	  */
 	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, Context $context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
+		
 		$totalAmount = 0;
-
-		$cart = new Cart((int)($idCart));
+		$cart = new Cart($idCart);
 		if (!Validate::isLoadedObject($cart))
 			return 0;
 
-		if ((!$this->cumulable AND (int)($nb_discounts) > 1) OR !$this->active OR (!$this->quantity AND !$cart->OrderExists()))
+		if ((!$this->cumulable AND (int)$nb_discounts > 1) OR !$this->active OR (!$this->quantity AND !$cart->OrderExists()))
 			return 0;
 
-		if ($this->usedByCustomer((int)($cart->id_customer)) >= $this->quantity_per_user AND !$cart->OrderExists())
+		if ($this->usedByCustomer((int)$cart->id_customer) >= $this->quantity_per_user AND !$cart->OrderExists())
 			return 0;
 		
 		$date_start = strtotime($this->date_from);
 		$date_end = strtotime($this->date_to);
 		if ((time() < $date_start OR time() > $date_end) AND !$cart->OrderExists()) return 0;
 
-		if (!$this->availableWithShop(Context::getContext()->shop))
+		if (!$this->isAssociatedToShop($context->shop->shopID()))
 			return 0;
 		$products = $cart->getProducts();
 		$categories = Discount::getCategories((int)$this->id);
@@ -322,8 +317,6 @@ class DiscountCore extends ObjectModel
 			/* Absolute value */
 			case 2:
 				// An "absolute" voucher is available in one currency only
-				if (!$context)
-					$context = Context::getContext();
 				$currency = ((int)$cart->id_currency ? Currency::getCurrencyInstance($cart->id_currency) : $context->currency);
 				if ($this->id_currency != $currency->id)
 					return 0;
@@ -439,8 +432,6 @@ class DiscountCore extends ObjectModel
 		$voucher->minimal = (float)($voucher->value);
 		$voucher->active = 1;
 		$voucher->cart_display = 1;
-		$voucher->id_group_shop = (int)$order->id_group_shop;
-		$voucher->id_shop = (int)$order->id_shop;
 		
 		$now = time();
 		$voucher->date_from = date('Y-m-d H:i:s', $now);
