@@ -66,7 +66,7 @@ class AdminProducts extends AdminTab
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
 		$this->_select = 'cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, SUM(stock.quantity) AS quantity';
-		$this->_group = 'GROUP BY stock.id_product';
+		$this->_group = 'GROUP BY a.id_product';
 
 		parent::__construct();
 	}

@@ -187,7 +187,7 @@ class CurrencyCore extends ObjectModel
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'currency` c
-				'.$context->shop->sqlAsso('currency', 'c').'
+				'.$context->shop->sqlAsso('currency', 'c', false).'
 				WHERE `deleted` = 0'
 					.($active == 1 ? ' AND c.`active` = 1' : '').'
 				ORDER BY `name` ASC';

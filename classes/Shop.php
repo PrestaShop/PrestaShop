@@ -94,6 +94,12 @@ class ShopCore extends ObjectModel
 	const CONTEXT_SHOP = 1;
 	const CONTEXT_GROUP = 2;
 	const CONTEXT_ALL = 3;
+	
+	/**
+	 * Some data can be shared between shops, like customers or orders
+	 */
+	const SHARE_CUSTOMER = 'share_customer';
+	const SHARE_ORDER = 'share_order';
 
 	public function getFields()
 	{
@@ -332,10 +338,12 @@ class ShopCore extends ObjectModel
 		if (self::$shops && !$refresh)
 			return;
 	
-		$sql = 'SELECT gs.id_group_shop, gs.name AS group_name, gs.share_datas, gs.share_stock, s.id_shop, s.name AS shop_name, s.id_theme, s.id_category, s.active
+		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.uri
 				FROM '._DB_PREFIX_.'group_shop gs
 				LEFT JOIN '._DB_PREFIX_.'shop s
-					ON (s.id_group_shop = gs.id_group_shop)
+					ON s.id_group_shop = gs.id_group_shop
+				LEFT JOIN '._DB_PREFIX_.'shop_url su
+					ON s.id_shop = su.id_shop AND su.main = 1
 				WHERE s.deleted = 0
 					AND gs.deleted = 0
 				ORDER BY gs.name, s.name';
@@ -347,7 +355,8 @@ class ShopCore extends ObjectModel
 					self::$shops[$row['id_group_shop']] = array(
 						'id' =>				$row['id_group_shop'],
 						'name' => 			$row['group_name'],
-						'share_datas' =>	$row['share_datas'],
+						'share_customer' =>	$row['share_customer'],
+						'share_order' =>	$row['share_order'],
 						'share_stock' =>	$row['share_stock'],
 						'shops' => 			array(),
 					);
@@ -358,6 +367,9 @@ class ShopCore extends ObjectModel
 					'name' =>			$row['shop_name'],
 					'id_theme' =>		$row['id_theme'],
 					'id_category' =>	$row['id_category'],
+					'domain' =>			$row['domain'],
+					'domain_ssl' =>		$row['domain_ssl'],
+					'uri' =>			$row['uri'],
 					'active' =>			$row['active'],
 				);
 			}
@@ -385,6 +397,21 @@ class ShopCore extends ObjectModel
 						$results[] = $shopData;
 				}
 		return $results;
+	}
+	
+	/**
+	 * Return some informations cached for one shop
+	 *
+	 * @param int $shopID
+	 * @return array
+	 */
+	public static function getShop($shopID)
+	{
+		Shop::cacheShops();
+		foreach (self::$shops as $groupID => $groupData)
+			if (array_key_exists($shopID, $groupData['shops']))
+				return $groupData['shops'][$shopID];
+		return false;
 	}
 
 	/**
@@ -427,16 +454,20 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * If the shop group has the option "share_datas" activated, get all shops ID of this group, else get current shop ID
+	 * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID
 	 * 
 	 * @param int $shopID
+	 * @param int $type Shop::SHARE_CUSTOMER or Shop::SHARE_ORDER
 	 * @return array
 	 */
-	public static function getSharedShops($shopID)
+	public static function getSharedShops($shopID, $type)
 	{
+		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER)))
+			die('Wrong argument ($type) in Shop::getSharedShops() method');
+
 		Shop::cacheShops();
 		foreach (self::$shops as $groupData)
-			if (array_key_exists($shopID, $groupData['shops']) && $groupData['share_datas'])
+			if (array_key_exists($shopID, $groupData['shops']) && $groupData[$type])
 				return array_keys($groupData['shops']);
 		return array($shopID);
 	}
@@ -444,7 +475,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
 	 * 
-	 * @param bool $share If true and if $shopID is set, list shops with share data too
+	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
 	 * @return array
 	 */
 	public function getListOfID($share = false)
@@ -453,7 +484,7 @@ class ShopCore extends ObjectModel
 		$shopGroupID = $this->getGroupID();
 
 		if ($shopID)
-			$list = (!$share) ? array($shopID) : Shop::getSharedShops($shopID);
+			$list = ($share) ? Shop::getSharedShops($shopID, $share) : array($shopID);
 		else if ($shopGroupID)
 			$list = Shop::getShops(true, $shopGroupID, true);
 		else
@@ -530,17 +561,7 @@ class ShopCore extends ObjectModel
 	{
 		return Shop::getContext('group');
 	}
-	
-	/**
-	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
-	 * 
-	 * @return array
-	 */
-	public function getListFromContext()
-	{
-		return Shop::getListOfID(Context::getContext());
-	}
-	
+
 	/**
 	 * Check in which type of shop context we are
 	 * 
@@ -555,17 +576,14 @@ class ShopCore extends ObjectModel
 			return Shop::CONTEXT_GROUP;
 		return Shop::CONTEXT_ALL;
 	}
-	
+
 	/**
-	 * Check if we are in "all" context
+	 * Add an sql restriction for shops fields
 	 * 
-	 * @return bool
+	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+	 * @param string $alias
+	 * @param string $type shop|group_shop
 	 */
-	public function inGlobalContext()
-	{
-		return $this->getContextType() == Shop::CONTEXT_ALL;
-	}
-	
 	public function sqlRestriction($share = false, $alias = null, $type = 'shop')
 	{
 		if ($type != 'shop' && $type != 'group_shop')
@@ -588,7 +606,7 @@ class ShopCore extends ObjectModel
 		else
 		{
 			if ($shopID || $shopGroupID)
-				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getListOfID($shopID, $shopGroupID, $share)).')';
+				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).')';
 		}
 		
 		return $restriction;
@@ -620,7 +638,7 @@ class ShopCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public function sqlAsso($table, $alias, $innerJoin = false)
+	public function sqlAsso($table, $alias, $innerJoin = true)
 	{
 		$tableAlias = ' asso_shop_'.$table;
 		if (strpos($table, '.') !== false)
@@ -632,7 +650,7 @@ class ShopCore extends ObjectModel
 
 		$sql = (($innerJoin) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$tableAlias.'
 					ON '.$tableAlias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
-					AND '.$tableAlias.'.id_shop IN('.implode(', ', Shop::getListOfID($this->getID(), $this->getGroupID())).') ';
+					AND '.$tableAlias.'.id_shop IN('.implode(', ', $this->getListOfID()).') ';
 		return $sql;
 	}
 

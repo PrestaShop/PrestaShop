@@ -1667,12 +1667,12 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
 
 				Language::loadLanguages();
-				$default_meta = Meta::getMetasByIdLang((int)Configuration::get('PS_LANG_DEFAULT'), (int)$uri['id_shop']);
+				$default_meta = Meta::getMetasByIdLang((int)Configuration::get('PS_LANG_DEFAULT'), new Shop($uri['id_shop']));
 
 				if ($multilang)
 					foreach (Language::getLanguages() as $language)
 					{
-						foreach (Meta::getMetasByIdLang((int)$language['id_lang'], (int)$uri['id_shop']) as $key => $meta)
+						foreach (Meta::getMetasByIdLang((int)$language['id_lang'], new Shop($uri['id_shop'])) as $key => $meta)
 							if (!empty($meta['url_rewrite']) AND Validate::isLinkRewrite($meta['url_rewrite']))
 								$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$language['iso_code'].'/'.$meta['url_rewrite'].'$'] = 'index.php?controller='.$meta['page'].'&isolang='.$language['iso_code'].'&id_shop='.$uri['id_shop'].' [QSA,L]';
 							elseif (array_key_exists($key, $default_meta) && $default_meta[$key]['url_rewrite'] != '')

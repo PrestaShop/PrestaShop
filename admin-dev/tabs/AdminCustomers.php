@@ -605,14 +605,17 @@ class AdminCustomers extends AdminTab
 			echo $this->l('No cart available').'.';
 		echo '</div>';
 		
-		$interested = Db::getInstance()->ExecuteS('SELECT DISTINCT id_product, c.id_cart, c.id_shop 
-																FROM '._DB_PREFIX_.'cart_product cp 
-																JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
-																WHERE c.id_customer = '.(int)$customer->id.' 
-																AND cp.id_product NOT IN (SELECT product_id 
-																									FROM '._DB_PREFIX_.'orders o 
-																									JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
-																									WHERE o.valid = 1 AND o.id_customer = '.(int)$customer->id.')');
+		$sql = 'SELECT DISTINCT id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
+				FROM '._DB_PREFIX_.'cart_product cp 
+				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
+				WHERE c.id_customer = '.(int)$customer->id.' 
+					AND cp.id_product NOT IN (
+						SELECT product_id 
+						FROM '._DB_PREFIX_.'orders o 
+						JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
+						WHERE o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
+					)';
+		$interested = Db::getInstance()->ExecuteS($sql);
 		if (count($interested))
 		{
 			echo '<div style="float:left;margin-left:20px">
@@ -621,11 +624,12 @@ class AdminCustomers extends AdminTab
 			foreach ($interested as $p)
 			{
 				$product = new Product($p['id_product'], false, $context->language->id, $p['id_shop']);
+				$url = $context->link->getProductLink($product->id, $product->link_rewrite, Category::getLinkRewrite($product->id_category_default, $context->language->id), null, null, $p['cp_id_shop']);
 				echo '
-				<tr '.($irow++ % 2 ? 'class="alt_row"' : '').' style="cursor: pointer" onclick="document.location = \''.$context->link->getProductLink($product->id, $product->link_rewrite, Category::getLinkRewrite($product->id_category_default, $context->language->id)).'\'">
+				<tr '.($irow++ % 2 ? 'class="alt_row"' : '').' style="cursor: pointer" onclick="document.location = \''.$url.'\'">
 					<td>'.(int)$product->id.'</td>
 					<td>'.Tools::htmlentitiesUTF8($product->name).'</td>
-					<td align="center"><a href="'.$context->link->getProductLink($product->id, $product->link_rewrite, Category::getLinkRewrite($product->id_category_default, $context->language->id)).'"><img src="../img/admin/details.gif" /></a></td>
+					<td align="center"><a href="'.$url.'"><img src="../img/admin/details.gif" /></a></td>
 				</tr>';
 			}
 			echo '</table></div>';

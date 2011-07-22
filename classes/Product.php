@@ -795,7 +795,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.*, pl.* , t.`rate` AS tax_rate, m.`name` AS manufacturer_name, s.`name` AS supplier_name
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 		 		  AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
@@ -822,7 +822,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.`id_product`, pl.`name`
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p').'
+				'.$context->shop->sqlAsso('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
 				WHERE pl.`id_lang` = '.(int)($id_lang).'
 				ORDER BY pl.`name`';
@@ -1368,7 +1368,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->sqlAsso('product', 'p', true).'
+					'.$context->shop->sqlAsso('product', 'p').'
 					WHERE `active` = 1
 						AND DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
 						AND p.`id_product` IN (
@@ -1384,7 +1384,7 @@ class ProductCore extends ObjectModel
 					i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name, DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
 					(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice, pa.id_product_attribute
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
@@ -1451,7 +1451,7 @@ class ProductCore extends ObjectModel
 		// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
 		$sql = 'SELECT p.id_product
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				WHERE p.`active` = 1
 					AND p.`id_product` IN ('.implode(', ', $ids_product).')
 					AND p.`id_product` IN (
@@ -1517,7 +1517,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->sqlAsso('product', 'p', true).'
+					'.$context->shop->sqlAsso('product', 'p').'
 					WHERE p.`active` = 1
 						AND p.`show_price` = 1
 						'.((!$beginning AND !$ending) ? ' AND p.`id_product` IN('.((is_array($ids_product) AND sizeof($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
@@ -1535,7 +1535,7 @@ class ProductCore extends ObjectModel
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				'.Product::sqlStock('p', 0, false, $context).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
@@ -1622,7 +1622,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT i.`cover`, i.`id_image`, il.`legend`
 				FROM `'._DB_PREFIX_.'image` i
-				'.$context->shop->sqlAsso('image', 'i', true).'
+				'.$context->shop->sqlAsso('image', 'i').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE i.`id_product` = '.(int)$this->id.'
 				ORDER BY `position`';
@@ -1641,7 +1641,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT i.`id_image`
 				FROM `'._DB_PREFIX_.'image` i
-				'.$context->shop->sqlAsso('image', 'i', true).'
+				'.$context->shop->sqlAsso('image', 'i').'
 				WHERE i.`id_product` = '.(int)($id_product).'
 				AND i.`cover` = 1';
 		return Db::getInstance()->getRow($sql);
@@ -2342,7 +2342,7 @@ class ProductCore extends ObjectModel
 		$sql = 'SELECT p.`id_product`, p.`reference`, pl.`name`
 				FROM `'._DB_PREFIX_.'accessory`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= `id_product_2`)
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				WHERE `id_product_1` = '.(int)$id_product;
 		return Db::getInstance()->ExecuteS($sql);
@@ -2364,7 +2364,7 @@ class ProductCore extends ObjectModel
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'accessory`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = `id_product_2`
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
@@ -2511,7 +2511,7 @@ class ProductCore extends ObjectModel
 					il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 		   			AND tr.`id_country` = '.(int)Context::getContext()->country->id.'

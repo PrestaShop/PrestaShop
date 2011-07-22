@@ -518,8 +518,8 @@ class DiscountCore extends ObjectModel
 		// @todo share datas on discount ? Utility of this function ?
 		$sql = 'SELECT id_discount
 				FROM '._DB_PREFIX_.'discount
-				WHERE id_discount='.(int)$this->id
-					.$shop->sqlRestriction(true);
+				WHERE id_discount = '.(int)$this->id
+					.$shop->sqlRestriction(false);
 		return Db::getInstance()->getValue($sql);
 	}
 }

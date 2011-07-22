@@ -318,7 +318,7 @@ class CartCore extends ObjectModel
 	public function getLastProduct()
 	{
 		$sql = '
-			SELECT `id_product`, `id_product_attribute`
+			SELECT `id_product`, `id_product_attribute`, id_shop
 			FROM `'._DB_PREFIX_.'cart_product`
 			WHERE `id_cart` = '.(int)($this->id).'
 			ORDER BY `date_add` DESC';
@@ -353,46 +353,45 @@ class CartCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 		
-		$sql = '
-		SELECT cp.`id_product_attribute`, cp.`id_product`, cu.`id_customization`, cp.`quantity` AS cart_quantity, cu.`quantity` AS customization_quantity, pl.`name`,
-		pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`,
-		p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`, p.`active`, p.`date_add`, p.`date_upd`, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity,
-		t.`id_tax`, tl.`name` AS tax, t.`rate`, pa.`price` AS price_attribute, stock.quantity,
-        pa.`ecotax` AS ecotax_attr, i.`id_image`, il.`legend`, pl.`link_rewrite`, cl.`link_rewrite` AS category, CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id,
-        IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
-        IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
-        (p.`weight`+ pa.`weight`) weight_attribute,
-        IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
-		pai.`id_image` as pai_id_image
-		FROM `'._DB_PREFIX_.'cart_product` cp
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = cp.`id_product_attribute`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-			AND tr.`id_country` = '.(int)$context->country->id.'
-			AND tr.`id_state` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'customization` cu ON (p.`id_product` = cu.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` pai ON (pai.`id_product_attribute` = pa.`id_product_attribute`)
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (IF(pai.`id_image`,
-			i.`id_image` =
-			(SELECT i2.`id_image`
-			FROM `'._DB_PREFIX_.'image` i2
-			INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai2 ON (pai2.`id_image` = i2.`id_image`)
-			WHERE i2.`id_product` = p.`id_product` AND pai2.`id_product_attribute` = pa.`id_product_attribute`
-			ORDER BY i2.`position`
-			LIMIT 1),
-			i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.')
-		'.Product::sqlStock('cp', 'cp').'
-		WHERE cp.`id_cart` = '.(int)$this->id.'
-		'.($id_product ? ' AND cp.`id_product` = '.(int)$id_product : '').'
-		AND p.`id_product` IS NOT NULL
-		GROUP BY unique_id
-		ORDER BY cp.date_add ASC';
+		$sql = 'SELECT cp.`id_product_attribute`, cp.`id_product`, cu.`id_customization`, cp.`quantity` AS cart_quantity, cp.id_shop, cu.`quantity` AS customization_quantity, pl.`name`,
+					pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`,
+					p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`, p.`active`, p.`date_add`, p.`date_upd`, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity,
+					t.`id_tax`, tl.`name` AS tax, t.`rate`, pa.`price` AS price_attribute, stock.quantity,
+      				pa.`ecotax` AS ecotax_attr, i.`id_image`, il.`legend`, pl.`link_rewrite`, cl.`link_rewrite` AS category, CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id,
+       				IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
+        			IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
+        			(p.`weight`+ pa.`weight`) weight_attribute,
+        			IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
+					pai.`id_image` as pai_id_image
+				FROM `'._DB_PREFIX_.'cart_product` cp
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = cp.`id_product_attribute`)
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+					AND tr.`id_country` = '.(int)$context->country->id.'
+					AND tr.`id_state` = 0)
+			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'customization` cu ON (p.`id_product` = cu.`id_product`)
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` pai ON (pai.`id_product_attribute` = pa.`id_product_attribute`)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (IF(pai.`id_image`,
+					i.`id_image` =
+					(SELECT i2.`id_image`
+					FROM `'._DB_PREFIX_.'image` i2
+					INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai2 ON (pai2.`id_image` = i2.`id_image`)
+					WHERE i2.`id_product` = p.`id_product` AND pai2.`id_product_attribute` = pa.`id_product_attribute`
+					ORDER BY i2.`position`
+					LIMIT 1),
+					i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				)
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.')
+				'.Product::sqlStock('cp', 'cp').'
+				WHERE cp.`id_cart` = '.(int)$this->id.'
+				'.($id_product ? ' AND cp.`id_product` = '.(int)$id_product : '').'
+				AND p.`id_product` IS NOT NULL
+				GROUP BY unique_id
+				ORDER BY cp.date_add ASC';
 		$result = Db::getInstance()->ExecuteS($sql);
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
 
@@ -632,9 +631,15 @@ class CartCore extends ObjectModel
 				if ((int)$quantity < $minimalQuantity)
 					return -1;
 
-				if (!Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_product', array('id_product' => (int)$id_product,
-				'id_product_attribute' => (int)$id_product_attribute, 'id_cart' => (int)$this->id,
-				'quantity' => (int)$quantity, 'date_add' => date('Y-m-d H:i:s')), 'INSERT'))
+				$resultAdd = Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_product', array(
+					'id_product' => 			(int)$id_product,
+					'id_product_attribute' => 	(int)$id_product_attribute,
+					'id_cart' => 				(int)$this->id,
+					'id_shop' => 				$context->shop->getID(true),
+					'quantity' => 				(int)$quantity,
+					'date_add' => 				date('Y-m-d H:i:s')
+				), 'INSERT');
+				if (!$resultAdd)
 					return false;
 			}
 		}
@@ -1475,7 +1480,7 @@ class CartCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders o ON (c.`id_cart` = o.`id_cart`)
 				WHERE c.`id_customer` = '.(int)($id_customer).'
 					AND o.`id_cart` IS NULL
-					'.Context::getContext()->shop->sqlRestriction(true, 'c').'
+					'.Context::getContext()->shop->sqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
 	 	if (!$id_cart = Db::getInstance()->getValue($sql))
 	 		return false;

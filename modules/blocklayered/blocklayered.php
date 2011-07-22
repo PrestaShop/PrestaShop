@@ -387,7 +387,7 @@ class BlockLayered extends Module
 					p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer, stock.quantity,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM '._DB_PREFIX_.'product p
-				'.$context->shop->sqlAsso('product', 'p', true).'
+				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.$context->shop->sqlLang('pl').')
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)

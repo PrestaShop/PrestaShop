@@ -95,16 +95,16 @@ class MetaCore extends ObjectModel
 		ORDER BY page ASC');
 	}
 
-	static public function getMetasByIdLang($id_lang, Context $context = null)
+	static public function getMetasByIdLang($id_lang, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'meta` m
 				LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
 				WHERE ml.`id_lang` = '.(int)$id_lang
-					.$context->shop->sqlLang('ml').
+					.$shop->sqlLang('ml').
 				'ORDER BY page ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		
