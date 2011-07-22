@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+// Include some alias functions
+include_once(dirname(__FILE__).'/alias.php');
+
 function __autoload($className)
 {
 		if (function_exists('smartyAutoload') AND smartyAutoload($className)) 
