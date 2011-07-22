@@ -3092,13 +3092,16 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$fields = array_merge($context->cookie->getFamily('pictures_'.(int)($this->id)), $context->cookie->getFamily('textFields_'.(int)($this->id)));
+		$fields = $context->cart->getProductCustomization($this->id, null, true);
 		if (($requiredFields = $this->getRequiredCustomizableFields()) === false)
 			return false;
-		$prefix = array(_CUSTOMIZE_FILE_ => 'pictures_'.(int)($this->id).'_', _CUSTOMIZE_TEXTFIELD_ => 'textFields_'.(int)($this->id).'_');
-		foreach ($requiredFields AS $field)
-			if (!isset($fields[$prefix[$field['type']].$field['id_customization_field']]) OR empty($fields[$prefix[$field['type']].$field['id_customization_field']]))
-				return false;
+
+		$fields_present = array();
+		foreach ($fields as $field)
+			$fields_present[] = array('id_customization_field' => $field['index'], 'type' => $field['type']);
+		foreach ($requiredFields AS $required_field)
+			if (!in_array($required_field, $fields_present))
+				return false;	
 		return true;
 	}
 	

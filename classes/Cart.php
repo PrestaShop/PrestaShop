@@ -545,7 +545,6 @@ class CartCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;
@@ -1590,6 +1589,8 @@ class CartCore extends ObjectModel
 	 * Return custom pictures in this cart for a specified product
 	 *
 	 * @param int $id_product
+	 * @param int $type only return customization of this type
+	 * @param bool $not_in_cart only return customizations that are not in cart already
 	 * @return array result rows
 	 */
 	public function getProductCustomization($id_product, $type = null, $not_in_cart = false)
@@ -1600,8 +1601,8 @@ class CartCore extends ObjectModel
 			ON cu.`id_customization` = cd.`id_customization`
 			WHERE cu.id_cart = '.(int)$this->id.'
 			AND cu.id_product = '.(int)$id_product.
-			($type == 0 ? ' AND type = 0' : '').
-			($type == 1 ? ' AND type = 1' : '').
+			($type === _CUSTOMIZE_FILE_ ? ' AND type = '.(int)_CUSTOMIZE_FILE_ : '').
+			($type === _CUSTOMIZE_TEXTFIELD_ ? ' AND type = '.(int)_CUSTOMIZE_TEXTFIELD_ : '').
 			($not_in_cart ? ' AND in_cart = 0' : '')
 		);
 		return $result;

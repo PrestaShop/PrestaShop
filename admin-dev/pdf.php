@@ -30,9 +30,15 @@ define('PS_ADMIN_DIR', getcwd());
 include(PS_ADMIN_DIR.'/../config/config.inc.php');
 
 /* Header can't be included, so cookie must be created here */
+$context = Context::getContext();
+
 $cookie = new Cookie('psAdmin');
 if (!$cookie->id_employee)
 	Tools::redirectAdmin('login.php');
+
+$context->employee = new Employee($cookie->id_employee);
+$context->language = new Language($context->employee->id_lang);
+$context->country = $defaultCountry;
 	
 $functionArray = array(
 	'pdf' => 'generateInvoicePDF',

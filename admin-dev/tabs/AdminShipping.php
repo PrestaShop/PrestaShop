@@ -32,6 +32,7 @@ class AdminShipping extends AdminTab
 
 	public function __construct()
 	{
+		$context = Context::getContext();
 	 	$this->table = 'delivery';
  		$this->_fieldsHandling = array(
 		'PS_SHIPPING_HANDLING' => array('title' => $this->l('Handling charges'), 'suffix' => $context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
@@ -189,6 +190,7 @@ class AdminShipping extends AdminTab
 
 	public function displayFormFees()
 	{
+		$context = Context::getContext();
 		$carrierArray = array();
 		$id_carrier = Tools::getValue('id_carrier');
 		$carriers = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), true , false,false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);

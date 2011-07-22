@@ -258,10 +258,13 @@ class AdminCarts extends AdminTab
 
 		if (is_array($customizedDatas) AND isset($customizedDatas[(int)($product['id_product'])][(int)($product['id_product_attribute'])]))
 		{
-			$image = new Image($image['id_image']);
+			if (isset($image['id_image']))
+				$image = new Image($image['id_image']);
+			else
+				$image = new Image();
 			echo '
 			<tr>
-				<td align="center">'.(isset($image['id_image']) ? cacheImage(_PS_IMG_DIR_.'p/'.$image->getExistingImgPath().'.jpg',
+				<td align="center">'.($image->id ? cacheImage(_PS_IMG_DIR_.'p/'.$image->getExistingImgPath().'.jpg',
 				'product_mini_'.(int)($product['id_product']).(isset($product['id_product_attribute']) ? '_'.(int)($product['id_product_attribute']) : '').'.jpg', 45, 'jpg') : '--').'</td>
 				<td><a href="index.php?tab=AdminCatalog&id_product='.$product['id_product'].'&updateproduct&token='.$tokenCatalog.'">
 					<span class="productName">'.$product['name'].'</span><br />
