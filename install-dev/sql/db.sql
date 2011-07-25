@@ -528,7 +528,7 @@ CREATE TABLE `PREFIX_date_range` (
 CREATE TABLE `PREFIX_delivery` (
   `id_delivery` int(10) unsigned NOT NULL auto_increment,
   `id_shop` INT UNSIGNED NULL DEFAULT NULL,
-  `id_group_shop` INT UNSIGNED NULL DEFAULT NULL;
+  `id_group_shop` INT UNSIGNED NULL DEFAULT NULL,
   `id_carrier` int(10) unsigned NOT NULL,
   `id_range_price` int(10) unsigned default NULL,
   `id_range_weight` int(10) unsigned default NULL,
