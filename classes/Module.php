@@ -758,7 +758,7 @@ abstract class ModuleCore
 				continue;
 
 			$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-			if (in_array(Dispatcher::$controller, $exceptions))
+			if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
 				continue;
 
 			if (is_callable(array($moduleInstance, 'hook'.$hook_name)))

@@ -231,7 +231,7 @@ class FrontControllerCore
 
 		/* get page name to display it in body id */
 		$pathinfo = pathinfo(__FILE__);
-		$page_name = Dispatcher::$controller;
+		$page_name = Dispatcher::getInstance()->getController();
 		$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
 		$smarty->assign(Tools::getMetaTags($language->id, $page_name));
 		$smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
