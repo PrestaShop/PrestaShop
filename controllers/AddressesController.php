@@ -47,18 +47,17 @@ class AddressesControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		$context = Context::getContext();
 		$multipleAddressesFormated = array();
 		$ordered_fields = array();
-		$customer = $context->customer;
+		$customer = $this->context->customer;
 
 		if (!Validate::isLoadedObject($customer))
 			die(Tools::displayError('Customer not found'));
 			
 		// Retro Compatibility Theme < 1.4.1
-		self::$smarty->assign('addresses', $customer->getAddresses($context->language->id));
+		$this->context->smarty->assign('addresses', $customer->getAddresses($this->context->language->id));
 		
-		$customerAddressesDetailed = $customer->getAddresses($context->language->id);
+		$customerAddressesDetailed = $customer->getAddresses($this->context->language->id);
 		
 		$total = 0;
 		foreach($customerAddressesDetailed as $addressDetailed)
@@ -81,7 +80,7 @@ class AddressesControllerCore extends FrontController
     	if (($key = array_search('Country:name', $ordered_fields)))
        		$ordered_fields[$key] = 'country';
 
-		self::$smarty->assign('addresses_style', array(
+		$this->context->smarty->assign('addresses_style', array(
 								'company' => 'address_company'
 								,'vat_number' => 'address_company'
 								,'firstname' => 'address_name'
@@ -95,7 +94,7 @@ class AddressesControllerCore extends FrontController
 								,'alias' => 'address_title'
 							));
 							
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'multipleAddresses' => $multipleAddressesFormated,
 			'ordered_fields' => $ordered_fields));
 	}
@@ -103,7 +102,7 @@ class AddressesControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'addresses.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'addresses.tpl');
 	}
 }
 

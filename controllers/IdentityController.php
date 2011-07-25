@@ -41,7 +41,7 @@ class IdentityControllerCore extends FrontController
 	{
 		parent::preProcess();
 		
-		$customer = new Customer((int)(self::$cookie->id_customer));
+		$customer = $this->context->customer;
 
 		if (sizeof($_POST))
 		{
@@ -65,7 +65,7 @@ class IdentityControllerCore extends FrontController
 				$customer->birthday = (empty($_POST['years']) ? '' : (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']));
 
 				$_POST['old_passwd'] = trim($_POST['old_passwd']);
-				if (empty($_POST['old_passwd']) OR (Tools::encrypt($_POST['old_passwd']) != self::$cookie->passwd))
+				if (empty($_POST['old_passwd']) OR (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
 					$this->errors[] = Tools::displayError('Your password is incorrect.');
 				elseif ($_POST['passwd'] != $_POST['confirmation'])
 					$this->errors[] = Tools::displayError('Password and confirmation do not match');
@@ -79,12 +79,12 @@ class IdentityControllerCore extends FrontController
 					$customer->id_default_group = (int)($prev_id_default_group);
 					$customer->firstname = Tools::ucfirst(Tools::strtolower($customer->firstname));
 					if (Tools::getValue('passwd'))
-						self::$cookie->passwd = $customer->passwd;
+						$this->context->cookie->passwd = $customer->passwd;
 					if ($customer->update())
 					{
-						self::$cookie->customer_lastname = $customer->lastname;
-						self::$cookie->customer_firstname = $customer->firstname;
-						self::$smarty->assign('confirmation', 1);
+						$this->context->cookie->customer_lastname = $customer->lastname;
+						$this->context->cookie->customer_firstname = $customer->firstname;
+						$this->context->smarty->assign('confirmation', 1);
 					}
 					else
 						$this->errors[] = Tools::displayError('Cannot update information');
@@ -100,7 +100,7 @@ class IdentityControllerCore extends FrontController
 			$birthday = array('-', '-', '-');
 
 		/* Generate years, months and days */
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'years' => Tools::dateYears(),
 			'sl_year' => $birthday[0],
 			'months' => Tools::dateMonths(),
@@ -110,7 +110,7 @@ class IdentityControllerCore extends FrontController
 			'errors' => $this->errors
 		));
 		
-		self::$smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
 	
 	public function setMedia()
@@ -122,7 +122,7 @@ class IdentityControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'identity.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'identity.tpl');
 	}
 }
 

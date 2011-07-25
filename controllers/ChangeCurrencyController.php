@@ -34,7 +34,7 @@ class ChangeCurrencyControllerCore extends FrontController
 		$currency = new Currency((int)Tools::getValue('id_currency'));
 		if (Validate::isLoadedObject($currency) AND !$currency->deleted)
 		{
-			self::$cookie->id_currency = (int)($currency->id);
+			$this->cookie->id_currency = (int)($currency->id);
 			die('1');
 		}
 		die('0');

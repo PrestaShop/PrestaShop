@@ -58,7 +58,7 @@ class CompareControllerCore extends FrontController
 
 				foreach ($ids AS $k => &$id)
 				{
-					$curProduct = new Product((int)$id, true, (int)self::$cookie->id_lang);
+					$curProduct = new Product((int)$id, true, $this->context->language->id);
 					if (!$curProduct->active OR !$curProduct->isAssociatedToShop())
 					{
 						unset($ids[$k]);
@@ -80,12 +80,12 @@ class CompareControllerCore extends FrontController
 						continue;
 					}
 
-					foreach ($curProduct->getFrontFeatures(self::$cookie->id_lang) AS $feature)
+					foreach ($curProduct->getFrontFeatures($this->context->language->id) AS $feature)
 						$listFeatures[$curProduct->id][$feature['id_feature']] = $feature['value'];
 
 					$cover = Product::getCover((int)$id);
 
-					$curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), self::$cookie->id_lang));
+					$curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), $this->context->language->id));
 					$curProduct->allow_oosp = Product::isAvailableWhenOutOfStock($curProduct->out_of_stock);
 					$listProducts[] = $curProduct;
 				}
@@ -95,25 +95,25 @@ class CompareControllerCore extends FrontController
 					$width = 80 / sizeof($listProducts);
 
 					$hasProduct = true;
-					$ordered_features = Feature::getFeaturesForComparison($ids, self::$cookie->id_lang);
-					self::$smarty->assign(array(
+					$ordered_features = Feature::getFeaturesForComparison($ids, $this->context->language->id);
+					$this->context->smarty->assign(array(
 						'ordered_features' => $ordered_features,
 						'product_features' => $listFeatures,
 						'products' => $listProducts,
 						'width' => $width,
 						'homeSize' => Image::getSize('home')
 					));
-					self::$smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Module::hookExec('extraProductComparison', array('list_ids_product' => $ids)));
+					$this->context->smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Module::hookExec('extraProductComparison', array('list_ids_product' => $ids)));
 				}
 			}
 		}
-		self::$smarty->assign('hasProduct', $hasProduct);
+		$this->context->smarty->assign('hasProduct', $hasProduct);
 	}
 
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'products-comparison.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
 }
 

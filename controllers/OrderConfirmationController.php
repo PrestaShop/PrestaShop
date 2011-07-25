@@ -58,7 +58,7 @@ class OrderConfirmationControllerCore extends FrontController
 			Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
 
 		$order = new Order((int)($this->id_order));
-		if (!Validate::isLoadedObject($order) OR $order->id_customer != self::$cookie->id_customer OR $this->secure_key != $order->secure_key)
+		if (!Validate::isLoadedObject($order) OR $order->id_customer != $this->context->customer->id OR $this->secure_key != $order->secure_key)
 			Tools::redirect($redirectLink);
 		$module = Module::getInstanceById((int)($this->id_module));
 		if ($order->payment != $module->displayName)
@@ -68,27 +68,27 @@ class OrderConfirmationControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		self::$smarty->assign(array(
-			'is_guest' => self::$cookie->is_guest,
+		$this->context->smarty->assign(array(
+			'is_guest' => $this->context->customer->is_guest,
 			'HOOK_ORDER_CONFIRMATION' => Hook::orderConfirmation((int)($this->id_order)),
 			'HOOK_PAYMENT_RETURN' => Hook::paymentReturn((int)($this->id_order), (int)($this->id_module))
 		));
 		
-		if (self::$cookie->is_guest)
+		if ($this->context->customer->is_guest)
 		{
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'id_order' => $this->id_order,
 				'id_order_formatted' => sprintf('#%06d', $this->id_order)
 			));
 			/* If guest we clear the cookie for security reason */
-			self::$cookie->logout();
+			$this->context->cookie->logout();
 		}
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-confirmation.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'order-confirmation.tpl');
 	}
 }
 

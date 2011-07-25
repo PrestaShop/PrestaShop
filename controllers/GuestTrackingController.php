@@ -31,7 +31,7 @@ class GuestTrackingControllerCore extends FrontController
 	{
 		parent::preProcess();
 		
-		if (self::$cookie->isLogged())
+		if ($this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=history');
 	}
 	
@@ -60,13 +60,13 @@ class GuestTrackingControllerCore extends FrontController
 				$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
 				
 			    if ($order->total_discounts > 0)
-			    	self::$smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
+			    	$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
 			    $products = $order->getProducts();
 			    $customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
 			    Product::addCustomizationPrice($products, $customizedDatas);
 	
 			    $this->processAddressFormat($addressDelivery, $addressInvoice);	
-			    self::$smarty->assign(array(
+			    $this->context->smarty->assign(array(
 			    	'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			    	'order' => $order,
 			    	'return_allowed' => false,
@@ -74,7 +74,7 @@ class GuestTrackingControllerCore extends FrontController
 			    	'order_state' => (int)($id_order_state),
 			    	'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 			    	'invoice' => (OrderState::invoiceAvailable((int)($id_order_state)) AND $order->invoice_number),
-			    	'order_history' => $order->getHistory((int)(self::$cookie->id_lang), false, true),
+			    	'order_history' => $order->getHistory($this->context->language->id, false, true),
 			    	'products' => $products,
 			    	'discounts' => $order->getDiscounts(),
 			    	'carrier' => $carrier,
@@ -91,8 +91,8 @@ class GuestTrackingControllerCore extends FrontController
 			    	'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
 			    	'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues));
 			    if ($carrier->url AND $order->shipping_number)
-			    	self::$smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-			    self::$smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
+			    	$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
+			    $this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
 			    Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
 				
 				if (Tools::isSubmit('submitTransformGuestToCustomer'))
@@ -100,12 +100,12 @@ class GuestTrackingControllerCore extends FrontController
 					$customer = new Customer((int)$order->id_customer);
 					if (!Validate::isLoadedObject($customer))
 						$this->errors[] = Tools::displayError('Invalid customer');
-					if (!$customer->transformToCustomer(self::$cookie->id_lang, Tools::getValue('password')))
+					if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
 						$this->errors[] = Tools::displayError('An error occurred while transforming guest to customer.');
 					if (!Tools::getValue('password'))
 						$this->errors[] = Tools::displayError('Invalid password');
 					else
-						self::$smarty->assign('transformSuccess', true);
+						$this->context->smarty->assign('transformSuccess', true);
 				}
 			}
 			if (sizeof($this->errors))
@@ -113,7 +113,7 @@ class GuestTrackingControllerCore extends FrontController
 				sleep(1);
 		}
 		
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'action' => 'guest-tracking.php',
 			'errors' => $this->errors
 		));
@@ -131,7 +131,7 @@ class GuestTrackingControllerCore extends FrontController
 	{
 		parent::displayContent();
 		
-		self::$smarty->display(_PS_THEME_DIR_.'guest-tracking.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'guest-tracking.tpl');
 	}
 
 	private function processAddressFormat(Address $delivery, Address $invoice)
@@ -140,8 +140,8 @@ class GuestTrackingControllerCore extends FrontController
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields($invoice->id_country);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($delivery->id_country);
 
-		self::$smarty->assign('inv_adr_fields', $inv_adr_fields);
-		self::$smarty->assign('dlv_adr_fields', $dlv_adr_fields);
+		$this->context->smarty->assign('inv_adr_fields', $inv_adr_fields);
+		$this->context->smarty->assign('dlv_adr_fields', $dlv_adr_fields);
 
 	}
 }

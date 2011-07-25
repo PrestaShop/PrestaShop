@@ -37,12 +37,12 @@ class IndexControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		self::$smarty->assign('HOOK_HOME', Module::hookExec('home'));
+		$this->context->smarty->assign('HOOK_HOME', Module::hookExec('home'));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'index.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'index.tpl');
 	}
 }

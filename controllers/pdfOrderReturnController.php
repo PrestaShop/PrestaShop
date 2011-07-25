@@ -31,7 +31,7 @@ class PdfOrderReturnControllerCore extends FrontController
 	{
 		parent::process();
 
-		$cookie = self::$cookie;
+		$cookie = $this->context->cookie;
 		if (!$cookie->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 

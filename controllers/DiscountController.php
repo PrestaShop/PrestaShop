@@ -41,19 +41,19 @@ class DiscountControllerCore extends FrontController
 	{
 		parent::process();
 		
-		$discounts = Discount::getCustomerDiscounts((int)(self::$cookie->id_lang), (int)(self::$cookie->id_customer), true, false);
+		$discounts = Discount::getCustomerDiscounts($this->context->language->id, $this->context->customer->id, true, false);
 		$nbDiscounts = 0;
 		foreach ($discounts AS $discount)
 			if ($discount['quantity_for_user'])
 				$nbDiscounts++;
 
-		self::$smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
+		$this->context->smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'discount.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'discount.tpl');
 	}
 }
 

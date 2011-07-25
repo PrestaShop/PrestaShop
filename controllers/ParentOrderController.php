@@ -45,14 +45,12 @@ class ParentOrderControllerCore extends FrontController
 	public function init()
 	{
 		parent::init();
-		$context = Context::getContext();
-		$this->nbProducts = $context->cart->nbProducts();
+		$this->nbProducts = $this->context->cart->nbProducts();
 	}
 	
 	public function preProcess()
 	{
 		global $isVirtualCart;
-		$context = Context::getContext();
 		parent::preProcess();
 		
 		// Redirect to the good order process
@@ -70,7 +68,7 @@ class ParentOrderControllerCore extends FrontController
 		
 		if (Tools::isSubmit('submitReorder') AND $id_order = (int)Tools::getValue('id_order'))
 		{
-			$oldCart = new Cart(Order::getCartIdStatic($id_order, $context->customer->id));
+			$oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
 			$duplication = $oldCart->duplicate();
 			if (!$duplication OR !Validate::isLoadedObject($duplication['cart']))
 				$this->errors[] = Tools::displayError('Sorry, we cannot renew your order.');
@@ -78,8 +76,8 @@ class ParentOrderControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Missing items - we are unable to renew your order');
 			else
 			{
-				$context->cookie->id_cart = $duplication['cart']->id;
-				$context->cookie->write();
+				$this->context->cookie->id_cart = $duplication['cart']->id;
+				$this->context->cookie->write();
 				if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 					Tools::redirect('index.php?controller=order-opc');
 				Tools::redirect('index.php?controller=order');
@@ -98,34 +96,34 @@ class ParentOrderControllerCore extends FrontController
 					$discount = new Discount((int)(Discount::getIdByName($discountName)));
 					if (Validate::isLoadedObject($discount))
 					{
-						if ($tmpError = $context->cart->checkDiscountValidity($discount, $context->cart->getDiscounts(), $context->cart->getOrderTotal(), $context->cart->getProducts(), true))
+						if ($tmpError = $this->context->cart->checkDiscountValidity($discount, $this->context->cart->getDiscounts(), $this->context->cart->getOrderTotal(), $this->context->cart->getProducts(), true))
 							$this->errors[] = $tmpError;
 					}
 					else
 						$this->errors[] = Tools::displayError('Voucher name invalid.');
 					if (!sizeof($this->errors))
 					{
-						$context->cart->addDiscount((int)($discount->id));
+						$this->context->cart->addDiscount((int)($discount->id));
 						Tools::redirect('index.php?controller=order-opc');
 					}
 				}
-				self::$smarty->assign(array(
+				$this->context->smarty->assign(array(
 					'errors' => $this->errors,
 					'discount_name' => Tools::safeOutput($discountName)
 				));
 			}
 			elseif (isset($_GET['deleteDiscount']) AND Validate::isUnsignedId($_GET['deleteDiscount']))
 			{
-				$context->cart->deleteDiscount((int)($_GET['deleteDiscount']));
+				$this->context->cart->deleteDiscount((int)($_GET['deleteDiscount']));
 				Tools::redirect('index.php?controller=order-opc');
 			}
 
 			/* Is there only virtual product in cart */
-			if ($isVirtualCart = $context->cart->isVirtualCart())
+			if ($isVirtualCart = $this->context->cart->isVirtualCart())
 				$this->_setNoCarrier();
 		}
 		
-		self::$smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+		$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
 	}
 	
 	public function setMedia()
@@ -154,25 +152,23 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function _checkFreeOrder()
 	{
-		$context = Context::getContext();
-		if ($context->cart->getOrderTotal() <= 0)
+		if ($this->context->cart->getOrderTotal() <= 0)
 		{
 			$order = new FreeOrder();
 			$order->free_order_class = true;
-			$order->validateOrder($context->cart->id, _PS_OS_PAYMENT_, 0, Tools::displayError('Free order', false));
-			return (int)Order::getOrderByCartId($context->cart->id);
+			$order->validateOrder($this->context->cart->id, _PS_OS_PAYMENT_, 0, Tools::displayError('Free order', false));
+			return (int)Order::getOrderByCartId($this->context->cart->id);
 		}
 		return false;
 	}
 	
 	protected function _updateMessage($messageContent)
 	{
-		$context = Context::getContext();
 		if ($messageContent)
 		{
 			if (!Validate::isMessage($messageContent))
     			$this->errors[] = Tools::displayError('Invalid message');
-    		elseif ($oldMessage = Message::getMessageByCartId((int)($context->cart->id)))
+    		elseif ($oldMessage = Message::getMessageByCartId((int)($this->context->cart->id)))
     		{
     			$message = new Message((int)($oldMessage['id_message']));
     			$message->message = htmlentities($messageContent, ENT_COMPAT, 'UTF-8');
@@ -182,14 +178,14 @@ class ParentOrderControllerCore extends FrontController
     		{
     			$message = new Message();
     			$message->message = htmlentities($messageContent, ENT_COMPAT, 'UTF-8');
-    			$message->id_cart = (int)($context->cart->id);
-    			$message->id_customer = (int)($context->cart->id_customer);
+    			$message->id_cart = (int)($this->context->cart->id);
+    			$message->id_customer = (int)($this->context->cart->id_customer);
     			$message->add();
     		}
     	}
     	else
     	{
-    		if ($oldMessage = Message::getMessageByCartId($context->cart->id))
+    		if ($oldMessage = Message::getMessageByCartId($this->context->cart->id))
     		{
     			$message = new Message($oldMessage['id_message']);
     			$message->delete();
@@ -200,20 +196,19 @@ class ParentOrderControllerCore extends FrontController
 	
 	protected function _processCarrier()
 	{
-		$context = Context::getContext();
-		$context->cart->recyclable = (int)(Tools::getValue('recyclable'));
-		$context->cart->gift = (int)(Tools::getValue('gift'));
+		$this->context->cart->recyclable = (int)(Tools::getValue('recyclable'));
+		$this->context->cart->gift = (int)(Tools::getValue('gift'));
 		if ((int)(Tools::getValue('gift')))
 		{
 			if (!Validate::isMessage($_POST['gift_message']))
 				$this->errors[] = Tools::displayError('Invalid gift message');
 			else
-				$context->cart->gift_message = strip_tags($_POST['gift_message']);
+				$this->context->cart->gift_message = strip_tags($_POST['gift_message']);
 		}
 		
-		if (isset($context->customer->id) AND $context->customer->id)
+		if (isset($this->context->customer->id) AND $this->context->customer->id)
 		{
-			$address = new Address((int)($context->cart->id_address_delivery));
+			$address = new Address((int)($this->context->cart->id_address_delivery));
 			if (!($id_zone = Address::getZoneById($address->id)))
 				$this->errors[] = Tools::displayError('No zone match with your address');
 		}
@@ -221,22 +216,21 @@ class ParentOrderControllerCore extends FrontController
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 			
 		if (Validate::isInt(Tools::getValue('id_carrier')) AND sizeof(Carrier::checkCarrierZone((int)(Tools::getValue('id_carrier')), (int)($id_zone))))
-			$context->cart->id_carrier = (int)(Tools::getValue('id_carrier'));
-		elseif (!$context->cart->isVirtualCart() AND (int)(Tools::getValue('id_carrier')) == 0)
+			$this->context->cart->id_carrier = (int)(Tools::getValue('id_carrier'));
+		elseif (!$this->context->cart->isVirtualCart() AND (int)(Tools::getValue('id_carrier')) == 0)
 			$this->errors[] = Tools::displayError('Invalid carrier or no carrier selected');
 		
-		Module::hookExec('processCarrier', array('cart' => $context->cart));
+		Module::hookExec('processCarrier', array('cart' => $this->context->cart));
 		
-		return $context->cart->update();
+		return $this->context->cart->update();
 	}
 	
 	protected function _assignSummaryInformations()
 	{
-		$context = Context::getContext();
-		if (file_exists(_PS_SHIP_IMG_DIR_.$context->cart->id_carrier.'.jpg'))
-			self::$smarty->assign('carrierPicture', 1);
-		$summary = $context->cart->getSummaryDetails();
-		$customizedDatas = Product::getAllCustomizedDatas($context->cart->id);
+		if (file_exists(_PS_SHIP_IMG_DIR_.$this->context->cart->id_carrier.'.jpg'))
+			$this->context->smarty->assign('carrierPicture', 1);
+		$summary = $this->context->cart->getSummaryDetails();
+		$customizedDatas = Product::getAllCustomizedDatas($this->context->cart->id);
 
 		// override customization tax rate with real tax (tax rules)
 		foreach($summary['products'] AS &$productUpdate)
@@ -245,14 +239,14 @@ class ParentOrderControllerCore extends FrontController
 			$productAttributeId = (int)(isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id']);
 
 			if (isset($customizedDatas[$productId][$productAttributeId]))
-				$productUpdate['tax_rate'] = Tax::getProductTaxRate($productId, $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+				$productUpdate['tax_rate'] = Tax::getProductTaxRate($productId, $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		}
 
 		Product::addCustomizationPrice($summary['products'], $customizedDatas);
 
-		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency($context->cart->id_currency)))
+		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency($this->context->cart->id_currency)))
 		{
-			$discounts = $context->cart->getDiscounts();
+			$discounts = $this->context->cart->getDiscounts();
 			$total_free_ship =  $free_ship - ($summary['total_products_wt'] + $summary['total_discounts']);
 			foreach ($discounts as $discount)
 				if ($discount['id_discount_type'] == 3)
@@ -260,30 +254,30 @@ class ParentOrderControllerCore extends FrontController
 					$total_free_ship = 0;
 					break;
 				}
-			self::$smarty->assign('free_ship', $total_free_ship);
+			$this->context->smarty->assign('free_ship', $total_free_ship);
 		}
 		// for compatibility with 1.2 themes
 		foreach($summary['products'] AS $key => $product)
 			$summary['products'][$key]['quantity'] = $product['cart_quantity'];
 
-		self::$smarty->assign($summary);
-		self::$smarty->assign(array(
+		$this->context->smarty->assign($summary);
+		$this->context->smarty->assign(array(
 			'token_cart' => Tools::getToken(false),
-			'isVirtualCart' => $context->cart->isVirtualCart(),
-			'productNumber' => $context->cart->nbProducts(),
+			'isVirtualCart' => $this->context->cart->isVirtualCart(),
+			'productNumber' => $this->context->cart->nbProducts(),
 			'voucherAllowed' => Configuration::get('PS_VOUCHERS'),
-			'shippingCost' => $context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
-			'shippingCostTaxExc' => $context->cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
+			'shippingCost' => $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
+			'shippingCostTaxExc' => $this->context->cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
 			'customizedDatas' => $customizedDatas,
 			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
 			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
-			'lastProductAdded' => $context->cart->getLastProduct(),
-			'displayVouchers' => Discount::getVouchersToCartDisplay($context->language->id, (isset($context->customer->id) ? $context->customer->id : 0)),
-			'currencySign' => $context->currency->sign,
-			'currencyRate' => $context->currency->conversion_rate,
-			'currencyFormat' => $context->currency->format,
-			'currencyBlank' => $context->currency->blank));
-		self::$smarty->assign(array(
+			'lastProductAdded' => $this->context->cart->getLastProduct(),
+			'displayVouchers' => Discount::getVouchersToCartDisplay($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0)),
+			'currencySign' => $this->context->currency->sign,
+			'currencyRate' => $this->context->currency->conversion_rate,
+			'currencyFormat' => $this->context->currency->format,
+			'currencyBlank' => $this->context->currency->blank));
+		$this->context->smarty->assign(array(
 			'HOOK_SHOPPING_CART' => Module::hookExec('shoppingCart', $summary),
 			'HOOK_SHOPPING_CART_EXTRA' => Module::hookExec('shoppingCartExtra', $summary)
 		));
@@ -291,20 +285,19 @@ class ParentOrderControllerCore extends FrontController
 	
 	protected function _assignAddress()
 	{
-		$context = Context::getContext();
 		//if guest checkout disabled and flag is_guest  in cookies is actived
-		if(Configuration::get('PS_GUEST_CHECKOUT_ENABLED') == 0 AND ((int)$context->customer->is_guest != Configuration::get('PS_GUEST_CHECKOUT_ENABLED')))
+		if(Configuration::get('PS_GUEST_CHECKOUT_ENABLED') == 0 AND ((int)$this->context->customer->is_guest != Configuration::get('PS_GUEST_CHECKOUT_ENABLED')))
 		{
-			$context->cookie->logout();
+			$this->context->cookie->logout();
 			Tools::redirect('');
 		}
-		elseif (!Customer::getAddressesTotalById($context->customer->id))
+		elseif (!Customer::getAddressesTotalById($this->context->customer->id))
 			Tools::redirect('index.php?controller=address&back=order.php&step=1');
-		$customer = $context->customer;
+		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{
 			/* Getting customer addresses */
-			$customerAddresses = $customer->getAddresses($context->language->id);
+			$customerAddresses = $customer->getAddresses($this->context->language->id);
 			
 			// Getting a list of formated address fields with associated values
 			$formatedAddressFieldsValuesList = array();
@@ -319,53 +312,52 @@ class ParentOrderControllerCore extends FrontController
 				
 				unset($tmpAddress);
 			}
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));
 
 			/* Setting default addresses for cart */
-			if ((!isset($context->cart->id_address_delivery) OR empty($context->cart->id_address_delivery)) AND sizeof($customerAddresses))
+			if ((!isset($this->context->cart->id_address_delivery) OR empty($this->context->cart->id_address_delivery)) AND sizeof($customerAddresses))
 			{
-				$context->cart->id_address_delivery = (int)($customerAddresses[0]['id_address']);
+				$this->context->cart->id_address_delivery = (int)($customerAddresses[0]['id_address']);
 				$update = 1;
 			}
-			if ((!isset($context->cart->id_address_invoice) OR empty($context->cart->id_address_invoice)) AND sizeof($customerAddresses))
+			if ((!isset($this->context->cart->id_address_invoice) OR empty($this->context->cart->id_address_invoice)) AND sizeof($customerAddresses))
 			{
-				$context->cart->id_address_invoice = (int)($customerAddresses[0]['id_address']);
+				$this->context->cart->id_address_invoice = (int)($customerAddresses[0]['id_address']);
 				$update = 1;
 			}
 			/* Update cart addresses only if needed */
 			if (isset($update) AND $update)
-				$context->cart->update();
+				$this->context->cart->update();
 
 			/* If delivery address is valid in cart, assign it to Smarty */
-			if (isset($context->cart->id_address_delivery))
+			if (isset($this->context->cart->id_address_delivery))
 			{
-				$deliveryAddress = new Address((int)($context->cart->id_address_delivery));
+				$deliveryAddress = new Address((int)($this->context->cart->id_address_delivery));
 				if (Validate::isLoadedObject($deliveryAddress) AND ($deliveryAddress->id_customer == $customer->id))
-					self::$smarty->assign('delivery', $deliveryAddress);
+					$this->context->smarty->assign('delivery', $deliveryAddress);
 			}
 
 			/* If invoice address is valid in cart, assign it to Smarty */
-			if (isset($context->cart->id_address_invoice))
+			if (isset($this->context->cart->id_address_invoice))
 			{
-				$invoiceAddress = new Address((int)($context->cart->id_address_invoice));
+				$invoiceAddress = new Address((int)($this->context->cart->id_address_invoice));
 				if (Validate::isLoadedObject($invoiceAddress) AND ($invoiceAddress->id_customer == $customer->id))
-					self::$smarty->assign('invoice', $invoiceAddress);
+					$this->context->smarty->assign('invoice', $invoiceAddress);
 			}
 		}
-		if ($oldMessage = Message::getMessageByCartId((int)($context->cart->id)))
-			self::$smarty->assign('oldMessage', $oldMessage['message']);
+		if ($oldMessage = Message::getMessageByCartId((int)($this->context->cart->id)))
+			$this->context->smarty->assign('oldMessage', $oldMessage['message']);
 	}
 	
 	protected function _assignCarrier()
 	{
-		$context = Context::getContext();
-		$address = new Address($context->cart->id_address_delivery);
+		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
-		$carriers = Carrier::getCarriersForOrder($id_zone, $context->customer->getGroups());
+		$carriers = Carrier::getCarriersForOrder($id_zone, $this->context->customer->getGroups());
 
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'checked' => $this->_setDefaultCarrierSelection($carriers),
 			'carriers' => $carriers,
 			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
@@ -376,36 +368,35 @@ class ParentOrderControllerCore extends FrontController
 	
 	protected function _assignWrappingAndTOS()
 	{
-		$context = Context::getContext();
 		// Wrapping fees
 		$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
 		$wrapping_fees_tax = new Tax(Configuration::get('PS_GIFT_WRAPPING_TAX'));
 		$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
 		
 		// TOS
-		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $context->language->id);
-		$this->link_conditions = $context->link->getCMSLink($cms, $cms->link_rewrite, true);
+		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, true);
 		if (!strpos($this->link_conditions, '?'))
 			$this->link_conditions .= '?content_only=1';
 		else
 			$this->link_conditions .= '&content_only=1';
 		
-		self::$smarty->assign(array(
-			'checkedTOS' => (int)($context->cookie->checkedTOS),
+		$this->context->smarty->assign(array(
+			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
 			'cms_id' => (int)(Configuration::get('PS_CONDITIONS_CMS_ID')),
 			'conditions' => (int)(Configuration::get('PS_CONDITIONS')),
 			'link_conditions' => $this->link_conditions,
-			'recyclable' => (int)($context->cart->recyclable),
+			'recyclable' => (int)($this->context->cart->recyclable),
 			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
-			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $context->currency),
-			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $context->currency)));
+			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
+			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));
 	}
 	
 	protected function _assignPayment()
 	{
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 		    'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
 			'HOOK_PAYMENT' => Module::hookExecPayment()
 		));
@@ -417,9 +408,8 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function _setNoCarrier()
 	{
-		$context = Context::getContext();
-		$context->cart->id_carrier = 0;
-		$context->cart->update();
+		$this->context->cart->id_carrier = 0;
+		$this->context->cart->update();
 	}
 	
 	/**
@@ -430,28 +420,27 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function _setDefaultCarrierSelection($carriers)
 	{
-		$context = Context::getContext();
 		if (sizeof($carriers))
 		{
 			$defaultCarrierIsPresent = false;
-			if ((int)$context->cart->id_carrier != 0)
+			if ((int)$this->context->cart->id_carrier != 0)
 				foreach ($carriers AS $carrier)
-					if ($carrier['id_carrier'] == (int)$context->cart->id_carrier)
+					if ($carrier['id_carrier'] == (int)$this->context->cart->id_carrier)
 						$defaultCarrierIsPresent = true;
 			if (!$defaultCarrierIsPresent)
 				foreach ($carriers AS $carrier)
 					if ($carrier['id_carrier'] == (int)Configuration::get('PS_CARRIER_DEFAULT'))
 					{
 						$defaultCarrierIsPresent = true;
-						$context->cart->id_carrier = (int)$carrier['id_carrier'];
+						$this->context->cart->id_carrier = (int)$carrier['id_carrier'];
 					}
 			if (!$defaultCarrierIsPresent)
-				$context->cart->id_carrier = (int)$carriers[0]['id_carrier'];
+				$this->context->cart->id_carrier = (int)$carriers[0]['id_carrier'];
 		}
 		else
-			$context->cart->id_carrier = 0;
-		if ($context->cart->update())
-			return $context->cart->id_carrier;
+			$this->context->cart->id_carrier = 0;
+		if ($this->context->cart->update())
+			return $this->context->cart->id_carrier;
 		return 0;
 	}
 	

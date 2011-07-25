@@ -29,7 +29,7 @@ class getFileControllerCore extends FrontController
 {
 	public function process()
 	{
-		$cookie = self::$cookie;
+		$cookie = $this->context->cookie;
 		if ($cookie->isLoggedBack() AND Tools::getValue('file'))
 		{
 			/* Admin can directly access to file */

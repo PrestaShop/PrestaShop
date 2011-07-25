@@ -39,14 +39,14 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if ($id_manufacturer = Tools::getValue('id_manufacturer'))
 		{
-			$this->manufacturer = new Manufacturer((int)$id_manufacturer, self::$cookie->id_lang);
+			$this->manufacturer = new Manufacturer((int)$id_manufacturer, $this->context->language->id);
 			if (Validate::isLoadedObject($this->manufacturer) AND $this->manufacturer->active AND $this->manufacturer->isAssociatedToGroupShop())
 			{
 				$nbProducts = $this->manufacturer->getProducts($id_manufacturer, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);
-				self::$smarty->assign(array(
+				$this->context->smarty->assign(array(
 					'nb_products' => $nbProducts,
-					'products' => $this->manufacturer->getProducts($id_manufacturer, (int)self::$cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
+					'products' => $this->manufacturer->getProducts($id_manufacturer, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 					'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 					'manufacturer' => $this->manufacturer));
 			}
@@ -61,17 +61,17 @@ class ManufacturerControllerCore extends FrontController
 		{
 			if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 			{
-				$id_current_group_shop = Context::getContext()->shop->getGroupID();
-				$data = call_user_func(array('Manufacturer', 'getManufacturers'), true, (int)self::$cookie->id_lang, true, false, false, false, $id_current_group_shop);
+				$id_current_group_shop = $this->context->shop->getGroupID();
+				$data = call_user_func(array('Manufacturer', 'getManufacturers'), true, $this->context->language->id, true, false, false, false, $id_current_group_shop);
 				$nbProducts = count($data);
 				$this->pagination($nbProducts);
 		
-				$data = call_user_func(array('Manufacturer', 'getManufacturers'), true, (int)self::$cookie->id_lang, true, $this->p, $this->n, false, $id_current_group_shop);
+				$data = call_user_func(array('Manufacturer', 'getManufacturers'), true, $this->context->language->id, true, $this->p, $this->n, false, $id_current_group_shop);
 				$imgDir = _PS_MANU_IMG_DIR_;
 				foreach ($data AS &$item)
 					$item['image'] = (!file_exists($imgDir.'/'.$item['id_manufacturer'].'-medium.jpg')) ? 
-						Language::getIsoById((int)(self::$cookie->id_lang)).'-default' :	$item['id_manufacturer'];
-				self::$smarty->assign(array(
+						$this->context->language->iso_code.'-default' :	$item['id_manufacturer'];
+				$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbManufacturers' => $nbProducts,
 				'mediumSize' => Image::getSize('medium'),
@@ -80,7 +80,7 @@ class ManufacturerControllerCore extends FrontController
 				));
 			}
 			else
-				self::$smarty->assign('nbManufacturers', 0);
+				$this->context->smarty->assign('nbManufacturers', 0);
 		}
 	}
 	
@@ -94,9 +94,9 @@ class ManufacturerControllerCore extends FrontController
 	{
 		parent::displayContent();
 		if ($this->manufacturer)
-			self::$smarty->display(_PS_THEME_DIR_.'manufacturer.tpl');
+			$this->context->smarty->display(_PS_THEME_DIR_.'manufacturer.tpl');
 		else
-			self::$smarty->display(_PS_THEME_DIR_.'manufacturer-list.tpl');
+			$this->context->smarty->display(_PS_THEME_DIR_.'manufacturer-list.tpl');
 	}
 	
 }

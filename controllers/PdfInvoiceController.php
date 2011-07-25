@@ -31,7 +31,7 @@ class PdfInvoiceControllerCore extends FrontController
 	{
 		parent::process();
 
-		$cookie = self::$cookie;
+		$cookie = $this->context->cookie;
 		if (!$cookie->isLogged() AND !Tools::getValue('secure_key'))
 			Tools::redirect('index.php?controller=authentication&back=pdf-invoice');
 		if (!(int)(Configuration::get('PS_INVOICE')))

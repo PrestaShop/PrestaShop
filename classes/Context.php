@@ -108,7 +108,7 @@ class ContextCore
 	}
 	
 	/**
-	 * Clone current context (
+	 * Clone current context
 	 * 
 	 * @return Context
 	 */

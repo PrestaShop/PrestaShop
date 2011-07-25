@@ -40,8 +40,8 @@ class BestSalesControllerCore extends FrontController
 		$nbProducts = (int)ProductSale::getNbSales();
 		$this->pagination($nbProducts);
 		
-		self::$smarty->assign(array(
-			'products' => ProductSale::getBestSales((int)self::$cookie->id_lang, (int)$this->p - 1, (int)$this->n, $this->orderBy, $this->orderWay),
+		$this->context->smarty->assign(array(
+			'products' => ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => $nbProducts,
 			'homeSize' => Image::getSize('home')
@@ -57,7 +57,7 @@ class BestSalesControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'best-sales.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'best-sales.tpl');
 	}
 }
 
