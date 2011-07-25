@@ -34,13 +34,13 @@ class CmsControllerCore extends FrontController
 	public function preProcess()
 	{
 		if ($id_cms = (int)Tools::getValue('id_cms'))
-		    $this->cms = new CMS($id_cms, self::$cookie->id_lang); 
+		    $this->cms = new CMS($id_cms, $this->context->language->id); 
 		elseif ($id_cms_category = (int)Tools::getValue('id_cms_category'))
-		    $this->cms_category = new CMSCategory($id_cms_category, self::$cookie->id_lang); 
+		    $this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id); 
 			
 		// Automatically redirect to the canonical URL if the current in is the right one
 		// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
-		if ($this->cms AND $canonicalURL = self::$link->getCMSLink($this->cms))
+		if ($this->cms AND $canonicalURL = $this->context->link->getCMSLink($this->cms))
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
@@ -48,7 +48,7 @@ class CmsControllerCore extends FrontController
 					die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.'">'.$canonicalURL.'</a>');
 				Tools::redirectLink($canonicalURL);
 			}
-		if ($this->cms_category AND $canonicalURL = self::$link->getCMSCategoryLink($this->cms_category))
+		if ($this->cms_category AND $canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category))
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
@@ -74,11 +74,11 @@ class CmsControllerCore extends FrontController
     		foreach ($rewrite_infos AS $infos)
     		{
     		    $arr_link = (isset($id_cms) AND !isset($id_cms_category)) ?
-    		        self::$link->getCMSLink($id_cms, $infos['link_rewrite'], $this->ssl, $infos['id_lang']) :
-    		        self::$link->getCMSCategoryLink($id_cms_category, $infos['link_rewrite'], $infos['id_lang']);
+    		        $this->context->link->getCMSLink($id_cms, $infos['link_rewrite'], $this->ssl, $infos['id_lang']) :
+    		        $this->context->link->getCMSCategoryLink($id_cms_category, $infos['link_rewrite'], $infos['id_lang']);
     			$default_rewrite[$infos['id_lang']] = $arr_link;
     		}
-		    self::$smarty->assign('lang_rewrite_urls', $default_rewrite);
+		    $this->context->smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
 	}
 	
@@ -95,13 +95,13 @@ class CmsControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		$parent_cat = new CMSCategory(1, (int)(self::$cookie->id_lang));
-		self::$smarty->assign('id_current_lang', self::$cookie->id_lang);
-		self::$smarty->assign('home_title', $parent_cat->name);
-		self::$smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
+		$parent_cat = new CMSCategory(1, $this->context->language->id);
+		$this->context->smarty->assign('id_current_lang', $this->context->language->id);
+		$this->context->smarty->assign('home_title', $parent_cat->name);
+		$this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
 		if ($this->assignCase == 1)
 		{
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'cms' => $this->cms,
 				'content_only' => (int)(Tools::getValue('content_only')),
 				'path' => ((isset($this->cms->id_cms_category) AND $this->cms->id_cms_category) ? Tools::getFullPath((int)($this->cms->id_cms_category), $this->cms->meta_title, 'CMS') : Tools::getFullPath(1, $this->cms->meta_title, 'CMS'))
@@ -109,10 +109,10 @@ class CmsControllerCore extends FrontController
 		}
 		elseif ($this->assignCase == 2)
 		{
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'category' => $this->cms_category,
-				'sub_category' => $this->cms_category->getSubCategories((int)(self::$cookie->id_lang)),
-				'cms_pages' => CMS::getCMSPages((int)(self::$cookie->id_lang), (int)($this->cms_category->id) ),
+				'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
+				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id) ),
 				'path' => ($this->cms_category->id !== 1) ? Tools::getPath((int)($this->cms_category->id), $this->cms_category->name, false, 'CMS') : '',
 			));
 		}
@@ -121,6 +121,6 @@ class CmsControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'cms.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'cms.tpl');
 	}
 }

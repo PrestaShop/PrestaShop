@@ -36,8 +36,6 @@ class StoresControllerCore extends FrontController
 	
 	public function preProcess()
 	{
-		$context = Context::getContext();
-				
 		$simplifiedStoreLocator = Configuration::get('PS_STORES_SIMPLIFIED');
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
@@ -51,7 +49,7 @@ class StoresControllerCore extends FrontController
 			LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-			WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop);
+			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop);
 			
 			foreach ($stores AS &$store)
 				$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
@@ -66,7 +64,7 @@ class StoresControllerCore extends FrontController
 				LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 				LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 				LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop);
+				WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop);
 			}
 			else
 			{
@@ -80,7 +78,7 @@ class StoresControllerCore extends FrontController
 				LEFT JOIN '._DB_PREFIX_.'store s ON (ss.id_store = s.id_store)
 				LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 				LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-				WHERE s.active = 1 AND cl.id_lang = '.(int)$context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop.'
+				WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id.' AND ss.id_shop = '.(int)$this->id_current_shop.'
 				HAVING distance < '.(int)($distance).'
 				ORDER BY distance ASC
 				LIMIT 0,20');
@@ -120,10 +118,10 @@ class StoresControllerCore extends FrontController
 							$hours_datas['hours'] = $hours[(int)($i) - 1];
 							$days_datas[] = $hours_datas;
 						}
-						self::$smarty->assign('days_datas', $days_datas);
-						self::$smarty->assign('id_country', $store['id_country']);
+						$this->context->smarty->assign('days_datas', $days_datas);
+						$this->context->smarty->assign('id_country', $store['id_country']);
 					
-						$other .= self::$smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
+						$other .= $this->context->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 					}
 					
 					$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
@@ -143,10 +141,10 @@ class StoresControllerCore extends FrontController
 				die($dom->saveXML());
 			}
 			else
-				self::$smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
+				$this->context->smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
 		}
 		
-		self::$smarty->assign(array('distance_unit' => $distanceUnit, 'simplifiedStoresDiplay' => $simplifiedStoreLocator, 'stores' => $stores, 'mediumSize' => Image::getSize('medium')));
+		$this->context->smarty->assign(array('distance_unit' => $distanceUnit, 'simplifiedStoresDiplay' => $simplifiedStoreLocator, 'stores' => $stores, 'mediumSize' => Image::getSize('medium')));
 	}
 
 	private function _processStoreAddress($store)
@@ -191,10 +189,10 @@ class StoresControllerCore extends FrontController
 	{
 		parent::process();
 				
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'defaultLat' => (float)Configuration::get('PS_STORES_CENTER_LAT'),
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
-			'searchUrl' => Context::getContext()->link->getPageLink('stores')
+			'searchUrl' => $this->context->link->getPageLink('stores')
 		));
 	}
 
@@ -210,6 +208,6 @@ class StoresControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'stores.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'stores.tpl');
 	}
 }

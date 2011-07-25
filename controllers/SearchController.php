@@ -49,7 +49,7 @@ class SearchControllerCore extends FrontController
 		{
 			$searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true);
 			foreach ($searchResults AS &$product)
-				$product['product_link'] = self::$link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
+				$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
 			die(Tools::jsonEncode($searchResults));
 		}
 		
@@ -58,11 +58,11 @@ class SearchControllerCore extends FrontController
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
-			$search = Search::find((int)(self::$cookie->id_lang), $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
+			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			Module::hookExec('search', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 			'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 			'search_products' => $search['result'],
 			'nbProducts' => $search['total'],
@@ -75,11 +75,11 @@ class SearchControllerCore extends FrontController
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
-			$search = Search::find((int)(self::$cookie->id_lang), $query, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
+			$search = Search::find($this->context->language->id, $query, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			Module::hookExec('search', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 			'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 			'search_products' => $search['result'],
 			'nbProducts' => $search['total'],
@@ -88,11 +88,11 @@ class SearchControllerCore extends FrontController
 		}
 		elseif ($tag = urldecode(Tools::getValue('tag')) AND !is_array($tag))
 		{
-			$nbProducts = (int)(Search::searchTag((int)(self::$cookie->id_lang), $tag, true));
+			$nbProducts = (int)(Search::searchTag($this->context->language->id, $tag, true));
 			$this->pagination($nbProducts);
-			$result = Search::searchTag((int)(self::$cookie->id_lang), $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
+			$result = Search::searchTag($this->context->language->id, $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			Module::hookExec('search', array('expr' => $tag, 'total' => sizeof($result)));
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 			'search_tag' => $tag,
 			'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 			'search_products' => $result,
@@ -101,13 +101,13 @@ class SearchControllerCore extends FrontController
 		}
 		else
 		{
-			self::$smarty->assign(array(
+			$this->context->smarty->assign(array(
 			'products' => array(),
 			'search_products' => array(),
 			'pages_nb' => 1,
 			'nbProducts' => 0));
 		}
-		self::$smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
+		$this->context->smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
 	}
 	
 	public function displayHeader()
@@ -115,13 +115,13 @@ class SearchControllerCore extends FrontController
 		if (!$this->instantSearch AND !$this->ajaxSearch)
 			parent::displayHeader();
 		else
-			self::$smarty->assign('static_token', Tools::getToken(false));
+			$this->context->smarty->assign('static_token', Tools::getToken(false));
 	}
 	
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'search.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'search.tpl');
 	}
 	
 	public function displayFooter()

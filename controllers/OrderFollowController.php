@@ -56,10 +56,10 @@ class OrderFollowControllerCore extends FrontController
 
 			$order = new Order((int)($id_order));
 			if (!$order->isReturnable()) Tools::redirect('index.php?controller=order-follow&errorNotReturnable');
-			if ($order->id_customer != self::$cookie->id_customer)
+			if ($order->id_customer != $this->context->customer->id)
 				die(Tools::displayError());
 			$orderReturn = new OrderReturn();
-			$orderReturn->id_customer = (int)(self::$cookie->id_customer);
+			$orderReturn->id_customer = (int)$this->context->customer->id;
 			$orderReturn->id_order = $id_order;
 			$orderReturn->question = strval(Tools::getValue('returnText'));
 			if (empty($orderReturn->question))
@@ -74,19 +74,19 @@ class OrderFollowControllerCore extends FrontController
 			Tools::redirect('index.php?controller=order-follow');
 		}
 
-		$ordersReturn = OrderReturn::getOrdersReturn((int)(self::$cookie->id_customer));
+		$ordersReturn = OrderReturn::getOrdersReturn($this->context->customer->id);
 		if (Tools::isSubmit('errorQuantity'))
-			self::$smarty->assign('errorQuantity', true);
+			$this->context->smarty->assign('errorQuantity', true);
 		elseif (Tools::isSubmit('errorMsg'))
-			self::$smarty->assign('errorMsg', true);
+			$this->context->smarty->assign('errorMsg', true);
 		elseif (Tools::isSubmit('errorDetail1'))
-			self::$smarty->assign('errorDetail1', true);
+			$this->context->smarty->assign('errorDetail1', true);
 		elseif (Tools::isSubmit('errorDetail2'))
-			self::$smarty->assign('errorDetail2', true);
+			$this->context->smarty->assign('errorDetail2', true);
 		elseif (Tools::isSubmit('errorNotReturnable'))
-			self::$smarty->assign('errorNotReturnable',true);
+			$this->context->smarty->assign('errorNotReturnable',true);
 
-		self::$smarty->assign('ordersReturn', $ordersReturn);
+		$this->context->smarty->assign('ordersReturn', $ordersReturn);
 	}
 	
 	public function setMedia()
@@ -100,7 +100,7 @@ class OrderFollowControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-follow.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'order-follow.tpl');
 	}
 }
 

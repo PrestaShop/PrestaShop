@@ -58,10 +58,10 @@ class OrderDetailControllerCore extends FrontController
 			if(!sizeof($this->errors))
 			{
 				$order = new Order((int)($idOrder));
-				if (Validate::isLoadedObject($order) AND $order->id_customer == self::$cookie->id_customer)
+				if (Validate::isLoadedObject($order) AND $order->id_customer == $this->context->customer->id)
 				{
 					$message = new Message();
-					$message->id_customer = (int)(self::$cookie->id_customer);
+					$message->id_customer = (int)$this->context->customer->id;
 					$message->message = $msgText;
 					$message->id_order = (int)($idOrder);
 					$message->private = false;
@@ -74,9 +74,9 @@ class OrderDetailControllerCore extends FrontController
 						$to = strval($to->email);
 					}
 					$toName = strval(Configuration::get('PS_SHOP_NAME'));
-					$customer = new Customer((int)(self::$cookie->id_customer));
+					$customer = $context->customer->id;
 					if (Validate::isLoadedObject($customer))
-						Mail::Send((int)(self::$cookie->id_lang), 'order_customer_comment', Mail::l('Message from a customer'),
+						Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
 						array(
 						'{lastname}' => $customer->lastname,
 						'{firstname}' => $customer->firstname,
@@ -99,7 +99,7 @@ class OrderDetailControllerCore extends FrontController
 		else
 		{
 			$order = new Order($id_order);
-			if (Validate::isLoadedObject($order) AND $order->id_customer == self::$cookie->id_customer)
+			if (Validate::isLoadedObject($order) AND $order->id_customer == $this->context->customer->id)
 			{
 				$id_order_state = (int)($order->getCurrentState());
 				$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
@@ -114,7 +114,7 @@ class OrderDetailControllerCore extends FrontController
 				$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
 
 				if ($order->total_discounts > 0)
-					self::$smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
+					$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
 				$products = $order->getProducts();
 
 				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
@@ -122,26 +122,26 @@ class OrderDetailControllerCore extends FrontController
 
 				$customer = new Customer($order->id_customer);
 
-				self::$smarty->assign(array(
+				$this->context->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
 					'return_allowed' => (int)($order->isReturnable()),
 					'currency' => new Currency($order->id_currency),
 					'order_state' => (int)($id_order_state),
 					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
-					'invoice' => (OrderState::invoiceAvailable((int)($id_order_state)) AND $order->invoice_number),
-					'order_history' => $order->getHistory((int)(self::$cookie->id_lang), false, true),
+					'invoice' => (OrderState::invoiceAvailable($id_order_state) AND $order->invoice_number),
+					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
 					'discounts' => $order->getDiscounts(),
 					'carrier' => $carrier,
 					'address_invoice' => $addressInvoice,
-					'invoiceState' => (Validate::isLoadedObject($addressInvoice) AND $addressInvoice->id_state) ? new State((int)($addressInvoice->id_state)) : false,
+					'invoiceState' => (Validate::isLoadedObject($addressInvoice) AND $addressInvoice->id_state) ? new State($addressInvoice->id_state) : false,
 					'address_delivery' => $addressDelivery,
 					'inv_adr_fields' => $inv_adr_fields,
 					'dlv_adr_fields' => $dlv_adr_fields,
 					'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
 					'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
-					'deliveryState' => (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state) ? new State((int)($addressDelivery->id_state)) : false,
+					'deliveryState' => (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
 					'is_guest' => false,
 					'messages' => Message::getMessagesByOrderId((int)($order->id)),
 					'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
@@ -150,8 +150,8 @@ class OrderDetailControllerCore extends FrontController
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 					'customizedDatas' => $customizedDatas));
 				if ($carrier->url AND $order->shipping_number)
-					self::$smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-				self::$smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
+					$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
+				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
 				Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
 				
 				unset($carrier);
@@ -173,7 +173,7 @@ class OrderDetailControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'order-detail.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'order-detail.tpl');
 	}
 
 	public function displayFooter()

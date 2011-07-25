@@ -56,14 +56,14 @@ class PasswordControllerCore extends FrontController
 						$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.(int)($min_time).' '.Tools::displayError('minute(s)');
 					else
 					{	
-						if (Mail::Send((int)(self::$cookie->id_lang), 'password_query', Mail::l('Password query confirmation'), 
+						if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), 
 						array('{email}' => $customer->email, 
 							  '{lastname}' => $customer->lastname, 
 							  '{firstname}' => $customer->firstname,
-							  '{url}' => self::$link->getPageLink('password', true, NULL, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id)),
+							  '{url}' => $this->context->link->getPageLink('password', true, NULL, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id)),
 						$customer->email, 
 						$customer->firstname.' '.$customer->lastname))
-							self::$smarty->assign(array('confirmation' => 2, 'email' => $customer->email));
+							$this->context->smarty->assign(array('confirmation' => 2, 'email' => $customer->email));
 						else
 							$this->errors[] = Tools::displayError('Error occurred when sending the e-mail.');
 					}
@@ -85,14 +85,14 @@ class PasswordControllerCore extends FrontController
 					$customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 					if ($customer->update())
 					{
-						if (Mail::Send((int)(self::$cookie->id_lang), 'password', Mail::l('Your password'), 
+						if (Mail::Send($this->context->language->id, 'password', Mail::l('Your password'), 
 						array('{email}' => $customer->email, 
 							  '{lastname}' => $customer->lastname, 
 							  '{firstname}' => $customer->firstname, 
 							  '{passwd}' => $password), 
 						$customer->email, 
 						$customer->firstname.' '.$customer->lastname)) 
-							self::$smarty->assign(array('confirmation' => 1, 'email' => $customer->email));
+							$this->context->smarty->assign(array('confirmation' => 1, 'email' => $customer->email));
 						else
 							$this->errors[] = Tools::displayError('Error occurred when sending the e-mail.');
 					}
@@ -110,7 +110,7 @@ class PasswordControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'password.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'password.tpl');
 	}
 }
 

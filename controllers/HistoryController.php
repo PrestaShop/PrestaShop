@@ -52,14 +52,14 @@ class HistoryControllerCore extends FrontController
 	{
 		parent::process();
 		
-		if ($orders = Order::getCustomerOrders((int)(self::$cookie->id_customer)))
+		if ($orders = Order::getCustomerOrders($this->context->customer->id))
 			foreach ($orders AS &$order)
 			{
 				$myOrder = new Order((int)($order['id_order']));
 				if (Validate::isLoadedObject($myOrder))
 					$order['virtual'] = $myOrder->isVirtual(false);
 			}
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'orders' => $orders,
 			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 			'slowValidation' => Tools::isSubmit('slowvalidation')
@@ -69,7 +69,7 @@ class HistoryControllerCore extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_THEME_DIR_.'history.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'history.tpl');
 	}
 }
 

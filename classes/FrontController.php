@@ -28,6 +28,10 @@
 class FrontControllerCore
 {
 	public $errors = array();
+	/**
+	 * @var Context
+	 */
+	protected $context;
 	protected static $smarty;
 	protected static $cookie;
 	protected static $link;
@@ -76,18 +80,23 @@ class FrontControllerCore
 
 	public function init()
 	{
+		/*
+		 * Globals are DEPRECATED as of version 1.5.
+		 * Use the Context to access objects instead.
+		 * Example: $this->context->cart
+		 */
 		global $link, $cookie, $cart, $smarty, $iso, $defaultCountry;
 
 		if (self::$initialized)
 			return;
 		self::$initialized = true;
 
-		$context = Context::getContext();
+		$this->context = Context::getContext();
 		
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
-		$context->link = $link;
+		$this->context->link = $link;
 		
 		$this->id_current_shop = Context::getContext()->shop->getID();
 		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
@@ -105,12 +114,12 @@ class FrontControllerCore
 		ob_start();
 
 		$cookie = new Cookie('ps');
-		$context->cookie = $cookie;
+		$this->context->cookie = $cookie;
 		
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
-		$context->link = $link;
+		$this->context->link = $link;
 		
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
@@ -219,7 +228,7 @@ class FrontControllerCore
 		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
 			$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 		$smarty->ps_language = $language;
-		$context->language = $language;
+		$this->context->language = $language;
 
 		/* get page name to display it in body id */
 		$pathinfo = pathinfo(__FILE__);
@@ -310,7 +319,11 @@ class FrontControllerCore
 			else
 				$smarty->assign($assignKey, $assignValue);
 
-		// shortcuts to context objects
+		/*
+		 * These shortcuts are DEPRECATED as of version 1.5.
+		 * Use the Context to access objects instead.
+		 * Example: $this->context->cart
+		 */
 		self::$cookie = $cookie;
 		self::$cart = $cart;
 		self::$smarty = $smarty;
@@ -345,11 +358,11 @@ class FrontControllerCore
 			$customer->geoloc_postcode = (int)$cookie->postcode;
 		
 
-		$context->customer = $customer;
-		$context->cart = $cart;
-		$context->currency = $currency;
-		$context->controller = $this;
-		$context->country = $defaultCountry;
+		$this->context->customer = $customer;
+		$this->context->cart = $cart;
+		$this->context->currency = $currency;
+		$this->context->controller = $this;
+		$this->context->country = $defaultCountry;
 	}
 
 	/* Display a maintenance page if shop is closed */
@@ -373,12 +386,11 @@ class FrontControllerCore
 
 	protected function canonicalRedirection()
 	{
-		$context = Context::getContext();
 		// Automatically redirect to the canonical URL if needed
 		if (isset($this->php_self) AND !empty($this->php_self))
 		{
 			// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
-			$canonicalURL = $context->link->getPageLink($this->php_self, $this->ssl, $context->language->id);
+			$canonicalURL = $this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id);
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', (($this->ssl AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
@@ -396,14 +408,12 @@ class FrontControllerCore
 
 	protected function geolocationManagement($defaultCountry)
 	{
-		$context = Context::getContext();
-
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
 			/* Check if Maxmind Database exists */
 			if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
 			{
-				if (!isset($context->cookie->iso_code_country) OR (isset($context->cookie->iso_code_country) AND !in_array(strtoupper($context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
+				if (!isset($this->context->cookie->iso_code_country) OR (isset($this->context->cookie->iso_code_country) AND !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
           			include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
@@ -425,19 +435,19 @@ class FrontControllerCore
 						}
 						else
 						{
-							$context->cookie->iso_code_country = strtoupper($record->country_code);
+							$this->context->cookie->iso_code_country = strtoupper($record->country_code);
 							$hasBeenSet = true;
 						}
 					}
 				}
 
-				if (isset($context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($context->cookie->iso_code_country))))
+				if (isset($this->context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($this->context->cookie->iso_code_country))))
 				{
 					/* Update defaultCountry */
-					if($defaultCountry->iso_code != $context->cookie->iso_code_country)
+					if($defaultCountry->iso_code != $this->context->cookie->iso_code_country)
 						$defaultCountry = new Country($id_country);
 					if (isset($hasBeenSet) AND $hasBeenSet)
-						$context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
+						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $defaultCountry;
 				}
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
@@ -488,7 +498,6 @@ class FrontControllerCore
 	{
 		if (!self::$initialized)
 			$this->init();
-		$context = Context::getContext();
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 

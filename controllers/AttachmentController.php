@@ -31,7 +31,7 @@ class AttachmentControllerCore extends FrontController
 	{
 		parent::process();
 
-		$a = new Attachment((int)(Tools::getValue('id_attachment')), (int)(self::$cookie->id_lang));
+		$a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
 		if (!$a->id)
 			Tools::redirect('index.php');
 		

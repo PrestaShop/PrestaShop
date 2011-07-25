@@ -39,14 +39,14 @@ class SupplierControllerCore extends FrontController
 	{
 		if ($id_supplier = Tools::getValue('id_supplier'))
 		{
-			$this->supplier = new Supplier((int)$id_supplier, self::$cookie->id_lang);
+			$this->supplier = new Supplier((int)$id_supplier, $this->context->cookie->id_lang);
 			if (Validate::isLoadedObject($this->supplier) AND $this->supplier->active AND $this->supplier->isAssociatedToGroupShop())
 			{
 				$nbProducts = $this->supplier->getProducts($id_supplier, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 				$this->pagination((int)$nbProducts);
-				self::$smarty->assign(array(
+				$this->context->smarty->assign(array(
 					'nb_products' => $nbProducts,
-					'products' => $this->supplier->getProducts($id_supplier, (int)self::$cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
+					'products' => $this->supplier->getProducts($id_supplier, (int)$this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 					'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
 					'supplier' => $this->supplier));
 			}
@@ -61,16 +61,16 @@ class SupplierControllerCore extends FrontController
 		{
 			if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 			{
-				$data = call_user_func(array('Supplier', 'getSuppliers'), true, (int)(self::$cookie->id_lang), true);
+				$data = call_user_func(array('Supplier', 'getSuppliers'), true, $this->context->language->id, true);
 				$nbProducts = count($data);
 				$this->pagination($nbProducts);
 		
-				$data = call_user_func(array('Supplier', 'getSuppliers'), true, (int)(self::$cookie->id_lang), true, $this->p, $this->n);
+				$data = call_user_func(array('Supplier', 'getSuppliers'), true, $this->context->language->id, true, $this->p, $this->n);
 				$imgDir = _PS_SUPP_IMG_DIR_;
 				foreach ($data AS &$item)
 					$item['image'] = (!file_exists($imgDir.'/'.$item['id_supplier'].'-medium.jpg')) ? 
-						Language::getIsoById((int)(self::$cookie->id_lang)).'-default' :	$item['id_supplier'];
-				self::$smarty->assign(array(
+						$this->context->language->iso_code.'-default' :	$item['id_supplier'];
+				$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbSuppliers' => $nbProducts,
 				'mediumSize' => Image::getSize('medium'),
@@ -79,7 +79,7 @@ class SupplierControllerCore extends FrontController
 				));
 			}
 			else
-				self::$smarty->assign('nbSuppliers', 0);
+				$this->context->smarty->assign('nbSuppliers', 0);
 		}
 	}
 	
@@ -93,9 +93,9 @@ class SupplierControllerCore extends FrontController
 	{
 		parent::displayContent();
 		if ($this->supplier)
-			self::$smarty->display(_PS_THEME_DIR_.'supplier.tpl');
+			$this->context->smarty->display(_PS_THEME_DIR_.'supplier.tpl');
 		else
-			self::$smarty->display(_PS_THEME_DIR_.'supplier-list.tpl');
+			$this->context->smarty->display(_PS_THEME_DIR_.'supplier-list.tpl');
 	}
 	
 }
