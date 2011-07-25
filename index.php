@@ -26,5 +26,4 @@
 */
 
 require(dirname(__FILE__).'/config/config.inc.php');
-$dispatcher = new Dispatcher();
-$dispatcher->dispatch();
+Dispatcher::getInstance()->dispatch();
