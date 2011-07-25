@@ -487,9 +487,9 @@ EOF;
 		echo '<br /><select id="em_list_'.$shopID.'">';
 		
 		// @todo do something better with controllers
-		Dispatcher::loadControllers();
-		ksort(Dispatcher::$controllers);
-		foreach (Dispatcher::$controllers as $k => $v)
+		$controllers = Dispatcher::getControllers();
+		ksort($controllers);
+		foreach ($controllers as $k => $v)
 		{
 			echo '<option value="'.$k.'">'.$k.'</option>';
 		}

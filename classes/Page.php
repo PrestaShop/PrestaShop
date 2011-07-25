@@ -51,7 +51,7 @@ class PageCore extends ObjectModel
 	 */
 	public static function getCurrentId()
 	{
-		$controller = Dispatcher::$controller;
+		$controller = Dispatcher::getInstance()->getController();
 		$pageTypeID = Page::getPageTypeByName($controller);
 		
 		// Some pages must be distinguished in order to record exactly what is being seen

@@ -59,8 +59,12 @@ class DispatcherCore
 		'word' =>	'[a-zA-Z0-9-]*',
 	);
 
+	/**
+	 * @var string
+	 */
+	protected $controller;
+
 	public static $controllers = array();
-	public static $controller;
 
 	/**
 	 * Get current instance of dispatcher (singleton)
@@ -80,12 +84,7 @@ class DispatcherCore
 	protected function __construct()
 	{
 		$this->useRoutes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
-		$this->loadControllers();
-		
-		// Load default routes
-		if ($this->useRoutes)
-			foreach ($this->defaultRoutes as $id => $route)
-				$this->addRoute($id, $route['rule'], $route['controller']);
+		$this->loadRoutes();
 	}
 
 	/**
@@ -93,18 +92,28 @@ class DispatcherCore
 	 */
 	public function dispatch()
 	{
-		self::$controller = $this->getController();
+		$this->getController();
 
-		self::$controller = str_replace('-', '', strtolower(self::$controller));
-		if (!isset(self::$controllers[self::$controller]))
-			self::$controller = 'index';
-		ControllerFactory::getController(self::$controllers[self::$controller])->run();
+		$controllers = Dispatcher::getControllers();
+		if (!isset($controllers[$this->controller]))
+			$this->controller = 'index';
+		ControllerFactory::getController($controllers[$this->controller])->run();
+	}
+	
+	/**
+	 * Load default routes
+	 */
+	protected function loadRoutes()
+	{
+		if ($this->useRoutes)
+			foreach ($this->defaultRoutes as $id => $route)
+				$this->addRoute($id, $route['rule'], $route['controller']);
 	}
 	
 	/**
 	 * 
 	 * @param string $id Name of the route (need to be uniq, a second route with same name will override the first)
-	 * @param string $rule URL rule
+	 * @param string $rule Url rule
 	 * @param string $controller Controller to call if request uri match the rule
 	 */
 	public function addRoute($routeID, $rule, $controller)
@@ -131,46 +140,42 @@ class DispatcherCore
 	}
 
 	/**
-	 * 
+	 * Create an url from
 	 * 
 	 * @param string $routeID Name the route
-	 * @param array $params 
+	 * @param array $params
+	 * @param bool $useRoutes If false, don't use to create this url
 	 */
-	public function createUrl($routeID, $params = array())
+	public function createUrl($routeID, $params = array(), $useRoutes = true)
 	{
 		if (!is_array($params))
-			die('Dispatcher::createURL() $params must be an array');
+			die('Dispatcher::createUrl() $params must be an array');
 
 		if (!isset($this->routes[$routeID]))
 			return '';
 		$route = $this->routes[$routeID];
 		
-		// Get required parameters
+		// Check required fields
 		$queryParams = array();
 		foreach (array_keys($route['required']) as $key)
 		{
 			if (!array_key_exists($key, $params))
-				die("Dispatcher::createURL() miss required parameter '$key'");
+				die("Dispatcher::createUrl() miss required parameter '$key'");
 			$queryParams[$key] = $params[$key];
 		}
 
-		// Build an URL which match a route
-		if ($this->useRoutes)
+		// Build an url which match a route
+		if ($this->useRoutes && $useRoutes)
 		{
 			$url = $route['rule'];
-			
-			// Replace required parameters
-			foreach ($route['required'] as $key => $keyword)
-			{
-				$url = str_replace('{'.$keyword.':'.$key.'}', $params[$key], $url);
-				unset($params[$key]);
-			}
-
-			// Replace other parameters
 			foreach ($params as $key => $value)
-				$url = str_replace('{'.$key.'}', $value, $url);
+				if (isset($route['required'][$key]))
+					$url = str_replace('{'.$route['required'][$key].':'.$key.'}', $params[$key], $url);
+				else
+					$url = str_replace('{'.$key.'}', $value, $url);
+			$url = preg_replace('#\{[a-z0-9]+(:[a-z0-9_]+)?\}#', '', $url);
 		}
-		// Build a classic URL index.php?controller=foo&...
+		// Build a classic url index.php?controller=foo&...
 		else
 			$url = 'index.php?controller='.$route['controller'].(($queryParams) ? '&'.http_build_query($queryParams) : '');
 		
@@ -178,34 +183,19 @@ class DispatcherCore
 	}
 
 	/**
-	 * Load list of available controllers
-	 */
-	public static function loadControllers()
-	{
-		$controller_files = scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'controllers');
-		foreach ($controller_files as $controller_filename)
-		{
-			if (substr($controller_filename, -14, 14) == 'Controller.php')
-				self::$controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
-		}
-
-		// add default controller
-		self::$controllers['index'] = 'IndexController';
-		self::$controllers['authentication'] = self::$controllers['auth'];
-		self::$controllers['productscomparison'] = self::$controllers['compare'];
-	}
-
-	/**
-	 * Retrieve the controller from URL or request URI if routes are activated
+	 * Retrieve the controller from url or request uri if routes are activated
 	 * 
 	 * @return string
 	 */
 	public function getController()
 	{
-		// Use routes ? (for URL rewriting)
+		if ($this->controller)
+			return $this->controller;
+		
+		// Use routes ? (for url rewriting)
 		if ($this->useRoutes)
 		{
-			// Get request URI (HTTP_X_REWRITE_URL is used by IIS)
+			// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
 			if (isset($_SERVER['REQUEST_URI']))
 				$request = $_SERVER['REQUEST_URI'];
 			else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
@@ -217,18 +207,17 @@ class DispatcherCore
 			foreach ($this->routes as $route)
 				if (preg_match($route['regexp'], $request, $m))
 				{
-					// Route found ! Now fill $_GET with parameters of URI
+					// Route found ! Now fill $_GET with parameters of uri
 					$controller = $route['controller'];
 					foreach ($m as $k => $v)
 						if (!is_numeric($k))
 							$_GET[$k] = $v;
 					break;
 				}
-			
-			$_GET['controller'] = $controller;
-			return $controller;
+
+			$this->controller = $controller;
 		}
-		// Default mode, take controller from URL
+		// Default mode, take controller from url
 		else
 		{
 			$controller = Tools::getValue('controller');
@@ -240,7 +229,33 @@ class DispatcherCore
 				else if (isset($_POST['controller']))
 					$_POST[$m[2]] = $m[3];
 			}
-			return (!empty($controller)) ? $controller : 'index';
+			$this->controller (!empty($controller)) ? $controller : 'index';
 		}
+		
+		$this->controller = str_replace('-', '', strtolower($this->controller));
+		return $this->controller;
+	}
+	
+	/**
+	 * Get list of available controllers
+	 * 
+	 * @return array
+	 */
+	public static function getControllers()
+	{
+		$controller_files = scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'controllers');
+		$controllers = array();
+		foreach ($controller_files as $controller_filename)
+		{
+			if (substr($controller_filename, -14, 14) == 'Controller.php')
+				$controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
+		}
+
+		// add default controller
+		$controllers['index'] = 'IndexController';
+		$controllers['authentication'] = $controllers['auth'];
+		$controllers['productscomparison'] = $controllers['compare'];
+		
+		return $controllers;
 	}
 }
