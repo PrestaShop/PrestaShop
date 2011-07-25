@@ -85,7 +85,7 @@ class FrontControllerCore
 		 * Use the Context to access objects instead.
 		 * Example: $this->context->cart
 		 */
-		global $link, $cookie, $cart, $smarty, $iso, $defaultCountry;
+		global $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
 
 		if (self::$initialized)
 			return;
@@ -103,7 +103,11 @@ class FrontControllerCore
 		
 		$this->css_files = array();
 		$this->js_files = array();
-
+		
+		// For compatibility with globals, DEPRECATED as of version 1.5
+		$css_files = $this->css_files;
+		$js_files = $this->js_files;
+		
 		if ($this->ssl AND (empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off') AND Configuration::get('PS_SSL_ENABLED'))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
@@ -115,11 +119,6 @@ class FrontControllerCore
 
 		$cookie = new Cookie('ps');
 		$this->context->cookie = $cookie;
-		
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$link = new Link($protocol_link, $protocol_content);
-		$this->context->link = $link;
 		
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
@@ -371,7 +370,7 @@ class FrontControllerCore
 		if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 		{
 			header('HTTP/1.1 503 temporarily overloaded');
-			self::$smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
+			$this->context->smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
 			exit;
 		}
 	}
@@ -380,7 +379,7 @@ class FrontControllerCore
 	protected function displayRestrictedCountryPage()
 	{
 		header('HTTP/1.1 503 temporarily overloaded');
-		self::$smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
 		exit;
 	}
 
@@ -428,7 +427,7 @@ class FrontControllerCore
 							if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 								$this->restrictedCountry = true;
 							elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-								self::$smarty->assign(array(
+								$this->context->smarty->assign(array(
 									'restricted_country_mode' => true,
 									'geolocation_country' => $record->country_name
 								));
@@ -453,7 +452,7 @@ class FrontControllerCore
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 					$this->restrictedCountry = true;
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
-					self::$smarty->assign(array(
+					$this->context->smarty->assign(array(
 						'restricted_country_mode' => true,
 						'geolocation_country' => 'Undefined'
 					));
@@ -491,7 +490,7 @@ class FrontControllerCore
 	public function displayContent()
 	{
 		Tools::safePostVars();
-		self::$smarty->assign('errors', $this->errors);
+		$this->context->smarty->assign('errors', $this->errors);
 	}
 
 	public function displayHeader()
@@ -502,7 +501,7 @@ class FrontControllerCore
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'time' => time(),
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'static_token' => Tools::getToken(false),
@@ -512,7 +511,7 @@ class FrontControllerCore
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only')
 		));
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'HOOK_HEADER' => Module::hookExec('header'),
 			'HOOK_TOP' => Module::hookExec('top'),
 			'HOOK_LEFT_COLUMN' => Module::hookExec('leftColumn')
@@ -529,9 +528,9 @@ class FrontControllerCore
 				$this->js_files = Tools::cccJs($this->js_files);
 		}
 
-		self::$smarty->assign('css_files', $this->css_files);
-		self::$smarty->assign('js_files', array_unique($this->js_files));
-		self::$smarty->display(_PS_THEME_DIR_.'header.tpl');
+		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('js_files', array_unique($this->js_files));
+		$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
 	}
 
 	public function displayFooter()
@@ -539,16 +538,16 @@ class FrontControllerCore
 		if (!self::$initialized)
 			$this->init();
 
-		self::$smarty->assign(array(
-			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => self::$cart)),
+		$this->context->smarty->assign(array(
+			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),
 			'HOOK_FOOTER' => Module::hookExec('footer'),
 			'content_only' => (int)(Tools::getValue('content_only'))));
-		self::$smarty->display(_PS_THEME_DIR_.'footer.tpl');
+		$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 		//live edit
 		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
-			self::$smarty->assign(array('ad' => $ad, 'live_edit' => true));
-			self::$smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
+			$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
+			$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
 		}
 		else
 			Tools::displayError();
@@ -575,7 +574,7 @@ class FrontControllerCore
 		if (!in_array($this->orderWay, $orderWayValues))
 			$this->orderWay = $orderWayValues[0];
 
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'orderby' => $this->orderBy,
 			'orderway' => $this->orderWay,
 			'orderbydefault' => $orderByValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_BY'))],
@@ -591,15 +590,15 @@ class FrontControllerCore
 
 		$nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50);
 		asort($nArray);
-		$this->n = abs((int)(Tools::getValue('n', ((isset(self::$cookie->nb_item_per_page) AND self::$cookie->nb_item_per_page >= 10) ? self::$cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
+		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? self::$this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
 		$this->p = abs((int)(Tools::getValue('p', 1)));
 		$range = 2; /* how many pages around page selected */
 
 		if ($this->p < 0)
 			$this->p = 0;
 
-		if (isset(self::$cookie->nb_item_per_page) AND $this->n != self::$cookie->nb_item_per_page AND in_array($this->n, $nArray))
-			self::$cookie->nb_item_per_page = $this->n;
+		if (isset($this->context->cookie->nb_item_per_page) AND $this->n != $this->context->cookie->nb_item_per_page AND in_array($this->n, $nArray))
+			$this->context->cookie->nb_item_per_page = $this->n;
 
 		if ($this->p > ($nbProducts / $this->n))
 			$this->p = ceil($nbProducts / $this->n);
@@ -611,7 +610,7 @@ class FrontControllerCore
 		$stop = (int)($this->p + $range);
 		if ($stop > $pages_nb)
 			$stop = (int)($pages_nb);
-		self::$smarty->assign('nb_products', $nbProducts);
+		$this->context->smarty->assign('nb_products', $nbProducts);
 		$pagination_infos = array(
 			'pages_nb' => (int)($pages_nb),
 			'p' => (int)($this->p),
@@ -621,17 +620,18 @@ class FrontControllerCore
 			'start' => (int)($start),
 			'stop' => (int)($stop)
 		);
-		self::$smarty->assign($pagination_infos);
+		$this->context->smarty->assign($pagination_infos);
 	}
 
 	public static function getCurrentCustomerGroups()
 	{
-		if (!isset(self::$cookie) || !self::$cookie->id_customer)
+		$context = Context::getContext();
+		if (!$context->customer->id)
 			return array();
 		if (!is_array(self::$currentCustomerGroups))
 		{
 			self::$currentCustomerGroups = array();
-			$result = Db::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'customer_group WHERE id_customer = '.(int)self::$cookie->id_customer);
+			$result = Db::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'customer_group WHERE id_customer = '.(int)$context->customer->id);
 			foreach ($result as $row)
 				self::$currentCustomerGroups[] = $row['id_group'];
 		}
