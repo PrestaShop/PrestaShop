@@ -52,7 +52,7 @@ $link = new Link($protocol_link, $protocol_content);
 define('_PS_BASE_URL_', Tools::getShopDomain(true));
 define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
-$employee = new Employee((int)$cookie->id_employee);
+$employee = new Employee($cookie->id_employee);
 $cookie->id_lang = (int)$employee->id_lang;
 $language = new Language($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
 $iso = $language->iso_code;

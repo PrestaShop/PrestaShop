@@ -264,7 +264,6 @@ class AdminCustomers extends AdminTab
 		$context = Context::getContext();
 		$irow = 0;
 		$defaultLanguage = $context->language->id;
-		$defaultCurrency = $context->currency->id;
 		if (!($customer = $this->loadObject()))
 			return;
 		$customerStats = $customer->getStats();
@@ -440,7 +439,7 @@ class AdminCustomers extends AdminTab
 				$orderFoot = '</table>';
 				if ($countOK = sizeof($ordersOK))
 				{
-					echo '<div style="float:left;margin-right:20px"><h3 style="color:green;font-weight:700">'.$this->l('Valid orders:').' '.$countOK.' '.$this->l('for').' '.Tools::displayPrice($totalOK, new Currency($defaultCurrency)).'</h3>'.$orderHead;
+					echo '<div style="float:left;margin-right:20px"><h3 style="color:green;font-weight:700">'.$this->l('Valid orders:').' '.$countOK.' '.$this->l('for').' '.Tools::displayPrice($totalOK, $context->currency->id).'</h3>'.$orderHead;
 					foreach ($ordersOK AS $order)
 						echo '<tr '.($irow++ % 2 ? 'class="alt_row"' : '').' style="cursor: pointer" onclick="document.location = \'?tab=AdminOrders&id_order='.$order['id_order'].'&vieworder&token='.$tokenOrders.'\'">
 						<td class="center">'.$order['id_order'].'</td>
