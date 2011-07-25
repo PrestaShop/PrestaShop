@@ -46,7 +46,7 @@ class AdminShipping extends AdminTab
 	public function postProcess()
 	{
 		/* Handling settings */
-		if (isset($_POST['submitHandling'.$this->table]))
+		if (Tools::isSubmit('submitHandling'.$this->table))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
 			{
@@ -81,7 +81,7 @@ class AdminShipping extends AdminTab
 		}
 
 		/* Shipping fees */
-		elseif (isset($_POST['submitFees'.$this->table]))
+		elseif (Tools::isSubmit('submitFees'.$this->table))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
 			{
@@ -93,24 +93,36 @@ class AdminShipping extends AdminTab
 					 	/* Get configuration values */
 						$shipping_method = $carrier->getShippingMethod();
 						$rangeTable = $carrier->getRangeTable(); 
-						
+
 						$carrier->deleteDeliveryPrice($rangeTable);
+						$currentList = Carrier::getDeliveryPriceByRanges($rangeTable, $id_carrier);
 
 						/* Build prices list */
-						$priceList = '';
+						$priceList = array();
 						foreach ($_POST AS $key => $value)
 							if (strstr($key, 'fees_'))
 							{
 								$tmpArray = explode('_', $key);
-								$priceList .= '('.($shipping_method == Carrier::SHIPPING_METHOD_PRICE ? (int)($tmpArray[2]) : 'NULL').',
-								'.($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT ? (int)($tmpArray[2]) : 'NULL').', '.$carrier->id.',
-								'.(int)($tmpArray[1]).', '.number_format(abs(preg_replace("#,#", '.', $value)), 2, '.', '').'),';
-								unset($tmpArray);
+
+								$price = number_format(abs(str_replace(',', '.', $value)), 2, '.', '');
+								$current = 0;
+								foreach ($currentList as $item)
+									if ($item['id_zone'] == $tmpArray[1] && $item['id_'.$rangeTable] == $tmpArray[2])
+										$current = $item;
+								if ($current && $price == $current['price'])
+									continue;
+
+								$priceList[] = array(
+									'id_range_price' => ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) ? (int)$tmpArray[2] : null,
+									'id_range_weight' => ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) ? (int)$tmpArray[2] : null,
+									'id_carrier' => (int)$carrier->id, 
+									'id_zone' => (int)$tmpArray[1], 
+									'price' => $price,
+								);
 							}
-						$priceList = rtrim($priceList, ',');
 						/* Update delivery prices */
 						$carrier->addDeliveryPrice($priceList);
-						Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=6&id_carrier='.$carrier->id.'&token='.$this->token);
 					}
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating fees (cannot load carrier object).');
@@ -218,7 +230,7 @@ class AdminShipping extends AdminTab
 		else
 		{
 			echo '<b>'.$this->l('Carrier:').' </b>
-				<select name="id_carrier2" onchange="document.fees.submit();">';
+				<select name="id_carrier2" onchange="$(\'#fees\').attr(\'action\', $(\'#fees\').attr(\'action\')+\'&id_carrier=\'+$(this).attr(\'value\')); $(\'#fees\').submit();">';
 			foreach ($carrierArray AS $carrierOption)
 				echo $carrierOption['display'];
 		echo '

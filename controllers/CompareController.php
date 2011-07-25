@@ -83,7 +83,7 @@ class CompareControllerCore extends FrontController
 					foreach ($curProduct->getFrontFeatures(self::$cookie->id_lang) AS $feature)
 						$listFeatures[$curProduct->id][$feature['id_feature']] = $feature['value'];
 
-					$cover = Product::getCover((int)$id, (int)$this->id_current_shop);
+					$cover = Product::getCover((int)$id);
 
 					$curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), self::$cookie->id_lang));
 					$curProduct->allow_oosp = Product::isAvailableWhenOutOfStock($curProduct->out_of_stock);
