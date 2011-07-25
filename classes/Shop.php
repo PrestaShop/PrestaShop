@@ -58,6 +58,7 @@ class ShopCore extends ObjectModel
 
 	private	static $assoTables = array(
 		'carrier' => 				array('type' => 'shop'),
+		'carrier_lang' => 			array('type' => 'fk_shop'),
 		'category_lang' => 			array('type' => 'fk_shop'),
 		'cms' => 					array('type' => 'shop'),
 		'contact' => 				array('type' => 'shop'),

@@ -289,10 +289,10 @@ abstract class DbCore
 	/**
 	 * Execute a DELETE query
 	 *
-	 * @param unknown_type $table Name of the table to delete
-	 * @param unknown_type $where WHERE clause on query
-	 * @param unknown_type $limit Number max of rows to delete
-	 * @param unknown_type $use_cache Use cache or not
+	 * @param string $table Name of the table to delete
+	 * @param string $where WHERE clause on query
+	 * @param int $limit Number max of rows to delete
+	 * @param bool $use_cache Use cache or not
 	 * @return bool
 	 */
 	public function	delete($table, $where = false, $limit = false, $use_cache = 1)

@@ -30,6 +30,12 @@ class DeliveryCore extends ObjectModel
 	/** @var integer */
 	public $id_delivery;
 	
+	/** @var int **/
+	public $id_shop;
+	
+	/** @var int **/
+	public $id_group_shop;
+	
 	/** @var integer */
 	public $id_carrier;
 
@@ -66,11 +72,15 @@ class DeliveryCore extends ObjectModel
 	{
 		parent::validateFields();
 
-		$fields['id_carrier'] = (int)($this->id_carrier);
-		$fields['id_range_price'] = (int)($this->id_range_price);
-		$fields['id_range_weight'] = (int)($this->id_range_weight);
-		$fields['id_zone'] = (int)($this->id_zone);
-		$fields['price'] = (float)($this->price);
+		if ($this->id_shop)
+			$fields['id_shop'] = (int)$this->id_shop;
+		if ($this->id_group_shop)
+			$fields['id_group_shop'] = (int)$this->id_group_shop;
+		$fields['id_carrier'] = (int)$this->id_carrier;
+		$fields['id_range_price'] = (int)$this->id_range_price;
+		$fields['id_range_weight'] = (int)$this->id_range_weight;
+		$fields['id_zone'] = (int)$this->id_zone;
+		$fields['price'] = (float)$this->price;
 		
 		return $fields;
 	}	
