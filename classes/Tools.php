@@ -551,9 +551,9 @@ class ToolsCore
 	 */
 	public static function dieObject($object, $kill = true)
 	{
-		echo '<pre style="text-align: left;">';
+		echo '<xmp style="text-align: left;">';
 		print_r($object);
-		echo '</pre><br />';
+		echo '</xmp><br />';
 		if ($kill)
 			die('END');
 		return $object;
@@ -1634,23 +1634,23 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg [L]';
 
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1 [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$1 [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1 [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)__([a-zA-Z0-9-]*)'] = 'index.php?controller=supplier&id_supplier=$1 [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)_([a-zA-Z0-9-]*)'] = 'index.php?controller=manufacturer&id_manufacturer=$1 [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms=$1 [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)__([a-zA-Z0-9-]*)'] = 'index.php?controller=supplier&id_supplier=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)_([a-zA-Z0-9-]*)'] = 'index.php?controller=manufacturer&id_manufacturer=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms=$1 [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1 [QSA,L]';
 
 				if ($multilang)
 				{
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/content/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=cms&isolang=$1&id_cms=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/content/category/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=cms&isolang=$1&id_cms_category=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)__[a-zA-Z0-9-]*'] = 'index.php?controller=supplier&isolang=$1&id_supplier=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-					$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)_[a-zA-Z0-9-]*'] = 'index.php?controller=manufacturer&isolang=$1&id_manufacturer=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/content/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=cms&isolang=$1&id_cms=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/content/category/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=cms&isolang=$1&id_cms_category=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)__[a-zA-Z0-9-]*'] = 'index.php?controller=supplier&isolang=$1&id_supplier=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
+					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)_[a-zA-Z0-9-]*'] = 'index.php?controller=manufacturer&isolang=$1&id_manufacturer=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
 				}
 
 				// PS BASE URI automaticaly prepend the string, do not use PS defines for the image directories
@@ -1658,13 +1658,13 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2.jpg [L]';
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
 
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)__([a-zA-Z0-9-]*)'] = 'index.php?controller=supplier&id_supplier=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)_([a-zA-Z0-9-]*)'] = 'index.php?controller=manufacturer&id_manufacturer=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)__([a-zA-Z0-9-]*)'] = 'index.php?controller=supplier&id_supplier=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)_([a-zA-Z0-9-]*)'] = 'index.php?controller=manufacturer&id_manufacturer=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
+				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
 
 				Language::loadLanguages();
 				$default_meta = Meta::getMetasByIdLang((int)Configuration::get('PS_LANG_DEFAULT'), new Shop($uri['id_shop']));
