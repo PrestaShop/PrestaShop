@@ -28,8 +28,9 @@
 ob_start();
 $timerStart = microtime(true);
 
-$currentFileName = array_reverse(explode("/", $_SERVER['SCRIPT_NAME']));
-$cookie = new Cookie('psAdmin', substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])));
+$context = Context::getContext();
+
+$context->cookie = $cookie;
 if (isset($_GET['logout']))
 	$cookie->logout();
 
@@ -45,20 +46,19 @@ if ($back = Tools::getValue('back'))
 	$currentIndex .= '&back='.urlencode($back);
 AdminTab::$currentIndex = $currentIndex;
 
-/* Server Params */
-$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-$protocol_content = (isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-$link = new Link($protocol_link, $protocol_content);
-define('_PS_BASE_URL_', Tools::getShopDomain(true));
-define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
-$employee = new Employee($cookie->id_employee);
-$cookie->id_lang = (int)$employee->id_lang;
-$language = new Language($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
 $iso = $language->iso_code;
 include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+
+/* Server Params */
+$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+$protocol_content = (isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+$link = new Link($protocol_link, $protocol_content);
+$context->link = $link;
+define('_PS_BASE_URL_', Tools::getShopDomain(true));
+define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 $path = dirname(__FILE__).'/themes/';
 if (empty($employee->bo_theme) OR !file_exists($path.$employee->bo_theme.'/admin.css'))
@@ -88,11 +88,6 @@ if (Tools::isMultiShopActivated() && Tools::getValue('setShopContext') !== false
 	Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery));
 }
 
-$context = Context::getContext();
-$context->employee = $employee;
-$context->cookie = $cookie;
-$context->link = $link;
-$context->language = $language;
 $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 $context->country = $defaultCountry;
 $context->shop = new Shop(Shop::getContextID());

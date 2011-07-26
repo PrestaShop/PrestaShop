@@ -1,5 +1,33 @@
 <?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 6844 $
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
 
+/**
+ * @since 1.5.0
+ */
 class DispatcherCore
 {
 	/**
@@ -11,36 +39,36 @@ class DispatcherCore
 	 * @var array
 	 */
 	protected $defaultRoutes = array(
-		'product' => array(
+		'product_rule' => array(
 			'controller' =>	'product',
-			'rule' =>		'{number:id_product}-{word}.html',
+			'rule' =>		'{number:id_product}-{text}.html',
 		),
-		'category' => array(
+		'category_rule' => array(
 			'controller' =>	'category',
-			'rule' =>		'{number:id_category}-{word}',
+			'rule' =>		'{number:id_category}-{text}',
 		),
-		'product_alt' => array(
+		'product_rule2' => array(
 			'controller' =>	'product',
-			'rule' =>		'{word1}/{number:id_product}-{word2}.html',
+			'rule' =>		'{text1}/{number:id_product}-{text2}.html',
 		),
-		'supplier' => array(
+		'supplier_rule' => array(
 			'controller' =>	'supplier',
-			'rule' =>		'{number:id_supplier}__{word}',
+			'rule' =>		'{number:id_supplier}__{text}',
 		),
-		'manufacturer' => array(
+		'manufacturer_rule' => array(
 			'controller' =>	'manufacturer',
-			'rule' =>		'{number:id_manufacturer}_{word}',
+			'rule' =>		'{number:id_manufacturer}_{text}',
 		),
-		'cms' => array(
+		'cms_rule' => array(
 			'controller' =>	'cms',
-			'rule' =>		'content/{number:id_cms}-{word}',
+			'rule' =>		'content/{number:id_cms}-{text}',
 		),
-		'cms_category' => array(
+		'cms_category_rule' => array(
 			'controller' =>	'cms',
-			'rule' =>		'content/category/{number:id_cms_category}-{word}',
+			'rule' =>		'content/category/{number:id_cms_category}-{text}',
 		),
 	);
-	
+
 	/**
 	 * @var $useRoutes bool
 	 */
@@ -50,13 +78,13 @@ class DispatcherCore
 	 * @var $routes array
 	 */
 	protected $routes = array();
-	
+
 	/**
 	 * @var array
 	 */
 	protected $keywords = array(
 		'number' =>	'[0-9]+',
-		'word' =>	'[a-zA-Z0-9-]*',
+		'text' =>	'[a-zA-Z0-9-]*',
 	);
 
 	/**
@@ -105,9 +133,21 @@ class DispatcherCore
 	 */
 	protected function loadRoutes()
 	{
+		$context = Context::getContext();
+		foreach ($this->defaultRoutes as $id => $route)
+			$this->addRoute($id, $route['rule'], $route['controller']);
+
+		// Load routes from meta table
 		if ($this->useRoutes)
-			foreach ($this->defaultRoutes as $id => $route)
-				$this->addRoute($id, $route['rule'], $route['controller']);
+		{
+			$sql = 'SELECT m.page, ml.url_rewrite
+					FROM `'._DB_PREFIX_.'meta` m
+					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.$context->shop->sqlLang('ml').')
+					WHERE id_lang = '.(int)$context->language->id;
+			if ($results = Db::getInstance()->ExecuteS($sql))
+				foreach ($results as $row)
+					$this->addRoute($row['page'], $row['url_rewrite'], $row['page']);
+		}
 	}
 	
 	/**
@@ -138,6 +178,17 @@ class DispatcherCore
 			'required' =>	$required,
 		);
 	}
+	
+	/**
+	 * Check if a route is defined
+	 * 
+	 * @param string $routeID
+	 * @return bool
+	 */
+	public function routeExists($routeID)
+	{
+		return isset($this->routes[$routeID]);
+	}
 
 	/**
 	 * Create an url from
@@ -152,7 +203,10 @@ class DispatcherCore
 			die('Dispatcher::createUrl() $params must be an array');
 
 		if (!isset($this->routes[$routeID]))
-			return '';
+		{
+			$query = http_build_query($params);
+			return 'index.php?controller='.$routeID.(($query) ? '&'.$query : '');
+		}
 		$route = $this->routes[$routeID];
 		
 		// Check required fields
@@ -191,9 +245,19 @@ class DispatcherCore
 	{
 		if ($this->controller)
 			return $this->controller;
-		
+			
+		$controller = Tools::getValue('controller');
+		if (isset($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
+		{
+			$controller = $m[1];
+			if (isset($_GET['controller']))
+				$_GET[$m[2]] = $m[3];
+			else if (isset($_POST['controller']))
+				$_POST[$m[2]] = $m[3];
+		}
+
 		// Use routes ? (for url rewriting)
-		if ($this->useRoutes)
+		if ($this->useRoutes && !$controller)
 		{
 			// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
 			if (isset($_SERVER['REQUEST_URI']))
@@ -219,19 +283,8 @@ class DispatcherCore
 		}
 		// Default mode, take controller from url
 		else
-		{
-			$controller = Tools::getValue('controller');
-			if (isset($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
-			{
-				$controller = $m[1];
-				if (isset($_GET['controller']))
-					$_GET[$m[2]] = $m[3];
-				else if (isset($_POST['controller']))
-					$_POST[$m[2]] = $m[3];
-			}
 			$this->controller = (!empty($controller)) ? $controller : 'index';
-		}
-		
+
 		$this->controller = str_replace('-', '', strtolower($this->controller));
 		return $this->controller;
 	}

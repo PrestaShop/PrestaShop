@@ -209,7 +209,7 @@ class CMSCategoryCore extends ObjectModel
 		$category['cms'] = Db::getInstance()->ExecuteS($sql);
 		if ($links == 1)
 		{
-			$category['link'] = $link->getCMSCategoryLink($current, $category['link_rewrite']);
+			$category['link'] = $context->link->getCMSCategoryLink($current, $category['link_rewrite']);
 			foreach($category['cms'] as $key => $cms)
 				$category['cms'][$key]['link'] = $context->link->getCMSLink($cms['id_cms'], $cms['link_rewrite']);
 		}
@@ -477,6 +477,9 @@ class CMSCategoryCore extends ObjectModel
 
 	public function getName($id_lang = NULL)
 	{
+		if (!$context)
+			$context = Context::getContext();
+
 		if (!$id_lang)
 		{
 			if (isset($this->name[Context::getContext()->language->id]))

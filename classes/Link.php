@@ -47,104 +47,181 @@ class LinkCore
 	}
 
 	/**
-	 * This function returns a link to delete a customization picture file
-	 * 
-	 * @param mixed $product 
-	 * @param mixed $id_picture 
-	 * @return void
+	 * Create a link to delete a product
+	 *
+	 * @param mixed $product ID of the product OR a Product object
+	 * @param int $id_picture ID of the picture to delete
+	 * @return string
 	 */
-	public function getProductDeletePictureLink($product, $id_picture){
-		if (is_object($product))
-			return ($this->allow == 1)?(_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink().((isset($product->category) AND !empty($product->category) AND $product->category != 'home') ? $product->category.'/' : '').(int)$product->id.'-'.$product->link_rewrite.($product->ean13 ? '-'.$product->ean13 : '').'.html?deletePicture='.$id_picture) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$product->id).'&amp;deletePicture='.$id_picture;
-		else
-			return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=product&id_product='.(int)$product.'&amp;deletePicture='.$id_picture;
+	public function getProductDeletePictureLink($product, $id_picture)
+	{
+		$url = $this->getProductLink($product);
+		return $url.((strpos($url, '?')) ? '&' : '?').'&deletePicture='.$id_picture;
 	}
 
 	/**
-	  * Return the correct link for product/category/supplier/manufacturer
-	  *
-	  * @param mixed $id_OBJ Can be either the object or the ID only
-	  * @param string $alias Friendly URL (only if $id_OBJ is the object)
-	  * @return string link
-	  */
+	 * Create a link to a product
+	 *
+	 * @param mixed $id_product ID of the product OR a Product object
+	 * @param string $alias If $id_product is not a object, this argument is same as obj->link_rewrite
+	 * @param string $category If $id_product is not a object, name of the product category
+	 * @param string $ean13
+	 * @param int $id_lang
+	 * @param int $id_shop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
+	 * @return string
+	 */
 	public function getProductLink($id_product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__;
 		
 		// @todo use specific method ?
 		if ($id_shop && ($shop = Shop::getShop($id_shop)))
-			$url = 'http://'.$shop['domain'].'/'.$shop['uri'];
-		
+			$url = 'http://'.$shop['domain'].'/'.$shop['uri'].$this->getLangLink($id_lang);
+			
 		if (is_object($id_product))
-			return ($this->allow == 1)?($url.$this->getLangLink((int)$id_lang).((isset($id_product->category) AND !empty($id_product->category) AND $id_product->category != 'home') ? $id_product->category.'/' : '').(int)$id_product->id.'-'.$id_product->link_rewrite.($id_product->ean13 ? '-'.$id_product->ean13 : '').'.html') :
-			($url.'index.php?controller=product&id_product='.(int)$id_product->id);
-		elseif ($alias)
-			return ($this->allow == 1)?($url.$this->getLangLink((int)$id_lang).(($category AND $category != 'home') ? ($category.'/') : '').(int)$id_product.'-'.$alias.($ean13 ? '-'.$ean13 : '').'.html') :
-			($url.'index.php?controller=product&id_product='.(int)$id_product);
+		{
+			$product = clone($id_product);
+			$id_product = $product->id;
+			$category = $product->category;
+			$alias = $product->link_rewrite;
+			$ean13 = $product->ean13;
+		}
+		
+		if ($category AND $category != 'home')
+			return $url.Dispatcher::getInstance()->createUrl('product_rule2', array(
+				'id_product' =>	$id_product,
+				'text1' =>		$category,
+				'text2' =>		$alias.(($ean13) ? '-'.$ean13 : ''),
+			), ($alias && $this->allow));
 		else
-			return $url.'index.php?controller=product&id_product='.(int)$id_product;
+			return $url.Dispatcher::getInstance()->createUrl('product_rule', array(
+				'id_product' =>	$id_product,
+				'text' =>		(($alias) ? $alias : '').(($ean13) ? '-'.$ean13 : ''),
+			), ($alias && $this->allow));
 	}
 
+	/**
+	 * Create a link to a category
+	 *
+	 * @param mixed $id_category ID of the category OR a Category object
+	 * @param string $alias If $id_category is not a object, this argument is same as obj->link_rewrite
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public function getCategoryLink($id_category, $alias = NULL, $id_lang = NULL)
 	{
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (is_object($id_category))
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_category->id).'-'.$id_category->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=category&id_category='.(int)($id_category->id));
-		if ($alias)
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_category).'-'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=category&id_category='.(int)($id_category));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=category&id_category='.(int)($id_category);
+		{
+			$category = clone($id_category);
+			$id_category = $category->id;
+			$alias = $category->link_rewrite;
+		}
+
+		return $url.Dispatcher::getInstance()->createUrl('category_rule', array(
+			'id_category' =>	$id_category,
+			'text' =>			($alias) ? $alias : '',
+		), ($alias && $this->allow));
 	}
 
+	/**
+	 * Create a link to a CMS category
+	 *
+	 * @param mixed $id_category ID of the category OR a CmsCategory object
+	 * @param string $alias If $id_category is not a object, this argument is same as obj->link_rewrite
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public function getCMSCategoryLink($id_category, $alias = NULL, $id_lang = NULL)
 	{
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (is_object($id_category))
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/category/'.(int)($id_category->id).'-'.$id_category->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=cms&id_cms_category='.(int)($id_category->id));
-		if ($alias)
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/category/'.(int)($id_category).'-'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=cms&id_cms_category='.(int)($id_category));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=cms&id_cms_category='.(int)($id_category);
+		{
+			$category = clone($id_category);
+			$id_category = $category->id;
+			$alias = $category->link_rewrite;
+		}
+
+		return $url.Dispatcher::getInstance()->createUrl('cms_category_rule', array(
+			'id_cms_category' =>	$id_category,
+			'text' =>				($alias) ? $alias : '',
+		), ($alias && $this->allow));
 	}
 
+	/**
+	 * Create a link to a CMS page
+	 *
+	 * @param mixed $cms ID of the CMS page OR a Cms object
+	 * @param string $alias If $cms is not a object, this argument is same as obj->link_rewrite
+	 * @param bool $ssl
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = NULL)
 	{
 		$base = (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
+		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (is_object($cms))
 		{
-			return ($this->allow == 1) ?
-				($base.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/'.(int)($cms->id).'-'.$cms->link_rewrite) :
-				($base.__PS_BASE_URI__.'index.php?controller=cms&id_cms='.(int)($cms->id));
+			$id_cms = $cms->id;
+			$alias = $cms->link_rewrite;
 		}
+		else
+			$id_cms = $cms;
 
-		if ($alias)
-			return ($this->allow == 1) ? ($base.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).'content/'.(int)($cms).'-'.$alias) :
-			($base.__PS_BASE_URI__.'index.php?controller=cms&id_cms='.(int)($cms));
-		return $base.__PS_BASE_URI__.'index.php?controller=cms&id_cms='.(int)($cms);
+		return $url.Dispatcher::getInstance()->createUrl('cms_rule', array(
+			'id_cms' =>	$id_cms,
+			'text' =>	($alias) ? $alias : '',
+		), ($alias && $this->allow));
 	}
 
+	/**
+	 * Create a link to a supplier
+	 *
+	 * @param mixed $id_supplier ID of the supplier page OR a Supplier object
+	 * @param string $alias If $id_supplier is not a object, this argument is same as obj->link_rewrite
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public function getSupplierLink($id_supplier, $alias = NULL, $id_lang = NULL)
 	{
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (is_object($id_supplier))
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_supplier->id).'__'.$id_supplier->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=supplier&id_supplier='.(int)($id_supplier->id));
-		if ($alias)
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_supplier).'__'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=supplier&id_supplier='.(int)($id_supplier));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=supplier&id_supplier='.(int)($id_supplier);
+		{
+			$supplier = clone($id_supplier);
+			$id_supplier = $supplier->id;
+			$alias = $supplier->link_rewrite;
+		}
+
+		return $url.Dispatcher::getInstance()->createUrl('supplier_rule', array(
+			'id_supplier' =>	$id_supplier,
+			'text' =>			($alias) ? $alias : '',
+		), ($alias && $this->allow));
 	}
 
+	/**
+	 * Create a link to a manufacturer
+	 *
+	 * @param mixed $id_manufacturer ID of the manufacturer page OR a Supplier object
+	 * @param string $alias If $id_manufacturer is not a object, this argument is same as obj->link_rewrite
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public function getManufacturerLink($id_manufacturer, $alias = NULL, $id_lang = NULL)
 	{
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (is_object($id_manufacturer))
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_manufacturer->id).'_'.$id_manufacturer->link_rewrite) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=manufacturer&id_manufacturer='.(int)($id_manufacturer->id));
-		if ($alias)
-			return ($this->allow == 1) ? (_PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink((int)($id_lang)).(int)($id_manufacturer).'_'.$alias) :
-			(_PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=manufacturer&id_manufacturer='.(int)($id_manufacturer));
-		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=manufacturer&id_manufacturer='.(int)($id_manufacturer);
+		{
+			$manufacturer = clone($id_manufacturer);
+			$id_manufacturer = $manufacturer->id;
+			$alias = $manufacturer->link_rewrite;
+		}
+
+		return $url.Dispatcher::getInstance()->createUrl('manufacturer_rule', array(
+			'id_manufacturer' =>	$id_manufacturer,
+			'text' =>				($alias) ? $alias : '',
+		), ($alias && $this->allow));
 	}
 
 	/**
@@ -185,59 +262,30 @@ class LinkCore
 		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
 	}
 
-	public function preloadPageLinks(Context $context = null)
+	/**
+	 * Create a simple link
+	 * 
+	 * @param string $controller
+	 * @param bool $ssl
+	 * @param int $id_lang
+	 * @param string $request
+	 * @param Context $context
+	 */
+	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, Context $context = null)
 	{
+		$controller = str_replace('.php', '', $controller);
+
 		if (!$context)
 			$context = Context::getContext();
-		if ($this->allow != 1)
-			return;
-
-		$result = Db::getInstance()->ExecuteS('
-		SELECT page, url_rewrite
-		FROM `'._DB_PREFIX_.'meta` m
-		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta)
-		WHERE id_lang = '.(int)$context->language->id);
-		foreach ($result as $row)
-			self::$cache['page'][$row['page'].'.php_'.$context->language->id] = $this->getLangLink($context->language->id).$row['url_rewrite'];
-	}
-
-	public function getPageLink($filename, $ssl = false, $id_lang = NULL, $request = NULL, Context $context = null)
-	{
-		if (!$context)
-			$context = Context::getContext();
-		if ($id_lang == NULL)
+		if (!$id_lang)
 			$id_lang = (int)$context->language->id;
 
-		if (array_key_exists($filename.'_'.$id_lang, self::$cache['page']) AND !empty(self::$cache['page'][$filename.'_'.$id_lang]))
-			$uri_path = self::$cache['page'][$filename.'_'.$id_lang];
-		else
-		{
-			if ($this->allow == 1)
-			{
-				$url_rewrite = '';
-				if ($filename != 'index')
-				{
-					$pagename = $filename;
-					$url_rewrite = Db::getInstance()->getValue('
-					SELECT url_rewrite
-					FROM `'._DB_PREFIX_.'meta` m
-					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta)
-					WHERE id_lang = '.(int)$id_lang.' AND `page` = \''.pSQL($pagename).'\'');
-					$uri_path = $this->getLangLink((int)$id_lang).($url_rewrite ? $url_rewrite : $filename);
-				}
-				else
-					$uri_path = $this->getLangLink((int)$id_lang);
-			}
-			else
-			{
-				$uri_path = '';
-				
-				if ($filename != 'index.php')
-					$uri_path = 'index.php?controller='.str_replace('.php', '', $filename);
-			}
-			self::$cache['page'][$filename.'_'.$id_lang] = $uri_path;
-		}
-		return (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).__PS_BASE_URI__.ltrim($uri_path, '/').($request ? (($this->allow ? '?' : '&').trim($request)) : '');
+		$uri_path = Dispatcher::getInstance()->createUrl($controller);
+		$url = ($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
+		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
+		$url .= ($request ? (($this->allow ? '?' : '&').trim($request)) : '');
+
+		return $url;
 	}
 
 	public function getCatImageLink($name, $id_category, $type = null)
