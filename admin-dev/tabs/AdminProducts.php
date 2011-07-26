@@ -2911,7 +2911,7 @@ class AdminProducts extends AdminTab
 	function displayFormImages($obj, $token = NULL)
 	{
 		global $attributeJs, $images;
-
+		$context = Context::getContext();
 		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
 		echo '
 		<div class="tab-page" id="step2">
