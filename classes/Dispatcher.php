@@ -229,7 +229,7 @@ class DispatcherCore
 				else if (isset($_POST['controller']))
 					$_POST[$m[2]] = $m[3];
 			}
-			$this->controller (!empty($controller)) ? $controller : 'index';
+			$this->controller = (!empty($controller)) ? $controller : 'index';
 		}
 		
 		$this->controller = str_replace('-', '', strtolower($this->controller));

@@ -55,10 +55,10 @@ class ToolsCore
 	* @param string $url Desired URL
 	* @param string $baseUri Base URI (optional)
 	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__, Context $context = null)
+	public static function redirect($url, $baseUri = __PS_BASE_URI__, Link $link = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$link)
+			$link = Context::getContext()->link;
 		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
 		{
 			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
@@ -70,7 +70,7 @@ class ToolsCore
 			}
 
 			$explode = explode('?', $url);
-			$url = $context->link->getPageLink($explode[0], true);
+			$url = $link->getPageLink($explode[0], true);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
 			$baseUri = '';

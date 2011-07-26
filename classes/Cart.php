@@ -333,7 +333,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @result array Products
 	 */
-	public function getProducts($refresh = false, $id_product = false, Context $context = null)
+	public function getProducts($refresh = false, $id_product = false, $id_country = null)
 	{
 		if (!$this->id)
 			return array();
@@ -350,8 +350,8 @@ class CartCore extends ObjectModel
 			}
 			return $this->_products;
 		}
-		if (!$context)
-			$context = Context::getContext();
+		if (!$id_country)
+			$id_country = Context::getContext()->country->id;
 		
 		$sql = 'SELECT cp.`id_product_attribute`, cp.`id_product`, cu.`id_customization`, cp.`quantity` AS cart_quantity, cp.id_shop, cu.`quantity` AS customization_quantity, pl.`name`,
 					pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`,
@@ -368,7 +368,7 @@ class CartCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = cp.`id_product_attribute`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)$context->country->id.'
+					AND tr.`id_country` = '.(int)$id_country.'
 					AND tr.`id_state` = 0)
 			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang.')
@@ -541,14 +541,14 @@ class CartCore extends ObjectModel
 	 * @param integer $id_product_attribute Attribute ID if needed
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
-	public	function updateQty($quantity, $id_product, $id_product_attribute = NULL, $id_customization = false, $operator = 'up', Context $context = null)
+	public	function updateQty($quantity, $id_product, $id_product_attribute = NULL, $id_customization = false, $operator = 'up', Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;
-		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $context->shop->getID());
+		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->getID());
 
 		/* If we have a product combination, the minimal quantity is set with the one of this combination */
 		if (!empty($id_product_attribute))
@@ -579,7 +579,7 @@ class CartCore extends ObjectModel
 				{
 					$sql = 'SELECT p.out_of_stock, stock.quantity
 							FROM '._DB_PREFIX_.'product p
-							'.Product::sqlStock('p', $id_product_attribute, true, $context).'
+							'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 							WHERE p.id_product = '.$id_product;
 					$result2 = Db::getInstance()->getRow($sql);
 					$productQty = (int)$result2['quantity'];
@@ -1028,13 +1028,14 @@ class CartCore extends ObjectModel
 	* @param integer $id_carrier Carrier ID (default : current carrier)
 	* @return float Shipping total
 	*/
-    function getOrderShippingCost($id_carrier = NULL, $useTax = true, Context $context = null)
+    function getOrderShippingCost($id_carrier = NULL, $useTax = true, Country $default_country = null)
     {
-		if (!$context)
-			$context = Context::getContext();
 		if ($this->isVirtualCart())
 			return 0;
 
+		if (!$default_country)
+			$default_country = Context::getContext()->country;
+			
 		// Checking discounts in cart
 		$products = $this->getProducts();
 		$discounts = $this->getDiscounts(true);
@@ -1076,11 +1077,9 @@ class CartCore extends ObjectModel
 			$id_zone = Address::getZoneById((int)($this->id_address_delivery));
 		else
 		{
-			// This method can be called from the backend, and $defaultCountry won't be defined
-			$defaultCountry = $context->country;
-			if (!Validate::isLoadedObject($defaultCountry))
-				$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-			$id_zone = (int)$defaultCountry->id_zone;
+			if (!Validate::isLoadedObject($default_country))
+				$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+			$id_zone = (int)$default_country->id_zone;
 		}		
 
 		// If no carrier, select default one
@@ -1199,7 +1198,7 @@ class CartCore extends ObjectModel
             )
 					$id_zone = Address::getZoneById((int)($this->id_address_delivery));
 				else
-					$id_zone = (int)$defaultCountry->id_zone;
+					$id_zone = (int)$default_country->id_zone;
 				if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT AND (!Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), $id_zone)))
 						OR ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE AND (!Carrier::checkDeliveryPriceByPrice($carrier->id, $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, (int)($this->id_currency)))))
 						$shipping_cost += 0;
@@ -1284,10 +1283,13 @@ class CartCore extends ObjectModel
 	*
 	* @return mixed Return a string if an error occurred and false otherwise
 	*/
-	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, Context $context = null)
+	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false, 
+		Customer $customer = null, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+		if (!$customer)
+			$customer = Context::getContext()->customer;			
 		if (!$order_total)
 			 return Tools::displayError('Cannot add voucher if order is free.');
 		if (!$discountObj->active)
@@ -1300,7 +1302,7 @@ class CartCore extends ObjectModel
 		if ($checkCartDiscount
 			AND (
 				$this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user
-				OR (Order::getDiscountsCustomer((int)($context->customer->id), $discountObj->id) + $this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user) >= $discountObj->quantity_per_user
+				OR (Order::getDiscountsCustomer($customer->id, $discountObj->id) + $this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user) >= $discountObj->quantity_per_user
 				)
 			)
 			return Tools::displayError('You cannot use this voucher anymore (usage limit attained).');
@@ -1308,7 +1310,7 @@ class CartCore extends ObjectModel
 			return Tools::displayError('This voucher is not yet valid');
 		if (strtotime($discountObj->date_to) < time())
 			return Tools::displayError('This voucher has expired.');
-		if (!$discountObj->availableWithShop($context->shop))
+		if (!$discountObj->availableWithShop($shop))
 			return Tools::displayError('This voucher is not available with this shop.');
 		if (sizeof($discounts) >= 1 AND $checkCartDiscount)
 		{
@@ -1327,7 +1329,7 @@ class CartCore extends ObjectModel
 
 		if (($discountObj->id_customer OR $discountObj->id_group) AND ($this->id_customer != $discountObj->id_customer AND !in_array($discountObj->id_group, $groups)))
 		{
-			if (!$context->customer->isLogged())
+			if (!$customer->isLogged())
 				return Tools::displayError('You cannot use this voucher.').' - '.Tools::displayError('Please log in.');
 			return Tools::displayError('You cannot use this voucher.');
 		}
@@ -1384,10 +1386,10 @@ class CartCore extends ObjectModel
 	*
 	* @return array Cart details
 	*/
-	function getSummaryDetails(Context $context = null)
+	function getSummaryDetails($id_lang = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
 		$delivery = new Address((int)($this->id_address_delivery));
 		$invoice = new Address((int)($this->id_address_invoice));
@@ -1415,7 +1417,7 @@ class CartCore extends ObjectModel
 			'delivery_state' => State::getNameById($delivery->id_state),
 			'invoice' => $invoice,
 			'invoice_state' => State::getNameById($invoice->id_state),
-			'carrier' => new Carrier($this->id_carrier, $context->language->id),
+			'carrier' => new Carrier($this->id_carrier, $id_lang),
 			'products' => $this->getProducts(false),
 			'discounts' => $this->getDiscounts(false, true),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
@@ -1647,10 +1649,8 @@ class CartCore extends ObjectModel
 		$success = true;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
-		$newContext = Context::cloneContext();
-		$newContext->shop = new Shop($cart->id_shop);
 		foreach ($products AS $product)
-			$success &= $cart->updateQty($product['quantity'], (int)$product['id_product'], (int)$product['id_product_attribute'], NULL, 'up', $newContext);
+			$success &= $cart->updateQty($product['quantity'], (int)$product['id_product'], (int)$product['id_product_attribute'], NULL, 'up', new Shop($cart->id_shop));
 
 		// Customized products
 		$customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('

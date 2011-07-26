@@ -235,10 +235,10 @@ class AddressFormatCore extends ObjectModel
 	 * @addressFormat is the format
 	 * @return double Array
 	 */
-	public static function getFormattedAddressFieldsValues($address, $addressFormat, Context $context = null)
+	public static function getFormattedAddressFieldsValues($address, $addressFormat, $id_lang = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 		$tab = array();
 		$temporyObject = array();
 		
@@ -268,8 +268,8 @@ class AddressFormatCore extends ObjectModel
 										$temporyObject[$associateName[0]] = new $associateName[0]($address->{$idFieldName});
 									if ($temporyObject[$associateName[0]])
 										$tab[$pattern] = (is_array($temporyObject[$associateName[0]]->{$associateName[1]})) ?
-											((isset($temporyObject[$associateName[0]]->{$associateName[1]}[$context->language->id])) ? 
-											$temporyObject[$associateName[0]]->{$associateName[1]}[$context->language->id] : '') :
+											((isset($temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang])) ? 
+											$temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang] : '') :
 											$temporyObject[$associateName[0]]->{$associateName[1]};
 								}
 							}
