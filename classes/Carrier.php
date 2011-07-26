@@ -399,14 +399,18 @@ class CarrierCore extends ObjectModel
 		return $carriers;
 	}
 
-	public static function getCarriersForOrder($id_zone, $groups = NULL, $context = null)
+	public static function getCarriersForOrder($id_zone, $groups = NULL, Cart $cart = null, $id_currency = null, $id_lang = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+		if (!$cart)
+			$cart = Context::getContext()->cart;
+		if (!$id_currency)
+			$id_currency = Context::getContext()->currency->id;
 		if (is_array($groups) AND !empty($groups))
-			$result = Carrier::getCarriers((int)$context->language->id, true, false, (int)$id_zone, $groups, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+			$result = Carrier::getCarriers($id_lang, true, false, (int)$id_zone, $groups, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		else
-			$result = Carrier::getCarriers((int)$context->language->id, true, false, (int)$id_zone, array(1), PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+			$result = Carrier::getCarriers($id_lang, true, false, (int)$id_zone, array(1), PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		$resultsArray = array();
 
 		foreach ($result AS $k => $row)
@@ -431,8 +435,8 @@ class CarrierCore extends ObjectModel
 					$id_zone = (int)$defaultCountry->id_zone;
 
 				// Get only carriers that have a range compatible with cart
-					if (($shippingMethod == Carrier::SHIPPING_METHOD_WEIGHT AND (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $context->cart->getTotalWeight(), $id_zone)))
-						OR ($shippingMethod == Carrier::SHIPPING_METHOD_PRICE AND (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $context->cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $context->currency->id))))
+					if (($shippingMethod == Carrier::SHIPPING_METHOD_WEIGHT AND (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone)))
+						OR ($shippingMethod == Carrier::SHIPPING_METHOD_PRICE AND (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency))))
 					{
 						unset($result[$k]);
 						continue ;
@@ -441,8 +445,8 @@ class CarrierCore extends ObjectModel
 			}
 			
 			$row['name'] = (strval($row['name']) != '0' ? $row['name'] : Configuration::get('PS_SHOP_NAME'));
-			$row['price'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $context->cart->getOrderShippingCost((int)$row['id_carrier']));
-			$row['price_tax_exc'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $context->cart->getOrderShippingCost((int)$row['id_carrier'], false));
+			$row['price'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier']));
+			$row['price_tax_exc'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier'], false));
 			$row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)($row['id_carrier']).'.jpg') ? _THEME_SHIP_DIR_.(int)($row['id_carrier']).'.jpg' : '';
 
 			// If price is false, then the carrier is unavailable (carrier module)
@@ -724,13 +728,13 @@ class CarrierCore extends ObjectModel
 		return false;
 	}
 
-	public function getRangeSuffix($context = null)
+	public function getRangeSuffix($currency = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$currency)
+			$currency = Context::getContext()->currency;
 		$suffix = Configuration::get('PS_WEIGHT_UNIT');
 		if ($this->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE)
-			$suffix = $context->currency->sign;
+			$suffix = $currency->sign;
 		return $suffix;
 	}
 

@@ -532,7 +532,7 @@ class ShopCore extends ObjectModel
 			{
 				if (!isset($context->shop))
 					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
-				$shopID = (int)$context->shop->id_shop;
+				$shopID = (int)$context->shop->getID();
 				$shopGroupID = (int)$context->shop->id_group_shop;
 			}
 			$executed = true;

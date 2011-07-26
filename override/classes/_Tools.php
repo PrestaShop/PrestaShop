@@ -47,18 +47,18 @@ else
 
 class Tools extends ToolsCore
 {
-
 	/**
 	* Redirect user to another page after 5 sec
 	*
 	* @param string $url Desired URL
 	* @param string $baseUri Base URI (optional)
 	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__)
+	public static function redirect($url, $baseUri = __PS_BASE_URI__, Link $link = null)
 	{
+		if (!$link)
+			$link = Context::getContext()->link;
 		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
 		{
-			global $link;
 			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
 				$url = substr($url, strlen($baseUri));
 			$explode = explode('?', $url);
@@ -73,7 +73,6 @@ class Tools extends ToolsCore
 		else
 			header('Refresh: 5; url='.$baseUri.$url);
 		exit;
-
 	}
 
 

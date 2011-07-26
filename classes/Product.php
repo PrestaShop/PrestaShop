@@ -2060,10 +2060,10 @@ class ProductCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public static function sqlStock($productAlias, $productAttribute = 0, $innerJoin = false, Context $context = null)
+	public static function sqlStock($productAlias, $productAttribute = 0, $innerJoin = false, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 
 		$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
 		if (!is_null($productAttribute))
@@ -2073,7 +2073,7 @@ class ProductCore extends ObjectModel
 			else if (is_string($productAttribute))
 				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
 		}
-		$sql .= $context->shop->sqlSharedStock('stock') . ' ';
+		$sql .= $shop->sqlSharedStock('stock') . ' ';
 
 		return $sql;
 	}

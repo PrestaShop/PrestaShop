@@ -1803,14 +1803,10 @@ abstract class AdminTabCore
 	 * @param integer $id_lang Language id (optional)
 	 * @return string
 	 */
-	protected function getFieldValue($obj, $key, $id_lang = NULL, Context $context = NULL)
+	protected function getFieldValue($obj, $key, $id_lang = NULL, $id_shop = null)
 	{
-		$id_shop = ($context) ? $context->shop->getID() : null;
-		if (!$context)
-			$context = Context::getContext();
-
 		if (!$id_shop AND $obj->isLangMultishop())
-			$id_shop = $context->shop->getID();
+			$id_shop = Context::getContext()->shop->getID();
 
 		if ($id_lang)
 			$defaultValue = ($obj->id AND isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
