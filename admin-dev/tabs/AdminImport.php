@@ -788,7 +788,7 @@ class AdminImport extends AdminTab
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = (int)($product->id);
 					// @todo multishop specific price import
-					$specificPrice->id_shop = $context->shop->getID();
+					$specificPrice->id_shop = $context->shop->getID(true);
 					$specificPrice->id_currency = 0;
 					$specificPrice->id_country = 0;
 					$specificPrice->id_group = 0;

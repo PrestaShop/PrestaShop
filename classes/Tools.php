@@ -90,6 +90,7 @@ class ToolsCore
 	*/
 	public static function redirectLink($url)
 	{
+		$context = Context::getContext();
 		if (!preg_match('@^https?://@i', $url))
 		{
 			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
@@ -1634,13 +1635,6 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg [L]';
 
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1 [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$1 [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1 [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)__([a-zA-Z0-9-]*)'] = 'index.php?controller=supplier&id_supplier=$1 [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)_([a-zA-Z0-9-]*)'] = 'index.php?controller=manufacturer&id_manufacturer=$1 [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms=$1 [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1 [QSA,L]';
 
 				if ($multilang)
 				{
@@ -1657,14 +1651,6 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2$3.jpg [L]';
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2.jpg [L]';
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
-
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)__([a-zA-Z0-9-]*)'] = 'index.php?controller=supplier&id_supplier=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)_([a-zA-Z0-9-]*)'] = 'index.php?controller=manufacturer&id_manufacturer=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-				//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'index.php?controller=cms&id_cms_category=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
 
 				Language::loadLanguages();
 				$default_meta = Meta::getMetasByIdLang((int)Configuration::get('PS_LANG_DEFAULT'), new Shop($uri['id_shop']));
@@ -1712,6 +1698,8 @@ class ToolsCore
 //		fwrite($writeFd, $tab['RewriteRule']['comment']."\n");
 		// Webservice needs apache_mod_rewrite in order to work
 		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '.__PS_BASE_URI__."webservice/dispatcher.php?url=$1 [QSA,L]\n");
+
+		fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\nRewriteCond %{REQUEST_FILENAME} -l [OR]\nRewriteCond %{REQUEST_FILENAME} -d\nRewriteRule ^.*$ - [NC,L]\nRewriteRule ^.*\$ index.php [NC,L]\n");
 		foreach ($domains AS $domain => $row) 
 		{
 			foreach ($row AS $uri)

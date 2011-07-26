@@ -186,15 +186,30 @@ class ShopCore extends ObjectModel
 		{
 			// Find current shop from URL
 			$db = Db::getInstance();
-			$sql = 'SELECT s.id_shop
+			$sql = 'SELECT s.id_shop, su.uri
 					FROM '._DB_PREFIX_.'shop_url su
 					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
 					WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\'
-						AND uri=\''.pSQL($uri).'\'
 						AND s.active = 1
 						AND s.deleted = 0';
-			if (!$id_shop = $db->getValue($sql))
-				$id_shop = (int)Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name = \'PS_SHOP_DEFAULT\'');
+			$default = false;
+			if ($results = Db::getInstance()->executeS($sql))
+				foreach ($results as $row)
+				{
+					if (!$default)
+						$default = $row;
+					else if (!$row['uri'])
+						$default = $row;
+
+					if ($uri == $row['uri'])
+					{
+						$id_shop = $row['id_shop'];
+						break;
+					}
+				}
+
+			if (!$id_shop)
+				$id_shop = ($default) ? $default['id_shop'] : (int)Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name = \'PS_SHOP_DEFAULT\'');
 		}
 
 		// Get instance of found shop

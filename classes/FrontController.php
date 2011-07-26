@@ -96,11 +96,6 @@ class FrontControllerCore
 
 		$this->context = Context::getContext();
 		
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$link = new Link($protocol_link, $protocol_content);
-		$this->context->link = $link;
-		
 		$this->id_current_shop = Context::getContext()->shop->getID();
 		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
 		
@@ -119,9 +114,26 @@ class FrontControllerCore
 		}
 
 		ob_start();
+		
+		// Switch language if needed and init cookie language
+		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
+			$_GET['id_lang'] = $id_lang;
 
-		$cookie = new Cookie('ps');
-		$this->context->cookie = $cookie;
+		Tools::switchLanguage();
+		Tools::setCookieLanguage($cookie);
+		$currency = Tools::setCurrency($cookie);
+		
+		if (Validate::isLoadedObject($currency))
+			$smarty->ps_currency = $currency;
+		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
+			$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+		$smarty->ps_language = $language;
+		$this->context->language = $language;
+		
+		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$link = new Link($protocol_link, $protocol_content);
+		$this->context->link = $link;
 		
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
@@ -134,13 +146,6 @@ class FrontControllerCore
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($defaultCountry)) && Validate::isLoadedObject($newDefault))
 				$defaultCountry = $newDefault;
-			
-		// Switch language if needed and init cookie language
-		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
-			$_GET['id_lang'] = $id_lang;
-
-		Tools::switchLanguage();
-		Tools::setCookieLanguage($cookie);
 
 		if (isset($_GET['logout']) OR ($cookie->logged AND Customer::isBanned((int)$cookie->id_customer)))
 		{
@@ -153,7 +158,6 @@ class FrontControllerCore
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 
-		$currency = Tools::setCurrency($cookie);
 		$_MODULES = array();
 		/* Cart already exists */
 		if ((int)$cookie->id_cart)
@@ -224,13 +228,8 @@ class FrontControllerCore
 		setlocale(LC_CTYPE, $locale);
 		setlocale(LC_TIME, $locale);
 		setlocale(LC_NUMERIC, 'en_US.UTF-8');
-		
-		if (Validate::isLoadedObject($currency))
-			$smarty->ps_currency = $currency;
-		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
-			$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+
 		$smarty->ps_language = $language;
-		$this->context->language = $language;
 
 		/* get page name to display it in body id */
 		$pathinfo = pathinfo(__FILE__);
@@ -248,7 +247,6 @@ class FrontControllerCore
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
-		$link->preloadPageLinks();
 		$this->canonicalRedirection();
 
 		Product::initPricesComputation();

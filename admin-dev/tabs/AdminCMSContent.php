@@ -105,21 +105,21 @@ class AdminCMSContent extends AdminTab
 		}
 		else
 		{
-		$id_cms_category = (int)(Tools::getValue('id_cms_category'));
-		if (!$id_cms_category)
-			$id_cms_category = 1;
-		$cms_tabs = array('cms_category', 'cms');
-		// Cleaning links
-		$catBarIndex = $currentIndex;
-		foreach ($cms_tabs AS $tab)
-			if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) 
-				$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', $currentIndex);
-		echo '<div class="cat_bar"><span style="color: #3C8534;">'.$this->l('Current category').' :</span>&nbsp;&nbsp;&nbsp;'.getPath($catBarIndex, $id_cms_category,'','','cms').'</div>';
-		echo '<h2>'.$this->l('Categories').'</h2>';
-		$this->adminCMSCategories->display($this->token);
-		echo '<div style="margin:10px">&nbsp;</div>';
-		echo '<h2>'.$this->l('Pages in this category').'</h2>';
-		$this->adminCMS->display($this->token);
+			$id_cms_category = (int)(Tools::getValue('id_cms_category'));
+			if (!$id_cms_category)
+				$id_cms_category = 1;
+			$cms_tabs = array('cms_category', 'cms');
+			// Cleaning links
+			$catBarIndex = self::$currentIndex;
+			foreach ($cms_tabs AS $tab)
+				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) 
+					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+			echo '<div class="cat_bar"><span style="color: #3C8534;">'.$this->l('Current category').' :</span>&nbsp;&nbsp;&nbsp;'.getPath($catBarIndex, $id_cms_category,'','','cms').'</div>';
+			echo '<h2>'.$this->l('Categories').'</h2>';
+			$this->adminCMSCategories->display($this->token);
+			echo '<div style="margin:10px">&nbsp;</div>';
+			echo '<h2>'.$this->l('Pages in this category').'</h2>';
+			$this->adminCMS->display($this->token);
 		}
 		
 	}

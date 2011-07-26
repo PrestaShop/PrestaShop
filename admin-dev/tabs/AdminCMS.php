@@ -43,7 +43,7 @@ class AdminCMS extends AdminTab
 		$this->fieldsDisplay = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'link_rewrite' => array('title' => $this->l('URL'), 'width' => 200),
-			'meta_title' => array('title' => $this->l('Title'), 'width' => 300),
+			'meta_title' => array('title' => $this->l('Title'), 'width' => 300, 'filter_key' => 'b!meta_title'),
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 			);
@@ -155,7 +155,7 @@ class AdminCMS extends AdminTab
 		if (Tools::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
-			$this->displayAssoShop();
+			$this->displayAssoShop('meta_title');
 			echo '</div>';
 		}
 		// SUBMIT
@@ -184,7 +184,7 @@ class AdminCMS extends AdminTab
 		$context = Context::getContext();
 		
 		if (($id_cms_category = (int)Tools::getValue('id_cms_category')))
-			$currentIndex .= '&id_cms_category='.$id_cms_category;
+			self::$currentIndex .= '&id_cms_category='.$id_cms_category;
 		$this->getList($context->language->id, !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL);
 
 		if (!$id_cms_category)

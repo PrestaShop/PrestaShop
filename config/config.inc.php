@@ -99,6 +99,33 @@ Language::loadLanguages();
 /* Loading default country */
 $defaultCountry = new Country((int)(Configuration::get('PS_COUNTRY_DEFAULT')), Configuration::get('PS_LANG_DEFAULT'));
 
+/* Instantiate cookie */
+if (defined('PS_ADMIN_DIR'))
+{
+	$currentFileName = array_reverse(explode("/", $_SERVER['SCRIPT_NAME']));
+	$cookie = new Cookie('psAdmin', substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])));
+}
+else
+	$cookie = new Cookie('ps');
+Context::getContext()->cookie = $cookie;
+
+/* Instantiate language */
+if (defined('PS_ADMIN_DIR'))
+{
+	$employee = new Employee($cookie->id_employee);
+	Context::getContext()->employee = $employee;
+
+	$cookie->id_lang = (int)$employee->id_lang;
+	$language = new Language($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
+}
+else
+{
+	if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
+		$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+}
+
+Context::getContext()->language = $language;
+
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 if (function_exists('date_default_timezone_set'))
 	@date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
