@@ -32,10 +32,13 @@ class FrontControllerCore
 	 * @var Context
 	 */
 	protected $context;
+	
+	/* Deprecated shortcuts as of 1.5 - Use $context->var instead */
 	protected static $smarty;
 	protected static $cookie;
 	protected static $link;
 	protected static $cart;
+	
 	public $iso;
 
 	public $orderBy;
@@ -50,8 +53,8 @@ class FrontControllerCore
 
 	protected $restrictedCountry = false;
 	protected $maintenance = false;
-	protected	$id_current_shop;
-	protected	$id_current_group_shop;
+	protected $id_current_shop;
+	protected $id_current_group_shop;
 
 	public static $initialized = false;
 
@@ -535,8 +538,8 @@ class FrontControllerCore
 
 	public function displayFooter()
 	{
-		if (!self::$initialized)
-			$this->init();
+		if (!$this->context)
+			$this->context = Context::getContext();
 
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),

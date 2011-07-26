@@ -184,33 +184,32 @@ class CategoryCore extends ObjectModel
 	  *
 	  * @param integer $maxDepth Maximum depth of the tree (i.e. 2 => 3 levels depth)
  	  * @param integer $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
+ 	  * @param integer $id_lang Specify the id of the language used
 	  * @param array $excludedIdsArray specify a list of ids to exclude of results
- 	  * @param integer $idLang Specify the id of the language used
+	  * @param Link $link
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, Context $context = null)
+	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $id_lang = NULL, $excludedIdsArray = NULL, Link $link = NULL)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		$idLang = is_null($idLang) ? $context->language->id : (int)$idLang;
+		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
 
 		$children = array();
-		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($idLang, true) AND sizeof($subcats))
+		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($id_lang, true) AND sizeof($subcats))
 			foreach ($subcats AS &$subcat)
 			{
 				if (!$subcat['id_category'])
 					break;
 				elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray))
 				{
-					$categ = new Category((int)$subcat['id_category'], $idLang);
-					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $idLang, $excludedIdsArray);
+					$categ = new Category((int)$subcat['id_category'], $id_lang);
+					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $id_lang, $excludedIdsArray);
 				}
 			}
 
 		return array(
 			'id' => (int)$this->id_category,
-			'link' => $context->link->getCategoryLink((int)$this->id, $this->link_rewrite),
+			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
 			'children' => $children
@@ -507,7 +506,7 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND default_on = 1)
 				'.$context->shop->sqlAsso('product', 'p').'
-				'.Product::sqlStock('p', 'pa', false, $context).'
+				'.Product::sqlStock('p', 'pa', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
@@ -567,12 +566,14 @@ class CategoryCore extends ObjectModel
 		return self::getChildren(1, $id_lang, $active);
 	}
 
-	static public function getRootCategory($id_lang = NULL, Context $context = null)
+	static public function getRootCategory($id_lang = NULL, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 
-		return new Category($context->shop->getCategory(), is_null($id_lang) ? $context->language->id : $id_lang);
+		return new Category($context->shop->getCategory(), $id_lang);
 	}
 
 	/**
@@ -709,22 +710,19 @@ class CategoryCore extends ObjectModel
 		return $result['link_rewrite'];
 	}
 
-	public function getLink(Context $context = null)
+	public function getLink(Link $link = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		return $context->link->getCategoryLink($this->id, $this->link_rewrite);
+		if (!$link)
+			$link = Context::getContext()->link;
+		return $link->getCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL, Context $context = null)
+	public function getName($id_lang = NULL)
 	{
 		if (!$id_lang)
 		{
-			if (!$context)
-				$context = Context::getContext();
-
-			if (isset($this->name[$context->language->id]))
-				$id_lang = $context->language->id;
+			if (isset($this->name[Context::getContext()->language->id]))
+				$id_lang = Context::getContext()->language->id;
 			else
 				$id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		}
@@ -780,10 +778,10 @@ class CategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($idLang = null, Context $context = null)
+	public function getParentsCategories($id_lang = null)
 	{
-		//get idLang
-		$idLang = is_null($idLang) ? $context->language->id : $idLang;
+		if (is_null($id_lang))
+			$id_lang = $context->language->id;
 
 		$categories = null;
 		$idCurrent = $this->id;
@@ -792,7 +790,7 @@ class CategoryCore extends ObjectModel
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$idLang.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.')
 				WHERE c.`id_category` = '.(int)$idCurrent.' AND c.`id_parent` != 0
 			');
 
