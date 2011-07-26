@@ -145,31 +145,32 @@ class CMSCategoryCore extends ObjectModel
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = NULL, $excludedIdsArray = NULL, Context $context = null)
+	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $id_lang = NULL, $excludedIdsArray = NULL, Link $link = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		//get idLang
-		$idLang = is_null($idLang) ? $context->language->id : (int)($idLang);
+		if (!$link)
+			$link = Context::getContext()->link;
+
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
 		
 		//recursivity for subcategories
 		$children = array();
-		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($idLang, true) AND sizeof($subcats))
+		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($id_lang, true) AND sizeof($subcats))
 			foreach ($subcats as &$subcat)
 			{
 				if (!$subcat['id_cms_category'])
 					break;
 				elseif ( !is_array($excludedIdsArray) || !in_array($subcat['id_cms_category'], $excludedIdsArray) )
 				{
-					$categ = new CMSCategory($subcat['id_cms_category'] ,$idLang);
+					$categ = new CMSCategory($subcat['id_cms_category'] ,$id_lang);
 					$categ->name = CMSCategory::hideCMSCategoryPosition($categ->name);
-					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $idLang, $excludedIdsArray);
+					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $id_lang, $excludedIdsArray);
 				}
 			}
 
 		return array(
 			'id' => $this->id_cms_category,
-			'link' => $context->link->getCMSCategoryLink($this->id, $this->link_rewrite),
+			'link' => $link->getCMSCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
 			'children' => $children
@@ -467,19 +468,19 @@ class CMSCategoryCore extends ObjectModel
 		return $result['link_rewrite'];
 	}
 
-	public function getLink(Context $context = null)
+	public function getLink(Link $link = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		return $context->link->getCMSCategoryLink($this->id, $this->link_rewrite);
+		if (!$link)
+			$link = Context::getContext()->link;
+		return $link->getCMSCategoryLink($this->id, $this->link_rewrite);
 	}
 
-	public function getName($id_lang = NULL, Context $context = null)
+	public function getName($id_lang = NULL)
 	{
 		if (!$id_lang)
 		{
-			if (isset($this->name[$context->language->id]))
-				$id_lang = $context->language->id;
+			if (isset($this->name[Context::getContext()->language->id]))
+				$id_lang = Context::getContext()->language->id;
 			else
 				$id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		}
@@ -537,12 +538,10 @@ class CMSCategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($idLang = null, Context $context = null)
+	public function getParentsCategories($id_lang = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		//get idLang
-		$idLang = is_null($idLang) ? $context->language->id : $idLang;
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
 
 		$categories = null;
 		$idCurrent = $this->id;
@@ -551,7 +550,7 @@ class CMSCategoryCore extends ObjectModel
 			$query = '
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'cms_category` c
-				LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)$idLang.')
+				LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)$id_lang.')
 				WHERE c.`id_cms_category` = '.(int)$idCurrent.' AND c.`id_parent` != 0
 			';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);

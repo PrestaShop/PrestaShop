@@ -121,7 +121,7 @@ class AttributeCore extends ObjectModel
 	static public function checkAttributeQty($id_product_attribute, $qty, Shop $shop = null)
 	{
 		if (!$shop)
-			$$shop = Context::getContext()->shop;
+			$shop = Context::getContext()->shop;
 
 		$sql = 'SELECT quantity
 				FROM '._DB_PREFIX_.'stock

@@ -104,11 +104,10 @@ class CMSCore extends ObjectModel
 		return false;
 	}
 
-	public static function getLinks($id_lang, $selection = NULL, $active = true, Context $context = null)
+	public static function getLinks($id_lang, $selection = NULL, $active = true, Link $link = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-			
+		if (!$link)
+			$link = Context::getContext()->link;			
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
 		FROM '._DB_PREFIX_.'cms c
@@ -122,7 +121,7 @@ class CMSCore extends ObjectModel
 		if ($result)
 			foreach ($result as $row)
 			{
-				$row['link'] = $context->link->getCMSLink((int)($row['id_cms']), $row['link_rewrite']);
+				$row['link'] = $link->getCMSLink((int)($row['id_cms']), $row['link_rewrite']);
 				$links[] = $row;
 			}
 		return $links;

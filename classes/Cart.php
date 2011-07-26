@@ -620,7 +620,7 @@ class CartCore extends ObjectModel
 			{
 				$sql = 'SELECT p.out_of_stock, stock.quantity
 						FROM '._DB_PREFIX_.'product p
-						'.Product::sqlStock('p', $id_product_attribute, true, $context).'
+						'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 						WHERE p.id_product = '.$id_product;
 				$result2 = Db::getInstance()->getRow($sql);
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
@@ -634,7 +634,7 @@ class CartCore extends ObjectModel
 					'id_product' => 			(int)$id_product,
 					'id_product_attribute' => 	(int)$id_product_attribute,
 					'id_cart' => 				(int)$this->id,
-					'id_shop' => 				$context->shop->getID(true),
+					'id_shop' => 				$shop->getID(true),
 					'quantity' => 				(int)$quantity,
 					'date_add' => 				date('Y-m-d H:i:s')
 				), 'INSERT');
