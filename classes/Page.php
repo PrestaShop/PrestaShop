@@ -70,11 +70,11 @@ class PageCore extends ObjectModel
 
 		if (array_key_exists($controller, $specialArray))
 		{
-			$objectID = Tools::getValue($specialArray[$controller]);
+			$objectID = Tools::getValue($specialArray[$controller], null);
 			$where = ' AND `id_object` = '.(int)$objectID;
 			$insertData['id_object'] = $objectID;
 		}
-		
+
 		$sql = 'SELECT `id_page`
 				FROM `'._DB_PREFIX_.'page`
 				WHERE `id_page_type` = '.(int)$pageTypeID.$where;
@@ -82,7 +82,7 @@ class PageCore extends ObjectModel
 		if ($result['id_page'])
 			return $result['id_page'];
 
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'page', $insertData, 'INSERT');
+		Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.'page', $insertData, 'INSERT');
 		return Db::getInstance()->Insert_ID();
 	}
 	
