@@ -42,7 +42,7 @@ if (Tools::getValue('hash') != md5(Configuration::get($module->prefix.'SALT') + 
 	die(Tools::displayError());	
 
 $result = $module->getDispositionState((int)($cart->id));
-$state = Configuration::get('PS_OS_ERROR');
+$state = _PS_OS_ERROR_;
 
 $disposition = Disposition::getByCartId((int)($cart->id));
 
@@ -53,7 +53,7 @@ if ($result[0] == 0)
 
 	if ($state == PrepaidServicesAPI::DISPOSITION_DISPOSED || $state == PrepaidServicesAPI::DISPOSITION_DEBITED)
 	{
-		$state = Configuration::get('PS_OS_PAYMENT');
+		$state = _PS_OS_PAYMENT_;
 		$message .= $module->getL('disposition_created');
 	} else {
 		$message .= $module->getL('disposition_invalid').' '.$state;
@@ -62,7 +62,7 @@ if ($result[0] == 0)
 	$message .= 'payment_error'.' '.$result[2];
 }
 
-if ($state != Configuration::get('PS_OS_ERROR'))
+if ($state != _PS_OS_ERROR_)
 {
 	$state = (int)(Configuration::get($module->prefix.'ORDER_STATE_ID'));
 
@@ -74,19 +74,19 @@ if ($state != Configuration::get('PS_OS_ERROR'))
 		if ($result[0] != 0)
 		{
 			$message .= $module->getL('payment_error').' '.$result[2];
-			$state = Configuration::get('PS_OS_ERROR');
+			$state = _PS_OS_ERROR_;
 		}
 		else 
 		{
 			$message .= $module->getL('payment_accepted');
-			$state = Configuration::get('PS_OS_PAYMENT');
+			$state = _PS_OS_PAYMENT_;
 		}
 	} 
 }
 
 $module->validateOrder((int)($cart->id), $state, (float)($cart->getOrderTotal(true, Cart::BOTH)), $module->displayName, $message, NULL, (int)($currency->id), false, $cart->secure_key);
 
-if ($state == Configuration::get('PS_OS_ERROR')) 
+if ($state == _PS_OS_ERROR_) 
 {
 	include(dirname(__FILE__).'/../../header.php');
 	echo $message;

@@ -137,19 +137,11 @@ class MySQLCore extends Db
 	}
 
 	/**
-	 * tryToConnect return 0 if the connection succeed and the database can be selected.
-	 * @since 1.4.4.0, the parameter $newDbLink (default true) has been added.
-	 * 
-	 * @param string $server mysql server name
-	 * @param string $user mysql user
-	 * @param string $pwd mysql user password
-	 * @param string $db mysql database name
-	 * @param boolean $newDbLink if set to true, the function will not create a new link if one already exists.
-	 * @return integer
+	 * @see DbCore::tryToConnect()
 	 */
-	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
+	static public function tryToConnect($server, $user, $pwd, $db)
 	{
-		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
+		if (!$link = @mysql_connect($server, $user, $pwd))
 			return 1;
 		if (!@mysql_select_db($db, $link))
 			return 2;

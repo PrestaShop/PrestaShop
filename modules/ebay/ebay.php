@@ -370,7 +370,7 @@ class Ebay extends Module
 	
 							// Validate order
 							$paiement = new eBayPayment();
-							$paiement->validateOrder(intval($cartAdd->id), Configuration::get('PS_OS_PAYMENT'), floatval($cartAdd->getOrderTotal(true, 3)), 'Paypal eBay', NULL, array(), intval($cartAdd->id_currency));
+							$paiement->validateOrder(intval($cartAdd->id), _PS_OS_PAYMENT_, floatval($cartAdd->getOrderTotal(true, 3)), 'Paypal eBay', NULL, array(), intval($cartAdd->id_currency));
 							$id_order = $paiement->currentOrder;
 	
 							// Fix on sending e-mail

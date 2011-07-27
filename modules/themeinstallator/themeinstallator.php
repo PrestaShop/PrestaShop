@@ -49,9 +49,6 @@ class ThemeInstallator extends Module
 	
 	public function __construct()
 	{
-		set_time_limit(0);
-		ini_set('memory_limit', '2G');
-		
 		$this->name = 'themeinstallator';
 		$this->version = '1.4';
 		$this->author = 'PrestaShop';
@@ -77,7 +74,7 @@ class ThemeInstallator extends Module
 		if (count($natives > 0))
 			return $natives;
 		// use this list if we can't contact the prestashop.com server
-		$natives = array('bankwire', 'birthdaypresent',	'blockadvertising', 'blockbestsellers', 'blockcart', 'blockcategories', 'blockcms',
+		$natives = array('bankwire', 'birthdaypresent',	'blockadvertising', 'blockbestsellers', 'blockcart', 'blockcategories',
 		'blockcurrencies', 'blockinfos', 'blocklanguages', 'blocklink', 'blockmanufacturer', 'blockmyaccount', 'blocknewproducts',
 		'blocknewsletter', 'blockpaymentlogo', 'blockpermanentlinks', 'blockrss', 'blocksearch', 'blockspecials', 'blocksupplier',
 		'blocktags', 'blockuserinfo', 'blockvariouslinks', 'blockviewed', 'blockwishlist', 'canonicalurl', 'cashondelivery', 'cheque',

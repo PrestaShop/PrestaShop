@@ -293,14 +293,7 @@ class OrderCore extends ObjectModel
 		/* Update order */
 		$shippingDiff = $this->total_shipping - $cart->getOrderShippingCost();
 		$this->total_products -= $productPriceWithoutTax;
-		
-		// After upgrading from old version
-		// total_products_wt is null
-		// removing a product made order total negative
-		// and don't recalculating totals (on getTotalProductsWithTaxes)
-		if ($this->total_products_wt != 0)
 		$this->total_products_wt -= $productPrice;
-		
 		$this->total_shipping = $cart->getOrderShippingCost();
 
 		/* It's temporary fix for 1.3 version... */

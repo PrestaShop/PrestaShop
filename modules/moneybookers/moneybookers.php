@@ -30,10 +30,6 @@ if (!defined('_CAN_LOAD_FILES_'))
 
 class MoneyBookers extends PaymentModule
 {
-	const LEFT_COLUMN = 0;
-	const RIGHT_COLUMN = 1;
-	const DISABLE = -1;
-
 	public function __construct()
 	{
 		$this->name = 'moneybookers';
@@ -111,9 +107,7 @@ class MoneyBookers extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() OR 
-			!$this->registerHook('payment') OR 
-			!$this->registerHook('paymentReturn'))
+		if (!parent::install() OR !$this->registerHook('payment') OR !$this->registerHook('paymentReturn'))
 			return false;
 		Configuration::updateValue('MB_HIDE_LOGIN', 1);
 		Configuration::updateValue('MB_PAY_TO_EMAIL', Configuration::get('PS_SHOP_EMAIL'));
@@ -249,17 +243,6 @@ class MoneyBookers extends PaymentModule
 			Configuration::updateValue('MB_DISPLAY_MODE', (int)($_POST['mb_display_mode']));
 		}
 
-		if (Tools::getValue('submitSettings'))
-		{
-			foreach(array('leftColumn', 'rightColumn') as $hookName)
-				if ($this->isRegisteredInHook($hookName))
-					$this->unregisterHook(Hook::get($hookName));
-			if (Tools::getValue('logo_position') == self::LEFT_COLUMN)
-				$this->registerHook('leftColumn');
-			else if (Tools::getValue('logo_position') == self::RIGHT_COLUMN)
-				$this->registerHook('rightColumn');
-		}
-			
 		/* Display errors */
 		if (sizeof($errors))
 		{
@@ -283,14 +266,6 @@ class MoneyBookers extends PaymentModule
 		if (!array_key_exists($lang->iso_code, $manual_links))
 			$iso_manual = 'en';
 
-		$blockPositionList = array(
-			self::DISABLE => $this->l('Disable'),
-			self::LEFT_COLUMN => $this->l('Left Column'),
-			self::RIGHT_COLUMN => $this->l('Right Column'));
-		
-		$currentLogoBlockPosition = ($this->isRegisteredInHook('leftColumn')) ? self::LEFT_COLUMN : 
-			(($this->isRegisteredInHook('rightColumn')) ? self::RIGHT_COLUMN : -1); 
-
 		/* Display settings form */
 		$output .= '
 		<b>'.$this->l('About Moneybookers').'</b><br /><br /><p style="font-size: 11px;">'.
@@ -300,30 +275,6 @@ class MoneyBookers extends PaymentModule
 		$this->l('Moneybookers changes its name and becomes Skrill!').'<br /><br />
                 <div style="clear: both;"></div>
 
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-settings">
-			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
-				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Settings').'</legend>
-				<div class="margin-form" style="margin:0; padding:0 0 1em 20px">
-					<b>'.$this->l('Select the logo position').'</b> : 
-					<select name="logo_position">';
-					foreach($blockPositionList as $position => $translation)
-					{
-						$selected = ($currentLogoBlockPosition == $position) ? 'selected="selected"' : '';
-						$output .= '<option value="'.$position.'" '.$selected.'>'.$translation.'</option>';
-					}
-		$link = new Link();
-		$admin_dir =  substr(_PS_ADMIN_DIR_, strrpos(_PS_ADMIN_DIR_,'/') + 1);
-		
-		$output .= '
-					</select>
-					<p>'.$this->l('Change your logo position in the Front Office. Works with').'
-						<a href="'.$link->getPageLink('index.php').'?live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).'">'.$this->l(' Live edit.').'</a></p>
-				</div>
-				<div style="text-align:center;">
-					<input type="submit" name="submitSettings" value="'.$this->l('Submit settings').'" />
-				</div>
-			</fieldset>
-		</form>
 		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-opening">
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Open Account').'</legend>
@@ -480,25 +431,6 @@ class MoneyBookers extends PaymentModule
 
 		return $output;
 	}
-
-	private function _displayLogoBlock($position)
-	{
-		$imgPath = 'http://www.prestashop.com/images/logo_partners/logo-skrill.png';
-		if (!@file_get_contents($imgPath))
-			$imgPath = __PS_BASE_URI__.'modules/moneybookers/logo-skrill.png';
-		return '<div style="text-align:center;"><img src="'.$imgPath.'" width=150 /></div>';
-	}
-	
-	public function hookRightColumn($params)
-	{
-		return $this->_displayLogoBlock(self::RIGHT_COLUMN);
-	}
-
-	public function hookLeftColumn($params)
-	{
-		return $this->_displayLogoBlock(self::LEFT_COLUMN);
-	}
-
 
 	public function hookPayment($params)
 	{

@@ -61,13 +61,13 @@ if (!$result OR (Tools::strlen($result) < 8) OR (!$statut = substr($result, -8))
 switch ($status)
 {
 	case 'Completed':
-		$id_order_state = Configuration::get('PS_OS_PAYMENT');
+		$id_order_state = _PS_OS_PAYMENT_;
 		break;
 	case 'Pending':
-		$id_order_state = Configuration::get('PS_OS_PAYPAL');
+		$id_order_state = _PS_OS_PAYPAL_;
 		break;
 	default:
-		$id_order_state = Configuration::get('PS_OS_ERROR');
+		$id_order_state = _PS_OS_ERROR_;
 }
 
 if ($order->getCurrentState() == $id_order_state)

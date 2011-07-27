@@ -37,6 +37,7 @@ class AdminWebservice extends AdminTab
 	 	$this->lang = false;
 	 	$this->edit = true;
 	 	$this->delete = true;
+	 	
  		$this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
 		
 		$this->fieldsDisplay = array(
@@ -92,13 +93,6 @@ class AdminWebservice extends AdminTab
 			$warnings[] = $this->l('If possible, it is preferable to use SSL (https) for webservice calls, as it avoids the security issues of type "man in the middle".');
 		
 		$this->displayWarning($warnings);
-
-		foreach ($this->_list as $k => $item)
-			if ($item['is_module'] && $item['class_name'] && $item['module_name'] && 
-				($instance = Module::getInstanceByName($item['module_name'])) && 
-				!$instance->useNormalPermissionBehaviour())
-				unset($this->_list[$k]);
-		parent::displayList();
 	}
 	
 	public function displayForm($isMainTab = true)
@@ -227,8 +221,6 @@ echo '
 	{
 		if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32)
 			$this->_errors[] = Tools::displayError($this->l('Key length must be 32 character long'));
-		if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account'))
-			$this->_errors[] = Tools::displayError($this->l('Key already exists'));
 		return parent::postProcess();
 	}
 

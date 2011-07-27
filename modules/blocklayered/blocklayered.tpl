@@ -77,21 +77,21 @@
 						<ul id="layered_{$filter.type}_{$filter.id_key}">
 						{if !isset($filter.slider)}
 							{foreach from=$filter.values key=id_value item=value}
-								<li class="nomargin">
+								<li{if $layered_use_checkboxes} class="nomargin"{/if}>
 								{if isset($filter.is_color_group) && $filter.is_color_group}
 									<input type="button" name="layered_{$filter.type_lite}_{$id_value}" rel="{$id_value}_{$filter.id_key}" id="layered_attribute_{$id_value}" {if !$value.nbr} value="X" disabled="disabled"{/if} style="background: {if isset($value.color)}{$value.color}{else}#CCC{/if}; margin-left: 0; width: 16px; height: 16px; padding:0; border: 1px solid {if isset($value.checked) && $value.checked}red{else}#666{/if};" />
 									{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
 								{else}
+									{if $layered_use_checkboxes}
 										<input type="checkbox" class="checkbox" name="layered_{$filter.type_lite}_{$id_value}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} /> 
 									{/if}
-								<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" rel="{$id_value}_{$filter.id_key}"{/if}{/if}>{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</label>
+								{/if}
+								<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" rel="{$id_value}_{$filter.id_key}"{/if}{/if}>{$value.name|escape:html:'UTF-8'}<span> ({$value.nbr})</span></label>
 								</li>
 							{/foreach}
 						{else}
-							<label for="{$filter.type}">{l s='Range:'}</label> <span id="layered_{$filter.type}_range"></span>
-							<div style="margin: 6px 0 6px 6px; width: 93%;">
+							<label for="{$filter.type}">{l s='Range'} : </label><span id="layered_{$filter.type}_range"></span>
 							<div style="margin-top:5px;" class="layered_slider" id="layered_{$filter.type}_slider"></div>
-							</div>
 							<script type="text/javascript">
 							unit = '{$filter.unit}';
 							{literal}

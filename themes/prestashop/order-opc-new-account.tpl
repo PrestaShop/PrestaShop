@@ -14,7 +14,7 @@
 				</div>
 				<div style="margin-left:40px;margin-bottom:5px;float:left;width:40%;">
 					<label for="passwd">{l s='Password'}</label>
-					<span><input type="password" id="login_passwd" name="passwd" /></span>
+					<span><input type="password" id="passwd" name="passwd" /></span>
 				</div>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}

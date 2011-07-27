@@ -324,19 +324,20 @@ class Loyalty extends Module
 				</div>
 				<div class="clear"></div>
 				<label>'.$this->l('Vouchers created by the loyalty system can be used in the following categories :').'</label>';
+
+		$html .=	'<table cellspacing="0" cellpadding="0" class="table">
+						<tr>
+							<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'categoryBox[]\', this.checked)" /></th>						
+							<th>'.$this->l('ID').'</th>
+							<th style="width: 400px">'.$this->l('Name').'</th>
+						</tr>';
 		$index = explode(',', Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY'));
-		$indexedCategories =  isset($_POST['categoryBox']) ? $_POST['categoryBox'] : $index;
-		// Translations are not automatic for the moment ;)
-		$trads = array(
-			 'Home' => $this->l('Home'), 
-			 'selected' => $this->l('selected'), 
-			 'Collapse All' => $this->l('Collapse All'), 
-			 'Expand All' => $this->l('Expand All'), 
-			 'Check All' => $this->l('Check All'), 
-			 'Uncheck All'  => $this->l('Uncheck All')
-		);
-		$html .= '<div class="margin-form">'.Helper::renderAdminCategorieTree($trads, $indexedCategories).'</div>';
-		 $html .= '
+		$indexedCategories =  isset($_POST['categoryBox']) ? $_POST['categoryBox'] : array();
+		foreach ($indexedCategories AS $k => $row)
+			$index[] = (int)$row['id_category'];
+		
+		$html .= $this->recurseCategoryForInclude((int)(Tools::getValue($this->identifier)), $index, $categories, $categories[0][1], 1, NULL);
+		$html .= '				</table>
 				<p style="padding-left:200px;">'.$this->l('Mark the box(es) of categories in which loyalty vouchers are usable.').'</p>
 				<div class="clear"></div>
 				<h3 style="margin-top:20px">'.$this->l('Loyalty points progression').'</h3>

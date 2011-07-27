@@ -100,6 +100,36 @@ class AdminCategories extends AdminTab
 				}
 			}
 		}
+		/* Change object statuts (active, inactive) */
+		elseif (isset($_GET['status']) AND Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				if (Validate::isLoadedObject($object = $this->loadObject()))
+				{
+					if ($object->toggleStatus())
+					{
+						$target = '';
+						if (($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product'))
+							$target = '&id_category='.(int)($id_category);
+						else 
+						{
+							$referrer = Tools::secureReferrer($_SERVER['HTTP_REFERER']);
+							if (preg_match('/id_category=(\d+)/', $referrer, $matches))
+								$target = '&id_category='.(int)($matches[1]);
+						}
+						Module::hookExec('categoryUpdate');
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$target.'&token='.Tools::getValue('token'));
+					}
+					else
+						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+				}
+				else
+					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		/* Delete object */
 		elseif (isset($_GET['delete'.$this->table]))
 		{

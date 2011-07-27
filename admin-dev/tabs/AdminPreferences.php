@@ -171,7 +171,15 @@ class AdminPreferences extends AdminTab
 	{
 		$context = Context::getContext();
 		$languages = Language::getLanguages(false);
-		Tools::clearCache($context->smarty);
+		if (!Configuration::get('PS_FORCE_SMARTY_2'))
+		{
+			$files = scandir(_PS_THEME_DIR_);
+			foreach ($files AS $file)
+				if (!preg_match('/^\..*/', $file))
+						$context->smarty->clearCache($file);
+		}
+		else
+			$context->smarty->clear_all_cache();
 
 		/* Check required fields */
 		foreach ($fields AS $field => $values)

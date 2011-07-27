@@ -87,15 +87,11 @@
 		for (var item in fields_name)
 		{ldelim}
 			var name = fields_name[item];
-			var value = getFieldValue(name, values);
-			if (value != "")
-			{ldelim}
 			var new_li = document.createElement('li');
 			new_li.className = 'address_'+ name;
 			new_li.innerHTML = getFieldValue(name, values);
 			dest_comp.append(new_li);
 		{rdelim}
-	{rdelim}
 	{rdelim}
 
 	function getFieldValue(field_name, values)

@@ -70,7 +70,7 @@ class AliasCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'alias`
 		WHERE `search` LIKE \''.pSQL($search).'\'');
 	}
-
+	
 	public function getAliases()
 	{
 		$aliases = Db::getInstance()->ExecuteS('

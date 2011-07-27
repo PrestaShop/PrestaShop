@@ -452,17 +452,7 @@ class ImageCore extends ObjectModel
 	public function createImgFolder()
 	{
 		if (!file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder()))
-		{
-			// Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), 0755, true) 
-						|| @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), 0755);
-			
-			// Create an index.php file in the new folder
-			if ($success 
-				&& !file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php')
-				&& file_exists($this->source_index))
-				return @copy($this->source_index, _PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php');	
-		}
+			return @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), 0755, true);
 		return true;
 	}
 	
@@ -521,51 +511,6 @@ class ImageCore extends ObjectModel
 		}
 		return $result;
 	}
-
-	public static function testFileSystem()
-	{
-		$safe_mode = ini_get('safe_mode');
-		if ($safe_mode)
-			return false;
-		$folder1 = _PS_PROD_IMG_DIR_.'testfilesystem/';
-		$test_folder = $folder1.'testsubfolder/';
-		if (file_exists($test_folder))
-		{
-			@rmdir($test_folder);
-			@rmdir($folder1);
-		}
-		if (file_exists($test_folder))
-			return false;
-		@mkdir($test_folder, 0755, true);
-		@chmod($test_folder, 0755);
-		if (!is_writeable($test_folder))
-			return false;
-		@rmdir($test_folder);
-		@rmdir($folder1);
-		if (file_exists($folder1))
-			return false;
-		return true;
-	}
-	
-	/**
-	 * Returns the path where a product image should be created (without file format)
-	 * 
-	 * @return string path 
-	 */
-	public function getPathForCreation()
-	{
-		if (!$this->id)
-			return false;
-		if (Configuration::get('PS_LEGACY_IMAGES'))
-		{
-			if (!$this->id_product)
-				return false;
-			$path = $this->id_product.'-'.$this->id;
-		}
-		else
-		{
-			$path = $this->getImgPath();
-			$this->createImgFolder();
-		}
-	}
 }
+
+
