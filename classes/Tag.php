@@ -182,17 +182,17 @@ class TagCore extends ObjectModel
 	
 	public function setProducts($array)
 	{
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'product_tag WHERE id_tag = '.(int)$this->id);
+		$result = Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'product_tag WHERE id_tag = '.(int)$this->id);
 		if (is_array($array))
 		{
 			$array = array_map('intval', $array);
-			$result1 = Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0 WHERE id_product IN ('.implode(',', $array).')');
+			$result &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0 WHERE id_product IN ('.implode(',', $array).')');
 			$ids = array();
 			foreach ($array as $id_product)
 				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';
-			return ($result1 && Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',',$ids)) && Search::indexation(false));
+			return ($result && Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',',$ids)) && Search::indexation(false));
 		}
-		return $result1;
+		return $result;
 	}
 	
 	static public function deleteTagsForProduct($id_product)
