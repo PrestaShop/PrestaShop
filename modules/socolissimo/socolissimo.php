@@ -290,7 +290,7 @@ class Socolissimo extends CarrierModule
 		<label>'.$this->l('Url Supervision').' : </label>
 		<div class="margin-form">
 		<input type="text" size="45" name="url_sup" value="'.htmlentities(Tools::getValue('url_sup',Configuration::get('SOCOLISSIMO_SUP_URL')),ENT_NOQUOTES, 'UTF-8').'" />
-		<p>' . $this->l('Url of supervision.') . '</p>
+		<p>' . $this->l('The URL of supervision is to ensure the availability of the service socolissimo. It is not advisable to disabled.') . '</p>
 		</div>
 
 		<div class="margin-form">

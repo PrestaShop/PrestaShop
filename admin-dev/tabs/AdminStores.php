@@ -112,6 +112,11 @@ class AdminStores extends AdminTab
 			if ((int)($country->contains_states) AND !$id_state)
 				$this->_errors[] = Tools::displayError('An address located in a country containing states must have a state selected.');
 
+			$latitude = (int)(Tools::getValue('latitude'));
+		    $longitude = (int)(Tools::getValue('longitude'));
+			if(empty($latitude) OR empty($longitude))
+			   $this->_errors[] = Tools::displayError('Latitude and longitude are required.');
+
 			/* Check zip code */
 			if ($country->need_zip_code)
 			{
@@ -227,6 +232,7 @@ class AdminStores extends AdminTab
 					<label>'.$this->l('Latitude / Longitude:').'</label>
 					<div class="margin-form">
 						<input type="text" size="8" maxlength="10" name="latitude" value="'.htmlentities($this->getFieldValue($obj, 'latitude'), ENT_COMPAT, 'UTF-8').'" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> / <input type="text" size="8" maxlength="10" name="longitude" value="'.htmlentities($this->getFieldValue($obj, 'longitude'), ENT_COMPAT, 'UTF-8').'" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" />
+						<sup>*</sup>
 						<p class="clear">'.$this->l('Store coords, eg. 45.265469 / -47.226478').'</p>
 					</div>
 					<label>'.$this->l('Phone:').'</label>

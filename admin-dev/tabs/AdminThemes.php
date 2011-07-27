@@ -266,6 +266,7 @@ class AdminThemes extends AdminPreferences
 		Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 		if (!empty($val) AND !$this->_isThemeCompatible($val)) // don't submit if errors
 			unset($_POST['submitThemes'.$this->table]);
+		Tools::clearCache($smarty);
 		parent::postProcess();
 	}
 }

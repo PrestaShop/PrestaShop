@@ -24,30 +24,55 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function checkBeforeComparison()
-{
-	var id_list = '';
-	$('.comparator:checked').each(
-		function()
-		{
-			id_list += $(this).val() + '|';
-		}
-	);
+$('document').ready(function(){
+	$('a.cmp_remove').click(function(){
 
-	$('.compare_product_list').val(id_list);
+		var idProduct = $(this).attr('rel').replace('ajax_id_product_', '');
 
-	if ($('.comparator:checked').length == 0)
-	{
-		alert(min_item);
-		return false;
-	}
-
+		$.ajax({
+  			url: 'products-comparison.php?ajax=1&action=remove&id_product=' + idProduct,
+ 			async: false,
+  			success: function(){
 	return true;
 }
+		});	
+	});
 
-function checkForComparison(nb_max_item)
+	$('input:checkbox.comparator').click(function(){
+	
+		var idProduct = $(this).attr('value').replace('comparator_item_', '');
+		var checkbox = $(this);
+		
+		if(checkbox.is(':checked'))
 {
-	if ($('.comparator:checked').length > nb_max_item)
+			$.ajax({
+	  			url: 'products-comparison.php?ajax=1&action=add&id_product=' + idProduct,
+	 			async: true,
+	  			success: function(data){
+	  				if (data == '0')
+	  				{
+	  					checkbox.attr('checked', false);
 		alert(max_item);
 }
-
+	  			},
+	    		error: function(){
+	    			checkbox.attr('checked', false);
+	    		}
+			});	
+		}
+		else
+		{
+			$.ajax({
+	  			url: 'products-comparison.php?ajax=1&action=remove&id_product=' + idProduct,
+	 			async: true,
+	  			success: function(data){
+	  				if (data == '0')
+	  					checkbox.attr('checked', true);
+	    		},
+	    		error: function(){
+	    			checkbox.attr('checked', true);
+	    		}
+			});	
+		}
+	});
+});

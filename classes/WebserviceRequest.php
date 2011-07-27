@@ -1356,7 +1356,7 @@ class WebserviceRequestCore
 				$this->setError(400, 'id is duplicate in request', 89);
 				return false;
 			}
-			if ($xmlEntities->count() != count($ids))
+			if (count($xmlEntities) != count($ids))
 			{
 				$this->setError(400, 'id is required when modifying a resource', 90);
 				return false;

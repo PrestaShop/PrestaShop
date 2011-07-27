@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_comment` (
   PRIMARY KEY (`id_product_comment`),
   KEY `id_product` (`id_product`),
   KEY `id_customer` (`id_customer`),
-  KEY `id_guest` (`id_product`)
+  KEY `id_guest` (`id_guest`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_product_comment_criterion` (

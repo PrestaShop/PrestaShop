@@ -1232,7 +1232,10 @@ class CartCore extends ObjectModel
 		{
 			$moduleName = $carrier->external_module_name;
 			$module = Module::getInstanceByName($moduleName);
-			if (key_exists('id_carrier', $module))
+	
+			if (Validate::isLoadedObject($module))
+			{
+				if (array_key_exists('id_carrier', $module))
 				$module->id_carrier = $carrier->id;
 			if($carrier->need_range)
 				$shipping_cost = $module->getOrderShippingCost($this, $shipping_cost);
@@ -1241,6 +1244,9 @@ class CartCore extends ObjectModel
 
 			// Check if carrier is available
 			if ($shipping_cost === false)
+				return false;
+		}
+			else
 				return false;
 		}
 
@@ -1327,7 +1333,7 @@ class CartCore extends ObjectModel
 		
 		$groups = Customer::getGroupsStatic($this->id_customer);
 
-		if (($discountObj->id_customer OR $discountObj->id_group) AND ($this->id_customer != $discountObj->id_customer AND !in_array($discountObj->id_group, $groups)))
+	    if (($discountObj->id_customer OR $discountObj->id_group) AND ((($this->id_customer != $discountObj->id_customer) OR ($this->id_customer == 0)) AND !in_array($discountObj->id_group, $groups)))
 		{
 			if (!$customer->isLogged())
 				return Tools::displayError('You cannot use this voucher.').' - '.Tools::displayError('Please log in.');
@@ -1699,6 +1705,8 @@ class CartCore extends ObjectModel
 	{
 		$carrier = new Carrier((int)$id_carrier, Configuration::get('PS_LANG_DEFAULT'));
 		$shippingMethod = $carrier->getShippingMethod();
+		if (!$carrier->range_behavior)
+			return true;
 
 		if ($shippingMethod == Carrier::SHIPPING_METHOD_FREE)
 			return true;

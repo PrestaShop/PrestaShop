@@ -1491,7 +1491,7 @@ class ToolsCore
 		return Tools::getHttpHost();
 	}
 
-	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '')
+	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '', $disableMuliviews = false)
 	{
 		if (!$writeFd = @fopen($path, 'w'))
 			return false;
@@ -1531,7 +1531,8 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8.jpg [L]';
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg [L]';
 
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
+				$tab['RewriteRule']['content']['^c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
+				$tab['RewriteRule']['content']['^c/([a-zA-Z-]+)/[a-zA-Z0-9-]+\.jpg$'] = 'img/c/$1.jpg [L]';
 
 				if ($multilang)
 				{
@@ -1591,9 +1592,13 @@ class ToolsCore
 			fwrite($writeFd, $specific);
 		// RewriteEngine
 		fwrite($writeFd, "\n<IfModule mod_rewrite.c>\n");
-		fwrite($writeFd, "\nRewriteEngine on\n\n");
-//		fwrite($writeFd, $tab['RewriteRule']['comment']."\n");
-		// Webservice needs apache_mod_rewrite in order to work
+
+		if ($disableMuliviews)
+			fwrite($writeFd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
+
+		fwrite($writeFd, $tab['RewriteEngine']['comment']."\nRewriteEngine on\n\n");
+		fwrite($writeFd, $tab['RewriteRule']['comment']."\n");
+		// Webservice
 		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '.__PS_BASE_URI__."webservice/dispatcher.php?url=$1 [QSA,L]\n");
 
 		fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\nRewriteCond %{REQUEST_FILENAME} -l [OR]\nRewriteCond %{REQUEST_FILENAME} -d\nRewriteRule ^.*$ - [NC,L]\nRewriteRule ^.*\$ index.php [NC,L]\n");
@@ -1989,6 +1994,19 @@ FileETag INode MTime Size
 	public static function nl2br($str)
 	{
 		return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+	}
+	
+	/**
+	 * Clear cache for Smarty
+	 * 
+	 * @param objet $smarty
+	 */
+	public static function clearCache($smarty)
+	{
+		if (!Configuration::get('PS_FORCE_SMARTY_2'))
+			$smarty->clearAllCache();
+		else
+			$smarty->clear_all_cache();
 	}
 }
 

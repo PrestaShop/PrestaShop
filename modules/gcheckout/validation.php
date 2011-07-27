@@ -97,7 +97,7 @@ switch ($root) {
 			unset($cart);
 
 			$orderTotal = (float)($data[$root]['order-total']['VALUE']);
-			$gcheckout->validateOrder((int)$secure_cart[0], _PS_OS_PAYMENT_, (float)$orderTotal, 
+		$gcheckout->validateOrder((int)$secure_cart[0], Configuration::get('PS_OS_PAYMENT'), (float)$orderTotal, 
 				$gcheckout->displayName, NULL, array(), NULL, false, $secure_cart[1]);
 			$Gresponse->SendAck();
 			break;

@@ -15,9 +15,9 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_6861a58e2be4956b3f2fd6420fe6c28
 $_MODULE['<{moneybookers}prestashop>moneybookers_a356736cbcf740f8648d71067fca090d'] = 'Acepta pagos por Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_fa214007826415a21a8456e3e09f999d'] = '¿Está seguro de que quiere eliminar sus datos?';
 $_MODULE['<{moneybookers}prestashop>moneybookers_088b74050a381d98fca38d5990b097be'] = 'Actualmente utiliza la dirección por defecto del módulo Moneybookers. Debe utilizar sus parámetros.';
-$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Imposible contactar con el servidor de activación, por favor inténtelo más tarde';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b863542eebcb27fa230b647b5dd07819'] = 'Error durante la validación de la cuenta, su correo electrónico podría estar equivocado';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d70c5b5767846906e0abe68498db887b'] = 'Activación correcta de su dirección email, ya puede validar su palabra secreta';
+$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Imposible contactar con el servidor de activación, por favor inténtelo más tarde';
 $_MODULE['<{moneybookers}prestashop>moneybookers_7757ea03f2a0893e36c7916a2ad07ef8'] = 'El campo email es obligatorio';
 $_MODULE['<{moneybookers}prestashop>moneybookers_aa1c444c2ee2f620d5b349fedfa68ba2'] = 'Error durante la validación de su palabra secreta, ha sobrepasado el número máximo de intentos (3 por hora)';
 $_MODULE['<{moneybookers}prestashop>moneybookers_cdbef58d093e0ff38e13686a669e9fee'] = 'Error durante la validación de la palabra secreta, su palabra secreta podría estar equivocada';

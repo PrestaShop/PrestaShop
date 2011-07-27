@@ -103,7 +103,8 @@ class LanguageCore extends ObjectModel
 		return ($resUpdateSQL AND Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			Configuration::get('PS_HTACCESS_SPECIFIC')
+			Configuration::get('PS_HTACCESS_SPECIFIC'),
+			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 		));
 	}
 
@@ -118,7 +119,8 @@ class LanguageCore extends ObjectModel
 		return (Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			Configuration::get('PS_HTACCESS_SPECIFIC')
+			Configuration::get('PS_HTACCESS_SPECIFIC'),
+			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 		));
 	}
 
@@ -290,7 +292,8 @@ class LanguageCore extends ObjectModel
 
 		foreach($tables as $table)
 			foreach($table as $t)
-				$langTables[] = $t;
+				if ($t != _DB_PREFIX_.'configuration_lang')
+					$langTables[] = $t;
 
 		Db::getInstance()->Execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
 		$return = true;
@@ -403,7 +406,8 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 									(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-									Configuration::get('PS_HTACCESS_SPECIFIC')
+									Configuration::get('PS_HTACCESS_SPECIFIC'),
+									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 								);
 	}
 
@@ -426,7 +430,8 @@ class LanguageCore extends ObjectModel
 		Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 								(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 								(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-								Configuration::get('PS_HTACCESS_SPECIFIC')
+								Configuration::get('PS_HTACCESS_SPECIFIC'),
+								(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 							);
 
 		return $result;
@@ -566,7 +571,8 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 							(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 							(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-							Configuration::get('PS_HTACCESS_SPECIFIC')
+							Configuration::get('PS_HTACCESS_SPECIFIC'),
+							(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 							);
 	}
 

@@ -52,7 +52,7 @@ if (empty($tab) and !sizeof($_POST))
 				? '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).intval($cookie->id_employee)).'">'
 				: '').'
 			'.$item['name'].((sizeof($tabs) - 1 > $key) ? '</a>' : '');
-
+		// @TODO : a way to desactivate this feature
 		echo'<script type="text/javascript">
 
 		$(function() {

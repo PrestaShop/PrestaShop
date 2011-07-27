@@ -79,7 +79,7 @@ var TS = (function()
 			<p><input id="ts-product-{$product.id_product}" type="checkbox" value="{$product.id_product}" name="item_product"> {l s='Buyer protection from' mod='trustedshops'} {$product.protected_amount_decimal} ({$product.gross_fee|round:2} {l s='GBP incl. VAT' mod='trustedshops'})</p>
 		{/foreach}
 		<div id="content_checkout" style="margin-left:100px">
-		<p>{l s='The Trusted Shops Buyer Protection secures your online purchase. I agree to my email address being transferred and' mod='trustedshops'} <b><a href="http://www.trustedshops.de/info/datenschutz/">{l s='saved' mod='trustedshops'}</a></b> {l s='for the purposes of Buyer Protection processing by Trusted Shops.' mod='trustedshops'}<b><a href="http://www.trustedshops.de/info/garantiebedingungen/">{l s='Conditions' mod='trustedshops'}</a></b>: {l s='for Buyer Protection.' mod='trustedshops'}</p></div>
+		<p>{l s='The Trusted Shops Buyer Protection secures your online purchase. I agree to my email address being transferred and' mod='trustedshops'} <b><a href="http://www.trustedshops.com/shop/data_privacy.php?shop_id={$shop_id}" target="_blank">{l s='saved' mod='trustedshops'}</a></b> {l s='for the purposes of Buyer Protection processing by Trusted Shops.' mod='trustedshops'} <b><a href="http://www.trustedshops.com/shop/protection_conditions.php?shop_id={$shop_id}" target="_blank">{l s='Conditions' mod='trustedshops'}</a></b> {l s='for Buyer Protection.' mod='trustedshops'}</p></div>
 	</div>
 	<div class="clear"/></div>
 </div>

@@ -62,6 +62,12 @@ class AdminGenerator extends AdminTab
 				<p>'.$this->l('Enable only if your server allows URL rewriting.').'</p>
 			</div>
 			<div class="clear">&nbsp;</div>
+			<label for="imageCacheControl">'.$this->l('Disable apache multiviews').'</label>
+			<div class="margin-form">
+				<input type="checkbox" name="PS_HTACCESS_DISABLE_MULTIVIEWS" id="PS_HTACCESS_CACHE_CONTROL" value="1" '.(Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS') == 1 ? 'checked="checked"' : '').' />
+				<p>'.$this->l('Enable this option only if you have problems with some pages URL rewriting.').'</p>
+			</div>
+			<div class="clear">&nbsp;</div>
 			<label for="specific_configuration">'.$this->l('Specific configuration').'</label>
 			<div class="margin-form">
 				<textarea rows="10" class="width3" id="specific_configuration" name="ps_htaccess_specific">'.Configuration::get('PS_HTACCESS_SPECIFIC').'</textarea>
@@ -112,8 +118,9 @@ class AdminGenerator extends AdminTab
 			{		
 				Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL'));
 				Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
+				Configuration::updateValue('PS_HTACCESS_DISABLE_MULTIVIEWS', (int)Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'));
 				Configuration::updateValue('PS_HTACCESS_SPECIFIC',  Tools::getValue('ps_htaccess_specific'), true);
-				if (Tools::generateHtaccess($this->_htFile, Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), Tools::getValue('ps_htaccess_specific')))
+				if (Tools::generateHtaccess($this->_htFile, Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), Tools::getValue('ps_htaccess_specific'), Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS')))
 					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				$this->_errors[] = $this->l('Cannot write into file:').' <b>'.$this->_htFile.'</b><br />'.$this->l('Please check write permissions.');
 			}
