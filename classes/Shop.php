@@ -617,14 +617,14 @@ class ShopCore extends ObjectModel
 		if ($type == 'group_shop')
 		{
 			if ($shopID)
-				$restriction = ' AND '.$alias.'id_group_shop = '.Shop::getGroupFromShop($shopID);
+				$restriction = ' AND '.$alias.'id_group_shop = '.Shop::getGroupFromShop($shopID).' ';
 			else if ($shopGroupID)
-				$restriction = ' AND '.$alias.'id_group_shop = '.$shopGroupID;
+				$restriction = ' AND '.$alias.'id_group_shop = '.$shopGroupID.' ';
 		}
 		else
 		{
 			if ($shopID || $shopGroupID)
-				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).')';
+				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
 		}
 		
 		return $restriction;
