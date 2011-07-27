@@ -300,25 +300,6 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Check if, except current customer, someone else registered this e-email
-	  *
-	  * @return integer Number of customers who have also this e-mail
-	  * @deprecated
-	  */
-	public function cantChangeemail()
-	{
-	 	Tools::displayAsDeprecated();
-		if (!Validate::isEmail($this->email))
-	 		die (Tools::displayError());
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_customer`) AS total
-		FROM `'._DB_PREFIX_.'customer`
-		WHERE `email` = \''.pSQL($this->email).'\' AND `id_customer` != '.(int)($this->id));
-
-		return $result['total'];
-	}
-
-	/**
 	  * Check if an address is owned by a customer
 	  *
 	  * @param integer $id_customer Customer ID
@@ -362,26 +343,6 @@ class CustomerCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
-
-	/**
-	  * Returns customer last connections
-	  *
-	  * @deprecated
-	  * @param integer $nb Number of connections wanted
-	  * @return array Connections
-	  */
-	public function getConnections($nb = 10)
-	{
-		Tools::displayAsDeprecated();
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT `ip_address`, `date_add`
-		FROM `'._DB_PREFIX_.'connections`
-		WHERE `id_guest` IN (SELECT `id_guest` FROM `'._DB_PREFIX_.'guest` WHERE `id_customer` = '.(int)($this->id).')
-		ORDER BY `date_add` DESC
-		LIMIT 0,'.(int)($nb));
-	}
-
 	/**
 	  * Count the number of addresses for a customer
 	  *
@@ -413,41 +374,6 @@ class CustomerCore extends ObjectModel
 				WHERE `id_customer` = '.$id_customer.'
 					AND `passwd` = \''.$passwd.'\'';
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-	}
-
-	/**
-	  * Return customers who have subscribed to the newsletter
-	  *
-	  * @return array Customers
-	  * @deprecated
-	  */
-	public static function getNewsletteremails()
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT `email`, `firstname`, `lastname`, `newsletter`, `ip_registration_newsletter`, `newsletter_date_add`
-		FROM `'._DB_PREFIX_.'customer`
-		WHERE `newsletter` = 1
-		AND `active` = 1');
-	}
-
-	/**
-	  * Return the number of customers who registered today
-	  *
-	  * @return integer number of customers who registered today
-	  * @deprecated
-	  */
-	public static function getTodaysRegistration()
-	{
-		Tools::displayAsDeprecated();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_customer`) as nb
-		FROM `'._DB_PREFIX_.'customer`
-		WHERE DAYOFYEAR(`date_add`) = DAYOFYEAR(NOW())
-		AND YEAR(`date_add`) = YEAR(NOW())');
-		if (!$result['nb'])
-			return '0';
-		return $result['nb'];
 	}
 
 	/**
@@ -514,23 +440,6 @@ class CustomerCore extends ObjectModel
         LIMIT 10');
     }
 
-	/**
-	  * Return last cart ID for this customer
-	  *
-	  * @return integer Cart ID
-	  * @deprecated
-	  */
-	public function getLastCart()
-	{
-		Tools::displayAsDeprecated();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT MAX(c.`id_cart`) AS id_cart
-		FROM `'._DB_PREFIX_.'cart` c
-		WHERE c.`id_customer` = '.(int)($this->id));
-		if (isset($result['id_cart']))
-			return $result['id_cart'];
-		return false;
-	}
 	/*
 	* Specify if a customer already in base
 	*
@@ -589,40 +498,12 @@ class CustomerCore extends ObjectModel
 		return false;
 	}
 
-	/**
-	 * @param int $id_group
-	 * @return int
-	 * @deprecated
-	 */
-	public function isMemberOfGroup($id_group)
-	{
-		Tools::displayAsDeprecated();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT count(cg.`id_group`) as nb
-		FROM '._DB_PREFIX_.'customer_group cg
-		WHERE cg.`id_customer` = '.(int)($this->id).'
-		AND cg.`id_group` = '.(int)($id_group));
-
-		return $result['nb'];
-	}
-
 	public function getBoughtProducts()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT * FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE o.valid = 1 AND o.`id_customer` = '.(int)($this->id));
-	}
-
-	/**
-	 * @deprecated
-	 * @return bool
-	 */
-	public function getNeedDNI()
-	{
-		Tools::displayAsDeprecated();
-		
-		return false;
 	}
 
 	static public function getDefaultGroupId($id_customer)

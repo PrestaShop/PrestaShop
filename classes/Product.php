@@ -587,26 +587,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated
-	 * @param string $reference
-	 */
-	public static function getByReference($reference)
-	{
-		Tools::displayAsDeprecated();
-		if (!Validate::isReference($reference))
-			die(Tools::displayError());
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_product`
-		FROM `'._DB_PREFIX_.'product` p
-		WHERE p.`reference` = \''.pSQL($reference).'\'');
-		if (!isset($result['id_product']))
-			return false;
-
-		return new self((int)$result['id_product']);
-	}
-
-	/**
 	 * addToCategories add this product to the category/ies if not exists.
 	 *
 	 * @param mixed $categories id_category or array of id_category
@@ -1136,18 +1116,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Delete product quantity discounts
-	*
-	* @return array Deletion result
-	* @deprecated
-	*/
-	public function deleteQuantityDiscounts()
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_quantity` WHERE `id_product` = '.(int)($this->id));
-	}
-
-	/**
 	* Delete product pack details
 	*
 	* @return array Deletion result
@@ -1595,21 +1563,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get categories where product is indexed
-	*
-	* @param integer $id_product Product id
-	* @return array Categories where product is indexed
-	*/
-	public static function getIndexedCategories($id_product)
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance()->ExecuteS('
-		SELECT `id_category`
-		FROM `'._DB_PREFIX_.'category_product`
-		WHERE `id_product` = '.(int)($id_product));
-	}
-
-	/**
 	* Get product images and legends
 	*
 	* @param integer $id_lang Language id for multilingual legends
@@ -1645,51 +1598,6 @@ class ProductCore extends ObjectModel
 				WHERE i.`id_product` = '.(int)($id_product).'
 				AND i.`cover` = 1';
 		return Db::getInstance()->getRow($sql);
-	}
-
-	/**
-	* Get reduction value for a given product
-	* *****************************************
-	* ** Kept for retro-compatibility issues **
-	* *****************************************
-	* You should use getPriceStatic() instead (with the parameter $only_reduc set to true)
-	*
-	* @param array $result SQL result with reduction informations
-	* @param boolean $wt With taxes or not (optional)
-	* @return float Reduction value in euros
-	*/
-	/*  */
-	public static function getReductionValue($reduction_price, $reduction_percent, $date_from, $date_to, $product_price, $usetax, $taxrate)
-	{
-		Tools::displayAsDeprecated();
-
-		// Avoid an error with 1970-01-01
-		if (!Validate::isDate($date_from) OR !Validate::isDate($date_to))
-			return 0;
-		$currentDate = date('Y-m-d H:i:s');
-		if ($date_from != $date_to AND ($currentDate > $date_to OR $currentDate < $date_from))
-			return 0;
-
-		// reduction values
-		if (!$usetax)
-			$reduction_price /= (1 + ($taxrate / 100));
-
-		// make the reduction
-		if ($reduction_price AND $reduction_price > 0)
-		{
-			if ($reduction_price >= $product_price)
-				$ret = $product_price;
-			else
-				$ret = $reduction_price;
-		}
-		elseif ($reduction_percent AND $reduction_percent > 0)
-		{
-			if ($reduction_percent >= 100)
-				$ret = $product_price;
-			else
-				$ret = $product_price * $reduction_percent / 100;
-		}
-		return isset($ret) ? $ret : 0;
 	}
 
 	/**
@@ -1956,15 +1864,6 @@ class ProductCore extends ObjectModel
 		return self::getPriceStatic((int)($this->id), $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public function getIdProductAttributeMostExpsensive()
-	{
-		Tools::displayAsDeprecated();
-		return $this->getIdProductAttributeMostExpensive();
-	}
-
 	public function getIdProductAttributeMostExpensive()
 	{
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -1985,6 +1884,7 @@ class ProductCore extends ObjectModel
 	* Get product price for display
 	* Also display currency sign and reduction
 	*
+	* @deprecated as of 1.4.2
 	* @param array $params Product price, reduction...
 	* @param object $smarty Smarty object
 	* @return string Product price fully formated in customer currency
@@ -1998,13 +1898,7 @@ class ProductCore extends ObjectModel
 		$ret .= Tools::displayPrice($params['p']['price'], $smarty->ps_currency);
 		return $ret;
 	}
-
-	static function productPriceWithoutDisplay($params, &$smarty)
-	{
-		Tools::displayAsDeprecated();
-		return Tools::convertPrice($params['p'], $params['c']);
-	}
-
+	
 	/**
 	* Display price with right format and currency
 	*
@@ -3216,15 +3110,6 @@ class ProductCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$id_lang.')
 		WHERE sm.id_product='.(int)$this->id.'
 		GROUP BY sm.id_stock_mvt');
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function getBasicPrice()
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `price` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)($this->id));
 	}
 
 	public static function getUrlRewriteInformations($id_product)

@@ -461,19 +461,6 @@ class CarrierCore extends ObjectModel
 		return $resultsArray;
 	}
 
-	/**
-	 * @param int $id_country
-	 * @param array $groups
-	 * @return Array carriers list
-	 * @deprecated
-	 */
-	public static function getCarriersOpc($id_country, $groups = NULL)
-	{
-		Tools::displayAsDeprecated();
-
-		return self::getCarriersForOrder((int)Country::getIdZone((int)($id_country)), $groups);
-	}
-
 	public static function checkCarrierZone($id_carrier, $id_zone)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -675,19 +662,6 @@ class CarrierCore extends ObjectModel
 
 		return (int)($row['total']);
 	}
-
-
-	/**
-	* Get the price without taxes defined in carrier
-	* @deprecated
-	**/
-	public function getPriceWithoutTaxes($productPrice)
-	{
-	    Tools::displayAsDeprecated();
-		$tax = new Tax($this->id_tax);
-		return round($productPrice - ($productPrice * $tax->rate / 100), 2);
-	}
-
 
 	public function getShippingMethod()
 	{

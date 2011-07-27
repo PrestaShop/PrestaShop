@@ -146,16 +146,6 @@ class ValidateCore
 	}
 
 	/**
-	 * @deprecated
-	 * @param int $id
-	 */
-	static public function isOptId($id)
-	{
-		Tools::displayAsDeprecated();
-		return empty($id) OR self::isUnsignedId($id);
-	}
-
-	/**
 	* Check for name validity
 	*
 	* @param string $name Name to validate
@@ -222,43 +212,6 @@ class ValidateCore
 	}
 
 	/**
-	 * @deprecated
-	 * @param string $tplFileName
-	 * @return bool
-	 */
-	static public function isTplFileName($tplFileName)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^[a-zA-Z0-9\/_.-]+/', $tplFileName);
-	}
-
-	/**
-	* Check for icon file validity
-	*
-	* @param string $icon Icon filename to validate
-	* @return boolean Validity is ok or not
-	* @deprecated
-	*/
-	static public function isIconFile($icon)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^[a-z0-9_-]+\.(gif|jpg|jpeg|png)$/i', $icon);
-	}
-
-	/**
-	* Check for ico file validity
-	*
-	* @param string $icon Icon filename to validate
-	* @return boolean Validity is ok or not
-	* @deprecated
-	*/
-	static public function isIcoFile($icon)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^[a-z0-9_-]+\.ico$/i', $icon);
-	}
-
-	/**
 	* Check for image type name validity
 	*
 	* @param string $type Image type name to validate
@@ -304,32 +257,6 @@ class ValidateCore
 	static public function isNumericIsoCode($isoCode)
 	{
 		return preg_match('/^[0-9]{2,3}$/', $isoCode);
-	}
-
-	/**
-	* Check for gender code (ISO) validity
-	*
-	* @param string $isoCode Gender code (ISO) to validate
-	* @return boolean Validity is ok or not
-	* @deprecated
-	*/
-	static public function isGenderIsoCode($isoCode)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^0|1|2|9$/', $isoCode);
-	}
-
-	/**
-	* Check for gender code (ISO) validity
-	*
-	* @param string $isoCode Gender code (ISO) to validate
-	* @return boolean Validity is ok or not
-	* @deprecated
-	*/
-	static public function isGenderName($genderName)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^[a-zA-Z.]+$/', $genderName);
 	}
 
 	/**
@@ -385,19 +312,6 @@ class ValidateCore
 	static public function isLinkRewrite($link)
 	{
 		return (boolean)preg_match('/^[_a-zA-Z0-9-]+$/', $link);
-	}
-
-	/**
-	* Check for zone name validity
-	*
-	* @param string $name Zone name to validate
-	* @return boolean Validity is ok or not
-	* @deprecated
-	*/
-	static public function isZoneName($name)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^[a-zA-Z -()]+$/', $name);
 	}
 
 	/**
@@ -793,17 +707,6 @@ class ValidateCore
 		return preg_match('/^[a-zA-Z]{1,2}$/', $unit);
 	}
 
-	/**
-	 * @deprecated
-	 * @param string $protocol
-	 */
-	static public function isProtocol($protocol)
-	{
-		Tools::displayAsDeprecated();
-		return preg_match('/^http(s?):\/\/$/i', $protocol);
-	}
-
-
 	static public function isSubDomainName($subDomainName)
 	{
 		return preg_match('/^[a-zA-Z0-9-_]*$/', $subDomainName);
@@ -812,19 +715,6 @@ class ValidateCore
 	static public function isVoucherDescription($text)
 	{
 		return preg_match('/^([^<>{}]|<br \/>)*$/i', $text);
-	}
-	
-	/**
-	* Check if the char values is a granularity value
-	*
-	* @param char $value
-	* @return boolean Validity is ok or not
-	* @deprecated
-	*/
-	static public function isGranularityValue($value)
-	{
-		Tools::displayAsDeprecated();
-		return (!is_null($value) AND ($value === 'd' OR $value === 'm' OR $value === 'y'));
 	}
 	
 	/**
@@ -867,96 +757,6 @@ class ValidateCore
 	static public function isDniLite($dni)
 	{
 		return empty($dni) OR (bool)preg_match('/^[0-9A-Za-z-.]{1,16}$/U', $dni);
-	}
-	
-	/**
-	* Check for Dni validity
-	*
-	* @param string $dni to validate
-	* @return int
-	* @deprecated
-	*/
-	static public function isDni($dni)
-	{
-		/*
-		Return code:
-		1 : It's Ok
-		0 : Bad format for DNI
-		-1 : DNI duplicate
-		-2 : NIF error
-		-3 : CIF error
-		-4 : NIE error
-		*/
-
-		Tools::displayAsDeprecated();
-		
-		if (!$dni)
-			return 1;
-		
-		$dni = strtoupper($dni);
-		if (!preg_match('/((^[A-Z]{1}[0-9]{7}[A-Z0-9]{1}$|^[T]{1}[A-Z0-9]{8}$)|^[0-9]{8}[A-Z]{1}$)/', $dni)) 
-			return 0;
-		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_address`
-		FROM `'._DB_PREFIX_.'address` 
-		WHERE `dni` = \''.pSQL($dni).'\'');
-		if($result)
-			return -1;
-		
-		for ($i=0;$i<9;$i++)
-			$char[$i] = substr($dni, $i, 1);
-		// 12345678T
-		if (preg_match('/(^[0-9]{8}[A-Z]{1}$)/', $dni))
-			if ($char[8] == substr('TRWAGMYFPDXBNJZSQVHLCKE', substr($dni, 0, 8) % 23, 1))
-				return 1;
-			else
-				return -2;
-		
-		$sum = $char[2] + $char[4] + $char[6];
-		for ($i = 1; $i < 8; $i += 2)
-			$sum += substr((2 * $char[$i]),0,1) + substr((2 * $char[$i]),1,1);
-		
-		$n = 10 - substr($sum, strlen($sum) - 1, 1);
-		
-		if (preg_match('/^[KLM]{1}/', $dni))
-			if ($char[8] == chr(64 + $n))
-				return 1;
-			else
-	 			return -2;
-		
-		if (preg_match('/^[ABCDEFGHJNPQRSUVW]{1}/', $dni))
-			if ($char[8] == chr(64 + $n) || $char[8] == substr($n, strlen($n) - 1, 1))
-				return 1;
-			else
-				return -3;
-		
-		if (preg_match('/^[T]{1}/', $dni))
-			if ($char[8] == preg_match('/^[T]{1}[A-Z0-9]{8}$/', $dni))
-				return 1;
-			else
-				return -4;
-		
-		if (preg_match('/^[XYZ]{1}/', $dni))
-			if ($char[8] == substr('TRWAGMYFPDXBNJZSQVHLCKE', substr(str_replace(array('X','Y','Z'), array('0','1','2'), $dni), 0, 8) % 23, 1))
-				return 1;
-			else
-				return -4;
-		
-		return 0;
-	}
-	
-	/**
-	* Check for Dni validity
-	*
-	* @param string $dni to validate
-	* @return bool
-	* @deprecated
-	*/
-	static public function isDniBool($dni)
-	{
-		Tools::displayAsDeprecated();
-		return (self::isDni($dni) > 0 ? 1 : 0); 
 	}
 
 	/**
