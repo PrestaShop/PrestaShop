@@ -204,15 +204,14 @@ class CustomerCore extends ObjectModel
 	  *
 	  * @return array Customers
 	  */
-	static public function getCustomers(Context $context = null)
+	static public function getCustomers(Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+		
 		$sql = 'SELECT `id_customer`, `email`, `firstname`, `lastname`
 				FROM `'._DB_PREFIX_.'customer`
-				WHERE 1 
-					'.$context->shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
+				WHERE 1 '.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `id_customer` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
@@ -224,19 +223,19 @@ class CustomerCore extends ObjectModel
 	  * @param string $passwd Password is also checked if specified
 	  * @return Customer instance
 	  */
-	public function getByEmail($email, $passwd = NULL, Context $context = null)
+	public function getByEmail($email, $passwd = NULL, Shop $shop = null)
 	{
 	 	if (!Validate::isEmail($email) OR ($passwd AND !Validate::isPasswd($passwd)))
 	 		die (Tools::displayError());
-	 		
-	 	if (!$context)
-	 		$context = Context::getContext();
+
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 
 	 	$sql = 'SELECT *
 				FROM `'._DB_PREFIX_	.'customer`
 				WHERE `active` = 1
 					AND `email` = \''.pSQL($email).'\'
-					'.$context->shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
+					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
 					'.(isset($passwd) ? 'AND `passwd` = \''.md5(_COOKIE_KEY_.$passwd).'\'' : '').'
 					AND `deleted` = 0
 					AND `is_guest` = 0';
@@ -280,18 +279,18 @@ class CustomerCore extends ObjectModel
 	  * @param $ignoreGuest boolean, for exclure guest customer
 	  * @return Customer ID if found, false otherwise
 	  */
-	static public function customerExists($email, $return_id = false, $ignoreGuest = true, Context $context = null)
+	static public function customerExists($email, $return_id = false, $ignoreGuest = true, Shop $shop = null)
 	{
 	 	if (!Validate::isEmail($email))
 	 		die (Tools::displayError());
 	 		
-	 	if (!$context)
-	 		$context = Context::getContext();
-
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+	 		
 	 	$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
-					'.$context->shop->sqlRestriction(Shop::SHARE_CUSTOMER).
+					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).
 					($ignoreGuest ? 'AND `is_guest` = 0' : '');
 		$result = Db::getInstance()->getRow($sql);
 
@@ -367,6 +366,7 @@ class CustomerCore extends ObjectModel
 	/**
 	  * Returns customer last connections
 	  *
+	  * @deprecated
 	  * @param integer $nb Number of connections wanted
 	  * @return array Connections
 	  */

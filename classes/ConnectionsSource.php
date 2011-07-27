@@ -59,11 +59,11 @@ class ConnectionsSourceCore extends ObjectModel
 		return $result;
 	}
 	
-	public static function logHttpReferer(Context $context = null)
+	public static function logHttpReferer(Cookie $cookie = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		if (!isset($context->cookie->id_connections) OR !Validate::isUnsignedId($context->cookie->id_connections))
+		if (!$cookie)
+			$cookie = Context::getContext()->cookie;
+		if (!isset($cookie->id_connections) OR !Validate::isUnsignedId($cookie->id_connections))
 			return false;
 		if (!isset($_SERVER['HTTP_REFERER']) AND !Configuration::get('TRACKING_DIRECT_TRAFFIC'))
 			return false;
@@ -85,7 +85,7 @@ class ConnectionsSourceCore extends ObjectModel
 			}
 		}
 		
-		$source->id_connections = (int)$context->cookie->id_connections;
+		$source->id_connections = (int)$cookie->id_connections;
 		$source->request_uri = Tools::getHttpHost(false, false);
 		if (isset($_SERVER['REDIRECT_URL']))
 			$source->request_uri .= strval($_SERVER['REDIRECT_URL']);
