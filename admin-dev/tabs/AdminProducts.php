@@ -2447,11 +2447,11 @@ class AdminProducts extends AdminTab
 						<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="<?php echo $up_filename ?>" />
 					<?php endif; ?>
 					</div>
-					<a id="delete_downloadable_product" style="display:none;" href="confirm.php?height=200&amp;width=300&amp;modal=true&amp;referer=<?php echo rawurlencode($_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true') ?>" class="thickbox red" title="<?php echo $this->l('Delete this file') ?>"><?php echo $this->l('Delete this file') ?></a>
+					<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('<?php echo addslashes($this->l('Delete this file')) ?>')" href="<?php echo $_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true' ?>" class="red"><?php echo $this->l('Delete this file') ?></a>
 	<?php else: ?>
 					<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="<?php echo $productDownload->physically_filename ?>" />
 					<?php echo $this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true) ?>
-					<a href="confirm.php?height=200&amp;width=300&amp;modal=true&amp;referer=<?php echo rawurlencode($_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true') ?>" class="thickbox red" title="<?php echo $this->l('Delete this file') ?>"><?php echo $this->l('Delete this file') ?></a>
+					<a onclick="return confirm('<?php echo addslashes($this->l('Delete this file')) ?>')" href="<?php echo $_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true' ?>" class="red"><?php echo $this->l('Delete this file') ?></a>
 	<?php endif; // check if file exists ?>
 				</p>
 				<p class="block">
