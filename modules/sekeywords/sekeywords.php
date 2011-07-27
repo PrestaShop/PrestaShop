@@ -48,7 +48,7 @@ class SEKeywords extends ModuleGraph
 				FROM `'._DB_PREFIX_.'sekeyword`
 				WHERE '.(Configuration::get('SEK_FILTER_KW') == '' ? '1' : '`keyword` REGEXP \''.pSQL(Configuration::get('SEK_FILTER_KW')).'\'')
 					.$this->sqlShopRestriction().
-					'AND `date_add` BETWEEN ';
+					' AND `date_add` BETWEEN ';
 
 		$this->_query2 = 'GROUP BY TRIM(`keyword`)
 				HAVING occurences > '.(int)Configuration::get('SEK_MIN_OCCURENCES').'
