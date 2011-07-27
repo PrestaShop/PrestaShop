@@ -408,7 +408,7 @@ abstract class ObjectModelCore
 		$fields = array();
 
 		if($this->id_lang == NULL)
-			foreach (Language::getLanguages(false) as $language)
+			foreach (Language::getLanguages() as $language)
 				$this->makeTranslationFields($fields, $fieldsArray, $language['id_lang']);
 		else
 			$this->makeTranslationFields($fields, $fieldsArray, $this->id_lang);

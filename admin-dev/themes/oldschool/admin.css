@@ -54,10 +54,3 @@ a.action_module{color: #268CCD;text-decoration: underline;}
 a.header_module_toggle{font-weight: bold;color: #268CCD;display:block;}
 a.module_toggle_all{color: #268CCD;}
 .nbr_module{float:right;margin-right:10px;font-style:italic;font-size:12px;color: #268CCD;}
-
-.autoupgradeSteps div {  line-height: 30px; }
-.upgradestep { margin-right: 5px;padding-left: 10px; padding-right: 5px;}
-#upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 15px;}
-#upgradeNow {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
-.button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
-.processing {overflow: auto;}

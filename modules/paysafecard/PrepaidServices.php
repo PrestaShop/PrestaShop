@@ -453,7 +453,7 @@ abstract class PrepaidServices extends PaymentModule
 			else
 				$order->total_paid_real += $amount;
 
-			$os = Configuration::get('PS_OS_PAYMENT');
+			$os = _PS_OS_PAYMENT_;
 			if ($order->total_paid != $order->total_paid_real)
 				$os = Configuration::get($this->prefix.'ORDER_STATE_PART_ID');
 

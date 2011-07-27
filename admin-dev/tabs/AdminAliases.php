@@ -59,6 +59,7 @@ class AdminAliases extends AdminTab
 			
 			if (!sizeof($this->_errors))
 			{
+				Alias::deleteAliases($search);
 			 	foreach ($aliases AS $alias)
 			 	{
 					$obj = new Alias(NULL, trim($alias), trim($search));

@@ -207,9 +207,10 @@ function createDir($path, $rights)
 
 function checkPSVersion()
 {
-	$upgrader = new Upgrader();
-
-	return $upgrader->checkPSVersion();
+	libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
+	if ($feed = @simplexml_load_file('http://www.prestashop.com/xml/version.xml') AND _PS_VERSION_ < $feed->version->num)
+		return array('name' => $feed->version->name, 'link' => $feed->download->link);
+	return false;
 }
 
 function translate($string)

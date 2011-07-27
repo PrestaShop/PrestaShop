@@ -231,12 +231,7 @@ class SpecificPriceCore extends ObjectModel
 					`id_country` IN(0, '.(int)($id_country).') AND
 					`id_group` IN(0, '.(int)($id_group).') AND
 					`from_quantity` = 1 AND
-					(
-						(`from` = \'0000-00-00 00:00:00\' OR \''.$beginning.'\' >= `from`)
-						AND
-						(`to` = \'0000-00-00 00:00:00\' OR \''.$ending.'\' <= `to`)
-					)
-					AND
+					(`from` = \'0000-00-00 00:00:00\' OR (\''.$beginning.'\' >= `from` AND \''.$ending.'\' <= `to`)) AND
 					`reduction` > 0
 		', false);
 		$ids_product = array();

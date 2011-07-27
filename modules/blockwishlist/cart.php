@@ -30,6 +30,8 @@ require_once(dirname(__FILE__).'/../../init.php');
 require_once(dirname(__FILE__).'/WishList.php');
 require_once(dirname(__FILE__).'/blockwishlist.php');
 
+$errors = array();
+
 $action = Tools::getValue('action');
 $add = (!strcmp($action, 'add') ? 1 : 0);
 $delete = (!strcmp($action, 'delete') ? 1 : 0);
@@ -40,7 +42,7 @@ $id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
 	$cookie->isLogged() === true)
-	echo Tools::displayError('Invalid token');
+	$errors[] = Tools::displayError('Invalid token');
 if ($cookie->isLogged())
 {
 	if ($id_wishlist AND WishList::exists($id_wishlist, $cookie->id_customer) === true)
@@ -76,4 +78,10 @@ if ($cookie->isLogged())
 		echo Tools::displayError('No template found');
 }
 else
-	echo Tools::displayError('You must be logged in to manage your wishlist.');
+	$errors[] = Tools::displayError('You must be logged in to manage your wishlist.');
+	
+if (sizeof($errors))
+{
+	$smarty->assign('errors', $errors);
+	$smarty->display(_PS_THEME_DIR_.'errors.tpl');
+}

@@ -384,11 +384,11 @@ class Fianetfraud extends Module
 		$conf = Configuration::getMultiple(array('SAC_PRODUCTION', 'PS_SAC_ID_FRAUD', 'SAC_SITEID', 'SAC_LOGIN', 'SAC_PASSWORD'));
 		if ($params['newOrderStatus']->id  == Configuration::get('SAC_ID_FRAUD'))
 			$order_status = 2;
-		elseif ($params['newOrderStatus']->id  == Configuration::get('PS_OS_DELIVERED'))
+		elseif ($params['newOrderStatus']->id  == _PS_OS_DELIVERED_)
 			$order_status = 1;
-		elseif ($params['newOrderStatus']->id == Configuration::get('PS_OS_CANCELED'))
+		elseif ($params['newOrderStatus']->id == _PS_OS_CANCELED_)
 			$order_status = 2;
-		elseif ($params['newOrderStatus']->id == Configuration::get('PS_OS_REFUND'))
+		elseif ($params['newOrderStatus']->id == _PS_OS_REFUND_)
 			$order_status = 6;
 		if ($order_status != false)
 			return file_get_contents('https://secure.fia-net.com/'.($conf['SAC_PRODUCTION'] ? 'fscreener' : 'pprod').'/engine/delivery.cgi?SiteID='.$conf['SAC_SITEID'].'&Pwd='.urlencode($conf['SAC_PASSWORD']).'&RefID='.(int)$params['id_order'].'&Status='.$order_status);
@@ -601,7 +601,7 @@ class Fianetfraud extends Module
 				{
 					$orderHistory = new OrderHistory();
 					$orderHistory->id_order = (int)($row['refid']);
-					$orderHistory->id_order_state = Configuration::get('PS_OS_PAYMENT');
+					$orderHistory->id_order_state = _PS_OS_PAYMENT_;
 					$orderHistory->save();
 				}
 		return true;

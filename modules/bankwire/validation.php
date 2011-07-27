@@ -34,17 +34,6 @@ $bankwire = new BankWire();
 if ($cart->id_customer == 0 OR $cart->id_address_delivery == 0 OR $cart->id_address_invoice == 0 OR !$bankwire->active)
 	Tools::redirect('index.php?controller=order&step=1');
 
-// Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
-$authorized = false;
-foreach (Module::getPaymentModules() as $module)
-	if ($module['name'] == 'bankwire')
-	{
-		$authorized = true;
-		break;
-	}
-if (!$authorized)
-	die(Tools::displayError('This payment method is not available.'));
-	
 $customer = new Customer((int)$cart->id_customer);
 
 if (!Validate::isLoadedObject($customer))
@@ -58,6 +47,6 @@ $mailVars = array(
 	'{bankwire_address}' => nl2br(Configuration::get('BANK_WIRE_ADDRESS'))
 );
 
-$bankwire->validateOrder($cart->id, Configuration::get('PS_OS_BANKWIRE'), $total, $bankwire->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
+$bankwire->validateOrder($cart->id, _PS_OS_BANKWIRE_, $total, $bankwire->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
 $order = new Order($bankwire->currentOrder);
 Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$bankwire->id.'&id_order='.$bankwire->currentOrder.'&key='.$customer->secure_key);

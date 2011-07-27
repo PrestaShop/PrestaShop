@@ -61,7 +61,7 @@ CREATE TABLE `PREFIX_attachment` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `file` varchar(40) NOT NULL,
   `file_name` varchar(128) NOT NULL,
-  `mime` varchar(128) NOT NULL,
+  `mime` varchar(64) NOT NULL,
   PRIMARY KEY  (`id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -288,16 +288,6 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   `meta_description` varchar(255) DEFAULT NULL,
   UNIQUE KEY `category_lang_index` (`id_cms_category`,`id_lang`),
   KEY `category_name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_compare_product` (
-  `id_compare_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_product` int(10) unsigned NOT NULL,
-  `id_guest` int(10) unsigned NOT NULL,
-  `id_customer` int(10) unsigned NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY  (`id_compare_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_configuration` (

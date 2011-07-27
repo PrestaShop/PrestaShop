@@ -68,17 +68,17 @@ switch ($status)
 {	
 	/* Bankwire */
 	case 0:
-		$moneyBookers->validateOrder((int)($secure_cart[0]), Configuration::get('PS_OS_BANKWIRE'), (float)($_POST['amount']), $moneyBookers->displayName, $message, array(), NULL, false, $secure_cart[2]);
+		$moneyBookers->validateOrder((int)($secure_cart[0]), _PS_OS_BANKWIRE_, (float)($_POST['amount']), $moneyBookers->displayName, $message, array(), NULL, false, $secure_cart[1]);
 		break;
 
 	/* Payment OK */
 	case 2:
-		$moneyBookers->validateOrder((int)($secure_cart[0]), Configuration::get('PS_OS_PAYMENT'), (float)($_POST['amount']), $moneyBookers->displayName, $message, array(), NULL, false, $secure_cart[2]);
+		$moneyBookers->validateOrder((int)($secure_cart[0]), _PS_OS_PAYMENT_, (float)($_POST['amount']), $moneyBookers->displayName, $message, array(), NULL, false, $secure_cart[1]);
 		break;
 
 	/* Unknown or error */
 	default:
-		$moneyBookers->validateOrder((int)($secure_cart[0]), Configuration::get('PS_OS_ERROR'), 0, $moneyBookers->displayName, $message, array(), NULL, false, $secure_cart[2]);
+		$moneyBookers->validateOrder((int)($secure_cart[0]), _PS_OS_ERROR_, 0, $moneyBookers->displayName, $message, array(), NULL, false, $secure_cart[1]);
 		break;
 }
 

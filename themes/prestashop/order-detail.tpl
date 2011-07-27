@@ -26,7 +26,7 @@
 
 <script type="text/javascript">
 // <![CDATA[
-	var baseDir = '{$base_dir_ssl}';		
+		
 //]]>
 </script>
 
@@ -80,7 +80,7 @@
 	{/if}
 </p>
 {/if}
-{if $order->recyclable && isset($isRecyclable) && $isRecyclable}
+{if $order->recyclable}
 <p><img src="{$img_dir}icon/recyclable.gif" alt="" class="icon" />&nbsp;{l s='You have given permission to receive your order in recycled packaging.'}</p>
 {/if}
 {if $order->gift}
