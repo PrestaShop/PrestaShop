@@ -223,10 +223,10 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $id_customer Customer ID
 	  * @return array Discounts
 	  */
-	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false, Context $context = null)
+	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false, Cart $cart = null)
     {
-		if (!$context)
-			$context = Context::getContext();
+		if (!$cart)
+			$cart = Context::getContext()->cart;
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
         SELECT d.*, dtl.`name` AS `type`, dl.`description`
 		FROM `'._DB_PREFIX_.'discount` d
@@ -242,8 +242,8 @@ class DiscountCore extends ObjectModel
 		foreach ($res as &$discount)
 			if ($discount['quantity_per_user'])
 			{
-				$quantity_used = Order::getDiscountsCustomer((int)($id_customer), (int)($discount['id_discount']));
-				if (isset($context->cart) AND $context->cart->id)
+				$quantity_used = Order::getDiscountsCustomer($id_customer, $discount['id_discount']);
+				if (isset($cart) AND $cart->id)
 					$quantity_used += $cart->getDiscountsCustomer((int)($discount['id_discount']));
 				$discount['quantity_for_user'] = $discount['quantity_per_user'] - $quantity_used;
 			}
@@ -269,11 +269,12 @@ class DiscountCore extends ObjectModel
 	  * @param boolean $order_total_products Total cart products amount
 	  * @return mixed Return a float value or '!' if reduction is 'Shipping free'
 	  */
-	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, Context $context = null)
+	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, Currency $currency = null, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		
+		if (!$currency)
+			$currency = Context::getContext()->currency;
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 		$totalAmount = 0;
 		$cart = new Cart($idCart);
 		if (!Validate::isLoadedObject($cart))
@@ -289,7 +290,7 @@ class DiscountCore extends ObjectModel
 		$date_end = strtotime($this->date_to);
 		if ((time() < $date_start OR time() > $date_end) AND !$cart->OrderExists()) return 0;
 
-		if (!$this->isAssociatedToShop($context->shop->shopID()))
+		if (!$this->isAssociatedToShop($shop->shopID()))
 			return 0;
 		$products = $cart->getProducts();
 		$categories = Discount::getCategories((int)$this->id);
@@ -317,7 +318,7 @@ class DiscountCore extends ObjectModel
 			/* Absolute value */
 			case 2:
 				// An "absolute" voucher is available in one currency only
-				$currency = ((int)$cart->id_currency ? Currency::getCurrencyInstance($cart->id_currency) : $context->currency);
+				$currency = ((int)$cart->id_currency ? Currency::getCurrencyInstance($cart->id_currency) : $currency);
 				if ($this->id_currency != $currency->id)
 					return 0;
 

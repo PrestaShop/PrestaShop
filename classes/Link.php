@@ -271,14 +271,12 @@ class LinkCore
 	 * @param string $request
 	 * @param Context $context
 	 */
-	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, Context $context = null)
+	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null)
 	{
 		$controller = str_replace('.php', '', $controller);
 
-		if (!$context)
-			$context = Context::getContext();
 		if (!$id_lang)
-			$id_lang = (int)$context->language->id;
+			$id_lang = (int)Context::getContext()->language->id;
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller);
 		$url = ($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);

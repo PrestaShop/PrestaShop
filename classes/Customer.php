@@ -382,11 +382,11 @@ class CustomerCore extends ObjectModel
 	  * @param string $query Searched string
 	  * @return array Corresponding customers
 	  */
-	public static function searchByName($query, Context $context = null)
+	public static function searchByName($query, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+					
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE (
@@ -394,7 +394,7 @@ class CustomerCore extends ObjectModel
 						OR `id_customer` LIKE \'%'.pSQL($query).'%\'
 						OR `lastname` LIKE \'%'.pSQL($query).'%\'
 						OR `firstname` LIKE \'%'.pSQL($query).'%\'
-					)'.$context->shop->sqlRestriction(Shop::SHARE_CUSTOMER);
+					)'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
@@ -513,14 +513,14 @@ class CustomerCore extends ObjectModel
 		return self::$_defaultGroupId[(int)($id_customer)];
 	}
 
-	static public function getCurrentCountry($id_customer, Context $context = null)
+	static public function getCurrentCountry($id_customer, Cart $cart = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		if (!$context->cart OR !$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
+		if (!$cart)
+			$cart = Context::getContext()->cart;
+		if (!$cart OR !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
 			$id_address = (int)(Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)($id_customer).' AND `deleted` = 0 ORDER BY `id`'));
 		else
-			$id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+			$id_address = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 		$ids = Address::getCountryAndState($id_address);
 		return (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
 	}
