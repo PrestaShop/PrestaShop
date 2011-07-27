@@ -910,20 +910,6 @@ class ToolsCore
 		return (int)($row['total']);
 	}
 
-	/*
-	** Historyc translation function kept for compatibility
-	** Removing soon
-	*/
-	public static function historyc_l($key, $translations)
-	{
-		if (!$translations OR !is_array($translations))
-			die(self::displayError());
-		$iso = strtoupper(Language::getIsoById($cookie->id_lang));
-		$lang = key_exists($context->language->iso_code, $translations) ? $translations[$context->language->iso_code] : false;
-		return (($lang AND is_array($lang) AND key_exists($key, $lang)) ? stripslashes($lang[$key]) : $key);
-	}
-
-	
 	/**
 	 * Return the friendly url from the provided string
 	 *

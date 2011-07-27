@@ -120,10 +120,10 @@ if (defined('PS_ADMIN_DIR'))
 }
 else
 {
-	if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
+	$language = new Language($cookie->id_lang);
+	if (!Validate::isLoadedObject($language))
 		$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 }
-
 Context::getContext()->language = $language;
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
