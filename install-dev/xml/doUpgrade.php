@@ -31,8 +31,11 @@ $engineType = 'ENGINE_TYPE';
 if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set('Europe/Paris');
 	
-define('_PS_MODULE_DIR_', realpath(INSTALL_PATH).'/../modules/');
-define('_PS_INSTALLER_PHP_UPGRADE_DIR_', realpath(INSTALL_PATH).'/php/');
+		define('_PS_MODULE_DIR_', realpath(INSTALL_PATH.'/../').'/modules/');
+
+if(!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
+	define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  INSTALL_PATH.DIRECTORY_SEPARATOR.'php/');
+
 // Only if loyalty module is installed
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_loyalty.php');
 // desactivate non-native module
@@ -103,6 +106,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_for_13version.php');
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_cms_block.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_blocklink.php');
+
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_productcomments_guest_index.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_loyalty.php');
 
@@ -249,6 +254,7 @@ foreach($neededUpgradeFiles AS $version)
 	$file = INSTALL_PATH.'/sql/upgrade/'.$version.'.sql';
 	if (!file_exists($file))
 	{
+		error_log('here?'.$file);
 		$logger->logError('Error while loading sql upgrade file.');
 		die('<action result="fail" error="33" />'."\n");
 	}

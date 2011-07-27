@@ -236,7 +236,7 @@ class Hipay extends PaymentModule
 			{
 				/* Paiement capturé sur Hipay = Paiement accepté sur Prestashop */
 				$orderMessage = $operation.': '.$status.'\ndate: '.$date.' '.$time.'\ntransaction: '.$transid.'\namount: '.(float)$amount.' '.$currency.'\nid_cart: '.(int)$id_cart;
-				$this->validateOrder((int)$id_cart, _PS_OS_PAYMENT_, (float)$amount, $this->displayName, $orderMessage, array(), NULL, false, Tools::getValue('token'));
+				$this->validateOrder((int)$id_cart, Configuration::get('PS_OS_PAYMENT'), (float)$amount, $this->displayName, $orderMessage, array(), NULL, false, Tools::getValue('token'));
 			}
 			elseif (trim($operation) == 'refund' AND trim(strtolower($status)) == 'ok')
 			{
@@ -245,12 +245,12 @@ class Hipay extends PaymentModule
 					die(Tools::displayError());
 					
 				$order = new Order((int)($id_order));
-				if (!$order->valid OR $order->getCurrentState() === _PS_OS_REFUND_)
+				if (!$order->valid OR $order->getCurrentState() === Configuration::get('PS_OS_REFUND'))
 					die(Tools::displayError());
 					
 				$orderHistory = new OrderHistory();
 				$orderHistory->id_order = (int)($order->id);
-				$orderHistory->changeIdOrderState((int)(_PS_OS_REFUND_), (int)($id_order));
+				$orderHistory->changeIdOrderState((int)(Configuration::get('PS_OS_REFUND')), (int)($id_order));
 				$orderHistory->addWithemail();
 			}
 		}

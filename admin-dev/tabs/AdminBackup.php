@@ -241,7 +241,7 @@ class AdminBackup extends AdminTab
 			if (preg_match('/^([\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches) == 0)
 				continue;
 			$timestamp = (int)($matches[1]);
-			$date = date('Y-m-d h:i:s', $timestamp);
+			$date = date('Y-m-d H:i:s', $timestamp);
 			$age = time() - $timestamp;
 			if ($age < 3600)
 				$age = '< 1 '.$this->l('hour');

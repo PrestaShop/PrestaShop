@@ -28,11 +28,6 @@
 include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/sendtoafriend.php');
 
-$sendtoafriend = new sendToAFriend();
-if (!$sendtoafriend->active)
-	Tools::display404Error();
-
-include(dirname(__FILE__).'/../../header.php');
-echo $sendtoafriend->displayFrontForm();
-include(dirname(__FILE__).'/../../footer.php');
+$sendtoafriend = new sendToAFriend($dontTranslate = true);
+echo $sendtoafriend->displayPageForm();
 

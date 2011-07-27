@@ -248,7 +248,7 @@ class AdminProducts extends AdminTab
 						$attachment->file = $uniqid;
 						$attachment->mime = $_FILES['attachment_file']['type'];
 						$attachment->file_name = pSQL($_FILES['attachment_file']['name']);
-						if (empty($attachment->mime) OR Tools::strlen($attachment->mime) > 64)
+						if (empty($attachment->mime) OR Tools::strlen($attachment->mime) > 128)
 							$this->_errors[] = Tools::displayError('Invalid file extension');
 						if (!Validate::isGenericName($attachment->file_name))
 							$this->_errors[] = Tools::displayError('Invalid file name');
@@ -2709,8 +2709,48 @@ class AdminProducts extends AdminTab
 							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
 						</td>
 					</tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
-					<tr id="tr_categories"></tr>
+					<tr>
+						<td colspan="2" style="padding-bottom:5px;">
+							<hr style="width:100%;" />
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label for="id_category_default" class="t">'.$this->l('Default category:').'</label></td>
+						<td>
+						<div id="no_default_category" style="color: red;font-weight: bold;display: none;">'.$this->l('Please check a category in order to select the default category.').'</div>
+						<script>var post_selected_cat;</script>';
+						if (Tools::isSubmit('categoryBox'))
+						{
+							$postCat = Tools::getValue('categoryBox');
+							$selectedCat = Category::getSimpleCategories($this->_defaultFormLanguage, false, true, 'AND c.`id_category` IN ('.(empty($postCat) ? '1' : implode(',', $postCat)).')');
+							echo '<script>post_selected_cat = \''.implode(',', $postCat).'\';</script>';
+						}
+						if ($obj->id)
+							$selectedCat = Product::getProductCategoriesFull($obj->id, $this->_defaultFormLanguage);
+						else if(!Tools::isSubmit('categoryBox'))
+							$selectedCat[] = array('id_category' => 1, 'name' => $this->l('Home'));
+						echo '<select id="id_category_default" name="id_category_default">';
+						
+							foreach($selectedCat AS $cat)
+								echo '<option value="'.$cat['id_category'].'" '.($obj->id_category_default == $cat['id_category'] ? 'selected' : '').'>'.$cat['name'].'</option>';
+						echo '</select>
+						</td> 
+					</tr>
+					<tr id="tr_categories">
+						<td colspan="2">
+						';
+					// Translations are not automatic for the moment ;)
+					$trads = array(
+						 'Home' => $this->l('Home'), 
+						 'selected' => $this->l('selected'), 
+						 'Collapse All' => $this->l('Collapse All'), 
+						 'Expand All' => $this->l('Expand All'), 
+						 'Check All' => $this->l('Check All'), 
+						 'Uncheck All'  => $this->l('Uncheck All')
+					);
+					echo Helper::renderAdminCategorieTree($trads, $selectedCat).'
+						</td>
+					</tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr><td colspan="2">
 						<span onclick="$(\'#seo\').slideToggle();" style="cursor: pointer"><img src="../img/admin/arrow.gif" alt="'.$this->l('SEO').'" title="'.$this->l('SEO').'" style="float:left; margin-right:5px;"/>'.$this->l('Click here to improve product\'s rank in search engines (SEO)').'</span><br />
@@ -2719,7 +2759,7 @@ class AdminProducts extends AdminTab
 								<tr>
 									<td class="col-left">'.$this->l('Meta title:').'</td>
 									<td class="translatable">';
-		foreach ($this->_languages as $language)
+		foreach ($this->_languages AS $language)
 			echo '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_title_'.$language['id_lang'].'" name="meta_title_'.$language['id_lang'].'"
 											value="'.htmlentities($this->getFieldValue($obj, 'meta_title', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
@@ -2894,18 +2934,10 @@ class AdminProducts extends AdminTab
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
 			<script type="text/javascript">
 					toggleVirtualProduct(getE(\'is_virtual_good\'));
-					unitPriceWithTax(\'unit\');';
+					unitPriceWithTax(\'unit\');
+			</script>';
 		$categoryBox = Tools::getValue('categoryBox', array());
-		echo '
-		$(function() {
-			$.ajax({
-				type: \'POST\',
-				url: \'ajax_category_list.php\',
-				data: \''.(sizeof($categoryBox) > 0 ? 'categoryBox='.serialize($categoryBox).'&' : '').'id_product='.$obj->id.'&id_category_default='.($this->getFieldValue($obj, 'id_category_default') ? $this->getFieldValue($obj, 'id_category_default') : Tools::getValue('id_category', 1)).'&id_category='.(int)(Tools::getValue('id_category')).'&token='.$this->token.'\',
-				async : true,
-				success: function(msg) { $(\'#tr_categories\').replaceWith(msg); }
-			});
-		});</script>';
+		
 	}
 
 	function displayFormImages($obj, $token = NULL)

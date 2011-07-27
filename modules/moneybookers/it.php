@@ -11,14 +11,13 @@ $_MODULE['<{moneybookers}prestashop>confirmation_df194447dfecf36bb8043bd8d94feed
 $_MODULE['<{moneybookers}prestashop>confirmation_047e219d25b398033511b18041dbfd7a'] = 'Il tuo ordine verrà spedito non appena avremo ricevuto il bonifico bancario.';
 $_MODULE['<{moneybookers}prestashop>confirmation_8de637e24570c1edb0357826a2ad5aea'] = 'Abbiamo notato un problema con il tuo ordine. Se pensi che sia un errore, contatta la nostra';
 $_MODULE['<{moneybookers}prestashop>moneybookers-currency-error_6484c945379d81c37ac734c9768605cf'] = 'Non puoi pagare con Moneybookers con la valuta attuale, scegli un\'altra valuta';
-$_MODULE['<{moneybookers}prestashop>moneybookers_27266fe4d37bf06589c7c6dbf2d5c067'] = 'Paga con';
 $_MODULE['<{moneybookers}prestashop>moneybookers_6861a58e2be4956b3f2fd6420fe6c28c'] = 'Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_a356736cbcf740f8648d71067fca090d'] = 'Si accettano pagamenti con Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_fa214007826415a21a8456e3e09f999d'] = 'Sei sicuro di voler cancellare i tuoi dati?';
 $_MODULE['<{moneybookers}prestashop>moneybookers_088b74050a381d98fca38d5990b097be'] = 'Si sta attualmente utilizzando l\'indirizzo e-mail Moneybookers di default, è necessario utilizzare il proprio indirizzo e-mail';
-$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Impossibile contattare il server di attivazione, riprova più tardi';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b863542eebcb27fa230b647b5dd07819'] = 'convalida account non riuscita, la tua e-mail potrebbe essere errata';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d70c5b5767846906e0abe68498db887b'] = 'attivazione e-mail di successo, ora è possibile convalidare la parola segreta';
+$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Impossibile contattare il server di attivazione, riprova più tardi';
 $_MODULE['<{moneybookers}prestashop>moneybookers_7757ea03f2a0893e36c7916a2ad07ef8'] = 'Il campo email è obbligatorio';
 $_MODULE['<{moneybookers}prestashop>moneybookers_aa1c444c2ee2f620d5b349fedfa68ba2'] = 'convalida parola segreta fallita, ha superato il numero massimo di tentativi (3 per ora)';
 $_MODULE['<{moneybookers}prestashop>moneybookers_cdbef58d093e0ff38e13686a669e9fee'] = 'convalida parola segreta fallita, la tua parola segreta potrebbe essere sbagliata';
@@ -55,5 +54,4 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_554fd8768f165251646ce21ba499820
 $_MODULE['<{moneybookers}prestashop>moneybookers_a190bc880b04cf478e0370d1b315a5a3'] = 'Tutti i loghi in 1 blocco';
 $_MODULE['<{moneybookers}prestashop>moneybookers_852d04b5f455aaf5264e9a8c561ced71'] = '1 blocco per ogni logo';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d4dccb8ca2dac4e53c01bd9954755332'] = 'Salva impostazioni';
-
-?>
+$_MODULE['<{moneybookers}prestashop>moneybookers_27266fe4d37bf06589c7c6dbf2d5c067'] = 'Paga con';

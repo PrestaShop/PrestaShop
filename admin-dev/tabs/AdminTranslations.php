@@ -157,7 +157,7 @@ class AdminTranslations extends AdminTab
 			}
 		}
 		if ($bool)
-			Tools::redirectLink(self::$currentIndex.'&conf=14&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=14&token='.$this->token);
 		$this->_errors[] = $this->l('a part of the data has been copied but some language files could not be found or copied');
 	}
 	

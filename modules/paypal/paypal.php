@@ -133,7 +133,7 @@ class PayPal extends PaymentModule
 			$orderState->logable = true;
 			$orderState->invoice = true;
 			if ($orderState->add())
-				copy(dirname(__FILE__).'/../../img/os/'._PS_OS_PAYPAL_.'.gif', dirname(__FILE__).'/../../img/os/'.(int)$orderState->id.'.gif');
+				copy(dirname(__FILE__).'/../../img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif', dirname(__FILE__).'/../../img/os/'.(int)$orderState->id.'.gif');
 			Configuration::updateValue('PAYPAL_OS_AUTHORIZATION', (int)$orderState->id);
 		}
 		
@@ -452,16 +452,16 @@ class PayPal extends PaymentModule
 		switch ($result['PAYMENTSTATUS'])
 		{
 			case 'Completed':
-				$id_order_state = _PS_OS_PAYMENT_;
+				$id_order_state = Configuration::get('PS_OS_PAYMENT');
 				break;
 			case 'Pending':
 				if ($result['PENDINGREASON'] != 'authorization')
-					$id_order_state = _PS_OS_PAYPAL_;
+					$id_order_state = Configuration::get('PS_OS_PAYPAL');
 				else
 					$id_order_state = (int)(Configuration::get('PAYPAL_OS_AUTHORIZATION'));
 				break;
 			default:
-				$id_order_state = _PS_OS_ERROR_;
+				$id_order_state = Configuration::get('PS_OS_ERROR');
 		}
 
 		// Call payment validation method
@@ -1065,7 +1065,7 @@ class PayPal extends PaymentModule
 				die(Tools::displayError('Error when updating PayPal database'));
 			$history = new OrderHistory();
 			$history->id_order = (int)($id_order);
-			$history->changeIdOrderState(_PS_OS_REFUND_, (int)($id_order));
+			$history->changeIdOrderState(Configuration::get('PS_OS_REFUND'), (int)($id_order));
 			$history->addWithemail();
 		}
 		else
@@ -1102,7 +1102,7 @@ class PayPal extends PaymentModule
 		{
 			$history = new OrderHistory();
 			$history->id_order = (int)($id_order);
-			$history->changeIdOrderState(_PS_OS_PAYMENT_, (int)$id_order);
+			$history->changeIdOrderState(Configuration::get('PS_OS_PAYMENT'), (int)$id_order);
 			$history->addWithemail();
 			$message .= $this->l('Order finished with PayPal!');
 		}
@@ -1143,7 +1143,7 @@ class PayPal extends PaymentModule
 					{
 						$history = new OrderHistory();
 						$history->id_order = (int)($id_order);
-						$history->changeIdOrderState(_PS_OS_PAYMENT_, (int)($id_order));
+						$history->changeIdOrderState(Configuration::get('PS_OS_PAYMENT'), (int)($id_order));
 						$history->addWithemail();
 					}
 					elseif ($response['PAYMENTSTATUS'] == 'Pending' AND $response['PENDINGREASON'] == 'authorization')
@@ -1157,7 +1157,7 @@ class PayPal extends PaymentModule
 					{
 						$history = new OrderHistory();
 						$history->id_order = (int)($id_order);
-						$history->changeIdOrderState(_PS_OS_ERROR_, (int)($id_order));
+						$history->changeIdOrderState(Configuration::get('PS_OS_ERROR'), (int)($id_order));
 						$history->addWithemail();
 					}
 					if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `payment_status` = \''.pSQL($response['PAYMENTSTATUS']).($response['PENDINGREASON'] == 'authorization' ? '_authorization' : '').'\' WHERE `id_order` = '.(int)$id_order))
@@ -1240,7 +1240,7 @@ class PayPal extends PaymentModule
 				$orderState->logable = true;
 				$orderState->invoice = true;
 				if ($orderState->add())
-					copy(_PS_ROOT_DIR_.'/img/os/'._PS_OS_PAYPAL_.'.gif', _PS_ROOT_DIR_.'/img/os/'.(int)($orderState->id).'.gif');
+					copy(_PS_ROOT_DIR_.'/img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif', _PS_ROOT_DIR_.'/img/os/'.(int)($orderState->id).'.gif');
 				Configuration::updateValue('PAYPAL_OS_AUTHORIZATION', (int)($orderState->id));
 			}
 			/* Delete unseless configuration */

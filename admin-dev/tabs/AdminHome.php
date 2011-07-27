@@ -159,9 +159,13 @@ class AdminHome extends AdminTab
 		<h1>'.$this->l('Dashboard').'</h1>
 		<hr style="background-color: #812143;color: #812143;" />
 		<br />';
-		if (@ini_get('allow_url_fopen') AND $update = checkPSVersion())
+		if (@ini_get('allow_url_fopen'))
+		{
+			$upgrade = new Upgrader();
+			if($update = $upgrade->checkPSVersion())
 			echo '<div class="warning warn" style="margin-bottom:30px;"><h3>'.$this->l('New PrestaShop version available').' : <a style="text-decoration: underline;" href="'.$update['link'].'" target="_blank">'.$this->l('Download').'&nbsp;'.$update['name'].'</a> !</h3></div>';
-	    elseif (!@ini_get('allow_url_fopen'))
+		}
+		else 
 	    {
 			echo '<p>'.$this->l('Update notification unavailable').'</p>';
 			echo '<p>&nbsp;</p>';

@@ -66,16 +66,16 @@ if (Validate::isLoadedObject($cart))
 		{
 			case 1:
 				/* Real error or payment canceled */
-				$ogone->validate((int)$_GET['orderID'], _PS_OS_ERROR_, 0, $_GET['NCERROR'].$params, $_GET['secure_key']);
+				$ogone->validate((int)$_GET['orderID'], Configuration::get('PS_OS_ERROR'), 0, $_GET['NCERROR'].$params, $_GET['secure_key']);
 				break;
 			case 2:
 				/* Real error - authorization refused */
-				$ogone->validate((int)$_GET['orderID'], _PS_OS_ERROR_, 0, $ogone->l('Error (auth. refused)').'<br />'.$_GET['NCERROR'].$params, $_GET['secure_key']);
+				$ogone->validate((int)$_GET['orderID'], Configuration::get('PS_OS_ERROR'), 0, $ogone->l('Error (auth. refused)').'<br />'.$_GET['NCERROR'].$params, $_GET['secure_key']);
 				break;
 			case 5:
 			case 9:
 				/* Payment OK */
-				$ogone->validate((int)$_GET['orderID'], _PS_OS_PAYMENT_, (float)($_GET['amount']), $ogone->l('Payment authorized / OK').$params, $_GET['secure_key']);
+				$ogone->validate((int)$_GET['orderID'], Configuration::get('PS_OS_PAYMENT'), (float)($_GET['amount']), $ogone->l('Payment authorized / OK').$params, $_GET['secure_key']);
 				break;
 			case 6:
 			case 7:
@@ -91,19 +91,19 @@ if (Validate::isLoadedObject($cart))
 					// Send a new message and change the state
 					$history = new OrderHistory();
 					$history->id_order = $id_order;
-					$history->changeIdOrderState(_PS_OS_ERROR_, $id_order);
+					$history->changeIdOrderState(Configuration::get('PS_OS_ERROR'), $id_order);
 					$history->addWithemail(true, array());
 				}
 				break;
 			default:
-				$ogone->validate((int)$_GET['orderID'], _PS_OS_ERROR_, (float)($_GET['amount']), $ogone->l('Unknown status:').' '.$_GET['STATUS'].$params, $_GET['secure_key']);
+				$ogone->validate((int)$_GET['orderID'], Configuration::get('PS_OS_ERROR'), (float)($_GET['amount']), $ogone->l('Unknown status:').' '.$_GET['STATUS'].$params, $_GET['secure_key']);
 		}
 		exit;
 	}
 	else
 	{
 		$message = $ogone->l('Invalid SHA-1 signature').'<br />'.$ogone->l('SHA-1 given:').' '.$_GET['SHASIGN'].'<br />'.$ogone->l('SHA-1 calculated:').' '.$sha1.'<br />'.$ogone->l('Plain key:').' '.$shasign;
-		$ogone->validate((int)$_GET['orderID'], _PS_OS_ERROR_, 0, $message.'<br />'.$params, $_GET['secure_key']);
+		$ogone->validate((int)$_GET['orderID'], Configuration::get('PS_OS_ERROR'), 0, $message.'<br />'.$params, $_GET['secure_key']);
 	}
 }
 	

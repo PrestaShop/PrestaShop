@@ -47,6 +47,7 @@ $(document).ready(function()
 	});
 	
 	paginationButton();
+	reloadContent();
 });
 
 function paginationButton() {

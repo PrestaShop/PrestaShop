@@ -16,9 +16,9 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_6861a58e2be4956b3f2fd6420fe6c28
 $_MODULE['<{moneybookers}prestashop>moneybookers_a356736cbcf740f8648d71067fca090d'] = 'Akzeptiert Zahlungen per Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_fa214007826415a21a8456e3e09f999d'] = 'Sie sind sicher, dass Sie Ihre Daten löschen wollen?';
 $_MODULE['<{moneybookers}prestashop>moneybookers_088b74050a381d98fca38d5990b097be'] = 'Sie nutzen zur Zeit die Standard-E-Mail-Adresse von Moneybookers, Sie müssen Ihre eigene E-Mail-Adresse verwenden';
-$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Unmöglich,den Aktivierungs-Server zu kontaktieren, bitte versuchen Sie es später';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b863542eebcb27fa230b647b5dd07819'] = 'Konto-Bestätigung fehlgeschlagen, Ihre E-Mail könnte falsch sein';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d70c5b5767846906e0abe68498db887b'] = 'E-Mail-Aktivierung erfolgreich, Sie können nun Ihr Kennwort bestâtigen';
+$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Unmöglich,den Aktivierungs-Server zu kontaktieren, bitte versuchen Sie es später';
 $_MODULE['<{moneybookers}prestashop>moneybookers_7757ea03f2a0893e36c7916a2ad07ef8'] = 'Das E-Mail-Feld ist erforderlich';
 $_MODULE['<{moneybookers}prestashop>moneybookers_aa1c444c2ee2f620d5b349fedfa68ba2'] = 'Kennwortbestätigung fehlgeschlagen, max. Versuchszahl überschritten (3 pro Stunde)';
 $_MODULE['<{moneybookers}prestashop>moneybookers_cdbef58d093e0ff38e13686a669e9fee'] = 'Kennwortbestätigung fehlgeschlagen, Ihr Kennwort könnte falsch sein';

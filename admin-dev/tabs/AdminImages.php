@@ -425,11 +425,58 @@ class AdminImages extends AdminTab
 	 */
 	private function _moveImagesToNewFileSystem()
 	{
-		ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
-		$this->max_execution_time = (int)ini_get('max_execution_time');		
-		$result = Image::moveToNewFileSystem($this->max_execution_time);
-		if ($result === 'timeout')
-			$this->_errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
-		Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
+		if (!Image::testFileSystem())
+			$this->_errors[] =  Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
+		else
+		{
+			ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
+			$this->max_execution_time = (int)ini_get('max_execution_time');		
+			$result = Image::moveToNewFileSystem($this->max_execution_time);
+			if ($result === 'timeout')
+				$this->_errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
+			elseif ($result === false)
+				$this->_errors[] =  Tools::displayError('Error: some or all images could not be moved.');
+		}
+		return (sizeof($this->_errors) > 0 ? false : true);
 	}
+	/**
+	 * Display the block for moving images
+	 */
+	public function displayImagePreferences()
+	{
+	 	global $currentIndex;
+		echo '<br />
+		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+			<fieldset class="width4">
+				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Images').'</legend>'.'
+				<p>'.$this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
+				<br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issue, turn it off by selecting "Use JPEG".').'</p>
+				<br />
+				<label>'.$this->l('Image quality').' </label>
+				<div class="margin-form">
+					<input type="radio" value="jpg" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_0" '.(Configuration::get('PS_IMAGE_QUALITY') == 'jpg' ? 'checked="checked"' : '').' />
+					<label class="t" for="PS_IMAGE_QUALITY_0">'.$this->l('Use JPEG').'</label>
+					<br />
+					<input type="radio" value="png" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_1" '.(Configuration::get('PS_IMAGE_QUALITY') == 'png' ? 'checked="checked"' : '').' />
+					<label class="t" for="PS_IMAGE_QUALITY_1">'.$this->l('Use PNG  only if the base image is in PNG format').'</label>
+					<br />
+					<input type="radio" value="png_all" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_2" '.(Configuration::get('PS_IMAGE_QUALITY') == 'png_all' ? 'checked="checked"' : '').' />
+					<label class="t" for="PS_IMAGE_QUALITY_2">'.$this->l('Use PNG for all images').'</label>
+				</div>
+				<br />
+				<label for="PS_JPEG_QUALITY">'.$this->l('JPEG quality').'</label>
+				<div class="margin-form">
+					<input type="text" name="PS_JPEG_QUALITY" id="PS_JPEG_QUALITY" value="'.(int)Configuration::get('PS_JPEG_QUALITY').'" size="3" />
+					<p>'.$this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)').'</p>
+				</div>
+				<label for="PS_PNG_QUALITY">'.$this->l('PNG quality').'</label>
+				<div class="margin-form">
+					<input type="text" name="PS_PNG_QUALITY" id="PS_PNG_QUALITY" value="'.(int)Configuration::get('PS_PNG_QUALITY').'" size="3" />
+					<p>'.$this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)').'</p>
+				</div>		
+				<div class="margin-form">
+					<input type="submit" value="'.$this->l('   Save   ').'" name="submitImagePreferences" class="button" />
+				</div>
+			</fieldset>
+		</form>';
 }

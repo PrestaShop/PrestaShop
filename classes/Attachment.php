@@ -37,7 +37,7 @@ class AttachmentCore extends ObjectModel
 	public		$position;
 
 	protected	$fieldsRequired = array('file', 'mime');
-	protected	$fieldsSize = array('file' => 40, 'mime' => 64, 'file_name' => 128);
+	protected	$fieldsSize = array('file' => 40, 'mime' => 128, 'file_name' => 128);
 	protected	$fieldsValidate = array('file' => 'isGenericName', 'mime' => 'isCleanHtml', 'file_name' => 'isGenericName');
 
 	protected	$fieldsRequiredLang = array('name');

@@ -412,7 +412,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 					
 		$history = new OrderHistory();
 		$history->id_order = (int)($params['NDossier']);
-		$history->changeIdOrderState(_PS_OS_SHIPPING_, (int)($params['NDossier'])); 
+		$history->changeIdOrderState(Configuration::get('PS_OS_SHIPPING'), (int)($params['NDossier'])); 
 		$history->id_employee = (int)($cookie->id_employee);
 		$history->addWithemail(true, $templateVars);
 

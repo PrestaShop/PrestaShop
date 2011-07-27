@@ -28,9 +28,15 @@ class ToolsInstall
 {
 	public static function checkDB ($srv, $login, $password, $name, $posted = true, $engine = false)
 	{
-		include_once(INSTALL_PATH.'/../classes/Validate.php');
-		include_once(INSTALL_PATH.'/../classes/Db.php');
-		include_once(INSTALL_PATH.'/../classes/MySQL.php');
+		// Don't include theses files if classes are already defined
+		if (!class_exists('Validate', false))
+			include_once(INSTALL_PATH.'/../classes/Validate.php');
+
+		if (!class_exists('Db', false))
+			include_once(INSTALL_PATH.'/../classes/Db.php');
+
+		if (!class_exists('MySQL', false))
+			include_once(INSTALL_PATH.'/../classes/MySQL.php');
 		
 		if($posted)
 		{

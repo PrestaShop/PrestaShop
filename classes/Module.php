@@ -523,6 +523,11 @@ abstract class ModuleCore
 		return false;
 	}
 
+	public static function configXmlStringFormat($string)
+	{
+		return str_replace('\'', '\\\'', Tools::htmlentitiesDecodeUTF8($string));
+	}
+
 	/**
 	  * Return available modules
 	  *
@@ -567,12 +572,12 @@ abstract class ModuleCore
 					$item->warning = '';
 					foreach ($xml_module as $k => $v)
 						$item->$k = (string) $v;
-					$item->displayName = Module::findTranslation($xml_module->name, $xml_module->displayName, (string)$xml_module->name);
-					$item->description = Module::findTranslation($xml_module->name, $xml_module->description, (string)$xml_module->name);
-					$item->author = Module::findTranslation($xml_module->name, $xml_module->author, (string)$xml_module->name);
+					$item->displayName = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
+					$item->description = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
+					$item->author = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
 
 					if (isset($xml_module->confirmUninstall))
-						$item->confirmUninstall = Module::findTranslation($xml_module->name, $xml_module->confirmUninstall, (string)$xml_module->name);
+						$item->confirmUninstall = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
 					$moduleList[$moduleListCursor] = $item;
@@ -792,8 +797,22 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 		$hookArgs = array('cookie' => $context->cookie, 'cart' => $context->cart);
-		$billing = new Address((int)($context->cart->id_address_invoice));
 		$output = '';
+
+		$result = self::getPaymentModules();
+
+		if ($result)
+			foreach ($result AS $module)
+				if (($moduleInstance = Module::getInstanceByName($module['name'])) AND is_callable(array($moduleInstance, 'hookpayment')))
+					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
+						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
+		return $output;
+	}
+	
+	public static function getPaymentModules()
+	{
+		$context = Context::getContext();
+		$billing = new Address($context->cart->id_address_invoice);
 		$list = Context::getContext()->shop->getListOfID();
 		$sql = 'SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 				FROM `'._DB_PREFIX_.'module_country` mc
@@ -810,13 +829,7 @@ abstract class ModuleCore
 					AND hm.id_shop IN('.implode(', ', $list).')
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-		if ($result)
-			foreach ($result AS $k => $module)
-				if (($moduleInstance = Module::getInstanceByName($module['name'])) AND is_callable(array($moduleInstance, 'hookpayment')))
-					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
-						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
-		return $output;
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
 	/**
@@ -1115,13 +1128,7 @@ abstract class ModuleCore
 
 	protected function _clearCache($template, $cacheId = NULL, $compileId = NULL)
 	{
-		$context = Context::getContext();
-		/* Use Smarty 3 API calls */
-		if (!Configuration::get('PS_FORCE_SMARTY_2')) /* PHP version > 5.1.2 */
-			return $context->smarty->clearCache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
-		/* or keep a backward compatibility if PHP version < 5.1.2 */
-		else
-			return $context->smarty->clear_cache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
+		Tools::clearCache(Context::getContext()->smarty);
 	}
 	
 	protected function _generateConfigXml()

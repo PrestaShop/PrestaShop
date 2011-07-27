@@ -77,9 +77,9 @@ else
 	$authorizeaim = new authorizeaim();
 	$message = $response[3];
 	if ($response[0] == 1)
-		$authorizeaim->validateOrder((int)$cart->id, _PS_OS_PAYMENT_, (float)$response[9], $authorizeaim->displayName, $message, NULL, NULL, false, $customer->secure_key);
+		$authorizeaim->validateOrder((int)$cart->id, Configuration::get('PS_OS_PAYMENT'), (float)$response[9], $authorizeaim->displayName, $message, NULL, NULL, false, $customer->secure_key);
 	else
-		$authorizeaim->validateOrder((int)$cart->id, _PS_OS_ERROR_, (float)$response[9], $authorizeaim->displayName, $message, NULL, NULL, false, $customer->secure_key);
+		$authorizeaim->validateOrder((int)$cart->id, Configuration::get('PS_OS_ERROR'), (float)$response[9], $authorizeaim->displayName, $message, NULL, NULL, false, $customer->secure_key);
 
 	Tools::redirect('index.php?controller=order-confirmation&id_module='.(int)$authorizeaim->id.'&id_cart='.(int)$cart->id.'&key='.$customer->secure_key);
 }
