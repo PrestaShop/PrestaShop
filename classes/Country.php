@@ -118,14 +118,14 @@ class CountryCore extends ObjectModel
 	  * @param boolean $active return only active coutries
 	  * @return array Countries and corresponding zones
 	  */
-	static public function getCountries($id_lang, $active = false, $containStates = NULL, Context $context = null)
+	static public function getCountries($id_lang, $active = false, $containStates = NULL, Shop $shop = null)
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 
-	 	if (!$context)
-	 		$context = Context::getContext();
-
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+			
 		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'state` s
@@ -133,7 +133,7 @@ class CountryCore extends ObjectModel
 
 		$sql = 'SELECT cl.*,c.*, cl.`name` AS country, z.`name` AS zone
 				FROM `'._DB_PREFIX_.'country` c
-				'.$context->shop->sqlAsso('country', 'c', false).'
+				'.$shop->sqlAsso('country', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
 				WHERE 1'
@@ -291,14 +291,17 @@ class CountryCore extends ObjectModel
 		return Context::getContext()->country->id;
 	}
 
-    public static function getCountriesByZoneId($id_zone, $id_lang, Context $context = null)
+    public static function getCountriesByZoneId($id_zone, $id_lang, Shop $shop = null)
     {
         if (empty($id_zone) OR empty($id_lang))
             die(Tools::displayError());
+        
+        if (!$shop)
+        	$shop = Context::getContext()->shop;
             
 		$sql = ' SELECT DISTINCT c.*, cl.*
         		FROM `'._DB_PREFIX_.'country` c
-				'.$context->shop->sqlAsso('country', 'c', false).'
+				'.$shop->sqlAsso('country', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
 		        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
         		WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')

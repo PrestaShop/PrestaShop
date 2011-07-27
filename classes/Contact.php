@@ -76,14 +76,14 @@ class ContactCore extends ObjectModel
 	  * @param Context
 	  * @return array Contacts
 	  */
-	static public function getContacts($id_lang, Context $context = null)
+	static public function getContacts($id_lang, Shop $shop = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		if (!$shop)
+			$shop = Context::getContext()->shop;
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'contact` c
-				'.$context->shop->sqlAsso('contact', 'c', false).'
+				'.$shop->sqlAsso('contact', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				ORDER BY `name` ASC';
