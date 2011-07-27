@@ -276,20 +276,6 @@ class AddressCore extends ObjectModel
 		return isset($result['used']) ? $result['used'] : false;
 	}
 
-	/**
-	 * @param int $id_address
-	 * @return int
-	 * @deprecated
-	 */
-	static public function getManufacturerIdByAddress($id_address)
-	{
-		Tools::displayAsDeprecated();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `id_manufacturer` FROM `'._DB_PREFIX_.'address`
-			WHERE `id_address` = '.(int)($id_address));
-		return isset($result['id_manufacturer']) ? $result['id_manufacturer'] : false;
-	}
-
 	static public function getCountryAndState($id_address)
 	{
 		if (isset(self::$_idCountries[$id_address]))

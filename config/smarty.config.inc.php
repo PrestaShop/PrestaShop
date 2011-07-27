@@ -74,7 +74,6 @@ smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate');
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
 smartyRegisterFunction($smarty, 'function', 'productPrice', array('Product', 'productPrice')); // unused
 smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
-smartyRegisterFunction($smarty, 'function', 'convertPriceWithoutDisplay', array('Product', 'productPriceWithoutDisplay')); // unused
 smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
 smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
 smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));

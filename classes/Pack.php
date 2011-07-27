@@ -155,23 +155,6 @@ class PackCore extends Product
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public static function addItems($id_product, $ids)
-	{
-		Tools::displayAsDeprecated();
-
-		array_pop($ids);
-		foreach ($ids as $id_product_item)
-		{
-			$idQty = explode('x', $id_product_item);
-			if (!self::addItem($id_product, $idQty[1], $idQty[0]))
-				return false;
-		}
-		return true;
-	}
-
-	/**
 	* Add an item to the pack
 	*
 	* @param integer $id_product

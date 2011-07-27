@@ -397,19 +397,6 @@ class OrderCore extends ObjectModel
 		WHERE od.`id_order` = '.(int)($this->id));
 	}
 
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public function getLastMessage()
-	{
-		Tools::displayAsDeprecated();
-		$sql = 'SELECT `message` FROM `'._DB_PREFIX_.'message` WHERE `id_order` = '.(int)($this->id).' ORDER BY `id_message` desc';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-		return $result['message'];
-	}
-
 	public function getFirstMessage()
 	{
 		$sql = 'SELECT `message` FROM `'._DB_PREFIX_.'message` WHERE `id_order` = '.(int)($this->id).' ORDER BY `id_message` asc';
@@ -590,15 +577,6 @@ class OrderCore extends ObjectModel
 		ORDER BY `date_add` DESC, `id_order_history` DESC');
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public function isLogable()
-	{
-		Tools::displayAsDeprecated();
-		return $this->valid;
-	}
-
 	public function hasBeenDelivered()
 	{
 		return sizeof($this->getHistory((int)($this->id_lang), _PS_OS_DELIVERED_));
@@ -670,19 +648,6 @@ class OrderCore extends ObjectModel
 		foreach ($result AS $order)
 			$orders[] = (int)($order['id_order']);
 		return $orders;
-	}
-
-	/*
-	* @deprecated
-	*/
-	static public function getOrders($limit = NULL)
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'orders`
-			ORDER BY `date_add`
-			'.((int)$limit ? 'LIMIT 0, '.(int)$limit : ''));
 	}
 
 	static public function getOrdersWithInformations($limit = NULL, Context $context = null)
@@ -835,41 +800,6 @@ class OrderCore extends ObjectModel
 	public function	addDiscount($id_discount, $name, $value)
 	{
 		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_discount', array('id_order' => (int)($this->id), 'id_discount' => (int)($id_discount), 'name' => pSQL($name), 'value' => (float)($value)), 'INSERT');
-	}
-
-	/**
-	 * Get orders number last week
-	 *
-	 * @return integer Orders number last week
-	 * @deprecated
-	 */
-	public static function getWeeklyOrders()
-	{
-		Tools::displayAsDeprecated();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_order`) as nb
-		FROM `'._DB_PREFIX_.'orders`
-		WHERE YEARWEEK(`date_add`) = YEARWEEK(NOW())');
-
-		return isset($result['nb']) ? $result['nb'] : 0;
-	}
-
-	/**
-	 * Get sales amount last month
-	 *
-	 * @return float Sales amount last month
-	 * @deprecated
-	 */
-	public static function getMonthlySales()
-	{
-		Tools::displayAsDeprecated();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(`total_paid`) as nb
-		FROM `'._DB_PREFIX_.'orders`
-		WHERE MONTH(`date_add`) = MONTH(NOW())
-		AND YEAR(`date_add`) = YEAR(NOW())');
-
-		return isset($result['nb']) ? $result['nb'] : 0;
 	}
 
 	public function getNumberOfDays()

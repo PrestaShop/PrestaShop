@@ -334,38 +334,6 @@ class LinkCore
 		return $switchLangLink;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public function getLanguageLinkAdmin($id_lang)
-	{
-		Tools::displayAsDeprecated();
-		return $this->getUrlWith('id_lang', (int)($id_lang));
-	}
-
-	/**
-	 * This function return the current url with a new parameter key=value
-	 * @param mixed $key 
-	 * @param mixed $val 
-	 * @return url with &key=val (or ?key=val)
-	 * @deprectated
-	 */
-	public function getUrlWith($key, $val)
-	{
-		// This function does not use rewrite
-		Tools::displayAsDeprecated();
-		$n = 0;
-		$url = str_replace('index.php', '', htmlentities($this->url, ENT_QUOTES, 'UTF-8'));
-
-		foreach ($_GET as $k => $value)
-			// adminlang is an hand-written param in BO
-			if ($k != 'adminlang')
-				if (!is_array($value) AND $k != $key AND Tools::isSubmit($k))
-					$url .= ((!$n++) ? '?' : '&amp;').urlencode($k).($value ? '='.urlencode($value) : '');
-		
-		return $url.($n ? '&amp;' : '?').urlencode($key).'='.urlencode($val);
-	}
-
 	public function goPage($url, $p)
 	{
 		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)($p));

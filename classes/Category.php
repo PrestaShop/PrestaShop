@@ -543,18 +543,6 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Hide category prefix used for position
-	  *
-	  * @param string $name Category name
-	  * @return string Name without position
-	  */
-	static public function hideCategoryPosition($name)
-	{
-		Tools::displayAsDeprecated();
-		return preg_replace('/^[0-9]+\./', '', $name);
-	}
-
-	/**
 	  * Return main categories
 	  *
 	  * @param integer $id_lang Language ID

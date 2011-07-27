@@ -229,19 +229,7 @@ class ManufacturerCore extends ObjectModel
 				$manufacturers[$i]['link_rewrite'] = 0;
 		return $manufacturers;
 	}
-
-	/**
-	 * @deprecated
-	 */
-	static public function getManufacturersWithoutAddress()
-	{
-		Tools::displayAsDeprecated();
-		$sql = 'SELECT m.* FROM `'._DB_PREFIX_.'manufacturer` m
-				LEFT JOIN `'._DB_PREFIX_.'address` a ON (a.`id_manufacturer` = m.`id_manufacturer` AND a.`deleted` = 0)
-				WHERE a.`id_manufacturer` IS NULL';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-	}
-
+	
 	/**
 	  * Return name from id
 	  *

@@ -117,22 +117,6 @@ class EmployeeCore extends ObjectModel
 		return $fields;
 	}
 	
-	/**
-	 * Return all employee id and email
-	 *
-	 * @return array Employees
-	 * @deprecated
-	 */
-	static public function getEmployees()
-	{
-		Tools::displayAsDeprecated();
-		return Db::getInstance()->ExecuteS('
-		SELECT `id_employee`, CONCAT(`firstname`, \' \', `lastname`) AS "name"
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `active` = 1
-		ORDER BY `email`');
-	}
-	
 	public function add($autodate = true, $nullValues = true)
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
