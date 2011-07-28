@@ -29,8 +29,7 @@ class AdminOrders extends AdminTab
 {
 	public function __construct()
 	{
-		$context = Context::getContext();
-
+		$this->context = Context::getContext();
 	 	$this->table = 'order';
 	 	$this->className = 'Order';
 	 	$this->view = true;
@@ -45,11 +44,11 @@ class AdminOrders extends AdminTab
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
 	 	LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
-		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$context->language->id.')';
+		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_where = 'AND oh.`id_order_history` = (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` moh WHERE moh.`id_order` = a.`id_order` GROUP BY moh.`id_order`)';
 
 		$statesArray = array();
-		$states = OrderState::getOrderStates((int)$context->language->id);
+		$states = OrderState::getOrderStates((int)$this->context->language->id);
 
 		foreach ($states AS $state)
 			$statesArray[$state['id_order_state']] = $state['name'];
@@ -69,7 +68,6 @@ class AdminOrders extends AdminTab
 
 	public function postProcess()
 	{
-		$context = Context::getContext();
 
 		/* Update shipping number */
 		if (Tools::isSubmit('submitShippingNumber') AND ($id_order = (int)(Tools::getValue('id_order'))) AND Validate::isLoadedObject($order = new Order($id_order)))
@@ -117,7 +115,7 @@ class AdminOrders extends AdminTab
 				{
 					$history = new OrderHistory();
 					$history->id_order = (int)$id_order;
-					$history->id_employee = (int)$context->employee->id;
+					$history->id_employee = (int)$this->context->employee->id;
 					$history->changeIdOrderState((int)($newOrderStatusId), (int)($id_order));
 					$order = new Order((int)$order->id);
 					$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
@@ -170,7 +168,7 @@ class AdminOrders extends AdminTab
 					if (!sizeof($this->_errors))
 					{
 						$message = new Message();
-						$message->id_employee = (int)$context->employee->id;
+						$message->id_employee = (int)$this->context->employee->id;
 						$message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
 						$message->id_order = $id_order;
 						$message->private = Tools::getValue('visibility');
@@ -278,7 +276,7 @@ class AdminOrders extends AdminTab
 								{
 									$updProductAttributeID = !empty($orderDetail->product_attribute_id) ? (int)($orderDetail->product_attribute_id) : NULL;
 									$newProductQty = Product::getQuantity($orderDetail->product_id, $updProductAttributeID);
-									$product = get_object_vars(new Product($orderDetail->product_id, false, $context->language->id, $order->id_shop));
+									$product = get_object_vars(new Product($orderDetail->product_id, false, $this->context->language->id, $order->id_shop));
 									if (!empty($orderDetail->product_attribute_id))
 									{
 										$updProduct['quantity_attribute'] = (int)($newProductQty);
@@ -336,7 +334,7 @@ class AdminOrders extends AdminTab
 							$this->_errors[] = Tools::displayError('Cannot generate voucher');
 						else
 						{
-							$currency = $context->currency;
+							$currency = $this->context->currency;
 							$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
 							$params['{voucher_num}'] = $voucher->name;
 							@Mail::Send((int)($order->id_lang), 'voucher', Mail::l('New voucher regarding your order'),
@@ -357,7 +355,7 @@ class AdminOrders extends AdminTab
 		}
 		elseif (isset($_GET['messageReaded']))
 		{
-			Message::markAsReaded($_GET['messageReaded'], $context->employee->id);
+			Message::markAsReaded($_GET['messageReaded'], $this->context->employee->id);
 		}
 		parent::postProcess();
 	}
@@ -458,29 +456,28 @@ class AdminOrders extends AdminTab
 
 	public function viewDetails()
 	{
-		$context = Context::getContext();
 		$irow = 0;
 		if (!($order = $this->loadObject()))
 			return;
 
 		$customer = new Customer($order->id_customer);
 		$customerStats = $customer->getStats();
-		$addressInvoice = new Address($order->id_address_invoice, $context->language->id);
+		$addressInvoice = new Address($order->id_address_invoice, $this->context->language->id);
 		if (Validate::isLoadedObject($addressInvoice) AND $addressInvoice->id_state)
 			$invoiceState = new State((int)($addressInvoice->id_state));
-		$addressDelivery = new Address($order->id_address_delivery, $context->language->id);
+		$addressDelivery = new Address($order->id_address_delivery, $this->context->language->id);
 		if (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state)
 			$deliveryState = new State((int)($addressDelivery->id_state));
 		$carrier = new Carrier($order->id_carrier);
-		$history = $order->getHistory($context->language->id);
+		$history = $order->getHistory($this->context->language->id);
 		$products = $order->getProducts();
 		$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
 		Product::addCustomizationPrice($products, $customizedDatas);
 		$discounts = $order->getDiscounts();
 		$messages = Message::getMessagesByOrderId($order->id, true);
-		$states = OrderState::getOrderStates($context->language->id);
+		$states = OrderState::getOrderStates($this->context->language->id);
 		$currency = new Currency($order->id_currency);
-		$currentLanguage = $context->language;
+		$currentLanguage = $this->context->language;
 		$currentState = OrderHistory::getLastOrderState($order->id);
 		$sources = ConnectionsSource::getOrderSources($order->id);
 		$cart = Cart::getCartByOrderId($order->id);
@@ -528,7 +525,7 @@ class AdminOrders extends AdminTab
 		echo '
 			<table cellspacing="0" cellpadding="0" class="table" style="width: 429px">
 				<tr>
-					<th>'.Tools::displayDate($row['date_add'], $context->language->id, true).'</th>
+					<th>'.Tools::displayDate($row['date_add'], $this->context->language->id, true).'</th>
 					<th><img src="../img/os/'.$row['id_order_state'].'.gif" /></th>
 					<th>'.stripslashes($row['ostate_name']).'</th>
 					<th>'.((!empty($row['employee_lastname'])) ? '('.stripslashes(Tools::substr($row['employee_firstname'], 0, 1)).'. '.stripslashes($row['employee_lastname']).')' : '').'</th>
@@ -538,7 +535,7 @@ class AdminOrders extends AdminTab
 			{
 				echo '
 				<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
-					<td>'.Tools::displayDate($row['date_add'], $context->language->id, true).'</td>
+					<td>'.Tools::displayDate($row['date_add'], $this->context->language->id, true).'</td>
 					<td><img src="../img/os/'.$row['id_order_state'].'.gif" /></td>
 					<td>'.stripslashes($row['ostate_name']).'</td>
 					<td>'.((!empty($row['employee_lastname'])) ? '('.stripslashes(Tools::substr($row['employee_firstname'], 0, 1)).'. '.stripslashes($row['employee_lastname']).')' : '').'</td>
@@ -552,7 +549,7 @@ class AdminOrders extends AdminTab
 		echo '
 			<form action="'.self::$currentIndex.'&view'.$this->table.'&token='.$this->token.'" method="post" style="text-align:center;">
 				<select name="id_order_state">';
-		$currentStateTab = $order->getCurrentStateFull($context->language->id);
+		$currentStateTab = $order->getCurrentStateFull($this->context->language->id);
 		foreach ($states AS $state)
 			echo '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == $currentStateTab['id_order_state']) ? ' selected="selected"' : '').'>'.stripslashes($state['name']).'</option>';
 		echo '
@@ -567,7 +564,7 @@ class AdminOrders extends AdminTab
 			echo '<br />
 			<fieldset style="width: 400px">
 				<legend><img src="../img/admin/tab-customers.gif" /> '.$this->l('Customer information').'</legend>
-				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id).'"> '.$customer->firstname.' '.$customer->lastname.'</a></span> ('.$this->l('#').$customer->id.')<br />
+				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'"> '.$customer->firstname.' '.$customer->lastname.'</a></span> ('.$this->l('#').$customer->id.')<br />
 				(<a href="mailto:'.$customer->email.'">'.$customer->email.'</a>)<br /><br />';
 			if ($customer->isGuest())
 			{
@@ -586,7 +583,7 @@ class AdminOrders extends AdminTab
 			}
 			else
 			{
-				echo $this->l('Account registered:').' '.Tools::displayDate($customer->date_add, $context->language->id, true).'<br />
+				echo $this->l('Account registered:').' '.Tools::displayDate($customer->date_add, $this->context->language->id, true).'<br />
 				'.$this->l('Valid orders placed:').' <b>'.$customerStats['nb_orders'].'</b><br />
 				'.$this->l('Total paid since registration:').' <b>'.Tools::displayPrice(Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2), $currency, false).'</b><br />';
 			}
@@ -600,7 +597,7 @@ class AdminOrders extends AdminTab
 			<fieldset style="width: 400px;"><legend><img src="../img/admin/tab-stats.gif" /> '.$this->l('Sources').'</legend><ul '.(sizeof($sources) > 3 ? 'style="height: 200px; overflow-y: scroll; width: 360px;"' : '').'>';
 			foreach ($sources as $source)
 				echo '<li>
-						'.Tools::displayDate($source['date_add'], $context->language->id, true).'<br />
+						'.Tools::displayDate($source['date_add'], $this->context->language->id, true).'<br />
 						<b>'.$this->l('From:').'</b> <a href="'.$source['http_referer'].'">'.preg_replace('/^www./', '', parse_url($source['http_referer'], PHP_URL_HOST)).'</a><br />
 						<b>'.$this->l('To:').'</b> '.$source['request_uri'].'<br />
 						'.($source['keywords'] ? '<b>'.$this->l('Keywords:').'</b> '.$source['keywords'].'<br />' : '').'<br />
@@ -619,8 +616,8 @@ class AdminOrders extends AdminTab
 		echo '<fieldset style="width: 400px">';
 		if (($currentState->invoice OR $order->invoice_number) AND count($products))
 			echo '<legend><a href="pdf.php?id_order='.$order->id.'&pdf"><img src="../img/admin/charged_ok.gif" /> '.$this->l('Invoice').'</a></legend>
-				<a href="pdf.php?id_order='.$order->id.'&pdf">'.$this->l('Invoice #').'<b>'.Configuration::get('PS_INVOICE_PREFIX', $context->language->id).sprintf('%06d', $order->invoice_number).'</b></a>
-				<br />'.$this->l('Created on:').' '.Tools::displayDate($order->invoice_date, $context->language->id, true);
+				<a href="pdf.php?id_order='.$order->id.'&pdf">'.$this->l('Invoice #').'<b>'.Configuration::get('PS_INVOICE_PREFIX', $this->context->language->id).sprintf('%06d', $order->invoice_number).'</b></a>
+				<br />'.$this->l('Created on:').' '.Tools::displayDate($order->invoice_date, $this->context->language->id, true);
 		else
 			echo '<legend><img src="../img/admin/charged_ko.gif" />'.$this->l('Invoice').'</legend>
 				'.$this->l('No invoice yet.');
@@ -632,7 +629,7 @@ class AdminOrders extends AdminTab
 			<legend><img src="../img/admin/delivery.gif" /> '.$this->l('Shipping information').'</legend>
 			'.$this->l('Total weight:').' <b>'.number_format($order->getTotalWeight(), 3).' '.Configuration::get('PS_WEIGHT_UNIT').'</b><br />
 			'.$this->l('Carrier:').' <b>'.($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name).'</b><br />
-			'.(($currentState->delivery OR $order->delivery_number) ? '<br /><a href="pdf.php?id_delivery='.$order->delivery_number.'">'.$this->l('Delivery slip #').'<b>'.Configuration::get('PS_DELIVERY_PREFIX', $context->language->id).sprintf('%06d', $order->delivery_number).'</b></a><br />' : '');
+			'.(($currentState->delivery OR $order->delivery_number) ? '<br /><a href="pdf.php?id_delivery='.$order->delivery_number.'">'.$this->l('Delivery slip #').'<b>'.Configuration::get('PS_DELIVERY_PREFIX', $this->context->language->id).sprintf('%06d', $order->delivery_number).'</b></a><br />' : '');
 			if ($order->shipping_number)
 				echo $this->l('Tracking number:').' <b>'.$order->shipping_number.'</b> '.(!empty($carrier->url) ? '(<a href="'.str_replace('@', $order->shipping_number, $carrier->url).'" target="_blank">'.$this->l('Track the shipment').'</a>)' : '');
 
@@ -669,7 +666,7 @@ class AdminOrders extends AdminTab
 		}
 		echo '
 			<label>'.$this->l('Original cart:').' </label>
-			<div style="margin: 2px 0 1em 190px;"><a href="?tab=AdminCarts&id_cart='.$cart->id.'&viewcart&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$context->employee->id).'">'.$this->l('Cart #').sprintf('%06d', $cart->id).'</a></div>
+			<div style="margin: 2px 0 1em 190px;"><a href="?tab=AdminCarts&id_cart='.$cart->id.'&viewcart&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$this->context->employee->id).'">'.$this->l('Cart #').sprintf('%06d', $cart->id).'</a></div>
 			<label>'.$this->l('Payment mode:').' </label>
 			<div style="margin: 2px 0 1em 190px;">'.Tools::substr($order->payment, 0, 32).' '.($order->module ? '('.$order->module.')' : '').'</div>
 			<div style="margin: 2px 0 1em 50px;">
@@ -703,7 +700,7 @@ class AdminOrders extends AdminTab
 			<fieldset style="width: 400px;">
 				<legend><img src="../img/admin/delivery.gif" alt="'.$this->l('Shipping address').'" />'.$this->l('Shipping address').'</legend>
 				<div style="float: right">
-					<a href="?tab=AdminAddresses&id_address='.$addressDelivery->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=1' : '').'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)$context->employee->id).'&back='.urlencode($_SERVER['REQUEST_URI']).'"><img src="../img/admin/edit.gif" /></a>
+					<a href="?tab=AdminAddresses&id_address='.$addressDelivery->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=1' : '').'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)$this->context->employee->id).'&back='.urlencode($_SERVER['REQUEST_URI']).'"><img src="../img/admin/edit.gif" /></a>
 					<a href="http://maps.google.com/maps?f=q&hl='.$currentLanguage->iso_code.'&geocode=&q='.$addressDelivery->address1.' '.$addressDelivery->postcode.' '.$addressDelivery->city.($addressDelivery->id_state ? ' '.$deliveryState->name: '').'" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
 				</div>
 				'.$this->displayAddressDetail($addressDelivery)
@@ -713,7 +710,7 @@ class AdminOrders extends AdminTab
 		<div style="float: left; margin-left: 40px">
 			<fieldset style="width: 400px;">
 				<legend><img src="../img/admin/invoice.gif" alt="'.$this->l('Invoice address').'" />'.$this->l('Invoice address').'</legend>
-				<div style="float: right"><a href="?tab=AdminAddresses&id_address='.$addressInvoice->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=2' : '').'&back='.urlencode($_SERVER['REQUEST_URI']).'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)$context->employee->id).'"><img src="../img/admin/edit.gif" /></a></div>
+				<div style="float: right"><a href="?tab=AdminAddresses&id_address='.$addressInvoice->id.'&addaddress&realedit=1&id_order='.$order->id.($addressDelivery->id == $addressInvoice->id ? '&address_type=2' : '').'&back='.urlencode($_SERVER['REQUEST_URI']).'&token='.Tools::getAdminToken('AdminAddresses'.(int)(Tab::getIdFromClassName('AdminAddresses')).(int)$this->context->employee->id).'"><img src="../img/admin/edit.gif" /></a></div>
 				'.$this->displayAddressDetail($addressInvoice)
 				.(!empty($addressInvoice->other) ? '<hr />'.$addressInvoice->other.'<br />' : '')
 
@@ -742,7 +739,7 @@ class AdminOrders extends AdminTab
 							<th colspan="2" style="width: 120px;"><img src="../img/admin/delete.gif" alt="'.$this->l('Products').'" /> '.($order->hasBeenDelivered() ? $this->l('Return') : ($order->hasBeenPaid() ? $this->l('Refund') : $this->l('Cancel'))).'</th>';
 		echo '
 						</tr>';
-						$tokenCatalog = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id);
+						$tokenCatalog = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id);
 						foreach ($products as $k => $product)
 						{
 					        if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
@@ -906,7 +903,7 @@ class AdminOrders extends AdminTab
 				echo '<div style="overflow:auto; width:400px;" '.($message['is_new_for_me'] ?'class="new_message"':'').'>';
 				if ($message['is_new_for_me'])
 					echo '<a class="new_message" title="'.$this->l('Mark this message as \'viewed\'').'" href="'.$_SERVER['REQUEST_URI'].'&token='.$this->token.'&messageReaded='.(int)($message['id_message']).'"><img src="../img/admin/enabled.gif" alt="" /></a>';
-				echo $this->l('At').' <i>'.Tools::displayDate($message['date_add'], $context->language->id, true);
+				echo $this->l('At').' <i>'.Tools::displayDate($message['date_add'], $this->context->language->id, true);
 				echo '</i> '.$this->l('from').' <b>'.(($message['elastname']) ? ($message['efirstname'].' '.$message['elastname']) : ($message['cfirstname'].' '.$message['clastname'])).'</b>';
 				echo ((int)($message['private']) == 1 ? '<span style="color:red; font-weight:bold;">'.$this->l('Private:').'</span>' : '');
 				echo '<p>'.Tools::nl2br($message['message']).'</p>';
@@ -928,9 +925,9 @@ class AdminOrders extends AdminTab
 			foreach ($returns as $return)
 			{
 				$state = new OrderReturnState($return['state']);
-				echo '('.Tools::displayDate($return['date_upd'], $context->language->id).') :
-				<b><a href="index.php?tab=AdminReturn&id_order_return='.$return['id_order_return'].'&updateorder_return&token='.Tools::getAdminToken('AdminReturn'.(int)(Tab::getIdFromClassName('AdminReturn')).(int)$context->employee->id).'">'.$this->l('#').sprintf('%06d', $return['id_order_return']).'</a></b> -
-				'.$state->name[$context->language->id].'<br />';
+				echo '('.Tools::displayDate($return['date_upd'], $this->context->language->id).') :
+				<b><a href="index.php?tab=AdminReturn&id_order_return='.$return['id_order_return'].'&updateorder_return&token='.Tools::getAdminToken('AdminReturn'.(int)(Tab::getIdFromClassName('AdminReturn')).(int)$this->context->employee->id).'">'.$this->l('#').sprintf('%06d', $return['id_order_return']).'</a></b> -
+				'.$state->name[$this->context->language->id].'<br />';
 			}
 		echo '</fieldset>';
 
@@ -943,7 +940,7 @@ class AdminOrders extends AdminTab
 			echo $this->l('No slip for this order.');
 		else
 			foreach ($slips as $slip)
-				echo '('.Tools::displayDate($slip['date_upd'], $context->language->id).') : <b><a href="pdf.php?id_order_slip='.$slip['id_order_slip'].'">'.$this->l('#').sprintf('%06d', $slip['id_order_slip']).'</a></b><br />';
+				echo '('.Tools::displayDate($slip['date_upd'], $this->context->language->id).') : <b><a href="pdf.php?id_order_slip='.$slip['id_order_slip'].'">'.$this->l('#').sprintf('%06d', $slip['id_order_slip']).'</a></b><br />';
 		echo '</fieldset>
 		</div>';
 		echo '<div class="clear">&nbsp;</div>';
@@ -962,14 +959,13 @@ class AdminOrders extends AdminTab
 
 	public function display()
 	{
-		$context = Context::getContext();
 		if (isset($_GET['view'.$this->table]))
 			$this->viewDetails();
 		else
 		{
-			$this->getList($context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
+			$this->getList($this->context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
 			$this->displayList();
-			echo '<h2 class="space" style="text-align:right; margin-right:44px;">'.$this->l('Total:').' '.Tools::displayPrice($this->getTotal(), $context->currency).'</h2>';
+			echo '<h2 class="space" style="text-align:right; margin-right:44px;">'.$this->l('Total:').' '.Tools::displayPrice($this->getTotal(), $this->context->currency).'</h2>';
 		}
 	}
 

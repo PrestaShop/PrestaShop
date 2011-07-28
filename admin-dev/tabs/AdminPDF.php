@@ -99,9 +99,8 @@ class AdminPDF extends AdminPreferences
 
 	public function display()
 	{
-		$context = Context::getContext();
-		if (!Validate::isLoadedObject($context->language))
+		if (!Validate::isLoadedObject($this->context->language))
 			die(Tools::displayError());
-		$this->_displayForm('PDF', $this->_fieldsPDF, $this->l('PDF settings for the current language:').' '.$context->language->name, 'width2', 'pdf');
+		$this->_displayForm('PDF', $this->_fieldsPDF, $this->l('PDF settings for the current language:').' '.$this->context->language->name, 'width2', 'pdf');
 	}
 }

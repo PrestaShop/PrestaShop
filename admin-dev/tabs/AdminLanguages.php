@@ -120,7 +120,6 @@ class AdminLanguages extends AdminTab
 
 	public function postProcess()
 	{
-		$context = Context::getContext();
 		if (isset($_GET['delete'.$this->table]))
 		{
 			if ($this->tabAccess['delete'] === '1') 	
@@ -149,7 +148,7 @@ class AdminLanguages extends AdminTab
 			{
 				if (in_array(Configuration::get('PS_LANG_DEFAULT'), $_POST[$this->table.'Box']))
 					$this->_errors[] = $this->l('you cannot delete the default language');
-				elseif (in_array($context->language->id, $_POST[$this->table.'Box']))
+				elseif (in_array($this->context->language->id, $_POST[$this->table.'Box']))
 					$this->_errors[] = $this->l('you cannot delete the language currently in use, please change languages before deleting');
 				else
 				{

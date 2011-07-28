@@ -29,19 +29,19 @@ class AdminTabs extends AdminTab
 {
 	public function __construct()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 	 	$this->table = 'tab';
 	 	$this->className = 'Tab';
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
-		$this->_select = '(SELECT stl.`name` FROM `'._DB_PREFIX_.'tab_lang` stl WHERE stl.`id_tab` = a.`id_parent` AND stl.`id_lang` = '.(int)$context->language->id.' LIMIT 1) AS parent';
+		$this->_select = '(SELECT stl.`name` FROM `'._DB_PREFIX_.'tab_lang` stl WHERE stl.`id_tab` = a.`id_parent` AND stl.`id_lang` = '.(int)$this->context->language->id.' LIMIT 1) AS parent';
 		
 		$this->fieldImageSettings = array('name' => 'icon', 'dir' => 't');
 		$this->imageType = 'gif';
 		
 		$tabs = array(0 => $this->l('Home'));
-		foreach (Tab::getTabs($context->language->id, 0) AS $tab)
+		foreach (Tab::getTabs($this->context->language->id, 0) AS $tab)
 			$tabs[$tab['id_tab']] = $tab['name'];
 		$this->fieldsDisplay = array(
 		'id_tab' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -92,21 +92,20 @@ class AdminTabs extends AdminTab
 	
 	public function displayList()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		parent::displayList();
 		
-		$tabs = Tab::getTabs($context->language->id, 0);
+		$tabs = Tab::getTabs($this->context->language->id, 0);
 		echo '<br /><h2>'.$this->l('Positions').'</h2>
 		<h3>'.$this->l('Level').' 1</h3>';
 		$this->_posTabs($this->l('Main'), $tabs);
 		echo '<h3>'.$this->l('Level').' 2</h3>';
 		foreach ($tabs AS $t)
-			$this->_posTabs(stripslashes($t['name']), Tab::getTabs($context->language->id, $t['id_tab']));
+			$this->_posTabs(stripslashes($t['name']), Tab::getTabs($this->context->language->id, $t['id_tab']));
 	}
 	
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -151,7 +150,7 @@ class AdminTabs extends AdminTab
 					<select name="id_parent">
 						<option value="-1" '.(($this->getFieldValue($obj, 'id_parent') == -1) ? 'selected="selected"' : '').'>'.$this->l('None').'</option>
 						<option value="0" '.(($this->getFieldValue($obj, 'id_parent') == 0) ? 'selected="selected"' : '').'>'.$this->l('Home').'</option>';
-		foreach (Tab::getTabs($context->language->id, 0) AS $tab)
+		foreach (Tab::getTabs($this->context->language->id, 0) AS $tab)
 			echo '		<option value="'.$tab['id_tab'].'" '.($tab['id_tab'] == $this->getFieldValue($obj, 'id_parent') ? 'selected="selected"' : '').'>'.$tab['name'].'</option>';
 		echo '		</select>
 				</div>

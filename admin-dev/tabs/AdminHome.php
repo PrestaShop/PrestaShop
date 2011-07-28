@@ -151,13 +151,12 @@ class AdminHome extends AdminTab
 	
 	public function display()
 	{
-		$context = Context::getContext();
 		$this->warnDomainName();
 
 		$tab = get_class();
 		$protocol = (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')?'https':'http';
-		$isoUser = $context->language->iso_code;
-		$currency = $context->currency;
+		$isoUser = $this->context->language->iso_code;
+		$currency = $this->context->currency;
 		echo '<div>
 		<h1>'.$this->l('Dashboard').'</h1>
 		<hr style="background-color: #812143;color: #812143;" />
@@ -177,7 +176,7 @@ class AdminHome extends AdminTab
 		}
 	  echo '</div>';
 	
-	  	if ($context->employee->show_screencast)
+	  	if ($this->context->employee->show_screencast)
 			echo'
 			<div id="adminpresentation">
 				<iframe src="'.$protocol.'://screencasts.prestashop.com/screencast.php?iso_lang='.Tools::strtolower($isoUser).'" style="border:none;width:100%;height:420px;" scrolling="no"></iframe>

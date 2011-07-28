@@ -55,23 +55,22 @@ class AdminSuppliers extends AdminTab
 	
 	public function viewsupplier()
 	{
-		$context = Context::getContext();
 		if (!($supplier = $this->loadObject()))
 			return;	
 		echo '<h2>'.$supplier->name.'</h2>';
 		
-		$products = $supplier->getProductsLite($context->language->id);
+		$products = $supplier->getProductsLite($this->context->language->id);
 		echo '<h3>'.$this->l('Total products:').' '.sizeof($products).'</h3>';
 		foreach ($products AS $product)
 		{
-			$product = new Product($product['id_product'], false, $context->language->id);
+			$product = new Product($product['id_product'], false, $this->context->language->id);
 			echo '<hr />';
 			if (!$product->hasAttributes())
 			{
 				echo '
 				<table border="0" cellpadding="0" cellspacing="0" class="table width3">
 					<tr>
-						<th><a href="index.php?tab=AdminCatalog&id_product='.$product->id.'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" target="_blank">'.$product->name.'</a></th>
+						<th><a href="index.php?tab=AdminCatalog&id_product='.$product->id.'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" target="_blank">'.$product->name.'</a></th>
 						'.(!empty($product->reference) ? '<th width="150">'.$this->l('Ref:').' '.$product->reference.'</th>' : '').'
 						'.(!empty($product->ean13) ? '<th width="120">'.$this->l('EAN13:').' '.$product->ean13.'</th>' : '').'
 						'.(!empty($product->upc) ? '<th width="120">'.$this->l('UPC:').' '.$product->upc.'</th>' : '').'
@@ -82,7 +81,7 @@ class AdminSuppliers extends AdminTab
 			else
 			{
 				echo '
-				<h3><a href="index.php?tab=AdminCatalog&id_product='.$product->id.'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" target="_blank">'.$product->name.'</a></h3>
+				<h3><a href="index.php?tab=AdminCatalog&id_product='.$product->id.'&addproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" target="_blank">'.$product->name.'</a></h3>
 				<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
 	                	<tr>
 		                    <th>'.$this->l('Attribute name').'</th>
@@ -92,7 +91,7 @@ class AdminSuppliers extends AdminTab
 		                   '.(Configuration::get('PS_STOCK_MANAGEMENT') ? '<th class="right" width="40">'.$this->l('Quantity').'</th>' : '').'
 	                	</tr>';
 			     	/* Build attributes combinaisons */
-				$combinaisons = $product->getAttributeCombinaisons($context->language->id);
+				$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
 				foreach ($combinaisons AS $k => $combinaison)
 				{
 					$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];

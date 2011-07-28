@@ -32,11 +32,11 @@ class AdminShipping extends AdminTab
 
 	public function __construct()
 	{
-		$context = Context::getContext();
+		$this->context = Context::getContext();
 	 	$this->table = 'delivery';
  		$this->_fieldsHandling = array(
-		'PS_SHIPPING_HANDLING' => array('title' => $this->l('Handling charges'), 'suffix' => $context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
-		'PS_SHIPPING_FREE_PRICE' => array('title' => $this->l('Free shipping starts at'), 'suffix' => $context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
+		'PS_SHIPPING_HANDLING' => array('title' => $this->l('Handling charges'), 'suffix' => $this->context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
+		'PS_SHIPPING_FREE_PRICE' => array('title' => $this->l('Free shipping starts at'), 'suffix' => $this->context->currency, 'validation' => 'isPrice', 'cast' => 'floatval'),
 		'PS_SHIPPING_FREE_WEIGHT' => array('title' => $this->l('Free shipping starts at'), 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'validation' => 'isUnsignedFloat', 'cast' => 'floatval'),
 		'PS_SHIPPING_METHOD' => array('title' => $this->l('Billing'), 'validation' => 'isBool', 'cast' => 'intval'));
 
@@ -202,7 +202,6 @@ class AdminShipping extends AdminTab
 
 	public function displayFormFees()
 	{
-		$context = Context::getContext();
 		$carrierArray = array();
 		$id_carrier = Tools::getValue('id_carrier');
 		$carriers = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), true , false,false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
@@ -239,7 +238,7 @@ class AdminShipping extends AdminTab
 					<tr>
 						<th>'.$this->l('Zone / Range').'</th>';
 
-				$currency = $context->currency;
+				$currency = $this->context->currency;
 				$rangeObj = $carrierSelected->getRangeObject();
 				$rangeTable = $carrierSelected->getRangeTable();
 				$suffix = $carrierSelected->getRangeSuffix();

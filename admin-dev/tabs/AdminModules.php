@@ -79,8 +79,7 @@ class AdminModules extends AdminTab
 	
 	public function postProcess()
 	{
-		$context = Context::getContext();
-		$id_employee = (int)$context->employee->id;
+		$id_employee = (int)$this->context->employee->id;
 		$filter_conf = Configuration::getMultiple(array(
 												'PS_SHOW_TYPE_MODULES_'.$id_employee,
 												'PS_SHOW_COUNTRY_MODULES_'.$id_employee,
@@ -285,11 +284,10 @@ class AdminModules extends AdminTab
 									$toolbar .= '<tr>
 										<th colspan="4">
 											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
-									$context = Context::getContext();
-									if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
-										$toolbar .= 'shop <b>'.$context->shop->name.'</b>';
-									elseif ($context->shop->getContextType() == Shop::CONTEXT_GROUP)
-										$toolbar .= 'all shops of group shop <b>'.$context->shop->getGroup()->name.'</b>';
+									if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
+										$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
+									elseif ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP)
+										$toolbar .= 'all shops of group shop <b>'.$this->context->shop->getGroup()->name.'</b>';
 									else
 										$toolbar .= 'all shops';
 									$toolbar .= '</th>
@@ -309,7 +307,7 @@ class AdminModules extends AdminTab
 								$module_errors[] = $name;
 						}
 						if ($key != 'configure' AND isset($_GET['bpay']))
-							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$context->employee->id));
+							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->context->employee->id));
 					}
 				if (sizeof($module_errors))
 				{
@@ -462,16 +460,16 @@ class AdminModules extends AdminTab
 
 	public function displayList()
 	{
-		$context = Context::getContext();	
+		$this->context = Context::getContext();	
 		$modulesAuthors = array();	
 		$autocompleteList = 'var moduleList = [';
 		
-		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id);
-		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id);
-		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id);
-		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id);
+		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id);
+		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id);
+		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id);
+		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id);
 
-		$nameCountryDefault = Country::getNameById($context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
+		$nameCountryDefault = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
 		$isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 		
 		$serialModules = '';
@@ -906,14 +904,13 @@ class AdminModules extends AdminTab
 	
 	public function displaySelectedFilter()
 	{
-		$context = Context::getContext();
 		$selected_filter = '';
-		$id_employee = (int)$context->employee->id;
+		$id_employee = (int)$this->context->employee->id;
 		
-		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id);
-		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id);
-		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id);
-		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id);
+		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id);
+		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id);
+		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id);
+		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id);
 		$selected_filter .= ($showTypeModules == 'allModules' ? $this->l('All Modules').' - ' : '').
 							($showTypeModules == 'nativeModules' ? $this->l('Native Modules').' - ' : '').
 							($showTypeModules == 'partnerModules' ? $this->l('Partners Modules').' - ' : '').
@@ -934,20 +931,20 @@ class AdminModules extends AdminTab
 	
 	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
 	{
-		$context = Context::getContext();		
-		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id, $module_type);
-		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id, $country_module_value);
-		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id, $module_install);
-		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id, $module_status);
+		$this->context = Context::getContext();		
+		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id, $module_type);
+		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id, $country_module_value);
+		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id, $module_install);
+		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id, $module_status);
 	}
 	
 	private function resetFilterModules()
 	{
-		$context = Context::getContext();		
-		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$context->employee->id, 'allModules');
-		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$context->employee->id, 0);
-		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$context->employee->id, 'installedUninstalled');
-		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$context->employee->id, 'enabledDisabled');
+		$this->context = Context::getContext();		
+		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id, 'allModules');
+		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id, 0);
+		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id, 'installedUninstalled');
+		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id, 'enabledDisabled');
 	}
 	
 }

@@ -671,7 +671,6 @@ class AdminTranslations extends AdminTab
 	}
 	public function display()
 	{
-		$context = Context::getContext();
 		$translations = array(
 			'front' => $this->l('Front Office translations'),
 			'back' => $this->l('Back Office translations'),
@@ -780,7 +779,7 @@ class AdminTranslations extends AdminTab
 				<fieldset class="width3"><legend><img src="../img/admin/copy_files.gif" />'.$this->l('Copy').'</legend>
 					<p>'.$this->l('Copies data from one language to another.').'<br />'.
 					$this->l('Be careful, as it will replace all existing data for the destination language!').'<br />'.
-					$this->l('If necessary').', <b><a href="index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$context->employee->id).'">'.$this->l('first create a new language').'</a></b>.</p>
+					$this->l('If necessary').', <b><a href="index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$this->context->employee->id).'">'.$this->l('first create a new language').'</a></b>.</p>
 					<div style="float:left;">
 						<p>
 							<div style="width:75px; font-weight:bold; float:left;">'.$this->l('From:').'</div>

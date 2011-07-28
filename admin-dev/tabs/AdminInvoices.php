@@ -43,8 +43,7 @@ class AdminInvoices extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
-		$statuses = OrderState::getOrderStates($context->language->id);
+		$statuses = OrderState::getOrderStates($this->context->language->id);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT COUNT(*) as nbOrders, (
 			SELECT oh.id_order_state
@@ -54,7 +53,7 @@ class AdminInvoices extends AdminTab
 			LIMIT 1
 		) id_order_state
 		FROM '._DB_PREFIX_.'orders o
-		WHERE o.id_shop IN('.implode(', ', $context->shop->getListOfID()).')
+		WHERE o.id_shop IN('.implode(', ', $this->context->shop->getListOfID()).')
 		GROUP BY id_order_state');
 		$statusStats = array();
 		foreach ($result as $row)

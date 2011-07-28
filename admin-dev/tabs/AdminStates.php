@@ -98,7 +98,6 @@ class AdminStates extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -121,7 +120,7 @@ class AdminStates extends AdminTab
 				<label>'.$this->l('Country:').' </label>
 				<div class="margin-form">
 					<select name="id_country">';
-				$countries = Country::getCountries($context->language->id, false, true);
+				$countries = Country::getCountries($this->context->language->id, false, true);
 				foreach ($countries AS $country)
 					echo '<option value="'.(int)($country['id_country']).'"'.(($this->getFieldValue($obj, 'id_country') == $country['id_country']) ? ' selected="selected"' : '').'>'.$country['name'].'</option>';
 				echo '

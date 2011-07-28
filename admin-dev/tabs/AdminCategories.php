@@ -73,9 +73,8 @@ class AdminCategories extends AdminTab
 
 	public function display($token = NULL)
 	{
-		$context = Context::getContext();
 
-		$this->getList((int)($context->language->id), !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $context->shop->getID(true));
+		$this->getList((int)($this->context->language->id), !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $this->context->shop->getID(true));
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subcategory')))).' '.$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
 		if ($this->tabAccess['add'] === '1')
 			echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?tab=AdminCatalog&add'.$this->table.'&id_parent='.$this->_category->id.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new subcategory').'</a>';
@@ -86,8 +85,7 @@ class AdminCategories extends AdminTab
 
 	public function postProcess($token = NULL)
 	{
-		$context = Context::getContext();
-		$this->tabAccess = Profile::getProfileAccess($context->employee->id_profile, $this->id);
+		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
@@ -185,13 +183,12 @@ class AdminCategories extends AdminTab
 	{
 		parent::displayForm();
 
-		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$active = $this->getFieldValue($obj, 'active');
 		$customer_groups = $obj->getGroups();
-		if ($context->shop->getContextType() == Shop::CONTEXT_SHOP)
-			$id_category = $context->shop->getCategory();
+		if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
+			$id_category = $this->context->shop->getCategory();
 		else
 			$id_category = (int)Tools::getValue('id_parent');
 
@@ -219,7 +216,7 @@ class AdminCategories extends AdminTab
 				<label>'.$this->l('Parent category:').' </label>
 				<div class="margin-form">
 					<select name="id_parent">';
-		$categories = Category::getCategories((int)$context->language->id, false);
+		$categories = Category::getCategories((int)$this->context->language->id, false);
 		Category::recurseCategory($categories, $categories[0][1], 1, ($obj->id ? $this->getFieldValue($obj, 'id_parent') : $id_category));
 		echo '
 					</select>
@@ -235,7 +232,7 @@ class AdminCategories extends AdminTab
 				</div>
 				<label>'.$this->l('Image:').' </label>
 				<div class="margin-form">';
-		echo 		$this->displayImage($obj->id, _PS_IMG_DIR_.'c/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$context->employee->id), true);
+		echo 		$this->displayImage($obj->id, _PS_IMG_DIR_.'c/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id), true);
 		echo '	<br /><input type="file" name="image" />
 					<p>'.$this->l('Upload category logo from your computer').'</p>
 				</div>
@@ -280,7 +277,7 @@ class AdminCategories extends AdminTab
 				</div>
 				<label>'.$this->l('Groups access:').' </label>
 				<div class="margin-form">';
-					$groups = Group::getGroups((int)($context->language->id));
+					$groups = Group::getGroups((int)($this->context->language->id));
 					if (sizeof($groups))
 					{
 						echo '

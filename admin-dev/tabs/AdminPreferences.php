@@ -29,13 +29,13 @@ class AdminPreferences extends AdminTab
 {
 	public function __construct()
 	{
-		$context = Context::getContext();
+		$this->context = Context::getContext();
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
 		$timezones = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT name FROM '._DB_PREFIX_.'timezone');
 		$taxes[] = array('id' => 0, 'name' => $this->l('None'));
-		foreach (Tax::getTaxes($context->language->id) as $tax)
+		foreach (Tax::getTaxes($this->context->language->id) as $tax)
 			$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);
 
 		$order_process_type = array(
@@ -70,7 +70,7 @@ class AdminPreferences extends AdminTab
 				'name' => $this->l('None')
 			)
 		);
-		foreach (CMS::listCms($context->language->id) as $cms_file)
+		foreach (CMS::listCms($this->context->language->id) as $cms_file)
 			$cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
 		$this->_fieldsGeneral = array(
 			'PS_SHOP_ENABLE' => array('title' => $this->l('Enable Shop'), 'desc' => $this->l('Activate or deactivate your shop. Deactivate your shop while you perform maintenance on it. Please note that the webservice will not be disabled'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
@@ -170,7 +170,6 @@ class AdminPreferences extends AdminTab
 	  */
 	protected function _postConfig($fields)
 	{
-		$context = Context::getContext();
 		$languages = Language::getLanguages(false);
 
 		Tools::clearCache($smarty);
@@ -321,7 +320,6 @@ class AdminPreferences extends AdminTab
 	  */
 	protected function _displayForm($name, $fields, $tabname, $size, $icon)
 	{
-		$context = Context::getContext();
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
 		$confValues = $this->getConf($fields, $languages);
@@ -361,7 +359,7 @@ class AdminPreferences extends AdminTab
 				echo '<div class="margin-form" style="padding-top:5px;">';
 			}
 
-			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
+			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
 
 			/* Display the appropriate input type for each field */
 			switch ($field['type'])
@@ -446,7 +444,7 @@ class AdminPreferences extends AdminTab
 				break;
 
 				case 'price':
-					echo $context->currency->getSign('left').'<input type="'.$field['type'].'" size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" '.(($isDisabled) ? 'disabled="disabled"' : '').' />'.$context->currency->getSign('right').' '.$this->l('(tax excl.)');
+					echo $this->context->currency->getSign('left').'<input type="'.$field['type'].'" size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" '.(($isDisabled) ? 'disabled="disabled"' : '').' />'.$this->context->currency->getSign('right').' '.$this->l('(tax excl.)');
 				break;
 
 				case 'textLang':

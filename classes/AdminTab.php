@@ -176,7 +176,7 @@ abstract class AdminTabCore
 
 	public function __construct()
 	{
-		$context = Context::getContext();
+		$this->context = Context::getContext();
 		
 		$this->id = Tab::getCurrentTabId();
 		$this->_conf = array(
@@ -198,7 +198,7 @@ abstract class AdminTabCore
 		$className = get_class($this);
 		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
 			$className = 'AdminCatalog';
-		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$context->employee->id);
+		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
 
 		if (!Tools::isMultiShopActivated())
 			$this->shopLinkType = '';
@@ -247,7 +247,6 @@ abstract class AdminTabCore
 	 */
 	public function display()
 	{
-		$context = Context::getContext();
 		// Include other tab in current tab
 		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))){}
 
@@ -265,7 +264,7 @@ abstract class AdminTabCore
 		}
 		elseif (isset($_GET['update'.$this->table]))
 		{
-			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $context->employee->id == Tools::getValue('id_employee')))
+			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
 			{
 				$this->displayForm();
 				if ($this->tabAccess['view'])
@@ -279,7 +278,7 @@ abstract class AdminTabCore
 
 		else
 		{
-			$this->getList($context->language->id);
+			$this->getList($this->context->language->id);
 			$this->displayList();
 			$this->displayOptionsList();
 			$this->displayRequiredFields();
@@ -543,7 +542,6 @@ abstract class AdminTabCore
 		// set token
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 		
-		$context = Context::getContext();
 		// Sub included tab postProcessing
 		$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
 
@@ -669,7 +667,7 @@ abstract class AdminTabCore
 				/* Object update */
 				if (isset($id) AND !empty($id))
 				{
-					if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $context->employee->id == Tools::getValue('id_employee') AND Tools::isSubmit('updateemployee')))
+					if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee') AND Tools::isSubmit('updateemployee')))
 					{
 						$object = new $this->className($id);
 						if (Validate::isLoadedObject($object))
@@ -766,7 +764,7 @@ abstract class AdminTabCore
 		/* Cancel all filters for this tab */
 		elseif (isset($_POST['submitReset'.$this->table]))
 		{
-			$filters = $context->cookie->getFamily($this->table.'Filter_');
+			$filters = $this->context->cookie->getFamily($this->table.'Filter_');
 			foreach ($filters AS $cookieKey => $filter)
 				if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
 					{
@@ -775,14 +773,14 @@ abstract class AdminTabCore
 						$tmpTab = explode('!', $key);
 						$key = (count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0]);
 						if (array_key_exists($key, $this->fieldsDisplay))
-							unset($context->cookie->$cookieKey);
+							unset($this->context->cookie->$cookieKey);
 					}
-			if (isset($context->cookie->{'submitFilter'.$this->table}))
-				unset($context->cookie->{'submitFilter'.$this->table});
-			if (isset($context->cookie->{$this->table.'Orderby'}))
-				unset($context->cookie->{$this->table.'Orderby'});
-			if (isset($context->cookie->{$this->table.'Orderway'}))
-				unset($context->cookie->{$this->table.'Orderway'});
+			if (isset($this->context->cookie->{'submitFilter'.$this->table}))
+				unset($this->context->cookie->{'submitFilter'.$this->table});
+			if (isset($this->context->cookie->{$this->table.'Orderby'}))
+				unset($this->context->cookie->{$this->table.'Orderby'});
+			if (isset($this->context->cookie->{$this->table.'Orderway'}))
+				unset($this->context->cookie->{$this->table.'Orderway'});
 			unset($_POST);
 		}
 
@@ -793,9 +791,9 @@ abstract class AdminTabCore
 		}
 
 		/* Manage list filtering */
-		elseif (Tools::isSubmit('submitFilter'.$this->table) OR $context->cookie->{'submitFilter'.$this->table} !== false)
+		elseif (Tools::isSubmit('submitFilter'.$this->table) OR $this->context->cookie->{'submitFilter'.$this->table} !== false)
 		{
-			$_POST = array_merge($context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
+			$_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
 			foreach ($_POST AS $key => $value)
 			{
 				/* Extracting filters from $_POST on key filter_ */
@@ -1151,22 +1149,21 @@ abstract class AdminTabCore
 	 */
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
 	{
-		$context = Context::getContext();
 
 		/* Manage default params values */
 		if (empty($limit))
-			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $context->cookie->{$this->table.'_pagination'});
+			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $this->context->cookie->{$this->table.'_pagination'});
 
 		if (!Validate::isTableOrIdentifier($this->table))
 			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
 
 		if (empty($orderBy))
-			$orderBy = $context->cookie->__get($this->table.'Orderby') ? $context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+			$orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
 		if (empty($orderWay))
-			$orderWay = $context->cookie->__get($this->table.'Orderway') ? $context->cookie->__get($this->table.'Orderway') : 'ASC';
+			$orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
 
 		$limit = (int)(Tools::getValue('pagination', $limit));
-		$context->cookie->{$this->table.'_pagination'} = $limit;
+		$this->context->cookie->{$this->table.'_pagination'} = $limit;
 
 		/* Check params validity */
 		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay)
@@ -1197,14 +1194,14 @@ abstract class AdminTabCore
 			$selectShop = ', shop.name as shop_name ';
 			$joinShop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
-			$whereShop = $context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+			$whereShop = $this->context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
 		$assos = Shop::getAssoTables();
 		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 		{
 			$filterKey = $assos[$this->table]['type'];
-			$idenfierShop = $context->shop->getListOfID();
+			$idenfierShop = $this->context->shop->getListOfID();
 		}
 		else if (Context::shop() == Shop::CONTEXT_GROUP)
 		{
@@ -1212,7 +1209,7 @@ abstract class AdminTabCore
 			if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
 			{
 				$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = array($context->shop->getGroupID());
+				$idenfierShop = array($this->context->shop->getGroupID());
 			}
 		}
 
@@ -1269,7 +1266,6 @@ abstract class AdminTabCore
 	 */
 	public function displayListHeader($token = NULL)
 	{
-		$context = Context::getContext();
 		$isCms = false;
 		if (preg_match('/cms/Ui', $this->identifier))
 			$isCms = true;
@@ -1279,7 +1275,7 @@ abstract class AdminTabCore
 			$token = $this->token;
 
 		/* Determine total page number */
-		$totalPages = ceil($this->_listTotal / Tools::getValue('pagination', (isset($context->cookie->{$this->table.'_pagination'}) ? $context->cookie->{$this->table.'_pagination'} : $this->_pagination[0])));
+		$totalPages = ceil($this->_listTotal / Tools::getValue('pagination', (isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : $this->_pagination[0])));
 		if (!$totalPages) $totalPages = 1;
 
 		echo '<a name="'.$this->table.'">&nbsp;</a>';
@@ -1311,7 +1307,7 @@ abstract class AdminTabCore
 		echo '			| '.$this->l('Display').'
 						<select name="pagination">';
 		/* Choose number of results per page */
-		$selectedPagination = Tools::getValue('pagination', (isset($context->cookie->{$this->table.'_pagination'}) ? $context->cookie->{$this->table.'_pagination'} : NULL));
+		$selectedPagination = Tools::getValue('pagination', (isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : NULL));
 		foreach ($this->_pagination AS $value)
 			echo '<option value="'.(int)($value).'"'.($selectedPagination == $value ? ' selected="selected"' : (($selectedPagination == NULL && $value == $this->_pagination[1]) ? ' selected="selected2"' : '')).'>'.(int)($value).'</option>';
 		echo '
@@ -1498,7 +1494,6 @@ abstract class AdminTabCore
 		 * icon   : icon determined by values
 		 * active : allow to toggle status
 		 */
-		$context = Context::getContext();
 		$id_category = 1; // default categ
 
 		$irow = 0;
@@ -1571,13 +1566,13 @@ abstract class AdminTabCore
 					elseif (isset($params['icon']) AND (isset($params['icon'][$tr[$key]]) OR isset($params['icon']['default'])))
 						echo '<img src="../img/admin/'.(isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'].'" alt="'.$tr[$key]).'" title="'.$tr[$key].'" />';
                     elseif (isset($params['price']))
-						echo Tools::displayPrice($tr[$key], (isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $context->currency), false);
+						echo Tools::displayPrice($tr[$key], (isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency), false);
 					elseif (isset($params['float']))
 						echo rtrim(rtrim($tr[$key], '0'), '.');
 					elseif (isset($params['type']) AND $params['type'] == 'date')
-						echo Tools::displayDate($tr[$key], $context->language->id);
+						echo Tools::displayDate($tr[$key], $this->context->language->id);
 					elseif (isset($params['type']) AND $params['type'] == 'datetime')
-						echo Tools::displayDate($tr[$key], $context->language->id, true);
+						echo Tools::displayDate($tr[$key], $this->context->language->id, true);
 					elseif (isset($tr[$key]))
 					{
 						if ($key == 'price')
@@ -1692,11 +1687,10 @@ abstract class AdminTabCore
 	 */
 	public function displayOptionsList()
 	{
-		$context = Context::getContext();
 		if (!isset($this->_fieldsOptions) OR !sizeof($this->_fieldsOptions))
 			return false;
 		
-		$defaultLanguage = (int)$context->language->id;
+		$defaultLanguage = (int)$this->context->language->id;
 		$this->_languages = Language::getLanguages(false);
 		$tab = Tab::getTab($defaultLanguage, $this->id);
 		echo '<br /><br />';
@@ -1718,7 +1712,7 @@ abstract class AdminTabCore
 				if (!Validate::isCleanHtml($val))
 					$val = Configuration::get($key);
 
-			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $context->shop->getContextType()) ? true : false;
+			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
 
 			echo $this->getHtmlDefaultConfigurationValue($key, $this->_languages);
 			echo '<label>'.$field['title'].' </label>
@@ -1849,20 +1843,19 @@ abstract class AdminTabCore
 	 */
 	public function displayForm($firstCall = true)
 	{
-		$context = Context::getContext();
 		$allowEmployeeFormLang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-		if ($allowEmployeeFormLang && !$context->cookie->employee_form_lang)
-			$context->cookie->employee_form_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		if ($allowEmployeeFormLang && !$this->context->cookie->employee_form_lang)
+			$this->context->cookie->employee_form_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$useLangFromCookie = false;
 		$this->_languages = Language::getLanguages(false);
 		if ($allowEmployeeFormLang)
 			foreach ($this->_languages AS $lang)
-				if ($context->cookie->employee_form_lang == $lang['id_lang'])
+				if ($this->context->cookie->employee_form_lang == $lang['id_lang'])
 					$useLangFromCookie = true;
 		if (!$useLangFromCookie)
 			$this->_defaultFormLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		else
-			$this->_defaultFormLanguage = (int)($context->cookie->employee_form_lang);
+			$this->_defaultFormLanguage = (int)($this->context->cookie->employee_form_lang);
 
 		// Only if it is the first call to displayForm, otherwise it has already been defined
 		if ($firstCall)
@@ -1929,11 +1922,10 @@ abstract class AdminTabCore
 
 	public function viewAccess($disable = false)
 	{
-		$context = Context::getContext();
 		if ($disable)
 			return true;
 
-		$this->tabAccess = Profile::getProfileAccess($context->employee->id_profile, $this->id);
+		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 
 		if ($this->tabAccess['view'] === '1')
 			return true;
@@ -1998,15 +1990,14 @@ abstract class AdminTabCore
 	
 	protected function displayAssoShop($field_name = 'name', $selectName = null)
 	{
-		$context = Context::getContext();
-		if (!Tools::isMultiShopActivated() || (!$this->_object && $context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Tools::isMultiShopActivated() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		$shops = Shop::getShops();
 		$sql = 'SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'`
 				FROM `'._DB_PREFIX_.pSQL($this->table).'`a '.
 				(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-				' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : '');
+				' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$this->context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : '');
 		$objects = Db::getInstance()->ExecuteS($sql);
 		$assos = array();
 		$res = Db::getInstance()->ExecuteS('SELECT id_shop, `'.pSQL($this->identifier).'`
@@ -2060,14 +2051,13 @@ abstract class AdminTabCore
 	
 	protected function displayAssoGroupShop($field_name = 'name')
 	{
-		$context = Context::getContext();
-		if (!Tools::isMultiShopActivated() || (!$this->_object && $context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Tools::isMultiShopActivated() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		$objects = Db::getInstance()->ExecuteS('SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'` 
 															FROM `'._DB_PREFIX_.pSQL($this->table).'` a'.
 															(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
+															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$this->context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
 		$groups_shop = GroupShop::getGroupShops();
 		$assos = array();
 		$res = Db::getInstance()->ExecuteS('SELECT id_group_shop, `'.pSQL($this->identifier).'`
@@ -2142,22 +2132,21 @@ abstract class AdminTabCore
 	 */
 	protected function getHtmlDefaultConfigurationValue($key, $languages)
 	{
-		$context = Context::getContext();
 		if (Configuration::isLangKey($key))
 		{
 			$testContext = false;
 			foreach ($languages as $lang)
-				if (($context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
-					|| ($context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
+				if (($this->context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
+					|| ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
 						$testContext = true;
 		}
 		else
 		{
-			$testContext = (($context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
-							|| ($context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
+			$testContext = (($this->context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
+							|| ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
 		}
 		
-		if (Tools::isMultiShopActivated() && $context->shop->getContextType() != Shop::CONTEXT_ALL && $testContext)
+		if (Tools::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL && $testContext)
 		{
 			echo '<div class="multishop_config">';
 				echo '<a href="#" title="'.$this->l('Click here to use default value for this field').'"><img src="../img/admin/multishop_config.png" /></a>';

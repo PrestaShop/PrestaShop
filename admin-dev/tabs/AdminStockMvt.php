@@ -29,6 +29,7 @@ class AdminStockMvt extends AdminTab
 {
 	public function __construct()
 	{
+		$this->context = Context::getContext();
 	 	$this->table = 'stock_mvt';
 	 	$this->className = 'StockMvt';
 	 	$this->edit = false;
@@ -44,15 +45,14 @@ class AdminStockMvt extends AdminTab
 		'employee' => array('title' => $this->l('Employee'), 'width' => 100, 'havingFilter' => true),
 		);
 		
-		$context = Context::getContext();
 		
 		$this->_select = 'CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason';
-		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock '.$context->shop->sqlSharedStock('stock').'
-							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$context->language->id.$context->shop->sqlLang('pl').')
-							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (a.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$context->language->id.')
+		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock '.$this->context->shop->sqlSharedStock('stock').'
+							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
+							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (a.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$this->context->language->id.')
 							LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
-							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$context->language->id.')';
+							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$this->context->language->id.')';
 		$this->_group = 'GROUP BY a.id_stock_mvt';
 		parent::__construct();
 	}
@@ -60,7 +60,7 @@ class AdminStockMvt extends AdminTab
 	public function postProcess()
 	{
 		if (Tools::isSubmit('rebuildStock'))
-			StockMvt::addMissingMvt($context->employee->id, false);
+			StockMvt::addMissingMvt($this->context->employee->id, false);
 		return parent::postProcess();
 	}
 	
@@ -100,10 +100,9 @@ class AdminStockMvt extends AdminTab
 	
 	public function viewstock_mvt()
 	{
-		$context = Context::getContext();
 		$stockMvt = new StockMvt((int)Tools::getValue('id_stock_mvt'));
-		$product = new Product((int)$stockMvt->id_product, true, $context->language->id);
-		$movements = $product->getStockMvts($context->language->id);
+		$product = new Product((int)$stockMvt->id_product, true, $this->context->language->id);
+		$movements = $product->getStockMvts($this->context->language->id);
 
 			echo '<h2>'.$this->l('Stock Movements for').' '.$product->name.'</h2>
 			<table cellspacing="0" cellpadding="0" class="table widthfull">
@@ -127,7 +126,7 @@ class AdminStockMvt extends AdminTab
 					<td>'.$mvt['reason'].'</td>
 					<td>'.$mvt['employee'].'</td>
 					<td>#'.$mvt['id_order'].'</td>
-					<td>'.Tools::displayDate($mvt['date_add'], $context->language->id).'</td>
+					<td>'.Tools::displayDate($mvt['date_add'], $this->context->language->id).'</td>
 				</tr>';
 			}
 			echo '</table>';
@@ -136,7 +135,6 @@ class AdminStockMvt extends AdminTab
 	public function display()
 	{
 		$old_post = false;
-		$context = Context::getContext();
 		
 		if (!isset($_GET['addstock_mvt_reason']) OR (Tools::isSubmit('submitAddstock_mvt_reason') AND Tools::getValue('id_stock_mvt_reason')))
 		{
@@ -178,7 +176,7 @@ class AdminStockMvt extends AdminTab
 												'sign' => array('title' => $this->l('Sign'), 'width' => 15, 'align' => 'center', 'type' => 'select',  'icon' => array(-1 => 'arrow_down.png', 1 => 'arrow_up.png'), 'orderby' => false),
 												'name' => array('title' => $this->l('Name'), 'width' => 500));
 		
-		$reasons = StockMvtReason::getStockMvtReasons($context->language->id);
+		$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
 		$this->_fieldsOptions = array('PS_STOCK_MVT_REASON_DEFAULT' => array('title' => $this->l('Default Stock Movement reason:'), 
 												'cast' => 'intval', 
 												'type' => 'select', 

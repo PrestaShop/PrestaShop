@@ -96,14 +96,14 @@ class AdminPayment extends AdminTab
 
 	public function display()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		$displayRestrictions = false;
 		
 		$currencies = Currency::getCurrencies();
-		$countries = Country::getCountries($context->language->id);
-		$groups = Group::getGroups($context->language->id);
+		$countries = Country::getCountries($this->context->language->id);
+		$groups = Group::getGroups($this->context->language->id);
 		
-		$tokenModules = Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$context->employee->id);
+		$tokenModules = Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id);
 		echo '<h2 class="space">'.$this->l('Payment modules list').'</h2>';
 		if (isset($this->paymentModules[0]))
 		echo '<input type="button" class="button" onclick="document.location=\'index.php?tab=AdminModules&token='.$tokenModules.'&module_name='.$this->paymentModules[0]->name.'&tab_module=payments_gateways\'" value="'.$this->l('Click to see the list of payment modules.').'" /><br>';

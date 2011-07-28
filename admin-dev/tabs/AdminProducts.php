@@ -35,7 +35,6 @@ class AdminProducts extends AdminTab
 
 	public function __construct()
 	{
-		$context = Context::getContext();
 
 		$this->table = 'product';
 		$this->className = 'Product';
@@ -45,6 +44,7 @@ class AdminProducts extends AdminTab
 		$this->view = false;
 		$this->duplicate = true;
 		$this->imageType = 'jpg';
+		$this->context = Context::getContext();
 
 		$this->fieldsDisplay = array(
 			'id_product' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 20),
@@ -62,7 +62,7 @@ class AdminProducts extends AdminTab
 		$this->_join = Product::sqlStock('a').'
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
 		$this->_select = 'cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, SUM(stock.quantity) AS quantity';
@@ -119,9 +119,8 @@ class AdminProducts extends AdminTab
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
 	{
-		$context = Context::getContext();
-		$orderByPriceFinal = (empty($orderBy) ? ($context->cookie->__get($this->table.'Orderby') ? $context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
-		$orderWayPriceFinal = (empty($orderWay) ? ($context->cookie->__get($this->table.'Orderway') ? $context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
+		$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
+		$orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
 		if ($orderByPriceFinal == 'price_final')
 		{
 			$orderBy = 'id_'.$this->table;
@@ -170,7 +169,6 @@ class AdminProducts extends AdminTab
 	 */
 	public function postProcess($token = NULL)
 	{
-		$context = Context::getContext();
 		/* Add a new product */
 		if (Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndStay') OR  Tools::isSubmit('submitAddProductAndPreview'))
 		{
@@ -523,7 +521,7 @@ class AdminProducts extends AdminTab
 									Tools::getValue('minimal_quantity'));
 								if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0 AND $id_reason > 0)
 								{
-									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $context->employee->id))
+									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $this->context->employee->id))
 										$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 								}
 								Hook::updateProductAttribute((int)$id_product_attribute);
@@ -1085,10 +1083,9 @@ class AdminProducts extends AdminTab
 	 */
 	public function submitAddProduct($token = NULL)
 	{
-		$context = Context::getContext();
 		$className = 'Product';
 		$rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
-		$defaultLanguage = $context->language;
+		$defaultLanguage = $this->context->language;
 		$languages = Language::getLanguages(false);
 
 		/* Check required fields */
@@ -1173,7 +1170,7 @@ class AdminProducts extends AdminTab
 					{
 						if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND Tools::getValue('mvt_quantity') > 0 AND $id_reason > 0)
 						{
-							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, NULL, NULL, $context->employee->id))
+							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, NULL, NULL, $this->context->employee->id))
 								$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 						}
 						$this->updateAccessories($object);
@@ -1197,7 +1194,7 @@ class AdminProducts extends AdminTab
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
 							{
-								$preview_url = ($context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $context->language->id)));
+								$preview_url = ($this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id)));
 								if (!$object->active)
 								{
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -1253,7 +1250,7 @@ class AdminProducts extends AdminTab
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
 							{
-								$preview_url = ($context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $context->language->id)));
+								$preview_url = ($this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id)));
 								if (!$object->active)
 								{
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -1399,11 +1396,10 @@ class AdminProducts extends AdminTab
 
 	public function display($token = NULL)
 	{
-		$context = Context::getContext();
 
 		if ($id_category = (int)Tools::getValue('id_category'))
 			AdminTab::$currentIndex .= '&id_category='.$id_category;
-		$this->getList($context->language->id, !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $context->shop->getID(true));
+		$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $this->context->shop->getID(true));
 
 		$id_category = Tools::getValue('id_category', 1);
 		if (!$id_category)
@@ -1518,7 +1514,6 @@ class AdminProducts extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if ($id_category_back = (int)(Tools::getValue('id_category')))
@@ -1527,7 +1522,7 @@ class AdminProducts extends AdminTab
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$currency = $context->currency;
+		$currency = $this->context->currency;
 
 		if ($obj->id)
 			self::$currentIndex .= '&id_product='.$obj->id;
@@ -1625,7 +1620,7 @@ class AdminProducts extends AdminTab
 		{
 			$productIndex = preg_replace('/(&id_product=[0-9]*)/', '', self::$currentIndex);
 			echo '<br /><br />
-			<a href="'.$productIndex.($this->token ? '&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id) : '').'">
+			<a href="'.$productIndex.($this->token ? '&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id) : '').'">
 				<img src="../img/admin/arrow2.gif" /> '.$this->l('Back to the category').'
 			</a><br />';
 		}
@@ -1633,15 +1628,14 @@ class AdminProducts extends AdminTab
 
 	function displayFormPrices($obj, $languages, $defaultLanguage)
 	{
-		$context = Context::getContext();
 		if ($obj->id)
 		{
 			$shops = Shop::getShops();
 			$currencies = Currency::getCurrencies();
-			$countries = Country::getCountries($context->language->id);
-			$groups = Group::getGroups($context->language->id);
-			$this->_displaySpecificPriceAdditionForm( $context->currency, $shops, $currencies, $countries, $groups);
-			$this->_displaySpecificPriceModificationForm( $context->currency, $shops, $currencies, $countries, $groups);
+			$countries = Country::getCountries($this->context->language->id);
+			$groups = Group::getGroups($this->context->language->id);
+			$this->_displaySpecificPriceAdditionForm( $this->context->currency, $shops, $currencies, $countries, $groups);
+			$this->_displaySpecificPriceModificationForm( $this->context->currency, $shops, $currencies, $countries, $groups);
 		}
 		else
 			echo '<b>'.$this->l('You must save this product before adding specific prices').'.</b>';
@@ -1657,13 +1651,12 @@ class AdminProducts extends AdminTab
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
 	{
-		$context = Context::getContext();
 		if (!($obj = $this->loadObject()))
 			return;
 		$specificPrices = SpecificPrice::getByProductId((int)($obj->id));
 		$specificPricePriorities = SpecificPrice::getPriority((int)($obj->id));
 
-		$taxRate = TaxRulesGroup::getTaxesRate($obj->id_tax_rules_group, $context->country->id, 0, 0);
+		$taxRate = TaxRulesGroup::getTaxesRate($obj->id_tax_rules_group, $this->context->country->id, 0, 0);
 
 		$tmp = array();
 		foreach ($shops as $shop)
@@ -1694,11 +1687,11 @@ class AdminProducts extends AdminTab
 					<th class="cell border" style="width: 12%;">'.$this->l('Currency').'</th>
 					<th class="cell border" style="width: 11%;">'.$this->l('Country').'</th>
 					<th class="cell border" style="width: 13%;">'.$this->l('Group').'</th>
-					<th class="cell border" style="width: 12%;">'.$this->l('Price').' '.($context->country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
+					<th class="cell border" style="width: 12%;">'.$this->l('Price').' '.($this->context->country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
 					<th class="cell border" style="width: 10%;">'.$this->l('Reduction').'</th>
 					<th class="cell border" style="width: 15%;">'.$this->l('Period').'</th>
 					<th class="cell border" style="width: 10%;">'.$this->l('From (quantity)').'</th>
-					<th class="cell border" style="width: 15%;">'.$this->l('Final price').' '.($context->country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
+					<th class="cell border" style="width: 15%;">'.$this->l('Final price').' '.($this->context->country->display_tax_label ? $this->l('(tax excl.)') : '').'</th>
 					<th class="cell border" style="width: 2%;">'.$this->l('Action').'</th>
 				</tr>
 			</thead>
@@ -1813,7 +1806,6 @@ class AdminProducts extends AdminTab
 	{
 		if (!($product = $this->loadObject()))
 			return;
-		$context = Context::getContext();
 
 		echo '
 		<a href="#" onclick="$(\'#add_specific_price\').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /> '.$this->l('Add a new specific price').'</a>
@@ -1863,7 +1855,7 @@ class AdminProducts extends AdminTab
 			</div>
 
 			<label>'.$this->l('Product price');
-				if ($context->country->display_tax_label)
+				if ($this->context->country->display_tax_label)
 					echo ' '.$this->l('(tax excl.):');
 			echo '</label>
 			<div class="margin-form">
@@ -2023,12 +2015,11 @@ class AdminProducts extends AdminTab
 
 	function displayFormAttachments($obj, $languages, $defaultLanguage)
 	{
-		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$languages = Language::getLanguages(false);
-		$attach1 = Attachment::getAttachments($context->language->id, $obj->id, true);
-		$attach2 = Attachment::getAttachments($context->language->id, $obj->id, false);
+		$attach1 = Attachment::getAttachments($this->context->language->id, $obj->id, true);
+		$attach2 = Attachment::getAttachments($this->context->language->id, $obj->id, false);
 
 				echo '
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
@@ -2095,7 +2086,6 @@ class AdminProducts extends AdminTab
 	function displayFormInformations($obj, $currency)
 	{
 		parent::displayForm(false);
-		$context = Context::getContext();
 
 		$has_attribute = $obj->hasAttributes();
 		$qty = $obj->getStock();
@@ -2156,7 +2146,7 @@ class AdminProducts extends AdminTab
 		$preview_url = '';
 		if (isset($obj->id))
 		{
-			$preview_url = ($context->link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), $context->language->id)));
+			$preview_url = ($this->context->link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), $this->context->language->id)));
 			if (!$obj->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -2173,7 +2163,7 @@ class AdminProducts extends AdminTab
 			<a href="'.$preview_url.'" target="_blank"><img src="../img/admin/details.gif" alt="'.$this->l('View product in shop').'" title="'.$this->l('View product in shop').'" /> '.$this->l('View product in shop').'</a>';
 
 			if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
-				echo '&nbsp;-&nbsp;<a href="index.php?tab=AdminStats&module=statsproduct&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminStats'.(int)(Tab::getIdFromClassName('AdminStats')).(int)$context->employee->id).'"><img src="../modules/statsproduct/logo.gif" alt="'.$this->l('View product sales').'" title="'.$this->l('View product sales').'" /> '.$this->l('View product sales').'</a>';
+				echo '&nbsp;-&nbsp;<a href="index.php?tab=AdminStats&module=statsproduct&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminStats'.(int)(Tab::getIdFromClassName('AdminStats')).(int)$this->context->employee->id).'"><img src="../modules/statsproduct/logo.gif" alt="'.$this->l('View product sales').'" title="'.$this->l('View product sales').'" /> '.$this->l('View product sales').'</a>';
 		}
 		echo '
 			<hr class="clear"/>
@@ -2295,7 +2285,7 @@ class AdminProducts extends AdminTab
 			echo '				<option value="'.$id_manufacturer.'" selected="selected">'.Manufacturer::getNameById($id_manufacturer).'</option>
 								<option disabled="disabled">----------</option>';
 		echo '
-							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminManufacturers&addmanufacturer&token='.Tools::getAdminToken('AdminManufacturers'.(int)(Tab::getIdFromClassName('AdminManufacturers')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete product information entered?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
+							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminManufacturers&addmanufacturer&token='.Tools::getAdminToken('AdminManufacturers'.(int)(Tab::getIdFromClassName('AdminManufacturers')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete product information entered?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
 						</td>
 					</tr>
 					<tr>
@@ -2307,7 +2297,7 @@ class AdminProducts extends AdminTab
 			echo '				<option value="'.$id_supplier.'" selected="selected">'.Supplier::getNameById($id_supplier).'</option>
 								<option disabled="disabled">----------</option>';
 		echo '
-							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminSuppliers&addsupplier&token='.Tools::getAdminToken('AdminSuppliers'.(int)(Tab::getIdFromClassName('AdminSuppliers')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
+							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminSuppliers&addsupplier&token='.Tools::getAdminToken('AdminSuppliers'.(int)(Tab::getIdFromClassName('AdminSuppliers')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
 						</td>
 					</tr>
 				</table>
@@ -2517,7 +2507,7 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>';
 					$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
-					$taxesRatesByGroup = TaxRulesGroup::getAssociatedTaxRatesByIdCountry($context->country->id);
+					$taxesRatesByGroup = TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id);
 					$ecotaxTaxRate = Tax::getProductEcotaxRate();
 					echo '<script type="text/javascript">';
 					echo 'noTax = '.(Tax::excludeTaxeOption() ? 'true' : 'false'), ";\n";
@@ -2545,11 +2535,11 @@ class AdminProducts extends AdminTab
 
 				echo '</select>
 
-				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)$context->employee->id).'&id_product='.(int)$obj->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
+				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)$this->context->employee->id).'&id_product='.(int)$obj->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
 				';
 				if (Tax::excludeTaxeOption())
 				{
-					echo '<span style="margin-left:10px; color:red;">'.$this->l('Taxes are currently disabled').'</span> (<b><a href="index.php?tab=AdminTaxes&token='.Tools::getAdminToken('AdminTaxes'.(int)(Tab::getIdFromClassName('AdminTaxes')).(int)$context->employee->id).'">'.$this->l('Tax options').'</a></b>)';
+					echo '<span style="margin-left:10px; color:red;">'.$this->l('Taxes are currently disabled').'</span> (<b><a href="index.php?tab=AdminTaxes&token='.Tools::getAdminToken('AdminTaxes'.(int)(Tab::getIdFromClassName('AdminTaxes')).(int)$this->context->employee->id).'">'.$this->l('Tax options').'</a></b>)';
 					echo '<input type="hidden" value="'.(int)($this->getFieldValue($obj, 'id_tax_rules_group')).'" name="id_tax_rules_group" />';
 				}
 
@@ -2567,7 +2557,7 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>';
 
-				if ($context->country->display_tax_label)
+				if ($this->context->country->display_tax_label)
 				{
 					echo '
 						<tr '.(Tax::excludeTaxeOption() ? 'style="display:none"' : '' ).'>
@@ -2584,7 +2574,7 @@ class AdminProducts extends AdminTab
 						<td class="col-left">'.$this->l('Unit price without tax:').'</td>
 						<td style="padding-bottom:5px;">
 							'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="'.($this->getFieldValue($obj, 'unit_price_ratio') != 0 ? Tools::ps_round($this->getFieldValue($obj, 'price') / $this->getFieldValue($obj, 'unit_price_ratio'), 2) : 0).'" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); unitPriceWithTax(\'unit\');"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <input size="6" maxlength="10" id="unity" name="unity" type="text" value="'.htmlentities($this->getFieldValue($obj, 'unity'), ENT_QUOTES, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>'.
-							(Configuration::get('PS_TAX') && $context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($obj, 'unity').'</span> '.$this->l('with tax') : '').'</span>
+							(Configuration::get('PS_TAX') && $this->context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($obj, 'unity').'</span> '.$this->l('with tax') : '').'</span>
 							<p>'.$this->l('Eg. $15 per Lb').'</p>
 						</td>
 					</tr>
@@ -2597,15 +2587,15 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td class="col-left"><b>'.$this->l('Final retail price:').'</b></td>
 						<td style="padding-bottom:5px;">
-							<span style="'.($context->country->display_tax_label ? '' : 'display:none').'">
+							<span style="'.($this->context->country->display_tax_label ? '' : 'display:none').'">
 							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPrice" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'> ('.$this->l('tax incl.').')</span>
 							</span>
 							<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'>';
 
-							if ($context->country->display_tax_label)
+							if ($this->context->country->display_tax_label)
 								echo ' / ';
 
-							 echo ($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.($context->country->display_tax_label ? '('.$this->l('tax excl.').')' : '').'</span>
+							 echo ($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.($this->context->country->display_tax_label ? '('.$this->l('tax excl.').')' : '').'</span>
 						</td>
 					</tr>
 					<tr>
@@ -2629,7 +2619,7 @@ class AdminProducts extends AdminTab
 								<td style="padding-bottom:5px;">
 									<select id="id_mvt_reason" name="id_mvt_reason">
 										<option value="-1">--</option>';
-							$reasons = StockMvtReason::getStockMvtReasons($context->language->id);
+							$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
 
 							foreach ($reasons AS $reason)
 								echo '<option rel="'.$reason['sign'].'" value="'.$reason['id_stock_mvt_reason'].'" '.(Configuration::get('PS_STOCK_MVT_REASON_DEFAULT') == $reason['id_stock_mvt_reason'] ? 'selected="selected"' : '').'>'.$reason['name'].'</option>';
@@ -2684,7 +2674,7 @@ class AdminProducts extends AdminTab
 						<td class="col-left">'.$this->l('Additional shipping cost:').'</td>
 						<td style="padding-bottom:5px;">
 							<input type="text" name="additional_shipping_cost" value="'.($this->getFieldValue($obj, 'additional_shipping_cost')).'" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
-							if ($context->country->display_tax_label)
+							if ($this->context->country->display_tax_label)
 								echo ' ('.$this->l('tax excl.').')';
 
 					echo '<p>'.$this->l('Carrier tax will be applied.').'</p>
@@ -2722,7 +2712,7 @@ class AdminProducts extends AdminTab
 						<td style="padding-bottom:5px;">
 							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0" '.((int)($this->getFieldValue($obj, 'out_of_stock')) == 0 ? 'checked="checked"' : '').'/> <label for="out_of_stock_1" class="t" id="label_out_of_stock_1">'.$this->l('Deny orders').'</label>
 							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" '.($this->getFieldValue($obj, 'out_of_stock') == 1 ? 'checked="checked"' : '').'/> <label for="out_of_stock_2" class="t" id="label_out_of_stock_2">'.$this->l('Allow orders').'</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$this->context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
 						</td>
 					</tr>
 					<tr>
@@ -2864,7 +2854,7 @@ class AdminProducts extends AdminTab
 				echo '	<p class="clear">'.$this->l('Tags separated by commas (e.g., dvd, dvd player, hifi)').'</p>
 						</td>
 					</tr>';
-				$accessories = Product::getAccessoriesLight($context->language->id, $obj->id);
+				$accessories = Product::getAccessoriesLight($this->context->language->id, $obj->id);
 
 				if ($postAccessories = Tools::getValue('inputAccessories'))
 				{
@@ -2937,7 +2927,7 @@ class AdminProducts extends AdminTab
 			<br />
 			</div>';
 			// TinyMCE
-		$iso = $context->language->iso_code;
+		$iso = $this->context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
@@ -2959,7 +2949,6 @@ class AdminProducts extends AdminTab
 	function displayFormImages($obj, $token = NULL)
 	{
 		global $attributeJs, $images;
-		$context = Context::getContext();
 		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
 		echo '
 		<div class="tab-page" id="step2">
@@ -3023,7 +3012,7 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td colspan="2" style="text-align:center;">';
 						echo '<input type="hidden" name="resizer" value="auto" />';
-					$images = Image::getImages($context->language->id, $obj->id);
+					$images = Image::getImages($this->context->language->id, $obj->id);
 					$imagesTotal = Image::getImagesTotal($obj->id);
 
 							if (isset($obj->id) AND sizeof($images))
@@ -3129,7 +3118,7 @@ class AdminProducts extends AdminTab
 				var modifyattributegroup = \''.addslashes(html_entity_decode($this->l('Modify this attribute combination'), ENT_COMPAT, 'UTF-8')).'\';
 				attrs[0] = new Array(0, \'---\');';
 
-			$attributes = Attribute::getAttributes($context->language->id, true);
+			$attributes = Attribute::getAttributes($this->context->language->id, true);
 			$attributeJs = array();
 
 			foreach ($attributes AS $k => $attribute)
@@ -3149,12 +3138,11 @@ class AdminProducts extends AdminTab
 
 	public function initCombinationImagesJS()
 	{
-		$context = Context::getContext();
 		if (!($obj = $this->loadObject(true)))
 			return;
 
 		$content = 'var combination_images = new Array();';
-		if (!$allCombinationImages = $obj->getCombinationImages($context->language->id))
+		if (!$allCombinationImages = $obj->getCombinationImages($this->context->language->id))
 			return $content;
 		foreach ($allCombinationImages AS $id_product_attribute => $combinationImages)
 		{
@@ -3168,18 +3156,17 @@ class AdminProducts extends AdminTab
 
 	function displayFormAttributes($obj, $languages, $defaultLanguage)
 	{
-		$context = Context::getContext();
 		
 		$attributeJs = array();
-		$attributes = Attribute::getAttributes($context->language->id, true);
+		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		foreach ($attributes AS $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-		$currency = $context->currency;
-		$attributes_groups = AttributeGroup::getAttributesGroups($context->language->id);
+		$currency = $this->context->currency;
+		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		
-		$images = Image::getImages($context->language->id, $obj->id);
+		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 			{
 				echo '
@@ -3194,7 +3181,7 @@ class AdminProducts extends AdminTab
 			<table cellpadding="5">
 				<tr>
 					<td colspan="2"><b>'.$this->l('Add or modify combinations for this product').'</b> -
-					&nbsp;<a href="index.php?tab=AdminCatalog&id_product='.$obj->id.'&id_category='.(int)(Tools::getValue('id_category')).'&attributegenerator&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="'.$this->l('Product combinations generator').'" />&nbsp;'.$this->l('Product combinations generator').'</a>
+					&nbsp;<a href="index.php?tab=AdminCatalog&id_product='.$obj->id.'&id_category='.(int)(Tools::getValue('id_category')).'&attributegenerator&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="'.$this->l('Product combinations generator').'" />&nbsp;'.$this->l('Product combinations generator').'</a>
 					</td>
 				</tr>
 			</table>
@@ -3261,7 +3248,7 @@ class AdminProducts extends AdminTab
 				</select>
 				<span id="span_impact">&nbsp;&nbsp;'.$this->l('of').'&nbsp;&nbsp;'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'
 					<input type="text" size="6" name="attribute_price" id="attribute_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); calcImpactPriceTI();"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
-					if ($context->country->display_tax_label)
+					if ($this->context->country->display_tax_label)
 					{
 						echo ' '.$this->l('(tax excl.)').'<span '.(Tax::excludeTaxeOption() ? 'style="display:none"' : '' ).'> '.$this->l('or').' '.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'
 							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); calcImpactPriceTE();"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('(tax incl.)').'</span> '.$this->l('final product price will be set to').' '.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="attribute_new_total_price">0.00</span>'.($currency->format % 2 == 0 ? $currency->sign.' ' : '');
@@ -3309,7 +3296,7 @@ class AdminProducts extends AdminTab
 				<td style="padding-bottom:5px;">
 					<select id="id_mvt_reason" name="id_mvt_reason">
 						<option value="-1">--</option>';
-			$reasons = StockMvtReason::getStockMvtReasons($context->language->id);
+			$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
 			foreach ($reasons AS $reason)
 				echo '<option rel="'.$reason['sign'].'" value="'.$reason['id_stock_mvt_reason'].'" '.(Configuration::get('PS_STOCK_MVT_REASON_DEFAULT') == $reason['id_stock_mvt_reason'] ? 'selected="selected"' : '').'>'.$reason['name'].'</option>';
 			echo '</select>
@@ -3382,11 +3369,11 @@ class AdminProducts extends AdminTab
 			if ($obj->id)
 			{
 				/* Build attributes combinaisons */
-				$combinaisons = $obj->getAttributeCombinaisons($context->language->id);
+				$combinaisons = $obj->getAttributeCombinaisons($this->context->language->id);
 				$groups = array();
 				if (is_array($combinaisons))
 				{
-					$combinationImages = $obj->getCombinationImages($context->language->id);
+					$combinationImages = $obj->getCombinationImages($this->context->language->id);
 					foreach ($combinaisons AS $k => $combinaison)
 					{
 						$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
@@ -3441,13 +3428,13 @@ class AdminProducts extends AdminTab
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
 							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\'); calcImpactPriceTI();" /></a>&nbsp;
-							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$context->employee->id).'">
+							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
-							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /></a></td>
 						</tr>';
 					}
-					echo '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
+					echo '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
 				}
 				else
 					echo '<tr><td colspan="7" align="center"><i>'.$this->l('No combination yet').'.</i></td></tr>';
@@ -3487,7 +3474,7 @@ class AdminProducts extends AdminTab
 								echo '
 								</select>
 								&nbsp;&nbsp;<input type="submit" value="'.$this->l('OK').'" name="submitAdd'.$this->table.'AndStay" class="button" />
-								&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?tab=AdminAttributesGroups&token='.Tools::getAdminToken('AdminAttributesGroups'.(int)(Tab::getIdFromClassName('AdminAttributesGroups')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/asterisk.gif" alt="" /> '.$this->l('Color attribute management').'</a>
+								&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?tab=AdminAttributesGroups&token='.Tools::getAdminToken('AdminAttributesGroups'.(int)(Tab::getIdFromClassName('AdminAttributesGroups')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/asterisk.gif" alt="" /> '.$this->l('Color attribute management').'</a>
 								<p >'.$this->l('Activate the color choice by selecting a color attribute group.').'</p>
 							</td>
 						</tr>
@@ -3499,12 +3486,11 @@ class AdminProducts extends AdminTab
 
 	function displayFormFeatures($obj)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if ($obj->id)
 		{
-			$feature = Feature::getFeatures($context->language->id);
+			$feature = Feature::getFeatures($this->context->language->id);
 			$ctab = '';
 			foreach ($feature AS $tab)
 				$ctab .= 'ccustom_'.$tab['id_feature'].'¤';
@@ -3524,7 +3510,7 @@ class AdminProducts extends AdminTab
 			</table>
 			<hr style="width:100%;" /><br />';
 			// Header
-			$nb_feature = Feature::nbFeatures($context->language->id);
+			$nb_feature = Feature::nbFeatures($this->context->language->id);
 			echo '
 			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:900px;">
 				<tr>
@@ -3550,7 +3536,7 @@ class AdminProducts extends AdminTab
 						if ($tab_products['id_feature'] == $tab_features['id_feature'])
 							$current_item = $tab_products['id_feature_value'];
 
-					$featureValues = FeatureValue::getFeatureValuesWithLang($context->language->id, (int)$tab_features['id_feature']);
+					$featureValues = FeatureValue::getFeatureValuesWithLang($this->context->language->id, (int)$tab_features['id_feature']);
 
 					echo '
 					<tr>
@@ -3574,7 +3560,7 @@ class AdminProducts extends AdminTab
 						echo '</select>';
 					}
 					else
-						echo '<input type="hidden" name="feature_'.$tab_features['id_feature'].'_value" value="0" /><span style="font-size: 10px; color: #666;">'.$this->l('N/A').' - <a href="index.php?tab=AdminFeatures&addfeature_value&id_feature='.(int)$tab_features['id_feature'].'&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$context->employee->id).'" style="color: #666; text-decoration: underline;">'.$this->l('Add pre-defined values first').'</a></span>';
+						echo '<input type="hidden" name="feature_'.$tab_features['id_feature'].'_value" value="0" /><span style="font-size: 10px; color: #666;">'.$this->l('N/A').' - <a href="index.php?tab=AdminFeatures&addfeature_value&id_feature='.(int)$tab_features['id_feature'].'&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$this->context->employee->id).'" style="color: #666; text-decoration: underline;">'.$this->l('Add pre-defined values first').'</a></span>';
 
 					echo '
 						</td>
@@ -3598,7 +3584,7 @@ class AdminProducts extends AdminTab
 			echo '</table>
 			<hr style="width:100%;" />
 			<div style="text-align:center;">
-				<a href="index.php?tab=AdminFeatures&addfeature&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$context->employee->id).'" onclick="return confirm(\''.$this->l('You will lose all modifications not saved, you may want to save modifications first?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="new_features" title="'.$this->l('Add a new feature').'" />&nbsp;'.$this->l('Add a new feature').'</a>
+				<a href="index.php?tab=AdminFeatures&addfeature&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('You will lose all modifications not saved, you may want to save modifications first?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="new_features" title="'.$this->l('Add a new feature').'" />&nbsp;'.$this->l('Add a new feature').'</a>
 			</div>';
 		}
 		else
@@ -3615,9 +3601,8 @@ class AdminProducts extends AdminTab
 
 	private function displayPack(Product $obj)
 	{
-		$context = Context::getContext();
 		$boolPack = (($obj->id AND Pack::isPack($obj->id)) OR Tools::getValue('ppack')) ? true : false;
-		$packItems = $boolPack ? Pack::getItems($obj->id, $context->language->id) : array();
+		$packItems = $boolPack ? Pack::getItems($obj->id, $this->context->language->id) : array();
 
 		echo '
 		<tr>

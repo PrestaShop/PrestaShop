@@ -29,7 +29,7 @@ class AdminCustomerThreads extends AdminTab
 {
 	public function __construct()
 	{
-		$context = Context::getContext();	 	
+		$this->context = Context::getContext();	 	
 	 	$this->table = 'customer_thread';
 	 	$this->lang = false;
 	 	$this->className = 'CustomerThread';
@@ -47,10 +47,10 @@ class AdminCustomerThreads extends AdminTab
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = a.`id_customer`
 		LEFT JOIN `'._DB_PREFIX_.'customer_message` cm ON cm.`id_customer_thread` = a.`id_customer_thread`
 		LEFT JOIN `'._DB_PREFIX_.'lang` l ON l.`id_lang` = a.`id_lang`
-		LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$context->language->id.')';
+		LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 		
 		$contactArray = array();
-		$contacts = Contact::getContacts($context->language->id);
+		$contacts = Contact::getContacts($this->context->language->id);
 		foreach ($contacts AS $contact)
 			$contactArray[$contact['id_contact']] = $contact['name'];
 			
@@ -91,7 +91,6 @@ class AdminCustomerThreads extends AdminTab
 	
 	public function postProcess()
 	{
-		$context = Context::getContext();
 		
 		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
 		{
@@ -109,7 +108,7 @@ class AdminCustomerThreads extends AdminTab
 				SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name, CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
 				FROM '._DB_PREFIX_.'customer_thread ct
 				LEFT JOIN '._DB_PREFIX_.'customer_message cm ON (ct.id_customer_thread = cm.id_customer_thread)
-				LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$context->language->id.')
+				LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$this->context->language->id.')
 				LEFT OUTER JOIN '._DB_PREFIX_.'employee e ON e.id_employee = cm.id_employee
 				LEFT OUTER JOIN '._DB_PREFIX_.'customer c ON (c.email = ct.email)
 				WHERE ct.id_customer_thread = '.(int)Tools::getValue('id_customer_thread').'
@@ -119,10 +118,10 @@ class AdminCustomerThreads extends AdminTab
 					$output .= $this->displayMsg($message, true, (int)Tools::getValue('id_employee_forward'));
 				
 				$cm = new CustomerMessage();
-				$cm->id_employee = (int)$context->employee->id;
+				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = (int)Tools::getValue('id_customer_thread');
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
-				$currentEmployee = $context->employee;
+				$currentEmployee = $this->context->employee;
 				if (($id_employee = (int)Tools::getValue('id_employee_forward')) AND ($employee = new Employee($id_employee)) AND Validate::isLoadedObject($employee))
 				{
 					$params = array(
@@ -130,7 +129,7 @@ class AdminCustomerThreads extends AdminTab
 					'{employee}' => $currentEmployee->firstname.' '.$currentEmployee->lastname,
 					'{comment}' => stripslashes($_POST['message_forward']));
 
-					if (Mail::Send($context->language->id, 'forward_msg', Mail::l('Fwd: Customer message'), $params,
+					if (Mail::Send($this->context->language->id, 'forward_msg', Mail::l('Fwd: Customer message'), $params,
 						$employee->email, $employee->firstname.' '.$employee->lastname,
 						$currentEmployee->email, $currentEmployee->firstname.' '.$currentEmployee->lastname,
 						NULL, NULL, _PS_MAIL_DIR_, true))
@@ -162,7 +161,7 @@ class AdminCustomerThreads extends AdminTab
 			{
 				$ct = new CustomerThread($id_customer_thread);
 				$cm = new CustomerMessage();
-				$cm->id_employee = (int)$context->employee->id;
+				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
 				$cm->message = Tools::htmlentitiesutf8(Tools::nl2br(Tools::getValue('reply_message')));
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
@@ -179,7 +178,7 @@ class AdminCustomerThreads extends AdminTab
 					}
 					$params = array(
 						'{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
-						'{link}' => Tools::url($context->link->getPageLink('contact', true), 'id_customer_thread='.(int)($ct->id).'&token='.$ct->token),
+						'{link}' => Tools::url($this->context->link->getPageLink('contact', true), 'id_customer_thread='.(int)($ct->id).'&token='.$ct->token),
 					);
 					if (Mail::Send($ct->id_lang, 'reply_msg', Mail::l('An answer to your message is available'), 
 						$params, Tools::getValue('msg_email'), NULL, NULL, NULL, $fileAttachment, NULL, 
@@ -200,7 +199,6 @@ class AdminCustomerThreads extends AdminTab
 	
 	public function display()
 	{
-		$context = Context::getContext();
 
 		if (isset($_GET['filename']) AND file_exists(_PS_UPLOAD_DIR_.$_GET['filename']))
 			self::openUploadedFile();
@@ -208,14 +206,13 @@ class AdminCustomerThreads extends AdminTab
 			$this->viewcustomer_thread();
 		else
 		{
-			$this->getList($context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_upd' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
+			$this->getList($this->context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_upd' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
 			$this->displayList();
 		}
 	}
 	
 	public function displayListHeader($token = NULL)
 	{
-		$context = Context::getContext();
 		$contacts = Db::getInstance()->ExecuteS('
 			SELECT cl.*, COUNT(*) as total, (
 				SELECT id_customer_thread
@@ -225,13 +222,13 @@ class AdminCustomerThreads extends AdminTab
 				LIMIT 1			
 			) as id_customer_thread
 			FROM '._DB_PREFIX_.'customer_thread ct
-			LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$context->language->id.')
+			LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$this->context->language->id.')
 			WHERE ct.status = "open"
 			GROUP BY ct.id_contact HAVING COUNT(*) > 0');
 		$categories = Db::getInstance()->ExecuteS('
 			SELECT cl.*
 			FROM '._DB_PREFIX_.'contact ct
-			LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$context->language->id.')
+			LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$this->context->language->id.')
 			WHERE ct.customer_service = 1');
 		$dim = count($categories);
 
@@ -298,9 +295,8 @@ class AdminCustomerThreads extends AdminTab
 	}
 	private function displayMsg($message, $email = false, $id_employee = null)
 	{
-		$context = Context::getContext();
-		$customersToken = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id);
-		$contacts = Contact::getContacts($context->language->id);
+		$customersToken = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
+		$contacts = Contact::getContacts($this->context->language->id);
 		
 		if (!$email)
 		{
@@ -329,21 +325,21 @@ class AdminCustomerThreads extends AdminTab
 						? '<b>'.$this->l('Customer ID:').'</b> <a href="index.php?tab=AdminCustomers&id_customer='.(int)($message['id_customer']).'&viewcustomer&token='.$customersToken.'" title="'.$this->l('View customer').'">'.(int)($message['id_customer']).' <img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
 						: ''
 					).'
-					<b>'.$this->l('Sent on:').'</b> '.Tools::displayDate($message['date_add'], $context->language->id, true).'<br />'.(
+					<b>'.$this->l('Sent on:').'</b> '.Tools::displayDate($message['date_add'], $this->context->language->id, true).'<br />'.(
 						empty($message['employee_name'])
 						? '<b>'.$this->l('Browser:').'</b> '.strip_tags($message['user_agent']).'<br />'
 						: ''
 					).(
 						(!empty($message['file_name']) AND file_exists(_PS_UPLOAD_DIR_.$message['file_name']))
-						? '<b>'.$this->l('File attachment').'</b> <a href="index.php?tab=AdminCustomerThreads&id_customer_thread='.$message['id_customer_thread'].'&viewcustomer_thread&token='.Tools::getAdminToken('AdminCustomerThreads'.(int)(Tab::getIdFromClassName('AdminCustomerThreads')).(int)$context->employee->id).'&filename='.$message['file_name'].'" title="'.$this->l('View file').'"><img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
+						? '<b>'.$this->l('File attachment').'</b> <a href="index.php?tab=AdminCustomerThreads&id_customer_thread='.$message['id_customer_thread'].'&viewcustomer_thread&token='.Tools::getAdminToken('AdminCustomerThreads'.(int)(Tab::getIdFromClassName('AdminCustomerThreads')).(int)$this->context->employee->id).'&filename='.$message['file_name'].'" title="'.$this->l('View file').'"><img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
 						: ''
 					).(
 						(!empty($message['id_order']) AND empty($message['employee_name']))
-						? '<b>'.$this->l('Order #').'</b> <a href="index.php?tab=AdminOrders&id_order='.(int)($message['id_order']).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id).'" title="'.$this->l('View order').'">'.(int)($message['id_order']).' <img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
+						? '<b>'.$this->l('Order #').'</b> <a href="index.php?tab=AdminOrders&id_order='.(int)($message['id_order']).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'" title="'.$this->l('View order').'">'.(int)($message['id_order']).' <img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
 						: ''
 					).(
 						(!empty($message['id_product']) AND empty($message['employee_name']))
-						? '<b>'.$this->l('Product #').'</b> <a href="index.php?tab=AdminOrders&id_order='.(int)($id_order_product).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id).'" title="'.$this->l('View order').'">'.(int)($message['id_product']).' <img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
+						? '<b>'.$this->l('Product #').'</b> <a href="index.php?tab=AdminOrders&id_order='.(int)($id_order_product).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'" title="'.$this->l('View order').'">'.(int)($message['id_product']).' <img src="../img/admin/search.gif" alt="'.$this->l('view').'" /></a><br />'
 						: ''
 					).'<br />
 					<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
@@ -409,10 +405,10 @@ class AdminCustomerThreads extends AdminTab
 	
 	public function viewcustomer_thread()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		if (!($thread = $this->loadObject()))
 			return;
-		$context->cookie->{'customer_threadFilter_cl!id_contact'} = $thread->id_contact;
+		$this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $thread->id_contact;
 		
 		$employees = Db::getInstance()->ExecuteS('
 		SELECT e.id_employee, e.firstname, e.lastname FROM '._DB_PREFIX_.'employee e
@@ -453,7 +449,7 @@ class AdminCustomerThreads extends AdminTab
 		SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name, CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
 		FROM '._DB_PREFIX_.'customer_thread ct
 		LEFT JOIN '._DB_PREFIX_.'customer_message cm ON (ct.id_customer_thread = cm.id_customer_thread)
-		LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$context->language->id.')
+		LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$this->context->language->id.')
 		LEFT JOIN '._DB_PREFIX_.'employee e ON e.id_employee = cm.id_employee
 		LEFT JOIN '._DB_PREFIX_.'customer c ON (IFNULL(ct.id_customer, ct.email) = IFNULL(c.id_customer, c.email))
 		WHERE ct.id_customer_thread = '.(int)Tools::getValue('id_customer_thread').'
@@ -468,8 +464,8 @@ class AdminCustomerThreads extends AdminTab
 			WHERE (id_employee IS NULL OR id_employee = 0) AND id_customer_thread = '.(int)$thread->id.'
 			ORDER BY date_add DESC LIMIT 1
 		)
-		'.($context->cookie->{'customer_threadFilter_cl!id_contact'} ? 'AND ct.id_contact = '.(int)$context->cookie->{'customer_threadFilter_cl!id_contact'} : '').'
-		'.($context->cookie->{'customer_threadFilter_l!id_lang'} ? 'AND ct.id_lang = '.(int)$context->cookie->{'customer_threadFilter_l!id_lang'} : '').
+		'.($this->context->cookie->{'customer_threadFilter_cl!id_contact'} ? 'AND ct.id_contact = '.(int)$this->context->cookie->{'customer_threadFilter_cl!id_contact'} : '').'
+		'.($this->context->cookie->{'customer_threadFilter_l!id_lang'} ? 'AND ct.id_lang = '.(int)$this->context->cookie->{'customer_threadFilter_l!id_lang'} : '').
 		' ORDER BY ct.date_upd ASC');
 				
 		if ($nextThread)
@@ -529,7 +525,7 @@ class AdminCustomerThreads extends AdminTab
 			{
 				$totalOK = 0;
 				$ordersOK = array();
-				$tokenOrders = Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id);
+				$tokenOrders = Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id);
 				foreach ($orders as $order)
 					if ($order['valid'])
 					{
@@ -554,7 +550,7 @@ class AdminCustomerThreads extends AdminTab
 					foreach ($ordersOK AS $order)
 						echo '<tr '.($irow++ % 2 ? 'class="alt_row"' : '').' style="cursor: pointer" onclick="document.location = \'?tab=AdminOrders&id_order='.$order['id_order'].'&vieworder&token='.$tokenOrders.'\'">
 						<td class="center">'.$order['id_order'].'</td>
-							<td>'.Tools::displayDate($order['date_add'], $context->language->id).'</td>
+							<td>'.Tools::displayDate($order['date_add'], $this->context->language->id).'</td>
 							<td align="right">'.$order['nb_products'].'</td>
 							<td align="right">'.Tools::displayPrice($order['total_paid_real'], new Currency((int)($order['id_currency']))).'</td>
 							<td>'.$order['payment'].'</td>
@@ -562,7 +558,7 @@ class AdminCustomerThreads extends AdminTab
 							<td align="center"><a href="?tab=AdminOrders&id_order='.$order['id_order'].'&vieworder&token='.$tokenOrders.'"><img src="../img/admin/details.gif" /></a></td>
 						</tr>';
 					echo '</table>
-					<h3 style="color:green;font-weight:700;margin-top:10px">'.$this->l('Validated Orders:').' '.$countOK.' '.$this->l('for').' '.Tools::displayPrice($totalOK, $context->currency).'</h3>
+					<h3 style="color:green;font-weight:700;margin-top:10px">'.$this->l('Validated Orders:').' '.$countOK.' '.$this->l('for').' '.Tools::displayPrice($totalOK, $this->context->currency).'</h3>
 					</div>';
 				}
 			}
@@ -579,11 +575,11 @@ class AdminCustomerThreads extends AdminTab
 						<th class="center">'.$this->l('Actions').'</th>
 					</tr>';
 				$irow = 0;
-				$tokenOrders = Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id);
+				$tokenOrders = Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id);
 				foreach ($products AS $product)
 					echo '
 					<tr '.($irow++ % 2 ? 'class="alt_row"' : '').' style="cursor: pointer" onclick="document.location = \'?tab=AdminOrders&id_order='.$product['id_order'].'&vieworder&token='.$tokenOrders.'\'">
-						<td>'.Tools::displayDate($product['date_add'], $context->language->id, true).'</td>
+						<td>'.Tools::displayDate($product['date_add'], $this->context->language->id, true).'</td>
 						<td>'.$product['product_id'].'</td>
 						<td>'.$product['product_name'].'</td>
 						<td align="right">'.$product['product_quantity'].'</td>
