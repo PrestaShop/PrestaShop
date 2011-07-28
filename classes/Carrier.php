@@ -401,12 +401,14 @@ class CarrierCore extends ObjectModel
 
 	public static function getCarriersForOrder($id_zone, $groups = NULL, Cart $cart = null, $id_currency = null, $id_lang = null)
 	{
+		$context = Context::getContext();
 		if (!$id_lang)
-			$id_lang = Context::getContext()->language->id;
+			$id_lang = $context->language->id;
 		if (!$cart)
-			$cart = Context::getContext()->cart;
+			$cart = $context->cart;
 		if (!$id_currency)
-			$id_currency = Context::getContext()->currency->id;
+			$id_currency = $context->currency->id;
+
 		if (is_array($groups) AND !empty($groups))
 			$result = Carrier::getCarriers($id_lang, true, false, (int)$id_zone, $groups, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		else
