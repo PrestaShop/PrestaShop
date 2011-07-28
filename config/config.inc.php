@@ -97,7 +97,7 @@ Configuration::loadConfiguration();
 Language::loadLanguages();
 
 /* Loading default country */
-$defaultCountry = new Country((int)(Configuration::get('PS_COUNTRY_DEFAULT')), Configuration::get('PS_LANG_DEFAULT'));
+$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 
 /* Instantiate cookie */
 if (defined('PS_ADMIN_DIR'))
