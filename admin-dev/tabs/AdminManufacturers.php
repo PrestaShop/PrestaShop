@@ -34,16 +34,16 @@ class AdminManufacturers extends AdminTab
 
 	public function __construct()
 	{
-		$context = Context::getContext();
 
 		$this->table = 'manufacturer';
 		$this->className = 'Manufacturer';
 		$this->lang = false;
 		$this->edit = true;
 	 	$this->delete = true;
+	 	$this->context = Context::getContext();
 
 		// Sub tab addresses
-		$countries = Country::getCountries($context->language->id);
+		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
 		
@@ -57,7 +57,7 @@ class AdminManufacturers extends AdminTab
 		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
 		$this->_includeTabTitle = array($this->l('Manufacturers addresses'));
 		$this->_joinAddresses = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON 
-		(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$context->language->id.') ';
+		(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.') ';
 	 	$this->_joinAddresses .= 'LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (a.`id_manufacturer` = m.`id_manufacturer`)';
 		$this->_selectAddresses = 'cl.`name` as country, m.`name` AS manufacturer_name';
 		$this->_includeTab = array('Addresses' => array('addressType' => 'manufacturer', 'fieldsDisplay' => $this->fieldsDisplayAddresses, '_join' => $this->_joinAddresses, '_select' => $this->_selectAddresses));
@@ -94,7 +94,6 @@ class AdminManufacturers extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($manufacturer = $this->loadObject(true)))
@@ -133,7 +132,7 @@ class AdminManufacturers extends AdminTab
 		echo '</div>';
 		
 		// TinyMCE
-		$iso = $context->language->iso_code;
+		$iso = $this->context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
@@ -206,13 +205,12 @@ class AdminManufacturers extends AdminTab
 
 	public function viewmanufacturer()
 	{
-		$context = Context::getContext();
 		if (!($manufacturer = $this->loadObject()))
 			return;
 		echo '<h2>'.$manufacturer->name.'</h2>';
 
-		$products = $manufacturer->getProductsLite($context->language->id);
-		$addresses = $manufacturer->getAddresses($context->language->id);
+		$products = $manufacturer->getProductsLite($this->context->language->id);
+		$addresses = $manufacturer->getAddresses($this->context->language->id);
 		
 		echo '<h3>'.$this->l('Total addresses:').' '.sizeof($addresses).'</h3>';
 		echo '<hr />';
@@ -246,14 +244,14 @@ class AdminManufacturers extends AdminTab
 		echo '<h3>'.$this->l('Total products:').' '.sizeof($products).'</h3>';
 		foreach ($products AS $product)
 		{
-			$product = new Product($product['id_product'], false, $context->language->id);
+			$product = new Product($product['id_product'], false, $this->context->language->id);
 			echo '<hr />';
 			if (!$product->hasAttributes())
 			{
 				echo '
 				<div style="float:right;">
-					<a href="?tab=AdminCatalog&id_product='.$product->id.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" class="button">'.$this->l('Edit').'</a>
-					<a href="?tab=AdminCatalog&id_product='.$product->id.'&deleteproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" class="button" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, TRUE).$product->id.' ?\');">'.$this->l('Delete').'</a>
+					<a href="?tab=AdminCatalog&id_product='.$product->id.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" class="button">'.$this->l('Edit').'</a>
+					<a href="?tab=AdminCatalog&id_product='.$product->id.'&deleteproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" class="button" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, TRUE).$product->id.' ?\');">'.$this->l('Delete').'</a>
 				</div>
 				<table border="0" cellpadding="0" cellspacing="0" class="table width3">
 					<tr>
@@ -269,10 +267,10 @@ class AdminManufacturers extends AdminTab
 			{
 				echo '
 				<div style="float:right;">
-					<a href="?tab=AdminCatalog&id_product='.$product->id.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" class="button">'.$this->l('Edit').'</a>
-					<a href="?tab=AdminCatalog&id_product='.$product->id.'&deleteproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'" class="button" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, TRUE).$product->id.' ?\');">'.$this->l('Delete').'</a>
+					<a href="?tab=AdminCatalog&id_product='.$product->id.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" class="button">'.$this->l('Edit').'</a>
+					<a href="?tab=AdminCatalog&id_product='.$product->id.'&deleteproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" class="button" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, TRUE).$product->id.' ?\');">'.$this->l('Delete').'</a>
 				</div>
-				<h3><a href="?tab=AdminCatalog&id_product='.$product->id.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id).'">'.$product->name.'</a></h3>
+				<h3><a href="?tab=AdminCatalog&id_product='.$product->id.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'">'.$product->name.'</a></h3>
 				<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
 					<tr>
 	                    <th>'.$this->l('Attribute name').'</th>
@@ -282,7 +280,7 @@ class AdminManufacturers extends AdminTab
 	                   '.(Configuration::get('PS_STOCK_MANAGEMENT') ? '<th class="right" width="40">'.$this->l('Quantity').'</th>' : '').'
                 	</tr>';
 			     	/* Build attributes combinaisons */
-				$combinaisons = $product->getAttributeCombinaisons($context->language->id);
+				$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
 				foreach ($combinaisons AS $k => $combinaison)
 				{
 					$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];

@@ -63,13 +63,12 @@ class AdminAccess extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 	 	
 	 	$currentProfile = (int)($this->getCurrentProfileId());
-	 	$tabs = Tab::getTabs($context->language->id);
-		$profiles = Profile::getProfiles($context->language->id);
-		$accesses = Profile::getProfileAccesses($context->language->id);
+	 	$tabs = Tab::getTabs($this->context->language->id);
+		$profiles = Profile::getProfiles($this->context->language->id);
+		$accesses = Profile::getProfileAccesses($this->context->language->id);
 		
 		echo '
 		<script type="text/javascript">

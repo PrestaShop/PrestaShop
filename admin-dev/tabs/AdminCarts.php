@@ -60,7 +60,6 @@ class AdminCarts extends AdminTab
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
-		$context = Context::getContext();
 		$customer = new Customer($cart->id_customer);
 		$customerStats = $customer->getStats();
 		$products = $cart->getProducts();
@@ -82,9 +81,9 @@ class AdminCarts extends AdminTab
 			<span style="font-weight: bold; font-size: 14px;">';
 			if ($customer->id)
 				echo '
-			<a href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id).'"> '.$customer->firstname.' '.$customer->lastname.'</a></span> ('.$this->l('#').$customer->id.')<br />
+			<a href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'"> '.$customer->firstname.' '.$customer->lastname.'</a></span> ('.$this->l('#').$customer->id.')<br />
 			(<a href="mailto:'.$customer->email.'">'.$customer->email.'</a>)<br /><br />
-			'.$this->l('Account registered:').' '.Tools::displayDate($customer->date_add, $context->language->id, true).'<br />
+			'.$this->l('Account registered:').' '.Tools::displayDate($customer->date_add, $this->context->language->id, true).'<br />
 			'.$this->l('Valid orders placed:').' <b>'.$customerStats['nb_orders'].'</b><br />
 			'.$this->l('Total paid since registration:').' <b>'.Tools::displayPrice($customerStats['total_orders'], $currency, false).'</b><br />';
 			else
@@ -119,9 +118,9 @@ class AdminCarts extends AdminTab
 			<span style="font-weight: bold; font-size: 14px;">';
 			if ($order->id)
 				echo '
-			<a href="?tab=AdminOrders&id_order='.(int)($order->id).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id).'"> '.$this->l('Order #').sprintf('%06d', $order->id).'</a></span>
+			<a href="?tab=AdminOrders&id_order='.(int)($order->id).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'"> '.$this->l('Order #').sprintf('%06d', $order->id).'</a></span>
 			<br /><br />
-			'.$this->l('Made on:').' '.Tools::displayDate($order->date_add, $context->language->id, true).'<br /><br /><br /><br />';
+			'.$this->l('Made on:').' '.Tools::displayDate($order->date_add, $this->context->language->id, true).'<br /><br /><br /><br />';
 			else
 				echo $this->l('No order created from this cart').'</span>';
 		echo '</fieldset>';
@@ -144,7 +143,7 @@ class AdminCarts extends AdminTab
 							<th style="width: 30px; text-align: center">'.$this->l('Stock').'</th>
 							<th style="width: 90px; text-align: right; font-weight:bold;">'.$this->l('Total').'</th>
 						</tr>';
-						$tokenCatalog = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id);
+						$tokenCatalog = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id);
 						foreach ($products as $k => $product)
 						{
                    			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
@@ -235,7 +234,7 @@ class AdminCarts extends AdminTab
 				foreach ($discounts as $discount)
 					echo '
 				<tr>
-					<td><a href="?tab=AdminDiscounts&id_discount='.$discount['id_discount'].'&updatediscount&token='.Tools::getAdminToken('AdminDiscounts'.(int)(Tab::getIdFromClassName('AdminDiscounts')).(int)$context->employee->id).'">'.$discount['name'].'</a></td>
+					<td><a href="?tab=AdminDiscounts&id_discount='.$discount['id_discount'].'&updatediscount&token='.Tools::getAdminToken('AdminDiscounts'.(int)(Tab::getIdFromClassName('AdminDiscounts')).(int)$this->context->employee->id).'">'.$discount['name'].'</a></td>
 					<td align="center">- '.Tools::displayPrice($discount['value_real'], $currency, false).'</td>
 				</tr>';
 				echo '

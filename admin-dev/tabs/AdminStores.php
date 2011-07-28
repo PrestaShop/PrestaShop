@@ -34,7 +34,7 @@ class AdminStores extends AdminTab
 	
 	public function __construct()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 	 	$this->table = 'store';
 	 	$this->className = 'Store';
 	 	$this->lang = false;
@@ -45,11 +45,11 @@ class AdminStores extends AdminTab
 		
 		$this->_select = 'cl.`name` country, st.`name` state';
 		$this->_join = '
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$context->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 		LEFT JOIN `'._DB_PREFIX_.'state` st ON (st.`id_state` = a.`id_state`)';
 		$this->_group = 'GROUP BY a.id_store';
 		
-		$countries = Country::getCountries($context->language->id);
+		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
 				
@@ -151,7 +151,6 @@ class AdminStores extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
@@ -266,7 +265,7 @@ class AdminStores extends AdminTab
 						<input type="file" name="image" />
 						<p class="clear">'.$this->l('Store window picture').'</p>';
 
-				echo $this->displayImage($obj->id, _PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminStores'.(int)(Tab::getIdFromClassName('AdminStores')).(int)$context->employee->id), true);
+				echo $this->displayImage($obj->id, _PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminStores'.(int)(Tab::getIdFromClassName('AdminStores')).(int)$this->context->employee->id), true);
 				
 				echo '</div>
 					<table cellpadding="2" cellspacing="2" style="padding: 10px; margin-top: 15px; border: 1px solid #BBB;">

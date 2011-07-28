@@ -106,7 +106,6 @@ class AdminCounty extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -132,7 +131,7 @@ class AdminCounty extends AdminTab
 				if (!isset($obj->id))
 					echo '<div class="hint clear" style="display:block;">'.$this->l('Save this county then you will be able to associate zipcodes').'</div><br />';
 
-		$countries = Country::getCountries($context->language->id, true, true);
+		$countries = Country::getCountries($this->context->language->id, true, true);
 		echo '<label>'.$this->l('Country:').' </label>
 				<div class="margin-form"><select id="id_country" onchange="populateStates($(this).val(), '.(int)($this->getFieldValue($obj, 'id_state')).');">';
 

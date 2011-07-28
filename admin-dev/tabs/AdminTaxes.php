@@ -62,13 +62,12 @@ class AdminTaxes extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$zones = Zone::getZones(true);
-		$states = State::getStates($context->language->id);
+		$states = State::getStates($this->context->language->id);
 
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">

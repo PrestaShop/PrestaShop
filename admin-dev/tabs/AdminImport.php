@@ -799,7 +799,7 @@ class AdminImport extends AdminTab
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = (int)($product->id);
 					// @todo multishop specific price import
-					$specificPrice->id_shop = $context->shop->getID(true);
+					$specificPrice->id_shop = $this->context->shop->getID(true);
 					$specificPrice->id_currency = 0;
 					$specificPrice->id_country = 0;
 					$specificPrice->id_group = 0;
@@ -860,7 +860,7 @@ class AdminImport extends AdminTab
 				
 				if (isset($product->image) AND is_array($product->image) and sizeof($product->image))
 				{
-					$productHasImages = (bool)Image::getImages($context->language->id, (int)($product->id));
+					$productHasImages = (bool)Image::getImages($this->context->language->id, (int)($product->id));
 					foreach ($product->image AS $key => $url)
 						if (!empty($url))
 						{
@@ -1292,7 +1292,6 @@ class AdminImport extends AdminTab
 	{
 		parent::displayForm();
 
-		$context = Context::getContext();
 		if ((Tools::getValue('import')) AND (isset($this->_warnings) AND !sizeof($this->_warnings)))
 			echo '<div class="module_confirmation conf confirm"><img src="../img/admin/ok.gif" alt="" title="" style="margin-right:5px; float:left;" />'.$this->l('The .CSV file has been imported into your shop.').'</div>';
 
@@ -1373,7 +1372,7 @@ class AdminImport extends AdminTab
 							<div class="margin-form">
 								<select name="iso_lang">';
 							foreach ($this->_languages AS $lang)
-								echo '<option value="'.$lang['iso_code'].'" '.($lang['id_lang'] == $context->language->id ? 'selected="selected"' : '').'>'.$lang['name'].'</option>';
+								echo '<option value="'.$lang['iso_code'].'" '.($lang['id_lang'] == $this->context->language->id ? 'selected="selected"' : '').'>'.$lang['name'].'</option>';
 							echo '</select></div><label for="convert" class="clear">'.$this->l('iso-8859-1 encoded file').' </label>
 							<div class="margin-form">
 								<input name="convert" id="convert" type="checkbox" style="margin-top: 6px;"/>

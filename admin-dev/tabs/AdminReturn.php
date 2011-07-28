@@ -29,12 +29,12 @@ class AdminReturn extends AdminTab
 {
 	public function __construct()
 	{
-		$context = Context::getContext();
+		$this->context = Context::getContext();
 	 	$this->table = 'order_return';
 	 	$this->className = 'OrderReturn';
 		$this->colorOnBackground = true;
 		$this->_select = 'orsl.`name`';
-		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$context->language->id.')';
+		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
 
  		$this->fieldsDisplay = array(
 		'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -53,7 +53,7 @@ class AdminReturn extends AdminTab
 	
 	public function postProcess()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		if (Tools::isSubmit('deleteorder_return_detail'))
 		{
 			if ($this->tabAccess['delete'] === '1')
@@ -119,7 +119,6 @@ class AdminReturn extends AdminTab
 	
 	public function display()
 	{
-		$context = Context::getContext();
 		// Include current tab
 		if (isset($_GET['update'.$this->table]))
 		{
@@ -133,7 +132,7 @@ class AdminReturn extends AdminTab
 		}
 		else
 		{
-			$this->getList($context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
+			$this->getList($this->context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
 			$this->displayList();
 			$this->displayOptionsList();
 			$this->includeSubTab('display');
@@ -158,7 +157,6 @@ class AdminReturn extends AdminTab
 	
 	public function displayForm($isMainTab = true)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 		
 		if (!($obj = $this->loadObject(true)))
@@ -174,12 +172,12 @@ class AdminReturn extends AdminTab
 				$customer = new Customer((int)($obj->id_customer));
 		echo '
 				<div class="margin-form">'.$customer->firstname.' '.$customer->lastname.'
-				<p style="clear: both"><a href="index.php?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$context->employee->id).'">'.$this->l('View details on customer page').'</a></p>
+				<p style="clear: both"><a href="index.php?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'">'.$this->l('View details on customer page').'</a></p>
 				</div>
 				<label>'.$this->l('Order:').' </label>';
 				$order = new Order((int)($obj->id_order));
 		echo '		<div class="margin-form">'.$this->l('Order #').sprintf('%06d', $order->id).' '.$this->l('from').' '.Tools::displayDate($order->date_upd, $order->id_lang).'
-				<p style="clear: both"><a href="index.php?tab=AdminOrders&id_order='.$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id).'">'.$this->l('View details on order page').'</a></p>
+				<p style="clear: both"><a href="index.php?tab=AdminOrders&id_order='.$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'">'.$this->l('View details on order page').'</a></p>
 				</div>
 				<label>'.$this->l('Customer explanation:').' </label>
 				<div class="margin-form">'.$obj->question.'</div>
@@ -187,7 +185,7 @@ class AdminReturn extends AdminTab
 				<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">
 				<select name=\'state\'>';
-				$states = OrderReturnState::getOrderReturnStates($context->language->id);
+				$states = OrderReturnState::getOrderReturnStates($this->context->language->id);
 				foreach ($states as $state)
 					echo '<option value="'.$state['id_order_return_state'].'"'.($obj->state == $state['id_order_return_state'] ? ' selected="selected"' : '').'>'.$state['name'].'</option>';
 		echo '	</select>
@@ -196,7 +194,7 @@ class AdminReturn extends AdminTab
 		if ($obj->state >= 3)
 			echo '	<label>'.$this->l('Slip:').' </label>
 				<div class="margin-form">'.$this->l('Generate a new slip from the customer order').'
-				<p style="clear: both"><a href="index.php?tab=AdminOrders&id_order='.$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$context->employee->id).'#products">'.$this->l('More information on order page').'</a></p>
+				<p style="clear: both"><a href="index.php?tab=AdminOrders&id_order='.$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'#products">'.$this->l('More information on order page').'</a></p>
 				</div>';
 		echo '	<label>'.$this->l('Products:').' </label>
 				<div class="margin-form">';

@@ -29,7 +29,7 @@ class AdminProfiles extends AdminTab
 {
 	public function __construct()
 	{
-		$context = Context::getContext();	
+		$this->context = Context::getContext();	
 	 	$this->table = 'profile';
 	 	$this->className = 'Profile';
 	 	$this->lang = true;
@@ -42,7 +42,7 @@ class AdminProfiles extends AdminTab
 		$this->identifier = 'id_profile';
 		
 		$list_profile = array();
-		foreach(Profile::getProfiles($context->language->id) as $profil)
+		foreach(Profile::getProfiles($this->context->language->id) as $profil)
 			$list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
 		
 		parent::__construct();

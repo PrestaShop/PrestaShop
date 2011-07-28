@@ -69,8 +69,7 @@ class AdminTaxRulesGroup extends AdminTab
 
     public function displayForm($isMainTab = true)
     {
-        $context = Context::getContext();
-		parent::displayForm();
+        		parent::displayForm();
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$tax_rules = isset($obj->id) ? $tax_rules = TaxRule::getTaxRulesByGroupId($obj->id) : array();
@@ -181,7 +180,7 @@ class AdminTaxRulesGroup extends AdminTab
 			<script type="text/javascript">
 				var tabPane1 = new WebFXTabPane( document.getElementById( "tab-pane-1" ) );
 			</script>
-			<link type="text/css" rel="stylesheet" href="../css/tabpane.css" />'.$this->renderZones($tax_rules, $context->language->id);
+			<link type="text/css" rel="stylesheet" href="../css/tabpane.css" />'.$this->renderZones($tax_rules, $this->context->language->id);
         echo '
 				<div class="margin-form" style="margin-top: 10px">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />&nbsp;&nbsp;
@@ -383,11 +382,10 @@ class AdminTaxRulesGroup extends AdminTab
 
     protected function afterUpdate($object)
     {
-        $context = Context::getContext();
-
+        
         TaxRule::deleteByGroupId($object->id);
 
-        foreach(Country::getCountries($context->language->id, true) AS $country)
+        foreach(Country::getCountries($this->context->language->id, true) AS $country)
         {
             $id_tax = (int)Tools::getValue('tax_'.$country['id_country'].'_0');
 
@@ -455,7 +453,6 @@ class AdminTaxRulesGroup extends AdminTab
 
    public function postProcess()
    {
-		$context = Context::getContext();
 	
    		if (!isset($this->table))
 			return false;
@@ -522,7 +519,7 @@ class AdminTaxRulesGroup extends AdminTab
 								// Default behavior (save and back)
 								$id_product = (int)Tools::getValue('id_product');
 								if ($id_product)
-    								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id));
+    								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id));
 
 								Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
 							}
@@ -554,7 +551,7 @@ class AdminTaxRulesGroup extends AdminTab
 							$this->updateAssoGroupShop($object->id);
 							$id_product = (int)Tools::getValue('id_product');
 							if ($id_product)
-   								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id));
+   								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id));
 
 							Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
 							// Default behavior (save and back)

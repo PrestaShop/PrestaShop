@@ -184,7 +184,6 @@ class AdminBackup extends AdminTab
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
 	{
-		$context = Context::getContext();
 		
 		if (!Validate::isTableOrIdentifier($this->table))
 			die('filter is corrupted');
@@ -217,9 +216,9 @@ class AdminBackup extends AdminTab
 				$orderWay = 'desc';
 		}
 		if (empty($limit))
-			$limit = ((!isset($context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $context->cookie->{$this->table.'_pagination'});
+			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = $this->context->cookie->{$this->table.'_pagination'});
 		$limit = (int)(Tools::getValue('pagination', $limit));
-		$context->cookie->{$this->table.'_pagination'} = $limit;
+		$this->context->cookie->{$this->table.'_pagination'} = $limit;
 
 		/* Determine offset from current page */
 		if (!empty($_POST['submitFilter'.$this->table]) AND	is_numeric($_POST['submitFilter'.$this->table]))

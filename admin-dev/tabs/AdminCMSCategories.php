@@ -74,10 +74,9 @@ class AdminCMSCategories extends AdminTab
 
 	public function display($token = NULL)
 	{
-		$context = Context::getContext();
 		$id_cms_category = (int)(Tools::getValue('id_cms_category', 1));
 
-		$this->getList((int)($context->cookie->id_lang), !$context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL);
+		$this->getList((int)($this->context->cookie->id_lang), !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL);
 		
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subCMS Category')))).' '.$this->l('in CMS Category').' "'.stripslashes(CMSCategory::hideCMSCategoryPosition($this->_CMSCategory->getName())).'"</h3>';
 		echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?tab=AdminCMSContent&add'.$this->table.'&id_parent='.Tools::getValue('id_cms_category').'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new sub CMS Category').'</a>
@@ -88,8 +87,7 @@ class AdminCMSCategories extends AdminTab
 
 	public function postProcess($token = NULL)
 	{	
-		$context = Context::getContext();
-		$this->tabAccess = Profile::getProfileAccess($context->employee->id_profile, $this->id);
+		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 		
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
@@ -191,7 +189,6 @@ class AdminCMSCategories extends AdminTab
 
 	public function displayForm($token=NULL)
 	{
-		$context = Context::getContext();
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -222,7 +219,7 @@ class AdminCMSCategories extends AdminTab
 				<label>'.$this->l('Parent CMS Category:').' </label>
 				<div class="margin-form">
 					<select name="id_parent">';
-		$categories = CMSCategory::getCategories($context->language->id, false);
+		$categories = CMSCategory::getCategories($this->context->language->id, false);
 		CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, $this->getFieldValue($obj, 'id_parent'));
 		echo '
 					</select>

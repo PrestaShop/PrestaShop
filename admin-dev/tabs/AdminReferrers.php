@@ -90,8 +90,7 @@ class AdminReferrers extends AdminTab
 	
 	public function displayJavascript()
 	{
-		$context = Context::getContext();
-		$products = Product::getSimpleProducts($context->language->id);
+		$products = Product::getSimpleProducts($this->context->language->id);
 		$productsArray = array();
 		foreach ($products as $product)
 			$productsArray[] = $product['id_product'];
@@ -130,7 +129,7 @@ class AdminReferrers extends AdminTab
 					{
 						referrerStatus[id_referrer] = true;
 						for (var i = 0; i < productIds.length; ++i)
-							$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)$context->employee->id.',token:"'.Tools::getValue('token').'",id_referrer:id_referrer,id_product:productIds[i]},
+							$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)$this->context->employee->id.',token:"'.Tools::getValue('token').'",id_referrer:id_referrer,id_product:productIds[i]},
 								function(result) {
 									var newLine = newProductLine(id_referrer, result[0]);
 									$(newLine).hide().insertAfter(getE(\'trid_\'+id_referrer)).fadeIn();
@@ -373,7 +372,6 @@ class AdminReferrers extends AdminTab
 	
 	public function viewreferrer()
 	{
-		$context = Context::getContext();
 		$referrer = new Referrer((int)(Tools::getValue('id_referrer')));
 
 		$displayTab = array(
@@ -393,7 +391,7 @@ class AdminReferrers extends AdminTab
 		<script type="text/javascript">
 			function updateConversionRate(id_product)
 			{
-				$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)$context->employee->id.',token:"'.Tools::getValue('token').'",id_referrer:'.$referrer->id.',id_product:id_product},
+				$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxReferrers:1, ajaxProductFilter:1,id_employee:'.(int)$this->context->employee->id.',token:"'.Tools::getValue('token').'",id_referrer:'.$referrer->id.',id_product:id_product},
 					function(j) {';
 		foreach ($displayTab as $key => $value)
 			echo '$("#'.$key.'").html(j[0].'.$key.');';
@@ -406,7 +404,7 @@ class AdminReferrers extends AdminTab
 				var form = document.layers ? document.forms.product : document.product;
 				var filter = form.filterProduct.value;
 				$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",
-					{ajaxReferrers:1,ajaxFillProducts:1,id_employee:'.(int)$context->employee->id.',token:"'.Tools::getValue('token').'",id_lang:'.(int)$context->language->id.',filter:filter},
+					{ajaxReferrers:1,ajaxFillProducts:1,id_employee:'.(int)$this->context->employee->id.',token:"'.Tools::getValue('token').'",id_lang:'.(int)$this->context->language->id.',filter:filter},
 					function(j) {
 						
 						form.selectProduct.length = j.length + 1;
@@ -440,7 +438,6 @@ class AdminReferrers extends AdminTab
 	
 	public function displayListContent($token = NULL)
 	{
-		$context = Context::getContext();
 		$irow = 0;
 		if ($this->_list)
 			foreach ($this->_list AS $tr)
@@ -452,7 +449,7 @@ class AdminReferrers extends AdminTab
 				{
 					echo '<td onclick="showProductLines('.$id.');" class="pointer '.(isset($params['align']) ? $params['align'] : '').'">'.(isset($params['prefix']) ? $params['prefix'] : '');
 					if (isset($tr[$key]) AND isset($params['price']))
-						echo Tools::displayPrice($tr[$key], $context->currency);
+						echo Tools::displayPrice($tr[$key], $this->context->currency);
 					elseif (isset($tr[$key]))
 						echo $tr[$key];
 					else

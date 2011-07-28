@@ -29,7 +29,7 @@ class AdminGeolocation extends AdminTab
 {
 	public function display()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		echo '
 		<h2>'.$this->l('Geolocation').'</h2>
 		';
@@ -97,7 +97,7 @@ class AdminGeolocation extends AdminTab
 						</thead>
 						<tbody>
 		';
-		foreach (Country::getCountries($context->language->id) AS $country)
+		foreach (Country::getCountries($this->context->language->id) AS $country)
 			echo '
 				<tr>
 					<td><input type="checkbox" name="countries[]" value="'.strtoupper(Tools::htmlentitiesUTF8($country['iso_code'])).'" '.(in_array(strtoupper($country['iso_code']), $allowedCountries) ? 'checked="checked"' : '').' /></td>

@@ -40,7 +40,7 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	public function postProcess()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) OR !Validate::isDate($to = Tools::getValue('datepickerTo')))
@@ -81,9 +81,9 @@ abstract class AdminStatsTab extends AdminPreferences
 		}
 		if (isset($from) AND isset($to) AND !sizeof($this->_errors))
 		{
-			$context->employee->stats_date_from = $from;
-			$context->employee->stats_date_to = $to;
-			$context->employee->update();
+			$this->context->employee->stats_date_from = $from;
+			$this->context->employee->stats_date_to = $to;
+			$this->context->employee->update();
 			Tools::redirectAdmin($_SERVER['REQUEST_URI']);
 		}
 		if (Tools::getValue('submitSettings'))
@@ -137,10 +137,9 @@ abstract class AdminStatsTab extends AdminPreferences
 	
 	protected function getDate()
 	{
-		$context = Context::getContext();
-		$year = isset($context->cookie->stats_year) ? $context->cookie->stats_year : date('Y');
-		$month = isset($context->cookie->stats_month) ? sprintf('%02d', $context->cookie->stats_month) : '%';
-		$day = isset($context->cookie->stats_day) ? sprintf('%02d', $context->cookie->stats_day) : '%';
+		$year = isset($this->context->cookie->stats_year) ? $this->context->cookie->stats_year : date('Y');
+		$month = isset($this->context->cookie->stats_month) ? sprintf('%02d', $this->context->cookie->stats_month) : '%';
+		$day = isset($this->context->cookie->stats_day) ? sprintf('%02d', $this->context->cookie->stats_day) : '%';
 		return $year.'-'.$month.'-'.$day;
 	}
 	

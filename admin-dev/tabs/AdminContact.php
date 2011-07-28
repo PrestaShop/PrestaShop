@@ -44,14 +44,14 @@ class AdminContact extends AdminPreferences
 	
 	private function _getDefaultFieldsContent()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		$countryList = array();
 		$countryList[] = array('id' => '0', 'name' => $this->l('Choose your country'));
-		foreach (Country::getCountries($context->language->id) AS $country)
+		foreach (Country::getCountries($this->context->language->id) AS $country)
 			$countryList[] = array('id' => $country['id_country'], 'name' => $country['name']);
 		$stateList = array();
 		$stateList[] = array('id' => '0', 'name' => $this->l('Choose your state (if applicable)'));
-		foreach (State::getStates($context->language->id) AS $state)
+		foreach (State::getStates($this->context->language->id) AS $state)
 			$stateList[] = array('id' => $state['id_state'], 'name' => $state['name']);
 			
 		$formFields = array(
@@ -108,10 +108,9 @@ class AdminContact extends AdminPreferences
 
 	protected function _postConfig($fields)
 	{
-		$context = Context::getContext();
 		if (!$this->_errors && isset($_POST['PS_SHOP_COUNTRY_ID']))
 		{
-			$country = new Country($_POST['PS_SHOP_COUNTRY_ID'], $context->language->id);
+			$country = new Country($_POST['PS_SHOP_COUNTRY_ID'], $this->context->language->id);
 			Configuration::updateValue('PS_SHOP_COUNTRY', pSQL($country->name));
 		}
 		if (!$this->_errors && isset($_POST['PS_SHOP_STATE_ID']))

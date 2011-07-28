@@ -178,8 +178,7 @@ class AdminFeatures extends AdminTab
 
 	public function postProcess()
 	{
-		$context = Context::getContext();
-		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($context->employee->id_profile, $this->id);
+		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 		$this->adminFeaturesValues->postProcess($this->token);
 
 		if(Tools::getValue('submitDel'.$this->table))
