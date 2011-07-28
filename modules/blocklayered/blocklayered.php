@@ -134,8 +134,8 @@ class BlockLayered extends Module
 	
 	public function getContent()
 	{
-		global $cookie;
-
+		$context = Context::getContext();
+		
 		$errors = array();
 		$html = '';
 
@@ -313,7 +313,7 @@ class BlockLayered extends Module
 					<td>'.(int)$filtersTemplate['id_layered_filter'].'</td>
 					<td style="text-align: left; padding-left: 10px; width: 270px;">'.$filtersTemplate['name'].'</td>
 					<td style="text-align: center;">'.(int)$filtersTemplate['n_categories'].'</td>
-					<td>'.Tools::displayDate($filtersTemplate['date_add'], (int)$cookie->id_lang, true).'</td>
+					<td>'.Tools::displayDate($filtersTemplate['date_add'], (int)$context->language->id, true).'</td>
 					<td>
 						<a href="#" onclick="updElements('.($filtersTemplate['n_categories'] ? 0 : 1).', '.(int)$filtersTemplate['id_layered_filter'].');"><img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
 						<a href="'.$_SERVER['REQUEST_URI'].'&deleteFilterTemplate=1&id_layered_filter='.(int)$filtersTemplate['id_layered_filter'].'" onclick="return confirm(\''.addslashes($this->l('Delete filter template #').(int)$filtersTemplate['id_layered_filter'].$this->l('?')).'\');"><img src="../img/admin/delete.gif" alt="" title="'.$this->l('Delete').'" /></a>
@@ -772,7 +772,6 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = c.id_category)
 		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
 		WHERE c.nleft > '.(int)$category->nleft.' and c.nright <= '.(int)$category->nright.' AND c.active = 1 AND c.id_parent = '.(int)$category->id.' AND cl.id_lang = '.(int)$context->language->id.'
-		WHERE c.nleft > '.(int)$category->nleft.' and c.nright <= '.(int)$category->nright.' AND c.active = 1 AND c.id_parent = '.(int)$category->id.' AND cl.id_lang = '.(int)$cookie->id_lang.'
 		AND cg.id_group '.pSQL(sizeof($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
 		GROUP BY c.id_category
 		ORDER BY c.position ASC');
@@ -1103,8 +1102,8 @@ class BlockLayered extends Module
 	
 	public function ajaxCallBackOffice($categoryBox = array(), $id_layered_filter = NULL)
 	{
-		global $cookie;
-		
+		$context = Context::getContext();
+				
 		if (!empty($id_layered_filter))
 		{
 			$layeredFilter = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$id_layered_filter);
@@ -1124,7 +1123,7 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_attribute = a.id_attribute)
 		LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product_attribute = pac.id_product_attribute)
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = pa.id_product)' : '').'
-		WHERE agl.id_lang = '.(int)$cookie->id_lang.
+		WHERE agl.id_lang = '.(int)$context->language->id.
 		(sizeof($categoryBox) ? ' AND cp.id_category IN ('.implode(',', $categoryBox).')' : '').'
 		GROUP BY ag.id_attribute_group');
 		
@@ -1135,7 +1134,7 @@ class BlockLayered extends Module
 		'.(sizeof($categoryBox) ? '
 		LEFT JOIN '._DB_PREFIX_.'feature_product fp ON (fp.id_feature = fv.id_feature)
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = fp.id_product)' : '').'		
-		WHERE (fv.custom IS NULL OR fv.custom = 0) AND fl.id_lang = '.(int)$cookie->id_lang.
+		WHERE (fv.custom IS NULL OR fv.custom = 0) AND fl.id_lang = '.(int)$context->language->id.
 		(sizeof($categoryBox) ? ' AND cp.id_category IN ('.implode(',', $categoryBox).')' : '').'
 		GROUP BY fl.id_feature');
 		

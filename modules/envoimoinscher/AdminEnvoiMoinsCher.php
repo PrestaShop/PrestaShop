@@ -37,7 +37,6 @@ class AdminEnvoiMoinsCher extends AdminTab
 
 	public function display()
 	{
-		global $cookie;
 		$emc = new Envoimoinscher();
 		echo '<h2>'.$emc->lang('List of orders to export').'</h2>';
 		if (Tools::isSubmit('submitExport'))
@@ -83,7 +82,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 			else
 			echo '<h2 style="color:red">'.$emc->lang('Please configure this module in order').'</h2>';
 		}
-		echo '<br><p><a href="index.php?tab=AdminModules&configure=envoimoinscher&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)($cookie->id_employee)).'" class="button">
+		echo '<br><p><a href="index.php?tab=AdminModules&configure=envoimoinscher&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id).'" class="button">
 			 ' . $emc->lang('Change configuration') . '</a></p>';
 	}
 	
@@ -113,7 +112,6 @@ class AdminEnvoiMoinsCher extends AdminTab
 
 	private function displayOrders($orders)
 	{
-		global $cookie;
 		echo '<table cellspacing="0" cellpadding="0" class="table" align="center" style="margin:10px 0px 0px 25px;">
 					<tr>
 						<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'ordersBox[]\', this.checked)" /></th>
@@ -148,7 +146,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 							  	echo '</select>
 							  </td>
 							  <td>'.envoimoinscher::selectNature(Configuration::get('EMC_CONTENT'),(int)($order['id_order'])).'</td>
-							  <td align="center"><a href="index.php?tab=AdminOrders&id_order='.(int)($order['id_order']).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)).'">
+							  <td align="center"><a href="index.php?tab=AdminOrders&id_order='.(int)($order['id_order']).'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'">
 					<img border="0" title="'.$emc->lang('View').'" alt="'.$emc->lang('View').'" src="'._PS_IMG_.'admin/details.gif"/></a></td>
 						  </tr>';
 			}
@@ -161,7 +159,6 @@ class AdminEnvoiMoinsCher extends AdminTab
 
 	private function getOrderDetails($id_order)
 	{
-		global $cookie;
 		$confs = Configuration::getMultiple(array('EMC_LOGIN', 'PS_SHOP_NAME', 'EMC_GENDER', 'EMC_FIRST_NAME', 'EMC_LAST_NAME', 'EMC_ADDRESS',
 												  'EMC_ZIP_CODE', 'EMC_CITY', 'EMC_COUNTRY', 'EMC_PHONE', 'EMC_EMAIL', 'EMC_EMAILS'));
 		$orderDetails = array();
@@ -218,7 +215,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 		$orderDelivery['adresse'] = htmlspecialchars($adresseDelivery->address1, ENT_COMPAT, 'UTF-8');
 		$orderDelivery['codepostal'] = htmlspecialchars($adresseDelivery->postcode, ENT_COMPAT, 'UTF-8');
 		$orderDelivery['ville'] = htmlspecialchars($adresseDelivery->city, ENT_COMPAT, 'UTF-8');
-		$orderDelivery['pz_id'] = Country::getIsoById(Country::getIdByName((int)($cookie->id_lang),$adresseDelivery->country));
+		$orderDelivery['pz_id'] = Country::getIsoById(Country::getIdByName($this->context->language->id, $adresseDelivery->country));
 		if (isset($adresseDelivery->phone))
 			$orderDelivery['tel'] = htmlspecialchars($adresseDelivery->phone, ENT_COMPAT, 'UTF-8');
 		else
@@ -226,13 +223,11 @@ class AdminEnvoiMoinsCher extends AdminTab
 		$orderDelivery['email'] = htmlspecialchars($customer->email, ENT_COMPAT, 'UTF-8');
 		
 		$orderDetails['destinataire'] = $orderDelivery;
-		//d($orderDetails);
 		return $orderDetails;
 	}
 	
 	private function getFeatures($id)
 	{
-		global $cookie;
 		$featuresTab = array();
 		$confs = Configuration::getMultiple(array('EMC_WIDTH', 'EMC_HEIGHT', 'EMC_DEPTH'));
 		$features = Product::getFeaturesStatic((int)$id);
@@ -242,15 +237,15 @@ class AdminEnvoiMoinsCher extends AdminTab
 			{
 				case $confs['EMC_WIDTH'] :
 					$featureValue = new FeatureValue((int)($feature['id_feature_value']));
-					$featuresTab['largeur'] = $featureValue->value[(int)($cookie->id_lang)];
+					$featuresTab['largeur'] = $featureValue->value[(int)$this->context->language->id];
 					break;
 				case $confs['EMC_HEIGHT'] :
 					$featureValue = new FeatureValue((int)($feature['id_feature_value']));
-					$featuresTab['hauteur'] = $featureValue->value[(int)($cookie->id_lang)];
+					$featuresTab['hauteur'] = $featureValue->value[(int)$this->context->language->id];
 					break;
 				case $confs['EMC_DEPTH'] :
 					$featureValue = new FeatureValue((int)($feature['id_feature_value']));
-					$featuresTab['longueur'] = $featureValue->value[(int)($cookie->id_lang)];
+					$featuresTab['longueur'] = $featureValue->value[(int)$this->context->language->id];
 					break;
 			}
 		}

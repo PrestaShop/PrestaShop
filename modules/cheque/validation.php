@@ -29,6 +29,8 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/cheque.php');
 
+$context = Context::getContext();
+$cart = $context->cart;
 $cheque = new Cheque();
 
 if ($cart->id_customer == 0 OR $cart->id_address_delivery == 0 OR $cart->id_address_invoice == 0 OR !$cheque->active)
@@ -45,12 +47,12 @@ foreach (Module::getPaymentModules() as $module)
 if (!$authorized)
 	die(Tools::displayError('This payment method is not available.'));
 
-$customer = new Customer((int)$cart->id_customer);
+$customer = new Customer($cart->id_customer);
 
 if (!Validate::isLoadedObject($customer))
 	Tools::redirect('index.php?controller=order&step=1');
 
-$currency = new Currency((int)(Tools::isSubmit('currency_payement') ? Tools::getValue('currency_payement') : $cookie->id_currency));
+$currency = Tools::isSubmit('currency_payement') ? new Currency(Tools::getValue('currency_payement')) : $context->currency;
 $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 
 $mailVars =	array(

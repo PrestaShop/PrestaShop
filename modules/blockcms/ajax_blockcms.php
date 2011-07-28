@@ -29,6 +29,7 @@ include_once('../../config/config.inc.php');
 include_once('../../init.php');
 include_once('blockcms.php');
 
+$context = Context::getContext();
 $blockcms = new BlockCms();
 if (!Tools::isSubmit('secure_key') OR Tools::getValue('secure_key') != $blockcms->secure_key OR !Tools::isSubmit('action'))
 	die(1);
@@ -42,7 +43,7 @@ if (Tools::getValue('action') == 'getCms')
 	SELECT * FROM `'._DB_PREFIX_.'cms_category` c
 	JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
 	WHERE c.`id_parent` = '.(int)Tools::getValue('id_cms_category').'
-	AND cl.`id_lang` = '.(int)$cookie->id_lang.'
+	AND cl.`id_lang` = '.(int)$context->language->id.'
 	ORDER BY c.`id_cms_category`');
 	
 	$cms_pages = Db::getInstance()->ExecuteS('
@@ -50,7 +51,7 @@ if (Tools::getValue('action') == 'getCms')
 	JOIN `'._DB_PREFIX_.'cms_lang` cl ON (c.`id_cms` = cl.`id_cms`)
 	WHERE c.`id_cms_category` = '.(int)Tools::getValue('id_cms_category').'
 	AND c.`active` = 1 
-	AND cl.`id_lang` = '.(int)$cookie->id_lang.'
+	AND cl.`id_lang` = '.(int)$context->language->id.'
 	ORDER BY c.`id_cms`');
 	
 	if (Tools::getValue('id_cms_block'))

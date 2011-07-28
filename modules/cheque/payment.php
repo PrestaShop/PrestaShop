@@ -32,7 +32,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/cheque.php');
 
-if (!$cookie->isLogged(true))
+if (!Context::getContext()->cookie->isLogged(true))
     Tools::redirect('index.php?controller=authentication&back=order.php');
 	
 $cheque = new Cheque();

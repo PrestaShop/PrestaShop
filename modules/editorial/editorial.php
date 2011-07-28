@@ -117,7 +117,7 @@ class Editorial extends Module
 
 	public function getContent()
 	{
-		global $cookie;
+		$context = Context::getContext();
 		
 		/* display the module name */
 		$this->_html = '<h2>'.$this->displayName.'</h2>';
@@ -132,7 +132,7 @@ class Editorial extends Module
 			{
 				unlink(dirname(__FILE__).'/homepage_logo.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 1);
-				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)($cookie->id_employee)));
+				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$context->employee->id));
 			}
 			$this->_html .= $errors;
 		}
@@ -180,17 +180,15 @@ class Editorial extends Module
 
 	private function _displayForm()
 	{
-		global $cookie;
+		$context = Context::getContext();
 		/* Languages preliminaries */
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
-		$iso = Language::getIsoById((int)($cookie->id_lang));
+		$iso = $context->language->iso_code;
 		$divLangName = 'title¤subheading¤cpara¤logo_subheading';
 
 		$editorial = new EditorialClass(1);
 		// TinyMCE
-		global $cookie;
-		$iso = Language::getIsoById((int)($cookie->id_lang));
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		$this->_html .=  '
@@ -296,15 +294,15 @@ class Editorial extends Module
 
 	public function hookHome($params)
 	{
-		global $cookie, $smarty;
-		
-		$editorial = new EditorialClass(1, (int)$cookie->id_lang);
-		$smarty->assign(array(
+		$context = Context::getContext();
+				
+		$editorial = new EditorialClass(1, $context->language->id);
+		$context->smarty->assign(array(
 			'editorial' => $editorial,
-			'default_lang' => (int)$cookie->id_lang,
+			'default_lang' => (int)$context->language->id,
 			'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
 			'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-			'id_lang' => $cookie->id_lang,
+			'id_lang' => $context->language->id,
 			'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo.jpg'),
 			'image_path' => $this->_path.'homepage_logo.jpg'
 		));

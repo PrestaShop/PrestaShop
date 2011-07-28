@@ -54,11 +54,10 @@ class blockcustomerprivacy extends Module
 	
 	public function getContent()
 	{
-		global $cookie;
-		
+		$context = Context::getContext();
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
-		$iso = Language::getIsoById((int)$cookie->id_lang);
+		$iso = $context->language->iso_code;
 
 		if (Tools::isSubmit('submitCustPrivMess'))
 		{
@@ -152,16 +151,10 @@ class blockcustomerprivacy extends Module
 	{
 		if (!$this->active)
 			return ;
-			
-		global $smarty, $cookie;
+		$context = Context::getContext();
 		
-		/* Languages preliminaries */
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-		$languages = Language::getLanguages(false);
-		$iso = Language::getIsoById((int)($cookie->id_lang));
-			
-		$smarty->assign(array(
-			'privacy_message' => Configuration::get('CUSTPRIV_MESSAGE', (int)($cookie->id_lang)),
+		$context->smarty->assign(array(
+			'privacy_message' => Configuration::get('CUSTPRIV_MESSAGE', $context->language->id),
 			'error_message' => $this->l('Please agree with the customer data privacy by ticking the checkbox below.')
 		));
 		return $this->display(__FILE__, 'blockcustomerprivacy.tpl');

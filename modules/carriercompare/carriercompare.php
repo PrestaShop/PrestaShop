@@ -178,8 +178,6 @@ class CarrierCompare extends Module
 	 */
 	private function isModuleAvailable()
 	{
-		global $cookie;
-		
 		$fileName = basename($_SERVER['SCRIPT_FILENAME']);
 		/**
 		 * This module is only available on standard order process because
@@ -191,7 +189,7 @@ class CarrierCompare extends Module
 		 * If visitor is logged, the module isn't available on Front office,
 		 * we use the account informations for carrier selection and taxes.
 		 */
-		if ($cookie->id_customer)
+		if (Context::getContext()->customer->id)
 			return false;
 		return true;
 }

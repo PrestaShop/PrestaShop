@@ -48,9 +48,9 @@ if (!$authorized)
 $customer = new Customer((int)$cart->id_customer);
 
 if (!Validate::isLoadedObject($customer))
-	Tools::redirect('index.php?controller=order&step=1');
+	Tools::redirec('index.php?controller=order&step=1');
 
-$currency = new Currency(Tools::getValue('currency_payement', false) ? Tools::getValue('currency_payement') : $cookie->id_currency);
+$currency = Tools::getValue('currency_payement', false) ? new Currency(Tools::getValue('currency_payement')) : Context::getContext()->currency;
 $total = (float)($cart->getOrderTotal(true, Cart::BOTH));
 $mailVars = array(
 	'{bankwire_owner}' => Configuration::get('BANK_WIRE_OWNER'),
