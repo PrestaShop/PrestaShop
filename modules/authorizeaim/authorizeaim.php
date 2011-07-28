@@ -136,7 +136,6 @@ class authorizeAIM extends PaymentModule
 		if (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off' AND Configuration::get('PS_SSL_ENABLED'))
 		{
 			$invoiceAddress = new Address((int)$params['cart']->id_address_invoice);
-			$customer = new Customer((int)$cookie->id_customer);
 			
 			$authorizeAIMParams = array();
 			$authorizeAIMParams['x_login'] = Configuration::get('AUTHORIZE_AIM_LOGIN_ID');

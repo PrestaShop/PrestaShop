@@ -32,6 +32,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include_once(dirname(__FILE__).'/WishList.php');
 
+$context = Context::getContext();
 $errors = array();
 
 if ($cookie->isLogged())
@@ -58,21 +59,21 @@ if ($cookie->isLogged())
 			{
 				$wishlist = new WishList();
 				$wishlist->name = $name;
-				$wishlist->id_customer = (int)$cookie->id_customer;
+				$wishlist->id_customer = (int)$context->customer->id;
 				list($us, $s) = explode(' ', microtime());
 				srand($s * $us);
-				$wishlist->token = strtoupper(substr(sha1(uniqid(rand(), true)._COOKIE_KEY_.$cookie->id_customer), 0, 16));
+				$wishlist->token = strtoupper(substr(sha1(uniqid(rand(), true)._COOKIE_KEY_.$context->customer->id), 0, 16));
 				$wishlist->add();
-				Mail::Send((int)($cookie->id_lang), 'wishlink', Mail::l('Your wishlist\'s link'), 
+				Mail::Send($context->language->id, 'wishlink', Mail::l('Your wishlist\'s link'), 
 					array(
 					'{wishlist}' => $wishlist->name,
 					'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist->token),
-					$cookie->email, $cookie->firstname.' '.$cookie->lastname, NULL, strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
+					$context->customer->email, $context->customer->firstname.' '.$context->customer->lastname, NULL, strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			}
 		}
 	}
 	else if ($add)
-		WishList::addCardToWishlist((int)($cookie->id_customer), (int)(Tools::getValue('id_wishlist')), (int)($cookie->id_lang));
+		WishList::addCardToWishlist($context->customer->id, Tools::getValue('id_wishlist'), $context->language->id);
 	else if ($delete AND empty($id_wishlist) === false)
 	{
 		$wishlist = new WishList((int)($id_wishlist));
@@ -81,23 +82,23 @@ if ($cookie->isLogged())
 		else
 			$errors[] = Tools::displayError('Cannot delete this wishlist');
 	}
-	$smarty->assign('wishlists', WishList::getByIdCustomer((int)($cookie->id_customer)));
-	$smarty->assign('nbProducts', WishList::getInfosByIdCustomer((int)($cookie->id_customer)));
+	$context->smarty->assign('wishlists', WishList::getByIdCustomer($context->customer->id));
+	$context->smarty->assign('nbProducts', WishList::getInfosByIdCustomer($context->customer->id));
 }
 else
 {
 	Tools::redirect('index.php?controller=authentication&back=modules/blockwishlist/mywishlist.php');
 }
 
-$smarty->assign(array(
-	'id_customer' => (int)($cookie->id_customer),
+$context->smarty->assign(array(
+	'id_customer' => (int)$context->customer->id,
 	'errors' => $errors
 ));
 
 if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/mywishlist.tpl'))
-	$smarty->display(_PS_THEME_DIR_.'modules/blockwishlist/mywishlist.tpl');
+	$context->smarty->display(_PS_THEME_DIR_.'modules/blockwishlist/mywishlist.tpl');
 elseif (Tools::file_exists_cache(dirname(__FILE__).'/mywishlist.tpl'))
-	$smarty->display(dirname(__FILE__).'/mywishlist.tpl');
+	$context->smarty->display(dirname(__FILE__).'/mywishlist.tpl');
 else
 	echo Tools::displayError('No template found');
 
