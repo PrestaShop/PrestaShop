@@ -35,7 +35,7 @@ class CompareControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'/comparator.css');
 		
 		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-			Tools::addJS(_THEME_JS_DIR_.'products-comparison.js');
+			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
 	public function preProcess()
