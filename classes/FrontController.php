@@ -487,7 +487,7 @@ class FrontControllerCore
 		}
 		$language = new Language($this->context->language->id);
 		if ($language->is_rtl)
-			Tools::addCSS(_THEME_CSS_DIR_.'rtl.css');
+			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 	}
 
 	public function process()
