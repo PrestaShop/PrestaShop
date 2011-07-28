@@ -188,29 +188,27 @@ class PDFCore extends PDF_PageGroupCore
     */
    private function _builMerchantFooterDetail($conf)
    {
-   	$footerText;
-   	
-   	// If the country is USA
-   	if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'US')
-   	{
-   		$completeAddressShop = $this->_getCompleteUSAddressFormat($conf);
-   	
-   		$footerText = self::l('Headquarters:')."\n".
-				$conf['PS_SHOP_NAME_UPPER']."\n".
-				(isset($conf['PS_SHOP_ADDR1']) && !empty($conf['PS_SHOP_ADDR1']) ? $conf['PS_SHOP_ADDR1']."\n" : '').
-				(isset($conf['PS_SHOP_ADDR2']) && !empty($conf['PS_SHOP_ADDR2']) ? $conf['PS_SHOP_ADDR2']."\n" : '').
-				(!empty($completeAddressShop) ? $completeAddressShop."\n" : '').
-				(isset($conf['PS_SHOP_COUNTRY']) && !empty($conf['PS_SHOP_COUNTRY']) ? $conf['PS_SHOP_COUNTRY']."\n" : '').
-				((isset($conf['PS_SHOP_PHONE']) && !empty($conf['PS_SHOP_PHONE'])) ? self::l('PHONE:').' '.$conf['PS_SHOP_PHONE'] : '');
-   	}
-   	else 
-   	{
-   		$footerText = $conf['PS_SHOP_NAME_UPPER'].(!empty($conf['PS_SHOP_ADDR1']) ? ' - '.self::l('Headquarters:').' '.$conf['PS_SHOP_ADDR1'].
-   			(!empty($conf['PS_SHOP_ADDR2']) ? ' '.$conf['PS_SHOP_ADDR2'] : '').' '.$conf['PS_SHOP_CODE'].' '.$conf['PS_SHOP_CITY'].
-   			((isset($conf['PS_SHOP_STATE']) AND !empty($conf['PS_SHOP_STATE'])) ? (', '.$conf['PS_SHOP_STATE']) : '').' '.$conf['PS_SHOP_COUNTRY'] : '').
-   			"\n".(!empty($conf['PS_SHOP_DETAILS']) ? self::l('Details:').' '.$conf['PS_SHOP_DETAILS'].' - ' : '').
-				(!empty($conf['PS_SHOP_PHONE']) ? self::l('PHONE:').' '.$conf['PS_SHOP_PHONE'] : '');
-   	}		
+		// If the country is USA
+	   	if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'US')
+	   	{
+	   		$completeAddressShop = $this->_getCompleteUSAddressFormat($conf);
+	   	
+	   		$footerText = self::l('Headquarters:')."\n".
+					$conf['PS_SHOP_NAME_UPPER']."\n".
+					(isset($conf['PS_SHOP_ADDR1']) && !empty($conf['PS_SHOP_ADDR1']) ? $conf['PS_SHOP_ADDR1']."\n" : '').
+					(isset($conf['PS_SHOP_ADDR2']) && !empty($conf['PS_SHOP_ADDR2']) ? $conf['PS_SHOP_ADDR2']."\n" : '').
+					(!empty($completeAddressShop) ? $completeAddressShop."\n" : '').
+					(isset($conf['PS_SHOP_COUNTRY']) && !empty($conf['PS_SHOP_COUNTRY']) ? $conf['PS_SHOP_COUNTRY']."\n" : '').
+					((isset($conf['PS_SHOP_PHONE']) && !empty($conf['PS_SHOP_PHONE'])) ? self::l('PHONE:').' '.$conf['PS_SHOP_PHONE'] : '');
+	   	}
+	   	else 
+	   	{
+	   		$footerText = $conf['PS_SHOP_NAME_UPPER'].(!empty($conf['PS_SHOP_ADDR1']) ? ' - '.self::l('Headquarters:').' '.$conf['PS_SHOP_ADDR1'].
+	   			(!empty($conf['PS_SHOP_ADDR2']) ? ' '.$conf['PS_SHOP_ADDR2'] : '').' '.$conf['PS_SHOP_CODE'].' '.$conf['PS_SHOP_CITY'].
+	   			((isset($conf['PS_SHOP_STATE']) AND !empty($conf['PS_SHOP_STATE'])) ? (', '.$conf['PS_SHOP_STATE']) : '').' '.$conf['PS_SHOP_COUNTRY'] : '').
+	   			"\n".(!empty($conf['PS_SHOP_DETAILS']) ? self::l('Details:').' '.$conf['PS_SHOP_DETAILS'].' - ' : '').
+					(!empty($conf['PS_SHOP_PHONE']) ? self::l('PHONE:').' '.$conf['PS_SHOP_PHONE'] : '');
+	   	}		
 		return $footerText;
    }
    
