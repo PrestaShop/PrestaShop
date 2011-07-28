@@ -38,20 +38,18 @@
 
 <script type="text/javascript">
 //<![CDATA[
+{literal}
 $(document).ready(function()
 {
 	$('#selectPrductSort').change(function()
 	{
-		var requestSortProducts = '{$request}';
+		var requestSortProducts = '{/literal}{$request}{literal}';
 		var splitData = $(this).val().split(':');
-		{if Module::isInstalled('blocklayered')}
-			reloadContent();
-		{else}
 			document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
-		{/if}
 	});
 });
 //]]>
+{/literal}
 </script>
 
 <form id="productsSortForm" action="{$request|escape:'htmlall':'UTF-8'}">

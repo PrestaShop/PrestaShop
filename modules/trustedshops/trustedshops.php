@@ -48,7 +48,7 @@ class TrustedShops extends Module
 		global $smarty;
 		$this->name = 'trustedshops';
 		$this->tab = 'payment_security';
-		$this->version = 1.2;
+		$this->version = 1.3;
 
 		parent::__construct();
 
@@ -76,8 +76,8 @@ class TrustedShops extends Module
 		if (!empty($this->warnings))
 			$this->warning = implode(',<br />', $this->warnings).'.';
 
-		$this->displayName = $this->l('Trusted Shops Customer Rating');
-		$this->description = $this->l('Boost consumer confidence and turn more shoppers into buyers.');
+		$this->displayName = $this->l('Trusted Shops trust solutions');
+		$this->description = $this->l('Build confidence in your online shop with the Trusted Shops quality seal, buyer protection and customer rating.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete all your settings?');
 	}
 

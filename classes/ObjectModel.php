@@ -86,7 +86,7 @@ abstract class ObjectModelCore
 	 * @param string $className Child class name for static use (optional)
 	 * @return array Validation rules (fields validity)
 	 */
-	static public function getValidationRules($className = __CLASS__)
+	public static function getValidationRules($className = __CLASS__)
 	{
 		$object = new $className();
 		return array(
@@ -231,7 +231,7 @@ abstract class ObjectModelCore
 			if ($fields AND is_array($fields))
 				foreach ($fields AS &$field)
 				{
-					foreach ($field AS $key => $value)
+					foreach (array_keys($field) AS $key)
 					 	if (!Validate::isTableOrIdentifier($key))
 			 				die(Tools::displayError());
 					$field[$this->identifier] = (int)$this->id;
@@ -291,7 +291,7 @@ abstract class ObjectModelCore
 			{
 				foreach ($fields as $field)
 				{
-					foreach ($field as $key => $value)
+					foreach (array_keys($field) as $key)
 						if (!Validate::isTableOrIdentifier($key))
 							die(Tools::displayError());
 
@@ -408,7 +408,7 @@ abstract class ObjectModelCore
 		$fields = array();
 
 		if($this->id_lang == NULL)
-			foreach (Language::getLanguages() as $language)
+			foreach (Language::getLanguages(false) as $language)
 				$this->makeTranslationFields($fields, $fieldsArray, $language['id_lang']);
 		else
 			$this->makeTranslationFields($fields, $fieldsArray, $this->id_lang);

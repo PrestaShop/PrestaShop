@@ -11,5 +11,3 @@ $_MODULE['<{gadsense}prestashop>gadsense_f4f70727dc34561dfde1a3c529b6205c'] = 'E
 $_MODULE['<{gadsense}prestashop>gadsense_30c2b4b5e19ac71fefa1b4d688a7a98f'] = 'Ihr Code';
 $_MODULE['<{gadsense}prestashop>gadsense_81eeab9506186e2dca8faefa78d54067'] = 'Beispiel:';
 $_MODULE['<{gadsense}prestashop>gadsense_b17f3f4dcf653a5776792498a9b44d6a'] = 'Einstellungen aktualisieren';
-
-?>

@@ -56,7 +56,7 @@ class TSBPException extends Exception
 		// @todo : don't forget to change email in translation
 		$mail = self::$translation_object->l('Please contact Trusted Shops at service@trustedshops.co.uk.', TSBPException::$translate_key);
 		$errors = array(
-			-10001 => self::$translation_object->l('Username or password invalid.', TSBPException::$translate_key),
+			-10001 => self::$translation_object->l('Invalid username or password.', TSBPException::$translate_key),
 			-10002 => self::$translation_object->l('You have reached your credit limit.', TSBPException::$translate_key),
 			-10011 => self::$translation_object->l('No credit available from Trusted Shops.', TSBPException::$translate_key),
 			-11111 => self::$translation_object->l('The data could not be saved.', TSBPException::$translate_key),

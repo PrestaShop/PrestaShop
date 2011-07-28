@@ -193,7 +193,7 @@ class OrderDetailCore extends ObjectModel
 		return $fields;
 	}	
 
-	static public function getDownloadFromHash($hash)
+	public static function getDownloadFromHash($hash)
 	{
 		if ($hash == '') return false;
 		$sql = 'SELECT *
@@ -204,7 +204,7 @@ class OrderDetailCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 
-	static public function incrementDownload($id_order_detail, $increment=1)
+	public static function incrementDownload($id_order_detail, $increment=1)
 	{
 		$sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
 			SET `download_nb` = `download_nb` + '.(int)($increment).'

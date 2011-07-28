@@ -105,18 +105,7 @@ if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 define('_CAN_LOAD_FILES_', 1);
 
 /* Order states */
-define('_PS_OS_CHEQUE_',      1);
-define('_PS_OS_PAYMENT_',     2);
-define('_PS_OS_PREPARATION_', 3);
-define('_PS_OS_SHIPPING_',    4);
-define('_PS_OS_DELIVERED_',   5);
-define('_PS_OS_CANCELED_',    6);
-define('_PS_OS_REFUND_',      7);
-define('_PS_OS_ERROR_',       8);
-define('_PS_OS_OUTOFSTOCK_',  9);
-define('_PS_OS_BANKWIRE_',    10);
-define('_PS_OS_PAYPAL_',      11);
-define('_PS_OS_WS_PAYEMENT_', 12);
+// Order states has been moved in config.inc.php file for backward compatibility reasons
 
 /* Tax behavior */
 define('PS_PRODUCT_TAX', 0);

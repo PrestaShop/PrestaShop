@@ -58,7 +58,7 @@ class ZoneCore extends ObjectModel
 	*
 	* @return array Zones
 	*/
-	static public function getZones($active = false)
+	public static function getZones($active = false)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *
@@ -72,7 +72,7 @@ class ZoneCore extends ObjectModel
 	*
 	* @return integer id_zone
 	*/
-	static public function getIdByName($name)
+	public static function getIdByName($name)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `id_zone`

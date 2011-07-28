@@ -34,13 +34,13 @@ class AdminThemes extends AdminPreferences
 	 * @since 1.4.0.11, check theme compatibility 1.4
 	 * @static
 		*/
-	static public $check_features_version = '1.4';
+	public static $check_features_version = '1.4';
 	
 	/** $check_features is a multidimensional array used to check [theme]/config.xml values, 
 	 * and also checks prestashop current configuration if not match.
 	 * @static
 	 */
-	static public $check_features = array(
+	public static $check_features = array(
 		'ccc' => array( // feature key name
 			'attributes' => array(
 				'available' => array( 
@@ -261,11 +261,13 @@ class AdminThemes extends AdminPreferences
 	 */
 	public function postProcess()
 	{
+		global $smarty;
 		// new check compatibility theme feature (1.4) :
 		$val = Tools::getValue('PS_THEME');
 		Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 		if (!empty($val) AND !$this->_isThemeCompatible($val)) // don't submit if errors
 			unset($_POST['submitThemes'.$this->table]);
+		Tools::clearCache($smarty);
 		parent::postProcess();
 	}
 }

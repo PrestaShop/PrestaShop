@@ -2,7 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{blockrss}prestashop>blockrss_10fd25dcd3353c0ba3731d4a23657f2e'] = 'Kein RSS Feed hinzugefügt';
 $_MODULE['<{blockrss}prestashop>blockrss_2516c13a12d3dbaf4efa88d9fce2e7da'] = 'RSS-Feed-Block';
 $_MODULE['<{blockrss}prestashop>blockrss_04396664ce529aa4204b0f7ad753fad1'] = 'Fügt einen Block hinzu, der ein RSS-Feed anzeigt';
 $_MODULE['<{blockrss}prestashop>blockrss_9680162225162baf2a085dfdc2814deb'] = 'RSS-Feed';
@@ -19,5 +18,4 @@ $_MODULE['<{blockrss}prestashop>blockrss_eb26a56cc4c9ae20bc55c887773bddfd'] = 'F
 $_MODULE['<{blockrss}prestashop>blockrss_ff9aa540e20285875ac8b190a3cb7ccf'] = 'Anzahl der angezeigten Threads';
 $_MODULE['<{blockrss}prestashop>blockrss_f33725e23a017705ad35897e849a4db4'] = 'Anzahl der im Block angezeigten Threads (Standardwert: 5)';
 $_MODULE['<{blockrss}prestashop>blockrss_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
-
-?>
+$_MODULE['<{blockrss}prestashop>blockrss_10fd25dcd3353c0ba3731d4a23657f2e'] = 'Kein RSS Feed hinzugefügt';

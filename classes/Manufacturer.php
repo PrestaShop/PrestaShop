@@ -77,6 +77,7 @@ class ManufacturerCore extends ObjectModel
 
 	protected	$webserviceParameters = array(
 		'fields' => array(
+			'active' => array(),
 			'link_rewrite' => array('getter' => 'getLink', 'setter' => false),
 		),
 		'associations' => array(
@@ -229,7 +230,7 @@ class ManufacturerCore extends ObjectModel
 				$manufacturers[$i]['link_rewrite'] = 0;
 		return $manufacturers;
 	}
-	
+
 	/**
 	  * Return name from id
 	  *
@@ -237,7 +238,7 @@ class ManufacturerCore extends ObjectModel
 	  * @return string name
 	  */
 	static protected $cacheName = array();
-	static public function getNameById($id_manufacturer)
+	public static function getNameById($id_manufacturer)
 	{
 		if (!isset(self::$cacheName[$id_manufacturer]))
 			self::$cacheName[$id_manufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -245,7 +246,7 @@ class ManufacturerCore extends ObjectModel
 		return self::$cacheName[$id_manufacturer];
 	}
 
-	static public function getIdByName($name)
+	public static function getIdByName($name)
 	{
 		$result = Db::getInstance()->getRow('
 		SELECT `id_manufacturer`
@@ -261,7 +262,7 @@ class ManufacturerCore extends ObjectModel
 		return Tools::link_rewrite($this->name, false);
 	}
 
-	static public function getProducts($id_manufacturer, $id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, Context $context = null)
+	static public function getProducts($id_manufacturer, $id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $active_category = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -287,7 +288,8 @@ class ManufacturerCore extends ObjectModel
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
+					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sqlGroups.'
 				)';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
@@ -312,11 +314,13 @@ class ManufacturerCore extends ObjectModel
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
+					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 						WHERE cg.`id_group` '.$sqlGroups.'
 					)
 				ORDER BY '.(($orderBy == 'id_product') ? 'p.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		if (!$result)
 			return false;
@@ -339,7 +343,7 @@ class ManufacturerCore extends ObjectModel
 	* @param $id_manufacturer Manufacturer id
 	* @return boolean
 	*/
-	static public function manufacturerExists($id_manufacturer)
+	public static function manufacturerExists($id_manufacturer)
 	{
 		$row = Db::getInstance()->getRow('
 		SELECT `id_manufacturer`
@@ -374,16 +378,19 @@ class ManufacturerCore extends ObjectModel
 		$ids = array();
 		foreach ($id_addresses as $id)
 			$ids[] = (int)$id['id'];
-		Db::getInstance()->ExecuteS('
+		$result1 = (Db::getInstance()->ExecuteS('
 			UPDATE `'._DB_PREFIX_.'address` 
 			SET id_manufacturer = 0 
 			WHERE id_manufacturer = '.(int)$this->id.' 
-			AND deleted = 0');
-		return (Db::getInstance()->ExecuteS('
+			AND deleted = 0') !== false);
+		$result2 = true;
+		if (count($ids))
+			$result2 = (Db::getInstance()->ExecuteS('
 			UPDATE `'._DB_PREFIX_.'address` 
 			SET id_customer = 0, id_supplier = 0, id_manufacturer = '.(int)$this->id.' 
 			WHERE id_address IN('.implode(',', $ids).') 
 			AND deleted = 0') !== false);
+		return ($result1 && $result2);
 	}
 }
 

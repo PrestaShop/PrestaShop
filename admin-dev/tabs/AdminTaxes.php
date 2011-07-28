@@ -41,12 +41,16 @@ class AdminTaxes extends AdminTab
 		'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%', 'width' => 50),
 		'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false));
 
+		$ecotax_desc = '';
+		if (Configuration::get('PS_USE_ECOTAX'))
+			$ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0');
+
 		$this->optionTitle = $this->l('Tax options');
 		$this->_fieldsOptions = array(
 		'PS_TAX' => array('title' => $this->l('Enable tax:'), 'desc' => $this->l('Select whether or not to include tax on purchases'), 'cast' => 'intval', 'type' => 'bool'),
 		'PS_TAX_DISPLAY' => array('title' => $this->l('Display tax in cart:'), 'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'), 'cast' => 'intval', 'type' => 'bool'),
 		'PS_TAX_ADDRESS_TYPE' => array('title' => $this->l('Base on:'), 'cast' => 'pSQL', 'type' => 'select', 'list' => array(array('name' => $this->l('Invoice Address'), 'id' => 'id_address_invoice'), array('name' => $this->l('Delivery Address'), 'id' => 'id_address_delivery')), 'identifier' => 'id'),
-		'PS_USE_ECOTAX' => array('title' => $this->l('Use ecotax'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+		'PS_USE_ECOTAX' => array('title' => $this->l('Use ecotax'), 'desc' => $ecotax_desc, 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 		);
 
 		if (Configuration::get('PS_USE_ECOTAX'))
@@ -180,6 +184,20 @@ class AdminTaxes extends AdminTab
 	        ((int)$id_category AND (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token!=NULL ? $token : $this->token).'" '.$confirm.'>
 	        <img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
 	        alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
+	}
+
+	public function updateOptionPsUseEcotax($value)
+	{
+		$old_value = (int)Configuration::get('PS_USE_ECOTAX');
+
+		if ($old_value != $value)
+		{
+			// Reset ecotax
+			if ($value == 0)
+				Product::resetEcoTax();
+
+			Configuration::updateValue('PS_USE_ECOTAX', (int)$value);
+}
 	}
 }
 

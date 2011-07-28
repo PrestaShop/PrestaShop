@@ -49,5 +49,3 @@ $_MODULE['<{paysafecard}prestashop>paysafecard_315e941f57cf90350aea15d968e190f8'
 $_MODULE['<{paysafecard}prestashop>paysafecard_d59048f21fd887ad520398ce677be586'] = 'Erfahren Sie mehr';
 $_MODULE['<{paysafecard}prestashop>paysafecard_ee363d108ef0c9c5a599d3afe04b9e32'] = 'Ein Fehler ist aufgetreten, überprüfen Sie die Mitteilungen, um mehr zu erfahren';
 $_MODULE['<{paysafecard}prestashop>paysafecard_a9ced76f2dd6907220fa95b3a136b04a'] = 'Ungültiger Betrag';
-
-?>

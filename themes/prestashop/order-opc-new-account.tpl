@@ -1,3 +1,23 @@
+{*
+** Compatibility code for Prestashop older than 1.4.2 using a recent theme
+** Ignore list isn't require here
+** $address exist in every PrestaShop version
+*}
+
+{* Will be deleted for 1.5 version and more *}
+{* If ordered_adr_fields doesn't exist, it's a PrestaShop older than 1.4.2 *}
+{if !isset($dlv_all_fields)}
+		{$dlv_all_fields.0 = 'company'}
+		{$dlv_all_fields.1 = 'firstname'}
+		{$dlv_all_fields.2 = 'lastname'}
+		{$dlv_all_fields.3 = 'address1'}
+		{$dlv_all_fields.4 = 'address2'}
+		{$dlv_all_fields.5 = 'postcode'}
+		{$dlv_all_fields.6 = 'city'}
+		{$dlv_all_fields.7 = 'country'}
+		{$dlv_all_fields.8 = 'state'}
+{/if}
+
 <div id="opc_new_account" class="opc-main-block">
 	<div id="opc_new_account-overlay" class="opc-overlay" style="display: none;"></div>
 	<h2>1. {l s='Account'}</h2>
@@ -14,7 +34,7 @@
 				</div>
 				<div style="margin-left:40px;margin-bottom:5px;float:left;width:40%;">
 					<label for="passwd">{l s='Password'}</label>
-					<span><input type="password" id="passwd" name="passwd" /></span>
+					<span><input type="password" id="login_passwd" name="passwd" /></span>
 				</div>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
@@ -169,7 +189,7 @@
 						{/foreach}
 					</select>
 				</p>
-				{if $newsletter}
+				{if isset($newsletter) && $newsletter}
 				<p class="checkbox">
 					<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($guestInformations) && $guestInformations.newsletter}checked="checked"{/if} />
 					<label for="newsletter">{l s='Sign up for our newsletter'}</label>
@@ -274,6 +294,7 @@
 				</p>
 
 				<div id="opc_invoice_address" class="is_customer_param">
+					{assign var=stateExist value=false}
 					<h3>{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
 					{if $field_name eq "company"}
@@ -290,7 +311,7 @@
 					</div>
 					<p class="required text dni_invoice">
 						<label for="dni">{l s='Identification number'}</label>
-						<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						<sup>*</sup>
 					</p>
@@ -329,7 +350,7 @@
 						<input type="text" class="text" name="city_invoice" id="city_invoice" value="" />
 						<sup>*</sup>
 					</p>
-					{elseif $field_name eq "country"}
+					{elseif $field_name eq "country" || $field_name eq "Country:name"}
 					<p class="required select">
 						<label for="id_country_invoice">{l s='Country'}</label>
 						<select name="id_country_invoice" id="id_country_invoice">
@@ -340,7 +361,8 @@
 						</select>
 						<sup>*</sup>
 					</p>
-					{elseif $field_name eq "state"}
+					{elseif $field_name eq "state" || $field_name eq 'State:name'}
+					{$stateExist = true}
 					<p class="required id_state_invoice select" style="display:none;">
 						<label for="id_state_invoice">{l s='State'}</label>
 						<select name="id_state_invoice" id="id_state_invoice">
@@ -350,6 +372,15 @@
 					</p>
 					{/if}
 					{/foreach}
+					{if !$stateExist}
+					<p class="required id_state_invoice select" style="display:none;">
+						<label for="id_state_invoice">{l s='State'}</label>
+						<select name="id_state_invoice" id="id_state_invoice">
+							<option value="">-</option>
+						</select>
+						<sup>*</sup>
+					</p>
+					{/if}
 					<p class="textarea is_customer_param">
 						<label for="other_invoice">{l s='Additional information'}</label>
 						<textarea name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>

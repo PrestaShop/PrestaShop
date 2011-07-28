@@ -73,20 +73,8 @@ class CategoryControllerCore extends FrontController
 		}
 	
 		parent::preProcess();
-		
-		if((int)(Configuration::get('PS_REWRITING_SETTINGS')))
-			if ($id_category = (int)Tools::getValue('id_category'))
-			{
-				$rewrite_infos = Category::getUrlRewriteInformations((int)$id_category);
-
-				$default_rewrite = array();
-				foreach ($rewrite_infos AS $infos)
-					$default_rewrite[$infos['id_lang']] = $this->context->link->getCategoryLink((int)$id_category, $infos['link_rewrite'], $infos['id_lang']);
-
-				$this->context->smarty->assign('lang_rewrite_urls', $default_rewrite);
-			}
 	}
-	
+
 	public function process()
 	{
 		parent::process();
@@ -151,6 +139,11 @@ class CategoryControllerCore extends FrontController
 					'thumbSceneSize' => Image::getSize('thumb_scene'),
 					'homeSize' => Image::getSize('home')
 				));
+				
+				if (isset(self::$cookie->id_customer))
+					self::$smarty->assign('compareProducts', CompareProduct::getCustomerCompareProducts((int)self::$cookie->id_customer));			
+				elseif (isset(self::$cookie->id_guest))
+					self::$smarty->assign('compareProducts', CompareProduct::getGuestCompareProducts((int)self::$cookie->id_guest));
 			}
 		}
 

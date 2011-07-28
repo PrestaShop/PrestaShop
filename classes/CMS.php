@@ -175,7 +175,7 @@ class CMSCore extends ObjectModel
 			AND `id_cms_category`='.(int)($movedCms['id_cms_category'])));
 	}
 	
-	static public function cleanPositions($id_category)
+	public static function cleanPositions($id_category)
 	{
 		$result = Db::getInstance()->ExecuteS('
 		SELECT `id_cms`
@@ -194,12 +194,12 @@ class CMSCore extends ObjectModel
 		return true;
 	}
 	
-	static public function getLastPosition($id_category)
+	public static function getLastPosition($id_category)
 	{
 		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'cms` WHERE `id_cms_category` = '.(int)($id_category)));
 	}
 	
-	static public function getCMSPages($id_lang = NULL, $id_cms_category = NULL, $active = true)
+	public static function getCMSPages($id_lang = NULL, $id_cms_category = NULL, $active = true)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *

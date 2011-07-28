@@ -39,7 +39,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.4';
+		$this->version = '2.6';
 		
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -67,6 +67,7 @@ class PayPal extends PaymentModule
 				$this->warning .= ', ';
 			$this->warning .= $content[1];
 		}
+
 	}
 	
 	public function install()
@@ -90,6 +91,12 @@ class PayPal extends PaymentModule
 			return $this->_checkAndUpdateFromOldVersion(true);
 		}
 		
+		/* For 1.4.3 and less compatibility */
+		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+		foreach ($updateConfig as $u)
+			if (!Configuration::get($u) && defined('_'.$u.'_'))
+				Configuration::updateValue($u, constant('_'.$u.'_'));
+
 		/* Set database */
 		if (!Db::getInstance()->Execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_order` (
 		  `id_order` int(10) unsigned NOT NULL,
@@ -133,7 +140,7 @@ class PayPal extends PaymentModule
 			$orderState->logable = true;
 			$orderState->invoice = true;
 			if ($orderState->add())
-				copy(dirname(__FILE__).'/../../img/os/'._PS_OS_PAYPAL_.'.gif', dirname(__FILE__).'/../../img/os/'.(int)$orderState->id.'.gif');
+				copy(dirname(__FILE__).'/../../img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif', dirname(__FILE__).'/../../img/os/'.(int)$orderState->id.'.gif');
 			Configuration::updateValue('PAYPAL_OS_AUTHORIZATION', (int)$orderState->id);
 		}
 		
@@ -361,6 +368,11 @@ class PayPal extends PaymentModule
 		$this->_addNewPrivateMessage((int)$order->id, $message);
 	}
 
+	public function PayPalRound($value)
+	{
+		return (floor(round($value * 100, 2)) / 100);
+	}
+
 	public function makePayPalAPIValidation($cookie, $cart, $id_currency, $payerID, $type)
 	{
 		global $cookie;
@@ -404,14 +416,14 @@ class PayPal extends PaymentModule
 			for ($i = 0; $i < sizeof($products); $i++)
 			{
 				$request .= '&L_NAME'.$i.'='.substr(urlencode($products[$i]['name'].(isset($products[$i]['attributes'])?' - '.$products[$i]['attributes']:'').(isset($products[$i]['instructions'])?' - '.$products[$i]['instructions']:'') ), 0, 127);
-				$request .= '&L_AMT'.$i.'='.urlencode(round($products[$i]['price'], 2));
+				$request .= '&L_AMT'.$i.'='.urlencode($this->PayPalRound($products[$i]['price']));
 				$request .= '&L_QTY'.$i.'='.urlencode($products[$i]['cart_quantity']);
-				$amt += round($products[$i]['price']*$products[$i]['cart_quantity'], 2);
+				$amt += $this->PayPalRound($products[$i]['price'])*$products[$i]['cart_quantity'];
 			}
-			$shipping = round($cart->getOrderShippingCost($cart->id_carrier, false), 2);
+			$shipping = $this->PayPalRound($cart->getOrderShippingCost($cart->id_carrier, false));
 			$request .= '&ITEMAMT='.urlencode($amt);
 			$request .= '&SHIPPINGAMT='.urlencode($shipping);
-			$request .= '&TAXAMT='.urlencode((float)max(round($total - $amt - $shipping, 2), 0));
+			$request .= '&TAXAMT='.urlencode((float)max($this->PayPalRound($total - $amt - $shipping), 0));
 		}
 		else
 		{
@@ -452,16 +464,16 @@ class PayPal extends PaymentModule
 		switch ($result['PAYMENTSTATUS'])
 		{
 			case 'Completed':
-				$id_order_state = _PS_OS_PAYMENT_;
+				$id_order_state = Configuration::get('PS_OS_PAYMENT');
 				break;
 			case 'Pending':
 				if ($result['PENDINGREASON'] != 'authorization')
-					$id_order_state = _PS_OS_PAYPAL_;
+					$id_order_state = Configuration::get('PS_OS_PAYPAL');
 				else
 					$id_order_state = (int)(Configuration::get('PAYPAL_OS_AUTHORIZATION'));
 				break;
 			default:
-				$id_order_state = _PS_OS_ERROR_;
+				$id_order_state = Configuration::get('PS_OS_ERROR');
 		}
 
 		// Call payment validation method
@@ -1065,7 +1077,7 @@ class PayPal extends PaymentModule
 				die(Tools::displayError('Error when updating PayPal database'));
 			$history = new OrderHistory();
 			$history->id_order = (int)($id_order);
-			$history->changeIdOrderState(_PS_OS_REFUND_, (int)($id_order));
+			$history->changeIdOrderState(Configuration::get('PS_OS_REFUND'), (int)($id_order));
 			$history->addWithemail();
 		}
 		else
@@ -1102,7 +1114,7 @@ class PayPal extends PaymentModule
 		{
 			$history = new OrderHistory();
 			$history->id_order = (int)($id_order);
-			$history->changeIdOrderState(_PS_OS_PAYMENT_, (int)$id_order);
+			$history->changeIdOrderState(Configuration::get('PS_OS_PAYMENT'), (int)$id_order);
 			$history->addWithemail();
 			$message .= $this->l('Order finished with PayPal!');
 		}
@@ -1143,7 +1155,7 @@ class PayPal extends PaymentModule
 					{
 						$history = new OrderHistory();
 						$history->id_order = (int)($id_order);
-						$history->changeIdOrderState(_PS_OS_PAYMENT_, (int)($id_order));
+						$history->changeIdOrderState(Configuration::get('PS_OS_PAYMENT'), (int)($id_order));
 						$history->addWithemail();
 					}
 					elseif ($response['PAYMENTSTATUS'] == 'Pending' AND $response['PENDINGREASON'] == 'authorization')
@@ -1157,7 +1169,7 @@ class PayPal extends PaymentModule
 					{
 						$history = new OrderHistory();
 						$history->id_order = (int)($id_order);
-						$history->changeIdOrderState(_PS_OS_ERROR_, (int)($id_order));
+						$history->changeIdOrderState(Configuration::get('PS_OS_ERROR'), (int)($id_order));
 						$history->addWithemail();
 					}
 					if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `payment_status` = \''.pSQL($response['PAYMENTSTATUS']).($response['PENDINGREASON'] == 'authorization' ? '_authorization' : '').'\' WHERE `id_order` = '.(int)$id_order))
@@ -1221,6 +1233,12 @@ class PayPal extends PaymentModule
 			$this->registerHook('cancelProduct');
 			$this->registerHook('adminOrder');
 
+			/* For 1.4.3 and less compatibility */
+			$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+			foreach ($updateConfig as $u)
+				if (!Configuration::get($u) && defined('_'.$u.'_'))
+					Configuration::updateValue($u, constant('_'.$u.'_'));
+
 			/* Create OrderState */
 			if (!Configuration::get('PAYPAL_OS_AUTHORIZATION'))
 			{
@@ -1240,7 +1258,7 @@ class PayPal extends PaymentModule
 				$orderState->logable = true;
 				$orderState->invoice = true;
 				if ($orderState->add())
-					copy(_PS_ROOT_DIR_.'/img/os/'._PS_OS_PAYPAL_.'.gif', _PS_ROOT_DIR_.'/img/os/'.(int)($orderState->id).'.gif');
+					@copy(_PS_ROOT_DIR_.'/img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif', _PS_ROOT_DIR_.'/img/os/'.(int)($orderState->id).'.gif');
 				Configuration::updateValue('PAYPAL_OS_AUTHORIZATION', (int)($orderState->id));
 			}
 			/* Delete unseless configuration */

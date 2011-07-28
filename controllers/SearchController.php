@@ -27,13 +27,12 @@
 
 class SearchControllerCore extends FrontController
 {
+	public $php_self = 'search.php';
 	public $instantSearch;
 	public $ajaxSearch;
 	
 	public function __construct()
 	{
-		$this->php_self = 'search.php';
-		
 		parent::__construct();
 		
 		$this->instantSearch = Tools::getValue('instantSearch');

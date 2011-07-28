@@ -46,7 +46,7 @@ else
 if (isset($_REQUEST['xml']))
 {
 	// if a XML is in POST
-	$input_xml = $_REQUEST['xml'];
+	$input_xml = stripslashes($_REQUEST['xml']);
 }
 else
 {

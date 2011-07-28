@@ -72,7 +72,7 @@ abstract class ModuleCore
 
 	protected $identifier = 'id_module';
 
-	static public $_db;
+	public static $_db;
 
 	/** @var array to store the limited country */
 	public $limited_countries = array();
@@ -456,6 +456,8 @@ abstract class ModuleCore
 	 */
 	public static function getModuleNameFromClass($currentClass)
 	{
+		global $cookie;
+		
 		// Module can now define AdminTab keeping the module translations method,
 		// i.e. in modules/[module name]/[iso_code].php
 		if (!isset(self::$classInModule[$currentClass]))
@@ -485,7 +487,7 @@ abstract class ModuleCore
 	  * @param string $moduleName Module name
 	  * @return Module instance
 	  */
-	static public function getInstanceByName($moduleName)
+	public static function getInstanceByName($moduleName)
 	{
 		if (!Tools::file_exists_cache(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php'))
 			return false;
@@ -521,6 +523,11 @@ abstract class ModuleCore
 		if (isset($id2name[$moduleID]))
 			return Module::getInstanceByName($id2name[$moduleID]);
 		return false;
+	}
+
+	public static function configXmlStringFormat($string)
+	{
+		return str_replace('\'', '\\\'', Tools::htmlentitiesDecodeUTF8($string));
 	}
 
 	/**
@@ -567,12 +574,12 @@ abstract class ModuleCore
 					$item->warning = '';
 					foreach ($xml_module as $k => $v)
 						$item->$k = (string) $v;
-					$item->displayName = Module::findTranslation($xml_module->name, $xml_module->displayName, (string)$xml_module->name);
-					$item->description = Module::findTranslation($xml_module->name, $xml_module->description, (string)$xml_module->name);
-					$item->author = Module::findTranslation($xml_module->name, $xml_module->author, (string)$xml_module->name);
+					$item->displayName = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
+					$item->description = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
+					$item->author = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
 
 					if (isset($xml_module->confirmUninstall))
-						$item->confirmUninstall = Module::findTranslation($xml_module->name, $xml_module->confirmUninstall, (string)$xml_module->name);
+						$item->confirmUninstall = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
 					$moduleList[$moduleListCursor] = $item;
@@ -641,7 +648,7 @@ abstract class ModuleCore
 		$modules = scandir(_PS_MODULE_DIR_);
 		foreach ($modules AS $name)
 		{
-			if (Tools::file_exists_cache($moduleFile = _PS_MODULE_DIR_.$name.'/'.$name.'.php'))
+			if (is_dir(_PS_MODULE_DIR_.$name) && Tools::file_exists_cache(_PS_MODULE_DIR_.$name.'/'.$name.'.php'))
 			{
 				if (!Validate::isModuleName($name))
 					die(Tools::displayError().' (Module '.$name.')');
@@ -660,7 +667,6 @@ abstract class ModuleCore
 	public static function getNonNativeModuleList()
 	{
 		$db = Db::getInstance();
-		$modulesDirOnDisk = Module::getModulesDirOnDisk();
 
 		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
 		$nativeModules = simplexml_load_file($module_list_xml);
@@ -766,7 +772,7 @@ abstract class ModuleCore
 				$hookArgs['altern'] = ++$altern;
 
 				$display = call_user_func(array($moduleInstance, 'hook'.$hook_name), $hookArgs);
-				if ($array['live_edit'] && ((Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))))
+				if ($array['live_edit'] && ((Tools::isSubmit('live_edit') AND Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))))
 				{
 					$live_edit = true;
 					$output .= '<script type="text/javascript"> modules_list.push(\''.$moduleInstance->name.'\');</script>
@@ -792,8 +798,24 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 		$hookArgs = array('cookie' => $context->cookie, 'cart' => $context->cart);
-		$billing = new Address((int)($context->cart->id_address_invoice));
 		$output = '';
+
+		$result = self::getPaymentModules();
+
+		if ($result)
+			foreach ($result AS $module)
+				if (($moduleInstance = Module::getInstanceByName($module['name'])) AND is_callable(array($moduleInstance, 'hookpayment')))
+					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
+						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
+		return $output;
+	}
+	
+	public static function getPaymentModules()
+	{
+		$context = Context::getContext();
+		$id_customer = $context->customer->id;
+		$billing = new Address((int)$context->cart->id_address_invoice);
+
 		$list = Context::getContext()->shop->getListOfID();
 		$sql = 'SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 				FROM `'._DB_PREFIX_.'module_country` mc
@@ -811,12 +833,8 @@ abstract class ModuleCore
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-		if ($result)
-			foreach ($result AS $k => $module)
-				if (($moduleInstance = Module::getInstanceByName($module['name'])) AND is_callable(array($moduleInstance, 'hookpayment')))
-					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
-						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
-		return $output;
+		
+		return $result;
 	}
 
 	/**
@@ -869,14 +887,17 @@ abstract class ModuleCore
 	 * @param boolean|string $specific filename to use in translation key
 	 * @return string Translation
 	 */
-	public function l($string, $specific = false)
+	public function l($string, $specific = false, $id_lang = null)
 	{
 		if (self::$_generateConfigXmlMode)
 			return $string;
 		
 		global $_MODULES, $_MODULE;
 
+		if ($id_lang == null)
+			$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)(Configuration::get('PS_LANG_DEFAULT')) : (int)($cookie->id_lang);
 		$file = _PS_MODULE_DIR_.$this->name.'/'.Context::getContext()->language->iso_code.'.php';
+
 		if (Tools::file_exists_cache($file) AND include_once($file))
 			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 		
@@ -1115,13 +1136,7 @@ abstract class ModuleCore
 
 	protected function _clearCache($template, $cacheId = NULL, $compileId = NULL)
 	{
-		$context = Context::getContext();
-		/* Use Smarty 3 API calls */
-		if (!Configuration::get('PS_FORCE_SMARTY_2')) /* PHP version > 5.1.2 */
-			return $context->smarty->clearCache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
-		/* or keep a backward compatibility if PHP version < 5.1.2 */
-		else
-			return $context->smarty->clear_cache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
+		Tools::clearCache(Context::getContext()->smarty);
 	}
 	
 	protected function _generateConfigXml()
@@ -1138,7 +1153,7 @@ abstract class ModuleCore
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(sizeof($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
-			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', utf8_encode($xml));
+			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', $xml);
 	}
 	
 	/**

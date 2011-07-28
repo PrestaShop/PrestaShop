@@ -82,7 +82,7 @@ class GroupReductionCore extends ObjectModel
 		return Db::getInstance()->Execute(rtrim($query, ', '));
 	}
 
-	static public function getGroupReductions($id_group, $id_lang)
+	public static function getGroupReductions($id_group, $id_lang)
 	{
 		return Db::getInstance()->ExecuteS('
 			SELECT gr.`id_group_reduction`, gr.`id_group`, gr.`id_category`, gr.`reduction`, cl.`name` AS category_name
@@ -92,14 +92,14 @@ class GroupReductionCore extends ObjectModel
 		);
 	}
 
-	static public function getValueForProduct($id_product, $id_group)
+	public static function getValueForProduct($id_product, $id_group)
 	{
 		if (!isset(self::$reductionCache[$id_product.'-'.$id_group]))
 			self::$reductionCache[$id_product.'-'.$id_group] = Db::getInstance()->getValue('SELECT `reduction` FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_product` = '.(int)($id_product).' AND `id_group` = '.(int)($id_group));
 		return self::$reductionCache[$id_product.'-'.$id_group];
 	}
 
-	static public function doesExist($id_group, $id_category)
+	public static function doesExist($id_group, $id_category)
 	{
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_group` FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)($id_group).' AND `id_category` = '.(int)($id_category));
 	}

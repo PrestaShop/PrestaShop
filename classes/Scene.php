@@ -239,7 +239,7 @@ class SceneCore extends ObjectModel
 	* @param integer $id_scene Scene id
 	* @return array Categories where scene is indexed
 	*/
-	static public function getIndexedCategories($id_scene)
+	public static function getIndexedCategories($id_scene)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT `id_category`
@@ -253,7 +253,7 @@ class SceneCore extends ObjectModel
 	  * @param string $name Scene name
 	  * @return string Name without position
 	  */
-	static public function hideScenePosition($name)
+	public static function hideScenePosition($name)
 	{
 		return preg_replace('/^[0-9]+\./', '', $name);
 	}

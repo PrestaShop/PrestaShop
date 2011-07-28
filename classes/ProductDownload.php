@@ -141,7 +141,7 @@ class ProductDownloadCore extends ObjectModel
 	 *
 	 * @return boolean
 	 */
-	static public function checkWritableDir()
+	public static function checkWritableDir()
 	{
 		return is_writable(_PS_DOWNLOAD_DIR_);
 	}
@@ -157,12 +157,10 @@ class ProductDownloadCore extends ObjectModel
 		if (array_key_exists($id_product, self::$_productIds))
 			return self::$_productIds[$id_product];
 			
-		$data = Db::getInstance()->getRow('
+		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)($id_product).' AND `active` = 1');
-		
-		self::$_productIds[$id_product] = isset($data['id_product_download']) ? (int)($data['id_product_download']) : false;
+		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');
 		
 		return self::$_productIds[$id_product];
 	}
@@ -175,12 +173,11 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function getFilenameFromIdProduct($id_product)
 	{
-		$data = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `physically_filename`
 		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)($id_product).'
+		WHERE `id_product` = '.(int)$id_product.'
 		AND `active` = 1');
-		return $data['physically_filename'];
 	}
 
 	/**
@@ -259,7 +256,7 @@ class ProductDownloadCore extends ObjectModel
 	 *
 	 * @return string Sha1 unique filename
 	 */
-	static public function getNewFilename()
+	public static function getNewFilename()
 	{
 		$ret = sha1(microtime());
 		if (file_exists(_PS_DOWNLOAD_DIR_.$ret))

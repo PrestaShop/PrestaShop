@@ -67,7 +67,7 @@ class FeatureCore extends ObjectModel
 	 * @return array Array with feature's data
 	 * @static
 	 */
-	static public function getFeature($id_lang, $id_feature)
+	public static function getFeature($id_lang, $id_feature)
 	{
 		return Db::getInstance()->getRow('
 		SELECT *
@@ -83,7 +83,7 @@ class FeatureCore extends ObjectModel
 	 * @return array Multiple arrays with feature's data
 	 * @static
 	 */
-	static public function getFeatures($id_lang)
+	public static function getFeatures($id_lang)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *
@@ -132,7 +132,7 @@ class FeatureCore extends ObjectModel
 	 	$fields = $this->getTranslationsFieldsChild();
 		foreach ($fields as $field)
 		{
-			foreach ($field as $key => $value)
+			foreach (array_keys($field) as $key)
 			 	if (!Validate::isTableOrIdentifier($key))
 	 				die(Tools::displayError());
 			$mode = Db::getInstance()->getRow('SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).
@@ -151,7 +151,7 @@ class FeatureCore extends ObjectModel
 	* @return int Number of feature
 	* @static
 	*/
-	static public function nbFeatures($id_lang)
+	public static function nbFeatures($id_lang)
 	{
 		$result = Db::getInstance()->getRow('
 		SELECT COUNT(ag.`id_feature`) as nb
@@ -168,7 +168,7 @@ class FeatureCore extends ObjectModel
 	* @param integer $id_product Product id	
 	* @param array $value Feature Value		
 	*/	
-	static public function addFeatureImport($name)
+	public static function addFeatureImport($name)
 	{
 		$rq = Db::getInstance()->getRow('SELECT `id_feature` FROM '._DB_PREFIX_.'feature_lang WHERE `name` = \''.pSQL($name).'\' GROUP BY `id_feature`');
 		if (!empty($rq))

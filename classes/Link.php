@@ -234,9 +234,10 @@ class LinkCore
 	 */
 	public function getImageLink($name, $ids, $type = NULL)
 	{
-		// legacy mode
-		if (Configuration::get('PS_LEGACY_IMAGES') 
+		// legacy mode or default image
+		if ((Configuration::get('PS_LEGACY_IMAGES') 
 			&& (file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'.jpg')))
+			|| strpos($ids, 'default') !== false)
 		{
 		if ($this->allow == 1)
 			$uri_path = __PS_BASE_URI__.$ids.($type ? '-'.$type : '').'/'.$name.'.jpg';

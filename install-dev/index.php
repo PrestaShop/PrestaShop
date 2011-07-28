@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date dans le passé
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set('Europe/Paris');
@@ -73,6 +73,20 @@ if (file_exists(INSTALL_PATH.'/../config/settings.inc.php'))
 {
 	include(INSTALL_PATH.'/../config/settings.inc.php');
 	$oldversion =_PS_VERSION_;
+	
+	// fix : complete version number if there is not all 4 numbers
+	// for example replace 1.4.3 by 1.4.3.0
+	// consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
+	// @since 1.4.4.0
+	$arrayVersion = preg_split('#\.#', $oldversion);
+	$versionNumbers = sizeof($arrayVersion);
+
+	if ($versionNumbers != 4)
+		$arrayVersion = array_pad($arrayVersion, 4, '0');
+
+	$oldversion = implode('.', $arrayVersion);
+	// end of fix
+	
 	$tooOld = (version_compare($oldversion, MINIMUM_VERSION_TO_UPDATE) == -1);
 	$sameVersions = (version_compare($oldversion, INSTALL_VERSION) == 0);
 	$installOfOldVersion = (version_compare($oldversion, INSTALL_VERSION) == 1);
@@ -99,7 +113,7 @@ if ($lm->getIncludeTradFilename())
 	<meta http-equiv="Cache" content="no store" />
 	<meta http-equiv="Expires" content="-1" />
 	<meta name="robots" content="noindex" />
-	<title><?php echo lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?></title>
+	<title><?php echo sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?></title>
 	<link rel="stylesheet" type="text/css" media="all" href="view.css"/>
 	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/jquery-1.4.4.min.js"></script>
 	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/ajaxfileupload.js"></script>
@@ -113,15 +127,15 @@ if ($lm->getIncludeTradFilename())
 		var id_lang = "<?php echo (isset($_GET['language']) ? (int)($_GET['language']) : 0); ?>";
 
 		//localWords
-		var Step1Title = "<?php echo lang('Welcome').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step2title = "<?php echo lang('System Compatibility').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step3title = "<?php echo lang('System Configuration').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step4title = "<?php echo lang('Shop Configuration').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step5title = "<?php echo lang('Ready, set, go!').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step6title = "<?php echo lang('Disclaimer').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step7title = "<?php echo lang('System Compatibility').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step8title = "<?php echo lang('Errors while updating...').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
-		var step9title = "<?php echo lang('Ready, set, go!').' - '.lang('PrestaShop '.INSTALL_VERSION.' Installer'); ?>";
+		var Step1Title = "<?php echo lang('Welcome').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step2title = "<?php echo lang('System Compatibility').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step3title = "<?php echo lang('System Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step4title = "<?php echo lang('Shop Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step5title = "<?php echo lang('Ready, set, go!').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step6title = "<?php echo lang('Disclaimer').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step7title = "<?php echo lang('System Compatibility').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step8title = "<?php echo lang('Errors while updating...').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step9title = "<?php echo lang('Ready, set, go!').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var txtNext = "<?php echo lang('Next')?>"
 		var txtDbLoginEmpty = "<?php echo lang('Please set a database login'); ?>";
 		var txtDbNameEmpty = "<?php echo lang('Please set a database name'); ?>";
@@ -194,7 +208,7 @@ if ($lm->getIncludeTradFilename())
 		txtError[999] = "<?php echo lang('No error code available.'); ?>";
 		//upgrader
 		txtError[27] = "<?php echo lang('This installer is too old.'); ?>";
-		txtError[28] = "<?php echo lang('You already have the '.INSTALL_VERSION.' version.'); ?>";
+		txtError[28] = "<?php echo sprintf(lang('You already have the %s version.'), INSTALL_VERSION); ?>";
 		txtError[29] = "<?php echo lang('There is no older version. Did you delete or rename the config/settings.inc.php file?'); ?>";
 		txtError[30] = "<?php echo lang('The config/settings.inc.php file was not found. Did you delete or rename this file?'); ?>";
 		txtError[31] = "<?php echo lang('Can\'t find the sql upgrade files. Please verify that the /install/sql/upgrade folder is not empty)'); ?>";
@@ -245,18 +259,30 @@ if ($lm->getIncludeTradFilename())
 </div>
 
 <div id="container">
+<div id="header" class="clearfix">
+	<ul id="headerLinks">
+		<li class="lnk_forum"><a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Forum'); ?></a></li>
+		<li class="lnk_blog last"><a href="http://www.prestashop.com/blog/"><?php echo lang('Blog'); ?></a></li>
+		<?php if ((isset($_GET['language']) AND $_GET['language'] == 1) OR $lm->getIsoCodeSelectedLang() == 'fr'): ?>
+		<li id="phone_block" class="last">
+			<div><?php echo '<span>'.lang('Contact us!').'</span><br />'.lang('+33 (0)1.40.18.30.04'); ?></div>
+		</li>
+		<?php endif; ?>
+	</ul>
+
+	<div id="PrestaShopLogo">PrestaShop</div>
+	
+	<div id="infosSup">
+		<div class="installerVersion" id="installerVersion-<?php echo $lm->getIsoCodeSelectedLang()?>">PrestaShop <?php echo INSTALL_VERSION.'<br />'.lang('Installer'); ?></div>
+		<div class="updaterVersion" id="updaterVersion-<?php echo $lm->getIsoCodeSelectedLang()?>">PrestaShop <?php echo INSTALL_VERSION.'<br />'.lang('Updater'); ?></div>
+	</div>
+</div><!-- /end header -->
 
 <div id="loaderSpace">
 	<div id="loader">&nbsp;</div>
-</div>
+</div><!-- /end loaderSpace -->
 
 <div id="leftpannel">
-	<h1>
-		<div id="PrestaShopLogo">&nbsp;</div>
-		<div class="installerVersion" id="installerVersion-<?php echo $lm->getIsoCodeSelectedLang()?>">PrestaShop <?php echo INSTALL_VERSION.'<br />'.lang('Installer'); ?></div>
-		<div class="updaterVersion" id="updaterVersion-<?php echo $lm->getIsoCodeSelectedLang()?>">PrestaShop <?php echo INSTALL_VERSION.'<br />'.lang('Updater'); ?></div>
-	</h1>
-
 	<ol id="tabs"><li>&nbsp;</li></ol>
 
 	<div id="help">
@@ -265,27 +291,28 @@ if ($lm->getIncludeTradFilename())
 		<div class="content">
 			<p class="title"><?php echo lang('Need help?'); ?></p>
 			<p class="title_down"><?php echo lang('All tips and advice about PrestaShop'); ?></p>
-
-			<ul>
-				<li><img src="img/puce.gif" alt="" /> <a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Forum'); ?></a><br class="clear" /></li>
-				<li><img src="img/puce.gif" alt="" /> <a href="http://www.prestashop.com/blog/"><?php echo lang('Blog'); ?></a><br class="clear" /></li>
-			</ul>
 		</div>
-	</div>
-
-	<?php if ((isset($_GET['language']) AND $_GET['language'] == 1) OR $lm->getIsoCodeSelectedLang() == 'fr'): ?>
-	<p id="phone_block">
-		<?php echo '<span>'.lang('A question about PrestaShop or issues during installation or upgrade? Call us!').'</span><br /><img src="img/phone.png" style="vertical-align: middle;" alt="" /> '.lang('+33 (0)1.40.18.30.04'); ?>
-	</p>
-	<?php endif; ?>
-</div>
+	</div><!-- /end help -->
+</div><!-- /end leftpannel -->
 
 
 <div id="sheets">
 
 	<div class="sheet shown" id="sheet_lang">
-		<h2><?php echo lang('Welcome')?></h2>
-		<h3><?php echo lang('Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.')?><br /><?php echo lang('Please allow 5-15 minutes to complete the installation process.')?></h3>
+		<div class="contentTitle">
+			<h1><?php echo lang('Welcome')?></h1>
+			
+			<ul id="stepList_1" class="stepList clearfix">
+				<li>Etape 1</li>
+				<li>Etape 2</li>
+				<li>Etape 3</li>
+				<li>Etape 4</li>
+				<li>Etape 5</li>
+			</ul>
+		</div>
+		
+		<h2><?php echo lang('Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.')?></h2>
+		<p><?php echo lang('Please allow 5-15 minutes to complete the installation process.')?></p>
 		<p><?php echo lang('The PrestaShop Installer will do most of the work in just a few clicks.')?><br /><?php echo lang('However, you must know how to do the following manually:')?></p>
 		<ul>
 			<li><?php echo lang('Set permissions on folders & subfolders using Terminal or an FTP client')?></li>
@@ -296,7 +323,7 @@ if ($lm->getIncludeTradFilename())
 			<?php echo lang('For more information, please consult our') ?> <a href="http://www.prestashop.com/wiki/Getting_Started/"><?php echo lang('online documentation') ?></a>.
 		</p>
 
-		<h3><?php echo lang('Choose the installer language:')?></h3>
+		<h2><?php echo lang('Choose the installer language:')?></h2>
 		<form id="formSetInstallerLanguage" action="<?php $_SERVER['REQUEST_URI']; ?>" method="get">
 			<ul id="langList" style="line-height: 20px;">
 			<?php foreach ($lm->getAvailableLangs() as $lang): ?>
@@ -314,14 +341,15 @@ if ($lm->getIncludeTradFilename())
 			<?php echo lang('Prestashop and community offers over 40 different languages for free download on'); ?> <a href="http://www.prestashop.com" target="_blank">http://www.prestashop.com</a>
 		</p>
 
-		<h3><?php echo lang('Installation method')?></h3>
+		<h2><?php echo lang('Installation method')?></h2>
 		<form id="formSetMethod" action="<?php $_SERVER['REQUEST_URI']; ?>" method="post">
 			<p><input <?php echo (!($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion)) ? 'checked="checked"' : '' ?> type="radio" value="install" name="typeInstall" id="typeInstallInstall"/><label for="typeInstallInstall"><?php echo lang('Installation : complete install of the PrestaShop Solution')?></label></p>
 			<p <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? '' : 'class="disabled"'; ?>><input <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? 'checked="checked"' : 'disabled="disabled"'; ?> type="radio" value="upgrade" name="typeInstall" id="typeInstallUpgrade"/><label <?php echo ($oldversion === false) ? 'class="disabled"' : ''; ?> for="typeInstallUpgrade"><?php echo lang('Upgrade: get the latest stable version!')?> <?php echo ($oldversion === false) ? lang('(no old version detected)') : ("(".(  ($tooOld) ? lang('the already installed version detected is too old, no more update available') : ($installOfOldVersion ? lang('the already installed version detected is too recent, no update available') : lang('installed version detected').' : '.$oldversion    )).")") ?></label></p>
 		</form>
-		<h2><?php echo lang('License Agreement')?></h2>
+		<h2><?php echo lang('Licenses Agreement')?></h2>
 		<div style="height:200px; border:1px solid #ccc; margin-bottom:8px; padding:5px; background:#fff; overflow: auto; overflow-x:hidden; overflow-y:scroll;">
-			<h3>Open Software License ("OSL") v. 3.0</h3>
+			<strong><?php echo lang('PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.')?></strong>
+			<h3>Core: Open Software License ("OSL") v. 3.0</h3>
 			<p>This Open Software License (the "License") applies to any original work of authorship (the "Original Work") whose owner (the "Licensor") has placed the following licensing notice adjacent to the copyright notice for the Original Work:</p>
 			<h4>Licensed under the Open Software License version 3.0</h4>
 			<p><strong>1. Grant of Copyright License.</strong> Licensor grants You a worldwide, royalty-free, non-exclusive, sublicensable license, for the duration of the copyright, to do the following:</p>
@@ -347,17 +375,53 @@ if ($lm->getIncludeTradFilename())
 			<p><strong>14. Definition of "You" in This License.</strong> "You" throughout this License, whether in upper or lower case, means an individual or a legal entity exercising rights under, and complying with all of the terms of, this License. For legal entities, "You" includes any entity that controls, is controlled by, or is under common control with you. For purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.</p>
 			<p><strong>15. Right to Use.</strong> You may use the Original Work in all ways not otherwise restricted or conditioned by this License or by law, and Licensor promises not to interfere with or be responsible for such uses by You.</p>
 			<p><strong>16. Modification of This License.</strong> This License is Copyright &copy; 2005 Lawrence Rosen. Permission is granted to copy, distribute, or communicate this License without modification. Nothing in this License permits You to modify this License as applied to the Original Work or to Derivative Works. However, You may modify the text of this License and copy, distribute or communicate your modified version (the "Modified License") and apply it to other original works of authorship subject to the following conditions: (i) You may not indicate in any way that your Modified License is the "Open Software License" or "OSL" and you may not use those names in the name of your Modified License; (ii) You must replace the notice specified in the first paragraph above with the notice "Licensed under Open Software License ("OSL") v. 3.0" or with a notice of your own that is not confusingly similar to the notice in this License; and (iii) You may not claim that your original works are open source software unless your Modified License has been approved by Open Source Initiative (OSI) and You comply with its license review and certification process.</p>
+			
+			<h3>Modules and Themes: Academic Free License ("AFL") v. 3.0</h3>
+			<p>This Academic Free License (the "License") applies to any original work of authorship (the "Original Work") whose owner (the "Licensor") has placed the following licensing notice adjacent to the copyright notice for the Original Work:</p>
+			<h4>Licensed under the Academic Free License version 3.0</h4>
+			<p><strong>1. Grant of Copyright License.</strong> Licensor grants You a worldwide, royalty-free, non-exclusive, sublicensable license, for the duration of the copyright, to do the following:</p>
+			<ol type="a">
+				<li>to reproduce the Original Work in copies, either alone or as part of a collective work;</li>
+				<li>to translate, adapt, alter, transform, modify, or arrange the Original Work, thereby creating derivative works ("Derivative Works") based upon the Original Work;</li>
+				<li>to distribute or communicate copies of the Original Work and Derivative Works to the public, <u>under any license of your choice that does not contradict the terms and conditions, including Licensor's reserved rights and remedies, in this Academic Free License</u>;</li>
+				<li>to perform the Original Work publicly; and</li>
+				<li>to display the Original Work publicly.</li>
+			</ol>
+			<p><strong>2. Grant of Patent License.</strong> Licensor grants You a worldwide, royalty-free, non-exclusive, sublicensable license, under patent claims owned or controlled by the Licensor that are embodied in the Original Work as furnished by the Licensor, for the duration of the patents, to make, use, sell, offer for sale, have made, and import the Original Work and Derivative Works.</p>
+			<p><strong>3. Grant of Source Code License.</strong> The term "Source Code" means the preferred form of the Original Work for making modifications to it and all available documentation describing how to modify the Original Work. Licensor agrees to provide a machine-readable copy of the Source Code of the Original Work along with each copy of the Original Work that Licensor distributes. Licensor reserves the right to satisfy this obligation by placing a machine-readable copy of the Source Code in an information repository reasonably calculated to permit inexpensive and convenient access by You for as long as Licensor continues to distribute the Original Work.</p>
+			<p><strong>4. Exclusions From License Grant.</strong> Neither the names of Licensor, nor the names of any contributors to the Original Work, nor any of their trademarks or service marks, may be used to endorse or promote products derived from this Original Work without express prior permission of the Licensor. Except as expressly stated herein, nothing in this License grants any license to Licensor's trademarks, copyrights, patents, trade secrets or any other intellectual property. No patent license is granted to make, use, sell, offer for sale, have made, or import embodiments of any patent claims other than the licensed claims defined in Section 2. No license is granted to the trademarks of Licensor even if such marks are included in the Original Work. Nothing in this License shall be interpreted to prohibit Licensor from licensing under terms different from this License any Original Work that Licensor otherwise would have a right to license.</p>
+			<p><strong>5. External Deployment.</strong> The term "External Deployment" means the use, distribution, or communication of the Original Work or Derivative Works in any way such that the Original Work or Derivative Works may be used by anyone other than You, whether those works are distributed or communicated to those persons or made available as an application intended for use over a network. As an express condition for the grants of license hereunder, You must treat any External Deployment by You of the Original Work or a Derivative Work as a distribution under section 1(c).</p>
+			<p><strong>6. Attribution Rights.</strong> You must retain, in the Source Code of any Derivative Works that You create, all copyright, patent, or trademark notices from the Source Code of the Original Work, as well as any notices of licensing and any descriptive text identified therein as an "Attribution Notice." You must cause the Source Code for any Derivative Works that You create to carry a prominent Attribution Notice reasonably calculated to inform recipients that You have modified the Original Work.</p>
+			<p><strong>7. Warranty of Provenance and Disclaimer of Warranty.</strong> Licensor warrants that the copyright in and to the Original Work and the patent rights granted herein by Licensor are owned by the Licensor or are sublicensed to You under the terms of this License with the permission of the contributor(s) of those copyrights and patent rights. Except as expressly stated in the immediately preceding sentence, the Original Work is provided under this License on an "AS IS" BASIS and WITHOUT WARRANTY, either express or implied, including, without limitation, the warranties of non-infringement, merchantability or fitness for a particular purpose. THE ENTIRE RISK AS TO THE QUALITY OF THE ORIGINAL WORK IS WITH YOU. This DISCLAIMER OF WARRANTY constitutes an essential part of this License. No license to the Original Work is granted by this License except under this disclaimer.</p>
+			<p><strong>8. Limitation of Liability.</strong> Under no circumstances and under no legal theory, whether in tort (including negligence), contract, or otherwise, shall the Licensor be liable to anyone for any indirect, special, incidental, or consequential damages of any character arising as a result of this License or the use of the Original Work including, without limitation, damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses. This limitation of liability shall not apply to the extent applicable law prohibits such limitation.</p>
+			<p><strong>9. Acceptance and Termination.</strong> If, at any time, You expressly assented to this License, that assent indicates your clear and irrevocable acceptance of this License and all of its terms and conditions. If You distribute or communicate copies of the Original Work or a Derivative Work, You must make a reasonable effort under the circumstances to obtain the express assent of recipients to the terms of this License. This License conditions your rights to undertake the activities listed in Section 1, including your right to create Derivative Works based upon the Original Work, and doing so without honoring these terms and conditions is prohibited by copyright law and international treaty. Nothing in this License is intended to affect copyright exceptions and limitations (including "fair use" or "fair dealing"). This License shall terminate immediately and You may no longer exercise any of the rights granted to You by this License upon your failure to honor the conditions in Section 1(c).</p>
+			<p><strong>10. Termination for Patent Action.</strong> This License shall terminate automatically and You may no longer exercise any of the rights granted to You by this License as of the date You commence an action, including a cross-claim or counterclaim, against Licensor or any licensee alleging that the Original Work infringes a patent. This termination provision shall not apply for an action alleging patent infringement by combinations of the Original Work with other software or hardware.</p>
+			<p><strong>11. Jurisdiction, Venue and Governing Law.</strong> Any action or suit relating to this License may be brought only in the courts of a jurisdiction wherein the Licensor resides or in which Licensor conducts its primary business, and under the laws of that jurisdiction excluding its conflict-of-law provisions. The application of the United Nations Convention on Contracts for the International Sale of Goods is expressly excluded. Any use of the Original Work outside the scope of this License or after its termination shall be subject to the requirements and penalties of copyright or patent law in the appropriate jurisdiction. This section shall survive the termination of this License.</p>
+			<p><strong>12. Attorneys' Fees.</strong> In any action to enforce the terms of this License or seeking damages relating thereto, the prevailing party shall be entitled to recover its costs and expenses, including, without limitation, reasonable attorneys' fees and costs incurred in connection with such action, including any appeal of such action. This section shall survive the termination of this License.</p>
+			<p><strong>13. Miscellaneous.</strong> If any provision of this License is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable.</p>
+			<p><strong>14. Definition of "You" in This License.</strong> "You" throughout this License, whether in upper or lower case, means an individual or a legal entity exercising rights under, and complying with all of the terms of, this License. For legal entities, "You" includes any entity that controls, is controlled by, or is under common control with you. For purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.</p>
+			<p><strong>15. Right to Use.</strong> You may use the Original Work in all ways not otherwise restricted or conditioned by this License or by law, and Licensor promises not to interfere with or be responsible for such uses by You.</p>
+			<p><strong>16. Modification of This License.</strong> This License is Copyright © 2005 Lawrence Rosen. Permission is granted to copy, distribute, or communicate this License without modification. Nothing in this License permits You to modify this License as applied to the Original Work or to Derivative Works. However, You may modify the text of this License and copy, distribute or communicate your modified version (the "Modified License") and apply it to other original works of authorship subject to the following conditions: (i) You may not indicate in any way that your Modified License is the "Academic Free License" or "AFL" and you may not use those names in the name of your Modified License; (ii) You must replace the notice specified in the first paragraph above with the notice "Licensed under <insert your license name here>" or with a notice of your own that is not confusingly similar to the notice in this License; and (iii) You may not claim that your original works are open source software unless your Modified License has been approved by Open Source Initiative (OSI) and You comply with its license review and certification process.</p>
 		</div>
 		<p>
 			<input type="checkbox" id="set_license" class="required" style="vertical-align: middle;" /><label for="set_license"><strong><?php echo lang('I agree to the above terms and conditions.'); ?></strong></label><br/>
 		</p>
 	</div>
 
-		<div class="sheet" id="sheet_require">
+		<div class="sheet clearfix" id="sheet_require">
+			<div class="contentTitle">
+				<h1><?php echo lang('System and permissions')?></h1>
 
-			<h2><?php echo lang('System and permissions')?></h2>
+			<ul id="stepList_2" class="stepList clearfix">
+				<li class="ok">Etape 1</li>
+				<li>Etape 2</li>
+				<li>Etape 3</li>
+				<li>Etape 4</li>
+				<li>Etape 5</li>
+			</ul>
+			</div>
 
-			<h3><?php echo lang('Required set-up. Please verify the following checklist items are true.')?></h3>
+			<h2><?php echo lang('Required set-up. Please verify the following checklist items are true.')?></h2>
 
 			<p>
 				<?php echo lang('If you have any questions, please visit our '); ?>
@@ -366,7 +430,7 @@ if ($lm->getIncludeTradFilename())
 				<a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Community Forum'); ?></a><?php echo lang('.'); ?>
 			</p>
 
-			<h3 id="resultConfig" style="font-size: 20px; text-align: center; padding: 0px; display: none;"></h3>
+			<h3 id="resultConfig"></h3>
 			<ul id="required">
 				<li class="title"><?php echo lang('PHP parameters:')?></li>
 				<li class="required"><?php echo lang('PHP 5.0 or later installed')?></li>
@@ -401,19 +465,31 @@ if ($lm->getIncludeTradFilename())
 				<li class="optional"><?php echo lang('GZIP compression is on (recommended)')?></li>
 				<li class="optional"><?php echo lang('Mcrypt is available (recommended)')?></li>
 				<li class="optional"><?php echo lang('PHP magic quotes option is off (recommended)')?></li>
+				<li class="optional"><?php echo lang('Dom extension loaded')?></li>
 			</ul>
 			<h3 style="display:none;" id="resultConfigHelper"><?php echo lang('If you do not know how to fix these issues, use turnkey solution PrestaBox at');?> <a href="http://www.prestabox.com">http://www.prestabox.com</a></h3>
 			<p><input class="button" value="<?php echo lang('Refresh these settings')?>" type="button" id="req_bt_refresh"/></p>
 
 		</div>
 
-		<div class="sheet" id="sheet_db">
-			<h2><?php echo lang('Database configuration')?></h2>
+		<div class="sheet clearfix" id="sheet_db">
+			<div class="contentTitle">
+				<h1><?php echo lang('Database configuration')?></h1>
 
-			<p><?php echo lang('Configure your database by filling out the following fields:')?></p>
+			<ul id="stepList_3" class="stepList clearfix">
+				<li class="ok">Etape 1</li>
+				<li class="ok">Etape 2</li>
+				<li>Etape 3</li>
+				<li>Etape 4</li>
+				<li>Etape 5</li>
+			</ul>
+			</div>
+			
+			<div id="dbPart">
+				<h2><?php echo lang('Configure your database by filling out the following fields:')?></h2>
+				<p><?php echo lang('You have to create a database, help available in readme_en.txt'); ?></p>
 			<form id="formCheckSQL" class="aligned" action="<?php $_SERVER['REQUEST_URI']; ?>" onsubmit="verifyDbAccess(); return false;" method="post">
-				<h3 style="padding:0;margin:0;"><?php echo lang('You have to create a database, help available in readme_en.txt'); ?></h3>
-				<p style="margin-top: 15px;">
+					<p class="first" style="margin-top: 15px;">
 					<label for="dbServer"><?php echo lang('Server:')?> </label>
 					<input size="25" class="text" type="text" id="dbServer" value="localhost"/>
 				</p>
@@ -436,27 +512,32 @@ if ($lm->getIncludeTradFilename())
 						<option value="MyISAM">MyISAM</option>
 					</select>
 				</p>
+					<p class="last">
+						<label for="db_prefix"><?php echo lang('Tables prefix:')?></label> 
+						<input class="text" type="text" id="db_prefix" value="ps_"/>
+					</p>
 				<p class="aligned">
 					<input id="btTestDB" class="button" type="submit" value="<?php echo lang('Verify now!')?>"/>
 				</p>
 				<p id="dbResultCheck"></p>
 			</form>
+			</div>
 
 			<div id="dbTableParam">
 				<form action="#" method="post" onsubmit="createDB(); return false;">
-				<p><label for="db_prefix"><?php echo lang('Tables prefix:')?> </label><input class="text" type="text" id="db_prefix" value="ps_"/></p>
 				<h2><?php echo lang('Installation type')?></h2>
 				<p id="dbModeSetter" style="line-height: 20px;">
-					<input value="lite" type="radio" name="db_mode" id="db_mode_simple" style="vertical-align: middle;" /><label for="db_mode_simple"><?php echo lang('Simple mode: Basic installation')?> <span style="color: #CC0000; font-weight: bold;"><?php echo lang('(FREE)'); ?></span></label><br />
-					<input value="full" type="radio" name="db_mode" checked="checked" id="db_mode_complet" style="vertical-align: middle;" /><label for="db_mode_complet"><?php echo lang('Full mode: includes').' <b>'.lang('100+ additional modules').'</b> '.lang('and demo products'); ?> <span style="color: #CC0000; font-weight: bold;"><?php echo lang('(FREE too!)'); ?></span></label>
+					<input value="lite" type="radio" name="db_mode" id="db_mode_simple" style="vertical-align: middle;" /> <label for="db_mode_simple"><?php echo lang('Simple mode: Basic installation')?> <span><?php echo lang('(FREE)'); ?></span></label><br />
+					<input value="full" type="radio" name="db_mode" checked="checked" id="db_mode_complet" style="vertical-align: middle;" /> <label for="db_mode_complet"><?php echo lang('Full mode: includes').' <b>'.lang('100+ additional modules').'</b> '.lang('and demo products'); ?> <span><?php echo lang('(FREE too!)'); ?></span></label>
 				</p>
 				</form>
 				<p id="dbCreateResultCheck"></p>
 			</div>
+			
 			<div id="mailPart">
 				<h2><?php echo lang('E-mail delivery set-up')?></h2>
 
-				<p>
+				<p id="configsmtp">
 					<input type="checkbox" id="set_stmp" style="vertical-align: middle;" /><label for="set_stmp"><?php echo lang('Configure SMTP manually (advanced users only)'); ?></label><br/>
 					<span class="userInfos"><?php echo lang('By default, the PHP \'mail()\' function is used'); ?></span>
 				</p>
@@ -478,7 +559,7 @@ if ($lm->getIncludeTradFilename())
 
 						<p>
 							<label for="smtpPort"><?php echo lang('Port:'); ?></label>
-							<input type="text" size="5" id="smtpPort" value="25" />
+							<input type="text" size="5" id="smtpPort" value="25" class="text" />
 						</p>
 
 						<p>
@@ -494,27 +575,41 @@ if ($lm->getIncludeTradFilename())
 					</form>
 				</div>
 				<p>
-					<input class="text" id="testEmail" type="text" size="15" value="<?php echo lang('enter@your.email'); ?>"></input>
-					<input id="btVerifyMail" class="button" type="submit" value="<?php echo lang('Send me a test email!'); ?>"></input>
+					<input class="text" id="testEmail" type="text" size="15" value="<?php echo lang('enter@your.email'); ?>" /> &nbsp; 
+					<input id="btVerifyMail" class="button" type="submit" value="<?php echo lang('Send me a test email!'); ?>" />
 				</p>
 
-				<p id="mailResultCheck" class="userInfos"></p>
+				<p id="mailResultCheck"></p>
 			</div>
 		</div>
 
-		<div class="sheet" id="sheet_infos">
+		<div class="sheet clearfix" id="sheet_infos">
 			<form action="<?php $_SERVER['REQUEST_URI']; ?>" method="post" onsubmit="return false;" enctype="multipart/form-data">
+				<div class="contentTitle">
+					<h1><?php echo lang('Shop configuration')?></h1>
 
-				<h2><?php echo lang('Shop configuration'); ?></h2>
+					<ul id="stepList_4" class="stepList clearfix">
+						<li class="ok">Etape 1 ok</li>
+						<li class="ok">Etape 2 ok</li>
+						<li class="ok">Etape 3 ok</li>
+						<li>Etape 4</li>
+						<li>Etape 5</li>
+					</ul>
+				</div>
 
-				<h3><?php echo lang('Merchant info'); ?></h3>
+				<div id="infosShopBlock">
+					<h2><?php echo lang('Merchant info'); ?></h2>
 				<div class="field">
-					<label for="infosShop" class="aligned"><?php echo lang('Shop name:'); ?> </label><input class="text required" type="text" id="infosShop" value=""/><br/>
+						<label for="infosShop" class="aligned"><?php echo lang('Shop name:'); ?> </label>
+						<span class="contentinput">
+							<input class="text required" type="text" id="infosShop" value=""/> <sup class="required">*</sup>
+						</span>
 					<span id="resultInfosShop" class="result aligned"></span>
 				</div>
 				<div class="field">
 					<label for="infosActivity" class="aligned"><?php echo lang('Main activity:'); ?></label>
-					<select id="infosActivity" style="border:1px solid #D41958">
+						<span class="contentinput">
+							<select id="infosActivity">
 						<option value="0"><?php echo lang('-- Please choose your main activity --'); ?></option>
 						<option value="1"><?php echo lang('Adult'); ?></option>
 						<option value="2"><?php echo lang('Animals and Pets'); ?></option>
@@ -538,64 +633,96 @@ if ($lm->getIncludeTradFilename())
 						<option value="20"><?php echo lang('Travel'); ?></option>
 						<option value="0"><?php echo lang('Other activity...'); ?></option>
 					</select>
+						</span>
 					<p class="userInfos aligned"><?php echo lang('This information isn\'t required, it will be used for statistical purposes. This information doesn\'t change anything in your store.'); ?></p>
 				</div>
 				<div class="field">
 					<label for="infosCountry" class="aligned"><?php echo lang('Default country:'); ?></label>
-					<select id="infosCountry" style="width:175px;border:1px solid #D41958">
+						<span class="contentinput">
+							<select id="infosCountry">
 					</select>
+						</span>
 				</div>
 				<div class="field">
 					<label for="infosTimezone" class="aligned"><?php echo lang('Shop\'s timezone:'); ?></label>
-					<select id="infosTimezone" style="width:175px;border:1px solid #D41958">
+						<span class="contentinput">
+							<select id="infosTimezone">
 					</select>
+						</span>
 				</div>
 				<div class="field">
 					<label for="infosLogo" class="aligned logo"><?php echo lang('Shop logo'); ?> : </label>
+						<span class="contentinput">
+							<p id="alignedLogo"><img id="uploadedImage" src="<?php echo PS_BASE_URI ?>img/logo.jpg" alt="Logo" /></p>
+						</span>
+						<p class="userInfos aligned"><?php echo lang('recommended dimensions: 230px X 75px'); ?></p>
+						
+						<span id="inputFileLogo" class="contentinput">
 					<input type="file" onchange="uploadLogo()" name="fileToUpload" id="fileToUpload"/>
+						</span>
 					<span id="resultInfosLogo" class="result"></span>
-					<p class="userInfos aligned"><?php echo lang('recommended dimensions: 230px X 75px'); ?></p>
-					<p id="alignedLogo"><img id="uploadedImage" src="<?php echo PS_BASE_URI ?>img/logo.jpg" alt="Logo" /></p>
 				</div>
 				<div class="field">
 					<label for="catalogMode" class="aligned"><?php echo lang('Catalog mode:'); ?></label>
+						<span class="contentinput">
 					<input type="radio" name="catalogMode" id="catalogMode_1" value="1" />
-					<label for="catalogMode_1"><?php echo lang('Yes'); ?></label>
+							<label for="catalogMode_1" class="radiolabel"><?php echo lang('Yes'); ?></label>&nbsp; &nbsp;
 					<input type="radio" name="catalogMode" id="catalogMode_0" value="0" checked="checked"/>
-					<label for="catalogMode_0"><?php echo lang('No'); ?></label>
+							<label for="catalogMode_0" class="radiolabel"><?php echo lang('No'); ?></label>
+						</span>
 					<p class="userInfos aligned"><?php echo lang('If you activate this feature, all purchase features will be disabled. You can activate this feature later in your back office'); ?></p>
 				</div>
 
 				<div class="field">
-					<label for="infosFirstname" class="aligned"><?php echo lang('First name:'); ?> </label><input class="text required" type="text" id="infosFirstname"/><br/>
+						<label for="infosFirstname" class="aligned"><?php echo lang('First name:'); ?> </label>
+						<span class="contentinput">
+							<input class="text required" type="text" id="infosFirstname"/> <sup class="required">*</sup>
+						</span>
 					<span id="resultInfosFirstname" class="result aligned"></span>
 				</div>
 
 				<div class="field">
-					<label for="infosName" class="aligned"><?php echo lang('Last name:'); ?> </label><input class="text required" type="text" id="infosName"/><br/>
+						<label for="infosName" class="aligned"><?php echo lang('Last name:'); ?> </label>
+						<span class="contentinput">
+							<input class="text required" type="text" id="infosName"/> <sup class="required">*</sup>
+						</span>
 					<span id="resultInfosName" class="result aligned"></span>
 				</div>
 
 				<div class="field">
-					<label for="infosEmail" class="aligned"><?php echo lang('E-mail address:'); ?> </label><input type="text" class="text required" id="infosEmail"/><br/>
+						<label for="infosEmail" class="aligned"><?php echo lang('E-mail address:'); ?> </label>
+						<span class="contentinput">
+							<input type="text" class="text required" id="infosEmail"/> <sup class="required">*</sup>
+						</span>
 					<span id="resultInfosEmail" class="result aligned"></span>
 				</div>
 
 				<div class="field">
-					<label for="infosPassword" class="aligned"><?php echo lang('Shop password:'); ?> </label><input autocomplete="off" type="password" class="text required" id="infosPassword"/><br/>
+						<label for="infosPassword" class="aligned"><?php echo lang('Shop password:'); ?> </label>
+						<span class="contentinput">
+							<input autocomplete="off" type="password" class="text required" id="infosPassword"/> <sup class="required">*</sup>
+						</span>
 					<span id="resultInfosPassword" class="result aligned"></span>
 				</div>
 				<div class="field">
-					<label class="aligned" for="infosPasswordRepeat"><?php echo lang('Re-type to confirm:'); ?> </label><input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat"/><br/>
+						<label class="aligned" for="infosPasswordRepeat"><?php echo lang('Re-type to confirm:'); ?> </label>
+						<span class="contentinput">
+							<input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat"/> <sup class="required">*</sup>
+						</span>
 					<span id="resultInfosPasswordRepeat" class="result aligned"></span>
 				</div>
 
-				<div class="field">
+					<div class="field" id="contentInfosNotification">
+						<span class="contentinput">
 					<input type="checkbox" id="infosNotification" class="aligned" style="vertical-align: middle;" /><label for="infosNotification"><?php echo lang('Receive notifications by e-mail'); ?></label><br/>
 					<span id="resultInfosNotification" class="result aligned"></span>
+						</span>
+						
 					<p class="userInfos aligned"><?php echo lang('If you check this box and your mail configuration is wrong, your installation might be blocked. If so, please uncheck the box to go to the next step.'); ?></p>
 				</div>
+				</div>
 
+				<div id="benefitsBlock">
 				<!-- Partner Modules -->
 				<?php
 					if (!isset($_GET['language']))
@@ -603,11 +730,7 @@ if ($lm->getIncludeTradFilename())
 				?>
 				<link href="../css/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />
 				<script src="../js/jquery/jquery.fancybox-1.3.4.js" type="text/javascript"></script>
-				<style>
-					.installModuleList { display: none; }
-					.installModuleList.selected { display: block; }
-				</style>
-				<script>
+					<script type="text/javascript">
 					var moduleChecked = new Array();
 					$(document).ready(function() {
 						$('#infosCountry').change(function() {
@@ -662,6 +785,14 @@ if ($lm->getIncludeTradFilename())
 									foreach ($p->prechecked as $country_iso_code)
 										$modulesPrechecked[trim($p->key)][trim($country_iso_code)] = 1;
 							}
+								echo '<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
+									<tr>
+										<th style="width: 30px;"></th>
+										<th style="width: 100px;">Modules</th>
+										<th style="padding: 12px; width: 430px;">Avantages</th>
+										</tr>
+									</table>
+								';
 
 							foreach ($modulesHelpInstall as $country_iso_code => $modulesList)
 							{
@@ -669,21 +800,20 @@ if ($lm->getIncludeTradFilename())
 								foreach ($modulesList as $module)
 								{
 									echo '
-									<table style="border: 1px solid #CCC; padding: 5px; width: 650px">
+										<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
 									<tr>
-									<td style="width: 100px; text-align: center;"><img src="'.$modulesDescription[$module]['logo'].'" alt="'.$modulesDescription[$module]['name'].'" title="'.$modulesDescription[$module]['name'].'">'.(isset($modulesDescription[$module]['more']) ? $modulesDescription[$module]['more'] : '').'</td>
-									<td style="padding-left: 15px; width: 430px;">
-									'.$modulesDescription[$module]['description'].'
-									</td>
-									<td style="text-align: center; width: 30px; background: #FFF;">
-									<span style="padding: 3px 4px 6px 2px; background: none repeat scroll 0pt 0pt #7EB423;">
+										<td valign="top" style="text-align: center; padding-top:10px; width: 30px; background: #FFF;">
+										<span style="padding: 12px 4px 6px 2px;">
 									<input type="checkbox" id="preInstallModules_'.$country_iso_code.'_'.$module.'" value="'.$module.'" class="'.$module.' preInstallModules_'.$country_iso_code.'" style="vertical-align: middle;" />
 									</span>
 									</td>
+										<td valign="top" style="width: 100px; text-align: center;"><img src="'.$modulesDescription[$module]['logo'].'" alt="'.$modulesDescription[$module]['name'].'" title="'.$modulesDescription[$module]['name'].'">'.(isset($modulesDescription[$module]['more']) ? $modulesDescription[$module]['more'] : '').'</td>
+										<td style="padding: 15px; width: 430px;">
+										'.$modulesDescription[$module]['description'].'
+										</td>
 									</tr>
-									<tr><td colspan="3"><div id="divForm_'.$country_iso_code.'_'.$module.'">&nbsp;</div></td></tr>
-									</table>
-									<br />';
+										<tr><td colspan="3"><div id="divForm_'.$country_iso_code.'_'.$module.'">&nbsp;</div></td></tr></table>
+										';
 									echo "<script>
 										moduleChecked['".$country_iso_code.'_'.$module."'] = 0;
 										$(document).ready(function() {
@@ -745,7 +875,6 @@ if ($lm->getIncludeTradFilename())
 												});
 											});";
 										}
-
 										echo "</script>";
 								}
 								echo '</div>';
@@ -754,12 +883,7 @@ if ($lm->getIncludeTradFilename())
 					}
 
 				?>
-
 				<!-- Partner Modules -->
-
-
-
-
 
 				<!--<h3><?php echo lang('Shop\'s languages'); ?></h3>
 				<p class="userInfos"><?php echo lang('Select the different languages available for your shop'); ?></p>-->
@@ -798,31 +922,44 @@ if ($lm->getIncludeTradFilename())
 						<?php }} ?>
 					</select>
 				</div>
+				
+				</div>
 			</form>
 
 			<div id="resultEnd">
 				<span id="resultInfosSQL" class="result"></span>
 				<span id="resultInfosLanguages" class="result"></span>
 			</div>
-
 		</div>
 
-		<div class="sheet" id="sheet_end" style="padding:0">
-			<div style="padding:1em">
-				<h2><?php echo lang('PrestaShop is ready!'); ?></h2>
-				<h3><?php echo lang('Your installation is finished!'); ?></h3>
+		<div class="sheet clearfix" id="sheet_end">
+			
+			<div class="contentTitle">
+				<h1><?php echo lang('PrestaShop is ready!'); ?></h1>
+				
+				<ul id="stepList_5" class="stepList clearfix">
+					<li class="ok">Etape 1 ok</li>
+					<li class="ok">Etape 2 ok</li>
+					<li class="ok">Etape 3 ok</li>
+					<li class="ok">Etape 4 ok</li>
+					<li class="ok">Etape 5</li>
+				</ul>
+		</div>
+
+			<div class="clearfix">
+				<h2><?php echo lang('Your installation is finished!'); ?></h2>
 				<p><?php echo lang('You have just installed and configured PrestaShop as your online shop solution. We wish you all the best with the success of your online shop.'); ?></p>
 				<p><?php echo lang('Here are your shop information. You can modify them once logged in.'); ?></p>
-				<table id="resultInstall" cellspacing="0">
-					<tr>
-						<td class="label"><?php echo lang('Shop name:'); ?></td>
-						<td id="endShopName" class="resultEnd">&nbsp;</td>
+				<table cellpadding="0" cellspacing="0" border="0" id="resultInstall" width="620">
+					<tr class="odd">
+						<td width="220" class="label"><?php echo lang('Shop name:'); ?></td>
+						<td width="400" id="endShopName" class="resultEnd">&nbsp;</td>
 					</tr>
 					<tr>
 						<td class="label"><?php echo lang('First name:'); ?></td>
 						<td id="endFirstName" class="resultEnd">&nbsp;</td>
 					</tr>
-					<tr>
+					<tr class="odd">
 						<td class="label"><?php echo lang('Last name:'); ?></td>
 						<td id="endName" class="resultEnd">&nbsp;</td>
 					</tr>
@@ -831,23 +968,26 @@ if ($lm->getIncludeTradFilename())
 						<td id="endEmail" class="resultEnd">&nbsp;</td>
 					</tr>
 				</table>
-				<h3><?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?></h3>
 
-				<a href="../admin" id="access" class="BO" target="_blank">
-					<span class="title"><?php echo lang('Back Office'); ?></span>
-					<span class="description"><?php echo lang('Manage your store with your back office. Manage your orders and customers, add modules, change your theme, etc...'); ?></span>
-					<span class="message"><?php echo lang('Manage your store'); ?></span>
-				</a>
-				<a href="../" id="access" class="FO" target="_blank">
-					<span class="title"><?php echo lang('Front Office'); ?></span>
-					<span class="description"><?php echo lang('Find your store as your future customers will see!'); ?></span>
-					<span class="message"><?php echo lang('Discover your store'); ?></span>
-				</a>
+				<h3 class="infosBlock"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?></h3>
+				
+				<div id="boBlock" class="blockInfoEnd clearfix">
+						<img src="img/visu_boBlock.png" />
+						<h3><?php echo lang('Back Office'); ?></h3>
+						<p class="description"><?php echo lang('Manage your store with your back office. Manage your orders and customers, add modules, change your theme, etc...'); ?></p>
+						<a href="../admin" id="access" class="BO" target="_blank"><span><?php echo lang('Manage your store'); ?></span></a>
+				</div>
+				<div id="foBlock" class="blockInfoEnd last clearfix">
+						<img src="img/visu_foBlock.png" />
+						<h3><?php echo lang('Front Office'); ?></h3>
+						<p class="description"><?php echo lang('Find your store as your future customers will see!'); ?></p>
+						<a href="../" id="access" class="FO" target="_blank"><span><?php echo lang('Discover your store'); ?></span></a>
+				</div>
+				
 				<div id="resultEnd"></div>
 			</div>
 			<?php
 			if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
-
 			<iframe src="http://addons.prestashop.com/psinstall.php?lang=<?php echo $lm->getIsoCodeSelectedLang()?>" scrolling="no" id="prestastore">
 				<p>Your browser does not support iframes.</p>
 			</iframe>
@@ -856,9 +996,18 @@ if ($lm->getIncludeTradFilename())
 
 		</div>
 
-		<div class="sheet" id="sheet_disclaimer">
-			<h2><?php echo lang('Disclaimer'); ?></h2>
-			<h3><?php echo lang('Warning: a manual backup is HIGHLY recommended before continuing!'); ?></h3>
+		<div class="sheet clearfix" id="sheet_disclaimer">
+			<div class="contentTitle">
+				<h1><?php echo lang('Disclaimer'); ?></h1>
+		
+				<ul id="stepList_6" class="stepList clearfix">
+					<li class="ok">Etape 1</li>
+					<li>Etape 2</li>
+					<li>Etape 3</li>
+					<li>Etape 4</li>
+				</ul>
+			</div>
+			<h2><?php echo lang('Warning: a manual backup is HIGHLY recommended before continuing!'); ?></h2>
 			<p><?php echo lang('Please backup the database and application files.'); ?></p>
 			<p><?php echo lang('When your files and database are saving in an other support, please certify that your shop is really backed up.'); ?><br /><br /></p>
 
@@ -879,7 +1028,7 @@ if ($lm->getIncludeTradFilename())
 					$(document).ready(function() {
 						$.ajax({
 							url: 'xml/getNonNativeModules.php',
-							async: false,
+							async: true,
 							dataType: "json",
 							success: function (json) 
 							{
@@ -962,20 +1111,20 @@ if ($lm->getIncludeTradFilename())
 					if (sizeof($upgradeFiles))
 					{
 						echo '
-						<table cellpadding="5" border="1" style="font-size: 11px; margin-top: 10px;">
+						<table cellpadding="0" cellspacing="0" border="0">
 							<tr>
 								<th>'.lang('Upgrade file').'</th>
-								<th style="width: 100px;">'.lang('Modifications to process').'</th>
+								<th  style="text-align: right;">'.lang('Modifications to process').'</th>
 							</tr>';
 
 						uasort($upgradeFiles, 'sortnatversion');
 						$totalInstructions = 0;
 						foreach ($upgradeFiles AS $file)
 						{
-							echo '<tr><td style="'.($file['is_major'] ? 'font-weight: bold;' : 'padding-left: 12px;').'">v'.$file['version'].($file['is_major'] ? ' '.lang('(major)') : '').'</td><td style="text-align: right; padding-right: 5px;">'.(int)$file['instructions'].'</td></tr>';
+							echo '<tr><td style="'.($file['is_major'] ? 'font-weight: bold;' : '').'">v'.$file['version'].($file['is_major'] ? ' '.lang('(major)') : '').'</td><td style="text-align: right;">'.(int)$file['instructions'].'</td></tr>';
 							$totalInstructions += (int)$file['instructions'];
 						}
-						echo '<tr style="font-weight: bold;"><td>'.lang('TOTAL').'</td><td style="text-align: right; padding-right: 5px;">'.(int)$totalInstructions.'</td></tr>';
+						echo '<tr style="font-weight: bold;"><td>'.lang('TOTAL').'</td><td style="text-align: right;">'.(int)$totalInstructions.'</td></tr>';
 						echo '
 						</table>';
 
@@ -983,7 +1132,7 @@ if ($lm->getIncludeTradFilename())
 						$minutes = (int)($upgradeTime / 60);
 						$seconds = (int)($upgradeTime - ($minutes * 60));
 
-						echo '<p><img src="../img/admin/time.gif" alt="" style="vertical-align: middle;" /> '.lang('Estimated time to complete the').' '.(int)$totalInstructions.' '.lang('modifications:').' <b style="font-size: 14px;">'.(int)$minutes.' '.($minutes > 1 ? lang('minutes') : lang('minute')).' '.(int)$seconds.' '.($seconds > 1 ? lang('seconds') : lang('second')).'</b><br />
+						echo '<p><img src="../img/admin/time.gif" alt="" style="vertical-align: absmiddle;" /> '.lang('Estimated time to complete the').' '.(int)$totalInstructions.' '.lang('modifications:').' <b style="font-size: 14px;">'.(int)$minutes.' '.($minutes > 1 ? lang('minutes') : lang('minute')).' '.(int)$seconds.' '.($seconds > 1 ? lang('seconds') : lang('second')).'</b><br />
 						<i style="font-size: 11px;">'.lang('Depending on your server and the size of your shop').'</i></p>';
 
 						if ($majorReleases > 1)
@@ -1011,7 +1160,7 @@ if ($lm->getIncludeTradFilename())
 				<br />
 				<h2>'.lang('Hosting parameters').'</h2>
 				<p>'.lang('PrestaShop tries to automatically set the best settings for your server in order the update to be successful.').'</p>
-				<table cellpadding="5" border="1" style="font-size: 11px;">
+				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<th>'.lang('PHP parameter').'</th>
 						<th>'.lang('Description').'</th>
@@ -1028,28 +1177,32 @@ if ($lm->getIncludeTradFilename())
 						<td style="text-align: right;">'.ini_get('memory_limit').'</td>
 					</tr>
 				</table>
-				<div style="font-weight: bold; background: '.$color.'; color: #000; padding: 10px; border: 1px solid #999; margin-top: 10px;">';
+				<div class="infosBlock">';
 
 				if ($color == '#D9F2D0')
-					echo '<img src="../img/admin/ok.gif" alt="" style="vertical-align: middle;" /> '.lang('All your settings seem to be OK, go for it!');
+					echo '<img src="../img/admin/ok.gif" alt="" style="vertical-align: absmiddle;" /> '.lang('All your settings seem to be OK, go for it!');
 				elseif ($color == '#FFDEB7')
-					echo '<img src="../img/admin/warning.gif" alt="" style="vertical-align: middle;" /> '.lang('Beware, your settings look correct but are not optimal, if you encounter problems (upgrade too long, memory error...), please ask your hosting provider to increase the values of these parameters (max_execution_time & memory_limit).');
+					echo '<img src="../img/admin/warning.gif" alt="" style="vertical-align: absmiddle;" /> '.lang('Beware, your settings look correct but are not optimal, if you encounter problems (upgrade too long, memory error...), please ask your hosting provider to increase the values of these parameters (max_execution_time & memory_limit).');
 				elseif ($color == '#FAE2E3')
-					echo '<img src="../img/admin/error2.png" alt="" style="vertical-align: middle;" /> '.lang('We strongly recommend that you inform your hosting provider to modify the settings before process to the update.');
-
-				echo '
-				</div><br />';
-
+					echo '<img src="../img/admin/error2.png" alt="" style="vertical-align: absmiddle;" /> '.lang('We strongly recommend that you inform your hosting provider to modify the settings before process to the update.');
+				echo '</div>';
 
 				?>
 			</div>
 		</div>
 
-		<div class="sheet" id="sheet_require_update">
+		<div class="sheet clearfix" id="sheet_require_update">
+			<div class="contentTitle">
+				<h1><?php echo lang('System and permissions')?></h1>
 
-			<h2><?php echo lang('System and permissions'); ?></h2>
-
-			<h3><?php echo lang('Required set-up. Please verify the following checklist items are true.'); ?></h3>
+				<ul id="stepList_7" class="stepList clearfix">
+					<li class="ok">Etape 1 ok</li>
+					<li class="ok">Etape 2 ok</li>
+					<li>Etape 3</li>
+					<li>Etape 4</li>
+				</ul>
+			</div>
+			<h2><?php echo lang('Required set-up. Please verify the following checklist items are true.'); ?></h2>
 
 			<p>
 				<?php echo lang('If you have any questions, please visit our '); ?>
@@ -1058,7 +1211,7 @@ if ($lm->getIncludeTradFilename())
 				<a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Community Forum'); ?></a><?php echo lang('.'); ?>
 			</p>
 
-			<h3 id="resultConfig_update" style="font-size: 20px; text-align: center; padding: 0px; display: none;"></h3>
+			<h3 id="resultConfig_update"></h3>
 			<ul id="required_update">
 				<li class="title"><?php echo lang('PHP parameters:')?></li>
 				<li class="required"><?php echo lang('PHP 5.0 or later installed')?></li>
@@ -1093,27 +1246,51 @@ if ($lm->getIncludeTradFilename())
 				<li class="optional"><?php echo lang('GZIP compression is on (recommended)')?></li>
 				<li class="optional"><?php echo lang('Mcrypt is available (recommended)')?></li>
 				<li class="optional"><?php echo lang('PHP magic quotes option is off (recommended)')?></li>
+				<li class="optional"><?php echo lang('Dom extension loaded')?></li>
 			</ul>
 
 			<p><input class="button" value="<?php echo lang('Refresh these settings'); ?>" type="button" id="req_bt_refresh_update"/></p>
 
 		</div>
 
-		<div class="sheet" id="sheet_updateErrors">
-			<h2><?php echo lang('Error!'); ?></h2>
+		<div class="sheet clearfix" id="sheet_updateErrors">
+			<div class="contentTitle">
+				<h1><?php echo lang('Error!'); ?></h1>
+
+				<ul id="stepList_8" class="stepList clearfix">
+					<li class="ok">Etape 1 ok</li>
+					<li class="ok">Etape 2 ok</li>
+					<li class="ko">Etape 3</li>
+					<li>Etape 4</li>
+				</ul>
+			</div>
+			
 			<h3><?php echo lang('One or more errors have occurred, you can find more informations below or in the log/installation.log file.'); ?></h3>
-			<p id="resultUpdate"></p>
-			<p id="detailsError"></p>
+			
+			<p id="resultUpdate" class="errorBlock"></p>
+			<br />
+			<p id="detailsError" class="infosBlock"><?php echo lang('No more informations'); ?></p>
 		</div>
 
-		<div class="sheet" id="sheet_end_update" style="padding:0px;">
-			<div style="padding:1em;">
+		<div class="sheet clearfix" id="sheet_end_update">
+			<div>
+				<div class="contentTitle">
 				<h1><?php echo lang('Your update is completed!'); ?></h1>
-				<h3><?php echo lang('Your shop version is now').' '.INSTALL_VERSION; ?></h3>
-				<p class="fail" id="txtErrorUpdateSQL"></p>
-				<p><a href="javascript:showUpdateLog()"><?php echo lang('view the log'); ?></a></p>
+
+					<ul id="stepList_7" class="stepList clearfix">
+						<li class="ok">Etape 1 ok</li>
+						<li class="ok">Etape 2 ok</li>
+						<li class="ok">Etape 3</li>
+						<li class="ok">Etape 4</li>
+					</ul>
+				</div>
+				<div class="okBlock">
+					<?php echo lang('Your shop version is now').' '.INSTALL_VERSION; ?>
+				</div>
+				<p class="errorBlock" id="txtErrorUpdateSQL" style="display:none;"></p>
+				<p style="padding-bottom: 5px;"><a href="javascript:showUpdateLog()"><?php echo lang('view the log'); ?></a></p>
 				<div id="updateLog"></div>
-				<p><?php echo lang('You have just updated and configured PrestaShop as your online shop solution. We wish you all the best with the success of your online shop.'); ?></p><br />
+				<p><?php echo lang('You have just updated and configured PrestaShop as your online shop solution. We wish you all the best with the success of your online shop.'); ?></p>
 
 				<?php
 
@@ -1121,19 +1298,23 @@ if ($lm->getIncludeTradFilename())
 					{
 						echo '
 						<h2>'.lang('New features in PrestaShop v').INSTALL_VERSION.'</h2>
-						<iframe style="width: 595px; margin-top: 5px; padding: 5px; border: 1px solid #BBB;" src="http://features.prestashop.com/lang/'.$lm->getIsoCodeSelectedLang().'/version/'.INSTALL_VERSION.'">
+						<iframe style="width: 638px; margin-top: 5px; padding: 5px; border: 1px solid #BBB;" src="http://features.prestashop.com/lang/'.$lm->getIsoCodeSelectedLang().'/version/'.INSTALL_VERSION.'">
 							<p>Your browser does not support iframes.</p>
 						</iframe>';
 					}
 
 				?>
 
-				<h3 style="margin-top: 15px;"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?></h3>
-				<a href="../" id="access_update" target="_blank">
-					<span class="title"><?php echo lang('Front Office'); ?></span>
-					<span class="description"><?php echo lang('Find your store as your future customers will see!'); ?></span>
-					<span class="message"><?php echo lang('Discover your store'); ?></span>
-				</a>
+				<div class="infosBlock">
+					<?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?>
+			</div>
+				
+				<div id="foBlock" class="blockInfoEnd clearfix">
+						<img src="img/visu_foBlock.png" />
+						<h3><?php echo lang('Front Office'); ?></h3>
+						<p class="description"><?php echo lang('Find your store as your future customers will see!'); ?></p>
+						<a href="../" id="access" class="FO" target="_blank"><span><?php echo lang('Discover your store'); ?></span></a>
+				</div>
 			</div>
 			<?php
 			if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>

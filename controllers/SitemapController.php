@@ -27,12 +27,7 @@
 
 class SitemapControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->php_self = 'sitemap.php';
-	
-		parent::__construct();
-	}
+	public $php_self = 'sitemap.php';
 	
 	public function setMedia()
 	{

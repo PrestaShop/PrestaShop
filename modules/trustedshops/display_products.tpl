@@ -72,14 +72,16 @@ var TS = (function()
 <div style="border:solid 1px #000; width: 537px; border: 1px solid #595A5E; margin-bottom: 10px;">
 	<h3 style="padding:0 0 0 5px;"><b>{l s='Trusted Shops Buyer Protection (recommended)' mod='trustedshops'}</b></h3>
 	<div style="float:left; width:100px;">
-		<img id="logo_trusted" style="margin:2px 0 10px 10px" alt="logo" src="{$module_dir}img/siegel.gif" />
+		<a href="https://www.trustedshops.com/shop/certificate.php?shop_id={$shop_id}" target="_blank">
+			<img id="logo_trusted" style="margin:2px 0 10px 10px" alt="logo" src="{$module_dir}img/siegel.gif" border="0" />
+		</a>
 	</div>
 	<div id="ts-list-items">
 		{foreach from=$buyer_protection_items item=product}
-			<p><input id="ts-product-{$product.id_product}" type="checkbox" value="{$product.id_product}" name="item_product"> {l s='Buyer protection from' mod='trustedshops'} {$product.protected_amount_decimal} ({$product.gross_fee|round:2} {l s='GBP incl. VAT' mod='trustedshops'})</p>
+			<p><input id="ts-product-{$product.id_product}" type="checkbox" value="{$product.id_product}" name="item_product"> {l s='Buyer protection from' mod='trustedshops'} {$product.protected_amount_decimal} {$currency_iso_code} ({$price|round:2} {$currency_iso_code} {l s='incl. VAT' mod='trustedshops'})</p>
 		{/foreach}
 		<div id="content_checkout" style="margin-left:100px">
-		<p>{l s='The Trusted Shops Buyer Protection secures your online purchase. I agree to my email address being transferred and' mod='trustedshops'} <b><a href="http://www.trustedshops.de/info/datenschutz/">{l s='saved' mod='trustedshops'}</a></b> {l s='for the purposes of Buyer Protection processing by Trusted Shops.' mod='trustedshops'}<b><a href="http://www.trustedshops.de/info/garantiebedingungen/">{l s='Conditions' mod='trustedshops'}</a></b>: {l s='for Buyer Protection.' mod='trustedshops'}</p></div>
+		<p>{l s='The Trusted Shops Buyer Protection secures your online purchase. I agree to my email address being transferred and' mod='trustedshops'} <b><a href="http://www.trustedshops.com/shop/data_privacy.php?shop_id={$shop_id}" target="_blank">{l s='saved' mod='trustedshops'}</a></b> {l s='for the purposes of Buyer Protection processing by Trusted Shops.' mod='trustedshops'} <b><a href="http://www.trustedshops.com/shop/protection_conditions.php?shop_id={$shop_id}" target="_blank">{l s='Conditions' mod='trustedshops'}</a></b> {l s='for Buyer Protection.' mod='trustedshops'}</p></div>
 	</div>
 	<div class="clear"/></div>
 </div>

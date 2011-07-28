@@ -16,5 +16,3 @@ $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_27ce7f8b5623b2e2df568
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_71a5c322b7f69a8a4e40b3eb20da5559'] = 'Beste Produkte';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_1784296dda47f4d571a179aad8106018'] = 'Eine Liste der besten Produkte';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_998e4c5c80f27dec552e99dfed34889a'] = 'CSV-Export';
-
-?>

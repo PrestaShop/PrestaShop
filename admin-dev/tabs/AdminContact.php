@@ -83,7 +83,7 @@ class AdminContact extends AdminPreferences
 			'PS_SHOP_PHONE' => 'phone');
 		
 		$this->_fieldsShop = array();
-		$orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'));
+		$orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
 		
 		foreach($orderedFields as $lineFields)
 			if (($patterns = explode(' ', $lineFields)))

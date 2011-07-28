@@ -28,7 +28,7 @@
 class CustomizationCore
 {
 
-	static public function getReturnedCustomizations($id_order)
+	public static function getReturnedCustomizations($id_order)
 	{
 		if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
@@ -42,7 +42,7 @@ class CustomizationCore
 		return $customizations;
 	}
 
-	static public function getOrderedCustomizations($id_cart)
+	public static function getOrderedCustomizations($id_cart)
 	{
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_customization`, `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int)($id_cart)))
 			return false;
@@ -52,7 +52,7 @@ class CustomizationCore
 		return $customizations;
 	}
 
-	static public function countCustomizationQuantityByProduct($customizations)
+	public static function countCustomizationQuantityByProduct($customizations)
 	{
 		$total = array();
 		foreach ($customizations AS $customization)
@@ -60,7 +60,7 @@ class CustomizationCore
 		return $total;
 	}
 
-	static public function getLabel($id_customization, $id_lang)
+	public static function getLabel($id_customization, $id_lang)
 	{
 		if (!$id_customization || !$id_lang)
 			return false;

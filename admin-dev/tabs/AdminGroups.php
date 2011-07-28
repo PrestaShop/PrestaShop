@@ -207,7 +207,7 @@ class AdminGroups extends AdminTab
 			
 			$customers = $obj->getCustomers(false, $from, $customersPerPage);
 			
-			echo '<tr>
+			echo '<table><tr>
 				<form method="post" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'">
 				<td style="vertical-align: bottom;"><span style="float: left; height:30px">';
 						
@@ -235,7 +235,9 @@ class AdminGroups extends AdminTab
 			echo	'	</select> / '.$nbCustomers.' result(s)	
 					</span><span class="clear"></span></td>
 				</form>
-			</tr>';
+			</tr>
+			</table>
+			<div class="clear"></div>';
 			// Pagination End
 			
 			echo '<table cellspacing="0" cellpadding="0" class="table widthfull">

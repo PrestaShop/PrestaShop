@@ -116,7 +116,7 @@ class EmployeeCore extends ObjectModel
 		
 		return $fields;
 	}
-	
+
 	public function add($autodate = true, $nullValues = true)
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
@@ -151,7 +151,7 @@ class EmployeeCore extends ObjectModel
 		return $this;
 	}
 	
-	static public function employeeExists($email)
+	public static function employeeExists($email)
 	{
 	 	if (!Validate::isEmail($email))
 	 		die (Tools::displayError());
@@ -168,7 +168,7 @@ class EmployeeCore extends ObjectModel
 	  * @param string $passwd Password
 	  * @return boolean result
 	  */
-	static public function checkPassword($id_employee, $passwd)
+	public static function checkPassword($id_employee, $passwd)
 	{
 	 	if (!Validate::isUnsignedId($id_employee) OR !Validate::isPasswd($passwd, 8))
 	 		die (Tools::displayError());
@@ -181,7 +181,7 @@ class EmployeeCore extends ObjectModel
 		AND active = 1');
 	}
 	
-	static public function countProfile($id_profile, $activeOnly = false)
+	public static function countProfile($id_profile, $activeOnly = false)
 	{
 		return Db::getInstance()->getValue('
 		SELECT COUNT(*)

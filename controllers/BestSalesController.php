@@ -27,12 +27,7 @@
 
 class BestSalesControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->php_self = 'best-sales.php';
-	
-		parent::__construct();
-	}
+	public $php_self = 'best-sales.php';
 	
 	public function process()
 	{

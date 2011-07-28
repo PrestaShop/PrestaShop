@@ -13,5 +13,3 @@ $_MODULE['<{statsequipment}prestashop>statsequipment_501361472d0528ee07f202297f5
 $_MODULE['<{statsequipment}prestashop>statsequipment_8ebe1665d646cc99d4a80835d1734cad'] = 'Bei der Webseitenverwaltung ist es wichtig, die vom Kunden genutzte Software im Auge zu behalten, um sicher zu gehen, dass die Webseite allen das Gleiche anzeigt. PrestaShop wurde so konzipiert, dass es mit den meisten neueren Webbrowsern und Betriebssystemen kompatibel ist. Falls Sie schließlich jedoch Ihren Webbrowser durch fortgeschrittene Funktionen erweitern oder sogar den PrestaShop Core Code verändern, können diese Zusätze nicht für alle zugänglich sein. Daher ist es angeraten, Tabs auf dem Prozentsatz der Kunden für jede Software-Art zu behalten, bevor Sie etwas hinzufügen oder ändern, was nur einer begrenzten Zahl an Benutzern zugänglich ist.';
 $_MODULE['<{statsequipment}prestashop>statsequipment_8ce59076ab4eaa3570ff2a931706d3c1'] = 'Web-Browser-Benutzung';
 $_MODULE['<{statsequipment}prestashop>statsequipment_eb84ea9e8324beffd94fdeff011edfd7'] = 'Betriebssystem-Benutzung';
-
-?>

@@ -24,24 +24,20 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 if(Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
 	include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 
 class AddressControllerCore extends FrontController
 {
+	public $auth = true;
+	public $guestAllowed = true;
+	public $php_self = 'address.php';
+	public $authRedirection = 'addresses.php';
+	public $ssl = true;
+		
 	protected $_address;
 
-	public function __construct()
-	{
-		$this->auth = true;
-		$this->guestAllowed = true;
-		$this->php_self = 'address.php';
-		$this->authRedirection = 'addresses.php';
-		$this->ssl = true;
-	
-		parent::__construct();
-	}
-	
 	public function preProcess()
 	{
 		parent::preProcess();
@@ -274,7 +270,7 @@ class AddressControllerCore extends FrontController
 
 		$id_country = is_null($this->_address)? 0 : (int)$this->_address->id_country;
 
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, $split_all = true);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
 		$this->context->smarty->assign('ordered_adr_fields', $dlv_adr_fields);
 	}
 	

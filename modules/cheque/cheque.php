@@ -194,7 +194,7 @@ class Cheque extends PaymentModule
 
 		$context = Context::getContext();
 		$state = $params['objOrder']->getCurrentState();
-		if ($state == _PS_OS_CHEQUE_ OR $state == _PS_OS_OUTOFSTOCK_)
+		if ($state == Configuration::get('PS_OS_CHEQUE') OR $state == Configuration::get('PS_OS_OUTOFSTOCK'))
 			$context->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'chequeName' => $this->chequeName,

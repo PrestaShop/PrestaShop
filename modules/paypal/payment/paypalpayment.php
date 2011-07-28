@@ -31,7 +31,7 @@ class PaypalPayment extends Paypal
 
 	public function PayPalRound($value)
 	{
-		return (floor($value * 100) / 100);
+		return (floor(round($value * 100, 2)) / 100);
 	}
 
 	public function getAuthorisation()

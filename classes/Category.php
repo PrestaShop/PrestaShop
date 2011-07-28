@@ -180,19 +180,31 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
+	 * @see ObjectModel::toggleStatus()
+	 */
+	public function toggleStatus()
+	{
+		$result = parent::toggleStatus();
+		Module::hookExec('categoryUpdate');
+		return $result;
+	}
+
+	/**
 	  * Recursive scan of subcategories
 	  *
 	  * @param integer $maxDepth Maximum depth of the tree (i.e. 2 => 3 levels depth)
  	  * @param integer $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
  	  * @param integer $id_lang Specify the id of the language used
 	  * @param array $excludedIdsArray specify a list of ids to exclude of results
-	  * @param Link $link
 	  *
  	  * @return array Subcategories lite tree
 	  */
-	function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $id_lang = NULL, $excludedIdsArray = NULL, Link $link = NULL)
+	public function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $id_lang = NULL, $excludedIdsArray = NULL)
 	{
 		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
+
+		if (!(int)$id_lang)
+			$id_lang = _USER_ID_LANG_;
 
 		$children = array();
 		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($id_lang, true) AND sizeof($subcats))
@@ -202,7 +214,7 @@ class CategoryCore extends ObjectModel
 					break;
 				elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray))
 				{
-					$categ = new Category((int)$subcat['id_category'], $id_lang);
+					$categ = new Category($subcat['id_category'], $id_lang);
 					$children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $id_lang, $excludedIdsArray);
 				}
 			}
@@ -216,12 +228,12 @@ class CategoryCore extends ObjectModel
 		);
 	}
 
-	static public function recurseCategory($categories, $current, $id_category = 1, $id_selected = 1)
+	public static function recurseCategory($categories, $current, $id_category = 1, $id_selected = 1)
 	{
 		echo '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		if (isset($categories[$id_category]))
-			foreach ($categories[$id_category] AS $key => $row)
+			foreach (array_keys($categories[$id_category]) AS $key)
 				self::recurseCategory($categories, $categories[$id_category][$key], $key, $id_selected);
 	}
 
@@ -241,7 +253,7 @@ class CategoryCore extends ObjectModel
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category`
 		WHERE `id_parent` = '.(int)($id_category));
-		foreach ($result AS $k => $row)
+		foreach ($result AS $row)
 		{
 			$toDelete[] = (int)($row['id_category']);
 			$this->recursiveDelete($toDelete, (int)($row['id_category']));
@@ -353,7 +365,7 @@ class CategoryCore extends ObjectModel
 	{
 		$left = (int)$n++;
 		if (isset($categories[(int)$id_category]['subcategories']))
-			foreach ($categories[(int)$id_category]['subcategories'] AS $id_subcategory => $value)
+			foreach (array_keys($categories[(int)$id_category]['subcategories']) AS $id_subcategory)
 				self::_subTree($categories, (int)$id_subcategory, $n);
 		$right = (int)$n++;
 
@@ -367,7 +379,7 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $active return only active categories
 	  * @return array Categories
 	  */
-	static public function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
+	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '',$sql_limit = '')
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
@@ -392,7 +404,7 @@ class CategoryCore extends ObjectModel
 		return $categories;
 	}
 
-	static public function getSimpleCategories($id_lang)
+	public static function getSimpleCategories($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.`id_category`, cl.`name`
@@ -594,37 +606,19 @@ class CategoryCore extends ObjectModel
 	 * @param int $id_lang
 	 * @return array 
 	 */
-	public static function getChildrenWithNbSelectedSubCatForProduct($id_parent, $id_product = 0, $ids_categories = null, $id_lang)
+	public static function getChildrenWithNbSelectedSubCat($id_parent, $selectedCat,  $id_lang)
 	{
-		$categories_product_str = '';
-		if ($id_product)
-		{
-			$categories_product = Db::getInstance()->ExecuteS('
-			SELECT `id_category` 
-			FROM `'._DB_PREFIX_.'category_product` 
-			WHERE `id_product` = '.(int)$id_product);
-			if (sizeof($categories_product))
-				foreach ($categories_product as $category_product)
-					$categories_product_str .= $category_product['id_category'].',';
-		}
-		else
-		{
-			$categories_product = array();
-			$categories_product_str = $ids_categories;
-		}
-		$categories_product_str = rtrim($categories_product_str, ',');
-		
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT c.`id_category`, cl.`name`, IF((
+		SELECT c.`id_category`, c.`level_depth`, cl.`name`, IF((
 			SELECT COUNT(*) 
 			FROM `'._DB_PREFIX_.'category` c2
 			WHERE c2.`id_parent` = c.`id_category`
-		) > 0, 1, 0) AS has_children, '.($categories_product_str ? '(
+		) > 0, 1, 0) AS has_children, '.($selectedCat ? '(
 			SELECT count(c3.`id_category`) 
 			FROM `'._DB_PREFIX_.'category` c3 
 			WHERE c3.`nleft` > c.`nleft` 
 			AND c3.`nright` < c.`nright`
-			AND c3.`id_category`  IN ('.$categories_product_str.')
+			AND c3.`id_category`  IN ('.$selectedCat.')
 		)' : '0').' AS nbSelectedSubCat
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`
@@ -725,7 +719,7 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $unrestricted allows search without lang and includes first category and exact match
 	  * @return array Corresponding categories
 	  */
-	static public function searchByName($id_lang, $query, $unrestricted = false)
+	public static function searchByName($id_lang, $query, $unrestricted = false)
 	{
 		if ($unrestricted === true)
 			return Db::getInstance()->getRow('
@@ -749,7 +743,7 @@ class CategoryCore extends ObjectModel
 	  * @param integer $id_parent_category parent category ID
 	  * @return array Corresponding category
 	  */
-	static public function searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category)
+	public static function searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category)
 	{
 		return Db::getInstance()->getRow('
 		SELECT c.*, cl.*
@@ -794,7 +788,7 @@ class CategoryCore extends ObjectModel
 	* @param $id_category Category id
 	* @return boolean
 	*/
-	static public function categoryExists($id_category)
+	public static function categoryExists($id_category)
 	{
 		$row = Db::getInstance()->getRow('
 		SELECT `id_category`
@@ -867,7 +861,7 @@ class CategoryCore extends ObjectModel
 			$this->addGroups(array(1));
 	}
 
-	static public function setNewGroupForHome($id_group)
+	public static function setNewGroupForHome($id_group)
 	{
 		if (!(int)($id_group))
 			return false;
@@ -920,7 +914,7 @@ class CategoryCore extends ObjectModel
 	 * @param mixed $id_category_parent 
 	 * @return boolean true if succeed
 	 */
-	static public function cleanPositions($id_category_parent)
+	public static function cleanPositions($id_category_parent)
 	{
 		$return = true;
 
@@ -941,7 +935,7 @@ class CategoryCore extends ObjectModel
 		return $return;
 	}
 
-	static public function getLastPosition($id_category_parent)
+	public static function getLastPosition($id_category_parent)
 	{
 		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'category` WHERE `id_parent` = '.(int)($id_category_parent)));
 	}
@@ -1022,3 +1016,4 @@ class CategoryCore extends ObjectModel
 		return $result[0]['nb_product_recursive'];
 	}
 }
+

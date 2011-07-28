@@ -248,7 +248,7 @@ class AdminProducts extends AdminTab
 						$attachment->file = $uniqid;
 						$attachment->mime = $_FILES['attachment_file']['type'];
 						$attachment->file_name = pSQL($_FILES['attachment_file']['name']);
-						if (empty($attachment->mime) OR Tools::strlen($attachment->mime) > 64)
+						if (empty($attachment->mime) OR Tools::strlen($attachment->mime) > 128)
 							$this->_errors[] = Tools::displayError('Invalid file extension');
 						if (!Validate::isGenericName($attachment->file_name))
 							$this->_errors[] = Tools::displayError('Invalid file name');
@@ -306,7 +306,7 @@ class AdminProducts extends AdminTab
 						else
 						{
 							Hook::addProduct($product);
-							Search::indexation(false);
+							Search::indexation(false, $product->id);
 							Tools::redirectAdmin(self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token));
 						}
 					}
@@ -745,7 +745,7 @@ class AdminProducts extends AdminTab
 					if (!$specificPrice->add())
 						$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token));
 				}
 			}
 			else
@@ -765,7 +765,7 @@ class AdminProducts extends AdminTab
 					if (!$specificPrice->delete())
 						$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
 					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token));
+						Tools::redirectAdmin(self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token));
 				}
 			}
 			else
@@ -787,7 +787,7 @@ class AdminProducts extends AdminTab
 			elseif (!SpecificPrice::setSpecificPriority((int)($obj->id), $priorities))
 				$this->_errors[] = Tools::displayError('An error occurred while setting priorities.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token));
+				Tools::redirectAdmin(self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token));
 		}
 		/* Customization management */
 		elseif (Tools::isSubmit('submitCustomizationConfiguration'))
@@ -1015,9 +1015,9 @@ class AdminProducts extends AdminTab
 					throw new Exception(Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png'));
 				}
 
-				if (!$image->createImgFolder())
+				if (!$new_path = $image->getPathForCreation())
 					throw new Exception(Tools::displayError('An error occurred during new folder creation'));
-				if (!imageResize($subdir.$file, _PS_PROD_IMG_DIR_.$image->getImgPath().'.jpg'))
+				if (!imageResize($subdir.$file, $new_path.'.'.$image->image_format))
 				{
 					$image->delete();
 					throw new Exception(Tools::displayError('An error occurred while resizing image.'));
@@ -1060,17 +1060,18 @@ class AdminProducts extends AdminTab
 		else
 		{
 			$image = new Image($id_image);
-			if (!(Configuration::get('PS_LEGACY_IMAGES') && file_exists(_PS_PROD_IMG_DIR_.$id_product.'-'.$id_image.'.jpg')))	
-				$image->createImgFolder();
+			
+			if (!$new_path = $image->getPathForCreation())
+				$this->_errors[] = Tools::displayError('An error occurred during new folder creation');
 			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName))
 				$this->_errors[] = Tools::displayError('An error occurred during the image upload');
-			elseif (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format))
+			elseif (!imageResize($tmpName, $new_path.'.'.$image->image_format))
 				$this->_errors[] = Tools::displayError('An error occurred while copying image.');
 			elseif($method == 'auto')
 			{
 				$imagesTypes = ImageType::getImagesTypes('products');
 				foreach ($imagesTypes AS $k => $imageType)
-					if (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+					if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 						$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 			}
 
@@ -1187,9 +1188,9 @@ class AdminProducts extends AdminTab
 							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
 						elseif ($id_image = $this->addProductImage($object, Tools::getValue('resizer')))
 						{
-							$currentIndex .= '&image_updated='.(int)(Tools::getValue('id_image'));
+							$currentIndex .= '&image_updated='.(int)Tools::getValue('id_image');
 							Hook::updateProduct($object);
-							Search::indexation(false);
+							Search::indexation(false, $object->id);
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) AND is_int($id_image) AND $id_image)
 								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') OR Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
 
@@ -1202,7 +1203,11 @@ class AdminProducts extends AdminTab
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
 									$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
 									$token = Tools::encrypt('PreviewProduct'.$object->id);
-									$preview_url .= $object->active ? '' : '?adtoken='.$token.'&ad='.$admin_dir;
+									if(strpos($preview_url, '?') === false)
+										$preview_url .= '?';
+									else
+										$preview_url .= '&';
+									$preview_url .= 'adtoken='.$token.'&ad='.$admin_dir;
 								}
 								Tools::redirectAdmin($preview_url);
 							} else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') OR ($id_image AND $id_image !== true)) // Save and stay on same form
@@ -1243,18 +1248,18 @@ class AdminProducts extends AdminTab
 						elseif ($id_image = $this->addProductImage($object))
 						{
 							Hook::addProduct($object);
-							Search::indexation(false);
+							Search::indexation(false, $object->id);
 
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
 							{
 								$preview_url = ($context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $context->language->id)));
-								if (!$obj->active)
+								if (!$object->active)
 								{
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
 									$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
 									$token = Tools::encrypt('PreviewProduct'.$object->id);
-									$preview_url .= $object->active ? '' : '?adtoken='.$token.'&ad='.$admin_dir;
+									$preview_url .= '&adtoken='.$token.'&ad='.$admin_dir;
 								}
 
 								Tools::redirectAdmin($preview_url);
@@ -1729,7 +1734,7 @@ class AdminProducts extends AdminTab
 					<td class="cell border">'.$period.'</td>
 					<td class="cell border">'.$specificPrice['from_quantity'].'</th>
 					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specificPrice, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border"><a href="'.self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td>
+					<td class="cell border"><a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td>
 				</tr>';
 				$i++;
 			}
@@ -2610,6 +2615,11 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>';
+					
+				
+				if ((int)Configuration::get('PS_STOCK_MANAGEMENT'))
+				{
+					
 					if (!$has_attribute)
 					{
 						if ($obj->id)
@@ -2662,6 +2672,12 @@ class AdminProducts extends AdminTab
 								<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You used combinations, for this reason you can\'t edit your stock quantity here, but in the Combinations tab').'</div>
 							</td>
 						</tr>';
+				}
+				else
+					echo '<tr>
+							<td colspan="2">'.$this->l('The stock management is disabled').'</td>
+						</tr>';
+						
 				echo '
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr>
@@ -2709,8 +2725,48 @@ class AdminProducts extends AdminTab
 							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
 						</td>
 					</tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
-					<tr id="tr_categories"></tr>
+					<tr>
+						<td colspan="2" style="padding-bottom:5px;">
+							<hr style="width:100%;" />
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label for="id_category_default" class="t">'.$this->l('Default category:').'</label></td>
+						<td>
+						<div id="no_default_category" style="color: red;font-weight: bold;display: none;">'.$this->l('Please check a category in order to select the default category.').'</div>
+						<script>var post_selected_cat;</script>';
+						if (Tools::isSubmit('categoryBox'))
+						{
+							$postCat = Tools::getValue('categoryBox');
+							$selectedCat = Category::getSimpleCategories($this->_defaultFormLanguage, false, true, 'AND c.`id_category` IN ('.(empty($postCat) ? '1' : implode(',', $postCat)).')');
+							echo '<script>post_selected_cat = \''.implode(',', $postCat).'\';</script>';
+						}
+						if ($obj->id)
+							$selectedCat = Product::getProductCategoriesFull($obj->id, $this->_defaultFormLanguage);
+						else if(!Tools::isSubmit('categoryBox'))
+							$selectedCat[] = array('id_category' => 1, 'name' => $this->l('Home'));
+						echo '<select id="id_category_default" name="id_category_default">';
+						
+							foreach($selectedCat AS $cat)
+								echo '<option value="'.$cat['id_category'].'" '.($obj->id_category_default == $cat['id_category'] ? 'selected' : '').'>'.$cat['name'].'</option>';
+						echo '</select>
+						</td> 
+					</tr>
+					<tr id="tr_categories">
+						<td colspan="2">
+						';
+					// Translations are not automatic for the moment ;)
+					$trads = array(
+						 'Home' => $this->l('Home'), 
+						 'selected' => $this->l('selected'), 
+						 'Collapse All' => $this->l('Collapse All'), 
+						 'Expand All' => $this->l('Expand All'), 
+						 'Check All' => $this->l('Check All'), 
+						 'Uncheck All'  => $this->l('Uncheck All')
+					);
+					echo Helper::renderAdminCategorieTree($trads, $selectedCat).'
+						</td>
+					</tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr><td colspan="2">
 						<span onclick="$(\'#seo\').slideToggle();" style="cursor: pointer"><img src="../img/admin/arrow.gif" alt="'.$this->l('SEO').'" title="'.$this->l('SEO').'" style="float:left; margin-right:5px;"/>'.$this->l('Click here to improve product\'s rank in search engines (SEO)').'</span><br />
@@ -2719,7 +2775,7 @@ class AdminProducts extends AdminTab
 								<tr>
 									<td class="col-left">'.$this->l('Meta title:').'</td>
 									<td class="translatable">';
-		foreach ($this->_languages as $language)
+		foreach ($this->_languages AS $language)
 			echo '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_title_'.$language['id_lang'].'" name="meta_title_'.$language['id_lang'].'"
 											value="'.htmlentities($this->getFieldValue($obj, 'meta_title', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
@@ -2894,18 +2950,10 @@ class AdminProducts extends AdminTab
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
 			<script type="text/javascript">
 					toggleVirtualProduct(getE(\'is_virtual_good\'));
-					unitPriceWithTax(\'unit\');';
+					unitPriceWithTax(\'unit\');
+			</script>';
 		$categoryBox = Tools::getValue('categoryBox', array());
-		echo '
-		$(function() {
-			$.ajax({
-				type: \'POST\',
-				url: \'ajax_category_list.php\',
-				data: \''.(sizeof($categoryBox) > 0 ? 'categoryBox='.serialize($categoryBox).'&' : '').'id_product='.$obj->id.'&id_category_default='.($this->getFieldValue($obj, 'id_category_default') ? $this->getFieldValue($obj, 'id_category_default') : Tools::getValue('id_category', 1)).'&id_category='.(int)(Tools::getValue('id_category')).'&token='.$this->token.'\',
-				async : true,
-				success: function(msg) { $(\'#tr_categories\').replaceWith(msg); }
-			});
-		});</script>';
+		
 	}
 
 	function displayFormImages($obj, $token = NULL)
@@ -3128,6 +3176,7 @@ class AdminProducts extends AdminTab
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
 		$currency = $context->currency;
 		$attributes_groups = AttributeGroup::getAttributesGroups($context->language->id);
+		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		
 		$images = Image::getImages($context->language->id, $obj->id);
@@ -3667,11 +3716,18 @@ class AdminProducts extends AdminTab
 	private function addPackItem()
 	{
 		return '
-
 			function addPackItem()
 			{
-
-			if ($(\'#curPackItemId\').val() == \'\' || $(\'#curPackItemName\').val() == \'\') return false;
+				if ($(\'#curPackItemId\').val() == \'\' || $(\'#curPackItemName\').val() == \'\')
+				{
+					alert(\''.$this->l('Thanks to select at least one product.').'\');
+					return false;
+				}
+				else if ($(\'#curPackItemId\').val() == \'\' || $(\'#curPackItemQty\').val() == \'\')
+				{
+					alert(\''.$this->l('Thanks to set a quantity to add a product.').'\');	
+					return false;
+				}
 
 			var lineDisplay = $(\'#curPackItemQty\').val()+ \'x \' +$(\'#curPackItemName\').val();
 
@@ -3685,7 +3741,7 @@ class AdminProducts extends AdminTab
 
 			$(\'#inputPackItems\').val($(\'#inputPackItems\').val() + line  + \'-\');
 			$(\'#divPackItems\').html(divContent);
-			$(\'#namePackItems\').val($(\'#namePackItems\').val() + lineDisplay + \'¤\');
+				$(\'#namePackItems\').val($(\'#namePackItems\').val() + lineDisplay + \'Â¤\');
 
 			$(\'#curPackItemId\').val(\'\');
 			$(\'#curPackItemName\').val(\'\');

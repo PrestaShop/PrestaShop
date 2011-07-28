@@ -353,7 +353,7 @@ abstract class DbCore
 			Cache::getInstance()->setQuery($sql, $resultArray);
 		return $resultArray;
 	}
-	
+
 	/**
 	 * getRow return an associative array containing the first row of the query
 	 * This function automatically add "limit 1" to the query

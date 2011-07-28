@@ -28,9 +28,6 @@
 ob_start();
 $timerStart = microtime(true);
 
-$context = Context::getContext();
-
-$context->cookie = $cookie;
 if (isset($_GET['logout']))
 	$cookie->logout();
 

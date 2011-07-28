@@ -1,34 +1,12 @@
 /*
   mColorPicker
-  Version: 1.0 r21
+  Version: 1.0 r34
   
   Copyright (c) 2010 Meta100 LLC.
+  http://www.meta100.com/
   
-  Permission is hereby granted, free of charge, to any person
-  obtaining a copy of this software and associated documentation
-  files (the "Software"), to deal in the Software without
-  restriction, including without limitation the rights to use,
-  copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the
-  Software is furnished to do so, subject to the following
-  conditions:
-  
-  The above copyright notice and this permission notice shall be
-  included in all copies or substantial portions of the Software.
-  
-  Except as contained in this notice, the name(s) of the above 
-  copyright holders shall not be used in advertising or otherwise 
-  to promote the sale, use or other dealings in this Software 
-  without prior written authorization.
-  
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  OTHER DEALINGS IN THE SOFTWARE.
+  Licensed under the MIT license 
+  http://www.opensource.org/licenses/mit-license.php 
 */
 
 // After this script loads set:
@@ -49,6 +27,8 @@
 
 (function($){
 
+  var $o;
+
   $.fn.mColorPicker = function(options) {
             
     $o = $.extend($.fn.mColorPicker.defaults, options);  
@@ -56,13 +36,10 @@
     if ($o.swatches.length < 10) $o.swatches = $.fn.mColorPicker.defaults.swatches
     if ($("div#mColorPicker").length < 1) $.fn.mColorPicker.drawPicker();
 
-    this.each(function () {
+    if ($('#css_disabled_color_picker').length < 1) $('head').prepend('<style id="css_disabled_color_picker" type="text/css">.mColorPicker[disabled] + span, .mColorPicker[disabled="disabled"] + span, .mColorPicker[disabled="true"] + span {filter:alpha(opacity=50);-moz-opacity:0.5;-webkit-opacity:0.5;-khtml-opacity: 0.5;opacity: 0.5;}</style>');
 
-      $.fn.mColorPicker.drawPickerTriggers($(this));
-    });
+    $('.mColorPicker').live('keyup', function () {
   
-    $('.mColorPickerInput').unbind().bind('keyup', function () {
-
       try {
   
         $(this).css({
@@ -72,6 +49,18 @@
         }).trigger('change');
       } catch (r) {}
     });
+
+    $('.mColorPickerTrigger').live('click', function () {
+
+      $.fn.mColorPicker.colorShow($(this).attr('id').replace('icp_', ''));
+    });
+
+    this.each(function () {
+
+      $.fn.mColorPicker.drawPickerTriggers($(this));
+    });
+
+    return this;
   };
 
   $.fn.mColorPicker.currentColor = false;
@@ -80,9 +69,12 @@
 
   $.fn.mColorPicker.init = {
     replace: '[type=color]',
+    index: 0,
     enhancedSwatches: true,
-    allowTransparency: true,
-    showLogo: true
+    allowTransparency: false,
+  	checkRedraw: 'DOMUpdated', // Change to 'ajaxSuccess' for ajax only or false if not needed
+  	liveEvents: false,
+    showLogo: false
   };
 
   $.fn.mColorPicker.defaults = {
@@ -101,17 +93,28 @@
     ]
   };
 
+  $.fn.mColorPicker.liveEvents = function() {
+
+    $.fn.mColorPicker.init.liveEvents = true;
+
+    if ($.fn.mColorPicker.init.checkRedraw && $.fn.mColorPicker.init.replace) {
+
+      $(document).bind($.fn.mColorPicker.init.checkRedraw + '.mColorPicker', function () {
+
+        $('input[data-mcolorpicker!="true"]').filter(function() {
+    
+          return ($.fn.mColorPicker.init.replace == '[type=color]')? this.getAttribute("type") == 'color': $(this).is($.fn.mColorPicker.init.replace);
+        }).mColorPicker();
+      });
+    }
+  };
+
   $.fn.mColorPicker.drawPickerTriggers = function ($t) {
 
-    if ($t[0].nodeName.toLowerCase() != 'input') return false
-    if ($t.data('mColorPicker') == 'true') return false
+    if ($t[0].nodeName.toLowerCase() != 'input') return false;
 
-    var id = $t.attr('id'),
-        currentTime = new Date(),
+    var id = $t.attr('id') || 'color_' + $.fn.mColorPicker.init.index++,
         hidden = false;
-
-    if (id == '') id = $t.attr('name');
-    if (id == '') id = 'color_' + Math.round(Math.random() * currentTime.getTime());
 
     $t.attr('id', id);
   
@@ -126,7 +129,7 @@
 
     $('body').append('<span id="color_work_area"></span>');
     $('span#color_work_area').append($t.clone(true));
-    colorPicker = $('span#color_work_area').html().replace(/type=[^a-z]*color[^a-z]*/gi, (hidden)? 'type="hidden"': 'type="text"');
+    colorPicker = $('span#color_work_area').html().replace(/type="color"/gi, '').replace(/input /gi, (hidden)? 'input type="hidden"': 'input type="text"');
     $('span#color_work_area').html('').remove();
     $t.after(
       (hidden)? '<span style="cursor:pointer;border:1px solid black;float:' + flt + ';width:' + width + 'px;height:' + height + 'px;" id="icp_' + id + '">&nbsp;</span>': ''
@@ -138,7 +141,11 @@
         'background-color': color,
         'background-image': image,
         'display': 'inline-block'
-      });
+      }).attr(
+        'class', $('#' + id).attr('class')
+      ).addClass(
+        'mColorPickerTrigger'
+      );
     } else {
 
       $('#' + id).css({
@@ -147,14 +154,15 @@
       }).css({
         'color': $.fn.mColorPicker.textColor($('#' + id).css('background-color'))
       }).after(
-        '<span style="cursor:pointer;" id="icp_' + id + '"><img src="' + $o.imageFolder + 'color.png" style="border:0;margin:0 0 0 3px" align="absmiddle"></span>'
+        '<span style="cursor:pointer;" id="icp_' + id + '" class="mColorPickerTrigger"><img src="' + $o.imageFolder + 'color.png" style="border:0;margin:0 0 0 3px" align="absmiddle"></span>'
       ).addClass('mColorPickerInput');
     }
 
-    $('#icp_' + id).bind('click', function () {
+    $('#icp_' + id).attr('data-mcolorpicker', 'true');
 
-      $.fn.mColorPicker.colorShow(id, hidden);
-    }).data('mColorPicker', 'true');
+    $('#' + id).addClass('mColorPicker');
+
+    return $('#' + id);
   };
 
   $.fn.mColorPicker.drawPicker = function () {
@@ -164,7 +172,7 @@
     ).css(
       'display','none'
     ).html(
-      '<div id="mColorPickerWrapper"><div id="mColorPickerImg" class="mColor"></div><div id="mColorPickerImgGray" class="mColor"></div><div id="mColorPickerSwatches"><div class="mClear"></div></div></div>'
+      '<div id="mColorPickerWrapper"><div id="mColorPickerImg" class="mColor"></div><div id="mColorPickerImgGray" class="mColor"></div><div id="mColorPickerSwatches"><div class="mClear"></div></div><div id="mColorPickerFooter"><input type="text" size="8" id="mColorPickerInput"/></div></div>'
     ).appendTo("body");
 
     $(document.createElement("div")).attr("id","mColorPickerBg").css({
@@ -186,7 +194,7 @@
       'color':'#fff',
       'z-index':999998,
       'width':'194px',
-      'height':'157px',
+      'height':'184px',
       'font-size':'12px',
       'font-family':'times'
     });
@@ -259,19 +267,13 @@
     if ($.fn.mColorPicker.init.allowTransparency) $('#mColorPickerFooter').prepend('<span id="mColorPickerTransparent" class="mColor" style="font-size:16px;color:#000;padding-right:30px;padding-top:3px;cursor:pointer;overflow:hidden;float:right;">transparent</span>');
     if ($.fn.mColorPicker.init.showLogo) $('#mColorPickerFooter').prepend('<a href="http://meta100.com/" title="Meta100 - Designing Fun" alt="Meta100 - Designing Fun" style="float:right;" target="_blank"><img src="' +  $o.imageFolder + 'meta100.png" title="Meta100 - Designing Fun" alt="Meta100 - Designing Fun" style="border:0;border-left:1px solid #aaa;right:0;position:absolute;"/></a>');
 
-    $("#mColorPickerBg").click(function() {
+    $("#mColorPickerBg").click($.fn.mColorPicker.closePicker);
 
-      $("#mColorPickerBg").hide();
-      $("#mColorPicker").fadeOut()
-    });
-  
-    var swatch = ($.fn.mColorPicker.init.enhancedSwatches)? $.fn.mColorPicker.getCookie('swatches'): $o.swatches,
+    var swatch = $.fn.mColorPicker.getCookie('swatches'),
         i = 0;
 
-    if (swatch == null) swatch = $o.swatches;
-    else swatch = swatch.split('||');
-
-    if (swatch.length < 10) swatch = $o.swatches;
+    if (typeof swatch == 'string') swatch = swatch.split('||');
+    if (swatch == null || $.fn.mColorPicker.init.enhancedSwatches || swatch.length < 10) swatch = $o.swatches;
 
     $(".mPastColor").each(function() {
 
@@ -279,7 +281,14 @@
     });
   };
 
-  $.fn.mColorPicker.colorShow = function (id, updateInput) {
+  $.fn.mColorPicker.closePicker = function () {
+
+    $(".mColor, .mPastColor, #mColorPickerInput, #mColorPickerWrapper").unbind();
+    $("#mColorPickerBg").hide();
+    $("#mColorPicker").fadeOut()
+  };
+
+  $.fn.mColorPicker.colorShow = function (id) {
 
     var $e = $("#icp_" + id);
         pos = $e.offset(),
@@ -289,6 +298,8 @@
         pickerLeft = pos.left,
         $d = $(document),
         $m = $("#mColorPicker");
+
+    if ($i.attr('disabled')) return false;
 
 		// KEEP COLOR PICKER IN VIEWPORT
 		if (pickerTop + $m.height() > $d.height()) pickerTop = pos.top - $m.height();
@@ -317,12 +328,13 @@
     $('#colorPreview').css('background', def);
     $('#color').val(def);
   
-    if (updateInput) $.fn.mColorPicker.currentColor = $e.css('background-color');
+    if ($('#' + id).attr('data-text')) $.fn.mColorPicker.currentColor = $e.css('background-color');
     else $.fn.mColorPicker.currentColor = $i.css('background-color');
 
     if (hex == 'true') $.fn.mColorPicker.currentColor = $.fn.mColorPicker.RGBtoHex($.fn.mColorPicker.currentColor);
 
     $("#mColorPickerInput").val($.fn.mColorPicker.currentColor);
+  
     $('.mColor, .mPastColor').bind('mousemove', function(e) {
   
       var offset = $(this).offset();
@@ -334,7 +346,7 @@
       else if ($(this).attr('id') == 'mColorPickerTransparent') $.fn.mColorPicker.color = 'transparent';
       else if (!$(this).hasClass('mPastColor')) $.fn.mColorPicker.color = $.fn.mColorPicker.whichColor(e.pageX - offset.left, e.pageY - offset.top + (($(this).attr('id') == 'mColorPickerImgGray')? 128: 0), hex);
 
-      $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.color, updateInput);
+      $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.color);
     }).click(function() {
   
       $.fn.mColorPicker.colorPicked(id);
@@ -345,32 +357,29 @@
       try {
   
         $.fn.mColorPicker.color = $('#mColorPickerInput').val();
-        $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.color, updateInput);
+        $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.color);
     
-        if (e.which == 13) {
-          $.fn.mColorPicker.colorPicked(id);
-        }
+        if (e.which == 13) $.fn.mColorPicker.colorPicked(id);
       } catch (r) {}
+
     }).bind('blur', function () {
   
-      $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.currentColor, updateInput);
+      $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.currentColor);
     });
   
     $('#mColorPickerWrapper').bind('mouseleave', function () {
   
-      $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.currentColor, updateInput);
+      $.fn.mColorPicker.setInputColor(id, $.fn.mColorPicker.currentColor);
     });
   };
 
-  $.fn.mColorPicker.setInputColor = function (id, color, updateInput) {
+  $.fn.mColorPicker.setInputColor = function (id, color) {
   
     var image = (color == 'transparent')? "url('" + $o.imageFolder + "grid.gif')": '',
         textColor = $.fn.mColorPicker.textColor(color);
   
-    if (updateInput) $("#icp_" + id).css({'background-color': color, 'background-image': image});
+    if ($('#' + id).attr('data-text') || $('#' + id).attr('text')) $("#icp_" + id).css({'background-color': color, 'background-image': image});
     $("#" + id).val(color).css({'background-color': color, 'background-image': image, 'color' : textColor}).trigger('change');
-    if(typeof(employeePage) != 'undefined')
-    	$('body').css('background-color', color);
     $("#mColorPickerInput").val(color);
   };
 
@@ -401,9 +410,7 @@
 
   $.fn.mColorPicker.colorPicked = function (id) {
   
-    $(".mColor, .mPastColor, #mColorPickerInput, #mColorPickerWrapper").unbind();
-    $("#mColorPickerBg").hide();
-    $("#mColorPicker").fadeOut();
+    $.fn.mColorPicker.closePicker();
   
     if ($.fn.mColorPicker.init.enhancedSwatches) $.fn.mColorPicker.addToSwatch();
   
@@ -539,35 +546,18 @@
     if (c.length < 6) c = c.substr(0, 1) + c.substr(0, 1) + c.substr(1, 1) + c.substr(1, 1) + c.substr(2, 1) + c.substr(2, 1);
 
     return 'rgb(' + parseInt(c.substr(0, 2), 16) + ', ' + parseInt(c.substr(2, 2), 16) + ', ' + parseInt(c.substr(4, 2), 16) + ')';
-  }
-
-  if ($.fn.mColorPicker.init.replace == '[type=color]') {
+  };
 
     $(document).ready(function () {
 
-      $('input').filter(function(index) {
+    if ($.fn.mColorPicker.init.replace) {
     
-        return this.getAttribute("type") == 'color';
-      }).mColorPicker();
+      $('input[data-mcolorpicker!="true"]').filter(function() {
     
-      $(document).bind('ajaxSuccess', function () {
-      
-        $('input').filter(function(index) {
-      
-          return this.getAttribute("type") == 'color';
+        return ($.fn.mColorPicker.init.replace == '[type=color]')? this.getAttribute("type") == 'color': $(this).is($.fn.mColorPicker.init.replace);
         }).mColorPicker();
-      });
-    });
-  } else if ($.fn.mColorPicker.init.replace) {
 
-    $(document).ready(function () {
-    
-      $('input' + $.fn.mColorPicker.init.replace).mColorPicker();
-    
-      $(document).bind('ajaxSuccess', function () {
-      
-        $('input' + $.fn.mColorPicker.init.replace).mColorPicker();
-      });
-    });
+      $.fn.mColorPicker.liveEvents();
   }
+  });
 })(jQuery);

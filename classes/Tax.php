@@ -79,7 +79,7 @@ class TaxCore extends ObjectModel
 	*
 	* @return array Taxes
 	*/
-	static public function getTaxes($id_lang = false, $active = 1)
+	public static function getTaxes($id_lang = false, $active = 1)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT t.id_tax, t.rate'.((int)($id_lang) ? ', tl.name, tl.id_lang ' : '').'
@@ -89,12 +89,12 @@ class TaxCore extends ObjectModel
 		ORDER BY `name` ASC' : ''));
 	}
 
-	static public function excludeTaxeOption()
+	public static function excludeTaxeOption()
 	{
 		return !Configuration::get('PS_TAX');
 	}
 
-	public static function getTaxIdByName($tax_name, $active =1)
+	public static function getTaxIdByName($tax_name, $active = 1)
 	{
 		$tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT t.`id_tax`

@@ -78,7 +78,7 @@ class OrderSlipCore extends ObjectModel
 		}
 	}
 
-	static public function getOrdersSlip($customer_id, $order_id = false)
+	public static function getOrdersSlip($customer_id, $order_id = false)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *
@@ -88,7 +88,7 @@ class OrderSlipCore extends ObjectModel
 		ORDER BY `date_add` DESC');
 	}
 
-	static public function getOrdersSlipDetail($id_order_slip = true, $id_order_detail = false)
+	public static function getOrdersSlipDetail($id_order_slip = true, $id_order_detail = false)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
 		($id_order_detail ? 'SELECT SUM(`product_quantity`) AS `total`' : 'SELECT *').
@@ -97,7 +97,7 @@ class OrderSlipCore extends ObjectModel
 		.($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
 	}
 
-	static public function getOrdersSlipProducts($orderSlipId, $order)
+	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
 		$discounts = $order->getDiscounts(true);
 		$productsRet = self::getOrdersSlipDetail($orderSlipId);
@@ -147,7 +147,7 @@ class OrderSlipCore extends ObjectModel
 		return $products;
 	}
 
-	static public function getSlipsIdByDate($dateFrom, $dateTo)
+	public static function getSlipsIdByDate($dateFrom, $dateTo)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT `id_order_slip`
@@ -161,7 +161,7 @@ class OrderSlipCore extends ObjectModel
 		return $slips;
 	}
 
-	static public function createOrderSlip($order, $productList, $qtyList, $shipping_cost = false)
+	public static function createOrderSlip($order, $productList, $qtyList, $shipping_cost = false)
 	{
 		$currency = new Currency($order->id_currency);
 		$orderSlip =  new OrderSlip();

@@ -91,7 +91,7 @@ class TagCore extends ObjectModel
 	*
 	* @return boolean Operation success
 	*/
-	static public function addTags($id_lang, $id_product, $string)
+	public static function addTags($id_lang, $id_product, $string)
 	{
 	 	if (!Validate::isUnsignedId($id_lang) OR !Validate::isTagsList($string))
 			return false;
@@ -124,7 +124,7 @@ class TagCore extends ObjectModel
 		VALUES '.$data);
 	}
 	
-	static public function getMainTags($id_lang, $nb = 10)
+	public static function getMainTags($id_lang, $nb = 10)
 	{
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sqlGroups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -147,7 +147,7 @@ class TagCore extends ObjectModel
 		LIMIT 0, '.(int)($nb));
 	}
 	
-	static public function getProductTags($id_product)
+	public static function getProductTags($id_product)
 	{
 	 	if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT t.`id_lang`, t.`name` 
@@ -195,7 +195,7 @@ class TagCore extends ObjectModel
 		return $result;
 	}
 	
-	static public function deleteTagsForProduct($id_product)
+	public static function deleteTagsForProduct($id_product)
 	{
 		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)($id_product));
 	}

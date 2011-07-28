@@ -24,6 +24,40 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{*
+** Retro compatibility for PrestaShop version < 1.4.2.5 with a recent theme
+** Syntax smarty for v2
+*}
+
+{* Will be deleted for 1.5 version and more *}
+{if !isset($formatedAddressFieldsValuesList)}
+	{$ignoreList.0 = "id_address"}
+	{$ignoreList.1 = "id_country"}
+	{$ignoreList.2 = "id_state"}
+	{$ignoreList.3 = "id_customer"}
+	{$ignoreList.4 = "id_manufacturer"}
+	{$ignoreList.5 = "id_supplier"}
+	{$ignoreList.6 = "date_add"}
+	{$ignoreList.7 = "date_upd"}
+	{$ignoreList.8 = "active"}
+	{$ignoreList.9 = "deleted"}	
+	
+	{* PrestaShop 1.4.0.17 compatibility *}
+	{if isset($addresses)}
+		{foreach from=$addresses key=k item=address}
+			{counter start=0 skip=1 assign=address_key_number}
+			{$id_address = $address.id_address}
+			{foreach from=$address key=address_key item=address_content}
+				{if !in_array($address_key, $ignoreList)}
+					{$formatedAddressFieldsValuesList.$id_address.ordered_fields.$address_key_number = $address_key}
+					{$formatedAddressFieldsValuesList.$id_address.formated_fields_values.$address_key = $address_content}
+					{counter}
+				{/if}
+			{/foreach}
+		{/foreach}
+	{/if}
+{/if}
+
 <script type="text/javascript">
 // <![CDATA[
 	{if !$opc}
@@ -87,11 +121,15 @@
 		for (var item in fields_name)
 		{ldelim}
 			var name = fields_name[item];
+			var value = getFieldValue(name, values);
+			if (value != "")
+			{ldelim}
 			var new_li = document.createElement('li');
 			new_li.className = 'address_'+ name;
 			new_li.innerHTML = getFieldValue(name, values);
 			dest_comp.append(new_li);
 		{rdelim}
+	{rdelim}
 	{rdelim}
 
 	function getFieldValue(field_name, values)

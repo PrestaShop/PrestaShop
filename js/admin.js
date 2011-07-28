@@ -307,7 +307,7 @@ function delAccessory(id)
 	var inputCut = input.value.split('-');
 	var nameCut = name.value.split('¤');
 
-	if (inputCut.lenght != nameCut.lenght)
+	if (inputCut.length != nameCut.length)
 		return alert('Bad size');
 
 	// Reset all hidden fields

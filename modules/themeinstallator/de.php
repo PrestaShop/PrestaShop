@@ -4,6 +4,7 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_fff01a1de50e0559f82501a927654d1b'] = 'Import / Export eines Themas';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_83ebbd7865677d356ffde5ad7e12784f'] = 'Exportieren oder installieren Sie ein Thema und seine Module auf Ihren Shop';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_e10ed1f81b51bd4c7f86eeb84bcd1359'] = 'zip ist nicht auf Ihrem Server installiert. Erkundigen Sie sich bei Ihrem Provider.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_25b9e1d82d8200d70be2b22a1a283957'] = 'Ein Fehler ist beim Hochladen der Datei aufgetreten.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_050991b5b76aad0be75563b7cb93a33e'] = 'Nur zip-Dateien sind erlaubt';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_57c1ed81b02e5d3361323c7930897295'] = 'Ein Fehler ist beim Kopieren der Datei aufgetreten.';
@@ -85,5 +86,3 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_5da618e8e4b89c66fe86e32
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_3271e801d0a5db9dc2963a19ed9695d6'] = 'Wählen Sie ein Thema';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_ea4788705e6873b424c65e91c2846b19'] = 'Abbrechen';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_abb381ee4077396e5d5d475b9022ba86'] = 'Generieren Sie das Archiv jetzt!';
-
-?>

@@ -27,15 +27,10 @@
 
 class HistoryControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->auth = true;
-		$this->php_self = 'history.php';
-		$this->authRedirection = 'history.php';
-		$this->ssl = true;
-	
-		parent::__construct();
-	}
+	public $auth = true;
+	public $php_self = 'history.php';
+	public $authRedirection = 'history.php';
+	public $ssl = true;
 	
 	public function setMedia()
 	{

@@ -299,8 +299,10 @@ function displayAccount()
 	// Select the most appropriate country
 	if (Tools::getValue('id_country'))
 		$selectedCountry = (int)(Tools::getValue('id_country'));
-	else
+	else if ((int)$result['COUNTRYCODE'])
+	{
 		$selectedCountry = Country::getByIso(strval($result['COUNTRYCODE']));
+	}
 	$countries = Country::getCountries((int)($cookie->id_lang), true);
 
 	// Smarty assigns
@@ -333,10 +335,12 @@ function displayAccount()
 
 // #####
 // Process !!
-
-if (!$cookie->isLogged(true))
+/*if (!$cookie->isLogged(true))
+{
+	displayAccount();
 	die('Not logged');
-elseif (!$cart->getOrderTotal(true, Cart::BOTH))
+}*/
+if (!$cart->getOrderTotal(true, Cart::BOTH))
 	die('Empty cart');
 
 // No token, we need to get one by making PayPal Authorisation

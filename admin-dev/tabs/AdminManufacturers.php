@@ -46,6 +46,7 @@ class AdminManufacturers extends AdminTab
 		$countries = Country::getCountries($context->language->id);
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
+		
 		$this->fieldsDisplayAddresses = array(
 		'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 		'm!manufacturer_name' => array('title' => $this->l('Manufacturer'), 'width' => 100),

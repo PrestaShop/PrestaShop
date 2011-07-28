@@ -85,7 +85,8 @@ class BlockCms extends Module
 		PRIMARY KEY (`id_cms_block_page`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
 		!Configuration::updateValue('FOOTER_CMS', '') OR
-		!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1))
+		!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) OR
+		!Configuration::updateValue('FOOTER_POWEREDBY', 1))
 			return false;
 		return true;
 	}
@@ -95,6 +96,7 @@ class BlockCms extends Module
 		if (!parent::uninstall() OR
 		!Configuration::deleteByName('FOOTER_CMS') OR
 		!Configuration::deleteByName('FOOTER_BLOCK_ACTIVATION') OR
+		!Configuration::deleteByName('FOOTER_POWEREDBY') OR
 		!Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'cms_block` , `'._DB_PREFIX_.'cms_block_page`, `'._DB_PREFIX_.'cms_block_lang`'))
 			return false;
 		return true;
@@ -402,6 +404,7 @@ class BlockCms extends Module
 		<form method="POST" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'">
 		<fieldset>
 			<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Footer\'s various links Configuration').'</legend>
+			<input type="checkbox" name="footer_poweredby_active" id="footer_poweredby_active" '.(((int)Configuration::get('FOOTER_POWEREDBY') === 1 || Configuration::get('FOOTER_POWEREDBY') === false) ? 'checked="checked"' : '').'> <label for="footer_active" style="float:none;">'.$this->l('Display "Powered by Prestashop"').'</label><br /><br />
 			<input type="checkbox" name="footer_active" id="footer_active" '.(Configuration::get('FOOTER_BLOCK_ACTIVATION') ? 'checked="checked"' : '').'> <label for="footer_active" style="float:none;">'.$this->l('Display the Footer\'s various links').'</label><br /><br />
 			<table cellspacing="0" cellpadding="0" class="table" width="100%">
 				<tr>
@@ -673,6 +676,7 @@ class BlockCms extends Module
 					$footer .= $box.'|';
 			Configuration::updateValue('FOOTER_CMS', rtrim($footer, '|'));
 			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', Tools::getValue('footer_active'));
+			Configuration::updateValue('FOOTER_POWEREDBY', (Tools::getValue('footer_poweredby_active') == 1 ? 1 : 0));
 			
 			$this->_html = $this->displayConfirmation($this->l('Footer\'s CMS updated'));
 		}
@@ -735,7 +739,8 @@ class BlockCms extends Module
 				'block' => 0,
 				'cmslinks' => $cms_titles,
 				'theme_dir' => _PS_THEME_DIR_,
-				'display_stores_footer' => Configuration::get('PS_STORES_DISPLAY_FOOTER')
+				'display_stores_footer' => Configuration::get('PS_STORES_DISPLAY_FOOTER'),
+				'display_poweredby' => ((int)Configuration::get('FOOTER_POWEREDBY') === 1 || Configuration::get('FOOTER_POWEREDBY') === false)
 			));
 			return $this->display(__FILE__, 'blockcms.tpl');
 		}

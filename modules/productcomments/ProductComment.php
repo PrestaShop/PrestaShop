@@ -91,7 +91,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return array Comments
 	 */
-	static public function getByProduct($id_product, $p = 1, $n = null)
+	public static function getByProduct($id_product, $p = 1, $n = null)
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
@@ -111,7 +111,7 @@ class ProductComment extends ObjectModel
 		'.($n ? 'LIMIT '.(int)(($p - 1) * $n).', '.(int)($n) : ''));
 	}
 	
-	static public function getByCustomer($id_product, $id_customer, $last = false, $id_guest = false)
+	public static function getByCustomer($id_product, $id_customer, $last = false, $id_guest = false)
 	{
 		$results = Db::getInstance()->ExecuteS('
 		SELECT * 
@@ -132,7 +132,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return array Grades
 	 */
-	static public function getGradeByProduct($id_product, $id_lang)
+	public static function getGradeByProduct($id_product, $id_lang)
 	{
 		if (!Validate::isUnsignedId($id_product) ||
 			!Validate::isUnsignedId($id_lang))
@@ -150,7 +150,7 @@ class ProductComment extends ObjectModel
 		($validate == '1' ? ' AND pc.`validate` = 1' : '')));
 	}
 
-	static public function getAveragesByProduct($id_product, $id_lang)
+	public static function getAveragesByProduct($id_product, $id_lang)
 	{
 		/* Get all grades */
 		$grades = ProductComment::getGradeByProduct((int)($id_product), (int)($id_lang));
@@ -178,7 +178,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return array Info
 	 */
-	static public function getCommentNumber($id_product)
+	public static function getCommentNumber($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
@@ -196,7 +196,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return array Info
 	 */
-	static public function getGradedCommentNumber($id_product)
+	public static function getGradedCommentNumber($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
@@ -215,7 +215,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return array Comments
 	 */
-	static public function getByValidate($validate = '0', $deleted = false)
+	public static function getByValidate($validate = '0', $deleted = false)
 	{
 		global $cookie;
 		
@@ -249,7 +249,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function deleteGrades($id_product_comment)
+	public static function deleteGrades($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
 			die(Tools::displayError());

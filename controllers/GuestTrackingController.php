@@ -27,6 +27,8 @@
 
 class GuestTrackingControllerCore extends FrontController
 {
+	public $php_self = 'guest-tracking.php';
+	
 	public function preProcess()
 	{
 		parent::preProcess();
@@ -136,9 +138,8 @@ class GuestTrackingControllerCore extends FrontController
 
 	private function processAddressFormat(Address $delivery, Address $invoice)
 	{
-
-		$inv_adr_fields = AddressFormat::getOrderedAddressFields($invoice->id_country);
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($delivery->id_country);
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($invoice->id_country, false, true);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($delivery->id_country, false, true);
 
 		$this->context->smarty->assign('inv_adr_fields', $inv_adr_fields);
 		$this->context->smarty->assign('dlv_adr_fields', $dlv_adr_fields);

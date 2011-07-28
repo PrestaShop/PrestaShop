@@ -31,8 +31,15 @@ $engineType = 'ENGINE_TYPE';
 if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set('Europe/Paris');
 	
-define('_PS_MODULE_DIR_', realpath(INSTALL_PATH).'/../modules/');
-define('_PS_INSTALLER_PHP_UPGRADE_DIR_', realpath(INSTALL_PATH).'/php/');
+// if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
+if (defined('_PS_ROOT_DIR_') AND !defined('_PS_MODULE_DIR_'))
+	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
+else if (!defined('_PS_MODULE_DIR_'))
+	define('_PS_MODULE_DIR_', INSTALL_PATH.'/../modules/');
+
+if(!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
+	define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  INSTALL_PATH.DIRECTORY_SEPARATOR.'php/');
+
 // Only if loyalty module is installed
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_loyalty.php');
 // desactivate non-native module
@@ -104,6 +111,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_cms_block.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_blocklink.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_productcomments_guest_index.php');
+
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_loyalty.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_followup.php');
@@ -122,6 +131,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_block_info_to_cms_block.php
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'create_multistore.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_order_state.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;
@@ -133,14 +144,14 @@ if (file_exists(SETTINGS_FILE) AND file_exists(DEFINES_FILE))
 }
 else
 {
-	die('<action result="fail" error="30" />'."\n");
 	$logger->logError('The config/settings.inc.php file was not found.');
+	die('<action result="fail" error="30" />'."\n");
 }
 
 if (!file_exists(DEFINES_FILE))
 {
-	die('<action result="fail" error="37" />'."\n");
 	$logger->logError('The config/settings.inc.php file was not found.');
+	die('<action result="fail" error="37" />'."\n");
 }
 include_once(SETTINGS_FILE);
 
@@ -156,7 +167,8 @@ include_once(DEFINES_FILE);
 
 $oldversion = _PS_VERSION_;
 
-$versionCompare =  version_compare(INSTALL_VERSION, _PS_VERSION_);
+$versionCompare =  version_compare(INSTALL_VERSION, $oldversion);
+
 if ($versionCompare == '-1')
 {
 	$logger->logError('This installer is too old.');
@@ -164,7 +176,7 @@ if ($versionCompare == '-1')
 }
 elseif ($versionCompare == 0)
 {
-	$logger->logError('You already have the '.INSTALL_VERSION.' version.');
+	$logger->logError(sprintf('You already have the %s version.',INSTALL_VERSION));
 	die('<action result="fail" error="28" />'."\n");
 }
 elseif ($versionCompare === false)
@@ -198,9 +210,27 @@ if (empty($upgradeFiles))
 }
 natcasesort($upgradeFiles);
 $neededUpgradeFiles = array();
+
+// fix : complete version number if there is not all 4 numbers
+// for example replace 1.4.3 by 1.4.3.0
+// consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
+// @since 1.4.4.0
+$arrayVersion = preg_split('#\.#', $oldversion);
+$versionNumbers = sizeof($arrayVersion);
+
+if ($versionNumbers != 4)
+	$arrayVersion = array_pad($arrayVersion, 4, '0');
+
+$oldversion = implode('.', $arrayVersion);
+// end of fix
+
 foreach ($upgradeFiles AS $version)
-	if (version_compare($version, _PS_VERSION_) == 1 AND version_compare(INSTALL_VERSION, $version) != -1)
+{
+
+	if (version_compare($version, $oldversion) == 1 AND version_compare(INSTALL_VERSION, $version) != -1)
 		$neededUpgradeFiles[] = $version;
+}
+
 if (empty($neededUpgradeFiles))
 {
 	$logger->logError('No upgrade is possible.');

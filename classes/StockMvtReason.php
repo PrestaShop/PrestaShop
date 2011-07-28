@@ -63,7 +63,7 @@ class StockMvtReasonCore extends ObjectModel
 		return parent::getTranslationsFields(array('name'));
 	}
 	
-	static public function getStockMvtReasons($id_lang)
+	public static function getStockMvtReasons($id_lang)
 	{
 		$sql = 'SELECT smrl.name, smr.id_stock_mvt_reason, smr.sign
 				FROM '._DB_PREFIX_.'stock_mvt_reason smr

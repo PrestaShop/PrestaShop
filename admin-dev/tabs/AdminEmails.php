@@ -81,8 +81,8 @@ class AdminEmails extends AdminPreferences
 		<fieldset class="width2" style="margin-top: 10px;">
 			<legend><img src="../img/admin/email.gif" alt="" /> '.$this->l('Test your e-mail configuration').'</legend>
 			<script type="text/javascript">
-				var textMsg = "'.$this->l('This is a test message, your server is now available to send email').'";
-				var textSubject = "'.$this->l('Test message - Prestashop').'";
+				var textMsg = "'.urlencode($this->l('This is a test message, your server is now available to send email')).'";
+				var textSubject = "'.urlencode($this->l('Test message - Prestashop')).'";
 				var textSendOk = "'.$this->l('Mail is sent').'";
 				var textSendError= "'.$this->l('Error: please check your configuration').'";
 				var errorMail = "'.$this->l('This email address is wrong!').'";

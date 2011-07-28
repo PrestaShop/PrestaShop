@@ -82,6 +82,11 @@ class AdminDb extends AdminPreferences
 					$tables_engine[$table['Name']] = $table['Engine'];
 				
 				$engineType = pSQL(Tools::getValue('engineType'));
+				
+				/* Datas are not saved in database but in config/settings.inc.php */
+				$settings = array('_MYSQL_ENGINE_' => $engineType);
+			    rewriteSettingsFile(NULL, NULL, $settings);
+				
 				foreach ($_POST['tablesBox'] AS $table)
 				{
 					if ($engineType == $tables_engine[$table])

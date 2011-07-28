@@ -32,7 +32,7 @@ valueOfZoneEdited = null;
 
 // Last item is used to save the current zone and 
 // allow to replace it if user cancel the editing
-lastItemEdited = null;
+lastEditedItem = null;
 
 /* functions called by cropping events */
 

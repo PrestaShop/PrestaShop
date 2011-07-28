@@ -150,7 +150,7 @@ class TSBuyerProtection extends AbsTrustedShops
 			'MONEYBOOKERS'		=> $this->l('moneybookers.com'),
 			'OTHER'				=> $this->l('Other method of payment'),
 		);
-		$this->tab_name = $this->l('Seal of Approval and Buyer Protection');
+		$this->tab_name = $this->l('Trusted Shops quality seal and buyer protection');
 		$this->site_url = Tools::htmlentitiesutf8('http://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__);
 		TSBPException::setTranslationObject($this);
 		if (!method_exists('Tools', 'jsonDecode') || !method_exists('Tools', 'jsonEncode'))
@@ -675,6 +675,15 @@ class TSBuyerProtection extends AbsTrustedShops
 				$product->name[(int)Configuration::get('PS_LANG_DEFAULT')] = 'Trustedshops';
 				$product->link_rewrite[(int)Configuration::get('PS_LANG_DEFAULT')] = 'trustedshops';
 			}
+
+			// Add specifics translations
+			$id_lang = Language::getIdByIso('de');
+			if ((int)$id_lang > 0) $product->name[$id_lang] = 'Trusted Shops Käuferschutz';
+			$id_lang = Language::getIdByIso('en');
+			if ((int)$id_lang > 0) $product->name[$id_lang] = 'Trusted Shops buyer protection';
+			$id_lang = Language::getIdByIso('fr');
+			if ((int)$id_lang > 0) $product->name[$id_lang] = 'Trusted Shops protection acheteur';
+
 			$product->quantity = 1000;
 			$product->price = ToolsCore::convertPrice($item->grossFee,Currency::getIdByIsoCode($item->currency));
 			$product->id_category_default = TSBuyerProtection::$CAT_ID;
@@ -922,6 +931,16 @@ class TSBuyerProtection extends AbsTrustedShops
 	}
 	private function _displayPresentation()
 	{
+		global $cookie;
+		$link = '';
+
+		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'de')
+			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.de/shopbetreiber/mitgliedschaft.html?et_cid=14&et_lid=29069" target="_blank">Jetzt bei Trusted Shops anmelden!</a></b></p><br />';
+		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'en')
+			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.com/merchants/membership.html?shopsw=PRESTA&et_cid=53&et_lid=3361" target="_blank">Appy now!</a></b></p><br />';
+		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'fr')
+			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.fr/marchands/tarifs.html?shopsw=PRESTA&et_cid=53&et_lid=3362" target="_blank">Enregistrement Trusted Shops</a></b></p><br />';
+
 		return '
 			<div style="text-align:right; margin:10px 20px 10px 0">
 				<img src="'.__PS_BASE_URI__.'modules/'.self::$module_name.'/img/siegel.gif" alt="logo"/>
@@ -935,7 +954,7 @@ class TSBuyerProtection extends AbsTrustedShops
 		<h3>'.$this->l('Profitable and long-term customer relationship').'</h3>
 		<p>'.$this->l('For many online shoppers, the Trusted Shops Seal of Approval with Buyer Protection is an effective sign of quality for safe shopping on the internet. One-time buyers become regular customers.').'</p><br />
 		<h3>'.$this->l('Environment type').'</h3>
-		<p>'.$this->l('You are currently using the mode :').' <b>'.TSBuyerProtection::$ENV_API.'</b></p><br />';
+		<p>'.$this->l('You are currently using the mode :').' <b>'.TSBuyerProtection::$ENV_API.'</b></p><br />'.$link;			
 	}
 
 	private function _displayFormRegistrationLink($link = false)
@@ -1172,9 +1191,9 @@ class TSBuyerProtection extends AbsTrustedShops
 		$out = '<fieldset>
 				<legend><img src="../img/admin/warning.gif" alt="" />'.$this->l('Cronjob configuration').'</legend>';
 		$out .= '<p>'
-					.$this->l('You need to set a cron Task on your server, working with your EXCELLENT certificate.').'<br />'
-					.$this->l('The file you need to call:').' <b style="color:red;">'.$this->getCronFilePath().'</b><br />'
-					.$this->l('Trusted Shops recommends that the request should be automated by a cronjob with an interval of 10 minutes.')
+					.$this->l('If you are using a Trusted Shops EXCELLENCE cetificate in your shop, set up a cron job on your web server.').'<br />'
+					.$this->l('Run the script file ').' <b style="color:red;">'.$this->getCronFilePath().'</b> '.$this->l('with an interval of 10 minutes.').'<br /><br />'
+					.$this->l('The corresponding line in your cron file may look like this:').' <br /><b style="color:red;">*/10 * * * * '.$this->getCronFilePath().'>/dev/null 2>&1</b><br />'
 				.'</p>';
 		$out .= '</fieldset>';
 		return $out;
@@ -1250,6 +1269,9 @@ class TSBuyerProtection extends AbsTrustedShops
 
 			TSBuyerProtection::$smarty->assign(array(
 				'tax_label' => 'TTC',
+				'shop_id' => TSBuyerProtection::$CERTIFICATE[$lang]['tsID'],
+				'price' => Product::getPriceStatic((int)$items[0]['id_product']),
+				'currency_iso_code' => $items[0]['currency'],
 				'buyer_protection_items' => $items)
 			);
 		}

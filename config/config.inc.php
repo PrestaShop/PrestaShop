@@ -60,7 +60,7 @@ require_once(dirname(__FILE__).'/settings.inc.php');
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) OR empty($_SERVER['REQUEST_URI']))
 {
-	if (substr($_SERVER['SCRIPT_NAME'], -9) == 'index.php')
+	if (substr($_SERVER['SCRIPT_NAME'], -9) == 'index.php' && empty($_SERVER['QUERY_STRING']))
 		$_SERVER['REQUEST_URI'] = dirname($_SERVER['SCRIPT_NAME']).'/';
 	else
 	{
@@ -103,10 +103,15 @@ $defaultCountry = new Country((int)(Configuration::get('PS_COUNTRY_DEFAULT')), C
 if (defined('PS_ADMIN_DIR'))
 {
 	$currentFileName = array_reverse(explode("/", $_SERVER['SCRIPT_NAME']));
-	$cookie = new Cookie('psAdmin', substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])));
+	$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
+	$cookie = new Cookie('psAdmin', substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])), $cookieLifetime);
 }
 else
-	$cookie = new Cookie('ps');
+{
+	$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+	$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_FO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_FO') : 1)* 3600));
+	$cookie = new Cookie('ps', '', $cookieLifetime);
+}
 Context::getContext()->cookie = $cookie;
 
 /* Instantiate language */
@@ -125,6 +130,22 @@ else
 		$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 }
 Context::getContext()->language = $language;
+
+/* Define order state */
+// DEPRECATED : these defines are going to be deleted on 1.6 version of Prestashop
+// USE : Configuration::get() method in order to getting the id of order state
+define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
+define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));
+define('_PS_OS_PREPARATION_', Configuration::get('PS_OS_PREPARATION'));
+define('_PS_OS_SHIPPING_',    Configuration::get('PS_OS_SHIPPING'));
+define('_PS_OS_DELIVERED_',   Configuration::get('PS_OS_DELIVERED'));
+define('_PS_OS_CANCELED_',    Configuration::get('PS_OS_CANCELED'));
+define('_PS_OS_REFUND_',      Configuration::get('PS_OS_REFUND'));
+define('_PS_OS_ERROR_',       Configuration::get('PS_OS_ERROR'));
+define('_PS_OS_OUTOFSTOCK_',  Configuration::get('PS_OS_OUTOFSTOCK'));
+define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
+define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
+define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 if (function_exists('date_default_timezone_set'))

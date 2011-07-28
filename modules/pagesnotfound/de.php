@@ -19,5 +19,3 @@ $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_a90083861c168ef985bf70763980a
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_535ff57deda0b45d32cb37fd430accc8'] = 'Falls Ihr Provider die .htaccess-Datei unterstützt, können Sie sie im Root-Verzeichnis von PrestaShop erstellen und folgende Zeile einfügen:';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_9cfaa8e935f9e3e65b0959b15b070b15'] = 'Ein Benutzer, der eine Seite aufruft, die es nicht gibt, wird zur Seite   weitergeleitet';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_feb436b0dabe28068aa6d866ac47bf0a'] = 'Dieses Modul protokolliert die Zugänge zu dieser Seite: die aufgerufene Seite, den Referrer und die Anzahl der Aufrufe.';
-
-?>

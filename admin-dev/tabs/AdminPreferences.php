@@ -72,7 +72,6 @@ class AdminPreferences extends AdminTab
 		);
 		foreach (CMS::listCms($context->language->id) as $cms_file)
 			$cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
-
 		$this->_fieldsGeneral = array(
 			'PS_SHOP_ENABLE' => array('title' => $this->l('Enable Shop'), 'desc' => $this->l('Activate or deactivate your shop. Deactivate your shop while you perform maintenance on it. Please note that the webservice will not be disabled'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_MAINTENANCE_IP' => array('title' => $this->l('Maintenance IP'), 'desc' => $this->l('IP addresses allowed to access the Front Office even if shop is disabled. Use a comma to separate them (e.g., 42.24.4.2,127.0.0.1,99.98.97.96)'), 'validation' => 'isGenericName', 'type' => 'maintenance_ip', 'size' => 30, 'default' => ''),
@@ -80,6 +79,8 @@ class AdminPreferences extends AdminTab
 			'PS_COOKIE_CHECKIP' => array('title' => $this->l('Check IP on the cookie'), 'desc' => $this->l('Check the IP address of the cookie in order to avoid your cookie being stolen'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool', 'default' => '0', 'visibility' => Shop::CONTEXT_ALL),
 			'PS_TOKEN_ENABLE' => array('title' => $this->l('Increase Front Office security'), 'desc' => $this->l('Enable or disable token on the Front Office in order to improve PrestaShop security'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool', 'default' => '0', 'visibility' => Shop::CONTEXT_ALL),
 			'PS_HELPBOX' => array('title' => $this->l('Back Office help boxes'), 'desc' => $this->l('Enable yellow help boxes which are displayed under form fields in the Back Office'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool', 'visibility' => Shop::CONTEXT_ALL),
+			'PS_COOKIE_LIFETIME_FO' => array('title' => $this->l('Lifetime of the Front Office cookie'), 'desc' => $this->l('Indicate the number of hours'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'text', 'default' => '480', 'visibility' => Shop::CONTEXT_ALL),
+			'PS_COOKIE_LIFETIME_BO' => array('title' => $this->l('Lifetime of the Back Office cookie'), 'desc' => $this->l('Indicate the number of hours'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'text', 'default' => '480', 'visibility' => Shop::CONTEXT_ALL),
 			'PS_ORDER_PROCESS_TYPE' => array('title' => $this->l('Order process type'), 'desc' => $this->l('You can choose the order process type as either standard (5 steps) or One Page Checkout'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $order_process_type, 'identifier' => 'value'),
 			'PS_GUEST_CHECKOUT_ENABLED' => array('title' => $this->l('Enable guest checkout'), 'desc' => $this->l('Your guest can make an order without registering'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_CONDITIONS' => array('title' => $this->l('Terms of service'), 'desc' => $this->l('Require customers to accept or decline terms of service before processing the order'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool', 'js' => array('on' => 'onchange="changeCMSActivationAuthorization()"', 'off' => 'onchange="changeCMSActivationAuthorization()"')),
@@ -171,15 +172,8 @@ class AdminPreferences extends AdminTab
 	{
 		$context = Context::getContext();
 		$languages = Language::getLanguages(false);
-		if (!Configuration::get('PS_FORCE_SMARTY_2'))
-		{
-			$files = scandir(_PS_THEME_DIR_);
-			foreach ($files AS $file)
-				if (!preg_match('/^\..*/', $file))
-						$context->smarty->clearCache($file);
-		}
-		else
-			$context->smarty->clear_all_cache();
+
+		Tools::clearCache($smarty);
 
 		/* Check required fields */
 		foreach ($fields AS $field => $values)

@@ -12,15 +12,7 @@ ALTER TABLE `PREFIX_orders` ADD INDEX `date_add`(`date_add`);
 INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_STOCK_MVT_REASON_DEFAULT', 3, NOW(), NOW());
 
-INSERT IGNORE INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`) VALUES (12, 0, 0, 'lightblue', 1, 0, 0);
-
-INSERT IGNORE INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `template`) VALUES
-(12, 1, 'Payment remotely accepted', ''),
-(12, 2, 'Paiement à distance accepté', ''),
-(12, 3, 'Payment remotely accepted', ''),
-(12, 4, 'Payment remotely accepted', ''),
-(12, 5, 'Payment remotely accepted', '');
-
+/* PHP:add_order_state(PS_OS_WS_PAYMENT, en:Payment remotely accepted|fr:Paiement à distance accepté, 0, 0, lightblue, 1, 0, 0); */;
 /* PHP:alter_blocklink(); */;
 /* PHP:update_module_loyalty(); */;
 /* PHP:remove_module_from_hook(blockcategories, afterCreateHtaccess); */;

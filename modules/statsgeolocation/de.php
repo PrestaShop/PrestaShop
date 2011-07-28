@@ -16,5 +16,3 @@ $_MODULE['<{statsgeolocation}prestashop>statsgeolocation_64d80b7a177f4bd0a1f1dde
 $_MODULE['<{statsgeolocation}prestashop>statsgeolocation_dc25612aeb2ba1c2705fc2e9c947f084'] = 'Fehler: Sie müssen auf die Karte klicken oder auf die Schaltfläche Abbrechen';
 $_MODULE['<{statsgeolocation}prestashop>statsgeolocation_ea4788705e6873b424c65e91c2846b19'] = 'Abbrechen';
 $_MODULE['<{statsgeolocation}prestashop>statsgeolocation_ad3d06d03d94223fa652babc913de686'] = 'Bestätigen';
-
-?>

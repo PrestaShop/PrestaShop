@@ -27,7 +27,8 @@
 
 include_once(PS_ADMIN_DIR.'/../images.inc.php');
 @ini_set('max_execution_time', 0);
-define('MAX_LINE_SIZE', 4096);
+// No max line limit since the lines can be more than 4096. Performance impact is not significant.
+define('MAX_LINE_SIZE', 0);
 
 define('UNFRIENDLY_ERROR', false); // Used for validatefields diying without user friendly error or not
 
@@ -93,7 +94,10 @@ class AdminImport extends AdminTab
 					'ecotax' => array('label' => $this->l('Ecotax')),
 					'quantity' => array('label' => $this->l('Quantity')),
 					'weight' => array('label' => $this->l('Weight')),
-					'default_on' => array('label' => $this->l('Default'))
+					'default_on' => array('label' => $this->l('Default')),
+					'image_position' => array('label' => $this->l('Image position'), 
+						'help' => $this->l('Position of the product image to use for this combination. If you use this field, leave image URL empty.')),
+					'image_url' => array('label' => $this->l('Image URL')),
 				);
 
 				self::$default_values = array(
@@ -164,6 +168,9 @@ class AdminImport extends AdminTab
 					'link_rewrite' => array('label' => $this->l('URL rewritten')),
 					'available_now' => array('label' => $this->l('Text when in-stock')),
 					'available_later' => array('label' => $this->l('Text if back-order allowed')),
+				'available_for_order' => array('label' => $this->l('Available for order')),
+				'date_add' => array('label' => $this->l('Date add product')),
+				'show_price' => array('label' => $this->l('Show price')),
 					'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
@@ -190,6 +197,8 @@ class AdminImport extends AdminTab
 					'online_only' => 0,
 					'condition' => 'new',
 					'shop' => Configuration::get('PS_SHOP_DEFAULT'),
+					'date_add' => date('Y-m-d H:i:s'),
+					'condition' => 'new',
 				);
 			break;
 
@@ -286,6 +295,15 @@ class AdminImport extends AdminTab
 		parent::__construct();
 	}
 
+	private static function rewindBomAware($handle)
+	{
+		// A rewind wrapper that skip BOM signature wrongly
+		rewind($handle);
+		if (($bom = fread($handle,3)) != "\xEF\xBB\xBF") {
+			rewind($handle);
+		}
+	}
+
 	private static function getBoolean($field)
 	{
 		return (boolean)$field;
@@ -300,11 +318,18 @@ class AdminImport extends AdminTab
 
 	private static function split($field)
 	{
+		if (empty($field))
+			return array();
 		$separator = ((is_null(Tools::getValue('multiple_value_separator')) OR trim(Tools::getValue('multiple_value_separator')) == '' ) ? ',' : Tools::getValue('multiple_value_separator'));
-		$tab = explode($separator, $field);
-		$res = array_map('strval', $tab);
-		$res = array_map('trim', $tab);
+		$temp = tmpfile();
+		fwrite($temp,$field);
+		rewind($temp);
+		$tab = fgetcsv($temp, MAX_LINE_SIZE, $separator);
+		fclose($temp);
+		if (empty($tab) || (!is_array($tab)))
+			return array();
 		return $tab;
+
 	}
 
 	private static function createMultiLangField($field)
@@ -409,22 +434,7 @@ class AdminImport extends AdminTab
 		return true;
 	}
 
-	public static function fgetcsv($handle, $lenght, $delimiter)
-	{
-		if (feof($handle))
-			return false;
-		$line = fgets($handle, $lenght);
-		if ($line === false)
-			return false;
-		$tmpTab = explode($delimiter, $line);
-
-		foreach ($tmpTab AS &$row)
-			if (preg_match ('/^".*"$/Uims',$row))
-				$row = trim($row, '"');
-		return $tmpTab;
-	}
-
-	static public function array_walk(&$array, $funcname, &$user_data = false)
+	public static function array_walk(&$array, $funcname, &$user_data = false)
 	{
 		if (!is_callable($funcname)) return false;
 
@@ -433,8 +443,6 @@ class AdminImport extends AdminTab
 				return false;
 		return true;
 	}
-
-
 
 	/**
 	 * copyImg copy an image located in $url and save it in a path
@@ -457,8 +465,7 @@ class AdminImport extends AdminTab
 			default:
 			case 'products':
 				$imageObj = new Image($id_image);
-				$imageObj->createImgFolder();
-				$path = _PS_PROD_IMG_DIR_.$imageObj->getImgPath();
+				$path = $imageObj->getPathForCreation();
 			break;
 			case 'categories':
 				$path = _PS_CAT_IMG_DIR_.(int)($id_entity);
@@ -609,16 +616,14 @@ class AdminImport extends AdminTab
 				$product = new Product();
 			self::setEntityDefaultValues($product);
 			self::array_walk($info, array('AdminImport', 'fillInfo'), $product);
-            $trg_id = (int)$product->id_tax_rules_group;
 
-			if ($product->id_tax_rules_group == 0 || !Validate::isLoadedObject(new TaxRulesGroup($trg_id)))
-				$this->_addProductWarning('id_tax_rules_group', $product->id_tax_rules_group, Tools::displayError('Invalid tax rule group ID, you first need a group with this ID.'));
-			else
+			if ((int)$product->id_tax_rules_group != 0)
 			{
+				if(Validate::isLoadedObject(new TaxRulesGroup($product->id_tax_rules_group)))
 			    $product->tax_rate = TaxRulesGroup::getTaxesRate((int)$product->id_tax_rules_group, Configuration::get('PS_COUNTRY_DEFAULT'), 0, 0);
-				
+				else
+					$this->_addProductWarning('id_tax_rules_group', $product->id_tax_rules_group, Tools::displayError('Invalid tax rule group ID, you first need a group with this ID.'));
 			}
-			
 			if (isset($product->manufacturer) AND is_numeric($product->manufacturer) AND Manufacturer::manufacturerExists((int)($product->manufacturer)))
 				$product->id_manufacturer = (int)($product->manufacturer);
 			elseif (isset($product->manufacturer) AND is_string($product->manufacturer) AND !empty($product->manufacturer))
@@ -724,6 +729,7 @@ class AdminImport extends AdminTab
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)($product->id_category[0]) : '';
 			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? $product->link_rewrite[$defaultLanguageId] : '';
+
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
 			if ((isset($product->link_rewrite[$defaultLanguageId]) AND empty($product->link_rewrite[$defaultLanguageId])) OR !$valid_link)
@@ -756,7 +762,12 @@ class AdminImport extends AdminTab
 				}
 				// If no id_product or update failed
 				if (!$res)
+				{
+					if (isset($product->date_add) && $product->date_add != '')
+						$res = $product->add(false);
+					else
 					$res = $product->add();
+			}
 			}
 			// If both failed, mysql error
 			if (!$res)
@@ -889,6 +900,7 @@ class AdminImport extends AdminTab
 
 	public function attributeImport()
 	{
+		global $cookie;
 		$defaultLanguage = Configuration::get('PS_LANG_DEFAULT');
 		$groups = array();
 		foreach (AttributeGroup::getAttributesGroups($defaultLanguage) AS $group)
@@ -909,8 +921,47 @@ class AdminImport extends AdminTab
 			$info = array_map('trim', $info);
 
 			self::setDefaultValues($info);
+			
 			$product = new Product((int)($info['id_product']), false, $defaultLanguage);
-			$id_product_attribute = $product->addProductAttribute((float)($info['price']), (float)($info['weight']), 0, (float)($info['ecotax']), (int)($info['quantity']), null, strval($info['reference']), strval($info['supplier_reference']), strval($info['ean13']), (int)($info['default_on']), strval($info['upc']));
+			$id_image = null;
+			
+			if (isset($info['image_url']) && $info['image_url'])
+			{
+				$productHasImages = (bool)Image::getImages((int)($cookie->id_lang), (int)($product->id));
+				$url = $info['image_url'];
+				$image = new Image();
+				$image->id_product = (int)($product->id);
+				$image->position = Image::getHighestPosition($product->id) + 1;
+				$image->cover = (!$productHasImages) ? true : false;
+				$image->legend = self::createMultiLangField($product->name);
+
+				if (($fieldError = $image->validateFields(UNFRIENDLY_ERROR, true)) === true AND ($langFieldError = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true AND $image->add())
+				{
+					if (!self::copyImg($product->id, $image->id, $url))
+						$this->_warnings[] = Tools::displayError('Error copying image: ').$url;
+					else
+						$id_image = array($image->id);
+				}
+				else
+				{
+					$this->_warnings[] = $image->legend[$defaultLanguageId].(isset($image->id_product) ? ' ('.$image->id_product.')' : '').' '.Tools::displayError('Cannot be saved');
+					$this->_errors[] = ($fieldError !== true ? $fieldError : '').($langFieldError !== true ? $langFieldError : '').mysql_error();
+				}
+			} elseif (isset($info['image_position']) && $info['image_position'])
+			{
+				$images = $product->getImages($defaultLanguage);
+				if ($images)
+					foreach ($images as $row)
+						if($row['position'] == (int)$info['image_position'])
+						{
+							$id_image = array($row['id_image']);
+							break;
+						}
+				if (!$id_image)
+					$this->_warnings[] = Tools::displayError('No image found for combination with id_product = '.$product->id.' and image position = '.(int)$info['image_position'].'.'); 
+			}
+
+			$id_product_attribute = $product->addProductAttribute((float)($info['price']), (float)($info['weight']), 0, (float)($info['ecotax']), (int)($info['quantity']), $id_image, strval($info['reference']), strval($info['supplier_reference']), strval($info['ean13']), (int)($info['default_on']), strval($info['upc']));
 			foreach (explode($fsep, $info['options']) as $option)
 			{
 				list($group, $attribute) = array_map('trim', explode(':', $option));
@@ -1291,8 +1342,6 @@ class AdminImport extends AdminTab
 			if (preg_match('/^\..*|index\.php/i', $filename))
 				unset($filesToImport[$k]);
 		unset($filename);
-		if (sizeof($filesToImport))
-		{
 			echo '
 			<div class="space">
 					<form id="preview_import" action="'.self::$currentIndex.'&token='.$this->token.'" method="post" style="display:inline" enctype="multipart/form-data" class="clear" onsubmit="if ($(\'#truncate\').get(0).checked) {if (confirm(\''.$this->l('Are you sure you want to delete', __CLASS__, true, false).'\' + \' \' + $(\'#entity > option:selected\').text().toLowerCase() + \''.$this->l('?', __CLASS__, true, false).'\')){this.submit();} else {return false;}}">
@@ -1309,7 +1358,10 @@ class AdminImport extends AdminTab
 				echo'>'.$entity.'</option>';
 			}
 			echo '				</select>
-							</div>
+						</div>';
+		if (sizeof($filesToImport))
+		{
+			echo '
 							<label class="clear">'.$this->l('Select your .CSV file:').' </label>
 							<div class="margin-form">
 								<select name="csv">';
@@ -1346,6 +1398,16 @@ class AdminImport extends AdminTab
 							<div>
 								'.$this->l('Note that the category import does not support categories of the same name').'
 							</div>
+						';
+				}
+				else
+					echo '
+					<div class="warn">
+						'.$this->l('No CSV file is available, please upload one file above.').'<br /><br />
+						'.$this->l('You can get many informations about CSV import at:').' <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a><br /><br />
+						'.$this->l('More about CSV format at: ').' <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+					</div>';
+					echo '
 						</fieldset>
 					</form>
 					<fieldset style="display: inline; float: right; margin-left: 20px;">
@@ -1380,7 +1442,6 @@ class AdminImport extends AdminTab
 				if (Tools::getValue('entity'))
 					echo' <script type="text/javascript">$("select#entity").change();</script>';
 		}
-	}
 
 	public function utf8_encode_array($array)
 	{
@@ -1396,7 +1457,7 @@ class AdminImport extends AdminTab
 	private function getNbrColumn($handle, $glue)
 	{
 		$tmp = fgetcsv($handle, MAX_LINE_SIZE, $glue);
-		fseek($handle, 0);
+		self::rewindBomAware($handle);
 		return sizeof($tmp);
 	}
 
@@ -1415,13 +1476,11 @@ class AdminImport extends AdminTab
 	{
 		 $handle = fopen(dirname(__FILE__).'/../import/'.strval(preg_replace('/\.{2,}/', '.',Tools::getValue('csv'))), 'r');
 
-		/* No BOM allowed */
-		$bom = fread($handle, 3);
-		if ($bom != '\xEF\xBB\xBF')
-			rewind($handle);
 
 		if (!$handle)
 			die(Tools::displayError('Cannot read the CSV file'));
+
+		self::rewindBomAware($handle);
 
 		for ($i = 0; $i < (int)(Tools::getValue('skip')); ++$i)
 			$line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator', ';'));
@@ -1468,7 +1527,7 @@ class AdminImport extends AdminTab
 			echo '</tr>';
 		}
 		echo '</table>';
-		fseek($handle, 0);
+		self::rewindBomAware($handle);
 	}
 
 	public function displayCSV()

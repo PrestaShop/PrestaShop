@@ -252,8 +252,9 @@ class AdminTaxRulesGroup extends AdminTab
 					<td>'.$this->renderTaxesSelect($id_lang, $id_tax, array('class' => 'tax_'.$id_zone, 'id' => 'tax_'.$country['id_country'].'_0', 'name' => 'tax_'.$country['id_country'].'_0' )).'</td>
 				</tr>
 			';
-			if ($country['contains_states'])
+			if ($country['contains_states']) {
 				$html .= $this->renderStates($tax_rules, (int)$id_zone, (int)$country['id_country'], (int)$id_lang);
+			}
 
 			$i++;
         }

@@ -31,7 +31,7 @@ class ProductSaleCore
 	** Fill the `product_sale` SQL table with data from `order_detail`
 	** @return bool True on success
 	*/
-	static public function fillProductSales()
+	public static function fillProductSales()
 	{
 		return Db::getInstance()->Execute('
 		REPLACE INTO '._DB_PREFIX_.'product_sale
@@ -148,7 +148,7 @@ class ProductSaleCore
 				ORDER BY sales DESC
 				LIMIT '.(int)($pageNumber * $nbProducts).', '.(int)$nbProducts;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql))
-			return $result;
+			return false;
 
 		foreach ($result AS &$row)
 		{
@@ -158,7 +158,7 @@ class ProductSaleCore
 		return $result;
 	}
 
-	static public function addProductSale($product_id, $qty = 1)
+	public static function addProductSale($product_id, $qty = 1)
 	{
 		return Db::getInstance()->Execute('
 			INSERT INTO '._DB_PREFIX_.'product_sale
@@ -167,7 +167,7 @@ class ProductSaleCore
 			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + '.(int)($qty).', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
 	}
 
-	static public function getNbrSales($id_product)
+	public static function getNbrSales($id_product)
 	{
 		$result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM '._DB_PREFIX_.'product_sale WHERE `id_product` = '.(int)($id_product));
 		if (!$result OR empty($result) OR !key_exists('sale_nbr', $result))
@@ -175,7 +175,7 @@ class ProductSaleCore
 		return (int)($result['sale_nbr']);
 	}
 
-	static public function removeProductSale($id_product, $qty = 1)
+	public static function removeProductSale($id_product, $qty = 1)
 	{
 		$nbrSales = self::getNbrSales($id_product);
 		if ($nbrSales > 1)

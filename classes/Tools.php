@@ -134,7 +134,7 @@ class ToolsCore
 	 *
 	 * @param boolean $http
 	 * @param boolean $entities
-	 * @return void
+	 * @return string host
 	 */
 	public static function getHttpHost($http = false, $entities = false)
 	{
@@ -147,11 +147,11 @@ class ToolsCore
 	}
 
 	/**
-	 * getShopDomain return domain name according to configuration
+	 * getShopDomain returns domain name according to configuration and ignoring ssl
 	 *
 	 * @param boolean $http if true, return domain name with protocol
 	 * @param boolean $entities if true,
-	 * @return void
+	 * @return string domain
 	 */
 	public static function getShopDomain($http = false, $entities = false)
 	{
@@ -164,6 +164,13 @@ class ToolsCore
 		return $domain;
 	}
 
+	/**
+	 * getShopDomainSsl returns domain name according to configuration and depending on ssl activation
+	 *
+	 * @param boolean $http if true, return domain name with protocol
+	 * @param boolean $entities if true,
+	 * @return string domain
+	 */
 	public static function getShopDomainSsl($http = false, $entities = false)
 	{
 		if (!$domain = ShopUrl::getMainShopDomainSSL())
@@ -178,7 +185,7 @@ class ToolsCore
 	/**
 	* Get the server variable SERVER_NAME
 	*
-	* @param string $referrer URL referrer
+	* @return string server name
 	*/
 	static function getServerName()
 	{
@@ -210,6 +217,8 @@ class ToolsCore
 	
 	/**
 	* Check if the current page use SSL connection on not
+	*
+	* @return bool uses SSL
 	*/
 	public static function usingSecureMode()
 	{
@@ -217,11 +226,13 @@ class ToolsCore
 	}
 	
 	/**
-	* Get the current url prefix protocole (https/http)
+	* Get the current url prefix protocol (https/http)
+	*
+	* @return string protocol
 	*/
 	public static function getCurrentUrlProtocolPrefix()
 	{
-		if(Tools::usingSecureMode())
+		if(self::usingSecureMode())
 			return 'https://';
 		else
 			return 'http://';
@@ -231,6 +242,7 @@ class ToolsCore
 	* Secure an URL referrer
 	*
 	* @param string $referrer URL referrer
+	* @return secured referrer
 	*/
 	public static function secureReferrer($referrer)
 	{
@@ -267,6 +279,8 @@ class ToolsCore
 
 	/**
 	* Change language in cookie while clicking on a flag
+	*
+	* @return string iso code
 	*/
 	public static function setCookieLanguage($cookie)
 	{
@@ -307,6 +321,9 @@ class ToolsCore
 		return $iso;
 	}
 
+	/**
+	 * Set cookie id_lang
+	 */
 	public static function switchLanguage(Context $context = null)
 	{
 		if (!$context)
@@ -315,6 +332,11 @@ class ToolsCore
 			$context->cookie->id_lang = $id_lang;
 	}
 
+	/**
+	 * Set cookie currency from POST or default currency
+	 *
+	 * @return Currency object
+	 */
 	public static function setCurrency($cookie)
 	{
 		if (self::isSubmit('SubmitCurrency'))
@@ -603,7 +625,7 @@ class ToolsCore
 	{
 		global $maintenance;
 
-		if (!(isset($maintenance) AND (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
+		if (!(isset($maintenance) AND (!in_array(self::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
 		{
 		 	/* Products specifics meta tags */
 			if ($id_product = self::getValue('id_product'))
@@ -771,6 +793,7 @@ class ToolsCore
 	{
 		return !empty($string) ? self::encrypt($string) : false;
 	}
+
 	public static function getAdminTokenLite($tab, Context $context = null)
 	{
 		if (!$context)
@@ -1072,9 +1095,9 @@ class ToolsCore
 	{
 		$method = (int)(Configuration::get('PS_PRICE_ROUND_MODE'));
 		if ($method == PS_ROUND_UP)
-			return Tools::ceilf($value, $precision);
+			return self::ceilf($value, $precision);
 		elseif ($method == PS_ROUND_DOWN)
-			return Tools::floorf($value, $precision);
+			return self::floorf($value, $precision);
 		return round($value, $precision);
 	}
 
@@ -1134,6 +1157,18 @@ class ToolsCore
 			return false;
     }
 
+	public static function simplexml_load_file($url, $class_name = null)
+	{
+		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
+			return simplexml_load_file($url, $class_name);
+		elseif (function_exists('curl_init'))
+		{
+			return simplexml_load_string(Tools::file_get_contents($url), $class_name);
+		}
+		else
+			return false;
+	}
+
 	public static function minifyHTML($html_content)
 	{
 		if (strlen($html_content) > 0)
@@ -1176,9 +1211,11 @@ class ToolsCore
 	* Translates a string with underscores into camel case (e.g. first_name -> firstName)
 	* @prototype string public static function toCamelCase(string $str[, bool $capitaliseFirstChar = false])
 	*/
-	public static function toCamelCase($str, $capitaliseFirstChar = false) {
+	public static function toCamelCase($str, $capitaliseFirstChar = false)
+	{
+		$str = strtolower($str);
 		if($capitaliseFirstChar)
-			$str[0] = strtoupper($str[0]);
+			$str = ucfirst($str);
 		return preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
@@ -1204,10 +1241,18 @@ class ToolsCore
 	{
 		if (strlen($html_content) > 0)
 		{
+			$htmlContentCopy = $html_content;
 			$html_content = preg_replace_callback(
 				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i'
 				,array('Tools', 'packJSinHTMLpregCallback')
 				,$html_content);
+			
+			// If the string is too big preg_replace return an error
+			// In this case, we don't compress the content
+			if( preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR ) {
+				error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+				return $htmlContentCopy;
+			}
 			return $html_content;
 		}
 		return false;
@@ -1275,17 +1320,17 @@ class ToolsCore
 	{
 		global $current_css_file;
 		
-		$protocolLink = Tools::getCurrentUrlProtocolPrefix();
+		$protocol_link = self::getCurrentUrlProtocolPrefix();
 		
 		if (array_key_exists(1, $matches))
 		{
 			$tmp = dirname($current_css_file).'/'.$matches[1];
-			return 'url(\''.$protocolLink.Tools::getMediaServer($tmp).$tmp.'\')';
+			return 'url(\''.$protocol_link.self::getMediaServer($tmp).$tmp.'\')';
 		}
 		return false;
 	}
 
-		/**
+	/**
 	 * addJS load a javascript file in the header
 	 *
 	 * @deprecated as of 1.5 use FrontController->addJS()
@@ -1326,7 +1371,7 @@ class ToolsCore
 		$compressed_css_files = array();
 		$compressed_css_files_not_found = array();
 		$compressed_css_files_infos = array();
-		$protocolLink = Tools::getCurrentUrlProtocolPrefix();
+		$protocolLink = self::getCurrentUrlProtocolPrefix();
 
 		// group css files by media
 		foreach ($css_files as $filename => $media)
@@ -1337,7 +1382,7 @@ class ToolsCore
 			$infos = array();
 			$infos['uri'] = $filename;
 			$url_data = parse_url($filename);
-			$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+			$infos['path'] = _PS_ROOT_DIR_.self::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 			$css_files_by_media[$media]['files'][] = $infos;
 			if (!array_key_exists('date', $css_files_by_media[$media]))
 				$css_files_by_media[$media]['date'] = 0;
@@ -1371,7 +1416,7 @@ class ToolsCore
 				foreach ($media_infos['files'] as $file_infos)
 				{
 					if (file_exists($file_infos['path']))
-						$compressed_css_files[$media] .= Tools::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri']);
+						$compressed_css_files[$media] .= self::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri']);
 					else
 						$compressed_css_files_not_found[] = $file_infos['path'];
 				}
@@ -1392,7 +1437,7 @@ class ToolsCore
 		foreach ($compressed_css_files as $media => $filename)
 		{
 			$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
-			$css_files[$protocolLink.Tools::getMediaServer($url).$url] = $media;
+			$css_files[$protocolLink.self::getMediaServer($url).$url] = $media;
 		}
 		return $css_files;
 	}
@@ -1412,7 +1457,7 @@ class ToolsCore
 		$compressed_js_file_date = 0;
 		$compressed_js_filename = '';
 		$js_external_files = array();
-		$protocolLink = Tools::getCurrentUrlProtocolPrefix();
+		$protocolLink = self::getCurrentUrlProtocolPrefix();
 
 		// get js files infos
 		foreach ($js_files as $filename)
@@ -1426,7 +1471,7 @@ class ToolsCore
 				$infos = array();
 				$infos['uri'] = $filename;
 				$url_data = parse_url($filename);
-				$infos['path'] =_PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+				$infos['path'] =_PS_ROOT_DIR_.self::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 				$js_files_infos[] = $infos;
 	
 				$js_files_date = max(
@@ -1454,7 +1499,7 @@ class ToolsCore
 				else
 					$compressed_js_files_not_found[] = $file_infos['path'];
 			}
-			$content = Tools::packJS($content);
+			$content = self::packJS($content);
 
 			if (!empty($compressed_js_files_not_found))
 				$content = '/* WARNING ! file(s) not found : "'.
@@ -1467,8 +1512,8 @@ class ToolsCore
 
 		// rebuild the original js_files array
 		$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
+
 		return array_merge(array($protocolLink.Tools::getMediaServer($url).$url), $js_external_files);
-		
 	}
 
 	private static $_cache_nb_media_servers = null;
@@ -1488,10 +1533,10 @@ class ToolsCore
 	
 		if (self::$_cache_nb_media_servers AND ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
-		return Tools::getHttpHost();
+		return self::getHttpHost();
 	}
 
-	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '')
+	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '', $disableMuliviews = false)
 	{
 		if (!$writeFd = @fopen($path, 'w'))
 			return false;
@@ -1530,8 +1575,8 @@ class ToolsCore
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7.jpg [L]';
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8.jpg [L]';
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg [L]';
-
 				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
+				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([a-zA-Z-]+)/[a-zA-Z0-9-]+\.jpg$'] = 'img/c/$1.jpg [L]';
 
 				if ($multilang)
 				{
@@ -1591,9 +1636,13 @@ class ToolsCore
 			fwrite($writeFd, $specific);
 		// RewriteEngine
 		fwrite($writeFd, "\n<IfModule mod_rewrite.c>\n");
-		fwrite($writeFd, "\nRewriteEngine on\n\n");
-//		fwrite($writeFd, $tab['RewriteRule']['comment']."\n");
-		// Webservice needs apache_mod_rewrite in order to work
+
+		if ($disableMuliviews)
+			fwrite($writeFd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
+
+		fwrite($writeFd, $tab['RewriteEngine']['comment']."\nRewriteEngine on\n\n");
+		fwrite($writeFd, $tab['RewriteRule']['comment']."\n");
+		// Webservice
 		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '.__PS_BASE_URI__."webservice/dispatcher.php?url=$1 [QSA,L]\n");
 
 		fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\nRewriteCond %{REQUEST_FILENAME} -l [OR]\nRewriteCond %{REQUEST_FILENAME} -d\nRewriteRule ^.*$ - [NC,L]\nRewriteRule ^.*\$ index.php [NC,L]\n");
@@ -1704,7 +1753,7 @@ FileETag INode MTime Size
 			$callee = next($backtrace);
 			trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
 
-			$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
+			$message = self::displayError('The function').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
 
 			Logger::addLog($message, 3, $callee['class']);
 		}
@@ -1718,7 +1767,7 @@ FileETag INode MTime Size
 		$backtrace = debug_backtrace();
 		$callee = next($backtrace);
 		$error = 'Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />';
-		$message = Tools::displayError('The parameter').' '.$parameter.' '.Tools::displayError(' in function ').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['Line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
+			$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
 
 		self::throwDeprecated($error, $message, $callee['class']);
 	}
@@ -1818,7 +1867,6 @@ FileETag INode MTime Size
     public static function checkPhpVersion()
     {
     	$version = null;
-    	$length = null;
     	
     	if(defined('PHP_VERSION'))
     		$version = PHP_VERSION;
@@ -1979,6 +2027,20 @@ FileETag INode MTime Size
 	{
 		return $begin.((strpos($begin, '?') !== false) ? '&' : '?').$end;
 	}
+	
+	/**
+	 * Display error and dies or silently log the error.
+	 * 
+	 * @param string $msg
+	 * @param bool $die
+	 * @return success of logging
+	 */
+	public static function dieOrLog($msg, $die = true)
+	{
+		if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_))
+			die($msg);
+		return Logger::addLog($msg);
+	}
 
 	/**
 	 * Convert \n and \r\n and \r to <br />
@@ -1989,6 +2051,19 @@ FileETag INode MTime Size
 	public static function nl2br($str)
 	{
 		return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+	}
+	
+	/**
+	 * Clear cache for Smarty
+	 * 
+	 * @param objet $smarty
+	 */
+	 public static function clearCache($smarty)
+	 {
+		if (!Configuration::get('PS_FORCE_SMARTY_2'))
+			$smarty->clearAllCache();
+		else
+			$smarty->clear_all_cache();
 	}
 }
 

@@ -57,17 +57,14 @@ class AdminSearchConf extends AdminPreferences
 	
 		parent::__construct();
 	}
-	
 	public function postProcess()
 	{
 		if (isset($_POST['submitSearch'.$this->table]))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->_postConfig($this->_fieldsSearch);
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+{ if ($this->tabAccess['edit'] === '1') $this->_postConfig($this->_fieldsSearch); else $this->_errors[] = Tools::displayError('You do not have permission to edit here.'); }
+
+if (isset($_POST['submitWeight'.$this->table]))
+{ if ($this->tabAccess['edit'] === '1') $this->_postConfig($this->_fieldsWeight); else $this->_errors[] = Tools::displayError('You do not have permission to edit here.'); }
 		}
-	}
 	
 	public function display()
 	{

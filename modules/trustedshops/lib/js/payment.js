@@ -5,8 +5,8 @@ var TSPayment = (function()
 		payment_module			: {},
 		alert_message			: '',
 		module_box				: {
-			html	: '<b class="payment-module-label"></b>',
-			class	: '.payment-module-label',
+			html		: '<b class=\'payment-module-label\'></b>',
+			ui_class	: '.payment-module-label',
 			id		:'label-module-',
 			css		: {
 				display			: 'none',
@@ -38,10 +38,10 @@ var TSPayment = (function()
 	};
 	function hoverEffect()
 	{
-		$(TSPayment.module_box.class).live('mouseover', function(){
+		$(TSPayment.module_box.ui_class).live('mouseover', function(){
 			$(this).css({backgroundColor:'#CF0000', opacity:0.6});
 		});
-		$(TSPayment.module_box.class).live('mouseout', function(){
+		$(TSPayment.module_box.ui_class).live('mouseout', function(){
 			$(this).css({backgroundColor:TSPayment.module_box.css.backgroundColor, opacity:1});
 			
 		});
@@ -65,6 +65,8 @@ var TSPayment = (function()
 			var boolean = true;
 			var payment_type = $('select[name=payment_type]').val();
 			var payment_module = $('select[name=payment_module]').val();
+			if (payment_type != null && payment_module != null)
+			{
 			$('.choosen_payment_type').each(function() {
 				var reg = new RegExp(payment_type, 'i');
 				if ($(this).val() == payment_module)
@@ -78,6 +80,7 @@ var TSPayment = (function()
 				TSPayment.alert_message = 'A payment module can be choosen for only one payment type';
 			
 			TSPayment.alertMessage();
+			}
 		});
 	}
 	function clickRemoveFunction()

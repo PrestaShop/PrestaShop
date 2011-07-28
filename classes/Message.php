@@ -80,7 +80,7 @@ class MessageCore extends ObjectModel
 	  * @param integer $id_cart Cart ID
 	  * @return array Message
 	  */
-	static public function getMessageByCartId($id_cart)
+	public static function getMessageByCartId($id_cart)
 	{
 		$db = Db::getInstance();
 		$result = $db->getRow('
@@ -151,7 +151,7 @@ class MessageCore extends ObjectModel
 	  * @param integer $id_message Message ID
 	  * @param integer $id_emplyee Employee ID
 	  */
-	static public function markAsReaded($id_message, $id_employee)
+	public static function markAsReaded($id_message, $id_employee)
 	{
 	 	if (!Validate::isUnsignedId($id_message) OR !Validate::isUnsignedId($id_employee))
 	 		die(Tools::displayError());

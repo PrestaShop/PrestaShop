@@ -323,6 +323,7 @@ class shopimporter extends ImportModule
 					<label>'.$this->l('Server').' : </label>
 						<div class="margin-form">
 							<input type="text" name="server" id="server" value="">
+							<p>'.$this->l('(eg : mysql.mydomain.com)').'</p>
 						</div>
 					<label>'.$this->l('User').' : </label>
 						<div class="margin-form">
@@ -331,6 +332,7 @@ class shopimporter extends ImportModule
 					<label>'.$this->l('Password').' : </label>
 						<div class="margin-form">
 							<input type="password" name="password" id="password" value="">
+							<p>'.$this->l('(password can be empty)').'</p>
 						</div>
 					<label>'.$this->l('Database').' : </label>
 						<div class="margin-form" style="">
@@ -339,6 +341,7 @@ class shopimporter extends ImportModule
 					<label>'.$this->l('Database prefix').' : </label>
 						<div class="margin-form" style="">
 							<input type="text" name="prefix" id="prefix" value="">
+							<p>'.$this->l('(The prefix is optional. If all of your database tables start with "pref_", your prefix is "pref_")').'</p>
 						</div>
 					</div>
 					<div class="margin-form">

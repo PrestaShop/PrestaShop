@@ -31,6 +31,7 @@ $_LANG['address_fe66abce284ec8589e7d791185b5c442'] = 'Teléfono fijo';
 $_LANG['address_41c2fff4867cc204120f001e7af20f7a'] = 'Telefono móvil';
 $_LANG['address_6c1c4d5a22e3d6ed8385e7287233396f'] = 'Asignar un nombre a esta dirección para futuras operaciones';
 $_LANG['address_ae7bdef7fe2bbbbf02c11e92c5fceb40'] = 'Mi dirección';
+$_LANG['address_dd1f775e443ff3b9a89270713580a51b'] = 'Anterior';
 $_LANG['address_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_LANG['address_19f823c6453c2b1ffd09cb715214813d'] = 'Campo requerido';
 $_LANG['addresses_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mi cuenta';

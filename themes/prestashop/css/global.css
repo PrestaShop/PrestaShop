@@ -973,6 +973,14 @@ p.price_container { text-align: center }
 /* discount.tpl */
 td.discount_value { white-space: nowrap }
 
+/* address.tpl */
+p.address_navigation { 
+	padding: padding: 1em 0!important;
+	margin-bottom: 1.5em
+}
+p.address_navigation a.button { float: left }
+p.address_navigation input[type=submit].button { float: right }
+
 /* shopping cart */
 .cart_last_product { 
 	width: 300px;
@@ -1493,3 +1501,5 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
     padding: 4px; 
     border: 2px solid #D0D3D8;
 }
+
+.

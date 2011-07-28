@@ -127,7 +127,7 @@ $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_66b793b6b4125e300717e8cf7449
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_2653c23b8c0daac59571e4be5e8fa7d0'] = 'Le webservice Mondial Relay est actuellement innaccessible.';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_dc41aac14af17f1d19fca5e3b9439e74'] = 'Cette clé';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_135a7b9a62531e066a95093d8951b344'] = 'n\'a pas un format valide';
-$_MODULE['<{mondialrelay}prestashop>mrgettickets_e6940b76f045c8bc0aaaa5b2476cdaf7'] = 'Il semble que la requête n\'est pas valide:';
+$_MODULE['<{mondialrelay}prestashop>mrgettickets_e6940b76f045c8bc0aaaa5b2476cdaf7'] = 'Il semble que la requête soit invalide :';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_c9b4de92f371ae545ad6f051c07d58ca'] = 'Erreur numéro :';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_ea5f761be4e4888eabf4e1501d7817d1'] = 'Détails :';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_2653c23b8c0daac59571e4be5e8fa7d0'] = 'Le webservice Mondial Relay est actuellement innaccessible.';

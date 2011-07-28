@@ -29,6 +29,9 @@ include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
 
 class AdminAttachments extends AdminTab
 {
+	
+	private $_productAttachements = array();
+	
 	public function __construct()
 	{
 	 	$this->table = 'attachment';
@@ -127,5 +130,39 @@ class AdminAttachments extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
+	}
+	
+	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL)
+	{
+		parent::getList((int)$id_lang, $orderBy, $orderWay, $start, $limit);
+		if(sizeof($this->_list))
+			$this->_productAttachements = Attachment::getProductAttached((int)$id_lang, $this->_list);	
+}
+	
+	protected function _displayDeleteLink($token = NULL, $id)
+	{
+	    global $currentIndex;
+		
+		$_cacheLang['Delete'] = $this->l('Delete');
+		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, TRUE, FALSE);
+		
+		if (isset($this->_productAttachements[$id]))
+		{
+			$productList = '';
+			foreach($this->_productAttachements[$id] as $product)
+				$productList .= $product.', ';
+		}
+		echo '
+			<script>
+				function confirmProductAttached(productList)
+				{
+					if (confirm(\''.$_cacheLang['DeleteItem'].$id.'\'))
+						return confirm(\''.$this->l('This attachment is used by the following products:').'\r\n\' + productList);
+					return false;
+				}
+			</script>
+			<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'"
+			onclick="'.(isset($this->_productAttachements[$id]) ? 'return confirmProductAttached(\''.$productList.'\')' : 'return confirm(\''.$_cacheLang['DeleteItem'].$id.' ?'.(!is_null($this->specificConfirmDelete) ? '\r'.rtrim($this->specificConfirmDelete, ', ') : '').'\')' ).'">
+			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
 	}
 }

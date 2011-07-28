@@ -67,7 +67,7 @@ class OrderMessageCore extends ObjectModel
 		return parent::getTranslationsFields(array('name', 'message'));
 	}
 
-	static public function getOrderMessages($id_lang)
+	public static function getOrderMessages($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT om.id_order_message, oml.name, oml.message

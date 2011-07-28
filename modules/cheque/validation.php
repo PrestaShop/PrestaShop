@@ -34,6 +34,17 @@ $cheque = new Cheque();
 if ($cart->id_customer == 0 OR $cart->id_address_delivery == 0 OR $cart->id_address_invoice == 0 OR !$cheque->active)
 	Tools::redirect('index.php?controller=order&step=1');
 
+// Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
+$authorized = false;
+foreach (Module::getPaymentModules() as $module)
+	if ($module['name'] == 'cheque')
+	{
+		$authorized = true;
+		break;
+	}
+if (!$authorized)
+	die(Tools::displayError('This payment method is not available.'));
+
 $customer = new Customer((int)$cart->id_customer);
 
 if (!Validate::isLoadedObject($customer))
@@ -47,7 +58,7 @@ $mailVars =	array(
 	'{cheque_address}' => Configuration::get('CHEQUE_ADDRESS'),
 	'{cheque_address_html}' => str_replace("\n", '<br />', Configuration::get('CHEQUE_ADDRESS')));
 
-$cheque->validateOrder((int)$cart->id, _PS_OS_CHEQUE_, $total, $cheque->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
+$cheque->validateOrder((int)$cart->id, Configuration::get('PS_OS_CHEQUE'), $total, $cheque->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
 
 Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)($cart->id).'&id_module='.(int)($cheque->id).'&id_order='.$cheque->currentOrder.'&key='.$customer->secure_key);
 

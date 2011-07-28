@@ -244,6 +244,10 @@ function updateCartSummary(json)
 	// Update products prices + discount
 	var i;
 	var nbrProducts = 0;
+
+	if (typeof json == 'undefined')
+		return;
+
 	for (i=0;i<json.products.length;i++)
 	{
 		key_for_blockcart = json.products[i].id_product+'_'+json.products[i].id_product_attribute;

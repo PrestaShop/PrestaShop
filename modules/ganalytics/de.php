@@ -47,5 +47,3 @@ $_MODULE['<{ganalytics}prestashop>ganalytics_3bab28a0105361c49ca261ca08a19bf7'] 
 $_MODULE['<{ganalytics}prestashop>ganalytics_9bfb6e6af6e6793bfa9387e728187c87'] = '(Erforderlich)';
 $_MODULE['<{ganalytics}prestashop>ganalytics_6a47891ae07f45802bc948d2618e36f5'] = 'Überprüfen Sie die \'Groß-/Kleinschreibung\'-Option';
 $_MODULE['<{ganalytics}prestashop>ganalytics_d2d0c38d112e1d775057388122ae7545'] = 'Speichern Sie dieses neue Ziel';
-
-?>

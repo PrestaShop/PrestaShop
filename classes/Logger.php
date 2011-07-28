@@ -77,7 +77,7 @@ class	LoggerCore extends ObjectModel
 		return $fields;
 	}
 
-	static public function sendByMail($log)
+	public static function sendByMail($log)
 	{
 		/* Send e-mail to the shop owner only if the minimal severity level has been reached */
 		if (intval(Configuration::get('PS_LOGS_BY_EMAIL')) <= intval($log->severity))
@@ -95,7 +95,7 @@ class	LoggerCore extends ObjectModel
 	 * @param boolean $allowDuplicate if set to true, can log several time the same information (not recommended)
 	 * @return boolean true if succeed
 	 */
-	static public function addLog($message, $severity = 1, $errorCode = NULL, $objectType = NULL, $objectId = NULL, $allowDuplicate = false)
+	public static function addLog($message, $severity = 1, $errorCode = NULL, $objectType = NULL, $objectId = NULL, $allowDuplicate = false)
 	{
 		$log = new Logger();
 		$log->severity = intval($severity);

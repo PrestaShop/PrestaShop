@@ -98,7 +98,7 @@ class AttributeCore extends ObjectModel
 	 * @param boolean $notNull Get only not null fields if true
 	 * @return array Attributes
 	 */
-	static public function getAttributes($id_lang, $notNull = false)
+	public static function getAttributes($id_lang, $notNull = false)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
@@ -139,7 +139,7 @@ class AttributeCore extends ObjectModel
 	 * @param integer $id_product
 	 * @return mixed Quantity or false
 	 */
-	static public function getAttributeQty($id_product)
+	public static function getAttributeQty($id_product)
 	{
 		Tools::displayAsDeprecated();
 
@@ -160,7 +160,7 @@ class AttributeCore extends ObjectModel
 	 * @param array &$arr
 	 * return bool
 	 */
-	static public function updateQtyProduct(&$arr)
+	public static function updateQtyProduct(&$arr)
 	{
 		Tools::displayAsDeprecated();
 
@@ -192,7 +192,7 @@ class AttributeCore extends ObjectModel
 	 * @param integer $id_product_attribute
 	 * @return mixed Minimal Quantity or false
 	 */
-	static public function getAttributeMinimalQty($id_product_attribute)
+	public static function getAttributeMinimalQty($id_product_attribute)
 	{
 		$minimal_quantity = Db::getInstance()->getValue('
 		SELECT `minimal_quantity`

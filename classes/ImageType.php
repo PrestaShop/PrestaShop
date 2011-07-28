@@ -101,7 +101,7 @@ class ImageTypeCore extends ObjectModel
 	* @param string|null Image type
 	* @return array Image type definitions
 	*/
-	static public function getImagesTypes($type = NULL)
+	public static function getImagesTypes($type = NULL)
 	{
 		if (!isset(self::$images_types_cache[$type]))
 		{
@@ -123,12 +123,12 @@ class ImageTypeCore extends ObjectModel
 	* @param string $typeName Name
 	* @return integer Number of results found
 	*/
-	static public function typeAlreadyExists($typeName)
+	public static function typeAlreadyExists($typeName)
 	{
 		if (!Validate::isImageTypeName($typeName))
 			die(Tools::displayError());
 			
-		$result = Db::getInstance()->ExecuteS('
+		Db::getInstance()->ExecuteS('
 		SELECT `id_image_type`
 		FROM `'._DB_PREFIX_.'image_type`
 		WHERE `name` = \''.pSQL($typeName).'\'');
@@ -141,7 +141,7 @@ class ImageTypeCore extends ObjectModel
 	 * @param string $name
 	 * @param string $type
 	 */
-	static public function getByNameNType($name, $type)
+	public static function getByNameNType($name, $type)
 	{
 		return Db::getInstance()->getRow('SELECT `id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes` FROM `'._DB_PREFIX_.'image_type` WHERE `name` = \''.pSQL($name).'\' AND `'.pSQL($type).'` = 1');
 	}

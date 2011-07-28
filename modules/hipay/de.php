@@ -2,11 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{hipay}prestashop>payment_cb047ebd77ec02c36fbac405f8c9922c'] = 'Bezahlen Sie mit Hipay';
-$_MODULE['<{hipay}prestashop>payment_35d5d65e0fb908f81b8c36820ddd7cc6'] = 'erforderlicher Minimalbetrag , um mit Hipay bezahlen:';
-$_MODULE['<{hipay}prestashop>payment_e755d43d98e3d597b4492d2e6493ffed'] = '(Sandbox / Test-Modus)';
 $_MODULE['<{hipay}prestashop>hipay_50089d40ef4536271e8b16dbe5763c01'] = 'Hipay';
-$_MODULE['<{hipay}prestashop>hipay_3a630598b9817a76dbb984ba467f6400'] = 'Secure payement Visa Mastercard und europäische Lösungen.';
 $_MODULE['<{hipay}prestashop>hipay_5063b1c7402ff93d09defb875fa0085b'] = '[Hipay] Fehler: kann keine PaymentParams erstellen ';
 $_MODULE['<{hipay}prestashop>hipay_a85eba4c6c699122b2bb1387ea4813ad'] = 'Warenkorb';
 $_MODULE['<{hipay}prestashop>hipay_d4126d0b64579211d37151ef9b5af754'] = '[Hipay] Fehler: kann \"Warenkorb\" Produkt nicht erstellen';
@@ -30,15 +26,11 @@ $_MODULE['<{hipay}prestashop>hipay_dc32882bf2b1893d53aeaaa862c46d5c'] = 'Erstell
 $_MODULE['<{hipay}prestashop>hipay_854348e0cffd068204ce979351b2eb10'] = 'Aktivieren Sie Hipay für Ihren Prestashop, es ist kostenlos!';
 $_MODULE['<{hipay}prestashop>hipay_b7ce0a1dce723a074049b88fb22dbb4d'] = 'Erfahren Sie mehr über Sonderkonditionen auf Transaktionen über prestashop, indem Sie';
 $_MODULE['<{hipay}prestashop>hipay_7667c2b31b9980267cb526ed2f0d235d'] = 'unseren Support kontaktieren';
-$_MODULE['<{hipay}prestashop>hipay_08bd40c7543007ad06e4fce31618f6ec'] = 'Konto';
-$_MODULE['<{hipay}prestashop>hipay_9596f310ab4657258496ab217d3b5d85'] = 'Echtzeit/ Betrieb';
-$_MODULE['<{hipay}prestashop>hipay_aeda5c9c68fbc42071d76a8d2b3d73e8'] = 'Sandbox / Test';
 $_MODULE['<{hipay}prestashop>hipay_d08cf8ae06cc7e3151aad4618c6efe3a'] = 'Konfiguration im';
 $_MODULE['<{hipay}prestashop>hipay_0f26e4f64d58beb4d924627c707e43ad'] = 'Kontonummer';
 $_MODULE['<{hipay}prestashop>hipay_315f3c78ea54c8dadb082acc328dd5bd'] = 'Händler-Kennwort';
 $_MODULE['<{hipay}prestashop>hipay_b250a007769c7ffe655c74cfb8176b8c'] = 'Seiten-ID';
 $_MODULE['<{hipay}prestashop>hipay_3adbdb3ac060038aa0e6e6c138ef9873'] = 'Kategorie';
-$_MODULE['<{hipay}prestashop>hipay_5c5fe383c7a097fea1d804ddbc83f4c6'] = 'Test Kontonummer';
 $_MODULE['<{hipay}prestashop>hipay_4de3b490bff03a1e715d142cdd41d3f4'] = 'Autorisierte Altersgruppe';
 $_MODULE['<{hipay}prestashop>hipay_a19a3f71c627a4bde1e016a46f313799'] = 'Für alle Altersstufen';
 $_MODULE['<{hipay}prestashop>hipay_1ddfab06495a5d2dfcf174034546502d'] = 'Ab 12 Jahren und älter';
@@ -46,5 +38,6 @@ $_MODULE['<{hipay}prestashop>hipay_524fefef83fd5b0b82292a5366b40cd2'] = 'Ab 16 J
 $_MODULE['<{hipay}prestashop>hipay_4f47a2eb5f2af6c1419baa17794e5f03'] = 'Ab 18 Jahren und älter';
 $_MODULE['<{hipay}prestashop>hipay_0d10a9cae9827e30b09913c1ec6ef2db'] = 'Hinweis: Bitte sicherstellen, dass der Währungsmodus, den Sie im Zahlungs-Tab gewählt haben, mit Ihrem Hipay Konto (en) kompatibel ist.';
 $_MODULE['<{hipay}prestashop>hipay_c80a51a60c5ee43553c3881459b8f431'] = 'Konfiguration aktualisieren';
-
-?>
+$_MODULE['<{hipay}prestashop>payment_cb047ebd77ec02c36fbac405f8c9922c'] = 'Bezahlen Sie mit Hipay';
+$_MODULE['<{hipay}prestashop>payment_35d5d65e0fb908f81b8c36820ddd7cc6'] = 'erforderlicher Minimalbetrag , um mit Hipay bezahlen:';
+$_MODULE['<{hipay}prestashop>payment_e755d43d98e3d597b4492d2e6493ffed'] = '(Sandbox / Test-Modus)';

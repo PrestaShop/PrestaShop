@@ -1533,3 +1533,9 @@ a.blue:hover {
 	    padding: 5px;
 	    width: 200px;
 	}
+
+a.action_module_delete {
+	color: #CB1C00;
+	text-decoration: underline;
+	margin-right: 30px;
+}

@@ -100,36 +100,6 @@ class AdminCategories extends AdminTab
 				}
 			}
 		}
-		/* Change object statuts (active, inactive) */
-		elseif (isset($_GET['status']) AND Tools::getValue($this->identifier))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Validate::isLoadedObject($object = $this->loadObject()))
-				{
-					if ($object->toggleStatus())
-					{
-						$target = '';
-						if (($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product'))
-							$target = '&id_category='.(int)($id_category);
-						else 
-						{
-							$referrer = Tools::secureReferrer($_SERVER['HTTP_REFERER']);
-							if (preg_match('/id_category=(\d+)/', $referrer, $matches))
-								$target = '&id_category='.(int)($matches[1]);
-						}
-						Module::hookExec('categoryUpdate');
-						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$target.'&token='.Tools::getValue('token'));
-					}
-					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
-				}
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
 		/* Delete object */
 		elseif (isset($_GET['delete'.$this->table]))
 		{
@@ -259,7 +229,7 @@ class AdminCategories extends AdminTab
 		foreach ($this->_languages AS $language)
 			echo '
 					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<textarea name="description_'.$language['id_lang'].'" rows="5" cols="40">'.htmlentities($this->getFieldValue($obj, 'description', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
+						<textarea name="description_'.$language['id_lang'].'" rows="10" cols="100">'.htmlentities($this->getFieldValue($obj, 'description', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
 					</div>';
 		echo '	<p class="clear"></p>
 				</div>

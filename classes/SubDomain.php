@@ -43,7 +43,7 @@ class SubDomainCore extends ObjectModel
 		return $fields;
 	}
 
-	static public function getSubDomains()
+	public static function getSubDomains()
 	{
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `name` FROM `'._DB_PREFIX_.'subdomain`'))
 			return false;

@@ -27,15 +27,10 @@
 
 class MyAccountControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->auth = true;
-		$this->php_self = 'my-account.php';
-		$this->authRedirection = 'my-account.php';
-		$this->ssl = true;
-	
-		parent::__construct();
-	}
+	public $auth = true;
+	public $php_self = 'my-account.php';
+	public $authRedirection = 'my-account.php';
+	public $ssl = true;
 	
 	public function setMedia()
 	{

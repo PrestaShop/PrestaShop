@@ -17,5 +17,3 @@ $_MODULE['<{statsstock}prestashop>statsstock_26d6b7e13fef62e89ebdc5b7bef429cb'] 
 $_MODULE['<{statsstock}prestashop>statsstock_4364f8c09d7bf97996a20840900e7b30'] = 'Durchschnittl. Preis';
 $_MODULE['<{statsstock}prestashop>statsstock_62668f75fc6977f3d09df632d1585d07'] = 'Gesamtwert';
 $_MODULE['<{statsstock}prestashop>statsstock_2dee758ce6cb0116b234dc3908f016c5'] = 'Durchschnittlicher Preis, wenn das Produkt Attribute hat.';
-
-?>

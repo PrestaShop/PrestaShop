@@ -37,7 +37,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = 1.0;
+		$this->version = 1.1;
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -47,12 +47,14 @@ class Hipay extends PaymentModule
 		$this->displayName = $this->l('Hipay');
 		$this->description = $this->l('Secure payement with Visa, Mastercard and European solutions.');
 
-		$result = Db::getInstance()->ExecuteS('
+		$request = '
 			SELECT iso_code
 			FROM '._DB_PREFIX_.'country as c
 			LEFT JOIN '._DB_PREFIX_.'zone as z
 			ON z.id_zone = c.id_zone
-			WHERE z.id_zone = 1');
+			WHERE ';
+
+		$result = Db::getInstance()->ExecuteS($request.$this->getRequestZones());
 
 		foreach ($result as $num => $iso)
 			$this->limited_countries[] = $iso['iso_code'];
@@ -79,16 +81,51 @@ class Hipay extends PaymentModule
 		
 		if (!(parent::install() AND $this->registerHook('payment')))
 			return false;
-		// Check only the European country for the country restrictions
-		Db::getInstance()->Execute('
-			DELETE FROM '._DB_PREFIX_.'module_country 
-			WHERE id_module = '.$this->id.' 
-			AND id_country NOT IN 
-			(SELECT id_country FROM '._DB_PREFIX_.'country WHERE id_zone = 1)');
+			
+		$result = Db::getInstance()->ExecuteS('
+			SELECT `id_zone`, `name`
+			FROM `'._DB_PREFIX_.'zone`
+			WHERE `active` = 1
+		');
+		
+		foreach ($result as $rowNumber => $rowValues)
+		{
+			Configuration::deleteByName('HIPAY_AZ_'.$rowValues['id_zone']);
+			Configuration::deleteByName('HIPAY_AZ_ALL_'.$rowValues['id_zone']);
+		}
+		Db::getInstance()->ExecuteS('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE `id_module` = '.(int)$this->id);
 			
 		return true;
 	}
 
+	/**
+	 * Set shipping zone search
+	 * 
+	 * @param	string $searchField = 'z.id_zone'
+	 * @param	int $defaultZone = 1
+	 * @return	string
+	 */
+	private function getRequestZones($searchField='z.id_zone', $defaultZone = 1)
+	{
+		$result = Db::getInstance()->ExecuteS('
+			SELECT `id_zone`, `name`
+			FROM `'._DB_PREFIX_.'zone`
+			WHERE `active` = 1
+		');
+		
+		$tmp = null;
+		foreach ($result as $rowNumber => $rowValues) 
+			if (strcmp(Configuration::get('HIPAY_AZ_'.$rowValues['id_zone']), 'ok') == 0)
+				$tmp .= $searchField.' = '.$rowValues['id_zone'].' OR ';
+		
+		if ($tmp == null)
+			$tmp = $searchField.' = '.$defaultZone;
+		else
+			$tmp = substr($tmp, 0, strlen($tmp) - strlen(' OR '));
+			
+		return $tmp;
+	}
+	
 	public function hookPayment($params)
 	{
 		global $smarty, $cart;
@@ -236,7 +273,7 @@ class Hipay extends PaymentModule
 			{
 				/* Paiement capturé sur Hipay = Paiement accepté sur Prestashop */
 				$orderMessage = $operation.': '.$status.'\ndate: '.$date.' '.$time.'\ntransaction: '.$transid.'\namount: '.(float)$amount.' '.$currency.'\nid_cart: '.(int)$id_cart;
-				$this->validateOrder((int)$id_cart, _PS_OS_PAYMENT_, (float)$amount, $this->displayName, $orderMessage, array(), NULL, false, Tools::getValue('token'));
+				$this->validateOrder((int)$id_cart, Configuration::get('PS_OS_PAYMENT'), (float)$amount, $this->displayName, $orderMessage, array(), NULL, false, Tools::getValue('token'));
 			}
 			elseif (trim($operation) == 'refund' AND trim(strtolower($status)) == 'ok')
 			{
@@ -245,24 +282,72 @@ class Hipay extends PaymentModule
 					die(Tools::displayError());
 					
 				$order = new Order((int)($id_order));
-				if (!$order->valid OR $order->getCurrentState() === _PS_OS_REFUND_)
+				if (!$order->valid OR $order->getCurrentState() === Configuration::get('PS_OS_REFUND'))
 					die(Tools::displayError());
 					
 				$orderHistory = new OrderHistory();
 				$orderHistory->id_order = (int)($order->id);
-				$orderHistory->changeIdOrderState((int)(_PS_OS_REFUND_), (int)($id_order));
+				$orderHistory->changeIdOrderState((int)(Configuration::get('PS_OS_REFUND')), (int)($id_order));
 				$orderHistory->addWithemail();
 			}
 		}
 	}
 
+	/**
+	 * Uninstall and clean the module settings
+	 * 
+	 * @return	bool
+	 */
+	public function uninstall()
+	{
+		parent::uninstall();
+		
+		$result = Db::getInstance()->ExecuteS('
+			SELECT `id_zone`, `name`
+			FROM `'._DB_PREFIX_.'zone`
+			WHERE `active` = 1
+		');
+		
+		foreach ($result as $rowValues)
+		{
+			Configuration::deleteByName('HIPAY_AZ_'.$rowValues['id_zone']);
+			Configuration::deleteByName('HIPAY_AZ_ALL_'.$rowValues['id_zone']);
+		}
+		Db::getInstance()->ExecuteS('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE `id_module` = '.(int)$this->id);
+		
+		return (true);
+	}
+	
 	public function getContent()
 	{
 		global $currentIndex, $cookie;
 
 		$currencies = DB::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT c.iso_code, c.name, c.sign FROM '._DB_PREFIX_.'currency c');
 		
-		if (Tools::isSubmit('submitHipay'))
+		if (Tools::isSubmit('submitHipayAZ')) 
+		{
+			// Delete all configurated zones
+			foreach ($_POST as $key => $val) 
+				if (strncmp($key, 'HIPAY_AZ_ALL_', strlen('HIPAY_AZ_ALL_')) == 0) 
+				{
+					$id = substr($key, -(strlen($key) - strlen('HIPAY_AZ_ALL_')));
+					Configuration::updateValue('HIPAY_AZ_'.$id, 'ko');
+				}
+			Db::getInstance()->ExecuteS('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE `id_module` = '.(int)$this->id);
+			
+			// Add the new configuration zones
+			foreach ($_POST as $key => $val) 
+			{
+				if (strncmp($key, 'HIPAY_AZ_', strlen('HIPAY_AZ_')) == 0)
+					Configuration::updateValue($key, 'ok');
+			}
+			$request = 'SELECT id_country FROM '._DB_PREFIX_.'country WHERE ';
+			$results = Db::getInstance()->ExecuteS($request.$this->getRequestZones('id_zone'));
+			foreach ($results as $rowValues)
+				Db::getInstance()->ExecuteS('INSERT INTO '._DB_PREFIX_.'module_country VALUE('.(int)$this->id.', '.(int)$rowValues['id_country'].')');
+			
+		}
+		elseif (Tools::isSubmit('submitHipay'))
 		{
 			Configuration::updateValue('HIPAY_PROD', Tools::getValue('HIPAY_PROD'));
 			$this->prod = (int)Tools::getValue('HIPAY_PROD', Configuration::get('HIPAY_PROD'));
@@ -435,6 +520,47 @@ class Hipay extends PaymentModule
 				<p>'.$this->l('Notice: please verify that the currency mode you have chosen in the payment tab is compatible with your Hipay account(s).').'</p>
 				<input type="submit" name="submitHipay" value="'.$this->l('Update configuration').'" class="button" />
         	</form>
+		</fieldset>
+		<br />
+		';
+		
+		$form .= '
+		<fieldset>
+			<legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Zones restrictions').'</legend>
+			'.$this->l('Select the authorized shipping zones').'<br /><br />
+			<form action="'.$currentIndex.'&configure=hipay&token='.Tools::getValue('token').'" method="post">
+				<table cellspacing="0" cellpadding="0" class="table">
+					<tr>
+						<th class="center">'.$this->l('ID').'</th>
+						<th>'.$this->l('Zones').'</th>
+						<th align="center"><img src="../modules/'.$this->name.'/logo.gif" /></th>
+					</tr>
+		';
+		
+		$result = Db::getInstance()->ExecuteS('
+			SELECT `id_zone`, `name`
+			FROM '._DB_PREFIX_.'zone
+			WHERE `active` = 1
+		');
+
+		foreach ($result as $rowNumber => $rowValues)
+		{
+			$form .= '<tr>';
+			$form .= '<td>'.$rowValues['id_zone'].'</td>';
+			$form .= '<td>'.$rowValues['name'].'</td>';
+			$chk = null;
+			if (Configuration::get('HIPAY_AZ_'.$rowValues['id_zone']) == 'ok')
+				$chk = "checked ";
+			
+			$form .= '<td align="center"><input type="checkbox" name="HIPAY_AZ_'.$rowValues['id_zone'].'" value="ok" '.$chk.'/>';
+			$form .= '<input type="hidden" name="HIPAY_AZ_ALL_'.$rowValues['id_zone'].'" value="ok" /></td>';
+			$form .= '</tr>';
+		}
+		
+		$form .= '
+				</table><br>
+				<input type="submit" name="submitHipayAZ" value="'.$this->l('Update zones').'" class="button" />
+			</form>
 		</fieldset>
 		<script type="text/javascript">
 			function switchHipayAccount(prod) {

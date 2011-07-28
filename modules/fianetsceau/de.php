@@ -19,5 +19,3 @@ $_MODULE['<{fianetsceau}prestashop>fianetsceau_650be61892bf690026089544abbd9d26'
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_0cbc6611f5540bd0809a388dc95a615b'] = 'Test';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_756d97bb256b8580d4d71ee0c547804e'] = 'Betrieb';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_b17f3f4dcf653a5776792498a9b44d6a'] = 'Aktualisierungseinstellungen';
-
-?>

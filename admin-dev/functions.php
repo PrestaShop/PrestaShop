@@ -82,7 +82,7 @@ function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
 	$defines['_PS_CACHING_SYSTEM_'] = _PS_CACHING_SYSTEM_;
 	$defines['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
 	$defines['_DB_NAME_'] = (($arrayDB AND isset($arrayDB['_DB_NAME_'])) ? $arrayDB['_DB_NAME_'] : _DB_NAME_);
-	$defines['_MYSQL_ENGINE_'] = _MYSQL_ENGINE_;
+	$defines['_MYSQL_ENGINE_'] = (($arrayDB AND isset($arrayDB['_MYSQL_ENGINE_'])) ? $arrayDB['_MYSQL_ENGINE_'] : _MYSQL_ENGINE_);
 	$defines['_DB_SERVER_'] = (($arrayDB AND isset($arrayDB['_DB_SERVER_'])) ? $arrayDB['_DB_SERVER_'] : _DB_SERVER_);
 	$defines['_DB_USER_'] = (($arrayDB AND isset($arrayDB['_DB_USER_'])) ? $arrayDB['_DB_USER_'] : _DB_USER_);
 	$defines['_DB_PREFIX_'] = (($arrayDB AND isset($arrayDB['_DB_PREFIX_'])) ? $arrayDB['_DB_PREFIX_'] : _DB_PREFIX_);
@@ -207,10 +207,9 @@ function createDir($path, $rights)
 
 function checkPSVersion()
 {
-	libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
-	if ($feed = @simplexml_load_file('http://www.prestashop.com/xml/version.xml') AND _PS_VERSION_ < $feed->version->num)
-		return array('name' => $feed->version->name, 'link' => $feed->download->link);
-	return false;
+	$upgrader = new Upgrader();
+
+	return $upgrader->checkPSVersion();
 }
 
 function translate($string)
