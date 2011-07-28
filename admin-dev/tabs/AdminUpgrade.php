@@ -1274,7 +1274,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 //			echo '<input class="button" type="submit" id="refreshCurrent" value="'.$this->l("refresh update dir / current").'"/>';
 			echo '<br/>';
 		if ($this->upgrader->needUpgrade)
-		{echo 'test';
+		{
 			echo '<a href="" id="upgradeNow" class="button-autoupgrade upgradestep">'.$this->l('Upgrade PrestaShop now !').'</a>';
 		}
 		else
