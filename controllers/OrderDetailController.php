@@ -42,7 +42,6 @@ class OrderDetailControllerCore extends FrontController
 	public function preProcess()
 	{
 		parent::preProcess();
-		
 
 		if (Tools::isSubmit('submitMessage'))
 		{
@@ -74,7 +73,7 @@ class OrderDetailControllerCore extends FrontController
 						$to = strval($to->email);
 					}
 					$toName = strval(Configuration::get('PS_SHOP_NAME'));
-					$customer = $context->customer->id;
+					$customer = $this->context->customer->id;
 					if (Validate::isLoadedObject($customer))
 						Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
 						array(

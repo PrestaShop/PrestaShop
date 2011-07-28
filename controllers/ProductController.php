@@ -209,7 +209,7 @@ class ProductControllerCore extends FrontController
 					'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
 					'ecotaxTax_rate' => $ecotax_rate,
 					'homeSize' => Image::getSize('home'),
-					'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $context->language->id),
+					'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
 					'token' => Tools::getToken(false),
 					'productPriceWithoutEcoTax' => (float)$productPriceWithoutEcoTax,
 					'features' => $features,
