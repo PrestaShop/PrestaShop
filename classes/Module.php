@@ -209,7 +209,7 @@ abstract class ModuleCore
 			$name = array($name);
 
 		foreach ($name as $k => $v)
-			Module::getInstanceByName()->enable();
+			Module::getInstanceByName($name)->enable();
 	}
 
 	/**
@@ -253,7 +253,7 @@ abstract class ModuleCore
 			$name = array($name);
 
 		foreach ($name as $k => $v)
-			Module::getInstanceByName()->disable();
+			Module::getInstanceByName($name)->disable();
 			
 		return true;
 	}
