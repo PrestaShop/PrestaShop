@@ -148,7 +148,7 @@ class StatsProduct extends ModuleGraph
 
 	public function hookAdminStatsModules($params)
 	{
-		global $cookie, $currentIndex;
+		global $cookie;
 		$id_category = (int)(Tools::getValue('id_category'));
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		
@@ -265,7 +265,7 @@ class StatsProduct extends ModuleGraph
 				</tr>
 			</thead><tbody>';
 			foreach ($this->getProducts($cookie->id_lang) AS $product)
-				$this->_html .= '<tr><td>'.$product['reference'].'</td><td><a href="'.$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a></td><td>'.$product['quantity'].'</td></tr>';
+				$this->_html .= '<tr><td>'.$product['reference'].'</td><td><a href="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a></td><td>'.$product['quantity'].'</td></tr>';
 			$this->_html .= '</tbody></table><br /></div><br />
 				<a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a><br />';
 		}

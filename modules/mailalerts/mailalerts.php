@@ -396,13 +396,11 @@ class MailAlerts extends Module
 
 	private function _displayForm()
 	{
-		global $currentIndex;
-
 		$tab = Tools::getValue('tab');
 		$token = Tools::getValue('token');
 
 		$this->_html .= '
-		<form action="'.$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
+		<form action="'.AdminTab::$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
 			<fieldset class="width3"><legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Customer notification').'</legend>
 				<label>'.$this->l('Product availability:').' </label>
 				<div class="margin-form">
@@ -415,7 +413,7 @@ class MailAlerts extends Module
 			</fieldset>
 		</form>
 		<br />
-		<form action="'.$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
+		<form action="'.AdminTab::$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
 			<fieldset class="width3"><legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Merchant notification').'</legend>
 				<label>'.$this->l('New order:').' </label>
 				<div class="margin-form">

@@ -320,7 +320,7 @@ class Hipay extends PaymentModule
 	
 	public function getContent()
 	{
-		global $currentIndex, $cookie;
+		global $cookie;
 
 		$currencies = DB::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT c.iso_code, c.name, c.sign FROM '._DB_PREFIX_.'currency c');
 		
@@ -421,7 +421,7 @@ class Hipay extends PaymentModule
 			</div>';
 		}
 
-		$link = $currentIndex.'&configure='.$this->name.'&token='.Tools::getValue('token');
+		$link = AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getValue('token');
 		$form = '
 		<style>
 			.hipay_label {float:none;font-weight:normal;padding:0;text-align:left;width:100%;line-height:30px}
@@ -528,7 +528,7 @@ class Hipay extends PaymentModule
 		<fieldset>
 			<legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Zones restrictions').'</legend>
 			'.$this->l('Select the authorized shipping zones').'<br /><br />
-			<form action="'.$currentIndex.'&configure=hipay&token='.Tools::getValue('token').'" method="post">
+			<form action="'.AdminTab::$currentIndex.'&configure=hipay&token='.Tools::getValue('token').'" method="post">
 				<table cellspacing="0" cellpadding="0" class="table">
 					<tr>
 						<th class="center">'.$this->l('ID').'</th>

@@ -115,7 +115,7 @@ class Secuvad_connection
 
 	public function send_transaction()
 	{
-		global $currentIndex, $cookie;
+		global $cookie;
 		
 		$flag_rep = false;
 		$response = str_replace("\n", "", $this->send('bulk_transactions'));

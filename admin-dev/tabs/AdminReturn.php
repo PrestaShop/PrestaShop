@@ -105,7 +105,7 @@ class AdminReturn extends AdminTab
 						Mail::Send((int)$order->id_lang, 'order_return_state', Mail::l('Your order return state has changed', $order->id_lang),
 						$vars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL,
 							NULL, _PS_MAIL_DIR_, true);
-						Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 					}
 				}
 				else

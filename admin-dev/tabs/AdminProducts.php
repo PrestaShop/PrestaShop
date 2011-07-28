@@ -1188,7 +1188,7 @@ class AdminProducts extends AdminTab
 							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
 						elseif ($id_image = $this->addProductImage($object, Tools::getValue('resizer')))
 						{
-							$currentIndex .= '&image_updated='.(int)Tools::getValue('id_image');
+							self::$currentIndex .= '&image_updated='.(int)Tools::getValue('id_image');
 							Hook::updateProduct($object);
 							Search::indexation(false, $object->id);
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) AND is_int($id_image) AND $id_image)

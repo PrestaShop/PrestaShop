@@ -244,7 +244,7 @@ class Secuvad extends Module
 
 	public function hookAdminOrder($params)
 	{
-		global $cookie, $currentIndex;
+		global $cookie;
 		
 		if ($this->check_assoc() != '')
 			return '
@@ -276,7 +276,7 @@ class Secuvad extends Module
 					'.($secuvad_order['is_fraud'] ? '<br /><b>'.$this->l('Unpaid transmitted:').'</b> '.$this->_getFraudStatusHtml((int)($secuvad_order['is_fraud'])) : '').'
 				</p>
 				
-				<form method="POST" action="'.$currentIndex.'&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)).'">
+				<form method="POST" action="'.AdminTab::$currentIndex.'&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)).'">
 					<p class="center">
 						<input type="hidden" name="id_secuvad_order" value="'.(int)($params['id_order']).'" />
 						<input type="submit" class="button" name="send_to_secuvad" value="'.$this->l('Update Secuvad status').'"> 

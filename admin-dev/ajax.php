@@ -70,7 +70,7 @@ function displayJavascriptAlert($s){echo '<script type="text/javascript">alert(\
 
 if (isset($_GET['ajaxProductManufacturers']))
 {
-	$currentIndex = 'index.php?tab=AdminCatalog';
+	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$manufacturers = Manufacturer::getManufacturers();
 	if ($manufacturers)
 	{
@@ -87,7 +87,7 @@ if (isset($_GET['ajaxReferrers']))
 
 if (isset($_GET['ajaxProductSuppliers']))
 {
-	$currentIndex = 'index.php?tab=AdminCatalog';
+	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$suppliers = Supplier::getSuppliers();
 	if ($suppliers)
 	{
@@ -100,7 +100,7 @@ if (isset($_GET['ajaxProductSuppliers']))
 
 if (isset($_GET['ajaxProductAccessories']))
 {
-	$currentIndex = 'index.php?tab=AdminCatalog';
+	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$jsonArray = array();
 
 	$products = Db::getInstance()->ExecuteS('
@@ -122,7 +122,7 @@ if (isset($_GET['ajaxProductAccessories']))
 
 if (isset($_GET['ajaxDiscountCustomers']))
 {
-	$currentIndex = 'index.php?tab=AdminDiscounts';
+	AdminTab::$currentIndex = 'index.php?tab=AdminDiscounts';
 	$jsonArray = array();
 	$filter = Tools::getValue('filter');
 
@@ -180,14 +180,14 @@ if ($step = (int)(Tools::getValue('ajaxProductTab')))
 		die (Tools::displayError('Product cannot be loaded'));
 
 	$switchArray = array(3 => 'displayFormPrices', 4 => 'displayFormAttributes', 5 => 'displayFormFeatures', 6 => 'displayFormCustomization', 7 => 'displayFormAttachments');
-	$currentIndex = 'index.php?tab=AdminCatalog';
+	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	if (key_exists($step, $switchArray))
 		$admin->{$switchArray[$step]}($product, $languages, $defaultLanguage);
 }
 
 if (isset($_GET['getAvailableFields']) and isset($_GET['entity']))
 {
-	$currentIndex = 'index.php?tab=AdminImport';
+	AdminTab::$currentIndex = 'index.php?tab=AdminImport';
 	$jsonArray = array();
 	require_once(dirname(__FILE__).'/tabs/AdminImport.php');
 	$import = new AdminImport();
