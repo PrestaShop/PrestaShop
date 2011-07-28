@@ -71,7 +71,7 @@ class AdminImages extends AdminTab
 			if ($this->tabAccess['edit'] === '1')
 		 	{
 				if($this->_moveImagesToNewFileSystem())
-					Tools::redirectAdmin($currentIndex.'&conf=25'.'&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
 		 	}
 		else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -90,7 +90,7 @@ class AdminImages extends AdminTab
 					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
 					$this->_errors[] = Tools::displayError('Unknown error.');
 				else
-					Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -487,9 +487,8 @@ class AdminImages extends AdminTab
 	 */
 	public function displayImagePreferences()
 	{
-	 	global $currentIndex;
 		echo '<br />
-		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 			<fieldset class="width4">
 				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Images').'</legend>'.'
 				<p>'.$this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'

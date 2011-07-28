@@ -54,7 +54,7 @@ class StatsCheckUp extends Module
 	
     function hookAdminStatsModules()
     {
-		global $cookie, $currentIndex;
+		global $cookie;
 
 		if (Tools::isSubmit('submitCheckup'))
 		{
@@ -148,7 +148,7 @@ class StatsCheckUp extends Module
 			table.checkup td {padding:5px 10px}
 			table.checkup2 td {text-align:right}
 		</style>
-		<form action="'.$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'" method="post" class="checkup">
+		<form action="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'" method="post" class="checkup">
 		<table class="table checkup" border="0" cellspacing="0" cellspacing="0">
 			<tr><th></th><th>'.$arrayColors[0].' '.$this->l('Not enough').'</th><th>'.$arrayColors[2].' '.$this->l('Alright').'</th></tr>';
 		foreach ($arrayConf as $conf => $translations)
@@ -161,7 +161,7 @@ class StatsCheckUp extends Module
 			<div><input type="submit" name="submitCheckup" class="button" value="'.$this->l('   Save   ').'" /></div>
 		</form>
 		<div class="clear">&nbsp;</div>
-		<form action="'.$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'" method="post">
+		<form action="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'" method="post">
 			'.$this->l('Order by').'
 			<select name="submitCheckupOrder" onchange="this.form.submit();" style="width:100px">
 				<option value="1">'.$this->l('ID').'</option>

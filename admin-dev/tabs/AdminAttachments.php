@@ -137,12 +137,10 @@ class AdminAttachments extends AdminTab
 		parent::getList((int)$id_lang, $orderBy, $orderWay, $start, $limit);
 		if(sizeof($this->_list))
 			$this->_productAttachements = Attachment::getProductAttached((int)$id_lang, $this->_list);	
-}
+	}
 	
 	protected function _displayDeleteLink($token = NULL, $id)
 	{
-	    global $currentIndex;
-		
 		$_cacheLang['Delete'] = $this->l('Delete');
 		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, TRUE, FALSE);
 		
@@ -161,7 +159,7 @@ class AdminAttachments extends AdminTab
 					return false;
 				}
 			</script>
-			<a href="'.$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'"
+			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'"
 			onclick="'.(isset($this->_productAttachements[$id]) ? 'return confirmProductAttached(\''.$productList.'\')' : 'return confirm(\''.$_cacheLang['DeleteItem'].$id.' ?'.(!is_null($this->specificConfirmDelete) ? '\r'.rtrim($this->specificConfirmDelete, ', ') : '').'\')' ).'">
 			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
 	}

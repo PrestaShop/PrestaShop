@@ -162,7 +162,7 @@ class ThemeInstallator extends Module
 	
 	private function init_defines()
 	{
-		global $currentIndex, $cookie;
+		global $cookie;
 		
 		define('_EXPORT_FOLDER_', dirname(__FILE__).'/export/');
 		define('_IMPORT_FOLDER_', dirname(__FILE__).'/import/');
@@ -174,7 +174,7 @@ class ThemeInstallator extends Module
 		
 		if (!Tools::isSubmit('cancelExport') AND (Tools::isSubmit('exportTheme') OR Tools::isSubmit('submitExport')))
 			$this->page = 'exportPage';
-		$this->_html = '<form action="'.$currentIndex.'&configure='.$this->name.'&token='.Tools::htmlentitiesUTF8(Tools::getValue('token')).'" method="POST" enctype=multipart/form-data>';
+		$this->_html = '<form action="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::htmlentitiesUTF8(Tools::getValue('token')).'" method="POST" enctype=multipart/form-data>';
 		
 		if (Tools::isSubmit('modulesToExport') OR Tools::isSubmit('submitModules'))
 			$this->to_export = Tools::getValue('modulesToExport');

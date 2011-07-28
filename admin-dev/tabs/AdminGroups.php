@@ -168,13 +168,13 @@ class AdminGroups extends AdminTab
 	public function viewgroup()
 	{
 		$context = Context::getContext();		
-		$currentIndex = 'index.php?tab=AdminGroups';
+		self::$currentIndex = 'index.php?tab=AdminGroups';
 		if (!($obj = $this->loadObject(true)))
 			return;
 		
 		echo '
 		<fieldset style="width: 400px">
-			<div style="float: right"><a href="'.$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
+			<div style="float: right"><a href="'.self::$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
 			<span style="font-weight: bold; font-size: 14px;">'.strval($obj->name[(int)$context->language->id]).'</span>
 			<div class="clear">&nbsp;</div>
 			'.$this->l('Discount:').' '.(float)($obj->reduction).$this->l('%').'

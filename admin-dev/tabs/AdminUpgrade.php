@@ -1347,7 +1347,6 @@ echo '</script>';
 	{
 		$this->displayWarning('This function is experimental. It\'s currently recommended to make a backup of your files and database.');
 
-		global $currentIndex;
 		if ($this->apacheModExists('mod_evasive'))
 			sleep(1);
 		// update['name'] = version name
@@ -1370,7 +1369,6 @@ echo '</script>';
 
 	private function _getJsInit()
 	{
-		global $currentIndex;
 		$js = '';
 		$js .= '
 function ucFirst(str) {
@@ -1509,7 +1507,7 @@ function afterBackupFiles()
 function doAjaxRequest(action, nextParams){
 		req = $.ajax({
 			type:"POST",
-			url : "'.str_replace('index','ajax-tab',$currentIndex).'",
+			url : "'.str_replace('index', 'ajax-tab', self::$currentIndex).'",
 			async: true,
 			data : {
 				dir:"'.$this->adminDir.'",

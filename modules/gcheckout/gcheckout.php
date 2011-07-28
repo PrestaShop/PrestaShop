@@ -74,7 +74,7 @@ class GCheckout extends PaymentModule
 	
 	public function getContent()
 	{
-		global $currentIndex, $cookie;
+		global $cookie;
 		
 		if (Tools::isSubmit('submitGoogleCheckout'))
 		{
@@ -100,7 +100,7 @@ class GCheckout extends PaymentModule
 				Configuration::updateValue('GCHECKOUT_NO_SHIPPING', 0);
 
 			if (!sizeof($errors))
-				Tools::redirectAdmin($currentIndex.'&configure=gcheckout&token='.Tools::getValue('token').'&conf=4');
+				Tools::redirectAdmin(AdminTab::$currentIndex.'&configure=gcheckout&token='.Tools::getValue('token').'&conf=4');
 			foreach ($errors as $error)
 				echo $error;
 		}

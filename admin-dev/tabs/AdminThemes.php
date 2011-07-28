@@ -127,7 +127,7 @@ class AdminThemes extends AdminPreferences
 		echo '<br /><br />';
 		if (@ini_get('allow_url_fopen') AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 			echo '<script type="text/javascript">
-				$.post("'.dirname($currentIndex).'/ajax.php",{page:"themes"},function(a){getE("prestastore-content").innerHTML="<legend><img src=\"../img/admin/prestastore.gif\" class=\"middle\" /> '.$this->l('Live from PrestaShop Addons!').'</legend>"+a;});
+				$.post("'.dirname(self::$currentIndex).'/ajax.php",{page:"themes"},function(a){getE("prestastore-content").innerHTML="<legend><img src=\"../img/admin/prestastore.gif\" class=\"middle\" /> '.$this->l('Live from PrestaShop Addons!').'</legend>"+a;});
 			</script>
 			<fieldset id="prestastore-content" class="width3"></fieldset>';			
 		else

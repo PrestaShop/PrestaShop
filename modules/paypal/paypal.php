@@ -879,7 +879,7 @@ class PayPal extends PaymentModule
 	
 	private function _postProcess()
 	{
-		global $currentIndex, $cookie;
+		global $cookie;
 		
 		if (Tools::isSubmit('submitPayPal'))
 		{
@@ -944,7 +944,7 @@ class PayPal extends PaymentModule
 				if ($response['ACK'] == 'Success')
 				{
 					if ($response['PAYMENTSTATUS'] == 'Completed' OR $response['PAYMENTSTATUS'] == 'Reversed' OR ($response['PAYMENTSTATUS'] == 'Pending' AND $response['PENDINGREASON'] == 'authorization'))
-						Tools::redirectAdmin($currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=validationOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=validationOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
 					else
 						$this->_html .= '<p><b>'.$this->l('Status').':</b> '.$response['PAYMENTSTATUS'].' ('.$this->l('Reason:').' '.$response['PENDINGREASON'].')</p>';
 				}
@@ -962,9 +962,9 @@ class PayPal extends PaymentModule
 				if ($response['ACK'] == 'Success')
 				{
 					if ($response['PAYMENTSTATUS'] == 'Completed')
-						Tools::redirectAdmin($currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
 					else
-						Tools::redirectAdmin($currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
 				}
 				else
 					$this->_html .= '<p style="color:red;">'.$this->l('Error from PayPal: ').$response['L_LONGMESSAGE0'].' (#'.$response['L_ERRORCODE0'].')</p>';
@@ -980,9 +980,9 @@ class PayPal extends PaymentModule
 				if ($response['ACK'] == 'Success')
 				{
 					if ($response['REFUNDTRANSACTIONID'] != '')
-						Tools::redirectAdmin($currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
 					else
-						Tools::redirectAdmin($currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
 				}
 				else
 					$this->_html .= '<p style="color:red;">'.$this->l('Error from PayPal: ').$response['L_LONGMESSAGE0'].' (#'.$response['L_ERRORCODE0'].')</p>';

@@ -347,7 +347,7 @@ class AdminDiscounts extends AdminTab
 							if ($(\'#filter\').val())
 								filterValue = $(\'#filter\').val();
 							
-							$.getJSON("'.dirname($currentIndex).'/ajax.php",{ajaxDiscountCustomers:1,filter:filterValue},
+							$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxDiscountCustomers:1,filter:filterValue},
 								function(obj) {
 									var groups_length = obj.groups.length;
 									if (obj.groups.length == 0)

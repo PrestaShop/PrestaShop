@@ -117,8 +117,7 @@ class Twenga extends PaymentModule
 	public function __construct()
 	{
 		// Basic vars
-		global $currentIndex;
-		$this->current_index = $currentIndex;
+		$this->current_index = AdminTab::$currentIndex;
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
