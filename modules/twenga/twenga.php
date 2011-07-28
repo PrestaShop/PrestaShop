@@ -94,7 +94,7 @@ class Twenga extends PaymentModule
 	 * need to be in lowercase
 	 * @var array
 	 */
-	public $limited_countries = array('fr', 'de', 'gb', 'uk', 'it', 'es');
+	public $limited_countries = array('fr', 'de', 'gb', 'uk', 'it', 'es', 'nl');
 	
 	private $_allowToWork = true;
 
@@ -122,7 +122,7 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.6';
+	 	$this->version = '1.8';
 		
 	 	parent::__construct();
 	
@@ -210,6 +210,8 @@ class Twenga extends PaymentModule
 				(($_POST['type'] == 'reset') ? $this->l('Reset') : 
 				(($_POST['type'] == 'uninstall') ? $this->l('Uninstall') : $this->l('Delete'))));
 
+			if ($_POST['type'] == 'delete')
+				$_POST['type'] = 'deleteModule';
 			$url = $_POST['base'].'&token='.$_POST['token'].'&module_name='.
 				$_POST['module_name'].'&tab_module='.$_POST['tab_module'].'&'.
 				$_POST['type'].'='.$_POST['module_name'];
@@ -413,7 +415,7 @@ class Twenga extends PaymentModule
 					self::$obj_ps_stats->cancelOrder();
 				}
 			} catch (Exception $e) {
-				die($e->getMessage());
+				// die($e->getMessage());
 			}
 		}
 	}
@@ -444,7 +446,7 @@ class Twenga extends PaymentModule
 					self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
 				}
 			} catch (Exception $e) {
-				die($e->getMessage());
+				// die($e->getMessage());
 			}
 		}
 	}
@@ -524,7 +526,7 @@ class Twenga extends PaymentModule
 	/*
 	 ** Get the current country name used literaly
 	 */
-	static public function getCurrentCountryName()
+	public static function getCurrentCountryName()
 	{
 		global $cookie;
 
@@ -1010,7 +1012,7 @@ class Twenga extends PaymentModule
 		$category_path = (Configuration::get('PS_NAVIGATION_PIPE') != false && Configuration::get('PS_NAVIGATION_PIPE') !== '>' ) ? str_replace(Configuration::get('PS_NAVIGATION_PIPE'), '>', $category_path) : $category_path;
 		// image tag
 		$id_image = (isset($combination['id_image'])) ? $combination['id_image'] : 0;
-		if($id_image === 0)
+		if($id_image === 0 || $id_image < 0)
 		{
 			$image = $product->getCover((int)$product->id);
 			$id_image = $image['id_image'];
@@ -1031,7 +1033,17 @@ class Twenga extends PaymentModule
 		$arr_return['designation'] = Tools::htmlentitiesUTF8($product->name[$lang].' '.Manufacturer::getNameById($product->id_manufacturer).' '.implode(' ', $model));
 		$arr_return['price'] = $price;
 		$arr_return['category'] = Tools::htmlentitiesUTF8(strip_tags($category_path));
+
+		if (substr(_PS_VERSION_, 0, 3) == '1.3')
+		{
+			if (!Configuration::get('PS_SHOP_DOMAIN'))
+				Configuration::updateValue('PS_SHOP_DOMAIN', $_SERVER['HTTP_HOST']);
+			$prefix =  'http://'.Configuration::get('PS_SHOP_DOMAIN').'/';
+			$arr_return['image_url'] = $prefix.$link->getImageLink('', $product->id.'-'.$id_image, 'large');
+		}
+		else
 		$arr_return['image_url'] = $link->getImageLink($product->link_rewrite[$lang], $product->id.'-'.$id_image, 'large');
+		
 		
 		// Must description added since Twenga-module v1.1
 		$arr_return['description'] = is_array($product->description) ? strip_tags($product->description[$lang]) : strip_tags($product->description);

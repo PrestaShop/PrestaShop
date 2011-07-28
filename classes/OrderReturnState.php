@@ -66,7 +66,7 @@ class OrderReturnStateCore extends ObjectModel
 	* @param integer $id_lang Language id for state name
 	* @return array Order states
 	*/
-	static public function getOrderReturnStates($id_lang)
+	public static function getOrderReturnStates($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *

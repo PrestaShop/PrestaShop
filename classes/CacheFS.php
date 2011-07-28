@@ -133,7 +133,7 @@ class CacheFSCore extends Cache {
 			foreach ($res[1] AS $table)
 				if (isset($this->_tablesCached[$table]))
 				{
-					foreach ($this->_tablesCached[$table] AS $fsKey => $foo)
+					foreach (array_keys($this->_tablesCached[$table]) AS $fsKey)
 					{
 						$this->delete($fsKey);
 						$this->delete($fsKey.'_nrows');

@@ -35,6 +35,7 @@ $_LANGPDF['PDF_invoice396124314c5fd1fa5bf463274896dc80'] = 'Pas de méthode d\'a
 $_LANGPDF['PDF_invoice065ab3a28ca4f16f55f103adc7d0226f'] = 'Livraison';
 $_LANGPDF['PDF_invoice6bdf2efe1a99072849d4e87baee37dbe'] = 'Facturation';
 $_LANGPDF['PDF_invoice60da3bd6867e3952ef0057a0772ea885'] = 'Numéro d\'indentification fiscale:';
+$_LANGPDF['PDF_invoice7b13afd12d6d91d52aa9f857d23f96ef'] = 'Projet de facture';
 $_LANGPDF['PDF_invoiced1228f5476d15142b1358ae4b5fa2454'] = 'Commande n°';
 $_LANGPDF['PDF_invoicef8617a92ba0a0a4eabee724eab7c9f48'] = 'Transporteur :';
 $_LANGPDF['PDF_invoicec1f6368d15f7c13c4e5e8f70c68c747f'] = 'Méthode de paiement :';

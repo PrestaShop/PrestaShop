@@ -23,6 +23,35 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+{*
+** Compatibility code for Prestashop older than 1.4.2 using a recent theme
+** Ignore list isn't require here
+** $address exist in every PrestaShop version
+*}
+
+{* Will be deleted for 1.5 version and more *}
+{* If ordered_adr_fields doesn't exist, it's a PrestaShop older than 1.4.2 *}
+{if !isset($ordered_adr_fields)}
+	{if isset($address)}
+		{counter start=0 skip=1 assign=address_key_number}
+		{foreach from=$address key=address_key item=address_value}
+			{$ordered_adr_fields.$address_key_number = $address_key}
+			{counter}
+		{/foreach}
+	{else}
+		{$ordered_adr_fields.0 = 'company'}
+		{$ordered_adr_fields.1 = 'firstname'}
+		{$ordered_adr_fields.2 = 'lastname'}
+		{$ordered_adr_fields.3 = 'address1'}
+		{$ordered_adr_fields.4 = 'address2'}
+		{$ordered_adr_fields.5 = 'postcode'}
+		{$ordered_adr_fields.6 = 'city'}
+		{$ordered_adr_fields.7 = 'country'}
+		{$ordered_adr_fields.8 = 'state'}
+	{/if}
+{/if}
+
 <script type="text/javascript">
 // <![CDATA[
 	var baseDir = '{$base_dir_ssl}';
@@ -175,7 +204,7 @@ $(function(){ldelim}
 			<select id="id_country" name="id_country">{$countries_list}</select>
 			<sup>*</sup>
 		</p>
-		{if $vatnumber_ajax_call}
+		{if isset($vatnumber_ajax_call) && $vatnumber_ajax_call}
 		<script type="text/javascript">
 		var ajaxurl = '{$ajaxurl}';
 		{literal}
@@ -203,7 +232,7 @@ $(function(){ldelim}
 		</script>
 		{/if}
 		{/if}
-		{if $field_name eq 'State:name'}
+		{if $field_name eq 'State:name' || $field_name eq 'state'}
 		{assign var="stateExist" value="true"}
 		<p class="required id_state select">
 			<label for="id_state">{l s='State'}</label>
@@ -242,12 +271,14 @@ $(function(){ldelim}
 			<sup>*</sup>
 		</p>
 	</fieldset>
-	<p class="submit2">
+	<p class="submit2 address_navigation" style="padding:0">
 		{if isset($id_address)}<input type="hidden" name="id_address" value="{$id_address|intval}" />{/if}
 		{if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
 		{if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
 		{if isset($select_address)}<input type="hidden" name="select_address" value="{$select_address|intval}" />{/if}
+		<a class="button" href="{$link->getPageLink('addresses.php', true)}" title="{l s='Previous'}">&laquo; {l s='Previous'}</a>
 		<input type="submit" name="submitAddress" id="submitAddress" value="{l s='Save'}" class="button" />
+		<br class="clear"/>
 	</p>
 	<p class="required"><sup>*</sup>{l s='Required field'}</p>
 </form>

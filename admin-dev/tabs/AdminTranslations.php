@@ -157,7 +157,7 @@ class AdminTranslations extends AdminTab
 			}
 		}
 		if ($bool)
-			Tools::redirectLink(self::$currentIndex.'&conf=14&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=14&token='.$this->token);
 		$this->_errors[] = $this->l('a part of the data has been copied but some language files could not be found or copied');
 	}
 	
@@ -1715,7 +1715,7 @@ class AdminTranslations extends AdminTab
 		{
 			if ($module{0} != '.' AND is_dir($root_dir.$module))
 			{
-				@include_once($root_dir.$module.'/'.$lang.'.php');
+				@include($root_dir.$module.'/'.$lang.'.php');
 				self::getModuleTranslations($is_default);
 				$this->recursiveGetModuleFiles($root_dir.$module.'/', $array_files, $module, $root_dir.$module.'/'.$lang.'.php', $is_default);
 			}
@@ -1891,7 +1891,7 @@ class AdminTranslations extends AdminTab
 	  *
 	  * @return array
 	  */
-	static public function getThemesList()
+	public static function getThemesList()
 	{
 		$dir = opendir(_PS_ALL_THEMES_DIR_);
 		while ($folder = readdir($dir))

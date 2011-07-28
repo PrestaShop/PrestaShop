@@ -77,7 +77,7 @@ class TabCore extends ObjectModel
 			return self::initAccess($this->id);
 		return false;
 	}
-	
+
 	static public function initAccess($id_tab, Context $context = null)
 	{
 		if (!$context)
@@ -110,7 +110,7 @@ class TabCore extends ObjectModel
 	 *
 	 * @return integer tab id
 	 */
-	static public function getCurrentTabId()
+	public static function getCurrentTabId()
 	{
 		return self::getIdFromClassName(Tools::getValue('tab'));
 	}
@@ -120,7 +120,7 @@ class TabCore extends ObjectModel
 	 *
 	 * @return integer tab parent id
 	 */
-	static public function getCurrentParentId()
+	public static function getCurrentParentId()
 	{
 	 	if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT `id_parent` FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('tab'))).'\''))
 		 	return $result['id_parent'];
@@ -132,7 +132,7 @@ class TabCore extends ObjectModel
 	 *
 	 * @return array tab
 	 */
-	static public function getTab($id_lang, $id_tab)
+	public static function getTab($id_lang, $id_tab)
 	{
 		/* Tabs selection */
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -148,7 +148,7 @@ class TabCore extends ObjectModel
 	 * @return array tabs
 	 */
 	static $_cache_tabs = array();
-	static public function getTabs($id_lang, $id_parent = NULL)
+	public static function getTabs($id_lang, $id_parent = NULL)
 	{
 		if (!isset(self::$_cache_tabs[$id_lang]))
 		{
@@ -181,7 +181,7 @@ class TabCore extends ObjectModel
 	 * @param string class_name
 	 * @return int id_tab
 	 */
-	static public function getIdFromClassName($class_name)
+	public static function getIdFromClassName($class_name)
 	{
 		if (self::$_getIdFromClassName === null)
 		{
@@ -193,7 +193,7 @@ class TabCore extends ObjectModel
 		return (isset(self::$_getIdFromClassName[$class_name]) ? (int)self::$_getIdFromClassName[$class_name] : false);
 	}
 
-	static public function getNbTabs($id_parent = NULL)
+	public static function getNbTabs($id_parent = NULL)
 	{
 		return (int)Db::getInstance()->getValue('
 		SELECT COUNT(*)

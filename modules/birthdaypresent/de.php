@@ -26,5 +26,3 @@ $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_3e788301a1b0ce341aa5ce15b
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_f299b58558601a85c98a2d1d7867d523'] = 'Nachhaltige Aktionen: Treue- oder Kundenkarte, die nicht nur der Kommunikation zwischen Händler und Kunden dient, sondern Kunden auch Vorteile bietet (Persönliche Angebote, Ermäßigungen).';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d434c183a411611f50fa7e121b0f6565'] = 'Diese Operation bewegt die Kunden dazu, in IHrem Shop regelmäßig einzukaufen.';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d46bd07675d08116e85f8a4c7866de53'] = 'Ihr Geburtstagsgeschenk!';
-
-?>

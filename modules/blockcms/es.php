@@ -19,6 +19,7 @@ $_MODULE['<{blockcms}prestashop>blockcms_f2a6c498fb90ee345d997f888fce3b18'] = 'B
 $_MODULE['<{blockcms}prestashop>blockcms_8f08c1af47e3e9611289c1882befc3a8'] = 'No existe ningún bloque CMS';
 $_MODULE['<{blockcms}prestashop>blockcms_0a40c06f34e5c794a7f0d3085d17d63a'] = 'Lista de los bloques CMS de la derecha';
 $_MODULE['<{blockcms}prestashop>blockcms_965be994da393e5aa15bd3a2444c6ccf'] = 'Configuración de los links CMS a pie de página';
+$_MODULE['<{blockcms}prestashop>blockcms_32c532e462a1f85b1b103ed9989a1aba'] = 'Mostrar \"Creado por PrestaShop\"';
 $_MODULE['<{blockcms}prestashop>blockcms_fab8ca8250236ed20b96f9750e1eacc7'] = 'Mostrar links a pie de página';
 $_MODULE['<{blockcms}prestashop>blockcms_49ee3087348e8d44e1feda1917443987'] = 'Nombre';
 $_MODULE['<{blockcms}prestashop>blockcms_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';

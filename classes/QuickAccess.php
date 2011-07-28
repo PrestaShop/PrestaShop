@@ -70,7 +70,7 @@ class QuickAccessCore extends ObjectModel
 	*
 	* @return array QuickAccesses
 	*/
-	static public function getQuickAccesses($id_lang)
+	public static function getQuickAccesses($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *

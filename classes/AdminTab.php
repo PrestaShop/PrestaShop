@@ -159,10 +159,11 @@ abstract class AdminTabCore
 	protected $_includeVars = false;
 	protected $_includeContainer = true;
 
+	public $ajax = false;
+
 	public static $tabParenting = array(
 		'AdminProducts' => 'AdminCatalog',
 		'AdminCategories' => 'AdminCatalog',
-		'AdminImageResize' => 'AdminImages',
 		'AdminCMS' => 'AdminCMSContent',
 		'AdminCMSCategories' => 'AdminCMSContent',
 		'AdminOrdersStates' => 'AdminStatuses',
@@ -233,6 +234,14 @@ abstract class AdminTabCore
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 
+	/**
+	 * ajaxDisplay is the default ajax return sytem 
+	 * 
+	 * @return void
+	 */
+	public function displayAjax()
+	{
+	}
 	/**
 	 * Manage page display (form, list...)
 	 */
@@ -433,7 +442,7 @@ abstract class AdminTabCore
 
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] AS $fieldLang)
-			if (($empty = Tools::getValue($fieldLang.'_'.$defaultLanguage->id)) === false OR empty($empty))
+			if (($empty = Tools::getValue($fieldLang.'_'.$defaultLanguage->id)) === false OR $empty !== '0' AND empty($empty))
 				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$defaultLanguage->name;
 
 		/* Checking for maximum fields sizes */
@@ -504,6 +513,24 @@ abstract class AdminTabCore
 			if (file_exists(_PS_IMG_DIR_.$dir.$id.'-'.stripslashes($imageType['name']).'.'.$this->imageType) AND !unlink(_PS_IMG_DIR_.$dir.$id.'-'.stripslashes($imageType['name']).'.'.$this->imageType))
 				return false;
 		return true;
+	}
+
+	/**
+	 * ajaxPreProcess is a method called in ajax-tab.php before displayConf(). 
+	 * 
+	 * @return void
+	 */
+	public function ajaxPreProcess()
+	{
+	}
+
+	/**
+	 * ajaxProcess is the default handle method for request with ajax-tab.php
+	 * 
+	 * @return void
+	 */
+	public function ajaxProcess()
+	{
 	}
 
 	/**
@@ -1013,7 +1040,7 @@ abstract class AdminTabCore
 		{
 			$languages = Language::getLanguages(false);
 			foreach ($languages AS $language)
-				foreach ($rules['validateLang'] AS $field => $validation)
+				foreach (array_keys($rules['validateLang']) AS $field)
 					if (isset($_POST[$field.'_'.(int)($language['id_lang'])]))
 						$object->{$field}[(int)($language['id_lang'])] = $_POST[$field.'_'.(int)($language['id_lang'])];
 		}
@@ -1107,9 +1134,9 @@ abstract class AdminTabCore
 	public function displayConf()
 	{
 		if ($conf = Tools::getValue('conf'))
-			echo '<div class="conf">
-				<img src="../img/admin/ok2.png" />
-				'.$this->_conf[(int)($conf)].'
+			echo '
+			<div class="conf">
+				<img src="../img/admin/ok2.png" alt="" /> '.$this->_conf[(int)($conf)].'
 			</div>';
 	}
 
@@ -1259,6 +1286,7 @@ abstract class AdminTabCore
 		echo '<form method="post" action="'.self::$currentIndex;
 		if(Tools::getIsset($this->identifier))
 			echo '&'.$this->identifier.'='.(int)(Tools::getValue($this->identifier));
+		echo '&token='.$token;		
 		if (Tools::getIsset($this->table.'Orderby'))
 			echo '&'.$this->table.'Orderby='.urlencode($this->_orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->_orderWay));
 		echo '#'.$this->table.'" class="form">
@@ -1313,7 +1341,7 @@ abstract class AdminTabCore
 			<script type="text/javascript" src="../js/admin-dnd.js"></script>
 			';
 		}
-		echo '<table'.(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="'.(($id_category = (int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? substr($this->identifier,3,strlen($this->identifier)) : '').'"' : '' ).' class="table'.((array_key_exists($this->identifier,$this->identifiersDnd) AND ($this->_orderBy != 'position 'AND $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'" cellpadding="0" cellspacing="0">
+		echo '<table'.(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? substr($this->identifier,3,strlen($this->identifier)) : '').'"' : '' ).' class="table'.((array_key_exists($this->identifier,$this->identifiersDnd) AND ($this->_orderBy != 'position 'AND $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr class="nodrag nodrop">
 					<th>';
@@ -1485,7 +1513,7 @@ abstract class AdminTabCore
 			if (preg_match('/cms/Ui', $this->identifier))
 				$isCms = true;
 			$keyToGet = 'id_'.($isCms ? 'cms_' : '').'category'.(in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '');
-			foreach ($this->_list AS $i => $tr)
+			foreach ($this->_list AS $tr)
 			{
 				$id = $tr[$this->identifier];
 				echo '<tr'.(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="tr_'.(($id_category = (int)(Tools::getValue('id_'.($isCms ? 'cms_' : '').'category', '1'))) ? $id_category : '').'_'.$id.'_'.$tr['position'].'"' : '').($irow++ % 2 ? ' class="alt_row"' : '').' '.((isset($tr['color']) AND $this->colorOnBackground) ? 'style="background-color: '.$tr['color'].'"' : '').'>
@@ -1934,7 +1962,6 @@ abstract class AdminTabCore
 	{
 		if (sizeof($languages) == 1)
 			return false;
-		$defaultIso = Language::getIsoById($defaultLanguage);
 		$output = '
 		<div class="displayed_flag">
 			<img src="../img/l/'.$defaultLanguage.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
@@ -2162,6 +2189,10 @@ abstract class AdminTabCore
 
 			if ($this->validateField(Tools::getValue($key), $options))
 			{
+				// check if a method updateOptionFieldName is available
+				$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+				if (method_exists($this, $method_name))
+					$this->$method_name(Tools::getValue($key));
 				if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
 				{
 					$list = array();

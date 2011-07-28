@@ -11,5 +11,3 @@ $_MODULE['<{statsbestvouchers}prestashop>statsbestvouchers_df25596dc94d556af2f18
 $_MODULE['<{statsbestvouchers}prestashop>statsbestvouchers_b769cee333527b8dc6f3f67882e35a0b'] = 'Beste Gutscheine';
 $_MODULE['<{statsbestvouchers}prestashop>statsbestvouchers_8fc8a29113479bf76f0917c51795ca99'] = 'Eine Liste der besten Gutscheine';
 $_MODULE['<{statsbestvouchers}prestashop>statsbestvouchers_998e4c5c80f27dec552e99dfed34889a'] = 'CSV-Export';
-
-?>

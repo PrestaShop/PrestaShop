@@ -24,6 +24,58 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{*
+** Retro compatibility for PrestaShop version < 1.4.2.5 with a recent theme
+*}
+
+{* Two variable are necessaries to display the address with the new layout system *}
+{* Will be deleted for 1.5 version and more *}
+{if !isset($multipleAddresses)}
+	{$ignoreList.0 = "id_address"}
+	{$ignoreList.1 = "id_country"}
+	{$ignoreList.2 = "id_state"}
+	{$ignoreList.3 = "id_customer"}
+	{$ignoreList.4 = "id_manufacturer"}
+	{$ignoreList.5 = "id_supplier"}
+	{$ignoreList.6 = "date_add"}
+	{$ignoreList.7 = "date_upd"}
+	{$ignoreList.8 = "active"}
+	{$ignoreList.9 = "deleted"}	
+	
+	{* PrestaShop < 1.4.2 compatibility *}
+	{if isset($addresses)}
+		{$address_number = 0}
+		{foreach from=$addresses key=k item=address}
+			{counter start=0 skip=1 assign=address_key_number}
+			{foreach from=$address key=address_key item=address_content}
+				{if !in_array($address_key, $ignoreList)}
+					{$multipleAddresses.$address_number.ordered.$address_key_number = $address_key}
+					{$multipleAddresses.$address_number.formated.$address_key = $address_content}
+					{counter}
+				{/if}
+			{/foreach}
+		{$multipleAddresses.$address_number.object = $address}
+		{$address_number = $address_number  + 1}
+		{/foreach}
+	{/if}
+{/if}
+
+{* Define the style if it doesn't exist in the PrestaShop version*}
+{* Will be deleted for 1.5 version and more *}
+{if !isset($addresses_style)}
+	{$addresses_style.company = 'address_company'}
+	{$addresses_style.vat_number = 'address_company'}
+	{$addresses_style.firstname = 'address_name'}
+	{$addresses_style.lastname = 'address_name'}
+	{$addresses_style.address1 = 'address_address1'}
+	{$addresses_style.address2 = 'address_address2'}
+	{$addresses_style.city = 'address_city'}
+	{$addresses_style.country = 'address_country'}
+	{$addresses_style.phone = 'address_phone'}
+	{$addresses_style.phone_mobile = 'address_phone_mobile'}
+	{$addresses_style.alias = 'address_title'}
+{/if}
+
 <script type="text/javascript">
 //<![CDATA[
 	var baseDir = '{$base_dir_ssl}';
@@ -60,8 +112,8 @@
 				{/foreach}
 				</li>
 			{/foreach}
-			<li class="address_update"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id_address|intval}")}" title="{l s='Update'}">{l s='Update'}</a></li>
-			<li class="address_delete"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id_address|intval}&amp;delete")}" onclick="return confirm('{l s='Are you sure?'}');" title="{l s='Delete'}">{l s='Delete'}</a></li>
+			<li class="address_update"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id|intval}")}" title="{l s='Update'}">{l s='Update'}</a></li>
+			<li class="address_delete"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id|intval}&amp;delete")}" onclick="return confirm('{l s='Are you sure?'}');" title="{l s='Delete'}">{l s='Delete'}</a></li>
 		</ul>
 	{/foreach}
 	<p class="clear" />

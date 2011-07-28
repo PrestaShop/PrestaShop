@@ -25,7 +25,7 @@
 */
 
 nb_move_available = null;
-current_move = 0;
+current_move = -1;
 next_scene_is_at_right = true;
 
 function loadScene(id_scene){
@@ -41,7 +41,7 @@ function onSceneMove(){
 	else current_move--;
 	if (current_move == nb_move_available - 1)	$('#scenes .next').fadeOut();
 	else $('#scenes .next:hidden').fadeIn().css('display','block');
-	if (current_move == 0) $('#scenes .prev').fadeOut().css('display','block');
+	if (current_move == 0) $('#scenes .prev').fadeOut();
 	else $('#scenes .prev').fadeIn().css('display','block');
 	return true;
 }

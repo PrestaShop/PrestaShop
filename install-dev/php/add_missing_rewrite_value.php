@@ -34,6 +34,7 @@ function add_missing_rewrite_value()
 	WHERE ml.`url_rewrite` = \'\'
 	AND m.`page` != "index"
 	');
+	if (sizeof($pages) && is_array($pages))
 	foreach ($pages as $page)
 	{
 		Db::getInstance()->Execute('

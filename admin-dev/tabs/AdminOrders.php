@@ -96,7 +96,9 @@ class AdminOrders extends AdminTab
 						'{lastname}' => $customer->lastname,
 						'{id_order}' => (int)($order->id)
 					);
-					@Mail::Send((int)($order->id_lang), 'in_transit', Mail::l('Package in transit'), $templateVars, $customer->email, $customer->firstname.' '.$customer->lastname);
+					@Mail::Send((int)($order->id_lang), 'in_transit', Mail::l('Package in transit'), $templateVars,
+						$customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,
+						_PS_MAIL_DIR_, true);
 				}
 			}
 			else
@@ -120,13 +122,13 @@ class AdminOrders extends AdminTab
 					$order = new Order((int)$order->id);
 					$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
 					$templateVars = array();
-					if ($history->id_order_state == _PS_OS_SHIPPING_ AND $order->shipping_number)
+					if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') AND $order->shipping_number)
 						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-					elseif ($history->id_order_state == _PS_OS_CHEQUE_)
+					elseif ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
 						$templateVars = array(
 							'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
 							'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : ''));
-					elseif ($history->id_order_state == _PS_OS_BANKWIRE_)
+					elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
 						$templateVars = array(
 							'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
 							'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
@@ -182,7 +184,9 @@ class AdminOrders extends AdminTab
 							if (Validate::isLoadedObject($order))
 							{
 								$varsTpl = array('{lastname}' => $customer->lastname, '{firstname}' => $customer->firstname, '{id_order}' => $message->id_order, '{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $message->message : Tools::nl2br($message->message)));
-								if (@Mail::Send((int)($order->id_lang), 'order_merchant_comment', Mail::l('New message regarding your order'), $varsTpl, $customer->email, $customer->firstname.' '.$customer->lastname))
+								if (@Mail::Send((int)($order->id_lang), 'order_merchant_comment',
+									Mail::l('New message regarding your order'), $varsTpl, $customer->email,
+									$customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL, _PS_MAIL_DIR_, true))
 									Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
 							}
 						}
@@ -319,7 +323,9 @@ class AdminOrders extends AdminTab
 						else
 						{
 							Module::hookExec('orderSlip', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
-							@Mail::Send((int)($order->id_lang), 'credit_slip', Mail::l('New credit slip regarding your order'), $params, $customer->email, $customer->firstname.' '.$customer->lastname);
+							@Mail::Send((int)$order->id_lang, 'credit_slip', Mail::l('New credit slip regarding your order', $order->id_lang),
+							$params, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,
+							_PS_MAIL_DIR_, true);
 						}
 					}
 
@@ -333,7 +339,9 @@ class AdminOrders extends AdminTab
 							$currency = $context->currency;
 							$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
 							$params['{voucher_num}'] = $voucher->name;
-							@Mail::Send((int)($order->id_lang), 'voucher', Mail::l('New voucher regarding your order'), $params, $customer->email, $customer->firstname.' '.$customer->lastname);
+							@Mail::Send((int)($order->id_lang), 'voucher', Mail::l('New voucher regarding your order'),
+							$params, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL,
+							NULL, _PS_MAIL_DIR_, true);
 						}
 					}
 				}
@@ -589,7 +597,7 @@ class AdminOrders extends AdminTab
 		if (sizeof($sources))
 		{
 			echo '<br />
-			<fieldset style="width: 400px;"><legend><img src="../img/admin/tab-stats.gif" /> '.$this->l('Sources').'</legend><ul '.(sizeof($sources) > 3 ? 'style="overflow-y: scroll; height: 200px"' : '').'>';
+			<fieldset style="width: 400px;"><legend><img src="../img/admin/tab-stats.gif" /> '.$this->l('Sources').'</legend><ul '.(sizeof($sources) > 3 ? 'style="height: 200px; overflow-y: scroll; width: 360px;"' : '').'>';
 			foreach ($sources as $source)
 				echo '<li>
 						'.Tools::displayDate($source['date_add'], $context->language->id, true).'<br />
@@ -865,7 +873,7 @@ class AdminOrders extends AdminTab
 			<form action="'.$_SERVER['REQUEST_URI'].'&token='.$this->token.'" method="post" onsubmit="if (getE(\'visibility\').checked == true) return confirm(\''.$this->l('Do you want to send this message to the customer?', __CLASS__, true, false).'\');">
 			<fieldset style="width: 400px;">
 				<legend style="cursor: pointer;" onclick="$(\'#message\').slideToggle();$(\'#message_m\').slideToggle();return false"><img src="../img/admin/email_edit.gif" /> '.$this->l('New message').'</legend>
-				<div id="message_m" style="display: '.(Tools::getValue('message') ? 'none' : 'block').'">
+				<div id="message_m" style="display: '.(Tools::getValue('message') ? 'none' : 'block').'; overflow: auto; width: 400px;">
 					<a href="#" onclick="$(\'#message\').slideToggle();$(\'#message_m\').slideToggle();return false"><b>'.$this->l('Click here').'</b> '.$this->l('to add a comment or send a message to the customer').'</a>
 				</div>
 				<div id="message" style="display: '.(Tools::getValue('message') ? 'block' : 'none').'">
@@ -949,7 +957,6 @@ class AdminOrders extends AdminTab
 			'avoid' => array()
 			//'avoid' => array('address2')
 		);
-		
 		return AddressFormat::generateAddress($addressDelivery, $patternRules, '<br />');
 	}
 

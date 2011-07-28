@@ -111,7 +111,7 @@ class SupplierCore extends ObjectModel
 	  *
 	  * @return array Suppliers
 	  */
-	static public function getSuppliers($getNbProducts = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
+	public static function getSuppliers($getNbProducts = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
 	{
 		if (!$id_lang)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');
@@ -165,14 +165,14 @@ class SupplierCore extends ObjectModel
 	  * @return string name
 	  */
 	static protected $cacheName = array();
-	static public function getNameById($id_supplier)
+	public static function getNameById($id_supplier)
 	{
 		if (!isset(self::$cacheName[$id_supplier]))
 			self::$cacheName[$id_supplier] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `name` FROM `'._DB_PREFIX_.'supplier` WHERE `id_supplier` = '.(int)($id_supplier));
 		return self::$cacheName[$id_supplier];
 	}
-	static public function getIdByName($name)
+	public static function getIdByName($name)
 	{
 		$result = Db::getInstance()->getRow('
 		SELECT `id_supplier`
@@ -183,7 +183,7 @@ class SupplierCore extends ObjectModel
 		return false;
  	}
 
-	static public function getProducts($id_supplier, $id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true)
+	public static function getProducts($id_supplier, $id_lang, $p, $n, $orderBy = NULL, $orderWay = NULL, $getTotal = false, $active = true, $active_category = true)
 	{
 		if ($p < 1) $p = 1;
 	 	if (empty($orderBy) OR $orderBy == 'position') $orderBy = 'name';
@@ -206,7 +206,8 @@ class SupplierCore extends ObjectModel
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
+					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sqlGroups.'
 				)';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
@@ -231,11 +232,13 @@ class SupplierCore extends ObjectModel
 		AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
+					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sqlGroups.'
 				)
 		ORDER BY '.(($orderBy == 'id_product') ? 'p.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).'
 		LIMIT '.(((int)($p) - 1) * (int)($n)).','.(int)($n);
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		if (!$result)
 			return false;
@@ -258,7 +261,7 @@ class SupplierCore extends ObjectModel
 	* @param $id_supplier Supplier id
 	* @return boolean
 	*/
-	static public function supplierExists($id_supplier)
+	public static function supplierExists($id_supplier)
 	{
 		$row = Db::getInstance()->getRow('
 		SELECT `id_supplier`

@@ -530,7 +530,7 @@ class TwengaObj
 		}
 	}
 	
-	static public function setTranslationObject(Module $object)
+	public static function setTranslationObject(Module $object)
 	{
 		self::$translation_object = $object;
 	}
@@ -542,7 +542,7 @@ class TwengaException extends Exception
 	 * @var AbsTrustedShops
 	 */
 	private static $translation_object; 
-	static public function setTranslationObject(Module $object)
+	public static function setTranslationObject(Module $object)
 	{
 		self::$translation_object = $object;
 	}

@@ -31,8 +31,6 @@ class ContactControllerCore extends FrontController
 	{
 		$this->php_self = 'contact';
 		$this->ssl = true;
-
-		parent::__construct();
 	}
 
 	public function preProcess()

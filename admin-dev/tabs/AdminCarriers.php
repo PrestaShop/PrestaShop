@@ -131,9 +131,17 @@ class AdminCarriers extends AdminTab
 				<label>'.$this->l('Zone').'</label>
 				<div class="margin-form">';
 					$carrier_zones = $obj->getZones();
+					$carrier_zones_ids = array();
+					if (is_array($carrier_zones))
+						foreach($carrier_zones as $carrier_zone)
+							$carrier_zones_ids[] = $carrier_zone['id_zone'];
+					
 					$zones = Zone::getZones(false);
 					foreach ($zones AS $zone)
-						echo '<input type="checkbox" id="zone_'.$zone['id_zone'].'" name="zone_'.$zone['id_zone'].'" value="true" '.(Tools::getValue('zone_'.$zone['id_zone'], (is_array($carrier_zones) AND in_array(array('id_carrier' => $obj->id, 'id_zone' => $zone['id_zone'], 'name' => $zone['name'], 'active' => $zone['active']), $carrier_zones))) ? ' checked="checked"' : '').'><label class="t" for="zone_'.$zone['id_zone'].'">&nbsp;<b>'.$zone['name'].'</b></label><br />';
+						echo '<input type="checkbox" id="zone_'.$zone['id_zone'].'" name="zone_'.$zone['id_zone'].'" value="true" '.
+							Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids) ? ' checked="checked"' : '')).'>
+							<label class="t" for="zone_'.$zone['id_zone'].'"> <b>'.$zone['name'].'</b></label><br />';
+					
 				echo '<p>'.$this->l('The zone in which this carrier is to be used').'</p>
 	</div>
 				<label>'.$this->l('Group access').'</label>

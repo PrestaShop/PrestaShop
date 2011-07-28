@@ -30,7 +30,7 @@ if (!defined('_CAN_LOAD_FILES_'))
 
 class GCheckout extends PaymentModule
 {
-    function __construct()
+	public function __construct()
     {
         $this->name = 'gcheckout';
         $this->tab = 'payments_gateways';
@@ -49,7 +49,7 @@ class GCheckout extends PaymentModule
 			$this->warning = $this->l('No currency set for this module');
 	}
 
-	function install()
+	public function install()
 	{		
 		if (!parent::install() OR !$this->registerHook('payment') OR 
 				!$this->registerHook('paymentReturn') OR 
@@ -62,7 +62,7 @@ class GCheckout extends PaymentModule
 		return true;
 	}
 
-	function uninstall()
+	public function uninstall()
 	{
 		return (parent::uninstall() AND 
 			Configuration::deleteByName('GCHECKOUT_MERCHANT_ID') AND 
@@ -72,7 +72,7 @@ class GCheckout extends PaymentModule
 			Configuration::deleteByName('GCHECKOUT_NO_SHIPPING'));
 	}
 	
-	function getContent()
+	public function getContent()
 	{
 		global $currentIndex, $cookie;
 		
@@ -93,6 +93,12 @@ class GCheckout extends PaymentModule
 				Configuration::updateValue('GCHECKOUT_LOGS', 1);
 			else
 				Configuration::updateValue('GCHECKOUT_LOGS', 0);
+			
+			if (Tools::getValue('gcheckout_no_shipping'))
+				Configuration::updateValue('GCHECKOUT_NO_SHIPPING', 1);
+			else
+				Configuration::updateValue('GCHECKOUT_NO_SHIPPING', 0);
+
 			if (!sizeof($errors))
 				Tools::redirectAdmin($currentIndex.'&configure=gcheckout&token='.Tools::getValue('token').'&conf=4');
 			foreach ($errors as $error)
@@ -103,6 +109,11 @@ class GCheckout extends PaymentModule
 		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
 			<fieldset>
 			<legend><img src="'.__PS_BASE_URI__.'modules/gcheckout/logo.gif" />'.$this->l('Settings').'</legend>
+			<p>
+				<div class="warn">
+					'.$this->l('The API version used by this module is 2.0').'
+				</div>
+			</p>
 				<p>'.$this->l('Use the sandbox to test out the module then you can use the real mode if no problems arise. Remember to change your merchant key and ID according to the mode.').'</p>
 				<label>
 					'.$this->l('Mode').'
@@ -113,6 +124,11 @@ class GCheckout extends PaymentModule
 						<option value="sandbox"'.(Configuration::get('GCHECKOUT_MODE') == 'sandbox' ? ' selected="selected"' : '').'>'.$this->l('Sandbox').'&nbsp;&nbsp;</option>
 					</select>
 				</div>
+				<p>'.$this->l('Don\'t forget to specify the currency used in the Payment tabs under the currency section').'</p>
+				<label>
+					'.$this->l('Currency').'
+				</label>
+				'.$this->getCurrency()->iso_code.'
 				<p>'.$this->l('You can find these keys in your Google Checkout account > Settings > Integration. Sandbox and real mode both have these keys.').'</p>
 				<label>
 					'.$this->l('Merchant ID').'
@@ -156,7 +172,7 @@ class GCheckout extends PaymentModule
 		return $html;
 	}
 
-	function hookPayment($params)
+	public function hookPayment($params)
 	{
 		if (!$this->active)
 			return;
@@ -167,17 +183,16 @@ class GCheckout extends PaymentModule
 		return $this->display(__FILE__, 'payment.tpl');
 	}
 	
-	function hookPaymentReturn($params)
+	public function hookPaymentReturn($params)
 	{
 		if (!$this->active)
 			return;
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 	
-	function preparePayment()
+	public function preparePayment()
 	{
 		global $smarty, $cart, $cookie;
-		
 		
 		require_once(dirname(__FILE__).'/library/googlecart.php');
 		require_once(dirname(__FILE__).'/library/googleitem.php');
@@ -212,8 +227,11 @@ class GCheckout extends PaymentModule
 				utf8_decode($voucher['description']), 1, '-'.$voucher['value_real']));
 		
 		if (!Configuration::get('GCHECKOUT_NO_SHIPPING'))
-				$googleCart->AddShipping(new GooglePickUp($this->l('Shipping costs'), 
+		{
+			$carrier = new Carrier((int)($cart->id_carrier), (int)($cookie->id_lang));
+			$googleCart->AddShipping(new GoogleFlatRateShipping(utf8_decode($carrier->name), 
 				$cart->getOrderShippingCost($cart->id_carrier)));
+		}
 
 		$googleCart->SetEditCartUrl(Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'order.php');
 		$googleCart->SetContinueShoppingUrl(Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'order-confirmation.php');

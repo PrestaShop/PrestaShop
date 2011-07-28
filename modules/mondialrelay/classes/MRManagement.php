@@ -47,7 +47,7 @@ class MRManagement extends MondialRelay
 		
 	}
 	
-	static public function replaceAccentedCharacters($string)
+	public static function replaceAccentedCharacters($string)
 	{
 		$currentLocale = setlocale(LC_ALL, NULL);
 		setlocale(LC_ALL, 'en_US.UTF8');

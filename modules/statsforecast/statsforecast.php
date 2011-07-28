@@ -372,8 +372,8 @@ class StatsForecast extends Module
 				$this->_html .= '
 					<tr>
 						<td>'.$payment['module'].'</td>
-						<td style="text-align:center;padding:4px">'.(int)($payment['nb']).'<br />'.number_format((100 * $payment['nb'] / $ca['ventil']['nb']), 1, '.', ' ').' %</td>
-						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['total'], $currency).'<br />'.number_format((100 * $payment['total'] / $ca['ventil']['total']), 1, '.', ' ').' %</td>
+						<td style="text-align:center;padding:4px">'.(int)$payment['nb'].'<br />'.($ca['ventil']['nb'] ? number_format((100 * $payment['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').' %</td>
+						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['total'], $currency).'<br />'.($ca['ventil']['total'] ? number_format((100 * $payment['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').' %</td>
 						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['cart'], $currency).'</td>
 					</tr>';
 			$this->_html .= '
@@ -398,7 +398,7 @@ class StatsForecast extends Module
 					<td align="right">'.$catrow['orderQty'].'</td>
 					<td align="right">'.Tools::displayPrice($catrow['orderSum'], $currency).'</td>
 					<td align="right">'.number_format((100 * $catrow['orderQty'] / $this->t4), 1, '.', ' ').'%</td>
-					<td align="right">'.number_format((100 * $catrow['orderSum'] / $ca['ventil']['total']), 1, '.', ' ').'%</td>
+					<td align="right">'.($ca['ventil']['total'] ? number_format((100 * $catrow['orderSum'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
 					<td align="right">'.Tools::displayPrice($catrow['priveAvg'], $currency).'</td>
 				</tr>';
 			$this->_html .= '
@@ -433,8 +433,8 @@ class StatsForecast extends Module
 					<td>'.(isset($zone['name']) ? $zone['name'] : $this->l('Undefined')).'</td>
 					<td align="right">'.(int)($zone['nb']).'</td>
 					<td align="right">'.Tools::displayPrice($zone['total'], $currency).'</td>
-					<td align="right">'.number_format((100 * $zone['nb'] / $ca['ventil']['nb']), 1, '.', ' ').'%</td>
-					<td align="right">'.number_format((100 * $zone['total'] / $ca['ventil']['total']), 1, '.', ' ').'%</td>
+					<td align="right">'.($ca['ventil']['nb'] ? number_format((100 * $zone['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').'%</td>
+					<td align="right">'.($ca['ventil']['total'] ? number_format((100 * $zone['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
 				</tr>';
 		$this->_html .= '
 			</table>
@@ -457,8 +457,8 @@ class StatsForecast extends Module
 						<td>'.$currencyRow['name'].'</td>
 						<td align="right">'.(int)($currencyRow['nb']).'</td>
 						<td align="right">'.Tools::displayPrice($currencyRow['total'], $currency).'</td>
-						<td align="right">'.number_format((100 * $currencyRow['nb'] / $ca['ventil']['nb']), 1, '.', ' ').'%</td>
-						<td align="right">'.number_format((100 * $currencyRow['total'] / $ca['ventil']['total']), 1, '.', ' ').'%</td>
+						<td align="right">'.($ca['ventil']['nb'] ? number_format((100 * $currencyRow['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').'%</td>
+						<td align="right">'.($ca['ventil']['total'] ? number_format((100 * $currencyRow['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
 					</tr>';
 			$this->_html .= '
 			</table>

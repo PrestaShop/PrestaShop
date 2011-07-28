@@ -99,7 +99,7 @@ class OrderStateCore extends ObjectModel
 	* @param integer $id_lang Language id for state name
 	* @return array Order states
 	*/
-	static public function getOrderStates($id_lang)
+	public static function getOrderStates($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *
@@ -114,7 +114,7 @@ class OrderStateCore extends ObjectModel
 	* @param integer $id_order_state State ID
 	* @return boolean availability
 	*/
-	static public function invoiceAvailable($id_order_state)
+	public static function invoiceAvailable($id_order_state)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `invoice` AS ok

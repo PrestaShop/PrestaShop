@@ -70,23 +70,19 @@ if(!$status)
    *
    */
 
-switch ($root) {
-	case "request-received": {
+switch ($root) 
+{
+	case "request-received":
 		break;
-	}
-	case "error": {
+	case "error":
 		break;
-	}
-	case "diagnosis": {
+	case "diagnosis":
 		break;
-	}
-	case "checkout-redirect": {
+	case "checkout-redirect":
 		break;
-	}
-	case "merchant-calculation-callback": {
+	case "merchant-calculation-callback":
 		break;
-	}
-		case "new-order-notification": {
+	case "new-order-notification":
 			// secure_cart[0] => id_cart
 			// secure_cart[1] => secure_key
 
@@ -97,31 +93,28 @@ switch ($root) {
 			unset($cart);
 
 			$orderTotal = (float)($data[$root]['order-total']['VALUE']);
-			$gcheckout->validateOrder((int)$secure_cart[0], _PS_OS_PAYMENT_, (float)$orderTotal, 
+		$gcheckout->validateOrder((int)$secure_cart[0], Configuration::get('PS_OS_PAYMENT'), (float)$orderTotal, 
 				$gcheckout->displayName, NULL, array(), NULL, false, $secure_cart[1]);
 			$Gresponse->SendAck();
 			break;
-	}
-	case "order-state-change-notification": {
+	case "order-state-change-notification":
 		$Gresponse->SendAck();
 		break;
-	}
-	case "charge-amount-notification": {
+	case "charge-amount-notification":
 		$Gresponse->SendAck();
 		break;
-	}
-	case "chargeback-amount-notification": {
+	case "chargeback-amount-notification":
 		$Gresponse->SendAck();
 		break;
-	}
-	case "refund-amount-notification": {
+	case "refund-amount-notification":
 		$Gresponse->SendAck();
 		break;
-	}
-	case "risk-information-notification": {
+	case "risk-information-notification":
 		$Gresponse->SendAck();
 		break;
-	}
+	case 'authorization-amount-notification':
+		$Gresponse->SendAck();
+		break;
 	default:
 		$Gresponse->SendBadRequestStatus("Invalid or not supported Message");
 		break;

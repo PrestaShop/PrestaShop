@@ -91,6 +91,7 @@ class AdminReturn extends AdminTab
 				if (($id_order_return = (int)(Tools::getValue('id_order_return'))) AND Validate::isUnsignedId($id_order_return))
 				{
 					$orderReturn = new OrderReturn($id_order_return);
+					$order = new Order($orderReturn->id_order);
 					$customer = new Customer($orderReturn->id_customer);
 					$orderReturn->state = (int)(Tools::getValue('state'));
 					if ($orderReturn->save())
@@ -100,9 +101,11 @@ class AdminReturn extends AdminTab
 						'{lastname}' => $customer->lastname,
 						'{firstname}' => $customer->firstname,
 						'{id_order_return}' => $id_order_return,
-						'{state_order_return}' => $orderReturnState->name[(int)(Configuration::get('PS_LANG_DEFAULT'))]);
-						Mail::Send(clan, 'order_return_state', Mail::l('Your order return state has changed'), $vars, $customer->email, $customer->firstname.' '.$customer->lastname);
-						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
+						'{state_order_return}' => (isset($orderReturnState->name[(int)$order->id_lang]) ? $orderReturnState->name[(int)$order->id_lang] : $orderReturnState->name[(int)Configuration::get('PS_LANG_DEFAULT')]));
+						Mail::Send((int)$order->id_lang, 'order_return_state', Mail::l('Your order return state has changed', $order->id_lang),
+						$vars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL,
+							NULL, _PS_MAIL_DIR_, true);
+						Tools::redirectAdmin($currentIndex.'&conf=4&token='.$this->token);
 					}
 				}
 				else

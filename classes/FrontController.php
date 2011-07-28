@@ -115,6 +115,8 @@ class FrontControllerCore
 
 		ob_start();
 		
+		$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+
 		// Switch language if needed and init cookie language
 		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
 			$_GET['id_lang'] = $id_lang;
@@ -122,7 +124,7 @@ class FrontControllerCore
 		Tools::switchLanguage();
 		Tools::setCookieLanguage($cookie);
 		$currency = Tools::setCurrency($cookie);
-		
+
 		if (Validate::isLoadedObject($currency))
 			$smarty->ps_currency = $currency;
 		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
@@ -159,6 +161,7 @@ class FrontControllerCore
 		}
 
 		$_MODULES = array();
+
 		/* Cart already exists */
 		if ((int)$cookie->id_cart)
 		{
@@ -232,9 +235,11 @@ class FrontControllerCore
 		$smarty->ps_language = $language;
 
 		/* get page name to display it in body id */
+		// @todo check here
 		$pathinfo = pathinfo(__FILE__);
 		$page_name = Dispatcher::getInstance()->getController();
 		$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
+
 		$smarty->assign(Tools::getMetaTags($language->id, $page_name));
 		$smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
@@ -285,8 +290,6 @@ class FrontControllerCore
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE'),
-			'id_current_shop' => $this->id_current_shop,
-			'id_current_group_shop' => (int)$this->id_current_group_shop
 		));
 
 		// Deprecated
@@ -473,7 +476,7 @@ class FrontControllerCore
 	{
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
 		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery-1.4.4.min.js', _PS_JS_DIR_.'jquery/jquery.easing.1.3.js', _PS_JS_DIR_.'tools.js'));
-		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		if (Tools::isSubmit('live_edit') AND Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
 			$this->addJS(array(
 							_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js',
@@ -482,6 +485,9 @@ class FrontControllerCore
 							);
 			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css');
 		}
+		$language = new Language($this->context->language->id);
+		if ($language->is_rtl)
+			Tools::addCSS(_THEME_CSS_DIR_.'rtl.css');
 	}
 
 	public function process()
@@ -538,6 +544,8 @@ class FrontControllerCore
 	{
 		if (!$this->context)
 			$this->context = Context::getContext();
+		if (!self::$initialized)
+			$this->init();
 
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),
@@ -702,7 +710,7 @@ class FrontControllerCore
 	 */
 	public function addJS($js_uri)
 	{
-		if(!isset($this->js_files))
+		if (!isset($this->js_files))
 			$this->js_files = array();
 		// avoid useless operation...
 		if (in_array($js_uri, $this->js_files))

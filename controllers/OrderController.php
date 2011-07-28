@@ -58,7 +58,7 @@ class OrderControllerCore extends ParentOrderController
 
 		$orderTotal = $this->context->cart->getOrderTotal();
 		$minimalPurchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-		if ($this->context->cart->getOrderTotal(false) < $minimalPurchase && $this->step != -1)
+		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase && $this->step != -1)
 		{
 			$this->step = 0;
 			$this->errors[] = Tools::displayError('A minimum purchase total of').' '.Tools::displayPrice($minimalPurchase, $currency).
@@ -131,8 +131,8 @@ class OrderControllerCore extends ParentOrderController
 		$addressDelivery = new Address((int)($this->context->cart->id_address_delivery));
 		$addressInvoice = new Address((int)($this->context->cart->id_address_invoice));
 
-		$invoiceAddressFields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
-		$deliveryAddressFields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
+		$invoiceAddressFields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country, false, true);
+		$deliveryAddressFields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country, false, true);
 		
 		$this->context->smarty->assign(array(
 			'inv_adr_fields' => $invoiceAddressFields,

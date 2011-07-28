@@ -27,12 +27,12 @@
 
 class OrderDetailControllerCore extends FrontController
 {
+	public $auth = true;
+	public $authRedirection = 'history.php';
+	public $ssl = true;
+	
 	public function __construct()
 	{
-		$this->auth = true;
-		$this->authRedirection = 'history.php';
-		$this->ssl = true;
-
 		parent::__construct();
 
 		header("Cache-Control: no-cache, must-revalidate");
@@ -146,6 +146,7 @@ class OrderDetailControllerCore extends FrontController
 					'messages' => Message::getMessagesByOrderId((int)($order->id)),
 					'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
 					'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+			'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
 					'use_tax' => Configuration::get('PS_TAX'),
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 					'customizedDatas' => $customizedDatas));

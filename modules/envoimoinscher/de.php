@@ -115,5 +115,3 @@ $_MODULE['<{envoimoinscher}prestashop>envoimoinscher_a254c25adc7d10d7e9c4889484f
 $_MODULE['<{envoimoinscher}prestashop>envoimoinscher_4351cfebe4b61d8aa5efa1d020710005'] = 'Anzeigen';
 $_MODULE['<{envoimoinscher}prestashop>envoimoinscher_94966d90747b97d1f0f206c98a8b1ac3'] = 'Senden';
 $_MODULE['<{envoimoinscher}prestashop>envoimoinscher_eae21050d83c239d047c9eb0d3bc930e'] = 'Liste der Bestellungen zum Exportieren';
-
-?>

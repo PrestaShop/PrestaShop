@@ -2,7 +2,7 @@
 <module>
 	<name>hipay</name>
 	<displayName><![CDATA[Hipay]]></displayName>
-	<version><![CDATA[1]]></version>
+	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[Secure payement with Visa, Mastercard and European solutions.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

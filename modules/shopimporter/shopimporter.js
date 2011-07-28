@@ -373,7 +373,7 @@ function enableShowErrorsTruncate()
 	return false;
 }
 
-function displaySpecificOptions(moduleName, server, user, password, database, prefix)
+function displaySpecificOptions(moduleName, server, user, password, database, prefix, token)
 {
 	$.ajax({
 	       type: 'GET',
@@ -381,7 +381,7 @@ function displaySpecificOptions(moduleName, server, user, password, database, pr
 	       async: false,
 	       cache: false,
 	       dataType : "html",
-	       data: 'ajax=true&token='+this.token+'&displaySpecificOptions&moduleName='+moduleName+'&server='+ server+'&user='+user+'&password='+password+'&database='+database+'&prefix='+prefix ,
+	       data: 'ajax=true&token='+token+'&displaySpecificOptions&moduleName='+moduleName+'&server='+ server+'&user='+user+'&password='+password+'&database='+database+'&prefix='+prefix ,
 	       success: function(htmlData)
 	       {
 	       		if (htmlData != 'not_exist')
@@ -480,7 +480,8 @@ $(document).ready(function(){
 			password = $('#password').val();
 			database = $('#database').val();
 			prefix = $('#prefix').val();
-		displaySpecificOptions(moduleName, server, user, password, database, prefix);
+			token = globalAjaxShopImporterToken;
+		displaySpecificOptions(moduleName, server, user, password, database, prefix, token);
 		return false;
 	});	
 	
@@ -514,6 +515,7 @@ $(document).ready(function(){
 									shopImporter.password = $('#password').val();
 									shopImporter.database = $('#database').val();
 									shopImporter.prefix = $('#prefix').val();
+									shopImporter.token = globalAjaxShopImporterToken;
 									shopImporter.hasErrors = $('input[name=hasErrors]:radio:checked').val();
 									shopImporter.checkAndSaveConfig(shopImporter.save);
 								return false;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>trustedshops</name>
-	<displayName><![CDATA[Trusted Shops Customer Rating]]></displayName>
-	<version><![CDATA[1.2]]></version>
-	<description><![CDATA[Boost consumer confidence and turn more shoppers into buyers.]]></description>
+	<displayName><![CDATA[Trusted Shops trust solutions]]></displayName>
+	<version><![CDATA[1.3]]></version>
+	<description><![CDATA[Build confidence in your online shop with the Trusted Shops quality seal, buyer protection and customer rating.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payment_security]]></tab>
 	<confirmUninstall>Are you sure you want to delete all your settings?</confirmUninstall>

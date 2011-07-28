@@ -45,6 +45,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 	('CHECKUP_STOCK_GT', '3', NOW(), NOW()),
 	('FOOTER_CMS', '0_3|0_4', NOW(), NOW()),
 	('FOOTER_BLOCK_ACTIVATION', '0_3|0_4', NOW(), NOW()),
+	('FOOTER_POWEREDBY', 1, NOW(), NOW()),
 	('BLOCKADVERT_LINK', 0, NOW(), NOW()),
 	('BLOCKSTORE_IMG', 'store.jpg', NOW(), NOW());
 
@@ -109,7 +110,7 @@ CREATE TABLE `PREFIX_cms_block` (
 	`name` varchar(40) NOT NULL,
 	`location` tinyint(1) unsigned NOT NULL,
 	`position` int(10) unsigned NOT NULL default '0',
-	`display_store` tinyint(1) NOT NULL DEFAULT '1',
+	`display_store` tinyint(1) unsigned NOT NULL DEFAULT '1',
 	PRIMARY KEY (`id_cms_block`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

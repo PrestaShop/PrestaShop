@@ -138,7 +138,7 @@ class ProductCommentCriterion extends ObjectModel
 	 *
 	 * @return array Criterion
 	 */
-	static public function getByProduct($id_product, $id_lang)
+	public static function getByProduct($id_product, $id_lang)
 	{
 		if (!Validate::isUnsignedId($id_product) ||
 			!Validate::isUnsignedId($id_lang))
@@ -159,7 +159,7 @@ class ProductCommentCriterion extends ObjectModel
 	 *
 	 * @return array Criterions
 	 */
-	static public function getCriterions($id_lang, $type = false, $active = false)
+	public static function getCriterions($id_lang, $type = false, $active = false)
 	{
 		if (!Validate::isUnsignedId($id_lang))
 			die(Tools::displayError());
@@ -207,7 +207,7 @@ class ProductCommentCriterion extends ObjectModel
 		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_comment_criterion_product` WHERE `id_product_comment_criterion` = '.(int)$this->id);
 	}
 	
-	static public function getTypes()
+	public static function getTypes()
 	{
 		return array(1 => Tools::displayError('Valid for the entire catalog'), 2 => Tools::displayError('Restricted to some categories'), 3 => Tools::displayError('Restricted to some products'));
 	}

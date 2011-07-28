@@ -26,10 +26,26 @@
 */
 class ToolsInstall
 {
-	public static function checkDB ($srv, $login, $password, $name, $posted = true, $engine = false)
+	/**
+	 * checkDB will call to the 
+	 * 
+	 * @param string $srv 
+	 * @param string $login 
+	 * @param string $password 
+	 * @param string $name 
+	 * @param string $posted 
+	 * @return void
+	 */
+	public static function checkDB ($srv, $login, $password, $name, $posted = true)
 	{
+		// Don't include theses files if classes are already defined
+		if (!class_exists('Validate', false))
 		include_once(INSTALL_PATH.'/../classes/Validate.php');
+
+		if (!class_exists('Db', false))
 		include_once(INSTALL_PATH.'/../classes/Db.php');
+
+		if (!class_exists('MySQL', false))
 		include_once(INSTALL_PATH.'/../classes/MySQL.php');
 		
 		if($posted)
@@ -51,7 +67,7 @@ class ToolsInstall
 					return 8;
 		}
 
-		switch(MySQL::tryToConnect(trim($srv), trim($login), trim($password), trim($name), trim($engine)))
+		switch(MySQL::tryToConnect(trim($srv), trim($login), trim($password), trim($name)))
 		{
 			case 0:
 				if (MySQL::tryUTF8(trim($srv), trim($login), trim($password)))

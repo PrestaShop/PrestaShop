@@ -38,12 +38,15 @@ class LanguageCore extends ObjectModel
 	/** @var string 5-letter iso code */
 	public 		$language_code;
 
+	/** @var bool true if this language is right to left language */
+	public		$is_rtl = false;
+
 	/** @var boolean Status */
 	public 		$active = true;
 
 	protected 	$fieldsRequired = array('name', 'iso_code');
 	protected 	$fieldsSize = array('name' => 32, 'iso_code' => 2, 'language_code' => 5);
-	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'language_code' => 'isLanguageCode', 'active' => 'isBool');
+	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'language_code' => 'isLanguageCode', 'active' => 'isBool', 'is_rtl' => 'isBool');
 
 	protected 	$table = 'lang';
 	protected 	$identifier = 'id_lang';
@@ -69,9 +72,10 @@ class LanguageCore extends ObjectModel
 		$fields['name'] = pSQL($this->name);
 		$fields['iso_code'] = pSQL(strtolower($this->iso_code));
 		$fields['language_code'] = pSQL(strtolower($this->language_code));
+		$fields['is_rtl'] = (int)$this->is_rtl;
 		if (empty($fields['language_code']))
 			$fields['language_code'] = $fields['iso_code'];
-		$fields['active'] = (int)($this->active);
+		$fields['active'] = (int)$this->active;
 		return $fields;
 	}
 
@@ -103,7 +107,8 @@ class LanguageCore extends ObjectModel
 		return ($resUpdateSQL AND Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			Configuration::get('PS_HTACCESS_SPECIFIC')
+			Configuration::get('PS_HTACCESS_SPECIFIC'),
+			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 		));
 	}
 
@@ -118,7 +123,8 @@ class LanguageCore extends ObjectModel
 		return (Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			Configuration::get('PS_HTACCESS_SPECIFIC')
+			Configuration::get('PS_HTACCESS_SPECIFIC'),
+			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 		));
 	}
 
@@ -140,7 +146,7 @@ class LanguageCore extends ObjectModel
 	{
 		if (isset(self::$_checkedLangs[$iso_code]) AND self::$_checkedLangs[$iso_code])
 			return true;
-		foreach (self::getFilesList($iso_code, _THEME_NAME_, false, false, false, true) as $key => $file)
+		foreach (array_keys(self::getFilesList($iso_code, _THEME_NAME_, false, false, false, true)) as $key)
 			if (!file_exists($key))
 				return false;
 		self::$_checkedLangs[$iso_code] = true;
@@ -234,7 +240,7 @@ class LanguageCore extends ObjectModel
 			if ($modules)
 			{
 				$modList = Module::getModulesDirOnDisk();
-				foreach ($modList as $k => $mod)
+				foreach ($modList as $mod)
 				{
 					$modDir = _PS_MODULE_DIR_.$mod;
 					// Lang file
@@ -290,6 +296,7 @@ class LanguageCore extends ObjectModel
 
 		foreach($tables as $table)
 			foreach($table as $t)
+				if ($t != _DB_PREFIX_.'configuration_lang')
 				$langTables[] = $t;
 
 		Db::getInstance()->Execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
@@ -359,7 +366,7 @@ class LanguageCore extends ObjectModel
 			if (file_exists($key))
 			unlink($key);
 		$modList = scandir(_PS_MODULE_DIR_);
-		foreach ($modList as $k => $mod)
+		foreach ($modList as $mod)
 		{
 			self::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
 			$files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
@@ -368,7 +375,7 @@ class LanguageCore extends ObjectModel
 
 			if(file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
 			{
-				$return = unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
+				unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
 				$files = @scandir(_PS_MODULE_DIR_.$mod);
 				if (count($files) <= 2)
 					self::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
@@ -403,7 +410,8 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 									(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-									Configuration::get('PS_HTACCESS_SPECIFIC')
+									Configuration::get('PS_HTACCESS_SPECIFIC'),
+									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 								);
 	}
 
@@ -426,7 +434,8 @@ class LanguageCore extends ObjectModel
 		Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 								(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 								(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-								Configuration::get('PS_HTACCESS_SPECIFIC')
+								Configuration::get('PS_HTACCESS_SPECIFIC'),
+								(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 							);
 
 		return $result;
@@ -566,7 +575,8 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 							(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 							(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-							Configuration::get('PS_HTACCESS_SPECIFIC')
+							Configuration::get('PS_HTACCESS_SPECIFIC'),
+							(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 							);
 	}
 

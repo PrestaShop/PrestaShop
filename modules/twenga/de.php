@@ -18,14 +18,11 @@ $_MODULE['<{twenga}prestashop>twenga_5f77daeb6fc30c87e051e5b5d11b034c'] = 'Einig
 $_MODULE['<{twenga}prestashop>twenga_da8ac71ff9563d9a5dd0f8894c8bc0ac'] = 'Listen Sie Ihre Produkte auf Twenga.de und verfolgen Sie die von Twenga generierten Verkäufe';
 $_MODULE['<{twenga}prestashop>twenga_0ed6e223384a822859461ca6bab72256'] = 'Sie sind schon bei Twenga Ready to Sell angemeldet ? ';
 $_MODULE['<{twenga}prestashop>twenga_63f97ef2cb80a6cf0a8fa98453577601'] = 'Schritt 1 : Kopieren Sie Ihren Twenga Hashkey, den Sie per Email von Twenga erhalten haben oder in  Ihrem Twenga Ready to Sell Konto unter (tools>tracking>hashkey) finden. Klicken auch auf \"Test das Tracking\".';
-$_MODULE['<{twenga}prestashop>twenga_5ac315e486b693637a06f490f308dc67'] = 'Schritt 2 : Kehren Sie hier zurück, und kopieren Sie den Hashkey in das Feld „hash key“. Klicken Sie auf Speichern  und Aktivieren.';
 $_MODULE['<{twenga}prestashop>twenga_f5cff2635ec9ecf0249d33a7656f61c5'] = 'Sie sind noch nicht bei Twenga Ready to Sell angemeldet ?';
 $_MODULE['<{twenga}prestashop>twenga_f9c31cabc1e6928068e7394f5453e759'] = 'Wie listen Sie Ihre Produkte auf Twenga.de:';
 $_MODULE['<{twenga}prestashop>twenga_87645feb1c92efecd6a6946d1b498fd7'] = 'Schritt 1 : Klicken auf dieses Link um sich bei Twenga Ready to Sell anzumelden.';
 $_MODULE['<{twenga}prestashop>twenga_b26917587d98330d93f87808fc9d7267'] = 'melden Sie sich an';
 $_MODULE['<{twenga}prestashop>twenga_1d79f46fad241d4984e47165ca578ee9'] = '(Fehler aufgetreten: Bitte kontaktieren Sie Twenga)';
-$_MODULE['<{twenga}prestashop>twenga_195b3777fa9dcc91d27b86391e7f9a49'] = 'Schritt 2 : Füllen Sie das Twenga Anmeldeformular aus  ';
-$_MODULE['<{twenga}prestashop>twenga_767a31e960aa760c42722d2e7373b2ad'] = 'Schritt 3 : Sobald Sie den Twenga hash-key per Email erhalten haben,  kehren Sie hier zurück, und kopieren kopieren Sie den Hashkey in das Feld „hash key“. Klicken Sie auf Speichern und Aktivieren.';
 $_MODULE['<{twenga}prestashop>twenga_bc88fe7063d7e7da0bf08003f21a1ad2'] = 'Steigern Sie Ihre Besucherzahlen  - 500 geschenkte Klicks';
 $_MODULE['<{twenga}prestashop>twenga_2d82e5a3931e70d2c94b9ba6e674edbc'] = 'Listen Sie Ihre Produkte kostenlos und erfolgsbasiert auf Twenga: Sie zahlen nur, wenn Sie auch verkaufen ';
 $_MODULE['<{twenga}prestashop>twenga_f9372612b4e86b53c45d31d7ca3402bb'] = 'Sehen hier Twenga Preisliste';
@@ -62,5 +59,3 @@ $_MODULE['<{twenga}prestashop>twenga_cd07439a0c70b97a595de73218094a36'] = 'Klick
 $_MODULE['<{twenga}prestashop>twenga_a13367a8e2a3f3bf4f3409079e3fdf87'] = 'Aktivieren';
 $_MODULE['<{twenga}prestashop>twenga_09d0c75c525a2cb0bf2310e447ea8a45'] = 'Der Hash Key muss für genutzte Twenga API eingestellt werden.';
 $_MODULE['<{twenga}prestashop>twenga_12a4f08255155a828e10c2c513595fe1'] = 'Einige Parameter fehlen, ansonsten existiert die Seite nicht';
-
-?>

@@ -127,7 +127,6 @@ class CurrencyCore extends ObjectModel
 	{
 		if (!is_array($selection) OR !Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
 			die(Tools::displayError());
-		$result = true;
 		foreach ($selection AS $id)
 		{
 			$obj = new Currency((int)($id));
@@ -238,7 +237,7 @@ class CurrencyCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
-	static public function getCurrency($id_currency)
+	public static function getCurrency($id_currency)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT *
@@ -247,7 +246,7 @@ class CurrencyCore extends ObjectModel
 		AND `id_currency` = '.(int)($id_currency));
 	}
 
-	static public function getIdByIsoCode($iso_code)
+	public static function getIdByIsoCode($iso_code)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `id_currency`
@@ -319,10 +318,10 @@ class CurrencyCore extends ObjectModel
 		return new Currency($id_currency);
 	}
 
-	static public function refreshCurrencies()
+	public static function refreshCurrencies()
 	{
 		// Parse
-		if (!$feed = @simplexml_load_file('http://www.prestashop.com/xml/currencies.xml'))
+		if (!$feed = Tools::simplexml_load_file('http://www.prestashop.com/xml/currencies.xml'))
 			return Tools::displayError('Cannot parse feed.');
 
 		// Default feed currency (EUR)
@@ -343,13 +342,13 @@ class CurrencyCore extends ObjectModel
 	 * @deprecated as of 1.5 use $context->currency instead
 	 * @return Currency
 	 */
-	static public function getCurrent()
+	public static function getCurrent()
 	{
 		Tools::displayAsDeprecated();
 		return Context::getContext()->currency;
 	}
 
-	static public function getCurrencyInstance($id)
+	public static function getCurrencyInstance($id)
 	{
 		if (!array_key_exists($id, self::$currencies))
 			self::$currencies[(int)($id)] = new Currency($id);

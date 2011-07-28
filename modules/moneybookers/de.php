@@ -11,14 +11,13 @@ $_MODULE['<{moneybookers}prestashop>confirmation_df194447dfecf36bb8043bd8d94feed
 $_MODULE['<{moneybookers}prestashop>confirmation_047e219d25b398033511b18041dbfd7a'] = 'Ihre Bestellung wird verschickt, sobald wir Ihre Banküberweisung erhalten haben.';
 $_MODULE['<{moneybookers}prestashop>confirmation_8de637e24570c1edb0357826a2ad5aea'] = 'Wir haben ein Problem bei Ihrer Bestellung festgestellt. Wenn Sie denken, dies sei ein Fehler, können Sie an unseren';
 $_MODULE['<{moneybookers}prestashop>moneybookers-currency-error_6484c945379d81c37ac734c9768605cf'] = 'Sie können mit Ihren derzeitigen Währung nicht mit Moneybookers bezahlen, wählen Sie bitte eine andere Währung';
-$_MODULE['<{moneybookers}prestashop>moneybookers_27266fe4d37bf06589c7c6dbf2d5c067'] = 'Zahlung mit';
 $_MODULE['<{moneybookers}prestashop>moneybookers_6861a58e2be4956b3f2fd6420fe6c28c'] = 'Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_a356736cbcf740f8648d71067fca090d'] = 'Akzeptiert Zahlungen per Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_fa214007826415a21a8456e3e09f999d'] = 'Sie sind sicher, dass Sie Ihre Daten löschen wollen?';
 $_MODULE['<{moneybookers}prestashop>moneybookers_088b74050a381d98fca38d5990b097be'] = 'Sie nutzen zur Zeit die Standard-E-Mail-Adresse von Moneybookers, Sie müssen Ihre eigene E-Mail-Adresse verwenden';
-$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Unmöglich,den Aktivierungs-Server zu kontaktieren, bitte versuchen Sie es später';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b863542eebcb27fa230b647b5dd07819'] = 'Konto-Bestätigung fehlgeschlagen, Ihre E-Mail könnte falsch sein';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d70c5b5767846906e0abe68498db887b'] = 'E-Mail-Aktivierung erfolgreich, Sie können nun Ihr Kennwort bestâtigen';
+$_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Unmöglich,den Aktivierungs-Server zu kontaktieren, bitte versuchen Sie es später';
 $_MODULE['<{moneybookers}prestashop>moneybookers_7757ea03f2a0893e36c7916a2ad07ef8'] = 'Das E-Mail-Feld ist erforderlich';
 $_MODULE['<{moneybookers}prestashop>moneybookers_aa1c444c2ee2f620d5b349fedfa68ba2'] = 'Kennwortbestätigung fehlgeschlagen, max. Versuchszahl überschritten (3 pro Stunde)';
 $_MODULE['<{moneybookers}prestashop>moneybookers_cdbef58d093e0ff38e13686a669e9fee'] = 'Kennwortbestätigung fehlgeschlagen, Ihr Kennwort könnte falsch sein';
@@ -26,7 +25,6 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_cd1dfa342c3c11c17ede212e6429ca0
 $_MODULE['<{moneybookers}prestashop>moneybookers_2e531f9ad978a2a1a88a00ae0d4dc78e'] = 'Das Kennwortfeld ist erforderlich';
 $_MODULE['<{moneybookers}prestashop>moneybookers_a9dd80641753cafc9c967e317ba92a28'] = 'Über Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_8342dda89e8c20bb92916fbe052c583a'] = 'Freuen Sie sich auf Sonderkonditionen, die Moneybookers für Prestashop-Shopbetreiber vorbereitet hat!';
-$_MODULE['<{moneybookers}prestashop>moneybookers_80346621324d2aa2c1a953100bad1711'] = 'Aus Moneybookers wird Skrill!';
 $_MODULE['<{moneybookers}prestashop>moneybookers_5138738b54f0d4bdf7c72780db651abc'] = 'Kontoeröffnung';
 $_MODULE['<{moneybookers}prestashop>moneybookers_41992c760318e60740f7a9b2819af191'] = 'Starten Sie mit der Eröffung eines ';
 $_MODULE['<{moneybookers}prestashop>moneybookers_c0302a6fbca061af831bc12f06cadb2f'] = 'Gratis-Kontos';
@@ -37,7 +35,6 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_b0e8c8326985417a5efdd6649f02e38
 $_MODULE['<{moneybookers}prestashop>moneybookers_d5086eeb1bc1994c5abf945fd79d4246'] = 'erhalten Sie eine bevorzugte Provision!';
 $_MODULE['<{moneybookers}prestashop>moneybookers_68db2cda800ddb2ae307c60b0a96252f'] = 'Online Bezahlsystem von Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b9c758264b134743b13a85ca4055c629'] = 'Monatlicher Umsatz über Moneybookers';
-$_MODULE['<{moneybookers}prestashop>moneybookers_826ba0a71ab6e534b04bfdd4dd98ac9e'] = 'Für Verkäufer mit Umsatz über 100,000 € kann verhandelt werden.';
 $_MODULE['<{moneybookers}prestashop>moneybookers_11c8ff1cde03aa19406dfe5971b92553'] = 'Moneybookers eWallet';
 $_MODULE['<{moneybookers}prestashop>moneybookers_223b661f7b13d33498a9274bb10e3538'] = 'Quick Checkout Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_f284fe53995a4cc2e1e099cb1e511ec8'] = 'Konto-Bestätigung';
@@ -69,5 +66,4 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_554fd8768f165251646ce21ba499820
 $_MODULE['<{moneybookers}prestashop>moneybookers_a190bc880b04cf478e0370d1b315a5a3'] = 'Alle Logos in 1 Block';
 $_MODULE['<{moneybookers}prestashop>moneybookers_852d04b5f455aaf5264e9a8c561ced71'] = '1 Block für jedes Logo';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d4dccb8ca2dac4e53c01bd9954755332'] = 'Speichern Sie die Einstellungen';
-
-?>
+$_MODULE['<{moneybookers}prestashop>moneybookers_27266fe4d37bf06589c7c6dbf2d5c067'] = 'Zahlung mit';

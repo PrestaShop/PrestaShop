@@ -453,7 +453,7 @@ abstract class PrepaidServices extends PaymentModule
 			else
 				$order->total_paid_real += $amount;
 
-			$os = _PS_OS_PAYMENT_;
+			$os = Configuration::get('PS_OS_PAYMENT');
 			if ($order->total_paid != $order->total_paid_real)
 				$os = Configuration::get($this->prefix.'ORDER_STATE_PART_ID');
 
@@ -559,7 +559,7 @@ abstract class PrepaidServices extends PaymentModule
 							 'payment_name' => $this->displayName,
 							 'module_name' => $this->name));
 
-		return $this->display(__FILE__, 'payment.tpl');
+		return $this->display(_MODULE_DIR_.'/'.$this->name.'/', 'payment.tpl');
 	}
 
 
@@ -571,7 +571,7 @@ abstract class PrepaidServices extends PaymentModule
 			return;
 
 		$smarty->assign('payment_name', $this->displayName);
-		return $this->display(__FILE__, $this->name.'-confirmation.tpl');
+		return $this->display(_MODULE_DIR_.'/'.$this->name.'/', $this->name.'-confirmation.tpl');
 	}
 
 

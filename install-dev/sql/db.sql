@@ -61,7 +61,7 @@ CREATE TABLE `PREFIX_attachment` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `file` varchar(40) NOT NULL,
   `file_name` varchar(128) NOT NULL,
-  `mime` varchar(64) NOT NULL,
+  `mime` varchar(128) NOT NULL,
   PRIMARY KEY  (`id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -288,6 +288,16 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   `meta_description` varchar(255) DEFAULT NULL,
   UNIQUE KEY `category_lang_index` (`id_cms_category`,`id_lang`),
   KEY `category_name` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_compare_product` (
+  `id_compare_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_product` int(10) unsigned NOT NULL,
+  `id_guest` int(10) unsigned NOT NULL,
+  `id_customer` int(10) unsigned NOT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY  (`id_compare_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_configuration` (
@@ -739,7 +749,7 @@ CREATE TABLE `PREFIX_hook_module_exceptions` (
 CREATE TABLE `PREFIX_image` (
   `id_image` int(10) unsigned NOT NULL auto_increment,
   `id_product` int(10) unsigned NOT NULL,
-  `position` tinyint(2) unsigned NOT NULL default '0',
+  `position` smallint(2) unsigned NOT NULL default '0',
   `cover` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_image`),
   KEY `image_product` (`id_product`),
@@ -776,6 +786,7 @@ CREATE TABLE `PREFIX_lang` (
   `active` tinyint(3) unsigned NOT NULL default '0',
   `iso_code` char(2) NOT NULL,
   `language_code` char(5) NOT NULL,
+  `is_rtl` TINYINT(1) NOT NULL default '0',
   PRIMARY KEY  (`id_lang`),
   KEY `lang_iso_code` (`iso_code`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

@@ -27,7 +27,7 @@ class DejalaCart extends ObjectModel
 	private static $INSTANCES = array() ;
 	private $djlCart ;
 
-	static public function getInstance($id) 
+	public static function getInstance($id) 
 	{
 		if (!isset(self::$INSTANCES[$id]))
         	self::$INSTANCES[$id] = new DejalaCart($id);

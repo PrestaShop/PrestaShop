@@ -1,7 +1,7 @@
 /* PHP:add_new_tab(AdminCounty, fr:Comtés|es:Condados|en:Counties|de:Counties|it:Counties,  5); */;
 
 ALTER TABLE `PREFIX_tax_rule` ADD `county_behavior` INT NOT NULL AFTER `state_behavior`;
-ALTER TABLE `PREFIX_tax_rule` ADD `id_county` INT NOT NULL AFTER `state_behavior`;
+ALTER TABLE `PREFIX_tax_rule` ADD `id_county` INT NOT NULL AFTER `id_country`;
 
 ALTER TABLE `PREFIX_tax_rule` ADD UNIQUE (
 `id_tax_rules_group` ,

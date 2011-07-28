@@ -111,15 +111,6 @@ class AdminCatalog extends AdminTab
 			}
 			$this->attributeGenerator->postProcess();
 		}
-		elseif (isset($_GET['imageresize']))
-		{
-			if (!isset($this->imageResize))
-			{
-				include_once(PS_ADMIN_DIR.'/tabs/AdminImageResize.php');
-				$this->imageResize = new AdminImageResize();
-			}
-			$this->imageResize->postProcess();
-		}
 		$this->adminProducts->postProcess($this->token);
 	}
 
@@ -157,15 +148,6 @@ class AdminCatalog extends AdminTab
 				$this->attributeGenerator = new AdminAttributeGenerator();
 			}
 			$this->attributeGenerator->displayForm();
-		}
-		elseif (isset($_GET['imageresize']))
-		{
-			if (!isset($this->imageResize))
-			{
-				include_once(PS_ADMIN_DIR.'/tabs/AdminImageResize.php');
-				$this->imageResize = new AdminImageResize();
-			}
-			$this->imageResize->displayForm();
 		}
 		elseif (!isset($_GET['editImage']))
 		{

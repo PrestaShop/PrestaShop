@@ -45,12 +45,16 @@ class UpsCarrier extends CarrierModule
 	private $_weightUnitList = array('KG' => 'KGS', 'KGS' => 'KGS', 'LBS' => 'LBS', 'LB' => 'LBS');
 	private $_moduleName = 'upscarrier';
 
+	/*
+	** Construct Method
+	**
+	*/
+
 	public function __construct()
 	{
-		set_time_limit(0);
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -96,6 +100,8 @@ class UpsCarrier extends CarrierModule
 			'UPS_CARRIER_PASSWORD' => $this->l('UPS Password'),
 			'UPS_CARRIER_SHIPPER_ID' => $this->l('MyUps ID'),
 			'UPS_CARRIER_API_KEY' => $this->l('UPS API Key'),
+			'UPS_CARRIER_PACKAGING_WEIGHT' => $this->l('Packaging weight'),
+			'UPS_CARRIER_HANDLING_FEE' => $this->l('Handling fee'),
 			'UPS_CARRIER_PICKUP_TYPE' => $this->l('UPS Pickup Type'),
 			'UPS_CARRIER_PACKAGING_TYPE' => $this->l('UPS Packaging Type'),
 			'UPS_CARRIER_RATE_SERVICE_GROUP' => $this->l('UPS Rate Service Group'),
@@ -421,6 +427,7 @@ class UpsCarrier extends CarrierModule
 	private function _displayFormGeneral()
 	{
 		global $cookie;
+		$configCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		$html = '<script>
 			$(document).ready(function() {
@@ -462,6 +469,17 @@ class UpsCarrier extends CarrierModule
 						<input type="text" size="20" name="ups_carrier_api_key" value="'.Tools::getValue('ups_carrier_api_key', Configuration::get('UPS_CARRIER_API_KEY')).'" />
 						<p><a href="https://www.ups.com/upsdeveloperkit" target="_blank">' . $this->l('Please click here to get your UPS API Key.') . '</a></p>
 					</div>
+					<br /><br />
+					<label>'.$this->l('Packaging Weight').' : </label>
+					<div class="margin-form">
+						<input type="text" size="5" name="ups_carrier_packaging_weight" value="'.Tools::getValue('ups_carrier_packaging_weight', Configuration::get('UPS_CARRIER_PACKAGING_WEIGHT')).'" />
+						'.Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT')).'
+					</div>
+					<label>'.$this->l('Handling Fee').' : </label>
+					<div class="margin-form">
+						<input type="text" size="5" name="ups_carrier_handling_fee" value="'.Tools::getValue('ups_carrier_handling_fee', Configuration::get('UPS_CARRIER_HANDLING_FEE')).'" />
+						'.$configCurrency->sign.'
+					</div>	
 				</fieldset>
 
 				<fieldset style="border: 0px;">
@@ -575,7 +593,7 @@ class UpsCarrier extends CarrierModule
 								foreach($this->_calculModeList as $kcalculmode => $vcalculmode)
 									$html .= '<option value="'.$kcalculmode.'" '.($kcalculmode == (Tools::getValue('ups_carrier_calcul_mode', Configuration::get('UPS_CARRIER_CALCUL_MODE'))) ? 'selected="selected"' : '').'>'.$vcalculmode.'</option>';
 					$html .= '</select>
-					<p>' . $this->l('Using the calcul mode "All items in one package" will automatically use default packaging size, packaging type and delivery services. Specific configurations for categories or product won\'t be used.') . '</p>
+					<p>' . $this->l('Using the calcul mode "All items in one package" will automatically use default packaging size, packaging type and delivery services. Specifics configurations for categories or product won\'t be used.') . '</p>
 					</div>';
 
 					if (Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'))
@@ -660,6 +678,8 @@ class UpsCarrier extends CarrierModule
 			Configuration::updateValue('UPS_CARRIER_PASSWORD', Tools::getValue('ups_carrier_password'));
 			Configuration::updateValue('UPS_CARRIER_SHIPPER_ID', Tools::getValue('ups_carrier_shipper_id'));
 			Configuration::updateValue('UPS_CARRIER_API_KEY', Tools::getValue('ups_carrier_api_key'));
+			Configuration::updateValue('UPS_CARRIER_PACKAGING_WEIGHT', Tools::getValue('ups_carrier_packaging_weight'));
+			Configuration::updateValue('UPS_CARRIER_HANDLING_FEE', Tools::getValue('ups_carrier_handling_fee'));
 			Configuration::updateValue('UPS_CARRIER_PICKUP_TYPE', Tools::getValue('ups_carrier_pickup_type'));
 			Configuration::updateValue('UPS_CARRIER_PACKAGING_TYPE', Tools::getValue('ups_carrier_packaging_type'));
 			Configuration::updateValue('UPS_CARRIER_ADDRESS1', Tools::getValue('ups_carrier_address1'));
@@ -687,6 +707,8 @@ class UpsCarrier extends CarrierModule
 			Configuration::updateValue('UPS_CARRIER_PASSWORD', Tools::getValue('ups_carrier_password')) AND
 			Configuration::updateValue('UPS_CARRIER_SHIPPER_ID', Tools::getValue('ups_carrier_shipper_id')) AND
 			Configuration::updateValue('UPS_CARRIER_API_KEY', Tools::getValue('ups_carrier_api_key')) AND
+			Configuration::updateValue('UPS_CARRIER_PACKAGING_WEIGHT', Tools::getValue('ups_carrier_packaging_weight')) AND
+			Configuration::updateValue('UPS_CARRIER_HANDLING_FEE', Tools::getValue('ups_carrier_handling_fee')) AND
 			Configuration::updateValue('UPS_CARRIER_PICKUP_TYPE', Tools::getValue('ups_carrier_pickup_type')) AND
 			Configuration::updateValue('UPS_CARRIER_PACKAGING_TYPE', Tools::getValue('ups_carrier_packaging_type')) AND
 			Configuration::updateValue('UPS_CARRIER_POSTAL_CODE', Tools::getValue('ups_carrier_postal_code')) AND
@@ -1348,7 +1370,7 @@ class UpsCarrier extends CarrierModule
 		foreach ($wsParams as $k => $v)
 			if ($k != 'products')
 			$paramHash .= '/'.$v;
-		return md5($productHash.$paramHash);
+		return md5($productHash.$paramHash.Configuration::get('UPS_CARRIER_CALCUL_MODE'));
 	}
 
 	public function getOrderShippingCostCache($wsParams)
@@ -1460,6 +1482,7 @@ class UpsCarrier extends CarrierModule
 				if ($product['weight'])
 					$weight += ($product['weight'] * $product['quantity']);
 			}
+			$weight += Tools::getValue('ups_carrier_packaging_weight', Configuration::get('UPS_CARRIER_PACKAGING_WEIGHT'));
 
 			// Get service in adequation with carrier and check if available
 			$serviceSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'ups_rate_service_code` WHERE `active` = 1 AND `id_carrier` = '.(int)($this->id_carrier));
@@ -1469,10 +1492,10 @@ class UpsCarrier extends CarrierModule
 			$wsParams['service'] = $serviceSelected['code'];
 			$wsParams['package_list'] = array();
 			$wsParams['package_list'][] = array(
-				'width' => ($width > 0 ? $width : 1),
-				'height' => ($height > 0 ? $height : 1),
-				'depth' => ($depth > 0 ? $depth : 1),
-				'weight' => ($weight > 0 ? $weight : 1),
+				'width' => ($width > 0 ? $width : 7),
+				'height' => ($height > 0 ? $height : 3),
+				'depth' => ($depth > 0 ? $depth : 5),
+				'weight' => ($weight > 0 ? $weight : 0.5),
 				'packaging_type' => Configuration::get('UPS_CARRIER_PACKAGING_TYPE'),
 			);
 		}
@@ -1493,10 +1516,10 @@ class UpsCarrier extends CarrierModule
 			$wsParams['service'] = $serviceSelected['code'];
 			for ($qty = 0; $qty < $product['quantity']; $qty++)
 				$wsParams['package_list'][] = array(
-					'width' => ($product['width'] ? $product['width'] : 1),
-					'height' => ($product['height'] ? $product['height'] : 1),
-					'depth' => ($product['depth'] ? $product['depth'] : 1),
-					'weight' => ($product['weight'] ? $product['weight'] : 1),
+						'width' => ($product['width'] ? $product['width'] : 7),
+						'height' => ($product['height'] ? $product['height'] : 3),
+						'depth' => ($product['depth'] ? $product['depth'] : 5),
+						'weight' => ($product['weight'] ? $product['weight'] : 0.5),
 					'packaging_type' => ($config['packaging_type_code'] ? $config['packaging_type_code'] : Configuration::get('UPS_CARRIER_PACKAGING_TYPE')),
 				);
 
@@ -1514,7 +1537,7 @@ class UpsCarrier extends CarrierModule
 		// If webservice return a cost, we add it, else, we return the original shipping cost
 		$result = $this->getUpsShippingCost($wsParams);
 		if ($result['connect'] && $result['cost'] > 0)
-			return ($cost + $result['cost']);
+			return ($cost + $result['cost'] + Tools::getValue('ups_carrier_handling_fee', Configuration::get('UPS_CARRIER_HANDLING_FEE')));
 		return false;
 	}
 

@@ -183,7 +183,7 @@ class AdminPayment extends AdminTab
 					if ($nameId == 'country' && isset($module->limited_countries) &&
 						count($module->limited_countries))
 					{
-						if (in_array($item['iso_code'], $module->limited_countries))
+						if (in_array(strtoupper($item['iso_code']), array_map('strtoupper', $module->limited_countries)))
 							echo '<input  type="checkbox" name="'.$module->name.'_'.
 								$nameId.'[]" value="'.$item['id_'.$nameId].'"'.
 								(in_array($item['id_'.$nameId.''], $value) ? 

@@ -15,5 +15,3 @@ $_MODULE['<{ekomi}prestashop>ekomi_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deaktiv
 $_MODULE['<{ekomi}prestashop>ekomi_ced21fe73878a0139d427ab2927f6772'] = 'Block anzeigen, oder verstecken. Bestellungen werden in jedem Fall an eKomi gesendet.';
 $_MODULE['<{ekomi}prestashop>ekomi_6a794dc942b2e8b4716dbc654e83d094'] = 'Bitte füllen Sie das Formular mit den Daten aus, die Sie von eKomi bekommen.';
 $_MODULE['<{ekomi}prestashop>ekomi_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
-
-?>

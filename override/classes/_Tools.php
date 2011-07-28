@@ -72,6 +72,7 @@ class Tools extends ToolsCore
     	header('Refresh: 5; url='.$_SERVER['HTTP_REFERER']);
 		else
 			header('Refresh: 5; url='.$baseUri.$url);
+		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
 		exit;
 	}
 
@@ -216,7 +217,7 @@ class Tools extends ToolsCore
 	public static function error($obj, $label = '')
 	{
 		if(PS_USE_FIREPHP)
-			FB::error($object, $label);
+			FB::error($obj, $label);
 	}
 
 	/**

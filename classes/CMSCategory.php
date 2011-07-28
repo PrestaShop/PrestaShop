@@ -218,14 +218,14 @@ class CMSCategoryCore extends ObjectModel
 		return $category;
 	}
 
-	static public function recurseCMSCategory($categories, $current, $id_cms_category = 1, $id_selected = 1, $is_html = 0)
+	public static function recurseCMSCategory($categories, $current, $id_cms_category = 1, $id_selected = 1, $is_html = 0)
 	{
 		$html = '<option value="'.$id_cms_category.'"'.(($id_selected == $id_cms_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).self::hideCMSCategoryPosition(stripslashes($current['infos']['name'])).'</option>';
 		if ($is_html == 0)
 			echo $html;
 		if (isset($categories[$id_cms_category]))
-			foreach ($categories[$id_cms_category] AS $key => $row)
+			foreach (array_keys($categories[$id_cms_category]) AS $key)
 				$html .= self::recurseCMSCategory($categories, $categories[$id_cms_category][$key], $key, $id_selected, $is_html);
 		return $html;
 	}
@@ -247,7 +247,7 @@ class CMSCategoryCore extends ObjectModel
 		SELECT `id_cms_category`
 		FROM `'._DB_PREFIX_.'cms_category`
 		WHERE `id_parent` = '.(int)($id_cms_category));
-		foreach ($result AS $k => $row)
+		foreach ($result AS $row)
 		{
 			$toDelete[] = (int)($row['id_cms_category']);
 			$this->recursiveDelete($toDelete, (int)($row['id_cms_category']));
@@ -322,7 +322,7 @@ class CMSCategoryCore extends ObjectModel
 	  * @param boolean $active return only active categories
 	  * @return array Categories
 	  */
-	static public function getCategories($id_lang, $active = true, $order = true)
+	public static function getCategories($id_lang, $active = true, $order = true)
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
@@ -344,7 +344,7 @@ class CMSCategoryCore extends ObjectModel
 		return $categories;
 	}
 
-	static public function getSimpleCategories($id_lang)
+	public static function getSimpleCategories($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.`id_cms_category`, cl.`name`
@@ -389,7 +389,7 @@ class CMSCategoryCore extends ObjectModel
 	  * @param string $name CMSCategory name
 	  * @return string Name without position
 	  */
-	static public function hideCMSCategoryPosition($name)
+	public static function hideCMSCategoryPosition($name)
 	{
 		return preg_replace('/^[0-9]+\./', '', $name);
 	}
@@ -401,12 +401,12 @@ class CMSCategoryCore extends ObjectModel
 	  * @param boolean $active return only active categories
 	  * @return array categories
 	  */
-	static public function getHomeCategories($id_lang, $active = true)
+	public static function getHomeCategories($id_lang, $active = true)
 	{
 		return self::getChildren(1, $id_lang, $active);
 	}
 
-	static public function getChildren($id_parent, $id_lang, $active = true)
+	public static function getChildren($id_parent, $id_lang, $active = true)
 	{
 		if (!Validate::isBool($active))
 	 		die(Tools::displayError());
@@ -500,7 +500,7 @@ class CMSCategoryCore extends ObjectModel
 	  * @param boolean $unrestricted allows search without lang and includes first CMSCategory and exact match
 	  * @return array Corresponding categories
 	  */
-	static public function searchByName($id_lang, $query, $unrestricted = false)
+	public static function searchByName($id_lang, $query, $unrestricted = false)
 	{
 		if ($unrestricted === true)
 			return Db::getInstance()->getRow('
@@ -514,6 +514,27 @@ class CMSCategoryCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'cms_category` c
 			LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($id_lang).')
 			WHERE `name` LIKE \'%'.pSQL($query).'%\' AND c.`id_cms_category` != 1');
+	}
+
+	/**
+	  * Retrieve CMSCategory by name and parent CMSCategory id
+	  *
+	  * @param integer $id_lang Language ID
+	  * @param string  $CMSCategory_name Searched CMSCategory name
+	  * @param integer $id_parent_CMSCategory parent CMSCategory ID
+	  * @return array Corresponding CMSCategory
+	  *	@deprecated
+	  */
+	public static function searchByNameAndParentCMSCategoryId($id_lang, $CMSCategory_name, $id_parent_CMSCategory)
+	{
+		Tools::displayAsDeprecated();
+		return Db::getInstance()->getRow('
+		SELECT c.*, cl.*
+	    FROM `'._DB_PREFIX_.'cms_category` c
+	    LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($id_lang).') 
+	    WHERE `name`  LIKE \''.pSQL($CMSCategory_name).'\' 
+		AND c.`id_cms_category` != 1 
+		AND c.`id_parent` = '.(int)($id_parent_CMSCategory));
 	}
 
 	/**
@@ -578,7 +599,7 @@ class CMSCategoryCore extends ObjectModel
 			AND `id_cms_category`='.(int)($movedCategory['id_cms_category'])));
 	}
 	
-	static public function cleanPositions($id_category_parent)
+	public static function cleanPositions($id_category_parent)
 	{
 		$result = Db::getInstance()->ExecuteS('
 		SELECT `id_cms_category`
@@ -597,7 +618,7 @@ class CMSCategoryCore extends ObjectModel
 		return true;
 	}
 	
-	static public function getLastPosition($id_category_parent)
+	public static function getLastPosition($id_category_parent)
 	{
 		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'cms_category` WHERE `id_parent` = '.(int)($id_category_parent)));
 	}

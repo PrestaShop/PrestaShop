@@ -55,5 +55,3 @@ $_MODULE['<{statsforecast}prestashop>statsforecast_61569923d8075889a162c4e603258
 $_MODULE['<{statsforecast}prestashop>statsforecast_8471eed257db7258f935588a664ba4f3'] = 'Attributverteilung';
 $_MODULE['<{statsforecast}prestashop>statsforecast_03937134cedab9078be39a77ee3a48a0'] = 'Gruppe';
 $_MODULE['<{statsforecast}prestashop>statsforecast_f2bbdf9f72c085adc4d0404e370f0f4c'] = 'Attribute';
-
-?>

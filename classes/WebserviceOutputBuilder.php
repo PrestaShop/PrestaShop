@@ -213,6 +213,9 @@ class WebserviceOutputBuilderCore
 			case 401 :
 				$this->status = $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized';
 				break;
+			case 403 :
+				$this->status = $_SERVER['SERVER_PROTOCOL'].' 403 Forbidden';
+				break;
 			case 404 :
 				$this->status = $_SERVER['SERVER_PROTOCOL'].' 404 Not Found';
 				break;
@@ -272,7 +275,7 @@ class WebserviceOutputBuilderCore
 		if (is_null($this->wsResource))
 			throw new WebserviceException ('You must set web service resource for get the resources list.', array(82, 500));
 		$output = '';
-		$more_attr = array('shop_name' => Tools::htmlentitiesUTF8(Configuration::get('PS_SHOP_NAME')));
+		$more_attr = array('shop_name' => Configuration::get('PS_SHOP_NAME'));
 		$output .= $this->objectRender->renderNodeHeader('api', array(), $more_attr);
 		foreach ($this->wsResource as $resourceName => $resource)
 		{
@@ -573,7 +576,7 @@ class WebserviceOutputBuilderCore
 				if (isset($this->wsResource[$assoc_name]['class']) && class_exists($this->wsResource[$assoc_name]['class'], true))
 					$class_name = $this->wsResource[$assoc_name]['class'];
 				$output_details = '';
-				foreach ($objects_assoc as $key => $object_assoc)
+				foreach ($objects_assoc as $object_assoc)
 				{
 					if ($depth == 0 || $class_name === null)
 					{
@@ -586,7 +589,7 @@ class WebserviceOutputBuilderCore
 					}
 					else
 					{
-						foreach ($object_assoc as $key_id => $id)
+						foreach ($object_assoc as $id)
 						{
 							if ($class_name !== null)
 							{

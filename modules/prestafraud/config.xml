@@ -2,7 +2,7 @@
 <module>
 	<name>prestafraud</name>
 	<displayName><![CDATA[PrestaShop Security]]></displayName>
-	<version><![CDATA[0.99]]></version>
+	<version><![CDATA[1.0]]></version>
 	<description><![CDATA[Protect your store from fraudulent payments]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payment_security]]></tab>

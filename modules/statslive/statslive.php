@@ -90,7 +90,7 @@ class StatsLive extends Module
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.$this->sqlShopRestriction(false, 'c').'
 						AND cp.`time_end` IS NULL
-						AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+						AND cp.`time_start` > '.strtotime('-15 minutes').'
 					GROUP BY c.id_connections
 					ORDER BY c.date_add DESC';
 		}
@@ -101,7 +101,7 @@ class StatsLive extends Module
 					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.$this->sqlShopRestriction(false, 'c').'
-						AND TIME_TO_SEC(TIMEDIFF(NOW(), c.`date_add`)) < 900
+						AND c.`date_add` > "'.date('Y-m-d H:i:s', strtotime('-15 minutes')).'"
 					ORDER BY c.date_add DESC';
 		}
 		

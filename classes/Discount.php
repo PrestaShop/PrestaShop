@@ -190,7 +190,7 @@ class DiscountCore extends ObjectModel
 	  *
 	  * @return array Discount types
 	  */
-	static public function getDiscountTypes($id_lang)
+	public static function getDiscountTypes($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *
@@ -294,7 +294,6 @@ class DiscountCore extends ObjectModel
 			return 0;
 		$products = $cart->getProducts();
 		$categories = Discount::getCategories((int)$this->id);
-		$in_category = false;
 
 		foreach ($products AS $product)
 			if (count($categories) AND Product::idIsOnCategoryId($product['id_product'], $categories))
@@ -341,7 +340,7 @@ class DiscountCore extends ObjectModel
 		return 0;
     }
 
-	static public function getCategories($id_discount)
+	public static function getCategories($id_discount)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT `id_category`
@@ -376,12 +375,12 @@ class DiscountCore extends ObjectModel
 		}
 	}
 
-	static public function discountExists($discountName, $id_discount = 0)
+	public static function discountExists($discountName, $id_discount = 0)
 	{
 		return Db::getInstance()->getRow('SELECT `id_discount` FROM '._DB_PREFIX_.'discount WHERE `name` LIKE \''.pSQL($discountName).'\' AND `id_discount` != '.(int)($id_discount));
 	}
 
-	static public function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
+	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
 	{
 		$languages = Language::getLanguages($order);
 		$products = $order->getProducts(false, $productList, $qtyList);
@@ -430,7 +429,7 @@ class DiscountCore extends ObjectModel
 		return $voucher;
 	}
 
-	static public function display($discountValue, $discountType, $currency = false)
+	public static function display($discountValue, $discountType, $currency = false)
 	{
 		if ((float)($discountValue) AND (int)($discountType))
 		{
@@ -442,7 +441,7 @@ class DiscountCore extends ObjectModel
 		return ''; // return a string because it's a display method
 	}
 
-	static public function getVouchersToCartDisplay($id_lang, $id_customer)
+	public static function getVouchersToCartDisplay($id_lang, $id_customer)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT d.`name`, dl.`description`, d.`id_discount`
@@ -456,7 +455,7 @@ class DiscountCore extends ObjectModel
 		OR d.`id_group` IN (SELECT `id_group` FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($id_customer).')))' : 'OR d.`id_group` = 1)'));
 	}
 
-	static public function deleteByIdCustomer($id_customer)
+	public static function deleteByIdCustomer($id_customer)
 	{
 		$discounts = Db::getInstance()->ExecuteS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount` WHERE `id_customer` = '.(int)($id_customer));
 		foreach ($discounts as $discount)
@@ -468,7 +467,7 @@ class DiscountCore extends ObjectModel
 		return true;
 	}
 
-	static public function deleteByIdGroup($id_group)
+	public static function deleteByIdGroup($id_group)
 	{
 		$discounts = Db::getInstance()->ExecuteS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount` WHERE `id_group` = '.(int)($id_group));
 		foreach ($discounts as $discount)
@@ -480,7 +479,7 @@ class DiscountCore extends ObjectModel
 		return true;
 	}
 
-	static public function getDiscount($id_discount)
+	public static function getDiscount($id_discount)
 	{
 		return Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)$id_discount);
 	}

@@ -46,7 +46,7 @@ class Treepodia extends Module
 	{
 	 	$this->name = 'treepodia';
 	 	$this->tab = 'front_office_features';
-	 	$this->version = '1.2';
+	 	$this->version = '1.3';
 		$this->displayName = 'Treepodia';
 
 	 	parent::__construct();

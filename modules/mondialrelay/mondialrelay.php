@@ -35,8 +35,8 @@ class MondialRelay extends Module
 	
 	private $_postErrors;
 	
-	static public $modulePath = '';
-	static public $moduleURL = '';
+	public static $modulePath = '';
+	public static $moduleURL = '';
 
 	// Added for 1.3 compatibility
 	const ONLY_PRODUCTS = 1;
@@ -181,18 +181,15 @@ class MondialRelay extends Module
 			return false;
 		
 	/* Tab uninstallation */
-		$result = Db::getInstance()->getRow('
-			SELECT id_tab  
-			FROM `' . _DB_PREFIX_ . 'tab`
-			WHERE class_name="AdminMondialRelay"');
+		$result = Db::getInstance()->getRow('SELECT id_tab FROM `'._DB_PREFIX_.'tab` WHERE class_name = "AdminMondialRelay"');
 		if ($result)
 		{
 			$id_tab = $result['id_tab'];
 			if (isset($id_tab) && !empty($id_tab))
 			{	
-				Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = '.(int)($id_tab));
-				Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'tab_lang WHERE id_tab = '.(int)($id_tab));
-				Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'access WHERE id_tab = '.(int)($id_tab));
+				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'tab WHERE id_tab = '.(int)$id_tab);
+				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'tab_lang WHERE id_tab = '.(int)$id_tab);
+				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'access WHERE id_tab = '.(int)$id_tab);
 			}
 		}
 
@@ -206,22 +203,12 @@ class MondialRelay extends Module
 				!Configuration::deleteByName('MR_KEY_WEBSERVICE') ||
 				!Configuration::deleteByName('MR_WEIGHT_COEF') ||
 				!Configuration::deleteByName('PS_MR_SHOP_NAME') || 
-				!Db::getInstance()->Execute('
-					DROP TABLE '._DB_PREFIX_ .'mr_historique, 
-					'._DB_PREFIX_ .'mr_method, 
-						'._DB_PREFIX_ .'mr_selected'))
+				!Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_ .'mr_historique, '._DB_PREFIX_ .'mr_method, '._DB_PREFIX_ .'mr_selected'))
 			return false;
 			
-		if (_PS_VERSION_ >= '1.4' && 
-				!Db::getInstance()->Execute('
-					UPDATE  '._DB_PREFIX_ .'carrier  
-					SET `active` = 0, `deleted` = 1 
-					WHERE `external_module_name` = "mondialrelay"'))
+		if (_PS_VERSION_ >= '1.4' && !Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'carrier SET `active` = 0, `deleted` = 1 WHERE `external_module_name` = "mondialrelay"'))
 			return false;
-		else if (!Db::getInstance()->Execute('
-					UPDATE  '._DB_PREFIX_ .'carrier  
-					SET `active` = 0, `deleted` = 1 
-					WHERE `name` = "mondialrelay"'))
+		else if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'carrier SET `active` = 0, `deleted` = 1 WHERE `name` = "mondialrelay"'))
 			return false; 
 			
 		return true;
@@ -247,9 +234,7 @@ class MondialRelay extends Module
 					`external_module_name` = 
 					"mondialrelay", 
 					`shipping_method` = 1 
-				WHERE `id_carrier` 
-				IN (SELECT `id_mr_method` 
-						FROM `'._DB_PREFIX_.'mr_method`)');
+				WHERE `id_carrier` IN (SELECT `id_mr_method` FROM `'._DB_PREFIX_.'mr_method`)');
 			return true;
 		}
 		return false;
@@ -267,7 +252,7 @@ class MondialRelay extends Module
 	** Init the access directory module for URL and file system
 	** Allow a compatibility for Presta < 1.4
 	*/
-	static public function initModuleAccess()
+	public static function initModuleAccess()
 	{
 		self::$modulePath =	_PS_MODULE_DIR_. 'mondialrelay/';
 	
@@ -286,7 +271,7 @@ class MondialRelay extends Module
 	** Override a jQuery version included by another one us.
 	** Allow a compatibility for Presta < 1.4
 	*/
-	static public function getJqueryCompatibility()
+	public static function getJqueryCompatibility()
 	{
 		return '
 			<script type="text/javascript">
@@ -1083,13 +1068,13 @@ class MondialRelay extends Module
 	}
 	
  	// Add for 1.3 compatibility and avoid duplicate code	
-	static public function jsonEncode($result)
+	public static function jsonEncode($result)
 	{
 		return (method_exists('Tools', 'jsonEncode')) ? 
 			Tools::jsonEncode($result) : json_encode($result);
 	}
 	
-	static public function ordersSQLQuery1_4($id_order_state)
+	public static function ordersSQLQuery1_4($id_order_state)
 	{
 		return 'SELECT  o.`id_address_delivery` as id_address_delivery, 
 							o.`id_order` as id_order, 
@@ -1120,7 +1105,7 @@ class MondialRelay extends Module
 			AND ca.`external_module_name` = "mondialrelay"';
 	}
 		
-	static public function ordersSQLQuery1_3($id_order_state)
+	public static function ordersSQLQuery1_3($id_order_state)
 	{
 		return '
 				SELECT  o.`id_address_delivery` as id_address_delivery, 
@@ -1152,7 +1137,7 @@ class MondialRelay extends Module
 			AND ca.`name` = "mondialrelay"';
 	}
 	
-	static public function getBaseOrdersSQLQuery($id_order_state)
+	public static function getBaseOrdersSQLQuery($id_order_state)
 	{
 		if (_PS_VERSION_ >= '1.4')
 			return self::ordersSQLQuery1_4($id_order_state);
@@ -1160,7 +1145,7 @@ class MondialRelay extends Module
 			return self::ordersSQLQuery1_3($id_order_state);
 	}
 	
-	static public function getOrders($orderIdList = array())
+	public static function getOrders($orderIdList = array())
 	{
 		$id_order_state = Configuration::get('MONDIAL_RELAY_ORDER_STATE');
 		$sql = self::getBaseOrdersSQLQuery($id_order_state);

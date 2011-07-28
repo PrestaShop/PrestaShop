@@ -59,20 +59,20 @@ class LoyaltyStateModule extends ObjectModel
 		return parent::getTranslationsFields(array('name'));
 	}
 
-	static public function getDefaultId() { return 1; }
-	static public function getValidationId() { return 2; }
-	static public function getCancelId() { return 3; }
-	static public function getConvertId() { return 4; }
-	static public function getNoneAwardId() { return 5; }
+	public static function getDefaultId() { return 1; }
+	public static function getValidationId() { return 2; }
+	public static function getCancelId() { return 3; }
+	public static function getConvertId() { return 4; }
+	public static function getNoneAwardId() { return 5; }
 
-	static public function insertDefaultData()
+	public static function insertDefaultData()
 	{
 		$loyaltyModule = new Loyalty();
 		$languages = Language::getLanguages();
 		
 		$defaultTranslations = array('default' => array('id_loyalty_state' => (int)LoyaltyStateModule::getDefaultId(), 'default' => $loyaltyModule->getL('Awaiting validation'), 'en' => 'Awaiting validation', 'fr' => 'En attente de validation'));
-		$defaultTranslations['validated'] = array('id_loyalty_state' => (int)LoyaltyStateModule::getValidationId(), 'id_order_state' => _PS_OS_DELIVERED_, 'default' => $loyaltyModule->getL('Available'), 'en' => 'Available', 'fr' => 'Disponible');
-		$defaultTranslations['cancelled'] = array('id_loyalty_state' => (int)LoyaltyStateModule::getCancelId(), 'id_order_state' => _PS_OS_CANCELED_, 'default' => $loyaltyModule->getL('Cancelled'), 'en' => 'Cancelled', 'fr' => 'Annulés');
+		$defaultTranslations['validated'] = array('id_loyalty_state' => (int)LoyaltyStateModule::getValidationId(), 'id_order_state' => Configuration::get('PS_OS_DELIVERED'), 'default' => $loyaltyModule->getL('Available'), 'en' => 'Available', 'fr' => 'Disponible');
+		$defaultTranslations['cancelled'] = array('id_loyalty_state' => (int)LoyaltyStateModule::getCancelId(), 'id_order_state' => Configuration::get('PS_OS_CANCELED'), 'default' => $loyaltyModule->getL('Cancelled'), 'en' => 'Cancelled', 'fr' => 'Annulés');
 		$defaultTranslations['converted'] = array('id_loyalty_state' => (int)LoyaltyStateModule::getConvertId(), 'default' => $loyaltyModule->getL('Already converted'), 'en' => 'Already converted', 'fr' => 'Déjà convertis');
 		$defaultTranslations['none_award'] = array('id_loyalty_state' => (int)LoyaltyStateModule::getNoneAwardId(), 'default' => $loyaltyModule->getL('Unavailable on discounts'), 'en' => 'Unavailable on discounts', 'fr' => 'Non disponbile sur produits remisés');
 		

@@ -32,7 +32,7 @@ class ProductCommentCriterion
 	 *
 	 * @return boolean succeed
 	 */
-	static public function add($id_lang, $name)
+	public static function add($id_lang, $name)
 	{
 		if (!Validate::isUnsignedId($id_lang) ||
 			!Validate::isMessage($name))
@@ -49,7 +49,7 @@ class ProductCommentCriterion
 	 *
 	 * @return boolean succeed
 	 */
-	static public function addToProduct($id_product_comment_criterion, $id_product)
+	public static function addToProduct($id_product_comment_criterion, $id_product)
 	{
 		if (!Validate::isUnsignedId($id_product_comment_criterion) ||
 			!Validate::isUnsignedId($id_product))
@@ -66,7 +66,7 @@ class ProductCommentCriterion
 	 *
 	 * @return boolean succeed
 	 */
-	static public function addGrade($id_product_comment, $id_product_comment_criterion, $grade)
+	public static function addGrade($id_product_comment, $id_product_comment_criterion, $grade)
 	{
 		if (!Validate::isUnsignedId($id_product_comment) ||
 			!Validate::isUnsignedId($id_product_comment_criterion))
@@ -88,7 +88,7 @@ class ProductCommentCriterion
 	 *
 	 * @return boolean succeed
 	 */
-	static public function update($id_product_comment_criterion, $id_lang, $name)
+	public static function update($id_product_comment_criterion, $id_lang, $name)
 	{
 		if (!Validate::isUnsignedId($id_product_comment_criterion) ||
 			!Validate::isUnsignedId($id_lang) ||
@@ -106,7 +106,7 @@ class ProductCommentCriterion
 	 *
 	 * @return array Criterion
 	 */
-	static public function getByProduct($id_product, $id_lang)
+	public static function getByProduct($id_product, $id_lang)
 	{
 		if (!Validate::isUnsignedId($id_product) ||
 			!Validate::isUnsignedId($id_lang))
@@ -124,7 +124,7 @@ class ProductCommentCriterion
 	 *
 	 * @return array Criterions
 	 */
-	static public function get($id_lang)
+	public static function get($id_lang)
 	{
 		if (!Validate::isUnsignedId($id_lang))
 			die(Tools::displayError());
@@ -140,7 +140,7 @@ class ProductCommentCriterion
 	 *
 	 * @return boolean succeed
 	 */
-	static public function deleteByProduct($id_product)
+	public static function deleteByProduct($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
@@ -154,7 +154,7 @@ class ProductCommentCriterion
 	 *
 	 * @return boolean succeed
 	 */
-	static public function delete($id_product_comment_criterion)
+	public static function delete($id_product_comment_criterion)
 	{
 		if (!Validate::isUnsignedId($id_product_comment_criterion))
 			die(Tools::displayError());

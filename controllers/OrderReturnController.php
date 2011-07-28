@@ -27,13 +27,13 @@
 
 class OrderReturnControllerCore extends FrontController
 {
+	public $auth = true;
+	public $php_self = 'order-return.php';
+	public $authRedirection = 'order-follow.php';
+	public $ssl = true;
+	
 	public function __construct()
 	{
-		$this->auth = true;
-		$this->php_self = 'order-return.php';
-		$this->authRedirection = 'order-follow.php';
-		$this->ssl = true;
-		
 		parent::__construct();
 		
 		header("Cache-Control: no-cache, must-revalidate");

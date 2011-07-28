@@ -2,11 +2,16 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Problem beim Lesen der Adressen aus MondialRelay Webservice: Mondial Relay-Server kann abgeschaltet sein';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'Es gibt keinen Relay Point in der Nähe Ihre eingegebenen Adresse. Ändern Sie die Adresse, oder wählen Sie eine andere Versandmethode';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = '(zzgl. MwSt.).';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = '(Inkl. Mwst.)';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = 'Kostenlos!';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_3d2da0d2e731d59465a92f13216cf82d'] = 'Die Kontaktseite';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_de21dc13e1ea638777fbfad49f88b332'] = 'Alle Bestellugen, die den Status haben';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_2345e28c9b93f368968be4781ed70f5c'] = 'Konfiguration ändern';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_37c85a61df6352af7285c307022c4413'] = 'Keine Bestelungen mit diesem Status';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_d79cf3f429596f77db95c65074663a54'] = 'Bestell ID';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_ce26601dac0dea138b7295f02b7620a7'] = 'Kunde';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_0eede552438475bdfe820c13f24c9399'] = 'Gesamtpreis';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_f4e8b53a114e5a17d051ab84d326cae5'] = 'Versandkosten Gesamt';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_44749712dbec183e983dcd78a7736c41'] = 'Datum';
+$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_3715c824cbc0f966c61a72254f248a2e'] = 'Gewicht (Gramm)';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_44585fcd617dce6416d8283b026714c1'] = 'Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_ed4a3b96dc1f38c160775cac1f7bcd6d'] = 'Liefern Sie in Relay-Punkten';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_70d70ce314f545b7c500a086f147f64b'] = 'Ungültiger Shop';
@@ -33,7 +38,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_b962d8fb95f5a439f50502152f3bad7
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_faf1247ae6846a9955a466d4f301bbe4'] = 'Der Lieferanten-Seite';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_10d78806b84b97ebc774e9f6277af6ac'] = 'Um Labels zu generieren, müssen Sie eine gültige und registrierte Adresse Ihres Shops auf Ihrer';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_af5efea250326c1c34d69aa9364b482c'] = 'Kontakt-Seite haben';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_ddcd6a653f661fd7d219d9102528b917'] = 'Gehen Sie zum Front-Office';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_fcf5b2122da1d5a5f5c7253b96a3f9d9'] = 'URL Cron Task:';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_362dff77f7403550e886db901404856c'] = 'Löschen erfolgreich';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_66661dacf33146201b60dc16520ddd68'] = 'Fügen Sie eine Versandart hinzu';
@@ -62,6 +66,7 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_907eba32d950bfab68227fd7ea22999
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_0c24ec05a02c710cedd400e3680d8b81'] = 'Versandart-Liste';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_14039af96b01e718a9c9d9c1259b6472'] = 'Keine Versandmethoden erstellt';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_8596361cec00f8d2438d264827eee737'] = 'Versand konfigurieren';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_d02bbc3cb147c272b0445ac5ca7d1a36'] = 'Bestellstatus';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_818f954f4838ecad839c5dcbd287d291'] = 'Wählen Sie den Bestellstatus für Marken. Sie können die Marken auf';
@@ -72,7 +77,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_93cba07454f06a4a960172bbd6e2a43
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deaktiviert';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Nein';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_9c5c09beb32c36129b857c2a40c861b6'] = 'Anzeige einer Google-Karte auf Ihre Mondial Relay Lieferantenseite, kann das Laden der Lieferantenseite verlangsameN';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_1ba3935c9858ffb8e19a35ca640b8505'] = 'Mondial Relay Kontoeinstellungen';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_12a3fbd35c1cab4b1101b91d708efd15'] = 'mr_marke_WebService:';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_6f0434b67007b555dfd1201f4e0d5254'] = 'mr_code_marke:';
@@ -86,6 +90,11 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_0dbe844fb964d5eca2f51be724e4329
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6aefd5e2191e1210a2f50416812b517'] = 'Follow-up-URL';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_61e70b58e38fd01daa254f44c4fa264b'] = 'Nb Abholpunkt:';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bba366864d25056c941b72f18ef79e7c'] = 'Dieser Fehler ist nicht bekannt :';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Problem beim Lesen der Adressen aus MondialRelay Webservice: Mondial Relay-Server kann abgeschaltet sein';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'Es gibt keinen Relay Point in der Nähe Ihre eingegebenen Adresse. Ändern Sie die Adresse, oder wählen Sie eine andere Versandmethode';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = '(zzgl. MwSt.).';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = '(Inkl. Mwst.)';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = 'Kostenlos!';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_81b7b4587a2a3ea7a0d6bb1df3fbba54'] = 'Lieferung nach';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_a1c3470a944b9625cfb924fd15c8bdbf'] = 'Bitte mindestens eine Bestellung auswählen';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_e6940b76f045c8bc0aaaa5b2476cdaf7'] = 'Die Anfrage scheint ungültig zu sein';
@@ -95,7 +104,6 @@ $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_eabb11bf9623f08409a0a4c9d035
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_b92c3d3319314513c547675924ceecd1'] = 'Ticket URL : ';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_66b793b6b4125e300717e8cf7449f533'] = 'Tracking URL: ';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_2653c23b8c0daac59571e4be5e8fa7d0'] = 'Der Webservice von Mondial Relay ist zu r Zeit nicht erreichbar';
-$_MODULE['<{mondialrelay}prestashop>mrgettickets_23e794a72c9b95b20a6c05cf7d3a17a5'] = 'Ihre Anfrage scheint ungültig zu sein: ';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_c9b4de92f371ae545ad6f051c07d58ca'] = 'Fehler:';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_ea5f761be4e4888eabf4e1501d7817d1'] = 'Details: ';
 $_MODULE['<{mondialrelay}prestashop>mrgettickets_2653c23b8c0daac59571e4be5e8fa7d0'] = 'Der Webservice von Mondial Relay ist zu r Zeit nicht erreichbar';
@@ -110,15 +118,3 @@ $_MODULE['<{mondialrelay}prestashop>recherchedetailpointrelais_ajax_c33b138a1638
 $_MODULE['<{mondialrelay}prestashop>recherchedetailpointrelais_ajax_8b7051187b9191cdcdae6ed5a10e5adc'] = 'Samstag';
 $_MODULE['<{mondialrelay}prestashop>recherchedetailpointrelais_ajax_9d1a0949c39e66a0cd65240bc0ac9177'] = 'Sonntag';
 $_MODULE['<{mondialrelay}prestashop>recherchedetailpointrelais_ajax_621895c388c9bb22abbbc69fad001846'] = 'Wählen Sie ein Relay Point aus';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_3d2da0d2e731d59465a92f13216cf82d'] = 'Die Kontaktseite';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_de21dc13e1ea638777fbfad49f88b332'] = 'Alle Bestellugen, die den Status haben';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_2345e28c9b93f368968be4781ed70f5c'] = 'Konfiguration ändern';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_37c85a61df6352af7285c307022c4413'] = 'Keine Bestelungen mit diesem Status';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_d79cf3f429596f77db95c65074663a54'] = 'Bestell ID';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_ce26601dac0dea138b7295f02b7620a7'] = 'Kunde';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_0eede552438475bdfe820c13f24c9399'] = 'Gesamtpreis';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_f4e8b53a114e5a17d051ab84d326cae5'] = 'Versandkosten Gesamt';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_44749712dbec183e983dcd78a7736c41'] = 'Datum';
-$_MODULE['<{mondialrelay}prestashop>adminmondialrelay_3715c824cbc0f966c61a72254f248a2e'] = 'Gewicht (Gramm)';
-
-?>

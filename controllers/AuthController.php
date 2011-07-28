@@ -27,13 +27,8 @@
 
 class AuthControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->ssl = true;
-		$this->php_self = 'authentication.php';
-
-		parent::__construct();
-	}
+	public $ssl = true;
+	public $php_self = 'authentication.php';
 
 	public function preProcess()
 	{
@@ -388,7 +383,7 @@ class AuthControllerCore extends FrontController
 	protected function processAddressFormat()
 	{
 		$addressItems = array();
-		$addressFormat = AddressFormat::getOrderedAddressFields(Configuration::get('PS_COUNTRY_DEFAULT'));
+		$addressFormat = AddressFormat::getOrderedAddressFields(Configuration::get('PS_COUNTRY_DEFAULT'), false, true);
 		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
 		
 		foreach ($addressFormat as $addressline)

@@ -105,7 +105,7 @@ abstract class PaymentModuleCore extends Module
 			$order->id_customer = (int)($cart->id_customer);
 			$order->id_address_invoice = (int)($cart->id_address_invoice);
 			$order->id_address_delivery = (int)($cart->id_address_delivery);
-			$vat_address = new Address((int)($order->id_address_delivery));
+			$vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 			$order->id_currency = ($currency_special ? (int)($currency_special) : (int)($cart->id_currency));
 			$order->id_lang = (int)($cart->id_lang);
 			$order->id_cart = (int)($cart->id);
@@ -139,7 +139,7 @@ abstract class PaymentModuleCore extends Module
 			// if ($order->total_paid != $order->total_paid_real)
 			// We use number_format in order to compare two string
 			if (number_format($order->total_paid, 2) != number_format($order->total_paid_real, 2))
-				$id_order_state = _PS_OS_ERROR_;
+				$id_order_state = Configuration::get('PS_OS_ERROR');
 			// Creating order
 			if ($cart->OrderExists() == false)
 				$result = $order->add();
@@ -184,7 +184,7 @@ abstract class PaymentModuleCore extends Module
 				{
 					$productQuantity = (int)(Product::getQuantity((int)($product['id_product']), ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL)));
 					$quantityInStock = ($productQuantity - (int)($product['cart_quantity']) < 0) ? $productQuantity : (int)($product['cart_quantity']);
-					if ($id_order_state != _PS_OS_CANCELED_ AND $id_order_state != _PS_OS_ERROR_)
+					if ($id_order_state != Configuration::get('PS_OS_CANCELED') AND $id_order_state != Configuration::get('PS_OS_ERROR'))
                                         {
 						if (Product::updateQuantity($product, (int)$order->id))
 							$product['stock_quantity'] -= $product['cart_quantity'];
@@ -300,9 +300,9 @@ abstract class PaymentModuleCore extends Module
 					if ($objDiscount->id_discount_type == 2 AND in_array($objDiscount->behavior_not_exhausted, array(1,2)))
 						$shrunk = true;
 
-					if ($shrunk AND ($total_discount_value + $value) > ($order->total_products + $order->total_shipping + $order->total_wrapping))
+					if ($shrunk AND ($total_discount_value + $value) > ($order->total_products_wt + $order->total_shipping + $order->total_wrapping))
 					{
-						$amount_to_add = ($order->total_products + $order->total_shipping + $order->total_wrapping) - $total_discount_value;
+						$amount_to_add = ($order->total_products_wt + $order->total_shipping + $order->total_wrapping) - $total_discount_value;
 						if ($objDiscount->id_discount_type == 2 AND $objDiscount->behavior_not_exhausted == 2)
 						{
 							$voucher = new Discount();
@@ -320,7 +320,7 @@ abstract class PaymentModuleCore extends Module
 						$amount_to_add = $value;
 					$order->addDiscount($objDiscount->id, $objDiscount->name, $amount_to_add);
 					$total_discount_value += $amount_to_add;
-					if ($id_order_state != _PS_OS_ERROR_ AND $id_order_state != _PS_OS_CANCELED_)
+					if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED'))
 						$objDiscount->quantity = $objDiscount->quantity - 1;
 					$objDiscount->update();
 
@@ -354,7 +354,7 @@ abstract class PaymentModuleCore extends Module
 				{
 					$history = new OrderHistory();
 					$history->id_order = (int)$order->id;
-					$history->changeIdOrderState(_PS_OS_OUTOFSTOCK_, (int)$order->id);
+					$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), (int)$order->id);
 					$history->addWithemail();
 				}
 
@@ -369,7 +369,7 @@ abstract class PaymentModuleCore extends Module
 				$order = new Order($order->id);
 
 				// Send an e-mail to customer
-				if ($id_order_state != _PS_OS_ERROR_ AND $id_order_state != _PS_OS_CANCELED_ AND $customer->id)
+				if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED') AND $customer->id)
 				{
 					$invoice = new Address((int)($order->id_address_invoice));
 					$delivery = new Address((int)($order->id_address_delivery));
@@ -440,9 +440,9 @@ abstract class PaymentModuleCore extends Module
 						$fileAttachment = NULL;
 
 					if (Validate::isEmail($customer->email))
-						Mail::Send((int)($order->id_lang), 'order_conf', Mail::l('Order confirmation'), $data, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, $fileAttachment);
+						Mail::Send((int)$order->id_lang, 'order_conf', Mail::l('Order confirmation', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, $fileAttachment);
 				}
-				$this->currentOrder = (int)($order->id);
+				$this->currentOrder = (int)$order->id;
 				return true;
 			}
 			else
@@ -467,7 +467,7 @@ abstract class PaymentModuleCore extends Module
 	private function _getTxtFormatedAddress($the_address)
 	{
 		$out = '';
-		$adr_fields = AddressFormat::getOrderedAddressFields($the_address->id_country);
+		$adr_fields = AddressFormat::getOrderedAddressFields($the_address->id_country, false, true);
 		$r_values = array();
 		foreach($adr_fields as $fields_line)
 		{

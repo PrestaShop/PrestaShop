@@ -58,7 +58,7 @@ class ProfileCore extends ObjectModel
 	*
 	* @return array Profiles
 	*/
-	static public function getProfiles($id_lang)
+	public static function getProfiles($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT p.`id_profile`, `name`
@@ -72,7 +72,7 @@ class ProfileCore extends ObjectModel
 	*
 	* @return string Profile
 	*/
-	static public function getProfile($id_profile, $id_lang = NULL)
+	public static function getProfile($id_profile, $id_lang = NULL)
 	{
 		if ($id_lang == NULL)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');

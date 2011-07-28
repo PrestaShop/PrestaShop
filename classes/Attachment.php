@@ -37,7 +37,7 @@ class AttachmentCore extends ObjectModel
 	public		$position;
 
 	protected	$fieldsRequired = array('file', 'mime');
-	protected	$fieldsSize = array('file' => 40, 'mime' => 64, 'file_name' => 128);
+	protected	$fieldsSize = array('file' => 40, 'mime' => 128, 'file_name' => 128);
 	protected	$fieldsValidate = array('file' => 'isGenericName', 'mime' => 'isCleanHtml', 'file_name' => 'isGenericName');
 
 	protected	$fieldsRequiredLang = array('name');
@@ -101,6 +101,25 @@ class AttachmentCore extends ObjectModel
 			return ($result1 && Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_attachment (id_product, id_attachment) VALUES '.implode(',',$ids)));
 		}
 		return $result1;
+	}
+	
+	public static function getProductAttached($id_lang, $list)
+	{
+		$ids_attachements = array();
+		if (is_array($list))
+		{
+			foreach($list as $attachement)
+				$ids_attachements[] = $attachement['id_attachment'];
+			$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
+												LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`)
+												WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).') AND pl.`id_lang` = '.(int)$id_lang.';');
+			$productAttachements = array();
+			foreach($tmp as $t)
+				$productAttachements[$t['id_attachment']][] =  $t['name'];
+			return $productAttachements;
+}
+		else
+			return false;
 	}
 }
 

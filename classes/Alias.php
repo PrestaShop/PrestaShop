@@ -63,14 +63,6 @@ class AliasCore extends ObjectModel
 		}
 	}
 
-	static public function deleteAliases($search)
-	{
-		return Db::getInstance()->Execute('
-		DELETE
-		FROM `'._DB_PREFIX_.'alias`
-		WHERE `search` LIKE \''.pSQL($search).'\'');
-	}
-	
 	public function getAliases()
 	{
 		$aliases = Db::getInstance()->ExecuteS('

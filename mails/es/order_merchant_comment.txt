@@ -1,0 +1,10 @@
+Hola {firstname} {lastname},
+
+Has recibido un mensaje sobre el pedido n°{id_order} :
+{message}
+
+Puedes, en cualquier momento, consultar tus antiguos mensajes en Seguimiento de pedido.
+
+
+
+{shop_url} desarrollado por PrestaShop™

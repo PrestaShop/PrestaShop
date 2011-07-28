@@ -11,5 +11,3 @@ $_MODULE['<{criteo}prestashop>criteo_e60d35bcd2d65206757417532f509366'] = 'Crite
 $_MODULE['<{criteo}prestashop>criteo_2a0b3f9396d21be5b3eb7e3bed1ed495'] = 'URL Widget';
 $_MODULE['<{criteo}prestashop>criteo_a4d3b161ce1309df1c4e25df28694b7b'] = 'Senden';
 $_MODULE['<{criteo}prestashop>criteo_c452f9f8ae244baf28588108f83e0a8a'] = 'Ihre URL, für die Kommunikation mit Criteo:';
-
-?>

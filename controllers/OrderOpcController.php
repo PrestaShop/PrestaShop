@@ -29,6 +29,7 @@ ControllerFactory::includeController('ParentOrderController');
 
 class OrderOpcControllerCore extends ParentOrderController
 {
+	public $php_self = 'order-opc.php';
 	public $isLogged;
 	
 	public function preProcess()
@@ -156,45 +157,45 @@ class OrderOpcControllerCore extends ParentOrderController
 						case 'updateAddressesSelected':
 							if ($this->context->cookie->isLogged(true))
 							{
-							$id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
-							$id_address_invoice = (int)(Tools::getValue('id_address_invoice'));
-							$address_delivery = new Address((int)(Tools::getValue('id_address_delivery')));
-							$address_invoice = ((int)(Tools::getValue('id_address_delivery')) == (int)(Tools::getValue('id_address_invoice')) ? $address_delivery : new Address((int)(Tools::getValue('id_address_invoice'))));
+								$id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
+								$id_address_invoice = (int)(Tools::getValue('id_address_invoice'));
+								$address_delivery = new Address((int)(Tools::getValue('id_address_delivery')));
+								$address_invoice = ((int)(Tools::getValue('id_address_delivery')) == (int)(Tools::getValue('id_address_invoice')) ? $address_delivery : new Address((int)(Tools::getValue('id_address_invoice'))));
 								if ($address_delivery->id_customer != $this->context->customer->id || $address_invoice->id_customer != $this->context->customer->id)
 									$this->errors[] = Tools::displayError('This address is not yours.');
 								elseif (!Address::isCountryActiveById((int)(Tools::getValue('id_address_delivery'))))
-								$this->errors[] = Tools::displayError('This address is not in a valid area.');
-							elseif (!Validate::isLoadedObject($address_delivery) OR !Validate::isLoadedObject($address_invoice) OR $address_invoice->deleted OR $address_delivery->deleted)
-								$this->errors[] = Tools::displayError('This address is invalid.');
-							else
-							{
-								$this->context->cart->id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
-								$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
-								if (!$this->context->cart->update())
-									$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
-							
-								if (!sizeof($this->errors))
+									$this->errors[] = Tools::displayError('This address is not in a valid area.');
+								elseif (!Validate::isLoadedObject($address_delivery) OR !Validate::isLoadedObject($address_invoice) OR $address_invoice->deleted OR $address_delivery->deleted)
+									$this->errors[] = Tools::displayError('This address is invalid.');
+								else
 								{
-									if ($this->context->customer->id)
-										$groups = $this->context->customer->getGroups();
-									else
-										$groups = array(1);
-									$result = $this->_getCarrierList();
-									// Wrapping fees
-									$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
-									$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
-									$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
-									$result = array_merge($result, array(
-										'summary' => $this->context->cart->getSummaryDetails(),
-										'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
-										'HOOK_PAYMENT' => $this->_getPaymentMethods(),
-										'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency))))
-									));
-									die(Tools::jsonEncode($result));
+									$this->context->cart->id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
+									$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
+									if (!$this->context->cart->update())
+										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
+								
+									if (!sizeof($this->errors))
+									{
+										if ($this->context->customer->id)
+											$groups = $this->context->customer->getGroups();
+										else
+											$groups = array(1);
+										$result = $this->_getCarrierList();
+										// Wrapping fees
+										$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
+										$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
+										$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
+										$result = array_merge($result, array(
+											'summary' => $this->context->cart->getSummaryDetails(),
+											'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
+											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency))))
+										));
+										die(Tools::jsonEncode($result));
+									}
 								}
-							}
-							if (sizeof($this->errors))
-								die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+								if (sizeof($this->errors))
+									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 							}
 							die(Tools::displayError());
 							break;
@@ -260,7 +261,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		// PAYMENT
 		$this->_assignPayment();
 		Tools::safePostVars();
-		
+	
 		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
 	
@@ -379,7 +380,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$currency = Currency::getCurrency((int)$this->context->cart->id_currency);
 		
 		$minimalPurchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-		if ($this->context->cart->getOrderTotal(false) < $minimalPurchase)
+		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase)
 			return '<p class="warning">'.Tools::displayError('A minimum purchase total of').' '.Tools::displayPrice($minimalPurchase, $currency).
 			' '.Tools::displayError('is required in order to validate your order.').'</p>';
 		
@@ -429,8 +430,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		$address_delivery = new Address((int)$this->context->cart->id_address_delivery);
 		$address_invoice = new Address((int)$this->context->cart->id_address_invoice);
 
-		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country);
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country);
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country, false, true);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country, false, true);
 
 		$inv_all_fields = array();
 		$dlv_all_fields = array();

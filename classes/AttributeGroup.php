@@ -81,7 +81,7 @@ class AttributeGroupCore extends ObjectModel
 		return parent::getTranslationsFields(array('name', 'public_name'));
 	}
 
-	static public function cleanDeadCombinations()
+	public static function cleanDeadCombinations()
 	{
 		$attributeCombinations = Db::getInstance()->ExecuteS('SELECT pac.`id_attribute`, pa.`id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute` pa LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pa.`id_product_attribute` = pac.`id_product_attribute`)');
 		$toRemove = array();
@@ -121,7 +121,7 @@ class AttributeGroupCore extends ObjectModel
 	 * @param boolean $id_attribute_group Attribute group id
 	 * @return array Attributes
 	 */
-	static public function getAttributes($id_lang, $id_attribute_group)
+	public static function getAttributes($id_lang, $id_attribute_group)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *
@@ -137,7 +137,7 @@ class AttributeGroupCore extends ObjectModel
 	 * @param integer $id_lang Language id
 	 * @return array Attributes groups
 	 */
-	static public function getAttributesGroups($id_lang)
+	public static function getAttributesGroups($id_lang)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *

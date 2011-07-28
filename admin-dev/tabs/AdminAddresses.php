@@ -349,7 +349,7 @@ class AdminAddresses extends AdminTab
 			{
 
 				echo '
-					<label>'.$this->l('Address').' (2):</label>
+					<label>'.$this->l('Address').' (2)</label>
 									     <div class="margin-form">
 												      <input type="text" size="33" name="address2" value="'.htmlentities($this->getFieldValue($obj, 'address2'), ENT_COMPAT, 'UTF-8').'" />
 															      </div>';
@@ -480,8 +480,8 @@ class AdminAddresses extends AdminTab
 		$selectedCountry = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : 
 				(int)(Configuration::get('PS_COUNTRY_DEFAULT'));
 		
-		$inv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry);
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry);
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry, false, true);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($selectedCountry, false, true);
 
 		$inv_all_fields = array();
 		$dlv_all_fields = array();

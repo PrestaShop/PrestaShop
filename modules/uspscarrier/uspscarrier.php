@@ -50,7 +50,7 @@ class UspsCarrier extends CarrierModule
 	{
 		$this->name = 'uspscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -94,6 +94,8 @@ class UspsCarrier extends CarrierModule
 		// Loading Fields List
 		$this->_fieldsList = array(
 			'USPS_CARRIER_USER_ID' => $this->l('USPS User ID'),
+			'USPS_CARRIER_PACKAGING_WEIGHT' => $this->l('Packaging weight'),
+			'USPS_CARRIER_HANDLING_FEE' => $this->l('Handling fee'),
 			'USPS_CARRIER_PACKAGING_SIZE' => $this->l('USPS Packaging Size'),
 			'USPS_CARRIER_PACKAGING_TYPE' => $this->l('USPS Packaging Type'),
 			'USPS_CARRIER_MACHINABLE' => $this->l('USPS Machinable'),
@@ -409,6 +411,7 @@ class UspsCarrier extends CarrierModule
 	private function _displayFormGeneral()
 	{
 		global $cookie;
+		$configCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		$html = '<script>
 			$(document).ready(function() {
@@ -443,6 +446,16 @@ class UspsCarrier extends CarrierModule
 					<div class="margin-form">
 						<input type="text" size="20" name="usps_carrier_user_id" value="'.Tools::getValue('usps_carrier_user_id', Configuration::get('USPS_CARRIER_USER_ID')).'" />
 						<p><a href="http://www.usps.com/webtools/" target="_blank">' . $this->l('Please click here to get your USPS API Key.') . '</a></p>
+					</div>
+					<label>'.$this->l('Packaging Weight').' : </label>
+					<div class="margin-form">
+						<input type="text" size="5" name="usps_carrier_packaging_weight" value="'.Tools::getValue('usps_carrier_packaging_weight', Configuration::get('USPS_CARRIER_PACKAGING_WEIGHT')).'" />
+						'.Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT')).'
+					</div>
+					<label>'.$this->l('Handling Fee').' : </label>
+					<div class="margin-form">
+						<input type="text" size="5" name="usps_carrier_handling_fee" value="'.Tools::getValue('usps_carrier_handling_fee', Configuration::get('USPS_CARRIER_HANDLING_FEE')).'" />
+						'.$configCurrency->sign.'
 					</div>
 				</fieldset>
 
@@ -543,7 +556,7 @@ class UspsCarrier extends CarrierModule
 								foreach($this->_calculModeList as $kcalculmode => $vcalculmode)
 									$html .= '<option value="'.$kcalculmode.'" '.($kcalculmode == (Tools::getValue('usps_carrier_calcul_mode', Configuration::get('USPS_CARRIER_CALCUL_MODE'))) ? 'selected="selected"' : '').'>'.$vcalculmode.'</option>';
 					$html .= '</select>
-					<p>' . $this->l('Using the calcul mode "All items in one package" will automatically use default packaging size, packaging type and delivery services. Specific configurations for categories or product won\'t be used.') . '</p>
+					<p>' . $this->l('Using the calcul mode "All items in one package" will automatically use default packaging size, packaging type and delivery services. Specifics configurations for categories or product won\'t be used.') . '</p>
 					</div>
 					<label>'.$this->l('Delivery Service').' : </label>
 					<div class="margin-form">';
@@ -613,6 +626,8 @@ class UspsCarrier extends CarrierModule
 
 			// All new configurations values are saved to be sure to test webservices with it
 			Configuration::updateValue('USPS_CARRIER_USER_ID', Tools::getValue('usps_carrier_user_id'));
+			Configuration::updateValue('USPS_CARRIER_PACKAGING_WEIGHT', Tools::getValue('usps_carrier_packaging_weight'));
+			Configuration::updateValue('USPS_CARRIER_HANDLING_FEE', Tools::getValue('usps_carrier_handling_fee'));
 			Configuration::updateValue('USPS_CARRIER_PACKAGING_SIZE', Tools::getValue('usps_carrier_packaging_size'));
 			Configuration::updateValue('USPS_CARRIER_PACKAGING_TYPE', Tools::getValue('usps_carrier_packaging_type'));
 			Configuration::updateValue('USPS_CARRIER_MACHINABLE', Tools::getValue('usps_carrier_machinable'));
@@ -638,6 +653,8 @@ class UspsCarrier extends CarrierModule
 	{
 		// Saving new configurations
 		if (Configuration::updateValue('USPS_CARRIER_USER_ID', Tools::getValue('usps_carrier_user_id')) AND
+			Configuration::updateValue('USPS_CARRIER_PACKAGING_WEIGHT', Tools::getValue('usps_carrier_packaging_weight')) AND
+			Configuration::updateValue('USPS_CARRIER_HANDLING_FEE', Tools::getValue('usps_carrier_handling_fee')) AND
 			Configuration::updateValue('USPS_CARRIER_PACKAGING_SIZE', Tools::getValue('usps_carrier_packaging_size')) AND
 			Configuration::updateValue('USPS_CARRIER_PACKAGING_TYPE', Tools::getValue('usps_carrier_packaging_type')) AND
 			Configuration::updateValue('USPS_CARRIER_MACHINABLE', Tools::getValue('usps_carrier_machinable')) AND
@@ -1152,7 +1169,7 @@ class UspsCarrier extends CarrierModule
 								<option value="0">'.$this->l('Select a product ...').'</option>';
 						$productsList = Db::getInstance()->ExecuteS('
 						SELECT pl.* FROM `'._DB_PREFIX_.'product` p
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = 2)
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$cookie->id_lang.')
 						WHERE p.`active` = 1
 						ORDER BY pl.`name`');
 						foreach ($productsList as $product)
@@ -1376,7 +1393,7 @@ class UspsCarrier extends CarrierModule
 		foreach ($wsParams as $k => $v)
 			if ($k != 'products')
 				$paramHash .= '/'.$v;
-		return md5($productHash.$paramHash);
+		return md5($productHash.$paramHash.Configuration::get('USPS_CARRIER_CALCUL_MODE'));
 	}
 
 	public function getOrderShippingCostCache($wsParams)
@@ -1488,6 +1505,7 @@ class UspsCarrier extends CarrierModule
 				if ($product['weight'])
 					$weight += ($product['weight'] * $product['quantity']);
 			}
+			$weight += Tools::getValue('usps_carrier_packaging_weight', Configuration::get('USPS_CARRIER_PACKAGING_WEIGHT'));
 
 			// Get service in adequation with carrier and check if available
 			$servicesConfiguration = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'usps_rate_service_code` WHERE `active` = 1');
@@ -1549,7 +1567,7 @@ class UspsCarrier extends CarrierModule
 		// If webservice return a cost, we add it, else, we return the original shipping cost
 		$result = $this->getUspsShippingCost($wsParams);
 		if ($result['connect'] && $result['cost'] > 0)
-			return ($cost + $result['cost']);
+			return ($cost + $result['cost'] + Tools::getValue('usps_carrier_handling_fee', Configuration::get('USPS_CARRIER_HANDLING_FEE')));
 		return false;
 	}
 
@@ -1722,7 +1740,7 @@ class UspsCarrier extends CarrierModule
 		// Check currency
 		$conversionRate = 1;
 		if (isset($resultTab['RATEV4RESPONSE']['PACKAGE']['POSTAGE']['RATE']))
-			$conversionRate = $this->getCartCurrencyRate(2, $wsParams['id_cart']);
+			$conversionRate = $this->getCartCurrencyRate(Currency::getIdByIsoCode('USD'), $wsParams['id_cart']);
 
 		// Return results
 		if (isset($resultTab['RATEV4RESPONSE']['PACKAGE']['POSTAGE']['RATE']))

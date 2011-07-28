@@ -2,12 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{blockcms}prestashop>blockcms_34c869c542dee932ef8cd96d2f91cae6'] = 'Unsere Shops';
-$_MODULE['<{blockcms}prestashop>blockcms_d1aa22a3126f04664e0fe3f598994014'] = 'Specials';
-$_MODULE['<{blockcms}prestashop>blockcms_9ff0635f5737513b1a6f559ac2bff745'] = 'Neue Produkte';
-$_MODULE['<{blockcms}prestashop>blockcms_3cb29f0ccc5fd220a97df89dafe46290'] = 'Verkaufshits';
-$_MODULE['<{blockcms}prestashop>blockcms_02d4482d332e1aef3437cd61c9bcc624'] = 'Kontaktieren Sie uns';
-$_MODULE['<{blockcms}prestashop>blockcms_7a52e36bf4a1caa031c75a742fb9927a'] = 'Powered by';
 $_MODULE['<{blockcms}prestashop>blockcms_cd275312651aebf8cbbb8d3bb1c086ae'] = 'CMS-Block';
 $_MODULE['<{blockcms}prestashop>blockcms_cdca12007979fc49008fd125cdb775fc'] = 'Fügt einen Block mit mehreren CMS-Links hinzu';
 $_MODULE['<{blockcms}prestashop>blockcms_97390dd0b5ba7867120aee2ff22bfa38'] = 'CMS-Block-Konfiguration';
@@ -52,8 +46,11 @@ $_MODULE['<{blockcms}prestashop>blockcms_5dab5acc3c6a2a7e87e8d8926a2c763e'] = 'V
 $_MODULE['<{blockcms}prestashop>blockcms_138218281781fd0d938a140892d7386c'] = 'Fußzeilen-CMS erfolgreich aktualisiert';
 $_MODULE['<{blockcms}prestashop>blockcms_ddd7d8a072783afaf23e5e6843398fc9'] = 'CMS-Block erfolgreich hinzugefügt';
 $_MODULE['<{blockcms}prestashop>blockcms_31a22821c66edf7e3aa33ef1c8109f4c'] = 'CMS-Block erfolgreich bearbeitet';
-$_MODULE['<{blockcms}prestashop>blockcms_10432af9a9d55d5aa8b0f380194af673'] = 'Löschung erfolgreich';
 $_MODULE['<{blockcms}prestashop>blockcms_be58fccb15fb119b8c3d485e3a8561c4'] = 'CMS-Block-Konfiguration';
 $_MODULE['<{blockcms}prestashop>blockcms_78edb384f1a71576034e00ed6844bcc2'] = 'In dieser CMS-Kategorie gibt es nichts anzuzeigen';
-
-?>
+$_MODULE['<{blockcms}prestashop>blockcms_34c869c542dee932ef8cd96d2f91cae6'] = 'Unsere Shops';
+$_MODULE['<{blockcms}prestashop>blockcms_d1aa22a3126f04664e0fe3f598994014'] = 'Specials';
+$_MODULE['<{blockcms}prestashop>blockcms_9ff0635f5737513b1a6f559ac2bff745'] = 'Neue Produkte';
+$_MODULE['<{blockcms}prestashop>blockcms_3cb29f0ccc5fd220a97df89dafe46290'] = 'Verkaufshits';
+$_MODULE['<{blockcms}prestashop>blockcms_02d4482d332e1aef3437cd61c9bcc624'] = 'Kontaktieren Sie uns';
+$_MODULE['<{blockcms}prestashop>blockcms_7a52e36bf4a1caa031c75a742fb9927a'] = 'Powered by';

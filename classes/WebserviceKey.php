@@ -43,6 +43,21 @@ class WebserviceKeyCore extends ObjectModel
 	protected 	$table = 'webservice_account';
 	protected 	$identifier = 'id_webservice_account';
 
+	
+	public function add($autodate = true, $nullValues = false)
+	{
+		if (WebserviceKey::keyExists($this->key))
+			return false;
+		return parent::add($autodate = true, $nullValues = false);
+	}
+	
+	static public function keyExists($key)
+	{
+		return (!Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `key` 
+			FROM '._DB_PREFIX_.'webservice_account 
+			WHERE `key` = \''.pSQL($key).'\'') ? false : true);
+	}
+	
 	public function getFields()
 	{
 		parent::validateFields();
@@ -75,7 +90,7 @@ class WebserviceKeyCore extends ObjectModel
 		return true;
 	}
 	
-	static public function getPermissionForAccount($auth_key)
+	public static function getPermissionForAccount($auth_key)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT p.*
@@ -90,7 +105,7 @@ class WebserviceKeyCore extends ObjectModel
 		return $permissions;
 	}
 	
-	static public function isKeyActive($auth_key)
+	public static function isKeyActive($auth_key)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT a.active
@@ -105,7 +120,7 @@ class WebserviceKeyCore extends ObjectModel
 		}
 	}
 	
-	static public function getClassFromKey($auth_key)
+	public static function getClassFromKey($auth_key)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT a.class_name as class
@@ -120,7 +135,7 @@ class WebserviceKeyCore extends ObjectModel
 		}
 	}
 	
-	static public function setPermissionForAccount($idAccount, $permissionsToSet)
+	public static function setPermissionForAccount($idAccount, $permissionsToSet)
 	{
 		$ok = true;
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'webservice_permission` WHERE `id_webservice_account` = '.(int)($idAccount);
@@ -133,7 +148,7 @@ class WebserviceKeyCore extends ObjectModel
 				$methods = array('GET', 'PUT', 'POST', 'DELETE', 'HEAD');
 				foreach ($permissionsToSet as $resourceName => $resource_methods)
 					if (in_array($resourceName, array_keys($resources)))
-						foreach ($resource_methods as $methodName => $value)
+						foreach (array_keys($resource_methods) as $methodName)
 							if (in_array($methodName, $methods))
 								$permissions[] = array($methodName, $resourceName);
 				$account = new WebserviceKey($idAccount);

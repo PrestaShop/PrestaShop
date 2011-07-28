@@ -27,17 +27,12 @@
 
 class OrderConfirmationControllerCore extends FrontController
 {
+	public $php_self = 'order-confirmation.php';
+		
 	public $id_cart;
 	public $id_module;
 	public $id_order;
 	public $secure_key;
-	
-	public function __construct()
-	{
-		$this->php_self = 'order-confirmation.php';
-	
-		parent::__construct();
-	}
 	
 	public function preProcess()
 	{

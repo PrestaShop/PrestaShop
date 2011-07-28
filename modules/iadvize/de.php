@@ -17,5 +17,3 @@ $_MODULE['<{iadvize}prestashop>iadvize_f9e4884c7654daa6581b42ed90aeaba4'] = 'Lin
 $_MODULE['<{iadvize}prestashop>iadvize_feb6cc332459769fe15570bf332a6b50'] = 'Rechte Spalte';
 $_MODULE['<{iadvize}prestashop>iadvize_b17f3f4dcf653a5776792498a9b44d6a'] = 'Einstellungen aktualisieren';
 $_MODULE['<{iadvize}prestashop>iadvize_70397c4b252a5168c5ec003931cea215'] = 'Pflichtfelder';
-
-?>

@@ -50,6 +50,7 @@ class AdminImages extends AdminTab
 	public function displayList()
 	{
 		parent::displayList();
+		$this->displayImagePreferences();
 		$this->displayRegenerate();
 		$this->displayMoveImages();
 	}
@@ -66,7 +67,34 @@ class AdminImages extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}elseif (Tools::getValue('submitMoveImages'.$this->table))
-			$this->_moveImagesToNewFileSystem();
+		{
+			if ($this->tabAccess['edit'] === '1')
+		 	{
+				if($this->_moveImagesToNewFileSystem())
+					Tools::redirectAdmin($currentIndex.'&conf=25'.'&token='.$this->token);
+		 	}
+		else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}elseif (Tools::getValue('submitImagePreferences'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				if ((int)Tools::getValue('PS_JPEG_QUALITY') < 0
+					|| (int)Tools::getValue('PS_JPEG_QUALITY') > 100)
+					$this->_errors[] = Tools::displayError('Incorrect value for JPEG image quality.');
+				elseif ((int)Tools::getValue('PS_PNG_QUALITY') < 0
+					|| (int)Tools::getValue('PS_PNG_QUALITY') > 9)
+					$this->_errors[] = Tools::displayError('Incorrect value for PNG image quality.');
+				elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
+					|| !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
+					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
+					$this->_errors[] = Tools::displayError('Unknown error.');
+				else
+					Tools::redirectAdmin($currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		else
 			parent::postProcess();
 	}
@@ -177,11 +205,13 @@ class AdminImages extends AdminTab
 		);
 		echo '
 		<h2 class="space">'.$this->l('Regenerate thumbnails').'</h2>
-		'.$this->l('Regenerates thumbnails for all existing product images').'.<br /><br />';
+		'.$this->l('Regenerates thumbnails for all existing product images').'.<br /><br /><div  class="width4">';
 		$this->displayWarning($this->l('Please be patient, as this can take several minutes').'<br />'.$this->l('Be careful! Manually generated thumbnails will be erased by automatically generated thumbnails.'));
-		echo '
+		echo '</div>
+
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-			<fieldset class="width2">
+
+			<fieldset class="width4">
 				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Regenerate thumbnails').'</legend><br />
 				<label>'.$this->l('Select image').'</label>
 				<div class="margin-form">
@@ -229,6 +259,8 @@ class AdminImages extends AdminTab
 	  */
 	private function _deleteOldImages($dir, $type, $product = false)
 	{
+		if (!is_dir($dir))
+			return false;
 		$toDel = scandir($dir);
 		foreach ($toDel AS $d)
 			foreach ($type AS $imageType)
@@ -260,6 +292,8 @@ class AdminImages extends AdminTab
 	// Regenerate images
 	private function _regenerateNewImages($dir, $type, $productsImages = false)
 	{
+		if (!is_dir($dir))
+			return false;
 		$errors = false;
 		$toRegen = scandir($dir);
 		if (!$productsImages)
@@ -331,16 +365,18 @@ class AdminImages extends AdminTab
 		{
 			$productsImages = Image::getAllImages();
 			foreach ($productsImages AS $k => $image)
+			{
 				$imageObj = new Image($image['id_image']);
 				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
 					foreach ($result AS $k => $module)
 					{
 						if ($moduleInstance = Module::getInstanceByName($module['name']) AND is_callable(array($moduleInstance, 'hookwatermark')))
-							call_user_func(array($moduleInstance, 'hookwatermark'), array('id_image' => $image['id_image'], 'id_product' => $image['id_product']));
+							call_user_func(array($moduleInstance, 'hookwatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product));
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
 					}
 		}
+	}
 	}
 
 	private function _regenerateThumbnails($type = 'all', $deleteOldImages = false)
@@ -401,12 +437,18 @@ class AdminImages extends AdminTab
 	 */
 	public function displayMoveImages()
 	{
+		$safe_mode = ini_get('safe_mode');
+
 		echo '
 		<br /><h2 class="space">'.$this->l('Move images').'</h2>'.
 		$this->l('A new storage system for product images is now used by PrestaShop. It offers better performance if your shop has a very large number of products.').'<br />'.
-		'<br />
+		'<br />';
+		if($safe_mode)
+			echo $this->displayWarning('PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the actual system.');
+		else
+			echo '
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-			<fieldset class="width3">
+				<fieldset class="width4">
 				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Move images').'</legend><br />'.
 				$this->l('You can choose to keep your images stored in the previous system - nothing wrong with that.').'<br />'.
 				$this->l('You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below.	Please be patient, as this can take several minutes.').
@@ -425,11 +467,60 @@ class AdminImages extends AdminTab
 	 */
 	private function _moveImagesToNewFileSystem()
 	{
-		ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
-		$this->max_execution_time = (int)ini_get('max_execution_time');		
-		$result = Image::moveToNewFileSystem($this->max_execution_time);
-		if ($result === 'timeout')
-			$this->_errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
-		Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
+		if (!Image::testFileSystem())
+			$this->_errors[] =  Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
+		else
+		{
+			ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
+			$this->max_execution_time = (int)ini_get('max_execution_time');		
+			$result = Image::moveToNewFileSystem($this->max_execution_time);
+			if ($result === 'timeout')
+				$this->_errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
+			else if ($result === false)
+				$this->_errors[] =  Tools::displayError('Error: some or all images could not be moved.');
+		}
+		return (sizeof($this->_errors) > 0 ? false : true);
 	}
+
+	/**
+	 * Display the block for moving images
+	 */
+	public function displayImagePreferences()
+	{
+	 	global $currentIndex;
+		echo '<br />
+		<form action="'.$currentIndex.'&token='.$this->token.'" method="post">
+			<fieldset class="width4">
+				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Images').'</legend>'.'
+				<p>'.$this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
+				<br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issue, turn it off by selecting "Use JPEG".').'</p>
+				<br />
+				<label>'.$this->l('Image quality').' </label>
+				<div class="margin-form">
+					<input type="radio" value="jpg" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_0" '.(Configuration::get('PS_IMAGE_QUALITY') == 'jpg' ? 'checked="checked"' : '').' />
+					<label class="t" for="PS_IMAGE_QUALITY_0">'.$this->l('Use JPEG').'</label>
+					<br />
+					<input type="radio" value="png" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_1" '.(Configuration::get('PS_IMAGE_QUALITY') == 'png' ? 'checked="checked"' : '').' />
+					<label class="t" for="PS_IMAGE_QUALITY_1">'.$this->l('Use PNG  only if the base image is in PNG format').'</label>
+					<br />
+					<input type="radio" value="png_all" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_2" '.(Configuration::get('PS_IMAGE_QUALITY') == 'png_all' ? 'checked="checked"' : '').' />
+					<label class="t" for="PS_IMAGE_QUALITY_2">'.$this->l('Use PNG for all images').'</label>
+				</div>
+				<br />
+				<label for="PS_JPEG_QUALITY">'.$this->l('JPEG quality').'</label>
+				<div class="margin-form">
+					<input type="text" name="PS_JPEG_QUALITY" id="PS_JPEG_QUALITY" value="'.(int)Configuration::get('PS_JPEG_QUALITY').'" size="3" />
+					<p>'.$this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)').'</p>
+				</div>
+				<label for="PS_PNG_QUALITY">'.$this->l('PNG quality').'</label>
+				<div class="margin-form">
+					<input type="text" name="PS_PNG_QUALITY" id="PS_PNG_QUALITY" value="'.(int)Configuration::get('PS_PNG_QUALITY').'" size="3" />
+					<p>'.$this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)').'</p>
+				</div>		
+				<div class="margin-form">
+					<input type="submit" value="'.$this->l('   Save   ').'" name="submitImagePreferences" class="button" />
+				</div>
+			</fieldset>
+		</form>';
+}
 }

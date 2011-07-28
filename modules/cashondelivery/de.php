@@ -2,6 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{cashondelivery}prestashop>cashondelivery_1f9497d3e8bac9b50151416f04119cec'] = 'Nachnahme (COD)';
+$_MODULE['<{cashondelivery}prestashop>cashondelivery_7a3ef27eb0b1895ebf263ad7dd949fb6'] = 'Zahlungen per Nachnahme akzeptieren ';
 $_MODULE['<{cashondelivery}prestashop>confirmation_2e2117b7c81aa9ea6931641ea2c6499f'] = 'Ihre Bestellung von';
 $_MODULE['<{cashondelivery}prestashop>confirmation_75fbf512d744977d62599cc3f0ae2bb4'] = 'ist abgeschlossen.';
 $_MODULE['<{cashondelivery}prestashop>confirmation_8861c5d3fa54b330d1f60ba50fcc4aab'] = 'Sie haben die Nachnahme-Methode gewählt.';
@@ -19,7 +21,3 @@ $_MODULE['<{cashondelivery}prestashop>validation_1f87346a16cf80c372065de3c54c86d
 $_MODULE['<{cashondelivery}prestashop>validation_0881a11f7af33bc1b43e437391129d66'] = 'Bitte bestätigen Sie Ihre Bestellung durch Klicken auf \"BESTELLEN\"';
 $_MODULE['<{cashondelivery}prestashop>validation_569fd05bdafa1712c4f6be5b153b8418'] = 'Andere Zahlungsmethoden';
 $_MODULE['<{cashondelivery}prestashop>validation_46b9e3665f187c739c55983f757ccda0'] = 'BESTELLEN';
-$_MODULE['<{cashondelivery}prestashop>cashondelivery_1f9497d3e8bac9b50151416f04119cec'] = 'Nachnahme (COD)';
-$_MODULE['<{cashondelivery}prestashop>cashondelivery_7a3ef27eb0b1895ebf263ad7dd949fb6'] = 'Zahlungen per Nachnahme akzeptieren ';
-
-?>

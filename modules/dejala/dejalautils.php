@@ -46,7 +46,7 @@ class DejalaUtils
 		return ($responseArray);
 	}
 	
-	static public function wtf($var, $arrayOfObjectsToHide=null, $fontSize=11)
+	public static function wtf($var, $arrayOfObjectsToHide=null, $fontSize=11)
 	{
 		$text = print_r($var, true);
 

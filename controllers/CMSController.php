@@ -66,20 +66,6 @@ class CmsControllerCore extends FrontController
 			$this->assignCase = 2;
 		else
 			Tools::redirect('index.php?controller=404');
-
-		if((int)(Configuration::get('PS_REWRITING_SETTINGS')))
-		{
-    	    $rewrite_infos = (isset($id_cms) AND !isset($id_cms_category)) ? CMS::getUrlRewriteInformations($id_cms) : CMSCategory::getUrlRewriteInformations($id_cms_category);
-    		$default_rewrite = array();
-    		foreach ($rewrite_infos AS $infos)
-    		{
-    		    $arr_link = (isset($id_cms) AND !isset($id_cms_category)) ?
-    		        $this->context->link->getCMSLink($id_cms, $infos['link_rewrite'], $this->ssl, $infos['id_lang']) :
-    		        $this->context->link->getCMSCategoryLink($id_cms_category, $infos['link_rewrite'], $infos['id_lang']);
-    			$default_rewrite[$infos['id_lang']] = $arr_link;
-    		}
-		    $this->context->smarty->assign('lang_rewrite_urls', $default_rewrite);
-		}
 	}
 	
 	public function setMedia()

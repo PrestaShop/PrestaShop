@@ -15,5 +15,3 @@ $_MODULE['<{statsdata}prestashop>statsdata_6511e0043f774246017a4c255e1e10c3'] = 
 $_MODULE['<{statsdata}prestashop>statsdata_48f08588e7f264b5ea1e7ea56ed768f6'] = 'Plug-Ins Erkennung';
 $_MODULE['<{statsdata}prestashop>statsdata_54e5f8bdd6c51a73d79ed702cdc9ac05'] = 'Die Plug-Ins Erkennung lädte ein zusätzliche 20kb JavaScript-Datei für neue Besucher.';
 $_MODULE['<{statsdata}prestashop>statsdata_06933067aafd48425d67bcb01bba5cb6'] = 'Aktualisieren';
-
-?>

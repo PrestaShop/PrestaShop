@@ -61,7 +61,7 @@ class ReferralProgramModule extends ObjectModel
 		return $fields;
 	}
 
-	static public function getDiscountPrefix()
+	public static function getDiscountPrefix()
 	{
 		return 'SP';
 	}
@@ -126,7 +126,7 @@ class ReferralProgramModule extends ObjectModel
 	  *
 	  * @return array Sponsor
 	  */
-	static public function getSponsorFriend($id_customer, $restriction = false)
+	public static function getSponsorFriend($id_customer, $restriction = false)
 	{
 		if (!(int)($id_customer))
 			return array();
@@ -151,7 +151,7 @@ class ReferralProgramModule extends ObjectModel
 	  *
 	  * @return boolean
 	  */
-	static public function isSponsorised($id_customer, $getId=false)
+	public static function isSponsorised($id_customer, $getId=false)
 	{
 		$result = Db::getInstance()->getRow('
 		SELECT s.`id_referralprogram`
@@ -164,7 +164,7 @@ class ReferralProgramModule extends ObjectModel
 		return isset($result['id_referralprogram']);
 	}
 
-	static public function isSponsorFriend($id_sponsor, $id_friend)
+	public static function isSponsorFriend($id_sponsor, $id_friend)
 	{
 		if (!(int)($id_sponsor) OR !(int)($id_friend))
 			return false; 
@@ -182,7 +182,7 @@ class ReferralProgramModule extends ObjectModel
 	  *
 	  * @return boolean OR int idReferralProgram
 	  */
-	static public function isEmailExists($email, $getId = false, $checkCustomer = true)
+	public static function isEmailExists($email, $getId = false, $checkCustomer = true)
 	{
 		if (empty($email) OR !Validate::isEmail($email))
 			die (Tools::displayError('Email invalid.'));

@@ -83,7 +83,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function incCounter($id_wishlist)
+	public static function incCounter($id_wishlist)
 	{
 		if (!Validate::isUnsignedId($id_wishlist))
 			die (Tools::displayError());
@@ -100,7 +100,7 @@ class		WishList extends ObjectModel
 	}
 
 	
-	static public function isExistsByNameForUser($name)
+	public static function isExistsByNameForUser($name)
 	{
 		global $cookie;
 	
@@ -117,7 +117,7 @@ class		WishList extends ObjectModel
 	 *
 	 *  @return boolean exists
 	 */
-	static public function exists($id_wishlist, $id_customer, $return = false)
+	public static function exists($id_wishlist, $id_customer, $return = false)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR
 			!Validate::isUnsignedId($id_customer))
@@ -142,7 +142,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return array Results
 	 */
-	static public function getByToken($token)
+	public static function getByToken($token)
 	{
 		if (!Validate::isMessage($token))
 			die (Tools::displayError());
@@ -158,7 +158,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return array Results
 	 */
-	static public function getByIdCustomer($id_customer)
+	public static function getByIdCustomer($id_customer)
 	{
 		if (!Validate::isUnsignedId($id_customer))
 			die (Tools::displayError());
@@ -169,7 +169,7 @@ class		WishList extends ObjectModel
 		ORDER BY w.`name` ASC'));
 	}
 
-	static public function refreshWishList($id_wishlist)
+	public static function refreshWishList($id_wishlist)
 	{
 		$old_carts = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT wp.id_product, wp.id_product_attribute, wpc.id_cart, UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(wpc.date_add) AS timecart
@@ -243,7 +243,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return array Results
 	 */
-	static public function getProductByIdCustomer($id_wishlist, $id_customer, $id_lang, $id_product = null, $quantity = false)
+	public static function getProductByIdCustomer($id_wishlist, $id_customer, $id_lang, $id_product = null, $quantity = false)
 	{
 		if (!Validate::isUnsignedId($id_customer) OR
 			!Validate::isUnsignedId($id_lang) OR
@@ -296,7 +296,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return array Results
 	 */
-	static public function getInfosByIdCustomer($id_customer)
+	public static function getInfosByIdCustomer($id_customer)
 	{
 		if (!Validate::isUnsignedId($id_customer))
 			die (Tools::displayError());
@@ -314,7 +314,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function addProduct($id_wishlist, $id_customer, $id_product, $id_product_attribute, $quantity)
+	public static function addProduct($id_wishlist, $id_customer, $id_product, $id_product_attribute, $quantity)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR
 			!Validate::isUnsignedId($id_customer) OR
@@ -356,7 +356,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function updateProduct($id_wishlist, $id_product, $id_product_attribute, $priority, $quantity)
+	public static function updateProduct($id_wishlist, $id_product, $id_product_attribute, $priority, $quantity)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR
 			!Validate::isUnsignedId($id_product) OR
@@ -377,7 +377,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function removeProduct($id_wishlist, $id_customer, $id_product, $id_product_attribute)
+	public static function removeProduct($id_wishlist, $id_customer, $id_product, $id_product_attribute)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR
 			!Validate::isUnsignedId($id_customer) OR
@@ -412,7 +412,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return Array results
 	 */
-	static public function getBoughtProduct($id_wishlist)
+	public static function getBoughtProduct($id_wishlist)
 	{
 
 		if (!Validate::isUnsignedId($id_wishlist))
@@ -431,7 +431,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function addBoughtProduct($id_wishlist, $id_product, $id_product_attribute, $id_cart, $quantity)
+	public static function addBoughtProduct($id_wishlist, $id_product, $id_product_attribute, $id_cart, $quantity)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR
 			!Validate::isUnsignedId($id_product) OR
@@ -486,7 +486,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return boolean succeed
 	 */
-	static public function addEmail($id_wishlist, $email)
+	public static function addEmail($id_wishlist, $email)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR empty($email) OR !Validate::isEmail($email))
 			return false;
@@ -502,7 +502,7 @@ class		WishList extends ObjectModel
 	 *
 	 * @return Array results
 	 */
-	static public function getEmail($id_wishlist, $id_customer)
+	public static function getEmail($id_wishlist, $id_customer)
 	{
 		if (!Validate::isUnsignedId($id_wishlist) OR
 			!Validate::isUnsignedId($id_customer))

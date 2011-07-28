@@ -306,7 +306,7 @@ class CustomerCore extends ObjectModel
 	  * @param integer $id_address Address ID
 	  * @return boolean result
 	  */
-	static public function customerHasAddress($id_customer, $id_address)
+	public static function customerHasAddress($id_customer, $id_address)
 	{
 		if (!array_key_exists($id_customer, self::$_customerHasAddress))
 		{
@@ -320,7 +320,7 @@ class CustomerCore extends ObjectModel
 		return self::$_customerHasAddress[$id_customer];
 	}
 	
-	static public function resetAddressCache($id_customer)
+	public static function resetAddressCache($id_customer)
 	{
 		if (array_key_exists($id_customer, self::$_customerHasAddress))
 			unset(self::$_customerHasAddress[$id_customer]);
@@ -364,7 +364,7 @@ class CustomerCore extends ObjectModel
 	  * @param string $passwd Password
 	  * @return boolean result
 	  */
-	static public function checkPassword($id_customer, $passwd)
+	public static function checkPassword($id_customer, $passwd)
 	{
 	 	if (!Validate::isUnsignedId($id_customer) OR !Validate::isMd5($passwd))
 	 		die (Tools::displayError());
@@ -452,7 +452,7 @@ class CustomerCore extends ObjectModel
 		return self::customerIdExistsStatic((int)($id_customer));
 	}
 
-	static public function customerIdExistsStatic($id_customer)
+	public static function customerIdExistsStatic($id_customer)
 	{
 		$row = Db::getInstance()->getRow('
 		SELECT `id_customer`
@@ -506,10 +506,10 @@ class CustomerCore extends ObjectModel
 		WHERE o.valid = 1 AND o.`id_customer` = '.(int)($this->id));
 	}
 
-	static public function getDefaultGroupId($id_customer)
+	public static function getDefaultGroupId($id_customer)
 	{
 		if (!isset(self::$_defaultGroupId[(int)($id_customer)]))
-			self::$_defaultGroupId[(int)($id_customer)] = Db::getInstance()->getValue('SELECT `id_default_group` FROM `'._DB_PREFIX_.'customer` WHERE `id_customer` = '.(int)($id_customer));
+			self::$_defaultGroupId[(int)($id_customer)] = Db::getInstance()->getValue('SELECT `id_default_group` FROM `'._DB_PREFIX_.'customer` WHERE `id_customer` = '.(int)$id_customer);
 		return self::$_defaultGroupId[(int)($id_customer)];
 	}
 
@@ -568,7 +568,7 @@ class CustomerCore extends ObjectModel
 		return false;
 	}
 	
-	static public function printNewsIcon($id_customer, $tr)
+	public static function printNewsIcon($id_customer, $tr)
 	{
 		$customer = new Customer($tr['id_customer']);
 		if (!Validate::isLoadedObject($customer))
@@ -578,7 +578,7 @@ class CustomerCore extends ObjectModel
 			'</a>';
 	}
 	
-	static public function printOptinIcon($id_customer, $tr)
+	public static function printOptinIcon($id_customer, $tr)
 	{
 		$customer = new Customer($tr['id_customer']);
 		if (!Validate::isLoadedObject($customer))

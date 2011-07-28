@@ -339,7 +339,7 @@ class	CookieCore
 	public function unsetFamily($origin)
 	{
 		$family = $this->getFamily($origin);
-		foreach ($family AS $member => $value)
+		foreach (array_keys($family) AS $member)
 			unset($this->$member);
 	}
 

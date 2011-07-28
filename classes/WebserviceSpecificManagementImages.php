@@ -296,7 +296,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			// images root node management : many image for one entity (product)
 			case '':
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image_types', array());
-				foreach ($this->imageTypes as $imageTypeName => $imageType)
+				foreach (array_keys($this->imageTypes) as $imageTypeName)
 				{
 					$more_attr = array(
 						'xlink_resource' => $this->wsObject->wsUrl.$this->wsObject->urlSegment[0].'/'.$imageTypeName,
@@ -369,7 +369,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			// List the general image types
 			case '':
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('general_image_types', array());
-				foreach ($this->imageTypes['general'] as $generalImageTypeName => $generalImageType)
+				foreach (array_keys($this->imageTypes['general']) as $generalImageTypeName)
 				{
 					$more_attr = array(
 						'xlink_resource' => $this->wsObject->wsUrl.$this->wsObject->urlSegment[0].'/'.$this->wsObject->urlSegment[1].'/'.$generalImageTypeName,
@@ -479,13 +479,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				$ids[] = $image['id_product'];
 			$ids = array_unique($ids, SORT_NUMERIC);
 			asort($ids);
-			foreach ($ids as $key => $id)
+			foreach ($ids as $id)
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $id, 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
 		}
 		else
 		{
 		$nodes = scandir($directory);
-		$lastId = 0;
 		foreach ($nodes as $node)
 			{
 			// avoid too much preg_match...
@@ -525,7 +524,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			
 			// New Behavior
 			$languages = Language::getLanguages();
-			$images = array();
 			foreach ($languages as $language)
 				foreach (Image::getImages($language['id_lang'], $object_id) as $image)
 					$available_image_ids[] = $image['id_image'];
@@ -987,7 +985,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		else
 						{
 							$imagesTypes = ImageType::getImagesTypes('products');
-							foreach ($imagesTypes AS $k => $imageType)
+							foreach ($imagesTypes AS $imageType)
 								if (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 									$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 						}

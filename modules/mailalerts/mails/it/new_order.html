@@ -85,8 +85,12 @@
 <th style="text-align: left; padding: 0.3em 1em;">INDIRIZZO DI CONSEGNA</th> <th style="text-align: left; padding: 0.3em 1em;">INDIRIZZO DI FATTURAZIONE</th>
 </tr>
 <tr>
-<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">{delivery_company} 							<br /><span style="color: #db3484; font-weight: bold;">{delivery_firstname} {delivery_lastname}</span> <br />{delivery_address1} 							<br />{delivery_address2} 							<br />{delivery_city} {delivery_postal_code} 							<br />{delivery_country} {delivery_state} 							<br />{delivery_phone} 							<br />{delivery_other}</td>
-<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">{invoice_company} 							<br /><span style="color: #db3484; font-weight: bold;">{invoice_firstname} {invoice_lastname}</span> <br />{invoice_address1} 							<br />{invoice_address2} 							<br />{invoice_city} {invoice_postal_code} 							<br />{invoice_country} {invoice_state} 							<br />{invoice_phone} 							<br />{invoice_other}</td>
+<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">
+{delivery_block_html}
+</td>
+<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">
+{invoice_block_html}
+</td>
 </tr>
 </tbody>
 </table>

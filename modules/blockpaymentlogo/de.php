@@ -11,5 +11,3 @@ $_MODULE['<{blockpaymentlogo}prestashop>blockpaymentlogo_f1206f9fadc5ce41694f691
 $_MODULE['<{blockpaymentlogo}prestashop>blockpaymentlogo_4b3c34d991275b9fdb0facfcea561be9'] = ' CMS-Seite für Link';
 $_MODULE['<{blockpaymentlogo}prestashop>blockpaymentlogo_01bb71b3e70e9e5057c9678a903d47ac'] = 'wählen Sie eine Seite';
 $_MODULE['<{blockpaymentlogo}prestashop>blockpaymentlogo_d4dccb8ca2dac4e53c01bd9954755332'] = 'Speichern Sie die Einstellungen';
-
-?>

@@ -11,5 +11,3 @@ $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_ea067eb37801c5aab1a
 $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_cc3eb9ba7d0e236f33023a4744d0693a'] = 'Beste Zulieferer';
 $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_0fbee5f62b2695e84a5eb275bcf98c6f'] = 'Eine Liste der besten Zulieferer';
 $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_998e4c5c80f27dec552e99dfed34889a'] = 'CSV-Export';
-
-?>

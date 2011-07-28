@@ -76,6 +76,11 @@ class BlockPermanentLinks extends Module
 		return $this->hookLeftColumn($params);
 	}
 	
+	function hookFooter($params)
+	{
+		return $this->hookLeftColumn($params);
+	}
+	
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockpermanentlinks.css', 'all');

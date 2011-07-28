@@ -27,15 +27,10 @@
 
 class OrderFollowControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->auth = true;
-		$this->php_self = 'order-follow.php';
-		$this->authRedirection = 'order-follow.php';
-		$this->ssl = true;
-	
-		parent::__construct();
-	}
+	public $auth = true;
+	public $php_self = 'order-follow.php';
+	public $authRedirection = 'order-follow.php';
+	public $ssl = true;
 	
 	public function preProcess()
 	{

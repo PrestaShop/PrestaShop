@@ -350,6 +350,14 @@ class AdminLanguages extends AdminTab
 					<input type="file" name="no-picture" /> <sup>*</sup>
 					<p>'.$this->l('Image displayed when "no picture found"').'</p>
 				</div>
+				<label>'.$this->l('Is RTL language:').' </label>
+				<div class="margin-form">
+					<input type="radio" name="is_rtl" id="is_rtl_on" value="1" '.(($this->getFieldValue($obj, 'is_rtl')) ? 'checked="checked" ' : '').'/>
+					<label class="t" for="is_rtl_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Yes').'" /></label>
+					<input type="radio" name="is_rtl" id="active_off" value="0" '.((!$this->getFieldValue($obj, 'is_rtl')) ? 'checked="checked" ' : '').'/>
+					<label class="t" for="is_rtl_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('No').'" /></label>
+					<p>'.$this->l('To active if this language is a right to left language').' '.$this->l('(Experimental: your theme must be compliant with RTL language)').'</p>
+				</div>
 				<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">
 					<input type="radio" name="active" id="active_on" value="1" '.((!$obj->id OR $this->getFieldValue($obj, 'active')) ? 'checked="checked" ' : '').'/>

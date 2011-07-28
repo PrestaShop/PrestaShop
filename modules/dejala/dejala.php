@@ -22,7 +22,7 @@ class Dejala extends CarrierModule
 	private $wday_labels ;
 	private static $INSTANCE = NULL ;
 	
-	static public function getInstance() 
+	public static function getInstance() 
 	{
 		if (!self::$INSTANCE) 
 		{
@@ -1000,7 +1000,7 @@ class Dejala extends CarrierModule
 		}
 	}
 
-	static public function wtf($var, $arrayOfObjectsToHide=null, $fontSize=11)
+	public static function wtf($var, $arrayOfObjectsToHide=null, $fontSize=11)
 	{
 		$text = print_r($var, true);
 
@@ -1341,7 +1341,7 @@ class Dejala extends CarrierModule
 	}
 
 	// Stolen from PS 1.3 for backwards compatibility in PS 1.2.5
-	static public function getHttpHost($http = false, $entities = false)
+	public static function getHttpHost($http = false, $entities = false)
 	{
 		$host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
 		if ($entities)

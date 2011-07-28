@@ -30,8 +30,6 @@ include(PS_ADMIN_DIR.'/../config/config.inc.php');
 /* Getting cookie or logout */
 require_once(dirname(__FILE__).'/init.php');
 
-require_once(PS_ADMIN_DIR.'/tabs/AdminCounty.php');
-
 $context = Context::getContext();
 
 if (isset($_GET['changeParentUrl']))
@@ -491,12 +489,12 @@ if (Tools::isSubmit('saveImportMatchs'))
 
 if (Tools::isSubmit('deleteImportMatchs'))
 {
-   Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE id_import_match = '.pSQL(Tools::getValue('idImportMatchs')));
+   Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
 }
 
 if (Tools::isSubmit('loadImportMatchs'))
 {
-   $return = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE id_import_match = '.pSQL(Tools::getValue('idImportMatchs')));
+   $return = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
    die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'.$return[0]['skip'].'"}');
 }
 
@@ -508,6 +506,8 @@ if (Tools::isSubmit('toggleScreencast'))
 
 if (Tools::isSubmit('ajaxAddZipCode') OR Tools::isSubmit('ajaxRemoveZipCode'))
 {
+	require_once(PS_ADMIN_DIR.'/tabs/AdminCounty.php');
+
 	$zipcodes = Tools::getValue('zipcodes');
 	$id_county = (int)Tools::getValue('id_county');
 
@@ -688,7 +688,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 
 if (Tools::isSubmit('getChildrenCategories') && Tools::getValue('id_category_parent')) 
 {
-	$children_categories = Category::getChildrenWithNbSelectedSubCatForProduct(Tools::getValue('id_category_parent'), Tools::getValue('id_product', 0), Tools::getValue('post_selected_cat', null), $cookie->id_lang);
+	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat', array()), $cookie->id_lang);
 	die(Tools::jsonEncode($children_categories));
 }
 

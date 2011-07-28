@@ -52,7 +52,7 @@ class TrustedShopsRating extends AbsTrustedShops
 									   'fr' => '&et_cid=53&et_lid=3362');
 	public function __construct()
 	{
-		$this->tab_name = $this->l('Customer Rating');
+		$this->tab_name = $this->l('Trusted Shops customer rating');
 		
 		// @todo : That gonna be change - Be worry it's false, countries have not the same ISO code as Languages, waiting Truste Shop's answer
 		$this->limited_countries = $this->available_languages;
@@ -107,7 +107,7 @@ class TrustedShopsRating extends AbsTrustedShops
 	}
 
 	
-	static public function getHttpHost($http = false, $entities = false)
+	public static function getHttpHost($http = false, $entities = false)
 	{
 		if (method_exists('Tools', 'getHttpHost'))
 			return call_user_func(array('Tools', 'getHttpHost'), array($http, $entities));
@@ -360,6 +360,14 @@ class TrustedShopsRating extends AbsTrustedShops
 	{
 		global $cookie;
 		
+		$link = '';
+		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'de')
+			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="https://www.trustedshops.de/shopbetreiber/kundenbewertung_anmeldung.html?partnerPackage=PrestaShop&ratingProduct=RATING_PRO&et_cid=14en&et_lid=29069" target="_blank">Jetzt bei Trusted Shops anmelden!</a></b></p><br />';
+		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'en')
+			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.com/merchants/membership.html?shopsw=PRESTA&et_cid=53&et_lid=3361" target="_blank">Apply now!</a></b></p><br />';
+		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'fr')
+			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.fr/marchands/tarifs.html?shopsw=PRESTA&et_cid=53&et_lid=3362" target="_blank">Enregistrement Trusted Shops</a></b></p><br />';
+
 		return '<fieldset>
 					<legend><img src="'.__PS_BASE_URI__.'modules/'.self::$module_name.'/logo.gif" alt="" />'.$this->l('Learn More').'</legend>
 		
@@ -377,7 +385,7 @@ class TrustedShopsRating extends AbsTrustedShops
 					<h4>'.$this->l('Increase reach via Facebook, Twitter and Google').'</h4>
 					<p>'.$this->l('Your customers spread reviews and rating on Facebook and Twitter directly to friends and followers. Ratings are automatically listed in the Google-Index and are displayed in Google Shopping.').'</p>
 					<br />
-					<a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="'.$this->getApplyUrl().'">'.$this->l('Register for Trusted Shops Customer Rating').'</a>
+					'.$link.'
 				</fieldset>
 				<br />';
 	}

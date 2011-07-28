@@ -169,7 +169,7 @@ class CombinationCore extends ObjectModel
 		$sqlValues = array();
 		foreach ($values as $value)
 			$sqlValues[] = '('.(int)$this->id.', '.(int)$value['id'].')';
-		$result = Db::getInstance()->Execute('
+		Db::getInstance()->Execute('
 			INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
 			VALUES '.implode(',', $sqlValues)
 		);

@@ -97,4 +97,5 @@ $_MODULE['<{loyalty}prestashop>shopping-cart_4cd8259257033282f11cc9bbe648dff7'] 
 $_MODULE['<{loyalty}prestashop>shopping-cart_2996152bb442bf98c80c515c6055de5f'] = 'points de fidélité';
 $_MODULE['<{loyalty}prestashop>shopping-cart_b40d5c523ee75453134b1449dd9cd13a'] = 'point de fidélité';
 $_MODULE['<{loyalty}prestashop>shopping-cart_443c3e03e194c2a4cdb107808b051615'] = 'pouvant être transformé(s) en un bon de réduction de';
+$_MODULE['<{loyalty}prestashop>shopping-cart_2d354f4df80bbebf309f184c3953dc1d'] = 'Offre non applicable pour les commandes passées en tant qu\'invité';
 $_MODULE['<{loyalty}prestashop>shopping-cart_8cec799df06a3f5a026b31fcd95e0172'] = 'Ajoutez des produits à votre panier pour gagner plus de points de fidélité.';

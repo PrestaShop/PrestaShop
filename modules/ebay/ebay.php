@@ -301,7 +301,8 @@ class Ebay extends Module
 			$orderList = $ebay->getOrders(Configuration::get('EBAY_ORDER_LAST_UPDATE'), $dateNew);
 			if ($orderList)
 				foreach ($orderList as $order)
-					if ($order['status'] == 'Complete')
+					if ($order['status'] == 'Complete'&& 
+						isset($order['product_list']) && count($order['product_list']))
 					{
 						$result = Db::getInstance()->getRow('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `active` = 1 AND `email` = \''.pSQL($order['email']).'\' AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
 						$id_customer = (isset($result['id_customer']) ? $result['id_customer'] : 0);
@@ -370,7 +371,7 @@ class Ebay extends Module
 	
 							// Validate order
 							$paiement = new eBayPayment();
-							$paiement->validateOrder(intval($cartAdd->id), _PS_OS_PAYMENT_, floatval($cartAdd->getOrderTotal(true, 3)), 'Paypal eBay', NULL, array(), intval($cartAdd->id_currency));
+							$paiement->validateOrder(intval($cartAdd->id), Configuration::get('PS_OS_PAYMENT'), floatval($cartAdd->getOrderTotal(true, 3)), 'Paypal eBay', NULL, array(), intval($cartAdd->id_currency));
 							$id_order = $paiement->currentOrder;
 	
 							// Fix on sending e-mail
@@ -545,7 +546,7 @@ class Ebay extends Module
 				function checkToken()
 				{
 					$.ajax({
-					  url: \''._MODULE_DIR_.'ebay/ajax/checkToken.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'\',
+					  url: \''._MODULE_DIR_.'ebay/ajax/checkToken.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&time='.pSQL(date('Ymdhis')).'\',
 					  success: function(data)
 					  {
 						if (data == \'OK\')
@@ -886,7 +887,7 @@ class Ebay extends Module
 			function loadCategoryMatch(id_category)
 			{
 				$.ajax({
-				  url: "'._MODULE_DIR_.'ebay/ajax/loadCategoryMatch.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&id_category=" + id_category,
+				  url: "'._MODULE_DIR_.'ebay/ajax/loadCategoryMatch.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&id_category=" + id_category + "&time='.pSQL(date('Ymdhis')).'",
 				  success: function(data) { $("#categoryPath" + id_category).html(data); }
 				});
 			}
@@ -899,7 +900,7 @@ class Ebay extends Module
 				if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
 
 				$.ajax({
-				  url: "'._MODULE_DIR_.'ebay/ajax/changeCategoryMatch.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&id_category=" + id_category + "&level=" + level + levelParams,
+				  url: "'._MODULE_DIR_.'ebay/ajax/changeCategoryMatch.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&time='.pSQL(date('Ymdhis')).'&id_category=" + id_category + "&level=" + level + levelParams,
 				  success: function(data) { $("#categoryPath" + id_category).html(data); }
 				});
 			}
@@ -1122,7 +1123,7 @@ class Ebay extends Module
 						params = params + "&action=0";
 
 					$.ajax({
-						url: "'._MODULE_DIR_.'ebay/ajax/getNbProductsSync.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'" + params,
+						url: "'._MODULE_DIR_.'ebay/ajax/getNbProductsSync.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&time='.pSQL(date('Ymdhis')).'" + params,
 						success: function(data) {
 					  		nbProducts = data;
 					  		nbProductsModeB = data;
@@ -1266,7 +1267,7 @@ class Ebay extends Module
 		$categoryDefaultCache = array();
 
 		// Up the time limit
-		set_time_limit(3600);
+		@set_time_limit(3600);
 
 		// Run the products list
 		foreach ($productsList as $product)

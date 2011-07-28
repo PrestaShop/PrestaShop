@@ -30,11 +30,13 @@ class FreeOrder extends PaymentModule {}
 
 class ParentOrderControllerCore extends FrontController
 {
+	public $ssl = true;
+	public $php_self = 'order.php';
+		
 	public $nbProducts;
 	
 	public function __construct()
 	{
-		$this->ssl = true;
 		parent::__construct();
 		
 		/* Disable some cache related bugs on the cart/order */
@@ -156,7 +158,7 @@ class ParentOrderControllerCore extends FrontController
 		{
 			$order = new FreeOrder();
 			$order->free_order_class = true;
-			$order->validateOrder($this->context->cart->id, _PS_OS_PAYMENT_, 0, Tools::displayError('Free order', false));
+			$order->validateOrder($this->context->cart->id, Configuration::get('PS_OS_PAYMENT'), 0, Tools::displayError('Free order', false), null, array(), null, false, $this->context->cart->secure_key);
 			return (int)Order::getOrderByCartId($this->context->cart->id);
 		}
 		return false;
@@ -360,7 +362,9 @@ class ParentOrderControllerCore extends FrontController
 		$this->context->smarty->assign(array(
 			'checked' => $this->_setDefaultCarrierSelection($carriers),
 			'carriers' => $carriers,
-			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
+			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT'))
+		));
+		self::$smarty->assign(array(
 			'HOOK_EXTRACARRIER' => Module::hookExec('extraCarrier', array('address' => $address)),
 			'HOOK_BEFORECARRIER' => Module::hookExec('beforeCarrier', array('carriers' => $carriers))
 		));

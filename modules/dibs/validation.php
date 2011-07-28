@@ -41,7 +41,7 @@ if (count($_POST))
 		$message .= $error."\n";
 	$message = nl2br(strip_tags($message));
 	if ($valid_order === true)
-		$obj_dibs->validateOrder((int)$posted_values['orderid'], _PS_OS_PAYMENT_, (float)((int)$posted_values['amount'] / 100), $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
+		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_PAYMENT'), (float)((int)$posted_values['amount'] / 100), $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
 	if ($valid_order === false)
-		$obj_dibs->validateOrder((int)$posted_values['orderid'], _PS_OS_ERROR_, 0, $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
+		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_ERROR'), 0, $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
 }

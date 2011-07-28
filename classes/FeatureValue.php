@@ -81,7 +81,7 @@ class FeatureValueCore extends ObjectModel
 	 * @return array Array with feature's values
 	 * @static
 	 */
-	static public function getFeatureValues($id_feature)
+	public static function getFeatureValues($id_feature)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *
@@ -97,7 +97,7 @@ class FeatureValueCore extends ObjectModel
 	 * @return array Array with feature's values
 	 * @static
 	 */
-	static public function getFeatureValuesWithLang($id_lang, $id_feature)
+	public static function getFeatureValuesWithLang($id_lang, $id_feature)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *
@@ -114,7 +114,7 @@ class FeatureValueCore extends ObjectModel
 	 * @return array Array with value's languages
 	 * @static
 	 */
-	static public function getFeatureValueLang($id_feature_value)
+	public static function getFeatureValueLang($id_feature_value)
 	{
 		return Db::getInstance()->ExecuteS('
 		SELECT *
@@ -131,14 +131,14 @@ class FeatureValueCore extends ObjectModel
 	 * @return string String value name selected
 	 * @static
 	 */
-	static public function selectLang($lang, $id_lang)
+	public static function selectLang($lang, $id_lang)
 	{
 		foreach ($lang as $tab)
 			if ($tab['id_lang'] == $id_lang)
 				return $tab['value'];
 	}
 	
-	static public function addFeatureValueImport($id_feature, $name)
+	public static function addFeatureValueImport($id_feature, $name)
 	{
 		$rq = Db::getInstance()->ExecuteS('
 		SELECT fv.`id_feature_value`

@@ -260,7 +260,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 					</span>
 					{if $priceDisplay == 2}
 						<br />
-						<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
+						<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL, 2)}</span>&nbsp;{l s='tax excl.'}</span>
 					{/if}
 					<br />
 				</p>

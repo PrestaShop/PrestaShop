@@ -31,7 +31,11 @@ eval(function(p,a,c,k,e,r){e=function(c){return c.toString(a)};if(!''.replace(/^
 //media.js end
 //ajaxfileupload start
 jQuery.extend({ createUploadIframe: function(id, uri)
-{ var frameId = 'jUploadFrame' + id; if(window.ActiveXObject) { var io = document.createElement('<iframe id="' + frameId + '" name="' + frameId + '" />'); if(typeof uri== 'boolean'){ io.src = 'javascript:false';}
+{ var frameId = 'jUploadFrame' + id; if(window.ActiveXObject) {
+	var io = document.createElement('iframe');
+	io.setAttribute('id', frameId);
+	io.setAttribute('name', frameId);
+	if(typeof uri== 'boolean'){ io.src = 'javascript:false';}
 else if(typeof uri== 'string'){ io.src = uri;}
 }
 else { var io = document.createElement('iframe'); io.id = frameId; io.name = frameId;}

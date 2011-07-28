@@ -7,6 +7,6 @@
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
 	<is_configurable>1</is_configurable>
-	<need_instance>0</need_instance>
+	<need_instance>1</need_instance>
 	<limited_countries></limited_countries>
 </module>

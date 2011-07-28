@@ -142,5 +142,3 @@ $_MODULE['<{upscarrier}prestashop>upscarrier_902b0d55fddef6f8d651fe1035b7d4bd'] 
 $_MODULE['<{upscarrier}prestashop>upscarrier_bbb1730944c8f495534aa125411687af'] = 'UPS Webservice scheint heruntergefahren zu sein, warten Sie bitte ein paar Minuten und versuchen Sie es erneut';
 $_MODULE['<{upscarrier}prestashop>upscarrier_da603f01f9ef4785e2aed2b3a2619e99'] = 'UPS Webservice hat die Zeit überschritten.';
 $_MODULE['<{upscarrier}prestashop>upscarrier_755549828deba234f771ea065e24c115'] = 'Konnte keine Verbindung zu UPS.com herstellen';
-
-?>

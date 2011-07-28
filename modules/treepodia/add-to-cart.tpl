@@ -35,7 +35,7 @@
 		var reg = new RegExp('^ajax_id_product_([\\d+]*)$', 'g');
 		var res = reg.exec(rel);
 		
-		if (res.lenght > 2)
+		if (res.length > 2)
 			Treepodia.getProduct('{/literal}{$account_id}{literal}', res[1]).logAddToCart();
 	}
 	

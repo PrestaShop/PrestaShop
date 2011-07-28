@@ -27,15 +27,10 @@
 
 class AddressesControllerCore extends FrontController
 {
-	public function __construct()
-	{
-		$this->auth = true;
-		$this->php_self = 'addresses.php';
-		$this->authRedirection = 'addresses.php';
-		$this->ssl = true;
-	
-		parent::__construct();
-	}
+	public $auth = true;
+	public $php_self = 'addresses.php';
+	public $authRedirection = 'addresses.php';
+	public $ssl = true;
 	
 	public function setMedia()
 	{
@@ -64,16 +59,12 @@ class AddressesControllerCore extends FrontController
 		{
 			$address = new Address($addressDetailed['id_address']);
 			
-			$multipleAddressesFormated[$total]['ordered'] = AddressFormat::getOrderedAddressFields($addressDetailed['id_country']);
-			$multipleAddressesFormated[$total]['formated'] =  AddressFormat::getFormattedAddressFieldsValues(
-				$address, 
-				$multipleAddressesFormated[$total]['ordered']);
-			$multipleAddressesFormated[$total]['object'] = $addressDetailed;
+			$multipleAddressesFormated[$total] = AddressFormat::getFormattedLayoutData($address);
 			unset($address);
 			++$total;
 			
 			// Retro theme < 1.4.2
-      		$ordered_fields = AddressFormat::getOrderedAddressFields($addressDetailed['id_country']);
+      $ordered_fields = AddressFormat::getOrderedAddressFields($addressDetailed['id_country'], false, true);
 		}
 		
 		// Retro theme 1.4.2

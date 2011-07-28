@@ -27,27 +27,80 @@
 
 class CompareControllerCore extends FrontController
 {
+	public $php_self = 'products-comparison.php';
+	
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'/comparator.css');
+		
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
+			Tools::addJS(_THEME_JS_DIR_.'products-comparison.js');
+	}
+
+	public function preProcess()
+	{
+		parent::preProcess();
+		
+		//Add or remove product with Ajax
+		if (Tools::getValue('ajax') AND Tools::getValue('id_product') AND Tools::getValue('action'))
+		{				
+			if (Tools::getValue('action') == 'add')
+			{
+				if (isset(self::$cookie->id_customer))
+				{
+					if(CompareProduct::getCustomerNumberProducts(self::$cookie->id_customer) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+						CompareProduct::addCustomerCompareProduct((int)self::$cookie->id_customer, (int)Tools::getValue('id_product'));
+					else
+						die('0');
+				}					
+				else
+				{
+					if ((isset(self::$cookie->id_guest) AND CompareProduct::getGuestNumberProducts(self::$cookie->id_guest) < Configuration::get('PS_COMPARATOR_MAX_ITEM')))
+						CompareProduct::addGuestCompareProduct((int)self::$cookie->id_guest, (int)Tools::getValue('id_product'));
+					else
+						die('0');
+				}
+			}
+			elseif (Tools::getValue('action') == 'remove')
+			{
+				if (isset(self::$cookie->id_customer))
+					CompareProduct::removeCustomerCompareProduct((int)self::$cookie->id_customer, (int)Tools::getValue('id_product'));			
+				elseif (isset(self::$cookie->id_guest))
+					CompareProduct::removeGuestCompareProduct((int)self::$cookie->id_guest, (int)Tools::getValue('id_product'));
+				else
+					die('0');
+			}
+			else
+				die('0');
+			
+			die('1');
+		}	
 	}
 
 	public function process()
 	{
 		parent::process();
 
+		//Clean compare product table
+		CompareProduct::cleanCompareProducts('week');
+		
 		$hasProduct = false;
-		$product_list = Tools::getValue('compare_product_list');
-		$postProducts = isset($product_list) ? rtrim($product_list,'|') : '';
 
 		if (!Configuration::get('PS_COMPARATOR_MAX_ITEM'))
 				return Tools::redirect('index.php?controller=404');
 
-		if ($postProducts)
-		{
+		if ($product_list = Tools::getValue('compare_product_list') AND $postProducts = (isset($product_list) ? rtrim($product_list,'|') : ''))
 			$ids = array_unique(explode('|', $postProducts));
+		elseif (isset(self::$cookie->id_customer))
+			$ids = CompareProduct::getCustomerCompareProducts(self::$cookie->id_customer);
+		elseif(isset(self::$cookie->id_guest))
+			$ids = CompareProduct::getGuestCompareProducts(self::$cookie->id_guest);
+		else
+			$ids = null;
 
+		if ($ids)
+		{
 			if (sizeof($ids) > 0)
 			{
 				if (sizeof($ids) > Configuration::get('PS_COMPARATOR_MAX_ITEM'))

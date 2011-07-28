@@ -353,9 +353,9 @@ class Tm4b extends Module
 
 	private function _postValidation()
 	{
-		if (!Tools::getValue('user') || Validate::isGenericName(Tools::getValue('user')) != true)
+		if (!Tools::getValue('user') || Validate::isGenericName(Tools::getValue('user')) != true)
 			$this->_postErrors[] = $this->l('Username is mandatory');
-		elseif (!Tools::getValue('password') || Validate::isPasswd(Tools::getValue('password')) != true)
+		elseif (!Tools::getValue('password') || Validate::isPasswd(Tools::getValue('password')) != true)
 			$this->_postErrors[] = $this->l('Password is mandatory');
 		elseif (!Tools::getValue('route') OR (Tools::getValue('route') != 'GD01' AND Tools::getValue('route') != 'GD02' AND Tools::getValue('route') != 'USS1'))
 			$this->_postErrors[] = $this->l('Route is mandatory');

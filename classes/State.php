@@ -82,7 +82,7 @@ class StateCore extends ObjectModel
 	* @param integer $id_state Country ID
 	* @return string State name
 	*/
-	static public function getNameById($id_state)
+	public static function getNameById($id_state)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `name`
@@ -98,7 +98,7 @@ class StateCore extends ObjectModel
 	* @param string $id_state Country ID
 	* @return integer state id
 	*/
-	static public function getIdByName($state)
+	public static function getIdByName($state)
     {
 	  	$result = Db::getInstance()->getRow('
 		SELECT `id_state`
@@ -114,7 +114,7 @@ class StateCore extends ObjectModel
 	* @param string $iso_code Iso code
 	* @return integer state id
 	*/
-	static public function getIdByIso($iso_code)
+	public static function getIdByIso($iso_code)
     {
 	  	return Db::getInstance()->getValue('
 			SELECT `id_state`

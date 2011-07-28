@@ -53,8 +53,7 @@ class CarrierCompare extends Module
 
 	public function hookHeader($params)
 	{
-		$fileName = explode(DIRECTORY_SEPARATOR, $_SERVER['PHP_SELF']);
-		if ($fileName[(sizeof($fileName)-1)] != 'order.php')
+		if (!$this->isModuleAvailable())
 			return;
 		$context = Context::getContext();
 		$context->controller->addCSS(($this->_path).'style.css', 'all');
@@ -66,20 +65,19 @@ class CarrierCompare extends Module
 	 */
 	public function hookShoppingCart($params)
 	{
-		$context = Context::getContext();
-		if ($context->customer->id)
+		if (!$this->isModuleAvailable())
 			return;
 
 		$context->smarty->assign(array(
-			'countries' => Country::getCountries($context->language->id),
+			'countries' => Country::getCountries($this->context->language->id),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
-			'id_country' => (isset($context->customer->geoloc_id_country) ? $context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
-			'id_state' => (isset($context->customer->geoloc_id_state) ? $context->customer->geoloc_id_state : 0),
-			'zipcode' => (isset($context->customer->geoloc_postcode) ? $context->customer->geoloc_postcode : ''),
-			'currencySign' => $context->currency->sign,
-			'currencyRate' => $context->currency->conversion_rate,
-			'currencyFormat' => $context->currency->format,
-			'currencyBlank' => $context->currency->blank
+			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
+			'id_state' => (isset($this->context->customer->geoloc_id_state) ? $this->context->customer->geoloc_id_state : 0),
+			'zipcode' => (isset($this->context->customer->geoloc_postcode) ? $this->context->customer->geoloc_postcode : ''),
+			'currencySign' => $this->context->currency->sign,
+			'currencyRate' => $this->context->currency->conversion_rate,
+			'currencyFormat' => $this->context->currency->format,
+			'currencyBlank' => $this->context->currency->blank
 		));
 
 		return $this->display(__FILE__, 'carriercompare.tpl');
@@ -173,5 +171,29 @@ class CarrierCompare extends Module
 			return true;
 		return false;
 	}
+
+	/**
+	 * This module is shown on front office, in only some conditions
+	 * @return bool
+	 */
+	private function isModuleAvailable()
+	{
+		global $cookie;
+		
+		$fileName = basename($_SERVER['SCRIPT_FILENAME']);
+		/**
+		 * This module is only available on standard order process because
+		 * on One Page Checkout the carrier list is already available.
+		 */
+		if ($fileName != 'order.php')
+			return false;
+		/**
+		 * If visitor is logged, the module isn't available on Front office,
+		 * we use the account informations for carrier selection and taxes.
+		 */
+		if ($cookie->id_customer)
+			return false;
+		return true;
+}
 }
 

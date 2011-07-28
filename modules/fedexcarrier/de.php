@@ -143,5 +143,3 @@ $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_71ffd676000b4ec8ea95f4096adc3d3
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_89a9eabc8fc9335d484dcb1eb7ef4ac5'] = 'Dieser Abschnitt ermöglicht es Ihnen, eine bestimmte FEDEX Konfiguration für jedes Produkt (z. B. Verpackungsart und Zusatzkosten) zu definieren.';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_902b0d55fddef6f8d651fe1035b7d4bd'] = 'Fehler';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_5e303843029d99ced59415005037969d'] = 'Fedex Webservice scheint abgeschaltet zu sein, warten Sie bitte ein paar Minuten und versuchen es dann erneut';
-
-?>

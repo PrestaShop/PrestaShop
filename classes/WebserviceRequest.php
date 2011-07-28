@@ -297,7 +297,7 @@ class WebserviceRequestCore
 	 */
 	public function specificPriceForProduct($entity_object, $parameters)
 	{
-		foreach($parameters as $name => $value)
+		foreach(array_keys($parameters) as $name)
 		{
 			$parameters[$name]['object_id'] = $entity_object->id;
 		}
@@ -323,7 +323,6 @@ class WebserviceRequestCore
 			$use_reduc = (isset($value['use_reduction']) ? $value['use_reduction'] : true);
 			$use_ecotax = (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
 			$specific_price_output = null;
-			$county = (isset($value['county']) ? $value['county'] : 0);
 			$return_value = Product::priceCalculation(null, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity, 
 									$use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
 			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>$return_value);
@@ -340,7 +339,7 @@ class WebserviceRequestCore
 	 */
 	public function specificPriceForCombination($entity_object, $parameters)
 	{
-		foreach($parameters as $name => $value)
+		foreach(array_keys($parameters) as $name)
 		{
 			$parameters[$name]['object_id'] = $entity_object->id_product;
 			$parameters[$name]['product_attribute'] = $entity_object->id;
@@ -818,7 +817,6 @@ class WebserviceRequestCore
 	protected function setObjects()
 	{
 		$objects = array();
-		$count = 0;
 		$arr_avoid_id = array();
 		$ids = array();
 		if (isset($this->urlFragments['id']))
@@ -856,7 +854,6 @@ class WebserviceRequestCore
 	
 	protected function parseDisplayFields($str)
 	{
-		$last = 0;
 		$bracket_level = 0;
 		$part = array();
 		$tmp = '';
@@ -877,7 +874,7 @@ class WebserviceRequestCore
 		if ($tmp != '')
 			$part[] = $tmp;
 		$fields = array();
-		foreach ($part as $key => $str)
+		foreach ($part as $str)
 		{
 			$field_name = trim(substr($str, 0, (strpos($str, '[') === false ? strlen($str) : strpos($str, '['))));
 			if (!isset($fields[$field_name])) $fields[$field_name] = null;
@@ -962,6 +959,23 @@ class WebserviceRequestCore
 				else
 					$i18n_available_filters[] = $fieldName;
 		
+		// Date feature : date=1
+		if (!empty($this->urlFragments['date']) && $this->urlFragments['date'])
+		{
+			if (!in_array('date_add', $available_filters))
+				$available_filters[] = 'date_add';
+			if (!in_array('date_upd', $available_filters))
+				$available_filters[] = 'date_upd';
+			if (!array_key_exists('date_add', $this->resourceConfiguration['fields']))
+				$this->resourceConfiguration['fields']['date_add'] = array('sqlId' => 'date_add');
+			if (!array_key_exists('date_upd', $this->resourceConfiguration['fields']))
+				$this->resourceConfiguration['fields']['date_upd'] = array('sqlId' => 'date_upd');
+		}
+		else
+			foreach ($available_filters as $key => $value)
+				if ($value == 'date_add' || $value == 'date_upd')
+					unset($available_filters[$key]);
+
 		//construct SQL filter
 		$sql_filter = '';
 		$sql_join = '';
@@ -1253,7 +1267,6 @@ class WebserviceRequestCore
 	protected function executeEntityDelete()
 	{
 		$objects = array();
-		$count = 0;
 		$arr_avoid_id = array();
 		$ids = array();
 		if (isset($this->urlFragments['id']))
@@ -1356,7 +1369,7 @@ class WebserviceRequestCore
 				$this->setError(400, 'id is duplicate in request', 89);
 				return false;
 			}
-			if ($xmlEntities->count() != count($ids))
+			if (count($xmlEntities) != count($ids))
 			{
 				$this->setError(400, 'id is required when modifying a resource', 90);
 				return false;

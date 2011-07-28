@@ -463,7 +463,9 @@ class GetVersionFromDb
 			// List keys
 			$struct[$virtualTable]['@keys'] = array();
 			$sql = 'SHOW INDEX FROM ' . $table;
-			foreach (Db::getInstance()->executeS($sql) as $rowIndex)
+			$results = Db::getInstance()->executeS($sql);
+			if($results)
+				foreach ($results as $rowIndex)
 			{
 				$keyName = strtolower($rowIndex['Key_name']);
 				$type = 'index';

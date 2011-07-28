@@ -39,7 +39,7 @@ class WidgetCache
 	public function isFresh($timeout = 10800)
 	{
 		if (file_exists($this->_fileName))
-			return ((mktime() - filemtime($this->_fileName)) < $timeout);
+			return ((time() - filemtime($this->_fileName)) < $timeout);
 		else
 			return false;
 	}

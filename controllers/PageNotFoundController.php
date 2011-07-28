@@ -27,6 +27,8 @@
 
 class PageNotFoundControllerCore extends FrontController
 {
+	public $php_self = '404.php';
+	
 	public function displayContent()
 	{
 		$this->context->smarty->display(_PS_THEME_DIR_.'404.tpl');
