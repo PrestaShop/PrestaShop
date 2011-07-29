@@ -84,9 +84,8 @@ class Reverso extends Module
 	
 	public function hookCreateAccountTop($params)
 	{
-		global $smarty;
 		$tag = '<img src='.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').'api.reversoform.com/includes/'.(Configuration::get('PS_SSL_ENABLED') ? 'www.reversoform.com/' : '').'js/trans.giff?d='.date('U').' with="0" height="0" />';
-		$smarty->assign(array('reverso_tag' => $tag));
+		$this->context->smarty->assign(array('reverso_tag' => $tag));
 		return $this->display(__FILE__, 'reverso.tpl');
 	}
 	

@@ -133,8 +133,6 @@ class ProductToolTip extends Module
 	
 	public function hookProductFooter($params)
 	{
-		global $smarty, $cookie;
-		
 		$id_product = (int)($params['product']->id);
 		
 		/* First we try to display the number of people who are currently watching this product page */
@@ -149,7 +147,7 @@ class ProductToolTip extends Module
 			WHERE p.id_page_type = 1 AND p.id_object = '.(int)($id_product).' AND cp.time_start > \''.pSQL($date).'\'');
 
 			if (isset($nbPeople['nb']) AND $nbPeople['nb'] > 0)
-				$smarty->assign('nb_people', (int)($nbPeople['nb']));
+				$this->context->smarty->assign('nb_people', (int)($nbPeople['nb']));
 		}
 		
 		/* Then, we try to display last sale */
@@ -166,7 +164,7 @@ class ProductToolTip extends Module
 			ORDER BY o.date_add DESC');
 			
 			if (isset($order['date_add']) && Validate::isDateFormat($order['date_add'])  && $order['date_add'] != '0000-00-00 00:00:00')
-				$smarty->assign('date_last_order', $order['date_add']);
+				$this->context->smarty->assign('date_last_order', $order['date_add']);
 			else
 			{
 				/* No sale? display last cart add instead */
@@ -178,7 +176,7 @@ class ProductToolTip extends Module
 					WHERE cp.id_product = '.(int)($id_product));
 			
 					if (isset($cart['date_add']) && Validate::isDateFormat($cart['date_add'])  && $cart['date_add'] != '0000-00-00 00:00:00')
-						$smarty->assign('date_last_cart', $cart['date_add']);
+						$this->context->smarty->assign('date_last_cart', $cart['date_add']);
 				}
 			}
 		}		
