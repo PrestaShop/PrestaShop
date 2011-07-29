@@ -99,7 +99,6 @@ class BlockBestSellers extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 
-		$context = Context::getContext();
 		$currency = new Currency((int)($params['cookie']->id_currency));
 		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 5);
 		if (!$bestsellers AND !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
@@ -113,7 +112,7 @@ class BlockBestSellers extends Module
 			$best_sellers[] = $bestseller;
 		}
 
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'best_sellers' => $best_sellers,
 			'mediumSize' => Image::getSize('medium'),
 		));
@@ -129,8 +128,7 @@ class BlockBestSellers extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockbestsellers.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockbestsellers.css', 'all');
 	}
 	
 	public function hookHome($params)
@@ -138,7 +136,6 @@ class BlockBestSellers extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 
-		global $smarty;
 		$currency = new Currency((int)($params['cookie']->id_currency));
 		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 4);
 		if (!$bestsellers AND !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
@@ -152,7 +149,7 @@ class BlockBestSellers extends Module
 				$best_sellers[] = $bestseller;
 }
 
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'best_sellers' => $best_sellers,
 			'homeSize' => Image::getSize('home')));
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl');

@@ -36,8 +36,6 @@ class Envoimoinscher extends Module
 	const INSTALL_SQL_FILE = 'install.sql';
 	function __construct()
 	{
-		global $cookie;
-		
 		$this->name = 'envoimoinscher';
 		$this->tab = 'shipping_logistics';
 		$this->version = '1.0';
@@ -81,8 +79,6 @@ class Envoimoinscher extends Module
 	 */
 	public function install()
 	{
-		global $cookie;
-		
 		if (!file_exists(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
 			return false;
 		elseif (!$sql = file_get_contents(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
@@ -121,8 +117,6 @@ class Envoimoinscher extends Module
 	 */
 	public function uninstall()
 	{
-		global $cookie;
-		
 		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'envoimoinscher_contenu`');
 		
 		$tab = new Tab(Tab::getIdFromClassName('AdminEnvoiMoinsCher'));
@@ -158,12 +152,11 @@ class Envoimoinscher extends Module
 	
 	private function _displayForm()
 	{
-		global $cookie;
 		$genderTab = array(1 => 'M.', 2 => 'Mme', 9 => '', 0 => '');
-		$features = Feature::getFeatures($cookie->id_lang);
-		$order_states = OrderState::getOrderStates($cookie->id_lang);
-		$carriers = Carrier::getCarriers($cookie->id_lang);
-		$countries = Country::getCountries($cookie->id_lang);
+		$features = Feature::getFeatures($this->context->language->id);
+		$order_states = OrderState::getOrderStates($this->context->language->id);
+		$carriers = Carrier::getCarriers($this->context->language->id);
+		$countries = Country::getCountries($this->context->language->id);
 		$confs = Configuration::getMultiple(array('PS_SHOP_NAME', 'EMC_LOGIN', 'EMC_GENDER', 'EMC_LAST_NAME', 'EMC_FIRST_NAME', 'EMC_ADDRESS', 'EMC_ZIP_CODE', 'EMC_CITY', 'EMC_COUNTRY',
 											 'EMC_PHONE', 'EMC_EMAIL'));
 		$link = '<a href="http://www.envoimoinscher.com/inscription.html?tracking=prestashop_module_v1

@@ -46,7 +46,7 @@ $errors = array();
 
 function getAuthorization()
 {
-	global $ppPayment, $cookie, $cart;
+	global $ppPayment;
 
 	$result = $ppPayment->getAuthorisation();
 	$logs = $ppPayment->getLogs();
@@ -56,9 +56,9 @@ function getAuthorization()
 		{
 			if (isset($result['TOKEN']))
 			{
-				$cookie->paypal_token = strval($result['TOKEN']);
-				$cookie->paypal_token_date = time();
-				header('Location: https://'.$ppPayment->getPayPalURL().'/webscr&cmd=_express-checkout&token='.urldecode(strval($cookie->paypal_token)).'&useraction=commit');
+				Context::getContext()->cookie->paypal_token = strval($result['TOKEN']);
+				Context::getContext()->cookie->paypal_token_date = time();
+				header('Location: https://'.$ppPayment->getPayPalURL().'/webscr&cmd=_express-checkout&token='.urldecode(strval(Context::getContext()->cookie->paypal_token)).'&useraction=commit');
         exit;
 			}
 			else
@@ -71,31 +71,31 @@ function getAuthorization()
 
 function displayConfirm()
 {
-	global $cookie, $smarty, $ppPayment, $cart;
+	global $ppPayment;
 
-	if (!$cookie->isLogged(true))
+	if (!Context::getContext()->cookie->isLogged(true))
 	{
 		header('location:../../../'); exit;
 		die('Not logged');
 	}
-	unset($cookie->paypal_token);
+	unset(Context::getContext()->cookie->paypal_token);
 
-	if ($cart->id_currency != $ppPayment->getCurrency((int)$cart->id_currency)->id)
+	if (Context::getContext()->cart->id_currency != $ppPayment->getCurrency((int)Context::getContext()->cart->id_currency)->id)
 	{
-		$cart->id_currency = (int)($ppPayment->getCurrency((int)$cart->id_currency)->id);
-		$cookie->id_currency = (int)($cart->id_currency);
-		$cart->update();
+		Context::getContext()->cart->id_currency = (int)($ppPayment->getCurrency((int)Context::getContext()->cart->id_currency)->id);
+		Context::getContext()->cookie->id_currency = (int)(Context::getContext()->cart->id_currency);
+		Context::getContext()->cart->update();
 		Tools::redirect('modules/'.$ppPayment->name.'/payment/submit.php');
 	}
 
 	// Display all and exit
 	include(_PS_ROOT_DIR_.'/header.php');
 
-	$smarty->assign(array(
+	Context::getContext()->smarty->assign(array(
 		'logo' => $ppPayment->getLogo(),
-		'cust_currency' => $cart->id_currency,
-		'currency' => $ppPayment->getCurrency((int)$cart->id_currency),
-		'total' => $cart->getOrderTotal(true, Cart::BOTH),
+		'cust_currency' => Context::getContext()->cart->id_currency,
+		'currency' => $ppPayment->getCurrency((int)Context::getContext()->cart->id_currency),
+		'total' => Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),
 		'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'. $ppPayment->name.'/',
 		'mode' => 'payment/'
 	));
@@ -107,54 +107,53 @@ function displayConfirm()
 
 function submitConfirm()
 {
-	global $cookie, $smarty, $ppPayment, $cart;
+	global $ppPayment;
 
-	if (!$cookie->isLogged(true))
+	if (!Context::getContext()->cookie->isLogged(true))
 	{
 		header('location:../../../'); exit;
 		die('Not logged');
 	}
 	elseif (!$id_currency = (int)(Tools::getValue('currency_payement')))
 		die('No currency');
-	elseif (!$cart->getOrderTotal(true, Cart::BOTH))
+	elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
 		die('Empty cart');
 	$currency = new Currency((int)($id_currency));
 	if (!Validate::isLoadedObject($currency))
 		die('Invalid currency');
-	$cookie->id_currency = (int)($id_currency);
+	Context::getContext()->cookie->id_currency = (int)($id_currency);
 	getAuthorization();
 }
 
 function validOrder()
 {
-	global $cookie, $cart, $ppPayment;
-	if (!$cookie->isLogged(true))
+	global $ppPayment;
+	if (!Context::getContext()->cookie->isLogged(true))
 	{
 		header('location:../../../'); exit;
 		die('Not logged');
 	}
-	elseif (!$cart->getOrderTotal(true, Cart::BOTH))
+	elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
 		die('Empty cart');
 	if (!$token = Tools::htmlentitiesUTF8(strval(Tools::getValue('token'))))
 	{
-		global $smarty;
-		$smarty->assign('paypalError', 'Invalid token');
+		Context::getContext()->smarty->assign('paypalError', 'Invalid token');
 		displayConfirm();
 		die('Invalid token');
 	}
-	if ($token != strval($cookie->paypal_token))
+	if ($token != strval(Context::getContext()->cookie->paypal_token))
 		die('Invalid cookie token');
 	if (!$payerID = Tools::htmlentitiesUTF8(strval(Tools::getValue('PayerID'))))
 		die('Invalid payerID');
-	$ppPayment->makePayPalAPIValidation($cookie, $cart, $cart->id_currency, $payerID, 'payment');
+	$ppPayment->makePayPalAPIValidation(Context::getContext()->cookie, Context::getContext()->cart, Context::getContext()->cart->id_currency, $payerID, 'payment');
 }
 
 // #####
 // Process !!
 
-if (!$cookie->isLogged(true))
+if (!Context::getContext()->cookie->isLogged(true))
 	die('Not logged');
-elseif (!$cart->getOrderTotal(true, Cart::BOTH))
+elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
 	die('Empty cart');
 
 // No submit, confirmation page
@@ -162,7 +161,7 @@ if (!Tools::isSubmit('submitPayment') AND !Tools::getValue('fromPayPal'))
 	displayConfirm();
 else
 {
-	if (!isset($cookie->paypal_token) OR !$cookie->paypal_token)
+	if (!isset(Context::getContext()->cookie->paypal_token) OR !Context::getContext()->cookie->paypal_token)
 		submitConfirm();
 	validOrder();
 }

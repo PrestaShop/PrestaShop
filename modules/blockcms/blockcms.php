@@ -117,14 +117,13 @@ class BlockCms extends Module
 	
 	private function getBlocksCMS($location)
 	{
-		$context = Context::getContext();
 		
 		return Db::getInstance()->ExecuteS('
 		SELECT bc.`id_cms_block`, bcl.`name` block_name, ccl.`name` category_name, bc.`position`, bc.`id_cms_category`, bc.`display_store`
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 		INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-		WHERE ccl.`id_lang` = '.(int)$context->language->id.' AND bc.`location` = '.(int)$location.' AND bcl.`id_lang` = '.(int)$context->language->id.'
+		WHERE ccl.`id_lang` = '.(int)$this->context->language->id.' AND bc.`location` = '.(int)$location.' AND bcl.`id_lang` = '.(int)$this->context->language->id.'
 		ORDER BY bc.`position`');
 	}
 	
@@ -133,10 +132,9 @@ class BlockCms extends Module
 		return array_merge($this->getBlocksCMS(self::LEFT_COLUMN), $this->getBlocksCMS(self::RIGHT_COLUMN));
 	}
 
-	static public function getCMStitlesFooter($context = null)
+	static public function getCMStitlesFooter()
 	{
-		if (!$context)
-			$context = Context::getContext();
+		$context = Context::getContext();
 
 		$footerCms = Configuration::get('FOOTER_CMS');
 		if (empty($footerCms))
@@ -176,10 +174,9 @@ class BlockCms extends Module
 		return $content;
 	}
 
-	static public function getCMStitles($location, $context = null)
+	static public function getCMStitles($location)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		$context = Context::getContext();
 
 		$cmsCategories = Db::getInstance()->ExecuteS('
 		SELECT bc.`id_cms_block`, bc.`id_cms_category`, bc.`display_store`, ccl.`link_rewrite`, ccl.`name` category_name, bcl.`name` block_name
@@ -301,7 +298,7 @@ class BlockCms extends Module
 
 	private function _displayForm()
 	{
-		$context = Context::getContext();		
+		$this->context = Context::getContext();		
 		$cms_blocks_left = $this->getBlocksCMS(0);
 		$cms_blocks_right = $this->getBlocksCMS(1);
 
@@ -412,7 +409,7 @@ class BlockCms extends Module
 					<th width="3%">'.$this->l('ID').'</th>
 					<th width="94%">'.$this->l('Name').'</th>
 				</tr>';
-			$this->displayRecurseCheckboxes(CMSCategory::getRecurseCategory($context->language->id), explode('|', Configuration::get('FOOTER_CMS')));
+			$this->displayRecurseCheckboxes(CMSCategory::getRecurseCategory($this->context->language->id), explode('|', Configuration::get('FOOTER_CMS')));
 		$this->_html .= '
 			</table>
 			<p class="center"><input type="submit" class="button" name="submitFooterCMS" value="'.$this->l('Save').'" /></p>
@@ -422,7 +419,6 @@ class BlockCms extends Module
 
 	private function _displayAddForm()
 	{
-		$context = Context::getContext();
 		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$divLangName = 'name';
@@ -461,7 +457,7 @@ class BlockCms extends Module
 			<label for="id_category">'.$this->l('Choose a CMS category:').'</label>
 			<div class="margin-form">
 				<select name="id_category" id="id_category" onchange="CMSCategory_js($(this).val(), \''.$this->secure_key.'\')">';
-		$categories = CMSCategory::getCategories($context->language->id, false);
+		$categories = CMSCategory::getCategories($this->context->language->id, false);
 		$this->_html .= CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, ($cmsBlock != NULL ? $cmsBlock[0]['id_cms_category'] : 1), 1);
 		$this->_html .= '
 				</select>
@@ -705,9 +701,9 @@ class BlockCms extends Module
 	
 	public function hookLeftColumn()
 	{
-		$context = Context::getContext();	
+		$this->context = Context::getContext();	
 		$cms_titles = self::getCMStitles(self::LEFT_COLUMN);
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 			'theme_dir' => _PS_THEME_DIR_
@@ -717,10 +713,9 @@ class BlockCms extends Module
 	
 	public function hookRightColumn()
 	{
-		$context = Context::getContext();
 
 		$cms_titles = self::getCMStitles(self::RIGHT_COLUMN);
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 			'theme_dir' => _PS_THEME_DIR_
@@ -730,12 +725,11 @@ class BlockCms extends Module
 	
 	public function hookFooter()
 	{
-		$context = Context::getContext();
 		
 		if (Configuration::get('FOOTER_BLOCK_ACTIVATION'))
 		{
 			$cms_titles = self::getCMStitlesFooter();
-			$context->smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'block' => 0,
 				'cmslinks' => $cms_titles,
 				'theme_dir' => _PS_THEME_DIR_,
@@ -749,8 +743,7 @@ class BlockCms extends Module
 	
 	public function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockcms.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockcms.css', 'all');
 	}
 	
 	public function getL($key)

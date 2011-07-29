@@ -209,7 +209,6 @@ class MoneyBookers extends PaymentModule
 
 	public function getContent()
 	{
-		global $cookie;
 		$errors = array();
 		$output = '
 		<p><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo-mb.gif" alt="Moneybookers" /></p><br />';
@@ -334,9 +333,9 @@ class MoneyBookers extends PaymentModule
 			$output .= '</ul>';
 		}
 
-		$lang = new Language((int)($cookie->id_lang));
-		$iso_img = $lang->iso_code;
-		if ($lang->iso_code != 'fr' AND $lang->iso_code != 'en')
+		$lang = $this->context->language;
+		$iso_img = $lang->id;
+		if ($iso_img != 'fr' AND $iso_img != 'en')
 			$iso_img = 'en';
 
 		$manual_links = array(
@@ -345,7 +344,7 @@ class MoneyBookers extends PaymentModule
 			'fr' => 'http://www.prestashop.com/partner/Manuel_Activation_Prestashop_FR.pdf');
 
 		$iso_manual = $lang->iso_code;
-		if (!array_key_exists($lang->iso_code, $manual_links))
+		if (!array_key_exists($iso_manual, $manual_links))
 			$iso_manual = 'en';
 
 		$blockPositionList = array(
@@ -567,8 +566,6 @@ class MoneyBookers extends PaymentModule
 
 	public function hookPayment($params)
 	{
-		global $smarty, $cookie;
-		
 		if (!Configuration::get('MB_PARAMETERS') OR !Configuration::get('MB_PARAMETERS_2') OR (Configuration::get('MB_LOCAL_METHODS') == '' AND Configuration::get('MB_INTER_METHODS') == ''))
 			return;
 
@@ -591,7 +588,7 @@ class MoneyBookers extends PaymentModule
 			$localMethods = Configuration::get('MB_LOCAL_METHODS');
 			$interMethods = Configuration::get('MB_INTER_METHODS');
 			
-			$smarty->assign(array(
+			$this->context->smarty->assign(array(
 			'display_mode' => (int)(Configuration::get('MB_DISPLAY_MODE')),
 			'local' => $localMethods ? explode('|', $localMethods) : array(),
 			'inter' => $interMethods ? explode('|', $interMethods) : array(),
@@ -603,7 +600,7 @@ class MoneyBookers extends PaymentModule
 			$countryObj = new Country((int)($address->id_country), Configuration::get('PS_LANG_DEFAULT'));
 			$customer = new Customer((int)($params['cart']->id_customer));
 			$currency = new Currency((int)($params['cart']->id_currency));
-			$lang = new Language((int)($cookie->id_lang));
+			$lang = $this->context->language;
 
 			$mbParams = array();
 
@@ -637,7 +634,7 @@ class MoneyBookers extends PaymentModule
 			$mbParams['status_url'] = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.'/validation.php';
 
 			/* Assign settings to Smarty template */
-			$smarty->assign($mbParams);
+			$this->context->smarty->assign($mbParams);
 
 			/* Display the MoneyBookers iframe */
 			return $this->display(__FILE__, 'moneybookers.tpl');
@@ -649,22 +646,20 @@ class MoneyBookers extends PaymentModule
 		if (!$this->active)
 			return ;
 
-		global $smarty;
-
 		switch($params['objOrder']->getCurrentState())
 		{
 			case _PS_OS_PAYMENT_:
 			case _PS_OS_OUTOFSTOCK_:
-				$smarty->assign('status', 'ok');
+				$this->context->smarty->assign('status', 'ok');
 				break;
 				
 			case _PS_OS_BANKWIRE_:
-				$smarty->assign('status', 'pending');
+				$this->context->smarty->assign('status', 'pending');
 				break;
 				
 			case _PS_OS_ERROR_:
 			default:
-				$smarty->assign('status', 'failed');
+				$this->context->smarty->assign('status', 'failed');
 				break;
 		}
 

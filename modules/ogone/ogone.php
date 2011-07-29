@@ -146,8 +146,6 @@ class Ogone extends PaymentModule
 	
 	public function hookPayment($params)
 	{
-		global $smarty;
-		
 		$currency = new Currency((int)($params['cart']->id_currency));
 		$lang = new Language((int)($params['cart']->id_lang));
 		$customer = new Customer((int)($params['cart']->id_customer));
@@ -177,26 +175,23 @@ class Ogone extends PaymentModule
 			$shasign .= strtoupper($key).'='.$value.Configuration::get('OGONE_SHA_IN');
 		$ogoneParams['SHASign'] = strtoupper(sha1($shasign));
 		
-		$smarty->assign('ogone_params', $ogoneParams);
-		$smarty->assign('OGONE_MODE', Configuration::get('OGONE_MODE'));
+		$this->context->smarty->assign('ogone_params', $ogoneParams);
+		$this->context->smarty->assign('OGONE_MODE', Configuration::get('OGONE_MODE'));
 		
 		return $this->display(__FILE__, 'ogone.tpl');
     }
 	
 	public function hookOrderConfirmation($params)
 	{
-		if (!$context)
-			$context = Context::getContext();		
-		
 		if ($params['objOrder']->module != $this->name)
 			return;
 		
 		if ($params['objOrder']->valid)
-			$context->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
+			$this->context->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
 		else
-			$context->smarty->assign('status', 'failed');
+			$this->context->smarty->assign('status', 'failed');
 
-		$context->smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $context->link->getPageLink('contact', true) : Tools::getHttpHost(true).'contact'));
+		$this->context->smarty->assign('ogone_link', (method_exists($link, 'getPageLink') ? $this->context->link->getPageLink('contact', true) : Tools::getHttpHost(true).'contact'));
 		return $this->display(__FILE__, 'hookorderconfirmation.tpl');
 	}
 	

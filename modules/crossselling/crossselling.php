@@ -96,8 +96,7 @@ class CrossSelling extends Module
 	
 	public function hookHeader()
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'crossselling.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'crossselling.css', 'all');
 	}
 
 	/**
@@ -105,7 +104,6 @@ class CrossSelling extends Module
 	*/
 	public function hookProductFooter($params)
 	{
-		$context = Context::getContext();
 		
 		$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT o.id_order
@@ -127,7 +125,7 @@ class CrossSelling extends Module
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id)
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default)
 			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
-			WHERE od.id_order IN ('.$list.') AND pl.id_lang = '.(int)$context->language->id.' AND cl.id_lang = '.(int)$context->language->id.' 
+			WHERE od.id_order IN ('.$list.') AND pl.id_lang = '.(int)$this->context->language->id.' AND cl.id_lang = '.(int)$this->context->language->id.' 
 			AND od.product_id != '.(int)$params['product']->id.' AND i.cover = 1 AND p.active = 1
 			ORDER BY RAND()
 			LIMIT 10');
@@ -135,15 +133,15 @@ class CrossSelling extends Module
 			$taxCalc = Product::getTaxCalculationMethod();
 			foreach ($orderProducts AS &$orderProduct)
 			{
-				$orderProduct['image'] = $context->link->getImageLink($orderProduct['link_rewrite'], (int)$orderProduct['product_id'].'-'.(int)$orderProduct['id_image'], 'medium');
-				$orderProduct['link'] = $context->link->getProductLink((int)$orderProduct['product_id'], $orderProduct['link_rewrite'], $orderProduct['category'], $orderProduct['ean13']);
+				$orderProduct['image'] = $this->context->link->getImageLink($orderProduct['link_rewrite'], (int)$orderProduct['product_id'].'-'.(int)$orderProduct['id_image'], 'medium');
+				$orderProduct['link'] = $this->context->link->getProductLink((int)$orderProduct['product_id'], $orderProduct['link_rewrite'], $orderProduct['category'], $orderProduct['ean13']);
 				if (Configuration::get('CROSSSELLING_DISPLAY_PRICE') AND ($taxCalc == 0 OR $taxCalc == 2))
 					$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], true, NULL);
 				elseif (Configuration::get('CROSSSELLING_DISPLAY_PRICE') AND $taxCalc == 1)
 					$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], false, NULL);
 			}
 			
-			$context->smarty->assign(array('orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
+			$this->context->smarty->assign(array('orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
 			'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')));
 		}
 		return $this->display(__FILE__, 'crossselling.tpl');

@@ -117,7 +117,6 @@ class Editorial extends Module
 
 	public function getContent()
 	{
-		$context = Context::getContext();
 		
 		/* display the module name */
 		$this->_html = '<h2>'.$this->displayName.'</h2>';
@@ -132,7 +131,7 @@ class Editorial extends Module
 			{
 				unlink(dirname(__FILE__).'/homepage_logo.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 1);
-				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$context->employee->id));
+				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id));
 			}
 			$this->_html .= $errors;
 		}
@@ -180,11 +179,10 @@ class Editorial extends Module
 
 	private function _displayForm()
 	{
-		$context = Context::getContext();
 		/* Languages preliminaries */
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
-		$iso = $context->language->iso_code;
+		$iso = $this->context->language->iso_code;
 		$divLangName = 'title¤subheading¤cpara¤logo_subheading';
 
 		$editorial = new EditorialClass(1);
@@ -294,15 +292,14 @@ class Editorial extends Module
 
 	public function hookHome($params)
 	{
-		$context = Context::getContext();
 				
-		$editorial = new EditorialClass(1, $context->language->id);
-		$context->smarty->assign(array(
+		$editorial = new EditorialClass(1, $this->context->language->id);
+		$this->context->smarty->assign(array(
 			'editorial' => $editorial,
-			'default_lang' => (int)$context->language->id,
+			'default_lang' => (int)$this->context->language->id,
 			'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
 			'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-			'id_lang' => $context->language->id,
+			'id_lang' => $this->context->language->id,
 			'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo.jpg'),
 			'image_path' => $this->_path.'homepage_logo.jpg'
 		));

@@ -54,8 +54,6 @@ class Ebay extends Module
 
 	public function __construct()
 	{
-		global $cookie;
-
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
 		$this->version = '1.1';
@@ -65,7 +63,7 @@ class Ebay extends Module
 		$this->id_lang = Language::getIdByIso('fr');
 
 		// Check the country and ask the bypass if not 'fr'
-		if (strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))) != 'fr' && !isset($cookie->ebay_country_default_fr))
+		if (strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
 		{
 			$this->warning = $this->l('eBay module currently works only for eBay.fr');
 			return false;
@@ -144,8 +142,6 @@ class Ebay extends Module
 
 	public function install()
 	{
-		global $cookie;
-
 		// Install SQL
 		include(dirname(__FILE__).'/sql-install.php');
 		foreach ($sql as $s)
@@ -181,8 +177,6 @@ class Ebay extends Module
 
 	public function uninstall()
 	{
-		global $cookie;
-
 		// Uninstall Config
 		foreach ($this->_fieldsList as $keyConfiguration => $name)
 			if (!Configuration::deleteByName($keyConfiguration))
@@ -225,8 +219,8 @@ class Ebay extends Module
 			return false;
 
 		// Clean Cookie
-		$cookie->eBaySession = '';
-		$cookie->eBayUsername = '';
+		$this->context->cookie->eBaySession = '';
+		$this->context->cookie->eBayUsername = '';
 
 		return true;
 	}
@@ -415,14 +409,12 @@ class Ebay extends Module
 
 	public function getContent()
 	{
-		global $cookie;
 		$this->_html .= '<h2>' . $this->l('eBay').'</h2>';
-
 
 		// Checking Country
 		if (Tools::getValue('ebay_country_default_fr') == 'ok')
-			$cookie->ebay_country_default_fr = true;
-		if (strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))) != 'fr' && !isset($cookie->ebay_country_default_fr))
+			$this->context->cookie->ebay_country_default_fr = true;
+		if (strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
 			return $this->_html.$this->displayError($this->l('eBay module currently works only for eBay.fr').'. <a href="'.$_SERVER['REQUEST_URI'].'&ebay_country_default_fr=ok">'.$this->l('Continue anyway ?').'</a>');
 
 
@@ -466,7 +458,7 @@ class Ebay extends Module
 
 		// Displaying Information from Prestashop
 		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$cookie->id_lang.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
+		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
 
 
 		// Displaying page
@@ -528,18 +520,17 @@ class Ebay extends Module
 
 	private function _displayFormRegister()
 	{
-		global $cookie;
 		$ebay = new eBayRequest();
 
-		if (!empty($cookie->eBaySession) && isset($_GET['action']) && $_GET['action'] == 'logged') 
+		if (!empty($this->context->cookie->eBaySession) && isset($_GET['action']) && $_GET['action'] == 'logged') 
 		{
 			if (isset($_POST['eBayUsername']))
 			{
-				$cookie->eBayUsername = $_POST['eBayUsername'];
+				$this->context->cookie->eBayUsername = $_POST['eBayUsername'];
 				Configuration::updateValue('EBAY_API_USERNAME', $_POST['eBayUsername']);
 			}
-			$ebay->session = $cookie->eBaySession;
-			$ebay->username = $cookie->eBayUsername;
+			$ebay->session = $this->context->cookie->eBaySession;
+			$ebay->username = $this->context->cookie->eBayUsername;
 
 			$html = '
 			<script>
@@ -565,10 +556,10 @@ class Ebay extends Module
 		}
 		else
 		{
-			if (empty($cookie->eBaySession))
+			if (empty($this->context->cookie->eBaySession))
 			{
 				$ebay->login();
-				$cookie->eBaySession = $ebay->session;
+				$this->context->cookie->eBaySession = $ebay->session;
 				Configuration::updateValue('EBAY_API_SESSION', $ebay->session);
 			}
 
@@ -583,7 +574,7 @@ class Ebay extends Module
 							return false;
 						}
 						else
-							window.open(\''.$ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$cookie->eBaySession.'\');
+							window.open(\''.$ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession.'\');
 					});
 				});
 			</script>
@@ -593,7 +584,7 @@ class Ebay extends Module
 					<label>'.$this->l('Click on the button below').'</label>
 					<div class="margin-form">
 						<br class="clear"/>
-						<label for="eBayUsername">'.$this->l('eBay User ID').'&nbsp;&nbsp;</label><input id="eBayUsername" type="text" name="eBayUsername" value="'.$cookie->eBayUsername.'" />
+						<label for="eBayUsername">'.$this->l('eBay User ID').'&nbsp;&nbsp;</label><input id="eBayUsername" type="text" name="eBayUsername" value="'.$this->context->cookie->eBayUsername.'" />
 						<br class="clear"/><br />
 						<input type="submit" id="button_ebay" class="button" value="'.$this->l('Register the module on eBay').'" />
 					</div>
@@ -667,8 +658,6 @@ class Ebay extends Module
 
 	private function _displayFormParameters()
 	{
-		global $cookie;
-
 		// Loading config currency
 		$configCurrency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
 
@@ -797,8 +786,6 @@ class Ebay extends Module
 
 	private function _displayFormCategory()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
@@ -818,7 +805,7 @@ class Ebay extends Module
 		$categoryConfigListTmp = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 		foreach ($categoryConfigListTmp as $c)
 			$categoryConfigList[$c['id_category']] = $c;
-		$categoryList = $this->_getChildCategories(Category::getCategories($cookie->id_lang), 0);
+		$categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
 		$eBayCategoryList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
 
@@ -917,7 +904,6 @@ class Ebay extends Module
 	private function _postProcessCategory()
 	{
 		// Init Var
-		global $cookie;
 		$date = date('Y-m-d H:i:s');
 		$services = Tools::getValue('service');
 
@@ -992,13 +978,11 @@ class Ebay extends Module
 
 	private function _displayFormTemplateManager()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
 
-		$iso = Language::getIsoById((int)($cookie->id_lang));
+		$iso = $context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 
@@ -1083,8 +1067,6 @@ class Ebay extends Module
 
 	private function _displayFormEbaySync()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
@@ -1170,7 +1152,7 @@ class Ebay extends Module
 		$categoryConfigListTmp = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 		foreach ($categoryConfigListTmp as $c)
 			$categoryConfigList[$c['id_category']] = $c;
-		$categoryList = $this->_getChildCategories(Category::getCategories($cookie->id_lang), 0);
+		$categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
 		$html .= '<table class="table tableDnD" cellpadding="0" cellspacing="0" width="90%">
 			<thead>
 				<tr class="nodrag nodrop">
@@ -1256,7 +1238,6 @@ class Ebay extends Module
 
 	private function _syncProducts($productsList)
 	{
-		global $link;
 		$fees = 0;
 		$count = 0;
 		$count_success = 0;
@@ -1288,9 +1269,9 @@ class Ebay extends Module
 				$images = $product->getImages($this->id_lang);
 				foreach ($images as $image)
 				{
-					$pictures[] = $prefix.$link->getImageLink('', $product->id.'-'.$image['id_image'], NULL);
-					$picturesMedium[] = $prefix.$link->getImageLink('', $product->id.'-'.$image['id_image'], 'medium');
-					$picturesLarge[] = $prefix.$link->getImageLink('', $product->id.'-'.$image['id_image'], 'large');
+					$pictures[] = $prefix.$this->context->link->getImageLink('', $product->id.'-'.$image['id_image'], NULL);
+					$picturesMedium[] = $prefix.$this->context->link->getImageLink('', $product->id.'-'.$image['id_image'], 'medium');
+					$picturesLarge[] = $prefix.$this->context->link->getImageLink('', $product->id.'-'.$image['id_image'], 'large');
 				}
 
 				// Load Variations
@@ -1326,7 +1307,7 @@ class Ebay extends Module
 				if (isset($combinationsImages) && !empty($combinationsImages) && count($combinationsImages) > 0)
 					foreach ($combinationsImages as $ci)
 						foreach ($ci as $i)
-							$variations[$product->id.'-'.$i['id_product_attribute']]['pictures'][] = $prefix.$link->getImageLink('', $product->id.'-'.$i['id_image'], NULL);
+							$variations[$product->id.'-'.$i['id_product_attribute']]['pictures'][] = $prefix.$this->context->link->getImageLink('', $product->id.'-'.$i['id_image'], NULL);
 
 
 				// Load basic price

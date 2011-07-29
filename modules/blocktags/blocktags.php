@@ -100,14 +100,13 @@ class BlockTags extends Module
 	*/
 	function hookLeftColumn($params)
 	{
-		$context = Context::getContext();
 
 		$tags = Tag::getMainTags((int)($params['cookie']->id_lang), (int)(Configuration::get('BLOCKTAGS_NBR')));
 		if (!sizeof($tags))
 			return false;
 		foreach ($tags AS &$tag)
 			$tag['class'] = 'tag_level'.($tag['times'] > BLOCKTAGS_MAX_LEVEL ? BLOCKTAGS_MAX_LEVEL : $tag['times']);
-		$context->smarty->assign('tags', $tags);
+		$this->context->smarty->assign('tags', $tags);
 		
 		return $this->display(__FILE__, 'blocktags.tpl');
 	}
@@ -119,8 +118,7 @@ class BlockTags extends Module
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blocktags.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blocktags.css', 'all');
 	}
 
 }

@@ -60,10 +60,9 @@ class BlockSupplier extends Module
 
 	function hookLeftColumn($params)
 	{
-		$context = Context::getContext();
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'suppliers' => Supplier::getSuppliers(false),
-			'link' => $context->link,
+			'link' => $this->context->link,
 			'text_list' => Configuration::get('SUPPLIER_DISPLAY_TEXT'),
 			'text_list_nb' => Configuration::get('SUPPLIER_DISPLAY_TEXT_NB'),
 			'form_list' => Configuration::get('SUPPLIER_DISPLAY_FORM'),
@@ -133,8 +132,7 @@ class BlockSupplier extends Module
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blocksupplier.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blocksupplier.css', 'all');
 	}
 }
 

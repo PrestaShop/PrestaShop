@@ -54,11 +54,10 @@ class BlockManufacturer extends Module
    
     function hookLeftColumn($params)
     {
-		$context = Context::getContext();
 
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'manufacturers' => Manufacturer::getManufacturers(),
-			'link' => $context->link,
+			'link' => $this->context->link,
 			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
 			'text_list_nb' => Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'),
 			'form_list' => Configuration::get('MANUFACTURER_DISPLAY_FORM'),
@@ -128,7 +127,6 @@ class BlockManufacturer extends Module
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockmanufacturer.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockmanufacturer.css', 'all');
 	}	
 }

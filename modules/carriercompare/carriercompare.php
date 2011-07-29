@@ -55,9 +55,8 @@ class CarrierCompare extends Module
 	{
 		if (!$this->isModuleAvailable())
 			return;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'style.css', 'all');
-		$context->controller->addJS(($this->_path).'carriercompare.js');
+		$this->context->controller->addCSS(($this->_path).'style.css', 'all');
+		$this->context->controller->addJS(($this->_path).'carriercompare.js');
 	}
 
 	/*
@@ -68,7 +67,7 @@ class CarrierCompare extends Module
 		if (!$this->isModuleAvailable())
 			return;
 
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'countries' => Country::getCountries($this->context->language->id),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
 			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
@@ -112,7 +111,6 @@ class CarrierCompare extends Module
 
 	public function saveSelection($id_country, $id_state, $zipcode, $id_carrier)
 	{
-		$context = Context::getContext();
 		$errors = array();
 
 		if (!Validate::isInt($id_state))
@@ -138,11 +136,11 @@ class CarrierCompare extends Module
 		if (sizeof($errors))
 			return $errors;
 
-		$context->cookie->id_country = $id_country;
-		$context->cookie->id_state = $id_state;
-		$context->cookie->postcode = $zipcode;
-		$context->cart->id_carrier = $id_carrier;
-		if (!$context->cart->update())
+		$this->context->cookie->id_country = $id_country;
+		$this->context->cookie->id_state = $id_state;
+		$this->context->cookie->postcode = $zipcode;
+		$this->context->cart->id_carrier = $id_carrier;
+		if (!$this->context->cart->update())
 			return array($this->l('Can\'t update the cart'));
 		return array();
 	}

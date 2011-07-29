@@ -132,7 +132,6 @@ class Blockrss extends Module
 
 	function hookLeftColumn($params)
 	{
-		$context = Context::getContext();
 		
 		// Conf
 		$title = strval(Configuration::get('RSS_FEED_TITLE'));
@@ -148,7 +147,7 @@ class Blockrss extends Module
 						$rss_links[] = array('title' => $item->title, 'url' => $item->link);
 		
 		// Display smarty
-		$context->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
+		$this->context->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
 
  	 	return $this->display(__FILE__, 'blockrss.tpl');
  	}
@@ -160,8 +159,7 @@ class Blockrss extends Module
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockrss.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockrss.css', 'all');
 	}
 }
 

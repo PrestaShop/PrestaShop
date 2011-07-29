@@ -58,10 +58,9 @@ class BlockMyAccount extends Module
 
 	public function hookLeftColumn($params)
 	{
-		$context = Context::getContext();
 		if (!$params['cookie']->isLogged())
 			return false;
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),
 			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
 			'HOOK_BLOCK_MY_ACCOUNT' => Module::hookExec('myAccountBlock')
@@ -85,8 +84,7 @@ class BlockMyAccount extends Module
 	}
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockmyaccount.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockmyaccount.css', 'all');
 	}
 }
 

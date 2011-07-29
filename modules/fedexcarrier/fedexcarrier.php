@@ -440,7 +440,6 @@ class FedexCarrier extends CarrierModule
 
 	private function _displayFormGeneral()
 	{
-		global $cookie;
 		$configCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		$html = '<script>
@@ -525,7 +524,7 @@ class FedexCarrier extends CarrierModule
 						<select name="fedex_carrier_country" id="fedex_carrier_country">
 							<option value="0">'.$this->l('Select a country ...').'</option>';
 							$idcountries = array();
-							foreach (Country::getCountries($cookie->id_lang) as $v)
+							foreach (Country::getCountries($this->context->language->id) as $v)
 							{
 								$html .= '<option value="'.$v['id_country'].'" '.($v['id_country'] == (int)(Tools::getValue('fedex_carrier_country', Configuration::get('FEDEX_CARRIER_COUNTRY'))) ? 'selected="selected"' : '').'>'.$v['name'].'</option>';
 								$idcountries[] = $v['id_country'];
@@ -715,8 +714,6 @@ class FedexCarrier extends CarrierModule
 
 	private function _getPathInTab($id_category)
 	{
-		global $cookie;
-
 		$category = Db::getInstance()->getRow('
 		SELECT id_category, level_depth, nleft, nright
 		FROM '._DB_PREFIX_.'category
@@ -728,7 +725,7 @@ class FedexCarrier extends CarrierModule
 			SELECT c.id_category, cl.name, cl.link_rewrite
 			FROM '._DB_PREFIX_.'category c
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)($cookie->id_lang).'
+			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$this->context->language->id.'
 			ORDER BY c.level_depth ASC
 			LIMIT '.(int)($category['level_depth'] + 1));
 
@@ -773,8 +770,6 @@ class FedexCarrier extends CarrierModule
 	
 	private function _displayFormCategory()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!$this->_webserviceTestResult)
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
@@ -909,7 +904,7 @@ class FedexCarrier extends CarrierModule
 						<div class="margin-form">
 							<select name="id_category">
 								<option value="0">'.$this->l('Select a category ...').'</option>
-								'.$this->_getChildCategories(Category::getCategories($cookie->id_lang), 0).'
+								'.$this->_getChildCategories(Category::getCategories($this->context->language->id), 0).'
 							</select>
 						</div>
 						<label>'.$this->l('Pickup Type').' : </label>
@@ -1051,8 +1046,6 @@ class FedexCarrier extends CarrierModule
 
 	private function _displayFormProduct()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!$this->_webserviceTestResult)
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
@@ -1080,7 +1073,7 @@ class FedexCarrier extends CarrierModule
 		foreach ($configProductList as $k => $c)
 		{
 			// Loading Product
-			$product = new Product((int)$c['id_product'], false, (int)$cookie->id_lang);
+			$product = new Product((int)$c['id_product'], false, (int)$this->context->language->id);
 
 			// Loading config currency
 			$configCurrency = new Currency($c['id_currency']);
@@ -1127,7 +1120,7 @@ class FedexCarrier extends CarrierModule
 		{
 			// Loading config
 			$configSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_fedex_rate_config` = '.(int)(Tools::getValue('id_fedex_rate_config')));
-			$product = new Product((int)$configSelected['id_product'], false, (int)$cookie->id_lang);
+			$product = new Product((int)$configSelected['id_product'], false, (int)$this->context->language->id);
 
 			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
 					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=edit&id_fedex_rate_config='.(int)(Tools::getValue('id_fedex_rate_config')).'" method="post" class="form">
@@ -1175,7 +1168,7 @@ class FedexCarrier extends CarrierModule
 								<option value="0">'.$this->l('Select a product ...').'</option>';
 						$productsList = Db::getInstance()->ExecuteS('
 						SELECT pl.* FROM `'._DB_PREFIX_.'product` p
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$cookie->id_lang.')
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.')
 						WHERE p.`active` = 1
 						ORDER BY pl.`name`');
 						foreach ($productsList as $product)

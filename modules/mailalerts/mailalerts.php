@@ -252,16 +252,14 @@ class MailAlerts extends Module
 
 	public function hookProductOutOfStock($params)
 	{
-		global $smarty, $cookie;
-
 		if (!$this->_customer_qty)
 			return ;
 
 		$id_product = (int)($params['product']->id);
 		$id_product_attribute = 0;
 
-		if (!$cookie->isLogged())
-			$smarty->assign('email', 1);
+		if (!$this->context->cookie->isLogged())
+			$this->context->smarty->assign('email', 1);
 		else
 		{
 			$id_customer = (int)($params['cookie']->id_customer);
@@ -269,7 +267,7 @@ class MailAlerts extends Module
 				return ;
 		}
 
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'id_product' => $id_product,
 			'id_product_attribute' => $id_product_attribute));
 
@@ -289,8 +287,6 @@ class MailAlerts extends Module
 
 	public function hookUpdateQuantity($params)
 	{
-		global $cookie;
-
 		if (is_object($params['product']))
 			$params['product'] = get_object_vars($params['product']);
 
@@ -309,9 +305,8 @@ class MailAlerts extends Module
 				'{qty}' => $qty,
 				'{last_qty}' => (int)(Configuration::get('MA_LAST_QTIES')),
 				'{product}' => strval($params['product']['name']).(isset($params['product']['attributes_small']) ? ' '.$params['product']['attributes_small'] : ''));
-			$id_lang = (is_object($cookie) AND isset($cookie->id_lang)) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
-			$iso = Language::getIsoById((int)$id_lang);
-			
+
+			$iso = $this->context->language->iso_code;
 		    if ($params['product']['active'] == 1)
 		    {
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/productoutofstock.txt') AND file_exists(dirname(__FILE__).'/mails/'.$iso.'/productoutofstock.html'))

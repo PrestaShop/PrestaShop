@@ -64,7 +64,6 @@ class BlockPaymentLogo extends Module
 
 	public function getContent()
 	{
-		$context = Context::getContext();
 		$html = '
 		<h2>'.$this->l('Payment logo').'</h2>
 		';
@@ -76,7 +75,7 @@ class BlockPaymentLogo extends Module
 				$html .= $this->displayConfirmation($this->l('Settings are updated'));
 			}
 		
-		$cmss = CMS::listCms($context->language->id);
+		$cmss = CMS::listCms($this->context->language->id);
 		
 		if (!sizeof($cmss))
 			$html .= $this->displayError($this->l('No CMS page is available'));
@@ -112,14 +111,13 @@ class BlockPaymentLogo extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 		
-		$context = Context::getContext();
 		
 		if (!Configuration::get('PS_PAYMENT_LOGO_CMS_ID'))
 			return;
-		$cms = new CMS(Configuration::get('PS_PAYMENT_LOGO_CMS_ID'), $context->language->id);
+		$cms = new CMS(Configuration::get('PS_PAYMENT_LOGO_CMS_ID'), $this->context->language->id);
 		if (!Validate::isLoadedObject($cms))
 			return;
-		$context->smarty->assign('cms_payement_logo', $cms);
+		$this->context->smarty->assign('cms_payement_logo', $cms);
 		return $this->display(__FILE__, 'blockpaymentlogo.tpl');
 	}
 	
@@ -136,8 +134,7 @@ class BlockPaymentLogo extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockpaymentlogo.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockpaymentlogo.css', 'all');
 	}
 
 }

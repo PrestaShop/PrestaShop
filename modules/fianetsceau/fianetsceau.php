@@ -231,8 +231,7 @@ class FianetSceau extends Module
 	
 	public function hookRightColumn($params)
 	{
-		global $cookie;
-		return '<a href="javascript:;" onclick="varwin=window.open(\'https://www.fia-net.com/certif/certificat.php?key='.Configuration::get('FIANET_SCEAU_SITEID').'&amp;lang='.Language::getIsoById((int)($cookie->id_lang)).'\', \'certificat\', \'width=650, height=510\', \'toolbar=no, location=no,directories=no, status=no, menubar=no, scrollbars=no, resizable=yes,dependent=yes\');"><img src="https://www.fia-net.com/img/logos/'.(($cookie->id_lang != 2 ) ? 'en/' : '' ).'rouge3bc.gif" title="Voir la fiche marchand sur Fia-net.com" alt="Voir la fiche marchand sur Fia-net.com" /></a>';
+		return '<a href="javascript:;" onclick="varwin=window.open(\'https://www.fia-net.com/certif/certificat.php?key='.Configuration::get('FIANET_SCEAU_SITEID').'&amp;lang='.$this->context->language->iso_code.'\', \'certificat\', \'width=650, height=510\', \'toolbar=no, location=no,directories=no, status=no, menubar=no, scrollbars=no, resizable=yes,dependent=yes\');"><img src="https://www.fia-net.com/img/logos/'.(($this->context->language->id != 2 ) ? 'en/' : '' ).'rouge3bc.gif" title="Voir la fiche marchand sur Fia-net.com" alt="Voir la fiche marchand sur Fia-net.com" /></a>';
 	}
 }
 

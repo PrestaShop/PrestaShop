@@ -36,8 +36,7 @@ class PaypalPayment extends Paypal
 
 	public function getAuthorisation()
 	{
-		global $cookie, $cart;
-
+		$cart = Context::getContext()->cart;
 		// Getting cart informations
 		$currency = new Currency((int)($cart->id_currency));
 		if (!Validate::isLoadedObject($currency))

@@ -6,8 +6,6 @@ class importerosc extends ImportModule
 {
 	public function __construct()
 	{
-		global $cookie;
-		
 		$this->name = 'importerosc';
 		$this->tab = 'migration_tools';
 		$this->version = '1.0';

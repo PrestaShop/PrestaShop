@@ -47,7 +47,6 @@ class BlockCart extends Module
 	public function smartyAssigns(&$smarty, &$params)
 	{
 		global $errors;
-		$context = Context::getContext();
 
 		// Set currency
 		if (!(int)($params['cart']->id_currency))
@@ -100,8 +99,8 @@ class BlockCart extends Module
 		));
 		if (sizeof($errors))
 			$smarty->assign('errors', $errors);
-		if(isset($context->cookie->ajax_blockcart_display))
-			$smarty->assign('colapseExpandStatus', $context->cookie->ajax_blockcart_display);
+		if(isset($this->context->cookie->ajax_blockcart_display))
+			$smarty->assign('colapseExpandStatus', $this->context->cookie->ajax_blockcart_display);
 	}
 
 	public function getContent()
@@ -160,9 +159,8 @@ class BlockCart extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
 
-		$context = Context::getContext();
-		$context->smarty->assign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
-		$this->smartyAssigns($context->smarty, $params);
+		$this->context->smarty->assign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
+		$this->smartyAssigns($this->context->smarty, $params);
 		return $this->display(__FILE__, 'blockcart.tpl');
 	}
 
@@ -176,8 +174,7 @@ class BlockCart extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
 
-		$context = Context::getContext();
-		$this->smartyAssigns($context->smarty, $params);
+		$this->smartyAssigns($this->context->smarty, $params);
 		$res = $this->display(__FILE__, 'blockcart-json.tpl');
 		return $res;
 	}
@@ -186,10 +183,9 @@ class BlockCart extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockcart.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
-			$context->controller->addJS(($this->_path).'ajax-cart.js');
+			$this->context->controller->addJS(($this->_path).'ajax-cart.js');
 	}
 }
 

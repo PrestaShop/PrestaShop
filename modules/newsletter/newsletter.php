@@ -36,8 +36,6 @@ class Newsletter extends Module
 
     public function __construct()
     {
-		global $cookie;
-
         $this->name = 'newsletter';
         $this->tab = 'administration';
         $this->version = 2.0;
@@ -55,7 +53,7 @@ class Newsletter extends Module
 			$this->_postValid = array();
 
 			// Getting data...
-			$_countries = Country::getCountries((int)($cookie->id_lang));
+			$_countries = Country::getCountries($this->context->language->id);
 
 			// ...formatting array
 			$countries[0] = $this->l('All countries');
