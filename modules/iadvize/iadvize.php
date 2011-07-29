@@ -58,9 +58,7 @@ class iAdvize extends Module
 	
 	public function getContent()
 	{
-		global $cookie;
-
-		$lang = new Language((int)($cookie->id_lang));
+		$lang = $this->context->language;
 		if (!in_array($lang->iso_code, array('fr', 'en', 'es')))
 			$lang->iso_code = 'en';
 		

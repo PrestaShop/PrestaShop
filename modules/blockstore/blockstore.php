@@ -63,17 +63,15 @@ class BlockStore extends Module
 	
 	function hookRightColumn($params)
 	{
-		$context = Context::getContext();
 		
 		
-		$context->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
+		$this->context->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		return $this->display(__FILE__, 'blockstore.tpl');
 	}
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS($this->_path.'/blockstore.css', 'all');
+		$this->context->controller->addCSS($this->_path.'/blockstore.css', 'all');
 	}
 	
 	public function postProcess()

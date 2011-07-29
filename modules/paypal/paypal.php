@@ -57,9 +57,8 @@ class PayPal extends PaymentModule
 		if (file_exists(_PS_ROOT_DIR_.'/modules/paypalapi/paypalapi.php') AND $this->active)
 			$this->warning = $this->l('All features of Paypal API module are be include in the new Paypal module. In order to don\'t have any conflict, please don\'t use and remove PayPalAPI module.');
 
-		global $cookie;
 		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.Tools::strtolower(Language::getIsoById(intval($cookie->id_lang))).'&id_lang='.(int)$cookie->id_lang.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
+		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.Tools::strtolower($this->context->language->iso_code).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK')
 		{
@@ -180,8 +179,6 @@ class PayPal extends PaymentModule
 	
 	public function hookPayment($params)
 	{
-		global $smarty;
-		
 		if (!$this->active)
 			return ;
 		/*
@@ -196,8 +193,8 @@ class PayPal extends PaymentModule
 		{
 			if ($this->_isPayPalAPIAvailable())
 			{
-				$smarty->assign('integral', (Configuration::get('PAYPAL_PAYMENT_METHOD') == 0 ? 1 : 0));
-				$smarty->assign('logo', _MODULE_DIR_.$this->name.'/paypal.gif');
+				$this->context->smarty->assign('integral', (Configuration::get('PAYPAL_PAYMENT_METHOD') == 0 ? 1 : 0));
+				$this->context->smarty->assign('logo', _MODULE_DIR_.$this->name.'/paypal.gif');
 				return $this->display(__FILE__, 'payment/payment.tpl');
 			}
 			else
@@ -209,14 +206,12 @@ class PayPal extends PaymentModule
 	
 	public function hookShoppingCartExtra($params)
 	{
-		global $cookie, $smarty;
-
 		if (!$this->active)
 			return ;
 
-		if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT') AND !$cookie->isLogged(true) AND $this->_isPayPalAPIAvailable())
+		if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT') AND !$this->context->cookie->isLogged(true) AND $this->_isPayPalAPIAvailable())
 		{
-			$smarty->assign('logo', $this->getLogo(true));
+			$this->context->smarty->assign('logo', $this->getLogo(true));
 			return $this->display(__FILE__, 'express/shopping_cart.tpl');
 		}
 	}
@@ -231,10 +226,8 @@ class PayPal extends PaymentModule
 	
 	public function hookRightColumn($params)
 	{
-		global $smarty, $cookie;
-	 
-		$smarty->assign('iso_code', Tools::strtolower(Language::getIsoById($cookie->id_lang ? (int)($cookie->id_lang) : 1)));
-		$smarty->assign('logo', $this->getLogo(false, true));
+		$this->context->smarty->assign('iso_code', Tools::strtolower($this->context->language));
+		$this->context->smarty->assign('logo', $this->getLogo(false, true));
 		return $this->display(__FILE__, 'column.tpl');
 	}
 
@@ -251,13 +244,11 @@ class PayPal extends PaymentModule
 		/* Only execute if you use PayPal API for payment */
 		if (Configuration::get('PAYPAL_PAYMENT_METHOD') != _PAYPAL_INTEGRAL_EVOLUTION_ AND $this->_isPayPalAPIAvailable())
 		{
-			global $cookie;
-	
 			if ($params['module'] != $this->name)
 				return false;
-			if (!$token = $cookie->paypal_token)
+			if (!$token = $this->context->cookie->paypal_token)
 				return false;
-			if (!$payerID = $cookie->paypal_payer_id)
+			if (!$payerID = $this->context->cookie->paypal_payer_id)
 				return false;
 			Tools::redirect('modules/paypal/express/submit.php?confirm=1&token='.$token.'&payerID='.$payerID);
 		}
@@ -375,8 +366,6 @@ class PayPal extends PaymentModule
 
 	public function makePayPalAPIValidation($cookie, $cart, $id_currency, $payerID, $type)
 	{
-		global $cookie;
-
 		if (!$this->active)
 			return ;
 		if (!$this->_isPayPalAPIAvailable())
@@ -558,11 +547,9 @@ class PayPal extends PaymentModule
 	
 	public function getLogo($ppExpress = false, $vertical = false)
 	{
-		global $cookie;
-
 		if ($ppExpress)
 		{
-			$iso_code = Tools::strtoupper(Language::getIsoById($cookie->id_lang ? (int)$cookie->id_lang : 1));
+			$iso_code = Tools::strtoupper($this->context->language);
 			$logo = array(
 				'FR' => 'FR',
 				'DE' => 'DE',
@@ -612,18 +599,13 @@ class PayPal extends PaymentModule
 	
 	public function getCountryCode()
 	{
-		global $cookie;
-
-		$cart = new Cart((int)$cookie->id_cart);
-		$address = new Address((int)$cart->id_address_invoice);
-		$country = new Country((int)$address->id_country);
+		$address = new Address($this->context->cart->id_address_invoice);
+		$country = new Country($address->id_country);
 		return $country->iso_code;
 	}
 	
 	public function displayPayPalAPIError($message, $log = false)
 	{
-		global $cookie, $smarty;
-
 		$send = true;
 		// Sanitize log
 		foreach ($log AS $key => $string)
@@ -644,11 +626,11 @@ class PayPal extends PaymentModule
 			}
 
 		include(dirname(__FILE__).'/../../header.php');
-		$smarty->assign('message', $message);
-		$smarty->assign('logs', $log);
+		$this->context->smarty->assign('message', $message);
+		$this->context->smarty->assign('logs', $log);
 		$data = array('{logs}' => implode('<br />', $log));
 		if ($send)
-			Mail::Send((int)($cookie->id_lang), 'error_reporting', Mail::l('Error reporting from your PayPal module'), $data, Configuration::get('PS_SHOP_EMAIL'), NULL, NULL, NULL, NULL, NULL, _PS_MODULE_DIR_.$this->name.'/mails/');
+			Mail::Send($this->context->language->id, 'error_reporting', Mail::l('Error reporting from your PayPal module'), $data, Configuration::get('PS_SHOP_EMAIL'), NULL, NULL, NULL, NULL, NULL, _PS_MODULE_DIR_.$this->name.'/mails/');
 		echo $this->display(__FILE__, 'error.tpl');
 		include_once(dirname(__FILE__).'/../../footer.php');
 		die;
@@ -747,14 +729,12 @@ class PayPal extends PaymentModule
 	
 	private function _getSolutionTabHtml()
 	{
-		global $cookie;
-
 		$paymentMethod = (int)(Tools::getValue('payment_method', Configuration::get('PAYPAL_PAYMENT_METHOD')));
 		$paypalExpress = (int)(Tools::isSubmit('paypal_express') ? 1 : Configuration::get('PAYPAL_EXPRESS_CHECKOUT'));
 		$paypalDebug = (int)(Tools::isSubmit('paypal_debug') ? 1 : Configuration::get('PAYPAL_DEBUG_MODE'));
 		
 		$link = 'http://altfarm.mediaplex.com/ad/ck/3484-23403-8030-88?ID=PROCPRESTA';
-		$lang = new Language((int)$cookie->id_lang);
+		$lang = $this->context->language;
 		if (strtolower($lang->iso_code) == 'es')
 			$link = 'http://altfarm.mediaplex.com/ad/ck/3484-34334-12439-1';
 		else if (strtolower($lang->iso_code) == 'it')
@@ -783,9 +763,7 @@ class PayPal extends PaymentModule
 	
 	private function _getSettingsTabHtml()
 	{
-		global $cookie;
-
-		$lang = new Language((int)$cookie->id_lang);
+		$lang = $this->context->language;
 		$sandboxMode = (int)(Tools::getValue('sandbox_mode', Configuration::get('PAYPAL_SANDBOX')));
 		$paypalCapture = (int)(Tools::getValue('paypal_capture', Configuration::get('PAYPAL_CAPTURE')));
 		
@@ -838,9 +816,7 @@ class PayPal extends PaymentModule
 	
 	private function _getPersonalizationsTabHtml()
 	{
-		global $cookie;
-
-		$lang = new Language((int)$cookie->id_lang);
+		$lang = $this->context->language;
 		$template_paypal = Tools::getValue('template_paypal', Configuration::get('PAYPAL_TEMPLATE'));
 		
 		return '
@@ -879,8 +855,6 @@ class PayPal extends PaymentModule
 	
 	private function _postProcess()
 	{
-		global $cookie;
-		
 		if (Tools::isSubmit('submitPayPal'))
 		{
 			$template_available = array('A', 'B', 'C');
@@ -944,7 +918,7 @@ class PayPal extends PaymentModule
 				if ($response['ACK'] == 'Success')
 				{
 					if ($response['PAYMENTSTATUS'] == 'Completed' OR $response['PAYMENTSTATUS'] == 'Reversed' OR ($response['PAYMENTSTATUS'] == 'Pending' AND $response['PENDINGREASON'] == 'authorization'))
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=validationOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=validationOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 					else
 						$this->_html .= '<p><b>'.$this->l('Status').':</b> '.$response['PAYMENTSTATUS'].' ('.$this->l('Reason:').' '.$response['PENDINGREASON'].')</p>';
 				}
@@ -962,9 +936,9 @@ class PayPal extends PaymentModule
 				if ($response['ACK'] == 'Success')
 				{
 					if ($response['PAYMENTSTATUS'] == 'Completed')
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 					else
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=captureError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 				}
 				else
 					$this->_html .= '<p style="color:red;">'.$this->l('Error from PayPal: ').$response['L_LONGMESSAGE0'].' (#'.$response['L_ERRORCODE0'].')</p>';
@@ -980,9 +954,9 @@ class PayPal extends PaymentModule
 				if ($response['ACK'] == 'Success')
 				{
 					if ($response['REFUNDTRANSACTIONID'] != '')
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundOk&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 					else
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+						Tools::redirectAdmin(AdminTab::$currentIndex.'&id_order='.(int)(Tools::getValue('id_order')).'&vieworder&paypal=refundError&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 				}
 				else
 					$this->_html .= '<p style="color:red;">'.$this->l('Error from PayPal: ').$response['L_LONGMESSAGE0'].' (#'.$response['L_ERRORCODE0'].')</p>';
@@ -1041,8 +1015,6 @@ class PayPal extends PaymentModule
 	
 	private function _doTotalRefund($id_order)
 	{
-		global $cookie;
-		
 		if (!$this->_isPayPalAPIAvailable())
 			return false;
 		if (!$id_order)
@@ -1089,8 +1061,6 @@ class PayPal extends PaymentModule
 	
 	private function _doCapture($id_order)
 	{
-		global $cookie;
-		
 		include_once(_PS_MODULE_DIR_.'paypal/api/paypallib.php');
 		
 		if (!$this->_isPayPalAPIAvailable())
@@ -1129,8 +1099,6 @@ class PayPal extends PaymentModule
 	
 	private function _updatePaymentStatusOfOrder($id_order)
 	{
-		global $cookie;
-		
 		include_once(_PS_MODULE_DIR_.'paypal/api/paypallib.php');
 		
 		if (!$this->_isPayPalAPIAvailable())

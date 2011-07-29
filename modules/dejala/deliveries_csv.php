@@ -15,7 +15,6 @@
 		return ($l_array);
 	}
 
-	global $smarty;
 	$dejalaConfig = new DejalaConfig();
 	$dejalaConfig->loadConfig();
 
@@ -66,7 +65,7 @@
 						}
 						$l_deliveries[$key] = $l_delivery;
 					}
-					$smarty->assign('deliveries', $l_deliveries);
-					$smarty->display(dirname(__FILE__).'/dejala_deliveries_csv.tpl');
+					Context::getContext()->smarty->assign('deliveries', $l_deliveries);
+					Context::getContext()->smarty->display(dirname(__FILE__).'/dejala_deliveries_csv.tpl');
 				}
 		}

@@ -68,12 +68,10 @@ class		WishList extends ObjectModel
 
 	public function delete()
 	{
-		$context = Context::getContext();
-		
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'wishlist_email` WHERE `id_wishlist` = '.(int)($this->id));
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'wishlist_product` WHERE `id_wishlist` = '.(int)($this->id));
-		if (isset($context->cookie->id_wishlist))
-			unset($context->cookie->id_wishlist);
+		if (isset($this->context->cookie->id_wishlist))
+			unset($this->context->cookie->id_wishlist);
 		
 		return (parent::delete());
 	}
@@ -103,7 +101,6 @@ class		WishList extends ObjectModel
 	public static function isExistsByNameForUser($name)
 	{
 		$context = Context::getContext();
-		
 		return Db::getInstance()->getValue('
 		SELECT COUNT(*) AS total
 		FROM `'._DB_PREFIX_.'wishlist` 

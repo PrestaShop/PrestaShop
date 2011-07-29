@@ -98,7 +98,6 @@ class DateOfDelivery extends Module
 
 	public function hookBeforeCarrier($params)
 	{
-		$context = Context::getContext();
 		if (!sizeof($params['carriers']))
 			return false;
 		
@@ -111,7 +110,7 @@ class DateOfDelivery extends Module
 		foreach ($params['carriers'] as $carrier)
 			$datesDelivery[(int)($carrier['id_carrier'])] = $this->_getDatesOfDelivery((int)($carrier['id_carrier']), $oos);
 		
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'datesDelivery' => $datesDelivery,
 			'id_carrier' => ($params['cart']->id_carrier ? (int)($params['cart']->id_carrier) : (int)(Configuration::get('PS_CARRIER_DEFAULT')))
 		));
@@ -121,7 +120,6 @@ class DateOfDelivery extends Module
 	
 	public function hookOrderDetailDisplayed($params)
 	{
-		$context = Context::getContext();
 		
 		$oos = false; // For out of stock management
 		foreach ($params['order']->getProducts() as $product)
@@ -134,7 +132,7 @@ class DateOfDelivery extends Module
 		if (!is_array($datesDelivery) OR !sizeof($datesDelivery))
 			return ;
 			
-		$context->smarty->assign('datesDelivery', $datesDelivery);
+		$this->context->smarty->assign('datesDelivery', $datesDelivery);
 		
 		return $this->display(__FILE__, 'orderDetail.tpl');
 	}
@@ -312,9 +310,8 @@ class DateOfDelivery extends Module
 	
 	private function _setCarrierRuleForm()
 	{
-		$context = Context::getContext();
 		
-		$carriers = Carrier::getCarriers($context->language->id, true , false,false, NULL, ALL_CARRIERS);
+		$carriers = Carrier::getCarriers($this->context->language->id, true , false,false, NULL, ALL_CARRIERS);
 		if (Tools::isSubmit('editCarrierRule') AND $this->_isCarrierRuleExists(Tools::getValue('id_carrier_rule')))
 			$carrier_rule = $this->_getCarrierRule(Tools::getValue('id_carrier_rule'));
 		

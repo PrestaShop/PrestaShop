@@ -243,13 +243,11 @@ class Loyalty extends Module
 
 	public function getContent()
 	{
-		global $cookie;
-
 		$this->instanceDefaultStates();
 		$this->_postProcess();
 
-		$categories = Category::getCategories((int)($cookie->id_lang));
-		$order_states = OrderState::getOrderStates((int)$cookie->id_lang);
+		$categories = Category::getCategories($this->context->language->id);
+		$order_states = OrderState::getOrderStates($this->context->language->id);
 		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
@@ -442,8 +440,6 @@ class Loyalty extends Module
 	{
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
 		
-		global $smarty;
-
 		$product = new Product((int)Tools::getValue('id_product'));
 		if (Validate::isLoadedObject($product))
 		{
@@ -458,14 +454,14 @@ class Loyalty extends Module
 				if (!(int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND Product::isDiscounted((int)$product->id))
 				{
 					$points = 0;
-					$smarty->assign('no_pts_discounted', 1);
+					$this->context->smarty->assign('no_pts_discounted', 1);
 				}
 				else			
 					$points = (int)(LoyaltyModule::getNbPointsByPrice($product->getPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true, (int)($product->getIdProductAttributeMostExpensive()))));
 				$pointsAfter = $points;
 				$pointsBefore = 0;
 			}
-			$smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'points' => (int)($points),
 				'total_points' => (int)($pointsAfter),
 				'point_rate' => Configuration::get('PS_LOYALTY_POINT_RATE'),
@@ -521,12 +517,10 @@ class Loyalty extends Module
 	{
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
 		
-		global $smarty;
-
 		if (Validate::isLoadedObject($params['cart']))
 		{
 			$points = LoyaltyModule::getCartNbPoints($params['cart']);
-			$smarty->assign(array(
+			$this->context->smarty->assign(array(
 				 'points' => (int)$points, 
 				 'voucher' => LoyaltyModule::getVoucherValue((int)$points),
 				 'guest_checkout' => (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED')

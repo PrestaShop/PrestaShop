@@ -169,15 +169,13 @@ class BlockWishList extends Module
 	
 	public function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
 		return $this->display(__FILE__, 'blockwishlist-header.tpl');
 	}
 
 	public function hookRightColumn($params)
 	{
 		global $errors;
-		$context = Context::getContext();
 
 		require_once(dirname(__FILE__).'/WishList.php');
 		if ($params['cookie']->isLogged())
@@ -196,7 +194,7 @@ class BlockWishList extends Module
 			}
 			else
 				$id_wishlist = $params['cookie']->id_wishlist;
-			$context->smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'id_wishlist' => $id_wishlist,
 				'isLogged' => true,
 				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $params['cookie']->id_customer, $params['cookie']->id_lang, null, true)),
@@ -204,7 +202,7 @@ class BlockWishList extends Module
 				'ptoken' => Tools::getToken(false)));
 		}
 		else
-			$context->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
+			$this->context->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
 		return ($this->display(__FILE__, 'blockwishlist.tpl'));
 	}
 
@@ -215,8 +213,7 @@ class BlockWishList extends Module
 
 	public function hookProductActions($params)
 	{
-		$context = Context::getContext();
-		$context->smarty->assign('id_product', (int)(Tools::getValue('id_product')));
+		$this->context->smarty->assign('id_product', (int)(Tools::getValue('id_product')));
 		return ($this->display(__FILE__, 'blockwishlist-extra.tpl'));
 	}
 	
@@ -232,19 +229,18 @@ class BlockWishList extends Module
 	
 	private function _displayProducts($id_wishlist)
 	{
-		$context = Context::getContext();
 		include_once(dirname(__FILE__).'/WishList.php');
 		
 		$wishlist = new WishList($id_wishlist);
-		$products = WishList::getProductByIdCustomer($id_wishlist, $wishlist->id_customer, $context->language->id);
+		$products = WishList::getProductByIdCustomer($id_wishlist, $wishlist->id_customer, $this->context->language->id);
 		for ($i = 0; $i < sizeof($products); ++$i)
 		{
-			$obj = new Product((int)($products[$i]['id_product']), false, $context->language->id);
+			$obj = new Product((int)($products[$i]['id_product']), false, $this->context->language->id);
 			if (!Validate::isLoadedObject($obj))
 				continue;
 			else
 			{
-				$images = $obj->getImages($context->language->id);
+				$images = $obj->getImages($this->context->language->id);
 				foreach ($images AS $k => $image)
 				{
 					if ($image['cover'])
@@ -254,7 +250,7 @@ class BlockWishList extends Module
 					}
 				}
 				if (!isset($products[$i]['cover']))
-					$products[$i]['cover'] = $context->language->iso_code.'-default';
+					$products[$i]['cover'] = $this->context->language->iso_code.'-default';
 			}
 		}
 		$this->_html .= '

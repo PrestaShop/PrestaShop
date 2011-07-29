@@ -91,11 +91,10 @@ class BlockLayered extends Module
 		if ($id_parent == 1)
 			return;
 
-		$context = Context::getContext();
-		$context->controller->addJS($this->_path.'blocklayered.js');
-		$context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
-		$context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
-		$context->controller->addCSS(($this->_path).'blocklayered.css', 'all');
+		$this->context->controller->addJS($this->_path.'blocklayered.js');
+		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
+		$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blocklayered.css', 'all');
 	}
 		
 	public function hookFooter($params)
@@ -134,7 +133,6 @@ class BlockLayered extends Module
 	
 	public function getContent()
 	{
-		$context = Context::getContext();
 		
 		$errors = array();
 		$html = '';
@@ -313,7 +311,7 @@ class BlockLayered extends Module
 					<td>'.(int)$filtersTemplate['id_layered_filter'].'</td>
 					<td style="text-align: left; padding-left: 10px; width: 270px;">'.$filtersTemplate['name'].'</td>
 					<td style="text-align: center;">'.(int)$filtersTemplate['n_categories'].'</td>
-					<td>'.Tools::displayDate($filtersTemplate['date_add'], (int)$context->language->id, true).'</td>
+					<td>'.Tools::displayDate($filtersTemplate['date_add'], (int)$this->context->language->id, true).'</td>
 					<td>
 						<a href="#" onclick="updElements('.($filtersTemplate['n_categories'] ? 0 : 1).', '.(int)$filtersTemplate['id_layered_filter'].');"><img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
 						<a href="'.$_SERVER['REQUEST_URI'].'&deleteFilterTemplate=1&id_layered_filter='.(int)$filtersTemplate['id_layered_filter'].'" onclick="return confirm(\''.addslashes($this->l('Delete filter template #').(int)$filtersTemplate['id_layered_filter'].$this->l('?')).'\');"><img src="../img/admin/delete.gif" alt="" title="'.$this->l('Delete').'" /></a>
@@ -648,7 +646,6 @@ class BlockLayered extends Module
 		if (!empty($this->products))
 			return $this->products;
 			
-		$context = Context::getContext();
 
 		/* If the current category isn't defined of if it's homepage, we have nothing to display */
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
@@ -736,14 +733,14 @@ class BlockLayered extends Module
 					p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer, stock.quantity,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM '._DB_PREFIX_.'product p
-				'.$context->shop->sqlAsso('product', 'p').'
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.$context->shop->sqlLang('pl').')
+				'.$this->context->shop->sqlAsso('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.$this->context->shop->sqlLang('pl').')
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
-				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)$context->language->id.')
+				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)$this->context->language->id.')
 				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
 				WHERE p.`active` = 1
-					AND pl.id_lang = '.(int)$context->language->id
+					AND pl.id_lang = '.(int)$this->context->language->id
 					.$queryFilters.
 				' ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby')).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
 				' LIMIT '.(((int)(Tools::getValue('p', 1)) - 1) * $n.','.$n);
@@ -754,7 +751,6 @@ class BlockLayered extends Module
 	
 	public function generateFiltersBlock($selectedFilters = array())
 	{
-		$context = Context::getContext();
 
 		/* If the current category isn't defined of if it's homepage, we have nothing to display */
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
@@ -771,7 +767,7 @@ class BlockLayered extends Module
 		FROM '._DB_PREFIX_.'category c
 		LEFT JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = c.id_category)
 		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-		WHERE c.nleft > '.(int)$category->nleft.' and c.nright <= '.(int)$category->nright.' AND c.active = 1 AND c.id_parent = '.(int)$category->id.' AND cl.id_lang = '.(int)$context->language->id.'
+		WHERE c.nleft > '.(int)$category->nleft.' and c.nright <= '.(int)$category->nright.' AND c.active = 1 AND c.id_parent = '.(int)$category->id.' AND cl.id_lang = '.(int)$this->context->language->id.'
 		AND cg.id_group '.pSQL(sizeof($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
 		GROUP BY c.id_category
 		ORDER BY c.position ASC');
@@ -836,7 +832,7 @@ class BlockLayered extends Module
 					SELECT fvl.id_feature_value, fvl.value
 					FROM '._DB_PREFIX_.'feature_value fv
 					LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fv.id_feature_value)
-					WHERE (fv.custom IS NULL OR fv.custom = 0) AND fv.id_feature = '.(int)$filterBlocks[(int)$filter['position']]['id_key'].' AND fvl.id_lang = '.(int)$context->language->id);
+					WHERE (fv.custom IS NULL OR fv.custom = 0) AND fv.id_feature = '.(int)$filterBlocks[(int)$filter['position']]['id_key'].' AND fvl.id_lang = '.(int)$this->context->language->id);
 					break;
 
 				case 'id_attribute_group':
@@ -846,7 +842,7 @@ class BlockLayered extends Module
 					SELECT al.id_attribute, al.name, a.color
 					FROM '._DB_PREFIX_.'attribute a
 					LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = a.id_attribute)
-					WHERE a.id_attribute_group = '.(int)$filterBlocks[(int)$filter['position']]['id_key'].' AND al.id_lang = '.(int)$context->language->id);					
+					WHERE a.id_attribute_group = '.(int)$filterBlocks[(int)$filter['position']]['id_key'].' AND al.id_lang = '.(int)$this->context->language->id);					
 					break;
 			}
 		}
@@ -857,7 +853,7 @@ class BlockLayered extends Module
 			$fNames = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT id_feature, name
 			FROM '._DB_PREFIX_.'feature_lang
-			WHERE id_lang = '.(int)$context->language->id.' AND id_feature IN ('.implode(',', $f).')');
+			WHERE id_lang = '.(int)$this->context->language->id.' AND id_feature IN ('.implode(',', $f).')');
 			$fNameByID = array();
 			foreach ($fNames AS $fName)
 				$fNameByID[(int)$fName['id_feature']] = $fName['name'];
@@ -870,7 +866,7 @@ class BlockLayered extends Module
 			SELECT ag.id_attribute_group, agl.public_name, ag.is_color_group
 			FROM '._DB_PREFIX_.'attribute_group ag
 			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = ag.id_attribute_group)
-			WHERE agl.id_lang = '.(int)$context->language->id.' AND ag.id_attribute_group IN ('.implode(',', $a).')');
+			WHERE agl.id_lang = '.(int)$this->context->language->id.' AND ag.id_attribute_group IN ('.implode(',', $a).')');
 
 			$aNameByID = $colorGroups = array();
 			foreach ($aNames AS $aName)
@@ -1085,9 +1081,9 @@ class BlockLayered extends Module
 		foreach($_GET AS $key => $val)
 			$params .= $key.'='.$val.'&';
 		
-		$share_url = $context->link->getCategoryLink((int)$category->id, $category->link_rewrite[(int)$context->language->id], $context->language->id).rtrim($params, '&');
+		$share_url = $this->context->link->getCategoryLink((int)$category->id, $category->link_rewrite[(int)$this->context->language->id], $this->context->language->id).rtrim($params, '&');
 				
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 		'display_share' => (int)Configuration::get('PS_LAYERED_SHARE'),
 		'share_url' => $this->getShortLink($share_url),
 		'layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'),
@@ -1102,7 +1098,6 @@ class BlockLayered extends Module
 	
 	public function ajaxCallBackOffice($categoryBox = array(), $id_layered_filter = NULL)
 	{
-		$context = Context::getContext();
 				
 		if (!empty($id_layered_filter))
 		{
@@ -1123,7 +1118,7 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_attribute = a.id_attribute)
 		LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product_attribute = pac.id_product_attribute)
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = pa.id_product)' : '').'
-		WHERE agl.id_lang = '.(int)$context->language->id.
+		WHERE agl.id_lang = '.(int)$this->context->language->id.
 		(sizeof($categoryBox) ? ' AND cp.id_category IN ('.implode(',', $categoryBox).')' : '').'
 		GROUP BY ag.id_attribute_group');
 		
@@ -1134,7 +1129,7 @@ class BlockLayered extends Module
 		'.(sizeof($categoryBox) ? '
 		LEFT JOIN '._DB_PREFIX_.'feature_product fp ON (fp.id_feature = fv.id_feature)
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = fp.id_product)' : '').'		
-		WHERE (fv.custom IS NULL OR fv.custom = 0) AND fl.id_lang = '.(int)$context->language->id.
+		WHERE (fv.custom IS NULL OR fv.custom = 0) AND fl.id_lang = '.(int)$this->context->language->id.
 		(sizeof($categoryBox) ? ' AND cp.id_category IN ('.implode(',', $categoryBox).')' : '').'
 		GROUP BY fl.id_feature');
 		
@@ -1215,11 +1210,10 @@ class BlockLayered extends Module
 	
 	public function ajaxCall()
 	{
-		$context = Context::getContext();
 
 		$selectedFilters = $this->getSelectedFilters();
 		$products = $this->getProductByFilters($selectedFilters);
-		$products = Product::getProductsProperties($context->language->id, $products);
+		$products = Product::getProductsProperties($this->context->language->id, $products);
 		$nbProducts = $this->nbr_products;
 		$range = 2; /* how many pages around page selected */
 		
@@ -1241,7 +1235,7 @@ class BlockLayered extends Module
 		if ($stop > $pages_nb)
 			$stop = (int)($pages_nb);
 			
-		$context->smarty->assign('nb_products', $nbProducts);
+		$this->context->smarty->assign('nb_products', $nbProducts);
 		$pagination_infos = array(
 			'pages_nb' => (int)($pages_nb),
 			'p' => (int)$p,
@@ -1251,15 +1245,15 @@ class BlockLayered extends Module
 			'stop' => (int)$stop,
 			'nArray' => $nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50)
 		);
-		$context->smarty->assign($pagination_infos);
+		$this->context->smarty->assign($pagination_infos);
 		
-		$context->smarty->assign('products', $products);
+		$this->context->smarty->assign('products', $products);
 		
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */
 		return Tools::jsonEncode(array(
 			'filtersBlock' => $this->generateFiltersBlock($selectedFilters),
-			'productList' => $context->smarty->fetch(_PS_THEME_DIR_.'product-list.tpl'),
-			'pagination' => $context->smarty->fetch(_PS_THEME_DIR_.'pagination.tpl')
+			'productList' => $this->context->smarty->fetch(_PS_THEME_DIR_.'product-list.tpl'),
+			'pagination' => $this->context->smarty->fetch(_PS_THEME_DIR_.'pagination.tpl')
 		));
 	}
 	

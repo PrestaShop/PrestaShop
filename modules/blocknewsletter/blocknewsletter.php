@@ -222,9 +222,8 @@ class Blocknewsletter extends Module
 
 	private function sendVoucher($email)
 	{
-		$context = Context::getContext();
 		if ($discount = Configuration::get('NW_VOUCHER_CODE'))
-			return Mail::Send($context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $discount), $email, NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+			return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $discount), $email, NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
 		return false;
 	}
 
@@ -235,14 +234,13 @@ class Blocknewsletter extends Module
  	
  	function hookLeftColumn($params)
  	{
-		$context = Context::getContext();
 
 		if (Tools::isSubmit('submitNewsletter'))
 		{
 			$this->newsletterRegistration();
 			if ($this->error)
 			{
-				$context->smarty->assign(array('color' => 'red',
+				$this->context->smarty->assign(array('color' => 'red',
 										'msg' => $this->error,
 										'nw_value' => isset($_POST['email']) ? pSQL($_POST['email']) : false,
 										'nw_error' => true,
@@ -252,19 +250,18 @@ class Blocknewsletter extends Module
 			{
 				if (Configuration::get('NW_CONFIRMATION_EMAIL') AND isset($_POST['action']) AND (int)($_POST['action']) == 0)
 					Mail::Send($params['cookie']->id_lang, 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($_POST['email']), NULL, NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
-				$context->smarty->assign(array('color' => 'green',
+				$this->context->smarty->assign(array('color' => 'green',
 										'msg' => $this->valid,
 										'nw_error' => false));
 			}
 		}
-		$context->smarty->assign('this_path', $this->_path);
+		$this->context->smarty->assign('this_path', $this->_path);
  	 	return $this->display(__FILE__, 'blocknewsletter.tpl');
  	}
 	
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blocknewsletter.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blocknewsletter.css', 'all');
 	}
 }
 

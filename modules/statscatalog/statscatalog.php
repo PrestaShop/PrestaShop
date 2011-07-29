@@ -134,10 +134,9 @@ class StatsCatalog extends Module
 
 	public function hookAdminStatsModules($params)
 	{
-		$context = Context::getContext();
 
-		$categories = Category::getCategories($context->language->id, true, false);
-		$productToken = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$context->employee->id);
+		$categories = Category::getCategories($this->context->language->id, true, false);
+		$productToken = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id);
 		$irow = 0;
 		
 		if ($id_category = (int)(Tools::getValue('id_category')))
@@ -153,7 +152,7 @@ class StatsCatalog extends Module
 		$totalPictures = $result1['images'];
 		$averagePictures = $total ? $totalPictures / $total : 0;
 
-		$neverBought = $this->getProductsNB($context->language->id);
+		$neverBought = $this->getProductsNB($this->context->language->id);
 		$totalNB = $neverBought['total'];
 		$productsNB = $neverBought['result'];
 
@@ -187,7 +186,7 @@ class StatsCatalog extends Module
 			<div class="clear space"></div>
 			<table>
 				'.$this->returnLine($this->l('Products available:'), (int)($total)).'
-				'.$this->returnLine($this->l('Average price (base price):'), Tools::displayPrice($averagePrice, $context->currency)).'
+				'.$this->returnLine($this->l('Average price (base price):'), Tools::displayPrice($averagePrice, $this->context->currency)).'
 				'.$this->returnLine($this->l('Product pages viewed:'), (int)($totalPageViewed)).'
 				'.$this->returnLine($this->l('Products bought:'), (int)($totalBought)).'
 				'.$this->returnLine($this->l('Average number of page visits:'), number_format((float)($averageViewed), 2, '.', '')).'
@@ -217,7 +216,7 @@ class StatsCatalog extends Module
 						<td style="width: 400px;">'.$product['name'].'</td>
 						<td style="text-align: right">
 							<a href="index.php?tab=AdminCatalog&id_product='.$product['id_product'].'&addproduct&token='.$productToken.'" target="_blank"><img src="../modules/'.$this->name.'/page_edit.png" /></a>
-							<a href="'.$context->link->getProductLink($product['id_product'], $product['link_rewrite']).'" target="_blank"><img src="../modules/'.$this->name.'/application_home.png" /></a>
+							<a href="'.$this->context->link->getProductLink($product['id_product'], $product['link_rewrite']).'" target="_blank"><img src="../modules/'.$this->name.'/application_home.png" /></a>
 						</td>
 					</tr>';
 			$html .= '

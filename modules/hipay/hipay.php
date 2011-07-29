@@ -128,9 +128,7 @@ class Hipay extends PaymentModule
 	
 	public function hookPayment($params)
 	{
-		global $smarty, $cart;
-
-		$currency = new Currency($this->getModuleCurrency($cart));
+		$currency = new Currency($this->getModuleCurrency($this->context->cart));
 		$hipayAccount = ($this->prod ? Configuration::get('HIPAY_ACCOUNT_'.$currency->iso_code) : Configuration::get('HIPAY_ACCOUNT_TEST_'.$currency->iso_code));
 		$hipayPassword = ($this->prod ? Configuration::get('HIPAY_PASSWORD_'.$currency->iso_code) : Configuration::get('HIPAY_PASSWORD_TEST_'.$currency->iso_code));
 		$hipaySiteId = ($this->prod ? Configuration::get('HIPAY_SITEID_'.$currency->iso_code) : Configuration::get('HIPAY_SITEID_TEST_'.$currency->iso_code));
@@ -138,8 +136,8 @@ class Hipay extends PaymentModule
 		
 		if ($hipayAccount AND $hipayPassword AND $hipaySiteId AND $hipayCategory AND Configuration::get('HIPAY_RATING'))
 		{
-			$smarty->assign('hipay_prod', $this->prod);
-			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
+			$this->context->smarty->assign('hipay_prod', $this->prod);
+			$this->context->smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
 			return $this->display(__FILE__, 'payment.tpl');
 		}
 	}
@@ -158,19 +156,17 @@ class Hipay extends PaymentModule
 
 	public function payment()
 	{
-		global $cookie, $cart;
-
-		$id_currency = (int)$this->getModuleCurrency($cart);
+		$id_currency = (int)$this->getModuleCurrency($this->context->cart);
 		// If the currency is forced to a different one than the current one, then the cart must be updated
-		if ($cart->id_currency != $id_currency)
-			if (Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart SET id_currency = '.(int)$id_currency.' WHERE id_cart = '.(int)$cart->id))
-				$cart->id_currency = $id_currency;
+		if ($this->context->cart->id_currency != $id_currency)
+			if (Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart SET id_currency = '.(int)$id_currency.' WHERE id_cart = '.(int)$this->context->cart->id))
+				$this->context->cart->id_currency = $id_currency;
 		
 		$currency = new Currency($id_currency);
-		$language = new Language($cart->id_lang);
-		$customer = new Customer($cart->id_customer);
-		$carrier = new Carrier($cart->id_carrier, $cart->id_lang);
-		$id_zone = self::MysqlGetValue('SELECT id_zone FROM '._DB_PREFIX_.'address a INNER JOIN '._DB_PREFIX_.'country c ON a.id_country = c.id_country WHERE id_address = '.(int)$cart->id_address_delivery);
+		$language = new Language($this->context->cart->id_lang);
+		$customer = new Customer($this->context->cart->id_customer);
+		$carrier = new Carrier($this->context->cart->id_carrier, $this->context->cart->id_lang);
+		$id_zone = self::MysqlGetValue('SELECT id_zone FROM '._DB_PREFIX_.'address a INNER JOIN '._DB_PREFIX_.'country c ON a.id_country = c.id_country WHERE id_address = '.(int)$this->context->cart->id_address_delivery);
 
 		require_once(dirname(__FILE__).'/mapi/mapi_package.php');
 		
@@ -188,12 +184,12 @@ class Hipay extends PaymentModule
 		$paymentParams->setPaymentMethod(HIPAY_MAPI_METHOD_SIMPLE);
 		$paymentParams->setCaptureDay(HIPAY_MAPI_CAPTURE_IMMEDIATE);
 		$paymentParams->setCurrency(strtoupper($currency->iso_code));
-		$paymentParams->setIdForMerchant($cart->id);
+		$paymentParams->setIdForMerchant($this->context->cart->id);
 		$paymentParams->setMerchantSiteId($hipaySiteId);
 		$paymentParams->setUrlCancel(self::getHttpHost(true, true).'index.php?controller=order&step=3');
-		$paymentParams->setUrlNok(self::getHttpHost(true, true).__PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
-		$paymentParams->setUrlOk(self::getHttpHost(true, true).__PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
-		$paymentParams->setUrlAck(self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/validation.php?token='.$cart->secure_key);
+		$paymentParams->setUrlNok(self::getHttpHost(true, true).__PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
+		$paymentParams->setUrlOk(self::getHttpHost(true, true).__PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
+		$paymentParams->setUrlAck(self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/validation.php?token='.$this->context->cart->secure_key);
 		$paymentParams->setBackgroundColor('#FFFFFF');
 
 		if (!$paymentParams->check())
@@ -203,9 +199,9 @@ class Hipay extends PaymentModule
 		$item->setName($this->l('Cart'));
 		$item->setInfo('');
 		$item->setquantity(1);
-		$item->setRef($cart->id);
+		$item->setRef($this->context->cart->id);
 		$item->setCategory($hipaycategory);
-		$item->setPrice($cart->getOrderTotal());
+		$item->setPrice($this->context->cart->getOrderTotal());
 		
 		try {
 			if (!$item->check())
@@ -237,12 +233,11 @@ class Hipay extends PaymentModule
 			Tools::redirectLink($url);
 		else
 		{
-			global $smarty;
 			include(dirname(__FILE__).'/../../header.php');
 			
-			$smarty->assign('errors', array('[Hipay] '.strval($err_msg).' ('.$output.')'));
+			$this->context->smarty->assign('errors', array('[Hipay] '.strval($err_msg).' ('.$output.')'));
 			$_SERVER['HTTP_REFERER'] = self::getHttpHost(true, true).'index.php?controller=order&step=3';
-			$smarty->display(_PS_THEME_DIR_.'errors.tpl');
+			$this->context->smarty->display(_PS_THEME_DIR_.'errors.tpl');
 			
 			include(dirname(__FILE__).'/../../footer.php');
 		}
@@ -320,8 +315,6 @@ class Hipay extends PaymentModule
 	
 	public function getContent()
 	{
-		global $cookie;
-
 		$currencies = DB::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT c.iso_code, c.name, c.sign FROM '._DB_PREFIX_.'currency c');
 		
 		if (Tools::isSubmit('submitHipayAZ')) 

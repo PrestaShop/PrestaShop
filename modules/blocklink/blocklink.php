@@ -84,14 +84,13 @@ class BlockLink extends Module
 	
 	public function hookLeftColumn($params)
 	{
-	 	$context = Context::getContext();
-	 	$links = $this->getLinks();
+	 	 	$links = $this->getLinks();
 		
-		$context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'blocklink_links' => $links,
-			'title' => Configuration::get('PS_BLOCKLINK_TITLE', $context->language->id),
+			'title' => Configuration::get('PS_BLOCKLINK_TITLE', $this->context->language->id),
 			'url' => Configuration::get('PS_BLOCKLINK_URL'),
-			'lang' => 'text_'.$context->language->id
+			'lang' => 'text_'.$this->context->language->id
 		));
 	 	if (!$links)
 			return false;
@@ -329,8 +328,7 @@ class BlockLink extends Module
 	private function _list()
 	{
 	 	$links = $this->getLinks();
-	 	$context = Context::getContext();
-	 	$languages = Language::getLanguages();
+	 	 	$languages = Language::getLanguages();
 	 	if ($links)
 	 	{
 	 		$this->_html .= '
@@ -370,7 +368,7 @@ class BlockLink extends Module
 				$this->_html .= '
 				<tr>
 					<td>'.$link['id'].'</td>
-					<td>'.$link['text_'.$context->language->id].'</td>
+					<td>'.$link['text_'.$this->context->language->id].'</td>
 					<td>'.$link['url'].'</td>
 					<td>
 						<img src="../img/admin/edit.gif" alt="" title="" onclick="linkEdition('.$link['id'].')" style="cursor: pointer" />

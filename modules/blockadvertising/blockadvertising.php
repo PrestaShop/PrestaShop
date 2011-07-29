@@ -165,7 +165,6 @@ class BlockAdvertising extends Module
 	 */
 	public function getContent()
 	{
-		$context = Context::getContext();
 		
 		$this->postProcess();
 		$output = '';
@@ -175,7 +174,7 @@ class BlockAdvertising extends Module
 <a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">';
 		if ($this->adv_img)
 		{
-			$output .= '<img src="'.$context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
+			$output .= '<img src="'.$this->context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
 			$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
 		}
 		else
@@ -208,11 +207,10 @@ class BlockAdvertising extends Module
 	*/
 	function hookRightColumn($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
-		$context->smarty->assign('image', $context->link->protocol_content.$this->adv_img);
-		$context->smarty->assign('adv_link', $this->adv_link);
-		$context->smarty->assign('adv_title', $this->adv_title);
+		$this->context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
+		$this->context->smarty->assign('image', $this->context->link->protocol_content.$this->adv_img);
+		$this->context->smarty->assign('adv_link', $this->adv_link);
+		$this->context->smarty->assign('adv_title', $this->adv_title);
 
 		return $this->display(__FILE__, 'blockadvertising.tpl');
 	}

@@ -166,10 +166,8 @@ abstract class PrepaidServices extends PaymentModule
 
 	public function createDisposition($cart)
 	{
-		global $cookie;
-
 		$currency = new Currency((int)($cart->id_currency));
-		$language = $this->_getSupportedLanguageIsoById((int)($cookie->id_lang));
+		$language = $this->_getSupportedLanguageIsoById($this->context->language->id);
 		$mid = Configuration::get($this->prefix.'MERCHANT_ID_'.$currency->iso_code);
 		$mtid = $cart->id.'-'.time();
 		$amount = number_format((float)($cart->getOrderTotal(true, Cart::BOTH)), 2, '.','');
@@ -353,14 +351,12 @@ abstract class PrepaidServices extends PaymentModule
 
 	private function _displayInfos()
 	{
-	    global $cookie;
-
 		return '<fieldset id="infos_cashticket">
 				<legend><img src="'._MODULE_DIR_.$this->name.'/img/payment-small.png" alt="" />'.$this->displayName.'</legend>
 					<center><img src="'._MODULE_DIR_.$this->name.'/img/payment.png" alt=""  class="logo" /></center>
 					'.$this->getL('introduction').'
 					<br /><br />
-					<a style="color: blue; text-decoration: underline" href="'.$this->_getRegisterLink((int)$cookie->id_lang).'">'.$this->getL('register').'</a>
+					<a style="color: blue; text-decoration: underline" href="'.$this->_getRegisterLink($this->context->language->id).'">'.$this->getL('register').'</a>
 				</fieldset>
 				<div class="clear" /><br />';
 	}
@@ -534,8 +530,6 @@ abstract class PrepaidServices extends PaymentModule
 
 	public function hookPayment($params)
 	{
-		global $smarty;
-
 		// check currency
 		$currency = new Currency((int)($params['cart']->id_currency));
 
@@ -555,7 +549,7 @@ abstract class PrepaidServices extends PaymentModule
 		if ($amount > $this->max_amount)
 			return false;
 
-		$smarty->assign(array('pic_url' => _MODULE_DIR_.'/'.$this->name.'/img/payment-logo.png',
+		$this->context->smarty->assign(array('pic_url' => _MODULE_DIR_.'/'.$this->name.'/img/payment-logo.png',
 							 'payment_name' => $this->displayName,
 							 'module_name' => $this->name));
 
@@ -565,19 +559,16 @@ abstract class PrepaidServices extends PaymentModule
 
 	public function hookPaymentReturn($params)
 	{
-		global $smarty, $cookie;
-
 		if ($params['objOrder']->module != $this->name)
 			return;
 
-		$smarty->assign('payment_name', $this->displayName);
+		$this->context->smarty->assign('payment_name', $this->displayName);
 		return $this->display(_MODULE_DIR_.'/'.$this->name.'/', $this->name.'-confirmation.tpl');
 	}
 
 
 	public function hookAdminOrder($params)
 	{
-		global $smarty, $cookie;
 		$error = 0;
 		$order = new Order((int)($params['id_order']));
 
@@ -598,7 +589,7 @@ abstract class PrepaidServices extends PaymentModule
 		// if the disposition is not "active"
 		if ($res[5] != PrepaidServicesAPI::DISPOSITION_DISPOSED && $res[5] != PrepaidServicesAPI::DISPOSITION_DEBITED)
 		{
-			$smarty->assign(array('disposition_state' => $res[5], 'payment_name' => $order->payment));
+			$this->context->smarty->assign(array('disposition_state' => $res[5], 'payment_name' => $order->payment));
 			return $this->display($this->module_dir.'/'.$this->name, 'disposition-error.tpl');
 		}
 
@@ -627,7 +618,7 @@ abstract class PrepaidServices extends PaymentModule
 		if (Tools::getIsset('pp_error'))
 			$error_msg = $this->_getErrorMsgFromErrorCode(Tools::getValue('pp_error'));
 
-		$smarty->assign(array('action' => Tools::safeOutput($_SERVER['PHP_SELF']).'?'.$_SERVER['QUERY_STRING'],
+		$this->context->smarty->assign(array('action' => Tools::safeOutput($_SERVER['PHP_SELF']).'?'.$_SERVER['QUERY_STRING'],
 							   'payment_name' => $order->payment,
 							   'error' => $error_msg,
 							   'currency' => $currency->getSign('right'),

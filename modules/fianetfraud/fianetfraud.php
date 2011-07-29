@@ -157,8 +157,6 @@ class Fianetfraud extends Module
 
 	private function _postProcess()
 	{	
-		global $cookie;
-		
 		$error = false;
 		
 		Configuration::updateValue('SAC_PRODUCTION', ((Tools::getValue('fianetfraud_production') == 1 ) ? 1 : 0));
@@ -176,11 +174,11 @@ class Fianetfraud extends Module
 			 	Configuration::updateValue('SAC_PAYMENT_TYPE_'.$payment,Tools::getValue($payment));
 		}
 		
-		$categories = Category::getSimpleCategories($cookie->id_lang);
+		$categories = Category::getSimpleCategories($this->context->language->id);
 		foreach ($categories AS $category)
 			Configuration::updateValue('SAC_CATEGORY_TYPE_'.$category['id_category'],Tools::getValue('cat_'.$category['id_category']));
 		
-		$carriers = Carrier::getCarriers($cookie->id_lang);
+		$carriers = Carrier::getCarriers($this->context->language->id);
 		foreach ($carriers as $carrier) 
 		{
 			if (isset($_POST['carrier_'.$carrier['id_carrier']]))

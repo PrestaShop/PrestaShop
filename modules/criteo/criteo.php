@@ -115,11 +115,8 @@ class Criteo extends Module
 			}
 	}
 
-	public static function buildCSV(Context $context = null)
+	public static function buildCSV()
 	{
-		if (!$context)
-			$context = Context::getContext();
-		
 		global $country_infos;
 		
 		$country_infos = array('id_group' => 0, 'id_tax' => 1);
@@ -165,7 +162,7 @@ class Criteo extends Module
 				$line[] = $product->manufacturer_name.' - '.$product->name[intval($conf['PS_LANG_DEFAULT'])];
 				$line[] = Tools::getProtocol().$_SERVER['HTTP_HOST']._THEME_PROD_DIR_.$imageObj->getExistingImgPath().'-small.jpg';
 				$line[] = Tools::getProtocol().$_SERVER['HTTP_HOST']._THEME_PROD_DIR_.$imageObj->getExistingImgPath().'-thickbox.jpg';
-				$line[] = $context->link->getProductLink(intval($product->id), $product->link_rewrite[intval($conf['PS_LANG_DEFAULT'])], $product->ean13).'&utm_source=criteo&aff=criteo';
+				$line[] = $this->context->link->getProductLink(intval($product->id), $product->link_rewrite[intval($conf['PS_LANG_DEFAULT'])], $product->ean13).'&utm_source=criteo&aff=criteo';
 				$line[] = str_replace(array("\n", "\r", "\t", '|'), '', strip_tags(html_entity_decode($product->description_short[intval($conf['PS_LANG_DEFAULT'])], ENT_COMPAT, 'UTF-8')));
 
 				$price = $product->getPrice(true, intval(Product::getDefaultAttribute($product->id)));
@@ -184,12 +181,11 @@ class Criteo extends Module
 		echo $html;
 	}
 
-	public static function buildXML(Context $context = null)
+	public static function buildXML()
 	{
 		global $country_infos;
-		if (!$context)
-			$context = Context::getContext();
-		
+		$context = Context::getContext();
+				
 		$country_infos = array('id_group' => 0, 'id_tax' => 1);
 		$html = '<products>'."\n";
 		/* First line, columns */

@@ -66,11 +66,6 @@ class dibs extends PaymentModule
 	 * @staticvar
 	 */
 	private static $site_url;
-	/**
-	 * Set the smarty object
-	 * @var Smarty
-	 */
-	private $smarty;
 	
 	/**
 	 * Only this langs array are allowed in DIBS API
@@ -91,8 +86,6 @@ class dibs extends PaymentModule
 
 	public function __construct()
 	{
-		global $smarty;
-		$this->smarty = $smarty;
 		$this->name = 'dibs';
 		$this->tab = 'payments_gateways';
 		$this->version = '1.0';
@@ -153,9 +146,9 @@ class dibs extends PaymentModule
 			return;
 		
 		if ($params['objOrder']->valid)
-			$this->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
+			$this->context->smarty->assign(array('status' => 'ok', 'id_order' => $params['objOrder']->id));
 		else
-			$this->smarty->assign('status', 'failed');
+			$this->context->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'hookorderconfirmation.tpl');
 	}
 
@@ -397,8 +390,8 @@ class dibs extends PaymentModule
 		$dibsParams['priceinfo2.ProductsAmount'] = $params['cart']->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
 		$dibsParams['priceinfo3.AmountWithoutTax'] = $params['cart']->getOrderTotal(false, Cart::BOTH);
 		$dibsParams['priceinfo4.AmountTotalTax'] = (float)($params['cart']->getOrderTotal(true, Cart::BOTH) - $params['cart']->getOrderTotal(false, Cart::BOTH));
-		$this->smarty->assign('p', $dibsParams);
-		$this->smarty->assign('logo_color', self::$MORE_SETTINGS['logo_color']);
+		$this->context->smarty->assign('p', $dibsParams);
+		$this->context->smarty->assign('logo_color', self::$MORE_SETTINGS['logo_color']);
 		return $this->display(__FILE__, 'dibs.tpl');
 	}
 }

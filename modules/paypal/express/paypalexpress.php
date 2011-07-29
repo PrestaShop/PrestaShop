@@ -31,13 +31,11 @@ class PaypalExpress extends Paypal
 
 	public function getAuthorisation()
 	{
-		global $cookie;
-
 		// Getting cart informations
-		$cart = new Cart((int)($cookie->id_cart));
+		$cart = $this->context->cart;
 		if (!Validate::isLoadedObject($cart))
 			$this->_logs[] = $this->l('Not a valid cart');
-		$currency = new Currency((int)($cart->id_currency));
+		$currency = new Currency($cart->id_currency);
 		if (!Validate::isLoadedObject($currency))
 			$this->_logs[] = $this->l('Not a valid currency');
 
@@ -85,10 +83,8 @@ class PaypalExpress extends Paypal
 
 	public function getCustomerInfos()
 	{
-		global $cookie;
-
 		// Making request
-		$request = '&TOKEN='.urlencode(strval($cookie->paypal_token));
+		$request = '&TOKEN='.urlencode(strval($this->context->cookie->paypal_token));
 
 		// Calling PayPal API
 		include(_PS_MODULE_DIR_.'paypal/api/paypallib.php');

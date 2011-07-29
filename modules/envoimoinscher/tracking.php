@@ -28,8 +28,6 @@
 include('../../config/config.inc.php');
 include('../../init.php');
 
-global $cookie;
-
 $validReturn = array('infoexterne', 'token', 'etat', 'envoi');
 
 $return = array();
@@ -56,7 +54,7 @@ if (isset($return['infoexterne']) AND isset($return['token']) AND isset($return[
 				$history = new OrderHistory();
 				$history->id_order = (int)($id_order);
 				$history->changeIdOrderState((int)($confs['EMC_ORDER_PAST_STATE']), (int)($history->id_order));
-				$history->id_employee = (int)($cookie->id_employee);
+				$history->id_employee = (int)$this->context->employee->id;
 				$history->addWithemail();
 				
 				$db = Db::getInstance();
@@ -77,7 +75,7 @@ if (isset($return['infoexterne']) AND isset($return['token']) AND isset($return[
 				$history = new OrderHistory();
 				$history->id_order = (int)($id_order);
 				$history->changeIdOrderState((int)($confs['EMC_SEND_STATE']), (int)($history->id_order));
-				$history->id_employee = (int)($cookie->id_employee);
+				$history->id_employee = (int)$this->context->employee->id;
 				$history->addWithemail();
 			break;
 			// Cancel
@@ -94,7 +92,7 @@ if (isset($return['infoexterne']) AND isset($return['token']) AND isset($return[
 				$history = new OrderHistory();
 				$history->id_order = (int)($id_order);
 				$history->changeIdOrderState((int)($confs['EMC_DELIVERY_STATE']), (int)($history->id_order));
-				$history->id_employee = (int)($cookie->id_employee);
+				$history->id_employee = (int)$this->context->employee->id;
 				$history->addWithemail();
 			break;
 		}	

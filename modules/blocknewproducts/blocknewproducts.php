@@ -96,11 +96,10 @@ class BlockNewProducts extends Module
 
 	public function hookRightColumn($params)
 	{
-		$context = Context::getContext();
 		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
 		if (!$newProducts AND !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
-		$context->smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
+		$this->context->smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
 
 		return $this->display(__FILE__, 'blocknewproducts.tpl');
 	}
@@ -112,8 +111,7 @@ class BlockNewProducts extends Module
 		
 	public function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
 	}
 
 }

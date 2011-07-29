@@ -126,20 +126,18 @@ class GAnalytics extends Module
 	
 	function hookHeader($params)
 	{
-		global $smarty, $cookie;
-		
 		// hookOrderConfirmation() already send the sats bypass this step
 		if (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order-confirmation.php') === 0) return '';
 	
 		// Otherwise, create Google Analytics stats
 		$ganalytics_id = Configuration::get('GANALYTICS_ID');
 		$multilang = (Language::countActiveLanguages() > 1);
-		$defaultMetaOrder = Meta::getMetaByPage('order',(int)$cookie->id_lang);
+		$defaultMetaOrder = Meta::getMetaByPage('order',$this->context->language->id);
 		$order = ($multilang?((string)Tools::getValue('isolang').'/'):'').$defaultMetaOrder['url_rewrite'];
 		$pageTrack = ((strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order.php') === 0 || strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.($multilang?((string)Tools::getValue('isolang').'/'):'').$defaultMetaOrder['url_rewrite']) === 0) ? '/order/step'.(int)(Tools::getValue('step')).'.html' : '');
-		$smarty->assign('ganalytics_id', $ganalytics_id);
-		$smarty->assign('pageTrack', $pageTrack);
-		$smarty->assign('isOrder', false);
+		$this->context->smarty->assign('ganalytics_id', $ganalytics_id);
+		$this->context->smarty->assign('pageTrack', $pageTrack);
+		$this->context->smarty->assign('isOrder', false);
 		return $this->display(__FILE__, 'header.tpl');
 	}
 	
@@ -152,7 +150,6 @@ class GAnalytics extends Module
 
 	function hookOrderConfirmation($params)
 	{
-		global $smarty;
 		// Setting parameters
 		$parameters = Configuration::getMultiple(array('PS_LANG_DEFAULT'));
 		
@@ -198,11 +195,11 @@ class GAnalytics extends Module
 			}
 			$ganalytics_id = Configuration::get('GANALYTICS_ID');
 			$pageTrack = (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order.php') === 0 ? '/order/step'.intval($step).'.html' : '');
-			$smarty->assign('items', $items);
-			$smarty->assign('trans', $trans);
-			$smarty->assign('ganalytics_id', $ganalytics_id);
-			$smarty->assign('pageTrack', $pageTrack);
-			$smarty->assign('isOrder', true);
+			$this->context->smarty->assign('items', $items);
+			$this->context->smarty->assign('trans', $trans);
+			$this->context->smarty->assign('ganalytics_id', $ganalytics_id);
+			$this->context->smarty->assign('pageTrack', $pageTrack);
+			$this->context->smarty->assign('isOrder', true);
 			return $this->display(__FILE__, 'header.tpl');
 		}
 	}

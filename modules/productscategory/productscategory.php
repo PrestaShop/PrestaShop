@@ -101,8 +101,6 @@ class productsCategory extends Module
 	
 	public function hookProductFooter($params)
 	{
-		global $smarty, $cookie;
-		
 		$idProduct = (int)(Tools::getValue('id_product'));
 		$product = new Product((int)($idProduct));
 
@@ -120,7 +118,7 @@ class productsCategory extends Module
 			return;
 
 		// Get infos
-		$categoryProducts = $category->getProducts((int)($cookie->id_lang), 1, 100); /* 100 products max. */
+		$categoryProducts = $category->getProducts($this->context->language->id, 1, 100); /* 100 products max. */
 		$sizeOfCategoryProducts = (int)sizeof($categoryProducts);
 		$middlePosition = 0;
 		
@@ -166,7 +164,7 @@ class productsCategory extends Module
 		}
 		
 		// Display tpl
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'categoryProducts' => $categoryProducts,
 			'middlePosition' => (int)$middlePosition,
 			'ProdDisplayPrice' => Configuration::get('PRODUCTSCATEGORY_DISPLAY_PRICE')));

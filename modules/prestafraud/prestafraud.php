@@ -117,7 +117,6 @@ class PrestaFraud extends Module
 	
 	private function _displayConfiguration()
 	{
-		global $cookie;
 		$this->_html .= '<script type="text/javascript">
 									$(document).ready(function() {
 										$(\'#submitCreateAccount\').unbind(\'click\').click(function() {
@@ -153,7 +152,7 @@ class PrestaFraud extends Module
 						<input id="terms_and_conditions" type="checkbox" value="1" />'.$this->l('I agree with the terms of PrestaShop Security service and I adhere to them unconditionally.').'</label>
 					</div>
 					<div id="terms" class="margin-form">';
-					$terms = file_get_contents($this->_trustUrl.'terms.php?lang='.Language::getIsoById((int)$cookie->id_lang));
+					$terms = file_get_contents($this->_trustUrl.'terms.php?lang='.$this->context->language->iso_code);
 					$this->_html .= $terms;
 					$this->_html .= '</div>
 					<div class="margin-form">
@@ -181,7 +180,7 @@ class PrestaFraud extends Module
 			$this->_html .= '</select>
 				</div>';
 
-		$carriers = Carrier::getCarriers((int)$cookie->id_lang, true);
+		$carriers = Carrier::getCarriers($this->context->language->id, true);
 		$trust_carriers_type = $this->_getPrestaTrustCarriersType();
 		$configured_carriers = $this->_getConfiguredCarriers();
 		
@@ -483,14 +482,13 @@ class PrestaFraud extends Module
 	
 	public function hookAdminOrder($params)
 	{
-		global $cookie;
 		$id_order = Db::getInstance()->getValue('SELECT id_order FROM '._DB_PREFIX_.'prestafraud_orders WHERE id_order = '.(int)$params['id_order']);
 		$this->_html .= '<br /><fieldset><legend>'.$this->l('PrestaShop Security').'</legend>';
 		if (!$id_order)
 			$this->_html .= $this->l('This order has not been sent to PrestaShop Security.');
 		else
 		{
-			$scoring = $this->_getScoring((int)$id_order, $cookie->id_lang);
+			$scoring = $this->_getScoring((int)$id_order, $this->context->language->id);
 			$this->_html .= '<p><b>'.$this->l('Scoring:').'</b> '.($scoring['scoring'] < 0 ? $this->l('Unknown') : (float)$scoring['scoring']).'</p>
 			<p><b>'.$this->l('Comment:').'</b> '.htmlentities($scoring['comment']).'</p>
 			<p><center><a target="_BLANK" href="'.$this->_trustUrl.'fraud_report.php?shop_id='.Configuration::get('PS_TRUST_SHOP_ID').'&shop_key='.Configuration::get('PS_TRUST_SHOP_KEY').'&order_id='.$id_order.'">'.$this->l('Report this order as a fraud to PrestaShop').'</a></center></p>';
@@ -498,9 +496,7 @@ class PrestaFraud extends Module
 		$this->_html .= '</fieldset>';
 		return $this->_html;
 	}
-	
-	
-		
+			
 	private function _getScoring($id_order, $id_lang)
 	{
 		if (!$scoring = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'prestafraud_orders WHERE scoring IS NOT NULL AND id_order = '.(int)$id_order))

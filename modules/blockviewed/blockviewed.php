@@ -93,7 +93,6 @@ class BlockViewed extends Module
 
 	function hookRightColumn($params)
 	{
-		$context = Context::getContext();
 		$id_product = (int)(Tools::getValue('id_product'));
 		$productsViewed = (isset($params['cookie']->viewed) AND !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
 
@@ -153,7 +152,7 @@ class BlockViewed extends Module
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 				LEFT JOIN `'._DB_PREFIX_.'customer_group` cug ON (cug.`id_group` = cg.`id_group`)
 				WHERE p.`id_product` = '.(int)($id_product).'
-				'.($context->customer->id ? 'AND cug.`id_customer` = '.(int)$context->customer->id : 
+				'.($this->context->customer->id ? 'AND cug.`id_customer` = '.(int)$this->context->customer->id : 
 				'AND cg.`id_group` = 1')
 				);
 				if ($result['total'])
@@ -167,7 +166,7 @@ class BlockViewed extends Module
 			if (!sizeof($productsViewedObj))
 				return ;
 
-			$context->smarty->assign(array(
+			$this->context->smarty->assign(array(
 				'productsViewedObj' => $productsViewedObj,
 				'mediumSize' => Image::getSize('medium')));
 
@@ -185,7 +184,6 @@ class BlockViewed extends Module
 
 	function hookHeader($params)
 	{
-		$context = Context::getContext();
-		$context->controller->addCSS(($this->_path).'blockviewed.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'blockviewed.css', 'all');
 	}
 }

@@ -44,22 +44,20 @@ class AdminMondialRelay extends AdminTab
 
 	private function displayOrdersTable()
 	{
-		global $cookie;
-
 		$mondialrelay = new MondialRelay();
-		$order_state = new OrderState((int)(Configuration::get('MONDIAL_RELAY_ORDER_STATE')), $cookie->id_lang);
+		$order_state = new OrderState((int)(Configuration::get('MONDIAL_RELAY_ORDER_STATE')), $this->context->language->id);
 		$mr_weight_coef = (int)(Configuration::get('MR_WEIGHT_COEF'));
 		
 		$html = '';
 		
 		$html .= $this->l('To generate labels, you must register a correct address for your store on').
 			' <a href="index.php?tab=AdminContact&token='.Tools::getAdminToken('AdminContact'.
-			(int)(Tab::getIdFromClassName('AdminContact')).(int)($cookie->id_employee)).'" class="green">'.
+			(int)(Tab::getIdFromClassName('AdminContact')).(int)$this->context->employee->id).'" class="green">'.
 			$this->l('The contact page').'</a>';
 		$html .= '<p>'.$this->l('All orders which have the state').' "<b>'.$order_state->name.'</b>"';
 		$html .= '.&nbsp;<a href="index.php?tab=AdminModules&configure=mondialrelay&token='.
 			Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).
-			(int)($cookie->id_employee)).'" class="green">' . $this->l('Change configuration') . '</a></p>
+			(int)$this->context->employee->id).'" class="green">' . $this->l('Change configuration') . '</a></p>
 			<div class="PS_MRErrorList error" id="otherErrors">
 							<img src="'._PS_IMG_.'admin/error2.png" alt="" />
 							<span></span>
@@ -110,7 +108,7 @@ class AdminMondialRelay extends AdminTab
 				$html .= '<td>'.$order['exp_number'].'</td>';
 				$html .= '
 					<td class="center">
-						<a href="index.php?tab=AdminOrders&id_order='.$order['id_order'].'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)).'">
+						<a href="index.php?tab=AdminOrders&id_order='.$order['id_order'].'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'">
 						<img border="0" title="'.$this->l('View').'" alt="'.$this->l('View').'" src="'._PS_IMG_.'admin/details.gif"/></a>
 					</td>
 					</tr>

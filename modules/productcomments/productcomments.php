@@ -165,7 +165,6 @@ class ProductComments extends Module
 		$name = Tools::getValue('criterion');
 		if (Tools::isSubmit('submitAddCriterion'))
 		{
-			global $cookie;
 			require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
 			$languages = Language::getLanguages();
 			$id_criterion = (int)Tools::getValue('id_product_comment_criterion');
@@ -330,8 +329,6 @@ class ProductComments extends Module
 	
 	private function _displayFormConfigurationCriterion()
 	{
-		global $cookie;
-		
 		$langs = Language::getLanguages(false);
 		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 		
@@ -375,7 +372,7 @@ class ProductComments extends Module
 				</div>
 				</form>';
 				require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
-				$criterions = ProductCommentCriterion::getCriterions((int)$cookie->id_lang);
+				$criterions = ProductCommentCriterion::getCriterions(Context::getContext()->language->id);
 				if (sizeof($criterions))
 				{
 						$this->_html.= '<br />
@@ -406,11 +403,9 @@ class ProductComments extends Module
 
 	private function _displayFormApplicationCriterion()
 	{
-		global $cookie;
-
 		include_once(dirname(__FILE__).'/ProductCommentCriterion.php');
 
-		$criterions = ProductCommentCriterion::getCriterions((int)$cookie->id_lang, false, true);
+		$criterions = ProductCommentCriterion::getCriterions(Context::getContext()->language->id, false, true);
 		$id_criterion = (int)Tools::getValue('updateCriterion');
 		
 		if ($id_criterion)
@@ -418,13 +413,13 @@ class ProductComments extends Module
 			$criterion = new ProductCommentCriterion((int)$id_criterion);
 			if ($criterion->id_product_comment_criterion_type == 2)
 			{
-				$categories = Category::getSimpleCategories((int)$cookie->id_lang);
+				$categories = Category::getSimpleCategories(Context::getContext()->language->id);
 				$criterion_categories = $criterion->getCategories();
 			}
 			elseif ($criterion->id_product_comment_criterion_type == 3)
 			{
 				$criterion_products = $criterion->getProducts();
-				$products = Product::getSimpleProducts((int)$cookie->id_lang);
+				$products = Product::getSimpleProducts(Context::getContext()->language->id);
 			}
 		}
 
@@ -488,15 +483,13 @@ class ProductComments extends Module
 	
 	public function hookProductTab($params)
     {
-		global $smarty, $cookie;
-		
 		require_once(dirname(__FILE__).'/ProductComment.php');
 		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
 		
-		$smarty->assign(array(
+		Context::getContext()->smarty->assign(array(
 		'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
 		'comments' => ProductComment::getByProduct((int)($_GET['id_product'])),
-		'criterions' => ProductCommentCriterion::getByProduct((int)($_GET['id_product']), (int)($cookie->id_lang)),
+		'criterions' => ProductCommentCriterion::getByProduct((int)($_GET['id_product']), Context::getContext()->language->id),
 		'nbComments' => (int)(ProductComment::getCommentNumber((int)($_GET['id_product'])))));
 
 		return ($this->display(__FILE__, '/tab.tpl'));
@@ -504,16 +497,14 @@ class ProductComments extends Module
 
 	private function _frontOfficePostProcess()
 	{
-		global $smarty, $cookie, $errors;
-
 		require_once(dirname(__FILE__).'/ProductComment.php');
 		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
 		
 		$allow_guests = (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS');
-		if (Tools::isSubmit('submitMessage') AND (empty($cookie->id_customer) === false OR ($cookie->id_guest AND $allow_guests)))
+		if (Tools::isSubmit('submitMessage') AND Context::getContext()->customer->id AND (!Context::getContext()->customer->is_guest OR $allow_guests))
 		{
-			$id_guest = (!$id_customer = (int)$cookie->id_customer) ? (int)$cookie->id_guest : false;
-			$customerComment = ProductComment::getByCustomer((int)(Tools::getValue('id_product')), (int)$cookie->id_customer, true, (int)$id_guest);
+			$id_guest = (!$id_customer = (int)Context::getContext()->cookie->id_customer) ? (int)Context::getContext()->cookie->id_guest : false;
+			$customerComment = ProductComment::getByCustomer((int)(Tools::getValue('id_product')), Context::getContext()->cookie->id_customer, true, (int)$id_guest);
 			
 			if (!$customerComment OR ($customerComment AND (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
 			{
@@ -525,7 +516,7 @@ class ProductComments extends Module
 					$comment = new ProductComment();
 					$comment->content = strip_tags(Tools::getValue('content'));
 					$comment->id_product = (int)$_GET['id_product'];
-					$comment->id_customer = (int)$cookie->id_customer;
+					$comment->id_customer = (int)Context::getContext()->cookie->id_customer;
 					$comment->id_guest = (int)$id_guest;
 					$comment->customer_name = pSQL($customer_name);
 					$comment->title = pSQL(Tools::getValue('title'));
@@ -550,7 +541,7 @@ class ProductComments extends Module
 						if (!$comment->save())
 							$errors[] = $this->l('An error occurred while saving your comment.');
 						else
-							$smarty->assign('confirmation', $this->l('Comment posted.').((int)(Configuration::get('PRODUCT_COMMENTS_MODERATE')) ? ' '.$this->l('Awaiting moderator validation.') : ''));
+							Context::getContext()->smarty->assign('confirmation', $this->l('Comment posted.').((int)(Configuration::get('PRODUCT_COMMENTS_MODERATE')) ? ' '.$this->l('Awaiting moderator validation.') : ''));
 					}
 				}
 				else
@@ -563,22 +554,20 @@ class ProductComments extends Module
 
     public function hookProductTabContent($params)
     {
-		global $smarty, $cookie;
-
-		$id_guest = (!$id_customer = (int)$cookie->id_customer) ? (int)$cookie->id_guest : false;
-		$customerComment = ProductComment::getByCustomer((int)(Tools::getValue('id_product')), (int)$cookie->id_customer, true, (int)$id_guest);
+		$id_guest = (!$id_customer = (int)Context::getContext()->cookie->id_customer) ? (int)Context::getContext()->cookie->id_guest : false;
+		$customerComment = ProductComment::getByCustomer((int)(Tools::getValue('id_product')), (int)Context::getContext()->cookie->id_customer, true, (int)$id_guest);
 		
-		$averages = ProductComment::getAveragesByProduct((int)Tools::getValue('id_product'), (int)$cookie->id_lang);
+		$averages = ProductComment::getAveragesByProduct((int)Tools::getValue('id_product'), Context::getContext()->language->id);
 		$averageTotal = 0;
 		foreach ($averages AS $average)
 			$averageTotal += (float)($average);
 		$averageTotal = count($averages) ? ($averageTotal / count($averages)) : 0;
 		
-		$smarty->assign(array(
-		'logged' => (int)$cookie->id_customer,
+		Context::getContext()->smarty->assign(array(
+		'logged' => (int)Context::getContext()->cookie->id_customer,
 		'action_url' => '',
 		'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product')),
-		'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), (int)$cookie->id_lang),
+		'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), Context::getContext()->language->id),
 		'averages' => $averages,
 		'product_comment_path' => $this->_path,
 		'averageTotal' => $averageTotal,
@@ -599,8 +588,6 @@ class ProductComments extends Module
 	
 	public function hookExtraProductComparison($params)
 	{
-		global $smarty, $cookie;
-	
 		$list_grades = array();
 		$list_product_grades = array();
 		$list_product_average = array();
@@ -608,8 +595,8 @@ class ProductComments extends Module
 		
 		foreach ($params['list_ids_product'] AS $id_product)
 		{
-			$grades = ProductComment::getAveragesByProduct((int)$id_product, (int)$cookie->id_lang);
-			$criterions = ProductCommentCriterion::getByProduct((int)$id_product, (int)$cookie->id_lang);
+			$grades = ProductComment::getAveragesByProduct($id_product, Context::getContext()->language->id);
+			$criterions = ProductCommentCriterion::getByProduct($id_product, Context::getContext()->language->id);
 			$grade_total = 0;
 			if (sizeof($grades) > 0)
 			{
@@ -630,7 +617,7 @@ class ProductComments extends Module
 		if (sizeof($list_grades) < 1) 
 			return false;
 			
-		$smarty->assign(array('grades' => $list_grades,	'product_grades' => $list_product_grades, 'list_ids_product' => $params['list_ids_product'], 
+		Context::getContext()->smarty->assign(array('grades' => $list_grades,	'product_grades' => $list_product_grades, 'list_ids_product' => $params['list_ids_product'], 
 		'list_product_average' => $list_product_average, 'product_comments' => $list_product_comment));
 		
 		return $this->display(__FILE__,'/products-comparison.tpl');
