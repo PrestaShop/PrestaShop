@@ -70,7 +70,7 @@ class OrderHistoryCore extends ObjectModel
 		return $fields;
 	}
 
-	public function changeIdOrderState($new_order_state = NULL, $id_order)
+	public function changeIdOrderState($new_order_state, $id_order)
 	{
 		if ($new_order_state != NULL)
 		{
