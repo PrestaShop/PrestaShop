@@ -80,22 +80,28 @@ class ProfileCore extends ObjectModel
 		SELECT `name` 
 		FROM `'._DB_PREFIX_.'profile` p 
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`) 
-		WHERE p.`id_profile` = '.(int)($id_profile).'
-		AND pl.`id_lang` = '.(int)($id_lang));
+		WHERE p.`id_profile` = '.(int)$id_profile.'
+		AND pl.`id_lang` = '.(int)$id_lang);
 	}
 
 	
 	public function add($autodate = true, $nullValues = false)
 	{
 	 	if (parent::add($autodate, true))
-			return Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)($this->id).', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)');
+			return (
+				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)')
+				&& Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'module_access (`id_profile`, `id_module`, `configure`, `view`) (SELECT '.(int)$this->id.', id_module, 0, 1 FROM '._DB_PREFIX_.'module)')
+			);
 		return false;
 	}
 	
 	public function delete()
 	{
 	 	if (parent::delete())
-	 	 	return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)($this->id));
+	 	 	return (
+				Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
+				&& Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
+			);
 		return false;
 	}
 
@@ -117,7 +123,7 @@ class ProfileCore extends ObjectModel
 			WHERE `id_profile` = '.(int)$id_profile);
 
 			self::$_cache_accesses[$id_profile] = array();
-			foreach($result AS $row)
+			foreach ($result AS $row)
 			{
 				if (!isset(self::$_cache_accesses[$id_profile][$row['id_tab']]))
 					self::$_cache_accesses[$id_profile][$row['id_tab']] = array();

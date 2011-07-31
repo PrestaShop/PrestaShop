@@ -68,14 +68,14 @@ class AdminAccess extends AdminTab
 	 	$currentProfile = (int)($this->getCurrentProfileId());
 	 	$tabs = Tab::getTabs($this->context->language->id);
 		$profiles = Profile::getProfiles($this->context->language->id);
-		$accesses = Profile::getProfileAccesses($this->context->language->id);
+		$accesses = Profile::getProfileAccesses($this->context->employee->id_profile);
 		
 		echo '
 		<script type="text/javascript">
 			setLang(Array(\''.$this->l('Profile updated').'\', \''.$this->l('Request failed!').'\', \''.$this->l('Update in progress. Please wait.').'\', \''.$this->l('Server connection failed!').'\'));
 		</script>
 		<div id="ajax_confirmation"></div>
-		<table class="table" cellspacing="0">
+		<table class="table float" cellspacing="0">
 			<tr>
 				<th '.($currentProfile == (int)_PS_ADMIN_PROFILE_ ? 'colspan="6"' : '').'>
 					<select name="profile" onchange="redirect(\''.Tools::getHttpHost(true, true).self::$currentIndex.'&token='.$this->token.'&profile=\'+this.options[this.selectedIndex].value)">';
@@ -87,17 +87,36 @@ class AdminAccess extends AdminTab
 		foreach ($tabs AS $tab)
 			if ($tab['id_tab'] > $tabsize)
 				$tabsize = $tab['id_tab'];
-		echo '
-					</select>
+		echo '		</select>
 				</th>';
 		
 		if ($currentProfile != (int)(_PS_ADMIN_PROFILE_))
 			echo '
-				<th class="center">'.$this->l('View').'<br /><input type="checkbox" name="1" id="viewall" onclick="ajax_power(this, \'view\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')" /></th>
-				<th class="center">'.$this->l('Add').'<br /><input type="checkbox" name="1" id="addall" onclick="ajax_power(this, \'add\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')" /></th>
-				<th class="center">'.$this->l('Edit').'<br /><input type="checkbox" name="1" id="editall" onclick="ajax_power(this, \'edit\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')" /></th>
-				<th class="center">'.$this->l('Delete').'<br /><input type="checkbox" name="1" id="deleteall" onclick="ajax_power(this, \'delete\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')" /></th>
-				<th class="center">'.$this->l('All').'<br /><input type="checkbox" name="1" id="allall" onclick="ajax_power(this, \'all\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')" /></th>
+				<th class="center">
+					<input type="checkbox" name="1" id="viewall"
+						'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'view\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					'.$this->l('View').'
+				</th>
+				<th class="center">
+					<input type="checkbox" name="1" id="addall"
+					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'add\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					'.$this->l('Add').'
+				</th>
+				<th class="center">
+					<input type="checkbox" name="1" id="editall"
+					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'edit\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					'.$this->l('Edit').'
+				</th>
+				<th class="center">
+					<input type="checkbox" name="1" id="deleteall"
+					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'delete\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					'.$this->l('Delete').'
+				</th>
+				<th class="center">
+					<input type="checkbox" name="1" id="allall"
+					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'all\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					'.$this->l('All').'
+				</th>
 			</tr>';
 
 		if (!sizeof($tabs))
@@ -114,6 +133,10 @@ class AdminAccess extends AdminTab
 					 		$this->printTabAccess($currentProfile, $child, $accesses[$child['id_tab']], true, $tabsize, sizeof($tabs));
 				}
 		echo '</table>';
+		
+		if ($currentProfile != (int)(_PS_ADMIN_PROFILE_))
+			$this->displayModuleAccesses($currentProfile);
+		echo '<div class="clear">&nbsp;</div>';
 	}
 	
 	private function printTabAccess($currentProfile, $tab, $access, $is_child, $tabsize, $tabnumber)
@@ -123,14 +146,102 @@ class AdminAccess extends AdminTab
 		echo '<tr><td'.($is_child ? '' : ' class="bold"').'>'.($is_child ? ' &raquo; ' : '').$tab['name'].'</td>';
 		foreach ($perms as $perm)
 		{
-			if($this->tabAccess['edit'] == 1)
-				echo '<td class="center"><input type="checkbox" name="1" id=\''.$perm.(int)($access['id_tab']).'\' class=\''.$perm.' '.(int)($access['id_tab']).'\' onclick="ajax_power(this, \''.$perm.'\', '.(int)($access['id_tab']).', '.(int)($access['id_profile']).', \''.$this->token.'\', \''.$tabsize.'\', \''.$tabnumber.'\')" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').'/></td>';
+			if ($this->tabAccess['edit'] == 1)
+				echo '<td><input type="checkbox" name="1" id=\''.$perm.(int)($access['id_tab']).'\' class=\''.$perm.' '.(int)($access['id_tab']).'\' onclick="ajax_power(this, \''.$perm.'\', '.(int)($access['id_tab']).', '.(int)($access['id_profile']).', \''.$this->token.'\', \''.$tabsize.'\', \''.$tabnumber.'\')" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').'/></td>';
 			else
-				echo '<td class="center"><input type="checkbox" name="1" disabled="disabled" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').' /></td>';
+				echo '<td><input type="checkbox" name="1" disabled="disabled" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').' /></td>';
 			$result_accesses += $access[$perm];
 		}
-		echo '<td class="center"><input type="checkbox" name="1" id=\'all'.(int)($access['id_tab']).'\' class=\'all '.(int)($access['id_tab']).'\' onclick="ajax_power(this, \'all\', '.(int)($access['id_tab']).', '.(int)($access['id_profile']).', \''.$this->token.'\', \''.$tabsize.'\', \''.$tabnumber.'\')" '.($result_accesses == 4 ? 'checked="checked"' : '').'/></td></tr>';
-	 
+		echo '<td>
+			<input type="checkbox" name="1" id=\'all'.(int)($access['id_tab']).'\' class=\'all '.(int)($access['id_tab']).'\'
+				'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'all\', '.(int)($access['id_tab']).', '.(int)($access['id_profile']).', \''.$this->token.'\', \''.$tabsize.'\', \''.$tabnumber.'\')"' : 'disabled="disabled"').'
+				'.($result_accesses == 4 ? 'checked="checked"' : '').'
+			/>
+		</td></tr>';
+	}
+	
+	public function ajaxProcess()
+	{
+		if (Tools::isSubmit('changeModuleAccess'))
+		{
+			if ($action = Tools::getValue('action') AND $variable = Tools::getValue('variable') AND $id_module = (int)Tools::getValue('id_module') AND $id_profile = (int)Tools::getValue('id_profile') AND $this->tabAccess['edit'] == 1)
+			{
+				if (!in_array($variable, array('view', 'configure')))
+					die (Tools::displayErrors('unknown variable'));
+				$action = ($action == 'true' ? 1 : 0);
+				if ($id_module == -1)
+					Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($variable).'` = '.(int)$action.' WHERE `id_profile` = '.(int)$id_profile);
+				else
+					Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($variable).'` = '.(int)$action.' WHERE `id_module` = '.(int)$id_module.' AND `id_profile` = '.(int)$id_profile);
+				die ('ok');
+			}
+			die ('inconsistent data');
+		}
+	}
+	
+	private function displayModuleAccesses($currentProfile)
+	{
+		echo '
+		<script type="text/javascript">
+			function changeModuleAccess(checkbox, id_module, variable)
+			{
+				getE(\'ajax_confirmation\').innerHTML = \'<span class="bold">\'+lang[2]+\'</span>\';
+				$.post(
+					\'ajax-tab.php?tab=AdminAccess&token='.Tools::getAdminTokenLite('AdminAccess').'&changeModuleAccess\',
+					{id_profile:'.(int)$currentProfile.',id_module:id_module,action:checkbox.checked,variable:variable},
+					function(r) {
+						if (r != \'ok\')
+							getE(\'ajax_confirmation\').innerHTML = \'<span class="bold">'.addslashes(Tools::displayError('An error occurred:')).' \'+lang[1]+\'</span>\';
+						else
+						{
+							getE(\'ajax_confirmation\').innerHTML = \'<span class="bold">\'+lang[0]+\'</span>\';
+							if (id_module == -1)
+								$(\'.ajax-ma-\'+variable).each(function(key, value) {
+									value.checked = checkbox.checked;
+								});
+							else if (!checkbox.checked)
+								$(\'#ajax-ma-\'+variable+\'-master\').each(function(key, value) {
+									value.checked = checkbox.checked;
+								});
+						}
+					}
+				);
+			}
+		</script>		
+		<table class="table float" cellspacing="0" style="margin-left:20px">
+		<tr>
+			<th>'.$this->l('Modules').'</th>
+			<th class="center"><input type="checkbox" id="ajax-ma-view-master" '.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, -1, \'view\');"' : 'disabled="disabled"').' /> '.$this->l('View').'</th>
+			<th class="center"><input type="checkbox" id="ajax-ma-configure-master" '.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, -1, \'configure\');"' : 'disabled="disabled"').' /> '.$this->l('Configure').'</th>
+		</tr>';
+
+		$modules = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT ma.id_module, m.name, ma.`view`, ma.`configure`
+		FROM '._DB_PREFIX_.'module_access ma
+		LEFT JOIN '._DB_PREFIX_.'module m ON ma.id_module = m.id_module
+		WHERE id_profile = '.(int)$currentProfile.'
+		ORDER BY m.name');
+		if (!sizeof($modules))
+			echo '<tr><td colspan="2">'.$this->l('No modules installed').'</td></tr>';
+		else 
+			foreach ($modules AS $module)
+				echo '<tr>
+					<td>&raquo; '.$module['name'].'</td>
+					<td>
+						<input type="checkbox" class="ajax-ma-view"
+							'.((int)$module['view'] == 1 ? 'checked="checked"' : '').'
+							'.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, '.(int)$module['id_module'].', \'view\');"' : 'disabled="disabled"').'
+						/>
+					</td>
+					<td>
+						<input type="checkbox" class="ajax-ma-configure"
+							'.((int)$module['configure'] == 1 ? 'checked="checked"' : '').'
+							'.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, '.(int)$module['id_module'].', \'configure\');"' : 'disabled="disabled"').'
+						/>
+					</td>
+				</tr>';
+
+		echo '</table>';
 	}
 }
 

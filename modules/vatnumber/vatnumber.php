@@ -67,7 +67,8 @@ class VatNumber extends Module
 	
 	public static function getPrefixIntracomVAT()
 	{
-		$intracom_array = array('AT'=>'AT',	//Austria
+		$intracom_array = array(
+			'AT'=>'AT',	//Austria
 			'BE'=>'BE',	//Belgium
 			'DK'=>'DK',	//Denmark
 			'FI'=>'FI',	//Finland
@@ -148,16 +149,17 @@ class VatNumber extends Module
 	{
 		global $cookie;
 		
+		$echo = '';
+		
 		if (Tools::isSubmit('submitVatNumber'))
 		{
-			if (Tools::getValue('vatnumber_country'))
-				if (Configuration::updateValue('VATNUMBER_COUNTRY', (int)(Tools::getValue('vatnumber_country'))))
-					echo $this->displayConfirmation($this->l('Your country has been updated.'));
+			if (Configuration::updateValue('VATNUMBER_COUNTRY', (int)(Tools::getValue('vatnumber_country'))))
+				$echo .= $this->displayConfirmation($this->l('Your country has been updated.'));
 			$check = (int)Tools::getValue('vatnumber_checking');
-			if(Configuration::get('VATNUMBER_CHECKING') != $check AND Configuration::updateValue('VATNUMBER_CHECKING', $check))
-				echo ($check ? $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now enabled.')) : $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now disabled.')));
+			if (Configuration::get('VATNUMBER_CHECKING') != $check AND Configuration::updateValue('VATNUMBER_CHECKING', $check))
+				$echo .= ($check ? $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now enabled.')) : $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now disabled.')));
 		}
-		echo '
+		$echo .=  '
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">
 				<label>'.$this->l('Your country').'</label>
@@ -165,8 +167,8 @@ class VatNumber extends Module
 					<select name="vatnumber_country">
 						<option value="0">'.$this->l('-- Choose a country --').'</option>';
 		foreach (Country::getCountries((int)($cookie->id_lang)) as $country)
-			echo '		<option value="'.$country['id_country'].'" '.(Tools::getValue('VATNUMBER_COUNTRY', Configuration::get('VATNUMBER_COUNTRY')) == $country['id_country'] ? 'selected="selected"' : '').'>'.$country['name'].'</option>';
-		echo '		</select>
+			$echo .=  '		<option value="'.$country['id_country'].'" '.(Tools::getValue('VATNUMBER_COUNTRY', Configuration::get('VATNUMBER_COUNTRY')) == $country['id_country'] ? 'selected="selected"' : '').'>'.$country['name'].'</option>';
+		$echo .=  '		</select>
 				</div>
 				<div class="clear">&nbsp;</div>
 				<label>'.$this->l('Enable checking of the VAT number with the WebService').'</label>
@@ -180,6 +182,7 @@ class VatNumber extends Module
 				</div>
 			</form>
 		</fieldset>';
+		return $echo;
 	}
 }
 

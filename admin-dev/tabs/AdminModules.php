@@ -46,21 +46,24 @@ class AdminModules extends AdminTab
 
 	function __construct()
 	{
-		parent::__construct ();
+		parent::__construct();
 		
 		$this->_moduleCacheFile = _PS_ROOT_DIR_.'/config/modules_list.xml';
 		
-		//refresh modules_list.xml every week
+		// refresh modules_list.xml every week
 		if (!$this->isFresh()) 
 			$this->refresh();
 		
-		$this->listTabModules = array('administration' => $this->l('Administration'), 'advertising_marketing' => $this->l('Advertising & Marketing'),
-		 'analytics_stats' => $this->l('Analytics & Stats'), 'billing_invoicing' => $this->l('Billing & Invoicing'), 'checkout' => $this->l('Checkout'),
-		 'content_management' => $this->l('Content Management'), 'export' => $this->l('Export'), 'front_office_features' => $this->l('Front Office Features'),
-		 'i18n_localization' => $this->l('I18n & Localization'), 'merchandizing' => $this->l('Merchandizing'), 'migration_tools' => $this->l('Migration Tools'),
-		 'payments_gateways' => $this->l('Payments & Gateways'), 'payment_security' => $this->l('Payment Security'), 'pricing_promotion' => $this->l('Pricing & Promotion'),
-		 'quick_bulk_update' => $this->l('Quick / Bulk update'), 'search_filter' => $this->l('Search & Filter'), 'seo' => $this->l('SEO'), 'shipping_logistics' => $this->l('Shipping & Logistics'),
-		 'slideshows' => $this->l('Slideshows'), 'smart_shopping' => $this->l('Smart Shopping'), 'market_place' => $this->l('Market Place'), 'social_networks' => $this->l('Social Networks'), 'others'=> $this->l('Other Modules'));
+		$this->listTabModules = array(
+			'administration' => $this->l('Administration'), 'advertising_marketing' => $this->l('Advertising & Marketing'),
+			 'analytics_stats' => $this->l('Analytics & Stats'), 'billing_invoicing' => $this->l('Billing & Invoicing'), 'checkout' => $this->l('Checkout'),
+			 'content_management' => $this->l('Content Management'), 'export' => $this->l('Export'), 'front_office_features' => $this->l('Front Office Features'),
+			 'i18n_localization' => $this->l('I18n & Localization'), 'merchandizing' => $this->l('Merchandizing'), 'migration_tools' => $this->l('Migration Tools'),
+			 'payments_gateways' => $this->l('Payments & Gateways'), 'payment_security' => $this->l('Payment Security'), 'pricing_promotion' => $this->l('Pricing & Promotion'),
+			 'quick_bulk_update' => $this->l('Quick / Bulk update'), 'search_filter' => $this->l('Search & Filter'), 'seo' => $this->l('SEO'), 'shipping_logistics' => $this->l('Shipping & Logistics'),
+			 'slideshows' => $this->l('Slideshows'), 'smart_shopping' => $this->l('Smart Shopping'), 'market_place' => $this->l('Market Place'), 'social_networks' => $this->l('Social Networks'),
+			 'others'=> $this->l('Other Modules')
+		 );
 		 
 		 $xmlModules = @simplexml_load_file($this->_moduleCacheFile);
 
@@ -68,25 +71,25 @@ class AdminModules extends AdminTab
 		 	if ($xmlModule->attributes() == 'native')
 		 		foreach($xmlModule->children() as $module)
 		 			foreach($module->attributes() as $key => $value)
-		 			if ($key == 'name')
-		 				$this->listNativeModules[] = (string)$value;
+						if ($key == 'name')
+							$this->listNativeModules[] = (string)$value;
 		 	if ($xmlModule->attributes() == 'partner')
 		 		foreach($xmlModule->children() as $module)
 		 			foreach($module->attributes() as $key => $value)
-		 			if ($key == 'name')
-		 				$this->listPartnerModules[] = (string)$value;
+						if ($key == 'name')
+							$this->listPartnerModules[] = (string)$value;
 	}
 	
 	public function postProcess()
 	{
 		$id_employee = (int)$this->context->employee->id;
 		$filter_conf = Configuration::getMultiple(array(
-												'PS_SHOW_TYPE_MODULES_'.$id_employee,
-												'PS_SHOW_COUNTRY_MODULES_'.$id_employee,
-												'PS_SHOW_INSTALLED_MODULES_'.$id_employee,
-												'PS_SHOW_ENABLED_MODULES_'.$id_employee
-												));
-		//reset filtre
+			'PS_SHOW_TYPE_MODULES_'.$id_employee,
+			'PS_SHOW_COUNTRY_MODULES_'.$id_employee,
+			'PS_SHOW_INSTALLED_MODULES_'.$id_employee,
+			'PS_SHOW_ENABLED_MODULES_'.$id_employee
+		));
+		
 		if (Tools::isSubmit('desactive') && isset($filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee] != 'enabledDisabled')
 			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee], 'disabled');
 			
@@ -99,7 +102,6 @@ class AdminModules extends AdminTab
 		if (Tools::isSubmit('install') && isset($filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee] != 'installedUninstalled')
 			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], 'installed', $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]);
 		
-		
 		if (Tools::isSubmit('filterModules'))
 		{
 			$this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
@@ -110,6 +112,7 @@ class AdminModules extends AdminTab
 			$this->resetFilterModules();
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
+		
 		if (Tools::isSubmit('active'))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
@@ -117,9 +120,15 @@ class AdminModules extends AdminTab
 				$module = Module::getInstanceByName(Tools::getValue('module_name'));
 				if (Validate::isLoadedObject($module))
 				{
-					$module->enable();
-					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-				} else
+					if (!$module->getPermission('configure'))
+						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+					else
+					{
+						$module->enable();
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+					}
+				}
+				else
 					$this->_errors[] = Tools::displayError('Cannot load module object');
 			} else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
@@ -131,9 +140,15 @@ class AdminModules extends AdminTab
 				$module = Module::getInstanceByName(Tools::getValue('module_name'));
 				if (Validate::isLoadedObject($module))
 				{
-					$module->disable();
-					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-				} else
+					if (!$module->getPermission('configure'))
+						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+					else
+					{
+						$module->disable();
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+					}
+				}
+				else
 					$this->_errors[] = Tools::displayError('Cannot load module object');
 			} else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
@@ -145,15 +160,20 @@ class AdminModules extends AdminTab
 				$module = Module::getInstanceByName(Tools::getValue('module_name'));
 				if (Validate::isLoadedObject($module))
 				{
-					if ($module->uninstall())
-						if ($module->install())
-							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-						else
-							$this->_errors[] = Tools::displayError('Cannot install module');
+					if (!$module->getPermission('configure'))
+						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
 					else
-						$this->_errors[] = Tools::displayError('Cannot uninstall module');
-											
-				} else
+					{
+						if ($module->uninstall())
+							if ($module->install())
+								Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+							else
+								$this->_errors[] = Tools::displayError('Cannot install module');
+						else
+							$this->_errors[] = Tools::displayError('Cannot uninstall module');
+					}
+				}
+				else
 					$this->_errors[] = Tools::displayError('Cannot load module object');
 			} else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
@@ -200,11 +220,16 @@ class AdminModules extends AdminTab
 				$module = Module::getInstanceByName(Tools::getValue('module_name'));
 				if (Validate::isLoadedObject($module))
 				{
-					if (Tools::getValue('enable'))
-						$module->enable();
+					if (!$module->getPermission('configure'))
+						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
 					else
-						$module->disable();
-					Tools::redirectAdmin($this->getCurrentUrl('enable'));
+					{
+						if (Tools::getValue('enable'))
+							$module->enable();
+						else
+							$module->disable();
+						Tools::redirectAdmin($this->getCurrentUrl('enable'));
+					}
 				}
 				else
 					$this->_errors[] = Tools::displayError('Cannot load module object');
@@ -219,11 +244,16 @@ class AdminModules extends AdminTab
 			{
 				if (Tools::getValue('module_name') != '')
 				{
-					$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
-					$this->recursiveDeleteOnDisk($moduleDir);
-					Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
+					$module = Module::getInstanceByName(Tools::getValue('module_name'));
+					if (Validate::isLoadedObject($module) AND !$module->getPermission('configure'))
+						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+					else
+					{
+						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
+						$this->recursiveDeleteOnDisk($moduleDir);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
+					}
 				}
-				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
@@ -247,15 +277,15 @@ class AdminModules extends AdminTab
 						if (!($module = Module::getInstanceByName(urldecode($name))))
 							$this->_errors[] = $this->l('module not found');
 						elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
-							$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-						elseif ($key == 'uninstall' AND $this->tabAccess['delete'] !== '1')
-							$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-						elseif ($key == 'configure' AND $this->tabAccess['edit'] !== '1')
-							$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+							$this->_errors[] = Tools::displayError('You do not have permission to install a module.');
+						elseif ($key == 'uninstall' AND ($this->tabAccess['delete'] !== '1' OR !$module->getPermission('configure')))
+							$this->_errors[] = Tools::displayError('You do not have permission to delete this module.');
+						elseif ($key == 'configure' AND ($this->tabAccess['edit'] !== '1' OR !$module->getPermission('configure')))
+							$this->_errors[] = Tools::displayError('You do not have permission to configure this module.');
 						elseif ($key == 'install' AND Module::isInstalled($module->name))
-							$this->_errors[] = Tools::displayError('This module is already installed : ').$module->name;
+							$this->_errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
 						elseif ($key == 'uninstall' AND !Module::isInstalled($module->name))
-							$this->_errors[] = Tools::displayError('This module is already uninstalled : ').$module->name;
+							$this->_errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
 						else
 						{
 							if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
@@ -311,12 +341,11 @@ class AdminModules extends AdminTab
 					}
 				if (sizeof($module_errors))
 				{
-					$htmlError = '';
-
+					$htmlError = '<ul>';
 					foreach ($module_errors AS $module_error)
 						$htmlError .= '<li>'.$module_error.'</li>';
 					$htmlError .= '</ul>';
-					$this->_errors[] = Tools::displayError('The following module(s) were not installed successfully:'.$htmlError);
+					$this->_errors[] = Tools::displayError('The following module(s) were not installed successfully:').$htmlError;
 				}
 			}
 			if ($return)
@@ -330,9 +359,9 @@ class AdminModules extends AdminTab
 		if (substr($file, -4) == '.zip')
 		{
 			if (!Tools::ZipExtract($file, _PS_MODULE_DIR_))
-					$this->_errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
-			}
-			else
+				$this->_errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+		}
+		else
 		{
 			$archive = new Archive_Tar($file);
 			if ($archive->extract(_PS_MODULE_DIR_))
@@ -505,22 +534,37 @@ class AdminModules extends AdminTab
 			</script>';
 		}
 
-		//filter module list
-		foreach($modules as $key => $module)
+		// Filter module list
+		foreach ($modules as $key => $module)
 		{
+			if ($module->id AND !Module::getPermissionStatic($module->id, 'view') AND !Module::getPermissionStatic($module->id, 'configure'))
+			{
+				unset($modules[$key]);
+				continue;
+			}
+			
 			switch ($showTypeModules)
 			{
 				case 'nativeModules':
 					if (!in_array($module->name, $this->listNativeModules))
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 				case 'partnerModules':
 					if (!in_array($module->name, $this->listPartnerModules))
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 				case 'otherModules':
 					if (in_array($module->name, $this->listPartnerModules) OR in_array($module->name, $this->listNativeModules))
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 				default:
 					if (strpos($showTypeModules, 'authorModules[') !== false)
@@ -528,7 +572,10 @@ class AdminModules extends AdminTab
 						$author_selected = $this->_getSubmitedModuleAuthor($showTypeModules);
 						$modulesAuthors[$author_selected] = 'selected';		// setting selected author in authors set
 						if (empty($module->author) || $module->author != $author_selected)
+						{
 							unset($modules[$key]);
+							continue;
+						}
 					}
 
 				break;
@@ -539,11 +586,17 @@ class AdminModules extends AdminTab
 			{
 				case 'installed':
 					if (!$module->id)
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 				case 'unistalled':
 					if ($module->id)
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 			}
 			
@@ -551,21 +604,31 @@ class AdminModules extends AdminTab
 			{
 				case 'enabled':
 					if (!$module->active)
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 				case 'disabled':
 					if ($module->active)
+					{
 						unset($modules[$key]);
+						continue;
+					}
 				break;
 			}		
 			
-			if ($showCountryModules)		
-				if (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($isoCountryDefault), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($isoCountryDefault) != strval($module->limited_countries))))
-					unset($modules[$key]);
+			if ($showCountryModules AND (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($isoCountryDefault), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($isoCountryDefault) != strval($module->limited_countries)))))
+			{
+				unset($modules[$key]);
+				continue;
+			}
 			
-			if (!empty($filterName))
-				if (stristr($module->name, $filterName) === false AND stristr($module->displayName, $filterName) === false AND stristr($module->description, $filterName) === false)
-					unset($modules[$key]);
+			if (!empty($filterName) AND (stristr($module->name, $filterName) === false AND stristr($module->displayName, $filterName) === false AND stristr($module->description, $filterName) === false))
+			{
+				unset($modules[$key]);
+				continue;
+			}
 		}
 		
 		foreach($modules as $module)

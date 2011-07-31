@@ -40,10 +40,9 @@ if (empty($tab) and !sizeof($_POST))
 	$_POST['tab'] = 'AdminHome';
 	$_POST['token'] = Tools::getAdminTokenLite($tab);
 }
-	if ($id_tab = checkingTab($tab))
+	if ($adminObj = checkingTab($tab))
 	{
     	$isoUser = Language::getIsoById(intval($cookie->id_lang));
-
 
 		if (Validate::isLoadedObject($adminObj))
 		{
