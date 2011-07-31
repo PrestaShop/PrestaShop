@@ -59,8 +59,9 @@ INSERT INTO `PREFIX_module` (`id_module`, `name`, `active`) VALUES (1, 'homefeat
 (47, 'statsbestvouchers', 1),(48, 'statsbestsuppliers', 1),(49, 'statscarrier', 1),(50, 'statsnewsletter', 1),(51, 'statssearch', 1),(52, 'statscheckup', 1),(53, 'statsstock', 1),
 (54, 'blockstore', 1),(55, 'statsforecast', 1);
 
-INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module`);
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 1, id_module, 1, 1 FROM PREFIX_module);
 
+INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module`);
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
 	('myAccountBlock', 'My account block', 'Display extra informations inside the "my account" block', 1);
@@ -1106,6 +1107,10 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (4, 90, 0, 0, 0, 0),
 (4, 91, 0, 0, 0, 0),
 (4, 92, 0, 0, 0, 0);
+
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 2, id_module, 0, 1 FROM PREFIX_module);
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 3, id_module, 0, 1 FROM PREFIX_module);
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 4, id_module, 0, 1 FROM PREFIX_module);
 
 INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (2),(3),(4);
 INSERT INTO `PREFIX_profile_lang` (`id_lang`, `id_profile`, `name`) VALUES

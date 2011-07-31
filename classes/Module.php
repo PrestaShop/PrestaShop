@@ -85,6 +85,8 @@ abstract class ModuleCore
 	protected static $_generateConfigXmlMode = false;
 	
 	protected static $l_cache = array();
+	
+	protected static $cache_permissions = array();
 
 	/**
 	 * @var array used by AdminTab to determine which lang file to use (admin.php or module lang file)
@@ -163,6 +165,23 @@ abstract class ModuleCore
 		$this->id = Db::getInstance()->Insert_ID();
 		
 		$this->enable(true);
+		
+		// Permissions management
+		Db::getInstance()->Execute('
+		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
+			SELECT id_profile, '.(int)$this->id.', 1, 1
+			FROM '._DB_PREFIX_.'access a
+			WHERE id_tab = (SELECT `id_tab` FROM '._DB_PREFIX_.'tab WHERE class_name = \'AdminModules\' LIMIT 1)
+			AND a.`view` = 1
+		)');
+		Db::getInstance()->Execute('
+		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
+			SELECT id_profile, '.(int)$this->id.', 1, 0
+			FROM '._DB_PREFIX_.'access a
+			WHERE id_tab = (SELECT `id_tab` FROM '._DB_PREFIX_.'tab WHERE class_name = \'AdminModules\' LIMIT 1)
+			AND a.`view` = 0
+		)');
+
 		return true;
 	}
 
@@ -189,10 +208,12 @@ abstract class ModuleCore
 			$this->cleanPositions($row['id_hook']);
 		}
 		$this->disable(true);
+		
+		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_module` = '.(int)$this->id);
 
 		return Db::getInstance()->Execute('
 			DELETE FROM `'._DB_PREFIX_.'module`
-			WHERE `id_module` = '.(int)($this->id));
+			WHERE `id_module` = '.(int)$this->id);
 	}
 
 	/**
@@ -766,6 +787,8 @@ abstract class ModuleCore
 			$exceptions = $moduleInstance->getExceptions($array['id_hook']);
 			if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
 				continue;
+			if (isset($context->employee) AND !$moduleInstance->getPermission('view', $context->employee))
+				continue;
 
 			if (is_callable(array($moduleInstance, 'hook'.$hook_name)))
 			{
@@ -1163,6 +1186,30 @@ abstract class ModuleCore
 	public function isHookableOn($hook_name)
 	{
 		return is_callable(array($this, 'hook'.ucfirst($hook_name)));
+	}
+	
+	public function getPermission($variable, $employee = null)
+	{
+		return self::getPermissionStatic($this->id, $variable, $employee);
+	}
+	
+	public function getPermissionStatic($id_module, $variable, $employee = null)
+	{
+		if (!in_array($variable, array('view', 'configure')))
+			return false;
+		if (!$employee)
+			$employee = $this->context->employee;
+		if (!isset($cache_permissions[$employee->id_profile]))
+		{
+			$cache_permissions[$employee->id_profile] = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_module, `view`, `configure` FROM '._DB_PREFIX_.'module_access WHERE id_profile = '.(int)$employee->id_profile);
+			foreach ($result as $row)
+			{
+				$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
+				$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
+			}
+		}
+		return (bool)$cache_permissions[$employee->id_profile][$id_module][$variable];
 	}
 }
 

@@ -862,6 +862,14 @@ CREATE TABLE `PREFIX_module` (
   KEY `name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_module_access` (
+  `id_profile` int(10) unsigned NOT NULL,
+  `id_module` int(10) unsigned NOT NULL,
+  `view` tinyint(1) NOT NULL,
+  `configure` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_profile`,`id_module`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_module_country` (
   `id_module` int(10) unsigned NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
