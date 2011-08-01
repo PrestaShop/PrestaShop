@@ -73,11 +73,12 @@ class LinkCore
 	public function getProductLink($id_product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__;
-		
+
 		// @todo use specific method ?
 		if ($id_shop && ($shop = Shop::getShop($id_shop)))
-			$url = 'http://'.$shop['domain'].'/'.$shop['uri'].$this->getLangLink($id_lang);
-			
+			$url = 'http://'.$shop['domain'].'/'.$shop['uri'];
+		$url .= $this->getLangLink($id_lang);
+
 		if (is_object($id_product))
 		{
 			$product = clone($id_product);
@@ -86,7 +87,7 @@ class LinkCore
 			$alias = $product->link_rewrite;
 			$ean13 = $product->ean13;
 		}
-		
+
 		if ($category AND $category != 'home')
 			return $url.Dispatcher::getInstance()->createUrl('product_rule2', array(
 				'id_product' =>	$id_product,
@@ -269,7 +270,7 @@ class LinkCore
 	 * @param string $controller
 	 * @param bool $ssl
 	 * @param int $id_lang
-	 * @param string $request
+	 * @param string|array $request
 	 * @param Context $context
 	 */
 	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null)
@@ -278,6 +279,11 @@ class LinkCore
 
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
+		if (is_array($request))
+		{
+			unset($request['controller']);
+			$request = http_build_query($request);
+		}
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller);
 		$url = ($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
@@ -313,24 +319,13 @@ class LinkCore
 			$request = str_replace($rewrite, $url_rewrite, $request);
 		}
 
-		$queryTab = array();
 		parse_str($_SERVER['QUERY_STRING'], $queryTab);
-		unset($queryTab['isolang']);
-		$query = http_build_query($queryTab);
-
-		if (!empty($query) OR !$this->allow)
-			$query = '?'.$query;
-
-		$switchLangLink = $this->getPageLink(substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)), false, $id_lang).$query;
+		unset($queryTab['isolang'], $queryTab['controller']);
+		
 		if (!$this->allow)
-			if ($id_lang != $context->language->id)
-			{
-				if (strpos($switchLangLink,'id_lang'))
-					$switchLangLink = preg_replace('`id_lang=[0-9]*`','id_lang='.$id_lang,$switchLangLink);
-				else
-					$switchLangLink = $switchLangLink.'&amp;id_lang='.$id_lang;
-			}
-		return $switchLangLink;
+			$queryTab['id_lang'] = $id_lang;
+
+		return $this->getPageLink(Dispatcher::getInstance()->getController(), false, $id_lang, $queryTab);
 	}
 
 	public function goPage($url, $p)
@@ -382,7 +377,7 @@ class LinkCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if (!$this->allow OR Language::countActiveLanguages() <= 1)
+		if (!$this->allow OR !Language::isMultiLanguageActivated())
 			return '';
 
 		if (!$id_lang)

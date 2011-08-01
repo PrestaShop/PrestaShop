@@ -51,10 +51,8 @@ if ((empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off')
 		.'<br/><br/><a href="https://'.Tools::getServerName().$_SERVER['REQUEST_URI'].'">https://'.Tools::getServerName().$_SERVER['REQUEST_URI'].'</a>';
 }
 
-$cookie = new Cookie('psAdmin', substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__), -10));
-if (!isset($cookie->id_lang))
-	$cookie->id_lang = Configuration::get('PS_LANG_DEFAULT');
-$iso = strtolower(Language::getIsoById((int)($cookie->id_lang)));
+$cookie = Context::getContext()->cookie;
+$iso = strtolower(Language::getIsoById(Context::getContext()->language->id));
 include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 

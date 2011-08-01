@@ -34,8 +34,7 @@ if (isset($_GET['logout']))
 
 if (!$cookie->isLoggedBack())
 {
-	$destination = substr($_SERVER['REQUEST_URI'], strlen(dirname($_SERVER['SCRIPT_NAME'])) + 1);
-	Tools::redirectAdmin('login.php'.(empty($destination) || ($destination == 'index.php?logout') ? '' : '?redirect='.$destination));
+	Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
 }
 
 // Set current index 

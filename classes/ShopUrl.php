@@ -30,7 +30,8 @@ class ShopUrlCore extends ObjectModel
 	public $id_shop;
 	public $domain;
 	public $domain_ssl;
-	public $uri;
+	public $physical_uri;
+	public $virtual_uri;
 	public $main;
 	public $active;
 	
@@ -39,7 +40,7 @@ class ShopUrlCore extends ObjectModel
 	
 
 	protected $fieldsRequired = array('domain', 'id_shop');
-	protected $fieldsSize = array('domain' => 255, 'uri' => 64);
+	protected $fieldsSize = array('domain' => 255, 'physical_uri' => 64, 'virtual_uri' => 64);
 	protected $fieldsValidate = array('active' => 'isBool');
 
 	protected $table = 'shop_url';
@@ -48,13 +49,33 @@ class ShopUrlCore extends ObjectModel
 	public function getFields()
 	{
 		parent::validateFields();
+		
+		$this->physical_uri = trim($this->physical_uri, '/');
+		$this->physical_uri .= '/'.$this->physical_uri;
+		if ($this->physical_uri)
+			$this->physical_uri = preg_replace('#/+#', '/', $this->physical_uri);
+			
+		$this->virtual_uri = trim($this->virtual_uri, '/');
+		if ($this->virtual_uri)
+			$this->virtual_uri = '/'.preg_replace('#/+#', '/', trim($this->virtual_uri, '/'));
+
 		$fields['domain'] = pSQL($this->domain);
 		$fields['domain_ssl'] = pSQL($this->domain_ssl);
-		$fields['uri'] = pSQL($this->uri);
+		$fields['physical_uri'] = pSQL($this->physical_uri);
+		$fields['virtual_uri'] = pSQL($this->virtual_uri);
 		$fields['id_shop'] = (int)$this->id_shop;
 		$fields['main'] = (int)$this->main;
 		$fields['active'] = (int)$this->active;
 		return $fields;
+	}
+	
+	public function getURL($ssl = false)
+	{
+		if (!$this->id)
+			return ;
+
+		$url = ($ssl) ? 'https://'.$this->domain_ssl : 'http://'.$this->domain;
+		return $url.$this->physical_uri.$this->virtual_uri;
 	}
 	
 	public static function getShopUrls($id_shop = false)

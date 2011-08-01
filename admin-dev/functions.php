@@ -75,7 +75,6 @@ function includeDatepicker($id, $time = false)
 function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
 {
  	$defines = array();
-	$defines['_PS_DIRECTORY_'] = ($baseUrls AND $baseUrls['_PS_DIRECTORY_']) ? $baseUrls['_PS_DIRECTORY_'] : _PS_DIRECTORY_;
 	$defines['_MEDIA_SERVER_1_'] = ($baseUrls AND isset($baseUrls['_MEDIA_SERVER_1_'])) ? $baseUrls['_MEDIA_SERVER_1_'] : _MEDIA_SERVER_1_;
 	$defines['_MEDIA_SERVER_2_'] = ($baseUrls AND isset($baseUrls['_MEDIA_SERVER_2_'])) ? $baseUrls['_MEDIA_SERVER_2_'] : _MEDIA_SERVER_2_;
 	$defines['_MEDIA_SERVER_3_'] = ($baseUrls AND isset($baseUrls['_MEDIA_SERVER_3_'])) ? $baseUrls['_MEDIA_SERVER_3_'] : _MEDIA_SERVER_3_;

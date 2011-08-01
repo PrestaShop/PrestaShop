@@ -36,6 +36,8 @@ class DispatcherCore
 	public static $instance = null;
 
 	/**
+	 * List of default routes
+	 * 
 	 * @var array
 	 */
 	protected $defaultRoutes = array(
@@ -70,16 +72,22 @@ class DispatcherCore
 	);
 
 	/**
+	 * If true, use routes to build URL (mod rewrite must be activated)
+	 * 
 	 * @var $useRoutes bool
 	 */
 	protected $useRoutes = false;
 
 	/**
+	 * List of loaded routes
+	 * 
 	 * @var $routes array
 	 */
 	protected $routes = array();
 
 	/**
+	 * List of allowed keywords in routes
+	 * 
 	 * @var array
 	 */
 	protected $keywords = array(
@@ -88,11 +96,25 @@ class DispatcherCore
 	);
 
 	/**
+	 * Current controller name
+	 * 
 	 * @var string
 	 */
 	protected $controller;
-
-	public static $controllers = array();
+	
+	/**
+	 * Current request uri
+	 * 
+	 * @var string
+	 */
+	protected $requestURI;
+	
+	/**
+	 * Store empty route (a route with an empty rule)
+	 * 
+	 * @var array
+	 */
+	protected $emptyRoute;
 
 	/**
 	 * Get current instance of dispatcher (singleton)
@@ -113,18 +135,34 @@ class DispatcherCore
 	{
 		$this->useRoutes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$this->loadRoutes();
+		
+		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
+		if (isset($_SERVER['REQUEST_URI']))
+			$this->requestURI = $_SERVER['REQUEST_URI'];
+		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
+			$this->requestURI = $_SERVER['HTTP_X_REWRITE_URL'];
 	}
 
 	/**
-	 * "main" method of dispatcher, call the controller
+	 * Find the controller and instantiate it
 	 */
 	public function dispatch()
 	{
-		$this->getController();
+		$this->requestURI = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->requestURI);
 
+		// If there are several languages, get language from uri
+		if ($this->useRoutes && Language::isMultiLanguageActivated())
+			if (preg_match('#^/([a-z]{2})/#', $this->requestURI, $m))
+			{
+				$_GET['isolang'] = $m[1];
+				$this->requestURI = substr($this->requestURI, 3);
+			}
+
+		// Get and instantiate controller
+		$this->getController();
 		$controllers = Dispatcher::getControllers();
 		if (!isset($controllers[$this->controller]))
-			$this->controller = 'index';
+			$this->controller = 'pagenotfound';
 		ControllerFactory::getController($controllers[$this->controller])->run();
 	}
 	
@@ -146,7 +184,16 @@ class DispatcherCore
 					WHERE id_lang = '.(int)$context->language->id;
 			if ($results = Db::getInstance()->ExecuteS($sql))
 				foreach ($results as $row)
-					$this->addRoute($row['page'], $row['url_rewrite'], $row['page']);
+				{
+					if ($row['url_rewrite'])
+						$this->addRoute($row['page'], $row['url_rewrite'], $row['page']);
+					else
+						$this->emptyRoute = array(
+							'routeID' =>	$row['page'],
+							'rule' =>		$row['url_rewrite'],
+							'controller' =>	$row['page'],
+						);
+				}
 		}
 	}
 	
@@ -177,17 +224,6 @@ class DispatcherCore
 			'controller' =>	$controller,
 			'required' =>	$required,
 		);
-	}
-	
-	/**
-	 * Check if a route is defined
-	 * 
-	 * @param string $routeID
-	 * @return bool
-	 */
-	public function routeExists($routeID)
-	{
-		return isset($this->routes[$routeID]);
 	}
 
 	/**
@@ -259,17 +295,16 @@ class DispatcherCore
 		// Use routes ? (for url rewriting)
 		if ($this->useRoutes && !$controller)
 		{
-			// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
-			if (isset($_SERVER['REQUEST_URI']))
-				$request = $_SERVER['REQUEST_URI'];
-			else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
-				$request = $_SERVER['HTTP_X_REWRITE_URL'];
-			else
-				return 'index';
-
+			if (!$this->requestURI)
+				return 'pagenotfound';
 			$controller = 'index';
+			
+			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
+			if ($this->emptyRoute)
+				$this->addRoute($this->emptyRoute['routeID'], $this->emptyRoute['rule'], $this->emptyRoute['controller']);
+
 			foreach ($this->routes as $route)
-				if (preg_match($route['regexp'], $request, $m))
+				if (preg_match($route['regexp'], $this->requestURI, $m))
 				{
 					// Route found ! Now fill $_GET with parameters of uri
 					$controller = $route['controller'];
@@ -278,7 +313,7 @@ class DispatcherCore
 							$_GET[$k] = $v;
 					break;
 				}
-
+			
 			$this->controller = $controller;
 		}
 		// Default mode, take controller from url

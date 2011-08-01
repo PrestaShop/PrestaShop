@@ -1538,144 +1538,103 @@ class ToolsCore
 
 	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '', $disableMuliviews = false)
 	{
+		// Check current content of .htaccess and save all code outside of prestashop comments
+		$specificBefore = $specificAfter = '';
+		if (file_exists($path))
+		{
+			$content = file_get_contents($path);
+			if (preg_match('#^(.*)\# ~~start~~.*\# ~~end~~[^\n]*(.*)$#s', $content, $m))
+			{
+				$specificBefore = $m[1];
+				$specificAfter = $m[2];
+			}
+			else
+				$specificBefore = $content;
+		}
+
+		// Write .htaccess data
 		if (!$writeFd = @fopen($path, 'w'))
 			return false;
-
-		$tab = array('ErrorDocument' => array(), 'RewriteEngine' => array(), 'RewriteRule' => array());
-		$multilang = (Language::countActiveLanguages() > 1);
-		$shop_urls = ShopUrl::getShopUrls();
-		
-		foreach ($shop_urls AS &$url)
+		fwrite($writeFd, trim($specificBefore)."\n\n");
+			
+		$domains = array();
+		foreach (ShopUrl::getShopUrls() as $shopUrl)
 		{
-			$url['uri'] .= (!empty($url['uri']) ? '/' : '');
-			$domains[$url['domain']][] = $url;
+			$domains[$shopUrl['domain']] = array(
+				'physical' =>	$shopUrl['physical_uri'],
+				'virtual' =>	$shopUrl['virtual_uri'],
+			);
 		}
 
-		foreach ($domains AS $domain => $row)
-		{
-			foreach ($row AS $uri)
-			{
-				// ErrorDocument
-				$tab['ErrorDocument'][$domain]['comment'] = '# Catch 404 errors';
-				$tab['ErrorDocument'][$domain]['content'] = '404 '.$uri['uri'].'404.php';
-
-				// Compatibility with the old image filesystem
-				if (Configuration::get('PS_LEGACY_IMAGES'))
-				{
-					$tab['RewriteRule'][$domain]['content']['^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2$3.jpg [L]';
-					$tab['RewriteRule'][$domain]['content']['^([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2.jpg [L]';
-				}
-
-				// Rewriting for product image id < 100 millions
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$1$2.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$1$2$3.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$1$2$3$4.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$1$2$3$4$5.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$1$2$3$4$5$6.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'c/([a-zA-Z-]+)/[a-zA-Z0-9-]+\.jpg$'] = 'img/c/$1.jpg [L]';
-
-				if ($multilang)
-				{
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'index.php?controller=product&id_product=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=category&id_category=$2&isolang=$1&id_shop='.$uri['id_shop'].' [QSA,L]';
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/content/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=cms&isolang=$1&id_cms=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/content/category/([0-9]+)\-[a-zA-Z0-9-]*'] = 'index.php?controller=cms&isolang=$1&id_cms_category=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)__[a-zA-Z0-9-]*'] = 'index.php?controller=supplier&isolang=$1&id_supplier=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-					//$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z]{2})/([0-9]+)_[a-zA-Z0-9-]*'] = 'index.php?controller=manufacturer&isolang=$1&id_manufacturer=$2&id_shop='.$uri['id_shop'].' [QSA,L]';
-				}
-
-				// PS BASE URI automaticaly prepend the string, do not use PS defines for the image directories
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2$3.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-]*\.jpg$'] = _PS_PROD_IMG_.'$1-$2.jpg [L]';
-				$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').'([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
-
-				Language::loadLanguages();
-				$default_meta = Meta::getMetasByIdLang((int)Configuration::get('PS_LANG_DEFAULT'), new Shop($uri['id_shop']));
-
-				if ($multilang)
-					foreach (Language::getLanguages() as $language)
-					{
-						foreach (Meta::getMetasByIdLang((int)$language['id_lang'], new Shop($uri['id_shop'])) as $key => $meta)
-							if (!empty($meta['url_rewrite']) AND Validate::isLinkRewrite($meta['url_rewrite']))
-								$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$language['iso_code'].'/'.$meta['url_rewrite'].'$'] = 'index.php?controller='.$meta['page'].'&isolang='.$language['iso_code'].'&id_shop='.$uri['id_shop'].' [QSA,L]';
-							elseif (array_key_exists($key, $default_meta) && $default_meta[$key]['url_rewrite'] != '')
-								$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$language['iso_code'].'/'.$default_meta[$key]['url_rewrite'].'$'] = 'index.php?controller='.$default_meta[$key]['page'].'&isolang='.$language['iso_code'].'&id_shop='.$uri['id_shop'].' [QSA,L]';
-						$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$language['iso_code'].'$'] = $language['iso_code'].'&id_shop='.$uri['id_shop'].' [QSA,L]';
-						$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$language['iso_code'].'/([^?&]*)$'] = '$2?isolang='.$language['iso_code'].'&id_shop='.$uri['id_shop'].' [QSA,L]';				
-					}
-				else
-					foreach ($default_meta as $key => $meta)
-						if (!empty($meta['url_rewrite']))
-							$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$meta['url_rewrite'].'$'] = 'index.php?controller='.$meta['page'].'&id_shop='.$uri['id_shop'].' [QSA,L]';
-						else if (array_key_exists($key, $default_meta) && $default_meta[$key]['url_rewrite'] != '')
-							$tab['RewriteRule'][$domain]['content']['^'.ltrim($uri['uri'], '/').''.$default_meta[$key]['url_rewrite'].'$'] = 'index.php?controller='.$default_meta[$key]['page'].'&id_shop='.$uri['id_shop'].' [QSA,L]';
-			}
-		}
-		/*
-		if (!Configuration::get('PS_INSTALL_VERSION') OR version_compare(Configuration::get('PS_INSTALL_VERSION'), '1.4.0.7') == -1)
-		{
-			// This is a nasty copy/paste of the previous links, but with "lang-en" instead of "en"
-			// Do not update it when you add something in the one at the top, it's only for the old links
-			$tab['RewriteRule'][$domain]['content']['^lang-([a-z]{2})/([a-zA-Z0-9-]*)/([0-9]+)\-([a-zA-Z0-9-]*)\.html'] = 'product.php?id_product=$4&isolang=$2 [QSA,L]';
-			$tab['RewriteRule'][$domain]['content']['^lang-([a-z]{2})/([0-9]+)\-([a-zA-Z0-9-]*)\.html'] = 'product.php?id_product=$3&isolang=$2 [QSA,L]';
-			$tab['RewriteRule'][$domain]['content']['^lang-([a-z]{2})/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'category.php?id_category=$3&isolang=$2 [QSA,L]';
-			$tab['RewriteRule'][$domain]['content']['^content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'cms.php?id_cms=$2 [QSA,L]';
-			$tab['RewriteRule'][$domain]['content']['^content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'cms.php?id_cms_category=$2 [QSA,L]';
-		}
-		*/
-		// PS Comments
+		// Write data in .htaccess file
+		fwrite($writeFd, "# ~~start~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
 		fwrite($writeFd, "# .htaccess automaticaly generated by PrestaShop e-commerce open-source solution\n");
-		fwrite($writeFd, "# WARNING: PLEASE DO NOT MODIFY THIS FILE MANUALLY. IF NECESSARY, ADD YOUR SPECIFIC CONFIGURATION WITH THE HTACCESS GENERATOR IN BACK OFFICE\n");
 		fwrite($writeFd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n\n");
-		if (!empty($specific))
-			fwrite($writeFd, $specific);
-		// RewriteEngine
-		fwrite($writeFd, "\n<IfModule mod_rewrite.c>\n");
 
+		// RewriteEngine
+		fwrite($writeFd, "<IfModule mod_rewrite.c>\n");
+		
+		// Disable multiviews ?
 		if ($disableMuliviews)
 			fwrite($writeFd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
-
-		fwrite($writeFd, $tab['RewriteEngine']['comment']."\nRewriteEngine on\n\n");
-		fwrite($writeFd, $tab['RewriteRule']['comment']."\n");
-		// Webservice
-		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '.__PS_BASE_URI__."webservice/dispatcher.php?url=$1 [QSA,L]\n");
-
-		fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\nRewriteCond %{REQUEST_FILENAME} -l [OR]\nRewriteCond %{REQUEST_FILENAME} -d\nRewriteRule ^.*$ - [NC,L]\nRewriteRule ^.*\$ index.php [NC,L]\n");
-		foreach ($domains AS $domain => $row) 
+		
+		fwrite($writeFd, "RewriteEngine on\n\n");
+		foreach ($domains as $domain => $uri)
 		{
-			foreach ($row AS $uri)
+			// Rewrite virtual multishop uri
+			if ($uri['virtual'])
 			{
-				fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");			
-				fwrite($writeFd, $tab['ErrorDocument'][$domain]['comment']."\nErrorDocument ".$tab['ErrorDocument'][$domain]['content']."\n");
-				// Classic URL rewriting
-				if ($rewrite_settings)
-					foreach ($tab['RewriteRule'][$domain]['content'] as $rule => $url)
-					{
-						fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-						fwrite($writeFd, 'RewriteRule '.$rule.' '.$url."\n");
-					}
-				if (Tools::strlen(ltrim($uri['uri'], '/')) > 0)
-				{
-					fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-					fwrite($writeFd, 'RewriteRule ^'.ltrim($uri['uri'], '/').'(.*) $1?id_shop='.$uri['id_shop'].' [QSA,L]'."\n");
-				}
+				fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+				fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."/(.*) ".$uri['physical']."/$1 [L]\n\n");
 			}
-				
 		}
+		
+		// Webservice
+		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '.$uri['physical']."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
+
+		if ($rewrite_settings)
+		{
+			// Compatibility with the old image filesystem
+			fwrite($writeFd, "# Images\n");
+			if (Configuration::get('PS_LEGACY_IMAGES'))
+			{
+				fwrite($writeFd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+				fwrite($writeFd, 'RewriteRule ^([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-]*\.jpg$ '._PS_PROD_IMG_.'$1-$2.jpg [L]'."\n");
+			}
+
+			// Rewrite product images < 100 millions
+			for ($i = 1; $i <= 8; $i++)
+			{
+				$imgPath = $imgName = '';
+				for ($j = 1; $j <= $i; $j++)
+				{
+					$imgPath .= '$'.$j.'/';
+					$imgName .= '$'.$j;
+				}
+				$imgName .= '$'.$j;
+				fwrite($writeFd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$ '._PS_PROD_IMG_.$imgPath.$imgName.".jpg [L]\n");
+			}
+			fwrite($writeFd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$ img/c/$1$2.jpg [L]'."\n");
+			fwrite($writeFd, 'RewriteRule ^c/([a-zA-Z-]+)/[a-zA-Z0-9-]+\.jpg$ img/c/$1.jpg [L]'."\n");
+		}
+
+		// Redirections to dispatcher
+		if ($rewrite_settings)
+		{
+			fwrite($writeFd, "\n# Dispatcher\n");
+			fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
+			fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
+			fwrite($writeFd, "RewriteCond %{REQUEST_FILENAME} -d\n");
+			fwrite($writeFd, "RewriteRule ^.*$ - [NC,L]\n");
+			fwrite($writeFd, "RewriteRule ^.*\$ index.php [NC,L]\n");
+		}
+
 		fwrite($writeFd, "</IfModule>\n\n");
-
-		// ErrorDocument
-
+		
 		// Cache control
 		if ($cache_control)
 		{
-			$cacheControl = "
-<IfModule mod_expires.c>
+			$cacheControl = "<IfModule mod_expires.c>
 	ExpiresActive On
 	ExpiresByType image/gif \"access plus 1 month\"
 	ExpiresByType image/jpeg \"access plus 1 month\"
@@ -1694,10 +1653,12 @@ FileETag INode MTime Size
 	AddOutputFilterByType DEFLATE text/javascript
 	AddOutputFilterByType DEFLATE application/javascript
 	AddOutputFilterByType DEFLATE application/x-javascript
-</IfModule>
-				";
+</IfModule>\n\n";
 			fwrite($writeFd, $cacheControl);
 		}
+
+		fwrite($writeFd, "# ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
+		fwrite($writeFd, "\n\n".trim($specificAfter));
 		fclose($writeFd);
 
 		Module::hookExec('afterCreateHtaccess');

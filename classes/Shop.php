@@ -37,8 +37,9 @@ class ShopCore extends ObjectModel
 	public	$id_category;
 	public	$deleted;
 
-	protected $base_uri;
 	protected $theme_name;
+	protected $physical_uri;
+	protected $virtual_uri;
 
 	/**
 	 * @var GroupShop
@@ -179,37 +180,26 @@ class ShopCore extends ObjectModel
 				$excluded_uris[] = $directory;
 
 		// Parse request_uri
-		preg_match('/^'.Tools::pRegexp(_PS_DIRECTORY_, '/').'([a-z0-9]+)\/.*$/Ui', $_SERVER['REQUEST_URI'], $res);
-		$uri = (isset($res[1]) AND !in_array($res[1], $excluded_uris)) ? $res[1] : '';
-
 		if (!$id_shop = Tools::getValue('id_shop'))
 		{
 			// Find current shop from URL
-			$db = Db::getInstance();
-			$sql = 'SELECT s.id_shop, su.uri
+			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
 					FROM '._DB_PREFIX_.'shop_url su
 					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
 					WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\'
 						AND s.active = 1
-						AND s.deleted = 0';
-			$default = false;
+						AND s.deleted = 0
+					ORDER BY LENGTH(uri) DESC';
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
-				{
-					if (!$default)
-						$default = $row;
-					else if (!$row['uri'])
-						$default = $row;
-
-					if ($uri == $row['uri'])
+					if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
 					{
 						$id_shop = $row['id_shop'];
 						break;
 					}
-				}
 
 			if (!$id_shop)
-				$id_shop = ($default) ? $default['id_shop'] : (int)Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name = \'PS_SHOP_DEFAULT\'');
+				die('Shop not found ... redirect me please !');
 		}
 
 		// Get instance of found shop
@@ -226,7 +216,7 @@ class ShopCore extends ObjectModel
 	 */
 	protected function loadShopInfos()
 	{
-		$sql = 'SELECT su.uri, t.name
+		$sql = 'SELECT su.physical_uri, su.virtual_uri, t.name
 				FROM '._DB_PREFIX_.'shop s
 				LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
 				LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
@@ -238,7 +228,8 @@ class ShopCore extends ObjectModel
 			return false;
 
 		$this->theme_name = $row['name'];
-		$this->base_uri = ($row['uri']) ? $row['uri'].'/' : '';
+		$this->physical_uri = $row['physical_uri'];
+		$this->virtual_uri = $row['virtual_uri'];
 		return true;
 	}
 	
@@ -258,14 +249,18 @@ class ShopCore extends ObjectModel
 	 * 
 	 * Get shop URI
 	 * 
-	 * @param bool $with_base
 	 * @return string
 	 */
-	public function getBaseURI($with_base = true)
+	public function getBaseURI()
 	{
 		if (!$this->theme_name)
 			$this->loadShopInfos();
-		return ($with_base ? _PS_DIRECTORY_ : '').$this->base_uri;
+		return $this->physical_uri.$this->virtual_uri.'/';
+	}
+	
+	public function getPhysicalURI()
+	{
+		return $this->physical_uri;
 	}
 	
 	/**
@@ -356,7 +351,7 @@ class ShopCore extends ObjectModel
 		if (self::$shops && !$refresh)
 			return;
 	
-		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.uri
+		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri
 				FROM '._DB_PREFIX_.'group_shop gs
 				LEFT JOIN '._DB_PREFIX_.'shop s
 					ON s.id_group_shop = gs.id_group_shop
@@ -387,7 +382,7 @@ class ShopCore extends ObjectModel
 					'id_category' =>	$row['id_category'],
 					'domain' =>			$row['domain'],
 					'domain_ssl' =>		$row['domain_ssl'],
-					'uri' =>			$row['uri'],
+					'uri' =>			$row['physical_uri'].$row['virtual_uri'],
 					'active' =>			$row['active'],
 				);
 			}

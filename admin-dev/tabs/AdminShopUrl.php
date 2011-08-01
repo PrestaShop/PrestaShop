@@ -34,19 +34,19 @@ class AdminShopUrl extends AdminTab
 	 	$this->className = 'ShopUrl';
 	 	$this->edit = true;
 		$this->delete = true;
-	 	$this->_select = 's.name shop_name';
+	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 	 	$this->_listSkipDelete = array(1);
 
 		$this->fieldsDisplay = array(
-		'id_shop_url' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'domain' => array('title' => $this->l('Domain'), 'width' => 130, 'filter_key' => 'domain'),
-		'domain_ssl' => array('title' => $this->l('Domain SSL'), 'width' => 130, 'filter_key' => 'domain'),
-		'uri' => array('title' => $this->l('Uri'), 'width' => 130, 'filter_key' => 'uri'),
-		'shop_name' => array('title' => $this->l('Shop name'), 'width' => 70),
-		'main' => array('title' => $this->l('Main URL'), 'align' => 'center', 'activeVisu' => 'main', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'main'),
-		'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'));
-		$this->_fieldsOptions = array('_PS_DIRECTORY_' => array('title' => $this->l('PS directory'), 'desc' => $this->l('Name of the PrestaShop directory on your Web server, bracketed by forward slashes (e.g., /shop/)'), 'validation' => 'isUrl', 'type' => 'text', 'size' => 20, 'default' => _PS_DIRECTORY_, 'visibility' => Shop::CONTEXT_ALL));
+			'id_shop_url' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'domain' => array('title' => $this->l('Domain'), 'width' => 130, 'filter_key' => 'domain'),
+			'domain_ssl' => array('title' => $this->l('Domain SSL'), 'width' => 130, 'filter_key' => 'domain'),
+			'uri' => array('title' => $this->l('Uri'), 'width' => 130, 'filter_key' => 'uri'),
+			'shop_name' => array('title' => $this->l('Shop name'), 'width' => 70),
+			'main' => array('title' => $this->l('Main URL'), 'align' => 'center', 'activeVisu' => 'main', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'main'),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
+		);
 		parent::__construct();
 	}
 	
@@ -66,15 +66,6 @@ class AdminShopUrl extends AdminTab
 				
 			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), Configuration::get('PS_HTACCESS_SPECIFIC'));
 		}
-
-		if (Tools::isSubmit('submitOptions'.$this->table))
-		{
-			$baseUrls = array();
-			if ($_PS_DIRECTORY_ = Tools::getValue('_PS_DIRECTORY_'))
-				$baseUrls['_PS_DIRECTORY_'] = $_PS_DIRECTORY_;
-			rewriteSettingsFile($baseUrls, NULL, NULL);
-			unset($this->_fieldsGeneral['_PS_DIRECTORY_']);
-		}
 		return parent::postProcess();
 	}
 	
@@ -90,6 +81,30 @@ class AdminShopUrl extends AdminTab
 		
 		if (!($obj = $this->loadObject(true)))
 			return;
+			
+		echo <<<EOF
+		<script type="text/javascript">
+		//<![CDATA[
+		$().ready(function()
+		{
+			$('#domain, #physical_uri, #virtual_uri').keyup(function()
+			{
+				var domain = $('#domain').val();
+				var physical = $('#physical_uri').val();
+				var virtual = $('#virtual_uri').val();
+				var url = 'http://';
+				url += ((domain) ? domain : '???');
+				if (physical)
+					url += '/'+physical;
+				if (virtual)
+					url += '/'+virtual;
+				url = url.replace(/\/+/g, "/");
+				$('#final_url').val(url);
+			});
+		});
+		//]]>
+		</script>
+EOF;
 
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
@@ -103,10 +118,19 @@ class AdminShopUrl extends AdminTab
 				<div class="margin-form">
 					<input type="text" name="domain_ssl" id="domain_ssl" value="'.$this->getFieldValue($obj, 'domain_ssl').'" />
 				</div>
-				<label for="uri">'.$this->l('URI').'</label>
+				<label for="physical_uri">'.$this->l('Physical URI').'</label>
 				<div class="margin-form">
-					<input type="text" name="uri" id="uri" value="'.$this->getFieldValue($obj, 'uri').'" />
+					<input type="text" name="physical_uri" id="physical_uri" value="'.$this->getFieldValue($obj, 'physical_uri').'" />
 					<p>'.$this->l('Folder of your store ex: ipods for http://yourshopname.com/ipods/, leave empty if no folder.').'<br /><b>'.$this->l('URL Rewrite must be activated to use this feature.').'</b></p>
+				</div>
+				<label for="virtual_uri">'.$this->l('Virtual URI').'</label>
+				<div class="margin-form">
+					<input type="text" name="virtual_uri" id="virtual_uri" value="'.$this->getFieldValue($obj, 'virtual_uri').'" />
+					<p>'.$this->l('Folder of your store ex: ipods for http://yourshopname.com/ipods/, leave empty if no folder.').'<br /><b>'.$this->l('URL Rewrite must be activated to use this feature.').'</b></p>
+				</div>
+				<label>'.$this->l('Your final URL will be').'</label>
+				<div class="margin-form">
+					<input type="text" readonly="readonly" id="final_url" style="width: 400px" value="'.$obj->getURL().'" /> 
 				</div>
 				<label for="id_shop">'.$this->l('Shop').'</label>
 				<div class="margin-form">

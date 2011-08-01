@@ -1509,7 +1509,7 @@ class ProductCore extends ObjectModel
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
 				'.$context->shop->sqlAsso('product', 'p').'
-				'.Product::sqlStock('p', 0, false, $context).'
+				'.Product::sqlStock('p', 0, false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')

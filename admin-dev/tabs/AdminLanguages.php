@@ -38,17 +38,19 @@ class AdminLanguages extends AdminTab
  		$this->fieldImageSettings = array(array('name' => 'flag', 'dir' => 'l'), array('name' => 'no-picture', 'dir' => 'p'));
 		
 		$this->fieldsDisplay = array(
-		'id_lang' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'flag' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'l', 'orderby' => false, 'search' => false),
-		'name' => array('title' => $this->l('Name'), 'width' => 120),
-		'iso_code' => array('title' => $this->l('ISO code'), 'width' => 70, 'align' => 'center'),
-		'language_code' => array('title' => $this->l('Language code'), 'width' => 70, 'align' => 'center'),
-		'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'));
+			'id_lang' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'flag' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'l', 'orderby' => false, 'search' => false),
+			'name' => array('title' => $this->l('Name'), 'width' => 120),
+			'iso_code' => array('title' => $this->l('ISO code'), 'width' => 70, 'align' => 'center'),
+			'language_code' => array('title' => $this->l('Language code'), 'width' => 70, 'align' => 'center'),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
+		);
 	
 		$this->optionTitle = $this->l('Languages options');
 		$this->_fieldsOptions = array(
-		'PS_LANG_DEFAULT' => array('title' => $this->l('Default language:'), 'desc' => $this->l('The default language used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_lang', 'list' => Language::getlanguages(false)),
+			'PS_LANG_DEFAULT' => array('title' => $this->l('Default language:'), 'desc' => $this->l('The default language used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_lang', 'list' => Language::getlanguages(false)),
 		);
+		$this->_group = 'GROUP BY a.id_lang';
 		
 		parent::__construct();
 	}
