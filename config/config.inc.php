@@ -100,18 +100,11 @@ Language::loadLanguages();
 $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 
 /* Instantiate cookie */
+$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
 if (defined('PS_ADMIN_DIR'))
-{
-	$currentFileName = array_reverse(explode("/", $_SERVER['SCRIPT_NAME']));
-	$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
-	$cookie = new Cookie('psAdmin', substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])), $cookieLifetime);
-}
+	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
 else
-{
-	$defaultCountry = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-	$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_FO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_FO') : 1)* 3600));
 	$cookie = new Cookie('ps', '', $cookieLifetime);
-}
 Context::getContext()->cookie = $cookie;
 
 /* Instantiate language */

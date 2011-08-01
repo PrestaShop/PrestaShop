@@ -1167,7 +1167,7 @@ class CartCore extends ObjectModel
 			$id_carrier = Configuration::get('PS_CARRIER_DEFAULT');
 
 		if (!isset(self::$_carriers[$id_carrier]))
-			self::$_carriers[$id_carrier] = new Carrier((int)($id_carrier), Configuration::get('PS_LANG_DEFAULT'));
+			self::$_carriers[$id_carrier] = new Carrier($id_carrier, Configuration::get('PS_LANG_DEFAULT'));
 		$carrier = self::$_carriers[$id_carrier];
 		if (!Validate::isLoadedObject($carrier))
 			die(Tools::displayError('Fatal error: "no default carrier"'));

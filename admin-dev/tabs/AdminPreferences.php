@@ -172,7 +172,7 @@ class AdminPreferences extends AdminTab
 	{
 		$languages = Language::getLanguages(false);
 
-		Tools::clearCache($smarty);
+		Tools::clearCache($this->context->smarty);
 
 		/* Check required fields */
 		foreach ($fields AS $field => $values)
@@ -289,7 +289,6 @@ class AdminPreferences extends AdminTab
 			else
 				$tab[$key] =  Tools::getValue($key, Configuration::get($key));
 		}
-		$tab['_PS_DIRECTORY_'] = _PS_DIRECTORY_;
 		$tab['_MEDIA_SERVER_1_'] = _MEDIA_SERVER_1_;
 		$tab['_MEDIA_SERVER_2_'] = _MEDIA_SERVER_2_;
 		$tab['_MEDIA_SERVER_3_'] = _MEDIA_SERVER_3_;

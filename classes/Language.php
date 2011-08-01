@@ -662,4 +662,15 @@ class LanguageCore extends ObjectModel
 			self::$countActiveLanguages = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
 		return self::$countActiveLanguages;
 	}
+
+	/**
+	 * Check if more on than one language is activated
+	 * 
+	 * @since 1.5.0
+	 * @return bool
+	 */
+	public static function isMultiLanguageActivated()
+	{
+		return (Language::countActiveLanguages() > 1);
+	}
 }

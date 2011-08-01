@@ -131,7 +131,7 @@ class GAnalytics extends Module
 	
 		// Otherwise, create Google Analytics stats
 		$ganalytics_id = Configuration::get('GANALYTICS_ID');
-		$multilang = (Language::countActiveLanguages() > 1);
+		$multilang = Language::isMultiLanguageActivated();
 		$defaultMetaOrder = Meta::getMetaByPage('order',$this->context->language->id);
 		$order = ($multilang?((string)Tools::getValue('isolang').'/'):'').$defaultMetaOrder['url_rewrite'];
 		$pageTrack = ((strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order.php') === 0 || strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.($multilang?((string)Tools::getValue('isolang').'/'):'').$defaultMetaOrder['url_rewrite']) === 0) ? '/order/step'.(int)(Tools::getValue('step')).'.html' : '');

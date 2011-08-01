@@ -136,7 +136,7 @@ class FrontControllerCore
 		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
-		
+
 		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
@@ -398,7 +398,7 @@ class FrontControllerCore
 			{
 				header('HTTP/1.0 301 Moved');
 				$params = '';
-				$excludedKey = array('isolang', 'id_lang');
+				$excludedKey = array('isolang', 'id_lang', 'controller');
 				foreach ($_GET as $key => $value)
 					if (!in_array($key, $excludedKey))
 						$params .= ($params == '' ? '?' : '&').$key.'='.$value;

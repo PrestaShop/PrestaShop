@@ -1735,18 +1735,19 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   KEY `id_theme` (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
-  `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_shop` int(11) unsigned NOT NULL,
-  `domain` varchar(255) NOT NULL,
-  `domain_ssl` varchar(255) NOT NULL,
-  `uri` varchar(64) NOT NULL,
-  `main` TINYINT(1) NOT NULL,
-  `active` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`id_shop_url`),
-  KEY `id_shop` (`id_shop`),
-  UNIQUE KEY `shop_url` (`domain`, `uri`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+	CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
+	  `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	  `id_shop` int(11) unsigned NOT NULL,
+	  `domain` varchar(255) NOT NULL,
+	  `domain_ssl` varchar(255) NOT NULL,
+	  `physical_uri` varchar(64) NOT NULL,
+	  `virtual_uri` varchar(64) NOT NULL,
+	  `main` TINYINT(1) NOT NULL,
+	  `active` TINYINT(1) NOT NULL,
+	  PRIMARY KEY (`id_shop_url`),
+	  KEY `id_shop` (`id_shop`),
+	  UNIQUE KEY `shop_url` (`domain`, `virtual_uri`)
+	) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `id_theme` int(11) NOT NULL AUTO_INCREMENT,

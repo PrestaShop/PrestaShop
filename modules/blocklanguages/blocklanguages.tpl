@@ -34,7 +34,7 @@
 					{if isset($lang_rewrite_urls.$indice_lang)}
 						<a href="{$lang_rewrite_urls.$indice_lang}" title="{$language.name}">
 					{else}
-						<a href="{$link->getLanguageLink($language.id_lang, $language.name)}" title="{$language.name}">
+						<a href="{$link->getLanguageLink($language.id_lang)}" title="{$language.name}">
 					{/if}
 
 				{/if}
