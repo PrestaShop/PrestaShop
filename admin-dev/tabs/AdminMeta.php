@@ -27,13 +27,15 @@
 
 class AdminMeta extends AdminTab
 {
+	public $table = 'meta';
+	public $className = 'Meta';
+	public $lang = true;
+	public $edit = true;
+	public $delete = true;
+
 	public function __construct()
 	{
-	 	$this->table = 'meta';
-	 	$this->className = 'Meta';
-		$this->lang = true;
-	 	$this->edit = true;
-	 	$this->delete = true;
+		parent::__construct();
 
 		$this->fieldsDisplay = array(
 			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -51,7 +53,6 @@ class AdminMeta extends AdminTab
 		);
 		if (!Tools::getValue('__PS_BASE_URI__'))
 			$_POST['__PS_BASE_URI__'] = __PS_BASE_URI__;
-		parent::__construct();
 	}
 
 	public function display()
