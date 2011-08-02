@@ -64,7 +64,7 @@ class AdminShopUrl extends AdminTab
 			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('uri')))
 				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
 				
-			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), Configuration::get('PS_HTACCESS_SPECIFIC'));
+			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
 		}
 		return parent::postProcess();
 	}
