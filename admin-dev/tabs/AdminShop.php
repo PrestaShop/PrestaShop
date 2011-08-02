@@ -43,11 +43,12 @@ class AdminShop extends AdminTab
 	 	$this->_group = 'GROUP BY a.id_shop';
 
 		$this->fieldsDisplay = array(
-		'id_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Shop'), 'width' => 130, 'filter_key' => 'b!name'),
-		'group_shop_name' => array('title' => $this->l('Group Shop'), 'width' => 70),
-		'category_name' => array('title' => $this->l('Category Root'), 'width' => 70),
-		'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'));
+			'id_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Shop'), 'width' => 130, 'filter_key' => 'b!name'),
+			'group_shop_name' => array('title' => $this->l('Group Shop'), 'width' => 70),
+			'category_name' => array('title' => $this->l('Category Root'), 'width' => 70),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
+		);
 		
 		$this->optionTitle = $this->l('Shops options');
 		$this->_fieldsOptions = array('PS_SHOP_DEFAULT' => array('title' => $this->l('Default shop:'), 'desc' => $this->l('The default shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_shop', 'list' => Shop::getShops(), 'visibility' => Shop::CONTEXT_ALL));
@@ -58,10 +59,7 @@ class AdminShop extends AdminTab
 	public function afterAdd($newShop)
 	{
 		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
-		{
-			$shop = new Shop((int)$newShop->id);
-			$shop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
-		}
+			$newShop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
 	}
 	
 	public function postProcess()
@@ -84,10 +82,10 @@ class AdminShop extends AdminTab
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		if (Shop::getTotalShops() > 1 AND $obj->id)
+		$disabled = '';
+		if (Shop::getTotalShops() > 1 && $obj->id)
 			$disabled = 'disabled="disabled"';
-		else
-			$disabled = '';
+			
 			
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
@@ -114,17 +112,8 @@ class AdminShop extends AdminTab
 
 		echo '		
 						</select>
-					</div>';
-		echo '<label for="id_theme">'.$this->l('Theme').'</label>
-					<div class="margin-form">
-						<select id="id_theme" name="id_theme">';
-		foreach (Theme::getThemes() AS $theme)
-			echo '<option value="'.$theme['id_theme'].'" '.($theme['id_theme'] == $obj->id_theme ? 'selected="selected"' : '' ).'>'.$theme['name'].'</option>';
-		echo '
-						</select>
-					</div>';
-		echo '
-				<label>'.$this->l('Status:').' </label>
+					</div>
+			<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">
 					<input type="radio" name="active" id="active_on" value="1" '.($this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
@@ -133,6 +122,27 @@ class AdminShop extends AdminTab
 					<p>'.$this->l('Enable or disable shop').'</p>
 				</div>';
 		
+		// Theme list
+		echo '<label for="id_theme">'.$this->l('Theme').'</label>
+				<div class="margin-form">';
+		foreach (Theme::getThemes() as $i => $theme)
+		{
+			$checked = ((!$obj->id && $i == 0) || $obj->id_theme == $theme['id_theme']) ? true : false;
+			echo '<div class="select_theme '.(($checked) ? 'select_theme_choice' : '').'" onclick="$(this).find(\'input\').attr(\'checked\', true); $(\'.select_theme\').removeClass(\'select_theme_choice\'); $(this).toggleClass(\'select_theme_choice\');">';
+				echo ucfirst($theme['name']).'<br />';
+				echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.$theme['name'].'" /><br />';
+				echo '<input type="radio" name="id_theme" value="'.$theme['id_theme'].'" '.(($checked) ? 'checked="checked"' : '').' />';
+			echo '</div>';
+		}
+		echo	'</div><div class="clear"></div>';
+		
+
+		echo '<div class="margin-form">
+					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
+				</div>
+				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
+			</fieldset><br /><br />';
+
 		if (Tools::getValue('addshop') !== false)
 		{
 			$importData = array(
@@ -161,10 +171,11 @@ class AdminShop extends AdminTab
 				'zone' => $this->l('Zones'),
 			);
 			
-			echo '<label>'.$this->l('Import data:').'</label>';
+			echo '<fieldset><legend>'.$this->l('Import data from another shop').'</legend>';
+			echo '<label>'.$this->l('Import data from another shop').'</label>';
 			echo '<div class="margin-form">';
 				echo '<input type="checkbox" value="1" checked="checked" name="useImportData" onclick="$(\'#importList\').slideToggle(\'slow\')" /> ';
-				echo $this->l('Duplicate data from');
+				echo $this->l('Duplicate data from shop');
 				echo ' <select name="importFromShop">';
 				foreach (Shop::getTree() as $gID => $gData)
 				{
@@ -179,15 +190,13 @@ class AdminShop extends AdminTab
 					echo '<li><label><input type="checkbox" name="importData['.$table.']" checked="checked" /> '.$lang.'</label></li>';
 				echo '</ul></div>';
 				echo '<p>'.$this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop').'</p>';
-			echo '</div>';
-		}
-		
-		echo '		<div class="margin-form">
+			echo '</div><div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
+				</div>';
+			echo '</fieldset>';
+		}
+
+		echo '</form>';
 	}
 	
 	protected function displayAddButton()

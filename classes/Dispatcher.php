@@ -74,14 +74,14 @@ class DispatcherCore
 	/**
 	 * If true, use routes to build URL (mod rewrite must be activated)
 	 * 
-	 * @var $useRoutes bool
+	 * @var bool
 	 */
 	protected $useRoutes = false;
 
 	/**
 	 * List of loaded routes
 	 * 
-	 * @var $routes array
+	 * @var array
 	 */
 	protected $routes = array();
 

@@ -46,6 +46,7 @@ class ShopCore extends ObjectModel
 	 */
 	protected $group;
 
+	protected $fieldsRequired = array('id_theme', 'id_category', 'id_group_shop', 'name');
 	protected $fieldsSize = array('name' => 64);
  	protected $fieldsValidate = array(
  		'active' => 'isBool',
@@ -179,28 +180,24 @@ class ShopCore extends ObjectModel
 			if (is_dir($dirname.'/../'.$directory) AND (!preg_match ('/^\./', $directory)))
 				$excluded_uris[] = $directory;
 
-		// Parse request_uri
-		if (!$id_shop = Tools::getValue('id_shop'))
-		{
-			// Find current shop from URL
-			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
-					FROM '._DB_PREFIX_.'shop_url su
-					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
-					WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\'
-						AND s.active = 1
-						AND s.deleted = 0
-					ORDER BY LENGTH(uri) DESC';
-			if ($results = Db::getInstance()->executeS($sql))
-				foreach ($results as $row)
-					if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
-					{
-						$id_shop = $row['id_shop'];
-						break;
-					}
+		// Find current shop from URL
+		$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
+				FROM '._DB_PREFIX_.'shop_url su
+				LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
+				WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\'
+					AND s.active = 1
+					AND s.deleted = 0
+				ORDER BY LENGTH(uri) DESC';
+		if ($results = Db::getInstance()->executeS($sql))
+			foreach ($results as $row)
+				if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
+				{
+					$id_shop = $row['id_shop'];
+					break;
+				}
 
-			if (!$id_shop)
-				die('Shop not found ... redirect me please !');
-		}
+		if (!$id_shop)
+			die('Shop not found ... redirect me please !');
 
 		// Get instance of found shop
 		$shop = new Shop($id_shop);

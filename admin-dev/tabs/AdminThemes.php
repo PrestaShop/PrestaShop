@@ -104,9 +104,6 @@ class AdminThemes extends AdminPreferences
 			'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo_stores-'.(int)$id_shop.'.gif?date='.time(), 'pos' => 'before')),
 			'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
 		);
-		$this->_fieldsTheme = array(
-			'PS_THEME' => array('title' => $this->l('Theme'), 'validation' => 'isGenericName', 'type' => 'image', 'list' => $this->_getThemesList(), 'max' => 3)
-		);
 		parent::__construct();
 	}
 
@@ -123,8 +120,6 @@ class AdminThemes extends AdminPreferences
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		$this->_displayForm('appearance', $this->_fieldsAppearance, $this->l('Appearance'), 'width3', 'appearance');
 		echo '<br /><br />';
-		$this->_displayForm('themes', $this->_fieldsTheme, $this->l('Themes'), 'width3', 'themes');
-		echo '<br /><br />';
 		if (@ini_get('allow_url_fopen') AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 			echo '<script type="text/javascript">
 				$.post("'.dirname(self::$currentIndex).'/ajax.php",{page:"themes"},function(a){getE("prestastore-content").innerHTML="<legend><img src=\"../img/admin/prestastore.gif\" class=\"middle\" /> '.$this->l('Live from PrestaShop Addons!').'</legend>"+a;});
@@ -132,21 +127,6 @@ class AdminThemes extends AdminPreferences
 			<fieldset id="prestastore-content" class="width3"></fieldset>';			
 		else
 			echo '<a href="http://addons.prestashop.com/3-prestashop-themes">'.$this->l('Find new themes on PrestaShop Addons!').'</a>';
-	}
-	
-	/**
-	  * Return an array with themes and thumbnails
-	  *
-	  * @return array
-	  */
-	private function _getThemesList()
-	{
-		$dir = opendir(_PS_ALL_THEMES_DIR_);
-		while ($folder = readdir($dir))
-			if ($folder != '.' AND $folder != '..' AND file_exists(_PS_ALL_THEMES_DIR_.'/'.$folder.'/preview.jpg'))
-				$themes[$folder]['name'] = $folder;
-		closedir($dir);	
-		return isset($themes) ? $themes : array();
 	}
 
 	/** This function checks if the theme designer has thunk to make his theme compatible 1.4, 
