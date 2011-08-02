@@ -107,7 +107,7 @@ class Language extends ObjectModel
 		return ($resUpdateSQL AND Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			Configuration::get('PS_HTACCESS_SPECIFIC')
+			''
 		));
 	}
 
@@ -122,7 +122,7 @@ class Language extends ObjectModel
 		return (Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			Configuration::get('PS_HTACCESS_SPECIFIC')
+			''
 		));
 	}
 
@@ -407,7 +407,7 @@ class Language extends ObjectModel
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 									(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-									Configuration::get('PS_HTACCESS_SPECIFIC')
+									''
 								);
 	}
 
@@ -430,7 +430,7 @@ class Language extends ObjectModel
 		Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 								(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 								(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-								Configuration::get('PS_HTACCESS_SPECIFIC')
+								''
 							);
 
 		return $result;
@@ -562,7 +562,7 @@ class Language extends ObjectModel
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 							(int)(Configuration::get('PS_REWRITING_SETTINGS')),
 							(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-							Configuration::get('PS_HTACCESS_SPECIFIC')
+							''
 							);
 	}
 
