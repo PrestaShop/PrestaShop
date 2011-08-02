@@ -1577,3 +1577,20 @@ a.action_module_delete {
 	text-decoration: underline;
 	margin-right: 30px;
 }
+
+.select_theme{
+	text-align: center;
+	width: 220px;
+	height: 235px;
+	float: left;
+	margin-bottom: 20px;
+	cursor: pointer;
+	border: 1px solid #FFFFF0;
+	color: #000000;
+	font-weight: bold;
+}
+
+.select_theme_choice{
+	background-color: #FAEEC2;
+	border: 1px dotted #000000;
+}

@@ -29,7 +29,6 @@ class ThemeCore extends ObjectModel
 {
 	public $name;
 
-	
 	protected $fieldsSize = array('name' => 64);
  	protected $fieldsValidate = array('name' => 'isGenericName');
 	protected $table = 'theme';
@@ -44,7 +43,9 @@ class ThemeCore extends ObjectModel
 	
 	public static function getThemes()
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
-														FROM '._DB_PREFIX_.'theme');
+		$sql = 'SELECT *
+				FROM '._DB_PREFIX_.'theme
+				ORDER BY name';
+		return Db::getInstance()->ExecuteS($sql);
 	}
 }

@@ -539,7 +539,7 @@ class ThemeInstallator extends Module
 			$msg .= '<br /><b>'.$this->l('Images have been correctly updated in database').'</b><br />';
 
 		$theme = new Theme();
-		$theme->name = pSQL($this->xml['name']);
+		$theme->name = (string)$this->xml['name'];
 		$theme->add();
 		$this->_msg .= parent::displayConfirmation($msg);
 		$this->_html .= '
