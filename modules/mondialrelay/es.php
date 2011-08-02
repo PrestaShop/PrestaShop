@@ -109,11 +109,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_0dbe844fb964d5eca2f51be724e4329
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6aefd5e2191e1210a2f50416812b517'] = 'URL de los seguimientos';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_61e70b58e38fd01daa254f44c4fa264b'] = 'Número de puntos recogida';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bba366864d25056c941b72f18ef79e7c'] = 'Este error no se conoce:';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Problemas para obtener las direcciones de servicio web MondialRelay: los servidores de Mondial Relay pueden estar fuera de servicio';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'No hay Punto de entrega cerca de su domicilio, por favor cambie su dirección o utilice otro modo de transporte';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = '(sin IVA)';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = '(IVA incluido)';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = '¡Gratis!';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_81b7b4587a2a3ea7a0d6bb1df3fbba54'] = 'Entregado a';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_a1c3470a944b9625cfb924fd15c8bdbf'] = 'Por favor, seleccione al menos un pedido';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_dc41aac14af17f1d19fca5e3b9439e74'] = 'La clave';

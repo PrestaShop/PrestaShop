@@ -243,7 +243,7 @@ class ProductCore extends ObjectModel
 		'cache_has_attachments' => 'isBool'
 	);
 	protected $fieldsRequiredLang = array('link_rewrite', 'name');
-	/* Description short is limited to 400 chars, but without html, so it can't be generic */
+	/* Description short is limited to 400 chars (but can be configured in Preferences Tab), but without html, so it can't be generic */
 	protected $fieldsSizeLang = array('meta_description' => 255, 'meta_keywords' => 255,
 		'meta_title' => 128, 'link_rewrite' => 128, 'name' => 128, 'available_now' => 255, 'available_later' => 255);
 	protected $fieldsValidateLang = array(
@@ -550,13 +550,16 @@ class ProductCore extends ObjectModel
 
 	public function validateFieldsLang($die = true, $errorReturn = false)
 	{
+		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
+		if ($limit <= 0)
+			$limit = 400;
 		if (!is_array($this->description_short))
 			$this->description_short = array();
 		foreach ($this->description_short as $k => $value)
-			if (Tools::strlen(strip_tags($value)) > 400)
+			if (Tools::strlen(strip_tags($value)) > $limit)
 			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).'->description: length > 400 for language '.$k.')');
-				return $errorReturn ? get_class($this).'->'.Tools::displayError('description: length > 400 for language').' '.$k : false;
+				if ($die) die (Tools::displayError().' ('.get_class($this).'->description: length > '.$limit.' for language '.$k.')');
+				return $errorReturn ? get_class($this).'->'.Tools::displayError('description: length >').' '.$limit.' '.Tools::displayError('for language').' '.$k : false;
 			}
 		return parent::validateFieldsLang($die, $errorReturn);
 	}
@@ -1635,8 +1638,7 @@ class ProductCore extends ObjectModel
 	* @return float Product price
 	*/
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = NULL, $decimals = 6, $divisor = NULL, $only_reduc = false,
-	$usereduc = true, $quantity = 1, $forceAssociatedTax = false, $id_customer = NULL, $id_cart = NULL, $id_address = NULL, &$specificPriceOutput = NULL, 
-	$with_ecotax = TRUE, Context $context = null)
+		$usereduc = true, $quantity = 1, $forceAssociatedTax = false, $id_customer = NULL, $id_cart = NULL, $id_address = NULL, &$specificPriceOutput = NULL, $with_ecotax = true, $use_groupReduction = true, Context $context = null)
 	{
 		if (!$context)
    			$context = Context::getContext();
@@ -1711,7 +1713,7 @@ class ProductCore extends ObjectModel
 			$usetax = false;
 
 		return Product::priceCalculation($context->shop->getID(), $id_product, $id_product_attribute, $id_country,  $id_state, $id_county, $id_currency, $id_group, $quantity, $usetax, $decimals, $only_reduc,
-		$usereduc, $with_ecotax, $specificPriceOutput);
+		$usereduc, $with_ecotax, $specificPriceOutput, $use_groupReduction);
 	}
 
 	/**
@@ -1733,7 +1735,7 @@ class ProductCore extends ObjectModel
 	* @param variable_reference $specific_price_output If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
 	* @return float Product price
 	**/
-	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price)
+	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_groupReduction)
 	{
 		// Caching
 		if ($id_product_attribute === NULL)
@@ -1803,13 +1805,15 @@ class ProductCore extends ObjectModel
 			$price -= $reduc;
 
 		// Group reduction
+		if ($use_groupReduction)
+		{
 		if ($reductionFromCategory = (float)(GroupReduction::getValueForProduct($id_product, $id_group)))
 			$price -= $price * $reductionFromCategory;
 		else // apply group reduction if there is no group reduction for this category
 			$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
+		}
 
 		$price = Tools::ps_round($price, $decimals);
-
 		// Eco Tax
 		if (($result['ecotax'] OR isset($result['attribute_ecotax'])) AND $with_ecotax)
 		{
@@ -3066,21 +3070,20 @@ class ProductCore extends ObjectModel
 	public function checkAccess($id_customer)
 	{
 		if (!$id_customer)
-		{
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT ctg.`id_group`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
 			WHERE cp.`id_product` = '.(int)$this->id.' AND ctg.`id_group` = 1');
-		} else {
+		else 
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT cg.`id_group`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
 			INNER JOIN `'._DB_PREFIX_.'customer_group` cg ON (cg.`id_group` = ctg.`id_group`)
 			WHERE cp.`id_product` = '.(int)$this->id.' AND cg.`id_customer` = '.(int)$id_customer);
-		}
 	}
+
 
 	/**
 	 * Add a stock movement for current product
@@ -3092,7 +3095,7 @@ class ProductCore extends ObjectModel
 	 * @param int $id_employee
 	 * @return bool
 	 */
-	public function addStockMvt($quantity, $id_reason, $id_product_attribute = NULL, $id_order = NULL, $id_employee = NULL)
+	public function addStockMvt($quantity, $id_reason, $id_product_attribute = null, $id_order = null, $id_employee = null)
 	{
 		if (!$this->id)
 			return;
@@ -3114,12 +3117,15 @@ class ProductCore extends ObjectModel
 		$stockMvt->id_employee = (int)$id_employee;
 		$stockMvt->quantity = $quantity;
 		$stockMvt->id_stock_mvt_reason = (int)$id_reason;
-		$result = $stockMvt->add();
 
-		// @hook updateQuantity
-		Hook::updateQuantity($this, null);
-
-		return $result;
+		// adding stock mouvement, this action update the stock of product in database only
+		if ($stockMvt->add())
+		{
+			$this->quantity = $this->getStock();
+			Hook::updateQuantity($this, null);
+			return true;
+		}
+		return false;
 	}
 
 	public function getStockMvts($id_lang)

@@ -39,9 +39,9 @@ legend{background:#7AB51D url(thead.png) repeat-x top left;border:1px solid #364
 #menu img{display:inline;padding:0 3px 0 6px;vertical-align:top;width:16px;height:16px}
 #menu li.active{background-position:0 -70px}
 #menu li.active a{color:#000}
-#submenu{clear:both;color:#666;margin:0;height:38px;padding:0}
-.withLeftBorder{background:transparent url(separator_subnav.png) no-repeat 0 5px}
-#submenu li{display:inline;list-style:none;margin:0;background:transparent url(separator_subnav.png) no-repeat right 0;padding-left:8px;padding-right:8px;margin-top:8px;float:left;height:20px}
+#submenu{clear:both;color:#666;margin:0;padding:0;border-bottom: #A2A8B2 1px solid}
+.withLeftBorder{background:url(bg-submenu.png) repeat-x #DADADA;background-position:0 -1px}
+#submenu li{display:inline;list-style:none;margin:0;background:transparent url(separator_subnav.png) no-repeat right 0;padding-left:8px;padding-right:8px;margin-top:8px;float:left;height:29px}
 #submenu li a{text-decoration:underline}
 #menu li{_height:32px;_padding-top:3px}
 #menu li a{_display:inline;_padding:6px 6px 4px}

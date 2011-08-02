@@ -99,6 +99,13 @@ class Pagesnotfound extends Module
 			Db::getInstance()->Execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
 			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found has been emptied.').'</div>';
 		}
+		elseif (Tools::isSubmit('submitDeletePNF'))
+		{
+			Db::getInstance()->Execute('
+				DELETE FROM `'._DB_PREFIX_.'pagenotfound`
+				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween());
+			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found have been deleted.').'</div>';
+		}
 
         $this->_html .= '<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
@@ -133,7 +140,10 @@ class Pagesnotfound extends Module
 		if (sizeof($pages))
 			$this->_html .= '<div class="clear">&nbsp;</div>
 			<fieldset class="width3"><legend><img src="../img/admin/delete.gif" /> '.$this->l('Empty database').'</legend>
-				<form action="'.Tools::htmlEntitiesUtf8($_SERVER['REQUEST_URI']).'" method="post"><input type="submit" class="button" name="submitTruncatePNF" value="'.$this->l('Empty ALL pages not found').'"></form>
+				<form action="'.Tools::htmlEntitiesUtf8($_SERVER['REQUEST_URI']).'" method="post">
+					<input type="submit" class="button" name="submitDeletePNF" value="'.$this->l('Empty ALL pages not found in this period').'">
+					<input type="submit" class="button" name="submitTruncatePNF" value="'.$this->l('Empty ALL pages not found').'">
+				</form>	
 			</fieldset>';
 		$this->_html .= '<div class="clear">&nbsp;</div>
 		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>

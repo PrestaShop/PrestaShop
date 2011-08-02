@@ -30,7 +30,7 @@ PREPARAZIONE
 Per installare PrestaShop, hai bisogno di un server remoto o nel tuo computer (MAMP), con accesso ad un database come MySQL.
 Dovrai accedere a phpMyAdmin per creare un database e per indicare le informazioni nel database all'installatore.
 
-Sei non hai un host e non sai come creare il tuo negozio, ti offriamo un negozio già pronto che ti farà realizzare il tuo negozio online in meno di 10 minuti senza nessun bisogno di competenze tecniche.
+Sei non hai un host e non sai come creare il tuo negozio, ti offriamo un negozio giï¿½ pronto che ti farï¿½ realizzare il tuo negozio online in meno di 10 minuti senza nessun bisogno di competenze tecniche.
 Ti invitiamo a visitare: 
 	http://www.prestabox.com/
 

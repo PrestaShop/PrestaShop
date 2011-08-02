@@ -45,7 +45,7 @@ $params = array(
 'Langue' => 'FR'
 );
 
-require_once('kit_mondialrelay/tools/nusoap/lib/nusoap.php');
+require_once(dirname(__FILE__).'/lib/nusoap/lib/nusoap.php');
 $client_mr = new nusoap_client("http://www.mondialrelay.fr/webservice/Web_Services.asmx?WSDL", true);
 $client_mr->soap_defencoding = 'UTF-8';
 $client_mr->decode_utf8 = false;

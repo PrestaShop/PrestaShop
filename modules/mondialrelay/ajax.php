@@ -35,12 +35,16 @@
 require_once(realpath(dirname(__FILE__).'/../../config/config.inc.php'));
 
 if (Tools::getValue('mrtoken') != sha1('mr'._COOKIE_KEY_.'mrAgain'))
-	die;
+	die();
 
 require_once(realpath(dirname(__FILE__).'/../../init.php'));
+require(dirname(__FILE__).'/mondialrelay.php');
 require(dirname(__FILE__).'/classes/MRCreateTickets.php');
 require(dirname(__FILE__).'/classes/MRGetTickets.php');
+require(dirname(__FILE__).'/classes/MRGetRelayPoint.php');
 require(dirname(__FILE__).'/classes/MRManagement.php');
+
+global $cookie, $cart, $customer;
 
 $method = Tools::getValue('method');
 $params = array();
@@ -61,12 +65,20 @@ switch($method)
 	case 'DeleteHistory':
 		$params['historyIdList'] = Tools::getValue('history_id_list');
 		break;
-	// 1.3 compatibility to add carrier info when an user select one
+	case 'uninstallDetail':
+		$params['action'] = Tools::getValue('action');
+		break;
+	case 'MRGetRelayPoint':
+		$params['id_carrier'] = Tools::getValue('id_carrier');
+		$params['weight'] = $cart->getTotalWeight();
+		$params['id_address_delivery'] = $cart->id_address_delivery;
+		break;
 	case 'addSelectedCarrierToDB':
-		$params['cart'] = new Cart($cookie->id_cart);
-		// Sometimes the carrier id isn't set into the cart object
-		if (($id_carrier = Tools::getValue('id_carrier')))
-			$params['cart']->id_carrier = $id_carrier;
+		$params['id_carrier'] = Tools::getValue('id_carrier');
+		$params['id_cart'] = $cart->id;
+		$params['id_customer'] = $cookie->id_customer;
+		$params['id_mr_method'] = Tools::getValue('id_mr_method');
+		$params['relayPointInfo'] = Tools::getValue('relayPointInfo');
 		break;
 	default:
 }

@@ -457,9 +457,8 @@ class Ebay extends Module
 
 
 		// Displaying Information from Prestashop
-		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
-
+		$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
+		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 
 		// Displaying page
 		$this->_html .= '<fieldset>
@@ -865,9 +864,9 @@ class Ebay extends Module
 		<p><b>'.$this->l('Beware : Only product default categories are used for this configuration.').'</b></p><br />
 
 		<p align="left">
-			* Certaines catégories bénéficient du nouveau format d’annonces multi-versions qui permet de publier 1 seule annonce pour plusieurs versions du même produit.<br />
-			Pour les catégories ne bénéficiant pas de ce format multi-versions, une annonce sera créée pour chaque version du produit.<br />
-			<a href="http://sellerupdate.ebay.fr/may2011/multi-variation-listings.html" target="_blank">Cliquez ici pour plus d’informations sur les catégories multi-versions</a>
+			* Certaines catÃ©gories bÃ©nÃ©ficient du nouveau format dâ€™annonces multi-versions qui permet de publier 1 seule annonce pour plusieurs versions du mÃªme produit.<br />
+			Pour les catÃ©gories ne bÃ©nÃ©ficiant pas de ce format multi-versions, une annonce sera crÃ©Ã©e pour chaque version du produit.<br />
+			<a href="http://sellerupdate.ebay.fr/may2011/multi-variation-listings.html" target="_blank">Cliquez ici pour plus dâ€™informations sur les catÃ©gories multi-versions</a>
 		</p><br /><br />
 
 		<script>
@@ -1567,22 +1566,22 @@ class Ebay extends Module
 		<h2>Sommaire</h2>
 		<h4><u><a href="#EbayHelpPart1">Comment lancer lancer sur eBay ?</a></u></h4>
 		<ol>
-		  <li><a href="#EbayHelpPart1-1">S’inscrire en tant que vendeur professionnel</a></li>
-		  <li><a href="#EbayHelpPart1-2">Vérification du statut de professionnel</a></li>
-		  <li><a href="#EbayHelpPart1-3">Lier son compte PayPal à son compte eBay</a></li>
+		  <li><a href="#EbayHelpPart1-1">Sâ€™inscrire en tant que vendeur professionnel</a></li>
+		  <li><a href="#EbayHelpPart1-2">VÃ©rification du statut de professionnel</a></li>
+		  <li><a href="#EbayHelpPart1-3">Lier son compte PayPal Ã  son compte eBay</a></li>
 		  <li><a href="#EbayHelpPart1-4">Configurer son compte vendeur et sa boutique eBay</a></li>
 		</ol>
-		<h4><u><a href="#EbayHelpPart2">Le Module Prestashop, comment ça marche ?</a></u></h4>
+		<h4><u><a href="#EbayHelpPart2">Le Module Prestashop, comment Ã§a marcheÂ ?</a></u></h4>
 		<ul>
-		  <li><a href="#EbayHelpPart2-1">Onglet Paramètres</li>
-		  <li><a href="#EbayHelpPart2-2">Onglet Configuration des catégories</a></li>
+		  <li><a href="#EbayHelpPart2-1">Onglet ParamÃ¨tres</li>
+		  <li><a href="#EbayHelpPart2-2">Onglet Configuration des catÃ©gories</a></li>
 		  <li><a href="#EbayHelpPart2-3">Onglet Template de la fiche produit</a></li>
 		  <li><a href="#EbayHelpPart2-4">Onglet Mise en ligne des produits</a></li>
 		</ul>
 		<h4><u><a href="#EbayHelpPart3">Conseils & Astuces pour bien vendre sur eBay</a></u></h4>
 		<ul>
-		  <li><a href="#EbayHelpPart3-1">Conseil N°1 : Avoir une bonne fiche produit</a></li>
-		  <li><a href="#EbayHelpPart3-2">Conseil N°2 : Avoir un bon Profil Vendeur</a></li>
+		  <li><a href="#EbayHelpPart3-1">Conseil NÂ°1Â : Avoir une bonne fiche produit</a></li>
+		  <li><a href="#EbayHelpPart3-2">Conseil NÂ°2Â : Avoir un bon Profil Vendeur</a></li>
 		</ul>
 
 
@@ -1591,36 +1590,36 @@ class Ebay extends Module
 		<br />
 
 
-		<h2 id="EbayHelpPart1">Comment se lancer sur eBay ?</h2>
-		<p>Plus d’infos et tous les liens sur <a href="http://www.inscriptionpro.com" target="_blank"><u>www.inscriptionpro.com</u></a></p><br />
+		<h2 id="EbayHelpPart1">Comment se lancer sur eBayÂ ?</h2>
+		<p>Plus dâ€™infos et tous les liens sur <a href="http://www.inscriptionpro.com" target="_blank"><u>www.inscriptionpro.com</u></a></p><br />
 
-		<h3><u>4 Etapes pour s’inscrire sur eBay</u></h3>
-		<p>A noter : dès votre inscription en tant que professionnel sur eBay.fr, vous recevrez automatiquement un email (dans les 48h) de notre service dédié à l’intégration afin de vous aider dans cette démarche.<br />
-		Vous pouvez contacter directement notre service “Inscription Pro” par email : <a href="mailto:inscriptionpro@ebay.com">inscriptionpro@ebay.com</a></p>
+		<h3><u>4 Etapes pour sâ€™inscrire sur eBay</u></h3>
+		<p>A noter : dÃ¨s votre inscription en tant que professionnel sur eBay.fr, vous recevrez automatiquement un email (dans les 48h) de notre service dÃ©diÃ© Ã  lâ€™intÃ©gration afin de vous aider dans cette dÃ©marche.<br />
+		Vous pouvez contacter directement notre service â€œInscription Proâ€� par email : <a href="mailto:inscriptionpro@ebay.com">inscriptionpro@ebay.com</a></p>
 		<br />
 
 		<h3 id="EbayHelpPart1-1"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>1) Inscription en tant que vendeur professionnel</u></a></h3>
-		<p>L’inscription se fait directement sur eBay.fr via un <a href="https://scgi.ebay.fr/ws/eBayISAPI.dll?RegisterEnterInfo&siteid=71&bizflow=2" target="_blank"><u>formulaire</u></a>. Choisissez un pseudo, un mot de passe, saisissez vos informations personnelles (adresse, téléphone…) et le tour est joué.</p>
+		<p>Lâ€™inscription se fait directement sur eBay.fr via un <a href="https://scgi.ebay.fr/ws/eBayISAPI.dll?RegisterEnterInfo&siteid=71&bizflow=2" target="_blank"><u>formulaire</u></a>. Choisissez un pseudo, un mot de passe, saisissez vos informations personnelles (adresse, tÃ©lÃ©phoneâ€¦) et le tour est jouÃ©.</p>
 		<br />
 
-		<h3 id="EbayHelpPart1-2"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>2) Vérification de votre statut professionnel</u></a></h3>
-		<p>Envoyez à notre service clients les documents justifiant <a href="http://pages.ebay.fr/help/sell/business/existingbusinessvetting.html" target="_blank"><u>votre statut professionnel</u></a>.</p>
+		<h3 id="EbayHelpPart1-2"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>2) VÃ©rification de votre statut professionnel</u></a></h3>
+		<p>Envoyez Ã  notre service clients les documents justifiant <a href="http://pages.ebay.fr/help/sell/business/existingbusinessvetting.html" target="_blank"><u>votre statut professionnel</u></a>.</p>
 		<br />
 
-		<h3 id="EbayHelpPart1-3"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>3) Liez votre compte PayPal à votre compte eBay</u></a></h3>
-		<p>Si vous n’avez pas de compte PayPal Business, il faut d’abord vous en créer un directement sur le site de PayPal : <a href="http://altfarm.mediaplex.com/ad/ck/3484-80712-8030-7" target="_blank"><u>créez votre compte PayPal business</u></a><br />
-		Si vous avez déjà un compte PayPal, liez-le à votre compte eBay pour <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=http%3A%2F%2Fmy.ebay.fr%2Fws%2FeBayISAPI.dll%3FMyeBay%26%26guest%3D1%26CurrentPage%3DMyeBayPayPalAccounts%26guest%3D1&pageType=1883" target="_blank"><u>recevoir les paiements</u></a> des acheteurs et <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=https%3A%2F%2Farbd.ebay.fr%2Fws%2FeBayISAPI.dll%3FPaymentSelectionShowV4%26%26guest%3D1%26guest%3D1&pp=pass&pageType=4098&i1=0" target="_blank"><u>payer automatiquement les frais eBay</u></a>.</p>
+		<h3 id="EbayHelpPart1-3"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>3) Liez votre compte PayPal Ã  votre compte eBay</u></a></h3>
+		<p>Si vous nâ€™avez pas de compte PayPal Business, il faut dâ€™abord vous en crÃ©er un directement sur le site de PayPalÂ : <a href="http://altfarm.mediaplex.com/ad/ck/3484-80712-8030-7" target="_blank"><u>crÃ©ez votre compte PayPal business</u></a><br />
+		Si vous avez dÃ©jÃ  un compte PayPal, liez-le Ã  votre compte eBay pour <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=http%3A%2F%2Fmy.ebay.fr%2Fws%2FeBayISAPI.dll%3FMyeBay%26%26guest%3D1%26CurrentPage%3DMyeBayPayPalAccounts%26guest%3D1&pageType=1883" target="_blank"><u>recevoir les paiements</u></a> des acheteurs et <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=https%3A%2F%2Farbd.ebay.fr%2Fws%2FeBayISAPI.dll%3FPaymentSelectionShowV4%26%26guest%3D1%26guest%3D1&pp=pass&pageType=4098&i1=0" target="_blank"><u>payer automatiquement les frais eBay</u></a>.</p>
 		<br />
 
 		<h3 id="EbayHelpPart1-4"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>4) Configurez votre compte vendeur et votre Boutique eBay</u></a></h3>
 		<ul>
-			<li><a href="http://cgi4.ebay.fr/ws/eBayISAPI.dll?RegisterBizSellerInfo&amp;guest=1" target="_blank"><u>Configurez votre compte</u></a> vendeur pro (coordonnées, CGV,…).</li>
-			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=3" target="_blank"><u>Ouvrez votre Boutique eBay</u></a> et <a href="http://cgi6.ebay.fr/ws/eBayISAPI.dll?StoreCategoryMgmt" target="_blank"><u>paramétrez-la</u></a> pour mettre en avant vos produits dans un espace dédié.</li>
-			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=7" target="_blank"><u>Inscrivez-vous au Gestionnaire de Ventes Pro</u></a>, tableau de bord indispensable au pilotage de votre activité.</li>
+			<li><a href="http://cgi4.ebay.fr/ws/eBayISAPI.dll?RegisterBizSellerInfo&amp;guest=1" target="_blank"><u>Configurez votre compte</u></a> vendeur pro (coordonnÃ©es, CGV,â€¦).</li>
+			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=3" target="_blank"><u>Ouvrez votre Boutique eBay</u></a> et <a href="http://cgi6.ebay.fr/ws/eBayISAPI.dll?StoreCategoryMgmt" target="_blank"><u>paramÃ©trez-la</u></a> pour mettre en avant vos produits dans un espace dÃ©diÃ©.</li>
+			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=7" target="_blank"><u>Inscrivez-vous au Gestionnaire de Ventes Pro</u></a>, tableau de bord indispensable au pilotage de votre activitÃ©.</li>
 		</ul>
 		<br />
 
-		<h3 align="center">Vous n’avez plus qu’à mettre en ligne vos produits avec le module eBay de Prestashop !</h3>
+		<h3 align="center">Vous nâ€™avez plus quâ€™Ã  mettre en ligne vos produits avec le module eBay de PrestashopÂ !</h3>
 
 
 		<br />
@@ -1628,24 +1627,24 @@ class Ebay extends Module
 		<br />
 
 
-		<h2 id="EbayHelpPart2">Le module eBay de Prestashop : comment ça marche ?</h2>
+		<h2 id="EbayHelpPart2">Le module eBay de Prestashop : comment Ã§a marche ?</h2>
 
-		<h3 id="EbayHelpPart2-1">1) Onglet « Paramètres »</h3>
-		<p>Cette section est à configurer lors de la première utilisation du module. <br />Vous devez définir votre <strong>compte PayPal</strong> comme <strong>moyen de paiement de produits sur eBay</strong> en renseignant l’email que vous utilisez pour votre compte PayPal. <br />Si vous n’en avez pas, vous devez <a href="https://www.paypal.com/fr/cgi-bin/webscr?cmd=_flow&amp;SESSION=85gB6zaK7zA5l_Y0UnNe_eJTaw1Al_e4hmrEfOLhrEiojJMJZGG-Cw9amIq&amp;dispatch=5885d80a13c0db1f8e263663d3faee8d5863a909c4bb5aeebb52c6e1151bdaa9" target="_blank"><u>souscrire à un compte PayPal Business</u></a>.<br />Vous devez définir le <strong>moyen et les frais de livraison</strong> qui seront appliqués à vos produits sur eBay.</p>
+		<h3 id="EbayHelpPart2-1">1) Onglet Â« ParamÃ¨tres Â»</h3>
+		<p>Cette section est Ã  configurer lors de la premiÃ¨re utilisation du module. <br />Vous devez dÃ©finir votre <strong>compte PayPal</strong> comme <strong>moyen de paiement de produits sur eBay</strong> en renseignant lâ€™email que vous utilisez pour votre compte PayPal. <br />Si vous nâ€™en avez pas, vous devez <a href="https://www.paypal.com/fr/cgi-bin/webscr?cmd=_flow&amp;SESSION=85gB6zaK7zA5l_Y0UnNe_eJTaw1Al_e4hmrEfOLhrEiojJMJZGG-Cw9amIq&amp;dispatch=5885d80a13c0db1f8e263663d3faee8d5863a909c4bb5aeebb52c6e1151bdaa9" target="_blank"><u>souscrire Ã  un compte PayPal Business</u></a>.<br />Vous devez dÃ©finir le <strong>moyen et les frais de livraison</strong> qui seront appliquÃ©s Ã  vos produits sur eBay.</p>
 
 		
-		<h3 id="EbayHelpPart2-2">2) Onglet « Configuration des catégories »</h3>
-		<p>Avant de publier vos produits sur eBay, vous devez associer les catégories de produits de votre boutique Prestashop avec celles d’eBay. Vous pouvez également choisir de vendre les produits de votre boutique Prestashop à un prix différent sur eBay. Cet impact sur le prix est défini en %.</p>
-		<p><u>NB :</u> Certaines catégories bénéficient du nouveau format d’annonce multi-versions.</p>
+		<h3 id="EbayHelpPart2-2">2) Onglet Â« Configuration des catÃ©gories Â»</h3>
+		<p>Avant de publier vos produits sur eBay, vous devez associer les catÃ©gories de produits de votre boutique Prestashop avec celles dâ€™eBay. Vous pouvez Ã©galement choisir de vendre les produits de votre boutique Prestashop Ã  un prix diffÃ©rent sur eBay. Cet impact sur le prix est dÃ©fini en %.</p>
+		<p><u>NBÂ :</u> Certaines catÃ©gories bÃ©nÃ©ficient du nouveau format dâ€™annonce multi-versions.</p>
 		<br />
 
-		<h3 id="EbayHelpPart2-3">3) Onglet « Template de la fiche produit »</h3>
-		<p>Afin d’optimiser le <strong>design de vos fiches produits</strong> sur eBay, vous pouvez <strong>personnaliser</strong> le header et le footer de vos annonces en créant un template qui s’appliquera à l’ensemble de vos produits sur eBay. En designant vos annonces selon votre charte graphique (logo, couleurs…), vous développez votre <strong>notoriété</strong> et votre <strong>visibilité</strong> sur eBay. De plus, un template d’annonce bien travaillé et présenté de manière agréable et professionnelle fait souvent la différence auprès des acheteurs.</p>
+		<h3 id="EbayHelpPart2-3">3) Onglet Â« Template de la fiche produit Â»</h3>
+		<p>Afin dâ€™optimiser le <strong>design de vos fiches produits</strong> sur eBay, vous pouvez <strong>personnaliser</strong> le header et le footer de vos annonces en crÃ©ant un template qui sâ€™appliquera Ã  lâ€™ensemble de vos produits sur eBay. En designant vos annonces selon votre charte graphique (logo, couleursâ€¦), vous dÃ©veloppez votre <strong>notoriÃ©tÃ©</strong> et votre <strong>visibilitÃ©</strong> sur eBay. De plus, un template dâ€™annonce bien travaillÃ© et prÃ©sentÃ© de maniÃ¨re agrÃ©able et professionnelle fait souvent la diffÃ©rence auprÃ¨s des acheteurs.</p>
 		<br />
 
-		<h3 id="EbayHelpPart2-4">4) Onglet « Mise en ligne des produits »</h3>
-		<p>Cette section vous permet de mettre effectivement en ligne vos produits sur eBay. Vous avez le choix de placer la totalité des produits de votre boutique Prestashop sur eBay (option recommandée) ou seulement certaines catégories.</p>
-		<p><u>Rappel :</u> Si vous avez une Boutique eBay, vous ne paierez aucun frais d’insertion pour mettre vos produits en ligne sur eBay.</p>
+		<h3 id="EbayHelpPart2-4">4) Onglet Â« Mise en ligne des produits Â»</h3>
+		<p>Cette section vous permet de mettre effectivement en ligne vos produits sur eBay. Vous avez le choix de placer la totalitÃ© des produits de votre boutique Prestashop sur eBay (option recommandÃ©e) ou seulement certaines catÃ©gories.</p>
+		<p><u>Rappel :</u> Si vous avez une Boutique eBay, vous ne paierez aucun frais dâ€™insertion pour mettre vos produits en ligne sur eBay.</p>
 		<br />
 
 
@@ -1656,28 +1655,28 @@ class Ebay extends Module
 
 		<h2 id="EbayHelpPart3">Conseils &amp; astuces pour bien vendre sur eBay.fr </h2>
 
-		<h3 id="EbayHelpPart3-1">Conseil N°1 : Avoir une bonne fiche produit</h3>
-		<p>Sur eBay, comme ailleurs, il faut soigner la présentation de ses produits sous peine de ne pas atteindre le niveau de ventes attendu. Un produit mal photographié et mal décrit ne se vendra pas. Il y a donc certaines normes à respecter avant de mettre en ligne ses produits sur eBay.fr. Cela vous permettra de bénéficier d’un bon référencement de vos produits sur eBay, d’optimiser vos ventes et ainsi de développer d’une visibilité optimale.</p>
+		<h3 id="EbayHelpPart3-1">Conseil NÂ°1 : Avoir une bonne fiche produit</h3>
+		<p>Sur eBay, comme ailleurs, il faut soigner la prÃ©sentation de ses produits sous peine de ne pas atteindre le niveau de ventes attendu. Un produit mal photographiÃ© et mal dÃ©crit ne se vendra pas. Il y a donc certaines normes Ã  respecter avant de mettre en ligne ses produits sur eBay.fr. Cela vous permettra de bÃ©nÃ©ficier dâ€™un bon rÃ©fÃ©rencement de vos produits sur eBay, dâ€™optimiser vos ventes et ainsi de dÃ©velopper dâ€™une visibilitÃ© optimale.</p>
 		<ul>
-			<li><strong>Titre</strong> (champ limité à 55 caractères)<br />Un bon titre doit obligatoirement comporter ces informations : Type de produit &gt; Modèle &gt; Caractéristiques importantes &gt; Marque<br />Il doit également utiliser des mots clés pertinents : déterminer préalablement les mots clés les plus recherchés par les utilisateurs<br />A EVITER : abréviations, titre coupé car dépassant 55 caractères, références techniques trop poussées, ponctuation…</li>
-			<li><strong>Attributs spécifiques</strong><br />Renseigner la totalité des attributs produits car ils sont pris en compte par les filtres de recherche et peuvent, par leur absence, exclure vos produits des résultats de recherche.</li>
-			<li><strong>Prix &amp; frais de port</strong><br />Le prix de vos objets, ainsi que vos frais de port, doivent être adaptés à l’offre générale présente sur eBay sous peine de vous voir pénaliser dans l’algorithme de recherche.<br />La gratuité des frais de port (frais de port inclus) permet de bénéficier d’une visibilité privilégiée dans les pages de résultats.</li>
-			<li><strong>Description / détails du produit</strong><br />La description de vos produits doit être claire et précise, elle doit mentionner les caractéristiques clés de vos produits, les garanties, indiquer clairement les conditions et modalités de livraison et de retour. Enfin une annonce doit être mise en forme de manière attractive (images, logos…) et adaptée à votre communication en tant que vendeur.</li>
-			<li><strong>Qualité des photos</strong><br />3 photos minimum (1 principale + 2 dans la description), elles doivent être de bonne qualité et sur fond blanc. Photos des détails si nécessaire. Les photos en disent autant qu’une belle description et constituent un élément important dans la décision de l’acheteur.</li>
+			<li><strong>Titre</strong> (champ limitÃ© Ã  55 caractÃ¨res)<br />Un bon titre doit obligatoirement comporter ces informations : Type de produit &gt; ModÃ¨le &gt; CaractÃ©ristiques importantes &gt; Marque<br />Il doit Ã©galement utiliser des mots clÃ©s pertinents : dÃ©terminer prÃ©alablement les mots clÃ©s les plus recherchÃ©s par les utilisateurs<br />A EVITER : abrÃ©viations, titre coupÃ© car dÃ©passant 55 caractÃ¨res, rÃ©fÃ©rences techniques trop poussÃ©es, ponctuationâ€¦</li>
+			<li><strong>Attributs spÃ©cifiques</strong><br />Renseigner la totalitÃ© des attributs produits car ils sont pris en compte par les filtres de recherche et peuvent, par leur absence, exclure vos produits des rÃ©sultats de recherche.</li>
+			<li><strong>Prix &amp; frais de port</strong><br />Le prix de vos objets, ainsi que vos frais de port, doivent Ãªtre adaptÃ©s Ã  lâ€™offre gÃ©nÃ©rale prÃ©sente sur eBay sous peine de vous voir pÃ©naliser dans lâ€™algorithme de recherche.<br />La gratuitÃ© des frais de port (frais de port inclus) permet de bÃ©nÃ©ficier dâ€™une visibilitÃ© privilÃ©giÃ©e dans les pages de rÃ©sultats.</li>
+			<li><strong>Description / dÃ©tails du produit</strong><br />La description de vos produits doit Ãªtre claire et prÃ©cise, elle doit mentionner les caractÃ©ristiques clÃ©s de vos produits, les garanties, indiquer clairement les conditions et modalitÃ©s de livraison et de retour. Enfin une annonce doit Ãªtre mise en forme de maniÃ¨re attractive (images, logosâ€¦) et adaptÃ©e Ã  votre communication en tant que vendeur.</li>
+			<li><strong>QualitÃ© des photos</strong><br />3 photos minimum (1 principale + 2 dans la description), elles doivent Ãªtre de bonne qualitÃ© et sur fond blanc. Photos des dÃ©tails si nÃ©cessaire. Les photos en disent autant quâ€™une belle description et constituent un Ã©lÃ©ment important dans la dÃ©cision de lâ€™acheteur.</li>
 		</ul>
 		<br />
 
-		<h3 id="EbayHelpPart3-2">Conseil N°2 : Avoir un bon profil vendeur</h3>
-		<p>eBay est la seule place de marché en France à vous donner la propriété du client. Vous êtes donc responsable de la relation client avec vos acheteurs qui vous évaluent en tant que vendeur. Pour avoir donc un bon profil vendeur, de bonnes évaluations et ainsi augmentez la confiance de vos acheteurs, il vous faut évidemment remplir vos obligations de vendeur mais aussi soigner votre relation client.</p>
-		<p>Vous devez avoir un <strong>objectif</strong> en taux <strong>de satisfaction</strong> (évaluations) de votre profil vendeur de minimum <strong>4.8/5</strong>.<br /><strong>Cette notation influence beaucoup le référencement de vos annonces dans eBay.</strong><br />Voici comment les <strong>4 critères</strong> sur lesquels vous devez soigner votre niveau de service client pour atteindre cet objectif de 4.8 de taux de satisfaction sur votre profil vendeur :</p>
+		<h3 id="EbayHelpPart3-2">Conseil NÂ°2 : Avoir un bon profil vendeur</h3>
+		<p>eBay est la seule place de marchÃ© en France Ã  vous donner la propriÃ©tÃ© du client. Vous Ãªtes donc responsable de la relation client avec vos acheteurs qui vous Ã©valuent en tant que vendeur. Pour avoir donc un bon profil vendeur, de bonnes Ã©valuations et ainsi augmentez la confiance de vos acheteurs, il vous faut Ã©videmment remplir vos obligations de vendeur mais aussi soigner votre relation client.</p>
+		<p>Vous devez avoir un <strong>objectif</strong> en taux <strong>de satisfaction</strong> (Ã©valuations) de votre profil vendeur de minimum <strong>4.8/5</strong>.<br /><strong>Cette notation influence beaucoup le rÃ©fÃ©rencement de vos annonces dans eBay.</strong><br />Voici comment les <strong>4 critÃ¨res</strong> sur lesquels vous devez soigner votre niveau de service client pour atteindre cet objectif de 4.8 de taux de satisfaction sur votre profil vendeur :</p>
 		<ul>
-			<li><u>Objet conforme à la description de l’annonce :</u> cf. Conseil N°1 Description produit</li>
-			<li><u>Communication :</u> réponse rapide aux questions pré ET post-ventes (Messages dans « Mon eBay »)</li>
-			<li><u>Délai de livraison :</u> assurer un service de livraison entre 48 et 72h maximum. Attention à la gestion des stocks (délai à rallonge avec un produit indisponible)</li>
-			<li><u>Frais de port :</u> la gratuité des frais de port permet d’obtenir 5/5 à ce critère</li>
+			<li><u>Objet conforme Ã  la description de lâ€™annonce :</u> cf. Conseil NÂ°1 Description produit</li>
+			<li><u>Communication :</u> rÃ©ponse rapide aux questions prÃ© ET post-ventes (Messages dans Â« Mon eBay Â»)</li>
+			<li><u>DÃ©lai de livraison :</u> assurer un service de livraison entre 48 et 72h maximum. Attention Ã  la gestion des stocks (dÃ©lai Ã  rallonge avec un produit indisponible)</li>
+			<li><u>Frais de port :</u> la gratuitÃ© des frais de port permet dâ€™obtenir 5/5 Ã  ce critÃ¨re</li>
 		</ul>
 
-		<p><u>NB :</u> L’outil « Gestionnaire de Ventes Pro » vous permet d’automatiser un certain nombre de ses tâches de relation client et ainsi de vous faire gagner du temps.<br /><a href="http://pages.ebay.fr/outils-vendeurs/gestionnaire-de-ventes/pro.html" target="_blank"><u>Souscrire au Gestionnaire de ventes Pro</u></a></p>';
+		<p><u>NB :</u> Lâ€™outil Â« Gestionnaire de Ventes Pro Â» vous permet dâ€™automatiser un certain nombre de ses tÃ¢ches de relation client et ainsi de vous faire gagner du temps.<br /><a href="http://pages.ebay.fr/outils-vendeurs/gestionnaire-de-ventes/pro.html" target="_blank"><u>Souscrire au Gestionnaire de ventes Pro</u></a></p>';
 	}
 
 	public function displayInfoByCart()

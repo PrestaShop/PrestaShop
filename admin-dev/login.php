@@ -145,7 +145,7 @@ $randomNb = rand(100, 999);
 if(file_exists(PS_ADMIN_DIR.'/../install') OR file_exists(PS_ADMIN_DIR.'/../admin'))
 {
 	echo '				<span>'.translate('For security reasons, you cannot connect to the Back Office until after you have:').'<br /><br />
-		- '.translate('deleted the /install folder').'<br />
+		- '.translate('delete the /install folder').'<br />
 		- '.translate('renamed the /admin folder (eg. ').'/admin'.$randomNb.')<br />
 		<br />'.translate('Please then access this page by the new url (eg. http://www.domain.tld/admin').$randomNb.')</span>';
 }

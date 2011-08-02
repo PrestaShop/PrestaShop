@@ -15,6 +15,7 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_6861a58e2be4956b3f2fd6420fe6c28
 $_MODULE['<{moneybookers}prestashop>moneybookers_a356736cbcf740f8648d71067fca090d'] = 'Acepta pagos por Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_fa214007826415a21a8456e3e09f999d'] = '¿Está seguro de que quiere eliminar sus datos?';
 $_MODULE['<{moneybookers}prestashop>moneybookers_088b74050a381d98fca38d5990b097be'] = 'Actualmente utiliza la dirección por defecto del módulo Moneybookers. Debe utilizar sus parámetros.';
+$_MODULE['<{moneybookers}prestashop>moneybookers_7593ded970377fe25371c952eb944770'] = 'Imposible recuperar los datos distantes';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b863542eebcb27fa230b647b5dd07819'] = 'Error durante la validación de la cuenta, su correo electrónico podría estar equivocado';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d70c5b5767846906e0abe68498db887b'] = 'Activación correcta de su dirección email, ya puede validar su palabra secreta';
 $_MODULE['<{moneybookers}prestashop>moneybookers_87ef564ed1574eda7e77b4012eef0b85'] = 'Imposible contactar con el servidor de activación, por favor inténtelo más tarde';
@@ -23,11 +24,19 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_aa1c444c2ee2f620d5b349fedfa68ba
 $_MODULE['<{moneybookers}prestashop>moneybookers_cdbef58d093e0ff38e13686a669e9fee'] = 'Error durante la validación de la palabra secreta, su palabra secreta podría estar equivocada';
 $_MODULE['<{moneybookers}prestashop>moneybookers_cd1dfa342c3c11c17ede212e6429ca01'] = 'Activación de su cuenta con éxito, palabra secreta correcta';
 $_MODULE['<{moneybookers}prestashop>moneybookers_2e531f9ad978a2a1a88a00ae0d4dc78e'] = 'El campo palabra secreta es obligatorio';
+$_MODULE['<{moneybookers}prestashop>moneybookers_bcfaccebf745acfd5e75351095a5394a'] = 'Inhabilitar';
+$_MODULE['<{moneybookers}prestashop>moneybookers_e4abb55720e3790fe55982fec858d213'] = 'Columna de la izquierda';
+$_MODULE['<{moneybookers}prestashop>moneybookers_f16072c370ef52db2e329a87b5e7177a'] = 'Columna de la derecha';
 $_MODULE['<{moneybookers}prestashop>moneybookers_a9dd80641753cafc9c967e317ba92a28'] = 'Sobre Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_8342dda89e8c20bb92916fbe052c583a'] = 'Disfrute de las tarifas especiales que PrestaShop Moneybookers frece a los comerciantes ';
 $_MODULE['<{moneybookers}prestashop>moneybookers_4f4c1b5e5d775709e08ccc3afad1a5c3'] = 'Moneybookers, controlado por Holdings Skrill, es uno de los más importantes sistemas de pago en línea en Europa, y propone más de 100 opciones de pago y 41 divisas en más de 200 países y territorios. Más de 80.000 comerciantes ya utilizan esta solución entre los que se encuentran eBay.com, Skype y Thomas Cook.';
 $_MODULE['<{moneybookers}prestashop>moneybookers_acf2b73b741f10cd1e0d075ed43fed39'] = 'Con más de 17 millones de usuarios y más de 15.000 nuevas cuentas creadas cada día, Moneybookers también ofrece uno de los mayores monedero electrónico en el mundo. Sus clientes también pueden pagar por medio de su e-mail y contraseña gracias a la solución de e-Wallet.';
 $_MODULE['<{moneybookers}prestashop>moneybookers_76264fd7352f803c63396bc27b0ee893'] = '¡Moneybookers cambia de nombre y se convierte en Skrill!';
+$_MODULE['<{moneybookers}prestashop>moneybookers_f4f70727dc34561dfde1a3c529b6205c'] = 'Configuración';
+$_MODULE['<{moneybookers}prestashop>moneybookers_e86e85752dd7a7b31bb935c862480cee'] = 'Seleccione la posición del logotipo';
+$_MODULE['<{moneybookers}prestashop>moneybookers_239d45036930947dbf41506d27fa1aa7'] = 'Cambie de posición del logotipo en el Front Office. Funciona con';
+$_MODULE['<{moneybookers}prestashop>moneybookers_81149af5698332fdf2d6869a66b6ad12'] = 'Live edit';
+$_MODULE['<{moneybookers}prestashop>moneybookers_708c440d8915f957ee6717efc426a863'] = 'Enviar';
 $_MODULE['<{moneybookers}prestashop>moneybookers_5138738b54f0d4bdf7c72780db651abc'] = 'Abrir una cuenta';
 $_MODULE['<{moneybookers}prestashop>moneybookers_41992c760318e60740f7a9b2819af191'] = 'Comience por abrir';
 $_MODULE['<{moneybookers}prestashop>moneybookers_c0302a6fbca061af831bc12f06cadb2f'] = 'una cuenta gratis';

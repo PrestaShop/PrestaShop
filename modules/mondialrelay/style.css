@@ -174,3 +174,138 @@ div.PS_MRLoader
 {
 	display:none;
 }
+
+div#PS_MRAskBackupContent
+{
+	border:1px solid #000;
+	background: url(logo_hd.png) no-repeat 10px 50px #BEBEBE;
+	line-height:18px;
+	font-size:14px;
+	height:190px;	
+}
+
+div#PS_MRAskBackupContent div
+{
+	width:290px;
+	float:right;
+	margin-right:20px;
+	text-align: center;
+}
+
+div#PS_MRAskBackupContent div > p
+{
+	line-height: 30px;
+}
+
+div#PS_MRAskBackupContent h2
+{
+	padding-top:10px;
+}
+
+tr.PS_MRSelectedCarrier > td
+{
+	text-align: center;
+	border-bottom: 1px black;
+}
+
+.PS_MRWarn
+{
+	border: 1px solid #D3C200;
+	background-color: #FFFAC6;
+	line-height: 20px;
+}
+
+.PS_MRRelayPointInfo
+{
+	text-align: left;
+	vertical-align: top;
+	margin: 10px 0;
+	cursor: pointer;
+}
+
+.PS_MRRelayPointInfo:hover
+{
+	background-color: #f4f4f4;
+}
+
+.PS_MRRelayPointInfo img
+{
+	height: 40px;
+	float:left;
+}
+
+.PS_MRRelayPointInfo p
+{
+ float:left;
+ width:380px;
+ text-align: justify;
+}
+
+.PS_MRFloatRelayPointSelecteIt
+{
+	display:none;
+}
+
+.PS_MRRelayPointInfo:hover .PS_MRFloatRelayPointSelecteIt
+{
+	display:block;
+}
+
+.PS_MRRelayPointInfo .PS_MRFloatRelayPointSelected
+{
+	color:#333333;
+	background:url(images/selectRelayPoint.png) no-repeat 0px -25px;
+}
+
+.PS_MRFloatRelayPointSelected
+{
+	display:block;
+}
+
+.PS_MRFloatRelayPointSelecteIt a.PS_MRSelectRelayPointButton 
+{
+	float:right;
+	display: block;
+	width: 60px;
+	height: 20px;
+	padding: 5px 20px 0px 25px;
+	color:#666666;
+	text-decoration: none;
+	margin-top: 8px;
+	background:url(images/selectRelayPoint.png) no-repeat 0px 0px;
+}
+
+.PS_MRFloatRelayPointSelected a.PS_MRSelectRelayPointButton 
+{
+	float:right;
+	display: block;
+	width: 60px;
+	height: 20px;
+	padding: 5px 20px 0px 25px;
+	text-decoration: none;
+	margin-top: 8px;
+	color:#333333;
+	background:url(images/selectRelayPoint.png) no-repeat 0px -25px;
+}
+
+a.PS_MRSelectRelayPointButton:hover 
+{
+	color:#333333;
+	background:url(images/selectRelayPoint.png) no-repeat 0px -25px;
+}
+
+.PS_MRGmapDefaultPosition
+{
+}
+
+.PS_MRGmapDefaultPosition
+{
+	display:none;
+}
+
+div.PS_MRGmapStyle
+{
+	width: 550px;
+	height:250px;
+	display: none;
+}

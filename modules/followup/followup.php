@@ -296,7 +296,7 @@ class Followup extends Module
 				if ($voucher !== false)
 				{
 					$templateVars = array('{email}' => $email['email'], '{lastname}' => $email['lastname'], '{firstname}' => $email['firstname'], '{amount}' => $conf['PS_FOLLOW_UP_AMOUNT_1'], '{days}' => $conf['PS_FOLLOW_UP_DAYS_1'], '{voucher_num}' => $voucher->name);
-					$result = Mail::Send((int)($email['id_lang']), 'followup_1', Mail::l('Your cart and your discount'), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+					$result = Mail::Send((int)($email['id_lang']), 'followup_1', Mail::l('Your cart and your discount', $email['id_lang']), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
 					$this->logEmail(1, (int)($voucher->id), (int)($email['id_customer']), (int)($email['id_cart']));
 				}
 		}
@@ -367,7 +367,7 @@ class Followup extends Module
 				if ($voucher !== false)
 				{
 					$templateVars = array('{email}' => $email['email'], '{lastname}' => $email['lastname'], '{firstname}' => $email['firstname'], '{amount}' => $conf['PS_FOLLOW_UP_AMOUNT_2'], '{days}' => $conf['PS_FOLLOW_UP_DAYS_2'], '{voucher_num}' => $voucher->name);
-					$result = Mail::Send((int)($email['id_lang']), 'followup_2', Mail::l('Thanks for your order'), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+					$result = Mail::Send((int)($email['id_lang']), 'followup_2', Mail::l('Thanks for your order', $email['id_lang']), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
 					$this->logEmail(2, (int)($voucher->id), (int)($email['id_customer']), (int)($email['id_cart']));
 				}
 		}
@@ -404,7 +404,7 @@ class Followup extends Module
 				if ($voucher !== false)
 				{
 					$templateVars = array('{email}' => $email['email'], '{lastname}' => $email['lastname'], '{firstname}' => $email['firstname'], '{amount}' => $conf['PS_FOLLOW_UP_AMOUNT_3'], '{days}' => $conf['PS_FOLLOW_UP_DAYS_3'], '{voucher_num}' => $voucher->name);
-					$result = Mail::Send((int)($email['id_lang']), 'followup_3', Mail::l('You are one of our best customers'), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+					$result = Mail::Send((int)($email['id_lang']), 'followup_3', Mail::l('You are one of our best customers', $email['id_lang']), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
 					$this->logEmail(3, (int)($voucher->id), (int)($email['id_customer']), (int)($email['id_cart']));
 				}
 		}
@@ -447,7 +447,7 @@ class Followup extends Module
 				if ($voucher !== false)
 				{
 					$templateVars = array('{email}' => $email['email'], '{lastname}' => $email['lastname'], '{firstname}' => $email['firstname'], '{amount}' => $conf['PS_FOLLOW_UP_AMOUNT_4'], '{days}' => $conf['PS_FOLLOW_UP_DAYS_4'], '{days_threshold}' => (int)(Configuration::get('PS_FOLLOW_UP_DAYS_THRESHOLD_4')), '{voucher_num}' => $voucher->name);
-					$result = Mail::Send((int)($email['id_lang']), 'followup_4', Mail::l('We miss you'), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
+					$result = Mail::Send((int)($email['id_lang']), 'followup_4', Mail::l('We miss you', $email['id_lang']), $templateVars, $email['email'], $email['firstname'].' '.$email['lastname'], NULL, NULL, NULL, NULL, dirname(__FILE__).'/mails/');
 					$this->logEmail(4, (int)($voucher->id), (int)($email['id_customer']), (int)($email['id_cart']));
 				}
 		}

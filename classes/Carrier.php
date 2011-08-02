@@ -399,7 +399,38 @@ class CarrierCore extends ObjectModel
 		return $carriers;
 	}
 
-	public static function getCarriersForOrder($id_zone, $groups = NULL, Cart $cart = null, $id_currency = null, $id_lang = null)
+	public static function getDeliveredCountries($id_lang, $activeCountries = false, $activeCarriers = false, $containStates = NULL)
+	{
+		if (!Validate::isBool($activeCountries) OR !Validate::isBool($activeCarriers))
+	 		die(Tools::displayError());
+	 		
+		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT s.*
+		FROM `'._DB_PREFIX_.'state` s
+		ORDER BY s.`name` ASC');
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone FROM `'._DB_PREFIX_.'country` c 
+			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = 1) 
+			INNER JOIN (`'._DB_PREFIX_.'carrier_zone` cz INNER JOIN `'._DB_PREFIX_.'carrier` cr ON ( cr.id_carrier = cz.id_carrier AND cr.deleted = 0 '.($activeCarriers ?
+			'AND cr.active = 1) ' : ') ').'
+			LEFT JOIN `'._DB_PREFIX_.'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone` 
+			WHERE 1
+			'.($activeCountries ? 'AND c.active = 1' : '').'
+			'.(!is_null($containStates) ? 'AND c.`contains_states` = '.(int)($containStates) : '').'
+			ORDER BY cl.name ASC');
+	
+		$countries = array();
+		foreach ($result AS &$country)
+			$countries[$country['id_country']] = $country;
+		foreach ($states AS &$state)
+			if (isset($countries[$state['id_country']])) /* Does not keep the state if its country has been disabled and not selected */
+				$countries[$state['id_country']]['states'][] = $state;
+
+		return $countries;
+	}
+	
+	public static function getCarriersForOrder($id_zone, $groups = NULL)
 	{
 		$context = Context::getContext();
 		if (!$id_lang)

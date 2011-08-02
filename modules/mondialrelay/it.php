@@ -2,11 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Problema per ottenere gli indirizzi da MondialRelay Webservice: i server di Mondial Relay potrebbero essere inattivi';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'Il Relay Point non è vicino al tuo indirizzo, per favore cambia il tuo indirizzo o utilizza un altro corriere';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = '(Tasse escl.)';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = '(Tasse incl.)';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = 'Gratis!';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_44585fcd617dce6416d8283b026714c1'] = 'Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_ed4a3b96dc1f38c160775cac1f7bcd6d'] = 'Consegna nei punti Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_70d70ce314f545b7c500a086f147f64b'] = 'Negozio non valido';
@@ -33,7 +28,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_b962d8fb95f5a439f50502152f3bad7
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_faf1247ae6846a9955a466d4f301bbe4'] = 'Pagina corriere';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_10d78806b84b97ebc774e9f6277af6ac'] = 'Per generare le etichette, è necessario disporre di un indirizzo valido e registrato per il tuo negozio sulla tua ';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_af5efea250326c1c34d69aa9364b482c'] = 'pagina contatti';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_ddcd6a653f661fd7d219d9102528b917'] = 'Vai al front office';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_fcf5b2122da1d5a5f5c7253b96a3f9d9'] = 'URL Cron task:';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_362dff77f7403550e886db901404856c'] = 'Cancellazione riuscita';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_66661dacf33146201b60dc16520ddd68'] = 'Aggiungere un metodo di spedizione';
@@ -62,6 +56,7 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_907eba32d950bfab68227fd7ea22999
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_0c24ec05a02c710cedd400e3680d8b81'] = 'Elenco metodo di spedizione ';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_14039af96b01e718a9c9d9c1259b6472'] = 'Nessun metodo di spedizione creato';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_8596361cec00f8d2438d264827eee737'] = 'Config di spedizione.';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_d02bbc3cb147c272b0445ac5ca7d1a36'] = 'Stato ordine';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_818f954f4838ecad839c5dcbd287d291'] = 'Scegli lo stato dell\'ordine per le etichette. È possibile gestire le etichette';
@@ -72,7 +67,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_93cba07454f06a4a960172bbd6e2a43
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_b9f5c797ebbf55adccdd8539a65a0241'] = 'Disattivato';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bafd7322c6e97d25b6299b5d6fe8920b'] = 'No';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_9c5c09beb32c36129b857c2a40c861b6'] = 'Visualizza una mappa di Google sul tuo operatore Mondial Relay, può rallentare il caricamento della pagina del corriere  ';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_1ba3935c9858ffb8e19a35ca640b8505'] = 'Impostazioni account Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_12a3fbd35c1cab4b1101b91d708efd15'] = 'Insegna WebService:';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_6f0434b67007b555dfd1201f4e0d5254'] = 'Codice marchio:';
@@ -86,5 +80,3 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_0dbe844fb964d5eca2f51be724e4329
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6aefd5e2191e1210a2f50416812b517'] = 'Follow-up URL';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_61e70b58e38fd01daa254f44c4fa264b'] = 'N. Point Relay:';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_81b7b4587a2a3ea7a0d6bb1df3fbba54'] = 'Consegna a';
-
-?>

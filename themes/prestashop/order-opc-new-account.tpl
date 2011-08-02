@@ -225,7 +225,7 @@
 					<sup>*</sup>
 				</p>
 				{elseif $field_name eq "address2"}
-				<p class="text is_customer_param">
+				<p class="text">
 					<label for="address2">{l s='Address (Line 2)'}</label>
 					<input type="text" class="text" name="address2" id="address2" value="" />
 				</p>

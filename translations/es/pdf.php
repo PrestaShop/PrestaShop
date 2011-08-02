@@ -35,6 +35,7 @@ $_LANGPDF['PDF_invoice396124314c5fd1fa5bf463274896dc80'] = 'No se ha definido ni
 $_LANGPDF['PDF_invoice065ab3a28ca4f16f55f103adc7d0226f'] = 'Entrega';
 $_LANGPDF['PDF_invoice6bdf2efe1a99072849d4e87baee37dbe'] = 'Facturación';
 $_LANGPDF['PDF_invoice60da3bd6867e3952ef0057a0772ea885'] = 'id del impuesto';
+$_LANGPDF['PDF_invoice7b13afd12d6d91d52aa9f857d23f96ef'] = 'Proyecto de factura';
 $_LANGPDF['PDF_invoiced1228f5476d15142b1358ae4b5fa2454'] = 'Pedido nº ';
 $_LANGPDF['PDF_invoicef8617a92ba0a0a4eabee724eab7c9f48'] = 'Transportista:';
 $_LANGPDF['PDF_invoicec1f6368d15f7c13c4e5e8f70c68c747f'] = 'Modo de pago:';

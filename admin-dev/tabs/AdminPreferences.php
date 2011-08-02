@@ -88,7 +88,7 @@ class AdminPreferences extends AdminTab
 			'PS_GIFT_WRAPPING' => array('title' => $this->l('Offer gift-wrapping'), 'desc' => $this->l('Suggest gift-wrapping to customer and possibility of leaving a message'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_GIFT_WRAPPING_PRICE' => array('title' => $this->l('Gift-wrapping price'), 'desc' => $this->l('Set a price for gift-wrapping'), 'validation' => 'isPrice', 'cast' => 'floatval', 'type' => 'price'),
 			'PS_GIFT_WRAPPING_TAX' => array('title' => $this->l('Gift-wrapping tax'), 'desc' => $this->l('Set a tax for gift-wrapping'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $taxes, 'identifier' => 'id'),
-			'PS_ATTACHMENT_MAXIMUM_SIZE' => array('title' => $this->l('Attachment maximum size'), 'desc' => $this->l('Set the maximum size of attachment files (in MegaBytes)'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'text'),
+			'PS_ATTACHMENT_MAXIMUM_SIZE' => array('title' => $this->l('Attachment maximum size'), 'desc' => $this->l('Set the maximum size of attachment files (in MegaBytes).').' '.$this->l('Maximum:').' '.((int)str_replace('M', '', ini_get('post_max_size')) > (int)str_replace('M', '', ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : ini_get('post_max_size')), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'text', 'default' => '2'),
 			'PS_RECYCLABLE_PACK' => array('title' => $this->l('Offer recycled packaging'), 'desc' => $this->l('Suggest recycled packaging to customer'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_CART_FOLLOWING' => array('title' => $this->l('Cart re-display at login'), 'desc' => $this->l('After customer logs in, recall and display contents of his/her last shopping cart'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_PRICE_ROUND_MODE' => array('title' => $this->l('Round mode'), 'desc' => $this->l('You can choose how to round prices: always round superior; always round inferior, or classic rounding'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $round_mode, 'identifier' => 'value'),
@@ -117,6 +117,15 @@ class AdminPreferences extends AdminTab
 
 	public function postProcess()
 	{
+		if (Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE'))
+        {
+            $uploadMaxSize = (int)str_replace('M', '',ini_get('upload_max_filesize'));
+            $postMaxSize = (int)str_replace('M', '', ini_get('post_max_size'));
+            $maxSize = $uploadMaxSize < $postMaxSize ? $uploadMaxSize : $postMaxSize;
+           
+            $_POST['PS_ATTACHMENT_MAXIMUM_SIZE'] = $maxSize < Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE') ? $maxSize : Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE');
+        }
+
 		if (isset($_POST['submitGeneral'.$this->table]))
 		{
 			Module::hookExec('categoryUpdate'); // We call this hook, for regenerate cache of categories
@@ -160,6 +169,7 @@ class AdminPreferences extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+		
 		parent::postProcess();
 	}
 
@@ -336,6 +346,7 @@ class AdminPreferences extends AdminTab
 				else
 					$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 			}
+
 		</script>
 		<form action="'.self::$currentIndex.'&submit'.$name.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 			<fieldset><legend><img src="../img/admin/'.strval($icon).'.gif" />'.$tabname.'</legend>';
