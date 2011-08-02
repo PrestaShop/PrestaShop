@@ -27,7 +27,7 @@
 
 class StoresControllerCore extends FrontController
 {
-	public $php_self = 'stores.php';
+	public $php_self = 'stores';
 	
 	public function preProcess()
 	{

@@ -27,7 +27,7 @@
 
 class GuestTrackingControllerCore extends FrontController
 {
-	public $php_self = 'guest-tracking.php';
+	public $php_self = 'guest-tracking';
 	
 	public function preProcess()
 	{

@@ -28,7 +28,7 @@
 class OrderDetailControllerCore extends FrontController
 {
 	public $auth = true;
-	public $authRedirection = 'history.php';
+	public $authRedirection = 'history';
 	public $ssl = true;
 	
 	public function __construct()

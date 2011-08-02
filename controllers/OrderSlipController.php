@@ -28,8 +28,8 @@
 class OrderSlipControllerCore extends FrontController
 {
 	public $auth = true;
-	public $php_self = 'order-slip.php';
-	public $authRedirection = 'order-slip.php';
+	public $php_self = 'order-slip';
+	public $authRedirection = 'order-slip';
 	public $ssl = true;
 	
 	public function setMedia()

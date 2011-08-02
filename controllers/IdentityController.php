@@ -28,8 +28,8 @@
 class IdentityControllerCore extends FrontController
 {
 	public $auth = true;
-	public $php_self = 'identity.php';
-	public $authRedirection = 'identity.php';
+	public $php_self = 'identity';
+	public $authRedirection = 'identity';
 	public $ssl = true;
 	
 	public function preProcess()
