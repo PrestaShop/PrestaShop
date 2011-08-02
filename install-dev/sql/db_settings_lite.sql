@@ -180,7 +180,6 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (109, 'PS_COOKIE_CHECKIP', '1', NOW(), NOW()),
 (110, 'PS_STORES_CENTER_LAT', '25.948969', NOW(), NOW()),
 (111, 'PS_STORES_CENTER_LONG', '-80.226439', NOW(), NOW()),
-(112, 'PS_HOMEPAGE_PHP_SELF', 'index.php', NOW(), NOW()),
 (113, 'PS_USE_ECOTAX', '0', NOW(), NOW()),
 (114, 'PS_CANONICAL_REDIRECT', '1', NOW(), NOW()),
 (115, 'PS_IMG_UPDATE_TIME', UNIX_TIMESTAMP(), NOW(), NOW()),

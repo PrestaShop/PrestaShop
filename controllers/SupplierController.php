@@ -27,7 +27,7 @@
 
 class SupplierControllerCore extends FrontController
 {
-	public $php_self = 'supplier.php';
+	public $php_self = 'supplier';
 	
 	protected $supplier;
 	

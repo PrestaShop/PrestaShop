@@ -27,7 +27,7 @@
 
 class SearchControllerCore extends FrontController
 {
-	public $php_self = 'search.php';
+	public $php_self = 'search';
 	public $instantSearch;
 	public $ajaxSearch;
 	

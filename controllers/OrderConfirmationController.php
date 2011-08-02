@@ -27,7 +27,7 @@
 
 class OrderConfirmationControllerCore extends FrontController
 {
-	public $php_self = 'order-confirmation.php';
+	public $php_self = 'order-confirmation';
 		
 	public $id_cart;
 	public $id_module;

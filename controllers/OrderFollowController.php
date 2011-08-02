@@ -28,8 +28,8 @@
 class OrderFollowControllerCore extends FrontController
 {
 	public $auth = true;
-	public $php_self = 'order-follow.php';
-	public $authRedirection = 'order-follow.php';
+	public $php_self = 'order-follow';
+	public $authRedirection = 'order-follow';
 	public $ssl = true;
 	
 	public function preProcess()

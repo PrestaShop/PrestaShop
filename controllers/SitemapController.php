@@ -27,7 +27,7 @@
 
 class SitemapControllerCore extends FrontController
 {
-	public $php_self = 'sitemap.php';
+	public $php_self = 'sitemap';
 	
 	public function setMedia()
 	{

@@ -27,7 +27,7 @@
 
 class NewProductsControllerCore extends FrontController
 {
-	public $php_self = 'new-products.php';
+	public $php_self = 'new-products';
 	
 	public function setMedia()
 	{

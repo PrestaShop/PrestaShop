@@ -27,7 +27,7 @@
 
 class BestSalesControllerCore extends FrontController
 {
-	public $php_self = 'best-sales.php';
+	public $php_self = 'best-sales';
 	
 	public function process()
 	{

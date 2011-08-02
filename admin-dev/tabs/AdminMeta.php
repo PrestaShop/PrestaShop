@@ -43,10 +43,10 @@ class AdminMeta extends AdminTab
 			'title' => array('title' => $this->l('Title'), 'width' => 120),
 			'url_rewrite' => array('title' => $this->l('Friendly URL'), 'width' => 120)
 		);
+		$this->_group = 'GROUP BY a.id_meta';
 		
 		$this->optionTitle = $this->l('URLs Setup');
 		$this->_fieldsOptions = array(
-			'PS_HOMEPAGE_PHP_SELF' => array('title' => $this->l('Homepage file'), 'desc' => $this->l('Usually "index.php", but may be different for a few hosts.'), 'type' => 'string', 'size' => 50),
 			'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$this->context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 		);

@@ -28,7 +28,7 @@
 class AuthControllerCore extends FrontController
 {
 	public $ssl = true;
-	public $php_self = 'authentication.php';
+	public $php_self = 'authentication';
 
 	public function preProcess()
 	{
@@ -196,7 +196,7 @@ class AuthControllerCore extends FrontController
 									die(Tools::jsonEncode($return));
 								}
 								if ($back = Tools::getValue('back'))
-									Tools::redirect($back);
+									Tools::redirect('index.php?controller='.$back);
 								Tools::redirect('index.php?controller=my-account');
 							}
 						}

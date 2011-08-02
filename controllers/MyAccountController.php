@@ -28,8 +28,8 @@
 class MyAccountControllerCore extends FrontController
 {
 	public $auth = true;
-	public $php_self = 'my-account.php';
-	public $authRedirection = 'my-account.php';
+	public $php_self = 'my-account';
+	public $authRedirection = 'my-account';
 	public $ssl = true;
 	
 	public function setMedia()

@@ -31,7 +31,7 @@ class FreeOrder extends PaymentModule {}
 class ParentOrderControllerCore extends FrontController
 {
 	public $ssl = true;
-	public $php_self = 'order.php';
+	public $php_self = 'order';
 		
 	public $nbProducts;
 	

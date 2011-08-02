@@ -28,8 +28,8 @@
 class AddressesControllerCore extends FrontController
 {
 	public $auth = true;
-	public $php_self = 'addresses.php';
-	public $authRedirection = 'addresses.php';
+	public $php_self = 'addresses';
+	public $authRedirection = 'addresses';
 	public $ssl = true;
 	
 	public function setMedia()

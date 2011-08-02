@@ -27,7 +27,7 @@
 
 class PageNotFoundControllerCore extends FrontController
 {
-	public $php_self = '404.php';
+	public $php_self = '404';
 	
 	public function displayContent()
 	{

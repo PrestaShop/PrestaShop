@@ -28,8 +28,8 @@
 class HistoryControllerCore extends FrontController
 {
 	public $auth = true;
-	public $php_self = 'history.php';
-	public $authRedirection = 'history.php';
+	public $php_self = 'history';
+	public $authRedirection = 'history';
 	public $ssl = true;
 	
 	public function setMedia()
