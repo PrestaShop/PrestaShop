@@ -274,12 +274,9 @@ echo '
 			$this->includeSubTab('display');
 			$assos_shop = Shop::getAssoTables();
 			if (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'shop')
-			{
-				echo '<br/>';
-				$this->displayAssoShop('key');
-			}
+				$this->displayAssoShop();
 			elseif (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'group_shop')
-				$this->displayAssoGroupShop();
+				$this->displayAssoShop('group_shop');
 			$this->displayOptionsList();
 		}
 	}

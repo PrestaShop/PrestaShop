@@ -97,10 +97,10 @@ class AdminTaxRulesGroup extends AdminTab
 				<input type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
             </div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
-			$this->displayAssoGroupShop();
+			$this->displayAssoShop('group_shop');
 			echo '</div>';
 		}
 		echo '
@@ -503,9 +503,7 @@ class AdminTaxRulesGroup extends AdminTab
 								$result = $object->update();
 								$this->afterUpdate($object);
 							}
-							
-							if ($object->id)
-								$this->updateAssoGroupShop($object->id);
+
 							if (!$result)
 								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 							elseif ($this->postImage($object->id) AND !sizeof($this->_errors))
@@ -548,7 +546,6 @@ class AdminTaxRulesGroup extends AdminTab
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
 
-							$this->updateAssoGroupShop($object->id);
 							$id_product = (int)Tools::getValue('id_product');
 							if ($id_product)
    								Tools::redirectAdmin('?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id));

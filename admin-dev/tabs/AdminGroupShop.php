@@ -137,4 +137,9 @@ EOF;
 			</fieldset>
 		</form>';
 	}
+	
+	protected function displayAddButton()
+	{
+		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new group shop').'</a><br /><br />';
+	}
 }

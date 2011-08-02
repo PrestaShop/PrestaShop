@@ -56,7 +56,6 @@ class AdminFeatures extends AdminTab
 		else
 		{
 			parent::display();
-			$this->displayAssoGroupShop();
 		}
 	}
 
@@ -155,10 +154,10 @@ class AdminFeatures extends AdminTab
 		echo '
 					<div class="clear"></div>
 				</div>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-					$this->displayAssoGroupShop();
+					$this->displayAssoShop('group_shop');
 					echo '</div>';
 				}
 				echo '

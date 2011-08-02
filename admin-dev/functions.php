@@ -385,3 +385,38 @@ function simpleXMLToArray ($xml, $flattenValues = true, $flattenAttributes = tru
 
 	return $return;
 }
+
+/**
+ * Generate a sweet HTML list for shop selection
+ * 
+ * @todo move in adminTab
+ * @return string
+ */
+function generateShopList()
+{
+	$tree = Shop::getTree();
+	
+	// Get default value
+	list($shopID, $shopGroupID) = Shop::getContext();
+	if ($shopID)
+		$value = 's-'.$shopID;
+	else if ($shopGroupID)
+		$value = 'g-'.$shopGroupID;
+	else
+		$value = '';
+
+	// Generate HTML
+	$url = $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=';
+	$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
+	$html .= '<option value="" class="first">'.translate('All shops').'</option>';
+	foreach ($tree as $gID => $groupData)
+	{
+		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.htmlspecialchars($groupData['name']).'</option>';
+		foreach ($groupData['shops'] as $sID => $shopData)
+			if ($shopData['active'])
+				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
+	}
+	$html .= '</select>';
+
+	return $html;
+}

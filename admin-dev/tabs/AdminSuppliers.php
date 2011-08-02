@@ -38,7 +38,6 @@ class AdminSuppliers extends AdminTab
 	 	$this->delete = true;
 		$this->_select = 'COUNT(p.`id_product`) AS products';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_supplier` = p.`id_supplier`)';
-		$this->_group = 'GROUP BY a.`id_supplier`';
 		
  		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
 		
@@ -196,10 +195,10 @@ class AdminSuppliers extends AdminTab
 					<input type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($supplier, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-			$this->displayAssoGroupShop();
+			$this->displayAssoShop('group_shop');
 			echo '</div>';
 		}
 		echo '		

@@ -35,13 +35,12 @@ class AdminDiscounts extends AdminTab
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
-	 	$this->_select = 'dtl.`name` AS discount_type, s.name shop_name,
+	 	$this->_select = 'dtl.`name` AS discount_type,
 			IF(a.id_discount_type = 1, CONCAT(a.value, " %"),
 			IF(a.id_discount_type = 2, CONCAT(a.value, " ", c.sign),
 			"--")) as strvalue';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'currency` c ON (c.`id_currency` = a.`id_currency`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type` dt ON (dt.`id_discount_type` = a.`id_discount_type`)
-						LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.`id_shop` = a.`id_shop`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)$this->context->language->id.')';
 		
 		$typesArray = array();
@@ -446,7 +445,7 @@ class AdminDiscounts extends AdminTab
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Enable or disable voucher').'</p>
 				</div>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop();

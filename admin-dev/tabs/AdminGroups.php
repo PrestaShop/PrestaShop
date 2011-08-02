@@ -43,7 +43,6 @@ class AdminGroups extends AdminTab
 		WHERE jc.`deleted` != 1 
 		AND jcg.`id_group` = a.`id_group`) AS nb
 		';
-		$this->_group = 'GROUP BY a.id_group';
 		$this->_listSkipDelete = array(1);
 
  		$this->fieldsDisplay = array(
@@ -126,10 +125,10 @@ class AdminGroups extends AdminTab
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-					$this->displayAssoGroupShop();
+					$this->displayAssoShop('group_shop');
 					echo '</div>';
 				}
 			echo '

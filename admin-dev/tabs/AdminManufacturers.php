@@ -65,7 +65,6 @@ class AdminManufacturers extends AdminTab
 		$this->_select = 'COUNT(`id_product`) AS `products`, (SELECT COUNT(ad.`id_manufacturer`) as `addresses` FROM `'._DB_PREFIX_.'address` ad WHERE ad.`id_manufacturer` = a.`id_manufacturer` AND ad.`deleted` = 0 GROUP BY ad.`id_manufacturer`) as `addresses`';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
 		$this->_joinCount = false;
-		$this->_group = 'GROUP BY a.`id_manufacturer`';
 
 		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'm');
 
@@ -188,10 +187,10 @@ class AdminManufacturers extends AdminTab
 					<input type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($manufacturer, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-			$this->displayAssoGroupShop();
+			$this->displayAssoShop('group_shop');
 			echo '</div>';
 		}
 		echo '

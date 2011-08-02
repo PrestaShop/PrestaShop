@@ -59,7 +59,6 @@ class AdminAttributesGroups extends AdminTab
 		else
 		{
 			parent::display();
-			$this->displayAssoGroupShop();
 		}
 	}
 	
@@ -209,10 +208,10 @@ class AdminAttributesGroups extends AdminTab
 					<label class="t" for="is_color_group_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('No').'" /></label>
 					<p>'.$this->l('This is a color group').'</p>
 				</div>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-					$this->displayAssoGroupShop();
+					$this->displayAssoShop('group_shop');
 					echo '</div>';
 				}
 				echo '

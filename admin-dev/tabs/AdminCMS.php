@@ -151,10 +151,10 @@ class AdminCMS extends AdminTab
 					<input type="radio" name="active" id="active_off" onclick="toggleDraftWarning(true);" value="0" '.(!$this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
-			$this->displayAssoShop('meta_title');
+			$this->displayAssoShop();
 			echo '</div>';
 		}
 		// SUBMIT

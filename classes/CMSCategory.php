@@ -479,8 +479,7 @@ class CMSCategoryCore extends ObjectModel
 
 	public function getName($id_lang = NULL)
 	{
-		if (!$context)
-			$context = Context::getContext();
+		$context = Context::getContext();
 
 		if (!$id_lang)
 		{

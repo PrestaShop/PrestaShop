@@ -70,10 +70,10 @@ class AdminZones extends AdminTab
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Allow or disallow shipping to this zone').'</p>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-			$this->displayAssoGroupShop();
+			$this->displayAssoShop('group_shop');
 			echo '</div>';
 		}
 		echo '

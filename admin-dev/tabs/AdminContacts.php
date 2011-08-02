@@ -38,10 +38,11 @@ class AdminContacts extends AdminTab
 	 	$this->delete = true;
  				
 		$this->fieldsDisplay = array(
-		'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Title'), 'width' => 130),
-		'email' => array('title' => $this->l('E-mail address'), 'width' => 130),
-		'description' => array('title' => $this->l('Description'), 'width' => 150));
+			'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Title'), 'width' => 130),
+			'email' => array('title' => $this->l('E-mail address'), 'width' => 130),
+			'description' => array('title' => $this->l('Description'), 'width' => 150),
+		);
 	
 		$this->optionTitle = $this->l('Contact options');
 		$this->_fieldsOptions = array(
@@ -101,7 +102,7 @@ class AdminContacts extends AdminTab
 				echo '
 					<p style="clear: both">'.$this->l('Additional information about this contact').'</p>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop();

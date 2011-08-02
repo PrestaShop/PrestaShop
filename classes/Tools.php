@@ -1923,18 +1923,6 @@ FileETag INode MTime Size
 			break;
 		}
 	}
-	
-	/**
-	 * @return bool Return true if there is more than one shop
-	 */
-	public static function isMultiShopActivated()
-	{
-		static $total = null;
-		
-		if (is_null($total))
-			$total = Shop::getTotalShops(true);
-		return ($total > 1) ? true : false;
-	}
 
 	/**
 	 * Convert a shorthand byte value from a PHP configuration directive to an integer value

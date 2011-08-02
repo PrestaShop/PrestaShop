@@ -66,7 +66,6 @@ class AdminProducts extends AdminTab
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
 		$this->_select = 'cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, SUM(stock.quantity) AS quantity';
-		$this->_group = 'GROUP BY a.id_product';
 
 		parent::__construct();
 	}
@@ -1410,7 +1409,6 @@ class AdminProducts extends AdminTab
 			echo '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
 		echo '<div style="margin:10px;">';
 		$this->displayList($token);
-		$this->displayAssoShop();
 		echo '</div>';
 	}
 
@@ -2249,7 +2247,7 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>
 					<tr id="shop_association">
-					<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;'.(!Tools::isMultiShopActivated() ? 'display:none;' : '').'">'.$this->l('Shop association:').'</td><td style="padding-bottom:5px;">';
+					<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;'.(!Shop::isMultiShopActivated() ? 'display:none;' : '').'">'.$this->l('Shop association:').'</td><td style="padding-bottom:5px;">';
 					$this->displayAssoShop();
 					echo '</td>
 					</tr>
@@ -3041,7 +3039,7 @@ class AdminProducts extends AdminTab
 									<th style="width: 100px;">'.$this->l('Image').'</th>
 									<th>&nbsp;</th>
 									<th>'.$this->l('Position').'</th>';
-						if (Tools::isMultiShopActivated())
+						if (Shop::isMultiShopActivated())
 						{
 							$shops = Shop::getShops();
 							echo '<script type="text/javascript">
@@ -3062,7 +3060,7 @@ class AdminProducts extends AdminTab
 
 						foreach ($images AS $k => $image)
 						{
-							if(Tools::isMultiShopActivated())
+							if (Shop::isMultiShopActivated())
 								$imgObj = new Image((int)$image['id_image']);
 							$image_obj = new Image($image['id_image']);
 							$img_path = $image_obj->getExistingImgPath();
@@ -3092,7 +3090,7 @@ class AdminProducts extends AdminTab
 									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
 									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
 							echo '</td>';
-							if(Tools::isMultiShopActivated())
+							if (Shop::isMultiShopActivated())
 								foreach ($shops AS $shop)
 									echo '<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';
 							echo '	

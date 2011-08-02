@@ -43,7 +43,6 @@ class AdminMeta extends AdminTab
 			'title' => array('title' => $this->l('Title'), 'width' => 120),
 			'url_rewrite' => array('title' => $this->l('Friendly URL'), 'width' => 120)
 		);
-		$this->_group = 'GROUP BY a.id_meta';
 		
 		$this->optionTitle = $this->l('URLs Setup');
 		$this->_fieldsOptions = array(

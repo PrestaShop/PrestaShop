@@ -40,7 +40,7 @@ class AdminShop extends AdminTab
 	 	$this->_select = 'gs.name group_shop_name, cl.name category_name';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'group_shop` gs ON (a.id_group_shop = gs.id_group_shop)
 	 						 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')';
-	 	$this->_group = 'GROUP BY id_shop';
+	 	$this->_group = 'GROUP BY a.id_shop';
 
 		$this->fieldsDisplay = array(
 		'id_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -188,5 +188,10 @@ class AdminShop extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
+	}
+	
+	protected function displayAddButton()
+	{
+		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new shop').'</a><br /><br />';
 	}
 }

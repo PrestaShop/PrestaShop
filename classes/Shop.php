@@ -691,37 +691,15 @@ class ShopCore extends ObjectModel
 	}
 	
 	/**
-	 * Generate a sweet HTML list for shop selection
-	 * 
-	 * @return string
+	 * @return bool Return true if there is more than one shop
 	 */
-	public static function generateHtmlList()
+	public static function isMultiShopActivated()
 	{
-		$tree = Shop::getTree();
-		
-		// Get default value
-		list($shopID, $shopGroupID) = Shop::getContext();
-		if ($shopID)
-			$value = 's-'.$shopID;
-		else if ($shopGroupID)
-			$value = 'g-'.$shopGroupID;
-		else
-			$value = '';
+		static $total = null;
 
-		// Generate HTML
-		$url = $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=';
-		$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
-		$html .= '<option value="" class="first">' . translate('All shops') . '</option>';
-		foreach ($tree as $gID => $groupData)
-		{
-			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.htmlspecialchars($groupData['name']).'</option>';
-			foreach ($groupData['shops'] as $sID => $shopData)
-				if ($shopData['active'])
-					$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
-		}
-		$html .= '</select>';
-
-		return $html;
+		if (is_null($total))
+			$total = Shop::getTotalShops(true);
+		return ($total > 1) ? true : false;
 	}
 	
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)

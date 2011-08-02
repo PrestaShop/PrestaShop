@@ -291,7 +291,7 @@ class AdminCustomers extends AdminTab
 			'.$this->l('Registration date:').' '.Tools::displayDate($customer->date_add, $this->context->language->id, true).'<br />
 			'.$this->l('Last visit:').' '.($customerStats['last_visit'] ? Tools::displayDate($customerStats['last_visit'], $this->context->language->id, true) : $this->l('never')).'<br />
 			'.($countBetterCustomers != '-' ? $this->l('Rank: #').' '.(int)$countBetterCustomers.'<br />' : '')
-			.(Tools::isMultiShopActivated() ? '<br />'.$this->l('Shop:').' '.Shop::getInstance($customer->id_shop)->name : '').'
+			.(Shop::isMultiShopActivated() ? '<br />'.$this->l('Shop:').' '.Shop::getInstance($customer->id_shop)->name : '').'
 		</fieldset>
 		<fieldset style="width:300px;float:left;margin-left:50px">
 			<div style="float: right">
@@ -666,13 +666,13 @@ class AdminCustomers extends AdminTab
                 <tr>
                     <th style="width: 200px">'.$this->l('Date').'</th>
                     <th style="width: 200px">'.$this->l('Name').'</th>
-                    '.((Tools::isMultiShopActivated())? '<th style="width: 200px">'.$this->l('Shop').'</th>' : '').'
+                    '.((Shop::isMultiShopActivated())? '<th style="width: 200px">'.$this->l('Shop').'</th>' : '').'
                 </tr>';
             foreach ($referrers as $referrer)
                 echo '<tr>
                         <td>'.Tools::displayDate($referrer['date_add'], $this->context->language->id, true).'</td>
                         <td>'.$referrer['name'].'</td>
-                        '.((Tools::isMultiShopActivated())? '<td>'.$referrer['shop_name'].'</td>' : '').'
+                        '.((Shop::isMultiShopActivated())? '<td>'.$referrer['shop_name'].'</td>' : '').'
                     </tr>';
             echo '</table><div class="clear">&nbsp;</div>';
         }
@@ -823,7 +823,7 @@ class AdminCustomers extends AdminTab
 						echo '<p>'.$this->l('No group created').'</p>';
 				echo '
 				</div>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					$shops = Shop::getShops();
 					echo '

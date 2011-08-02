@@ -36,8 +36,6 @@ class AdminScenes extends AdminTab
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
-	 	
-	 	$this->_group = 'GROUP BY a.id_scene';
 		
 		$this->fieldImageSettings = array(
 			array('name' => 'image', 'dir' => 'scenes'),
@@ -226,17 +224,10 @@ class AdminScenes extends AdminTab
 				echo '<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg" /><br />';
 			echo '</div>
 				 ';
-			
-			if (Tools::isMultiShopActivated())
-			{
-				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
-				$this->displayAssoShop();
-				echo '</div>';
-			}
 
 			echo '<label>'.$this->l('Category:').' </label>
 					<div class="margin-form">
-						<div style="overflow: auto; min-height: 300px; padding-top: 0.6em;" id="categoryList">
+						<div style="overflow: auto; max-height: 300px; padding-top: 0.6em;" id="categoryList">
 							<table cellspacing="0" cellpadding="0" class="table" style="width: 600px;">
 									<tr>
 									<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'categories[]\', this.checked)" /></th>
@@ -257,6 +248,12 @@ class AdminScenes extends AdminTab
 						<p style="padding:0px; margin:0px 0px 10px 0px;">'.$this->l('Mark all checkbox(es) of the categories for which the image map is to appear.').'<sup> *</sup></p>
 					</div>
 				</div>';
+			if (Shop::isMultiShopActivated())
+			{
+				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
+				$this->displayAssoShop();
+				echo '</div>';
+			}
 			echo '
 					<div id="save_scene" class="margin-form" '.(($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg')) ? '' : 'style="display:none;"') .'>
 						<input type="submit" name="save_image_map" value="'.$this->l('Save Image Map(s)').'" class="button" />
@@ -264,8 +261,15 @@ class AdminScenes extends AdminTab
 		}
 		else
 		{
-			echo '
-					<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image...').'</span><br/><br/>';
+			echo '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image...').'</span><br/><br/>';
+			echo '</div>';
+			if (Shop::isMultiShopActivated())
+			{
+				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
+				$this->displayAssoShop();
+				echo '</div>';
+			}
+			
 		}
 		echo '
 		<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>

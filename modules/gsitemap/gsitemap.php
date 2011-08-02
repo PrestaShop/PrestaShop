@@ -79,7 +79,7 @@ class Gsitemap extends Module
 		Configuration::updateValue('GSITEMAP_ALL_CMS', (int)Tools::getValue('GSITEMAP_ALL_CMS'));
 		Configuration::updateValue('GSITEMAP_ALL_PRODUCTS', (int)Tools::getValue('GSITEMAP_ALL_PRODUCTS'));
 
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 			$res = $this->generateSitemapIndex();
 		else
 			$res = $this->generateSitemap(Configuration::get('PS_SHOP_DEFAULT'), GSITEMAP_FILE);

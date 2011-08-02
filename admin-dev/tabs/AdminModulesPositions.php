@@ -252,7 +252,7 @@ class AdminModulesPositions extends AdminTab
 		</form>
 		
 		<fieldset style="width:250px;float:right"><legend>'.$this->l('Live edit').'</legend>';
-		if (Tools::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP)
+		if (Shop::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP)
 			echo '<p>'.$this->l('You have to select a shop to use live edit').'</p>';
 		else
 			echo '<p>'.$this->l('By clicking here you will be redirected to the front office of your shop to move and delete modules directly.').'</p>
@@ -267,7 +267,7 @@ class AdminModulesPositions extends AdminTab
 
 		echo '<div id="unhook_button_position_top"><input class="button floatr" type="submit" name="unhookform" value="'.$this->l('Unhook the selection').'"/></div>';
 
-		$canMove = (Tools::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP) ? false : true;
+		$canMove = (Shop::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP) ? false : true;
 		if (!$canMove)
 			echo '<br /><div><b>'.$this->l('If you want to order / move following data, please go in shop context (select a shop in shop list)').'</b></div>';
 		foreach ($hooks AS $hook)
