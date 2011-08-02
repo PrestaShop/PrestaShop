@@ -138,7 +138,7 @@ class CountryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
 				WHERE 1'
 					.($active ? ' AND c.active = 1' : '')
-					.(!is_null($containStates) ? 'AND c.`contains_states` = '.(int)($containStates) : '').'
+					.(!is_null($containStates) ? ' AND c.`contains_states` = '.(int)($containStates) : '').'
 		ORDER BY cl.name ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		$countries = array();

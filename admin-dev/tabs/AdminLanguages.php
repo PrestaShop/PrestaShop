@@ -50,7 +50,6 @@ class AdminLanguages extends AdminTab
 		$this->_fieldsOptions = array(
 			'PS_LANG_DEFAULT' => array('title' => $this->l('Default language:'), 'desc' => $this->l('The default language used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_lang', 'list' => Language::getlanguages(false)),
 		);
-		$this->_group = 'GROUP BY a.id_lang';
 		
 		parent::__construct();
 	}
@@ -368,7 +367,7 @@ class AdminLanguages extends AdminTab
 					<p>'.$this->l('Allow or disallow this language to be selected by the customer').'</p>
 				</div>
 				<p id="resultCheckLangPack"><img src="'._PS_IMG_.'admin/ajax-loader.gif" alt="" /> '.$this->l('Check if a language pack is available for this ISO code...').'</p>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop();

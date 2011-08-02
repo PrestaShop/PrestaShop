@@ -92,14 +92,13 @@ class AdminShopUrl extends AdminTab
 				var domain = $('#domain').val();
 				var physical = $('#physical_uri').val();
 				var virtual = $('#virtual_uri').val();
-				var url = 'http://';
-				url += ((domain) ? domain : '???');
+				url = ((domain) ? domain : '???');
 				if (physical)
 					url += '/'+physical;
 				if (virtual)
 					url += '/'+virtual;
 				url = url.replace(/\/+/g, "/");
-				$('#final_url').val(url);
+				$('#final_url').val('http://'+url);
 			});
 		});
 		//]]>
@@ -121,14 +120,17 @@ EOF;
 				<label for="physical_uri">'.$this->l('Physical URI').'</label>
 				<div class="margin-form">
 					<input type="text" name="physical_uri" id="physical_uri" value="'.$this->getFieldValue($obj, 'physical_uri').'" />
-					<p>'.$this->l('Folder of your store ex: ipods for http://yourshopname.com/ipods/, leave empty if no folder.').'<br /><b>'.$this->l('URL Rewrite must be activated to use this feature.').'</b></p>
-				</div>
-				<label for="virtual_uri">'.$this->l('Virtual URI').'</label>
+					<p>'.$this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path.').'</p>
+				</div>';
+		if (Shop::isMultiShopActivated())
+		{
+			echo '<label for="virtual_uri">'.$this->l('Virtual URI').'</label>
 				<div class="margin-form">
 					<input type="text" name="virtual_uri" id="virtual_uri" value="'.$this->getFieldValue($obj, 'virtual_uri').'" />
-					<p>'.$this->l('Folder of your store ex: ipods for http://yourshopname.com/ipods/, leave empty if no folder.').'<br /><b>'.$this->l('URL Rewrite must be activated to use this feature.').'</b></p>
-				</div>
-				<label>'.$this->l('Your final URL will be').'</label>
+					<p>'.$this->l('This virtual folder must not exist on your server and is used to associate an URI to a shop.').'<br /><b>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</b></p>
+				</div>';
+		}
+		echo '	<label>'.$this->l('Your final URL will be').'</label>
 				<div class="margin-form">
 					<input type="text" readonly="readonly" id="final_url" style="width: 400px" value="'.$obj->getURL().'" /> 
 				</div>
@@ -167,5 +169,10 @@ EOF;
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
+	}
+	
+	protected function displayAddButton()
+	{
+		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new shop URL').'</a><br /><br />';
 	}
 }

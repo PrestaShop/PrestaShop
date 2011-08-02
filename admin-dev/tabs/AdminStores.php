@@ -47,7 +47,6 @@ class AdminStores extends AdminTab
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 		LEFT JOIN `'._DB_PREFIX_.'state` st ON (st.`id_state` = a.`id_state`)';
-		$this->_group = 'GROUP BY a.id_store';
 		
 		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries AS $country)
@@ -300,7 +299,7 @@ class AdminStores extends AdminTab
 					</table>
 				</div>
 				<div class="clear"></div>';
-			if (Tools::isMultiShopActivated())
+			if (Shop::isMultiShopActivated())
 			{
 				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 				$this->displayAssoShop();

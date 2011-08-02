@@ -325,7 +325,7 @@ class AdminCountries extends AdminTab
 					<input type="radio" name="display_tax_label" id="display_tax_label_off" value="0" '.((!$this->getFieldValue($obj, 'display_tax_label') AND $obj->id) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="display_tax_label_off"> <img src="../img/admin/disabled.gif" alt="" title="" />'.$this->l('No').'</label>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop();

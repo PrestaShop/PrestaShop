@@ -234,6 +234,14 @@ label.t {
 	font-weight: bold;
 	font-size: 12px;
 }
+label.child {
+	float: none;
+	clear: none;
+	padding: 0px;
+	margin: 0px;
+	font-weight: normal;
+	font-size: 12px;
+}
 label.std {
 	float: none;
 	margin: 0px;
@@ -914,26 +922,56 @@ table.permissions td {
 	margin: 0;
 }
 
-#header_shoplist select.shopList{
+#header_shoplist{
     background-image: url("../img/t/AdminShop.gif");
-    background-position: 1px 50%;
+    background-position: 0 3px;
     background-repeat: no-repeat;
-    padding: 1px 1px 1px 14px;
+    padding-left: 17px;
+    height: 20px;
 }
 
-	#header_shoplist select.shopList .first{
-		font-weight: bold;
+	#header_shoplist select.shopList option{
+		padding: 2px;
 	}
 	
-	#header_shoplist select.shopList .group{
-		font-weight: bold;
-		font-style: italic;
-		padding-left: 10px;
-	}
-	
-	#header_shoplist select.shopList .shop{
-		padding-left: 20px;
-	}
+		#header_shoplist select.shopList .first{
+			font-weight: bold;
+			background-color: #408BD5;
+			color: #ffffff;
+		}
+		
+		#header_shoplist select.shopList .group{
+			font-weight: bold;
+			font-style: italic;
+			padding-left: 10px;
+			background-color: #C6DEFC;
+		}
+		
+		#header_shoplist select.shopList .shop{
+			padding-left: 20px;
+			background-color: #EAF2FC;
+		}
+		
+.multishop_info{
+	background-image: url(../img/admin/info_multishop.png);
+	background-repeat: no-repeat;
+	background-position: 2px 2px;
+	background-color: #C6DEFC;
+	border: 1px solid #669BDB;
+	clear: both;
+	display: block;
+	font-size: 14px;
+	padding: 10px;
+	padding-left: 40px;
+	margin-bottom: 15px;
+}
+
+.assoShop{
+	width: 100%;
+	max-width: 600px;
+	max-height: 300px;
+	overflow: auto;
+}
 
 .clearfix:after {
 	content: ".";

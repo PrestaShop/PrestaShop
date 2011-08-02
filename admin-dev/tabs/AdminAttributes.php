@@ -84,10 +84,10 @@ class AdminAttributes extends AdminTab
 		echo '
 					</select><sup> *</sup>
 				</div>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
-			$this->displayAssoGroupShop();
+			$this->displayAssoShop('group_shop');
 			echo '</div>';
 		}
 		echo '

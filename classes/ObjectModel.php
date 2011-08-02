@@ -249,7 +249,7 @@ abstract class ObjectModelCore
 				}
 		}
 		
-		if (!Tools::isMultishopActivated())
+		if (!Shop::isMultishopActivated())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getID(), 'shop');

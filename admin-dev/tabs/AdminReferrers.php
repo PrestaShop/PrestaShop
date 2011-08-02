@@ -261,7 +261,7 @@ class AdminReferrers extends AdminTab
 					<input type="text" size="8" name="percent_fee" value="'.number_format((float)($this->getFieldValue($obj, 'percent_fee')), 2).'" />
 					<p>'.$this->l('Percent of the sales.').'</p>
 				</div>';
-			if (Tools::isMultiShopActivated())
+			if (Shop::isMultiShopActivated())
 			{
 				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 				$this->displayAssoShop();

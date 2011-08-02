@@ -657,12 +657,10 @@ class AdminOrders extends AdminTab
 		<br />
 		<fieldset style="width: 400px">
 			<legend><img src="../img/admin/details.gif" /> '.$this->l('Order details').'</legend>';
-		if (Tools::isMultiShopActivated())
+		if (Shop::isMultiShopActivated())
 		{
-			$shop = new Shop((int)$order->id_shop);
-			echo '
-			<label>'.$this->l('Shop:').' </label>
-			<div style="margin: 2px 0 1em 190px;">'.$shop->name.'</div>';
+			echo '<label>'.$this->l('Shop:').' </label>
+			<div style="margin: 2px 0 1em 190px;">'.Shop::getInstance($order->id_shop)->name.'</div>';
 		}
 		echo '
 			<label>'.$this->l('Original cart:').' </label>

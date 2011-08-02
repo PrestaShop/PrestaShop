@@ -74,21 +74,19 @@ if (empty($tab) and !sizeof($_POST))
 		</div>
 			<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).intval($cookie->id_employee)).'">'.translate('Back Office').'</a>
 			'.$bread;
-		if (Tools::isMultiShopActivated())
-		{
-			echo '
-			<span style="float:right">'.translate('You are currently view/configure your store for').' <b>';
-			if (Context::getContext()->shop->getContextType() == Shop::CONTEXT_ALL)
-				echo 'all shops';
-			elseif (Context::getContext()->shop->getContextType() == Shop::CONTEXT_GROUP)
-				echo 'all shops of group shop <b>'.Context::getContext()->shop->getGroup()->name.'</b>';
-			elseif (Context::getContext()->shop->getContextType() == Shop::CONTEXT_SHOP)
-				echo  'shop <b>'.Context::getContext()->shop->name.'</b>';
-			echo '</b>
-			</span>&nbsp;';
-		}
 		echo '
 		</div>';
+		
+		
+		if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
+		{
+			echo '<div class="multishop_info">';
+			if (Context::shop() == Shop::CONTEXT_GROUP)
+				printf(translate('You are configuring your store for group shop %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
+			elseif (Context::shop() == Shop::CONTEXT_SHOP)
+				printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+			echo '</div>';
+		}
 
 		if (Validate::isLoadedObject($adminObj))
 		{

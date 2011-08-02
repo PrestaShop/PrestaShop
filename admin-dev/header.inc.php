@@ -117,8 +117,8 @@ foreach (QuickAccess::getQuickAccesses((int)($cookie->id_lang)) AS $quick)
 echo '			</select>
 			</div>';
 
-			if (Tools::isMultiShopActivated())
-				echo '<div id="header_shoplist">'.Shop::generateHtmlList().'</div>';
+			if (Shop::isMultiShopActivated())
+				echo '<div id="header_shoplist">'.translate('Select your shop:').' '.generateShopList().'</div>';
 
 echo '		<div class="flatclear">&nbsp;</div>
 			'.Module::hookExec('backOfficeTop').'

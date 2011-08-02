@@ -49,9 +49,7 @@ class AdminCarriers extends AdminTab
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 			'is_free' => array('title' => $this->l('Is Free'), 'align' => 'center', 'icon' => array(0 => 'disabled.gif', 1 => 'enabled.gif', 'default' => 'disabled.gif'), 'type' => 'bool', 'orderby' => false)
 		);
-		
-		$this->_group = 'GROUP BY a.id_carrier';
-		
+
 		$this->optionTitle = $this->l('Carrier options');
 		$this->_fieldsOptions = array(
 			'PS_CARRIER_DEFAULT' => array('title' => $this->l('Default carrier:'), 'desc' => $this->l('The default carrier used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_carrier', 'list' => Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, ALL_CARRIERS)),
@@ -244,7 +242,7 @@ class AdminCarriers extends AdminTab
 					echo '</div>';
 				}
 				echo '</div>';
-				if (Tools::isMultiShopActivated())
+				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop();

@@ -98,8 +98,6 @@ abstract class AdminTabCore
 	
 	/** @var bool */
 	public $shopShareDatas = false;
-	
-	public $shopAssoName = 'name';
 
 	/** @var array Cache for query results */
 	protected $_list = array();
@@ -200,7 +198,7 @@ abstract class AdminTabCore
 			$className = 'AdminCatalog';
 		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
 
-		if (!Tools::isMultiShopActivated())
+		if (!Shop::isMultiShopActivated())
 			$this->shopLinkType = '';
 	}
 
@@ -283,11 +281,6 @@ abstract class AdminTabCore
 			$this->displayOptionsList();
 			$this->displayRequiredFields();
 			$this->includeSubTab('display');
-			$assos_shop = Shop::getAssoTables();
-			if (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'shop')
-				$this->displayAssoShop($this->shopAssoName);
-			elseif (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'group_shop')
-				$this->displayAssoGroupShop($this->shopAssoName);
 		}
 	}
 
@@ -697,11 +690,10 @@ abstract class AdminTabCore
 								$result = $object->update();
 								$this->afterUpdate($object);
 							}
+
 							if ($object->id)
-							{
-								$this->updateAssoShop((int)$object->id);
-								$this->updateAssoGroupShop((int)$object->id);
-							}
+								$this->updateAssoShop($object->id);
+
 							if (!$result)
 								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 							elseif ($this->postImage($object->id) AND !sizeof($this->_errors))
@@ -862,54 +854,32 @@ abstract class AdminTabCore
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
 		}
-		elseif (Tools::isSubmit('submitAssoShop') AND $this->tabAccess['add'] === '1' AND Tools::getValue('assoShopClass') == $this->className)
-		{
-			$this->updateAssoShop();
-			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
-		}
-		
-		elseif (Tools::isSubmit('submitAssoGroupShop') AND $this->tabAccess['add'] === '1' AND Tools::getValue('assoGroupShopClass') == $this->className)
-		{
-			$this->updateAssoGroupShop();
-			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
-		}
 	}
-	
-	protected function updateAssoGroupShop($id_object = false)
-	{
-		$assos = array();
-		foreach ($_POST AS $k => $row)
-		{
-			if (!preg_match('/^checkBoxGroupShopAsso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
-				continue;
-			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
-			$assos[] = array('id_object' => (int)$id_asso_object, 'id_group_shop' => (int)$res[2]);
-		}
-		if (!sizeof($assos))
-			return;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_group_shop'.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
-		foreach ($assos AS $asso)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_group_shop(`'.pSQL($this->identifier).'`, id_group_shop)
-												VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_group_shop'].')');
-	}
-	
+
 	protected function updateAssoShop($id_object = false)
 	{
+		$shopAsso = Shop::getAssoTables();
+		$groupShopAsso = GroupShop::getAssoTables();
+		if (isset($shopAsso[$this->table]) && $shopAsso[$this->table]['type'] == 'shop')
+			$type = 'shop';
+		else if (isset($groupShopAsso[$this->table]) && $groupShopAsso[$this->table]['type'] == 'group_shop')
+			$type = 'group_shop';
+		else
+			return ;
+		
 		$assos = array();
 		foreach ($_POST AS $k => $row)
 		{
-			if (!preg_match('/^checkBoxShopAsso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
+			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
 				continue;
 			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
-			$assos[] = array('id_object' => (int)$id_asso_object, 'id_shop' => (int)$res[2]);
+			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
 		}
 
-		if (!sizeof($assos))
-			return;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_shop'.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 		foreach ($assos AS $asso)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_shop(`'.pSQL($this->identifier).'`, id_shop)
-											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_shop'].')');
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
+											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
 	}
 	
 	protected function updateOptions($token)
@@ -1215,7 +1185,13 @@ abstract class AdminTabCore
 
 		$filterShop = '';
 		if (isset($filterKey))
+		{
+			if (!$this->_group)
+				$this->_group = 'GROUP BY a.'.pSQL($this->identifier);
+			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
+				$this->_group .= ', a.'.pSQL($this->identifier);
 			$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
+		}
 		
 		/* Query in order to get results with all fields */
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS
@@ -1463,7 +1439,8 @@ abstract class AdminTabCore
 		$this->displayTop();
 
 		if ($this->edit AND (!isset($this->noAdd) OR !$this->noAdd))
-			echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new').'</a><br /><br />';
+			$this->displayAddButton();
+
 		/* Append when we get a syntax error in SQL query */
 		if ($this->_list === false)
 		{
@@ -1614,6 +1591,11 @@ abstract class AdminTabCore
 			}
 		}
 	}
+	
+	protected function displayAddButton()
+	{
+		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new').'</a><br /><br />';
+	}
 
 	protected function _displayEnableLink($token, $id, $value, $active,  $id_category = NULL, $id_product = NULL)
 	{
@@ -1712,7 +1694,7 @@ abstract class AdminTabCore
 				if (!Validate::isCleanHtml($val))
 					$val = Configuration::get($key);
 
-			$isDisabled = (Tools::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
+			$isDisabled = (Shop::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
 
 			echo $this->getHtmlDefaultConfigurationValue($key, $this->_languages);
 			echo '<label>'.$field['title'].' </label>
@@ -1988,119 +1970,117 @@ abstract class AdminTabCore
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
 	
-	protected function displayAssoShop($field_name = 'name', $selectName = null)
+	protected function displayAssoShop($type = 'shop')
 	{
-		if (!Tools::isMultiShopActivated() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Shop::isMultiShopActivated() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
-		$shops = Shop::getShops();
-		$sql = 'SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'`a '.
-				(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-				' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$this->context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : '');
-		$objects = Db::getInstance()->ExecuteS($sql);
-		$assos = array();
-		$res = Db::getInstance()->ExecuteS('SELECT id_shop, `'.pSQL($this->identifier).'`
-														FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`');
-		foreach ($res AS $row)
-			$assos[$row['id_shop']][] = $row[$this->identifier];
-		
-		if (!$this->_object)
-		{
-			$html = '
-			<table cellpadding="0" cellspacing="0" class="table">
-			<form name="updateAssoShop" action="'.self::$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
-			<input type="hidden" name="assoShopClass" value="'.$this->className.'" />
-						<tr>
-							<th style="width: 200px">'.$this->l('Shop association').'</th>';
-			foreach ($shops as $shop)
-				$html .= '<th>'.$shop['name'].'</th>';
+		if ($type != 'shop' && $type != 'group_shop')
+			$type = 'shop';
 
-			$html .= '
-				</tr>';
-			
-			foreach ($objects AS $row)
+		$assos = array();
+		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
+				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
+		foreach (Db::getInstance()->ExecuteS($sql) AS $row)
+			$assos[$row['id_'.$type]][] = $row[$this->identifier];
+
+		$html = <<<EOF
+			<script type="text/javascript">
+			$().ready(function()
 			{
-				$html .= '<tr><td>'.$row[$field_name].'</td>';
-				foreach ($shops AS $shop)
-					$html .= '<td><input type="checkbox" name="checkBoxShopAsso_'.$this->table.'_'.$row[$this->identifier].'_'.$shop['id_shop'].'" id="checkedBox_'.$shop['id_shop'].'" '.((isset($assos[$shop['id_shop']]) AND in_array($row[$this->identifier], $assos[$shop['id_shop']])) ? 'checked="checked"' : '').'></td>';
-				$html .= '</tr>';
+				// Click on "all shop"
+				$('.input_all_shop').click(function()
+				{
+					var checked = $(this).attr('checked');
+					$('.input_group_shop').attr('checked', checked);
+					$('.input_shop').attr('checked', checked);
+				});
+
+				// Click on a group shop
+				$('.input_group_shop').click(function()
+				{
+					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
+					check_all_shop();
+				});
+
+				// Click on a shop
+				$('.input_shop').click(function()
+				{
+					check_group_shop_status($(this).val());
+					check_all_shop();
+				});
+
+				// Initialize checkbox
+				$('.input_shop').each(function(k, v)
+				{
+					check_group_shop_status($(v).val());
+					check_all_shop();
+				});
+			});
+
+			function check_group_shop_status(id_group)
+			{
+				var groupChecked = true;
+				$('.input_shop[value='+id_group+']').each(function(k, v)
+				{
+					if (!$(v).attr('checked'))
+						groupChecked = false;
+				});
+				$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
 			}
-		
-			$html .= '<tr><td colspan="'.(sizeof($shops)+1).'"><center><input class="button" type="submit" value="'.$this->l('Submit').'" name="submitAssoShop" /></center></td></tr></table>
-				</form>';
-		}
-		else
+				
+			function check_all_shop()
+			{
+				var allChecked = true;
+				$('.input_group_shop').each(function(k, v)
+				{
+					if (!$(v).attr('checked'))
+						allChecked = false;
+				});
+				$('.input_all_shop').attr('checked', allChecked);
+			}
+			</script>
+EOF;
+
+		$html .= '<div class="assoShop">';
+		$html .= '<table class="table" cellpadding="0" cellspacing="0" width="100%">
+					<tr><th>'.$this->l('Shop').'</th></tr>';
+		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
+		foreach (Shop::getTree() as $groupID => $groupData)
 		{
-			$html = '<table class="table" cellpadding="0" cellspacing="0">
-						<tr><th>'.$this->l('Shop').'</th><th>'.$this->l('Association').'</th></tr>';
-			foreach ($shops AS $shop)
-				$html .= '<tr><td>'.$shop['name'].'</td><td><input type="checkbox" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shop['id_shop'].'" id="checkedBox_'.$shop['id_shop'].'" '.(((isset($assos[$shop['id_shop']]) AND in_array($this->_object->id, $assos[$shop['id_shop']])) || !$this->_object->id) ? 'checked="checked"' : '').'></td></tr>';
-			$html .= '</table>';
+			$groupChecked = ($type == 'group_shop' && ((isset($assos[$groupID]) && in_array($this->_object->id, $assos[$groupID])) || !$this->_object->id));
+			$html .= '<tr'.(($type == 'shop') ? ' class="alt_row"' : '').'>';
+			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_group_shop" type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
+			$html .= '</tr>';
+
+			if ($type == 'shop')
+			{
+				$total = count($groupData['shops']);
+				$j = 0;
+				foreach ($groupData['shops'] as $shopID => $shopData)
+				{
+					$checked = ((isset($assos[$shopID]) && in_array($this->_object->id, $assos[$shopID])) || !$this->_object->id);
+					$html .= '<tr>';
+					$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" /><label class="child">';
+					$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
+					$html .= $shopData['name'].'</label></td>';
+					$html .= '</tr>';
+					$j++;
+				}
+			}
 		}
+		$html .= '</table></div>';
 		echo $html;
 	}
-	
+
 	protected function youEditFieldFor()
 	{
-		if (!Tools::isMultiShopActivated())
+		if (!Shop::isMultiShopActivated())
 			return;
 
 		return $this->l('This field will be changed for the shop:').' '.Context::getContext()->shop->name;
 	}
-	
-	protected function displayAssoGroupShop($field_name = 'name')
-	{
-		if (!Tools::isMultiShopActivated() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
-			return;
 
-		$objects = Db::getInstance()->ExecuteS('SELECT DISTINCT a.`'.pSQL($this->identifier).'`, '.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name)  ? 'b' : 'a').'.`'.pSQL($field_name).'` 
-															FROM `'._DB_PREFIX_.pSQL($this->table).'` a'.
-															(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' LEFT JOIN `'._DB_PREFIX_.pSQL($this->table).'_lang` b ON (a.`'.pSQL($this->identifier).'`=b.`'.pSQL($this->identifier).'`)' : '').
-															' WHERE 1'.(($this->lang AND isset($this->fieldsDisplay[$field_name]['filter_key']) AND $this->fieldsDisplay[$field_name]['filter_key'] == 'b!'.$field_name) ? ' AND b.id_lang='.(int)$this->context->language->id : '').($this->_object ? ' AND a.`'.pSQL($this->identifier).'`='.(int)$this->_object->id : ''));
-		$groups_shop = GroupShop::getGroupShops();
-		$assos = array();
-		$res = Db::getInstance()->ExecuteS('SELECT id_group_shop, `'.pSQL($this->identifier).'`
-														FROM `'._DB_PREFIX_.pSQL($this->table).'_group_shop`');
-		foreach ($res AS $row)
-			$assos[$row['id_group_shop']][] = $row[$this->identifier];
-		if (!$this->_object)
-		{
-			$html = '<form name="updateAssoGroupShop" action="'.self::$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
-			<input type="hidden" name="assoGroupShopClass" value="'.$this->className.'" />
-			<table cellpadding="0" cellspacing="0" class="table">
-						<tr>
-							<th style="width: 200px">'.$this->l('GroupShop association').'</th>';
-			foreach ($groups_shop as $group_shop)
-				$html .= '<th>'.$group_shop['name'].'</th>';
-
-			$html .= '
-				</tr>';
-			
-			foreach ($objects as $row)
-			{
-				$html .= '<tr><td>'.$row['name'].'</td>';
-				foreach ($groups_shop AS $group_shop)
-					$html .= '<td><input type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$row[$this->identifier].'_'.$group_shop['id_group_shop'].'" id="checkedBox_'.$group_shop['id_group_shop'].'" '.((isset($assos[$group_shop['id_group_shop']]) AND in_array($row[$this->identifier], $assos[$group_shop['id_group_shop']])) ? 'checked="checked"' : '').'></td>';
-				$html .= '</tr>';
-			}
-		
-			$html .= '<td colspan="'.(sizeof($groups_shop)+1).'"><center><input style="margin-left:15px;" class="button" type="submit" value="'.$this->l('Submit').'" name="submitAssoGroupShop" /></center></td>
-					</table>
-				</form>';
-		}
-		else
-		{
-			$html = '<table class="table" cellpadding="0" cellspacing="0">
-						<tr><th>'.$this->l('Shop').'</th><th>'.$this->l('Association').'</th></tr>';
-			foreach ($groups_shop as $group_shop)
-				$html .= '<tr><td>'.$group_shop['name'].'</td><td><input type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$group_shop['id_group_shop'].'" id="checkedBox_'.$group_shop['id_group_shop'].'" '.(((isset($assos[$group_shop['id_group_shop']]) AND in_array($this->_object->id, $assos[$group_shop['id_group_shop']])) || !$this->_object->id) ? 'checked="checked"' : '').'></td></tr>';
-			$html .= '</table>';	
-		}
-		echo $html;
-	
-	}
-	
 	/**
 	 * Get current URL
 	 * 
@@ -2146,7 +2126,7 @@ abstract class AdminTabCore
 							|| ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
 		}
 		
-		if (Tools::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL && $testContext)
+		if (Shop::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL && $testContext)
 		{
 			echo '<div class="multishop_config">';
 				echo '<a href="#" title="'.$this->l('Click here to use default value for this field').'"><img src="../img/admin/multishop_config.png" /></a>';
@@ -2170,7 +2150,7 @@ abstract class AdminTabCore
 			if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
 				continue;
 				
-			if (Tools::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
+			if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
 			{
 				Configuration::deleteFromContext($key);
 				continue;
