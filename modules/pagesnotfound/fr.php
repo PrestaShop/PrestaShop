@@ -11,6 +11,7 @@ $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_b6f05e5ddde1ec63d992d61144452
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_64d129224a5377b63e9727479ec987d9'] = 'Compteur';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_d372ffc9065cb7d2ea24df137927d060'] = 'Aucune page enregistrée';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_d8847bc418fc4f5a3e37c2e8390bb9ed'] = 'Suppression';
+$_MODULE['<{pagesnotfound}prestashop>pagesnotfound_190d2527535602ceed273f097040bef8'] = 'Supprimer toutes les pages introuvables sur cette période';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_254b5e94768b90388cc7002d362351f0'] = 'Supprimer toutes les pages introuvables';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_3604249130acf7fda296e16edc996e5b'] = 'Erreurs 404';

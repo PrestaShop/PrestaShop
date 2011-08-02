@@ -1,61 +1,50 @@
-.comparison_feature_value
-{
+.comparison_feature_value {
 	padding: 5px;
 	margin-top: 5px
 }
 
-.comparison_feature
-{
+.comparison_feature {
 	padding: 5px;
 	color: red;
 	font-weight: bold
 }
 
-.comparison_feature_odd
-{
+.comparison_feature_odd {
 	background-color: #F1F2F4;
-	padding: 3px;	
+	padding: 3px
 }
 
-.comparison_feature_even
-{
-	padding: 3px;
+.comparison_feature_even {
+	padding: 3px
 }
 
-.comparison_infos
-{
+.comparison_infos {
 	border-left: 1px dotted #595A5E;
-	vertical-align: top;
+	vertical-align: top
 }
 
-.comparison_infos_first
-{
+.comparison_infos_first {
 	border-left: 1px dotted  #595A5E;
 	border-right: 1px dotted #595A5E
 }
 
-#product_comparison
-{
-	border-collapse: collapse;
+#product_comparison {
+	border-collapse: collapse
 }	
 
-tr.comparison_header td
-{
+tr.comparison_header td {
 	background-color: #595A5E;	
 	color: #FFFFFF;
 	font-weight: bold;
 	padding: 3px
 }
 
-.product_desc a
-{
-	text-decoration: none;
+.product_desc a {
+	text-decoration: none
 }
 
-.comparison_comment
-{
-	background-color: #FFFFFF;
-	
+.comparison_comment {
+	background-color: #FFFFFF
 }
 
 
@@ -69,14 +58,12 @@ tr.comparison_header td
 		width: 430px
 	}
 	
-.comment .customer_name
-{
-	font-weight: bold;
+.comment .customer_name {
+	font-weight: bold
 }
 
 
-.cmp_remove
-{
+.cmp_remove {
 	margin: auto;
 	text-align: center;
 	display: block;
@@ -85,37 +72,36 @@ tr.comparison_header td
 	display: block;
 	line-height: 22px;
 	height: 22px;
-	background: url('../../../../img/admin/delete.gif') no-repeat;
+	background: url('../../../../img/admin/delete.gif') no-repeat
 }
 
-.comparison_availability_statut
-{
-	height: 27px;
+.comparison_availability_statut {
+	height: 27px
 }
 
-.comparison_old_price
-{
-	height: 13px;
+.comparison_old_price {
+	height: 13px
 }
 
-.comparison_product_infos
-{
+.comparison_product_infos {
 	width: 100%;
-	text-align: center;
+	text-align: center
 }
 
-.comparison_unit_price
-{
+#center_column .products_block .comparison_product_infos a.product_image {
+	margin: 0px auto
+}
+
+.comparison_unit_price {
 	color:gray;
-	font-size:0.75em;
+	font-size:0.75em
 }
 
-.product_discount
-{
+.product_discount {
 	height: 13px;	
 	color:#DA0F00;
 	font-weight:bold;
-	text-transform:uppercase;
+	text-transform:uppercase
 }
 
 

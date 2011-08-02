@@ -126,6 +126,7 @@ h1 {font-size:24px;}
 h2 {
 	padding-bottom:20px;
 	font-size:18px;
+	line-height:20px;
 }
 h3 {
 	padding-bottom:20px;
@@ -161,6 +162,7 @@ input.button {
 	padding:0 30px;
 	height:31px;
 	line-height:31px;
+	font-weight:bold;
 	color:#fff;
 	text-shadow:0 1px 0 #0d7903;
 	background:#039701 url(img/bt.png) repeat-x 0 0;
@@ -191,7 +193,7 @@ input.text {
 	padding:0 6px;
 	height:22px;
 	width:218px;/* 230 */
-	background:#fff img(img/bg-input-text.png) repeat-x 0 0;
+	background:#fff url(img/bg_input_button.png) repeat-x 0 0;
 	border:1px solid #ccc;
 }
 select {
@@ -316,6 +318,7 @@ ol#tabs{
 		color:#adadad;
 	}
 		ol#tabs li.selected{
+			font-weight: bold;
 			color:#000;
 			background : url(img/bg-li-tabs.png) no-repeat 1px 15px;
 		}
@@ -380,6 +383,8 @@ ul#footer a:link, ul#footer a:active, ul#footer a:visited {
 			}
 			.sheet .contentTitle .stepList li.ok {background-position:0 -50px;}
 			.sheet .contentTitle .stepList li.ko {background-position:0 -100px;}
+			.sheet .contentTitle h1 {text-shadow:0 1px 0 #fff;}
+			.sheet .contentTitle ul {list-style-type:none;}
 
 	li.title {
 		margin:0;
@@ -472,8 +477,7 @@ ul#optional {list-style-type:none;}
 
 #mailPart .userInfos {
 	padding-left:18px;
-	font-size:11px;
-	font-style:italic;
+    font: 11px Georgia, Arial, Sans-serif italic;
 	color:#999;
 }
 

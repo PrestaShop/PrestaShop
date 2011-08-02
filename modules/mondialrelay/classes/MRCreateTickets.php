@@ -85,7 +85,8 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			'Expe_CP'				=>  array(
 						'required'				=> true,
 						'value'						=> '',
-						'regexValidation' => '#^[0-9]{5}$#'),
+						'params'					=> array(),
+						'methodValidation' => 'checkZipcodeByCountry'),
 			'Expe_Pays'			=>  array(
 						'required'				=> true,
 						'value'						=> '',
@@ -129,7 +130,8 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			'Dest_CP'				=>  array(
 						'required'				=> true,
 						'value'						=> '',
-						'regexValidation' => '#^[0-9]{5}$#'),
+						'params'					=> array(),
+						'methodValidation' => 'checkZipcodeByCountry'),
 			'Dest_Pays'			=>  array(
 						'required'				=> true,
 						'value'						=> '',
@@ -277,6 +279,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		$this->_fields['list']['Expe_Ad4']['value'] = Configuration::get('PS_SHOP_ADDR2');
 		$this->_fields['list']['Expe_Ville']['value'] = Configuration::get('PS_SHOP_CITY');
 		$this->_fields['list']['Expe_CP']['value'] = Configuration::get('PS_SHOP_CODE');
+		$this->_fields['list']['Expe_CP']['params']['id_country'] = Configuration::get('PS_COUNTRY_DEFAULT');
 		
 		if (_PS_VERSION_ >= '1.4')
 		$this->_fields['list']['Expe_Pays']['value'] = Country::getIsoById(Configuration::get('PS_SHOP_COUNTRY_ID'));
@@ -332,6 +335,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$tmp['Dest_Ad3']['value'] = $deliveriesAddress->address1;
 				$tmp['Dest_Ville']['value'] = $deliveriesAddress->city;
 				$tmp['Dest_CP']['value'] = $deliveriesAddress->postcode;
+				$tmp['Dest_CP']['params']['id_country'] = $deliveriesAddress->id_country;
 				$tmp['Dest_Pays']['value'] = $destIsoCode;
 				$tmp['Dest_Tel1']['value'] = $deliveriesAddress->phone;
 				$tmp['Dest_Tel2']['value'] = $deliveriesAddress->phone_mobile;
@@ -369,9 +373,18 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			foreach($rootCase['list'] as $paramName => &$valueDetailed)
 				if ($paramName != 'Texte' && $paramName != 'Security')
 				{
-					$valueDetailed['value'] = strtoupper(MRManagement::replaceAccentedCharacters($valueDetailed['value']));
-					if (preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
+					$valueDetailed['value'] = strtoupper(MRTools::replaceAccentedCharacters($valueDetailed['value']));
+					// Call a pointer function if exist to do different test
+					if (isset($valueDetailed['methodValidation']) &&
+							method_exists('MRTools', $valueDetailed['methodValidation']) && 
+							isset($valueDetailed['params']) && 
+							MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
 						$concatenationValue .= $valueDetailed['value'];
+					// Use simple Regex test given by MondialRelay
+					else if (isset($valueDetailed['regexValidation']) &&
+							preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
+						$concatenationValue .= $valueDetailed['value'];
+					// If the key is required, we set an error, else it's skipped 
 					else if ((!strlen($valueDetailed['value']) && $valueDetailed['required']) || strlen($valueDetailed['value']))
 					{
 						if (empty($valueDetailed['value']))

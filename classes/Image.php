@@ -538,6 +538,8 @@ class ImageCore extends ObjectModel
 				if (!$image || $image->id !== (int)$matches[2])
 					$image = new Image((int)$matches[2]);
 
+				if (Validate::isLoadedObject($image))
+				{
 				// create the new folder if it does not exist
 				if (!$image->createImgFolder())
 					return false;
@@ -549,6 +551,7 @@ class ImageCore extends ObjectModel
 				if (!@rename(_PS_PROD_IMG_DIR_.$file, $new_path) || !file_exists($new_path))
 					return false;
 				}
+			}
 			if ((int)$max_execution_time != 0 && (time() - $start_time > (int)$max_execution_time - 4))
 				return 'timeout';
 		}

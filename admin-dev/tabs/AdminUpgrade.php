@@ -102,16 +102,16 @@ class AdminUpgrade extends AdminPreferences
 	{
 		$this->_fieldsAutoUpgrade['PS_AUTOUP_DONT_SAVE_IMAGES'] = array(
 			'title' => $this->l('Don\'t save images'), 'cast' => 'intval', 'validation' => 'isBool',
-			'type' => 'bool', 'desc'=>$this->l('You can exclude the image directory from backup if you already saved it by an other method. (not recommended)'),
+			'type' => 'bool', 'desc'=>$this->l('You can exclude the image directory from backup if you already saved it by another method (not recommended)'),
 		);
 
 		$this->_fieldsAutoUpgrade['PS_AUTOUP_KEEP_DEFAULT_THEME'] = array(
 			'title' => $this->l('Keep theme "prestashop"'), 'cast' => 'intval', 'validation' => 'isBool',
-			'type' => 'bool', 'desc'=>$this->l('if you have customized prestashop default theme, you can protect it from upgrade (not recommended)'),
+			'type' => 'bool', 'desc'=>$this->l('If you have customized PrestaShop default theme, you can protect it from upgrade (not recommended)'),
 		);
 
 		$this->_fieldsAutoUpgrade['PS_AUTOUP_KEEP_TRAD'] = array(
-			'title' => $this->l('Don\'t keep translations'), 'cast' => 'intval', 'validation' => 'isBool',
+			'title' => $this->l('Keep translations'), 'cast' => 'intval', 'validation' => 'isBool',
 			'type' => 'bool', 'desc'=>$this->l('If set too yes, you will keep all your translations'),
 		);
 		// allow manual mode only for dev
@@ -185,7 +185,18 @@ class AdminUpgrade extends AdminPreferences
 			$this->nextParams['filesToUpgrade'] = $this->currentParams['filesToUpgrade'];
 
 		$this->backupDbFilename = Configuration::get('UPGRADER_BACKUPDB_FILENAME');
+		if(!file_exists($this->backupDbFilename))
+		{
+			$this->backupDbFilename = '';
+			Configuration::updateValue('UPGRADER_BACKUPDB_FILENAME','');
+		}
 		$this->backupFilesFilename = Configuration::get('UPGRADER_BACKUPFILES_FILENAME');
+		if(!file_exists($this->backupFilesFilename))
+		{
+			$this->backupFilesFilename = '';
+			Configuration::updateValue('UPGRADER_BACKUPFILES_FILENAME','');
+		}
+
 
 		$this->autoupgradePath = $this->adminDir.DIRECTORY_SEPARATOR.$this->autoupgradeDir;
 
@@ -257,9 +268,15 @@ class AdminUpgrade extends AdminPreferences
 			$this->_postConfig($this->_fieldsAutoUpgrade);
 	}
 
+	public function ajaxProcessUpgradeComplete()
+	{
+		$this->nextDesc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
+		$this->next = '';
+	}
+
 	public function ajaxProcessUpgradeNow()
 	{
-		$this->nextDesc = 'Starting upgrade ...';
+		$this->nextDesc = $this->l('Starting upgrade ...');
 		$this->next = 'desactiveShop';
 	}
 	public function ajaxProcessSvnExport()
@@ -1092,7 +1109,7 @@ class AdminUpgrade extends AdminPreferences
 			}
 			else if (!method_exists(get_class($this), 'ajaxProcess'.$action))
 			{
-				$this->nextDesc = sprintf($this->l('action "%1$s" non trouvée '), $action);
+				$this->nextDesc = sprintf($this->l('action "%1$s" not found'), $action);
 				$this->next = 'error';
 				$this->error = '1';
 			}
@@ -1190,17 +1207,17 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 	private function _displayRollbackForm()
 	{
 		echo '<fieldset><legend>'.$this->l('Rollback').'</legend>
-		<div id="rollbackContainer">';
+		<div id="rollbackForm">';
 		if (empty($this->backupFilesFilename) AND empty($this->backupDbFilename))
 			echo $this->l('No rollback available');
 		else if (!empty($this->backupFilesFilename) OR !empty($this->backupDbFilename))
 		{
-			echo '<div id="rollbackContainer"><a class="upgradestep button" href="" id="rollback">'.$this->l('rollback').'</a></div>';
+			echo '<div id="rollbackContainer"><a class="upgradestep button" href="" id="rollback">'.$this->l('rollback').'</a></div><br/>';
 		}
 		if (!empty($this->backupFilesFilename))
-			echo '<div id="restoreFilesContainer"><a href="" class="upgradestep button" id="restoreFiles">restoreFiles</a> '.sprintf($this->l('click to restore %s'),$this->backupFilesFilename).'</div>';
+			echo '<div id="restoreFilesContainer"><a href="" class="upgradestep button" id="restoreFiles">restoreFiles</a> '.sprintf($this->l('click to restore %s'),$this->backupFilesFilename).'</div><br/>';
 		if (!empty($this->backupDbFilename))
-			echo '<div id="restoreDbContainer"><a href="" class="upgradestep button" id="restoreDb">restoreDb</a> '.sprintf($this->l('click to restore %s'), $this->backupDbFilename).'</div>';
+			echo '<div id="restoreDbContainer"><a href="" class="upgradestep button" id="restoreDb">restoreDb</a> '.sprintf($this->l('click to restore %s'), $this->backupDbFilename).'</div><br/>';
 
 		echo '</div></fieldset>';
 	}
@@ -1211,13 +1228,13 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 			echo '<fieldset class="width autoupgrade " >';
 			echo '<legend>'.$this->l('Your current configuration').'</legend>';
-			echo '<b>'.$this->l('root directory').' : </b>'.$this->prodRootDir.'<br/><br/>';
+			echo '<b>'.$this->l('Root directory').' : </b>'.$this->prodRootDir.'<br/><br/>';
 
 			if ($this->rootWritable)
 				$srcRootWritable = '../img/admin/enabled.gif';
 			else
 				$srcRootWritable = '../img/admin/disabled.gif';
-			echo '<b>'.$this->l('Root directory').' : </b>'.'<img src="'.$srcRootWritable.'" /> '.($this->rootWritable?$this->l('root directory is fully writable'):$this->l('root directory is not writable recursively')).'. <br/><br/>';
+			echo '<b>'.$this->l('Root directory status').' : </b>'.'<img src="'.$srcRootWritable.'" /> '.($this->rootWritable?$this->l('fully writable'):$this->l('not writable recursively')).'<br/><br/>';
 			
 			if ($this->upgrader->needUpgrade)
 			{
@@ -1245,7 +1262,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 				$srcExecTime = '../img/admin/enabled.gif';
 			else
 				$srcExecTime = '../img/admin/warning.gif';
-			echo '<b>'.$this->l('php time limit').' : </b>'.'<img src="'.$srcExecTime.'" />'.($max_exec_time == 0?$this->l('disabled'):$max_exec_time.' '.$this->l('seconds')).' <br/><br/>';
+			echo '<b>'.$this->l('PHP time limit').' : </b>'.'<img src="'.$srcExecTime.'" />'.($max_exec_time == 0?$this->l('disabled'):$max_exec_time.' '.$this->l('seconds')).' <br/><br/>';
 
 			if ($this->rootWritable)
 				$srcRootWritable = '../img/admin/enabled.gif';
@@ -1268,7 +1285,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		// @TODO : this should be checked when init()
 		if ($this->isUpgradeAllowed()) {
 			if ($pleaseUpdate) {
-				echo '<li><img src="'.$this->prodRootDir.'img/information.png" alt="information"/> '.$this->l('Latest Prestashop version available is:').' <b>'.$pleaseUpdate['name'].'</b></li>';
+				echo '<li><img src="'._PS_ADMIN_IMG_.'information.png" alt="information"/> '.$this->l('Latest Prestashop version available is:').' <b>'.$pleaseUpdate['name'].'</b></li>';
 			}
 //			echo '<input class="button" type="submit" name="sumbitUpdateVersion" value="'.$this->l('Backup Database, backup files and update right now and in one click !').'"/>';
 //			echo '<input class="button" type="submit" id="refreshCurrent" value="'.$this->l("refresh update dir / current").'"/>';
@@ -1337,34 +1354,45 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		// temporary infoUpdate will be in #tmpInformation
 		echo '<script type="text/javascript">';
 		// _PS_MODE_DEV_ is available in js
-		if (defined('_PS_MODE_DEV_' AND _PS_MODE_DEV_))
+		if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_)
 			echo 'var _PS_MODE_DEV_ = true;';
 		echo $this->_getJsErrorMsgs();
 
 echo '</script>';
 	}
+
 	public function display()
 	{
-		$this->displayWarning('This function is experimental. It\'s currently recommended to make a backup of your files and database.');
+		$this->displayWarning($this->l('This function is experimental. It\'s highly recommended to make a backup of your files and database before starting the upgrade process.'));
 
-		if ($this->apacheModExists('mod_evasive'))
-			sleep(1);
 		// update['name'] = version name
 		// update['num'] = only the version
 		// update['link'] = download link
 		// @TODO
-		if ($this->useSvn AND FALSE)
+
+		if ($this->isUpgradeAllowed())
+		{
+			if ($this->useSvn)
 			echo '<div class="error"><h1>'.$this->l('Unstable upgrade').'</h1>
 			<p class="warning">'.$this->l('Your current configuration indicate you want to upgrade your system from the unstable development branch, with no version number. If you upgrade, you will not be able to follow the official release process anymore').'.</p>
 		</div>';
-
 			$this->_displayUpgraderForm();
+
 		echo '<br/>';
 		$this->_displayRollbackForm();
 
 		echo '<br/>';
-		$this->_displayForm('autoUpgradeOptions',$this->_fieldsAutoUpgrade,'<a href="" name="options" id="options">'.$this->l('Options').'</a>', 'my-autoupgrade-option','');
+			$this->_displayForm('autoUpgradeOptions',$this->_fieldsAutoUpgrade,'<a href="" name="options" id="options">'.$this->l('Options').'</a>', '','prefs');
 		echo '<script type="text/javascript">'.$this->_getJsInit().'</script>';
+	}
+		else
+		{
+			echo '<fieldset>
+			<legend>'.$this->l('Update').'</legend>';
+			echo '<p>'.$this->l('You currently don\'t need to use this feature.').'</p>';
+			echo '</fieldset>';
+		}
+
 	}
 
 	private function _getJsInit()
@@ -1456,7 +1484,7 @@ function parseXMLResult(xmlRet)
 			.hide("slow");
 
 		// difference with the original function
-		ret = {next:"upgradeComplete",nextParams:""};
+		ret = {next:"upgradeComplete",nextParams:{typeResult:"json"},status:"ok"};
 
 	}
 	else
@@ -1471,7 +1499,7 @@ function parseXMLResult(xmlRet)
 		
 		// propose rollback if there is an error
 		if (confirm(txtError[parseInt(ret.getAttribute("error"))]+"\r\n\r\n'.$this->l('Do you want to rollback ?').'"))
-			ret = {next:"rollback","nextParams":nextParams};
+			ret = {next:"rollback",nextParams:{typeResult:"json"},status:"error"};
 	}
 
 	return ret
@@ -1519,6 +1547,11 @@ function doAjaxRequest(action, nextParams){
 			},
 			success : function(res,textStatus,jqXHR)
 			{
+				if(eval("typeof nextParams") == "undefined")
+				{
+					nextParams = {typeResult : "json"};
+				}
+
 				if (nextParams.typeResult == "xml")
 				{
 					xmlRes = parseXMLResult(res);
@@ -1526,12 +1559,14 @@ function doAjaxRequest(action, nextParams){
 					res.next = xmlRes.next;
 					// if xml, we keep the next params
 					nextParams = myNext;
-					
-					// res.status = "ok",
+					res.status = xmlRes.status;
 				}
 				else
 				{
 					res = $.parseJSON(res);
+					nextParams = res.nextParams;
+				}
+
 					if (res.status == "ok")
 					{
 						// a
@@ -1557,7 +1592,6 @@ function doAjaxRequest(action, nextParams){
 						$("#"+action).addClass("steperror");
 						handleError(res);
 					}
-				}
 			},
 			error: function(res,textStatus,jqXHR)
 			{
@@ -1607,9 +1641,9 @@ function prepareNextButton(button_selector, nextParams)
  */
 function handleSuccess(res)
 {
+	updateInfoStep(res.nextDesc);
 	if (res.next != "")
 	{
-		updateInfoStep(res.nextDesc);
 		addQuickInfo(res.nextQuickInfo);
 
 		$("#"+res.next).addClass("nextStep");

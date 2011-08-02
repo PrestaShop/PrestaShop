@@ -56,7 +56,6 @@ class MRGetTickets implements IMondialRelayWSMethod
 	
 	private $_detailedExpeditionList = array();
 	private $_webServiceKey = '';
-	private $_markCode = '';
 	private $_mondialRelay = NULL;
 	
 	private $_resultList = array(
@@ -69,7 +68,6 @@ class MRGetTickets implements IMondialRelayWSMethod
 	{
 		$this->_detailedExpeditionList = $params['detailedExpeditionList'];
 		$this->_webServiceKey = Configuration::get('MR_KEY_WEBSERVICE');
-		$this->_markCode = Configuration::get('MR_CODE_MARQUE');
 	}
 	
 	public function __destruct()

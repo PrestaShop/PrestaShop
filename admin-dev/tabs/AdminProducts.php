@@ -1113,10 +1113,12 @@ class AdminProducts extends AdminTab
 		}
 
 		/* Check description short size without html */
+		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
+		if ($limit <= 0) $limit = 400;
 		foreach ($languages AS $language)
 			if ($value = Tools::getValue('description_short_'.$language['id_lang']))
-				if (Tools::strlen(strip_tags($value)) > 400)
-					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'description_short').' ('.$language['name'].')</b> '.$this->l('is too long').' : 400 '.$this->l('chars max').' ('.$this->l('count now').' '.Tools::strlen(strip_tags($value)).')';
+				if (Tools::strlen(strip_tags($value)) > $limit)
+					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'description_short').' ('.$language['name'].')</b> '.$this->l('is too long').' : '.$limit.' '.$this->l('chars max').' ('.$this->l('count now').' '.Tools::strlen(strip_tags($value)).')';
 		/* Check multilingual fields sizes */
 		foreach ($rules['sizeLang'] AS $fieldLang => $maxLength)
 			foreach ($languages AS $language)
@@ -2099,6 +2101,7 @@ class AdminProducts extends AdminTab
 					updateFriendlyURL();
 					$.ajax({
 						url: "'.dirname(self::$currentIndex).'/ajax.php",
+						cache: false,
 						dataType: "json",
 						data: "ajaxProductManufacturers=1",
 						success: function(j) {
@@ -2116,6 +2119,7 @@ class AdminProducts extends AdminTab
 					});
 					$.ajax({
 						url: "'.dirname(self::$currentIndex).'/ajax.php",
+						cache: false,
 						dataType: "json",
 						data: "ajaxProductSuppliers=1",
 						success: function(j) {

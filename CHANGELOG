@@ -34,6 +34,269 @@ Release Notes for PrestaShop 1.4
 	[+] FO : add dispatcher
 
 ####################################
+#   v1.4.4.0 - 7803 (2011-07-28)  #
+####################################
+
+	Added Features:
+
+	[+] Project : adding RTL language management
+
+	[+] BO : new class Upgrader to check PrestaShop version or download last version.
+	[+] BO : new file ajax-tab.php, you can now make request without ajax.php and handle them directly in the appropriate AdminXXX
+	[+] BO : new tab AdminUpgrade can now automatize the upgrade process. Thanks a lot to Broceliande/Eric Dolou for his great help
+
+	[+] CORE : Add the possibility to personalize an address layout with special chars.
+
+	[+] MO : A better view of the currency used by the module.
+	[+] MO : Fetch content use more than one method (CURL, fopen, fsockopen and file_get_content)
+	[+] MO : Moneybookers, Add the possibility to display the logo in the front Office (works with live edit).
+	[+] MO : New Module - Canada Post (0.1)
+	[+] MO : new module dedicated to german users which enable you to display legal notice on the customer account creation
+
+	Improved/changed features:
+
+	[*] Installer : improve installer template
+	[*] Installer : now class ConfigurationTest is located in classes directory and renamed to ConfigurationTestCore
+	[*] Installer : now method tryToConnect don't use an existing ressource except if specified
+	[*] Installer : php directory is now directly related to INSTALL_DIR
+
+	[*] FO : #PSCFI-2691 - Adding index.php file for redirection
+	[*] FO : CC-24 - Adding previous button for the address creation
+	[*] FO : CC-32 - Adding a checkbox for the displaying of "Powered by PS"
+	[*] FO : CC-93 - Review of the compare product system
+	[*] FO : CC-93 - Review of the compare product system. Adding CompareProduct class
+	[*] FO : Change the id "passwd" by "login_passwd" to avoid ambiguous id in OPC ordering (with guest authorization).
+	[*] FO : Fixed #PSCFI-2176 - now you can use vars in your mail subject
+	[*] FO : Update the jquery.cluetip.js library. From V0.9.9 to V1.1.3
+
+	[*] BO : Add option to disable apache option multiviews. Linked with #PSCFI-2597
+	[*] BO : Added check for safe_mode before activating new image system
+	[*] BO : Added compatibility check before moving images to the new filesystem
+	[*] BO : AdminTab childs can now handle ajax request like index.php (with tab and token params) using specific method ajaxProcess
+	[*] BO : Bug Fixed #PSCFI-2282 - Shipping Prices Range with a tax excluded group
+	[*] BO : CC-108 - Remove informations about stocks in AdminProducts when the stock management is disabled
+	[*] BO : CC-26 - Adding German and Italian translations
+	[*] BO : CC-26 - Rename Alias Tab as Alias Research
+	[*] BO : CC-50 - Increasing the size of the description area
+	[*] BO : CC-99 - Better visibility for the delete module button
+	[*] BO : FA-35 - Changing manufacturer translation in French for the BO. Replaced "fabricant" by "marque"
+	[*] BO : FA-35 - Changing manufacturer translation in French for the BO. Replaced "fabricant" by "marque"
+	[*] BO : Fixed bug PSCFI-2416 - The whole search index is not rewritten when you update a single product
+	[*] BO : It is now possible to edit the field date_add with AdminImport
+	[*] BO : Upgrader class now also check if autoupgrade is indicated for the last version, from http://www.prestashop.com/xml/version.xml
+	[*] BO : added alert if attachment is bind to a product
+	[*] BO : backup directory is now a static definition in Backup class
+	[*] BO : improve CSV import when no csv file is available
+	[*] BO : improve category listing in product edition and loyalty module
+	[*] BO : improved Upgrader to check ps version
+	[*] BO : improved backup class
+	[*] BO : refactoring #PSCFI-2458 - AdminCarrier when Zone disabled & overcomplex processing ( Carrier )
+	[*] BO : the new image filesystem is now entirely deactivated when the legacy setting is activated
+
+	[*] Classes : improvement #PSCFI-2278 - Don't die in Mail::send() method
+	[*] Classes : improvement #PSCFI-2278 - refactoring
+	[*] Classes : improvement #PSCFI-2440 - Tools class improvements
+
+	[*] MO : Adding traduction for blockcms
+	[*] MO : New Admin Panel for "Layered Navigation" module, "Build your own template" feature!
+	[*] MO : Now use the variable Calcul_mode in the hash of the cache
+	[*] MO : Numerous bugs fixed for the "Layered Navigation" module
+	[*] MO : Numerous bugs fixed for the "Layered Navigation" module
+	[*] MO : Translations and changes on TrustedShop module
+	[*] MO : Translations and changes on TrustedShop module (part 2)
+	[*] MO : Upgrade on the UPS module (from enigma32, thx to him :)
+	[*] MO : Upgrade on the USPS module (from enigma32, thx to him :)
+	[*] MO : Upgrade on the fedex module (from enigma32, thx to him :)
+	[*] MO : stats live performance improvment - PSCFI-2080
+	[*] MO : you can now hook blockpermanentlinks on the footer
+
+	[*] WS : Add new feature for date_add/date_upd, PSCFI-2380
+	[*] WS : Allow to change Webservice permission behavior
+
+	Fixed bugs:
+
+	[-] PROJECT : Fix template mail for new layout system
+
+	[-] INSTALLER : CSS Preactivation
+	[-] Installer : Remove a bad space
+	[-] Installer : fix error about version number (1.4.3.0 included when current version is 1.4.3)
+	[-] Installer : fixed Tools::checkDb method when class Validate, DD or MySQL are already loaded
+	[-] Installer : fixed a bug in add_missing_rewrite_value.php
+	[-] Installer : log is now working correctly
+
+	[-] FO : Bug Fixed #PSCFI-2520 - Attribute EcoTax not correctly applied
+	[-] FO : Bug Fixed #PSCFI-2725 Incorrect VAT address
+	[-] FO : Bug Fixed #PSCFI-2734 - Quantity prices not displayed correctly when changing currency
+	[-] FO : BugFix #36138 - Problem with product preview and url rewrite
+	[-] FO : BugFix #PSCFI-2382 - Reductions without end dates are not possible
+	[-] FO : BugFix #PSCFI-2382 - Reductions without end dates are not possible
+	[-] FO : BugFix #PSCFI-2386 - Invalid argument supplied for foreach()
+	[-] FO : BugFix #PSCFI-2402 - Product::getDefaultAttribute is wrong when all attributes quantity less than minimumQuantity
+	[-] FO : BugFix #PSCFI-2487 - Save and preview shows blank page if CCC is enabled
+	[-] FO : BugFix #PSCFI-2498 - Problems with .htaccess
+	[-] FO : BugFix #PSCFI-2537 - RMA not opening/showing content
+	[-] FO : BugFix #PSCFI-2537 - RMA not opening/showing content
+	[-] FO : Fix product sort for Smarty 2
+	[-] FO : Fix undefined json variable in opc when an user select a product and want to be identified.
+	[-] FO : Fixed #PSCFI-2144 - wrong url params, ? instead of &
+	[-] FO : Fixed Bug #PSCFI-2726, Display properly the text depending of the recyclable preference option.
+	[-] FO : Fixed bug #PSCFI-2003 - "Next" button is hidden in scenes slider on FO
+	[-] FO : Fixed bug #PSCFI-2099. Country and state are properly displayed when another invoice address is selected
+	[-] FO : Fixed bug #PSCFI-2316 - there was a notice when you added a product without image to your cart
+	[-] FO : Fixed bug #PSCFI-2393 - After copying language files forwards to frontend with error msg
+	[-] FO : Fixed bug #PSCFI-2417, The compatibility with recent theme under older Prestashop version (< 1.4.2) works.
+	[-] FO : Fixed bug #PSCFI-2662 - Empty script block in order-detail.tpl
+	[-] FO : Problem with .htaccess
+	[-] FO : fixed bug #PSCFI-2299 - Default-home image location
+	[-] FO : fixed bug #PSCFI-2310 - carrier disabled in OPC
+	[-] FO : fixed bug #PSCFI-2326 - fixed smarty error with Smarty 2
+	[-] FO : fixed bug #PSCFI-2348 - bug in order-opc.js 1.4.3
+	[-] FO : fixed bug #PSCFI-2406 - Redirect index file for created image folders
+	[-] FO : fixed bug #PSCFI-2408 - invalid date producttooltip module
+	[-] FO : fixed bug #PSCFI-2464 - manufacturers and suppliers blocks should not display products in inactive categories
+	[-] FO : fixed bug #PSCFI-2493 - One page checkout, "undefined" DNI
+	[-] FO : fixed bug #PSCFI-2502 - The clicking "Continue shopping" on Shopping cart summary is not working properly.
+	[-] FO : fixed bug #PSCFI-2735 - Order manipulation possible after payment method selection
+	[-] FO : fixed bug with guest checkout
+	[-] FO : fixed notice error on One page checkout with Blocknewsletter module
+
+	[-] BO : "alias" tab name is too long
+	[-] BO : Bug Fixed #PSCFI-2368 - Disable ecotax and ecotax is still present on the front office
+	[-] BO : BugFix #PSCFI-1903 - Problem with payment module limited to some countries
+	[-] BO : BugFix #PSCFI-2420 - AdminImport.php ( import csv ) missing handling for escaped list separator and UTF-8 BOM issue
+	[-] BO : BugFix #PSCFI-2420 - AdminImport.php ( import csv ) missing handling for escaped list separator and UTF-8 BOM issue
+	[-] BO : BugFix #PSCFI-2536 - SendMailTest.js does not escape its parameters causing malfunction when trying to send htmlentities (v. 1.4.1.0)
+	[-] BO : BugFix #PSCFI-2550 - can't give a product an attribute of "0"
+	[-] BO : BugFix #PSCFI-2568 - Order page display problem: box expands to overlap another box
+	[-] BO : BugFix #PSCFI-2584 - Orders could have a totals negative
+	[-] BO : BugFix #PSCFI-2614 - Add new method simplexml_load_file
+	[-] BO : BugFix #PSCFI-2614 - Bug this localization file
+	[-] BO : BugFix #PSCFI-2642 - Translation problem with modules
+	[-] BO : BugFix #PSCFI-2645 - sendtoafriend problem with translation
+	[-] BO : BugFix #PSCFI-2663 - "New order" email has hardcoded address format
+	[-] BO : BugFix #PSCFI-2690 - Incorrect closing comment
+	[-] BO : BugFix #PSCFI-2708 Syntax error (working with PHP 5.3 and more)
+	[-] BO : BugFix #PSCFI-2767 - Change guest index of product_comment
+	[-] BO : Fixed Bug #PSCFI-2665, Backup times is now correctly displayed with a H 24 format.
+	[-] BO : Fixed bug #PSCFI-2379 - Avoid the call of memory_get_usage() if it is not defined
+	[-] BO : Fixed bug #PSCFI-2379 - Missing token in form action
+	[-] BO : Fixed bug #PSCFI-2424 - PS_OS_WS_PAYEMENT should be PS_OS_WS_PAYMENT
+	[-] BO : Fixed bug #PSCFI-2429 - IE9 compatibility problem with upload
+	[-] BO : Fixed bug #PSCFI-2535 - Losing opening div
+	[-] BO : Fixed bug #PSCFI-2670 - Increase mime size for attachment from 64 to 128 for support docx file
+	[-] BO : Fixed bug - Empty the cache in the theme for module overrided
+	[-] BO : Fixed bug PSCFI-2253 - Error "invalid date" with some version of PHP fixed
+	[-] BO : Global was missing on AdminThemes
+	[-] BO : In the search tab, Deleted a function which deleted the first occurrence when the last have the samed value in the "search" field
+	[-] BO : PNG images are now supported after activation in BO. Backward compatible.
+	[-] BO : US address format is now correctly displayed for the PDF.
+	[-] BO : fix call on categoryUpdate hook when we change the status of a category #PSCFI-2669
+	[-] BO : fixed bug #PSCFI-2235 - Module panel inoperative after module suppression
+	[-] BO : fixed bug #PSCFI-2300 - clear useless variable in replaceByAbsoluteURL method
+	[-] BO : fixed bug #PSCFI-2301 - html /form tag is inside the translatable string
+	[-] BO : fixed bug #PSCFI-2302 - Product - CSV import: "available for order" and "show price" not available?
+	[-] BO : fixed bug #PSCFI-2302 - Product - CSV import: "available for order" and "show price" not available?
+	[-] BO : fixed bug #PSCFI-2303 - in AdminManufacturers.php have a repeated code
+	[-] BO : fixed bug #PSCFI-2319 - $default_country varaible is missing in AdminProduct
+	[-] BO : fixed bug #PSCFI-2321 - fixed bug on pagination display on AdminGroups
+	[-] BO : fixed bug #PSCFI-2322 - fixed bug on product.tpl
+	[-] BO : fixed bug #PSCFI-2336 - Small typo error in Back Office
+	[-] BO : fixed bug #PSCFI-2360 - redundant lines in Tools::generateHtaccess()
+	[-] BO : fixed bug #PSCFI-2365 - "Warning : the secure key is empty, check your payment account before validation" error with FreeOrder module
+	[-] BO : fixed bug #PSCFI-2366 - Module Bug / "tab cannot be found" on IIS
+	[-] BO : fixed bug #PSCFI-2421 - watermark does not show on regenerated images
+	[-] BO : fixed bug #PSCFI-2447 - Button Home is gone after adding new specific price
+	[-] BO : fixed bug #PSCFI-2455 - Minimum order purchase considers shipping costs
+	[-] BO : fixed bug #PSCFI-2496 - quantity number in pack option
+	[-] BO : fixed bug #PSCFI-2507 - AdminProducts undefined variable and non-object PHP notices in Apache log
+	[-] BO : fixed bug #PSCFI-2533 - image quality button not checked
+	[-] BO : fixed bug #PSCFI-2706 - fields were not created in database for deactivated languages, causing issues when the language is reactivated
+	[-] BO : fixed product images zip upload
+	[-] BO : update jquery colorpicker plugin #PSCFI-2325
+
+	[-] Classes : added some checks to Image class
+	[-] Classes : fix moving images to new filesystem when unused images are present
+	[-] Classes : fixed bug #PSCFI-2005 - Merchandise Returns status emails to customers are BO language dependent
+	[-] Classes : fixed bug #PSCFI-2234 - Hookexec doesn't properly manage execeptions when passing filename by parameter
+	[-] Classes : fixed bug #PSCFI-2311 - Function Validate::isUrl has a problem
+	[-] Classes : fixed bug #PSCFI-2511 - Deleting a product with attachment deletes attachment
+	[-] Classes : fixed bug #PSCFI-2723 - CLONE - Reductions without end dates are not possible
+	[-] Classes : fixed bug on stock mouvement and hook update quantity
+	[-] Classes : fixed rights settings for image folders
+	[-] Classes : fixed url rewrite for missing category images - #PSCFI-2635
+
+	[-] CORE : Check correctly the availability of an object for an external module shipping
+	[-] Core : Fixed bug PSCFI-2436. Cookie object is properly verified before trying to use one of the attributs for the getDefaultCountryId method.
+
+	[-] MO : #PSCFI-2663 - Fix new layout address for mailalerts.
+	[-] MO : Add footer hook for blocklayered to allow AJAX sorting of products
+	[-] MO : Bug fixed on Twenga module (1.7) Image link on PrestaShop 1.3 was wrong (module enabled for nl)
+	[-] MO : Bug fixed on eBay module, when apache cache was enabled, the method fetchToken did not work properly
+	[-] MO : BugFix #PPSCFI-2536 - SendMailTest.js does not escape its parameters causing malfunction when trying to send htmlentities (v. 1.4.1.0)
+	[-] MO : BugFix #PSCFI-2201 - error output of set_time_limit must be "muted"
+	[-] MO : BugFix #PSCFI-2304 - On calculte remaining amount of a voucher, use cart total with tax.
+	[-] MO : BugFix #PSCFI-2305 - Followup module SQL error
+	[-] MO : BugFix #PSCFI-2376 - Bad code : mapi_payment.php line 429
+	[-] MO : BugFix #PSCFI-2427 - Do not fix PSCFI-2427, but the module follow up
+	[-] MO : BugFix #PSCFI-2571 - Missing a global $cookie
+	[-] MO : BugFix #PSCFI-2581 - NEWSLETTER MODULE : Country's filter problem
+	[-] MO : BugFix #PSCFI-2585 - HTML typo in blocklink module
+	[-] MO : BugFix #PSCFI-2593 - Sale message hidden after uncheck (option from layered block module)
+	[-] MO : BugFix #PSCFI-2602 - Web service dispatcher does not stripslashes from POSTed XML
+	[-] MO : BugFix Module Dibs - Must work with PS1.3
+	[-] MO : BugFix in module producttooltip - Can show product page
+	[-] MO : Changing the version of the Treepodia module
+	[-] MO : Changing the version of the fedex module (#previousCommit)
+	[-] MO : Ebay, fix an order validation issue when products list is empty
+	[-] MO : Fedex module used id_lang 2 by default, now use cookie
+	[-] MO : Fixed bug #PSCFI-2369, 'authorization-amount-notification' send now a correct answer to Google.
+	[-] MO : Fixed bug #PSCFI-2370, Shipping fees correctly take in consideration for the form validation
+	[-] MO : Fixed bug #PSCFI-2370. Shipping delivery message is correctly set for Google summary order.
+	[-] MO : Fixed bug SQL error when generate filters
+	[-] MO : Fixed bug according to the last commit about secure_key
+	[-] MO : Module Twenga hiding errors
+	[-] MO : Module treepodia little fix for IE
+	[-] MO : MoneyBookers, fix string manipulation after a fetching content
+	[-] MO : MoneyBookers, replace getProtocol to http:// for older PrestaShop version using with a unsecure page
+	[-] MO : Ogone. Add an ignore key list variable to generate properly the sha1.
+	[-] MO : PayPal fixing rounding issues
+	[-] MO : PayPal module fixing order state issue
+	[-] MO : PayPal retrocompatibility issue
+	[-] MO : PaySafeCard template directory was wrong
+	[-] MO : Paypal, fix the express checkout
+	[-] MO : TrustedShops , fix translations
+	[-] MO : Twenga module (1.7) can now handle more products on their feed
+	[-] MO : added check if curl is loaded in layered block
+	[-] MO : display hook footer for blocklayered module only on page category
+	[-] MO : fix little bug on themeinstallator with blockcms module
+	[-] MO : fixed bug #PSCFI-2249 - Loyalty Point information should not display during Instant Checkout?
+	[-] MO : fixed bug #PSCFI-2318 - fixed typo error in add-to-cart.tpl file of Treepodia module
+	[-] MO : fixed bug #PSCFI-2374 - carriercompare module is not showing any result
+	[-] MO : fixed bug #PSCFI-2713 - Fix issue on Blockwishlist module
+	[-] MO : fixed bug PSCFI-2337 in the statsforecast module : no more division by zero
+	[-] MO : fixed token undifined in shopimport
+	[-] MO : modules exceptions weren't perfectly managed by the theme installer
+
+	[-] WS : Bug PSCFI-2624 fixed
+	[-] WS : Bug PSCFI-2684 fixed
+	[-] WS : Bug PSCFI-2685 fixed
+	[-] WS : Bug PSCFI-2748 fixed
+	[-] WS : Fix a bug when adding a Configuration (Found via Unit Test)
+	[-] WS : Fixed bug PSCFI-2603
+	[-] WS : Small fix
+	[-] WS : Small fix in Order entity (setCurrentState)
+	[-] WS : Small fix in Webservice back-office tab
+	[-] WS : [-] WS : Bug PSCFI-2377 fixed
+
+	[-] PDF : Bug Fixed #PSCFI-2425 - Incorrect tax breakdown (tax excl group)
+
+	[-] TR : fixed fr translation, thanks to Sabrina
+	[-] TR : translation minor fix
+	[-] TR : translations fr about AdminUpgrade.php
+	[-] TR : when a module class was called before the translation proces, its translation wasn't found.
+
+
+####################################
 #   v1.4.3.0 - 7119 (2011-06-16)  #
 ####################################
 

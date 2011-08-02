@@ -109,11 +109,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_0dbe844fb964d5eca2f51be724e4329
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6aefd5e2191e1210a2f50416812b517'] = 'URL du suivi';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_61e70b58e38fd01daa254f44c4fa264b'] = 'Nombre de Points Relais';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bba366864d25056c941b72f18ef79e7c'] = 'Cette erreur n\'est pas mentionnée:';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Mondial Relay est inaccessible';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'Il n\'y a pas de point relais à proximité de votre adresse, veuillez changer votre adresse ou utiliser un autre transporteur';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = 'HT';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = 'TTC';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = 'Gratuit !';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_81b7b4587a2a3ea7a0d6bb1df3fbba54'] = 'Livraison à';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_a1c3470a944b9625cfb924fd15c8bdbf'] = 'Veuillez choisir au moins une commande';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_dc41aac14af17f1d19fca5e3b9439e74'] = 'Cette clé';

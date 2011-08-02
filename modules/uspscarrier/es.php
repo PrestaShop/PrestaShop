@@ -8,6 +8,8 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_883fa0069f4b0454e2277dd567ab3991'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_5a3ceec65d417f5d92c26dbf0dccc00d'] = '\"Unidad de medida (cm o in)\"';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_4d470fde8487e755a50e9235e3dc13ab'] = 'debe estar configurado para funcionar correctamente';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_d2d22fe4f85d971b090bcbacec8f0123'] = 'ID del usuario USPS ';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_20449d3f0b6c6b9265a5cd2a470a6451'] = 'Peso del paquete';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_bfc00de34bc04366e7fee516adf7dca5'] = 'Gastos de gestión';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_761c02f2b956cac5abe5539c6d908508'] = 'Tamaño de los paquetes USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_ca9df8a12e7558c34bcf7b88aab5cba5'] = 'Tipo de paquete USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f347d2e6d32688d9174b7aa1fc0124b1'] = 'Puede ser tratado por una máquina';
@@ -40,6 +42,8 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_6a26f548831e6a8c26bfbbd9f6ec61e0'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_d2126da975d5b9a5b846efaf57d3fd53'] = 'Configuración general';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_b150f21f4d216c6c275de3d69dffac68'] = 'Su login USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_ebbbab87d3a60b18f370b76f59dab31e'] = 'Pulse aquí para obtener su clave API USPS';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_db06a2900c66a3a2cb78fe3a470f1b85'] = 'Peso del paquete';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_0274f749472f365e7d48a501e14793e6'] = 'Gastos de gestión';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_83ad4fdaf06650e6d9d7ca18f82fb975'] = 'Configuración de ubicación';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f489118ea95c746d648d36bb50c226f0'] = 'Unidad de peso';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_659c95668841b7d6602ead454b28d4ba'] = 'La unidad de peso de su tienda (ej: kg o Ibs)';
@@ -66,7 +70,7 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_795de10b1bdcb843b3703c63ad577fc6'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_93c8645dbbc33cf8d126266a827a5501'] = 'Machinable';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_67cd0f5256c40c16a6cfd6effe3ab06b'] = 'Elija si puede ser tratado por una máquina por defecto o no.';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_8d6bd50f3fe3ee2f4513066c25e5fb4a'] = 'Modo de cálculo';
-$_MODULE['<{uspscarrier}prestashop>uspscarrier_37fa4a1a7af70286d9067ac63555cbf4'] = 'Usando el modo de cálculo \"Todos los artículos en un solo paquete\", automáticamente usará el tamaño por defecto de embalaje, tipo de embalaje y entrega. Configuraciones específicas para las categorías de productos no se utilizarán.';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_3169c5057093f8e6c2750f1949a0900d'] = 'Utilizando el modo de cálculo \"Todos los artículos en un solo paquete\" utilizará automáticamente el tamaño por defecto de embalaje, tipo de embalaje y entrega. No se utilizarán las configuraciones específicas de las categorías y de los productos.';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_5cdd307ba6e260beb4801c0c10e22a3a'] = 'Servicio de entrega';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_78945de8de090e90045d299651a68a9b'] = 'Disponible';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_2d25c72c1b18e562f6654fff8e11711e'] = 'No disponible';

@@ -48,7 +48,11 @@ class AdminCountries extends AdminTab
 		'a!active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'a!active'));
 
 		$this->optionTitle = $this->l('Countries options');
-		$this->_fieldsOptions = array('PS_COUNTRY_DEFAULT' => array('title' => $this->l('Default country:'), 'desc' => $this->l('The default country used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_country', 'list' => Country::getCountries(Context::getContext()->language->id)));
+		$this->_fieldsOptions = array(
+			'PS_COUNTRY_DEFAULT' => array('title' => $this->l('Default country:'), 'desc' => $this->l('The default country used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_country', 'list' => Country::getCountries(Context::getContext()->language->id)),
+			'PS_RESTRICT_DELIVERED_COUNTRIES' => array('title' => $this->l('Restrict countries in FO by those delivered by active carriers'), 'cast' => 'intval', 'type' => 'bool', 'default' => '0')
+		);
+
 		parent::__construct();
 	}
 

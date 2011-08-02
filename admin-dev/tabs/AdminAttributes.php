@@ -144,6 +144,14 @@ class AdminAttributes extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
+		elseif (Tools::isSubmit('submitAddattribute'))
+		{
+			// clean \n\r characters
+			foreach($_POST as $key => $value)
+				if (preg_match('/^name_/Ui', $key))
+					$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
+			parent::postProcess();
+		}
 		else
 			parent::postProcess();
 	}

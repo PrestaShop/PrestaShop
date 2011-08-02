@@ -983,7 +983,7 @@ class AdminImport extends AdminTab
 				{
 					$obj = new Attribute();
 					$obj->id_attribute_group = $groups[$group];
-					$obj->name[$defaultLanguage] = $attribute;
+					$obj->name[$defaultLanguage] = str_replace('\n', '', str_replace('\r', '', $attribute));
 					if (($fieldError = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true AND ($langFieldError = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 					{
 						$obj->add();

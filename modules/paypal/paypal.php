@@ -57,8 +57,9 @@ class PayPal extends PaymentModule
 		if (file_exists(_PS_ROOT_DIR_.'/modules/paypalapi/paypalapi.php') AND $this->active)
 			$this->warning = $this->l('All features of Paypal API module are be include in the new Paypal module. In order to don\'t have any conflict, please don\'t use and remove PayPalAPI module.');
 
-		$context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.Tools::strtolower($this->context->language->iso_code).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $context);
+		$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
+		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.Tools::strtolower($this->context->language->iso_code).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+
 		$content = explode('|', $content);
 		if ($content[0] == 'OK')
 		{

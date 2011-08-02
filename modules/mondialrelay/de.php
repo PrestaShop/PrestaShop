@@ -90,11 +90,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_0dbe844fb964d5eca2f51be724e4329
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6aefd5e2191e1210a2f50416812b517'] = 'Follow-up-URL';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_61e70b58e38fd01daa254f44c4fa264b'] = 'Nb Abholpunkt:';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bba366864d25056c941b72f18ef79e7c'] = 'Dieser Fehler ist nicht bekannt :';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_2f84f9d5731852c4d07d52ef0badc42e'] = 'Problem beim Lesen der Adressen aus MondialRelay Webservice: Mondial Relay-Server kann abgeschaltet sein';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_016854c68c7122b18d89ff0f5e40502b'] = 'Es gibt keinen Relay Point in der Nähe Ihre eingegebenen Adresse. Ändern Sie die Adresse, oder wählen Sie eine andere Versandmethode';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_21034ae6d01a83e702839a72ba8a77b0'] = '(zzgl. MwSt.).';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_1f87346a16cf80c372065de3c54c86d9'] = '(Inkl. Mwst.)';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_e7a6ca4e744870d455a57b644f696457'] = 'Kostenlos!';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_81b7b4587a2a3ea7a0d6bb1df3fbba54'] = 'Lieferung nach';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_a1c3470a944b9625cfb924fd15c8bdbf'] = 'Bitte mindestens eine Bestellung auswählen';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_e6940b76f045c8bc0aaaa5b2476cdaf7'] = 'Die Anfrage scheint ungültig zu sein';

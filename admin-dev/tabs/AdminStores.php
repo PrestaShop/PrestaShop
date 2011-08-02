@@ -58,7 +58,7 @@ class AdminStores extends AdminTab
 			'state' => array('title' => $this->l('State'), 'width' => 100),
 			'city' => array('title' => $this->l('City'), 'width' => 100),
 			'postcode' => array('title' => $this->l('Zip code'), 'width' => 50),
-			'name' => array('title' => $this->l('Name'), 'width' => 120),
+			'name' => array('title' => $this->l('Name'), 'width' => 120, 'filter_key' => 'a!name'),
 			'phone' => array('title' => $this->l('Phone'), 'width' => 70),
 			'fax' => array('title' => $this->l('Fax'), 'width' => 70),
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)

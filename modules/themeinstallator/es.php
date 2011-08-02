@@ -4,7 +4,6 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_fff01a1de50e0559f82501a927654d1b'] = 'Importar / exportar un tema';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_83ebbd7865677d356ffde5ad7e12784f'] = 'Exportar o importar un tema y sus módulos en su tienda';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_e10ed1f81b51bd4c7f86eeb84bcd1359'] = 'Zip no está instalado en su servidor. Contacte con su hosting';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_25b9e1d82d8200d70be2b22a1a283957'] = 'Se ha producido un error durante el envío del archivo.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_050991b5b76aad0be75563b7cb93a33e'] = 'Solo están autorizados los archivos zip';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_57c1ed81b02e5d3361323c7930897295'] = 'Se ha producido un error durante la copia del archivo.';
