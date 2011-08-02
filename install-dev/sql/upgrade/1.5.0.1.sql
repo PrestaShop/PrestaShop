@@ -21,3 +21,5 @@ INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `vie
 	WHERE id_tab = (SELECT `id_tab` FROM PREFIX_tab WHERE class_name = 'AdminModules' LIMIT 1)
 	AND a.`view` = 1
 );
+
+UPDATE `PREFIX_tab` SET `class_name` = 'AdminThemes' WHERE `class_name` = 'AdminAppearance';
