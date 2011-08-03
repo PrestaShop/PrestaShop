@@ -2726,19 +2726,27 @@ class AdminProducts extends AdminTab
 						<td class="col-left"><label for="id_category_default" class="t">'.$this->l('Default category:').'</label></td>
 						<td>
 						<div id="no_default_category" style="color: red;font-weight: bold;display: none;">'.$this->l('Please check a category in order to select the default category.').'</div>
-						<script>var post_selected_cat;</script>';
-						if (Tools::isSubmit('categoryBox'))
+						<script type="text/javascript">
+							var post_selected_cat;
+						</script>';
+						$default_category = Tools::getValue('id_category', 1);
+						if (!$obj->id)
 						{
-							$postCat = Tools::getValue('categoryBox');
-							$selectedCat = Category::getSimpleCategories($this->_defaultFormLanguage, false, true, 'AND c.`id_category` IN ('.(empty($postCat) ? '1' : implode(',', $postCat)).')');
-							echo '<script>post_selected_cat = \''.implode(',', $postCat).'\';</script>';
+							$selectedCat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->_defaultFormLanguage);
+							echo '
+							<script type="text/javascript">
+								post_selected_cat = \''.implode(',', array_keys($selectedCat)).'\';
+							</script>';
 						}
-						if ($obj->id)
+						else
+						{
+							if (Tools::isSubmit('categoryBox'))
+								$selectedCat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->_defaultFormLanguage);
+							else
 							$selectedCat = Product::getProductCategoriesFull($obj->id, $this->_defaultFormLanguage);
-						else if(!Tools::isSubmit('categoryBox'))
-							$selectedCat[] = array('id_category' => 1, 'name' => $this->l('Home'));
-						echo '<select id="id_category_default" name="id_category_default">';
+						}
 						
+						echo '<select id="id_category_default" name="id_category_default">';
 							foreach($selectedCat AS $cat)
 								echo '<option value="'.$cat['id_category'].'" '.($obj->id_category_default == $cat['id_category'] ? 'selected' : '').'>'.$cat['name'].'</option>';
 						echo '</select>

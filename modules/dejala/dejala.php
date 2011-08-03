@@ -125,7 +125,7 @@ class Dejala extends CarrierModule
   	$djlCarrier = DejalaCarrierUtils::getCarrierByName($this->name) ;
   	if (Configuration::get('PS_CARRIER_DEFAULT') == (int)($djlCarrier->id))
   	{
-  		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, NULL, PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+  		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
   		foreach($carriers as $carrier) 
   		{
   			if ($carrier['active'] AND !$carrier['deleted'] AND ($carrier['external_module_name'] != $this->name)) 

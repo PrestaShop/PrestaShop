@@ -12,7 +12,8 @@ if (file_exists($configPath))
 	$nbProducts = Db::getInstance()->getValue('
 	SELECT COUNT(`id_product`) as nb
 	FROM `'._DB_PREFIX_.'product`
-	WHERE `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_ebay_category` > 0 AND `sync` = 1)');
+	WHERE `quantity` > 0 AND `active` = 1
+	AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_ebay_category` > 0 AND `sync` = 1)');
 
 	echo $nbProducts;
 }

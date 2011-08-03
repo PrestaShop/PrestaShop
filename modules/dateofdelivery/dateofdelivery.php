@@ -310,8 +310,7 @@ class DateOfDelivery extends Module
 	
 	private function _setCarrierRuleForm()
 	{
-		
-		$carriers = Carrier::getCarriers($this->context->language->id, true , false,false, NULL, ALL_CARRIERS);
+		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
 		if (Tools::isSubmit('editCarrierRule') AND $this->_isCarrierRuleExists(Tools::getValue('id_carrier_rule')))
 			$carrier_rule = $this->_getCarrierRule(Tools::getValue('id_carrier_rule'));
 		

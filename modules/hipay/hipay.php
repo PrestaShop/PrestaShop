@@ -321,11 +321,13 @@ class Hipay extends PaymentModule
 		{
 			// Delete all configurated zones
 			foreach ($_POST as $key => $val) 
+			{
 				if (strncmp($key, 'HIPAY_AZ_ALL_', strlen('HIPAY_AZ_ALL_')) == 0) 
 				{
 					$id = substr($key, -(strlen($key) - strlen('HIPAY_AZ_ALL_')));
 					Configuration::updateValue('HIPAY_AZ_'.$id, 'ko');
 				}
+			}
 			Db::getInstance()->ExecuteS('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE `id_module` = '.(int)$this->id);
 			
 			// Add the new configuration zones
@@ -353,17 +355,17 @@ class Hipay extends PaymentModule
 				if (Configuration::get('HIPAY_SITEID_TEST_'.$currency['iso_code']) != Tools::getValue('HIPAY_SITEID_TEST_'.$currency['iso_code']))
 					Configuration::updateValue('HIPAY_CATEGORY_TEST_'.$currency['iso_code'], false);
 			
-				Configuration::updateValue('HIPAY_ACCOUNT_'.$currency['iso_code'], Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code']));
-				Configuration::updateValue('HIPAY_PASSWORD_'.$currency['iso_code'], Tools::getValue('HIPAY_PASSWORD_'.$currency['iso_code']));
-				Configuration::updateValue('HIPAY_SITEID_'.$currency['iso_code'], Tools::getValue('HIPAY_SITEID_'.$currency['iso_code']));
+				Configuration::updateValue('HIPAY_ACCOUNT_'.$currency['iso_code'], trim(Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code'])));
+				Configuration::updateValue('HIPAY_PASSWORD_'.$currency['iso_code'], trim(Tools::getValue('HIPAY_PASSWORD_'.$currency['iso_code'])));
+				Configuration::updateValue('HIPAY_SITEID_'.$currency['iso_code'], trim(Tools::getValue('HIPAY_SITEID_'.$currency['iso_code'])));
 				Configuration::updateValue('HIPAY_CATEGORY_'.$currency['iso_code'], Tools::getValue('HIPAY_CATEGORY_'.$currency['iso_code']));
 				
 				if ($this->prod AND Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code']))
 					$accounts[Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code'])] = 1;
 					
-				Configuration::updateValue('HIPAY_ACCOUNT_TEST_'.$currency['iso_code'], Tools::getValue('HIPAY_ACCOUNT_TEST_'.$currency['iso_code']));
-				Configuration::updateValue('HIPAY_PASSWORD_TEST_'.$currency['iso_code'], Tools::getValue('HIPAY_PASSWORD_TEST_'.$currency['iso_code']));
-				Configuration::updateValue('HIPAY_SITEID_TEST_'.$currency['iso_code'], Tools::getValue('HIPAY_SITEID_TEST_'.$currency['iso_code']));
+				Configuration::updateValue('HIPAY_ACCOUNT_TEST_'.$currency['iso_code'], trim(Tools::getValue('HIPAY_ACCOUNT_TEST_'.$currency['iso_code'])));
+				Configuration::updateValue('HIPAY_PASSWORD_TEST_'.$currency['iso_code'], trim(Tools::getValue('HIPAY_PASSWORD_TEST_'.$currency['iso_code'])));
+				Configuration::updateValue('HIPAY_SITEID_TEST_'.$currency['iso_code'], trim(Tools::getValue('HIPAY_SITEID_TEST_'.$currency['iso_code'])));
 				Configuration::updateValue('HIPAY_CATEGORY_TEST_'.$currency['iso_code'], Tools::getValue('HIPAY_CATEGORY_TEST_'.$currency['iso_code']));
 				
 				if (!$this->prod AND Tools::getValue('HIPAY_ACCOUNT_TEST_'.$currency['iso_code']))

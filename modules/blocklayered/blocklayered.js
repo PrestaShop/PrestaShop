@@ -116,7 +116,10 @@ function reloadContent(params_plus)
 	
 	data = $('#layered_form').serialize();
 	$('.layered_slider').each( function () {
-		data += '&'+$(this).attr('id')+'='+$(this).slider('values', 0)+'_'+$(this).slider('values', 1);
+		var sliderStart = $(this).slider('values', 0);
+		var sliderStop = $(this).slider('values', 1);
+		if(typeof(sliderStart) == 'number' && typeof(sliderStop) == 'number')
+			data += '&'+$(this).attr('id')+'='+sliderStart+'_'+sliderStop;
 	});
 	
 	if ($('#selectPrductSort').length)

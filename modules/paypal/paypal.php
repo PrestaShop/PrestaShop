@@ -884,7 +884,7 @@ class PayPal extends PaymentModule
 				Configuration::updateValue('PAYPAL_BUSINESS', trim(Tools::getValue('email_paypal')));
 				Configuration::updateValue('PAYPAL_HEADER', Tools::getValue('banner_url'));
 				Configuration::updateValue('PAYPAL_API_USER', trim(Tools::getValue('api_username')));
-				Configuration::updateValue('PAYPAL_API_PASSWORD', Tools::getValue('api_password'));
+				Configuration::updateValue('PAYPAL_API_PASSWORD', trim(Tools::getValue('api_password')));
 				Configuration::updateValue('PAYPAL_API_SIGNATURE', trim(Tools::getValue('api_signature')));
 				Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT', (int)(Tools::isSubmit('paypal_express')));
 				Configuration::updateValue('PAYPAL_MODE_DEBUG', (int)(Tools::isSubmit('paypal_debug')));

@@ -46,7 +46,7 @@ class Treepodia extends Module
 	{
 	 	$this->name = 'treepodia';
 	 	$this->tab = 'front_office_features';
-	 	$this->version = '1.3';
+	 	$this->version = '1.4';
 		$this->displayName = 'Treepodia';
 
 	 	parent::__construct();
@@ -123,13 +123,23 @@ XML;
 		foreach ($languages AS $language)
 			$infos->addChild('lang', $language['iso_code']);
 
+		$limit_sql = '';
+		$limit_start = (int)Tools::getValue('limit_start');
+		$limit_end = (int)Tools::getValue('limit_end');
+		if ($limit_start > 0)
+		{
+			if ($limit_end < $limit_start)
+				$limit_end = $limit_start + 10;
+			$limit_sql = ' LIMIT '.(int)$limit_start.','.(int)$limit_end;
+		}
+
 		$sqlProducts = Db::getInstance()->ExecuteS('
 		SELECT p.id_product, p.reference, p.weight, m.name manufacturer, s.name supplier, p.on_sale, p.id_manufacturer, pd.id_product_download
 		FROM '._DB_PREFIX_.'product p
 		LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
 		LEFT JOIN '._DB_PREFIX_.'supplier s ON (s.id_supplier = p.id_supplier)
 		LEFT JOIN '._DB_PREFIX_.'product_download pd ON (pd.id_product = p.id_product)
-		WHERE p.active = 1');
+		WHERE p.active = 1'.$limit_sql);
 
 		foreach ($sqlProducts AS $sqlProduct)
 		{

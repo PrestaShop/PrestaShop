@@ -117,7 +117,7 @@ abstract class ObjectModelCore
 		if ($id_lang != NULL && Validate::isLoadedObject(new Language($id_lang)))
 			$this->id_lang = $id_lang;
 		elseif ($id_lang != NULL)
-			die(Tools::displayError());
+			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
 
 		if ($id_shop && $this->langMultiShop)
 		{
@@ -852,5 +852,21 @@ abstract class ObjectModelCore
 			&& !unlink($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format))
 				return false;
 		return true;
+	}
+
+	/**
+	* Specify if an ObjectModel is already in database
+	*
+	* @param $id_entity entity id
+	* @return boolean
+	*/
+	public static function existsInDatabase($id_entity)
+	{
+		$row = Db::getInstance()->getRow('
+		SELECT `id_'.self::$table.'`
+		FROM `'._DB_PREFIX_.self::$table.'` e
+		WHERE e.`id_'.self::$table.'` = '.(int)($id_entity));
+
+		return isset($row['id_product']);
 	}
 }

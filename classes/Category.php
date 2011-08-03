@@ -1008,8 +1008,8 @@ class CategoryCore extends ObjectModel
 	
 	public function getWsNbProductsRecursive()
 	{
-		$result = Db::getInstance()->ExecuteS(
-		'SELECT count(distinct(id_product)) as nb_product_recursive FROM  `'._DB_PREFIX_.'category_product`
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT count(distinct(id_product)) as nb_product_recursive FROM  `'._DB_PREFIX_.'category_product`
 		WHERE id_category IN (SELECT id_category
 		FROM `'._DB_PREFIX_.'category`
 		WHERE nleft > '.(int)$this->nleft.
@@ -1017,6 +1017,38 @@ class CategoryCore extends ObjectModel
 		if (!$result)
 			return -1;
 		return $result[0]['nb_product_recursive'];
+	}
+	
+	/**
+	 *
+	 * @param Array $ids_category
+	 * @param int $id_lang
+	 * @return Array 
+	 */
+	public static function getCategoryInformations($ids_category, $id_lang = null)
+	{
+		if ($id_lang === null)
+		{
+			global $cookie;
+			$id_lang = $cookie->id_lang;
+}
+
+		if (!is_array($ids_category) || !sizeof($ids_category))
+			return;
+		
+		$categories = array();
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, cl.`id_lang` 
+			FROM `'._DB_PREFIX_.'category` c 
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
+			WHERE cl.`id_lang` = '.(int)$id_lang.'
+			AND c.`id_category` IN ('.implode(',', $ids_category).')
+		');
+		
+		foreach($results as $category)
+			$categories[$category['id_category']] = $category;
+		
+		return $categories;
 	}
 }
 
