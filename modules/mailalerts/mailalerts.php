@@ -185,7 +185,7 @@ class MailAlerts extends Module
 
 		// Filling-in vars for email
 		$template = 'new_order';
-		$subject = $this->l('New order', $id_lang);
+		$subject = $this->l('New order').' - '.sprintf('%06d', $order->id);
 		$templateVars = array(
 			'{firstname}' => $customer->firstname,
 			'{lastname}' => $customer->lastname,

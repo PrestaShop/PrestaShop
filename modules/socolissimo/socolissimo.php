@@ -407,7 +407,7 @@ class Socolissimo extends CarrierModule
 								  'inputs' => $inputs, 'serialsInput' => $serialsInput, 'finishProcess' => $this->l('To choose SoColissimo, click on a delivery method')));
 
 			$country = new Country((int)($params['address']->id_country));
-			$carriers = Carrier::getCarriers($cookie->id_lang,  true , false,false, NULL, ALL_CARRIERS);
+			$carriers = Carrier::getCarriers($cookie->id_lang,  true , false,false, NULL, Carrier::ALL_CARRIERS);
 			$ids = array();
 			foreach($carriers as $carrier)
 				$ids[] = $carrier['id_carrier'];

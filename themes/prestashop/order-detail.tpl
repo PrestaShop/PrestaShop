@@ -29,7 +29,10 @@
 	var baseDir = '{$base_dir_ssl}';		
 //]]>
 </script>
-
+{if !isset($smarty.get.ajax)}
+<div class="block-center" id="block-history">
+	<div id="block-order-detail">
+{/if}
 <form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 	<div>
 		<input type="hidden" value="{$order->id}" name="id_order"/>
@@ -368,4 +371,8 @@
 	</form>
 {else}
 <p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You can\'t make a merchandise return with a guest account'}</p>
+{/if}
+{if !isset($smarty.get.ajax)}
+	</div>
+</div>
 {/if}

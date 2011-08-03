@@ -293,7 +293,7 @@ class AdminInformation extends AdminTab
 		if ($recursive)
 		{
 			while (($file = readdir($dh)) !== false)
-				if (@filetype($dir.$file) == 'dir' AND $file != '.' AND $file != '..')
+				if (is_dir($dir.$file) AND $file != '.' AND $file != '..')
 					if (!self::test_dir($dir.$file, true))
 						return false;
 		}

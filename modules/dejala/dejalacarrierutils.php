@@ -86,8 +86,9 @@ class DejalaCarrierUtils
 		return true;
 	}
 
-	public static function getCarrierByName($name) {
-		$carriers = Carrier::getCarriers(Context::getContext()->language->id, true, false, false, NULL, ALL_CARRIERS);
+	public static function getCarrierByName($name)
+	{
+		$carriers = Carrier::getCarriers(Context::getContext()->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
 		foreach($carriers as $carrier)
 			if (!$carrier['deleted'] AND $carrier['external_module_name'] == $name)
 				return new Carrier((int)$carrier['id_carrier']) ;

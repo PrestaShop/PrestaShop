@@ -538,8 +538,6 @@ class ToolsCore
 					self::deleteDirectory($dirname.$file, true);
 				elseif (file_exists($dirname.$file))
 					unlink($dirname.$file);
-				else
-					p('Unable to delete '.$dirname.$file);
 			}
 		if($delete_self)
 			rmdir($dirname);

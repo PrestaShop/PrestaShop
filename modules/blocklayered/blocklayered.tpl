@@ -151,5 +151,16 @@
 		<p style="margin: 20px 0; text-align: center;"><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
 	</div>
 </div>
+{else}
+<div id="layered_block_left" class="block">
+	<div class="block_content">
+		<form action="#" id="layered_form">
+			<input type="hidden" name="id_category_layered" value="{$id_category_layered}" />
+		</form>
+	</div>
+	<div id="layered_ajax_loader" style="display: none;">
+		<p style="margin: 20px 0; text-align: center;"><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
+	</div>
+</div>
 {/if}
 <!-- /Block layered navigation module -->

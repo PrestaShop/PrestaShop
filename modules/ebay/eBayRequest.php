@@ -374,7 +374,7 @@ class eBayRequest
 		$requestXml .= '  <ErrorLanguage>fr_FR</ErrorLanguage>'."\n";
 		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
 		$requestXml .= '  <Item>'."\n";
-		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
+		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].(isset($datas['reference']) ? '-'.$datas['reference'] : '').'</SKU>';
 		$requestXml .= '    <Title>'.substr($datas['name'], 0, 55).'</Title>'."\n";
 		if (isset($datas['pictures']))
 		{
@@ -503,7 +503,7 @@ class eBayRequest
 		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
 		$requestXml .= '  <Item>'."\n";
 		$requestXml .= '    <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
-		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
+		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].(isset($datas['reference']) ? '-'.$datas['reference'] : '').'</SKU>';
 		$requestXml .= '    <Quantity>'.$datas['quantity'].'</Quantity>'."\n";
 		$requestXml .= '    <StartPrice>'.$datas['price'].'</StartPrice>'."\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1)
@@ -653,7 +653,7 @@ class eBayRequest
 			foreach ($datas['variations'] as $key => $variation)
 			{
 				$requestXml .= '      <Variation>'."\n";
-				$requestXml .= '        <SKU>prestashop-'.$key.'</SKU>'."\n";
+				$requestXml .= '        <SKU>prestashop-'.$key.(isset($variation['reference']) ? '-'.$variation['reference'] : '').'</SKU>'."\n";
 				$requestXml .= '        <StartPrice>'.$variation['price'].'</StartPrice>'."\n";
 				$requestXml .= '        <Quantity>'.$variation['quantity'].'</Quantity>'."\n";
 				$requestXml .= '        <VariationSpecifics>'."\n";
@@ -1005,6 +1005,24 @@ class eBayRequest
 					}
 					if ($id_product > 0)
 						$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => $id_product_attribute, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
+					else
+					{
+						$id_product = Db::getInstance()->getValue('
+						SELECT `id_product` FROM `'._DB_PREFIX_.'product`
+						WHERE `reference` = \''.pSQL((string)$transaction->item->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->item->CustomLabel).'\'
+						OR `reference` = \''.pSQL((string)$transaction->Variation->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->Variation->CustomLabel).'\'');
+						if ((int)$id_product > 0)
+							$itemList[] = array('id_product' => $id_product, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
+						else
+						{
+							$row = Db::getInstance()->getValue('
+							SELECT `id_product`, `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute`
+							WHERE `reference` = \''.pSQL((string)$transaction->item->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->item->CustomLabel).'\'
+							OR `reference` = \''.pSQL((string)$transaction->Variation->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->Variation->CustomLabel).'\'');
+							if ((int)$row['id_product'] > 0)
+								$itemList[] = array('id_product' => $row['id_product'], 'id_product_attribute' => $row['id_product_attribute'], 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
+				}
+					}
 				}
 
 				$orderList[] = array(
@@ -1014,7 +1032,7 @@ class eBayRequest
 					'date' => substr((string)$order->CreatedTime, 0, 10).' '.substr((string)$order->CreatedTime, 11, 8),
 					'name' => (string)$order->ShippingAddress->Name,
 					'firstname' => $name[0],
-					'familyname' => $name[1],
+					'familyname' => (isset($name[1]) ? $name[1] : $name[0]),
 					'address1' => (string)$order->ShippingAddress->Street1,
 					'address2' => (string)$order->ShippingAddress->Street2,
 					'city' => (string)$order->ShippingAddress->CityName,

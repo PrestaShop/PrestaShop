@@ -633,7 +633,7 @@ class BlockLayered extends Module
 							$selectedFilters[$res[1].($id_key ? '_'.$id_key : '')] = array();
 						$selectedFilters[$res[1].($id_key ? '_'.$id_key : '')][] = (int)$value;
 					}
-					elseif (in_array($res[1], array('weight')))
+					elseif ($res[1] == 'weight')
 						$selectedFilters[$res[1]] = $tmpTab;
 				}
 			}
@@ -715,6 +715,7 @@ class BlockLayered extends Module
 				break;
 
 				case 'weight':
+					if($selectedFilters['weight'][0] != 0 || $selectedFilters['weight'][1] != 0)
 					$queryFilters .= ' AND p.`weight` BETWEEN '.(float)($selectedFilters['weight'][0] - 0.001).' AND '.(float)($selectedFilters['weight'][1] + 0.001);
 				break;
 			}
