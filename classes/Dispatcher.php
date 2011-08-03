@@ -40,7 +40,7 @@ class DispatcherCore
 	 * 
 	 * @var array
 	 */
-	protected $defaultRoutes = array(
+	public $defaultRoutes = array(
 		'product_rule' => array(
 			'controller' =>	'product',
 			'rule' =>		'{number:id_product}-{text}.html',
@@ -175,9 +175,9 @@ class DispatcherCore
 		foreach ($this->defaultRoutes as $id => $route)
 			$this->addRoute($id, $route['rule'], $route['controller']);
 
-		// Load routes from meta table
 		if ($this->useRoutes)
 		{
+			// Load routes from meta table
 			$sql = 'SELECT m.page, ml.url_rewrite
 					FROM `'._DB_PREFIX_.'meta` m
 					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.$context->shop->sqlLang('ml').')
@@ -194,6 +194,11 @@ class DispatcherCore
 							'controller' =>	$row['page'],
 						);
 				}
+				
+			// Load custom routes
+			foreach ($this->defaultRoutes as $routeID => $routeData)
+				if ($customRoute = Configuration::get('PS_ROUTE_'.$routeID))
+					$this->addRoute($routeID, $customRoute, $routeData['controller']);
 		}
 	}
 	
@@ -224,6 +229,24 @@ class DispatcherCore
 			'controller' =>	$controller,
 			'required' =>	$required,
 		);
+	}
+	
+	public function validateRoute($routeID, $rule, &$errors = array())
+	{
+		$errors = array();
+		if (!isset($this->defaultRoutes[$routeID]))
+			return false;
+
+		$required = array();
+		preg_match_all('#\{('.implode('|', array_keys($this->keywords)).')[0-9]*:([a-z0-9_]+)\}#', $this->defaultRoutes[$routeID]['rule'], $m);
+		for ($i = 0, $total = count($m[0]); $i < $total; $i++)
+			$required[] = $m[2][$i];
+				
+		foreach ($required as $requiredKey)
+			if (!preg_match('#\{('.implode('|', array_keys($this->keywords)).')[0-9]*:'.$requiredKey.'\}#', $rule))
+				$errors[] = $requiredKey;
+				
+		return (count($errors)) ? false : true;
 	}
 
 	/**

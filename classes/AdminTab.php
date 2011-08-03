@@ -1693,6 +1693,9 @@ abstract class AdminTabCore
 			if ($field['type'] != 'textLang')
 				if (!Validate::isCleanHtml($val))
 					$val = Configuration::get($key);
+					
+			if (isset($field['defaultValue']) && !$val)
+				$val = $field['defaultValue'];
 
 			$isDisabled = (Shop::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
 
@@ -2162,7 +2165,7 @@ EOF;
 				$method_name = 'updateOption'.Tools::toCamelCase($key, true);
 				if (method_exists($this, $method_name))
 					$this->$method_name(Tools::getValue($key));
-				if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+				else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
 				{
 					$list = array();
 					foreach ($languages as $language)
