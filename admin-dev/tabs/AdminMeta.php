@@ -50,8 +50,20 @@ class AdminMeta extends AdminTab
 			'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$this->context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 		);
-		if (!Tools::getValue('__PS_BASE_URI__'))
-			$_POST['__PS_BASE_URI__'] = __PS_BASE_URI__;
+		
+		// Display route options only if friendly URL is activated
+		if (Configuration::get('PS_REWRITING_SETTINGS'))
+		{
+			$this->_fieldsOptions += array(
+				'PS_ROUTE_product_rule' => array('title' => $this->l('Route to products'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['product_rule']['rule']),
+				'PS_ROUTE_product_rule2' => array('title' => $this->l('Route to products with category'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['product_rule2']['rule']),
+				'PS_ROUTE_category_rule' => array('title' => $this->l('Route to category'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['category_rule']['rule']),
+				'PS_ROUTE_supplier_rule' => array('title' => $this->l('Route to supplier'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['supplier_rule']['rule']),
+				'PS_ROUTE_manufacturer_rule' => array('title' => $this->l('Route to manufacturer'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['manufacturer_rule']['rule']),
+				'PS_ROUTE_cms_rule' => array('title' => $this->l('Route to CMS page'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['cms_rule']['rule']),
+				'PS_ROUTE_cms_category_rule' => array('title' => $this->l('Route to CMS category'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['cms_category_rule']['rule']),
+			);
+		}
 	}
 
 	public function display()
@@ -189,6 +201,64 @@ class AdminMeta extends AdminTab
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->getID());
 	}
+	
+	/**
+	 * Validate route syntax and save it in configuration
+	 * 
+	 * @param string $routeID
+	 */
+	public function checkAndUpdateRoute($routeID)
+	{
+		$defaultRoutes = Dispatcher::getInstance()->defaultRoutes;
+		if (!isset($defaultRoutes[$routeID]))
+			return ;
+		
+		$rule = Tools::getValue('PS_ROUTE_'.$routeID);
+		if (!$rule || $rule == $defaultRoutes[$routeID]['rule'])
+			return ;
+
+		$errors = array();
+		if (!Dispatcher::getInstance()->validateRoute($routeID, $rule, $errors))
+		{
+			foreach ($errors as $error)
+				$this->_errors[] = sprintf('Keyword "%1$s" required for route "%2$s" (rule: "%3$s")', $error, $routeID, htmlspecialchars($rule));
+		}
+		else
+			Configuration::updateValue('PS_ROUTE_'.$routeID, $rule);
+	}
+
+	public function updateOptionPsDispatcherRouteProductRule()
+	{
+		$this->checkAndUpdateRoute('product_rule');
+	}
+	
+	public function updateOptionPsDispatcherRouteProductRule2()
+	{
+		$this->checkAndUpdateRoute('product_rule2');
+	}
+	
+	public function updateOptionPsDispatcherRouteCategoryRule()
+	{
+		$this->checkAndUpdateRoute('category_rule');
+	}
+	
+	public function updateOptionPsDispatcherRouteSupplierRule()
+	{
+		$this->checkAndUpdateRoute('supplier_rule');
+	}
+	
+	public function updateOptionPsDispatcherRouteManufacturerRule()
+	{
+		$this->checkAndUpdateRoute('manufacturer_rule');
+	}
+	
+	public function updateOptionPsDispatcherRouteCmsRule()
+	{
+		$this->checkAndUpdateRoute('cms_rule');
+	}
+	
+	public function updateOptionPsDispatcherRouteCmsCategoryRule()
+	{
+		$this->checkAndUpdateRoute('cms_category_rule');
+	}
 }
-
-
