@@ -358,18 +358,27 @@ class AdminPreferences extends AdminTab
 			if (isset($field['required']) AND $field['required'])
 				$required = true;
 			$val = $this->getVal($confValues, $key);
+			
+			// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
+			$isDisabled = $isInvisible = false;
+			if (Shop::isMultiShopActivated())
+			{
+				if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+				{
+					$isDisabled = true;
+					$isInvisible = true;
+				}
+				else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					$isDisabled = true;
+			}
 
 			if (!in_array($field['type'], array('image', 'radio', 'container', 'container_end')) OR isset($field['show']))
 			{
-				echo '<div style="clear: both; padding-top:15px;">';
-				$this->getHtmlDefaultConfigurationValue($key, $languages);
-
+				echo '<div style="clear: both; padding-top:15px;" id="conf_id_'.$key.'">';
 				if ($field['title'])
-					echo '<label>'.$field['title'].'</label>';
+					echo '<label class="conf_title '.(($isDisabled) ? 'isDisabled' : '').'">'.$field['title'].'</label>';
 				echo '<div class="margin-form" style="padding-top:5px;">';
 			}
-
-			$isDisabled = (Shop::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
 
 			/* Display the appropriate input type for each field */
 			switch ($field['type'])
@@ -485,16 +494,20 @@ class AdminPreferences extends AdminTab
 				break;
 
 				case 'maintenance_ip':
-					echo '<input type="'.$field['type'].'"'.(isset($field['id']) === true ? ' id="'.$field['id'].'"' : '').' size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" />'.(isset($field['next']) ? '&nbsp;'.strval($field['next']) : '').' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP').'</a>';
+					echo '<input type="'.$field['type'].'"'.(isset($field['id']) === true ? ' id="'.$field['id'].'"' : '').(($isDisabled) ? 'disabled="disabled"' : '').' size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" />'.(isset($field['next']) ? '&nbsp;'.strval($field['next']) : '').' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP').'</a>';
 				break;
 
 				case 'text':
 				default:
-					echo '<input type="'.$field['type'].'"'.(isset($field['id']) === true ? ' id="'.$field['id'].'"' : '').(($isDisabled) ? ' disabled="disabled"' : '').' size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" />'.(isset($field['next']) ? '&nbsp;'.strval($field['next']) : '');
+					echo '<input type="'.$field['type'].'"'.(isset($field['id']) === true ? ' id="'.$field['id'].'"' : '').(($isDisabled) ? 'disabled="disabled"' : '').' size="'.(isset($field['size']) ? (int)($field['size']) : 5).'" name="'.$key.'" value="'.($field['type'] == 'password' ? '' : htmlentities($val, ENT_COMPAT, 'UTF-8')).'" />'.(isset($field['next']) ? '&nbsp;'.strval($field['next']) : '');
 			}
 			echo ((isset($field['required']) AND $field['required'] AND !in_array($field['type'], array('image', 'radio')))  ? ' <sup>*</sup>' : '');
-			echo (isset($field['desc']) ? '<p style="clear:both">'.((isset($field['thumb']) AND $field['thumb'] AND $field['thumb']['pos'] == 'after') ? '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" style="float:left;" />' : '' ).$field['desc'].'</p>' : '');
-			echo ($isDisabled) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
+
+			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible)
+				echo '<div class="preference_default_multishop"><label><input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '') .' onclick="$(\'#conf_id_'.$key.' input, #conf_id_'.$key.' textarea, #conf_id_'.$key.' select\').attr(\'disabled\', $(this).attr(\'checked\')); $(\'#conf_id_'.$key.' .preference_default_multishop input\').attr(\'disabled\', false); $(\'#conf_id_'.$key.' label.conf_title\').toggleClass(\'isDisabled\');" /> '.$this->l('Use default value').'</label></div>';
+
+			echo (isset($field['desc']) ? '<p class="preference_description">'.((isset($field['thumb']) AND $field['thumb'] AND $field['thumb']['pos'] == 'after') ? '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" style="float:left;" />' : '' ).$field['desc'].'</p>' : '');
+			echo ($isInvisible) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
 			if (!in_array($field['type'], array('image', 'radio', 'container', 'container_end')) OR isset($field['show']))
 				echo '</div></div>';
 		}
