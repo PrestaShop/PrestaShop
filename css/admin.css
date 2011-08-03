@@ -1595,8 +1595,7 @@ a.action_module_delete {
 	border: 1px dotted #000000;
 }
 
-fieldset .optionsDescription
-{
+fieldset .optionsDescription{
     background: url("../img/admin/help2.png") no-repeat scroll 6px center #DDE9F7;
     border: 1px solid #50B0EC;
     color: #7F7F7F;
@@ -1604,4 +1603,36 @@ fieldset .optionsDescription
     font-size: 0.85em;
     margin-bottom: 15px;
     padding: 5px 5px 5px 40px;
+}
+
+p.preference_description{
+    clear: both;
+    text-align: justify;
+    width: 500px;
+}
+
+.preference_default_multishop{
+	float: right;
+	margin-right: 40px;
+}
+
+.preference_default_multishop input{
+	margin-top: -3px;
+}
+
+.preference_default_multishop label{
+	float: none;
+	font-size: 12px;
+	color: #666666;
+	font-style: italic;
+}
+
+.isDisabled{
+	color: #3F3F3F;
+	font-style: italic;
+}
+
+input.disable_me[disabled=disabled]
+{
+	background-color: red;
 }

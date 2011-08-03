@@ -405,6 +405,25 @@ class ConfigurationCore extends ObjectModel
 		return false;
 	}
 	
+	public static function isOverridenByCurrentContext($key)
+	{
+		if (Configuration::isLangKey($key))
+		{
+			$testContext = false;
+			foreach (Language::getLanguages(false) as $lang)
+				if ((Context::shop() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
+					|| (Context::shop() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
+						$testContext = true;
+		}
+		else
+		{
+			$testContext = ((Context::shop() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
+							|| (Context::shop() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
+		}
+		
+		return (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && $testContext);
+	}
+	
 	/**
 	 * Check if a key was loaded as multi lang
 	 *

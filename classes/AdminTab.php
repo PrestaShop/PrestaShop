@@ -93,6 +93,8 @@ abstract class AdminTabCore
 	/** @var array Fields to display in list */
 	public $fieldsDisplay = array();
 	
+	public $optionTitle = null;
+	
 	/** @var string shop | group_shop */
 	public $shopLinkType;
 	
@@ -152,6 +154,8 @@ abstract class AdminTabCore
 	
 	/** @var bool If false, don't add form tags in options forms */
 	protected $formOptions = true;
+	
+	public $_fieldsOptions = array();
 
 	protected	$_languages = NULL;
 	protected	$_defaultFormLanguage = NULL;
@@ -1677,25 +1681,25 @@ abstract class AdminTabCore
 	{
 		if (is_null($fieldsOptions))
 			$fieldsOptions = $this->_fieldsOptions;
-			
-		if (is_null($optionTitle))
-			$optionTitle = $this->optionTitle;
 
 		if (!isset($fieldsOptions) OR !sizeof($fieldsOptions))
 			return false;
-		
+
+		if (is_null($optionTitle))
+			$optionTitle = $this->optionTitle;
+
 		$defaultLanguage = (int)$this->context->language->id;
 		$this->_languages = Language::getLanguages(false);
 		$tab = Tab::getTab($defaultLanguage, $this->id);
 		echo '<br /><br />';
-		echo (isset($optionTitle) ? '<h2>'.$optionTitle.'</h2>' : '');
+		echo ($optionTitle ? '<h2>'.$optionTitle.'</h2>' : '');
 		echo '
 		<script type="text/javascript">
 			id_language = Number('.$defaultLanguage.');
 		</script>
 		'.(($this->formOptions) ? '<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">' : '').'
 			<fieldset>';
-				echo (isset($optionTitle) ? '<legend>
+				echo ($optionTitle ? '<legend>
 					<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" />'
 					.$optionTitle.'</legend>' : '');
 		if ($optionDescription)
@@ -1711,10 +1715,20 @@ abstract class AdminTabCore
 			if (isset($field['defaultValue']) && !$val)
 				$val = $field['defaultValue'];
 
-			$isDisabled = (Shop::isMultiShopActivated() && isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType()) ? true : false;
+			// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
+			$isDisabled = $isInvisible = false;
+			if (Shop::isMultiShopActivated())
+			{
+				if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+				{
+					$isDisabled = true;
+					$isInvisible = true;
+				}
+				else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					$isDisabled = true;
+			}
 
-			echo $this->getHtmlDefaultConfigurationValue($key, $this->_languages);
-			echo '<label>'.$field['title'].' </label>
+			echo '<div id="conf_id_'.$key.'"><label>'.$field['title'].' </label>
 			<div class="margin-form">';
 			switch ($field['type'])
 			{
@@ -1770,12 +1784,15 @@ abstract class AdminTabCore
 				break;
 			}
 
+			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible)
+				echo '<div class="preference_default_multishop"><label><input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '') .' onclick="$(\'#conf_id_'.$key.' input, #conf_id_'.$key.' textarea, #conf_id_'.$key.' select\').attr(\'disabled\', $(this).attr(\'checked\')); $(\'#conf_id_'.$key.' .preference_default_multishop input\').attr(\'disabled\', false); $(\'#conf_id_'.$key.' label.conf_title\').toggleClass(\'isDisabled\');" /> '.$this->l('Use default value').'</label></div>';
+
 			if (isset($field['required']) AND $field['required'])
 				echo ' <sup>*</sup>';
 
 			echo (isset($field['desc']) ? '<p>'.$field['desc'].'</p>' : '');
-			echo ($isDisabled) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
-			echo '</div>';
+			echo ($isInvisible) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
+			echo '</div></div>';
 		}
 			echo '<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitOptions'.$this->table.'" class="button" />
@@ -2121,40 +2138,6 @@ EOF;
 		return $url;
 	}
 
-	/**
-	 * Display the button to set default value of a configuration field
-	 * 
-	 * @todo Improve system for modules
-	 * @param string $key
-	 * @return string
-	 */
-	protected function getHtmlDefaultConfigurationValue($key, $languages)
-	{
-		if (Configuration::isLangKey($key))
-		{
-			$testContext = false;
-			foreach ($languages as $lang)
-				if (($this->context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
-					|| ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
-						$testContext = true;
-		}
-		else
-		{
-			$testContext = (($this->context->shop->getContextType() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
-							|| ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
-		}
-		
-		if (Shop::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL && $testContext)
-		{
-			echo '<div class="multishop_config">';
-				echo '<a href="#" title="'.$this->l('Click here to use default value for this field').'"><img src="../img/admin/multishop_config.png" /></a>';
-				echo '<div>';
-					echo '<input type="checkbox" name="configUseDefault['.$key.']" value="1" /> '.$this->l('Use default value');
-				echo '</div>';
-			echo '</div>';
-		}
-	}
-	
 	/**
 	 * Process the submission of a configuration form
 	 *
