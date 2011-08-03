@@ -52,24 +52,59 @@ class AdminMeta extends AdminTab
 		);
 		
 		// Display route options only if friendly URL is activated
+		$this->_fieldsRoutes = array();
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
-			$this->_fieldsOptions += array(
-				'PS_ROUTE_product_rule' => array('title' => $this->l('Route to products'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['product_rule']['rule']),
-				'PS_ROUTE_product_rule2' => array('title' => $this->l('Route to products with category'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['product_rule2']['rule']),
-				'PS_ROUTE_category_rule' => array('title' => $this->l('Route to category'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['category_rule']['rule']),
-				'PS_ROUTE_supplier_rule' => array('title' => $this->l('Route to supplier'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['supplier_rule']['rule']),
-				'PS_ROUTE_manufacturer_rule' => array('title' => $this->l('Route to manufacturer'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['manufacturer_rule']['rule']),
-				'PS_ROUTE_cms_rule' => array('title' => $this->l('Route to CMS page'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['cms_rule']['rule']),
-				'PS_ROUTE_cms_category_rule' => array('title' => $this->l('Route to CMS category'), 'desc' => $this->l('Select URL pattern if friendly url is activated'), 'validation' => 'isString', 'type' => 'text', 'size' => 50, 'defaultValue' => Dispatcher::getInstance()->defaultRoutes['cms_category_rule']['rule']),
-			);
+			$this->addFieldRoute('product_rule', $this->l('Route to products'));
+			$this->addFieldRoute('category_rule', $this->l('Route to category'));
+			$this->addFieldRoute('supplier_rule', $this->l('Route to supplier'));
+			$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
+			$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
+			$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
 		}
 	}
-
-	public function display()
+	
+	public function addFieldRoute($routeID, $title)
 	{
-		$this->warnDomainName();
-		parent::display();
+		$keywords = array();
+		foreach (Dispatcher::getInstance()->defaultRoutes[$routeID]['keywords'] as $keyword => $data)
+			$keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
+
+		$this->_fieldsRoutes['PS_ROUTE_'.$routeID] = array(
+			'title' =>	$title,
+			'desc' => sprintf($this->l('Keywords: %s'), implode(', ', $keywords)),
+			'validation' => 'isString',
+			'type' => 'text',
+			'size' => 70,
+			'defaultValue' => Dispatcher::getInstance()->defaultRoutes[$routeID]['rule'],
+		);
+	}
+	
+	protected function updateOptions($token)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$this->submitConfiguration($this->_fieldsRoutes);
+			parent::updateOptions($token);
+		}
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+	}
+
+	public function displayOptionsList($fieldsOptions = null, $optionTitle = null, $optionDescription = null)
+	{
+		// Desactivate <form>, we want to add our own tags
+		$this->formOptions = false;
+		
+		$tab = Tab::getTab($this->context->language->id, $this->id);
+		echo '<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">';
+		parent::displayOptionsList();
+		if ($this->_fieldsRoutes)
+		{
+			$desc = $this->l('You can change here the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.');
+			parent::displayOptionsList($this->_fieldsRoutes, $this->l('Schema of URLs'), $desc);
+		}
+		echo '</form>';
 	}
 	
 	public function displayForm($isMainTab = true)
@@ -215,49 +250,47 @@ class AdminMeta extends AdminTab
 		
 		$rule = Tools::getValue('PS_ROUTE_'.$routeID);
 		if (!$rule || $rule == $defaultRoutes[$routeID]['rule'])
+		{
+			Configuration::updateValue('PS_ROUTE_'.$routeID, '');
 			return ;
+		}
 
 		$errors = array();
 		if (!Dispatcher::getInstance()->validateRoute($routeID, $rule, $errors))
 		{
 			foreach ($errors as $error)
-				$this->_errors[] = sprintf('Keyword "%1$s" required for route "%2$s" (rule: "%3$s")', $error, $routeID, htmlspecialchars($rule));
+				$this->_errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $routeID, htmlspecialchars($rule));
 		}
 		else
 			Configuration::updateValue('PS_ROUTE_'.$routeID, $rule);
 	}
 
-	public function updateOptionPsDispatcherRouteProductRule()
+	public function updateOptionPsRouteProductRule()
 	{
 		$this->checkAndUpdateRoute('product_rule');
 	}
-	
-	public function updateOptionPsDispatcherRouteProductRule2()
-	{
-		$this->checkAndUpdateRoute('product_rule2');
-	}
-	
-	public function updateOptionPsDispatcherRouteCategoryRule()
+
+	public function updateOptionPsRouteCategoryRule()
 	{
 		$this->checkAndUpdateRoute('category_rule');
 	}
 	
-	public function updateOptionPsDispatcherRouteSupplierRule()
+	public function updateOptionPsRouteSupplierRule()
 	{
 		$this->checkAndUpdateRoute('supplier_rule');
 	}
 	
-	public function updateOptionPsDispatcherRouteManufacturerRule()
+	public function updateOptionPsRouteManufacturerRule()
 	{
 		$this->checkAndUpdateRoute('manufacturer_rule');
 	}
 	
-	public function updateOptionPsDispatcherRouteCmsRule()
+	public function updateOptionPsRouteCmsRule()
 	{
 		$this->checkAndUpdateRoute('cms_rule');
 	}
 	
-	public function updateOptionPsDispatcherRouteCmsCategoryRule()
+	public function updateOptionPsRouteCmsCategoryRule()
 	{
 		$this->checkAndUpdateRoute('cms_category_rule');
 	}

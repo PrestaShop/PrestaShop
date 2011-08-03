@@ -149,6 +149,9 @@ abstract class AdminTabCore
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
+	
+	/** @var bool If false, don't add form tags in options forms */
+	protected $formOptions = true;
 
 	protected	$_languages = NULL;
 	protected	$_defaultFormLanguage = NULL;
@@ -1666,28 +1669,39 @@ abstract class AdminTabCore
 
 	/**
 	 * Options lists
+	 * 
+	 * @param array $fieldsOptions Since 1.5.0
+	 * @param string $optionTitle Since 1.5.0
 	 */
-	public function displayOptionsList()
+	public function displayOptionsList($fieldsOptions = null, $optionTitle = null, $optionDescription = null)
 	{
-		if (!isset($this->_fieldsOptions) OR !sizeof($this->_fieldsOptions))
+		if (is_null($fieldsOptions))
+			$fieldsOptions = $this->_fieldsOptions;
+			
+		if (is_null($optionTitle))
+			$optionTitle = $this->optionTitle;
+
+		if (!isset($fieldsOptions) OR !sizeof($fieldsOptions))
 			return false;
 		
 		$defaultLanguage = (int)$this->context->language->id;
 		$this->_languages = Language::getLanguages(false);
 		$tab = Tab::getTab($defaultLanguage, $this->id);
 		echo '<br /><br />';
-		echo (isset($this->optionTitle) ? '<h2>'.$this->optionTitle.'</h2>' : '');
+		echo (isset($optionTitle) ? '<h2>'.$optionTitle.'</h2>' : '');
 		echo '
 		<script type="text/javascript">
 			id_language = Number('.$defaultLanguage.');
 		</script>
-		<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">
+		'.(($this->formOptions) ? '<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">' : '').'
 			<fieldset>';
-				echo (isset($this->optionTitle) ? '<legend>
+				echo (isset($optionTitle) ? '<legend>
 					<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" />'
-					.$this->optionTitle.'</legend>' : '');
+					.$optionTitle.'</legend>' : '');
+		if ($optionDescription)
+			echo '<p class="optionsDescription">'.$optionDescription.'</p>';
 
-		foreach ($this->_fieldsOptions AS $key => $field)
+		foreach ($fieldsOptions AS $key => $field)
 		{
 			$val = Tools::getValue($key, Configuration::get($key));
 			if ($field['type'] != 'textLang')
@@ -1767,8 +1781,9 @@ abstract class AdminTabCore
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitOptions'.$this->table.'" class="button" />
 				</div>
 			</fieldset>
-			<input type="hidden" name="token" value="'.$this->token.'" />
-		</form>';
+			<input type="hidden" name="token" value="'.$this->token.'" />';
+		if ($this->formOptions)
+			echo '</form>';
 	}
 
 	/**
