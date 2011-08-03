@@ -184,6 +184,8 @@ class ProductCore extends ObjectModel
 
 	/*** @var array Tags */
 	public		$tags;
+
+	public 		$isFullyLoaded = false;
 	
 	protected	$langMultiShop = true;
 
@@ -300,6 +302,7 @@ class ProductCore extends ObjectModel
 		
 		if ($full AND $this->id)
 		{
+			$this->isFullyLoaded = $full;
 			$this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
 			$this->manufacturer_name = Manufacturer::getNameById((int)$this->id_manufacturer);
 			$this->supplier_name = Supplier::getNameById((int)$this->id_supplier);
@@ -2691,8 +2694,12 @@ class ProductCore extends ObjectModel
 
 	public function getTags($id_lang)
 	{
+		if (!$this->isFullyLoaded && is_null($this->tags))
+			$this->tags = Tag::getProductTags($this->id);
+			
 		if (!($this->tags AND key_exists($id_lang, $this->tags)))
 			return '';
+
 		$result = '';
 		foreach ($this->tags[$id_lang] AS $tagName)
 			$result .= $tagName.', ';

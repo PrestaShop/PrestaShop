@@ -43,31 +43,70 @@ class DispatcherCore
 	public $defaultRoutes = array(
 		'product_rule' => array(
 			'controller' =>	'product',
-			'rule' =>		'{number:id_product}-{text}.html',
+			'rule' =>		'{category:/}{id}-{rewrite}{-:ean13}.html',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_product'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'ean13' =>			array('regexp' => '[a-zA-Z0-9-]*'),
+				'category' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'reference' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'manufacturer' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'supplier' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'price' =>			array('regexp' => '[0-9\.,]*'),
+				'tags' =>			array('regexp' => '[a-zA-Z0-9-]*'),
+			),
 		),
 		'category_rule' => array(
 			'controller' =>	'category',
-			'rule' =>		'{number:id_category}-{text}',
-		),
-		'product_rule2' => array(
-			'controller' =>	'product',
-			'rule' =>		'{text1}/{number:id_product}-{text2}.html',
+			'rule' =>		'{id}-{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+			),
 		),
 		'supplier_rule' => array(
 			'controller' =>	'supplier',
-			'rule' =>		'{number:id_supplier}__{text}',
+			'rule' =>		'{id}__{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+			),
 		),
 		'manufacturer_rule' => array(
 			'controller' =>	'manufacturer',
-			'rule' =>		'{number:id_manufacturer}_{text}',
+			'rule' =>		'{id}_{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+			),
 		),
 		'cms_rule' => array(
 			'controller' =>	'cms',
-			'rule' =>		'content/{number:id_cms}-{text}',
+			'rule' =>		'content/{id}-{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_cms'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+			),
 		),
 		'cms_category_rule' => array(
 			'controller' =>	'cms',
-			'rule' =>		'content/category/{number:id_cms_category}-{text}',
+			'rule' =>		'content/category/{id}-{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
+			),
 		),
 	);
 
@@ -84,16 +123,6 @@ class DispatcherCore
 	 * @var array
 	 */
 	protected $routes = array();
-
-	/**
-	 * List of allowed keywords in routes
-	 * 
-	 * @var array
-	 */
-	protected $keywords = array(
-		'number' =>	'[0-9]+',
-		'text' =>	'[a-zA-Z0-9-]*',
-	);
 
 	/**
 	 * Current controller name
@@ -173,7 +202,7 @@ class DispatcherCore
 	{
 		$context = Context::getContext();
 		foreach ($this->defaultRoutes as $id => $route)
-			$this->addRoute($id, $route['rule'], $route['controller']);
+			$this->addRoute($id, $route['rule'], $route['controller'], $route['keywords']);
 
 		if ($this->useRoutes)
 		{
@@ -198,7 +227,7 @@ class DispatcherCore
 			// Load custom routes
 			foreach ($this->defaultRoutes as $routeID => $routeData)
 				if ($customRoute = Configuration::get('PS_ROUTE_'.$routeID))
-					$this->addRoute($routeID, $customRoute, $routeData['controller']);
+					$this->addRoute($routeID, $customRoute, $routeData['controller'], $routeData['keywords']);
 		}
 	}
 	
@@ -208,44 +237,74 @@ class DispatcherCore
 	 * @param string $rule Url rule
 	 * @param string $controller Controller to call if request uri match the rule
 	 */
-	public function addRoute($routeID, $rule, $controller)
-	{	
+	public function addRoute($routeID, $rule, $controller, $keywords = array())
+	{
 		$regexp = preg_quote($rule, '#');
-		$required = array();
-		preg_match_all('#\\\{('.implode('|', array_keys($this->keywords)).')[0-9]*(\\\:([a-z0-9_]+))?\\\}#', $regexp, $m);
-		for ($i = 0, $total = count($m[0]); $i < $total; $i++)
-			if ($m[3][$i])
+		if ($keywords)
+		{
+			$transformKeywords = array();
+			preg_match_all('#\\\{(([^{}]+)\\\:)?('.implode('|', array_keys($keywords)).')(\\\:([^{}]+))?\\\}#', $regexp, $m);
+			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
 			{
-				$regexp = str_replace($m[0][$i], '(?P<'.$m[3][$i].'>'.$this->keywords[$m[1][$i]].')', $regexp);
-				$required[$m[3][$i]] = $m[1][$i];
+				$prepend = $m[2][$i];
+				$keyword = $m[3][$i];
+				$append = $m[5][$i];
+				$transformKeywords[$keyword] = array(
+					'required' =>	isset($keywords[$keyword]['param']),
+					'prepend' =>	stripslashes($prepend),
+					'append' =>		stripslashes($append),
+				);
+
+				if (isset($keywords[$keyword]['param']))
+					$regexp = str_replace($m[0][$i], (($prepend) ? '('.$prepend.')?' : '').'(?P<'.$keywords[$keyword]['param'].'>'.$keywords[$keyword]['regexp'].')'.(($append) ? '('.$append.')?' : ''), $regexp);
+				else
+					$regexp = str_replace($m[0][$i], (($prepend) ? '('.$prepend.')?' : '').'('.$keywords[$keyword]['regexp'].')'.(($append) ? '('.$append.')?' : ''), $regexp);
+				
 			}
-			else
-				$regexp = str_replace($m[0][$i], '('.$this->keywords[$m[1][$i]].')', $regexp);
+			$keywords = $transformKeywords;
+		}
 
 		$regexp = '#^/'.$regexp.'#';
 		$this->routes[$routeID] = array(
 			'rule' =>		$rule,
 			'regexp' =>		$regexp,
 			'controller' =>	$controller,
-			'required' =>	$required,
+			'keywords' =>	$keywords,
 		);
 	}
-	
+
+	/**
+	 * Check if a keyword is written in a route rule
+	 * 
+	 * @param string $routeID
+	 * @param string $keyword
+	 * @return bool
+	 */
+	public function hasKeyword($routeID, $keyword)
+	{
+		if (!isset($this->routes[$routeID]))
+			return false;
+			
+		return preg_match('#\{([^{}]+:)?'.preg_quote($keyword, '#').'(:[^{}])?\}#', $this->routes[$routeID]['rule']);
+	}
+
+	/**
+	 * Check if a route rule contain all required keywords of default route definition
+	 * 
+	 * @param string $routeID
+	 * @param string $rule Rule to verify
+	 * @param array $errors List of missing keywords
+	 */
 	public function validateRoute($routeID, $rule, &$errors = array())
 	{
 		$errors = array();
 		if (!isset($this->defaultRoutes[$routeID]))
 			return false;
 
-		$required = array();
-		preg_match_all('#\{('.implode('|', array_keys($this->keywords)).')[0-9]*:([a-z0-9_]+)\}#', $this->defaultRoutes[$routeID]['rule'], $m);
-		for ($i = 0, $total = count($m[0]); $i < $total; $i++)
-			$required[] = $m[2][$i];
-				
-		foreach ($required as $requiredKey)
-			if (!preg_match('#\{('.implode('|', array_keys($this->keywords)).')[0-9]*:'.$requiredKey.'\}#', $rule))
-				$errors[] = $requiredKey;
-				
+		foreach ($this->defaultRoutes[$routeID]['keywords'] as $keyword => $data)
+			if (isset($data['param']) && !preg_match('#\{([^{}]+:)?'.$keyword.'(:[^{}])?\}#', $rule))
+				$errors[] = $keyword;
+
 		return (count($errors)) ? false : true;
 	}
 
@@ -267,13 +326,16 @@ class DispatcherCore
 			return 'index.php?controller='.$routeID.(($query) ? '&'.$query : '');
 		}
 		$route = $this->routes[$routeID];
-		
+
 		// Check required fields
 		$queryParams = array();
-		foreach (array_keys($route['required']) as $key)
+		foreach ($route['keywords'] as $key => $data)
 		{
+			if (!$data['required'])
+				continue;
+
 			if (!array_key_exists($key, $params))
-				die("Dispatcher::createUrl() miss required parameter '$key'");
+				die("Dispatcher::createUrl() miss required parameter '$key' for route '$routeID'");
 			$queryParams[$key] = $params[$key];
 		}
 
@@ -282,11 +344,17 @@ class DispatcherCore
 		{
 			$url = $route['rule'];
 			foreach ($params as $key => $value)
-				if (isset($route['required'][$key]))
-					$url = str_replace('{'.$route['required'][$key].':'.$key.'}', $params[$key], $url);
+			{
+				if (!isset($route['keywords'][$key]))
+					continue;
+				$data = $route['keywords'][$key];
+				if ($params[$key])
+					$replace = $route['keywords'][$key]['prepend'].$params[$key].$route['keywords'][$key]['append'];
 				else
-					$url = str_replace('{'.$key.'}', $value, $url);
-			$url = preg_replace('#\{[a-z0-9]+(:[a-z0-9_]+)?\}#', '', $url);
+					$replace = '';
+				$url = preg_replace('#\{([^{}]+:)?'.$key.'(:[^{}])?\}#', $replace, $url);
+			}
+			$url = preg_replace('#\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
@@ -336,7 +404,6 @@ class DispatcherCore
 							$_GET[$k] = $v;
 					break;
 				}
-			
 			$this->controller = $controller;
 		}
 		// Default mode, take controller from url

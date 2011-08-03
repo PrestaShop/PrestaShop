@@ -62,98 +62,113 @@ class LinkCore
 	/**
 	 * Create a link to a product
 	 *
-	 * @param mixed $id_product ID of the product OR a Product object
-	 * @param string $alias If $id_product is not a object, this argument is same as obj->link_rewrite
-	 * @param string $category If $id_product is not a object, name of the product category
-	 * @param string $ean13
+	 * @param mixed $product Product object (can be an ID product, but deprecated)
+	 * @param string $alias Deprecated
+	 * @param string $category Deprecated
+	 * @param string $ean13 Deprecated
 	 * @param int $id_lang
 	 * @param int $id_shop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
 	 * @return string
 	 */
-	public function getProductLink($id_product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null)
+	public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null)
 	{
+		$dispatcher = Dispatcher::getInstance();
 		$url = _PS_BASE_URL_.__PS_BASE_URI__;
+		
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
 		// @todo use specific method ?
 		if ($id_shop && ($shop = Shop::getShop($id_shop)))
 			$url = 'http://'.$shop['domain'].'/'.$shop['uri'];
 		$url .= $this->getLangLink($id_lang);
+		
+		if (!is_object($product))
+			$product = new Product($product, false, $id_lang);
 
-		if (is_object($id_product))
-		{
-			$product = clone($id_product);
-			$id_product = $product->id;
-			$category = $product->category;
-			$alias = $product->link_rewrite;
-			$ean13 = $product->ean13;
-		}
+		// Set available keywords
+		$params = array();
+		$params['id'] = $product->id;
+		$params['rewrite'] = $product->link_rewrite;
+		$params['ean13'] = $product->ean13;
+		$params['category'] = $product->category;
+		$params['meta_keywords'] =	Tools::str2url($product->meta_keywords);
+		$params['meta_title'] = Tools::str2url($product->meta_title);
 
-		if ($category AND $category != 'home')
-			return $url.Dispatcher::getInstance()->createUrl('product_rule2', array(
-				'id_product' =>	$id_product,
-				'text1' =>		$category,
-				'text2' =>		$alias.(($ean13) ? '-'.$ean13 : ''),
-			), ($alias && $this->allow));
-		else
-			return $url.Dispatcher::getInstance()->createUrl('product_rule', array(
-				'id_product' =>	$id_product,
-				'text' =>		(($alias) ? $alias : '').(($ean13) ? '-'.$ean13 : ''),
-			), ($alias && $this->allow));
+		if ($dispatcher->hasKeyword('product_rule', 'manufacturer'))
+			$params['manufacturer'] = Tools::str2url($product->isFullyLoaded ? $product->manufacturer_name : Manufacturer::getNameById($product->id_manufacturer));
+			
+		if ($dispatcher->hasKeyword('product_rule', 'supplier'))
+			$params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
+			
+		if ($dispatcher->hasKeyword('product_rule', 'price'))
+			$params['supplier'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, NULL, 6, NULL, false, true, 1, false, NULL, NULL, NULL, $product->specificPrice);
+
+		if ($dispatcher->hasKeyword('product_rule', 'tags'))
+			$params['tags'] = Tools::str2url($product->getTags($id_lang));
+
+		return $url.$dispatcher->createUrl('product_rule', $params, $this->allow);
 	}
 
 	/**
 	 * Create a link to a category
 	 *
-	 * @param mixed $id_category ID of the category OR a Category object
-	 * @param string $alias If $id_category is not a object, this argument is same as obj->link_rewrite
+	 * @param mixed $category Category object (can be an ID category, but deprecated)
+	 * @param string $alias Deprecated
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCategoryLink($id_category, $alias = NULL, $id_lang = NULL)
+	public function getCategoryLink($category, $alias = NULL, $id_lang = NULL)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
-		if (is_object($id_category))
-		{
-			$category = clone($id_category);
-			$id_category = $category->id;
-			$alias = $category->link_rewrite;
-		}
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
-		return $url.Dispatcher::getInstance()->createUrl('category_rule', array(
-			'id_category' =>	$id_category,
-			'text' =>			($alias) ? $alias : '',
-		), ($alias && $this->allow));
+		if (!is_object($category))
+			$category = new Category($category, $id_lang);
+
+		// Set available keywords
+		$params = array();
+		$params['id'] = $category->id;
+		$params['rewrite'] = $category->link_rewrite;
+		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
+		$params['meta_title'] = Tools::str2url($category->meta_title);
+
+		return $url.Dispatcher::getInstance()->createUrl('category_rule', $params, $this->allow);
 	}
 
 	/**
 	 * Create a link to a CMS category
 	 *
-	 * @param mixed $id_category ID of the category OR a CmsCategory object
-	 * @param string $alias If $id_category is not a object, this argument is same as obj->link_rewrite
+	 * @param mixed $category CMSCategory object (can be an ID category, but deprecated)
+	 * @param string $alias Deprecated
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSCategoryLink($id_category, $alias = NULL, $id_lang = NULL)
+	public function getCMSCategoryLink($category, $alias = NULL, $id_lang = NULL)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
-		if (is_object($id_category))
-		{
-			$category = clone($id_category);
-			$id_category = $category->id;
-			$alias = $category->link_rewrite;
-		}
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
-		return $url.Dispatcher::getInstance()->createUrl('cms_category_rule', array(
-			'id_cms_category' =>	$id_category,
-			'text' =>				($alias) ? $alias : '',
-		), ($alias && $this->allow));
+		if (!is_object($category))
+			$category = new CMSCategory($category, $id_lang);
+
+		// Set available keywords
+		$params = array();
+		$params['id'] = $category->id;
+		$params['rewrite'] = $category->link_rewrite;
+		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
+		$params['meta_title'] = Tools::str2url($category->meta_title);
+
+		return $url.Dispatcher::getInstance()->createUrl('cms_category_rule', $params, $this->allow);
 	}
 
 	/**
 	 * Create a link to a CMS page
 	 *
-	 * @param mixed $cms ID of the CMS page OR a Cms object
-	 * @param string $alias If $cms is not a object, this argument is same as obj->link_rewrite
+	 * @param mixed $cms CMS object (can be an ID CMS, but deprecated)
+	 * @param string $alias Deprecated
 	 * @param bool $ssl
 	 * @param int $id_lang
 	 * @return string
@@ -162,67 +177,74 @@ class LinkCore
 	{
 		$base = (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
 		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
-		if (is_object($cms))
-		{
-			$id_cms = $cms->id;
-			$alias = $cms->link_rewrite;
-		}
-		else
-			$id_cms = $cms;
+		if (!is_object($cms))
+			$cms = new CMS($cms, $id_lang);
 
-		return $url.Dispatcher::getInstance()->createUrl('cms_rule', array(
-			'id_cms' =>	$id_cms,
-			'text' =>	($alias) ? $alias : '',
-		), ($alias && $this->allow));
+		// Set available keywords
+		$params = array();
+		$params['id'] = $cms->id;
+		$params['rewrite'] = $cms->link_rewrite;
+		$params['meta_keywords'] =	Tools::str2url($cms->meta_keywords);
+		$params['meta_title'] = Tools::str2url($cms->meta_title);
+
+		return $url.Dispatcher::getInstance()->createUrl('cms_rule', $params, $this->allow);
 	}
 
 	/**
 	 * Create a link to a supplier
 	 *
-	 * @param mixed $id_supplier ID of the supplier page OR a Supplier object
-	 * @param string $alias If $id_supplier is not a object, this argument is same as obj->link_rewrite
+	 * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
+	 * @param string $alias Deprecated
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getSupplierLink($id_supplier, $alias = NULL, $id_lang = NULL)
+	public function getSupplierLink($supplier, $alias = NULL, $id_lang = NULL)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
-		if (is_object($id_supplier))
-		{
-			$supplier = clone($id_supplier);
-			$id_supplier = $supplier->id;
-			$alias = $supplier->link_rewrite;
-		}
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
-		return $url.Dispatcher::getInstance()->createUrl('supplier_rule', array(
-			'id_supplier' =>	$id_supplier,
-			'text' =>			($alias) ? $alias : '',
-		), ($alias && $this->allow));
+		if (!is_object($supplier))
+			$supplier = new Supplier($supplier, $id_lang);
+
+		// Set available keywords
+		$params = array();
+		$params['id'] = $supplier->id;
+		$params['rewrite'] = $supplier->link_rewrite;
+		$params['meta_keywords'] =	Tools::str2url($supplier->meta_keywords);
+		$params['meta_title'] = Tools::str2url($supplier->meta_title);
+
+		return $url.Dispatcher::getInstance()->createUrl('supplier_rule', $params, $this->allow);
 	}
 
 	/**
 	 * Create a link to a manufacturer
 	 *
-	 * @param mixed $id_manufacturer ID of the manufacturer page OR a Supplier object
-	 * @param string $alias If $id_manufacturer is not a object, this argument is same as obj->link_rewrite
+	 * @param mixed $manufacturer Manufacturer object (can be an ID supplier, but deprecated)
+	 * @param string $alias Deprecated
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getManufacturerLink($id_manufacturer, $alias = NULL, $id_lang = NULL)
+	public function getManufacturerLink($manufacturer, $alias = NULL, $id_lang = NULL)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
-		if (is_object($id_manufacturer))
-		{
-			$manufacturer = clone($id_manufacturer);
-			$id_manufacturer = $manufacturer->id;
-			$alias = $manufacturer->link_rewrite;
-		}
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
-		return $url.Dispatcher::getInstance()->createUrl('manufacturer_rule', array(
-			'id_manufacturer' =>	$id_manufacturer,
-			'text' =>				($alias) ? $alias : '',
-		), ($alias && $this->allow));
+		if (!is_object($manufacturer))
+			$manufacturer = new Manufacturer($manufacturer, $id_lang);
+
+		// Set available keywords
+		$params = array();
+		$params['id'] = $manufacturer->id;
+		$params['rewrite'] = $manufacturer->link_rewrite;
+		$params['meta_keywords'] =	Tools::str2url($manufacturer->meta_keywords);
+		$params['meta_title'] = Tools::str2url($manufacturer->meta_title);
+
+		return $url.Dispatcher::getInstance()->createUrl('manufacturer_rule', $params, $this->allow);
 	}
 
 	/**
@@ -279,6 +301,7 @@ class LinkCore
 
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
+
 		if (is_array($request))
 		{
 			unset($request['controller']);

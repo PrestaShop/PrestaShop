@@ -1594,3 +1594,14 @@ a.action_module_delete {
 	background-color: #FAEEC2;
 	border: 1px dotted #000000;
 }
+
+fieldset .optionsDescription
+{
+    background: url("../img/admin/help2.png") no-repeat scroll 6px center #DDE9F7;
+    border: 1px solid #50B0EC;
+    color: #7F7F7F;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 0.85em;
+    margin-bottom: 15px;
+    padding: 5px 5px 5px 40px;
+}
