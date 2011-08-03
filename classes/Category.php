@@ -606,25 +606,28 @@ class CategoryCore extends ObjectModel
 	 * @param int $id_lang
 	 * @return array 
 	 */
-	public static function getChildrenWithNbSelectedSubCat($id_parent, $selectedCat,  $id_lang)
+	public static function getChildrenWithNbSelectedSubCat($id_parent, $selectedCat,  $id_lang, Shop $shop = null)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT c.`id_category`, c.`level_depth`, cl.`name`, IF((
-			SELECT COUNT(*) 
-			FROM `'._DB_PREFIX_.'category` c2
-			WHERE c2.`id_parent` = c.`id_category`
-		) > 0, 1, 0) AS has_children, '.($selectedCat ? '(
-			SELECT count(c3.`id_category`) 
-			FROM `'._DB_PREFIX_.'category` c3 
-			WHERE c3.`nleft` > c.`nleft` 
-			AND c3.`nright` < c.`nright`
-			AND c3.`id_category`  IN ('.$selectedCat.')
-		)' : '0').' AS nbSelectedSubCat
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`
-		WHERE `id_lang` = '.(int)($id_lang).'
-		AND c.`id_parent` = '.(int)($id_parent).'
-		ORDER BY `position` ASC');
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+
+		$sql = 'SELECT c.`id_category`, c.`level_depth`, cl.`name`, IF((
+						SELECT COUNT(*) 
+						FROM `'._DB_PREFIX_.'category` c2
+						WHERE c2.`id_parent` = c.`id_category`
+					) > 0, 1, 0) AS has_children, '.($selectedCat ? '(
+						SELECT count(c3.`id_category`) 
+						FROM `'._DB_PREFIX_.'category` c3 
+						WHERE c3.`nleft` > c.`nleft` 
+						AND c3.`nright` < c.`nright`
+						AND c3.`id_category`  IN ('.$selectedCat.')
+					)' : '0').' AS nbSelectedSubCat
+				FROM `'._DB_PREFIX_.'category` c
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->sqlLang('cl').'
+				WHERE `id_lang` = '.(int)($id_lang).'
+					AND c.`id_parent` = '.(int)($id_parent).'
+				ORDER BY `position` ASC';
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 	
 	/**
@@ -636,10 +639,10 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function duplicateProductCategories($id_old, $id_new)
 	{
-		$result = Db::getInstance()->ExecuteS('
-		SELECT `id_category`
-		FROM `'._DB_PREFIX_.'category_product`
-		WHERE `id_product` = '.(int)($id_old));
+		$sql = 'SELECT `id_category`
+				FROM `'._DB_PREFIX_.'category_product`
+				WHERE `id_product` = '.(int)$id_old;
+		$result = Db::getInstance()->ExecuteS($sql);
 
 		$row = array();
 		if ($result)
