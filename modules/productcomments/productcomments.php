@@ -66,7 +66,7 @@ class ProductComments extends Module
 				return false;
 		if (parent::install() == false OR $this->registerHook('productTab') == false
 		OR $this->registerHook('extraProductComparison') == false OR $this->registerHook('productTabContent') == false
-		OR $this->registerHook('header') == false OR !Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30)
+		OR $this->registerHook('header') == false OR $this->registerHook('extraRight') == false OR !Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30)
 		OR !Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', 0)
 		OR !Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', 1))
 			return false;
@@ -494,6 +494,38 @@ class ProductComments extends Module
 
 		return ($this->display(__FILE__, '/tab.tpl'));
 	}
+	
+	public function hookExtraRight($params)
+	{			
+		require_once(dirname(__FILE__).'/ProductComment.php');
+		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
+				
+		$id_guest = (!$id_customer = (int)Context::getContext()->cookie->id_customer) ? (int)Context::getContext()->cookie->id_guest : false;
+		$customerComment = ProductComment::getByCustomer((int)(Tools::getValue('id_product')), (int)Context::getContext()->cookie->id_customer, true, (int)$id_guest);
+		
+		$averages = ProductComment::getAveragesByProduct((int)Tools::getValue('id_product'), Context::getContext()->language->id);
+		
+		$averageTotal = 0;
+		foreach ($averages AS $average)
+			$averageTotal += (float)($average);
+		$averageTotal = count($averages) ? ($averageTotal / count($averages)) : 0;
+
+		$image = Product::getCover((int)($_GET['id_product']));
+		
+		Context::getContext()->smarty->assign(array(
+			'logged' => (int)Context::getContext()->cookie->id_customer,
+			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
+			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
+			'mediumSize' => Image::getSize('medium'),
+			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), Context::getContext()->language->id),
+			'action_url' => '',
+			'averageTotal' => (int)$averageTotal,
+			'too_early' => ($customerComment AND (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) > time()),
+			'nbComments' => (int)(ProductComment::getCommentNumber((int)($_GET['id_product'])))
+		));
+		
+		return ($this->display(__FILE__, '/productcomments-extra.tpl'));
+	}
 
 	private function _frontOfficePostProcess()
 	{
@@ -583,6 +615,7 @@ class ProductComments extends Module
 
 	public function hookHeader()
 	{
+		$this->context->controller->addCSS($this->_path.'productcomments.css', 'all');
 		$this->_frontOfficePostProcess();
 	}
 	
