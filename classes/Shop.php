@@ -369,6 +369,8 @@ class ShopCore extends ObjectModel
 					self::$shops[$row['id_group_shop']] = array(
 						'id' =>				$row['id_group_shop'],
 						'name' => 			$row['group_name'],
+						'share_customer' =>	$row['share_customer'],
+						'share_order' =>	$row['share_order'],
 						'share_stock' =>	$row['share_stock'],
 						'shops' => 			array(),
 					);
@@ -478,6 +480,9 @@ class ShopCore extends ObjectModel
 			die('Wrong argument ($type) in Shop::getSharedShops() method');
 
 		Shop::cacheShops();
+		foreach (self::$shops as $groupData)
+			if (array_key_exists($shopID, $groupData['shops']) && $groupData[$type])
+				return array_keys($groupData['shops']);
 		return array($shopID);
 	}
 
@@ -742,4 +747,3 @@ class ShopCore extends ObjectModel
 		}
 	}
 }
-
