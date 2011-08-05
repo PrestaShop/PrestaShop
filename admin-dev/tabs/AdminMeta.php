@@ -44,15 +44,23 @@ class AdminMeta extends AdminTab
 			'url_rewrite' => array('title' => $this->l('Friendly URL'), 'width' => 120)
 		);
 		$this->_group = 'GROUP BY a.id_meta';
-		
-		$this->optionTitle = $this->l('URLs Setup');
-		$this->_fieldsOptions = array(
-			'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$this->context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
-			'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('URLs Setup'),
+				'fields' =>	array(
+					'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$this->context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+					'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+				),
+			),
+			'routes' => array(
+				'title' =>	$this->l('Schema of URLs'),
+				'description' => $this->l('You can change here the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'fields' => array(),
+			),
 		);
 		
 		// Display route options only if friendly URL is activated
-		$this->_fieldsRoutes = array();
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
 			$this->addFieldRoute('product_rule', $this->l('Route to products'));
@@ -70,7 +78,7 @@ class AdminMeta extends AdminTab
 		foreach (Dispatcher::getInstance()->defaultRoutes[$routeID]['keywords'] as $keyword => $data)
 			$keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
 
-		$this->_fieldsRoutes['PS_ROUTE_'.$routeID] = array(
+		$this->optionsList['routes']['fields']['PS_ROUTE_'.$routeID] = array(
 			'title' =>	$title,
 			'desc' => sprintf($this->l('Keywords: %s'), implode(', ', $keywords)),
 			'validation' => 'isString',
@@ -79,34 +87,7 @@ class AdminMeta extends AdminTab
 			'defaultValue' => Dispatcher::getInstance()->defaultRoutes[$routeID]['rule'],
 		);
 	}
-	
-	protected function updateOptions($token)
-	{
-		if ($this->tabAccess['edit'] === '1')
-		{
-			$this->submitConfiguration($this->_fieldsRoutes);
-			parent::updateOptions($token);
-		}
-		else
-			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-	}
 
-	public function displayOptionsList($fieldsOptions = null, $optionTitle = null, $optionDescription = null)
-	{
-		// Desactivate <form>, we want to add our own tags
-		$this->formOptions = false;
-		
-		$tab = Tab::getTab($this->context->language->id, $this->id);
-		echo '<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">';
-		parent::displayOptionsList();
-		if ($this->_fieldsRoutes)
-		{
-			$desc = $this->l('You can change here the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.');
-			parent::displayOptionsList($this->_fieldsRoutes, $this->l('Schema of URLs'), $desc);
-		}
-		echo '</form>';
-	}
-	
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
@@ -210,11 +191,13 @@ class AdminMeta extends AdminTab
 				$defaultLangIsValidated = !Tools::getValue('url_rewrite_'.$default_language) OR Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
 				$englishLangIsValidated = !Tools::getValue('url_rewrite_1') OR Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
 			}
+
 			if (!$defaultLangIsValidated AND !$englishLangIsValidated)
 			{
 				$this->_errors[] = Tools::displayError('Url rewrite field must be filled at least in default or english language.');
 				return false;
 			}
+
 			foreach ($langs as $lang)
 			{
 				$current = Tools::getValue('url_rewrite_'.$lang['id_lang']);
@@ -225,9 +208,8 @@ class AdminMeta extends AdminTab
 					else
 						$_POST['url_rewrite_'.$lang['id_lang']] = Tools::getValue('url_rewrite_1');
 			}
-		}
-		if (Tools::isSubmit('submitOptions'.$this->table) OR Tools::isSubmit('submitAddmeta'))
 			Module::hookExec('afterSaveAdminMeta');
+		}
 		
 		return parent::postProcess();
 	}

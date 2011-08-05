@@ -46,20 +46,24 @@ class AdminCurrencies extends AdminTab
 			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'float' => true, 'align' => 'center', 'width' => 50, 'search' => false),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
-
-		$this->optionTitle = $this->l('Currencies options');
-		$this->_fieldsOptions = array(
-			'PS_CURRENCY_DEFAULT' => array(
-				'title' => $this->l('Default currency:'),
-				'desc' => $this->l('The default currency used in shop')
-					.'<div class=warn"><img src="../img/admin/warn2.png" />'.$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
-					'cast' => 'intval',
-					'type' => 'select',
-					'identifier' => 'id_currency',
-					'list' => Currency::getCurrencies()
-				),
-		);
 		$this->_where = 'AND a.`deleted` = 0';
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Currencies options'),
+				'fields' =>	array(
+					'PS_CURRENCY_DEFAULT' => array(
+						'title' => $this->l('Default currency:'),
+						'desc' => $this->l('The default currency used in shop')
+							.'<div class=warn"><img src="../img/admin/warn2.png" />'.$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
+							'cast' => 'intval',
+							'type' => 'select',
+							'identifier' => 'id_currency',
+							'list' => Currency::getCurrencies()
+						),	
+				),
+			),
+		);
 
 		parent::__construct();
 	}
@@ -104,16 +108,6 @@ class AdminCurrencies extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::getValue('submitOptions'.$this->table))
-		{
-			foreach ($this->_fieldsOptions as $key => $field)
-			{
-				Configuration::updateValue($key, $field['cast'](Tools::getValue($key)));
-				if ($key == 'PS_CURRENCY_DEFAULT')
-					Currency::refreshCurrencies();
-			}
-			Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
-		}
 		elseif (Tools::isSubmit('submitExchangesRates'))
 		{
 			if (!$this->_errors[] = Currency::refreshCurrencies())
@@ -122,10 +116,17 @@ class AdminCurrencies extends AdminTab
 		else
 			parent::postProcess();
 	}
+	
+	public function updateOptionPsCurrencyDefault($value)
+	{
+		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
+		Currency::refreshCurrencies();
+	}
 
 	public function displayOptionsList()
 	{
 		parent::displayOptionsList();
+
 		echo '<br /><br />
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 			<fieldset>

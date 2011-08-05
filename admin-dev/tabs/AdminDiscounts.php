@@ -59,11 +59,16 @@ class AdminDiscounts extends AdminTab
 			'date_to' => array('title' => $this->l('To'), 'width' => 60, 'type' => 'date', 'align' => 'right'),
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
-	
-		$this->optionTitle = $this->l('Discounts options');
-		$this->_fieldsOptions = array(
-			'PS_VOUCHERS' => array('title' => $this->l('Enable vouchers:'), 'desc' => $this->l('Allow the use of vouchers in shop'), 'cast' => 'intval', 'type' => 'bool'),
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Discounts options'),
+				'fields' =>	array(
+					'PS_VOUCHERS' => array('title' => $this->l('Enable vouchers:'), 'desc' => $this->l('Allow the use of vouchers in shop'), 'cast' => 'intval', 'type' => 'bool'),
+				),
+			),
 		);
+
 		parent::__construct();
 	}
 	

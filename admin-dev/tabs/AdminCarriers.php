@@ -50,9 +50,13 @@ class AdminCarriers extends AdminTab
 			'is_free' => array('title' => $this->l('Is Free'), 'align' => 'center', 'icon' => array(0 => 'disabled.gif', 1 => 'enabled.gif', 'default' => 'disabled.gif'), 'type' => 'bool', 'orderby' => false)
 		);
 
-		$this->optionTitle = $this->l('Carrier options');
-		$this->_fieldsOptions = array(
-			'PS_CARRIER_DEFAULT' => array('title' => $this->l('Default carrier:'), 'desc' => $this->l('The default carrier used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_carrier', 'list' => Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, Carrier::ALL_CARRIERS)),
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Carrier options'),
+				'fields' =>	array(
+					'PS_CARRIER_DEFAULT' => array('title' => $this->l('Default carrier:'), 'desc' => $this->l('The default carrier used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_carrier', 'list' => Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true , false,false, NULL, Carrier::ALL_CARRIERS)),
+				),
+			),
 		);
 
 		parent::__construct();

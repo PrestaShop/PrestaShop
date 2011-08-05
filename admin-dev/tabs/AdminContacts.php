@@ -43,16 +43,19 @@ class AdminContacts extends AdminTab
 			'email' => array('title' => $this->l('E-mail address'), 'width' => 130),
 			'description' => array('title' => $this->l('Description'), 'width' => 150),
 		);
-	
-		$this->optionTitle = $this->l('Contact options');
-		$this->_fieldsOptions = array(
-			'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array('title' => $this->l('Allow file upload'), 'desc' => $this->l('Allow customers to upload file using contact page'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
-				'0' => array('value' => 0, 'name' => $this->l('No')), 
-				'1' => array('value' => 1, 'name' => $this->l('Yes')) 
-			)),
-			'PS_CUSTOMER_SERVICE_SIGNATURE' => array('title' => $this->l('Pre-defined message'), 'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'), 'cast' => 'pSQL', 'type' => 'textareaLang', 'identifier' => 'value',
-			'cols' => 40, 'rows' => 8
-		));
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Contact options'),
+				'fields' =>	array(
+					'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array('title' => $this->l('Allow file upload'), 'desc' => $this->l('Allow customers to upload file using contact page'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
+						'0' => array('value' => 0, 'name' => $this->l('No')), 
+						'1' => array('value' => 1, 'name' => $this->l('Yes')) 
+					)),
+					'PS_CUSTOMER_SERVICE_SIGNATURE' => array('title' => $this->l('Pre-defined message'), 'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'), 'cast' => 'pSQL', 'type' => 'textareaLang', 'identifier' => 'value', 'cols' => 40, 'rows' => 8),
+				),
+			),
+		);
 		
 		parent::__construct();
 	}

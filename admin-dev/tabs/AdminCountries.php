@@ -40,17 +40,22 @@ class AdminCountries extends AdminTab
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
 
 		$this->fieldsDisplay = array(
-		'id_country' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Country'), 'width' => 130, 'filter_key' => 'b!name'),
-		'iso_code' => array('title' => $this->l('ISO code'), 'width' => 70, 'align' => 'center'),
-		'call_prefix' => array('title' => $this->l('Call prefix'), 'width' => 40, 'align' => 'center', 'callback' => 'displayCallPrefix'),
-		'zone' => array('title' => $this->l('Zone'), 'width' => 100, 'filter_key' => 'z!name'),
-		'a!active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'a!active'));
+			'id_country' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Country'), 'width' => 130, 'filter_key' => 'b!name'),
+			'iso_code' => array('title' => $this->l('ISO code'), 'width' => 70, 'align' => 'center'),
+			'call_prefix' => array('title' => $this->l('Call prefix'), 'width' => 40, 'align' => 'center', 'callback' => 'displayCallPrefix'),
+			'zone' => array('title' => $this->l('Zone'), 'width' => 100, 'filter_key' => 'z!name'),
+			'a!active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'a!active'),
+		);
 
-		$this->optionTitle = $this->l('Countries options');
-		$this->_fieldsOptions = array(
-			'PS_COUNTRY_DEFAULT' => array('title' => $this->l('Default country:'), 'desc' => $this->l('The default country used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_country', 'list' => Country::getCountries(Context::getContext()->language->id)),
-			'PS_RESTRICT_DELIVERED_COUNTRIES' => array('title' => $this->l('Restrict countries in FO by those delivered by active carriers'), 'cast' => 'intval', 'type' => 'bool', 'default' => '0')
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Countries options'),
+				'fields' =>	array(
+					'PS_COUNTRY_DEFAULT' => array('title' => $this->l('Default country:'), 'desc' => $this->l('The default country used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_country', 'list' => Country::getCountries(Context::getContext()->language->id)),
+					'PS_RESTRICT_DELIVERED_COUNTRIES' => array('title' => $this->l('Restrict countries in FO by those delivered by active carriers'), 'cast' => 'intval', 'type' => 'bool', 'default' => '0')
+				),
+			),
 		);
 
 		parent::__construct();

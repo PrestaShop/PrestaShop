@@ -37,15 +37,20 @@ class AdminReturn extends AdminTab
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
 
  		$this->fieldsDisplay = array(
-		'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'id_order' => array('title' => $this->l('Order ID'), 'width' => 75, 'align' => 'center'),
-		'name' => array('title' => $this->l('Status'), 'width' => 150, 'align' => 'center'),
-		'date_add' => array('title' => $this->l('Date issued'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
+			'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_order' => array('title' => $this->l('Order ID'), 'width' => 75, 'align' => 'center'),
+			'name' => array('title' => $this->l('Status'), 'width' => 150, 'align' => 'center'),
+			'date_add' => array('title' => $this->l('Date issued'), 'width' => 60, 'type' => 'date', 'align' => 'right'),
+ 		);
 		
-		$this->optionTitle = $this->l('Merchandise return (RMA) options');
-		$this->_fieldsOptions = array(
-		'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns:'), 'desc' => $this->l('Select whether or not to activate merchandise return for your shop'), 'cast' => 'intval', 'type' => 'bool'),
-		'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity:'), 'desc' => $this->l('Number of days the customer can make a return after the delivery date'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Merchandise return (RMA) options'),
+				'fields' =>	array(
+					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns:'), 'desc' => $this->l('Select whether or not to activate merchandise return for your shop'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity:'), 'desc' => $this->l('Number of days the customer can make a return after the delivery date'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
+				),
+			),
 		);
 		
 		parent::__construct();
@@ -281,5 +286,3 @@ class AdminReturn extends AdminTab
 		</form>';
 	}
 }
-
-

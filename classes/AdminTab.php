@@ -156,6 +156,12 @@ abstract class AdminTabCore
 	protected $formOptions = true;
 	
 	public $_fieldsOptions = array();
+	
+	/**
+	 * @since 1.5.0
+	 * @var array
+	 */
+	public $optionsList = array();
 
 	protected	$_languages = NULL;
 	protected	$_defaultFormLanguage = NULL;
@@ -285,6 +291,7 @@ abstract class AdminTabCore
 		{
 			$this->getList($this->context->language->id);
 			$this->displayList();
+			echo '<br />';
 			$this->displayOptionsList();
 			$this->displayRequiredFields();
 			$this->includeSubTab('display');
@@ -1773,10 +1780,25 @@ abstract class AdminTabCore
 	{
 		$tab = Tab::getTab($this->context->language->id, $this->id);
 
+		// Retrocompatibility < 1.5.0
+		if (!$this->optionsList && $this->_fieldsOptions)
+		{
+			$this->optionsList = array(
+				'options' => array(
+					'title' =>	($this->optionTitle) ? $this->optionTitle : $this->l('Options'),
+					'fields' =>	$this->_fieldsOptions,
+				),
+			);
+		}
+
+		if (!$this->optionsList)
+			return ;
+
+		echo '<br />';
 		echo '<script type="text/javascript">
 			id_language = Number('.$this->context->language->id.');
 		</script>';
-		
+
 		echo '<form action="'.self::$currentIndex.'&submitOptions'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">';
 		foreach ($this->optionsList as $category => $categoryData)
 		{
@@ -2011,6 +2033,23 @@ abstract class AdminTabCore
 			echo '</div>';
 		}
 		$this->displayFlags($languages, $this->context->language->id, $key, $key);
+	}
+	
+	/**
+	 * Type = TextareaLang
+	 */
+	public function displayOptionTypeTextareaLang($key, $field, $value)
+	{
+		$languages = Language::getLanguages(false);
+		foreach ($languages as $language)
+		{
+			$value = Configuration::get($key, $language['id_lang']);
+			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left;">';
+				echo '<textarea rows="'.(int)($field['rows']).'" cols="'.(int)($field['cols']).'"  name="'.$key.'_'.$language['id_lang'].'">'.str_replace('\r\n', "\n", $value).'</textarea>';
+			echo '</div>';
+		}
+		$this->displayFlags($languages, $this->context->language->id, $key, $key);
+		echo '<br style="clear:both">';
 	}
 	
 	/**
