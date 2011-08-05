@@ -44,7 +44,7 @@ abstract class ModuleCore
 
 	/** @var string author of the module */
 	public $author;
-	
+
 	/** @var int need_instance */
 	public $need_instance = 1;
 
@@ -79,13 +79,13 @@ abstract class ModuleCore
 
 	protected static $modulesCache;
 	protected static $_hookModulesCache;
-	
+
 	protected static $_INSTANCE = array();
-	
+
 	protected static $_generateConfigXmlMode = false;
-	
+
 	protected static $l_cache = array();
-	
+
 	protected static $cache_permissions = array();
 
 	/**
@@ -158,14 +158,14 @@ abstract class ModuleCore
 		WHERE `name` = \''.pSQL($this->name).'\'');
 		if ($result)
 			return false;
-		
+
 		$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1), 'INSERT');
 		if (!$result)
 			return false;
 		$this->id = Db::getInstance()->Insert_ID();
-		
+
 		$this->enable(true);
-		
+
 		// Permissions management
 		Db::getInstance()->Execute('
 		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
@@ -208,7 +208,7 @@ abstract class ModuleCore
 			$this->cleanPositions($row['id_hook']);
 		}
 		$this->disable(true);
-		
+
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_module` = '.(int)$this->id);
 
 		return Db::getInstance()->Execute('
@@ -217,14 +217,14 @@ abstract class ModuleCore
 	}
 
 	/**
-	 * This function enable module $name. If an $name is an array, 
+	 * This function enable module $name. If an $name is an array,
 	 * this will enable all of them
-	 * 
-	 * @param array|string $name 
+	 *
+	 * @param array|string $name
 	 * @return true if succeed
 	 * @since 1.4.1
 	 */
-	public static function enableByName($name) 
+	public static function enableByName($name)
 	{
 		if (!is_array($name))
 			$name = array($name);
@@ -235,7 +235,7 @@ abstract class ModuleCore
 
 	/**
 	 * Activate current module.
-	 * 
+	 *
 	 * @param bool $forceAll If true, enable module for all shop
 	 */
 	public function enable($forceAll = false)
@@ -256,37 +256,37 @@ abstract class ModuleCore
 					'id_module' =>	$this->id,
 					'id_shop' =>	$id,
 				), 'INSERT');
-				
+
 		return true;
 	}
 
 	/**
-	 * This function disable module $name. If an $name is an array, 
+	 * This function disable module $name. If an $name is an array,
 	 * this will disable all of them
-	 * 
-	 * @param array|string $name 
+	 *
+	 * @param array|string $name
 	 * @return true if succeed
 	 * @since 1.4.1
 	 */
-	public static function disableByName($name) 
+	public static function disableByName($name)
 	{
 		if (!is_array($name))
 			$name = array($name);
 
 		foreach ($name as $k => $v)
 			Module::getInstanceByName($name)->disable();
-			
+
 		return true;
 	}
 
 	/**
 	 * Desactivate current module.
-	 * 
+	 *
 	 * @param bool $forceAll If true, disable module for all shop
 	 */
-	public function disable($forceAll = false) 
+	public function disable($forceAll = false)
 	{
-		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop 
+		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop
 				WHERE id_module = '.$this->id.'
 					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', $this->context->shop->getListOfID()).')' : '');
 		Db::getInstance()->execute($sql);
@@ -341,7 +341,7 @@ abstract class ModuleCore
 		$hookID = Db::getInstance()->getValue($sql);
 		if (!$hookID)
 			return false;
-			
+
 		if (is_null($shopList))
 			$shopList = Shop::getShops(true, null, true);
 
@@ -357,7 +357,7 @@ abstract class ModuleCore
 						AND id_shop = '.$shopID;
 			if (Db::getInstance()->getRow($sql))
 				continue;
-	
+
 			// Get module position in hook
 			$sql = 'SELECT MAX(`position`) AS position
 					FROM `'._DB_PREFIX_.'hook_module`
@@ -365,7 +365,7 @@ abstract class ModuleCore
 						.' AND id_shop = '.$shopID;
 			if (!$position = Db::getInstance()->getValue($sql))
 				$position = 0;
-	
+
 			// Register module in hook
 			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module', array(
 				'id_module' =>	$this->id,
@@ -376,7 +376,7 @@ abstract class ModuleCore
 			if (!$result)
 				$return &= false;
 		}
-		
+
 		$this->cleanPositions($hookID, $shopList);
 		return $return;
 	}
@@ -446,7 +446,7 @@ abstract class ModuleCore
 			{
 				if (!$except)
 					continue;
-	
+
 				$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module_exceptions', array(
 					'id_module' =>	$this->id,
 					'id_hook' =>	(int)$id_hook,
@@ -468,17 +468,17 @@ abstract class ModuleCore
 
 
 	/**
-	 * This function is used to determine the module name 
+	 * This function is used to determine the module name
 	 * of an AdminTab which belongs to a module, in order to keep translation
 	 * related to a module in its directory (instead of $_LANGADM)
-	 * 
-	 * @param mixed $currentClass the 
+	 *
+	 * @param mixed $currentClass the
 	 * @return boolean|string if the class belongs to a module, will return the module name. Otherwise, return false.
 	 */
 	public static function getModuleNameFromClass($currentClass)
 	{
 		global $cookie;
-		
+
 		// Module can now define AdminTab keeping the module translations method,
 		// i.e. in modules/[module name]/[iso_code].php
 		if (!isset(self::$classInModule[$currentClass]))
@@ -495,7 +495,7 @@ abstract class ModuleCore
 				if (Tools::file_exists_cache($file) AND include_once($file))
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 			}
-			else 
+			else
 				self::$classInModule[$currentClass] = false;
 		}
 		// return name of the module, or false
@@ -530,7 +530,7 @@ abstract class ModuleCore
 	static public function getInstanceById($moduleID)
 	{
 		static $id2name = null;
-		
+
 		if (is_null($id2name))
 		{
 			$id2name = array();
@@ -540,7 +540,7 @@ abstract class ModuleCore
 				foreach ($results as $row)
 					$id2name[$row['id_module']] = $row['name'];
 		}
-		
+
 		if (isset($id2name[$moduleID]))
 			return Module::getInstanceByName($id2name[$moduleID]);
 		return false;
@@ -636,7 +636,7 @@ abstract class ModuleCore
 		// Get modules information from database
 		if (!empty($moduleNameList))
 		{
-			$list = Context::getContext()->shop->getListOfID();		
+			$list = Context::getContext()->shop->getListOfID();
 
 			$sql = 'SELECT m.id_module, m.name, (
 						SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
@@ -761,7 +761,7 @@ abstract class ModuleCore
 					ORDER BY hm.`position`';
 			$result = $db->ExecuteS($sql, false);
 			self::$_hookModulesCache = array();
-	
+
 			if ($result)
 				while ($row = $db->nextRow())
 				{
@@ -799,7 +799,7 @@ abstract class ModuleCore
 				{
 					$live_edit = true;
 					$output .= '<script type="text/javascript"> modules_list.push(\''.$moduleInstance->name.'\');</script>
-								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'" 
+								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'"
 								class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
 								<span><img src="'.$moduleInstance->_path.'/logo.gif">'
 							 	.$moduleInstance->displayName.'<span style="float:right">
@@ -832,7 +832,7 @@ abstract class ModuleCore
 						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
 		return $output;
 	}
-	
+
 	public static function getPaymentModules()
 	{
 		$context = Context::getContext();
@@ -856,14 +856,14 @@ abstract class ModuleCore
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-		
+
 		return $result;
 	}
 
 	/**
 	 * find translation from $_MODULES and put it in self::$l_cache if not already exist
 	 * and return it.
-	 * 
+	 *
 	 * @param string $name name of the module
 	 * @param string $string term to find
 	 * @param string $source additional param for building translation key
@@ -872,9 +872,9 @@ abstract class ModuleCore
 	public static function findTranslation($name, $string, $source)
 	{
 		global $_MODULES;
-		
+
 		$cache_key = $name . '|' . $string . '|' . $source;
-		
+
 		if (!isset(self::$l_cache[$cache_key]))
 		{
 			if (!is_array($_MODULES))
@@ -883,7 +883,7 @@ abstract class ModuleCore
 			$_MODULES = array_change_key_case($_MODULES);
 			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.md5($string);
 			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.md5($string);
-			
+
 			if (isset($_MODULES[$currentKey]))
 				$ret = stripslashes($_MODULES[$currentKey]);
 			elseif (isset($_MODULES[Tools::strtolower($currentKey)]))
@@ -894,16 +894,16 @@ abstract class ModuleCore
 				$ret = stripslashes($_MODULES[Tools::strtolower($defaultKey)]);
 			else
 				$ret = stripslashes($string);
-			
+
 			self::$l_cache[$cache_key] = str_replace('"', '&quot;', $ret);
-		} 
+		}
 		return self::$l_cache[$cache_key];
 	}
 	/**
 	 * Get translation for a given module text
 	 *
 	 * Note: $specific parameter is mandatory for library files.
-	 * Otherwise, translation key will not match for Module library 
+	 * Otherwise, translation key will not match for Module library
 	 * when module is loaded with eval() Module::getModulesOnDisk()
 	 *
 	 * @param string $string String to translate
@@ -914,7 +914,7 @@ abstract class ModuleCore
 	{
 		if (self::$_generateConfigXmlMode)
 			return $string;
-		
+
 		global $_MODULES, $_MODULE;
 
 		if ($id_lang == null)
@@ -923,7 +923,7 @@ abstract class ModuleCore
 
 		if (Tools::file_exists_cache($file) AND include_once($file))
 			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-		
+
 		$source = $specific ? $specific : $this->name;
 		$string = str_replace('\'', '\\\'', $string);
 		$ret = $this->findTranslation($this->name, $string, $source);
@@ -959,10 +959,10 @@ abstract class ModuleCore
 				return false;
 			$from = $res[$k];
 			$to = $res[$k + 1];
-	
+
 			if (isset($position) and !empty($position))
 				$to['position'] = (int)($position);
-				
+
 			$sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
 					SET `position`= position '.($way ? '-1' : '+1').'
 					WHERE position between '.(int)(min(array($from['position'], $to['position']))) .' AND '.(int)(max(array($from['position'], $to['position']))).'
@@ -970,7 +970,7 @@ abstract class ModuleCore
 						AND id_shop = '.$shopID;
 			if (!Db::getInstance()->Execute($sql))
 				return false;
-				
+
 			$sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
 					SET `position`='.(int)($to['position']).'
 					WHERE `'.pSQL($this->identifier).'` = '.(int)($from[$this->identifier]).'
@@ -1000,7 +1000,7 @@ abstract class ModuleCore
 		{
 			if (!isset($position[$row['id_shop']]))
 				$position[$row['id_shop']] = 1;
-				
+
 			$sql = 'UPDATE '._DB_PREFIX_.'hook_module
 					SET position = '.$position[$row['id_shop']].'
 					WHERE id_hook = '.(int)$id_hook.'
@@ -1060,7 +1060,7 @@ abstract class ModuleCore
 				self::$exceptionsCache[$key][$row['id_shop']][] = $row['file_name'];
 			}
 		}
-		
+
 		$key = $hookID.'-'.$this->id;
 		if (!$dispatch)
 		{
@@ -1161,7 +1161,7 @@ abstract class ModuleCore
 	{
 		Tools::clearCache(Context::getContext()->smarty);
 	}
-	
+
 	protected function _generateConfigXml()
 	{
 		$xml = '<?xml version="1.0" encoding="UTF-8" ?>
@@ -1178,7 +1178,7 @@ abstract class ModuleCore
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
 			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', $xml);
 	}
-	
+
 	/**
 	 * @param string $hook_name
 	 * @return bool if module can be transplanted on hook
@@ -1187,18 +1187,18 @@ abstract class ModuleCore
 	{
 		return is_callable(array($this, 'hook'.ucfirst($hook_name)));
 	}
-	
+
 	public function getPermission($variable, $employee = null)
 	{
 		return self::getPermissionStatic($this->id, $variable, $employee);
 	}
-	
-	public function getPermissionStatic($id_module, $variable, $employee = null)
+
+	public static function getPermissionStatic($id_module, $variable, $employee = null)
 	{
 		if (!in_array($variable, array('view', 'configure')))
 			return false;
 		if (!$employee)
-			$employee = $this->context->employee;
+			$employee = Context::getContext()->employee;
 		if (!isset($cache_permissions[$employee->id_profile]))
 		{
 			$cache_permissions[$employee->id_profile] = array();
