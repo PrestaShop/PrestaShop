@@ -508,6 +508,7 @@ class ProductComments extends Module
 			
 			if (!$customerComment OR ($customerComment AND (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
 			{
+				$errors = array();
 				$customer_name = false;
 				if ($id_guest AND (!$customer_name = Tools::getValue('customer_name')))
 					$errors[] = $this->l('Please fill your name');
@@ -575,8 +576,7 @@ class ProductComments extends Module
 		'too_early' => ($customerComment AND (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) > time()),
 		'delay' => Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')));
 
-		$controller = new FrontController();
-		$controller->pagination((int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')));
+		$this->context->controller->pagination((int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')));
 		
 		return ($this->display(__FILE__, '/productcomments.tpl'));
 	}
