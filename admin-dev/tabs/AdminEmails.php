@@ -39,39 +39,40 @@ class AdminEmails extends AdminPreferences
 		foreach (Contact::getContacts($this->context->language->id) AS $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
- 		$this->_fieldsEmail = array(
-			'PS_MAIL_EMAIL_MESSAGE' => array('title' => $this->l('Send e-mail to:'), 'desc' => $this->l('When customers send message from order page'), 'validation' => 'isUnsignedId', 'type' => 'select', 'cast' => 'intval', 'identifier' => 'email_message', 'list' => $arr),
-			'PS_MAIL_METHOD' => array('title' => '', 'validation' => 'isGenericName', 'required' => true, 'type' => 'radio', 'choices' => array(1 => $this->l('Use PHP mail() function.  Recommended; works in most cases'), 2 => $this->l('Set my own SMTP parameters. For advanced users ONLY')), 'js' => array(1 => 'onclick="$(\'#SMTP_CONTAINER\').slideUp();"', 2 => 'onclick="$(\'#SMTP_CONTAINER\').slideDown();"'), 'visibility' => Shop::CONTEXT_ALL),
-			'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'required' => true, 'type' => 'radio', 'choices' => array(1 => $this->l('Send e-mail as HTML'), 2 => $this->l('Send e-mail as Text'), 3 => $this->l('Both'))),
-			'SMTP_CONTAINER' => array('title' => '', 'type' => 'container'),
-			'PS_MAIL_DOMAIN' => array('title' => $this->l('Mail domain:'), 'desc' => $this->l('Fully qualified domain name (keep it empty if you do not know)'), 'validation' => 'isUrl', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
-			'PS_MAIL_SERVER' => array('title' => $this->l('SMTP server:'), 'desc' => $this->l('IP or server name (e.g., smtp.mydomain.com)'), 'validation' => 'isGenericName', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
-			'PS_MAIL_USER' => array('title' => $this->l('SMTP user:'), 'desc' => $this->l('Leave blank if not applicable'), 'validation' => 'isGenericName', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
-			'PS_MAIL_PASSWD' => array('title' => $this->l('SMTP password:'), 'desc' => $this->l('Leave blank if not applicable'), 'validation' => 'isAnything', 'size' => 30, 'type' => 'password', 'visibility' => Shop::CONTEXT_ALL),
-			'PS_MAIL_SMTP_ENCRYPTION' => array('title' => $this->l('Encryption:'), 'desc' => $this->l('Use an encrypt protocol'), 'type' => 'select', 'cast' => 'strval', 'identifier' => 'mode', 'list' => array(array('mode' => 'off', 'name' => $this->l('None')), array('mode' => 'tls', 'name' => $this->l('TLS')), array('mode' => 'ssl', 'name' => $this->l('SSL'))), 'visibility' => Shop::CONTEXT_ALL),
-			'PS_MAIL_SMTP_PORT' => array('title' => $this->l('Port:'), 'desc' => $this->l('Number of port to use'), 'validation' => 'isInt', 'size' => 5, 'type' => 'text', 'cast' => 'intval', 'visibility' => Shop::CONTEXT_ALL),
-			'SMTP_CONTAINER_END' => array('title' => '', 'type' => 'container_end', 'content' => '<script type="text/javascript">if (getE("PS_MAIL_METHOD2_on").checked == false) { $(\'#SMTP_CONTAINER\').hide(); }</script>'),
+ 		$this->optionsList = array(
+			'email' => array(
+				'title' =>	$this->l('E-mail'),
+				'icon' =>	'email',
+				'fields' =>	array(
+					'PS_MAIL_EMAIL_MESSAGE' => array('title' => $this->l('Send e-mail to:'), 'desc' => $this->l('When customers send message from order page'), 'validation' => 'isUnsignedId', 'type' => 'select', 'cast' => 'intval', 'identifier' => 'email_message', 'list' => $arr),
+					'PS_MAIL_METHOD' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(1 => $this->l('Use PHP mail() function.  Recommended; works in most cases'), 2 => $this->l('Set my own SMTP parameters. For advanced users ONLY')), 'js' => array(1 => 'onclick="$(\'#smtp\').slideUp();"', 2 => 'onclick="$(\'#smtp\').slideDown();"'), 'visibility' => Shop::CONTEXT_ALL),
+					'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(1 => $this->l('Send e-mail as HTML'), 2 => $this->l('Send e-mail as Text'), 3 => $this->l('Both'))),
+				),
+ 			),
+ 			'smtp' => array(
+				'title' =>	$this->l('E-mail'),
+				'icon' =>	'email',
+				'fields' =>	array(
+					'PS_MAIL_DOMAIN' => array('title' => $this->l('Mail domain:'), 'desc' => $this->l('Fully qualified domain name (keep it empty if you do not know)'), 'validation' => 'isUrl', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
+					'PS_MAIL_SERVER' => array('title' => $this->l('SMTP server:'), 'desc' => $this->l('IP or server name (e.g., smtp.mydomain.com)'), 'validation' => 'isGenericName', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
+					'PS_MAIL_USER' => array('title' => $this->l('SMTP user:'), 'desc' => $this->l('Leave blank if not applicable'), 'validation' => 'isGenericName', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
+					'PS_MAIL_PASSWD' => array('title' => $this->l('SMTP password:'), 'desc' => $this->l('Leave blank if not applicable'), 'validation' => 'isAnything', 'size' => 30, 'type' => 'password', 'visibility' => Shop::CONTEXT_ALL),
+					'PS_MAIL_SMTP_ENCRYPTION' => array('title' => $this->l('Encryption:'), 'desc' => $this->l('Use an encrypt protocol'), 'type' => 'select', 'cast' => 'strval', 'identifier' => 'mode', 'list' => array(array('mode' => 'off', 'name' => $this->l('None')), array('mode' => 'tls', 'name' => $this->l('TLS')), array('mode' => 'ssl', 'name' => $this->l('SSL'))), 'visibility' => Shop::CONTEXT_ALL),
+					'PS_MAIL_SMTP_PORT' => array('title' => $this->l('Port:'), 'desc' => $this->l('Number of port to use'), 'validation' => 'isInt', 'size' => 5, 'type' => 'text', 'cast' => 'intval', 'visibility' => Shop::CONTEXT_ALL),
+ 				),
+ 			),
  		);
 	}
-	
-	public function postProcess()
+
+	public function beforeUpdateOptions()
 	{
-		if (isset($_POST['submitEmail'.$this->table]))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-			{
-				if ($_POST['PS_MAIL_METHOD'] == 2 AND (empty($_POST['PS_MAIL_SERVER']) OR empty($_POST['PS_MAIL_SMTP_PORT'])))
-					$this->_errors[] = Tools::displayError('You must define a SMTP server and a SMTP port. If you do not know, use the PHP mail() function instead.');
-				else
-					$this->_postConfig($this->_fieldsEmail);
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
+		if ($_POST['PS_MAIL_METHOD'] == 2 AND (empty($_POST['PS_MAIL_SERVER']) OR empty($_POST['PS_MAIL_SMTP_PORT'])))
+			$this->_errors[] = Tools::displayError('You must define a SMTP server and a SMTP port. If you do not know, use the PHP mail() function instead.');
 	}
 	
-	public function display() {
-		$this->_displayForm('email', $this->_fieldsEmail, $this->l('E-mail'), 'width2', 'email');
+	public function display()
+	{
+		parent::display();
 		$this->_displayMailTest();
 	}
 	
@@ -103,5 +104,23 @@ class AdminEmails extends AdminPreferences
 				</div>
 			</div>
 		</fieldset>';
+	}
+
+	public function displayTopOptionCategory($category, $categoryData)
+	{
+		if ($category == 'smtp')
+			echo '<div id="smtp" style="display: '.((Configuration::get('PS_MAIL_METHOD') == 2) ? 'block' : 'none').';">';
+	}
+
+	public function displayBottomOptionCategory($category, $categoryData)
+	{
+		if ($category == 'smtp')
+			echo '<script type="text/javascript">
+					if (getE(\'PS_MAIL_METHOD2_on\').checked)
+						getE(\'smtp\').style.display = \'block\';
+					else
+						getE(\'smtp\').style.display = \'none\';
+				</script>
+				</div>';
 	}
 }

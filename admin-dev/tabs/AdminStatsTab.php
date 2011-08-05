@@ -29,15 +29,6 @@ include_once(PS_ADMIN_DIR.'/tabs/AdminPreferences.php');
 
 abstract class AdminStatsTab extends AdminPreferences
 {
-	public function __construct()
-	{
- 		$this->_fieldsSettings = array(
-			'PS_STATS_RENDER' => array('title' => $this->l('Graph engine'), 'validation' => 'isGenericName'),
-			'PS_STATS_GRID_RENDER' => array('title' => $this->l('Grid engine'), 'validation' => 'isGenericName')
-		);
-		parent::__construct();
-	}
-	
 	public function postProcess()
 	{
 		$this->context = Context::getContext();		
@@ -91,7 +82,8 @@ abstract class AdminStatsTab extends AdminPreferences
 		 	if ($this->tabAccess['edit'] === '1')
 			{
 				self::$currentIndex .= '&module='.Tools::getValue('module');
-				$this->_postConfig($this->_fieldsSettings);
+				Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
+				Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -99,7 +91,7 @@ abstract class AdminStatsTab extends AdminPreferences
 		if (sizeof($this->_errors))
 			AdminTab::displayErrors();
 	}
-	
+
 	protected function displayEngines()
 	{
 		$graphEngine = Configuration::get('PS_STATS_RENDER');

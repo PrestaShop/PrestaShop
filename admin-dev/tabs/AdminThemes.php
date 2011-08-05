@@ -95,16 +95,25 @@ class AdminThemes extends AdminPreferences
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		$id_shop = Context::getContext()->shop->getID();
- 		$this->_fieldsAppearance = array(
-			'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time(), 'pos' => 'before')),
-			'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => ((file_exists(_PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg')) ? _PS_IMG_.'logo_mail-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),
-			'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => (file_exists(_PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg') ? _PS_IMG_.'logo_invoice-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),
-			'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'favicon-'.(int)$id_shop.'.ico?date='.time(), 'pos' => 'after')),
-			'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo_stores-'.(int)$id_shop.'.gif?date='.time(), 'pos' => 'before')),
-			'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
-		);
+		
 		parent::__construct();
+		
+		$id_shop = Context::getContext()->shop->getID();
+		$this->optionsList = array(
+			'appearance' => array(
+				'title' =>	$this->l('Appearance'),
+				'icon' =>	'email',
+				'class' => 'width3',
+				'fields' =>	array(
+					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time(), 'pos' => 'before')),
+					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => ((file_exists(_PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg')) ? _PS_IMG_.'logo_mail-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),
+					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => (file_exists(_PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg') ? _PS_IMG_.'logo_invoice-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),
+					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'favicon-'.(int)$id_shop.'.ico?date='.time(), 'pos' => 'after')),
+					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo_stores-'.(int)$id_shop.'.gif?date='.time(), 'pos' => 'before')),
+					'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
+				),
+ 			),
+ 		);
 	}
 
 	public function display()
@@ -115,10 +124,12 @@ class AdminThemes extends AdminPreferences
 			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 		}
+
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		$this->_displayForm('appearance', $this->_fieldsAppearance, $this->l('Appearance'), 'width3', 'appearance');
+		$this->displayOptionsList();
+
 		echo '<br /><br />';
 		if (@ini_get('allow_url_fopen') AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 			echo '<script type="text/javascript">
@@ -129,14 +140,15 @@ class AdminThemes extends AdminPreferences
 			echo '<a href="http://addons.prestashop.com/3-prestashop-themes">'.$this->l('Find new themes on PrestaShop Addons!').'</a>';
 	}
 
-	/** This function checks if the theme designer has thunk to make his theme compatible 1.4, 
-	* and noticed it on the $theme_dir/config.xml file. If not, some new functionnalities has
-	* to be desactivated
-	*
-	* @since 1.4
-	* @param string $theme_dir theme directory
-	* @return boolean Validity is ok or not
-	*/
+	/**
+	 * This function checks if the theme designer has thunk to make his theme compatible 1.4, 
+	 * and noticed it on the $theme_dir/config.xml file. If not, some new functionnalities has
+	 * to be desactivated
+	 *
+	 * @since 1.4
+	 * @param string $theme_dir theme directory
+	 * @return boolean Validity is ok or not
+	 */
 	private function _isThemeCompatible($theme_dir)
 	{
 		$all_errors='';
@@ -235,21 +247,106 @@ class AdminThemes extends AdminPreferences
 		return $return;
 	}
 
-	/** this functions make checks about AdminThemes configuration edition only.
+	/**
+	 * This functions make checks about AdminThemes configuration edition only.
 	 * 
 	 * @since 1.4
 	 */
 	public function postProcess()
 	{
-		global $smarty;
 		// new check compatibility theme feature (1.4) :
 		$val = Tools::getValue('PS_THEME');
 		Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 		if (!empty($val) AND !$this->_isThemeCompatible($val)) // don't submit if errors
 			unset($_POST['submitThemes'.$this->table]);
-		Tools::clearCache($smarty);
+		Tools::clearCache($this->context->smarty);
+
 		parent::postProcess();
 	}
-}
+	
+	/**
+	 * Update PS_LOGO
+	 */
+	public function updateOptionPsLogo()
+	{
+		$id_shop = Context::getContext()->shop->getID();
+		if (isset($_FILES['PS_LOGO']['tmp_name']) AND $_FILES['PS_LOGO']['tmp_name'])
+		{
+			if ($error = checkImage($_FILES['PS_LOGO'], 300000))
+				$this->_errors[] = $error;
+			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmpName))
+				return false;
+			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo.jpg'))
+				$this->_errors[] = 'an error occurred during logo copy';
+			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo-'.(int)$id_shop.'.jpg'))
+				$this->_errors[] = 'an error occurred during logo copy';
+				
+			unlink($tmpName);
+		}
+	}
+	
+	/**
+	 * Update PS_LOGO_MAIL
+	 */
+	public function updateOptionPsLogoMail()
+	{
+		$id_shop = Context::getContext()->shop->getID();
+		if (isset($_FILES['PS_LOGO_MAIL']['tmp_name']) AND $_FILES['PS_LOGO_MAIL']['tmp_name'])
+		{
+			if ($error = checkImage($_FILES['PS_LOGO_MAIL'], 300000))
+				$this->_errors[] = $error;
+			if (!$tmpName == tempnam(_PS_TMP_IMG_DIR_, 'PS_MAIL') OR !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmpName))
+				return false;
+			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail.jpg'))
+				$this->_errors[] = 'an error occurred during logo copy';
+			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg'))
+				$this->_errors[] = 'an error occurred during logo copy';
+			unlink($tmpName);
+		}
+	}
+	
+	/**
+	 * Update PS_LOGO_INVOICE
+	 */
+	public function updateOptionPsLogoInvoice()
+	{
+		$id_shop = Context::getContext()->shop->getID();
+		if (isset($_FILES['PS_LOGO_INVOICE']['tmp_name']) AND $_FILES['PS_LOGO_INVOICE']['tmp_name'])
+		{
+			if ($error = checkImage($_FILES['PS_LOGO_INVOICE'], 300000))
+				$this->_errors[] = $error;
+			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_INVOICE') OR !move_uploaded_file($_FILES['PS_LOGO_INVOICE']['tmp_name'], $tmpName))
+				return false;
+			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_invoice.jpg'))
+				$this->_errors[] = 'an error occurred during logo copy';
+			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg'))
+				$this->_errors[] = 'an error occurred during logo copy';
+				
+			unlink($tmpName);
+		}
+	}
+	
+	/**
+	 * Update PS_STORES_ICON
+	 */
+	public function updateOptionPsStoresIcon()
+	{
+		$id_shop = Context::getContext()->shop->getID();
+		if (isset($_FILES['PS_STORES_ICON']['tmp_name']) AND $_FILES['PS_STORES_ICON']['tmp_name'])
+		{
+			if ($error = checkImage($_FILES['PS_STORES_ICON'], 300000))
+				$this->_errors[] = $error;
+			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_STORES_ICON') OR !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmpName))
+				return false;
+			if ($id_shop = Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_stores.gif'))
+				$this->_errors[] = 'an error occurred during logo copy';
+			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_stores-'.(int)$id_shop.'.gif'))
+				$this->_errors[] = 'an error occurred during logo copy';
+			unlink($tmpName);
+		}
 
-?>
+		if ($id_shop = Configuration::get('PS_SHOP_DEFAULT'))
+			$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
+		$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico');
+	}
+}

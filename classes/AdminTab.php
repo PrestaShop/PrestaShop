@@ -888,17 +888,113 @@ abstract class AdminTabCore
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
 											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
 	}
-	
+
+	/**
+	 * Update options and preferences
+	 *
+	 * @param string $token
+	 */
 	protected function updateOptions($token)
 	{
 		if ($this->tabAccess['edit'] === '1')
 		{
-			$this->submitConfiguration($this->_fieldsOptions);
+			$this->beforeUpdateOptions();
+
+			$languages = Language::getLanguages(false);
+			foreach ($this->optionsList as $category => $categoryData)
+			{
+				$fields = $categoryData['fields'];
+				
+				/* Check required fields */
+				foreach ($fields AS $field => $values)
+					if (isset($values['required']) AND $values['required'] && !isset($_POST['configUseDefault'][$field]))
+						if (isset($values['type']) AND $values['type'] == 'textLang')
+						{
+							foreach ($languages as $language)
+								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false AND (string)$value != '0')
+									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+						}
+						elseif (($value = Tools::getValue($field)) == false AND (string)$value != '0')
+							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+		
+				/* Check fields validity */
+				foreach ($fields AS $field => $values)
+					if (isset($values['type']) AND $values['type'] == 'textLang')
+					{
+						foreach ($languages as $language)
+							if (Tools::getValue($field.'_'.$language['id_lang']) AND isset($values['validation']))
+								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
+									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+					}
+					elseif (Tools::getValue($field) AND isset($values['validation']))
+						if (!Validate::$values['validation'](Tools::getValue($field)))
+							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+		
+				/* Default value if null */
+				foreach ($fields AS $field => $values)
+					if (!Tools::getValue($field) AND isset($values['default']))
+						$_POST[$field] = $values['default'];
+
+				if (!sizeof($this->_errors))
+				{
+					foreach ($fields as $key => $options)
+					{
+						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
+							continue;
+							
+						if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
+						{
+							Configuration::deleteFromContext($key);
+							continue;
+						}
+
+						// check if a method updateOptionFieldName is available
+						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+						if (method_exists($this, $method_name))
+							$this->$method_name(Tools::getValue($key));
+						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+						{
+							$list = array();
+							foreach ($languages as $language)
+							{
+								$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key.'_'.$language['id_lang'])) : Tools::getValue($key.'_'.$language['id_lang']));
+								if ($this->validateField($val, $options))
+								{
+									if (Validate::isCleanHtml($val))
+										$list[$language['id_lang']] = $val;
+									else
+										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+								}
+							}
+							Configuration::updateValue($key, $list);
+						} 
+						else
+						{
+							$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+							if ($this->validateField($val, $options))
+							{
+								if (Validate::isCleanHtml($val))
+									Configuration::updateValue($key, $val);
+								else
+									$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+							}
+						}
+					}
+				}
+			}
+			
 			if (count($this->_errors) <= 0)
 				Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$token);
 		}
 		else
 			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+	}
+	
+	/**
+	 * Can be overriden
+	 */
+	public function beforeUpdateOptions()
+	{
 	}
 
 	protected function validateField($value, $field)
@@ -1126,7 +1222,6 @@ abstract class AdminTabCore
 	 */
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
 	{
-
 		/* Manage default params values */
 		if (empty($limit))
 			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $this->context->cookie->{$this->table.'_pagination'});
@@ -1673,134 +1768,285 @@ abstract class AdminTabCore
 
 	/**
 	 * Options lists
-	 * 
-	 * @param array $fieldsOptions Since 1.5.0
-	 * @param string $optionTitle Since 1.5.0
 	 */
-	public function displayOptionsList($fieldsOptions = null, $optionTitle = null, $optionDescription = null)
+	public function displayOptionsList()
 	{
-		if (is_null($fieldsOptions))
-			$fieldsOptions = $this->_fieldsOptions;
+		$tab = Tab::getTab($this->context->language->id, $this->id);
 
-		if (!isset($fieldsOptions) OR !sizeof($fieldsOptions))
-			return false;
-
-		if (is_null($optionTitle))
-			$optionTitle = $this->optionTitle;
-
-		$defaultLanguage = (int)$this->context->language->id;
-		$this->_languages = Language::getLanguages(false);
-		$tab = Tab::getTab($defaultLanguage, $this->id);
-		echo '<br /><br />';
-		echo ($optionTitle ? '<h2>'.$optionTitle.'</h2>' : '');
-		echo '
-		<script type="text/javascript">
-			id_language = Number('.$defaultLanguage.');
-		</script>
-		'.(($this->formOptions) ? '<form action="'.self::$currentIndex.'" id="'.$tab['name'].'" name="'.$tab['name'].'" method="post">' : '').'
-			<fieldset>';
-				echo ($optionTitle ? '<legend>
-					<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" />'
-					.$optionTitle.'</legend>' : '');
-		if ($optionDescription)
-			echo '<p class="optionsDescription">'.$optionDescription.'</p>';
-
-		foreach ($fieldsOptions AS $key => $field)
+		echo '<script type="text/javascript">
+			id_language = Number('.$this->context->language->id.');
+		</script>';
+		
+		echo '<form action="'.self::$currentIndex.'&submitOptions'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">';
+		foreach ($this->optionsList as $category => $categoryData)
 		{
-			$val = Tools::getValue($key, Configuration::get($key));
-			if ($field['type'] != 'textLang')
-				if (!Validate::isCleanHtml($val))
-					$val = Configuration::get($key);
-					
-			if (isset($field['defaultValue']) && !$val)
-				$val = $field['defaultValue'];
+			$required = false;
+			$this->displayTopOptionCategory($category, $categoryData);
+			echo '<fieldset>';
 
-			// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
-			$isDisabled = $isInvisible = false;
-			if (Shop::isMultiShopActivated())
+			// Options category title
+			$legend = '<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" /> ';
+			$legend .= ((isset($categoryData['title'])) ? $categoryData['title'] : $this->l('Options'));
+			echo '<legend>'.$legend.'</legend>';
+			
+			// Category fields
+			if (!isset($categoryData['fields']))
+				continue;
+
+			// Category description
+			if (isset($categoryData['description']) && $categoryData['description'])
+				echo '<p class="optionsDescription">'.$categoryData['description'].'</p>';
+
+			foreach ($categoryData['fields'] as $key => $field)
 			{
-				if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+				// Field value
+				$value = Tools::getValue($key, Configuration::get($key));
+				if (!Validate::isCleanHtml($value))
+					$value = Configuration::get($key);
+						
+				if (isset($field['defaultValue']) && !$value)
+					$value = $field['defaultValue'];
+					
+				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
+				$isDisabled = $isInvisible = false;
+				if (Shop::isMultiShopActivated())
 				{
-					$isDisabled = true;
-					$isInvisible = true;
+					if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+					{
+						$isDisabled = true;
+						$isInvisible = true;
+					}
+					else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+						$isDisabled = true;
 				}
-				else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
-					$isDisabled = true;
+
+				// Display title
+				echo '<div style="clear: both; padding-top:15px;" id="conf_id_'.$key.'">';
+				if ($field['title'])
+				{
+					echo '<label class="conf_title">';
+
+					// Is this field required ?
+					if (isset($field['required']) && $field['required'])
+					{
+						$required = true;
+						echo '<sup>*</sup> ';
+					}
+					echo $field['title'].'</label>';
+				}
+
+				echo '<div class="margin-form" style="padding-top:5px;">';
+
+				// Display option inputs
+				$method = 'displayOptionType'.Tools::toCamelCase($field['type'], true);
+				if (!method_exists($this, $method))
+					echo 'Option method '.get_class($this).'-&gt;'.$method.'() not found<br />';
+				else
+					$this->$method($key, $field, $value);
+
+				// Multishop default value
+				if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible)
+					echo '<div class="preference_default_multishop">
+							<label>
+								<input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
+							</label>
+						</div>';
+				
+				// Field description
+				//echo (isset($field['desc']) ? '<p class="preference_description">'.((isset($field['thumb']) AND $field['thumb'] AND $field['thumb']['pos'] == 'after') ? '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" style="float:left;" />' : '' ).$field['desc'].'</p>' : '');
+				echo (isset($field['desc']) ? '<p class="preference_description">'.$field['desc'].'</p>' : '');
+
+				// Is this field invisible in current shop context ?
+				echo ($isInvisible) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
+				
+				echo '</div></div>';
 			}
 
-			echo '<div id="conf_id_'.$key.'"><label>'.$field['title'].' </label>
-			<div class="margin-form">';
-			switch ($field['type'])
-			{
-				case 'select':
-					echo '<select name="'.$key.'" '.(($isDisabled) ? 'disabled="disabled"' : '').'>';
-					foreach ($field['list'] AS $value)
-						echo '<option value="'.(isset($field['cast']) ? $field['cast']($value[$field['identifier']]) : $value[$field['identifier']]).'"'.($val == $value[$field['identifier']] ? ' selected="selected"' : '').'>'.$value['name'].'</option>';
-					echo '</select>';
-				break;
-
-				case 'bool':
-					echo '<label class="t" for="'.$key.'_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>
-					<input type="radio" name="'.$key.'" id="'.$key.'_on" value="1"'.($val ? ' checked="checked"' : '').' '.(($isDisabled) ? 'disabled="disabled"' : '').' />
-					<label class="t" for="'.$key.'_on"> '.$this->l('Yes').'</label>
-					<label class="t" for="'.$key.'_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" /></label>
-					<input type="radio" name="'.$key.'" id="'.$key.'_off" value="0" '.(!$val ? 'checked="checked"' : '').' '.(($isDisabled) ? 'disabled="disabled"' : '').' />
-					<label class="t" for="'.$key.'_off"> '.$this->l('No').'</label>';
-				break;
-
-				case 'textLang':
-					foreach ($this->_languages as $language)
-					{
-						$val = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
-						if (!Validate::isCleanHtml($val))
-							$val = Configuration::get($key);
-						echo '
-						<div id="'.$key.'_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-							<input size="'.$field['size'].'" type="text" name="'.$key.'_'.$language['id_lang'].'" value="'.$val.'" '.(($isDisabled) ? 'disabled="disabled"' : '').' />
-						</div>';
-					}
-					$this->displayFlags($this->_languages, $defaultLanguage, $key, $key);
-					
-					echo '<br style="clear:both">';
-				break;
-
-				case 'textareaLang':
-					foreach ($this->_languages as $language)
-					{
-						$val = Configuration::get($key, $language['id_lang']);
-						echo '
-						<div id="'.$key.'_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-							<textarea rows="'.(int)($field['rows']).'" cols="'.(int)($field['cols']).'"  name="'.$key.'_'.$language['id_lang'].'" '.(($isDisabled) ? 'disabled="disabled"' : '').'>'.str_replace('\r\n', "\n", $val).'</textarea>
-						</div>';
-					}
-					$this->displayFlags($this->_languages, $defaultLanguage, $key, $key);
-					echo '<br style="clear:both">';
-				break;
-
-				case 'text':
-
-				default:
-					echo '<input type="text" name="'.$key.'" value="'.$val.'" size="'.$field['size'].'" '.(($isDisabled) ? 'disabled="disabled"' : '').' />'.(isset($field['suffix']) ? $field['suffix'] : '');
-				break;
-			}
-
-			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible)
-				echo '<div class="preference_default_multishop"><label><input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '') .' onclick="$(\'#conf_id_'.$key.' input, #conf_id_'.$key.' textarea, #conf_id_'.$key.' select\').attr(\'disabled\', $(this).attr(\'checked\')); $(\'#conf_id_'.$key.' .preference_default_multishop input\').attr(\'disabled\', false); $(\'#conf_id_'.$key.' label.conf_title\').toggleClass(\'isDisabled\');" /> '.$this->l('Use default value').'</label></div>';
-
-			if (isset($field['required']) AND $field['required'])
-				echo ' <sup>*</sup>';
-
-			echo (isset($field['desc']) ? '<p>'.$field['desc'].'</p>' : '');
-			echo ($isInvisible) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
-			echo '</div></div>';
+			echo '<div align="center" style="margin-top: 20px;">';
+			echo '<input type="submit" value="'.$this->l('   Save   ').'" name="submit'.ucfirst($category).$this->table.'" class="button" />';
+			echo '</div>';
+			if ($required)
+				echo '<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>';
+			
+			echo '</fieldset><br />';
+			$this->displayBottomOptionCategory($category, $categoryData);
 		}
-			echo '<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitOptions'.$this->table.'" class="button" />
-				</div>
-			</fieldset>
-			<input type="hidden" name="token" value="'.$this->token.'" />';
-		if ($this->formOptions)
-			echo '</form>';
+		echo '</form>';
+	}
+
+	/**
+	 * Can be overriden
+	 */
+	public function displayTopOptionCategory($category, $data)
+	{
+	}
+
+	/**
+	 * Can be overriden
+	 */
+	public function displayBottomOptionCategory($category, $data)
+	{
+	}
+
+	/**
+	 * Type = select
+	 */
+	public function displayOptionTypeSelect($key, $field, $value)
+	{
+		echo '<select name="'.$key.'"'.(isset($field['js']) === true ? ' onchange="'.$field['js'].'"' : '').' id="'.$key.'">';
+		foreach ($field['list'] AS $k => $option)
+			echo  '<option value="'.(isset($option['cast']) ? $option['cast']($option[$field['identifier']]) : $option[$field['identifier']]).'"'.(($value == $option[$field['identifier']]) ? ' selected="selected"' : '').'>'.$option['name'].'</option>';
+		echo '</select>';
+	}
+	
+	/**
+	 * Type = bool
+	 */
+	public function displayOptionTypeBool($key, $field, $value)
+	{
+		echo '<label class="t" for="'.$key.'_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" /></label>';
+		echo '<input type="radio" name="'.$key.'" id="'.$key.'_on" value="1" '.($value ? ' checked="checked" ' : '').(isset($field['js']['on']) ? $field['js']['on'] : '').' />';
+		echo '<label class="t" for="'.$key.'_on"> '.$this->l('Yes').'</label>';
+
+		echo '<label class="t" for="'.$key.'_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" /></label>';
+		echo '<input type="radio" name="'.$key.'" id="'.$key.'_off" value="0" '.(!$value ? ' checked="checked" ' : '').(isset($field['js']['off']) ? $field['js']['off'] : '').' />';
+		echo '<label class="t" for="'.$key.'_off"> '.$this->l('No').'</label>';
+	}
+	
+	/**
+	 * Type = radio
+	 */
+	public function displayOptionTypeRadio($key, $field, $value)
+	{
+		foreach ($field['choices'] as $k => $v)
+			echo '<input type="radio" name="'.$key.'" id="'.$key.$k.'_on" value="'.(int)$v.'"'.(($k == $value) ? ' checked="checked"' : '').(isset($field['js'][$k]) ? ' '.$field['js'][$k] : '').' /><label class="t" for="'.$key.$k.'_on"> '.$v.'</label><br />';
+		echo '<br />';
+	}
+	
+	/**
+	 * Type = text
+	 */
+	public function displayOptionTypeText($key, $field, $value)
+	{
+		echo '<input type="'.$field['type'].'"'.(isset($field['id']) ? ' id="'.$field['id'].'"' : '').' size="'.(isset($field['size']) ? (int)$field['size'] : 5).'" name="'.$key.'" value="'.htmlentities($value, ENT_COMPAT, 'UTF-8').'" />'.(isset($field['next']) ? '&nbsp;'.(string)$field['next'] : '');
+	}
+	
+	/**
+	 * Type = password
+	 */
+	public function displayOptionTypePassword($key, $field, $value)
+	{
+		$this->displayOptionTypeText($key, $field, '');
+	}
+	
+	/**
+	 * Type = textarea
+	 */
+	public function displayOptionTypeTextarea($key, $field, $value)
+	{
+		echo '<textarea name='.$key.' cols="'.$field['cols'].'" rows="'.$field['rows'].'">'.htmlentities($value, ENT_COMPAT, 'UTF-8').'</textarea>';
+	}
+	
+	/**
+	 * Type = file
+	 */
+	public function displayOptionTypeFile($key, $field, $value)
+	{
+		if (isset($field['thumb']) && $field['thumb'] && $field['thumb']['pos'] == 'before')
+			echo '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" /><br />';
+		echo '<input type="file" name="'.$key.'" />';
+	}
+	
+	/**
+	 * Type = image
+	 */
+	public function displayOptionTypeImage($key, $field, $value)
+	{
+		echo '<table cellspacing="0" cellpadding="0">';
+		echo '<tr>';
+
+		/*if ($name == 'themes')
+			echo '
+			<td colspan="'.sizeof($field['list']).'">
+				<b>'.$this->l('In order to use a new theme, please follow these steps:', get_class()).'</b>
+				<ul>
+					<li>'.$this->l('Import your theme using this module:', get_class()).' <a href="index.php?tab=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&filtername=themeinstallator" style="text-decoration: underline;">'.$this->l('Theme installer', get_class()).'</a></li>
+					<li>'.$this->l('When your theme is imported, please select the theme in this page', get_class()).'</li>
+				</ul>
+			</td>
+			</tr>
+			<tr>
+			';*/
+
+		$i = 0;
+		foreach ($field['list'] AS $theme)
+		{
+			echo '<td class="center" style="width: 180px; padding:0px 20px 20px 0px;">';
+				echo '<input type="radio" name="'.$key.'" id="'.$key.'_'.$theme['name'].'_on" style="vertical-align: text-bottom;" value="'.$theme['name'].'"'.(_THEME_NAME_ == $theme['name'] ? 'checked="checked"' : '').' />';
+				echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
+				echo '<br />';
+				echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on">';
+					echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
+				echo '</label>';
+			echo '</td>';
+			if (isset($field['max']) AND ($i +1 ) % $field['max'] == 0)
+				echo '</tr><tr>';
+			$i++;
+		}
+		echo '</tr>';
+		echo '</table>';
+	}
+	
+	/**
+	 * Type = textLang
+	 */
+	public function displayOptionTypeTextLang($key, $field, $value)
+	{
+		$languages = Language::getLanguages(false);
+		foreach ($languages as $language)
+		{
+			$value = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
+			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="margin-bottom:8px; display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left; vertical-align: top;">';
+			echo '<input type="text" size="'.(isset($field['size']) ? (int)$field['size'] : 5).'" name="'.$key.'_'.$language['id_lang'].'" value="'.htmlentities($value, ENT_COMPAT, 'UTF-8').'" />';
+			echo '</div>';
+		}
+		$this->displayFlags($languages, $this->context->language->id, $key, $key);
+	}
+	
+	/**
+	 * Type = selectLang
+	 */
+	public function displayOptionTypeSelectLang($key, $field, $value)
+	{
+		$languages = Language::getLanguages(false);
+		foreach ($languages as $language)
+		{
+			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="margin-bottom:8px; display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left; vertical-align: top;">';
+			echo  '<select name="'.$key.'_'.strtoupper($language['iso_code']).'">';
+			foreach ($field['list'] as $k => $v)
+				echo  '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.strtoupper($language['iso_code']), (Configuration::get($key.'_'.strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
+			echo  '</select>';
+			echo  '</div>';
+		}
+		$this->displayFlags($languages, $this->context->language->id, $key, $key);
+	}
+	
+	/**
+	 * Type = price
+	 */
+	public function displayOptionTypePrice($key, $field, $value)
+	{
+		echo $this->context->currency->getSign('left');
+		$this->displayOptionTypeText($key, $field, $value);
+		echo $this->context->currency->getSign('right').' '.$this->l('(tax excl.)');
+	}
+	
+	/**
+	 * Type = disabled
+	 */
+	public function displayOptionTypeDisabled($key, $field, $value)
+	{
+		echo $field['disabled'];
 	}
 
 	/**
@@ -2136,55 +2382,5 @@ EOF;
 		if ($url[$len - 1] == '&')
 			$url = substr($url, 0, $len - 1);
 		return $url;
-	}
-
-	/**
-	 * Process the submission of a configuration form
-	 *
-	 * @param array $fields
-	 */
-	protected function submitConfiguration($fields)
-	{
-		$languages = Language::getLanguages(false);
-		foreach ($fields as $key => $options)
-		{
-			if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
-				continue;
-				
-			if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
-			{
-				Configuration::deleteFromContext($key);
-				continue;
-			}
-
-			if ($this->validateField(Tools::getValue($key), $options))
-			{
-				// check if a method updateOptionFieldName is available
-				$method_name = 'updateOption'.Tools::toCamelCase($key, true);
-				if (method_exists($this, $method_name))
-					$this->$method_name(Tools::getValue($key));
-				else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
-				{
-					$list = array();
-					foreach ($languages as $language)
-					{
-						$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key.'_'.$language['id_lang'])) : Tools::getValue($key.'_'.$language['id_lang']));
-						if (Validate::isCleanHtml($val))
-							$list[$language['id_lang']] = $val;
-						else
-							$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
-					}
-					Configuration::updateValue($key, $list);
-				} 
-				else
-				{
-					$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
-					if (Validate::isCleanHtml($val))
-						Configuration::updateValue($key, $val);
-					else
-						$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
-				}
-			}
-		}
 	}
 }

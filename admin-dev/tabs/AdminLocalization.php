@@ -34,29 +34,35 @@ class AdminLocalization extends AdminPreferences
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
-		$this->_fieldsLocalization = array(
-			'PS_WEIGHT_UNIT' => array('title' => $this->l('Weight unit:'), 'desc' => $this->l('The weight unit of your shop (eg. kg or lbs)'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
-			'PS_DISTANCE_UNIT' => array('title' => $this->l('Distance unit:'), 'desc' => $this->l('The distance unit of your shop (eg. km or mi)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'),
-			'PS_VOLUME_UNIT' => array('title' => $this->l('Volume unit:'), 'desc' => $this->l('The volume unit of your shop'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
-			'PS_DIMENSION_UNIT' => array('title' => $this->l('Dimension unit:'), 'desc' => $this->l('The dimension unit of your shop (eg. cm or in)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'));
-		$this->_fieldsOptions = array(
-			'PS_LOCALE_LANGUAGE' => array('title' => $this->l('Language locale:'), 'desc' => $this->l('Your server\'s language locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
-			'PS_LOCALE_COUNTRY' => array('title' => $this->l('Country locale:'), 'desc' => $this->l('Your server\'s country locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL)
-		);
-
 		parent::__construct();
+
+		$this->optionsList = array(
+			'localization' => array(
+				'title' =>	$this->l('Localization'),
+				'width' =>	'width2',
+				'icon' =>	'localization',
+				'fields' =>	array(
+					'PS_WEIGHT_UNIT' => array('title' => $this->l('Weight unit:'), 'desc' => $this->l('The weight unit of your shop (eg. kg or lbs)'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
+					'PS_DISTANCE_UNIT' => array('title' => $this->l('Distance unit:'), 'desc' => $this->l('The distance unit of your shop (eg. km or mi)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'),
+					'PS_VOLUME_UNIT' => array('title' => $this->l('Volume unit:'), 'desc' => $this->l('The volume unit of your shop'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
+					'PS_DIMENSION_UNIT' => array('title' => $this->l('Dimension unit:'), 'desc' => $this->l('The dimension unit of your shop (eg. cm or in)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'),
+				),
+			),
+			'options' => array(
+				'title' =>	$this->l('Advanced'),
+				'width' =>	'width2',
+				'icon' =>	'localization',
+				'fields' =>	array(
+					'PS_LOCALE_LANGUAGE' => array('title' => $this->l('Language locale:'), 'desc' => $this->l('Your server\'s language locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
+					'PS_LOCALE_COUNTRY' => array('title' => $this->l('Country locale:'), 'desc' => $this->l('Your server\'s country locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL)
+				),
+			),
+		);
 	}
 
 	public function postProcess()
 	{
-		if (isset($_POST['submitLocalization'.$this->table]))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->_postConfig($this->_fieldsLocalization);
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		elseif (Tools::isSubmit('submitLocalizationPack'))
+		if (Tools::isSubmit('submitLocalizationPack'))
 		{
 			if (!$pack = @Tools::file_get_contents('http://www.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml') AND !$pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml'))
 				$this->_errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
@@ -76,15 +82,15 @@ class AdminLocalization extends AdminPreferences
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);
 			}
-			
-			
 		}
+
 		parent::postProcess();
 	}
 
 	public function display()
 	{
-		$this->_displayForm('localization', $this->_fieldsLocalization, $this->l('Localization'), 'width2', 'localization');
+		$this->displayOptionsList();
+
 		echo '<br />
 		<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'" class="width2" enctype="multipart/form-data">
 		<fieldset>
@@ -122,6 +128,5 @@ class AdminLocalization extends AdminPreferences
 		</fieldset>
 		</form>
 		<br />';
-		$this->_displayForm('options', $this->_fieldsOptions, $this->l('Advanced'), 'width2', 'localization');
 	}
 }
