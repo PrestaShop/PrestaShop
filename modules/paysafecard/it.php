@@ -49,5 +49,3 @@ $_MODULE['<{paysafecard}prestashop>paysafecard_315e941f57cf90350aea15d968e190f8'
 $_MODULE['<{paysafecard}prestashop>paysafecard_d59048f21fd887ad520398ce677be586'] = 'Per saperne di più';
 $_MODULE['<{paysafecard}prestashop>paysafecard_ee363d108ef0c9c5a599d3afe04b9e32'] = 'Si è verificato un errore, controlla Messaggi per maggiori informazioni';
 $_MODULE['<{paysafecard}prestashop>paysafecard_a9ced76f2dd6907220fa95b3a136b04a'] = 'Importo non valido';
-
-?>

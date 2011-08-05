@@ -309,3 +309,8 @@ div.PS_MRGmapStyle
 	height:250px;
 	display: none;
 }
+
+div#PS_MRPersonalizedFields
+{
+	display:none;
+}

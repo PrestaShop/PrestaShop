@@ -1,5 +1,0 @@
-{shop_name}
-Ce produit est bientot en rupture de stock :
-Ref: {product_ref}
-Id: {product_id}
-Quantité: {qty}

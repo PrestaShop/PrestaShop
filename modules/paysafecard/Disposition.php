@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Disposition
+class PSCDisposition
 {
 	const TABLE_NAME = 'disposition';
 	

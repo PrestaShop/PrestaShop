@@ -27,10 +27,9 @@
 if (!defined('_CAN_LOAD_FILES_'))
 	exit;
 
-if (!in_array('PrepaidServices', get_declared_classes())) include_once(_PS_MODULE_DIR_.'paysafecard/PrepaidServices.php');
+include_once(_PS_MODULE_DIR_.'paysafecard/PrepaidServices.php');
 
-
-class PaysafeCard extends PrepaidServices
+class PaysafeCard extends PSCPrepaidServices
 {
 	public $prefix = 'PS_PSC_';
 	protected $supported_languages = array('de', 'en', 'gr', 'el', 'es', 'it', 'fr', 'nl', 'pl', 'pt', 'si', 'sk', 'tr');

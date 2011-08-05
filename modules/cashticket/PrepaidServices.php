@@ -297,6 +297,14 @@ abstract class PrepaidServices extends PaymentModule
 
 		foreach ($this->_getAllowedCurrencies() AS $currency)
 		{
+			$mid = Configuration::get($this->prefix.'MERCHANT_ID_'.$currency['iso_code']);
+			$certificateExiste = '';
+			$passwordExist = '';
+			if (file_exists($this->certificat_dir.$mid.'.pem'))
+				$certificateExiste = '<div style="color:#00b511; text-align:center;">'.$this->l('A certificate has been found for this configuration').' : '.$mid.'.pem'.'</div><br />';
+			if (Configuration::get($this->prefix.'KEYRING_PW_'.$currency['iso_code']))
+				$passwordExist = '<div style="color:#00b511; text-align:center;">'.$this->l('A password has already been saved');
+		
 			$currencies_configuration .= '
 			<tr>
 				<td class="currency_label">'.$this->getL('configuration_in').' '.$currency['name'].' '.$currency['sign'].'</td>
@@ -310,10 +318,12 @@ abstract class PrepaidServices extends PaymentModule
 					<div class="margin-form">
 						<input type="file" name="ct_keyring_certificate_'.$currency['iso_code'].'" />
 					</div>
+					'.$certificateExiste.'
 					<label>'.$this->getL('keyring_pw').'</label>
 					<div class="margin-form">
-						<input type="text" name="ct_keyring_pw_'.$currency['iso_code'].'" value="'.Tools::htmlentitiesUTF8(Configuration::get($this->prefix.'KEYRING_PW_'.$currency['iso_code'])).'"/>
+						<input type="password" name="ct_keyring_pw_'.$currency['iso_code'].'" value=""/>
 					</div>
+					'.$passwordExist.'
 				</td>
 			</tr>';
 		}
@@ -511,6 +521,11 @@ abstract class PrepaidServices extends PaymentModule
 			$mid = trim(Tools::getValue('ct_merchant_id_'.$currency['iso_code']));
 
 			Configuration::updateValue($this->prefix.'MERCHANT_ID_'.$currency['iso_code'], $mid);
+			
+			$pass = Tools::getValue('ct_keyring_pw_'.$currency['iso_code']);
+			if (!empty($pass))
+			Configuration::updateValue($this->prefix.'KEYRING_PW_'.$currency['iso_code'], Tools::getValue('ct_keyring_pw_'.$currency['iso_code']));
+
 			Configuration::updateValue($this->prefix.'KEYRING_PW_'.$currency['iso_code'], Tools::getValue('ct_keyring_pw_'.$currency['iso_code']));
 
 			if (isset($_FILES['ct_keyring_certificate_'.$currency['iso_code']]))
@@ -556,7 +571,7 @@ abstract class PrepaidServices extends PaymentModule
 							 'payment_name' => $this->displayName,
 							 'module_name' => $this->name));
 
-		return $this->display(__FILE__, 'payment.tpl');
+		return $this->display(dirname(__FILE__), 'payment.tpl');
 	}
 
 

@@ -213,7 +213,7 @@ class AddressFormatCore extends ObjectModel
 								$usedKeyList[] = $patternName;
 					}
 							else
-								$this->_errorFormatList[] = Tools::displayError('This key is used too many times (once allowed').
+								$this->_errorFormatList[] = Tools::displayError('This key is used too many times (once allowed)').
 									': '.$patternName;
 				}
 			}

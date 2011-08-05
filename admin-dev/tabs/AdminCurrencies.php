@@ -172,7 +172,7 @@ class AdminCurrencies extends AdminTab
 				</div>
 				<label>'.$this->l('Symbol:').' </label>
 				<div class="margin-form">
-					<input type="text" size="3" maxlength="8" name="sign" value="'.htmlentities($this->getFieldValue($obj, 'sign'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
+					<input type="text" size="3" maxlength="8" name="sign" value="'.$this->getFieldValue($obj, 'sign').'" /> <sup>*</sup>
 					<p class="clear">'.$this->l('Will appear on Front Office, e.g., &euro;, $').'...</p>
 				</div>
 				<label>'.$this->l('Conversion rate:').' </label>

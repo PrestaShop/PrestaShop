@@ -920,18 +920,22 @@ class MondialRelay extends Module
 
 		if (!Configuration::get('PS_MR_SHOP_NAME'))
 			$warn .= '<div class="warn">'.
-				$this->l('Its seems you updated Mondialrelay without use the uninstall / install method, 
-				you have to set up this part to make working the generating ticket process').
+				$this->l('Its seems you updated Mondialrelay without use the uninstall / install method, you have to set up this part to make working the generating ticket process').
 				'</div>';			
 		// Form
 		$form = '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form">';
 		$form .= '
 			<fieldset class="PS_MRFormStyle">
 				<legend>
-					<img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Fields personalization').
+					<img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Advanced Settings'). ' - 
+					<a href="javascript:void(0);" id="PS_MRDisplayPersonalizedOptions"><font style="color:#00b511;">'.$this->l('Click to display / hide the options').'</font>	</a>'.
 			'</legend>'.
 			$warn.'
-			<label for="PS_MR_SHOP_NAME">'.$this->l('Main Address').'</label>
+			<div id="PS_MRPersonalizedFields">
+				<div style="margin-bottom:20px;">
+				- '.$this->l('This part allow to override the data sent at MondialRelay when you want to generate Ticket. Some fields are restricted by the length, or forbidden char').'.
+				</div>
+				<label for="PS_MR_SHOP_NAME">'.$this->l('Shop Name').'</label>
 			<div class="margin-form">
 				<input type="text" name="Expe_ad1" value="'.$addr1.'" /><br />
 				<p>'.$this->l('The key used by Mondialrelay is').' <b>Expe_ad1</b> '.$this->l('and has this default value').'
@@ -941,6 +945,8 @@ class MondialRelay extends Module
 		<div class="margin-form">
 			<input type="submit" name="PS_MRSubmitFieldPersonalization"  value="' . $this->l('Save') . '" class="button" />
 		</div>
+			</div>
+		</fieldset>
 		</form><br  />';
 		return $form;
 	}
@@ -968,15 +974,7 @@ class MondialRelay extends Module
 		$output .= '<a href="index.php?tab=AdminMondialRelay&token='.Tools::getAdminToken('AdminMondialRelay'.(int)(Tab::getIdFromClassName('AdminMondialRelay')).(int)$this->context->employee->id).'" class="green">'.
 		$this->l('the Mondial Relay administration page').'</a></p>';
 		$output .= '</div>
-		<div class="clear"></div>
-		<label>'.$this->l('Google Map').' </label>
-		<div class="margin-form">
-			<input type="radio" name="mr_google_key" id="mr_google_key_on" value="1" '.(Configuration::get('MR_GOOGLE_MAP') ? 'checked="checked" ' : '').'/>
-			<label class="t" for="mr_google_key_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Yes').'" /></label>
-			<input type="radio" name="mr_google_key" id="mr_google_key_off" value="0" '.(!Configuration::get('MR_GOOGLE_MAP') ? 'checked="checked" ' : '').'/>
-			<label class="t" for="mr_google_key_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('No').'" /></label>
-			<p>'.$this->l('Displaying a google map on your Mondial Relay carrier may make carrier page loading slower.').'</p>
-		</div>';
+		<div class="clear"></div>';
 		$output .= '<div class="margin-form"><input type="submit" name="submit_order_state"  value="' . $this->l('Save') . '" class="button" /></div>';
 		$output .= '</fieldset></form><br>';
 		
@@ -990,6 +988,9 @@ class MondialRelay extends Module
 			<form action="' . $_SERVER['REQUEST_URI'] . '" method="post" >
 				<fieldset>
 					<legend><img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Mondial Relay Account Settings').'</legend>
+					<div>
+						- '.$this->l('These parameters are provided by Mondial Relay once you subscribed to their service').'
+					</div>
 					<ul>
 						<li class="PS_MRRequireFields">
 							<sup>* ' . $this->l('Required') . '</sup>

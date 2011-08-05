@@ -516,6 +516,21 @@ function PS_MRDisplayRelayPoint(json, blockContent, carrier_id)
 	}
 }
 
+function PS_MRDisplayErrorRelayPoint(errorList, blockContent)
+{
+	
+	blockContent.fadeOut('fast', function()
+	{
+		console.log($(this));
+		$(this).children('td').html('');
+		for (numError in errorList)
+		{
+			$('<div class="error">' + errorList[numError] + '</div>').appendTo($(this).children('td'));
+		}
+		$(this).fadeIn('fast');
+	});
+}
+
 // Fetch the relay point
 function PS_MRFetchRelayPoint(carrierSelected)
 {
@@ -542,7 +557,9 @@ function PS_MRFetchRelayPoint(carrierSelected)
 		dataType: 'json',
 		success: function(json) 
 		{
-			if (json && json.success)
+			if (json && json.error && json.error.length)
+				PS_MRDisplayErrorRelayPoint(json.error, $('#PS_MRSelectedCarrier_' + carrier_id));
+			else if (json && json.success)
 				PS_MRDisplayRelayPoint(json, $('#PS_MRSelectedCarrier_' + carrier_id), carrier_id);					
 		},
 		error: function(xhr, ajaxOptions, thrownError) 
@@ -737,6 +754,7 @@ function PS_MRAddGMapMarker(id_carrier, relayPointNumber, contentBlockid)
 	return false;
 }	
 
+
 $(document).ready(function()
 {
 	$('#toggleStatusOrderList').click(function()
@@ -755,6 +773,10 @@ $(document).ready(function()
 	{
 		deleteSelectedHistories();
 	});
+	$('#PS_MRDisplayPersonalizedOptions').click(function()
+	{
+		$('#PS_MRPersonalizedFields').toggle('fast');
+});
 });
 
 

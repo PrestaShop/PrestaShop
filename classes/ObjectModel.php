@@ -860,12 +860,12 @@ abstract class ObjectModelCore
 	* @param $id_entity entity id
 	* @return boolean
 	*/
-	public static function existsInDatabase($id_entity)
+	public static function existsInDatabase($id_entity, $table)
 	{
 		$row = Db::getInstance()->getRow('
-		SELECT `id_'.self::$table.'`
-		FROM `'._DB_PREFIX_.self::$table.'` e
-		WHERE e.`id_'.self::$table.'` = '.(int)($id_entity));
+		SELECT `id_'.$table.'`
+		FROM `'._DB_PREFIX_.$table.'` e
+		WHERE e.`id_'.$table.'` = '.(int)($id_entity));
 
 		return isset($row['id_product']);
 	}
