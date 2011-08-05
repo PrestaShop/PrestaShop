@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -99,7 +99,7 @@ class ShopCore extends ObjectModel
 	const CONTEXT_SHOP = 1;
 	const CONTEXT_GROUP = 2;
 	const CONTEXT_ALL = 3;
-	
+
 	/**
 	 * Some data can be shared between shops, like customers or orders
 	 */
@@ -109,7 +109,7 @@ class ShopCore extends ObjectModel
 	public function getFields()
 	{
 		parent::validateFields();
-		
+
 		$fields['id_group_shop'] = (int)$this->id_group_shop;
 		$fields['id_category'] = (int)$this->id_category;
 		$fields['id_theme'] = (int)$this->id_theme;
@@ -140,7 +140,7 @@ class ShopCore extends ObjectModel
 				if ($group->share_stock && $group->getNbShops() > 1)
 					continue;
 			}
-			
+
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_shop')
 				$id = 'id_shop';
@@ -148,7 +148,7 @@ class ShopCore extends ObjectModel
 				$table_name .= '_'.$row['type'];
 			$res &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
 		}
-		
+
 		Shop::cacheShops(true);
 
 		return $res;
@@ -167,7 +167,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Find the shop from current domain / uri and get an instance of this shop
-	 * 
+	 *
 	 * @return Shop
 	 */
 	public static function initialize()
@@ -188,13 +188,17 @@ class ShopCore extends ObjectModel
 					AND s.active = 1
 					AND s.deleted = 0
 				ORDER BY LENGTH(uri) DESC';
+
+		$id_shop = '';
 		if ($results = Db::getInstance()->executeS($sql))
 			foreach ($results as $row)
+			{
 				if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
 				{
 					$id_shop = $row['id_shop'];
 					break;
 				}
+			}
 
 		if (!$id_shop)
 			die('Shop not found ... redirect me please !');
@@ -205,10 +209,10 @@ class ShopCore extends ObjectModel
 			die(Tools::displayError());
 		return $shop;
 	}
-	
+
 	/**
 	 * Load some additional data of current shop (theme name, shop uri)
-	 * 
+	 *
 	 * @return bool
 	 */
 	protected function loadShopInfos()
@@ -229,10 +233,10 @@ class ShopCore extends ObjectModel
 		$this->virtual_uri = $row['virtual_uri'];
 		return true;
 	}
-	
+
 	/**
 	 * Get shop theme name
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getTheme()
@@ -241,11 +245,11 @@ class ShopCore extends ObjectModel
 			$this->loadShopInfos();
 		return $this->theme_name;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Get shop URI
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getBaseURI()
@@ -254,15 +258,15 @@ class ShopCore extends ObjectModel
 			$this->loadShopInfos();
 		return $this->physical_uri.$this->virtual_uri.'/';
 	}
-	
+
 	public function getPhysicalURI()
 	{
 		return $this->physical_uri;
 	}
-	
+
 	/**
 	 * Get group of current shop
-	 * 
+	 *
 	 * @return GroupShop
 	 */
 	public function getGroup($asObject = false)
@@ -296,7 +300,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Get root category of current shop
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getCategory()
@@ -306,7 +310,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Get list of shop's urls
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getUrls()
@@ -320,7 +324,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Check if current shop ID is the same as default shop in configuration
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function isDefaultShop()
@@ -340,14 +344,14 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Load list of groups and shops, and cache it
-	 * 
+	 *
 	 * @param bool $refresh
 	 */
 	public static function cacheShops($refresh = false)
 	{
 		if (self::$shops && !$refresh)
 			return;
-	
+
 		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri
 				FROM '._DB_PREFIX_.'group_shop gs
 				LEFT JOIN '._DB_PREFIX_.'shop s
@@ -365,8 +369,6 @@ class ShopCore extends ObjectModel
 					self::$shops[$row['id_group_shop']] = array(
 						'id' =>				$row['id_group_shop'],
 						'name' => 			$row['group_name'],
-						'share_customer' =>	$row['share_customer'],
-						'share_order' =>	$row['share_order'],
 						'share_stock' =>	$row['share_stock'],
 						'shops' => 			array(),
 					);
@@ -408,7 +410,7 @@ class ShopCore extends ObjectModel
 				}
 		return $results;
 	}
-	
+
 	/**
 	 * Return some informations cached for one shop
 	 *
@@ -426,7 +428,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Return a shop ID from shop name
-	 * 
+	 *
 	 * @param string $name
 	 * @return int
 	 */
@@ -450,7 +452,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Retrieve group ID of a shop
-	 * 
+	 *
 	 * @param int $shopID Shop ID
 	 * @return int Group ID
 	 */
@@ -465,7 +467,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID
-	 * 
+	 *
 	 * @param int $shopID
 	 * @param int $type Shop::SHARE_CUSTOMER or Shop::SHARE_ORDER
 	 * @return array
@@ -476,15 +478,12 @@ class ShopCore extends ObjectModel
 			die('Wrong argument ($type) in Shop::getSharedShops() method');
 
 		Shop::cacheShops();
-		foreach (self::$shops as $groupData)
-			if (array_key_exists($shopID, $groupData['shops']) && $groupData[$type])
-				return array_keys($groupData['shops']);
 		return array($shopID);
 	}
-	
+
 	/**
 	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
-	 * 
+	 *
 	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
 	 * @return array
 	 */
@@ -498,14 +497,14 @@ class ShopCore extends ObjectModel
 		else if ($shopGroupID)
 			$list = Shop::getShops(true, $shopGroupID, true);
 		else
-			$list = Shop::getShops(true, null, true);	
-			
+			$list = Shop::getShops(true, null, true);
+
 		return $list;
 	}
-	
+
 	/**
 	 * Retrieve the current shop context in FO or BO
-	 * 
+	 *
 	 * @param string null|shop|group
 	 * @return array(id_shop, id_group_shop)|int
 	 */
@@ -551,20 +550,20 @@ class ShopCore extends ObjectModel
 			return $shopGroupID;
 		return array($shopID, $shopGroupID);
 	}
-	
+
 	/**
 	 * Get ID shop from context
-	 * 
+	 *
 	 * @return int
 	 */
 	public static function getContextID()
 	{
 		return Shop::getContext('shop');
 	}
-	
+
 	/**
 	 * Get ID shop from context
-	 * 
+	 *
 	 * @return int
 	 */
 	public static function getContextGroupID()
@@ -574,7 +573,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Check in which type of shop context we are
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getContextType()
@@ -589,7 +588,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Add an sql restriction for shops fields
-	 * 
+	 *
 	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
 	 * @param string $alias
 	 * @param string $type shop|group_shop
@@ -598,7 +597,7 @@ class ShopCore extends ObjectModel
 	{
 		if ($type != 'shop' && $type != 'group_shop')
 			$type = 'shop';
-			
+
 		if ($alias)
 			$alias .= '.';
 
@@ -618,10 +617,10 @@ class ShopCore extends ObjectModel
 			if ($shopID || $shopGroupID)
 				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
 		}
-		
+
 		return $restriction;
 	}
-	
+
 	public function sqlSharedStock($alias = null)
 	{
 		if ($alias)
@@ -653,7 +652,7 @@ class ShopCore extends ObjectModel
 		$tableAlias = ' asso_shop_'.$table;
 		if (strpos($table, '.') !== false)
 			list($tableAlias, $table) = explode('.', $table);
-			
+
 		$assoTables = Shop::getAssoTables();
 		if (!isset($assoTables[$table]) || $assoTables[$table]['type'] != 'shop')
 			return ;
@@ -675,10 +674,10 @@ class ShopCore extends ObjectModel
 	{
 		return ' AND '.$alias.'.id_shop = '.$this->getID(true). ' ';
 	}
-	
+
 	/**
 	 * Get all groups and associated shops as subarrays
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getTree()
@@ -686,7 +685,7 @@ class ShopCore extends ObjectModel
 		Shop::cacheShops();
 		return self::$shops;
 	}
-	
+
 	/**
 	 * @return bool Return true if there is more than one shop
 	 */
@@ -698,14 +697,14 @@ class ShopCore extends ObjectModel
 			$total = Shop::getTotalShops(true);
 		return ($total > 1) ? true : false;
 	}
-	
+
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
 	{
 		foreach (Shop::getAssoTables() AS $table_name => $row)
 		{
 			if ($tables_import && !isset($tables_import[$table_name]))
 				continue;
-				
+
 			// Special case for stock if current shop is in a share stock group
 			if ($table_name == 'stock')
 			{
@@ -713,13 +712,13 @@ class ShopCore extends ObjectModel
 				if ($group->share_stock && $group->haveShops())
 					continue;
 			}
-			
+
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_shop')
 				$id = 'id_shop';
 			else
 				$table_name .= '_'.$row['type'];
-				
+
 			if (!$deleted)
 			{
 				$res = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'` = '.(int)$old_id);
@@ -728,7 +727,7 @@ class ShopCore extends ObjectModel
 					unset($res[$id]);
 					if (isset($row['primary']))
 						unset($res[$row['primary']]);
-				
+
 					$keys = implode(', ', array_keys($res));
 					$sql = 'INSERT INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
 								(SELECT '.$keys.', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
@@ -737,9 +736,10 @@ class ShopCore extends ObjectModel
 				}
 			}
 			else
-			{		
+			{
 					Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
 			}
 		}
 	}
 }
+
