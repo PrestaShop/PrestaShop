@@ -182,7 +182,7 @@ switch (_DB_TYPE_) {
 				die('<action result="fail" error="9" />'."\n");
 			}
 		}
-		$db_data_settings .= "\n".'INSERT INTO `PREFIX_shop_url` (`id_shop`, `domain`, `domain_ssl`, `uri`, `main`,  `active`) VALUES(1, \''.pSQL(Tools::getHttpHost()).'\', \''.pSQL(Tools::getHttpHost()).'\', \'\', 1, 1);';
+		$db_data_settings .= "\n".'INSERT INTO `PREFIX_shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`,  `active`) VALUES(1, \''.pSQL(Tools::getHttpHost()).'\', \''.pSQL(Tools::getHttpHost()).'\', \'\', \'\', 1, 1);';
 		$db_data_settings .= "\n".'UPDATE `PREFIX_customer` SET `passwd` = \''.md5(_COOKIE_KEY_.'123456789').'\' WHERE `id_customer` =1;';
 		$db_data_settings .= "\n".'INSERT INTO `PREFIX_configuration` (name, value, date_add, date_upd) VALUES (\'PS_VERSION_DB\', \'' . INSTALL_VERSION . '\', NOW(), NOW());';
 		$db_data_settings = str_replace(array($filePrefix, $engineType), array($_GET['tablePrefix'], $_GET['engine']), $db_data_settings);
