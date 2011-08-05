@@ -336,7 +336,7 @@ class DispatcherCore
 
 			if (!array_key_exists($key, $params))
 				die("Dispatcher::createUrl() miss required parameter '$key' for route '$routeID'");
-			$queryParams[$key] = $params[$key];
+			$queryParams[$this->defaultRoutes[$routeID]['keywords'][$key]['param']] = $params[$key];
 		}
 
 		// Build an url which match a route
