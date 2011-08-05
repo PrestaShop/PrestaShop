@@ -90,6 +90,13 @@ class Ebay extends Module
 		if (!Configuration::get('EBAY_SECURITY_TOKEN'))
 			Configuration::updateValue('EBAY_SECURITY_TOKEN', Tools::passwdGen(30));
 
+		/* For 1.4.3 and less compatibility */
+		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+		if (!Configuration::get('PS_OS_PAYMENT'))
+			foreach ($updateConfig as $u)
+				if (!Configuration::get($u) && defined('_'.$u.'_'))
+					Configuration::updateValue($u, constant('_'.$u.'_'));
+
 		// Check if installed
 		if (self::isInstalled($this->name))
 		{
@@ -311,7 +318,7 @@ class Ebay extends Module
 		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-45 minutes')).'T'.date('H:i:s', strtotime('-45 minutes')).'.000Z')
 		{
 			$ebay = new eBayRequest();
-			$orderList = $ebay->getOrders(date('Y-m-d', strtotime('-90 days')).'T'.date('H:i:s', strtotime('-45 minutes')).'.000Z', $dateNew);
+			$orderList = $ebay->getOrders(date('Y-m-d', strtotime('-30 days')).'T'.date('H:i:s', strtotime('-30 days')).'.000Z', $dateNew);
 
 			if ($orderList)
 				foreach ($orderList as $order)

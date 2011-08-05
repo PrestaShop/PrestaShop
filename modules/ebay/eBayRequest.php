@@ -1009,7 +1009,7 @@ class eBayRequest
 					{
 						$id_product = Db::getInstance()->getValue('
 						SELECT `id_product` FROM `'._DB_PREFIX_.'product`
-						WHERE `reference` = \''.pSQL((string)$transaction->item->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->item->CustomLabel).'\'
+						WHERE `reference` = \''.pSQL((string)$transaction->item->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->item->CustomLabel).'\' OR `reference` = \''.pSQL((string)$transaction->SellingManagerProductDetails->CustomLabel).'\'
 						OR `reference` = \''.pSQL((string)$transaction->Variation->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->Variation->CustomLabel).'\'');
 						if ((int)$id_product > 0)
 							$itemList[] = array('id_product' => $id_product, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
@@ -1017,7 +1017,7 @@ class eBayRequest
 						{
 							$row = Db::getInstance()->getValue('
 							SELECT `id_product`, `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute`
-							WHERE `reference` = \''.pSQL((string)$transaction->item->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->item->CustomLabel).'\'
+							WHERE `reference` = \''.pSQL((string)$transaction->item->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->item->CustomLabel).'\' OR `reference` = \''.pSQL((string)$transaction->SellingManagerProductDetails->CustomLabel).'\'
 							OR `reference` = \''.pSQL((string)$transaction->Variation->SKU).'\' OR `reference` = \''.pSQL((string)$transaction->Variation->CustomLabel).'\'');
 							if ((int)$row['id_product'] > 0)
 								$itemList[] = array('id_product' => $row['id_product'], 'id_product_attribute' => $row['id_product_attribute'], 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);

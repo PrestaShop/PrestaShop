@@ -605,7 +605,7 @@ class AdminImport extends AdminTab
 			if (Tools::getValue('convert'))
 				$line = $this->utf8_encode_array($line);
 			$info = self::getMaskedRow($line);
-			if (array_key_exists('id', $info) AND (int)($info['id']) AND Product::existsInDatabase((int)($info['id'])))
+			if (array_key_exists('id', $info) AND (int)($info['id']) AND Product::existsInDatabase((int)($info['id']), 'product'))
 			{
 				$product = new Product((int)($info['id']));
 				$categoryData = Product::getProductCategories((int)($product->id));
@@ -753,7 +753,7 @@ class AdminImport extends AdminTab
 					$product->quantity = 0;
 					
 				// If id product AND id product already in base, trying to update
-				if ($product->id AND Product::existsInDatabase((int)($product->id)))
+				if ($product->id AND Product::existsInDatabase((int)($product->id), 'product'))
 				{
 
 					$datas = Db::getInstance()->getRow('SELECT `date_add` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)($product->id));
@@ -1192,7 +1192,7 @@ class AdminImport extends AdminTab
 
 			self::setDefaultValues($info);
 
-			if (array_key_exists('id', $info) AND (int)($info['id']) AND Manufacturer::existsInDatabase((int)($info['id'])))
+			if (array_key_exists('id', $info) AND (int)($info['id']) AND Manufacturer::existsInDatabase((int)($info['id']), 'manufacturer'))
 				$manufacturer = new Manufacturer((int)($info['id']));
 			else
 			$manufacturer = new Manufacturer();
@@ -1247,7 +1247,7 @@ class AdminImport extends AdminTab
 
 			self::setDefaultValues($info);
 
-			if (array_key_exists('id', $info) AND (int)($info['id']) AND Supplier::existsInDatabase((int)($info['id'])))
+			if (array_key_exists('id', $info) AND (int)($info['id']) AND Supplier::existsInDatabase((int)($info['id']), 'supplier'))
 				$supplier = new Supplier((int)($info['id']));
 			else
 			$supplier = new Supplier();

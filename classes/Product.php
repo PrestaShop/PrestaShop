@@ -2780,6 +2780,7 @@ class ProductCore extends ObjectModel
 	public static function getProductsProperties($id_lang, $query_result)
 	{
 		$resultsArray = array();
+		if(is_array($query_result))
 		foreach ($query_result AS $row)
 			if ($row2 = Product::getProductProperties($id_lang, $row))
 				$resultsArray[] = $row2;

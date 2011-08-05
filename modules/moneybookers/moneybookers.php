@@ -377,10 +377,14 @@ class MoneyBookers extends PaymentModule
 					}
 		$link = new Link();
 		$admin_dir =  substr(_PS_ADMIN_DIR_, strrpos(_PS_ADMIN_DIR_,'/') + 1);
+		$iso_code = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+		$landingPage = ($iso_code == 'en' || $iso_code == 'us') ? 'http://www.moneybookers.com/ads/partners/index.html?p=Prestashop' :
+			'http://www.moneybookers.com/ads/partners/'.$iso_code.'/index.html?p=Prestashop';
+		
 		
 		$output .= '
 					</select>
-					<p>'.$this->l('Change your logo position in the Front Office. Works with').'
+					<p>'.$this->l('Change youpr logo position in the Front Office. Works with').'
 						<a href="'.$link->getPageLink('index.php').'?live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).'">'.$this->l(' Live edit.').'</a></p>
 				</div>
 				<div style="text-align:center;">
@@ -405,6 +409,10 @@ class MoneyBookers extends PaymentModule
 .tdMBR { border-left: 1px solid black; border-top: 1px solid black; border-right: 1px solid black; }
 .tdMBLast { border-top: 1px solid black; border-right: 1px solid black; }
 </style>
+
+<p>'.$this->l('Fees available since March 21st 2011').'</p>
+
+
 <table cellpadding="2" cellspacing="0" style="width: 750px;">
  <tr><td class="tdMBL" style="background-color: grey;"><b>PrestaShop</b></td><td colspan="2" class="tdMBR" style="background-color: grey;"><b>'.$this->l('Online payment solution by Moneybookers').'</b></td></tr>
  <tr><td class="tdMBL">'.$this->l('Monthly volume for payments made via Moneybookers').'</td><td class="tdMBL">Quick Checkout Moneybookers ***</td><td class="tdMBR">Moneybookers eWallet **</td></tr>
@@ -415,6 +423,8 @@ class MoneyBookers extends PaymentModule
  <tr><td class="tdMBL">€ 100,000</td><td class="tdMBR">1.2% + 0.19€</td></tr>
  <tr><td colspan="3" style="border-top: 1px solid black;"><small>'.$this->l('For merchants over €100,000 fees can be negotiated.').' Contact: ecommerce@moneybookers.com</small></td></tr>
 </table>
+<br />
+'.$this->l('To view the last update of the detailed fees').'<a href="'.$landingPage.'"> <b>'.$this->l('Click here').'</b></a> 
 
 <p align="left">
 ** '.$this->l('Moneybookers eWallet').'<br />
