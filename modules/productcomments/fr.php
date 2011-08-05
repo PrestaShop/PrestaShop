@@ -2,6 +2,15 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{productcomments}prestashop>productcomments-extra_7c3b0e9898b88deee7ea75aafd2e37e2'] = 'Note moyenne';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_a71a0229e164fecdcde3c4e0f40473fa'] = 'Lire les avis utilisateurs';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_4ce7fa08d440a1e0fb369b1273e52ac3'] = 'Donner votre avis';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_b78a3223503896721cca1303f776159b'] = 'Titre';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_0be8406951cdfda82f00f79328cf4efc'] = 'Commentaire';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_a2ed44743411cf8b80e397448fce104c'] = 'Votre nom';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'ou';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{productcomments}prestashop>productcomments_b91c4e8b229a399a3bc911d352524a9b'] = 'Commentaires produits';
 $_MODULE['<{productcomments}prestashop>productcomments_0c21532dfd3476791e5aab1aa7fa7405'] = 'Autorise les utilisateurs à poster des commentaires sur les produits';
 $_MODULE['<{productcomments}prestashop>productcomments_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmation';
@@ -56,17 +65,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_6bf852d9850445291f5e9d474
 $_MODULE['<{productcomments}prestashop>productcomments_6d28f2900adb9e500868166f6d04da92'] = 'Vous devez attendre';
 $_MODULE['<{productcomments}prestashop>productcomments_ba8d7ae5dcadfba739f28a777378f208'] = 'secondes avant de poster un nouveau commentaire.';
 $_MODULE['<{productcomments}prestashop>productcomments_7c3b0e9898b88deee7ea75aafd2e37e2'] = 'Note moyenne';
-$_MODULE['<{productcomments}prestashop>productcomments_b1897515d548a960afe49ecf66a29021'] = 'Moyenne';
-$_MODULE['<{productcomments}prestashop>productcomments_5da618e8e4b89c66fe86e32cdafde142'] = 'De';
-$_MODULE['<{productcomments}prestashop>productcomments_b78a3223503896721cca1303f776159b'] = 'Titre';
 $_MODULE['<{productcomments}prestashop>productcomments_08621d00a3a801b9159a11b8bbd69f89'] = 'Aucun commentaire n\'a été publié pour le moment.';
-$_MODULE['<{productcomments}prestashop>productcomments_30b3dbf8b5c381c2e8d62189048ab37c'] = 'seconde(s) avant de poster un nouveau commentaire.';
-$_MODULE['<{productcomments}prestashop>productcomments_c3edcf2cedbd4ce230fd6d4ea8915718'] = 'Ajouter un commentaire';
-$_MODULE['<{productcomments}prestashop>productcomments_a2ed44743411cf8b80e397448fce104c'] = 'Votre nom :';
-$_MODULE['<{productcomments}prestashop>productcomments_51ec9bf4aaeab1b25bb57f9f8d4de557'] = 'Titre : ';
-$_MODULE['<{productcomments}prestashop>productcomments_240f3031f25601fa128bd4e15f0a37de'] = 'Commentaire :';
-$_MODULE['<{productcomments}prestashop>productcomments_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
-$_MODULE['<{productcomments}prestashop>productcomments_720fae7db6e6055d2b47890240bb3598'] = 'Seuls les utilisateurs enregistrés peuvent poster des commentaires.';
 $_MODULE['<{productcomments}prestashop>products-comparison_8413c683b4b27cc3f4dbd4c90329d8ba'] = 'Commentaires';
 $_MODULE['<{productcomments}prestashop>products-comparison_b1897515d548a960afe49ecf66a29021'] = 'Moyenne';
 $_MODULE['<{productcomments}prestashop>products-comparison_bc976f6c3405523cde61f63a7cbe224b'] = 'Voir les avis';

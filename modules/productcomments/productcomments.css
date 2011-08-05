@@ -1,0 +1,124 @@
+#product_comments_block_extra {
+	border: 1px solid #D0D3D8;
+	background: #F1F2F4;
+	padding: 10px
+}
+	
+#product_comments_block_extra a {
+	text-decoration: none;
+	font-weight: bold
+}
+
+#product_comments_block_extra a:hover {
+	text-decoration: underline
+}
+
+#product_comments_block_extra div.star {
+	background: url("img/star.gif") no-repeat scroll 0 0 transparent
+}
+
+#product_comments_block_extra div.star_on {
+	background: url("img/star.gif") no-repeat scroll 0 0 transparent;
+	background-position: 0 -16px
+}
+	
+#new_comment_form {
+	color: #333;
+	background-color: #fff;
+	padding: 10px;
+	width: 565px;
+	text-align: left;
+}
+
+#new_comment_form .title {
+	padding: 15px;
+	background: #333;
+	color: #fff;
+	font-size: 13px;
+	font-weight: bold;
+	padding: 5px;
+	text-align: left;
+	text-transform: uppercase;
+	display: block;
+	margin: 5px 0
+}
+
+#new_comment_form label {
+	display: block;
+	margin: 5px 0;
+	text-align: left;
+	font-weight: bold
+}
+
+#new_comment_form textarea {
+	width: 100%;
+	min-height: 100px;
+	margin: 5px 0
+}
+
+#new_comment_form input[type=text] {
+	width: 100%;
+	height: 30px;
+	margin: 5px 0
+}
+
+#new_comment_form th {
+	font-size: 11px;
+	text-align: left;
+	font-weight: bold;
+	color: #333
+}
+
+#new_comment_form button {
+	background-color: #333;
+	border: solid 1px #BDC2C9;
+	padding: 3px 5px;
+	cursor: pointer;
+	color: #fff
+}
+	
+#product_comments_block_tab div.comment {
+	border-bottom: solid 1px #ccc;
+	padding: 5px
+}
+
+#product_comments_block_tab div.comment div.comment_author {
+	float: left;
+	width: 200px
+}
+
+#product_comments_block_tab div.comment div.comment_details {
+	float: left;
+	width: 320px
+}
+
+#product_comments_block_tab div.comment_details p{
+	padding: 0
+}
+
+#product_comments_block_tab a {
+	text-decoration: none;
+	font-weight: bold
+}
+
+#product_comments_block_tab a:hover {
+	text-decoration: underline
+}
+
+#product_comments_block_tab div.star {
+	background: url("img/star.gif") no-repeat scroll 0 0 transparent
+}
+
+#product_comments_block_tab div.star_on {
+	background: url("img/star.gif") no-repeat scroll 0 0 transparent;
+	background-position: 0 -16px
+}
+
+#product_comments_block_tab button {
+	background-color: #bbb;
+	border: solid 1px #999;
+	padding: 1px;
+	cursor: pointer;
+	color: #fff;
+	border-radius: 3px
+}
