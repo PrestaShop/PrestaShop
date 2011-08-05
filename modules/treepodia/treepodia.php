@@ -202,7 +202,7 @@ XML;
 			$price->addChild('reduction_percent', ($specificPrice AND $specificPrice['reduction_type'] == 'percentage') ? $specificPrice['reduction'] * 100 : 0.00);
 			$price->addChild('reduction_price', ($specificPrice AND $specificPrice['reduction_type'] == 'amount') ? (float)$specificPrice['reduction'] : 0.00);
 			$price->addChild('display-on-sale', (int)$sqlProduct['on_sale']);
-			
+
 			$product->addChild('downloadable', $sqlProduct['id_product_download'] >= 1 ? 1 : 0);
 
 			$pack = Db::getInstance()->ExecuteS('
@@ -241,7 +241,7 @@ XML;
 			{
 				if (isset($imagesAlreadyDone[$imageSQL['id_image']]))
 					continue;
-				
+
 				$imagesAlreadyDone[(int)$imageSQL['id_image']] = 1;
 
 				$image = $product->addChild('image');
@@ -363,7 +363,7 @@ XML;
 						}
 					}
 
-					if (!empty($group['attributes']))	
+					if (!empty($group['attributes']))
 					{
 						foreach ($group['attributes'] AS $id_attribute => $attribute)
 						{
@@ -408,7 +408,7 @@ XML;
 			LEFT JOIN '._DB_PREFIX_.'product_attribute_image pi ON (pa.id_product_attribute = pi.id_product_attribute)
 			WHERE pa.id_product = '.(int)$sqlProduct['id_product']);
 
-			if(!empty($productAttributes))	
+			if(!empty($productAttributes))
 			{
 				foreach ($productAttributes AS $productAttribute)
 				{
@@ -427,7 +427,7 @@ XML;
 						$image->addAttribute('ref-id', $productAttribute['id_image']);
 					}
 
-					if (isset($combinaison[$id_product_attribute]) && !empty($combinaison[$id_product_attribute]))	
+					if (isset($combinaison[$id_product_attribute]) && !empty($combinaison[$id_product_attribute]))
 					{
 						foreach ($combinaison[$id_product_attribute] AS $id_group_attribute => $id_attribute)
 						{
@@ -504,7 +504,7 @@ XML;
 			}
 			closedir($dh);
 		}
-		
+
 		$out .= '<div class="clear"></div></div></div>';
 		return $out;
 	}
@@ -671,13 +671,13 @@ XML;
         if (Tools::getValue('trpd_hook_position') == 0)
         {
             Configuration::updateValue('TREEPODIA_HOOK', 0);
-            $this->unregisterHook(Hook::get('productFooter'));
+            $this->unregisterHook(Hook::getIdByName('productFooter'));
             $this->registerHook('extraLeft');
         }
 		else
 		{
             Configuration::updateValue('TREEPODIA_HOOK', 1);
-            $this->unregisterHook(Hook::get('extraLeft'));
+            $this->unregisterHook(Hook::getIdByName('extraLeft'));
             $this->registerHook('productFooter');
         }
 
@@ -713,7 +713,7 @@ XML;
 			$result = '';
 			while (!feof($socket))
 				$result .= trim(fgets($socket, 1024));
-			
+
 			fclose($socket);
 		}
 

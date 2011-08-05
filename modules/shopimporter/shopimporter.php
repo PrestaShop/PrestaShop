@@ -268,7 +268,7 @@ class shopimporter extends ImportModule
 				unset($exportModules[$key]);
 		$html = '<script type="text/javascript">var globalAjaxShopImporterToken = "'.sha1(_COOKIE_KEY_.'ajaxShopImporter').'";</script>
 		<script type="text/javascript" src="../modules/shopimporter/shopimporter.js"></script>
-				<script src="'._PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js"></script> 
+				<script src="'._PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js"></script>
 				 <script type="text/javascript">
 					var conf = new Array(); ';
 		$i = 0;
@@ -449,10 +449,10 @@ class shopimporter extends ImportModule
 					$defaultIdLand = $importModule->getDefaultIdLang();
 					$defaultLanguageImport = new Language(Language::getIdByIso($languages[$defaultIdLand]['iso_code']));
 					if ($defaultLanguage->iso_code != $defaultLanguageImport->iso_code)
-						$errors[] = $this->l('Default language doesn\'t match : ').'<br>'.Configuration::get('PS_SHOP_NAME').' : '.$defaultLanguage->name.' ≠ 
+						$errors[] = $this->l('Default language doesn\'t match : ').'<br>'.Configuration::get('PS_SHOP_NAME').' : '.$defaultLanguage->name.' ≠
 											'.$importModule->displayName.' : '.$defaultLanguageImport->name.'<br>'.$this->l('Please change default language in your configuration');
 				}
-				
+
 				if (Tools::isSubmit('syncCurrency'))
 				{
 					$defaultIdCurrency = $importModule->getDefaultIdCurrency();
@@ -461,7 +461,7 @@ class shopimporter extends ImportModule
 						$defaultCurrencyImport = new Currency((int)Currency::getIdByIsoCode($currencies[$defaultIdCurrency]['iso_code']));
 					else
 						$defaultCurrencyImport = new Currency((int)Currency::getIdByIsoCodeNum($currencies[$defaultIdCurrency]['iso_code_num']));
-						
+
 					$defaultCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 					if ($defaultCurrency->iso_code != $defaultCurrencyImport->iso_code)
 						$errors[] = $this->l('Default currency doesn\'t match : ').'<br>'.Configuration::get('PS_SHOP_NAME').' : '.$defaultCurrency->name.' ≠ '.$importModule->displayName.' : '.$defaultCurrencyImport->name.'<br>'.$this->l('Please change default currency in your configuration');
@@ -472,7 +472,7 @@ class shopimporter extends ImportModule
 			else
 				die('{"hasError" : true, "error" : ["FATAL ERROR"], "datas" : []}');
 		}
-		
+
 		foreach($fields as $key => $field)
 		{
 			$id = $this->supportedImports[strtolower($className)]['identifier'];
@@ -492,7 +492,7 @@ class shopimporter extends ImportModule
 				array_unshift($errors[sizeof($errors)-1], $field[$id]);
 			}
 		}
-		if (sizeof($errors) > 0) 
+		if (sizeof($errors) > 0)
 		{
 			$json['hasError'] = true;
 			$json['error'] = $errors;
@@ -528,14 +528,14 @@ class shopimporter extends ImportModule
 			if ($className == 'Category' AND (sizeof($fields) != (int)Tools::getValue('nbr_import')))
 				$this->updateCat();
 		}
-		if (sizeof($errors) > 0 AND is_array($errors)) 
+		if (sizeof($errors) > 0 AND is_array($errors))
 		{
 			$json['hasError'] = true;
 			$json['error'] = $errors;
 		}
 		die(Tools::jsonEncode($json));
 	}
-	
+
 	private function saveObject($className, $items)
 	{
 		$return = array();
@@ -547,7 +547,7 @@ class shopimporter extends ImportModule
 		{
 			$object = new $className;
 			$id = $item[$this->supportedImports[strtolower($className)]['identifier']];
-			if (array_key_exists('foreign_key', $this->supportedImports[strtolower($className)]))			
+			if (array_key_exists('foreign_key', $this->supportedImports[strtolower($className)]))
 				$this->replaceForeignKey($item, $table);
 			$matchIdLang = $this->getMatchIdLang(1);
 			foreach($item as $key => $val)
@@ -584,7 +584,7 @@ class shopimporter extends ImportModule
 		}
 		return $return;
 	}
-	
+
 	private function saveOrders($items)
 	{
 		$this->saveObject('cart', $items);
@@ -637,12 +637,12 @@ class shopimporter extends ImportModule
 							$item['order_history'][$k][$key] = $foreignKey[$key][$val];
 						else
 							$item['order_history'][$k][$key] = 0;
-				
+
 				Db::getInstance()->autoExecute(_DB_PREFIX_.'order_history', $item['order_history'][$k],'INSERT');
 			}
 		}
 	}
-	
+
 	private function insertAssociation($table, $items)
 	{
 		foreach($this->supportedImports[$table]['association'] AS $association)
@@ -675,7 +675,7 @@ class shopimporter extends ImportModule
 			}
 		}
 	}
-	
+
 	private function saveMatchId($className, $psId, $matchId)
 	{
 		$table = $this->supportedImports[$className]['table'];
@@ -683,7 +683,7 @@ class shopimporter extends ImportModule
 		$identifier = $this->supportedImports[$className]['identifier'];
 		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.pSQL($table).' SET `'.pSQL($identifier).'_'.pSQL($moduleName).'` =  '.(int)$matchId.' WHERE `'.pSQL($identifier).'` = '.(int)$psId);
 	}
-	
+
 	private function getMatchId($className)
 	{
 		$table = $this->supportedImports[$className]['table'];
@@ -695,7 +695,7 @@ class shopimporter extends ImportModule
 			$match[$return[$identifier.'_'.$moduleName]] = $return[$identifier];
 		return $match;
 	}
-	
+
 	private function getDefaultId($table)
 	{
 		$defaultId = 1;
@@ -703,7 +703,7 @@ class shopimporter extends ImportModule
 				$defaultId = Configuration::get($this->supportedImports[strtolower($table)]['defaultId']);
 		return $defaultId;
 	}
-	
+
 	private function copyImg($item, $className)
 	{
 		require_once('../../images.inc.php');
@@ -737,7 +737,7 @@ class shopimporter extends ImportModule
 				$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'import');
 				if (@copy($image, $tmpfile))
 				{
-					
+
 					$imagesTypes = ImageType::getImagesTypes($type);
 					imageResize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
 					if ($className == 'Product')
@@ -767,16 +767,16 @@ class shopimporter extends ImportModule
 				@unlink($tmpfile);
 				$cover = 0;
 			}
-		
+
 	}
-	
+
 	private function replaceForeignKey(&$item, $table)
 	{
 		if ($table == 'product_attribute')
 			$table2 = 'combination';
 		else
 			$table2 = $table;
-		
+
 		$foreingKey = $this->supportedImports[$table2]['foreign_key'];
 		$foreingKeyValue = $this->getForeignKey($table, $foreingKey);
 		foreach($foreingKey as $key)
@@ -793,7 +793,7 @@ class shopimporter extends ImportModule
 				$item[$key2] = $this->getDefaultId($table);
 		}
 	}
-	
+
 	private function alterTable($className)
 	{
 		$query ='';
@@ -816,7 +816,7 @@ class shopimporter extends ImportModule
 			Db::getInstance()->Execute($query);
 		}
 	}
-	
+
 	private function updateCat()
 	{
 		$moduleName = Tools::getValue('moduleName');
@@ -825,7 +825,7 @@ class shopimporter extends ImportModule
 									INNER JOIN
 									'._DB_PREFIX_.'category c2
 									ON
-									c.id_parent = c2.id_category_'.pSQL($moduleName).' 
+									c.id_parent = c2.id_category_'.pSQL($moduleName).'
 									SET
 									c.id_parent = c2.id_category
 									WHERE c.id_category_'.pSQL($moduleName).' != 0');
@@ -838,7 +838,7 @@ class shopimporter extends ImportModule
 			$cat->update();
 		}
 	}
-	
+
 	private function getForeignKey($className, $foreign_key = null)
 	{
 		$moduleName = Tools::getValue('moduleName');
@@ -859,7 +859,7 @@ class shopimporter extends ImportModule
 			$return = Db::getInstance()->ExecuteS('SELECT `'.pSQL($key2).'_'.pSQL($moduleName).'`, `'.pSQL($key2).'` FROM `'._DB_PREFIX_.pSQL($from).'` WHERE `'.pSQL($key2).'_'.pSQL($moduleName).'` != 0');
 			if (!empty($return))
 				foreach($return AS $name => $val)
-					$match[$key][$val[$key2.'_'.$moduleName]] = $val[$key2];				
+					$match[$key][$val[$key2.'_'.$moduleName]] = $val[$key2];
 		}
 		return $match;
 	}
@@ -874,7 +874,7 @@ class shopimporter extends ImportModule
 				$match[$val[$id.'_'.$moduleName]] = $val[$id];
 		return $match;
 	}
-	
+
 	private function getMatchIdLang($order = 1)
 	{
 		$moduleName = Tools::getValue('moduleName');
@@ -931,7 +931,7 @@ class shopimporter extends ImportModule
 						}
 						else
 							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
-		
+
 		if ((sizeof($rules['requiredLang']) OR sizeof($rules['sizeLang']) OR sizeof($rules['validateLang'])))
 		{
 		$matchIdLang = $this->getMatchIdLang(0);
@@ -1037,7 +1037,7 @@ class shopimporter extends ImportModule
 				Db::getInstance()->Execute('UPDATE  `'._DB_PREFIX_.'lang`
 											SET  `id_lang_'.pSQL($moduleName).'` =  '.(int)$language['id_lang'].'
 											WHERE  `id_lang` = '.(int)$newId);
-			}		
+			}
 		}
 	}
 
@@ -1129,12 +1129,12 @@ class shopimporter extends ImportModule
 				Product::cleanPositions((int)($categ['id_category']));
 		}
 	}
-	
+
 	public function getDefaultIdLang()
 	{
 		return;
 	}
-	
+
 	private function generateData($size = 1, $type)
 	{
 		$type = str_replace('is', '', $type);
@@ -1197,7 +1197,7 @@ class shopimporter extends ImportModule
 		 			$return .= substr($str, mt_rand(0, strlen($str)), 1);
 			break;
 			case 'StateIsoCode';
-			
+
 			break;
 			case 'Email':
 				$a = mt_rand(4, 10);
@@ -1218,9 +1218,9 @@ class shopimporter extends ImportModule
 				$return .= '1970-01-01 00:00:00';
 			break;
 		}
-		return $return; 
+		return $return;
 	}
-	
+
 	private function cartToOrder($items, $foreignKey)
 	{
 		$this->alterTable('order');
@@ -1231,13 +1231,13 @@ class shopimporter extends ImportModule
 			$order->id_customer = (int)$foreignKey['id_customer'][$item['id_customer']];
 			$order->id_address_invoice = (int)$foreignKey['id_address_invoice'][$item['id_address_invoice']];
 			$order->id_address_delivery = (int)$foreignKey['id_address_delivery'][$item['id_address_delivery']];
-			
+
 			$vat_address = new Address((int)$foreignKey['id_address_delivery'][$item['id_address_delivery']]);
 			$id_zone = Address::getZoneById((int)$vat_address->id);
 			$order->id_currency = (int)$item['id_currency'];
 			$order->id_lang = (int)$item['id_lang'];
 			$order->id_cart = (int)$foreignKey['id_cart'][$item['id_cart']];
-			
+
 			$customer = new Customer((int)$order->id_customer);
 			$order->secure_key = pSQL($customer->secure_key);
 			if (!strlen(trim($item['payment'])))
@@ -1246,24 +1246,27 @@ class shopimporter extends ImportModule
 				$order->payment = utf8_encode(html_entity_decode(strip_tags(Tools::substr($item['payment'], 0, 32))));
 			if (isset($this->name))
 				$order->module = $this->name;
-			
+
+			$carrier = new Carrier((int)$item['id_carrier']);
+
 			$currency = new Currency($order->id_currency);
 			$order->conversion_rate = $currency->conversion_rate;
 			$order->total_products = (float)$item['total_products'];
 			$order->total_products_wt = (float)$item['total_products_wt'];
 			$order->total_discounts = (float)$item['total_discounts'];
 			$order->total_shipping = (float)$item['total_shipping'];
-			$order->carrier_tax_rate = (float)Tax::getCarrierTaxRate((int)$item['id_carrier'], (int)$item[Configuration::get('PS_TAX_ADDRESS_TYPE')]);
+			$order->carrier_tax_rate = (float)$carrier->getTaxesRate(new Address((int)$item[Configuration::get('PS_TAX_ADDRESS_TYPE')]));
 			$order->total_wrapping = (float)$item['total_wrapping'];
 			$order->total_paid = (float)$item['total_paid'];
 			$order->total_paid_real = (float)$item['total_paid_real'];
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
 			$order->save(false, false);
-			
+
 			$this->saveMatchId('order', (int)$order->id, (int)$item['id_cart']);
 		}
 	}
 }
 
 ?>
+

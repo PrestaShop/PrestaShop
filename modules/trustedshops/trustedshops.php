@@ -91,7 +91,7 @@ class TrustedShops extends Module
 				break;
 		}
 		$return = ($return) ? (parent::install() AND $this->registerHook('orderConfirmation') AND $this->registerHook('newOrder') AND $this->registerHook('rightColumn') AND $this->registerHook('paymentTop') AND $this->registerHook('orderConfirmation')) : $return;
-		$id_hook = Hook::get('payment');
+		$id_hook = Hook::getIdByName('payment');
 		$this->updatePosition($id_hook, 0, 1);
 		return $return;
 	}

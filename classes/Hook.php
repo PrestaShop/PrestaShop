@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,42 +29,64 @@ class HookCore extends ObjectModel
 {
 	/** @var string Name */
 	public 		$name;
-	
+
 	protected	$fieldsRequired = array('name');
 	protected	$fieldsSize = array('name' => 32);
 	protected	$fieldsValidate = array('name' => 'isHookName');
-	
+
 	protected 	$table = 'hook';
 	protected 	$identifier = 'id_hook';
-	
+
 	static $preloadModulesFromHooks = null;
-	
+
 	public function getFields()
 	{
-		parent::validateFields();		
+		parent::validateFields();
 		$fields['name'] = pSQL($this->name);
 		return $fields;
 	}
-	
+
 	/**
 	  * Return hook ID from name
-	  * 
+	  *
 	  * @param string $hookName Hook name
 	  * @return integer Hook ID
+	  *
+	  * @deprecated since 1.5
 	  */
 	static public function get($hookName)
 	{
+		Tools::displayAsDeprecated();
 	 	if (!Validate::isHookName($hookName))
 	 		die(Tools::displayError());
-	 	
+
 		$result = Db::getInstance()->getRow('
 		SELECT `id_hook`, `name`
-		FROM `'._DB_PREFIX_.'hook` 
+		FROM `'._DB_PREFIX_.'hook`
 		WHERE `name` = \''.pSQL($hookName).'\'');
-		
+
 		return ($result ? $result['id_hook'] : false);
 	}
-	
+
+	/**
+	  * Return hook ID from name
+	  *
+	  * @param string $hook_name Hook name
+	  * @return integer Hook ID
+	  */
+	public static function getIdByName($hook_name)
+	{
+	 	if (!Validate::isHookName($hook_name))
+	 		die(Tools::displayError());
+
+		$result = Db::getInstance()->getRow('
+		SELECT `id_hook`, `name`
+		FROM `'._DB_PREFIX_.'hook`
+		WHERE `name` = \''.pSQL($hook_name).'\'');
+
+		return ($result ? $result['id_hook'] : false);
+	}
+
 	static public function getHooks($position = false)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -105,7 +127,7 @@ class HookCore extends ObjectModel
 			);
 		}
 	}
-	
+
 	static public function getModulesFromHook($hookID, $moduleID = null)
 	{
 		Hook::preloadModulesFromHooks();
@@ -115,7 +137,7 @@ class HookCore extends ObjectModel
 			return (isset($list[$moduleID])) ? array($list[$moduleID]) : array();
 		return $list;
 	}
-	
+
 	static public function newOrder($cart, $order, $customer, $currency, $orderStatus)
 	{
 		return Module::hookExec('newOrder', array(
@@ -135,7 +157,7 @@ class HookCore extends ObjectModel
 		$return = Module::hookExec('updateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id))) AND $return;
 		return $return;
 	}
-	
+
 	static public function postUpdateOrderStatus($newOrderStatusId, $id_order)
 	{
 		$order = new Order((int)($id_order));
@@ -146,7 +168,7 @@ class HookCore extends ObjectModel
 
 	/**
 	 * Called when quantity of a product is updated.
-	 * 
+	 *
 	 * @param Product
 	 * @param Order
 	 */
@@ -154,37 +176,37 @@ class HookCore extends ObjectModel
 	{
 		return Module::hookExec('updateQuantity', array('product' => $product, 'order' => $order));
 	}
-	
+
 	static public function productFooter($product, $category)
 	{
 		return Module::hookExec('productFooter', array('product' => $product, 'category' => $category));
 	}
-	
+
 	static public function productOutOfStock($product)
 	{
 		return Module::hookExec('productOutOfStock', array('product' => $product));
 	}
-	
+
 	static public function addProduct($product)
 	{
 		return Module::hookExec('addProduct', array('product' => $product));
 	}
-	
+
 	static public function updateProduct($product)
 	{
 		return Module::hookExec('updateProduct', array('product' => $product));
 	}
-	
+
 	static public function deleteProduct($product)
 	{
 		return Module::hookExec('deleteProduct', array('product' => $product));
 	}
-	
+
 	static public function updateProductAttribute($id_product_attribute)
 	{
 		return Module::hookExec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
 	}
-	
+
 	static public function orderConfirmation($id_order)
 	{
 	    if (Validate::isUnsignedId($id_order))
@@ -192,20 +214,20 @@ class HookCore extends ObjectModel
 			$params = array();
 			$order = new Order((int)$id_order);
 			$currency = new Currency((int)$order->id_currency);
-	    
+
 	    	if (Validate::isLoadedObject($order))
 	    	{
 				$params['total_to_pay'] = $order->total_paid;
 				$params['currency'] = $currency->sign;
 				$params['objOrder'] = $order;
 				$params['currencyObj'] = $currency;
-				
+
 				return Module::hookExec('orderConfirmation', $params);
 		}
 	    }
 	    return false;
 	}
-	
+
 	static public function paymentReturn($id_order, $id_module)
 	{
 	    if (Validate::isUnsignedId($id_order) AND Validate::isUnsignedId($id_module))
@@ -213,14 +235,14 @@ class HookCore extends ObjectModel
 			$params = array();
 			$order = new Order((int)($id_order));
 			$currency = new Currency((int)($order->id_currency));
-	    
+
 	    	if (Validate::isLoadedObject($order))
 	    	{
 				$params['total_to_pay'] = $order->total_paid;
 				$params['currency'] = $currency->sign;
 				$params['objOrder'] = $order;
 				$params['currencyObj'] = $currency;
-				
+
 				return Module::hookExec('paymentReturn', $params, (int)($id_module));
 			}
 	    }
@@ -233,7 +255,7 @@ class HookCore extends ObjectModel
 			return false;
 		return Module::hookExec('PDFInvoice', array('pdf' => $pdf, 'id_order' => $id_order));
 	}
-	
+
 	static public function backBeforePayment($module)
 	{
 		$params['module'] = strval($module);
@@ -241,7 +263,7 @@ class HookCore extends ObjectModel
 			return false;
 		return Module::hookExec('backBeforePayment', $params);
 	}
-	
+
 	static public function updateCarrier($id_carrier, $carrier)
 	{
 		if (!Validate::isUnsignedId($id_carrier) OR !is_object($carrier))
@@ -249,5 +271,4 @@ class HookCore extends ObjectModel
 		return Module::hookExec('updateCarrier', array('id_carrier' => $id_carrier, 'carrier' => $carrier));
 	}
 }
-
 
