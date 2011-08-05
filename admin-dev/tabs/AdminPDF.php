@@ -33,6 +33,8 @@ class AdminPDF extends AdminPreferences
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
+		
+		parent::__construct();
 
 		/* Collect all font files and build array for combo box */
 		$fontFiles = scandir(_PS_FPDF_PATH_.'font');
@@ -59,41 +61,44 @@ class AdminPDF extends AdminPreferences
 				array_push($encodingList, $arr);
 			}
 
- 		$this->_fieldsPDF = array(
-			'PS_PDF_ENCODING' => array(
-				'title' => $this->l('Encoding:'),
-				'desc' => $this->l('Encoding for PDF invoice'),
-				'type' => 'selectLang',
-				'cast' => 'strval',
-				'identifier' => 'mode', 
-				'list' => $encodingList),
-			'PS_PDF_FONT' => array(
-				'title' => $this->l('Font:'),
-				'desc' => $this->l('Font for PDF invoice'),
-				'type' => 'selectLang',
-				'cast' => 'strval',
-				'identifier' => 'mode', 
-				'list' => $fontList)
+		$this->optionsList = array(
+			'PDF' => array(
+				'title' =>	$this->l('PDF settings for the current language:').' '.$this->context->language->name,
+				'icon' =>	'pdf',
+				'class' =>	'width2',
+				'fields' =>	array(
+					'PS_PDF_ENCODING' => array(
+						'title' => $this->l('Encoding:'),
+						'desc' => $this->l('Encoding for PDF invoice'),
+						'type' => 'selectLang',
+						'cast' => 'strval',
+						'identifier' => 'mode', 
+						'list' => $encodingList),
+					'PS_PDF_FONT' => array(
+						'title' => $this->l('Font:'),
+						'desc' => $this->l('Font for PDF invoice'),
+						'type' => 'selectLang',
+						'cast' => 'strval',
+						'identifier' => 'mode', 
+						'list' => $fontList),
+				),
+			),
 		);
-
-		parent::__construct();
 	}
 
 	public function postProcess()
 	{
 		if (isset($_POST['submitPDF'.$this->table]))
 		{
+			// @todo automatize selectLang post process
 			$fieldLangPDF = array();
 			$languages = Language::getLanguages(false);
-			foreach ($this->_fieldsPDF as $field => $fieldvalue)
+			foreach ($this->optionsList['PDF']['fields'] as $field => $fieldvalue)
 				foreach ($languages as $lang)
 					if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
-						$fieldLangPDF[$field.'_'.strtoupper($lang['iso_code'])] = array('type' => 'select', 'cast' => 'strval', 'identifier' => 'mode', 'list' => $fieldvalue['list']);
+						$this->optionsList['PDF']['fields'][$field.'_'.strtoupper($lang['iso_code'])] = array('type' => 'select', 'cast' => 'strval', 'identifier' => 'mode', 'list' => $fieldvalue['list']);
 
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->_postConfig($fieldLangPDF);
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		 	parent::postProcess();
 		}
 	}	
 
@@ -101,6 +106,6 @@ class AdminPDF extends AdminPreferences
 	{
 		if (!Validate::isLoadedObject($this->context->language))
 			die(Tools::displayError());
-		$this->_displayForm('PDF', $this->_fieldsPDF, $this->l('PDF settings for the current language:').' '.$this->context->language->name, 'width2', 'pdf');
+		$this->displayOptionsList();
 	}
 }

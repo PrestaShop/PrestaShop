@@ -34,14 +34,13 @@ class AdminContact extends AdminPreferences
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-
-		$temporyArrayFields = $this->_getDefaultFieldsContent();
-		$this->_buildOrderedFieldsShop($temporyArrayFields);
 		
 		parent::__construct();
 
+		$temporyArrayFields = $this->_getDefaultFieldsContent();
+		$this->_buildOrderedFieldsShop($temporyArrayFields);
 	}
-	
+
 	private function _getDefaultFieldsContent()
 	{
 		$this->context = Context::getContext();		
@@ -82,49 +81,64 @@ class AdminContact extends AdminPreferences
 			'PS_SHOP_COUNTRY_ID' => 'Country:name',
 			'PS_SHOP_PHONE' => 'phone');
 		
-		$this->_fieldsShop = array();
+		$fields = array();
 		$orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
 		
 		foreach($orderedFields as $lineFields)
 			if (($patterns = explode(' ', $lineFields)))
 				foreach($patterns as $pattern)
 					if (($key = array_search($pattern, $associatedOrderKey)))
-						$this->_fieldsShop[$key] = $formFields[$key];
+						$fields[$key] = $formFields[$key];
 		foreach($formFields as $key => $value)
-			if (!isset($this->_fieldsShop[$key]))
-				$this->_fieldsShop[$key] = $formFields[$key];
+			if (!isset($fields[$key]))
+				$fields[$key] = $formFields[$key];
+				
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Contact details'),
+				'icon' =>	'tab-contact',
+				'class' =>	'width3',
+				'fields' =>	$fields,
+			),
+		);
 	}
-	
-	public function postProcess()
+
+	public function beforeUpdateOptions()
 	{
 		if (isset($_POST['PS_SHOP_STATE_ID']) && $_POST['PS_SHOP_STATE_ID'] != '0')
 		{
-			$isStateOk = Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'state` WHERE `id_country` = '.(int)(Tools::getValue('PS_SHOP_COUNTRY_ID')).' AND `id_state` = '.(int)(Tools::getValue('PS_SHOP_STATE_ID')));
+			$sql = 'SELECT `active` FROM `'._DB_PREFIX_.'state`
+					WHERE `id_country` = '.(int)Tools::getValue('PS_SHOP_COUNTRY_ID').'
+						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
+			$isStateOk = Db::getInstance()->getValue($sql);
 			if ($isStateOk != 1)
 				$this->_errors[] = Tools::displayError('This state is not in this country.');
 		}
-		parent::postProcess();
 	}
 
-	protected function _postConfig($fields)
+	public function updateOptionPsShopCountryId($value)
 	{
-		if (!$this->_errors && isset($_POST['PS_SHOP_COUNTRY_ID']))
+		if (!$this->_errors && $value)
 		{
-			$country = new Country($_POST['PS_SHOP_COUNTRY_ID'], $this->context->language->id);
-			Configuration::updateValue('PS_SHOP_COUNTRY', pSQL($country->name));
+			$country = new Country($value, $this->context->language->id);
+			if ($country->id)
+			{
+				Configuration::updateValue('PS_SHOP_COUNTRY_ID', $value);
+				Configuration::updateValue('PS_SHOP_COUNTRY', pSQL($country->name));
+			}
 		}
-		if (!$this->_errors && isset($_POST['PS_SHOP_STATE_ID']))
-		{
-			$state = new State((int)($_POST['PS_SHOP_STATE_ID']));
-			Configuration::updateValue('PS_SHOP_STATE', pSQL($state->name));
-		}
-		parent::_postConfig($fields);
 	}
-	
-	public function display()
+
+	public function updateOptionPsShopStateId($value)
 	{
-		$this->_displayForm('shop', $this->_fieldsShop, $this->l('Contact details'), 'width3', 'tab-contact');
+		if (!$this->_errors && $value)
+		{
+			$state = new State($value);
+			if ($state->id)
+			{
+				Configuration::updateValue('PS_SHOP_STATE_ID', $value);
+				Configuration::updateValue('PS_SHOP_STATE', pSQL($state->name));
+			}
+		}
 	}
 }
-
-

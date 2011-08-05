@@ -33,14 +33,23 @@ class AdminDb extends AdminPreferences
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
- 	
- 		$this->_fieldsDatabase = array(
-		'db_server' => array('title' => $this->l('Server:'), 'desc' => $this->l('IP or server name; \'localhost\' will work in most cases'), 'size' => 30, 'type' => 'text', 'required' => true, 'visibility' => Shop::CONTEXT_ALL),
-		'db_name' => array('title' => $this->l('Database:'), 'desc' => $this->l('Database name (e.g., \'prestashop\')'), 'size' => 30, 'type' => 'text', 'required' => true, 'visibility' => Shop::CONTEXT_ALL),
-		'db_prefix' => array('title' => $this->l('Prefix:'), 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
-		'db_user' => array('title' => $this->l('User:'), 'size' => 30, 'type' => 'text', 'required' => true, 'visibility' => Shop::CONTEXT_ALL),
-		'db_passwd' => array('title' => $this->l('Password:'), 'size' => 30, 'type' => 'password', 'desc' => $this->l('Leave blank if no change')), 'visibility' => Shop::CONTEXT_ALL);
+ 
 		parent::__construct();
+
+		$this->optionsList = array(
+			'database' => array(
+				'title' =>	$this->l('Database'),
+				'icon' =>	'database_gear',
+				'class' =>	'width2',
+				'fields' =>	array(
+				 	'db_server' => array('title' => $this->l('Server:'), 'desc' => $this->l('IP or server name; \'localhost\' will work in most cases'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_SERVER_, 'visibility' => Shop::CONTEXT_ALL),
+					'db_name' => array('title' => $this->l('Database:'), 'desc' => $this->l('Database name (e.g., \'prestashop\')'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_NAME_, 'visibility' => Shop::CONTEXT_ALL),
+					'db_prefix' => array('title' => $this->l('Prefix:'), 'size' => 30, 'type' => 'text', 'defaultValue' => _DB_PREFIX_, 'visibility' => Shop::CONTEXT_ALL),
+					'db_user' => array('title' => $this->l('User:'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_USER_, 'visibility' => Shop::CONTEXT_ALL),
+					'db_passwd' => array('title' => $this->l('Password:'), 'size' => 30, 'type' => 'password', 'desc' => $this->l('Leave blank if no change'), 'defaultValue' => _DB_PASSWD_, 'visibility' => Shop::CONTEXT_ALL),
+				),
+			),
+		);
 	}
 	
 	public function postProcess()
@@ -49,7 +58,7 @@ class AdminDb extends AdminPreferences
 		{
 		 	if ($this->tabAccess['edit'] === '1')	 	
 		 	{
-				foreach ($this->_fieldsDatabase AS $field => $values)
+				foreach ($this->optionsList['database']['fields'] AS $field => $values)
 					if (isset($values['required']) AND $values['required'])
 						if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
 							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
@@ -58,8 +67,8 @@ class AdminDb extends AdminPreferences
 				{
 					/* Datas are not saved in database but in config/settings.inc.php */
 					$settings = array();
-				 	foreach ($_POST as $k => $value)
-						if ($value)
+				 	foreach ($this->optionsList['database']['fields'] as $k => $data)
+						if ($value = Tools::getValue($k))
 							$settings['_'.Tools::strtoupper($k).'_'] = $value;
 				 	rewriteSettingsFile(NULL, NULL, $settings);
 				 	Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
@@ -68,6 +77,7 @@ class AdminDb extends AdminPreferences
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+
 		if (Tools::isSubmit('submitEngine'))
 		{
 			if (!isset($_POST['tablesBox']) OR !sizeof($_POST['tablesBox']))
@@ -84,6 +94,7 @@ class AdminDb extends AdminPreferences
 				$engineType = pSQL(Tools::getValue('engineType'));
 				
 				/* Datas are not saved in database but in config/settings.inc.php */
+				// @todo add a Db::trytoconnect()
 				$settings = array('_MYSQL_ENGINE_' => $engineType);
 			    rewriteSettingsFile(NULL, NULL, $settings);
 				
@@ -105,7 +116,7 @@ class AdminDb extends AdminPreferences
 	public function display()
 	{
 		echo $this->displayWarning($this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.')).'<br />';
-		$this->_displayForm('database', $this->_fieldsDatabase, $this->l('Database'), 'width2', 'database_gear');
+		$this->displayOptionsList();
 		$engines = $this->_getEngines();
 		$irow = 0;
 		echo '<br /><fieldset class="width2"><legend>'.$this->l('MySQL Engine').'</legend><form name="updateEngine" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post"><table cellspacing="0" cellpadding="0" class="table width2 clear">

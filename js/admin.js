@@ -829,18 +829,20 @@ function trackClickOnHelp(label, doc_version)
 
 $(document).ready(function()
 {
-	$('.multishop_config a').click(function(e)
+	$('.preference_default_multishop input[type=checkbox]').each(function(k, v)
 	{
-		var input = $(this).parent().find('input[type=checkbox]');
-		input.attr('checked', (!input.attr('checked')) ? true : false);
-		return false;
-	});
-
-	$('.multishop_config').hover(function()
-	{
-		$(this).find('div').fadeIn('fast');
-	}, function()
-	{
-		$(this).find('div').fadeOut('fast');
+		var key = $(v).attr('name');
+		var len = key.length;
+		checkMultishopDefaultValue(v, key.substr(17, len - 18));
 	});
 });
+
+function checkMultishopDefaultValue(obj, key)
+{
+	$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', $(obj).attr('checked'));
+	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
+	if ($(obj).attr('checked'))
+		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
+	else
+		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
+}
