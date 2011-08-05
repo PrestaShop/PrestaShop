@@ -37,12 +37,12 @@ class AdminStockMvt extends AdminTab
 		$this->view = true;
 				
 		$this->fieldsDisplay = array(
-		'id_stock_mvt' => array('title' => $this->l('ID'), 'width' => 40),
-		'product_name' => array('title' => $this->l('Product Name'), 'width' => 250, 'havingFilter' => true),
-		'quantity' => array('title' => $this->l('Quantity'), 'width' => 40),
-		'reason' => array('title' => $this->l('Reason'), 'width' => 250),
-		'id_order' => array('title' => $this->l('ID Order'), 'width' => 40),
-		'employee' => array('title' => $this->l('Employee'), 'width' => 100, 'havingFilter' => true),
+			'id_stock_mvt' => array('title' => $this->l('ID'), 'width' => 40),
+			'product_name' => array('title' => $this->l('Product Name'), 'width' => 250, 'havingFilter' => true),
+			'quantity' => array('title' => $this->l('Quantity'), 'width' => 40),
+			'reason' => array('title' => $this->l('Reason'), 'width' => 250),
+			'id_order' => array('title' => $this->l('ID Order'), 'width' => 40),
+			'employee' => array('title' => $this->l('Employee'), 'width' => 100, 'havingFilter' => true),
 		);
 		
 		
@@ -177,12 +177,21 @@ class AdminStockMvt extends AdminTab
 												'name' => array('title' => $this->l('Name'), 'width' => 500));
 		
 		$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
-		$this->_fieldsOptions = array('PS_STOCK_MVT_REASON_DEFAULT' => array('title' => $this->l('Default Stock Movement reason:'), 
-												'cast' => 'intval', 
-												'type' => 'select', 
-												'list' => $reasons, 
-												'identifier' => 'id_stock_mvt_reason'));
-		
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Options'),
+				'fields' =>	array(
+					'PS_STOCK_MVT_REASON_DEFAULT' => array(
+						'title' => $this->l('Default Stock Movement reason:'), 
+						'cast' => 'intval', 
+						'type' => 'select', 
+						'list' => $reasons, 
+						'identifier' => 'id_stock_mvt_reason'
+					),
+				),
+			),
+		);
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 		
 		echo '<h2>'.$this->l('Stock movement reason').'</h2>';

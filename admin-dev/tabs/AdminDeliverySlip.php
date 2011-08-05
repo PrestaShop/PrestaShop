@@ -30,11 +30,15 @@ class AdminDeliverySlip extends AdminTab
 	public function __construct()
 	{
 		$this->table = 'delivery';
-		
-		$this->optionTitle = $this->l('Delivery slips options');
-		$this->_fieldsOptions = array(
-			'PS_DELIVERY_PREFIX' => array('title' => $this->l('Delivery prefix:'), 'desc' => $this->l('Prefix used for delivery slips'), 'size' => 6, 'type' => 'textLang'),
-			'PS_DELIVERY_NUMBER' => array('title' => $this->l('Delivery number:'), 'desc' => $this->l('The next delivery slip will begin with this number, and then increase with each additional slip'), 'size' => 6, 'type' => 'text'),
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Delivery slips options'),
+				'fields' =>	array(
+					'PS_DELIVERY_PREFIX' => array('title' => $this->l('Delivery prefix:'), 'desc' => $this->l('Prefix used for delivery slips'), 'size' => 6, 'type' => 'textLang'),
+					'PS_DELIVERY_NUMBER' => array('title' => $this->l('Delivery number:'), 'desc' => $this->l('The next delivery slip will begin with this number, and then increase with each additional slip'), 'size' => 6, 'type' => 'text'),
+				),
+			),
 		);
 
 		parent::__construct();
@@ -71,6 +75,7 @@ class AdminDeliverySlip extends AdminTab
 	public function display()
 	{
 		$this->displayForm();
+		echo '<br />';
 		$this->displayOptionsList();
 	}
 	

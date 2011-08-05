@@ -31,11 +31,15 @@ class AdminInvoices extends AdminTab
 	{
 		$this->table = 'invoice';
 
-		$this->optionTitle = $this->l('Invoice options');
-		$this->_fieldsOptions = array(
-			'PS_INVOICE' => array('title' => $this->l('Enable invoices:'), 'desc' => $this->l('Select whether or not to activate invoices for your shop'), 'cast' => 'intval', 'type' => 'bool'),
-			'PS_INVOICE_PREFIX' => array('title' => $this->l('Invoice prefix:'), 'desc' => $this->l('Prefix used for invoices'), 'size' => 6, 'type' => 'textLang'),
-			'PS_INVOICE_START_NUMBER' => array('title' => $this->l('Invoice number:'), 'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (#').(Order::getLastInvoiceNumber() + 1).').', 'size' => 6, 'type' => 'text', 'cast' => 'intval')
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Invoice options'),
+				'fields' =>	array(
+					'PS_INVOICE' => array('title' => $this->l('Enable invoices:'), 'desc' => $this->l('Select whether or not to activate invoices for your shop'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_INVOICE_PREFIX' => array('title' => $this->l('Invoice prefix:'), 'desc' => $this->l('Prefix used for invoices'), 'size' => 6, 'type' => 'textLang'),
+					'PS_INVOICE_START_NUMBER' => array('title' => $this->l('Invoice number:'), 'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (#').(Order::getLastInvoiceNumber() + 1).').', 'size' => 6, 'type' => 'text', 'cast' => 'intval')
+				),
+			),
 		);
 
 		parent::__construct();
@@ -139,15 +143,13 @@ class AdminInvoices extends AdminTab
 				$this->_errors[] = $this->l('No invoice found for this status');
 			}
 		}
-		elseif (Tools::isSubmit('submitOptionsinvoice'))
-		{
-			if ((int)(Tools::getValue('PS_INVOICE_START_NUMBER')) != 0 AND (int)(Tools::getValue('PS_INVOICE_START_NUMBER')) <= Order::getLastInvoiceNumber())
-				$this->_errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber() .')';
-			else
-				parent::postProcess();
-		}
 		else
 			parent::postProcess();
 	}
+	
+	public function beforeUpdateOptions()
+	{
+		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 AND (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
+				$this->_errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber() .')';
+	}
 }
-

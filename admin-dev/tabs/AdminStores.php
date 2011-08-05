@@ -63,15 +63,19 @@ class AdminStores extends AdminTab
 			'fax' => array('title' => $this->l('Fax'), 'width' => 70),
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
-		
-		$this->optionTitle = $this->l('Parameters');
-		$this->_fieldsOptions = array(
-			'PS_STORES_DISPLAY_FOOTER' => array('title' => $this->l('Display in the footer:'), 'desc' => $this->l('Display a link to the store locator in the footer'), 'cast' => 'intval', 'type' => 'bool'),
-			'PS_STORES_DISPLAY_SITEMAP' => array('title' => $this->l('Display in the sitemap page:'), 'desc' => $this->l('Display a link to the store locator in the sitemap page'), 'cast' => 'intval', 'type' => 'bool'),
-			'PS_STORES_SIMPLIFIED' => array('title' => $this->l('Show a simplified store locator:'), 'desc' => $this->l('No map, no search, only a store directory'), 'cast' => 'intval', 'type' => 'bool'),
-			'PS_STORES_CENTER_LAT' => array('title' => $this->l('Latitude by default:'), 'desc' => $this->l('Used for the position by default of the map'), 'cast' => 'floatval', 'type' => 'float', 'size' => '10'),
-			'PS_STORES_CENTER_LONG' => array('title' => $this->l('Longitude by default:'), 'desc' => $this->l('Used for the position by default of the map'), 'cast' => 'floatval', 'type' => 'float', 'size' => '10'));
-		
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Parameters'),
+				'fields' =>	array(
+					'PS_STORES_DISPLAY_FOOTER' => array('title' => $this->l('Display in the footer:'), 'desc' => $this->l('Display a link to the store locator in the footer'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_STORES_DISPLAY_SITEMAP' => array('title' => $this->l('Display in the sitemap page:'), 'desc' => $this->l('Display a link to the store locator in the sitemap page'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_STORES_SIMPLIFIED' => array('title' => $this->l('Show a simplified store locator:'), 'desc' => $this->l('No map, no search, only a store directory'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_STORES_CENTER_LAT' => array('title' => $this->l('Latitude by default:'), 'desc' => $this->l('Used for the position by default of the map'), 'cast' => 'floatval', 'type' => 'text', 'size' => '10'),
+					'PS_STORES_CENTER_LONG' => array('title' => $this->l('Longitude by default:'), 'desc' => $this->l('Used for the position by default of the map'), 'cast' => 'floatval', 'type' => 'text', 'size' => '10')
+				),
+			),
+		);
 		parent::__construct();
 	}
 	

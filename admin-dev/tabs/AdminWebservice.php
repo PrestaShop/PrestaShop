@@ -40,28 +40,37 @@ class AdminWebservice extends AdminTab
  		$this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
 		
 		$this->fieldsDisplay = array(
-		'key' => array('title' => $this->l('Key'), 'align' => 'center', 'width' => 32),
-		'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
-		'description' => array('title' => $this->l('Key description'), 'align' => 'center', 'orderby' => false)
+			'key' => array('title' => $this->l('Key'), 'align' => 'center', 'width' => 32),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'description' => array('title' => $this->l('Key description'), 'align' => 'center', 'orderby' => false)
 		);
 		
-		$this->optionTitle = $this->l('Configuration');
 		if (file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$this->_fieldsOptions = array('PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop Webservice:'), 
-																	'desc' => $this->l('Before activating the webservice, you must be sure to: ').
-																						'<ol><li>'.$this->l('be certain URL rewrite is available on this server').
-																						'</li><li>'.$this->l('be certain that the 5 methods GET, POST, PUT, DELETE and HEAD are supported by this server').
-																						'</li></ol>', 
-																	'cast' => 'intval',
-																	'type' => 'bool'));
+			$this->optionsList = array(
+				'general' => array(
+					'title' =>	$this->l('Configuration'),
+					'fields' =>	array(
+						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop Webservice:'), 
+							'desc' => $this->l('Before activating the webservice, you must be sure to: ').
+												'<ol><li>'.$this->l('be certain URL rewrite is available on this server').
+												'</li><li>'.$this->l('be certain that the 5 methods GET, POST, PUT, DELETE and HEAD are supported by this server').
+												'</li></ol>', 
+							'cast' => 'intval',
+							'type' => 'bool'),
+					),
+				),
+			);
+
 		parent::__construct();
 	}
 	
-	protected function afterAdd($object) {
+	protected function afterAdd($object)
+	{
 		WebserviceKey::setPermissionForAccount($object->id, Tools::getValue('resources', array()));
 	}
 	
-	protected function afterUpdate($object) {
+	protected function afterUpdate($object)
+	{
 		WebserviceKey::setPermissionForAccount($object->id, Tools::getValue('resources', array()));
 	}
 	
@@ -223,6 +232,7 @@ echo '
 			</fieldset>
 		</form>';
 	}
+
 	public function postProcess()
 	{
 		if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32)

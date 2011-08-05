@@ -45,12 +45,16 @@ class AdminLanguages extends AdminTab
 			'language_code' => array('title' => $this->l('Language code'), 'width' => 70, 'align' => 'center'),
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
 		);
-	
-		$this->optionTitle = $this->l('Languages options');
-		$this->_fieldsOptions = array(
-			'PS_LANG_DEFAULT' => array('title' => $this->l('Default language:'), 'desc' => $this->l('The default language used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_lang', 'list' => Language::getlanguages(false)),
-		);
 		
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Languages options'),
+				'fields' =>	array(
+					'PS_LANG_DEFAULT' => array('title' => $this->l('Default language:'), 'desc' => $this->l('The default language used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_lang', 'list' => Language::getlanguages(false)),
+				),
+			),
+		);
+
 		parent::__construct();
 	}
 	
@@ -229,16 +233,15 @@ class AdminLanguages extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::isSubmit('submitOptions'.$this->table))
-		{
-			$lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
-			if (!$lang->active)
-				$this->_errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
-			else
-				return parent::postProcess();
-		}
 		else
 			return parent::postProcess();
+	}
+	
+	public function beforeUpdateOptions()
+	{
+		$lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
+		if (!$lang->active)
+			$this->_errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
 	}
 	
 	public function displayList()

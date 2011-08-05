@@ -49,10 +49,15 @@ class AdminShop extends AdminTab
 			'category_name' => array('title' => $this->l('Category Root'), 'width' => 70),
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
 		);
-		
-		$this->optionTitle = $this->l('Shops options');
-		$this->_fieldsOptions = array('PS_SHOP_DEFAULT' => array('title' => $this->l('Default shop:'), 'desc' => $this->l('The default shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_shop', 'list' => Shop::getShops(), 'visibility' => Shop::CONTEXT_ALL));
-		
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Shops options'),
+				'fields' =>	array(
+					'PS_SHOP_DEFAULT' => array('title' => $this->l('Default shop:'), 'desc' => $this->l('The default shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_shop', 'list' => Shop::getShops(), 'visibility' => Shop::CONTEXT_ALL)
+				),
+			),
+		);
 		parent::__construct();
 	}
 	

@@ -45,17 +45,21 @@ class AdminTaxes extends AdminTab
 		if (Configuration::get('PS_USE_ECOTAX'))
 			$ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0');
 
-		$this->optionTitle = $this->l('Tax options');
-		$this->_fieldsOptions = array(
-		'PS_TAX' => array('title' => $this->l('Enable tax:'), 'desc' => $this->l('Select whether or not to include tax on purchases'), 'cast' => 'intval', 'type' => 'bool'),
-		'PS_TAX_DISPLAY' => array('title' => $this->l('Display tax in cart:'), 'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'), 'cast' => 'intval', 'type' => 'bool'),
-		'PS_TAX_ADDRESS_TYPE' => array('title' => $this->l('Base on:'), 'cast' => 'pSQL', 'type' => 'select', 'list' => array(array('name' => $this->l('Invoice Address'), 'id' => 'id_address_invoice'), array('name' => $this->l('Delivery Address'), 'id' => 'id_address_delivery')), 'identifier' => 'id'),
-		'PS_USE_ECOTAX' => array('title' => $this->l('Use ecotax'), 'desc' => $ecotax_desc, 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Tax options'),
+				'fields' =>	array(
+					'PS_TAX' => array('title' => $this->l('Enable tax:'), 'desc' => $this->l('Select whether or not to include tax on purchases'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_TAX_DISPLAY' => array('title' => $this->l('Display tax in cart:'), 'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_TAX_ADDRESS_TYPE' => array('title' => $this->l('Base on:'), 'cast' => 'pSQL', 'type' => 'select', 'list' => array(array('name' => $this->l('Invoice Address'), 'id' => 'id_address_invoice'), array('name' => $this->l('Delivery Address'), 'id' => 'id_address_delivery')), 'identifier' => 'id'),
+					'PS_USE_ECOTAX' => array('title' => $this->l('Use ecotax'), 'desc' => $ecotax_desc, 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+				),
+			),
 		);
 
 		if (Configuration::get('PS_USE_ECOTAX'))
-			$this->_fieldsOptions['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g., French ecotax: 19.6%).'),
-			'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_tax', 'identifier' => 'id_tax_rules_group', 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions());
+			$this->optionsList['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g., French ecotax: 19.6%).'),
+				'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_tax', 'identifier' => 'id_tax_rules_group', 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions());
 
 		parent::__construct();
 	}
@@ -106,7 +110,7 @@ class AdminTaxes extends AdminTab
 
 	public function postProcess()
 	{
-		if(Tools::getValue('submitAdd'.$this->table))
+		if (Tools::getValue('submitAdd'.$this->table))
 		{
 		 	/* Checking fields validity */
 			$this->validateRules();
@@ -196,7 +200,6 @@ class AdminTaxes extends AdminTab
 				Product::resetEcoTax();
 
 			Configuration::updateValue('PS_USE_ECOTAX', (int)$value);
-}
+		}
 	}
 }
-

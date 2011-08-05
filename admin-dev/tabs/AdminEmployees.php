@@ -50,20 +50,25 @@ class AdminEmployees extends AdminTab
 				$this->profilesArray[$profile['name']] = $profile['name'];
 		
 		$this->fieldsDisplay = array(
-		'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'lastname' => array('title' => $this->l('Last name'), 'width' => 130),
-		'firstname' => array('title' => $this->l('First name'), 'width' => 130),
-		'email' => array('title' => $this->l('E-mail address'), 'width' => 180), 
-		'profile' => array('title' => $this->l('Profile'), 'width' => 90, 'type' => 'select', 'select' => $this->profilesArray, 'filter_key' => 'pl!name'),
-		'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'));
+			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'lastname' => array('title' => $this->l('Last name'), 'width' => 130),
+			'firstname' => array('title' => $this->l('First name'), 'width' => 130),
+			'email' => array('title' => $this->l('E-mail address'), 'width' => 180), 
+			'profile' => array('title' => $this->l('Profile'), 'width' => 90, 'type' => 'select', 'select' => $this->profilesArray, 'filter_key' => 'pl!name'),
+			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
+		);
 
-		$this->optionTitle = $this->l('Employees options');
-		$this->_fieldsOptions = array(
-			'PS_PASSWD_TIME_BACK' => array('title' => $this->l('Password regenerate:'), 'desc' => $this->l('Security minimum time to wait to regenerate a new password'), 'cast' => 'intval', 'size' => 5, 'type' => 'text', 'suffix' => ' '.$this->l('minutes'), 'visibility' => Shop::CONTEXT_ALL),
-			'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array('title' => $this->l('Memorize form language:'), 'desc' => $this->l('Allow employees to save their own default form language'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
-				'0' => array('value' => 0, 'name' => $this->l('No')), 
-				'1' => array('value' => 1, 'name' => $this->l('Yes')) 
-			), 'visibility' => Shop::CONTEXT_ALL)
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Employees options'),
+				'fields' =>	array(
+					'PS_PASSWD_TIME_BACK' => array('title' => $this->l('Password regenerate:'), 'desc' => $this->l('Security minimum time to wait to regenerate a new password'), 'cast' => 'intval', 'size' => 5, 'type' => 'text', 'suffix' => ' '.$this->l('minutes'), 'visibility' => Shop::CONTEXT_ALL),
+					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array('title' => $this->l('Memorize form language:'), 'desc' => $this->l('Allow employees to save their own default form language'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
+						'0' => array('value' => 0, 'name' => $this->l('No')), 
+						'1' => array('value' => 1, 'name' => $this->l('Yes')) 
+					), 'visibility' => Shop::CONTEXT_ALL)
+				),
+			),
 		);
 
 		parent::__construct();

@@ -47,23 +47,29 @@ class AdminCustomers extends AdminTab
 		) as connect';
 		$genders = array(1 => $this->l('M'), 2 => $this->l('F'), 9 => $this->l('?'));
  		$this->fieldsDisplay = array(
-		'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'id_gender' => array('title' => $this->l('Gender'), 'width' => 25, 'align' => 'center', 'icon' => array(1 => 'male.gif', 2 => 'female.gif', 'default' => 'unknown.gif'), 'orderby' => false, 'type' => 'select', 'select' => $genders, 'filter_key' => 'a!id_gender'),
-		'lastname' => array('title' => $this->l('Last Name'), 'width' => 80),
-		'firstname' => array('title' => $this->l('First name'), 'width' => 60),
-		'email' => array('title' => $this->l('E-mail address'), 'width' => 120, 'maxlength' => 19),
-		'age' => array('title' => $this->l('Age'), 'width' => 30, 'search' => false),
-		'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
-		'newsletter' => array('title' => $this->l('News.'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'callback' => 'printNewsIcon', 'orderby' => false),
-		'optin' => array('title' => $this->l('Opt.'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'callback' => 'printOptinIcon', 'orderby' => false),
-		'date_add' => array('title' => $this->l('Registration'), 'width' => 30, 'type' => 'date', 'align' => 'right'),
-		'connect' => array('title' => $this->l('Connection'), 'width' => 60, 'type' => 'datetime', 'search' => false));
+			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_gender' => array('title' => $this->l('Gender'), 'width' => 25, 'align' => 'center', 'icon' => array(1 => 'male.gif', 2 => 'female.gif', 'default' => 'unknown.gif'), 'orderby' => false, 'type' => 'select', 'select' => $genders, 'filter_key' => 'a!id_gender'),
+			'lastname' => array('title' => $this->l('Last Name'), 'width' => 80),
+			'firstname' => array('title' => $this->l('First name'), 'width' => 60),
+			'email' => array('title' => $this->l('E-mail address'), 'width' => 120, 'maxlength' => 19),
+			'age' => array('title' => $this->l('Age'), 'width' => 30, 'search' => false),
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'newsletter' => array('title' => $this->l('News.'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'callback' => 'printNewsIcon', 'orderby' => false),
+			'optin' => array('title' => $this->l('Opt.'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'callback' => 'printOptinIcon', 'orderby' => false),
+			'date_add' => array('title' => $this->l('Registration'), 'width' => 30, 'type' => 'date', 'align' => 'right'),
+			'connect' => array('title' => $this->l('Connection'), 'width' => 60, 'type' => 'datetime', 'search' => false),
+ 		);
 
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = true;
-		$this->optionTitle = $this->l('Customers options');
-		$this->_fieldsOptions = array(
-			'PS_PASSWD_TIME_FRONT' => array('title' => $this->l('Regenerate password:'), 'desc' => $this->l('Security minimum time to wait to regenerate the password'),'validation' => 'isUnsignedInt', 'cast' => 'intval', 'size' => 5, 'type' => 'text', 'suffix' => ' '.$this->l('minutes'))
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Customers options'),
+				'fields' =>	array(
+					'PS_PASSWD_TIME_FRONT' => array('title' => $this->l('Regenerate password:'), 'desc' => $this->l('Security minimum time to wait to regenerate the password'),'validation' => 'isUnsignedInt', 'cast' => 'intval', 'size' => 5, 'type' => 'text', 'suffix' => ' '.$this->l('minutes'))
+				),
+			),
 		);
 
 		parent::__construct();

@@ -47,16 +47,20 @@ class AdminLogs extends AdminTab
 		'object_id' => array('title' => $this->l('Object ID'), 'width' => 50),
 		'error_code' => array('title' => $this->l('Error code'), 'width' => 75, 'prefix' => '0x'),
 		'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime'));
-		
-		$this->optionTitle = $this->l('Logs by e-mail');
-		$this->_fieldsOptions = array(
-			'PS_LOGS_BY_EMAIL' => array(
-				'title' => $this->l('Minimum severity level:'), 
-				'desc' => $this->l('Put "5" if you don\'t want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'), 
-				'cast' => 'intval', 
-				'type' => 'text', 
-				'size' => 5
-			)
+
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Logs by e-mail'),
+				'fields' =>	array(
+					'PS_LOGS_BY_EMAIL' => array(
+						'title' => $this->l('Minimum severity level:'), 
+						'desc' => $this->l('Put "5" if you don\'t want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'), 
+						'cast' => 'intval', 
+						'type' => 'text', 
+						'size' => 5
+					),
+				),
+			),
 		);
 		
 		parent::__construct();
@@ -64,19 +68,19 @@ class AdminLogs extends AdminTab
 	
 	public function displayListHeader($token = NULL)
 	{			
-			echo '
-			<fieldset>
-				<legend>'.$this->l('Severity levels').'</legend>
-				<p>'.$this->l('Here\'s the meaning of severity levels:').'</p>
-				<ol>
-					<li style="color: green;">'.$this->l('Informative only').'</li>
-					<li style="color: orange;">'.$this->l('Warning').'</li>
-					<li style="color: orange;">'.$this->l('Error').'</li>
-					<li style="color: red;">'.$this->l('Major issue (crash)').'</li>
-				</ol>
-			</fieldset>';
-			
-			parent::displayListHeader();
+		echo '
+		<fieldset>
+			<legend>'.$this->l('Severity levels').'</legend>
+			<p>'.$this->l('Here\'s the meaning of severity levels:').'</p>
+			<ol>
+				<li style="color: green;">'.$this->l('Informative only').'</li>
+				<li style="color: orange;">'.$this->l('Warning').'</li>
+				<li style="color: orange;">'.$this->l('Error').'</li>
+				<li style="color: red;">'.$this->l('Major issue (crash)').'</li>
+			</ol>
+		</fieldset>';
+		
+		parent::displayListHeader();
 	}
 }
 
