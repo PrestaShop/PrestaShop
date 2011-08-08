@@ -31,7 +31,7 @@ class AdminPayment extends AdminTab
 	
 	public function __construct()
 	{
-		$shopID = Context::getContext()->shop->getID();
+		$shopID = Context::getContext()->shop->getID(true);
 
 		/* Get all modules then select only payment ones*/
 		$modules = Module::getModulesOnDisk();
@@ -39,7 +39,7 @@ class AdminPayment extends AdminTab
 			
 			if ($module->tab == 'payments_gateways')
 			{
-				if($module->id)
+				if ($module->id)
 				{
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->country = array();
@@ -88,7 +88,7 @@ class AdminPayment extends AdminTab
 		foreach ($this->paymentModules as $module)
 			if ($module->active AND isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)
-					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID().', '.(int)$selected.')';
+					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID(true).', '.(int)$selected.')';
 		if (sizeof($values))
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
 		Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
