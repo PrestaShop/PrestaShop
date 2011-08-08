@@ -36,7 +36,7 @@ class Autoload
 	 * @var Autoload
 	 */
 	protected static $instance;
-	
+
 	/**
 	 * @var string Root directory
 	 */
@@ -56,7 +56,7 @@ class Autoload
 
 	/**
 	 * Get instance of autoload (singleton)
-	 * 
+	 *
 	 * @return Autoload
 	 */
 	public static function getInstance()
@@ -66,10 +66,10 @@ class Autoload
 
 		return Autoload::$instance;
 	}
-	
+
 	/**
-	 * Retrive informations about a class in classes index and load it
-	 * 
+	 * Retrieve informations about a class in classes index and load it
+	 *
 	 * @param string $classname
 	 */
 	public function load($classname)
@@ -78,7 +78,7 @@ class Autoload
 			$this->generateIndex();
 
 		// If $classname has not core suffix (E.g. Shop, Product)
-		if (substr($classname, -4) == 'Core')
+		if (substr($classname, -4) != 'Core')
 		{
 			// If requested class does not exist, load associated core class
 		 	if (isset($this->index[$classname]) && !$this->index[$classname])
@@ -135,9 +135,9 @@ class Autoload
 	}
 
 	/**
-	 * Retrive recursively all classes in a directory and its subdirectories
-	 * 
-	 * @param unknown_type $path Relativ path from root to the directory
+	 * Retrieve recursively all classes in a directory and its subdirectories
+	 *
+	 * @param string $path Relativ path from root to the directory
 	 * @return array
 	 */
 	protected function getClassesFromDir($path)
@@ -166,3 +166,4 @@ class Autoload
 		return $classes;
 	}
 }
+
