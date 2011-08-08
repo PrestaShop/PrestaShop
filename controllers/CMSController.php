@@ -27,9 +27,36 @@
 
 class CmsControllerCore extends FrontController
 {
+	public $php_self = 'cms';
 	public $assignCase;
 	public $cms;
 	public $cms_category;
+	
+	public function canonicalRedirection()
+	{
+		// Automatically redirect to the canonical URL if the current in is the right one
+		// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
+
+		if (Configuration::get('PS_CANONICAL_REDIRECT'))
+		{
+			if (Validate::isLoadedObject($this->cms) AND $canonicalURL = $this->context->link->getCMSLink($this->cms))
+				if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
+				{
+					header('HTTP/1.0 301 Moved');
+					if (_PS_MODE_DEV_)
+						die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.'">'.$canonicalURL.'</a>');
+					Tools::redirectLink($canonicalURL);
+				}
+			if (Validate::isLoadedObject($this->cms_category) AND $canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category))
+				if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
+				{
+					header('HTTP/1.0 301 Moved');
+					if (_PS_MODE_DEV_ )
+						die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.'">'.$canonicalURL.'</a>');
+					Tools::redirectLink($canonicalURL);
+				}
+		}
+	}
 	
 	public function preProcess()
 	{
@@ -37,25 +64,7 @@ class CmsControllerCore extends FrontController
 		    $this->cms = new CMS($id_cms, $this->context->language->id); 
 		elseif ($id_cms_category = (int)Tools::getValue('id_cms_category'))
 		    $this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id); 
-			
-		// Automatically redirect to the canonical URL if the current in is the right one
-		// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
-		if ($this->cms AND $canonicalURL = $this->context->link->getCMSLink($this->cms))
-			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
-			{
-				header('HTTP/1.0 301 Moved');
-				if (defined(_PS_MODE_DEV_) AND _PS_MODE_DEV_ )
-					die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.'">'.$canonicalURL.'</a>');
-				Tools::redirectLink($canonicalURL);
-			}
-		if ($this->cms_category AND $canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category))
-			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/i', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
-			{
-				header('HTTP/1.0 301 Moved');
-				if (_PS_MODE_DEV_ )
-					die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.'">'.$canonicalURL.'</a>');
-				Tools::redirectLink($canonicalURL);
-			}
+		$this->canonicalRedirection();
 		
 		parent::preProcess();
 		

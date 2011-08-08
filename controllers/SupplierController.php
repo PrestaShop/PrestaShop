@@ -39,6 +39,8 @@ class SupplierControllerCore extends FrontController
 	
 	public function canonicalRedirection()
 	{
+		if (Configuration::get('PS_CANONICAL_REDIRECT'))
+		{
 		if (Validate::isLoadedObject($this->supplier))
 		{
 			$canonicalURL = self::$link->getSupplierLink($this->supplier);
@@ -50,6 +52,7 @@ class SupplierControllerCore extends FrontController
 				Tools::redirectLink($canonicalURL);
 			}
 		}
+	}
 	}
 	
 	public function preProcess()

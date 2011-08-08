@@ -30,7 +30,7 @@ if (!defined('_CAN_LOAD_FILES_'))
 
 class sendToAFriend extends Module
 {
- 	function __construct()
+	function __construct($dontTranslate = false)
  	{
  	 	$this->name = 'sendtoafriend';
  	 	$this->version = '1.1';
@@ -40,9 +40,12 @@ class sendToAFriend extends Module
 
 		parent::__construct();
 
+		if(!$dontTranslate)
+		{
 		$this->displayName = $this->l('Send to a Friend module');
 		$this->description = $this->l('Allows customers to send a product link to a friend.');
  	}
+	}
 
 	function install()
 	{

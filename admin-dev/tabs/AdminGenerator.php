@@ -139,7 +139,14 @@ class AdminGenerator extends AdminTab
 					fwrite($writeFd, "# For more information about the robots.txt standard, see:\n");
 					fwrite($writeFd, "# http://www.robotstxt.org/wc/robots.html\n\n");
 
+					//GoogleBot specific
+					fwrite($writeFd, "# GoogleBot specific\n");
+					fwrite($writeFd, "User-agent: Googlebot\n");
+					foreach ($this->_rbData['GB'] as $GB)
+						fwrite($writeFd, 'Disallow: '.__PS_BASE_URI__.$GB."\n");
+					
 					// User-Agent
+					fwrite($writeFd, "# All bots\n\n");
 					fwrite($writeFd, "User-agent: *\n");
 
 					// Directories
@@ -178,8 +185,11 @@ class AdminGenerator extends AdminTab
 		$tab['Files'] = array('addresses.php', 'address.php', 'authentication.php', 'cart.php', 'discount.php', 'footer.php',
 		'get-file.php', 'header.php', 'history.php', 'identity.php', 'images.inc.php', 'init.php', 'my-account.php', 'order.php', 'order-opc.php',
 		'order-slip.php', 'order-detail.php', 'order-follow.php', 'order-return.php', 'order-confirmation.php', 'pagination.php', 'password.php',
-		'pdf-invoice.php', 'pdf-order-return.php', 'pdf-order-slip.php', 'product-sort.php', 'search.php', 'statistics.php','attachment.php', 'guest-tracking',
-		'*orderby=','*orderway=','*tag=','*id_currency=','*search_query=','*id_lang=','*back=','*utm_source=','*utm_medium=','*utm_campaign=','*n=');
+		'pdf-invoice.php', 'pdf-order-return.php', 'pdf-order-slip.php', 'product-sort.php', 'search.php', 'statistics.php','attachment.php', 'guest-tracking');
+
+		$tab['GB'] = array(
+			'*orderby=','*orderway=','*tag=','*id_currency=','*search_query=','*id_lang=','*back=','*utm_source=','*utm_medium=','*utm_campaign=','*n='
+		);
 
 		return $tab;
 	}
