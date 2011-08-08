@@ -52,15 +52,12 @@ if (isset($return['SIGNATURE']) AND isset($return['CENAME']) AND isset($return['
 	
 		if ($return['SIGNATURE'] === socolissimo::make_key($return['CENAME'],(float)($return['DYPREPARATIONTIME']),$return['DYFORWARDINGCHARGES'],$return['TRCLIENTNUMBER'], $return['ORDERID']))
 		{
-			global $cookie ;	
-			if (isset($cookie) OR is_object($cookie))
+			if (Context::getContext()->cart->id)
 			{
-			
-				if (saveOrderShippingDetails((int)($cookie->id_cart),(int)($return['TRCLIENTNUMBER']),$return))
+				if (saveOrderShippingDetails(Context::getContext()->cart->id,(int)($return['TRCLIENTNUMBER']),$return))
 				{	
-					global $cookie;
-					$cart->id_carrier = (int)($_POST['TRPARAMPLUS']);
-					if (!$cart->update())
+					Context::getContext()->cart->id_carrier = (int)($_POST['TRPARAMPLUS']);
+					if (!Context::getContext()->cart->update())
 						Tools::redirect();
 					else
 						Tools::redirect('index.php?controller=order&step=3');

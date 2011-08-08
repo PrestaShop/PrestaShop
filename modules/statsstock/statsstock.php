@@ -51,14 +51,12 @@ class StatsStock extends Module
 
     function hookAdminStatsModules()
     {
-		global $cookie;
-		
 		if (Tools::isSubmit('submitCategory'))
-			$cookie->statsstock_id_category = Tools::getValue('statsstock_id_category');
+			$this->context->cookie->statsstock_id_category = Tools::getValue('statsstock_id_category');
 
 		$ru = AdminTab::$currentIndex.'&module='.$this->name.'&token='.Tools::getValue('token');
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$filter = ((int)$cookie->statsstock_id_category ? ' AND p.id_product IN (SELECT cp.id_product FROM '._DB_PREFIX_.'category_product cp WHERE cp.id_category = '.(int)$cookie->statsstock_id_category.')' : '');
+		$filter = ((int)$this->context->cookie->statsstock_id_category ? ' AND p.id_product IN (SELECT cp.id_product FROM '._DB_PREFIX_.'category_product cp WHERE cp.id_category = '.(int)$this->context->cookie->statsstock_id_category.')' : '');
 	
 		$sql = 'SELECT p.id_product, p.reference, pl.name,
 				IFNULL((
@@ -76,7 +74,7 @@ class StatsStock extends Module
 				), p.wholesale_price * p.quantity) as stockvalue
 				FROM '._DB_PREFIX_.'product p
 				'.$this->context->shop->sqlAsso('product', 'p').'
-				INNER JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
+				INNER JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.')
 				WHERE 1 = 1
 				'.$filter;
 		$products = Db::getInstance()->ExecuteS($sql);
@@ -88,8 +86,8 @@ class StatsStock extends Module
 			<input type="hidden" name="submitCategory" value="1" />
 			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">
 				<option value="0">-- '.$this->l('All').' --</option>';
-		foreach (Category::getSimpleCategories($cookie->id_lang) as $category)
-			echo '<option value="'.(int)$category['id_category'].'" '.($cookie->statsstock_id_category == $category['id_category'] ? 'selected="selected"' : '').'>'.$category['name'].'</option>';
+		foreach (Category::getSimpleCategories($this->context->language->id) as $category)
+			echo '<option value="'.(int)$category['id_category'].'" '.($this->context->cookie->statsstock_id_category == $category['id_category'] ? 'selected="selected"' : '').'>'.$category['name'].'</option>';
 		echo '	</select>
 		</form>
 		<div style="clear:both">&nbsp;</div>';

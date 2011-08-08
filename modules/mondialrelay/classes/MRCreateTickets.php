@@ -404,8 +404,6 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	 */
 	private function _updateTable($params, $expeditionNum, $ticketURL, $trackingURL, $id_mr_selected)
 	{
-		global $cookie;
-			
 		Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'mr_selected`
 			SET `MR_poids` = \''.$params['Poids'].'\',
@@ -426,7 +424,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		$history = new OrderHistory();
 		$history->id_order = (int)($params['NDossier']);
 		$history->changeIdOrderState(Configuration::get('PS_OS_SHIPPING'), (int)($params['NDossier'])); 
-		$history->id_employee = (int)($cookie->id_employee);
+		$history->id_employee = (int)Context::getContext()->employee->id;
 		$history->addWithemail(true, $templateVars);
 
 		unset($order);

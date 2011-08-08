@@ -162,8 +162,6 @@ class ThemeInstallator extends Module
 
 	private function init_defines()
 	{
-		global $cookie;
-
 		define('_EXPORT_FOLDER_', dirname(__FILE__).'/export/');
 		define('_IMPORT_FOLDER_', dirname(__FILE__).'/import/');
 		$this->page = 1;
@@ -623,9 +621,7 @@ class ThemeInstallator extends Module
 
 	private function _displayForm2()
 	{
-		global			$cookie;
-
-		$iso = Language::getIsoById((int)($cookie->id_lang));
+		$iso = $this->context->language->iso_code;
 		$xml = simplexml_load_file(_IMPORT_FOLDER_.XMLFILENAME);
 		$this->xml = $xml;
 		$res = $xml->xpath('/theme/descriptions/description[@iso="'.$iso.'"]');
@@ -1145,10 +1141,8 @@ class ThemeInstallator extends Module
 
 	private function AuthorInformationForm()
 	{
-		global			$cookie;
-
-		$employee = new Employee((int)$cookie->id_employee);
-		$mail = Tools::getValue('email') ? Tools::htmlentitiesUTF8(Tools::getValue('email')) : Tools::htmlentitiesUTF8($cookie->email);
+		$employee = $this->context->employee;
+		$mail = Tools::getValue('email') ? Tools::htmlentitiesUTF8(Tools::getValue('email')) : Tools::htmlentitiesUTF8($employee->email);
 		$author = Tools::getValue('author_name') ? Tools::htmlentitiesUTF8(Tools::getValue('author_name')) : Tools::htmlentitiesUTF8(($employee->firstname).' '.$employee->lastname);
 		$website = Tools::getValue('website') ? Tools::htmlentitiesUTF8(Tools::getValue('website')) : Tools::getHttpHost(true);
 
@@ -1173,11 +1167,9 @@ class ThemeInstallator extends Module
 
 	private function ThemeInformationForm()
 	{
-		global			$cookie;
-
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$defaultLanguage = (int)$this->context->language->id;
 		$languages = Language::getLanguages();
-		$iso = Language::getIsoById((int)($cookie->id_lang));
+		$iso = $this->context->language->iso_code;
 		$divLangName = 'title';
 		$val = Tools::getValue('theme_name') ? Tools::getValue('theme_name') : Tools::getValue('mainTheme');
 

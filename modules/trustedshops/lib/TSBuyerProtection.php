@@ -931,14 +931,13 @@ class TSBuyerProtection extends AbsTrustedShops
 	}
 	private function _displayPresentation()
 	{
-		global $cookie;
 		$link = '';
 
-		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'de')
+		if (strtolower(Context::getContext()->language->iso_code) == 'de')
 			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.de/shopbetreiber/mitgliedschaft.html?et_cid=14&et_lid=29069" target="_blank">Jetzt bei Trusted Shops anmelden!</a></b></p><br />';
-		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'en')
+		if (strtolower(Context::getContext()->language->iso_code) == 'en')
 			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.com/merchants/membership.html?shopsw=PRESTA&et_cid=53&et_lid=3361" target="_blank">Appy now!</a></b></p><br />';
-		if (strtolower(Language::getIsoById((int)$cookie->id_lang)) == 'fr')
+		if (strtolower(Context::getContext()->language->iso_code) == 'fr')
 			$link = '<p><b><a style="text-decoration: underline; font-weight: bold; color: #0000CC;" target="_blank" href="http://www.trustedshops.fr/marchands/tarifs.html?shopsw=PRESTA&et_cid=53&et_lid=3362" target="_blank">Enregistrement Trusted Shops</a></b></p><br />';
 
 		return '

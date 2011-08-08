@@ -65,20 +65,19 @@ class StatsForecast extends Module
 	
 	public function hookAdminStatsModules()
 	{
-		global $cookie;
 		$ru = AdminTab::$currentIndex.'&module='.$this->name.'&token='.Tools::getValue('token');
 		
 		$db = Db::getInstance();
 		
-		if (!isset($cookie->stats_granularity))
-			$cookie->stats_granularity = 10;
+		if (!isset($this->context->cookie->stats_granularity))
+			$this->context->cookie->stats_granularity = 10;
 		if (Tools::isSubmit('submitIdZone'))
-			$cookie->stats_id_zone = Tools::getValue('stats_id_zone');
+			$this->context->cookie->stats_id_zone = Tools::getValue('stats_id_zone');
 		if (Tools::isSubmit('submitGranularity'))
-			$cookie->stats_granularity = Tools::getValue('stats_granularity');
+			$this->context->cookie->stats_granularity = Tools::getValue('stats_granularity');
 		
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$employee = new Employee((int)($cookie->id_employee));
+		$currency = $this->context->currency;
+		$employee = $this->context->employee;
 
 		// @todo use PHP functions to get timestamp ...
 		$result = $db->getRow('SELECT UNIX_TIMESTAMP(\'2009-06-05 00:00:00\') as t1, UNIX_TIMESTAMP(\''.$employee->stats_date_from.' 00:00:00\') as t2');
@@ -90,13 +89,13 @@ class StatsForecast extends Module
 		$interval2 = ($to2 - $from) / 60 / 60 / 24;
 		$prop30 = $interval / $interval2;
 		
-		if ($cookie->stats_granularity == 7)
+		if ($this->context->cookie->stats_granularity == 7)
 			$intervalAvg = $interval2 / 30;
-		if ($cookie->stats_granularity == 4)
+		if ($this->context->cookie->stats_granularity == 4)
 			$intervalAvg = $interval2 / 365;
-		if ($cookie->stats_granularity == 10)
+		if ($this->context->cookie->stats_granularity == 10)
 			$intervalAvg = $interval2;
-		if ($cookie->stats_granularity == 42)
+		if ($this->context->cookie->stats_granularity == 42)
 			$intervalAvg = $interval2 / 7;
 		
 		define('PS_BASE_URI', '/');
@@ -104,11 +103,11 @@ class StatsForecast extends Module
 		$from = max($result['t1'], $result['t2']);
 		$to = strtotime($employee->stats_date_to.'');
 
-		$dateFromGAdd = ($cookie->stats_granularity != 42
-			? 'SUBSTRING(date_add, 1, '.(int)$cookie->stats_granularity.')'
+		$dateFromGAdd = ($this->context->cookie->stats_granularity != 42
+			? 'SUBSTRING(date_add, 1, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(date_add),DAYOFYEAR(date_add)-WEEKDAY(date_add)), CONCAT(YEAR(date_add),"-01-01*"))');
-		$dateFromGInvoice = ($cookie->stats_granularity != 42
-			? 'SUBSTRING(invoice_date, 1, '.(int)$cookie->stats_granularity.')'
+		$dateFromGInvoice = ($this->context->cookie->stats_granularity != 42
+			? 'SUBSTRING(invoice_date, 1, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(invoice_date),DAYOFYEAR(invoice_date)-WEEKDAY(invoice_date)), CONCAT(YEAR(invoice_date),"-01-01*"))');
 		
 		$sql = 'SELECT
@@ -127,7 +126,7 @@ class StatsForecast extends Module
 		$result = $db->ExecuteS($sql, false);
 
 		$dataTable = array();
-		if ($cookie->stats_granularity == 10)
+		if ($this->context->cookie->stats_granularity == 10)
 		{
 			$dateEnd = strtotime($employee->stats_date_to.' 23:59:59');
 			$dateToday = time();
@@ -145,9 +144,9 @@ class StatsForecast extends Module
 				<input type="hidden" name="submitGranularity" value="1" />
 				'.$this->l('Mode:').' <select name="stats_granularity" onchange="this.form.submit();" style="width:100px">
 					<option value="10">'.$this->l('Day').'</option>
-					<option value="42" '.($cookie->stats_granularity == '42' ? 'selected="selected"' : '').'>'.$this->l('Week').'</option>
-					<option value="7" '.($cookie->stats_granularity == '7' ? 'selected="selected"' : '').'>'.$this->l('Month').'</option>
-					<option value="4" '.($cookie->stats_granularity == '4' ? 'selected="selected"' : '').'>'.$this->l('Year').'</option>
+					<option value="42" '.($this->context->cookie->stats_granularity == '42' ? 'selected="selected"' : '').'>'.$this->l('Week').'</option>
+					<option value="7" '.($this->context->cookie->stats_granularity == '7' ? 'selected="selected"' : '').'>'.$this->l('Month').'</option>
+					<option value="4" '.($this->context->cookie->stats_granularity == '4' ? 'selected="selected"' : '').'>'.$this->l('Year').'</option>
 				</select>
 			</form>
 			<div class="clear">&nbsp;</div>
@@ -193,7 +192,7 @@ class StatsForecast extends Module
 			$discountToday = (isset($discountArray[$row['fix_date']]) ? $discountArray[$row['fix_date']] : 0);
 			$visitsToday = (int)(isset($visitArray[$row['fix_date']]) ? $visitArray[$row['fix_date']] : 0);
 			
-			$dateFromGReg = ($cookie->stats_granularity != 42
+			$dateFromGReg = ($this->context->cookie->stats_granularity != 42
 				? 'LIKE \''.$row['fix_date'].'%\''
 				: 'BETWEEN \''.substr($row['fix_date'], 0, 10).' 00:00:00\' AND DATE_ADD(\''.substr($row['fix_date'], 0, 8).substr($row['fix_date'], 8, 2).' 23:59:59\', INTERVAL 7 DAY)');
 			$sql = 'SELECT COUNT(*) FROM '._DB_PREFIX_.'customer
@@ -363,7 +362,7 @@ class StatsForecast extends Module
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
 					<option value="0">'.$this->l('-- No filter --').'</option>';
 		foreach (Zone::getZones() as $zone)
-			$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
+			$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
 		$this->_html .= '</select>
 			</form>
 			<table class="table float" border="0" cellspacing="0" cellspacing="0">
@@ -386,7 +385,7 @@ class StatsForecast extends Module
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
 					<option value="0">'.$this->l('-- No filter --').'</option>';
 		foreach (Zone::getZones() as $zone)
-			$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
+			$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
 		$this->_html .= '	</select>
 			</form>
 			<table class="table float" border="0" cellspacing="0" cellspacing="0">
@@ -446,7 +445,7 @@ class StatsForecast extends Module
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
 					<option value="0">'.$this->l('-- No filter --').'</option>';
 		foreach (Zone::getZones() as $zone)
-			$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
+			$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
 		$this->_html .= '</select>
 			</form>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
@@ -483,23 +482,21 @@ class StatsForecast extends Module
 
 	private function getRealCA()
 	{
-		global $cookie;
-
-		$employee = new Employee($cookie->id_employee);
+		$employee = $this->context->employee;
 		$ca = array();
 
 		$where = $join = '';
-		if ((int)$cookie->stats_id_zone)
+		if ((int)$this->context->cookie->stats_id_zone)
 		{
 			$join =  ' LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address LEFT JOIN `'._DB_PREFIX_.'country` co ON co.id_country = a.id_country';
-			$where = ' AND co.id_zone = '.$cookie->stats_id_zone.' ';
+			$where = ' AND co.id_zone = '.$this->context->cookie->stats_id_zone.' ';
 		}
 
 		$sql = 'SELECT SUM(od.`product_price` * od.`product_quantity` / o.conversion_rate) as orderSum, COUNT(*) AS orderQty, cl.name, AVG(od.`product_price` / o.conversion_rate) as priveAvg
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = od.product_id
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.id_category_default = cl.id_category AND cl.id_lang = '.(int)($cookie->id_lang).')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.id_category_default = cl.id_category AND cl.id_lang = '.(int)$this->context->language->id.')
 				'.$join.'
 				WHERE o.valid = 1
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
@@ -589,8 +586,8 @@ class StatsForecast extends Module
 				LEFT JOIN '._DB_PREFIX_.'order_detail od ON o.id_order = od.id_order
 				INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON od.product_attribute_id = pac.id_product_attribute
 				INNER JOIN '._DB_PREFIX_.'attribute a ON pac.id_attribute = a.id_attribute
-				INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (a.id_attribute_group = agl.id_attribute_group AND agl.id_lang = '.(int)($cookie->id_lang).')
-				INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (a.id_attribute = al.id_attribute AND al.id_lang = '.(int)($cookie->id_lang).')
+				INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (a.id_attribute_group = agl.id_attribute_group AND agl.id_lang = '.(int)$this->context->language->id.')
+				INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (a.id_attribute = al.id_attribute AND al.id_lang = '.(int)$this->context->language->id.')
 				WHERE o.valid = 1
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$this->sqlShopRestriction(false, 'o').'

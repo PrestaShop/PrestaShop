@@ -551,10 +551,6 @@ class MondialRelay extends Module
 	*/
 	public function _getCarriers()
 	{
-		global $cookie;
-		
-		$id_lang = (int)$cookie->id_lang;
-	
 		// Query don't use the external_module_name to keep the 
 		// 1.3 compatibility	
 		$carriers = Db::getInstance()->ExecuteS('
@@ -625,8 +621,6 @@ class MondialRelay extends Module
 	
 	public function getContent()
 	{	
-		global $cookie;
-		
 		$error = null;
 		
 		$html = '';

@@ -62,8 +62,6 @@ class Secuvad_flux
 	
 	private function get_flux_xml_order()
 	{	
-		global $cookie;
-		
 		$order = new Order((int)($this->id_order));			
 		$address_delivery = new Address((int)($order->id_address_delivery));
 		$address_invoice = new Address((int)($order->id_address_invoice));
@@ -92,7 +90,7 @@ class Secuvad_flux
 		FROM `'._DB_PREFIX_.'secuvad_assoc_transport` at 
 		JOIN `'._DB_PREFIX_.'secuvad_transport_delay` td ON (at.`transport_delay_id` = td.`transport_delay_id`)  
 		JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = td.`id_lang`)
-		WHERE l.`id_lang` = '.((isset($cookie->id_lang) AND (int)($cookie->id_lang)) ? (int)($cookie->id_lang) : (int)(Configuration::get('PS_LANG_DEFAULT'))).'
+		WHERE l.`id_lang` = '.(int)Context::getContext()->language->id.'
 		AND at.`id_carrier` = '.(int)($order->id_carrier));
 		$transptype = $carrier['transport_id'];
 		$rapidite = $carrier['transport_delay_name'];
@@ -209,8 +207,6 @@ class Secuvad_flux
 	
 	private function get_flux_xml_products()
 	{
-		global $cookie;
-		
 		$flux_xml 	= '';
 		$order = new Order((int)($this->id_order));
 		$products = $order->getProducts();
@@ -222,7 +218,7 @@ class Secuvad_flux
 			JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = sac.`id_category`)
 			JOIN `'._DB_PREFIX_.'category` c ON (c.`id_category` = cp.`id_category`)
 			JOIN `'._DB_PREFIX_.'product_lang` pl ON (cp.`id_product` = pl.`id_product`) 
-			JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = pl.`id_lang` AND l.`id_lang` = '.((isset($cookie->id_lang) AND (int)($cookie->id_lang)) ? (int)($cookie->id_lang) : (int)(Configuration::get('PS_LANG_DEFAULT'))).')
+			JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = pl.`id_lang` AND l.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE pl.`id_product` = '.(int)($product['product_id']).'
 			ORDER BY c.`level_depth` DESC
 			',true);

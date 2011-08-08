@@ -86,11 +86,10 @@ class Tools extends ToolsCore
 	{
 		if (!preg_match('@^https?://@i', $url))
 		{
-			global $link;
 			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
 				$url = substr($url, strlen(__PS_BASE_URI__));
 			$explode = explode('?', $url);
-			$url = $link->getPageLink($explode[0]);
+			$url = Context::getContext()->link->getPageLink($explode[0]);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
 		}

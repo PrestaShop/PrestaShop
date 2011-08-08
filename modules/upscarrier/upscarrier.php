@@ -426,7 +426,6 @@ class UpsCarrier extends CarrierModule
 
 	private function _displayFormGeneral()
 	{
-		global $cookie;
 		$configCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		$html = '<script>
@@ -511,7 +510,7 @@ class UpsCarrier extends CarrierModule
 						<select name="ups_carrier_country" id="ups_carrier_country">
 							<option value="0">'.$this->l('Select a country ...').'</option>';
 							$idcountries = array();
-							foreach (Country::getCountries($cookie->id_lang) as $v)
+							foreach (Country::getCountries($this->context->language->id) as $v)
 							{
 								$html .= '<option value="'.$v['id_country'].'" '.($v['id_country'] == (int)(Tools::getValue('ups_carrier_country', Configuration::get('UPS_CARRIER_COUNTRY'))) ? 'selected="selected"' : '').'>'.$v['name'].'</option>';
 								$idcountries[] = $v['id_country'];
@@ -732,8 +731,6 @@ class UpsCarrier extends CarrierModule
 
 	private function _getPathInTab($id_category)
 	{
-		global $cookie;
-
 		$category = Db::getInstance()->getRow('
 		SELECT id_category, level_depth, nleft, nright
 		FROM '._DB_PREFIX_.'category
@@ -745,7 +742,7 @@ class UpsCarrier extends CarrierModule
 			SELECT c.id_category, cl.name, cl.link_rewrite
 			FROM '._DB_PREFIX_.'category c
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)($cookie->id_lang).'
+			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$this->context->language->id.'
 			ORDER BY c.level_depth ASC
 			LIMIT '.(int)($category['level_depth'] + 1));
 
@@ -790,8 +787,6 @@ class UpsCarrier extends CarrierModule
 	
 	private function _displayFormCategory()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
@@ -917,7 +912,7 @@ class UpsCarrier extends CarrierModule
 						<div class="margin-form">
 							<select name="id_category">
 								<option value="0">'.$this->l('Select a category ...').'</option>
-								'.$this->_getChildCategories(Category::getCategories($cookie->id_lang), 0).'
+								'.$this->_getChildCategories(Category::getCategories($this->context->language->id), 0).'
 							</select>
 						</div>
 						<label>'.$this->l('Packaging Type').' : </label>
@@ -1049,8 +1044,6 @@ class UpsCarrier extends CarrierModule
 
 	private function _displayFormProduct()
 	{
-		global $cookie;
-
 		// Check if the module is configured
 		if (!Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
@@ -1077,7 +1070,7 @@ class UpsCarrier extends CarrierModule
 		foreach ($configProductList as $k => $c)
 		{
 			// Loading Product
-			$product = new Product((int)$c['id_product'], false, (int)$cookie->id_lang);
+			$product = new Product((int)$c['id_product'], false, (int)$this->context->language->id);
 
 			// Loading config currency
 			$configCurrency = new Currency($c['id_currency']);
@@ -1124,7 +1117,7 @@ class UpsCarrier extends CarrierModule
 		{
 			// Loading config
 			$configSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'ups_rate_config` WHERE `id_ups_rate_config` = '.(int)(Tools::getValue('id_ups_rate_config')));
-			$product = new Product((int)$configSelected['id_product'], false, (int)$cookie->id_lang);
+			$product = new Product((int)$configSelected['id_product'], false, $this->context->language->id);
 
 			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
 					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=edit&id_ups_rate_config='.(int)(Tools::getValue('id_ups_rate_config')).'" method="post" class="form">

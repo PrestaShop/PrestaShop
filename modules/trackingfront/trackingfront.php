@@ -46,13 +46,11 @@ class TrackingFront extends Module
 	
 	public function postProcess()
 	{
-		global $cookie, $smarty;
-
 		if (Tools::isSubmit('ajaxProductFilter'))
 		{
 			$fakeEmployee = new Employee();
-			$fakeEmployee->stats_date_from = $cookie->stats_date_from;
-			$fakeEmployee->stats_date_to = $cookie->stats_date_to;
+			$fakeEmployee->stats_date_from = $this->context->cookie->stats_date_from;
+			$fakeEmployee->stats_date_to = $this->context->cookie->stats_date_to;
 			$result = Db::getInstance()->getRow('
 			SELECT `id_referrer`
 			FROM `'._DB_PREFIX_.'referrer`
@@ -62,8 +60,8 @@ class TrackingFront extends Module
 		}
 		elseif (Tools::isSubmit('logout_tracking'))
 		{
-			unset($cookie->tracking_id);
-			unset($cookie->tracking_passwd);
+			unset($this->context->cookie->tracking_id);
+			unset($this->context->cookie->tracking_passwd);
 			Tools::redirect('modules/trackingfront/stats.php');
 		}
 		elseif (Tools::isSubmit('submitLoginTracking'))
@@ -90,18 +88,18 @@ class TrackingFront extends Module
 					$errors[] = $this->l('authentication failed');
 				else
 				{
-					$cookie->tracking_id = $tracking_id;
-					$cookie->tracking_passwd = $passwd;
+					$this->context->cookie->tracking_id = $tracking_id;
+					$this->context->cookie->tracking_passwd = $passwd;
 					Tools::redirect('modules/trackingfront/stats.php');
 				}
 			}
-			$smarty->assign('errors', $errors);
+			$this->context->smarty->assign('errors', $errors);
 		}
 
 		if (Tools::isSubmit('submitDatePicker'))
 		{
-			$cookie->stats_date_from = Tools::getValue('datepickerFrom');
-			$cookie->stats_date_to = Tools::getValue('datepickerTo');
+			$this->context->cookie->stats_date_from = Tools::getValue('datepickerFrom');
+			$this->context->cookie->stats_date_to = Tools::getValue('datepickerTo');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{
@@ -140,13 +138,12 @@ class TrackingFront extends Module
 	
 	public function isLogged()
 	{
-		global $cookie;
-		if (!$cookie->tracking_id OR !$cookie->tracking_passwd)
+		if (!$this->context->cookie->tracking_id OR !$this->context->cookie->tracking_passwd)
 			return false;
 		$result = Db::getInstance()->getRow('
 		SELECT `id_referrer`
 		FROM `'._DB_PREFIX_.'referrer`
-		WHERE `id_referrer` = '.(int)($cookie->tracking_id).' AND `passwd` = \''.pSQL($cookie->tracking_passwd).'\'');
+		WHERE `id_referrer` = '.(int)($this->context->cookie->tracking_id).' AND `passwd` = \''.pSQL($this->context->cookie->tracking_passwd).'\'');
 		return isset($result['id_referrer']) ? $result['id_referrer'] : false;
 	}
 		
@@ -157,21 +154,19 @@ class TrackingFront extends Module
 	
 	public function displayAccount()
 	{
-		global $smarty, $cookie;
-		
-		if (!isset($cookie->stats_date_from))
-			$cookie->stats_date_from = date('Y-m-d');
-		if (!isset($cookie->stats_date_to))
-			$cookie->stats_date_to = date('Y-m-t');
+		if (!isset($this->context->cookie->stats_date_from))
+			$this->context->cookie->stats_date_from = date('Y-m-d');
+		if (!isset($this->context->cookie->stats_date_to))
+			$this->context->cookie->stats_date_to = date('Y-m-t');
 		$fakeEmployee = new Employee();
-		$fakeEmployee->stats_date_from = $cookie->stats_date_from;
-		$fakeEmployee->stats_date_to = $cookie->stats_date_to;
-		Referrer::refreshCache(array(array('id_referrer' => (int)($cookie->tracking_id))), $fakeEmployee);
+		$fakeEmployee->stats_date_from = $this->context->cookie->stats_date_from;
+		$fakeEmployee->stats_date_to = $this->context->cookie->stats_date_to;
+		Referrer::refreshCache(array(array('id_referrer' => (int)($this->context->cookie->tracking_id))), $fakeEmployee);
 		
-		$referrer = new Referrer((int)($cookie->tracking_id));
-		$smarty->assign('referrer', $referrer);
-		$smarty->assign('datepickerFrom', $fakeEmployee->stats_date_from);
-		$smarty->assign('datepickerTo', $fakeEmployee->stats_date_to);
+		$referrer = new Referrer((int)($this->context->cookie->tracking_id));
+		$this->context->smarty->assign('referrer', $referrer);
+		$this->context->smarty->assign('datepickerFrom', $fakeEmployee->stats_date_from);
+		$this->context->smarty->assign('datepickerTo', $fakeEmployee->stats_date_to);
 		
 		$displayTab = array(
 			'uniqs' => $this->l('Unique visitors'),
@@ -187,15 +182,15 @@ class TrackingFront extends Module
 			'cart' => $this->l('Average cart'),
 			'reg_rate' => $this->l('Registration rate'),
 			'order_rate' => $this->l('Order rate'));
-		$smarty->assign('displayTab', $displayTab);
+		$this->context->smarty->assign('displayTab', $displayTab);
 		
-		$products = Product::getSimpleProducts((int)($cookie->id_lang));
+		$products = Product::getSimpleProducts($this->context->language->id);
 		$productsArray = array();
 		foreach ($products as $product)
 			$productsArray[] = $product['id_product'];
 		
 		$echo = '
-		<script type="text/javascript" src="../../js/jquery/datepicker/ui/i18n/ui.datepicker-'.Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)($cookie->id_lang)).'.js"></script>
+		<script type="text/javascript" src="../../js/jquery/datepicker/ui/i18n/ui.datepicker-'.Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)$this->context->language->id).'.js"></script>
 		<script type="text/javascript">
 			$("#datepickerFrom").datepicker({
 				prevText:"",
@@ -208,7 +203,7 @@ class TrackingFront extends Module
 			
 			function updateValues()
 			{
-				$.getJSON("stats.php",{ajaxProductFilter:1,id_referrer:'.$referrer->id.',token:"'.$cookie->tracking_passwd.'",id_product:0},
+				$.getJSON("stats.php",{ajaxProductFilter:1,id_referrer:'.$referrer->id.',token:"'.$this->context->cookie->tracking_passwd.'",id_product:0},
 					function(j) {';
 		foreach ($displayTab as $key => $value)
 			$echo .= '$("#'.$key.'").html(j[0].'.$key.');';
@@ -244,7 +239,7 @@ class TrackingFront extends Module
 			{
 				var irow = 0;
 				for (var i = 0; i < productIds.length; ++i)
-					$.getJSON("stats.php",{ajaxProductFilter:1,token:"'.$cookie->tracking_passwd.'",id_referrer:'.$referrer->id.',id_product:productIds[i]},
+					$.getJSON("stats.php",{ajaxProductFilter:1,token:"'.$this->context->cookie->tracking_passwd.'",id_referrer:'.$referrer->id.',id_product:productIds[i]},
 						function(result) {
 							var newLine = newProductLine('.$referrer->id.', result[0], (irow++%2 ? 204 : 238));
 							$(newLine).hide().insertBefore($(\'#trid_dummy\')).fadeIn();

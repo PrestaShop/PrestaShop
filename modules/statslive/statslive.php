@@ -111,8 +111,6 @@ class StatsLive extends Module
 	
 	public function hookAdminStatsModules($params)
 	{
-		global $cookie;
-
 		list($customers, $totalCustomers) = $this->getCustomersOnline();
 		list($visitors, $totalVisitors) = $this->getVisitorsOnline();
 		$irow = 0;
@@ -137,7 +135,7 @@ class StatsLive extends Module
 					<td style="width: 200px;">'.$customer['firstname'].' '.$customer['lastname'].'</td>
 					<td style="width: 200px;">'.$customer['page'].'</td>
 					<td style="text-align: right; width: 25px;">
-						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($cookie->id_employee)).'" target="_blank">
+						<a href="index.php?tab=AdminCustomers&id_customer='.$customer['id_customer'].'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'" target="_blank">
 							<img src="../modules/'.$this->name.'/logo.gif" />
 						</a>
 					</td>

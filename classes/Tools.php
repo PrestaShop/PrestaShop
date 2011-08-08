@@ -90,7 +90,6 @@ class ToolsCore
 	*/
 	public static function redirectLink($url)
 	{
-		$context = Context::getContext();
 		if (!preg_match('@^https?://@i', $url))
 		{
 			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
@@ -98,7 +97,7 @@ class ToolsCore
 			if (strpos($url, 'index.php?controller=') !== FALSE && strpos($url, 'index.php/') == 0)
 				$url = substr($url, strlen('index.php?controller='));
 			$explode = explode('?', $url);
-			$url = $context->link->getPageLink($explode[0]);
+			$url = Context::getContext()->link->getPageLink($explode[0]);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
 		}

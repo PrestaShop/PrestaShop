@@ -51,8 +51,7 @@ class sendToAFriend extends Module
 
 	function hookExtraLeft($params)
 	{
-		global $smarty;
-		$smarty->assign('this_path', $this->_path);
+		$this->context->smarty->assign('this_path', $this->_path);
 		return $this->display(__FILE__, 'product_page.tpl');
 	}
 
@@ -68,16 +67,14 @@ class sendToAFriend extends Module
 
 	public function displayFrontForm()
 	{
-		global $smarty;
 		$error = false;
 		$confirm = false;
 
 		if (isset($_POST['submitAddtoafriend']))
 		{
-			global $cookie, $link;
 			/* Product informations */
-			$product = new Product((int)Tools::getValue('id_product'), false, (int)$cookie->id_lang);
-			$productLink = $link->getProductLink($product);
+			$product = new Product((int)Tools::getValue('id_product'), false, $this->context->language->id);
+			$productLink = $this->context->link->getProductLink($product);
 
 			/* Fields verifications */
 			if (empty($_POST['email']) OR empty($_POST['name']))
@@ -108,10 +105,9 @@ class sendToAFriend extends Module
 		}
 		else
 		{
-			global $cookie, $link;
 			/* Product informations */
-			$product = new Product((int)Tools::getValue('id_product'), false, (int)$cookie->id_lang);
-			$productLink = $link->getProductLink($product);
+			$product = new Product((int)Tools::getValue('id_product'), false, $this->context->language->id);
+			$productLink = $this->context->link->getProductLink($product);
 		}
 
 		/* Image */
@@ -126,7 +122,7 @@ class sendToAFriend extends Module
 		if (!isset($cover))
 			$cover = array('id_image' => Language::getIsoById((int)$cookie->id_lang).'-default', 'legend' => 'No picture');
 
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'cover' => $cover,
 			'errors' => $error,
 			'confirm' => $confirm,

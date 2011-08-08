@@ -148,9 +148,8 @@ class StatsProduct extends ModuleGraph
 
 	public function hookAdminStatsModules($params)
 	{
-		global $cookie;
 		$id_category = (int)(Tools::getValue('id_category'));
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = Context::getContext()->currency;
 		
 		if (Tools::getValue('export'))
 			if (!Tools::getValue('exportType'))
@@ -164,7 +163,7 @@ class StatsProduct extends ModuleGraph
 					$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product));	
 				elseif (Tools::getValue('exportType') == 2)
 					$this->csvExport(array('type' => 'pie', 'option' => '3-'.$id_product));
-			$product = new Product($id_product, false, (int)($cookie->id_lang));
+			$product = new Product($id_product, false, $this->context->language->id);
 			$totalBought = $this->getTotalBought($product->id);
 			$totalSales = $this->getTotalSales($product->id);
 			$totalViewed = $this->getTotalViewed($product->id);
@@ -181,7 +180,7 @@ class StatsProduct extends ModuleGraph
 			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=2"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br />';
 			if ($totalBought)
 			{
-				$sales = $this->getSales($id_product, $cookie->id_lang);
+				$sales = $this->getSales($id_product, $this->context->language->id);
 				$this->_html .= '<br class="clear" />
 				<h3>'.$this->l('Sales').'</h3>
 				<div style="overflow-y: scroll; height: '.min(400, (count($sales)+1)*32).'px;">
@@ -196,12 +195,12 @@ class StatsProduct extends ModuleGraph
 						<th>'.$this->l('Price').'</th>
 					</tr>
 				</thead><tbody>';
-				$tokenOrder = Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee));
-				$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($cookie->id_employee));
+				$tokenOrder = Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($this->context->employee->id));
+				$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)($this->context->employee->id));
 				foreach ($sales as $sale)
 					$this->_html .= '
 					<tr>
-						<td>'.Tools::displayDate($sale['date_add'], (int)($cookie->id_lang), false).'</td>
+						<td>'.Tools::displayDate($sale['date_add'], (int)($this->context->language->id), false).'</td>
 						<td align="center"><a href="?tab=AdminOrders&id_order='.$sale['id_order'].'&vieworder&token='.$tokenOrder.'">'.(int)($sale['id_order']).'</a></td>
 						<td align="center"><a href="?tab=AdminCustomers&id_customer='.$sale['id_customer'].'&viewcustomer&token='.$tokenCustomer.'">'.(int)($sale['id_customer']).'</a></td>
 						'.($hasAttribute ? '<td>'.$sale['product_name'].'</td>' : '').'
@@ -210,7 +209,7 @@ class StatsProduct extends ModuleGraph
 					</tr>';
 				$this->_html .= '</tbody></table></div>';
 				
-				$crossSelling = $this->getCrossSales($id_product, $cookie->id_lang);
+				$crossSelling = $this->getCrossSales($id_product, $this->context->language->id);
 				if (count($crossSelling))
 				{
 					$this->_html .= '<br class="clear" />
@@ -224,7 +223,7 @@ class StatsProduct extends ModuleGraph
 							<th>'.$this->l('Average price').'</th>
 						</tr>
 					</thead><tbody>';
-					$tokenProducts = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee));
+					$tokenProducts = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($this->context->employee->id));
 					foreach ($crossSelling as $selling)
 						$this->_html .= '
 						<tr>
@@ -238,7 +237,7 @@ class StatsProduct extends ModuleGraph
 		}
 		else
 		{
-			$categories = Category::getCategories((int)($cookie->id_lang), true, false);
+			$categories = Category::getCategories((int)$this->context->language->id, true, false);
 			$this->_html .= '
 			<label>'.$this->l('Choose a category').'</label>
 			<div class="margin-form">
@@ -264,7 +263,7 @@ class StatsProduct extends ModuleGraph
 					<th>'.$this->l('Stock').'</th>
 				</tr>
 			</thead><tbody>';
-			foreach ($this->getProducts($cookie->id_lang) AS $product)
+			foreach ($this->getProducts($this->context->language->id) AS $product)
 				$this->_html .= '<tr><td>'.$product['reference'].'</td><td><a href="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a></td><td>'.$product['quantity'].'</td></tr>';
 			$this->_html .= '</tbody></table><br /></div><br />
 				<a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a><br />';
@@ -343,10 +342,9 @@ class StatsProduct extends ModuleGraph
 
 	protected function getData($layers)
 	{
-		global $cookie;
 		if ($this->_option == 42)
 		{
-			$products = $this->getProducts(intval($cookie->id_lang));
+			$products = $this->getProducts($this->context->language->id);
 			foreach ($products AS $product)
 			{
 				$this->_values[0][] =  $product['reference'];

@@ -54,8 +54,6 @@ class StatsCheckUp extends Module
 	
     function hookAdminStatsModules()
     {
-		global $cookie;
-
 		if (Tools::isSubmit('submitCheckup'))
 		{
 			foreach (array('CHECKUP_DESCRIPTIONS_LT','CHECKUP_DESCRIPTIONS_GT','CHECKUP_IMAGES_LT','CHECKUP_IMAGES_GT','CHECKUP_SALES_LT','CHECKUP_SALES_GT','CHECKUP_STOCK_LT','CHECKUP_STOCK_GT') as $confname)
@@ -65,15 +63,15 @@ class StatsCheckUp extends Module
 
 		if (Tools::isSubmit('submitCheckupOrder'))
 		{
-			$cookie->checkup_order = (int)Tools::getValue('submitCheckupOrder');
+			$this->context->cookie->checkup_order = (int)Tools::getValue('submitCheckupOrder');
 			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"> '.$this->l('Configuration updated').'</div>';
 		}
 
-		if (!isset($cookie->checkup_order))
-			$cookie->checkup_order = 1;
+		if (!isset($this->context->cookie->checkup_order))
+			$this->context->cookie->checkup_order = 1;
 
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
-		$employee = new Employee((int)($cookie->id_employee));
+		$employee = Context::getContext()->employee;
 		$prop30 = ((strtotime($employee->stats_date_to.' 23:59:59') - strtotime($employee->stats_date_from.' 00:00:00')) / 60 / 60 / 24) / 30;
 		
 		$shopID = $this->context->shop->getID();
@@ -90,7 +88,7 @@ class StatsCheckUp extends Module
 			1 => '<img src="../modules/'.$this->name.'/orange.png" alt="'.$this->l('average').'" />',
 			2 => '<img src="../modules/'.$this->name.'/green.png" alt="'.$this->l('good').'" />'
 		);
-		$tokenProducts = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee));
+		$tokenProducts = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)Context::getContext()->employee->id);
 		$divisor = 4;
 		$totals = array('products' => 0, 'active' => 0, 'images' => 0, 'sales' => 0, 'stock' => 0);
 		foreach ($languages as $language)
@@ -100,9 +98,9 @@ class StatsCheckUp extends Module
 		}
 
 		$orderBy = 'p.id_product';
-		if ($cookie->checkup_order == 2)
+		if ($this->context->cookie->checkup_order == 2)
 			$orderBy = 'pl.name';
-		elseif ($cookie->checkup_order == 3)
+		elseif ($this->context->cookie->checkup_order == 3)
 			$orderBy = 'nbSales DESC';
 
 		// Get products stats
@@ -124,7 +122,7 @@ class StatsCheckUp extends Module
 					WHERE pa.id_product = p.id_product
 				), p.quantity) as stock
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$cookie->id_lang.')
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.')
 				'.$this->context->shop->sqlAsso('product', 'p').'
 				ORDER BY '.$orderBy;
 		$result = $db->ExecuteS($sql);
@@ -165,8 +163,8 @@ class StatsCheckUp extends Module
 			'.$this->l('Order by').'
 			<select name="submitCheckupOrder" onchange="this.form.submit();" style="width:100px">
 				<option value="1">'.$this->l('ID').'</option>
-				<option value="2" '.($cookie->checkup_order == 2 ? 'selected="selected"' : '').'>'.$this->l('Name').'</option>
-				<option value="3" '.($cookie->checkup_order == 3 ? 'selected="selected"' : '').'>'.$this->l('Sales').'</option>
+				<option value="2" '.($this->context->cookie->checkup_order == 2 ? 'selected="selected"' : '').'>'.$this->l('Name').'</option>
+				<option value="3" '.($this->context->cookie->checkup_order == 3 ? 'selected="selected"' : '').'>'.$this->l('Sales').'</option>
 			</select>
 		</form>
 		<div class="clear">&nbsp;</div>

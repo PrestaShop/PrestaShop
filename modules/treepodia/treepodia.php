@@ -90,11 +90,9 @@ class Treepodia extends Module
 
 	public function generateXmlFlow()
 	{
-		global $cart, $cookie;
-		$cookie->id_lang = (int)Configuration::get('PS_LANG_DEFAULT'); // url rewriting case
+		$this->context->cookie->id_lang = (int)Configuration::get('PS_LANG_DEFAULT'); // url rewriting case
 
-		$cart = new Cart();
-		$link = new Link();
+		$link = $this->context->link;
 		$defaultCurrencyIsoCode = strtoupper(Db::getInstance()->getValue('SELECT c.iso_code FROM '._DB_PREFIX_.'currency c WHERE c.id_currency = '.(int)Configuration::get('PS_CURRENCY_DEFAULT')));
 		$defaultIdLang = (int)Configuration::get('PS_LANG_DEFAULT');
 
@@ -511,9 +509,7 @@ XML;
 
 	public function displayForm()
 	{
-		global $cookie;
-
-		$lang = new Language((int)($cookie->id_lang));
+		$lang = $this->context->language;
 
 		$output = $this->_displayCSSAndJS().'<h2>'.$this->displayName.'</h2>
 		<img id="treepodia-logo" src="'.__PS_BASE_URI__.'modules/'.$this->name.'/logo.png'.'" alt="" />
@@ -726,8 +722,6 @@ XML;
 
 	public function hookExtraLeft($params)
 	{
-		global $smarty;
-
 		$id_product = Tools::getValue('id_product');
 		if (!Configuration::get('TREEPODIA_ACCOUNT_CODE') OR Configuration::get('TREEPODIA_INTEGRATION_TYPE') != 0)
 			return '';
@@ -747,7 +741,7 @@ XML;
 				$position = 'left';
 		}
 
-		$smarty->assign(array('position' => $position, 'img_src' => _MODULE_DIR_.$this->name.'/logos/'.Configuration::get('TREEPODIA_PLAY_LOGO'), 'account_id' => Configuration::get('TREEPODIA_ACCOUNT_CODE'), 'product_sku' => (int)($id_product)));
+		$this->context->smarty->assign(array('position' => $position, 'img_src' => _MODULE_DIR_.$this->name.'/logos/'.Configuration::get('TREEPODIA_PLAY_LOGO'), 'account_id' => Configuration::get('TREEPODIA_ACCOUNT_CODE'), 'product_sku' => (int)($id_product)));
 		return $this->display(__FILE__, 'product.tpl');
 	}
 
@@ -759,14 +753,12 @@ XML;
 
 	public function hookFooter($params)
 	{
-		global $smarty;
-
 		if (!Configuration::get('TREEPODIA_ACCOUNT_CODE') OR Configuration::get('TREEPODIA_INTEGRATION_TYPE') != 0)
 			return;
 		if (!(int)Tools::getValue('id_product'))
 			return;
 
-		$smarty->assign(array('account_id' => Configuration::get('TREEPODIA_ACCOUNT_CODE'), 'product_sku' => (int)Tools::getValue('id_product')));
+		$this->context->smarty->assign(array('account_id' => Configuration::get('TREEPODIA_ACCOUNT_CODE'), 'product_sku' => (int)Tools::getValue('id_product')));
 		return $this->display(__FILE__, 'footer.tpl');
 	}
 
@@ -780,8 +772,7 @@ XML;
 		$order = $params['objOrder'];
 		$products = $order->getProducts();
 
-		global $smarty;
-		$smarty->assign(array('account_id' => Configuration::get('TREEPODIA_ACCOUNT_CODE'), 'products' => $products));
+		$this->context->smarty->assign(array('account_id' => Configuration::get('TREEPODIA_ACCOUNT_CODE'), 'products' => $products));
 		return $this->display(__FILE__, 'tracking.tpl');
 	}
 }

@@ -9,9 +9,7 @@ if (!Tools::getValue('ajax'))
 	
 $socolissimo = new Socolissimo();
 	
-global $cookie;
-
-$result = $socolissimo->getDeliveryInfos($cookie->id_cart,$cookie->id_customer);
+$result = $socolissimo->getDeliveryInfos(Context::getContext()->cart->id, Context::getContext()->customer->id);
 if (!$result)
 	die('{"result" : false}');
 else

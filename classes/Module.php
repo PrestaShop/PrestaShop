@@ -477,8 +477,6 @@ abstract class ModuleCore
 	 */
 	public static function getModuleNameFromClass($currentClass)
 	{
-		global $cookie;
-
 		// Module can now define AdminTab keeping the module translations method,
 		// i.e. in modules/[module name]/[iso_code].php
 		if (!isset(self::$classInModule[$currentClass]))
@@ -918,7 +916,7 @@ abstract class ModuleCore
 		global $_MODULES, $_MODULE;
 
 		if ($id_lang == null)
-			$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)(Configuration::get('PS_LANG_DEFAULT')) : (int)($cookie->id_lang);
+			$id_lang = Context::getContext()->language->id;
 		$file = _PS_MODULE_DIR_.$this->name.'/'.Context::getContext()->language->iso_code.'.php';
 
 		if (Tools::file_exists_cache($file) AND include_once($file))

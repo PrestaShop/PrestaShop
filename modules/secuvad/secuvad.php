@@ -244,8 +244,6 @@ class Secuvad extends Module
 
 	public function hookAdminOrder($params)
 	{
-		global $cookie;
-		
 		if ($this->check_assoc() != '')
 			return '
 			<br />
@@ -276,7 +274,7 @@ class Secuvad extends Module
 					'.($secuvad_order['is_fraud'] ? '<br /><b>'.$this->l('Unpaid transmitted:').'</b> '.$this->_getFraudStatusHtml((int)($secuvad_order['is_fraud'])) : '').'
 				</p>
 				
-				<form method="POST" action="'.AdminTab::$currentIndex.'&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)).'">
+				<form method="POST" action="'.AdminTab::$currentIndex.'&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id).'">
 					<p class="center">
 						<input type="hidden" name="id_secuvad_order" value="'.(int)($params['id_order']).'" />
 						<input type="submit" class="button" name="send_to_secuvad" value="'.$this->l('Update Secuvad status').'"> 
@@ -353,8 +351,6 @@ class Secuvad extends Module
 	
 	public function getContent()
 	{
-		global $cookie;
-		
 		$this->_html = '<h2>'.$this->l('Secuvad configuration').'</h2>';
 		
 		if (!$this->_isPaymentCCFilePresent())
@@ -394,12 +390,10 @@ class Secuvad extends Module
 
 	private function _getSecuvadCategories()
 	{
-		global $cookie;
-		
 		return Db::getInstance()->ExecuteS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_category` sc
-		WHERE sc.`id_lang` = '.(int)($cookie->id_lang));
+		WHERE sc.`id_lang` = '.(int)$this->context->language->id);
 	}
 	
 	private function _getSecuvadCategoryAssoc()
@@ -419,58 +413,48 @@ class Secuvad extends Module
 	
 	private function _getSecuvadPayment()
 	{
-		global $cookie;
-		
 		return Db::getInstance()->ExecuteS('
 		SELECT IF(sp.name IS NULL, "Unknown", sp.name) AS `secuvad_name`, sp.`code`, m.`id_module`, m.`name` AS `module_name` 
 		FROM `'._DB_PREFIX_.'secuvad_assoc_payment` sac
 		JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = sac.`id_module`)
-	 	LEFT JOIN `'._DB_PREFIX_.'secuvad_payment` sp ON (sp.`code` = sac.`code` AND sp.`id_lang` = '.(int)($cookie->id_lang).')');
+	 	LEFT JOIN `'._DB_PREFIX_.'secuvad_payment` sp ON (sp.`code` = sac.`code` AND sp.`id_lang` = '.(int)$this->context->language->id.')');
 	}
 	
 	private function _getSecuvadCodePayment()
 	{
-		global $cookie;
-		
 		return Db::getInstance()->ExecuteS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_payment` 
-		WHERE `id_lang` = '.(int)($cookie->id_lang)
+		WHERE `id_lang` = '.(int)$this->context->language->id
 		);
 	}
 	
 	private function _getSecuvadCarrier()
 	{
-		global $cookie;
-
 		return Db::getInstance()->ExecuteS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_assoc_transport` sat
 		JOIN '._DB_PREFIX_.'carrier c ON (c.id_carrier = sat.id_carrier)
-	 	LEFT JOIN '._DB_PREFIX_.'secuvad_transport st ON st.transport_id = sat.transport_id AND st.id_lang='.(int)($cookie->id_lang).'
-		LEFT JOIN '._DB_PREFIX_.'secuvad_transport_delay std ON std.transport_delay_id = sat.transport_delay_id AND std.id_lang='.(int)($cookie->id_lang)
+	 	LEFT JOIN '._DB_PREFIX_.'secuvad_transport st ON st.transport_id = sat.transport_id AND st.id_lang='.(int)$this->context->language->id.'
+		LEFT JOIN '._DB_PREFIX_.'secuvad_transport_delay std ON std.transport_delay_id = sat.transport_delay_id AND std.id_lang='.(int)$this->context->language->id
 		);
 	}
 	
 	private function _getSecuvadCarrierType()
 	{
-		global $cookie;
-		
 		return Db::getInstance()->ExecuteS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_transport` 
-		WHERE `id_lang` = '.(int)($cookie->id_lang)
+		WHERE `id_lang` = '.(int)$this->context->language->id
 		);
 	}
 	
 	private function _getSecuvadCarrierDelay()
 	{
-		global $cookie;
-		
 		return Db::getInstance()->ExecuteS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_transport_delay` 
-		WHERE `id_lang` = '.(int)($cookie->id_lang)
+		WHERE `id_lang` = '.(int)$this->context->language->id
 		);
 	}
 	
@@ -621,8 +605,6 @@ class Secuvad extends Module
 	
 	private function _setFormConfigure()
 	{
-		global $cookie;
-		
 		$this->_html .= '
 		<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">
 			<fieldset style="width:430px;margin-right:10px;margin-bottom:10px;">
@@ -658,7 +640,7 @@ class Secuvad extends Module
 		
 		if (Configuration::get('SECUVAD_ACTIVATION'))
 		{
-			$categories = Category::getCategories((int)($cookie->id_lang), false);
+			$categories = Category::getCategories((int)$this->context->language->id, false);
 			$categories[1]['infos'] = array('name' => $this->l('Home'), 'id_parent' => 0, 'level_depth' => 0);
 			
 			$this->_html .= '
@@ -763,7 +745,7 @@ class Secuvad extends Module
 	
 	private function recurseCategoryForInclude($categories, $current, $id_category = 1, $has_suite = array())
 	{
-		global $done, $cookie;
+		global $done;
 		static $irow;
 		
 		if (!isset($done[$current['infos']['id_parent']]))
@@ -1058,8 +1040,6 @@ class Secuvad extends Module
 	
 	private function check_transport()
 	{
-		global $cookie;
-		
 		$result = true;
 		Db::getInstance()->Execute('
 		DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_transport` 
@@ -1085,8 +1065,8 @@ class Secuvad extends Module
 		SELECT c.`name`, c.`id_carrier` 
 		FROM `'._DB_PREFIX_.'carrier` c 
 		JOIN `'._DB_PREFIX_.'secuvad_assoc_transport` sat ON (sat.`id_carrier` = c.`id_carrier`) 
-		LEFT JOIN `'._DB_PREFIX_.'secuvad_transport` st ON (st.`transport_id` = sat.`transport_id` AND st.`id_lang` = '.(int)($cookie->id_lang).')
-		LEFT JOIN `'._DB_PREFIX_.'secuvad_transport_delay` std ON (std.`transport_delay_id` = sat.`transport_delay_id` AND std.`id_lang`='.(int)($cookie->id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'secuvad_transport` st ON (st.`transport_id` = sat.`transport_id` AND st.`id_lang` = '.(int)$this->context->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'secuvad_transport_delay` std ON (std.`transport_delay_id` = sat.`transport_delay_id` AND std.`id_lang`='.(int)$this->context->language->id.')
 		WHERE (st.`transport_id` IS NULL OR std.`transport_delay_id` IS NULL)
 		AND c.`deleted` = 0
 		AND c.`active` = 1
@@ -1105,8 +1085,6 @@ class Secuvad extends Module
 	
 	private function check_category()
 	{
-		global $cookie;
-		
 		$result = true;
 		Db::getInstance()->Execute('
 		DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_category` 
@@ -1133,7 +1111,7 @@ class Secuvad extends Module
 		JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = c.`id_category`) 
 		JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = cl.`id_lang` AND l.`iso_code` = \'en\') 
 		JOIN `'._DB_PREFIX_.'secuvad_assoc_category` sac ON (sac.`id_category` = c.`id_category`)
-		LEFT JOIN `'._DB_PREFIX_.'secuvad_category` sc ON (sc.`category_id` = sac.`category_id` AND sc.`id_lang` = '.(int)($cookie->id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'secuvad_category` sc ON (sc.`category_id` = sac.`category_id` AND sc.`id_lang` = '.(int)$this->context->language->id.')
 		WHERE sc.`category_id` IS NULL
 		');
 		if(count($module_not_assoc)>0)
@@ -1150,8 +1128,6 @@ class Secuvad extends Module
 	
 	private function _sendToSecuvad()
 	{	
-		global $cookie;
-		
 		if ($this->check_assoc() != '' || Configuration::get('SECUVAD_ACTIVATION') != 1)
 		{
 			$this->secuvad_log('AdminOrders.php : '.$this->l('Error during activation'));
@@ -1169,14 +1145,12 @@ class Secuvad extends Module
 				$url = 'https://'.Configuration::get('SECUVAD_LOGIN').':'.Configuration::get('SECUVAD_MDP').'@'.Configuration::get('SECUVAD_URL_PROD');			
 			$connection_obj = new Secuvad_connection($flux_xml, Configuration::get('SECUVAD_ID'),$url, $this);
 			$connection_obj->send_transaction();
-			Tools::redirectAdmin('index.php?tab=AdminOrders&confirm=1&id_order='.Tools::getValue('id_secuvad_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+			Tools::redirectAdmin('index.php?tab=AdminOrders&confirm=1&id_order='.Tools::getValue('id_secuvad_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 		}
 	}
 	
 	private function _reportFraud()
 	{		
-		global $cookie;
-		
 		if ($this->check_assoc() != '' || Configuration::get('SECUVAD_ACTIVATION') != 1)
 		{
 			$this->secuvad_log('AdminOrders.php : '.$this->l('Error during activation'));
@@ -1209,7 +1183,7 @@ class Secuvad extends Module
 			$result = $connection_obj->report_fraud('impaye','impaye_report');
 			
 			if ($result == "true")
-				Tools::redirectAdmin('index.php?tab=AdminOrders&confirm=2&id_order='.Tools::getValue('id_secuvad_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($cookie->id_employee)));
+				Tools::redirectAdmin('index.php?tab=AdminOrders&confirm=2&id_order='.Tools::getValue('id_secuvad_order').'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 			else
 			{
 				if ($result == "Erreur de connexion")

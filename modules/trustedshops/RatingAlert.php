@@ -56,7 +56,6 @@ class RatingAlert
 	
 	public static function executeCronTask()
 	{
-		global $cookie;
 		if (!Configuration::get('TS_SEND_SEPERATE_MAIL')) 
 			return true;
 
@@ -67,7 +66,7 @@ class RatingAlert
 		
 		foreach ($alerts_infos AS $infos)
 		{
-			$cookie->id_lang = $infos['id_lang'];
+			$this->context->cookie->id_lang = $infos['id_lang'];
 			$subject = $ts_module->getL('title_part_1').' '.Configuration::get('PS_SHOP_NAME').$ts_module->getL('title_part_2');
 			$template_vars = array('{ts_id}' => Configuration::get('TS_ID_'.(int)($infos['id_lang'])), 
 								   '{button_url}' => TrustedShops::getHttpHost(true, true)._MODULE_DIR_.$ts_module->name.'/img',

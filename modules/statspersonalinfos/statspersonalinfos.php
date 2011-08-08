@@ -120,8 +120,6 @@ class StatsPersonalInfos extends ModuleGraph
 
 	protected function getData($layers)
 	{
-		global $cookie;
-		
 		switch ($this->_option)
 		{
 			case 'gender':
@@ -244,7 +242,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'address` a
 						LEFT JOIN `'._DB_PREFIX_.'customer` cu ON cu.id_customer = a.id_customer
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON a.`id_country` = c.`id_country`
-						LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$cookie->id_lang.')
+						LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 						WHERE a.id_customer != 0
 							'.$this->sqlShopRestriction(true, 'cu').'
 						GROUP BY c.`id_country`';
