@@ -110,7 +110,6 @@ class Autoload
 				if (isset($this->index[$classname.'Core']))
 					require_once($this->root_dir.$this->index[$classname.'Core']);
 
-	p($classname);
 				require_once($this->root_dir.$this->index[$classname]);
 			}
 		}
