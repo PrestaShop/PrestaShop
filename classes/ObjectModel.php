@@ -252,7 +252,7 @@ abstract class ObjectModelCore
 		if (!Shop::isMultishopActivated())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
-				$result &= $this->associateTo(Context::getContext()->shop->getID(), 'shop');
+				$result &= $this->associateTo(Context::getContext()->shop->getID(true), 'shop');
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
@@ -799,6 +799,7 @@ abstract class ObjectModelCore
 			return Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$context.'` (`'.$this->identifier.'`, `id_'.$context.'`) VALUES '.rtrim($sql,','));
 		return true;
 	}
+
 	/**
 	 * Check if current object is associated to a group shop
 	 *
@@ -815,6 +816,29 @@ abstract class ObjectModelCore
 				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_group_shop`
 				WHERE `'.$this->identifier.'`='.(int)$this->id.' AND id_group_shop='.(int)$id_group_shop;
 		return (bool)Db::getInstance()->getValue($sql);
+	}
+
+	/**
+	 * @since 1.5.0
+	 */
+	public function duplicateShops($id)
+	{
+		$asso = Shop::getAssoTables();
+		if (!isset($asso[$this->table]) || $asso[$this->table]['type'] != 'shop')
+			return false;
+
+		$sql = 'SELECT id_shop
+				FROM '._DB_PREFIX_.$this->table.'_shop
+				WHERE '.$this->identifier.' = '.(int)$id;
+		if ($results = Db::getInstance()->ExecuteS($sql))
+		{
+			$ids = array();
+			foreach ($results as $row)
+				$ids[] = $row['id_shop'];
+			return $this->associateTo($ids);
+		}
+		
+		return false;
 	}
 
 	public function isLangMultishop()

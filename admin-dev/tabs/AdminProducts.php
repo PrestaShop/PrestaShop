@@ -293,7 +293,8 @@ class AdminProducts extends AdminTab
 					AND Pack::duplicate($id_product_old, $product->id)
 					AND Product::duplicateCustomizationFields($id_product_old, $product->id)
 					AND Product::duplicateTags($id_product_old, $product->id)
-					AND Product::duplicateDownload($id_product_old, $product->id))
+					AND Product::duplicateDownload($id_product_old, $product->id)
+					AND $product->duplicateShops($id_product_old))
 					{
 						if ($product->hasAttributes())
 							Product::updateDefaultAttribute($product->id);
