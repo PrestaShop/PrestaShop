@@ -190,6 +190,8 @@ class DispatcherCore
 		// Get and instantiate controller
 		$this->getController();
 		$controllers = Dispatcher::getControllers();
+		if (!$this->controller)
+			$this->controller = 'index';
 		if (!isset($controllers[$this->controller]))
 			$this->controller = 'pagenotfound';
 		ControllerFactory::getController($controllers[$this->controller])->run();
@@ -323,7 +325,7 @@ class DispatcherCore
 		if (!isset($this->routes[$routeID]))
 		{
 			$query = http_build_query($params);
-			return 'index.php?controller='.$routeID.(($query) ? '&'.$query : '');
+			return ($routeID == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$routeID.(($query) ? '&'.$query : '');
 		}
 		$route = $this->routes[$routeID];
 
@@ -408,7 +410,7 @@ class DispatcherCore
 		}
 		// Default mode, take controller from url
 		else
-			$this->controller = (!empty($controller)) ? $controller : 'index';
+			$this->controller = $controller;
 
 		$this->controller = str_replace('-', '', strtolower($this->controller));
 		return $this->controller;
