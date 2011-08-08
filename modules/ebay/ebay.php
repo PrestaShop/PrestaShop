@@ -339,7 +339,6 @@ class Ebay extends Module
 
 							if (Validate::isEmail($order['email']) && !empty($order['firstname']) && !empty($order['familyname']))
 							{
-
 						// Add customer if he doesn't exist
 						if ($id_customer < 1)
 						{

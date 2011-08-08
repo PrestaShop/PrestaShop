@@ -127,6 +127,10 @@ class AdminCurrencies extends AdminTab
 	{
 		parent::displayOptionsList();
 
+		$dir = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+		for ($i = 0; $i < 2; ++$i)
+			$adminDir = array_pop($dir);
+
 		echo '<br /><br />
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
 			<fieldset>
@@ -140,6 +144,12 @@ class AdminCurrencies extends AdminTab
 				</div>
 			</fieldset>
 		</form>';
+		echo '<br /></br />
+		<fieldset>
+			<legend><img src="../img/admin/tab-tools.gif" />'.$this->l('Currency rates update').'</legend>
+			<p>'.$this->l('Place this URL in crontab or call it manually daily').':<br />
+			<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.$adminDir.DIRECTORY_SEPARATOR.'cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>
+		</fieldset>';
 	}
 
 	public function displayForm($isMainTab = true)

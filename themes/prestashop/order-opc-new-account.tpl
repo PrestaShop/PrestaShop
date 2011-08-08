@@ -200,6 +200,7 @@
 				</p>
 				{/if}
 				<h3>{l s='Delivery address'}</h3>
+				{$stateExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
 				{if $field_name eq "company"}
 				<p class="text">
@@ -259,6 +260,15 @@
 						<input type="text" class="text" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
 					</p>
 				</div>
+				{elseif $field_name eq "state" || $field_name eq 'State:name'}
+				{$stateExist = true}
+				<p class="required id_state_invoice select" style="display:none;">
+					<label for="id_state_invoice">{l s='State'}</label>
+					<select name="id_state_invoice" id="id_state_invoice">
+						<option value="">-</option>
+					</select>
+					<sup>*</sup>
+				</p>
 				{/if}
 				{/foreach}
 				<p class="required text dni">
@@ -267,6 +277,7 @@
 					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					<sup>*</sup>
 				</p>
+				{if !$stateExist}
 				<p class="required id_state select">
 					<label for="id_state">{l s='State'}</label>
 					<select name="id_state" id="id_state">
@@ -274,6 +285,7 @@
 					</select>
 					<sup>*</sup>
 				</p>
+				{/if}
 				<p class="textarea is_customer_param">
 					<label for="other">{l s='Additional information'}</label>
 					<textarea name="other" id="other" cols="26" rows="3"></textarea>

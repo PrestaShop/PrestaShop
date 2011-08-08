@@ -31,6 +31,12 @@ class StoresControllerCore extends FrontController
 	
 	public function preProcess()
 	{
+		if(!extension_loaded('Dom'))
+		{
+			$this->errors[] = Tools::displayError('Dom extension is not loaded.');
+			$smarty->assign('errors', $this->errors);
+		}
+		
 		$simplifiedStoreLocator = Configuration::get('PS_STORES_SIMPLIFIED');
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))

@@ -975,7 +975,7 @@ td.discount_value { white-space: nowrap }
 
 /* address.tpl */
 p.address_navigation { 
-	padding: padding: 1em 0!important;
+	padding: 1em 0!important;
 	margin-bottom: 1.5em
 }
 p.address_navigation a.button { float: left }
