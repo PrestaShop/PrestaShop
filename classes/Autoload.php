@@ -59,8 +59,8 @@ class Autoload
 					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $is_core));
 				else if (substr($file, -4) == '.php')
 			 	{
-			 		$content = file_get_contents($path.$file);
-			 		if (preg_match('#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(Core)?)\s+((extends|implements)\s+[a-z][a-z0-9_]*)?\s*\{#i', $content, $m))
+			 		$content = file_get_contents($this->root_dir.$path.$file);
+			 		if (preg_match('#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(Core)?)(\s+(extends|implements)\s+[a-z][a-z0-9_]*)?\s*\{#i', $content, $m))
 			 		{
 			 			$classes[$m['classname']] = $path.$file;
 						if (substr($m['classname'], -4) == 'Core')
@@ -110,6 +110,7 @@ class Autoload
 				if (isset($this->index[$classname.'Core']))
 					require_once($this->root_dir.$this->index[$classname.'Core']);
 
+	p($classname);
 				require_once($this->root_dir.$this->index[$classname]);
 			}
 		}
