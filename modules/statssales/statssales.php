@@ -57,8 +57,6 @@ class StatsSales extends ModuleGraph
 		
 	public function hookAdminStatsModules($params)
 	{
-		global $cookie;
-		
 		$totals = $this->getTotals();
 		$currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 		if (($id_export = (int)Tools::getValue('export')) == 1)
@@ -73,7 +71,7 @@ class StatsSales extends ModuleGraph
 			<form action="'.$_SERVER['REQUEST_URI'].'" method="post" style="float: right; margin-left: 10px;">
 				<select name="id_country">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
-		foreach (Country::getCountries($cookie->id_lang) AS $country)
+		foreach (Country::getCountries($this->context->language->id) AS $country)
 			$this->_html .= '<option value="'.$country['id_country'].'"'.(($country['id_country'] == Tools::getValue('id_country')) ? ' selected="selected"' : '').'>'.$country['name'].'</option>';
 		$this->_html .= '</select>
 				<input type="submit" name="submitCountry" value="'.$this->l('Filter').'" class="button" />

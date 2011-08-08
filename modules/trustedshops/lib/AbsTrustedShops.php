@@ -116,7 +116,7 @@ abstract class AbsTrustedShops
 	}
 	public function display($file, $template, $cacheId = NULL, $compileId = NULL)
 	{
-		global $smarty;
+		$smarty = $this->context->smarty;
 
 		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
 		{

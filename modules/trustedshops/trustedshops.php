@@ -45,7 +45,6 @@ class TrustedShops extends Module
 
 	public function __construct()
 	{
-		global $smarty;
 		$this->name = 'trustedshops';
 		$this->tab = 'payment_security';
 		$this->version = 1.3;
@@ -60,7 +59,7 @@ class TrustedShops extends Module
 			$obj_ts_buyerprotection->_setEnvApi(TSBuyerProtection::ENV_PROD);
 			self::$objects_list = array($obj_ts_rating, $obj_ts_buyerprotection);
 			self::$objects_list[0]->setModuleName($this->name);
-			self::$objects_list[0]->setSmarty($smarty);
+			self::$objects_list[0]->setSmarty($this->context->smarty);
 		}
 
 		if (!extension_loaded('soap'))

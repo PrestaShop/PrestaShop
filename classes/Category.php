@@ -1028,10 +1028,7 @@ class CategoryCore extends ObjectModel
 	public static function getCategoryInformations($ids_category, $id_lang = null)
 	{
 		if ($id_lang === null)
-		{
-			global $cookie;
-			$id_lang = $cookie->id_lang;
-}
+			$id_lang = Context::getContext()->language->id;
 
 		if (!is_array($ids_category) || !sizeof($ids_category))
 			return;

@@ -44,8 +44,6 @@ require(dirname(__FILE__).'/classes/MRGetTickets.php');
 require(dirname(__FILE__).'/classes/MRGetRelayPoint.php');
 require(dirname(__FILE__).'/classes/MRManagement.php');
 
-global $cookie, $cart, $customer;
-
 $method = Tools::getValue('method');
 $params = array();
 $result = array();
@@ -70,13 +68,13 @@ switch($method)
 		break;
 	case 'MRGetRelayPoint':
 		$params['id_carrier'] = Tools::getValue('id_carrier');
-		$params['weight'] = $cart->getTotalWeight();
-		$params['id_address_delivery'] = $cart->id_address_delivery;
+		$params['weight'] = Context::getContext()->cart->getTotalWeight();
+		$params['id_address_delivery'] = Context::getContext()->cart->id_address_delivery;
 		break;
 	case 'addSelectedCarrierToDB':
 		$params['id_carrier'] = Tools::getValue('id_carrier');
-		$params['id_cart'] = $cart->id;
-		$params['id_customer'] = $cookie->id_customer;
+		$params['id_cart'] = Context::getContext()->cart->id;
+		$params['id_customer'] = Context::getContext()->customer->id;
 		$params['id_mr_method'] = Tools::getValue('id_mr_method');
 		$params['relayPointInfo'] = Tools::getValue('relayPointInfo');
 		break;

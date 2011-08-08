@@ -151,11 +151,9 @@ class StatsGeoLocation extends Module
 
 	public function displayForm()
 	{
-		global $cookie;
-
 		$map_size;
 		$cross_size;
-		$id_lang = (isset($cookie->id_lang) ? (int)($cookie->id_lang) : Configuration::get('PS_LANG_DEFAULT'));
+		$id_lang = (int)$this->context->language->id;
 		$wait = $this->l('Please wait...');
 
 		if ((file_exists('../modules/'.$this->name.'/'.$this->_map_path) == FALSE) || 

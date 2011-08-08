@@ -900,7 +900,6 @@ class AdminImport extends AdminTab
 
 	public function attributeImport()
 	{
-		global $cookie;
 		$defaultLanguage = Configuration::get('PS_LANG_DEFAULT');
 		$groups = array();
 		foreach (AttributeGroup::getAttributesGroups($defaultLanguage) AS $group)
@@ -927,7 +926,7 @@ class AdminImport extends AdminTab
 			
 			if (isset($info['image_url']) && $info['image_url'])
 			{
-				$productHasImages = (bool)Image::getImages((int)($cookie->id_lang), (int)($product->id));
+				$productHasImages = (bool)Image::getImages($this->context->language->id, $product->id);
 				$url = $info['image_url'];
 				$image = new Image();
 				$image->id_product = (int)($product->id);

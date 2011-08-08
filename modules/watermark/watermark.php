@@ -226,7 +226,6 @@ class Watermark extends Module
 	//we assume here only jpg files
 	public function hookwatermark($params)
 	{
-		global $smarty;
 		$image = new Image($params['id_image']);
 		$image->id_product = $params['id_product'];
 		$file = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-watermark.jpg';

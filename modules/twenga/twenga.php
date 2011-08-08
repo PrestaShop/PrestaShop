@@ -184,15 +184,13 @@ class Twenga extends PaymentModule
 
 	private function _initCurrentIsoCodeCountry()
 	{
-		global $cookie;
-
 		$country = Db::getInstance()->ExecuteS('
 			SELECT c.iso_code as iso
 			FROM '._DB_PREFIX_.'country as c
 			LEFT JOIN '._DB_PREFIX_.'country_lang as c_l
 			ON c_l.id_country = c.id_country
-			WHERE c_l.id_lang = '.$cookie->id_lang.' 
-			AND c.id_country = '.	Configuration::get('PS_COUNTRY_DEFAULT'));
+			WHERE c_l.id_lang = '.(int)$this->context->language->id.' 
+			AND c.id_country = '.(int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		if (isset($country[0]['iso']))
 			$this->_currentIsoCodeCountry = $country[0]['iso'];
@@ -251,13 +249,11 @@ class Twenga extends PaymentModule
 	 */
 	private function _getAjaxScript($file, $type, $href, $displayMsg = true)
 	{
-		global $cookie;
-
 		return '
 				$.ajax({
 						type: \'POST\',
 						url: \''._MODULE_DIR_.'twenga/'.$file.'\',
-						data: \'type='.$type.'&base='.$href.'&twenga_token='.sha1(Configuration::get('TWENGA_TOKEN')._COOKIE_KEY_).'&id_lang='.(int)$cookie->id_lang.'\',
+						data: \'type='.$type.'&base='.$href.'&twenga_token='.sha1(Configuration::get('TWENGA_TOKEN')._COOKIE_KEY_).'&id_lang='.(int)$this->context->language->id.'\',
 						success: function(msg) {
 							'.(($displayMsg) ? '
 							$.fancybox(msg, {
@@ -527,9 +523,7 @@ class Twenga extends PaymentModule
 	 */
 	public static function getCurrentCountryName()
 	{
-		global $cookie;
-
-		$id_lang = ((isset($cookie->id_lang)) ? $cookie->id_lang : 
+		$id_lang = ((isset(Context::getContext()->language->id)) ? Context::getContext()->language->id : 
 			((isset($_POST['id_lang'])) ? $_POST['id_lang'] : NULL));
 
 		if ($id_lang === NULL)
@@ -550,8 +544,6 @@ class Twenga extends PaymentModule
 	 */
 	private function _checkCurrentCountrie()
 	{
-		global $cookie;
-
 		if (!in_array(strtolower($this->_currentIsoCodeCountry), $this->limited_countries))
 		{
 			$query = '
@@ -559,7 +551,7 @@ class Twenga extends PaymentModule
 				FROM '._DB_PREFIX_.'country_lang as c_l
 				LEFT JOIN '._DB_PREFIX_.'country as c
 				ON c_l.id_country = c.id_country
-				WHERE c_l.id_lang = '.$cookie->id_lang.' 
+				WHERE c_l.id_lang = '.(int)$this->context->language->id.' 
 				AND c.iso_code IN ('; 
 			foreach($this->limited_countries as $iso)
 				$query .= "'".strtoupper($iso)."', ";
@@ -652,9 +644,7 @@ class Twenga extends PaymentModule
 		else
 			$tarifs_link = 'https://rts.twenga.com/media/prices_'.$defaultIsoCountry.'.jpg';
 		
-		global $cookie;
-		
-		$isoUser = strtolower(Language::getIsoById(intval($cookie->id_lang)));
+		$isoUser = strtolower($this->context->language->iso_code);
 
 		$tarif_arr = array(950, 565);
 		if (file_exists($tarifs_link))
@@ -711,9 +701,7 @@ class Twenga extends PaymentModule
 	 */
 	private function displayTwengaLogin()
 	{
-		global $cookie;
-
-		$isoUser = strtolower(Language::getIsoById(intval($cookie->id_lang)));
+		$isoUser = strtolower($this->context->language->id);
 		if ($isoUser == 'en')
 			$lost_link = 'https://rts.twenga.co.uk/lost_password';
 		else

@@ -55,8 +55,6 @@ class Socolissimo extends CarrierModule
 
 	function __construct()
 	{
-		global $cookie;
-
 		$this->name = 'socolissimo';
 		$this->tab = 'shipping_logistics';
 		$this->version = '2.0';
@@ -108,8 +106,6 @@ class Socolissimo extends CarrierModule
 
 	public function install()
 	{
-		global $cookie;
-
 		if (!parent::install() OR !Configuration::updateValue('SOCOLISSIMO_ID', NULL) OR !Configuration::updateValue('SOCOLISSIMO_KEY', NULL)
 		 OR !Configuration::updateValue('SOCOLISSIMO_URL', 'https://ws.colissimo.fr/pudo-fo/storeCall.do') OR !Configuration::updateValue('SOCOLISSIMO_PREPARATION_TIME', 1)
 		 OR !Configuration::updateValue('SOCOLISSIMO_OVERCOST', 3.6) OR !$this->registerHook('extraCarrier') OR !$this->registerHook('AdminOrder') OR !$this->registerHook('updateCarrier')
@@ -154,8 +150,6 @@ class Socolissimo extends CarrierModule
 
 	public function uninstall()
 	{
-		global $cookie;
-				
 		$so_id = (int)Configuration::get('SOCOLISSIMO_CARRIER_ID');
 		
 		if (!parent::uninstall() 
@@ -181,7 +175,7 @@ class Socolissimo extends CarrierModule
 		//if socolissimo carrier is default set other one as default
 		if(Configuration::get('PS_CARRIER_DEFAULT') == (int)($soCarrier->id))
 		{
-			$carriersD = Carrier::getCarriers((int)($cookie->id_lang));
+			$carriersD = Carrier::getCarriers($this->context->language->id);
 			foreach($carriersD as $carrierD)
 				if ($carrierD['active'] AND !$carrierD['deleted'] AND ($carrierD['name'] != $this->_config['name']))
 					Configuration::updateValue('PS_CARRIER_DEFAULT', $carrierD['id_carrier']);
@@ -217,8 +211,6 @@ class Socolissimo extends CarrierModule
 
 	private function _displayForm()
 	{
-		global $cookie;
-
 		$this->_html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form">
 		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('Description').'</legend>'.
 		$this->l('SoColissimo is a service offered by La Poste, which allows you to offer buyers 5 modes of delivery.').' :
@@ -359,8 +351,6 @@ class Socolissimo extends CarrierModule
 
 	public function hookExtraCarrier($params)
 	{
-		global $smarty, $cookie;
-
 		$customer = new Customer($params['address']->id_customer);
 		$gender = array('1'=>'MR','2'=>'MME');
 		if (in_array((int)($customer->id_gender),array(1,2)))
@@ -403,19 +393,19 @@ class Socolissimo extends CarrierModule
 				$serialsInput .= '&'.$key.'='.$val;
 			$serialsInput = ltrim($serialsInput, '&');
 			$row['id_carrier'] = (int)($carrierSo->id);
-			$smarty->assign(array('urlSo' => Configuration::get('SOCOLISSIMO_URL').'?trReturnUrlKo='.htmlentities($this->url,ENT_NOQUOTES, 'UTF-8'),'id_carrier' => (int)($row['id_carrier']),
+			$this->context->smarty->assign(array('urlSo' => Configuration::get('SOCOLISSIMO_URL').'?trReturnUrlKo='.htmlentities($this->url,ENT_NOQUOTES, 'UTF-8'),'id_carrier' => (int)($row['id_carrier']),
 								  'inputs' => $inputs, 'serialsInput' => $serialsInput, 'finishProcess' => $this->l('To choose SoColissimo, click on a delivery method')));
 
 			$country = new Country((int)($params['address']->id_country));
-			$carriers = Carrier::getCarriers($cookie->id_lang,  true , false,false, NULL, Carrier::ALL_CARRIERS);
+			$carriers = Carrier::getCarriers($this->context->language->id,  true , false,false, NULL, Carrier::ALL_CARRIERS);
 			$ids = array();
 			foreach($carriers as $carrier)
 				$ids[] = $carrier['id_carrier'];
 
-			if ($this->getDeliveryInfos((int)$cookie->id_cart, (int)$cookie->id_customer))
-				$smarty->assign('already_select_delivery', true);
+			if ($this->getDeliveryInfos($this->context->cart->id, $this->context->customer->id))
+				$this->context->smarty->assign('already_select_delivery', true);
 			else
-				$smarty->assign('already_select_delivery', false);
+				$this->context->smarty->assign('already_select_delivery', false);
 			
 			if (($country->iso_code == 'FR') AND (Configuration::Get('SOCOLISSIMO_ID') != NULL) 
 				AND (Configuration::get('SOCOLISSIMO_KEY') != NULL) AND $this->checkAvailibility()
@@ -426,7 +416,7 @@ class Socolissimo extends CarrierModule
 				}
 				else
 				{
-					$smarty->assign('ids', explode('|',Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST')));
+					$this->context->smarty->assign('ids', explode('|',Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST')));
 					return $this->display(__FILE__, 'socolissimo_error.tpl');
 				}
 
@@ -435,7 +425,6 @@ class Socolissimo extends CarrierModule
 
 	public function hooknewOrder($params)
 	{
-		global $cookie;
 		if ($params['order']->id_carrier != Configuration::get('SOCOLISSIMO_CARRIER_ID'))
 			return;
 		$order = $params['order'];
@@ -727,9 +716,8 @@ class Socolissimo extends CarrierModule
 
 	private function checkSoCarrierAvailable($id_carrier)
 	{
-		global $cart, $defaultCountry;
 		$carrier = new Carrier((int)($id_carrier));
-		$address = new Address((int)($cart->id_address_delivery));
+		$address = new Address((int)($this->context->cart->id_address_delivery));
 		$id_zone = Address::getZoneById((int)($address->id));
 
 		// Get only carriers that are compliant with shipping method
@@ -743,14 +731,14 @@ class Socolissimo extends CarrierModule
 		if ($carrier->range_behavior)
 		{
 			// Get id zone
-	        if (isset($cart->id_address_delivery) AND $cart->id_address_delivery)
-				$id_zone = Address::getZoneById((int)($cart->id_address_delivery));
+	        if (isset($this->context->cart->id_address_delivery) AND $this->context->cart->id_address_delivery)
+				$id_zone = Address::getZoneById((int)($this->context->cart->id_address_delivery));
 			else
-				$id_zone = (int)$defaultCountry->id_zone;
+				$id_zone = (int)$this->context->country->id_zone;
 
 			// Get only carriers that have a range compatible with cart
-			if ((Configuration::get('PS_SHIPPING_METHOD') AND (!Carrier::checkDeliveryPriceByWeight((int)($carrier->id), $cart->getTotalWeight(), $id_zone)))
-			OR (!Configuration::get('PS_SHIPPING_METHOD') AND (!Carrier::checkDeliveryPriceByPrice((int)($carrier->id), $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $cart->id_currency))))
+			if ((Configuration::get('PS_SHIPPING_METHOD') AND (!Carrier::checkDeliveryPriceByWeight((int)($carrier->id), $this->context->cart->getTotalWeight(), $id_zone)))
+			OR (!Configuration::get('PS_SHIPPING_METHOD') AND (!Carrier::checkDeliveryPriceByPrice((int)($carrier->id), $this->context->cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $this->context->cart->id_currency))))
 				{
 					return false;
 				}
@@ -760,8 +748,7 @@ class Socolissimo extends CarrierModule
 	
 	public function getOrderShippingCost($params,$shipping_cost)
 	{
-		global $cart;
-		$deliveryInfo = $this->getDeliveryInfos($cart->id, $cart->id_customer);
+		$deliveryInfo = $this->getDeliveryInfos($this->context->cart->id, $this->context->cart->id_customer);
 		if (!empty($deliveryInfo))
 			if ($deliveryInfo['delivery_mode'] == 'RDV')
 				$shipping_cost += (float)(Configuration::get('SOCOLISSIMO_OVERCOST'));

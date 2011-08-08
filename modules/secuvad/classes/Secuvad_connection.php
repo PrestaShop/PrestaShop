@@ -112,11 +112,8 @@ class Secuvad_connection
     		return 'Erreur de connexion';
 	}
 	
-
 	public function send_transaction()
 	{
-		global $cookie;
-		
 		$flag_rep = false;
 		$response = str_replace("\n", "", $this->send('bulk_transactions'));
 		$response = str_replace("\r", "", $response);

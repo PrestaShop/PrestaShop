@@ -56,15 +56,13 @@ class StatsCarrier extends ModuleGraph
 		
 	public function hookAdminStatsModules($params)
 	{
-		global $cookie;
-		
 		$sql = 'SELECT COUNT(o.`id_order`) as total
 				FROM `'._DB_PREFIX_.'orders` o
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$this->sqlShopRestriction(false, 'o').'
 					'.((int)(Tools::getValue('id_order_state')) ? 'AND (SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh WHERE o.id_order = oh.id_order ORDER BY oh.date_add DESC, oh.id_order_history DESC LIMIT 1) = '.(int)(Tools::getValue('id_order_state')) : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-		$states = OrderState::getOrderStates((int)($cookie->id_lang));
+		$states = OrderState::getOrderStates($this->context->language->id);
 
 		if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
