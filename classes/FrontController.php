@@ -56,7 +56,7 @@ class FrontControllerCore
 	protected $id_current_shop;
 	protected $id_current_group_shop;
 
-	public static $initialized = false;
+	public $initialized = false;
 
 	protected static $currentCustomerGroups;
 	
@@ -89,9 +89,9 @@ class FrontControllerCore
 		 */
 		global $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
 
-		if (self::$initialized)
+		if ($this->initialized)
 			return;
-		self::$initialized = true;
+		$this->initialized = true;
 
 		$this->context = Context::getContext();
 		
@@ -502,7 +502,7 @@ class FrontControllerCore
 
 	public function displayHeader()
 	{
-		if (!self::$initialized)
+		if (!$this->initialized)
 			$this->init();
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
@@ -542,9 +542,7 @@ class FrontControllerCore
 
 	public function displayFooter()
 	{
-		if (!$this->context)
-			$this->context = Context::getContext();
-		if (!self::$initialized)
+		if (!$this->initialized)
 			$this->init();
 
 		$this->context->smarty->assign(array(
@@ -564,7 +562,7 @@ class FrontControllerCore
 
 	public function productSort()
 	{
-		if (!self::$initialized)
+		if (!$this->initialized)
 			$this->init();
 
 		// $this->orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
@@ -594,7 +592,7 @@ class FrontControllerCore
 
 	public function pagination($nbProducts = 10)
 	{
-		if (!self::$initialized)
+		if (!$this->initialized)
 			$this->init();
 
 		$nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50);
