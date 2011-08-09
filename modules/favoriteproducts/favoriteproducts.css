@@ -1,0 +1,26 @@
+#favoriteproducts_block_extra span#add_favorites_btn {
+	cursor: pointer
+}
+
+#favoriteproducts_block_account div.favoriteproduct {
+	background: none repeat scroll 0 0 #F1F2F4;
+	border: 1px solid #D0D3D8;
+	padding: 10px;
+	margin: 10px 0
+}
+
+#favoriteproducts_block_account div.favoriteproduct .fl {
+	float: left
+}
+
+#favoriteproducts_block_account div.favoriteproduct .fr {
+	float: right
+}
+
+#favoriteproducts_block_account div.favoriteproduct img {
+	margin: 5px
+}
+
+#favoriteproducts_block_account div.favoriteproduct_description {
+	width: 350px
+}
