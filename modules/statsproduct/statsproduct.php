@@ -61,7 +61,7 @@ class StatsProduct extends ModuleGraph
 				FROM `'._DB_PREFIX_.'order_detail` od
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
 				WHERE od.`product_id` = '.(int)$id_product.'
-					'.$this->sqlShopRestriction(false, 'o').'
+					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND o.`date_add` BETWEEN '.$dateBetween;
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -74,7 +74,7 @@ class StatsProduct extends ModuleGraph
 				FROM `'._DB_PREFIX_.'order_detail` od
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
 				WHERE od.`product_id` = '.(int)($id_product).'
-					'.$this->sqlShopRestriction(false, 'o').'
+					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND o.`date_add` BETWEEN '.$dateBetween;
 		return (float)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -88,7 +88,7 @@ class StatsProduct extends ModuleGraph
 				LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
 				LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
 				LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
-				WHERE pt.`name` = \'product.php\'
+				WHERE pt.`name` = \'product\'
 					'.$this->sqlShopRestriction(false, 'pv').'
 					AND p.`id_object` = '.(int)($id_product).'
 					AND dr.`time_start` BETWEEN '.$dateBetween.'
@@ -117,7 +117,7 @@ class StatsProduct extends ModuleGraph
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				WHERE o.date_add BETWEEN '.$this->getDate().'
-					'.$this->sqlShopRestriction(false, 'o').'
+					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND od.product_id = '.(int)($id_product);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
@@ -135,12 +135,12 @@ class StatsProduct extends ModuleGraph
 						LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 						WHERE o.date_add BETWEEN '.$this->getDate().'
 						AND o.valid = 1
-						AND od.product_id = '.(int)($id_product).'
+						AND od.product_id = '.(int)$id_product.'
 					)
-					'.$this->sqlShopRestriction(false, 'o').'
+					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.date_add BETWEEN '.$this->getDate().'
 					AND o.valid = 1
-					AND od.product_id != '.(int)($id_product).'
+					AND od.product_id != '.(int)$id_product.'
 				GROUP BY od.product_id
 				ORDER BY pqty DESC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
@@ -302,7 +302,7 @@ class StatsProduct extends ModuleGraph
 						FROM `'._DB_PREFIX_.'order_detail` od
 						LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
 						WHERE od.`product_id` = '.(int)($this->_id_product).'
-							'.$this->sqlShopRestriction(false, 'o').'
+							'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 							AND o.valid = 1
 							AND o.`date_add` BETWEEN '.$dateBetween.'
 						GROUP BY o.`date_add`';
@@ -312,7 +312,7 @@ class StatsProduct extends ModuleGraph
 						LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
 						LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
 						LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
-						WHERE pt.`name` = \'product.php\'
+						WHERE pt.`name` = \'product\'
 							'.$this->sqlShopRestriction(false, 'pv').'
 							AND p.`id_object` = '.(int)($this->_id_product).'
 							AND dr.`time_start` BETWEEN '.$dateBetween.'
@@ -324,8 +324,8 @@ class StatsProduct extends ModuleGraph
 				$this->_query = 'SELECT product_attribute_id, SUM(od.`product_quantity`) AS total
 						FROM `'._DB_PREFIX_.'orders` o
 						LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.`id_order` = od.`id_order`
-						WHERE od.`product_id` = '.(int)($this->_id_product).'
-							'.$this->sqlShopRestriction(false, 'o').'
+						WHERE od.`product_id` = '.(int)$this->_id_product.'
+							'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 							AND o.valid = 1
 							AND o.`date_add` BETWEEN '.$dateBetween.'
 						GROUP BY od.`product_attribute_id`';

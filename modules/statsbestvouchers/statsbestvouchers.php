@@ -115,7 +115,7 @@ class StatsBestVouchers extends ModuleGrid
 				FROM '._DB_PREFIX_.'order_discount od
 				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = od.id_order
 				WHERE o.valid = 1
-					'.$this->sqlShopRestriction(false, 'o').'
+					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.invoice_date BETWEEN '.$this->getDate().'
 				GROUP BY od.id_discount';
 		if (Validate::IsName($this->_sort))
