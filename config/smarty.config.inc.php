@@ -39,8 +39,8 @@ $smarty->compile_dir = _PS_SMARTY_DIR_.'compile';
 $smarty->cache_dir = _PS_SMARTY_DIR_.'cache';
 $smarty->config_dir = _PS_SMARTY_DIR_.'configs';
 $smarty->caching = false;
-$smarty->force_compile = (bool)Configuration::get('PS_SMARTY_FORCE_COMPILE');
-$smarty->compile_check = false;
+$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+$smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 $smarty->debugging = false; 
 $smarty->debugging_ctrl = 'URL'; // 'NONE' on production
 $smarty->deprecation_notices = false; // so many depreciated yet not migrated smarty calls

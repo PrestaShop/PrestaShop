@@ -71,7 +71,7 @@ class AdminHome extends AdminTab
 			$indexRebuiltAfterUpdate = 2;
 		
 		$smartyOptimized = 0;
-		if (!Configuration::get('PS_SMARTY_FORCE_COMPILE'))
+		if (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_NO_COMPILE_)
 			++$smartyOptimized;
 		if (Configuration::get('PS_SMARTY_CACHE'))
 			++$smartyOptimized;
