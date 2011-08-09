@@ -81,7 +81,7 @@ class StatsNewsletter extends ModuleGraph
 		$sql = 'SELECT COUNT(*) as customers
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE 1
-					'.$this->sqlShopRestriction(true).'
+					'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 					AND `newsletter_date_add` BETWEEN '.ModuleGraph::getDateBetween();
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
@@ -103,13 +103,13 @@ class StatsNewsletter extends ModuleGraph
 		$this->_query = 'SELECT newsletter_date_add
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE 1
-					'.$this->sqlShopRestriction(true).'
+					'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 					AND `newsletter_date_add` BETWEEN ';
 
 		$this->_query2 = 'SELECT newsletter_date_add
 				FROM '._DB_PREFIX_.'newsletter
 				WHERE 1
-					'.$this->sqlShopRestriction(true).'
+					'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 					AND `newsletter_date_add` BETWEEN ';
 		$this->setDateGraph($layers, true);
 	}

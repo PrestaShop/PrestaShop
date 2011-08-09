@@ -115,7 +115,7 @@ class StatsCheckUp extends Module
 					LEFT JOIN '._DB_PREFIX_.'order_detail od ON o.id_order = od.id_order
 					WHERE od.product_id = p.id_product
 						AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween().'
-						'.$this->sqlShopRestriction().'
+						'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				) as nbSales, IFNULL((
 					SELECT SUM(pa.quantity)
 					FROM '._DB_PREFIX_.'product_attribute pa
