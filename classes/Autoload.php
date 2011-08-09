@@ -119,7 +119,6 @@ class Autoload
 	 */
 	public function generateIndex()
 	{
-		echo 'oui';
 		$classes = array_merge(
 							$this->getClassesFromDir('classes/', true),
 							$this->getClassesFromDir('override/classes/', false)
