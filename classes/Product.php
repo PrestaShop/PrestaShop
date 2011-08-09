@@ -202,6 +202,10 @@ class ProductCore extends ObjectModel
 	protected static $_cacheFeatures = array();
 	protected static $_frontFeaturesCache = array();
 	protected static $producPropertiesCache = array();
+	
+	/** @var array cache stock data in getStock() method */
+	protected $cacheStock = array();
+	
 	/** @var array tables */
 	protected $tables = array ('product', 'product_lang');
 
@@ -2082,6 +2086,8 @@ class ProductCore extends ObjectModel
 				'id_group_shop' =>			$shop->getGroupID(),
 				'quantity' =>				$quantity,
 			), 'INSERT');
+			
+		$this->cacheStock[$id_product_attribute] = null;
 	}
 
 	/**
@@ -2099,12 +2105,16 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = 'SELECT quantity
-				FROM '._DB_PREFIX_.'stock
-				WHERE id_product = '.$this->id.'
-					AND id_product_attribute = '.(int)$id_product_attribute
-					.$context->shop->sqlSharedStock('');
-		return (int)Db::getInstance()->getValue($sql);
+		if (!isset($this->cacheStock[$id_product_attribute]))
+		{
+			$sql = 'SELECT quantity
+					FROM '._DB_PREFIX_.'stock
+					WHERE id_product = '.$this->id.'
+						AND id_product_attribute = '.(int)$id_product_attribute
+						.$context->shop->sqlSharedStock();
+			$this->cacheStock[$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
+		}
+		return $this->cacheStock[$id_product_attribute];
 	}
 
 	/**
