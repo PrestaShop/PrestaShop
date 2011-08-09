@@ -2112,7 +2112,7 @@ class ProductCore extends ObjectModel
 					WHERE id_product = '.$this->id.'
 						AND id_product_attribute = '.(int)$id_product_attribute
 						.$context->shop->sqlSharedStock();
-			$this->cacheStock[$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
+			self::$cacheStock[$this->id][$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
 		}
 		return self::$cacheStock[$this->id][$id_product_attribute];
 	}

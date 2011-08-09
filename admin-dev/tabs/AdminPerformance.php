@@ -193,7 +193,7 @@ class AdminPerformance extends AdminTab
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', 0));
+				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
@@ -246,11 +246,14 @@ class AdminPerformance extends AdminTab
 			<fieldset>
 				<legend><img src="../img/admin/prefs.gif" /> '.$this->l('Smarty').'</legend>
 				
-				<label>'.$this->l('Force compile:').'</label>
+				<label>'.$this->l('Templates cache:').'</label>
 				<div class="margin-form">
-					<input type="radio" name="smarty_force_compile" id="smarty_force_compile_1" value="1" '.(Configuration::get('PS_SMARTY_FORCE_COMPILE') ? 'checked="checked"' : '').' /> <label class="t"><img src="../img/admin/enabled.gif" alt="" /> '.$this->l('Yes').'</label>
-					<input type="radio" name="smarty_force_compile" id="smarty_force_compile_0" value="0" '.(!Configuration::get('PS_SMARTY_FORCE_COMPILE') ? 'checked="checked"' : '').' /> <label class="t"><img src="../img/admin/disabled.gif" alt="" /> '.$this->l('No').'</label>
-					<p>'.$this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.').'</p>
+					<input type="radio" name="smarty_force_compile" id="smarty_force_compile_'._PS_SMARTY_NO_COMPILE_.'" value="'._PS_SMARTY_NO_COMPILE_.'" '.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_NO_COMPILE_ ? 'checked="checked"' : '').' /> <label class="t"> '.$this->l('Never compile cache').'</label>
+					<br /><p>'.$this->l('Templates are never recompiled, performance are better and this option should be used in production environement').'</p><br />
+					<input type="radio" name="smarty_force_compile" id="smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_.'" value="'._PS_SMARTY_CHECK_COMPILE_.'" '.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_ ? 'checked="checked"' : '').' /> <label class="t"> '.$this->l('Compile cache if templates are updated').'</label>
+					<br /><p>'.$this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your templates files, you should use force compile instead of this option.  It should never be used in a production environment.').'</p><br />
+					<input type="radio" name="smarty_force_compile" id="smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_.'" value="'._PS_SMARTY_FORCE_COMPILE_.'" '.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_ ? 'checked="checked"' : '').' /> <label class="t"> '.$this->l('Force compile').'</label>
+					<br /><p>'.$this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.').'</p>
 				</div>
 				<label>'.$this->l('Cache:').'</label>
 				<div class="margin-form">
