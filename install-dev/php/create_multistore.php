@@ -20,8 +20,11 @@ function create_multistore()
 		$shop_domain = Tools::getHttpHost();
 		$shop_domain_ssl = Tools::getHttpHost();
 	}
+
+	$_PS_DIRECTORY_ = trim(str_replace(' ', '%20', INSTALLER__PS_BASE_URI), '/');
+	$_PS_DIRECTORY_ = ($_PS_DIRECTORY_) ? '/'.$_PS_DIRECTORY_.'/' : '/';
 	$res &= Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`, `active`) 
-																			VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\',, \'\' \'\', 1, 1)');
+																			VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1)');
 
 	// Stock conversion
 	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)

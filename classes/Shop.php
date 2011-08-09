@@ -256,7 +256,7 @@ class ShopCore extends ObjectModel
 	{
 		if (!$this->theme_name)
 			$this->loadShopInfos();
-		return $this->physical_uri.$this->virtual_uri.'/';
+		return $this->physical_uri.$this->virtual_uri;
 	}
 
 	public function getPhysicalURI()

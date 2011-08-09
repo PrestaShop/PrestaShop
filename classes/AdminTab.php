@@ -872,6 +872,9 @@ abstract class AdminTabCore
 
 	protected function updateAssoShop($id_object = false)
 	{
+		if (!Shop::isMultiShopActivated())
+			return ;
+
 		$shopAsso = Shop::getAssoTables();
 		$groupShopAsso = GroupShop::getAssoTables();
 		if (isset($shopAsso[$this->table]) && $shopAsso[$this->table]['type'] == 'shop')
@@ -1300,7 +1303,7 @@ abstract class AdminTabCore
 			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
 				
-			if (Shop::isMultiShopActivated() && Shop::context() == Shop::CONTEXT_ALL)
+			if (Shop::isMultiShopActivated() && Context::shop() == Shop::CONTEXT_ALL)
 				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		}
 

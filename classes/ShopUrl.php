@@ -51,13 +51,14 @@ class ShopUrlCore extends ObjectModel
 		parent::validateFields();
 		
 		$this->physical_uri = trim($this->physical_uri, '/');
-		$this->physical_uri .= '/'.$this->physical_uri;
 		if ($this->physical_uri)
-			$this->physical_uri = preg_replace('#/+#', '/', $this->physical_uri);
+			$this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
+		else
+			$this->physical_uri = '/';
 			
 		$this->virtual_uri = trim($this->virtual_uri, '/');
 		if ($this->virtual_uri)
-			$this->virtual_uri = '/'.preg_replace('#/+#', '/', trim($this->virtual_uri, '/'));
+			$this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
 
 		$fields['domain'] = pSQL($this->domain);
 		$fields['domain_ssl'] = pSQL($this->domain_ssl);
@@ -94,13 +95,24 @@ class ShopUrlCore extends ObjectModel
 		return $res;
 	}
 		
-	public function canAddThisUrl($domain, $domain_ssl, $uri)
+	public function canAddThisUrl($domain, $domain_ssl, $physical_uri, $virtual_uri)
 	{
+		$physical_uri = trim($physical_uri, '/');
+		if ($physical_uri)
+			$physical_uri = preg_replace('#/+#', '/', '/'.$physical_uri.'/');
+		else
+			$this->physical_uri = '/';
+			
+		$virtual_uri = trim($virtual_uri, '/');
+		if ($virtual_uri)
+			$virtual_uri = preg_replace('#/+#', '/', trim($virtual_uri, '/')).'/';
+
 		$sql = 'SELECT id_shop_url
 				FROM '._DB_PREFIX_.'shop_url
-				WHERE uri=\''.pSQL($uri).'\'
-					AND (domain=\''.pSQL($domain).'\' '.(($domain_ssl) ? 'OR domain_ssl=\''.pSQL($domain_ssl).'\'' : '').')'
-					.($this->id ? ' AND id_shop_url !='.(int)$this->id : '');
+				WHERE physical_uri = \''.pSQL($physical_uri).'\'
+					AND virtual_uri = \''.pSQL($virtual_uri).'\'
+					AND (domain = \''.pSQL($domain).'\' '.(($domain_ssl) ? ' OR domain_ssl = \''.pSQL($domain_ssl).'\'' : '').')'
+					.($this->id ? ' AND id_shop_url != '.(int)$this->id : '');
 		return Db::getInstance()->getValue($sql);
 	}
 	
@@ -126,4 +138,3 @@ class ShopUrlCore extends ObjectModel
 		return	self::$main_domain_ssl;
 	}
 }
-

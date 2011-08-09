@@ -61,7 +61,7 @@ class AdminShopUrl extends AdminTab
 				if ($beforeUpdate->main AND !Tools::getValue('main'))
 					$this->_errors[] = Tools::displayError('You must have a main url per shop');
 			}
-			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('uri')))
+			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
 				
 			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
