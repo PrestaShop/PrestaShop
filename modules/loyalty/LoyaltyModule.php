@@ -104,8 +104,8 @@ class LoyaltyModule extends ObjectModel
 			{
 				if (!(int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND Product::isDiscounted((int)$product['id_product']))
 				{
-					if (isset($this->context->smarty) AND is_object($newProduct) AND $product['id_product'] == $newProduct->id)
-						$this->context->smarty->assign('no_pts_discounted', 1);
+					if (isset(Context::getContext()->smarty) AND is_object($newProduct) AND $product['id_product'] == $newProduct->id)
+						Context::getContext()->smarty->assign('no_pts_discounted', 1);
 					continue;
 				}
 				$total += ($taxesEnabled == PS_TAX_EXC ? $product['price'] : $product['price_wt'])* (int)($product['cart_quantity']);
@@ -119,17 +119,17 @@ class LoyaltyModule extends ObjectModel
 
 	public static function getVoucherValue($nbPoints, $id_currency = NULL)
 	{
-		$currency = $id_currency ? new Currency($id_currency) : $this->context->currency->id;
+		$currency = $id_currency ? new Currency($id_currency) : Context::getContext()->currency->id;
 			
 		return (int)$nbPoints * (float)Tools::convertPrice(Configuration::get('PS_LOYALTY_POINT_VALUE'), $currency);
 	}
 
 	public static function getNbPointsByPrice($price)
 	{
-		if (Configuration::get('PS_CURRENCY_DEFAULT') != $this->context->currency->id)
+		if (Configuration::get('PS_CURRENCY_DEFAULT') != Context::getContext()->currency->id)
 		{
-			if ($this->context->currency->conversion_rate)
-				$price = $price / $this->context->currency->conversion_rate;
+			if (Context::getContext()->currency->conversion_rate)
+				$price = $price / Context::getContext()->currency->conversion_rate;
 		}
 
 		/* Prevent division by zero */
