@@ -74,7 +74,8 @@ class Autoload
 	 */
 	public function load($classname)
 	{
-		if (!isset($this->index[$classname]))
+		// regenerate the class index if the requested class is not found in the index or if the requested file doesn't exists
+		if (!isset($this->index[$classname]) || ($this->index[$classname] && !file_exists($this->root_dir.$this->index[$classname])))
 			$this->generateIndex();
 
 		// If $classname has not core suffix (E.g. Shop, Product)
@@ -118,6 +119,7 @@ class Autoload
 	 */
 	public function generateIndex()
 	{
+		echo 'oui';
 		$classes = array_merge(
 							$this->getClassesFromDir('classes/', true),
 							$this->getClassesFromDir('override/classes/', false)
