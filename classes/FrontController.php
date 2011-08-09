@@ -56,7 +56,7 @@ class FrontControllerCore
 	protected $id_current_shop;
 	protected $id_current_group_shop;
 
-	public $initialized = false;
+	public static $initialized = false;
 
 	protected static $currentCustomerGroups;
 	
@@ -89,9 +89,9 @@ class FrontControllerCore
 		 */
 		global $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
 
-		if ($this->initialized)
+		if (self::$initialized)
 			return;
-		$this->initialized = true;
+		self::$initialized = true;
 
 		$this->context = Context::getContext();
 		
@@ -485,8 +485,7 @@ class FrontControllerCore
 							);
 			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css');
 		}
-		$language = new Language($this->context->language->id);
-		if ($language->is_rtl)
+		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 	}
 
@@ -502,8 +501,14 @@ class FrontControllerCore
 
 	public function displayHeader()
 	{
-		if (!$this->initialized)
+		if (!self::$initialized)
 			$this->init();
+		// if this function is called from a module, do a fast init
+		else if (!$this->context)
+		{
+			$this->context = Context::getContext();
+			$this->setMedia();
+		}
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
@@ -523,7 +528,7 @@ class FrontControllerCore
 			'HOOK_TOP' => Module::hookExec('top'),
 			'HOOK_LEFT_COLUMN' => Module::hookExec('leftColumn')
 		));
-
+				
 		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
 		{
 			// CSS compressor management
@@ -542,8 +547,14 @@ class FrontControllerCore
 
 	public function displayFooter()
 	{
-		if (!$this->initialized)
+		if (!self::$initialized)
 			$this->init();
+		// if this function is called from a module, do a fast init
+		else if (!$this->context)
+		{
+			$this->context = Context::getContext();
+			$this->setMedia();
+		}
 
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),
@@ -562,8 +573,10 @@ class FrontControllerCore
 
 	public function productSort()
 	{
-		if (!$this->initialized)
+		if (!self::$initialized)
 			$this->init();
+		elseif (!$this->context)
+			$this->context = Context::getContext();
 
 		// $this->orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 		// $this->orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
@@ -592,12 +605,14 @@ class FrontControllerCore
 
 	public function pagination($nbProducts = 10)
 	{
-		if (!$this->initialized)
+		if (!self::$initialized)
 			$this->init();
-
+		elseif (!$this->context)
+			$this->context = Context::getContext();
+			
 		$nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50);
 		asort($nArray);
-		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? self::$this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
+		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
 		$this->p = abs((int)(Tools::getValue('p', 1)));
 		$range = 2; /* how many pages around page selected */
 
