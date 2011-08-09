@@ -204,7 +204,7 @@ class ProductCore extends ObjectModel
 	protected static $producPropertiesCache = array();
 	
 	/** @var array cache stock data in getStock() method */
-	protected $cacheStock = array();
+	protected static $cacheStock = array();
 	
 	/** @var array tables */
 	protected $tables = array ('product', 'product_lang');
@@ -2086,8 +2086,8 @@ class ProductCore extends ObjectModel
 				'id_group_shop' =>			$shop->getGroupID(),
 				'quantity' =>				$quantity,
 			), 'INSERT');
-			
-		$this->cacheStock[$id_product_attribute] = null;
+
+		self::$cacheStock[$this->id][$id_product_attribute] = null;
 	}
 
 	/**
@@ -2105,7 +2105,7 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		if (!isset($this->cacheStock[$id_product_attribute]))
+		if (!isset(self::$cacheStock[$this->id][$id_product_attribute]))
 		{
 			$sql = 'SELECT quantity
 					FROM '._DB_PREFIX_.'stock
