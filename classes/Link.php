@@ -80,9 +80,9 @@ class LinkCore
 
 		// @todo use specific method ?
 		if ($id_shop && ($shop = Shop::getShop($id_shop)))
-			$url = 'http://'.$shop['domain'].'/'.$shop['uri'];
+			$url = 'http://'.$shop['domain'].$shop['uri'];
 		$url .= $this->getLangLink($id_lang);
-		
+
 		if (!is_object($product))
 			$product = new Product($product, false, $id_lang);
 
