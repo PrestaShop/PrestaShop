@@ -148,7 +148,7 @@ class AdminCurrencies extends AdminTab
 		<fieldset>
 			<legend><img src="../img/admin/tab-tools.gif" />'.$this->l('Currency rates update').'</legend>
 			<p>'.$this->l('Place this URL in crontab or call it manually daily').':<br />
-			<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.$adminDir.DIRECTORY_SEPARATOR.'cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>
+			<b>'.Tools::getShopDomain(true, true). __PS_BASE_URI__.$adminDir.'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>
 		</fieldset>';
 	}
 

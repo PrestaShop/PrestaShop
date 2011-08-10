@@ -573,6 +573,9 @@ class ProductCore extends ObjectModel
 
 	public function delete()
 	{
+		if (!GroupReduction::deleteProductReduction($this->id))
+			return false;
+		
 		Hook::deleteProduct($this);
 		if (!parent::delete() OR
 			!$this->deleteCategories(true) OR
@@ -683,6 +686,9 @@ class ProductCore extends ObjectModel
 		if (!$this->addToCategories($categories))
 			return false;
 
+		if (!$this->setGroupReduction($categories))
+			return false;
+		
 		return true;
 	}
 
@@ -3418,5 +3424,30 @@ class ProductCore extends ObjectModel
 		UPDATE `'._DB_PREFIX_.'product`
 		SET ecotax = 0
 		');
+	}
+	
+	/**
+	 * Set Group reduction if needed
+	 * @param string $productCategories Categories the product belongs to
+	 */
+	public function setGroupReduction($categories)
+	{
+		if (sizeof($categories) > 1) // Use category_default id if more than 1 category
+			$row = GroupReduction::getGroupByCategoryId((int)$this->id_category_default);
+		else
+			$row = GroupReduction::getGroupByCategoryId((int)array_pop($categories));
+		
+		if (!$row)
+		{
+			// Then Remove
+			if (!GroupReduction::deleteProductReduction($this->id))
+				return false;
+		}
+		else
+		{
+			if (!GroupReduction::setProductReduction($this->id, $row['id_group'], $category, $row['reduction'])) // Add or Edit
+				return false;
+		}
+		return true;
 	}
 }

@@ -439,7 +439,7 @@ class BlockLayered extends Module
 						$.ajax(
 						{
 							type: \'GET\',
-							url: '.__PS_BASE_URI__.' + \'modules/blocklayered/blocklayered-ajax-back.php\',
+							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php\',
 							data: (all ? \'\' : $(\'input[name="categoryBox[]"]\').serialize()+\'&\')+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter)+\'\' : \'\'),
 							success: function(result)
 							{

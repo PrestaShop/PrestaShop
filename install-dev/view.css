@@ -644,12 +644,12 @@ ul#optional {list-style-type:none;}
 
 #prestastore,
 #prestastore_update {
-	height:170px;
+    height:210px;
 	width:645px;
-	border:1px solid #ccc;
-	-moz-border-radius: 5px;
+	border:none;
+	/*-moz-border-radius: 5px;
 	-webkit-border-radius:5px;
-	border-radius: 5px
+	border-radius: 5px*/
 }
 
 /* MISE A JOUR ********************************************************************************* */

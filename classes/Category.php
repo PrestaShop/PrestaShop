@@ -312,6 +312,12 @@ class CategoryCore extends ObjectModel
 			self::regenerateEntireNtree();
 
 		Module::hookExec('categoryDeletion', array('category' => $this));
+		
+		/* Delete Categories in GroupReduction */
+		foreach ($toDelete AS $category)
+			if (GroupReduction::getGroupReductionByCategoryId((int)$category))
+				GroupReduction::deleteCategory($category);
+
 		return true;
 	}
 
