@@ -364,7 +364,7 @@ class ParentOrderControllerCore extends FrontController
 			'carriers' => $carriers,
 			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT'))
 		));
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'HOOK_EXTRACARRIER' => Module::hookExec('extraCarrier', array('address' => $address)),
 			'HOOK_BEFORECARRIER' => Module::hookExec('beforeCarrier', array('carriers' => $carriers))
 		));

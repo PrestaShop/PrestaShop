@@ -98,6 +98,7 @@ Language::loadLanguages();
 
 /* Loading default country */
 $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+Context::getContext()->country = $defaultCountry;
 
 /* Instantiate cookie */
 $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
@@ -107,21 +108,35 @@ else
 	$cookie = new Cookie('ps', '', $cookieLifetime);
 Context::getContext()->cookie = $cookie;
 
-/* Instantiate language */
+/* Create employee if in BO, customer else */
 if (defined('PS_ADMIN_DIR'))
 {
 	$employee = new Employee($cookie->id_employee);
 	Context::getContext()->employee = $employee;
 
 	$cookie->id_lang = (int)$employee->id_lang;
-	$language = new Language($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
 }
 else
 {
-	$language = new Language($cookie->id_lang);
-	if (!Validate::isLoadedObject($language))
-		$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
+	{
+		$customer = new Customer($cookie->id_customer);
+		$customer->id_guest = $cookie->id_guest;
+		$customer->logged = $cookie->logged;
+	}
+	else
+	{
+		$customer = new Customer();
+		$customer->id_guest = $cookie->id_guest;
+	}
+	Context::getContext()->customer = $customer;
 }
+
+// if the language stored in the cookie is not available language, use default language
+if (isset($cookie->id_lang) && $cookie->id_lang)
+	$language = new Language($cookie->id_lang);
+if (!isset($language) || !Validate::isLoadedObject($language))
+	$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 Context::getContext()->language = $language;
 
 /* Define order state */
