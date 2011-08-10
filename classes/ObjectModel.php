@@ -252,7 +252,9 @@ abstract class ObjectModelCore
 		if (!Shop::isMultishopActivated())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+			{
 				$result &= $this->associateTo(Context::getContext()->shop->getID(true), 'shop');
+			}
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
@@ -778,10 +780,10 @@ abstract class ObjectModelCore
 	 * This function associate an item to its context
 	 * 
 	 * @param int|array $id_shops 
-	 * @param string $context 
+	 * @param string $type 
 	 * @return boolean
 	 */
-	public function associateTo($id_shops, $context = 'shop')
+	public function associateTo($id_shops, $type = 'shop')
 	{
 		if (!$this->id)
 			return;
@@ -791,12 +793,12 @@ abstract class ObjectModelCore
 		
 		foreach ($id_shops as $id_shop)
 		{
-			if (!$this->isAssociatedToShop($id_shop))
+			if (($type == 'shop' && !$this->isAssociatedToShop($id_shop)) || ($type == 'group_shop' && !$this->isAssociatedToGroupShop($id_shop)))
 				$sql .= '('.(int)$this->id.','.(int)$id_shop.'),';
 		}
 		
 		if (!empty($sql))
-			return Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$context.'` (`'.$this->identifier.'`, `id_'.$context.'`) VALUES '.rtrim($sql,','));
+			return Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
 		return true;
 	}
 
