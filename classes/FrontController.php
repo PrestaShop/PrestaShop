@@ -113,30 +113,26 @@ class FrontControllerCore
 		}
 
 		ob_start();
-		
-		$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 
 		// Switch language if needed and init cookie language
 		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
 			$_GET['id_lang'] = $id_lang;
 
 		Tools::switchLanguage();
-		Tools::setCookieLanguage($cookie);
-		$currency = Tools::setCurrency($cookie);
+		Tools::setCookieLanguage($this->context->cookie);
+		$currency = Tools::setCurrency($this->context->cookie);
 
 		if (Validate::isLoadedObject($currency))
-			$smarty->ps_currency = $currency;
-		if (!Validate::isLoadedObject($language = new Language($cookie->id_lang)))
-			$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-		$smarty->ps_language = $language;
-		$this->context->language = $language;
+			$this->context->smarty->ps_currency = $currency;
+
+		$this->context->smarty->ps_language = $this->context->language;
 		
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
 
-		if ($this->auth AND !$cookie->isLogged($this->guestAllowed))
+		if ($this->auth AND !$this->context->cookie->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
 		/* Theme is missing or maintenance */
@@ -145,46 +141,46 @@ class FrontControllerCore
 		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' AND !(int)(Configuration::get('PS_SHOP_ENABLE')))
 			$this->maintenance = true;
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
-			if (($newDefault = $this->geolocationManagement($defaultCountry)) && Validate::isLoadedObject($newDefault))
-				$defaultCountry = $newDefault;
+			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
+				$this->context->country = $newDefault;
 
-		if (isset($_GET['logout']) OR ($cookie->logged AND Customer::isBanned((int)$cookie->id_customer)))
+		if (isset($_GET['logout']) OR ($this->context->cookie->logged AND Customer::isBanned((int)$this->context->cookie->id_customer)))
 		{
-			$cookie->logout();
+			$this->context->cookie->logout();
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 		elseif (isset($_GET['mylogout']))
 		{
-			$cookie->mylogout();
+			$this->context->cookie->mylogout();
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 
 		$_MODULES = array();
 
 		/* Cart already exists */
-		if ((int)$cookie->id_cart)
+		if ((int)$this->context->cookie->id_cart)
 		{
-			$cart = new Cart($cookie->id_cart);
+			$cart = new Cart($this->context->cookie->id_cart);
 			if ($cart->OrderExists())
-				unset($cookie->id_cart, $cart, $cookie->checkedTOS);
+				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
 			/* Delete product of cart, if user can't make an order from his country */
 			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND 
-					!in_array(strtoupper($cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND 
+					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND 
 					$cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 AND
 					!self::isInWhitelistForGeolocation())
-				unset($cookie->id_cart, $cart);
+				unset($this->context->cookie->id_cart, $cart);
 			// update cart values
-			elseif ($cookie->id_customer != $cart->id_customer OR $cookie->id_lang != $cart->id_lang OR $currency->id != $cart->id_currency)
+			elseif ($this->context->cookie->id_customer != $cart->id_customer OR $this->context->cookie->id_lang != $cart->id_lang OR $currency->id != $cart->id_currency)
 			{
-				if ($cookie->id_customer)
-					$cart->id_customer = (int)($cookie->id_customer);
-				$cart->id_lang = (int)($cookie->id_lang);
+				if ($this->context->cookie->id_customer)
+					$cart->id_customer = (int)($this->context->cookie->id_customer);
+				$cart->id_lang = (int)($this->context->cookie->id_lang);
 				$cart->id_currency = (int)$currency->id;
 				$cart->update();
 			}
 			/* Select an address if not set */
 			if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 || 
-				!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $cookie->id_customer)
+				!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer)
 			{
 				$to_update = false;
 				if (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)
@@ -205,14 +201,14 @@ class FrontControllerCore
 		if (!isset($cart) OR !$cart->id)
 		{
 			$cart = new Cart();
-			$cart->id_lang = (int)($cookie->id_lang);
-			$cart->id_currency = (int)($cookie->id_currency);
-			$cart->id_guest = (int)($cookie->id_guest);
+			$cart->id_lang = (int)($this->context->cookie->id_lang);
+			$cart->id_currency = (int)($this->context->cookie->id_currency);
+			$cart->id_guest = (int)($this->context->cookie->id_guest);
 			$cart->id_group_shop = (int)$this->id_current_group_shop;
 			$cart->id_shop = $this->id_current_shop;
-			if ($cookie->id_customer)
+			if ($this->context->cookie->id_customer)
 			{
-				$cart->id_customer = (int)($cookie->id_customer);
+				$cart->id_customer = (int)($this->context->cookie->id_customer);
 				$cart->id_address_delivery = (int)(Address::getFirstCustomerAddressId($cart->id_customer));
 				$cart->id_address_invoice = $cart->id_address_delivery;
 			}
@@ -231,7 +227,7 @@ class FrontControllerCore
 		setlocale(LC_TIME, $locale);
 		setlocale(LC_NUMERIC, 'en_US.UTF-8');
 
-		$smarty->ps_language = $language;
+		$this->context->smarty->ps_language = $this->context->language;
 
 		/* get page name to display it in body id */
 		// @todo check here
@@ -239,12 +235,12 @@ class FrontControllerCore
 		$page_name = Dispatcher::getInstance()->getController();
 		$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
 
-		$smarty->assign(Tools::getMetaTags($language->id, $page_name));
-		$smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
+		$this->context->smarty->assign(Tools::getMetaTags($this->context->language->id, $page_name));
+		$this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
 		/* Breadcrumb */
 		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
-		$smarty->assign('navigationPipe', $navigationPipe);
+		$this->context->smarty->assign('navigationPipe', $navigationPipe);
 
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
@@ -255,7 +251,7 @@ class FrontControllerCore
 
 		Product::initPricesComputation();
 
-		$display_tax_label = $defaultCountry->display_tax_label;
+		$display_tax_label = $this->context->country->display_tax_label;
 		if ($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
 		{
 			$infos = Address::getCountryAndState((int)($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
@@ -263,11 +259,11 @@ class FrontControllerCore
 			if (Validate::isLoadedObject($country))
 				$display_tax_label = $country->display_tax_label;
 		}
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'link' => $link,
 			'cart' => $cart,
 			'currency' => $currency,
-			'cookie' => $cookie,
+			'cookie' => $this->context->cookie,
 			'page_name' => $page_name,
 			'base_dir' => _PS_BASE_URL_.__PS_BASE_URI__,
 			'base_dir_ssl' => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
@@ -275,7 +271,7 @@ class FrontControllerCore
 			'tpl_dir' => _PS_THEME_DIR_,
 			'modules_dir' => _MODULE_DIR_,
 			'mail_dir' => _MAIL_DIR_,
-			'lang_iso' => $language->iso_code,
+			'lang_iso' => $this->context->language->iso_code,
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace('\'', '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),
@@ -292,10 +288,10 @@ class FrontControllerCore
 		));
 
 		// Deprecated
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'id_currency_cookie' => (int)$currency->id,
-			'logged' => $cookie->isLogged(),
-			'customerName' => ($cookie->logged ? $cookie->customer_firstname.' '.$cookie->customer_lastname : false)
+			'logged' => $this->context->cookie->isLogged(),
+			'customerName' => ($this->context->cookie->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
 		));
 
 		// TODO for better performances (cache usage), remove these assign and use a smarty function to get the right media server in relation to the full ressource name
@@ -317,19 +313,20 @@ class FrontControllerCore
 
 		foreach ($assignArray as $assignKey => $assignValue)
 			if (substr($assignValue, 0, 1) == '/' OR $protocol_content == 'https://')
-				$smarty->assign($assignKey, $protocol_content.Tools::getMediaServer($assignValue).$assignValue);
+				$this->context->smarty->assign($assignKey, $protocol_content.Tools::getMediaServer($assignValue).$assignValue);
 			else
-				$smarty->assign($assignKey, $assignValue);
+				$this->context->smarty->assign($assignKey, $assignValue);
 
 		/*
 		 * These shortcuts are DEPRECATED as of version 1.5.
 		 * Use the Context to access objects instead.
 		 * Example: $this->context->cart
 		 */
-		self::$cookie = $cookie;
+		self::$cookie = $this->context->cookie;
 		self::$cart = $cart;
-		self::$smarty = $smarty;
+		self::$smarty = $this->context->smarty;
 		self::$link = $link;
+		$defaultCountry = $this->context->country;
 
 		if ($this->maintenance)
 			$this->displayMaintenancePage();
@@ -344,27 +341,16 @@ class FrontControllerCore
 		$this->iso = $iso;
 		$this->setMedia();
 		
-		if (isset($cookie->id_customer) && (int)$cookie->id_customer)
-		{
-			$customer = new Customer($cookie->id_customer);
-			$customer->logged = $cookie->logged;
-		}
-		else
-			$customer = new Customer();
+		if($this->context->cookie->id_country)
+			$customer->geoloc_id_country = (int)$this->context->cookie->id_country;
+		if($this->context->cookie->id_state)
+			$customer->geoloc_id_state = (int)$this->context->cookie->id_state;
+		if($this->context->cookie->postcode)
+			$customer->geoloc_postcode = (int)$this->context->cookie->postcode;
 		
-		if($cookie->id_country)
-			$customer->geoloc_id_country = (int)$cookie->id_country;
-		if($cookie->id_state)
-			$customer->geoloc_id_state = (int)$cookie->id_state;
-		if($cookie->postcode)
-			$customer->geoloc_postcode = (int)$cookie->postcode;
-		
-
-		$this->context->customer = $customer;
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 		$this->context->controller = $this;
-		$this->context->country = $defaultCountry;
 	}
 
 	/* Display a maintenance page if shop is closed */

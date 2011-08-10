@@ -104,7 +104,7 @@ abstract class ModuleCore
 	 */
 	public function __construct($name = null, Context $context = null)
 	{
-		$this->context = ($context) ? $context : Context::getContext();
+		$this->context = $context ? $context : Context::getContext();
 
 		if ($this->name == NULL)
 			$this->name = $this->id;

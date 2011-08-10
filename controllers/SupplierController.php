@@ -43,7 +43,7 @@ class SupplierControllerCore extends FrontController
 		{
 		if (Validate::isLoadedObject($this->supplier))
 		{
-			$canonicalURL = self::$link->getSupplierLink($this->supplier);
+			$canonicalURL = $this->context->link->getSupplierLink($this->supplier);
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');

@@ -56,7 +56,7 @@ class ProductControllerCore extends FrontController
 		// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
 		if (Validate::isLoadedObject($this->product))
 		{
-			$canonicalURL = self::$link->getProductLink($this->product);
+			$canonicalURL = $this->context->link->getProductLink($this->product);
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
