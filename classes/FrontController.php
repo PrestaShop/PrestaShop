@@ -505,10 +505,8 @@ class FrontControllerCore
 			$this->init();
 		// if this function is called from a module, do a fast init
 		else if (!$this->context)
-		{
 			$this->context = Context::getContext();
-			$this->setMedia();
-		}
+		
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
@@ -551,10 +549,7 @@ class FrontControllerCore
 			$this->init();
 		// if this function is called from a module, do a fast init
 		else if (!$this->context)
-		{
 			$this->context = Context::getContext();
-			$this->setMedia();
-		}
 
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),
