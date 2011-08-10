@@ -887,10 +887,10 @@ abstract class ObjectModelCore
 	public static function existsInDatabase($id_entity, $table)
 	{
 		$row = Db::getInstance()->getRow('
-		SELECT `id_'.$table.'`
+		SELECT `id_'.$table.'` as id
 		FROM `'._DB_PREFIX_.$table.'` e
 		WHERE e.`id_'.$table.'` = '.(int)($id_entity));
 
-		return isset($row['id_product']);
+		return isset($row['id']);
 	}
 }

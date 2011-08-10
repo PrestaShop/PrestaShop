@@ -287,6 +287,7 @@ class AdminProducts extends AdminTab
 					if ($product->add()
 					AND Category::duplicateProductCategories($id_product_old, $product->id)
 					AND ($combinationImages = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+					AND GroupReduction::duplicateReduction($id_product_old, $product->id)
 					AND Product::duplicateAccessories($id_product_old, $product->id)
 					AND Product::duplicateFeatures($id_product_old, $product->id)
 					AND Product::duplicateSpecificPrices($id_product_old, $product->id)

@@ -662,6 +662,14 @@ if (Tools::isSubmit('getAdminHomeElement'))
 			$result['partner_preactivation'] = 'NOK';
 	}
 	
+	// PREACTIVATION PAYPAL WARNING
+	$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.Tools::strtolower(Language::getIsoById(intval($cookie->id_lang))).'&id_lang='.(int)$cookie->id_lang.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+	$content = explode('|', $content);
+	if ($content[0] == 'OK')
+		Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', $content[1]);
+	else
+		Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', '');
+
 	// DISCOVER PRESTASHOP
 	$content = @file_get_contents($protocol.'://www.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$cookie->id_lang, false, $stream_context);
 	if (!$content)

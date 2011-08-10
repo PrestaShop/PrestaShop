@@ -935,7 +935,7 @@ class eBayRequest
 
 
 
-	function getOrders($CreateTimeFrom, $CreateTimeTo)
+	function getOrders($CreateTimeFrom, $CreateTimeTo, $page)
 	{
 		// Check data
 		if (!$CreateTimeFrom || !$CreateTimeTo)
@@ -953,6 +953,11 @@ class eBayRequest
 		$requestXml .= '  <CreateTimeFrom>'.$CreateTimeFrom.'</CreateTimeFrom>'."\n";
 		$requestXml .= '  <CreateTimeTo>'.$CreateTimeTo.'</CreateTimeTo>'."\n";
 		$requestXml .= '  <OrderRole>Seller</OrderRole>'."\n";
+		$requestXml .= '  <OrderStatus>Completed</OrderStatus>'."\n";
+		$requestXml .= '  <Pagination>'."\n";
+		$requestXml .= '    <EntriesPerPage>100</EntriesPerPage>'."\n";
+		$requestXml .= '    <PageNumber>'.$page.'</PageNumber>'."\n";
+		$requestXml .= '  </Pagination>'."\n";
 		$requestXml .= '  <RequesterCredentials>'."\n";
 		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
 		$requestXml .= '  </RequesterCredentials>'."\n";
@@ -992,19 +997,25 @@ class eBayRequest
 					$transaction = $order->TransactionArray->Transaction[$i];
 
 					$id_product = 0;
-					$id_attribute = 0;
+					$id_product_attribute = 0;
 					$quantity = (string)$transaction->QuantityPurchased;
 					if (isset($transaction->item->SKU))
 					{
 						$tmp = explode('-', (string)$transaction->item->SKU);
+						if (isset($tmp[1]))
 						$id_product = $tmp[1];
 					}
 					if (isset($transaction->Variation->SKU))
 					{
 						$tmp = explode('-', (string)$transaction->Variation->SKU);
+						if (isset($tmp[1]))
 						$id_product = $tmp[1];
+						if (isset($tmp[2]))
 						$id_product_attribute = $tmp[2];
 					}
+
+					$id_product = (int)Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product);
+					$id_product_attribute = (int)Db::getInstance()->getValue('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
 					if ($id_product > 0)
 						$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => $id_product_attribute, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
 					else
@@ -1025,7 +1036,7 @@ class eBayRequest
 						SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 						WHERE `reference` = \''.pSQL($reference).'\'');
 						if ((int)$id_product > 0)
-							$itemList[] = array('id_product' => $id_product, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
+							$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => 0, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
 						else
 						{
 							$row = Db::getInstance()->getValue('
@@ -1057,7 +1068,7 @@ class eBayRequest
 					'shippingServiceCost' => (string)$order->ShippingServiceSelected->ShippingServiceCost,
 					'email' => (string)$order->TransactionArray->Transaction[0]->Buyer->Email,
 					'product_list' => $itemList,
-					'object' => $order
+					//'object' => $order
 				);
 			}
 

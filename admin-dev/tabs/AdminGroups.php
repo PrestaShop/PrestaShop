@@ -343,7 +343,7 @@ class AdminGroups extends AdminTab
 								$groupReduction = new GroupReduction((int)($id_group_reductions[$key]));
 								$groupReduction->reduction = $reductions[$key] / 100;
 								if (!$groupReduction->update())
-									$this->errors[] = Tools::displayError('Cannot update group reductions');
+									$this->_errors[] = Tools::displayError('Cannot update group reductions');
 							}
 					if (!sizeof($this->_errors))
 						parent::postProcess();
