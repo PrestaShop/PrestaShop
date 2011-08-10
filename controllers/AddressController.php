@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -35,7 +35,7 @@ class AddressControllerCore extends FrontController
 	public $php_self = 'address';
 	public $authRedirection = 'addresses';
 	public $ssl = true;
-		
+
 	protected $_address;
 
 	public function preProcess()
@@ -45,7 +45,7 @@ class AddressControllerCore extends FrontController
 			$this->context->smarty->assign('back', Tools::safeOutput($back));
 		if ($mod = Tools::getValue('mod'))
 			$this->context->smarty->assign('mod', Tools::safeOutput($mod));
-		
+
 		if (Tools::isSubmit('ajax') AND Tools::isSubmit('type'))
 		{
 			if (Tools::getValue('type') == 'delivery')
@@ -57,7 +57,7 @@ class AddressControllerCore extends FrontController
 		}
 		else
 			$id_address = (int)Tools::getValue('id_address', 0);
-		
+
 		if ($id_address)
 		{
 			$this->_address = new Address((int)$id_address);
@@ -83,7 +83,7 @@ class AddressControllerCore extends FrontController
 		if (Tools::isSubmit('submitAddress'))
 		{
 			$address = new Address();
-			$this->errors = $address->validateControler();
+			$this->errors = $address->validateController();
 			$address->id_customer = (int)$this->context->customer->id;
 
 			if (!Tools::getValue('phone') AND !Tools::getValue('phone_mobile'))
@@ -130,7 +130,7 @@ class AddressControllerCore extends FrontController
 
 			if ((int)($country->contains_states) AND !(int)($address->id_state))
 				$this->errors[] = Tools::displayError('This country requires a state selection.');
-			
+
 			if (!sizeof($this->errors))
 			{
 				if (isset($id_address))
@@ -183,7 +183,7 @@ class AddressControllerCore extends FrontController
 					if (Tools::isSubmit('ajax'))
 					{
 						$return = array(
-							'hasError' => !empty($this->errors), 
+							'hasError' => !empty($this->errors),
 							'errors' => $this->errors,
 							'id_address_delivery' => $this->context->cart->id_address_delivery,
 							'id_address_invoice' => $this->context->cart->id_address_invoice
@@ -206,19 +206,19 @@ class AddressControllerCore extends FrontController
 		if (Tools::isSubmit('ajax') AND sizeof($this->errors))
 		{
 			$return = array(
-				'hasError' => !empty($this->errors), 
+				'hasError' => !empty($this->errors),
 				'errors' => $this->errors
 			);
 			die(Tools::jsonEncode($return));
 		}
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
-	
+
 	public function process()
 	{
 		parent::process();
@@ -257,9 +257,9 @@ class AddressControllerCore extends FrontController
 			$this->context->smarty->assign('vat_display', 0);
 
 		$this->context->smarty->assign('ajaxurl', _MODULE_DIR_);
-		
+
 		$this->context->smarty->assign('vatnumber_ajax_call', (int)file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'));
-		
+
 		$this->context->smarty->assign(array(
 			'countries_list' => $countriesList,
 			'countries' => $countries,
@@ -277,13 +277,13 @@ class AddressControllerCore extends FrontController
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
 		$this->context->smarty->assign('ordered_adr_fields', $dlv_adr_fields);
 	}
-	
+
 	public function displayHeader()
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayHeader();
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();
@@ -291,7 +291,7 @@ class AddressControllerCore extends FrontController
 		$this->_processAddressFormat();
 		$this->context->smarty->display(_PS_THEME_DIR_.'address.tpl');
 	}
-	
+
 	public function displayFooter()
 	{
 		if (Tools::getValue('ajax') != 'true')
