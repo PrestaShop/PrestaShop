@@ -1546,7 +1546,13 @@ class ToolsCore
 				$specificAfter = $m[2];
 			}
 			else
-				$specificBefore = $content;
+			{
+				// For retrocompatibility
+				if (preg_match('#\# http://www\.prestashop\.com - http://www\.prestashop\.com/forums\s*(.*)<IfModule mod_rewrite\.c>#si', $content, $m))
+					$specificBefore = $m[1];
+				else
+					$specificBefore = $content;
+			}
 		}
 
 		// Write .htaccess data
@@ -1582,12 +1588,12 @@ class ToolsCore
 			if ($uri['virtual'])
 			{
 				fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-				fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."/(.*) ".$uri['physical']."/$1 [L]\n\n");
+				fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."(.*) ".$uri['physical']."/$1 [L]\n\n");
 			}
 		}
 		
 		// Webservice
-		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '.$uri['physical']."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
+		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
 
 		if ($rewrite_settings)
 		{
