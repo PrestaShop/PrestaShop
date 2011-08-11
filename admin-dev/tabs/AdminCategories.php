@@ -311,5 +311,16 @@ class AdminCategories extends AdminTab
 			</fieldset>
 		</form>
 		<p class="clear"></p>';
+		// TinyMCE
+		$iso = $this->context->language->iso_code;
+		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
+		$ad = dirname($_SERVER["PHP_SELF"]);
+		echo '<script type="text/javascript">
+			var iso = \''.$isoTinyMCE.'\' ;
+			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
+			var ad = \''.$ad.'\' ;
+			</script>
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>';
 	}
 }
