@@ -50,9 +50,9 @@ class AdminGroupShop extends AdminTab
 		if (Tools::isSubmit('delete'.$this->table) OR Tools::isSubmit('status') OR Tools::isSubmit('status'.$this->table))
 		{
 			$object = $this->loadObject();
-			if(GroupShop::getTotalGroupShops() == 1)
+			if (GroupShop::getTotalGroupShops() == 1)
 				$this->_errors[] = Tools::displayError('You cannot delete or disable the last groupshop.');
-			elseif($object->haveShops())
+			else if ($object->haveShops())
 				$this->_errors[] = Tools::displayError('You cannot delete or disable a groupshop which have this shops using it.');
 			
 			if (sizeof($this->_errors))

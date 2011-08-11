@@ -105,6 +105,7 @@ class ShopCore extends ObjectModel
 	 */
 	const SHARE_CUSTOMER = 'share_customer';
 	const SHARE_ORDER = 'share_order';
+	const SHARE_STOCK = 'share_stock';
 
 	public function getFields()
 	{
@@ -181,32 +182,32 @@ class ShopCore extends ObjectModel
 				$excluded_uris[] = $directory;
 
 		// Find current shop from URL
-		$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
-				FROM '._DB_PREFIX_.'shop_url su
-				LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
-				WHERE su.domain=\''.pSQL(Tools::getHttpHost()).'\'
-					AND s.active = 1
-					AND s.deleted = 0
-				ORDER BY LENGTH(uri) DESC';
-
-		$id_shop = '';
-		if ($results = Db::getInstance()->executeS($sql))
-			foreach ($results as $row)
-			{
-				if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
+		if (!$id_shop = Tools::getValue('id_shop'))
+		{
+			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
+					FROM '._DB_PREFIX_.'shop_url su
+					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
+					WHERE su.domain = \''.pSQL(Tools::getHttpHost()).'\'
+						AND s.active = 1
+						AND s.deleted = 0
+					ORDER BY LENGTH(uri) DESC';
+	
+			$id_shop = '';
+			if ($results = Db::getInstance()->executeS($sql))
+				foreach ($results as $row)
 				{
-					$id_shop = $row['id_shop'];
-					break;
+					if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
+					{
+						$id_shop = $row['id_shop'];
+						break;
+					}
 				}
-			}
-
-		if (!$id_shop)
-			die('Shop not found ... redirect me please !');
+		}
 
 		// Get instance of found shop
 		$shop = new Shop($id_shop);
 		if (!Validate::isLoadedObject($shop))
-			die(Tools::displayError());
+			$shop = new Shop(1);
 		return $shop;
 	}
 
@@ -471,12 +472,12 @@ class ShopCore extends ObjectModel
 	 * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID
 	 *
 	 * @param int $shopID
-	 * @param int $type Shop::SHARE_CUSTOMER or Shop::SHARE_ORDER
+	 * @param int $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER | Shop::SHARE_STOCK
 	 * @return array
 	 */
 	public static function getSharedShops($shopID, $type)
 	{
-		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER)))
+		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, Shop::SHARE_STOCK)))
 			die('Wrong argument ($type) in Shop::getSharedShops() method');
 
 		Shop::cacheShops();
@@ -624,23 +625,6 @@ class ShopCore extends ObjectModel
 		}
 
 		return $restriction;
-	}
-
-	public function sqlSharedStock($alias = null)
-	{
-		if ($alias)
-			$alias .= '.';
-
-		$shopID = $this->getID();
-		$shopGroupID = $this->getGroupID();
-		if (!$shopID)
-			return ($shopGroupID) ? ' AND '.$alias.'id_group_shop = '.(int)$shopGroupID : '';
-
-		Shop::cacheShops();
-		foreach (self::$shops as $groupID => $groupData)
-			if (array_key_exists($shopID, $groupData['shops']) && $groupData['share_stock'])
-				return ' AND '.$alias.'id_group_shop = '.$groupID;
-		return ' AND '.$alias.'id_shop = '.$shopID;
 	}
 
 	/**

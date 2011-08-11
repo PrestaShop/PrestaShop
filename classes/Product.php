@@ -2012,7 +2012,7 @@ class ProductCore extends ObjectModel
 			else if (is_string($productAttribute))
 				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
 		}
-		$sql .= $shop->sqlSharedStock('stock') . ' ';
+		$sql .= $shop->sqlRestriction(Shop::SHARE_STOCK, 'stock') . ' ';
 
 		return $sql;
 	}
@@ -2070,8 +2070,7 @@ class ProductCore extends ObjectModel
 				Db::getInstance()->autoExecute(_DB_PREFIX_.'stock', array(
 					'id_product' =>				$this->id,
 					'id_product_attribute' =>	$id_product_attribute,
-					'id_shop' =>				$shop->getID(),
-					'id_group_shop' =>			$shop->getGroupID(),
+					'id_shop' =>				$shop->getID(true),
 					'quantity' =>				$quantity,
 				), 'INSERT');
 		}
@@ -2088,12 +2087,11 @@ class ProductCore extends ObjectModel
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'stock', array(
 				'id_product' =>				$this->id,
 				'id_product_attribute' =>	0,
-				'id_shop' =>				$shop->getID(),
-				'id_group_shop' =>			$shop->getGroupID(),
+				'id_shop' =>				$shop->getID(true),
 				'quantity' =>				$quantity,
 			), 'INSERT');
 
-		self::$cacheStock[$this->id][$id_product_attribute] = null;
+		self::$cacheStock[$shop->getID(true)][$this->id][$id_product_attribute] = null;
 	}
 
 	/**
@@ -2111,13 +2109,14 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
+		$id_shop = $shop->getID(true);
 		if (!isset(self::$cacheStock[$this->id][$id_product_attribute]))
 		{
 			$sql = 'SELECT quantity
 					FROM '._DB_PREFIX_.'stock
 					WHERE id_product = '.$this->id.'
 						AND id_product_attribute = '.(int)$id_product_attribute
-						.$context->shop->sqlSharedStock();
+						.$context->shop->sqlRestriction(Shop::SHARE_STOCK);
 			self::$cacheStock[$this->id][$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
 		}
 		return self::$cacheStock[$this->id][$id_product_attribute];

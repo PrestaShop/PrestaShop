@@ -162,6 +162,12 @@ abstract class AdminTabCore
 	 * @var array
 	 */
 	public $optionsList = array();
+	
+	/**
+	 * @since 1.5.0
+	 * @var Context
+	 */
+	public $context;
 
 	protected	$_languages = NULL;
 	protected	$_defaultFormLanguage = NULL;
@@ -1848,7 +1854,7 @@ abstract class AdminTabCore
 				}
 
 				// Display title
-				echo '<div style="clear: both; padding-top:15px;" id="conf_id_'.$key.'">';
+				echo '<div style="clear: both; padding-top:15px;" id="conf_id_'.$key.'" '.(($isInvisible) ? 'class="isInvisible"' : '').'>';
 				if ($field['title'])
 				{
 					echo '<label class="conf_title">';
