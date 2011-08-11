@@ -18,7 +18,8 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
+*  @author Presta
+ SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
 *  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
@@ -91,7 +92,7 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return array Comments
 	 */
-	public static function getByProduct($id_product, $p = 1, $n = null)
+	public static function getByProduct($id_product, $p = 1, $n = null, $id_customer = null)
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
@@ -102,8 +103,14 @@ class ProductComment extends ObjectModel
 			$p = 1;
 		if ($n != null AND $n <= 0)
 			$n = 5;
+		
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT pc.`id_product_comment`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  LEFT(c.`lastname`, 1)), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pc.title
+		SELECT pc.`id_product_comment`, 
+		(SELECT count(*) FROM `ps_product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful, 
+		(SELECT count(*) FROM `ps_product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment`) as total_advice, '.
+		($id_customer ? '(SELECT count(*) FROM `ps_product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = '.(int)$id_customer.') as customer_advice, ' : '').
+		($id_customer ? '(SELECT count(*) FROM `ps_product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = '.(int)$id_customer.') as customer_report, ' : '').'
+		IF(c.id_customer, CONCAT(c.`firstname`, \' \',  LEFT(c.`lastname`, 1)), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pc.title
 		  FROM `'._DB_PREFIX_.'product_comment` pc
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = pc.`id_customer`
 		WHERE pc.`id_product` = '.(int)($id_product).($validate == '1' ? ' AND pc.`validate` = 1' : '').'
@@ -111,6 +118,11 @@ class ProductComment extends ObjectModel
 		'.($n ? 'LIMIT '.(int)(($p - 1) * $n).', '.(int)($n) : ''));
 	}
 	
+	/**
+	 * Return customer's comment
+	 *
+	 * @return arrayComments
+	 */
 	public static function getByCustomer($id_product, $id_customer, $last = false, $id_guest = false)
 	{
 		$results = Db::getInstance()->ExecuteS('
@@ -221,9 +233,8 @@ class ProductComment extends ObjectModel
 		SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
 		FROM `'._DB_PREFIX_.'product_comment` pc
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`) 
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product`) 
-		WHERE pc.`validate` = '.(int)($validate).'
-		AND pl.`id_lang` = '.(int)Context::getContext()->language->id.'
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Context::getContext()->shop->sqlLang('pl').') 
+		WHERE pc.`validate` = '.(int)($validate).'	  
 		ORDER BY pc.`date_add` DESC'));
 	}
 	
@@ -255,4 +266,88 @@ class ProductComment extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 		WHERE `id_product_comment` = '.(int)($id_product_comment)));
 	}
+	
+	/**
+	 * Delete Reports
+	 *
+	 * @return boolean succeed
+	 */
+	public static function deleteReports($id_product_comment)
+	{
+		if (!Validate::isUnsignedId($id_product_comment))
+			die(Tools::displayError());
+		return (Db::getInstance()->Execute('
+		DELETE FROM `'._DB_PREFIX_.'product_comment_report`
+		WHERE `id_product_comment` = '.(int)($id_product_comment)));
+	}
+	
+	/**
+	 * Report comment
+	 *
+	 * @return boolean
+	 */
+	public static function reportComment($id_product_comment, $id_customer)
+	{
+		return (Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'product_comment_report` (`id_product_comment`, `id_customer`)
+			VALUES ('.(int)$id_product_comment.', '.$id_customer.')'));
+	}
+	
+	/**
+	 * Comment already report
+	 *
+	 * @return boolean
+	 */
+	public static function isAlreadyReport($id_product_comment, $id_customer)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT COUNT(*) 
+			FROM `'._DB_PREFIX_.'product_comment_report` 
+			WHERE `id_customer` = '.(int)($id_customer).' 
+			AND `id_product_comment` = '.(int)($id_product_comment));
+	}
+	
+	/**
+	 * Set comment usefulness
+	 *
+	 * @return boolean
+	 */
+	public static function setCommentUsefulness($id_product_comment, $usefulness, $id_customer)
+	{
+		return (Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'product_comment_usefulness` (`id_product_comment`, `usefulness`, `id_customer`)
+			VALUES ('.(int)$id_product_comment.', '.(int)$usefulness.', '.(int)$id_customer.')'));
+	}
+	
+	/**
+	 * Usefulness already set
+	 *
+	 * @return boolean
+	 */
+	public static function isAlreadyUsefulness($id_product_comment, $id_customer)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT COUNT(*) 
+			FROM `'._DB_PREFIX_.'product_comment_usefulness` 
+			WHERE `id_customer` = '.(int)($id_customer).' 
+			AND `id_product_comment` = '.(int)($id_product_comment));
+	}
+	
+	/**
+	 * Get reported comments
+	 *
+	 * @return array Comments
+	 */
+	public static function getReportedComments()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT DISTINCT(pc.`id_product_comment`), pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name` 
+		FROM `'._DB_PREFIX_.'product_comment_report` pcr 
+		LEFT JOIN `'._DB_PREFIX_.'product_comment` pc 
+			ON pcr.id_product_comment = pc.id_product_comment 
+		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.' AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Context::getContext()->shop->sqlLang('pl').')
+		ORDER BY pc.`date_add` DESC');
+	}
+	
 };
