@@ -27,6 +27,13 @@
 
 class PdfInvoiceControllerCore extends FrontController
 {
+	public function run()
+	{
+		$this->init();
+		$this->preProcess();
+		$this->process();
+	}
+
 	public function process()
 	{
 		parent::process();
