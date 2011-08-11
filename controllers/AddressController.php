@@ -128,7 +128,7 @@ class AddressControllerCore extends FrontController
 				$this->context->customer->isLogged(true) === true)
 				$this->errors[] = Tools::displayError('Invalid token');
 
-			if ($country->contains_states AND !$address->id_state)
+			if ((int)($country->contains_states) AND !(int)($address->id_state))
 				$this->errors[] = Tools::displayError('This country requires a state selection.');
 
 			if (!sizeof($this->errors))

@@ -121,7 +121,7 @@ class ContactControllerCore extends FrontController
 					foreach ($fields as $key => $row)
 					{
 						$tmp = 0;
-						if ($row['id_customer'] AND $row['id_customer'] != $customer->id AND $row['email'] != $from)
+						if ((int)$row['id_customer'] AND $row['id_customer'] != $customer->id AND $row['email'] != $from)
 							continue;
 						if ($row['id_order'] != 0 AND Tools::getValue('id_order') != $row['id_order'])
 							continue;
@@ -159,7 +159,7 @@ class ContactControllerCore extends FrontController
 
 				if ($contact->customer_service)
 				{
-					if ($id_customer_thread)
+					if ((int)$id_customer_thread)
 					{
 						$ct = new CustomerThread($id_customer_thread);
 						$ct->status = 'open';

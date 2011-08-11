@@ -486,7 +486,7 @@ class StatsForecast extends Module
 		$ca = array();
 
 		$where = $join = '';
-		if ($this->context->cookie->stats_id_zone)
+		if ((int)$this->context->cookie->stats_id_zone)
 		{
 			$join =  ' LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address LEFT JOIN `'._DB_PREFIX_.'country` co ON co.id_country = a.id_country';
 			$where = ' AND co.id_zone = '.$this->context->cookie->stats_id_zone.' ';

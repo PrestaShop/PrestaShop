@@ -813,7 +813,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		}
 		else
 		{
-			if ((int)Configuration::get('PS_IMAGE_GENERATION_METHOD') == 2 OR ((int)Configuration::get('PS_IMAGE_GENERATION_METHOD') == 0 AND $widthDiff > $heightDiff))
+			if ((int)(Configuration::get('PS_IMAGE_GENERATION_METHOD')) == 2 OR ((int)(Configuration::get('PS_IMAGE_GENERATION_METHOD')) == 0 AND $widthDiff > $heightDiff))
 			{
 				$nextHeight = $destHeight;
 				$nextWidth = (int)(($sourceWidth * $nextHeight) / $sourceHeight);

@@ -184,7 +184,7 @@ class BlockCart extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
 		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
-		if (Configuration::get('PS_BLOCK_CART_AJAX'))
+		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');
 	}
 }

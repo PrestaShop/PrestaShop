@@ -704,7 +704,7 @@ if (Tools::isSubmit('updateProductImageShopAsso'))
 {
 	if ($id_image = (int)Tools::getValue('id_image') AND $id_shop = (int)Tools::getValue('id_shop'))
 	{
-		if (Tools::getValue('active'))
+		if ((int)Tools::getValue('active'))
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
 		else
 			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' AND `id_shop`='.(int)$id_shop);
