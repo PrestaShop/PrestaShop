@@ -2109,7 +2109,7 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$id_shop = $shop->getID(true);
+		$id_shop = $context->shop->getID(true);
 		if (!isset(self::$cacheStock[$this->id][$id_product_attribute]))
 		{
 			$sql = 'SELECT quantity
