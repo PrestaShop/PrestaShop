@@ -487,7 +487,7 @@ class PDFCore extends PDF_PageGroupCore
 	 	if (!$context)
 	 		$context = Context::getContext();
 
-		if (!Validate::isLoadedObject($order) OR ((isset($context->employee) && !$context->employee->id) AND (!OrderState::invoiceAvailable($order->getCurrentState()) AND !$order->invoice_number)))
+		if (!Validate::isLoadedObject($order) OR (!Validate::isLoadedObject($context->employee) AND (!OrderState::invoiceAvailable($order->getCurrentState()) AND !$order->invoice_number)))
 			die('Invalid order or invalid order state');
 		self::$order = $order;
 		self::$orderSlip = $slip;
