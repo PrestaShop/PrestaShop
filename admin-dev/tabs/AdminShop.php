@@ -102,13 +102,21 @@ class AdminShop extends AdminTab
 					<input type="text" name="name" id="name" value="'.$this->getFieldValue($obj, 'name').'" />
 				</div>
 				<label for="id_group_shop">'.$this->l('Group Shop').'</label>
-				<div class="margin-form">
-					<select '.$disabled.' name="id_group_shop" id="id_group_shop">';
-		foreach (GroupShop::getGroupShops() AS $group)
-			echo '<option value="'.(int)$group['id_group_shop'].'" '.($obj->id_group_shop ==  $group['id_group_shop'] ? 'selected="selected"' : '').'">'.$group['name'].'</option>';
-		echo '
-					</select>
-				</div>';
+				<div class="margin-form">';
+				if ($disabled)
+				{
+					$groupShop = new GroupShop($obj->id_group_shop);
+					echo $groupShop->name;
+					echo '<input type="hidden" name="id_group_shop" value="'.$obj->id_group_shop.'" />';
+				}
+				else
+				{
+					echo '<select '.$disabled.' name="id_group_shop" id="id_group_shop">';
+					foreach (GroupShop::getGroupShops() AS $group)
+						echo '<option value="'.(int)$group['id_group_shop'].'" '.($obj->id_group_shop ==  $group['id_group_shop'] ? 'selected="selected"' : '').'">'.$group['name'].'</option>';
+					echo '</select>';
+				}
+		echo '		</div>';
 		echo '<label for="id_category">'.$this->l('Category root').'</label>
 					<div class="margin-form">
 						<select id="id_category" name="id_category">';

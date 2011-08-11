@@ -65,18 +65,18 @@ CREATE TABLE `PREFIX_stock` (
 `id_stock` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_product` INT( 11 ) UNSIGNED NOT NULL,
 `id_product_attribute` INT( 11 ) UNSIGNED NOT NULL,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(11) NOT NULL,
   PRIMARY KEY (`id_stock`),
   KEY `id_product` (`id_product`),
-	KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `id_product_attribute` (`id_product_attribute`),
   KEY `id_group_shop` (`id_group_shop`),
-  KEY `id_shop` (`id_shop`)
+  KEY `id_shop` (`id_shop`),
+  UNIQUE KEY `product_stock` (`id_product` ,`id_product_attribute` ,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-INSERT INTO `PREFIX_stock` (id_product, id_group_shop, id_shop) (SELECT p.id_product, 1, 1 FROM PREFIX_product p LEFT JOIN PREFIX_product_attribute pa ON (p.id_product = pa.id_product) WHERE pa.id_product_attribute IS NULL);
-INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_group_shop, id_shop) (SELECT id_product, id_product_attribute, 1, 1 FROM PREFIX_product_attribute);
+INSERT INTO `PREFIX_stock` (id_product, id_shop) (SELECT p.id_product, 1 FROM PREFIX_product p LEFT JOIN PREFIX_product_attribute pa ON (p.id_product = pa.id_product) WHERE pa.id_product_attribute IS NULL);
+INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_shop) (SELECT id_product, id_product_attribute, 1 FROM PREFIX_product_attribute);
 
 CREATE TABLE `PREFIX_country_shop` (
 `id_country` INT( 11 ) UNSIGNED NOT NULL,

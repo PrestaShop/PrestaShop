@@ -121,17 +121,16 @@ class AdminGroups extends AdminTab
 					</select>
 					<p>'.$this->l('How the prices are displayed on order summary for this customer group (tax included or excluded).').'</p>
 				</div>
-				<div class="clear">&nbsp;</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>';
+				<div class="clear">&nbsp;</div>';
 				if (Shop::isMultiShopActivated())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop('group_shop');
 					echo '</div>';
 				}
-			echo '
+				echo '<div class="margin-form">
+					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
+				</div>
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form><br />';

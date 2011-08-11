@@ -1767,14 +1767,14 @@ CREATE TABLE `PREFIX_stock` (
 `id_stock` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_product` INT( 11 ) UNSIGNED NOT NULL,
 `id_product_attribute` INT( 11 ) UNSIGNED NOT NULL,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(11) NOT NULL,
   PRIMARY KEY (`id_stock`),
   KEY `id_product` (`id_product`),
-	KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `id_product_attribute` (`id_product_attribute`),
   KEY `id_group_shop` (`id_group_shop`),
-  KEY `id_shop` (`id_shop`)
+  KEY `id_shop` (`id_shop`),
+  UNIQUE KEY `product_stock` (`id_product` ,`id_product_attribute` ,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_country_shop` (

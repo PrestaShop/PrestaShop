@@ -839,10 +839,15 @@ $(document).ready(function()
 
 function checkMultishopDefaultValue(obj, key)
 {
-	$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', $(obj).attr('checked'));
-	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
-	if ($(obj).attr('checked'))
+	if ($(obj).attr('checked') || $('#'+key).hasClass('isInvisible'))
+	{
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
+	}
 	else
+	{
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
 		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
+	}
+	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
 }

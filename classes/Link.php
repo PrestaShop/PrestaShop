@@ -311,7 +311,7 @@ class LinkCore
 		$uri_path = Dispatcher::getInstance()->createUrl($controller);
 		$url = ($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
 		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
-		$url .= ($request ? (($this->allow ? '?' : '&').trim($request)) : '');
+		$url .= ($request ? ((strpos($url, '?') === false ? '?' : '&').trim($request)) : '');
 
 		return $url;
 	}

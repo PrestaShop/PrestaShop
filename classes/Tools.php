@@ -1591,7 +1591,7 @@ class ToolsCore
 			if ($uri['virtual'])
 			{
 				fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-				fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."(.*) ".$uri['physical']."/$1 [L]\n\n");
+				fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."(.*) ".$uri['physical']."$1 [L]\n\n");
 			}
 		}
 		
