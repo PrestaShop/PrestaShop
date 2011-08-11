@@ -391,37 +391,18 @@ class ProductCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		self::validateFieldsLang();
-
-		$fieldsArray = array('meta_description', 'meta_keywords', 'meta_title', 'link_rewrite', 'name', 'available_now', 'available_later');
-		$fields = array();
-		$languages = Language::getLanguages(false);
-		$defaultLanguage = Configuration::get('PS_LANG_DEFAULT');
-		foreach ($languages as $language)
-		{
-			$fields[$language['id_lang']]['id_lang'] = $language['id_lang'];
-			$fields[$language['id_lang']][$this->identifier] = (int)($this->id);
-			$fields[$language['id_lang']]['id_shop'] = (int)$this->id_shop; // @todo ID shop in product ???
-			$fields[$language['id_lang']]['description'] = (isset($this->description[$language['id_lang']])) ? pSQL($this->description[$language['id_lang']], true) : '';
-			$fields[$language['id_lang']]['description_short'] = (isset($this->description_short[$language['id_lang']])) ? pSQL($this->description_short[$language['id_lang']], true) : '';
-			foreach ($fieldsArray as $field)
-			{
-				if (!Validate::isTableOrIdentifier($field))
-					die(Tools::displayError());
-
-				/* Check fields validity */
-				if (isset($this->{$field}[$language['id_lang']]) AND !empty($this->{$field}[$language['id_lang']]))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$language['id_lang']]);
-				elseif (in_array($field, $this->fieldsRequiredLang))
-				{
-					if ($this->{$field} != '')
-						$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$defaultLanguage]);
-				}
-				else
-					$fields[$language['id_lang']][$field] = '';
-			}
-		}
-		return $fields;
+		parent::validateFieldsLang();
+		return parent::getTranslationsFields(array(
+			'meta_description',
+			'meta_keywords',
+			'meta_title',
+			'link_rewrite',
+			'name',
+			'available_now',
+			'available_later',
+			'description' => array('html' => true),
+			'description_short' => array('html' => true),
+		));
 	}
 
 	public static function initPricesComputation($customer = NULL)

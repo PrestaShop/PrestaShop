@@ -59,29 +59,13 @@ class CMSCore extends ObjectModel
 	public function getTranslationsFieldsChild()
 	{
 		parent::validateFieldsLang();
-
-		$fieldsArray = array('meta_title', 'meta_description', 'meta_keywords', 'link_rewrite');
-		$fields = array();
-		$languages = Language::getLanguages(false);
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-		foreach ($languages as $language)
-		{
-			$fields[$language['id_lang']]['id_lang'] = (int)($language['id_lang']);
-			$fields[$language['id_lang']][$this->identifier] = (int)($this->id);
-			$fields[$language['id_lang']]['content'] = (isset($this->content[$language['id_lang']])) ? pSQL($this->content[$language['id_lang']], true) : '';
-			foreach ($fieldsArray as $field)
-			{
-				if (!Validate::isTableOrIdentifier($field))
-					die(Tools::displayError());
-				if (isset($this->{$field}[$language['id_lang']]) AND !empty($this->{$field}[$language['id_lang']]))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$language['id_lang']]);
-				elseif (in_array($field, $this->fieldsRequiredLang))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$defaultLanguage]);
-				else
-					$fields[$language['id_lang']][$field] = '';
-			}
-		}
-		return $fields;
+		return parent::getTranslationsFields(array(
+			'meta_description',
+			'meta_keywords',
+			'meta_title',
+			'link_rewrite',
+			'content' => array('html' => true),
+		));
 	}
 	
 	public function add($autodate = true, $nullValues = false)
