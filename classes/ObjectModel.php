@@ -424,20 +424,28 @@ abstract class ObjectModelCore
 		$fields[$id_language][$this->identifier] = (int)($this->id);
 		if ($this->id_shop AND $this->langMultiShop)
 			$fields[$id_language]['id_shop'] = (int)$this->id_shop;
-		foreach ($fieldsArray as $field)
+		foreach ($fieldsArray as $k => $field)
 		{
+			$html = false;
+			$fieldName = $field;
+			if (is_array($field))
+			{
+				$fieldName = $k;
+				$html = (isset($field['html'])) ? $field['html'] : false;
+			}
+			
 			/* Check fields validity */
-			if (!Validate::isTableOrIdentifier($field))
+			if (!Validate::isTableOrIdentifier($fieldName))
 				die(Tools::displayError());
 
 			/* Copy the field, or the default language field if it's both required and empty */
-			if ((!$this->id_lang AND isset($this->{$field}[$id_language]) AND !empty($this->{$field}[$id_language])) 
-			OR ($this->id_lang AND isset($this->$field) AND !empty($this->$field)))
-				$fields[$id_language][$field] = $this->id_lang ? pSQL($this->$field) : pSQL($this->{$field}[$id_language]);
-			elseif (in_array($field, $this->fieldsRequiredLang))
-				$fields[$id_language][$field] = $this->id_lang ? pSQL($this->$field) : pSQL($this->{$field}[Configuration::get('PS_LANG_DEFAULT')]);
+			if ((!$this->id_lang AND isset($this->{$fieldName}[$id_language]) AND !empty($this->{$fieldName}[$id_language])) 
+			OR ($this->id_lang AND isset($this->$fieldName) AND !empty($this->$fieldName)))
+				$fields[$id_language][$fieldName] = $this->id_lang ? pSQL($this->$fieldName, $html) : pSQL($this->{$fieldName}[$id_language], $html);
+			elseif (in_array($fieldName, $this->fieldsRequiredLang))
+				$fields[$id_language][$fieldName] = $this->id_lang ? pSQL($this->$fieldName, $html) : pSQL($this->{$fieldName}[Configuration::get('PS_LANG_DEFAULT')], $html);
 			else
-				$fields[$id_language][$field] = '';
+				$fields[$id_language][$fieldName] = '';
 		}
 	}
 
