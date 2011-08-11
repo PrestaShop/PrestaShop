@@ -89,7 +89,7 @@ class eBayRequest
 
 		$this->apiUrl = 'https://api.ebay.com/ws/api.dll';
 		$this->apiCall = $apiCall;
-		$this->compatibilityLevel = 719;
+		$this->compatibilityLevel = 741;
 
 		$this->runame = 'Prestashop-Prestash-70a5-4-pepwa';
 
@@ -355,7 +355,7 @@ class eBayRequest
 
 
 	/******************************************************************/
-	/** Add Product Methods *******************************************/
+	/** Add / Update / End Product Methods ****************************/
 	/******************************************************************/
 
 
@@ -374,7 +374,7 @@ class eBayRequest
 		$requestXml .= '  <ErrorLanguage>fr_FR</ErrorLanguage>'."\n";
 		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
 		$requestXml .= '  <Item>'."\n";
-		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].(isset($datas['reference']) ? '-'.$datas['reference'] : '').'</SKU>';
+		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
 		$requestXml .= '    <Title>'.substr($datas['name'], 0, 55).'</Title>'."\n";
 		if (isset($datas['pictures']))
 		{
@@ -503,7 +503,7 @@ class eBayRequest
 		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
 		$requestXml .= '  <Item>'."\n";
 		$requestXml .= '    <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
-		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].(isset($datas['reference']) ? '-'.$datas['reference'] : '').'</SKU>';
+		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
 		$requestXml .= '    <Quantity>'.$datas['quantity'].'</Quantity>'."\n";
 		$requestXml .= '    <StartPrice>'.$datas['price'].'</StartPrice>'."\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1)
@@ -576,6 +576,86 @@ class eBayRequest
 			return false;
 		return true;
 	}
+
+
+
+	function endFixedPriceItem($datas = array())
+	{
+		// Check data
+		if (!$datas)
+			return false;
+
+		// Set Api Call
+		$this->apiCall = 'EndFixedPriceItem';
+
+		// Build the request Xml string
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
+		$requestXml .= '<EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
+		$requestXml .= '  <ErrorLanguage>fr_FR</ErrorLanguage>'."\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
+		$requestXml .= '  <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
+		$requestXml .= '  <SKU>prestashop-'.$datas['id_product'].'</SKU>';
+		$requestXml .= '  <EndingReason>NotAvailable</EndingReason>'."\n";
+		$requestXml .= '  <RequesterCredentials>'."\n";
+		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
+		$requestXml .= '  </RequesterCredentials>'."\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
+		$requestXml .= '</EndFixedPriceItemRequest>'."\n";
+
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		{
+			$this->error = 'Error sending '.$this->apiCall.' request';
+			return false;
+		}
+
+		// Loading XML tree in array
+		$this->response = simplexml_load_string($responseXml);
+
+
+		// Checking Errors
+		$this->error = '';
+		$this->errorCode = '';
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e)
+			{
+				// if product no longer on eBay, we log the error code
+				if ((int)$e->ErrorCode == 291)
+					$this->errorCode = (int)$e->ErrorCode;
+
+				// We log error message
+				if ($e->SeverityCode == 'Error')
+				{
+					if ($this->error != '')
+						$this->error .= '<br />';
+					$this->error .= (string)$e->LongMessage;
+					if (isset($e->ErrorParameters->Value))
+						$this->error .= '<br />'.(string)$e->ErrorParameters->Value;
+				}
+			}
+
+		// Checking Success
+		$this->itemID = 0;
+		if (isset($this->response->Ack) && ((string)$this->response->Ack == 'Success' || (string)$this->response->Ack == 'Warning'))
+		{
+			$this->fees = 0;
+			$this->itemID = (string)$this->response->ItemID;
+			if (isset($this->response->Fees->Fee))
+				foreach ($this->response->Fees->Fee as $f)
+					$this->fees += (float)$f->Fee;
+		}
+		elseif ($this->error == '')
+			$this->error = 'Sorry, technical problem, try again later.';
+
+		if (!empty($this->error))
+			return false;
+
+		return true;
+	}
+
+
 
 
 
@@ -653,7 +733,7 @@ class eBayRequest
 			foreach ($datas['variations'] as $key => $variation)
 			{
 				$requestXml .= '      <Variation>'."\n";
-				$requestXml .= '        <SKU>prestashop-'.$key.(isset($variation['reference']) ? '-'.$variation['reference'] : '').'</SKU>'."\n";
+				$requestXml .= '        <SKU>prestashop-'.$key.'</SKU>'."\n";
 				$requestXml .= '        <StartPrice>'.$variation['price'].'</StartPrice>'."\n";
 				$requestXml .= '        <Quantity>'.$variation['quantity'].'</Quantity>'."\n";
 				$requestXml .= '        <VariationSpecifics>'."\n";
@@ -929,6 +1009,18 @@ class eBayRequest
 	}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 	/******************************************************************/
 	/** Order Methods *************************************************/
 	/******************************************************************/
@@ -1068,6 +1160,9 @@ class eBayRequest
 					'shippingServiceCost' => (string)$order->ShippingServiceSelected->ShippingServiceCost,
 					'email' => (string)$order->TransactionArray->Transaction[0]->Buyer->Email,
 					'product_list' => $itemList,
+					'payment_method' => (string)$order->CheckoutStatus->PaymentMethod,
+					'id_order_seller' => (string)$order->ShippingDetails->SellingManagerSalesRecordNumber,
+					'date_add' => substr((string)$order->CreatedTime, 0, 10).' '.substr((string)$order->CreatedTime, 11, 8),
 					//'object' => $order
 				);
 			}

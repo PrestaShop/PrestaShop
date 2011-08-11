@@ -179,7 +179,7 @@ class AdminGenerator extends AdminTab
 		$tab = array();
 
 		// Directories
-		$tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/', 'lang-'.Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')).'/');
+		$tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/', Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')).'/');
 
 		// Files
 		$tab['Files'] = array('addresses.php', 'address.php', 'authentication.php', 'cart.php', 'discount.php', 'footer.php',

@@ -147,6 +147,7 @@ class AdminGroups extends AdminTab
 				foreach ($categories AS $category)
 					echo '	<option value="'.(int)($category['id_category']).'">'.Tools::htmlentitiesUTF8($category['name']).'</option>';
 				echo '	</select><sup>*</sup>
+					<p>'.$this->l('Only products that have this category as default category will be affected').'.</p>
 					</div>
 					<label>'.$this->l('Discount (in %):').' </label>
 					<div class="margin-form">
@@ -334,6 +335,7 @@ class AdminGroups extends AdminTab
 					$id_group_reductions = Tools::getValue('gr_id_group_reduction');
 					$reductions = Tools::getValue('gr_reduction');
 					if ($id_group_reductions)
+					{
 						foreach ($id_group_reductions AS $key => $id_group_reduction)
 							if (!Validate::isUnsignedId($id_group_reductions[$key]) OR !Validate::isPrice($reductions[$key]))
 								$this->_errors[] = Tools::displayError();
@@ -344,6 +346,7 @@ class AdminGroups extends AdminTab
 								if (!$groupReduction->update())
 									$this->_errors[] = Tools::displayError('Cannot update group reductions');
 							}
+					}
 					if (!sizeof($this->_errors))
 						parent::postProcess();
 				}

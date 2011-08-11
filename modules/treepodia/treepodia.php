@@ -24,7 +24,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-if (!defined('_CAN_LOAD_FILES_'))
+
+if (!defined('_PS_VERSION_'))
 	exit;
 
 class SimpleXMLExtended extends SimpleXMLElement
@@ -46,7 +47,7 @@ class Treepodia extends Module
 	{
 	 	$this->name = 'treepodia';
 	 	$this->tab = 'front_office_features';
-	 	$this->version = '1.4';
+	 	$this->version = '1.5';
 		$this->displayName = 'Treepodia';
 
 	 	parent::__construct();
@@ -82,9 +83,11 @@ class Treepodia extends Module
 
 	private function _getShopURL()
 	{
-		$host = ((Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? Tools::getShopDomainSsl() : Tools::getShopDomain()).__PS_BASE_URI__;
-		if (substr($host, 0, 4) != 'http')
-			$host = ((Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://'.$host : 'http://'.$host);
+		if (!($domain = Configuration::get('PS_SHOP_DOMAIN')))
+			$domain = $_SERVER['HTTP_HOST'];
+
+		$host = ((Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://'.$domain : 'http://'.$domain).__PS_BASE_URI__;
+
 		return $host;
 	}
 

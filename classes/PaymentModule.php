@@ -296,7 +296,7 @@ abstract class PaymentModuleCore extends Module
 				$shrunk = false;
 				foreach ($discounts AS $discount)
 				{
-					$objDiscount = new Discount((int)$discount['id_discount'], $order->id_lang);
+					$objDiscount = new Discount((int)$discount['id_discount']);
 					$value = $objDiscount->getValue(sizeof($discounts), $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), $order->total_shipping, $cart->id);
 					if ($objDiscount->id_discount_type == 2 AND in_array($objDiscount->behavior_not_exhausted, array(1,2)))
 						$shrunk = true;
@@ -314,6 +314,9 @@ abstract class PaymentModuleCore extends Module
 							$voucher->add();
 							$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
 							$params['{voucher_num}'] = $voucher->name;
+							$params['{firstname}'] = $customer->firstname;
+							$params['{lastname}'] = $customer->lastname;
+							$params['{id_order}'] = $order->id;
 							@Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order #').$order->id, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
 						}
 					}

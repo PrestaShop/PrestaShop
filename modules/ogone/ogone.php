@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 	
+if (!defined('_PS_VERSION_'))
+	exit;
+
 class Ogone extends PaymentModule
 {
 	private $_ignoreKeyList = array('secure_key');

@@ -433,13 +433,13 @@ if ($lm->getIncludeTradFilename())
 			<h3 id="resultConfig"></h3>
 			<ul id="required">
 				<li class="title"><?php echo lang('PHP parameters:')?></li>
-				<li class="required"><?php echo lang('PHP 5.0 or later installed')?></li>
+				<li class="required first"><?php echo lang('PHP 5.0 or later installed')?></li>
 				<li class="required"><?php echo lang('File upload allowed')?></li>
 				<li class="required"><?php echo lang('Create new files and folders allowed')?></li>
 				<li class="required"><?php echo lang('GD Library installed')?></li>
 				<li class="required"><?php echo lang('MySQL support is on')?></li>
 				<li class="title"><?php echo lang('Write permissions on files and folders:')?></li>
-				<li class="required">/config</li>
+				<li class="required first">/config</li>
 				<li class="required">/tools/smarty/compile</li>
 				<li class="required">/tools/smarty/cache</li>
 				<li class="required">/tools/smarty_v2/compile</li>
@@ -447,7 +447,7 @@ if ($lm->getIncludeTradFilename())
 				<li class="required">/sitemap.xml</li>
 				<li class="required">/log</li>
 				<li class="title"><?php echo lang('Write permissions on folders (and subfolders):')?></li>
-				<li class="required">/img</li>
+				<li class="required first">/img</li>
 				<li class="required">/mails</li>
 				<li class="required">/modules</li>
 				<li class="required">/themes/prestashop/lang</li>
@@ -519,7 +519,7 @@ if ($lm->getIncludeTradFilename())
 				<p class="aligned">
 					<input id="btTestDB" class="button" type="submit" value="<?php echo lang('Verify now!')?>"/>
 				</p>
-				<p id="dbResultCheck"></p>
+					<p id="dbResultCheck" style="display:none;"></p>
 			</form>
 			</div>
 
@@ -802,7 +802,7 @@ if ($lm->getIncludeTradFilename())
 									echo '
 										<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
 									<tr>
-										<td valign="top" style="text-align: center; padding-top:10px; width: 30px; background: #FFF;">
+										<td valign="top" style="text-align: center; padding-top:10px; width: 30px;">
 										<span style="padding: 12px 4px 6px 2px;">
 									<input type="checkbox" id="preInstallModules_'.$country_iso_code.'_'.$module.'" value="'.$module.'" class="'.$module.' preInstallModules_'.$country_iso_code.'" style="vertical-align: middle;" />
 									</span>
@@ -1214,13 +1214,13 @@ if ($lm->getIncludeTradFilename())
 			<h3 id="resultConfig_update"></h3>
 			<ul id="required_update">
 				<li class="title"><?php echo lang('PHP parameters:')?></li>
-				<li class="required"><?php echo lang('PHP 5.0 or later installed')?></li>
+				<li class="required first"><?php echo lang('PHP 5.0 or later installed')?></li>
 				<li class="required"><?php echo lang('File upload allowed')?></li>
 				<li class="required"><?php echo lang('Create new files and folders allowed')?></li>
 				<li class="required"><?php echo lang('GD Library installed')?></li>
 				<li class="required"><?php echo lang('MySQL support is on')?></li>
 				<li class="title"><?php echo lang('Write permissions on folders:')?></li>
-				<li class="required">/config</li>
+				<li class="required first">/config</li>
 				<li class="required">/tools/smarty/compile</li>
 				<li class="required">/tools/smarty/cache</li>
 				<li class="required">/tools/smarty_v2/compile</li>
@@ -1228,7 +1228,7 @@ if ($lm->getIncludeTradFilename())
 				<li class="required">/sitemap.xml</li>
 				<li class="required">/log</li>
 				<li class="title"><?php echo lang('Write permissions on folders (and subfolders):')?></li>
-				<li class="required">/img</li>
+				<li class="required first">/img</li>
 				<li class="required">/mails</li>
 				<li class="required">/modules</li>
 				<li class="required">/themes/prestashop/lang</li>

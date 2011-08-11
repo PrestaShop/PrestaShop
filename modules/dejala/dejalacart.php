@@ -5,8 +5,10 @@
   * DejalaCart class, dejalacart.php
   * Manage cart information related to dejala.fr carrier
  **/
-if (!defined('_CAN_LOAD_FILES_'))
+
+if (!defined('_PS_VERSION_'))
 	exit;
+
 class DejalaCart extends ObjectModel
 {
 	public 		$id;
