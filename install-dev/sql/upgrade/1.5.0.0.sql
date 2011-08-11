@@ -70,13 +70,16 @@ CREATE TABLE `PREFIX_stock` (
   PRIMARY KEY (`id_stock`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `id_group_shop` (`id_group_shop`),
   KEY `id_shop` (`id_shop`),
   UNIQUE KEY `product_stock` (`id_product` ,`id_product_attribute` ,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-INSERT INTO `PREFIX_stock` (id_product, id_shop) (SELECT p.id_product, 1 FROM PREFIX_product p LEFT JOIN PREFIX_product_attribute pa ON (p.id_product = pa.id_product) WHERE pa.id_product_attribute IS NULL);
-INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_shop) (SELECT id_product, id_product_attribute, 1 FROM PREFIX_product_attribute);
+INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_shop, quantity) (SELECT id_product, id_product_attribute, 1, quantity FROM PREFIX_product_attribute);
+INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_shop, quantity) (SELECT id_product, 0, 1, IF(
+	(SELECT COUNT(*) FROM PREFIX_product_attribute pa WHERE p.id_product = pa.id_product) > 0,
+	(SELECT SUM(pa2.quantity) FROM PREFIX_product_attribute pa2 WHERE p.id_product = pa2.id_product),
+	quantity
+) FROM PREFIX_product p);
 
 CREATE TABLE `PREFIX_country_shop` (
 `id_country` INT( 11 ) UNSIGNED NOT NULL,
