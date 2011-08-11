@@ -86,7 +86,7 @@ class CountryCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_zone'] = (int)($this->id_zone);
 		$fields['id_currency'] = (int)($this->id_currency);
 		$fields['iso_code'] = pSQL(strtoupper($this->iso_code));
@@ -107,8 +107,8 @@ class CountryCore extends ObjectModel
 	  */
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 
 	/**

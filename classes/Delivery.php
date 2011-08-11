@@ -70,7 +70,7 @@ class DeliveryCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		if ($this->id_shop)
 			$fields['id_shop'] = (int)$this->id_shop;

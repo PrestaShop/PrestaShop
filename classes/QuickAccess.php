@@ -48,7 +48,7 @@ class QuickAccessCore extends ObjectModel
 		
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['link'] = pSQL($this->link);
 		$fields['new_window'] = (int)($this->new_window);
 		return $fields;
@@ -61,8 +61,8 @@ class QuickAccessCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 	
 	/**

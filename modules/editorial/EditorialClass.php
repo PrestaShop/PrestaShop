@@ -62,7 +62,7 @@ class		EditorialClass extends ObjectModel
 	  */
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
+		$this->validateFieldsLang();
 
 		$fieldsArray = array('body_title', 'body_subheading', 'body_paragraph', 'body_logo_subheading');
 		$fields = array();
@@ -107,7 +107,7 @@ class		EditorialClass extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_editorial'] = (int)($this->id);
 		$fields['body_home_logo_link'] = pSQL($this->body_home_logo_link);
 		return $fields;

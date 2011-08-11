@@ -55,7 +55,7 @@ class AttributeCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_attribute_group'] = (int)($this->id_attribute_group);
 		$fields['color'] = pSQL($this->color);
@@ -70,8 +70,8 @@ class AttributeCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 
 	public function delete()

@@ -60,7 +60,7 @@ class OrderHistoryCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['id_order_state'] = (int)($this->id_order_state);

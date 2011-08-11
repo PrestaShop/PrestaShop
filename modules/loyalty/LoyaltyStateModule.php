@@ -43,7 +43,7 @@ class LoyaltyStateModule extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_order_state'] = (int)($this->id_order_state);
 		return $fields;
 	}
@@ -55,8 +55,8 @@ class LoyaltyStateModule extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 
 	public static function getDefaultId() { return 1; }

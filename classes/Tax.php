@@ -50,7 +50,7 @@ class TaxCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['rate'] = (float)($this->rate);
 		$fields['active'] = (int)($this->active);
 		return $fields;
@@ -63,8 +63,8 @@ class TaxCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 
 	public function delete()

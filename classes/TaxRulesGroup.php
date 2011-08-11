@@ -44,7 +44,7 @@ class TaxRulesGroupCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['name'] = ($this->name);
 		$fields['active'] = (int)($this->active);
 		return $fields;

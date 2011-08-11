@@ -61,7 +61,7 @@ class MessageCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['message'] = pSQL($this->message, true);
 		$fields['id_cart'] = (int)($this->id_cart);

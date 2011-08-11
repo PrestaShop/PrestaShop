@@ -69,7 +69,7 @@ class StockMvtCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_stock'] = (int)$this->id_stock;
 		$fields['id_order'] = (int)$this->id_order;
 		$fields['id_employee'] = (int)$this->id_employee;

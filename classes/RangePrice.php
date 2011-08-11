@@ -47,7 +47,7 @@ class RangePriceCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_carrier'] = (int)($this->id_carrier);
 		$fields['delimiter1'] = (float)($this->delimiter1);
 		$fields['delimiter2'] = (float)($this->delimiter2);

@@ -161,7 +161,7 @@ class OrderDetailCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['product_id'] = (int)($this->product_id);

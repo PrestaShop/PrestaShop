@@ -58,7 +58,7 @@ class OrderSlipCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_customer'] = (int)($this->id_customer);
 		$fields['id_order'] = (int)($this->id_order);

@@ -126,7 +126,7 @@ class DiscountCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_customer'] = (int)($this->id_customer);
 		$fields['id_group'] = (int)($this->id_group);
@@ -180,9 +180,9 @@ class DiscountCore extends ObjectModel
 
 	public function getTranslationsFieldsChild()
 	{
-		if (!parent::validateFieldsLang())
+		if (!$this->validateFieldsLang())
 			return false;
-		return parent::getTranslationsFields(array('description'));
+		return $this->getTranslationsFields(array('description'));
 	}
 
 	/**

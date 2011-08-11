@@ -52,7 +52,7 @@ class ContactCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['email'] = pSQL($this->email);
 		$fields['customer_service'] = (int)($this->customer_service);
 		return $fields;
@@ -65,8 +65,8 @@ class ContactCore extends ObjectModel
 	  */
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name', 'description'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name', 'description'));
 	}
 	
 	/**

@@ -99,7 +99,7 @@ class ManufacturerCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_manufacturer'] = (int)($this->id);
 		$fields['name'] = pSQL($this->name);
@@ -111,8 +111,8 @@ class ManufacturerCore extends ObjectModel
 
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array(
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array(
 			'meta_description',
 			'meta_keywords',
 			'meta_title',

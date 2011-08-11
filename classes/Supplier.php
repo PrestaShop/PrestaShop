@@ -90,7 +90,7 @@ class SupplierCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_supplier'] = (int)($this->id);
 		$fields['name'] = pSQL($this->name);
@@ -102,8 +102,8 @@ class SupplierCore extends ObjectModel
 
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('description', 'meta_title', 'meta_keywords', 'meta_description'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('description', 'meta_title', 'meta_keywords', 'meta_description'));
 	}
 
 	/**

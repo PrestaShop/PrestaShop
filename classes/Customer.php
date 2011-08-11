@@ -134,7 +134,7 @@ class CustomerCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_customer'] = (int)($this->id);
 		

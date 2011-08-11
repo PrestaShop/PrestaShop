@@ -48,7 +48,7 @@ class PaymentCCCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['id_currency'] = (int)($this->id_currency);
 		$fields['amount'] = (float)($this->amount);

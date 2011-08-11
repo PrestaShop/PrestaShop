@@ -65,7 +65,7 @@ class ConfigurationCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['name'] = pSQL($this->name);
 		$fields['id_group_shop'] = $this->id_group_shop;
 		$fields['id_shop'] = $this->id_shop;
@@ -84,8 +84,8 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (!is_array($this->value))
 			return true;
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('value'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('value'));
 	}
 	
 	/**

@@ -330,7 +330,7 @@ class ProductCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_product'] = (int)($this->id);
 		$fields['id_tax_rules_group'] = (int)($this->id_tax_rules_group);
@@ -391,8 +391,8 @@ class ProductCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array(
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array(
 			'meta_description',
 			'meta_keywords',
 			'meta_title',
@@ -549,7 +549,7 @@ class ProductCore extends ObjectModel
 				if ($die) die (Tools::displayError().' ('.get_class($this).'->description: length > '.$limit.' for language '.$k.')');
 				return $errorReturn ? get_class($this).'->'.Tools::displayError('description: length >').' '.$limit.' '.Tools::displayError('for language').' '.$k : false;
 			}
-		return parent::validateFieldsLang($die, $errorReturn);
+		return $this->validateFieldsLang($die, $errorReturn);
 	}
 
 	public function delete()

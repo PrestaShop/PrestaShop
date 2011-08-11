@@ -49,7 +49,7 @@ class AttachmentCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['file_name'] = pSQL($this->file_name);
 		$fields['file'] = pSQL($this->file);
 		$fields['mime'] = pSQL($this->mime);
@@ -58,8 +58,8 @@ class AttachmentCore extends ObjectModel
 
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name', 'description'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name', 'description'));
 	}
 	
 	public function delete()

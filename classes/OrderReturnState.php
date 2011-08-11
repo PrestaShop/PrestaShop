@@ -44,7 +44,7 @@ class OrderReturnStateCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['color'] = pSQL($this->color);
 		return $fields;
 	}
@@ -56,8 +56,8 @@ class OrderReturnStateCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 	
 	/**

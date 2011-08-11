@@ -62,7 +62,7 @@ class GroupShopCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['name'] = pSQL($this->name);
 		$fields['share_customer'] = (int)$this->share_customer;

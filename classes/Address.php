@@ -184,7 +184,7 @@ class AddressCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_address'] = (int)($this->id);
 		$fields['id_customer'] = is_null($this->id_customer) ? 0 : (int)($this->id_customer);

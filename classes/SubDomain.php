@@ -38,7 +38,7 @@ class SubDomainCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['name'] = pSQL($this->name);
 		return $fields;
 	}

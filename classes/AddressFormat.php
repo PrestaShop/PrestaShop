@@ -93,7 +93,7 @@ class AddressFormatCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_country'] = (int)($this->id_country);
 		$fields['format'] = pSQL($this->format);

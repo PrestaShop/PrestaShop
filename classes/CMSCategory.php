@@ -91,7 +91,7 @@ class CMSCategoryCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_cms_category'] = (int)($this->id);
 		$fields['active'] = (int)($this->active);
@@ -110,8 +110,8 @@ class CMSCategoryCore extends ObjectModel
 	  */
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name', 'description', 'link_rewrite', 'meta_title', 'meta_keywords', 'meta_description'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name', 'description', 'link_rewrite', 'meta_title', 'meta_keywords', 'meta_description'));
 	}
 
 	public	function add($autodate = true, $nullValues = false)

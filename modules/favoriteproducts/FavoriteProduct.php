@@ -57,7 +57,7 @@ class FavoriteProduct extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_customer'] = (int)$this->id_customer;

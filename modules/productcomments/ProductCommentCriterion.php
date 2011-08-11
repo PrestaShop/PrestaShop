@@ -42,14 +42,14 @@ class ProductCommentCriterion extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		return array('id_product_comment_criterion_type' => (int)$this->id_product_comment_criterion_type, 'active' => (int)$this->active);
 	}
 	
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 	
 	public function delete()

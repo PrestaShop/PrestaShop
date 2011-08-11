@@ -58,7 +58,7 @@ class OrderReturnCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_customer'] = pSQL($this->id_customer);
 		$fields['id_order'] = pSQL($this->id_order);
