@@ -282,6 +282,21 @@ class ProductComment extends ObjectModel
 	}
 	
 	/**
+	 * Delete usefulness
+	 *
+	 * @return boolean succeed
+	 */
+	public static function deleteUsefulness($id_product_comment)
+	{
+		if (!Validate::isUnsignedId($id_product_comment))
+			die(Tools::displayError());
+
+		return (Db::getInstance()->Execute('
+		DELETE FROM `'._DB_PREFIX_.'product_comment_usefulness`
+		WHERE `id_product_comment` = '.(int)($id_product_comment)));
+	}
+	
+	/**
 	 * Report comment
 	 *
 	 * @return boolean

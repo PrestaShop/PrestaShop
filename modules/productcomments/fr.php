@@ -66,6 +66,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_f8694a9aae2eb045920f613cf
 $_MODULE['<{productcomments}prestashop>productcomments_6bf852d9850445291f5e9d4740ac7b50'] = 'Un texte est nécessaire pour publier un commentaire.';
 $_MODULE['<{productcomments}prestashop>productcomments_6d28f2900adb9e500868166f6d04da92'] = 'Vous devez attendre';
 $_MODULE['<{productcomments}prestashop>productcomments_ba8d7ae5dcadfba739f28a777378f208'] = 'secondes avant de poster un nouveau commentaire.';
+$_MODULE['<{productcomments}prestashop>productcomments_4494d00c901c9e22ff3b953177205cea'] = 'Etes vous sur de vouloir signaler ce commentaire?';
 $_MODULE['<{productcomments}prestashop>productcomments_7c3b0e9898b88deee7ea75aafd2e37e2'] = 'Note moyenne';
 $_MODULE['<{productcomments}prestashop>productcomments_663fc7093256cda156e571631ddb295e'] = 'personne(s) sur';
 $_MODULE['<{productcomments}prestashop>productcomments_e759c67f646fedbee26e1e6732588a98'] = 'ont trouvé ce commentaire utile';

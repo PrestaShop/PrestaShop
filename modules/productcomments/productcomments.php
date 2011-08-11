@@ -107,6 +107,7 @@ class ProductComments extends Module
 		$this->_html = '<h2>'.$this->displayName.'</h2>';
 		$this->_postProcess();
 		$this->_checkModerateComment();
+		$this->_checkReportedComment();
 		$this->_checkCriterion();
 		$this->_updateApplicationCriterion();
 		
@@ -129,6 +130,45 @@ class ProductComments extends Module
 			(int)(Configuration::get('PRODUCT_COMMENTS_MODERATE')))
 		{
 			$product_comments = Tools::getValue('id_product_comment');
+			
+			if (sizeof($product_comments))
+			{
+				require_once(dirname(__FILE__).'/ProductComment.php');
+				switch ($action)
+				{
+					case 'accept':
+						foreach ($product_comments AS $id_product_comment)
+						{
+							if (!$id_product_comment)
+								continue;
+							$comment = new ProductComment((int)$id_product_comment);
+							$comment->validate();
+						}
+						break;
+					case 'delete':
+						foreach ($product_comments AS $id_product_comment)
+						{
+							if (!$id_product_comment)
+								continue;
+							$comment = new ProductComment((int)$id_product_comment);
+							$comment->delete();
+							ProductComment::deleteGrades((int)$id_product_comment);
+						}
+						break;
+					default:
+						;
+				}
+			}
+		}
+	}
+	
+	private function _checkReportedComment()
+	{
+		$action = Tools::getValue('action');
+		if (empty($action) === false)
+		{
+			$product_comments = Tools::getValue('id_product_comment');
+			
 			if (sizeof($product_comments))
 			{
 				require_once(dirname(__FILE__).'/ProductComment.php');
@@ -153,6 +193,7 @@ class ProductComments extends Module
 							$comment->delete();
 							ProductComment::deleteGrades((int)$id_product_comment);
 							ProductComment::deleteReports((int)$id_product_comment);
+							ProductComment::deleteUsefulness((int)$id_product_comment);
 						}
 						break;
 					default:
