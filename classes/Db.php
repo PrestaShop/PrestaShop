@@ -243,7 +243,7 @@ abstract class DbCore
 		{
 			$sql = 'UPDATE `'.$table.'` SET ';
 			foreach ($data AS $key => $value)
-				$sql .= ($useNull && ($value === '' || is_null($value))) ? "`$key` = NULL" : "`$key` = '$value',";
+				$sql .= ($useNull && ($value === '' || is_null($value))) ? "`$key` = NULL," : "`$key` = '$value',";
 			$sql = rtrim($sql, ',');
 			if ($where)
 				$sql .= ' WHERE '.$where;
