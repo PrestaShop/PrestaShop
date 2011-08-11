@@ -35,7 +35,7 @@
   * @version 1.4
   */
 
-if (!defined('_CAN_LOAD_FILES_'))
+if (!defined('_PS_VERSION_'))
 	exit;
 
 class GraphXmlSwfCharts extends ModuleGraphEngine

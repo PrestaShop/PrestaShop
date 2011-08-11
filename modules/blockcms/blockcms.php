@@ -24,7 +24,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-if (!defined('_CAN_LOAD_FILES_'))
+
+if (!defined('_PS_VERSION_'))
 	exit;
 	
 class BlockCms extends Module
@@ -110,8 +111,14 @@ class BlockCms extends Module
 		LEFT JOIN `'._DB_PREFIX_.'cms_block_lang` cbl ON (cbl.`id_cms_block` = cb.`id_cms_block`)
 		WHERE cb.`id_cms_block` = '.(int)$id_cms_block);
 
+		$store_display_update = array(0, $size = count($cmsBlocks), $display = Configuration::get('PS_STORES_DISPLAY_FOOTER'));
 		foreach ($cmsBlocks AS $cmsBlock)
+		{
 			$cmsBlocks['name'][(int)$cmsBlock['id_lang']] = $cmsBlock['name'];
+			if ($store_display_update['0'] < $store_display_update['1'])
+				$cmsBlocks[$store_display_update['0']]['display_store'] = $store_display_update['2'];
+			++$store_display_update['0'];
+		}
 		return $cmsBlocks;
 	}
 	
@@ -589,6 +596,10 @@ class BlockCms extends Module
 					INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) 
 					VALUES('.(int)$id_cms_block.', '.(int)$language['id_lang'].', 
 					"'.pSQL(Tools::getValue('block_name_'.$language['id_lang'])).'")');
+					
+				Db::getInstance()->Execute('
+				UPDATE `'._DB_PREFIX_.'cms_block
+				SET `display_store` = '.Configuration::get('PS_STORES_DISPLAY_FOOTER'));
 			}
 			elseif (Tools::isSubmit('editBlockCMS'))
 			{
@@ -619,6 +630,8 @@ class BlockCms extends Module
 				`display_store` = '.(int)(Tools::getValue('PS_STORES_DISPLAY_CMS')).'
 				WHERE `id_cms_block` = '.(int)($id_cms_block));
 				
+				Configuration::updateValue('PS_STORES_DISPLAY_FOOTER', (int)(Tools::getValue('PS_STORES_DISPLAY_CMS')));
+
 				foreach ($languages as $language)
 					Db::getInstance()->Execute('
 					UPDATE `'._DB_PREFIX_.'cms_block_lang` 

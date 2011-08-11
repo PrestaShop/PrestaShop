@@ -93,7 +93,6 @@ class AdminLanguages extends AdminTab
 				}
 				unlink($tmpName);
 			}
-
 	}
 	
 	/**
@@ -122,6 +121,13 @@ class AdminLanguages extends AdminTab
 		return !sizeof($this->_errors) ? true : false;
 	}
 
+	protected function copyFromPost(&$object, $table)
+	{
+		if($object->id AND  ($object->iso_code != $_POST['iso_code']))
+			if(Validate::isLanguageIsoCode($_POST['iso_code']))
+				$object->moveToIso($_POST['iso_code']);
+		parent::copyFromPost($object, $table);
+	}
 
 	public function postProcess()
 	{

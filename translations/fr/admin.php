@@ -1000,6 +1000,7 @@ $_LANGADM['AdminGroups817b35caca2afa11b6c1efc428315470'] = 'Groupe de boutiques 
 $_LANGADM['AdminGroups19f823c6453c2b1ffd09cb715214813d'] = 'Champs requis';
 $_LANGADM['AdminGroupsc53a3dc4f27d93e065c2c5be5a78b74f'] = 'Nouvelle réduction de groupe';
 $_LANGADM['AdminGroups56a8a9eb05f9014da51a4f9b57322ac7'] = 'Catégorie :';
+$_LANGADM['AdminGroups60c4a9a7f56f6b9669f84977ebd0f93d'] = 'Seuls les produits qui ont cette catégorie par défaut seront ajoutés';
 $_LANGADM['AdminGroups567183b8b1122180690be51cc6df2b74'] = 'Réduction (en %) :';
 $_LANGADM['AdminGroups1fe63847218648baf13474e3d25747bb'] = 'Ajouter';
 $_LANGADM['AdminGroupsdaab80c5dadc81fa2d019c562f805994'] = 'Sexe';

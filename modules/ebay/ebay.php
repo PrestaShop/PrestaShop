@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+// Security
+if (!defined('_PS_VERSION_'))
+	exit;
 
 // Loading eBay Class Request
 if (file_exists(dirname(__FILE__).'/eBayRequest.php'))
@@ -420,9 +423,12 @@ class Ebay extends Module
 	
 							// Validate order
 							$paiement = new eBayPayment();
-							$paiement->validateOrder(intval($cartAdd->id), Configuration::get('PS_OS_PAYMENT'), floatval($cartAdd->getOrderTotal(true, 3)), 'Paypal eBay', NULL, array(), intval($cartAdd->id_currency));
+										$paiement->validateOrder(intval($cartAdd->id), Configuration::get('PS_OS_PAYMENT'), floatval($cartAdd->getOrderTotal(true, 3)), 'eBay '.$order['payment_method'].' '.$order['id_order_seller'], NULL, array(), intval($cartAdd->id_currency));
 							$id_order = $paiement->currentOrder;
 	
+										// Fix on date
+										Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', array('date_add' => pSQL($order['date_add'])), 'UPDATE', '`id_order` = '.(int)$id_order);
+
 							// Fix on sending e-mail
 							Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order['email'])), 'UPDATE', '`id_customer` = '.(int)$id_customer);
 	
@@ -1514,8 +1520,19 @@ class Ebay extends Module
 							$itemID = Db::getInstance()->getValue('SELECT `id_product_ref` FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product` = '.(int)$product->id.' AND `id_attribute` = '.(int)$datasTmp['id_attribute']);
 							if ($itemID)
 							{
-								// Update
+								// Get Item ID
 								$datasTmp['itemID'] = $itemID;
+
+								// Delete or Update
+								if ($datasTmp['quantity'] < 1)
+								{
+									// Delete
+									if ($ebay->endFixedPriceItem($datasTmp))
+										Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datasTmp['itemID']).'\'');
+								}
+								else
+								{
+								// Update
 								if ($ebay->reviseFixedPriceItem($datasTmp))
 									Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('date_upd' => pSQL($date)), 'UPDATE', '`id_product_ref` = '.(int)$itemID);
 
@@ -1528,6 +1545,7 @@ class Ebay extends Module
 									if ($ebay->itemID > 0)
 										Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => (int)$datasTmp['id_attribute'], 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
 								}
+							}
 							}
 							else
 							{
@@ -1562,8 +1580,19 @@ class Ebay extends Module
 
 					if ($itemID)
 					{
-						// Update
+						// Get Item ID
 						$datas['itemID'] = $itemID;
+
+						// Delete or Update
+						if ($datas['quantity'] < 1)
+						{
+							// Delete
+							if ($ebay->endFixedPriceItem($datas))
+								Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
+						}
+						else
+						{
+						// Update
 						if ($ebay->reviseFixedPriceItem($datas))
 							Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('date_upd' => pSQL($date)), 'UPDATE', '`id_product_ref` = '.(int)$itemID);
 
@@ -1576,6 +1605,7 @@ class Ebay extends Module
 							if ($ebay->itemID > 0)
 								Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => 0, 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
 						}
+					}
 					}
 					else
 					{

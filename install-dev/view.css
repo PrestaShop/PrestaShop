@@ -203,7 +203,7 @@ select {
 
 div.field {
 	padding:10px 0;
-	border-bottom:1px solid #ccc;
+	background:url(img/bg_field.png) repeat-x 0 100% transparent;
 }
 	div.field label {
 		display:inline-block;
@@ -220,9 +220,12 @@ div.field {
 		display:inline-block;
 		width:200px;
 		font-size:11px;
+		font-family:Georgia;
 		font-style:italic;
 		color:#999;
 }
+
+#uploadedImage {border:1px solid #ccc;}	
 
 .okBlock {
 	padding:20px 20px 20px 38px;
@@ -376,11 +379,13 @@ ul#footer a:link, ul#footer a:active, ul#footer a:visited {
 }
 			.sheet .contentTitle .stepList li {
 				float:left;
+				margin:0 0 0 5px;
 				height:42px;
 				width:42px;
 				text-indent:-5000px;
 				background:transparent url(img/bg_li_stepList.png) no-repeat 0 0;
 			}
+
 			.sheet .contentTitle .stepList li.ok {background-position:0 -50px;}
 			.sheet .contentTitle .stepList li.ko {background-position:0 -100px;}
 			.sheet .contentTitle h1 {text-shadow:0 1px 0 #fff;}
@@ -409,16 +414,21 @@ ul#langList {list-style-type:none;}
 }*/
 
 ul#required,
-ul#optional {list-style-type:none;}
+ul#optional {
+	list-style-type: none;
+	margin: 0;
+}
 	ul#required li,
 	ul#optional li {
 		padding:6px 8px 4px 8px;
+		font-size:12px;
 		background:#f8f8f8;
 }
 	ul#required li.title,
 	ul#optional li.title {
 		margin-top: 20px;
 		padding:4px 8px;
+		font-size:13px;
 		background:#f8f8f8 url(img/bg_li_title.png) repeat-x 0 0;
 }
 	ul#required li.required ,
@@ -428,11 +438,11 @@ ul#optional {list-style-type:none;}
 }
 	ul#required li.ok, 
 	ul#optional li.ok{
-		background:#f8f8f8 url(img/pict_ok.png) no-repeat 100% 10px;
+		background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px
 }
 	ul#required li.fail,
 	ul#optional li.fail {
-		background:#f8f8f8 url(img/pict_error.png) no-repeat 100% 8px;
+		background:#f8f8f8 url(img/pict_error.png) no-repeat 99% 8px;
 }
 
 /* ETAPE 3 - DB ************************************************************* */
@@ -443,15 +453,22 @@ ul#optional {list-style-type:none;}
 
 #formCheckSQL p,
 #mailSMTPParam p {
-	/*
-	USELESS
 	padding:10px 0;
-	border-top:1px solid #fff;
-	border-bottom:1px solid #ccc;*/
+	background:url(img/bg_field.png) repeat-x 0 100% transparent;
 }
 #formCheckSQL p.first {border-top:none;}
 #formCheckSQL p.last {border-bottom:none;}
-/*USELESS #formCheckSQL p#dbResultCheck {border:none;}*/
+#formCheckSQL p#dbResultCheck {background:none;}
+#formCheckSQL p#dbResultCheck.errorBlock {
+    background: url("img/pict_error.png") no-repeat scroll 15px 21px #FFEBE8;
+    border: 1px solid #CC0000;
+    padding: 20px 20px 20px 38px;
+}
+#formCheckSQL p#dbResultCheck.okBlock {
+	padding:20px 20px 20px 38px;
+	background:#b7e2a7 url(img/pict_ok.png) no-repeat 15px 21px;
+	border:1px solid #85c10c;
+}
 #formCheckSQL p label,
 #mailSMTPParam p label {
 	display:inline-block;
@@ -477,7 +494,7 @@ ul#optional {list-style-type:none;}
 
 #mailPart .userInfos {
 	padding-left:18px;
-    font: 11px Georgia, Arial, Sans-serif italic;
+	font:italic 11px Georgia, Arial, Sans-serif italic;
 	color:#999;
 }
 
@@ -509,7 +526,6 @@ ul#optional {list-style-type:none;}
 .moduleTable {
 	padding: 5px;
 	width: 650px;
-	background:#fff;
 	border: 1px solid #CCC;
 	border-bottom:none;
 }

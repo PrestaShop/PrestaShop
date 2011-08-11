@@ -686,7 +686,7 @@ class ProductCore extends ObjectModel
 		if (!$this->addToCategories($categories))
 			return false;
 
-		if (!$this->setGroupReduction($categories))
+		if (!$this->setGroupReduction())
 			return false;
 		
 		return true;
@@ -3427,26 +3427,17 @@ class ProductCore extends ObjectModel
 	
 	/**
 	 * Set Group reduction if needed
-	 * @param string $productCategories Categories the product belongs to
 	 */
-	public function setGroupReduction($categories)
+	public function setGroupReduction()
 	{
-		if (sizeof($categories) > 1) // Use category_default id if more than 1 category
-			$row = GroupReduction::getGroupByCategoryId((int)$this->id_category_default);
-		else
-			$row = GroupReduction::getGroupByCategoryId((int)array_pop($categories));
-		
-		if (!$row)
+		$row = GroupReduction::getGroupByCategoryId($this->id_category_default);
+		if (!$row) // Remove
 		{
-			// Then Remove
 			if (!GroupReduction::deleteProductReduction($this->id))
 				return false;
 		}
-		else
-		{
-			if (!GroupReduction::setProductReduction($this->id, $row['id_group'], $category, $row['reduction'])) // Add or Edit
+		else if (!GroupReduction::setProductReduction($this->id, $row['id_group'], $this->id_category_default, (float)$row['reduction']))
 				return false;
-		}
 		return true;
 	}
 }

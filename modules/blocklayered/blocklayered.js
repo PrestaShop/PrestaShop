@@ -170,9 +170,9 @@ function reloadContent(params_plus)
 				reloadContent();
 				return false;
 			});
+			ajaxCart.overrideButtonsInThePage();
 		}
 	});
-	
 	ajaxQueries.push(ajaxQuery);
 }
 

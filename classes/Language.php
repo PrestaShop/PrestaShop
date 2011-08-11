@@ -61,6 +61,13 @@ class LanguageCore extends ObjectModel
 		'objectsNodeName' => 'languages',
 	);
 
+	protected $translationsFilesAndVars = array(
+			'fields' => '_FIELDS',
+			'errors' => '_ERRORS',
+			'admin' => '_LANGADM',
+			'pdf' => '_LANGPDF',
+		);
+
 	public	function __construct($id = NULL, $id_lang = NULL)
 	{
 		parent::__construct($id);
@@ -79,25 +86,53 @@ class LanguageCore extends ObjectModel
 		return $fields;
 	}
 
+	/**
+	 * Generate traslations files
+	 * 
+	 */
+	private function _generateFiles($newIso){
+		$iso_code = $newIso?$newIso:$this->iso_code;
+	
+		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))
+			mkdir(_PS_TRANSLATIONS_DIR_.$iso_code);
+		foreach ($this->translationsFilesAndVars as $file => $var)
+			if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php'))
+				file_put_contents(_PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php', '<?php
+	global $'.$var.';
+	$'.$var.' = array();
+?>');
+	}
+	
+	/**
+	 * Move translations files after editiing language iso code
+	 */
+	public function moveToIso($newIso)
+	{
+		if($newIso == $this->iso_code)
+			return true;
+
+		if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
+			rename(_PS_TRANSLATIONS_DIR_.$this->iso_code, _PS_TRANSLATIONS_DIR_.$newIso);
+
+		if (file_exists(_PS_MAIL_DIR_.$this->iso_code))
+			rename(_PS_MAIL_DIR_.$this->iso_code, _PS_MAIL_DIR_.$newIso);
+
+		foreach (Module::getModulesDirOnDisk() as $moduleDir) {
+			if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code))
+				rename(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code, _PS_MODULE_DIR_.$moduleDir.'/mails/'.$newIso);
+			
+			if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php'))
+				rename(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php', _PS_MODULE_DIR_.$moduleDir.'/'.$newIso.'.php');
+		}
+	}
+	
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (!parent::add($autodate))
 			return false;
 
-		$translationsFiles = array(
-			'fields' => '_FIELDS',
-			'errors' => '_ERRORS',
-			'admin' => '_LANGADM',
-			'pdf' => '_LANGPDF',
-		);
-		if (!file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
-			mkdir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
-		foreach ($translationsFiles as $file => $var)
-			if (!file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code.'/'.$file.'.php'))
-				file_put_contents(_PS_TRANSLATIONS_DIR_.$this->iso_code.'/'.$file.'.php', '<?php
-	global $'.$var.';
-	$'.$var.' = array();
-?>');
+		// create empty files if they not exists
+		$this->_generateFiles();
 
 		$resUpdateSQL = $this->loadUpdateSQL();
 		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
@@ -565,6 +600,8 @@ class LanguageCore extends ObjectModel
 
 	public function update($nullValues = false)
 	{
+
+		
 		if (!parent::update($nullValues))
 			return false;
 
