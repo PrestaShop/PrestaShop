@@ -30,7 +30,7 @@ $('document').ready(function(){
 		var idProduct = $(this).attr('rel').replace('ajax_id_product_', '');
 
 		$.ajax({
-  			url: 'products-comparison.php?ajax=1&action=remove&id_product=' + idProduct,
+  			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
  			async: false,
   			success: function(){
 	return true;
@@ -46,7 +46,7 @@ $('document').ready(function(){
 		if(checkbox.is(':checked'))
 {
 			$.ajax({
-	  			url: 'products-comparison.php?ajax=1&action=add&id_product=' + idProduct,
+	  			url: 'index.php?controller=products-comparison&ajax=1&action=add&id_product=' + idProduct,
 	 			async: true,
 	  			success: function(data){
 	  				if (data == '0')
@@ -63,7 +63,7 @@ $('document').ready(function(){
 		else
 		{
 			$.ajax({
-	  			url: 'products-comparison.php?ajax=1&action=remove&id_product=' + idProduct,
+	  			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 	 			async: true,
 	  			success: function(data){
 	  				if (data == '0')

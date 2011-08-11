@@ -150,10 +150,10 @@ class CategoryControllerCore extends FrontController
 					'homeSize' => Image::getSize('home')
 				));
 				
-				if (isset(self::$cookie->id_customer))
-					self::$smarty->assign('compareProducts', CompareProduct::getCustomerCompareProducts((int)self::$cookie->id_customer));			
-				elseif (isset(self::$cookie->id_guest))
-					self::$smarty->assign('compareProducts', CompareProduct::getGuestCompareProducts((int)self::$cookie->id_guest));
+				if (isset($this->context->customer->id))
+					$this->context->smarty->assign('compareProducts', CompareProduct::getCustomerCompareProducts($this->context->customer->id));			
+				elseif (isset($this->context->customer->id_guest))
+					$this->context->smarty->assign('compareProducts', CompareProduct::getGuestCompareProducts($this->context->customer->id_guest));
 			}
 		}
 
