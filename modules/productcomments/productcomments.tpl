@@ -62,19 +62,22 @@
 
 		$('span[id^=comment_report_]').click(function(){
 
-			var idProductComment = $(this).attr('id').replace('comment_report_', '');
-			var parent = $(this).parent();
-			
-			$.ajax({
-				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
-				post: "POST",
-				data: "id_product_comment=" + idProductComment + "&action=report",
-				success: function(result){
-					parent.fadeOut("normal", function() {
-						parent.remove();
-					});
-	 		 	}
-			});
+			{/literal}if (confirm('{l s='Are you sure you want report this comment?' mod='productcomments'}')){literal}
+			{
+				var idProductComment = $(this).attr('id').replace('comment_report_', '');
+				var parent = $(this).parent();
+				
+				$.ajax({
+					{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+					post: "POST",
+					data: "id_product_comment=" + idProductComment + "&action=report",
+					success: function(result){
+						parent.fadeOut("normal", function() {
+							parent.remove();
+						});
+		 		 	}
+				});	
+			}
 		});
 	});
 {/literal}
