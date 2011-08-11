@@ -464,7 +464,7 @@ class CartCore extends ObjectModel
 	{
 		$paImplode = array();
 		foreach ($ipaList as $id_product_attribute)
-			if ($id_product_attribute AND !array_key_exists($id_product_attribute.'-'.$id_lang, self::$_attributesLists))
+			if ((int)$id_product_attribute AND !array_key_exists($id_product_attribute.'-'.$id_lang, self::$_attributesLists))
 			{
 				$paImplode[] = (int)$id_product_attribute;
 				self::$_attributesLists[(int)$id_product_attribute.'-'.$id_lang] = array('attributes' => '', 'attributes_small' => '');
@@ -569,7 +569,7 @@ class CartCore extends ObjectModel
 			unset(self::$_nbProducts[$this->id]);
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
-		if ($quantity <= 0)
+		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
 		elseif (!$product->available_for_order OR Configuration::get('PS_CATALOG_MODE'))
 			return false;
@@ -631,10 +631,10 @@ class CartCore extends ObjectModel
 						WHERE p.id_product = '.$id_product;
 				$result2 = Db::getInstance()->getRow($sql);
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
-					if ($quantity > $result2['quantity'])
+					if ((int)$quantity > $result2['quantity'])
 						return false;
 
-				if ($quantity < $minimalQuantity)
+				if ((int)$quantity < $minimalQuantity)
 					return -1;
 
 				$resultAdd = Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_product', array(
@@ -799,7 +799,7 @@ class CartCore extends ObjectModel
 			unset(self::$_nbProducts[$this->id]);
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
-		if ($id_customization)
+		if ((int)($id_customization))
 		{
 			$productTotalQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity`
 				FROM `'._DB_PREFIX_.'cart_product`
@@ -1101,7 +1101,7 @@ class CartCore extends ObjectModel
 
 		if (empty($id_carrier))
 		{
-			if ($this->id_customer)
+			if ((int)($this->id_customer))
 			{
 				$customer = new Customer((int)($this->id_customer));
 				$result = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true, false, (int)($id_zone), $customer->getGroups());

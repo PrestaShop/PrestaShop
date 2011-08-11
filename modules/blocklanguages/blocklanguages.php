@@ -62,7 +62,7 @@ class BlockLanguages extends Module
 			return;
 		$link = new Link();
 			
-		if (Configuration::get('PS_REWRITING_SETTINGS'))
+		if((int)Configuration::get('PS_REWRITING_SETTINGS'))
 		{
 			$default_rewrite = array();
 			$phpSelf = isset($_SERVER['PHP_SELF']) ? substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)) : '';

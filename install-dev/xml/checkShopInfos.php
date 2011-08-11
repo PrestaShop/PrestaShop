@@ -185,7 +185,7 @@ if (isFormValid())
 	$sqlParams[] = 'UPDATE '._DB_PREFIX_.'configuration SET value = \''.pSQL($_GET['isoCode']).'\' WHERE name = \'PS_LOCALE_LANGUAGE\'';
 	$sqlParams[] = 'UPDATE '._DB_PREFIX_.'configuration SET value = \''.(int)$_GET['catalogMode'].'\' WHERE name = \'PS_CATALOG_MODE\'';
 	$sqlParams[] = "INSERT IGNORE INTO "._DB_PREFIX_."configuration (name, value, date_add, date_upd) VALUES ('PS_SHOP_ACTIVITY', '".(int)($_GET['infosActivity'])."', NOW(), NOW())";
-	if ($_GET['infosCountry'])
+	if ((int)($_GET['infosCountry']) != 0)
 	{
 		$sqlParams[] = 'UPDATE '._DB_PREFIX_.'configuration SET value = '.(int)($_GET['infosCountry']).' WHERE name = \'PS_COUNTRY_DEFAULT\'';
 		$sqlParams[] = 'UPDATE '._DB_PREFIX_.'configuration SET value = "'.pSQL($_GET['infosTimezone']).'" WHERE name = \'PS_TIMEZONE\'';

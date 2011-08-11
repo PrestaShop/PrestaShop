@@ -493,7 +493,7 @@ class Socolissimo extends CarrierModule
 
 	public function hookupdateCarrier($params)
 	{
-		if ((int)$params['id_carrier'] == (int)Configuration::get('SOCOLISSIMO_CARRIER_ID'))
+		if ((int)($params['id_carrier']) == (int)(Configuration::get('SOCOLISSIMO_CARRIER_ID')))
 		{
 			Configuration::updateValue('SOCOLISSIMO_CARRIER_ID', (int)($params['carrier']->id));
 			Configuration::updateValue('SOCOLISSIMO_CARRIER_ID_HIST', Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST').'|'.(int)($params['carrier']->id));

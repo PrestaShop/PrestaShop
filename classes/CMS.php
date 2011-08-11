@@ -152,7 +152,7 @@ class CMSCore extends ObjectModel
 			return false;
 		
 		foreach ($res AS $cms)
-			if ((int)$cms['id_cms'] == (int)$this->id)
+			if ((int)($cms['id_cms']) == (int)($this->id))
 				$movedCms = $cms;
 		
 		if (!isset($movedCms) || !isset($position))

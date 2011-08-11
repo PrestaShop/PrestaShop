@@ -58,7 +58,7 @@ class BlockNewProducts extends Module
 		{
 			if (!$productNbr = Tools::getValue('productNbr') OR empty($productNbr))
 				$output .= '<div class="alert error">'.$this->l('Please fill in the "products displayed" field.').'</div>';
-			elseif ((int)$productNbr == 0)
+			elseif ((int)($productNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
 			{

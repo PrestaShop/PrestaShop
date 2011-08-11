@@ -158,7 +158,7 @@ class FrontControllerCore
 		$_MODULES = array();
 
 		/* Cart already exists */
-		if ($this->context->cookie->id_cart)
+		if ((int)$this->context->cookie->id_cart)
 		{
 			$cart = new Cart($this->context->cookie->id_cart);
 			if ($cart->OrderExists())

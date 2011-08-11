@@ -14,7 +14,7 @@ class DejalaCarrierUtils
 		$id_zone = 1;
 		$moduleCountryIsoCode = strtoupper($dejalaConfig->country);
 		$countryID = Country::getByIso($moduleCountryIsoCode);
-		if ($countryID)
+		if ((int)($countryID))
 			$id_zone = Country::getIdZone($countryID);
 
 		//TODO Will have to review this and apply proper code.

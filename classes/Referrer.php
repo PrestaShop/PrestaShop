@@ -241,7 +241,7 @@ class ReferrerCore extends ObjectModel
 		
 		$implode = array();
 		foreach ($result as $row)
-			if ($row['id_order'])
+			if ((int)$row['id_order'])
 				$implode[] = (int)$row['id_order'];
 		
 		if ($implode)
@@ -339,7 +339,7 @@ class ReferrerCore extends ObjectModel
 		$statsSales = $referrer->getStatsSales($id_product, $employee);
 
 		// If it's a product and it has no visits nor orders
-		if ($id_product AND !$statsVisits['visits'] AND !$statsSales['orders'])
+		if ((int)($id_product) AND !$statsVisits['visits'] AND !$statsSales['orders'])
 			exit;
 		
 		$jsonArray = array();

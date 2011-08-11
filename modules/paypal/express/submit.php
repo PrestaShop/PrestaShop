@@ -346,7 +346,7 @@ if (!isset(Context::getContext()->cookie->paypal_token) OR !Context::getContext(
 else
 {
 	// We have token, we need to confirm user informations (login or signup)
-	if (Tools::getValue('confirm'))
+	if ((int)(Tools::getValue('confirm')))
 		displayConfirm();
 	elseif (Tools::isSubmit('submitAccount'))
 		submitAccount();
