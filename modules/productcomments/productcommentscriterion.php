@@ -34,7 +34,7 @@ if (empty($_GET['id_lang']) === false &&
 	isset($_GET['id_product']) === true)
 {
 	$criterions = ProductCommentCriterion::get($_GET['id_lang']);
-	if ((int)($_GET['id_product']))
+	if ($_GET['id_product'])
 		$selects = ProductCommentCriterion::getByProduct($_GET['id_product'], $_GET['id_lang']);
 	echo '<select name="id_product_comment_criterion[]" id="id_product_comment_criterion" multiple="true" style="height:100px;width:360px;">';
 	foreach ($criterions as $criterion)

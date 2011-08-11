@@ -262,7 +262,7 @@ class CategoryCore extends ObjectModel
 
 	public function delete()
 	{
-		if ((int)($this->id) === 0 OR (int)($this->id) === 1) return false;
+		if ((int)$this->id === 0 OR (int)$this->id === 1) return false;
 
 		$this->clearCache();
 
@@ -891,7 +891,7 @@ class CategoryCore extends ObjectModel
 			return false;
 
 		foreach ($res AS $category)
-			if ((int)($category['id_category']) == (int)($this->id))
+			if ((int)$category['id_category'] == $this->id)
 				$movedCategory = $category;
 		
 		if (!isset($movedCategory) || !isset($position))
@@ -903,8 +903,8 @@ class CategoryCore extends ObjectModel
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
-				? '> '.(int)($movedCategory['position']).' AND `position` <= '.(int)($position)
-				: '< '.(int)($movedCategory['position']).' AND `position` >= '.(int)($position)).'
+				? '> '.(int)($movedCategory['position']).' AND `position` <= '.(int)$position
+				: '< '.(int)($movedCategory['position']).' AND `position` >= '.(int)$position).'
 			AND `id_parent`='.(int)($movedCategory['id_parent']))
 		AND Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'category`

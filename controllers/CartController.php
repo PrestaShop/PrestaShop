@@ -185,7 +185,7 @@ class CartControllerCore extends FrontController
 								if ($updateQuantity < 0)
 								{
 									/* if product has attribute, minimal quantity is set with minimal quantity of attribute*/
-									if ((int)$idProductAttribute)
+									if ($idProductAttribute)
 										$minimal_quantity = Attribute::getAttributeMinimalQty($idProductAttribute);
 									else
 										$minimal_quantity = $producToAdd->minimal_quantity;

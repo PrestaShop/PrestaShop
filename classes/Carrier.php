@@ -156,7 +156,7 @@ class CarrierCore extends ObjectModel
 			return false;
 		if (!$numRows = Db::getInstance()->NumRows())
 			return false;
-		if ((int)($numRows) == 1)
+		if ($numRows == 1)
 			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)($this->id));
 		return true;
 	}
@@ -689,7 +689,7 @@ class CarrierCore extends ObjectModel
 			VALUES ('.$this->id.','.(int)$val['id_zone'].')');
 
 		//Copy default carrier
-		if ((int)(Configuration::get('PS_CARRIER_DEFAULT')) == $oldId)
+		if (Configuration::get('PS_CARRIER_DEFAULT') == $oldId)
 			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)($this->id));
 	}
 
@@ -718,7 +718,7 @@ class CarrierCore extends ObjectModel
 		if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT)
 		{
 			// backward compatibility
-			if ((int)Configuration::get('PS_SHIPPING_METHOD'))
+			if (Configuration::get('PS_SHIPPING_METHOD'))
 				$method = Carrier::SHIPPING_METHOD_WEIGHT;
 			else
 				$method = Carrier::SHIPPING_METHOD_PRICE;

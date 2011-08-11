@@ -1010,7 +1010,7 @@ class Twenga extends PaymentModule
 		$condition = '';
 		 if(strlen((string)$version) < 2)
 			 $version = (string)$version.'0';
-		if((int)substr($version, 0, 2) >= 14)
+		if ((int)substr($version, 0, 2) >= 14)
 			$condition = (($product->condition === 'new') ? 0 : 1);
 		
 		$price = $product->getPrice(true, (isset($combination['id_combination']) ? $combination['id_combination'] : NULL), 2);

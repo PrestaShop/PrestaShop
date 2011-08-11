@@ -301,7 +301,7 @@ class Loyalty extends Module
 		foreach ($order_states AS $order_state)
 		{
 			$html .= '<option value="' . $order_state['id_order_state'] . '" style="background-color:' . $order_state['color'] . ';"';
-			if ((int)($this->loyaltyStateValidation->id_order_state) == $order_state['id_order_state'] )
+			if ((int)$this->loyaltyStateValidation->id_order_state == $order_state['id_order_state'] )
 				$html .= ' selected="selected"';
 			$html .= '>' . $order_state['name'] . '</option>';
 		}
@@ -314,7 +314,7 @@ class Loyalty extends Module
 		foreach ($order_states AS $order_state)
 		{
 			$html .= '<option value="' . $order_state['id_order_state'] . '" style="background-color:' . $order_state['color'] . ';"';
-			if ((int)($this->loyaltyStateCancel->id_order_state) == $order_state['id_order_state'] )
+			if ((int)$this->loyaltyStateCancel->id_order_state == $order_state['id_order_state'] )
 				$html .= ' selected="selected"';
 			$html .= '>' . $order_state['name'] . '</option>';
 		}
@@ -542,7 +542,7 @@ class Loyalty extends Module
 		$loyalty->id_customer = (int)$params['customer']->id;
 		$loyalty->id_order = (int)$params['order']->id;
 		$loyalty->points = LoyaltyModule::getOrderNbPoints($params['order']);
-		if ((int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND (int)($loyalty->points) == 0)
+		if (Configuration::get('PS_LOYALTY_NONE_AWARD') AND (int)$loyalty->points == 0)
 			$loyalty->id_loyalty_state = LoyaltyStateModule::getNoneAwardId();
 		else
 			$loyalty->id_loyalty_state = LoyaltyStateModule::getDefaultId();
@@ -567,13 +567,13 @@ class Loyalty extends Module
 		{
 			if (!Validate::isLoadedObject($loyalty = new LoyaltyModule(LoyaltyModule::getByOrderId($order->id))))
 				return false;
-			if ((int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND $loyalty->id_loyalty_state == LoyaltyStateModule::getNoneAwardId())
+			if (Configuration::get('PS_LOYALTY_NONE_AWARD') AND $loyalty->id_loyalty_state == LoyaltyStateModule::getNoneAwardId())
 				return true;
 
 			if ($newOrder->id == $this->loyaltyStateValidation->id_order_state)
 			{
 				$loyalty->id_loyalty_state = LoyaltyStateModule::getValidationId();
-				if ((int)($loyalty->points) < 0)
+				if ((int)$loyalty->points < 0)
 					$loyalty->points = abs((int)($loyalty->points));
 			}
 			elseif ($newOrder->id == $this->loyaltyStateCancel->id_order_state)

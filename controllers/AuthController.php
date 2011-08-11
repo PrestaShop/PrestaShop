@@ -140,7 +140,7 @@ class AuthControllerCore extends FrontController
 				{
 					if (!$country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT')) OR !Validate::isLoadedObject($country))
 						die(Tools::displayError());
-					if ((int)($country->contains_states) AND !(int)($address->id_state))
+					if ($country->contains_states AND !$address->id_state)
 						$this->errors[] = Tools::displayError('This country requires a state selection.');
 					else
 					{
