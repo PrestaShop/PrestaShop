@@ -141,6 +141,7 @@ class ProductComments extends Module
 								continue;
 							$comment = new ProductComment((int)$id_product_comment);
 							$comment->validate();
+							ProductComment::deleteReports((int)$id_product_comment);
 						}
 						break;
 					case 'delete':
@@ -151,6 +152,7 @@ class ProductComments extends Module
 							$comment = new ProductComment((int)$id_product_comment);
 							$comment->delete();
 							ProductComment::deleteGrades((int)$id_product_comment);
+							ProductComment::deleteReports((int)$id_product_comment);
 						}
 						break;
 					default:
@@ -159,6 +161,7 @@ class ProductComments extends Module
 			}
 		}
 	}
+	
 	private function _checkCriterion()
 	{
 		$action_criterion = Tools::getValue('criterion_action');
@@ -241,6 +244,7 @@ class ProductComments extends Module
 	private function _displayForm()
 	{
 		$this->_displayFormModerate();
+		$this->_displayFormReported();
 		$this->_displayFormConfigurationCriterion();
 		$this->_displayFormApplicationCriterion();
 		return $this->_html;
@@ -324,6 +328,54 @@ class ProductComments extends Module
 				else
 					$this->_html .= $this->l('No comments to validate at this time.');
 			}
+		$this->_html .= '</fieldset><br />';
+	}
+	
+	private function _displayFormReported()
+	{
+		$this->_html .= '<fieldset class="width2">
+				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Reported Comments').'</legend>';
+
+				require_once(dirname(__FILE__).'/ProductComment.php');
+				$comments = ProductComment::getReportedComments();
+				if (sizeof($comments))
+				{
+					$this->_html .= '
+					<form action="'.$this->_baseUrl.'" method="post" name="comment_form">
+					<input type="hidden" name="id_product_comment[]" id="id_product_comment" />
+					<input type="hidden" name="action" id="action" />
+					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
+					<thead>
+					<tr>
+						<th><input class="noborder" type="checkbox" name="id_product_comment[]" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
+						<th style="width:150px;">'.$this->l('Author').'</th>
+						<th style="width:550px;">'.$this->l('Comment').'</th>
+						<th style="width:150px;">'.$this->l('Product name').'</th>
+						<th style="width:30px;">'.$this->l('Actions').'</th>
+					</tr>
+					</thead>
+					<tbody>';
+					foreach ($comments AS $comment)
+						$this->_html .= '<tr>
+						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="id_product_comment[]" /></td>
+						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.$comment['id_product'].' - '.htmlspecialchars($comment['name'], ENT_COMPAT, 'UTF-8').'</td>
+						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
+							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+						</tr>';
+						$this->_html .= '
+						<tr>
+							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
+							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
+							<a href="javascript:;" onclick="deleteComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+						</tr>
+						</tbody>
+					</table>
+					</form>';
+				}
+				else
+					$this->_html .= $this->l('No reported comment at this time.');
 		$this->_html .= '</fieldset><br />';
 	}
 	
@@ -595,11 +647,11 @@ class ProductComments extends Module
 		foreach ($averages AS $average)
 			$averageTotal += (float)($average);
 		$averageTotal = count($averages) ? ($averageTotal / count($averages)) : 0;
-		
+				
 		Context::getContext()->smarty->assign(array(
 		'logged' => (int)Context::getContext()->cookie->id_customer,
 		'action_url' => '',
-		'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product')),
+		'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, null, Context::getContext()->cookie->id_customer),
 		'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), Context::getContext()->language->id),
 		'averages' => $averages,
 		'product_comment_path' => $this->_path,

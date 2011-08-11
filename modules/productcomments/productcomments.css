@@ -114,11 +114,16 @@
 	background-position: 0 -16px
 }
 
-#product_comments_block_tab button {
+#product_comments_block_tab button.usefulness_btn {
 	background-color: #bbb;
 	border: solid 1px #999;
 	padding: 1px;
 	cursor: pointer;
 	color: #fff;
-	border-radius: 3px
+	margin: 3px
+}
+
+#product_comments_block_tab span.report_btn {
+	cursor: pointer;
+	text-decoration: underline
 }

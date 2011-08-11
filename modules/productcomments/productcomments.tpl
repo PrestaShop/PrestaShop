@@ -23,6 +23,62 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<script type="text/javascript">
+{literal}
+	$('document').ready(function(){
+		$('button[id^=comment_useful_yes_]').click(function(){
+
+			var idProductComment = $(this).attr('id').replace('comment_useful_yes_', '');
+			var parent = $(this).parent();
+			
+			$.ajax({
+				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				post: "POST",
+				data: "id_product_comment=" + idProductComment + "&action=usefulness&value=1",
+				success: function(result){
+					parent.fadeOut("normal", function() {
+						parent.remove();
+					});
+	 		 	}
+			});
+		});
+
+		$('button[id^=comment_useful_no_]').click(function(){
+
+			var idProductComment = $(this).attr('id').replace('comment_useful_no_', '');
+			var parent = $(this).parent();
+			
+			$.ajax({
+				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				post: "POST",
+				data: "id_product_comment=" + idProductComment + "&action=usefulness&value=0",
+				success: function(result){
+					parent.fadeOut("normal", function() {
+						parent.remove();
+					});
+	 		 	}
+			});
+		});
+
+		$('span[id^=comment_report_]').click(function(){
+
+			var idProductComment = $(this).attr('id').replace('comment_report_', '');
+			var parent = $(this).parent();
+			
+			$.ajax({
+				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				post: "POST",
+				data: "id_product_comment=" + idProductComment + "&action=report",
+				success: function(result){
+					parent.fadeOut("normal", function() {
+						parent.remove();
+					});
+	 		 	}
+			});
+		});
+	});
+{/literal}
+</script>
 
 <div id="idTab5">
 	<div id="product_comments_block_tab">
@@ -48,6 +104,19 @@
 				<div class="comment_details">
 					<h4>{$comment.title}</h4>
 					<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
+					<ul>
+						{if $comment.total_advice > 0}
+							<li>{$comment.total_useful} {l s='out of' mod='productcomments'} {$comment.total_advice} {l s='people found this review useful' mod='productcomments'}</li>
+						{/if}
+						{if $cookie->isLogged() == true}
+							{if !$comment.customer_advice}
+							<li>{l s='Was this comment useful to you?' mod='productcomments'}<button class="usefulness_btn" id="comment_useful_yes_{$comment.id_product_comment}">{l s='yes' mod='productcomments'}</button><button class="usefulness_btn" id="comment_useful_no_{$comment.id_product_comment}">{l s='no' mod='productcomments'}</button></li>
+							{/if}
+							{if !$comment.customer_report}
+							<li><span class="report_btn" id="comment_report_{$comment.id_product_comment}">{l s='Report abuse' mod='productcomments'}</span></li>
+							{/if}
+						{/if}
+					</ul>
 				</div>
 			</div>
 			{/if}
