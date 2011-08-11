@@ -64,7 +64,7 @@ class BlockViewed extends Module
 		{
 			if (!$productNbr = Tools::getValue('productNbr') OR empty($productNbr))
 				$output .= '<div class="alert error">'.$this->l('You must fill in the \'Products displayed\' field.').'</div>';
-			elseif ((int)($productNbr) == 0)
+			elseif ((int)$productNbr == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
 			{

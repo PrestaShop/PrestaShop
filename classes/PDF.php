@@ -563,7 +563,7 @@ class PDFCore extends PDF_PageGroupCore
 			$pdf->Cell(0, 6, self::l('SLIP #').' '.sprintf('%06d', self::$orderSlip->id).' '.self::l('from') . ' ' .Tools::displayDate(self::$orderSlip->date_upd, self::$order->id_lang), 1, 2, 'L', 1);
 		elseif (self::$delivery)
 			$pdf->Cell(0, 6, self::l('DELIVERY SLIP #').Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_DELIVERY_PREFIX', $context->language->id)).sprintf('%06d', self::$delivery).' '.self::l('from') . ' ' .Tools::displayDate(self::$order->delivery_date, self::$order->id_lang), 1, 2, 'L', 1);
-		elseif ((int)self::$order->invoice_date)
+		elseif (self::$order->invoice_date)
 			$pdf->Cell(0, 6, self::l('INVOICE #').' '.Tools::iconv('utf-8', self::encoding(), Configuration::get('PS_INVOICE_PREFIX', $context->language->id)).sprintf('%06d', self::$order->invoice_number).' '.self::l('from') . ' ' .Tools::displayDate(self::$order->invoice_date, self::$order->id_lang), 1, 2, 'L', 1);
 		else
 			$pdf->Cell(0, 6, self::l('Invoice draft'), 1, 2, 'L', 1);

@@ -456,7 +456,7 @@ class ProductCore extends ObjectModel
 			return false;
 
 		foreach ($res AS $product)
-			if ((int)($product['id_product']) == (int)($this->id))
+			if ((int)$product['id_product'] == (int)$this->id)
 				$movedProduct = $product;
 
 		if (!isset($movedProduct) || !isset($position))
@@ -1678,7 +1678,7 @@ class ProductCore extends ObjectModel
 			$cur_cart = new Cart($id_cart);
 		}
 
-		if ((int)($id_cart))
+		if ($id_cart)
 		{
 			if (!isset(self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)]) OR self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)] !=  (int)($quantity))
 				self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -2398,7 +2398,7 @@ class ProductCore extends ObjectModel
 	{
 		$productImplode = array();
 		foreach ($productIds as $id_product)
-			if ((int)$id_product AND !array_key_exists($id_product, self::$_cacheFeatures))
+			if ($id_product AND !array_key_exists($id_product, self::$_cacheFeatures))
 				$productImplode[] = (int)$id_product;
 		if (!count($productImplode))
 			return;
@@ -2419,7 +2419,7 @@ class ProductCore extends ObjectModel
 	{
 		$productImplode = array();
 		foreach ($productIds as $id_product)
-			if ((int)$id_product AND !array_key_exists($id_product.'-'.$id_lang, self::$_cacheFeatures))
+			if ($id_product AND !array_key_exists($id_product.'-'.$id_lang, self::$_cacheFeatures))
 				$productImplode[] = (int)$id_product;
 		if (!count($productImplode))
 			return;
@@ -2970,11 +2970,11 @@ class ProductCore extends ObjectModel
 	public function createLabels($uploadableFiles, $textFields)
 	{
 		$languages = Language::getLanguages();
-		if ((int)($uploadableFiles) > 0)
+		if ($uploadableFiles > 0)
 			for ($i = 0; $i < (int)($uploadableFiles); $i++)
 				if (!$this->_createLabel($languages, _CUSTOMIZE_FILE_))
 					return false;
-		if ((int)($textFields) > 0)
+		if ((int)$textFields > 0)
 			for ($i = 0; $i < (int)($textFields); $i++)
 				if (!$this->_createLabel($languages, _CUSTOMIZE_TEXTFIELD_))
 					return false;

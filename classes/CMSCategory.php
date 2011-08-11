@@ -576,7 +576,7 @@ class CMSCategoryCore extends ObjectModel
 		))
 			return false;
 		foreach ($res AS $category)
-			if ((int)($category['id_cms_category']) == (int)($this->id))
+			if ((int)$category['id_cms_category'] == (int)$this->id)
 				$movedCategory = $category;
 		
 		if (!isset($movedCategory) || !isset($position))

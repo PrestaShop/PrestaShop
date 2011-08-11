@@ -948,7 +948,7 @@ abstract class ModuleCore
 				continue;
 
 			foreach ($res AS $key => $values)
-				if ((int)($values[$this->identifier]) == (int)($this->id))
+				if ((int)$values[$this->identifier] == (int)$this->id)
 				{
 					$k = $key ;
 					break ;

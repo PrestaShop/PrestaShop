@@ -392,7 +392,7 @@ class ThemeInstallator extends Module
 			$foo = Db::getInstance()->getRow('
 				SELECT name FROM `'._DB_PREFIX_.'image_type` i
 				WHERE i.name LIKE \''.pSQL($row['name']).'\'');
-			if ((int)(Tools::getValue('imagesConfig')) == 1 AND $foo)
+			if ((int)Tools::getValue('imagesConfig') == 1 AND $foo)
 				continue ;
 			if ($foo)
 				Db::getInstance()->Execute('
@@ -533,7 +533,7 @@ class ThemeInstallator extends Module
 						}
 				}
 		}
-		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages())
+		if ((int)Tools::getValue('imagesConfig') != 3 AND self::updateImages())
 			$msg .= '<br /><b>'.$this->l('Images have been correctly updated in database').'</b><br />';
 
 		$theme = new Theme();
@@ -1009,7 +1009,7 @@ class ThemeInstallator extends Module
 		$count = 0;
 		while (Tools::isSubmit('myvar_'.++$count))
 		{
-			if ((int)(Tools::getValue('myvar_'.$count)) == -1)
+			if ((int)Tools::getValue('myvar_'.$count) == -1)
 				continue ;
 			$name = Tools::getValue('themevariationname_'.$count);
 			$dir = Tools::getValue('myvar_'.$count);
@@ -1088,7 +1088,7 @@ class ThemeInstallator extends Module
 			$this->_html .= parent::displayError($this->l('Please enter a valid theme name'));
 		while ($this->error === false AND Tools::isSubmit('myvar_'.++$count))
 		{
-			if ((int)(Tools::getValue('myvar_'.$count)) == -1)
+			if ((int)Tools::getValue('myvar_'.$count) == -1)
 				continue ;
 			$name = Tools::getValue('themevariationname_'.$count);
 			if (!$name OR !Validate::isGenericName($name) OR strlen($name) > MAX_NAME_LENGTH)
@@ -1110,7 +1110,7 @@ class ThemeInstallator extends Module
 			$this->_html .= parent::displayError($this->l('Syntax error on version field. Only digits and points are allowed and the compatibility should be increasing or equal.'));
 		while ($this->error === false AND Tools::isSubmit('myvar_'.++$count))
 		{
-			if ((int)(Tools::getValue('myvar_'.$count)) == -1)
+			if ((int)Tools::getValue('myvar_'.$count) == -1)
 				continue ;
 			$from = Tools::getValue('compafrom_'.$count);
 			$to = Tools::getValue('compato_'.$count);

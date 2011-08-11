@@ -839,7 +839,7 @@ class Dejala extends CarrierModule
 		do 
 		{
 			$wd = date("w", $balladUtc);
-			if ((int)($calendar[$wd]['stop_hour']) < (int)($calendar[$wd]['start_hour'])) continue ;
+			if ((int)$calendar[$wd]['stop_hour'] < (int)$calendar[$wd]['start_hour']) continue ;
 
 			$dates[$iDate]['value'] = date("Y/m/d", $balladUtc);
 			$dates[$iDate]['ts'] = $balladUtc ;
@@ -856,9 +856,9 @@ class Dejala extends CarrierModule
 			return ;
 
 		$now = (int)(date("H", $ctime)) ;
-		if ((int)($dates[0]['stop_hour']) > $now && (int)($dates[0]['start_hour']) < $now) 
+		if ((int)$dates[0]['stop_hour'] > $now && (int)$dates[0]['start_hour'] < $now) 
 			$dates[0]['start_hour'] = $now ;
-		elseif ((int)($dates[0]['ts']) == $now && (int)($dates[0]['stop_hour']) < $now) 
+		elseif ((int)$dates[0]['ts'] == $now && (int)$dates[0]['stop_hour'] < $now) 
 			array_shift($dates) ;
 
 

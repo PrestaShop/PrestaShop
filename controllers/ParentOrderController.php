@@ -141,7 +141,7 @@ class ParentOrderControllerCore extends FrontController
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND Tools::getValue('step') == 1) OR Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			$this->addJS(_THEME_JS_DIR_.'order-address.js');
 		$this->addJS(_PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js');
-		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) OR Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+		if (Configuration::get('PS_BLOCK_CART_AJAX') OR Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 		{
 			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
 			$this->addJS(_PS_JS_DIR_.'jquery/jquery-typewatch.pack.js');
@@ -200,7 +200,7 @@ class ParentOrderControllerCore extends FrontController
 	{
 		$this->context->cart->recyclable = (int)(Tools::getValue('recyclable'));
 		$this->context->cart->gift = (int)(Tools::getValue('gift'));
-		if ((int)(Tools::getValue('gift')))
+		if (Tools::getValue('gift'))
 		{
 			if (!Validate::isMessage($_POST['gift_message']))
 				$this->errors[] = Tools::displayError('Invalid gift message');
@@ -427,7 +427,7 @@ class ParentOrderControllerCore extends FrontController
 		if (sizeof($carriers))
 		{
 			$defaultCarrierIsPresent = false;
-			if ((int)$this->context->cart->id_carrier != 0)
+			if ($this->context->cart->id_carrier)
 				foreach ($carriers AS $carrier)
 					if ($carrier['id_carrier'] == (int)$this->context->cart->id_carrier)
 						$defaultCarrierIsPresent = true;

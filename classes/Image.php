@@ -257,7 +257,7 @@ class ImageCore extends ObjectModel
 			return ;
 		foreach ($combinationImages['new'] AS $id_product_attribute => $imageIds)
 			foreach ($imageIds AS $key => $imageId)
-				if ((int)($imageId) == (int)($saved_id))
+				if ((int)$imageId == (int)$saved_id)
 					$combinationImages['new'][$id_product_attribute][$key] = (int)($id_image);
 	}
 

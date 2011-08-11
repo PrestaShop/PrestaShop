@@ -74,7 +74,7 @@
 				foreach ($categoryBox AS $k => $row)
 					$index[] = $row;
 			}
-			elseif ((int)Tools::getValue('id_product'))
+			elseif (Tools::getValue('id_product'))
 				$index = Product::getProductCategories((int)Tools::getValue('id_product'));
 			$adminProducts->recurseCategoryForInclude((int)(Tools::getValue('id_product')), $index, $categories, $categories[0][1], 1, (int)(Tools::getValue('id_category_default')));
 			echo '				</table>

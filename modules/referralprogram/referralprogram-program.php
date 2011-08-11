@@ -166,7 +166,7 @@ $stats = $customer->getStats();
 
 $orderQuantity = (int)(Configuration::get('REFERRAL_ORDER_QUANTITY'));
 $canSendInvitations = false;
-if ((int)($stats['nb_orders']) >= $orderQuantity)
+if ((int)$stats['nb_orders'] >= $orderQuantity)
 	$canSendInvitations = true;
 
 // Smarty display

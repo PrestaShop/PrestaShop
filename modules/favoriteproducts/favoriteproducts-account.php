@@ -38,7 +38,7 @@ if (!Context::getContext()->cookie->isLogged())
 	
 include(dirname(__FILE__).'/../../header.php');
 
-if ((int)Context::getContext()->customer->id)
+if (Context::getContext()->customer->id)
 {	
 	$smarty->assign('favoriteProducts', FavoriteProduct::getFavoriteProducts((int)Context::getContext()->customer->id, (int)Context::getContext()->language->id));
 

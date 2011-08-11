@@ -65,7 +65,7 @@ class ToolsCore
 				$url = substr($url, strlen($baseUri));
 			if (strpos($url, 'index.php?controller=') !== FALSE && strpos($url, 'index.php/') == 0) {
 				$url = substr($url, strlen('index.php?controller='));
-				if((int)(Configuration::get('PS_REWRITING_SETTINGS') == 1))
+				if (Configuration::get('PS_REWRITING_SETTINGS'))
 					$url = self::strReplaceFirst('&', '?' , $url);
 			}
 

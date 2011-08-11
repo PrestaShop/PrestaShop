@@ -90,7 +90,7 @@ class StatsCarrier extends ModuleGraph
 	protected function getData($layers)
 	{
 		$stateQuery = '';
-		if ((int)($this->_option))
+		if ($this->_option)
 			$stateQuery = 'AND (SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh WHERE o.id_order = oh.id_order ORDER BY oh.date_add DESC, oh.id_order_history DESC LIMIT 1) = '.(int)($this->_option);
 		$this->_titles['main'] = $this->l('Percentage of orders by carrier');
 		

@@ -63,7 +63,7 @@ class BlockTags extends Module
 		{
 			if (!$tagsNbr = Tools::getValue('tagsNbr') OR empty($tagsNbr))
 				$output .= '<div class="alert error">'.$this->l('Please fill in the "tags displayed" field.').'</div>';
-			elseif ((int)($tagsNbr) == 0)
+			elseif ((int)$tagsNbr == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
 			{

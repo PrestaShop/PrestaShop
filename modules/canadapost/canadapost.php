@@ -1162,7 +1162,7 @@ class CanadaPost extends CarrierModule
 
 	public function hookupdateCarrier($params)
 	{
-		if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
+		if ((int)$params['id_carrier'] != (int)$params['carrier']->id)
 		{
 			$serviceSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'cp_rate_service_code` WHERE `id_carrier` = '.(int)$params['id_carrier']);
 			$update = array('id_carrier' => (int)($params['carrier']->id), 'id_carrier_history' => pSQL($serviceSelected['id_carrier_history'].'|'.(int)($params['carrier']->id)));
