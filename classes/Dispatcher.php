@@ -186,7 +186,6 @@ class DispatcherCore
 				$_GET['isolang'] = $m[1];
 				$this->requestURI = substr($this->requestURI, 3);
 			}
-
 		// Get and instantiate controller
 		$this->getController();
 		$controllers = Dispatcher::getControllers();
@@ -376,6 +375,7 @@ class DispatcherCore
 			return $this->controller;
 			
 		$controller = Tools::getValue('controller');
+
 		if (isset($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
 		{
 			$controller = $m[1];

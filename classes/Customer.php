@@ -104,6 +104,9 @@ class CustomerCore extends ObjectModel
 	/** @var boolean is the customer logged in */
 	public		$logged = 0;
 	
+	/** @var int id_guest meaning the guest table, not the guest customer  */
+	public 		$id_guest;
+	
 	protected $tables = array ('customer');
 
  	protected 	$fieldsRequired = array('lastname', 'passwd', 'firstname', 'email');
