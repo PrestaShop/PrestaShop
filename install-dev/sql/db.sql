@@ -1772,7 +1772,6 @@ CREATE TABLE `PREFIX_stock` (
   PRIMARY KEY (`id_stock`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `id_group_shop` (`id_group_shop`),
   KEY `id_shop` (`id_shop`),
   UNIQUE KEY `product_stock` (`id_product` ,`id_product_attribute` ,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
