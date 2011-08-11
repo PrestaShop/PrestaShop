@@ -76,7 +76,7 @@ class AliasCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		$fields['alias'] = pSQL($this->alias);
 		$fields['search'] = pSQL($this->search);

@@ -59,7 +59,7 @@ class OrderDiscountCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['name'] = pSQL($this->name);

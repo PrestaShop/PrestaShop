@@ -43,7 +43,7 @@ class ConnectionsSourceCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_connections'] = (int)($this->id_connections);
 		$fields['http_referer'] = pSQL($this->http_referer);
 		$fields['request_uri'] = pSQL($this->request_uri);

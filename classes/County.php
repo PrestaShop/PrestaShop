@@ -54,7 +54,7 @@ class CountyCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_state'] = (int)($this->id_state);
 		$fields['name'] = pSQL($this->name);
 		$fields['active'] = (int)($this->active);

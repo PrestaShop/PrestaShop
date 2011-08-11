@@ -73,7 +73,7 @@ class ProductComment extends ObjectModel
 
 	public	function getFields()
 	{
-	 	parent::validateFields(false);
+	 	$this->validateFields(false);
 		$fields['id_product'] = (int)($this->id_product);
 		$fields['id_customer'] = (int)($this->id_customer);
 		$fields['id_guest'] = (int)($this->id_guest);

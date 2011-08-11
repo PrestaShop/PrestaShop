@@ -60,7 +60,7 @@ class WebserviceKeyCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		$fields['key'] = pSQL($this->key);
 		$fields['active'] = (int)($this->active);

@@ -45,7 +45,7 @@ class Stock extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_group_shop'] = (int)$this->id_group_shop;

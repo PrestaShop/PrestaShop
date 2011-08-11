@@ -45,7 +45,7 @@ class ZoneCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		$fields['name'] = pSQL($this->name);
 		$fields['active'] = (int)$this->active;

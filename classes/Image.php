@@ -78,7 +78,7 @@ class ImageCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_product'] = (int)($this->id_product);
 		$fields['position'] = (int)($this->position);
 		$fields['cover'] = (int)($this->cover);
@@ -87,8 +87,8 @@ class ImageCore extends ObjectModel
 	
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('legend'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('legend'));
 	}
 	
 	public function delete()

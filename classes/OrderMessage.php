@@ -57,14 +57,14 @@ class OrderMessageCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		return array('date_add' => pSQL($this->date_add));
 	}
 
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name', 'message'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name', 'message'));
 	}
 
 	public static function getOrderMessages($id_lang)

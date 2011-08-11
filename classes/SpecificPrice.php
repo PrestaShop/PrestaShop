@@ -50,7 +50,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_product'] = (int)($this->id_product);
 		$fields['id_shop'] = (int)($this->id_shop);
 		$fields['id_currency'] = (int)($this->id_currency);

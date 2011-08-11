@@ -82,7 +82,7 @@ class ImageTypeCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['name'] = pSQL($this->name);
 		$fields['width'] = (int)($this->width);
 		$fields['height'] = (int)($this->height);

@@ -43,7 +43,7 @@ class TaxRuleCore extends ObjectModel
 
 	public function getFields()
 	{
-	  parent::validateFields();
+	  $this->validateFields();
       $fields['id_tax_rules_group'] = (int)($this->id_tax_rules_group);
       $fields['id_country'] = (int)$this->id_country;
       $fields['id_state'] = (int)$this->id_state;

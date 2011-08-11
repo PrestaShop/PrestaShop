@@ -53,7 +53,7 @@ class MondialRelayClass extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		if (isset($this->id_mr_selected))
 			$fields['id_mr_selected'] = (int)($this->id_mr_selected);

@@ -58,7 +58,7 @@ class AttributeGroupCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['is_color_group'] = (int)($this->is_color_group);
 
@@ -77,8 +77,8 @@ class AttributeGroupCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name', 'public_name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name', 'public_name'));
 	}
 
 	public static function cleanDeadCombinations()

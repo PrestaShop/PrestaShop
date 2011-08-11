@@ -119,7 +119,7 @@ class CategoryCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_category'] = (int)($this->id);
 		$fields['active'] = (int)($this->active);
@@ -150,8 +150,8 @@ class CategoryCore extends ObjectModel
 	  */
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array(
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array(
 			'name',
 			'description' => array('html' => true),
 			'link_rewrite',

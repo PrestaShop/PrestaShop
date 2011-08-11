@@ -38,7 +38,7 @@ class SearchEngineCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['server'] = pSQL($this->server);
 		$fields['getvar'] = pSQL($this->getvar);
 		return $fields;

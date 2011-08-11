@@ -45,7 +45,7 @@ class CustomerMessageCore extends ObjectModel
 
 	public	function getFields()
 	{
-	 	parent::validateFields();
+	 	$this->validateFields();
 		$fields['id_customer_thread'] = (int)($this->id_customer_thread);
 		$fields['id_employee'] = (int)($this->id_employee);
 		$fields['message'] = pSQL($this->message);

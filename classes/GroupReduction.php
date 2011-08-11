@@ -41,7 +41,7 @@ class GroupReductionCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_group'] = (int)($this->id_group);
 		$fields['id_category'] = (int)($this->id_category);
 		$fields['reduction'] = (float)($this->reduction);

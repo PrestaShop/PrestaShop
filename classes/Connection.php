@@ -58,7 +58,7 @@ class ConnectionCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_guest'] = (int)($this->id_guest);
 		$fields['id_page'] = (int)($this->id_page);
 		$fields['ip_address'] = (int)($this->ip_address);

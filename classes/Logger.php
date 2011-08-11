@@ -64,7 +64,7 @@ class	LoggerCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['severity'] = intval($this->severity);
 		$fields['error_code'] = intval($this->error_code);

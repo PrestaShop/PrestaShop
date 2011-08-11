@@ -49,7 +49,7 @@ class DejalaCart extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_dejala_product'] = (int)($this->id_dejala_product);
 		$fields['shipping_date'] = pSQL($this->shipping_date);
 		$fields['id_delivery'] = (int)($this->id_delivery);

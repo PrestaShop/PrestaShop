@@ -55,7 +55,7 @@ class FeatureValueCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 
 		$fields['id_feature'] = (int)$this->id_feature;
 		$fields['custom'] = (int)$this->custom;
@@ -70,8 +70,8 @@ class FeatureValueCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('value'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('value'));
 	}
 	
 	/**

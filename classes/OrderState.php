@@ -71,7 +71,7 @@ class OrderStateCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['send_email'] = (int)($this->send_email);
 		$fields['invoice'] = (int)($this->invoice);
 		$fields['color'] = pSQL($this->color);
@@ -89,8 +89,8 @@ class OrderStateCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name', 'template'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name', 'template'));
 	}
 	
 	/**

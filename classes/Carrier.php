@@ -112,7 +112,7 @@ class CarrierCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_tax_rules_group'] = (int)($this->id_tax_rules_group);
 		$fields['name'] = pSQL($this->name);
 		$fields['url'] = pSQL($this->url);
@@ -144,8 +144,8 @@ class CarrierCore extends ObjectModel
 	*/
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('delay'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('delay'));
 	}
 
 	public function add($autodate = true, $nullValues = false)

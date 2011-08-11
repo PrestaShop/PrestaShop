@@ -40,7 +40,7 @@ class PageCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_page_type'] = (int)($this->id_page_type);
 		$fields['id_object'] = (int)($this->id_object);
 		return $fields;

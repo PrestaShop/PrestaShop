@@ -48,7 +48,7 @@ class ReferralProgramModule extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_sponsor'] = (int)$this->id_sponsor;
 		$fields['email'] = pSQL($this->email);
 		$fields['lastname'] = pSQL($this->lastname);

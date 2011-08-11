@@ -38,7 +38,7 @@ class DateRangeCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['time_start'] = pSQL($this->time_start);
 		$fields['time_end'] = pSQL($this->time_end);
 		return $fields;

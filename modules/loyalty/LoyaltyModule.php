@@ -46,7 +46,7 @@ class LoyaltyModule extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_loyalty_state'] = (int)$this->id_loyalty_state;
 		$fields['id_customer'] = (int)$this->id_customer;
 		$fields['id_order'] = (int)$this->id_order;

@@ -48,7 +48,7 @@ class ShopUrlCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		
 		$this->physical_uri = trim($this->physical_uri, '/');
 		if ($this->physical_uri)

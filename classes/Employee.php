@@ -90,7 +90,7 @@ class EmployeeCore extends ObjectModel
 	
 	public	function getFields()
 	{
-	 	parent::validateFields();
+	 	$this->validateFields();
 		
 		$fields['id_profile'] = (int)$this->id_profile;
 		$fields['id_lang'] = (int)$this->id_lang;

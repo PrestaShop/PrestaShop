@@ -64,7 +64,7 @@ class SceneCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['active'] = (int)($this->active);
 		return $fields;
 	}
@@ -76,8 +76,8 @@ class SceneCore extends ObjectModel
   */
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}	
 	
 	public function update($nullValues = false)

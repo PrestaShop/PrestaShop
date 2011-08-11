@@ -75,7 +75,7 @@ class LanguageCore extends ObjectModel
 
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['name'] = pSQL($this->name);
 		$fields['iso_code'] = pSQL(strtolower($this->iso_code));
 		$fields['language_code'] = pSQL(strtolower($this->language_code));

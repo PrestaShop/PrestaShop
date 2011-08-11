@@ -48,7 +48,7 @@ class CMSCore extends ObjectModel
 	
 	public function getFields() 
 	{ 
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_cms'] = (int)($this->id);
 		$fields['id_cms_category'] = (int)($this->id_cms_category);
 		$fields['position'] = (int)($this->position);
@@ -58,8 +58,8 @@ class CMSCore extends ObjectModel
 	
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array(
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array(
 			'meta_description',
 			'meta_keywords',
 			'meta_title',

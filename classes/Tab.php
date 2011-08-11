@@ -56,7 +56,7 @@ class TabCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		$fields['id_parent'] = (int)($this->id_parent);
 		$fields['class_name'] = pSQL($this->class_name);
 		$fields['module'] = pSQL($this->module);
@@ -66,8 +66,8 @@ class TabCore extends ObjectModel
 
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('name'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('name'));
 	}
 
 	public function add($autodate = true, $nullValues = false)

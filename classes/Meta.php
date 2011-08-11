@@ -48,14 +48,14 @@ class MetaCore extends ObjectModel
 		
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		return array('page' => pSQL($this->page));
 	}
 	
 	public function getTranslationsFieldsChild()
 	{
-		parent::validateFieldsLang();
-		return parent::getTranslationsFields(array('title', 'description', 'keywords', 'url_rewrite'));
+		$this->validateFieldsLang();
+		return $this->getTranslationsFields(array('title', 'description', 'keywords', 'url_rewrite'));
 	}
 	
 	public static function getPages($excludeFilled = false, $addPage = false)

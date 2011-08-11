@@ -64,7 +64,7 @@ class GroupCore extends ObjectModel
 	
 	public function getFields()
 	{
-		parent::validateFields();
+		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_group'] = (int)($this->id);
 		$fields['reduction'] = (float)($this->reduction);
@@ -77,9 +77,9 @@ class GroupCore extends ObjectModel
 	
 	public function getTranslationsFieldsChild()
 	{
-		if (!parent::validateFieldsLang())
+		if (!$this->validateFieldsLang())
 			return false;
-		return parent::getTranslationsFields(array('name'));
+		return $this->getTranslationsFields(array('name'));
 	}
 	
 	public static function getGroups($id_lang)
