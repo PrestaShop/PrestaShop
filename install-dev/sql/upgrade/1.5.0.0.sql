@@ -2,8 +2,8 @@ SET NAMES 'utf8';
 CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
   `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `share_customer` TINYINT(1) NOT NULL,
   `share_order` TINYINT(1) NOT NULL,
-  `share_stock` TINYINT(1) NOT NULL,
   `share_stock` TINYINT(1) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -80,6 +80,10 @@ INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_shop, quantity)
 	(SELECT SUM(pa2.quantity) FROM PREFIX_product_attribute pa2 WHERE p.id_product = pa2.id_product),
 	quantity
 ) FROM PREFIX_product p);
+
+ALTER TABLE PREFIX_stock_mvt ADD id_stock INT UNSIGNED NOT NULL AFTER id_stock_mvt;
+UPDATE PREFIX_stock_mvt sm SET sm.id_stock = (SELECT s.id_stock FROM PREFIX_stock s WHERE s.id_product = sm.id_product AND s.id_product_attribute = sm.id_product_attribute ORDER BY s.id_shop LIMIT 1);
+ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;
 
 CREATE TABLE `PREFIX_country_shop` (
 `id_country` INT( 11 ) UNSIGNED NOT NULL,
@@ -279,12 +283,6 @@ ALTER TABLE `PREFIX_carrier_lang` ADD UNIQUE `shipper_lang_index` (`id_carrier`,
 ALTER TABLE `PREFIX_search_word` ADD `id_shop` INT(11) NOT NULL DEFAULT '1' AFTER `id_word`;
 ALTER TABLE `PREFIX_search_word` DROP INDEX `id_lang`, ADD UNIQUE `id_lang` (`id_lang`,`id_shop`,`word`);
 
-ALTER TABLE PREFIX_stock_mvt ADD id_stock INT UNSIGNED NOT NULL AFTER id_stock_mvt;
-INSERT INTO PREFIX_stock (id_product, id_product_attribute, id_group_shop, id_shop, quantity) SELECT id_product, 0, 1, 1, quantity FROM PREFIX_product;
-INSERT INTO PREFIX_stock (id_product, id_product_attribute, id_group_shop, id_shop, quantity) SELECT id_product, id_product_attribute, 1, 1, quantity FROM PREFIX_product_attribute;
-UPDATE PREFIX_stock_mvt sm SET sm.id_stock = (SELECT s.id_stock FROM PREFIX_stock s WHERE s.id_product = sm.id_product AND s.id_product_attribute = sm.id_product_attribute);
-ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;
-
 CREATE TABLE `PREFIX_referrer_shop` (
   `id_referrer` int(10) unsigned NOT NULL auto_increment,
   `id_shop` int(10) unsigned NOT NULL default '1',
@@ -325,4 +323,4 @@ INSERT INTO `PREFIX_discount_shop` (id_shop, id_discount) (SELECT 1, id_discount
 
 ALTER TABLE `PREFIX_delivery` ADD `id_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_delivery`, ADD `id_group_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_shop`;
 
-/* PHP:create_multistore(); */
+/* PHP:create_multistore(); */;
