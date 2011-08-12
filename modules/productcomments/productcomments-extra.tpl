@@ -70,10 +70,8 @@
 	</div>
 	<div>
 		<a href="#idTab5">{l s='Read user reviews' mod='productcomments'} ({$nbComments})</a><br/>
-	{if ($too_early == false AND ($cookie->isLogged() == true OR $allow_guests == true))}
-		{if $cookie->isLogged() == true || $allow_guests == true}
-			<a id="new_comment_btn" href="#new_comment_form">{l s='Give your advice' mod='productcomments'}</a>
-		{/if}
+	{if ($too_early == false AND ($cookie->isLogged() OR $allow_guests))}
+		<a id="new_comment_btn" href="#new_comment_form">{l s='Give your advice' mod='productcomments'}</a>
 	{/if}
 	</div>
 	<div style="display: none;">
