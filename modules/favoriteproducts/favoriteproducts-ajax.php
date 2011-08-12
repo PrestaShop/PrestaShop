@@ -26,6 +26,7 @@
 */
 
 require_once(dirname(__FILE__).'/../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/FavoriteProduct.php');
 
 if (Tools::getValue('action') AND Tools::getValue('id_product') AND Context::getContext()->cookie->id_customer)
@@ -40,7 +41,6 @@ if (Tools::getValue('action') AND Tools::getValue('id_product') AND Context::get
 		if ($favoriteProduct)
 			if ($favoriteProduct->delete())
 				die('0');
-		die('1');
 	}
 	elseif (Tools::getValue('action') == 'add')
 	{
@@ -54,11 +54,8 @@ if (Tools::getValue('action') AND Tools::getValue('id_product') AND Context::get
 		$favoriteProduct->id_shop = (int)Context::getContext()->shop->getID();
 		if ($favoriteProduct->add())
 			die('0');
-		die('1');
 	}
-	else
-		die('1');
 }
-else
-	die('1');
+
+die('1');
 

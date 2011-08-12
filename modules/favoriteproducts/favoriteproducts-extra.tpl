@@ -25,12 +25,13 @@
 *}
 
 <script type="text/javascript">
+{literal}
 $('document').ready(function(){
 	$('#add_favorites_btn').click(function(){
 		$.ajax({
-			url: "{$module_dir}favoriteproducts-ajax.php",
+			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
 			post: "POST",
-			data: "id_product={$smarty.get.id_product}&action=add",
+			{/literal}data: "id_product={$smarty.get.id_product}&action=add",{literal}
 			success: function(result){
 				if (result == '0')
 				{
@@ -42,6 +43,7 @@ $('document').ready(function(){
 		});
 	});
 })
+{/literal}
 </script>
 
 {if !$isCustomerFavoriteProduct AND $isLogged}
