@@ -169,7 +169,40 @@ class AdminDiscounts extends AdminTab
 						if (!$object->add(true, false, $categories))
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 						elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
-							Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
+						{
+							if ($customer = new Customer($object->id_customer) AND Validate::isLoadedObject($customer))
+							{
+								if (Validate::isEmail($customer->email))
+								{
+									$data = array(
+										'{firstname}' => $customer->firstname,
+										'{lastname}' => $customer->lastname,
+										'{email}' => $customer->email,
+										'{voucher_num}' => $object->name);
+								
+									@Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'voucher_new', Mail::l('New voucher'), $data, $customer->email, $customer->firstname.' '.$customer->lastname);
+								}
+							}
+							elseif ($group = new Group($object->id_group) AND Validate::isLoadedObject($group))
+							{
+								$customer = null;
+								$customers = $group->getCustomers();
+								
+								if ($customers)
+									foreach ($customers as $customer)
+									{
+										$data = array(
+											'{firstname}' => $customer['firstname'],
+											'{lastname}' => $customer['lastname'],
+											'{email}' => $customer['email'],
+											'{voucher_num}' => $object->name);
+									
+										@Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'voucher_new', Mail::l('New voucher'), $data, $customer['email'], $customer['firstname'].' '.$customer['lastname']);
+									}
+							}
+							
+							Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
+						}
 					}
 					else
 						$this->_errors[] = Tools::displayError('You do not have permission to add here.');
