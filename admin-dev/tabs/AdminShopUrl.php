@@ -52,21 +52,46 @@ class AdminShopUrl extends AdminTab
 	
 	public function postProcess()
 	{
+		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
 			$object = $this->loadObject(true);
-			if ($object->id)
-			{
-				$beforeUpdate = new ShopUrl((int)$object->id);
-				if ($beforeUpdate->main AND !Tools::getValue('main'))
-					$this->_errors[] = Tools::displayError('You must have a main url per shop');
-			}
+			if ($object->id && Tools::getValue('main'))
+				$object->setMain();
+				
+			if ($object->main && !Tools::getValue('main'))
+				$this->_errors[] = Tools::displayError('You can\'t change a main url to a non main url, you have to set an other url as main url for selected shop');
+				
+			if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
+				$this->_errors[] = Tools::displayError('You can\'t disable a main url');
+
 			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
-				
+			
+			parent::postProcess();
 			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
 		}
-		return parent::postProcess();
+		elseif ((isset($_GET['status'.$this->table]) OR isset($_GET['status'])) AND Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				if (Validate::isLoadedObject($object = $this->loadObject()))
+				{
+					if ($object->main)
+						$this->_errors[] = Tools::displayError('You can\'t disable a main url');
+					else if ($object->toggleStatus())
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
+					else
+						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+				}
+				else
+					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		else
+			return parent::postProcess();
 	}
 	
 	protected function afterUpdate($object)
@@ -78,28 +103,59 @@ class AdminShopUrl extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm($isMainTab = true);
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
-			
+		$currentShop = Shop::initialize();
+
+		$listShopWithUrl = array();
+		foreach (Shop::getShops(false, null, true) as $id)
+			$listShopWithUrl[$id] = (bool)count(ShopUrl::getShopUrls($id));
+		$jsShopUrl = Tools::jsonEncode($listShopWithUrl);
+
 		echo <<<EOF
 		<script type="text/javascript">
 		//<![CDATA[
+		function fillShopUrl()
+		{
+			var domain = $('#domain').val();
+			var physical = $('#physical_uri').val();
+			var virtual = $('#virtual_uri').val();
+			url = ((domain) ? domain : '???');
+			if (physical)
+				url += '/'+physical;
+			if (virtual)
+				url += '/'+virtual;
+			url = url.replace(/\/+/g, "/");
+			$('#final_url').val('http://'+url);
+		};
+
+		var shopUrl = {$jsShopUrl};
+		function checkMainUrlInfo(shopID)
+		{
+			if (!shopID)
+				shopID = $('#id_shop').val();
+
+			if (!shopUrl[shopID])
+			{
+				$('#main_off').attr('disabled', true);
+				$('#main_on').attr('checked', true);
+				$('#mainUrlInfo').css('display', 'block');
+				$('#mainUrlInfoExplain').css('display', 'none');
+			}
+			else
+			{
+				$('#main_off').attr('disabled', false);
+				$('#mainUrlInfo').css('display', 'none');
+				$('#mainUrlInfoExplain').css('display', 'block');
+			}
+		}
+
 		$().ready(function()
 		{
-			$('#domain, #physical_uri, #virtual_uri').keyup(function()
-			{
-				var domain = $('#domain').val();
-				var physical = $('#physical_uri').val();
-				var virtual = $('#virtual_uri').val();
-				url = ((domain) ? domain : '???');
-				if (physical)
-					url += '/'+physical;
-				if (virtual)
-					url += '/'+virtual;
-				url = url.replace(/\/+/g, "/");
-				$('#final_url').val('http://'+url);
-			});
+			fillShopUrl();
+			checkMainUrlInfo();
+			$('#domain, #physical_uri, #virtual_uri').keyup(fillShopUrl);
 		});
 		//]]>
 		</script>
@@ -111,32 +167,29 @@ EOF;
 			<fieldset><legend>'.$this->l('Shop Url').'</legend>
 				<label for="domain">'.$this->l('Domain').'</label>
 				<div class="margin-form">
-					<input type="text" name="domain" id="domain" value="'.$this->getFieldValue($obj, 'domain').'" />
+					<input type="text" name="domain" id="domain" value="'.((Validate::isLoadedObject($obj)) ? $this->getFieldValue($obj, 'domain') : $currentShop->domain).'" />
 				</div>
 				<label for="domain">'.$this->l('Domain SSL').'</label>
 				<div class="margin-form">
-					<input type="text" name="domain_ssl" id="domain_ssl" value="'.$this->getFieldValue($obj, 'domain_ssl').'" />
+					<input type="text" name="domain_ssl" id="domain_ssl" value="'.((Validate::isLoadedObject($obj)) ? $this->getFieldValue($obj, 'domain_ssl') : $currentShop->domain_ssl).'" />
 				</div>
 				<label for="physical_uri">'.$this->l('Physical URI').'</label>
 				<div class="margin-form">
-					<input type="text" name="physical_uri" id="physical_uri" value="'.$this->getFieldValue($obj, 'physical_uri').'" />
+					<input type="text" name="physical_uri" id="physical_uri" value="'.((Validate::isLoadedObject($obj)) ? $this->getFieldValue($obj, 'physical_uri') : $currentShop->physical_uri).'" />
 					<p>'.$this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path.').'</p>
 				</div>';
-		if (Shop::isMultiShopActivated())
-		{
 			echo '<label for="virtual_uri">'.$this->l('Virtual URI').'</label>
 				<div class="margin-form">
 					<input type="text" name="virtual_uri" id="virtual_uri" value="'.$this->getFieldValue($obj, 'virtual_uri').'" />
 					<p>'.$this->l('This virtual folder must not exist on your server and is used to associate an URI to a shop.').'<br /><b>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</b></p>
 				</div>';
-		}
 		echo '	<label>'.$this->l('Your final URL will be').'</label>
 				<div class="margin-form">
-					<input type="text" readonly="readonly" id="final_url" style="width: 400px" value="'.$obj->getURL().'" /> 
+					<input type="text" readonly="readonly" id="final_url" style="width: 400px" /> 
 				</div>
 				<label for="id_shop">'.$this->l('Shop').'</label>
 				<div class="margin-form">
-					<select name="id_shop" id="id_shop">';
+					<select name="id_shop" id="id_shop" onchange="checkMainUrlInfo(this.value)">';
 		foreach (Shop::getTree() AS $gID => $gData)
 		{
 			echo '<optgroup label="'.$gData['name'].'">';
@@ -153,7 +206,9 @@ EOF;
 					<label class="t" for="main_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 					<input type="radio" name="main" id="main_off" value="0" '.(!$this->getFieldValue($obj, 'main') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="main_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('Set this url as main, all urls set to this shop will be redirected to this url.').'</p>
+					<p>'.$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url (you can only have one main url per shop).').'</p>
+					<p id="mainUrlInfo">'.$this->l('Since the selected shop has no main url, you have to set this url as main').'</p>
+					<p id="mainUrlInfoExplain">'.$this->l('The selected shop has already a main url, if you set this one as main url, the older one will be set as normal url').'</p>
 				</div>
 				<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">

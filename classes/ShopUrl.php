@@ -49,13 +49,13 @@ class ShopUrlCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
-		
+
 		$this->physical_uri = trim($this->physical_uri, '/');
 		if ($this->physical_uri)
 			$this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
 		else
 			$this->physical_uri = '/';
-			
+
 		$this->virtual_uri = trim($this->virtual_uri, '/');
 		if ($this->virtual_uri)
 			$this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
@@ -90,8 +90,10 @@ class ShopUrlCore extends ObjectModel
 		
 	public function setMain()
 	{
-		$res = Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'shop_url SET main=0 WHERE id_shop = '.(int)$this->id_shop);
-		$res &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'shop_url SET main=1 WHERE id_shop_url = '.(int)$this->id);
+		$res = Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 0), 'UPDATE', 'id_shop = '.(int)$this->id_shop);
+		$res &= Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 1), 'UPDATE', 'id_shop_url = '.(int)$this->id);
+		$this->main = true;
+
 		return $res;
 	}
 		
@@ -121,7 +123,7 @@ class ShopUrlCore extends ObjectModel
 		if (!self::$main_domain)
 			self::$main_domain = Db::getInstance()->getValue('SELECT domain
 															FROM '._DB_PREFIX_.'shop_url
-															WHERE main=1 AND id_shop = '.Context::getContext()->shop->getID());
+															WHERE main=1 AND id_shop = '.Context::getContext()->shop->getID(true));
 		return self::$main_domain;
 	}
 	
