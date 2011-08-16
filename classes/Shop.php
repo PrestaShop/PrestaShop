@@ -138,7 +138,7 @@ class ShopCore extends ObjectModel
 						AND su.main = 1';
 			if (!$row = Db::getInstance()->getRow($sql))
 				return ;
-	
+
 			$this->theme_name = $row['name'];
 			$this->physical_uri = $row['physical_uri'];
 			$this->virtual_uri = $row['virtual_uri'];
@@ -218,7 +218,7 @@ class ShopCore extends ObjectModel
 						AND s.active = 1
 						AND s.deleted = 0
 					ORDER BY LENGTH(uri) DESC';
-	
+
 			$id_shop = '';
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
@@ -233,8 +233,17 @@ class ShopCore extends ObjectModel
 
 		// Get instance of found shop
 		$shop = new Shop($id_shop);
-		if (!Validate::isLoadedObject($shop))
-			$shop = new Shop(1);
+		if (!Validate::isLoadedObject($shop) || !$shop->active)
+		{
+			// No shop found ... too bad, let's redirect to default shop
+			$defaultShop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			if (!$defaultShop)
+				// Hmm there is something really bad in your Prestashop !
+				die('Shop not found');
+			$url = 'http://'.$defaultShop->domain.$defaultShop->getBaseURI().ltrim($_SERVER['SCRIPT_NAME'], '/').'?'.$_SERVER['QUERY_STRING'];
+			header('location: '.$url);
+			exit;
+		}
 		return $shop;
 	}
 
