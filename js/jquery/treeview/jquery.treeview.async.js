@@ -19,14 +19,14 @@ function load(settings, root, child, container) {
 	function createNode(parent) {
 		var id_category = this.id_category;
 		var checked = false;
-		$('input[name="'+inputName+'[]"][type=hidden]').each( function () {
+		$('input[name="'+inputName+'"][type=hidden]').each( function () {
 			if ($(this).attr('value') == id_category)
 			{
 				checked = true;
 				$(this).remove();
 			}
 		});
-		var current = $("<li/>").attr("id", this.id_category || "").html(" <input type=\"checkbox\" value=\""+this.id_category+"\"/ name=\""+inputName+"[]\" "+(checked ? 'checked' : '')+" onclick=\"clickOnCategoryBox($(this));\"/> <span class=\"category_label\">" + this.name +"</span> <span class=\"category_level\" style=\"display: none;\">" + this.level_depth +"</span> <span class=\"nb_sub_cat_selected\" style=\"font-weight: bold;"+(this.nbSelectedSubCat == 0 ? 'display: none;' : '')+"\">(<span class=\"nb_sub_cat_selected_value\">"+this.nbSelectedSubCat+"</span> "+selectedLabel+")</span>").appendTo(parent);
+		var current = $("<li/>").attr("id", this.id_category || "").html(" <input type=\""+(!use_radio ? 'checkbox' : 'radio')+"\" value=\""+this.id_category+"\"/ name=\""+inputName+"\" "+(checked ? 'checked' : '')+" onclick=\"clickOnCategoryBox($(this));\"/> <span class=\"category_label\">" + this.name +"</span> <span class=\"category_level\" style=\"display: none;\">" + this.level_depth +"</span> <span class=\"nb_sub_cat_selected\" style=\"font-weight: bold;"+(this.nbSelectedSubCat == 0 ? 'display: none;' : '')+"\">(<span class=\"nb_sub_cat_selected_value\">"+this.nbSelectedSubCat+"</span> "+selectedLabel+")</span>").appendTo(parent);
 		if (this.classes) {
 			current.children("span").addClass(this.classes);
 		}

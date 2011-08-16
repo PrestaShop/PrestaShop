@@ -214,13 +214,16 @@ class AdminCategories extends AdminTab
 					<label class="t" for="active_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>
 				<label>'.$this->l('Parent category:').' </label>
-				<div class="margin-form">
-					<select name="id_parent">';
-		$categories = Category::getCategories((int)$this->context->language->id, false);
-		Category::recurseCategory($categories, $categories[0][1], 1, ($obj->id ? $this->getFieldValue($obj, 'id_parent') : $id_category));
-		echo '
-					</select>
-				</div>
+				<div class="margin-form">';
+				// Translations are not automatic for the moment ;)
+				$trads = array(
+					 'Home' => $this->l('Home'), 
+					 'selected' => $this->l('selected'), 
+					 'Collapse All' => $this->l('Collapse All'), 
+					 'Expand All' => $this->l('Expand All')
+				);
+				echo Helper::renderAdminCategorieTree($trads, array(isset($obj->id_parent) ? $obj->id_parent : 1), 'id_parent', true);
+				echo '</div>
 				<label>'.$this->l('Description:').' </label>
 				<div class="margin-form translatable">';
 		foreach ($this->_languages AS $language)

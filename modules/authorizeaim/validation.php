@@ -42,9 +42,11 @@ foreach ($_POST AS $key => $value)
 		$postString .= $key.'='.urlencode($value).'&';
 $postString .= 'x_exp_date='.str_pad($_POST["x_exp_date_m"], 2, "0",STR_PAD_LEFT).$_POST["x_exp_date_y"];
 
+if (Tools::getValue('x_test_request'))
+	$postString .= 'Test_Mode=1';
+
 /* Do the CURL request ro Authorize.net */
-$request = curl_init(
-Tools::getValue('x_test_request') ? 'https://test.authorize.net/gateway/transact.dll' : 'https://secure.authorize.net/gateway/transact.dll');
+$request = curl_init('https://secure.authorize.net/gateway/transact.dll');
 curl_setopt($request, CURLOPT_HEADER, 0);
 curl_setopt($request, CURLOPT_RETURNTRANSFER, 1); 
 curl_setopt($request, CURLOPT_POSTFIELDS, $postString);

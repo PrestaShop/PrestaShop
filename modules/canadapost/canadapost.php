@@ -1363,7 +1363,7 @@ class CanadaPost extends CarrierModule
 					'width' => ($product['width'] ? $product['width'] : 1),
 					'height' => ($product['height'] ? $product['height'] : 1),
 					'depth' => ($product['depth'] ? $product['depth'] : 1),
-					'weight' => ($product['weight'] ? $product['weight'] : 1),
+					'weight' => ($product['weight'] > 0.1 ? $product['weight'] : 0.1),
 					'quantity' => $product['quantity'],
 					'id_product' => $product['id_product'],
 				);

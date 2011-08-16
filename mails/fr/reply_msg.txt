@@ -1,0 +1,4 @@
+{reply}
+
+Attention, vous ne devez pas répondre à ce message en utilisant votre logiciel de messagerie, nous ne recevrons pas votre message.
+Pour répondre, merci d'utiliser exclusivement le lien suivant : {link}

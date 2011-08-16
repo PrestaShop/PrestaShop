@@ -50,7 +50,8 @@ class AdminTranslations extends AdminTab
 	{
 		parent::__construct();
 		self::$tpl_regexp = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( mod=\'.+\')?( js=1)?\}/U';
-		self::$php_regexp = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, \'(.+)\')?(, (.+))?\)/U';
+		// added ? after spaces because some peoples forget them. see PSCFI-2501
+		self::$php_regexp = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 	}
 	
 	/**

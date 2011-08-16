@@ -28,4 +28,4 @@ include(dirname(__FILE__). '/../../config/config.inc.php');
 include(dirname(__FILE__). '/../../init.php');
 include(dirname(__FILE__). '/vatnumber.php');
 
-echo VatNumber::isApplicable($_GET['id_country']);
+echo VatNumber::isApplicable(Tools::getValue('id_country'));

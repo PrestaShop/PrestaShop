@@ -549,7 +549,7 @@ class ProductCore extends ObjectModel
 				if ($die) die (Tools::displayError().' ('.get_class($this).'->description: length > '.$limit.' for language '.$k.')');
 				return $errorReturn ? get_class($this).'->'.Tools::displayError('description: length >').' '.$limit.' '.Tools::displayError('for language').' '.$k : false;
 			}
-		return $this->validateFieldsLang($die, $errorReturn);
+		return parent::validateFieldsLang($die, $errorReturn);
 	}
 
 	public function delete()
@@ -880,13 +880,14 @@ class ProductCore extends ObjectModel
 
 		$price = str_replace(',', '.', $price);
 		$weight = str_replace(',', '.', $weight);
+
 		Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute', array(
-			'id_product' => $this->id,
+			'id_product' => (int)$this->id,
 			'price' => (float)$price,
 			'ecotax' => (float)$ecotax,
-			'quantity' => (int)$quantity,
-			'weight' => $weight ? (float)$weight : 0,
-			'unit_price_impact' => $unit_impact ? (float)$unit_impact : 0,
+			'quantity' => 0,
+			'weight' => ($weight ? (float)$weight : 0),
+			'unit_price_impact' => ($unit_impact ? (float)$unit_impact : 0),
 			'reference' => pSQL($reference),
 			'supplier_reference' => pSQL($supplier_reference),
 			'location' => pSQL($location),
@@ -894,12 +895,16 @@ class ProductCore extends ObjectModel
 			'upc' => pSQL($upc),
 			'default_on' => (int)$default
 		), 'INSERT');
+
 		$id_product_attribute = Db::getInstance()->Insert_ID();
 
 		$this->setStock($quantity, $id_product_attribute);
 		Product::updateDefaultAttribute($this->id);
 		if (!$id_product_attribute)
 			return false;
+
+		$this->addStockMvt((int)$quantity, 1, $id_product_attribute);
+
 		if (empty($id_images))
 			return (int)($id_product_attribute);
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`) VALUES ';
@@ -2432,23 +2437,18 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = 'SELECT p.`id_product`, pl.`name`, pl.`link_rewrite`, p.`weight`, p.`active`, p.`ecotax`, i.`id_image`, p.`reference`, p.`cache_is_pack`,
-					il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name
+		$sql = 'SELECT p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.quantity
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
 				'.$context->shop->sqlAsso('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		   			AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-		   			AND tr.`id_state` = 0)
-	    		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`) AND i.`cover` = 1
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.`id_product` = p.`id_product`
+				'.Product::sqlStock('p', 'pa', false, $context->shop).'
 				WHERE pl.`name` LIKE \'%'.pSQL($query).'%\'
 					OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 					OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
+					OR pa.`reference` LIKE \'%'.pSQL($query).'%\'
 				GROUP BY `id_product`
 				ORDER BY pl.`name` ASC';
 		$result = Db::getInstance()->ExecuteS($sql);
@@ -2460,7 +2460,6 @@ class ProductCore extends ObjectModel
 		foreach ($result AS $row)
 		{
 			$row['price'] = Product::getPriceStatic($row['id_product'], true, NULL, 2);
-			$row['quantity'] = Product::getQuantity($row['id_product'], NULL, $row['cache_is_pack']);
 			$resultsArray[] = $row;
 		}
 		return $resultsArray;

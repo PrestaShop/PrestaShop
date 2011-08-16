@@ -47,7 +47,7 @@ class Treepodia extends Module
 	{
 	 	$this->name = 'treepodia';
 	 	$this->tab = 'front_office_features';
-	 	$this->version = '1.5';
+	 	$this->version = '1.6';
 		$this->displayName = 'Treepodia';
 
 	 	parent::__construct();
@@ -199,9 +199,18 @@ XML;
 			$price->addChild('retail-price-with-tax', Product::getPriceStatic((int)$sqlProduct['id_product'], true, NULL, 6, NULL, false, false));
 			$price->addChild('retail-price-without-tax', Product::getPriceStatic((int)$sqlProduct['id_product'], false, NULL, 6, NULL, false, false));
 			$price->addChild('final-retail-price-with-tax', Product::getPriceStatic((int)$sqlProduct['id_product'], true));
+			if (version_compare(_PS_VERSION_, '1.4') < 0)
+			{
+				$price->addChild('final-retail-price-without-tax', Product::getPriceStatic(intval($sqlProduct['id_product']), false));
+				$price->addChild('reduction_percent', floatval($sqlProduct['reduction_percent']));
+				$price->addChild('reduction_price', floatval($sqlProduct['reduction_price']));
+			}
+			else
+			{
 			$price->addChild('final-retail-price-without-tax', Product::getPriceStatic((int)$sqlProduct['id_product'], false, NULL, 6, NULL, false, true, 1, false, NULL, NULL, NULL, $specificPrice));
 			$price->addChild('reduction_percent', ($specificPrice AND $specificPrice['reduction_type'] == 'percentage') ? $specificPrice['reduction'] * 100 : 0.00);
 			$price->addChild('reduction_price', ($specificPrice AND $specificPrice['reduction_type'] == 'amount') ? (float)$specificPrice['reduction'] : 0.00);
+			}
 			$price->addChild('display-on-sale', (int)$sqlProduct['on_sale']);
 
 			$product->addChild('downloadable', $sqlProduct['id_product_download'] >= 1 ? 1 : 0);
@@ -264,14 +273,30 @@ XML;
 				}
 			}
 
-			$quantityDiscounts = SpecificPrice::getQuantityDiscounts((int)$sqlProduct['id_product'], $this->context->shop->getGroupID(), 0, 0, 0);
-
-			foreach ($quantityDiscounts AS $quantityDiscount)
+			if (version_compare(_PS_VERSION_, '1.4') < 0)
 			{
-				$discount = $product->addChild('discount');
-				$discount->addChild('discount-quantity', (int)($quantityDiscount['from_quantity']));
-				$discount->addChild('discount-value', ((float)($quantityDiscount['price']) AND $quantityDiscount['reduction_type'] == 'amount') ? (float)($quantityDiscount['price']) : $quantityDiscount['reduction'] * 100);
-				$discount->addChild('discount-type', ($quantityDiscount['reduction_type'] == 'amount' ? $defaultCurrencyIsoCode : '%'));
+				$quantityDiscounts = Db::getInstance()->ExecuteS('
+				SELECT dq.quantity, dq.value, dq.id_discount_type
+				FROM '._DB_PREFIX_.'discount_quantity dq
+				WHERE dq.id_product = '.intval($sqlProduct['id_product']));
+				foreach ($quantityDiscounts AS $quantityDiscount)
+				{
+					$discount = $product->addChild('discount');
+					$discount->addChild('discount-quantity', intval($quantityDiscount['quantity']));
+					$discount->addChild('discount-value', floatval($quantityDiscount['value']));
+					$discount->addChild('discount-type', ($quantityDiscount['id_discount_type'] == 1 ? $defaultCurrencyIsoCode : '%'));
+				}
+			}
+			else
+			{
+				$quantityDiscounts = SpecificPrice::getQuantityDiscounts((int)$sqlProduct['id_product'], $this->context->shop->getGroupID(), 0, 0, 0);
+				foreach ($quantityDiscounts AS $quantityDiscount)
+				{
+					$discount = $product->addChild('discount');
+					$discount->addChild('discount-quantity', (int)($quantityDiscount['from_quantity']));
+					$discount->addChild('discount-value', ((float)($quantityDiscount['price']) AND $quantityDiscount['reduction_type'] == 'amount') ? (float)($quantityDiscount['price']) : $quantityDiscount['reduction'] * 100);
+					$discount->addChild('discount-type', ($quantityDiscount['reduction_type'] == 'amount' ? $defaultCurrencyIsoCode : '%'));
+				}
 			}
 
 			$categories = Db::getInstance()->ExecuteS('
