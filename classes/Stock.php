@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class Stock extends ObjectModel
+class StockCore extends ObjectModel
 {
 	public $id_product;
 	public $id_product_attribute;

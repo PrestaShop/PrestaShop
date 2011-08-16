@@ -37,9 +37,11 @@ class ShopCore extends ObjectModel
 	public	$id_category;
 	public	$deleted;
 
-	protected $theme_name;
-	protected $physical_uri;
-	protected $virtual_uri;
+	public $theme_name;
+	public $physical_uri;
+	public $virtual_uri;
+	public $domain;
+	public $domain_ssl;
 
 	/**
 	 * @var GroupShop
@@ -119,6 +121,31 @@ class ShopCore extends ObjectModel
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
 	}
+	
+	public function __construct($id = NULL, $id_lang = NULL, $id_shop = NULL)
+	{
+		parent::__construct($id, $id_lang, $id_shop);
+
+		if ($this->id)
+		{
+			$sql = 'SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.name
+					FROM '._DB_PREFIX_.'shop s
+					LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
+					LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
+					WHERE s.id_shop = '.$this->id.'
+						AND s.active = 1
+						AND s.deleted = 0
+						AND su.main = 1';
+			if (!$row = Db::getInstance()->getRow($sql))
+				return ;
+	
+			$this->theme_name = $row['name'];
+			$this->physical_uri = $row['physical_uri'];
+			$this->virtual_uri = $row['virtual_uri'];
+			$this->domain = $row['domain'];
+			$this->domain_ssl = $row['domain_ssl'];
+		}
+	}
 
 	public function add($autodate = true, $nullValues = false)
 	{
@@ -182,7 +209,7 @@ class ShopCore extends ObjectModel
 				$excluded_uris[] = $directory;
 
 		// Find current shop from URL
-		if (!$id_shop = Tools::getValue('id_shop'))
+		if (!$id_shop = Tools::getValue('id_shop') && !defined('PS_ADMIN_DIR'))
 		{
 			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
 					FROM '._DB_PREFIX_.'shop_url su
@@ -212,38 +239,12 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * Load some additional data of current shop (theme name, shop uri)
-	 *
-	 * @return bool
-	 */
-	protected function loadShopInfos()
-	{
-		$sql = 'SELECT su.physical_uri, su.virtual_uri, t.name
-				FROM '._DB_PREFIX_.'shop s
-				LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-				LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
-				WHERE s.id_shop = '.$this->id.'
-					AND s.active = 1
-					AND s.deleted = 0
-					AND su.main = 1';
-		if (!$row = Db::getInstance()->getRow($sql))
-			return false;
-
-		$this->theme_name = $row['name'];
-		$this->physical_uri = $row['physical_uri'];
-		$this->virtual_uri = $row['virtual_uri'];
-		return true;
-	}
-
-	/**
 	 * Get shop theme name
 	 *
 	 * @return string
 	 */
 	public function getTheme()
 	{
-		if (!$this->theme_name)
-			$this->loadShopInfos();
 		return $this->theme_name;
 	}
 
@@ -255,8 +256,6 @@ class ShopCore extends ObjectModel
 	 */
 	public function getBaseURI()
 	{
-		if (!$this->theme_name)
-			$this->loadShopInfos();
 		return $this->physical_uri.$this->virtual_uri;
 	}
 

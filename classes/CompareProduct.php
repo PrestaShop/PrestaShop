@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CompareProduct extends ObjectModel
+class CompareProductCore extends ObjectModel
 {
 	public		$id;
 	
