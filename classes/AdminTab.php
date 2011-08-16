@@ -197,19 +197,20 @@ abstract class AdminTabCore
 		
 		$this->id = Tab::getCurrentTabId();
 		$this->_conf = array(
-		1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
-		3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
-		5 => $this->l('Status update successful'), 6 => $this->l('Settings update successful'),
-		7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfully'),
-		9 => $this->l('Thumbnails successfully regenerated'), 10 => $this->l('Message sent to the customer'),
-		11 => $this->l('Comment added'), 12 => $this->l('Module installed successfully'),
-		13 => $this->l('Module uninstalled successfully'), 14 => $this->l('Language successfully copied'),
-		15 => $this->l('Translations successfully added'), 16 => $this->l('Module transplanted successfully to hook'),
-		17 => $this->l('Module removed successfully from hook'), 18 => $this->l('Upload successful'),
-		19 => $this->l('Duplication completed successfully'), 20 => $this->l('Translation added successfully but the language has not been created'),
-		21 => $this->l('Module reset successfully'), 22 => $this->l('Module deleted successfully'),
-		23 => $this->l('Localization pack imported successfully'), 24 => $this->l('Refund Successful'),
-		25 => $this->l('Images successfully moved'));
+			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
+			3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
+			5 => $this->l('Status update successful'), 6 => $this->l('Settings update successful'),
+			7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfully'),
+			9 => $this->l('Thumbnails successfully regenerated'), 10 => $this->l('Message sent to the customer'),
+			11 => $this->l('Comment added'), 12 => $this->l('Module installed successfully'),
+			13 => $this->l('Module uninstalled successfully'), 14 => $this->l('Language successfully copied'),
+			15 => $this->l('Translations successfully added'), 16 => $this->l('Module transplanted successfully to hook'),
+			17 => $this->l('Module removed successfully from hook'), 18 => $this->l('Upload successful'),
+			19 => $this->l('Duplication completed successfully'), 20 => $this->l('Translation added successfully but the language has not been created'),
+			21 => $this->l('Module reset successfully'), 22 => $this->l('Module deleted successfully'),
+			23 => $this->l('Localization pack imported successfully'), 24 => $this->l('Refund Successful'),
+			25 => $this->l('Images successfully moved'),
+		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
 		$className = get_class($this);

@@ -146,6 +146,10 @@ class ConfigurationCore extends ObjectModel
 		$langID = (int)$langID;
 		if (!isset(self::$_CONF[$langID]))
 			$langID = 0;
+			
+		// If conf if not initialized, try manual query
+		if (!self::$_CONF)
+			return Db::getInstance()->getValue('SELECT `value` FROM '._DB_PREFIX_.'configuration WHERE `name` = \''.pSQL($key).'\'');
 
 		if ($shopID && Configuration::hasKey($key, $langID, null, $shopID))
 			return self::$_CONF[$langID]['shop'][$shopID][$key];

@@ -60,38 +60,53 @@ class AdminShop extends AdminTab
 		);
 		parent::__construct();
 	}
-	
+
 	public function afterAdd($newShop)
 	{
 		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
 			$newShop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
 	}
-	
+
 	public function postProcess()
 	{
-		if (Tools::isSubmit('delete'.$this->table) OR ((Tools::isSubmit('status') OR Tools::isSubmit('status'.$this->table)) && $this->loadObject()->active))
+		if ((Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table) || (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue($this->identifier) && !Tools::getValue('active'))) && $this->loadObject() && $this->loadObject()->active)
 		{
-			if (Shop::getTotalShops() == 1)
-			{
-				$this->_errors[] = Tools::displayError('You cannot delete or disable the last shop.');
-				return false;
-			}
+			if (Tools::getValue('id_shop') == Configuration::get('PS_SHOP_DEFAULT'))
+				$this->_errors[] = Tools::displayError('You cannot disable the default shop.');
+			else if (Shop::getTotalShops() == 1)
+				$this->_errors[] = Tools::displayError('You cannot disable the last shop.');
 		}
+		
+		if ($this->_errors)
+			return false;
 		return parent::postProcess();
 	}
-	
+
+	public function displayConf()
+	{
+		if ($conf = Tools::getValue('conf'))
+		{
+			if ($conf == 3)
+				echo '
+				<div class="conf">
+					<img src="../img/admin/ok2.png" alt="" /> <a href="index.php?tab=AdminShopUrl&addshop_url&token='.Tools::getAdminToken('AdminShopUrl'.Tab::getIdFromClassName('AdminShopUrl').(int)$this->context->employee->id).'">'.$this->l('Your store has been successfully created. To make your store accessible on front office, you must create a URL for your store by clicking on this text.').'</a>
+				</div>';
+			else
+				parent::displayConf();
+		}
+	}
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm($isMainTab);
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 
 		$disabled = '';
 		if (Shop::getTotalShops() > 1 && $obj->id)
 			$disabled = 'disabled="disabled"';
-			
-			
+
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
@@ -134,7 +149,7 @@ class AdminShop extends AdminTab
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Enable or disable shop').'</p>
 				</div>';
-		
+
 		// Theme list
 		echo '<label for="id_theme">'.$this->l('Theme').'</label>
 				<div class="margin-form">';
@@ -148,7 +163,6 @@ class AdminShop extends AdminTab
 			echo '</div>';
 		}
 		echo	'</div><div class="clear"></div>';
-		
 
 		echo '<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
@@ -183,7 +197,7 @@ class AdminShop extends AdminTab
 				'store' => $this->l('Stores'),
 				'zone' => $this->l('Zones'),
 			);
-			
+
 			echo '<fieldset><legend>'.$this->l('Import data from another shop').'</legend>';
 			echo '<label>'.$this->l('Import data from another shop').'</label>';
 			echo '<div class="margin-form">';
@@ -211,7 +225,7 @@ class AdminShop extends AdminTab
 
 		echo '</form>';
 	}
-	
+
 	protected function displayAddButton()
 	{
 		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new shop').'</a><br /><br />';
