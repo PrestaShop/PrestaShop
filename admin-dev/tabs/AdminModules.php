@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,24 +36,24 @@ class AdminModules extends AdminTab
 		'configure' => 'getContent',
 		'delete' => 'delete'
 	);
-	
+
 	private $listTabModules;
 	private $listPartnerModules = array();
 	private $listNativeModules = array();
 	private $_moduleCacheFile;
 	static private $MAX_DISP_AUTHOR = 20;		// maximum length to display
-	
+
 
 	function __construct()
 	{
 		parent::__construct();
-		
+
 		$this->_moduleCacheFile = _PS_ROOT_DIR_.'/config/modules_list.xml';
-		
+
 		// refresh modules_list.xml every week
-		if (!$this->isFresh()) 
+		if (!$this->isFresh())
 			$this->refresh();
-		
+
 		$this->listTabModules = array(
 			'administration' => $this->l('Administration'), 'advertising_marketing' => $this->l('Advertising & Marketing'),
 			 'analytics_stats' => $this->l('Analytics & Stats'), 'billing_invoicing' => $this->l('Billing & Invoicing'), 'checkout' => $this->l('Checkout'),
@@ -64,7 +64,7 @@ class AdminModules extends AdminTab
 			 'slideshows' => $this->l('Slideshows'), 'smart_shopping' => $this->l('Smart Shopping'), 'market_place' => $this->l('Market Place'), 'social_networks' => $this->l('Social Networks'),
 			 'others'=> $this->l('Other Modules')
 		 );
-		 
+
 		 $xmlModules = @simplexml_load_file($this->_moduleCacheFile);
 
 		 foreach($xmlModules->children() as $xmlModule)
@@ -79,7 +79,7 @@ class AdminModules extends AdminTab
 						if ($key == 'name')
 							$this->listPartnerModules[] = (string)$value;
 	}
-	
+
 	public function postProcess()
 	{
 		$id_employee = (int)$this->context->employee->id;
@@ -89,19 +89,19 @@ class AdminModules extends AdminTab
 			'PS_SHOW_INSTALLED_MODULES_'.$id_employee,
 			'PS_SHOW_ENABLED_MODULES_'.$id_employee
 		));
-		
+
 		if (Tools::isSubmit('desactive') && isset($filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee] != 'enabledDisabled')
 			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee], 'disabled');
-			
+
 		if (Tools::isSubmit('active') && isset($filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee] != 'enabledDisabled')
 			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee], 'enabled');
-			
+
 		if (Tools::isSubmit('uninstall') && isset($filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee] != 'installedUninstalled')
 			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], 'unistalled', $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]);
-			
+
 		if (Tools::isSubmit('install') && isset($filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee] != 'installedUninstalled')
 			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], 'installed', $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]);
-		
+
 		if (Tools::isSubmit('filterModules'))
 		{
 			$this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
@@ -112,7 +112,7 @@ class AdminModules extends AdminTab
 			$this->resetFilterModules();
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
-		
+
 		if (Tools::isSubmit('active'))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
@@ -211,7 +211,7 @@ class AdminModules extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		
+
 		// Enable / disable module
 		if (Tools::getValue('enable') !== false)
 		{
@@ -237,7 +237,7 @@ class AdminModules extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		
+
 		if (Tools::isSubmit('deleteModule'))
 		{
 		 	if ($this->tabAccess['delete'] === '1')
@@ -293,7 +293,7 @@ class AdminModules extends AdminTab
 								$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
 								$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
 								$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
-								
+
 								$toolbar = '
 								<table class="table" cellpadding="0" cellspacing="0" style="margin:auto;text-align:center">
 									<tr>
@@ -306,7 +306,7 @@ class AdminModules extends AdminTab
 								$toolbar .= '
 										</th>
 									</tr>';
-	
+
 								// Display checkbox in toolbar if multishop
 								if (Shop::isMultiShopActivated())
 								{
@@ -323,9 +323,9 @@ class AdminModules extends AdminTab
 									$toolbar .= '</th>
 									</tr>';
 								}
-								
+
 								$toolbar .= '</table>';
-								
+
 								// Display configure page
 								echo $toolbar.'
 								<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>
@@ -369,12 +369,12 @@ class AdminModules extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
 		}
-		
+
 		@unlink($file);
 		if ($success)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
-	
+
 	public function display()
 	{
 		if (!isset($_GET['configure']) AND !isset($_GET['delete']) OR sizeof($this->_errors) )
@@ -410,7 +410,7 @@ class AdminModules extends AdminTab
 					}
 				}
 				document.location.href=\''.self::$currentIndex.'&token='.$this->token.'&\'+action+\'=\'+module_list.substring(1, module_list.length);
-			}	
+			}
 			$(\'document\').ready( function() {
 				$(\'input[name="filtername"]\').autocomplete(moduleList, {
 					minChars: 0,
@@ -428,7 +428,7 @@ class AdminModules extends AdminTab
 				 $(\'#filternameForm\').submit();
 				});
 			});
-			
+
 		</script>';
 	}
 	public static function sortModule($a, $b)
@@ -438,7 +438,7 @@ class AdminModules extends AdminTab
 	    }
 	    return (sizeof($a) < sizeof($b)) ? -1 : 1;
 	}
-	
+
 
 	/**
 	 * Used for retreiving author name from submited field authorModules[name]
@@ -458,7 +458,7 @@ class AdminModules extends AdminTab
 	/**
 	 * Used for building option group
 	 * @param Array $authors contains modules authors
-	 * @param String $fieldName name of optiongroup 
+	 * @param String $fieldName name of optiongroup
 	 * @return String built comp
 	 */
 
@@ -489,10 +489,10 @@ class AdminModules extends AdminTab
 
 	public function displayList()
 	{
-		$this->context = Context::getContext();	
-		$modulesAuthors = array();	
+		$this->context = Context::getContext();
+		$modulesAuthors = array();
 		$autocompleteList = 'var moduleList = [';
-		
+
 		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id);
 		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id);
 		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id);
@@ -500,7 +500,7 @@ class AdminModules extends AdminTab
 
 		$nameCountryDefault = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
 		$isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-		
+
 		$serialModules = '';
 		$modules = Module::getModulesOnDisk(true);
 
@@ -515,15 +515,15 @@ class AdminModules extends AdminTab
 		}
 
 		$serialModules = urlencode($serialModules);
-		
+
 		$filterName = Tools::getValue('filtername');
 		if (!empty($filterName))
 		{
 			echo '
 			<script type="text/javascript">
-				$(document).ready(function() {	
+				$(document).ready(function() {
 					$(\'#all_open\').hide();
-					$(\'#all_close\').show();			 
+					$(\'#all_close\').show();
 					$(\'.tab_module_content\').each(function(){
 						$(this).slideDown();
 						$(\'.header_module_img\').each(function(){
@@ -537,12 +537,13 @@ class AdminModules extends AdminTab
 		// Filter module list
 		foreach ($modules as $key => $module)
 		{
+			// beware $module could be an instance of Module or stdClass, that explain the static call
 			if ($module->id AND !Module::getPermissionStatic($module->id, 'view') AND !Module::getPermissionStatic($module->id, 'configure'))
 			{
 				unset($modules[$key]);
 				continue;
 			}
-			
+
 			switch ($showTypeModules)
 			{
 				case 'nativeModules':
@@ -581,7 +582,7 @@ class AdminModules extends AdminTab
 				break;
 
 			}
-					
+
 			switch ($showInstalledModules)
 			{
 				case 'installed':
@@ -599,7 +600,7 @@ class AdminModules extends AdminTab
 					}
 				break;
 			}
-			
+
 			switch ($showEnabledModules)
 			{
 				case 'enabled':
@@ -616,21 +617,21 @@ class AdminModules extends AdminTab
 						continue;
 					}
 				break;
-			}		
-			
+			}
+
 			if ($showCountryModules AND (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($isoCountryDefault), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($isoCountryDefault) != strval($module->limited_countries)))))
 			{
 				unset($modules[$key]);
 				continue;
 			}
-			
+
 			if (!empty($filterName) AND (stristr($module->name, $filterName) === false AND stristr($module->displayName, $filterName) === false AND stristr($module->description, $filterName) === false))
 			{
 				unset($modules[$key]);
 				continue;
 			}
 		}
-		
+
 		foreach($modules as $module)
 			$autocompleteList .= Tools::jsonEncode(array(
 				'displayName' => (string)$module->displayName,
@@ -638,13 +639,13 @@ class AdminModules extends AdminTab
 				'name' => (string)$module->name,
 				'author' => (string)$module->author
 			)).', ';
-		
+
 		$autocompleteList = rtrim($autocompleteList, ' ,').'];';
 		// Display CSS Fancy Box
 		echo '<link href="'._PS_CSS_DIR_.'jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />';
 		echo '<script type="text/javascript">'.$autocompleteList.'</script>';
 		$this->displayJavascript();
-		
+
 		echo '
 		<span onclick="$(\'#module_install\').slideToggle()" style="cursor:pointer"><img src="../img/admin/add.gif" alt="'.$this->l('Add a new module').'" class="middle" />
 			'.$this->l('Add a module from my computer').'
@@ -701,7 +702,7 @@ class AdminModules extends AdminTab
 		foreach ($modules AS $module)
 			$orderModule[(isset($module->tab) AND !empty($module->tab) AND array_key_exists(strval($module->tab), $this->listTabModules)) ? strval($module->tab) : 'others' ][] = $module;
 		uasort($orderModule,array('AdminModules', 'sortModule'));
-		
+
 		$concatWarning = array();
 		foreach ($orderModule AS $tabModule)
 			foreach ($tabModule AS $module)
@@ -771,12 +772,12 @@ class AdminModules extends AdminTab
 				$goto = 'others';
 		else
 			$goto = false;
-			
+
 		echo '
   		<script src="'.__PS_BASE_URI__.'js/jquery/jquery.scrollTo-1.4.2-min.js"></script>
 		<script>
 		 $(document).ready(function() {
-		 
+
 		 $(\'.header_module_toggle, .module_toggle_all\').unbind(\'click\').click(function(){
 		 	var id = $(this).attr(\'id\');
 			if (id == \'all_open\')
@@ -803,14 +804,14 @@ class AdminModules extends AdminTab
 		 			$(\'#\'+id+\'_img\').attr(\'src\', \'../img/admin/less.png\');
 		 		else
 		 			$(\'#\'+id+\'_img\').attr(\'src\', \'../img/admin/more.png\');
-		 		
+
 		 		$(\'#\'+$(this).attr(\'id\')+\'_content\').slideToggle();
 		 	}
 		 	return false;
 		 });
 		'.(!$goto ? '': 'if ($(\'#'.$goto.'_content\').length > 0) $(\'#'.$goto.'_content\').slideToggle( function (){
 		$(\'#'.$goto.'_img\').attr(\'src\', \'../img/admin/less.png\');
-		'.(!$goto ? '' : 'if ($("#modgo_'.Tools::getValue('module_name').'").length > 0) $.scrollTo($("#modgo_'.Tools::getValue('module_name').'"), 300 , 
+		'.(!$goto ? '' : 'if ($("#modgo_'.Tools::getValue('module_name').'").length > 0) $.scrollTo($("#modgo_'.Tools::getValue('module_name').'"), 300 ,
 		{onAfter:function(){
 			$("#modgo_'.Tools::getValue('module_name').'").fadeTo(100, 0, function (){
 				$(this).fadeTo(100, 0, function (){
@@ -823,7 +824,7 @@ class AdminModules extends AdminTab
 					)}
 				});').'
 		});').'
-		
+
 			});
 		 </script>';
 		if (!empty($orderModule))
@@ -837,7 +838,7 @@ class AdminModules extends AdminTab
 					<a class="header_module_toggle" id="'.$tab.'" href="modgo_'.$tab.'" style="margin-left: 5px;">
 						<span style="padding-right:0.5em">
 						<img class="header_module_img" id="'.$tab.'_img" src="../img/admin/more.png" alt="" />
-						</span>'.$this->listTabModules[$tab].'</a> 
+						</span>'.$this->listTabModules[$tab].'</a>
 				</div>
 				<div id="'.$tab.'_content" class="tab_module_content" style="display:none;border:solid 1px #CCC">';
 				/* Display modules for each tab type */
@@ -879,7 +880,7 @@ class AdminModules extends AdminTab
 						onclick="javascript:document.location.href=\''.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'\'">'
 						: '<input type="button" class="button small" name="Uninstall" value="'.$this->l('Uninstall').'"
 						onclick="'.((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'if(confirm(\''.addslashes($module->confirmUninstall).'\')) ').'document.location.href=\''.$href.'\'' : $module->onclickOption('uninstall', $href)).'">').'</td>
-						
+
 					</tr>
 					<tr'.($irow++ % 2 ? ' class="alt_row"' : '').'>
 						<td style="padding-left:50px;padding-bottom:5px;padding-top:5px" colspan="2">'.$this->displayOptions($module).'</td>
@@ -909,13 +910,13 @@ class AdminModules extends AdminTab
 		else
 			echo '<table cellpadding="0" cellspacing="0" class="table" style="width:100%;"><tr><td align="center">'.$this->l('No module found').'</td></tr></table>';
 	}
-	
-	
+
+
 	public function recursiveDeleteOnDisk($dir)
 	{
 		if (strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false)
 			return ;
-		if (is_dir($dir)) 
+		if (is_dir($dir))
 		{
 			$objects = scandir($dir);
 			foreach ($objects as $object)
@@ -930,28 +931,28 @@ class AdminModules extends AdminTab
 			rmdir($dir);
 		}
 	}
-	
+
 	public function displayOptions($module)
 	{
 		$return = '';
 		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.
 			urlencode($module->name).'&tab_module='.$module->tab;
-			
+
 		if ($module->id)
 			$return .= '<a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'" '.((Shop::isMultiShopActivated()) ? 'title="'.htmlspecialchars($module->active ? $this->l('Disable this module') : $this->l('Enable this module for all shops')).'"' : '').'>'.($module->active ? $this->l('Disable') : $this->l('Enable')).'</a>&nbsp;&nbsp;';
 
 		if ($module->id AND $module->active)
 			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Reset').'</a>&nbsp;&nbsp;';
-		
+
 		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isMultiShopActivated()))
 			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Configure').'</a>&nbsp;&nbsp;';
-			
+
 		$hrefDelete = self::$currentIndex.'&deleteModule='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
 		$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?').'\');" href="'.$hrefDelete.'">'.$this->l('Delete').'</a>&nbsp;&nbsp;';
 
 		return $return;
 	}
-	
+
 	public function isFresh($timeout = 604800000)
 	{
 		if (file_exists($this->_moduleCacheFile))
@@ -959,17 +960,17 @@ class AdminModules extends AdminTab
 		else
 			return false;
 	}
-	
+
 	public function refresh()
 	{
 		return file_put_contents($this->_moduleCacheFile, Tools::file_get_contents('http://www.prestashop.com/xml/modules_list.xml'));
 	}
-	
+
 	public function displaySelectedFilter()
 	{
 		$selected_filter = '';
 		$id_employee = (int)$this->context->employee->id;
-		
+
 		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id);
 		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id);
 		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id);
@@ -991,25 +992,23 @@ class AdminModules extends AdminTab
 			$selected_filter = '<div class="hint" style="display:block;background:#DDE9F7 no-repeat 6px 5px url(../img/admin/filter.png);"><b>'.$this->l('Selected filters').' : </b>'.rtrim($selected_filter, ' - ').'</div>';
 		return $selected_filter;
 	}
-	
+
 	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
 	{
-		$this->context = Context::getContext();		
+		$this->context = Context::getContext();
 		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id, $module_type);
 		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id, $country_module_value);
 		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id, $module_install);
 		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id, $module_status);
 	}
-	
+
 	private function resetFilterModules()
 	{
-		$this->context = Context::getContext();		
+		$this->context = Context::getContext();
 		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id, 'allModules');
 		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id, 0);
 		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id, 'installedUninstalled');
 		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id, 'enabledDisabled');
 	}
-	
+
 }
-
-
