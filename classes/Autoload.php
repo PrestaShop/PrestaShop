@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5
+ */
 class Autoload
 {
 	/**
@@ -103,15 +106,13 @@ class Autoload
 				if (isset($this->index[$classname.'Core']))
 					require_once($this->root_dir.$this->index[$classname.'Core']);
 
-				require_once($this->root_dir.$this->index[$classname]);
+				if (isset($this->index[$classname]))
+					require_once($this->root_dir.$this->index[$classname]);
 			}
 		}
 		// Call directly ProductCore, ShopCore class
 		else
 			require_once($this->root_dir.$this->index[$classname]);
-
-		if (!class_exists($classname, false) && !interface_exists($classname, false))
-			throw new Exception('Class not found: '.$classname);
 	}
 
 	/**
