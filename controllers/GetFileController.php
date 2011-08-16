@@ -27,6 +27,13 @@
 
 class getFileControllerCore extends FrontController
 {
+	public function run()
+	{
+		$this->init();
+		$this->preProcess();
+		$this->process();
+	}
+	
 	public function process()
 	{
 		$cookie = $this->context->cookie;

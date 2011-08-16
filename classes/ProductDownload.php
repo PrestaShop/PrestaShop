@@ -100,6 +100,9 @@ class ProductDownloadCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
+		
+		if (!$this->date_expiration)
+			$this->date_expiration = '0000-00-00 00:00:00';
 
 		$fields['id_product'] = (int)($this->id_product);
 		$fields['display_filename'] = pSQL($this->display_filename);
@@ -205,7 +208,7 @@ class ProductDownloadCore extends ObjectModel
 	public function getTextLink($admin=true, $hash=false)
 	{
 		$key = $this->physically_filename . '-' . ($hash ? $hash : 'orderdetail');
-		$link = ($admin) ? './index.php?controller=get-file-admin' : Tools::getHttpHost(true, true).'index.php?controller=get-file';
+		$link = ($admin) ? 'get-file-admin.php?' : Tools::getHttpHost(true, true).'index.php?controller=get-file&';
 		$link .= ($admin) ? 'file='.$this->physically_filename : 'key='.$key;
 		return $link;
 	}
