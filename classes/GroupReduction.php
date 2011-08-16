@@ -199,7 +199,7 @@ class GroupReductionCore extends ObjectModel
 			WHERE pgr.`id_product` = '.(int)$id_product_old
 		);
 		if (!$row)
-			return false;
+			return true;
 		
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
 		$query .= '('.(int)($id_product).', '.(int)($row['id_group']).', '.(float)($row['reduction']).')';

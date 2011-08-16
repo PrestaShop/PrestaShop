@@ -228,6 +228,12 @@ function updateNbSubCategorySelected(category, add)
 	var currentSpan = category.parent().parent().parent().children('.nb_sub_cat_selected');
 	var parentNbSubCategorySelected = currentSpan.children('.nb_sub_cat_selected_value').html();
 
+	if (use_radio)
+	{
+		$('.nb_sub_cat_selected').hide();
+		return false;
+	}
+
 	if (add)
 		var newValue = parseInt(parentNbSubCategorySelected)+1;
 	else

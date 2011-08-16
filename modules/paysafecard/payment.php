@@ -44,7 +44,7 @@ if (Tools::getValue('hash') != md5(Configuration::get($module->prefix.'SALT') + 
 $result = $module->getDispositionState((int)($cart->id));
 $state = Configuration::get('PS_OS_ERROR');
 
-$disposition = Disposition::getByCartId((int)($cart->id));
+$disposition = PSCDisposition::getByCartId((int)($cart->id));
 
 $message = 'Transaction ID #'.$disposition['mtid'].': '.$disposition['amount'].$disposition['currency'].'<br />'. date('Y-m-d').' ';
 if ($result[0] == 0)

@@ -1489,7 +1489,7 @@ class UpsCarrier extends CarrierModule
 				'width' => ($width > 0 ? $width : 7),
 				'height' => ($height > 0 ? $height : 3),
 				'depth' => ($depth > 0 ? $depth : 5),
-				'weight' => ($weight > 0 ? $weight : 0.5),
+				'weight' => ($weight > 0.1 ? $weight : 0.1),
 				'packaging_type' => Configuration::get('UPS_CARRIER_PACKAGING_TYPE'),
 			);
 		}
@@ -1513,7 +1513,7 @@ class UpsCarrier extends CarrierModule
 						'width' => ($product['width'] ? $product['width'] : 7),
 						'height' => ($product['height'] ? $product['height'] : 3),
 						'depth' => ($product['depth'] ? $product['depth'] : 5),
-						'weight' => ($product['weight'] ? $product['weight'] : 0.5),
+						'weight' => ($product['weight'] > 0.1 ? $product['weight'] : 0.1),
 					'packaging_type' => ($config['packaging_type_code'] ? $config['packaging_type_code'] : Configuration::get('UPS_CARRIER_PACKAGING_TYPE')),
 				);
 

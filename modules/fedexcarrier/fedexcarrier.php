@@ -1536,7 +1536,7 @@ class FedexCarrier extends CarrierModule
 					'width' => ($product['width'] ? $product['width'] : 1),
 					'height' => ($product['height'] ? $product['height'] : 1),
 					'depth' => ($product['depth'] ? $product['depth'] : 1),
-					'weight' => ($product['weight'] ? $product['weight'] : 1),
+						'weight' => ($product['weight'] > 0.1 ? $product['weight'] : 0.1),
 					'pickup_type' => (isset($config['pickup_type_code']) ? $config['pickup_type_code'] : Configuration::get('FEDEX_CARRIER_PICKUP_TYPE')),
 				);
 

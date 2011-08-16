@@ -578,10 +578,7 @@ class shopimporter extends ImportModule
 			foreach($item as $key => $val)
 			{
 				if ($key == 'passwd')
-				{
-					$password = $val;
-					$val = substr($val,0,29);
-				}
+					$val = '------';
 				if (is_array($val) AND $key != 'images')
 				{
 

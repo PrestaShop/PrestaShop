@@ -38,7 +38,7 @@ class MoneyBookers extends PaymentModule
 	{
 		$this->name = 'moneybookers';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5';
+		$this->version = '1.6';
 
 		parent::__construct();
 
@@ -48,6 +48,13 @@ class MoneyBookers extends PaymentModule
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 		if (Configuration::get('MB_PAY_TO_EMAIL') == 'testmerchant@moneybookers.com')
 			$this->warning = $this->l('You are currently using the default Moneybookers e-mail address, please use your own e-mail address.');
+
+		/* For 1.4.3 and less compatibility */
+		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+		if (!Configuration::get('PS_OS_PAYMENT'))
+			foreach ($updateConfig as $u)
+				if (!Configuration::get($u) && defined('_'.$u.'_'))
+					Configuration::updateValue($u, constant('_'.$u.'_'));
 
 		/* MoneyBookers payment methods */
 		$this->_internationalPaymentMethods = array(

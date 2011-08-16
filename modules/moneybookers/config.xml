@@ -2,7 +2,7 @@
 <module>
 	<name>moneybookers</name>
 	<displayName><![CDATA[Moneybookers]]></displayName>
-	<version><![CDATA[1.5]]></version>
+	<version><![CDATA[1.6]]></version>
 	<description><![CDATA[Accepts payments by Moneybookers.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

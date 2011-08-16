@@ -376,7 +376,7 @@ class Followup extends Module
 	/* For all customers with more than x euros in 90 days */
 	private function bestCustomer($count = false)
 	{
-		$emailLogs =  $this->getLogsEmail(2);
+		$emailLogs =  $this->getLogsEmail(3);
 
 		$sql = '
 		SELECT SUM(o.total_paid) total, c.id_cart, c.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
