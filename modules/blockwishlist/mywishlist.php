@@ -35,7 +35,7 @@ include_once(dirname(__FILE__).'/WishList.php');
 $context = Context::getContext();
 $errors = array();
 
-if ($cookie->isLogged())
+if ($context->customer->isLogged())
 {
 	$add = Tools::getIsset('add');
 	$add = (empty($add) === false ? 1 : 0);

@@ -70,7 +70,7 @@
 	</div>
 	<div>
 		<a href="#idTab5">{l s='Read user reviews' mod='productcomments'} ({$nbComments})</a><br/>
-	{if ($too_early == false AND ($cookie->isLogged() OR $allow_guests))}
+	{if ($too_early == false AND ($logged OR $allow_guests))}
 		<a id="new_comment_btn" href="#new_comment_form">{l s='Give your advice' mod='productcomments'}</a>
 	{/if}
 	</div>
@@ -111,7 +111,7 @@
 						<input name="title" type="text" value=""/><br/>
 						<label for="content">{l s='Comment' mod='productcomments'} *:</label>
 						<textarea name="content"></textarea>
-						{if $allow_guests == true && $cookie->isLogged() == false}
+						{if $allow_guests == true && $logged == 0}
 						<label>{l s='Your name:' mod='productcomments'} *:</label>
 						<input name="customer_name" type="text" value=""/><br/>
 						{/if}

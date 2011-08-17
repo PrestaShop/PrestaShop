@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/../../init.php');
 
 require_once(dirname(__FILE__).'/FavoriteProduct.php');
 
-if (!Context::getContext()->cookie->isLogged())
+if (!Context::getContext()->customer->isLogged())
 	Tools::redirect('authentication.php?back=modules/favoriteproducts/favoriteproducts.php');
 	
 include(dirname(__FILE__).'/../../header.php');

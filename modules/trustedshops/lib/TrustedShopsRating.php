@@ -402,7 +402,7 @@ class TrustedShopsRating extends AbsTrustedShops
 	{
 		$buyer_email = '';
 		
-		if (Context::getContext()->cookie->isLogged()) 
+		if (Context::getContext()->customer->isLogged()) 
 		{
 			if (empty($id_order) && !empty(Context::getContext()->customer->id))
 				$id_order = $this->_getLastOrderId(Context::getContext()->customer->id);

@@ -36,8 +36,7 @@ class getFileControllerCore extends FrontController
 	
 	public function process()
 	{
-		$cookie = $this->context->cookie;
-		if ($cookie->isLoggedBack() AND Tools::getValue('file'))
+		if (isset($this->context->employee) && $this->context->employee->isLoggedBack() AND Tools::getValue('file'))
 		{
 			/* Admin can directly access to file */
 			$filename = Tools::getValue('file');
@@ -62,11 +61,10 @@ class getFileControllerCore extends FrontController
 			if (!($key = Tools::getValue('key')))
 				$this->displayCustomError('Invalid key.');
 		
-			$cookie = new Cookie('ps');
 			Tools::setCookieLanguage();
-			if (!$cookie->isLogged() AND !Tools::getValue('secure_key') AND !Tools::getValue('id_order'))
+			if (!$this->context->customer->isLogged() AND !Tools::getValue('secure_key') AND !Tools::getValue('id_order'))
 				Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
-			elseif (!$cookie->isLogged() AND Tools::getValue('secure_key') AND Tools::getValue('id_order'))
+			elseif (!$this->context->customer->isLogged() AND Tools::getValue('secure_key') AND Tools::getValue('id_order'))
 			{
 				$order = new Order((int)Tools::getValue('id_order'));
 				if (!Validate::isLoadedObject($order))

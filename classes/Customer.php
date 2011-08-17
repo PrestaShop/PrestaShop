@@ -73,7 +73,7 @@ class CustomerCore extends ObjectModel
 	public 		$passwd;
 
 	/** @var datetime Password */
-	public $last_passwd_gen;
+	public 		$last_passwd_gen;
 
 	/** @var boolean Status */
 	public 		$active = true;
@@ -620,4 +620,24 @@ class CustomerCore extends ObjectModel
         return false;
 	}
 	
+	/**
+	  * Logout
+	  */
+	public function logout()
+	{
+		if (isset(Context::getContext()->cookie))
+			Context::getContext()->cookie->logout();
+		$this->logged = 0;
+	}
+
+	/**
+	  * Soft logout, delete everything links to the customer
+	  * but leave there affiliate's informations
+	  */
+	public function mylogout()
+	{
+		if (isset(Context::getContext()->cookie))
+			Context::getContext()->cookie->mylogout();
+		$this->logged = 0;
+	}	
 }

@@ -29,12 +29,10 @@ define('PS_ADMIN_DIR', getcwd());
 
 include(PS_ADMIN_DIR.'/../config/config.inc.php');
 
-/* Header can't be included, so cookie must be created here */
-$cookie = new Cookie('psAdmin');
-if (!$cookie->id_employee)
+if (!Context::getContext()->employee->isLoggedBack())
 	Tools::redirectAdmin('login.php');
 
-$tabAccess = Profile::getProfileAccess($cookie->profile, Tab::getIdFromClassName('AdminBackup'));
+$tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminBackup'));
 
 if ($tabAccess['view'] !== '1')
 	die (Tools::displayError('You do not have permission to view here'));

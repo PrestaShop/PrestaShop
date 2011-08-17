@@ -73,7 +73,7 @@ function displayConfirm()
 {
 	global $ppPayment;
 
-	if (!Context::getContext()->cookie->isLogged(true))
+	if (!Context::getContext()->customer->isLogged(true))
 	{
 		header('location:../../../'); exit;
 		die('Not logged');
@@ -109,7 +109,7 @@ function submitConfirm()
 {
 	global $ppPayment;
 
-	if (!Context::getContext()->cookie->isLogged(true))
+	if (!Context::getContext()->customer->isLogged(true))
 	{
 		header('location:../../../'); exit;
 		die('Not logged');
@@ -128,7 +128,7 @@ function submitConfirm()
 function validOrder()
 {
 	global $ppPayment;
-	if (!Context::getContext()->cookie->isLogged(true))
+	if (!Context::getContext()->customer->isLogged(true))
 	{
 		header('location:../../../'); exit;
 		die('Not logged');
@@ -151,7 +151,7 @@ function validOrder()
 // #####
 // Process !!
 
-if (!Context::getContext()->cookie->isLogged(true))
+if (!Context::getContext()->customer->isLogged(true))
 	die('Not logged');
 elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
 	die('Empty cart');

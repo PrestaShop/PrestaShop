@@ -34,10 +34,10 @@ require_once(dirname(__FILE__).'/../../init.php');
 include_once(dirname(__FILE__).'/LoyaltyModule.php');
 include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
 
-if (!$cookie->isLogged())
+$context = Context::getContext();
+if (!$context->customer->isLogged())
 	Tools::redirect('index.php?controller=authentication&back=modules/loyalty/loyalty-program.php');
 
-$context = Context::getContext();
 $context->controller->addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
 $context->controller->addJS(array(_PS_JS_DIR_.'jquery/jquery.dimensions.js',_PS_JS_DIR_.'jquery/jquery.cluetip.js'));
 

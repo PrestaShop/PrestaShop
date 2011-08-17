@@ -68,6 +68,8 @@ class EmployeeCore extends ObjectModel
 	/** @var boolean show screencast */
 	public 		$show_screencast = 1;
 	
+	public 		$remote_addr;
+	
  	protected 	$fieldsRequired = array('lastname', 'firstname', 'email', 'passwd', 'id_profile', 'id_lang');
  	protected 	$fieldsSize = array('lastname' => 32, 'firstname' => 32, 'email' => 128, 'passwd' => 32, 'bo_color' => 32, 'bo_theme' => 32);
  	protected 	$fieldsValidate = array('lastname' => 'isName', 'firstname' => 'isName', 'email' => 'isEmail', 'id_lang' => 'isUnsignedInt', 
@@ -208,5 +210,30 @@ class EmployeeCore extends ObjectModel
 		else
 			$this->passwd = Tools::encrypt($passwd);
 		return true;
+	}
+	
+	/**
+	  * Check employee informations saved into cookie and return employee validity
+	  *
+	  * @return boolean employee validity
+	  */
+	public function isLoggedBack()
+	{
+		/* Employee is valid only if it can be load and if cookie password is the same as database one */
+	 	return ($this->id
+			AND Validate::isUnsignedId($this->id)
+			AND Employee::checkPassword($this->id, $this->passwd)
+			AND (!isset($this->remote_addr) OR $this->remote_addr == ip2long(Tools::getRemoteAddr()) OR !Configuration::get('PS_COOKIE_CHECKIP'))
+		);
+	}
+	
+	/**
+	  * Logout
+	  */
+	public function logout()
+	{
+		if (isset(Context::getContext()->cookie))
+			Context::getContext()->cookie->logout();
+		$this->id = null;
 	}
 }

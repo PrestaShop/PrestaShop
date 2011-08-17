@@ -25,8 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+define('PS_ADMIN_DIR', getcwd());
 include_once(dirname(__FILE__).'/../config/config.inc.php');
-$cookie = new Cookie('psAdmin');
 
 $module = Tools::getValue('module');
 $render = Tools::getValue('render');
@@ -41,7 +41,7 @@ $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
 $id_employee = (int)(Tools::getValue('id_employee'));
 $id_lang = (int)(Tools::getValue('id_lang'));
 
-if ($cookie->id_employee != $id_employee)
+if (Context::getContext()->employee->id != $id_employee)
 	die;
 
 if (!Validate::isModuleName($module))

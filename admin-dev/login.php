@@ -74,20 +74,20 @@ if (Tools::isSubmit('Submit'))
 	{
 	 	/* Seeking for employee */
 		$employee = new Employee();
-		$employee = $employee->getByemail($email, $passwd);
-		if (!$employee)
+		if (!$employee->getByemail($email, $passwd))
 		{
 			$errors[] = Tools::displayError('Employee does not exist or password is incorrect.');
-			$cookie->logout();
+			$employee->logout();
 		}
 		else
 		{
+			$employee->remote_addr = ip2long(Tools::getRemoteAddr());
 		 	/* Creating cookie */
 			$cookie->id_employee = $employee->id;
 			$cookie->email = $employee->email;
 			$cookie->profile = $employee->id_profile;
 			$cookie->passwd = $employee->passwd;
-			$cookie->remote_addr = ip2long(Tools::getRemoteAddr());
+			$cookie->remote_addr = $employee->remote_addr;
 			$cookie->write();
 			/* Redirect to admin panel */
 			if (isset($_GET['redirect']))

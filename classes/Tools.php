@@ -284,8 +284,10 @@ class ToolsCore
 	*
 	* @return string iso code
 	*/
-	public static function setCookieLanguage($cookie)
+	public static function setCookieLanguage($cookie = null)
 	{
+		if (!$cookie)
+			$cookie = Context::getContext()->cookie;
 		/* If language does not exist or is disabled, erase it */
 		if ($cookie->id_lang)
 		{

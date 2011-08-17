@@ -41,7 +41,7 @@ echo '
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/datepicker/datepicker.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'jquery.cluetip.css" />
-		<link type="text/css" rel="stylesheet" href="themes/'.$employee->bo_theme.'/admin.css" />
+		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/admin.css" />
 		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>
 		<script type="text/javascript">
 			var helpboxes = '.Configuration::get('PS_HELPBOX').';
@@ -61,20 +61,20 @@ echo '
 		<![endif]-->
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {
-				color:'.(Tools::getBrightness(empty($employee->bo_color) ? '#FFFFFF' : $employee->bo_color) < 128 ? 'white' : '#383838').'
+				color:'.(Tools::getBrightness(empty(Context::getContext()->employee->bo_color) ? '#FFFFFF' : Context::getContext()->employee->bo_color) < 128 ? 'white' : '#383838').'
 			}
 		</style>
 	</head>
-	<body '.((!empty($employee->bo_color)) ? 'style="background:'.Tools::htmlentitiesUTF8($employee->bo_color).'"' : '').'>
+	<body '.((!empty(Context::getContext()->employee->bo_color)) ? 'style="background:'.Tools::htmlentitiesUTF8(Context::getContext()->employee->bo_color).'"' : '').'>
 	<div id="top_container">
 		<div id="container">
 			<div id="header_infos"><span>
 				<a id="header_shopname" href="index.php"><span>'.Configuration::get('PS_SHOP_NAME').'</span></a><br />
-				'.Tools::substr($employee->firstname, 0, 1).'.&nbsp;'.htmlentities($employee->lastname, ENT_COMPAT, 'UTF-8').'
+				'.Tools::substr(Context::getContext()->employee->firstname, 0, 1).'.&nbsp;'.htmlentities(Context::getContext()->employee->lastname, ENT_COMPAT, 'UTF-8').'
 				[ <a href="index.php?logout" id="header_logout"><span>'.translate('logout').'</span></a> ]';
 				if (Context::getContext()->shop->getBaseURL())
 					echo '- <a href="'.Context::getContext()->shop->getBaseURL().'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'"><span>'.translate('View my shop').'</span></a>';
-	echo '		- <a href="index.php?tab=AdminEmployees&id_employee='.(int)$cookie->id_employee.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> '.translate('My preferences').'</a>
+	echo '		- <a href="index.php?tab=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> '.translate('My preferences').'</a>
 			</span></div>
 			<div id="header_search">
 				<form method="post" action="index.php?tab=AdminSearch&token='.Tools::getAdminTokenLite('AdminSearch').'">
@@ -105,14 +105,14 @@ echo '
 				</script>
 				<select onchange="quickSelect(this);" id="quick_select">
 					<option value="0">'.translate('Quick Access').'</option>';
-foreach (QuickAccess::getQuickAccesses((int)($cookie->id_lang)) AS $quick)
+foreach (QuickAccess::getQuickAccesses(Context::getContext()->language->id) AS $quick)
 {
 	preg_match('/tab=(.+)(&.+)?$/', $quick['link'], $adminTab);
 	if (isset($adminTab[1]))
 	{
 		if (strpos($adminTab[1], '&'))
 			$adminTab[1] = substr($adminTab[1], 0, strpos($adminTab[1], '&'));
-		$quick['link'] .= '&token='.Tools::getAdminToken($adminTab[1].(int)(Tab::getIdFromClassName($adminTab[1])).(int)($cookie->id_employee));
+		$quick['link'] .= '&token='.Tools::getAdminToken($adminTab[1].(int)(Tab::getIdFromClassName($adminTab[1])).(int)(Context::getContext()->employee->id));
 	}
 	echo '<option value="'.$quick['link'].($quick['new_window'] ? '_blank' : '').'">&gt; '.$quick['name'].'</option>';
 }
@@ -130,23 +130,23 @@ if (empty($tab))
 	echo '<div class="mainsubtablist" style="display:none"></div>';
 
 $id_parent_tab_current = (int)(Tab::getCurrentParentId());
-$tabs = Tab::getTabs((int)$cookie->id_lang, 0);
+$tabs = Tab::getTabs(Context::getContext()->language->id, 0);
 $echoLis = '';
 $mainsubtablist = '';
 foreach ($tabs AS $t)
 	if (checkTabRights($t['id_tab']) === true)
 	{
-		$img = (Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.$employee->bo_theme.'/img/t/'.$t['class_name'].'.gif') ? 'themes/'.$employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$t['class_name'].'.gif';
+		$img = (Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.Context::getContext()->employee->bo_theme.'/img/t/'.$t['class_name'].'.gif') ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$t['class_name'].'.gif';
 		if (trim($t['module']) != '')
 			$img = _MODULE_DIR_.$t['module'].'/'.$t['class_name'].'.gif';
 		$current = (($t['class_name'] == $tab) OR ($id_parent_tab_current == $t['id_tab']));
 		echo '<li class="submenu_size '.($current ? 'active' : '').'" id="maintab'.$t['id_tab'].'">
-			<a href="index.php?tab='.$t['class_name'].'&token='.Tools::getAdminToken($t['class_name'].(int)($t['id_tab']).(int)($cookie->id_employee)).'">
+			<a href="index.php?tab='.$t['class_name'].'&token='.Tools::getAdminToken($t['class_name'].(int)($t['id_tab']).(int)Context::getContext()->employee->id).'">
 				<img src="'.$img.'" alt="" /> '.$t['name'].'
 			</a>
 		</li>';
 		$echoLi = '';
-		$subTabs = Tab::getTabs((int)$cookie->id_lang, (int)$t['id_tab']);
+		$subTabs = Tab::getTabs(Context::getContext()->language->id, (int)$t['id_tab']);
 		foreach ($subTabs AS $t2)
 			if (checkTabRights($t2['id_tab']) === true)
 				$echoLi .= '<li><a href="index.php?tab='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
@@ -155,7 +155,7 @@ foreach ($tabs AS $t)
 		$echoLis .= '<div id="tab'.(int)($t['id_tab']).'_subtabs" style="display:none">'.$echoLi.'</div>';
 	}
 echo '		</ul>'.$echoLis;
-if ($employee->bo_uimode == 'hover')
+if (Context::getContext()->employee->bo_uimode == 'hover')
 	echo '	<script type="text/javascript">
 				$("#menu li").hoverIntent({over:hoverTabs,timeout:100,out:outTabs});
 				function outTabs(){}

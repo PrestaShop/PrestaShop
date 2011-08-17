@@ -121,14 +121,12 @@ else
 	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 	{
 		$customer = new Customer($cookie->id_customer);
-		$customer->id_guest = $cookie->id_guest;
 		$customer->logged = $cookie->logged;
 	}
-	else
-	{
+	else	
 		$customer = new Customer();
-		$customer->id_guest = $cookie->id_guest;
-	}
+	
+	$customer->id_guest = $cookie->id_guest;
 	Context::getContext()->customer = $customer;
 }
 

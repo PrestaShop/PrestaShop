@@ -78,7 +78,7 @@ class FavoriteProducts extends Module
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
 		
-		$favoriteProducts = FavoriteProduct::getFavoriteProducts((int)$this->context->cookie->id_customer, (int)$this->context->cookie->id_lang);
+		$favoriteProducts = FavoriteProduct::getFavoriteProducts($this->context->customer->id, $this->context->language->id);
 		
 		$this->context->smarty->assign(array('favorite_products' => $favoriteProducts));
 		
@@ -95,8 +95,8 @@ class FavoriteProducts extends Module
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
 				
 		$this->context->smarty->assign(array(
-			'isCustomerFavoriteProduct' => (FavoriteProduct::isCustomerFavoriteProduct((int)($this->context->cookie->id_customer), Tools::getValue('id_product')) ? 1 : 0),
-			'isLogged' => (int)$this->context->cookie->id_customer));
+			'isCustomerFavoriteProduct' => (FavoriteProduct::isCustomerFavoriteProduct($this->context->customer->id, Tools::getValue('id_product')) ? 1 : 0),
+			'isLogged' => (int)$this->context->customer->logged));
 		
 		return $this->display(__FILE__, 'favoriteproducts-extra.tpl');
 	}

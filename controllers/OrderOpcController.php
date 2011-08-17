@@ -149,13 +149,13 @@ class OrderOpcControllerCore extends ParentOrderController
 							{
 								$email = $this->context->customer->email;
 								if ($this->context->customer->is_guest)
-									$this->context->cookie->logout(); // If guest we clear the cookie for security reason
+									$this->context->customer->logout(); // If guest we clear the cookie for security reason
 								die('freeorder:'.$id_order.':'.$email);
 							}
 							exit;
 							break;
 						case 'updateAddressesSelected':
-							if ($this->context->cookie->isLogged(true))
+							if ($this->context->customer->isLogged(true))
 							{
 								$id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
 								$id_address_invoice = (int)(Tools::getValue('id_address_invoice'));

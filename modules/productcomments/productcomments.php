@@ -606,7 +606,7 @@ class ProductComments extends Module
 		$image = Product::getCover((int)($_GET['id_product']));
 		
 		Context::getContext()->smarty->assign(array(
-			'logged' => (int)Context::getContext()->cookie->id_customer,
+			'logged' => (int)Context::getContext()->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
 			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
 			'mediumSize' => Image::getSize('medium'),
@@ -690,7 +690,7 @@ class ProductComments extends Module
 		$averageTotal = count($averages) ? ($averageTotal / count($averages)) : 0;
 				
 		Context::getContext()->smarty->assign(array(
-		'logged' => (int)Context::getContext()->cookie->id_customer,
+		'logged' => (int)Context::getContext()->customer->isLogged(true),
 		'action_url' => '',
 		'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, null, Context::getContext()->cookie->id_customer),
 		'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), Context::getContext()->language->id),

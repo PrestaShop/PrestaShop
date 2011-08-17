@@ -132,7 +132,7 @@ class FrontControllerCore
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
 
-		if ($this->auth AND !$this->context->cookie->isLogged($this->guestAllowed))
+		if ($this->auth AND !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
 		/* Theme is missing or maintenance */
@@ -144,14 +144,14 @@ class FrontControllerCore
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
 
-		if (isset($_GET['logout']) OR ($this->context->cookie->logged AND Customer::isBanned((int)$this->context->cookie->id_customer)))
+		if (isset($_GET['logout']) OR ($this->context->customer->logged AND Customer::isBanned($this->context->customer->id)))
 		{
-			$this->context->cookie->logout();
+			$this->context->customer->logout();
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 		elseif (isset($_GET['mylogout']))
 		{
-			$this->context->cookie->mylogout();
+			$this->context->customer->mylogout();
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 
@@ -290,8 +290,8 @@ class FrontControllerCore
 		// Deprecated
 		$this->context->smarty->assign(array(
 			'id_currency_cookie' => (int)$currency->id,
-			'logged' => $this->context->cookie->isLogged(),
-			'customerName' => ($this->context->cookie->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
+			'logged' => $this->context->customer->isLogged(),
+			'customerName' => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
 		));
 
 		// TODO for better performances (cache usage), remove these assign and use a smarty function to get the right media server in relation to the full ressource name

@@ -30,12 +30,11 @@ $timerStart = microtime(true);
 
 $context = Context::getContext();
 if (isset($_GET['logout']))
-	$cookie->logout();
+	$context->employee->logout();
 
-if (!$cookie->isLoggedBack())
-{
+if (!$context->employee->isLoggedBack())
 	Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
-}
+
 
 // Set current index 
 $currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
@@ -43,8 +42,7 @@ if ($back = Tools::getValue('back'))
 	$currentIndex .= '&back='.urlencode($back);
 AdminTab::$currentIndex = $currentIndex;
 
-
-$iso = $language->iso_code;
+$iso = $context->language->iso_code;
 include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
@@ -58,12 +56,12 @@ define('_PS_BASE_URL_', Tools::getShopDomain(true));
 define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 $path = dirname(__FILE__).'/themes/';
-if (empty($employee->bo_theme) OR !file_exists($path.$employee->bo_theme.'/admin.css'))
+if (empty($context->employee->bo_theme) OR !file_exists($path.$employee->bo_theme.'/admin.css'))
 {
 	if (file_exists($path.'oldschool/admin.css'))
-		$employee->bo_theme = 'oldschool';
+		$context->employee->bo_theme = 'oldschool';
 	elseif (file_exists($path.'origins/admin.css'))
-		$employee->bo_theme = 'origins';
+		$context->employee->bo_theme = 'origins';
 	else
 		foreach (scandir($path) as $theme)
 			if ($theme[0] != '.' AND file_exists($path.$theme.'/admin.css'))
@@ -71,13 +69,13 @@ if (empty($employee->bo_theme) OR !file_exists($path.$employee->bo_theme.'/admin
 				$employee->bo_theme = $theme;
 				break;
 			}
-	$employee->update();
+	$context->employee->update();
 }
 
 // Change shop context ?
 if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
 {
-	$cookie->shopContext = Tools::getValue('setShopContext');
+	$context->cookie->shopContext = Tools::getValue('setShopContext');
 	$url = parse_url($_SERVER['REQUEST_URI']);
 	$query = (isset($url['query'])) ? $url['query'] : '';
 	parse_str($query, $parseQuery);

@@ -29,7 +29,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/gcheckout.php');
 
-if (!$cookie->isLogged(true))
+if (!Context::getContext()->customer->isLogged(true))
     Tools::redirect('index.php?controller=authentication&back=order.php');
 elseif (!$cart->getOrderTotal(true, Cart::BOTH))
 	Tools::displayError('Error: Empty cart');

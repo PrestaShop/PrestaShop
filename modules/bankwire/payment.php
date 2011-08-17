@@ -32,7 +32,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/bankwire.php');
 
-if (!$cookie->isLogged(true))
+if (!Context::getContext()->customer->isLogged(true))
     Tools::redirect('index.php?controller=authentication&back=order.php');
 $bankwire = new BankWire();
 echo $bankwire->execPayment($cart);

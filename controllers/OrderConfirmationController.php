@@ -76,7 +76,7 @@ class OrderConfirmationControllerCore extends FrontController
 				'id_order_formatted' => sprintf('#%06d', $this->id_order)
 			));
 			/* If guest we clear the cookie for security reason */
-			$this->context->cookie->logout();
+			$this->context->customer->logout();
 		}
 	}
 	
