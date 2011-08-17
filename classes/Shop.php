@@ -737,7 +737,7 @@ class ShopCore extends ObjectModel
 						unset($res[$row['primary']]);
 
 					$keys = implode(', ', array_keys($res));
-					$sql = 'INSERT INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
+					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
 								(SELECT '.$keys.', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
 								WHERE `'.$id.'` = '.(int)$old_id.')';
 					Db::getInstance()->Execute($sql);
