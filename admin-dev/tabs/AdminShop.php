@@ -66,6 +66,12 @@ class AdminShop extends AdminTab
 		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
 			$newShop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
 	}
+	
+	public function afterUpdate($newShop)
+	{
+		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
+			$newShop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
+	}
 
 	public function postProcess()
 	{
@@ -170,58 +176,57 @@ class AdminShop extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset><br /><br />';
 
-		if (Tools::getValue('addshop') !== false)
-		{
-			$importData = array(
-				'carrier' => $this->l('Carriers'),
-				'category_lang' => $this->l('Category lang'),
-				'cms' => $this->l('CMS page'),
-				'contact' => $this->l('Contact'),
-				'country' => $this->l('Countries'),
-				'currency' => $this->l('Currencies'),
-				'discount' => $this->l('Discounts'),
-				'image' => $this->l('Images'),
-				'lang' => $this->l('Langs'),
-				'manufacturer' => $this->l('Manufacturers'),
-				'module' => $this->l('Modules'),
-				'hook_module' => $this->l('Modules hook'),
-				'hook_module_exceptions' => $this->l('Modules hook exceptions'),
-				'meta_lang' => $this->l('Meta'),
-				'module_country' => $this->l('Payment module country restrictions'),
-				'module_group' => $this->l('Payment module customer group restrictions'),
-				'module_currency' => $this->l('Payment module currency restrictions'),
-				'product' => $this->l('Products'),
-				'product_lang' => $this->l('Products lang'),
-				'scene' => $this->l('Scenes'),
-				'stock' => $this->l('Stock'),
-				'store' => $this->l('Stores'),
-				'zone' => $this->l('Zones'),
-			);
+		$importData = array(
+			'carrier' => $this->l('Carriers'),
+			'carrier_lang' => $this->l('Carriers lang'),
+			'category_lang' => $this->l('Category lang'),
+			'cms' => $this->l('CMS page'),
+			'contact' => $this->l('Contact'),
+			'country' => $this->l('Countries'),
+			'currency' => $this->l('Currencies'),
+			'discount' => $this->l('Discounts'),
+			'image' => $this->l('Images'),
+			'lang' => $this->l('Langs'),
+			'manufacturer' => $this->l('Manufacturers'),
+			'module' => $this->l('Modules'),
+			'hook_module' => $this->l('Modules hook'),
+			'hook_module_exceptions' => $this->l('Modules hook exceptions'),
+			'meta_lang' => $this->l('Meta'),
+			'module_country' => $this->l('Payment module country restrictions'),
+			'module_group' => $this->l('Payment module customer group restrictions'),
+			'module_currency' => $this->l('Payment module currency restrictions'),
+			'product' => $this->l('Products'),
+			'product_lang' => $this->l('Products lang'),
+			'scene' => $this->l('Scenes'),
+			'stock' => $this->l('Stock'),
+			'store' => $this->l('Stores'),
+			'zone' => $this->l('Zones'),
+		);
 
-			echo '<fieldset><legend>'.$this->l('Import data from another shop').'</legend>';
-			echo '<label>'.$this->l('Import data from another shop').'</label>';
-			echo '<div class="margin-form">';
-				echo '<input type="checkbox" value="1" checked="checked" name="useImportData" onclick="$(\'#importList\').slideToggle(\'slow\')" /> ';
-				echo $this->l('Duplicate data from shop');
-				echo ' <select name="importFromShop">';
-				foreach (Shop::getTree() as $gID => $gData)
-				{
-					echo '<optgroup label="'.$gData['name'].'">';
-					foreach ($gData['shops'] as $sID => $sData)
-						echo '<option value="'.(int)$sID.'" '.($sID == Configuration::get('PS_SHOP_DEFAULT') ? 'selected="selected"' : '').'">'.$sData['name'].'</option>';
-					echo '</optgroup>';
-				}
-				echo '</select>';
-				echo '<div id="importList" style=""><ul>';
-				foreach ($importData as $table => $lang)
-					echo '<li><label><input type="checkbox" name="importData['.$table.']" checked="checked" /> '.$lang.'</label></li>';
-				echo '</ul></div>';
-				echo '<p>'.$this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop').'</p>';
-			echo '</div><div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>';
-			echo '</fieldset>';
-		}
+		$checked = (Tools::getValue('addshop') !== false) ? true : false;
+		echo '<fieldset><legend>'.$this->l('Import data from another shop').'</legend>';
+		echo '<label>'.$this->l('Import data from another shop').'</label>';
+		echo '<div class="margin-form">';
+			echo '<input type="checkbox" value="1" '.(($checked) ? 'checked="checked"' : '').' name="useImportData" onclick="$(\'#importList\').slideToggle(\'slow\')" /> ';
+			echo $this->l('Duplicate data from shop');
+			echo ' <select name="importFromShop">';
+			foreach (Shop::getTree() as $gID => $gData)
+			{
+				echo '<optgroup label="'.$gData['name'].'">';
+				foreach ($gData['shops'] as $sID => $sData)
+					echo '<option value="'.(int)$sID.'" '.($sID == Configuration::get('PS_SHOP_DEFAULT') ? 'selected="selected"' : '').'">'.$sData['name'].'</option>';
+				echo '</optgroup>';
+			}
+			echo '</select>';
+			echo '<div id="importList" style="'.((!$checked) ? 'display: none' : '').'"><ul>';
+			foreach ($importData as $table => $lang)
+				echo '<li><label><input type="checkbox" name="importData['.$table.']" checked="checked" /> '.$lang.'</label></li>';
+			echo '</ul></div>';
+			echo '<p>'.$this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop').'</p>';
+		echo '</div><div class="margin-form">
+				<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
+			</div>';
+		echo '</fieldset>';
 
 		echo '</form>';
 	}
