@@ -348,7 +348,7 @@ class CategoryCore extends ObjectModel
 		$return = 1;
 		foreach ($categories AS $id_category)
 		{
-			$category = new Category((int)($id_category));
+			$category = new Category($id_category);
 			$return &= $category->delete();
 		}
 		return $return;
@@ -365,7 +365,7 @@ class CategoryCore extends ObjectModel
 		if (!$this->id_parent)
 			return 0;
 
-		$parentCategory = new Category((int)($this->id_parent));
+		$parentCategory = new Category($this->id_parent);
 		if (!Validate::isLoadedObject($parentCategory))
 			die('parent category does not exist');
 		return $parentCategory->level_depth + 1;
