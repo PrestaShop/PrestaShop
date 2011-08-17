@@ -61,7 +61,7 @@ class AdminCustomers extends AdminTab
  		);
 
 		$this->shopLinkType = 'shop';
-		$this->shopShareDatas = true;
+		$this->shopShareDatas = Shop::SHARE_CUSTOMER;
 
 		$this->optionsList = array(
 			'general' => array(
