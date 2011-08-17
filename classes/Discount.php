@@ -71,6 +71,9 @@ class DiscountCore extends ObjectModel
 	/** @var integer Minimum cart total amount required to use the discount */
 	public 		$minimal;
 
+	/** @var boolean include_tax selected for the choice of the calcul method in the cart*/
+	public 		$include_tax;
+
 	/** @var integer display the discount in the summary */
 	public 		$cart_display;
 
@@ -115,6 +118,7 @@ class DiscountCore extends ObjectModel
 			'date_from' => array('sqlId' => 'date_from'),
 			'date_to' => array('sqlId' => 'date_to'),
 			'minimal' => array('sqlId' => 'minimal'),
+			'include_tax' => array('sqlId' => 'include_tax'),
 			'active' => array('sqlId' => 'active'),
 			'cart_display' => array('sqlId' => 'cart_display'),
 			'date_add' => array('sqlId' => 'date_add'),
@@ -141,6 +145,7 @@ class DiscountCore extends ObjectModel
 		$fields['date_from'] = pSQL($this->date_from);
 		$fields['date_to'] = pSQL($this->date_to);
 		$fields['minimal'] = (float)($this->minimal);
+		$fields['include_tax'] = (int)($this->include_tax);
 		$fields['behavior_not_exhausted'] = (int)$this->behavior_not_exhausted;
 		$fields['active'] = (int)($this->active);
 		$fields['cart_display'] = (int)($this->cart_display);
@@ -297,11 +302,9 @@ class DiscountCore extends ObjectModel
 
 		foreach ($products AS $product)
 			if (count($categories) AND Product::idIsOnCategoryId($product['id_product'], $categories))
-				$totalAmount += $useTax ? $product['price_wt'] * $product['quantity']: $product['price'] * $product['quantity'];
-
+				$totalAmount += $this->include_tax ? $product['total_wt'] : $product['total'];
 		if ($this->minimal > 0 AND $totalAmount < $this->minimal)
 			return 0;
-
 		switch ($this->id_discount_type)
 		{
 			/* Relative value (% of the order total) */
@@ -311,7 +314,7 @@ class DiscountCore extends ObjectModel
 				foreach ($products AS $product)
 						if (Product::idIsOnCategoryId($product['id_product'], $categories))
 							if ($this->cumulable_reduction OR (!$product['reduction_applies'] AND !$product['on_sale']))
-								$amount += ($useTax ? $product['total_wt'] : $product['total']) * $percentage;
+								$amount += ($this->include_tax ? $product['total_wt'] : $product['total']) * $percentage;
 				return $amount;
 
 			/* Absolute value */
@@ -322,7 +325,7 @@ class DiscountCore extends ObjectModel
 					return 0;
 
 				$taxDiscount = Cart::getTaxesAverageUsed((int)($cart->id));
-				if (!$useTax AND isset($taxDiscount) AND $taxDiscount != 1)
+				if (!$this->include_tax AND isset($taxDiscount) AND $taxDiscount != 1)
 					$this->value = abs($this->value / (1 + $taxDiscount * 0.01));
 
 				// Main return

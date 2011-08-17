@@ -169,7 +169,7 @@ ALTER TABLE PREFIX_product_lang DROP INDEX `id_product`;
 CREATE TABLE `PREFIX_customer_group` (
 	`id_customer` int(10) unsigned NOT NULL,
 	`id_group` int(10) unsigned NOT NULL,
-	PRIMARY KEY `customer_group_index` (`id_customer`,`id_group`),
+	PRIMARY KEY (`id_customer`,`id_group`),
 	INDEX customer_login(id_group)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

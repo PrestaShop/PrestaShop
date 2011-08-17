@@ -751,11 +751,17 @@ class AdminImport extends AdminTab
 				// check quantity
 				if ($product->quantity == NULL)
 					$product->quantity = 0;
-					
-				// If id product AND id product already in base, trying to update
-				if ($product->id AND Product::existsInDatabase((int)($product->id), 'product'))
-				{
 
+				// If match ref is specified AND ref product AND ref product already in base, trying to update
+				if (Tools::getValue('match_ref') == 1 AND $product->reference AND Product::existsRefInDatabase($product->reference))
+				{
+					$datas = Db::getInstance()->getRow('SELECT `date_add`, `id_product` FROM `'._DB_PREFIX_.'product` WHERE `reference` = "'.$product->reference.'"');
+					$product->id = pSQL($datas['id_product']);
+					$product->date_add = pSQL($datas['date_add']);
+					$res = $product->update();
+				} // Else If id product AND id product already in base, trying to update
+				else if ($product->id AND Product::existsInDatabase((int)($product->id), 'product'))
+				{
 					$datas = Db::getInstance()->getRow('SELECT `date_add` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)($product->id));
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
@@ -767,7 +773,7 @@ class AdminImport extends AdminTab
 						$res = $product->add(false);
 					else
 					$res = $product->add();
-			}
+				}
 			}
 			// If both failed, mysql error
 			if (!$res)
@@ -1396,14 +1402,21 @@ class AdminImport extends AdminTab
 							</div>
 							<label for="truncate" class="clear">'.$this->l('Delete all').' <span id="entitie">'.$this->l('categories').'</span> '.$this->l('before import ?').' </label>
 							<div class="margin-form">
-								<input name="truncate" id="truncate" type="checkbox" style="margin-top: 6px;"/>
+							<input name="truncate" id="truncate" type="checkbox"/>
 							</div>
+						<label for="match_ref" class="clear" style="display: none">'.$this->l('Use product reference as key ?').'</label>
+						<div class="margin-form">
+							<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
+						</div>
 							<div class="space margin-form">
 								<input type="submit" name="submitImportFile" value="'.$this->l('Next step').'" class="button"/>
 							</div>
 							<div>
-								'.$this->l('Note that the category import does not support categories of the same name').'
+							'.$this->l('Note that the category import does not support categories of the same name').'.
 							</div>
+						<div>
+							'.$this->l('Note that references are not specified as UNIQUE in the database').'.
+						</div>
 						';
 				}
 				else
@@ -1427,6 +1440,14 @@ class AdminImport extends AdminTab
 				<div class="clear">&nbsp;</div>
 				<script type="text/javascript">
 					$("select#entity").change( function() {
+					if ($("#entity > option:selected").val() != 1)
+					{
+						$("label[for=match_ref],#match_ref").hide();
+					}
+					if ($("#entity > option:selected").val() == 1)
+					{
+						$("label[for=match_ref],#match_ref").show();
+					}
 						$("#entitie").html($("#entity > option:selected").text().toLowerCase());
 						$.getJSON("'.dirname(self::$currentIndex).'/ajax.php", 
 							{
@@ -1577,13 +1598,15 @@ class AdminImport extends AdminTab
 
 		echo '
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" id="import_form" name="import_form">
-			'.$this->l('Skip').' <input type="text" size="2" name="skip" value="0" /> '.$this->l('lines').'.
+			'.$this->l('Skip').' <input type="text" size="2" name="skip" value="0" /> '.$this->l('lines').'
 			<input type="hidden" name="csv" value="'.Tools::getValue('csv').'" />
 			<input type="hidden" name="convert" value="'.Tools::getValue('convert').'" />
 			<input type="hidden" name="entity" value="'.(int)(Tools::getValue('entity')).'" />
 			<input type="hidden" name="iso_lang" value="'.Tools::getValue('iso_lang').'" />';
 		if (Tools::getValue('truncate'))
 			echo '<input type="hidden" name="truncate" value="1" />';
+		if (Tools::getValue('match_ref'))
+			echo '<input type="hidden" name="match_ref" value="1" />';
 		echo '
 			<input type="hidden" name="separator" value="'.strval(trim(Tools::getValue('separator'))).'">
 			<input type="hidden" name="multiple_value_separator" value="'.strval(trim(Tools::getValue('multiple_value_separator'))).'">

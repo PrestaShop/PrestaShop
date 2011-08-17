@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>uspscarrier</name>
-	<displayName><![CDATA[USPS Carrier]]></displayName>
+	<displayName><![CDATA[U.S.P.S Rate Calulator]]></displayName>
 	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[Offer your customers, different delivery methods with USPS]]></description>
 	<author><![CDATA[PrestaShop]]></author>

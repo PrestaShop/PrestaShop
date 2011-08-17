@@ -625,7 +625,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 {
 	$result = array();
 	
-	$protocol = (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off') ? 'https' : 'http';
+	$protocol = Tools::usingSecureMode() ? 'https' : 'http';
 	$isoUser = Context::getContext()->language->iso_code;
 	$isoCountry = Context::getContext()->country->iso_code;
 	$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));

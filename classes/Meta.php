@@ -130,9 +130,10 @@ class MetaCore extends ObjectModel
 			return false;			
 									
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)(Configuration::get('PS_REWRITING_SETTINGS')),		
-									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')), 
-									''
+									(int)Configuration::get('PS_REWRITING_SETTINGS'),
+									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
+									'',
+									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 									);
 	}
 
@@ -141,9 +142,10 @@ class MetaCore extends ObjectModel
 		if (!parent::add($autodate, $nullValues));
 		
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)(Configuration::get('PS_REWRITING_SETTINGS')),		
-									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')), 
-									''
+									(int)Configuration::get('PS_REWRITING_SETTINGS'),
+									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
+									'',
+									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 									);
 	}
 	
@@ -153,9 +155,10 @@ class MetaCore extends ObjectModel
 			return false;
 		
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-								(int)(Configuration::get('PS_REWRITING_SETTINGS')),		
-								(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')), 
-								''
+								(int)Configuration::get('PS_REWRITING_SETTINGS'),
+								(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
+								'',
+								(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 								);
 	}
 	
@@ -171,9 +174,10 @@ class MetaCore extends ObjectModel
 		}
 		
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)(Configuration::get('PS_REWRITING_SETTINGS')),		
-									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')), 
-									''
+									(int)Configuration::get('PS_REWRITING_SETTINGS'),		
+									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'), 
+									'',
+									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 									);
 	}
 

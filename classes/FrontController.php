@@ -87,7 +87,7 @@ class FrontControllerCore
 		 * Use the Context to access objects instead.
 		 * Example: $this->context->cart
 		 */
-		global $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
+		global $useSSL, $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
 
 		if (self::$initialized)
 			return;
@@ -97,7 +97,7 @@ class FrontControllerCore
 		
 		$this->id_current_shop = Context::getContext()->shop->getID();
 		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
-		
+
 		$this->css_files = array();
 		$this->js_files = array();
 		
@@ -105,7 +105,7 @@ class FrontControllerCore
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
 		
-		if ($this->ssl AND (empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off') AND Configuration::get('PS_SSL_ENABLED'))
+		if ($this->ssl AND !Tools::usingSecureMode() AND Configuration::get('PS_SSL_ENABLED'))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
@@ -127,8 +127,9 @@ class FrontControllerCore
 
 		$this->context->smarty->ps_language = $this->context->language;
 		
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
-		$protocol_content = ((isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://' : 'http://';
+		$useSSL = (isset($this->ssl) AND $this->ssl AND Configuration::get('PS_SSL_ENABLED')) OR Tools::usingSecureMode()?true:false;
+		$protocol_content = ($useSSL) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
 
@@ -267,7 +268,7 @@ class FrontControllerCore
 			'page_name' => $page_name,
 			'base_dir' => _PS_BASE_URL_.__PS_BASE_URI__,
 			'base_dir_ssl' => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
-			'content_dir' => $protocol_content.Tools::getShopDomain().__PS_BASE_URI__,
+			'content_dir' => $protocol_content.(($useSSL)?Tools::getShopDomainSsl():Tools::getShopDomain()).__PS_BASE_URI__,
 			'tpl_dir' => _PS_THEME_DIR_,
 			'modules_dir' => _MODULE_DIR_,
 			'mail_dir' => _MAIL_DIR_,

@@ -32,7 +32,6 @@
 {else}
 <script type="text/javascript">
 	// <![CDATA[
-	var baseDir = '{$base_dir_ssl}';
 	var imgDir = '{$img_dir}';
 	var authenticationUrl = '{$link->getPageLink("authentication", true)}';
 	var orderOpcUrl = '{$link->getPageLink("order-opc", true)}';

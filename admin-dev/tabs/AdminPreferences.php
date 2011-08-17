@@ -106,7 +106,7 @@ class AdminPreferences extends AdminTab
 				$fields['PS_TIMEZONE'] = array('title' => $this->l('Time Zone:'), 'validation' => 'isAnything', 'type' => 'select', 'list' => $timezones, 'identifier' => 'name', 'visibility' => Shop::CONTEXT_ALL);
 			
 			// No HTTPS activation if you haven't already.
-			if (empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off')
+			if (!Tools::usingSecureMode())
 			{
 				$fields['PS_SSL_ENABLED']['type'] = 'disabled';
 				$fields['PS_SSL_ENABLED']['disabled'] = '<a href="https://'.Tools::getShopDomainSsl().$_SERVER['REQUEST_URI'].'">'.$this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';

@@ -12,3 +12,5 @@ AND `id_lang` = (
 	WHERE `iso_code` = 'en'
 	LIMIT 1
 );
+
+ALTER TABLE `PREFIX_discount` ADD `include_tax` TINYINT(1) NOT NULL DEFAULT '0';

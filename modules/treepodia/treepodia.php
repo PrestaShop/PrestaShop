@@ -86,7 +86,7 @@ class Treepodia extends Module
 		if (!($domain = Configuration::get('PS_SHOP_DOMAIN')))
 			$domain = $_SERVER['HTTP_HOST'];
 
-		$host = ((Configuration::get('PS_SSL_ENABLED') OR (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://'.$domain : 'http://'.$domain).__PS_BASE_URI__;
+		$host = ((Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://'.$domain : 'http://'.$domain).__PS_BASE_URI__;
 
 		return $host;
 	}

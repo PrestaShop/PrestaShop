@@ -115,7 +115,7 @@ CREATE TABLE `PREFIX_attribute_lang` (
   `id_attribute` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
-  PRIMARY KEY `attribute_lang` (`id_attribute`,`id_lang`),
+  PRIMARY KEY (`id_attribute`,`id_lang`),
   KEY `id_lang` (`id_lang`,`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -567,6 +567,7 @@ CREATE TABLE `PREFIX_discount` (
   `date_from` datetime NOT NULL,
   `date_to` datetime NOT NULL,
   `minimal` decimal(17,2) default NULL,
+  `include_tax` tinyint(1) NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '0',
   `cart_display` tinyint(1) unsigned NOT NULL default '0',
 	`date_add` datetime NOT NULL,
