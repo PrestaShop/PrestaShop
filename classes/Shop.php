@@ -258,7 +258,6 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 *
 	 * Get shop URI
 	 *
 	 * @return string
@@ -271,6 +270,18 @@ class ShopCore extends ObjectModel
 	public function getPhysicalURI()
 	{
 		return $this->physical_uri;
+	}
+	
+	/**
+	 * Get shop URL
+	 *
+	 * @return string
+	 */
+	public function getBaseURL()
+	{
+		if (!$this->domain)
+			return false;
+		return 'http://'.$this->domain.$this->physical_uri.$this->virtual_uri;
 	}
 
 	/**
