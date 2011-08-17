@@ -438,7 +438,7 @@ abstract class ModuleCore
 	public function registerExceptions($id_hook, $excepts, $shopList = null)
 	{
 		if (is_null($shopList))
-			$shopList = Shop::getShops(true, null, true);
+			Context::getContext()->shop->getListOfID();
 
 		foreach ($shopList as $shopID)
 		{
@@ -460,10 +460,17 @@ abstract class ModuleCore
 		return true;
 	}
 
-	public function editExceptions($hookID, $excepts, $shopList = null)
+	public function editExceptions($hookID, $excepts)
 	{
-		$this->unregisterExceptions($hookID, $shopList);
-		return $this->registerExceptions($hookID, $excepts, $shopList);
+		$result = true;
+		foreach ($excepts as $shopID => $except)
+		{
+			$shopList = ($shopID == 0) ? Context::getContext()->shop->getListOfID() : array($shopID);
+			$this->unregisterExceptions($hookID, $shopList);
+			$result &= $this->registerExceptions($hookID, $except, $shopList);
+		}
+		
+		return $result;
 	}
 
 

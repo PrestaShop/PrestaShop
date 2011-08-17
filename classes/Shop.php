@@ -509,7 +509,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
 	 *
-	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+	 * @param string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
 	 * @return array
 	 */
 	public function getListOfID($share = false)
