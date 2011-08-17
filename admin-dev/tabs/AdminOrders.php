@@ -62,7 +62,7 @@ class AdminOrders extends AdminTab
 		'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false));
  		$this->shopLinkType = 'shop';
- 		$this->shopShareDatas = true;
+ 		$this->shopShareDatas = Shop::SHARE_ORDER;
 		parent::__construct();
 	}
 
