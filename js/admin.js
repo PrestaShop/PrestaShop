@@ -829,6 +829,12 @@ function trackClickOnHelp(label, doc_version)
 
 $(document).ready(function()
 {
+	$('.isInvisible input, .isInvisible select, .isInvisible textarea').each(function(k, v)
+	{
+		$(v).attr('disabled', true);
+	});
+	
+	// Disable options fields for each row with a multishop default checkbox
 	$('.preference_default_multishop input[type=checkbox]').each(function(k, v)
 	{
 		var key = $(v).attr('name');
