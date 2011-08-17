@@ -525,6 +525,8 @@ class Loyalty extends Module
 				 'voucher' => LoyaltyModule::getVoucherValue((int)$points),
 				 'guest_checkout' => (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED')
 			));
+		} else {
+			$smarty->assign(array('points' => 0));
 		}
 		
 		return $this->display(__FILE__, 'shopping-cart.tpl');

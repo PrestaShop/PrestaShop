@@ -40,7 +40,6 @@
 {else}
 	<script type="text/javascript">
 	// <![CDATA[
-	var baseDir = '{$base_dir_ssl}';
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';

@@ -80,9 +80,8 @@ class BlockSearch extends Module
 	 */
 	private function _hookCommon($params)
 	{
-
 		$this->context->smarty->assign('ENT_QUOTES', ENT_QUOTES);
-		$this->context->smarty->assign('search_ssl', (int)(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'));
+		$this->context->smarty->assign('search_ssl', Tools::usingSecureMode());
 		
 		$ajaxSearch=(int)(Configuration::get('PS_SEARCH_AJAX'));
 		$this->context->smarty->assign('ajaxsearch', $ajaxSearch);

@@ -368,8 +368,7 @@ class MondialRelay extends Module
 		self::$modulePath =	_PS_MODULE_DIR_. 'mondialrelay/';
 		self::$MRToken = sha1('mr'._COOKIE_KEY_.'mrAgain');
 	
-		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
-			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		$protocol = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
 		
 		$endURL = __PS_BASE_URI__.'/modules/mondialrelay/';
 	

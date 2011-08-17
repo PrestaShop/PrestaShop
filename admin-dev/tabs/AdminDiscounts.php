@@ -340,7 +340,11 @@ class AdminDiscounts extends AdminTab
 				</div>
 				<label>'.$this->l('Minimum amount').'</label>
 				<div class="margin-form">
-					<input type="text" size="15" name="minimal" value="'.($this->getFieldValue($obj, 'minimal') ? (float)($this->getFieldValue($obj, 'minimal')) : '0').'" onkeyup="javascript:this.value = this.value.replace(/,/g, \'.\'); " /> <sup>*</sup>
+					<input type="text" size="15" name="minimal" value="'.($this->getFieldValue($obj, 'minimal') ? (float)($this->getFieldValue($obj, 'minimal')) : '0').'" onkeyup="javascript:this.value = this.value.replace(/,/g, \'.\'); " /> <sup>*</sup>&nbsp;
+					<select name="include_tax" id="include_tax" style="vertical-align: middle;">
+						<option value="0">'.$this->l('tax excl.').'</option>
+						<option value="1">'.$this->l('tax incl.').'</option>
+					</select>
 					<p class="clear">'.$this->l('0 if not applicable').'</p>
 				</div>
 				<div class="margin-form">
@@ -541,5 +545,3 @@ class AdminDiscounts extends AdminTab
 					self::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
 	}
 }
-
-

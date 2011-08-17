@@ -224,6 +224,10 @@ class ToolsCore
 	*/
 	public static function usingSecureMode()
 	{
+		if (empty($_SERVER['HTTPS'])) {
+			if(!empty($_SERVER['SSL']))
+				$_SERVER['HTTPS'] = $_SERVER['SSL'];
+		}
 		return !(empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off');
 	}
 	

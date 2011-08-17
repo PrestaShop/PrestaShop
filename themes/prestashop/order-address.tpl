@@ -61,7 +61,6 @@
 <script type="text/javascript">
 // <![CDATA[
 	{if !$opc}
-	var baseDir = '{$base_dir_ssl}';
 	var orderProcess = 'order';
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
 	var currencyRate = '{$currencyRate|floatval}';

@@ -1033,7 +1033,7 @@ class PayPal extends PaymentModule
 		// Amount for refund
 		$amt = 0.00;
 		foreach ($products AS $product)
-			$amt += (float)($product['total_price']) * ($product['product_quantity'] - $product['product_quantity_refunded']);
+			$amt += (float)($product['product_price_wt']) * ($product['product_quantity'] - $product['product_quantity_refunded']);
 		$amt += (float)($order->total_shipping) + (float)($order->total_wrapping) - (float)($order->total_discounts);
 
 		// check if total or partial

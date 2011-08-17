@@ -54,12 +54,6 @@
 
 <script type="text/javascript">
 // <![CDATA[
-	var baseDir = '{$base_dir_ssl}';
-//]]>
-</script>
-
-<script type="text/javascript">
-// <![CDATA[
 idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{else}false{/if}{/if};
 countries = new Array();
 countriesNeedIDNumber = new Array();

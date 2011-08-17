@@ -24,11 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-// <![CDATA[
-	var baseDir = '{$base_dir_ssl}';		
-//]]>
-</script>
 {if !isset($smarty.get.ajax)}
 <div class="block-center" id="block-history">
 	<div id="block-order-detail">

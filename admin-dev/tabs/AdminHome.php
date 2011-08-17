@@ -154,7 +154,7 @@ class AdminHome extends AdminTab
 		$this->warnDomainName();
 
 		$tab = get_class();
-		$protocol = (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off')?'https':'http';
+		$protocol = Tools::usingSecureMode()?'https':'http';
 		$isoUser = $this->context->language->iso_code;
 		$currency = $this->context->currency;
 		echo '<div>

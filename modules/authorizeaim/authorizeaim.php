@@ -140,7 +140,7 @@ class authorizeAIM extends PaymentModule
 
 	public function hookPayment($params)
 	{
-		if (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) != 'off' AND Configuration::get('PS_SSL_ENABLED'))
+		if (Tools::usingSecureMode() AND Configuration::get('PS_SSL_ENABLED'))
 		{
 			$invoiceAddress = new Address((int)$params['cart']->id_address_invoice);
 			

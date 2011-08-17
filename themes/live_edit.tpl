@@ -37,7 +37,6 @@
 	var unableToUnregisterHook = '{l s='Unable to unregister hook'}';
 	var unableToSaveModulePosition = '{l s='Unable to save module position'}';
 	var loadFail = '{l s='Failed to load module list'}';
-	var baseDir = '{$base_dir}';
 </script>
 
 <div style="width:100%;height:30px;padding-top:10px;background-color:#D0D3D8;border:solid 1px gray;position:fixed;bottom:0;left:0;opacity:0.7" onmouseover="$(this).css('opacity', 1);" onmouseout="$(this).css('opacity', 0.7);">
