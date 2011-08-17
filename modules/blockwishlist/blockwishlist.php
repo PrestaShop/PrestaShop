@@ -178,26 +178,26 @@ class BlockWishList extends Module
 		global $errors;
 
 		require_once(dirname(__FILE__).'/WishList.php');
-		if ($params['cookie']->isLogged())
+		if ($this->context->customer->isLogged())
 		{
-			$wishlists = Wishlist::getByIdCustomer($params['cookie']->id_customer);
-			if (empty($params['cookie']->id_wishlist) === true ||
-				WishList::exists($params['cookie']->id_wishlist, $params['cookie']->id_customer) === false)
+			$wishlists = Wishlist::getByIdCustomer($this->context->customer->id);
+			if (empty($this->context->cookie->id_wishlist) === true ||
+				WishList::exists($this->context->cookie->id_wishlist, $this->context->customer->id) === false)
 			{
 				if (!sizeof($wishlists))
 					$id_wishlist = false;
 				else
 				{
 					$id_wishlist = (int)($wishlists[0]['id_wishlist']);
-					$params['cookie']->id_wishlist = (int)($id_wishlist);
+					$this->context->cookie->id_wishlist = (int)($id_wishlist);
 				}
 			}
 			else
-				$id_wishlist = $params['cookie']->id_wishlist;
+				$id_wishlist = $this->context->cookie->id_wishlist;
 			$this->context->smarty->assign(array(
 				'id_wishlist' => $id_wishlist,
 				'isLogged' => true,
-				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $params['cookie']->id_customer, $params['cookie']->id_lang, null, true)),
+				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $this->context->customer->id, $this->context->language->id, null, true)),
 				'wishlists' => $wishlists,
 				'ptoken' => Tools::getToken(false)));
 		}

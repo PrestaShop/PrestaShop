@@ -32,7 +32,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/hipay.php');
 
-if (!$cookie->isLogged(true))
+if (!Context::getContext()->customer->isLogged(true))
     Tools::redirect('index.php?controller=authentication&back=order.php');
 
 $hipay = new HiPay();

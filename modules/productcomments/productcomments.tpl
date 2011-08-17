@@ -111,7 +111,7 @@
 						{if $comment.total_advice > 0}
 							<li>{$comment.total_useful} {l s='out of' mod='productcomments'} {$comment.total_advice} {l s='people found this review useful' mod='productcomments'}</li>
 						{/if}
-						{if $cookie->isLogged() == true}
+						{if $logged == 1}
 							{if !$comment.customer_advice}
 							<li>{l s='Was this comment useful to you?' mod='productcomments'}<button class="usefulness_btn" id="comment_useful_yes_{$comment.id_product_comment}">{l s='yes' mod='productcomments'}</button><button class="usefulness_btn" id="comment_useful_no_{$comment.id_product_comment}">{l s='no' mod='productcomments'}</button></li>
 							{/if}

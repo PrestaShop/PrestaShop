@@ -29,12 +29,14 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 require_once(dirname(__FILE__).'/WishList.php');
 
+$context = Context::getContext();
+
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
-	$context->cookie->isLogged() === true)
+	$context->customer->isLogged() === true)
 	exit(Tools::displayError('invalid token',false));
 
-if ($context->cookie->isLogged())
+if ($context->customer->isLogged())
 {
 	$id_wishlist = (int)(Tools::getValue('id_wishlist'));
 	if (empty($id_wishlist) === true)

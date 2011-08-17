@@ -58,7 +58,7 @@ class BlockMyAccount extends Module
 
 	public function hookLeftColumn($params)
 	{
-		if (!$params['cookie']->isLogged())
+		if ($this->context->customer->isLogged())
 			return false;
 		$this->context->smarty->assign(array(
 			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),

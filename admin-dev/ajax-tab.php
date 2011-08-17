@@ -42,7 +42,7 @@ if (empty($tab) and !sizeof($_POST))
 }
 	if ($adminObj = checkingTab($tab))
 	{
-    	$isoUser = Language::getIsoById(intval($cookie->id_lang));
+    	$isoUser = Context::getContext()->language->iso_code;
 
 		if (Validate::isLoadedObject($adminObj))
 		{

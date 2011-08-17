@@ -30,8 +30,6 @@ define('PS_ADMIN_DIR', getcwd());
 include(PS_ADMIN_DIR.'/../config/config.inc.php');
 include(PS_ADMIN_DIR.'/functions.php');
 
-$cookie = new Cookie('psAdmin', substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__), -10));
-
 $errors = array();
 
 $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');

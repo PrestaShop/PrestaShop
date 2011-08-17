@@ -171,6 +171,7 @@ class AuthControllerCore extends FrontController
 								$this->context->cookie->customer_firstname = $customer->firstname;
 								$this->context->cookie->passwd = $customer->passwd;
 								$this->context->cookie->logged = 1;
+								$customer->logged = 1;
 								$this->context->cookie->email = $customer->email;
 								$this->context->cookie->is_guest = !Tools::getValue('is_new_customer', 1);
 								/* Update cart address */
@@ -251,6 +252,7 @@ class AuthControllerCore extends FrontController
 					$this->context->cookie->customer_lastname = $customer->lastname;
 					$this->context->cookie->customer_firstname = $customer->firstname;
 					$this->context->cookie->logged = 1;
+					$customer->logged = 1;
 					$this->context->cookie->is_guest = $customer->isGuest();
 					$this->context->cookie->passwd = $customer->passwd;
 					$this->context->cookie->email = $customer->email;

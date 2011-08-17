@@ -40,7 +40,7 @@ if (empty($tab) and !sizeof($_POST))
 
 	if ($adminObj = checkingTab($tab))
 	{
-    	$isoUser = Language::getIsoById(intval($cookie->id_lang));
+    	$isoUser = Context::getContext()->language->id;
 		$tabs = array();
 		$tabs = recursiveTab($adminObj->id, $tabs);
 		$tabs = array_reverse($tabs);
@@ -49,7 +49,7 @@ if (empty($tab) and !sizeof($_POST))
 		foreach ($tabs AS $key => $item)
 			$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
 			'.((sizeof($tabs) - 1 > $key)
-				? '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).intval($cookie->id_employee)).'">'
+				? '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">'
 				: '').'
 			'.$item['name'].((sizeof($tabs) - 1 > $key) ? '</a>' : '');
 		// @TODO : a way to desactivate this feature
@@ -59,7 +59,7 @@ if (empty($tab) and !sizeof($_POST))
 			$.ajax({
 				type: \'POST\',
 				url: \'ajax.php\',
-				data: \'helpAccess=1&item='.$item['class_name'].'&isoUser='.$isoUser.'&country='.Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')).'&version='._PS_VERSION_.'\',
+				data: \'helpAccess=1&item='.$item['class_name'].'&isoUser='.$isoUser.'&country='.Context::getContext()->country->iso_code.'&version='._PS_VERSION_.'\',
 				async : true,
 				success: function(msg) {
 					$("#help-button").html(msg);
@@ -72,7 +72,7 @@ if (empty($tab) and !sizeof($_POST))
 		echo '<div class="path_bar">
 		<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
 		</div>
-			<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).intval($cookie->id_employee)).'">'.translate('Back Office').'</a>
+			<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
 			'.$bread;
 		echo '
 		</div>';

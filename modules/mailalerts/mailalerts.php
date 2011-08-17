@@ -258,7 +258,7 @@ class MailAlerts extends Module
 		$id_product = (int)($params['product']->id);
 		$id_product_attribute = 0;
 
-		if (!$this->context->cookie->isLogged())
+		if (!$this->context->customer->isLogged())
 			$this->context->smarty->assign('email', 1);
 		else
 		{

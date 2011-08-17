@@ -32,7 +32,7 @@ if (!$id_product = (int)(Tools::getValue('id_product')))
 	die ('0');
 $id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
 
-if (!$cookie->isLogged())
+if (!Context::getContext()->customer->isLogged())
 {
 	$customer_email = trim(Tools::getValue('customer_email'));
 	if (empty($customer_email) OR !Validate::isEmail($customer_email))
@@ -53,7 +53,7 @@ if (!$cookie->isLogged())
 }
 else
 {
-	$id_customer = (int)($cookie->id_customer);
+	$id_customer = (int)Context::getContext()->customer->id;
 	$customer_email = 0;
 }
 

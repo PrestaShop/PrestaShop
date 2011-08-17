@@ -168,10 +168,12 @@ class	CookieCore
 	/**
 	  * Check customer informations saved into cookie and return customer validity
 	  *
+	  * @deprecated as of version 1.5 use Customer::isLogged() instead
 	  * @return boolean customer validity
 	  */
 	public function isLogged($withGuest = false)
 	{
+		Tools::displayAsDeprecated();
 		if (!$withGuest AND $this->is_guest == 1)
 			return false;
 		
@@ -184,10 +186,12 @@ class	CookieCore
 	/**
 	  * Check employee informations saved into cookie and return employee validity
 	  *
+	  * @deprecated as of version 1.5 use Employee::isLoggedBack() instead
 	  * @return boolean employee validity
 	  */
 	public function isLoggedBack()
 	{
+		Tools::displayAsDeprecated();
 		/* Employee is valid only if it can be load and if cookie password is the same as database one */
 	 	return ($this->id_employee
 			AND Validate::isUnsignedId($this->id_employee)
@@ -198,6 +202,7 @@ class	CookieCore
 
 	/**
 	  * Delete cookie
+	  * As of version 1.5 don't call this function, use Customer::logout() or Employee::logout() instead;
 	  */
 	public function logout()
 	{
@@ -210,7 +215,8 @@ class	CookieCore
 
 	/**
 	  * Soft logout, delete everything links to the customer
-	  * but leave there affiliate's informations
+	  * but leave there affiliate's informations.
+	  * As of version 1.5 don't call this function, use Customer::mylogout() instead;
 	  */
 	public function mylogout()
 	{

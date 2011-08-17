@@ -40,9 +40,9 @@ $quantity = (int)(Tools::getValue('quantity'));
 $id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
-	$context->cookie->isLogged() === true)
+	$context->customer->isLogged() === true)
 	echo Tools::displayError('Invalid token');
-if ($context->cookie->isLogged())
+if ($context->customer->isLogged())
 {
 	if ($id_wishlist AND WishList::exists($id_wishlist, $context->customer->id) === true)
 		$context->cookie->id_wishlist = (int)($id_wishlist);

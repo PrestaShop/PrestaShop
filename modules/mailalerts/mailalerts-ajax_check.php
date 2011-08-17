@@ -29,10 +29,10 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/../../modules/mailalerts/mailalerts.php');
 
-if (!$cookie->isLogged())
+if (!Context::getContext()->customer->isLogged())
 	die('0');
 
-$id_customer = (int)($cookie->id_customer);
+$id_customer = (int)(Context::getContext()->customer->id);
 if (!$id_product = (int)(Tools::getValue('id_product')))
 	die ('0');
 $id_product_attribute = (int)(Tools::getValue('id_product_attribute'));

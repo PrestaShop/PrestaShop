@@ -32,7 +32,7 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 require_once(dirname(__FILE__).'/WishList.php');
 $context = Context::getContext();
-if ($context->cookie->isLogged())
+if ($context->customer->isLogged())
 {
 	$action = Tools::getValue('action');
 	$id_wishlist = (int)Tools::getValue('id_wishlist');

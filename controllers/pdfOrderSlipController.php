@@ -38,15 +38,14 @@ class PdfOrderSlipControllerCore extends FrontController
 	{
 		parent::process();
 
-		$cookie = $this->context->cookie;
-		if (!$cookie->isLogged())
+		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 		
 		if (isset($_GET['id_order_slip']) AND Validate::isUnsignedId($_GET['id_order_slip']))
 			$orderSlip = new OrderSlip((int)($_GET['id_order_slip']));
 		if (!isset($orderSlip) OR !Validate::isLoadedObject($orderSlip))
 		    die(Tools::displayError('Order return not found'));
-		elseif ($orderSlip->id_customer != $cookie->id_customer)
+		elseif ($orderSlip->id_customer != $this->context->customer->id)
 		    die(Tools::displayError('Order return not found'));
 		$order = new Order((int)($orderSlip->id_order));
 		if (!Validate::isLoadedObject($order))

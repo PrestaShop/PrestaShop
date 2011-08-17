@@ -290,7 +290,7 @@ class ParentOrderControllerCore extends FrontController
 		//if guest checkout disabled and flag is_guest  in cookies is actived
 		if(Configuration::get('PS_GUEST_CHECKOUT_ENABLED') == 0 AND ((int)$this->context->customer->is_guest != Configuration::get('PS_GUEST_CHECKOUT_ENABLED')))
 		{
-			$this->context->cookie->logout();
+			$this->context->customer->logout();
 			Tools::redirect('');
 		}
 		elseif (!Customer::getAddressesTotalById($this->context->customer->id))

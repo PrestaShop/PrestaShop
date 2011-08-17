@@ -98,7 +98,7 @@ function displayConfirm()
 {
 	global $ppExpress, $payerID;
 
-	if (!Context::getContext()->cookie->isLogged(true))
+	if (!Context::getContext()->customer->isLogged(true))
 		die('Not logged');
 	if (!$payerID AND !$payerID = Tools::htmlentitiesUTF8(strval(Tools::getValue('payerID'))))
 		die('No payer ID');
@@ -127,7 +127,7 @@ function submitConfirm()
 {
 	global $ppExpress;
 
-	if (!Context::getContext()->cookie->isLogged(true))
+	if (!Context::getContext()->customer->isLogged(true))
 		die('Not logged');
 	elseif (!$currency = (int)(Tools::getValue('currency_payement')))
 		die('No currency');
@@ -187,6 +187,7 @@ function submitAccount()
 					$context->cookie->customer_firstname = $customer->firstname;
 					$context->cookie->passwd = $customer->passwd;
 					$context->cookie->logged = 1;
+					$customer->logged = 1;
 					$context->cookie->email = $customer->email;
 					Module::hookExec('createAccount', array(
 						'_POST' => $_POST,
@@ -232,6 +233,7 @@ function submitLogin()
 			$context->cookie->customer_lastname = $customer->lastname;
 			$context->cookie->customer_firstname = $customer->firstname;
 			$context->cookie->logged = 1;
+			$customer->logged = 1;
 			$context->cookie->passwd = $customer->passwd;
 			$context->cookie->email = $customer->email;
 			if (Configuration::get('PS_CART_FOLLOWING') AND (empty($context->cookie->id_cart) OR Cart::getNbProducts($context->cookie->id_cart) == 0))
@@ -252,11 +254,13 @@ function displayLogin()
 	// Customer exists, login form
 
 	// If customer already logged, check if same mail than PayPal, and go through, or unlog
-	if (Context::getContext()->cookie->isLogged(true) AND isset($result['EMAIL']) AND Context::getContext()->cookie->email == $result['EMAIL'])
+	if (Context::getContext()->customer->isLogged(true) AND isset($result['EMAIL']) AND Context::getContext()->customer->email == $result['EMAIL'])
 		displayProcess($payerID);
-	elseif (Context::getContext()->cookie->isLogged(true))
+	elseif (Context::getContext()->customer->isLogged(true))
+	{
 		Context::getContext()->cookie->makeNewLog();
-
+		Context::getContext()->customer = new Customer();
+	}
 	// Smarty assigns
 	Context::getContext()->smarty->assign(array(
 		'email' => $email,
@@ -279,9 +283,11 @@ function displayAccount()
 	// Customer does not exists, signup form
 
 	// If customer already logged, unlog him
-	if (Context::getContext()->cookie->isLogged(true))
+	if (Context::getContext()->customer->isLogged(true))
+	{
 		Context::getContext()->cookie->makeNewLog();
-
+		Context::getContext()->customer = new Customer();
+	}
 	// Generate years, months and days
 	if (isset($_POST['years']) AND is_numeric($_POST['years']))
 		$selectedYears = (int)($_POST['years']);
@@ -332,7 +338,7 @@ function displayAccount()
 
 // #####
 // Process !!
-/*if (!Context::getContext()->cookie->isLogged(true))
+/*if (!Context::getContext()->customer->isLogged(true))
 {
 	displayAccount();
 	die('Not logged');
