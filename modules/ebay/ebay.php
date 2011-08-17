@@ -67,7 +67,7 @@ class Ebay extends Module
 		$this->id_lang = Language::getIdByIso('fr');
 
 		// Check the country and ask the bypass if not 'fr'
-		if (strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
+		if (strtolower($this->context->country->iso_code) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
 		{
 			$this->warning = $this->l('eBay module currently works only for eBay.fr');
 			return false;
@@ -485,7 +485,7 @@ class Ebay extends Module
 		// Checking Country
 		if (Tools::getValue('ebay_country_default_fr') == 'ok')
 			$this->context->cookie->ebay_country_default_fr = true;
-		if (strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
+		if (strtolower($this->context->country->iso_code) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
 			return $this->_html.$this->displayError($this->l('eBay module currently works only for eBay.fr').'. <a href="'.$_SERVER['REQUEST_URI'].'&ebay_country_default_fr=ok">'.$this->l('Continue anyway ?').'</a>');
 
 

@@ -489,7 +489,6 @@ class AdminModules extends AdminTab
 
 	public function displayList()
 	{
-		$this->context = Context::getContext();
 		$modulesAuthors = array();
 		$autocompleteList = 'var moduleList = [';
 
@@ -499,7 +498,7 @@ class AdminModules extends AdminTab
 		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id);
 
 		$nameCountryDefault = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
-		$isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
+		$isoCountryDefault = $this->context->country->iso_code;
 
 		$serialModules = '';
 		$modules = Module::getModulesOnDisk(true);

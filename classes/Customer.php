@@ -606,7 +606,8 @@ class CustomerCore extends ObjectModel
 	/**
 	  * Check customer informations and return customer validity
 	  *
-	  * @parma boolean $withGuest 
+	  * @since 1.5.0
+	  * @param boolean $withGuest 
 	  * @return boolean customer validity
 	  */
 	public function isLogged($withGuest = false)
@@ -622,6 +623,8 @@ class CustomerCore extends ObjectModel
 	
 	/**
 	  * Logout
+	  * 
+	  * @since 1.5.0
 	  */
 	public function logout()
 	{
@@ -633,6 +636,8 @@ class CustomerCore extends ObjectModel
 	/**
 	  * Soft logout, delete everything links to the customer
 	  * but leave there affiliate's informations
+	  * 
+	  * @since 1.5.0
 	  */
 	public function mylogout()
 	{

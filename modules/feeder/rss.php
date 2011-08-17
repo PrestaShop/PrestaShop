@@ -46,7 +46,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 		<link><?php echo _PS_BASE_URL_.__PS_BASE_URI__; ?></link>
 		<mail><?php echo Configuration::get('PS_SHOP_EMAIL') ?></mail>
 		<generator>PrestaShop</generator>
-		<language><?php echo Language::getIsoById((int)($cookie->id_lang)); ?></language>
+		<language><?php echo Context::getContext()->language->iso_code; ?></language>
 		<image>
 			<title><![CDATA[<?php echo Configuration::get('PS_SHOP_NAME') ?>]]></title>
 			<url><?php echo _PS_BASE_URL_.__PS_BASE_URI__.'img/logo.jpg'; ?></url>

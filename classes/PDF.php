@@ -189,7 +189,7 @@ class PDFCore extends PDF_PageGroupCore
    private function _builMerchantFooterDetail($conf)
    {
 		// If the country is USA
-	   	if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'US')
+	   	if (Context::getContext()->country->iso_code == 'US')
 	   	{
 	   		$completeAddressShop = $this->_getCompleteUSAddressFormat($conf);
 	   	
@@ -449,7 +449,7 @@ class PDFCore extends PDF_PageGroupCore
 						if (!in_array($pattern, $patternRules['avoid']))
 						{
 							if ($pattern == 'State:name' && 
-								Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'US')
+								Context::getContext()->country->iso_code == 'US')
 							{
 								$state = &$addressType[$type]['addressFormatedValues'][$pattern];
 								$state = strtoupper(substr($state, 0, 2));

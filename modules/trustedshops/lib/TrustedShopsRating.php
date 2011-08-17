@@ -464,7 +464,7 @@ class TrustedShopsRating extends AbsTrustedShops
 		if (!$this->_isTsIdActive((int)($params['cookie']->id_lang)))
 			return false;
 		
-		self::$smarty->assign(array('rating_url' => $this->getRatingUrl((int)($params['objOrder']->id)), 'language' => Language::getIsoById((int)($params['cookie']->id_lang))));
+		self::$smarty->assign(array('rating_url' => $this->getRatingUrl((int)($params['objOrder']->id)), 'language' => $this->context->language->iso_code));
 		
 		return $this->display(self::$module_name, 'order-confirmation.tpl');
 	}
