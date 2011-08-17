@@ -1627,12 +1627,20 @@ p.preference_description{
 	font-style: italic;
 }
 
+.multishop_warning{
+    background-image: url("../img/admin/warning.gif");
+    background-repeat: no-repeat;
+    color: #FE2744;
+    font-weight: bold;
+    padding-left: 22px;
+    padding-top: 1px;
+}
+
 .isDisabled{
 	color: #3F3F3F;
 	font-style: italic;
 }
 
-input.disable_me[disabled=disabled]
-{
+input.disable_me[disabled=disabled]{
 	background-color: red;
 }

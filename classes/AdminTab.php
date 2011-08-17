@@ -1891,7 +1891,7 @@ abstract class AdminTabCore
 				echo (isset($field['desc']) ? '<p class="preference_description">'.$field['desc'].'</p>' : '');
 
 				// Is this field invisible in current shop context ?
-				echo ($isInvisible) ? '<p><img src="../img/admin/warning.gif" /> <b>'.$this->l('You can\'t change the value of this configuration field in this shop context').'</b></p>' : '';
+				echo ($isInvisible) ? '<p class="multishop_warning">'.$this->l('You can\'t change the value of this configuration field in this shop context').'</p>' : '';
 				
 				echo '</div></div>';
 			}
