@@ -34,7 +34,7 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->need_instance = 0;
@@ -43,6 +43,13 @@ class authorizeAIM extends PaymentModule
 
         $this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
         $this->description = $this->l('Receive payment with Authorize.net');
+
+		/* For 1.4.3 and less compatibility */
+		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+		if (!Configuration::get('PS_OS_PAYMENT'))
+			foreach ($updateConfig as $u)
+				if (!Configuration::get($u) && defined('_'.$u.'_'))
+					Configuration::updateValue($u, constant('_'.$u.'_'));
 	}
 
 	public function install()

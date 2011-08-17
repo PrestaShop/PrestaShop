@@ -685,7 +685,7 @@ class BlockCms extends Module
 					$footer .= $box.'|';
 			Configuration::updateValue('FOOTER_CMS', rtrim($footer, '|'));
 			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', Tools::getValue('footer_active'));
-			Configuration::updateValue('FOOTER_POWEREDBY', (Tools::getValue('footer_poweredby_active') == 1 ? 1 : 0));
+			Configuration::updateValue('FOOTER_POWEREDBY', (Tools::getValue('footer_poweredby_active') == 'on' ? 1 : 0));
 			
 			$this->_html = $this->displayConfirmation($this->l('Footer\'s CMS updated'));
 		}

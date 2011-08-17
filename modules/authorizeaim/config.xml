@@ -2,7 +2,7 @@
 <module>
 	<name>authorizeaim</name>
 	<displayName><![CDATA[Authorize.net AIM (Advanced Integration Method)]]></displayName>
-	<version><![CDATA[1.1]]></version>
+	<version><![CDATA[1.2]]></version>
 	<description><![CDATA[Receive payment with Authorize.net]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

@@ -57,7 +57,7 @@ class UspsCarrier extends CarrierModule
 
 		parent::__construct ();
 
-		$this->displayName = $this->l('USPS Carrier');
+		$this->displayName = $this->l('U.S.P.S Rate Calulator');
 		$this->description = $this->l('Offer your customers, different delivery methods with USPS');
 
 		if (self::isInstalled($this->name))
@@ -71,7 +71,7 @@ class UspsCarrier extends CarrierModule
 				if (!Configuration::get($keyConfiguration) && !empty($name))
 					$warning[] = '\''.$name.'\' ';
 
-			// Check calcul mode
+			// Check calculation mode
 			if (!Configuration::get('USPS_CARRIER_CALCUL_MODE'))
 				Configuration::updateValue('USPS_CARRIER_CALCUL_MODE', 'split');
 
@@ -134,7 +134,7 @@ class UspsCarrier extends CarrierModule
 			'TRUE' => $this->l('True')
 		);
 
-		// Loading calcul mode list
+		// Loading calculation mode list
 		$this->_calculModeList = array(
 			'onepackage' => $this->l('All items in one package'),
 			'split' => $this->l('Split one item per package')
@@ -549,14 +549,14 @@ class UspsCarrier extends CarrierModule
 					$html .= '</select>
 					<p>' . $this->l('Select if it is machinable or not by default.') . '</p>
 					</div>
-					<label>'.$this->l('Calcul mode').' : </label>
+					<label>'.$this->l('Calculation mode').' : </label>
 						<div class="margin-form">
 							<select name="usps_carrier_calcul_mode">';
 								$idcalculmode = array();
 								foreach($this->_calculModeList as $kcalculmode => $vcalculmode)
 									$html .= '<option value="'.$kcalculmode.'" '.($kcalculmode == (Tools::getValue('usps_carrier_calcul_mode', Configuration::get('USPS_CARRIER_CALCUL_MODE'))) ? 'selected="selected"' : '').'>'.$vcalculmode.'</option>';
 					$html .= '</select>
-					<p>' . $this->l('Using the calcul mode "All items in one package" will automatically use default packaging size, packaging type and delivery services. Specifics configurations for categories or product won\'t be used.') . '</p>
+					<p>' . $this->l('Using the calculation mode "All items in one package" will automatically use default packaging size, packaging type and delivery services. Specifics configurations for categories or product won\'t be used.') . '</p>
 					</div>
 					<label>'.$this->l('Delivery Service').' : </label>
 					<div class="margin-form">';

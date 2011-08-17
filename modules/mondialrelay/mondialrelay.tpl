@@ -44,26 +44,26 @@
 
 <script type="text/javascript">
 	$(document).ready(function() 
-	{
+	{literal}{{/literal}
 		// Bind id_carrierX to an ajax call 
 		{foreach from=$carriersextra item=carrier name=myLoop}
 			$('#id_carrier' + {$carrier.id_carrier}).click(function()
-			{
+			{literal}{{/literal}
 				PS_MRCarrierSelectedProcess($(this), {$carrier.id_carrier}, '{$carrier.mr_ModeLiv}');
-		});
+			{literal}}{/literal});
 			PS_MRCarrierMethodList[{$carrier.id_carrier}] = {$carrier.id_mr_method};
 			if ($('#id_carrier' + {$carrier.id_carrier}).attr('checked'))
-			{
+			{literal}{{/literal}
 				PS_MRCarrierSelectedProcess($('#id_carrier' + {$carrier.id_carrier}), {$carrier.id_carrier}, '{$carrier.mr_ModeLiv}');
-			}
+			{literal}}{/literal}
 		{/foreach}
 		// Handle input click of the other input to hide the previous relay point list displayed
 		$('input[name=id_carrier]').click(function()
-		{
+		{literal}{{/literal}
 			// Hide MR input if one of them is not selected
 			if (PS_MRCarrierMethodList[$(this).val()] == undefined)
 				PS_MRHideLastRelayPointList();
-		})
-	});
+		{literal}}{/literal})
+	{literal}}{/literal});
 	</script>
 

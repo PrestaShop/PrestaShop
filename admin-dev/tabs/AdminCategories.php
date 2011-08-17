@@ -222,7 +222,7 @@ class AdminCategories extends AdminTab
 					 'Collapse All' => $this->l('Collapse All'), 
 					 'Expand All' => $this->l('Expand All')
 				);
-				echo Helper::renderAdminCategorieTree($trads, array(isset($obj->id_parent) ? $obj->id_parent : 1), 'id_parent', true);
+				echo Helper::renderAdminCategorieTree($trads, array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1)), 'id_parent', true);
 				echo '</div>
 				<label>'.$this->l('Description:').' </label>
 				<div class="margin-form translatable">';

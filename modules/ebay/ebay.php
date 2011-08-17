@@ -269,6 +269,8 @@ class Ebay extends Module
 		{
 			// Retrieve product list for eBay (which have matched categories) AND Send each product on eBay
 			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE '.$sql.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
+			foreach ($productList as $k => $v)
+				$productList[$k]['noPriceUpdate'] = 1;
 			if ($productsList)
 				$this->_syncProducts($productsList);
 		}
@@ -276,6 +278,8 @@ class Ebay extends Module
 		{
 			// Select the sync Categories and Retrieve product list for eBay (which have matched and sync categories) AND Send each product on eBay
 			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE '.$sql.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
+			foreach ($productList as $k => $v)
+				$productList[$k]['noPriceUpdate'] = 1;
 			if ($productsList)
 				$this->_syncProducts($productsList);
 		}
@@ -1319,10 +1323,10 @@ class Ebay extends Module
 		@set_time_limit(3600);
 
 		// Run the products list
-		foreach ($productsList as $product)
+		foreach ($productsList as $p)
 		{
 			// Product instanciation
-			$product = new Product((int)$product['id_product'], true, $this->id_lang);
+			$product = new Product((int)$p['id_product'], true, $this->id_lang);
 			if (Validate::isLoadedObject($product) && $product->id_category_default > 0)
 			{
 				// Load default category matched in cache
@@ -1407,6 +1411,10 @@ class Ebay extends Module
 					'picturesMedium' => $picturesMedium,
 					'picturesLarge' => $picturesLarge,
 				);
+
+				// Price Update
+				if (isset($p['noPriceUpdate']))
+					$datas['noPriceUpdate'] = $p['noPriceUpdate'];
 
 				// Save percent and price discount
 				if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)

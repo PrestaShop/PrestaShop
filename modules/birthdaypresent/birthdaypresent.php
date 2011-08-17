@@ -128,6 +128,7 @@ class BirthdayPresent extends Module
 			$voucher->name = 'BIRTHDAY-'.(int)($voucher->id_customer).'-'.date('Y');
 			$voucher->description[(int)(Configuration::get('PS_LANG_DEFAULT'))] = $this->l('Your birthday present !');
 			$voucher->value = Configuration::get('BIRTHDAY_DISCOUNT_VALUE');
+			$voucher->id_currency = Configuration::get('PS_CURRENCY_DEFAULT');
 			$voucher->quantity = 1;
 			$voucher->quantity_per_user = 1;
 			$voucher->cumulable = 1;

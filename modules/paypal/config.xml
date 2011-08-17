@@ -2,7 +2,7 @@
 <module>
 	<name>paypal</name>
 	<displayName><![CDATA[PayPal]]></displayName>
-	<version><![CDATA[2.7]]></version>
+	<version><![CDATA[2.8]]></version>
 	<description><![CDATA[Accepts payments by credit cards (CB, Visa, MasterCard, Amex, Aurore, Cofinoga, 4 stars) with PayPal.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
