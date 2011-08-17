@@ -663,7 +663,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	}
 	
 	// PREACTIVATION PAYPAL WARNING
-	$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+	$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 	$content = explode('|', $content);
 	if ($content[0] == 'OK')
 		Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', $content[1]);

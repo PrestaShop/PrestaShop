@@ -382,9 +382,9 @@ class MoneyBookers extends PaymentModule
 						$selected = ($currentLogoBlockPosition == $position) ? 'selected="selected"' : '';
 						$output .= '<option value="'.$position.'" '.$selected.'>'.$translation.'</option>';
 					}
-		$link = new Link();
+		$link = $this->context->link;
 		$admin_dir =  substr(_PS_ADMIN_DIR_, strrpos(_PS_ADMIN_DIR_,'/') + 1);
-		$iso_code = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+		$iso_code = strtolower($this->context->country->iso_code);
 		$landingPage = ($iso_code == 'en' || $iso_code == 'us') ? 'http://www.moneybookers.com/ads/partners/index.html?p=Prestashop' :
 			'http://www.moneybookers.com/ads/partners/'.$iso_code.'/index.html?p=Prestashop';
 

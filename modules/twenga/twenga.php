@@ -138,7 +138,7 @@ class Twenga extends PaymentModule
 		self::$base_path = $this->site_url.'/modules/twenga/';
 		$this->feed_url = self::$base_path.'export.php?twenga_token='.sha1(Configuration::get('TWENGA_TOKEN')._COOKIE_KEY_);
 		
-		self::$shop_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
+		self::$shop_country = $this->context->country->iso_code;
 		
 		require_once realpath(self::$base_dir.'/lib/PrestashopStats.php');
 		require_once realpath(self::$base_dir.'/lib/TwengaObj.php');

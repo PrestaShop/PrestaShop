@@ -51,8 +51,7 @@ if ((empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off')
 		.'<br/><br/><a href="https://'.Tools::getServerName().$_SERVER['REQUEST_URI'].'">https://'.Tools::getServerName().$_SERVER['REQUEST_URI'].'</a>';
 }
 
-$cookie = Context::getContext()->cookie;
-$iso = strtolower(Language::getIsoById(Context::getContext()->language->id));
+$iso = strtolower(Context::getContext()->language->iso_code);
 include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 
@@ -83,6 +82,7 @@ if (Tools::isSubmit('Submit'))
 		{
 			$employee->remote_addr = ip2long(Tools::getRemoteAddr());
 		 	/* Creating cookie */
+			$cookie = Context::getContext()->cookie;
 			$cookie->id_employee = $employee->id;
 			$cookie->email = $employee->email;
 			$cookie->profile = $employee->id_profile;

@@ -1199,7 +1199,7 @@ class TSBuyerProtection extends AbsTrustedShops
 	}
 	public function hookRightColumn($params)
 	{
-		$lang = Language::getIsoById($params['cookie']->id_lang);
+		$lang = $this->context->language->iso_code;
 		$lang = strtoupper($lang);
 		if (array_key_exists($lang, $this->available_languages) AND isset(TSBuyerProtection::$CERTIFICATE[$lang]['tsID']))
 		{
@@ -1219,7 +1219,7 @@ class TSBuyerProtection extends AbsTrustedShops
 	 */
 	public function hookPaymentTop($params)
 	{
-		$lang = Language::getIsoById($params['cookie']->id_lang);
+		$lang = $this->context->language->iso_code;
 		$lang = strtoupper($lang);
 
 		if (!isset(TSBuyerProtection::$CERTIFICATE[$lang]) ||

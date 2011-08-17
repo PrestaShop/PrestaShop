@@ -123,7 +123,7 @@ class sendToAFriend extends Module
 			}
 
 		if (!isset($cover))
-			$cover = array('id_image' => Language::getIsoById((int)$cookie->id_lang).'-default', 'legend' => 'No picture');
+			$cover = array('id_image' => $this->context->language->iso_code.'-default', 'legend' => 'No picture');
 
 		$this->context->smarty->assign(array(
 			'cover' => $cover,
