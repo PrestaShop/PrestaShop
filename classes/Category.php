@@ -596,7 +596,7 @@ class CategoryCore extends ObjectModel
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		return new Category($context->shop->getCategory(), $id_lang);
+		return new Category($shop->getCategory(), $id_lang);
 	}
 
 	/**
@@ -986,11 +986,29 @@ class CategoryCore extends ObjectModel
 	 */
 	public static function getInterval($id)
 	{
-		$sql = 'SELECT nleft, nright FROM '._DB_PREFIX_.'category
+		$sql = 'SELECT nleft, nright, level_depth
+				FROM '._DB_PREFIX_.'category
 				WHERE id_category = '.(int)$id;
 		if (!$result = Db::getInstance()->getRow($sql))
 			return false;
 		return $result;
+	}
+
+	/**
+	 * Check if current category is a child of shop root category
+	 *
+	 * @since 1.5.0
+	 * @param Shop $shop
+	 * @return bool
+	 */
+	public function inShop(Shop $shop = null)
+	{
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+
+		if (!$interval = Category::getInterval($shop->getCategory()))
+			return false;
+		return ($this->nleft >= $interval['nleft'] && $this->nright <= $interval['nright']);
 	}
 	
 	public function getChildrenWs()

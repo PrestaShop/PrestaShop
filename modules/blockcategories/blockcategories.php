@@ -122,8 +122,11 @@ class BlockCategories extends Module
 		</form>';
 	}
 
-	public function getTree($resultParents, $resultIds, $maxDepth, $id_category = 1, $currentDepth = 0)
+	public function getTree($resultParents, $resultIds, $maxDepth, $id_category = null, $currentDepth = 0)
 	{
+		if (is_null($id_category))
+			$id_category = $this->context->shop->getCategory();
+
 		$children = array();
 		if (isset($resultParents[$id_category]) AND sizeof($resultParents[$id_category]) AND ($maxDepth == 0 OR $currentDepth < $maxDepth))
 			foreach ($resultParents[$id_category] as $subcat)
@@ -156,7 +159,7 @@ class BlockCategories extends Module
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.$id_lang.' AND cl.`id_shop`='.(int)$id_current_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.$this->context->shop->sqlLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
 				WHERE (c.`active` = 1 OR c.`id_category` = 1)
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
@@ -177,13 +180,8 @@ class BlockCategories extends Module
 			}
 
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
-			unset($resultParents);
-			unset($resultIds);
-			//TODO clean that
-			$res = $blockCategTree;
-			$shopcurrentroot = $this->context->shop->getCategory();
-			if ($blockCategTree['id'] != $shopcurrentroot)
-				$blockCategTree = $this->cleanTree($blockCategTree['children']);
+			unset($resultParents, $resultIds);
+
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 			if (Tools::isSubmit('id_category'))
 			{
@@ -216,7 +214,6 @@ class BlockCategories extends Module
 
 	public function hookFooter($params)
 	{
-		$this->context = $this->context;
 		$id_current_shop = $this->context->shop->getID();
 		
 		$id_customer = (int)($params['cookie']->id_customer);
@@ -225,7 +222,8 @@ class BlockCategories extends Module
 		$id_product = (int)(Tools::getValue('id_product', 0));
 		$id_category = (int)(Tools::getValue('id_category', 0));
 		$id_lang = (int)($params['cookie']->id_lang);
-		$smartyCacheId = 'blockcategories|'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
+		$smartyCacheId = 'blockcategories|'.$id_current_shop.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
+
 		Tools::enableCache();
 		if (!$this->isCached('blockcategories_footer.tpl', $smartyCacheId))
 		{
@@ -234,7 +232,7 @@ class BlockCategories extends Module
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.' AND cl.`id_shop`='.(int)$id_current_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.$this->context->shop->sqlLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
 				WHERE (c.`active` = 1 OR c.`id_category` = 1)
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
@@ -260,13 +258,8 @@ class BlockCategories extends Module
 			$this->context->smarty->assign('widthColumn', $widthColumn);
 			
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
-			unset($resultParents);
-			unset($resultIds);
-			//TODO clean that
-			$res = $blockCategTree;
-			if($blockCategTree['id'] != $this->context->shop->getCategory())
-				$blockCategTree = $this->cleanTree($blockCategTree['children']);
-			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
+			unset($resultParents, $resultIds);
+
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 
 			if (Tools::isSubmit('id_category'))
@@ -296,18 +289,6 @@ class BlockCategories extends Module
 		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;
-	}
-	
-	public function cleanTree($categories)
-	{
-		$id_category_root = Context::getContext()->shop->getCategory();
-		foreach ($categories AS $row)
-		{
-			if ($row['id'] == $id_category_root)
-				return $row;
-			elseif (sizeof($row['children']))
-				$this->cleanTree($row['children']);
-		}
 	}
 
 	public function hookRightColumn($params)

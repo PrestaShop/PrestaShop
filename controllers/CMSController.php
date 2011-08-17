@@ -99,7 +99,7 @@ class CmsControllerCore extends FrontController
 			$this->context->smarty->assign(array(
 				'cms' => $this->cms,
 				'content_only' => (int)(Tools::getValue('content_only')),
-				'path' => ((isset($this->cms->id_cms_category) AND $this->cms->id_cms_category) ? Tools::getFullPath((int)($this->cms->id_cms_category), $this->cms->meta_title, 'CMS') : Tools::getFullPath(1, $this->cms->meta_title, 'CMS'))
+				'path' => ((isset($this->cms->id_cms_category) AND $this->cms->id_cms_category) ? Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS') : Tools::getFullPath(1, $this->cms->meta_title, 'CMS'))
 			));
 		}
 		elseif ($this->assignCase == 2)
@@ -108,7 +108,7 @@ class CmsControllerCore extends FrontController
 				'category' => $this->cms_category,
 				'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
 				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id) ),
-				'path' => ($this->cms_category->id !== 1) ? Tools::getPath((int)($this->cms_category->id), $this->cms_category->name, false, 'CMS') : '',
+				'path' => ($this->cms_category->id !== 1) ? Tools::getPath($this->cms_category->id, $this->cms_category->name, false, 'CMS') : '',
 			));
 		}
 	}

@@ -167,7 +167,7 @@ class ProductControllerCore extends FrontController
 				if (isset($category) AND Validate::isLoadedObject($category))
 				{
 					$this->context->smarty->assign(array(
-						'path' => Tools::getPath((int)$category->id, $this->product->name, true),
+						'path' => Tools::getPath($category->id, $this->product->name, true),
 						'category' => $category,
 						'subCategories' => $category->getSubCategories($this->context->language->id, true),
 						'id_category_current' => (int)($category->id),
