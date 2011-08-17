@@ -211,7 +211,7 @@ class CMSCategoryCore extends ObjectModel
 		$category['cms'] = Db::getInstance()->ExecuteS($sql);
 		if ($links == 1)
 		{
-			$category['link'] = $context->link->getCMSCategoryLink($current, $category['link_rewrite']);
+			$category['link'] = $link->getCMSCategoryLink($current, $category['link_rewrite']);
 			foreach($category['cms'] as $key => $cms)
 				$category['cms'][$key]['link'] = $link->getCMSLink($cms['id_cms'], $cms['link_rewrite']);
 		}

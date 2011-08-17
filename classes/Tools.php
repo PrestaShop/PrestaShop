@@ -819,7 +819,8 @@ class ToolsCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-			
+
+		$id_category = (int)$id_category;
 		if ($id_category == 1)
 			return '<span class="navigation_end">'.$path.'</span>';
 
@@ -828,23 +829,23 @@ class ToolsCore
 			$pipe = '>';
 
 		$fullPath = '';
-
 		if ($categoryType === 'products')
 		{
-			$category = Db::getInstance()->getRow('
-			SELECT id_category, level_depth, nleft, nright
-			FROM '._DB_PREFIX_.'category
-			WHERE id_category = '.(int)$id_category);
-
-			if (isset($category['id_category']))
+			$interval = Category::getInterval($id_category);
+			$intervalRoot = Category::getInterval($context->shop->getCategory());
+			if ($interval)
 			{
-				$categories = Db::getInstance()->ExecuteS('
-				SELECT c.id_category, cl.name, cl.link_rewrite
-				FROM '._DB_PREFIX_.'category c
-				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-				WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$context->language->id.' AND c.id_category != 1
-				ORDER BY c.level_depth ASC
-				LIMIT '.(int)$category['level_depth']);
+				$sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
+						FROM '._DB_PREFIX_.'category c
+						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.$context->shop->sqlLang('cl').')
+						WHERE c.nleft <= '.$interval['nleft'].'
+							AND c.nright >= '.$interval['nright'].'
+							AND c.nleft >= '.$intervalRoot['nleft'].'
+							AND c.nright <= '.$intervalRoot['nright'].'
+							AND cl.id_lang = '.(int)$context->language->id.'
+							AND c.active = 1
+						ORDER BY c.level_depth ASC';
+				$categories = Db::getInstance()->ExecuteS($sql);
 
 				$n = 1;
 				$nCategories = (int)sizeof($categories);
@@ -860,7 +861,7 @@ class ToolsCore
 				return $fullPath.$path;
 			}
 		}
-		elseif ($categoryType === 'CMS')
+		else if ($categoryType === 'CMS')
 		{
 			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
@@ -872,7 +873,7 @@ class ToolsCore
 			else
 				$fullPath = ($linkOntheLastItem ? '<a href="'.self::safeOutput($categoryLink).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($linkOntheLastItem ? '</a>' : '');
 
-			return self::getPath((int)($category->id_parent), $fullPath, $linkOntheLastItem, $categoryType);
+			return self::getPath($category->id_parent, $fullPath, $linkOntheLastItem, $categoryType);
 		}
 	}
 
@@ -883,17 +884,22 @@ class ToolsCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-			
+
+		$id_category = (int)$id_category;
 		$pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 
-		if($type_cat === 'products')
-		    $category = new Category($id_category, $context->language->id);
+		$defaultCategory = 1;
+		if ($type_cat === 'products')
+		{
+			$defaultCategory = $context->shop->getCategory();
+			$category = new Category($id_category, $context->language->id);
+		}
 		else if ($type_cat === 'CMS')
 		    $category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
-			$id_category = 1;
-		if ($id_category == 1)
+			$id_category = $defaultCategory;
+		if ($id_category == $defaultCategory)
 			return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
 
 		return self::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';

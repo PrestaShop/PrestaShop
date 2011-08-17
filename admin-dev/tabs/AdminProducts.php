@@ -1399,7 +1399,6 @@ class AdminProducts extends AdminTab
 
 	public function display($token = NULL)
 	{
-
 		if ($id_category = (int)Tools::getValue('id_category'))
 			AdminTab::$currentIndex .= '&id_category='.$id_category;
 		$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $this->context->shop->getID(true));

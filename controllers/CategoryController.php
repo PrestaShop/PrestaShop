@@ -92,7 +92,7 @@ class CategoryControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Missing category ID');
 		else
 		{
-			if (!Validate::isLoadedObject($this->category))
+			if (!Validate::isLoadedObject($this->category) || !$this->category->inShop())
 				$this->errors[] = Tools::displayError('Category does not exist');
 			elseif (!$this->category->checkAccess($this->context->customer->id))
 				$this->errors[] = Tools::displayError('You do not have access to this category.');
@@ -103,7 +103,7 @@ class CategoryControllerCore extends FrontController
 				$rewrited_url = $this->context->link->getCategoryLink((int)$this->category->id, $this->category->link_rewrite);
 
 				/* Scenes  (could be externalised to another controler if you need them */
-				$this->context->smarty->assign('scenes', Scene::getScenes((int)($this->category->id), $this->context->language->id, true, false));
+				$this->context->smarty->assign('scenes', Scene::getScenes($this->category->id, $this->context->language->id, true, false));
 				
 				/* Scenes images formats */
 				if ($sceneImageTypes = ImageType::getImagesTypes('scenes'))
@@ -142,7 +142,7 @@ class CategoryControllerCore extends FrontController
 					'id_category' => (int)($this->category->id),
 					'id_category_parent' => (int)($this->category->id_parent),
 					'return_category_name' => Tools::safeOutput($this->category->name),
-					'path' => Tools::getPath((int)($this->category->id)),
+					'path' => Tools::getPath($this->category->id),
 					'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 					'categorySize' => Image::getSize('category'),
 					'mediumSize' => Image::getSize('medium'),
