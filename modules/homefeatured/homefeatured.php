@@ -92,7 +92,7 @@ class HomeFeatured extends Module
 
 	function hookHome($params)
 	{
-		$category = new Category(1, Configuration::get('PS_LANG_DEFAULT'));
+		$category = new Category(Context::getContext()->shop->getCategory(), Configuration::get('PS_LANG_DEFAULT'));
 		$nb = (int)(Configuration::get('HOME_FEATURED_NBR'));
 		$products = $category->getProducts($params['cookie']->id_lang, 1, ($nb ? $nb : 10));
 		$this->context->smarty->assign(array(
