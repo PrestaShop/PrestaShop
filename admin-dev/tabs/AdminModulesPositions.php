@@ -65,12 +65,7 @@ class AdminModulesPositions extends AdminTab
 				$module = Module::getInstanceById($id_module);
 				$id_hook = (int)(Tools::getValue('id_hook'));
 				$hook = new Hook($id_hook);
-				$excepts = explode(',', str_replace(' ', '', Tools::getValue('exceptions')));
-				
-				// Checking vars...
-				foreach ($excepts AS $except)
-					if (!Validate::isFileName($except))
-						$this->_errors[] = Tools::displayError('No valid value for field exceptions');
+
 				if (!$id_module OR !Validate::isLoadedObject($module))
 					$this->_errors[] = Tools::displayError('module cannot be loaded');
 				elseif (!$id_hook OR !Validate::isLoadedObject($hook))
@@ -84,9 +79,21 @@ class AdminModulesPositions extends AdminTab
 				{
 					if (!$module->registerHook($hook->name, Context::getContext()->shop->getListOfID()))
 						$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
-					elseif (!$module->registerExceptions($id_hook, $excepts, Context::getContext()->shop->getListOfID()))
-						$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					else
+					{
+						$exceptions = Tools::getValue('exceptions');
+						$exceptions = (isset($exceptions[0])) ? $exceptions[0] : array();
+						$exceptions = explode(',', str_replace(' ', '', $exceptions));
+
+						foreach ($exceptions AS $except)
+							if (!Validate::isFileName($except))
+								$this->_errors[] = Tools::displayError('No valid value for field exceptions');
+
+						if (!$this->_errors && !$module->registerExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
+							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
+					}
+					
+					if (!$this->_errors)
 						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 			}
@@ -122,11 +129,13 @@ class AdminModulesPositions extends AdminTab
 							foreach ($exception AS $except)
 								if (!Validate::isFileName($except))
 									$this->_errors[] = Tools::displayError('No valid value for field exceptions');
-	
-							// Add files exceptions
-							if (!$module->editExceptions($id_hook, $exception, Context::getContext()->shop->getListOfID()))
-								$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
+									
+							$exceptions[$id] = $exception;
 						}
+
+						// Add files exceptions
+						if (!$module->editExceptions($id_hook, $exceptions))
+							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						
 						if (!$this->_errors)
 							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
@@ -358,7 +367,7 @@ class AdminModulesPositions extends AdminTab
 			{
 				$first = current($exceptsList);
 				foreach ($exceptsList as $k => $v)
-					if (array_diff($v, $first))
+					if (array_diff($v, $first) || array_diff($first, $v))
 						$exceptsDiff = true;
 				
 				if (!$exceptsDiff)
@@ -368,7 +377,7 @@ class AdminModulesPositions extends AdminTab
 		else
 		{
 			$exceptsDiff = false;
-			$excepts = strval(Tools::getValue('exceptions'));
+			$exceptsList = Tools::getValue('exceptions', array(array()));
 		}
 		$modules = Module::getModulesInstalled(0);
 
@@ -423,9 +432,12 @@ class AdminModulesPositions extends AdminTab
 				if (r.test(inputValue))
 				{
 					var rep = '';
-					if (new RegExp(listValue+' *,').test(inputValue))
-						rep = ',';
-					$('#em_text_'+shopID).val(inputValue.replace(r, rep));
+					if (new RegExp(', *'+listValue+' *,').test(inputValue))
+						$('#em_text_'+shopID).val(inputValue.replace(r, ','));
+					else if (new RegExp(listValue+' *,').test(inputValue))
+						$('#em_text_'+shopID).val(inputValue.replace(r, ''));
+					else
+						$('#em_text_'+shopID).val(inputValue.replace(r, ''));
 				}
 			}
 			//]]>
@@ -437,7 +449,7 @@ EOF;
 		{
 			echo '<label>'.$this->l('Exceptions').' :</label>
 					<div class="margin-form">';
-			$this->displayModuleExceptionList($excepts, 0);
+			$this->displayModuleExceptionList(array_shift($exceptsList), 0);
 
 			echo $this->l('Please specify those files for which you do not want the module to be displayed').'.<br />
 						'.$this->l('Please type each filename separated by a comma').'.
@@ -449,9 +461,7 @@ EOF;
 			echo '<label>'.$this->l('Exceptions').' :</label>
 					<div class="margin-form">';
 			foreach ($exceptsList as $shopID => $fileList)
-			{
 				$this->displayModuleExceptionList($fileList, $shopID);
-			}
 			echo $this->l('Please specify those files for which you do not want the module to be displayed').'.<br />
 						'.$this->l('Please type each filename separated by a comma').'.
 						<br /><br />
