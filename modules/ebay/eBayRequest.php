@@ -389,6 +389,7 @@ class eBayRequest
 		$requestXml .= '      <CategoryID>'.$datas['categoryId'].'</CategoryID>'."\n";
 		$requestXml .= '    </PrimaryCategory>'."\n";
 		$requestXml .= '    <ConditionID>1000</ConditionID>'."\n";
+		if (!isset($datas['noPriceUpdate']))
 		$requestXml .= '    <StartPrice>'.$datas['price'].'</StartPrice>'."\n";
 		$requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>'."\n";
 		$requestXml .= '    <Country>FR</Country>'."\n";
@@ -505,6 +506,7 @@ class eBayRequest
 		$requestXml .= '    <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
 		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
 		$requestXml .= '    <Quantity>'.$datas['quantity'].'</Quantity>'."\n";
+		if (!isset($datas['noPriceUpdate']))
 		$requestXml .= '    <StartPrice>'.$datas['price'].'</StartPrice>'."\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1)
 		{
@@ -734,6 +736,7 @@ class eBayRequest
 			{
 				$requestXml .= '      <Variation>'."\n";
 				$requestXml .= '        <SKU>prestashop-'.$key.'</SKU>'."\n";
+				if (!isset($datas['noPriceUpdate']))
 				$requestXml .= '        <StartPrice>'.$variation['price'].'</StartPrice>'."\n";
 				$requestXml .= '        <Quantity>'.$variation['quantity'].'</Quantity>'."\n";
 				$requestXml .= '        <VariationSpecifics>'."\n";
@@ -900,6 +903,7 @@ class eBayRequest
 			{
 				$requestXml .= '      <Variation>'."\n";
 				$requestXml .= '        <SKU>prestashop-'.$key.'</SKU>'."\n";
+				if (!isset($datas['noPriceUpdate']))
 				$requestXml .= '        <StartPrice>'.$variation['price'].'</StartPrice>'."\n";
 				$requestXml .= '        <Quantity>'.$variation['quantity'].'</Quantity>'."\n";
 				$requestXml .= '        <VariationSpecifics>'."\n";

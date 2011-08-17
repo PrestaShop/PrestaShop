@@ -32,7 +32,7 @@
 			<li>{$error}</li>
 		{/foreach}
 		</ol>
-		{if isset($smarty.server.HTTP_REFERER) && !strstr($request_uri, 'authentication') && preg_replace('#^http://[^/]+/#', '/', $smarty.server.HTTP_REFERER) != $request_uri}
+		{if isset($smarty.server.HTTP_REFERER) && !strstr($request_uri, 'authentication') && preg_replace('#^https?://[^/]+/#', '/', $smarty.server.HTTP_REFERER) != $request_uri}
 			<p class="align_right"><a href="{$smarty.server.HTTP_REFERER|escape:'htmlall':'UTF-8'|secureReferrer}" class="button_small" title="{l s='Back'}">&laquo; {l s='Back'}</a></p>
 		{/if}
 	</div>

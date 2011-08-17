@@ -58,7 +58,7 @@ class PaysafeCard extends PSCPrepaidServices
 	{
 		$this->name = 'paysafecard';
 		$this->tab = 'payments_gateways';
-		$this->version = 1.2;
+		$this->version = '1.3';
 		$this->module_dir = dirname(__FILE__);
         $this->certificat_dir = dirname(__FILE__).'/keyring/';
 		$this->need_instance = 0;
@@ -67,6 +67,13 @@ class PaysafeCard extends PSCPrepaidServices
 
 		$this->displayName = $this->l('PaysafeCard');
 		$this->description = $this->l('Accepts payments by PaysafeCard.');
+
+		/* For 1.4.3 and less compatibility */
+		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+		if (!Configuration::get('PS_OS_PAYMENT'))
+			foreach ($updateConfig as $u)
+				if (!Configuration::get($u) && defined('_'.$u.'_'))
+					Configuration::updateValue($u, constant('_'.$u.'_'));
 	}
 
 	public function getL($key)
