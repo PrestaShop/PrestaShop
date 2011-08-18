@@ -156,13 +156,15 @@ class HelperCore
 		if (isset($select_options['empty']))
 			$select_html .= '<option value="">'.$select_options['empty'].'</option>';
 
+		if (isset($select_options['selected']) && !is_array($select_options['selected']))
+			$select_options['selected'] = array($select_options['selected']);	
 		// render options fields
 		foreach ($values as $key => $value)
 		{
 			$current_key = isset($use_key) ? $value[$use_key] : $key;
 			$current_value = isset($use_value) ? $value[$use_value] : $value;
 
-			if (isset($select_options['selected']) && $select_options['selected'] == $current_key)
+			if (isset($select_options['selected']) && in_array($current_key, $select_options['selected']))
 				$selected = 'selected="selected"';
 			else
 				$selected = '';
@@ -171,7 +173,6 @@ class HelperCore
 		}
 
 		$select_html .= '</select>';
-
 		return $select_html;
 	}
 
