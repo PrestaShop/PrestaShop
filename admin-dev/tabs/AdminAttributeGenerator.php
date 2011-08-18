@@ -228,7 +228,7 @@ class AdminAttributeGenerator extends AdminTab
 			i18n_tax_exc = "'.$this->l('Tax Excl.:').'";
 			i18n_tax_inc = "'.$this->l('Tax Incl.:').'";
 
-			var product_tax = "'.Tax::getProductTaxRate($this->product->id, NULL).'";
+			var product_tax = "'.$this->product->getTaxesRate().'";
 
 			function calcPrice(element, element_has_tax)
 			{

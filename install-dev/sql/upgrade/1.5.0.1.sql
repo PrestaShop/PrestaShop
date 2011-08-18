@@ -23,3 +23,19 @@ INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `vie
 );
 
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminThemes' WHERE `class_name` = 'AdminAppearance';
+
+INSERT INTO `PREFIX_hook` (
+`name` ,
+`title` ,
+`description` ,
+`position` ,
+`live_edit`
+)
+VALUES ('taxmanager', 'taxmanager', NULL , '1', '0');
+
+/* PHP:update_tax_rules(); */;
+
+/* PHP:remove_tab(AdminCounty); */;
+DROP TABLE `PREFIX_county_zip_code`;
+DROP TABLE `PREFIX_county`;
+

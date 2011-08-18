@@ -99,9 +99,12 @@ abstract class PaymentModuleCore extends Module
 			if ($secure_key !== false AND $secure_key != $cart->secure_key)
 				die(Tools::displayError());
 
+
+			$carrier = new Carrier((int)$cart->id_carrier, (int)$cart->id_lang);
+
 			// Copying data from cart
 			$order = new Order();
-			$order->id_carrier = (int)($cart->id_carrier);
+			$order->id_carrier = $carrier->id;
 			$order->id_customer = (int)($cart->id_customer);
 			$order->id_address_invoice = (int)($cart->id_address_invoice);
 			$order->id_address_delivery = (int)($cart->id_address_delivery);
@@ -109,10 +112,10 @@ abstract class PaymentModuleCore extends Module
 			$order->id_currency = ($currency_special ? (int)($currency_special) : (int)($cart->id_currency));
 			$order->id_lang = (int)($cart->id_lang);
 			$order->id_cart = (int)($cart->id);
-			
+
 			$order->id_shop = (int)($shop->getID() ? $shop->getID() : $cart->id_shop);
 			$order->id_group_shop = (int)($shop->getID() ? $shop->getGroupID() : $cart->id_group_shop);
-			
+
 			$customer = new Customer((int)($order->id_customer));
 			$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));
 			$order->payment = $paymentMethod;
@@ -128,8 +131,8 @@ abstract class PaymentModuleCore extends Module
 			$order->total_products = (float)($cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
 			$order->total_products_wt = (float)($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
 			$order->total_discounts = (float)(abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)));
-			$order->total_shipping = (float)($cart->getOrderShippingCost());
-			$order->carrier_tax_rate = (float)Tax::getCarrierTaxRate($cart->id_carrier, (int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			$order->total_shipping = (float)$cart->getOrderShippingCost();
+			$order->carrier_tax_rate = (float)$carrier->getTaxesRate(new Address((int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 			$order->total_wrapping = (float)(abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING)));
 			$order->total_paid = (float)(Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2));
 			$order->invoice_date = '0000-00-00 00:00:00';
@@ -256,15 +259,15 @@ abstract class PaymentModuleCore extends Module
 							if (isset($customization['datas'][_CUSTOMIZE_TEXTFIELD_]))
 								foreach ($customization['datas'][_CUSTOMIZE_TEXTFIELD_] AS $text)
 									$customizationText .= $text['name'].':'.' '.$text['value'].'<br />';
-							
+
 							if (isset($customization['datas'][_CUSTOMIZE_FILE_]))
 								$customizationText .= sizeof($customization['datas'][_CUSTOMIZE_FILE_]) .' '. Tools::displayError('image(s)').'<br />';
-								
-							$customizationText .= '---<br />';							
+
+							$customizationText .= '---<br />';
 						}
-						
+
 						$customizationText = rtrim($customizationText, '---<br />');
-						
+
 						$customizationQuantity = (int)($product['customizationQuantityTotal']);
 						$productsList .=
 						'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
@@ -377,7 +380,6 @@ abstract class PaymentModuleCore extends Module
 				{
 					$invoice = new Address((int)($order->id_address_invoice));
 					$delivery = new Address((int)($order->id_address_delivery));
-					$carrier = new Carrier((int)($order->id_carrier), $order->id_lang);
 					$delivery_state = $delivery->id_state ? new State((int)($delivery->id_state)) : false;
 					$invoice_state = $invoice->id_state ? new State((int)($invoice->id_state)) : false;
 
@@ -387,11 +389,11 @@ abstract class PaymentModuleCore extends Module
 					'{email}' => $customer->email,
 					'{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
 					'{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
-					'{delivery_block_html}' => $this->_getFormatedAddress($delivery, "<br />", 
+					'{delivery_block_html}' => $this->_getFormatedAddress($delivery, "<br />",
 						array(
-							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>', 
+							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
 							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
-						'{invoice_block_html}' => $this->_getFormatedAddress($invoice, "<br />", 
+						'{invoice_block_html}' => $this->_getFormatedAddress($invoice, "<br />",
 						array(
 							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
 							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>')),

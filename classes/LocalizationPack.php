@@ -117,59 +117,7 @@ class LocalizationPackCore
 						return false;
 					}
 				}
-
-				// Add counties
-				foreach ($data->county AS $xml_county)
-				{
-					$county_attributes = $xml_county->attributes();
-					if (!$id_county = County::getIdCountyByNameAndIdState($county_attributes['name'], $state->id))
-					{
-						$county = new County();
-						$county->name = $county_attributes['name'];
-						$county->id_state = (int)$state->id;
-						$county->active = 1;
-
-						if (!$county->validateFields())
-						{
-							$this->_errors[] = Tools::displayError('Invalid County properties');
-							return false;
-						}
-
-						if (!$county->save())
-						{
-							$this->_errors[] = Tools::displayError('An error has occurred while adding the county');
-							return false;
-						}
-					} else {
-						$county = new County((int)$id_county);
-						if (!Validate::isLoadedObject($county))
-						{
-							$this->_errors[] = Tools::displayError('An error occurred while fetching the county.');
-							return false;
-						}
-					}
-
-					// add zip codes
-					foreach ($xml_county->zipcode AS $xml_zipcode)
-					{
-							$zipcode_attributes = $xml_zipcode->attributes();
-
-							$zipcodes = $zipcode_attributes['from'];
-							if (isset($zipcode_attributes['to']))
-								$zipcodes .= '-'.$zipcode_attributes['to'];
-
-							if ($county->isZipCodeRangePresent($zipcodes))
-								continue;
-
-							if (!$county->addZipCodes($zipcodes))
-							{
-								$this->_errors[] = Tools::displayError('An error has occurred while adding zipcodes');
-								return false;
-							}
-					}
-				}
 			}
-
 
 		return true;
 	}

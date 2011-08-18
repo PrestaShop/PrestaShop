@@ -25,6 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+
+/**
+* @deprecated since 1.5
+*/
 class CountyCore extends ObjectModel
 {
 	public $id;
@@ -63,181 +67,97 @@ class CountyCore extends ObjectModel
 
 	public function delete()
 	{
-		$id = $this->id;
-		parent::delete();
-
-		// remove associated zip codes & tax rule
-		return (County::deleteZipCodeByIdCounty($id) AND TaxRule::deleteTaxRuleByIdCounty($id));
+		return true;
 	}
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public static function getCounties($id_state)
 	{
-		if (!isset(self::$_cache_get_counties[$id_state]))
-		{
-			self::$_cache_get_counties[$id_state] = Db::getInstance()->ExecuteS('
-			SELECT * FROM `'._DB_PREFIX_.'county`
-			WHERE `id_state` = '.(int)$id_state
-			);
-		}
-
-		return self::$_cache_get_counties[$id_state];
+		Tools::displayAsDeprecated();
+		return false;
 	}
 
-	// return the list of associated zipcode
+	/**
+	* @deprecated since 1.5
+	*/
 	public function getZipCodes()
 	{
-		return Db::getInstance()->ExecuteS('
-		SELECT * FROM `'._DB_PREFIX_.'county_zip_code`
-		WHERE `id_county` = '.(int)$this->id.'
-		ORDER BY `from_zip_code` ASC'
-		);
+		Tools::displayAsDeprecated();
+		return false;
 	}
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public function addZipCodes($zip_codes)
 	{
-		list($from, $to) = $this->breakDownZipCode($zip_codes);
-
-		if ($from == 0)
-			return false;
-
-		return Db::getInstance()->Execute(
-		'INSERT INTO `'._DB_PREFIX_.'county_zip_code` (`id_county`, `from_zip_code`, `to_zip_code`)
-		VALUES ('.(int)$this->id.','.(int)$from.','.(int)$to.')'
-		);
+		Tools::displayAsDeprecated();
+		return true;
 	}
 
-
+	/**
+	* @deprecated since 1.5
+	*/
 	public function removeZipCodes($zip_codes)
 	{
-		list($from, $to) = $this->breakDownZipCode($zip_codes);
-
-		if ($from == 0)
-			return false;
-
-		return Db::getInstance()->Execute('
-		DELETE FROM `'._DB_PREFIX_.'county_zip_code`
-		WHERE `id_county` = '.(int)$this->id.'
-		AND `from_zip_code` = '.(int)$from.'
-		AND `to_zip_code` = '.(int)$to
-		);
+		Tools::displayAsDeprecated();
+		return true;
 	}
 
-
+	/**
+	* @deprecated since 1.5
+	*/
 	public function breakDownZipCode($zip_codes)
 	{
-		$zip_codes = preg_split('/-/', $zip_codes);
-
-		if (sizeof($zip_codes) == 2)
-		{
-			$from = $zip_codes[0];
-			$to   = $zip_codes[1];
-			if ($zip_codes[0] > $zip_codes[1])
-			{
-				$from = $zip_codes[1];
-				$to   = $zip_codes[0];
-			}
-			else if ($zip_codes[0] == $zip_codes[1])
-			{
-				$from = $zip_codes[0];
-				$to   = 0;
-			}
-		}
-		else if (sizeof($zip_codes) == 1)
-		{
-			$from = $zip_codes[0];
-			$to = 0;
-		}
-
-		if (!Validate::isInt($from) OR !Validate::isInt($to))
-		{
-			$from = 0;
-			$to = 0;
-		}
-
-		return array($from, $to);
+		Tools::displayAsDeprecated();
+		return array(0,0);
 	}
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public static function getIdCountyByZipCode($id_state, $zip_code)
 	{
-		if (!isset(self::$_cache_county_zipcode[$id_state.'-'.$zip_code]))
-		{
-			self::$_cache_county_zipcode[$id_state.'-'.$zip_code] = Db::getInstance()->getValue('
-			SELECT DISTINCT c.`id_county` FROM `'._DB_PREFIX_.'county` c
-			LEFT JOIN `'._DB_PREFIX_.'county_zip_code` cz ON (c.`id_county` = cz.`id_county`)
-			WHERE `id_state` = '.(int)$id_state.'
-			AND cz.`from_zip_code` >= '.(int)$zip_code.'
-			AND cz.`to_zip_code` <= '.(int)$zip_code
-			);
-		}
-
-		return self::$_cache_county_zipcode[$id_state.'-'.$zip_code];
+		Tools::displayAsDeprecated();
+		return false;
 	}
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public function isZipCodeRangePresent($zip_codes)
 	{
-		$res = false;
-		list($from, $to) = $this->breakDownZipCode($zip_codes);
-
-		if ($from == 0)
-			return false;
-
-		if ($to != 0)
-		{
-			$res = Db::getInstance()->getValue('
-			SELECT COUNT(*) FROM `'._DB_PREFIX_.'county_zip_code` cz
-			LEFT JOIN `'._DB_PREFIX_.'county` c ON (c.`id_county` = cz.`id_county`)
-			LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = c.`id_state`)
-			WHERE `from_zip_code` >= '.(int)$from.'
-			AND `to_zip_code` <= '.(int)$to.'
-			AND s.`id_country` = (SELECT `id_country`
-										 FROM `'._DB_PREFIX_.'state` s
-										 LEFT JOIN `'._DB_PREFIX_.'county` c ON (c.`id_state` = s.`id_state`)
-										 WHERE `id_county` = '.(int)$this->id.'
-										)'
-			);
-		}
-
-		return ($res OR County::isZipCodePresent($from) OR County::isZipCodePresent($to));
+		Tools::displayAsDeprecated();
+		return false;
 	}
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public function isZipCodePresent($zip_code)
 	{
-
-		if ($zip_code == 0)
-			return false;
-
-		return (bool) Db::getInstance()->getValue('
-		SELECT COUNT(*) FROM `'._DB_PREFIX_.'county_zip_code` cz
-		LEFT JOIN `'._DB_PREFIX_.'county` c ON (c.`id_county` = cz.`id_county`)
-		LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = c.`id_state`)
-		WHERE
-		(`from_zip_code` <= '.(int)$zip_code.' AND `to_zip_code` >= '.(int)$zip_code.')
-		OR
-		(`from_zip_code` = '.(int)$zip_code.')
-		AND s.`id_country` = (SELECT `id_country`
-									 FROM `'._DB_PREFIX_.'state` s
-									 LEFT JOIN `'._DB_PREFIX_.'county` c ON (c.`id_state` = s.`id_state`)
-									 WHERE `id_county` = '.(int)$this->id.'
-									)'
-		);
+		Tools::displayAsDeprecated();
+		return false;
 	}
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public static function deleteZipCodeByIdCounty($id_county)
 	{
-		return Db::getInstance()->Execute(
-		'DELETE FROM `'._DB_PREFIX_.'county_zip_code`
-		WHERE `id_county` = '.(int)$id_county
-		);
+		Tools::displayAsDeprecated();
+		return true;
 	}
 
-
+	/**
+	* @deprecated since 1.5
+	*/
 	public static function getIdCountyByNameAndIdState($name, $id_state)
 	{
-		return Db::getInstance()->getValue('
-		SELECT `id_county` FROM `'._DB_PREFIX_.'county`
-		WHERE `name` = \''.pSQL($name).'\'
-		AND `id_state` = '.(int)$id_state
-		);
+		Tools::displayAsDeprecated();
+		return false;
 	}
 
 }

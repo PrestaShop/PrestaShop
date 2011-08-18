@@ -70,7 +70,7 @@ class CarrierCore extends ObjectModel
 
 	/** @var boolean Free carrier */
 	public		$is_free = false;
-	
+
 	/** @var int shipping behavior: by weight or by price */
 	public 		$shipping_method = 0;
 
@@ -82,7 +82,7 @@ class CarrierCore extends ObjectModel
 
 	/** @var boolean Need Range */
 	public		$need_range = 0;
-	
+
 	protected	$langMultiShop = true;
 
  	protected 	$fieldsRequired = array('name', 'active');
@@ -488,7 +488,7 @@ class CarrierCore extends ObjectModel
 					}
 			}
 			}
-			
+
 			$row['name'] = (strval($row['name']) != '0' ? $row['name'] : Configuration::get('PS_SHOP_NAME'));
 			$row['price'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier']));
 			$row['price_tax_exc'] = ($shippingMethod == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier'], false));
@@ -590,7 +590,7 @@ class CarrierCore extends ObjectModel
 			$where .= 'AND id_shop IS NULL AND id_group_shop = '.$shopGroupID;
 		else
 			$where .= 'AND id_shop = '.$shopID;
-		
+
 		return Db::getInstance()->delete(_DB_PREFIX_.'delivery', $where);
 	}
 
@@ -610,7 +610,7 @@ class CarrierCore extends ObjectModel
 			$keys[] = 'id_shop';
 		if (!in_array('id_group_shop', $keys))
 			$keys[] = 'id_group_shop';
-		
+
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 		$shopID = $shop->getID();
@@ -623,7 +623,7 @@ class CarrierCore extends ObjectModel
 				$values['id_shop'] = ($shopID) ? $shopID : null;
 			if (!isset($values['id_group_shop']))
 				$values['id_group_shop'] = ($shopGroupID) ? $shopGroupID : null;
-			
+
 			$sql .= '(';
 			foreach ($values as $v)
 			{
@@ -650,7 +650,7 @@ class CarrierCore extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($oldId))
 			die(Tools::displayError());
-			
+
 		if (!$this->id)
 			return false;
 
@@ -670,7 +670,7 @@ class CarrierCore extends ObjectModel
 						VALUES ('.$this->id.','.(float)$val['delimiter1'].','.(float)$val['delimiter2'].')';
 				Db::getInstance()->Execute($sql);
 				$rangeID = (int)Db::getInstance()->Insert_ID();
-				
+
 				$rangePriceID = ($range == 'range_price') ? $rangeID : 'NULL';
 				$rangeWeightID = ($range == 'range_weight') ? $rangeID : 'NULL';
 				$sql = 'INSERT INTO '._DB_PREFIX_.$range.' (id_carrier, id_shop, id_group_shop, id_range_price, id_range_weight, id_zone, price)
@@ -769,10 +769,24 @@ class CarrierCore extends ObjectModel
 
 	   return self::$_cache_tax_rule[$id_carrier];
 	}
-	
+
+
+	/**
+	 * Return the taxes rate associated to the carrier
+	 *
+	 * @since 1.5
+	 * @param Address $address
+	 */
+	public function getTaxesRate(Address $address)
+	{
+		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
+		$tax_calculator = $tax_manager->getTaxCalculator();
+		return $tax_calculator->getTaxesRate();
+	}
+
 	/**
 	 * This tricky method generate a sql clause to check if ranged data are overloaded by multishop
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @param string $rangeTable
 	 * @param Shop $shop
@@ -791,7 +805,7 @@ class CarrierCore extends ObjectModel
 			$where = 'AND ((d2.id_group_shop IS NULL OR d2.id_group_shop = '.$shopGroupID.') AND d2.id_shop IS NULL)';
 		else
 			$where = 'AND (d2.id_shop = '.$shopID.' OR (d2.id_group_shop = '.$shopGroupID.' AND d2.id_shop IS NULL) OR (d2.id_group_shop IS NULL AND d2.id_shop IS NULL))';
-		
+
 		$sql = 'AND '.$alias.'.id_delivery = (
 					SELECT d2.id_delivery
 					FROM '._DB_PREFIX_.'delivery d2

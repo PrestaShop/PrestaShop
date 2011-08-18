@@ -34,7 +34,7 @@ class HelperCore
 	public static $translationsKeysForAdminCategorieTree = array(
 		 'Home', 'selected', 'selecteds', 'Collapse All', 'Expand All', 'Check All', 'Uncheck All'
 	);
-	
+
 	/**
 	 *
 	 * @param type $trads values of translations keys
@@ -42,22 +42,22 @@ class HelperCore
 	 * @param type $selected_cat array of selected categories
 	 *					Format
 	 *						Array
-							(
-								 [0] => 1
-								 [1] => 2
-	 						)
-	 *					OR
-							Array
-							(
-								 [1] => Array
-									  (
-											[id_category] => 1
-											[name] => Home page
-											[link_rewrite] => home
-									  )
-							)
+	 * 					(
+	 *							 [0] => 1
+	 *						 [1] => 2
+	 *					)
+	 * 					OR
+	 *					Array
+	 *					(
+	 *						 [1] => Array
+	 *							  (
+	 *									[id_category] => 1
+	 *									[name] => Home page
+	 *									[link_rewrite] => home
+	 *							  )
+	 *					)
 	 * @param type $input_name name of input
-	 * @return string 
+	 * @return string
 	 */
 	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false)
 	{
@@ -86,7 +86,7 @@ class HelperCore
 		</script>
 		<link type="text/css" rel="stylesheet" href="../css/jquery.treeview.css" />
 		';
-		
+
 		$html .= '
 		<div style="background-color:#F4E6C9; width:99%;padding:5px 0 5px 5px;">
 			<a href="#" id="collapse_all" >'.$trads['Collapse All'].'</a>
@@ -97,7 +97,7 @@ class HelperCore
 			' : '').'
 		</div>
 		';
-		
+
 		$home_is_selected = false;
 		foreach($selected_cat AS $cat)
 		{
@@ -121,10 +121,77 @@ class HelperCore
 				<li id="1" class="hasChildren">
 					<span class="folder"> <input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'.$input_name.'" value="1" '.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '.$trads['Home'].'</span>
 					<ul>
-						<li><span class="placeholder">&nbsp;</span></li>	
+						<li><span class="placeholder">&nbsp;</span></li>
 				  </ul>
 				</li>
 			</ul>';
 		return $html;
 	}
+
+	/**
+	* Create a select input field
+	*
+	* @param array $values
+	* @param array $html_options any key => value options
+	* @param array $select_options
+	* - key: the array value that will be used as a key in my select (optional)
+	* - value: the array value that will be used as a label in my select (optional)
+	* - empty: the label displayed as an empty value (optional)
+	* - selected: the key corresponding to the selected value  (optional)
+	*
+	* @return string html content
+	*/
+	public static function selectInput(array $values, array $html_options = array(), array $select_options = array())
+	{
+		// options management
+		$options = self::buildHtmlOptions($html_options);
+		$select_html = '<select '.$options.'>';
+
+		if (isset($select_options['key']))
+			$use_key = $select_options['key'];
+
+		if (isset($select_options['value']))
+			$use_value = $select_options['value'];
+
+		if (isset($select_options['empty']))
+			$select_html .= '<option value="">'.$select_options['empty'].'</option>';
+
+		// render options fields
+		foreach ($values as $key => $value)
+		{
+			$current_key = isset($use_key) ? $value[$use_key] : $key;
+			$current_value = isset($use_value) ? $value[$use_value] : $value;
+
+			if (isset($select_options['selected']) && $select_options['selected'] == $current_key)
+				$selected = 'selected="selected"';
+			else
+				$selected = '';
+
+			$select_html .= '<option value="'.Tools::htmlentitiesUTF8($current_key).'" '.$selected.'>'.Tools::htmlentitiesUTF8($current_value).'</option>';
+		}
+
+		$select_html .= '</select>';
+
+		return $select_html;
+	}
+
+	/**
+	* Create html a string containing html options
+	* eg: buildHtmlOptions(array('name' => 'myInputName', 'id' => 'myInputId'));
+	*     return => 'name="myInputName" id="myInputId"'
+	*
+	* @param array $html_options
+	*
+	* @return string
+	*/
+	protected static function buildHtmlOptions(array $html_options)
+	{
+		$html = '';
+
+		foreach ($html_options as $html_option => $value)
+				$html .= Tools::htmlentitiesUTF8($html_option).'="'.Tools::htmlentitiesUTF8($value).'" ';
+
+		return rtrim($html, ' ');
+	}
 }
+

@@ -131,7 +131,7 @@ class AdminProducts extends AdminTab
 		$nb = count($this->_list);
 		if ($this->_list)
 		{
-			
+
 
 			/* update product final price */
 			for ($i = 0; $i < $nb; $i++)
@@ -1059,7 +1059,7 @@ class AdminProducts extends AdminTab
 		else
 		{
 			$image = new Image($id_image);
-			
+
 			if (!$new_path = $image->getPathForCreation())
 				$this->_errors[] = Tools::displayError('An error occurred during new folder creation');
 			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName))
@@ -1179,7 +1179,7 @@ class AdminProducts extends AdminTab
 						$this->updateAccessories($object);
 						$this->updateDownloadProduct($object);
 						$this->updateAssoShop((int)$object->id);
-						
+
 						if (!$this->updatePackItems($object))
 							$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 						elseif (!$object->updateCategories($_POST['categoryBox'], true))
@@ -1662,7 +1662,7 @@ class AdminProducts extends AdminTab
 		$specificPrices = SpecificPrice::getByProductId((int)($obj->id));
 		$specificPricePriorities = SpecificPrice::getPriority((int)($obj->id));
 
-		$taxRate = TaxRulesGroup::getTaxesRate($obj->id_tax_rules_group, $this->context->country->id, 0, 0);
+		$taxRate = $obj->getTaxesRate(Tax::initializeAddress());
 
 		$tmp = array();
 		foreach ($shops as $shop)
@@ -2613,11 +2613,11 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>';
-					
-				
+
+
 				if ((int)Configuration::get('PS_STOCK_MANAGEMENT'))
 				{
-					
+
 					if (!$has_attribute)
 					{
 						if ($obj->id)
@@ -2675,7 +2675,7 @@ class AdminProducts extends AdminTab
 					echo '<tr>
 							<td colspan="2">'.$this->l('The stock management is disabled').'</td>
 						</tr>';
-						
+
 				echo '
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr>
@@ -2751,23 +2751,23 @@ class AdminProducts extends AdminTab
 							else
 							$selectedCat = Product::getProductCategoriesFull($obj->id, $this->_defaultFormLanguage);
 						}
-						
+
 						echo '<select id="id_category_default" name="id_category_default">';
 							foreach($selectedCat AS $cat)
 								echo '<option value="'.$cat['id_category'].'" '.($obj->id_category_default == $cat['id_category'] ? 'selected' : '').'>'.$cat['name'].'</option>';
 						echo '</select>
-						</td> 
+						</td>
 					</tr>
 					<tr id="tr_categories">
 						<td colspan="2">
 						';
 					// Translations are not automatic for the moment ;)
 					$trads = array(
-						 'Home' => $this->l('Home'), 
-						 'selected' => $this->l('selected'), 
-						 'Collapse All' => $this->l('Collapse All'), 
-						 'Expand All' => $this->l('Expand All'), 
-						 'Check All' => $this->l('Check All'), 
+						 'Home' => $this->l('Home'),
+						 'selected' => $this->l('selected'),
+						 'Collapse All' => $this->l('Collapse All'),
+						 'Expand All' => $this->l('Expand All'),
+						 'Check All' => $this->l('Check All'),
 						 'Uncheck All'  => $this->l('Uncheck All')
 					);
 					echo Helper::renderAdminCategorieTree($trads, $selectedCat).'
@@ -2840,7 +2840,7 @@ class AdminProducts extends AdminTab
 			echo '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
 								<textarea class="rte" cols="100" rows="10" id="description_short_'.$language['id_lang'].'" name="description_short_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($obj, 'description_short', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
 							</div>';
-		echo '<p class="clear">'.($obj->id ? $this->youEditFieldFor() : '').'</p>	
+		echo '<p class="clear">'.($obj->id ? $this->youEditFieldFor() : '').'</p>
 			</td>
 					</tr>
 					<tr>
@@ -2959,7 +2959,7 @@ class AdminProducts extends AdminTab
 					unitPriceWithTax(\'unit\');
 			</script>';
 		$categoryBox = Tools::getValue('categoryBox', array());
-		
+
 	}
 
 	function displayFormImages($obj, $token = NULL)
@@ -3070,7 +3070,7 @@ class AdminProducts extends AdminTab
 										</script>';
 							foreach ($shops as $shop)
 								echo '<th>'.$shop['name'].'</th>';
-						}	
+						}
 						echo '
 									<th>'.$this->l('Cover').'</th>
 									<th>'.$this->l('Action').'</th>
@@ -3111,7 +3111,7 @@ class AdminProducts extends AdminTab
 							if (Shop::isMultiShopActivated())
 								foreach ($shops AS $shop)
 									echo '<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';
-							echo '	
+							echo '
 								<td class="center"><a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
 								<td class="center">
 									<a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&editImage&tabs=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/edit.gif" alt="'.$this->l('Modify this image').'" title="'.$this->l('Modify this image').'" /></a>
@@ -3172,7 +3172,7 @@ class AdminProducts extends AdminTab
 
 	function displayFormAttributes($obj, $languages, $defaultLanguage)
 	{
-		
+
 		$attributeJs = array();
 		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		foreach ($attributes AS $k => $attribute)
@@ -3181,7 +3181,7 @@ class AdminProducts extends AdminTab
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
-		
+
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 			{
@@ -3726,7 +3726,7 @@ class AdminProducts extends AdminTab
 				}
 				else if ($(\'#curPackItemId\').val() == \'\' || $(\'#curPackItemQty\').val() == \'\')
 				{
-					alert(\''.$this->l('Thanks to set a quantity to add a product.').'\');	
+					alert(\''.$this->l('Thanks to set a quantity to add a product.').'\');
 					return false;
 				}
 
