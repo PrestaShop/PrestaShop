@@ -200,7 +200,6 @@ class AdminShop extends AdminTab
 			'scene' => $this->l('Scenes'),
 			'stock' => $this->l('Stock'),
 			'store' => $this->l('Stores'),
-			'zone' => $this->l('Zones'),
 		);
 
 		$checked = (Tools::getValue('addshop') !== false) ? true : false;

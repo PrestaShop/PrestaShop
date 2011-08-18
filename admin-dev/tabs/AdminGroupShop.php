@@ -38,9 +38,10 @@ class AdminGroupShop extends AdminTab
 		$this->deleted = false;
 		
 		$this->fieldsDisplay = array(
-		'id_group_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('County'), 'width' => 130, 'filter_key' => 'b!name'),
-		'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'));
+			'id_group_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('County'), 'width' => 130, 'filter_key' => 'b!name'),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
+		);
 
 		parent::__construct();
 	}
@@ -59,6 +60,18 @@ class AdminGroupShop extends AdminTab
 				return false;
 		}
 		return parent::postProcess();
+	}
+	
+	public function afterAdd($newGroupShop)
+	{
+		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
+			$newGroupShop->copyGroupShopData(Tools::getValue('importFromShop'), $importData);
+	}
+	
+	public function afterUpdate($newGroupShop)
+	{
+		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
+			$newGroupShop->copyGroupShopData(Tools::getValue('importFromShop'), $importData);
 	}
 		
 	public function displayForm($isMainTab = true)
@@ -134,8 +147,41 @@ EOF;
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
+			</fieldset><br />';
+
+		$importData = array(
+			'attribute_group' => $this->l('Attribute groups'),
+			'attribute' => $this->l('Attributes'),
+			//'customer_group' => $this->l('Customer groups'),
+			'feature' => $this->l('Features'),
+			'group' => $this->l('Groups'),
+			'manufacturer' => $this->l('Manufacturers'),
+			'supplier' => $this->l('Suppliers'),
+			'tax_rules_group' => $this->l('Tax rules groups'),
+			'zone' => $this->l('Zones'),
+		);
+
+		$checked = (Tools::getValue('addgroup_shop') !== false) ? true : false;
+		$defaultGroup = Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID();
+		echo '<fieldset><legend>'.$this->l('Import data from another group shop').'</legend>';
+		echo '<label>'.$this->l('Import data from another group shop').'</label>';
+		echo '<div class="margin-form">';
+			echo '<input type="checkbox" value="1" '.(($checked) ? 'checked="checked"' : '').' name="useImportData" onclick="$(\'#importList\').slideToggle(\'slow\')" /> ';
+			echo $this->l('Duplicate data from group shop');
+			echo ' <select name="importFromShop">';
+			foreach (Shop::getTree() as $gID => $gData)
+				echo '<option value="'.(int)$gID.'" '.($gID == $defaultGroup ? 'selected="selected"' : '').'">'.$gData['name'].'</option>';
+			echo '</select>';
+			echo '<div id="importList" style="'.((!$checked) ? 'display: none' : '').'"><ul>';
+			foreach ($importData as $table => $lang)
+				echo '<li><label><input type="checkbox" name="importData['.$table.']" checked="checked" /> '.$lang.'</label></li>';
+			echo '</ul></div>';
+			echo '<p>'.$this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop').'</p>';
+		echo '</div><div class="margin-form">
+				<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
+			</div>';
+		echo '</fieldset>';
+		echo '</form>';
 	}
 	
 	protected function displayAddButton()

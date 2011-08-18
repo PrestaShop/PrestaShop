@@ -51,7 +51,7 @@ class GroupShopCore extends ObjectModel
 	private	static $assoTables = array(
 		'attribute_group' => 		array('type' => 'group_shop'),
 		'attribute' => 				array('type' => 'group_shop'),
-		'customer_group' => 		array('type' => 'group_shop'),
+		//'customer_group' => 		array('type' => 'group_shop'),
 		'feature' => 				array('type' => 'group_shop'),
 		'group' => 					array('type' => 'group_shop'),
 		'manufacturer' => 			array('type' => 'group_shop'),
@@ -87,10 +87,9 @@ class GroupShopCore extends ObjectModel
 
 		foreach (Shop::getAssoTables() AS $table_name => $row)
 		{
-		
 			$id = 'id_'.$row['type'];
-			if ($row['type'] == 'fk_shop')
-				$id = 'id_shop';
+			if ($row['type'] == 'fk_group_shop')
+				$id = 'id_group_shop';
 			else
 				$table_name .= '_'.$row['type'];
 			$res &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
@@ -98,12 +97,12 @@ class GroupShopCore extends ObjectModel
 
 		return $res;
 	}
-	
+
 	public static function getAssoTables()
 	{
 		return  self::$assoTables;
 	}
-	
+
 	/**
 	 * @return int Total of groupshops
 	 */
@@ -111,24 +110,20 @@ class GroupShopCore extends ObjectModel
 	{
 		return sizeof(GroupShop::getGroupShops($active));
 	}
-	
-	public function copyGroupShopData($old_id)
-	{
-	//TODO
-	}
-	
+
 	public function haveShops()
 	{
-		return (bool)$this->getNbShops();
+		return (bool)$this->getTotalShops();
 	}
-	
-	public function getNbShops()
+
+	public function getTotalShops()
 	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*)
-																FROM '._DB_PREFIX_.'shop s
-																WHERE id_group_shop='.(int)$this->id);
+		$sql = 'SELECT COUNT(*)
+				FROM '._DB_PREFIX_.'shop s
+				WHERE id_group_shop='.(int)$this->id;
+		return (int)Db::getInstance()->getValue($sql);
 	}
-	
+
 	/**
 	 * Return a group shop ID from group shop name
 	 * 
@@ -137,8 +132,45 @@ class GroupShopCore extends ObjectModel
 	 */
 	public static function getIdByName($name)
 	{
-		$sql = 'SELECT id_group_shop FROM '._DB_PREFIX_.'group_shop
+		$sql = 'SELECT id_group_shop
+				FROM '._DB_PREFIX_.'group_shop
 				WHERE name = \''.pSQL($name).'\'';
 		return (int)Db::getInstance()->getValue($sql);
+	}
+	
+	public function copyGroupShopData($old_id, $tables_import = false, $deleted = false)
+	{
+		foreach (GroupShop::getAssoTables() AS $table_name => $row)
+		{
+			if ($tables_import && !isset($tables_import[$table_name]))
+				continue;
+
+			$id = 'id_'.$row['type'];
+			if ($row['type'] == 'fk_group_shop')
+				$id = 'id_group_shop';
+			else
+				$table_name .= '_'.$row['type'];
+
+			if (!$deleted)
+			{
+				$res = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'` = '.(int)$old_id);
+				if ($res)
+				{
+					unset($res[$id]);
+					if (isset($row['primary']))
+						unset($res[$row['primary']]);
+
+					$keys = implode(', ', array_keys($res));
+					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
+								(SELECT '.$keys.', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
+								WHERE `'.$id.'` = '.(int)$old_id.')';
+					Db::getInstance()->Execute($sql);
+				}
+			}
+			else
+			{
+				//Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
+			}
+		}
 	}
 }

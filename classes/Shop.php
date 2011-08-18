@@ -165,7 +165,7 @@ class ShopCore extends ObjectModel
 			if ($table_name == 'stock')
 			{
 				$group = new GroupShop($this->id_group_shop);
-				if ($group->share_stock && $group->getNbShops() > 1)
+				if ($group->share_stock && $group->getTotalShops() > 1)
 					continue;
 			}
 
@@ -745,7 +745,7 @@ class ShopCore extends ObjectModel
 			}
 			else
 			{
-					Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
+				//Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
 			}
 		}
 	}
