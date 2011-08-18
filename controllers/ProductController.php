@@ -49,7 +49,7 @@ class ProductControllerCore extends FrontController
 			$this->addJS(_PS_JS_DIR_.'jquery/jquery.jqzoom.js');
 		}
 	}
-	
+
 	public function canonicalRedirection()
 	{
 		// Automatically redirect to the canonical URL if the current in is the right one
@@ -189,9 +189,9 @@ class ProductControllerCore extends FrontController
 				$id_country = (int)($id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT'));
 
 				// Tax
-				$tax = (float)(Tax::getProductTaxRate((int)$this->product->id, $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+				$tax = (float)$this->product->getTaxesRate(new Address((int)$this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 				$this->context->smarty->assign('tax_rate', $tax);
-				
+
 				$productPriceWithTax = Product::getPriceStatic($this->product->id, true, NULL, 6);
 				if (Product::$_taxCalculationMethod == PS_TAX_INC)
 					$productPriceWithTax = Tools::ps_round($productPriceWithTax, 2);

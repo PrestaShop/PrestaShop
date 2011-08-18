@@ -59,74 +59,19 @@ class TaxRulesGroupCore extends ObjectModel
 	    );
 	}
 
+	/**
+	* @return array an array of tax rules group formatted as $id => $name
+	*/
 	public static function getTaxRulesGroupsForOptions()
 	{
 		$tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Tools::displayError('No tax'));
 		return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
 	}
 
-	public static function getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county)
-	{
-	    if (empty($id_tax_rules_group) OR empty($id_country))
-	        return array(new Tax()); // No Tax
 
-       if (isset(self::$_taxes[$id_tax_rules_group.'-'.$id_country.'-'.$id_state.'-'.$id_county]))
-            return self::$_taxes[$id_tax_rules_group.'-'.$id_country.'-'.$id_state.'-'.$id_county];
-
-	    $rows = Db::getInstance()->ExecuteS('
-	    SELECT *
-	    FROM `'._DB_PREFIX_.'tax_rule`
-	    WHERE `id_country` = '.(int)$id_country.'
-	    AND `id_tax_rules_group` = '.(int)$id_tax_rules_group.'
-	    AND `id_state` IN (0, '.(int)$id_state.')
-	    AND `id_county` IN (0, '.(int)$id_county.')
-	    ORDER BY `id_county` DESC, `id_state` DESC'
-	    );
-
-
-	    $taxes = array();
-	    foreach ($rows AS $row)
-	    {
-          if ($row['id_county'] != 0)
-          {
-          	switch($row['county_behavior'])
-          	{
-          		case County::USE_BOTH_TAX:
-                 $taxes[] = new Tax($row['id_tax']);
-          		break;
-
-          		case County::USE_COUNTY_TAX:
-                  $taxes = array(new Tax($row['id_tax']));
-          		break 2;
-
-          		case County::USE_STATE_TAX: // do nothing
-          		break;
-          	}
-          }
-	       else if ($row['id_state'] != 0)
-	       {
-	            switch($row['state_behavior'])
-	            {
-	                case PS_STATE_TAX: // use only product tax
-                        $taxes[] = new Tax($row['id_tax']);
-    	                break 2; // switch + foreach
-
-    	            case PS_BOTH_TAX:
-    	                $taxes[] = new Tax($row['id_tax']);
-    	                break;
-
-	                case PS_PRODUCT_TAX: // do nothing use country tax
-	                    break;
-	            }
-	       }
-	       else
-	            $taxes[] = new Tax((int)$row['id_tax']);
-	    }
-
-	    self::$_taxes[$id_tax_rules_group.'-'.$id_country.'-'.$id_state.'-'.$id_county] = $taxes;
-       return $taxes;
-	}
-
+	/**
+	* @return array
+	*/
 	public static function getAssociatedTaxRatesByIdCountry($id_country)
 	{
 	    $rows = Db::getInstance()->ExecuteS('
@@ -136,7 +81,7 @@ class TaxRulesGroupCore extends ObjectModel
 	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 	    WHERE tr.`id_country` = '.(int)$id_country.'
 	    AND tr.`id_state` = 0
-	    AND tr.`id_county` = 0'
+	    AND 0 between `zipcode_from` AND `zipcode_to`'
 	    );
 
 	    $res = array();
@@ -146,15 +91,12 @@ class TaxRulesGroupCore extends ObjectModel
 	    return $res;
 	}
 
-	public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $id_county)
-	{
-	    $rate = 0;
-	    foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county) AS $tax)
-	        $rate += (float)$tax->rate;
-
-	    return $rate;
-	}
-
+	/**
+	* Returns the tax rules group id corresponding to the name
+	*
+	* @param string name
+	* @return int id of the tax rules
+	*/
 	public static function getIdByName($name)
 	{
 	    return Db::getInstance()->getValue(
@@ -163,4 +105,29 @@ class TaxRulesGroupCore extends ObjectModel
 	    WHERE `name` = \''.pSQL($name).'\''
 	    );
 	}
+
+	/**
+	* @deprecated since 1.5
+	*/
+	public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $zipcode)
+	{
+		Tools::displayAsDeprecated();
+	    $rate = 0;
+	    foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) AS $tax)
+	        $rate += (float)$tax->rate;
+
+	    return $rate;
+	}
+
+	/**
+	 * Return taxes associated to this para
+	 * @deprecated since 1.5
+	 */
+	public static function getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county)
+	{
+		Tools::displayAsDeprecated();
+		return array();
+	}
+
 }
+

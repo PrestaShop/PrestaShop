@@ -186,7 +186,7 @@ class ProductCore extends ObjectModel
 	public		$tags;
 
 	public 		$isFullyLoaded = false;
-	
+
 	protected	$langMultiShop = true;
 
 	public $cache_is_pack;
@@ -202,10 +202,10 @@ class ProductCore extends ObjectModel
 	protected static $_cacheFeatures = array();
 	protected static $_frontFeaturesCache = array();
 	protected static $producPropertiesCache = array();
-	
+
 	/** @var array cache stock data in getStock() method */
 	protected static $cacheStock = array();
-	
+
 	/** @var array tables */
 	protected $tables = array ('product', 'product_lang');
 
@@ -303,7 +303,7 @@ class ProductCore extends ObjectModel
 		parent::__construct($id_product, $id_lang, $id_shop);
 		if (!$context)
 			$context = Context::getContext();
-		
+
 		if ($full AND $this->id)
 		{
 			$this->isFullyLoaded = $full;
@@ -311,10 +311,13 @@ class ProductCore extends ObjectModel
 			$this->manufacturer_name = Manufacturer::getNameById((int)$this->id_manufacturer);
 			$this->supplier_name = Supplier::getNameById((int)$this->id_supplier);
 			self::$_tax_rules_group[$this->id] = $this->id_tax_rules_group;
+
+			$address = NULL;
 			if (is_object($context->cart) AND $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != NULL)
-				$this->tax_rate = Tax::getProductTaxRate($this->id, $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-			else
-				$this->tax_rate = Tax::getProductTaxRate($this->id, NULL);
+				$address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+
+			$this->tax_rate = $this->getTaxesRate(new Address($address));
+
 			$this->new = $this->isNew();
 			$this->price = Product::getPriceStatic((int)($this->id), false, NULL, 6, NULL, false, true, 1, false, NULL, NULL, NULL, $this->specificPrice);
 			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
@@ -375,7 +378,7 @@ class ProductCore extends ObjectModel
 
 		return $fields;
 	}
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (!parent::add($autodate, $nullValues))
@@ -405,18 +408,25 @@ class ProductCore extends ObjectModel
 		));
 	}
 
-	public static function initPricesComputation($customer = NULL)
+	public static function initPricesComputation($id_customer = NULL)
 	{
-		if ($customer)
+		if ($id_customer)
+		{
+			$customer = new Customer((int)($id_customer));
+			if (!Validate::isLoadedObject($customer))
+				die(Tools::displayError());
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
+		}
+		else if (Validate::isLoadedObject(Context::getContext()->customer))
+			self::$_taxCalculationMethod = Group::getPriceDisplayMethod(Context::getContext()->customer->id_default_group);
 		else
 			self::$_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
 	}
 
-	public static function getTaxCalculationMethod($customer = NULL)
+	public static function getTaxCalculationMethod($id_customer = NULL)
 	{
-		if ($customer)
-			self::initPricesComputation((int)($customer));
+		if ($id_customer)
+			self::initPricesComputation((int)($id_customer));
 		return (int)(self::$_taxCalculationMethod);
 	}
 
@@ -556,7 +566,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!GroupReduction::deleteProductReduction($this->id))
 			return false;
-		
+
 		Hook::deleteProduct($this);
 		if (!parent::delete() OR
 			!$this->deleteCategories(true) OR
@@ -669,7 +679,7 @@ class ProductCore extends ObjectModel
 
 		if (!$this->setGroupReduction())
 			return false;
-		
+
 		return true;
 	}
 
@@ -740,7 +750,7 @@ class ProductCore extends ObjectModel
 		SELECT `id_image`
 		FROM `'._DB_PREFIX_.'image`
 		WHERE `id_product` = '.(int)($this->id));
-		
+
 		$status = true;
 		if ($result)
 		foreach($result as $row)
@@ -1369,7 +1379,7 @@ class ProductCore extends ObjectModel
 				   AND tr.`id_state` = 0)
 	  		  	LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				WHERE p.`active` = 1 
+				WHERE p.`active` = 1
 					AND DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
@@ -1556,7 +1566,7 @@ class ProductCore extends ObjectModel
 				$ret[] = $val['id_category'];
 		return $ret;
 			}
-	
+
 	public static function getProductCategoriesFull($id_product = '', $id_lang)
 	{
 		$ret = array();
@@ -1642,7 +1652,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
    			$context = Context::getContext();
-   			
+
         $cur_cart = $context->cart;
 
         if (isset($divisor))
@@ -1680,7 +1690,7 @@ class ProductCore extends ObjectModel
 		// retrieve address informations
 		$id_country = (int)$context->country->id;
 		$id_state = 0;
-		$id_county = 0;
+		$zipcode = 0;
 
 		if (!$id_address)
 			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
@@ -1692,18 +1702,14 @@ class ProductCore extends ObjectModel
 			{
 				$id_country = (int)($address_infos['id_country']);
 				$id_state = (int)($address_infos['id_state']);
-				$postcode = (int)$address_infos['postcode'];
-
-				$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
+				$zipcode = $address_infos['postcode'];
 			}
 		}
 		elseif (isset($context->customer->geoloc_id_country))
 		{
 			$id_country = (int)$context->customer->geoloc_id_country;
 			$id_state = (int)$context->customer->id_state;
-			$postcode = (int)$context->customer->postcode;
-
-			$id_county = (int)County::getIdCountyByZipCode($id_state, $postcode);
+			$zipcode = (int)$context->customer->postcode;
 		}
 
 		if (Tax::excludeTaxeOption())
@@ -1712,7 +1718,7 @@ class ProductCore extends ObjectModel
 		if ($usetax != false AND !empty($address_infos['vat_number']) AND $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY') AND Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
 
-		return Product::priceCalculation($context->shop->getID(), $id_product, $id_product_attribute, $id_country,  $id_state, $id_county, $id_currency, $id_group, $quantity, $usetax, $decimals, $only_reduc,
+		return Product::priceCalculation($context->shop->getID(), $id_product, $id_product_attribute, $id_country,  $id_state, $zipcode, $id_currency, $id_group, $quantity, $usetax, $decimals, $only_reduc,
 		$usereduc, $with_ecotax, $specificPriceOutput, $use_groupReduction);
 	}
 
@@ -1733,16 +1739,17 @@ class ProductCore extends ObjectModel
 	* @param boolean $use_reduc Set if the returned amount will include reduction
 	* @param boolean $with_ecotax insert ecotax in price output.
 	* @param variable_reference $specific_price_output If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
+	*
 	* @return float Product price
 	**/
-	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_groupReduction)
+	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency, $id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_groupReduction)
 	{
 		// Caching
 		if ($id_product_attribute === NULL)
 			$product_attribute_label = 'NULL';
 		else
 			$product_attribute_label = ($id_product_attribute === false ? 'false' : $id_product_attribute);
-		$cacheId = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$id_county.'-'.$id_group.'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.$with_ecotax;
+		$cacheId = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.$with_ecotax;
 
 		// reference parameter is filled before any returns
 		$specific_price = SpecificPrice::getSpecificPrice((int)($id_product), $id_shop, $id_currency, $id_country, $id_group, $quantity);
@@ -1773,14 +1780,18 @@ class ProductCore extends ObjectModel
 		if ($id_product_attribute !== false) // If you want the default combination, please use NULL value instead
 			$price += $attribute_price;
 
-		// TaxRate calculation
-		$tax_rate = Tax::getProductTaxRateViaRules((int)$id_product, (int)$id_country, (int)$id_state, (int)$id_county);
-		if ($tax_rate === false)
-			$tax_rate = 0;
+		// Tax
+		$address = new Address();
+		$address->id_country = $id_country;
+		$address->id_state = $id_state;
+		$address->postcode = $zipcode;
+
+		$tax_manager = TaxManagerFactory::getManager($address, Product::getIdTaxRulesGroupByIdProduct((int)$id_product));
+		$product_tax_calculator = $tax_manager->getTaxCalculator();
 
 		// Add Tax
 		if ($use_tax)
-			$price = $price * (1 + ($tax_rate / 100));
+			$price = $product_tax_calculator->addTaxes($price);
 		$price = Tools::ps_round($price, $decimals);
 
 		// Reduction
@@ -1793,7 +1804,7 @@ class ProductCore extends ObjectModel
 
 		        if (!$specific_price['id_currency'])
 		            $reduction_amount = Tools::convertPrice($reduction_amount, $id_currency);
-		        $reduc = Tools::ps_round(!$use_tax ? $reduction_amount / (1 + $tax_rate / 100) : $reduction_amount, $decimals);
+		        $reduc = Tools::ps_round(!$use_tax ? $product_tax_calculator->removeTax($reduction_amount) : $reduction_amount, $decimals);
 		    }
 			else
 		        $reduc = Tools::ps_round($price * $specific_price['reduction'], $decimals);
@@ -1825,8 +1836,13 @@ class ProductCore extends ObjectModel
 				$ecotax = Tools::convertPrice($ecotax, $id_currency);
 			if ($use_tax)
 			{
-				$taxRate = TaxRulesGroup::getTaxesRate((int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'), (int)$id_country, (int)$id_state, (int)$id_county);
-				$price += $ecotax * (1 + ($taxRate / 100));
+				// reinit the tax manager for ecotax handling
+				$tax_manager = TaxManagerFactory::getManager(
+										$address,
+										(int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID')
+									);
+				$ecotax_tax_calculator = $tax_manager->getTaxCalculator();
+				$price += $ecotax_tax_calculator->addTaxes($ecotax);
 			}
 			else
 				$price += $ecotax;
@@ -1915,7 +1931,7 @@ class ProductCore extends ObjectModel
 		$ret .= Tools::displayPrice($params['p']['price'], $smarty->ps_currency);
 		return $ret;
 	}
-	
+
 	/**
 	* Display price with right format and currency
 	*
@@ -1975,10 +1991,10 @@ class ProductCore extends ObjectModel
 		$product = new Product($id_product);
 		return $product->getStock($id_product_attribute);
 	}
-	
+
 	/**
 	 * Create JOIN query with 'stock' table
-	 * 
+	 *
 	 * @param string $productAlias Alias of product table
 	 * @param string|int $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
 	 * @param bool $innerJoin LEFT JOIN or INNER JOIN
@@ -2002,10 +2018,10 @@ class ProductCore extends ObjectModel
 
 		return $sql;
 	}
-	
+
 	/**
 	 * Set the stock quantity of current product
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @param int $quantity
 	 * @param int $id_product_attribute
@@ -2060,7 +2076,7 @@ class ProductCore extends ObjectModel
 					'quantity' =>				$quantity,
 				), 'INSERT');
 		}
-		
+
 		// Change stock quantity on product
 		if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID(true)))
 		{
@@ -2082,7 +2098,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Get the stock quantity of current product
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @param int $id_product_attribute
 	 * @param Context $context
@@ -2103,6 +2119,7 @@ class ProductCore extends ObjectModel
 					WHERE id_product = '.$this->id.'
 						AND id_product_attribute = '.(int)$id_product_attribute
 						.$context->shop->sqlRestriction(Shop::SHARE_STOCK);
+
 			self::$cacheStock[$this->id][$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
 		}
 		return self::$cacheStock[$this->id][$id_product_attribute];
@@ -2692,7 +2709,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!$this->isFullyLoaded && is_null($this->tags))
 			$this->tags = Tag::getProductTags($this->id);
-			
+
 		if (!($this->tags AND key_exists($id_lang, $this->tags)))
 			return '';
 
@@ -2714,7 +2731,7 @@ class ProductCore extends ObjectModel
 		if (!$row['id_product'])
 			return false;
 		$context = Context::getContext();
-			
+
 		// Product::getDefaultAttribute is only called if id_product_attribute is missing from the SQL query at the origin of it: consider adding it in order to avoid unnecessary queries
 		$row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
 		if ((!isset($row['id_product_attribute']) OR !$row['id_product_attribute'])
@@ -3030,10 +3047,10 @@ class ProductCore extends ObjectModel
 			$fields_present[] = array('id_customization_field' => $field['index'], 'type' => $field['type']);
 		foreach ($requiredFields AS $required_field)
 			if (!in_array($required_field, $fields_present))
-				return false;	
+				return false;
 		return true;
 	}
-	
+
 	public static function idIsOnCategoryId($id_product, $categories)
 	{
 		$sql = 'SELECT id_product FROM `'._DB_PREFIX_.'category_product` WHERE `id_product`='.(int)($id_product).' AND `id_category` IN(';
@@ -3063,7 +3080,7 @@ class ProductCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'category_product` cp
 			INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
 			WHERE cp.`id_product` = '.(int)$this->id.' AND ctg.`id_group` = 1');
-		else 
+		else
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT cg.`id_group`
 			FROM `'._DB_PREFIX_.'category_product` cp
@@ -3075,7 +3092,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Add a stock movement for current product
-	 * 
+	 *
 	 * @param int $quantity
 	 * @param int $id_reason
 	 * @param int $id_product_attribute
@@ -3153,6 +3170,20 @@ class ProductCore extends ObjectModel
 	        self::$_tax_rules_group[$id_product] = $id_group;
         }
 	    return self::$_tax_rules_group[$id_product];
+	}
+
+	/**
+	* @return the total taxes rate applied to the product
+	*/
+	public function getTaxesRate(Address $address = NULL)
+	{
+		if (!$address OR !$address->id_country)
+			$address = Tax::initializeAddress();
+
+		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
+		$tax_calculator = $tax_manager->getTaxCalculator();
+
+		return $tax_calculator->getTaxesRate();
 	}
 
 	/**
@@ -3368,7 +3399,7 @@ class ProductCore extends ObjectModel
 									SET `cover` = 1 WHERE `id_product` = '.(int)($this->id).' AND `id_image` = '.(int)$id_image);
 		return true;
 	}
-	
+
 	/**
 	* Webservice getter : get image ids of current product for association
 	*
@@ -3390,8 +3421,8 @@ class ProductCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_tag`
 		WHERE `id_product` = '.(int)($this->id));
 	}
-	
-	
+
+
 	public function getWsManufacturerName()
 	{
 		return Manufacturer::getNameById((int)$this->id_manufacturer);
@@ -3404,7 +3435,7 @@ class ProductCore extends ObjectModel
 		SET ecotax = 0
 		');
 	}
-	
+
 	/**
 	 * Set Group reduction if needed
 	 */

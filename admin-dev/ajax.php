@@ -358,7 +358,7 @@ if (isset($_GET['ajaxStates']) AND isset($_GET['id_country']))
 	LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
 	WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
 	ORDER BY s.`name` ASC');
-	
+
 	if (is_array($states) AND !empty($states))
 	{
 		$list = '';
@@ -504,30 +504,6 @@ if (Tools::isSubmit('toggleScreencast'))
 	$context->employee->save();
 }
 
-if (Tools::isSubmit('ajaxAddZipCode') OR Tools::isSubmit('ajaxRemoveZipCode'))
-{
-	require_once(PS_ADMIN_DIR.'/tabs/AdminCounty.php');
-
-	$zipcodes = Tools::getValue('zipcodes');
-	$id_county = (int)Tools::getValue('id_county');
-
-	$county = new County($id_county);
-	if (!Validate::isLoadedObject($county))
-		die('error');
-
-	if (Tools::isSubmit('ajaxAddZipCode'))
-	{
-		if ($county->isZipCodeRangePresent($zipcodes))
-			die('error:'.Tools::displayError('This Zip Code is already in use.'));
-		if ($county->addZipCodes($zipcodes))
-			die(AdminCounty::renderZipCodeList($county->getZipCodes()));
-	}
-	else if (Tools::isSubmit('ajaxRemoveZipCode') AND $county->removeZipCodes($zipcodes))
-			die(AdminCounty::renderZipCodeList($county->getZipCodes()));
-
-	die('error');
-}
-
 if (Tools::isSubmit('helpAccess'))
 {
 	$item = Tools::getValue('item');
@@ -562,14 +538,14 @@ if (Tools::isSubmit('getHookableList'))
 			if ($moduleInstance->isHookableOn($hook_name))
 				array_push($hookableList[$hook_name], $module);
 		}
-			
+
 	}
 	die(Tools::jsonEncode($hookableList));
 }
 
 if (Tools::isSubmit('getHookableModuleList'))
 {
-	
+
 	include('../init.php');
 	$hook_name = Tools::getValue('hook');
 	$hookableModulesList = array();
@@ -582,9 +558,9 @@ if (Tools::isSubmit('getHookableModuleList'))
 			$mod = new $module['name']();
 			if ($mod->isHookableOn($hook_name))
 				$hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Module::hookExec($hook_name, array(), (int)$mod->id));
-		}		
+		}
 	}
-	die(Tools::jsonEncode($hookableModulesList));			
+	die(Tools::jsonEncode($hookableModulesList));
 }
 
 if (Tools::isSubmit('saveHook'))
@@ -599,7 +575,7 @@ if (Tools::isSubmit('saveHook'))
 			$hook = trim($hook);
 			if (!$hook)
 				continue;
-	
+
 			$sql = 'DELETE FROM '._DB_PREFIX_.'hook_module
 					WHERE id_hook = (SELECT id_hook FROM '._DB_PREFIX_.'hook WHERE `name` = \''.pSQL($hook).'\' LIMIT 1)
 						AND id_shop = '.$id_shop;
@@ -615,7 +591,7 @@ if (Tools::isSubmit('saveHook'))
 			}
 			$value = rtrim($value, ',');
 			Db::getInstance()->Execute('INSERT INTO  '._DB_PREFIX_.'hook_module (id_module, id_shop, id_hook, position) VALUES '.$value);
-				
+
 		}
 	}
 	die('{"hasError" : false, "errors" : ""}');
@@ -624,18 +600,18 @@ if (Tools::isSubmit('saveHook'))
 if (Tools::isSubmit('getAdminHomeElement'))
 {
 	$result = array();
-	
+
 	$protocol = Tools::usingSecureMode() ? 'https' : 'http';
 	$isoUser = Context::getContext()->language->iso_code;
 	$isoCountry = Context::getContext()->country->iso_code;
 	$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
-	
+
 	// SCREENCAST
 	if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
 		$result['screencast'] = 'OK';
 	else
 		$result['screencast'] = 'NOK';
-	
+
 	// PREACTIVATION
 	$content = @file_get_contents($protocol.'://www.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&date_creation='._PS_CREATION_DATE_.'&v='._PS_VERSION_.'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 	if (!$content)
@@ -661,7 +637,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 		else
 			$result['partner_preactivation'] = 'NOK';
 	}
-	
+
 	// PREACTIVATION PAYPAL WARNING
 	$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 	$content = explode('|', $content);
@@ -681,20 +657,20 @@ if (Tools::isSubmit('getAdminHomeElement'))
 			$result['discover_prestashop'] = $content[1];
 		else
 			$result['discover_prestashop'] = 'NOK';
-	
+
 		if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
 			$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://www.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
-	
+
 		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK')
 			$result['discover_prestashop'] .= $content[1];
-	}	
-	
+	}
+
 	die(Tools::jsonEncode($result));
 }
 
-if (Tools::isSubmit('getChildrenCategories') && Tools::getValue('id_category_parent')) 
+if (Tools::isSubmit('getChildrenCategories') && Tools::getValue('id_category_parent'))
 {
 	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat', array()), Context::getContext()->language->id);
 	die(Tools::jsonEncode($children_categories));

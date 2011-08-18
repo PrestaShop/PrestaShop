@@ -30,7 +30,7 @@ $engineType = 'ENGINE_TYPE';
 
 if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set('Europe/Paris');
-	
+
 // if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
 if (defined('_PS_ROOT_DIR_') AND !defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
@@ -132,6 +132,10 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_block_info_to_cms_block.php
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'create_multistore.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_order_state.php');
+
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_tax_rules.php');
+
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_tab.php');
 
 //old version detection
 global $oldversion, $logger;
@@ -313,9 +317,9 @@ if ($confFile->error != false)
 
 // Settings updated, compile and cache directories must be emptied
 $arrayToClean = array(
-	INSTALL_PATH.'/../tools/smarty/cache/', 
-	INSTALL_PATH.'/../tools/smarty/compile/', 
-	INSTALL_PATH.'/../tools/smarty_v2/cache/', 
+	INSTALL_PATH.'/../tools/smarty/cache/',
+	INSTALL_PATH.'/../tools/smarty/compile/',
+	INSTALL_PATH.'/../tools/smarty_v2/cache/',
 	INSTALL_PATH.'/../tools/smarty_v2/compile/');
 foreach ($arrayToClean as $dir)
 	if (!file_exists($dir))

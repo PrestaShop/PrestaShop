@@ -30,13 +30,21 @@ class TaxRuleCore extends ObjectModel
     public $id_tax_rules_group;
     public $id_country;
     public $id_state;
-    public $id_county;
+	 public $zipcode_from;
+	 public $zipcode_to;
     public $id_tax;
-    public $state_behavior;
-    public $county_behavior;
+	 public $behavior;
+	 public $description;
 
  	protected 	$fieldsRequired = array('id_tax_rules_group', 'id_country', 'id_tax');
- 	protected 	$fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId', 'id_country' => 'isUnsignedId', 'id_state' => 'isUnsignedId', 'id_county' => 'isUnsignedId', 'id_tax' => 'isUnsignedId', 'state_behavior' => 'isUnsignedInt', 'county_behavior' => 'isUnsignedInt');
+ 	protected 	$fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId',
+ 												   'id_country' => 'isUnsignedId',
+ 												   'id_state' => 'isUnsignedId',
+ 												   'zipcode_from' => 'isUnsignedId', // TODO: char
+ 												   'zipcode_to' => 'isUnsignedId',	 // TODO: char
+ 												   'id_tax' => 'isUnsignedId',
+ 												   'behavior' => 'isUnsignedInt',
+ 												   'description' => 'isUnsignedInt'); // TODO:char
 
 	protected 	$table = 'tax_rule';
 	protected 	$identifier = 'id_tax_rule';
@@ -47,10 +55,11 @@ class TaxRuleCore extends ObjectModel
       $fields['id_tax_rules_group'] = (int)($this->id_tax_rules_group);
       $fields['id_country'] = (int)$this->id_country;
       $fields['id_state'] = (int)$this->id_state;
-      $fields['id_county'] = (int)$this->id_county;
-      $fields['state_behavior'] = (int)$this->state_behavior;
-      $fields['county_behavior'] = (int)$this->county_behavior;
-	  $fields['id_tax'] = (int)($this->id_tax);
+      $fields['zipcode_from'] = (int)$this->zipcode_from;
+      $fields['zipcode_to'] = (int)$this->zipcode_to;
+      $fields['behavior'] = (int)$this->behavior;
+	   $fields['id_tax'] = (int)($this->id_tax);
+	   $fields['description'] = $this->description;
 
 	  return $fields;
 	}
@@ -66,23 +75,44 @@ class TaxRuleCore extends ObjectModel
         );
     }
 
+    public static function retrieveById($id_tax_rule)
+    {
+    	return Db::getInstance()->getRow('
+    	SELECT * FROM `'._DB_PREFIX_.'tax_rule`
+    	WHERE `id_tax_rule` = '.(int)$id_tax_rule);
+    }
+/*
     public static function getTaxRulesByGroupId($id_group)
     {
         if (empty($id_group))
             die(Tools::displayError());
 
-        $results = Db::getInstance()->ExecuteS('
+        return Db::getInstance()->ExecuteS('
         SELECT *
         FROM `'._DB_PREFIX_.'tax_rule`
         WHERE `id_tax_rules_group` = '.(int)$id_group
         );
+    }*/
 
-        $res = array();
-        foreach ($results AS $row)
-            $res[$row['id_country']][$row['id_state']][$row['id_county']] = array('id_tax' => $row['id_tax'], 'state_behavior' => $row['state_behavior'], 'county_behavior' => $row['county_behavior']);
+	public static function getTaxRulesByGroupId($id_lang, $id_group)
+	{
 
-        return $res;
-    }
+
+		return Db::getInstance()->ExecuteS('
+		SELECT g.`id_tax_rule`,
+				 c.`name` AS country_name,
+				 s.`name` AS state_name,
+				 t.rate,
+				 g.`zipcode_from`, g.`zipcode_to`,
+				 g.`description`,
+				 g.`behavior`
+		FROM `'._DB_PREFIX_.'tax_rule` g
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND id_lang = '.(int)$id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
+		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
+		WHERE `id_tax_rules_group` = '.(int)$id_group
+		);
+	}
 
     public static function deleteTaxRuleByIdTax($id_tax)
     {
@@ -93,19 +123,57 @@ class TaxRuleCore extends ObjectModel
     }
 
 
+	/**
+	* @deprecated since 1.5
+	*/
 	public static function deleteTaxRuleByIdCounty($id_county)
 	{
-		return Db::getInstance()->Execute('
-		DELETE FROM `'._DB_PREFIX_.'tax_rule`
-		WHERE `id_county` = '.(int)$id_county
-		);
+		Tools::displayAsDeprecated();
+		return true;
 	}
 
+	/**
+	* @param int $id_tax
+	* @return boolean
+	*/
     public static function isTaxInUse($id_tax)
     {
         return Db::getInstance()->getValue('
         SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int)$id_tax
         );
     }
+
+
+	 /**
+	  * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
+	  * @return array an array containing two zipcode ordered by zipcode
+	  */
+    public function breakDownZipCode($zip_codes)
+	 {
+		$zip_codes = preg_split('/-/', $zip_codes);
+
+		if (sizeof($zip_codes) == 2)
+		{
+			$from = $zip_codes[0];
+			$to   = $zip_codes[1];
+			if ($zip_codes[0] > $zip_codes[1])
+			{
+				$from = $zip_codes[1];
+				$to   = $zip_codes[0];
+			}
+			elseif ($zip_codes[0] == $zip_codes[1])
+			{
+				$from = $zip_codes[0];
+				$to   = 0;
+			}
+		}
+		elseif (sizeof($zip_codes) == 1)
+		{
+			$from = $zip_codes[0];
+			$to = 0;
+		}
+
+		return array($from, $to);
+	}
 }
 

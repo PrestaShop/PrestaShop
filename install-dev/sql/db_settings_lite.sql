@@ -66,7 +66,8 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
 (63, 'beforeAuthentication', 'Before Authentication', 'Before authentication', 0, 0),
 (64, 'paymentTop', 'Top of payment page', 'Top of payment page', 0, 0),
 (65, 'afterCreateHtaccess', 'After htaccess creation', 'After htaccess creation', 0, 0),
-(66, 'afterSaveAdminMeta', 'After save configuration in AdminMeta', 'After save configuration in AdminMeta', 0, 0);
+(66, 'afterSaveAdminMeta', 'After save configuration in AdminMeta', 'After save configuration in AdminMeta', 0, 0),
+(67, 'taxManager', 'Tax Manager Factory', '' , 0, 0);
 
 INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES
 (1, 'PS_LANG_DEFAULT', '1', NOW(), NOW()),
@@ -1180,7 +1181,7 @@ INSERT INTO `PREFIX_address_format` (`id_country`, `format`)
 UPDATE `PREFIX_address_format` set `format`='firstname lastname
 company
 address1 address2
-city, State:name postcode 
+city, State:name postcode
 Country:name
 phone' where `id_country`=21;
 
@@ -1199,3 +1200,4 @@ postcode city
 State:name
 Country:name
 phone' where `id_country`=10;
+

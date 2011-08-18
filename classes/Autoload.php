@@ -77,6 +77,8 @@ class Autoload
 	 */
 	public function load($classname)
 	{
+	//	echo("Please load $classname.<br />");
+
 		// regenerate the class index if the requested class is not found in the index or if the requested file doesn't exists
 		if (!isset($this->index[$classname]) || ($this->index[$classname] && !file_exists($this->root_dir.$this->index[$classname])))
 			$this->generateIndex();
@@ -87,6 +89,7 @@ class Autoload
 			// If requested class does not exist, load associated core class
 		 	if (isset($this->index[$classname]) && !$this->index[$classname])
 		 	{
+
 				require_once($this->root_dir.$this->index[$classname.'Core']);
 		 		if (file_exists($this->root_dir.'override/'.$this->index[$classname.'Core']))
 		 		{
@@ -104,10 +107,14 @@ class Autoload
 			{
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
+				{
 					require_once($this->root_dir.$this->index[$classname.'Core']);
+				}
 
 				if (isset($this->index[$classname]))
+				{
 					require_once($this->root_dir.$this->index[$classname]);
+				}
 			}
 		}
 		// Call directly ProductCore, ShopCore class

@@ -178,7 +178,7 @@ CREATE TABLE `PREFIX_cart` (
   KEY `id_lang` (`id_lang`),
   KEY `id_currency` (`id_currency`),
   KEY `id_guest` (`id_guest`),
-  KEY `id_group_shop` (`id_group_shop`), 
+  KEY `id_group_shop` (`id_group_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -324,7 +324,7 @@ CREATE TABLE `PREFIX_configuration_lang` (
 
 CREATE TABLE `PREFIX_connections` (
   `id_connections` int(10) unsigned NOT NULL auto_increment,
-  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1', 
+  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_guest` int(10) unsigned NOT NULL,
   `id_page` int(10) unsigned NOT NULL,
@@ -442,7 +442,7 @@ CREATE TABLE `PREFIX_customer` (
   KEY `customer_login` (`email`,`passwd`),
   KEY `id_customer_passwd` (`id_customer`,`passwd`),
   KEY `id_gender` (`id_gender`),
-  KEY `id_group_shop` (`id_group_shop`), 
+  KEY `id_group_shop` (`id_group_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -487,7 +487,7 @@ CREATE TABLE `PREFIX_customer_thread` (
 	KEY `id_contact` (`id_contact`),
 	KEY `id_customer` (`id_customer`),
 	KEY `id_order` (`id_order`),
-	KEY `id_product` (`id_product`)	
+	KEY `id_product` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 
@@ -942,7 +942,7 @@ CREATE TABLE `PREFIX_orders` (
   KEY `id_currency` (`id_currency`),
   KEY `id_address_delivery` (`id_address_delivery`),
   KEY `id_address_invoice` (`id_address_invoice`),
-  KEY `id_group_shop` (`id_group_shop`), 
+  KEY `id_group_shop` (`id_group_shop`),
   KEY `id_shop` (`id_shop`),
   INDEX `date_add`(`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1119,7 +1119,7 @@ CREATE TABLE `PREFIX_page_type` (
 
 CREATE TABLE `PREFIX_page_viewed` (
   `id_page` int(10) unsigned NOT NULL,
-  `id_group_shop` INT UNSIGNED NOT NULL DEFAULT '1', 
+  `id_group_shop` INT UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT UNSIGNED NOT NULL DEFAULT '1',
   `id_date_range` int(10) unsigned NOT NULL,
   `counter` int(10) unsigned NOT NULL,
@@ -1637,14 +1637,14 @@ CREATE TABLE `PREFIX_tax_rule` (
   `id_tax_rules_group` int(11) NOT NULL,
   `id_country` int(11) NOT NULL,
   `id_state` int(11) NOT NULL,
-  `id_county` int(11) NOT NULL,
+  `zipcode_from` INT NOT NULL,
+  `zipcode_to` INT NOT NULL,
   `id_tax` int(11) NOT NULL,
-  `state_behavior` int(11) NOT NULL,
-  `county_behavior` int(11) NOT NULL,
+  `behavior` int(11) NOT NULL,
+  `description` VARCHAR( 100 ) NOT NULL,
   PRIMARY KEY (`id_tax_rule`),
   KEY `id_tax_rules_group` (`id_tax_rules_group`),
-  KEY `id_tax` (`id_tax`),
-  UNIQUE KEY `tax_rule` (`id_tax_rules_group`, `id_country`, `id_state`, `id_county`)
+  KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_tax_rules_group` (
@@ -1686,23 +1686,6 @@ CREATE TABLE `PREFIX_import_match` (
   `match` text NOT NULL,
   `skip` int(2) NOT NULL,
   PRIMARY KEY (`id_import_match`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `PREFIX_county` (
-  `id_county` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  `id_state` int(11) NOT NULL,
-  `active` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id_county`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 ;
-
-
-CREATE TABLE `PREFIX_county_zip_code` (
-	`id_county` INT NOT NULL ,
-	`from_zip_code` INT NOT NULL ,
-	`to_zip_code` INT NOT NULL ,
-	PRIMARY KEY ( `id_county` , `from_zip_code` , `to_zip_code` )
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_address_format` (

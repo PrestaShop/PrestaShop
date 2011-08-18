@@ -156,9 +156,9 @@ class AdminTracking extends AdminTab
 				</tr>';
 			foreach ($this->_list['obj'] AS $k => $prod)
 			{
-				$product = new Product((int)($prod['id_product']));
+				$product = new Product((int)$prod['id_product'], false);
 				$product->name = $product->name[(int)$this->context->language->id];
-				$taxrate = Tax::getProductTaxRate($product->id);
+				$taxrate = $product->getTaxesRate();
 
 				echo '
 				<tr>
@@ -222,13 +222,15 @@ class AdminTracking extends AdminTab
 				else
 					$prod['combination_name'] = $prod['group_name'].' : '.$prod['attribute_name'];
 
+
 				$attributes[$prod['id_product_attribute']] = $prod;
 				$prevAttributeId = $prod['id_product_attribute'];
 			}
 
 			foreach ($attributes AS $prod)
 			{
-				$taxrate = Tax::getProductTaxRate($prod['id_product']);
+				$product = new Product((int)$prod['id_product'], false);
+				$tax_rate = $product->getTaxesRate();
 
 				echo '
 				<tr>
