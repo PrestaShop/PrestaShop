@@ -43,12 +43,13 @@ class CacheFSCore extends Cache {
 
 	public function set($key, $value, $expire = 0)
 	{
-		$path = _PS_CACHEFS_DIRECTORY_;
+		$path = $this->getPath();
 		for ($i = 0; $i < $this->_depth; $i++)
 		{
-			$path.=$key[$i].'/';
+			$path .= $key[$i].'/';
 		}
-		if(file_put_contents($path.$key, serialize($value)))
+
+		if (file_put_contents($path.$key, serialize($value)))
 		{
 			$this->_keysCached[$key] = true;
 			return $key;
@@ -70,9 +71,9 @@ class CacheFSCore extends Cache {
 	{
 		if (!isset($this->_keysCached[$key]))
 			return false;
-		$path = _PS_CACHEFS_DIRECTORY_;
+		$path = $this->getPath();
 		for ($i = 0; $i < $this->_depth; $i++)
-			$path.=$key[$i].'/';
+			$path .= $key[$i].'/';
 		if (!file_exists($path.$key))
 		{
 			unset($this->_keysCached[$key]);
@@ -84,14 +85,14 @@ class CacheFSCore extends Cache {
 
 	protected function _setKeys()
 	{
-		if (file_exists(_PS_CACHEFS_DIRECTORY_.'keysCached'))
+		if (file_exists($this->getPath().'keysCached'))
 		{
-			$file = file_get_contents(_PS_CACHEFS_DIRECTORY_.'keysCached');
+			$file = file_get_contents($this->getPath().'keysCached');
 			$this->_keysCached =	unserialize($file);
 		}
-		if (file_exists(_PS_CACHEFS_DIRECTORY_.'tablesCached'))
+		if (file_exists($this->getPath().'tablesCached'))
 		{
-			$file = file_get_contents(_PS_CACHEFS_DIRECTORY_.'tablesCached');
+			$file = file_get_contents($this->getPath().'tablesCached');
 			$this->_tablesCached = unserialize($file);
 		}
 		return true;
@@ -113,7 +114,7 @@ class CacheFSCore extends Cache {
 
 	public function delete($key, $timeout = 0)
 	{
-		$path = _PS_CACHEFS_DIRECTORY_;
+		$path = $this->getPath();
 		if (!isset($this->_keysCached[$key]))
 			return;
 		for ($i = 0; $i < $this->_depth; $i++)
@@ -149,19 +150,19 @@ class CacheFSCore extends Cache {
 	public function __destruct()
 	{
 		parent::__destruct();
-		file_put_contents(_PS_CACHEFS_DIRECTORY_.'keysCached', serialize($this->_keysCached));
-		file_put_contents(_PS_CACHEFS_DIRECTORY_.'tablesCached', serialize($this->_tablesCached));
+		file_put_contents($this->getPath().'keysCached', serialize($this->_keysCached));
+		file_put_contents($this->getPath().'tablesCached', serialize($this->_tablesCached));
 	}
 
 	public static function deleteCacheDirectory()
 	{
-		Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
+		Tools::deleteDirectory($this->getPath(), false);
 	}
 
 	public static function createCacheDirectories($level_depth, $directory = false)
 	{
 		if (!$directory)
-			$directory = _PS_CACHEFS_DIRECTORY_;
+			$directory = $this->getPath();
 		$chars = '0123456789abcdefghijklmnopqrstuvwxyz';
 		for ($i = 0; $i < strlen($chars); $i++)
 		{
@@ -171,5 +172,10 @@ class CacheFSCore extends Cache {
 					if ($level_depth - 1 > 0)
 						self::createCacheDirectories($level_depth - 1, $new_dir);
 		}
+	}
+	
+	protected function getPath()
+	{
+		return (defined('_PS_CACHEFS_DIRECTORY_') ? _PS_CACHEFS_DIRECTORY_ : dirname(__FILE__).'/../cache/cachefs/');
 	}
 }
