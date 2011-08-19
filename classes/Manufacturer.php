@@ -313,11 +313,11 @@ class ManufacturerCore extends ObjectModel
 
 	public function getProductsLite($id_lang)
 	{
-		return Db::getInstance()->ExecuteS('
-		SELECT p.`id_product`,  pl.`name`
-		FROM `'._DB_PREFIX_.'product` p
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).')
-		WHERE p.`id_manufacturer` = '.(int)($this->id));
+		$sql = 'SELECT p.`id_product`,  pl.`name`
+				FROM `'._DB_PREFIX_.'product` p
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('pl').')
+				WHERE p.`id_manufacturer` = '.(int)$this->id;
+		return Db::getInstance()->ExecuteS($sql);
 	}
 	/*
 	* Specify if a manufacturer already in base

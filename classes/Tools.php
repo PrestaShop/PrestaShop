@@ -636,11 +636,13 @@ class ToolsCore
 		 	/* Products specifics meta tags */
 			if ($id_product = self::getValue('id_product'))
 			{
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`)
-				WHERE pl.id_lang = '.(int)($id_lang).' AND pl.id_product = '.(int)($id_product).' AND p.active = 1');
+				$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
+						FROM `'._DB_PREFIX_.'product` p
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Context::getContext()->shop->sqlLang('pl').')
+						WHERE pl.id_lang = '.(int)$id_lang.'
+							AND pl.id_product = '.(int)$id_product.'
+							AND p.active = 1';
+				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if ($row)
 				{
 					if (empty($row['meta_description']))

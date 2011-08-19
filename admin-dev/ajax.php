@@ -108,6 +108,7 @@ if (isset($_GET['ajaxProductAccessories']))
 	FROM `'._DB_PREFIX_.'product` p
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
+	'.Context::getContext()->shop->sqlLang('pl').'
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')).'
 	AND p.`id_product` NOT IN (
 		SELECT a.`id_product_2`
@@ -342,6 +343,7 @@ if (isset($_GET['ajaxProductPackItems']))
 	FROM `'._DB_PREFIX_.'product` p
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
+	'.Context::getContext()->shop->sqlLang('pl').'
 	AND p.`id_product` NOT IN (SELECT DISTINCT id_product_pack FROM `'._DB_PREFIX_.'pack`)
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 

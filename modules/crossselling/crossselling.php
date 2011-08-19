@@ -122,7 +122,7 @@ class CrossSelling extends Module
 			SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, p.show_price, cl.link_rewrite category, p.ean13
 			FROM '._DB_PREFIX_.'order_detail od
 			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id)
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.$this->context->shop->sqlLang('pl').')
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default)
 			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
 			WHERE od.id_order IN ('.$list.') AND pl.id_lang = '.(int)$this->context->language->id.' AND cl.id_lang = '.(int)$this->context->language->id.' 

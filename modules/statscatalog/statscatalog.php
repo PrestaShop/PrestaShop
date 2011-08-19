@@ -123,7 +123,7 @@ class StatsCatalog extends Module
 
 		$sql = 'SELECT p.id_product, pl.name, pl.link_rewrite
 				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)($id_lang).')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.$this->context->shop->sqlLang('pl').')
 				'.$this->_join.'
 				WHERE p.`active` = 1
 					'.(sizeof($precalc2) ? 'AND p.`id_product` NOT IN ('.implode(',', $precalc2).')' : '').'
