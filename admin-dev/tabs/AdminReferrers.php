@@ -58,11 +58,14 @@ class AdminReferrers extends AdminTab
 	 	$this->view = true;
 	 	$this->edit = true;
 		$this->delete = true;
+		
+		parent::__construct();
 
 		$this->_select = 'SUM(sa.cache_visitors) AS cache_visitors, SUM(sa.cache_visits) AS cache_visits, SUM(sa.cache_pages) AS cache_pages,
 							SUM(sa.cache_registrations) AS cache_registrations, SUM(sa.cache_orders) AS cache_orders, SUM(sa.cache_sales) AS cache_sales,
 							IF(sa.cache_orders > 0, ROUND(sa.cache_sales/sa.cache_orders, 2), 0) as cart, (sa.cache_visits*click_fee) as fee0,
 							(sa.cache_orders*base_fee) as fee1, (sa.cache_sales*percent_fee/100) as fee2';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'referrer_shop` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', $this->context->shop->getListOfID()).'))';
 		$this->_group = 'GROUP BY sa.id_referrer';
 		$this->fieldsDisplay = array(
 			'id_referrer' => array('title' => $this->l('ID'), 'width' => 25, 'align' => 'center'),
@@ -79,8 +82,6 @@ class AdminReferrers extends AdminTab
 			'fee0' => array('title' => $this->l('Click'), 'width' => 30, 'align' => 'right', 'price' => true),
 			'fee1' => array('title' => $this->l('Base'), 'width' => 30, 'align' => 'right', 'price' => true),
 			'fee2' => array('title' => $this->l('Percent'), 'width' => 30, 'align' => 'right', 'price' => true));
-			
-		parent::__construct();
 	}
 
 	private function enableCalendar()
