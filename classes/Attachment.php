@@ -110,9 +110,12 @@ class AttachmentCore extends ObjectModel
 		{
 			foreach($list as $attachement)
 				$ids_attachements[] = $attachement['id_attachment'];
-			$tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
-												LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`)
-												WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).') AND pl.`id_lang` = '.(int)$id_lang.';');
+				
+			$sql = 'SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
+					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Context::getContext()->shop->sqlLang('pl').')
+					WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).')
+						AND pl.`id_lang` = '.(int)$id_lang;
+			$tmp = Db::getInstance()->executeS($sql);
 			$productAttachements = array();
 			foreach($tmp as $t)
 				$productAttachements[$t['id_attachment']][] =  $t['name'];

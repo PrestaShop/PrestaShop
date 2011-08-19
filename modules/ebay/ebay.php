@@ -992,7 +992,7 @@ class Ebay extends Module
 				{
 					$productTest = Db::getInstance()->getRow('
 					SELECT pl.`name`, pl.`description`
-					FROM `'._DB_PREFIX_.'product` p LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.')
+					FROM `'._DB_PREFIX_.'product` p LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.$this->context->shop->sqlLang('pl').')
 					WHERE `id_category_default` = '.(int)$c['id_category']);
 					$id_category_ref_suggested = $ebay->getSuggestedCategories($c['name'].' '.$productTest['name']);
 					$id_ebay_category_suggested = Db::getInstance()->getValue('SELECT `id_ebay_category` FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_category_ref` = '.(int)$id_category_ref_suggested);

@@ -1158,7 +1158,7 @@ class UpsCarrier extends CarrierModule
 								<option value="0">'.$this->l('Select a product ...').'</option>';
 						$productsList = Db::getInstance()->ExecuteS('
 						SELECT pl.* FROM `'._DB_PREFIX_.'product` p
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = 2)
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = 2'.$this->context->shop->sqlLang('pl').')
 						WHERE p.`active` = 1
 						ORDER BY pl.`name`');
 						foreach ($productsList as $product)

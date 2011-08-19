@@ -1188,8 +1188,8 @@ class ProductCore extends ObjectModel
 		if (!sizeof($attributes))
 			return false;
 		$attributesList = '';
-		foreach($attributes AS $id_attribute)
-			$attributesList .= '('.(int)($id_product_attribute).','.(int)($id_attribute).'),';
+		foreach ($attributes AS $id_attribute)
+			$attributesList .= '('.(int)$id_product_attribute.','.(int)$id_attribute.'),';
 		$attributesList = rtrim($attributesList, ',');
 
 		if (!Validate::isValuesList($attributesList))
@@ -1282,7 +1282,6 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN '._DB_PREFIX_.'stock s ON pa.id_product = s.id_product AND pa.id_product_attribute = s.id_product_attribute
 				'.Product::sqlStock('pa', 'pa').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				ORDER BY pa.`id_product_attribute`';
@@ -2184,11 +2183,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Check product availability
-	*
-	* @param integer $qty Quantity desired
-	* @return boolean True if product is available with this quantity
-	*/
+	 * Check product availability
+	 *
+	 * @param integer $qty Quantity desired
+	 * @return boolean True if product is available with this quantity
+	 */
 	public function checkQty($qty)
 	{
 		if (Pack::isPack((int)($this->id)) AND !Pack::isInStock((int)($this->id)))
@@ -2201,8 +2200,8 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Check if there is not a default attribute and create it not
-	*/
+	 * Check if there is not a default attribute and create it not
+	 */
 	public function checkDefaultAttributes()
 	{
 		if (!$this->id)
@@ -2231,11 +2230,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get all available attribute groups
-	*
-	* @param integer $id_lang Language id
-	* @return array Attribute groups
-	*/
+	 * Get all available attribute groups
+	 *
+	 * @param integer $id_lang Language id
+	 * @return array Attribute groups
+	 */
 	public function getAttributesGroups($id_lang)
 	{
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name,
@@ -2255,32 +2254,32 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Delete product accessories
-	*
-	* @return mixed Deletion result
-	*/
+	 * Delete product accessories
+	 *
+	 * @return mixed Deletion result
+	 */
 	public function deleteAccessories()
 	{
 		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'accessory` WHERE `id_product_1` = '.(int)($this->id));
 	}
 
 	/**
-	* Delete product from other products accessories
-	*
-	* @return mixed Deletion result
-	*/
+	 * Delete product from other products accessories
+	 *
+	 * @return mixed Deletion result
+	 */
 	public function deleteFromAccessories()
 	{
 		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'accessory` WHERE `id_product_2` = '.(int)($this->id));
 	}
 
 	/**
-	* Get product accessories (only names)
-	*
-	* @param integer $id_lang Language id
-	* @param integer $id_product Product id
-	* @return array Product accessories
-	*/
+	 * Get product accessories (only names)
+	 *
+	 * @param integer $id_lang Language id
+	 * @param integer $id_product Product id
+	 * @return array Product accessories
+	 */
 	public static function getAccessoriesLight($id_lang, $id_product, Context $context = null)
 	{
 		if (!$context)
@@ -2296,11 +2295,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get product accessories
-	*
-	* @param integer $id_lang Language id
-	* @return array Product accessories
-	*/
+	 * Get product accessories
+	 *
+	 * @param integer $id_lang Language id
+	 * @return array Product accessories
+	 */
 	public function getAccessories($id_lang, $active = true, Context $context = null)
 	{
 		if (!$context)
@@ -2331,14 +2330,14 @@ class ProductCore extends ObjectModel
 
 	public static function getAccessoryById($accessoryId)
 	{
-		return Db::getInstance()->getRow('SELECT `id_product`, `name` FROM `'._DB_PREFIX_.'product_lang` WHERE `id_product` = '.(int)($accessoryId));
+		return Db::getInstance()->getRow('SELECT `id_product`, `name` FROM `'._DB_PREFIX_.'product_lang` WHERE `id_product` = '.(int)$accessoryId);
 	}
 
 	/**
-	* Link accessories with product
-	*
-	* @param array $accessories_id Accessories ids
-	*/
+	 * Link accessories with product
+	 *
+	 * @param array $accessories_id Accessories ids
+	 */
 	public function changeAccessories($accessories_id)
 	{
 		foreach ($accessories_id as $id_product_2)
@@ -2346,8 +2345,8 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Add new feature to product
-	*/
+	 * Add new feature to product
+	 */
 	public function addFeaturesCustomToDB($id_value, $lang, $cust)
 	{
 		$row = array('id_feature_value' => (int)($id_value), 'id_lang' => (int)($lang), 'value' => pSQL($cust));
@@ -3135,28 +3134,28 @@ class ProductCore extends ObjectModel
 
 	public function getStockMvts($id_lang)
 	{
-		return Db::getInstance()->ExecuteS('
-		SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order, CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
-		FROM `'._DB_PREFIX_.'stock_mvt` sm
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (sm.id_product = pl.id_product AND pl.id_lang = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (sm.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = sm.id_employee)
-		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = sm.id_product_attribute)
-		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$id_lang.')
-		WHERE sm.id_product='.(int)$this->id.'
-		GROUP BY sm.id_stock_mvt');
+		$sql = 'SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order, CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
+				FROM `'._DB_PREFIX_.'stock_mvt` sm
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (sm.id_product = pl.id_product AND pl.id_lang = '.(int)$id_lang.Context::getContext()->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (sm.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = sm.id_employee)
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = sm.id_product_attribute)
+				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$id_lang.')
+				WHERE sm.id_product='.(int)$this->id.'
+				GROUP BY sm.id_stock_mvt';
+		return Db::getInstance()->ExecuteS($sql);
 	}
 
 	public static function getUrlRewriteInformations($id_product)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT pl.`id_lang`, pl.`link_rewrite`, p.`ean13`, cl.`link_rewrite` AS category_rewrite
-		FROM `'._DB_PREFIX_.'product` p
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'lang` l ON (pl.`id_lang` = l.`id_lang`)
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = p.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`)
-		WHERE p.`id_product` = '.(int)$id_product. '
-		AND l.`active` = 1');
+		$sql = 'SELECT pl.`id_lang`, pl.`link_rewrite`, p.`ean13`, cl.`link_rewrite` AS category_rewrite
+				FROM `'._DB_PREFIX_.'product` p
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`'.Context::getContext()->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'lang` l ON (pl.`id_lang` = l.`id_lang`)
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = p.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`)
+				WHERE p.`id_product` = '.(int)$id_product. '
+					AND l.`active` = 1';
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
 	public static function getIdTaxRulesGroupByIdProduct($id_product)

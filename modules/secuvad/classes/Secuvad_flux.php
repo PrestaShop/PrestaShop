@@ -217,7 +217,7 @@ class Secuvad_flux
 			FROM `'._DB_PREFIX_.'secuvad_assoc_category` sac 
 			JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = sac.`id_category`)
 			JOIN `'._DB_PREFIX_.'category` c ON (c.`id_category` = cp.`id_category`)
-			JOIN `'._DB_PREFIX_.'product_lang` pl ON (cp.`id_product` = pl.`id_product`) 
+			JOIN `'._DB_PREFIX_.'product_lang` pl ON (cp.`id_product` = pl.`id_product`'.$this->context->shop->sqlLang('pl').') 
 			JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = pl.`id_lang` AND l.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE pl.`id_product` = '.(int)($product['product_id']).'
 			ORDER BY c.`level_depth` DESC
