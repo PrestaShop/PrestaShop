@@ -342,8 +342,8 @@ class AdminDiscounts extends AdminTab
 				<div class="margin-form">
 					<input type="text" size="15" name="minimal" value="'.($this->getFieldValue($obj, 'minimal') ? (float)($this->getFieldValue($obj, 'minimal')) : '0').'" onkeyup="javascript:this.value = this.value.replace(/,/g, \'.\'); " /> <sup>*</sup>&nbsp;
 					<select name="include_tax" id="include_tax" style="vertical-align: middle;">
-						<option value="0">'.$this->l('tax excl.').'</option>
-						<option value="1">'.$this->l('tax incl.').'</option>
+						<option value="0" '.($obj->include_tax == 0 ? 'selected="selected"' : '').'>'.$this->l('tax excl.').'</option>
+						<option value="1" '.($obj->include_tax == 1 ? 'selected="selected"' : '').'>'.$this->l('tax incl.').'</option>
 					</select>
 					<p class="clear">'.$this->l('0 if not applicable').'</p>
 				</div>

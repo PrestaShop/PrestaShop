@@ -71,14 +71,23 @@ class PaypalPayment extends Paypal
 		$discounts = (float)($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 		if ($discounts == 0)
 		{
+			if ($params['cart']->id_customer)
+			{
+				$customer = new Customer((int)$params['cart']->id_customer);
+				$taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
+			}
+			else
+				$taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+			$priceField = (($taxCalculationMethod == PS_TAX_EXC) ? 'price' : 'price_wt');
+
 			$products = $cart->getProducts();
 			$amt = 0;
 			for ($i = 0; $i < sizeof($products); $i++)
 			{
 				$request .= '&L_NAME'.$i.'='.substr(urlencode($products[$i]['name'].(isset($products[$i]['attributes'])?' - '.$products[$i]['attributes']:'').(isset($products[$i]['instructions'])?' - '.$products[$i]['instructions']:'') ), 0, 127);
-				$request .= '&L_AMT'.$i.'='.urlencode($this->PayPalRound($products[$i]['price_wt']));
+				$request .= '&L_AMT'.$i.'='.urlencode($this->PayPalRound($products[$i][$priceField]));
 				$request .= '&L_QTY'.$i.'='.urlencode($products[$i]['cart_quantity']);
-				$amt += $this->PayPalRound($products[$i]['price_wt']*$products[$i]['cart_quantity']);
+				$amt += $this->PayPalRound($products[$i][$priceField] * $products[$i]['cart_quantity']);
 			}
 			$shipping = $this->PayPalRound($cart->getOrderShippingCost($cart->id_carrier, false));
 			$request .= '&ITEMAMT='.urlencode($amt);

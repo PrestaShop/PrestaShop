@@ -956,8 +956,10 @@ class CartCore extends ObjectModel
 			}
 			else
 			{
-				$price = Product::getPriceStatic((int)($product['id_product']), $withTaxes, (int)($product['id_product_attribute']), 2, NULL, false, true, $product['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
+				$price = Product::getPriceStatic((int)($product['id_product']), true, (int)($product['id_product_attribute']), 2, NULL, false, true, $product['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
 				$total_price = Tools::ps_round($price, 2) * (int)($product['cart_quantity']);
+				if (!$withTaxes)
+					$total_price = Tools::ps_round($total_price / (1 + ($product['rate'] / 100)), 2);					 
 			}
 			$order_total += $total_price;
 		}
@@ -976,7 +978,6 @@ class CartCore extends ObjectModel
 			}
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)($this->id_currency)));
 		}
-
 		if ($type != Cart::ONLY_PRODUCTS)
 		{
 			$discounts = array();
@@ -1366,7 +1367,7 @@ class CartCore extends ObjectModel
 				if (Product::idIsOnCategoryId($product['id_product'], $categories))
 				{
 					if ((!$discountObj->cumulable_reduction AND !$product['reduction_applies'] AND !$product['on_sale']) OR $discountObj->cumulable_reduction)
-						$total_cart += $product['total_wt'];
+						$total_cart += $discountObj->include_tax ? $product['total_wt'] : $product['total'];
 					$returnErrorNoProductCategory = false;
 				}
 		}
@@ -1411,7 +1412,6 @@ class CartCore extends ObjectModel
 		    		break;
 		    	}
 		}
-
 		return array(
 			'delivery' => $delivery,
 			'delivery_state' => State::getNameById($delivery->id_state),

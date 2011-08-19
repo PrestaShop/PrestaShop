@@ -51,7 +51,7 @@ if ($result[0] == 0)
 {
 	list ($rc, $errorcode, $error_message, $amount, $used_currency, $state) = $result;
 
-	if ($state == PrepaidServicesAPI::DISPOSITION_DISPOSED || $state == PrepaidServicesAPI::DISPOSITION_DEBITED)
+	if ($state == PSCPrepaidServicesAPI::DISPOSITION_DISPOSED || $state == PSCPrepaidServicesAPI::DISPOSITION_DEBITED)
 	{
 		$state = Configuration::get('PS_OS_PAYMENT');
 		$message .= $module->getL('disposition_created');
