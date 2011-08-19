@@ -123,7 +123,7 @@ class CrossSelling extends Module
 			FROM '._DB_PREFIX_.'order_detail od
 			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.$this->context->shop->sqlLang('pl').')
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default)
+			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default'.$this->context->shop->sqlLang('cl').')
 			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
 			WHERE od.id_order IN ('.$list.') AND pl.id_lang = '.(int)$this->context->language->id.' AND cl.id_lang = '.(int)$this->context->language->id.' 
 			AND od.product_id != '.(int)$params['product']->id.' AND i.cover = 1 AND p.active = 1

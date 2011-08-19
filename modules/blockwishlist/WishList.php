@@ -252,7 +252,7 @@ class		WishList extends ObjectModel
 		JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = wp.`id_product`
 		JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = wp.`id_product`'.Context::getContext()->shop->sqlLang('pl').'
 		JOIN `'._DB_PREFIX_.'wishlist` w ON w.`id_wishlist` = wp.`id_wishlist`
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = p.`id_category_default` AND cl.id_lang='.(int)$id_lang.'
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = p.`id_category_default` AND cl.id_lang='.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').'
 		WHERE w.`id_customer` = '.(int)($id_customer).'
 		AND pl.`id_lang` = '.(int)($id_lang).'
 		AND wp.`id_wishlist` = '.(int)($id_wishlist).

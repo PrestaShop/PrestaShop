@@ -139,14 +139,17 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 		WHERE id_category = '.(int)$id_category);
 		if (isset($category['id_category']))
 		{
-			$categories = Db::getInstance()->ExecuteS('
-			SELECT c.id_category, cl.name, cl.link_rewrite
-			FROM '._DB_PREFIX_.'category c
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category)
-			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)$context->language->id.($home ? ' AND c.id_category='.$id_category : '').'
-			GROUP BY c.id_category
-			ORDER BY c.level_depth ASC
-			LIMIT '.(!$home ? (int)($category['level_depth'] + 1) : 1));
+			$sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
+					FROM '._DB_PREFIX_.'category c
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.$context->shop->sqlLang('cl').')
+					WHERE c.nleft <= '.(int)$category['nleft'].'
+						AND c.nright >= '.(int)$category['nright'].'
+						AND cl.id_lang = '.(int)$context->language->id.
+						($home ? ' AND c.id_category='.$id_category : '').'
+					GROUP BY c.id_category
+					ORDER BY c.level_depth ASC
+					LIMIT '.(!$home ? (int)($category['level_depth'] + 1) : 1);
+			$categories = Db::getInstance()->ExecuteS($sql);
 			$fullPath = '';
 			$n = 1;
 			$nCategories = (int)sizeof($categories);
