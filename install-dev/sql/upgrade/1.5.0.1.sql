@@ -33,7 +33,28 @@ INSERT INTO `PREFIX_hook` (
 )
 VALUES ('taxmanager', 'taxmanager', NULL , '1', '0');
 
-/* PHP:update_tax_rules(); */;
+ALTER TABLE `PREFIX_tax_rule`
+	ADD `zipcode_from` INT NOT NULL AFTER `id_state` ,
+	ADD `zipcode_to` INT NOT NULL AFTER `zipcode_from` ,
+	ADD `behavior` INT NOT NULL AFTER `zipcode_to`,
+	ADD `description` VARCHAR( 100 ) NOT NULL AFTER `id_tax`;
+
+ALTER TABLE `PREFIX_tax_rule` DROP INDEX tax_rule;
+
+INSERT INTO `PREFIX_tax_rule` (`id_tax_rules_group`, `id_country`, `id_state`, `id_tax`, `behavior`, `zipcode_from`, `zipcode_to`)
+	SELECT r.`id_tax_rules_group`, r.`id_country`, r.`id_state`, r.`id_tax`, 0, z.`from_zip_code`, z.`to_zip_code`
+	FROM `PREFIX_tax_rule` r INNER JOIN `PREFIX_county_zip_code` z ON (z.`id_county` = r.`id_county`);
+
+UPDATE `PREFIX_tax_rule` SET `behavior` = GREATEST(`state_behavior`, `county_behavior`);
+
+DELETE FROM `PREFIX_tax_rule`
+WHERE `id_county` != 0
+AND `zipcode_from` = 0;
+
+ALTER TABLE `PREFIX_tax_rule`
+  DROP `id_county`,
+  DROP `state_behavior`,
+  DROP `county_behavior`;
 
 /* PHP:remove_tab(AdminCounty); */;
 DROP TABLE `PREFIX_county_zip_code`;

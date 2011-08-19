@@ -133,8 +133,6 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'create_multistore.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_order_state.php');
 
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_tax_rules.php');
-
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_tab.php');
 
 //old version detection
