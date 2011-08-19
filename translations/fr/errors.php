@@ -11,6 +11,7 @@ $_ERRORS['dea850f4b2aebd535089e1042c789b7c'] = 'Un montant minimum d\'achat de';
 $_ERRORS['a2284157626fd717badf9887b326392b'] = 'Une réduction existe déjà pour cette catégorie.';
 $_ERRORS['6945cb79a997b9823a8bff9e72dd1cb8'] = 'Un bon avec ce nom existe déjà. Merci de choisir un autre nom.';
 $_ERRORS['08de2fdaabcd120b8ca1388d21179921'] = 'accès interdit';
+$_ERRORS['7eb3eacf05efbe5c577df2f83e663291'] = 'Tous les modules ne peuvent pas être chargé en raison d\'une restriction de mémoire, merci d\'augmenter la valeur du memory_limit dans votre configuration serveur';
 $_ERRORS['4ee13cb828cde6949c31c24478a6069b'] = 'un compte existe déjà avec cette adresse mail :';
 $_ERRORS['c40e77fb4435d6520a59d8778c771b74'] = 'Un compte existe déjà avec cette adresse mail, merci de renseigner le champ mot de passe ou d\'en demander un nouveau';
 $_ERRORS['86de674d7405670db52e79ec1665b0b1'] = 'une adresse localisée dans un pays contenant des états doit en sélectionner un';

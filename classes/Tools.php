@@ -2038,6 +2038,33 @@ FileETag INode MTime Size
 		else
 			$smarty->clear_all_cache();
 	}
+	
+	/**
+	 * getMemoryLimit allow to get the memory limit in octet
+	 * 
+	 * @since 1.4.5.0
+	 * @return int the memory limit value in octet 
+	 */
+	public static function getMemoryLimit()
+	{
+		$memory_limit = @ini_get('memory_limit');
+		
+		if (preg_match('/[0-9]+k/i', $memory_limit))
+			return 1024 * (int)$memory_limit;
+		
+		if (preg_match('/[0-9]+m/i', $memory_limit))
+			return 1024 * 1024 * (int)$memory_limit;
+		
+		if (preg_match('/[0-9]+g/i', $memory_limit))
+			return 1024 * 1024 * 1024 * (int)$memory_limit;
+		
+		return $memory_limit;
+}
+
+	public static function isX86_64arch()
+	{
+		return (PHP_INT_MAX == '9223372036854775807');
+	}
 }
 
 /**

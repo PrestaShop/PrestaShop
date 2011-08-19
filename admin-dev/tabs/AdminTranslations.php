@@ -1813,6 +1813,25 @@ class AdminTranslations extends AdminTab
 		echo $str_output;
 	}
 
+	/** parse $filepath to find expression which match $regex, and return an 
+	 * 
+	 * @param string $filepath file to parse
+	 * @param string $regex regexp to use
+	 * @param array $langArray contains expression in the chosen language
+	 * @param string $tab name to use with the md5 key
+	 * @param array $tabsArray 
+	 * @return array containing all datas needed for building the translation form
+	 * @since 1.4.5.0
+	 */
+	private function _parsePdfClass($filepath, $regex, $langArray, $tab, $tabsArray)
+	{
+		$content = file_get_contents($filepath);
+		preg_match_all($regex, $content, $matches);
+		foreach ($matches[1] as $key)
+			$tabsArray[$tab][$key] = stripslashes(key_exists($tab.md5(addslashes($key)), $langArray) ? html_entity_decode($langArray[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '');
+		return $tabsArray;
+	}
+
 	public function displayFormPDF()
 	{
 		$lang = Tools::strtolower(Tools::getValue('lang'));
@@ -1829,16 +1848,15 @@ class AdminTranslations extends AdminTab
 		@include(_PS_TRANSLATIONS_DIR_.$lang.'/pdf.php');
 		$files = array();
 		$count = 0;
+		$tabsArray = array($tab=>array());
 		$tab = 'PDF_invoice';
-		$pdf = _PS_CLASS_DIR_.'PDF.php';
-		$newLang = array();
-		$fd = fopen($pdf, 'r');
-		$content = fread($fd, filesize($pdf));
-		fclose($fd);
 		$regex = '/self::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
-		preg_match_all($regex, $content, $matches);
-		foreach($matches[1] AS $key)
-			$tabsArray[$tab][$key] = stripslashes(key_exists($tab.md5(addslashes($key)), $_LANGPDF) ? html_entity_decode($_LANGPDF[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '');
+		// need to parse PDF.php in order to find $regex and add this to $tabsArray
+		// this has to be done for the core class, and eventually for the override
+		$tabsArray = $this->_parsePdfClass(_PS_CLASS_DIR_.'PDF.php', $regex, $_LANGPDF, $tab, $tabsArray);
+		if(file_exists(_PS_ROOT_DIR_.'/override/classes/PDF.php'))
+			$tabsArray = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/PDF.php', $regex, $_LANGPDF, $tab, $tabsArray);
+
 		$count += isset($tabsArray[$tab]) ? sizeof($tabsArray[$tab]) : 0;
 		$closed = sizeof($_LANGPDF) >= $count;
 		
