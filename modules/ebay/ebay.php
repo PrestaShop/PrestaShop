@@ -985,7 +985,7 @@ class Ebay extends Module
 			$categoryConfigListTmp = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 			foreach ($categoryConfigListTmp as $c)
 				$categoryConfigList[$c['id_category']] = $c;
-			$categoryList = Db::getInstance()->ExecuteS('SELECT `id_category`, `name` FROM `'._DB_PREFIX_.'category_lang` WHERE `id_lang` = '.(int)$this->id_lang);
+			$categoryList = Db::getInstance()->ExecuteS('SELECT `id_category`, `name` FROM `'._DB_PREFIX_.'category_lang` WHERE `id_lang` = '.(int)$this->id_lang.$this->context->shop->sqlLang('cl'));
 
 			foreach ($categoryList as $k => $c)
 				if (!isset($categoryConfigList[$c['id_category']]))

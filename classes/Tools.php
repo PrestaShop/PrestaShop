@@ -658,7 +658,7 @@ class ToolsCore
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang`
-				WHERE id_lang = '.(int)($id_lang).' AND id_category = '.(int)($id_category));
+				WHERE id_lang = '.(int)($id_lang).' AND id_category = '.(int)$id_category.Context::getContext()->shop->sqlLang());
 				if ($row)
 				{
 					if (empty($row['meta_description']))

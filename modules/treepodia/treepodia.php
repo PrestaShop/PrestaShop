@@ -302,7 +302,7 @@ XML;
 			$categories = Db::getInstance()->ExecuteS('
 			SELECT cl.name, l.iso_code
 			FROM '._DB_PREFIX_.'category_product cp
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = cp.id_category)
+			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = cp.id_category'.$this->context->shop->sqlLang('cl').')
 			LEFT JOIN '._DB_PREFIX_.'lang l ON (l.id_lang = cl.id_lang)
 			WHERE cp.id_product = '.(int)$sqlProduct['id_product']);
 

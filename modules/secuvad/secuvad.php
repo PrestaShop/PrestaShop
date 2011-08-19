@@ -1109,7 +1109,7 @@ class Secuvad extends Module
 		$module_not_assoc = Db::getInstance()->ExecuteS('
 		SELECT cl.`name`, c.`id_category` 
 		FROM `'._DB_PREFIX_.'category` c 
-		JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = c.`id_category`) 
+		JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = c.`id_category`'.$this->context->shop->sqlLang('cl').') 
 		JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = cl.`id_lang` AND l.`iso_code` = \'en\') 
 		JOIN `'._DB_PREFIX_.'secuvad_assoc_category` sac ON (sac.`id_category` = c.`id_category`)
 		LEFT JOIN `'._DB_PREFIX_.'secuvad_category` sc ON (sc.`category_id` = sac.`category_id` AND sc.`id_lang` = '.(int)$this->context->language->id.')

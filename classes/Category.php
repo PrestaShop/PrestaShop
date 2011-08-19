@@ -402,14 +402,14 @@ class CategoryCore extends ObjectModel
 	  * @param boolean $active return only active categories
 	  * @return array Categories
 	  */
-	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '',$sql_limit = '')
+	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').'
 		WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)($id_lang) : '').'
 		'.($active ? 'AND `active` = 1' : '').'
 		'.(!$id_lang ? 'GROUP BY c.id_category' : '').'
@@ -432,7 +432,7 @@ class CategoryCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$id_lang.'
 		GROUP BY c.id_category
 		ORDER BY c.`position`');
@@ -456,7 +456,7 @@ class CategoryCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
 		LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
 		WHERE `id_parent` = '.(int)($this->id).'
 		'.($active ? 'AND `active` = 1' : '').'
@@ -615,7 +615,7 @@ class CategoryCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').'
 		WHERE `id_lang` = '.(int)($id_lang).'
 		AND c.`id_parent` = '.(int)($id_parent).'
 		'.($active ? 'AND `active` = 1' : '').'
@@ -712,7 +712,7 @@ class CategoryCore extends ObjectModel
 		$result = Db::getInstance()->getRow('
 		SELECT cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').'
 		WHERE `id_lang` = '.(int)($id_lang).'
 		AND c.`id_category` = '.(int)($id_category));
 		self::$_links[$id_category.'-'.$id_lang] = $result['link_rewrite'];
@@ -752,13 +752,13 @@ class CategoryCore extends ObjectModel
 			return Db::getInstance()->getRow('
 			SELECT c.*, cl.*
 			FROM `'._DB_PREFIX_.'category` c
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
 			WHERE `name` LIKE \''.pSQL($query).'\'');
 		else
 			return Db::getInstance()->ExecuteS('
 			SELECT c.*, cl.*
 			FROM `'._DB_PREFIX_.'category` c
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)($id_lang).')
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
 			WHERE `name` LIKE \'%'.pSQL($query).'%\' AND c.`id_category` != 1');
 	}
 
@@ -775,7 +775,7 @@ class CategoryCore extends ObjectModel
 		return Db::getInstance()->getRow('
 		SELECT c.*, cl.*
 	    FROM `'._DB_PREFIX_.'category` c
-	    LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)($id_lang).')
+	    LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
 	    WHERE `name`  LIKE \''.pSQL($category_name).'\'
 		AND c.`id_category` != 1
 		AND c.`id_parent` = '.(int)($id_parent_category));
@@ -799,7 +799,7 @@ class CategoryCore extends ObjectModel
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
 				WHERE c.`id_category` = '.(int)$idCurrent.' AND c.`id_parent` != 0
 			');
 
@@ -1079,7 +1079,7 @@ class CategoryCore extends ObjectModel
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, cl.`id_lang` 
 			FROM `'._DB_PREFIX_.'category` c 
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
 			WHERE cl.`id_lang` = '.(int)$id_lang.'
 			AND c.`id_category` IN ('.implode(',', $ids_category).')
 		');
