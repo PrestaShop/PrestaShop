@@ -314,7 +314,7 @@ class DiscountCore extends ObjectModel
 				foreach ($products AS $product)
 						if (Product::idIsOnCategoryId($product['id_product'], $categories))
 							if ($this->cumulable_reduction OR (!$product['reduction_applies'] AND !$product['on_sale']))
-								$amount += ($this->include_tax ? $product['total_wt'] : $product['total']) * $percentage;
+								$amount += ($useTax? $product['total_wt'] : $product['total']) * $percentage;
 				return $amount;
 
 			/* Absolute value */
@@ -325,7 +325,7 @@ class DiscountCore extends ObjectModel
 					return 0;
 
 				$taxDiscount = Cart::getTaxesAverageUsed((int)($cart->id));
-				if (!$this->include_tax AND isset($taxDiscount) AND $taxDiscount != 1)
+				if (!$useTax AND isset($taxDiscount) AND $taxDiscount != 1)
 					$this->value = abs($this->value / (1 + $taxDiscount * 0.01));
 
 				// Main return

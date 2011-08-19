@@ -329,11 +329,13 @@ function returnDestImage($type, $ressource, $filename)
 			$flag = imagegif($ressource, $filename);
 			break;
 		case 'png':
-			$flag = imagepng($ressource, $filename, (int)Configuration::get('PS_PNG_QUALITY'));
+			$quality = (Configuration::get('PS_PNG_QUALITY') === false ? 7 : Configuration::get('PS_PNG_QUALITY'));
+			$flag = imagepng($ressource, $filename, (int)$quality);
 			break;
 		case 'jpeg':
 		default:
-			$flag = imagejpeg($ressource, $filename, (int)Configuration::get('PS_JPEG_QUALITY'));
+			$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
+			$flag = imagejpeg($ressource, $filename, (int)$quality);
 			break;
 	}
 	imagedestroy($ressource);

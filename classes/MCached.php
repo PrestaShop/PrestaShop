@@ -156,7 +156,7 @@ class MCachedCore extends Cache
 
 	public static function addServer($ip, $port, $weight)
 	{
-		return Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (id_memcached_server, ip, port, weight) VALUES(\'\', \''.pSQL($ip).'\', '.(int)$port.', '.(int)$weight.')', false);
+		return Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (ip, port, weight) VALUES(\''.pSQL($ip).'\', '.(int)$port.', '.(int)$weight.')', false);
 	}
 
 	public static function getMemcachedServers()
