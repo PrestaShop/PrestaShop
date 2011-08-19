@@ -572,28 +572,24 @@ abstract class ModuleCore
 		$modulesNameToCursor = array();
 		$errors = array();
 		$modules_dir = self::getModulesDirOnDisk();
+		
+		$memory_limit = Tools::getMemoryLimit();
+		
 		foreach ($modules_dir AS $module)
 		{
 			// Memory usage checking
-			if ($memory_limit = strtoupper(@ini_get('memory_limit')))
+			if (function_exists('memory_get_usage') && $memory_limit !== -1)
 			{
-				if (strpos($memory_limit, 'M'))
-				{
-					$memory_limit = str_replace('M', '', $memory_limit);
-					$memory_limit *= 1024 * 1024;
-				}
-				elseif (strpos($memory_limit, 'K'))
-				{
-					$memory_limit = str_replace('K', '', $memory_limit);
-					$memory_limit *= 1024;
-				}
-				
-				if ($memory_limit - memory_get_usage() <= (512 * 1024))
+				$current_memory = memory_get_usage(true);
+				// memory_threshold in MB
+				$memory_threshold = (Tools::isX86_64arch() ? 3 : 1.5);
+				if (($memory_limit - $current_memory) <= ($memory_threshold * 1024 * 1024))
 				{
 					$errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restriction reason, please increase your memory_limit value on your server configuration');
 					break;
 				}
 			}
+			
 			$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
 			$xml_exist = file_exists($configFile);
 			if ($xml_exist)

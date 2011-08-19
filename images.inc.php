@@ -42,16 +42,10 @@ function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCach
 		{
 			$infos = getimagesize($image);
 
-			$memory_limit = ini_get('memory_limit');
+			$memory_limit = Tools::getMemoryLimit();
 			// memory_limit == -1 => unlimited memory
-			if (function_exists('memory_get_usage') AND (int)$memory_limit != -1)
+			if (function_exists('memory_get_usage') && (int)$memory_limit != -1)
 			{
-				if (preg_match('/[0-9]+k/i', $memory_limit))
-					$memory_limit = 1024 * (int)$memory_limit;
-				elseif (preg_match('/[0-9]+m/i', $memory_limit))
-					$memory_limit = 1024 * 1024 * (int)$memory_limit;
-				elseif (preg_match('/[0-9]+g/i', $memory_limit))
-					$memory_limit = 1024 * 1024 * 1024 * (int)$memory_limit;
 				$current_memory = memory_get_usage();
 				
 				// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
