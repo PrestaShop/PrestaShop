@@ -384,11 +384,16 @@ class FrontControllerCore
 			if (!Tools::getValue('ajax') && !preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', (($this->ssl AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
-				$params = '';
+				$params = array();
 				$excludedKey = array('isolang', 'id_lang', 'controller');
 				foreach ($_GET as $key => $value)
 					if (!in_array($key, $excludedKey))
-						$params .= ($params == '' ? '?' : '&').$key.'='.$value;
+						$params[] = $key.'='.$value;
+				if ($params)
+					$params = ((strpos($canonicalURL, '?') === false) ? '?' : '&').implode('&', $params);
+				else
+					$params = '';
+
 				if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
 					die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.$params.'">'.$canonicalURL.$params.'</a>');
 				Tools::redirectLink($canonicalURL.$params);
