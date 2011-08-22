@@ -641,6 +641,8 @@ class ShopCore extends ObjectModel
 		{
 			if ($shopID || $shopGroupID)
 				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
+			else if ($share == Shop::SHARE_STOCK)
+				$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
 		}
 
 		return $restriction;
@@ -678,9 +680,9 @@ class ShopCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public function sqlLang($alias)
+	public function sqlLang($alias = null)
 	{
-		return ' AND '.$alias.'.id_shop = '.$this->getID(true). ' ';
+		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$this->getID(true). ' ';
 	}
 
 	/**

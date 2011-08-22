@@ -33,11 +33,11 @@ class ProductSaleCore
 	*/
 	public static function fillProductSales()
 	{
-		return Db::getInstance()->Execute('
-		REPLACE INTO '._DB_PREFIX_.'product_sale
-		(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-		SELECT od.product_id, COUNT(od.product_id), SUM(od.product_quantity), NOW()
-					FROM '._DB_PREFIX_.'order_detail od GROUP BY od.product_id');
+		$sql = 'REPLACE INTO '._DB_PREFIX_.'product_sale
+				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
+				SELECT od.product_id, COUNT(od.product_id), SUM(od.product_quantity), NOW()
+							FROM '._DB_PREFIX_.'order_detail od GROUP BY od.product_id';
+		return Db::getInstance()->Execute($sql);
 	}
 
 	/*
@@ -51,8 +51,8 @@ class ProductSaleCore
 
 		$sql = 'SELECT COUNT(ps.`id_product`) AS nb
 				FROM `'._DB_PREFIX_.'product_sale` ps
-				'.$context->shop->sqlAsso('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ps.`id_product`
+				'.$context->shop->sqlAsso('product', 'p', false).'
 				WHERE p.`active` = 1';
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
