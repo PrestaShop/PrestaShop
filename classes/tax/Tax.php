@@ -209,7 +209,7 @@ class TaxCore extends ObjectModel
 		{
 			$address = new Address((int)$id_address);
 
-			if (!Validate::isLoadedObject())
+			if (!Validate::isLoadedObject($address))
 				throw new Exception('Invalid address');
 		}
 

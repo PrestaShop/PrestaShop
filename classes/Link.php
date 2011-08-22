@@ -63,9 +63,9 @@ class LinkCore
 	 * Create a link to a product
 	 *
 	 * @param mixed $product Product object (can be an ID product, but deprecated)
-	 * @param string $alias Deprecated
-	 * @param string $category Deprecated
-	 * @param string $ean13 Deprecated
+	 * @param string $alias
+	 * @param string $category
+	 * @param string $ean13
 	 * @param int $id_lang
 	 * @param int $id_shop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
 	 * @return string
@@ -89,9 +89,9 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $product->id;
-		$params['rewrite'] = $product->link_rewrite;
-		$params['ean13'] = $product->ean13;
-		$params['category'] = $product->category;
+		$params['rewrite'] = (!$alias) ? $product->link_rewrite : $alias;
+		$params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
+		$params['category'] = (!$category) ? $product->category : $category;
 		$params['meta_keywords'] =	Tools::str2url($product->meta_keywords);
 		$params['meta_title'] = Tools::str2url($product->meta_title);
 
@@ -114,7 +114,7 @@ class LinkCore
 	 * Create a link to a category
 	 *
 	 * @param mixed $category Category object (can be an ID category, but deprecated)
-	 * @param string $alias Deprecated
+	 * @param string $alias
 	 * @param int $id_lang
 	 * @return string
 	 */
@@ -130,7 +130,7 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $category->id;
-		$params['rewrite'] = $category->link_rewrite;
+		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
 		$params['meta_title'] = Tools::str2url($category->meta_title);
 
@@ -141,7 +141,7 @@ class LinkCore
 	 * Create a link to a CMS category
 	 *
 	 * @param mixed $category CMSCategory object (can be an ID category, but deprecated)
-	 * @param string $alias Deprecated
+	 * @param string $alias
 	 * @param int $id_lang
 	 * @return string
 	 */
@@ -157,7 +157,7 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $category->id;
-		$params['rewrite'] = $category->link_rewrite;
+		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
 		$params['meta_title'] = Tools::str2url($category->meta_title);
 
@@ -168,7 +168,7 @@ class LinkCore
 	 * Create a link to a CMS page
 	 *
 	 * @param mixed $cms CMS object (can be an ID CMS, but deprecated)
-	 * @param string $alias Deprecated
+	 * @param string $alias
 	 * @param bool $ssl
 	 * @param int $id_lang
 	 * @return string
@@ -186,7 +186,7 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $cms->id;
-		$params['rewrite'] = $cms->link_rewrite;
+		$params['rewrite'] = (!$alias) ? $cms->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($cms->meta_keywords);
 		$params['meta_title'] = Tools::str2url($cms->meta_title);
 
@@ -197,7 +197,7 @@ class LinkCore
 	 * Create a link to a supplier
 	 *
 	 * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
-	 * @param string $alias Deprecated
+	 * @param string $alias
 	 * @param int $id_lang
 	 * @return string
 	 */
@@ -213,7 +213,7 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $supplier->id;
-		$params['rewrite'] = $supplier->link_rewrite;
+		$params['rewrite'] = (!$alias) ? $supplier->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($supplier->meta_keywords);
 		$params['meta_title'] = Tools::str2url($supplier->meta_title);
 
@@ -224,7 +224,7 @@ class LinkCore
 	 * Create a link to a manufacturer
 	 *
 	 * @param mixed $manufacturer Manufacturer object (can be an ID supplier, but deprecated)
-	 * @param string $alias Deprecated
+	 * @param string $alias
 	 * @param int $id_lang
 	 * @return string
 	 */
@@ -240,7 +240,7 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $manufacturer->id;
-		$params['rewrite'] = $manufacturer->link_rewrite;
+		$params['rewrite'] = (!$alias) ? $manufacturer->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($manufacturer->meta_keywords);
 		$params['meta_title'] = Tools::str2url($manufacturer->meta_title);
 
