@@ -2405,14 +2405,6 @@ EOF;
 		echo $html;
 	}
 
-	protected function youEditFieldFor()
-	{
-		if (!Shop::isMultiShopActivated())
-			return;
-
-		return $this->l('This field will be changed for the shop:').' '.Context::getContext()->shop->name;
-	}
-
 	/**
 	 * Get current URL
 	 * 

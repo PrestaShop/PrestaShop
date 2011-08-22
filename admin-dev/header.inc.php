@@ -65,6 +65,24 @@ echo '
 				color:'.(Tools::getBrightness(empty(Context::getContext()->employee->bo_color) ? '#FFFFFF' : Context::getContext()->employee->bo_color) < 128 ? 'white' : '#383838').'
 			}
 		</style>
+		<script type="text/javascript">
+		$().ready(function()
+		{
+			var hints = $(\'.translatable span.hint\');
+			';
+			if (Shop::isMultiShopActivated())
+			{
+				if (Context::shop() == Shop::CONTEXT_ALL)
+					$youEditFieldFor = translate('A modification of this field will be applied for all shops');
+				else if (Context::shop() == Shop::CONTEXT_GROUP)
+					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for all shops of group %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
+				else
+					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+				echo 'hints.html(hints.html()+\'<br /><span class="red">'.addslashes($youEditFieldFor).'</span>\');';
+			}
+echo '
+		});
+		</script>
 	</head>
 	<body '.((!empty(Context::getContext()->employee->bo_color)) ? 'style="background:'.Tools::htmlentitiesUTF8(Context::getContext()->employee->bo_color).'"' : '').'>
 	<div id="top_container">

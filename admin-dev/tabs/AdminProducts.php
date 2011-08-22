@@ -2184,7 +2184,7 @@ class AdminProducts extends AdminTab
 			echo '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 								<input size="43" type="text" id="name_'.$language['id_lang'].'" name="name_'.$language['id_lang'].'"
 								value="'.stripslashes(htmlspecialchars($this->getFieldValue($obj, 'name', $language['id_lang']))).'"'.((!$obj->id) ? ' onkeyup="if (isArrowKey(event)) return; copy2friendlyURL();"' : '').' onkeyup="if (isArrowKey(event)) return; updateCurrentText();" onchange="updateCurrentText();" /><sup> *</sup>
-								<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+								<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 							</div>';
 		echo '		</td>
 					</tr>
@@ -2695,7 +2695,7 @@ class AdminProducts extends AdminTab
 			echo '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 								<input size="30" type="text" id="available_now_'.$language['id_lang'].'" name="available_now_'.$language['id_lang'].'"
 								value="'.stripslashes(htmlentities($this->getFieldValue($obj, 'available_now', $language['id_lang']), ENT_COMPAT, 'UTF-8')).'" />
-								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 							</div>';
 		echo '			</td>
 					</tr>
@@ -2706,7 +2706,7 @@ class AdminProducts extends AdminTab
 			echo '		<div  class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 								<input size="30" type="text" id="available_later_'.$language['id_lang'].'" name="available_later_'.$language['id_lang'].'"
 								value="'.stripslashes(htmlentities($this->getFieldValue($obj, 'available_later', $language['id_lang']), ENT_COMPAT, 'UTF-8')).'" />
-								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 							</div>';
 			echo '	</td>
 					</tr>
@@ -2785,7 +2785,7 @@ class AdminProducts extends AdminTab
 			echo '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_title_'.$language['id_lang'].'" name="meta_title_'.$language['id_lang'].'"
 											value="'.htmlentities($this->getFieldValue($obj, 'meta_title', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
-											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		echo '						<p class="clear">'.$this->l('Product page title; leave blank to use product name').'</p>
 									</td>
@@ -2797,7 +2797,7 @@ class AdminProducts extends AdminTab
 			echo '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_description_'.$language['id_lang'].'" name="meta_description_'.$language['id_lang'].'"
 											value="'.htmlentities($this->getFieldValue($obj, 'meta_description', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
-											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		echo '						<p class="clear">'.$this->l('A single sentence for HTML header').'</p>
 									</td>
@@ -2809,7 +2809,7 @@ class AdminProducts extends AdminTab
 			echo '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_keywords_'.$language['id_lang'].'" name="meta_keywords_'.$language['id_lang'].'"
 											value="'.htmlentities($this->getFieldValue($obj, 'meta_keywords', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
-											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		echo '						<p class="clear">'.$this->l('Keywords for HTML header, separated by a comma').'</p>
 									</td>
@@ -2822,7 +2822,7 @@ class AdminProducts extends AdminTab
 			echo '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="link_rewrite_'.$language['id_lang'].'" name="link_rewrite_'.$language['id_lang'].'"
 											value="'.htmlentities($this->getFieldValue($obj, 'link_rewrite', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();" onchange="updateFriendlyURL();" /><sup> *</sup>
-											<span class="hint" name="help_box">'.$this->l('Only letters and the "less" character are allowed').($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+											<span class="hint" name="help_box">'.$this->l('Only letters and the "less" character are allowed').'<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		}
 		echo '						<p class="clear" style="padding:10px 0 0 0">'.'<a style="cursor:pointer" class="button" onmousedown="updateFriendlyURLByName();">'.$this->l('Generate').'</a>&nbsp;'.$this->l('Friendly-url from product\'s name.').'<br /><br />';
@@ -2840,7 +2840,7 @@ class AdminProducts extends AdminTab
 			echo '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
 								<textarea class="rte" cols="100" rows="10" id="description_short_'.$language['id_lang'].'" name="description_short_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($obj, 'description_short', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
 							</div>';
-		echo '<p class="clear">'.($obj->id ? $this->youEditFieldFor() : '').'</p>
+		echo '<p class="clear"></p>
 			</td>
 					</tr>
 					<tr>
@@ -2850,7 +2850,7 @@ class AdminProducts extends AdminTab
 			echo '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
 								<textarea class="rte" cols="100" rows="20" id="description_'.$language['id_lang'].'" name="description_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($obj, 'description', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
 							</div>';
-		echo '<p class="clear">'.($obj->id ? $this->youEditFieldFor() : '').'</p>
+		echo '<p class="clear"></p>
 					</td>
 					</tr>';
 				echo '

@@ -140,7 +140,7 @@ class AdminPayment extends AdminTab
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" id="form_'.$nameId.'">
 			<fieldset>
 				<legend><img src="../img/admin/'.$icon.'.gif" />'.$title.'</legend>
-				<p>'.$desc.'<br />'.$this->youEditFieldFor().'<p>
+				<p>'.$desc.'<p>
 				<table cellpadding="0" cellspacing="0" class="table">
 					<tr>
 						<th style="width: 200px">'.$title.'</th>';
