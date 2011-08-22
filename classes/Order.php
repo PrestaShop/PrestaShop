@@ -420,22 +420,30 @@ class OrderCore extends ObjectModel
 
 		$group_reduction = 1;
 		if ($row['group_reduction'] > 0)
-			$group_reduction =  $row['group_reduction'] / 100;
+			$group_reduction =  1 - $row['group_reduction'] / 100;
 
-		if ($row['reduction_percent'])
+		if ($row['reduction_percent'] != 0)
 		{
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = $row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01 * $group_reduction);
+				$row['product_price'] = ($row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01));
 			else
-				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] - $row['product_price_wt'] * ($row['reduction_percent'] * 0.01 * $group_reduction), 2);
+				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['product_price_wt'] * ($row['reduction_percent'] * 0.01)), 2);
 		}
 
-		if ($row['reduction_amount'])
+		if ($row['reduction_amount'] != 0)
 		{
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = $row['product_price'] - ($row['reduction_amount'] / (1 + $row['tax_rate'] / 100))  * $group_reduction;
+				$row['product_price'] = ($row['product_price'] - ($row['reduction_amount'] / (1 + $row['tax_rate'] / 100)));
 			else
-				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] - $row['reduction_amount'] * $group_reduction, 2);
+				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['reduction_amount']), 2);
+		}
+
+		if ($row['group_reduction'] > 0)
+		{
+			if ($this->_taxCalculationMethod == PS_TAX_EXC)
+				$row['product_price'] = $row['product_price'] * $group_reduction; 
+			else
+				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2); 
 		}
 
 		if (($row['reduction_percent'] OR $row['reduction_amount'] OR $row['group_reduction']) AND $this->_taxCalculationMethod == PS_TAX_EXC)
@@ -452,6 +460,7 @@ class OrderCore extends ObjectModel
 		$row['total_wt'] = $row['product_quantity'] * $row['product_price_wt'];
 		$row['total_price'] = $row['product_quantity'] * $row['product_price'];
 	}
+
 
 	/**
 	 * Get order products

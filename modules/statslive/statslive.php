@@ -90,7 +90,7 @@ class StatsLive extends Module
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.$this->sqlShopRestriction(false, 'c').'
 						AND cp.`time_end` IS NULL
-						AND cp.`time_start` > '.strtotime('-15 minutes').'
+			AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
 					GROUP BY c.id_connections
 					ORDER BY c.date_add DESC';
 		}

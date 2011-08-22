@@ -14,3 +14,5 @@ AND `id_lang` = (
 );
 
 ALTER TABLE `PREFIX_discount` ADD `include_tax` TINYINT(1) NOT NULL DEFAULT '0';
+
+UPDATE `PREFIX_order_detail`set `product_price` = `product_price` /( 1-(`group_reduction`/100));

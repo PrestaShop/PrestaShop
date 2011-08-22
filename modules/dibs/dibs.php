@@ -79,6 +79,7 @@ class dibs extends PaymentModule
 	 * @var array
 	 */
 	public static $dibs_subscription_link = array(
+		'fr'	=> 'http://www.dibspayment.com/order/fr_request/',
 		'en'	=> 'http://www.dibspayment.com/order/uk_request_2eng',
 		'da'	=> 'http://www.dibs.dk/bestil/internet/',
 		'sv'	=> 'http://www.dibs.se/bestall/internet/',
@@ -89,7 +90,7 @@ class dibs extends PaymentModule
 	{
 		$this->name = 'dibs';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -116,6 +117,13 @@ class dibs extends PaymentModule
 			$this->warning = $this->l('For security reasons, you must set key #1 and key #2 used by MD5 control of DIBS API.');
 		if (!self::$ID_MERCHANT OR self::$ID_MERCHANT === '')
 			$this->warning = $this->l('You have to set your merchant ID to use DIBS API.');
+
+		/* For 1.4.3 and less compatibility */
+		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
+		if (!Configuration::get('PS_OS_PAYMENT'))
+			foreach ($updateConfig as $u)
+				if (!Configuration::get($u) && defined('_'.$u.'_'))
+					Configuration::updateValue($u, constant('_'.$u.'_'));
 	}
 
 	public function install()
@@ -183,8 +191,9 @@ class dibs extends PaymentModule
 	private function _displayPresentation()
 	{
 		$href = '';
-		if (isset(dibs::$dibs_subscription_link[Configuration::get('PS_LANG_DEFAULT')]))
-			$href = dibs::$dibs_subscription_link[Configuration::get('PS_LANG_DEFAULT')];
+		$langIsoCode = Language::getIsoById(Configuration::get('PS_LANG_DEFAULT'));
+		if (isset(dibs::$dibs_subscription_link[$langIsoCode]))
+			$href = dibs::$dibs_subscription_link[$langIsoCode];
 		else
 			$href = dibs::$dibs_subscription_link['en'];
 		$out = '
