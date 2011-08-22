@@ -211,7 +211,7 @@ class Ogone extends PaymentModule
 		if ($amount > 0 AND class_exists('PaymentCC'))
 		{
 			$pcc = new PaymentCC();
-			$order = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'orders WHERE id_cart = '.(int)$secure_cart[0]);
+			$order = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'orders WHERE id_cart = '.(int)$id_cart);
 			$pcc->id_order = (int)$order['id_order'];
 			$pcc->id_currency = (int)$order['id_currency'];
 			$pcc->amount = $amount;
