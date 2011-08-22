@@ -54,9 +54,9 @@ class OrderDetailControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Message cannot be blank');
 			elseif (!Validate::isMessage($msgText))
 				$this->errors[] = Tools::displayError('Message is invalid (HTML is not allowed)');
-			if(!sizeof($this->errors))
+			if (!sizeof($this->errors))
 			{
-				$order = new Order((int)($idOrder));
+				$order = new Order($idOrder);
 				if (Validate::isLoadedObject($order) AND $order->id_customer == $this->context->customer->id)
 				{
 					$message = new Message();
@@ -84,12 +84,10 @@ class OrderDetailControllerCore extends FrontController
 						'{message}' => $message->message),
 						$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
 					if (Tools::getValue('ajax') != 'true')
-						Tools::redirect('index.php?controller=order-detail&id_order='.(int)($idOrder));
+						Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
 				}
 				else
-				{
 					$this->errors[] = Tools::displayError('Order not found');
-				}
 			}
 		}
 
@@ -108,7 +106,7 @@ class OrderDetailControllerCore extends FrontController
 
 				$inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
 				$dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
-				
+
 				$invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressInvoice, $inv_adr_fields);
 				$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
 
@@ -153,10 +151,8 @@ class OrderDetailControllerCore extends FrontController
 					$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
 				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
 				Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
-				
-				unset($carrier);
-				unset($addressInvoice);
-				unset($addressDelivery);
+
+				unset($carrier, $addressInvoice, $addressDelivery);
 			}
 			else
 				$this->errors[] = Tools::displayError('Cannot find this order');
@@ -169,11 +165,11 @@ class OrderDetailControllerCore extends FrontController
 		if (Tools::getValue('ajax') != 'true')
 		{
 			parent::setMedia();
-			Tools::addCSS(_THEME_CSS_DIR_.'history.css');
-			Tools::addCSS(_THEME_CSS_DIR_.'addresses.css');
+			$this->addCSS(_THEME_CSS_DIR_.'history.css');
+			$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
 		}
 	}
-	
+
 	public function displayHeader()
 	{
 		if (Tools::getValue('ajax') != 'true')
@@ -192,4 +188,3 @@ class OrderDetailControllerCore extends FrontController
 			parent::displayFooter();
 	}
 }
-
