@@ -194,7 +194,7 @@ class StatsCheckUp extends Module
 			$totals['images'] += (int)$scores['images'];
 			$totals['sales'] += (int)$scores['sales'];
 			$totals['stock'] += (int)$scores['stock'];
-			$descriptions = $db->ExecuteS('SELECT iso_code, description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang'.$this->context->shop->sqlLang('pl').' WHERE id_product = '.(int)$row['id_product']);
+			$descriptions = $db->ExecuteS('SELECT l.iso_code, pl.description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang WHERE id_product = '.(int)$row['id_product'].$this->context->shop->sqlLang('pl'));
 			foreach ($descriptions as $description)
 			{
 				$row['desclength_'.$description['iso_code']] = Tools::strlen(strip_tags($description['description']));
