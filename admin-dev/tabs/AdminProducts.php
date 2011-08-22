@@ -1197,7 +1197,7 @@ class AdminProducts extends AdminTab
 							// Save and preview
 							if (Tools::isSubmit('submitAddProductAndPreview'))
 							{
-								$preview_url = ($this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id)));
+								$preview_url = $this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id), null, null, Context::getContext()->shop->getID());
 								if (!$object->active)
 								{
 									$admin_dir = dirname($_SERVER['PHP_SELF']);
