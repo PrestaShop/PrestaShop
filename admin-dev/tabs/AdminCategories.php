@@ -202,7 +202,7 @@ class AdminCategories extends AdminTab
 			echo '
 					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input type="text" style="width: 260px" name="name_'.$language['id_lang'].'" id="name_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'name', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" '.((!$obj->id) ? ' onkeyup="copy2friendlyURL();"' : '').' /><sup> *</sup>
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 					</div>';
 		echo '	<p class="clear"></p>
 				</div>
@@ -246,7 +246,7 @@ class AdminCategories extends AdminTab
 			echo '
 					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input type="text" name="meta_title_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'meta_title', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+						<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 					</div>';
 		echo '	<p class="clear"></p>
 				</div>
@@ -255,7 +255,7 @@ class AdminCategories extends AdminTab
 		foreach ($this->_languages AS $language)
 			echo '<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input type="text" name="meta_description_'.$language['id_lang'].'" id="meta_description_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'meta_description', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+						<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 				</div>';
 		echo '	<p class="clear"></p>
 				</div>
@@ -265,7 +265,7 @@ class AdminCategories extends AdminTab
 			echo '
 					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input type="text" name="meta_keywords_'.$language['id_lang'].'" id="meta_keywords_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'meta_keywords', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}'.($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+						<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 					</div>';
 		echo '	<p class="clear"></p>
 				</div>
@@ -274,7 +274,7 @@ class AdminCategories extends AdminTab
 		foreach ($this->_languages AS $language)
 			echo '<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input type="text" name="link_rewrite_'.$language['id_lang'].'" id="link_rewrite_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'link_rewrite', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" onchange="this.value = str2url(this.value);" /><sup> *</sup>
-						<span class="hint" name="help_box">'.$this->l('Only letters and the minus (-) character are allowed').($obj->id ? '<br />'.$this->youEditFieldFor() : '').'<span class="hint-pointer">&nbsp;</span></span>
+						<span class="hint" name="help_box">'.$this->l('Only letters and the minus (-) character are allowed').'<span class="hint-pointer">&nbsp;</span></span>
 					</div>';
 		echo '	<p class="clear"></p>
 				</div>
