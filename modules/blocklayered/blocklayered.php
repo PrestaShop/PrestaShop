@@ -1247,7 +1247,8 @@ class BlockLayered extends Module
 			'nArray' => $nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50)
 		);
 		$this->context->smarty->assign($pagination_infos);
-		
+
+		$this->context->smarty->assign('comparator_max_item', (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'));
 		$this->context->smarty->assign('products', $products);
 		
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */

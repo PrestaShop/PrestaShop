@@ -128,11 +128,11 @@ class FrontControllerCore
 		$this->context->smarty->ps_language = $this->context->language;
 		
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://' : 'http://';
-		$useSSL = (isset($this->ssl) AND $this->ssl AND Configuration::get('PS_SSL_ENABLED')) OR Tools::usingSecureMode()?true:false;
+		$useSSL = ((isset($this->ssl) AND $this->ssl AND Configuration::get('PS_SSL_ENABLED')) OR Tools::usingSecureMode()) ? true : false;
 		$protocol_content = ($useSSL) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
-
+		
 		if ($this->auth AND !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 

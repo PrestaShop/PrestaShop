@@ -46,6 +46,10 @@ $(document).ready(function(){
 	});
 	
 	$('#categories-treeview li#1 span').trigger('click');
+	$('#categories-treeview li#1').children('div').remove();
+	$('#categories-treeview li#1').
+		removeClass('collapsable lastCollapsable').
+		addClass('last static');
 	
 	$('#expand_all').click( function () {
 		expandAllCategories();
@@ -127,6 +131,9 @@ function expandAllCategories()
 	// if no category to expand, no action
 	if (!needExpandAllCategories())
 		return;
+	// force to open main category
+	if ($('li#1').is('.expandable'))
+		$('li#1').children('span.folder').trigger('click');
 	readyToExpand = true;
 	if (setCategoryToExpand())
 		interval = setInterval(openCategory, 10);

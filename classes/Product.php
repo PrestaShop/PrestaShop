@@ -3050,8 +3050,18 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
+	
+	/**
+	 * Checks if the product is in at least one of the submited categories
+	 *
+	 * @param int $id_product
+	 * @param array $categories array of category arrays
+	 * @return boolean is the product in at least one category
+	 */
 	public static function idIsOnCategoryId($id_product, $categories)
 	{
+		if (!((int)$id_product > 0) || !is_array($categories) || empty($categories))
+			return false;
 		$sql = 'SELECT id_product FROM `'._DB_PREFIX_.'category_product` WHERE `id_product`='.(int)($id_product).' AND `id_category` IN(';
 		foreach ($categories AS $category)
 			$sql .= (int)($category['id_category']).',';

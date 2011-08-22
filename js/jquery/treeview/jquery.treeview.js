@@ -135,6 +135,9 @@
 		
 			// handle toggle event
 			function toggler() {
+				// Added by Prestashop
+				if ($(this).parent().is('.static'))
+					return;
 				$(this)
 					.parent()
 					// swap classes for hitarea

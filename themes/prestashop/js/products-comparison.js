@@ -25,6 +25,10 @@
 */
 
 $('document').ready(function(){
+	reloadProductComparison();
+});
+
+reloadProductComparison = function() {
 	$('a.cmp_remove').click(function(){
 
 		var idProduct = $(this).attr('rel').replace('ajax_id_product_', '');
@@ -75,4 +79,4 @@ $('document').ready(function(){
 			});	
 		}
 	});
-});
+}

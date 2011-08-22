@@ -959,7 +959,7 @@ class CartCore extends ObjectModel
 				$price = Product::getPriceStatic((int)($product['id_product']), true, (int)($product['id_product_attribute']), 2, NULL, false, true, $product['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
 				$total_price = Tools::ps_round($price, 2) * (int)($product['cart_quantity']);
 				if (!$withTaxes)
-					$total_price = Tools::ps_round($total_price / (1 + ($product['rate'] / 100)), 2);					 
+					$total_price = Tools::ps_round($total_price / (1 + ((float)(Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100)), 2);
 			}
 			$order_total += $total_price;
 		}

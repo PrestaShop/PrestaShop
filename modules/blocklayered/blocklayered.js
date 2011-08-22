@@ -171,6 +171,10 @@ function reloadContent(params_plus)
 				return false;
 			});
 			ajaxCart.overrideButtonsInThePage();
+			
+			if(typeof(reloadProductComparison) == 'function') {
+				reloadProductComparison();
+		}
 		}
 	});
 	ajaxQueries.push(ajaxQuery);

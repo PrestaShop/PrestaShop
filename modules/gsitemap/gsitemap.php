@@ -37,7 +37,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '1.6';
+		$this->version = '1.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
@@ -234,7 +234,7 @@ XML;
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_shop ='.$shopID.')
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (p.id_category_default = cl.id_category AND pl.id_lang = cl.id_lang AND cl.id_shop = '.$shopID.')
 				LEFT JOIN '._DB_PREFIX_.'image i ON p.id_product = i.id_product
-				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = pl.id_lang)
+				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image)
 				LEFT JOIN '._DB_PREFIX_.'lang l ON (pl.id_lang = l.id_lang)
 				WHERE l.`active` = 1
 					AND p.`active` = 1
@@ -243,7 +243,22 @@ XML;
 				ORDER BY pl.id_product, pl.id_lang ASC';
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 				
+		$tmp = null;
+		$res = null;
 		foreach($products AS $product)
+		{
+			if ($tmp == $product['id_product'])
+				$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
+			else
+			{
+				$tmp = $product['id_product'];
+				$res[$tmp] = $product;
+				unset($res[$tmp]['id_image'], $res[$tmp]['legend_image']);
+				$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
+			}
+		}
+		
+		foreach ($res as $product)
 		{
 			if (($priority = 0.7 - ($product['level_depth'] / 10)) < 0.1)
 				$priority = 0.1;
@@ -316,12 +331,15 @@ XML;
 	
 	private function _addSitemapNodeImage($xml, $product)
 	{
-		$image = $xml->addChild('image', null, 'http://www.google.com/schemas/sitemap-image/1.1');
-		$image->addChild('loc', htmlspecialchars($this->context->link->getImageLink($product['link_rewrite'], (int)$product['id_product'].'-'.(int)$product['id_image'])), 'http://www.google.com/schemas/sitemap-image/1.1');
-		
-		$legend_image = preg_replace('/(&+)/i', '&amp;', $product['legend_image']);
-		$image->addChild('caption', $legend_image, 'http://www.google.com/schemas/sitemap-image/1.1');
-		$image->addChild('title', $legend_image, 'http://www.google.com/schemas/sitemap-image/1.1');
+		foreach ($product['images'] as $img)
+		{
+			$image = $xml->addChild('image', null, 'http://www.google.com/schemas/sitemap-image/1.1');
+			$image->addChild('loc', htmlspecialchars($this->context->link->getImageLink($product['link_rewrite'], (int)$product['id_product'].'-'.(int)$img['id_image'])), 'http://www.google.com/schemas/sitemap-image/1.1');
+
+			$legend_image = preg_replace('/(&+)/i', '&amp;', $img['legend_image']);
+			$image->addChild('caption', $legend_image, 'http://www.google.com/schemas/sitemap-image/1.1');
+			$image->addChild('title', $legend_image, 'http://www.google.com/schemas/sitemap-image/1.1');
+		}
 	}
 
     private function _displaySitemap()

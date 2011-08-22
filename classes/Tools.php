@@ -224,12 +224,14 @@ class ToolsCore
 	*/
 	public static function usingSecureMode()
 	{
-		if (empty($_SERVER['HTTPS'])) {
-			if(!empty($_SERVER['SSL']))
-				$_SERVER['HTTPS'] = $_SERVER['SSL'];
+		if (isset($_SERVER['HTTPS']))
+			return ($_SERVER['HTTPS'] == 1 || strtolower($_SERVER['HTTPS']) == 'on');
+		// $_SERVER['SSL'] exists only in some specific configuration
+		if (isset($_SERVER['SSL']))
+			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+		
+		return false;
 		}
-		return !(empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off');
-	}
 	
 	/**
 	* Get the current url prefix protocol (https/http)
