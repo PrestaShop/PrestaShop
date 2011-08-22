@@ -30,15 +30,16 @@ class ChangeCurrencyControllerCore extends FrontController
 	public function process()
 	{
 		parent::process();
-		
+
 		$currency = new Currency((int)Tools::getValue('id_currency'));
 		if (Validate::isLoadedObject($currency) AND !$currency->deleted)
 		{
-			$this->cookie->id_currency = (int)($currency->id);
+			$this->context->cookie->id_currency = (int)$currency->id;
 			die('1');
 		}
 		die('0');
 	}
+
 	public function run()
 	{
 		$this->init();
