@@ -413,6 +413,7 @@ class DispatcherCore
 			$this->controller = $controller;
 
 		$this->controller = str_replace('-', '', strtolower($this->controller));
+		$_GET['controller'] = $this->controller;
 		return $this->controller;
 	}
 	
