@@ -83,13 +83,13 @@ class AuthControllerCore extends FrontController
 			$_POST['firstname'] = $_POST['customer_firstname'];
 			if (!Tools::getValue('phone') AND !Tools::getValue('phone_mobile'))
 				$this->errors[] = Tools::displayError('You must register at least one phone number');
-			$this->errors = array_unique(array_merge($this->errors, $customer->validateControler()));
+			$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
 			/* Preparing address */
 			$address = new Address();
 			$_POST['lastname'] = $lastnameAddress;
 			$_POST['firstname'] = $firstnameAddress;
 			$address->id_customer = 1;
-			$this->errors = array_unique(array_merge($this->errors, $address->validateControler()));
+			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 
 			/* US customer: normalize the address */
 			if($address->id_country == Country::getByIso('US'))

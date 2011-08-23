@@ -534,9 +534,11 @@ abstract class ObjectModelCore
 
 	/**
 	* TODO: refactor rename all calls to this to validateController
+	* @deprecated since 1.5 use validateController instead
 	*/
 	public function validateControler($htmlentities = true)
 	{
+		Tools::displayAsDeprecated();
 		return $this->validateController($htmlentities);
 	}
 
