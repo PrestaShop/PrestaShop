@@ -56,9 +56,9 @@ class ParentOrderControllerCore extends FrontController
 		parent::preProcess();
 		
 		// Redirect to the good order process
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND Tools::getValue('controller') != 'order')
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND Dispatcher::getInstance()->getController() != 'order')
 			Tools::redirect('index.php?controller=order');
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 AND Tools::getValue('controller') != 'order-opc')
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 AND Dispatcher::getInstance()->getController() != 'order-opc')
 		{
 			if (isset($_GET['step']) AND $_GET['step'] == 3)
 				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');
