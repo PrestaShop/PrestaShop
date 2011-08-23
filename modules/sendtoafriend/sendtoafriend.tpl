@@ -35,25 +35,23 @@
 {if isset($smarty.get.submited)}
 	<p class="success">{l s='Your email has been sent successfully' mod='sendtoafriend'}</p>
 {else}
-	<form method="post" action="{$request_uri}" class="std">
+	<form method="post" action="{$request_uri}" class="std" id="sendfriendform">
 		<fieldset>
-			<h3>{l s='Send a message' mod='sendtoafriend'}</h3>
-
-			<p class="align_center">
+			<p class="product">
 				<a href="{$productLink}"><img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'small')}" alt="" title="{$cover.legend}" /></a><br/>
 				<a href="{$productLink}">{$product->name}</a>
 			</p>
 
-			<p>
+			<p class="text">
 				<label for="friend-name">{l s='Friend\'s name:' mod='sendtoafriend'}</label>
 				<input type="text" id="friend-name" name="name" value="{if isset($smarty.post.name)}{$smarty.post.name|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
 			</p>
-			<p>
+			<p class="text">
 				<label for="friend-address">{l s='Friend\'s email:' mod='sendtoafriend'}</label>
 				<input type="text" id="friend-address" name="email" value="{if isset($smarty.post.name)}{$smarty.post.email|escape:'htmlall'|stripslashes}{/if}" />
 			</p>
 
-			<p class="submit">
+			<p class="submit clearfix">
 				<input type="submit" name="submitAddtoafriend" value="{l s='send' mod='sendtoafriend'}" class="button" />
 			</p>
 		</fieldset>
@@ -61,6 +59,6 @@
 {/if}
 
 <ul class="footer_links">
-	<li><a href="{$productLink}" class="button_large">{l s='Back to product page' mod='sendtoafriend'}</a></li>
+	<li><a href="{$productLink}">&laquo; {l s='Back to product page' mod='sendtoafriend'}</a></li>
 </ul>
 

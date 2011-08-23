@@ -8,6 +8,7 @@ $_MODULE['<{productcomments}prestashop>productcomments-extra_4ce7fa08d440a1e0fb3
 $_MODULE['<{productcomments}prestashop>productcomments-extra_b78a3223503896721cca1303f776159b'] = 'Titre';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_0be8406951cdfda82f00f79328cf4efc'] = 'Commentaire';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_a2ed44743411cf8b80e397448fce104c'] = 'Votre nom';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_e699583427bd276f34244d23e6072a41'] = 'Tous les champs sont obligatoires';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'ou';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
@@ -67,7 +68,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_6bf852d9850445291f5e9d474
 $_MODULE['<{productcomments}prestashop>productcomments_6d28f2900adb9e500868166f6d04da92'] = 'Vous devez attendre';
 $_MODULE['<{productcomments}prestashop>productcomments_ba8d7ae5dcadfba739f28a777378f208'] = 'secondes avant de poster un nouveau commentaire.';
 $_MODULE['<{productcomments}prestashop>productcomments_4494d00c901c9e22ff3b953177205cea'] = 'Etes vous sur de vouloir signaler ce commentaire?';
-$_MODULE['<{productcomments}prestashop>productcomments_7c3b0e9898b88deee7ea75aafd2e37e2'] = 'Note moyenne';
+$_MODULE['<{productcomments}prestashop>productcomments_4b3b9db8c9784468094acde0f8bf7071'] = 'Note';
 $_MODULE['<{productcomments}prestashop>productcomments_663fc7093256cda156e571631ddb295e'] = 'personne(s) sur';
 $_MODULE['<{productcomments}prestashop>productcomments_e759c67f646fedbee26e1e6732588a98'] = 'ont trouvé ce commentaire utile';
 $_MODULE['<{productcomments}prestashop>productcomments_39630ad6ee79b8653ea89194cdb45bec'] = 'Ce commentaire vous a-t-il été utile?';

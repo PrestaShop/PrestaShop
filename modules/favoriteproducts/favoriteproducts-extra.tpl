@@ -47,7 +47,7 @@ $('document').ready(function(){
 </script>
 
 {if !$isCustomerFavoriteProduct AND $isLogged}
-<div id="favoriteproducts_block_extra">
-	<span id="add_favorites_btn"><img src="{$module_dir}img/add_favorite.gif"/>{l s='Add this product to my favorites' mod='favoriteproducts'}</span>
-</div>
+<li id="favoriteproducts_block_extra">
+	{l s='Add this product to my favorites' mod='favoriteproducts'}
+</li>
 {/if}

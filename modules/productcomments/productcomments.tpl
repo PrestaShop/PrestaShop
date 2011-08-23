@@ -90,7 +90,8 @@
 			{if $comment.content}
 			<div class="comment clearfix">
 				<div class="comment_author">
-					<span style="float:left;">{l s='Average grade' mod='productcomments'}&nbsp</span>
+					<span>{l s='Grade' mod='productcomments'}&nbsp</span>
+					<div class="star_content clearfix">
 					{section name="i" start=0 loop=5 step=1}
 						{if $comment.grade le $smarty.section.i.index}
 							<div class="star"></div>
@@ -98,8 +99,8 @@
 							<div class="star star_on"></div>
 						{/if}
 					{/section}
-					<br style="clear:both"/>
-					<div>
+					</div>
+					<div class="comment_author_infos">
 						<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong><br/>
 						<em>{dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</em>
 					</div>

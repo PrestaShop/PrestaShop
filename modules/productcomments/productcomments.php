@@ -66,7 +66,7 @@ class ProductComments extends Module
 				return false;
 		if (parent::install() == false OR $this->registerHook('productTab') == false
 		OR $this->registerHook('extraProductComparison') == false OR $this->registerHook('productTabContent') == false
-		OR $this->registerHook('header') == false OR $this->registerHook('extraRight') == false OR !Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30)
+		OR $this->registerHook('header') == false OR $this->registerHook('productOutOfStock') == false OR !Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30)
 		OR !Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', 0)
 		OR !Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', 1))
 			return false;
@@ -529,6 +529,7 @@ class ProductComments extends Module
 				<form action="'.$this->_baseUrl.'" method="post" name="product_criterion_form">
 					<label>'.$this->l('Criterion').'</label>
 					<div class="margin-form">
+">
 						<select name="id_product_comment_criterion" id="id_product_comment_criterion" onchange="window.location=\''.$this->_baseUrl.'&updateCriterion=\'+$(\'#id_product_comment_criterion option:selected\').val()">
 							<option value="--">-- '.$this->l('Choose a criterion').' --</option>';
 						foreach ($criterions AS $foo)
@@ -588,7 +589,7 @@ class ProductComments extends Module
 		return ($this->display(__FILE__, '/tab.tpl'));
 	}
 	
-	public function hookExtraRight($params)
+	public function hookProductOutOfStock($params)
 	{			
 		require_once(dirname(__FILE__).'/ProductComment.php');
 		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
