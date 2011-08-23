@@ -232,9 +232,12 @@ class FrontControllerCore
 
 		/* get page name to display it in body id */
 		// @todo check here
-		$pathinfo = pathinfo(__FILE__);
 		$page_name = Dispatcher::getInstance()->getController();
 		$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
+		
+		// Arf we in a module ?
+		if (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
+			$page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
 
 		$this->context->smarty->assign(Tools::getMetaTags($this->context->language->id, $page_name));
 		$this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
