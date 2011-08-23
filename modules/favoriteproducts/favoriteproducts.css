@@ -2,25 +2,46 @@
 	cursor: pointer
 }
 
-#favoriteproducts_block_account div.favoriteproduct {
-	background: none repeat scroll 0 0 #F1F2F4;
-	border: 1px solid #D0D3D8;
-	padding: 10px;
-	margin: 10px 0
+#favoriteproducts_block_account .favoriteproduct {
+	position:relative;
+   margin-bottom: 14px;
+   padding: 12px 8px;
+	border: 1px solid #eee;
+   border-radius: 3px 3px 3px 3px;
 }
 
-#favoriteproducts_block_account div.favoriteproduct .fl {
-	float: left
+.favoriteproduct a.product_img_link {
+    border: 1px solid #CCCCCC;
+    display: block;
+    float: left;
+    margin-right: 14px;
+    overflow: hidden;
+    position: relative;
 }
 
-#favoriteproducts_block_account div.favoriteproduct .fr {
-	float: right
+.favoriteproduct h3 {
+    color: #000000;
+    font-size: 13px;
+    padding: 0 0 10px;
 }
 
-#favoriteproducts_block_account div.favoriteproduct img {
-	margin: 5px
+.favoriteproduct  p.product_desc {
+    line-height: 16px;
+    overflow: hidden;
+    padding: 0;
 }
 
-#favoriteproducts_block_account div.favoriteproduct_description {
-	width: 350px
+.favoriteproduct .remove {
+	position:absolute;
+	top:10px;
+	right:10px
+}
+.favoriteproduct .remove .icon {cursor:pointer}
+
+
+/* lnk fiche produit */
+
+#usefull_link_block li#favoriteproducts_block_extra {
+	padding-left:20px;
+	background:url(img/add_favorite.gif) no-repeat 0 0;
 }

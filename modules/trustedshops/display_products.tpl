@@ -69,7 +69,7 @@ var TS = (function()
 })();
 </script>
 
-<div style="border:solid 1px #000; width: 537px; border: 1px solid #595A5E; margin-bottom: 10px;">
+<div style="border:solid 1px #000; width: 537px; margin-bottom: 10px;">
 	<h3 style="padding:0 0 0 5px;"><b>{l s='Trusted Shops Buyer Protection (recommended)' mod='trustedshops'}</b></h3>
 	<div style="float:left; width:100px;">
 		<a href="https://www.trustedshops.com/shop/certificate.php?shop_id={$shop_id}" target="_blank">

@@ -58,14 +58,13 @@ $('documnet').ready(function(){
 	{if $favoriteProducts}
 		<div>
 			{foreach from=$favoriteProducts item=favoriteProduct}
-			<div class="clearfix favoriteproduct">
-				<a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)}" class="fl"><img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium')}" alt=""/></a>
-				<div class="fl favoriteproduct_description">
-					<p><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)}"><strong>{$favoriteProduct.name}</strong></a></p>
-					<p>{$favoriteProduct.description_short}</p>
-				</div>	
-				<div class="fr">
-					<img style="cursor:pointer;" rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}" src="{$img_dir}icon/delete.gif" alt="" class="icon" />
+			<div class="favoriteproduct clearfix">
+				<a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)}" class="product_img_link"><img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium')}" alt=""/></a>
+				<h3><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)}">{$favoriteProduct.name}</a></h3>
+				<div class="product_desc">{$favoriteProduct.description_short}</div>
+
+				<div class="remove">
+					<img rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}" src="{$img_dir}icon/delete.gif" alt="" class="icon" />
 				</div>
 			</div>
 			{/foreach}
@@ -75,7 +74,6 @@ $('documnet').ready(function(){
 	{/if}
 	
 	<ul class="footer_links">
-		<li><a href="{$link->getPageLink('my-account.php', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account.php', true)}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
-		<li><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /></a><a href="{$base_dir}">{l s='Home' mod='favoriteproducts'}</a></li>
+		<li class="fleft"><a href="{$link->getPageLink('my-account.php', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account.php', true)}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
 	</ul>
 </div>

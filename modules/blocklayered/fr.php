@@ -33,9 +33,10 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_ef7de3f485174ff47f061ad27d83d0e
 $_MODULE['<{blocklayered}prestashop>blocklayered_64646db703ca003a37bd1e73977a3a4d'] = 'Catégories utilisant ce modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d758a9754eb9f36db05c22ad0c77e38e'] = 'Sélectionnez une ou plusieurs catégories utilisant ce modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5965d2ce192837f00d743d8a674382c1'] = 'Cliquez sur \"Sauvegarder cette sélection\" ou fermez la fenêtre pour sauvegarder';
-$_MODULE['<{blocklayered}prestashop>blocklayered_8cf04a9734132302f96da8e113e80ce5'] = 'Accueil';
 $_MODULE['<{blocklayered}prestashop>blocklayered_72dd03f11489ff6f604a4eb57c957202'] = 'Sauvegarder cette sélection';
 $_MODULE['<{blocklayered}prestashop>blocklayered_2e527847e8c785f3fd99651f64006798'] = 'Etape 2/3 - Sélectionnez vos filtres';
+$_MODULE['<{blocklayered}prestashop>blocklayered_3488a51eb7f723d65daeff912e69b177'] = 'Filres sélectionnés';
+$_MODULE['<{blocklayered}prestashop>blocklayered_cf3cd81b30d4c4fd996ae5374fe656da'] = 'Aucun filtre sélectionné pour le moment.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8524de963f07201e5c086830d370797f'] = 'Chargement...';
 $_MODULE['<{blocklayered}prestashop>blocklayered_74a6a547d86659933a210680efb6e6d1'] = 'Etape 3/3 - Donnez un nom à votre modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f8263d99054a4cdb3428196f078fa212'] = 'Nom du modèle :';
@@ -45,11 +46,9 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_ef1094d9826e98f5417e0a37f174213
 $_MODULE['<{blocklayered}prestashop>blocklayered_254f642527b45bc260048e30704edb39'] = 'Configuration';
 $_MODULE['<{blocklayered}prestashop>blocklayered_054b4f3ea543c990f6b125f41af6ebf7'] = 'Option';
 $_MODULE['<{blocklayered}prestashop>blocklayered_689202409e48743b914713f96d93947c'] = 'Valeur';
-$_MODULE['<{blocklayered}prestashop>blocklayered_deb2e405c1ee047002c6963e6c963d9e'] = 'Masquer les filtres pour lesquels aucun produit ne correspond';
 $_MODULE['<{blocklayered}prestashop>blocklayered_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{blocklayered}prestashop>blocklayered_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8531c73de81b9ed94322dda7cf947daa'] = 'Afficher le nombre de produits qui correspondent';
-$_MODULE['<{blocklayered}prestashop>blocklayered_01f7d5dca78cb0a2c6ad8f3a3fe64883'] = 'Utiliser le système de modèle de filtres';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8b6c3aa61f1e15caefb66e68e7e64924'] = 'Autoriser les clients à partager des URLs';
 $_MODULE['<{blocklayered}prestashop>blocklayered_abc07e5243a77d8bebcadd90fca23d74'] = 'Pour offrir à vos clients des url courtes, créer un compte sur bit.ly, puis copiez et collez login et clé API.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d67850bd126f070221dcfd5fa6317043'] = 'Inscrivez-vous';
@@ -66,8 +65,6 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_fcebe56087b9373f15514831184fa57
 $_MODULE['<{blocklayered}prestashop>blocklayered_2d25c72c1b18e562f6654fff8e11711e'] = 'Non disponible';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c0bd7654d5b278e65f21cf4e9153fdb4'] = 'Fabricant';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8c489d0946f66d17d73f26366a4bf620'] = 'Poids';
-$_MODULE['<{blocklayered}prestashop>blocklayered_3488a51eb7f723d65daeff912e69b177'] = 'Filres sélectionnés';
-$_MODULE['<{blocklayered}prestashop>blocklayered_cf3cd81b30d4c4fd996ae5374fe656da'] = 'Aucun filtre sélectionné pour le moment.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_308edffd52afae39cc6277e246ec5df8'] = 'Filtres disponibles';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cfbc982f8fb7a0cc3abb3c85c795ab41'] = 'Filtre sous-catégories';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cd50ff1c5332f9920acf8173c4aab425'] = 'Filtre stock du produit';
