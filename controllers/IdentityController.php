@@ -67,7 +67,7 @@ class IdentityControllerCore extends FrontController
 				else
 				{
 					$prev_id_default_group = $customer->id_default_group;
-					$this->errors = $customer->validateControler();
+					$this->errors = $customer->validateController();
 				}
 				if (!sizeof($this->errors))
 				{

@@ -96,7 +96,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$this->context->customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
 							$_POST['lastname'] = $_POST['customer_lastname'];
 							$_POST['firstname'] = $_POST['customer_firstname'];
-							$this->errors = $this->context->customer->validateControler();
+							$this->errors = $this->context->customer->validateController();
 							$this->context->customer->newsletter = (int)Tools::isSubmit('newsletter');
 							$this->context->customer->optin = (int)Tools::isSubmit('optin');
 							$return = array(
