@@ -211,7 +211,8 @@ class DispatcherCore
 			$sql = 'SELECT m.page, ml.url_rewrite
 					FROM `'._DB_PREFIX_.'meta` m
 					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.$context->shop->sqlLang('ml').')
-					WHERE id_lang = '.(int)$context->language->id;
+					WHERE id_lang = '.(int)$context->language->id.'
+					ORDER BY LENGTH(ml.url_rewrite) DESC';
 			if ($results = Db::getInstance()->ExecuteS($sql))
 				foreach ($results as $row)
 				{
