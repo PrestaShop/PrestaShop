@@ -27,7 +27,7 @@
 <script type="text/javascript">
 {literal}
 $('document').ready(function(){
-	$('#favoriteproducts_block_extra').click(function(){
+	$('#favoriteproducts_block_extra_add').click(function(){
 		$.ajax({
 			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
 			post: "POST",
@@ -35,9 +35,58 @@ $('document').ready(function(){
 			success: function(result){
 				if (result == '0')
 				{
-			    	$('#favoriteproducts_block_extra').fadeOut("normal", function() {
-			    		$('#favoriteproducts_block_extra').remove();
+			    	$('#favoriteproducts_block_extra_add').slideUp(function() {
+			    		$('#favoriteproducts_block_extra_added').slideDown("slow");
 			    	});
+			    	
+				}
+		 	}
+		});
+	});
+	$('#favoriteproducts_block_extra_remove').click(function(){
+		$.ajax({
+			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
+			post: "POST",
+			{/literal}data: "id_product={$smarty.get.id_product}&action=remove",{literal}
+			success: function(result){
+				if (result == '0')
+				{
+			    	$('#favoriteproducts_block_extra_remove').slideUp(function() {
+			    		$('#favoriteproducts_block_extra_removed').slideDown("slow");
+			    	});
+			    	
+				}
+		 	}
+		});
+	});
+	$('#favoriteproducts_block_extra_added').click(function(){
+		$.ajax({
+			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
+			post: "POST",
+			{/literal}data: "id_product={$smarty.get.id_product}&action=remove",{literal}
+			success: function(result){
+				if (result == '0')
+				{
+			    	$('#favoriteproducts_block_extra_added').slideUp(function() {
+			    		$('#favoriteproducts_block_extra_removed').slideDown("slow");
+			    	});
+			    	
+				}
+		 	}
+		});
+	});
+	$('#favoriteproducts_block_extra_removed').click(function(){
+		$.ajax({
+			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
+			post: "POST",
+			{/literal}data: "id_product={$smarty.get.id_product}&action=add",{literal}
+			success: function(result){
+				if (result == '0')
+				{
+			    	$('#favoriteproducts_block_extra_removed').slideUp(function() {
+			    		$('#favoriteproducts_block_extra_added').slideDown("slow");
+			    	});
+			    	
 				}
 		 	}
 		});
@@ -47,11 +96,19 @@ $('document').ready(function(){
 </script>
 
 {if !$isCustomerFavoriteProduct AND $isLogged}
-<li id="favoriteproducts_block_extra">
+<li id="favoriteproducts_block_extra_add" class="add">
 	{l s='Add this product to my favorites' mod='favoriteproducts'}
 </li>
-{elseif $isCustomerFavoriteProduct AND $isLogged}
-<li id="afavoriteproducts_block_extra_added">
-	{l s='This product is already one of my favorites' mod='favoriteproducts'}
+{/if}
+{if $isCustomerFavoriteProduct AND $isLogged}
+<li id="favoriteproducts_block_extra_remove">
+	{l s='Remove this product from my favorites' mod='favoriteproducts'}
 </li>
 {/if}
+
+<li id="favoriteproducts_block_extra_added">
+	{l s='Remove this product from my favorites' mod='favoriteproducts'}
+</li>
+<li id="favoriteproducts_block_extra_removed">
+	{l s='Add this product to my favorites' mod='favoriteproducts'}
+</li>

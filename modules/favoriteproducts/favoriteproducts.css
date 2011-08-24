@@ -1,7 +1,3 @@
-#favoriteproducts_block_extra span#add_favorites_btn {
-	cursor: pointer
-}
-
 #favoriteproducts_block_account .favoriteproduct {
 	position:relative;
    margin-bottom: 14px;
@@ -41,8 +37,27 @@
 
 /* lnk fiche produit */
 
-#usefull_link_block li#favoriteproducts_block_extra {
+#usefull_link_block li#favoriteproducts_block_extra_add {
 	padding-left:20px;
 	background:url(img/add_favorite.gif) no-repeat 0 0;
 	cursor: pointer;
+}
+
+#usefull_link_block li#favoriteproducts_block_extra_remove {
+	padding-left:20px;
+	background:url(img/add_favorite.gif) no-repeat 0 0;
+	cursor: pointer;
+}
+
+ul#usefull_link_block li#favoriteproducts_block_extra_added {
+	padding-left:20px;
+	background:url(img/add_favorite.gif) no-repeat 0 0;
+	cursor: pointer;
+	display: none;
+}
+ul#usefull_link_block li#favoriteproducts_block_extra_removed {
+	padding-left:20px;
+	background:url(img/add_favorite.gif) no-repeat 0 0;
+	cursor: pointer;
+	display: none;
 }
