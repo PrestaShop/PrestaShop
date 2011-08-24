@@ -130,6 +130,7 @@ class AdminAccess extends AdminTab
 					$this->printTabAccess((int)($currentProfile), $tab, $accesses[$tab['id_tab']], false, $tabsize, sizeof($tabs));
 					foreach ($tabs AS $child)
 						if ($child['id_parent'] === $tab['id_tab'])
+							if (isset($accesses[$child['id_tab']]))
 					 		$this->printTabAccess($currentProfile, $child, $accesses[$child['id_tab']], true, $tabsize, sizeof($tabs));
 				}
 		echo '</table>';

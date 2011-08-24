@@ -208,7 +208,7 @@ class Ogone extends PaymentModule
 	public function validate($id_cart, $id_order_state, $amount, $message = '', $secure_key)
 	{
 		$this->validateOrder((int)$id_cart, $id_order_state, $amount, $this->displayName, $message, NULL, NULL, true, pSQL($secure_key));
-		if ($amount > 0 AND class_exists('PaymentCC'))
+		if ($amount > 0 AND file_exists('../../classes/PaymentCC.php'))
 		{
 			$pcc = new PaymentCC();
 			$order = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'orders WHERE id_cart = '.(int)$id_cart);

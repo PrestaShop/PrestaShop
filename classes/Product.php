@@ -1673,6 +1673,7 @@ class ProductCore extends ObjectModel
 			$cur_cart = new Cart($id_cart);
 		}
 
+		$cart_quantity = 0;
 		if ((int)($id_cart))
 		{
 			if (!isset(self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)]) OR self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)] !=  (int)($quantity))

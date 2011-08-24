@@ -28,7 +28,7 @@
 oosHookJsCodeFunctions.push('oosHookJsCodeMailAlert');
 
 function clearText() {
-	if ($('#oos_customer_email').val() == 'your@email.com')
+	if ($('#oos_customer_email').val() == '{l s='your@email.com' mod='mailalerts'}')
 		$('#oos_customer_email').val('');
 }
 
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
 <!-- MODULE MailAlerts -->
 {if isset($email) AND $email}
-	<input type="text" id="oos_customer_email" name="customer_email" size="20" value="your@email.com" class="mailalerts_oos_email" onclick="clearText();" /><br />
+	<input type="text" id="oos_customer_email" name="customer_email" size="20" value="{l s='your@email.com' mod='mailalerts'}" class="mailalerts_oos_email" onclick="clearText();" /><br />
 {/if}
 <a href="#" onclick="return addNotification();" id="mailalert_link">{l s='Notify me when available' mod='mailalerts'}</a>
 <span id="oos_customer_email_result" style="display:none;"></span>

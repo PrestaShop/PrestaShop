@@ -461,13 +461,21 @@ class SearchCore
 						$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word] = 0;
 					}
 
+				$existingWords = $db->ExecuteS('SELECT word FROM '._DB_PREFIX_.'search_word WHERE word IN ('.implode(',', $queryArray2).') GROUP BY word');
+				if($existingWords)
+					foreach($existingWords as $data)
+						unset($queryArray[$data['word']]);
+				
 				if (count($queryArray))
 				{
 					// The words are inserted...
 					$db->Execute('
 					INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
 					VALUES '.implode(',',$queryArray));
+				}
 					
+				if (count($queryArray2))
+				{
 					// ...then their IDs are retrieved and added to the cache
 					$addedWords = $db->ExecuteS('
 					SELECT sw.id_word, sw.word
