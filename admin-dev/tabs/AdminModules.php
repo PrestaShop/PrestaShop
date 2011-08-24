@@ -288,6 +288,14 @@ class AdminModules extends AdminTab
 							$this->_errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
 						else
 						{
+							// If we install a module, force temporary global context for multishop
+							if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
+							{
+								Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
+								Context::getContext()->shop = new Shop();
+								Configuration::updateValue('RSS_FEED_TITLE', 'lol');
+							}
+
 							if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
 							{
 								$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
@@ -335,6 +343,12 @@ class AdminModules extends AdminTab
 								$return = ($method == 'install' ? 12 : 13);
 							elseif ($echo === false)
 								$module_errors[] = $name;
+								
+							if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
+							{
+								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
+								unset(Context::getContext()->tmpOldShop);
+							}
 						}
 						if ($key != 'configure' AND isset($_GET['bpay']))
 							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->context->employee->id));

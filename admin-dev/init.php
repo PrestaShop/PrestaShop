@@ -85,4 +85,12 @@ if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
 
 $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 $context->country = $defaultCountry;
-$context->shop = new Shop(Shop::getContextID());
+
+$shopID = '';
+if ($context->cookie->shopContext)
+{
+	$split = explode('-', $context->cookie->shopContext);
+	if (count($split) == 2 && $split[0] == 's')
+		$shopID = (int)$split[1];
+}
+$context->shop = new Shop($shopID);

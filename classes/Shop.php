@@ -535,7 +535,28 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getContext($type = null)
 	{
-		static $executed = false, $shopID = 0, $shopGroupID = 0;
+		$context = Context::getContext();
+		if (!isset($context->shop))
+			return ($type == 'shop' || $type == 'group') ? '' : array('', '');
+
+		$shopID = $context->shop->id;
+		$shopGroupID = $context->shop->id_group_shop;
+		if (defined('PS_ADMIN_DIR'))
+		{
+			if (!isset($context->cookie) || !$context->cookie->shopContext)
+				return ($type == 'shop' || $type == 'group') ? '' : array('', '');
+				
+			// Parse shopContext cookie value (E.g. s-2, g-4)
+			$split = explode('-', $context->cookie->shopContext);
+			if (count($split) == 2 && $split[0] == 'g')
+				$shopGroupID = (int)$split[1];
+		}
+
+		if ($type == 'shop')
+			return $shopID;
+		else if ($type == 'group')
+			return $shopGroupID;
+		return array($shopID, $shopGroupID);
 
 		if (!$executed)
 		{
@@ -547,7 +568,7 @@ class ShopCore extends ObjectModel
 					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
 
 				// Parse shopContext cookie value (E.g. s-2, g-4)
-				$split = explode('-', Context::getContext()->cookie->shopContext);
+				$split = explode('-', $context->cookie->shopContext);
 				if (count($split) == 2)
 				{
 					if ($split[0] == 's')
@@ -561,8 +582,7 @@ class ShopCore extends ObjectModel
 			}
 			else
 			{
-				if (!isset($context->shop))
-					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
+				
 				$shopID = (int)$context->shop->getID();
 				$shopGroupID = (int)$context->shop->id_group_shop;
 			}
