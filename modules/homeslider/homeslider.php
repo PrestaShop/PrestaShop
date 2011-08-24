@@ -85,7 +85,7 @@ class HomeSlider extends Module
 	protected function createTables()
 	{
 		/* Slides */
-		$res = Db::getInstance()->Execute('
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
 				`id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
@@ -94,7 +94,7 @@ class HomeSlider extends Module
 		');
 
 		/* Slides configuration */
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
 			  `id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `position` int(10) unsigned NOT NULL DEFAULT \'0\',
@@ -104,7 +104,7 @@ class HomeSlider extends Module
 		');
 
 		/* Slides lang configuration */
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
 			  `id_slide` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
@@ -128,7 +128,7 @@ class HomeSlider extends Module
 			$toDel = new HomeSlide($slide['id_slide']);
 			$toDel->delete();
 		}
-		return Db::getInstance()->Execute('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			DROP TABLE `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
 		');
 	}
@@ -612,7 +612,7 @@ class HomeSlider extends Module
 
 	public function getNextPosition()
 	{
-		$row = Db::getInstance()->getRow('
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT MAX(hss.`position`) AS `next_position`
 				FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
 				WHERE hss.`id_slide` = hs.`id_slide` AND hs.`id_shop` = '.(int)$this->context->shop->getId()
@@ -627,7 +627,7 @@ class HomeSlider extends Module
 		$idShop = $this->context->shop->getID();
 		$idLang = $this->context->language->id;
 
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT hs.`id_slide` AS id_slide, hssl.`image` as image, hss.`position` AS position, hss.`active` as active, hssl.`title` as title, hssl.`url` as url, hssl.`legend` as legend
 			FROM `'._DB_PREFIX_.'homeslider` hs, `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider_slides_lang` hssl
 			WHERE hs.`id_shop` = '.(int)$idShop. ((int)$idShop != 0 ? ' OR hs.`id_shop` = 0' : '').' AND hs.`id_slide` = hss.`id_slide` AND hss.`id_slide` = hssl.`id_slide` AND hs.`id_slide` = hssl.`id_slide`
@@ -649,7 +649,7 @@ class HomeSlider extends Module
 		$req = 'SELECT hs.`id_slide`
 				FROM `'._DB_PREFIX_.'homeslider` hs
 				WHERE hs.`id_slide` = '.(int)$id_slide;
-		$row = Db::getInstance()->getRow($req);
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($req);
 		return ($row);
 	}
 }

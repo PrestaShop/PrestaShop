@@ -27,7 +27,7 @@
 <script type="text/javascript">
 {literal}
 $('document').ready(function(){
-	$('#add_favorites_btn').click(function(){
+	$('#favoriteproducts_block_extra').click(function(){
 		$.ajax({
 			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
 			post: "POST",
@@ -35,8 +35,8 @@ $('document').ready(function(){
 			success: function(result){
 				if (result == '0')
 				{
-			    	$('#add_favorites_btn').fadeOut("normal", function() {
-			    		$('#add_favorites_btn').remove();
+			    	$('#favoriteproducts_block_extra').fadeOut("normal", function() {
+			    		$('#favoriteproducts_block_extra').remove();
 			    	});
 				}
 		 	}
@@ -49,5 +49,9 @@ $('document').ready(function(){
 {if !$isCustomerFavoriteProduct AND $isLogged}
 <li id="favoriteproducts_block_extra">
 	{l s='Add this product to my favorites' mod='favoriteproducts'}
+</li>
+{elseif $isCustomerFavoriteProduct AND $isLogged}
+<li id="afavoriteproducts_block_extra_added">
+	{l s='This product is already one of my favorites' mod='favoriteproducts'}
 </li>
 {/if}

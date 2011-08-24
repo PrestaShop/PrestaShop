@@ -96,7 +96,7 @@ class HomeSlide extends ObjectModel
 		$id_shop = $context->shop->getID();
 
 		$res = parent::add();
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			INSERT INTO `'._DB_PREFIX_.'homeslider` (`id_shop`, `id_slide`)
 			VALUES('.(int)$id_shop.', '.(int)$this->id.')'
 		);
@@ -115,7 +115,7 @@ class HomeSlide extends ObjectModel
 		}
 
 		$res &= $this->reOrderPositions();
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			DELETE FROM `'._DB_PREFIX_.'homeslider`
 			WHERE `id_slide` = '.(int)$this->id
 		);
@@ -130,7 +130,7 @@ class HomeSlide extends ObjectModel
 		$context = Context::getContext();
 		$id_shop = $context->shop->getID();
 
-		$max = Db::getInstance()->ExecuteS('
+		$max = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT MAX(hss.`position`) as position
 			FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
 			WHERE hss.`id_slide` = hs.`id_slide` AND hs.`id_shop` = '.(int)$id_shop
@@ -139,7 +139,7 @@ class HomeSlide extends ObjectModel
 		if ((int)$max == (int)$id_slide)
 			return true;
 
-		$rows = Db::getInstance()->ExecuteS('
+		$rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT hss.`position` as position, hss.`id_slide` as id_slide
 			FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
 			WHERE hss.`id_slide` = hs.`id_slide` AND hs.`id_shop` = '.(int)$id_shop.' AND hss.`position` > '.(int)$this->position

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,7 +27,7 @@
 
 if (!defined('_CAN_LOAD_FILES_'))
 	exit;
-	
+
 class FavoriteProducts extends Module
 {
 	public function __construct()
@@ -46,12 +46,12 @@ class FavoriteProducts extends Module
 
 	public function install()
 	{
-			if (!parent::install() 
+			if (!parent::install()
 				OR !$this->registerHook('myAccountBlock')
-				OR !$this->registerHook('extraLeft') 
+				OR !$this->registerHook('extraLeft')
 				OR !$this->registerHook('header'))
 					return false;
-					
+
 			if (!Db::getInstance()->Execute('
 				CREATE TABLE `'._DB_PREFIX_.'favorite_product` (
 				`id_favorite_product` int(10) unsigned NOT NULL auto_increment,
@@ -63,44 +63,43 @@ class FavoriteProducts extends Module
 				PRIMARY KEY (`id_favorite_product`))
 				ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 				return false;
-				
+
 			return true;
 	}
-	
+
 	public function uninstall()
 	{
 		if (!parent::uninstall() OR !Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'favorite_product`'))
 			return false;
 		return true;
 	}
-	
+
 	public function hookCustomerAccount($params)
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
-		
+
 		$favoriteProducts = FavoriteProduct::getFavoriteProducts($this->context->customer->id, $this->context->language->id);
-		
+
 		$this->context->smarty->assign(array('favorite_products' => $favoriteProducts));
-		
+
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
-	
+
 	public function hookMyAccountBlock($params)
 	{
 		return $this->hookCustomerAccount($params);
 	}
-	
+
 	public function hookExtraLeft($params)
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
-				
+
 		$this->context->smarty->assign(array(
 			'isCustomerFavoriteProduct' => (FavoriteProduct::isCustomerFavoriteProduct($this->context->customer->id, Tools::getValue('id_product')) ? 1 : 0),
 			'isLogged' => (int)$this->context->customer->logged));
-		
 		return $this->display(__FILE__, 'favoriteproducts-extra.tpl');
 	}
-		
+
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'favoriteproducts.css', 'all');
