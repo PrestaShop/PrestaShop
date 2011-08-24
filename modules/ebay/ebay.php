@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -324,6 +324,10 @@ class Ebay extends Module
 		$dateNew = date('Y-m-d').'T'.date('H:i:s').'.000Z';
 		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-45 minutes')).'T'.date('H:i:s', strtotime('-45 minutes')).'.000Z')
 		{
+			// Lock
+			Configuration::updateValue('EBAY_ORDER_LAST_UPDATE', $dateNew);
+
+			// eBay Request
 			$ebay = new eBayRequest();
 
 			$page = 1;
@@ -345,8 +349,7 @@ class Ebay extends Module
 					{
 						if (!Db::getInstance()->getValue('SELECT `id_ebay_order` FROM `'._DB_PREFIX_.'ebay_order` WHERE `id_order_ref` = \''.pSQL($order['id_order_ref']).'\''))
 						{
-						$result = Db::getInstance()->getRow('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `active` = 1 AND `email` = \''.pSQL($order['email']).'\' AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
-						$id_customer = (isset($result['id_customer']) ? $result['id_customer'] : 0);
+							$id_customer = (int)Db::getInstance()->getValue('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `active` = 1 AND `email` = \''.pSQL($order['email']).'\' AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
 
 							// Check for empty name
 							$order['firstname'] = str_replace('_', '', trim($order['firstname']));
@@ -355,6 +358,8 @@ class Ebay extends Module
 								$order['familyname'] = $order['firstname'];
 							if (empty($order['firstname']))
 								$order['firstname'] = $order['familyname'];
+							if (empty($order['phone']) || !Validate::isPhoneNumber($order['phone']))
+								$order['phone'] = '0100000000';
 
 							if (Validate::isEmail($order['email']) && !empty($order['firstname']) && !empty($order['familyname']))
 							{
@@ -376,10 +381,17 @@ class Ebay extends Module
 							$id_customer = $customer->id;
 						}
 			
+								// Search if address exists
+								$id_address = (int)Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \'eBay\'');
+								if ($id_address > 0)
+									$address = new Address((int)$id_address);
+								else
+								{
 						$address = new Address();
 						$address->id_customer = (int)$id_customer;
+								}
 						$address->id_country = (int)Country::getByIso($order['country_iso_code']);
-						$address->alias = 'eBay '.date('Y-m-d H:i:s');
+								$address->alias = 'eBay';
 						$address->lastname = pSQL($order['familyname']);
 						$address->firstname = pSQL($order['firstname']);
 						$address->address1 = pSQL($order['address1']);
@@ -388,6 +400,9 @@ class Ebay extends Module
 						$address->city = pSQL($order['city']);
 						$address->phone = pSQL($order['phone']);
 						$address->active = 1;
+								if ($id_address > 0 && Validate::isLoadedObject($address))
+									$address->update();
+								else
 						$address->add();
 						$id_address = $address->id;
 
@@ -455,8 +470,6 @@ class Ebay extends Module
 						}
 					}
 					}
-
-			Configuration::updateValue('EBAY_ORDER_LAST_UPDATE', $dateNew);
 		}
 	}
 

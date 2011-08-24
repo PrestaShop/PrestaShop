@@ -246,6 +246,11 @@ class OrderOpcControllerCore extends ParentOrderController
 			'errorTOS' => Tools::displayError('You must accept terms of service before', false),
 			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) AND $_GET['isPaymentStep'])
 		));
+		/* Call a hook to display more information on form */
+		self::$smarty->assign(array(
+			'HOOK_CREATE_ACCOUNT_FORM' => Module::hookExec('createAccountForm'),
+			'HOOK_CREATE_ACCOUNT_TOP' => Module::hookExec('createAccountTop')
+		));
 		$years = Tools::dateYears();
 		$months = Tools::dateMonths();
 		$days = Tools::dateDays();

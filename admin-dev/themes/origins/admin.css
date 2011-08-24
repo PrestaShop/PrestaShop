@@ -51,6 +51,7 @@ hr {height: 1px;color:#E0D0B1;background-color:#E0D0B1}
 #content {background-color:#FFF;border-left:1px solid #999999;border-right:1px solid #999999}
 input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #E0D0B1}
 select {border: 1px solid #E0D0B1}
+select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
 .header_module{background:url(header_module.png);padding-left: 0.5em;padding-top: 0.8em;height:20px;color: #812143;border:solid 1px #CCC;}
 a.action_module{color: #268CCD;text-decoration: underline;}
 a.header_module_toggle{font-weight: bold;color: #268CCD;display:block;}

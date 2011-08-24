@@ -391,7 +391,7 @@ class MoneyBookers extends PaymentModule
 
 		$output .= '
 					</select>
-					<p>'.$this->l('Change youpr logo position in the Front Office. Works with').'
+					<p>'.$this->l('Change your logo position in the Front Office. Works with').'
 						<a href="'.$link->getPageLink('index.php').'?live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).'">'.$this->l(' Live edit.').'</a></p>
 				</div>
 				<div style="text-align:center;">

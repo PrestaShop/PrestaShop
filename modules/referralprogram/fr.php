@@ -88,7 +88,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_edf7f0a17b8a8f1732f12856f
 $_MODULE['<{referralprogram}prestashop>referralprogram_8465d83b5c1b569299af284c14d957bb'] = 'Description du bon :';
 $_MODULE['<{referralprogram}prestashop>referralprogram_b17f3f4dcf653a5776792498a9b44d6a'] = 'Mettre à jour les paramètres';
 $_MODULE['<{referralprogram}prestashop>referralprogram_562ad64cf21ac2da656134355115133d'] = 'Vous devez spécifier un texte.';
-$_MODULE['<{referralprogram}prestashop>referralprogram_01705c0177ebf5fbcbf4e882bc454405'] = 'Conditions du programme de parrainage';
+$_MODULE['<{referralprogram}prestashop>referralprogram_6b719c160f9b08dad4760bcc4b52ed48'] = 'Conditions du programme de parrainage';
 $_MODULE['<{referralprogram}prestashop>referralprogram_c5afb9c76a7880978cba32872d01f068'] = 'Mise à jour du texte';
 $_MODULE['<{referralprogram}prestashop>referralprogram_6b31baf25848e7a6563ecc3946626c80'] = 'Programme de parrainage';
 $_MODULE['<{referralprogram}prestashop>referralprogram_7790d51a3d62c85aae65464dee12ee8b'] = 'Parrain du client :';

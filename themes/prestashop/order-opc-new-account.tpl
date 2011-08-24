@@ -68,6 +68,7 @@
 				<div class="clear"></div>
 			</div>
 			<div id="opc_account_form">
+				{$HOOK_CREATE_ACCOUNT_TOP}
 				<script type="text/javascript">
 				// <![CDATA[
 				idSelectedCountry = {if isset($guestInformations) && $guestInformations.id_state}{$guestInformations.id_state|intval}{else}false{/if};
@@ -407,6 +408,7 @@
 					</p>
 					<input type="hidden" name="alias_invoice" id="alias_invoice" value="{l s='My Invoice address'}" />
 				</div>
+				{$HOOK_CREATE_ACCOUNT_FORM}
 				<p style="float: right;">
 					<input type="submit" class="exclusive button" name="submitAccount" id="submitAccount" value="{l s='Save'}" />
 				</p>
