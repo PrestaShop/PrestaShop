@@ -335,7 +335,7 @@ class ProductControllerCore extends FrontController
 				}
 
 				$this->context->smarty->assign(array(
-					'no_tax' => Tax::excludeTaxeOption() OR !Tax::getProductTaxRate((int)$this->product->id, $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}),
+					'no_tax' => Tax::excludeTaxeOption() OR !$this->product->getTaxesRate(new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})),
 					'customizationFields' => ($this->product->customizable) ? $this->product->getCustomizationFields($this->context->language->id) : false,
 				));
 
