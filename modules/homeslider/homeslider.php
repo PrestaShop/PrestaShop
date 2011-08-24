@@ -564,6 +564,8 @@ class HomeSlider extends Module
 
 	public function hookHeader()
 	{
+		if (!$this->getSlides(true))
+			return;
 		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
