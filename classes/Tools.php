@@ -1588,6 +1588,9 @@ class ToolsCore
 		$domains = array();
 		foreach (ShopUrl::getShopUrls() as $shopUrl)
 		{
+			if (!isset($domains[$shopUrl['domain']]))
+				$domains[$shopUrl['domain']] = array();
+
 			$domains[$shopUrl['domain']] = array(
 				'physical' =>	$shopUrl['physical_uri'],
 				'virtual' =>	$shopUrl['virtual_uri'],
@@ -1607,15 +1610,14 @@ class ToolsCore
 			fwrite($writeFd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 		
 		fwrite($writeFd, "RewriteEngine on\n\n");
-		foreach ($domains as $domain => $uri)
-		{
-			// Rewrite virtual multishop uri
-			if ($uri['virtual'])
-			{
-				fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-				fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."(.*) ".$uri['physical']."$1 [L]\n\n");
-			}
-		}
+		foreach ($domains as $domain => $list_uri)
+			foreach ($list_uri as $uri)
+				// Rewrite virtual multishop uri
+				if ($uri['virtual'])
+				{
+					fwrite($writeFd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+					fwrite($writeFd, "RewriteRule ^".ltrim($uri['virtual'], '/')."(.*) ".$uri['physical']."$1 [L]\n\n");
+				}
 		
 		// Webservice
 		fwrite($writeFd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
