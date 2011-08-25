@@ -1437,7 +1437,7 @@ class ProductCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'product` p
 				'.$context->shop->sqlAsso('product', 'p').'
 				WHERE p.`active` = 1
-					AND p.`id_product` IN ('.implode(', ', $ids_product).')
+					'.(($ids_product) ? 'AND p.`id_product` IN ('.implode(', ', $ids_product).')' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
