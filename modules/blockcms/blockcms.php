@@ -598,7 +598,7 @@ class BlockCms extends Module
 					"'.pSQL(Tools::getValue('block_name_'.$language['id_lang'])).'")');
 					
 				Db::getInstance()->Execute('
-				UPDATE `'._DB_PREFIX_.'cms_block
+				UPDATE `'._DB_PREFIX_.'cms_block`
 				SET `display_store` = '.Configuration::get('PS_STORES_DISPLAY_FOOTER'));
 			}
 			elseif (Tools::isSubmit('editBlockCMS'))

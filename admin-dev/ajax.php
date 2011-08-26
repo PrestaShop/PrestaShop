@@ -76,7 +76,7 @@ if (isset($_GET['ajaxProductManufacturers']))
 	{
 		$jsonArray = array();
 		foreach ($manufacturers AS $manufacturer)
-			$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars($manufacturer['name']).'"}';
+			$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
 		die('['.implode(',', $jsonArray).']');
 	}
 }
@@ -93,7 +93,7 @@ if (isset($_GET['ajaxProductSuppliers']))
 	{
 		$jsonArray = array();
 		foreach ($suppliers AS $supplier)
-			$jsonArray[] = '{"optionValue": "'.$supplier['id_supplier'].'", "optionDisplay": "'.htmlspecialchars($supplier['name']).'"}';
+			$jsonArray[] = '{"optionValue": "'.$supplier['id_supplier'].'", "optionDisplay": "'.htmlspecialchars(trim($supplier['name'])).'"}';
 		die('['.implode(',', $jsonArray).']');
 	}
 }

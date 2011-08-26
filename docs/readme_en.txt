@@ -21,48 +21,48 @@ needs please refer to http://www.prestashop.com for more information.
 @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
-NAME: Prestashop 1.5.0.0
-VERSION: 1.5.0.0
+NAME: Prestashop 1.4.4.1
+VERSION: 1.4.4.1
 
-PREPARAZIONE
+PREPARATION
 ===========
 
-Per installare PrestaShop, hai bisogno di un server remoto o nel tuo computer (MAMP), con accesso ad un database come MySQL.
-Dovrai accedere a phpMyAdmin per creare un database e per indicare le informazioni nel database all'installatore.
+To install PrestaShop, you need a remote web server or on your computer (MAMP), with access to a database like MySQL.
+You'll need access to phpMyAdmin to create a database and to indicate the information in the database in the installer.
 
-Sei non hai un host e non sai come creare il tuo negozio, ti offriamo un negozio gi� pronto che ti far� realizzare il tuo negozio online in meno di 10 minuti senza nessun bisogno di competenze tecniche.
-Ti invitiamo a visitare: 
+If you do not host and unable to create your store, we offer a turnkey store, which lets you create your online store in less than 10 minutes without any technical knowledge.
+We invite you to visit: 
 	http://www.prestabox.com/
 
-INSTALLAZIONE
+INSTALLATION
 ============
 
-Devi solo andare nella tua directory PrestaShop e usare l'installatore :-)
+Simply go to your PrestaShop web directory and use installer :-)
 
-Se si verifica un qualsiasi errore PHP, forse non hai PHP5 oppure devi attivarlo nel tuo web host.
-Vai nel nostro forum e cerca le impostazioni di pre-installazione (PHP 5, htaccess) per alcuni hosting services (1&1, Free, Lycos, OVH, Infomaniak, Amen, GoDaddy, etc).
+If you have any PHP error, perhaps you don't have PHP5 or you need to activate it on your web host.
+Please go to our forum to find pre-installation settings (PHP 5, htaccess) for certain hosting services (1&1, Free, Lycos, OVH, Infomaniak, Amen, GoDaddy, etc).
 
-Impostazioni specifiche per web host in inglese:
+English webhost specifics settings :
 	http://www.prestashop.com/forums/viewthread/2946/installation_configuration___upgrade/preinstallation_settings_php_5_htaccess_for_certain_hosting_services
 
-Se non trovi nessuna soluzione per lanciare l'installatore, scrivi un post sul nostro forum:
+If you don't find any solution to launch installer, please post on our forum :
 	http://www.prestashop.com/forums/viewforum/7/installation_configuration___upgrade
 
-Troverai sempre una soluzione ai tuoi problemi :-)
+There are always solutions for your issues ;-)
 
-INFORMAZIONI
+DOCUMENTATION
 =============
 
-Per qualsiasi informazione ulteriore (come fare per?), leggi il nostro wiki:
+For any extra documentation (how-to), please read our wiki :
 	http://www.prestashop.com/wiki/
 
-FORUM
+FORUMS
 ======
 
-Puoi anche inserirti, chattare, e contribuire alla community PrestaShop nei nostri forum:
+You can also discute, help and contribute with PrestaShop community on our forums :
 	http://www.prestashop.com/forums/
 
-Ti ringraziamo per l'uso della soluzione open-source PrestaShop per il commercio online!
+Thanks for downloading and using PrestaShop e-commerce open-source solution !
 
 ==========================
 =     The PrestaTeam'    =

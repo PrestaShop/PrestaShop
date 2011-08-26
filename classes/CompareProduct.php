@@ -85,8 +85,8 @@ class CompareProductCore extends ObjectModel
 	public static function addGuestCompareProduct($id_guest, $id_product)
 	{
 		return Db::getInstance()->Execute('
-			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `date_add`, `date_upd`) 
-			VALUES ('.(int)($id_product).', '.(int)($id_guest).', NOW(), NOW())
+			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `id_customer`, `date_add`, `date_upd`) 
+			VALUES ('.(int)($id_product).', '.(int)($id_guest).', 0, NOW(), NOW())
 		');
 	}
 	
@@ -145,7 +145,9 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function addCustomerCompareProduct($id_customer, $id_product)
 	{
-		 return Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_customer`, `date_add`, `date_upd`) VALUES ('.(int)($id_product).', '.(int)($id_customer).', NOW(), NOW())');
+		return Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `id_customer`, `date_add`, `date_upd`)
+			VALUES ('.(int)($id_product).', 0, '.(int)($id_customer).', NOW(), NOW())');
 	}
 	
 	

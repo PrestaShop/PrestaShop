@@ -763,6 +763,8 @@ ul#order_step { background-color: white }
 }
 
 /* Default block style */
+div.block-cms h1 a { color: #374853; text-decoration: none; }
+div.block-cms h1 a:hover { text-decoration: underline; }
 div.block {
 	margin-bottom: 1em;
 	width: 191px
