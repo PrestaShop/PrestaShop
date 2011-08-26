@@ -216,7 +216,7 @@ class AdminMeta extends AdminTab
 	
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->getID());
+		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->getID(true));
 	}
 	
 	/**
