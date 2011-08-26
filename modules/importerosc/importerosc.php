@@ -307,6 +307,7 @@ class importerosc extends ImportModule
 		{
 			$combination['association'] = array('product_attribute_combination' => array($combination['options_values_id'] => $combination['id_product_attribute']));
 			unset($combination['options_values_price']);
+			unset($combination['options_values_id']);
 		}
 		return $this->autoFormat($combinations, $identifier);
 	}
