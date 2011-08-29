@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,37 +32,37 @@ if (!defined('_PS_VERSION_'))
 class ProductComment extends ObjectModel
 {
 	public		$id;
-	
+
 	/** @var integer Product's id */
 	public		$id_product;
-	
+
 	/** @var integer Customer's id */
 	public		$id_customer;
 
 	/** @var integer Guest's id */
 	public		$id_guest;
-	
-	
+
+
 	/** @var integer Customer name */
 	public		$customer_name;
-	
+
 	/** @var string Title */
 	public		$title;
-	
+
 	/** @var string Content */
 	public		$content;
-	
+
 	/** @var integer Grade */
 	public		$grade;
-	
+
 	/** @var boolean Validate */
 	public		$validate = 0;
-	
+
 	public		$deleted = 0;
-	
+
 	/** @var string Object creation date */
 	public		$date_add;
-	
+
 	protected	$fieldsRequired = array('id_product', 'id_customer', 'content');
 	protected	$fieldsSize = array('content' => 65535);
 	protected	$fieldsValidate = array('id_product' => 'isUnsignedId', 'id_customer' => 'isUnsignedId', 'content' => 'isMessage',
@@ -86,7 +86,7 @@ class ProductComment extends ObjectModel
 		$fields['date_add'] = pSQL($this->date_add);
 		return ($fields);
 	}
-	
+
 	/**
 	 * Get comments by IdProduct
 	 *
@@ -103,13 +103,13 @@ class ProductComment extends ObjectModel
 			$p = 1;
 		if ($n != null AND $n <= 0)
 			$n = 5;
-		
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT pc.`id_product_comment`, 
-		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful, 
+		SELECT pc.`id_product_comment`,
+		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful,
 		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment`) as total_advice, '.
-		($id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = '.(int)$id_customer.') as customer_advice, ' : '').
-		($id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = '.(int)$id_customer.') as customer_report, ' : '').'
+		((int)$id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = '.(int)$id_customer.') as customer_advice, ' : '').
+		((int)$id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = '.(int)$id_customer.') as customer_report, ' : '').'
 		IF(c.id_customer, CONCAT(c.`firstname`, \' \',  LEFT(c.`lastname`, 1)), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pc.title
 		  FROM `'._DB_PREFIX_.'product_comment` pc
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = pc.`id_customer`
@@ -117,7 +117,7 @@ class ProductComment extends ObjectModel
 		ORDER BY pc.`date_add` DESC
 		'.($n ? 'LIMIT '.(int)(($p - 1) * $n).', '.(int)($n) : ''));
 	}
-	
+
 	/**
 	 * Return customer's comment
 	 *
@@ -126,19 +126,19 @@ class ProductComment extends ObjectModel
 	public static function getByCustomer($id_product, $id_customer, $last = false, $id_guest = false)
 	{
 		$results = Db::getInstance()->ExecuteS('
-		SELECT * 
+		SELECT *
 		FROM `'._DB_PREFIX_.'product_comment` pc
 		WHERE pc.`id_product` = '.(int)($id_product).' AND '.(!$id_guest ? 'pc.`id_customer` = '.(int)($id_customer) : 'pc.`id_guest` = '.(int)($id_guest)).'
 		ORDER BY pc.`date_add` DESC '
 		.($last ? 'LIMIT 1' : '')
 		);
-		
-		if ($last) 
+
+		if ($last)
 			return array_shift($results);
-		
+
 		return $results;
 	}
-	
+
 	/**
 	 * Get Grade By product
 	 *
@@ -151,6 +151,7 @@ class ProductComment extends ObjectModel
 			die(Tools::displayError());
 		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
 
+
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT pc.`id_product_comment`, pcg.`grade`, pccl.`name`, pcc.`id_product_comment_criterion`
 		FROM `'._DB_PREFIX_.'product_comment` pc
@@ -160,6 +161,23 @@ class ProductComment extends ObjectModel
 		WHERE pc.`id_product` = '.(int)($id_product).'
 		AND pccl.`id_lang` = '.(int)($id_lang).
 		($validate == '1' ? ' AND pc.`validate` = 1' : '')));
+	}
+
+	public static function getAverageGrade($id_product)
+	{
+		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(pc.`grade`) /
+			(SELECT COUNT(pc.`grade`)
+			FROM `'._DB_PREFIX_.'product_comment` pc
+			WHERE pc.`id_product` = '.(int)($id_product).'
+			AND pc.`deleted` = 0'.
+			($validate == '1' ? ' AND pc.`validate` = 1' : '').') AS grade
+		FROM `'._DB_PREFIX_.'product_comment` pc
+		WHERE pc.`id_product` = '.(int)($id_product).'
+		AND pc.`deleted` = 0'.
+		($validate == '1' ? ' AND pc.`validate` = 1' : ''));
 	}
 
 	public static function getAveragesByProduct($id_product, $id_lang)
@@ -232,12 +250,12 @@ class ProductComment extends ObjectModel
 		return (Db::getInstance()->ExecuteS('
 		SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
 		FROM `'._DB_PREFIX_.'product_comment` pc
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`) 
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Context::getContext()->shop->sqlLang('pl').') 
-		WHERE pc.`validate` = '.(int)($validate).'	  
+		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Context::getContext()->shop->sqlLang('pl').')
+		WHERE pc.`validate` = '.(int)($validate).'
 		ORDER BY pc.`date_add` DESC'));
 	}
-	
+
 	/**
 	 * Validate a comment
 	 *
@@ -252,7 +270,7 @@ class ProductComment extends ObjectModel
 		`validate` = '.(int)($validate).'
 		WHERE `id_product_comment` = '.(int)($this->id)));
 	}
-	
+
 	/**
 	 * Delete Grades
 	 *
@@ -266,7 +284,7 @@ class ProductComment extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 		WHERE `id_product_comment` = '.(int)($id_product_comment)));
 	}
-	
+
 	/**
 	 * Delete Reports
 	 *
@@ -280,7 +298,7 @@ class ProductComment extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.'product_comment_report`
 		WHERE `id_product_comment` = '.(int)($id_product_comment)));
 	}
-	
+
 	/**
 	 * Delete usefulness
 	 *
@@ -295,7 +313,7 @@ class ProductComment extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.'product_comment_usefulness`
 		WHERE `id_product_comment` = '.(int)($id_product_comment)));
 	}
-	
+
 	/**
 	 * Report comment
 	 *
@@ -305,9 +323,9 @@ class ProductComment extends ObjectModel
 	{
 		return (Db::getInstance()->Execute('
 			INSERT INTO `'._DB_PREFIX_.'product_comment_report` (`id_product_comment`, `id_customer`)
-			VALUES ('.(int)$id_product_comment.', '.$id_customer.')'));
+			VALUES ('.(int)$id_product_comment.', '.(int)$id_customer.')'));
 	}
-	
+
 	/**
 	 * Comment already report
 	 *
@@ -316,12 +334,12 @@ class ProductComment extends ObjectModel
 	public static function isAlreadyReport($id_product_comment, $id_customer)
 	{
 		return (bool)Db::getInstance()->getValue('
-			SELECT COUNT(*) 
-			FROM `'._DB_PREFIX_.'product_comment_report` 
-			WHERE `id_customer` = '.(int)($id_customer).' 
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'product_comment_report`
+			WHERE `id_customer` = '.(int)($id_customer).'
 			AND `id_product_comment` = '.(int)($id_product_comment));
 	}
-	
+
 	/**
 	 * Set comment usefulness
 	 *
@@ -333,7 +351,7 @@ class ProductComment extends ObjectModel
 			INSERT INTO `'._DB_PREFIX_.'product_comment_usefulness` (`id_product_comment`, `usefulness`, `id_customer`)
 			VALUES ('.(int)$id_product_comment.', '.(int)$usefulness.', '.(int)$id_customer.')'));
 	}
-	
+
 	/**
 	 * Usefulness already set
 	 *
@@ -342,12 +360,12 @@ class ProductComment extends ObjectModel
 	public static function isAlreadyUsefulness($id_product_comment, $id_customer)
 	{
 		return (bool)Db::getInstance()->getValue('
-			SELECT COUNT(*) 
-			FROM `'._DB_PREFIX_.'product_comment_usefulness` 
-			WHERE `id_customer` = '.(int)($id_customer).' 
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'product_comment_usefulness`
+			WHERE `id_customer` = '.(int)($id_customer).'
 			AND `id_product_comment` = '.(int)($id_product_comment));
 	}
-	
+
 	/**
 	 * Get reported comments
 	 *
@@ -356,13 +374,13 @@ class ProductComment extends ObjectModel
 	public static function getReportedComments()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT DISTINCT(pc.`id_product_comment`), pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name` 
-		FROM `'._DB_PREFIX_.'product_comment_report` pcr 
-		LEFT JOIN `'._DB_PREFIX_.'product_comment` pc 
-			ON pcr.id_product_comment = pc.id_product_comment 
+		SELECT DISTINCT(pc.`id_product_comment`), pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
+		FROM `'._DB_PREFIX_.'product_comment_report` pcr
+		LEFT JOIN `'._DB_PREFIX_.'product_comment` pc
+			ON pcr.id_product_comment = pc.id_product_comment
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.' AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Context::getContext()->shop->sqlLang('pl').')
 		ORDER BY pc.`date_add` DESC');
 	}
-	
+
 };

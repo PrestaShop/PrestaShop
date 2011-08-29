@@ -2,8 +2,8 @@
 <module>
 	<name>productcomments</name>
 	<displayName><![CDATA[Product Comments]]></displayName>
-	<version><![CDATA[2.1]]></version>
-	<description><![CDATA[Allow users to post comment about a product.]]></description>
+	<version><![CDATA[2.2]]></version>
+	<description><![CDATA[Allows users to post reviews.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
 	<is_configurable>1</is_configurable>
