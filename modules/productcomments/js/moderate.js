@@ -32,6 +32,14 @@ function getCommentForm()
 		return (document.comment_form);
 }
 
+function getCommentDeleteForm()
+{
+	if (document.forms)
+		return (document.forms['delete_comment_form']);
+	else
+		return (document.delete_comment_form);
+}
+
 function acceptComment(id)
 {
 	var form = getCommentForm();
@@ -49,6 +57,19 @@ function deleteComment(id)
 		form.elements['id_product_comment'].value = id;
 	form.elements['action'].value = 'delete';
 	form.submit();
+}
+
+function delComment(id, confirmation)
+{
+	var answer = confirm(confirmation);
+	if (answer)
+	{
+		var form = getCommentDeleteForm();
+		if (id)
+			form.elements['delete_id_product_comment'].value = id;
+		form.elements['delete_action'].value = 'delete';
+		form.submit();
+	}
 }
 
 function getCriterionForm()

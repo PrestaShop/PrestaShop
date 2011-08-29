@@ -131,6 +131,7 @@ class ProductComments extends Module
 		$this->_checkReportedComment();
 		$this->_checkCriterion();
 		$this->_updateApplicationCriterion();
+		$this->_checkDeleteComment();
 
 		return $this->_html.$this->_displayForm();
 	}
@@ -309,6 +310,8 @@ class ProductComments extends Module
 		$this->_displayFormReported();
 		$this->_displayFormConfigurationCriterion();
 		$this->_displayFormApplicationCriterion();
+		$this->_displayFormDelete();
+
 		return $this->_html;
 	}
 
@@ -593,6 +596,77 @@ class ProductComments extends Module
 			}
 
 			$this->_html .= '</fieldset>';
+		}
+	}
+
+	private function _displayFormDelete()
+	{
+		$this->_html .= '
+			<fieldset class="width2">
+				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Manage Comments').'</legend>';
+
+				require_once(dirname(__FILE__).'/ProductComment.php');
+				$comments = ProductComment::getAll();
+				if (sizeof($comments))
+				{
+					$this->_html .= '
+					<form action="'.$this->_baseUrl.'" method="post" name="delete_comment_form">
+					<input type="hidden" name="delete_id_product_comment[]" id="delete_id_product_comment" />
+					<input type="hidden" name="delete_action" id="delete_action" />
+					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
+					<thead>
+					<tr>
+						<th><input class="noborder" type="checkbox" name="delete_id_product_comment[]" onclick="checkDelBoxes(this.form, \'delete_id_product_comment[]\', this.checked)" /></th>
+						<th style="width:150px;">'.$this->l('Author').'</th>
+						<th style="width:550px;">'.$this->l('Comment').'</th>
+						<th style="width:30px;">'.$this->l('Actions').'</th>
+					</tr>
+					</thead>
+					<tbody>';
+					foreach ($comments AS $comment)
+						$this->_html .= '<tr>
+						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="delete_id_product_comment[]" /></td>
+						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
+						<td><a href="javascript:;" onclick="delComment(\''.(int)($comment['id_product_comment']).'\',\''.$this->l('Are you sure?').'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+						</tr>';
+						$this->_html .= '
+						<tr>
+							<td colspan="3" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
+							<td><a href="javascript:;" onclick="delComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+						</tr>
+						</tbody>
+					</table>
+					</form>';
+				}
+				else
+					$this->_html .= $this->l('No comments to manage at this time.');
+
+		$this->_html .= '</fieldset><br />';
+	}
+
+	private function _checkDeleteComment()
+	{
+		$action = Tools::getValue('delete_action');
+		if (empty($action) === false)
+		{
+			$product_comments = Tools::getValue('delete_id_product_comment');
+
+			if (sizeof($product_comments))
+			{
+				require_once(dirname(__FILE__).'/ProductComment.php');
+				if ($action == 'delete')
+				{
+						foreach ($product_comments AS $id_product_comment)
+						{
+							if (!$id_product_comment)
+								continue;
+							$comment = new ProductComment((int)$id_product_comment);
+							$comment->delete();
+							ProductComment::deleteGrades((int)$id_product_comment);
+						}
+				}
+			}
 		}
 	}
 

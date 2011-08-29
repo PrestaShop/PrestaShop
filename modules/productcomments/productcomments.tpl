@@ -103,7 +103,6 @@
 				o.value = $(this).val();
 				datas.push(o);
 			});
-			console.log(datas);
 			$.ajax({
 				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
 				post: "POST",
