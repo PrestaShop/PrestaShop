@@ -53,6 +53,27 @@
 			$('ul#more_info_tabs a[href^="#idTab"]').removeClass('selected');
 			$('a[href="#idTab5"]').addClass('selected');
 		{literal}}{/literal});
+		{literal}
+		$('#submitMessage').click(function(){
+			var datas = [];
+			$('#fancybox-content').find('input, textarea, select').each(function(index){
+				var o = {}
+				o.key = $(this).attr('name');
+				o.value = $(this).val();
+				datas.push(o);
+			});
+			console.log(datas);
+			$.ajax({
+				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				post: "POST",
+				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},{/literal}{literal}
+				dataType: "json",
+				success: function(result){
+					$.fancybox.close();
+	 		 	}
+			});
+		});
+		{/literal}
 	{literal}}{/literal});
 </script>
 
@@ -72,14 +93,12 @@
 	<div class="comments_advices">
 		<a href="#idTab5">{l s='Read user reviews' mod='productcomments'} ({$nbComments})</a><br/>
 	{if ($too_early == false AND ($logged OR $allow_guests))}
-		<a id="new_comment_btn" href="#new_comment_form">{l s='Give your advice' mod='productcomments'}</a>
+		<a id="new_comment_btn" href="#new_comment_form">{l s='Write your review' mod='productcomments'}</a>
 	{/if}
 	</div>
 	<div style="display: none;">
 		<div id="new_comment_form">
-			<form action="{$action_url}" method="post" id="sendComment">
-				<h2 class="title">{l s='Give your advice' mod='productcomments'}</h2>
-				
+				<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
 				<div class="product clearfix">
 					<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 					<div class="product_desc">
@@ -89,7 +108,7 @@
 				</div>
 				
 				<div class="new_comment_form_content">
-					<p class="intro_form">{l s='Give your advice' mod='productcomments'}</p>
+					<p class="intro_form">{l s='Write your review' mod='productcomments'}</p>
 				{if $criterions|@count > 0}
 					<div class="grade_content clearfix">
 					{section loop=$criterions name=i start=0 step=1}
@@ -110,26 +129,27 @@
 					<div class="form_contenair">
 						<p class="text">
 							<label for="comment_title">{l s='Title' mod='productcomments'} <sup>*</sup>:</label>
-							<input name="title" type="text" value=""/>
+							<input id="commentTitle" name="title" type="text" value=""/>
 						</p>
 						<p class="textarea">
 							<label for="content">{l s='Comment' mod='productcomments'} <sup>*</sup>:</label>
-							<textarea name="content"></textarea>
+							<textarea id="commentContent" name="content"></textarea>
 						</p>
 						{if $allow_guests == true && $logged == 0}
 						<p class="text">
 							<label>{l s='Your name:' mod='productcomments'} <sup>*</sup>:</label>
-							<input name="customer_name" type="text" value=""/>
+							<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 						</p>
 						{/if}
 						<p class="submit">
-							<span class="txt_required">* {l s='All ths fields are mandatory' mod='productcomments'}</span>
-							<button name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
+							<span class="txt_required">* {l s='Required fields' mod='productcomments'}</span>
+							<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
+							<button id="submitMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
 							{l s='or' mod='productcomments'}&nbsp;<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='productcomments'}</a>
 						</p>
 					</div>
 				</div><!-- /end new_comment_form_content -->
-			</form>
 		</div>
 	</div>
 </div>
+<!--  /Module ProductComments -->

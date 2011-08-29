@@ -23,9 +23,25 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<script type="text/javascript" src="{$module_dir}js/jquery.rating.pack.js"></script>
 <script type="text/javascript">
+	$(function(){literal}{{/literal} $('input[@type=radio].star').rating(); {literal}}{/literal});
+	$(function(){literal}{{/literal}
+		$('.auto-submit-star').rating({literal}{{/literal}
+			callback: function(value, link){literal}{{/literal}
+			{literal}}{/literal}
+		{literal}}{/literal});
+	{literal}}{/literal});
+
 {literal}
 	$('document').ready(function(){
+
+		$('#new_comment_tab_btn').fancybox({
+			'hideOnContentClick': false,
+			'onClosed': function(){
+			},
+		});
+		
 		$('button[id^=comment_useful_yes_]').click(function(){
 
 			var idProductComment = $(this).attr('id').replace('comment_useful_yes_', '');
@@ -79,6 +95,25 @@
 				});	
 			}
 		});
+		$('#submitNewMessage').click(function(){
+			var datas = [];
+			$('#fancybox-content').find('input, textarea, select').each(function(index){
+				var o = {}
+				o.key = $(this).attr('name');
+				o.value = $(this).val();
+				datas.push(o);
+			});
+			console.log(datas);
+			$.ajax({
+				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				post: "POST",
+				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
+				dataType: "json",
+				success: function(result){
+					$.fancybox.close();
+	 		 	}
+			});
+		});
 	});
 {/literal}
 </script>
@@ -126,7 +161,70 @@
 			{/if}
 		{/foreach}
 	{else}
+		{if ($too_early == false AND ($logged OR $allow_guests))}
+		
+		<div style="display: none;">
+			<div id="new_comment_form">
+				<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
+				<div class="product clearfix">
+					<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
+					<div class="product_desc">
+						<p class="product_name"><strong>{$product->name}</strong></p>
+						{$product->description_short}
+					</div>
+				</div>
+				
+				<div class="new_comment_form_content">
+					<p class="intro_form">{l s='Write your review' mod='productcomments'}</p>
+				{if $criterions|@count > 0}
+					<div class="grade_content clearfix">
+					{section loop=$criterions name=i start=0 step=1}
+						<span>
+							<input type="hidden" name="id_product_comment_criterion_{$smarty.section.i.iteration}" value="{$criterions[i].id_product_comment_criterion|intval}" />
+							{$criterions[i].name|escape:'html':'UTF-8'}:&nbsp;
+						</span>
+						<div class="star_content">
+							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" id="{$smarty.section.i.iteration}_grade" value="1" />
+							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="2" />
+							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="3" checked="checked" />
+							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="4" />
+							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="5" />
+						</div>
+					{/section}
+					</div>
+					{/if}
+					<div class="form_contenair">
+						<p class="text">
+							<label for="comment_title">{l s='Title' mod='productcomments'} <sup>*</sup>:</label>
+							<input id="commentTitle" name="title" type="text" value=""/>
+						</p>
+						<p class="textarea">
+							<label for="content">{l s='Comment' mod='productcomments'} <sup>*</sup>:</label>
+							<textarea id="commentContent" name="content"></textarea>
+						</p>
+						{if $allow_guests == true && $logged == 0}
+						<p class="text">
+							<label>{l s='Your name:' mod='productcomments'} <sup>*</sup>:</label>
+							<input id="commentCustomerName" name="customer_name" type="text" value=""/>
+						</p>
+						{/if}
+						<p class="submit">
+							<span class="txt_required">* {l s='Required fields' mod='productcomments'}</span>
+							<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
+							<button id="submitNewMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
+							{l s='or' mod='productcomments'}&nbsp;<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='productcomments'}</a>
+						</p>
+					</div>
+				</div><!-- /end new_comment_form_content -->
+			</div>
+		</div>
+	
+		<p class="align_center">
+			<a id="new_comment_tab_btn" href="#new_comment_form">{l s='Be the first to write your review' mod='productcomments'} !</a>
+		</p>
+		{else}
 		<p class="align_center">{l s='No customer comments for the moment.' mod='productcomments'}</p>
+		{/if}
 	{/if}	
 	</div>
 </div>
