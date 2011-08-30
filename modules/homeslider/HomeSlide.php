@@ -90,12 +90,12 @@ class HomeSlide extends ObjectModel
 		parent::__construct($id_slide, $id_lang, $id_shop);
 	}
 
-	public function add()
+	public function add($autodate = true, $nullValues = false)
 	{
 		$context = Context::getContext();
 		$id_shop = $context->shop->getID();
 
-		$res = parent::add();
+		$res = parent::add($autodate, $nullValues);
 		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 			INSERT INTO `'._DB_PREFIX_.'homeslider` (`id_shop`, `id_slide`)
 			VALUES('.(int)$id_shop.', '.(int)$this->id.')'
