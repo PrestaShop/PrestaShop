@@ -183,8 +183,8 @@ echo '		var html = "";
 	<div id="top_container">
 		<div id="container">
 			<div id="header_infos"><span>
-				<a id="header_shopname" href="index.php"><span>'.CConfiguration::get('PS_SHOP_NAME').'</span></a><div id="notifs_icon_wrapper">';
-				if(Configuration::get('PS_SHOW_NEW_ORDERS') == 1)
+				<a id="header_shopname" href="index.php"><span>'.Configuration::get('PS_SHOP_NAME').'</span></a><div id="notifs_icon_wrapper">';
+				if (Configuration::get('PS_SHOW_NEW_ORDERS') == 1)
 				{
 					echo '<div id="orders_notif" class="notifs"><span id="orders_notif_number_wrapper" class="number_wrapper"><span id="orders_notif_value">0</span></span>
 							<div id="orders_notif_wrapper" class="notifs_wrapper">
@@ -194,7 +194,7 @@ echo '		var html = "";
 							</div>
 						</div>';
 				}
-				if(Configuration::get('PS_SHOW_NEW_CUSTOMERS') == 1)
+				if (Configuration::get('PS_SHOW_NEW_CUSTOMERS') == 1)
 				{
 					echo '<div id="customers_notif" class="notifs notifs_alternate"><span id="customers_notif_number_wrapper" class="number_wrapper"><span id="customers_notif_value">0</span></span>
 							<div id="customers_notif_wrapper" class="notifs_wrapper">
@@ -204,7 +204,7 @@ echo '		var html = "";
 							</div>
 						</div>';
 				}
-				if(Configuration::get('PS_SHOW_NEW_MESSAGES') == 1) 
+				if (Configuration::get('PS_SHOW_NEW_MESSAGES') == 1) 
 				{
 					echo '<div id="messages_notif" class="notifs"><span id="messages_notif_number_wrapper" class="number_wrapper"><span id="messages_notif_value">0</span></span>
 							<div id="messages_notif_wrapper" class="notifs_wrapper">
