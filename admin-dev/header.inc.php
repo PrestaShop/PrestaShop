@@ -189,6 +189,7 @@ echo '		var html = "";
 					echo '<div id="orders_notif" class="notifs"><span id="orders_notif_number_wrapper" class="number_wrapper"><span id="orders_notif_value">0</span></span>
 							<div id="orders_notif_wrapper" class="notifs_wrapper">
 								<h3>'.translate('Last orders').'</h3>
+								<p class="no_notifs">'.translate("No new orders has been made on your shop").'</p>
 								<ul id="list_orders_notif"></ul>
 								<p><a href="index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.translate('Show all orders').'</a></p>
 							</div>
@@ -199,6 +200,7 @@ echo '		var html = "";
 					echo '<div id="customers_notif" class="notifs notifs_alternate"><span id="customers_notif_number_wrapper" class="number_wrapper"><span id="customers_notif_value">0</span></span>
 							<div id="customers_notif_wrapper" class="notifs_wrapper">
 								<h3>'.translate('Last customers').'</h3>
+								<p class="no_notifs">'.translate("No new customers registered on your shop").'</p>
 								<ul id="list_customers_notif"></ul>
 								<p><a href="index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.translate('Show all customers').'</a></p>
 							</div>
@@ -209,6 +211,7 @@ echo '		var html = "";
 					echo '<div id="messages_notif" class="notifs"><span id="messages_notif_number_wrapper" class="number_wrapper"><span id="messages_notif_value">0</span></span>
 							<div id="messages_notif_wrapper" class="notifs_wrapper">
 								<h3>'.translate('Last messages').'</h3>
+								<p class="no_notifs">'.translate("No new messages posted on your shop").'</p>
 								<ul id="list_messages_notif"></ul>
 								<p><a href="index.php?tab=AdminMessages&token='.Tools::getAdminTokenLite('AdminMessages').'">'.translate('Show all messages').'</a></p>
 							</div>
