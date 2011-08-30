@@ -67,3 +67,20 @@ a.module_toggle_all{color:#FFF;text-decoration:none;display:inherit;}
 #upgradeNow {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .processing {overflow: auto;}
+
+#header_infos {width: 445px;}
+#header_shopname {float: left;width: 300px;}
+#employee_links {float: left;clear: both;margin-top: 10px;}
+#notifs_icon_wrapper {float: left;position: relative;margin-top: 8px;}
+.notifs {float: left;position: relative;	cursor: pointer;margin: 0px 5px;width: 18px;height: 15px;}
+#orders_notif {background: url("notif_order.png") no-repeat left top;}
+#customers_notif {background: url("notif_customer.png") no-repeat left top;}
+#messages_notif {background: url("notif_message.png") no-repeat left top;}
+.number_wrapper {color: black;display: none;font-size: 13px;font-weight: bold;position: absolute;right: -8px;top: -10px;z-index: 101;padding: 2px 5px;}
+.number_wrapper span {background-color: #F03D25;display: block;padding: 0 2px;border-color: -moz-use-text-color #DD3822 #DD3822;border-radius: 2px 2px 2px 2px;border-right: 1px solid #DD3822;border-style: none solid solid;border-width: 0 0px;}
+.notifs_wrapper {display: none;cursor:auto; position: absolute;top: 20px;left: 0;width:300px;background-color: white;border:2px solid #E0E0E0;padding: 10px;}
+.notifs_wrapper h3 {font-size: 14px;padding-bottom:8px;margin:0;border-bottom: 2px solid #E0E0E0;}
+.notifs_wrapper ul {padding:6px 0;margin:0;}
+.notifs_wrapper ul li {text-decoration: none;list-style: none;font-size:12px;padding:5px 0;}
+#header_infos .notifs_wrapper a {font-weight: bold;color: black;}
+.notifs_wrapper p {font-size: 12px;padding-top:8px;margin:0;border-top: 2px solid #E0E0E0;}
