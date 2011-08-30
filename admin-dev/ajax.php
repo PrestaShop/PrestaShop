@@ -688,3 +688,15 @@ if (Tools::isSubmit('updateProductImageShopAsso'))
 			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' AND `id_shop`='.(int)$id_shop);
 	}
 }
+
+if (Tools::isSubmit('getNotifications'))
+{
+	$notification = new Notification;
+	die(Tools::jsonEncode($notification->getLastElements()));
+}
+
+if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType'))
+{
+	$notification = new Notification;
+	die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
+}
