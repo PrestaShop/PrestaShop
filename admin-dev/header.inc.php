@@ -80,7 +80,102 @@ echo '
 					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo 'hints.html(hints.html()+\'<br /><span class="red">'.addslashes($youEditFieldFor).'</span>\');';
 			}
-echo '
+			
+echo '		var html = "";		
+			var nb_notifs = 0;
+			var wrapper_id = "";
+			var type = new Array();
+			
+			function getPush()
+			{
+				$.post("ajax.php",{"getNotifications" : "1"}, function(data) {
+					if (data)
+					{
+						json = jQuery.parseJSON(data);
+						
+						// Add orders notifications to the list
+						html = "";
+						nb_notifs = 0;
+						$.each(json.order, function(property, value) {
+							html += "<li>'.translate("A new order has been made on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that order").'</a></li>";
+						});						
+						if (html != "")
+						{
+							$("#list_orders_notif").empty().append(html);
+							nb_notifs = $("#list_orders_notif li").length;
+							$("#orders_notif_value").text(nb_notifs);
+							$("#orders_notif_number_wrapper").show();
+						}
+						else
+						{
+							$("#orders_notif_number_wrapper").hide();
+						}	
+						
+						// Add customers notifications to the list
+						html = "";
+						nb_notifs = 0;
+						$.each(json.customer, function(property, value) {
+							html += "<li>'.translate("A new customer registered on your shop.").'<br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate("Click here to see that customer").'</a></li>";
+						});						
+						if (html != "")
+						{
+							$("#list_customers_notif").empty().append(html);
+							nb_notifs = $("#list_customers_notif li").length;
+							$("#customers_notif_value").text(nb_notifs);
+							$("#customers_notif_number_wrapper").show();
+						}
+						else
+						{
+							$("#customers_notif_number_wrapper").hide();
+						}
+						
+						// Add messages notifications to the list
+						html = "";
+						nb_notifs = 0;
+						$.each(json.message, function(property, value) {
+							html += "<li>'.translate("A new message posted on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that message").'</a></li>";
+						});						
+						if (html != "")
+						{
+							$("#list_messages_notif").empty().append(html);
+							nb_notifs = $("#list_messages_notif li").length;
+							$("#messages_notif_value").text(nb_notifs);
+							$("#messages_notif_number_wrapper").show();
+						}
+						else
+						{
+							$("#messages_notif_number_wrapper").hide();
+						}
+						
+					}
+					setTimeout("getPush()",60000);
+				});
+			}
+			
+			$(".notifs").live("click", function(){
+				wrapper_id = $(this).attr("id");
+				type = wrapper_id.split("s_notif")
+				$.post("ajax.php",{"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]}, function(data) {
+					if(data)
+					{
+						if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
+						{
+							$(".notifs_wrapper").hide();
+							$("#" + wrapper_id + "_number_wrapper").hide();  
+							$("#" + wrapper_id + "_wrapper").show();  
+						}else
+						{
+							$("#" + wrapper_id + "_wrapper").hide();							
+						}
+					}				
+				});
+			});
+			
+			$("#main").click(function(){
+				$(".notifs_wrapper").hide();
+			});
+
+			getPush();
 		});
 		</script>
 	</head>
@@ -88,7 +183,38 @@ echo '
 	<div id="top_container">
 		<div id="container">
 			<div id="header_infos"><span>
-				<a id="header_shopname" href="index.php"><span>'.Configuration::get('PS_SHOP_NAME').'</span></a><br />
+				<a id="header_shopname" href="index.php"><span>'.CConfiguration::get('PS_SHOP_NAME').'</span></a><div id="notifs_icon_wrapper">';
+				if(Configuration::get('PS_SHOW_NEW_ORDERS') == 1)
+				{
+					echo '<div id="orders_notif" class="notifs"><span id="orders_notif_number_wrapper" class="number_wrapper"><span id="orders_notif_value">0</span></span>
+							<div id="orders_notif_wrapper" class="notifs_wrapper">
+								<h3>'.translate('Last orders').'</h3>
+								<ul id="list_orders_notif"></ul>
+								<p><a href="index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.translate('Show all orders').'</a></p>
+							</div>
+						</div>';
+				}
+				if(Configuration::get('PS_SHOW_NEW_CUSTOMERS') == 1)
+				{
+					echo '<div id="customers_notif" class="notifs notifs_alternate"><span id="customers_notif_number_wrapper" class="number_wrapper"><span id="customers_notif_value">0</span></span>
+							<div id="customers_notif_wrapper" class="notifs_wrapper">
+								<h3>'.translate('Last customers').'</h3>
+								<ul id="list_customers_notif"></ul>
+								<p><a href="index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.translate('Show all customers').'</a></p>
+							</div>
+						</div>';
+				}
+				if(Configuration::get('PS_SHOW_NEW_MESSAGES') == 1) 
+				{
+					echo '<div id="messages_notif" class="notifs"><span id="messages_notif_number_wrapper" class="number_wrapper"><span id="messages_notif_value">0</span></span>
+							<div id="messages_notif_wrapper" class="notifs_wrapper">
+								<h3>'.translate('Last messages').'</h3>
+								<ul id="list_messages_notif"></ul>
+								<p><a href="index.php?tab=AdminMessages&token='.Tools::getAdminTokenLite('AdminMessages').'">'.translate('Show all messages').'</a></p>
+							</div>
+						</div>';
+				}
+	echo		'</div><span id="employee_links">
 				'.Tools::substr(Context::getContext()->employee->firstname, 0, 1).'.&nbsp;'.htmlentities(Context::getContext()->employee->lastname, ENT_COMPAT, 'UTF-8').'
 				[ <a href="index.php?logout" id="header_logout"><span>'.translate('logout').'</span></a> ]';
 				if (Context::getContext()->shop->getBaseURL())
