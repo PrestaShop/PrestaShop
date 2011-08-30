@@ -43,10 +43,10 @@ class Notification
 	public function getLastElements()
 	{
 		$notifications = array();
-		$sql = 'SELECT id_last_order, id_last_message, id_last_customer 
+		$employee_infos = Db::getInstance()->getRow('
+				SELECT id_last_order, id_last_message, id_last_customer 
 				FROM `'._DB_PREFIX_.'employee` 
-				WHERE `id_employee` = '.(int)$this->context->employee->id;
-		$employee_infos = Db::getInstance()->getRow($sql);
+				WHERE `id_employee` = '.(int)$this->context->employee->id);
 				
 		foreach ($this->types as $type)
 			$notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
@@ -58,53 +58,45 @@ class Notification
 	 * getLastElementsIdsByType return all the element ids to show (order, customer registration, and customer message)
 	 * Get all the element ids
 	 *
+	 * @param string $type contains the field name of the Employee table
+	 * @param integer $id_last_element contains the id of the last seen element 	 
 	 * @return array containing the notifications
 	 */
 	public static function getLastElementsIdsByType($type, $id_last_element)
 	{
 	
 		if ($type == 'order' || $type == 'message')
-		{
 			$sql = 'SELECT id_order 
 					FROM `'._DB_PREFIX_.(($type == 'order') ? $type.'s' : $type).'` 
 					WHERE `id_'.$type.'` > '.$id_last_element.' 
-					ORDER BY `id_'.$type.'` DESC LIMIT 5');
-		}
+					ORDER BY `id_'.$type.'` DESC LIMIT 5';
 		else
-		{
 			$sql = 'SELECT id_'.$type.' 
 					FROM `'._DB_PREFIX_.$type.'` 
 					WHERE `id_'.$type.'` > '.$id_last_element.' 
-					ORDER BY `id_'.$type.'` DESC LIMIT 5');
-		}
+					ORDER BY `id_'.$type.'` DESC LIMIT 5';
 		
 		return Db::getInstance()->ExecuteS($sql);
 	}	
 	
 	/**
 	 * updateEmployeeLastElement return 0 if the field doesn't exists in Employee table.
-	 * Updates the last element seen by the employee 
+	 * Updates the last seen element by the employee 
 	 *
-	 * @param boolean $type contains the field name of the Employee table
+	 * @param string $type contains the field name of the Employee table
 	 * @return boolean if type exists or not
 	 */
 	public function updateEmployeeLastElement($type)
 	{	
 		if (in_array($type, $this->types))
-		{
 			// We update the last item viewed
-			$sql = 'UPDATE `'._DB_PREFIX_.'employee` 
+			return Db::getInstance()->Execute('
+					UPDATE `'._DB_PREFIX_.'employee` 
 					SET `id_last_'.$type.'` = (SELECT MAX(`id_'.$type.'`) 
 					FROM `'._DB_PREFIX_.(($type == 'order') ? $type.'s' : $type).'`) 
-					WHERE `id_employee` = '.(int)$this->context->employee->id);
-			Db::getInstance()->Execute($sql);
-			
-			return true;		
-		} 
+					WHERE `id_employee` = '.(int)$this->context->employee->id);	 
 		else 
-		{ 
 			return false;
-		}
 	}	
 }
 ?>
