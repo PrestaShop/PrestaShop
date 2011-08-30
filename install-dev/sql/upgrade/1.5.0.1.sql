@@ -60,3 +60,8 @@ ALTER TABLE `PREFIX_tax_rule`
 DROP TABLE `PREFIX_county_zip_code`;
 DROP TABLE `PREFIX_county`;
 
+ALTER TABLE `PREFIX_employee`
+	ADD `id_last_order` tinyint(1) unsigned NOT NULL default '0',
+	ADD `id_last_message` tinyint(1) unsigned NOT NULL default '0',
+	ADD `id_last_customer` tinyint(1) unsigned NOT NULL default '0';
+	  
