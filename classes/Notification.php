@@ -42,7 +42,10 @@ class Notification
 	
 	public static function getLastElementsIdsByType($type, $id_last_element)
 	{
-		return Db::getInstance()->ExecuteS('SELECT id_'.$type.' FROM `'._DB_PREFIX_.(($type == 'order') ? $type.'s' : $type).'` WHERE `id_'.$type.'` > '.$id_last_element.' ORDER BY `id_'.$type.'` DESC LIMIT 5');
+		if($type == 'order' || $type == 'message')
+			return Db::getInstance()->ExecuteS('SELECT id_order FROM `'._DB_PREFIX_.(($type == 'order') ? $type.'s' : $type).'` WHERE `id_'.$type.'` > '.$id_last_element.' ORDER BY `id_'.$type.'` DESC LIMIT 5');
+		else
+			return Db::getInstance()->ExecuteS('SELECT id_'.$type.' FROM `'._DB_PREFIX_.$type.'` WHERE `id_'.$type.'` > '.$id_last_element.' ORDER BY `id_'.$type.'` DESC LIMIT 5');
 	}	
 	
 	public function updateEmployeeLastElement($type)
