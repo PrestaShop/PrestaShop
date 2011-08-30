@@ -81,3 +81,4 @@ a.module_toggle_all{color: #268CCD;}
 .notifs_wrapper ul li {text-decoration: none;list-style: none;font-size:12px;padding:5px 0;}
 #header_infos .notifs_wrapper a {font-weight: bold;color: black;}
 .notifs_wrapper p {font-size: 12px;padding-top:8px;margin:0;border-top: 2px solid #E0E0E0;}
+.notifs_wrapper p.no_notifs {border: none;}
