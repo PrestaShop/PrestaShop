@@ -10,11 +10,6 @@
   * @license http://www.opensource.org/licenses/osl-3.0.php Open-source licence 3.0
   * @version 1.2
   *
-  		`id_push_notification` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-		`tab` INT UNSIGNED NULL,
-		`link_to_push` VARCHAR(250) NULL,
-		`type` VARCHAR(250) NULL,
-		`date` DATETIME,
   */
 
 class Notification
