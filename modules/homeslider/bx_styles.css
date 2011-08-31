@@ -5,8 +5,11 @@
  * background property for each of the five styles below
  */
 
+.bx-window {margin-bottom:20px;}
+ 
 /*next button*/
 .bx-next {
+	display:none;
 	position:absolute;
 	top:40%;
 	right:-50px;
@@ -18,7 +21,9 @@
 }
 
 /*previous button*/
+
 .bx-prev {
+	display:none;
 	position:absolute;
 	top:40%;
 	left:-50px;
@@ -31,11 +36,12 @@
 
 /*pager links*/
 .bx-pager a {
-	margin-right: 5px;
-	color: #fff;
-	padding: 3px 8px 3px 6px;
-	font-size: 12px;
 	zoom:1;
+	margin-right: 5px;
+	padding: 4px 7px 3px 7px;
+	font-weight: bold;
+	font-size: 11px;
+	color: #fff;
 	background: url(gray_pager.png) no-repeat 0 -20px;
 }
 
@@ -70,10 +76,14 @@
 
 /*pager wrapper*/
 .bx-pager {
-	text-align:center;
+	float:left;
+   position: relative;
+   top: -60px;
+	left: 15px;
 	padding-top: 7px;
-	font-size:12px;
+	font-size:11px;
 	color:#666;
+	text-align:center;
 }
 
 /*captions*/
