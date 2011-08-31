@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript" src="{$module_dir}js/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="{$module_dir}js/jquery.textareaCounter.plugin.js"></script>
 <script type="text/javascript">
 	$(function(){literal}{{/literal} $('input[@type=radio].star').rating(); {literal}}{/literal});
 	$(function(){literal}{{/literal}
@@ -40,6 +41,17 @@
 	{rdelim}
 
 	$('document').ready(function(){literal}{{/literal}
+
+		var limitInputText = {
+				'maxCharacterSize': 200,
+				'originalStyle': 'originalDisplayInfo',
+				'warningStyle': 'warningDisplayInfo',
+				'warningNumber': 40,
+				'displayFormat': '#left'
+			};
+		
+		$('#commentContent').textareaCount(limitInputText);
+		
 		$('#new_comment_btn').fancybox({literal}{{/literal}
 			'hideOnContentClick': false,
 			'onClosed': function(){literal}{{/literal}

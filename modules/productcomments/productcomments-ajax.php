@@ -52,6 +52,7 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 		$id_product = 0;
 		$content = null;
 		$title = null;
+		$name = null;
 		$grades = array();
 		foreach ($review as $entry)
 		{
@@ -61,6 +62,8 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 				$title = $entry->value;
 			elseif ($entry->key == "content")
 				$content = $entry->value;
+			elseif ($entry->key  == "customer_name")
+				$name = $entry->value;
 			elseif (preg_match("/grade/", $entry->key))
 			{
 				$id = array(preg_split("/_/", $entry->key));
@@ -72,7 +75,8 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 			die('0');
 
 		$allow_guests = (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS');
-		if (Context::getContext()->customer->id AND (!Context::getContext()->customer->is_guest OR $allow_guests))
+
+		if (Context::getContext()->customer->id OR (!Context::getContext()->customer->id AND $allow_guests))
 		{
 			$id_guest = (!$id_customer = (int)Context::getContext()->cookie->id_customer) ? (int)Context::getContext()->cookie->id_guest : false;
 			$customerComment = ProductComment::getByCustomer((int)($id_product), Context::getContext()->cookie->id_customer, true, (int)$id_guest);
@@ -83,6 +87,7 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 				$customer_name = false;
 				if ($id_guest AND (!$customer_name = Context::getContext()->customer->firstname . " " . Context::getContext()->customer->lastname))
 					$errors[] = $productCom->l('Please fill your name');
+
 				if (!sizeof($errors) AND $content)
 				{
 					$comment = new ProductComment();
@@ -91,6 +96,8 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 					$comment->id_customer = (int)Context::getContext()->cookie->id_customer;
 					$comment->id_guest = (int)$id_guest;
 					$comment->customer_name = pSQL($customer_name);
+					if (!$comment->id_customer)
+						$comment->customer_name = pSQL($name);
 					$comment->title = pSQL($title);
 					$comment->grade = 0;
 					$comment->validate = 0;
