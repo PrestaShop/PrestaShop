@@ -158,11 +158,11 @@
 						</p>
 						{/if}
 						<p class="submit">
-							<span class="txt_required">* {l s='Required fields' mod='productcomments'}</span>
 							<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
 							<button id="submitMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
 							{l s='or' mod='productcomments'}&nbsp;<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='productcomments'}</a>
 						</p>
+						<p class="txt_required">* {l s='Required fields' mod='productcomments'}</p>
 					</div>
 				</div><!-- /end new_comment_form_content -->
 		</div>
