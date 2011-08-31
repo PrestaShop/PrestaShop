@@ -44,7 +44,7 @@ class HomeSlide extends ObjectModel
 		 'active',
 		 'position'
 	);
-	protected $fieldsRequiredLang = array('title', 'description', 'url', 'legend');
+	protected $fieldsRequiredLang = array('title', 'url', 'legend');
 	protected $fieldsSizeLang = array(
 		 'description' => 4000,
 		 'title' => 255,
@@ -53,7 +53,7 @@ class HomeSlide extends ObjectModel
 		 'image' => 255
 	);
 	protected $fieldsValidateLang = array(
-		 'title' => 'isName',
+		 'title' => 'isCleanHtml',
 		 'description' => 'isCleanHtml',
 		 'url' => 'isUrl',
 		 'legend' => 'isCleanHtml',
@@ -100,7 +100,6 @@ class HomeSlide extends ObjectModel
 			INSERT INTO `'._DB_PREFIX_.'homeslider` (`id_shop`, `id_slide`)
 			VALUES('.(int)$id_shop.', '.(int)$this->id.')'
 		);
-
 		return $res;
 	}
 
