@@ -43,7 +43,7 @@ class Notification
 	public function getLastElements()
 	{
 		$notifications = array();
-		$employee_infos = Db::getInstance()->getRow('
+		$employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT id_last_order, id_last_message, id_last_customer 
 				FROM `'._DB_PREFIX_.'employee` 
 				WHERE `id_employee` = '.(int)$this->context->employee->id);
@@ -67,16 +67,16 @@ class Notification
 	
 		if ($type == 'order' || $type == 'message')
 			$sql = 'SELECT id_order 
-					FROM `'._DB_PREFIX_.(($type == 'order') ? $type.'s' : $type).'` 
-					WHERE `id_'.$type.'` > '.$id_last_element.' 
-					ORDER BY `id_'.$type.'` DESC LIMIT 5';
+					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'` 
+					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.' 
+					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
 		else
-			$sql = 'SELECT id_'.$type.' 
-					FROM `'._DB_PREFIX_.$type.'` 
-					WHERE `id_'.$type.'` > '.$id_last_element.' 
-					ORDER BY `id_'.$type.'` DESC LIMIT 5';
+			$sql = 'SELECT id_'.pSQL($type).' 
+					FROM `'._DB_PREFIX_.pSQL($type).'` 
+					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.' 
+					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
 		
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}	
 	
 	/**
@@ -92,8 +92,8 @@ class Notification
 			// We update the last item viewed
 			return Db::getInstance()->Execute('
 					UPDATE `'._DB_PREFIX_.'employee` 
-					SET `id_last_'.$type.'` = (SELECT MAX(`id_'.$type.'`) 
-					FROM `'._DB_PREFIX_.(($type == 'order') ? $type.'s' : $type).'`) 
+					SET `id_last_'.pSQL($type).'` = (SELECT MAX(`id_'.$type.'`) 
+					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`) 
 					WHERE `id_employee` = '.(int)$this->context->employee->id);	 
 		else 
 			return false;
