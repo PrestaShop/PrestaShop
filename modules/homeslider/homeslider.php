@@ -262,7 +262,7 @@ class HomeSlider extends Module
 			<br />
 			<legend><img src="'._PS_ADMIN_IMG_.'add.gif" alt="" />1 - '.$this->l('Upload your slide').'</legend>';
 		/* Image */
-		$this->_html .= '<label>'.$this->l('Select a file').':</label><div class="margin-form">';
+		$this->_html .= '<label>'.$this->l('Select a file').' * :</label><div class="margin-form">';
 		foreach ($languages as $language)
 		{
 			$this->_html .= '<div id="image_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">';
@@ -293,7 +293,7 @@ class HomeSlider extends Module
 
 		/* Form content */
 		/* Title */
-		$this->_html .= '<br /><label>'.$this->l('Title:').'</label><div class="margin-form">';
+		$this->_html .= '<br /><label>'.$this->l('Title').' * : </label><div class="margin-form">';
 		foreach ($languages as $language)
 		{
 			$this->_html .= '
@@ -305,7 +305,7 @@ class HomeSlider extends Module
 		$this->_html .= '</div><br /><br />';
 
 		/* URL */
-		$this->_html .= '<label>'.$this->l('URL:').'</label><div class="margin-form">';
+		$this->_html .= '<label>'.$this->l('URL').' * : </label><div class="margin-form">';
 		foreach ($languages as $language)
 		{
 			$this->_html .= '
@@ -317,7 +317,7 @@ class HomeSlider extends Module
 		$this->_html .= '</div><br /><br />';
 
 		/* Legend */
-		$this->_html .= '<label>'.$this->l('Legend:').'</label><div class="margin-form">';
+		$this->_html .= '<label>'.$this->l('Legend').' * :</label><div class="margin-form">';
 		foreach ($languages as $language)
 		{
 			$this->_html .= '
@@ -330,7 +330,7 @@ class HomeSlider extends Module
 
 		/* Description */
 		$this->_html .= '
-		<label>'.$this->l('Description:').'</label>
+		<label>'.$this->l('Description').' :</label>
 		<div class="margin-form">';
 		foreach ($languages as $language)
 		{
@@ -350,6 +350,7 @@ class HomeSlider extends Module
 		    <label class="t" for="active_on">'.$this->l('Yes').'</label>
 		    <img src="../img/admin/disabled.gif" alt="No" title="No" style="margin-left: 10px;" />
 		    <input type="radio" name="active_slide" id="active_off" '.(($slide AND (isset($slide->active) AND (int)$slide->active == 0)) ? 'checked="checked" ' : '').' value="0" />
+		    <label class="t" for="active_off">'.$this->l('No').'</label>
 		</div>';
 
 		/* Save */
@@ -361,6 +362,7 @@ class HomeSlider extends Module
 
 		/* End of fieldset & form */
 		$this->_html .= '
+			<p>*'.$this->l('Required fields').'</p>
 			</fieldset>
 		</form>';
 	}
@@ -405,9 +407,9 @@ class HomeSlider extends Module
 					$errors[] = $this->l('Title is too long');
 				if (strlen(Tools::getValue('legend_'.$language['id_lang'])) > 40)
 					$errors[] = $this->l('Legend is too long');
-				if (strlen(Tools::getValue('url_'.$language['id_lang'])) > 40)
+				if (strlen(Tools::getValue('url_'.$language['id_lang'])) > 200)
 					$errors[] = $this->l('URL is too long');
-				if (strlen(Tools::getValue('description_'.$language['id_lang'])) > 200)
+				if (strlen(Tools::getValue('description_'.$language['id_lang'])) > 400)
 					$errors[] = $this->l('Description is too long');
 				if (strlen(Tools::getValue('url_'.$language['id_lang'])) > 0 && !Validate::isUrl(Tools::getValue('url_'.$language['id_lang'])))
 					$errors[] = $this->l('URL format is not correct');
@@ -425,8 +427,6 @@ class HomeSlider extends Module
 				$errors[] = $this->l('Legend is not set');
 			if (strlen(Tools::getValue('url_'.$defaultLanguage)) == 0)
 				$errors[] = $this->l('URL is not set');
-			if (strlen(Tools::getValue('description_'.$defaultLanguage)) == 0)
-				$errors[] = $this->l('Description is not set');
 			if (Tools::getValue('image_'.$defaultLanguage) == "" AND !Validate::isFileName(Tools::getValue('image_'.$defaultLanguage)) AND !Tools::getValue('image_old_'.defaultLanguage))
 				$errors[] = $this->l("Image is not set");
 			if (Tools::getValue('image_old_'.$defaultLanguage) AND !Validate::isFileName(Tools::getValue('image_old_'.$defaultLanguage)))
