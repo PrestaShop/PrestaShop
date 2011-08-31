@@ -559,6 +559,7 @@ class HomeSlider extends Module
 
 		$this->context->smarty->assign('homeslider_slides', $slides);
 		$this->context->smarty->assign('homeslider', $slider);
+
 		return $this->display(__FILE__, 'homeslider.tpl');
 	}
 
@@ -568,8 +569,8 @@ class HomeSlider extends Module
 			return;
 		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
-		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
+		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 	}
 
 	public function hookBackOfficeTop()
