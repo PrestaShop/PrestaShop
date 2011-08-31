@@ -63,7 +63,7 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 				$content = $entry->value;
 			elseif (preg_match("/grade/", $entry->key))
 			{
-				$id = array(split("_", $entry->key));
+				$id = array(preg_split("/_/", $entry->key));
 				$grades[] = array('id' => $id['0']['0'], 'grade' => $entry->value);
 			}
 		}
