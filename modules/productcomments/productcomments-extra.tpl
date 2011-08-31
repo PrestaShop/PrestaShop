@@ -77,6 +77,7 @@
 </script>
 
 <div id="product_comments_block_extra">
+	{if $nbComments != 0}
 	<div class="comments_note">
 		<span>{l s='Average grade' mod='productcomments'}&nbsp</span>
 		<div class="star_content clearfix">
@@ -89,8 +90,12 @@
 		{/section}
 		</div>
 	</div>
+	{/if}
+	
 	<div class="comments_advices">
+		{if $nbComments != 0}
 		<a href="#idTab5">{l s='Read user reviews' mod='productcomments'} ({$nbComments})</a><br/>
+		{/if}
 	{if ($too_early == false AND ($logged OR $allow_guests))}
 		<a id="new_comment_btn" href="#new_comment_form">{l s='Write your review' mod='productcomments'}</a>
 	{/if}
