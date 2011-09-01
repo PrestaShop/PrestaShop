@@ -93,7 +93,7 @@ class ManufacturerControllerCore extends FrontController
 				$manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false, $id_current_group_shop);
 				$imgDir = _PS_MANU_IMG_DIR_;
 				foreach ($data AS &$item)
-					$row['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$row['id_manufacturer'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_manufacturer'];
+					$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
 				$this->context->smarty->assign(array(
 					'pages_nb' => ceil($nbProducts / (int)($this->n)),
