@@ -77,8 +77,8 @@
 /*pager wrapper*/
 .bx-pager {
 	float:left;
-   position: relative;
-   top: -60px;
+   	position: absolute;
+   	bottom: 20px;
 	left: 15px;
 	padding-top: 7px;
 	font-size:11px;

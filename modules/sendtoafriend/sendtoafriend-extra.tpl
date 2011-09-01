@@ -91,13 +91,12 @@ $('document').ready(function(){
 						<label for="friend_email">{l s='E-mail address of your friend' mod='sendtoafriend'}* :</label>
 						<input id="friend_email" name="friend_email" type="text" value=""/>
 					</p>
-					<br /><br />
+					<p class="txt_required">* {l s='Required fields' mod='sendtoafriend'}</p>
 					<p class="submit">
 						<input id="id_product_comment_send" name="id_product" type="hidden" value='{$stf_id_product}'></input>
 						<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='sendtoafriend'}</a>&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;
 						<button id="sendEmail" name="sendEmail" type="submit">{l s='Send' mod='sendtoafriend'}</button>
 					</p>
-					<p class="txt_required">* {l s='Required fields' mod='sendtoafriend'}</p>
 				</div>
 			</div>
 	</div>
