@@ -15,4 +15,6 @@ AND `id_lang` = (
 
 ALTER TABLE `PREFIX_discount` ADD `include_tax` TINYINT(1) NOT NULL DEFAULT '0';
 
-UPDATE `PREFIX_order_detail`set `product_price` = `product_price` /( 1-(`group_reduction`/100));
+UPDATE `PREFIX_order_detail` SET `product_price` = `product_price` /( 1-(`group_reduction`/100));
+
+DELETE FROM `PREFIX_configuration` WHERE name IN ('PS_LAYERED_BITLY_USERNAME', 'PS_LAYERED_BITLY_API_KEY', 'PS_LAYERED_SHARE') LIMIT 3;

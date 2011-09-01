@@ -787,7 +787,7 @@ class AdminOrders extends AdminTab
 										.($product['product_supplier_reference'] ? $this->l('Ref Supplier:').' '.$product['product_supplier_reference'] : '')
 										.'</a></td>
 									<td align="center">'.Tools::displayPrice($product_price, $currency, false).'</td>
-									<td align="center" class="productQuantity">'.((int)($product['product_quantity']) - $product['customizationQuantityTotal']).'</td>
+									<td align="center" class="productQuantity" '.($quantity > 1 ? 'style="font-weight:700;font-size:1.1em;color:red"' : '').'>'.(int)$quantity.'</td>
 									'.($order->hasBeenPaid() ? '<td align="center" class="productQuantity">'.(int)($product['product_quantity_refunded']).'</td>' : '').'
 									'.($order->hasBeenDelivered() ? '<td align="center" class="productQuantity">'.(int)($product['product_quantity_return']).'</td>' : '').'
 									<td align="center" class="productQuantity">'.$productObj->getStock($product['product_attribute_id']).'</td>

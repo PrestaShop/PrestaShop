@@ -36,29 +36,22 @@ if (file_exists(SETTINGS_FILE))
 	if (!unlink(SETTINGS_FILE))
 		die('<action result="fail" error="17" />'."\n");
 
-include(INSTALL_PATH.'/classes/AddConfToFile.php');
-include(INSTALL_PATH.'/../classes/Validate.php');
-include(INSTALL_PATH.'/../classes/Db.php');
-include(INSTALL_PATH.'/../classes/Tools.php');
+require_once(INSTALL_PATH.'/classes/AddConfToFile.php');
+require_once(INSTALL_PATH.'/../classes/Validate.php');
+require_once(INSTALL_PATH.'/../classes/Db.php');
+require_once(INSTALL_PATH.'/../classes/Tools.php');
 
 global $logger;
 
 //check db access
 include_once(INSTALL_PATH.'/classes/ToolsInstall.php');
-$resultDB = ToolsInstall::checkDB($_GET['server'], $_GET['login'], $_GET['password'], $_GET['name'], true, $_GET['engine']);
+$resultDB = ToolsInstall::checkDB($_GET['server'], $_GET['login'], $_GET['password'], $_GET['name'], true);
 if ($resultDB !== true){
 	$logger->logError('Invalid database configuration');
 	die("<action result='fail' error='".$resultDB."'/>\n");
 }
 
-
-// Check POST data...
-$data_check = array(
-	!isset($_GET['mode']) OR ( $_GET['mode'] != "full" AND $_GET['mode'] != "lite"),
-	!isset($_GET['tablePrefix']) OR !Validate::isMailName($_GET['tablePrefix']) OR !preg_match('/^[a-z0-9_]*$/i', $_GET['tablePrefix'])
-);
-foreach ($data_check AS $data)
-	if ($data)
+if (!isset($_GET['mode']) OR ($_GET['mode'] != "full" AND $_GET['mode'] != "lite"))
 		die('<action result="fail" error="8"/>'."\n");
 
 // Writing data in settings file
@@ -67,12 +60,12 @@ $_PS_DIRECTORY_ = trim(str_replace(' ', '%20', INSTALLER__PS_BASE_URI), '/');
 $_PS_DIRECTORY_ = ($_PS_DIRECTORY_) ? '/'.$_PS_DIRECTORY_.'/' : '/';
 $datas = array(
 	array('_DB_SERVER_', trim($_GET['server'])),
-	array('_DB_TYPE_', trim($_GET['type'])),
+	array('_DB_TYPE_', 'MySQL'),
 	array('_DB_NAME_', trim($_GET['name'])),
 	array('_DB_USER_', trim($_GET['login'])),
 	array('_DB_PASSWD_', trim($_GET['password'])),
 	array('_DB_PREFIX_', trim($_GET['tablePrefix'])),
-	array('_MYSQL_ENGINE_', $_GET['engine']),
+	array('_MYSQL_ENGINE_', trim($_GET['engine'])),
 	array('_PS_CACHING_SYSTEM_', 'MCached'),
 	array('_PS_CACHE_ENABLED_', '0'),
 	array('_MEDIA_SERVER_1_', ''),
@@ -103,8 +96,8 @@ foreach (array(INSTALL_PATH.'/../tools/smarty/cache/', INSTALL_PATH.'/../tools/s
 if ($confFile->error != false)
 	die('<action result="fail" error="'.$confFile->error.'" />'."\n");
 
-//load new settings
-include(SETTINGS_FILE);
+//load new settings, and fatal error if you can't
+require_once(SETTINGS_FILE);
 
 //-----------
 //import SQL data

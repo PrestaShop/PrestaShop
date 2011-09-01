@@ -241,7 +241,7 @@ if (empty($neededUpgradeFiles))
 
 
 //refresh conf file
-include(INSTALL_PATH.'/classes/AddConfToFile.php');
+require_once(INSTALL_PATH.'/classes/AddConfToFile.php');
 $oldLevel = error_reporting(E_ALL);
 $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 $datas = array(

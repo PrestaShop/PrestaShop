@@ -78,6 +78,8 @@ class HelperCore
 				$html .= 'var selectedCat = "'.implode(',', $selected_cat).'"';
 			else
 				$html .= 'var selectedCat = "'.implode(',', array_keys($selected_cat)).'"';
+		} else {
+			$html .= 'var selectedCat = ""';
 		}
 		$html .= '
 			var selectedLabel = \''.$trads['selected'].'\';

@@ -54,6 +54,7 @@ if ( substr($memory_limit,-1) != 'G'
 ){
 	@ini_set('memory_limit','128M');
 }
+require_once(dirname(__FILE__).'/../config/autoload.php');
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '')
@@ -64,7 +65,7 @@ $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
 define('INSTALL_VERSION', '1.5.0.1');
 define('PS_INSTALLATION_IN_PROGRESS', true);
-include_once(INSTALL_PATH.'/classes/ToolsInstall.php');
+require_once(INSTALL_PATH.'/classes/ToolsInstall.php');
 define('SETTINGS_FILE', INSTALL_PATH.'/../config/settings.inc.php');
 define('DEFINES_FILE', INSTALL_PATH.'/../config/defines.inc.php');
 define('INSTALLER__PS_BASE_URI', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/')+1))));
@@ -85,31 +86,31 @@ if (isset($_GET['method']))
 	switch ($_GET['method'])
 	{
 		case 'checkConfig' :
-			include_once('xml/checkConfig.php');
+			require_once('xml/checkConfig.php');
 		break;
 
 		case 'checkDB' :
-			include_once('xml/checkDB.php');
+			require_once('xml/checkDB.php');
 		break;
 
 		case 'createDB' :
-			include_once('xml/createDB.php');
+			require_once('xml/createDB.php');
 		break;
 
 		case 'checkMail' :
-			include_once('xml/checkMail.php');
+			require_once('xml/checkMail.php');
 		break;
 
 		case 'checkShopInfos' :
-			include_once('xml/checkShopInfos.php');
+			require_once('xml/checkShopInfos.php');
 		break;
 
 		case 'doUpgrade' :
-			include_once('xml/doUpgrade.php');
+			require_once('xml/doUpgrade.php');
 		break;
 		
 		case 'getVersionFromDb' :
-			include_once('xml/getVersionFromDb.php');
+			require_once('xml/getVersionFromDb.php');
 		break;
 	}
 }

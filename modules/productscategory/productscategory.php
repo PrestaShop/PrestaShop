@@ -138,9 +138,9 @@ class productsCategory extends Module
 					if ($categoryProduct['id_product'] != $idProduct)
 					{
 						if ($taxes == 0 OR $taxes == 2)
-							$categoryProducts[$key]['displayed_price'] = Product::getPriceStatic((int)$categoryProduct['id_product'], true, NULL);
+							$categoryProducts[$key]['displayed_price'] = Product::getPriceStatic((int)$categoryProduct['id_product'], true, NULL, 2);
 						elseif ($taxes == 1)
-							$categoryProducts[$key]['displayed_price'] = Product::getPriceStatic((int)$categoryProduct['id_product'], false, NULL);
+							$categoryProducts[$key]['displayed_price'] = Product::getPriceStatic((int)$categoryProduct['id_product'], false, NULL, 2);
 					}
 		
 			// Get positions

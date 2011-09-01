@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once("../classes/Validate.php");
-
 class LanguageManager
 {
 	private $url_xml;
@@ -72,8 +70,12 @@ class LanguageManager
 		return $this->lang;
 	}
 	
+	/** get the http_accept_language isocode (if exists), 
+	 * and use it to find the corresponding prestashop id_lang
+	 * otherwise, return 0.
+	 * @return int id_lang to use
+	 */
 	private function getIdByHAL(){
-		
 		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
 			$FirstHAL = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -86,14 +88,16 @@ class LanguageManager
 		}
 		else
 			return 0;
-		
 	}
 	
+	/** set lang property with param $_GET['language'] if present, 
+		* or by $_SERVER['HTTP_ACCEPT_LANGUAGE'] otherwise
+		*/
 	private function setLanguage()
 	{
-		if( isset($_GET['language']) AND Validate::isInt($_GET['language']))
-			$id_lang = (int)($_GET['language']);
-		if (!isset($id_lang))
+		if ( !empty($_GET['language']))
+			$id_lang =  (int)($_GET['language'])>0 ? $_GET['language'] : 0;
+		if (empty($id_lang))
 			$id_lang = ($this->getIdByHAL());
 		$this->lang = $this->xml_file->lang[(int)($id_lang)];
 	}

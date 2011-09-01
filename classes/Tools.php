@@ -1162,15 +1162,19 @@ class ToolsCore
 		return self::$file_exists_cache[$filename];
 	}
 
-	public static function file_get_contents($url, $useIncludePath = false, $streamContext = NULL)
+	public static function file_get_contents($url, $useIncludePath = false, $streamContext = NULL, $curlTimeOut = 5)
     {
+		if ($streamContext == NULL)
+			$streamContext = stream_context_create(array('http' => array('timeout' => 5)));
+
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return file_get_contents($url, $useIncludePath, $streamContext);
-		else if (function_exists('curl_init'))
+			return @file_get_contents($url, $useIncludePath, $streamContext);
+		elseif (function_exists('curl_init') && in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
 		{
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curlTimeOut);
 			$content = curl_exec($curl);
 			curl_close($curl);
 			return $content;
@@ -1182,11 +1186,7 @@ class ToolsCore
 	public static function simplexml_load_file($url, $class_name = null)
 	{
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return simplexml_load_file($url, $class_name);
-		elseif (function_exists('curl_init'))
-		{
 			return simplexml_load_string(Tools::file_get_contents($url), $class_name);
-		}
 		else
 			return false;
 	}

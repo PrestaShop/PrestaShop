@@ -427,7 +427,10 @@ class OrderCore extends ObjectModel
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 				$row['product_price'] = ($row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01));
 			else
-				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['product_price_wt'] * ($row['reduction_percent'] * 0.01)), 2);
+			{
+				$reduction = Tools::ps_round($row['product_price_wt'] * ($row['reduction_percent'] * 0.01), 2);
+				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $reduction), 2);
+		}
 		}
 
 		if ($row['reduction_amount'] != 0)

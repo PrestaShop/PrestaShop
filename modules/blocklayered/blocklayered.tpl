@@ -29,12 +29,6 @@
 <div id="layered_block_left" class="block">
 	<h4>{l s='Catalog' mod='blocklayered'}</h4>
 	<div class="block_content">
-	{if $display_share}
-		<div id="layered_url_filter_block">
-			<span class="layered_subtitle" style="float: none;">{l s='Share your search:' mod='blocklayered'}</span>
-			<input value="{$share_url|escape:html:'UTF-8'}">
-		</div>
-	{/if}
 		<form action="#" id="layered_form">
 			<div>
 				{if isset($selected_filters) && $n_filters > 0}

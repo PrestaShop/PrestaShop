@@ -1151,7 +1151,10 @@ class CartCore extends ObjectModel
 						$tmp = $shipping;
 
 					if ($shipping <= $tmp)
+					{
 						$id_carrier = (int)($row['id_carrier']);
+						$tmp = $shipping;
+				}
 				}
 				else // by price
 				{
@@ -1161,9 +1164,12 @@ class CartCore extends ObjectModel
 						$tmp = $shipping;
 
 					if ($shipping <= $tmp)
+					{
 						$id_carrier = (int)($row['id_carrier']);
+						$tmp = $shipping;
 				}
 			}
+		}
 		}
 
 		if (empty($id_carrier))

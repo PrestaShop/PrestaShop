@@ -26,9 +26,9 @@
 */
 
 require_once(SETTINGS_FILE);
-include_once(INSTALL_PATH.'/classes/GetVersionFromDb.php');
+require_once(INSTALL_PATH.'/classes/GetVersionFromDb.php');
 
-include(INSTALL_PATH.'/classes/LanguagesManager.php');
+require_once(INSTALL_PATH.'/classes/LanguagesManager.php');
 $lm = new LanguageManager(INSTALL_PATH.'/langs/list.xml');
 $_LANG = array();
 $_LIST_WORDS = array();

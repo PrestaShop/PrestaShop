@@ -249,7 +249,7 @@ class ProductCore extends ObjectModel
 		'cache_has_attachments' => 'isBool'
 	);
 	protected $fieldsRequiredLang = array('link_rewrite', 'name');
-	/* Description short is limited to 400 chars (but can be configured in Preferences Tab), but without html, so it can't be generic */
+	/* Description short is limited to 800 chars (but can be configured in Preferences Tab), but without html, so it can't be generic */
 	protected $fieldsSizeLang = array('meta_description' => 255, 'meta_keywords' => 255,
 		'meta_title' => 128, 'link_rewrite' => 128, 'name' => 128, 'available_now' => 255, 'available_later' => 255);
 	protected $fieldsValidateLang = array(
@@ -550,14 +550,14 @@ class ProductCore extends ObjectModel
 	{
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
 		if ($limit <= 0)
-			$limit = 400;
+			$limit = 800;
 		if (!is_array($this->description_short))
 			$this->description_short = array();
 		foreach ($this->description_short as $k => $value)
 			if (Tools::strlen(strip_tags($value)) > $limit)
 			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).'->description: length > '.$limit.' for language '.$k.')');
-				return $errorReturn ? get_class($this).'->'.Tools::displayError('description: length >').' '.$limit.' '.Tools::displayError('for language').' '.$k : false;
+				if ($die) die (Tools::displayError().' ('.get_class($this).'->description_short: length > '.$limit.' for language '.$k.')');
+				return $errorReturn ? get_class($this).'->'.Tools::displayError('description_short: length >').' '.$limit.' '.Tools::displayError('for language').' '.$k : false;
 			}
 		return parent::validateFieldsLang($die, $errorReturn);
 	}
@@ -1676,13 +1676,26 @@ class ProductCore extends ObjectModel
 		$cart_quantity = 0;
 		if ((int)($id_cart))
 		{
-			if (!isset(self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)]) OR self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)] !=  (int)($quantity))
-				self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			$condition = '';
+			$cache_name = (int)($id_cart).'_'.(int)($id_product);
+			
+			if(Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'))
+			{
+				$cache_name = (int)($id_cart).'_'.(int)($id_product).'_'.(int)($id_product_attribute);
+				$condition = ' AND `id_product_attribute` = '.(int)($id_product_attribute);
+			}
+				
+			if (!isset(self::$_cart_quantity[$cache_name]) OR self::$_cart_quantity[$cache_name] !=  (int)($quantity))
+			{
+				self::$_cart_quantity[$cache_name] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT SUM(`quantity`)
 				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product` = '.(int)($id_product).' AND `id_cart` = '.(int)($id_cart)
+				WHERE `id_product` = '.(int)($id_product).' 
+				AND `id_cart` = '.(int)($id_cart).' '.$condition					
 			);
-			$cart_quantity = self::$_cart_quantity[(int)($id_cart).'_'.(int)($id_product)];
+				
+				$cart_quantity = self::$_cart_quantity[$cache_name];
+		}
 		}
 		$quantity = ($id_cart AND $cart_quantity) ? $cart_quantity : $quantity;
 		$id_currency = (int)(Validate::isLoadedObject($context->currency) ? $context->currency->id : Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -3402,10 +3415,10 @@ class ProductCore extends ObjectModel
 	*/
 	public function setCoverWs($id_image)
 	{
-		Db::getInstance()->ExecuteS('UPDATE `'._DB_PREFIX_.'image`
+		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'image`
 									SET `cover` = 0 WHERE `id_product` = '.(int)($this->id).'
 									');
-		Db::getInstance()->ExecuteS('UPDATE `'._DB_PREFIX_.'image`
+		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'image`
 									SET `cover` = 1 WHERE `id_product` = '.(int)($this->id).' AND `id_image` = '.(int)$id_image);
 		return true;
 	}

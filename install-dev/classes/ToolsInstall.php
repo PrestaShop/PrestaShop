@@ -40,28 +40,26 @@ class ToolsInstall
 	{
 		// Don't include theses files if classes are already defined
 		if (!class_exists('Validate', false))
-		include_once(INSTALL_PATH.'/../classes/Validate.php');
+			require_once(INSTALL_PATH.'/../classes/Validate.php');
 
 		if (!class_exists('Db', false))
-		include_once(INSTALL_PATH.'/../classes/Db.php');
+			require_once(INSTALL_PATH.'/../classes/Db.php');
 
 		if (!class_exists('MySQL', false))
-		include_once(INSTALL_PATH.'/../classes/MySQL.php');
+			require_once(INSTALL_PATH.'/../classes/MySQL.php');
 		
 		if($posted)
 		{
 			// Check POST data...
 			$data_check = array(
-				!isset($_GET['server']) OR empty($_GET['server']),
-				!Validate::isMailName($_GET['server']),
-				!isset($_GET['type']) OR empty($_GET['type']),
-				!Validate::isMailName($_GET['type']),
-				!isset($_GET['name']) OR empty($_GET['name']),
-				!Validate::isMailName($_GET['name']),
-				!isset($_GET['login']) OR empty($_GET['login']),
-				!Validate::isMailName($_GET['login']),
-				!isset($_GET['password'])
+				!isset($_GET['server']) OR empty($_GET['server']) OR !Validate::isUrl($_GET['server']),
+				!isset($_GET['engine']) OR empty($_GET['engine']) OR !Validate::isMySQLEngine($_GET['engine']),
+				!isset($_GET['name']) OR empty($_GET['name']) OR !Validate::isUnixName($_GET['name']),
+				!isset($_GET['login']) OR empty($_GET['login']) OR !Validate::isUnixName($_GET['login']),
+				!isset($_GET['password']),
+				!isset($_GET['tablePrefix']) OR !Validate::isTablePrefix($_GET['tablePrefix']),
 			);
+
 			foreach ($data_check AS $data)
 				if ($data)
 					return 8;
@@ -100,9 +98,9 @@ class ToolsInstall
 	
 	public static function sendMail($smtpChecked, $smtpServer, $content, $subject, $type, $to, $from, $smtpLogin, $smtpPassword, $smtpPort = 25, $smtpEncryption)
 	{
-		include(INSTALL_PATH.'/../tools/swift/Swift.php');
-		include(INSTALL_PATH.'/../tools/swift/Swift/Connection/SMTP.php');
-		include(INSTALL_PATH.'/../tools/swift/Swift/Connection/NativeMail.php');
+		require_once(INSTALL_PATH.'/../tools/swift/Swift.php');
+		require_once(INSTALL_PATH.'/../tools/swift/Swift/Connection/SMTP.php');
+		require_once(INSTALL_PATH.'/../tools/swift/Swift/Connection/NativeMail.php');
 		
 		$swift = NULL;
 		$result = NULL;

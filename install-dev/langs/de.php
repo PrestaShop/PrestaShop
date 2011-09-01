@@ -283,3 +283,4 @@ $_LANG['In this aim, use our'] = 'Verwenden Sie dazu unseren';
 $_LANG['Additional Benefits'] = 'Exklusiv Angebot';
 $_LANG['Exclusive offers dedicated to PrestaShop merchants'] = 'Exklusiv Angebot f√ºr die Verk√§ufer PrestaShop';
 $_LANG['PHP magic quotes option is off (recommended)'] = 'Die PHP-Option "magic quotes" ist deaktiviert (empfohlen)';
+$_LANG['Other activity...'] = 'Andere activiteit...';
