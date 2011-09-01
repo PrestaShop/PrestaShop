@@ -367,12 +367,12 @@ function verifyDbAccess ()
 		url: "model.php",
 		data: 
 			"method=checkDB"
-			+"&type=MySQL"
 			+"&server="+ $("#dbServer").val()
 			+"&login="+ $("#dbLogin").val()
 			+"&password="+encodeURIComponent($("#dbPassword").val())
 			+"&engine="+$("#dbEngine option:selected").val()
-			+"&name="+ $("#dbName").val(),
+			+ "&name=" + $("#dbName").val()
+			+ "&tablePrefix=" + $("#db_prefix").val(),
 		success: function(ret)
 		{
 			ret = ret.getElementsByTagName('action')[0];

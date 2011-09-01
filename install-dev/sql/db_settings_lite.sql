@@ -152,7 +152,7 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (80, 'PS_ORDER_PROCESS_TYPE', 0, NOW(), NOW()),
 (81, 'PS_SPECIFIC_PRICE_PRIORITIES', 'id_shop;id_currency;id_country;id_group', NOW(), NOW()),
 (82, 'PS_TAX_DISPLAY', 0, NOW(), NOW()),
-(83, 'PS_SMARTY_FORCE_COMPILE', 1, NOW(), NOW()),
+(83, 'PS_SMARTY_FORCE_COMPILE', 0, NOW(), NOW()),
 (84, 'PS_DISTANCE_UNIT', 'km', NOW(), NOW()),
 (85, 'PS_STORES_DISPLAY_CMS', 1, NOW(), NOW()),
 (86, 'PS_STORES_DISPLAY_FOOTER', 1, NOW(), NOW()),

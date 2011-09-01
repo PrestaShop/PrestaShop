@@ -1509,7 +1509,7 @@ CREATE TABLE `PREFIX_tax_lang` (
   UNIQUE KEY `tax_lang_index` (`id_tax`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE PREFIX_timezone (
+CREATE TABLE `PREFIX_timezone` (
 	id_timezone int(10) unsigned NOT NULL auto_increment,
 	name VARCHAR(32) NOT NULL,
 	PRIMARY KEY timezone_index(`id_timezone`)

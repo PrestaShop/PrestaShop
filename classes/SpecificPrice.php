@@ -138,7 +138,7 @@ class SpecificPriceCore extends ObjectModel
 					AND
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
-				ORDER BY `score` DESC, `from_quantity` DESC');
+				ORDER BY `from_quantity` DESC, `score` DESC, `from_quantity` DESC');
 		}
 		return self::$_specificPriceCache[$key];
 	}
@@ -192,19 +192,20 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `score`  DESC, `from_quantity` DESC
+					ORDER BY `from_quantity` DESC, `score` DESC
 		');
 
 		$targeted_prices = array();
-		$max_score = NULL;
+		$last_quantity = NULL; 
 
 		foreach($res as $specific_price)
 		{
-		    if (!isset($max_score))
-		        $max_score = $specific_price['score'];
-		    else if ($max_score != $specific_price['score'])
+			if (!isset($last_quantity))
+				 $last_quantity = $specific_price['from_quantity']; 
+			else if ($last_quantity == $specific_price['from_quantity'])
 		        break;
 
+			$last_quantity = $specific_price['from_quantity']; 
             if ($specific_price['from_quantity'] > 1)
     		    $targeted_prices[] = $specific_price;
 		}

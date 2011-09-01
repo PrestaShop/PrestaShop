@@ -26,9 +26,14 @@
 */
 
 /* Getting cookie or logout */
-include(dirname(__FILE__).'/../../config/config.inc.php');
+/*include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/blocklayered.php');
+include(dirname(__FILE__).'/blocklayered.php');*/
+
+/* Clean categoryBox before use */
+if (isset($_GET['categoryBox']) AND is_array($_GET['categoryBox']))
+	foreach ($_GET['categoryBox'] AS &$value)
+		$value = (int)$value;
 
 $blockLayered = new BlockLayered();
 echo $blockLayered->ajaxCallBackOffice((isset($_GET['categoryBox']) AND is_array($_GET['categoryBox'])) ? $_GET['categoryBox'] : array(), 

@@ -1,5 +1,5 @@
 <?php
-	include('../classes/Tools.php');
+	require_once('../classes/Tools.php');
 	if (!isset($_GET['language']))
 		$_GET['language'] = 0;
 	function getPreinstallXmlLang($object, $field)

@@ -28,7 +28,7 @@
 oosHookJsCodeFunctions.push('oosHookJsCodeMailAlert');
 
 function clearText() {
-	if ($('#oos_customer_email').val() == '{l s='your@email.com' mod='mailalerts'}')
+	if ($('#oos_customer_email').val() == '{/literal}{l s='your@email.com' mod='mailalerts'}{literal}')
 		$('#oos_customer_email').val('');
 }
 

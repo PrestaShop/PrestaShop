@@ -161,7 +161,7 @@ class MondialRelay extends Module
 		else 
 		{
 			// Reactive transport if database wasn't remove at the last uninstall
-			Db::getInstance()->ExecuteS('
+			Db::getInstance()->Execute('
 				UPDATE `'._DB_PREFIX_.'carrier` c, `'._DB_PREFIX_.'mr_method` m
 					SET `deleted` = 0
 					WHERE c.id_carrier = m.id_carrier');
@@ -368,7 +368,8 @@ class MondialRelay extends Module
 		self::$modulePath =	_PS_MODULE_DIR_. 'mondialrelay/';
 		self::$MRToken = sha1('mr'._COOKIE_KEY_.'mrAgain');
 	
-		$protocol = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
+		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
+			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		
 		$endURL = __PS_BASE_URI__.'/modules/mondialrelay/';
 	
@@ -647,16 +648,13 @@ class MondialRelay extends Module
 				<img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('To create a Mondial Relay carrier').
 			'</legend>
 		- '.$this->l('Enter and save your Mondial Relay account settings').'<br />
-		- '.$this->l('Create a Carrier').'<br />
+				- '.$this->l('Create a Carrier using the form "add a carrier" below').'<br />
 				- '.$this->l('Define a price for your carrier on').' 
 					<a href="index.php?tab=AdminCarriers&token='.Tools::getAdminToken('AdminCarriers'.(int)(Tab::getIdFromClassName('AdminCarriers')).
 					(int)$this->context->employee->id).'" class="green">'.$this->l('The Carrier page').'</a><br />
 				- '.$this->l('To generate labels, you must have a valid and registered address of your store on your').
 					' <a href="index.php?tab=AdminContact&token='.Tools::getAdminToken('AdminContact'.(int)(Tab::getIdFromClassName('AdminContact')).
 					(int)$this->context->employee->id).'" class="green">'.$this->l('contact page').'</a><br />
-				<p>
-					'.$this->l('URL Cron Task:').' '.Tools::getHttpHost(true, true)._MODULE_DIR_.$this->name.'/cron.php?secure_key='.Configuration::get('MONDIAL_RELAY_SECURE_KEY').
-				'</p>
 		</fieldset>
 		<br class="clear" />
 		<div class="PS_MRFormType">'.
@@ -666,7 +664,7 @@ class MondialRelay extends Module
 			$this->settingsstateorderForm().
 		'</div>
 		<div class="PS_MRFormType">'.
-			$this->personalizeFormFields().
+			$this->advancedSettings().
 		'</div>
 		<div class="PS_MRFormType">'.
 			$this->addMethodForm().
@@ -894,7 +892,32 @@ class MondialRelay extends Module
 	}
 	
 	/*
+	** Display advanced settings form
+	*/
+	public function advancedSettings()
+	{
+		$form = '';
+		
+		$form .= '
+			<fieldset class="PS_MRFormStyle">
+				<legend>
+					<img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Advanced Settings'). ' - 
+					<a href="javascript:void(0);" id="PS_MRDisplayPersonalizedOptions"><font style="color:#00b511;">'.$this->l('Click to display / hide the options').'</font>	</a>'.
+			'</legend>
+			<div id="PS_MRAdvancedSettings">
+				<p>
+					'.$this->l('URL Cron Task:').' '.Tools::getHttpHost(true, true)
+					._MODULE_DIR_.$this->name.'/cron.php?secure_key='.
+					Configuration::get('MONDIAL_RELAY_SECURE_KEY').
+				'</p>
+			</div>
+			</fieldset>';
+		return $form;	
+	}
+	
+	/*
 	** Form to allow personalization fields sent for MondialRelay
+	** Not used anymore but still present if needed
 	*/
 	public function personalizeFormFields()
 	{

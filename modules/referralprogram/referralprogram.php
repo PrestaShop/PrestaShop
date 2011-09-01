@@ -279,7 +279,7 @@ class ReferralProgram extends Module
 			<p>
 				 <div style="float: left"><label class="t" for="discount_description">'.$this->l('Voucher description:').'</label></div>';
 			$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-			$languages = Language::getLanguages(false);
+			$languages = Language::getLanguages(true);
 
 			foreach ($languages AS $language)
 				$this->_html .= '
@@ -489,7 +489,8 @@ class ReferralProgram extends Module
 		}
 
 		$html = '
-		<h2>'.$this->l('Referral program').'</h2>
+		<div class="clear">&nbsp;</div>
+		<h2>'.$this->l('Referral program').' ('.count($friends).')</h2>
 		<h3>'.(isset($sponsor) ? $this->l('Customer\'s sponsor:').' <a href="index.php?tab=AdminCustomers&id_customer='.(int)$sponsor->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'">'.$sponsor->firstname.' '.$sponsor->lastname.'</a>' : $this->l('No one has sponsored this customer.')).'</h3>';
 
 		if ($friends AND sizeof($friends))

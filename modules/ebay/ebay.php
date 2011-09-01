@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.2.1';
+		$this->version = '1.2.2';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -541,8 +541,10 @@ class Ebay extends Module
 
 
 		// Displaying Information from Prestashop
-		$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
+		$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 2)));
 		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+		if (!Validate::isCleanHtml($prestashopContent))
+			$prestashopContent = '';
 
 		// Displaying page
 		$this->_html .= '<fieldset>
@@ -1213,8 +1215,36 @@ class Ebay extends Module
 					$("#button_ebay_sync").attr("value", "'.$this->l('Sync with eBay').'\n(" + nbProducts + " '.$this->l('products').')");
 				});
 			});
+
+			function eBaySync()
+			{
+				$(".categorySync").attr("disabled", "true");
+				$("#ebay_sync_mode1").attr("disabled", "true");
+				$("#ebay_sync_mode2").attr("disabled", "true");
+				$("#ebay_sync_option_resync").attr("disabled", "true");
+				$("#button_ebay_sync").attr("disabled", "true");
+				$("#button_ebay_sync").hide("slow");
+				$("#resultSync").html("<img src=\"../modules/ebay/loading-small.gif\" border=\"0\" />");
+				eBaySyncProduct();
+			}
+
+			function eBaySyncProduct()
+			{
+				$.ajax({
+				  url: \''._MODULE_DIR_.'ebay/ajax/eBaySyncProduct.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&time='.pSQL(date('Ymdhis').rand()).'\',
+				  success: function(data)
+				  {
+					tab = data.split("|");
+					$("#resultSync").html(tab[1]);
+					if (tab[0] != "OK")
+						eBaySyncProduct();
+				  }
+				});
+			}
 		</script>
 		
+		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
+
 		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=4&section=sync" method="post" class="form" id="configForm4">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('You will now push your products on eBay.').' <b>'.$this->l('Reminder,').'</b> '.$this->l('you will not have to pay any fees if you have a shop on eBay.').'</h4>
@@ -1269,7 +1299,10 @@ class Ebay extends Module
 					$(document).ready(function() {
 						$("#catSync").show("slow");
 						$("#ebay_sync_mode2").attr("checked", true);
-					});
+						';
+				if (Tools::getValue('section') == 'sync')
+					$html .= 'eBaySync();';
+				$html .= '});
 				</script>';
 			}
 
@@ -1293,16 +1326,14 @@ class Ebay extends Module
 		// Update Sync Option
 		Configuration::updateValue('EBAY_SYNC_OPTION_RESYNC', (Tools::getValue('ebay_sync_option_resync') == 1 ? 1 : 0));
 
+		// Empty error result
+		Configuration::updateValue('EBAY_SYNC_LAST_PRODUCT', 0);
+		@unlink('../modules/ebay/ajax/_ebaySyncError.log.php');
+
 		if ($_POST['ebay_sync_mode'] == 'A')
 		{
 			// Update Sync Mod
 			Configuration::updateValue('EBAY_SYNC_MODE', 'A');
-
-			// Retrieve product list for eBay (which have matched categories)
-			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `quantity` > 0 AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
-
-			// Send each product on eBay
-			$this->_syncProducts($productsList);
 		}
 		else
 		{
@@ -1313,13 +1344,102 @@ class Ebay extends Module
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', array('sync' => 0), 'UPDATE', '');
 			foreach ($_POST['category'] as $id_category)
 				Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', array('sync' => 1), 'UPDATE', '`id_category` = '.(int)$id_category);
-			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `quantity` > 0 AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
-
-			// Send each product on eBay
-			$this->_syncProducts($productsList);
 		}
 	}
 
+	public function ajaxProductSync()
+	{
+		// Take the next product
+		$where = '';
+		if ((int)Configuration::get('EBAY_SYNC_LAST_PRODUCT') > 0)
+			$where = 'AND `id_product` > '.(int)Configuration::get('EBAY_SYNC_LAST_PRODUCT');
+
+
+		if (Configuration::get('EBAY_SYNC_MODE') == 'A')
+		{
+			// Retrieve total nb products for eBay (which have matched categories)
+			$nbProductsTotal = Db::getInstance()->getValue('
+			SELECT COUNT(`id_product`)
+			FROM `'._DB_PREFIX_.'product`
+			WHERE `quantity` > 0 AND `active` = 1
+			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
+
+			// Retrieve products list for eBay (which have matched categories)				
+			$productsList = Db::getInstance()->ExecuteS('
+			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
+			WHERE `quantity` > 0 AND `active` = 1
+			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)
+			AND `id_product` NOT IN (SELECT `id_product` FROM `'._DB_PREFIX_.'ebay_product`)
+			'.$where.'
+			ORDER BY `id_product`
+			LIMIT 1');
+
+			// How Many Product Less ?			
+			$nbProductsLess = Db::getInstance()->getValue('
+			SELECT COUNT(`id_product`) FROM `'._DB_PREFIX_.'product`
+			WHERE `quantity` > 0 AND `active` = 1
+			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)
+			AND `id_product` NOT IN (SELECT `id_product` FROM `'._DB_PREFIX_.'ebay_product`)
+			'.$where);
+		}
+		else
+		{
+			// Retrieve total nb products for eBay (which have matched categories)
+			$nbProductsTotal = Db::getInstance()->getValue('
+			SELECT COUNT(`id_product`)
+			FROM `'._DB_PREFIX_.'product`
+			WHERE `quantity` > 0 AND `active` = 1
+			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
+
+			// Retrieve products list for eBay (which have matched categories)				
+			$productsList = Db::getInstance()->ExecuteS('
+			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
+			WHERE `quantity` > 0 AND `active` = 1
+			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)
+			AND `id_product` NOT IN (SELECT `id_product` FROM `'._DB_PREFIX_.'ebay_product`)
+			'.$where.'
+			ORDER BY `id_product`
+			LIMIT 1');
+
+			// How Many Product Less ?			
+			$nbProductsLess = Db::getInstance()->getValue('
+			SELECT COUNT(`id_product`) FROM `'._DB_PREFIX_.'product`
+			WHERE `quantity` > 0 AND `active` = 1
+			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)
+			AND `id_product` NOT IN (SELECT `id_product` FROM `'._DB_PREFIX_.'ebay_product`)
+			'.$where);
+		}
+
+			// Send each product on eBay
+		if (count($productsList) >= 1)
+		{
+			// Save the last product
+			Configuration::updateValue('EBAY_SYNC_LAST_PRODUCT', (int)$productsList[0]['id_product']);
+
+			// Sync product
+			$this->_syncProducts($productsList);
+
+			echo 'KO|<br /><br /> <img src="../modules/ebay/loading-small.gif" border="0" /> Produits : '.($nbProductsTotal - $nbProductsLess + 1).' / '.$nbProductsTotal.'<br /><br />';
+		}
+		else
+		{
+			echo 'OK|'.$this->displayConfirmation($this->l('Settings updated').' ('.$this->l('Option').' '.Configuration::get('EBAY_SYNC_MODE').' : '.($nbProductsTotal - $nbProductsLess).' / '.$nbProductsTotal.' '.$this->l('product(s) sync with eBay').')');
+			if (file_exists('_ebaySyncError.log.php'))
+			{
+				global $tab_error;
+				include('_ebaySyncError.log.php');
+				foreach ($tab_error as $error)
+				{
+					$productsDetails = '<br /><u>'.$this->l('Product(s) concerned').' :</u>';
+					foreach ($error['products'] as $product)
+						$productsDetails .= '<br />- '.$product;
+					echo $this->displayError($error['msg'].'<br />'.$productsDetails);
+	}
+				echo '<style>#content .alert { text-align: left; width: 875px; }</style>';
+				@unlink('_ebaySyncError.log.php');
+			}
+		}
+	}
 
 	private function _syncProducts($productsList)
 	{
@@ -1331,6 +1451,13 @@ class Ebay extends Module
 		$date = date('Y-m-d H:i:s');
 		$ebay = new eBayRequest();
 		$categoryDefaultCache = array();
+
+		// Get errors back
+		if (file_exists('_ebaySyncError.log.php'))
+		{
+			global $tab_error;
+			include('_ebaySyncError.log.php');
+		}
 
 		// Up the time limit
 		@set_time_limit(3600);
@@ -1656,19 +1783,10 @@ class Ebay extends Module
 				$count++;
 			}
 		}
-		if ($count_success > 0)
-			$this->_html .= $this->displayConfirmation($this->l('Settings updated').' ('.$this->l('Option').' '.Configuration::get('EBAY_SYNC_MODE').' : '.$count_success.'/'.$count.' '.$this->l('product(s) sync with eBay').')');
+
 		if ($count_error > 0)
-		{
-			foreach ($tab_error as $error)
-			{
-				$productsDetails = '<br /><u>'.$this->l('Product(s) concerned').' :</u>';
-				foreach ($error['products'] as $product)
-					$productsDetails .= '<br />- '.$product;
-				$this->_html .= $this->displayError($error['msg'].'<br />'.$productsDetails);
+			file_put_contents('_ebaySyncError.log.php', '<?php $tab_error = '.var_export($tab_error, true).'; ?>');
 			}
-		}
-	}
 
 
 	/******************************************************************/

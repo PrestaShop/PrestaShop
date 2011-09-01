@@ -272,11 +272,14 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	 */
 	private function _setRequestDefaultValue()
 	{
+		
 		$this->_fields['list']['Enseigne']['value'] = Configuration::get('MR_ENSEIGNE_WEBSERVICE');
 		$this->_fields['list']['Expe_Langage']['value'] = Configuration::get('MR_LANGUAGE');
+		var_dump(Configuration::get('MR_LANGUAGE'));
 		$this->_fields['list']['Expe_Ad1']['value'] = Configuration::get('PS_MR_SHOP_NAME');
 		$this->_fields['list']['Expe_Ad3']['value'] = Configuration::get('PS_SHOP_ADDR1');
-		$this->_fields['list']['Expe_Ad4']['value'] = Configuration::get('PS_SHOP_ADDR2');
+		// Deleted, cause to many failed for the process
+		// $this->_fields['list']['Expe_Ad4']['value'] = Configuration::get('PS_SHOP_ADDR2');
 		$this->_fields['list']['Expe_Ville']['value'] = Configuration::get('PS_SHOP_CITY');
 		$this->_fields['list']['Expe_CP']['value'] = Configuration::get('PS_SHOP_CODE');
 		$this->_fields['list']['Expe_CP']['params']['id_country'] = Configuration::get('PS_COUNTRY_DEFAULT');
@@ -286,7 +289,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		else
 			$this->_fields['list']['Expe_Pays']['value'] = substr(Configuration::get('PS_SHOP_COUNTRY'), 0, 2);
 			
-		$this->_fields['list']['Expe_Tel1']['value'] = Configuration::get('PS_SHOP_PHONE');
+		$this->_fields['list']['Expe_Tel1']['value'] = str_replace(array('.', ' ', '-'), '', Configuration::get('PS_SHOP_PHONE'));
 		$this->_fields['list']['Expe_Mail']['value'] = Configuration::get('PS_SHOP_EMAIL');
 		$this->_fields['list']['NbColis']['value'] = 1;
 		$this->_fields['list']['CRT_Valeur']['value'] = 0;
@@ -373,7 +376,11 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			foreach($rootCase['list'] as $paramName => &$valueDetailed)
 				if ($paramName != 'Texte' && $paramName != 'Security')
 				{
-					$valueDetailed['value'] = strtoupper(MRTools::replaceAccentedCharacters($valueDetailed['value']));
+					// Mac server make an empty string instead of a cleaned string
+					// TODO : test on windows and linux server
+					$cleanedString = MRTools::replaceAccentedCharacters($valueDetailed['value']);
+					$valueDetailed['value'] = !empty($cleanedString) ? strtoupper($cleanedString) : strtoupper($valueDetailed['value']);
+					
 					// Call a pointer function if exist to do different test
 					if (isset($valueDetailed['methodValidation']) &&
 							method_exists('MRTools', $valueDetailed['methodValidation']) && 
@@ -420,10 +427,13 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		$order->update();
 		
 		$templateVars = array('{followup}' => $trackingURL);
+		$orderState = (Configuration::get('PS_OS_SHIPPING')) ? 
+			Configuration::get('PS_OS_SHIPPING') : 
+			_PS_OS_SHIPPING_;
 					
 		$history = new OrderHistory();
 		$history->id_order = (int)($params['NDossier']);
-		$history->changeIdOrderState(Configuration::get('PS_OS_SHIPPING'), (int)($params['NDossier'])); 
+		$history->changeIdOrderState($orderState, (int)($params['NDossier'])); 
 		$history->id_employee = (int)Context::getContext()->employee->id;
 		$history->addWithemail(true, $templateVars);
 

@@ -142,6 +142,7 @@
   'ModuleGridEngine' => 'override/classes/ModuleGridEngine.php',
   'MySQLCore' => 'classes/MySQL.php',
   'MySQL' => 'override/classes/MySQL.php',
+  'Notification' => 'classes/Notification.php',
   'ObjectModelCore' => 'classes/ObjectModel.php',
   'ObjectModel' => 'override/classes/ObjectModel.php',
   'OrderCore' => 'classes/Order.php',

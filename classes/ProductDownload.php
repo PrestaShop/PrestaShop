@@ -94,7 +94,8 @@ class ProductDownloadCore extends ObjectModel
 	public function delete($deleteFile=false)
 	{
 		if ($deleteFile)
-			$this->deleteFile();
+			return $this->deleteFile();
+		return true;
 	}
 
 	public function getFields()

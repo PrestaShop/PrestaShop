@@ -366,7 +366,7 @@ class ValidateCore
 	*/
 	public static function isCleanHtml($html)
 	{
-		$jsEvent = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave';
+		$jsEvent = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror';
 		return (!preg_match('/<[ \t\n]*script/i', $html) && !preg_match('/<?.*('.$jsEvent.')[ \t\n]*=/i', $html)  && !preg_match('/.*script\:/i', $html));
 	}
 
@@ -673,6 +673,22 @@ class ValidateCore
 		if (!empty($url))
 			return preg_match('/^https?:\/\/[,:#%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
 		return true;
+	}
+
+	public static function isMySQLEngine($engine)
+	{
+		return (in_array($engine, array('InnoDB', 'MyISAM')));
+	}
+	
+	public static function isUnixName($data)
+	{
+		return preg_match('/^[a-z0-9_-]+$/ui', $data);
+	}
+	
+	public static function isTablePrefix($data)
+	{
+		// Even if "-" is theorically allowed, it will be considered a syntax error if you do not add backquotes (`) around the table name
+		return preg_match('/^[a-z0-9_]+$/ui', $data);
 	}
 
 	/**
