@@ -80,24 +80,24 @@ $('document').ready(function(){
 			</div>
 			
 			<div class="send_friend_form_content">
-				<p class="intro_form">{l s='Recipient' mod='sendtoafriend'} :</p>
 				<div id="send_friend_form_error"></div>
 				<div class="form_container">
+					<p class="intro_form">{l s='Recipient' mod='sendtoafriend'} :</p>
 					<p class="text">
-						<label for="friend_name">{l s='Name of your friend' mod='sendtoafriend'}* :</label>
+						<label for="friend_name">{l s='Name of your friend' mod='sendtoafriend'} <sup class="required">*</sup> :</label>
 						<input id="friend_name" name="friend_name" type="text" value=""/>
 					</p>
 					<p class="text">
-						<label for="friend_email">{l s='E-mail address of your friend' mod='sendtoafriend'}* :</label>
+						<label for="friend_email">{l s='E-mail address of your friend' mod='sendtoafriend'} <sup class="required">*</sup> :</label>
 						<input id="friend_email" name="friend_email" type="text" value=""/>
 					</p>
-					<p class="txt_required">* {l s='Required fields' mod='sendtoafriend'}</p>
-					<p class="submit">
-						<input id="id_product_comment_send" name="id_product" type="hidden" value='{$stf_id_product}'></input>
-						<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='sendtoafriend'}</a>&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;
-						<button id="sendEmail" name="sendEmail" type="submit">{l s='Send' mod='sendtoafriend'}</button>
-					</p>
+					<p class="txt_required"><sup class="required">*</sup> {l s='Required fields' mod='sendtoafriend'}</p>
 				</div>
+				<p class="submit">
+					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$stf_id_product}'></input>
+					<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='sendtoafriend'}</a>&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;
+					<input id="sendEmail" class="button" name="sendEmail" type="submit" value="{l s='Send' mod='sendtoafriend'}" />
+				</p>
 			</div>
 	</div>
 </div>
