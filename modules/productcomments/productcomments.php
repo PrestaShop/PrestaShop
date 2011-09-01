@@ -766,6 +766,9 @@ class ProductComments extends Module
 
 	public function hookExtraProductComparison($params)
 	{
+		require_once(dirname(__FILE__).'/ProductComment.php');
+		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
+
 		$list_grades = array();
 		$list_product_grades = array();
 		$list_product_average = array();
