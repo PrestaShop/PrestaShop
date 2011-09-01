@@ -430,7 +430,6 @@ abstract class DbCore
 
 		$this->_result = false;
 		$result = $this->query($sql);
-		$this->_lastQuery = $sql;
 		if ($use_cache AND _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);
 		return $result;
