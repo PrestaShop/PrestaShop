@@ -97,7 +97,7 @@ class SupplierControllerCore extends FrontController
 		
 				$suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
 				foreach ($suppliers AS &$row)
-					$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_supplier'];;
+					$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];;
 
 				$this->context->smarty->assign(array(
 					'pages_nb' => ceil($nbProducts / (int)$this->n),
