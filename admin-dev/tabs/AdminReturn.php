@@ -235,7 +235,7 @@ class AdminReturn extends AdminTab
 					{
 						echo '<tr>
 						<td colspan="4">';
-						if ($type == _CUSTOMIZE_FILE_)
+						if ($type == Product::CUSTOMIZE_FILE)
 						{
 							$i = 0;
 							echo '<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">';
@@ -245,7 +245,7 @@ class AdminReturn extends AdminTab
 									</li>';
 							echo '</ul>';
 						}
-						elseif ($type == _CUSTOMIZE_TEXTFIELD_)
+						elseif ($type == Product::CUSTOMIZE_TEXTFIELD)
 						{
 							$i = 0;
 							echo '<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">';

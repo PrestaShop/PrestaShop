@@ -200,6 +200,18 @@ class AdminPerformance extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+		if (Tools::isSubmit('submitFeaturesDetachables'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				if (!Combination::isActuallyUsed())
+					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
+				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		return parent::postProcess();
 	}
 
@@ -264,6 +276,51 @@ class AdminPerformance extends AdminTab
 
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitSmartyConfig" class="button" />
+				</div>
+			</fieldset>
+		</form>';
+		
+		echo '
+		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;" id="featuresDetachables">
+			<fieldset>
+				<legend><img src="../img/admin/tab-plugins.gif" /> '.$this->l('Features detachables').'</legend>
+				
+				<p>'.$this->l('Some features can be disabled in order to improve performance.').'</p>
+				
+				<label>'.$this->l('Combination:').'</label>
+				<div class="margin-form">
+					<input type="radio" name="combination" id="combination_1" value="1" '.(Combination::isFeatureActive() ? 'checked="checked"' : '').' '.(Combination::isActuallyUsed() ? 'disabled="disabled"' : '').' /> <label class="t"><img src="../img/admin/enabled.gif" alt="" /> '.$this->l('Yes').'</label>
+					<input type="radio" name="combination" id="combination_0" value="0" '.(!Combination::isFeatureActive() ? 'checked="checked"' : '').' '.(Combination::isActuallyUsed() ? 'disabled="disabled"' : '').' /> <label class="t"><img src="../img/admin/disabled.gif" alt="" /> '.$this->l('No').'</label>
+		';
+		if (Combination::isActuallyUsed())
+			$this->displayWarning($this->l('This feature can\'t be disabled beacause this is currently in use.'));
+		echo '
+					<p>
+						'.$this->l('These features are going to be disabled:').'
+						<ul>
+							<li>'.$this->l('Combinations tab on product page').'</li>
+							<li>'.$this->l('Attribute').'</li>
+							<li>'.$this->l('Group of attribute').'</li>
+						</ul>
+					</p>
+				</div>
+				
+				<label>'.$this->l('Feature:').'</label>
+				<div class="margin-form">
+					<input type="radio" name="feature" id="feature_1" value="1" '.(Feature::isFeatureActive() ? 'checked="checked"' : '').' /> <label class="t"><img src="../img/admin/enabled.gif" alt="" /> '.$this->l('Yes').'</label>
+					<input type="radio" name="feature" id="feature_0" value="0" '.(!Feature::isFeatureActive() ? 'checked="checked"' : '').' /> <label class="t"><img src="../img/admin/disabled.gif" alt="" /> '.$this->l('No').'</label>
+					<p>
+						'.$this->l('These features are going to be disabled:').'
+						<ul>
+							<li>'.$this->l('Features tab on product page').'</li>
+							<li>'.$this->l('Feature').'</li>
+							<li>'.$this->l('Feature value').'</li>
+						</ul>
+					</p>
+				</div>
+
+				<div class="margin-form">
+					<input type="submit" value="'.$this->l('   Save   ').'" name="submitFeaturesDetachables" class="button" />
 				</div>
 			</fieldset>
 		</form>';

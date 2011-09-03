@@ -54,11 +54,11 @@ class ParentOrderControllerCore extends FrontController
 	{
 		global $isVirtualCart;
 		parent::preProcess();
-		
+
 		// Redirect to the good order process
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 AND Dispatcher::getInstance()->getController() != 'order')
 			Tools::redirect('index.php?controller=order');
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 AND Dispatcher::getInstance()->getController() != 'order-opc')
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 AND Dispatcher::getInstance()->getController() != 'orderopc')
 		{
 			if (isset($_GET['step']) AND $_GET['step'] == 3)
 				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');
@@ -88,7 +88,7 @@ class ParentOrderControllerCore extends FrontController
 
 		if ($this->nbProducts)
 		{
-			if (Tools::isSubmit('submitAddDiscount') AND Tools::getValue('discount_name'))
+			if (Tools::isSubmit('submitAddDiscount') && Tools::getValue('discount_name') && Discount::isFeatureActive())
 			{
 				$discountName = Tools::getValue('discount_name');
 				if (!Validate::isDiscountName($discountName))
@@ -114,7 +114,7 @@ class ParentOrderControllerCore extends FrontController
 					'discount_name' => Tools::safeOutput($discountName)
 				));
 			}
-			elseif (isset($_GET['deleteDiscount']) AND Validate::isUnsignedId($_GET['deleteDiscount']))
+			elseif (isset($_GET['deleteDiscount']) && Validate::isUnsignedId($_GET['deleteDiscount']) && Discount::isFeatureActive())
 			{
 				$this->context->cart->deleteDiscount((int)($_GET['deleteDiscount']));
 				Tools::redirect('index.php?controller=order-opc');
@@ -235,23 +235,26 @@ class ParentOrderControllerCore extends FrontController
 		$customizedDatas = Product::getAllCustomizedDatas($this->context->cart->id);
 
 		// override customization tax rate with real tax (tax rules)
-		foreach($summary['products'] AS &$productUpdate)
+		if ($customizedDatas)
 		{
-			$productId = (int)(isset($productUpdate['id_product']) ? $productUpdate['id_product'] : $productUpdate['product_id']);
-			$productAttributeId = (int)(isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id']);
+			foreach($summary['products'] AS &$productUpdate)
+			{
+				$productId = (int)(isset($productUpdate['id_product']) ? $productUpdate['id_product'] : $productUpdate['product_id']);
+				$productAttributeId = (int)(isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id']);
+	
+				if (isset($customizedDatas[$productId][$productAttributeId]))
+					$productUpdate['tax_rate'] = Tax::getProductTaxRate($productId, $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			}
 
-			if (isset($customizedDatas[$productId][$productAttributeId]))
-				$productUpdate['tax_rate'] = Tax::getProductTaxRate($productId, $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			Product::addCustomizationPrice($summary['products'], $customizedDatas);
 		}
-
-		Product::addCustomizationPrice($summary['products'], $customizedDatas);
-
+		
 		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency($this->context->cart->id_currency)))
 		{
 			$discounts = $this->context->cart->getDiscounts();
 			$total_free_ship =  $free_ship - ($summary['total_products_wt'] + $summary['total_discounts']);
 			foreach ($discounts as $discount)
-				if ($discount['id_discount_type'] == 3)
+				if ($discount['id_discount_type'] == Discount::FREE_SHIPPING)
 				{
 					$total_free_ship = 0;
 					break;
@@ -271,8 +274,8 @@ class ParentOrderControllerCore extends FrontController
 			'shippingCost' => $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
 			'shippingCostTaxExc' => $this->context->cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
 			'customizedDatas' => $customizedDatas,
-			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
-			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
+			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'lastProductAdded' => $this->context->cart->getLastProduct(),
 			'displayVouchers' => Discount::getVouchersToCartDisplay($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0)),
 			'currencySign' => $this->context->currency->sign,

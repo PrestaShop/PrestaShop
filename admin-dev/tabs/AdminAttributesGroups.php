@@ -50,20 +50,26 @@ class AdminAttributesGroups extends AdminTab
 
 	public function display()
 	{
-		if ((isset($_POST['submitAddattribute']) AND sizeof($this->adminAttributes->_errors))
-			OR isset($_GET['updateattribute']) OR isset($_GET['addattribute']))
+		if (Combination::isFeatureActive())
 		{
-			$this->adminAttributes->displayForm($this->token);
-			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			if ((isset($_POST['submitAddattribute']) AND sizeof($this->adminAttributes->_errors))
+				OR isset($_GET['updateattribute']) OR isset($_GET['addattribute']))
+			{
+				$this->adminAttributes->displayForm($this->token);
+				echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+			}
+			else
+				parent::display();
 		}
 		else
-		{
-			parent::display();
-		}
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 	}
 	
 	public function postProcess()
 	{	
+		if (!Combination::isFeatureActive())
+			return;
+		
 		$this->adminAttributes->tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, $this->id);
 		$this->adminAttributes->postProcess($this->token);
 
@@ -166,6 +172,12 @@ class AdminAttributesGroups extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
+		if (!Combination::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))

@@ -256,12 +256,12 @@ abstract class PaymentModuleCore extends Module
 						$customizationText = '';
 						foreach ($customizedDatas[$product['id_product']][$product['id_product_attribute']] AS $customization)
 						{
-							if (isset($customization['datas'][_CUSTOMIZE_TEXTFIELD_]))
-								foreach ($customization['datas'][_CUSTOMIZE_TEXTFIELD_] AS $text)
+							if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
+								foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] AS $text)
 									$customizationText .= $text['name'].':'.' '.$text['value'].'<br />';
 
-							if (isset($customization['datas'][_CUSTOMIZE_FILE_]))
-								$customizationText .= sizeof($customization['datas'][_CUSTOMIZE_FILE_]) .' '. Tools::displayError('image(s)').'<br />';
+							if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
+								$customizationText .= sizeof($customization['datas'][Product::CUSTOMIZE_FILE]) .' '. Tools::displayError('image(s)').'<br />';
 
 							$customizationText .= '---<br />';
 						}
@@ -301,13 +301,13 @@ abstract class PaymentModuleCore extends Module
 				{
 					$objDiscount = new Discount((int)$discount['id_discount']);
 					$value = $objDiscount->getValue(sizeof($discounts), $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), $order->total_shipping, $cart->id);
-					if ($objDiscount->id_discount_type == 2 AND in_array($objDiscount->behavior_not_exhausted, array(1,2)))
+					if ($objDiscount->id_discount_type == Discount::AMOUNT AND in_array($objDiscount->behavior_not_exhausted, array(1,2)))
 						$shrunk = true;
 
 					if ($shrunk AND ($total_discount_value + $value) > ($order->total_products_wt + $order->total_shipping + $order->total_wrapping))
 					{
 						$amount_to_add = ($order->total_products_wt + $order->total_shipping + $order->total_wrapping) - $total_discount_value;
-						if ($objDiscount->id_discount_type == 2 AND $objDiscount->behavior_not_exhausted == 2)
+						if ($objDiscount->id_discount_type == Discount::AMOUNT AND $objDiscount->behavior_not_exhausted == 2)
 						{
 							$voucher = new Discount();
 							foreach ($objDiscount AS $key => $discountValue)

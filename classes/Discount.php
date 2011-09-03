@@ -101,6 +101,7 @@ class DiscountCore extends ObjectModel
 	protected 	$table = 'discount';
 	protected 	$identifier = 'id_discount';
 
+	protected static $feature_active = null;
 
 	protected	$webserviceParameters = array(
 			'fields' => array(
@@ -126,8 +127,10 @@ class DiscountCore extends ObjectModel
 		)
 	);
 
-
-
+	const PERCENT = 1;
+	const AMOUNT = 2;
+	const FREE_SHIPPING = 3;
+	
 	public function getFields()
 	{
 		$this->validateFields();
@@ -211,38 +214,67 @@ class DiscountCore extends ObjectModel
 	  */
 	public static function getIdByName($discountName)
 	{
-	 	if (!Validate::isDiscountName($discountName))
+	 	if (!self::isFeatureActive())
+			return 0;
+
+		if (!Validate::isDiscountName($discountName))
 	 		die(Tools::displayError());
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+	 	return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `id_discount`
 		FROM `'._DB_PREFIX_.'discount`
 		WHERE `name` = \''.pSQL($discountName).'\'');
-		return isset($result['id_discount']) ? $result['id_discount'] : false;
 	}
 
 	/**
-	  * Return customer discounts
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $id_customer Customer ID
-	  * @return array Discounts
-	  */
-	static public function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $stock = false, Cart $cart = null)
+	 * 
+	 * This method allow to get the customer discount
+	 * @param int $id_lang
+	 * @param int $id_customer
+	 * @param bool $active
+	 * @param bool $includeGenericOnes include the discount available for all customers
+	 * @param bool $hasStock
+	 * @param Cart $cart
+	 */
+	public static function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $hasStock = false, Cart $cart = null)
     {
-		if (!$cart)
+		if (!self::isFeatureActive())
+			return array();
+    	
+    	if (!$cart)
 			$cart = Context::getContext()->cart;
-		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		
+		$sql = '
         SELECT d.*, dtl.`name` AS `type`, dl.`description`
 		FROM `'._DB_PREFIX_.'discount` d
 		LEFT JOIN `'._DB_PREFIX_.'discount_lang` dl ON (d.`id_discount` = dl.`id_discount` AND dl.`id_lang` = '.(int)($id_lang).')
 		LEFT JOIN `'._DB_PREFIX_.'discount_type` dt ON dt.`id_discount_type` = d.`id_discount_type`
 		LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)($id_lang).')
-		WHERE (`id_customer` = '.(int)($id_customer).'
-		OR `id_group` IN (SELECT `id_group` FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($id_customer).')'.
-		($includeGenericOnes ? ' OR (`id_customer` = 0 AND `id_group` = 0)' : '').')
-		'.($active ? ' AND d.`active` = 1' : '').'
-		'.($stock ? ' AND d.`quantity` != 0' : ''));
+		WHERE (d.`id_customer` = '.(int)$id_customer.'
+		';
+		
+		// Group clause
+		if (Group::isFeatureActive())
+			$sql .= 'OR d.`id_group` IN (
+				SELECT `id_group` 
+				FROM `'._DB_PREFIX_.'customer_group` cg 
+				WHERE cg.`id_customer` = '.(int)$id_customer.'
+			)';
+		else
+			$sql .= 'OR d.`id_group` = 1';
+		
+		if ($includeGenericOnes)
+			$sql .= 'OR (d.`id_customer` = 0 AND d.`id_group` = 0)';
+		
+		$sql .= ')'; // close parenthsis openned befor d.`id_customer`
+		
+		if ($active)
+			$sql .= ' AND d.`active` = 1';
+		
+		if ($hasStock)
+			$sql .= ' AND d.`quantity` != 0';
+		
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 
 		foreach ($res as &$discount)
 			if ($discount['quantity_per_user'])
@@ -257,14 +289,19 @@ class DiscountCore extends ObjectModel
 		return $res;
 	}
 
+	/**
+	 * 
+	 * @param int $id_customer
+	 * @return bool
+	 */
 	public function usedByCustomer($id_customer)
 	{
-		$sql = 'SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'order_discount` od
-				LEFT JOIN `'._DB_PREFIX_.'orders` o ON (od.`id_order` = o.`id_order`)
-				WHERE od.`id_discount` = '.(int)$this->id.'
-					AND o.`id_customer` = '.(int)$id_customer;
-		return Db::getInstance()->getValue($sql);
+		return (bool)Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'order_discount` od
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (od.`id_order` = o.`id_order`)
+			WHERE od.`id_discount` = '.(int)$this->id.'
+			AND o.`id_customer` = '.(int)$id_customer);
 	}
 
 	/**
@@ -276,6 +313,9 @@ class DiscountCore extends ObjectModel
 	  */
 	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, Currency $currency = null, Shop $shop = null)
 	{
+		if (!self::isFeatureActive())
+			return 0;
+		
 		if (!$currency)
 			$currency = Context::getContext()->currency;
 		if (!$shop)
@@ -308,7 +348,7 @@ class DiscountCore extends ObjectModel
 		switch ($this->id_discount_type)
 		{
 			/* Relative value (% of the order total) */
-			case 1:
+			case Discount::PERCENT:
 				$amount = 0;
 				$percentage = $this->value / 100;
 				foreach ($products AS $product)
@@ -318,7 +358,7 @@ class DiscountCore extends ObjectModel
 				return $amount;
 
 			/* Absolute value */
-			case 2:
+			case Discount::AMOUNT:
 				// An "absolute" voucher is available in one currency only
 				$currency = ((int)$cart->id_currency ? Currency::getCurrencyInstance($cart->id_currency) : $currency);
 				if ($this->id_currency != $currency->id)
@@ -337,7 +377,7 @@ class DiscountCore extends ObjectModel
 				return $value;
 
 			/* Free shipping (does not return a value but a special code) */
-			case 3:
+			case Discount::FREE_SHIPPING:
 				return '!';
 		}
 		return 0;
@@ -366,7 +406,9 @@ class DiscountCore extends ObjectModel
 		}
 		elseif (!is_array($categories) OR !sizeof($categories))
 			return false;
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_category` WHERE `id_discount`='.(int)($this->id));
+		Db::getInstance()->Execute('
+			DELETE FROM `'._DB_PREFIX_.'discount_category` 
+			WHERE `id_discount`='.(int)$this->id);
 		foreach($categories AS $category)
 		{
 			Db::getInstance()->ExecuteS('
@@ -374,13 +416,22 @@ class DiscountCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'discount_category`
 			WHERE `id_discount`='.(int)($this->id).' AND `id_category`='.(int)($category));
 			if (Db::getInstance()->NumRows() == 0)
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`, `id_category`) VALUES('.(int)($this->id).','.(int)($category).')');
+				Db::getInstance()->Execute('
+					INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`, `id_category`) 
+					VALUES('.(int)($this->id).','.(int)($category).')');
 		}
 	}
 
 	public static function discountExists($discountName, $id_discount = 0)
 	{
-		return Db::getInstance()->getRow('SELECT `id_discount` FROM '._DB_PREFIX_.'discount WHERE `name` LIKE \''.pSQL($discountName).'\' AND `id_discount` != '.(int)($id_discount));
+		if (!self::isFeatureActive())
+			return false;
+
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_discount` 
+			FROM `'._DB_PREFIX_.'discount` 
+			WHERE `name` LIKE \''.pSQL($discountName).'\' 
+			AND `id_discount` != '.(int)$id_discount);
 	}
 
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
@@ -394,9 +445,9 @@ class DiscountCore extends ObjectModel
 		$total_tmp = $total;
 		foreach ($discounts as $discount)
 		{
-			if ($discount['id_discount_type'] == 1)
+			if ($discount['id_discount_type'] == Discount::PERCENT)
 				$total -= $total_tmp * ($discount['value'] / 100);
-			elseif ($discount['id_discount_type'] == 2)
+			elseif ($discount['id_discount_type'] == Discount::AMOUNT)
 				$total -= ($discount['value'] * ($total_tmp / $order->total_products_wt));
 		}
 		if ($shipping_cost)
@@ -404,7 +455,7 @@ class DiscountCore extends ObjectModel
 
 		// create discount
 		$voucher = new Discount();
-		$voucher->id_discount_type = 2;
+		$voucher->id_discount_type = Discount::AMOUNT;
 		foreach ($languages as $language)
 			$voucher->description[$language['id_lang']] = strval($name).(int)($order->id);
 		$voucher->value = (float)($total);
@@ -444,18 +495,52 @@ class DiscountCore extends ObjectModel
 		return ''; // return a string because it's a display method
 	}
 
-	public static function getVouchersToCartDisplay($id_lang, $id_customer)
+	/**
+	 * 
+	 * This method allows to get the vouchers can be shown in order page
+	 * @param int $id_lang
+	 * @param int $id_customer
+	 * @return array contains discount
+	 */
+	public static function getVouchersToCartDisplay($id_lang, $id_customer = 0)
 	{
-		return Db::getInstance()->ExecuteS('
+		if (!self::isFeatureActive())
+			return array();
+		
+		$sql = '
 		SELECT d.`name`, dl.`description`, d.`id_discount`
 		FROM `'._DB_PREFIX_.'discount` d
 		LEFT JOIN `'._DB_PREFIX_.'discount_lang` dl ON (d.`id_discount` = dl.`id_discount`)
 		WHERE d.`active` = 1
 		AND d.`date_from` <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND d.`date_to` >= \''.pSQL(date('Y-m-d H:i:s')).'\'
-		AND dl.`id_lang` = '.(int)($id_lang).'
-		AND d.`cart_display` = 1 AND d.`quantity` > 0
-		AND ((d.`id_customer` = 0 AND d.`id_group` = 0) '.($id_customer ? 'OR (d.`id_customer` = '.$id_customer.'
-		OR d.`id_group` IN (SELECT `id_group` FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($id_customer).')))' : 'OR d.`id_group` = 1)'));
+		AND dl.`id_lang` = '.(int)$id_lang.'
+		AND d.`cart_display` = 1 
+		AND d.`quantity` > 0
+		AND (
+			(d.`id_customer` = 0 AND d.`id_group` = 0)';
+		
+		if ($id_customer)
+		{
+			$sql .= ' OR (';
+			// adding id_customer clause
+			$sql .= 'd.`id_customer` = '.(int)$id_customer;
+			if (Group::isFeatureActive())
+				$sql .= ' 
+				OR d.`id_group` IN (
+					SELECT cg.`id_group` 
+					FROM `'._DB_PREFIX_.'customer_group` cg 
+					WHERE cg.`id_customer` = '.(int)$id_customer.'
+				)';
+			else
+				$sql .= ' OR d.`id_group` = 1';
+			$sql .= ')';
+		}
+		else
+			$sql .= ' OR d.`id_group` = 1';
+		
+		$sql .= ')'; // close parenthesis openned above
+
+		return Db::getInstance()->ExecuteS($sql);
 	}
 
 	public static function deleteByIdCustomer($id_customer)
@@ -485,5 +570,21 @@ class DiscountCore extends ObjectModel
 	public static function getDiscount($id_discount)
 	{
 		return Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)$id_discount);
+	}
+	
+	/**
+	 * This metohd is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'discount` 
+				WHERE `active` = 1
+			') > 1);
+		return self::$feature_active;
 	}
 }

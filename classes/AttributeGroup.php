@@ -123,6 +123,8 @@ class AttributeGroupCore extends ObjectModel
 	 */
 	public static function getAttributes($id_lang, $id_attribute_group)
 	{
+		if (!Combination::isFeatureActive())
+			return array();
 		return Db::getInstance()->ExecuteS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'attribute` a
@@ -139,6 +141,8 @@ class AttributeGroupCore extends ObjectModel
 	 */
 	public static function getAttributesGroups($id_lang)
 	{
+		if (!Combination::isFeatureActive())
+			return array();
 		return Db::getInstance()->ExecuteS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'attribute_group` ag
@@ -154,7 +158,8 @@ class AttributeGroupCore extends ObjectModel
 	public function deleteSelection($selection)
 	{
 		/* Also delete Attributes */
-		foreach ($selection AS $value) {
+		foreach ($selection AS $value) 
+		{
 			$obj = new AttributeGroup($value);
 			if (!$obj->delete())
 				return false;

@@ -47,16 +47,19 @@ class AdminFeatures extends AdminTab
 
 	public function display()
 	{
-		if ((isset($_POST['submitAddfeature_value']) AND sizeof($this->adminFeaturesValues->_errors))
-			OR isset($_GET['updatefeature_value']) OR isset($_GET['addfeature_value']))
+		if (Feature::isFeatureActive())
 		{
-			$this->adminFeaturesValues->displayForm($this->token);
-			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" alt="" /> '.$this->l('Back to the features list').'</a><br />';
+			if ((isset($_POST['submitAddfeature_value']) AND sizeof($this->adminFeaturesValues->_errors))
+				OR isset($_GET['updatefeature_value']) OR isset($_GET['addfeature_value']))
+			{
+				$this->adminFeaturesValues->displayForm($this->token);
+				echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" alt="" /> '.$this->l('Back to the features list').'</a><br />';
+			}
+			else
+				parent::display();
 		}
 		else
-		{
-			parent::display();
-		}
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 	}
 
 	/* Report to AdminTab::displayList() for more details */
@@ -131,6 +134,12 @@ class AdminFeatures extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
+		if (!Feature::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -177,6 +186,9 @@ class AdminFeatures extends AdminTab
 
 	public function postProcess()
 	{
+		if (!Feature::isFeatureActive())
+			return ;
+		
 		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 		$this->adminFeaturesValues->postProcess($this->token);
 

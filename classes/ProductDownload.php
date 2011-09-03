@@ -80,6 +80,8 @@ class ProductDownloadCore extends ObjectModel
 	protected $table = 'product_download';
 	protected $identifier = 'id_product_download';
 	
+	protected static $feature_active = null;
+	
 	/**
 	 * Build a virtual product
 	 *
@@ -158,6 +160,9 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function getIdFromIdProduct($id_product)
 	{
+		if (!self::isFeatureActive())
+			return false;
+		
 		if (array_key_exists($id_product, self::$_productIds))
 			return self::$_productIds[$id_product];
 			
@@ -206,7 +211,7 @@ class ProductDownloadCore extends ObjectModel
 	 * @param string $hash hash code in table order detail (optionnal)
 	 * @return string Html all the code for print a link to the file
 	 */
-	public function getTextLink($admin=true, $hash=false)
+	public function getTextLink($admin = true, $hash = false)
 	{
 		$key = $this->physically_filename . '-' . ($hash ? $hash : 'orderdetail');
 		$link = ($admin) ? 'get-file-admin.php?' : Tools::getHttpHost(true, true).'index.php?controller=get-file&';
@@ -266,6 +271,21 @@ class ProductDownloadCore extends ObjectModel
 		if (file_exists(_PS_DOWNLOAD_DIR_.$ret))
 			$ret = ProductDownload::getNewFilename();
 		return $ret;
+	}
+
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'product_download`
+			');
+		return self::$feature_active;
 	}
 
 }

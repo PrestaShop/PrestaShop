@@ -65,3 +65,9 @@ ALTER TABLE `PREFIX_employee`
 	ADD `id_last_message` tinyint(1) unsigned NOT NULL default '0',
 	ADD `id_last_customer` tinyint(1) unsigned NOT NULL default '0';
 	  
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
+('PS_SHOW_NEW_ORDERS', '1', NOW(), NOW()),
+('PS_SHOW_NEW_CUSTOMERS', '1', NOW(), NOW()),
+('PS_SHOW_NEW_MESSAGES', '1', NOW(), NOW()),
+('PS_FEATURE_FEATURE_ACTIVE', '1', NOW(), NOW()),
+('PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW());

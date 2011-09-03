@@ -562,10 +562,8 @@ class CategoryCore extends ObjectModel
 			$sql .= ' LIMIT 0, '.(int)($randomNumberProducts);
 		}
 		else
-		{
 			$sql .= ' ORDER BY '.(isset($orderByPrefix) ? $orderByPrefix.'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).'
 			LIMIT '.(((int)($p) - 1) * (int)($n)).','.(int)($n);
-		}
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		if ($orderBy == 'orderprice')

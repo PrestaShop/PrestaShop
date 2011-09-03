@@ -391,7 +391,7 @@ class AdminOrders extends AdminTab
 				<tr>
 					<td colspan="2">';
 				foreach ($customization['datas'] AS $type => $datas)
-					if ($type == _CUSTOMIZE_FILE_)
+					if ($type == Product::CUSTOMIZE_FILE)
 					{
 						$i = 0;
 						echo '<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">';
@@ -401,7 +401,7 @@ class AdminOrders extends AdminTab
 								</li>';
 						echo '</ul>';
 					}
-					elseif ($type == _CUSTOMIZE_TEXTFIELD_)
+					elseif ($type == Product::CUSTOMIZE_TEXTFIELD)
 					{
 						$i = 0;
 						echo '<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">';
@@ -472,7 +472,8 @@ class AdminOrders extends AdminTab
 		$history = $order->getHistory($this->context->language->id);
 		$products = $order->getProducts();
 		$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
-		Product::addCustomizationPrice($products, $customizedDatas);
+		if ($customizedDatas)
+			Product::addCustomizationPrice($products, $customizedDatas);
 		$discounts = $order->getDiscounts();
 		$messages = Message::getMessagesByOrderId($order->id, true);
 		$states = OrderState::getOrderStates($this->context->language->id);
@@ -770,7 +771,9 @@ class AdminOrders extends AdminTab
 							}
 							// Customization display
 							$this->displayCustomizedDatas($customizedDatas, $product, $currency, $image, $tokenCatalog, $k);
-
+							
+							if (!isset($product['customizationQuantityTotal']))
+								$product['customizationQuantityTotal'] = 0;
 							// Normal display
 							if ($product['product_quantity'] > $product['customizationQuantityTotal'])
 							{
@@ -787,7 +790,7 @@ class AdminOrders extends AdminTab
 										.($product['product_supplier_reference'] ? $this->l('Ref Supplier:').' '.$product['product_supplier_reference'] : '')
 										.'</a></td>
 									<td align="center">'.Tools::displayPrice($product_price, $currency, false).'</td>
-									<td align="center" class="productQuantity" '.($quantity > 1 ? 'style="font-weight:700;font-size:1.1em;color:red"' : '').'>'.(int)$quantity.'</td>
+									<td align="center" class="productQuantity" '.($product['product_quantity'] > 1 ? 'style="font-weight:700;font-size:1.1em;color:red"' : '').'>'.(int)$product['product_quantity'].'</td>
 									'.($order->hasBeenPaid() ? '<td align="center" class="productQuantity">'.(int)($product['product_quantity_refunded']).'</td>' : '').'
 									'.($order->hasBeenDelivered() ? '<td align="center" class="productQuantity">'.(int)($product['product_quantity_return']).'</td>' : '').'
 									<td align="center" class="productQuantity">'.$productObj->getStock($product['product_attribute_id']).'</td>

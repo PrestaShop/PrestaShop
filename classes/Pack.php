@@ -30,9 +30,13 @@ class PackCore extends Product
 	protected static $cachePackItems = array();
 	protected static $cacheIsPack = array();
 	protected static $cacheIsPacked = array();
+	protected static $feature_active = null;
 
 	public static function isPack($id_product)
 	{
+		if (!self::isFeatureActive())
+			return false;
+		
 		if (!array_key_exists($id_product, self::$cacheIsPack))
 		{
 			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)($id_product));
@@ -43,6 +47,9 @@ class PackCore extends Product
 
 	public static function isPacked($id_product)
 	{
+		if (!self::isFeatureActive())
+			return false;
+		
 		if (!array_key_exists($id_product, self::$cacheIsPacked))
 		{
 			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_item = '.(int)($id_product));
@@ -63,6 +70,9 @@ class PackCore extends Product
 
 	public static function getItems($id_product, $id_lang)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		if (array_key_exists($id_product, self::$cachePackItems))
 			return self::$cachePackItems[$id_product];
 		$result = Db::getInstance()->ExecuteS('SELECT id_product_item, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)($id_product));
@@ -79,6 +89,9 @@ class PackCore extends Product
 
 	public static function isInStock($id_product)
 	{
+		if (!self::isFeatureActive())
+			return true;
+		
 		$items = self::getItems((int)($id_product), Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($items AS $item)
 			if ($item->quantity < $item->pack_quantity AND !$item->isAvailableWhenOutOfStock((int)($item->out_of_stock)))
@@ -88,6 +101,9 @@ class PackCore extends Product
 
 	public static function getItemTable($id_product, $id_lang, $full = false)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		$sql = 'SELECT p.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
@@ -114,6 +130,9 @@ class PackCore extends Product
 
 	public static function getPacksTable($id_product, $id_lang, $full = false, $limit = NULL)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		$packs = Db::getInstance()->getValue('
 		SELECT GROUP_CONCAT(a.`id_product_pack`)
 		FROM `'._DB_PREFIX_.'pack` a
@@ -176,6 +195,21 @@ class PackCore extends Product
 
 		// If return query result, a non-pack product will return false
 		return true;
+	}
+	
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'pack`
+			');
+		return self::$feature_active;
 	}
 }
 

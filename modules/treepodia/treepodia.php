@@ -284,7 +284,7 @@ XML;
 					$discount = $product->addChild('discount');
 					$discount->addChild('discount-quantity', intval($quantityDiscount['quantity']));
 					$discount->addChild('discount-value', floatval($quantityDiscount['value']));
-					$discount->addChild('discount-type', ($quantityDiscount['id_discount_type'] == 1 ? $defaultCurrencyIsoCode : '%'));
+					$discount->addChild('discount-type', ($quantityDiscount['id_discount_type'] == Discount::PERCENT ? $defaultCurrencyIsoCode : '%'));
 				}
 			}
 			else

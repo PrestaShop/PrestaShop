@@ -100,6 +100,8 @@ class AttributeCore extends ObjectModel
 	 */
 	public static function getAttributes($id_lang, $notNull = false)
 	{
+		if (!Combination::isFeatureActive())
+			return array();
 		return Db::getInstance()->ExecuteS('
 		SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
 		FROM `'._DB_PREFIX_.'attribute_group` ag
@@ -158,7 +160,7 @@ class AttributeCore extends ObjectModel
 	 *
 	 * @deprecated since 1.5.0
 	 * @param array &$arr
-	 * return bool
+	 * @return bool
 	 */
 	public static function updateQtyProduct(&$arr)
 	{

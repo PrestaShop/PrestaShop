@@ -36,8 +36,8 @@ class AdminDiscounts extends AdminTab
 	 	$this->edit = true;
 	 	$this->delete = true;
 	 	$this->_select = 'dtl.`name` AS discount_type,
-			IF(a.id_discount_type = 1, CONCAT(a.value, " %"),
-			IF(a.id_discount_type = 2, CONCAT(a.value, " ", c.sign),
+			IF(a.id_discount_type = '.(int)Discount::PERCENT.', CONCAT(a.value, " %"),
+			IF(a.id_discount_type = '.(int)Discount::AMOUNT.', CONCAT(a.value, " ", c.sign),
 			"--")) as strvalue';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'currency` c ON (c.`id_currency` = a.`id_currency`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type` dt ON (dt.`id_discount_type` = a.`id_discount_type`)
@@ -91,9 +91,9 @@ class AdminDiscounts extends AdminTab
 		{
 			if (Tools::getValue('id_discount_type') == 0)
 				$this->_errors[] = Tools::displayError('Please set a type for this voucher.');
-			if (Tools::getValue('id_discount_type') == 2 AND Tools::getValue('id_currency') == 0)
+			if (Tools::getValue('id_discount_type') == Discount::AMOUNT AND Tools::getValue('id_currency') == 0)
 				$this->_errors[] = Tools::displayError('Please set a currency for this voucher.');			
-			if ((Tools::getValue('id_discount_type') == 1 || Tools::getValue('id_discount_type') == 2) && !Tools::getValue('value'))
+			if ((Tools::getValue('id_discount_type') == Discount::PERCENT || Tools::getValue('id_discount_type') == 2) && !Tools::getValue('value'))
 				$this->_errors[] = Tools::displayError('Please set a amount for this voucher.');
 			if (!Validate::isBool_Id(Tools::getValue('id_target')))
 				$this->_errors[] = Tools::displayError('Invalid customer or group ID field');
@@ -227,13 +227,13 @@ class AdminDiscounts extends AdminTab
 			{
 				if ($("#id_discount_type").val() == 0)
 					$("#value-div").css("display", "none");
-				else if ($("#id_discount_type").val() == 1)
+				else if ($("#id_discount_type").val() == '.Discount::PERCENT.')
 				{
 					$("#value-div").css("display", "block");
 					$("#percent-span").css("display", "block");
 					$("#id_currency").css("display", "none");
 				}
-				else if ($("#id_discount_type").val() == 2)
+				else if ($("#id_discount_type").val() == '.Discount::AMOUNT.')
 				{
 					$("#value-div").css("display", "block");
 					$("#percent-span").css("display", "none");
@@ -241,9 +241,9 @@ class AdminDiscounts extends AdminTab
 					$(\'#behavior_not_exhausted\').show();
 					
 				}
-				else if ($("#id_discount_type").val() == 3)
+				else if ($("#id_discount_type").val() == '.Discount::FREE_SHIPPING.')
 					$("#value-div").css("display", "none");
-				if ($(\'#id_discount_type\').val() != 2)
+				if ($(\'#id_discount_type\').val() != '.Discount::AMOUNT.')
 					$(\'#behavior_not_exhausted\').hide();
 					
 			}

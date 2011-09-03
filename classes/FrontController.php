@@ -637,6 +637,9 @@ class FrontControllerCore
 
 	public static function getCurrentCustomerGroups()
 	{
+		if (!Group::isFeatureActive())
+			return array();
+		
 		$context = Context::getContext();
 		if (!$context->customer->id)
 			return array();

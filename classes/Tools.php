@@ -657,12 +657,10 @@ class ToolsCore
 			elseif ($id_category = self::getValue('id_category'))
 			{
 				$page_number = self::getValue('p');
-				$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
-						FROM `'._DB_PREFIX_.'category_lang`
-						WHERE id_lang = '.(int)$id_lang.'
-							AND id_category = '.(int)$id_category
-							.Context::getContext()->shop->sqlLang();
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
+				FROM `'._DB_PREFIX_.'category_lang` cl
+				WHERE cl.`id_lang` = '.(int)($id_lang).' AND cl.`id_category` = '.(int)$id_category.Context::getContext()->shop->sqlLang('cl'));
 				if ($row)
 				{
 					if (empty($row['meta_description']))
@@ -2065,11 +2063,48 @@ FileETag INode MTime Size
 			return 1024 * 1024 * 1024 * (int)$memory_limit;
 		
 		return $memory_limit;
-}
+	}
 
+	/**
+	 * 
+	 * @return bool true if the server use 64bit arch 
+	 */
 	public static function isX86_64arch()
 	{
 		return (PHP_INT_MAX == '9223372036854775807');
+	}
+	
+	/**
+	 * @param array SQL query in array
+	 * @return string SQL query
+	 */
+	public static function buildQuery(array $sql)
+	{
+		if (!isset($sql['select']))
+			$sql['select'] = 'SELECT *';
+		
+		$req = $sql['select']."\n";
+		$req .= $sql['from']."\n";
+		
+		if (isset($sql['join']))
+			$req .= $sql['join']."\n";
+		
+		if (isset($sql['where']))
+			$req .= $sql['where']."\n";
+		
+		if (isset($sql['groupby']))
+			$req .= $sql['groupby']."\n";
+		
+		if (isset($sql['having']))
+			$req .= $sql['having']."\n";
+		
+		if (isset($sql['orderby']))
+			$req .= $sql['orderby']."\n";
+			
+		if (isset($sql['limit']))
+			$req .= $sql['limit']."\n";
+			
+		return $req;
 	}
 }
 

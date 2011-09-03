@@ -103,20 +103,24 @@ class CategoryControllerCore extends FrontController
 				$rewrited_url = $this->context->link->getCategoryLink((int)$this->category->id, $this->category->link_rewrite);
 
 				/* Scenes  (could be externalised to another controler if you need them */
-				$this->context->smarty->assign('scenes', Scene::getScenes($this->category->id, $this->context->language->id, true, false));
+				$scenes = Scene::getScenes($this->category->id, $this->context->language->id, true, false);
+				$this->context->smarty->assign('scenes', $scenes);
 				
 				/* Scenes images formats */
-				if ($sceneImageTypes = ImageType::getImagesTypes('scenes'))
+				if (sizeof($scenes))
 				{
-					foreach ($sceneImageTypes AS $sceneImageType)
+					if ($sceneImageTypes = ImageType::getImagesTypes('scenes'))
 					{
-						if ($sceneImageType['name'] == 'thumb_scene')
-							$thumbSceneImageType = $sceneImageType;
-						elseif ($sceneImageType['name'] == 'large_scene')
-							$largeSceneImageType = $sceneImageType;
+						foreach ($sceneImageTypes AS $sceneImageType)
+						{
+							if ($sceneImageType['name'] == 'thumb_scene')
+								$thumbSceneImageType = $sceneImageType;
+							elseif ($sceneImageType['name'] == 'large_scene')
+								$largeSceneImageType = $sceneImageType;
+						}
+						$this->context->smarty->assign('thumbSceneImageType', isset($thumbSceneImageType) ? $thumbSceneImageType : NULL);
+						$this->context->smarty->assign('largeSceneImageType', isset($largeSceneImageType) ? $largeSceneImageType : NULL);
 					}
-					$this->context->smarty->assign('thumbSceneImageType', isset($thumbSceneImageType) ? $thumbSceneImageType : NULL);
-					$this->context->smarty->assign('largeSceneImageType', isset($largeSceneImageType) ? $largeSceneImageType : NULL);
 				}
 
 				$this->category->description = Tools::nl2br($this->category->description);

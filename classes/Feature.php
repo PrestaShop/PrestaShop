@@ -187,6 +187,9 @@ class FeatureCore extends ObjectModel
 	
 	public static function getFeaturesForComparison($list_ids_product, $id_lang)
 	{
+		if (!Feature::isFeatureActive())
+			return false;
+		
 		$ids = '';
 		foreach($list_ids_product as $id)
 			$ids .= (int)($id).',';
@@ -205,6 +208,16 @@ class FeatureCore extends ObjectModel
 		AND `id_lang` = '.(int)($id_lang).'
 		GROUP BY f.`id_feature`
 		ORDER BY nb DESC');
+	}
+	
+	/**
+	 * This metohd is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		return Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
 	}
 }
 

@@ -206,7 +206,9 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (135, 'PS_RESTRICT_DELIVERED_COUNTRIES', '0', NOW(), NOW()),
 (136, 'PS_SHOW_NEW_ORDERS', '1', NOW(), NOW()),
 (137, 'PS_SHOW_NEW_CUSTOMERS', '1', NOW(), NOW()),
-(138, 'PS_SHOW_NEW_MESSAGES', '1', NOW(), NOW());
+(138, 'PS_SHOW_NEW_MESSAGES', '1', NOW(), NOW()),
+(139, 'PS_FEATURE_FEATURE_ACTIVE', '1', NOW(), NOW()),
+(140, 'PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),

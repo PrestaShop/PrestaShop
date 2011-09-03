@@ -54,7 +54,7 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 	/* Voucher creation and affectation to the customer */
 	$voucher = new Discount();
 	$voucher->name = $voucherCode;
-	$voucher->id_discount_type = 2; // Discount on order (amount)
+	$voucher->id_discount_type = Discount::AMOUNT; // Discount on order (amount)
 	$voucher->id_customer = (int)($cookie->id_customer);
 	$voucher->id_currency = (int)($cookie->id_currency);
 	$voucher->value = LoyaltyModule::getVoucherValue((int)$customerPoints);
