@@ -158,7 +158,7 @@ class CombinationCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_attribute_image`
 		WHERE `id_product_attribute` = '.(int)($this->id).'
 		');
-}
+	}
 
 	public function setWsImages($values)
 	{
@@ -174,6 +174,29 @@ class CombinationCore extends ObjectModel
 			VALUES '.implode(',', $sqlValues)
 		);
 		return true;
+	}
+	
+	/**
+	 * This method is allow to know if a feature is active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		return Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
+	}
+	
+	/**
+	 * This method is allow to know if a feature is in use
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isActuallyUsed()
+	{
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `ps_product_attribute`
+		');
 	}
 }
 

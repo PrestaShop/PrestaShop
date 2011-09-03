@@ -43,6 +43,12 @@ class AdminFeaturesValues extends AdminTab
 	 */
 	public function displayForm($isMainTab = true)
 	{
+		if (!Feature::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))

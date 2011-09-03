@@ -307,6 +307,9 @@ class SearchCore
 
 	public static function getAttributes($db, $id_product, $id_lang)
 	{
+		if (!Cobmination::isFeatureActive())
+			return '';
+
 		$attributes = '';
 		$attributesArray = $db->ExecuteS('
 		SELECT al.name FROM '._DB_PREFIX_.'product_attribute pa
@@ -320,6 +323,9 @@ class SearchCore
 
 	public static function getFeatures($db, $id_product, $id_lang)
 	{
+		if (!Feature::isFeatureActive())
+			return '';
+
 		$features = '';
 		$featuresArray = $db->ExecuteS('
 		SELECT fvl.value FROM '._DB_PREFIX_.'feature_product fp

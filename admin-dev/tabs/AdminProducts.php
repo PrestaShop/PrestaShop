@@ -191,7 +191,6 @@ class AdminProducts extends AdminTab
 		{
 			if ($this->tabAccess['add'] === '1')
 			{
-
 				$languages = Language::getLanguages(false);
 				$is_attachment_name_valid = false;
 				foreach ($languages AS $language)
@@ -268,7 +267,7 @@ class AdminProducts extends AdminTab
 		{
 			if ($this->tabAccess['edit'] === '1')
 				if ($id = (int)(Tools::getValue($this->identifier)))
-					if (Attachment::attachToProduct($id, $_POST['attachments']))
+					if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
 						Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&tabs=6&token='.($token ? $token : $this->token));
 		}
 
@@ -481,6 +480,8 @@ class AdminProducts extends AdminTab
 		/* Product attributes management */
 		elseif (Tools::isSubmit('submitProductAttribute'))
 		{
+			if (!Combination::isFeatureActive())
+				return;
 			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 			{
 				if (!isset($_POST['attribute_price']) OR $_POST['attribute_price'] == NULL)
@@ -573,6 +574,8 @@ class AdminProducts extends AdminTab
 		}
 		elseif (Tools::isSubmit('deleteProductAttribute'))
 		{
+			if (!Combination::isFeatureActive())
+				return;
 			if ($this->tabAccess['delete'] === '1')
 			{
 				if (($id_product = (int)(Tools::getValue('id_product'))) AND Validate::isUnsignedId($id_product) AND Validate::isLoadedObject($product = new Product($id_product)))
@@ -598,6 +601,8 @@ class AdminProducts extends AdminTab
 		}
 		elseif (Tools::isSubmit('deleteAllProductAttributes'))
 		{
+			if (!Combination::isFeatureActive())
+				return;
 			if ($this->tabAccess['delete'] === '1')
 			{
 				if (($id_product = (int)(Tools::getValue('id_product'))) AND Validate::isUnsignedId($id_product) AND Validate::isLoadedObject($product = new Product($id_product)))
@@ -619,6 +624,8 @@ class AdminProducts extends AdminTab
 		}
 		elseif (Tools::isSubmit('defaultProductAttribute'))
 		{
+			if (!Combination::isFeatureActive())
+				return;
 			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 			{
 				$product->deleteDefaultAttributes();
@@ -632,6 +639,8 @@ class AdminProducts extends AdminTab
 		/* Product features management */
 		elseif (Tools::isSubmit('submitProductFeature'))
 		{
+			if (!Feature::isFeatureActive())
+				return;
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
@@ -1561,12 +1570,13 @@ class AdminProducts extends AdminTab
 				/* Tabs */
 		$this->displayFormInformations($obj, $currency);
 		$this->displayFormImages($obj, $this->token);
-		$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
+		if (Combination::isFeatureActive()) 
+			$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
 		$countAttachments = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$obj->id);
 		if ($obj->id)
 			echo '
 			<div class="tab-page" id="step3"><h4 class="tab">3. '.$this->l('Prices').'</h4></div>
-			<div class="tab-page" id="step4"><h4 class="tab">4. '.$this->l('Combinations').' ('.$countAttributes.')</h4></div>
+			<div class="tab-page" id="step4"><h4 class="tab">4. '.$this->l('Combinations').(isset($countAttributes) ? ' ('.$countAttributes.')' : '').'</h4></div>
 			<div class="tab-page" id="step5"><h4 class="tab">5. '.$this->l('Features').'</h4></div>
 			<div class="tab-page" id="step6"><h4 class="tab">6. '.$this->l('Customization').'</h4></div>
 			<div class="tab-page" id="step7"><h4 class="tab">7. '.$this->l('Attachments').' ('.$countAttachments.')</h4></div>';
@@ -1898,18 +1908,18 @@ class AdminProducts extends AdminTab
 	private function _getCustomizationFieldIds($labels, $alreadyGenerated, $obj)
 	{
 		$customizableFieldIds = array();
-		if (isset($labels[_CUSTOMIZE_FILE_]))
-			foreach ($labels[_CUSTOMIZE_FILE_] AS $id_customization_field => $label)
-				$customizableFieldIds[] = 'label_'._CUSTOMIZE_FILE_.'_'.(int)($id_customization_field);
-		if (isset($labels[_CUSTOMIZE_TEXTFIELD_]))
-			foreach ($labels[_CUSTOMIZE_TEXTFIELD_] AS $id_customization_field => $label)
-				$customizableFieldIds[] = 'label_'._CUSTOMIZE_TEXTFIELD_.'_'.(int)($id_customization_field);
+		if (isset($labels[Product::CUSTOMIZE_FILE]))
+			foreach ($labels[Product::CUSTOMIZE_FILE] AS $id_customization_field => $label)
+				$customizableFieldIds[] = 'label_'.Product::CUSTOMIZE_FILE.'_'.(int)($id_customization_field);
+		if (isset($labels[Product::CUSTOMIZE_TEXTFIELD]))
+			foreach ($labels[Product::CUSTOMIZE_TEXTFIELD] AS $id_customization_field => $label)
+				$customizableFieldIds[] = 'label_'.Product::CUSTOMIZE_TEXTFIELD.'_'.(int)($id_customization_field);
 		$j = 0;
-		for ($i = $alreadyGenerated[_CUSTOMIZE_FILE_]; $i < (int)($this->getFieldValue($obj, 'uploadable_files')); $i++)
-			$customizableFieldIds[] = 'newLabel_'._CUSTOMIZE_FILE_.'_'.$j++;
+		for ($i = $alreadyGenerated[Product::CUSTOMIZE_FILE]; $i < (int)($this->getFieldValue($obj, 'uploadable_files')); $i++)
+			$customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_FILE.'_'.$j++;
 		$j = 0;
-		for ($i = $alreadyGenerated[_CUSTOMIZE_TEXTFIELD_]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++)
-			$customizableFieldIds[] = 'newLabel_'._CUSTOMIZE_TEXTFIELD_.'_'.$j++;
+		for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++)
+			$customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
 		return implode('¤', $customizableFieldIds);
 	}
 
@@ -1937,7 +1947,7 @@ class AdminProducts extends AdminTab
 	private function _displayLabelFields(&$obj, &$labels, $languages, $defaultLanguage, $type)
 	{
 		$type = (int)($type);
-		$labelGenerated = array(_CUSTOMIZE_FILE_ => (isset($labels[_CUSTOMIZE_FILE_]) ? count($labels[_CUSTOMIZE_FILE_]) : 0), _CUSTOMIZE_TEXTFIELD_ => (isset($labels[_CUSTOMIZE_TEXTFIELD_]) ? count($labels[_CUSTOMIZE_TEXTFIELD_]) : 0));
+		$labelGenerated = array(Product::CUSTOMIZE_FILE => (isset($labels[Product::CUSTOMIZE_FILE]) ? count($labels[Product::CUSTOMIZE_FILE]) : 0), Product::CUSTOMIZE_TEXTFIELD => (isset($labels[Product::CUSTOMIZE_TEXTFIELD]) ? count($labels[Product::CUSTOMIZE_TEXTFIELD]) : 0));
 
 		$fieldIds = $this->_getCustomizationFieldIds($labels, $labelGenerated, $obj);
 		if (isset($labels[$type]))
@@ -1989,7 +1999,7 @@ class AdminProducts extends AdminTab
 				<tr>
 					<td style="width:150px" valign="top">'.$this->l('Files fields:').'</td>
 					<td>';
-					$this->_displayLabelFields($obj, $labels, $languages, $defaultLanguage, _CUSTOMIZE_FILE_);
+					$this->_displayLabelFields($obj, $labels, $languages, $defaultLanguage, Product::CUSTOMIZE_FILE);
 					echo '
 					</td>
 				</tr>';
@@ -2002,7 +2012,7 @@ class AdminProducts extends AdminTab
 				<tr>
 					<td style="width:150px" valign="top">'.$this->l('Text fields:').'</td>
 					<td>';
-					$this->_displayLabelFields($obj, $labels, $languages, $defaultLanguage, _CUSTOMIZE_TEXTFIELD_);
+					$this->_displayLabelFields($obj, $labels, $languages, $defaultLanguage, Product::CUSTOMIZE_TEXTFIELD);
 					echo '
 					</td>
 				</tr>';
@@ -3170,9 +3180,14 @@ class AdminProducts extends AdminTab
 		return $content;
 	}
 
-	function displayFormAttributes($obj, $languages, $defaultLanguage)
+	public function displayFormAttributes($obj, $languages, $defaultLanguage)
 	{
-
+		if (!Combination::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		$attributeJs = array();
 		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		foreach ($attributes AS $k => $attribute)
@@ -3181,11 +3196,10 @@ class AdminProducts extends AdminTab
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
-
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
-			{
-				echo '
+		{
+			echo '
 			<script type="text/javascript">
 				$(document).ready(function(){
 					$(\'#id_mvt_reason\').change(function(){
@@ -3500,8 +3514,14 @@ class AdminProducts extends AdminTab
 					echo '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
 	}
 
-	function displayFormFeatures($obj)
+	public function displayFormFeatures($obj)
 	{
+		if (!Feature::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		parent::displayForm();
 
 		if ($obj->id)

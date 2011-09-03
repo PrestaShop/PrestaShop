@@ -46,6 +46,12 @@ class AdminAttributes extends AdminTab
 	 */
 	public function displayForm($token = NULL)
 	{
+		if (!Combination::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -127,6 +133,9 @@ class AdminAttributes extends AdminTab
 	 */
 	public function postProcess($token = NULL)
 	{
+		if (!Combination::isFeatureActive())
+			return;
+		
 		if (Tools::getValue('submitDel'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')

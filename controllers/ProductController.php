@@ -127,12 +127,12 @@ class ProductControllerCore extends FrontController
 				elseif (isset($_GET['deletePicture']) AND !$this->context->cart->deletePictureToProduct($this->product->id, Tools::getValue('deletePicture')))
 					$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
-				$files = $this->context->cart->getProductCustomization($this->product->id, _CUSTOMIZE_FILE_, true);
+				$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
 				$pictures = array();
 				foreach($files as $file)
 					$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
 
-				$texts = $this->context->cart->getProductCustomization($this->product->id, _CUSTOMIZE_TEXTFIELD_, true);
+				$texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
 				$textFields = array();
 				foreach ($texts as $textField)
 					$textFields['textFields_'.$this->product->id.'_'.$textField['index']] = str_replace('<br />', "\n", $textField['value']);
@@ -375,7 +375,7 @@ class ProductControllerCore extends FrontController
 			return false;
 		$authorizedFileFields = array();
 		foreach ($fieldIds AS $fieldId)
-			if ($fieldId['type'] == _CUSTOMIZE_FILE_)
+			if ($fieldId['type'] == Product::CUSTOMIZE_FILE)
 				$authorizedFileFields[(int)($fieldId['id_customization_field'])] = 'file'.(int)($fieldId['id_customization_field']);
 		$indexes = array_flip($authorizedFileFields);
 		foreach ($_FILES AS $fieldName => $file)
@@ -398,7 +398,7 @@ class ProductControllerCore extends FrontController
 				else
 				{
 					// Store customization in database
-					$cart->addPictureToProduct($this->product->id, $indexes[$fieldName], _CUSTOMIZE_FILE_, $fileName);
+					$cart->addPictureToProduct($this->product->id, $indexes[$fieldName], Product::CUSTOMIZE_FILE, $fileName);
 				}
 				unlink($tmpName);
 			}
@@ -411,7 +411,7 @@ class ProductControllerCore extends FrontController
 			return false;
 		$authorizedTextFields = array();
 		foreach ($fieldIds AS $fieldId)
-			if ($fieldId['type'] == _CUSTOMIZE_TEXTFIELD_)
+			if ($fieldId['type'] == Product::CUSTOMIZE_TEXTFIELD)
 				$authorizedTextFields[(int)($fieldId['id_customization_field'])] = 'textField'.(int)($fieldId['id_customization_field']);
 		$indexes = array_flip($authorizedTextFields);
 		foreach ($_POST AS $fieldName => $value)
@@ -420,7 +420,7 @@ class ProductControllerCore extends FrontController
 				if (!Validate::isMessage($value))
 					$this->errors[] = Tools::displayError('Invalid message');
 				else
-					$cart->addTextFieldToProduct($this->product->id, $indexes[$fieldName], _CUSTOMIZE_TEXTFIELD_, $value);
+					$cart->addTextFieldToProduct($this->product->id, $indexes[$fieldName], Product::CUSTOMIZE_TEXTFIELD, $value);
 			}
 			elseif (in_array($fieldName, $authorizedTextFields) AND empty($value))
 				$cart->deleteCustomizationToProduct((int)($this->product->id), $indexes[$fieldName]);

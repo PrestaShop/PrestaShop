@@ -59,6 +59,7 @@ class GroupCore extends ObjectModel
 
 	protected static $_cacheReduction = array();
 	protected static $_groupPriceDisplayMethod = array();
+	protected static $feature_active = null;
 	
 	protected	$webserviceParameters = array();
 	
@@ -127,7 +128,7 @@ class GroupCore extends ObjectModel
 			self::$_cacheReduction['group'][$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `reduction`
 			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.$id_group);
+			WHERE `id_group` = '.(int)$id_group);
 		}
 		return self::$_cacheReduction['group'][$id_group];
 	}
@@ -138,7 +139,7 @@ class GroupCore extends ObjectModel
 			self::$_groupPriceDisplayMethod[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `price_display_method`
 			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.(int)($id_group));
+			WHERE `id_group` = '.(int)$id_group);
 		return self::$_groupPriceDisplayMethod[$id_group];
 	}
 
@@ -166,6 +167,21 @@ class GroupCore extends ObjectModel
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'group`
+			') > 1);
+		return self::$feature_active;
 	}
 }
 

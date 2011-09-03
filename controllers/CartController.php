@@ -156,7 +156,7 @@ class CartControllerCore extends FrontController
 										break;
 									}
 							}
-							if (!$discount['cumulable_reduction'] && ($discount['id_discount_type'] != 1 || !$hasUndiscountedProduct))
+							if (!$discount['cumulable_reduction'] && ($discount['id_discount_type'] != Discount::PERCENT || !$hasUndiscountedProduct))
 								if (Tools::getValue('ajax') == 'true')
 									die('{"hasError" : true, "errors" : ["'.Tools::displayError('Cannot add this product because current voucher does not allow additional discounts.').'"]}');
 								else

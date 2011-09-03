@@ -88,10 +88,10 @@ class ReferralProgramModule extends ObjectModel
 		$discount->id_discount_type = (int)$configurations['REFERRAL_DISCOUNT_TYPE'];
 		
 		/* % */
-		if ($configurations['REFERRAL_DISCOUNT_TYPE'] == 1)
+		if ($configurations['REFERRAL_DISCOUNT_TYPE'] == Discount::PERCENT)
 			$discount->value = (float)$configurations['REFERRAL_PERCENTAGE'];
 		/* Fixed amount */
-		elseif ($configurations['REFERRAL_DISCOUNT_TYPE'] == 2 AND isset($configurations['REFERRAL_DISCOUNT_VALUE_'.(int)($id_currency)]))
+		elseif ($configurations['REFERRAL_DISCOUNT_TYPE'] == Discount::AMOUNT AND isset($configurations['REFERRAL_DISCOUNT_VALUE_'.(int)($id_currency)]))
 			$discount->value = (float)$configurations['REFERRAL_DISCOUNT_VALUE_'.(int)($id_currency)];
 		/* Unknown or value undefined for this currency (configure your module correctly) */
 		else

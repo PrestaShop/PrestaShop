@@ -47,6 +47,7 @@ class SpecificPriceCore extends ObjectModel
 
 	protected static $_specificPriceCache = array();
 	protected static $_cache_priorities = array();
+	protected static $feature_active = null;
 
 	public function getFields()
 	{
@@ -67,16 +68,18 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getByProductId($id_product)
 	{
-		return Db::getInstance()->ExecuteS('
-			SELECT * FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)($id_product)
-		);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT * 
+			FROM `'._DB_PREFIX_.'specific_price` 
+			WHERE `id_product` = '.(int)$id_product);
 	}
 
 	public static function getIdsByProductId($id_product)
 	{
-		return Db::getInstance()->ExecuteS('
-			SELECT `id_specific_price` FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product.'
-		');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT `id_specific_price` 
+			FROM `'._DB_PREFIX_.'specific_price` 
+			WHERE `id_product` = '.(int)$id_product);
 	}
 
    // score generation for quantity discount
@@ -96,10 +99,12 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getPriority($id_product)
     {
+		if (!self::isFeatureActive())
+			return Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
 
     	if (!isset(self::$_cache_priorities[(int)$id_product]))
     	{
-		   self::$_cache_priorities[(int)$id_product] = Db::getInstance()->getValue('
+		   self::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		   SELECT `priority`
 			FROM `'._DB_PREFIX_.'specific_price_priority`
 			WHERE `id_product` = '.(int)$id_product);
@@ -114,6 +119,9 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		/*
 		** The date is not taken into account for the cache, but this is for the better because it keeps the consistency for the whole script.
 		** The price must not change between the top and the bottom of the page
@@ -123,7 +131,7 @@ class SpecificPriceCore extends ObjectModel
 		if (!array_key_exists($key, self::$_specificPriceCache))
 		{
 			$now = date('Y-m-d H:i:s');
-			self::$_specificPriceCache[$key] = Db::getInstance()->getRow('
+			self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT *, '.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 				FROM `'._DB_PREFIX_.'specific_price`
 				WHERE `id_product` IN (0, '.(int)$id_product.')
@@ -176,8 +184,11 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		$now = date('Y-m-d H:i:s');
-		$res =  Db::getInstance()->ExecuteS('
+		$res =  Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 			FROM `'._DB_PREFIX_.'specific_price`
@@ -215,8 +226,11 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		$now = date('Y-m-d H:i:s');
-		return Db::getInstance()->getRow('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 			FROM `'._DB_PREFIX_.'specific_price`
@@ -238,7 +252,10 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending)
 	{
-		$resource = Db::getInstance()->ExecuteS('
+		if (!self::isFeatureActive())
+			return array();
+		
+		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)($id_shop).') AND
@@ -271,5 +288,20 @@ class SpecificPriceCore extends ObjectModel
 			$this->id_product = (int)($id_product);
 		return $this->add();
 	}
+	
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'specific_price`
+			');
+		return self::$feature_active;
+	} 
 }
 

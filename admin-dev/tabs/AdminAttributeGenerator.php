@@ -99,7 +99,7 @@ class AdminAttributeGenerator extends AdminTab
 		parent::postProcess();
 	}
 
-	static private function displayAndReturnAttributeJs()
+	private static function displayAndReturnAttributeJs()
 	{
 		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		$attributeJs = array();
@@ -142,7 +142,7 @@ class AdminAttributeGenerator extends AdminTab
 				</div>';
 	}
 
-    static private function setAttributesImpacts($id_product, $tab)
+    private static function setAttributesImpacts($id_product, $tab)
     {
         $attributes = array();
         foreach ($tab AS $group)
@@ -155,7 +155,7 @@ class AdminAttributeGenerator extends AdminTab
 		);
     }
 
-    static private function getAttributesImpacts($id_product)
+    private static function getAttributesImpacts($id_product)
     {
         $tab = array();
         $result = Db::getInstance()->ExecuteS(
@@ -216,6 +216,12 @@ class AdminAttributeGenerator extends AdminTab
 
 	public function displayForm($isMainTab = true)
 	{
+		if (!Combination::isFeatureActive())
+		{
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			return;
+		}
+		
 		parent::displayForm();
 
 		$jsAttributes = self::displayAndReturnAttributeJs();

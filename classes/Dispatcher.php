@@ -428,10 +428,8 @@ class DispatcherCore
 		$controller_files = scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'controllers');
 		$controllers = array();
 		foreach ($controller_files as $controller_filename)
-		{
 			if (substr($controller_filename, -14, 14) == 'Controller.php')
 				$controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
-		}
 
 		// add default controller
 		$controllers['index'] = 'IndexController';

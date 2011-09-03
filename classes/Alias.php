@@ -37,6 +37,8 @@ class AliasCore extends ObjectModel
 
 	protected 	$table = 'alias';
 	protected 	$identifier = 'id_alias';
+	
+	protected static $feature_active = null;
 
 	function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{
@@ -44,27 +46,38 @@ class AliasCore extends ObjectModel
 			parent::__construct($id);
 		elseif ($alias AND Validate::isValidSearch($alias))
 		{
-			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT a.id_alias, a.search, a.alias
-			FROM `'._DB_PREFIX_.'alias` a
-			WHERE `alias` LIKE \''.pSQL($alias).'\' AND `active` = 1');
-
-			if ($row)
-			{
-			 	$this->id = (int)($row['id_alias']);
-			 	$this->search = $search ? trim($search) : $row['search'];
-				$this->alias = $row['alias'];
-			}
-			else
+			if (!self::isFeatureActive())
 			{
 				$this->alias = trim($alias);
 				$this->search = trim($search);
+			}
+			else 
+			{
+				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+				SELECT a.id_alias, a.search, a.alias
+				FROM `'._DB_PREFIX_.'alias` a
+				WHERE `alias` LIKE \''.pSQL($alias).'\' AND `active` = 1');
+	
+				if ($row)
+				{
+				 	$this->id = (int)($row['id_alias']);
+				 	$this->search = $search ? trim($search) : $row['search'];
+					$this->alias = $row['alias'];
+				}
+				else
+				{
+					$this->alias = trim($alias);
+					$this->search = trim($search);
+				}
 			}
 		}
 	}
 
 	public function getAliases()
 	{
+		if (!self::isFeatureActive())
+			return '';
+		
 		$aliases = Db::getInstance()->ExecuteS('
 		SELECT a.alias
 		FROM `'._DB_PREFIX_.'alias` a
@@ -83,5 +96,20 @@ class AliasCore extends ObjectModel
 		$fields['active'] = (int)($this->active);
 		return $fields;
 	}
+	
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'alias`
+			');
+		return self::$feature_active;
+	} 
 }
 

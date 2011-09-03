@@ -682,7 +682,7 @@ class ValidateCore
 	
 	public static function isUnixName($data)
 	{
-		return preg_match('/^[a-z0-9_-]+$/ui', $data);
+		return preg_match('/^[a-z0-9\._-]+$/ui', $data);
 	}
 	
 	public static function isTablePrefix($data)

@@ -51,6 +51,8 @@ class SceneCore extends ObjectModel
  	protected 	$fieldsSizeLang = array('name' => 100);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
  	
+ 	protected static	$feature_active = null;
+ 	
  	public function __construct($id = NULL, $id_lang = NULL, $liteResult = true, $hideScenePosition = false)
 	{
 		parent::__construct((int)($id), (int)($id_lang));
@@ -181,8 +183,11 @@ class SceneCore extends ObjectModel
 	*
 	* @return array Products
 	*/
-	static public function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true, Context $context = null)
+	public static function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true, Context $context = null)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		if (!$context)
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
@@ -211,6 +216,9 @@ class SceneCore extends ObjectModel
 	*/
 	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true, Context $context = null)
 	{
+		if (!self::isFeatureActive())
+			return array();
+		
 		if (!$context)
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
@@ -256,6 +264,21 @@ class SceneCore extends ObjectModel
 	public static function hideScenePosition($name)
 	{
 		return preg_replace('/^[0-9]+\./', '', $name);
+	}
+	
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'scene`
+			');
+		return self::$feature_active;
 	}
 }
 

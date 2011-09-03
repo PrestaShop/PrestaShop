@@ -118,9 +118,9 @@ class OrderSlipCore extends ObjectModel
 					$realProductPrice = $resTab[$key]['product_price'];
 					foreach ($discounts as $discount)
 					{
-						if ($discount['id_discount_type'] == 1)
+						if ($discount['id_discount_type'] == Discount::PERCENT)
 							$resTab[$key]['product_price'] -= $realProductPrice * ($discount['value'] / 100);
-						elseif ($discount['id_discount_type'] == 2)
+						elseif ($discount['id_discount_type'] == Discount::AMOUNT)
 							$resTab[$key]['product_price'] -= (($discount['value'] * ($product['product_price_wt'] / $order->total_products_wt)) / (1.00 + ($product['tax_rate'] / 100)));
 					}
 

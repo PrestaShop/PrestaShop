@@ -456,7 +456,7 @@ class Followup extends Module
 	private function createDiscount($id_email_type, $amount, $id_customer, $dateValidity, $description)
 	{
 		$discount = new Discount();
-		$discount->id_discount_type = 1;
+		$discount->id_discount_type = Discount::PERCENT;
 		$discount->value = (float)($amount);
 		$discount->id_customer = (int)($id_customer);
 		$discount->date_to = $dateValidity;

@@ -148,12 +148,12 @@ class MailAlerts extends Module
 
 				foreach ($customizedDatas[$product['product_id']][$product['product_attribute_id']] AS $customization)
 				{
-					if (isset($customization['datas'][_CUSTOMIZE_TEXTFIELD_]))
-						foreach ($customization['datas'][_CUSTOMIZE_TEXTFIELD_] AS $text)
+					if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
+						foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] AS $text)
 							$customizationText .= $text['name'].':'.' '.$text['value'].'<br />';
 					
-					if (isset($customization['datas'][_CUSTOMIZE_FILE_]))
-						$customizationText .= sizeof($customization['datas'][_CUSTOMIZE_FILE_]) .' '. Tools::displayError('image(s)').'<br />';
+					if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
+						$customizationText .= sizeof($customization['datas'][Product::CUSTOMIZE_FILE]) .' '. Tools::displayError('image(s)').'<br />';
 						
 					$customizationText .= '---<br />';							
 				}

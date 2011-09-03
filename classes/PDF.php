@@ -787,11 +787,11 @@ class PDFCore extends PDF_PageGroupCore
 						$customizationGroup = $customizedData['datas'];
 						$nb_images = 0;
 						
-						if (array_key_exists(_CUSTOMIZE_FILE_, $customizationGroup))
-							$nb_images = sizeof($customizationGroup[_CUSTOMIZE_FILE_]);
+						if (array_key_exists(Product::CUSTOMIZE_FILE, $customizationGroup))
+							$nb_images = sizeof($customizationGroup[Product::CUSTOMIZE_FILE]);
 
-						if (array_key_exists(_CUSTOMIZE_TEXTFIELD_, $customizationGroup))
-							foreach($customizationGroup[_CUSTOMIZE_TEXTFIELD_] as $customization)
+						if (array_key_exists(Product::CUSTOMIZE_TEXTFIELD, $customizationGroup))
+							foreach($customizationGroup[Product::CUSTOMIZE_TEXTFIELD] as $customization)
 								if(!empty($customization['name'])) $custoLabel .= '- '.$customization['name'].': '.$customization['value']."\n"; 
 								
 						

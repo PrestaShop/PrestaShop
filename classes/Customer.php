@@ -481,6 +481,9 @@ class CustomerCore extends ObjectModel
 
 	public static function getGroupsStatic($id_customer)
 	{
+		if (!Group::isFeatureActive())
+			return array(1);
+		
 		$groups = array();
 		$result = Db::getInstance()->ExecuteS('
 		SELECT cg.`id_group`
@@ -511,6 +514,9 @@ class CustomerCore extends ObjectModel
 
 	public static function getDefaultGroupId($id_customer)
 	{
+		if (!Group::isFeatureActive())
+			return 1;
+
 		if (!isset(self::$_defaultGroupId[(int)($id_customer)]))
 			self::$_defaultGroupId[(int)($id_customer)] = Db::getInstance()->getValue('SELECT `id_default_group` FROM `'._DB_PREFIX_.'customer` WHERE `id_customer` = '.(int)$id_customer);
 		return self::$_defaultGroupId[(int)($id_customer)];

@@ -27,6 +27,7 @@
 
 class CustomizationCore
 {
+	protected static $feature_active = null;
 
 	public static function getReturnedCustomizations($id_order)
 	{
@@ -94,9 +95,7 @@ class CustomizationCore
 							 WHERE `id_customization` IN ('.$in_values.')');
 
 			foreach($results as $row)
-			{
 				$quantities[$row['id_customization']] = $row;
-			}
 		}
 
 		return $quantities;
@@ -114,12 +113,25 @@ class CustomizationCore
 					);
 
 		foreach($results as $row)
-		{
 			$quantity[$row['id_product']][$row['product_attribute_id']] = $row['quantity'];
-		}
 
 		return $quantity;
 	}
 
+	/**
+	 * This method is allow to know if a feature is used or active
+	 * @since 1.5.0.1
+	 * @return bool
+	 */
+	public static function isFeatureActive()
+	{
+		if (self::$feature_active === null)
+			self::$feature_active = (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(*) 
+				FROM `'._DB_PREFIX_.'customization_field`
+			') > 1);
+		return self::$feature_active;
+	}
+	
 }
 
