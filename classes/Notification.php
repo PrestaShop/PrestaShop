@@ -46,7 +46,7 @@ class Notification
 		$employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT id_last_order, id_last_message, id_last_customer 
 				FROM `'._DB_PREFIX_.'employee` 
-				WHERE `id_employee` = '.(int)$this->context->employee->id);
+				WHERE `id_employee` = '.(int)Context::getContext()->employee->id);
 				
 		foreach ($this->types as $type)
 			$notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
@@ -94,7 +94,7 @@ class Notification
 					UPDATE `'._DB_PREFIX_.'employee` 
 					SET `id_last_'.pSQL($type).'` = (SELECT MAX(`id_'.$type.'`) 
 					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`) 
-					WHERE `id_employee` = '.(int)$this->context->employee->id);	 
+					WHERE `id_employee` = '.(int)Context::getContext()->employee->id);	 
 		else 
 			return false;
 	}	
