@@ -27,6 +27,7 @@
 
 class UpgraderCore{
 	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
+	private static $rss_version_link = 'http://www.prestashop.com/xml/version.xml';
 	/**
 	 * link contains hte url where to download the file
 	 * 
@@ -98,7 +99,7 @@ class UpgraderCore{
 			if (!($this->autoUpgrade AND $lastCheck) AND ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) )
 			{
 			libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
-			if ($feed = @simplexml_load_file('http://www.prestashop.com/xml/version.xml'))
+				if ($feed = @simplexml_load_file(self::$rss_version_link))
 			{
 					$this->version_name = (string)$feed->version->name;
 					$this->version_num = (string)$feed->version->num;

@@ -39,6 +39,8 @@ class GuestTrackingControllerCore extends FrontController
 	
 	public function process()
 	{
+		global $link;
+		
 		parent::process();
 		
 		if ($id_order = Tools::getValue('id_order') AND $email = Tools::getValue('email'))
@@ -116,7 +118,7 @@ class GuestTrackingControllerCore extends FrontController
 		}
 		
 		$this->context->smarty->assign(array(
-			'action' => 'guest-tracking.php',
+			'action' => $link->getPageLink('guest-tracking.php'),
 			'errors' => $this->errors
 		));
 	}

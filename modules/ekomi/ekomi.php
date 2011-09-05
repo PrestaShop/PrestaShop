@@ -37,7 +37,7 @@ class Ekomi extends Module
     {
         $this->name = 'ekomi';
         $this->tab = 'advertising_marketing';
-        $this->version = 1.0;
+		$this->version = 1.1;
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -83,9 +83,9 @@ class Ekomi extends Module
 					<br class="clear"/><br />
 					<label>Display block</label>
 					<div class="margin-form">
-						<input type="radio" name="ekomi_display" id="ekomi_display_on" value="1" />
+						<input type="radio" name="ekomi_display" id="ekomi_display_on" value="1" '.(Configuration::get('PS_EKOMI_DISPLAY') == 1 ? 'checked="checked"' : '').' />
 						<label class="t" for="ekomi_display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-						<input type="radio" name="ekomi_display" id="ekomi_display_off" value="0" checked="checked" />
+						<input type="radio" name="ekomi_display" id="ekomi_display_off" value="0" '.(Configuration::get('PS_EKOMI_DISPLAY') == 0 ? 'checked="checked"' : '').' />
 						<label class="t" for="ekomi_display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 						<p class="clear">'.$this->l('Show or don\'t show the block (orders will be sent to eKomi whether you choose to hide or display the block).').'</p>
 					</div>

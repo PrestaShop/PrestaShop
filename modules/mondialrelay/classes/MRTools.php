@@ -32,10 +32,17 @@ class MRTools
 {
 	static public function replaceAccentedCharacters($string)
 	{
+		if (function_exists('iconv'))
+		{
 		$currentLocale = setlocale(LC_ALL, NULL);
 		setlocale(LC_ALL, 'en_US.UTF8');
 		$cleanedString = iconv('UTF-8','ASCII//TRANSLIT', $string);
 		setLocale(LC_ALL, $currentLocale);
+		}
+		else
+			$cleanedString = strtr($string,
+			'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
+			'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
 		return $cleanedString;
 	}
 	
@@ -48,8 +55,9 @@ class MRTools
 				FROM `'._DB_PREFIX_.'country`
 				WHERE `id_country` = '.(int)$id_country);
 
+		// Skip the cheking format if doesn't exist
 		if (!$zipcodeFormat)
-			return false;
+			return true;
 
 		$regxMask = str_replace(
 				array('N', 'C', 'L'),

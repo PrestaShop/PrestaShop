@@ -232,7 +232,7 @@ INSERT INTO `PREFIX_category_lang` (`id_category`, `id_lang`, `name`, `descripti
 
 INSERT INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`) VALUES
 (1, 0, 1, 'lightblue', 1, 0, 0),(2, 1, 1, '#DDEEFF', 1, 1, 0),(3, 1, 1, '#FFDD99', 1, 1, 1),(4, 1, 1, '#EEDDFF', 1, 1, 1),(5, 1, 0, '#DDFFAA', 1, 1, 1),
-(6, 0, 1, '#DADADA', 1, 0, 0),(7, 1, 1, '#FFFFBB', 1, 0, 0),(8, 0, 1, '#FFDFDF', 1, 0, 0),(9, 1, 1, '#FFD3D3', 1, 0, 0),(10, 0, 1, 'lightblue', 1, 0, 0),(11, 0, 0, 'lightblue', 1, 0, 0),(12, 0, 0, 'lightblue', 1, 0, 0);
+(6, 0, 1, '#DADADA', 1, 0, 0),(7, 1, 1, '#FFFFBB', 1, 0, 0),(8, 0, 1, '#FFDFDF', 1, 0, 0),(9, 1, 1, '#FFD3D3', 1, 0, 0),(10, 0, 1, 'lightblue', 1, 0, 0),(11, 0, 0, 'lightblue', 1, 0, 0),(12, 1, 0, '#DDEEFF', 1, 1, 0);
 
 INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `template`) VALUES
 (1, 1, 'Awaiting cheque payment', 'cheque'),
@@ -307,7 +307,7 @@ INSERT INTO `PREFIX_country` (`id_country`, `id_zone`, `iso_code`, `call_prefix`
 (6, 1, 'ES', 34, 1, 0, 1, 1, 'NNNNN', 1),(7, 1, 'FI', 358, 1, 0, 0, 1, 'NNNNN', 1),(8, 1, 'FR', 33, 1, 0, 0, 1, 'NNNNN', 1),(9, 1, 'GR', 30, 1, 0, 0, 1, 'NNNNN', 1),(10, 1, 'IT', 39, 1, 1, 0, 1, 'NNNNN', 1),
 (11, 3, 'JP', 81, 1, 1, 0, 1, 'NNN-NNNN', 1),(12, 1, 'LU', 352, 1, 0, 0, 1, 'NNNN', 1),(13, 1, 'NL', 31, 1, 0, 0, 1, 'NNNN LL', 1),(14, 1, 'PL', 48, 1, 0, 0, 1, 'NN-NNN', 1),
 (15, 1, 'PT', 351, 1, 0, 0, 1, 'NNNN NNN', 1),(16, 1, 'CZ', 420, 1, 0, 0, 1, 'NNN NN', 1),(17, 1, 'GB', 44, 1, 0, 0, 1, '', 1),(18, 1, 'SE', 46, 1, 0, 0, 1, 'NNN NN', 1),
-(19, 7, 'CH', 41, 1, 0, 0, 1, 'NNNN', 1),(20, 1, 'DK', 45, 1, 0, 0, 1, 'NNNN', 1),(21, 2, 'US', 1, 1, 1, 0, 1, 'NNNNN', 1),(22, 3, 'HK', 852, 1, 0, 0, 0, '', 1),(23, 1, 'NO', 47, 1, 0, 0, 1, 'NNNN', 1),
+(19, 7, 'CH', 41, 1, 0, 0, 1, 'NNNN', 1),(20, 1, 'DK', 45, 1, 0, 0, 1, 'NNNN', 1),(21, 2, 'US', 1, 1, 1, 0, 1, 'NNNNN', 0),(22, 3, 'HK', 852, 1, 0, 0, 0, '', 1),(23, 1, 'NO', 47, 1, 0, 0, 1, 'NNNN', 1),
 (24, 5, 'AU', 61, 1, 0, 0, 1, 'NNNN', 1),(25, 3, 'SG', 65, 1, 0, 0, 1, 'NNNNNN', 1),(26, 1, 'IE', 353, 1, 0, 0, 1, '', 1),(27, 5, 'NZ', 64, 1, 0, 0, 1, 'NNNN', 1),(28, 3, 'KR', 82, 1, 0, 0, 1, 'NNN-NNN', 1),
 (29, 3, 'IL', 972, 1, 0, 0, 1, 'NNNNN', 1),(30, 4, 'ZA', 27, 1, 0, 0, 1, 'NNNN', 1),(31, 4, 'NG', 234, 1, 0, 0, 1, '', 1),(32, 4, 'CI', 225, 1, 0, 0, 1, '', 1),(33, 4, 'TG', 228, 1, 0, 0, 1, '', 1),
 (34, 6, 'BO', 591, 1, 0, 0, 1, '', 1),(35, 4, 'MU', 230, 1, 0, 0, 1, '', 1),(36, 1, 'RO', 40, 1, 0, 0, 1, 'NNNNNN', 1),(37, 1, 'SK', 421, 1, 0, 0, 1, 'NNN NN', 1),(38, 4, 'DZ', 213, 1, 0, 0, 1, 'NNNNN', 1),

@@ -258,7 +258,7 @@ function verifyThisStep()
 
 function setInstallerLanguage ()
 {
-	$("#formSetInstallerLanguage").submit();
+	$('#formSetInstallerLanguage').submit();
 }
 
 function verifyAndSetRequire(firsttime)
@@ -446,20 +446,36 @@ function createDB()
 				for (i = 0; countries_ret[i]; i=i+1)
 				{
 					html = html + '<option rel="'+countries_ret[i].getAttribute('iso')+'" value="'+countries_ret[i].getAttribute("value")+'" ';
-					if (countries_ret[i].getAttribute("value") == 8)
+					if (id_lang == 0)
+						$('#infosCountry').find('option[disabled=disabled]').attr('selected', 'selected');
+					else if (id_lang == 1 && countries_ret[i].getAttribute('value') == 8) /* France */
 						html = html + ' selected="selected" ';
-					html = html + ' >'+countries_ret[i].getAttribute("name")+'</option>';
+					else if (id_lang == 2 && countries_ret[i].getAttribute('value') == 6) /* Spain */
+						html = html + ' selected="selected" ';
+					else if (id_lang == 3 && countries_ret[i].getAttribute('value') == 1) /* Germany */
+						html = html + ' selected="selected" ';
+					else if (id_lang == 4 && countries_ret[i].getAttribute('value') == 10) /* Italy */
+						html = html + ' selected="selected" ';
+					html = html + ' >'+countries_ret[i].getAttribute('name')+'</option>';
 				}
-				$('#infosCountry').html(html);
+				$('#infosCountry').append(html);
 				html = '';
 				for (i = 0; timezone_ret[i]; i=i+1)
 				{
 					html = html + '<option value="'+timezone_ret[i].getAttribute("value")+'" ';
-					if (timezone_ret[i].getAttribute("value") == "Europe/Paris")
+					if (id_lang == 0)
+						$('#infosTimezone').find('option[disabled=disabled]').attr('selected', 'selected');
+					else if (id_lang == 1 && timezone_ret[i].getAttribute('value') == 'Europe/Paris') /* France */
 						html = html + ' selected="selected" ';
+					else if (id_lang == 2 && timezone_ret[i].getAttribute('value') == 'Europe/Madrid') /* Spain */
+						html = html + ' selected="selected" ';
+					else if (id_lang == 3 && timezone_ret[i].getAttribute('value') == 'Europe/Berlin') /* Germany */
+						html = html + ' selected="selected" ';
+					else if (id_lang == 4 && timezone_ret[i].getAttribute('value') == 'Europe/Rome') /* Italy */
+						html = html + ' selected="selected" ';					
 					html = html + ' >'+timezone_ret[i].getAttribute("name")+'</option>';
 				}
-				$('#infosTimezone').html(html);
+				$('#infosTimezone').append(html);
 				showStep(step+1, 'next');
 			}
 			else
@@ -628,25 +644,25 @@ function moveLanguage(direction)
 	}
 }
 
-function ajaxRefreshField(nthField, idResultField, fieldsList, inputId)
+function ajaxRefreshField(ret, idResultField, fieldMsg)
 {
-	var result = fieldsList[nthField].getAttribute("result");
-	if (result != "ok")
+	var pattern = 'field[id='+idResultField+']';
+	var result = $(ret).children().find(pattern).attr('result');
+	var error = $(ret).children().find(pattern).attr('error');
+	
+	if (error === undefined || result === undefined)
+		return true;
+		
+	if (result != 'ok')
 	{
-		$("#"+idResultField)
-			.html( txtError[parseInt(fieldsList[nthField].getAttribute("error"))] )
-			.addClass("errorBlock")
-			.show("slow");
+		$('#'+fieldMsg).html(txtError[parseInt(error)]).addClass('errorBlock').show('slow');
 		if (validShopInfos)
-			$("#"+inputId).focus();
+			$('#'+idResultField).focus();
 		return false;
 	}
 	else
 	{
-		$("#"+idResultField)
-			.html("")
-			.removeClass("errorBlock")
-			.show("slow");
+		$('#'+fieldMsg).html('').removeClass('errorBlock').show('slow');
 		return true;
 	}
 }
@@ -664,7 +680,7 @@ function verifyShopInfos()
 	
 	$.ajax(
 	{
-	   url: "model.php",
+	   url: 'model.php',
 	   async: true,
 	   cache: false,
 	   data:
@@ -693,21 +709,22 @@ function verifyShopInfos()
 		"&isoCodeLocalLanguage="+isoCodeLocalLanguage,
 	   success: function(ret)
 	   {
-			fieldsList = ret.getElementsByTagName('shopConfig')[0].getElementsByTagName('field');
 			validShopInfos = true;
-			if (!ajaxRefreshField(0, "resultInfosShop", fieldsList, "infosShop")) validShopInfos = false;
-			else if (!ajaxRefreshField(4, "resultInfosShop", fieldsList, "validateShop")) validShopInfos = false;
-			else if (!ajaxRefreshField(1, "resultInfosFirstname", fieldsList, "infosFirstname")) validShopInfos = false;
-			else if (!ajaxRefreshField(2, "resultInfosName", fieldsList, "infosName")) validShopInfos = false;
-			else if (!ajaxRefreshField(3, "resultInfosEmail", fieldsList, "infosEmail")) validShopInfos = false;
-			else if (!ajaxRefreshField(7, "resultInfosPassword", fieldsList, "infosPassword")) validShopInfos = false;
-			else if (!ajaxRefreshField(8, "resultInfosPasswordRepeat", fieldsList, "infosPasswordRepeat")) validShopInfos = false;
-			else if (!ajaxRefreshField(9, "resultInfosLanguages", fieldsList, "infosLanguages")) validShopInfos = false;
-			else if (!ajaxRefreshField(11, "resultInfosSQL", fieldsList, "infosSQL")) validShopInfos = false;
-			else if (!ajaxRefreshField(10, "resultInfosNotification", fieldsList, "infosNotification")) validShopInfos = false;
-			else if (!ajaxRefreshField(5, "resultInfosFirstname", fieldsList, "validateFirstname")) validShopInfos = false;
-			else if (!ajaxRefreshField(6, "resultInfosName", fieldsList, "validateName")) validShopInfos = false;
-			else if (!ajaxRefreshField(12, "resultCatalogMode", fieldsList, "validateCatalogMode")) validCatalogMode = false;
+			if (!ajaxRefreshField(ret, 'infosShop', 'resultInfosShop')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosCountry', 'resultInfosCountry')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosTimezone', 'resultInfosTimezone')) validShopInfos = false;	
+			else if (!ajaxRefreshField(ret, 'validateShop', 'resultInfosShop')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosFirstname', 'resultInfosFirstname')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosName', 'resultInfosName')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosEmail', 'resultInfosEmail')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosPassword', 'resultInfosPassword')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosPasswordRepeat', 'resultInfosPasswordRepeat')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosLanguages', 'resultInfosLanguages')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosSQL', 'resultInfosSQL')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'infosNotification', 'resultInfosNotification')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'validateFirstname', 'resultInfosFirstname')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'validateName', 'resultInfosName')) validShopInfos = false;
+			else if (!ajaxRefreshField(ret, 'validateCatalogMode', 'resultCatalogMode')) validCatalogMode = false;
 			else
 			{
 				$('#endShopName').html($('input#infosShop').val());
@@ -721,15 +738,10 @@ function verifyShopInfos()
 	 );
 }
 
-function autoCheckField(idField, idResultSpan, typeVerif)
+function checkRequired(idResultSpan, resValue)
 {
-	switch (typeVerif)
+	if(resValue == "")
 	{
-		case "required" :
-			$(idField).blur(function()
-			{
-				if($(this).val() == "")
-				{
 					$(idResultSpan)
 						.show("slow")
 						.addClass("errorBlock")
@@ -743,7 +755,15 @@ function autoCheckField(idField, idResultSpan, typeVerif)
 						.html("");
 				}
 			}
-			);
+
+function autoCheckField(idField, idResultSpan, typeVerif)
+{
+	switch (typeVerif)
+	{
+		case "required" :
+			$(idField).blur(function() { checkRequired(idResultSpan, $(this).val()); });
+			if (idField == '#infosCountry' || idField == '#infosTimezone')
+				$(idField).change(function() { checkRequired(idResultSpan, $(this).val()); });
 		break;
 		
 		case "mailFormat" :
@@ -998,6 +1018,8 @@ $(document).ready(
 		//autocheck fields
 		autoCheckField("#infosShop", "#resultInfosShop", "required");
 		autoCheckField("#infosFirstname", "#resultInfosFirstname", "firstnameFormat");
+		autoCheckField("#infosCountry", "#resultInfosCountry", "required");
+		autoCheckField("#infosTimezone", "#resultInfosTimezone", "required");
 		autoCheckField("#infosName", "#resultInfosName", "nameFormat");
 		autoCheckField("#infosEmail", "#resultInfosEmail", "mailFormat");
 		autoCheckField("#infosPassword", "#resultInfosPassword", "required");

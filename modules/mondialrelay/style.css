@@ -277,11 +277,12 @@ tr.PS_MRSelectedCarrier > td
 
 .PS_MRFloatRelayPointSelected a.PS_MRSelectRelayPointButton 
 {
+	font-size: 10px;
 	float:right;
 	display: block;
 	width: 60px;
 	height: 20px;
-	padding: 6px 20px 0px 25px;
+	padding: 7px 20px 0px 25px;
 	text-decoration: none;
 	margin-top: 8px;
 	color:#333333;
@@ -314,3 +315,14 @@ div#PS_MRPersonalizedFields
 {
 	display:none;
 }
+
+.clearfix:before,
+.clearfix:after 
+{
+	content: ".";
+	display: block;
+	height: 0;
+	overflow: hidden
+}
+.clearfix:after {clear: both}
+.clearfix {zoom: 1}

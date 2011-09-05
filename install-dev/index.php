@@ -124,10 +124,10 @@ if ($lm->getIncludeTradFilename())
 		//php to js vars
 		var isoCodeLocalLanguage = "<?php echo $lm->getIsoCodeSelectedLang(); ?>";
 		var ps_base_uri = "<?php echo PS_BASE_URI; ?>";
-		var id_lang = "<?php echo (isset($_GET['language']) ? (int)($_GET['language']) : 0); ?>";
+		var id_lang = <?php echo (isset($_GET['language']) ? (int)($_GET['language']) : 0); ?>;
 
 		//localWords
-		var Step1Title = "<?php echo lang('Welcome').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var Step1Title = "<?php echo sprintf(lang('Welcome to the PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step2title = "<?php echo lang('System Compatibility').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step3title = "<?php echo lang('System Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step4title = "<?php echo lang('Shop Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
@@ -268,6 +268,11 @@ if ($lm->getIncludeTradFilename())
 			<div><?php echo '<span>'.lang('Contact us!').'</span><br />'.lang('+33 (0)1.40.18.30.04'); ?></div>
 		</li>
 		<?php endif; ?>
+		<?php if ((isset($_GET['language']) AND $_GET['language'] == 0) OR $lm->getIsoCodeSelectedLang() == 'en'): ?>
+		<li id="phone_block" class="last">
+			<div><?php echo '<span>'.lang('Contact us!').'</span><br />'.lang('+1 (888) 947-6543'); ?></div>
+		</li>
+		<?php endif; ?>
 	</ul>
 
 	<div id="PrestaShopLogo">PrestaShop</div>
@@ -311,7 +316,8 @@ if ($lm->getIncludeTradFilename())
 			</ul>
 		</div>
 		
-		<h2><?php echo lang('Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.')?></h2>
+		<h2 id="welcome-title"><?php echo lang('Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.'); ?></h2>
+		<script type="text/javascript">$('#welcome-title').html(Step1Title);</script>
 		<p><?php echo lang('Please allow 5-15 minutes to complete the installation process.')?></p>
 		<p><?php echo lang('The PrestaShop Installer will do most of the work in just a few clicks.')?><br /><?php echo lang('However, you must know how to do the following manually:')?></p>
 		<ul>
@@ -326,9 +332,9 @@ if ($lm->getIncludeTradFilename())
 		<h2><?php echo lang('Choose the installer language:')?></h2>
 		<form id="formSetInstallerLanguage" action="<?php $_SERVER['REQUEST_URI']; ?>" method="get">
 			<ul id="langList" style="line-height: 20px;">
-			<?php foreach ($lm->getAvailableLangs() as $lang): ?>
+			<?php foreach ($lm->getAvailableLangs() AS $lang): ?>
 				<li><input onclick="setInstallerLanguage()" type="radio" value="<?php echo $lang['id'] ?>" <?php echo ( $lang['id'] == $lm->getIdSelectedLang() ) ? "checked=\"checked\"" : '' ?> id="lang_<?php echo $lang['id'] ?>" name="language" style="vertical-align: middle; margin-right: 0;" /><label for="lang_<?php echo $lang['id'] ?>">
-				<?php foreach ($lang->flags->url as $url_flag): ?>
+				<?php foreach ($lang->flags->url AS $url_flag): ?>
 					<img src="<?php echo $url_flag ?>" alt="<?php echo $lang['label'] ?>" style="vertical-align: middle;" />
 				<?php endforeach;  ?>
 				<?php echo $lang['label'] ?></label></li>
@@ -639,16 +645,20 @@ if ($lm->getIncludeTradFilename())
 				<div class="field">
 					<label for="infosCountry" class="aligned"><?php echo lang('Default country:'); ?></label>
 						<span class="contentinput">
-							<select id="infosCountry">
-					</select>
+							<select name="infosCountry" id="infosCountry">
+								<option disabled="disabled"><?php echo lang('-- Select your country --'); ?></option>
+							</select> <sup class="required">*</sup>
 						</span>
+						<span id="resultInfosCountry" class="result aligned"></span>
 				</div>
 				<div class="field">
 					<label for="infosTimezone" class="aligned"><?php echo lang('Shop\'s timezone:'); ?></label>
 						<span class="contentinput">
-							<select id="infosTimezone">
-					</select>
+							<select name="infosTimezone" id="infosTimezone">
+								<option disabled="disabled"><?php echo lang('-- Select your timezone --'); ?></option>
+							</select> <sup class="required">*</sup>
 						</span>
+						<span id="resultInfosTimezone" class="result aligned"></span>
 				</div>
 				<div class="field">
 					<label for="infosLogo" class="aligned logo"><?php echo lang('Shop logo'); ?> : </label>
@@ -737,6 +747,11 @@ if ($lm->getIncludeTradFilename())
 							$(".installModuleList.selected").removeClass("selected");
 							if ($("#modulesList" + $('select#infosCountry option:selected').attr('rel')))
 								$("#modulesList" + $('select#infosCountry option:selected').attr('rel')).addClass("selected");
+								$('#benefitsBlock').show();
+								if ($('div .installModuleList:visible').length == 0)
+									$('#benefitsBlock').hide();
+								else
+									$('#benefitsBlock').show();
 							$.ajax({
 								type: "GET",
 								url: "./php?controller=country_to_timezone.php?country="+$("select#infosCountry option:selected").attr('rel'),
@@ -744,6 +759,9 @@ if ($lm->getIncludeTradFilename())
 									$("select#infosTimezone").val(timezone);
 								}
 							});
+								
+								autoCheckField("#infosCountry", "#resultInfosCountry", "required");
+								autoCheckField("#infosTimezone", "#resultInfosTimezone", "required");
 						});
 					});
 				</script>
@@ -769,35 +787,36 @@ if ($lm->getIncludeTradFilename())
 						$result = simplexml_load_string($content);
 						if ($result->partner)
 						{
-							echo '
-							<h2>'.lang('Additional Benefits').'</h2>
-							<h3>'.lang('Exclusive offers dedicated to PrestaShop merchants').'</h3>';
-				
 							$modulesHelpInstall = array();
 							$modulesDescription = array();
 							$modulesPrechecked = array();
-							foreach ($result->partner as $p)
+								foreach ($result->partner AS $p)
 							{
 								$modulesDescription[trim($p->key)] = array('name' => trim($p->label), 'logo' => trim($p->logo_medium), 'label' => getPreinstallXmlLang($p, 'label'), 'description' => getPreinstallXmlLang($p, 'description'), 'more' => getPreinstallXmlLang($p, 'more'));
-								foreach ($p->country as $country_iso_code)
+									foreach ($p->country AS $country_iso_code)
 									$modulesHelpInstall[trim($country_iso_code)][] = trim($p->key);
 								if ($p->prechecked)
-									foreach ($p->prechecked as $country_iso_code)
+										foreach ($p->prechecked AS $country_iso_code)
 										$modulesPrechecked[trim($p->key)][trim($country_iso_code)] = 1;
 							}
-								echo '<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
+								
+								if (sizeof($modulesHelpInstall))
+								{
+									echo '
+									<h2>'.lang('Additional Benefits').'</h2>
+									<h3>'.lang('Exclusive offers dedicated to PrestaShop merchants').'</h3>
+									<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
 									<tr>
 										<th style="width: 30px;"></th>
-										<th style="width: 100px;">Modules</th>
-										<th style="padding: 12px; width: 430px;">Avantages</th>
+											<th style="width: 100px;">'.lang('Modules').'</th>
+											<th style="padding: 12px; width: 430px;">'.lang('Benefits').'</th>
 										</tr>
-									</table>
-								';
+									</table>';
 
-							foreach ($modulesHelpInstall as $country_iso_code => $modulesList)
+									foreach ($modulesHelpInstall AS $country_iso_code => $modulesList)
 							{
 								echo '<div class="installModuleList'.($country_iso_code == 'FR' ? ' selected' : '').'" id="modulesList'.$country_iso_code.'">';
-								foreach ($modulesList as $module)
+										foreach ($modulesList AS $module)
 								{
 									echo '
 										<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
@@ -881,6 +900,7 @@ if ($lm->getIncludeTradFilename())
 							}
 						}
 					}
+						}
 
 				?>
 				<!-- Partner Modules -->
@@ -891,7 +911,7 @@ if ($lm->getIncludeTradFilename())
 
 					<?php echo lang('Optional languages'); ?><br/>
 					<select style="width:300px;" id="aLList" multiple="multiple" size="4">
-					<?php foreach ($lm->getAvailableLangs() as $lang){
+						<?php foreach ($lm->getAvailableLangs() AS $lang){
 						if ( $lang['id'] != $lm->getIdSelectedLang() AND $lang['id']  != "0" ){ ?>
 							<option value="<?php echo $lang->idLangPS ?>"><?php echo $lang['label'] ?></option>
 					<?php }} ?>
@@ -907,7 +927,7 @@ if ($lm->getIncludeTradFilename())
 					<?php echo lang('Available shop languages'); ?><br/>
 					<select style="width:240px;" id="wLList" size="4">
 						<option value="en">English (English)</option>
-						<?php foreach ($lm->getAvailableLangs() as $lang){
+							<?php foreach ($lm->getAvailableLangs() AS $lang){
 							if ( $lang['id'] == $lm->getIdSelectedLang() AND $lang['id']  != "0" ){ ?>
 								<option value="<?php echo $lang->idLangPS ?>"><?php echo $lang['label'] ?></option>
 						<?php }} ?>
@@ -916,7 +936,7 @@ if ($lm->getIncludeTradFilename())
 					<label for="dLList"><?php echo lang('Shop\'s default language'); ?></label><br/>
 					<select style="width:180px;" id="dLList">
 						<option selected="selected" value="en">English (English)</option>
-						<?php foreach ($lm->getAvailableLangs() as $lang){
+							<?php foreach ($lm->getAvailableLangs() AS $lang){
 							if ( $lang['id'] == $lm->getIdSelectedLang() AND $lang['id']  != "0" ){ ?>
 								<option selected="selected" value="<?php echo $lang->idLangPS ?>"><?php echo $lang['label'] ?></option>
 						<?php }} ?>

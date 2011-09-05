@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.2.2';
+		$this->version = '1.2.3';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -1292,6 +1292,8 @@ class Ebay extends Module
 				}
 			}
 			$html .= '</tbody></table>';
+			if (Tools::getValue('section') == 'sync')
+				$html .= '<script>$(document).ready(function() { eBaySync(); });</script>';
 
 			if (Configuration::get('EBAY_SYNC_MODE') == 'B')
 			{
@@ -1299,10 +1301,7 @@ class Ebay extends Module
 					$(document).ready(function() {
 						$("#catSync").show("slow");
 						$("#ebay_sync_mode2").attr("checked", true);
-						';
-				if (Tools::getValue('section') == 'sync')
-					$html .= 'eBaySync();';
-				$html .= '});
+					});
 				</script>';
 			}
 

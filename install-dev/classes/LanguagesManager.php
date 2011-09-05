@@ -95,9 +95,9 @@ class LanguageManager
 		*/
 	private function setLanguage()
 	{
-		if ( !empty($_GET['language']))
+		if (isset($_GET['language']))
 			$id_lang =  (int)($_GET['language'])>0 ? $_GET['language'] : 0;
-		if (empty($id_lang))
+		if (!isset($id_lang))
 			$id_lang = ($this->getIdByHAL());
 		$this->lang = $this->xml_file->lang[(int)($id_lang)];
 	}
@@ -107,3 +107,4 @@ class LanguageManager
 		return ($this->lang == NULL) ? false : dirname(__FILE__).$this->lang['trad_file'];
 	}
 }
+
