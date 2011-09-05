@@ -76,6 +76,8 @@
   'DateRange' => 'override/classes/DateRange.php',
   'DbCore' => 'classes/Db.php',
   'Db' => 'override/classes/Db.php',
+  'DbMySQLiCore' => 'classes/DbMySQLi.php',
+  'DbMySQLi' => 'override/classes/DbMySQLi.php',
   'DeliveryCore' => 'classes/Delivery.php',
   'Delivery' => 'override/classes/Delivery.php',
   'DiscountCore' => 'classes/Discount.php',
