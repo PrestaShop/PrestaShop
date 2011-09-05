@@ -66,6 +66,72 @@ echo '
 			}
 		</style>
 		<script type="text/javascript">
+		function getPush()
+		{
+			$.post("ajax.php",{"getNotifications" : "1"}, function(data) {
+				if (data)
+				{
+					json = jQuery.parseJSON(data);
+					
+					// Add orders notifications to the list
+					html = "";
+					nb_notifs = 0;
+					$.each(json.order, function(property, value) {
+						html += "<li>'.translate("A new order has been made on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that order").'</a></li>";
+					});						
+					if (html != "")
+					{
+						$("#list_orders_notif").empty().append(html);
+						nb_notifs = $("#list_orders_notif li").length;
+						$("#orders_notif_value").text(nb_notifs);
+						$("#orders_notif_number_wrapper").show();
+					}
+					else
+					{
+						$("#orders_notif_number_wrapper").hide();
+					}	
+					
+					// Add customers notifications to the list
+					html = "";
+					nb_notifs = 0;
+					$.each(json.customer, function(property, value) {
+						html += "<li>'.translate("A new customer registered on your shop.").'<br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate("Click here to see that customer").'</a></li>";
+					});						
+					if (html != "")
+					{
+						$("#list_customers_notif").empty().append(html);
+						nb_notifs = $("#list_customers_notif li").length;
+						$("#customers_notif_value").text(nb_notifs);
+						$("#customers_notif_number_wrapper").show();
+					}
+					else
+					{
+						$("#customers_notif_number_wrapper").hide();
+					}
+					
+					// Add messages notifications to the list
+					html = "";
+					nb_notifs = 0;
+					$.each(json.message, function(property, value) {
+						html += "<li>'.translate("A new message posted on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that message").'</a></li>";
+					});
+					if (html != "")
+					{
+						$("#list_messages_notif").empty().append(html);
+						nb_notifs = $("#list_messages_notif li").length;
+						$("#messages_notif_value").text(nb_notifs);
+						$("#messages_notif_number_wrapper").show();
+					}
+					else
+					{
+						$("#messages_notif_number_wrapper").hide();
+					}
+					
+				}
+				setTimeout("getPush()",60000);
+			});
+		}
+		
 		$().ready(function()
 		{
 			var hints = $(\'.translatable span.hint\');
@@ -85,72 +151,6 @@ echo '		var html = "";
 			var nb_notifs = 0;
 			var wrapper_id = "";
 			var type = new Array();
-			
-			function getPush()
-			{
-				$.post("ajax.php",{"getNotifications" : "1"}, function(data) {
-					if (data)
-					{
-						json = jQuery.parseJSON(data);
-						
-						// Add orders notifications to the list
-						html = "";
-						nb_notifs = 0;
-						$.each(json.order, function(property, value) {
-							html += "<li>'.translate("A new order has been made on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that order").'</a></li>";
-						});						
-						if (html != "")
-						{
-							$("#list_orders_notif").empty().append(html);
-							nb_notifs = $("#list_orders_notif li").length;
-							$("#orders_notif_value").text(nb_notifs);
-							$("#orders_notif_number_wrapper").show();
-						}
-						else
-						{
-							$("#orders_notif_number_wrapper").hide();
-						}	
-						
-						// Add customers notifications to the list
-						html = "";
-						nb_notifs = 0;
-						$.each(json.customer, function(property, value) {
-							html += "<li>'.translate("A new customer registered on your shop.").'<br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate("Click here to see that customer").'</a></li>";
-						});						
-						if (html != "")
-						{
-							$("#list_customers_notif").empty().append(html);
-							nb_notifs = $("#list_customers_notif li").length;
-							$("#customers_notif_value").text(nb_notifs);
-							$("#customers_notif_number_wrapper").show();
-						}
-						else
-						{
-							$("#customers_notif_number_wrapper").hide();
-						}
-						
-						// Add messages notifications to the list
-						html = "";
-						nb_notifs = 0;
-						$.each(json.message, function(property, value) {
-							html += "<li>'.translate("A new message posted on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that message").'</a></li>";
-						});						
-						if (html != "")
-						{
-							$("#list_messages_notif").empty().append(html);
-							nb_notifs = $("#list_messages_notif li").length;
-							$("#messages_notif_value").text(nb_notifs);
-							$("#messages_notif_number_wrapper").show();
-						}
-						else
-						{
-							$("#messages_notif_number_wrapper").hide();
-						}
-						
-					}
-					setTimeout("getPush()",60000);
-				});
-			}
 			
 			$(".notifs").live("click", function(){
 				wrapper_id = $(this).attr("id");
