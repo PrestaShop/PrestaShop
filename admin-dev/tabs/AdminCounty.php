@@ -38,7 +38,7 @@ class AdminCounty extends AdminTab
 
 		$this->fieldsDisplay = array(
 		'id_county' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('County'), 'width' => 130, 'filter_key' => 'b!name'),
+		'name' => array('title' => $this->l('County'), 'width' => 130, 'filter_key' => 'a!name'),
 		'state' => array('title' => $this->l('State'), 'width' => 70, 'filter_key' => 's!name'),
 		'a!active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'a!active'));
 

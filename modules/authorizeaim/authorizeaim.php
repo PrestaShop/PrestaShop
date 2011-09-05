@@ -34,7 +34,7 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->need_instance = 0;
@@ -140,7 +140,7 @@ class authorizeAIM extends PaymentModule
 
 	public function hookPayment($params)
 	{
-		if (Tools::usingSecureMode() AND Configuration::get('PS_SSL_ENABLED'))
+		if (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$invoiceAddress = new Address((int)$params['cart']->id_address_invoice);
 			

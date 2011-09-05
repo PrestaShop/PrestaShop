@@ -20,6 +20,10 @@ $database = Tools::getValue('database');
 $prefix = Tools::getValue('prefix');
 $save = Tools::getValue('save');
 
+$url = Tools::getValue('url');
+$loginws = Tools::getValue('loginws');
+$apikey = Tools::getValue('apikey');
+
 if (Tools::isSubmit('checkAndSaveConfig'))
 {
 	//cleans the database if an import has already been done
@@ -69,6 +73,35 @@ if (Tools::isSubmit('getData') || Tools::isSubmit('syncLang') || Tools::isSubmit
 		}
 	}
 }
+if (Tools::isSubmit('getDataWS') || Tools::isSubmit('syncLangWS') || Tools::isSubmit('syncCurrencyWS'))
+{		
+	if (Tools::isSubmit('syncLangWS'))
+		$save = true;
+
+	if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
+	{
+		require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
+		
+		try
+		{
+			$importModule = new $moduleName();
+			$importModule->connect($url,$loginws,$apikey);
+			
+			if (!method_exists($importModule, $getMethod))
+				die('{"hasError" : true, "error" : ["not_exist"], "datas" : []}');
+			else
+			{
+				$return = call_user_func_array(array($importModule, $getMethod), array($limit, $nbr_import));
+				$shopImporter = new shopImporter();
+				$shopImporter->generiqueImport($className, $return, (bool)$save);
+			}
+			die('{"hasError" : false, "error" : []}');
+		} catch (Exception $e)
+		{
+			die('{"hasError" : true, "error" : ['.json_encode($e->getMessage()).'], "datas" : []}');	
+		}
+	}
+}
 
 if (Tools::isSubmit('truncatTable'))
 {	
@@ -114,6 +147,43 @@ if (Tools::isSubmit('displaySpecificOptions'))
 			die(Tools::displayError('Link to database cannot be established.'));
 	}
 }
+elseif (Tools::isSubmit('displaySpecificOptionsWsdl'))
+{
+	if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
+	{
+		require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
+		$importModule = new $moduleName();
+
+		try
+		{
+			if (method_exists($importModule, 'displaySpecificOptions'))
+				die($importModule->displaySpecificOptions());
+			else
+				die('not_exist');
+		} catch (Exception $e)
+		{
+			die('{"hasError" : true, "error" : ['.json_encode($e->getMessage()).'], "datas" : []}');	
+		}
+	}
+}
+if (Tools::isSubmit('connexionWs'))
+{
+	if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
+	{
+		require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
+		try
+		{
+
+			$importModule = new $moduleName();
+			$importModule->connect($url,$loginws,$apikey);
+			die('{"hasError" : false, "error" : []}');
+		} catch (Exception $e)
+		{
+			die('{"hasError" : true, "error" : ['.json_encode($e->getMessage()).'], "datas" : []}');	
+		}
+	}
+}
+
 if (Tools::isSubmit('validateSpecificOptions'))
 {
 	if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
@@ -126,5 +196,16 @@ if (Tools::isSubmit('validateSpecificOptions'))
 			die($importModule->validateSpecificOptions());
 	}
 }	
-
+if (Tools::isSubmit('displayConfigConnector'))
+{
+	if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
+	{
+		require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
+		$importModule = new $moduleName();
+		if (!method_exists($importModule, 'displayConfigConnector'))
+			die('{"hasError" : true, "error" : ["not_exist"]}');
+		else
+			die($importModule->displayConfigConnector());
+	}
+}
 ?>

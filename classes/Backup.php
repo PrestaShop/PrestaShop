@@ -36,6 +36,9 @@ class BackupCore
 	/** @var string custom backup directory. */
 	public $customBackupDir = NULL;
 
+	public $psBackupAll = true;
+	public $psBackupDropTable = true;
+
 	/**
 	 * Creates a new backup object
 	 *
@@ -45,6 +48,11 @@ class BackupCore
 	{
 		if ($filename)
 			$this->id = $this->getRealBackupPath($filename);
+
+			$psBackupAll = Configuration::get('PS_BACKUP_ALL');
+			$psBackupDropTable = Configuration::get('PS_BACKUP_DROP_TABLE');
+			$this->psBackupAll = $psBackupAll !== false ? $psBackupAll : true;
+			$this->psBackupDropTable = $psBackupDropTable !== false ? $psBackupDropTable : true;
 	}
 
 	/**
@@ -169,7 +177,7 @@ class BackupCore
 			return false;
 		}
 
-		if (!Configuration::get('PS_BACKUP_ALL'))
+		if (!$this->psBackupAll)
 			$ignore_insert_table = array(_DB_PREFIX_.'connections', _DB_PREFIX_.'connections_page', _DB_PREFIX_.'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
 		else
 			$ignore_insert_table = array();
@@ -228,7 +236,7 @@ class BackupCore
 
 			fwrite($fp, '/* Scheme for table ' . $schema[0]['Table'] . " */\n");
 			
-			if (Configuration::get('PS_BACKUP_DROP_TABLE'))
+			if ($this->psBackupDropTable)
 				fwrite($fp, 'DROP TABLE IF EXISTS `'.$schema[0]['Table'].'`;'."\n");
 			
 			fwrite($fp, $schema[0]['Create Table'] . ";\n\n");

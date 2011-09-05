@@ -47,7 +47,7 @@ class Treepodia extends Module
 	{
 	 	$this->name = 'treepodia';
 	 	$this->tab = 'front_office_features';
-	 	$this->version = '1.6';
+	 	$this->version = '1.6.1';
 		$this->displayName = 'Treepodia';
 
 	 	parent::__construct();
@@ -86,7 +86,7 @@ class Treepodia extends Module
 		if (!($domain = Configuration::get('PS_SHOP_DOMAIN')))
 			$domain = $_SERVER['HTTP_HOST'];
 
-		$host = ((Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://'.$domain : 'http://'.$domain).__PS_BASE_URI__;
+		$host = ((Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://'.$domain : 'http://'.$domain).__PS_BASE_URI__;
 
 		return $host;
 	}

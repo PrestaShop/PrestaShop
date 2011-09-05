@@ -43,11 +43,11 @@ define('__PS_BASE_URI__', Context::getContext()->shop->getBaseURI());
 function isFormValid()
 {
 	global $error;
-	$validInfos = true;
+
 	foreach ($error as $anError)
 		if ($anError != '')
-			$validInfos = false;
-	return $validInfos;
+			return false;
+	return true;
 }
 
 $error = array();
@@ -84,6 +84,16 @@ if (isset($_GET['infosShop']) AND !Validate::isGenericName($_GET['infosShop']))
 	$error['validateShop'] = '46';
 else
 	$error['validateShop'] = '';
+
+if (!isset($_GET['infosCountry']) OR empty($_GET['infosCountry']))
+	$error['infosCountry'] = '0';
+else
+	$error['infosCountry'] = '';
+	
+if (!isset($_GET['infosTimezone']) OR empty($_GET['infosTimezone']))
+	$error['infosTimezone'] = '0';
+else
+	$error['infosTimezone'] = '';
 
 if (isset($_GET['infosFirstname']) AND !Validate::isName($_GET['infosFirstname']))
 	$error['validateFirstname'] = '47';

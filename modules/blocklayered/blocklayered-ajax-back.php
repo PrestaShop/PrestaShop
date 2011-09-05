@@ -26,9 +26,9 @@
 */
 
 /* Getting cookie or logout */
-/*include(dirname(__FILE__).'/../../config/config.inc.php');
+include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/blocklayered.php');*/
+include(dirname(__FILE__).'/blocklayered.php');
 
 /* Clean categoryBox before use */
 if (isset($_GET['categoryBox']) AND is_array($_GET['categoryBox']))

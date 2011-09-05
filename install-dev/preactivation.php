@@ -1,4 +1,5 @@
 <?php
+
 	require_once('../classes/Tools.php');
 	if (!isset($_GET['language']))
 		$_GET['language'] = 0;
@@ -26,7 +27,7 @@
 			{
 				$varList = "";
 				echo '<br clear="left" /><hr /><br clear="left" />';
-				foreach ($result->field as $field)
+				foreach ($result->field AS $field)
 				{
 					echo '<div><label class="aligned" style="float:left;width:200px;padding-left:10px;">'.getPreinstallXmlLang($field, 'label').' :</label>';
 					if ($field->type == 'text' || $field->type == 'password')
@@ -95,7 +96,6 @@
 		}
 
 	}
-
 
 	if ($_GET['request'] == 'send')
 	{

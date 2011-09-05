@@ -68,7 +68,6 @@ if (empty($tab) and !sizeof($_POST))
 			});
 		});</script>';
 
-
 		echo '<div class="path_bar">
 		<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
 		</div>

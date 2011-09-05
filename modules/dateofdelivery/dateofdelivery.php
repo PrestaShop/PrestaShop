@@ -104,7 +104,7 @@ class DateOfDelivery extends Module
 		
 		$oos = false; // For out of stock management
 		foreach ($params['cart']->getProducts() as $product)
-			if ($product['quantity'] <= 0 OR ($product['quantity_attribute'] <= 0 AND $product['id_product_attribute']))
+			if ($product['stock_quantity'] <= 0 OR ($product['quantity_attribute'] <= 0 AND $product['id_product_attribute']))
 				$oos = true;
 
 		$datesDelivery = array();

@@ -63,6 +63,8 @@ function updateCarrierList(json)
 				var extraHtml = 'disabled="disabled"';
 			else if (checkedCarrier == carriers[i].id_carrier)
 				var extraHtml = 'checked="checked"';
+			else
+				var extraHtml = '';
 			
 			html = html + 
 			'<tr class="'+itemType+'">'+

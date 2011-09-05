@@ -307,7 +307,6 @@ class importerosc extends ImportModule
 		{
 			$combination['association'] = array('product_attribute_combination' => array($combination['options_values_id'] => $combination['id_product_attribute']));
 			unset($combination['options_values_price']);
-			unset($combination['options_values_id']);
 		}
 		return $this->autoFormat($combinations, $identifier);
 	}
@@ -453,6 +452,34 @@ class importerosc extends ImportModule
 		}
 		
 	}
+
+	public function displayConfigConnector()
+	{
+		$content = '<label>'.$this->l('Server').' : </label>
+						<div class="margin-form">
+							<input type="text" name="server" id="server" value="">
+							<p>'.$this->l('(eg : mysql.mydomain.com)').'</p>
+						</div>
+					<label>'.$this->l('User').' : </label>
+						<div class="margin-form">
+							<input type="text" name="user" id="user" value="">
+						</div>
+					<label>'.$this->l('Password').' : </label>
+						<div class="margin-form">
+							<input type="password" name="password" id="password" value="">
+							<p>'.$this->l('(password can be empty)').'</p>
+						</div>
+					<label>'.$this->l('Database').' : </label>
+						<div class="margin-form" style="">
+							<input type="text" name="database" id="database" value="">
+						</div>
+					<label>'.$this->l('Database prefix').' : </label>
+						<div class="margin-form" style="">
+							<input type="text" name="prefix" id="prefix" value="">
+							<p>'.$this->l('(The prefix is optional. If all of your database tables start with "pref_", your prefix is "pref_")').'</p>
+						</div>';
+		return $content;
+}
 
 }
 

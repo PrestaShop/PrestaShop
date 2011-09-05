@@ -610,7 +610,7 @@ class AdminImport extends AdminTab
 				$product = new Product((int)($info['id']));
 				$categoryData = Product::getProductCategories((int)($product->id));
 				foreach ($categoryData as $tmp)
-					$product->category[] = $tmp['id_category'];
+					$product->category[] = $tmp;
 			}
 			else
 				$product = new Product();

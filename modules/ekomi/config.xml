@@ -2,7 +2,7 @@
 <module>
 	<name>ekomi</name>
 	<displayName><![CDATA[eKomi]]></displayName>
-	<version><![CDATA[1]]></version>
+	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[Adds an eKomi block]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>
