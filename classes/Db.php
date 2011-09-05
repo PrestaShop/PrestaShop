@@ -170,9 +170,9 @@ abstract class DbCore
 
 		if (!isset(self::$_instance[$idServer]))
 		{
-			$class = _DB_TYPE_;
-			if (!class_exists($class))
-				$class = 'MySQL';
+			$class = 'MySQL';
+			if (class_exists('mysqli', false))
+				$class = 'DbMySQLi';
 			self::$_instance[$idServer] = new $class(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
 		}
 
