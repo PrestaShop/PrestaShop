@@ -2050,7 +2050,9 @@ class ProductCore extends ObjectModel
 		$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
 		if (!is_null($productAttribute))
 		{
-			if (is_numeric($productAttribute))
+			if (!Combination::isFeatureActive())
+				$sql .= ' AND stock.id_product_attribute = 0';
+			else if (is_numeric($productAttribute))
 				$sql .= ' AND stock.id_product_attribute = '.$productAttribute;
 			else if (is_string($productAttribute))
 				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
@@ -2524,12 +2526,10 @@ class ProductCore extends ObjectModel
 		if (Combination::isFeatureActive())
 		{
 			$sql['join'] .= '
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.`id_product` = p.`id_product`
-				'.Product::sqlStock('p', 'pa', false, $context->shop);
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.`id_product` = p.`id_product`';
 			$sql['where'] .= 'OR pa.`reference` LIKE \'%'.pSQL($query).'%\'';
 		}
-		else 
-			$sql['join'] .= Product::sqlStock('p', null, false, $context->shop);
+		$sql['join'] .= Product::sqlStock('p', 'pa', false, $context->shop);
 		
 		$result = Db::getInstance()->ExecuteS(Tools::buildQuery($sql));
 
