@@ -100,11 +100,12 @@ abstract class PaymentModuleCore extends Module
 				die(Tools::displayError());
 
 
-			$carrier = new Carrier((int)$cart->id_carrier, (int)$cart->id_lang);
+			// Be carefull, carrier may not exist
+			$carrier = new Carrier($cart->id_carrier, $cart->id_lang);
 
 			// Copying data from cart
 			$order = new Order();
-			$order->id_carrier = $carrier->id;
+			$order->id_carrier = (int)$carrier->id;
 			$order->id_customer = (int)($cart->id_customer);
 			$order->id_address_invoice = (int)($cart->id_address_invoice);
 			$order->id_address_delivery = (int)($cart->id_address_delivery);
@@ -128,13 +129,14 @@ abstract class PaymentModuleCore extends Module
 			$order->conversion_rate = $currency->conversion_rate;
 			$amountPaid = !$dont_touch_amount ? Tools::ps_round((float)($amountPaid), 2) : $amountPaid;
 			$order->total_paid_real = $amountPaid;
-			$order->total_products = (float)($cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-			$order->total_products_wt = (float)($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
-			$order->total_discounts = (float)(abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)));
+			$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+			$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+			$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 			$order->total_shipping = (float)$cart->getOrderShippingCost();
-			$order->carrier_tax_rate = (float)$carrier->getTaxesRate(new Address((int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-			$order->total_wrapping = (float)(abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING)));
-			$order->total_paid = (float)(Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2));
+			if (Validate::isLoadedObject($carrier))
+				$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+			$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+			$order->total_paid = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
 			// Amount paid by customer is not the right one -> Status = payment error
