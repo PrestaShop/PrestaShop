@@ -307,7 +307,7 @@ class SearchCore
 
 	public static function getAttributes($db, $id_product, $id_lang)
 	{
-		if (!Cobmination::isFeatureActive())
+		if (!Combination::isFeatureActive())
 			return '';
 
 		$attributes = '';
