@@ -40,7 +40,7 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Validate::isLoadedObject($this->manufacturer))
 		{
-			$canonicalURL = $this->context->link->getManufacturerLink($this->manufacturer);
+			$canonicalURL = str_replace('&amp;', '&', $this->context->link->getManufacturerLink($this->manufacturer));
 			if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', Tools::getProtocol().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');

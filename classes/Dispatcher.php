@@ -325,7 +325,7 @@ class DispatcherCore
 		if (!isset($this->routes[$routeID]))
 		{
 			$query = http_build_query($params);
-			return ($routeID == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$routeID.(($query) ? '&'.$query : '');
+			return ($routeID == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$routeID.(($query) ? '&amp;'.$query : '');
 		}
 		$route = $this->routes[$routeID];
 
@@ -360,7 +360,7 @@ class DispatcherCore
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
-			$url = 'index.php?controller='.$route['controller'].(($queryParams) ? '&'.http_build_query($queryParams) : '');
+			$url = 'index.php?controller='.$route['controller'].(($queryParams) ? '&amp;'.http_build_query($queryParams) : '');
 		
 		return $url;
 	}

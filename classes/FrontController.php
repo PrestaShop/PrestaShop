@@ -383,7 +383,7 @@ class FrontControllerCore
 		{
 			// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
 
-			$canonicalURL = $this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id);
+			$canonicalURL = str_replace('&amp;', '&', $this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id));
 			if (!Tools::getValue('ajax') && !preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', (($this->ssl AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
 			{
 				header('HTTP/1.0 301 Moved');
