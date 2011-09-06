@@ -250,6 +250,8 @@ class CartCore extends ObjectModel
 	/**
 	 * Return cart discounts
 	 *
+	 * @param bool true will return discounts with basic informations
+	 * @param bool true will erase the cache  
 	 * @result array Discounts
 	 */
 	public function getDiscounts($lite = false, $refresh = false)
@@ -260,10 +262,15 @@ class CartCore extends ObjectModel
 		
 		if (!$this->id)
 			return array();
-		if (!$lite AND !$refresh AND isset(self::$_discounts[$this->id]))
+		
+		if (!$refresh)
+		{
+			if (!$lite AND isset(self::$_discounts[$this->id]))
 			return self::$_discounts[$this->id];
+			
 		if ($lite AND isset(self::$_discountsLite[$this->id]))
 			return self::$_discountsLite[$this->id];
+		}
 
 		$result = Db::getInstance()->ExecuteS('
 		SELECT d.*, `id_cart`
