@@ -175,7 +175,7 @@ abstract class DbCore
 		}
 
 		if (!isset(self::$_instance[$idServer]))
-			self::$_instance[$idServer] = Db::newInstance(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
+			self::$_instance[$idServer] = Db::factory(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
 
 		return self::$_instance[$idServer];
 	}
@@ -190,7 +190,7 @@ abstract class DbCore
 	 * @param bool $connect If false, don't connect in constructor
 	 * @return Db
 	 */
-	public static function newInstance($server, $user, $password, $database, $connect = true)
+	public static function factory($server, $user, $password, $database, $connect = true)
 	{
 		$class = 'MySQL';
 		if (class_exists('mysqli', false))
@@ -509,8 +509,7 @@ abstract class DbCore
 	 */
 	static public function checkConnection($server, $user, $pwd, $db)
 	{
-		$instance = Db::newInstance($server, $user, $pwd, $db, false);
-		return $instance->tryConnection();
+		return Db::factory($server, $user, $pwd, $db, false)->tryConnection();
 	}
 
 		/**
@@ -526,8 +525,7 @@ abstract class DbCore
 	 */
 	static public function checkEncoding($server, $user, $pwd, $encoding = 'UTF8')
 	{
-		$instance = Db::newInstance($server, $user, $pwd, '', false);
-		return $instance->tryEncoding($encoding);
+		return Db::factory($server, $user, $pwd, '', false)->tryEncoding($encoding);
 	}
 
 	/**
