@@ -136,36 +136,6 @@ class MySQLCore extends Db
 		return mysql_select_db($db_name, $this->_link);
 	}
 
-	/**
-	 * @see DbCore::tryConnection()
-	 */
-	public function tryConnection($newDbLink = true)
-	{
-		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
-			return 1;
-		if (!@mysql_select_db($db, $link))
-			return 2;
-		@mysql_close($link);
-		return 0;
-	}
-
-	/**
-	 * @see DbCore::tryEncoding()
-	 */
-	public function tryEncoding($encoding = 'UTF8')
-	{
-		$link = @mysql_connect($server, $user, $pwd);
-		if (!mysql_query('SET NAMES \''.pSQL($encoding).'\'', $link))
-			$ret = false;
-		else
-			$ret = true;
-		@mysql_close($link);
-		return $ret;
-	}
-
-	/**
-	 * @deprecated since 1.5.0
-	 */
 	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
 	{
 		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
@@ -176,9 +146,6 @@ class MySQLCore extends Db
 		return 0;
 	}
 
-	/**
-	 * @deprecated since 1.5.0
-	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
 		$link = @mysql_connect($server, $user, $pwd);

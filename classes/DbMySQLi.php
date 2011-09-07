@@ -134,54 +134,19 @@ class DbMySQLiCore extends Db
 	{
 		return $this->_link->query('USE '.pSQL($db_name));
 	}
-	
-	/**
-	 * @see DbCore::tryConnection()
-	 */
-	public function tryConnection($newDbLink = true)
-	{
-		$link = @new mysqli($this->_server, $this->_user, $this->_password, $this->_database);
-		
-		// Do not use object way for error because this work bad before PHP 5.2.9
-		if (mysqli_connect_error())
-			return 1;
-		$link->close();
-		return 0;
-	}
-	
-	/**
-	 * @see DbCore::tryEncoding()
-	 */
-	public function tryEncoding($encoding = 'UTF8')
-	{
-		$link = @new mysqli($this->_server, $this->_user, $this->_password, $this->_database);
-		$ret = $link->query("SET NAMES '".pSQL($encoding)."'");
-		$link->close();
-		return $ret;
-	}
-	
-	/**
-	 * @deprecated since 1.5.0
-	 */
+
 	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
 	{
-		Tools::displayAsDeprecated();
-
-		$link = new mysqli($server, $user, $pwd, $db);
+		$link = @new mysqli($server, $user, $pwd, $db);
 		if (mysqli_connect_error())
 			return 1;
 		$link->close();
 		return 0;
 	}
 
-	/**
-	 * @deprecated since 1.5.0
-	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
-		Tools::displayAsDeprecated();
-
-		$link = new mysqli($server, $user, $pwd, $db);
+		$link = @new mysqli($server, $user, $pwd, $db);
 		$ret = $link->query("SET NAMES 'UTF8'");
 		$link->close();
 		return $ret;
