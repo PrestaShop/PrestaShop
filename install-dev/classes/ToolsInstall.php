@@ -65,7 +65,7 @@ class ToolsInstall
 					return 8;
 		}
 
-		switch(MySQL::tryToConnect(trim($srv), trim($login), trim($password), trim($name)))
+		switch (Db::checkConnection(trim($srv), trim($login), trim($password), trim($name)))
 		{
 			case 0:
 				if (MySQL::tryUTF8(trim($srv), trim($login), trim($password)))

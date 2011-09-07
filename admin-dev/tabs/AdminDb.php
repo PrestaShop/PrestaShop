@@ -1,4 +1,4 @@
-<?php
+*<?php
 /*
 * 2007-2011 PrestaShop 
 *
@@ -70,8 +70,20 @@ class AdminDb extends AdminPreferences
 				 	foreach ($this->optionsList['database']['fields'] as $k => $data)
 						if ($value = Tools::getValue($k))
 							$settings['_'.Tools::strtoupper($k).'_'] = $value;
-				 	rewriteSettingsFile(NULL, NULL, $settings);
-				 	Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
+
+					if (Db::checkConnection(
+						isset($settings['_DB_SERVER_']) ? $settings['_DB_SERVER_'] : _DB_SERVER_,
+						isset($settings['_DB_USER_']) ? $settings['_DB_USER_'] : _DB_USER_,
+						isset($settings['_DB_PASSWD_']) ? $settings['_DB_PASSWD_'] : _DB_PASSWD_,
+						isset($settings['_DB_NAME_']) ? $settings['_DB_NAME_'] : _DB_NAME_,
+						true
+					) == 0)
+					{
+				 		rewriteSettingsFile(NULL, NULL, $settings);
+				 		Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
+					}
+					else
+						$this->_errors[] = Tools::displayError('Unable to connect to a database with these identifiers.');
 				}
 			}
 			else
@@ -94,7 +106,6 @@ class AdminDb extends AdminPreferences
 				$engineType = pSQL(Tools::getValue('engineType'));
 				
 				/* Datas are not saved in database but in config/settings.inc.php */
-				// @todo add a Db::trytoconnect()
 				$settings = array('_MYSQL_ENGINE_' => $engineType);
 			    rewriteSettingsFile(NULL, NULL, $settings);
 				
