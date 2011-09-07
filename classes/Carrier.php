@@ -673,8 +673,8 @@ class CarrierCore extends ObjectModel
 
 				$rangePriceID = ($range == 'range_price') ? $rangeID : 'NULL';
 				$rangeWeightID = ($range == 'range_weight') ? $rangeID : 'NULL';
-				$sql = 'INSERT INTO '._DB_PREFIX_.$range.' (id_carrier, id_shop, id_group_shop, id_range_price, id_range_weight, id_zone, price)
-						SELECT '.$this->id.', id_shop, id_group_shop, '.$rangePriceID.', '.$rangeWeightID.', id_zone, price FROM '._DB_PREFIX_.$range;
+				$sql = 'INSERT INTO '._DB_PREFIX_.$range.' (id_carrier, id_range_price, id_range_weight, id_zone, price)
+						SELECT '.$this->id.', '.$rangePriceID.', '.$rangeWeightID.', id_zone, price FROM '._DB_PREFIX_.$range;
 				Db::getInstance()->Execute($sql);
 			}
 		}
