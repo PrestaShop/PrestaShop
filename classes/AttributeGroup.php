@@ -67,7 +67,16 @@ class AttributeGroupCore extends ObjectModel
 	
 	public function add($autodate = true, $nullValues = false)
 	{
-	 	return parent::add($autodate, true);
+		$return = parent::add($autodate, true);
+		Module::hookExec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
+		return $return;
+	}
+	
+	public function update($nullValues = false)
+	{
+		$return = parent::update($nullValues);
+		Module::hookExec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
+		return $return;
 	}
 	
 	/**
@@ -111,7 +120,10 @@ class AttributeGroupCore extends ObjectModel
 	 	/* Also delete related attributes */
 		if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'attribute_lang` WHERE `id_attribute` IN (SELECT id_attribute FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)($this->id).')') === false OR Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)($this->id)) === false)
 			return false;
-		return parent::delete();
+		$return = parent::delete();
+		if($return)
+			Module::hookExec('afterDeleteAttributeGroup', array('id_attribute_group' => $this->id));
+		return $return;
 	}
 	
 	/**

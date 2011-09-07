@@ -170,6 +170,7 @@ class AdminFeatures extends AdminTab
 					echo '</div>';
 				}
 				echo '
+				'.Module::hookExec('featureForm', array('id_attribute_group' => $obj->id)).'
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>

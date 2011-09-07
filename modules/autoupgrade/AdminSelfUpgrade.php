@@ -46,11 +46,18 @@ if(empty($_POST['action']) OR !in_array($_POST['action'],array('upgradeDb')))
 	}
 	else
 		require_once(dirname(__FILE__).'/Upgrader.php');
+
 	if(!class_exists('Upgrader',false))
+	{
 		if(file_exists(_PS_ROOT_DIR_.'/override/classes/Upgrader.php'))
+		{
 			require_once(_PS_ROOT_DIR_.'/override/classes/Upgrader.php');
+		}
 		else
+		{
 			eval('class Upgrader extends UpgraderCore{}');
+		}
+	}
 
 require_once(dirname(__FILE__).'/Tools14.php');
 if(!class_exists('Tools',false))
@@ -1524,8 +1531,9 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		{
 			if($this->configOk())
 			{
-				echo '<a href="" id="upgradeNow" class="button-autoupgrade upgradestep">'.$this->l('Upgrade PrestaShop now !').'</a>';
-				echo '<small>'.sprintf($this->l('PrestaShop will be downloaded from %s'), $this->upgrader->link).'</small>';
+				echo '<p><a href="" id="upgradeNow" class="button-autoupgrade upgradestep">'.$this->l('Upgrade PrestaShop now !').'</a></p>';
+				echo '<small>'.sprintf($this->l('PrestaShop will be downloaded from %s'), $this->upgrader->link).'</small><br/>';
+				echo '<small><a href="'.$this->upgrader->changelog.'">'.$this->l('see CHANGELOG').'</a></small>';
 			}
 			else
 				echo $this->displayWarning('Your current configuration does not allow upgrade.');
@@ -1547,10 +1555,10 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			echo '</fieldset>';
 		
 		
-			echo '<br class="clear"/>';
 
 			if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_)
 			{
+				echo '<br class="clear"/>';
 				echo '<fieldset class="autoupgradeSteps"><legend>'.$this->l('Step').'</legend>';
 				echo '<h4>'.$this->l('Upgrade steps').'</h4>';
 				echo '<div>';
@@ -1565,16 +1573,16 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 				if (defined('_PS_ALLOW_UPGRADE_UNSTABLE_') AND _PS_ALLOW_UPGRADE_UNSTABLE_ )
 				{
-					echo '<h4>Development tools </h4><div>
-					<a href="" name="action" id="svnCheckout"	class="button upgradestep" type="submit" >svnCheckout</a>
-					<a href="" name="action" id="svnUpdate"	class="button upgradestep" type="submit" >svnUpdate</a>
-					<a href="" name="action" id="svnExport"	class="button upgradestep" type="submit" >svnExport</a>
-					</div>';
+					echo '<h4>Development tools </h4><div>';
+					echo '<a href="" name="action" id="svnCheckout"	class="button upgradestep" type="submit" >svnCheckout</a>';
+					echo '<a href="" name="action" id="svnUpdate"	class="button upgradestep" type="submit" >svnUpdate</a>';
+					echo '<a href="" name="action" id="svnExport"	class="button upgradestep" type="submit" >svnExport</a>';
+					echo '<br class="clear"/>';
+					echo '</div>';
 				}
 			}
 
-			echo '<br class="clear"/>';
-			echo'	<div id="quickInfo" class="processing" style="height:100px;">quick info</div>';
+			echo'	<div id="quickInfo" class="processing" style="height:100px;">&nbsp;</div>';
 			// for upgradeDb
 			echo '<p id="dbResultCheck"></p>';
 			echo '<p id="dbCreateResultCheck"></p>';
@@ -1606,6 +1614,7 @@ echo '</script>';
 		{
 			$upgrader = new Upgrader();
 			$upgrader->checkPSVersion(true);
+			$this->upgrader = $upgrader;
 		}
 		echo '<style>
 .autoupgradeSteps div {  line-height: 30px; }
@@ -1613,7 +1622,7 @@ echo '</script>';
 #upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 15px;}
 #upgradeNow {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
-.processing {overflow: auto;}
+.processing {border:2px outset grey;margin-top:1px;overflow: auto;}
 </style>';
 		$this->displayWarning($this->l('This function is experimental. It\'s highly recommended to make a backup of your files and database before starting the upgrade process.'));
 

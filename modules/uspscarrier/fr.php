@@ -2,7 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{uspscarrier}prestashop>uspscarrier_5947e2ae63c0a33524cf81c44a1db580'] = 'Transporteur USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_098087ab799def1028233142cafeeafd'] = 'Propose à vos clients le transporteur USPS (US Postal)';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_883fa0069f4b0454e2277dd567ab3991'] = '\'Unité de poids (LB ou KG)\'';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_5a3ceec65d417f5d92c26dbf0dccc00d'] = '\'Unité de mesure (CM ou IN)\'';
@@ -28,6 +27,7 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_f8320b26d30ab433c5a54546d21f414c'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f827cf462f62848df37c5e1e94a4da74'] = 'True';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_386aad80d82f8245e9ef80352a2240e8'] = 'Tous les articles en un seul paquet';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f35eb2a913a3fd6fd8e661012cf0ebd8'] = 'Découper un article par paquet';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_5947e2ae63c0a33524cf81c44a1db580'] = 'Transporteur USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f57cff5425b6e64843c5f066c5b310d0'] = 'Statut du module USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_09bdd414ce843927aa3dceadc8bce034'] = 'Le transporteur USPS est fonctionnel !';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_ec8b84c83dfee20afa4c2f35245a254b'] = 'Le transporteur USPS n\'est pas encore complètement configuré, vous devez :';
@@ -69,8 +69,6 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_8d2ee0603dfce09b57d60db628cde269'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_795de10b1bdcb843b3703c63ad577fc6'] = 'Choisissez le type de paquet par défaut';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_93c8645dbbc33cf8d126266a827a5501'] = 'Machinable';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_67cd0f5256c40c16a6cfd6effe3ab06b'] = 'Choisissez si cela peut être traité par une machine ou non par défaut';
-$_MODULE['<{uspscarrier}prestashop>uspscarrier_8d6bd50f3fe3ee2f4513066c25e5fb4a'] = 'Mode de calcul';
-$_MODULE['<{uspscarrier}prestashop>uspscarrier_3169c5057093f8e6c2750f1949a0900d'] = 'Utiliser la méthode de calcul \"Tous les produits dans un colis\" utilisera automatiquement la taille de colis, le type de colis et les services de livraison par défaut. Les configurations spécifiques des catégories et des produits ne seront pas utilisés.';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_5cdd307ba6e260beb4801c0c10e22a3a'] = 'Service de livraison';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_78945de8de090e90045d299651a68a9b'] = 'Disponible';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_2d25c72c1b18e562f6654fff8e11711e'] = 'Non disponible';

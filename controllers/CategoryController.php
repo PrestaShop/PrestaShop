@@ -51,7 +51,7 @@ class CategoryControllerCore extends FrontController
 	
 	public function canonicalRedirection()
 	{
-		if (Configuration::get('PS_CANONICAL_REDIRECT'))
+		if (Configuration::get('PS_CANONICAL_REDIRECT') && !Tools::getValue('noredirect'))
 		{
 			// Automatically redirect to the canonical URL if the current in is the right one
 			// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain

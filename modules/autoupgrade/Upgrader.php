@@ -26,7 +26,8 @@
 */
 
 class UpgraderCore{
-	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 0;
+	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
+	public $rss_version_link = 'http://www.prestashop.com/xml/version.xml';
 	/**
 	 * link contains hte url where to download the file
 	 * 
@@ -39,6 +40,8 @@ class UpgraderCore{
 	public $version_num;
 	public $link;
 	public $autoupgrade;
+	public $changelog;
+	public $md5;
 
 	public function __get($var)
 	{
@@ -95,20 +98,26 @@ class UpgraderCore{
 			$lastCheck = Configuration::get('PS_LAST_VERSION_CHECK');
 			// if we use the autoupgrade process, we will never refresh it
 			// except if no check has been done before
-			if (!($this->autoUpgrade AND $lastCheck) AND ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) )
+			if ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)) )
 			{
 				libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
-				if ($feed = @simplexml_load_file('http://www.prestashop.com/xml/version.xml'))
+				if ($feed = @simplexml_load_file($this->rss_version_link))
 				{
 					$this->version_name = (string)$feed->version->name;
 					$this->version_num = (string)$feed->version->num;
 					$this->link = (string)$feed->download->link;
+					$this->md5 = (string)$feed->download->md5;
+					$this->changelog = (string)$feed->download->changelog;
 					$this->autoupgrade = (int)$feed->autoupgrade;
+					$this->desc = (string)$feed->desc ;
 					$configLastVersion = array(
 						'name' => $this->version_name,
 						'num' => $this->version_num,
 						'link' => $this->link,
-						'autoupgrade' => $this->autoupgrade
+						'md5' => $this->md5,
+						'autoupgrade' => $this->autoupgrade,
+						'changelog' => $this->changelog,
+						'desc' => $this->desc
 					);
 					Configuration::updateValue('PS_LAST_VERSION',serialize($configLastVersion));
 					Configuration::updateValue('PS_LAST_VERSION_CHECK',time());
@@ -121,6 +130,9 @@ class UpgraderCore{
 				$this->version_num = $lastVersionCheck['num'];
 				$this->link = $lastVersionCheck['link'];
 				$this->autoupgrade = $lastVersionCheck['autoupgrade'];
+				$this->md5 = $lastVersionCheck['md5'];
+				$this->desc = $lastVersionCheck['desc'];
+				$this->changelog = $lastVersionCheck['changelog'];
 			}
 		}
 		// retro-compatibility :
@@ -136,60 +148,3 @@ class UpgraderCore{
 	}
 
 }
-
-class Upgrader extends UpgraderCore
-{
-	public function checkPSVersion($force = false)
-	{
-		if (empty($this->link))
-		{
-			if(class_exists('Configuration',false))
-				$lastCheck = Configuration::get('PS_LAST_VERSION_CHECK');
-			else
-				$lastCheck = 0;
-			// if we use the autoupgrade process, we will never refresh it
-			// except if no check has been done before
-			if (!($this->autoUpgrade AND $lastCheck) AND ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) )
-			{
-				libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
-				if ($feed = @simplexml_load_file('http://www.prestashop.com/xml/version.xml'))
-				{
-					$this->version_name = (string)$feed->version->name;
-					$this->version_num = (string)$feed->version->num;
-					$this->link = (string)$feed->download->link;
-					$this->autoupgrade = (int)$feed->autoupgrade;
-					$configLastVersion = array(
-						'name' => $this->version_name,
-						'num' => $this->version_num,
-						'link' => $this->link,
-						'autoupgrade' => $this->autoupgrade
-					);
-				if(class_exists('Configuration',false))
-				{
-					Configuration::updateValue('PS_LAST_VERSION',serialize($configLastVersion));
-					Configuration::updateValue('PS_LAST_VERSION_CHECK',time());
-				}
-				}
-			}
-			else
-			{
-				$lastVersionCheck = unserialize(Configuration::get('PS_LAST_VERSION'));
-				$this->version_name = $lastVersionCheck['name'];
-				$this->version_num = $lastVersionCheck['num'];
-				$this->link = $lastVersionCheck['link'];
-				$this->autoupgrade = $lastVersionCheck['autoupgrade'];
-			}
-		}
-		// retro-compatibility :
-		// return array(name,link) if you don't use the last version
-		// false otherwise
-		if (version_compare(_PS_VERSION_, $this->version_num, '<'))
-		{
-			$this->needUpgrade = true;
-			return array('name' => $this->version_name, 'link' => $this->link);
-		}
-		else
-			return false;
-	}
-}
-
