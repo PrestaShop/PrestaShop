@@ -195,7 +195,7 @@ class CombinationCore extends ObjectModel
 	{
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `ps_product_attribute`
+			FROM `'._DB_PREFIX_.'product_attribute`
 		');
 	}
 }
