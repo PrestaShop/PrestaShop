@@ -137,6 +137,33 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * @see DbCore::tryConnection()
+	 */
+	public function tryConnection($server, $user, $pwd, $db, $newDbLink = true)
+	{
+		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
+			return 1;
+		if (!@mysql_select_db($db, $link))
+			return 2;
+		@mysql_close($link);
+		return 0;
+	}
+
+	/**
+	 * @see DbCore::tryEncoding()
+	 */
+	public function tryEncoding($server, $user, $pwd, $encoding = 'UTF8')
+	{
+		$link = @mysql_connect($server, $user, $pwd);
+		if (!mysql_query('SET NAMES \''.pSQL($encoding).'\'', $link))
+			$ret = false;
+		else
+			$ret = true;
+		@mysql_close($link);
+		return $ret;
+	}
+
+	/**
 	 * tryToConnect return 0 if the connection succeed and the database can be selected.
 	 * @since 1.4.4.0, the parameter $newDbLink (default true) has been added.
 	 * 

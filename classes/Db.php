@@ -136,18 +136,24 @@ abstract class DbCore
 	 */
 	abstract public function getNumberError();
 	
+	/**
+	 * Try a connection to te database
+	 * 
+	 * @param string $newDbLink
+	 * @return int
+	 */
+	abstract public function tryConnection($newDbLink = true);
+	
+	/**
+	 * Try to change encoding on a database
+	 * 
+	 * @param string $encoding
+	 * @return bool
+	 */
+	abstract public function tryEncoding($encoding = 'UTF8');
+	
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
-	
-	/**
-	 * Try a connection
-	 */
-	//abstract static public function tryToConnect($server, $user, $pwd, $db);
-	
-	/**
-	 * Try to change UTF8
-	 */
-	//abstract static public function tryUTF8($server, $user, $pwd);
 
 	/**
 	 * Get Db object instance
@@ -169,14 +175,27 @@ abstract class DbCore
 		}
 
 		if (!isset(self::$_instance[$idServer]))
-		{
-			$class = 'MySQL';
-			if (class_exists('mysqli', false))
-				$class = 'DbMySQLi';
-			self::$_instance[$idServer] = new $class(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
-		}
+			self::$_instance[$idServer] = Db::newInstance(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
 
 		return self::$_instance[$idServer];
+	}
+
+	/**
+	 * Get child layer class instance
+	 * 
+	 * @param string $server Server address
+	 * @param string $user User login
+	 * @param string $password User password
+	 * @param string $database Database name
+	 * @param bool $connect If false, don't connect in constructor
+	 * @return Db
+	 */
+	public static function newInstance($server, $user, $password, $database, $connect = true)
+	{
+		$class = 'MySQL';
+		if (class_exists('mysqli', false))
+			$class = 'DbMySQLi';
+		return new $class($server, $user, $password, $database, $connect);
 	}
 
 	/**
@@ -186,8 +205,9 @@ abstract class DbCore
 	 * @param string $user User login
 	 * @param string $password User password
 	 * @param string $database Database name
+	 * @param bool $connect If false, don't connect in constructor (since 1.5.0)
 	 */
-	public function __construct($server, $user, $password, $database)
+	public function __construct($server, $user, $password, $database, $connect = true)
 	{
 		$this->_server = $server;
 		$this->_user = $user;
@@ -198,7 +218,8 @@ abstract class DbCore
 		if (!defined('_PS_DEBUG_SQL_'))
 			define('_PS_DEBUG_SQL_', false);
 
-		$this->connect();
+		if ($connect)
+			$this->connect();
 	}
 	
 	/**
@@ -206,7 +227,8 @@ abstract class DbCore
 	 */
 	public function __destruct()
 	{
-		$this->disconnect();
+		if ($this->_link)
+			$this->disconnect();
 	}
 
 	/**
@@ -475,7 +497,39 @@ abstract class DbCore
 		
 		return $string;
 	}
-	
+
+	/**
+	 * Try a connection to te database
+	 * 
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @return int
+	 */
+	static public function checkConnection($server, $user, $pwd, $db)
+	{
+		$instance = Db::newInstance($server, $user, $pwd, $db, false);
+		return $instance->tryConnection();
+	}
+
+		/**
+	 * Try a connection to te database
+	 * 
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param string $newDbLink Database name
+	 * @return int
+	 * @todo remake with static
+	 */
+	static public function checkEncoding($server, $user, $pwd, $encoding = 'UTF8')
+	{
+		$instance = Db::newInstance($server, $user, $pwd, '', false);
+		return $instance->tryEncoding($encoding);
+	}
+
 	/**
 	 * Alias of Db::getInstance()->ExecuteS
 	 *

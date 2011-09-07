@@ -134,36 +134,54 @@ class DbMySQLiCore extends Db
 	{
 		return $this->_link->query('USE '.pSQL($db_name));
 	}
-
+	
 	/**
-	 * tryToConnect return 0 if the connection succeed and the database can be selected.
-	 * @since 1.4.4.0, the parameter $newDbLink (default true) has been added.
-	 * 
-	 * @param string $server mysql server name
-	 * @param string $user mysql user
-	 * @param string $pwd mysql user password
-	 * @param string $db mysql database name
-	 * @param boolean $newDbLink Param not used in this class
-	 * @return integer
+	 * @see DbCore::tryConnection()
 	 */
-	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
+	public function tryConnection($newDbLink = true)
 	{
-		$link = new mysqli($server, $user, $password, $db);
+		$link = @new mysqli($this->_server, $this->_user, $this->_password, $this->_database);
 		
 		// Do not use object way for error because this work bad before PHP 5.2.9
 		if (mysqli_connect_error())
 			return 1;
 		$link->close();
 		return 0;
+	}
+	
+	/**
+	 * @see DbCore::tryEncoding()
+	 */
+	public function tryEncoding($encoding = 'UTF8')
+	{
+		$link = @new mysqli($this->_server, $this->_user, $this->_password, $this->_database);
+		$ret = $link->query("SET NAMES '".pSQL($encoding)."'");
+		$link->close();
+		return $ret;
+	}
+	
+	/**
+	 * @deprecated since 1.5.0
+	 */
+	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
+	{
+		Tools::displayAsDeprecated();
 
-		// UTF-8 support
-		if (!$this->_link->query('SET NAMES \'utf8\''))
-			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+		$link = new mysqli($server, $user, $pwd, $db);
+		if (mysqli_connect_error())
+			return 1;
+		$link->close();
+		return 0;
 	}
 
+	/**
+	 * @deprecated since 1.5.0
+	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
-		$link = new mysqli($server, $user, $password, $db);
+		Tools::displayAsDeprecated();
+
+		$link = new mysqli($server, $user, $pwd, $db);
 		$ret = $link->query("SET NAMES 'UTF8'");
 		$link->close();
 		return $ret;
