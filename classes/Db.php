@@ -136,22 +136,6 @@ abstract class DbCore
 	 */
 	abstract public function getNumberError();
 	
-	/**
-	 * Try a connection to te database
-	 * 
-	 * @param string $newDbLink
-	 * @return int
-	 */
-	abstract public function tryConnection($newDbLink = true);
-	
-	/**
-	 * Try to change encoding on a database
-	 * 
-	 * @param string $encoding
-	 * @return bool
-	 */
-	abstract public function tryEncoding($encoding = 'UTF8');
-	
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
 
@@ -175,27 +159,25 @@ abstract class DbCore
 		}
 
 		if (!isset(self::$_instance[$idServer]))
-			self::$_instance[$idServer] = Db::factory(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
-
+		{
+			$class = Db::getClass();
+			self::$_instance[$idServer] = new $class(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
+		}
+	
 		return self::$_instance[$idServer];
 	}
 
 	/**
-	 * Get child layer class instance
+	 * Get child layer class
 	 * 
-	 * @param string $server Server address
-	 * @param string $user User login
-	 * @param string $password User password
-	 * @param string $database Database name
-	 * @param bool $connect If false, don't connect in constructor
-	 * @return Db
+	 * @return string
 	 */
-	public static function factory($server, $user, $password, $database, $connect = true)
+	public static function getClass()
 	{
 		$class = 'MySQL';
 		if (class_exists('mysqli', false))
 			$class = 'DbMySQLi';
-		return new $class($server, $user, $password, $database, $connect);
+		return $class;
 	}
 
 	/**
@@ -505,27 +487,25 @@ abstract class DbCore
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
 	 * @param string $db Database name
+	 * @param bool $newDbLink
 	 * @return int
 	 */
-	static public function checkConnection($server, $user, $pwd, $db)
+	static public function checkConnection($server, $user, $pwd, $db, $newDbLink = true)
 	{
-		return Db::factory($server, $user, $pwd, $db, false)->tryConnection();
+		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $newDbLink));
 	}
 
-		/**
+	/**
 	 * Try a connection to te database
 	 * 
 	 * @param string $server Server address
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
-	 * @param string $db Database name
-	 * @param string $newDbLink Database name
 	 * @return int
-	 * @todo remake with static
 	 */
-	static public function checkEncoding($server, $user, $pwd, $encoding = 'UTF8')
+	static public function checkEncoding($server, $user, $pwd)
 	{
-		return Db::factory($server, $user, $pwd, '', false)->tryEncoding($encoding);
+		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd));
 	}
 
 	/**
