@@ -72,7 +72,7 @@ a.module_toggle_all{color:#FFF;text-decoration:none;display:inherit;}
 #header_shopname {float: left;width: 300px;}
 #employee_links {float: left;clear: both;margin-top: 10px;}
 #notifs_icon_wrapper {float: left;position: relative;margin-top: 8px;}
-.notifs {float: left;position: relative;	cursor: pointer;margin: 0px 5px;width: 18px;height: 15px;}
+.notifs {float: left;position: relative;	cursor: pointer;margin: 0px 5px;width: 18px;height: 15px;color:black;}
 #orders_notif {background: url("notif_order.png") no-repeat left top;}
 #customers_notif {background: url("notif_customer.png") no-repeat left top;}
 #messages_notif {background: url("notif_message.png") no-repeat left top;}
