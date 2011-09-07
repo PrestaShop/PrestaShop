@@ -27,7 +27,7 @@
 
 class UpgraderCore{
 	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
-	private static $rss_version_link = 'http://www.prestashop.com/xml/version.xml';
+	public $rss_version_link = 'http://www.prestashop.com/xml/version.xml';
 	/**
 	 * link contains hte url where to download the file
 	 * 
@@ -40,6 +40,8 @@ class UpgraderCore{
 	public $version_num;
 	public $link;
 	public $autoupgrade;
+	public $changelog;
+	public $md5;
 
 	public function __get($var)
 	{
@@ -96,20 +98,26 @@ class UpgraderCore{
 			$lastCheck = Configuration::get('PS_LAST_VERSION_CHECK');
 			// if we use the autoupgrade process, we will never refresh it
 			// except if no check has been done before
-			if (!($this->autoUpgrade AND $lastCheck) AND ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) )
+			if ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)) )
 			{
 			libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
-				if ($feed = @simplexml_load_file(self::$rss_version_link))
+				if ($feed = @simplexml_load_file($this->rss_version_link))
 			{
 					$this->version_name = (string)$feed->version->name;
 					$this->version_num = (string)$feed->version->num;
 					$this->link = (string)$feed->download->link;
+					$this->md5 = (string)$feed->download->md5;
+					$this->changelog = (string)$feed->download->changelog;
 					$this->autoupgrade = (int)$feed->autoupgrade;
+					$this->desc = (string)$feed->desc ;
 					$configLastVersion = array(
 						'name' => $this->version_name,
 						'num' => $this->version_num,
 						'link' => $this->link,
-						'autoupgrade' => $this->autoupgrade
+						'md5' => $this->md5,
+						'autoupgrade' => $this->autoupgrade,
+						'changelog' => $this->changelog,
+						'desc' => $this->desc
 					);
 					Configuration::updateValue('PS_LAST_VERSION',serialize($configLastVersion));
 					Configuration::updateValue('PS_LAST_VERSION_CHECK',time());
@@ -117,11 +125,14 @@ class UpgraderCore{
 		}
 			else
 			{
-				$lastVersionCheck = unserialize(Configuration::get('PS_LAST_VERSION'));
+				$lastVersionCheck = @unserialize(Configuration::get('PS_LAST_VERSION'));
 				$this->version_name = $lastVersionCheck['name'];
 				$this->version_num = $lastVersionCheck['num'];
 				$this->link = $lastVersionCheck['link'];
 				$this->autoupgrade = $lastVersionCheck['autoupgrade'];
+				$this->md5 = $lastVersionCheck['md5'];
+				$this->desc = $lastVersionCheck['desc'];
+				$this->changelog = $lastVersionCheck['changelog'];
 			}
 		}
 		// retro-compatibility :

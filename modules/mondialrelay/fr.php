@@ -48,12 +48,10 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_cb5e100e5a9a3e7f6d1fd9751221528
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_350c1cc4343826a89f08a33bb49c6d98'] = 'Configuration du Module Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_d21a9f93917604d5490ad529a7cf1ff9'] = 'Pour créer un transporteur Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6a2e6af5fff47adb3afd780b97d9b4b'] = 'Remplissez et sauvegarder vos paramètres Mondial Relay';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_abfc836cd1df9d6d2bdfd2fc98e6fa93'] = 'Créez un transporteur';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_b962d8fb95f5a439f50502152f3bad71'] = 'Definissez un prix pour votre transporteur sur';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_faf1247ae6846a9955a466d4f301bbe4'] = 'La page Transporteurs';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_10d78806b84b97ebc774e9f6277af6ac'] = 'Pour générer vos étiquettes, vous devez avoir enregistré une adresse valide de votre boutique sur votre';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_af5efea250326c1c34d69aa9364b482c'] = 'page contact';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_fcf5b2122da1d5a5f5c7253b96a3f9d9'] = 'URL de la tache CRON à lancer pour la mise à jour des statuts de commandes';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_362dff77f7403550e886db901404856c'] = 'Suppression effectuée';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_66661dacf33146201b60dc16520ddd68'] = 'Ajouter un transporteur';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_b651efdb98a5d6bd2b3935d0c3f4a5e2'] = 'Champ obligatoire';
@@ -81,9 +79,10 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_907eba32d950bfab68227fd7ea22999
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_0c24ec05a02c710cedd400e3680d8b81'] = 'Liste des tranporteurs';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_14039af96b01e718a9c9d9c1259b6472'] = 'Aucun transporteur créé';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_8596361cec00f8d2438d264827eee737'] = 'Modification de la configuration';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_759e1f68a70bbe8c48eb30fa4b512de8'] = 'Il semblerait que vous venez de mettre à jour Mondial Relay sans avoir réinitialisé le module : il est requis de configurer les champs ci-dessous afin de pouvoir générer les étiquettes';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_9ffc3ccc968a96d902af963c6d7b4e97'] = 'Paramètres avancés';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_1d1d57f5840e1da871622295ba206b30'] = 'Cliquez pour afficher / cacher les options';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_fcf5b2122da1d5a5f5c7253b96a3f9d9'] = 'URL de la tache CRON à lancer pour la mise à jour des statuts de commandes';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_759e1f68a70bbe8c48eb30fa4b512de8'] = 'Il semblerait que vous venez de mettre à jour Mondial Relay sans avoir réinitialisé le module : il est requis de configurer les champs ci-dessous afin de pouvoir générer les étiquettes';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bbd9bc77f1f5b6a9edce6db062b607c9'] = 'Cette partie permet de réécrire les données envoyées à Mondial Relay lorsque vous lancez le processus de génération de tickets. Certains champs sont assez restrictifs en terme de longueur ou de caractères utilisés.';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_9127fe218b2cac7f0c8aecd7016a891d'] = 'Nom de la boutique';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_7e9bbecd32836500b557db33c3b3e93b'] = 'La clé utilisée par Mondialrelay est';

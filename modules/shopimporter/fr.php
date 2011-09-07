@@ -60,14 +60,6 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_60474e812295a5adc371de63dc62a16
 $_MODULE['<{shopimporter}prestashop>shopimporter_05f4be265d59ea66f3a1fb12ba103583'] = 'Choisir un import';
 $_MODULE['<{shopimporter}prestashop>shopimporter_961f2247a2070bedff9f9cd8d64e2650'] = 'Choisir';
 $_MODULE['<{shopimporter}prestashop>shopimporter_151a0fbfcc4894aa53335091c2512de5'] = 'Aucun module d\'import installé';
-$_MODULE['<{shopimporter}prestashop>shopimporter_9aa1b03934893d7134a660af4204f2a9'] = 'Serveur';
-$_MODULE['<{shopimporter}prestashop>shopimporter_770b2f7556eecbe5000cfcbddc9f9885'] = '(Ex: mysql.mydomain.com)';
-$_MODULE['<{shopimporter}prestashop>shopimporter_8f9bfe9d1345237cb3b2b205864da075'] = 'Utilisateur';
-$_MODULE['<{shopimporter}prestashop>shopimporter_dc647eb65e6711e155375218212b3964'] = 'Mot de passe';
-$_MODULE['<{shopimporter}prestashop>shopimporter_14ae0ea02f571a833786d13d9ca6a897'] = '(Le mot de passe peut être vide)';
-$_MODULE['<{shopimporter}prestashop>shopimporter_e307db07b3975fef922a80d07455ee5e'] = 'Base de données';
-$_MODULE['<{shopimporter}prestashop>shopimporter_dac130bdd2c5492a8108a4145bd9f04a'] = 'Prefix de base de données';
-$_MODULE['<{shopimporter}prestashop>shopimporter_6bdc02625540b5264cffe801c37a82dd'] = '(Le préfixe est optionnel. Si tous vos tables de base de données commencent par \"pref_\", le préfixe est \"pref_\")';
 $_MODULE['<{shopimporter}prestashop>shopimporter_2bb4cbbf4c51025867d47131e79ad05f'] = 'Etape suivante';
 $_MODULE['<{shopimporter}prestashop>shopimporter_72dd98a453e92ccc01697f29bb5dbeb9'] = 'Option d\'import';
 $_MODULE['<{shopimporter}prestashop>shopimporter_9dfc5d5738312210c3c75e68a468691d'] = 'Options avancées ';

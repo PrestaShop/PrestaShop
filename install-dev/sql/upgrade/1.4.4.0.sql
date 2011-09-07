@@ -24,7 +24,7 @@ INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_up
 ALTER TABLE `PREFIX_lang` ADD `is_rtl` TINYINT(1) NOT NULL DEFAULT '0';
 
 UPDATE `PREFIX_country_lang`
-SET `name` = 'United State'
+SET `name` = 'United States'
 WHERE `name` = 'USA'
 AND `id_lang` = (
 	SELECT `id_lang`
@@ -78,3 +78,4 @@ DELETE FROM `PREFIX_configuration` WHERE name = 'PS_LAYERED_NAVIGATION_CHECKBOXE
 /* PHP:add_new_tab(AdminUpgrade, en:Upgrade|fr:Mise à jour,  9); */;
 
 /* PHP:alter_productcomments_guest_index(); */;
+

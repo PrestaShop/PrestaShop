@@ -30,23 +30,35 @@ class Autoupgrade extends Module
 		if (!$autoupgradeCanWork)
 			return false;
 
-		// How to remove an Admin Tab ?
-		if (version_compare(_PS_VERSION_,'1.4.4.0','=') OR version_compare(_PS_VERSION_,'1.4.4.1','='))
+		$res = true;
+		// before adding AdminSelfUpgrade, we should remove AdminUpgrade
+		if (version_compare(_PS_VERSION_,'1.4.4.0','==') OR version_compare(_PS_VERSION_,'1.4.4.1','=='))
 		{
 			$idTab = Tab::getIdFromClassName('AdminUpgrade');
+
+			if ($idTab)
+			{
 			$tab = new Tab($idTab);
-			$tab->delete();
+				$res &= $tab->delete();
 		}
-		else
+		}
+		
+		$idTab = Tab::getIdFromClassName('AdminSelfUpgrade');
+		// Then we add AdminSelfUpgrade only if not exists
+		if (!$idTab)
 		{
 			$tab = new Tab();
 			$tab->class_name = 'AdminSelfUpgrade';
 			$tab->module = 'autoupgrade';
 			$tab->id_parent = 9;
 			$tab->name = array_fill(1,sizeof(Language::getLanguages(false)), 'Upgrade');
-			$res = $tab->save();
-			Configuration::updateValue('PS_AUTOUPDATE_MODULE_IDTAB',$tab->id);
+			$res &= $tab->save();
 		}
+		else
+		{
+			$tab = new Tab($idTab);
+		}
+			Configuration::updateValue('PS_AUTOUPDATE_MODULE_IDTAB',$tab->id);
 
 		$autoupgradeDir = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade';
 		if(!file_exists($autoupgradeDir))
@@ -58,6 +70,7 @@ class Autoupgrade extends Module
 		$res &= copy($path.'ajax-upgradetab.php',$autoupgradeDir . DIRECTORY_SEPARATOR . 'ajax-upgradetab.php');
 		
 		if (!$res 
+			OR !Tab::getIdFromClassName('AdminSelfUpgrade')
 			OR !(Hook::get('backOfficeHeader') AND !$this->registerHook('backOfficeHeader'))
 			OR !parent::install()
 		)

@@ -1095,9 +1095,9 @@ class eBayRequest
 					$id_product = 0;
 					$id_product_attribute = 0;
 					$quantity = (string)$transaction->QuantityPurchased;
-					if (isset($transaction->item->SKU))
+					if (isset($transaction->Item->SKU))
 					{
-						$tmp = explode('-', (string)$transaction->item->SKU);
+						$tmp = explode('-', (string)$transaction->Item->SKU);
 						if (isset($tmp[1]))
 						$id_product = $tmp[1];
 					}

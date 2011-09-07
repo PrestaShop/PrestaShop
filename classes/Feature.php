@@ -111,7 +111,9 @@ class FeatureCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
-		return parent::add($autodate, true);
+		$return = parent::add($autodate, true);
+		Module::hookExec('afterSaveFeature', array('id_feature' => $this->id));
+		return $return;
 	}
 
 	public function delete()
@@ -121,7 +123,10 @@ class FeatureCore extends ObjectModel
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id));
 		/* Also delete related products */
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature` = '.(int)($this->id));
-		return parent::delete();
+		$return = parent::delete();
+		if($return)
+			Module::hookExec('afterDeleteFeature', array('id_feature' => $this->id));
+		return $return;
 	}
 	
 	public function update($nullValues = false)
@@ -144,6 +149,7 @@ class FeatureCore extends ObjectModel
 			Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', '`'.
 			pSQL($this->identifier).'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']);
 		}
+		Module::hookExec('afterSaveFeature', array('id_feature' => $this->id));
 		return $result;
 	}
 	

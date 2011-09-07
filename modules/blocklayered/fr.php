@@ -15,10 +15,6 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_4ad0f0fe31d93e0d8dd7a7fc69a7278
 $_MODULE['<{blocklayered}prestashop>blocklayered_91e77d047f2496b7ba8c9def96d03324'] = 'Modèle de filtres non trouvé';
 $_MODULE['<{blocklayered}prestashop>blocklayered_09da2b6f1217055bb22caa6ea08d9b80'] = 'Navigation à facettes';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7c47bdf0ef7a058e0243fd870019f10b'] = 'Une indexation est en cours. Merci de ne pas fermer cette page';
-$_MODULE['<{blocklayered}prestashop>blocklayered_40fc1029eccda234e67e1beff3b228b3'] = 'Indexer tous les produits non-indexé.';
-$_MODULE['<{blocklayered}prestashop>blocklayered_26e424abe001fcfdcc85a2d59bacb567'] = 'Re-construire l\'intégralité de l\'index.';
-$_MODULE['<{blocklayered}prestashop>blocklayered_be8508b58244b20cb0e00ed6afa7f1c8'] = 'Vous pouvez définir une tâche cron pour reconstruire l\'index en utilisant l\'URL suivante:';
-$_MODULE['<{blocklayered}prestashop>blocklayered_61f31fb41a5743e1fff0a97b32e19dc2'] = 'Une ré-indexation complète doit être faite chaque fois qu\'un produit est modifié. Une reconstruction nocturne est recommandé.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a607dc3941415ecea04bb1eb8a978962'] = 'Modèles de filtres existants';
 $_MODULE['<{blocklayered}prestashop>blocklayered_9923a3739235561cc50eb9446dc1771e'] = 'modèles de filtres sont configurés :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_49ee3087348e8d44e1feda1917443987'] = 'Nom';
