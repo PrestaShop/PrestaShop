@@ -139,7 +139,7 @@ class MySQLCore extends Db
 	/**
 	 * @see DbCore::tryConnection()
 	 */
-	public function tryConnection($server, $user, $pwd, $db, $newDbLink = true)
+	public function tryConnection($newDbLink = true)
 	{
 		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
 			return 1;
@@ -152,7 +152,7 @@ class MySQLCore extends Db
 	/**
 	 * @see DbCore::tryEncoding()
 	 */
-	public function tryEncoding($server, $user, $pwd, $encoding = 'UTF8')
+	public function tryEncoding($encoding = 'UTF8')
 	{
 		$link = @mysql_connect($server, $user, $pwd);
 		if (!mysql_query('SET NAMES \''.pSQL($encoding).'\'', $link))
@@ -164,15 +164,7 @@ class MySQLCore extends Db
 	}
 
 	/**
-	 * tryToConnect return 0 if the connection succeed and the database can be selected.
-	 * @since 1.4.4.0, the parameter $newDbLink (default true) has been added.
-	 * 
-	 * @param string $server mysql server name
-	 * @param string $user mysql user
-	 * @param string $pwd mysql user password
-	 * @param string $db mysql database name
-	 * @param boolean $newDbLink if set to true, the function will not create a new link if one already exists.
-	 * @return integer
+	 * @deprecated since 1.5.0
 	 */
 	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
 	{
@@ -184,6 +176,9 @@ class MySQLCore extends Db
 		return 0;
 	}
 
+	/**
+	 * @deprecated since 1.5.0
+	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
 		$link = @mysql_connect($server, $user, $pwd);
