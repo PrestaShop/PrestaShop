@@ -410,13 +410,24 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 <!-- description and features -->
 {if $product->description || $features || $accessories || $HOOK_PRODUCT_TAB || $attachments}
 <div id="more_info_block" class="clear">
-	<ul id="more_info_tabs" class="idTabs idTabsShort">
-		{if $product->description}<li><a id="more_info_tab_more_info" href="#idTab1">{l s='More info'}</a></li>{/if}
-		{if $features}<li><a id="more_info_tab_data_sheet" href="#idTab2">{l s='Data sheet'}</a></li>{/if}
-		{if $attachments}<li><a id="more_info_tab_attachments" href="#idTab9">{l s='Download'}</a></li>{/if}
-		{if isset($accessories) AND $accessories}<li><a href="#idTab4">{l s='Accessories'}</a></li>{/if}
-		{$HOOK_PRODUCT_TAB}
-	</ul>
+	{if $product->description && !$features && !$accessories && !$attachments && !$HOOK_PRODUCT_TAB}
+		<h2>{l s='More info'}</h2>
+	{elseif $features && !$product->description && !$accessories && !$attachments && !$HOOK_PRODUCT_TAB}
+		<h2>{l s='Data sheet'}</h2>
+	{elseif (isset($accessories) AND $accessories) && !$product->description && !$features && !$attachments && !$HOOK_PRODUCT_TAB}
+		<h2>{l s='Accessories'}</h2>
+	{elseif $attachments && !$product->description && !$features && !$accessories && !$HOOK_PRODUCT_TAB}
+		<h2>{l s='Download'}</h2>
+	{else}
+		<ul id="more_info_tabs" class="idTabs idTabsShort">
+			{if $product->description}<li><a id="more_info_tab_more_info" href="#idTab1">{l s='More info'}</a></li>{/if}
+			{if $features}<li><a id="more_info_tab_data_sheet" href="#idTab2">{l s='Data sheet'}</a></li>{/if}
+			{if $attachments}<li><a id="more_info_tab_attachments" href="#idTab9">{l s='Download'}</a></li>{/if}
+			{if isset($accessories) AND $accessories}<li><a href="#idTab4">{l s='Accessories'}</a></li>{/if}
+			{$HOOK_PRODUCT_TAB}
+		</ul>
+	{/if}
+	
 	<div id="more_info_sheets" class="sheets align_justify">
 	{if $product->description}
 		<!-- full description -->
