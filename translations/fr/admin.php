@@ -3398,5 +3398,11 @@ $_LANGADM['index1928895508822da82ce5c4932a114044'] = 'Indiquez votre adresse e-m
 $_LANGADM['index449d3718fc3a9e9bf3f3fc0254bb5625'] = '(celle que vous avez indiquée durant l\'installation) afin de recevoir vos nouveaux codes d\'accès par e-mail';
 $_LANGADM['index94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
 $_LANGADM['index804ccd6219996d12eda865d1c0707423'] = 'Toutes les boutiques';
+$_LANGADM['index529a53abbdf42a64cb2d149c0aeced04'] = 'Dernières commandes';
+$_LANGADM['indexad0750ccecf0c31c43ce46ea7e665ea5'] = 'Voir toutes les commandes';
+$_LANGADM['index1a9c46c5de112e3cb217e0ec5576d499'] = 'Derniers clients';
+$_LANGADM['index4942b4a77c98af316861fc63c648b45f'] = 'Voir tous les clients';
+$_LANGADM['index77181afe06241c54ef771a23ee6da8f4'] = 'Derniers messages';
+$_LANGADM['indexa2eda4e1c4dfc9bade7150b878c57a46'] = 'Voir tous les messages';
 
 ?>
