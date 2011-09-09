@@ -335,7 +335,7 @@ class DiscountCore extends ObjectModel
 		$date_end = strtotime($this->date_to);
 		if ((time() < $date_start OR time() > $date_end) AND !$cart->OrderExists()) return 0;
 
-		if (!$this->isAssociatedToShop($shop->shopID()))
+		if (!$this->isAssociatedToShop($shop->getID()))
 			return 0;
 		$products = $cart->getProducts();
 		$categories = Discount::getCategories((int)$this->id);
@@ -584,7 +584,7 @@ class DiscountCore extends ObjectModel
 				SELECT COUNT(*) 
 				FROM `'._DB_PREFIX_.'discount` 
 				WHERE `active` = 1
-			') > 1);
+			') > 0);
 		return self::$feature_active;
 	}
 }
