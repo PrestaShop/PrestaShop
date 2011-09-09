@@ -81,6 +81,7 @@ echo '
 					});						
 					if (html != "")
 					{
+						$("#list_orders_notif").prev("p").hide();
 						$("#list_orders_notif").empty().append(html);
 						nb_notifs = $("#list_orders_notif li").length;
 						$("#orders_notif_value").text(nb_notifs);
@@ -99,6 +100,7 @@ echo '
 					});						
 					if (html != "")
 					{
+						$("#list_customers_notif").prev("p").hide();						
 						$("#list_customers_notif").empty().append(html);
 						nb_notifs = $("#list_customers_notif li").length;
 						$("#customers_notif_value").text(nb_notifs);
@@ -117,6 +119,7 @@ echo '
 					});
 					if (html != "")
 					{
+						$("#list_messages_notif").prev("p").hide();	
 						$("#list_messages_notif").empty().append(html);
 						nb_notifs = $("#list_messages_notif li").length;
 						$("#messages_notif_value").text(nb_notifs);
