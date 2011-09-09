@@ -123,8 +123,6 @@ class AdminDiscounts extends AdminTab
 								$object->update();
 								$objectNew = new $this->className();
 								$this->copyFromPost($objectNew, $this->table);
-								$shop = new Shop((int)$objectNew->id_shop);
-								$objectNew->id_group_shop = (int)$shop->id_group_shop;
 								$result = $objectNew->add();
 								if (Validate::isLoadedObject($objectNew))
 									$this->afterDelete($objectNew, $object->id);
@@ -134,8 +132,6 @@ class AdminDiscounts extends AdminTab
 								if (($categories = Tools::getValue('categoryBox')) === false OR (!empty($categories) AND !is_array($categories)))
 									$this->_errors[] = Tools::displayError('Please set a category for this voucher.');
 								$this->copyFromPost($object, $this->table);
-								$shop = new Shop((int)$objectNew->id_shop);
-								$objectNew->id_group_shop = (int)$shop->id_group_shop;
 								$result = $object->update(true, false, $categories);
 							}
 							if (!$result)
@@ -163,8 +159,6 @@ class AdminDiscounts extends AdminTab
 					{
 						$object = new $this->className();
 						$this->copyFromPost($object, $this->table);
-						$shop = new Shop((int)$objectNew->id_shop);
-						$objectNew->id_group_shop = (int)$shop->id_group_shop;
 						$categories = Tools::getValue('categoryBox', null);
 						if (!$object->add(true, false, $categories))
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
@@ -201,7 +195,7 @@ class AdminDiscounts extends AdminTab
 									}
 							}
 							
-							Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
+							Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
 						}
 					}
 					else
@@ -359,15 +353,6 @@ class AdminDiscounts extends AdminTab
 						<label class="t" for="cumulable_reduction_on"> '.$this->l('Cumulative with price reductions').'</label>
 					</p>
 				</div>
-				<label for="id_shop">'.$this->l('Shop:').'</label>
-				<div class="margin-form">
-					<select name="id_shop" id="id_shop">';
-			$shops = Shop::getShops();
-			foreach ($shops AS $shop)
-				echo	'<option value="'.$shop['id_shop'].'" '.($this->getFieldValue($obj, 'id_shop') == $shop['id_shop'] ? 'selected="selected"' : '').'>'.$shop['name'].'</option>';
-			echo	'</select>
-				</div>
-				</label>
 				<label>'.$this->l('To be used by:').' </label>
 								<div class="margin-form">
 					<input type="hidden" name="id_customer" value="0">
