@@ -28,6 +28,10 @@
 /* Getting cookie or logout */
 include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
+
+if (substr(Tools::encrypt('blocklayered/index'),0,10) != Tools::getValue('layered_token') || !Module::isInstalled('blocklayered'))
+	die('Bad token');
+
 include(dirname(__FILE__).'/blocklayered.php');
 
 /* Clean categoryBox before use */

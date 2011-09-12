@@ -7,7 +7,5 @@ include(dirname(__FILE__).'/blocklayered.php');
 if (substr(Tools::encrypt('blocklayered/index'),0,10) != Tools::getValue('token') || !Module::isInstalled('blocklayered'))
 	die('Bad token');
 
-if(Tools::getValue('full'))
-	echo BlockLayered::fullindexProcess((int)Tools::getValue('cursor'), (int)Tools::getValue('ajax'), true);
-else
-	echo BlockLayered::indexProcess((int)Tools::getValue('cursor'), (int)Tools::getValue('ajax'));
+$blockLayered = new BlockLayered();
+echo $blockLayered->indexUrl((int)Tools::getValue('id_category'), (int)Tools::getValue('truncate'));

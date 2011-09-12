@@ -57,7 +57,6 @@ $_MODULE['<{socolissimo}prestashop>socolissimo_00d23a76e43b46dae9ec7aa9dcbebb32'
 $_MODULE['<{socolissimo}prestashop>socolissimo_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deaktiviert';
 $_MODULE['<{socolissimo}prestashop>socolissimo_fdd526b84abc0b8fc17060e62d022b84'] = 'Verfügbarkeit von Service SoColissimo erlauben oder nicht erlauben ';
 $_MODULE['<{socolissimo}prestashop>socolissimo_32996bdf4214d6cb8bf7fa02273813c8'] = 'URL Kontrolle';
-$_MODULE['<{socolissimo}prestashop>socolissimo_995a56aecac4198b9bc0a17a976561b5'] = 'URL der Kontrolle';
 $_MODULE['<{socolissimo}prestashop>socolissimo_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{socolissimo}prestashop>socolissimo_a82be0f551b8708bc08eb33cd9ded0cf'] = 'Information';
 $_MODULE['<{socolissimo}prestashop>socolissimo_3e387f5ebd657c6372f0594c8226863e'] = 'Hier sind zwei Adressen, die Sie in Ihrem Back Office SoColissimo ausfüllen müssen ';

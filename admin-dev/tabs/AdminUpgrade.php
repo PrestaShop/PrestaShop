@@ -1573,9 +1573,17 @@ echo '</script>';
 		$tokenModule = Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$cookie->id_employee);
 		$tokenAdminTabs =  Tools::getAdminToken('AdminTabs'.(int)(Tab::getIdFromClassName('AdminTabs')).(int)$cookie->id_employee);
 		$tokenAdminTools =  Tools::getAdminToken('AdminTools'.(int)(Tab::getIdFromClassName('AdminTools')).(int)$cookie->id_employee);
+		if (!$idTab = Tab::getIdFromClassName('AdminSelfUpgrade'))
+		{
 		echo '<br/><p id="ContainerActivateButton">
 			<a class="button" id="activateAutoupgradeModule" href="index.php?tab=AdminModules&token='.$tokenModule.'&amp;install=autoupgrade&amp;module_name=autoupgrade">'
 			.$this->l('Activate the module').'</a></p>';
+		}
+		else{
+			$tokenSelfUpgrade =  Tools::getAdminToken('AdminSelfUpgrade'.(int)(Tab::getIdFromClassName('AdminSelfUpgrade')).(int)$cookie->id_employee);
+			echo '	<a class="button" href="index.php?tab=AdminSelfUpgrade&token='.$tokenSelfUpgrade.'">'
+				.$this->l('Use the autoupgrade module').'</a></p>';
+		}
 		echo '<script type="text/javascript">
 			$("#activateAutoupgradeModule").click(function(e){
 				e.preventDefault();

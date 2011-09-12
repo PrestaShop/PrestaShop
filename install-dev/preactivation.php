@@ -26,6 +26,8 @@
 			if ($result)
 			{
 				$varList = "";
+				if (count($result->field) > 0)
+				{
 				echo '<br clear="left" /><hr /><br clear="left" />';
 				foreach ($result->field AS $field)
 				{
@@ -66,6 +68,7 @@
 						$varList .= "'&".$field->key."='+$('#".$p."_".$c."_form_".$field->key."_year').val()+'-'+$('#".$p."_".$c."_form_".$field->key."_month').val()+'-'+$('#".$p."_".$c."_form_".$field->key."_day').val()+\n";
 					else
 						$varList .= "'&".$field->key."='+ encodeURIComponent($('#".$p."_".$c."_form_".$field->key."').val())+\n";
+				}
 				}
 				echo '
 				<script>'."

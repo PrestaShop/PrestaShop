@@ -443,8 +443,16 @@ class AdminImages extends AdminTab
 		<br /><h2 class="space">'.$this->l('Move images').'</h2>'.
 		$this->l('A new storage system for product images is now used by PrestaShop. It offers better performance if your shop has a very large number of products.').'<br />'.
 		'<br />';
+		if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/'))
+		{
+			echo '<div class="width4">';
+			$this->displayWarning($this->l('Duplicate images were found when moving the product images. It is probably caused by unused demonstration images. Please make sure that the folder ').
+				_PS_PROD_IMG_DIR_.'duplicates/'.
+				$this->l(' only contains demonstration images then delete this folder.'));
+			echo '</div>';
+		}
 		if($safe_mode)
-			echo $this->displayWarning('PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the actual system.');
+			$this->displayWarning($this->l('PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the actual system.'));
 		else
 			echo '
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">

@@ -393,7 +393,15 @@ class ProductCore extends ObjectModel
 		if (!parent::add($autodate, $nullValues))
 			return false;
 		$this->setStock($this->quantity);
+		Module::hookExec('afterSaveProduct', array('id_product' => $this->id));
 		return true;
+	}
+
+	public function update($nullValues = false)
+	{
+		$return = parent::update($nullValues);
+		Module::hookExec('afterSaveProduct', array('id_product' => $this->id));
+		return $return;
 	}
 
 	/**

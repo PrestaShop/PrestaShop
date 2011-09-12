@@ -1086,7 +1086,8 @@ class eBayRequest
 		if (isset($this->response->OrderArray))
 			foreach ($this->response->OrderArray->Order as $order)
 			{
-				$name = explode(' ', (string)$order->ShippingAddress->Name);
+				$name = str_replace(array('_', ',', '  '), array('', '', ' '), (string)$order->ShippingAddress->Name); 
+				$name = explode(' ', $name);
 				$itemList = array();
 				for ($i = 0; isset($order->TransactionArray->Transaction[$i]); $i++)
 				{

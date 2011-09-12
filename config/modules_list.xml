@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules_list>
 	<modules type="native">
+		<module name="autoupgrade"/>
 		<module name="bankwire"/>
 		<module name="birthdaypresent"/>
 		<module name="blockadvertising"/>
@@ -95,6 +96,7 @@
 		<module name="criteo"/>
 		<module name="dejala"/>
 		<module name="dibs"/>
+	  <module name="ebay"/> 
 		<module name="envoimoinscher"/>
 		<module name="ekomi"/>
 		<module name="fedexcarrier"/>

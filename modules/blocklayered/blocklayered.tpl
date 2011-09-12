@@ -36,18 +36,19 @@
 					<span class="layered_subtitle" style="float: none;">{l s='Enabled filters:' mod='blocklayered'}</span>
 					<ul>
 					{foreach from=$selected_filters key=filter_type item=filter_values}
-						{foreach from=$filter_values item=filter_value name=f_values}
+						{foreach from=$filter_values key=filter_key item=filter_value name=f_values}
 							{foreach from=$filters item=filter}
 								{if $filter.type == $filter_type && isset($filter.values)}
 									{if isset($filter.slider) && $smarty.foreach.f_values.first}
 										<li>
-											- {$filter.name|escape:html:'UTF-8'}{l s=':'} 
+											<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}">x</a>
+											{$filter.name|escape:html:'UTF-8'}{l s=':'} 
 											{$filter.values[0]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'} - 
 											{$filter.values[1]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'}
 										</li>
 									{else}
 										{foreach from=$filter.values key=id_value item=value}
-											{if $id_value == $filter_value}
+											{if $id_value == $filter_key && !is_numeric($filter_value) && ($filter.type eq 'id_attribute_group' || $filter.type eq 'id_feature') || $id_value == $filter_value && $filter.type neq 'id_attribute_group'}
 												<li>
 													<a href="#" rel="layered_{$filter.type_lite}_{$id_value}" title="{l s='Cancel' mod='blocklayered'}">x</a>
 													{$filter.name|escape:html:'UTF-8'}{l s=':'} {$value.name|escape:html:'UTF-8'}
@@ -64,16 +65,20 @@
 				{/if}
 				{foreach from=$filters item=filter}
 					{if isset($filter.values)}
+						{if isset($filter.slider)}
+						<div class="layered_{$filter.type}" style="display: none;">
+						{else}
 					<div>
+						{/if}
 						<span class="layered_subtitle">{$filter.name|escape:html:'UTF-8'}</span>
 						<span class="layered_close"><a href="#" rel="layered_{$filter.type}_{$filter.id_key}">v</a></span>
 						<div class="clear"></div>
-						<ul id="layered_{$filter.type}_{$filter.id_key}">
+						<ul id="ul_layered_{$filter.type}_{$filter.id_key}">
 						{if !isset($filter.slider)}
 							{foreach from=$filter.values key=id_value item=value}
 								<li class="nomargin">
 								{if isset($filter.is_color_group) && $filter.is_color_group}
-									<input type="button" name="layered_{$filter.type_lite}_{$id_value}" rel="{$id_value}_{$filter.id_key}" id="layered_attribute_{$id_value}" {if !$value.nbr} value="X" disabled="disabled"{/if} style="background: {if isset($value.color)}{$value.color}{else}#CCC{/if}; margin-left: 0; width: 16px; height: 16px; padding:0; border: 1px solid {if isset($value.checked) && $value.checked}red{else}#666{/if};" />
+									<input type="button" name="layered_{$filter.type_lite}_{$id_value}" rel="{$id_value}_{$filter.id_key}" id="layered_id_attribute_group_{$id_value}" {if !$value.nbr} value="X" disabled="disabled"{/if} style="background: {if isset($value.color)}{$value.color}{else}#CCC{/if}; margin-left: 0; width: 16px; height: 16px; padding:0; border: 1px solid {if isset($value.checked) && $value.checked}red{else}#666{/if};" />
 									{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
 								{else}
 										<input type="checkbox" class="checkbox" name="layered_{$filter.type_lite}_{$id_value}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} /> 
@@ -88,9 +93,7 @@
 							</div>
 							<script type="text/javascript">
 							{literal}
-								$(document).ready(function()
-								{
-									$('#layered_{/literal}{$filter.type}{literal}_slider').slider({
+								addSlider('{/literal}{$filter.type}{literal}',{
 										range: true,
 										min: {/literal}{$filter.min}{literal},
 										max: {/literal}{$filter.max}{literal},
@@ -101,10 +104,11 @@
 										stop: function () {
 											reloadContent();
 										}
+								}, '{/literal}{$filter.unit}{literal}');
+								$(document).ready(function()
+								{
+									$('.layered_{/literal}{$filter.type}{literal}').show();
 									});
-									$('#layered_{/literal}{$filter.type}{literal}_range').html($('#layered_{/literal}{$filter.type}{literal}_slider').slider('values', 0 ) +'{/literal}{$filter.unit}{literal}'+
-										' - ' + $('#layered_{/literal}{$filter.type}{literal}_slider').slider('values', 1 )+'{/literal}{$filter.unit}{literal}');
-								});
 							{/literal}
 							</script>
 						{/if}

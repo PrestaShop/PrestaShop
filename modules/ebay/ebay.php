@@ -359,8 +359,8 @@ class Ebay extends Module
 							$id_customer = (int)Db::getInstance()->getValue('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `active` = 1 AND `email` = \''.pSQL($order['email']).'\' AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
 
 							// Check for empty name
-							$order['firstname'] = str_replace('_', '', trim($order['firstname']));
-							$order['familyname'] = str_replace('_', '', trim($order['familyname']));
+							$order['firstname'] = trim($order['firstname']);
+							$order['familyname'] = trim($order['familyname']);
 							if (empty($order['familyname']))
 								$order['familyname'] = $order['firstname'];
 							if (empty($order['firstname']))
@@ -966,6 +966,7 @@ class Ebay extends Module
 			function loadCategoryMatch(id_category)
 			{
 				$.ajax({
+				  async: false,
 				  url: "'._MODULE_DIR_.'ebay/ajax/loadCategoryMatch.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&id_category=" + id_category + "&time='.pSQL(date('Ymdhis')).'",
 				  success: function(data) { $("#categoryPath" + id_category).html(data); }
 				});
