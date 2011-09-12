@@ -1118,7 +1118,7 @@ class AdminProducts extends AdminTab
 
 		/* Check description short size without html */
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
-		if ($limit <= 0) $limit = 400;
+		if ($limit <= 0) $limit = 800;
 		foreach ($languages AS $language)
 			if ($value = Tools::getValue('description_short_'.$language['id_lang']))
 				if (Tools::strlen(strip_tags($value)) > $limit)
