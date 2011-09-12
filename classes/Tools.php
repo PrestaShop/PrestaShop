@@ -2120,6 +2120,23 @@ FileETag INode MTime Size
 			
 		return $req;
 	}
+	
+	/**
+	 * Get max file upload size considering server settings and optional max value
+	 * 
+	 * @param int $max_size optional max file size
+	 * @return int max file size in bytes
+	 */
+	public static function getMaxUploadSize($max_size = 0)
+	{
+		$post_max_size = self::convertBytes(ini_get('post_max_size'));
+		$upload_max_filesize = self::convertBytes(ini_get('upload_max_filesize'));
+		if ($max_size > 0)
+			$result = min($post_max_size, $upload_max_filesize, $max_size);
+		else
+			$result = min($post_max_size, $upload_max_filesize);
+		return $result;
+	}
 }
 
 /**

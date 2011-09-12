@@ -27,8 +27,6 @@
 
 class AdminCategories extends AdminTab
 {
-	protected $maxImageSize = 300000;
-
 	/** @var object Category() instance for navigation*/
 	private $_category;
 

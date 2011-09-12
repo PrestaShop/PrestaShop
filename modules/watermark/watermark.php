@@ -39,7 +39,6 @@ class Watermark extends Module
 	private $transparency;
 	private $imageTypes = array();
 	private	$watermarkTypes;
-	private $maxImageSize = 100000;
 
 	public function __construct()
 	{
@@ -132,7 +131,7 @@ class Watermark extends Module
 		if (isset($_FILES['PS_WATERMARK']) AND !empty($_FILES['PS_WATERMARK']['tmp_name']))
 		{
 			/* Check watermark validity */
-			if ($error = checkImage($_FILES['PS_WATERMARK'], $this->maxImageSize))
+			if ($error = checkImage($_FILES['PS_WATERMARK']))
 				$this->_errors[] = $error;
 			/* Copy new watermark */
 			elseif(!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark.gif'))

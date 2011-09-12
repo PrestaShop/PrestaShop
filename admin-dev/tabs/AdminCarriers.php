@@ -29,8 +29,6 @@ include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
 
 class AdminCarriers extends AdminTab
 {
-	protected $maxImageSize = 30000;
-
 	public function __construct()
 	{
 	 	$this->table = 'carrier';

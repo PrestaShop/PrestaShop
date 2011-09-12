@@ -28,8 +28,7 @@ include_once(PS_ADMIN_DIR.'/tabs/AdminProfiles.php');
 
 class AdminProducts extends AdminTab
 {
-	protected $maxImageSize = 2000000;
-	protected $maxFileSize  = 10000000;
+	protected $maxFileSize  = 20000000;
 
 	private $_category;
 
@@ -1009,12 +1008,6 @@ class AdminProducts extends AdminTab
 				if (!$image->add())
 					throw new Exception(Tools::displayError('Error while creating additional image'));
 
-				if (filesize($subdir.$file) > $this->maxImageSize)
-				{
-					$image->delete();
-					throw new Exception(Tools::displayError('Image is too large').' ('.(filesize($subdir.$file) / 1000).Tools::displayError('kB').'). '.Tools::displayError('Maximum allowed:').' '.($this->maxImageSize / 1000).Tools::displayError('kB'));
-				}
-
 				$ext = substr($file, -4);
 				$type = (isset($types[$ext]) ? $types[$ext] : '');
 				if (!isPicture(array('tmp_name' => $subdir.$file, 'type' => $type)))
@@ -1063,7 +1056,7 @@ class AdminProducts extends AdminTab
 	{
 		if (!isset($_FILES['image_product']['tmp_name']))
 			return false;
-		if ($error = checkImage($_FILES['image_product'], $this->maxImageSize))
+		if ($error = checkImage($_FILES['image_product']))
 			$this->_errors[] = $error;
 		else
 		{
@@ -2991,7 +2984,7 @@ class AdminProducts extends AdminTab
 						<td style="padding-bottom:5px;">
 							<input type="file" id="image_product" name="image_product" />
 							<p>
-								'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.($this->maxImageSize / 1000).''.$this->l('Kb max.').'
+								'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').'
 								<br />'.$this->l('You can also upload a ZIP file containing several images. Thumbnails will be resized automatically.').'
 							</p>
 						</td>

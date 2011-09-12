@@ -125,8 +125,10 @@ abstract class AdminTabCore
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
-	/** @var integer Max image size for upload */
-	protected $maxImageSize = 2000000;
+	/** @var integer Max image size for upload 
+	 * As of 1.5 it is recommended to not set a limit to max image size
+	 **/
+	protected $maxImageSize;
 
 	/** @var array Errors displayed after post processing */
 	public $_errors = array();
@@ -1042,8 +1044,10 @@ abstract class AdminTabCore
 			else
 				return false;
 
+			
 			// Check image validity
-			if ($error = checkImage($_FILES[$name], $this->maxImageSize))
+			$max_size = isset($this->maxImageSize) ? $this->maxImageSize : 0;
+			if ($error = checkImage($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->_errors[] = $error;
 			elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName))
 				return false;
@@ -1074,7 +1078,7 @@ abstract class AdminTabCore
 		if (isset($_FILES[$name]['tmp_name']) AND !empty($_FILES[$name]['tmp_name']))
 		{
 			/* Check ico validity */
-			if ($error = checkIco($_FILES[$name], $this->maxImageSize))
+			if ($error = checkIco($_FILES[$name]))
 				$this->_errors[] = $error;
 
 			/* Copy new ico */
