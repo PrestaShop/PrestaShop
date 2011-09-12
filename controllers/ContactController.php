@@ -140,8 +140,9 @@ class ContactControllerCore extends FrontController
 				}
 				$old_message = Db::getInstance()->getValue('
 					SELECT cm.message FROM '._DB_PREFIX_.'customer_message cm
-					WHERE cm.id_customer_thread = '.(int)($id_customer_thread).'AND cm.id_shop = '.(int)$this->id_current_shop.'
-					ORDER BY date_add DESC');
+					LEFT JOIN '._DB_PREFIX_.'customer_thread cc on (cm.id_customer_thread = cc.id_customer_thread)
+					WHERE cc.id_customer_thread = '.(int)($id_customer_thread).' AND cc.id_shop = '.(int)$this->id_current_shop.'
+					ORDER BY cm.date_add DESC');
 				if ($old_message == htmlentities($message, ENT_COMPAT, 'UTF-8'))
 				{
 					$this->context->smarty->assign('alreadySent', 1);
