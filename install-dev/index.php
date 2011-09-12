@@ -813,14 +813,20 @@ if ($lm->getIncludeTradFilename())
 										</tr>
 									</table>';
 
+									$country_iso_code_default = '';
+									if ($_GET['language'] == 1) $country_iso_code_default = 'FR';
+									else if ($_GET['language'] == 2) $country_iso_code_default = 'ES';
+									else if ($_GET['language'] == 3) $country_iso_code_default = 'DE';
+									else if ($_GET['language'] == 4) $country_iso_code_default = 'IT';
+
 									foreach ($modulesHelpInstall AS $country_iso_code => $modulesList)
 							{
-								echo '<div class="installModuleList'.($country_iso_code == 'FR' ? ' selected' : '').'" id="modulesList'.$country_iso_code.'">';
+										echo '<div class="installModuleList'.($country_iso_code == $country_iso_code_default ? ' selected' : '').'" id="modulesList'.$country_iso_code.'">';
 										foreach ($modulesList AS $module)
 								{
 									echo '
 										<table cellpadding="0" callspacing="0" border="0" class="moduleTable">
-									<tr>
+											<tr style="border-bottom:0px">
 										<td valign="top" style="text-align: center; padding-top:10px; width: 30px;">
 										<span style="padding: 12px 4px 6px 2px;">
 									<input type="checkbox" id="preInstallModules_'.$country_iso_code.'_'.$module.'" value="'.$module.'" class="'.$module.' preInstallModules_'.$country_iso_code.'" style="vertical-align: middle;" />
@@ -989,7 +995,7 @@ if ($lm->getIncludeTradFilename())
 					</tr>
 				</table>
 
-				<h3 class="infosBlock"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder.'); ?></h3>
+				<h3 class="infosBlock"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files(readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?></h3>
 				
 				<div id="boBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_boBlock.png" />
@@ -1357,7 +1363,7 @@ if ($lm->getIncludeTradFilename())
 <ul id="footer">
 	<li><a href="http://www.prestashop.com/forum/" title="<?php echo lang('Official forum'); ?>"><?php echo lang('Official forum'); ?></a> | </li>
 	<li><a href="http://www.prestashop.com" title="PrestaShop.com">PrestaShop.com</a> | </li>
-	<li><a href="http://www.prestashop.com/contact.php" title="<?php echo lang('Contact us'); ?>"><?php echo lang('Contact us'); ?></a> | </li>
+	<li><a href="http://www.prestashop.com/contact.php" title="<?php echo lang('Contact us!'); ?>"><?php echo lang('Contact us!'); ?></a> | </li>
 	<li>&copy; 2005-<?php echo date('Y'); ?></li>
 </ul>
 </body>

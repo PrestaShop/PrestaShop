@@ -1941,15 +1941,13 @@ FileETag INode MTime Size
 			case 'by' :
 				$orderByPrefix = '';
 				if($prefix) {
-					if ($value == 'id_product' OR	$value == 'date_add')
+					if ($value == 'id_product' || $value == 'date_add' || $value == 'price')
 						$orderByPrefix = 'p.';
 					elseif ($value == 'name')
 						$orderByPrefix = 'pl.';
 					elseif ($value == 'manufacturer')
-					{
 						$orderByPrefix = 'm.';
-					}
-					elseif ($value == 'position')
+					elseif ($value == 'position' || empty($value))
 						$orderByPrefix = 'cp.';
 				}
 				

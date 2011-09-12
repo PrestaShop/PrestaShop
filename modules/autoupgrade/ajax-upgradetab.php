@@ -28,19 +28,22 @@
 if($_POST['action'] == 'upgradeDb')
 		require_once(dirname(__FILE__).'/../../config/config.inc.php');
 
-// require('Tools.php');
-// require('../../config/config.autoupgrade.inc.php');
+// ajax-upgrade-tab is located in admin/autoupgrade directory
 if(!defined('_PS_ROOT_DIR_'))
-	define('_PS_ROOT_DIR_', dirname(__FILE__).'/../../');
+	define('_PS_ROOT_DIR_', realpath(dirname(__FILE__).'/../../'));
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 if(!defined('_PS_MODULE_DIR_'))
-	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ .'modules/');
+	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ .'/modules/');
+
 define('AUTOUPGRADE_MODULE_DIR', _PS_MODULE_DIR_.'autoupgrade/');
 require_once(AUTOUPGRADE_MODULE_DIR.'functions.php');
 if(!defined('_PS_USE_SQL_SLAVE_'))
 	define('_PS_USE_SQL_SLAVE_',0);
 // dir = admin-dev
-define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/'.$_POST['dir']);
+if ( _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$_POST['dir'] !==  realpath(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$_POST['dir']))
+	die('not allowed');
+
+define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$_POST['dir']);
 define('PS_ADMIN_DIR', _PS_ADMIN_DIR_); // Retro-compatibility
 //require(_PS_ADMIN_DIR_.'/functions.php');
 include(AUTOUPGRADE_MODULE_DIR.'init.php');

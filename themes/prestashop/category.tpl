@@ -29,16 +29,14 @@
 
 {if isset($category)}
 	{if $category->id AND $category->active}
-		<h1>{strip}
+
+		<h1>
+			{strip}
 			{$category->name|escape:'htmlall':'UTF-8'}
-			<span>
-				{if $category->id == 1 OR $nb_products == 0}{l s='There are no products.'}
-				{else}
-					{if $nb_products == 1}{l s='There is'}{else}{l s='There are'}{/if}&#160;
-					{$nb_products}&#160;
-					{if $nb_products == 1}{l s='product.'}{else}{l s='products.'}{/if}
-				{/if}
-			</span>{/strip}
+				<span class="category-product-count">
+					{include file="$tpl_dir./category-count.tpl"}
+				</span>
+			{/strip}
 		</h1>
 
 		{if $scenes}

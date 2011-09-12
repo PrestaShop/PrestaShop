@@ -1207,6 +1207,17 @@ class TSBuyerProtection extends AbsTrustedShops
 			TSBuyerProtection::$smarty->assign('onlineshop_name', ConfigurationCore::get('PS_SHOP_NAME'));
 			$url = str_replace(array('#shop_id#', '#shop_name#'), array(TSBuyerProtection::$CERTIFICATE[$lang]['tsID'], urlencode(str_replace('_', '-', ConfigurationCore::get('PS_SHOP_NAME')))), TSBuyerProtection::$certificate_link[$lang]);
 			TSBuyerProtection::$smarty->assign('trusted_shops_url', $url);
+
+			$displayWidget = false;
+			foreach (TSBuyerProtection::$CERTIFICATE as $lang => $certificate)
+			{
+				$certificate = (array)$certificate;
+				if (isset($certificate['tsID']) && $certificate['tsID'] !== '' && $certificate['user'] != '')
+					$displayWidget = true;
+			}
+			if ($displayWidget == false)
+				return '';
+
 			return $this->display(TSBuyerProtection::$module_name, 'seal_of_approval.tpl');
 		}
 	}
@@ -1233,6 +1244,8 @@ class TSBuyerProtection extends AbsTrustedShops
 		// If login parameters missing for the certificate an error occurred
 		if ((TSBuyerProtection::$CERTIFICATE[$lang]['user'] == '' OR TSBuyerProtection::$CERTIFICATE[$lang]['password'] == '') AND TSBuyerProtection::$CERTIFICATE[$lang]['typeEnum'] == 'EXCELLENCE')
 		{
+			return '';
+			// Display here has been deprecated by Trusted Shop
 			return '
 			<p style="color:red;text-align:center;font-size:14px;font-weight:bold;">'
 			.$this->l('The Trusted Shop Buyer Protection needs a login to succeed. Please contact the shop administrator.')
@@ -1347,8 +1360,8 @@ class TSBuyerProtection extends AbsTrustedShops
 		$return = '';
 		if (!empty($this->errors))
 			$return = '<p style="color:red">'.implode('<br />', $this->errors).'</p>';
-		else
-			$return = '<p>'.$this->l('You will receive an e-mail by Trusted Shops about your guarantee number.').'</p>';
+		//else
+		//	$return = '<p>'.$this->l('You will receive an e-mail by Trusted Shops about your guarantee number.').'</p>';
 		return $return;
 	}
 

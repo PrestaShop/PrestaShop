@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{trustedshops}prestashop>display_products_02ecb4a4709d9bcc590f1a25fc82c0e2'] = 'Trusted Shops Käuferschutz (empfohlen)';
-$_MODULE['<{trustedshops}prestashop>display_products_b55aab8932a39ca85bb0a1b6eb83f83f'] = 'Käuferschutz ab';
+$_MODULE['<{trustedshops}prestashop>display_products_1107bf75ac50728edbeb497ab803a104'] = 'Käuferschutz bis';
 $_MODULE['<{trustedshops}prestashop>display_products_69db1ddc2a15253abb0a11beb1eae734'] = 'inkl. MwSt.';
 $_MODULE['<{trustedshops}prestashop>display_products_b3c25d2f94cf87ece3dbb2907318520c'] = 'Die im Käuferschutz enthaltene Trusted Shops Garantie sichert Ihren Online-Kauf ab. Mit der Übermittlung und';
 $_MODULE['<{trustedshops}prestashop>display_products_536a056b710e94b16169efd17a4a657b'] = 'Speicherung';

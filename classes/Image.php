@@ -523,12 +523,14 @@ class ImageCore extends ObjectModel
 	 * If max_execution_time is provided, stops before timeout and returns string "timeout".
 	 * If any image cannot be moved, stops and returns "false"
 	 *
+	 * @param int max_execution_time
 	 * @return mixed success or timeout
 	 */
 	public static function moveToNewFileSystem($max_execution_time = 0)
 	{
 		$start_time = time();
 		$image = null;
+		$tmp_folder = 'duplicates/';
 		foreach (scandir(_PS_PROD_IMG_DIR_) as $file)
 		{
 			// matches the base product image or the thumbnails
@@ -537,17 +539,28 @@ class ImageCore extends ObjectModel
 				// don't recreate an image object for each image type
 				if (!$image || $image->id !== (int)$matches[2])
 					$image = new Image((int)$matches[2]);
-
-				if (Validate::isLoadedObject($image))
+				// image exists in DB and with the correct product?
+				if (Validate::isLoadedObject($image) && $image->id_product == (int)rtrim($matches[1], "-"))
 				{
 				// create the new folder if it does not exist
 				if (!$image->createImgFolder())
 					return false;
 				
-				// move the image
+					// if there's already a file at the new image path, move it to a dump folder
+					// most likely the preexisting image is a demo image not linked to a product and it's ok to replace it
 					$new_path = _PS_PROD_IMG_DIR_.$image->getImgPath().(isset($matches[3]) ? $matches[3] : '').'.jpg';
 				if (file_exists($new_path))
+					{
+						if(!file_exists(_PS_PROD_IMG_DIR_.$tmp_folder))
+						{
+							@mkdir(_PS_PROD_IMG_DIR_.$tmp_folder, 0755);
+							@chmod(_PS_PROD_IMG_DIR_.$tmp_folder, 0755);	
+						}
+						$tmp_path = _PS_PROD_IMG_DIR_.$tmp_folder.basename($file);
+						if (!@rename($new_path, $tmp_path) || !file_exists($tmp_path))
 						return false;
+					}
+					// move the image
 				if (!@rename(_PS_PROD_IMG_DIR_.$file, $new_path) || !file_exists($new_path))
 					return false;
 				}

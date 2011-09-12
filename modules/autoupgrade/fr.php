@@ -2,7 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_875b8a59022d232837491c0fdfacb4ab'] = 'Ne pas sauver les images';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a8d6c6734da0083021561b23f2fa88cc'] = 'Vous pouvez exclure le dossier image de la sauvegarde si vous l\'avez déjà sauvegardé d\'une autre manière (non recommandé)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_af98608eaedd4ba7ffd47a0204e84b23'] = 'Conserver le thème \"prestashop\" actuel';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4ea56ca1a757e426911ff20889c0e93c'] = 'Si vous avez personnalisé le thème par défaut de PrestaShop, vous pouvez le protéger de la mise à niveau (non recommandé)';
@@ -31,12 +30,9 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_63ded4905ba41ac4bf00373df273
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_11978affb3b0dbb16c50d571fd05de6d'] = 'erreur lors  de la création du répertoire %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1b854285afc1988b6f83414fde5943ab'] = '%1$s copié dans %2$s. encore %3$s fichiers à mettre à jour.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0e06ce0972ad338e1d96e8589dc21b9c'] = 'erreur lors de la copie de %1$s vers %2$s';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0511620a3a1d6036d3fbe47b131d7c4b'] = 'Fichiers restorés. Restauration de la base de données.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_791403f158965a3e19f8627c7b744126'] = 'Base de données restaurée.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5f7f50973696d0a42c1efcc07f7820a0'] = 'Votre site est maintenant restauré.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_28517b8a291c50d80aa53a078407065b'] = 'Répertoire racine nettoyée.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_bb71892737d721949538d6e1c4d3d22d'] = 'Fichiers restaurés. Sauvegarde de la base de données non trouvée. Restauration terminée.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_cb7dce5f6a1934d54c0d3335c7ffe841'] = 'Fichiers restaurés.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_8efc36d230f76fbfd9e4d758964e9414'] = 'impossible d\'extraire %1$ s dans%2$s.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d7624db09c15d46cd37d7709ae05e44b'] = 'aucune sauvegarde trouvée. Il n\'y a rien à restaurer.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_09a362e2dd3800f8fbc55d3446513f65'] = 'Rien à restaurer (aucune requête trouvée)';

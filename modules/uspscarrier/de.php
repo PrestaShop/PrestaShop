@@ -2,7 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{uspscarrier}prestashop>uspscarrier_5947e2ae63c0a33524cf81c44a1db580'] = 'USPS Carrier';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_098087ab799def1028233142cafeeafd'] = 'Bieten Sie Ihren Kunden unterschiedliche Liefermethoden mit USPS';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_883fa0069f4b0454e2277dd567ab3991'] = '\'Gewichtseinheit (la oder kg).\'';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_5a3ceec65d417f5d92c26dbf0dccc00d'] = '\'Maßeinheit (cm oder in).\'';
@@ -26,6 +25,7 @@ $_MODULE['<{uspscarrier}prestashop>uspscarrier_f8320b26d30ab433c5a54546d21f414c'
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f827cf462f62848df37c5e1e94a4da74'] = 'Richtig';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_386aad80d82f8245e9ef80352a2240e8'] = 'Alle Einheiten im Paket';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f35eb2a913a3fd6fd8e661012cf0ebd8'] = 'In eine Einheit pro Paket aufteilen';
+$_MODULE['<{uspscarrier}prestashop>uspscarrier_5947e2ae63c0a33524cf81c44a1db580'] = 'USPS Carrier';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_f57cff5425b6e64843c5f066c5b310d0'] = 'Usps Modulstatus';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_09bdd414ce843927aa3dceadc8bce034'] = 'USPS Carrier ist richtig konfiguriert und online!';
 $_MODULE['<{uspscarrier}prestashop>uspscarrier_ec8b84c83dfee20afa4c2f35245a254b'] = 'USPS Carrier ist noch nicht konfiguriert, Sie müssen:';

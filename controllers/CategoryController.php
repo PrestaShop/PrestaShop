@@ -134,15 +134,12 @@ class CategoryControllerCore extends FrontController
 						'subcategories_nb_total' => sizeof($subCategories),
 						'subcategories_nb_half' => ceil(sizeof($subCategories) / 2)));
 				}
+
 				if ($this->category->id != 1)
-				{
-					$nbProducts = $this->category->getProducts(NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
-					$this->pagination((int)$nbProducts);
-					$this->context->smarty->assign('nb_products', (int)$nbProducts);
-					$cat_products = $this->category->getProducts($this->context->language->id, (int)($this->p), (int)($this->n), $this->orderBy, $this->orderWay);
-				}
+					$this->productListAssign();
+
 				$this->context->smarty->assign(array(
-					'products' => (isset($cat_products) AND $cat_products) ? $cat_products : NULL,
+					'products' => (isset($this->cat_products) AND $this->cat_products) ? $this->cat_products : NULL,
 					'id_category' => (int)($this->category->id),
 					'id_category_parent' => (int)($this->category->id_parent),
 					'return_category_name' => Tools::safeOutput($this->category->name),
@@ -166,6 +163,21 @@ class CategoryControllerCore extends FrontController
 			'comparator_max_item' => (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')),
 			'suppliers' => Supplier::getSuppliers()
 		));
+	}
+
+	public function productListAssign()
+	{
+		$hookExecuted = false;
+		Module::hookExec('productListAssign', array('nbProducts' => &$this->nbProducts, 'catProducts' => &$this->cat_products, 'hookExecuted' => &$hookExecuted));
+		if (!$hookExecuted)
+		{
+			$this->nbProducts = $this->category->getProducts(NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
+			$this->pagination((int)$this->nbProducts);
+			$this->cat_products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+		}
+		else
+			$this->pagination((int)$this->nbProducts);
+		self::$smarty->assign('nb_products', (int)$this->nbProducts);
 	}
 
 	public function displayContent()

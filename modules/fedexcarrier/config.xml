@@ -2,7 +2,7 @@
 <module>
 	<name>fedexcarrier</name>
 	<displayName><![CDATA[Fedex Carrier]]></displayName>
-	<version><![CDATA[1.1]]></version>
+	<version><![CDATA[1.2]]></version>
 	<description><![CDATA[Offer your customers, different delivery methods with Fedex]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

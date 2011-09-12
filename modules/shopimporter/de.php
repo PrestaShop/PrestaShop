@@ -59,11 +59,6 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_60474e812295a5adc371de63dc62a16
 $_MODULE['<{shopimporter}prestashop>shopimporter_05f4be265d59ea66f3a1fb12ba103583'] = 'Wählen Sie Ihren Import';
 $_MODULE['<{shopimporter}prestashop>shopimporter_961f2247a2070bedff9f9cd8d64e2650'] = 'Wählen';
 $_MODULE['<{shopimporter}prestashop>shopimporter_151a0fbfcc4894aa53335091c2512de5'] = 'Kein Import-Modul installiert';
-$_MODULE['<{shopimporter}prestashop>shopimporter_9aa1b03934893d7134a660af4204f2a9'] = 'Server';
-$_MODULE['<{shopimporter}prestashop>shopimporter_8f9bfe9d1345237cb3b2b205864da075'] = 'Benutzer';
-$_MODULE['<{shopimporter}prestashop>shopimporter_dc647eb65e6711e155375218212b3964'] = 'Kennwort';
-$_MODULE['<{shopimporter}prestashop>shopimporter_e307db07b3975fef922a80d07455ee5e'] = 'Datenbank';
-$_MODULE['<{shopimporter}prestashop>shopimporter_dac130bdd2c5492a8108a4145bd9f04a'] = 'Datenbank-Präfix';
 $_MODULE['<{shopimporter}prestashop>shopimporter_2bb4cbbf4c51025867d47131e79ad05f'] = 'Nächster Schritt';
 $_MODULE['<{shopimporter}prestashop>shopimporter_72dd98a453e92ccc01697f29bb5dbeb9'] = 'Import-Optionen';
 $_MODULE['<{shopimporter}prestashop>shopimporter_9dfc5d5738312210c3c75e68a468691d'] = 'Advanced-Optionen';

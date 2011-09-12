@@ -75,7 +75,5 @@ CREATE TABLE IF NOT EXISTS `PREFIX_compare_product` (
 
 DELETE FROM `PREFIX_configuration` WHERE name = 'PS_LAYERED_NAVIGATION_CHECKBOXES' LIMIT 1;
 
-/* PHP:add_new_tab(AdminUpgrade, en:Upgrade|fr:Mise à jour,  9); */;
-
 /* PHP:alter_productcomments_guest_index(); */;
 

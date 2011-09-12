@@ -152,7 +152,8 @@ class GAnalytics extends Module
 	function hookHeader($params)
 	{
 		// hookOrderConfirmation() already send the sats bypass this step
-		if (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order-confirmation.php') === 0) return '';
+		if (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order-confirmation.php') === 0)
+			return '';
 	
 		// Otherwise, create Google Analytics stats
 		$ganalytics_id = Configuration::get('GANALYTICS_ID');
@@ -169,7 +170,8 @@ class GAnalytics extends Module
 	function hookFooter($params)
 	{
 		// for retrocompatibility
-		if (!$this->isRegisteredInHook('header')) $this->registerHook('header');
+		if (!$this->isRegisteredInHook('header'))
+			$this->registerHook('header');
 		return ;
 	}
 
@@ -191,7 +193,8 @@ class GAnalytics extends Module
 			}
 
 			// Order general information
-		$trans = array('id' => intval($order->id),				// order ID - required
+			$trans = array(
+				'id' => intval($order->id),				// order ID - required
 						'store' => htmlentities(Configuration::get('PS_SHOP_NAME')), // affiliation or store name
 						'total' => Tools::ps_round(floatval($order->total_paid) / floatval($conversion_rate), 2),		// total - required
 						'tax' => '0', // tax
@@ -210,7 +213,8 @@ class GAnalytics extends Module
 								WHERE `id_product` = '.intval($product['product_id']).' AND `id_category_default` = `id_category` 
 								AND `id_lang` = '.intval($parameters['PS_LANG_DEFAULT']));
 				
-				$items[] = array('OrderId' => intval($order->id),				// order ID - required
+				$items[] = array(
+					'OrderId' => intval($order->id),								// order ID - required
 								'SKU' => addslashes($product['product_id']),		// SKU/code - required
 								'Product' => addslashes($product['product_name']),		// product name
 								'Category' => addslashes($category['name']),			// category or variation
@@ -219,11 +223,10 @@ class GAnalytics extends Module
 								);
 			}
 			$ganalytics_id = Configuration::get('GANALYTICS_ID');
-			$pageTrack = (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order.php') === 0 ? '/order/step'.intval($step).'.html' : '');
+
 			$this->context->smarty->assign('items', $items);
 			$this->context->smarty->assign('trans', $trans);
 			$this->context->smarty->assign('ganalytics_id', $ganalytics_id);
-			$this->context->smarty->assign('pageTrack', $pageTrack);
 			$this->context->smarty->assign('isOrder', true);
 			return $this->display(__FILE__, 'header.tpl');
 		}
