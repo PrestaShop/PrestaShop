@@ -753,10 +753,15 @@ tr.deleted td {
 	margin-top: 4px;
 	margin-bottom: 2px;
 	border: 1px solid #50B0EC;
-	padding: 8px 6px 8px 34px ;
+	padding: 8px 6px 8px 34px;
 	color: #383838;
 	background: #DDE9F7 url(../img/admin/help2.png) no-repeat 6px 5px;
 }
+
+div.hint {
+	position: relative;
+}
+
 
 /* The pointer image is added by using another span */
 .hint .hint-pointer {
