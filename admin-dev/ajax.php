@@ -678,17 +678,6 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::getValue('id_category_par
 	die(Tools::jsonEncode($children_categories));
 }
 
-if (Tools::isSubmit('updateProductImageShopAsso'))
-{
-	if ($id_image = (int)Tools::getValue('id_image') AND $id_shop = (int)Tools::getValue('id_shop'))
-	{
-		if ((int)Tools::getValue('active'))
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
-		else
-			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' AND `id_shop`='.(int)$id_shop);
-	}
-}
-
 if (Tools::isSubmit('getNotifications'))
 {
 	$notification = new Notification;
