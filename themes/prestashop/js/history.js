@@ -106,13 +106,13 @@ function updateOrderLineDisplay(domCheckbox){
 
 //send a message in relation to the order with ajax
 function sendOrderMessage (){
-	paramString = "ajax=true";
+	paramString = "controller=order-detail&ajax=true";
 	$('form#sendOrderMessage').find('input, textarea').each(function(){
 		paramString += '&' + $(this).attr('name') + '=' + encodeURI($(this).val());
 	});
 	$.ajax({
 		type: "POST",
-		url: baseDir + "order-detail.php",
+		url: baseDir + "index.php",
 		data: paramString,
 		success: function (msg){
 			$('#block-order-detail').fadeOut('slow', function() {
