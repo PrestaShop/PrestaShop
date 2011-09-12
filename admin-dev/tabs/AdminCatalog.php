@@ -68,7 +68,6 @@ class AdminCatalog extends AdminTab
 					$id_category = $shop->getCategory();
 			}
 		}
-
 		self::$_category = new Category($id_category);
 		if (!Validate::isLoadedObject(self::$_category))
 			die('Category cannot be loaded');
@@ -112,6 +111,16 @@ class AdminCatalog extends AdminTab
 			$this->attributeGenerator->postProcess();
 		}
 		$this->adminProducts->postProcess($this->token);
+	}
+	public function ajaxProcess()
+	{
+		if (Tools::getValue('addImage') !== false)
+			$this->adminProducts->ajaxProcess();
+		if (Tools::getValue('updateProductImageShopAsso'))
+			$this->adminProducts->ajaxProcess();
+		if (Tools::getValue('deleteImage'))
+			$this->adminProducts->ajaxProcess();
+			
 	}
 
 	public function displayErrors()

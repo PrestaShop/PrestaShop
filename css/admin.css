@@ -1648,3 +1648,46 @@ p.preference_description{
 input.disable_me[disabled=disabled]{
 	background-color: red;
 }
+
+div.progressBarImage
+{
+    float: left;
+    height: 15px;
+    margin-left: 3px;
+    width: 233px;
+}
+#showCounter
+{
+	font-weight: bold;
+	float: left;
+    margin-left: 25px;
+    margin-top: 1px;
+}
+#listImage
+{
+    list-style: none outside none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#listImage li
+{
+	clear: both;
+    float: left;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#listImage li p.errorImg
+{
+	background: none repeat scroll 0 0 #FAE2E3;
+    border: 1px solid #EC9B9B;
+    clear: both;
+	margin-bottom: 18px;
+    padding: 6px;
+    display: none;
+}
+#progressBarImage div.ui-progressbar-value
+{
+	height: 100%;
+}

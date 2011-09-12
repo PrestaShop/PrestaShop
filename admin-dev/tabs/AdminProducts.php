@@ -28,13 +28,13 @@ include_once(PS_ADMIN_DIR.'/tabs/AdminProfiles.php');
 
 class AdminProducts extends AdminTab
 {
-	protected $maxFileSize  = 20000000;
+	protected $maxFileSize = 20000000;
 
 	private $_category;
 
 	public function __construct()
 	{
-
+		
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
@@ -68,7 +68,6 @@ class AdminProducts extends AdminTab
 
 		parent::__construct();
 	}
-
 	private function _cleanMetaKeywords($keywords)
 	{
 		if (!empty($keywords) && $keywords != '')
@@ -416,28 +415,8 @@ class AdminProducts extends AdminTab
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				/* Delete product image */
-				if (isset($_GET['deleteImage']))
-				{
-					$image->delete();
-
-					if (!Image::getCover($image->id_product))
-					{
-						$first_img = Db::getInstance()->getRow('
-						SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-						WHERE `id_product` = '.(int)($image->id_product));
-						Db::getInstance()->Execute('
-						UPDATE `'._DB_PREFIX_.'image`
-						SET `cover` = 1
-						WHERE `id_image` = '.(int)($first_img['id_image']));
-					}
-					@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
-					@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
-					Tools::redirectAdmin(self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1'.'&token='.($token ? $token : $this->token));
-				}
-
 				/* Update product image/legend */
-				elseif (isset($_GET['editImage']))
+				if (isset($_GET['editImage']))
 				{
 					if ($image->cover)
 						$_POST['cover'] = 1;
@@ -856,6 +835,61 @@ class AdminProducts extends AdminTab
 			parent::postProcess(true);
 	}
 
+	public function ajaxProcess()
+	{
+		if (Tools::getValue('addImage') !== false)
+		{
+			self::$currentIndex = 'index.php?tab=AdminCatalog';
+			$allowedExtensions = array("jpeg", "gif", "png", "jpg");
+			// max file size in bytes
+			$sizeLimit = $this->maxFileSize;
+			$uploader = new FileUploader($allowedExtensions, $sizeLimit);
+			$result = $uploader->handleUpload();
+			if (isset($result['success']))
+			{
+				$shops = false;
+				if (Shop::isMultiShopActivated())
+					$shops = Shop::getShops();
+				$obj = new Product((int)Tools::getValue('id_product'));	
+				$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
+				$images = Image::getImages($this->context->language->id, $obj->id);
+				$imagesTotal = Image::getImagesTotal($obj->id);
+				$html = $this->getLineTableImage($result['success'], $imagesTotal + 1, $this->token, $shops);
+				die(Tools::jsonEncode(array("success" => $html))); 
+			}
+			else
+				die(Tools::jsonEncode($result));
+		}
+		
+		if (Tools::getValue('updateProductImageShopAsso'))
+		{
+			if ($id_image = (int)Tools::getValue('id_image') AND $id_shop = (int)Tools::getValue('id_shop'))
+				if (Tools::getValue('active') == "true")
+					die(Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')'));
+				else
+					die(Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' AND `id_shop`='.(int)$id_shop));
+		}
+		
+		if (Tools::getValue('deleteImage'))
+		{
+			$image = new Image((int)Tools::getValue('id_image'));
+			$image->delete();
+			if (!Image::getCover($image->id_product))
+			{
+				$first_img = Db::getInstance()->getRow('
+				SELECT `id_image` FROM `'._DB_PREFIX_.'image`
+				WHERE `id_product` = '.(int)($image->id_product));
+				Db::getInstance()->Execute('
+				UPDATE `'._DB_PREFIX_.'image`
+				SET `cover` = 1
+				WHERE `id_image` = '.(int)($first_img['id_image']));
+			}
+			@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
+			@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
+			die(true);
+		}
+
+	}
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
 	{
 		if (!Validate::isUnsignedId($id_shop) OR !Validate::isUnsignedId($id_currency) OR !Validate::isUnsignedId($id_country) OR !Validate::isUnsignedId($id_group))
@@ -923,41 +957,6 @@ class AdminProducts extends AdminTab
 					$this->copyImage($product->id, $image->id, $method);
 			}
 		}
-
-		/* Adding a new product image */
-		elseif (isset($_FILES['image_product']['name']) && $_FILES['image_product']['name'] != NULL )
-		{
-			if ($error = checkImageUploadError($_FILES['image_product']))
-				$this->_errors[] = $error;
-
-			if (!sizeof($this->_errors) AND isset($_FILES['image_product']['tmp_name']) AND $_FILES['image_product']['tmp_name'] != NULL)
-			{
-				if (!Validate::isLoadedObject($product))
-					$this->_errors[] = Tools::displayError('Cannot add image because product add failed.');
-				elseif (substr($_FILES['image_product']['name'], -4) == '.zip')
-					return $this->uploadImageZip($product);
-				else
-				{
-					$image = new Image();
-					$image->id_product = (int)($product->id);
-					$_POST['id_product'] = $image->id_product;
-					$image->position = Image::getHighestPosition($product->id) + 1;
-					if (($cover = Tools::getValue('cover')) == 1)
-						Image::deleteCover($product->id);
-					$image->cover = !$cover ? !sizeof($product->getImages(Configuration::get('PS_LANG_DEFAULT'))) : true;
-					$this->validateRules('Image', 'image');
-					$this->copyFromPost($image, 'image');
-					if (!sizeof($this->_errors))
-					{
-						if (!$image->add())
-							$this->_errors[] = Tools::displayError('Error while creating additional image');
-						else
-							$this->copyImage($product->id, $image->id, $method);
-						$id_image = $image->id;
-					}
-				}
-			}
-		}
 		if (isset($image) AND Validate::isLoadedObject($image) AND !file_exists(_PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format))
 			$image->delete();
 		if (sizeof($this->_errors))
@@ -966,86 +965,6 @@ class AdminProducts extends AdminTab
 		@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$product->id.'.jpg');
 		return ((isset($id_image) AND is_int($id_image) AND $id_image) ? $id_image : true);
 	}
-
-	public function uploadImageZip($product)
-	{
-		// Move the ZIP file to the img/tmp directory
-		if (!$zipfile = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['image_product']['tmp_name'], $zipfile))
-		{
-			$this->_errors[] = Tools::displayError('An error occurred during the ZIP file upload.');
-			return false;
-		}
-
-		// Unzip the file to a subdirectory
-		$subdir = _PS_TMP_IMG_DIR_.uniqid().'/';
-		try
-		{
-			if (!Tools::ZipExtract($zipfile, $subdir))
-				throw new Exception(Tools::displayError('An error occurred while unzipping your file.'));
-
-			$types = array('.gif' => 'image/gif', '.jpeg' => 'image/jpeg', '.jpg' => 'image/jpg', '.png' => 'image/png');
-			$_POST['id_product'] = (int)$product->id;
-			$imagesTypes = ImageType::getImagesTypes('products');
-			$highestPosition = Image::getHighestPosition($product->id);
-			foreach (scandir($subdir) as $file)
-			{
-				if ($file[0] == '.')
-					continue;
-
-				// Create image object
-				$image = new Image();
-				$image->id_product = (int)$product->id;
-				$image->position = ++$highestPosition;
-				$image->cover = ($highestPosition == 1 ? true : false);
-
-				// Call automated copy function
-				$this->validateRules('Image', 'image');
-				$this->copyFromPost($image, 'image');
-
-				if (sizeof($this->_errors))
-					throw new Exception('');
-
-				if (!$image->add())
-					throw new Exception(Tools::displayError('Error while creating additional image'));
-
-				$ext = substr($file, -4);
-				$type = (isset($types[$ext]) ? $types[$ext] : '');
-				if (!isPicture(array('tmp_name' => $subdir.$file, 'type' => $type)))
-				{
-					$image->delete();
-					throw new Exception(Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png'));
-				}
-
-				if (!$new_path = $image->getPathForCreation())
-					throw new Exception(Tools::displayError('An error occurred during new folder creation'));
-				if (!imageResize($subdir.$file, $new_path.'.'.$image->image_format))
-				{
-					$image->delete();
-					throw new Exception(Tools::displayError('An error occurred while resizing image.'));
-				}
-
-				foreach ($imagesTypes AS $k => $imageType)
-					if (!imageResize($subdir.$file, _PS_PROD_IMG_DIR_.$image->getImgPath().'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']))
-					{
-						$image->delete();
-						throw new Exception(Tools::displayError('An error occurred while copying image.').' '.stripslashes($imageType['name']));
-					}
-
-				Module::hookExec('watermark', array('id_image' => $image->id, 'id_product' => $image->id_product));
-			}
-		}
-		catch (Exception $e)
-		{
-			if ($error = $e->getMessage());
-				$this->_errors[] = $error;
-			Tools::deleteDirectory($subdir);
-			return false;
-		}
-
-		Tools::deleteDirectory($subdir);
-		return true;
-	}
-
 	/**
 	 * Copy a product image
 	 *
@@ -1118,7 +1037,7 @@ class AdminProducts extends AdminTab
 
 		/* Check description short size without html */
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
-		if ($limit <= 0) $limit = 800;
+		if ($limit <= 0) $limit = 400;
 		foreach ($languages AS $language)
 			if ($value = Tools::getValue('description_short_'.$language['id_lang']))
 				if (Tools::strlen(strip_tags($value)) > $limit)
@@ -2967,11 +2886,20 @@ class AdminProducts extends AdminTab
 
 	function displayFormImages($obj, $token = NULL)
 	{
+		if(!Tools::getValue('id_product'))
+			return '';
 		global $attributeJs, $images;
+		$shops = false;
+		if (Shop::isMultiShopActivated())
+			$shops = Shop::getShops();
+			
 		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
+		$images = Image::getImages($this->context->language->id, $obj->id);
+		$imagesTotal = Image::getImagesTotal($obj->id);
+					
 		echo '
 		<div class="tab-page" id="step2">
-				<h4 class="tab">2. '.$this->l('Images').' ('.$countImages.')</h4>
+				<h4 class="tab" >2. '.$this->l('Images').' (<span id="countImage">'.$countImages.'</span>)</h4>
 				<table cellpadding="5">
 				<tr>
 					<td><b>'.(Tools::getValue('id_image')?$this->l('Edit this product image'):$this->l('Add a new image to this product')).'</b></td>
@@ -2982,92 +2910,152 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td class="col-left">'.$this->l('File:').'</td>
 						<td style="padding-bottom:5px;">
-							<input type="file" id="image_product" name="image_product" />
-							<p>
-								'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').'
-								<br />'.$this->l('You can also upload a ZIP file containing several images. Thumbnails will be resized automatically.').'
+						<div id="file-uploader">		
+							<noscript>			
+								<p>Please enable JavaScript to use file uploader.</p>
+							</noscript>         
+						</div>
+						<div id="progressBarImage" class="progressBarImage"></div>
+						<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
+						<ul	id="listImage"></ul>
+						<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
+						<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
+						<script src="../js/fileuploader.js" type="text/javascript"></script>
+						<script src="../js/jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+						<script type="text/javascript"> 
+							function deleteImg(id)
+							{
+								var conf = confirm(\''.addslashes($this->l('Are you sure?', __CLASS__, true, false)).'\');
+								if (conf)
+									$.post("ajax-tab.php",
+									{
+										deleteImage: 1, 
+										id_image:id, 
+										id_product : "'.(int)Tools::getValue('id_product').'", 
+										id_category : "'.(int)$this->_category->id.'", 
+										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
+										tab : "AdminCatalog",
+										updateproduct : 1},
+										function (data) {
+											if (data)
+											{
+												position = parseInt($("#" + id + " .positionImage").html());
+												cover = 0;
+												if ($("#" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
+													cover = 1;
+												$("#" + id).remove();
+												if (cover)
+													$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
+												$("#imageTable tr").eq(1).find(".up").html("[ <img src=\"../img/admin/up_d.gif\" alt=\"\" border=\"0\"> ]");
+												$("#countImage").html(parseInt($("#countImage").html()) - 1);
+												$("#imageTable .positionImage").each( function(index){
+													if (parseInt($(this).html()) > position)
+														$(this).html(parseInt($(this).html()) - 1);
+												$("#imageTable tr:last .down").html("[ <img src=\"../img/admin/down_d.gif\" alt=\"\" border=\"0\"> ]");
+												
+												});
+											}
+									});
+							}
+							function delQueue(id)
+							{
+								$("#img" + id).fadeOut("slow");
+								$("#img" + id).remove();
+							}
+							$(document).ready(function () { 
+								var filecheck = 1;
+								var uploader = new qq.FileUploader({
+									element: document.getElementById("file-uploader"),
+									action: \'ajax-tab.php\',
+									debug: false,
+									onComplete: function(id, fileName, responseJSON){
+										var purcent = ((filecheck * 100) / nbfile);
+										$("#progressBarImage").progressbar({value: purcent });
+										if (purcent != 100)
+										{
+											$("#imageUpload").html(parseInt(filecheck));
+											$("#imageTotal").html(" / " + parseInt(nbfile) + " '.$this->l('Images').'");
+											$("#progressBarImage").show();
+											$("#showCounter").show();
+										}
+										else
+										{
+											$("#progressBarImage").progressbar({value: 0 });
+											$("#progressBarImage").hide();
+											$("#showCounter").hide();
+											nbfile = 0;
+											filecheck = 0;
+										}
+										if (responseJSON.success)
+										{
+											$("#imageTable tr:last").after(responseJSON.success);
+											$("#countImage").html(parseInt($("#countImage").html()) + 1);
+											$("#img" + id).remove();
+										}
+										else
+										{
+											$("#img" + id).addClass("red");
+											$("#img" + id + " .errorImg").html(responseJSON.error);
+											$("#img" + id + " .errorImg").show();
+											
+										}
+										if (purcent >= 100)
+											$("#imageTable tr:last .down").html("[ <img src=\"../img/admin/down_d.gif\" alt=\"\" border=\"0\"> ]");
+										filecheck++;
+									},
+									onSubmit: function(id, filename){
+										$("#imageTable").show();
+										$("#listImage").append("<li id=\'img"+id+"\'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px;\" href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
+									},
+									params: {
+										id_product : "'.(int)Tools::getValue('id_product').'", 
+										id_category : "'.(int)$this->_category->id.'", 
+										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
+										tab : "AdminCatalog",
+										updateproduct : 1,
+										addImage : 1,
+										},
+									
+								});
+							});
+        			  </script>    
+							<p class="float" style="clear: both;">
+								'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.($this->maxImageSize / 1000).''.$this->l('Kb max.').'
 							</p>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">'.$this->l('Caption:').'</td>
-						<td style="padding-bottom:5px;" class="translatable">';
-						foreach ($this->_languages as $language)
-						{
-							if (!Tools::getValue('legend_'.$language['id_lang']))
-								$legend = $this->getFieldValue($obj, 'name', $language['id_lang']);
-							else
-								$legend = Tools::getValue('legend_'.$language['id_lang']);
-							echo '
-							<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float:left; width:371px;">
-								<input size="55" type="text" id="legend_'.$language['id_lang'].'" name="legend_'.$language['id_lang'].'" value="'.stripslashes(htmlentities($legend, ENT_COMPAT, 'UTF-8')).'" maxlength="128" />
-								<sup> *</sup>
-								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<br />'.$this->l('Forbidden characters will be automatically erased.').'<span class="hint-pointer">&nbsp;</span></span>
-							</div>';
-						}
-						echo '
-							<p class="clear">'.$this->l('Short description of the image').'</p>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Cover:').'</td>
-						<td style="padding-bottom:5px;">
-							<input type="checkbox" size="40" name="cover" id="cover_on" class="checkbox"'.((isset($_POST['cover']) AND (int)($_POST['cover'])) ? ' checked="checked"' : '').' value="1" /><label class="t" for="cover_on"> '.$this->l('Use as product cover?').'</label>
-							<p>'.$this->l('If you want to select this image as a product cover').'</p>
-						</td>
-					</tr>
-					'; /* DEPRECATED FEATURE
-					<tr>
-						<td class="col-left">'.$this->l('Thumbnails resize method:').'</td>
-						<td style="padding-bottom:5px;">
-							<select name="resizer">
-								<option value="auto"'.(Tools::getValue('resizer', 'auto') == 'auto' ? ' selected="selected"' : '').'>'.$this->l('Automatic').'</option>
-								<option value="man"'.(Tools::getValue('resizer', 'auto') == 'man' ? ' selected="selected"' : '').'>'.$this->l('Manual').'</option>
-							</select>
-							<p>'.$this->l('Method you want to use to generate resized thumbnails').'</p>
-						</td>
-					</tr>*/
-					echo '
-					<tr>
-						<td colspan="2" style="text-align:center;">';
-						echo '<input type="hidden" name="resizer" value="auto" />';
-					$images = Image::getImages($this->context->language->id, $obj->id);
-					$imagesTotal = Image::getImagesTotal($obj->id);
-
-							if (isset($obj->id) AND sizeof($images))
-							{
-								echo '<input type="submit" value="'.$this->l('   Save image   ').'" name="submitAdd'.$this->table.'AndStay" class="button" />';
-								echo '<input type="hidden" value="on" name="productCreated" /><br /><br />';
-							}
-							echo (Tools::getValue('id_image') ? '<input type="hidden" name="id_image" value="'.(int)(Tools::getValue('id_image')).'" />' : '').'
-						</td>
-					</tr>
-					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>';
-					if (!sizeof($images) OR !isset($obj->id))
-						echo '<tr>
 						<td colspan="2" style="text-align:center;">
-							<input type="hidden" value="off" name="productCreated" />
-							'.(Tools::isSubmit('id_category') ? '<input type="submit" value="'.$this->l('Save').'" name="submitAdd'.$this->table.'" class="button" />' : '').'
-							&nbsp;<input type="submit" value="'.$this->l('Save and stay').'" name="submitAdd'.$this->table.'AndStay" class="button" /></td>
-					</tr>';
-					else
-					{
-						echo '
-						<tr>
+						<input type="hidden" name="resizer" value="auto" />
+							'.(Tools::getValue('id_image') ? '<input type="hidden" name="id_image" value="'.(int)(Tools::getValue('id_image')).'" />' : '').'
+						</td>
+					</tr>
+					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>					
+					<tr>
 							<td colspan="2">
-							<table cellspacing="0" cellpadding="0" class="table">
+							
+							<table cellspacing="0" cellpadding="0" class="table" id="imageTable" style="display:'.($countImages == 0 ? 'none' : '').';">
 								<tr>
 									<th style="width: 100px;">'.$this->l('Image').'</th>
 									<th>&nbsp;</th>
 									<th>'.$this->l('Position').'</th>';
-						if (Shop::isMultiShopActivated())
+						if ($shops)
 						{
-							$shops = Shop::getShops();
 							echo '<script type="text/javascript">
-											$(window).ready(function() {
+											$(document).ready(function() {
 												$(\'.image_shop\').change(function() {
-													$.post("'.dirname(self::$currentIndex).'/ajax.php",
-														{updateProductImageShopAsso: 1, id_image:$(this).attr("name"), id_shop: $(this).val(), active:$(this).attr("checked")});
+													$.post("ajax-tab.php",
+														{
+															updateProductImageShopAsso: 1, 
+															id_image:$(this).attr("name"), 
+															id_shop: $(this).val(), 
+															active:$(this).attr("checked"),
+															id_product : "'.(int)Tools::getValue('id_product').'", 
+															id_category : "'.(int)$this->_category->id.'", 
+															token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
+															tab : "AdminCatalog",
+															updateproduct : 1,
+														});
 												});
 											});
 										</script>';
@@ -3079,50 +3067,10 @@ class AdminProducts extends AdminTab
 									<th>'.$this->l('Action').'</th>
 								</tr>';
 
+						echo $this->_positionJS();
 						foreach ($images AS $k => $image)
-						{
-							if (Shop::isMultiShopActivated())
-								$imgObj = new Image((int)$image['id_image']);
-							$image_obj = new Image($image['id_image']);
-							$img_path = $image_obj->getExistingImgPath();
-
-							echo  $this->_positionJS().'
-							<tr>
-								<td style="padding: 4px;"><a href="'._THEME_PROD_DIR_.$img_path.'.jpg" target="_blank">
-								<img src="'._THEME_PROD_DIR_.$img_path.'-small.jpg'.((int)(Tools::getValue('image_updated')) === (int)($image['id_image']) ? '?date='.time() : '').'"
-								alt="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" title="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" /></a></td>
-								<td class="center">'.(int)($image['position']).'</td>
-								<td class="position-cell">';
-
-							if ($image['position'] == 1)
-							{
-								echo '<span>[ <img src="../img/admin/up_d.gif" alt="" border="0"> ]</span>';
-								if ($image['position'] == $imagesTotal)
-									echo '<span>[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
-								else
-									echo '<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
-							}
-							elseif ($image['position'] == $imagesTotal)
-								echo '
-									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
-									<span>[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
-							else
-								echo '
-									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
-									<span>[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
-							echo '</td>';
-							if (Shop::isMultiShopActivated())
-								foreach ($shops AS $shop)
-									echo '<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';
-							echo '
-								<td class="center"><a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
-								<td class="center">
-									<a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&editImage&tabs=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/edit.gif" alt="'.$this->l('Modify this image').'" title="'.$this->l('Modify this image').'" /></a>
-									<a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&deleteImage&tabs=1&token='.($token ? $token : $this->token).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
-								</td>
-							</tr>';
-						}
-					}
+							echo $this->getLineTableImage($image, $imagesTotal, $token, $shops);
+					
 
 			echo '
 							</table>
@@ -3154,7 +3102,56 @@ class AdminProducts extends AdminTab
 			echo '
 			</script>';
 	}
-
+	
+	public function getLineTableImage($image, $imagesTotal, $token, $shops)
+	{
+		if (Shop::isMultiShopActivated())
+			$imgObj = new Image((int)$image['id_image']);
+		$image_obj = new Image($image['id_image']);
+		$img_path = $image_obj->getExistingImgPath();
+		
+		$html =  '
+			<tr id="'.$image['id_image'].'">
+				<td style="padding: 4px;"><a href="'._THEME_PROD_DIR_.$img_path.'.jpg" target="_blank">
+					<img src="'._THEME_PROD_DIR_.$img_path.'-small.jpg'.((int)(Tools::getValue('image_updated')) === (int)($image['id_image']) ? '?date='.time() : '').'"
+					alt="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" title="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" /></a>
+				</td>
+				<td class="center positionImage">'.(int)($image['position']).'</td>
+				<td class="position-cell">';
+		if ($image['position'] == 1)
+		{
+			$html .= '
+					<span class="up">[ <img src="../img/admin/up_d.gif" alt="" border="0"> ]</span>';
+			if ($image['position'] == $imagesTotal)
+				$html .= '
+					<span class="down">[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
+			else
+				$html .= '
+					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+		}
+		elseif ($image['position'] == $imagesTotal)
+			$html .= '
+					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
+					<span class="down">[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
+		else
+			$html .= '
+					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
+					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+		$html .= '
+				</td>';
+		if (Shop::isMultiShopActivated())
+			foreach ($shops AS $shop)
+				$html .= '
+				<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';
+		$html .= '
+				<td class="center"><a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img class="covered" src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
+				<td class="center">
+				<a href="#" onclick="deleteImg('.(int)$image['id_image'].');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
+				</td>
+			</tr>';
+		return $html;
+	}
+	
 	public function initCombinationImagesJS()
 	{
 		if (!($obj = $this->loadObject(true)))
@@ -3881,6 +3878,5 @@ class AdminProducts extends AdminTab
 
 		$this->displayErrors();
 	}
-
 }
 
