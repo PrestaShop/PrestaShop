@@ -122,7 +122,7 @@ class ShopCore extends ObjectModel
 		return $fields;
 	}
 	
-	public function __construct($id = NULL, $id_lang = NULL, $id_shop = NULL)
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
 		parent::__construct($id, $id_lang, $id_shop);
 
@@ -149,7 +149,7 @@ class ShopCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
-		$res = parent::add();
+		$res = parent::add($autodate, $nullValues);
 		Shop::cacheShops(true);
 		return $res;
 	}
@@ -289,7 +289,7 @@ class ShopCore extends ObjectModel
 	 *
 	 * @return GroupShop
 	 */
-	public function getGroup($asObject = false)
+	public function getGroup()
 	{
 		if (!$this->group)
 			$this->group = new GroupShop($this->getGroupID());
@@ -765,10 +765,10 @@ class ShopCore extends ObjectModel
 					Db::getInstance()->Execute($sql);
 				}
 			}
-			else
+			/*else
 			{
-				//Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
-			}
+				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
+			}*/
 		}
 	}
 }
