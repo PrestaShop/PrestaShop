@@ -112,9 +112,7 @@ class Autoload
 				}
 
 				if (isset($this->index[$classname]))
-				{
 					require_once($this->root_dir.$this->index[$classname]);
-				}
 			}
 		}
 		// Call directly ProductCore, ShopCore class
