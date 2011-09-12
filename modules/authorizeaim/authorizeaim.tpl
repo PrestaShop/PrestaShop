@@ -31,7 +31,7 @@
 	{/if}
 
 	<form id="aut" name="authorizeaim_form" action="{$module_dir}validation.php" method="post">
-		<span style="display: block;text-decoration: none;">
+		<span style="border: 1px solid #595A5E;display: block;padding: 0.6em;text-decoration: none;margin-left: 0.7em;">
 			<a id="click_authorizeaim" href="#" title="{l s='Pay with authorizeaim' mod='authorizeaim'}" style="display: block;text-decoration: none;">
 				{if $cards.visa == 1}
 					<img src="{$module_dir}cards/visa.gif" alt="{l s='visa logo' mod='authorizeaim'}" />

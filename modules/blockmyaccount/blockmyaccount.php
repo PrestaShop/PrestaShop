@@ -86,17 +86,6 @@ class BlockMyAccount extends Module
 	{
 		$this->context->controller->addCSS(($this->_path).'blockmyaccount.css', 'all');
 	}
-	public function hookFooter($params)
-	{
-		global $smarty;
-		
-		$smarty->assign(array(
-			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),
-			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
-			'HOOK_BLOCK_MY_ACCOUNT' => Module::hookExec('myAccountBlock')
-		));
-		return $this->display(__FILE__, $this->name.'.tpl');
-	}
 }
 
 
