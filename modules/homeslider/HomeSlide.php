@@ -34,7 +34,6 @@ class HomeSlide extends ObjectModel
 	public $image;
 	public $active;
 	public $position;
-	public $maxImageSize = 307200;
 
 	protected $fieldsValidate = array(
 		 'active' => 'isunsignedInt',

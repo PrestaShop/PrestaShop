@@ -29,8 +29,6 @@ include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
 
 class AdminCMSCategories extends AdminTab
 {
-	protected $maxImageSize = 300000;
-
 	/** @var object CMSCategory() instance for navigation*/
 	private $_CMSCategory;
 

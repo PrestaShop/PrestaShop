@@ -30,9 +30,6 @@ if (!defined('_PS_VERSION_'))
 
 class Editorial extends Module
 {
-	/** @var max image size */
-	protected $maxImageSize = 307200;
-
 	public function __construct()
 	{
 		$this->name = 'editorial';
@@ -152,7 +149,7 @@ class Editorial extends Module
 				Configuration::set('PS_IMAGE_GENERATION_METHOD', 1);
 				if(file_exists(dirname(__FILE__).'/homepage_logo.jpg'))
 					unlink(dirname(__FILE__).'/homepage_logo.jpg');
-				if ($error = checkImage($_FILES['body_homepage_logo'], $this->maxImageSize))
+				if ($error = checkImage($_FILES['body_homepage_logo']))
 					$errors .= $error;
 				elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
 					return false;

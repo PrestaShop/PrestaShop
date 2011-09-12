@@ -27,8 +27,6 @@
 
 class AdminScenes extends AdminTab
 {
-	protected $maxImageSize = 1000000;
-
 	public function __construct()
 	{
 	 	$this->table = 'scene';
@@ -192,7 +190,7 @@ class AdminScenes extends AdminTab
 				<div class="margin-form">
 					<input type="hidden" id="stay_here" name="stay_here" value="" />
 					<input type="file" name="image" id="image_input" /> <input type="button" value="'.$this->l('Upload image').'" onclick="{$(\'#stay_here\').val(\'true\');$(\'#scenesForm\').submit();}" class="button" /><br/>
-					<p>'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '.($this->maxImageSize / 1000).''.$this->l('KB max.').' '.$this->l('If larger than the image size setting, the image will be reduced to ').' '.$largeSceneImageType['width'].'x'.$largeSceneImageType['height'].'px '.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'.<br />'.$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).').'</p>';
+					<p>'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('KB max.').' '.$this->l('If larger than the image size setting, the image will be reduced to ').' '.$largeSceneImageType['width'].'x'.$largeSceneImageType['height'].'px '.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'.<br />'.$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).').'</p>';
 					
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg'))
 		{
@@ -218,7 +216,7 @@ class AdminScenes extends AdminTab
 			echo '<label>'.$this->l('Alternative thumbnail:').' </label>
 					<div class="margin-form">
 						<input type="file" name="thumb" id="thumb_input" />&nbsp;&nbsp;'.$this->l('(optional)').'
-						<p>'.$this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.').'<br />'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.($this->maxImageSize / 1000).''.$this->l('Kb max.').' '.$this->l('Automatically resized to').' '.$thumbSceneImageType['width'].'x'.$thumbSceneImageType['height'].'px '.$this->l('(width x height)').'.<br />'.$this->l('Note: To change image dimensions, please change the \'thumb_scene\' image type settings to the desired size (in Back Office > Preferences > Images).').'</p>
+						<p>'.$this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.').'<br />'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '.$this->l('Automatically resized to').' '.$thumbSceneImageType['width'].'x'.$thumbSceneImageType['height'].'px '.$this->l('(width x height)').'.<br />'.$this->l('Note: To change image dimensions, please change the \'thumb_scene\' image type settings to the desired size (in Back Office > Preferences > Images).').'</p>
 						';
 			if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg'))
 				echo '<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg" /><br />';

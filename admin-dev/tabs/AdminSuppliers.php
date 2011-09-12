@@ -27,8 +27,6 @@
 
 class AdminSuppliers extends AdminTab
 {
-	protected $maxImageSize = 200000;
-
 	public function __construct()
 	{
 	 	$this->table = 'supplier';

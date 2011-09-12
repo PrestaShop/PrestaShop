@@ -503,7 +503,7 @@ class HomeSlider extends Module
 				/* Uploads image and sets slide */
 				if (isset($_FILES['image_'.$language['id_lang']]) AND isset($_FILES['image_'.$language['id_lang']]['tmp_name']) AND !empty($_FILES['image_'.$language['id_lang']]['tmp_name']))
 				{
-					if ($error = checkImage($_FILES['image_'.$language['id_lang']], $slide->maxImageSize))
+					if ($error = checkImage($_FILES['image_'.$language['id_lang']]))
 						$errors .= $error;
 					elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $tmpName))
 						return false;

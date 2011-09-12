@@ -83,11 +83,11 @@ function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCach
   * Check image upload
   *
   * @param array $file Upload $_FILE value
-  * @param integer $maxFileSize Maximum upload size
+  * @param integer $maxFileSize Maximum upload size (optional)
   */
-function checkImage($file, $maxFileSize)
+function checkImage($file, $maxFileSize = 0)
 {
-	if ($file['size'] > $maxFileSize)
+	if ((int)$maxFileSize > 0 && $file['size'] > (int)$maxFileSize)
 		return Tools::displayError('Image is too large').' ('.($file['size'] / 1000).Tools::displayError('KB').'). '.Tools::displayError('Maximum allowed:').' '.($maxFileSize / 1000).Tools::displayError('KB');
 	if (!isPicture($file))
 		return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
@@ -169,11 +169,11 @@ function isPicture($file, $types = NULL)
   * Check icon upload
   *
   * @param array $file Upload $_FILE value
-  * @param integer $maxFileSize Maximum upload size
+  * @param integer $maxFileSize Maximum upload size (optional)
   */
-function checkIco($file, $maxFileSize)
+function checkIco($file, $maxFileSize = 0)
 {
-	if ($file['size'] > $maxFileSize)
+	if ((int)$maxFileSize > 0 && $file['size'] > $maxFileSize)
 		return Tools::displayError('Image is too large').' ('.($file['size'] / 1000).'ko). '.Tools::displayError('Maximum allowed:').' '.($maxFileSize / 1000).'ko';
 	if (substr($file['name'], -4) != '.ico')
 		return Tools::displayError('Image format not recognized, allowed formats are: .ico');

@@ -66,7 +66,7 @@ class AdminLanguages extends AdminTab
 	public function copyNoPictureImage($language)
 	{
 		if (isset($_FILES['no-picture']) and $_FILES['no-picture']['error'] === 0)
-			if ($error = checkImage($_FILES['no-picture'], $this->maxImageSize))
+			if ($error = checkImage($_FILES['no-picture'], Tools::getMaxUploadSize()))
 				$this->_errors[] = $error;
 			else
 			{

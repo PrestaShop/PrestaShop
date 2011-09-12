@@ -75,8 +75,6 @@ class blockreinsurance extends Module
 	
 	public function addToDB()
 	{
-		$maxImageSize = 3007200;		 
-		 
 		if(isset($_POST['nbblocks']))
 		{			
 			for($i = 1; $i <= (int)$_POST['nbblocks']; $i++)
@@ -84,7 +82,7 @@ class blockreinsurance extends Module
 				$filename = explode('.', $_FILES['info'.$i.'_file']['name']);
 				if (isset($_FILES['info'.$i.'_file']) AND isset($_FILES['info'.$i.'_file']['tmp_name']) AND !empty($_FILES['info'.$i.'_file']['tmp_name']))
 				{
-					if ($error = checkImage($_FILES['info'.$i.'_file'], $maxImageSize))
+					if ($error = checkImage($_FILES['info'.$i.'_file']))
 						return false;
 					elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['info'.$i.'_file']['tmp_name'], $tmpName))
 						return false;

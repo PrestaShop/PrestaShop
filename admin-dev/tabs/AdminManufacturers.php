@@ -27,8 +27,6 @@
 
 class AdminManufacturers extends AdminTab
 {
-	protected $maxImageSize = 200000;
-
 	/** @var array countries list */
 	private $countriesArray = array();
 
