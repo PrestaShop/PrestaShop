@@ -66,7 +66,7 @@ class Notification
 	{
 	
 		if ($type == 'order' || $type == 'message')
-			$sql = 'SELECT id_order 
+			$sql = 'SELECT id_order, id_customer, '.(($type == 'order') ? 'total_paid_real' : 'message').'
 					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'` 
 					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.' 
 					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
@@ -76,7 +76,20 @@ class Notification
 					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.' 
 					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
 		
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$json = array();
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql) as $key => $value)
+		{
+			$customer = new Customer(intval($value['id_customer']));
+			$json[] = array(
+				'id_order' => ((isset($value['id_order'])) ? (int)$value['id_order'] : 0),
+				'id_customer' => ((isset($value['id_customer'])) ? (int)$value['id_customer'] : 0),
+				'total_paid_real' => ((isset($value['total_paid_real'])) ? Tools::displayPrice(intval($value['total_paid_real'])) : 0),
+				'customer_name' => $customer->firstname.' '.$customer->lastname,
+				'message_customer' => ((isset($value['message'])) ? substr(strip_tags($value['message']), 0, 20) : '')
+			);
+		}
+		
+		return $json;
 	}	
 	
 	/**
