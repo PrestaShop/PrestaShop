@@ -402,8 +402,17 @@ if (helpboxes)
 	{
 		if ($('input'))
 		{
-			$('input').focus(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
-			$('input').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			//Display by rollover
+			$('input').mouseover(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
+			$('input').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			
+			//display when you press the tab key
+			$('input').keydown(function (e) {
+				if ( e.keyCode === 9 ){
+					$('input').focus(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
+					$('input').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+				}
+			});
 		}
 	});
 }

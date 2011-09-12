@@ -749,8 +749,7 @@ tr.deleted td {
 /* help boxes */
 .hint {
 	display: none;
-	position: relative;
-	left: 0px;
+	position: absolute;
 	margin-top: 4px;
 	margin-bottom: 2px;
 	border: 1px solid #50B0EC;
