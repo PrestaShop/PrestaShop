@@ -77,8 +77,6 @@ class Autoload
 	 */
 	public function load($classname)
 	{
-	//	echo("Please load $classname.<br />");
-
 		// regenerate the class index if the requested class is not found in the index or if the requested file doesn't exists
 		if (!isset($this->index[$classname]) || ($this->index[$classname] && !file_exists($this->root_dir.$this->index[$classname])))
 			$this->generateIndex();
