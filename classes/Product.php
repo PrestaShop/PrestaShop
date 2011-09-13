@@ -174,6 +174,9 @@ class ProductCore extends ObjectModel
 	/** @var boolean Product available for order */
 	public		$available_for_order = 1;
 
+	/** @var string Object available order date */
+	public		$available_date;
+
 	/** @var enum Product condition (new, used, refurbished) */
 	public		$condition;
 
@@ -246,6 +249,7 @@ class ProductCore extends ObjectModel
 		'text_fields' => 'isUnsignedInt',
 		'active' => 'isBool',
 		'available_for_order' => 'isBool',
+		'available_date' => 'isDate',
 		'condition' => 'isGenericName',
 		'show_price' => 'isBool',
 		'ean13' => 'isEan13',
@@ -376,6 +380,7 @@ class ProductCore extends ObjectModel
 		$fields['text_fields'] = (int)($this->text_fields);
 		$fields['active'] = (int)($this->active);
 		$fields['available_for_order'] = (int)($this->available_for_order);
+		$fields['available_date'] = pSQL($this->available_date);
 		$fields['condition'] = pSQL($this->condition);
 		$fields['show_price'] = (int)($this->show_price);
 		$fields['indexed'] = 0; // Reset indexation every times
@@ -1036,7 +1041,7 @@ class ProductCore extends ObjectModel
 	* @param string $minimal_quantity Minimal quantity
 	* @return array Update result
 	*/
-	public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL, $minimal_quantity)
+	public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL, $minimal_quantity, $available_date_combi)
 	{
 		Db::getInstance()->Execute('
 		DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
@@ -1056,7 +1061,8 @@ class ProductCore extends ObjectModel
 			'ean13' => pSQL($ean13),
 			'upc' => pSQL($upc),
 			'default_on' => (int)($default),
-			'minimal_quantity' => (int)($minimal_quantity)
+			'minimal_quantity' => (int)($minimal_quantity),
+			'available_date_combi' => pSQL($available_date_combi)
 		);
 
 		if ($quantity)
@@ -2292,7 +2298,7 @@ class ProductCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name,
-					a.`color` AS attribute_color, pa.`id_product_attribute`, stock.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`, pa.`minimal_quantity`
+					a.`color` AS attribute_color, pa.`id_product_attribute`, stock.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`, pa.`minimal_quantity`, pa.`available_date_combi`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				'.Product::sqlStock('pa', 'pa').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`

@@ -484,27 +484,36 @@ class AdminProducts extends AdminTab
 								$this->_errors[] = Tools::displayError('This attribute already exists.');
 							else
 							{
-								$product->updateProductAttribute($id_product_attribute,
-									Tools::getValue('attribute_wholesale_price'),
-									Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
-									Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
-									Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
-									Tools::getValue('attribute_ecotax'),
-									false,
-									Tools::getValue('id_image_attr'),
-									Tools::getValue('attribute_reference'),
-									Tools::getValue('attribute_supplier_reference'),
-									Tools::getValue('attribute_ean13'),
-									Tools::getValue('attribute_default'),
-									Tools::getValue('attribute_location'),
-									Tools::getValue('attribute_upc'),
-									Tools::getValue('minimal_quantity'));
-								if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0 AND $id_reason > 0)
+								if (Validate::isDateFormat(Tools::getValue('available_date_combi')))
 								{
-									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $this->context->employee->id))
-										$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
+									$product->updateProductAttribute($id_product_attribute,
+										Tools::getValue('attribute_wholesale_price'),
+										Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
+										Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
+										Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
+										Tools::getValue('attribute_ecotax'),
+										false,
+										Tools::getValue('id_image_attr'),
+										Tools::getValue('attribute_reference'),
+										Tools::getValue('attribute_supplier_reference'),
+										Tools::getValue('attribute_ean13'),
+										Tools::getValue('attribute_default'),
+										Tools::getValue('attribute_location'),
+										Tools::getValue('attribute_upc'),
+										Tools::getValue('minimal_quantity'),
+										Tools::getValue('available_date_combi'));
+								
+									if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0 AND $id_reason > 0)
+									{
+										if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $this->context->employee->id))
+											$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
+									}
+									Hook::updateProductAttribute((int)$id_product_attribute);
 								}
-								Hook::updateProductAttribute((int)$id_product_attribute);
+								else
+								{
+									$this->_errors[] = Tools::displayError('Invalid date format.');
+								}
 							}
 						}
 						else
@@ -2631,8 +2640,27 @@ class AdminProducts extends AdminTab
 								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 							</div>';
 			echo '	</td>
-					</tr>
+					</tr>';
 
+			// Check if product has combination, to display the available date only for the product or for each combination
+			if (Combination::isFeatureActive()) 
+				$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
+
+			if (isset($countAttributes) && $countAttributes == 0)
+			{
+				echo '
+						<tr>
+							<td class="col-left">'.$this->l('Available date:').'</td>
+							<td style="padding-bottom:5px;">
+							<input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
+						</td>
+						</tr>';
+				// date picker include
+				include_once('functions.php');
+				includeDatepicker('available_date');
+			}
+
+			echo '
 					<script type="text/javascript">
 						calcPriceTI();
 					</script>
@@ -3337,6 +3365,14 @@ class AdminProducts extends AdminTab
 			  <td style="width:150px">'.$this->l('Quantity in stock:').'</td>
 			  <td style="padding-bottom:5px;"><b><span style="display:none;" id="attribute_quantity"></span></b></td>
 		  </tr>
+		  <tr style="width:150px;vertical-align:top;padding-right:10px;font-weight:bold;" class="col-left">
+			  <td style="width:150px">'.$this->l('Available date:').'</td>
+			  <td style="padding-bottom:5px;"><input id="available_date_combi" name="available_date_combi" value="'.(($this->getFieldValue($obj, 'available_date_combi')!=0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date_combi'), $language['id_lang']))) : '00-00-0000').'" style="text-align: center;" type="text" /></td>
+		  </tr>';
+		  // date picker include
+		  include_once('functions.php');
+		  includeDatepicker('available_date_combi');
+		echo '
 		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 		  <tr>
 			  <td style="width:150px">'.$this->l('Image:').'</td>
@@ -3405,6 +3441,7 @@ class AdminProducts extends AdminTab
                         $combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 						$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
+						$combArray[$combinaison['id_product_attribute']]['available_date_combi'] = strftime($combinaison['available_date_combi']);
 						$combArray[$combinaison['id_product_attribute']]['location'] = $combinaison['location'];
 						$combArray[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
 						$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
@@ -3434,6 +3471,7 @@ class AdminProducts extends AdminTab
 						$list = rtrim($list, ', ');
 						$jsList = rtrim($jsList, ', ');
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
+						$available_date = ($product_attribute['available_date_combi'] != 0) ? date('Y-m-j', strtotime($product_attribute['available_date_combi'])) : '00-00-0000';
 						echo '
 						<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
 							<td>'.stripslashes($list).'</td>
@@ -3447,7 +3485,7 @@ class AdminProducts extends AdminTab
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
-							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\'); calcImpactPriceTI();" /></a>&nbsp;
+							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
 							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">

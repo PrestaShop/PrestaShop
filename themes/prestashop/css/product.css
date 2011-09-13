@@ -99,7 +99,7 @@
 	float: right
 }
 #primary_block #buy_block span.our_price_display { float: right }
-#primary_block #buy_block span#availability_label {
+#primary_block #buy_block span#availability_label, #primary_block #buy_block span#availability_date_label {
 	float: left;
 	margin-right: 1em
 }
