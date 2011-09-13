@@ -447,7 +447,7 @@ class AdminProducts extends AdminTab
 				/* Choose product image position */
 				elseif (isset($_GET['imgPosition']) AND isset($_GET['imgDirection']))
 				{
-					$image->positionImage((int)(Tools::getValue('imgPosition')), (int)(Tools::getValue('imgDirection')));
+					$image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
 					Tools::redirectAdmin(self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1&token='.($token ? $token : $this->token));
 				}
 			}
@@ -3061,9 +3061,16 @@ class AdminProducts extends AdminTab
 					</tr>
 					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>					
 					<tr>
-							<td colspan="2">
-							
-							<table cellspacing="0" cellpadding="0" class="table" id="imageTable" style="display:'.($countImages == 0 ? 'none' : '').';">
+						<td colspan="2">
+							<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+							<script type="text/javascript">
+								var token = \''.($token!=NULL ? $token : $this->token).'\';
+								var come_from = \''.$this->table.'\';
+								var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
+							</script>
+							<script type="text/javascript" src="../js/admin-dnd.js"></script>							
+							<table cellspacing="0" cellpadding="0" class="table tableDnD" id="imageTable" style="display:'.($countImages == 0 ? 'none' : '').';">
+								<thead>
 								<tr>
 									<th style="width: 100px;">'.$this->l('Image').'</th>
 									<th>&nbsp;</th>
@@ -3094,7 +3101,7 @@ class AdminProducts extends AdminTab
 						echo '
 									<th>'.$this->l('Cover').'</th>
 									<th>'.$this->l('Action').'</th>
-								</tr>';
+								</tr></thead>';
 
 						echo $this->_positionJS();
 						foreach ($images AS $k => $image)
@@ -3138,15 +3145,14 @@ class AdminProducts extends AdminTab
 			$imgObj = new Image((int)$image['id_image']);
 		$image_obj = new Image($image['id_image']);
 		$img_path = $image_obj->getExistingImgPath();
-		
 		$html =  '
-			<tr id="'.$image['id_image'].'">
+			<tr id="tr_'.$image_obj->id.'_'.$image_obj->position.'">
 				<td style="padding: 4px;"><a href="'._THEME_PROD_DIR_.$img_path.'.jpg" target="_blank">
 					<img src="'._THEME_PROD_DIR_.$img_path.'-small.jpg'.((int)(Tools::getValue('image_updated')) === (int)($image['id_image']) ? '?date='.time() : '').'"
 					alt="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" title="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" /></a>
 				</td>
 				<td class="center positionImage">'.(int)($image['position']).'</td>
-				<td class="position-cell">';
+				<td id="td_'.$image_obj->id.'" class="position-cell dragHandle">';
 		if ($image['position'] == 1)
 		{
 			$html .= '
@@ -3156,16 +3162,16 @@ class AdminProducts extends AdminTab
 					<span class="down">[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
 			else
 				$html .= '
-					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
 		}
 		elseif ($image['position'] == $imagesTotal)
 			$html .= '
-					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
+					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] - 1).'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
 					<span class="down">[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
 		else
 			$html .= '
-					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
-					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.$image['position'].'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] - 1).'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
+					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
 		$html .= '
 				</td>';
 		if (Shop::isMultiShopActivated())

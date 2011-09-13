@@ -283,9 +283,12 @@ class ImageCore extends ObjectModel
 	  *
 	  * @param integer $position Position
 	  * @param boolean $direction Direction
+	  * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
 	  */
 	public function	positionImage($position, $direction)
 	{
+		Tools::displayAsDeprecated();
+		
 		$position = (int)($position);
 		$direction = (int)($direction);
 		
@@ -308,6 +311,36 @@ class ImageCore extends ObjectModel
 		SET `position` = '.$this->position.'
 		WHERE `id_product` = '.(int)($this->id_product).'
 		AND `position` = '.(int)($high_position));
+	}
+	
+	/**
+	 * Change an image position and update relative positions
+	 * 
+	 * @param int $way position is moved up if 0, moved down if 1
+	 * @param int $position new position of the moved image
+	 * @return int success
+	 */
+	public function updatePosition($way, $position)
+	{
+		if (!isset($this->id) || !$position)
+			return false;
+			
+		// < and > statements rather than BETWEEN operator
+		// since BETWEEN is treated differently according to databases
+		$result = (Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'image`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+			WHERE `position`
+			'.($way
+				? '> '.(int)($this->position).' AND `position` <= '.(int)($position)
+				: '< '.(int)($this->position).' AND `position` >= '.(int)($position)).'
+			AND `id_product`='.(int)($this->id_product))
+		&& Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'image`
+			SET `position` = '.(int)($position).'
+			WHERE `id_image` = '.(int)($this->id_image)));
+
+		return $result;
 	}
 	
 	public static function getSize($type)

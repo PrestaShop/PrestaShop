@@ -757,7 +757,6 @@ CREATE TABLE `PREFIX_image` (
   `cover` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_image`),
   KEY `image_product` (`id_product`),
-  UNIQUE KEY `product_position` (`id_product`,`position`),
   KEY `id_product_cover` (`id_product`,`cover`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

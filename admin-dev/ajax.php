@@ -335,6 +335,35 @@ if (array_key_exists('ajaxProductsPositions', $_POST))
 		}
 }
 
+if (array_key_exists('ajaxProductImagesPositions', $_POST))
+{
+	$id_image = (int)(Tools::getValue('id_image'));
+	$way = (int)(Tools::getValue('way'));
+	$positions = Tools::getValue('imageTable');
+
+	if (is_array($positions))
+		foreach ($positions AS $key => $value)
+		{
+			$pos = explode('_', $value);
+			if ((isset($pos[1])) AND ($pos[1] == $id_image))
+			{
+				$position = $key;
+				break;
+			}
+		}
+	$image = new Image($id_image);
+	if (Validate::isLoadedObject($image))
+	{
+		if (isset($position) && $image->updatePosition($way, $position))
+			die(true);
+		else
+			die('{"hasError" : true, "errors" : "Cannot update image position"}');
+	}
+	else
+		die('{"hasError" : true, "errors" : "This image cannot be loaded"}');
+}
+	
+
 if (isset($_GET['ajaxProductPackItems']))
 {
 	$jsonArray = array();

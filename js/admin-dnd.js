@@ -84,7 +84,15 @@ $(document).ready(function() {
 						token: token
 					};
 				}
-
+				if (table.id == 'imageTable') {
+					params = {
+						ajaxProductImagesPositions: true,
+						id_image: ids[1],
+						way: way,
+						token: token
+					};
+				}
+				
 				$.ajax({
 					type: 'POST',
 					async: false,
