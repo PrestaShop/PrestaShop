@@ -1840,14 +1840,11 @@ $_LANGADM['AdminPPreferences048a517fd1781ed314402df592f2ea68'] = 'Largeur :';
 $_LANGADM['AdminPPreferencesc9c4e9c1a92d9b15e0cdefc7ddb1bbd5'] = 'La largeur maximum des images envoyées par les clients';
 $_LANGADM['AdminPPreferences9a61f5ce3180789a8455f536681cabc1'] = 'Hauteur :';
 $_LANGADM['AdminPPreferencesdde6c96bcb0af50f18f37572267d904a'] = 'La hauteur maximum des images envoyées par les clients';
-<<<<<<< .working
-=======
 $_LANGADM['AdminPPreferences044a77653804fe33652d68098d98121e'] = 'Activer la compatibilité avec les anciennes images';
 $_LANGADM['AdminPPreferencese7ed00268dc16aecaac5a60aeb6f4c73'] = 'Ce réglage doit rester sur \"Oui\" à moins que vous n’ayez déplacé avec succès les images dans l\'onglet Préférences > Image';
 $_LANGADM['AdminPPreferences88694e637431115721b5241e652a178f'] = 'Prix dégressifs basés sur :';
 $_LANGADM['AdminPPreferences68217d833599eb6fb56f9e6d2ca24196'] = 'Comment calculer les prix dégressifs';
 $_LANGADM['AdminPPreferences068f80c7519d0528fb08e82137a72131'] = 'Produits';
->>>>>>> .merge-right.r8507
 $_LANGADM['AdminPPreferencesb9208b03bcc9eb4a336258dcdcb66207'] = 'Déclinaisons';
 $_LANGADM['AdminPaymenta75b01d1ff66cd0a327bda1effa71dec'] = 'Liste de modules de paiement';
 $_LANGADM['AdminPayment1f3a05f7b45df8e5c5cafaf0485eedd5'] = 'Cliquez pour voir la liste des modules de paiement.';
