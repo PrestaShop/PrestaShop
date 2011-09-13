@@ -51,7 +51,7 @@ class CombinationCore extends ObjectModel
 
 	public $default_on;
 
-	public $available_date_combi;
+	public $available_date;
 
 	protected	$fieldsRequired = array(
 		'id_product',
@@ -78,7 +78,7 @@ class CombinationCore extends ObjectModel
 		'quantity' => 'isUnsignedInt',
 		'weight' => 'isFloat',
 		'default_on' => 'isBool',
-		'available_date_combi' => 'isDate',
+		'available_date' => 'isDateFormat',
 	);
 
 	protected $table = 'product_attribute';
@@ -111,7 +111,7 @@ class CombinationCore extends ObjectModel
 		$fields['quantity'] = (int)($this->quantity);
 		$fields['weight'] = pSQL($this->weight);
 		$fields['default_on'] = (int)($this->default_on);
-		$fields['available_date_combi'] = pSQL($this->available_date_combi);
+		$fields['available_date'] = pSQL($this->available_date);
 		return $fields;
 	}
 	

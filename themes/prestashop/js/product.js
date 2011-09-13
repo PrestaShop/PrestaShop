@@ -50,7 +50,7 @@ function oosHookJsCode()
 }
 
 //add a combination of attributes in the global JS sytem
-function addCombination(idCombination, arrayOfIdAttributes, quantity, price, ecotax, id_image, reference, unit_price, minimal_quantity, available_date_combi)
+function addCombination(idCombination, arrayOfIdAttributes, quantity, price, ecotax, id_image, reference, unit_price, minimal_quantity, available_date)
 {
 	globalQuantity += quantity;
 
@@ -64,7 +64,7 @@ function addCombination(idCombination, arrayOfIdAttributes, quantity, price, eco
 	combination['reference'] = reference;
 	combination['unit_price'] = unit_price;
 	combination['minimal_quantity'] = minimal_quantity;
-	combination['available_date_combi'] = available_date_combi;
+	combination['available_date'] = available_date;
 	combinations.push(combination);
 
 }
@@ -121,7 +121,7 @@ function findCombination(firstTime)
 				displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
 
 			//get available_date for combination product
-			selectedCombination['available_date_combi'] = combinations[combination]['available_date_combi'];
+			selectedCombination['available_date'] = combinations[combination]['available_date'];
 			
 			//update the display
 			updateDisplay();
@@ -243,15 +243,15 @@ function updateDisplay()
 		$('#availability_statut:hidden').show();
 		
 		//display availability date
-		var date_combi = selectedCombination['available_date_combi'];
-		tab_date = date_combi.split('-');
-		var time_combi = new Date(tab_date[2], tab_date[1], tab_date[0]);
-		time_combi.setMonth(time_combi.getMonth()-1);
+		var available_date = selectedCombination['available_date'];
+		tab_date = available_date.split('-');
+		var time_available = new Date(tab_date[2], tab_date[1], tab_date[0]);
+		time_available.setMonth(time_available.getMonth()-1);
 		var now = new Date();
-		// date displayed only if time_combi
-		if (now.getTime() < time_combi.getTime())
+		// date displayed only if time_available
+		if (now.getTime() < time_available.getTime())
 		{
-			$('#availability_date_value').text(selectedCombination['available_date_combi']);
+			$('#availability_date_value').text(selectedCombination['available_date']);
 			$('#availability_date_label').show();
 			$('#availability_date_value').show();
 		}

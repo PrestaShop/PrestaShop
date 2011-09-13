@@ -26,7 +26,7 @@
 
 var storeUsedGroups = {};
 
-function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impact, reference, supplier_reference, ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, location, upc, minimal_quantity, available_date_combi)
+function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impact, reference, supplier_reference, ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, location, upc, minimal_quantity, available_date)
 {
 	init_elems();
 	$('#stock_mvt_attribute').show();
@@ -34,10 +34,10 @@ function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impa
 	$('#attribute_quantity').html(quantity);
 	$('#attribute_quantity').show();
 	$('#attr_qty_stock').show();
-    if(available_date_combi!=undefined)
-        getE('available_date_combi').value = available_date_combi;
+    if(available_date!=undefined)
+        getE('available_date').value = available_date;
     else
-        getE('available_date_combi').value = '0000-00-00';
+        getE('available_date').value = '0000-00-00';
 	getE('minimal_quantity').value = minimal_quantity;
 	getE('attribute_reference').value = reference;
 	getE('attribute_supplier_reference').value = supplier_reference;

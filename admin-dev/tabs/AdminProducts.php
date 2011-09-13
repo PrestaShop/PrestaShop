@@ -484,7 +484,7 @@ class AdminProducts extends AdminTab
 								$this->_errors[] = Tools::displayError('This attribute already exists.');
 							else
 							{
-								if (Validate::isDateFormat(Tools::getValue('available_date_combi')))
+								if (Validate::isDateFormat(Tools::getValue('available_date')))
 								{
 									$product->updateProductAttribute($id_product_attribute,
 										Tools::getValue('attribute_wholesale_price'),
@@ -501,7 +501,7 @@ class AdminProducts extends AdminTab
 										Tools::getValue('attribute_location'),
 										Tools::getValue('attribute_upc'),
 										Tools::getValue('minimal_quantity'),
-										Tools::getValue('available_date_combi'));
+										Tools::getValue('available_date'));
 								
 									if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0 AND $id_reason > 0)
 									{
@@ -2653,6 +2653,7 @@ class AdminProducts extends AdminTab
 							<td class="col-left">'.$this->l('Available date:').'</td>
 							<td style="padding-bottom:5px;">
 							<input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
+								<p>'.$this->l('The available date when this product is out of stock').'</p>
 						</td>
 						</tr>';
 				// date picker include
@@ -3365,13 +3366,15 @@ class AdminProducts extends AdminTab
 			  <td style="width:150px">'.$this->l('Quantity in stock:').'</td>
 			  <td style="padding-bottom:5px;"><b><span style="display:none;" id="attribute_quantity"></span></b></td>
 		  </tr>
-		  <tr style="width:150px;vertical-align:top;padding-right:10px;font-weight:bold;" class="col-left">
-			  <td style="width:150px">'.$this->l('Available date:').'</td>
-			  <td style="padding-bottom:5px;"><input id="available_date_combi" name="available_date_combi" value="'.(($this->getFieldValue($obj, 'available_date_combi')!=0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date_combi'), $language['id_lang']))) : '00-00-0000').'" style="text-align: center;" type="text" /></td>
+		  <tr>
+			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">'.$this->l('Available date:').'</td>
+			  <td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date')!=0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '00-00-0000').'" style="text-align: center;" type="text" />
+				  <p>'.$this->l('The available date when this product is out of stock').'</p>
+			  </td>
 		  </tr>';
 		  // date picker include
 		  include_once('functions.php');
-		  includeDatepicker('available_date_combi');
+		  includeDatepicker('available_date');
 		echo '
 		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 		  <tr>
@@ -3441,7 +3444,7 @@ class AdminProducts extends AdminTab
                         $combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 						$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
-						$combArray[$combinaison['id_product_attribute']]['available_date_combi'] = strftime($combinaison['available_date_combi']);
+						$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
 						$combArray[$combinaison['id_product_attribute']]['location'] = $combinaison['location'];
 						$combArray[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
 						$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
@@ -3471,7 +3474,7 @@ class AdminProducts extends AdminTab
 						$list = rtrim($list, ', ');
 						$jsList = rtrim($jsList, ', ');
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
-						$available_date = ($product_attribute['available_date_combi'] != 0) ? date('Y-m-j', strtotime($product_attribute['available_date_combi'])) : '00-00-0000';
+						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-j', strtotime($product_attribute['available_date'])) : '00-00-0000';
 						echo '
 						<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
 							<td>'.stripslashes($list).'</td>
