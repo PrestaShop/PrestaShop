@@ -72,6 +72,6 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ('PS_FEATURE_FEATURE_ACTIVE', '1', NOW(), NOW()),
 ('PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW());
 
-ALTER TABLE `PREFIX_product` ADD `available_date` DATETIME NOT NULL AFTER `available_for_order`
+ALTER TABLE `PREFIX_product` ADD `available_date` DATETIME NOT NULL AFTER `available_for_order`;
  
-ALTER TABLE `ps_product_attribute` ADD `available_date_combi` DATETIME NOT NULL 
+ALTER TABLE `PREFIX_product_attribute` ADD `available_date` DATETIME NOT NULL;

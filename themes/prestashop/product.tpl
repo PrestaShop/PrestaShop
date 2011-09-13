@@ -108,7 +108,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 {if isset($groups)}
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
-		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date_combi}');
+		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date}');
 	{/foreach}
 	// Colors
 	{if $colors|@count > 0}
