@@ -119,6 +119,8 @@ class OrderControllerCore extends ParentOrderController
 						Tools::redirect('index.php?controller=history');
 				}
 				$this->_assignPayment();
+				// assign some informations to display cart
+				$this->_assignSummaryInformations();
 				break;
 			default:
 				$this->_assignSummaryInformations();
