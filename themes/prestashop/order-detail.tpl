@@ -356,6 +356,15 @@
 	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
 		<p class="bold">{l s='Add a message:'}</p>
 		<p>{l s='If you would like to add a comment about your order, please write it below.'}</p>
+		<p>
+		<label for="id_product">{l s='Product'}</label>
+			<select name="id_product" style="width:300px;">
+				<option value="0">{l s='-- Choose --'}</option>
+				{foreach from=$products item=product name=products}
+					<option value="{$product.product_id}">{$product.product_name}</option>
+				{/foreach}
+			</select>
+		</p>
 		<p class="textarea">
 			<textarea cols="67" rows="3" name="msgText"></textarea>
 		</p>

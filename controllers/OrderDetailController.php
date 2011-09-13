@@ -59,12 +59,34 @@ class OrderDetailControllerCore extends FrontController
 				$order = new Order($idOrder);
 				if (Validate::isLoadedObject($order) AND $order->id_customer == $this->context->customer->id)
 				{
-					$message = new Message();
-					$message->id_customer = (int)$this->context->customer->id;
-					$message->message = $msgText;
-					$message->id_order = (int)($idOrder);
-					$message->private = false;
-					$message->add();
+					//check if a thread already exist
+					$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
+					
+					p(var_dump($id_customer_thread));
+					
+					$cm = new CustomerMessage();
+					if (!$id_customer_thread)
+					{
+						$ct = new CustomerThread();
+						$ct->id_contact = 0;
+						$ct->id_customer = (int)$order->id_customer;
+						$ct->id_shop = (int)$this->context->shop->getId(true);
+						if ($id_product = (int)Tools::getValue('id_product'))
+							$ct->id_product = $id_product;
+						$ct->id_order = (int)$order->id;
+						$ct->id_lang = (int)$this->context->language->id;
+						$ct->email = $this->context->customer->email;
+						$ct->status = 'open';
+						$ct->token = Tools::passwdGen(12);
+						$ct->add();
+					}
+					else
+						$ct = new CustomerThread((int)$id_customer_thread);
+					$cm->id_customer_thread = $ct->id;
+					$cm->message = Tools::htmlentitiesutf8(Tools::nl2br($msgText));
+					$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
+					$cm->add();
+
 					if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE'))
 						$to = strval(Configuration::get('PS_SHOP_EMAIL'));
 					else
@@ -73,16 +95,18 @@ class OrderDetailControllerCore extends FrontController
 						$to = strval($to->email);
 					}
 					$toName = strval(Configuration::get('PS_SHOP_NAME'));
-					$customer = $this->context->customer->id;
+					$customer = $this->context->customer;
+
 					if (Validate::isLoadedObject($customer))
 						Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
 						array(
 						'{lastname}' => $customer->lastname,
 						'{firstname}' => $customer->firstname,
 						'{email}' => $customer->email,
-						'{id_order}' => (int)($message->id_order),
-						'{message}' => $message->message),
+						'{id_order}' => (int)($order->id),
+						'{message}' => $msgText),
 						$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
+					
 					if (Tools::getValue('ajax') != 'true')
 						Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
 				}
@@ -140,7 +164,7 @@ class OrderDetailControllerCore extends FrontController
 					'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
 					'deliveryState' => (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
 					'is_guest' => false,
-					'messages' => Message::getMessagesByOrderId((int)($order->id)),
+					'messages' => CustomerMessage::getMessagesByOrderId((int)($order->id)),
 					'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
 					'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
 			'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
