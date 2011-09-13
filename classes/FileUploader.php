@@ -127,9 +127,7 @@ class FileUploaderCore
         $allowedExtensions = array_map("strtolower", $allowedExtensions);
             
         $this->allowedExtensions = $allowedExtensions;        
-        $this->sizeLimit = $sizeLimit;
-        
-        $this->checkServerSettings();       
+        $this->sizeLimit = $sizeLimit; 
 
         if (isset($_GET['qqfile'])) 
             $this->file = new qqUploadedFileXhr();
@@ -137,17 +135,6 @@ class FileUploaderCore
             $this->file = false; 
     }
     
-    private function checkServerSettings()
-    {        
-        $postSize = $this->toBytes(ini_get('post_max_size'));
-        $uploadSize = $this->toBytes(ini_get('upload_max_filesize'));        
-        
-        if ($postSize < $this->sizeLimit || $uploadSize < $this->sizeLimit)
-        {
-            $size = max(1, $this->sizeLimit / 1024 / 1024) . 'M';             
-            die("{'error':".Tools::displayError('increase post_max_size and upload_max_filesize to $size')."}");    
-        }        
-    }
     
     private function toBytes($str)
     {
