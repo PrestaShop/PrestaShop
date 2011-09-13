@@ -249,7 +249,7 @@ class ProductCore extends ObjectModel
 		'text_fields' => 'isUnsignedInt',
 		'active' => 'isBool',
 		'available_for_order' => 'isBool',
-		'available_date' => 'isDate',
+		'available_date' => 'isDateFormat',
 		'condition' => 'isGenericName',
 		'show_price' => 'isBool',
 		'ean13' => 'isEan13',
