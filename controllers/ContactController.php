@@ -106,9 +106,7 @@ class ContactControllerCore extends FrontController
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
 						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->id_current_shop.' AND token = \''.pSQL(Tools::getValue('token')).'\'')
 					) OR (
-						$id_customer_thread = (int)Db::getInstance()->getValue('
-						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
-						WHERE cm.email = \''.pSQL($from).'\' AND cm.id_shop = '.(int)$this->id_current_shop.' AND cm.id_order = '.(int)(Tools::getValue('id_order')).'')
+						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, (int)Tools::getValue('id_order'))
 					)))
 				{
 					$fields = Db::getInstance()->ExecuteS('
