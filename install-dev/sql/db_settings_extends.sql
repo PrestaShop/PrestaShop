@@ -170,7 +170,7 @@ INSERT INTO `PREFIX_guest` (`id_guest`, `id_operating_system`, `id_web_browser`,
 	VALUES (1, 1, 3, 1, 1, 1680, 1050, 32, 1, 1, 0, 1, 1, 0, 'en-us');
 
 INSERT INTO `PREFIX_cart` (`id_cart`, `id_carrier`, `id_lang`, `id_address_delivery`, `id_address_invoice`, `id_currency`, `id_customer`, `id_guest`, `recyclable`, `gift`, `date_add`, `date_upd`)
-	VALUES (1, 2, 2, 6, 6, 1, 1, 1, 1, 0, NOW(), NOW());
+	VALUES (1, 2, 2, 2, 2, 1, 1, 1, 1, 0, NOW(), NOW());
 INSERT INTO `PREFIX_cart_product` (`id_cart`, `id_product`, `id_shop`, `id_product_attribute`, `quantity`, `date_add`) VALUES (1, 7, 1, 23, 1, NOW());
 INSERT INTO `PREFIX_cart_product` (`id_cart`, `id_product`, `id_shop`, `id_product_attribute`, `quantity`, `date_add`) VALUES (1, 9, 1, 0, 1, NOW());
 
@@ -187,7 +187,7 @@ INSERT INTO `PREFIX_manufacturer` (`id_manufacturer`, `name`, `date_add`, `date_
 
 INSERT INTO `PREFIX_manufacturer_group_shop` (`id_manufacturer`, `id_group_shop`) (SELECT `id_manufacturer`, 1  FROM `PREFIX_manufacturer`);
 
-INSERT INTO `PREFIX_manufacturer_lang` (`id_manufacturer`, `id_lang`, `description`, `short_description`, `meta_title`, `meta_keywords`, `meta_description`) VALUES 
+INSERT INTO `PREFIX_manufacturer_lang` (`id_manufacturer`, `id_lang`, `description`, `short_description`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
 (1, 1, '', '', '', '', ''),
 (1, 2, '', '', '', '', ''),
 (1, 3, '', '', '', '', ''),
@@ -204,7 +204,7 @@ INSERT INTO `PREFIX_supplier` (`id_supplier`, `name`, `date_add`, `date_upd`, `a
 
 INSERT INTO `PREFIX_supplier_group_shop` (`id_supplier`, `id_group_shop`) (SELECT `id_supplier`, 1 FROM `PREFIX_supplier`);
 
-INSERT INTO `PREFIX_supplier_lang` (`id_supplier`, `id_lang`, `description`, `meta_title`, `meta_keywords`, `meta_description`) VALUES 
+INSERT INTO `PREFIX_supplier_lang` (`id_supplier`, `id_lang`, `description`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
 (1, 1, '', '', '', ''),
 (1, 2, '', '', '', ''),
 (1, 3, '', '', '', ''),
@@ -1162,3 +1162,4 @@ INSERT INTO `PREFIX_stock` (`id_stock`, `id_product`, `id_product_attribute`, `i
 (36, 7, 0, 1, 180),
 (37, 8, 0, 1, 1),
 (38, 9, 0, 1, 1);
+
