@@ -3103,7 +3103,6 @@ class AdminProducts extends AdminTab
 									<th>'.$this->l('Action').'</th>
 								</tr></thead>';
 
-						echo $this->_positionJS();
 						foreach ($images AS $k => $image)
 							echo $this->getLineTableImage($image, $imagesTotal, $token, $shops);
 					
@@ -3146,32 +3145,17 @@ class AdminProducts extends AdminTab
 		$image_obj = new Image($image['id_image']);
 		$img_path = $image_obj->getExistingImgPath();
 		$html =  '
-			<tr id="tr_'.$image_obj->id.'_'.$image_obj->position.'">
+			<tr id="tr_'.$image_obj->id.'">
 				<td style="padding: 4px;"><a href="'._THEME_PROD_DIR_.$img_path.'.jpg" target="_blank">
 					<img src="'._THEME_PROD_DIR_.$img_path.'-small.jpg'.((int)(Tools::getValue('image_updated')) === (int)($image['id_image']) ? '?date='.time() : '').'"
 					alt="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" title="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" /></a>
 				</td>
 				<td class="center positionImage">'.(int)($image['position']).'</td>
-				<td id="td_'.$image_obj->id.'" class="position-cell dragHandle">';
-		if ($image['position'] == 1)
-		{
-			$html .= '
-					<span class="up">[ <img src="../img/admin/up_d.gif" alt="" border="0"> ]</span>';
-			if ($image['position'] == $imagesTotal)
-				$html .= '
-					<span class="down">[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
-			else
-				$html .= '
-					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
-		}
-		elseif ($image['position'] == $imagesTotal)
-			$html .= '
-					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] - 1).'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
-					<span class="down">[ <img src="../img/admin/down_d.gif" alt="" border="0"> ]</span>';
-		else
-			$html .= '
-					<span class="up">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] - 1).'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a> ]</span>
-					<span class="down">[ <a onclick="return hideLink();" href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a> ]</span>';
+				<td id="td_'.$image_obj->id.'" class="pointer dragHandle center">';
+
+		$html .= '
+				<a '.($image['position'] == 1 ? ' style="display: none;"' : '').' href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] - 1).'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a>
+				<a '.($image['position'] == $imagesTotal ? ' style="display: none;"' : '').' href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a>';
 		$html .= '
 				</td>';
 		if (Shop::isMultiShopActivated())
@@ -3848,20 +3832,6 @@ class AdminProducts extends AdminTab
 				extraParams: {excludeIds :  getSelectedIds()}
 			});
 		}';
-	}
-
-	private function _positionJS()
-	{
-
-		return '<script type="text/javascript">
-
-				function hideLink()
-				{
-					$(".position-cell span").hide();
-					$(".position-cell").append("<img src=\"'._PS_IMG_.'loader.gif\" alt=\"\" />");
-
-				}
-				</script>';
 	}
 
 	public function updatePackItems($product)

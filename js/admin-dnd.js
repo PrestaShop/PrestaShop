@@ -99,61 +99,59 @@ $(document).ready(function() {
 					url: 'ajax.php?' + $.tableDnD.serialize(),
 					data: params,
 					success: function(data) {
-					if (come_from == 'AdminModulesPositions') {
-							tableDrag.find('tr').removeClass('alt_row');
-							tableDrag.find('tr' + reOrder).addClass('alt_row');
-							tableDrag.find('td.positions').each(function(i) {
-								$(this).html(i+1);
-							});
-							tableDrag.find('td.dragHandle a:hidden').show();
-							tableDrag.find('td.dragHandle:first a:even').hide();
-							tableDrag.find('td.dragHandle:last a:odd').hide();
+						if (come_from == 'AdminModulesPositions') 
+						{
+								tableDrag.find('tr').removeClass('alt_row');
+								tableDrag.find('tr' + reOrder).addClass('alt_row');
+								tableDrag.find('td.positions').each(function(i) {
+									$(this).html(i+1);
+								});
+								tableDrag.find('td.dragHandle a:hidden').show();
+								tableDrag.find('td.dragHandle:first a:even').hide();
+								tableDrag.find('td.dragHandle:last a:odd').hide();
 						}
-						else if (table.id == 'product') {
-							var reg = /_[0-9][0-9]*$/g;
-							tableDrag.find('tbody tr').each(function(i) {
-								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
-								
-								// Update link position
-								var up_reg  = new RegExp('position=[-]?[0-9]+&');
-								
-								// Up links
-								$(this).find('td.dragHandle a:odd').attr('href', $(this).find('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
-								
-								// Down links
-								$(this).find('td.dragHandle a:even').attr('href', $(this).find('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
-								
-						});
-							tableDrag.find('tr').not('.nodrag').removeClass('alt_row');
-							tableDrag.find('tr:not(".nodrag"):odd').addClass('alt_row');
-							tableDrag.find('tr td.dragHandle a:hidden').show();
-							
-							if (alternate) {
-								tableDrag.find('tr td.dragHandle:first a:odd').hide();
-								tableDrag.find('tr td.dragHandle:last a:even').hide();
-							}
-							else {
-								tableDrag.find('tr td.dragHandle:first a:even').hide();
-								tableDrag.find('tr td.dragHandle:last a:odd').hide();
-							}
-						}
-						else 
+						else if (table.id == 'imageTable')
 						{
 							var reg = /_[0-9]$/g;
+							var up_reg  = new RegExp('imgPosition=[0-9]+&');
+							tableDrag.find('tbody tr').each(function(i) {
+								// Update link position
+								// Up links
+								$(this).find('td.dragHandle a:first').attr('href', $(this).find('td.dragHandle a:first').attr('href').replace(up_reg, 'imgPosition='+ i +'&'));//, 'imgPosition='+ (i - 1) +'&'));
+								// Down links
+								$(this).find('td.dragHandle a:last').attr('href', $(this).find('td.dragHandle a:last').attr('href').replace(up_reg, 'imgPosition='+ (i + 2) +'&'));
+								// Position image cell
+								$(this).find('td.positionImage').html(i + 1);
+							
+							});
+							tableDrag.find('tr td.dragHandle a:hidden').show();
+							tableDrag.find('tr td.dragHandle:first a:first').hide();
+							tableDrag.find('tr td.dragHandle:last a:last').hide();
+						}
+						else
+						{
+							if (table.id == 'product')
+							{
+								var reg = /_[0-9][0-9]*$/g;
+							}
+							else
+							{
+								var reg = /_[0-9]$/g;
+							}
+							
+							var up_reg  = new RegExp('position=[-]?[0-9]+&');
+							
 							tableDrag.find('tbody tr').each(function(i) {
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
 								
-								// Update link position
-								var up_reg  = new RegExp('position=[-]?[0-9]+&');
-								
+								// Update link position								
 								// Up links
 								$(this).find('td.dragHandle a:odd').attr('href', $(this).find('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
 								
 								// Down links
 								$(this).find('td.dragHandle a:even').attr('href', $(this).find('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
 								
-						});
-							
+							});
 							tableDrag.find('tr').not('.nodrag').removeClass('alt_row');
 							tableDrag.find('tr:not(".nodrag"):odd').addClass('alt_row');
 							tableDrag.find('tr td.dragHandle a:hidden').show();
@@ -166,7 +164,6 @@ $(document).ready(function() {
 								tableDrag.find('tr td.dragHandle:first a:even').hide();
 								tableDrag.find('tr td.dragHandle:last a:odd').hide();
 							}
-
 						}
 					}
 				});
