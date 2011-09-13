@@ -762,6 +762,16 @@ div.hint {
 	position: relative;
 }
 
+.hintGroup{
+	position: relative;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #50B0EC;
+	padding: 8px 6px 8px 40px;
+	color: #383838;
+	background: #DDE9F7 url(../img/admin/help2.png) no-repeat 6px 5px;
+}
+
 
 /* The pointer image is added by using another span */
 .hint .hint-pointer {
