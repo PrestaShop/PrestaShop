@@ -102,9 +102,9 @@ class UpgraderCore{
 			// except if no check has been done before
 			if ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)) )
 			{
-			libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
+				libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
 				if ($feed = @simplexml_load_file($this->rss_version_link))
-			{
+				{
 
 					$this->version_name = (string)$feed->version->name;
 					$this->version_num = (string)$feed->version->num;
@@ -127,8 +127,8 @@ class UpgraderCore{
 
 					Configuration::updateValue('PS_LAST_VERSION',serialize($configLastVersion));
 					Configuration::updateValue('PS_LAST_VERSION_CHECK',time());
+				}
 			}
-		}
 			else
 			{
 				$lastVersionCheck = @unserialize(Configuration::get('PS_LAST_VERSION'));
