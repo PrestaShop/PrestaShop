@@ -798,7 +798,7 @@ class AdminCustomers extends AdminTab
 					echo '<option value="'.(int)($group['id_group']).'"'.($group['id_group'] == $obj->id_default_group ? ' selected="selected"' : '').'>'.htmlentities($group['name'], ENT_NOQUOTES, 'utf-8').'</option>';
 				echo '
 					</select>
-					<p>'.$this->l('Apply non-cumulative rules (e.g., price, display method, reduction)').'</p>
+					<div class="hintGroup">'.$this->l('The group will be as applied by default.').'</div>
 				</div>
 				<label>'.$this->l('Groups:').' </label>
 				<div class="margin-form">';

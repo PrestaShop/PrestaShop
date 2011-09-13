@@ -849,6 +849,18 @@ class CategoryCore extends ObjectModel
 			$groups[] = $group['id_group'];
 		return $groups;
 	}
+	
+	public function addGroupsIfNoExist($id_group)
+	{
+		$groups = $this->getGroups();
+		p($groups);
+		foreach($groups as $group){
+			if($group != $id_group)
+				return false;
+			else
+				$this->addGroups(array((int)($id_group)));
+		}
+	}
 
 	/**
 	 * checkAccess return true if id_customer is in a group allowed to see this category.
