@@ -108,7 +108,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 {if isset($groups)}
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
-		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity});
+		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date_combi}');
 	{/foreach}
 	// Colors
 	{if $colors|@count > 0}
@@ -340,6 +340,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>
 					{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}
 				</span>
+				
+				{if ($product->available_date && $product->available_date != 0) && ($product->available_date|date_format:"%Y-%m-%d" >= $smarty.now|date_format:"%Y-%m-%d") && $product->quantity <= 0}<br /><span id="availability_date_label">{l s='Restocking:'}</span><span id="availability_date_value" class="success_inline">{$product->available_date|date_format:"%d-%m-%Y"}</span>
+				{else}
+				<br /><span id="availability_date_label" style="display:none;">{l s='Restocking:'}</span><span id="availability_date_value" class="success_inline" style="display:none;">{$product->available_date|date_format:"%d-%m-%Y"}</span>
+				{/if}
 			</p>
 
 			<!-- number of item in stock -->

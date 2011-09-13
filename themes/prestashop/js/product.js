@@ -50,7 +50,7 @@ function oosHookJsCode()
 }
 
 //add a combination of attributes in the global JS sytem
-function addCombination(idCombination, arrayOfIdAttributes, quantity, price, ecotax, id_image, reference, unit_price, minimal_quantity)
+function addCombination(idCombination, arrayOfIdAttributes, quantity, price, ecotax, id_image, reference, unit_price, minimal_quantity, available_date_combi)
 {
 	globalQuantity += quantity;
 
@@ -64,6 +64,7 @@ function addCombination(idCombination, arrayOfIdAttributes, quantity, price, eco
 	combination['reference'] = reference;
 	combination['unit_price'] = unit_price;
 	combination['minimal_quantity'] = minimal_quantity;
+	combination['available_date_combi'] = available_date_combi;
 	combinations.push(combination);
 
 }
@@ -119,6 +120,9 @@ function findCombination(firstTime)
 			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
 				displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
 
+			//get available_date for combination product
+			selectedCombination['available_date_combi'] = combinations[combination]['available_date_combi'];
+			
 			//update the display
 			updateDisplay();
 
@@ -163,6 +167,10 @@ function updateDisplay()
 
 		//hide the hook out of stock
 		$('#oosHook').hide();
+		
+		//hide availability date
+		$('#availability_date_label').hide();
+		$('#availability_date_value').hide();
 
 		//availability value management
 		if (availableNowValue != '')
@@ -233,7 +241,25 @@ function updateDisplay()
 			$('#oosHook').hide();
 		}
 		$('#availability_statut:hidden').show();
-
+		
+		//display availability date
+		var date_combi = selectedCombination['available_date_combi'];
+		tab_date = date_combi.split('-');
+		var time_combi = new Date(tab_date[2], tab_date[1], tab_date[0]);
+		time_combi.setMonth(time_combi.getMonth()-1);
+		var now = new Date();
+		// date displayed only if time_combi
+		if (now.getTime() < time_combi.getTime())
+		{
+			$('#availability_date_value').text(selectedCombination['available_date_combi']);
+			$('#availability_date_label').show();
+			$('#availability_date_value').show();
+		}
+		else
+		{
+			$('#availability_date_label').hide();
+			$('#availability_date_value').hide();
+		}
 
 		//show the 'add to cart' button ONLY IF it's possible to buy when out of stock AND if it was previously invisible
 		if (allowBuyWhenOutOfStock && !selectedCombination['unavailable'] && productAvailableForOrder == 1)

@@ -289,6 +289,9 @@ class ProductControllerCore extends FrontController
 							$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
 						$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)($row['quantity']);
 
+						//french date format
+						$availableDateCombi = date('j-m-Y',strtotime($row['available_date_combi']));
+						
 						$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 						$combinations[$row['id_product_attribute']]['attributes'][] = (int)($row['id_attribute']);
 						$combinations[$row['id_product_attribute']]['price'] = (float)($row['price']);
@@ -298,6 +301,7 @@ class ProductControllerCore extends FrontController
 						$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
 						$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 						$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
+						$combinations[$row['id_product_attribute']]['available_date_combi'] = $availableDateCombi;
 						$combinations[$row['id_product_attribute']]['id_image'] = isset($combinationImages[$row['id_product_attribute']][0]['id_image']) ? $combinationImages[$row['id_product_attribute']][0]['id_image'] : -1;
 					}
 
