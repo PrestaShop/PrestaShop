@@ -75,3 +75,6 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ALTER TABLE `PREFIX_product` ADD `available_date` DATETIME NOT NULL AFTER `available_for_order`;
  
 ALTER TABLE `PREFIX_product_attribute` ADD `available_date` DATETIME NOT NULL;
+
+/* Index was only used by deprecated function Image::positionImage() */
+ALTER TABLE `PREFIX_image` DROP INDEX `product_position`;
