@@ -37,10 +37,10 @@ class DispatcherCore
 
 	/**
 	 * List of default routes
-	 * 
+	 *
 	 * @var array
 	 */
-	public $defaultRoutes = array(
+	public $default_routes = array(
 		'product_rule' => array(
 			'controller' =>	'product',
 			'rule' =>		'{category:/}{id}-{rewrite}{-:ean13}.html',
@@ -112,42 +112,42 @@ class DispatcherCore
 
 	/**
 	 * If true, use routes to build URL (mod rewrite must be activated)
-	 * 
+	 *
 	 * @var bool
 	 */
-	protected $useRoutes = false;
+	protected $use_routes = false;
 
 	/**
 	 * List of loaded routes
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $routes = array();
 
 	/**
 	 * Current controller name
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $controller;
-	
+
 	/**
 	 * Current request uri
-	 * 
+	 *
 	 * @var string
 	 */
-	protected $requestURI;
-	
+	protected $request_uri;
+
 	/**
 	 * Store empty route (a route with an empty rule)
-	 * 
+	 *
 	 * @var array
 	 */
-	protected $emptyRoute;
+	protected $empty_route;
 
 	/**
 	 * Get current instance of dispatcher (singleton)
-	 * 
+	 *
 	 * @return Dispatcher
 	 */
 	public static function getInstance()
@@ -162,14 +162,14 @@ class DispatcherCore
 	 */
 	protected function __construct()
 	{
-		$this->useRoutes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
+		$this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$this->loadRoutes();
-		
+
 		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
-		if (isset($_SERVER['REQUEST_URI']))
-			$this->requestURI = $_SERVER['REQUEST_URI'];
+		if (isset($_SERVER['request_uri']))
+			$this->request_uri = $_SERVER['request_uri'];
 		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
-			$this->requestURI = $_SERVER['HTTP_X_REWRITE_URL'];
+			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 	}
 
 	/**
@@ -177,14 +177,14 @@ class DispatcherCore
 	 */
 	public function dispatch()
 	{
-		$this->requestURI = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->requestURI);
+		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
 
 		// If there are several languages, get language from uri
-		if ($this->useRoutes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/#', $this->requestURI, $m))
+		if ($this->use_routes && Language::isMultiLanguageActivated())
+			if (preg_match('#^/([a-z]{2})/#', $this->request_uri, $m))
 			{
 				$_GET['isolang'] = $m[1];
-				$this->requestURI = substr($this->requestURI, 3);
+				$this->request_uri = substr($this->request_uri, 3);
 			}
 		// Get and instantiate controller
 		$this->getController();
@@ -195,17 +195,17 @@ class DispatcherCore
 			$this->controller = 'pagenotfound';
 		ControllerFactory::getController($controllers[$this->controller])->run();
 	}
-	
+
 	/**
 	 * Load default routes
 	 */
 	protected function loadRoutes()
 	{
 		$context = Context::getContext();
-		foreach ($this->defaultRoutes as $id => $route)
+		foreach ($this->default_routes as $id => $route)
 			$this->addRoute($id, $route['rule'], $route['controller'], $route['keywords']);
 
-		if ($this->useRoutes)
+		if ($this->use_routes)
 		{
 			// Load routes from meta table
 			$sql = 'SELECT m.page, ml.url_rewrite
@@ -219,39 +219,39 @@ class DispatcherCore
 					if ($row['url_rewrite'])
 						$this->addRoute($row['page'], $row['url_rewrite'], $row['page']);
 					else
-						$this->emptyRoute = array(
+						$this->empty_route = array(
 							'routeID' =>	$row['page'],
 							'rule' =>		$row['url_rewrite'],
 							'controller' =>	$row['page'],
 						);
 				}
-				
+
 			// Load custom routes
-			foreach ($this->defaultRoutes as $routeID => $routeData)
-				if ($customRoute = Configuration::get('PS_ROUTE_'.$routeID))
-					$this->addRoute($routeID, $customRoute, $routeData['controller'], $routeData['keywords']);
+			foreach ($this->default_routes as $route_id => $route_data)
+				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id))
+					$this->addRoute($route_id, $custom_route, $route_data['controller'], $route_data['keywords']);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $id Name of the route (need to be uniq, a second route with same name will override the first)
 	 * @param string $rule Url rule
 	 * @param string $controller Controller to call if request uri match the rule
 	 */
-	public function addRoute($routeID, $rule, $controller, $keywords = array())
+	public function addRoute($route_id, $rule, $controller, $keywords = array())
 	{
 		$regexp = preg_quote($rule, '#');
 		if ($keywords)
 		{
-			$transformKeywords = array();
+			$transform_keywords = array();
 			preg_match_all('#\\\{(([^{}]+)\\\:)?('.implode('|', array_keys($keywords)).')(\\\:([^{}]+))?\\\}#', $regexp, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
 			{
 				$prepend = $m[2][$i];
 				$keyword = $m[3][$i];
 				$append = $m[5][$i];
-				$transformKeywords[$keyword] = array(
+				$transform_keywords[$keyword] = array(
 					'required' =>	isset($keywords[$keyword]['param']),
 					'prepend' =>	stripslashes($prepend),
 					'append' =>		stripslashes($append),
@@ -261,13 +261,13 @@ class DispatcherCore
 					$regexp = str_replace($m[0][$i], (($prepend) ? '('.$prepend.')?' : '').'(?P<'.$keywords[$keyword]['param'].'>'.$keywords[$keyword]['regexp'].')'.(($append) ? '('.$append.')?' : ''), $regexp);
 				else
 					$regexp = str_replace($m[0][$i], (($prepend) ? '('.$prepend.')?' : '').'('.$keywords[$keyword]['regexp'].')'.(($append) ? '('.$append.')?' : ''), $regexp);
-				
+
 			}
-			$keywords = $transformKeywords;
+			$keywords = $transform_keywords;
 		}
 
 		$regexp = '#^/'.$regexp.'#';
-		$this->routes[$routeID] = array(
+		$this->routes[$route_id] = array(
 			'rule' =>		$rule,
 			'regexp' =>		$regexp,
 			'controller' =>	$controller,
@@ -277,33 +277,33 @@ class DispatcherCore
 
 	/**
 	 * Check if a keyword is written in a route rule
-	 * 
-	 * @param string $routeID
+	 *
+	 * @param string $route_id
 	 * @param string $keyword
 	 * @return bool
 	 */
-	public function hasKeyword($routeID, $keyword)
+	public function hasKeyword($route_id, $keyword)
 	{
-		if (!isset($this->routes[$routeID]))
+		if (!isset($this->routes[$route_id]))
 			return false;
-			
-		return preg_match('#\{([^{}]+:)?'.preg_quote($keyword, '#').'(:[^{}])?\}#', $this->routes[$routeID]['rule']);
+
+		return preg_match('#\{([^{}]+:)?'.preg_quote($keyword, '#').'(:[^{}])?\}#', $this->routes[$route_id]['rule']);
 	}
 
 	/**
 	 * Check if a route rule contain all required keywords of default route definition
-	 * 
-	 * @param string $routeID
+	 *
+	 * @param string $route_id
 	 * @param string $rule Rule to verify
 	 * @param array $errors List of missing keywords
 	 */
-	public function validateRoute($routeID, $rule, &$errors = array())
+	public function validateRoute($route_id, $rule, &$errors = array())
 	{
 		$errors = array();
-		if (!isset($this->defaultRoutes[$routeID]))
+		if (!isset($this->default_routes[$route_id]))
 			return false;
 
-		foreach ($this->defaultRoutes[$routeID]['keywords'] as $keyword => $data)
+		foreach ($this->default_routes[$route_id]['keywords'] as $keyword => $data)
 			if (isset($data['param']) && !preg_match('#\{([^{}]+:)?'.$keyword.'(:[^{}])?\}#', $rule))
 				$errors[] = $keyword;
 
@@ -312,37 +312,37 @@ class DispatcherCore
 
 	/**
 	 * Create an url from
-	 * 
-	 * @param string $routeID Name the route
+	 *
+	 * @param string $route_id Name the route
 	 * @param array $params
-	 * @param bool $useRoutes If false, don't use to create this url
+	 * @param bool $use_routes If false, don't use to create this url
 	 */
-	public function createUrl($routeID, $params = array(), $useRoutes = true)
+	public function createUrl($route_id, $params = array(), $use_routes = true)
 	{
 		if (!is_array($params))
 			die('Dispatcher::createUrl() $params must be an array');
 
-		if (!isset($this->routes[$routeID]))
+		if (!isset($this->routes[$route_id]))
 		{
 			$query = http_build_query($params);
-			return ($routeID == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$routeID.(($query) ? '&amp;'.$query : '');
+			return ($route_id == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&amp;'.$query : '');
 		}
-		$route = $this->routes[$routeID];
+		$route = $this->routes[$route_id];
 
 		// Check required fields
-		$queryParams = array();
+		$query_params = array();
 		foreach ($route['keywords'] as $key => $data)
 		{
 			if (!$data['required'])
 				continue;
 
 			if (!array_key_exists($key, $params))
-				die("Dispatcher::createUrl() miss required parameter '$key' for route '$routeID'");
-			$queryParams[$this->defaultRoutes[$routeID]['keywords'][$key]['param']] = $params[$key];
+				die('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
+			$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
 		}
 
 		// Build an url which match a route
-		if ($this->useRoutes && $useRoutes)
+		if ($this->use_routes && $use_routes)
 		{
 			$url = $route['rule'];
 			foreach ($params as $key => $value)
@@ -360,21 +360,21 @@ class DispatcherCore
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
-			$url = 'index.php?controller='.$route['controller'].(($queryParams) ? '&amp;'.http_build_query($queryParams) : '');
-		
+			$url = 'index.php?controller='.$route['controller'].(($query_params) ? '&amp;'.http_build_query($query_params) : '');
+
 		return $url;
 	}
 
 	/**
 	 * Retrieve the controller from url or request uri if routes are activated
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getController()
 	{
 		if ($this->controller)
 			return $this->controller;
-			
+
 		$controller = Tools::getValue('controller');
 
 		if (isset($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
@@ -387,18 +387,18 @@ class DispatcherCore
 		}
 
 		// Use routes ? (for url rewriting)
-		if ($this->useRoutes && !$controller)
+		if ($this->use_routes && !$controller)
 		{
-			if (!$this->requestURI)
+			if (!$this->request_uri)
 				return 'pagenotfound';
 			$controller = 'index';
-			
+
 			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
-			if ($this->emptyRoute)
-				$this->addRoute($this->emptyRoute['routeID'], $this->emptyRoute['rule'], $this->emptyRoute['controller']);
+			if ($this->empty_route)
+				$this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller']);
 
 			foreach ($this->routes as $route)
-				if (preg_match($route['regexp'], $this->requestURI, $m))
+				if (preg_match($route['regexp'], $this->request_uri, $m))
 				{
 					// Route found ! Now fill $_GET with parameters of uri
 					$controller = $route['controller'];
@@ -417,10 +417,10 @@ class DispatcherCore
 		$_GET['controller'] = $this->controller;
 		return $this->controller;
 	}
-	
+
 	/**
 	 * Get list of available controllers
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getControllers()
@@ -435,7 +435,7 @@ class DispatcherCore
 		$controllers['index'] = 'IndexController';
 		$controllers['authentication'] = $controllers['auth'];
 		$controllers['productscomparison'] = $controllers['compare'];
-		
+
 		return $controllers;
 	}
 }
