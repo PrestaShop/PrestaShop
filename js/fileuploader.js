@@ -270,7 +270,7 @@ qq.FileUploaderBasic = function(o){
         params: {},
         button: null,
         multiple: true,
-        maxConnections: 3,
+        maxConnections: 1,
         // validation        
         allowedExtensions: [],               
         sizeLimit: 0,   
