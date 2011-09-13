@@ -76,9 +76,8 @@ echo '
 					// Add orders notifications to the list
 					html = "";
 					nb_notifs = 0;
-					console.log(json);
 					$.each(json.order, function(property, value) {
-						html += "<li>'.translate("A new order has been made on your shop : ").'<br />'.translate("Order number : ").'<strong>#" + parseInt(value.id_order) + "</strong><br />'.translate("Total : ").'<strong>" + parseInt(value.total_paid_real) + "</strong><br />'.translate("From : ").'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that order").'</a></li>";
+						html += "<li>'.translate('A new order has been made on your shop.').'<br />'.translate('Order number : ').'<strong>#" + parseInt(value.id_order) + "</strong><br />'.translate('Total : ').'<strong>" + value.total_paid_real + "</strong><br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that order').'</a></li>";
 					});						
 					if (html != "")
 					{
@@ -96,9 +95,8 @@ echo '
 					// Add customers notifications to the list
 					html = "";
 					nb_notifs = 0;
-					console.log(json);
 					$.each(json.customer, function(property, value) {
-						html += "<li>'.translate("A new customer registered on your shop.").'<br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate("Click here to see that customer").'</a></li>";
+						html += "<li>'.translate('A new customer registered on your shop.').'<br />'.translate('Customer name : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate('Click here to see that customer').'</a></li>";
 					});						
 					if (html != "")
 					{
@@ -116,9 +114,8 @@ echo '
 					// Add messages notifications to the list
 					html = "";
 					nb_notifs = 0;
-					console.log(json);
 					$.each(json.message, function(property, value) {
-						html += "<li>'.translate("A new message posted on your shop.").'<br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate("Click here to see that message").'</a></li>";
+						html += "<li>'.translate('A new message posted on your shop.').'<br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br />'.translate('Excerpt : ').'<strong>" + value.message_customer + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that message').'</a></li>";
 					});
 					if (html != "")
 					{
@@ -158,24 +155,24 @@ echo '		var html = "";
 			var wrapper_id = "";
 			var type = new Array();
 			
-			// $(".notifs").live("click", function(){
-				// wrapper_id = $(this).attr("id");
-				// type = wrapper_id.split("s_notif")
-				// $.post("ajax.php",{"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]}, function(data) {
-					// if(data)
-					// {
-						// if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
-						// {
-							// $(".notifs_wrapper").hide();
-							// $("#" + wrapper_id + "_number_wrapper").hide();  
-							// $("#" + wrapper_id + "_wrapper").show();  
-						// }else
-						// {
-							// $("#" + wrapper_id + "_wrapper").hide();							
-						// }
-					// }				
-				// });
-			// });
+			$(".notifs").live("click", function(){
+				wrapper_id = $(this).attr("id");
+				type = wrapper_id.split("s_notif")
+				$.post("ajax.php",{"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]}, function(data) {
+					if(data)
+					{
+						if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
+						{
+							$(".notifs_wrapper").hide();
+							$("#" + wrapper_id + "_number_wrapper").hide();  
+							$("#" + wrapper_id + "_wrapper").show();  
+						}else
+						{
+							$("#" + wrapper_id + "_wrapper").hide();							
+						}
+					}				
+				});
+			});
 			
 			$("#main").click(function(){
 				$(".notifs_wrapper").hide();
@@ -195,7 +192,7 @@ echo '		var html = "";
 					echo '<div id="orders_notif" class="notifs"><span id="orders_notif_number_wrapper" class="number_wrapper"><span id="orders_notif_value">0</span></span>
 							<div id="orders_notif_wrapper" class="notifs_wrapper">
 								<h3>'.translate('Last orders').'</h3>
-								<p class="no_notifs">'.translate("No new orders has been made on your shop").'</p>
+								<p class="no_notifs">'.translate('No new orders has been made on your shop').'</p>
 								<ul id="list_orders_notif"></ul>
 								<p><a href="index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.translate('Show all orders').'</a></p>
 							</div>
@@ -206,7 +203,7 @@ echo '		var html = "";
 					echo '<div id="customers_notif" class="notifs notifs_alternate"><span id="customers_notif_number_wrapper" class="number_wrapper"><span id="customers_notif_value">0</span></span>
 							<div id="customers_notif_wrapper" class="notifs_wrapper">
 								<h3>'.translate('Last customers').'</h3>
-								<p class="no_notifs">'.translate("No new customers registered on your shop").'</p>
+								<p class="no_notifs">'.translate('No new customers registered on your shop').'</p>
 								<ul id="list_customers_notif"></ul>
 								<p><a href="index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.translate('Show all customers').'</a></p>
 							</div>
@@ -217,7 +214,7 @@ echo '		var html = "";
 					echo '<div id="messages_notif" class="notifs"><span id="messages_notif_number_wrapper" class="number_wrapper"><span id="messages_notif_value">0</span></span>
 							<div id="messages_notif_wrapper" class="notifs_wrapper">
 								<h3>'.translate('Last messages').'</h3>
-								<p class="no_notifs">'.translate("No new messages posted on your shop").'</p>
+								<p class="no_notifs">'.translate('No new messages posted on your shop').'</p>
 								<ul id="list_messages_notif"></ul>
 								<p><a href="index.php?tab=AdminMessages&token='.Tools::getAdminTokenLite('AdminMessages').'">'.translate('Show all messages').'</a></p>
 							</div>
