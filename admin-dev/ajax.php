@@ -347,7 +347,8 @@ if (array_key_exists('ajaxProductImagesPositions', $_POST))
 			$pos = explode('_', $value);
 			if ((isset($pos[1])) AND ($pos[1] == $id_image))
 			{
-				$position = $key;
+				// +1 is added because images position range starts from 1 instead of 0 for other objects (products, categories...)
+				$position = ($key + 1);
 				break;
 			}
 		}
