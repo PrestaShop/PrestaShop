@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,11 +31,11 @@ class IdentityControllerCore extends FrontController
 	public $php_self = 'identity';
 	public $authRedirection = 'identity';
 	public $ssl = true;
-	
+
 	public function preProcess()
 	{
 		parent::preProcess();
-		
+
 		$customer = $this->context->customer;
 
 		if (sizeof($_POST))
@@ -102,18 +102,19 @@ class IdentityControllerCore extends FrontController
 			'sl_month' => $birthday[1],
 			'days' => Tools::dateDays(),
 			'sl_day' => $birthday[2],
-			'errors' => $this->errors
+			'errors' => $this->errors,
+			'genders' => Gender::getGenders(),
 		));
-		
+
 		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'identity.css');
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();

@@ -32,11 +32,11 @@ abstract class ObjectModelCore
 
 	/** @var integer lang id */
 	protected $id_lang = NULL;
-	
+
 	protected $id_shop = NULL;
-	
+
 	private $getShopFromContext = true;
-	
+
 	/** @var string SQL Table name */
 	protected $table = NULL;
 
@@ -63,7 +63,7 @@ abstract class ObjectModelCore
 
  	/** @var array Multilingual fields validity functions for admin panel forms */
  	protected $fieldsValidateLang = array();
- 	
+
  	protected $langMultiShop = false;
 
 	/** @var array tables */
@@ -76,7 +76,7 @@ abstract class ObjectModelCore
 
 	/** @var  string path to image directory. Used for image deletion. */
 	protected $image_dir = NULL;
-	
+
 	/** @var string file type of image files. Used for image deletion. */
 	protected $image_format = 'jpg';
 
@@ -153,7 +153,7 @@ abstract class ObjectModelCore
 				foreach ($result AS $key => $value)
 					if (key_exists($key, $this))
 						$this->{$key} = stripslashes($value);
-				
+
 				if (!$id_lang AND method_exists($this, 'getTranslationsFieldsChild'))
 				{
 					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
@@ -248,7 +248,7 @@ abstract class ObjectModelCore
 						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
 				}
 		}
-		
+
 		if (!Shop::isMultishopActivated())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
@@ -285,7 +285,7 @@ abstract class ObjectModelCore
 		if (!$result)
 			return false;
 
-		// Database update for multilingual fields related to the object 
+		// Database update for multilingual fields related to the object
 		if (method_exists($this, 'getTranslationsFieldsChild'))
 		{
 			$fields = $this->getTranslationsFieldsChild();
@@ -417,7 +417,7 @@ abstract class ObjectModelCore
 
 		return $fields;
 	}
-	
+
 	protected function makeTranslationFields(&$fields, &$fieldsArray, $id_language)
 	{
 		$fields[$id_language]['id_lang'] = $id_language;
@@ -433,13 +433,13 @@ abstract class ObjectModelCore
 				$fieldName = $k;
 				$html = (isset($field['html'])) ? $field['html'] : false;
 			}
-			
+
 			/* Check fields validity */
 			if (!Validate::isTableOrIdentifier($fieldName))
 				die(Tools::displayError());
 
 			/* Copy the field, or the default language field if it's both required and empty */
-			if ((!$this->id_lang AND isset($this->{$fieldName}[$id_language]) AND !empty($this->{$fieldName}[$id_language])) 
+			if ((!$this->id_lang AND isset($this->{$fieldName}[$id_language]) AND !empty($this->{$fieldName}[$id_language]))
 			OR ($this->id_lang AND isset($this->$fieldName) AND !empty($this->$fieldName)))
 				$fields[$id_language][$fieldName] = $this->id_lang ? pSQL($this->$fieldName, $html) : pSQL($this->{$fieldName}[$id_language], $html);
 			elseif (in_array($fieldName, $this->fieldsRequiredLang))
@@ -715,7 +715,7 @@ abstract class ObjectModelCore
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
 		$assoc = Shop::getAssoTables();
-		
+
 		if (array_key_exists($this->table ,$assoc))
 		{
 			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.$this->table.'_'.$assoc[$this->table]['type'].'` AS multi_shop_'.$this->table.' ON (main.'.$this->identifier.' = '.'multi_shop_'.$this->table.'.'.$this->identifier.')';
@@ -778,7 +778,7 @@ abstract class ObjectModelCore
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID();
-			
+
 		$sql = 'SELECT id_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_shop`
 				WHERE `'.$this->identifier.'` = '.(int)$this->id.'
@@ -788,9 +788,9 @@ abstract class ObjectModelCore
 
 	/**
 	 * This function associate an item to its context
-	 * 
-	 * @param int|array $id_shops 
-	 * @param string $type 
+	 *
+	 * @param int|array $id_shops
+	 * @param string $type
 	 * @return boolean
 	 */
 	public function associateTo($id_shops, $type = 'shop')
@@ -800,13 +800,13 @@ abstract class ObjectModelCore
 		$sql = '';
 		if (!is_array($id_shops))
 			$id_shops = array($id_shops);
-		
+
 		foreach ($id_shops as $id_shop)
 		{
 			if (($type == 'shop' && !$this->isAssociatedToShop($id_shop)) || ($type == 'group_shop' && !$this->isAssociatedToGroupShop($id_shop)))
 				$sql .= '('.(int)$this->id.','.(int)$id_shop.'),';
 		}
-		
+
 		if (!empty($sql))
 			return Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
 		return true;
@@ -823,7 +823,7 @@ abstract class ObjectModelCore
 	{
 		if (is_null($id_group_shop))
 			$id_group_shop = Context::getContext()->shop->getGroupID();
-		
+
 		$sql = 'SELECT id_group_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_group_shop`
 				WHERE `'.$this->identifier.'`='.(int)$this->id.' AND id_group_shop='.(int)$id_group_shop;
@@ -849,7 +849,7 @@ abstract class ObjectModelCore
 				$ids[] = $row['id_shop'];
 			return $this->associateTo($ids);
 		}
-		
+
 		return false;
 	}
 
@@ -871,20 +871,20 @@ abstract class ObjectModelCore
 		/* Deleting object images and thumbnails (cache) */
 		if ($this->image_dir)
 		{
-			if (file_exists($this->image_dir.$this->id.'.'.$this->image_format) 
+			if (file_exists($this->image_dir.$this->id.'.'.$this->image_format)
 				&& !unlink($this->image_dir.$this->id.'.'.$this->image_format))
 				return false;
 		}
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.$this->id.'.'.$this->image_format) 
+		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.$this->id.'.'.$this->image_format)
 			&& !unlink(_PS_TMP_IMG_DIR_.$this->table.'_'.$this->id.'.'.$this->image_format))
 			return false;
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_mini_'.$this->id.'.'.$this->image_format) 
+		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_mini_'.$this->id.'.'.$this->image_format)
 			&& !unlink(_PS_TMP_IMG_DIR_.$this->table.'_mini_'.$this->id.'.'.$this->image_format))
 			return false;
-			
+
 		$types = ImageType::getImagesTypes();
 		foreach ($types AS $image_type)
-			if (file_exists($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format) 
+			if (file_exists($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format)
 			&& !unlink($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format))
 				return false;
 		return true;

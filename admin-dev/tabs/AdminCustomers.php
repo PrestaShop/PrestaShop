@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -37,7 +37,7 @@ class AdminCustomers extends AdminTab
 	 	$this->delete = true;
 		$this->deleted = true;
 		$this->requiredDatabase = true;
-		
+
 		$this->_select = '(YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(`birthday`, 5)) as age, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
@@ -45,10 +45,27 @@ class AdminCustomers extends AdminTab
 			ORDER BY c.date_add DESC
 			LIMIT 1
 		) as connect';
-		$genders = array(1 => $this->l('M'), 2 => $this->l('F'), 9 => $this->l('?'));
+
+		$genders_icon = array('default' => 'unknown.gif');
+		$genders = array(0 => $this->l('?'));
+		foreach (Gender::getGenders() as $gender)
+		{
+			$genders_icon[$gender['id_gender']] = '../genders/'.$gender['id_gender'].'.jpg';
+			$genders[$gender['id_gender']] = $gender['name'];
+		}
+
  		$this->fieldsDisplay = array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'id_gender' => array('title' => $this->l('Gender'), 'width' => 25, 'align' => 'center', 'icon' => array(1 => 'male.gif', 2 => 'female.gif', 'default' => 'unknown.gif'), 'orderby' => false, 'type' => 'select', 'select' => $genders, 'filter_key' => 'a!id_gender'),
+			'id_gender' => array(
+				'title' => $this->l('Gender'),
+				'width' => 30,
+				'align' => 'center',
+				'icon' => $genders_icon,
+				'orderby' => false,
+				'type' => 'select',
+				'select' => $genders,
+				'filter_key' => 'a!id_gender',
+ 			),
 			'lastname' => array('title' => $this->l('Last Name'), 'width' => 80),
 			'firstname' => array('title' => $this->l('First name'), 'width' => 60),
 			'email' => array('title' => $this->l('E-mail address'), 'width' => 120, 'maxlength' => 19),
@@ -74,7 +91,7 @@ class AdminCustomers extends AdminTab
 
 		parent::__construct();
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitDel'.$this->table) OR Tools::isSubmit('delete'.$this->table))
@@ -102,11 +119,11 @@ class AdminCustomers extends AdminTab
 			</form>
 			<div class="clear">&nbsp;</div>';
 		}
-		
+
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 		 	$groupList = Tools::getValue('groupBox');
-		 	
+
 		 	/* Checking fields validity */
 			$this->validateRules();
 			if (!sizeof($this->_errors))
@@ -122,7 +139,7 @@ class AdminCustomers extends AdminTab
 						if (Validate::isLoadedObject($object))
 						{
 							$customer_email = strval(Tools::getValue('email'));
-							
+
 							// check if e-mail already used
 							if ($customer_email != $object->email)
 							{
@@ -131,13 +148,13 @@ class AdminCustomers extends AdminTab
 								if ($customer->id)
 									$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 							}
-							
+
 							if (!is_array($groupList) OR sizeof($groupList) == 0)
 								$this->_errors[] = Tools::displayError('Customer must be in at least one group.');
 							else
 								if (!in_array(Tools::getValue('id_default_group'), $groupList))
 									$this->_errors[] = Tools::displayError('Default customer group must be selected in group box.');
-							
+
 							// Updating customer's group
 							if (!sizeof($this->_errors))
 							{
@@ -248,7 +265,7 @@ class AdminCustomers extends AdminTab
 			$update = Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
 			if (!$update)
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);	
+			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 
 		}elseif (Tools::isSubmit('changeOptinVal') AND Tools::getValue('id_customer'))
 		{
@@ -261,7 +278,7 @@ class AdminCustomers extends AdminTab
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 		}
-		
+
 		return parent::postProcess();
 	}
 
@@ -288,10 +305,12 @@ class AdminCustomers extends AdminTab
 		else
 			$countBetterCustomers = '-';
 
+		$gender = new Gender($customer->id_gender);
+
 		echo '
 		<fieldset style="width:400px;float: left"><div style="float: right"><a href="'.self::$currentIndex.'&addcustomer&id_customer='.$customer->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
 			<span style="font-weight: bold; font-size: 14px;">'.$customer->firstname.' '.$customer->lastname.'</span>
-			<img src="../img/admin/'.($customer->id_gender == 2 ? 'female' : ($customer->id_gender == 1 ? 'male' : 'unknown')).'.gif" style="margin-bottom: 5px" /><br />
+			<img src="'.$gender->getImage().'" style="margin-bottom: 5px" /><br />
 			<a href="mailto:'.$customer->email.'" style="text-decoration: underline; color: blue">'.$customer->email.'</a><br /><br />
 			'.$this->l('ID:').' '.sprintf('%06d', $customer->id).'<br />
 			'.$this->l('Registration date:').' '.Tools::displayDate($customer->date_add, $this->context->language->id, true).'<br />
@@ -331,7 +350,7 @@ class AdminCustomers extends AdminTab
 		echo '
 		</fieldset>
 		<div class="clear">&nbsp;</div>';
-		
+
 		echo '<fieldset style="height:190px"><legend><img src="../img/admin/cms.gif" /> '.$this->l('Add a private note').'</legend>
 			<p>'.$this->l('This note will be displayed to all the employees but not to the customer.').'</p>
 			<form action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" id="customer_note">
@@ -361,8 +380,8 @@ class AdminCustomers extends AdminTab
 				});
 			}
 		</script>';
-		
-		
+
+
 		echo '<h2>'.$this->l('Messages').' ('.sizeof($messages).')</h2>';
 		if (sizeof($messages))
 		{
@@ -476,7 +495,7 @@ class AdminCustomers extends AdminTab
 		}
 		else
 			echo $customer->firstname.' '.$customer->lastname.' '.$this->l('has not placed any orders yet');
-			
+
 		if ($products AND sizeof($products))
 		{
 			echo '<div class="clear">&nbsp;</div>
@@ -572,7 +591,7 @@ class AdminCustomers extends AdminTab
 		else
 			echo $customer->firstname.' '.$customer->lastname.' '.$this->l('has no discount vouchers').'.';
 		echo '<div class="clear">&nbsp;</div>';
-		 
+
 		echo '<div style="float:left">
 		<h2>'.$this->l('Carts').' ('.sizeof($carts).')</h2>';
 		if ($carts AND sizeof($carts))
@@ -608,14 +627,14 @@ class AdminCustomers extends AdminTab
 		else
 			echo $this->l('No cart available').'.';
 		echo '</div>';
-		
+
 		$sql = 'SELECT DISTINCT id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
-				FROM '._DB_PREFIX_.'cart_product cp 
+				FROM '._DB_PREFIX_.'cart_product cp
 				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
-				WHERE c.id_customer = '.(int)$customer->id.' 
+				WHERE c.id_customer = '.(int)$customer->id.'
 					AND cp.id_product NOT IN (
-						SELECT product_id 
-						FROM '._DB_PREFIX_.'orders o 
+						SELECT product_id
+						FROM '._DB_PREFIX_.'orders o
 						JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
 						WHERE o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
 					)';
@@ -638,12 +657,12 @@ class AdminCustomers extends AdminTab
 			}
 			echo '</table></div>';
 		}
-		
+
 		echo '<div class="clear">&nbsp;</div>';
 
 		/* Last connections */
         $connections = $customer->getLastConnections();
-        if (sizeof($connections))    
+        if (sizeof($connections))
         {
             echo '<h2>'.$this->l('Last connections').'</h2>
             <table cellspacing="0" cellpadding="0" class="table">
@@ -665,7 +684,7 @@ class AdminCustomers extends AdminTab
             echo '</table><div class="clear">&nbsp;</div>';
         }
 
-        if (sizeof($referrers))    
+        if (sizeof($referrers))
         {
             echo '<h2>'.$this->l('Referrers').'</h2>
             <table cellspacing="0" cellpadding="0" class="table">
@@ -688,26 +707,27 @@ class AdminCustomers extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
-		
+
 		$birthday = explode('-', $this->getFieldValue($obj, 'birthday'));
 		$customer_groups = Tools::getValue('groupBox', $obj->getGroups());
 		$groups = Group::getGroups($this->_defaultFormLanguage, true);
-		
+
 		echo '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" autocomplete="off">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab-customers.gif" />'.$this->l('Customer').'</legend>
 				<label>'.$this->l('Gender:').' </label>
-				<div class="margin-form">
-					<input type="radio" size="33" name="id_gender" id="gender_1" value="1" '.($this->getFieldValue($obj, 'id_gender') == 1 ? 'checked="checked" ' : '').'/>
-					<label class="t" for="gender_1"> '.$this->l('Male').'</label>
-					<input type="radio" size="33" name="id_gender" id="gender_2" value="2" '.($this->getFieldValue($obj, 'id_gender') == 2 ? 'checked="checked" ' : '').'/>
-					<label class="t" for="gender_2"> '.$this->l('Female').'</label>
-					<input type="radio" size="33" name="id_gender" id="gender_3" value="9" '.(($this->getFieldValue($obj, 'id_gender') == 9 OR !$this->getFieldValue($obj, 'id_gender')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="gender_3"> '.$this->l('Unknown').'</label>
+				<div class="margin-form">';
+				foreach (Gender::getGenders() as $gender)
+				{
+					echo '<input type="radio" size="33" name="id_gender" id="gender_'.$gender['id_gender'].'" value="'.$gender['id_gender'].'" '.($this->getFieldValue($obj, 'id_gender') == $gender['id_gender'] ? 'checked="checked" ' : '').'/>';
+					echo '<label class="t" for="gender_'.$gender['id_gender'].'"> '.$gender['name'].'</label> &nbsp; ';
+				}
+				echo '	<input type="radio" size="33" name="id_gender" id="gender_unknown" value="0" '.(($this->getFieldValue($obj, 'id_gender') == 9 || !$this->getFieldValue($obj, 'id_gender')) ? 'checked="checked" ' : '').'/>
+				<label class="t" for="gender_unknown"> '.$this->l('Unknown').'</label>
 				</div>
 				<label>'.$this->l('Last name:').' </label>
 				<div class="margin-form">
@@ -854,7 +874,7 @@ class AdminCustomers extends AdminTab
 	{
 		return parent::getList(Context::getContext()->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
 	}
-	
+
 	public function beforeDelete($object)
 	{
 		return $object->isUsed();

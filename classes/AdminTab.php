@@ -92,12 +92,12 @@ abstract class AdminTabCore
 
 	/** @var array Fields to display in list */
 	public $fieldsDisplay = array();
-	
+
 	public $optionTitle = null;
-	
+
 	/** @var string shop | group_shop */
 	public $shopLinkType;
-	
+
 	/** @var bool */
 	public $shopShareDatas = false;
 
@@ -125,7 +125,7 @@ abstract class AdminTabCore
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
-	/** @var integer Max image size for upload 
+	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 **/
 	protected $maxImageSize;
@@ -144,27 +144,27 @@ abstract class AdminTabCore
 
 	/** @var string specificConfirmDelete */
 	public $specificConfirmDelete = NULL;
-	
+
 	public static $currentIndex;
-	
+
 	public $smarty;
 
 	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms');
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
-	
+
 	/** @var bool If false, don't add form tags in options forms */
 	protected $formOptions = true;
-	
+
 	public $_fieldsOptions = array();
-	
+
 	/**
 	 * @since 1.5.0
 	 * @var array
 	 */
 	public $optionsList = array();
-	
+
 	/**
 	 * @since 1.5.0
 	 * @var Context
@@ -196,7 +196,7 @@ abstract class AdminTabCore
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-		
+
 		$this->id = Tab::getCurrentTabId();
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -255,8 +255,8 @@ abstract class AdminTabCore
 	}
 
 	/**
-	 * ajaxDisplay is the default ajax return sytem 
-	 * 
+	 * ajaxDisplay is the default ajax return sytem
+	 *
 	 * @return void
 	 */
 	public function displayAjax()
@@ -531,8 +531,8 @@ abstract class AdminTabCore
 	}
 
 	/**
-	 * ajaxPreProcess is a method called in ajax-tab.php before displayConf(). 
-	 * 
+	 * ajaxPreProcess is a method called in ajax-tab.php before displayConf().
+	 *
 	 * @return void
 	 */
 	public function ajaxPreProcess()
@@ -541,7 +541,7 @@ abstract class AdminTabCore
 
 	/**
 	 * ajaxProcess is the default handle method for request with ajax-tab.php
-	 * 
+	 *
 	 * @return void
 	 */
 	public function ajaxProcess()
@@ -557,7 +557,7 @@ abstract class AdminTabCore
 			return false;
 		// set token
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-		
+
 		// Sub included tab postProcessing
 		$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
 
@@ -892,7 +892,7 @@ abstract class AdminTabCore
 			$type = 'group_shop';
 		else
 			return ;
-		
+
 		$assos = array();
 		foreach ($_POST AS $k => $row)
 		{
@@ -923,7 +923,7 @@ abstract class AdminTabCore
 			foreach ($this->optionsList as $category => $categoryData)
 			{
 				$fields = $categoryData['fields'];
-				
+
 				/* Check required fields */
 				foreach ($fields AS $field => $values)
 					if (isset($values['required']) AND $values['required'] && !isset($_POST['configUseDefault'][$field]))
@@ -935,7 +935,7 @@ abstract class AdminTabCore
 						}
 						elseif (($value = Tools::getValue($field)) == false AND (string)$value != '0')
 							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-		
+
 				/* Check fields validity */
 				foreach ($fields AS $field => $values)
 					if (isset($values['type']) AND $values['type'] == 'textLang')
@@ -948,7 +948,7 @@ abstract class AdminTabCore
 					elseif (Tools::getValue($field) AND isset($values['validation']))
 						if (!Validate::$values['validation'](Tools::getValue($field)))
 							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
-		
+
 				/* Default value if null */
 				foreach ($fields AS $field => $values)
 					if (!Tools::getValue($field) AND isset($values['default']))
@@ -960,7 +960,7 @@ abstract class AdminTabCore
 					{
 						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
 							continue;
-							
+
 						if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
 						{
 							Configuration::deleteFromContext($key);
@@ -986,7 +986,7 @@ abstract class AdminTabCore
 								}
 							}
 							Configuration::updateValue($key, $list);
-						} 
+						}
 						else
 						{
 							$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
@@ -1001,14 +1001,14 @@ abstract class AdminTabCore
 					}
 				}
 			}
-			
+
 			if (count($this->_errors) <= 0)
 				Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$token);
 		}
 		else
 			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 	}
-	
+
 	/**
 	 * Can be overriden
 	 */
@@ -1027,10 +1027,10 @@ abstract class AdminTabCore
 				{
 					$this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
 					return false;
-				}			
-			}	
+				}
+			}
 		}
-		
+
 		return true;
 	}
 
@@ -1044,7 +1044,7 @@ abstract class AdminTabCore
 			else
 				return false;
 
-			
+
 			// Check image validity
 			$max_size = isset($this->maxImageSize) ? $this->maxImageSize : 0;
 			if ($error = checkImage($_FILES[$name], Tools::getMaxUploadSize($max_size)))
@@ -1279,7 +1279,7 @@ abstract class AdminTabCore
 
 		/* SQL table : orders, but class name is Order */
 		$sqlTable = $this->table == 'order' ? 'orders' : $this->table;
-		
+
 		// Add SQL shop restriction
 		$selectShop = $joinShop = $whereShop = '';
 		if ($this->shopLinkType)
@@ -1313,7 +1313,7 @@ abstract class AdminTabCore
 				$this->_group = 'GROUP BY a.'.pSQL($this->identifier);
 			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
-				
+
 			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
 				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		}
@@ -1383,7 +1383,7 @@ abstract class AdminTabCore
 		echo '<form method="post" action="'.self::$currentIndex;
 		if(Tools::getIsset($this->identifier))
 			echo '&'.$this->identifier.'='.(int)(Tools::getValue($this->identifier));
-		echo '&token='.$token;		
+		echo '&token='.$token;
 		if (Tools::getIsset($this->table.'Orderby'))
 			echo '&'.$this->table.'Orderby='.urlencode($this->_orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->_orderWay));
 		echo '#'.$this->table.'" class="form">
@@ -1656,13 +1656,13 @@ abstract class AdminTabCore
 						// item_id is the product id in a product image context, else it is the image id.
 						$item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
 						// If it's a product image
-						if (isset($tr['id_image'])) 
+						if (isset($tr['id_image']))
 						{
 							$image = new Image((int)$tr['id_image']);
 							$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$image->getExistingImgPath().'.'.$this->imageType;
 						}else
 							$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$item_id.(isset($tr['id_image']) ? '-'.(int)($tr['id_image']) : '').'.'.$this->imageType;
-							
+
 						echo cacheImage($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
 					}
 					elseif (isset($params['icon']) AND (isset($params['icon'][$tr[$key]]) OR isset($params['icon']['default'])))
@@ -1684,7 +1684,7 @@ abstract class AdminTabCore
 						else
 							$echo = $tr[$key];
 
-						echo isset($params['callback']) ? call_user_func_array(array($this->className, $params['callback']), array($echo, $tr)) : $echo;
+						echo isset($params['callback']) ? call_user_func_array(array((isset($params['callback_object'])) ? $params['callback_object'] : $this->className, $params['callback']), array($echo, $tr)) : $echo;
 					}
 					else
 						echo '--';
@@ -1692,7 +1692,7 @@ abstract class AdminTabCore
 					echo (isset($params['suffix']) ? $params['suffix'] : '').
 					'</td>';
 				}
-				
+
 				if ($this->shopLinkType)
 				{
 					$name = (Tools::strlen($tr['shop_name']) > 15) ? Tools::substr($tr['shop_name'], 0, 15).'...' : $tr['shop_name'];
@@ -1716,7 +1716,7 @@ abstract class AdminTabCore
 			}
 		}
 	}
-	
+
 	protected function displayAddButton()
 	{
 		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new').'</a><br /><br />';
@@ -1826,7 +1826,7 @@ abstract class AdminTabCore
 			$legend = '<img src="'.(!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif" /> ';
 			$legend .= ((isset($categoryData['title'])) ? $categoryData['title'] : $this->l('Options'));
 			echo '<legend>'.$legend.'</legend>';
-			
+
 			// Category fields
 			if (!isset($categoryData['fields']))
 				continue;
@@ -1841,10 +1841,10 @@ abstract class AdminTabCore
 				$value = Tools::getValue($key, Configuration::get($key));
 				if (!Validate::isCleanHtml($value))
 					$value = Configuration::get($key);
-						
+
 				if (isset($field['defaultValue']) && !$value)
 					$value = $field['defaultValue'];
-					
+
 				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
 				$isDisabled = $isInvisible = false;
 				if (Shop::isMultiShopActivated())
@@ -1889,14 +1889,14 @@ abstract class AdminTabCore
 								<input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
 							</label>
 						</div>';
-				
+
 				// Field description
 				//echo (isset($field['desc']) ? '<p class="preference_description">'.((isset($field['thumb']) AND $field['thumb'] AND $field['thumb']['pos'] == 'after') ? '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" style="float:left;" />' : '' ).$field['desc'].'</p>' : '');
 				echo (isset($field['desc']) ? '<p class="preference_description">'.$field['desc'].'</p>' : '');
 
 				// Is this field invisible in current shop context ?
 				echo ($isInvisible) ? '<p class="multishop_warning">'.$this->l('You can\'t change the value of this configuration field in this shop context').'</p>' : '';
-				
+
 				echo '</div></div>';
 			}
 
@@ -1905,7 +1905,7 @@ abstract class AdminTabCore
 			echo '</div>';
 			if ($required)
 				echo '<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>';
-			
+
 			echo '</fieldset><br />';
 			$this->displayBottomOptionCategory($category, $categoryData);
 		}
@@ -1936,7 +1936,7 @@ abstract class AdminTabCore
 			echo  '<option value="'.(isset($option['cast']) ? $option['cast']($option[$field['identifier']]) : $option[$field['identifier']]).'"'.(($value == $option[$field['identifier']]) ? ' selected="selected"' : '').'>'.$option['name'].'</option>';
 		echo '</select>';
 	}
-	
+
 	/**
 	 * Type = bool
 	 */
@@ -1950,7 +1950,7 @@ abstract class AdminTabCore
 		echo '<input type="radio" name="'.$key.'" id="'.$key.'_off" value="0" '.(!$value ? ' checked="checked" ' : '').(isset($field['js']['off']) ? $field['js']['off'] : '').' />';
 		echo '<label class="t" for="'.$key.'_off"> '.$this->l('No').'</label>';
 	}
-	
+
 	/**
 	 * Type = radio
 	 */
@@ -1960,7 +1960,7 @@ abstract class AdminTabCore
 			echo '<input type="radio" name="'.$key.'" id="'.$key.$k.'_on" value="'.(int)$v.'"'.(($k == $value) ? ' checked="checked"' : '').(isset($field['js'][$k]) ? ' '.$field['js'][$k] : '').' /><label class="t" for="'.$key.$k.'_on"> '.$v.'</label><br />';
 		echo '<br />';
 	}
-	
+
 	/**
 	 * Type = text
 	 */
@@ -1968,7 +1968,7 @@ abstract class AdminTabCore
 	{
 		echo '<input type="'.$field['type'].'"'.(isset($field['id']) ? ' id="'.$field['id'].'"' : '').' size="'.(isset($field['size']) ? (int)$field['size'] : 5).'" name="'.$key.'" value="'.htmlentities($value, ENT_COMPAT, 'UTF-8').'" />'.(isset($field['next']) ? '&nbsp;'.(string)$field['next'] : '');
 	}
-	
+
 	/**
 	 * Type = password
 	 */
@@ -1976,7 +1976,7 @@ abstract class AdminTabCore
 	{
 		$this->displayOptionTypeText($key, $field, '');
 	}
-	
+
 	/**
 	 * Type = textarea
 	 */
@@ -1984,7 +1984,7 @@ abstract class AdminTabCore
 	{
 		echo '<textarea name='.$key.' cols="'.$field['cols'].'" rows="'.$field['rows'].'">'.htmlentities($value, ENT_COMPAT, 'UTF-8').'</textarea>';
 	}
-	
+
 	/**
 	 * Type = file
 	 */
@@ -1994,7 +1994,7 @@ abstract class AdminTabCore
 			echo '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" /><br />';
 		echo '<input type="file" name="'.$key.'" />';
 	}
-	
+
 	/**
 	 * Type = image
 	 */
@@ -2034,7 +2034,7 @@ abstract class AdminTabCore
 		echo '</tr>';
 		echo '</table>';
 	}
-	
+
 	/**
 	 * Type = textLang
 	 */
@@ -2050,7 +2050,7 @@ abstract class AdminTabCore
 		}
 		$this->displayFlags($languages, $this->context->language->id, $key, $key);
 	}
-	
+
 	/**
 	 * Type = TextareaLang
 	 */
@@ -2067,7 +2067,7 @@ abstract class AdminTabCore
 		$this->displayFlags($languages, $this->context->language->id, $key, $key);
 		echo '<br style="clear:both">';
 	}
-	
+
 	/**
 	 * Type = selectLang
 	 */
@@ -2085,7 +2085,7 @@ abstract class AdminTabCore
 		}
 		$this->displayFlags($languages, $this->context->language->id, $key, $key);
 	}
-	
+
 	/**
 	 * Type = price
 	 */
@@ -2095,7 +2095,7 @@ abstract class AdminTabCore
 		$this->displayOptionTypeText($key, $field, $value);
 		echo $this->context->currency->getSign('right').' '.$this->l('(tax excl.)');
 	}
-	
+
 	/**
 	 * Type = disabled
 	 */
@@ -2296,7 +2296,7 @@ abstract class AdminTabCore
 			return $this->fieldsDisplay[$filter];
 		return false;
 	}
-	
+
 	protected function warnDomainName()
 	{
 		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') AND $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
@@ -2305,7 +2305,7 @@ abstract class AdminTabCore
 			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
-	
+
 	protected function displayAssoShop($type = 'shop')
 	{
 		if (!Shop::isMultiShopActivated() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
@@ -2364,7 +2364,7 @@ abstract class AdminTabCore
 				});
 				$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
 			}
-				
+
 			function check_all_shop()
 			{
 				var allChecked = true;
@@ -2411,7 +2411,7 @@ EOF;
 
 	/**
 	 * Get current URL
-	 * 
+	 *
 	 * @param array $remove List of keys to remove from URL
 	 * @return string
 	 */
@@ -2420,7 +2420,7 @@ EOF;
 		$url = $_SERVER['REQUEST_URI'];
 		if (!$remove)
 			return $url;
-			
+
 		if (!is_array($remove))
 			$remove = array($remove);
 

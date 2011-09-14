@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -35,12 +35,12 @@ class AdminGroups extends AdminTab
 	 	$this->edit = true;
 	 	$this->view = true;
 	 	$this->delete = true;
-		
+
 		$this->_select = '
 		(SELECT COUNT(jcg.`id_customer`)
-		FROM `'._DB_PREFIX_.'customer_group` jcg 
-		LEFT JOIN `'._DB_PREFIX_.'customer` jc ON (jc.`id_customer` = jcg.`id_customer`) 
-		WHERE jc.`deleted` != 1 
+		FROM `'._DB_PREFIX_.'customer_group` jcg
+		LEFT JOIN `'._DB_PREFIX_.'customer` jc ON (jc.`id_customer` = jcg.`id_customer`)
+		WHERE jc.`deleted` != 1
 		AND jcg.`id_group` = a.`id_group`) AS nb
 		';
 		$this->_listSkipDelete = array(1);
@@ -58,7 +58,7 @@ class AdminGroups extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$groupReductions = $obj->id ? GroupReduction::getGroupReductions($obj->id, $this->context->language->id) : array();
@@ -93,7 +93,7 @@ class AdminGroups extends AdminTab
 				<div class="margin-form">';
 			if ($groupReductions)
 			{
-				
+
 				echo '
 					<table>
 						<tr>
@@ -168,11 +168,11 @@ class AdminGroups extends AdminTab
 
 	public function viewgroup()
 	{
-		$this->context = Context::getContext();		
+		$this->context = Context::getContext();
 		self::$currentIndex = 'index.php?tab=AdminGroups';
 		if (!($obj = $this->loadObject(true)))
 			return;
-		
+
 		echo '
 		<fieldset style="width: 400px">
 			<div style="float: right"><a href="'.self::$currentIndex.'&updategroup&id_group='.$obj->id.'&token='.$this->token.'"><img src="../img/admin/edit.gif" /></a></div>
@@ -197,50 +197,50 @@ class AdminGroups extends AdminTab
 		if ($nbCustomers = $obj->getCustomers(true))
 		{
 			echo '<h2>'.$this->l('Customer members of this group').' ('.$nbCustomers.')</h2>';
-			
+
 			// Pagination Begin
-			$customersPerPage = (Tools::getValue('customerPerPage') ? (int)Tools::getValue('customerPerPage') : 50); 
+			$customersPerPage = (Tools::getValue('customerPerPage') ? (int)Tools::getValue('customerPerPage') : 50);
 			$totalPages = ceil($nbCustomers / $customersPerPage);
 			$perPageOptions = array(20, 50, 100, 300);
-			
+
 			$customerPageIndex = (Tools::getValue('customerPageIndex') && Tools::getValue('customerPageIndex') <= $totalPages ? (int)Tools::getValue('customerPageIndex') : 1);
 			$from = (Tools::getValue('customerPageIndex') ? ((int)$customerPageIndex - 1) * ((int)$customersPerPage) : 0);
-			
+
 			$customers = $obj->getCustomers(false, $from, $customersPerPage);
-			
+
 			echo '<table><tr>
 				<form method="post" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'">
 				<td style="vertical-align: bottom;"><span style="float: left; height:30px">';
-						
+
 			if ($customerPageIndex > 1)
 			{
 					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value=1" src="../img/admin/list-prev2.gif">&nbsp';
 					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.($customerPageIndex-1).'" src="../img/admin/list-prev.gif">&nbsp';
 			}
-			
+
 			echo    'Page <b><select onChange="submit()" name="customerPageIndex" id="customerPageIndex">';
 			for ($i=1; $i <= $totalPages; $i++)
 				echo '<option value="'.$i.'"'.((int)$customerPageIndex === $i ? 'selected="selected"' : '').'>'.$i.'</option>';
 			echo 	'</select></b> / '.$totalPages;
-			
+
 			if ($customerPageIndex < $totalPages)
 			{
 					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.((int)$customerPageIndex+1).'" src="../img/admin/list-next.gif">';
 					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.$totalPages.'" src="../img/admin/list-next2.gif">';
 			}
-			
+
 			echo 	'			| Display
 						<select onchange="document.getElementById(\'customerPageIndex\').value=1; submit();" name="customerPerPage">';
 			foreach ($perPageOptions as $option)
 				echo '<option value="'.$option.'"'.((int)$customersPerPage == $option ? 'selected="selected"' : '').'>'.$option.'</option>';
-			echo	'	</select> / '.$nbCustomers.' result(s)	
+			echo	'	</select> / '.$nbCustomers.' result(s)
 					</span><span class="clear"></span></td>
 				</form>
 			</tr>
 			</table>
 			<div class="clear"></div>';
 			// Pagination End
-			
+
 			echo '<table cellspacing="0" cellpadding="0" class="table widthfull">
 				<tr>';
 			foreach ($this->fieldsDisplay AS $field)
@@ -248,14 +248,13 @@ class AdminGroups extends AdminTab
 			echo '
 				</tr>';
 			$irow = 0;
-			
+
 			foreach ($customers AS $k => $customer)
 			{
-				$imgGender = $customer['id_gender'] == 1 ? '<img src="../img/admin/male.gif" alt="'.$this->l('Male').'" />' : ($customer['id_gender'] == 2 ? '<img src="../img/admin/female.gif" alt="'.$this->l('Female').'" />' : '');
 				echo '
 				<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
 					<td>'.$customer['id_customer'].'</td>
-					<td class="center">'.$imgGender.'</td>
+					<td class="center"><img src="'.Gender::getStaticImage($customer['id_gender']).'" /></td>
 					<td>'.stripslashes($customer['lastname']).' '.stripslashes($customer['firstname']).'</td>
 					<td>'.stripslashes($customer['email']).'<a href="mailto:'.stripslashes($customer['email']).'"> <img src="../img/admin/email_edit.gif" alt="'.$this->l('Write to this customer').'" /></a></td>
 					<td>'.Tools::displayDate($customer['birthday'], $this->context->language->id).'</td>

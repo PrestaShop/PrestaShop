@@ -670,6 +670,20 @@ CREATE TABLE `PREFIX_feature_value_lang` (
   PRIMARY KEY  (`id_feature_value`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_gender` (
+  `id_gender` int(11) NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_gender`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_gender_lang` (
+  `id_gender` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id_gender`,`id_lang`),
+  KEY `id_gender` (`id_gender`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_group` (
   `id_group` int(10) unsigned NOT NULL auto_increment,
   `reduction` decimal(17,2) NOT NULL default '0.00',

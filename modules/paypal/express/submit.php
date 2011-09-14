@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -142,7 +142,7 @@ function submitConfirm()
 function submitAccount()
 {
 	global $errors;
-	
+
 	$context = Context::getContext();
 	$email = Tools::getValue('email');
 	if (empty($email) OR !Validate::isEmail($email))
@@ -150,7 +150,7 @@ function submitAccount()
 	elseif (!Validate::isPasswd(Tools::getValue('passwd')))
 		$errors[] = Tools::displayError('invalid password');
 	elseif (Customer::customerExists($email))
-		$errors[] = Tools::displayError('someone has already registered with this e-mail address');	
+		$errors[] = Tools::displayError('someone has already registered with this e-mail address');
 	elseif (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) AND !(Tools::getValue('months') == '' AND Tools::getValue('days') == '' AND Tools::getValue('years') == ''))
 		$errors[] = Tools::displayError('invalid birthday');
 	else
@@ -179,7 +179,7 @@ function submitAccount()
 					$errors[] = Tools::displayError('an error occurred while creating your address');
 				else
 				{
-					if (Mail::Send($context->language->id, 'account', Mail::l('Welcome!'), 
+					if (Mail::Send($context->language->id, 'account', Mail::l('Welcome!'),
 					array('{firstname}' => $customer->firstname, '{lastname}' => $customer->lastname, '{email}' => $customer->email, '{passwd}' => Tools::getValue('passwd')), $customer->email, $customer->firstname.' '.$customer->lastname))
 						$context->smarty->assign('confirmation', 1);
 					$context->cookie->id_customer = (int)($customer->id);
@@ -326,7 +326,8 @@ function displayAccount()
 		'zip' => (Tools::getValue('postcode') ? Tools::htmlentitiesUTF8(strval(Tools::getValue('postcode'))) : (isset($result['SHIPTOZIP']) ? $result['SHIPTOZIP'] : '')),
 		'payerID' => $payerID,
 		'ppToken' => strval(Context::getContext()->cookie->paypal_token),
-		'errors'=> $errors
+		'errors'=> $errors,
+		'genders' => Gender::getGenders(),
 	));
 
 	// Display all and exit

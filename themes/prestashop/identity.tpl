@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -43,10 +43,10 @@
 		<fieldset>
 			<p class="radio">
 				<span>{l s='Title'}</span>
-				<input type="radio" id="id_gender1" name="id_gender" value="1" {if $smarty.post.id_gender == 1 OR !$smarty.post.id_gender}checked="checked"{/if} />
-				<label for="id_gender1">{l s='Mr.'}</label>
-				<input type="radio" id="id_gender2" name="id_gender" value="2" {if $smarty.post.id_gender == 2}checked="checked"{/if} />
-				<label for="id_gender2">{l s='Ms.'}</label>
+				{foreach from=$genders key=k item=gender}
+					<input type="radio" name="id_gender" id="id_gender{$gender.id_gender}" value="{$gender.id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender.id_gender}checked="checked"{/if} />
+					<label for="id_gender{$gender.id_gender}" class="top">{$gender.name}</label>
+				{/foreach}
 			</p>
 			<p class="required text">
 				<label for="firstname">{l s='First name'}</label>

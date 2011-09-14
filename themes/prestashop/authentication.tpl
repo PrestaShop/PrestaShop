@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -146,12 +146,12 @@ $(function(){ldelim}
 					</p>
 					<p class="radio required">
 						<span>{l s='Title'}</span>
-						<input type="radio" name="id_gender" id="id_gender1" value="1" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == '1'}checked="checked"{/if}>
-						<label for="id_gender1" class="top">{l s='Mr.'}</label>
-						<input type="radio" name="id_gender" id="id_gender2" value="2" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == '2'}checked="checked"{/if}>
-						<label for="id_gender2" class="top">{l s='Ms.'}</label>
+						{foreach from=$genders key=k item=gender}
+							<input type="radio" name="id_gender" id="id_gender{$gender.id_gender}" value="{$gender.id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender.id_gender}checked="checked"{/if} />
+							<label for="id_gender{$gender.id_gender}" class="top">{$gender.name}</label>
+						{/foreach}
 					</p>
-										<p class="required text">
+					<p class="required text">
 						<label for="firstname">{l s='First name'}</label>
 						<input type="text" class="text" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}">
 						<input type="hidden" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}">
@@ -296,8 +296,8 @@ $(function(){ldelim}
 					<sup>*</sup>
 				</p>
 			</fieldset>
-			<p class="cart_navigation required submit">		
-				<span><sup>*</sup>{l s='Required field'}</span>			
+			<p class="cart_navigation required submit">
+				<span><sup>*</sup>{l s='Required field'}</span>
 				<input type="submit" class="button" name="submitGuestAccount" id="submitGuestAccount" style="float:right" value="{l s='Continue'}">
 			</p>
 		</form>
@@ -309,10 +309,10 @@ $(function(){ldelim}
 		<h3>{l s='Your personal information'}</h3>
 		<p class="radio required">
 			<span>{l s='Title'}</span>
-			<input type="radio" name="id_gender" id="id_gender1" value="1" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == 1}checked="checked"{/if} />
-			<label for="id_gender1" class="top">{l s='Mr.'}</label>
-			<input type="radio" name="id_gender" id="id_gender2" value="2" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == 2}checked="checked"{/if} />
-			<label for="id_gender2" class="top">{l s='Ms.'}</label>
+			{foreach from=$genders key=k item=gender}
+				<input type="radio" name="id_gender" id="id_gender{$gender.id_gender}" value="{$gender.id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender.id_gender}checked="checked"{/if} />
+				<label for="id_gender{$gender.id_gender}" class="top">{$gender.name}</label>
+			{/foreach}
 		</p>
 		<p class="required text">
 			<label for="customer_firstname">{l s='First name'}</label>
