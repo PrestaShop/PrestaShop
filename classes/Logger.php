@@ -28,38 +28,38 @@
 class	LoggerCore extends ObjectModel
 {
 	/** @var integer Log id */
-	public		$id_log;
+	public $id_log;
 
 	/** @var integer Log severity */
-	public		$severity;
+	public $severity;
 
 	/** @var integer Error code */
-	public		$error_code;
+	public $error_code;
 
 	/** @var string Message */
-	public 		$message;
+	public $message;
 
 	/** @var string Object type (eg. Order, Customer...) */
-	public		$object_type;
+	public $object_type;
 
 	/** @var integer Object ID */
-	public 		$object_id;
+	public $object_id;
 
 	/** @var string Object creation date */
-	public 		$date_add;
+	public $date_add;
 
 	/** @var string Object last modification date */
-	public 		$date_upd;
+	public $date_upd;
 
-	protected	$fieldsRequired = array('severity', 'message');
-	protected	$fieldsSize = array();
-	protected	$fieldsValidate = array('id_log' => 'isUnsignedId', 'severity' => 'isInt', 'error_code' => 'isUnsignedInt',
+	protected $fieldsRequired = array('severity', 'message');
+	protected $fieldsSize = array();
+	protected $fieldsValidate = array('id_log' => 'isUnsignedId', 'severity' => 'isInt', 'error_code' => 'isUnsignedInt',
 	'message' => 'isMessage', 'object_id' => 'isUnsignedInt', 'object_type' => 'isName');
 
-	protected 	$table = 'log';
-	protected 	$identifier = 'id_log';
+	protected $table = 'log';
+	protected $identifier = 'id_log';
 
-	protected static $_is_present = array();
+	protected static $is_present = array();
 
 
 	public function getFields()
@@ -77,11 +77,23 @@ class	LoggerCore extends ObjectModel
 		return $fields;
 	}
 
+
+	/**
+	 * Send e-mail to the shop owner only if the minimal severity level has been reached
+	 *
+	 * @param Logger
+	 * @param unknown_type $log
+	 */
 	public static function sendByMail($log)
 	{
-		/* Send e-mail to the shop owner only if the minimal severity level has been reached */
 		if (intval(Configuration::get('PS_LOGS_BY_EMAIL')) <= intval($log->severity))
-			Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'log_alert', Mail::l('Log: You have a new alert from your shop'), array(), Configuration::get('PS_SHOP_EMAIL'));
+			Mail::Send(
+				(int)Configuration::get('PS_LANG_DEFAULT'),
+				'log_alert',
+				Mail::l('Log: You have a new alert from your shop'),
+				array(),
+				Configuration::get('PS_SHOP_EMAIL')
+			);
 	}
 
 	/**
@@ -89,34 +101,34 @@ class	LoggerCore extends ObjectModel
 	 *
 	 * @param string $message the log message
 	 * @param int $severity
-	 * @param int $errorCode
-	 * @param string $objectType
-	 * @param int $objectId
-	 * @param boolean $allowDuplicate if set to true, can log several time the same information (not recommended)
+	 * @param int $error_code
+	 * @param string $object_type
+	 * @param int $object_id
+	 * @param boolean $allow_duplicate if set to true, can log several time the same information (not recommended)
 	 * @return boolean true if succeed
 	 */
-	public static function addLog($message, $severity = 1, $errorCode = NULL, $objectType = NULL, $objectId = NULL, $allowDuplicate = false)
+	public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false)
 	{
 		$log = new Logger();
 		$log->severity = intval($severity);
-		$log->error_code = intval($errorCode);
+		$log->error_code = intval($error_code);
 		$log->message = pSQL($message);
 		$log->date_add = date('Y-m-d H:i:s');
 		$log->date_upd = date('Y-m-d H:i:s');
-		if (!empty($objectType) AND !empty($objectId))
+		if (!empty($object_type) && !empty($object_id))
 		{
-			$log->object_type = pSQL($objectType);
-			$log->object_id = intval($objectId);
+			$log->object_type = pSQL($object_type);
+			$log->object_id = intval($object_id);
 		}
 
 		self::sendByMail($log);
 
-		if ($allowDuplicate or !$log->_isPresent() )
+		if ($allow_duplicate || !$log->_isPresent())
 		{
 			$res = $log->add();
 			if ($res)
 			{
-				self::$_is_present[$log->getHash()] = isset(self::$_is_present[$log->getHash()])?self::$_is_present[$log->getHash()] + 1:1;
+				self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()])?self::$is_present[$log->getHash()] + 1:1;
 				return true;
 			}
 		}
@@ -128,7 +140,8 @@ class	LoggerCore extends ObjectModel
 	 *
 	 * @return string hash
 	 */
-	public function getHash(){
+	public function getHash()
+	{
 		if (empty($this->hash))
 			$this->hash = md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id);
 
@@ -138,13 +151,12 @@ class	LoggerCore extends ObjectModel
 	/**
 	 * check if this log message already exists in database.
 	 *
-	 * @param mixed $message
 	 * @return true if exists
 	 */
 	private function _isPresent()
 	{
-		if (!isset(self::$_is_present[md5($this->message)]))
-			self::$_is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
+		if (!isset(self::$is_present[md5($this->message)]))
+			self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'log`
 				WHERE
 					`message` = \''.$this->message.'\'
@@ -154,7 +166,7 @@ class	LoggerCore extends ObjectModel
 					AND `object_id` = \''.$this->object_id.'\'
 				');
 
-		return self::$_is_present[$this->getHash()];
+		return self::$is_present[$this->getHash()];
 	}
 
 }
