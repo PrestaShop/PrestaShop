@@ -864,3 +864,26 @@ function checkMultishopDefaultValue(obj, key)
 	}
 	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
 }
+/**
+ * Update the product image list position buttons
+ * 
+ * @param DOM table imageTable
+ */
+function refreshImagePositions(imageTable)
+{
+	var reg = /_[0-9]$/g;
+	var up_reg  = new RegExp("imgPosition=[0-9]+&");
+
+	imageTable.find("tbody tr").each(function(i) {
+		// Update link position
+		// Up links
+		$(this).find("td.dragHandle a:first").attr("href", $(this).find("td.dragHandle a:first").attr("href").replace(up_reg, "imgPosition="+ i +"&"));//, "imgPosition="+ (i - 1) +"&"));
+		// Down links
+		$(this).find("td.dragHandle a:last").attr("href", $(this).find("td.dragHandle a:last").attr("href").replace(up_reg, "imgPosition="+ (i + 2) +"&"));
+		// Position image cell
+		$(this).find("td.positionImage").html(i + 1);
+	});
+	imageTable.find("tr td.dragHandle a:hidden").show();
+	imageTable.find("tr td.dragHandle:first a:first").hide();
+	imageTable.find("tr td.dragHandle:last a:last").hide();
+}
