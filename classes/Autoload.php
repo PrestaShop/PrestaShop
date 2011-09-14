@@ -85,17 +85,17 @@ class Autoload
 		if (substr($classname, -4) != 'Core')
 		{
 			// If requested class does not exist, load associated core class
-		 	if (isset($this->index[$classname]) && !$this->index[$classname])
-		 	{
+			if (isset($this->index[$classname]) && !$this->index[$classname])
+			{
 
 				require_once($this->root_dir.$this->index[$classname.'Core']);
-		 		if (file_exists($this->root_dir.'override/'.$this->index[$classname.'Core']))
-		 		{
+				if (file_exists($this->root_dir.'override/'.$this->index[$classname.'Core']))
+				{
 		 			$this->generateIndex();
 		 			require_once($this->root_dir.$this->index[$classname]);
-		 		}
-		 		else
-		 		{
+				}
+				else
+				{
 					// Since the classname does not exists (we only have a classCore class), we have to emulate the declaration of this class
 					$class_infos = new ReflectionClass($classname.'Core');
 					eval(($class_infos->isAbstract() ? 'abstract ' : '').'class '.$classname.' extends '.$classname.'Core {}');
@@ -105,9 +105,7 @@ class Autoload
 			{
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
-				{
 					require_once($this->root_dir.$this->index[$classname.'Core']);
-				}
 
 				if (isset($this->index[$classname]))
 					require_once($this->root_dir.$this->index[$classname]);
@@ -156,9 +154,11 @@ class Autoload
 				if (is_dir($this->root_dir.$path.$file))
 					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/'));
 				else if (substr($file, -4) == '.php')
-			 	{
+				{
 			 		$content = file_get_contents($this->root_dir.$path.$file);
-			 		if (preg_match('#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(Core)?)(\s+(extends|implements)\s+[a-z][a-z0-9_]*)?\s*\{#i', $content, $m))
+			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php')
+			 					.'(Core)?)(\s+(extends|implements)\s+[a-z][a-z0-9_]*)?\s*\{#i';
+			 		if (preg_match($pattern, $content, $m))
 			 		{
 			 			$classes[$m['classname']] = $path.$file;
 						if (substr($m['classname'], -4) == 'Core')
