@@ -79,6 +79,42 @@ ALTER TABLE `PREFIX_product_attribute` ADD `available_date` DATETIME NOT NULL;
 /* Index was only used by deprecated function Image::positionImage() */
 ALTER TABLE `PREFIX_image` DROP INDEX `product_position`;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_gender` (
+  `id_gender` int(11) NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_gender`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_gender_lang` (
+  `id_gender` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id_gender`,`id_lang`),
+  KEY `id_gender` (`id_gender`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+INSERT INTO `PREFIX_gender` (`id_gender`, `type`) VALUES
+(1, 0),
+(2, 1),
+(3, 1);
+
+INSERT INTO `PREFIX_gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
+(1, 1, 'Mr.'),
+(1, 2, 'M.'),
+(1, 3, 'Sr.'),
+(1, 4, 'Herr'),
+(1, 5, 'Sig.'),
+(2, 1, 'Ms.'),
+(2, 2, 'Mme'),
+(2, 3, 'Sra.'),
+(2, 4, 'Frau'),
+(2, 5, 'Sig.ra'),
+(3, 1, 'Miss'),
+(3, 2, 'Melle'),
+(3, 3, 'Miss'),
+(3, 4, 'Miss'),
+(3, 5, 'Miss');
+
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_FORCE_SMARTY_2';
 
 CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
@@ -101,3 +137,4 @@ CREATE TABLE `PREFIX_customer_message_sync_imap` (
 
 ALTER TABLE  `PREFIX_customer_message` ADD  `private` TINYINT NOT NULL DEFAULT  '0' AFTER  `user_agent`;
 
+/* PHP:add_new_tab(AdminGenders, fr:Genres|es:Genders|en:Genders|de:Genders|it:Genders, 2); */;
