@@ -66,6 +66,9 @@ class BlockLayered extends Module
 		self::_installFriendlyUrlTable();
 		self::_installIndexableAttributeTable();
 
+		$this->indexUrl();
+		self::fullIndexProcess();
+
 		return $result;
 	}
 
@@ -75,12 +78,12 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_HIDE_0_VALUES');
 		Configuration::deleteByName('PS_LAYERED_SHOW_QTIES');
 		
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'price_static_index');
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'layered_friendly_url');
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'layered_indexable_attribute_group');
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'layered_indexable_feature');
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'layered_category');
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'layered_filter');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'price_static_index');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
 		
 		return parent::uninstall();
 	}
@@ -138,20 +141,15 @@ class BlockLayered extends Module
 	/*
 	 * Url indexation
 	 */
-	public function indexUrl($cursor = array(), $ajax = false, $truncate = true)
+	public function indexUrl($ajax = false, $truncate = true)
 	{
 		if($truncate)
 			Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'layered_friendly_url');
 		
-		if(!empty($idCategory))
-			$categorySubQuery = ' AND lc.id_category = '.(int)$idCategory;
-		else
-			$categorySubQuery = '';
-		
 		$attributeValues = array();
 		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT lc.*, id_lang, name, link_rewrite, cl.id_category
 		FROM '._DB_PREFIX_.'layered_category lc
-		INNER JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = lc.id_category AND lc.id_category <> 1'.$categorySubQuery.')
+		INNER JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = lc.id_category AND lc.id_category <> 1 )
 		ORDER BY position ASC');
 		if (!$filters)
 			return;
@@ -177,7 +175,7 @@ class BlockLayered extends Module
 						if (!isset($attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']]))
 							$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']] = array();
 						$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']][] = array('name' => $attribute['name'],
-						'id_name' => 'c'.$attribute['id_name'], 'value' => $attribute['value'], 'id_value' => $attribute['id_value'].'_'.$attribute['id_name'],
+						'id_name' => 'c'.$attribute['id_name'], 'value' => $attribute['value'], 'id_value' => $attribute['id_name'].'_'.$attribute['id_value'],
 						'id_id_value' => $attribute['id_value'], 'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					}
 					break;
@@ -209,8 +207,9 @@ class BlockLayered extends Module
 					SELECT cl.name, cl.id_lang, c.id_category
 					FROM '._DB_PREFIX_.'category c
 					INNER JOIN '._DB_PREFIX_.'category_lang cl ON (c.id_category = cl.id_category)
-					WHERE nleft > (SELECT nleft FROM '._DB_PREFIX_.'category WHERE id_category = 2)
-					AND  nright < (SELECT nright FROM '._DB_PREFIX_.'category WHERE id_category = 2)
+					WHERE nleft > (SELECT nleft FROM '._DB_PREFIX_.'category WHERE id_category = '.$filter['id_category'].')
+					AND  nright < (SELECT nright FROM '._DB_PREFIX_.'category WHERE id_category = '.$filter['id_category'].')
+					AND cl.id_lang = '.(int)$filter['id_lang'].'
 					');
 		foreach($categories as $category)
 		{
@@ -230,6 +229,7 @@ class BlockLayered extends Module
 					$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 					SELECT m.name as name,l.id_lang as id_lang,  id_manufacturer
 					FROM '._DB_PREFIX_.'manufacturer m , '._DB_PREFIX_.'lang l
+					WHERE l.id_lang = '.(int)$filter['id_lang'].'
 					');
 				
 					foreach ($manufacturers as $manufacturer)
@@ -264,107 +264,23 @@ class BlockLayered extends Module
 					break;
 	}
 
-		$maxExecutionTime = ini_get('max_execution_time') * 0.9; // 90% of safety margin
-		if ($maxExecutionTime > 5)
-			$maxExecutionTime = 5;
-		$startTime = microtime(true);
-		$memoryLimit = (Tools::getMemoryLimit() * 0.9);
-		
-		if (empty($cursor))
-		{
-			$cursor = array(
-				'attribute_values' => 0,
-				'tmp1' => 0,
-				'possibility' => 0,
-				'total' => 0
-			);
-			
-			if ($ajax)
-			{
-				// Calculation, to eval progression
-				$nbPosibilities = 0;
-				foreach ($attributeValues as $idLang => $tmp1)
-					foreach ($tmp1 as $key => $tmp2)
-					{
-						$nbPosibilitiesTmp = 1;
-						foreach ($tmp2 as $name)
-						{
-							$count = count($name)+1;
-							$nbPosibilitiesTmp *= $count;
-						}
-						$nbPosibilities += $nbPosibilitiesTmp;
-					}
-				$cursor['nb_posibilities'] = $nbPosibilities;
-			}
-		}
-		
-		
 		// Foreach langs
 		$attributeValuesKeys = array_keys($attributeValues);
-		for (;$cursor['attribute_values'] < count($attributeValuesKeys); $cursor['attribute_values']++)
+		foreach($attributeValues as $id_lang => $attributesByCategoriesByLang)
 	{
-			$id_lang = $attributeValuesKeys[$cursor['attribute_values']];
-			$tmp1 = &$attributeValues[$id_lang];
-			
 			// Foreach categories
-			$tmp1Keys = array_keys($tmp1);
-			for(; $cursor['tmp1'] < count($tmp1Keys); $cursor['tmp1']++)
+			foreach($attributesByCategoriesByLang as $id_category => $attributesByCategory)
 			{
-				$id_category = $tmp1Keys[$cursor['tmp1']];
-				$tmp2 = &$tmp1[$id_category];
-				
-				$cursors = array_fill(0, count($tmp2), 0);
-				$limits = array();
-				$nbName = count($tmp2);
-				$nbPosibilities = 1;
-				$tmp2 = array_values($tmp2);
-		
-				// fill limits and calculate the number of combination possible
-				foreach ($tmp2 as $name)
+				foreach($attributesByCategory as $attribute)
 				{
-					$count = count($name)+1;
-					$limits[] = $count;
-					$nbPosibilities *= $count;
-				}
-				
-				// Loop all url posibilities
-				for (; $cursor['possibility'] < $nbPosibilities; $cursor['possibility']++)
+					foreach($attribute as $param)
 				{
-					if ($memoryLimit < memory_get_peak_usage() OR (microtime(true) - $startTime) > $maxExecutionTime)
-					{
-						if ($ajax)
-							return Tools::jsonEncode(array('cursor' => Tools::jsonEncode($cursor)));
-						Tools::file_get_contents(Tools::getProtocol().Tools::getHttpHost().'/modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&cursor='.Tools::jsonEncode($cursor));
-						return 1;
-					}
-					
-					$cursor['total']++;
-					// generate all parameters posibilities
-					$a = 1;
-					foreach ($cursors as $position => $cursorP)
-					{
-						// Get all possible combination (one by group)
-						// 0 means no combinations selected in the group
-						$cursors[$position] = (($cursor['possibility'] / ($a)) % $limits[$position]);
-						$a *= $limits[$position];
-					}
-					$link = '';
-					$selectedFilters = array('category' => array());
-					
-					// Generate url with selected filters
-					foreach ($cursors as $position => $cursorP)
-					{
-						if ($cursorP != 0)
-						{
-							$link .= '/'.Tools::link_rewrite($tmp2[$position][$cursorP-1]['name'].'-'.$tmp2[$position][$cursorP-1]['value']);
-							if (!isset($selectedFilters[$tmp2[$position][$cursorP-1]['type']]))
-								$selectedFilters[$tmp2[$position][$cursorP-1]['type']] = array();
-							if (!isset($tmp2[$position][$cursorP-1]['id_id_value']))
-								$tmp2[$position][$cursorP-1]['id_id_value'] = $tmp2[$position][$cursorP-1]['id_value'];
-							$selectedFilters[$tmp2[$position][$cursorP-1]['type']][$tmp2[$position][$cursorP-1]['id_id_value']] = $tmp2[$position][$cursorP-1]['id_value'];
-						}
-					}
-					
+						$selectedFilters = array();
+						$link = '/'.str_replace('-', '_', Tools::link_rewrite($param['name'])).'-'.str_replace('-', '_', Tools::link_rewrite($param['value']));
+						$selectedFilters[$param['type']] = array();
+						if (!isset($param['id_id_value']))
+							$param['id_id_value'] = $param['id_value'];
+						$selectedFilters[$param['type']][$param['id_id_value']] = $param['id_value'];
 					$urlKey = md5($link);
 					$idLayeredFriendlyUrl = Db::getInstance()->getValue('SELECT id_layered_friendly_url FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `id_lang` = '.$id_lang.' AND `url_key` = \''.$urlKey.'\'');
 					if ($idLayeredFriendlyUrl == false)
@@ -373,9 +289,8 @@ class BlockLayered extends Module
 						$idLayeredFriendlyUrl = Db::getInstance()->Insert_ID();
 					}
 				}
-				$cursor['possibility'] = 0;
 			}
-			$cursor['tmp1'] = 0;
+		}
 		}
 		if ($ajax)
 			return '{"result": 1}';
@@ -545,7 +460,7 @@ class BlockLayered extends Module
 			WHERE `active` = 1 AND psi.id_product IS NULL');
 		
 		$maxExecutionTime = ini_get('max_execution_time') * 0.9; // 90% of safety margin
-		if ($maxExecutionTime > 5)
+		if ($maxExecutionTime > 5 || $maxExecutionTime <= 0)
 			$maxExecutionTime = 5;
 		
 		$startTime = microtime(true);
@@ -949,9 +864,6 @@ class BlockLayered extends Module
 			'.$this->l('A nightly rebuild is recommended.').'
 			<script type="text/javascript">
 				$(\'#url-indexer\').click(function() {
-					if (this.cursor == undefined)
-						this.cursor = {};
-						
 					if (this.legend == undefined)
 							this.legend = $(this).html();
 					
@@ -980,19 +892,13 @@ class BlockLayered extends Module
 						success: function(res)
 						{
 							this.running = false;
-							if (res.result)
-							{
+							this.restartAllowed = true;
 								this.cursor = 0;
 								$(\'#indexing-warning\').hide();
 								$(this).html(this.legend);
 								$(\'#ajax-message-ok span\').html(\''.$this->l('Url indexation finished').'\');
 								$(\'#ajax-message-ok\').show();
 								return;
-							}
-							this.cursor = res.cursor;
-							var cursorObj = JSON.parse(this.cursor);
-							$(this).html(this.legend+\' (in progress, \'+(cursorObj.total / cursorObj.nb_posibilities * 100).toFixed(2) +\'%)\');
-							this.click();
 							},
 						error: function(res)
 						{
@@ -1052,7 +958,7 @@ class BlockLayered extends Module
 								}
 								this.cursor = parseInt(res.cursor);
 								$(this).html(this.legend+\' (in progress, \'+res.count+\' products to index)\');
-								this.click();
+								$(this).click();
 							},
 							error: function(res)
 							{
@@ -1396,11 +1302,41 @@ class BlockLayered extends Module
 		if ($id_parent == 1)
 			return;
 
-		if (strpos($_SERVER['SCRIPT_FILENAME'], 'blocklayered-ajax.php') === false)
+		if (strpos($_SERVER['SCRIPT_FILENAME'], 'blocklayered-ajax.php') === false || Tools::getValue('selected_filters') !== false)
 		{
-			$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5(preg_replace('/\/(\w*)\/([0-9]+[-\w]*)/', '',$_SERVER['REQUEST_URI'])).'\'');
-			if($data !== false)
-				return unserialize($data);
+			if(Tools::getValue('selected_filters'))
+				$url = Tools::getValue('selected_filters');
+			else
+				$url = preg_replace('/\/(\w*)\/([0-9]+[-\w]*)/', '', $_SERVER['REQUEST_URI']);
+			
+			$urlAttributes = explode('/',$url);
+			array_shift($urlAttributes);
+			$selectedFilters = array('category' => array());
+			if(!empty($urlAttributes))
+			{
+				foreach($urlAttributes as $urlAttribute)
+				{
+					$urlParameters = explode('-', $urlAttribute);
+					$attributeName  = array_shift($urlParameters);
+					foreach($urlParameters as $urlParameter)
+					{
+						$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attributeName.'-'.$urlParameter).'\'');
+						if($data)
+							foreach(unserialize($data) as $keyParams => $params)
+							{
+								if(!isset($selectedFilters[$keyParams]))
+									$selectedFilters[$keyParams] = array();
+								foreach($params as $keyParam => $param)
+								{
+									if(!isset($selectedFilters[$keyParams][$keyParam]))
+										$selectedFilters[$keyParams][$keyParam] = array();
+									$selectedFilters[$keyParams][$keyParam] = $param;
+		}
+							}
+					}
+				}
+				return $selectedFilters;
+			}
 		}
 
 		/* Analyze all the filters selected by the user and store them into a tab */
@@ -1936,13 +1872,15 @@ class BlockLayered extends Module
 		}
 				
 		//generate SEO link
+		$paramSelected = '';
 		$optionCheckedArray = array();
 		$paramGroupSelectedArray = array();
 		$titleValues = array();
 		$link = new Link();
 		
-		$linkBase = $link->getCategoryLink($id_parent,Category::getLinkRewrite($id_parent, (int)($cookie->id_lang)), (int)($cookie->id_lang));
+		$linkBase = $link->getCategoryLink($id_parent,Category::getLinkRewrite($id_parent, (int)($cookie->id_lang),(int)($cookie->id_lang) ), (int)($cookie->id_lang));
 		$filterBlockList = array();
+		//get filters checked by group
 		foreach ($filterBlocks as $typeFilter)
 		{
 			$paramGroupSelected = '';
@@ -1952,6 +1890,7 @@ class BlockLayered extends Module
 				{
 					$paramGroupSelected .= '-'.Tools::link_rewrite($value['name']);
 					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][]  = Tools::link_rewrite($value['name']);
+				
 					if (!isset($titleValues[$typeFilter['name']]))
 						$titleValues[$typeFilter['name']] = array();
 					$titleValues[$typeFilter['name']][] = $value['name'];
@@ -1960,35 +1899,37 @@ class BlockLayered extends Module
 					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][] = array();
 			}
 			if(!empty($paramGroupSelected))
+			{
+				$paramSelected .= '/'.Tools::link_rewrite($typeFilter['name']).$paramGroupSelected;
 				$optionCheckedArray[Tools::link_rewrite($typeFilter['name'])] = $paramGroupSelected;
-			
-			$filterBlockList[] = Tools::link_rewrite($typeFilter['name']);
 			}
+		}
 		
 		$blackList = array('weight','price');
-		
 		foreach ($filterBlocks as &$typeFilter)
-			if (count($typeFilter) > 0 AND !in_array($typeFilter['type'], $blackList)){
+		{	
+			if(count($typeFilter) > 0 AND !in_array($typeFilter['type'], $blackList))
+			{	
 				foreach ($typeFilter['values'] as $key => $values)
 				{
 					$optionCheckedCloneArray = $optionCheckedArray;
 					//if not filters checked, add parameter
 					if(!in_array(Tools::link_rewrite($values['name']), $paramGroupSelectedArray[Tools::link_rewrite($typeFilter['name'])]))
 					{
-						//filter checked
-							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] =  '-'.Tools::link_rewrite($values['name']);
+						//update parameter filter checked before
+						if(array_key_exists(Tools::link_rewrite($typeFilter['name']), $optionCheckedArray))
+							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] = $optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])].'-'.str_replace('-', '_', Tools::link_rewrite($values['name']));
+						else 
+							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] =  '-'.str_replace('-', '_', Tools::link_rewrite($values['name']));
 					}
-					$parametersLink = '';
-					//create order order by filter position
-					foreach ($filterBlockList as $keyFilter => $valueFilter)
-					{
-						if(!empty($optionCheckedCloneArray[$valueFilter]))
-							$parametersLink .= '/'.$valueFilter.$optionCheckedCloneArray[$valueFilter];
-					}
+					$parameters = '';
+					foreach ($optionCheckedCloneArray as $keyGroup => $valueGroup)
+						$parameters .= '/'.str_replace('-', '_',$keyGroup).$valueGroup;
 					//write link
-					$typeFilter['values'][$key]['link'] =  $linkBase.$parametersLink;
+					$typeFilter['values'][$key]['link'] =  $linkBase.$parameters;
 				}
 			}
+		}
 		
 		$nFilters = 0;
 		if(isset($selectedFilters['price']))

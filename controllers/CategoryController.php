@@ -171,6 +171,7 @@ class CategoryControllerCore extends FrontController
 		Module::hookExec('productListAssign', array('nbProducts' => &$this->nbProducts, 'catProducts' => &$this->cat_products, 'hookExecuted' => &$hookExecuted));
 		if (!$hookExecuted)
 		{
+			self::$smarty->assign('categoryNameComplement', '');
 			$this->nbProducts = $this->category->getProducts(NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
 			$this->pagination((int)$this->nbProducts);
 			$this->cat_products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
