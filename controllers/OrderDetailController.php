@@ -167,7 +167,7 @@ class OrderDetailControllerCore extends FrontController
 					'messages' => CustomerMessage::getMessagesByOrderId((int)($order->id)),
 					'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
 					'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
-			'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
+					'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
 					'use_tax' => Configuration::get('PS_TAX'),
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 					'customizedDatas' => $customizedDatas));
