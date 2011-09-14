@@ -73,7 +73,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ('PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW());
 
 ALTER TABLE `PREFIX_product` ADD `available_date` DATETIME NOT NULL AFTER `available_for_order`;
- 
+
 ALTER TABLE `PREFIX_product_attribute` ADD `available_date` DATETIME NOT NULL;
 
 /* Index was only used by deprecated function Image::positionImage() */
@@ -84,7 +84,7 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_FORCE_SMARTY_2';
 CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
 `id_order_detail` INT NOT NULL ,
 `id_tax` INT NOT NULL
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 ALTER TABLE `PREFIX_tax` ADD `deleted` INT NOT NULL AFTER `active`;
 
@@ -100,3 +100,4 @@ CREATE TABLE `PREFIX_customer_message_sync_imap` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 ALTER TABLE  `PREFIX_customer_message` ADD  `private` TINYINT NOT NULL DEFAULT  '0' AFTER  `user_agent`;
+
