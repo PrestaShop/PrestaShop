@@ -27,25 +27,25 @@
 
 class TaxRuleCore extends ObjectModel
 {
-    public $id_tax_rules_group;
-    public $id_country;
-    public $id_state;
+	 public $id_tax_rules_group;
+	 public $id_country;
+	 public $id_state;
 	 public $zipcode_from;
 	 public $zipcode_to;
-    public $id_tax;
+	 public $id_tax;
 	 public $behavior;
 	 public $description;
 
- 	protected 	$fieldsRequired = array('id_tax_rules_group', 'id_country', 'id_tax');
- 	protected 	$fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId',
- 												   'id_country' => 'isUnsignedId',
- 												   'id_state' => 'isUnsignedId',
- 												   'zipcode_from' => 'isUnsignedId', // TODO: char
- 												   'zipcode_to' => 'isUnsignedId',	 // TODO: char
- 												   'id_tax' => 'isUnsignedId',
- 												   'behavior' => 'isUnsignedInt',
- 												   'description' => 'isUnsignedInt'); // TODO:char
-
+	 protected 	$fieldsRequired = array('id_tax_rules_group', 'id_country', 'id_tax');
+	 protected 	$fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId',
+	 											   'id_country' => 'isUnsignedId',
+	 											   'id_state' => 'isUnsignedId',
+	 											   'zipcode_from' => 'isUnsignedId', // TODO: char
+	 											   'zipcode_to' => 'isUnsignedId',	 // TODO: char
+	 											   'id_tax' => 'isUnsignedId',
+	 											   'behavior' => 'isUnsignedInt',
+	 											   'description' => 'isUnsignedInt'); // TODO:char
+	
 	protected 	$table = 'tax_rule';
 	protected 	$identifier = 'id_tax_rule';
 
@@ -96,8 +96,6 @@ class TaxRuleCore extends ObjectModel
 
 	public static function getTaxRulesByGroupId($id_lang, $id_group)
 	{
-
-
 		return Db::getInstance()->ExecuteS('
 		SELECT g.`id_tax_rule`,
 				 c.`name` AS country_name,
@@ -110,7 +108,8 @@ class TaxRuleCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND id_lang = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
 		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
-		WHERE `id_tax_rules_group` = '.(int)$id_group
+		WHERE `id_tax_rules_group` = '.(int)$id_group.'
+		ORDER BY `country_name` ASC, `state_name` ASC, `zipcode_from` ASC, `zipcode_to` ASC'
 		);
 	}
 
@@ -174,6 +173,15 @@ class TaxRuleCore extends ObjectModel
 		}
 
 		return array($from, $to);
+	}
+	
+	public static function swapTaxId($old_id, $new_id)
+	{
+		return Db::getInstance()->Execute('
+		UPDATE `'._DB_PREFIX_.'tax_rule`
+		SET `id_tax` = '.(int)$new_id.'
+		WHERE `id_tax` = '.(int)$old_id
+		);	
 	}
 }
 

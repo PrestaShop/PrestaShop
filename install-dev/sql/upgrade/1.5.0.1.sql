@@ -64,7 +64,7 @@ ALTER TABLE `PREFIX_employee`
 	ADD `id_last_order` tinyint(1) unsigned NOT NULL default '0',
 	ADD `id_last_message` tinyint(1) unsigned NOT NULL default '0',
 	ADD `id_last_customer` tinyint(1) unsigned NOT NULL default '0';
-	  
+
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_SHOW_NEW_ORDERS', '1', NOW(), NOW()),
 ('PS_SHOW_NEW_CUSTOMERS', '1', NOW(), NOW()),
@@ -78,3 +78,17 @@ ALTER TABLE `PREFIX_product_attribute` ADD `available_date` DATETIME NOT NULL;
 
 /* Index was only used by deprecated function Image::positionImage() */
 ALTER TABLE `PREFIX_image` DROP INDEX `product_position`;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
+`id_order_detail` INT NOT NULL ,
+`id_tax` INT NOT NULL
+);
+
+ALTER TABLE `PREFIX_tax` ADD `deleted` INT NOT NULL AFTER `active`;
+
+/* PHP:update_order_detail_taxes(); */;
+
+ALTER TABLE `PREFIX_order_detail`
+  DROP `tax_name`,
+  DROP `tax_rate`;
+

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,13 +29,13 @@ class OrderDetailCore extends ObjectModel
 {
 	/** @var integer */
 	public $id_order_detail;
-	
+
 	/** @var integer */
 	public $id_order;
-	
+
 	/** @var integer */
 	public $product_id;
-	
+
 	/** @var integer */
 	public $product_attribute_id;
 
@@ -47,10 +47,10 @@ class OrderDetailCore extends ObjectModel
 
 	/** @var integer */
 	public $product_quantity_in_stock;
-	
+
 	/** @var integer */
 	public $product_quantity_return;
-	
+
 	/** @var integer */
 	public $product_quantity_refunded;
 
@@ -59,55 +59,55 @@ class OrderDetailCore extends ObjectModel
 
 	/** @var float */
 	public $product_price;
-	
+
 	/** @var float */
 	public $reduction_percent;
-	
+
 	/** @var float */
 	public $reduction_amount;
-	
+
 	/** @var float */
 	public $group_reduction;
-	
+
 	/** @var float */
 	public $product_quantity_discount;
-	
+
 	/** @var string */
 	public $product_ean13;
-	
+
 	/** @var string */
 	public $product_upc;
-	
+
 	/** @var string */
 	public $product_reference;
-	
+
 	/** @var string */
 	public $product_supplier_reference;
-	
+
 	/** @var float */
 	public $product_weight;
-	
+
 	/** @var string */
 	public $tax_name;
 
 	/** @var float */
 	public $tax_rate;
-	
+
 	/** @var float */
 	public $ecotax;
 
 	/** @var float */
 	public $ecotax_tax_rate;
-	
+
 	/** @var integer */
 	public $discount_quantity_applied;
 
 	/** @var string */
 	public $download_hash;
-	
+
 	/** @var integer */
 	public $download_nb;
-	
+
 	/** @var date */
 	public $download_deadline;
 
@@ -141,10 +141,10 @@ class OrderDetailCore extends ObjectModel
 	'ecotax_tax_rate' => 'isFloat',
 	'download_nb' => 'isInt',
 	);
-	
+
 	protected 	$table = 'order_detail';
 	protected 	$identifier = 'id_order_detail';
-	
+
 	protected	$webserviceParameters = array(
 	'fields' => array (
 		'id_order' => array('xlink_resource' => 'orders'),
@@ -157,8 +157,8 @@ class OrderDetailCore extends ObjectModel
 		'download_deadline' => array()
 		)
 	);
-	
-	
+
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -189,9 +189,9 @@ class OrderDetailCore extends ObjectModel
 		$fields['download_hash'] = pSQL($this->download_hash);
 		$fields['download_nb'] = (int)($this->download_nb);
 		$fields['download_deadline'] = pSQL($this->download_deadline);
-		
+
 		return $fields;
-	}	
+	}
 
 	public static function getDownloadFromHash($hash)
 	{
@@ -213,6 +213,61 @@ class OrderDetailCore extends ObjectModel
 		return Db::getInstance()->Execute($sql);
 	}
 
-}
+	/**
+	 * Returns the tax calculator associated to this order detail.
+	 * @return TaxCalculator
+	 */
+	public function getTaxCalculator()
+	{
+		return OrderDetail::getTaxCalculatorStatic($this->id);
+	}
 
+	/**
+	 * Return the tax calculator associated to this order_detail
+	 * @param int $id_order_detail
+	 * @return TaxCalculator
+	 */
+	public static function getTaxCalculatorStatic($id_order_detail)
+	{
+		$sql = 'SELECT t.*, d.`tax_computation_method`
+				FROM `'._DB_PREFIX_.'order_detail_tax` t
+				LEFT JOIN `'._DB_PREFIX_.'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
+				WHERE d.`id_order_detail` = '.(int)$id_order_detail;
+
+		$computation_method = 1;
+		$taxes = array();
+		if ($results = Db::getInstance()->ExecuteS($sql))
+		{
+			
+			foreach ($results AS $result)
+				$taxes[] = new Tax((int)$result['id_tax']);
+
+			$computation_method = $result['tax_computation_method'];
+		}
+
+		return new TaxCalculator($taxes, $computation_method);
+	}
+
+	/**
+	 * Save the tax calculator
+	 * @param int $id_order_detail
+	 * @param TaxCalculator $tax_calculator
+	 * @return boolean
+	 */
+	public static function saveTaxCalculatorStatic($id_order_detail, TaxCalculator $tax_calculator)
+	{
+		if (sizeof($tax_calculator->taxes) == 0)
+			return true;
+
+		$values = '';
+		foreach ($tax_calculator->taxes AS $tax)
+			$values .= '('.(int)$id_order_detail.','.(float)$tax->id.'),';
+
+		$values = rtrim($values, ',');
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax)
+				VALUES '.$values;
+
+		return Db::getInstance()->Execute($sql);
+	}
+}
 

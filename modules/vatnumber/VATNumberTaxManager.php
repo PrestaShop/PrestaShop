@@ -37,7 +37,10 @@ class VATNumberTaxManager implements TaxManagerInterface
 	public function getTaxCalculator()
 	{
 		// No tax
-		return new TaxCalculator(array(0));
+		$tax = new Tax();
+		$tax->rate = 0;
+
+		return new TaxCalculator(array($tax));
 	}
 }
 
