@@ -180,7 +180,6 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (100, 'PS_ATTACHMENT_MAXIMUM_SIZE', '2', NOW(), NOW()),
 (101, 'PS_SMARTY_CACHE', '1', NOW(), NOW()),
 (102, 'PS_DIMENSION_UNIT', 'cm', NOW(), NOW()),
-(103, 'PS_FORCE_SMARTY_2', '0', NOW(), NOW()),
 (104, 'PS_GUEST_CHECKOUT_ENABLED', '0', NOW(), NOW()),
 (105, 'PS_DISPLAY_SUPPLIERS', '1', NOW(), NOW()),
 (106, 'PS_CATALOG_MODE', '0', NOW(), NOW()),

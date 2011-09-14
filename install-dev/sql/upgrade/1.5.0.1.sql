@@ -79,6 +79,8 @@ ALTER TABLE `PREFIX_product_attribute` ADD `available_date` DATETIME NOT NULL;
 /* Index was only used by deprecated function Image::positionImage() */
 ALTER TABLE `PREFIX_image` DROP INDEX `product_position`;
 
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_FORCE_SMARTY_2';
+
 CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
 `id_order_detail` INT NOT NULL ,
 `id_tax` INT NOT NULL

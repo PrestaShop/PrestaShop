@@ -1871,19 +1871,6 @@ FileETag INode MTime Size
 
         return $version;
 	}
-
-	/**
-     * @desc selection of Smarty depending on the version of php
-     *
-     */
-    public static function selectionVersionSmarty()
-    {
-        //Smarty 3 requirements PHP 5.2 +
-        if (strnatcmp(self::checkPhpVersion(),'5.2.0') >= 0)
-            Configuration::updateValue('PS_FORCE_SMARTY_2', 0);
-        else
-            Configuration::updateValue('PS_FORCE_SMARTY_2',1);
-    }
 	
     /**
      * @desc try to open a zip file in order to check if it's valid
@@ -2052,10 +2039,7 @@ FileETag INode MTime Size
 	 */
 	 public static function clearCache($smarty)
 	 {
-		if (!Configuration::get('PS_FORCE_SMARTY_2'))
-			$smarty->clearAllCache();
-		else
-			$smarty->clear_all_cache();
+		$smarty->clearAllCache();
 	}
 	
 	/**
