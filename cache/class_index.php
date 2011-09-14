@@ -92,6 +92,8 @@
   'FeatureValue' => 'override/classes/FeatureValue.php',
   'FileLoggerCore' => 'classes/FileLogger.php',
   'FileLogger' => 'override/classes/FileLogger.php',
+  'FileUploaderCore' => 'classes/FileUploader.php',
+  'FileUploader' => '',
   'FrontControllerCore' => 'classes/FrontController.php',
   'FrontController' => 'override/classes/FrontController.php',
   'GroupCore' => 'classes/Group.php',
