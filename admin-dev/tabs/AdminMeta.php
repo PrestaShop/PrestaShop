@@ -75,7 +75,7 @@ class AdminMeta extends AdminTab
 	public function addFieldRoute($routeID, $title)
 	{
 		$keywords = array();
-		foreach (Dispatcher::getInstance()->defaultRoutes[$routeID]['keywords'] as $keyword => $data)
+		foreach (Dispatcher::getInstance()->default_routes[$routeID]['keywords'] as $keyword => $data)
 			$keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
 
 		$this->optionsList['routes']['fields']['PS_ROUTE_'.$routeID] = array(
@@ -84,7 +84,7 @@ class AdminMeta extends AdminTab
 			'validation' => 'isString',
 			'type' => 'text',
 			'size' => 70,
-			'defaultValue' => Dispatcher::getInstance()->defaultRoutes[$routeID]['rule'],
+			'defaultValue' => Dispatcher::getInstance()->default_routes[$routeID]['rule'],
 		);
 	}
 
@@ -226,12 +226,12 @@ class AdminMeta extends AdminTab
 	 */
 	public function checkAndUpdateRoute($routeID)
 	{
-		$defaultRoutes = Dispatcher::getInstance()->defaultRoutes;
-		if (!isset($defaultRoutes[$routeID]))
+		$default_routes = Dispatcher::getInstance()->default_routes;
+		if (!isset($default_routes[$routeID]))
 			return ;
 		
 		$rule = Tools::getValue('PS_ROUTE_'.$routeID);
-		if (!$rule || $rule == $defaultRoutes[$routeID]['rule'])
+		if (!$rule || $rule == $default_routes[$routeID]['rule'])
 		{
 			Configuration::updateValue('PS_ROUTE_'.$routeID, '');
 			return ;
