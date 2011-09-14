@@ -65,6 +65,8 @@ if(!class_exists('Tools',false))
 	eval('class Tools extends Tools14{}');
 class AdminSelfUpgrade extends AdminSelfTab
 {
+	public $svn_link = 'http://svn.prestashop.com/trunk';
+
 	public $ajax = false;
 	public $nextResponseType = 'json'; // json, xml
 	public $next = 'N/A';
@@ -140,7 +142,10 @@ class AdminSelfUpgrade extends AdminSelfTab
  */
 	public static $loopRemoveSamples = 1000;
 
-//	public static $skipAction = array('unzip'=>'listSampleFiles');
+	/* usage :  key = the step you want to ski
+  * value = the next step you want instead
+ 	*	example : public static $skipAction = array('download'=>'upgradeFiles');
+	*/
 	public static $skipAction;
 	public $useSvn;
 
@@ -312,7 +317,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		// checkPSVersion will be not 
 			$this->upgrader = new Upgrader();
 		$this->upgrader->checkPSVersion();
-			$this->currentParams['install_version'] = $this->upgrader->version_num;
+			$this->nextParams['install_version'] = $this->upgrader->version_num;
 
 			if ($this->upgrader->autoupgrade_module)
 			$this->standalone = true;
@@ -668,23 +673,8 @@ $this->standalone = true;
 		file_put_contents($this->nextParams['filesToUpgrade'],serialize($filesToUpgrade));
 	}
 
-	/**
-	 * _modelDoUpgrade prepare the call to doUpgrade.php file (like model.php)
-	 *
-	 * @return void
-	 */
-	public function _modelDoUpgrade()
+	public function _modelDo($method)
 	{
-		// a. set logger
-		// it will be used later
-		global $logger;
-		$logger = new FileLogger();
-		if (function_exists('date_default_timezone_set'))
-			date_default_timezone_set('Europe/Paris');
-		// use autoupgrade as log dir
-		$logger->setFilename($this->latestRootDir.'/'.date('Ymd').'_autoupgrade.log');
-
-		// init env.
 		@set_time_limit(0);
 		@ini_set('max_execution_time', '0');
 		// setting the memory limit to 128M only if current is lower
@@ -695,78 +685,124 @@ $this->standalone = true;
 		){
 			@ini_set('memory_limit','128M');
 		}
+	require_once($this->prodRootDir.'/config/autoload.php');
 		
 		/* Redefine REQUEST_URI if empty (on some webservers...) */
 		if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '')
 			$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
-		
 		if ($tmp = strpos($_SERVER['REQUEST_URI'], '?'))
 			$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
-			
 		$_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
-		///////////////////////
-		// Copy from model.php
-		///////////////////////
-		if (!is_object($this->upgrader))
-			$this->upgrader = new Upgrader();
-
-		$upgrader = $this->upgrader;
-
-		$upgrader->checkPSVersion();
-
 		define('INSTALL_VERSION', $this->currentParams['install_version']);
-		// now the install dir to use is in a subdirectory of the admin dir
 		define('INSTALL_PATH', realpath($this->latestRootDir.DIRECTORY_SEPARATOR.'install'));
 
-		define('PS_INSTALLATION_IN_PROGRESS', true);
-		// Note : we don't need ToolsInstall.php
-		// include_once(INSTALL_PATH.'/classes/ToolsInstall.php');
 
+		define('PS_INSTALLATION_IN_PROGRESS', true);
+	require_once(INSTALL_PATH.'/classes/ToolsInstall.php');
 		define('SETTINGS_FILE', $this->prodRootDir . '/config/settings.inc.php');
 		define('DEFINES_FILE',	$this->prodRootDir .'/config/defines.inc.php');
 		define('INSTALLER__PS_BASE_URI', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/')+1))));
-
-		// Note : INSTALLER__PS_BASE_URI_ABSOLUTE is not used for upgrade
-		// define('INSTALLER__PS_BASE_URI_ABSOLUTE', 'http://'.ToolsInstall::getHttpHost(false, true).INSTALLER__PS_BASE_URI);
+	define('INSTALLER__PS_BASE_URI_ABSOLUTE', 'http://'.ToolsInstall::getHttpHost(false, true).INSTALLER__PS_BASE_URI);
 
 		// XML Header
 		header('Content-Type: text/xml');
-		require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'doUpgrade.php');
-		
-		//////////////////////////////
-		// End of copy from model.php
-		//////////////////////////////
-		
-	}
 
+	// Switching method
+		if (in_array($method, array('doUpgrade', 'createDB', 'checkShopInfos')))
+		{
+			global $logger;
+			$logger = new FileLogger();
+			$logger->setFilename($this->prodRootDir.DIRECTORY_SEPARATOR.'log'.DIRECTORY_SEPARATOR.@date('Ymd').'_installation.log');
+		}
+		switch ($method)
+		{
+			case 'checkConfig' :
+				require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'checkConfig.php');
+				die();
+			break;
+
+			case 'checkDB' :
+				require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'checkDB.php');
+			break;
+
+			case 'createDB' :
+				require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'createDB.php');
+			break;
+
+			case 'checkMail' :
+				require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'checkMail.php');
+			break;
+
+			case 'checkShopInfos' :
+				require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'checkShopInfos.php');
+			break;
+
+			case 'doUpgrade' :
+		require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'doUpgrade.php');
+			break;
+		
+			case 'getVersionFromDb' :
+				require_once(INSTALL_PATH.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'getVersionFromDb.php');
+			break;
+	}
+	}
 	public function ajaxProcessUpgradeDb(){
+
 		// @TODO : 1/2/3 have to be done at the beginning !!!!!!!!!!!!!!!!!!!!!!
+		$this->nextParams = $this->currentParams;
 
 		// use something like actual in install-dev
 		// Notice : xml used here ...
-
+		if (!isset($this->currentParams['upgradeDbStep']))
+		{
+			$this->nextParams['upgradeDbStep'] = 1;
+			$this->next = 'upgradeDb';
+			$this->nextDesc = 'upgrading database';
+			$this->nextResponseType = 'xml';
+		}
+		else
+			switch ($this->currentParams['upgradeDbStep'])
+			{
+				default:
+					$this->next = 'upgradeComplete';
+					$this->nextResponseType = 'json';
+					return true;
+					// $this->_model('checkConfig');
+				break;
 		// 1) confirm version is correct(DB)
 		// install/model.php?method=getVersionFromDb&language=0
-		// later
-
+				case '1':
+				$this->_modelDo('getVersionFromDb');
+				break;
 		// 2) confirm config is correct (r/w rights)
 		//	install/model.php?method=checkConfig&firsttime=0
-		// later
-		// 3) save current activated modules in nextParams, or don't desactivate them ?
-		// @TODO
-		// 4) upgrade
-		//	install/model.php?_=1309193641470&method=doUpgrade&customModule=desactivate
-		if (!empty($this->currentParams['desactivateCustomModule']))
-			$_GET['customModule'] = 'desactivate';
-		if (!$this->_modelDoUpgrade())
+				case '2':
+				if(!$this->_modelDo('checkConfig'))
 		{
 			$this->next = 'error';
-			$this->nextDesc = $this->l('error during upgrade Db');
+					$this->nextDesc = $this->l('error when checking configuration');
 		}
+				break;
+
+				case '3':
+				if (!$this->_modelDo('doUpgrade'))
+				{
+					$this->next = 'error';
+					$this->nextDesc = $this->l('error during upgrade Db. You may need to restore your database');
+				}
+				break;
+
+				case '4':
+					$this->next = 'upgradeComplete';
+					$this->nextResponseType = 'json';
+					$this->nextDesc = $this->l('Way to go ! Upgrade complete.');
+					break;
+			}
 
 		// 5) compare activated modules and reactivate them
 		// @TODO
+			return true;
 
 	}
 
@@ -1226,7 +1262,6 @@ $this->standalone = true;
 	{
 		$this->nextParams = $this->currentParams;
 		if ($this->useSvn){
-			$svnLink = 'http://svn.prestashop.com/trunk';
 			$dest = $this->autoupgradePath . DIRECTORY_SEPARATOR . $this->svnDir;
 			
 			$svnStatus = svn_status($dest);
@@ -1260,10 +1295,10 @@ $this->standalone = true;
 							return false;
 						}
 
-					if (svn_checkout($svnLink, $dest))
+					if (svn_checkout($this->svn_link, $dest))
 					{
 						$this->next = 'svnExport';
-						$this->nextDesc = sprintf($this->l('SVN Checkout done from %s . now exporting it into latest...'),$svnLink);
+						$this->nextDesc = sprintf($this->l('SVN Checkout done from %s . now exporting it into latest...'),$this->svn_link);
 						return true;
 					}
 					else
@@ -1661,8 +1696,6 @@ echo '</script>';
 		// update['link'] = download link
 		// @TODO
 
-		if ($this->isUpgradeAllowed())
-		{
 			$this->createCustomToken();
 			if ($this->useSvn)
 				echo '<div class="error"><h1>'.$this->l('Unstable upgrade').'</h1>
@@ -1683,15 +1716,8 @@ echo '</script>';
 					</script>
 					<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/jquery-1.6.2.min.js"></script>';
 			}
+			echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/jquery.xml2json.js"></script>';
 			echo '<script type="text/javascript">'.$this->_getJsInit().'</script>';
-		}
-		else
-		{
-			echo '<fieldset>
-			<legend>'.$this->l('Update').'</legend>';
-			echo '<p>'.$this->l('You currently don\'t need to use this feature.').'</p>';
-			echo '</fieldset>';
-		}
 
 	}
 
@@ -1771,24 +1797,67 @@ $(document).ready(function(){
 
 /**
  * parseXMLResult is used to handle the return value of the doUpgrade method
- *
+ * @xmlRet xml return value
+ * @var previousParams contains the precedent post values (to conserve post datas during upgrade db process)
  */
-function parseXMLResult(xmlRet)
-{
-	ret = $(xmlRet);
-	ret = ret.find("action")[0];
-	if (ret.getAttribute("result") == "ok")
-	{
-		$("#dbResultCheck")
-			.addClass("ok")
-			.removeClass("fail")
-			.html("<p>'.$this->l('upgrade complete. Please check your front-office (try to make an order, check theme)').'</p>")
-			.show("slow");
-		$("#dbCreateResultCheck")
-			.hide("slow");
 
-		// as xml is only after upgradeDb, the next step is always upgradeComplete
-		ret = {next:"upgradeComplete",nextParams:{typeResult:"json"},status:"ok"};
+function checkConfig(res)
+{
+	testRequiredList = $(res.testList[0].test);
+	configIsOk = true;
+
+	testRequiredList.each(function()
+	{
+		result = $(this).attr("result");
+		if (result == "fail") configIsOk = false;
+	});
+
+	if (!configIsOk)
+	{
+		alert("Configuration install problem");
+		return "fail";
+	}
+	else
+		return "ok";
+}
+
+function handleXMLResult(xmlRet, previousParams)
+{
+	// use xml2json and put the result in the global var
+	// this will be used in after** javascript functions
+	resGlobal = $.xml2json(xmlRet);
+
+	switch(previousParams.upgradeDbStep) 
+	{
+		case 0: // getVersionFromDb
+		result = "ok";
+		break;
+		case 1: // getVersionFromDb
+		result = resGlobal.result;
+		break;
+		case 2: // checkConfig
+		result = checkConfig(resGlobal);
+		break;
+		case 3: // doUpgrade:
+		result = resGlobal.result;
+		break;
+		case 4: // upgradeComplete
+		result = resGlobal.result;
+		break;
+	}
+
+	if (result == "ok")
+	{
+		nextParams = previousParams;
+			nextParams.upgradeDbStep = previousParams.upgradeDbStep+1;
+			if(nextParams.upgradeDbStep >= 4)
+			{
+				resGlobal.next = "upgradeComplete";
+				nextParams.typeResult = "json";
+			}
+	else
+				resGlobal.next = "upgradeDb";
+			resGlobal = {next:resGlobal.next,nextParams:nextParams,status:"ok"};
 
 	}
 	else
@@ -1796,22 +1865,35 @@ function parseXMLResult(xmlRet)
 		$("#dbResultCheck")
 			.addClass("fail")
 			.removeClass("ok")
-			.html(txtError[parseInt(ret.getAttribute("error"))])
 			.show("slow");
 		$("#dbCreateResultCheck")
 			.hide("slow");
 		
 		// propose rollback if there is an error
-		if (confirm(txtError[parseInt(ret.getAttribute("error"))]+"\r\n\r\n'.$this->l('Do you want to rollback ?').'"))
-			ret = {next:"rollback",nextParams:{typeResult:"json"},status:"error"};
+		if (confirm("An error happen\r\n'.$this->l('Do you want to rollback ?').'"))
+			resGlobal = {next:"rollback",nextParams:{typeResult:"json"},status:"error"};
 	}
 
-	return ret
+	return resGlobal;
 };
 
+var resGlobal = {};
+function afterUpgradeDb()
+{
+	// console.info("inside afterUpgradeDb");
+	// console.log(resGlobal);
+
+}
 function afterUpgradeComplete()
 {
 	$("#pleaseWait").hide();
+	$("#dbResultCheck")
+		.addClass("ok")
+		.removeClass("fail")
+		.html("<p>'.$this->l('upgrade complete. Please check your front-office (try to make an order, check theme)').'</p>")
+		.show("slow");
+	$("#dbCreateResultCheck")
+		.hide("slow");
 	$("#infoStep").html("<h3>'.$this->l('Upgrade Complete ! ').'</h3>");
 }
 /**
@@ -1865,12 +1947,12 @@ function doAjaxRequest(action, nextParams){
 
 				if (nextParams.typeResult == "xml")
 				{
-					xmlRes = parseXMLResult(res);
-					res = {};
-					res.next = xmlRes.next;
+					res = handleXMLResult(res,nextParams);
+					// res.next = xmlRes;
 					// if xml, we keep the next params
-					nextParams = myNext;
-					res.status = xmlRes.status;
+					// nextParams = xmlRes;
+					// console.info(nextParams);
+					// res.status = xmlRes.status;
 				}
 				else
 				{
@@ -1905,7 +1987,6 @@ function doAjaxRequest(action, nextParams){
 					funcName = "after"+ucFirst(action);
 					if (typeof funcName == "string" &&
 						eval("typeof " + funcName) == "function") {
-
 						eval(funcName+"()");
 					}
 
@@ -1927,8 +2008,6 @@ function doAjaxRequest(action, nextParams){
 				}
 				else
 				{
-					//console.log(res);
-					//console.log(jqXHR);
 					updateInfoStep("[Server Error] Status message : " + textStatus);
 				}
 			}

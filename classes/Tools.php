@@ -665,9 +665,12 @@ class ToolsCore
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['description']);
-					$row['meta_title'] .= $row['name'] . (!empty($page_number) ? ' ('.$page_number.')' : '');
-					$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['meta_title']);
+					if (!empty($row['meta_title']))
+						$row['meta_title'] = $row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					else
+						$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					
+					return self::completeMetaTags($row, $row['name']);
 				}
 			}
 
@@ -764,11 +767,11 @@ class ToolsCore
 		if (!$context)
 			$context = Context::getContext();
 
-		if ($metaTags['meta_title'] == NULL)
+		if (empty($metaTags['meta_title']))
 			$metaTags['meta_title'] = $defaultValue.' - '.Configuration::get('PS_SHOP_NAME');
-		if ($metaTags['meta_description'] == NULL)
+		if (empty($metaTags['meta_description']))
 			$metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
-		if ($metaTags['meta_keywords'] == NULL)
+		if (empty($metaTags['meta_keywords']))
 			$metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
 		return $metaTags;
 	}

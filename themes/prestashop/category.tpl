@@ -33,6 +33,7 @@
 		<h1>
 			{strip}
 			{$category->name|escape:'htmlall':'UTF-8'}
+				{$categoryNameComplement|escape:'htmlall':'UTF-8'}
 				<span class="category-product-count">
 					{include file="$tpl_dir./category-count.tpl"}
 				</span>

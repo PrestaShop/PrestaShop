@@ -393,7 +393,7 @@ abstract class SelfModule
 			{
 				self::$classInModule[$currentClass] = substr(dirname($filePath), strlen($realpathModuleDir)+1);
 
-				$id_lang = (int)($cookie->id_lang);
+				$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)(Configuration::get('PS_LANG_DEFAULT')) : (int)($cookie->id_lang);
 				$file = _PS_MODULE_DIR_.self::$classInModule[$currentClass].'/'.Language::getIsoById($id_lang).'.php';
 				if (file_exists($file) AND include_once($file))
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
