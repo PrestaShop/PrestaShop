@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -33,14 +33,14 @@ class ThemeCore extends ObjectModel
  	protected $fieldsValidate = array('name' => 'isGenericName');
 	protected $table = 'theme';
 	protected $identifier = 'id_theme';
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
 		$fields['name'] = pSQL($this->name);
 		return $fields;
 	}
-	
+
 	public static function getThemes()
 	{
 		$sql = 'SELECT *

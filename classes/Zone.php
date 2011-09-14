@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,31 +28,31 @@
 class ZoneCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
-	
+	public $name;
+
 	/** @var boolean Zone status */
-	public 		$active = true;
-	public 		$eu_zone = false; /* Obsolete; to remove */
-	
- 	protected 	$fieldsRequired = array('name');
- 	protected 	$fieldsSize = array('name' => 64);
- 	protected 	$fieldsValidate = array('name' => 'isGenericName', 'active' => 'isBool');
-		
-	protected 	$table = 'zone';
-	protected 	$identifier = 'id_zone';
-	
-	protected	$webserviceParameters = array();
+	public $active = true;
+	public $eu_zone = false; /* Obsolete; to remove */
+
+ 	protected $fieldsRequired = array('name');
+ 	protected $fieldsSize = array('name' => 64);
+ 	protected $fieldsValidate = array('name' => 'isGenericName', 'active' => 'isBool');
+
+	protected $table = 'zone';
+	protected $identifier = 'id_zone';
+
+	protected $webserviceParameters = array();
 
 	public function getFields()
 	{
 		$this->validateFields();
-		
+
 		$fields['name'] = pSQL($this->name);
 		$fields['active'] = (int)$this->active;
-		
+
 		return $fields;
 	}
-	
+
 	/**
 	* Get all available geographical zones
 	*
@@ -79,27 +79,27 @@ class ZoneCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'zone`
 		WHERE `name` = \''.pSQL($name).'\'');
 	}
-	
+
 	/**
 	* Delete a zone
 	*
 	* @return boolean Deletion result
 	*/
 	public function delete()
-	{		
+	{
 		if (parent::delete())
 		{
 			/* Delete regarding delivery preferences */
 			$result = Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_zone WHERE id_zone = '.(int)$this->id);
 			$result &= Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'delivery WHERE id_zone = '.(int)$this->id);
-			
+
 			/* Update Country & state zone with 0 */
 			$result &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'country SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
 			$result &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'state SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
-			
+
 			return $result;
 		}
-		
+
 		return false;
 	}
 }
