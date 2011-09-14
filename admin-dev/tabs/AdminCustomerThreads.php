@@ -86,6 +86,22 @@ class AdminCustomerThreads extends AdminTab
 		);
 		$this->shopLinkType = 'shop';
 
+		$this->optionsList = array(
+			'general' => array(
+				'title' =>	$this->l('Customer service options'),
+				'fields' =>	array(
+					'PS_SAV_IMAP_URL' => array('title' => $this->l('Imap url'), 'desc' => $this->l('Url for imap server (mail.server.com)'), 'type' => 'text', 'size' => 40, 'visibility' => Shop::CONTEXT_ALL),
+					'PS_SAV_IMAP_PORT' => array('title' => $this->l('Imap port'), 'desc' => $this->l('Port to use to connect imap server'), 'type' => 'text', 'defaultValue' => 143, 'visibility' => Shop::CONTEXT_ALL),
+					'PS_SAV_IMAP_USER' => array('title' => $this->l('Imap user'), 'desc' => $this->l('User to use to connect imap server'), 'type' => 'text', 'size' => 40, 'visibility' => Shop::CONTEXT_ALL),
+					'PS_SAV_IMAP_PWD' => array('title' => $this->l('Imap password'), 'desc' => $this->l('Password to use to connect imap server'), 'type' => 'text', 'size' => 40, 'visibility' => Shop::CONTEXT_ALL),
+					'PS_SAV_IMAP_DELETE_MSG' => array('title' => $this->l('Delete messages'), 'desc' => $this->l('Deletes message after sync. If you do not active this option, the sync will be longer'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
+						'0' => array('value' => 0, 'name' => $this->l('No')), 
+						'1' => array('value' => 1, 'name' => $this->l('Yes')) 
+					), 'visibility' => Shop::CONTEXT_ALL)
+				),
+			),
+		);
+
 		parent::__construct();
 	}
 	
@@ -180,7 +196,7 @@ class AdminCustomerThreads extends AdminTab
 						'{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
 						'{link}' => Tools::url($this->context->link->getPageLink('contact', true), 'id_customer_thread='.(int)($ct->id).'&token='.$ct->token),
 					);
-					if (Mail::Send($ct->id_lang, 'reply_msg', Mail::l('An answer to your message is available'), 
+					if (Mail::Send($ct->id_lang, 'reply_msg', Mail::l('An answer to your message is available').' #ct'.$ct->id.'#tc'.$ct->token, 
 						$params, Tools::getValue('msg_email'), NULL, NULL, NULL, $fileAttachment, NULL, 
 						_PS_MAIL_DIR_, true))
 					{
@@ -207,7 +223,10 @@ class AdminCustomerThreads extends AdminTab
 		else
 		{
 			$this->getList($this->context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_upd' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
+			
 			$this->displayList();
+			$this->displayOptionsList();
+			$this->displaySyncOption();
 		}
 	}
 	
@@ -605,5 +624,67 @@ class AdminCustomerThreads extends AdminTab
 			</p>
 		</div>';
 	}
+
+	
+	private function displaySyncOption()
+	{
+		if (Configuration::get('PS_SAV_IMAP_URL')
+		AND Configuration::get('PS_SAV_IMAP_PORT')
+		AND Configuration::get('PS_SAV_IMAP_USER')
+		AND Configuration::get('PS_SAV_IMAP_PWD'))
+		echo '
+		<fieldset><legend>'.$this->l('Sync').'</legend>
+			<label>'.$this->l('Run sync').' :</label>
+			<div class="margin-form">
+				<button class="button" id="run_sync" onclick="run_sync();">'.$this->l('Run sync').'</button>
+				<p>'.$this->l('Click to synchronize mail automatically').'</p>
+				<div id="ajax_loader"></div>
+				<div class="error" style="display:none" id="ajax_error"></div>
+				<div class="conf" style="display:none" id="ajax_conf"></div>
+			</div>
+		</fieldset><br/>
+		<script type="text/javascript"> 
+			function run_sync () {
+				$(\'#ajax_error\').html(\'\');
+				$(\'#ajax_error\').hide();
+				$(\'#ajax_conf\').html(\'\');
+				$(\'#ajax_conf\').hide();
+
+				$(\'#ajax_loader\').html(\'<img src="'._PS_ADMIN_IMG_.'ajax-loader.gif">\');
+				$.ajax({
+					type: "POST",
+					url: "ajax.php",
+					data: "syncImapMail=1",
+					dataType : "json",
+					success: function(jsonData) {
+						jsonError = \'\';
+						if (jsonData.hasError)
+						{
+							for (i=0;i<jsonData.errors.length;i++)
+								jsonError = jsonError+\'<li>\'+jsonData.errors[i]+\'</li>\';
+							$(\'#ajax_error\').html(\'<ul>\'+jsonError+\'</ul>\');
+							$(\'#ajax_error\').fadeIn();
+						}
+						else
+						{
+							jsonError = \'<li>'.$this->l('Sync success').'</li>\';
+							for (i=0;i<jsonData.errors.length;i++)
+								jsonError = jsonError+\'<li>\'+jsonData.errors[i]+\'</li>\';
+							$(\'#ajax_conf\').html(\'<ul>\'+jsonError+\'</ul>\');
+							$(\'#ajax_conf\').fadeIn();
+						}
+							
+						$(\'#ajax_loader\').html(\'\');
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("TECHNICAL ERROR: unable to refresh the cart.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + \'Text status: \' + textStatus);
+					}
+				});
+				
+			};
+		</script>';
+	}
+	
+	
 }
 
