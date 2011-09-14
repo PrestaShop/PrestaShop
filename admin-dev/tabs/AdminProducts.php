@@ -2804,6 +2804,110 @@ class AdminProducts extends AdminTab
 		echo '<p class="clear"></p>
 					</td>
 					</tr>';
+				$images = Image::getImages($this->context->language->id, $obj->id);
+				if($images)
+				{
+					echo '
+					<tr>
+						<td class="col-left"></td>
+						<td style="padding-bottom:5px;">
+							<div style="display:block;width:620px;" class="hint clear">
+								'.$this->l('You want an image associated with the product in your description ?').'
+								<span class="addImageDescription" style="cursor:pointer">'.$this->l('Click here').'</span>.
+								<table id="createImageDescription" style="display:none;">
+									<tr>
+										<td colspan="2" height="10"></td>
+									</tr>
+									<tr>
+										<td class="col-left">'.$this->l('Select your image:').'</td>
+										<td style="padding-bottom:5px;">
+											<ul>';
+											foreach($images as $key => $image)
+											{
+												$checked = ($key == 0) ? 'checked' : '';
+												echo '
+													<li>
+														<input type="radio" name="smallImage" id="smallImage_'.$key.'" value="'.$image['id_image'].'" '.$checked.'>';
+												$urlImage = $this->context->link->getImageLink($obj->link_rewrite[$this->context->language->id], $obj->id.'-'.$image['id_image'], 'small');
+												echo '
+														<label for="smallImage_'.$key.'" class="t"><img src="'.$urlImage.'" alt="'.$image['legend'].'" /></label>
+													</li>';
+											}
+										echo '
+											</ul>
+											<p class="clear"></p>
+										</td>
+									</tr>';
+								echo '
+									<tr>
+										<td class="col-left">'.$this->l('Where to place ?').'</td>
+										<td style="padding-bottom:5px;">
+											<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
+											<label for="leftRight_1" class="t">'.$this->l('left').'</label>
+											<br />
+											<input type="radio" name="leftRight" id="leftRight_2" value="right">
+											<label for="leftRight_2" class="t">'.$this->l('right').'</label>
+											<p class="clear"></p>
+										</td>
+									</tr>';
+								echo '
+									<tr>
+										<td class="col-left">'.$this->l('Select the type of picture:').'</td>
+										<td style="padding-bottom:5px;">';
+											$imageTypes = ImageType::getImagesTypes('products');
+											foreach($imageTypes as $key => $type)
+											{
+												$checked = ($key == 0) ? 'checked' : '';
+												echo '
+													<input type="radio" name="imageTypes" id="imageTypes_'.$key.'" value="'.$type['name'].'" '.$checked.'>
+													<label for="imageTypes_'.$key.'" class="t">'.$type['name'].' <span>('.$type['width'].'px par '.$type['height'].'px)</span></label>
+													<br />';
+											}
+									echo '
+											<p class="clear"></p>
+										</td>
+									</tr>';
+								echo '
+									<tr>
+										<td class="col-left">'.$this->l('Tag of the image to insert:').'</td>
+										<td style="padding-bottom:5px;">
+											<input type="text" id="resultImage" name="resultImage" />
+											<p>'.$this->l('The tag is to copy / paste in the description.').'</p>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<p class="clear"></p>
+						</td>
+					</tr>';
+					echo '	
+					<script type="text/javascript">
+						$(function() {
+							changeTagImage();
+							$("#createImageDescription input").change(function(){
+								changeTagImage();
+							});
+							
+							var i = 0;
+							$(".addImageDescription").click(function(){
+								if(i == 0){
+									$("#createImageDescription").animate({opacity: 1, height: "toggle"}, 500);
+									i = 1;
+								}else{
+									$("#createImageDescription").animate({opacity: 0, height: "toggle"}, 500);
+									i = 0;
+								}
+							});
+						});
+						
+						function changeTagImage(){
+							var smallImage = $("input[name=smallImage]:checked").attr("value");
+							var leftRight = $("input[name=leftRight]:checked").attr("value");
+							var imageTypes = $("input[name=imageTypes]:checked").attr("value");
+							$("#resultImage").val("{img-"+smallImage+"-"+leftRight+"-"+imageTypes+"}");
+						}
+					</script>';
+				}
 				echo '
 					<tr>
 						<td class="col-left">'.$this->l('Tags:').'</td>

@@ -1701,3 +1701,11 @@ div.progressBarImage
 {
 	height: 100%;
 }
+
+#createImageDescription ul li{
+	list-style-type: none;
+	display: block;
+	width: 50px;
+	text-align: center;
+	float: left;
+}

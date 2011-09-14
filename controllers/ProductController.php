@@ -346,6 +346,8 @@ class ProductControllerCore extends FrontController
 				// Pack management
 				$this->context->smarty->assign('packItems', $this->product->cache_is_pack ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array());
 				$this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
+				
+				$this->product->description = $this->transformDescriptionWithImg($this->product->description);
 			}
 		}
 
@@ -371,6 +373,19 @@ class ProductControllerCore extends FrontController
 	{
 		parent::displayContent();
 		$this->context->smarty->display(_PS_THEME_DIR_.'product.tpl');
+	}
+	
+	public function transformDescriptionWithImg($desc)
+	{
+		$reg = '/{img-([0-9]+)-(left|right)-([a-z]+)}/';
+		while (preg_match($reg, $desc, $matches))
+		{
+			$linkImg = $this->context->link->getImageLink($this->product->link_rewrite, $this->product->id.'-'.$matches[1], $matches[3]);
+			$class = $matches[2] == 'left' ? 'class="imageFloatLeft"' : 'class="imageFloatRight"';
+			$htmlImg = '<img src="'.$linkImg.'" alt="" '.$class.'/>';
+			$desc = str_replace($matches[0], $htmlImg, $desc);
+		}
+		return $desc;
 	}
 
 	public function pictureUpload(Product $product, Cart $cart)
