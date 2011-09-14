@@ -29,9 +29,9 @@ abstract class AbstractLoggerCore
 {
 	public $level;
 	protected $level_value = array(0 => 'DEBUG',
-			   							  1 => 'INFO',
-											  2 => 'WARNING',
-											  3 => 'ERROR');
+									1 => 'INFO',
+									2 => 'WARNING',
+									3 => 'ERROR');
 
 	const DEBUG = 0;
 	const INFO = 1;
@@ -55,17 +55,15 @@ abstract class AbstractLoggerCore
 	abstract protected function logMessage($message, $level);
 
 	/**
-	* Check the level and log the message if needed
-	*
-	* @param string message
-	* @param level
-	*/
+	 * Check the level and log the message if needed
+	 *
+	 * @param string message
+	 * @param level
+	 */
 	public function log($message, $level = self::DEBUG)
 	{
 		if ($level >= $this->level)
-		{
 			$this->logMessage($message, $level);
-		}
 	}
 
 	/**
