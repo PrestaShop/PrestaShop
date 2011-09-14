@@ -168,7 +168,11 @@
 			{if !isset($product.deleted)}
 				{assign var='productId' value=$product.product_id}
 				{assign var='productAttributeId' value=$product.product_attribute_id}
-				{if isset($customizedDatas.$productId.$productAttributeId)}{assign var='productQuantity' value=$product.product_quantity-$product.customizationQuantityTotal}{else}{assign var='productQuantity' value=$product.product_quantity}{/if}
+				{if isset($customizedDatas.$productId.$productAttributeId)}
+					{assign var='productQuantity' value=$product.product_quantity-$product.customizationQuantityTotal}
+				{else}
+					{assign var='productQuantity' value=$product.product_quantity}
+				{/if}
 				<!-- Customized products -->
 				{if isset($customizedDatas.$productId.$productAttributeId)}
 					<tr class="item">

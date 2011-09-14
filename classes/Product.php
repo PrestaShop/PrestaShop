@@ -2961,36 +2961,42 @@ class ProductCore extends ObjectModel
 
 	public static function addCustomizationPrice(&$products, &$customizedDatas)
 	{
-		if (!Customization::isFeatureActive())
-			return;
-		
 		foreach ($products AS &$productUpdate)
 		{
-			$customizationQuantity = 0;
-			$customizationQuantityRefunded = 0;
-			$customizationQuantityReturned = 0;
-			/* Compatibility */
-			$productId = (int)(isset($productUpdate['id_product']) ? $productUpdate['id_product'] : $productUpdate['product_id']);
-			$productAttributeId = (int)(isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id']);
-			$productQuantity = (int)(isset($productUpdate['cart_quantity']) ? $productUpdate['cart_quantity'] : $productUpdate['product_quantity']);
-			$price = isset($productUpdate['price']) ? $productUpdate['price'] : $productUpdate['product_price'];
-			$priceWt = $price * (1 + ((isset($productUpdate['tax_rate']) ? $productUpdate['tax_rate'] : $productUpdate['rate']) * 0.01));
-			if (isset($customizedDatas[$productId][$productAttributeId]))
-				foreach ($customizedDatas[$productId][$productAttributeId] AS $customization)
-				{
-					$customizationQuantity += (int)($customization['quantity']);
-					$customizationQuantityRefunded += (int)($customization['quantity_refunded']);
-					$customizationQuantityReturned += (int)($customization['quantity_returned']);
-				}
-			$productUpdate['customizationQuantityTotal'] = $customizationQuantity;
-			$productUpdate['customizationQuantityRefunded'] = $customizationQuantityRefunded;
-			$productUpdate['customizationQuantityReturned'] = $customizationQuantityReturned;
-			if ($customizationQuantity)
+			if (!Customization::isFeatureActive())
 			{
-				$productUpdate['total_wt'] = $priceWt * ($productQuantity - $customizationQuantity);
-				$productUpdate['total_customization_wt'] = $priceWt * $customizationQuantity;
-				$productUpdate['total'] = $price * ($productQuantity - $customizationQuantity);
-				$productUpdate['total_customization'] = $price * $customizationQuantity;
+				$productUpdate['customizationQuantityTotal'] = 0;
+				$productUpdate['customizationQuantityRefunded'] = 0;
+				$productUpdate['customizationQuantityReturned'] = 0;
+			}
+			else
+			{
+				$customizationQuantity = 0;
+				$customizationQuantityRefunded = 0;
+				$customizationQuantityReturned = 0;
+				/* Compatibility */
+				$productId = (int)(isset($productUpdate['id_product']) ? $productUpdate['id_product'] : $productUpdate['product_id']);
+				$productAttributeId = (int)(isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id']);
+				$productQuantity = (int)(isset($productUpdate['cart_quantity']) ? $productUpdate['cart_quantity'] : $productUpdate['product_quantity']);
+				$price = isset($productUpdate['price']) ? $productUpdate['price'] : $productUpdate['product_price'];
+				$priceWt = $price * (1 + ((isset($productUpdate['tax_rate']) ? $productUpdate['tax_rate'] : $productUpdate['rate']) * 0.01));
+				if (isset($customizedDatas[$productId][$productAttributeId]))
+					foreach ($customizedDatas[$productId][$productAttributeId] AS $customization)
+					{
+						$customizationQuantity += (int)($customization['quantity']);
+						$customizationQuantityRefunded += (int)($customization['quantity_refunded']);
+						$customizationQuantityReturned += (int)($customization['quantity_returned']);
+					}
+				$productUpdate['customizationQuantityTotal'] = $customizationQuantity;
+				$productUpdate['customizationQuantityRefunded'] = $customizationQuantityRefunded;
+				$productUpdate['customizationQuantityReturned'] = $customizationQuantityReturned;
+				if ($customizationQuantity)
+				{
+					$productUpdate['total_wt'] = $priceWt * ($productQuantity - $customizationQuantity);
+					$productUpdate['total_customization_wt'] = $priceWt * $customizationQuantity;
+					$productUpdate['total'] = $price * ($productQuantity - $customizationQuantity);
+					$productUpdate['total_customization'] = $price * $customizationQuantity;
+				}
 			}
 		}
 	}
