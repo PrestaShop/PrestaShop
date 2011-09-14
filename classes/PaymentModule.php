@@ -133,10 +133,12 @@ abstract class PaymentModuleCore extends Module
 			$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 			$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 			$order->total_shipping = (float)$cart->getOrderShippingCost();
+
 			if (Validate::isLoadedObject($carrier))
 				$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 			$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
 			$order->total_paid = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
+
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
 			// Amount paid by customer is not the right one -> Status = payment error
@@ -179,7 +181,7 @@ abstract class PaymentModuleCore extends Module
 				$productsList = '';
 				$db = Db::getInstance();
 				$query = 'INSERT INTO `'._DB_PREFIX_.'order_detail`
-					(`id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_in_stock`, `product_price`, `reduction_percent`, `reduction_amount`, `group_reduction`, `product_quantity_discount`, `product_ean13`, `product_upc`, `product_reference`, `product_supplier_reference`, `product_weight`, `tax_name`, `tax_rate`, `ecotax`, `ecotax_tax_rate`, `discount_quantity_applied`, `download_deadline`, `download_hash`)
+					(`id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_in_stock`, `product_price`, `reduction_percent`, `reduction_amount`, `group_reduction`, `product_quantity_discount`, `product_ean13`, `product_upc`, `product_reference`, `product_supplier_reference`, `product_weight`, `tax_computation_method`, `ecotax`, `ecotax_tax_rate`, `discount_quantity_applied`, `download_deadline`, `download_hash`)
 				VALUES ';
 
 				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
@@ -211,14 +213,15 @@ abstract class PaymentModuleCore extends Module
 					}
 
 					// Exclude VAT
-					if (Tax::excludeTaxeOption())
+					$tax_calculator = new TaxCalculator();
+					if (!Tax::excludeTaxeOption())
 					{
-						$product['tax'] = 0;
-						$product['rate'] = 0;
-						$tax_rate = 0;
+						$address = Tax::initializeAddress($vat_address->id);
+						$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product']);
+				
+						$tax_manager = TaxManagerFactory::getManager($vat_address, $id_tax_rules);
+						$tax_calculator = $tax_manager->getTaxCalculator();						
 					}
-					else
-						$tax_rate = Tax::getProductTaxRate((int)($product['id_product']), $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
                     $ecotaxTaxRate = 0;
                     if (!empty($product['ecotax']))
@@ -227,7 +230,7 @@ abstract class PaymentModuleCore extends Module
                     $product_price = (float)Product::getPriceStatic((int)($product['id_product']), false, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), (Product::getTaxCalculationMethod((int)($order->id_customer)) == PS_TAX_EXC ? 2 : 6), NULL, false, false, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}), $specificPrice, false, false);
 					$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $this->context->shop->getID(), (int)$cart->id_currency, (int)$vat_address->id_country, (int)$customer->id_default_group, (int)$product['cart_quantity']);
 					$unitPrice = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? intval($product['id_product_attribute']) : NULL), 2, NULL, false, true, 1, false, (int)$order->id_customer, NULL, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-					$quantityDiscountValue = $quantityDiscount ? ((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ? Tools::ps_round($unitPrice, 2) : $unitPrice) - $quantityDiscount['price'] * (1 + $tax_rate / 100)) : 0.00;
+					$quantityDiscountValue = $quantityDiscount ? ((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ? Tools::ps_round($unitPrice, 2) : $unitPrice) - $tax_calculator->addTaxes($quantityDiscount['price'])) : 0.00;
 					$query .= '('.(int)($order->id).',
 						'.(int)($product['id_product']).',
 						'.(isset($product['id_product_attribute']) ? (int)($product['id_product_attribute']) : 'NULL').',
@@ -244,8 +247,7 @@ abstract class PaymentModuleCore extends Module
 						'.(empty($product['reference']) ? 'NULL' : '\''.pSQL($product['reference']).'\'').',
 						'.(empty($product['supplier_reference']) ? 'NULL' : '\''.pSQL($product['supplier_reference']).'\'').',
 						'.(float)($product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight']).',
-						\''.(empty($tax_rate) ? '' : pSQL($product['tax'])).'\',
-						'.(float)($tax_rate).',
+						'.(int)$tax_calculator->computation_method.',
 						'.(float)Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency)).',
 						'.(float)$ecotaxTaxRate.',
 						'.(($specificPrice AND $specificPrice['from_quantity'] > 1) ? 1 : 0).',
@@ -294,6 +296,9 @@ abstract class PaymentModuleCore extends Module
 				$query = rtrim($query, ',');
 				$result = $db->Execute($query);
 
+				OrderDetail::saveTaxCalculatorStatic($db->Insert_ID(), $tax_calculator);
+				unset($tax_calculator);
+				
 				// Insert discounts from cart into order_discount table
 				$discounts = $cart->getDiscounts();
 				$discountsList = '';

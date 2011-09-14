@@ -135,6 +135,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_order_state.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_tab.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_detail_taxes.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;

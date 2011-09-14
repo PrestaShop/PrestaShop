@@ -45,9 +45,9 @@ class TaxCalculatorCore
 	const ONE_AFTER_ANOTHER_METHOD = 2;
 
 	/**
-	 * @var array $taxes_rate
+	 * @var array $taxes
 	 */
-	public $taxes_rate;
+	public $taxes;
 
 	/**
 	 * @var int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
@@ -56,89 +56,89 @@ class TaxCalculatorCore
 
 
 	/**
-	 * @param array $taxes_rate
+	 * @param array $taxes
 	 * @param int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
 	 */
-	public function __construct(array $taxes_rate, $computation_method = TaxCalculator::COMBINE_METHOD)
+	public function __construct(array $taxes = array(), $computation_method = TaxCalculator::COMBINE_METHOD)
 	{
-		$this->taxes_rate = $taxes_rate;
+		// sanity check
+		foreach ($taxes as $tax)
+			if (!($tax instanceof Tax))
+				throw new Exception('Invalid Tax Object');
+
+		$this->taxes = $taxes;
 		$this->computation_method = (int)$computation_method;
 	}
 
 	/**
 	 * Compute and add the taxes to the specified price
 	 *
-	 * @param price
-	 * @return price with taxes
+	 * @param price_te price tax excluded
+	 * @return float price with taxes
 	 */
-	public function addTaxes($price)
+	public function addTaxes($price_te)
 	{
-		$total_price = $price;
-		if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
-		{
-			foreach ($this->taxes_rate as $tax_rate)
-				$total_price = $total_price * (1 + abs($tax_rate) / 100);
-		}
-		else
-		{
-			foreach ($this->taxes_rate as $tax_rate)
-			{
-				if ($tax_rate != 0)
-					$total_price = $total_price + ($price * (abs($tax_rate) / 100));
-			}
-		}
-		return $total_price;
+		return $price_te * (1 + ($this->getTotalRate() / 100));
 	}
 
 
 	/**
 	 * Compute and remove the taxes to the specified price
 	 *
-	 * @param price
+	 * @param price_ti price tax inclusive
 	 * @return price without taxes
 	 */
-	public function removeTaxes($price)
+	public function removeTaxes($price_ti)
 	{
-		$total_price = $price;
-		if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
-		{
-			foreach ($this->taxes_rate as $tax_rate)
-				$total_price = $total_price / (1 + abs($tax_rate) / 100);
-		}
-		else
-		{
-			$taxes_rate = 0;
-			foreach ($this->taxes_rate as $tax_rate)
-				$taxes_rate += abs($tax_rate);
-
-			$total_price = $total_price / (1 + (abs($taxes_rate) / 100));
-		}
-
-		return $total_price;
+		return $price_ti / (1 + $this->getTotalRate() / 100);
 	}
 
 	/**
-	 * @return total taxes rate
+	 * @return float total taxes rate
 	 */
-	public function getTaxesRate()
+	public function getTotalRate()
 	{
-		$taxes_rate = 0;
+		$taxes = 0;
 		if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
 		{
-			$taxes_rate = 1;
-			foreach ($this->taxes_rate as $rate)
-				$taxes_rate *= (1 + (abs($rate) / 100));
+			$taxes = 1;
+			foreach ($this->taxes as $tax)
+				$taxes *= (1 + (abs($tax->rate) / 100));
 
-			$taxes_rate = $taxes_rate - 1;
-			$taxes_rate = $taxes_rate * 100;
+			$taxes = $taxes - 1;
+			$taxes = $taxes * 100;
 		}
 		else
 		{
-			foreach ($this->taxes_rate as $rate)
-				$taxes_rate += abs($rate);
+			foreach ($this->taxes as $tax)
+				$taxes += abs($tax->rate);
 		}
 
-		return $taxes_rate;
+		return (float)$taxes;
+	}
+
+	/**
+	 * Return the tax amount associated to each taxes of the TaxCalculator
+	 * 
+	 * @param float $price_te
+	 * @return array $taxes_amount
+	 */
+	public function getTaxesAmount($price_te)
+	{
+		$taxes_amounts = array();
+
+		foreach ($this->taxes as $tax)
+		{
+			if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
+			{
+				$taxes_amounts[$tax->rate] = $price_te * (abs($tax->rate) / 100);
+				$price_te = $price_te + $taxes_amounts[$tax->rate];
+			}
+			else
+				$taxes_amounts[$tax->rate] = ($price * (abs($tax->rate) / 100));
+		}
+
+		return $taxes_amounts;
 	}
 }
 

@@ -395,7 +395,10 @@ if (isset($_GET['ajaxStates']) AND isset($_GET['id_country']))
 	{
 		$list = '';
 		if (Tools::getValue('no_empty') != true)
-			$list = '<option value="0">-----------</option>'."\n";
+		{
+			$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------'; 
+			$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
+		}
 
 		foreach ($states AS $state)
 			$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
@@ -652,7 +655,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	{
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[2]) && Validate::isCleanHtml($content[1]))
-		{
+		{ 
 			$result['partner_preactivation'] = $content[2];
 			$content[1] = explode('#%#', $content[1]);
 			foreach ($content[1] as $partnerPopUp)

@@ -74,13 +74,13 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 
 		$behavior = 0;
 		$first_row = true;
-		$taxes_rates = array();
+		$taxes = array();
 
 		foreach ($rows as $row)
 		{
 			$tax = new Tax((int)$row['id_tax']);
 
-			$taxes_rates[] = $tax->rate;
+			$taxes[] = $tax;
 
 			// the applied behavior correspond to the most specific rules
 			if ($first_row)
@@ -93,9 +93,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 				 break;
 		}
 
-		$this->tax_calculator = new TaxCalculator($taxes_rates, $behavior);
-
-		return $this->tax_calculator;
+		return new TaxCalculator($taxes, $behavior);
 	}
 }
 

@@ -781,7 +781,7 @@ class CarrierCore extends ObjectModel
 	{
 		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
 		$tax_calculator = $tax_manager->getTaxCalculator();
-		return $tax_calculator->getTaxesRate();
+		return $tax_calculator->getTotalRate();
 	}
 
 	/**

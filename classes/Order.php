@@ -275,14 +275,16 @@ class OrderCore extends ObjectModel
 	/* DOES delete the product */
 	protected function _deleteProduct($orderDetail, $quantity)
 	{
-		$price = $orderDetail->product_price * (1 + $orderDetail->tax_rate * 0.01);
+		$tax_calculator = $orderDetail->getTaxCalculator();
+		
+		$price = $tax_calculator->addTaxes($orderDetail->product_price);
 		if ($orderDetail->reduction_percent != 0.00)
 			$reduction_amount = $price * $orderDetail->reduction_percent / 100;
 		elseif ($orderDetail->reduction_amount != '0.000000')
 			$reduction_amount = Tools::ps_round($orderDetail->reduction_amount, 2);
 		if (isset($reduction_amount) AND $reduction_amount)
 			$price = Tools::ps_round($price - $reduction_amount, 2);
-		$productPriceWithoutTax = number_format($price / (1 + $orderDetail->tax_rate * 0.01), 2, '.', '');
+		$productPriceWithoutTax = number_format($tax_calculator->removeTaxes($price), 2, '.', '');
 		$price += Tools::ps_round($orderDetail->ecotax * (1 + $orderDetail->ecotax_tax_rate / 100), 2);
 		$productPrice = number_format($quantity * $price, 2, '.', '');
 		/* Update cart */
@@ -413,10 +415,14 @@ class OrderCore extends ObjectModel
 
 	public function setProductPrices(&$row)
 	{
+		$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$row['id_order_detail']);		
+		$row['tax_calculator'] = $tax_calculator;
+		$row['tax_rate'] = $tax_calculator->getTotalRate();
+		
 		if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
 		else
-			$row['product_price_wt'] = Tools::ps_round($row['product_price'] * (1 + $row['tax_rate'] / 100), 2);
+			$row['product_price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['product_price']), 2);
 
 		$group_reduction = 1;
 		if ($row['group_reduction'] > 0)
@@ -427,16 +433,13 @@ class OrderCore extends ObjectModel
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 				$row['product_price'] = ($row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01));
 			else
-			{
-				$reduction = Tools::ps_round($row['product_price_wt'] * ($row['reduction_percent'] * 0.01), 2);
-				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $reduction), 2);
-		}
+				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['product_price_wt'] * ($row['reduction_percent'] * 0.01)), 2);
 		}
 
 		if ($row['reduction_amount'] != 0)
 		{
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = ($row['product_price'] - ($row['reduction_amount'] / (1 + $row['tax_rate'] / 100)));
+				$row['product_price'] = ($row['product_price'] - ($tax_calculator->removeTaxes($row['reduction_amount'])));
 			else
 				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['reduction_amount']), 2);
 		}
@@ -453,7 +456,7 @@ class OrderCore extends ObjectModel
 			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
 
 		if ($this->_taxCalculationMethod == PS_TAX_EXC)
-			$row['product_price_wt'] = Tools::ps_round($row['product_price'] * (1 + ($row['tax_rate'] * 0.01)), 2) + Tools::ps_round($row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
+			$row['product_price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['product_price']), 2) + Tools::ps_round($row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
 		else
 		{
 			$row['product_price_wt_but_ecotax'] = $row['product_price_wt'];
@@ -474,6 +477,7 @@ class OrderCore extends ObjectModel
 	{
 		if (!$products)
 			$products = $this->getProductsDetail();
+			
 		$resultArray = array();
 		foreach ($products AS $row)
 		{
@@ -487,6 +491,7 @@ class OrderCore extends ObjectModel
 				if (!$row['product_quantity'])
 					continue ;
 			}
+		
 			$this->setProductPrices($row);
 
 			/* Add information for virtual product */
@@ -494,7 +499,7 @@ class OrderCore extends ObjectModel
 				$row['filename'] = ProductDownload::getFilenameFromIdProduct($row['product_id']);
 
 			/* Stock product */
-			$resultArray[(int)($row['id_order_detail'])] = $row;
+			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
 		return $resultArray;
 	}

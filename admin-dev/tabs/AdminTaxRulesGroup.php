@@ -25,10 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class
- AdminTaxRulesGroup extends AdminTab
+class AdminTaxRulesGroup extends AdminTab
 {
     public $tax_rule;
+    public $selected_countries = array();
     public $_errors_tax_rule;
 
 	public function __construct()
@@ -84,31 +84,45 @@ class
 		{
 			$zipcode = Tools::getValue('zipcode');
 			$id_rule	= (int)Tools::getValue('id_tax_rule');
+			
+			$this->selected_countries = Tools::getValue('country');
+			$this->selected_states = Tools::getValue('states');
+			
+			if (empty($this->selected_states) || sizeof($this->selected_states) == 0)
+				$this->selected_states = array(0);
 
-			$tr = new TaxRule();
-
-			// update or creation?
-			if (isset($id_rule))
-				$tr->id = $id_rule;
-
-			$tr->id_tax = (int)Tools::getValue('tax');
-			$tr->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
-			$tr->id_country = (int)Tools::getValue('country');
-			$tr->id_state = (int)Tools::getValue('states');
-			list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zipcode);
-			$tr->behavior = (int)Tools::getValue('behavior');
-			$tr->description = Tools::getValue('description');
-
-			$this->_errors_tax_rule = $this->validateTaxRule($tr);
-
-			if (sizeof($this->_errors_tax_rule) == 0)
+			foreach ($this->selected_countries as $id_country)
 			{
-				if (!$tr->save())
-					die('error');
+				foreach ($this->selected_states as $id_state)
+				{
+					$tr = new TaxRule();
+	
+					// update or creation?
+					if (isset($id_rule))
+						$tr->id = $id_rule;
+						
+					$tr->id_tax = (int)Tools::getValue('tax');
+					$tr->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
+					$tr->id_country = (int)$id_country;
+					$tr->id_state = (int)$id_state;
+					list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zipcode);
+					$tr->behavior = (int)Tools::getValue('behavior');
+					$tr->description = Tools::getValue('description');
+	
+					$this->tax_rule = $tr;
+					$this->_errors_tax_rule = $this->validateTaxRule($tr);				
+					if (sizeof($this->_errors_tax_rule) == 0)
+					{
+						if (!$tr->save())
+							die(Tools::displayError('An error has occured: Can\'t save the current tax rule'));
+					} else 
+						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+				}					
 			}
-
-			$this->tax_rule = $tr;
-			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+			
+			if (sizeof($this->_errors_tax_rule) == 0)
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+		
 		} else
          parent::postProcess();
 	}
@@ -127,28 +141,42 @@ class
 	{
 		global $cookie;
 
+		$all = $this->l('All');
 		$javascript = <<<EOT
 		<script type="text/javascript">
 		function populateStates(id_country, id_state)
 		{
-				$.ajax({
-				  url: "ajax.php",
-				  cache: false,
-				  data: "ajaxStates=1&id_country="+id_country+"&id_state="+id_state,
-				  success: function(html){
-						if (html == "false")
-						{
-							$("#state-label").hide();
-							$("#state-select").hide();
-						}
-						else
-						{
-							$("#state-label").show();
-							$("#state-select").show();
-							$("#states").html(html);
-						}
-				  }
-				});
+				if ($("#country option:selected").size() > 1)
+				{
+					$("#zipcode-label").hide();	
+					$("#zipcode").hide();
+					
+					$("#state-select").hide();
+					$("#state-label").hide();					
+				} else {
+					$.ajax({
+						  url: "ajax.php",
+						  cache: false,
+						  data: "ajaxStates=1&id_country="+id_country+"&id_state="+id_state+"&empty_value=$all",
+						  success: function(html){
+								if (html == "false")
+								{
+									$("#state-label").hide();
+									$("#state-select").hide();
+								}
+								else
+								{
+									$("#state-label").show();
+									$("#state-select").show();
+									$("#states").html(html);
+								}
+						  }
+					});				
+				
+					$("#zipcode-label").show();	
+					$("#zipcode").show();
+				
+				}
 		}
 
 		function loadTaxRule(id_tax_rule)
@@ -302,12 +330,15 @@ EOT;
 	{
 		global $cookie, $currentIndex;
 
-      if (Validate::isLoadedObject($this->tax_rule))
+        if (Validate::isLoadedObject($this->tax_rule))
             die(Tools::displayError('Unable to load the tax rule!'));
 
 		$country_select = Helper::selectInput(Country::getCountries((int)$cookie->id_lang),
- 				 			  					 array('id' => 'country', 'name' => 'country', 'onclick' => 'populateStates($(this).val(), \'\')'),
-												 array('key' => 'id_country', 'value' => 'name'));
+ 				 			  					 array('id' => 'country', 'name' => 'country[]', 'onclick' => 'populateStates($(this).val(), \'\')', 'multiple' => 'multiple'),
+												 array('key' => 'id_country', 
+												 		'value' => 'name', 
+												 		'selected' => $this->selected_countries,
+												 		'empty' => $this->l('All')));
 
 
 		$tax_select = Helper::selectInput(Tax::getTaxes((int)$cookie->id_lang),
@@ -325,18 +356,23 @@ EOT;
 		echo '<a href="#" onclick="initForm();$(\'#rule_form\').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /> '.$this->l('Add a new tax rule').'</a>
 				<form action="'.$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 				<div id="rule_form" style="display: none">
+					<div style="float: left">
 					<label>'.$this->l('Country').'</label>
 					<div class="margin-form">
 						'.$country_select.'
 					</div>
-
-					<label id="state-label">'.$this->l('State').'</label>
-					<div id="state-select" class="margin-form">
-						<select id="states" name="states">
-						</select>
 					</div>
 
-					<label>'.$this->l('ZipCode range').'</label>
+					<div style="float: left">
+					<label id="state-label">'.$this->l('State').'</label>
+					<div id="state-select" class="margin-form">
+						<select id="states" name="states[]" multiple="multiple">
+						</select>
+					</div>
+					</div>
+
+					<div style="clear: both"></div>
+					<label id="zipcode-label">'.$this->l('ZipCode range').'</label>
 					<div class="margin-form">
                   <input type="hidden" name="action" value="create_rule" />
                   <input type="hidden" id="id_tax_rules_group" name="id_tax_rules_group" value="'.(int)$id_rule_group.'" />
@@ -421,25 +457,22 @@ EOT;
 			foreach ($tax_rules as $tax_rule)
 			{
 				//  format fields for display
+				$country_name = ($tax_rule['country_name'] == '' ? '*' : $tax_rule['country_name']);
 				$state_name = ($tax_rule['state_name'] == '' ? '*' : $tax_rule['state_name']);
-
 				$zipcodes = '*';
 				if (isset($tax_rule['zipcode_from']) && $tax_rule['zipcode_from'] != 0)
 				{
 					$zipcodes = $tax_rule['zipcode_from'];
 					if (isset($tax_rule['zipcode_to']) && $tax_rule['zipcode_to'] != 0 && $tax_rule['zipcode_to'] != $tax_rule['zipcode_from'])
-					{
 						$zipcodes .= '-'.$tax_rule['zipcode_to'];
-					}
 				}
 
 				$tax = ((float)$tax_rule['rate'] == 0 ? '-' : (float)$tax_rule['rate'].'%');
-
 				$behavior = ($tax_rule['behavior'] == 0 ? $this->l('This tax only') : $this->l('Compute with others'));
 
 				// render fields
 				$html .= '<tr>
-							<td>'.Tools::htmlentitiesUTF8($tax_rule['country_name']).'</td>
+							<td>'.Tools::htmlentitiesUTF8($country_name).'</td>
 							<td>'.Tools::htmlentitiesUTF8($state_name).'</td>
 							<td>'.Tools::htmlentitiesUTF8($zipcodes).'</td>
 							<td>'.Tools::htmlentitiesUTF8($behavior).'</td>
@@ -483,4 +516,3 @@ EOT;
 		}
 	}
 }
-
