@@ -3055,6 +3055,7 @@ class AdminProducts extends AdminTab
 						<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
 						<script src="../js/fileuploader.js" type="text/javascript"></script>
 						<script src="../js/jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+						<script type="text/javascript" src="../js/admin.js"></script>
 						<script type="text/javascript"> 
 							function deleteImg(id)
 							{
@@ -3072,21 +3073,17 @@ class AdminProducts extends AdminTab
 										function (data) {
 											if (data)
 											{
-												position = parseInt($("#" + id + " .positionImage").html());
 												cover = 0;
-												if ($("#" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
+												if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
 													cover = 1;
-												$("#" + id).remove();
+												$("#tr_" + id).remove();
+												
 												if (cover)
 													$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
-												$("#imageTable tr").eq(1).find(".up").html("[ <img src=\"../img/admin/up_d.gif\" alt=\"\" border=\"0\"> ]");
+													
 												$("#countImage").html(parseInt($("#countImage").html()) - 1);
-												$("#imageTable .positionImage").each( function(index){
-													if (parseInt($(this).html()) > position)
-														$(this).html(parseInt($(this).html()) - 1);
-												$("#imageTable tr:last .down").html("[ <img src=\"../img/admin/down_d.gif\" alt=\"\" border=\"0\"> ]");
 												
-												});
+												refreshImagePositions($("#imageTable"));
 											}
 									});
 							}
@@ -3102,9 +3099,9 @@ class AdminProducts extends AdminTab
 									action: \'ajax-tab.php\',
 									debug: false,
 									onComplete: function(id, fileName, responseJSON){
-										var purcent = ((filecheck * 100) / nbfile);
-										$("#progressBarImage").progressbar({value: purcent });
-										if (purcent != 100)
+										var percent = ((filecheck * 100) / nbfile);
+										$("#progressBarImage").progressbar({value: percent });
+										if (percent != 100)
 										{
 											$("#imageUpload").html(parseInt(filecheck));
 											$("#imageTotal").html(" / " + parseInt(nbfile) + " '.$this->l('Images').'");
@@ -3132,8 +3129,10 @@ class AdminProducts extends AdminTab
 											$("#img" + id + " .errorImg").show();
 											
 										}
-										if (purcent >= 100)
-											$("#imageTable tr:last .down").html("[ <img src=\"../img/admin/down_d.gif\" alt=\"\" border=\"0\"> ]");
+										if (percent >= 100)
+										{
+											refreshImagePositions($("#imageTable"));
+										}
 										filecheck++;
 									},
 									onSubmit: function(id, filename){
