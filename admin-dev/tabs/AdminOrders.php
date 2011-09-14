@@ -167,21 +167,44 @@ class AdminOrders extends AdminTab
 								$this->_errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is invalid.');
 					if (!sizeof($this->_errors))
 					{
-						$message = new Message();
-						$message->id_employee = (int)$this->context->employee->id;
-						$message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
-						$message->id_order = $id_order;
-						$message->private = Tools::getValue('visibility');
-						if (!$message->add())
+						$order = new Order((int)(Tools::getValue('id_order')));
+						$customer = new Customer((int)$order->id_customer);
+						//check if a thread already exist
+						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, $order->id);
+						$cm = new CustomerMessage();
+						if (!$id_customer_thread)
+						{
+							$ct = new CustomerThread();
+							$ct->id_contact = 0;
+							$ct->id_customer = (int)$order->id_customer;
+							$ct->id_shop = (int)$this->context->shop->getId(true);
+							$ct->id_order = (int)$order->id;
+							$ct->id_lang = (int)$this->context->language->id;
+							$ct->email = $customer->email;
+							$ct->status = 'open';
+							$ct->token = Tools::passwdGen(12);
+							$ct->add();
+						}
+						else
+							$ct = new CustomerThread((int)$id_customer_thread);
+						$cm->id_customer_thread = $ct->id;
+						$cm->id_employee = (int)$this->context->employee->id;
+						$cm->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
+						$cm->private = Tools::getValue('visibility');
+						if (!$cm->add())
 							$this->_errors[] = Tools::displayError('An error occurred while sending message.');
 						elseif ($message->private)
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
+							Tools::redirectAdmin($currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
 						elseif (Validate::isLoadedObject($customer = new Customer($id_customer)))
 						{
-							$order = new Order((int)($message->id_order));
 							if (Validate::isLoadedObject($order))
 							{
-								$varsTpl = array('{lastname}' => $customer->lastname, '{firstname}' => $customer->firstname, '{id_order}' => $message->id_order, '{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $message->message : Tools::nl2br($message->message)));
+								$varsTpl = array(
+												'{lastname}' => $customer->lastname,
+												'{firstname}' => $customer->firstname,
+												'{id_order}' => $order->id,
+												'{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $cm->message : Tools::nl2br($cm->message))
+												);
 								if (@Mail::Send((int)($order->id_lang), 'order_merchant_comment',
 									Mail::l('New message regarding your order'), $varsTpl, $customer->email,
 									$customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL, _PS_MAIL_DIR_, true))

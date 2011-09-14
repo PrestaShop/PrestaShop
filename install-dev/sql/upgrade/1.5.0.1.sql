@@ -92,3 +92,11 @@ ALTER TABLE `PREFIX_order_detail`
   DROP `tax_name`,
   DROP `tax_rate`;
 
+CREATE TABLE `PREFIX_customer_message_sync_imap` (
+  `md5_header` varbinary(32) NOT NULL,
+  KEY `md5_header_index` (`md5_header`(4))
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE INDEX `md5_header_index` ON `PREFIX_customer_message_sync_imap` (md5_header(4));
+
+ALTER TABLE  `PREFIX_customer_message` ADD  `private` TINYINT NOT NULL DEFAULT  '0' AFTER  `user_agent`;

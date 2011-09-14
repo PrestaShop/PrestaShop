@@ -722,3 +722,75 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 	$notification = new Notification;
 	die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
 }
+
+if (Tools::isSubmit('syncImapMail'))
+{
+	if (!$url = Configuration::get('PS_SAV_IMAP_URL')
+	OR !$port = Configuration::get('PS_SAV_IMAP_PORT')
+	OR !$user = Configuration::get('PS_SAV_IMAP_USER')
+	OR !$password = Configuration::get('PS_SAV_IMAP_PWD'))
+	die('{"hasError" : true, "errors" : "Configuration is not correct"}');
+		
+	$mbox = @imap_open('{'.$url.':'.$port.'}', $user, $password);
+	
+	$errors = imap_errors();
+	if (sizeof($errors))
+	{
+		$str_errors = '["';
+		foreach($errors as $error)
+			$str_errors .= $error.',';
+		$str_errors = rtrim($str_errors, ',').'"]';
+	}
+	if (!$mbox)
+		die('{"hasError" : true, "errors" : ["Can not connect to the mailbox"]}');
+
+	$check = imap_check($mbox);
+	
+	if ($check->Nmsgs == 0)
+		die('{"hasError" : true, "errors" : ["NO message to sync"]}');
+	
+	$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
+	foreach ($result as $overview)
+	{
+	    //check if message exist in database
+	    if (isset($overview->subject))
+	   		$subject = $overview->subject;
+	   	else
+	   		$subject = '';
+	    
+	    $md5 = md5($overview->date.$overview->from.$subject);
+	    $exist = Db::getInstance()->getValue(
+			    'SELECT md5_header 
+			    FROM `'._DB_PREFIX_.'customer_message_sync_imap` 
+			    WHERE md5_header = \''.pSQL($md5).'\'');
+	    if ($exist)
+	    {
+			if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
+				imap_delete($mbox, $overview->msgno);  	
+	    }
+	    else
+	    {
+	    	//check if subject has id_order
+	    	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
+	    	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
+
+			if (isset($matches1[1]) AND isset($matches2[1]))
+			{
+				//check if order exist in database
+				$ct = new CustomerThread((int)$matches1[1]);
+				
+				if (Validate::isLoadedObject($ct) && $ct->token == $matches2[1])
+				{
+					$cm = new CustomerMessage();
+					$cm->id_customer_thread = $ct->id;
+					$cm->message = imap_fetchbody($mbox, $overview->msgno, 1);
+					$cm->add();
+				}
+			}
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` VALUES (\''.pSQL($md5).'\')');
+	    }
+	}
+	imap_expunge($mbox);
+	imap_close($mbox);
+	die('{"hasError" : false, "errors" : '.$str_errors.'}');
+}

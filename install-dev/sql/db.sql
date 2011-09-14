@@ -468,6 +468,14 @@ CREATE TABLE `PREFIX_customer_message` (
   KEY `id_employee` (`id_employee`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE `PREFIX_customer_message_sync_imap` (
+  `md5_header` varbinary(32) NOT NULL,
+  KEY `md5_header_index` (`md5_header`(4))
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE INDEX `md5_header_index` ON `PREFIX_customer_message_sync_imap` (md5_header(4));
+
 CREATE TABLE `PREFIX_customer_thread` (
   `id_customer_thread` int(11) unsigned NOT NULL auto_increment,
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
