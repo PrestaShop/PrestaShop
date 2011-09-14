@@ -955,6 +955,11 @@ CREATE TABLE `PREFIX_orders` (
   INDEX `date_add`(`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
+  `id_order_detail` int(11) NOT NULL,
+  `id_tax` int(11) NOT NULL
+)
+
 CREATE TABLE `PREFIX_order_detail` (
   `id_order_detail` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
@@ -1506,6 +1511,7 @@ CREATE TABLE `PREFIX_tax` (
   `id_tax` int(10) unsigned NOT NULL auto_increment,
   `rate` DECIMAL(10, 3) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL default '1',
+  `deleted` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1916,3 +1922,4 @@ CREATE TABLE `PREFIX_discount_shop` (
 PRIMARY KEY (`id_discount`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
