@@ -1,3 +1,4 @@
+
 <?php
 /*
 * 2007-2011 PrestaShop
@@ -309,7 +310,7 @@ class ProductCore extends ObjectModel
 	);
 
 	const CUSTOMIZE_FILE = 0;
-	const CUSTOMIZE_TEXTFIELD = 1; 
+	const CUSTOMIZE_TEXTFIELD = 1;
 
 	public	function __construct($id_product = NULL, $full = false, $id_lang = NULL, $id_shop = NULL, Context $context = NULL)
 	{
@@ -1146,7 +1147,7 @@ class ProductCore extends ObjectModel
 	public function deleteAttachments()
 	{
 		return Db::getInstance()->Execute('
-			DELETE FROM `'._DB_PREFIX_.'product_attachment` 
+			DELETE FROM `'._DB_PREFIX_.'product_attachment`
 			WHERE `id_product` = '.(int)$this->id);
 	}
 
@@ -1429,7 +1430,7 @@ class ProductCore extends ObjectModel
 		';
 		$sql['orderby'] = 'ORDER BY '.(isset($orderByPrefix) ? pSQL($orderByPrefix).'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay);
 		$sql['limit'] = 'LIMIT '.(int)($pageNumber * $nbProducts).', '.(int)($nbProducts);
-		
+
 		if (Combination::isFeatureActive())
 		{
 			$sql['select'] .= ', pa.id_product_attribute';
@@ -1726,22 +1727,22 @@ class ProductCore extends ObjectModel
 		{
 			$condition = '';
 			$cache_name = (int)($id_cart).'_'.(int)($id_product);
-			
+
 			if(Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'))
 			{
 				$cache_name = (int)($id_cart).'_'.(int)($id_product).'_'.(int)($id_product_attribute);
 				$condition = ' AND `id_product_attribute` = '.(int)($id_product_attribute);
 			}
-				
+
 			if (!isset(self::$_cart_quantity[$cache_name]) OR self::$_cart_quantity[$cache_name] !=  (int)($quantity))
 			{
 				self::$_cart_quantity[$cache_name] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT SUM(`quantity`)
 				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product` = '.(int)($id_product).' 
-				AND `id_cart` = '.(int)($id_cart).' '.$condition					
+				WHERE `id_product` = '.(int)($id_product).'
+				AND `id_cart` = '.(int)($id_cart).' '.$condition
 				);
-				
+
 				$cart_quantity = self::$_cart_quantity[$cache_name];
 			}
 		}
@@ -1826,7 +1827,7 @@ class ProductCore extends ObjectModel
 			$sql['select'] = 'SELECT p.`price`, p.`ecotax`';
 			$sql['from'] = 'FROM `'._DB_PREFIX_.'product` p';
 			$sql['where'] = 'WHERE p.`id_product` = '.(int)($id_product);
-			
+
 			if (Combination::isFeatureActive())
 			{
 				if ($id_product_attribute)
@@ -1837,7 +1838,7 @@ class ProductCore extends ObjectModel
 				else
 					$sql['select'] .= ', IFNULL((SELECT pa.price FROM `'._DB_PREFIX_.'product_attribute` pa WHERE id_product = '.(int)($id_product).' AND default_on = 1), 0) AS attribute_price';
 			}
-			
+
 			self::$_pricesLevel2[$cacheId2] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(Tools::buildQuery($sql));
 		}
 		$result = self::$_pricesLevel2[$cacheId2];
@@ -2462,7 +2463,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!Feature::isFeatureActive())
 			return;
-		
+
 		$productImplode = array();
 		foreach ($productIds as $id_product)
 			if ((int)$id_product AND !array_key_exists($id_product, self::$_cacheFeatures))
@@ -2536,7 +2537,7 @@ class ProductCore extends ObjectModel
 			OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
 		$sql['groupby'] = 'GROUP BY `id_product`';
 		$sql['orderby'] = 'ORDER BY pl.`name` ASC';
-		
+
 		if (Combination::isFeatureActive())
 		{
 			$sql['join'] .= '
@@ -2544,7 +2545,7 @@ class ProductCore extends ObjectModel
 			$sql['where'] .= 'OR pa.`reference` LIKE \'%'.pSQL($query).'%\'';
 		}
 		$sql['join'] .= Product::sqlStock('p', 'pa', false, $context->shop);
-		
+
 		$result = Db::getInstance()->ExecuteS(Tools::buildQuery($sql));
 
 		if (!$result)
@@ -2713,7 +2714,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return false;
-		
+
 		$customizations = array();
 		if (($customizations['fields'] = Db::getInstance()->ExecuteS('
 			SELECT `id_customization_field`, `type`, `required`
@@ -2929,7 +2930,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return false;
-		
+
 		// No need to query if there isn't any real cart!
 		if (!$id_cart)
 			return false;
@@ -3124,8 +3125,8 @@ class ProductCore extends ObjectModel
 		if (!Customization::isFeatureActive())
 			return array();
 		return Db::getInstance()->ExecuteS('
-			SELECT `id_customization_field`, `type` 
-			FROM `'._DB_PREFIX_.'customization_field` 
+			SELECT `id_customization_field`, `type`
+			FROM `'._DB_PREFIX_.'customization_field`
 			WHERE `id_product` = '.(int)($this->id));
 	}
 
@@ -3134,9 +3135,9 @@ class ProductCore extends ObjectModel
 		if (!Customization::isFeatureActive())
 			return array();
 		return Db::getInstance()->ExecuteS('
-			SELECT `id_customization_field`, `type` 
-			FROM `'._DB_PREFIX_.'customization_field` 
-			WHERE `id_product` = '.(int)($this->id).' 
+			SELECT `id_customization_field`, `type`
+			FROM `'._DB_PREFIX_.'customization_field`
+			WHERE `id_product` = '.(int)($this->id).'
 			AND `required` = 1'
 		);
 	}
@@ -3161,7 +3162,7 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
-	
+
 	/**
 	 * Checks if the product is in at least one of the submited categories
 	 *
@@ -3305,7 +3306,7 @@ class ProductCore extends ObjectModel
 		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
 		$tax_calculator = $tax_manager->getTaxCalculator();
 
-		return $tax_calculator->getTaxesRate();
+		return $tax_calculator->getTotalRate();
 	}
 
 	/**
@@ -3573,7 +3574,7 @@ class ProductCore extends ObjectModel
 				return false;
 		return true;
 	}
-        
+
 	/**
 	 * Checks if reference exists
 	 * @return boolean
@@ -3584,7 +3585,7 @@ class ProductCore extends ObjectModel
 		SELECT `reference`
 		FROM `'._DB_PREFIX_.'product` p
 		WHERE p.reference = "'.$reference.'"');
-	                
+
 		return isset($row['reference']);
 	}
 }
