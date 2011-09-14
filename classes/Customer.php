@@ -28,11 +28,11 @@
 class CustomerCore extends ObjectModel
 {
 	public 		$id;
-	
+
 	public		$id_shop;
-	
+
 	public		$id_group_shop;
-	
+
 	/** @var string Secure key */
 	public		$secure_key;
 
@@ -40,7 +40,7 @@ class CustomerCore extends ObjectModel
 	public		$note;
 
 	/** @var integer Gender ID */
-	public		$id_gender = 9;
+	public		$id_gender = 0;
 
 	/** @var integer Default group ID */
 	public		$id_default_group = _PS_DEFAULT_CUSTOMER_GROUP_;
@@ -80,7 +80,7 @@ class CustomerCore extends ObjectModel
 
 	/** @var boolean Status */
 	public 		$is_guest = 0;
-	
+
 	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
 	public 		$deleted = 0;
 
@@ -93,20 +93,20 @@ class CustomerCore extends ObjectModel
 	public		$years;
 	public		$days;
 	public		$months;
-	
+
 	/** @var int customer id_country as determined by geolocation */
 	public		$geoloc_id_country;
 	/** @var int customer id_state as determined by geolocation */
 	public		$geoloc_id_state;
 	/** @var string customer postcode as determined by geolocation */
 	public		$geoloc_postcode;
-	
+
 	/** @var boolean is the customer logged in */
 	public		$logged = 0;
-	
+
 	/** @var int id_guest meaning the guest table, not the guest customer  */
 	public 		$id_guest;
-	
+
 	protected $tables = array ('customer');
 
  	protected 	$fieldsRequired = array('lastname', 'passwd', 'firstname', 'email');
@@ -137,7 +137,7 @@ class CustomerCore extends ObjectModel
 		$this->validateFields();
 		if (isset($this->id))
 			$fields['id_customer'] = (int)($this->id);
-		
+
 		$fields['id_shop'] = (int)$this->id_shop;
 		$fields['id_group_shop'] = (int)$this->id_group_shop;
 		$fields['secure_key'] = pSQL($this->secure_key);
@@ -211,7 +211,7 @@ class CustomerCore extends ObjectModel
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
-		
+
 		$sql = 'SELECT `id_customer`, `email`, `firstname`, `lastname`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE 1 '.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
@@ -286,10 +286,10 @@ class CustomerCore extends ObjectModel
 	{
 	 	if (!Validate::isEmail($email))
 	 		die (Tools::displayError());
-	 		
+
 		if (!$shop)
 			$shop = Context::getContext()->shop;
-	 		
+
 	 	$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
@@ -322,7 +322,7 @@ class CustomerCore extends ObjectModel
 		}
 		return self::$_customerHasAddress[$id_customer];
 	}
-	
+
 	public static function resetAddressCache($id_customer)
 	{
 		if (array_key_exists($id_customer, self::$_customerHasAddress))
@@ -389,7 +389,7 @@ class CustomerCore extends ObjectModel
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
-					
+
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE (
@@ -407,7 +407,7 @@ class CustomerCore extends ObjectModel
 	  * @return array Stats
 	  */
 	public function getStats()
-	{			
+	{
 		$result = Db::getInstance()->getRow('
 		SELECT COUNT(`id_order`) AS nb_orders, SUM(`total_paid` / o.`conversion_rate`) AS total_orders
 		FROM `'._DB_PREFIX_.'orders` o
@@ -483,7 +483,7 @@ class CustomerCore extends ObjectModel
 	{
 		if (!Group::isFeatureActive())
 			return array(1);
-		
+
 		$groups = array();
 		$result = Db::getInstance()->ExecuteS('
 		SELECT cg.`id_group`
@@ -533,7 +533,7 @@ class CustomerCore extends ObjectModel
 		$ids = Address::getCountryAndState($id_address);
 		return (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
 	}
-	
+
 	public function toggleStatus()
 	{
 		parent::toggleStatus();
@@ -550,7 +550,7 @@ class CustomerCore extends ObjectModel
 	{
 		return (bool)$this->is_guest;
 	}
-	
+
 	public function transformToCustomer($id_lang, $password = NULL)
 	{
 		if (!$this->isGuest())
@@ -559,7 +559,7 @@ class CustomerCore extends ObjectModel
 			$password = Tools::passwdGen();
 		if (!Validate::isPasswd($password))
 			return false;
-		
+
 		$this->is_guest = 0;
 		$this->passwd = Tools::encrypt($password);
 		if ($this->update())
@@ -570,13 +570,13 @@ class CustomerCore extends ObjectModel
 			    '{email}' => $this->email,
 			    '{passwd}' => $password
 			);
-			
+
 			Mail::Send((int)$id_lang, 'guest_to_customer', Mail::l('Your guest account has been transformed to customer account'), $vars, $this->email, $this->firstname.' '.$this->lastname);
 			return true;
 		}
 		return false;
 	}
-	
+
 	public static function printNewsIcon($id_customer, $tr)
 	{
 		$customer = new Customer($tr['id_customer']);
@@ -586,7 +586,7 @@ class CustomerCore extends ObjectModel
 				($customer->newsletter ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
-	
+
 	public static function printOptinIcon($id_customer, $tr)
 	{
 		$customer = new Customer($tr['id_customer']);
@@ -596,7 +596,7 @@ class CustomerCore extends ObjectModel
 				($customer->optin ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
-	
+
 	public function setWsPasswd($passwd)
 	{
 		if ($this->id != 0)
@@ -608,28 +608,28 @@ class CustomerCore extends ObjectModel
 			$this->passwd = Tools::encrypt($passwd);
 		return true;
 	}
-	
+
 	/**
 	  * Check customer informations and return customer validity
 	  *
 	  * @since 1.5.0
-	  * @param boolean $withGuest 
+	  * @param boolean $withGuest
 	  * @return boolean customer validity
 	  */
 	public function isLogged($withGuest = false)
 	{
 		if (!$withGuest AND $this->is_guest == 1)
 			return false;
-		
+
 		/* Customer is valid only if it can be load and if object password is the same as database one */
 	 	if ($this->logged == 1 AND $this->id AND Validate::isUnsignedId($this->id) AND self::checkPassword($this->id, $this->passwd))
         	return true;
         return false;
 	}
-	
+
 	/**
 	  * Logout
-	  * 
+	  *
 	  * @since 1.5.0
 	  */
 	public function logout()
@@ -642,7 +642,7 @@ class CustomerCore extends ObjectModel
 	/**
 	  * Soft logout, delete everything links to the customer
 	  * but leave there affiliate's informations
-	  * 
+	  *
 	  * @since 1.5.0
 	  */
 	public function mylogout()
@@ -650,5 +650,5 @@ class CustomerCore extends ObjectModel
 		if (isset(Context::getContext()->cookie))
 			Context::getContext()->cookie->mylogout();
 		$this->logged = 0;
-	}	
+	}
 }

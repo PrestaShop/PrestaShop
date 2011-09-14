@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,7 +27,7 @@
 
 if (!defined('_PS_VERSION_'))
 	exit;
-	
+
 if ((basename(__FILE__) == 'fianetfraud.php'))
 	require_once(dirname(__FILE__).'/fianet/fianet.php');
 
@@ -65,7 +65,7 @@ class Fianetfraud extends Module
 		4 => 'Transporteur (La Poste, Colissimo, UPS, DHL... ou tout transporteur privé)',
 		5 => 'Emission d’un billet électronique, téléchargements'
 	);
-	
+
 	private $_payement_type = array(
 		1 => 'carte',
 		2 => 'cheque',
@@ -157,9 +157,9 @@ class Fianetfraud extends Module
 	}
 
 	private function _postProcess()
-	{	
+	{
 		$error = false;
-		
+
 		Configuration::updateValue('SAC_PRODUCTION', ((Tools::getValue('fianetfraud_production') == 1 ) ? 1 : 0));
 		Configuration::updateValue('SAC_LOGIN', Tools::getValue('fianetfraud_login'));
 		Configuration::updateValue('SAC_PASSWORD', Tools::getValue('fianetfraud_password'));
@@ -167,20 +167,20 @@ class Fianetfraud extends Module
 		Configuration::updateValue('SAC_DEFAULT_PRODUCT_TYPE', Tools::getValue('fianetfraud_product_type'));
 		Configuration::updateValue('SAC_DEFAULT_CARRIER_TYPE', Tools::getValue('fianetfraud_default_carrier'));
 		Configuration::updateValue('SAC_MINIMAL_ORDER', Tools::getValue('fianetfraud_minimal_order'));
-		
+
 		if (isset($_POST['payementBox']))
 		{
 			Configuration::updateValue('SAC_PAYMENT_MODULE', implode(',', $_POST['payementBox']));
-			foreach ($_POST['payementBox'] as $payment) 
+			foreach ($_POST['payementBox'] as $payment)
 			 	Configuration::updateValue('SAC_PAYMENT_TYPE_'.$payment,Tools::getValue($payment));
 		}
-		
+
 		$categories = Category::getSimpleCategories($this->context->language->id);
 		foreach ($categories AS $category)
 			Configuration::updateValue('SAC_CATEGORY_TYPE_'.$category['id_category'],Tools::getValue('cat_'.$category['id_category']));
-		
+
 		$carriers = Carrier::getCarriers($this->context->language->id);
-		foreach ($carriers as $carrier) 
+		foreach ($carriers as $carrier)
 		{
 			if (isset($_POST['carrier_'.$carrier['id_carrier']]))
 				Configuration::updateValue('SAC_CARRIER_TYPE_'.$carrier['id_carrier'], $_POST['carrier_'.$carrier['id_carrier']]);
@@ -190,7 +190,7 @@ class Fianetfraud extends Module
 				$this->_html .= '<div class="alert error">'.$this->l('Invalid carrier code').'</div>';
 			}
 		}
-		
+
 		if (!$error)
 		{
 			$dataSync = ((($site_id = Configuration::get('SAC_SITEID')) AND Configuration::get('SAC_PRODUCTION'))
@@ -199,7 +199,7 @@ class Fianetfraud extends Module
 			);
 			$this->_html .= '<div class="conf confirm">'.$this->l('Settings are updated').$dataSync.'</div>';
 		}
-		
+
 	}
 
 	public function getContent()
@@ -289,7 +289,7 @@ class Fianetfraud extends Module
 		$this->_html .= '</select>
 			</div>
 			</fieldset><div class="clear">&nbsp;</div>';
-		
+
 		/* Get all modules then select only payment ones*/
 		$modules = Module::getModulesOnDisk();
 		$modules_is_fianet = explode(',', Configuration::get('SAC_PAYMENT_MODULE'));
@@ -303,12 +303,12 @@ class Fianetfraud extends Module
 					$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)($module->id));
 					foreach ($countries as $country)
 						$module->country[] = $country['id_country'];
-						
+
 					$module->currency = array();
 					$currencies = DB::getInstance()->ExecuteS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)($module->id));
 					foreach ($currencies as $currency)
 						$module->currency[] = $currency['id_currency'];
-						
+
 					$module->group = array();
 					$groups = DB::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)($module->id));
 					foreach ($groups as $group)
@@ -327,7 +327,7 @@ class Fianetfraud extends Module
 				<label>'.$this->l('Payment Detail').'</label>
 				<div class="margin-form">
 					<table cellspacing="0" cellpadding="0" class="table" ><thead><tr>
-						<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'payementBox[]\', this.checked)" /></th>	
+						<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'payementBox[]\', this.checked)" /></th>
 						<th>'.$this->l('Payment Module').'</th><th>'.$this->l('Payment Type').'</th></tr></thead><tbody>';
 
 			foreach ($this->paymentModules as $module)
@@ -336,10 +336,10 @@ class Fianetfraud extends Module
 					$this->_html .= '<td><img src="'.__PS_BASE_URI__.'modules/'.$module->name.'/logo.gif" alt="'.$module->name.'" title="'.$module->displayName.'" />'.stripslashes($module->displayName).'</td><td><select name="'.substr($module->name,0,15).'">';
 					$this->_html .= '<option value="0">'.$this->l('-- Choose --').'</option>';
 					foreach ($this->_payement_type as $type)
-						$this->_html .= '<option '.((Configuration::get('SAC_PAYMENT_TYPE_'.substr($module->name,0,15)) == $type) ? 'selected="true"' : '').'>'.$type.'</option>';			
+						$this->_html .= '<option '.((Configuration::get('SAC_PAYMENT_TYPE_'.substr($module->name,0,15)) == $type) ? 'selected="true"' : '').'>'.$type.'</option>';
 					$this->_html .= '</select></tr>';
 			}
-			
+
 		$this->_html .= '</tbody></table></margin></fieldset><br class="clear" /><br />
 			<center><input type="submit" name="submitSettings" value="'.$this->l('Save').'" class="button" /></center>
 		</form>
@@ -409,10 +409,10 @@ class Fianetfraud extends Module
 	{
 		if ($params['order']->total_paid <= 0)
 			return;
-			
+
 		if (!$this->needCheck($params['order']->module, $params['order']->total_paid))
 			return false;
-			
+
 		$address_delivery = new Address((int)($params['order']->id_address_delivery));
 		$address_invoice = new Address((int)($params['order']->id_address_invoice));
 		$customer = new Customer((int)($params['order']->id_customer));
@@ -423,7 +423,8 @@ class Fianetfraud extends Module
 		else
 			$orderFianet->billing_user->set_quality_professional();
 
-		$orderFianet->billing_user->titre = (($customer->id_gender == 1) ? $this->l('Mr.') : (($customer->id_gender == 2 ) ? $this->l('Mrs') : $this->l('Mr.')));
+		$gender = new Gender($customer->id_gender);
+		$orderFianet->billing_user->titre = $gender->name;
 		$orderFianet->billing_user->nom = utf8_decode($address_invoice->lastname);
 		$orderFianet->billing_user->prenom = utf8_decode($address_invoice->firstname);
 		$orderFianet->billing_user->societe = utf8_decode($address_invoice->company);
@@ -455,14 +456,15 @@ class Fianetfraud extends Module
 		{
 			$orderFianet->delivery_user = new fianet_delivery_user_xml();
 			$orderFianet->delivery_adress = new fianet_delivery_adress_xml();
-		
+
 			if ($address_delivery->company == '')
 				$orderFianet->delivery_user->set_quality_nonprofessional();
 			else
 				$orderFianet->delivery_user->set_quality_professional();
-				
-			$orderFianet->delivery_user->titre = (($customer->id_gender == 1) ? $this->l('Mr.') : (($customer->id_gender == 2) ? $this->l('Mrs') : $this->l('Unknown')));
-		
+
+
+			$orderFianet->delivery_user->titre = $gender->name;
+
 			$orderFianet->delivery_user->nom = utf8_decode($address_delivery->lastname);
 			$orderFianet->delivery_user->prenom = utf8_decode($address_delivery->firstname);
 			$orderFianet->delivery_user->societe = utf8_decode($address_delivery->company);
@@ -471,7 +473,7 @@ class Fianetfraud extends Module
 			$orderFianet->delivery_user->telmobile = utf8_decode($address_delivery->phone_mobile);
 			$orderFianet->delivery_user->telfax = '';
 			$orderFianet->delivery_user->email = $customer->email;
-		
+
 			$orderFianet->delivery_adress->rue1 = utf8_decode($address_delivery->address1);
 			$orderFianet->delivery_adress->rue2 = utf8_decode($address_delivery->address2);
 			$orderFianet->delivery_adress->cpostal = utf8_decode($address_delivery->postcode);
@@ -479,7 +481,7 @@ class Fianetfraud extends Module
 			$country =  new Country((int)($address_delivery->id_country));
 			$orderFianet->delivery_adress->pays = utf8_decode($country->name[$id_lang]);
 		}
-		
+
 		$orderFianet->info_commande->refid = ($params['order']->id);
 		$orderFianet->info_commande->montant = $params['order']->total_paid;
 		$currency = new Currency((int)($params['order']->id_currency));
@@ -495,7 +497,7 @@ class Fianetfraud extends Module
 			$have_sac_cat = false;
 
 			$produit = new fianet_product_xml();
-			
+
 			if(Configuration::get('SAC_CATEGORY_TYPE_'.$product['id_category_default']))
 			{
 				$produit->type = Configuration::get('SAC_CATEGORY_TYPE_'.$product['id_category_default']);
@@ -521,7 +523,7 @@ class Fianetfraud extends Module
 			$sender->mode = 'production';
 		else
 			$sender->mode = 'test';
-			
+
 		$sender->add_order($orderFianet);
 		$res = $sender->send_orders_stacking();
 		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'fianet_fraud_orders(id_order, date_add) VALUES('.(int)($params['order']->id).', \''.pSQL(date('Y-m-d H:i:s')).'\')');

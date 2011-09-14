@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -69,9 +69,9 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->csvExport(array('type' => 'pie', 'option' => 'currency'));
 				elseif (Tools::getValue('exportType') =='language')
 					$this->csvExport(array('type' => 'pie', 'option' => 'language'));
-			
+
 			$this->_html .= '
-			
+
 				<center><p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women among your customers.').'</p>
 				'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'<br /></center>
 				<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=gender"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
@@ -124,27 +124,43 @@ class StatsPersonalInfos extends ModuleGraph
 		{
 			case 'gender':
 				$this->_titles['main'] = $this->l('Gender distribution');
-				$sql = 'SELECT `id_gender`, COUNT(`id_customer`) AS total
-						FROM `'._DB_PREFIX_.'customer`
+				$genders = array(
+					0 => $this->l('Male'),
+					1 => $this->l('Female'),
+					2 => $this->l('Unknown'),
+				);
+
+				$sql = 'SELECT g.type, c.id_gender, COUNT(c.id_customer) AS total
+						FROM '._DB_PREFIX_.'customer c
+						LEFT JOIN '._DB_PREFIX_.'gender g ON c.id_gender = g.id_gender
 						WHERE 1
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
-						GROUP BY `id_gender`';
+							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER, 'c').'
+						GROUP BY c.id_gender';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-				$gender = array(1 => $this->l('Male'), 2 => $this->l('Female'), 9 => $this->l('Unknown'), 0 => $this->l('Unknown'));
+
+				$gendersResults = array();
 				foreach ($result as $row)
 				{
-					$this->_values[] = $row['total'];
-					$this->_legend[] = $gender[$row['id_gender']];
+					$type = (is_null($row['type'])) ? 2 : $row['type'];
+					if (!isset($gendersResults[$type]))
+						$gendersResults[$type] = 0;
+					$gendersResults[$type] += $row['total'];
+				}
+
+				foreach ($gendersResults as $type => $total)
+				{
+					$this->_values[] = $total;
+					$this->_legend[] = $genders[$type];
 				}
 			break;
 
 			case 'age':
 				$this->_titles['main'] = $this->l('Age ranges');
-				
+
 				// 0 - 18 years
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
-						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 18 
+						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 18
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -153,7 +169,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('0-18 years old');
 				}
-				
+
 				// 18 - 24 years
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
@@ -195,7 +211,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('35-49 years old');
 				}
-				
+
 				// 50 - 59 years
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
@@ -209,7 +225,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('50-59 years old');
 				}
-				
+
 				// More than 60 years
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
@@ -222,7 +238,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('60 years old and more');
 				}
-				
+
 				// Total unknown
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`

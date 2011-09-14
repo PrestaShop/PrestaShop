@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -51,10 +51,10 @@ countries = new Array();
 		<h3>{l s='Your personal information' mod='paypal'}</h3>
 		<p class="radio required">
 			<span>{l s='Title'}</span>
-			<input type="radio" name="id_gender" id="id_gender1" value="1" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == 1}checked="checked"{/if} />
-			<label for="id_gender1" class="top">{l s='Mr.' mod='paypal'}</label>
-			<input type="radio" name="id_gender" id="id_gender2" value="2" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == 2}checked="checked"{/if} />
-			<label for="id_gender2" class="top">{l s='Ms.' mod='paypal'}</label>
+			{foreach from=$genders key=k item=gender}
+				<input type="radio" name="id_gender" id="id_gender{$gender.id_gender}" value="{$gender.id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender.id_gender}checked="checked"{/if} />
+				<label for="id_gender{$gender.id_gender}" class="top">{$gender.name}</label>
+			{/foreach}
 		</p>
 		<p class="required text">
 			<label for="customer_firstname">{l s='First name' mod='paypal'}</label>

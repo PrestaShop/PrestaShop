@@ -96,6 +96,8 @@
   'FileUploader' => '',
   'FrontControllerCore' => 'classes/FrontController.php',
   'FrontController' => 'override/classes/FrontController.php',
+  'GenderCore' => 'classes/Gender.php',
+  'Gender' => '',
   'GroupCore' => 'classes/Group.php',
   'Group' => 'override/classes/Group.php',
   'GroupReductionCore' => 'classes/GroupReduction.php',

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -256,7 +256,7 @@ class Ebay extends Module
 			include(dirname(__FILE__).'/sql-upgrade-1-2.php');
 			foreach ($sql as $s)
 				if (!Db::getInstance()->Execute($s))
-					return false;	
+					return false;
 			Configuration::updateValue('EBAY_VERSION', $this->version);
 		}
 	}
@@ -374,7 +374,7 @@ class Ebay extends Module
 						if ($id_customer < 1)
 						{
 							$customer = new Customer();
-							$customer->id_gender = 9;
+							$customer->id_gender = 0;
 							$customer->id_default_group = 1;
 							$customer->secure_key = md5(uniqid(rand(), true));
 							$customer->email = $order['email'];
@@ -387,7 +387,7 @@ class Ebay extends Module
 							$customer->add();
 							$id_customer = $customer->id;
 						}
-			
+
 								// Search if address exists
 								$id_address = (int)Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \'eBay\'');
 								if ($id_address > 0)
@@ -421,7 +421,7 @@ class Ebay extends Module
 									if (isset($product['id_product_attribute']) && $product['id_product_attribute'] > 0 && !Db::getInstance()->getValue('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)$product['id_product'].' AND `id_product_attribute` = '.(int)$product['id_product_attribute']))
 								$flag = 0;
 						}
-						
+
 						if ($flag == 1)
 						{
 									$cartNbProducts = 0;
@@ -437,7 +437,7 @@ class Ebay extends Module
 										if ($cartAdd->updateQty((int)($product['quantity']), (int)($product['id_product']), ((isset($product['id_product_attribute']) && $product['id_product_attribute'] > 0) ? $product['id_product_attribute'] : NULL)))
 											$cartNbProducts++;
 							$cartAdd->update();
-	
+
 									// Check number of products in the cart
 									if ($cartNbProducts > 0)
 									{
@@ -446,18 +446,18 @@ class Ebay extends Module
 							$customerClear = new Customer();
 							if (method_exists($customerClear, 'clearCache'))
 								$customerClear->clearCache(true);
-	
+
 							// Validate order
 							$paiement = new eBayPayment();
 										$paiement->validateOrder(intval($cartAdd->id), Configuration::get('PS_OS_PAYMENT'), floatval($cartAdd->getOrderTotal(true, 3)), 'eBay '.$order['payment_method'].' '.$order['id_order_seller'], NULL, array(), intval($cartAdd->id_currency));
 							$id_order = $paiement->currentOrder;
-	
+
 										// Fix on date
 										Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', array('date_add' => pSQL($order['date_add'])), 'UPDATE', '`id_order` = '.(int)$id_order);
 
 							// Fix on sending e-mail
 							Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order['email'])), 'UPDATE', '`id_customer` = '.(int)$id_customer);
-	
+
 							// Update price (because of possibility of price impact)
 							$updateOrder = array(
 								'total_paid' => floatval($order['amount']),
@@ -614,7 +614,7 @@ class Ebay extends Module
 	{
 		$ebay = new eBayRequest();
 
-		if (!empty($this->context->cookie->eBaySession) && isset($_GET['action']) && $_GET['action'] == 'logged') 
+		if (!empty($this->context->cookie->eBaySession) && isset($_GET['action']) && $_GET['action'] == 'logged')
 		{
 			if (isset($_POST['eBayUsername']))
 			{
@@ -778,7 +778,7 @@ class Ebay extends Module
 						<select name="ebay_shipping_carrier_id">';
 					foreach ($this->_shippingMethod as $id => $val)
 						$html .= '<option value="'.$id.'" '.(Tools::getValue('ebay_shipping_carrier_id', Configuration::get('EBAY_SHIPPING_CARRIER_ID')) == $id ? 'selected="selected"' : '').'>'.$val['description'].'</option>';
-		$html .= '			</select>				
+		$html .= '			</select>
 						<p>'.$this->l('Shipping cost configuration for your products on eBay').'</p>
 					</div>
 					<label>'.$this->l('Shipping cost').' : </label>
@@ -854,7 +854,7 @@ class Ebay extends Module
 	/******************************************************************/
 	/** Category Form Config Methods **********************************/
 	/******************************************************************/
-	
+
 	private function _getChildCategories($categories, $id, $path = array(), $pathAdd = '')
 	{
 		$categoryTmp = array();
@@ -904,7 +904,7 @@ class Ebay extends Module
 		// Display header
 		$html = '<p><b>'.$this->l('To export your products on eBay, you have to associate each one of your shop categories to an eBay category. You can also define an impact of your price on eBay.').'</b></p><br />
 
-		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">			
+		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
 			<p><b>'.$this->l('You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.').'</b>
 			<input class="button" name="submitSave" type="submit" value="'.$this->l('Suggest Categories').'" />
 			</p><br />
@@ -1117,7 +1117,7 @@ class Ebay extends Module
 					});
 					</script>
 					' : '
-					<script type="text/javascript">	
+					<script type="text/javascript">
 					var iso = \''.$isoTinyMCE.'\';
 					var pathCSS = \''._THEME_CSS_DIR_.'\';
 					var ad = \''.$ad.'\';
@@ -1258,7 +1258,7 @@ class Ebay extends Module
 				});
 			}
 		</script>
-		
+
 		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 
 		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=4&section=sync" method="post" class="form" id="configForm4">
@@ -1390,7 +1390,7 @@ class Ebay extends Module
 			WHERE `quantity` > 0 AND `active` = 1
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
 
-			// Retrieve products list for eBay (which have matched categories)				
+			// Retrieve products list for eBay (which have matched categories)
 			$productsList = Db::getInstance()->ExecuteS('
 			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1400,7 +1400,7 @@ class Ebay extends Module
 			ORDER BY `id_product`
 			LIMIT 1');
 
-			// How Many Product Less ?			
+			// How Many Product Less ?
 			$nbProductsLess = Db::getInstance()->getValue('
 			SELECT COUNT(`id_product`) FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1417,7 +1417,7 @@ class Ebay extends Module
 			WHERE `quantity` > 0 AND `active` = 1
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
 
-			// Retrieve products list for eBay (which have matched categories)				
+			// Retrieve products list for eBay (which have matched categories)
 			$productsList = Db::getInstance()->ExecuteS('
 			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1427,7 +1427,7 @@ class Ebay extends Module
 			ORDER BY `id_product`
 			LIMIT 1');
 
-			// How Many Product Less ?			
+			// How Many Product Less ?
 			$nbProductsLess = Db::getInstance()->getValue('
 			SELECT COUNT(`id_product`) FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1735,7 +1735,7 @@ class Ebay extends Module
 							}
 						}
 					}
-				}				
+				}
 				else
 				{
 					// No variations case
@@ -1897,7 +1897,7 @@ class Ebay extends Module
 		<h3 id="EbayHelpPart2-1">1) Onglet Â« ParamÃ¨tres Â»</h3>
 		<p>Cette section est Ã  configurer lors de la premiÃ¨re utilisation du module. <br />Vous devez dÃ©finir votre <strong>compte PayPal</strong> comme <strong>moyen de paiement de produits sur eBay</strong> en renseignant lâ€™email que vous utilisez pour votre compte PayPal. <br />Si vous nâ€™en avez pas, vous devez <a href="https://www.paypal.com/fr/cgi-bin/webscr?cmd=_flow&amp;SESSION=85gB6zaK7zA5l_Y0UnNe_eJTaw1Al_e4hmrEfOLhrEiojJMJZGG-Cw9amIq&amp;dispatch=5885d80a13c0db1f8e263663d3faee8d5863a909c4bb5aeebb52c6e1151bdaa9" target="_blank"><u>souscrire Ã  un compte PayPal Business</u></a>.<br />Vous devez dÃ©finir le <strong>moyen et les frais de livraison</strong> qui seront appliquÃ©s Ã  vos produits sur eBay.</p>
 
-		
+
 		<h3 id="EbayHelpPart2-2">2) Onglet Â« Configuration des catÃ©gories Â»</h3>
 		<p>Avant de publier vos produits sur eBay, vous devez associer les catÃ©gories de produits de votre boutique Prestashop avec celles dâ€™eBay. Vous pouvez Ã©galement choisir de vendre les produits de votre boutique Prestashop Ã  un prix diffÃ©rent sur eBay. Cet impact sur le prix est dÃ©fini en %.</p>
 		<p><u>NBÂ :</u> Certaines catÃ©gories bÃ©nÃ©ficient du nouveau format dâ€™annonce multi-versions.</p>

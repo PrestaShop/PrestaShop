@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,20 +27,20 @@
 
 if (!defined('_PS_VERSION_'))
 	exit;
-	
+
 class FianetSceau extends Module
 {
 	private $id_order;
-	
+
 	function __construct()
 	{
 	 	$this->name = 'fianetsceau';
 	 	$this->tab = 'front_office_features';
 	 	$this->version = '1.0';
 		$this->limited_countries = array('fr');
-		
+
 	 	parent::__construct();
-		
+
 		$this->displayName = $this->l('FIA-NET Seal of Confidence');
 		$this->description = $this->l('Turn your visitors into buyers by creating confidence in your site.');
 		if (!Configuration::get('FIANET_SCEAU_PRIVATEKEY'))
@@ -48,7 +48,7 @@ class FianetSceau extends Module
 		if (!Configuration::get('FIANET_SCEAU_SITEID'))
 			$this->warning = $this->l('Please enter your site ID.');
 	}
-	
+
 	public function install()
 	{
 		return (parent::install() AND
@@ -79,13 +79,13 @@ class FianetSceau extends Module
 		else
 			Configuration::updateValue('FIANET_SCEAU_SITEID', Tools::getValue('FIANET_SCEAU_SITEID'));
 		Configuration::updateValue('FIANET_SCEAU_PRIVATEKEY', Tools::getValue('FIANET_SCEAU_PRIVATEKEY'));
-		
+
 		if ((int)Tools::getValue('fia_net_mode'))
 			$dataSync = (($site_id = Configuration::get('FIANET_SCEAU_SITEID')) ? '<img src="http://www.prestashop.com/modules/fianetsceau.png?site_id='.urlencode($site_id).'" style="float:right" />' : 'toto');
 		else
 			$dataSync = '';
 		return $this->_html .= $this->displayConfirmation($this->l('Configuration updated').$dataSync);	}
-	
+
 	public function getContent()
 	{
 		$output = '<h2>'.$this->displayName.'</h2>';
@@ -93,7 +93,7 @@ class FianetSceau extends Module
 			$output .= parent::displayError('You need to enable Curl library to use this module');
 		else if (Tools::isSubmit('submitFianet'))
 			$output .= self::getProcess();
-	
+
 		$output .= '
 		<fieldset style="width:80%"><legend>'.$this->displayName.'</legend>
 			<img src="../modules/'.$this->name.'/logo.jpg" style="float:right;margin:5px 10px 5px 0" />
@@ -131,13 +131,13 @@ class FianetSceau extends Module
 					<label for="production" style="color:#080;display:block;float:left;text-align:left;width:85px;">'.$this->l('Production').'</label></span>
 				</div>
 				<p class="clear">&nbsp;</p>
-				<input type="submit" name="submitFianet" value="'.$this->l('Update settings').'" class="button" />	
+				<input type="submit" name="submitFianet" value="'.$this->l('Update settings').'" class="button" />
 			</fieldset>
 		</form>';
 
 		return $output;
 	}
-	
+
 	private function sendXML()
 	{
 		$SiteID = Configuration::get('FIANET_SCEAU_SITEID');
@@ -148,15 +148,15 @@ class FianetSceau extends Module
 
 		$user = $control->addChild('utilisateur');
 		$name = $user->addChild('nom', $customer->lastname);
-		if ($customer->id_gender == 1 OR $customer->id_gender == 2)
+		if ($customer->id_gender)
 			$name->addAttribute('titre', 1);
 		$user->addChild('prenom', $customer->firstname);
 		$user->addChild('email', $customer->email);
-		
+
 		$info = $control->addChild('infocommande');
 		$info->addChild('siteid', $SiteID);
 		$info->addChild('refid', (int)$order->id);
-		
+
 		$total = round($order->total_paid / $currency->conversion_rate, 2);
 		$amount = $info->addChild('montant', $total);
 		$amount->addAttribute('devise', 'EUR');
@@ -173,12 +173,12 @@ class FianetSceau extends Module
 			SELECT date_add
 			FROM '._DB_PREFIX_.'orders
 			WHERE id_order = '.(int)$order->id);
-		$customer_ip = $info->addChild('ip', $ip);		
+		$customer_ip = $info->addChild('ip', $ip);
 		$customer_ip->addAttribute('timestamp', $order_date);
 
 		$cryptKey = md5(Configuration::get('FIANET_SCEAU_PRIVATEKEY').'_'.(int)$order->id.'+'.$order_date.'='.$customer->email);
 		$control->addChild('crypt', $cryptKey);
-		
+
 		$XMLInfo = $control->asXML();
 		$CheckSum = md5($XMLInfo);
 
@@ -196,7 +196,7 @@ class FianetSceau extends Module
 			return true;
 		return false;
 	}
-	
+
 	public function	hookUpdateOrderStatus($params)
 	{
 		$this->id_order = (int)$params['id_order'];
@@ -224,12 +224,12 @@ class FianetSceau extends Module
 				WHERE a.id = '.(int)$res['id']);
 		}
 	}
-	
+
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
-	
+
 	public function hookRightColumn($params)
 	{
 		return '<a href="javascript:;" onclick="varwin=window.open(\'https://www.fia-net.com/certif/certificat.php?key='.Configuration::get('FIANET_SCEAU_SITEID').'&amp;lang='.$this->context->language->iso_code.'\', \'certificat\', \'width=650, height=510\', \'toolbar=no, location=no,directories=no, status=no, menubar=no, scrollbars=no, resizable=yes,dependent=yes\');"><img src="https://www.fia-net.com/img/logos/'.(($this->context->language->id != 2 ) ? 'en/' : '' ).'rouge3bc.gif" title="Voir la fiche marchand sur Fia-net.com" alt="Voir la fiche marchand sur Fia-net.com" /></a>';

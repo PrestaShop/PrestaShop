@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,14 +31,14 @@ class OrderOpcControllerCore extends ParentOrderController
 {
 	public $php_self = 'order-opc';
 	public $isLogged;
-	
+
 	public function preProcess()
 	{
 		parent::preProcess();
 		if ($this->nbProducts)
 			$this->context->smarty->assign('virtual_cart', false);
 		$this->isLogged = (bool)($this->context->customer->id AND Customer::customerIdExistsStatic((int)($this->context->cookie->id_customer)));
-		
+
 		if ($this->context->cart->nbProducts())
 		{
 			if (Tools::isSubmit('ajax'))
@@ -100,7 +100,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->context->customer->newsletter = (int)Tools::isSubmit('newsletter');
 							$this->context->customer->optin = (int)Tools::isSubmit('optin');
 							$return = array(
-								'hasError' => !empty($this->errors), 
+								'hasError' => !empty($this->errors),
 								'errors' => $this->errors,
 								'id_customer' => (int)$this->context->customer->id,
 								'token' => Tools::getToken(false)
@@ -173,7 +173,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
 									if (!$this->context->cart->update())
 										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
-								
+
 									if (!sizeof($this->errors))
 									{
 										if ($this->context->customer->id)
@@ -209,11 +209,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		elseif (Tools::isSubmit('ajax'))
 			exit;
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
-		
+
 		// Adding CSS style sheet
 		$this->addCSS(_THEME_CSS_DIR_.'order-opc.css');
 		// Adding JS files
@@ -221,7 +221,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->addJS(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
-	
+
 	public function process()
 	{
 		// SHOPPING CART
@@ -235,7 +235,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 		else
 			$countries = Country::getCountries($this->context->language->id, true);
-		
+
 		$this->context->smarty->assign(array(
 			'isLogged' => $this->isLogged,
 			'isGuest' => isset($this->context->cookie->is_guest) ? $this->context->cookie->is_guest : 0,
@@ -244,7 +244,8 @@ class OrderOpcControllerCore extends ParentOrderController
 			'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 			'errorCarrier' => Tools::displayError('You must choose a carrier before', false),
 			'errorTOS' => Tools::displayError('You must accept terms of service before', false),
-			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) AND $_GET['isPaymentStep'])
+			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) AND $_GET['isPaymentStep']),
+			'genders' => Gender::getGenders(),
 		));
 		/* Call a hook to display more information on form */
 		self::$smarty->assign(array(
@@ -259,11 +260,11 @@ class OrderOpcControllerCore extends ParentOrderController
 			'months' => $months,
 			'days' => $days,
 		));
-		
+
 		/* Load guest informations */
 		if ($this->isLogged AND $this->context->cookie->is_guest)
 			$this->context->smarty->assign('guestInformations', $this->_getGuestInformations());
-		
+
 		if ($this->isLogged)
 			$this->_assignAddress(); // ADDRESS
 		// CARRIER
@@ -271,30 +272,30 @@ class OrderOpcControllerCore extends ParentOrderController
 		// PAYMENT
 		$this->_assignPayment();
 		Tools::safePostVars();
-	
+
 		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 	}
-	
+
 	public function displayHeader()
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayHeader();
 	}
-	
+
 	public function displayContent()
 	{
 		parent::displayContent();
-	
+
 		$this->_processAddressFormat();
 		$this->context->smarty->display(_PS_THEME_DIR_.'order-opc.tpl');
 	}
-	
+
 	public function displayFooter()
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayFooter();
 	}
-	
+
 	protected function _getGuestInformations()
 	{
 		$customer = $this->context->customer;
@@ -331,7 +332,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'sl_day' => $birthday[2]
 		);
 	}
-	
+
 	protected function _assignCarrier()
 	{
 		if (!$this->isLogged)
@@ -348,7 +349,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		else
 			parent::_assignCarrier();
 	}
-	
+
 	protected function _assignPayment()
 	{
 		$this->context->smarty->assign(array(
@@ -356,7 +357,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'HOOK_PAYMENT' => $this->_getPaymentMethods()
 		));
 	}
-	
+
 	protected function _getPaymentMethods()
 	{
 		if (!$this->isLogged)
@@ -381,29 +382,29 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Error: no currency has been selected').'</p>';
 		if (!$this->context->cookie->checkedTOS AND Configuration::get('PS_CONDITIONS'))
 			return '<p class="warning">'.Tools::displayError('Please accept Terms of Service').'</p>';
-		
+
 		/* If some products have disappear */
 		if (!$this->context->cart->checkQuantities())
 			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available, you cannot proceed with your order.').'</p>';
-		
+
 		/* Check minimal amount */
 		$currency = Currency::getCurrency((int)$this->context->cart->id_currency);
-		
+
 		$minimalPurchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
 		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase)
 			return '<p class="warning">'.Tools::displayError('A minimum purchase total of').' '.Tools::displayPrice($minimalPurchase, $currency).
 			' '.Tools::displayError('is required in order to validate your order.').'</p>';
-		
+
 		/* Bypass payment step if total is 0 */
 		if ($this->context->cart->getOrderTotal() <= 0)
 			return '<p class="center"><input type="button" class="exclusive_large" name="confirmOrder" id="confirmOrder" value="'.Tools::displayError('I confirm my order').'" onclick="confirmFreeOrder();" /></p>';
-		
+
 		$return = Module::hookExecPayment();
 		if (!$return)
 			return '<p class="warning">'.Tools::displayError('No payment method is available').'</p>';
 		return $return;
 	}
-	
+
 	protected function _getCarrierList()
 	{
 		$address_delivery = new Address($this->context->cart->id_address_delivery);

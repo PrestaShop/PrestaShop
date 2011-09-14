@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,7 +32,7 @@ class AdminSearch extends AdminTab
 	{
 		if (!ip2long(trim($query)))
 			return;
-			
+
 		$this->_list['customers'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT DISTINCT c.*
 		FROM `'._DB_PREFIX_.'customer` c
@@ -40,7 +40,7 @@ class AdminSearch extends AdminTab
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.id_guest = co.id_guest
 		WHERE co.`ip_address` = \''.ip2long(trim($query)).'\'');
 	}
-	
+
 	/**
 	* Search a specific string in the products and categories
 	*
@@ -48,7 +48,7 @@ class AdminSearch extends AdminTab
 	*/
 	public function searchCatalog($query)
 	{
-		$this->context = Context::getContext();		
+		$this->context = Context::getContext();
 		$this->_list['products'] = Product::searchByName($this->context->language->id, $query);
 		if (!empty($this->_list['products']))
 			for ($i = 0; $i < count($this->_list['products']); $i++)
@@ -69,17 +69,17 @@ class AdminSearch extends AdminTab
 
 	function postProcess()
 	{
-		$this->context = Context::getContext();		
+		$this->context = Context::getContext();
 		$query = trim(Tools::getValue('bo_query'));
 		$searchType = (int)Tools::getValue('bo_search_type');
-		
+
 		/* Handle empty search field */
 		if (empty($query))
 			$this->_errors[] = Tools::displayError('Please fill in search form first.');
 		else
 		{
 			echo '<h2>'.$this->l('Search results').'</h2>';
-			
+
 			if (!$searchType and strlen($query) > 1)
 			{
 				global $_LANGADM;
@@ -101,7 +101,7 @@ class AdminSearch extends AdminTab
 							$matchingResults[$tabs[$key]] = array();
 						$matchingResults[$tabs[$key]][] = array('tab' => $key, 'value' => $value);
 					}
-				
+
 				if (count($matchingResults))
 				{
 					arsort($matchingResults);
@@ -122,8 +122,8 @@ class AdminSearch extends AdminTab
 					echo '</table><div class="clear">&nbsp;</div>';
 				}
 			}
-			
-			
+
+
 			/* Product research */
 			if (!$searchType OR $searchType == 1)
 			{
@@ -184,7 +184,7 @@ class AdminSearch extends AdminTab
 					Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)($order->id).'&vieworder'.'&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
 				$this->_errors[] = Tools::displayError('No order found with this ID:').' '.Tools::htmlentitiesUTF8($query);
 			}
-			
+
 			/* Invoices */
 			if ($searchType == 4)
 			{
@@ -200,7 +200,7 @@ class AdminSearch extends AdminTab
 					Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart='.(int)($cart->id).'&viewcart'.'&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$this->context->employee->id));
 				$this->_errors[] = Tools::displayError('No cart found with this ID:').' '.Tools::htmlentitiesUTF8($query);
 			}
-			
+
 			/* IP */
 			// 6 - but it is included in the customer block
 		}
@@ -211,7 +211,7 @@ class AdminSearch extends AdminTab
 		self::$currentIndex = 'index.php';
 		$query = trim(Tools::getValue('bo_query'));
 		$nbCategories = $nbProducts = $nbCustomers = 0;
-		
+
 		/* Display categories if any has been matching */
 		if (isset($this->_list['categories']) AND $nbCategories = sizeof($this->_list['categories']))
 		{
@@ -270,11 +270,10 @@ class AdminSearch extends AdminTab
 			$irow = 0;
 			foreach ($this->_list['customers'] AS $k => $customer)
 			{
-				$imgGender = $customer['id_gender'] == 1 ? '<img src="../img/admin/male.gif" alt="'.$this->l('Male').'" />' : ($customer['id_gender'] == 2 ? '<img src="../img/admin/female.gif" alt="'.$this->l('Female').'" />' : '');
 				echo '
 				<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
 					<td>'.$customer['id_customer'].'</td>
-					<td class="center">'.$imgGender.'</td>
+					<td class="center"><img src="'.Gender::getStaticImage($customer['id_gender']).'" /></td>
 					<td>'.stripslashes($customer['lastname']).' '.stripslashes($customer['firstname']).'</td>
 					<td>'.stripslashes($customer['email']).'<a href="mailto:'.stripslashes($customer['email']).'"> <img src="../img/admin/email_edit.gif" alt="'.$this->l('Write to this customer').'" /></a></td>
 					<td>'.Tools::displayDate($customer['birthday'], $this->context->language->id).'</td>
@@ -294,7 +293,7 @@ class AdminSearch extends AdminTab
 			echo '</table>
 			<div class="clear">&nbsp;</div>';
 		}
-			
+
 		/* Display error if nothing has been matching */
 		if (!$nbCategories AND !$nbProducts AND !$nbCustomers)
 			echo '<h3>'.$this->l('Nothing found for').' "'.Tools::htmlentitiesUTF8($query).'"</h3>';

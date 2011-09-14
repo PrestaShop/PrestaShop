@@ -82,7 +82,7 @@ class AdminImport extends AdminTab
 			case $this->entities[$this->l('Combinations')]:
 				self::$required_fields = array('id_product', 'options');
 				$this->available_fields = array(
-					'no' => array('label' => $this->l('Ignore this column')), 
+					'no' => array('label' => $this->l('Ignore this column')),
 					'id_product' => array('label' => $this->l('Product ID').'*'),
 					'options' => array('label' => $this->l('Options (Group:Value)').'*'),
 					'reference' => array('label' => $this->l('Reference')),
@@ -95,7 +95,7 @@ class AdminImport extends AdminTab
 					'quantity' => array('label' => $this->l('Quantity')),
 					'weight' => array('label' => $this->l('Weight')),
 					'default_on' => array('label' => $this->l('Default')),
-					'image_position' => array('label' => $this->l('Image position'), 
+					'image_position' => array('label' => $this->l('Image position'),
 						'help' => $this->l('Position of the product image to use for this combination. If you use this field, leave image URL empty.')),
 					'image_url' => array('label' => $this->l('Image URL')),
 				);
@@ -180,7 +180,7 @@ class AdminImport extends AdminTab
 					'online_only' => array('label' => $this->l('Only available online')),
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(
-						'label' => $this->l('ID / Name of shop'), 
+						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
 					),
 				);
@@ -210,7 +210,7 @@ class AdminImport extends AdminTab
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
-					'id_gender' => array('label' => $this->l('Gender ID (Mr = 1, Ms = 2, else 9)')),
+					'id_gender' => array('label' => $this->l('Gender ID (Mr = 1, Ms = 2, else 0)')),
 					'email' => array('label' => $this->l('E-mail *')),
 					'passwd' => array('label' => $this->l('Password *')),
 					'birthday' => array('label' => $this->l('Birthday (yyyy-mm-dd)')),
@@ -219,7 +219,7 @@ class AdminImport extends AdminTab
 					'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
 					'optin' => array('label' => $this->l('Opt in (0/1)')),
 					'id_shop' => array(
-						'label' => $this->l('ID / Name of shop'), 
+						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
 					),
 				);
@@ -282,11 +282,11 @@ class AdminImport extends AdminTab
 					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
 					'meta_description' => array('label' => $this->l('Meta-description')),
 					'shop' => array(
-						'label' => $this->l('ID / Name of group shop'), 
+						'label' => $this->l('ID / Name of group shop'),
 						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
 					),
 				);
-				
+
 				self::$default_values = array(
 					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
 				);
@@ -446,11 +446,11 @@ class AdminImport extends AdminTab
 
 	/**
 	 * copyImg copy an image located in $url and save it in a path
-	 * according to $entity->$id_entity . 
+	 * according to $entity->$id_entity .
 	 * $id_image is used if we need to add a watermark
-	 * 
+	 *
 	 * @param int $id_entity id of product or category (set in entity)
-	 * @param int $id_image (default null) id of the image if watermark enabled. 
+	 * @param int $id_image (default null) id of the image if watermark enabled.
 	 * @param string $url path or url to use
 	 * @param string entity 'products' or 'categories'
 	 * @return void
@@ -798,7 +798,7 @@ class AdminImport extends AdminTab
 					}
 					$product->associateTo($shops);
 				}
-				
+
 				// SpecificPrice (only the basic reduction feature is supported by the import)
 				if ((isset($info['reduction_price']) AND $info['reduction_price'] > 0) OR (isset($info['reduction_percent']) AND $info['reduction_percent'] > 0))
 				{
@@ -863,7 +863,7 @@ class AdminImport extends AdminTab
 						$product->deleteImages();
 				elseif (isset($product->image) AND is_array($product->image) AND sizeof($product->image))
 					$product->deleteImages();
-				
+
 				if (isset($product->image) AND is_array($product->image) and sizeof($product->image))
 				{
 					$productHasImages = (bool)Image::getImages($this->context->language->id, (int)($product->id));
@@ -926,10 +926,10 @@ class AdminImport extends AdminTab
 			$info = array_map('trim', $info);
 
 			self::setDefaultValues($info);
-			
+
 			$product = new Product((int)($info['id_product']), false, $defaultLanguage);
 			$id_image = null;
-			
+
 			if (isset($info['image_url']) && $info['image_url'])
 			{
 				$productHasImages = (bool)Image::getImages($this->context->language->id, $product->id);
@@ -1035,7 +1035,7 @@ class AdminImport extends AdminTab
 			if (($fieldError = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true AND ($langFieldError = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
 				$customer->id_group_shop = Shop::getGroupFromShop($customer->id_shop);
-				
+
 				if ($customer->id AND $customer->customerIdExists($customer->id))
 					$res = $customer->update();
 				if (!$res)
@@ -1125,7 +1125,7 @@ class AdminImport extends AdminTab
 			}
 
 			if(isset($address->customer_email) and !empty($address->customer_email))
-			{	
+			{
 				if( Validate::isEmail($address->customer_email))
 				{
 					$customer = Customer::customerExists($address->customer_email, true);
@@ -1211,7 +1211,7 @@ class AdminImport extends AdminTab
 					$res = $manufacturer->update();
 				if (!$res)
 					$res = $manufacturer->add();
-					
+
 				if ($res)
 				{
 					// Associate supplier to group shop
@@ -1450,7 +1450,7 @@ class AdminImport extends AdminTab
 						$("label[for=match_ref],#match_ref").show();
 					}
 						$("#entitie").html($("#entity > option:selected").text().toLowerCase());
-						$.getJSON("'.dirname(self::$currentIndex).'/ajax.php", 
+						$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",
 							{
 							getAvailableFields:1,
 							entity: $("#entity").val()},
@@ -1478,7 +1478,7 @@ class AdminImport extends AdminTab
 				$array[$key] = utf8_encode($value);
 		else
 			$array = utf8_encode($array);
-		
+
 		return $array;
 	}
 
@@ -1561,7 +1561,7 @@ class AdminImport extends AdminTab
 	public function displayCSV()
 	{
 		$importMatchs = Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'import_match');
-		
+
 		echo '
 		<script src="'._PS_JS_DIR_.'adminImport.js"></script>
 		<script type="text/javascript">
@@ -1579,7 +1579,7 @@ class AdminImport extends AdminTab
 				</select>
 				<a class="button" id="loadImportMatchs" href="#">'.$this->l('Load').'</a>
 				<a class="button" id="deleteImportMatchs" href="#">'.$this->l('Delete').'</a>';
-		
+
 		echo '</div></div><h3>'.$this->l('Please set the value type of each column').'</h3>
 		<div id="error_duplicate_type" class="warning warn" style="display:none;">
 			<h3>'.$this->l('Columns cannot have the same value type').'</h3>
@@ -1744,7 +1744,7 @@ class AdminImport extends AdminTab
 						$this->_errors[] = Tools::displayError('No file was uploaded');
 						break;
 					break;
-				}	
+				}
 			}
 			elseif (!file_exists($_FILES['file']['tmp_name']) OR !@move_uploaded_file($_FILES['file']['tmp_name'], dirname(__FILE__).'/../import/'.$_FILES['file']['name'].'.'.date('Ymdhis')))
 				$this->_errors[] = $this->l('an error occurred while uploading and copying file');

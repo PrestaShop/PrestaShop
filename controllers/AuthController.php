@@ -323,6 +323,8 @@ class AuthControllerCore extends FrontController
 			));
 		}
 
+		$this->context->smarty->assign('genders', Gender::getGenders());
+
 		/* Generate years, months and days */
 		if (isset($_POST['years']) AND is_numeric($_POST['years']))
 			$selectedYears = (int)($_POST['years']);
@@ -364,13 +366,13 @@ class AuthControllerCore extends FrontController
 		if (!empty($back))
 		{
 			$this->context->smarty->assign('back', Tools::safeOutput($back));
-			if (strpos($back, 'order.php') !== false)
+			if (strpos($back, 'order') !== false)
 			{
 				if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
 					$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 				else
 					$countries = Country::getCountries($this->context->language->id, true);
-				
+
 				$this->context->smarty->assign(array(
 					'inOrderProcess' => true,
 					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
@@ -394,16 +396,16 @@ class AuthControllerCore extends FrontController
 		$addressItems = array();
 		$addressFormat = AddressFormat::getOrderedAddressFields(Configuration::get('PS_COUNTRY_DEFAULT'), false, true);
 		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
-		
+
 		foreach ($addressFormat as $addressline)
 			foreach (explode(' ', $addressline) as $addressItem)
 				$addressItems[] = trim($addressItem);
-		
+
 		// Add missing require fields for a new user susbscription form
 		foreach($requireFormFieldsList as $fieldName)
 			if (!in_array($fieldName, $addressItems))
 				$addressItems[] = trim($fieldName);
-				
+
 		foreach (array('inv', 'dlv') as $addressType)
 			$this->context->smarty->assign(array($addressType.'_adr_fields' => $addressFormat, $addressType.'_all_fields' => $addressItems));
 		}
