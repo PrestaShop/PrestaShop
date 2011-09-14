@@ -118,11 +118,6 @@ abstract class AbsTrustedShops
 	{
 		$smarty = $this->context->smarty;
 
-		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
-		{
-			$previousTemplate = $smarty->currentTemplate;
-			$smarty->currentTemplate = substr(basename($template), 0, -4);
-		}
 		$smarty->assign('module_dir', __PS_BASE_URI__.'modules/'.basename($file, '.php').'/');
 		if (($overloaded = self::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === NULL)
 			$result = Tools::displayError('No template found');
@@ -131,8 +126,6 @@ abstract class AbsTrustedShops
 			$smarty->assign('module_template_dir', ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/');
 			$result = $smarty->fetch(($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template, $cacheId, $compileId);
 		}
-		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
-			$smarty->currentTemplate = $previousTemplate;
 		return $result;
 	}
 	

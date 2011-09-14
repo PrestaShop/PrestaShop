@@ -274,9 +274,6 @@ if (isFormValid())
 		if(!$dbInstance->Execute($query))
 			$error['infosInsertSQL'] = '11';
 	unset($dbInstance);
-
-	//select the version of Smarty for the version of php
-    Tools::selectionVersionSmarty();
 }
 
 //////////////////////////

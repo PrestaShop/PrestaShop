@@ -1143,11 +1143,6 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 
-		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
-		{
-			$previousTemplate = $context->smarty->currentTemplate;
-			$context->smarty->currentTemplate = substr(basename($template), 0, -4);
-		}
 		$context->smarty->assign('module_dir', __PS_BASE_URI__.'modules/'.basename($file, '.php').'/');
 		if (($overloaded = self::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === NULL)
 			$result = Tools::displayError('No template found for module').' '.basename($file,'.php');
@@ -1156,8 +1151,6 @@ abstract class ModuleCore
 			$context->smarty->assign('module_template_dir', ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/');
 			$result = $context->smarty->fetch(($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template, $cacheId, $compileId);
 		}
-		if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
-			$context->smarty->currentTemplate = $previousTemplate;
 		return $result;
 	}
 
@@ -1170,12 +1163,7 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 
-		/* Use Smarty 3 API calls */
-		if (!Configuration::get('PS_FORCE_SMARTY_2')) /* PHP version > 5.1.2 */
-			return $context->smarty->isCached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
-		/* or keep a backward compatibility if PHP version < 5.1.2 */
-		else
-			return $context->smarty->is_cached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
+		return $context->smarty->isCached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
 	}
 
 	protected function _clearCache($template, $cacheId = NULL, $compileId = NULL)

@@ -25,10 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (Configuration::get('PS_FORCE_SMARTY_2'))
-	define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty_v2/');
-else
-	define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
+define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
 
 require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 
@@ -45,30 +42,18 @@ $smarty->debugging = false;
 $smarty->debugging_ctrl = 'URL'; // 'NONE' on production
 $smarty->deprecation_notices = false; // so many depreciated yet not migrated smarty calls
 
-if (Configuration::get('PS_FORCE_SMARTY_2')) 
-{	
-	$smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
-	
-	if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
-		$smarty->register_outputfilter('smartyMinifyHTML');
-	if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
-		$smarty->register_outputfilter('smartyPackJSinHTML');
-}
-else
-{
-	if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
-		$smarty->registerFilter('output', 'smartyMinifyHTML');
-	if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
-		$smarty->registerFilter('output', 'smartyPackJSinHTML');
-}
+if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
+	$smarty->registerFilter('output', 'smartyMinifyHTML');
+if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
+	$smarty->registerFilter('output', 'smartyPackJSinHTML');
 
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
 smartyRegisterFunction($smarty, 'function', 't', 'smartyTruncate'); // unused
 smartyRegisterFunction($smarty, 'function', 'm', 'smartyMaxWords'); // unused
-smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // unused
-smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // unused
+smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug only
+smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate');
 
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
@@ -81,27 +66,13 @@ smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Prod
 
 function smartyTranslate($params, &$smarty)
 {
-	/*
-	 * Warning in Smarty-v2 : 2 lines have been added to the Smarty class.
-	 * "public $currentTemplate = null;" into the class itself
-	 * "$this->currentTemplate = Tools::substr(basename($resource_name), 0, -4);" into the "fetch" method
-	 * Notice : before 1.4.2.5, this modification was in the display method
-	 *
-	 * In Smarty-v3 : No modifications, using the existing var $this->smarty->_current_file instead
-	 */
 	global $_LANG, $_MODULES, $cookie, $_MODULE;
 	if (!isset($params['js'])) $params['js'] = 0;
 	if (!isset($params['mod'])) $params['mod'] = false;
 	
 	$string = str_replace('\'', '\\\'', $params['s']);
-	$key = '';
-	if (Configuration::get('PS_FORCE_SMARTY_2')) /* Keep a backward compatibility for Smarty v2 */
-		$key = $smarty->currentTemplate.'_'.md5($string);
-	else
-	{
-		$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_filepath : $smarty->compiler_object->template->getTemplateFilepath());
-		$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
-	}
+	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_filepath : $smarty->compiler_object->template->getTemplateFilepath());
+	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
 	$lang_array = $_LANG;
 	if ($params['mod'])
 	{
@@ -140,13 +111,11 @@ function smartyTranslate($params, &$smarty)
 
 function smartyDieObject($params, &$smarty)
 {
-	Tools::displayAsDeprecated();
 	return Tools::d($params['var']);
 }
 
 function smartyShowObject($params, &$smarty)
 {
-	Tools::displayAsDeprecated();
 	return Tools::p($params['var']);
 }
 
@@ -208,8 +177,5 @@ function smartyRegisterFunction($smarty, $type, $function, $params)
 {
 	if (!in_array($type, array('function', 'modifier')))
 		return false;
-	if (!Configuration::get('PS_FORCE_SMARTY_2'))
-		$smarty->registerPlugin($type, $function, $params); // Use Smarty 3 API calls, only if PHP version > 5.1.2
-	else
-		$smarty->{'register_'.$type}($function, $params); // or keep a backward compatibility if PHP version < 5.1.2
+	$smarty->registerPlugin($type, $function, $params);
 }
