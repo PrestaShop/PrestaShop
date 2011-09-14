@@ -350,16 +350,18 @@ class AdminModules extends AdminTab
 								unset(Context::getContext()->tmpOldShop);
 							}
 						}
-						if ($key != 'configure' AND isset($_GET['bpay']))
+						if ($key != 'configure' && isset($_GET['bpay']))
 							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->context->employee->id));
 					}
-				if (sizeof($module_errors))
+				if (count($module_errors))
 				{
-					$htmlError = '<ul>';
-					foreach ($module_errors AS $module_error)
-						$htmlError .= '<li>'.$module_error.'</li>';
-					$htmlError .= '</ul>';
-					$this->_errors[] = Tools::displayError('The following module(s) were not installed successfully:').$htmlError;
+					// If error during module installation, no redirection
+					$html_error = '<ul>';
+					foreach ($module_errors as $module_error)
+						$html_error .= '<li>'.$module_error.'</li>';
+					$html_error .= '</ul>';
+
+					$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
 				}
 			}
 			if ($return)
@@ -367,7 +369,7 @@ class AdminModules extends AdminTab
 		}
 	}
 
-	function extractArchive($file)
+	public function extractArchive($file)
 	{
 		$success = false;
 		if (substr($file, -4) == '.zip')
@@ -391,7 +393,7 @@ class AdminModules extends AdminTab
 
 	public function display()
 	{
-		if (!isset($_GET['configure']) AND !isset($_GET['delete']) OR sizeof($this->_errors) )
+		if (!isset($_GET['configure']) && !isset($_GET['delete']) || count($this->_errors))
 			$this->displayList();
 	}
 

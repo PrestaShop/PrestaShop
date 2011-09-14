@@ -307,15 +307,14 @@ class AdminGroups extends AdminTab
 				if (!($obj = $this->loadObject()))
 					return;
 				$groupReduction = new GroupReduction();
-				if (!$id_category = Tools::getValue('id_category') OR !Validate::isUnsignedId($id_category))
+				if (!$id_category = Tools::getValue('id_category') || !Validate::isUnsignedId($id_category))
 					$this->_errors[] = Tools::displayError('Wrong category ID');
-				elseif (!$reduction = Tools::getValue('reductionByCategory') OR !Validate::isPrice($reduction))
+				else if (!$reduction = Tools::getValue('reductionByCategory') || !Validate::isPrice($reduction))
 					$this->_errors[] = Tools::displayError('Invalid reduction (must be a percentage)');
-				elseif (Tools::getValue('reductionByCategory') > 100 OR Tools::getValue('reductionByCategory') < 0)
+				else if (Tools::getValue('reductionByCategory') > 100 || Tools::getValue('reductionByCategory') < 0)
 					$this->_errors[] = Tools::displayError('Reduction value is incorrect');
-				elseif (GroupReduction::doesExist((int)($obj->id), $id_category)){
+				else if (GroupReduction::doesExist((int)$obj->id, $id_category))
 					$this->_errors[] = Tools::displayError('A reduction already exists for this category.');
-				}
 				else
 				{
 					$category = new Category((int)$id_category);

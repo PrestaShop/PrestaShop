@@ -74,7 +74,11 @@ class TabCore extends ObjectModel
 	{
 		$this->position = self::getNbTabs($this->id_parent) + 1;
 		if (parent::add($autodate, $nullValues))
+		{
+			// refresh cache when adding new tab
+			self::$_getIdFromClassName[$this->class_name] = $this->id;
 			return self::initAccess($this->id);
+		}
 		return false;
 	}
 
@@ -235,5 +239,3 @@ class TabCore extends ObjectModel
 		return true;
 	}
 }
-
-

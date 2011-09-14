@@ -8,4 +8,5 @@ if (substr(Tools::encrypt('blocklayered/index'),0,10) != Tools::getValue('token'
 	die('Bad token');
 
 $blockLayered = new BlockLayered();
-echo $blockLayered->indexUrl((int)Tools::getValue('id_category'), (int)Tools::getValue('truncate'));
+$cursor = Tools::jsonDecode(Tools::getValue('cursor', '{}'), true);
+echo $blockLayered->indexUrl($cursor, (int)Tools::getValue('ajax'), (int)Tools::getValue('truncate'));

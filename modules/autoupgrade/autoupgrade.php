@@ -64,7 +64,6 @@ class Autoupgrade extends Module
 		
 		if (!$res 
 			OR !Tab::getIdFromClassName('AdminSelfUpgrade')
-			OR !(Hook::get('backOfficeHeader') AND !$this->registerHook('backOfficeHeader'))
 			OR !parent::install()
 		)
 			return false;
@@ -79,26 +78,21 @@ class Autoupgrade extends Module
 		if(file_exists(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs'.'AdminUpgrade.php'))
 		{
 			// Should we create the correct AdminUpgrade tab (not the module)
-			$tab = new Tab();
-			$tab->class_name = 'AdminUpgrade';
-			$tab->module = false;
-			$tab->id_parent = 9;
-			$tab->name = array_fill(1,sizeof(Language::getLanguages(false)), 'Upgrade');
-			$res = $tab->save();
+			if($idOldTab = Tab::getIdFromClassName('AdminUpgrade'))
+			{
+				$tab = new Tab($idOldTab);
+				$res &= $tab->delete();
+		}
+			$res &= unlink(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs'.'AdminUpgrade.php');
 		}
 		
 		if (file_exists(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade'.DIRECTORY_SEPARATOR.'ajax-upgradetab.php'))
 		$res &= @unlink(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade'.DIRECTORY_SEPARATOR.'ajax-upgradetab.php');
-		if($res OR !parent::uninstall())
+		if (!$res OR !parent::uninstall())
 			return false;
 
 		return true;
 	}
 
-	public function hookBackOfficeHeader($params)
-	{
-		echo '<link type="text/css" rel="stylesheet" href="../modules/autoupgrade/autoupgrade.css" />';
 
 	}
-
-}

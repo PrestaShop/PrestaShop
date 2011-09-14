@@ -138,7 +138,7 @@ class BlockLayered extends Module
 	/*
 	 * Url indexation
 	 */
-	public function indexUrl($idCategory = null, $truncate = true)
+	public function indexUrl($cursor = array(), $ajax = false, $truncate = true)
 	{
 		if($truncate)
 			Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'layered_friendly_url');
@@ -177,8 +177,8 @@ class BlockLayered extends Module
 						if (!isset($attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']]))
 							$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']] = array();
 						$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']][] = array('name' => $attribute['name'],
-						'id_name' => 'c'.$attribute['id_name'], 'value' => $attribute['value'], 'id_value' => $attribute['id_value'],
-						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
+						'id_name' => 'c'.$attribute['id_name'], 'value' => $attribute['value'], 'id_value' => $attribute['id_value'].'_'.$attribute['id_name'],
+						'id_id_value' => $attribute['id_value'], 'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					}
 					break;
 				
@@ -218,30 +218,101 @@ class BlockLayered extends Module
 							$attributeValues[$category['id_lang']] = array();
 						if (!isset($attributeValues[$category['id_lang']][$filter['id_category']]))
 							$attributeValues[$category['id_lang']][$filter['id_category']] = array();
-						if (!isset($attributeValues[$category['id_lang']][$filter['id_category']]['cat'.$category['id_category']]))
-							$attributeValues[$category['id_lang']][$filter['id_category']]['cat'.$category['id_category']] = array();
-						$attributeValues[$category['id_lang']][$filter['id_category']]['cat'.$category['id_category']][] = array('name' => $this->l('Categories'),
+						if (!isset($attributeValues[$category['id_lang']][$filter['id_category']]['category']))
+							$attributeValues[$category['id_lang']][$filter['id_category']]['category'] = array();
+						$attributeValues[$category['id_lang']][$filter['id_category']]['category'][] = array('name' => $this->l('Categories'),
 						'id_name' => null, 'value' => $category['name'], 'id_value' => $category['id_category'],
 						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 		}
-					$filter['id_category'];
 					break;
 					
 				case 'manufacturer':
-					// @TODO
+					$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+					SELECT m.name as name,l.id_lang as id_lang,  id_manufacturer
+					FROM '._DB_PREFIX_.'manufacturer m , '._DB_PREFIX_.'lang l
+					');
+				
+					foreach ($manufacturers as $manufacturer)
+					{
+						if (!isset($attributeValues[$manufacturer['id_lang']]))
+							$attributeValues[$manufacturer['id_lang']] = array();
+						if (!isset($attributeValues[$manufacturer['id_lang']][$filter['id_category']]))
+							$attributeValues[$manufacturer['id_lang']][$filter['id_category']] = array();
+						if (!isset($attributeValues[$manufacturer['id_lang']][$filter['id_category']]['manufacturer']))
+							$attributeValues[$manufacturer['id_lang']][$filter['id_category']]['manufacturer'] = array();
+						$attributeValues[$manufacturer['id_lang']][$filter['id_category']]['manufacturer'][] = array('name' => $this->translateWord('Manufacturer', $manufacturer['id_lang']),
+						'id_name' => null, 'value' => $manufacturer['name'], 'id_value' => $manufacturer['id_manufacturer'],
+						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
+					}
 					break;
 				
-				case 'avaibility':
-					// @TODO
+				case 'quantity':
+					foreach (array (0 => $this->translateWord('Not available',(int)$filter['id_lang']), 1 => $this->translateWord('In stock', (int)$filter['id_lang']))
+					as $key => $quantity)
+						$attributeValues[$filter['id_lang']][$filter['id_category']]['quantity'][] = array('name' => $this->translateWord('Availability', (int)$filter['id_lang']),
+						'id_name' => null, 'value' => $quantity, 'id_value' => $key, 'id_id_value' => 0,
+						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
+					break;
+				
+				case 'condition':
+					foreach (array('new' => $this->translateWord('New', (int)$filter['id_lang']), 'used' => $this->translateWord('Used', (int)$filter['id_lang']),
+					'refurbished' => $this->translateWord('Refurbished', (int)$filter['id_lang']))
+					as $key => $condition)
+						$attributeValues[$filter['id_lang']][$filter['id_category']]['condition'][] = array('name' => $this->translateWord('Condition', (int)$filter['id_lang']),
+						'id_name' => null, 'value' => $condition, 'id_value' => $key,
+						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					break;
 	}
 
-		// Foreach langs
-		foreach ($attributeValues as $id_lang => $tmp1)
-	{
-			// Foreach categories
-			foreach ($tmp1 as $id_category => $tmp2)
+		$maxExecutionTime = ini_get('max_execution_time') * 0.9; // 90% of safety margin
+		if ($maxExecutionTime > 5)
+			$maxExecutionTime = 5;
+		$startTime = microtime(true);
+		$memoryLimit = (Tools::getMemoryLimit() * 0.9);
+		
+		if (empty($cursor))
+		{
+			$cursor = array(
+				'attribute_values' => 0,
+				'tmp1' => 0,
+				'possibility' => 0,
+				'total' => 0
+			);
+			
+			if ($ajax)
 			{
+				// Calculation, to eval progression
+				$nbPosibilities = 0;
+				foreach ($attributeValues as $idLang => $tmp1)
+					foreach ($tmp1 as $key => $tmp2)
+					{
+						$nbPosibilitiesTmp = 1;
+						foreach ($tmp2 as $name)
+						{
+							$count = count($name)+1;
+							$nbPosibilitiesTmp *= $count;
+						}
+						$nbPosibilities += $nbPosibilitiesTmp;
+					}
+				$cursor['nb_posibilities'] = $nbPosibilities;
+			}
+		}
+		
+		
+		// Foreach langs
+		$attributeValuesKeys = array_keys($attributeValues);
+		for (;$cursor['attribute_values'] < count($attributeValuesKeys); $cursor['attribute_values']++)
+	{
+			$id_lang = $attributeValuesKeys[$cursor['attribute_values']];
+			$tmp1 = &$attributeValues[$id_lang];
+			
+			// Foreach categories
+			$tmp1Keys = array_keys($tmp1);
+			for(; $cursor['tmp1'] < count($tmp1Keys); $cursor['tmp1']++)
+			{
+				$id_category = $tmp1Keys[$cursor['tmp1']];
+				$tmp2 = &$tmp1[$id_category];
+				
 				$cursors = array_fill(0, count($tmp2), 0);
 				$limits = array();
 				$nbName = count($tmp2);
@@ -257,53 +328,112 @@ class BlockLayered extends Module
 				}
 				
 				// Loop all url posibilities
-				for ($i = 1; $i < $nbPosibilities; $i++)
+				for (; $cursor['possibility'] < $nbPosibilities; $cursor['possibility']++)
 				{
+					if ($memoryLimit < memory_get_peak_usage() OR (microtime(true) - $startTime) > $maxExecutionTime)
+					{
+						if ($ajax)
+							return Tools::jsonEncode(array('cursor' => Tools::jsonEncode($cursor)));
+						Tools::file_get_contents(Tools::getProtocol().Tools::getHttpHost().'/modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&cursor='.Tools::jsonEncode($cursor));
+						return 1;
+					}
+					
+					$cursor['total']++;
 					// generate all parameters posibilities
 					$a = 1;
-					foreach ($cursors as $position => $cursor)
+					foreach ($cursors as $position => $cursorP)
 					{
 						// Get all possible combination (one by group)
 						// 0 means no combinations selected in the group
-						$cursors[$position] = (($i / ($a)) % $limits[$position]);
+						$cursors[$position] = (($cursor['possibility'] / ($a)) % $limits[$position]);
 						$a *= $limits[$position];
 					}
-					
 					$link = '';
 					$selectedFilters = array('category' => array());
 					
 					// Generate url with selected filters
-					foreach ($cursors as $position => $cursor)
+					foreach ($cursors as $position => $cursorP)
 					{
-						if ($cursor != 0)
+						if ($cursorP != 0)
 						{
-							$link .= '/'.Tools::link_rewrite($tmp2[$position][$cursor-1]['name'].'-'.$tmp2[$position][$cursor-1]['value']);
-							if (!isset($selectedFilters[$tmp2[$position][$cursor-1]['type']]))
-								$selectedFilters[$tmp2[$position][$cursor-1]['type']] = array();
-							$selectedFilters[$tmp2[$position][$cursor-1]['type']][$tmp2[$position][$cursor-1]['id_value']] = $tmp2[$position][$cursor-1]['id_value'];
+							$link .= '/'.Tools::link_rewrite($tmp2[$position][$cursorP-1]['name'].'-'.$tmp2[$position][$cursorP-1]['value']);
+							if (!isset($selectedFilters[$tmp2[$position][$cursorP-1]['type']]))
+								$selectedFilters[$tmp2[$position][$cursorP-1]['type']] = array();
+							if (!isset($tmp2[$position][$cursorP-1]['id_id_value']))
+								$tmp2[$position][$cursorP-1]['id_id_value'] = $tmp2[$position][$cursorP-1]['id_value'];
+							$selectedFilters[$tmp2[$position][$cursorP-1]['type']][$tmp2[$position][$cursorP-1]['id_id_value']] = $tmp2[$position][$cursorP-1]['id_value'];
 						}
 					}
 					
 					$urlKey = md5($link);
-					$idLayeredFriendlyUrl = Db::getInstance()->getValue('SELECT id_layered_friendly_url FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.$urlKey.'\'');
+					$idLayeredFriendlyUrl = Db::getInstance()->getValue('SELECT id_layered_friendly_url FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `id_lang` = '.$id_lang.' AND `url_key` = \''.$urlKey.'\'');
 					if ($idLayeredFriendlyUrl == false)
 					{
 						Db::getInstance()->AutoExecute(_DB_PREFIX_.'layered_friendly_url', array('url_key' => $urlKey, 'data' => serialize($selectedFilters), 'id_lang' => $id_lang), 'INSERT');
 						$idLayeredFriendlyUrl = Db::getInstance()->Insert_ID();
 					}
 				}
+				$cursor['possibility'] = 0;
 			}
+			$cursor['tmp1'] = 0;
 		}
+		if ($ajax)
+			return '{"result": 1}';
+		else
 		return 1;
+	}
+	
+	public function translateWord($string, $id_lang ) 
+	{
+		static $_MODULES = array();
+		global $_MODULE;
+
+		$file = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php';
+
+		if (!array_key_exists($id_lang,$_MODULES))
+		{
+			if (!file_exists($file))
+				return $string;
+			include $file;
+			$_MODULES[$id_lang] = $_MODULE;
+		}
+
+		$string = str_replace('\'', '\\\'', $string);
+
+		// set array key to lowercase for 1.3 compatibility
+		$_MODULES[$id_lang] = array_change_key_case($_MODULES[$id_lang]);
+		$currentKey = '<{'.strtolower( $this->name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($this->name).'_'.md5($string);
+		$defaultKey = '<{'.strtolower( $this->name).'}prestashop>'.strtolower($this->name).'_'.md5($string);
+			
+		if (isset($_MODULES[$id_lang][$currentKey]))
+			$ret = stripslashes($_MODULES[$id_lang][$currentKey]);
+		elseif (isset($_MODULES[$id_lang][Tools::strtolower($currentKey)]))
+			$ret = stripslashes($_MODULES[$id_lang][Tools::strtolower($currentKey)]);
+		elseif (isset($_MODULES[$id_lang][$defaultKey]))
+			$ret = stripslashes($_MODULES[$id_lang][$defaultKey]);
+		elseif (isset($_MODULES[$id_lang][Tools::strtolower($defaultKey)]))
+			$ret = stripslashes($_MODULES[$id_lang][Tools::strtolower($defaultKey)]);
+		else
+			$ret = stripslashes($string);
+
+		return  str_replace('"', '&quot;', $ret);
 	}
 	
 	public function hookProductListAssign($params)
 	{
+		global $smarty;
 		if (!Configuration::get('PS_LAYERED_INDEXED'))
 			return;
 		$params['hookExecuted'] = true;
 		$params['catProducts'] = array();
 		$selectedFilters = $this->getSelectedFilters();
+		$filterBlock = self::getFilterBlock($selectedFilters);
+		$title = '';
+		if (is_array($filterBlock['title_values']))
+			foreach ($filterBlock['title_values'] as $key => $val)
+				$title .= ' – '.$key.' '.implode('/', $val);
+		
+		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selectedFilters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
 	}
 	
@@ -384,7 +514,6 @@ class BlockLayered extends Module
 					<p>'.$this->l('Use this feature in url generated by the module block layered navigation').'</p>
 				</div>';
 	}
-	
 	
 	/*
 	 * $cursor $cursor in order to restart indexing from the last state
@@ -591,9 +720,35 @@ class BlockLayered extends Module
 
 	public function hookHeader($params)
 	{
+		global $smarty, $cookie;
+		
 		if (Tools::getValue('id_category', Tools::getValue('id_category_layered', 1)) == 1)
 			return;
 
+		$idLang = (int)$cookie->id_lang;
+		$category = new Category((int)Tools::getValue('id_category'));
+		$categoryMetas = Tools::getMetaTags($idLang, '');
+		$categoryTitle = (empty($category->meta_title[$idLang])?$category->name[$idLang]:$category->meta_title[$idLang]);
+
+		// Generate meta title and meta description
+		$selectedFilters = $this->getSelectedFilters();
+		$filterBlock = self::getFilterBlock($selectedFilters);
+		$title = '';
+		if (is_array($filterBlock['title_values']))
+			foreach ($filterBlock['title_values'] as $key => $val)
+				$title .= $key.' '.implode('/', $val).' – ';
+		$title = rtrim($title, ' – ');
+		$metaComplement = ucfirst(strtolower($title));
+		$metaKeyWordsComplement = str_replace(' – ', ', ', strtolower($title));
+		
+		if (!empty($metaComplement))
+		{
+			$smarty->assign('meta_title', str_replace(' - '.Configuration::get('PS_SHOP_NAME'), ' – '.$metaComplement.' - '.Configuration::get('PS_SHOP_NAME'), $categoryMetas['meta_title']));
+			$smarty->assign('meta_description', rtrim($categoryTitle.' – '.$metaComplement.' – '.$categoryMetas['meta_description'], ' – '));
+		}
+		if (!empty($metaKeyWordsComplement))
+			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$metaKeyWordsComplement.', '.$categoryMetas['meta_keywords'], ', '));
+		
 		Tools::addJS(($this->_path).'blocklayered.js');
 		Tools::addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		Tools::addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
@@ -795,7 +950,7 @@ class BlockLayered extends Module
 			<script type="text/javascript">
 				$(\'#url-indexer\').click(function() {
 					if (this.cursor == undefined)
-						this.cursor = 0;
+						this.cursor = {};
 						
 					if (this.legend == undefined)
 							this.legend = $(this).html();
@@ -806,47 +961,51 @@ class BlockLayered extends Module
 					if (this.running == true)
 						return false;
 						
+					$(\'.ajax-message\').hide();
+					
 					this.running = true;
 					
-					this.categories = '.Tools::jsonEncode($categoryList).';
-					
-					$(this).html(this.legend+\' (in progress, 0/\'+this.categories.length+\')\');
+					if (typeof(this.restartAllowed) == \'undefined\' || this.restartAllowed)
+					{
+						$(this).html(this.legend+\' (in progress)\');
 					$(\'#indexing-warning\').show();
+					}
 					
+					this.restartAllowed = false;
 					
-					var first = true;
-					var it = this;
-					$(this.categories).each(function(cursor, idCategory) {
-						it.cursor = cursor;
-						if(cursor == 0) {
-							var truncate = 1;
-						}
-						else {
-							var truncate = 0;
-						}
-						it.idCategory = idCategory;
 						$.ajax({
-							url: it.href.replace(\'&truncate=1\',\'\')+\'&id_category=\'+it.idCategory+\'&truncate=\'+truncate,
-							context: it,
+						url: this.href+\'&ajax=1&cursor=\'+this.cursor,
+						context: this,
 							dataType: \'json\',
-							async: false,
-							success: function(res) {
-								$(this).html(this.legend+\' (in progress, \'+(parseInt(it.cursor)+1)+\'/\'+it.categories.length+\')\');
-							},
-							error: function(res) {
-								alert(\'Indexation failed\');
+						success: function(res)
+						{
+							this.running = false;
+							if (res.result)
+							{
+								this.cursor = 0;
 								$(\'#indexing-warning\').hide();
-									$(it).html(this.legend+\' (failed)\');
-								it.cursor = 0;
+								$(this).html(this.legend);
+								$(\'#ajax-message-ok span\').html(\''.$this->l('Url indexation finished').'\');
+								$(\'#ajax-message-ok\').show();
+								return;
+							}
+							this.cursor = res.cursor;
+							var cursorObj = JSON.parse(this.cursor);
+							$(this).html(this.legend+\' (in progress, \'+(cursorObj.total / cursorObj.nb_posibilities * 100).toFixed(2) +\'%)\');
+							this.click();
+							},
+						error: function(res)
+						{
+							this.restartAllowed = true;
+								$(\'#indexing-warning\').hide();
+							$(\'#ajax-message-ko span\').html(\''.$this->l('Url indexation failed').'\');
+							$(\'#ajax-message-ko\').show();
+							$(this).html(this.legend);
+							
+							this.cursor = 0;
+							this.running = false;
 							}
 						});
-					});
-					
-					
-					$(this).html(this.legend);
-					$(\'#indexing-warning\').hide();
-					this.running = false;
-					
 					return false;
 				});
 				$(\'.ajaxcall\').each(function(it, elm) {
@@ -1466,9 +1625,14 @@ class BlockLayered extends Module
 		return $this->products;
 	}
 
-	public function generateFiltersBlockNew($selectedFilters = array())
+	public function getFilterBlock($selectedFilters = array())
 	{
-		global $cookie, $smarty;
+		global $cookie;
+		static $cache = null;
+		
+		if (is_array($cache)) {
+			return $cache;
+		}
 		
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
 		if ($id_parent == 1)
@@ -1476,7 +1640,6 @@ class BlockLayered extends Module
 			
 		$parent = new Category((int)$id_parent);
 		
-			
 		/* Get the filters for the current category */
 		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM '._DB_PREFIX_.'layered_category WHERE id_category = '.(int)$id_parent.' GROUP BY `type`, id_value ORDER BY position ASC');
 		// Remove all empty selected filters
@@ -1775,10 +1938,11 @@ class BlockLayered extends Module
 		//generate SEO link
 		$optionCheckedArray = array();
 		$paramGroupSelectedArray = array();
+		$titleValues = array();
 		$link = new Link();
+		
 		$linkBase = $link->getCategoryLink($id_parent,Category::getLinkRewrite($id_parent, (int)($cookie->id_lang)), (int)($cookie->id_lang));
 		$filterBlockList = array();
-			
 		foreach ($filterBlocks as $typeFilter)
 		{
 			$paramGroupSelected = '';
@@ -1788,6 +1952,9 @@ class BlockLayered extends Module
 				{
 					$paramGroupSelected .= '-'.Tools::link_rewrite($value['name']);
 					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][]  = Tools::link_rewrite($value['name']);
+					if (!isset($titleValues[$typeFilter['name']]))
+						$titleValues[$typeFilter['name']] = array();
+					$titleValues[$typeFilter['name']][] = $value['name'];
 				}
 				else 
 					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][] = array();
@@ -1822,6 +1989,7 @@ class BlockLayered extends Module
 					$typeFilter['values'][$key]['link'] =  $linkBase.$parametersLink;
 				}
 			}
+		
 		$nFilters = 0;
 		if(isset($selectedFilters['price']))
 			if($priceArray['min'] == $selectedFilters['price'][0] && $priceArray['max'] == $selectedFilters['price'][1])
@@ -1833,9 +2001,17 @@ class BlockLayered extends Module
 		foreach ($selectedFilters AS $filters)
 			$nFilters += sizeof($filters);
 		
-		$smarty->assign(array('layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'), 'id_category_layered' => (int)$id_parent,
-		'selected_filters' => $selectedFilters, 'n_filters' => (int)$nFilters, 'nbr_filterBlocks' => sizeof($filterBlocks), 'filters' => $filterBlocks));
+		$cache = array('layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'), 'id_category_layered' => (int)$id_parent,
+		'selected_filters' => $selectedFilters, 'n_filters' => (int)$nFilters, 'nbr_filterBlocks' => sizeof($filterBlocks), 'filters' => $filterBlocks,
+		'title_values' => $titleValues);
 
+		return $cache;
+	}
+	
+	public function generateFiltersBlock($selectedFilters)
+	{
+		global $smarty;
+		$smarty->assign($this->getFilterBlock($selectedFilters));
 		return $this->display(__FILE__, 'blocklayered.tpl');
 	}
 	
@@ -1966,15 +2142,6 @@ class BlockLayered extends Module
 		$queryFilters = rtrim($queryFilters, ',').') ';
 		
 		return array('where' => $queryFilters);
-	}
-	
-	/*
-	 * This function must be improved
-	 * For the moment, we don't "filter filters"
-	 */
-	public function generateFiltersBlock($selectedFilters = array())
-	{
-		return self::generateFiltersBlockNew($selectedFilters);
 	}
 	
 	public function ajaxCallBackOffice($categoryBox = array(), $id_layered_filter = NULL)

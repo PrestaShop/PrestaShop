@@ -191,7 +191,10 @@ class CategoryCore extends ObjectModel
 			$this->position = self::getLastPosition((int)$this->id_parent);
 		$ret = parent::update($nullValues);
 		if (!isset($this->doNotRegenerateNTree) OR !$this->doNotRegenerateNTree)
+		{
 			self::regenerateEntireNtree();
+			$this->recalculateLevelDepth($this->id_category);
+		}
 		Module::hookExec('categoryUpdate', array('category' => $this));
 		return $ret;
 	}
@@ -393,6 +396,27 @@ class CategoryCore extends ObjectModel
 		$right = (int)$n++;
 
 		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'category SET nleft = '.(int)$left.', nright = '.(int)$right.' WHERE id_category = '.(int)$id_category.' LIMIT 1');
+	}
+
+	/**
+	  * Re-calculate the levels of all childs
+	  */
+	public function recalculateLevelDepth($id_category)
+	{
+		/* Gets all childs */
+		$categories = Db::getInstance()->ExecuteS('SELECT id_category, id_parent, level_depth FROM '._DB_PREFIX_.'category
+												   WHERE id_parent = '.$id_category);
+		$level = Db::getInstance()->getRow('SELECT level_depth FROM '._DB_PREFIX_.'category
+											WHERE id_category = '.$id_category);
+		/* Update level of depth  for all childs */
+		foreach ($categories as $sub_category)
+		{
+			Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'category
+										SET level_depth = '.($level['level_depth'] + 1).'
+										WHERE id_category = '.$sub_category['id_category']);
+			/* Recursive call */
+			$this->recalculateLevelDepth($sub_category['id_category']);
+		}
 	}
 
 	/**
