@@ -1387,7 +1387,7 @@ class BlockLayered extends Module
 		/* If the current category isn't defined of if it's homepage, we have nothing to display */
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
 		if ($id_parent == 1)
-			return;
+			return false;
 
 		$queryFilters = ' AND p.active = 1';
 		
@@ -1888,7 +1888,7 @@ class BlockLayered extends Module
 			{
 				if (is_array($value) AND array_key_exists('checked', $value ))
 				{
-					$paramGroupSelected .= '-'.Tools::link_rewrite($value['name']);
+					$paramGroupSelected .= '-'.str_replace('-', '_', Tools::link_rewrite($value['name']));
 					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][]  = Tools::link_rewrite($value['name']);
 				
 					if (!isset($titleValues[$typeFilter['name']]))
@@ -1900,7 +1900,7 @@ class BlockLayered extends Module
 			}
 			if(!empty($paramGroupSelected))
 			{
-				$paramSelected .= '/'.Tools::link_rewrite($typeFilter['name']).$paramGroupSelected;
+				$paramSelected .= '/'.str_replace('-', '_', Tools::link_rewrite($typeFilter['name'])).$paramGroupSelected;
 				$optionCheckedArray[Tools::link_rewrite($typeFilter['name'])] = $paramGroupSelected;
 			}
 		}
@@ -1912,21 +1912,32 @@ class BlockLayered extends Module
 			{	
 				foreach ($typeFilter['values'] as $key => $values)
 				{
+					$nofollow = false;
 					$optionCheckedCloneArray = $optionCheckedArray;
 					//if not filters checked, add parameter
 					if(!in_array(Tools::link_rewrite($values['name']), $paramGroupSelectedArray[Tools::link_rewrite($typeFilter['name'])]))
 					{
 						//update parameter filter checked before
-						if(array_key_exists(Tools::link_rewrite($typeFilter['name']), $optionCheckedArray))
+						if(array_key_exists(Tools::link_rewrite($typeFilter['name']), $optionCheckedArray)) {
 							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] = $optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])].'-'.str_replace('-', '_', Tools::link_rewrite($values['name']));
+							$nofollow = true;
+						}
 						else 
 							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] =  '-'.str_replace('-', '_', Tools::link_rewrite($values['name']));
+					}
+					else
+					{
+						// Remove selected parameters
+						$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] = str_replace('-'.str_replace('-', '_', Tools::link_rewrite($values['name'])), '', $optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])]);
+						if(empty($optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])]))
+							unset($optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])]);
 					}
 					$parameters = '';
 					foreach ($optionCheckedCloneArray as $keyGroup => $valueGroup)
 						$parameters .= '/'.str_replace('-', '_',$keyGroup).$valueGroup;
 					//write link
 					$typeFilter['values'][$key]['link'] =  $linkBase.$parameters;
+					$typeFilter['values'][$key]['rel'] = ($nofollow)?'nofollow':'';
 				}
 			}
 		}
@@ -1944,7 +1955,7 @@ class BlockLayered extends Module
 		
 		$cache = array('layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'), 'id_category_layered' => (int)$id_parent,
 		'selected_filters' => $selectedFilters, 'n_filters' => (int)$nFilters, 'nbr_filterBlocks' => sizeof($filterBlocks), 'filters' => $filterBlocks,
-		'title_values' => $titleValues);
+		'title_values' => $titleValues, 'current_friendly_url' => htmlentities($paramSelected), 'nofollow' => $nofollow);
 
 		return $cache;
 	}
@@ -1952,8 +1963,13 @@ class BlockLayered extends Module
 	public function generateFiltersBlock($selectedFilters)
 	{
 		global $smarty;
+		if($filterBlock = $this->getFilterBlock($selectedFilters))
+		{
 		$smarty->assign($this->getFilterBlock($selectedFilters));
 		return $this->display(__FILE__, 'blocklayered.tpl');
+	}
+		else
+			return false;
 	}
 	
 	/*

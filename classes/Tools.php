@@ -941,6 +941,29 @@ class ToolsCore
 			$str = mb_strtolower($str, 'utf-8');
 
 		$str = trim($str);
+		$str = self::replaceAccentedChars($str);
+
+		// Remove all non-whitelist chars.
+		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
+		$str = preg_replace('/[\s\'\:\/\[\]-]+/',' ', $str);
+		$str = preg_replace('/[ ]/','-', $str);
+		$str = preg_replace('/[\/]/','-', $str);
+
+		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
+		// This way we lose fewer special chars.
+		$str = strtolower($str);
+
+		return $str;
+	}
+
+	/**
+	 * Replace all accented chars by their equivalent non accented chars.
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	public static function replaceAccentedChars($str)
+	{
 		$str = preg_replace('/[\x{0105}\x{0104}\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}]/u','a', $str);
 		$str = preg_replace('/[\x{00E7}\x{010D}\x{0107}\x{0106}]/u','c', $str);
 		$str = preg_replace('/[\x{010F}]/u','d', $str);
@@ -958,17 +981,6 @@ class ToolsCore
 		$str = preg_replace('/[\x{017C}\x{017A}\x{017B}\x{0179}\x{017E}]/u','z', $str);
 		$str = preg_replace('/[\x{00E6}]/u','ae', $str);
 		$str = preg_replace('/[\x{0153}]/u','oe', $str);
-	
-		// Remove all non-whitelist chars.
-		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
-		$str = preg_replace('/[\s\'\:\/\[\]-]+/',' ', $str);
-		$str = preg_replace('/[ ]/','-', $str);
-		$str = preg_replace('/[\/]/','-', $str);
-		
-		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
-		// This way we lose fewer special chars. 
-		$str = strtolower($str);
-
 		return $str;
 	}
 
