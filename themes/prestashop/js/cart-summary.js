@@ -150,7 +150,7 @@ function upQuantity(id, qty)
        async: true,
        cache: false,
        dataType: 'json',
-       data: 'ajax=true&add&summary&id_product='+productId+'&ipa='+productAttributeId + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
+       data: 'ajax=true&add&getproductprice&summary&id_product='+productId+'&ipa='+productAttributeId + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
        success: function(jsonData)
        {
        		if (jsonData.hasError)
@@ -206,7 +206,7 @@ function downQuantity(id, qty)
 	       async: true,
 	       cache: false,
 	       dataType: 'json',
-	       data: 'ajax=true&add&summary&id_product='+productId+'&ipa='+productAttributeId+'&op=down' + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
+	       data: 'ajax=true&add&getproductprice&summary&id_product='+productId+'&ipa='+productAttributeId+'&op=down' + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
 	       success: function(jsonData)
 	       {
 	       		if (jsonData.hasError)
@@ -250,6 +250,21 @@ function updateCartSummary(json)
 
 	for (i=0;i<json.products.length;i++)
 	{
+		// if reduction, we need to show it in the cart by showing the initial price above the current one
+		var reduction = json.products[i].reduction_applies;
+		var initial_price_text = '';
+		initial_price = formatCurrency(json.products[i].price_without_quantity_discount, currencyFormat, currencySign, currencyBlank);
+		var current_price = '';
+		if (priceDisplayMethod != 0)
+			current_price = formatCurrency(json.products[i].price, currencyFormat, currencySign, currencyBlank);
+		else
+			current_price = formatCurrency(json.products[i].price_wt, currencyFormat, currencySign, currencyBlank);
+		if (reduction && typeof(initial_price) != 'undefined')
+		{
+			if (initial_price != '' && initial_price > current_price)
+				initial_price_text = '<span style="text-decoration:line-through;">'+initial_price+'</span><br />';
+		}
+
 		key_for_blockcart = json.products[i].id_product+'_'+json.products[i].id_product_attribute;
 		if (json.products[i].id_product_attribute == 0)
 			key_for_blockcart = json.products[i].id_product;
@@ -259,13 +274,13 @@ function updateCartSummary(json)
 		if (priceDisplayMethod != 0)
 		{
     		$('#cart_block_product_'+key_for_blockcart+' span.price').html(formatCurrency(json.products[i].total, currencyFormat, currencySign, currencyBlank));
-			$('#product_price_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute).html(formatCurrency(json.products[i].price, currencyFormat, currencySign, currencyBlank));
+   			$('#product_price_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute).html(initial_price_text+current_price);
     		$('#total_product_price_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute).html(formatCurrency(json.products[i].total, currencyFormat, currencySign, currencyBlank));
 		}
 		else
 		{
     		$('#cart_block_product_'+key_for_blockcart+' span.price').html(formatCurrency(json.products[i].total_wt, currencyFormat, currencySign, currencyBlank));
-			$('#product_price_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute).html(formatCurrency(json.products[i].price_wt, currencyFormat, currencySign, currencyBlank));
+			$('#product_price_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute).html(initial_price_text+current_price);
     		$('#total_product_price_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute).html(formatCurrency(json.products[i].total_wt, currencyFormat, currencySign, currencyBlank));
 		}
 
@@ -286,6 +301,7 @@ function updateCartSummary(json)
 			$('#cart_quantity_down_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+(json.products[i].id_customization != null ? '_'+json.products[i].id_customization : '')).fadeTo('slow',0.3);
 		else
 			$('#cart_quantity_down_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+(json.products[i].id_customization != null ? '_'+json.products[i].id_customization : '')).fadeTo('slow',1);
+
 	}
 
 	// Update discounts
@@ -407,4 +423,3 @@ function updateHookShoppingCartExtra(html)
 {
 	$('#HOOK_SHOPPING_CART_EXTRA').html(html);
 }
-

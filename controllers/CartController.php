@@ -55,6 +55,10 @@ class CartControllerCore extends FrontController
 				$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
 				$result['HOOK_SHOPPING_CART'] = Module::hookExec('shoppingCart', $result['summary']);
 				$result['HOOK_SHOPPING_CART_EXTRA'] = Module::hookExec('shoppingCartExtra', $result['summary']);
+				// Display reduced price (or not) without quantity discount
+				if (Tools::getIsset('getproductprice'))
+					foreach ($result['summary']['products'] as $key => $product)
+						$result['summary']['products'][$key]['price_without_quantity_discount'] = Product::getPriceStatic($product['id_product'], !Product::getTaxCalculationMethod(), $product['id_product_attribute']);
 				die(Tools::jsonEncode($result));
 			}
 			else
