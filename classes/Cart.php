@@ -484,6 +484,7 @@ class CartCore extends ObjectModel
 			$row = array_merge($row, $row2);
 
 			$row['reduction_applies'] = ($specificPriceOutput AND (float)$specificPriceOutput['reduction']);
+			$row['quantity_discount_applies'] = ($specificPriceOutput AND $row['cart_quantity'] >= (int)$specificPriceOutput['from_quantity']);
 			$row['id_image'] = Product::defineProductImage($row,$this->id_lang);
 			$row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
 			$row['features'] = Product::getFeaturesStatic((int)$row['id_product']);
@@ -1448,7 +1449,7 @@ class CartCore extends ObjectModel
 	*
 	* @return array Cart details
 	*/
-	function getSummaryDetails($id_lang = null)
+	public function getSummaryDetails($id_lang = null)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
