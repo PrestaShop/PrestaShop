@@ -1,10 +1,11 @@
 <?
-		include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "inc" . DIRECTORY_SEPARATOR . "config.php");		
-		require_once('../../config/config.inc.php');
-		require_once('../init.php');
-		$error = '';
-		$fileMoved = array();
-		$unmovedDocDueToSamePath = array();
+	include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "inc" . DIRECTORY_SEPARATOR . "config.php");		
+	define('PS_ADMIN_DIR', getcwd());
+	require_once('../../config/config.inc.php');
+	require_once('../init.php');
+	$error = '';
+	$fileMoved = array();
+	$unmovedDocDueToSamePath = array();
 	if(CONFIG_SYS_VIEW_ONLY || (!CONFIG_OPTIONS_CUT && !CONFIG_OPTIONS_COPY))
 	{
 		$error = SYS_DISABLED;
