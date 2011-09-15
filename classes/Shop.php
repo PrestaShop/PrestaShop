@@ -60,7 +60,7 @@ class ShopCore extends ObjectModel
 	/** @var array List of shops cached */
 	protected static $shops = array();
 
-	private	static $assoTables = array(
+	private	static $asso_tables = array(
 		'carrier' => 				array('type' => 'shop'),
 		'carrier_lang' => 			array('type' => 'fk_shop'),
 		'category_lang' => 			array('type' => 'fk_shop'),
@@ -87,7 +87,7 @@ class ShopCore extends ObjectModel
 		'webservice_account' => 	array('type' => 'shop'),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_group_shop' => array('xlink_resource' => 'shop_groups'),
 			'id_category' => array(),
@@ -121,7 +121,7 @@ class ShopCore extends ObjectModel
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
 	}
-	
+
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
 		parent::__construct($id, $id_lang, $id_shop);
@@ -137,7 +137,7 @@ class ShopCore extends ObjectModel
 						AND s.deleted = 0
 						AND su.main = 1';
 			if (!$row = Db::getInstance()->getRow($sql))
-				return ;
+				return;
 
 			$this->theme_name = $row['name'];
 			$this->physical_uri = $row['physical_uri'];
@@ -147,9 +147,9 @@ class ShopCore extends ObjectModel
 		}
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-		$res = parent::add($autodate, $nullValues);
+		$res = parent::add($autodate, $null_values);
 		Shop::cacheShops(true);
 		return $res;
 	}
@@ -271,7 +271,7 @@ class ShopCore extends ObjectModel
 	{
 		return $this->physical_uri;
 	}
-	
+
 	/**
 	 * Get shop URL
 	 *
@@ -359,7 +359,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getAssoTables()
 	{
-		return self::$assoTables;
+		return self::$asso_tables;
 	}
 
 	/**
@@ -545,7 +545,7 @@ class ShopCore extends ObjectModel
 		{
 			if (!isset($context->cookie) || !$context->cookie->shopContext)
 				return ($type == 'shop' || $type == 'group') ? '' : array('', '');
-				
+
 			// Parse shopContext cookie value (E.g. s-2, g-4)
 			$split = explode('-', $context->cookie->shopContext);
 			if (count($split) == 2 && $split[0] == 'g')
@@ -582,7 +582,7 @@ class ShopCore extends ObjectModel
 			}
 			else
 			{
-				
+
 				$shopID = (int)$context->shop->getID();
 				$shopGroupID = (int)$context->shop->id_group_shop;
 			}
@@ -683,8 +683,8 @@ class ShopCore extends ObjectModel
 		if (strpos($table, '.') !== false)
 			list($tableAlias, $table) = explode('.', $table);
 
-		$assoTables = Shop::getAssoTables();
-		if (!isset($assoTables[$table]) || $assoTables[$table]['type'] != 'shop')
+		$asso_tables = Shop::getAssoTables();
+		if (!isset($asso_tables[$table]) || $asso_tables[$table]['type'] != 'shop')
 			return ;
 
 		$sql = (($innerJoin) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$tableAlias.'
