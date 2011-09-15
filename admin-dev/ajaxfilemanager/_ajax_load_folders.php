@@ -1,5 +1,6 @@
 <?php
 	require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "inc" . DIRECTORY_SEPARATOR . "config.php");
+	define('PS_ADMIN_DIR', getcwd());
 	require_once('../../config/config.inc.php');
 	require_once('../init.php');
 ?>

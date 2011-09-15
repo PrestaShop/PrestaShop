@@ -32,7 +32,7 @@ $context = Context::getContext();
 if (isset($_GET['logout']))
 	$context->employee->logout();
 
-if (!$context->employee->isLoggedBack())
+if (!isset($context->employee) || !$context->employee->isLoggedBack())
 	Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
 
 

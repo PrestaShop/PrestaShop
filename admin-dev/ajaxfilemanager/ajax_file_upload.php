@@ -6,7 +6,7 @@
 	 * @since 22/May/2007
 	 *
 	 */	
-	 
+	define('PS_ADMIN_DIR', getcwd());	 
 	require_once('../../config/config.inc.php');
 	require_once('../init.php');
 	 
