@@ -41,14 +41,12 @@ $(document).ready(function()
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
 			$('\'input[name='+$(this).attr('name')+']:hidden\'').remove();
-		window.location = '#'+$(this).next().children(1).attr('href').replace(/https?:\/\/.*\/\d+-[^\/]+/, '');
 		reloadContent();
 	});
 	
 	// Click on checkbox
 	$('#layered_form input[type=checkbox]').live('click', function()
 	{
-		window.location = '#'+$(this).next().children(1).attr('href').replace(/https?:\/\/.*\/\d+-[^\/]+/, '');
 		reloadContent();
 	});
 	
@@ -57,7 +55,6 @@ $(document).ready(function()
 		  click: function() {
 			if($(this).parent().parent().find('input').attr('disabled') == '')
 			{
-				window.location = '#'+this.href.replace(/https?:\/\/.*\/\d+-[^\/]+/, '');
 			  $(this).parent().parent().find('input').click();
 			  reloadContent();
 			}
@@ -90,34 +87,12 @@ function initSliders()
 function initLayered()
 {
 	initSliders();
-	if (window.location.href.split('#').length == 2)
+	if (window.location.href.split('#').length == 2 && window.location.href.split('#')[1] != '')
 	{
 		var params = window.location.href.split('#')[1];
-		reloadContent('&selected_filters='+params, true);
+		reloadContent('&selected_filters='+params);
 	}
-	else
-	{
-		var params = window.location.href;
-	params = friendlyUrl(params, 'long');
-	params = params.split('#');
-	params.shift();
-	$(params).each(function(it, val)
-	{
-		allowReload = true;
-		if (val.split('=')[0] == 'price' || val.split('=')[0] == 'weight')
-		{
-			$("#layered_"+val.split('=')[0]+"_slider").slider('values', 0, val.split('=')[1].split('_')[0]);
-			$("#layered_"+val.split('=')[0]+"_slider").slider('values', 1, val.split('=')[1].split('_')[1]);
-			$("#layered_"+val.split('=')[0]+"_slider").slider('option', 'slide')(0,{values:[val.split('=')[1].split('_')[0], val.split('=')[1].split('_')[1]]});
 		}
-		else
-		{
-			$('#'+val.split('=')[0]).click();
-		}
-	});
-		reloadContent();
-}
-}
 
 function updatelink(link)
 {
@@ -234,14 +209,8 @@ function openCloseFilter()
 	});
 }
 
-function reloadContent(params_plus, force)
+function reloadContent(params_plus)
 {
-	if (typeof(allowReload) == 'undefined' && typeof(force) != 'undefined' && force != true)
-	{
-		allowReload = true;
-		return;
-	}
-	
 	for(i = 0; i < ajaxQueries.length; i++)
 		ajaxQueries[i].abort();
 	ajaxQueries = new Array();
@@ -317,6 +286,9 @@ function reloadContent(params_plus, force)
 				reloadProductComparison();
 		}
 			initSliders();
+			
+			if(typeof(current_friendly_url != 'undefined'))
+				window.location = current_friendly_url;
 		}
 	});
 	ajaxQueries.push(ajaxQuery);

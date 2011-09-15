@@ -417,7 +417,7 @@ INSERT INTO `PREFIX_image_lang` (`id_image`, `id_lang`, `legend`) VALUES
 
 INSERT INTO `PREFIX_tag` (`id_tag`, `id_lang`, `name`) VALUES (5, 1, 'apple'),(6, 2, 'ipod'),(7, 2, 'nano'),(8, 2, 'apple'),(18, 2, 'shuffle'),
 (19, 2, 'macbook'),(20, 2, 'macbookair'),(21, 2, 'air'),(22, 1, 'superdrive'),(27, 2, 'marche'),(26, 2, 'casque'),(25, 2, 'écouteurs'),
-(24, 2, 'ipod touch tacticle'),(23, 1, 'Ipod touch'),(28, 1, 'ipod'),(29, 1, 'nano'),(30, 3, 'ipod'),(31, 3, 'nano'),(32, 3, 'apple'),(33, 1, 'shuffle'),
+(24, 2, 'ipod touch tactile'),(23, 1, 'Ipod touch'),(28, 1, 'ipod'),(29, 1, 'nano'),(30, 3, 'ipod'),(31, 3, 'nano'),(32, 3, 'apple'),(33, 1, 'shuffle'),
 (34, 3, 'shuffle'),(35, 2, 'superdrive'),(36, 3, 'superdrive'),(37, 3, 'Ipod touch');
 
 INSERT INTO `PREFIX_product_tag` (`id_product`, `id_tag`) VALUES (1, 5),(1, 6),(1, 7),(1, 8),(1, 28),(1, 29),(1, 30),(1, 31),(1, 32),(2, 6),(2, 18),(2, 28),
@@ -770,7 +770,7 @@ INSERT INTO `PREFIX_search_word` (`id_word`, `id_lang`, `word`) VALUES (1, 1, 'i
 (925, 2, 'internet'),(926, 2, 'poche'),(927, 2, 'navigateur'),(928, 2, 'safari,'),(929, 2, 'consulter'),(930, 2, 'sites'),(931, 2, 'leur'),(932, 2, 'mise'),
 (933, 2, 'page'),(934, 2, 'effectuer'),(935, 2, 'zoom'),(936, 2, 'arrière'),(937, 2, 'simple'),(938, 2, 'pression'),(939, 2, 'l''écran'),(940, 2, 'contenu'),
 (941, 2, 'coffret'),(942, 2, 'écouteurs'),(943, 2, 'câble'),(944, 2, 'dock'),(945, 2, 'chiffon'),(946, 2, 'nettoyage'),(947, 2, 'support'),(948, 2, 'guide'),
-(949, 2, 'démarrage'),(950, 2, 'tacticle'),(951, 2, '32go'),(952, 2, 'jack'),(953, 2, '120g'),(954, 2, '70mm'),(955, 2, '110mm'),(956, 3, 'touch'),
+(949, 2, 'démarrage'),(950, 2, 'tactile'),(951, 2, '32go'),(952, 2, 'jack'),(953, 2, '120g'),(954, 2, '70mm'),(955, 2, '110mm'),(956, 3, 'touch'),
 (957, 3, 'interfaz'),(958, 3, 'revolucionaria'),(959, 3, 'color'),(960, 3, 'pulgadas'),(961, 3, '(80211b'),(962, 3, 'espesor'),(963, 3, 'safari,'),
 (964, 3, 'youtube,'),(965, 3, 'music'),(966, 3, 'store,'),(967, 3, 'correo,'),(968, 3, 'mapas,'),(969, 3, 'bolsa,'),(970, 3, 'tiempo,'),(971, 3, 'notas'),
 (972, 3, 'cinco'),(973, 3, 'mano'),(974, 3, 'consulta'),(975, 3, 'correo'),(976, 3, 'formato'),(977, 3, 'html'),(978, 3, 'enriquecido,'),(979, 3, 'fotos'),

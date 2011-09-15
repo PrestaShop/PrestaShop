@@ -279,7 +279,7 @@ function verifyAndSetRequire(firsttime)
 			for (i = 0; i < testListRequired.length; i++){
 				result = testListRequired[i].getAttribute("result");
 				$($("div#sheet_require"+isUpdate+" > ul#required"+isUpdate+" .required")[i])
-				.removeClass( (result == "fail") ? "okBlock" : "errorBlock" )
+				.removeClass( (result == "fail") ? "ok" : "fail" )
 				.addClass(result);
 				if (result == "fail") configIsOk = false;
 			}
@@ -290,7 +290,7 @@ function verifyAndSetRequire(firsttime)
 			for (i = 0; i < testListOptional.length; i++){
 				result = testListOptional[i].getAttribute("result");
 				$($("div#sheet_require"+isUpdate+" > ul#optional"+isUpdate+" li.optional")[i])
-					.removeClass( (result == "fail") ? "okBlock" : "errorBlock" )
+					.removeClass( (result == "fail") ? "ok" : "fail" )
 					.addClass(result);
 				if (result == "fail") optionalIsOk = false;
 			}

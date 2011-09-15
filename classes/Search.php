@@ -150,7 +150,7 @@ class SearchCore
 		if (!$context)
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
-		
+
 		// Only use cookie if id_customer is not present
 		if ($useCookie)
 			$id_customer = $context->customer->id;
@@ -173,12 +173,13 @@ class SearchCore
 			{
 				$word = str_replace('%', '\\%', $word);
 				$word = str_replace('_', '\\_', $word);
+
 				$intersectArray[] = 'SELECT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 					WHERE sw.id_lang = '.(int)$id_lang.'
 						AND sw.id_shop = '.$context->shop->getID(true).'
-						AND sw.word LIKE 
+						AND sw.word LIKE
 					'.($word[0] == '-'
 						? ' \''.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
 						: '\''.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
@@ -219,7 +220,7 @@ class SearchCore
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
 		$result = $db->ExecuteS($sql, false);
-		
+
 		$eligibleProducts = array();
 		while ($row = $db->nextRow($result))
 			$eligibleProducts[] = $row['id_product'];
@@ -235,7 +236,7 @@ class SearchCore
 				return ($ajax ? array() : array('total' => 0, 'result' => array()));
 		}
 		array_unique($eligibleProducts);
-		
+
 		$productPool = '';
 		foreach ($eligibleProducts AS $id_product)
 			if ($id_product)
@@ -255,7 +256,7 @@ class SearchCore
 					ORDER BY position DESC LIMIT 10';
 			return $db->ExecuteS($sql);
 		}
-		
+
 		$sql = 'SELECT p.*, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 					tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.', DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 new
 				FROM '._DB_PREFIX_.'product p
@@ -284,12 +285,12 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE p.`id_product` '.$productPool;
 		$total = $db->getValue($sql);
-		
+
 		if (!$result)
 			$resultProperties = false;
 		else
 			$resultProperties = Product::getProductsProperties((int)$id_lang, $result);
-			
+
 		return array('total' => $total,'result' => $resultProperties);
 	}
 
@@ -340,7 +341,7 @@ class SearchCore
 	{
 		$db = Db::getInstance();
 		$dropIndex = false;
-		
+
 		if ($id_product)
 			$full = false;
 
@@ -365,12 +366,12 @@ class SearchCore
 					$ids[] = (int)$product['id_product'];
 			if (sizeof($ids))
 				$db->Execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $ids).')');
-				
-				
+
+
 			if (count($products) > 2000)
 				$dropIndex = true;
 		}
-		
+
 		if ($dropIndex)
 		{
 			$dropIndex = false;
@@ -412,8 +413,8 @@ class SearchCore
 		$countProducts = 0;
 		$queryArray3 = array();
 		$productsArray = array();
-		
-		// Every indexed words are cached into a PHP array 
+
+		// Every indexed words are cached into a PHP array
 		$wordIdsByWord = array();
 		$wordIds = Db::getInstance()->ExecuteS('
 		SELECT id_word, word, id_lang, id_shop
@@ -425,8 +426,8 @@ class SearchCore
 				$wordIdsByWord[$wordId['id_shop']][$wordId['id_lang']] = array();
 			$wordIdsByWord[$wordId['id_shop']][$wordId['id_lang']]['_'.$wordId['word']] = (int)$wordId['id_word'];
 		}
-		
-		// Now each non-indexed product is processed one by one, langage by langage 
+
+		// Now each non-indexed product is processed one by one, langage by langage
 		while ($product = $db->nextRow($products))
 		{
 			$product['tags'] = Search::getTags($db, (int)$product['id_product'], (int)$product['id_lang']);
@@ -443,6 +444,9 @@ class SearchCore
 						if (!empty($word))
 						{
 							$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
+							// Remove accents
+							$word = Tools::replaceAccentedChars($word);
+
 							if (!isset($pArray[$word]))
 								$pArray[$word] = 0;
 							$pArray[$word] += $weightArray[$key];
@@ -462,16 +466,20 @@ class SearchCore
 				foreach ($pArray AS $word => $weight)
 					if ($weight AND !isset($wordIdsByWord['_'.$word]))
 					{
-						$queryArray[] = '('.(int)$product['id_lang'].', '.(int)$product['id_shop'].', \''.pSQL($word).'\')';
+						$queryArray[$word] = '('.(int)$product['id_lang'].', '.(int)$product['id_shop'].', \''.pSQL($word).'\')';
 						$queryArray2[] = '\''.pSQL($word).'\'';
 						$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word] = 0;
 					}
 
-				$existingWords = $db->ExecuteS('SELECT word FROM '._DB_PREFIX_.'search_word WHERE word IN ('.implode(',', $queryArray2).') GROUP BY word');
+				$existingWords = $db->ExecuteS('
+					SELECT word FROM '._DB_PREFIX_.'search_word
+					WHERE word IN ('.implode(',', $queryArray2).')
+					AND id_lang = '.(int)$product['id_lang'].' GROUP BY word');
+
 				if($existingWords)
 					foreach($existingWords as $data)
-						unset($queryArray[$data['word']]);
-				
+						unset($queryArray[Tools::replaceAccentedChars($data['word'])]);
+
 				if (count($queryArray))
 				{
 					// The words are inserted...
@@ -479,7 +487,6 @@ class SearchCore
 					INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
 					VALUES '.implode(',',$queryArray));
 				}
-					
 				if (count($queryArray2))
 				{
 					// ...then their IDs are retrieved and added to the cache
@@ -490,8 +497,9 @@ class SearchCore
 					AND sw.id_lang = '.(int)$product['id_lang'].'
 					AND sw.id_shop = '.(int)$product['id_shop'].'
 					LIMIT '.count($queryArray2));
+					// replace accents from the retrieved words so that words without accents or with differents accents can still be linked
 					foreach ($addedWords AS $wordId)
-						$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$wordId['word']] = (int)$wordId['id_word'];
+						$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.Tools::replaceAccentedChars($wordId['word'])] = (int)$wordId['id_word'];
 				}
 			}
 
@@ -508,7 +516,7 @@ class SearchCore
 				if (++$countWords % 200 == 0)
 					Search::saveIndex($queryArray3);
 			}
-	
+
 			if (!in_array($product['id_product'], $productsArray))
 				$productsArray[] = (int)$product['id_product'];
 
@@ -516,11 +524,11 @@ class SearchCore
 			if (++$countProducts % 50 == 0)
 				Search::setProductsAsIndexed($productsArray);
 		}
-		
+
 		// One last save is done at the end in order to save what's left
 		Search::saveIndex($queryArray3);
 		Search::setProductsAsIndexed($productsArray);
-		
+
 		// If it has been deleted, the index is created again once the indexation is done
 		if (!$dropIndex)
 		{
@@ -532,7 +540,7 @@ class SearchCore
 		}
 		if ($dropIndex)
 			$db->Execute('ALTER TABLE `'._DB_PREFIX_.'search_index` ADD PRIMARY KEY (`id_word`, `id_product`)');
-		
+
 		Configuration::updateValue('PS_NEED_REBUILD_INDEX', 0);
 		return true;
 	}
@@ -543,7 +551,7 @@ class SearchCore
 			Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 1 WHERE id_product IN ('.implode(',', $products).') LIMIT '.(int)count($products));
 		$productsArray = array();
 	}
-	
+
 	// $queryArray3 is automatically emptied in order to be reused immediatly
 	protected static function saveIndex(&$queryArray3)
 	{
@@ -562,7 +570,7 @@ class SearchCore
 			$id_customer = (int)$context->customer->id;
 		else
 			$id_customer = 0;
-	 	
+
 		if (!is_numeric($pageNumber) OR !is_numeric($pageSize) OR !Validate::isBool($count) OR !Validate::isValidSearch($tag)
 		OR $orderBy AND !$orderWay OR ($orderBy AND !Validate::isOrderBy($orderBy))	OR ($orderWay AND !Validate::isOrderBy($orderWay)))
 			return false;
