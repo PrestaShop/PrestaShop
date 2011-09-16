@@ -251,7 +251,7 @@ class CartCore extends ObjectModel
 	 * Return cart discounts
 	 *
 	 * @param bool true will return discounts with basic informations
-	 * @param bool true will erase the cache  
+	 * @param bool true will erase the cache
 	 * @result array Discounts
 	 */
 	public function getDiscounts($lite = false, $refresh = false)
@@ -259,15 +259,15 @@ class CartCore extends ObjectModel
 		// if discounts are never used
 		if (!Discount::isFeatureActive())
 			return array();
-		
+
 		if (!$this->id)
 			return array();
-		
+
 		if (!$refresh)
 		{
 			if (!$lite AND isset(self::$_discounts[$this->id]))
 			return self::$_discounts[$this->id];
-			
+
 		if ($lite AND isset(self::$_discountsLite[$this->id]))
 			return self::$_discountsLite[$this->id];
 		}
@@ -322,7 +322,7 @@ class CartCore extends ObjectModel
 			return 0;
 
 		return Db::getInstance()->getValue('
-			SELECT COUNT(*) 
+			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'cart_discount`
 			WHERE `id_discount` = '.(int)($id_discount).' AND `id_cart` = '.(int)($this->id));
 	}
@@ -394,7 +394,7 @@ class CartCore extends ObjectModel
 		$sql['groupby'] = 'GROUP BY unique_id';
 		// Build ORDER BY
 		$sql['orderby'] = 'ORDER BY cp.date_add ASC';
-		
+
 		if (Customization::isFeatureActive())
 		{
 			$sql['select'] .= ', cu.`id_customization`, cu.`quantity` AS customization_quantity';
@@ -415,7 +415,7 @@ class CartCore extends ObjectModel
 			';
 		}
 		else
-			$sql['select'] .= ', p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, 
+			$sql['select'] .= ', p.`reference` AS reference, p.`supplier_reference` AS supplier_reference,
 				p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity';
 
 		$result = Db::getInstance()->ExecuteS(Tools::buildQuery($sql));
@@ -856,10 +856,10 @@ class CartCore extends ObjectModel
 
 		/* Get customization quantity */
 		if (($result = Db::getInstance()->getRow('
-			SELECT SUM(`quantity`) AS \'quantity\' 
-			FROM `'._DB_PREFIX_.'customization` 
-			WHERE `id_cart` = '.(int)$this->id.' 
-			AND `id_product` = '.(int)$id_product.' 
+			SELECT SUM(`quantity`) AS \'quantity\'
+			FROM `'._DB_PREFIX_.'customization`
+			WHERE `id_cart` = '.(int)$this->id.'
+			AND `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute)
 		) === false)
 			return false;
@@ -867,9 +867,9 @@ class CartCore extends ObjectModel
 		/* If the product still possesses customization it does not have to be deleted */
 		if (Db::getInstance()->NumRows() AND (int)($result['quantity']))
 			return Db::getInstance()->Execute('
-				UPDATE `'._DB_PREFIX_.'cart_product` 
-				SET `quantity` = '.(int)($result['quantity']).' 
-				WHERE `id_cart` = '.(int)($this->id).' 
+				UPDATE `'._DB_PREFIX_.'cart_product`
+				SET `quantity` = '.(int)($result['quantity']).'
+				WHERE `id_cart` = '.(int)($this->id).'
 				AND `id_product` = '.(int)($id_product).
 				($id_product_attribute != NULL ? ' AND `id_product_attribute` = '.(int)($id_product_attribute) : ''));
 
@@ -1065,7 +1065,7 @@ class CartCore extends ObjectModel
 								if (in_array($discount->behavior_not_exhausted, array(1,2)))
 									$shrunk = true;
 						}
-	
+
 						$order_total_discount = 0;
 						if ($shrunk AND $order_total < (-$wrapping_fees - $order_total_products - $shipping_fees))
 							$order_total_discount = -$wrapping_fees - $order_total_products - $shipping_fees;
@@ -1344,16 +1344,16 @@ class CartCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (cp.`id_product_attribute` = pa.`id_product_attribute`)
 				WHERE (cp.`id_product_attribute` IS NOT NULL AND cp.`id_product_attribute` != 0)
 				AND cp.`id_cart` = '.(int)($this->id));
-			else 
+			else
 				$weight_product_with_attribute = 0;
-			
+
 			$weight_product_without_attribute = Db::getInstance()->getValue('
 			SELECT SUM(p.`weight` * cp.`quantity`) as nb
 			FROM `'._DB_PREFIX_.'cart_product` cp
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
 			WHERE (cp.`id_product_attribute` IS NULL OR cp.`id_product_attribute` = 0)
 			AND cp.`id_cart` = '.(int)($this->id));
-			
+
 			self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute, 3);
 		}
 		return self::$_totalWeight[$this->id];
@@ -1641,7 +1641,7 @@ class CartCore extends ObjectModel
 		if (!Customization::isFeatureActive())
 			return array();
 		$result = Db::getInstance()->ExecuteS('
-			SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity 
+			SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity
 			FROM `'._DB_PREFIX_.'customization` cu
 			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cu.`id_customization` = cd.`id_customization`)
 			WHERE cu.id_cart = '.(int)$this->id.'
