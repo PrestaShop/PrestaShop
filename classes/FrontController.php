@@ -25,20 +25,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class FrontControllerCore
+class FrontControllerCore extends ControllerCore
 {
 	public $errors = array();
 	/**
 	 * @var Context
 	 */
 	protected $context;
-	
+
 	/* Deprecated shortcuts as of 1.5 - Use $context->var instead */
 	protected static $smarty;
 	protected static $cookie;
 	protected static $link;
 	protected static $cart;
-	
+
 	public $iso;
 
 	public $orderBy;
@@ -59,7 +59,7 @@ class FrontControllerCore
 	public static $initialized = false;
 
 	protected static $currentCustomerGroups;
-	
+
 	public $css_files;
 	public $js_files;
 	public $nb_items_per_page;
@@ -94,17 +94,17 @@ class FrontControllerCore
 		self::$initialized = true;
 
 		$this->context = Context::getContext();
-		
+
 		$this->id_current_shop = Context::getContext()->shop->getID();
 		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
 
 		$this->css_files = array();
 		$this->js_files = array();
-		
+
 		// For compatibility with globals, DEPRECATED as of version 1.5
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
-		
+
 		if ($this->ssl AND !Tools::usingSecureMode() AND Configuration::get('PS_SSL_ENABLED'))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
@@ -126,13 +126,13 @@ class FrontControllerCore
 			$this->context->smarty->ps_currency = $currency;
 
 		$this->context->smarty->ps_language = $this->context->language;
-		
+
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://' : 'http://';
 		$useSSL = ((isset($this->ssl) AND $this->ssl AND Configuration::get('PS_SSL_ENABLED')) OR Tools::usingSecureMode()) ? true : false;
 		$protocol_content = ($useSSL) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
-		
+
 		if ($this->auth AND !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
@@ -165,8 +165,8 @@ class FrontControllerCore
 			if ($cart->OrderExists())
 				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
 			/* Delete product of cart, if user can't make an order from his country */
-			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND 
-					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND 
+			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND
+					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND
 					$cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 AND
 					!self::isInWhitelistForGeolocation())
 				unset($this->context->cookie->id_cart, $cart);
@@ -180,7 +180,7 @@ class FrontControllerCore
 				$cart->update();
 			}
 			/* Select an address if not set */
-			if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 || 
+			if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
 				!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer)
 			{
 				$to_update = false;
@@ -344,14 +344,14 @@ class FrontControllerCore
 
 		$this->iso = $iso;
 		$this->setMedia();
-		
+
 		if($this->context->cookie->id_country)
 			$customer->geoloc_id_country = (int)$this->context->cookie->id_country;
 		if($this->context->cookie->id_state)
 			$customer->geoloc_id_state = (int)$this->context->cookie->id_state;
 		if($this->context->cookie->postcode)
 			$customer->geoloc_postcode = (int)$this->context->cookie->postcode;
-		
+
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 		$this->context->controller = $this;
@@ -419,7 +419,7 @@ class FrontControllerCore
 					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
 					$record = geoip_record_by_addr($gi, '81.57.72.226');//Tools::getRemoteAddr());
 
-					if (is_object($record)) 
+					if (is_object($record))
 					{
 						if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND !self::isInWhitelistForGeolocation())
 						{
@@ -501,7 +501,7 @@ class FrontControllerCore
 		// if this function is called from a module, do a fast init
 		else if (!$this->context)
 			$this->context = Context::getContext();
-		
+
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
@@ -521,7 +521,7 @@ class FrontControllerCore
 			'HOOK_TOP' => Module::hookExec('top'),
 			'HOOK_LEFT_COLUMN' => Module::hookExec('leftColumn')
 		));
-				
+
 		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
 		{
 			// CSS compressor management
@@ -573,7 +573,7 @@ class FrontControllerCore
 		// 'orderbydefault' => Tools::getProductsOrder('by'),
 		// 'orderwayposition' => Tools::getProductsOrder('way'), // Deprecated: orderwayposition
 		// 'orderwaydefault' => Tools::getProductsOrder('way'),
-			
+
 		$stock_management = (int)(Configuration::get('PS_STOCK_MANAGEMENT')) ? true : false; // no display quantity order if stock management disabled
 		$orderByValues = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
 		$orderWayValues = array(0 => 'asc', 1 => 'desc');
@@ -599,7 +599,7 @@ class FrontControllerCore
 			$this->init();
 		elseif (!$this->context)
 			$this->context = Context::getContext();
-			
+
 		$nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50);
 		asort($nArray);
 		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
@@ -639,7 +639,7 @@ class FrontControllerCore
 	{
 		if (!Group::isFeatureActive())
 			return array();
-		
+
 		$context = Context::getContext();
 		if (!$context->customer->id)
 			return array();
@@ -664,7 +664,7 @@ class FrontControllerCore
 					$allowed = true;
 		return $allowed;
 	}
-	
+
 	/**
 	 * addCSS allows you to add stylesheet at any time.
 	 *
@@ -680,7 +680,7 @@ class FrontControllerCore
 				$this->addCSS($file, $media_type);
 			return true;
 		}
-		
+
 		//overriding of modules css files
 		$different = 0;
 		$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
@@ -707,7 +707,7 @@ class FrontControllerCore
 
 		return true;
 	}
-	
+
 	/**
 	 * addJS load a javascript file in the header
 	 *
@@ -756,6 +756,6 @@ class FrontControllerCore
 
 		return true;
 	}
-	
+
 }
 

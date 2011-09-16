@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,12 +25,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @deprecated since 1.5.0
+ */
 class ControllerFactoryCore
 {
+	/**
+	 * @deprecated since 1.5.0
+	 */
 	public static function includeController($className)
 	{
+		Tools::displayAsDeprecated();
+
 		if (!class_exists($className, false))
-		{	
+		{
 			require_once(dirname(__FILE__).'/../controllers/'.$className.'.php');
 			if (file_exists(dirname(__FILE__).'/../override/controllers/'.$className.'.php'))
 				require_once(dirname(__FILE__).'/../override/controllers/'.$className.'.php');
@@ -45,6 +53,9 @@ class ControllerFactoryCore
 		}
 	}
 
+	/**
+	 * @deprecated since 1.5.0
+	 */
 	public static function getController($className, $auth = false, $ssl = false)
 	{
 		ControllerFactory::includeController($className);

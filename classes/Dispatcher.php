@@ -193,7 +193,7 @@ class DispatcherCore
 			$this->controller = 'index';
 		if (!isset($controllers[$this->controller]))
 			$this->controller = 'pagenotfound';
-		ControllerFactory::getController($controllers[$this->controller])->run();
+		Controller::getController($controllers[$this->controller])->run();
 	}
 
 	/**
