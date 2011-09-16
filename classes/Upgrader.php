@@ -28,6 +28,7 @@
 class UpgraderCore{
 	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
 	public $rss_version_link = 'http://www.prestashop.com/xml/version.xml';
+	public $rss_md5file_link_dir = 'http://www.prestashop.com/xml/md5/';
 	/**
 	 * link contains hte url where to download the file
 	 * 
@@ -35,6 +36,9 @@ class UpgraderCore{
 	 */
 	private $needUpgrade = false;
 	private $noRefresh = false;
+	private $changedFiles = array();
+	private $missingFiles = array();
+	private $versionIsModified = false;
 
 	public $version_name;
 	public $version_num;
@@ -152,6 +156,65 @@ class UpgraderCore{
 		}
 		else
 			return false;
+	}
+
+	public function getChangedFilesList()
+	{
+		$checksum = simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
+		if ($checksum === false)
+			throw new Exception('No checksum xml file for your Prestashop version');
+		$this->browseXmlAndCompare($checksum);	
+		
+		return $this->changedFiles;
+}
+	protected function addChangedFile($path)
+	{
+		$this->versionIsModified = true;
+		$this->changedFiles[] = $path;
+	}
+
+	protected function addMissingFile($path)
+	{
+		$this->versionIsModified = true;
+		$this->missingFiles[] = $path;
+	}
+
+	protected function browseXmlAndCompare($node, &$currentPath = array(), $level = 0)
+	{
+		foreach ($node as $key => $child)
+		{
+			if (is_object($child) && $child->getName() != 'md5file')
+			{
+				$level += 1;
+				$currentPath[$level] = $child->getName();
+				$this->browseXmlAndCompare($child, $currentPath, $level);
+				$level -= 1;
+			}
+			else
+			{
+				$path = '';
+				for ($i=1;$i<=$level;$i++)
+					$path .= $currentPath[$i].'/';
+				$path .= (string)$child->attributes()->name;
+				$path = str_replace('ps_root_dir',_PS_ROOT_DIR_,$path);
+				if(!file_exists($path))
+					$this->addMissingFile($path);
+				else if (!$this->compareChecksum($path, (string)$child->attributes()->sum))
+					$this->addChangedFile($path);
+			}
+		}
+	}
+
+	protected function compareChecksum($path, $originalSum)
+	{
+		if (md5_file($path) == $originalSum)
+			return true;
+		return false;
+	}
+
+	public function isAuthenticPrestashopVersion()
+	{
+		return !$this->versionIsModified;
 	}
 
 }

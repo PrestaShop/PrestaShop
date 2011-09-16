@@ -653,14 +653,17 @@ class BlockLayered extends Module
 			foreach ($filterBlock['title_values'] as $key => $val)
 				$title .= $key.' '.implode('/', $val).' – ';
 		$title = rtrim($title, ' – ');
-		$metaComplement = ucfirst(strtolower($title));
-		$metaKeyWordsComplement = str_replace(' – ', ', ', strtolower($title));
+		$metaComplement = $title;
+		$metaKeyWordsComplement = substr(str_replace(' – ', ', ', strtolower($title)), 1000);
 		
 		if (!empty($metaComplement))
 		{
-			$smarty->assign('meta_title', str_replace(' - '.Configuration::get('PS_SHOP_NAME'), ' – '.$metaComplement.' - '.Configuration::get('PS_SHOP_NAME'), $categoryMetas['meta_title']));
+			$smarty->assign('meta_title', ucfirst(strtolower(str_replace(' - '.Configuration::get('PS_SHOP_NAME'), ' – '.$metaComplement.' - '.Configuration::get('PS_SHOP_NAME'), $categoryMetas['meta_title']))));
 			$smarty->assign('meta_description', rtrim($categoryTitle.' – '.$metaComplement.' – '.$categoryMetas['meta_description'], ' – '));
 		}
+		else
+			$smarty->assign('meta_title', ucfirst(strtolower($categoryMetas['meta_title'])));
+		
 		if (!empty($metaKeyWordsComplement))
 			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$metaKeyWordsComplement.', '.$categoryMetas['meta_keywords'], ', '));
 		
@@ -738,13 +741,13 @@ class BlockLayered extends Module
 			{
 				/* Clean categoryBox before use */
 				if (isset($_POST['categoryBox']) AND is_array($_POST['categoryBox']))
-					foreach ($_POST['categoryBox'] AS &$value)
-						$value = (int)$value;
+						foreach ($_POST['categoryBox'] AS &$categoryBoxTmp)
+							$categoryBoxTmp = (int)$categoryBoxTmp;
 				
 				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_category WHERE id_category IN ('.implode(',', $_POST['categoryBox']).')');
 
 				$filterValues = array();
-					foreach (Tools::getValue('categoryBox') AS $idc)
+					foreach ($_POST['categoryBox'] AS $idc)
 						$filterValues['categories'][] = (int)$idc;
 
 				$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position) VALUES ';
@@ -1389,13 +1392,15 @@ class BlockLayered extends Module
 		if ($id_parent == 1)
 			return false;
 
-		$queryFilters = ' AND p.active = 1';
+		$queryFiltersWhere = ' AND p.active = 1';
+		$queryFiltersFrom = '';
 		
 		$parent = new Category((int)$id_parent);
 		if (!sizeof($selectedFilters['category']))
-			 $queryFilters .= ' AND p.id_product IN (SELECT id_product FROM '._DB_PREFIX_.'category_product cp 
-			 LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category) 
-			 WHERE 1 AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')';
+			$queryFiltersFrom .= ' INNER JOIN '._DB_PREFIX_.'category_product cp
+			ON p.id_product = cp.id_product
+			INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category
+			AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')';
 
 		foreach ($selectedFilters AS $key => $filterValues)
 		{
@@ -1415,12 +1420,12 @@ class BlockLayered extends Module
 						if(!isset($subQueries[$filterValueArray[0]]))
 							$subQueries[$filterValueArray[0]] = array();
 						$subQueries[$filterValueArray[0]][] = 'fp.`id_feature_value` = '.(int)$filterValueArray[1];
-						//$queryFilters .= 'pac.`id_attribute` = '.(int)$filterValue.' OR ';
+						//$queryFiltersWhere .= 'pac.`id_attribute` = '.(int)$filterValue.' OR ';
 					}
 					foreach($subQueries as $subQuery)
 					{
-						$queryFilters .= ' AND p.id_product IN (SELECT `id_product` FROM `'._DB_PREFIX_.'feature_product` fp WHERE ';
-						$queryFilters .= implode(' OR ', $subQuery).') ';
+						$queryFiltersWhere .= ' AND p.id_product IN (SELECT `id_product` FROM `'._DB_PREFIX_.'feature_product` fp WHERE ';
+						$queryFiltersWhere .= implode(' OR ', $subQuery).') ';
 					}
 				break;
 
@@ -1434,47 +1439,47 @@ class BlockLayered extends Module
 						if(!isset($subQuery[$filterValueArray[0]]))
 							$subQueries[$filterValueArray[0]] = array();
 						$subQueries[$filterValueArray[0]][] = 'pac.`id_attribute` = '.(int)$filterValueArray[1];
-						//$queryFilters .= 'pac.`id_attribute` = '.(int)$filterValue.' OR ';
+						//$queryFiltersWhere .= 'pac.`id_attribute` = '.(int)$filterValue.' OR ';
 					}
 					foreach($subQueries as $subQuery)
 					{
-					$queryFilters .= ' AND p.id_product IN (SELECT pa.`id_product`
+						$queryFiltersWhere .= ' AND p.id_product IN (SELECT pa.`id_product`
 										FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 										LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 										ON (pa.`id_product_attribute` = pac.`id_product_attribute`) WHERE ';
-						$queryFilters .= implode(' OR ', $subQuery).') ';
+						$queryFiltersWhere .= implode(' OR ', $subQuery).') ';
 					}
 				break;
 
 				case 'category':
-					$queryFilters .= ' AND p.id_product IN (SELECT id_product FROM '._DB_PREFIX_.'category_product cp WHERE ';				
+					$queryFiltersWhere .= ' AND p.id_product IN (SELECT id_product FROM '._DB_PREFIX_.'category_product cp WHERE ';
 					foreach ($selectedFilters['category'] AS $id_category)
-						$queryFilters .= 'cp.`id_category` = '.(int)$id_category.' OR ';
-					$queryFilters = rtrim($queryFilters, 'OR ').')';
+						$queryFiltersWhere .= 'cp.`id_category` = '.(int)$id_category.' OR ';
+					$queryFiltersWhere = rtrim($queryFiltersWhere, 'OR ').')';
 				break;
 
 				case 'quantity':
 					if (sizeof($selectedFilters['quantity']) == 2)
 						break;
-					$queryFilters .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '=' : '>').' 0';
+					$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '=' : '>').' 0';
 				break;
 
 				case 'manufacturer':
-					$queryFilters .= ' AND p.id_manufacturer IN ('.implode($selectedFilters['manufacturer'], ',').')';
+					$queryFiltersWhere .= ' AND p.id_manufacturer IN ('.implode($selectedFilters['manufacturer'], ',').')';
 				break;
 
 				case 'condition':
 					if (sizeof($selectedFilters['condition']) == 3)
 						break;
-					$queryFilters .= ' AND p.condition IN (';
+					$queryFiltersWhere .= ' AND p.condition IN (';
 					foreach ($selectedFilters['condition'] AS $cond)
-						$queryFilters .= '\''.$cond.'\',';
-					$queryFilters = rtrim($queryFilters, ',').')';
+						$queryFiltersWhere .= '\''.$cond.'\',';
+					$queryFiltersWhere = rtrim($queryFiltersWhere, ',').')';
 				break;
 
 				case 'weight':
 					if ($selectedFilters['weight'][0] != 0 OR $selectedFilters['weight'][1] != 0)
-						$queryFilters .= ' AND p.`weight` BETWEEN '.(float)($selectedFilters['weight'][0] - 0.001).' AND '.(float)($selectedFilters['weight'][1] + 0.001);
+						$queryFiltersWhere .= ' AND p.`weight` BETWEEN '.(float)($selectedFilters['weight'][0] - 0.001).' AND '.(float)($selectedFilters['weight'][1] + 0.001);
 
 				case 'price':
 					if (isset($selectedFilters['price']))
@@ -1516,20 +1521,22 @@ class BlockLayered extends Module
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
 		'.$priceFilterQueryOut.'
-		WHERE 1 '.$queryFilters.' GROUP BY id_product');
+		'.$queryFiltersFrom.'
+		WHERE 1 '.$queryFiltersWhere.' GROUP BY id_product', false);
 		
 		$allProductsIn = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
 		'.$priceFilterQueryIn.'
-		WHERE 1 '.$queryFilters.' GROUP BY id_product');
+		'.$queryFiltersFrom.'
+		WHERE 1 '.$queryFiltersWhere.' GROUP BY id_product', false);
 
 		$productIdList = array();
 		
-		foreach ($allProductsIn as $product)
+		while ($product = DB::getInstance()->nextRow($allProductsIn))
 			$productIdList[] = (int)$product['id_product'];
 
-		foreach ($allProductsOut as $product)
+		while ($product = DB::getInstance()->nextRow($allProductsOut))
 			if (isset($priceFilter) AND $priceFilter)
 			{
 				$price = Product::getPriceStatic($product['id_product']);
@@ -1605,13 +1612,8 @@ class BlockLayered extends Module
 				case 'condition':
 				case 'quantity':
 					$sqlQuery['select'] = '
-					SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`quantity`, p.`weight`,
-					(SELECT GROUP_CONCAT(`id_category`) FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`) ids_cat,
-					(SELECT GROUP_CONCAT(`id_feature_value`) FROM `'._DB_PREFIX_.'feature_product` fp WHERE fp.`id_product` = p.`id_product`) ids_feat,
-					(SELECT GROUP_CONCAT(DISTINCT(pac.`id_attribute`)) 
-					FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-					LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = pac.`id_product_attribute`) 
-					WHERE pa.`id_product` = p.`id_product`) ids_attr';
+					SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`quantity`, p.`weight`
+					';
 					$sqlQuery['from'] = '
 					FROM '._DB_PREFIX_.'product p ';
 					$sqlQuery['join'] = '
@@ -1906,6 +1908,7 @@ class BlockLayered extends Module
 		}
 		
 		$blackList = array('weight','price');
+		$nofollow = false;
 		foreach ($filterBlocks as &$typeFilter)
 		{	
 			if(count($typeFilter) > 0 AND !in_array($typeFilter['type'], $blackList))
@@ -1987,11 +1990,12 @@ class BlockLayered extends Module
 			INNER JOIN `'._DB_PREFIX_.'price_static_index` psi ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.'
 			AND psi.price_min <= '.(int)$filterValue[1].' AND psi.price_max >= '.(int)$filterValue[0].') ';
 		}
-		else{
+		else
+		{
 			$idCurrency = Currency::getCurrent()->id;
 			$priceFilterQuery = '
-			INNER JOIN `'._DB_PREFIX_.'price_static_index` psi ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.'
-			AND psi.`id_product` = p.`id_product` AND psi.`id_currency` = '.(int)$idCurrency.') ';
+			INNER JOIN `'._DB_PREFIX_.'price_static_index` psi 
+			ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.') ';
 		}
 		
 		return array('join' => $priceFilterQuery, 'select' => ', psi.price_min, psi.price_max');

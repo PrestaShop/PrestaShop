@@ -457,7 +457,19 @@ $this->standalone = true;
 		$this->nextDesc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
 		$this->next = '';
 	}
+	public function ajaxProcessCheckFilesVersion()
+	{
+		if ($testOrigCore = $this->upgrader->isAuthenticPrestashopVersion() !== false)
+			$this->nextParams['status'] = 'ok';
+		else
+			$this->nextParams['status'] = 'nok';
 
+		$changedFileList = $this->upgrader->getChangedFilesList();
+
+	//		echo '<img src="'.$originalCore.'" /> '.
+		$this->nextParams['msg'] = ($testOrigCore?$this->l('Core files are ok'):sprintf($this->l('%s core files have been modified'), sizeof($changedFileList)));
+		$this->nextParams['result'] = $changedFileList;
+	}
 	public function ajaxProcessUpgradeNow()
 	{
 		$this->nextDesc = $this->l('Starting upgrade ...');
@@ -1570,7 +1582,11 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 				$configurationDone = '../img/admin/disabled.gif';
 			echo '<b>'.$this->l('Options chosen').' : </b>'.'<img src="'.$configurationDone.'" /> '.($testConfigDone?$this->l('autoupgrade configuration ok'):$this->l('Please configure autoupgrade options')).'<br/><br/>';
 
-			echo '<a class="button" id="scrollToOptions" href="#options">'.$this->l('Modify your options').'</a>';
+			echo '<b>'.$this->l('PrestaShop Original version').' : </b>'.'<span id="checkPrestaShopFilesVersion">
+			<img id="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/>
+			</span>';
+
+			echo '<p> <a class="button" id="scrollToOptions" href="#options">'.$this->l('Modify your options').'</a></p>';
 			echo '</fieldset>';
 
 			echo '<br/>';
@@ -1687,6 +1703,8 @@ echo '</script>';
 .button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .processing {border:2px outset grey;margin-top:1px;overflow: auto;}
 #dbResultCheck{ padding-left:20px;}
+#checkPrestaShopFilesVersion{margin-bottom:20px;}
+#changedList ul{list-style-type:circle}
 </style>';
 		$this->displayWarning($this->l('This function is experimental. It\'s highly recommended to make a backup of your files and database before starting the upgrade process.'));
 
@@ -1882,8 +1900,8 @@ function afterUpgradeDb()
 {
 	// console.info("inside afterUpgradeDb");
 	// console.log(resGlobal);
-
 }
+
 function afterUpgradeComplete()
 {
 	$("#pleaseWait").hide();
@@ -2093,6 +2111,50 @@ function handleError(res)
 	}
 }
 ';
+// ajax to check md5 files
+$js.= '$(document).ready(function(){
+	$.ajax({
+			type:"POST",
+			url : "'.($this->standalone? __PS_BASE_URI__ . trim($this->adminDir,DIRECTORY_SEPARATOR).'/autoupgrade/ajax-upgradetab.php' : str_replace('index','ajax-tab',$currentIndex)).'",
+			async: true,
+			data : {
+				dir:"'.trim($this->adminDir,DIRECTORY_SEPARATOR).'",
+				token : "'.$this->token.'",
+				tab : "'.get_class($this).'",
+				action : "checkFilesVersion",
+				params : {}
+			},
+			success : function(res,textStatus,jqXHR)
+			{
+				res = $.parseJSON(res);
+				answer = res.nextParams;
+				$("#checkPrestaShopFilesVersion").html("<span>"+answer.msg+"</span> ");
+				$("#checkPrestaShopFilesVersion").append("<a id=\"toggleChangedList\" class=\"button\" href=\"\">'.$this->l('See or hide the list').'</a><br/>");
+
+				$("#checkPrestaShopFilesVersion").append("<div id=\"changedList\" style=\"display:none \">");
+				
+				$("#changedList").html("<ul>");
+				$(answer.result).each(function(k,v){
+					$("#changedList ul").append("<li>"+v+"</li>");
+				});
+
+$("#toggleChangedList").bind("click",function(e){e.preventDefault();$("#changedList").toggle();});
+
+			}
+			,
+			error: function(res,textStatus,jqXHR)
+			{
+				if (textStatus == "timeout" && action == "download")
+				{
+					updateInfoStep("'.$this->l('Your server can\'t download the file. Please upload it first by ftp in your admin/autoupgrade directory').'");
+				}
+				else
+				{
+					updateInfoStep("[Server Error] Status message : " + textStatus);
+				}
+			}
+		})
+});';
 		return $js;
 	}
 	private function _cleanUp($path)
