@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,18 +25,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Notification
-{	
+class NotificationCore
+{
 	public $types;
-	
+
 	public function __construct()
 	{
 		$this->types = array('order', 'message', 'customer');
 	}
-	
+
 	/**
 	 * getLastElements return all the notifications (new order, new customer registration, and new customer message)
-	 * Get all the notifications 
+	 * Get all the notifications
 	 *
 	 * @return array containing the notifications
 	 */
@@ -44,38 +44,38 @@ class Notification
 	{
 		$notifications = array();
 		$employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT id_last_order, id_last_message, id_last_customer 
-				FROM `'._DB_PREFIX_.'employee` 
+				SELECT id_last_order, id_last_message, id_last_customer
+				FROM `'._DB_PREFIX_.'employee`
 				WHERE `id_employee` = '.(int)Context::getContext()->employee->id);
-				
+
 		foreach ($this->types as $type)
 			$notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
-				
-		return $notifications;		
+
+		return $notifications;
 	}
-	
+
 	/**
 	 * getLastElementsIdsByType return all the element ids to show (order, customer registration, and customer message)
 	 * Get all the element ids
 	 *
 	 * @param string $type contains the field name of the Employee table
-	 * @param integer $id_last_element contains the id of the last seen element 	 
+	 * @param integer $id_last_element contains the id of the last seen element
 	 * @return array containing the notifications
 	 */
 	public static function getLastElementsIdsByType($type, $id_last_element)
 	{
-	
+
 		if ($type == 'order' || $type == 'message')
 			$sql = 'SELECT id_order, id_customer, '.(($type == 'order') ? 'total_paid_real' : 'message').'
-					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'` 
-					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.' 
+					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`
+					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.'
 					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
 		else
-			$sql = 'SELECT id_'.pSQL($type).' 
-					FROM `'._DB_PREFIX_.pSQL($type).'` 
-					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.' 
+			$sql = 'SELECT id_'.pSQL($type).'
+					FROM `'._DB_PREFIX_.pSQL($type).'`
+					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.'
 					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
-		
+
 		$json = array();
 		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql) as $key => $value)
 		{
@@ -93,28 +93,28 @@ class Notification
 				'message_customer' => ((isset($value['message'])) ? substr(strip_tags($value['message']), 0, 20) : '')
 			);
 		}
-		
+
 		return $json;
-	}	
-	
+	}
+
 	/**
 	 * updateEmployeeLastElement return 0 if the field doesn't exists in Employee table.
-	 * Updates the last seen element by the employee 
+	 * Updates the last seen element by the employee
 	 *
 	 * @param string $type contains the field name of the Employee table
 	 * @return boolean if type exists or not
 	 */
 	public function updateEmployeeLastElement($type)
-	{	
+	{
 		if (in_array($type, $this->types))
 			// We update the last item viewed
 			return Db::getInstance()->Execute('
-					UPDATE `'._DB_PREFIX_.'employee` 
-					SET `id_last_'.pSQL($type).'` = (SELECT MAX(`id_'.$type.'`) 
-					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`) 
-					WHERE `id_employee` = '.(int)Context::getContext()->employee->id);	 
-		else 
+					UPDATE `'._DB_PREFIX_.'employee`
+					SET `id_last_'.pSQL($type).'` = (SELECT MAX(`id_'.$type.'`)
+					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`)
+					WHERE `id_employee` = '.(int)Context::getContext()->employee->id);
+		else
 			return false;
-	}	
+	}
 }
 ?>

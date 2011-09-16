@@ -20,12 +20,12 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7104 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class PdfOrderReturnControllerCore extends FrontController
+class PdfOrderSlipControllerCore extends FrontController
 {
 	public function run()
 	{
@@ -40,16 +40,18 @@ class PdfOrderReturnControllerCore extends FrontController
 
 		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
-
-		if (isset($_GET['id_order_return']) AND Validate::isUnsignedId($_GET['id_order_return']))
-			$orderReturn = new OrderReturn((int)($_GET['id_order_return']));
-		if (!isset($orderReturn) OR !Validate::isLoadedObject($orderReturn))
+		
+		if (isset($_GET['id_order_slip']) AND Validate::isUnsignedId($_GET['id_order_slip']))
+			$orderSlip = new OrderSlip((int)($_GET['id_order_slip']));
+		if (!isset($orderSlip) OR !Validate::isLoadedObject($orderSlip))
 		    die(Tools::displayError('Order return not found'));
-		else if ($orderReturn->id_customer != $this->context->customer->id)
+		elseif ($orderSlip->id_customer != $this->context->customer->id)
 		    die(Tools::displayError('Order return not found'));
-		else if ($orderReturn->state < 2)
-		    die(Tools::displayError('Order return not confirmed'));
-		else
-			PDF::orderReturn($orderReturn);
+		$order = new Order((int)($orderSlip->id_order));
+		if (!Validate::isLoadedObject($order))
+		    die(Tools::displayError('Order not found'));
+		$order->products = OrderSlip::getOrdersSlipProducts((int)($orderSlip->id), $order);
+		$ref = NULL;
+		PDF::invoice($order, 'D', false, $ref, $orderSlip);
 	}
 }

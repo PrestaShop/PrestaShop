@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-ControllerFactory::includeController('ParentOrderController');
-
 class OrderOpcControllerCore extends ParentOrderController
 {
 	public $php_self = 'order-opc';

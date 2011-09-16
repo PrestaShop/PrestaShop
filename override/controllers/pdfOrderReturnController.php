@@ -1,6 +1,6 @@
 <?php
 
-class pdfOrderReturnController extends pdfOrderReturnControllerCore
+class PdfOrderReturnController extends PdfOrderReturnControllerCore
 {
 
 }

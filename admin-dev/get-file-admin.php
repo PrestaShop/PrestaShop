@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,4 +27,4 @@
 
 define('PS_ADMIN_DIR', getcwd());
 require(dirname(dirname(__FILE__)).'/config/config.inc.php');
-ControllerFactory::getController('getFileController')->run();
+Controller::getController('getFileController')->run();

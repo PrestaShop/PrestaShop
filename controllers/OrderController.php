@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-ControllerFactory::includeController('ParentOrderController');
-
 class OrderControllerCore extends ParentOrderController
 {
 	public $step;
@@ -98,11 +96,11 @@ class OrderControllerCore extends ParentOrderController
 				$this->_assignCarrier();
 				break;
 			case 3:
-				//Test that the conditions (so active) were accepted by the customer 
+				//Test that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv');
 				if (Configuration::get('PS_CONDITIONS') AND (!Validate::isBool($cgv)))
 					Tools::redirect('index.php?controller=order&step=2');
-				
+
 				if(Tools::isSubmit('processCarrier'))
 					$this->processCarrier();
 				$this->autoStep();
@@ -135,7 +133,7 @@ class OrderControllerCore extends ParentOrderController
 
 		$invoiceAddressFields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country, false, true);
 		$deliveryAddressFields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country, false, true);
-		
+
 		$this->context->smarty->assign(array(
 			'inv_adr_fields' => $invoiceAddressFields,
 			'dlv_adr_fields' => $deliveryAddressFields));
@@ -144,7 +142,7 @@ class OrderControllerCore extends ParentOrderController
 	public function displayContent()
 	{
 		parent::displayContent();
-		
+
 		$this->context->smarty->assign(array(
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
@@ -277,7 +275,7 @@ class OrderControllerCore extends ParentOrderController
 
 		// Redirect instead of displaying payment modules if any module are grefted on
 		Hook::backBeforePayment('order.php?step=3');
-		
+
 		/* We may need to display an order summary */
 		$this->context->smarty->assign($this->context->cart->getSummaryDetails());
 		$this->context->smarty->assign(array(
@@ -285,7 +283,7 @@ class OrderControllerCore extends ParentOrderController
 			'taxes_enabled' => (int)(Configuration::get('PS_TAX'))
 		));
 		$this->context->cart->checkedTOS = '1';
-		
+
 		parent::_assignPayment();
 	}
 }

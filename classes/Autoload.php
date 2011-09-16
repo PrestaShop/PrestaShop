@@ -122,8 +122,10 @@ class Autoload
 	public function generateIndex()
 	{
 		$classes = array_merge(
-							$this->getClassesFromDir('classes/', true),
-							$this->getClassesFromDir('override/classes/', false)
+							$this->getClassesFromDir('classes/'),
+							$this->getClassesFromDir('override/classes/'),
+							$this->getClassesFromDir('controllers/'),
+							$this->getClassesFromDir('override/controllers/')
 						);
 		$content = '<?php return '.var_export($classes, true).';';
 

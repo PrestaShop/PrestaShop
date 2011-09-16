@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -39,4 +39,4 @@ elseif (in_array(substr($_SERVER['REQUEST_URI'], -3), array('.js', 'css')))
 	die('');
 
 require_once(dirname(__FILE__).'/config/config.inc.php');
-ControllerFactory::getController('PageNotFoundController')->run();
+Controller::getController('PageNotFoundController')->run();

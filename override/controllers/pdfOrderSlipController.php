@@ -1,6 +1,6 @@
 <?php
 
-class pdfOrderSlipController extends pdfOrderSlipControllerCore
+class PdfOrderSlipController extends PdfOrderSlipControllerCore
 {
 
 }

@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class getFileControllerCore extends FrontController
+class GetFileControllerCore extends FrontController
 {
 	public function run()
 	{
