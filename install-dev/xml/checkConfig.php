@@ -26,7 +26,8 @@
 */
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date dans le passé
-include_once(INSTALL_PATH.'/../classes/ConfigurationTest.php');
+if (!class_exists('ConfigurationTest',false))
+	require_once(INSTALL_PATH.'/../classes/ConfigurationTest.php');
 
 // Functions list to test with 'test_system'
 $funcs = array('fopen', 'fclose', 'fread', 'fwrite', 'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir', 'getcwd', 'chdir', 'chmod');
