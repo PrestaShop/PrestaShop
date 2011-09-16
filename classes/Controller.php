@@ -27,8 +27,102 @@
 
 abstract class ControllerCore
 {
-	public static function getController($className, $auth = false, $ssl = false)
+	/**
+	 * @var Context
+	 */
+	protected $context;
+
+	/**
+	 * @var array list of css files
+	 */
+	public $css_files = array();
+
+	/**
+	 * @var array list of javascript files
+	 */
+	public $js_files = array();
+
+	/**
+	 * Set default media list for controller
+	 */
+	abstract public function setMedia();
+
+	/**
+	 * Get an instance of a controller
+	 *
+	 * @param string $class_name
+	 * @param bool $auth
+	 * @param bool $ssl
+	 */
+	public static function getController($class_name, $auth = false, $ssl = false)
 	{
-		return new $className($auth, $ssl);
+		return new $class_name($auth, $ssl);
+	}
+
+	public function __construct()
+	{
+		$this->context = Context::getContext();
+	}
+
+	/**
+	 * Add a new stylesheet in page header.
+	 *
+	 * @param mixed $css_uri Path to css file, or list of css files like this : array(array(uri => media_type), ...)
+	 * @param string $css_media_type
+	 * @return true
+	 */
+	public function addCSS($css_uri, $css_media_type = 'all')
+	{
+		if (is_array($css_uri))
+		{
+			foreach ($css_uri as $file => $media_type)
+				self::addCSS($file, $media_type);
+			return true;
+		}
+
+		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
+		$url_data = parse_url($css_uri);
+		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+
+		// check if css files exists
+		if (!file_exists($file_uri))
+			return true;
+
+		// adding file to the big array...
+		$this->css_files[$css_uri] = $css_media_type;
+
+		return true;
+	}
+
+	/**
+	 * Add a new javascript file in page header.
+	 *
+	 * @param mixed $js_uri
+	 * @return void
+	 */
+	public function addJS($js_uri)
+	{
+		if (is_array($js_uri))
+		{
+			foreach ($js_uri as $file)
+				self::addJS($file);
+			return true;
+		}
+
+		if (in_array($js_uri, $this->js_files))
+			return true;
+
+		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
+		$url_data = parse_url($js_uri);
+		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+
+		// check if js files exists
+		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !file_exists($file_uri))
+			return true;
+
+		// adding file to the big array...
+		$this->js_files[] = $js_uri;
+
+		return true;
 	}
 }

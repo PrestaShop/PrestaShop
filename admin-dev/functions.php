@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(dirname(__FILE__).'/../images.inc.php'); 
+require_once(dirname(__FILE__).'/../images.inc.php');
 
 function bindDatepicker($id, $time)
 {
@@ -132,7 +132,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 {
 	$context = Context::getContext();
 	if ($categoryType == 'catalog')
-	{			
+	{
 		$category = Db::getInstance()->getRow('
 		SELECT id_category, level_depth, nleft, nright
 		FROM '._DB_PREFIX_.'category
@@ -162,7 +162,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 				($n < $nCategories ? '</a>' : '').
 				(($n++ != $nCategories OR !empty($path)) ? ' > ' : '');
 			}
-				
+
 			return $fullPath.$path;
 		}
 	}
@@ -235,7 +235,7 @@ function recursiveTab($id_tab, $tabs)
 
 /**
  * Returns a new Tab object
- * 
+ *
  * @param string $tab class name
  * @return mixed(AdminTab, bool) tab object or false if failed
  */
@@ -244,7 +244,7 @@ function checkingTab($tab)
 	$tab = trim($tab);
 	if (!Validate::isTabName($tab))
 		return false;
-		
+
 	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module FROM `'._DB_PREFIX_.'tab` WHERE class_name = \''.pSQL($tab).'\'');
 	if (!$row['id_tab'])
 	{
@@ -276,7 +276,7 @@ function checkingTab($tab)
 function checkTabRights($id_tab)
 {
 	static $tabAccesses = NULL;
-	
+
 	if ($tabAccesses === NULL)
 		$tabAccesses =  Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
 
@@ -391,14 +391,14 @@ function simpleXMLToArray ($xml, $flattenValues = true, $flattenAttributes = tru
 
 /**
  * Generate a sweet HTML list for shop selection
- * 
+ *
  * @todo move in adminTab
  * @return string
  */
 function generateShopList()
 {
 	$tree = Shop::getTree();
-	
+
 	// Get default value
 	list($shopID, $shopGroupID) = Shop::getContext();
 	if ($shopID)
