@@ -28,10 +28,6 @@
 class FrontControllerCore extends ControllerCore
 {
 	public $errors = array();
-	/**
-	 * @var Context
-	 */
-	protected $context;
 
 	/* Deprecated shortcuts as of 1.5 - Use $context->var instead */
 	protected static $smarty;
@@ -67,6 +63,8 @@ class FrontControllerCore extends ControllerCore
 	public function __construct()
 	{
 		global $useSSL;
+
+		parent::__construct();
 		$useSSL = $this->ssl;
 	}
 
@@ -92,8 +90,6 @@ class FrontControllerCore extends ControllerCore
 		if (self::$initialized)
 			return;
 		self::$initialized = true;
-
-		$this->context = Context::getContext();
 
 		$this->id_current_shop = Context::getContext()->shop->getID();
 		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
@@ -658,80 +654,47 @@ class FrontControllerCore extends ControllerCore
 		$allowed = false;
 		$userIp = Tools::getRemoteAddr();
 		$ips = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
-		if (is_array($ips) AND sizeof($ips))
-			foreach ($ips AS $ip)
-				if (!empty($ip) AND strpos($userIp, $ip) === 0)
+		if (is_array($ips) && sizeof($ips))
+			foreach ($ips as $ip)
+				if (!empty($ip) && strpos($userIp, $ip) === 0)
 					$allowed = true;
 		return $allowed;
 	}
 
 	/**
-	 * addCSS allows you to add stylesheet at any time.
+	 * Add one or several CSS for front, checking if css files are overriden in theme/css/modules/ directory
 	 *
-	 * @param mixed $css_uri
-	 * @param string $css_media_type
-	 * @return true
+	 * @see Controller::addCSS()
 	 */
 	public function addCSS($css_uri, $css_media_type = 'all')
 	{
-		if (is_array($css_uri))
+		if (!is_array($css_uri))
+			$css_uri = array($css_uri => $css_media_type);
+
+		$list_uri = array();
+		foreach ($css_uri as $file => $media)
 		{
-			foreach ($css_uri as $file => $media_type)
-				$this->addCSS($file, $media_type);
-			return true;
+			$different = 0;
+			$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $file, $different);
+			if ($different && file_exists($override_path))
+				$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $file, $different);
+			$list_uri[$file] = $media;
 		}
 
-		//overriding of modules css files
-		$different = 0;
-		$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
-		if ($different && file_exists($override_path))
-			$css_uri = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $css_uri, $different);
-		else
-		{
-			// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-			$url_data = parse_url($css_uri);
-			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-			// check if css files exists
-			if (!file_exists($file_uri))
-				return true;
-		}
-
-		// detect mass add
-		$css_uri = array($css_uri => $css_media_type);
-
-		// adding file to the big array...
-		if (is_array($this->css_files))
-			$this->css_files = array_merge($this->css_files, $css_uri);
-		else
-			$this->css_files = $css_uri;
-
-		return true;
+		return parent::addCSS($list_uri, $css_media_type);
 	}
 
 	/**
-	 * addJS load a javascript file in the header
+	 * Add one or several JS files for front, checking if js files are overriden in theme/js/modules/ directory
 	 *
-	 * @param mixed $js_uri
-	 * @return void
+	 * @see Controller::addJS()
 	 */
 	public function addJS($js_uri)
 	{
-		if (!isset($this->js_files))
-			$this->js_files = array();
-		// avoid useless operation...
-		if (in_array($js_uri, $this->js_files))
-			return true;
-
-		// detect mass add
-		if (!is_array($js_uri) && !in_array($js_uri, $this->js_files))
+		if (!is_array($js_uri))
 			$js_uri = array($js_uri);
-		else
-			foreach($js_uri as $key => $js)
-				if (in_array($js, $this->js_files))
-					unset($js_uri[$key]);
 
-		//overriding of modules js files
-		foreach ($js_uri AS $key => &$file)
+		foreach ($js_uri as $key => &$file)
 		{
 			if (!preg_match('/^http(s?):\/\//i', $file))
 			{
@@ -739,23 +702,10 @@ class FrontControllerCore extends ControllerCore
 				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
 				if ($different && file_exists($override_path))
 					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				else
-				{
-					// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-					$url_data = parse_url($file);
-					$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-					// check if js files exists
-					if (!file_exists($file_uri))
-						unset($js_uri[$key]);
-				}
 			}
 		}
 
-		// adding file to the big array...
-		$this->js_files = array_merge($this->js_files, $js_uri);
-
-		return true;
+		return parent::addJS($js_uri);
 	}
-
 }
 
