@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -42,9 +42,9 @@ class StatsNewsletter extends ModuleGraph
         $this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
 		parent::__construct();
-		
+
         $this->displayName = $this->l('Newsletter');
         $this->description = $this->l('Display the newsletter registrations');
     }
@@ -87,19 +87,20 @@ class StatsNewsletter extends ModuleGraph
 
 		$sql = 'SELECT COUNT(*) as visitors
 				FROM '._DB_PREFIX_.'newsletter
-				WHERE '.$this->sqlShopRestriction().'
+				WHERE 1
+				   '.$this->sqlShopRestriction().'
 					AND `newsletter_date_add` BETWEEN '.ModuleGraph::getDateBetween();
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		return array('customers' => $result1['customers'], 'visitors' => $result2['visitors'], 'both' => $result1['customers'] + $result2['visitors']);
 	}
-		
+
 	protected function getData($layers)
 	{
 		$this->_titles['main'][0] = $this->l('Newsletter statistics');
 		$this->_titles['main'][1] = $this->l('Customers');
 		$this->_titles['main'][2] = $this->l('Visitors');
 		$this->_titles['main'][3] = $this->l('Both');
-			
+
 		$this->_query = 'SELECT newsletter_date_add
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE 1
@@ -113,7 +114,7 @@ class StatsNewsletter extends ModuleGraph
 					AND `newsletter_date_add` BETWEEN ';
 		$this->setDateGraph($layers, true);
 	}
-	
+
 	protected function setAllTimeValues($layers)
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
@@ -126,7 +127,7 @@ class StatsNewsletter extends ModuleGraph
 		foreach ($this->_values[2] as $key => $zerofill)
 			$this->_values[2][$key] = $this->_values[0][$key] + $this->_values[1][$key];
 	}
-	
+
 	protected function setYearValues($layers)
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
@@ -139,7 +140,7 @@ class StatsNewsletter extends ModuleGraph
 		foreach ($this->_values[2] as $key => $zerofill)
 			$this->_values[2][$key] = $this->_values[0][$key] + $this->_values[1][$key];
 	}
-	
+
 	protected function setMonthValues($layers)
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
