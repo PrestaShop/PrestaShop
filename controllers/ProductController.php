@@ -318,8 +318,8 @@ class ProductControllerCore extends FrontController
 								unset($colors[$key]);
 					}
 
-					foreach ($groups AS &$group)
-						natcasesort($group['attributes']);
+					/*foreach ($groups AS &$group) // attributes are now sortable in BO
+						natcasesort($group['attributes']);*/
 
 					foreach ($combinations AS $id_product_attribute => $comb)
 					{

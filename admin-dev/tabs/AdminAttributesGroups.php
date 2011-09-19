@@ -109,11 +109,24 @@ class AdminAttributesGroups extends AdminTab
 		if ($this->_list === false)
 			Tools::displayError('No elements found');
 
-		$this->displayListHeader();
+		$this->displayListHeader($this->token);
 		echo '<input type="hidden" name="groupid" value="0">';
 
 		if (!sizeof($this->_list))
 			echo '<tr><td class="center" colspan="'.sizeof($this->_list).'">'.$this->l('No elements found').'</td></tr>';
+			
+		//$this->displayListContent($this->token);
+
+
+		echo '
+		<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+		<script type="text/javascript">
+			var token = \''.$this->token.'\';
+			var come_from = \''.$this->table.'\';
+			var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
+		</script>
+		<script type="text/javascript" src="../js/admin-dnd.js"></script>
+		';
 
 		$irow = 0;
 		foreach ($this->_list AS $tr)
@@ -123,39 +136,10 @@ class AdminAttributesGroups extends AdminTab
 			<tr'.($irow++ % 2 ? ' class="alt_row"' : '').'>
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center"><input type="checkbox" name="'.$this->table.'Box[]" value="'.$id.'" class="noborder" /></td>
 				<td style="width: 140px; vertical-align: top; padding: 4px 0 4px 0; cursor: pointer" onclick="$(\'#attributes_'.$id.'\').slideToggle();">'.$tr['name'].'</td>
-				<td style="vertical-align: top; padding: 4px 0 4px 0; width: 340px">
-					<div id="attributes_'.$id.'" style="display: none">
-					<table class="table" cellpadding="0" cellspacing="0">
-						<tr>
-							<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'attribute'.$id.'Box[]\', this.checked)" /></th>
-							<th width="100%">'.$this->l('Attribute').'</th>
-							<th>'.$this->l('Actions').'</th>
-						</tr>';
-			$attributes = AttributeGroup::getAttributes(Context::getContext()->language->id, $id);
-			foreach ($attributes AS $attribute)
-			{
-				echo '
-						<tr>
-							<td class="center"><input type="checkbox" name="attribute'.$id.'Box[]" value="'.$attribute['id_attribute'].'" class="noborder" /></td>
-							<td>
-								'.($tr['is_color_group'] ? '<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: '.$attribute['color'].'; margin-right: 4px;"></div>' : '')
-								.$attribute['name'].'
-							</td>
-							<td class="center">
-								<a href="'.self::$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&updateattribute&token='.$this->token.'">
-								<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;
-								<a href="'.self::$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&deleteattribute&token='.$this->token.'"
-								onclick="return confirm(\''.$this->l('Delete attribute', __CLASS__, true, false).' : '.$attribute['name'].'?\');">
-								<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
-							</td>
-						</tr>';
-			}
+				<td style="vertical-align: top; padding: 4px 0 4px 0; width: 340px">';
+				$this->displayListAttributes($id, $irow, $tr);
 			echo '
-					</table>
-					<p><input type="Submit" class="button" name="submitDelattribute" value="'.$this->l('Delete selection').'"
-					onclick="changeFormParam(this.form, \''.self::$currentIndex.'\', '.$id.'); return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>
-					</div>
-					</td>';
+				</td>';
 
 			echo '
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center">
@@ -167,7 +151,7 @@ class AdminAttributesGroups extends AdminTab
 			</tr>';
 		}
 
-		$this->displayListFooter();
+		$this->displayListFooter($this->token);
 	}
 
 	public function displayForm($isMainTab = true)
@@ -234,6 +218,69 @@ class AdminAttributesGroups extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
+	}
+	
+	/**
+	 * displayListAttributes
+	 * 
+	 * Display a list of attributes from a group
+	 */
+	public function displayListAttributes($id, $irow, $tr)
+	{
+		echo '
+				<div id="attributes_'.$id.'" style="display: none">
+					<table class="attribute table tableDnD" cellpadding="0" cellspacing="0" id="attribute_'.$id.'">
+						<thead>
+						<tr class="nodrag nodrop">
+							<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'attribute'.$id.'Box[]\', this.checked)" /></th>
+							<th width="100%">'.$this->l('Attribute').'</th>
+							<th>'.$this->l('Position').'</th>
+							<th>'.$this->l('Actions').'</th>
+						</tr>
+						</thead>
+						<tbody>';
+			$attributes = AttributeGroup::getAttributes(Context::getContext()->language->id, $id);
+			$nbrow = 0;
+			foreach ($attributes AS $attribute)
+			{
+				$class = ($irow % 2) ? '': 'not_';
+				echo '
+						<tr'.($nbrow++ % 2 ? ' class="'.$class.'alt_row"' : '').' id="tr_'.$attribute['id_attribute_group'].'_'.$attribute['id_attribute'].'_'.$attribute['position'].'">
+							<td class="center"><input type="checkbox" name="attribute'.$id.'Box[]" value="'.$attribute['id_attribute'].'" class="noborder" /></td>
+							<td>
+								'.($tr['is_color_group'] ? '<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: '.$attribute['color'].'; margin-right: 4px;"></div>' : '')
+								.$attribute['name'].'
+							</td>
+							<td class="dragHandle">';
+
+				echo '<a'.(!($attribute['position'] != $attributes[sizeof($attributes) - 1]['position']) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
+						'&id_attribute_group='.(int)($attribute['id_attribute_group']).'&id_attribute='.$attribute['id_attribute'].'
+						&way=1&position='.(int)($attribute['position'] + 1).'&token='.$this->token.'">
+						<img src="../img/admin/down.gif"
+						alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>';
+
+				echo '<a'.(!($attribute['position'] != $attributes[0]['position']) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
+						'&id_attribute_group='.(int)($attribute['id_attribute_group']).'&&id_attribute='.$attribute['id_attribute'].'
+						&way=0&position='.(int)($attribute['position'] - 1).'&token='.$this->token.'">
+						<img src="../img/admin/up.gif"
+						alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
+				echo'
+							</td>
+							<td class="center">
+								<a href="'.self::$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&updateattribute&token='.$this->token.'">
+								<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;
+								<a href="'.self::$currentIndex.'&id_attribute='.$attribute['id_attribute'].'&deleteattribute&token='.$this->token.'"
+								onclick="return confirm(\''.$this->l('Delete attribute', __CLASS__, true, false).' : '.$attribute['name'].'?\');">
+								<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>
+							</td>
+						</tr>';
+			}
+			echo '
+							</tbody>
+							</table>
+					<p><input type="Submit" class="button" name="submitDelattribute" value="'.$this->l('Delete selection').'"
+					onclick="changeFormParam(this.form, \''.self::$currentIndex.'\', '.$id.'); return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>
+					</div>';
 	}
 }
 

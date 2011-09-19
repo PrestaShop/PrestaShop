@@ -138,3 +138,7 @@ CREATE TABLE `PREFIX_customer_message_sync_imap` (
 ALTER TABLE  `PREFIX_customer_message` ADD  `private` TINYINT NOT NULL DEFAULT  '0' AFTER  `user_agent`;
 
 /* PHP:add_new_tab(AdminGenders, fr:Genres|es:Genders|en:Genders|de:Genders|it:Genders, 2); */;
+
+ALTER TABLE `PREFIX_attribute` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+
+/* PHP:add_attribute_position(); */;

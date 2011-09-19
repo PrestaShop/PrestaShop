@@ -83,6 +83,7 @@ CREATE TABLE `PREFIX_attribute` (
   `id_attribute` int(10) unsigned NOT NULL auto_increment,
   `id_attribute_group` int(10) unsigned NOT NULL,
   `color` varchar(32) default NULL,
+  `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_attribute`),
   KEY `attribute_group` (`id_attribute_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

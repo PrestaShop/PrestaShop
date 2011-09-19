@@ -23,6 +23,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table tr td{border-bottom:1px solid #DEDEDE;color:#963;font-size:.9em;height:23px;padding:0 4px 0 6px}
 .table tr.last td{border-bottom:none}
 .alt_row{background-color:#EFEFEF}
+.not_alt_row{background-color:#FFF}
 .path_bar{background-color:#E2EBEE;border:1px solid #999999;font-family:Trebuchet,Arial,Helvetica,sans-serif;font-size:13px;margin-bottom:20px;padding:5px}
 .path_bar a{font-weight:700}
 .cat_bar{background-color:#F4E8CD;border:1px solid #999999;font-family:Trebuchet,Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;margin-bottom:20px;padding:5px}

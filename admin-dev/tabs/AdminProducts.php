@@ -3461,7 +3461,7 @@ class AdminProducts extends AdminTab
 		  </tr>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">'.$this->l('Available date:').'</td>
-			  <td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date')!=0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '00-00-0000').'" style="text-align: center;" type="text" />
+			  <td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date')!=0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
 				  <p>'.$this->l('The available date when this product is out of stock').'</p>
 			  </td>
 		  </tr>';
@@ -3567,7 +3567,7 @@ class AdminProducts extends AdminTab
 						$list = rtrim($list, ', ');
 						$jsList = rtrim($jsList, ', ');
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
-						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-j', strtotime($product_attribute['available_date'])) : '00-00-0000';
+						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-j', strtotime($product_attribute['available_date'])) : '0000-00-00';
 						echo '
 						<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
 							<td>'.stripslashes($list).'</td>

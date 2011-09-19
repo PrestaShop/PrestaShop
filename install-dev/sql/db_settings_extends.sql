@@ -309,9 +309,9 @@ INSERT INTO `PREFIX_scene_products` (`id_scene`, `id_product`, `x_axis`, `y_axis
 (3, 5, 198, 47, 137, 92),(1, 1, 394, 14, 73, 168),(1, 1, 318, 14, 69, 168),(1, 1, 244, 14, 66, 169),(1, 1, 180, 13, 59, 168),(1, 1, 6, 12, 30, 175),
 (1, 1, 38, 12, 30, 170),(1, 1, 76, 14, 41, 169),(1, 1, 123, 13, 49, 169);
 
-INSERT INTO `PREFIX_attribute` (`id_attribute`, `id_attribute_group`) VALUES (1, 1),(2, 1),(8, 1),(9, 1),(10, 3),(11, 3),(12, 1),(13, 1);
-INSERT INTO `PREFIX_attribute` (`id_attribute`, `id_attribute_group`, `color`) VALUES (3, 2, '#D2D6D5'),(4, 2, '#008CB7'),(5, 2, '#F3349E'),(6, 2, '#93D52D'),
-(7, 2, '#FD9812'),(15, 1, ''),(16, 1, ''),(17, 1, ''),(18, 2, '#7800F0'),(19, 2, '#F6EF04'),(20, 2, '#F60409'),(14, 2, '#000000');
+INSERT INTO `PREFIX_attribute` (`id_attribute`, `id_attribute_group`, `position`) VALUES (1, 1, 0),(2, 1, 1),(8, 1, 2),(9, 1, 3),(10, 3, 0),(11, 3, 1),(12, 1, 4),(13, 1, 5);
+INSERT INTO `PREFIX_attribute` (`id_attribute`, `id_attribute_group`, `color`, `position`) VALUES (3, 2, '#D2D6D5', 0),(4, 2, '#008CB7', 1),(5, 2, '#F3349E', 3),(6, 2, '#93D52D', 4),
+(7, 2, '#FD9812', 5),(15, 1, '', 6),(16, 1, '', 7),(17, 1, '', 8),(18, 2, '#7800F0', 6),(19, 2, '#F6EF04', 7),(20, 2, '#F60409', 8),(14, 2, '#000000', 9);
 
 INSERT INTO `PREFIX_attribute_group_shop` (`id_attribute`, `id_group_shop`) (SELECT `id_attribute`, 1 FROM `PREFIX_attribute`);
 

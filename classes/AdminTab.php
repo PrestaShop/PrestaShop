@@ -149,7 +149,7 @@ abstract class AdminTabCore
 
 	public $smarty;
 
-	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms');
+	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute');
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -1647,7 +1647,8 @@ abstract class AdminTabCore
 									'&'.$keyToGet.'='.(int)($id_category).'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
 									&way=0&position='.(int)($tr['position'] - 1).'&token='.($token!=NULL ? $token : $this->token).'">
 									<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'up' : 'down').'.gif"
-									alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';						}
+									alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
+						}
 						else
 							echo (int)($tr[$key] + 1);
 					}
