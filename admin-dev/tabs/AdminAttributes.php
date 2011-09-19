@@ -155,8 +155,19 @@ class AdminAttributes extends AdminTab
 		}
 		elseif (Tools::isSubmit('submitAddattribute'))
 		{
+			$id_attribute = (int)Tools::getValue('id_attribute');
+			// Adding last position to the attribute if not exist
+			if ($id_attribute <= 0)
+			{
+				$sql = 'SELECT `position`+1
+						FROM `'._DB_PREFIX_.'attribute`
+						WHERE id_attribute_group = '.(int)Tools::getValue('id_attribute_group').' 
+						ORDER BY position DESC';
+			// set the position of the new attribute in $_POST for postProcess() method
+				$_POST['position'] = DB::getInstance()->getValue($sql);
+			}
 			// clean \n\r characters
-			foreach($_POST as $key => $value)
+			foreach ($_POST as $key => $value)
 				if (preg_match('/^name_/Ui', $key))
 					$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 			parent::postProcess();

@@ -2309,7 +2309,7 @@ class ProductCore extends ObjectModel
 				WHERE pa.`id_product` = '.(int)($this->id).'
 					AND al.`id_lang` = '.(int)($id_lang).'
 					AND agl.`id_lang` = '.(int)($id_lang).'
-				ORDER BY agl.`public_name`, al.`name`';
+				ORDER BY agl.`public_name`, a.`position` ASC';
 		return Db::getInstance()->ExecuteS($sql);
 	}
 

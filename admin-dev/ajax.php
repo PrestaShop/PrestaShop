@@ -794,3 +794,32 @@ if (Tools::isSubmit('syncImapMail'))
 	imap_close($mbox);
 	die('{"hasError" : false, "errors" : '.$str_errors.'}');
 }
+
+/* Modify attribute position */
+if (array_key_exists('ajaxAttributesPositions', $_POST))
+{
+	$way = (int)(Tools::getValue('way'));
+	$id_attribute = (int)(Tools::getValue('id_attribute'));
+	$id_attribute_group = (int)(Tools::getValue('id_attribute_group'));
+	$positions = Tools::getValue('attribute_'.(int)(Tools::getValue('id_attribute_group')));
+
+	if (is_array($positions))
+		foreach ($positions AS $position => $value)
+		{
+			// pos[1] = id_attribute_group, pos[2] = id_attribute, pos[3]=old position
+			$pos = explode('_', $value);
+
+			if ((isset($pos[1]) AND isset($pos[2])) AND ($pos[1] == $id_attribute_group AND (int)$pos[2] === $id_attribute))
+			{
+				if ($attribute = new Attribute((int)$pos[2]))
+					if (isset($position) && $attribute->updatePosition($way, $position))
+						echo "ok position $position for attribute $pos[2]\r\n";
+					else
+						echo '{"hasError" : true, "errors" : "Can not update attribute '. $id_attribute . ' to position '.$position.' "}';
+				else
+					echo '{"hasError" : true, "errors" : "This attribute ('.$id_attribute.') can t be loaded"}';
+
+				break;
+			}
+		}
+}

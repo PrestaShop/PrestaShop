@@ -142,7 +142,7 @@ class AttributeGroupCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'attribute` a
 		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)($id_lang).')
 		WHERE a.`id_attribute_group` = '.(int)($id_attribute_group).'
-		ORDER BY `name`');
+		ORDER BY `position` ASC');
 	}
 	
 	/**

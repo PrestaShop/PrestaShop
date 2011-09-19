@@ -33,11 +33,12 @@ class AttributeCore extends ObjectModel
 	/** @var string Name */
 	public 		$name;
 	public		$color;
+	public		$position;
 	
 	public		$default;
 	
  	protected 	$fieldsRequired = array('id_attribute_group');
-	protected 	$fieldsValidate = array('id_attribute_group' => 'isUnsignedId', 'color' => 'isColor');
+	protected 	$fieldsValidate = array('id_attribute_group' => 'isUnsignedId', 'color' => 'isColor', 'position' => 'isInt');
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 64);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
@@ -59,6 +60,7 @@ class AttributeCore extends ObjectModel
 
 		$fields['id_attribute_group'] = (int)($this->id_attribute_group);
 		$fields['color'] = pSQL($this->color);
+		$fields['position'] = (int)($this->position);
 
 		return $fields;
 	}
@@ -88,6 +90,9 @@ class AttributeCore extends ObjectModel
 			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` IN ('.implode(', ', $combinationIds).')') === false)
 				return false;
 		}
+		/* Reinitializing position */
+		$this->cleanPositions((int)($this->id_attribute_group));
+
 		return parent::delete();
 	}
 
@@ -109,7 +114,7 @@ class AttributeCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute_group` = ag.`id_attribute_group`
 		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)($id_lang).')
 		'.($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
-		ORDER BY agl.`name` ASC, al.`name` ASC');
+		ORDER BY agl.`name` ASC, a.`position` ASC');
 	}
 	
 	/**
@@ -181,7 +186,7 @@ class AttributeCore extends ObjectModel
 	{
 		if (!Db::getInstance()->getRow('
 			SELECT `is_color_group` FROM `'._DB_PREFIX_.'attribute_group` WHERE `id_attribute_group` = (
-				SELECT `id_attribute_group` FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute` = '.(int)($this->id).')
+				SELECT `id_attribute_group` FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute` = '.(int)$this->id.')
 				AND is_color_group = 1'))
 			return false;
 		return Db::getInstance()->NumRows();
@@ -199,12 +204,80 @@ class AttributeCore extends ObjectModel
 		$minimal_quantity = Db::getInstance()->getValue('
 		SELECT `minimal_quantity`
 		FROM `'._DB_PREFIX_.'product_attribute` 
-		WHERE `id_product_attribute` = '.(int)($id_product_attribute));
+		WHERE `id_product_attribute` = '.(int)$id_product_attribute);
 		
 		if ($minimal_quantity > 1)
 			return (int)$minimal_quantity;
 		return false;
 	}
+
+	/**
+	 * Move an attribute inside its group
+	 * @param boolean $way Up (1)  or Down (0)
+	 * @param integer $position
+	 * @return boolean Update result
+	 */
+	public function updatePosition($way, $position)
+	{
+		if (!$res = Db::getInstance()->ExecuteS('
+			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
+			FROM `'._DB_PREFIX_.'attribute` a
+			WHERE a.`id_attribute_group` = '.(int)Tools::getValue('id_attribute_group', 1).'
+			ORDER BY a.`position` ASC'
+		))
+			return false;
+
+		foreach ($res AS $attribute)
+			if ((int)$attribute['id_attribute'] == (int)$this->id)
+				$movedAttribute = $attribute;
+
+		if (!isset($movedAttribute) || !isset($position))
+			return false;
+
+		// < and > statements rather than BETWEEN operator
+		// since BETWEEN is treated differently according to databases
+		return (Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'attribute`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+			WHERE `position`
+			'.($way
+				? '> '.(int)$movedAttribute['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$movedAttribute['position'].' AND `position` >= '.(int)$position).'
+			AND `id_attribute_group`='.(int)$movedAttribute['id_attribute_group'])
+		AND Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'attribute`
+			SET `position` = '.(int)$position.'
+			WHERE `id_attribute` = '.(int)$movedAttribute['id_attribute'].'
+			AND `id_attribute_group`='.(int)$movedAttribute['id_attribute_group']));
+	}
 	
+	/**
+	 * Reorder attribute position in group $id_attribute_group.
+	 * Call it after deleting an attribute from a group.
+	 *
+	 * @param int $id_attribute_group
+	 * @return bool $return
+	 */
+	public function cleanPositions($id_attribute_group)
+	{
+		$return = true;
+
+		$result = Db::getInstance()->ExecuteS('
+		SELECT `id_attribute`
+		FROM `'._DB_PREFIX_.'attribute`
+		WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
+		AND `id_attribute` != '.(int)$this->id.'
+		ORDER BY `position`');
+		$sizeof = sizeof($result);
+
+		for ($i = 0; $i < $sizeof; $i++)
+			$return &= Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'attribute`
+			SET `position` = '.(int)$i.'
+			WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
+			AND `id_attribute` = '.(int)$result[$i]['id_attribute']);
+		return $return;
+	}
+
 }
 

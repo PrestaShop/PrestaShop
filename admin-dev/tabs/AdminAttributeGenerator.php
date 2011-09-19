@@ -101,7 +101,7 @@ class AdminAttributeGenerator extends AdminTab
 
 	private static function displayAndReturnAttributeJs()
 	{
-		$attributes = Attribute::getAttributes($this->context->language->id, true);
+		$attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
 		$attributeJs = array();
 		foreach ($attributes AS $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
