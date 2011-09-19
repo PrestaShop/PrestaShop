@@ -166,8 +166,8 @@ class DispatcherCore
 		$this->loadRoutes();
 
 		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
-		if (isset($_SERVER['request_uri']))
-			$this->request_uri = $_SERVER['request_uri'];
+		if (isset($_SERVER['REQUEST_URI']))
+			$this->request_uri = $_SERVER['REQUEST_URI'];
 		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 	}
