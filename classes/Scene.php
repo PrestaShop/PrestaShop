@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,19 +29,19 @@ class SceneCore extends ObjectModel
 {
  	/** @var string Name */
 	public 		$name;
-	
+
 	/** @var boolean Active Scene */
 	public 		$active = true;
-	
+
 	/** @var array Zone for image map */
 	public		$zones = array();
-	
+
 	/** @var array list of category where this scene is available */
 	public		$categories = array();
-	
+
 	/** @var array Products */
 	public 		$products;
-		
+
 	protected 	$table = 'scene';
 	protected 	$identifier = 'id_scene';
 
@@ -50,27 +50,27 @@ class SceneCore extends ObjectModel
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 100);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
- 	
+
  	protected static	$feature_active = null;
- 	
+
  	public function __construct($id = NULL, $id_lang = NULL, $liteResult = true, $hideScenePosition = false)
 	{
 		parent::__construct((int)($id), (int)($id_lang));
-		
+
 		if (!$liteResult)
-			$this->products = $this->getProducts(true, (int)($id_lang), false);		
+			$this->products = $this->getProducts(true, (int)($id_lang), false);
 		if ($hideScenePosition)
 			$this->name = Scene::hideScenePosition($this->name);
 		$this->image_dir = _PS_SCENE_IMG_DIR_;
 	}
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
 		$fields['active'] = (int)($this->active);
 		return $fields;
 	}
-	
+
 	/**
   * Check then return multilingual fields for database interaction
   *
@@ -80,8 +80,8 @@ class SceneCore extends ObjectModel
 	{
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name'));
-	}	
-	
+	}
+
 	public function update($nullValues = false)
 	{
 		if (!$this->updateZoneProducts())
@@ -90,17 +90,17 @@ class SceneCore extends ObjectModel
 			return false;
 		return parent::update($nullValues);
 	}
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (!empty($this->zones))
 			$this->addZoneProducts($this->zones);
 		if (!empty($this->categories))
 			$this->addCategories($this->categories);
-		
+
 		return parent::add($autodate, $nullValues);
 	}
-	
+
 	public function delete()
 	{
 		$this->deleteZoneProducts();
@@ -108,12 +108,12 @@ class SceneCore extends ObjectModel
 		if (parent::delete())
 			return $this->deleteImage();
 	}
-	
+
 	public function deleteImage()
 	{
 		if (parent::deleteImage())
 		{
-			if (file_exists($this->image_dir.'thumbs/'.$this->id.'-thumb_scene.'.$this->image_format) 
+			if (file_exists($this->image_dir.'thumbs/'.$this->id.'-thumb_scene.'.$this->image_format)
 				&& !unlink($this->image_dir.'thumbs/'.$this->id.'-thumb_scene.'.$this->image_format))
 				return false;
 		}
@@ -121,7 +121,7 @@ class SceneCore extends ObjectModel
 			return false;
 		return true;
 	}
-	
+
 	public function addCategories($categories)
 	{
 		$result = true;
@@ -132,14 +132,14 @@ class SceneCore extends ObjectModel
 		}
 		return $result;
 	}
-	
+
 	public function deleteCategories()
 	{
 		return Db::getInstance()->Execute('
-		DELETE FROM `'._DB_PREFIX_.'scene_category` 
+		DELETE FROM `'._DB_PREFIX_.'scene_category`
 		WHERE `id_scene` = '.(int)($this->id));
 	}
-	
+
 	public function updateCategories()
 	{
 		if (!$this->deleteCategories())
@@ -148,7 +148,7 @@ class SceneCore extends ObjectModel
 				return false;
 		return true;
 	}
-	
+
 	public function addZoneProducts($zones)
 	{
 		$result = true;
@@ -161,14 +161,14 @@ class SceneCore extends ObjectModel
 		}
 		return $result;
 	}
-	
+
 	public function deleteZoneProducts()
 	{
 		return Db::getInstance()->Execute('
 		DELETE FROM `'._DB_PREFIX_.'scene_products`
 		WHERE `id_scene` = '.(int)($this->id));
 	}
-	
+
 	public function updateZoneProducts()
 	{
 		if (!$this->deleteZoneProducts())
@@ -177,7 +177,7 @@ class SceneCore extends ObjectModel
 			return false;
 		return true;
 	}
-	
+
 	/**
 	* Get all scenes of a category
 	*
@@ -187,7 +187,7 @@ class SceneCore extends ObjectModel
 	{
 		if (!self::isFeatureActive())
 			return array();
-		
+
 		if (!$context)
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
@@ -202,13 +202,13 @@ class SceneCore extends ObjectModel
 					.($onlyActive ? ' AND s.active = 1' : '').'
 				ORDER BY sl.name ASC';
 		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
-		
+
 		if (!$liteResult AND $scenes)
 			foreach($scenes AS &$scene)
 				$scene = new Scene($scene['id_scene'], $id_lang, false, $hideScenePosition);
 		return $scenes;
 	}
-	
+
 	/**
 	* Get all products of this scene
 	*
@@ -218,17 +218,17 @@ class SceneCore extends ObjectModel
 	{
 		if (!self::isFeatureActive())
 			return array();
-		
+
 		if (!$context)
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
-		
+
 		$products = Db::getInstance()->ExecuteS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'scene_products` s
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = s.id_product)
 		WHERE s.id_scene = '.(int)$this->id.($onlyActive ? ' AND p.active = 1' : ''));
-		
+
 		if (!$liteResult AND $products)
 			foreach ($products AS &$product)
 			{
@@ -240,7 +240,7 @@ class SceneCore extends ObjectModel
 			}
 		return $products;
 	}
-	
+
 	/**
 	* Get categories where scene is indexed
 	*
@@ -254,7 +254,7 @@ class SceneCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'scene_category`
 		WHERE `id_scene` = '.(int)($id_scene));
 	}
-	
+
 	/**
 	  * Hide scene prefix used for position
 	  *
@@ -265,7 +265,7 @@ class SceneCore extends ObjectModel
 	{
 		return preg_replace('/^[0-9]+\./', '', $name);
 	}
-	
+
 	/**
 	 * This method is allow to know if a feature is used or active
 	 * @since 1.5.0.1
@@ -275,7 +275,7 @@ class SceneCore extends ObjectModel
 	{
 		if (self::$feature_active === null)
 			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(*) 
+				SELECT `id_scene`
 				FROM `'._DB_PREFIX_.'scene`
 			');
 		return self::$feature_active;

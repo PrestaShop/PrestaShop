@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -30,14 +30,14 @@ class AliasCore extends ObjectModel
 	public $alias;
 	public $search;
 	public $active = true;
-		
+
  	protected 	$fieldsRequired = array('alias', 'search');
  	protected 	$fieldsSize = array('alias' => 255, 'search' => 255);
  	protected 	$fieldsValidate = array('search' => 'isValidSearch', 'alias' => 'isValidSearch', 'active' => 'isBool');
 
 	protected 	$table = 'alias';
 	protected 	$identifier = 'id_alias';
-	
+
 	protected static $feature_active = null;
 
 	function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
@@ -51,13 +51,13 @@ class AliasCore extends ObjectModel
 				$this->alias = trim($alias);
 				$this->search = trim($search);
 			}
-			else 
+			else
 			{
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
 				FROM `'._DB_PREFIX_.'alias` a
 				WHERE `alias` LIKE \''.pSQL($alias).'\' AND `active` = 1');
-	
+
 				if ($row)
 				{
 				 	$this->id = (int)($row['id_alias']);
@@ -77,7 +77,7 @@ class AliasCore extends ObjectModel
 	{
 		if (!self::isFeatureActive())
 			return '';
-		
+
 		$aliases = Db::getInstance()->ExecuteS('
 		SELECT a.alias
 		FROM `'._DB_PREFIX_.'alias` a
@@ -86,17 +86,17 @@ class AliasCore extends ObjectModel
 		$aliases = array_map('implode', $aliases);
 		return implode(', ', $aliases);
 	}
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
-		
+
 		$fields['alias'] = pSQL($this->alias);
 		$fields['search'] = pSQL($this->search);
 		$fields['active'] = (int)($this->active);
 		return $fields;
 	}
-	
+
 	/**
 	 * This method is allow to know if a feature is used or active
 	 * @since 1.5.0.1
@@ -106,10 +106,10 @@ class AliasCore extends ObjectModel
 	{
 		if (self::$feature_active === null)
 			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(*) 
+				SELECT `id_alias`
 				FROM `'._DB_PREFIX_.'alias`
 			');
 		return self::$feature_active;
-	} 
+	}
 }
 

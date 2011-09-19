@@ -126,12 +126,12 @@ class CustomizationCore
 	public static function isFeatureActive()
 	{
 		if (self::$feature_active === null)
-			self::$feature_active = (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(*) 
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_customization_field`
 				FROM `'._DB_PREFIX_.'customization_field`
-			') > 1);
+			');
 		return self::$feature_active;
 	}
-	
+
 }
 

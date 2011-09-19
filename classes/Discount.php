@@ -28,7 +28,7 @@
 class DiscountCore extends ObjectModel
 {
 	public		$id;
-	
+
 	/** @var integer Customer id only if discount is reserved */
 	public		$id_customer;
 
@@ -130,7 +130,7 @@ class DiscountCore extends ObjectModel
 	const PERCENT = 1;
 	const AMOUNT = 2;
 	const FREE_SHIPPING = 3;
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -227,7 +227,7 @@ class DiscountCore extends ObjectModel
 	}
 
 	/**
-	 * 
+	 *
 	 * This method allow to get the customer discount
 	 * @param int $id_lang
 	 * @param int $id_customer
@@ -240,10 +240,10 @@ class DiscountCore extends ObjectModel
     {
 		if (!self::isFeatureActive())
 			return array();
-    	
+
     	if (!$cart)
 			$cart = Context::getContext()->cart;
-		
+
 		$sql = '
         SELECT d.*, dtl.`name` AS `type`, dl.`description`
 		FROM `'._DB_PREFIX_.'discount` d
@@ -252,28 +252,28 @@ class DiscountCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)($id_lang).')
 		WHERE (d.`id_customer` = '.(int)$id_customer.'
 		';
-		
+
 		// Group clause
 		if (Group::isFeatureActive())
 			$sql .= 'OR d.`id_group` IN (
-				SELECT `id_group` 
-				FROM `'._DB_PREFIX_.'customer_group` cg 
+				SELECT `id_group`
+				FROM `'._DB_PREFIX_.'customer_group` cg
 				WHERE cg.`id_customer` = '.(int)$id_customer.'
 			)';
 		else
 			$sql .= 'OR d.`id_group` = 1';
-		
+
 		if ($includeGenericOnes)
 			$sql .= 'OR (d.`id_customer` = 0 AND d.`id_group` = 0)';
-		
+
 		$sql .= ')'; // close parenthsis openned befor d.`id_customer`
-		
+
 		if ($active)
 			$sql .= ' AND d.`active` = 1';
-		
+
 		if ($hasStock)
 			$sql .= ' AND d.`quantity` != 0';
-		
+
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 
 		foreach ($res as &$discount)
@@ -290,7 +290,7 @@ class DiscountCore extends ObjectModel
 	}
 
 	/**
-	 * 
+	 *
 	 * @param int $id_customer
 	 * @return bool
 	 */
@@ -315,7 +315,7 @@ class DiscountCore extends ObjectModel
 	{
 		if (!self::isFeatureActive())
 			return 0;
-		
+
 		if (!$currency)
 			$currency = Context::getContext()->currency;
 		if (!$shop)
@@ -330,7 +330,7 @@ class DiscountCore extends ObjectModel
 
 		if ($this->usedByCustomer((int)$cart->id_customer) >= $this->quantity_per_user AND !$cart->OrderExists())
 			return 0;
-		
+
 		$date_start = strtotime($this->date_from);
 		$date_end = strtotime($this->date_to);
 		if ((time() < $date_start OR time() > $date_end) AND !$cart->OrderExists()) return 0;
@@ -407,7 +407,7 @@ class DiscountCore extends ObjectModel
 		elseif (!is_array($categories) OR !sizeof($categories))
 			return false;
 		Db::getInstance()->Execute('
-			DELETE FROM `'._DB_PREFIX_.'discount_category` 
+			DELETE FROM `'._DB_PREFIX_.'discount_category`
 			WHERE `id_discount`='.(int)$this->id);
 		foreach($categories AS $category)
 		{
@@ -417,7 +417,7 @@ class DiscountCore extends ObjectModel
 			WHERE `id_discount`='.(int)($this->id).' AND `id_category`='.(int)($category));
 			if (Db::getInstance()->NumRows() == 0)
 				Db::getInstance()->Execute('
-					INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`, `id_category`) 
+					INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`, `id_category`)
 					VALUES('.(int)($this->id).','.(int)($category).')');
 		}
 	}
@@ -428,9 +428,9 @@ class DiscountCore extends ObjectModel
 			return false;
 
 		return (bool)Db::getInstance()->getValue('
-			SELECT `id_discount` 
-			FROM `'._DB_PREFIX_.'discount` 
-			WHERE `name` LIKE \''.pSQL($discountName).'\' 
+			SELECT `id_discount`
+			FROM `'._DB_PREFIX_.'discount`
+			WHERE `name` LIKE \''.pSQL($discountName).'\'
 			AND `id_discount` != '.(int)$id_discount);
 	}
 
@@ -469,7 +469,7 @@ class DiscountCore extends ObjectModel
 		$voucher->minimal = (float)($voucher->value);
 		$voucher->active = 1;
 		$voucher->cart_display = 1;
-		
+
 		$now = time();
 		$voucher->date_from = date('Y-m-d H:i:s', $now);
 		$voucher->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
@@ -496,7 +496,7 @@ class DiscountCore extends ObjectModel
 	}
 
 	/**
-	 * 
+	 *
 	 * This method allows to get the vouchers can be shown in order page
 	 * @param int $id_lang
 	 * @param int $id_customer
@@ -506,7 +506,7 @@ class DiscountCore extends ObjectModel
 	{
 		if (!self::isFeatureActive())
 			return array();
-		
+
 		$sql = '
 		SELECT d.`name`, dl.`description`, d.`id_discount`
 		FROM `'._DB_PREFIX_.'discount` d
@@ -514,21 +514,21 @@ class DiscountCore extends ObjectModel
 		WHERE d.`active` = 1
 		AND d.`date_from` <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND d.`date_to` >= \''.pSQL(date('Y-m-d H:i:s')).'\'
 		AND dl.`id_lang` = '.(int)$id_lang.'
-		AND d.`cart_display` = 1 
+		AND d.`cart_display` = 1
 		AND d.`quantity` > 0
 		AND (
 			(d.`id_customer` = 0 AND d.`id_group` = 0)';
-		
+
 		if ($id_customer)
 		{
 			$sql .= ' OR (';
 			// adding id_customer clause
 			$sql .= 'd.`id_customer` = '.(int)$id_customer;
 			if (Group::isFeatureActive())
-				$sql .= ' 
+				$sql .= '
 				OR d.`id_group` IN (
-					SELECT cg.`id_group` 
-					FROM `'._DB_PREFIX_.'customer_group` cg 
+					SELECT cg.`id_group`
+					FROM `'._DB_PREFIX_.'customer_group` cg
 					WHERE cg.`id_customer` = '.(int)$id_customer.'
 				)';
 			else
@@ -537,7 +537,7 @@ class DiscountCore extends ObjectModel
 		}
 		else
 			$sql .= ' OR d.`id_group` = 1';
-		
+
 		$sql .= ')'; // close parenthesis openned above
 
 		return Db::getInstance()->ExecuteS($sql);
@@ -571,7 +571,7 @@ class DiscountCore extends ObjectModel
 	{
 		return Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)$id_discount);
 	}
-	
+
 	/**
 	 * This metohd is allow to know if a feature is used or active
 	 * @since 1.5.0.1
@@ -580,11 +580,11 @@ class DiscountCore extends ObjectModel
 	public static function isFeatureActive()
 	{
 		if (self::$feature_active === null)
-			self::$feature_active = (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(*) 
-				FROM `'._DB_PREFIX_.'discount` 
+			self::$feature_active = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_discount`
+				FROM `'._DB_PREFIX_.'discount`
 				WHERE `active` = 1
-			') > 0);
+			');
 		return self::$feature_active;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,7 +36,7 @@ class CombinationCore extends ObjectModel
 	public $location;
 
 	public $ean13;
-	
+
 	public $upc;
 
 	public $wholesale_price;
@@ -83,7 +83,7 @@ class CombinationCore extends ObjectModel
 
 	protected $table = 'product_attribute';
 	protected $identifier = 'id_product_attribute';
-	
+
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'combination',
 		'objectsNodeName' => 'combinations',
@@ -114,14 +114,14 @@ class CombinationCore extends ObjectModel
 		$fields['available_date'] = pSQL($this->available_date);
 		return $fields;
 	}
-	
+
 	public function delete()
 	{
 		if (!parent::delete() OR $this->deleteAssociations() === false)
 			return false;
 		return true;
 	}
-	
+
 	public function deleteAssociations()
 	{
 		if (
@@ -132,7 +132,7 @@ class CombinationCore extends ObjectModel
 			return false;
 		return true;
 	}
-	
+
 	public function setWsProductOptionValues($values)
 	{
 		if ($this->deleteAssociations())
@@ -148,7 +148,7 @@ class CombinationCore extends ObjectModel
 		}
 		return false;
 	}
-	
+
 	public function getWsProductOptionValues()
 	{
 		$result = Db::getInstance()->executeS('SELECT id_attribute AS id from `'._DB_PREFIX_.'product_attribute_combination` WHERE id_product_attribute = '.(int)$this->id);
@@ -179,7 +179,7 @@ class CombinationCore extends ObjectModel
 		);
 		return true;
 	}
-	
+
 	/**
 	 * This method is allow to know if a feature is active
 	 * @since 1.5.0.1
@@ -189,16 +189,16 @@ class CombinationCore extends ObjectModel
 	{
 		return Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
 	}
-	
+
 	/**
 	 * This method is allow to know if a feature is in use
 	 * @since 1.5.0.1
 	 * @return bool
 	 */
-	public static function isActuallyUsed()
+	public static function isCurrentlyUsed()
 	{
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
+			SELECT `id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute`
 		');
 	}

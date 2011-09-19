@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,7 +36,7 @@ class AdminPerformance extends AdminTab
 				$settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
 				if (!Tools::getValue('active'))
 					$cache_active = 0;
-				else	
+				else
 					$cache_active = 1;
 				if (!$caching_system = Tools::getValue('caching_system'))
 					$this->_errors[] = Tools::displayError('Caching system is missing');
@@ -52,7 +52,7 @@ class AdminPerformance extends AdminTab
 					if (!($depth = Tools::getValue('ps_cache_fs_directory_depth')))
 						$this->_errors[] = Tools::displayError('Please set a directory depth');
 					if (!sizeof($this->_errors))
-					{	
+					{
 						CacheFS::deleteCacheDirectory();
 						CacheFS::createCacheDirectories((int)$depth);
 						Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
@@ -103,7 +103,7 @@ class AdminPerformance extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		
+
 		if (Tools::isSubmit('submitCiphering') AND Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -144,7 +144,7 @@ class AdminPerformance extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		
+
 		if (Tools::isSubmit('submitCCC'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -204,7 +204,7 @@ class AdminPerformance extends AdminTab
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (!Combination::isActuallyUsed())
+				if (!Combination::isCurrentlyUsed())
 					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
 				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
@@ -222,10 +222,10 @@ class AdminPerformance extends AdminTab
 			$warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').' <a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
 		if(!is_writable(_PS_CACHEFS_DIRECTORY_))
 			$warnings[] = $this->l('To use CacheFS the directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
-	
+
 		if ($warnings)
 			$this->displayWarning($warnings);
-	
+
 		echo '<script type="text/javascript">
 						$(document).ready(function() {
 							showMemcached();
@@ -252,12 +252,12 @@ class AdminPerformance extends AdminTab
 						});
 		</script>
 		';
-		
+
 		echo '
 		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
 			<fieldset>
 				<legend><img src="../img/admin/prefs.gif" /> '.$this->l('Smarty').'</legend>
-				
+
 				<label>'.$this->l('Templates cache:').'</label>
 				<div class="margin-form">
 					<input type="radio" name="smarty_force_compile" id="smarty_force_compile_'._PS_SMARTY_NO_COMPILE_.'" value="'._PS_SMARTY_NO_COMPILE_.'" '.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_NO_COMPILE_ ? 'checked="checked"' : '').' /> <label class="t"> '.$this->l('Never compile cache').'</label>
@@ -279,21 +279,21 @@ class AdminPerformance extends AdminTab
 				</div>
 			</fieldset>
 		</form>';
-		
+
 		echo '
 		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;" id="featuresDetachables">
 			<fieldset>
 				<legend><img src="../img/admin/tab-plugins.gif" /> '.$this->l('Features detachables').'</legend>
-				
+
 				<p>'.$this->l('Some features can be disabled in order to improve performance.').'</p>
-				
+
 				<label>'.$this->l('Combination:').'</label>
 				<div class="margin-form">
-					<input type="radio" name="combination" id="combination_1" value="1" '.(Combination::isFeatureActive() ? 'checked="checked"' : '').' '.(Combination::isActuallyUsed() ? 'disabled="disabled"' : '').' /> <label class="t"><img src="../img/admin/enabled.gif" alt="" /> '.$this->l('Yes').'</label>
-					<input type="radio" name="combination" id="combination_0" value="0" '.(!Combination::isFeatureActive() ? 'checked="checked"' : '').' '.(Combination::isActuallyUsed() ? 'disabled="disabled"' : '').' /> <label class="t"><img src="../img/admin/disabled.gif" alt="" /> '.$this->l('No').'</label>
+					<input type="radio" name="combination" id="combination_1" value="1" '.(Combination::isFeatureActive() ? 'checked="checked"' : '').' '.(Combination::isCurrentlyUsed() ? 'disabled="disabled"' : '').' /> <label class="t"><img src="../img/admin/enabled.gif" alt="" /> '.$this->l('Yes').'</label>
+					<input type="radio" name="combination" id="combination_0" value="0" '.(!Combination::isFeatureActive() ? 'checked="checked"' : '').' '.(Combination::isCurrentlyUsed() ? 'disabled="disabled"' : '').' /> <label class="t"><img src="../img/admin/disabled.gif" alt="" /> '.$this->l('No').'</label>
 		';
-		if (Combination::isActuallyUsed())
-			$this->displayWarning($this->l('This feature can\'t be disabled beacause this is currently in use.'));
+		if (Combination::isCurrentlyUsed())
+			$this->displayWarning($this->l('This feature can\'t be disabled because this is currently in use.'));
 		echo '
 					<p>
 						'.$this->l('These features are going to be disabled:').'
@@ -304,7 +304,7 @@ class AdminPerformance extends AdminTab
 						</ul>
 					</p>
 				</div>
-				
+
 				<label>'.$this->l('Feature:').'</label>
 				<div class="margin-form">
 					<input type="radio" name="feature" id="feature_1" value="1" '.(Feature::isFeatureActive() ? 'checked="checked"' : '').' /> <label class="t"><img src="../img/admin/enabled.gif" alt="" /> '.$this->l('Yes').'</label>
@@ -324,7 +324,7 @@ class AdminPerformance extends AdminTab
 				</div>
 			</fieldset>
 		</form>';
-		
+
 		echo '
 		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
 			<fieldset>
@@ -338,7 +338,7 @@ class AdminPerformance extends AdminTab
 					<input type="radio" value="0" name="PS_CSS_THEME_CACHE" id="PS_CSS_THEME_CACHE_0" '.(Configuration::get('PS_CSS_THEME_CACHE') ? '' : 'checked="checked"').' />
 					<label class="t" for="PS_CSS_THEME_CACHE_0">'.$this->l('Keep CSS as original').'</label>
 				</div>
-				
+
 				<label>'.$this->l('Smart cache for JavaScript').' </label>
 				<div class="margin-form">
 					<input type="radio" value="1" name="PS_JS_THEME_CACHE" id="PS_JS_THEME_CACHE_1" '.(Configuration::get('PS_JS_THEME_CACHE') ? 'checked="checked"' : '').' />
@@ -347,7 +347,7 @@ class AdminPerformance extends AdminTab
 					<input type="radio" value="0" name="PS_JS_THEME_CACHE" id="PS_JS_THEME_CACHE_0" '.(Configuration::get('PS_JS_THEME_CACHE') ? '' : 'checked="checked"').' />
 					<label class="t" for="PS_JS_THEME_CACHE_0">'.$this->l('Keep JavaScript as original').'</label>
 				</div>
-				
+
 				<label>'.$this->l('Minify HTML').' </label>
 				<div class="margin-form">
 					<input type="radio" value="1" name="PS_HTML_THEME_COMPRESSION" id="PS_HTML_THEME_COMPRESSION_1" '.(Configuration::get('PS_HTML_THEME_COMPRESSION') ? 'checked="checked"' : '').' />
@@ -356,7 +356,7 @@ class AdminPerformance extends AdminTab
 					<input type="radio" value="0" name="PS_HTML_THEME_COMPRESSION" id="PS_HTML_THEME_COMPRESSION_0" '.(Configuration::get('PS_HTML_THEME_COMPRESSION') ? '' : 'checked="checked"').' />
 					<label class="t" for="PS_HTML_THEME_COMPRESSION_0">'.$this->l('Keep HTML as original').'</label>
 				</div>
-				
+
 				<label>'.$this->l('Compress inline JavaScript in HTML').' </label>
 				<div class="margin-form">
 					<input type="radio" value="1" name="PS_JS_HTML_THEME_COMPRESSION" id="PS_JS_HTML_THEME_COMPRESSION_1" '.(Configuration::get('PS_JS_HTML_THEME_COMPRESSION') ? 'checked="checked"' : '').' />
@@ -365,7 +365,7 @@ class AdminPerformance extends AdminTab
 					<input type="radio" value="0" name="PS_JS_HTML_THEME_COMPRESSION" id="PS_JS_HTML_THEME_COMPRESSION_0" '.(Configuration::get('PS_JS_HTML_THEME_COMPRESSION') ? '' : 'checked="checked"').' />
 					<label class="t" for="PS_JS_HTML_THEME_COMPRESSION_0">'.$this->l('Keep inline JavaScript in HTML as original').'</label>
 				</div>
-				
+
 				<label>'.$this->l('High risk HTML compression').' </label>
 				<div class="margin-form">
 					<input type="radio" value="1" name="PS_HIGH_HTML_THEME_COMPRESSION" id="PS_HIGH_HTML_THEME_COMPRESSION_1" '.(Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION') ? 'checked="checked"' : '').' />
@@ -374,13 +374,13 @@ class AdminPerformance extends AdminTab
 					<input type="radio" value="0" name="PS_HIGH_HTML_THEME_COMPRESSION" id="PS_HIGH_HTML_THEME_COMPRESSION_0" '.(Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION') ? '' : 'checked="checked"').' />
 					<label class="t" for="PS_HIGH_HTML_THEME_COMPRESSION_0">'.$this->l('Keep W3C validation').'</label>
 				</div>
-				
+
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitCCC" class="button" />
 				</div>
 			</fieldset>
 		</form>';
-		
+
 		echo '<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" style="margin-top:10px;">
 			<fieldset>
 				<legend><img src="../img/admin/subdomain.gif" /> '.$this->l('Media servers (used only with CCC)').'</legend>
@@ -425,7 +425,7 @@ class AdminPerformance extends AdminTab
 			</form>
 		</fieldset>
 		';
-		
+
 		$depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
 		echo '<fieldset style="margin-top: 10px;">
 				<legend><img src="../img/admin/computer_key.png" /> '.$this->l('Caching').'</legend>
@@ -479,7 +479,7 @@ class AdminPerformance extends AdminTab
 						</form>
 					</div>';
 			$servers = MCached::getMemcachedServers();
-			if ($servers)					
+			if ($servers)
 			{
 				echo '<div class="margin-form">
 					<table style="width: 320px;" cellspacing="0" cellpadding="0" class="table">
