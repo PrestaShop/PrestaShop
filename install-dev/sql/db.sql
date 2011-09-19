@@ -1259,17 +1259,20 @@ CREATE TABLE `PREFIX_product_attribute_image` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_download` (
-  `id_product_download` int(10) unsigned NOT NULL auto_increment,
+  `id_product_download` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_product` int(10) unsigned NOT NULL,
-  `display_filename` varchar(255) default NULL,
-  `physically_filename` varchar(255) default NULL,
-  `date_deposit` datetime NOT NULL,
-  `date_expiration` datetime default NULL,
-  `nb_days_accessible` int(10) unsigned default NULL,
-  `nb_downloadable` int(10) unsigned default '1',
-  `active` tinyint(1) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`id_product_download`),
-  KEY `product_active` (`id_product`,`active`)
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `display_filename` varchar(255) DEFAULT NULL,
+  `filename` varchar(255) DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_expiration` datetime DEFAULT NULL,
+  `nb_days_accessible` int(10) unsigned DEFAULT NULL,
+  `nb_downloadable` int(10) unsigned DEFAULT '1',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `is_shareable` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_product_download`),
+  KEY `product_active` (`id_product`,`active`),
+  KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_lang` (
