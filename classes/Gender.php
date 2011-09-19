@@ -83,7 +83,7 @@ class GenderCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
-	public function getStaticImage($id, $useUnknown = false)
+	public static function getStaticImage($id, $useUnknown = false)
 	{
 		if (!file_exists(_PS_GENDERS_DIR_.$id.'.jpg'))
 			return ($useUnknown) ?  _PS_ADMIN_IMG_.'unknown.gif' : false;
