@@ -97,6 +97,9 @@ class AdminSearch extends AdminTab
 						$key = substr($key, 0, -32);
 						if (in_array($key, array('AdminTab', 'index')))
 							continue;
+						// if class name doesn't exists, just ignore it
+						if (!isset($tabs[$key]))
+							continue;
 						if (!isset($matchingResults[$tabs[$key]]))
 							$matchingResults[$tabs[$key]] = array();
 						$matchingResults[$tabs[$key]][] = array('tab' => $key, 'value' => $value);
