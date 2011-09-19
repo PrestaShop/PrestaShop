@@ -78,17 +78,33 @@ class LocalizationPackCore
 	protected function _installStates($xml)
 	{
 		if (isset($xml->states->state))
-			foreach ($xml->states->state AS $data)
+			foreach ($xml->states->state as $data)
 			{
 				$attributes = $data->attributes();
-
 				if (!$id_state = State::getIdByName($attributes['name']))
 				{
 					$state = new State();
 					$state->name = strval($attributes['name']);
 					$state->iso_code = strval($attributes['iso_code']);
 					$state->id_country = Country::getByIso(strval($attributes['country']));
-					$state->id_zone = (int)(Zone::getIdByName(strval($attributes['zone'])));
+
+					$id_zone = (int)Zone::getIdByName(strval($attributes['zone']));
+					if (!$id_zone)
+					{
+						$zone = new Zone();
+						$zone->name = (string)$attributes['zone'];
+						$zone->active = true;
+
+						if (!$zone->add())
+						{
+							$this->_errors[] = Tools::displayError('Invalid Zone name.');
+							return false;
+						}
+
+						$id_zone = $zone->id;
+					}
+
+					$state->id_zone = $id_zone;
 
 					if (!$state->validateFields())
 					{
@@ -126,9 +142,8 @@ class LocalizationPackCore
 	{
 		if (isset($xml->taxes->tax))
 		{
-			$available_behavior = array(PS_PRODUCT_TAX, PS_STATE_TAX, PS_BOTH_TAX);
 			$assoc_taxes = array();
-			foreach ($xml->taxes->tax AS $taxData)
+			foreach ($xml->taxes->tax as $taxData)
 			{
 				$attributes = $taxData->attributes();
 				if (Tax::getTaxIdByName($attributes['name']))
@@ -153,7 +168,7 @@ class LocalizationPackCore
 				$assoc_taxes[(int)$attributes['id']] = $tax->id;
 			}
 
-			foreach ($xml->taxes->taxRulesGroup AS $group)
+			foreach ($xml->taxes->taxRulesGroup as $group)
 			{
 				$group_attributes = $group->attributes();
 				if (!Validate::isGenericName($group_attributes['name']))
@@ -172,7 +187,7 @@ class LocalizationPackCore
 					return false;
 				}
 
-				foreach($group->taxRule as $rule)
+				foreach ($group->taxRule as $rule)
 				{
 					$rule_attributes = $rule->attributes();
 
@@ -188,25 +203,17 @@ class LocalizationPackCore
 						continue;
 
 					// Default values
-					$id_state = (int) isset($rule_attributes['iso_code_state']) ? State::getIdByIso(strtoupper($rule_attributes['iso_code_state'])) : 0;
+					$id_state = (int)isset($rule_attributes['iso_code_state']) ? State::getIdByIso(strtoupper($rule_attributes['iso_code_state'])) : 0;
 					$id_county = 0;
-					$state_behavior = 0;
-					$county_behavior = 0;
+					$zipcode_from = 0;
+					$zipcode_to = 0;
+					$behavior = $rule_attributes['behavior'];
 
-					if ($id_state)
+					if (isset($rule_attributes['zipcode_from']))
 					{
-						if (isset($rule_attributes['state_behavior']) && in_array($rule_attributes['state_behavior'], $available_behavior))
-							$state_behavior = (int)$rule_attributes['state_behavior'];
-
-						if (isset($rule_attributes['county_name']))
-						{
-							$id_county = County::getIdCountyByNameAndIdState($rule_attributes['county_name'], (int)$id_state);
-							if (!$id_county)
-								continue;
-						}
-
-						if (isset($rule_attributes['county_behavior']) && in_array($rule_attributes['state_behavior'], $available_behavior))
-							$county_behavior = (int)$rule_attributes['county_behavior'];
+						$zipcode_from = $rule_attributes['zipcode_from'];
+						if (isset($rule_attributes['zipcode_to']))
+							$zipcode_to = $rule_attributes['zipcode_to'];
 					}
 
 					// Creation
@@ -215,14 +222,15 @@ class LocalizationPackCore
 					$tr->id_country = $id_country;
 					$tr->id_state = $id_state;
 					$tr->id_county = $id_county;
-					$tr->state_behavior = $state_behavior;
-					$tr->county_behavior = $county_behavior;
+					$tr->zipcode_from = $zipcode_from;
+					$tr->zipcode_to = $zipcode_to;
+					$tr->behavior = $behavior;
+					$tr->description = $description;
 					$tr->id_tax = $assoc_taxes[strval($rule_attributes['id_tax'])];
 					$tr->save();
 				}
 			}
 		}
-
 		return true;
 	}
 
