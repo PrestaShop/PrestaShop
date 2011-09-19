@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,19 +29,19 @@ class ProductDownloadCore extends ObjectModel
 {
 	/** @var integer Product id which download belongs */
 	public $id_product;
-	
+
 	/** @var string DisplayFilename the name which appear */
 	public $display_filename;
 
 	/** @var string PhysicallyFilename the name of the file on hard disk */
 	public $physically_filename;
-	
+
 	/** @var string DateDeposit when the file is upload */
 	public $date_deposit;
 
 	/** @var string DateExpiration deadline of the file */
 	public $date_expiration;
-	
+
 	/** @var string NbDaysAccessible how many days the customer can access to file */
 	public $nb_days_accessible;
 
@@ -79,9 +79,9 @@ class ProductDownloadCore extends ObjectModel
 
 	protected $table = 'product_download';
 	protected $identifier = 'id_product_download';
-	
+
 	protected static $feature_active = null;
-	
+
 	/**
 	 * Build a virtual product
 	 *
@@ -92,7 +92,7 @@ class ProductDownloadCore extends ObjectModel
 		parent::__construct($id_product_download);
 		// @TODO check if the file is present on hard drive
 	}
-	
+
 	public function delete($deleteFile=false)
 	{
 		if ($deleteFile)
@@ -103,7 +103,7 @@ class ProductDownloadCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
-		
+
 		if (!$this->date_expiration)
 			$this->date_expiration = '0000-00-00 00:00:00';
 
@@ -162,15 +162,15 @@ class ProductDownloadCore extends ObjectModel
 	{
 		if (!self::isFeatureActive())
 			return false;
-		
+
 		if (array_key_exists($id_product, self::$_productIds))
 			return self::$_productIds[$id_product];
-			
+
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
 		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');
-		
+
 		return self::$_productIds[$id_product];
 	}
 
@@ -282,7 +282,7 @@ class ProductDownloadCore extends ObjectModel
 	{
 		if (self::$feature_active === null)
 			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(*) 
+				SELECT `id_product_download`
 				FROM `'._DB_PREFIX_.'product_download`
 			');
 		return self::$feature_active;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,7 +31,7 @@ class GroupCore extends ObjectModel
 
 	/** @var string Lastname */
 	public 		$name;
-	
+
 	/** @var string Reduction */
 	public 		$reduction;
 
@@ -49,7 +49,7 @@ class GroupCore extends ObjectModel
  	protected 	$fieldsRequired = array('price_display_method');
  	protected 	$fieldsSize = array();
  	protected 	$fieldsValidate = array('reduction' => 'isFloat', 'price_display_method' => 'isPriceDisplayMethod');
-	
+
 	protected	$fieldsRequiredLang = array('name');
 	protected	$fieldsSizeLang = array('name' => 32);
 	protected	$fieldsValidateLang = array('name' => 'isGenericName');
@@ -60,9 +60,9 @@ class GroupCore extends ObjectModel
 	protected static $_cacheReduction = array();
 	protected static $_groupPriceDisplayMethod = array();
 	protected static $feature_active = null;
-	
+
 	protected	$webserviceParameters = array();
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -75,14 +75,14 @@ class GroupCore extends ObjectModel
 
 		return $fields;
 	}
-	
+
 	public function getTranslationsFieldsChild()
 	{
 		if (!$this->validateFieldsLang())
 			return false;
 		return $this->getTranslationsFields(array('name'));
 	}
-	
+
 	public static function getGroups($id_lang)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -91,7 +91,7 @@ class GroupCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($id_lang).')
 		ORDER BY g.`id_group` ASC');
 	}
-	
+
 	public function getCustomers($count = false, $start = 0, $limit = 0)
 	{
 		if ($count)
@@ -99,18 +99,18 @@ class GroupCore extends ObjectModel
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'customer_group` cg
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
-			WHERE cg.`id_group` = '.(int)$this->id.' 
+			WHERE cg.`id_group` = '.(int)$this->id.'
 			AND c.`deleted` != 1');
 		return Db::getInstance()->ExecuteS('
 		SELECT cg.`id_customer`, c.*
 		FROM `'._DB_PREFIX_.'customer_group` cg
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
-		WHERE cg.`id_group` = '.(int)$this->id.' 
-		AND c.`deleted` != 1 
+		WHERE cg.`id_group` = '.(int)$this->id.'
+		AND c.`deleted` != 1
 		ORDER BY cg.`id_customer` ASC
 		'.($limit > 0 ? 'LIMIT '.(int)$start.', '.(int)$limit : ''));
 	}
-	
+
 	public static function getReduction($id_customer = NULL)
 	{
 		if (!isset(self::$_cacheReduction['customer'][(int)$id_customer]))
@@ -168,7 +168,7 @@ class GroupCore extends ObjectModel
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method is allow to know if a feature is used or active
 	 * @since 1.5.0.1
@@ -177,10 +177,10 @@ class GroupCore extends ObjectModel
 	public static function isFeatureActive()
 	{
 		if (self::$feature_active === null)
-			self::$feature_active = (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(*) 
+			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_group`
 				FROM `'._DB_PREFIX_.'group`
-			') > 1);
+			');
 		return self::$feature_active;
 	}
 }
