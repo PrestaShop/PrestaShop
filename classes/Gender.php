@@ -72,7 +72,7 @@ class GenderCore extends ObjectModel
 		));
 	}
 
-	public function getGenders($id_lang = null)
+	public static function getGenders($id_lang = null)
 	{
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
