@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -30,8 +30,6 @@ header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 header('Pragma: no-cache');
 header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-
-require_once(dirname(__FILE__).'/init.php');
 
 echo '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -72,13 +70,13 @@ echo '
 				if (data)
 				{
 					json = jQuery.parseJSON(data);
-					
+
 					// Add orders notifications to the list
 					html = "";
 					nb_notifs = 0;
 					$.each(json.order, function(property, value) {
 						html += "<li>'.translate('A new order has been made on your shop.').'<br />'.translate('Order number : ').'<strong>#" + parseInt(value.id_order) + "</strong><br />'.translate('Total : ').'<strong>" + value.total_paid_real + "</strong><br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that order').'</a></li>";
-					});						
+					});
 					if (html != "")
 					{
 						$("#list_orders_notif").prev("p").hide();
@@ -90,17 +88,17 @@ echo '
 					else
 					{
 						$("#orders_notif_number_wrapper").hide();
-					}	
-					
+					}
+
 					// Add customers notifications to the list
 					html = "";
 					nb_notifs = 0;
 					$.each(json.customer, function(property, value) {
 						html += "<li>'.translate('A new customer registered on your shop.').'<br />'.translate('Customer name : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate('Click here to see that customer').'</a></li>";
-					});						
+					});
 					if (html != "")
 					{
-						$("#list_customers_notif").prev("p").hide();						
+						$("#list_customers_notif").prev("p").hide();
 						$("#list_customers_notif").empty().append(html);
 						nb_notifs = $("#list_customers_notif li").length;
 						$("#customers_notif_value").text(nb_notifs);
@@ -110,7 +108,7 @@ echo '
 					{
 						$("#customers_notif_number_wrapper").hide();
 					}
-					
+
 					// Add messages notifications to the list
 					html = "";
 					nb_notifs = 0;
@@ -119,7 +117,7 @@ echo '
 					});
 					if (html != "")
 					{
-						$("#list_messages_notif").prev("p").hide();	
+						$("#list_messages_notif").prev("p").hide();
 						$("#list_messages_notif").empty().append(html);
 						nb_notifs = $("#list_messages_notif li").length;
 						$("#messages_notif_value").text(nb_notifs);
@@ -129,12 +127,12 @@ echo '
 					{
 						$("#messages_notif_number_wrapper").hide();
 					}
-					
+
 				}
 				setTimeout("getPush()",60000);
 			});
 		}
-		
+
 		$().ready(function()
 		{
 			var hints = $(\'.translatable span.hint\');
@@ -149,12 +147,12 @@ echo '
 					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo 'hints.html(hints.html()+\'<br /><span class="red">'.addslashes($youEditFieldFor).'</span>\');';
 			}
-			
-echo '		var html = "";		
+
+echo '		var html = "";
 			var nb_notifs = 0;
 			var wrapper_id = "";
 			var type = new Array();
-			
+
 			$(".notifs").live("click", function(){
 				wrapper_id = $(this).attr("id");
 				type = wrapper_id.split("s_notif")
@@ -164,16 +162,16 @@ echo '		var html = "";
 						if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
 						{
 							$(".notifs_wrapper").hide();
-							$("#" + wrapper_id + "_number_wrapper").hide();  
-							$("#" + wrapper_id + "_wrapper").show();  
+							$("#" + wrapper_id + "_number_wrapper").hide();
+							$("#" + wrapper_id + "_wrapper").show();
 						}else
 						{
-							$("#" + wrapper_id + "_wrapper").hide();							
+							$("#" + wrapper_id + "_wrapper").hide();
 						}
-					}				
+					}
 				});
 			});
-			
+
 			$("#main").click(function(){
 				$(".notifs_wrapper").hide();
 			});
@@ -209,7 +207,7 @@ echo '		var html = "";
 							</div>
 						</div>';
 				}
-				if (Configuration::get('PS_SHOW_NEW_MESSAGES') == 1) 
+				if (Configuration::get('PS_SHOW_NEW_MESSAGES') == 1)
 				{
 					echo '<div id="messages_notif" class="notifs"><span id="messages_notif_number_wrapper" class="number_wrapper"><span id="messages_notif_value">0</span></span>
 							<div id="messages_notif_wrapper" class="notifs_wrapper">
@@ -324,7 +322,7 @@ if (Context::getContext()->employee->bo_uimode == 'hover')
 echo '		<ul id="submenu" '.(strlen($mainsubtablist) ? 'class="withLeftBorder clearfix"' : '').'>'.$mainsubtablist.'</ul>
 			<div id="main">
 				<div id="content">'
-			.(file_exists(PS_ADMIN_DIR.'/../install') ? '<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">'
+			.(file_exists(_PS_ADMIN_DIR_.'/../install') ? '<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">'
 				.translate('For security reasons, you must also:').' '.
 				translate('delete the /install folder').
 				'</div>' : '').'

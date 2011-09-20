@@ -240,4 +240,16 @@ class TabCore extends ObjectModel
 			WHERE `id_tab` = '.(int)$result[$i]['id_tab']);
 		return true;
 	}
+
+	public static function checkTabRights($id_tab)
+	{
+		static $tabAccesses = NULL;
+
+		if ($tabAccesses === NULL)
+			$tabAccesses =  Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
+
+		if (isset($tabAccesses[(int)($id_tab)]['view']))
+			return ($tabAccesses[(int)($id_tab)]['view'] === '1');
+		return false;
+}
 }

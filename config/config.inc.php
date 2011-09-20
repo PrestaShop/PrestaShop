@@ -102,14 +102,14 @@ Context::getContext()->country = $defaultCountry;
 
 /* Instantiate cookie */
 $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
-if (defined('PS_ADMIN_DIR'))
+if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
 else
 	$cookie = new Cookie('ps', '', $cookieLifetime);
 Context::getContext()->cookie = $cookie;
 
 /* Create employee if in BO, customer else */
-if (defined('PS_ADMIN_DIR'))
+if (defined('_PS_ADMIN_DIR_'))
 {
 	$employee = new Employee($cookie->id_employee);
 	Context::getContext()->employee = $employee;
@@ -123,9 +123,9 @@ else
 		$customer = new Customer($cookie->id_customer);
 		$customer->logged = $cookie->logged;
 	}
-	else	
+	else
 		$customer = new Customer();
-	
+
 	$customer->id_guest = $cookie->id_guest;
 	Context::getContext()->customer = $customer;
 }
@@ -158,7 +158,11 @@ if (function_exists('date_default_timezone_set'))
 	@date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Smarty */
-require_once(dirname(__FILE__).'/smarty.config.inc.php');
+if (!defined('_PS_ADMIN_DIR_'))
+	require_once(dirname(__FILE__).'/smarty.config.inc.php');
+else
+	require_once(dirname(__FILE__).'/smartyadmin.config.inc.php');
+
 Context::getContext()->smarty = $smarty;
 /* Possible value are true, false, 'URL'
  (for 'URL' append SMARTY_DEBUG as a parameter to the url)
