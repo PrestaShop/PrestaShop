@@ -58,9 +58,9 @@ class AttributeCore extends ObjectModel
 	{
 		$this->validateFields();
 
-		$fields['id_attribute_group'] = (int)($this->id_attribute_group);
+		$fields['id_attribute_group'] = (int)$this->id_attribute_group;
 		$fields['color'] = pSQL($this->color);
-		$fields['position'] = (int)($this->position);
+		$fields['position'] = (int)$this->position;
 
 		return $fields;
 	}
@@ -78,20 +78,20 @@ class AttributeCore extends ObjectModel
 
 	public function delete()
 	{
-		if (($result = Db::getInstance()->ExecuteS('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)($this->id))) === false)
+		if (($result = Db::getInstance()->ExecuteS('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id)) === false)
 			return false;
 		$combinationIds = array();
 		if (Db::getInstance()->numRows())
 		{
 			foreach ($result AS $row)
-				$combinationIds[] = (int)($row['id_product_attribute']);
-			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)($this->id)) === false)
+				$combinationIds[] = (int)$row['id_product_attribute'];
+			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
 				return false;
 			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` IN ('.implode(', ', $combinationIds).')') === false)
 				return false;
 		}
 		/* Reinitializing position */
-		$this->cleanPositions((int)($this->id_attribute_group));
+		$this->cleanPositions((int)$this->id_attribute_group);
 
 		return parent::delete();
 	}
@@ -110,9 +110,9 @@ class AttributeCore extends ObjectModel
 		return Db::getInstance()->ExecuteS('
 		SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
 		FROM `'._DB_PREFIX_.'attribute_group` ag
-		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute_group` = ag.`id_attribute_group`
-		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 		'.($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
 		ORDER BY agl.`name` ASC, a.`position` ASC');
 	}
@@ -153,10 +153,10 @@ class AttributeCore extends ObjectModel
 		$row = Db::getInstance()->getRow('
 		SELECT SUM(quantity) as quantity
 		FROM `'._DB_PREFIX_.'product_attribute` 
-		WHERE `id_product` = '.(int)($id_product));
+		WHERE `id_product` = '.(int)$id_product);
 		
 		if ($row['quantity'] !== NULL)
-			return (int)($row['quantity']);
+			return (int)$row['quantity'];
 		return false;
 	}
 
@@ -171,12 +171,12 @@ class AttributeCore extends ObjectModel
 	{
 		Tools::displayAsDeprecated();
 
-		$id_product = (int)($arr['id_product']);
+		$id_product = (int)$arr['id_product'];
 		$qty = self::getAttributeQty($id_product);
 		
 		if ($qty !== false)
 		{
-			$arr['quantity'] = (int)($qty);
+			$arr['quantity'] = (int)$qty;
 			return true;
 		}
 		return false;
@@ -256,22 +256,28 @@ class AttributeCore extends ObjectModel
 	 * Call it after deleting an attribute from a group.
 	 *
 	 * @param int $id_attribute_group
+	 * @param bool $use_last_attribute
 	 * @return bool $return
 	 */
-	public function cleanPositions($id_attribute_group)
+	public function cleanPositions($id_attribute_group, $use_last_attribute = true)
 	{
 		$return = true;
 
-		$result = Db::getInstance()->ExecuteS('
+		$sql = '
 		SELECT `id_attribute`
 		FROM `'._DB_PREFIX_.'attribute`
-		WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
-		AND `id_attribute` != '.(int)$this->id.'
-		ORDER BY `position`');
+		WHERE `id_attribute_group` = '.(int)$id_attribute_group;
+		// when delete, you must use $use_last_attribute
+		if($use_last_attribute)
+			$sql .= '
+			AND `id_attribute` != '.(int)$this->id;
+		$sql .= '
+		ORDER BY `position`';
+		$result = Db::getInstance()->ExecuteS($sql);
 		$sizeof = sizeof($result);
 
 		for ($i = 0; $i < $sizeof; $i++)
-			$return &= Db::getInstance()->Execute('
+			$return = Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position` = '.(int)$i.'
 			WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
@@ -279,5 +285,21 @@ class AttributeCore extends ObjectModel
 		return $return;
 	}
 
+	/**
+	 * getHigherPosition
+	 * 
+	 * Get the higher attribute position from a group attribute
+	 * 
+	 * @param integer $id_attribute_group
+	 * @return integer $position
+	 */
+	public static function getHigherPosition($id_attribute_group)
+	{
+		$sql = 'SELECT `position`
+				FROM `'._DB_PREFIX_.'attribute`
+				WHERE id_attribute_group = '.(int)$id_attribute_group.' 
+				ORDER BY position DESC';
+		return ((DB::getInstance()->getValue($sql)!==false)) ? DB::getInstance()->getValue($sql) : -1;
+	}
 }
 
