@@ -84,7 +84,8 @@ class AdminImport extends AdminTab
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id_product' => array('label' => $this->l('Product ID').'*'),
-					'options' => array('label' => $this->l('Options (Group:Value)').'*'),
+					'options' => array('label' => $this->l('Options (Group:Value:Position)').'*',
+						'help' => $this->l('Position of the attribute in the attribute group.')),
 					'reference' => array('label' => $this->l('Reference')),
 					'supplier_reference' => array('label' => $this->l('Supplier reference')),
 					'ean13' => array('label' => $this->l('EAN13')),
@@ -952,7 +953,8 @@ class AdminImport extends AdminTab
 					$this->_warnings[] = $image->legend[$defaultLanguageId].(isset($image->id_product) ? ' ('.$image->id_product.')' : '').' '.Tools::displayError('Cannot be saved');
 					$this->_errors[] = ($fieldError !== true ? $fieldError : '').($langFieldError !== true ? $langFieldError : '').mysql_error();
 				}
-			} elseif (isset($info['image_position']) && $info['image_position'])
+			}
+			else if (isset($info['image_position']) && $info['image_position'])
 			{
 				$images = $product->getImages($defaultLanguage);
 
@@ -968,9 +970,16 @@ class AdminImport extends AdminTab
 			}
 
 			$id_product_attribute = $product->addProductAttribute((float)($info['price']), (float)($info['weight']), 0, (float)($info['ecotax']), (int)($info['quantity']), $id_image, strval($info['reference']), strval($info['supplier_reference']), strval($info['ean13']), (int)($info['default_on']), strval($info['upc']));
+			$id_attribute_group = 0;
 			foreach (explode($fsep, $info['options']) as $option)
 			{
-				list($group, $attribute) = array_map('trim', explode(':', $option));
+				$options = explode(':', $option);
+				list($group, $attribute) = array_map('trim', $options);
+				// if position is filled
+				if (isset($options[2]))
+					$position = $options[2];
+				else
+					$position = false;
 				if (!isset($groups[$group]))
 				{
 					$obj = new AttributeGroup();
@@ -985,11 +994,13 @@ class AdminImport extends AdminTab
 					else
 						$this->_errors[] = ($fieldError !== true ? $fieldError : '').($langFieldError !== true ? $langFieldError : '');
 				}
+				$id_attribute_group = $groups[$group];
 				if (!isset($attributes[$group.'_'.$attribute]))
 				{
 					$obj = new Attribute();
 					$obj->id_attribute_group = $groups[$group];
 					$obj->name[$defaultLanguage] = str_replace('\n', '', str_replace('\r', '', $attribute));
+					$obj->position = (!$position) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
 					if (($fieldError = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true AND ($langFieldError = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 					{
 						$obj->add();
@@ -997,11 +1008,16 @@ class AdminImport extends AdminTab
 					}
 					else
 						$this->_errors[] = ($fieldError !== true ? $fieldError : '').($langFieldError !== true ? $langFieldError : '');
+
 				}
-				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute) VALUES ('.(int)($attributes[$group.'_'.$attribute]).','.(int)($id_product_attribute).')');
+				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute) VALUES ('.(int)($attributes[$group.'_'.$attribute]).','.(int)$id_product_attribute.')');
 			}
 		}
 		$this->closeCsvFile($handle);
+
+		// after insertion, we clean attribute position
+		$obj = new Attribute();
+		$obj->cleanPositions((int)$id_attribute_group, false);
 	}
 
 	public function customerImport()
