@@ -26,11 +26,10 @@
 */
 
 define('_PS_ADMIN_DIR_', getcwd());
-define('PS_ADMIN_DIR', _PS_ADMIN_DIR_); // Retro-compatibility
 
-include(PS_ADMIN_DIR.'/../config/config.inc.php');
-include(PS_ADMIN_DIR.'/functions.php');
-include(PS_ADMIN_DIR.'/header.inc.php');
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include(_PS_ADMIN_DIR_.'/functions.php');
+include(_PS_ADMIN_DIR_.'/init.php');
 if (empty($tab) and !sizeof($_POST))
 {
 	$tab = 'AdminHome';
@@ -38,14 +37,22 @@ if (empty($tab) and !sizeof($_POST))
 	$_POST['token'] = Tools::getAdminTokenLite($tab);
 }
 
-	if ($adminObj = checkingTab($tab))
+if ($adminObj = checkingTab($tab))
+{
+	// init is different for new tabs (AdminController) and old tabs (AdminTab)
+	if ($adminObj instanceof AdminController)
 	{
+		$adminObj->path = dirname($_SERVER["PHP_SELF"]);
+		$adminObj->run();
+	}
+	else
+	{
+		include(_PS_ADMIN_DIR_.'/header.inc.php');
     	$isoUser = Context::getContext()->language->id;
 		$tabs = array();
 		$tabs = recursiveTab($adminObj->id, $tabs);
 		$tabs = array_reverse($tabs);
 		$bread = '';
-
 		foreach ($tabs AS $key => $item)
 			$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
 			'.((sizeof($tabs) - 1 > $key)
@@ -75,8 +82,8 @@ if (empty($tab) and !sizeof($_POST))
 			'.$bread;
 		echo '
 		</div>';
-		
-		
+
+
 		if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
 		{
 			echo '<div class="multishop_info">';
@@ -144,7 +151,8 @@ if (empty($tab) and !sizeof($_POST))
 				die;
 			}
 		}
+		include(_PS_ADMIN_DIR_.'/footer.inc.php');
 	}
+}
 
-include(PS_ADMIN_DIR.'/footer.inc.php');
 
