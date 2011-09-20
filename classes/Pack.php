@@ -206,7 +206,7 @@ class PackCore extends Product
 	{
 		if (self::$feature_active === null)
 			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_pack`
+				SELECT `id_product_pack`
 				FROM `'._DB_PREFIX_.'pack`
 			');
 		return self::$feature_active;
