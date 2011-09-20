@@ -225,7 +225,7 @@ class LocalizationPackCore
 					$tr->zipcode_from = $zipcode_from;
 					$tr->zipcode_to = $zipcode_to;
 					$tr->behavior = $behavior;
-					$tr->description = $description;
+					$tr->description = '';
 					$tr->id_tax = $assoc_taxes[strval($rule_attributes['id_tax'])];
 					$tr->save();
 				}
