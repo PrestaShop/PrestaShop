@@ -366,61 +366,68 @@ class CartCore extends ObjectModel
 			$id_country = Context::getContext()->country->id;
 
 		// Build query
-		$sql = array();
+		$sql = new DbQuery();
+
 		// Build SELECT
-		$sql['select'] = 'SELECT cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`,
-					pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`,
-					p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`, p.`active`, p.`date_add`, p.`date_upd`,
-					t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category, CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id';
+		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`')
+			->select('pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`')
+			->select('p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`')
+			->select('p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category')
+			->select('CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id');
+
 		// Build FROM
-		$sql['from'] = 'FROM `'._DB_PREFIX_.'cart_product` cp';
+		$sql->from(_DB_PREFIX_.'cart_product cp');
+
 		// Build JOIN
-		$sql['join'] = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl').')
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-			AND tr.`id_country` = '.(int)$id_country.'
-			AND tr.`id_state` = 0
-		    AND tr.`zipcode_from` = 0)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl').')
-		'.Product::sqlStock('cp', 'cp');
+		$sql->leftJoin(_DB_PREFIX_.'product p', 'p.`id_product` = cp.`id_product`')
+			->leftJoin(_DB_PREFIX_.'product_lang pl', 'p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl'))
+			->leftJoin(_DB_PREFIX_.'tax_rule tr', 'p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+										AND tr.`id_country` = '.(int)$id_country.'
+										AND tr.`id_state` = 0
+										AND tr.`zipcode_from` = 0')
+			->leftJoin(_DB_PREFIX_.'tax t', 't.`id_tax` = tr.`id_tax`')
+			->leftJoin(_DB_PREFIX_.'tax_lang tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang)
+			->leftJoin(_DB_PREFIX_.'category_lang cl', 'p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
+
+		// @todo test if everything is ok, then refactorise call of this method
+		Product::sqlStock('cp', 'cp', false, null, $sql);
+
 		// Build WHERE clauses
-		$sql['where'] = '
-		WHERE cp.`id_cart` = '.(int)$this->id.'
-		'.($id_product ? ' AND cp.`id_product` = '.(int)$id_product : '').'
-		AND p.`id_product` IS NOT NULL';
+		$sql->where('cp.`id_cart` = '.(int)$this->id);
+		if ($id_product)
+			$sql->where('cp.`id_product` = '.(int)$id_product);
+		$sql->where('p.`id_product` IS NOT NULL');
+
 		// Build GROUP BY
-		$sql['groupby'] = 'GROUP BY unique_id';
+		$sql->group('unique_id');
+
 		// Build ORDER BY
-		$sql['orderby'] = 'ORDER BY cp.date_add ASC';
+		$sql->order('cp.date_add ASC');
 
 		if (Customization::isFeatureActive())
 		{
-			$sql['select'] .= ', cu.`id_customization`, cu.`quantity` AS customization_quantity';
-			$sql['join'] .= 'LEFT JOIN `'._DB_PREFIX_.'customization` cu ON (p.`id_product` = cu.`id_product`)';
+			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
+			$sql->leftJoin(_DB_PREFIX_.'customization` cu ON (p.`id_product` = cu.`id_product`)');
 		}
 
 		if (Combination::isFeatureActive())
 		{
-			$sql['select'] .= ', pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr,
-				IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
-				IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
-				(p.`weight`+ pa.`weight`) weight_attribute,
-				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
-				pai.`id_image` as pai_id_image, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr';
-			$sql['join'] .= '
-			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = cp.`id_product_attribute`)
-			LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` pai ON (pai.`id_product_attribute` = pa.`id_product_attribute`)
-			';
+			$sql->select('pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr')
+				->select('IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference')
+				->select('IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference')
+				->select('(p.`weight`+ pa.`weight`) weight_attribute')
+				->select('IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc')
+				->select('pai.`id_image` as pai_id_image, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
+
+			$sql->leftJoin(_DB_PREFIX_.'product_attribute pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`')
+				->leftJoin(_DB_PREFIX_.'product_attribute_image pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
 		}
 		else
-			$sql['select'] .= ', p.`reference` AS reference, p.`supplier_reference` AS supplier_reference,
-				p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity';
+			$sql->select('p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity');
 
-		$result = Db::getInstance()->ExecuteS(Tools::buildQuery($sql));
+		$result = Db::getInstance()->ExecuteS($sql);
+
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
-
 		$productsIds = array();
 		$paIds = array();
 		foreach ($result as $row)

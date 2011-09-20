@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -132,7 +132,7 @@ class Tools extends ToolsCore
 	}
 
 	/**
-	* ALIAS OF dieObject() - Display an error with detailed object 
+	* ALIAS OF dieObject() - Display an error with detailed object
 	* (display in firefox console if Firephp is enabled)
 	*
 	* @param object $object Object to display
@@ -159,7 +159,7 @@ class Tools extends ToolsCore
 	{
 		if(PS_USE_FIREPHP)
 			FB::info($object);
-		else 
+		else
 			return parent::p($object);
 		return $object;
 	}
@@ -170,19 +170,18 @@ class Tools extends ToolsCore
 	*/
 	public static function displayAsDeprecated()
 	{
-
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
-		$backtrace = debug_backtrace();
-		$callee = next($backtrace);
-		if(PS_USE_FIREPHP)
-			FB::warn('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', 'Deprecated method');
-		else
-			trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
+			$backtrace = debug_backtrace();
+			$callee = next($backtrace);
+			if (PS_USE_FIREPHP)
+				FB::warn('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', 'Deprecated method');
+			else
+				trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
 
-		$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
-		Logger::addLog($message, 3, $callee['class']);
-	}
+			$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
+			Logger::addLog($message, 3, $callee['class']);
+		}
 	}
 
 	/**
@@ -208,9 +207,9 @@ class Tools extends ToolsCore
 
 	/**
 	 * use of FirePHP::error() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
+	 *
+	 * @param mixed $obj
+	 * @param string $label
 	 * @return void
 	 */
 	public static function error($obj, $label = '')
@@ -221,9 +220,9 @@ class Tools extends ToolsCore
 
 	/**
 	 * use of FirePHP::warn() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
+	 *
+	 * @param mixed $obj
+	 * @param string $label
 	 * @return void
 	 */
 	public static function warn($obj, $label = '')
@@ -234,9 +233,9 @@ class Tools extends ToolsCore
 
 	/**
 	 * use of FirePHP::info() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
+	 *
+	 * @param mixed $obj
+	 * @param string $label
 	 * @return void
 	 */
 	public static function info($obj, $label = '')
@@ -247,9 +246,9 @@ class Tools extends ToolsCore
 
 	/**
 	 * use of FirePHP::log() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
+	 *
+	 * @param mixed $obj
+	 * @param string $label
 	 * @return void
 	 */
 	public static function log($obj, $label = '')
@@ -258,10 +257,10 @@ class Tools extends ToolsCore
 			FB::log($obj,$label);
 	}
 	/**
-	* display debug_backtrace() 
+	* display debug_backtrace()
 	* (display in firefox console if Firephp is enabled)
-	* 
-	* @param mixed $obj 
+	*
+	* @param mixed $obj
 	* @return void
 	*/
 	public static function trace($obj = NULL, $label = '')

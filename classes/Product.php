@@ -2056,22 +2056,41 @@ class ProductCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public static function sqlStock($productAlias, $productAttribute = 0, $innerJoin = false, Shop $shop = null)
+	public static function sqlStock($productAlias, $productAttribute = 0, $innerJoin = false, Shop $shop = null, DbQuery $sql = null)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
-		if (!is_null($productAttribute))
+		if ($sql)
 		{
-			if (!Combination::isFeatureActive())
-				$sql .= ' AND stock.id_product_attribute = 0';
-			else if (is_numeric($productAttribute))
-				$sql .= ' AND stock.id_product_attribute = '.$productAttribute;
-			else if (is_string($productAttribute))
-				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
+			// @todo remove this code when query builder is accepted or removed
+			$method = ($innerJoin) ? 'innerJoin' : 'leftJoin';
+			$sql->$method(_DB_PREFIX_.'stock stock', 'stock.id_product = '.pSQL($productAlias).'.id_product');
+			if (!is_null($productAttribute))
+			{
+				if (!Combination::isFeatureActive())
+					$sql->where('stock.id_product_attribute = 0');
+				else if (is_numeric($productAttribute))
+					$sql->where('stock.id_product_attribute = '.$productAttribute);
+				else if (is_string($productAttribute))
+					$sql->where('stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)');
+			}
+			$sql->where(ltrim($shop->sqlRestriction(Shop::SHARE_STOCK, 'stock'), ' AND '));
 		}
-		$sql .= $shop->sqlRestriction(Shop::SHARE_STOCK, 'stock') . ' ';
+		else
+		{
+			$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
+			if (!is_null($productAttribute))
+			{
+				if (!Combination::isFeatureActive())
+					$sql .= ' AND stock.id_product_attribute = 0';
+				else if (is_numeric($productAttribute))
+					$sql .= ' AND stock.id_product_attribute = '.$productAttribute;
+				else if (is_string($productAttribute))
+					$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
+			}
+			$sql .= $shop->sqlRestriction(Shop::SHARE_STOCK, 'stock') . ' ';
+		}
 
 		return $sql;
 	}
