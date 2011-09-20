@@ -68,16 +68,10 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getByProductId($id_product)
 	{
-<<<<<<< .mine
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE `id_product` = '.(int)$id_product);
-=======
-		return Db::getInstance()->ExecuteS('
-			SELECT * FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product
-		);
->>>>>>> .r8644
 	}
 
 	public static function getIdsByProductId($id_product)
@@ -213,11 +207,7 @@ class SpecificPriceCore extends ObjectModel
 		');
 
 		$targeted_prices = array();
-<<<<<<< .mine
-		$last_quantity = NULL;
-=======
 		$last_quantity = null;
->>>>>>> .r8644
 
 		foreach($res as $specific_price)
 		{
