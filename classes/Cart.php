@@ -376,18 +376,18 @@ class CartCore extends ObjectModel
 			->select('CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id');
 
 		// Build FROM
-		$sql->from(_DB_PREFIX_.'cart_product cp');
+		$sql->from('cart_product cp');
 
 		// Build JOIN
-		$sql->leftJoin(_DB_PREFIX_.'product p', 'p.`id_product` = cp.`id_product`')
-			->leftJoin(_DB_PREFIX_.'product_lang pl', 'p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl'))
-			->leftJoin(_DB_PREFIX_.'tax_rule tr', 'p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`')
+			->leftJoin('product_lang pl ON p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl'))
+			->leftJoin('tax_rule tr ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 										AND tr.`id_country` = '.(int)$id_country.'
 										AND tr.`id_state` = 0
 										AND tr.`zipcode_from` = 0')
-			->leftJoin(_DB_PREFIX_.'tax t', 't.`id_tax` = tr.`id_tax`')
-			->leftJoin(_DB_PREFIX_.'tax_lang tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang)
-			->leftJoin(_DB_PREFIX_.'category_lang cl', 'p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
+			->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`')
+			->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang)
+			->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
 
 		// @todo test if everything is ok, then refactorise call of this method
 		Product::sqlStock('cp', 'cp', false, null, $sql);
@@ -407,7 +407,7 @@ class CartCore extends ObjectModel
 		if (Customization::isFeatureActive())
 		{
 			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
-			$sql->leftJoin(_DB_PREFIX_.'customization` cu ON (p.`id_product` = cu.`id_product`)');
+			$sql->leftJoin('customization cu ON p.`id_product` = cu.`id_product`');
 		}
 
 		if (Combination::isFeatureActive())
@@ -419,8 +419,8 @@ class CartCore extends ObjectModel
 				->select('IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc')
 				->select('pai.`id_image` as pai_id_image, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
 
-			$sql->leftJoin(_DB_PREFIX_.'product_attribute pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`')
-				->leftJoin(_DB_PREFIX_.'product_attribute_image pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
+			$sql->leftJoin('product_attribute pa ON pa.`id_product_attribute` = cp.`id_product_attribute`')
+				->leftJoin('product_attribute_image pai ON pai.`id_product_attribute` = pa.`id_product_attribute`');
 		}
 		else
 			$sql->select('p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity');

@@ -2065,7 +2065,7 @@ class ProductCore extends ObjectModel
 		{
 			// @todo remove this code when query builder is accepted or removed
 			$method = ($innerJoin) ? 'innerJoin' : 'leftJoin';
-			$sql->$method(_DB_PREFIX_.'stock stock', 'stock.id_product = '.pSQL($productAlias).'.id_product');
+			$sql->$method('stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product');
 			if (!is_null($productAttribute))
 			{
 				if (!Combination::isFeatureActive())
