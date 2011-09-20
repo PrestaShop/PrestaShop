@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -52,7 +52,7 @@ abstract class DbCore
 	protected static $_instance = array();
 
 	/** @var array Object instance for singleton */
-	protected static $_servers = array(	
+	protected static $_servers = array(
 		array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
 		// Add here your slave(s) server(s)
 			// array('server' => '192.168.0.15', 'user' => 'rep', 'password' => '123456', 'database' => 'rep'),
@@ -61,36 +61,36 @@ abstract class DbCore
 
 	/**
 	 * Store last executed query
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $_lastQuery;
-	
+
 	/**
 	 * Last cached query
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $_lastCached;
-	
+
 	/**
 	 * Open a connection
 	 */
 	abstract public function connect();
-	
+
 	/**
 	 * Close a connection
 	 */
 	abstract public function disconnect();
-	
+
 	/**
 	 * Execute a query and get result ressource
-	 * 
+	 *
 	 * @param string $sql
 	 * @return mixed
 	 */
 	abstract protected function _query($sql);
-	
+
 	/**
 	 * Get number of rows in a result
 	 */
@@ -107,17 +107,17 @@ abstract class DbCore
 	abstract public function Affected_Rows();
 
 	/**
-	 * Get next row for a query which doesn't return an array 
+	 * Get next row for a query which doesn't return an array
 	 */
 	abstract public function nextRow($result = false);
-	
+
 	/**
 	 * Get database version
-	 * 
+	 *
 	 * @return string
 	 */
 	abstract public function getVersion();
-	
+
 	/**
 	 * Protect string against SQL injections
 	 *
@@ -130,12 +130,12 @@ abstract class DbCore
 	 * Returns the text of the error message from previous database operation
 	 */
 	abstract public function getMsgError();
-	
+
 	/**
 	 * Returns the number of the error from previous database operation
 	 */
 	abstract public function getNumberError();
-	
+
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
 
@@ -163,13 +163,13 @@ abstract class DbCore
 			$class = Db::getClass();
 			self::$_instance[$idServer] = new $class(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
 		}
-	
+
 		return self::$_instance[$idServer];
 	}
 
 	/**
 	 * Get child layer class
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function getClass()
@@ -182,7 +182,7 @@ abstract class DbCore
 
 	/**
 	 * Instantiate database connection
-	 * 
+	 *
 	 * @param string $server Server address
 	 * @param string $user User login
 	 * @param string $password User password
@@ -196,14 +196,14 @@ abstract class DbCore
 		$this->_password = $password;
 		$this->_type = _DB_TYPE_;
 		$this->_database = $database;
-		
+
 		if (!defined('_PS_DEBUG_SQL_'))
 			define('_PS_DEBUG_SQL_', false);
 
 		if ($connect)
 			$this->connect();
 	}
-	
+
 	/**
 	 * Close connection to database
 	 */
@@ -257,7 +257,7 @@ abstract class DbCore
 		}
 		else
 			die('Wrong argument (miss type) in Db::autoExecute()');
-		
+
 		return false;
 	}
 
@@ -278,18 +278,19 @@ abstract class DbCore
 
 	/**
 	 * Execute a query and get result ressource
-	 * 
+	 *
 	 * @param string $sql
 	 * @return mixed
 	 */
 	public function query($sql)
 	{
+		$sql = (string)$sql;
 		$result = $this->_query($sql);
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
 		return $result;
 	}
-	
+
 	/**
 	 * Execute a DELETE query
 	 *
@@ -308,7 +309,7 @@ abstract class DbCore
 			Cache::getInstance()->deleteQuery($sql);
 		return $res;
 	}
-	
+
 	/**
 	 * Execute a query
 	 *
@@ -318,22 +319,24 @@ abstract class DbCore
 	 */
 	public function	Execute($sql, $use_cache = 1)
 	{
+		$sql = (string)$sql;
 		$this->_result = $this->query($sql);
 		if ($use_cache AND _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);
 		return $this->_result;
 	}
-	
+
 	/**
 	 * ExecuteS return the result of $sql as array
-	 * 
+	 *
 	 * @param string $sql query to execute
 	 * @param boolean $array return an array instead of a mysql_result object
 	 * @param int $use_cache if query has been already executed, use its result
-	 * @return array or result object 
+	 * @return array or result object
 	 */
 	public function	ExecuteS($sql, $array = true, $use_cache = 1)
 	{
+		$sql = (string)$sql;
 		$this->_result = false;
 		$this->_lastQuery = $sql;
 		if ($use_cache AND _PS_CACHE_ENABLED_ && $array AND ($result = Cache::getInstance()->get(md5($sql))))
@@ -354,7 +357,7 @@ abstract class DbCore
 		while ($row = $this->nextRow($this->_result))
 			$resultArray[] = $row;
 
-		if ($use_cache AND _PS_CACHE_ENABLED_)	
+		if ($use_cache AND _PS_CACHE_ENABLED_)
 			Cache::getInstance()->setQuery($sql, $resultArray);
 		return $resultArray;
 	}
@@ -362,13 +365,14 @@ abstract class DbCore
 	/**
 	 * getRow return an associative array containing the first row of the query
 	 * This function automatically add "limit 1" to the query
-	 * 
+	 *
 	 * @param mixed $sql the select query (without "LIMIT 1")
 	 * @param int $use_cache find it in cache first
 	 * @return array associative array of (field=>value)
 	 */
 	public function	getRow($sql, $use_cache = 1)
 	{
+		$sql = (string)$sql;
 		$sql .= ' LIMIT 1';
 		$this->_result = false;
 		$this->_lastQuery = $sql;
@@ -391,21 +395,22 @@ abstract class DbCore
 
 	/**
 	 * getValue return the first item of a select query.
-	 * 
-	 * @param mixed $sql 
-	 * @param int $use_cache 
+	 *
+	 * @param mixed $sql
+	 * @param int $use_cache
 	 * @return void
 	 */
 	public function	getValue($sql, $use_cache = 1)
 	{
+		$sql = (string)$sql;
 		if (!$result = $this->getRow($sql, $use_cache))
 			return false;
 		return array_shift($result);
 	}
-	
+
 	/**
 	 * Get number of rows for last result
-	 * 
+	 *
 	 * @return int
 	 */
 	public function	NumRows()
@@ -420,11 +425,11 @@ abstract class DbCore
 		else if (_PS_CACHE_ENABLED_ AND $this->_lastCached)
 			return Cache::getInstance()->getNumRows(md5($this->_lastQuery));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Execute a query
-	 * 
+	 *
 	 * @param string $sql
 	 * @param bool $use_cache
 	 */
@@ -432,6 +437,7 @@ abstract class DbCore
 	{
 		global $webservice_call;
 
+		$sql = (string)$sql;
 		$this->_result = false;
 		$result = $this->query($sql);
 		if ($use_cache AND _PS_CACHE_ENABLED_)
@@ -458,7 +464,7 @@ abstract class DbCore
 			die(Tools::displayError($this->getMsgError()));
 		}
 	}
-	
+
 	/**
 	 * Sanitize data which will be injected into SQL query
 	 *
@@ -476,13 +482,13 @@ abstract class DbCore
 			if (!$htmlOK)
 				$string = strip_tags(Tools::nl2br($string));
 		}
-		
+
 		return $string;
 	}
 
 	/**
 	 * Try a connection to te database
-	 * 
+	 *
 	 * @param string $server Server address
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
@@ -497,7 +503,7 @@ abstract class DbCore
 
 	/**
 	 * Try a connection to te database
-	 * 
+	 *
 	 * @param string $server Server address
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
@@ -518,14 +524,14 @@ abstract class DbCore
 	{
 		return Db::getInstance()->ExecuteS($sql, true, $use_cache);
 	}
-	
+
 	static public function ps($sql, $use_cache = 1)
 	{
 		$ret = Db::s($sql, $use_cache);
 		p($ret);
 		return $ret;
 	}
-	
+
 	static public function ds($sql, $use_cache = 1)
 	{
 		Db::s($sql, $use_cache);

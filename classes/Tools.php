@@ -70,7 +70,7 @@ class ToolsCore
 			}
 
 			$explode = explode('?', $url);
-			// don't use ssl if url is home page 
+			// don't use ssl if url is home page
 			// used when logout for example
 			$useSSL = !empty($url);
 			$url = $link->getPageLink($explode[0], $useSSL);
@@ -216,7 +216,7 @@ class ToolsCore
 		}
 		return $_SERVER['REMOTE_ADDR'];
 	}
-	
+
 	/**
 	* Check if the current page use SSL connection on not
 	*
@@ -229,10 +229,10 @@ class ToolsCore
 		// $_SERVER['SSL'] exists only in some specific configuration
 		if (isset($_SERVER['SSL']))
 			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
-		
+
 		return false;
 		}
-	
+
 	/**
 	* Get the current url prefix protocol (https/http)
 	*
@@ -669,7 +669,7 @@ class ToolsCore
 						$row['meta_title'] = $row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
 					else
 						$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-					
+
 					return self::completeMetaTags($row, $row['name']);
 				}
 			}
@@ -725,7 +725,7 @@ class ToolsCore
 					return self::completeMetaTags($row, $row['meta_title']);
 				}
 			}
-			
+
 			/* CMS category specifics meta tags */
 			elseif ($id_cms = self::getValue('id_cms_category'))
 			{
@@ -927,11 +927,11 @@ class ToolsCore
 	{
 		return self::str2url($str);
 	}
-	
+
 	/**
 	 * Return a friendly url made from the provided string
 	 * If the mbstring library is available, the output is the same as the js function of the same name
-	 * 
+	 *
 	 * @param string $str
 	 * @return string
 	 */
@@ -1281,7 +1281,7 @@ class ToolsCore
 				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i'
 				,array('Tools', 'packJSinHTMLpregCallback')
 				,$html_content);
-			
+
 			// If the string is too big preg_replace return an error
 			// In this case, we don't compress the content
 			if( preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR ) {
@@ -1354,9 +1354,9 @@ class ToolsCore
 	public static function replaceByAbsoluteURL($matches)
 	{
 		global $current_css_file;
-		
+
 		$protocol_link = self::getCurrentUrlProtocolPrefix();
-		
+
 		if (array_key_exists(1, $matches))
 		{
 			$tmp = dirname($current_css_file).'/'.$matches[1];
@@ -1378,7 +1378,7 @@ class ToolsCore
 		$context = Context::getContext();
 		$context->controller->addJs($js_uri);
 	}
-	
+
 	/**
 	 * addCSS allows you to add stylesheet at any time.
 	 *
@@ -1477,10 +1477,10 @@ class ToolsCore
 		return $css_files;
 	}
 
-	
+
 	/**
 	* Combine Compress and Cache (ccc) JS calls
-	* 
+	*
 	* @param array js_files
 	* @return array processed js_files
 	*/
@@ -1498,17 +1498,17 @@ class ToolsCore
 		foreach ($js_files as $filename)
 		{
 			$expr = explode(':', $filename);
-			
+
 			if ($expr[0] == 'http')
-				$js_external_files[] = $filename;	
-			else 
+				$js_external_files[] = $filename;
+			else
 			{
 				$infos = array();
 				$infos['uri'] = $filename;
 				$url_data = parse_url($filename);
 				$infos['path'] =_PS_ROOT_DIR_.self::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 				$js_files_infos[] = $infos;
-	
+
 				$js_files_date = max(
 					file_exists($infos['path']) ? filemtime($infos['path']) : 0,
 					$js_files_date
@@ -1565,7 +1565,7 @@ class ToolsCore
 			else
 				self::$_cache_nb_media_servers = 3;
 		}
-	
+
 		if (self::$_cache_nb_media_servers AND ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
 		return self::getHttpHost();
@@ -1597,7 +1597,7 @@ class ToolsCore
 		if (!$write_fd = @fopen($path, 'w'))
 			return false;
 		fwrite($write_fd, trim($specific_before)."\n\n");
-			
+
 		$domains = array();
 		foreach (ShopUrl::getShopUrls() as $shop_url)
 		{
@@ -1621,7 +1621,7 @@ class ToolsCore
 		// Disable multiviews ?
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
-		
+
 		fwrite($write_fd, "RewriteEngine on\n\n");
 		foreach ($domains as $domain => $list_uri)
 			foreach ($list_uri as $uri)
@@ -1711,8 +1711,8 @@ FileETag INode MTime Size
 
 	/**
 	 * jsonDecode convert json string to php array / object
-	 * 
-	 * @param string $json 
+	 *
+	 * @param string $json
 	 * @param boolean $assoc  (since 1.4.2.4) if true, convert to associativ array
 	 * @return array
 	 */
@@ -1725,12 +1725,12 @@ FileETag INode MTime Size
 			include_once(_PS_TOOL_DIR_.'json/json.php');
 			$pearJson = new Services_JSON(($assoc) ? SERVICES_JSON_LOOSE_TYPE : 0);
 			return $pearJson->decode($json);
-				}
-			}
+		}
+	}
 
 	/**
 	 * Convert an array to json string
-	 * 
+	 *
 	 * @param array $data
 	 * @return string json
 	 */
@@ -1743,21 +1743,26 @@ FileETag INode MTime Size
 			include_once(_PS_TOOL_DIR_.'json/json.php');
 			$pearJson = new Services_JSON();
 			return $pearJson->encode($data);
-			  }
-			  }
+		}
+	}
 
 	/**
 	 * Display a warning message indicating that the method is deprecated
 	 */
-	public static function displayAsDeprecated()
+	public static function displayAsDeprecated($message = null)
 	{
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
 			$backtrace = debug_backtrace();
 			$callee = next($backtrace);
-			trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
 
-			$message = self::displayError('The function').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
+			if ($message)
+				trigger_error($message, E_USER_WARNING);
+			else
+			{
+				trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
+				$message = self::displayError('The function').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
+			}
 
 			Logger::addLog($message, 3, $callee['class']);
 		}
@@ -1771,7 +1776,7 @@ FileETag INode MTime Size
 		$backtrace = debug_backtrace();
 		$callee = next($backtrace);
 		$error = 'Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />';
-			$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
+		$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
 
 		self::throwDeprecated($error, $message, $callee['class']);
 	}
@@ -1814,7 +1819,7 @@ FileETag INode MTime Size
 	{
 		if (!$context)
 			$context = Context::getContext();
-		
+
 		if (isset(self::$_forceCompile))
 			$context->smarty->force_compile = (int)(self::$_forceCompile);
 		if (isset(self::$_caching))
@@ -1834,7 +1839,7 @@ FileETag INode MTime Size
 			$s = str_replace($char, '\\'.$char, $s);
 		return $s;
 	}
-	
+
 	public static function str_replace_once($needle , $replace, $haystack)
 	{
 		$pos = strpos($haystack, $needle);
@@ -1842,8 +1847,8 @@ FileETag INode MTime Size
 			return $haystack;
 		return substr_replace($haystack, $replace, $pos, strlen($needle));
 	}
-	
-	
+
+
 	/**
 	 * Function property_exists does not exist in PHP < 5.1
 	 *
@@ -1855,12 +1860,12 @@ FileETag INode MTime Size
 	{
 		if (function_exists('property_exists'))
 			return property_exists($class, $property);
-			
+
         if (is_object($class))
             $vars = get_object_vars($class);
         else
             $vars = get_class_vars($class);
-            
+
         return array_key_exists($property, $vars);
     }
 
@@ -1871,7 +1876,7 @@ FileETag INode MTime Size
     public static function checkPhpVersion()
     {
     	$version = null;
-    	
+
     	if(defined('PHP_VERSION'))
     		$version = PHP_VERSION;
     	else
@@ -1883,7 +1888,7 @@ FileETag INode MTime Size
 
         return $version;
 	}
-	
+
     /**
      * @desc try to open a zip file in order to check if it's valid
      * @return bool success
@@ -1898,11 +1903,11 @@ FileETag INode MTime Size
 		else
 		{
 			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
-			$zip = new PclZip($fromFile);			
-			return ($zip->privCheckFormat() === true);	
+			$zip = new PclZip($fromFile);
+			return ($zip->privCheckFormat() === true);
 		}
 	}
-	
+
     /**
      * @desc extract a zip file to the given directory
      * @return bool success
@@ -1921,7 +1926,7 @@ FileETag INode MTime Size
 		else
 		{
 			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
-			$zip = new PclZip($fromFile);			
+			$zip = new PclZip($fromFile);
 			$list = $zip->extract(PCLZIP_OPT_PATH, $toDir);
 			foreach ($list as $extractedFile)
 				if ($extractedFile['status'] != 'ok')
@@ -1929,10 +1934,10 @@ FileETag INode MTime Size
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Get products order field name for queries.
-	 * 
+	 *
 	 * @param string $type by|way
 	 * @param string $value If no index given, use default order from admin -> pref -> products
 	 */
@@ -1952,7 +1957,7 @@ FileETag INode MTime Size
 					elseif ($value == 'position' || empty($value))
 						$orderByPrefix = 'cp.';
 				}
-				
+
 				$value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
 				$list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
 				return $orderByPrefix.((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position'));
@@ -1997,7 +2002,7 @@ FileETag INode MTime Size
 			return $qty;
 		}
 	}
-	
+
 	public static function display404Error()
 	{
 		header('HTTP/1.1 404 Not Found');
@@ -2005,10 +2010,10 @@ FileETag INode MTime Size
 		include(dirname(__FILE__).'/../404.php');
 		die;
 	}
-	
+
 	/**
 	 * Concat $begin and $end, add ? or & between strings
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @param string $begin
 	 * @param string $end
@@ -2018,10 +2023,10 @@ FileETag INode MTime Size
 	{
 		return $begin.((strpos($begin, '?') !== false) ? '&' : '?').$end;
 	}
-	
+
 	/**
 	 * Display error and dies or silently log the error.
-	 * 
+	 *
 	 * @param string $msg
 	 * @param bool $die
 	 * @return success of logging
@@ -2043,48 +2048,48 @@ FileETag INode MTime Size
 	{
 		return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
 	}
-	
+
 	/**
 	 * Clear cache for Smarty
-	 * 
+	 *
 	 * @param objet $smarty
 	 */
 	 public static function clearCache($smarty)
 	 {
 		$smarty->clearAllCache();
 	}
-	
+
 	/**
 	 * getMemoryLimit allow to get the memory limit in octet
-	 * 
+	 *
 	 * @since 1.4.5.0
-	 * @return int the memory limit value in octet 
+	 * @return int the memory limit value in octet
 	 */
 	public static function getMemoryLimit()
 	{
 		$memory_limit = @ini_get('memory_limit');
-		
+
 		if (preg_match('/[0-9]+k/i', $memory_limit))
 			return 1024 * (int)$memory_limit;
-		
+
 		if (preg_match('/[0-9]+m/i', $memory_limit))
 			return 1024 * 1024 * (int)$memory_limit;
-		
+
 		if (preg_match('/[0-9]+g/i', $memory_limit))
 			return 1024 * 1024 * 1024 * (int)$memory_limit;
-		
+
 		return $memory_limit;
 	}
 
 	/**
-	 * 
-	 * @return bool true if the server use 64bit arch 
+	 *
+	 * @return bool true if the server use 64bit arch
 	 */
 	public static function isX86_64arch()
 	{
 		return (PHP_INT_MAX == '9223372036854775807');
 	}
-	
+
 	/**
 	 * @param array SQL query in array
 	 * @return string SQL query
@@ -2093,34 +2098,34 @@ FileETag INode MTime Size
 	{
 		if (!isset($sql['select']))
 			$sql['select'] = 'SELECT *';
-		
+
 		$req = $sql['select']."\n";
 		$req .= $sql['from']."\n";
-		
+
 		if (isset($sql['join']))
 			$req .= $sql['join']."\n";
-		
+
 		if (isset($sql['where']))
 			$req .= $sql['where']."\n";
-		
+
 		if (isset($sql['groupby']))
 			$req .= $sql['groupby']."\n";
-		
+
 		if (isset($sql['having']))
 			$req .= $sql['having']."\n";
-		
+
 		if (isset($sql['orderby']))
 			$req .= $sql['orderby']."\n";
-			
+
 		if (isset($sql['limit']))
 			$req .= $sql['limit']."\n";
-			
+
 		return $req;
 	}
-	
+
 	/**
 	 * Get max file upload size considering server settings and optional max value
-	 * 
+	 *
 	 * @param int $max_size optional max file size
 	 * @return int max file size in bytes
 	 */

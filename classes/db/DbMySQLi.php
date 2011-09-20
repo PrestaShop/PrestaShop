@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0
+ */
 class DbMySQLiCore extends Db
 {
 	/**
@@ -33,7 +36,7 @@ class DbMySQLiCore extends Db
 	public function	connect()
 	{
 		$this->_link = new mysqli($this->_server, $this->_user, $this->_password, $this->_database);
-		
+
 		// Do not use object way for error because this work bad before PHP 5.2.9
 		if (mysqli_connect_error())
 			die(Tools::displayError('Link to database cannot be established : '.mysqli_connect_error()));
@@ -44,7 +47,7 @@ class DbMySQLiCore extends Db
 
 		return $this->_link;
 	}
-	
+
 	/**
 	 * @see DbCore::disconnect()
 	 */
@@ -52,7 +55,7 @@ class DbMySQLiCore extends Db
 	{
 		$this->_link->close();
 	}
-	
+
 	/**
 	 * @see DbCore::_query()
 	 */
@@ -70,7 +73,7 @@ class DbMySQLiCore extends Db
 			$result = $this->_result;
 		return $result->fetch_assoc();
 	}
-	
+
 	/**
 	 * @see DbCore::_numRows()
 	 */
@@ -78,7 +81,7 @@ class DbMySQLiCore extends Db
 	{
 		return $result->num_rows;
 	}
-	
+
 	/**
 	 * @see DbCore::Insert_ID()
 	 */
@@ -110,7 +113,7 @@ class DbMySQLiCore extends Db
 	{
 		return $this->_link->errno;
 	}
-	
+
 	/**
 	 * @see DbCore::getVersion()
 	 */
@@ -118,7 +121,7 @@ class DbMySQLiCore extends Db
 	{
 		return $this->getValue('SELECT VERSION()');
 	}
-	
+
 	/**
 	 * @see DbCore::_escape()
 	 */
@@ -126,7 +129,7 @@ class DbMySQLiCore extends Db
 	{
 		return $this->_link->real_escape_string($str);
 	}
-	
+
 	/**
 	 * @see DbCore::set_db()
 	 */

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -38,7 +38,7 @@ $smarty->config_dir = _PS_SMARTY_DIR_.'configs';
 $smarty->caching = false;
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_) ? true : false;
-$smarty->debugging = false; 
+$smarty->debugging = false;
 $smarty->debugging_ctrl = 'URL'; // 'NONE' on production
 $smarty->deprecation_notices = false; // so many depreciated yet not migrated smarty calls
 
@@ -69,7 +69,7 @@ function smartyTranslate($params, &$smarty)
 	global $_LANG, $_MODULES, $cookie, $_MODULE;
 	if (!isset($params['js'])) $params['js'] = 0;
 	if (!isset($params['mod'])) $params['mod'] = false;
-	
+
 	$string = str_replace('\'', '\\\'', $params['s']);
 	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_filepath : $smarty->compiler_object->template->getTemplateFilepath());
 	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
@@ -88,7 +88,7 @@ function smartyTranslate($params, &$smarty)
 			$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/'.$iso.'.php';
 			$key = '<{'.$params['mod'].'}prestashop>'.$key;
 		}
-		
+
 		if(!is_array($_MODULES))
 			$_MODULES = array();
 		if (@include_once($translationsFile))
@@ -96,14 +96,14 @@ function smartyTranslate($params, &$smarty)
 				$_MODULES = array_merge($_MODULES, $_MODULE);
 		$lang_array = $_MODULES;
 	}
-	
+
 	if (is_array($lang_array) AND key_exists($key, $lang_array))
 		$msg = $lang_array[$key];
 	elseif (is_array($lang_array) AND key_exists(Tools::strtolower($key), $lang_array))
 		$msg = $lang_array[Tools::strtolower($key)];
 	else
 		$msg = $params['s'];
-	
+
 	if ($msg != $params['s'])
 		$msg = $params['js'] ? addslashes($msg) : stripslashes($msg);
 	return $params['js'] ? $msg : Tools::htmlentitiesUTF8($msg);
@@ -124,7 +124,7 @@ function smartyMaxWords($params, &$smarty)
 	Tools::displayAsDeprecated();
 	$params['s'] = str_replace('...', ' ...', html_entity_decode($params['s'], ENT_QUOTES, 'UTF-8'));
 	$words = explode(' ', $params['s']);
-	
+
 	foreach($words AS &$word)
 		if(Tools::strlen($word) > $params['n'])
 			$word = Tools::substr(trim(chunk_split($word, $params['n']-1, '- ')), 0, -1);
@@ -149,7 +149,7 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
 {
 	if (!$length)
 		return '';
- 
+
 	if (Tools::strlen($string) > $length)
 	{
 		$length -= min($length, Tools::strlen($etc));
