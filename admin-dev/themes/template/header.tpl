@@ -34,6 +34,18 @@
 			var helpboxes = {$help_box};
 			var roundMode = {$round_mode};
 			
+			{if isset($shop_context)}
+				{if $shop_context == 'all'}
+					var youEditFieldFor = {l s='A modification of this field will be applied for all shops'}
+				{elseif $shop_context == 'group'}
+					var youEditFieldFor = {l s='A modification of this field will be applied for all shops of group '}<b>{$shop_name}</b>
+				{else}
+					var youEditFieldFor = {l s='A modification of this field will be applied for the shop '}<b>{$shop_name}</b>
+				{/if}
+			{else}
+				var youEditFieldFor = '';
+			{/if}
+			
 			{* Notifications vars *}
 			var new_order_msg = '{l s='A new order has been made on your shop.'}';
 			var order_number_msg = '{l s='Order number : '}';
@@ -46,6 +58,8 @@
 			var new_msg = '{l s='A new message posted on your shop.'}';
 			var excerpt_msg = '{l s='Excerpt : '}';
 			var see_msg = '{l s='Click here to see that message'}';
+			var token_admin_orders = '{$token_admin_orders}';
+			var token_admin_customers = '{$token_admin_customers}';
 		</script>
 
 		{if isset($css_files)}
@@ -85,18 +99,6 @@
 		</style>
 	</head>
 	<body {if $bo_color} style="background:{$bo_color}" {/if}>
-	{if $is_multishop}
-		<script type="text/javascript">
-			hints.html(hints.html()+\'<br /><span class="red">'.addslashes(
-					{if $shop_context == 'all'}
-						{l s='A modification of this field will be applied for all shops'}
-					{elseif $shop_context == 'group'}{l s=''}
-						{l s='A modification of this field will be applied for all shops of group '}<b>{$shop_name}</b>
-					{/if}
-					
-			).'</span>\');
-		</script>
-	{/if}
 	<div id="top_container">
 		<div id="container">
 			<div id="header_infos"><span>
@@ -136,7 +138,7 @@
 							<h3>{l s='Last messages'}</h3>
 							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
 							<ul id="list_messages_notif"></ul>
-							<p><a href="index.php?tab=AdminMessages&token='.Tools::getAdminTokenLite('AdminMessages').'">{l s='Show all messages'}</a></p>
+							<p><a href="index.php?tab=AdminMessages&token={$token_admin_messages}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
 				{/if}

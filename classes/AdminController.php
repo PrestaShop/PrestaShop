@@ -239,6 +239,7 @@ class AdminController extends Controller
 			'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
 			'token_admin_orders' => Tools::getAdminTokenLite('AdminOrders'),
 			'token_admin_customers' => Tools::getAdminTokenLite('AdminCustomers'),
+			'token_admin_messages' => Tools::getAdminTokenLite('AdminMessages'),
 			'token_admin_employees' => Tools::getAdminTokenLite('AdminEmployees'),
 			'token_admin_search' => Tools::getAdminTokenLite('AdminSearch'),
 			'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
