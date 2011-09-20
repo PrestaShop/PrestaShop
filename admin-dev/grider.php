@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('PS_ADMIN_DIR', getcwd());
+define('_PS_ADMIN_DIR_', getcwd());
 include_once(dirname(__FILE__).'/../config/config.inc.php');
 
 $module = Tools::getValue('module');

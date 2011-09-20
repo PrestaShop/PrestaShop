@@ -25,9 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
-include(PS_ADMIN_DIR.'/tabs/AdminCategories.php');
-include(PS_ADMIN_DIR.'/tabs/AdminProducts.php');
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminCategories.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminProducts.php');
 
 class AdminCatalog extends AdminTab
 {
@@ -105,7 +105,7 @@ class AdminCatalog extends AdminTab
 		{
 			if (!isset($this->attributeGenerator))
 			{
-				include_once(PS_ADMIN_DIR.'/tabs/AdminAttributeGenerator.php');
+				include_once(_PS_ADMIN_DIR_.'/tabs/AdminAttributeGenerator.php');
 				$this->attributeGenerator = new AdminAttributeGenerator();
 			}
 			$this->attributeGenerator->postProcess();
@@ -153,7 +153,7 @@ class AdminCatalog extends AdminTab
 		{
 			if (!isset($this->attributeGenerator))
 			{
-				include_once(PS_ADMIN_DIR.'/tabs/AdminAttributeGenerator.php');
+				include_once(_PS_ADMIN_DIR_.'/tabs/AdminAttributeGenerator.php');
 				$this->attributeGenerator = new AdminAttributeGenerator();
 			}
 			$this->attributeGenerator->displayForm();

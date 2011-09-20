@@ -25,8 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('PS_ADMIN_DIR', getcwd());
-include(PS_ADMIN_DIR.'/../config/config.inc.php');
+define('_PS_ADMIN_DIR_', getcwd());
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 /* Getting cookie or logout */
 require_once(dirname(__FILE__).'/init.php');
 	

@@ -44,7 +44,6 @@ if ( _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$_POST['dir'] !==  realpath(_PS_ROOT_DIR_
 	die('not allowed');
 
 define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$_POST['dir']);
-define('PS_ADMIN_DIR', _PS_ADMIN_DIR_); // Retro-compatibility
 //require(_PS_ADMIN_DIR_.'/functions.php');
 include(AUTOUPGRADE_MODULE_DIR.'init.php');
 
@@ -56,7 +55,7 @@ $adminObj->ajax = true;
 		{
 			if ($adminObj->checkToken())
 			{
-				// the differences with index.php is here 
+				// the differences with index.php is here
 
 				$adminObj->ajaxPreProcess();
 				$action = Tools14::getValue('action');

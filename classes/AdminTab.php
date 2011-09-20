@@ -364,7 +364,7 @@ abstract class AdminTabCore
 			$classname = 'Admin'.$subtab;
 			if ($module = Db::getInstance()->getValue('SELECT `module` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($classname).'\'') AND file_exists(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php'))
 				include_once(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php');
-			elseif (file_exists(PS_ADMIN_DIR.'/tabs/'.$classname.'.php'))
+			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$classname.'.php'))
 				include_once('tabs/'.$classname.'.php');
 			if (!isset($this->_includeObj[$key]))
 				$this->_includeObj[$key] = new $classname;

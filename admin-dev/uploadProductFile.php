@@ -25,9 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('PS_ADMIN_DIR', getcwd());
+define('_PS_ADMIN_DIR_', getcwd());
 
-include(PS_ADMIN_DIR.'/../config/config.inc.php');
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 if (!isset(Context::getContext()->employee) || !Context::getContext()->employee->isLoggedBack())
 	die;

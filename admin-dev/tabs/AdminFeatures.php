@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/tabs/AdminFeaturesValues.php');
+include_once(_PS_ADMIN_DIR_.'/tabs/AdminFeaturesValues.php');
 
 class AdminFeatures extends AdminTab
 {

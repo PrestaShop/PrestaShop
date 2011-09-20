@@ -25,8 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('PS_ADMIN_DIR', getcwd());
-include(PS_ADMIN_DIR.'/../config/config.inc.php');
+define('_PS_ADMIN_DIR_', getcwd());
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 /* Getting cookie or logout */
 require_once(dirname(__FILE__).'/init.php');
 
@@ -363,7 +363,7 @@ if (array_key_exists('ajaxProductImagesPositions', $_POST))
 	else
 		die('{"hasError" : true, "errors" : "This image cannot be loaded"}');
 }
-	
+
 
 if (isset($_GET['ajaxProductPackItems']))
 {
@@ -396,7 +396,7 @@ if (isset($_GET['ajaxStates']) AND isset($_GET['id_country']))
 		$list = '';
 		if (Tools::getValue('no_empty') != true)
 		{
-			$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------'; 
+			$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------';
 			$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
 		}
 
@@ -655,7 +655,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	{
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[2]) && Validate::isCleanHtml($content[1]))
-		{ 
+		{
 			$result['partner_preactivation'] = $content[2];
 			$content[1] = explode('#%#', $content[1]);
 			foreach ($content[1] as $partnerPopUp)
@@ -730,9 +730,9 @@ if (Tools::isSubmit('syncImapMail'))
 	OR !$user = Configuration::get('PS_SAV_IMAP_USER')
 	OR !$password = Configuration::get('PS_SAV_IMAP_PWD'))
 	die('{"hasError" : true, "errors" : "Configuration is not correct"}');
-		
+
 	$mbox = @imap_open('{'.$url.':'.$port.'}', $user, $password);
-	
+
 	$errors = imap_errors();
 	if (sizeof($errors))
 	{
@@ -745,10 +745,10 @@ if (Tools::isSubmit('syncImapMail'))
 		die('{"hasError" : true, "errors" : ["Can not connect to the mailbox"]}');
 
 	$check = imap_check($mbox);
-	
+
 	if ($check->Nmsgs == 0)
 		die('{"hasError" : true, "errors" : ["NO message to sync"]}');
-	
+
 	$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
 	foreach ($result as $overview)
 	{
@@ -757,16 +757,16 @@ if (Tools::isSubmit('syncImapMail'))
 	   		$subject = $overview->subject;
 	   	else
 	   		$subject = '';
-	    
+
 	    $md5 = md5($overview->date.$overview->from.$subject);
 	    $exist = Db::getInstance()->getValue(
-			    'SELECT md5_header 
-			    FROM `'._DB_PREFIX_.'customer_message_sync_imap` 
+			    'SELECT md5_header
+			    FROM `'._DB_PREFIX_.'customer_message_sync_imap`
 			    WHERE md5_header = \''.pSQL($md5).'\'');
 	    if ($exist)
 	    {
 			if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
-				imap_delete($mbox, $overview->msgno);  	
+				imap_delete($mbox, $overview->msgno);
 	    }
 	    else
 	    {
@@ -778,7 +778,7 @@ if (Tools::isSubmit('syncImapMail'))
 			{
 				//check if order exist in database
 				$ct = new CustomerThread((int)$matches1[1]);
-				
+
 				if (Validate::isLoadedObject($ct) && $ct->token == $matches2[1])
 				{
 					$cm = new CustomerMessage();

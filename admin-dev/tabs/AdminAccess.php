@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 
 class AdminAccess extends AdminTab
 {

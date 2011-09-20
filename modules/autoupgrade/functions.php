@@ -101,7 +101,7 @@ function rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
 	foreach ($defines as $k => $value)
 		$content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
 	$content .= "\n?>";
-	if ($fd = @fopen(PS_ADMIN_DIR.'/../config/settings.inc.php', 'w'))
+	if ($fd = @fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
 	{
 		fwrite($fd, $content);
 		fclose($fd);
@@ -254,8 +254,8 @@ function checkingTab($tab)
 	}
 	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$tab.'.php'))
 		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$tab.'.php');
-	elseif (file_exists(PS_ADMIN_DIR.'/tabs/'.$tab.'.php'))
-		include_once(PS_ADMIN_DIR.'/tabs/'.$tab.'.php');
+	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$tab.'.php'))
+		include_once(_PS_ADMIN_DIR_.'/tabs/'.$tab.'.php');
 
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{

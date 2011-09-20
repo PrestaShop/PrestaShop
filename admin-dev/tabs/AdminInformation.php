@@ -40,17 +40,17 @@ class AdminInformation extends AdminTab
 			'system' => $funcs,
 			'gd' => false,
 			'mysql_support' => false,
-			'config_dir' => PS_ADMIN_DIR.'/../config/',
-			'tools_dir' => PS_ADMIN_DIR.'/../tools/smarty/compile',
-			'cache_dir' => PS_ADMIN_DIR.'/../tools/smarty/cache/',
-			'sitemap' => PS_ADMIN_DIR.'/../sitemap.xml',
-			'img_dir' => PS_ADMIN_DIR.'/../img/',
-			'mails_dir' => PS_ADMIN_DIR.'/../mails/',
-			'module_dir' => PS_ADMIN_DIR.'/../modules/',
-			'theme_lang_dir' => PS_ADMIN_DIR.'/../themes/'._THEME_NAME_.'/lang/',
-			'translations_dir' => PS_ADMIN_DIR.'/../translations/',
-			'customizable_products_dir' => PS_ADMIN_DIR.'/../upload/',
-			'virtual_products_dir' => PS_ADMIN_DIR.'/../download/'
+			'config_dir' => _PS_ADMIN_DIR_.'/../config/',
+			'tools_dir' => _PS_ADMIN_DIR_.'/../tools/smarty/compile',
+			'cache_dir' => _PS_ADMIN_DIR_.'/../tools/smarty/cache/',
+			'sitemap' => _PS_ADMIN_DIR_.'/../sitemap.xml',
+			'img_dir' => _PS_ADMIN_DIR_.'/../img/',
+			'mails_dir' => _PS_ADMIN_DIR_.'/../mails/',
+			'module_dir' => _PS_ADMIN_DIR_.'/../modules/',
+			'theme_lang_dir' => _PS_ADMIN_DIR_.'/../themes/'._THEME_NAME_.'/lang/',
+			'translations_dir' => _PS_ADMIN_DIR_.'/../translations/',
+			'customizable_products_dir' => _PS_ADMIN_DIR_.'/../upload/',
+			'virtual_products_dir' => _PS_ADMIN_DIR_.'/../download/'
 		);
 
 		$tests_op = array(

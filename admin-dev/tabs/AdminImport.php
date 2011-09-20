@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/../images.inc.php');
+include_once(_PS_ADMIN_DIR_.'/../images.inc.php');
 @ini_set('max_execution_time', 0);
 // No max line limit since the lines can be more than 4096. Performance impact is not significant.
 define('MAX_LINE_SIZE', 0);
@@ -1325,7 +1325,7 @@ class AdminImport extends AdminTab
 		if ((Tools::getValue('import')) AND (isset($this->_warnings) AND !sizeof($this->_warnings)))
 			echo '<div class="module_confirmation conf confirm"><img src="../img/admin/ok.gif" alt="" title="" style="margin-right:5px; float:left;" />'.$this->l('The .CSV file has been imported into your shop.').'</div>';
 
-		if(!is_writable(PS_ADMIN_DIR.'/import/'))
+		if(!is_writable(_PS_ADMIN_DIR_.'/import/'))
 			$this->displayWarning($this->l('directory import on admin directory must be writable (CHMOD 755 / 777)'));
 
 		if(isset($this->_warnings) AND sizeof($this->_warnings))

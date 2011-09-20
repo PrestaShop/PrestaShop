@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 
 class AdminBackup extends AdminTab
 {
@@ -87,7 +87,7 @@ class AdminBackup extends AdminTab
 	 */
 	public function displayForm($isMainTab = true)
 	{
-		if(is_writable(PS_ADMIN_DIR.'/backups/'))
+		if(is_writable(_PS_ADMIN_DIR_.'/backups/'))
 		{
 		if (!($object = $this->loadObject()))
 			return;
@@ -179,7 +179,7 @@ class AdminBackup extends AdminTab
 	public function displayList()
 	{
 		// Test if the backup dir is writable
-		if(!is_writable(PS_ADMIN_DIR.'/backups/'))
+		if(!is_writable(_PS_ADMIN_DIR_.'/backups/'))
 			$this->displayWarning($this->l('"Backups" Directory in admin directory must be writeable (CHMOD 755 / 777)'));
 
 		$this->displayErrors();
@@ -235,10 +235,10 @@ class AdminBackup extends AdminTab
 		$this->_list = array();
 
 		// Find all the backups
-		$dh = @opendir(PS_ADMIN_DIR.'/backups/');
+		$dh = @opendir(_PS_ADMIN_DIR_.'/backups/');
 		if ($dh === false)
 		{
-			$this->_errors[] = Tools::displayError('Unable to open backup directory .').addslashes(PS_ADMIN_DIR.'/backups/').'"';
+			$this->_errors[] = Tools::displayError('Unable to open backup directory .').addslashes(_PS_ADMIN_DIR_.'/backups/').'"';
 			return;
 		}
 		while (($file = readdir($dh)) !== false)
@@ -260,7 +260,7 @@ class AdminBackup extends AdminTab
 				$age = floor($age / 86400);
 				$age = $age.' '.(($age == 1) ? $this->l('day') : $this->l('days'));
 			}
-			$size = filesize(PS_ADMIN_DIR.'/backups/'.$file);
+			$size = filesize(_PS_ADMIN_DIR_.'/backups/'.$file);
 			$this->_list[] = array(
 				'filename' => $file, 
 				'age' => $age,

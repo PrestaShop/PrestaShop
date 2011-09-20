@@ -25,9 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('PS_ADMIN_DIR')) define('PS_ADMIN_DIR', getcwd().'/..');
-include_once(PS_ADMIN_DIR.'/../config/config.inc.php');
-include_once(PS_ADMIN_DIR.'/init.php');
+if (!defined('_PS_ADMIN_DIR_')) define('_PS_ADMIN_DIR_', getcwd().'/..');
+include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include_once(_PS_ADMIN_DIR_.'/init.php');
 
 if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)(Tab::getIdFromClassName('AdminReferrers')).(int)(Tools::getValue('id_employee'))))
 {
