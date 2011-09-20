@@ -24,7 +24,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-include_once(PS_ADMIN_DIR.'/tabs/AdminProfiles.php');
+include_once(_PS_ADMIN_DIR_.'/tabs/AdminProfiles.php');
 
 class AdminProducts extends AdminTab
 {

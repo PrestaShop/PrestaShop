@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/tabs/AdminPreferences.php');
+include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
 
 class AdminSearchConf extends AdminPreferences
 {

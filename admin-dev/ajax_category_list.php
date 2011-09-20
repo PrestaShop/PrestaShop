@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-	define('PS_ADMIN_DIR', getcwd());
+	define('_PS_ADMIN_DIR_', getcwd());
 	include_once('../config/config.inc.php');
 	include_once('tabs/AdminCatalog.php');
 	include_once('tabs/AdminProducts.php');

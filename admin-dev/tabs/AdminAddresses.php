@@ -24,7 +24,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 if(Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
 	include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 

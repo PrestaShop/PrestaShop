@@ -25,9 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
-include(PS_ADMIN_DIR.'/tabs/AdminCMSCategories.php');
-include(PS_ADMIN_DIR.'/tabs/AdminCMS.php');
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminCMSCategories.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminCMS.php');
 
 class AdminCMSContent extends AdminTab
 {

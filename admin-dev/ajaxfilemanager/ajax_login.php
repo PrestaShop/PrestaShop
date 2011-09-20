@@ -1,5 +1,5 @@
 <?php
-	define('PS_ADMIN_DIR', getcwd());
+	define('_PS_ADMIN_DIR_', getcwd());
 	require_once('../../config/config.inc.php');
 	require_once('../init.php');
 	/**

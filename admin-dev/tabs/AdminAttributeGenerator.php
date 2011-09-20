@@ -26,7 +26,7 @@
 */
 
 @ini_set('max_execution_time', 3600);
-include_once(PS_ADMIN_DIR.'/../classes/AdminTab.php');
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 
 class AdminAttributeGenerator extends AdminTab
 {

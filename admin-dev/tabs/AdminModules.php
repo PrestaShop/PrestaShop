@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(PS_ADMIN_DIR.'/../tools/tar/Archive_Tar.php');
+include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 
 class AdminModules extends AdminTab
 {

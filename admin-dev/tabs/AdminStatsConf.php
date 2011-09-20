@@ -26,7 +26,7 @@
 */
 
 include_once(dirname(__FILE__).'/AdminStatsTab.php');
-include_once(PS_ADMIN_DIR.'/tabs/AdminPreferences.php');
+include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
 
 class AdminStatsConf extends AdminPreferences
 {

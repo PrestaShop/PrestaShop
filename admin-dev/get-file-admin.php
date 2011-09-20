@@ -25,6 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('PS_ADMIN_DIR', getcwd());
+define('_PS_ADMIN_DIR_', getcwd());
 require(dirname(dirname(__FILE__)).'/config/config.inc.php');
 Controller::getController('getFileController')->run();

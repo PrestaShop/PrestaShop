@@ -26,10 +26,10 @@
 */
  
 ob_start();
-define('PS_ADMIN_DIR', getcwd());
+define('_PS_ADMIN_DIR_', getcwd());
 
-include(PS_ADMIN_DIR.'/../config/config.inc.php');
-include(PS_ADMIN_DIR.'/functions.php');
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include(_PS_ADMIN_DIR_.'/functions.php');
 
 $clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'),explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 
@@ -142,7 +142,7 @@ echo '
 				<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
 
 $randomNb = rand(100, 999);
-if(file_exists(PS_ADMIN_DIR.'/../install') OR file_exists(PS_ADMIN_DIR.'/../admin'))
+if(file_exists(_PS_ADMIN_DIR_.'/../install') OR file_exists(_PS_ADMIN_DIR_.'/../admin'))
 {
 	echo '				<span>'.translate('For security reasons, you cannot connect to the Back Office until after you have:').'<br /><br />
 		- '.translate('delete the /install folder').'<br />

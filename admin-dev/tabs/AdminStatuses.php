@@ -25,8 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include(PS_ADMIN_DIR.'/tabs/AdminOrdersStates.php');
-include(PS_ADMIN_DIR.'/tabs/AdminReturnStates.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminOrdersStates.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminReturnStates.php');
 
 class AdminStatuses extends AdminTab
 {

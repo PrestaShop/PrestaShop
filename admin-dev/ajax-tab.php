@@ -25,8 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', getcwd());
-define('PS_ADMIN_DIR', _PS_ADMIN_DIR_); // Retro-compatibility
+define('_PS_ADMIN_DIR_', dirname(__FILE__));
 
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 include(_PS_ADMIN_DIR_.'/functions.php');
@@ -49,7 +48,7 @@ if (empty($tab) and !sizeof($_POST))
 			$adminObj->ajax = true;
 			if ($adminObj->checkToken())
 			{
-				// the differences with index.php is here 
+				// the differences with index.php is here
 
 				$adminObj->ajaxPreProcess();
 				$action = Tools::getValue('action');
@@ -60,7 +59,7 @@ if (empty($tab) and !sizeof($_POST))
 					$adminObj->{'ajaxProcess'.Tools::toCamelCase($action)}();
 				else
 					$adminObj->ajaxProcess();
-				
+
 				// @TODO We should use a displayAjaxError
 				$adminObj->displayErrors();
 				if (!empty($action) AND method_exists($adminObj, 'displayAjax'.Tools::toCamelCase($action)) )

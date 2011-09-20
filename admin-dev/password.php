@@ -25,10 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('PS_ADMIN_DIR', getcwd());
+define('_PS_ADMIN_DIR_', getcwd());
 
-include(PS_ADMIN_DIR.'/../config/config.inc.php');
-include(PS_ADMIN_DIR.'/functions.php');
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include(_PS_ADMIN_DIR_.'/functions.php');
 
 $errors = array();
 

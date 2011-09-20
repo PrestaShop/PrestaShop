@@ -209,7 +209,7 @@ class ShopCore extends ObjectModel
 				$excluded_uris[] = $directory;
 
 		// Find current shop from URL
-		if (!$id_shop = Tools::getValue('id_shop') && !defined('PS_ADMIN_DIR'))
+		if (!$id_shop = Tools::getValue('id_shop') && !defined('_PS_ADMIN_DIR_'))
 		{
 			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
 					FROM '._DB_PREFIX_.'shop_url su
@@ -313,7 +313,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function getGroupID()
 	{
-		if (defined('PS_ADMIN_DIR'))
+		if (defined('_PS_ADMIN_DIR_'))
 			return Shop::getContextGroupID();
 		return (int)$this->id_group_shop;
 	}
@@ -541,7 +541,7 @@ class ShopCore extends ObjectModel
 
 		$shopID = $context->shop->id;
 		$shopGroupID = $context->shop->id_group_shop;
-		if (defined('PS_ADMIN_DIR'))
+		if (defined('_PS_ADMIN_DIR_'))
 		{
 			if (!isset($context->cookie) || !$context->cookie->shopContext)
 				return ($type == 'shop' || $type == 'group') ? '' : array('', '');
@@ -561,7 +561,7 @@ class ShopCore extends ObjectModel
 		if (!$executed)
 		{
 			$context = Context::getContext();
-			if (defined('PS_ADMIN_DIR'))
+			if (defined('_PS_ADMIN_DIR_'))
 			{
 				// While cookie is not instancied in admin, we wait ...
 				if (!isset($context->cookie))

@@ -96,9 +96,9 @@ class AdminOrdersStates extends AdminTab
 	private function getTemplates($iso_code)
 	{
 		$array = array();
-		if (!file_exists(PS_ADMIN_DIR.'/../mails/'.$iso_code))
+		if (!file_exists(_PS_ADMIN_DIR_.'/../mails/'.$iso_code))
 			return false;
-		$templates = scandir(PS_ADMIN_DIR.'/../mails/'.$iso_code);
+		$templates = scandir(_PS_ADMIN_DIR_.'/../mails/'.$iso_code);
 		foreach ($templates AS $template)
 			if (!strncmp(strrev($template), 'lmth.', 5))
 				$array[] = substr($template, 0, -5);
