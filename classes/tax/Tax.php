@@ -199,7 +199,7 @@ class TaxCore extends ObjectModel
 	*/
 	public static function getProductEcotaxRate($id_address = NULL)
 	{
-		$address = Tax::initializeAddress($id_address);
+		$address = Address::initialize($id_address);
 
 		$tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'));
 		$tax_calculator = $tax_manager->getTaxCalculator();
@@ -215,40 +215,13 @@ class TaxCore extends ObjectModel
 	*/
 	public static function getCarrierTaxRate($id_carrier, $id_address = NULL)
 	{
-		$address = Tax::initializeAddress($id_address);
+		$address = Address::initialize($id_address);
 		$id_tax_rules = (int)Carrier::getIdTaxRulesGroupByIdCarrier((int)$id_carrier);
 
 		$tax_manager = TaxManagerFactory::getManager($address, $id_tax_rules);
 		$tax_calculator = $tax_manager->getTaxCalculator();
 
 		return $tax_calculator->getTotalRate();
-	}
-
-	/**
-	* Initiliaze an address corresponding to the id address if any or to the
-	* default shop configuration
-	*
-	* @param int $id_address
-	* @return Address address
-	*/
-	public static function initializeAddress($id_address = NULL)
-	{
-		// set the default address
-		$address = new Address();
-		$address->id_country = (int)Context::getContext()->country->id;
-		$address->id_state = 0;
-		$address->postcode = 0;
-
-		// if an id_address has been specified retrieve the address
-		if ($id_address)
-		{
-			$address = new Address((int)$id_address);
-
-			if (!Validate::isLoadedObject($address))
-				throw new Exception('Invalid address');
-		}
-
-		return $address;
 	}
 
 	/**
@@ -282,7 +255,7 @@ class TaxCore extends ObjectModel
 	 */
 	public static function getProductTaxRate($id_product, $id_address = NULL)
 	{
-		$address = Tax::initializeAddress($id_address);
+		$address = Address::initialize($id_address);
 		$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct($id_product);
 
 		$tax_manager = TaxManagerFactory::getManager($address, $id_tax_rules);

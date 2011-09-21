@@ -216,11 +216,11 @@ abstract class PaymentModuleCore extends Module
 					$tax_calculator = new TaxCalculator();
 					if (!Tax::excludeTaxeOption())
 					{
-						$address = Tax::initializeAddress($vat_address->id);
+						$address = Address::initialize($vat_address->id);
 						$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product']);
-				
+
 						$tax_manager = TaxManagerFactory::getManager($vat_address, $id_tax_rules);
-						$tax_calculator = $tax_manager->getTaxCalculator();						
+						$tax_calculator = $tax_manager->getTaxCalculator();
 					}
 
                     $ecotaxTaxRate = 0;
@@ -298,7 +298,7 @@ abstract class PaymentModuleCore extends Module
 
 				OrderDetail::saveTaxCalculatorStatic($db->Insert_ID(), $tax_calculator);
 				unset($tax_calculator);
-				
+
 				// Insert discounts from cart into order_discount table
 				$discounts = $cart->getDiscounts();
 				$discountsList = '';
