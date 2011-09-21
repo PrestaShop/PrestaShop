@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -58,5 +58,7 @@
 		{/foreach}
 		{if $display_poweredby}<li class="last_item">{l s='Powered by' mod='blockcms'} <a href="http://www.prestashop.com">PrestaShop</a>&trade;</li>{/if}
 	</ul>
+
+	{$footer_text}
 	<!-- /MODULE Block footer -->
 {/if}
