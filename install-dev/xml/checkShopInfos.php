@@ -32,7 +32,7 @@ define('_PS_MAGIC_QUOTES_GPC_', get_magic_quotes_gpc());
 
 require_once(INSTALL_PATH.'/classes/AddConfToFile.php');
 require_once(INSTALL_PATH.'/../classes/Validate.php');
-require_once(INSTALL_PATH.'/../classes/Db.php');
+require_once(INSTALL_PATH.'/../classes/db/Db.php');
 require_once(INSTALL_PATH.'/../classes/Tools.php');
 require_once(INSTALL_PATH.'/../config/settings.inc.php');
 
@@ -89,7 +89,7 @@ if (!isset($_GET['infosCountry']) OR empty($_GET['infosCountry']))
 	$error['infosCountry'] = '0';
 else
 	$error['infosCountry'] = '';
-	
+
 if (!isset($_GET['infosTimezone']) OR empty($_GET['infosTimezone']))
 	$error['infosTimezone'] = '0';
 else
@@ -268,7 +268,7 @@ if (isFormValid())
 	{
 		$sqlParams[] = 'DELETE c, cl FROM `'._DB_PREFIX_.'cms` AS c LEFT JOIN `'._DB_PREFIX_.'cms_lang` AS cl ON c.id_cms = cl.id_cms WHERE 1 AND c.`id_cms` IN (1, 5)';
 	}
-	
+
 	$dbInstance = Db::getInstance();
 	foreach($sqlParams as $query)
 		if(!$dbInstance->Execute($query))

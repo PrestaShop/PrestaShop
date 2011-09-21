@@ -38,7 +38,7 @@ if (file_exists(SETTINGS_FILE))
 
 require_once(INSTALL_PATH.'/classes/AddConfToFile.php');
 require_once(INSTALL_PATH.'/../classes/Validate.php');
-require_once(INSTALL_PATH.'/../classes/Db.php');
+require_once(INSTALL_PATH.'/../classes/db/Db.php');
 require_once(INSTALL_PATH.'/../classes/Tools.php');
 
 global $logger;
