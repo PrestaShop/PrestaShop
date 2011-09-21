@@ -36,6 +36,7 @@ abstract class TaxManagerModuleCore extends Module
 
 	public function hookTaxManager($args)
 	{
+
 		$class_file =_PS_MODULE_DIR_.'/'.$this->name.'/'.$this->tax_manager_class.'.php';
 
 		if (!isset($this->tax_manager_class) || !file_exists($class_file))
@@ -47,8 +48,7 @@ abstract class TaxManagerModuleCore extends Module
 			die(Tools::displayError('Tax Manager class not found ['.$this->tax_manager_class.']'));
 
 		$class = $this->tax_manager_class;
-
-		if (call_user_func(array($class, 'isAvailableForThisAddress'), array($args['address'])))
+		if (call_user_func(array($class, 'isAvailableForThisAddress'), $args['address']))
 			return new $class();
 
 		return false;
