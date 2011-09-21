@@ -2154,7 +2154,7 @@ class ProductCore extends ObjectModel
 		}
 
 		// Change stock quantity on product
-		if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID(true)))
+		if ($id_stock = Stock::getStockId($this->id, 0, $shop->getID(true)))
 		{
 			$sql = 'UPDATE '._DB_PREFIX_.'stock
 					SET quantity = '.(($update) ? 'quantity + '. $quantity : $quantity).'
