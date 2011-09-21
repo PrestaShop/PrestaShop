@@ -29,6 +29,7 @@ class AdminTaxRulesGroup extends AdminTab
 {
     public $tax_rule;
     public $selected_countries = array();
+    public $selected_states = array();
     public $_errors_tax_rule;
 
 	public function __construct()
@@ -84,10 +85,10 @@ class AdminTaxRulesGroup extends AdminTab
 		{
 			$zipcode = Tools::getValue('zipcode');
 			$id_rule	= (int)Tools::getValue('id_tax_rule');
-			
+
 			$this->selected_countries = Tools::getValue('country');
 			$this->selected_states = Tools::getValue('states');
-			
+
 			if (empty($this->selected_states) || sizeof($this->selected_states) == 0)
 				$this->selected_states = array(0);
 
@@ -96,11 +97,11 @@ class AdminTaxRulesGroup extends AdminTab
 				foreach ($this->selected_states as $id_state)
 				{
 					$tr = new TaxRule();
-	
+
 					// update or creation?
 					if (isset($id_rule))
 						$tr->id = $id_rule;
-						
+
 					$tr->id_tax = (int)Tools::getValue('tax');
 					$tr->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
 					$tr->id_country = (int)$id_country;
@@ -108,21 +109,21 @@ class AdminTaxRulesGroup extends AdminTab
 					list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zipcode);
 					$tr->behavior = (int)Tools::getValue('behavior');
 					$tr->description = Tools::getValue('description');
-	
+
 					$this->tax_rule = $tr;
-					$this->_errors_tax_rule = $this->validateTaxRule($tr);				
+					$this->_errors_tax_rule = $this->validateTaxRule($tr);
 					if (sizeof($this->_errors_tax_rule) == 0)
 					{
 						if (!$tr->save())
 							die(Tools::displayError('An error has occured: Can\'t save the current tax rule'));
-					} else 
+					} else
 						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-				}					
+				}
 			}
-			
+
 			if (sizeof($this->_errors_tax_rule) == 0)
 				Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-		
+
 		} else
          parent::postProcess();
 	}
@@ -148,11 +149,11 @@ class AdminTaxRulesGroup extends AdminTab
 		{
 				if ($("#country option:selected").size() > 1)
 				{
-					$("#zipcode-label").hide();	
+					$("#zipcode-label").hide();
 					$("#zipcode").hide();
-					
+
 					$("#state-select").hide();
-					$("#state-label").hide();					
+					$("#state-label").hide();
 				} else {
 					$.ajax({
 						  url: "ajax.php",
@@ -171,11 +172,11 @@ class AdminTaxRulesGroup extends AdminTab
 									$("#states").html(html);
 								}
 						  }
-					});				
-				
-					$("#zipcode-label").show();	
+					});
+
+					$("#zipcode-label").show();
 					$("#zipcode").show();
-				
+
 				}
 		}
 
@@ -335,8 +336,8 @@ EOT;
 
 		$country_select = Helper::selectInput(Country::getCountries((int)$cookie->id_lang),
  				 			  					 array('id' => 'country', 'name' => 'country[]', 'onclick' => 'populateStates($(this).val(), \'\')', 'multiple' => 'multiple'),
-												 array('key' => 'id_country', 
-												 		'value' => 'name', 
+												 array('key' => 'id_country',
+												 		'value' => 'name',
 												 		'selected' => $this->selected_countries,
 												 		'empty' => $this->l('All')));
 
@@ -516,3 +517,4 @@ EOT;
 		}
 	}
 }
+
