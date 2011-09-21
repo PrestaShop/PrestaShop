@@ -72,37 +72,37 @@ class DbQueryCore
 
 	/**
 	 * Add JOIN clause
+	 * 	E.g. $this->join('RIGHT JOIN '._DB_PREFIX_.'product p ON ...');
 	 *
-	 * @param string $type Join type : left|right|inner|cross|union|natural
+	 * @param string $join Complete string
 	 * @return DbQuery
 	 */
-	public function join($type, $join)
+	public function join($join)
 	{
-		$type = strtolower($type);
-		$types = array(
-			'left' => 'LEFT JOIN',
-			'right' => 'RIGHT JOIN',
-			'inner' => 'INNER JOIN',
-			'cross' => 'CROSS JOIN',
-			'union' => 'UNION JOIN',
-			'natural' => 'NATURAL JOIN',
-		);
-
-		if (!isset($types[$type]))
-			die('Bad type in DbQuery->join()');
-
-		$this->query['join'][] = $types[$type].' '._DB_PREFIX_.$join;
+		$this->query['join'][] = $join;
 		return $this;
 	}
 
+	/**
+	 * Add LEFT JOIN clause
+	 * 	E.g. $this->leftJoin('product p ON ...')
+	 *
+	 * @param string $join Table followed by ON claused
+	 */
 	public function leftJoin($join)
 	{
-		return $this->join('left', $join);
+		return $this->join('LEFT JOIN '._DB_PREFIX_.$join);
 	}
 
-	public function innerJoin($table)
+	/**
+	 * Add INNER JOIN clause
+	 * 	E.g. $this->innerJoin('product p ON ...')
+	 *
+	 * @param string $join Table followed by ON claused
+	 */
+	public function innerJoin($join)
 	{
-		return $this->join('inner', $join);
+		return $this->join('INNER JOIN '._DB_PREFIX_.$join);
 	}
 
 	/**
@@ -135,7 +135,7 @@ class DbQueryCore
 	 * @param string $fields List of fields to sort. E.g. $this->order('myField, b.mySecondField DESC')
 	 * @return DbQuery
 	 */
-	public function order($fields)
+	public function orderBy($fields)
 	{
 		$this->query['order'][] = $fields;
 		return $this;
@@ -147,7 +147,7 @@ class DbQueryCore
 	 * @param string $fields List of fields to sort. E.g. $this->group('myField, b.mySecondField DESC')
 	 * @return DbQuery
 	 */
-	public function group($fields)
+	public function groupBy($fields)
 	{
 		$this->query['group'][] = $fields;
 		return $this;
@@ -189,13 +189,13 @@ class DbQueryCore
 			$sql .= implode("\n", $this->query['join'])."\n";
 
 		if ($this->query['where'])
-			$sql .= 'WHERE '.implode(' AND ', $this->query['where'])."\n";
+			$sql .= 'WHERE ('.implode(') AND (', $this->query['where']).")\n";
 
 		if ($this->query['group'])
 			$sql .= 'GROUP BY '.implode(', ', $this->query['group'])."\n";
 
 		if ($this->query['having'])
-			$sql .= 'HAVING '.implode(' AND ', $this->query['having'])."\n";
+			$sql .= 'HAVING ('.implode(') AND (', $this->query['having']).")\n";
 
 		if ($this->query['order'])
 			$sql .= 'ORDER BY '.implode(', ', $this->query['order'])."\n";
