@@ -311,5 +311,32 @@ class AddressCore extends ObjectModel
 			WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
 		);
 	}
+
+	/**
+	* Initiliaze an address corresponding to the specified id address or if empty to the
+	* default shop configuration
+	*
+	* @param int $id_address
+	* @return Address address
+	*/
+	public static function initialize($id_address = null)
+	{
+		// set the default address
+		$address = new Address();
+		$address->id_country = (int)Context::getContext()->country->id;
+		$address->id_state = 0;
+		$address->postcode = 0;
+
+		// if an id_address has been specified retrieve the address
+		if ($id_address)
+		{
+			$address = new Address((int)$id_address);
+
+			if (!Validate::isLoadedObject($address))
+				throw new Exception('Invalid address');
+		}
+
+		return $address;
+	}
 }
 
