@@ -369,8 +369,8 @@ class CartCore extends ObjectModel
 		$sql = new DbQuery();
 
 		// Build SELECT
-		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`')
-			->select('pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`')
+		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`,
+			pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`')
 			->select('p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`')
 			->select('p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category')
 			->select('CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id');
@@ -399,10 +399,10 @@ class CartCore extends ObjectModel
 		$sql->where('p.`id_product` IS NOT NULL');
 
 		// Build GROUP BY
-		$sql->group('unique_id');
+		$sql->groupBy('unique_id');
 
 		// Build ORDER BY
-		$sql->order('cp.date_add ASC');
+		$sql->orderBy('cp.date_add ASC');
 
 		if (Customization::isFeatureActive())
 		{
