@@ -91,6 +91,7 @@ CREATE TABLE `PREFIX_attribute` (
 CREATE TABLE `PREFIX_attribute_group` (
   `id_attribute_group` int(10) unsigned NOT NULL auto_increment,
   `is_color_group` tinyint(1) NOT NULL default '0',
+  `group_type` ENUM('select', 'radio', 'color') NOT NULL DEFAULT  'select',
   `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_attribute_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1176,7 +1177,6 @@ CREATE TABLE `PREFIX_product` (
   `id_manufacturer` int(10) unsigned default NULL,
   `id_tax_rules_group` int(10) unsigned NOT NULL,
   `id_category_default` int(10) unsigned default NULL,
-  `id_color_default` int(10) unsigned default NULL,
   `on_sale` tinyint(1) unsigned NOT NULL default '0',
   `online_only` tinyint(1) unsigned NOT NULL default '0',
   `ean13` varchar(13) default NULL,

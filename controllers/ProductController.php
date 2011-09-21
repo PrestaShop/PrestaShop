@@ -264,7 +264,7 @@ class ProductControllerCore extends FrontController
 					foreach ($attributesGroups AS $k => $row)
 					{
 						/* Color management */
-						if (((isset($row['attribute_color']) AND $row['attribute_color']) OR (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg'))) AND $row['id_attribute_group'] == $this->product->id_color_default)
+						if ((isset($row['attribute_color']) AND $row['attribute_color']) OR (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')))
 						{
 							$colors[$row['id_attribute']]['value'] = $row['attribute_color'];
 							$colors[$row['id_attribute']]['name'] = $row['attribute_name'];
@@ -272,12 +272,11 @@ class ProductControllerCore extends FrontController
 								$colors[$row['id_attribute']]['attributes_quantity'] = 0;
 							$colors[$row['id_attribute']]['attributes_quantity'] += (int)($row['quantity']);
 						}
-
 						if (!isset($groups[$row['id_attribute_group']]))
 						{
 							$groups[$row['id_attribute_group']] = array(
 								'name' =>			$row['public_group_name'],
-								'is_color_group' =>	$row['is_color_group'],
+								'group_type' =>	$row['group_type'],
 								'default' =>		-1,
 							);
 						}
@@ -304,7 +303,6 @@ class ProductControllerCore extends FrontController
 						$combinations[$row['id_product_attribute']]['available_date'] = $availableDate;
 						$combinations[$row['id_product_attribute']]['id_image'] = isset($combinationImages[$row['id_product_attribute']][0]['id_image']) ? $combinationImages[$row['id_product_attribute']][0]['id_image'] : -1;
 					}
-
 					//wash attributes list (if some attributes are unavailables and if allowed to wash it)
 					if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0)
 					{
@@ -318,9 +316,6 @@ class ProductControllerCore extends FrontController
 								unset($colors[$key]);
 					}
 
-					/*foreach ($groups AS &$group) // attributes are now sortable in BO
-						natcasesort($group['attributes']);*/
-
 					foreach ($combinations AS $id_product_attribute => $comb)
 					{
 						$attributeList = '';
@@ -329,12 +324,11 @@ class ProductControllerCore extends FrontController
 						$attributeList = rtrim($attributeList, ',');
 						$combinations[$id_product_attribute]['list'] = $attributeList;
 					}
-
 					$this->context->smarty->assign(array(
 						'groups' => $groups,
 						'combinaisons' => $combinations, /* Kept for compatibility purpose only */
 						'combinations' => $combinations,
-						'colors' => (sizeof($colors) AND $this->product->id_color_default) ? $colors : false,
+						'colors' => (sizeof($colors)) ? $colors : false,
 						'combinationImages' => $combinationImages));
 				}
 

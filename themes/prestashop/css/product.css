@@ -50,6 +50,7 @@
 	border: 1px #d0d3d8 solid;
 	margin-bottom: 1.5em
 }
+
 #primary_block #color_to_pick_list li {
 	display: inline;
 	float: left;
@@ -62,6 +63,11 @@
 	border: 1px solid #666;
 	cursor: pointer
 }
+
+#primary_block a.color_pick.selected {
+	border: 1px red solid;
+}
+#primary_block a.color_pick.selected:hover { border: 1px red solid; }
 #primary_block a.color_pick:hover { border: 1px solid #000 }
 #primary_block a#color_all { cursor: pointer }
 #primary_block #image-block img#bigpic.jqzoom {
@@ -116,6 +122,37 @@
 #primary_block div#attributes p, #minimal_quantity_wanted_p {
 	clear: left;
 	text-align: center
+}
+#attributes {
+	margin-top: 10px;
+}
+.attribute_list {
+	width:50%;
+	float:right;
+	height:auto
+}
+
+#primary_block #buy_block .attribute_label {
+	font-size: 1.1em;
+	color: #374853;
+	float:left;
+	width:45%;
+}
+
+#primary_block #buy_block .attribute_select {
+	width: 100%;
+	margin-left: 0;
+}
+
+.attribute_fieldset {
+	padding:0;
+	border:0;
+	margin-bottom:10px
+}
+
+.attribute_radio {
+	margin:0 5px 5px 0;
+
 }
 
 /* prices */

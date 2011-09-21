@@ -34,7 +34,6 @@ class AttributeCore extends ObjectModel
 	public 		$name;
 	public		$color;
 	public		$position;
-	
 	public		$default;
 	
  	protected 	$fieldsRequired = array('id_attribute_group');
@@ -53,7 +52,14 @@ class AttributeCore extends ObjectModel
 			'id_attribute_group' => array('xlink_resource'=> 'product_options'),
 		),
 	);
+	
+	public function __construct()
+	{
+	 	$this->image_dir =  _PS_COL_IMG_DIR_;
 
+		parent::__construct();
+	}
+	
 	public function getFields()
 	{
 		$this->validateFields();
@@ -182,16 +188,22 @@ class AttributeCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * Return true if attribute is color type
+	 *
+	 * @acces public
+	 * @return bool
+	 */
 	public function isColorAttribute()
 	{
 		if (!Db::getInstance()->getRow('
-			SELECT `is_color_group` FROM `'._DB_PREFIX_.'attribute_group` WHERE `id_attribute_group` = (
+			SELECT `group_type` FROM `'._DB_PREFIX_.'attribute_group` WHERE `id_attribute_group` = (
 				SELECT `id_attribute_group` FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute` = '.(int)$this->id.')
-				AND is_color_group = 1'))
+				AND group_type = \'color\''))
 			return false;
 		return Db::getInstance()->NumRows();
 	}
-	
+
 	/**
 	 * Get minimal quantity for product with attributes quantity
 	 *

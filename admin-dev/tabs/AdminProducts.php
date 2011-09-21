@@ -3611,28 +3611,7 @@ class AdminProducts extends AdminTab
 						var s_impact2 = document.getElementById(\'span_weight_impact\');
 
 						init_elems();
-					</script>
-					<hr style="width:100%;" />
-					<table cellpadding="5">
-						<tr>
-							<td class="col-left"><b>'.$this->l('Color picker:').'</b></td>
-							<td style="padding-bottom:5px;">
-								<select name="id_color_default">
-								<option value="0">'.$this->l('Do not display').'</option>';
-								foreach ($attributes_groups AS $k => $attribute_group)
-									if (isset($groups[$attribute_group['id_attribute_group']]))
-										echo '<option value="'.(int)($attribute_group['id_attribute_group']).'"
-												'.((int)($attribute_group['id_attribute_group']) == (int)($obj->id_color_default) ? 'selected="selected"' : '').'>'
-												.htmlentities(stripslashes($attribute_group['name']), ENT_COMPAT, 'UTF-8').
-											'</option>';
-								echo '
-								</select>
-								&nbsp;&nbsp;<input type="submit" value="'.$this->l('OK').'" name="submitAdd'.$this->table.'AndStay" class="button" />
-								&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?tab=AdminAttributesGroups&token='.Tools::getAdminToken('AdminAttributesGroups'.(int)(Tab::getIdFromClassName('AdminAttributesGroups')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/asterisk.gif" alt="" /> '.$this->l('Color attribute management').'</a>
-								<p >'.$this->l('Activate the color choice by selecting a color attribute group.').'</p>
-							</td>
-						</tr>
-					</table>';
+					</script>';
 				}
 				else
 					echo '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
