@@ -2091,39 +2091,6 @@ FileETag INode MTime Size
 	}
 
 	/**
-	 * @param array SQL query in array
-	 * @return string SQL query
-	 */
-	public static function buildQuery(array $sql)
-	{
-		if (!isset($sql['select']))
-			$sql['select'] = 'SELECT *';
-
-		$req = $sql['select']."\n";
-		$req .= $sql['from']."\n";
-
-		if (isset($sql['join']))
-			$req .= $sql['join']."\n";
-
-		if (isset($sql['where']))
-			$req .= $sql['where']."\n";
-
-		if (isset($sql['groupby']))
-			$req .= $sql['groupby']."\n";
-
-		if (isset($sql['having']))
-			$req .= $sql['having']."\n";
-
-		if (isset($sql['orderby']))
-			$req .= $sql['orderby']."\n";
-
-		if (isset($sql['limit']))
-			$req .= $sql['limit']."\n";
-
-		return $req;
-	}
-
-	/**
 	 * Get max file upload size considering server settings and optional max value
 	 *
 	 * @param int $max_size optional max file size

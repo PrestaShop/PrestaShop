@@ -106,6 +106,26 @@ class DbQueryCore
 	}
 
 	/**
+	 * Add LEFT OUTER JOIN clause
+	 *
+	 * @param string $join Table followed by ON claused
+	 */
+	public function leftOuterJoin($join)
+	{
+		return $this->join('LEFT OUTER JOIN '._DB_PREFIX_.$join);
+	}
+
+	/**
+	 * Add NATURAL JOIN clause
+	 *
+	 * @param string $join
+	 */
+	public function naturalJoin($join)
+	{
+		return $this->join('NATURAL JOIN '._DB_PREFIX_.$join);
+	}
+
+	/**
 	 * Add a restriction in WHERE clause (each restriction will be separated by AND statement)
 	 *
 	 * @param string $restriction

@@ -150,22 +150,22 @@ class TaxCore extends ObjectModel
 	*/
 	public static function getTaxes($id_lang = false, $active_only = true)
 	{
-		$query = array();
-		$query['select'] = 'SELECT t.id_tax, t.rate';
-		$query['from'] = 'FROM `'._DB_PREFIX_.'tax` t';
-		$query['where'] = 'WHERE t.`deleted` != 1';
+		$sql = new DbQuery();
+		$sql->select('t.id_tax, t.rate');
+		$sql->from('tax t');
+		$sql->where('t.`deleted` != 1');
 
 		if ($id_lang)
 		{
-			$query['select'] .= ', tl.name, tl.id_lang ';
-			$query['join'] = 'LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')';
-			$query['order'] = 'ORDER BY `name` ASC';
+			$sql->select('tl.name, tl.id_lang');
+			$sql->leftJoin('tax_lang tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')');
+			$sql->orderBy('`name` ASC');
 		}
 
 		if ($active_only)
-			$query['where'] .= ' AND t.`active` = 1';
+			$sql->where('t.`active` = 1');
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(Tools::buildQuery($query));
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
 	public static function excludeTaxeOption()
