@@ -150,6 +150,4 @@ ALTER TABLE `PREFIX_product_download` ADD `is_shareable` TINYINT( 1 ) UNSIGNED N
 
 ALTER TABLE `PREFIX_attribute_group` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
-ALTER TABLE  `PREFIX_attribute_group` ADD  `group_type` ENUM('select', 'radio', 'color') NOT NULL DEFAULT  'select';
-UPDATE `PREFIX_attribute_group` SET  `group_type`='color' WHERE `is_color_group` = 1;
-ALTER TABLE `PREFIX_product` DROP `id_color_default`;
+/* PHP:add_group_attribute_position(); */;
