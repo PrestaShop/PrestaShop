@@ -495,7 +495,7 @@ class ProductCore extends ObjectModel
 	 */
 	public static function cleanPositions($id_category)
 	{
-    $return = true;
+		$return = true;
 
 		$result = Db::getInstance()->ExecuteS('
 		SELECT `id_product`
@@ -1395,43 +1395,39 @@ class ProductCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = array();
-		$sql['select'] = '
-			SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
-			i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name, DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
-			(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice
-		';
-		$sql['from'] = 'FROM `'._DB_PREFIX_.'product` p';
-		$sql['join'] = $context->shop->sqlAsso('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
-			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-			   AND tr.`id_country` = '.(int)$context->country->id.'
-			   AND tr.`id_state` = 0)
-  		  	LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-		';
-		$sql['where'] = '
-			WHERE p.`active` = 1
-			AND DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
-			AND p.`id_product` IN (
+		$sql = new DbQuery();
+		$sql->select('p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
+						i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
+						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
+						(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice');
+
+		$sql->from('product p');
+		$sql->join($context->shop->sqlAsso('product', 'p'));
+		$sql->leftJoin('product_lang pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')');
+		$sql->leftJoin('image i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)');
+		$sql->leftJoin('image_lang il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')');
+		$sql->leftJoin('tax_rule tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)');
+		$sql->leftJoin('tax t ON (t.`id_tax` = tr.`id_tax`)');
+		$sql->leftJoin('manufacturer m ON (m.`id_manufacturer` = p.`id_manufacturer`)');
+
+		$sql->where('p.`active` = 1');
+		$sql->where('DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0');
+		$sql->where('p.`id_product` IN (
 				SELECT cp.`id_product`
 				FROM `'._DB_PREFIX_.'category_group` cg
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-				WHERE cg.`id_group` '.$sqlGroups.'
-			)
-		';
-		$sql['orderby'] = 'ORDER BY '.(isset($orderByPrefix) ? pSQL($orderByPrefix).'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay);
-		$sql['limit'] = 'LIMIT '.(int)($pageNumber * $nbProducts).', '.(int)($nbProducts);
+				WHERE cg.`id_group` '.$sqlGroups.')');
+
+		$sql->orderBy((isset($orderByPrefix) ? pSQL($orderByPrefix).'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay));
+		$sql->limit($nbProducts, $pageNumber * $nbProducts);
 
 		if (Combination::isFeatureActive())
 		{
-			$sql['select'] .= ', pa.id_product_attribute';
-			$sql['join'] .= 'LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)';
+			$sql->select('pa.id_product_attribute');
+			$sql->leftOuterJoin('product_attribute pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)');
 		}
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(Tools::buildQuery($sql));
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 
 		if ($orderBy == 'price')
 			Tools::orderbyPrice($result, $orderWay);
@@ -1817,23 +1813,23 @@ class ProductCore extends ObjectModel
 		$cacheId2 = $id_product.'-'.$id_product_attribute;
 		if (!isset(self::$_pricesLevel2[$cacheId2]))
 		{
-			$sql = array();
-			$sql['select'] = 'SELECT p.`price`, p.`ecotax`';
-			$sql['from'] = 'FROM `'._DB_PREFIX_.'product` p';
-			$sql['where'] = 'WHERE p.`id_product` = '.(int)($id_product);
+			$sql = new DbQuery();
+			$sql->select('p.`price`, p.`ecotax`');
+			$sql->from('product p');
+			$sql->where('p.`id_product` = '.(int)$id_product);
 
 			if (Combination::isFeatureActive())
 			{
 				if ($id_product_attribute)
 				{
-					$sql['select'] .= ', pa.`price` AS attribute_price';
-					$sql['join'] = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = '.(int)($id_product_attribute).')';
+					$sql->select('pa.`price` AS attribute_price');
+					$sql->leftJoin('product_attribute pa ON (pa.`id_product_attribute` = '.(int)($id_product_attribute).')');
 				}
 				else
-					$sql['select'] .= ', IFNULL((SELECT pa.price FROM `'._DB_PREFIX_.'product_attribute` pa WHERE id_product = '.(int)($id_product).' AND default_on = 1), 0) AS attribute_price';
+					$sql->select('IFNULL((SELECT pa.price FROM `'._DB_PREFIX_.'product_attribute` pa WHERE id_product = '.(int)($id_product).' AND default_on = 1), 0) AS attribute_price');
 			}
 
-			self::$_pricesLevel2[$cacheId2] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(Tools::buildQuery($sql));
+			self::$_pricesLevel2[$cacheId2] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		}
 		$result = self::$_pricesLevel2[$cacheId2];
 
@@ -2536,31 +2532,28 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = array();
-		$sql['select'] = 'SELECT p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`';
-		$sql['from'] = 'FROM `'._DB_PREFIX_.'category_product` cp';
-		$sql['join'] = '
-			LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = cp.`id_product`
-			'.$context->shop->sqlAsso('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
-			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-		';
-		$sql['where'] = '
-			WHERE pl.`name` LIKE \'%'.pSQL($query).'%\'
-			OR p.`reference` LIKE \'%'.pSQL($query).'%\'
-			OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
-		$sql['groupby'] = 'GROUP BY `id_product`';
-		$sql['orderby'] = 'ORDER BY pl.`name` ASC';
+		$sql = new DbQuery();
+		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`');
+		$sql->from('category_product cp');
+		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
+		$sql->join($context->shop->sqlAsso('product', 'p'));
+		$sql->leftJoin('product_lang pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')');
+		$sql->leftJoin('manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`');
+
+		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\' OR p.`reference` LIKE \'%'.pSQL($query).'%\' OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
+		$sql->where();
+		$sql->groupBy('`id_product`');
+		$sql->orderBy('pl.`name` ASC');
 
 		if (Combination::isFeatureActive())
 		{
-			$sql['join'] .= '
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.`id_product` = p.`id_product`';
-			$sql['where'] .= 'OR pa.`reference` LIKE \'%'.pSQL($query).'%\'';
+			$sql->leftJoin('product_attribute pa ON pa.`id_product` = p.`id_product`');
+			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'';
 		}
-		$sql['join'] .= Product::sqlStock('p', 'pa', false, $context->shop);
+		$sql->where($where);
+		Product::sqlStock('p', 'pa', false, $context->shop, $sql);
 
-		$result = Db::getInstance()->ExecuteS(Tools::buildQuery($sql));
+		$result = Db::getInstance()->ExecuteS($sql);
 
 		if (!$result)
 			return false;

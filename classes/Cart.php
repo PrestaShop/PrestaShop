@@ -370,24 +370,24 @@ class CartCore extends ObjectModel
 
 		// Build SELECT
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`,
-			pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`')
-			->select('p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`')
-			->select('p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category')
-			->select('CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id');
+						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`,
+						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`,
+						p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
+						CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id');
 
 		// Build FROM
 		$sql->from('cart_product cp');
 
 		// Build JOIN
-		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`')
-			->leftJoin('product_lang pl ON p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl'))
-			->leftJoin('tax_rule tr ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
+		$sql->leftJoin('product_lang pl ON p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl'));
+		$sql->leftJoin('tax_rule tr ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 										AND tr.`id_country` = '.(int)$id_country.'
 										AND tr.`id_state` = 0
-										AND tr.`zipcode_from` = 0')
-			->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`')
-			->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang)
-			->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
+										AND tr.`zipcode_from` = 0');
+		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
+		$sql->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang);
+		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
 
 		// @todo test if everything is ok, then refactorise call of this method
 		Product::sqlStock('cp', 'cp', false, null, $sql);
@@ -412,15 +412,15 @@ class CartCore extends ObjectModel
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->select('pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr')
-				->select('IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference')
-				->select('IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference')
-				->select('(p.`weight`+ pa.`weight`) weight_attribute')
-				->select('IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc')
-				->select('pai.`id_image` as pai_id_image, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
+			$sql->select('pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr,
+							IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
+							IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
+							(p.`weight`+ pa.`weight`) weight_attribute,
+							IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
+							pai.`id_image` as pai_id_image, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
 
-			$sql->leftJoin('product_attribute pa ON pa.`id_product_attribute` = cp.`id_product_attribute`')
-				->leftJoin('product_attribute_image pai ON pai.`id_product_attribute` = pa.`id_product_attribute`');
+			$sql->leftJoin('product_attribute pa ON pa.`id_product_attribute` = cp.`id_product_attribute`');
+			$sql->leftJoin('product_attribute_image pai ON pai.`id_product_attribute` = pa.`id_product_attribute`');
 		}
 		else
 			$sql->select('p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity');
