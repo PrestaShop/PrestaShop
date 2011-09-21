@@ -63,7 +63,7 @@ class AdminAttributes extends AdminTab
 		<script type="text/javascript">
 			var attributesGroups = {';
 		foreach ($attributes_groups AS $attribute_group)
-			$strAttributesGroups .= '"'.$attribute_group['id_attribute_group'].'" : '.$attribute_group['is_color_group'].',';
+			$strAttributesGroups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ) .',';
 		echo $strAttributesGroups.'};
 		</script>
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.($token ? $token : $this->token).'" method="post" enctype="multipart/form-data">

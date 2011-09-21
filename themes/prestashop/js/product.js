@@ -76,7 +76,7 @@ function findCombination(firstTime)
 	$('#quantity_wanted').val(1);
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = new Array();
-	$('div#attributes select').each(function(){
+	$('div#attributes select, div#attributes input[type=hidden], div#attributes input[type=radio]:checked').each(function(){
 		choice.push($(this).val());
 	});
 
@@ -137,21 +137,6 @@ function findCombination(firstTime)
 	//this combination doesn't exist (not created in back office)
 	selectedCombination['unavailable'] = true;
 	updateDisplay();
-}
-
-function updateColorSelect(id_attribute)
-{
-	if (id_attribute == 0)
-	{
-		refreshProductImages(0);
-		return ;
-	}
-	// Visual effect
-	$('#color_'+id_attribute).fadeTo('fast', 1, function(){	$(this).fadeTo('slow', 0, function(){ $(this).fadeTo('slow', 1, function(){}); }); });
-	// Attribute selection
-	$('#group_'+id_color_default+' option[value='+id_attribute+']').attr('selected', 'selected');
-	$('#group_'+id_color_default+' option[value!='+id_attribute+']').removeAttr('selected');
-	findCombination();
 }
 
 //update display of the availability of the product AND the prices of the product
@@ -243,24 +228,26 @@ function updateDisplay()
 		$('#availability_statut:hidden').show();
 		
 		//display availability date
-		var available_date = selectedCombination['available_date'];
-		tab_date = available_date.split('-');
-		var time_available = new Date(tab_date[2], tab_date[1], tab_date[0]);
-		time_available.setMonth(time_available.getMonth()-1);
-		var now = new Date();
-		// date displayed only if time_available
-		if (now.getTime() < time_available.getTime())
+		if (selectedCombination.length)
 		{
-			$('#availability_date_value').text(selectedCombination['available_date']);
-			$('#availability_date_label').show();
-			$('#availability_date_value').show();
+			var available_date = selectedCombination['available_date'];
+			tab_date = available_date.split('-');
+			var time_available = new Date(tab_date[2], tab_date[1], tab_date[0]);
+			time_available.setMonth(time_available.getMonth()-1);
+			var now = new Date();
+			// date displayed only if time_available
+			if (now.getTime() < time_available.getTime())
+			{
+				$('#availability_date_value').text(selectedCombination['available_date']);
+				$('#availability_date_label').show();
+				$('#availability_date_value').show();
+			}
+			else
+			{
+				$('#availability_date_label').hide();
+				$('#availability_date_value').hide();
+			}
 		}
-		else
-		{
-			$('#availability_date_label').hide();
-			$('#availability_date_value').hide();
-		}
-
 		//show the 'add to cart' button ONLY IF it's possible to buy when out of stock AND if it was previously invisible
 		if (allowBuyWhenOutOfStock && !selectedCombination['unavailable'] && productAvailableForOrder == 1)
 		{
@@ -501,7 +488,7 @@ $(document).ready(function()
 
 	//
 	$('a#resetImages').click(function() {
-		updateColorSelect(0);
+		refreshProductImages(0);
 	});
 
 	$('.thickbox').fancybox({
@@ -552,3 +539,17 @@ function checkMinimalQuantity(minimal_quantity)
 	}
 }
 
+function colorPickerClick(elt)
+{
+	id_attribute = $(elt).attr('id').replace('color_', '');
+	$('.color_pick').removeClass('selected');
+	$(elt).fadeTo('fast', 1, function(){
+								$(this).fadeTo('slow', 0, function(){
+									$(this).fadeTo('slow', 1, function(){
+										$(this).addClass('selected');
+										});
+									});
+								});
+	$('#color_pick_hidden').val(id_attribute);
+	findCombination();
+}

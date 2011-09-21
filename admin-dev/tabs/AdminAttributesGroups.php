@@ -244,13 +244,14 @@ class AdminAttributesGroups extends AdminTab
 		echo '
 					<div class="clear"></div>
 				</div>
-				<label>'.$this->l('Color group:').' </label>
+				<label>'.$this->l('Group type:').' </label>
 				<div class="margin-form">
-					<input type="radio" name="is_color_group" id="is_color_group_on" value="1" '.($this->getFieldValue($obj, 'is_color_group') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="is_color_group_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Yes').'" /></label>
-					<input type="radio" name="is_color_group" id="is_color_group_off" value="0" '.(!$this->getFieldValue($obj, 'is_color_group') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="is_color_group_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('No').'" /></label>
-					<p>'.$this->l('This is a color group').'</p>
+					<select name="group_type">
+						<option value="select" '.($this->getFieldValue($obj, 'group_type') == 'select' ? 'selected="selected" ' : '').'>'.$this->l('Select').'</option>
+						<option value="radio" '.($this->getFieldValue($obj, 'group_type') == 'radio' ? 'selected="selected" ' : '').'>'.$this->l('Radio button').'</option>
+						<option value="color" '.($this->getFieldValue($obj, 'group_type') == 'color' ? 'selected="selected" ' : '').'>'.$this->l('Color').'</option>
+					</select>
+					<p>'.$this->l('Choose the type of the attribute group').'</p>
 				</div>';
 				if (Shop::isMultiShopActivated())
 				{

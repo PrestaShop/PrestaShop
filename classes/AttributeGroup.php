@@ -31,6 +31,7 @@ class AttributeGroupCore extends ObjectModel
 	public 		$name;
 	public		$is_color_group;
 	public		$position;
+	public		$group_type;
 	
 	/** @var string Public Name */
 	public 		$public_name;	
@@ -62,6 +63,7 @@ class AttributeGroupCore extends ObjectModel
 		$this->validateFields();
 
 		$fields['is_color_group'] = (int)($this->is_color_group);
+		$fields['group_type'] = pSQL($this->group_type);
 		$fields['position'] = (int)($this->position);
 
 		return $fields;

@@ -54,9 +54,6 @@ class ProductCore extends ObjectModel
 	/** @var integer default Category id */
 	public 		$id_category_default;
 
-	/** @var integer default Attribute id if color picker is enabled */
-	public 		$id_color_default;
-
 	/** @var string Manufacturer name */
 	public		$manufacturer_name;
 
@@ -225,7 +222,6 @@ class ProductCore extends ObjectModel
 		'id_manufacturer' => 'isUnsignedId',
 		'id_supplier' => 'isUnsignedId',
 		'id_category_default' => 'isUnsignedId',
-		'id_color_default' => 'isUnsignedInt', /* unsigned integer because its value could be 0 if the feature is disabled */
 		'minimal_quantity' => 'isUnsignedInt',
 		'price' => 'isPrice',
 		'additional_shipping_cost' => 'isPrice',
@@ -353,7 +349,6 @@ class ProductCore extends ObjectModel
 		$fields['id_manufacturer'] = (int)($this->id_manufacturer);
 		$fields['id_supplier'] = (int)($this->id_supplier);
 		$fields['id_category_default'] = (int)($this->id_category_default);
-		$fields['id_color_default'] = (int)($this->id_color_default);
 		$fields['quantity'] = (int)($this->quantity);
 		$fields['minimal_quantity'] = (int)($this->minimal_quantity);
 		$fields['price'] = (float)($this->price);
@@ -2317,7 +2312,8 @@ class ProductCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name,
-					a.`color` AS attribute_color, pa.`id_product_attribute`, stock.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`, pa.`minimal_quantity`, pa.`available_date`
+					a.`color` AS attribute_color, pa.`id_product_attribute`, stock.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`,
+					pa.`minimal_quantity`, pa.`available_date`,  ag.`group_type`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				'.Product::sqlStock('pa', 'pa').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
