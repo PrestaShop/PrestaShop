@@ -511,7 +511,7 @@ abstract class DbCore
 	 */
 	static public function checkEncoding($server, $user, $pwd)
 	{
-		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd));
+		return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
 	}
 
 	/**
