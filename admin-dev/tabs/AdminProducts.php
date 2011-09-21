@@ -34,7 +34,7 @@ class AdminProducts extends AdminTab
 
 	public function __construct()
 	{
-		
+
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
@@ -502,7 +502,7 @@ class AdminProducts extends AdminTab
 										Tools::getValue('attribute_upc'),
 										Tools::getValue('minimal_quantity'),
 										Tools::getValue('available_date'));
-								
+
 									if ($id_reason = (int)Tools::getValue('id_mvt_reason') AND (int)Tools::getValue('attribute_mvt_quantity') > 0 AND $id_reason > 0)
 									{
 										if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, NULL, $this->context->employee->id))
@@ -859,17 +859,17 @@ class AdminProducts extends AdminTab
 				$shops = false;
 				if (Shop::isMultiShopActivated())
 					$shops = Shop::getShops();
-				$obj = new Product((int)Tools::getValue('id_product'));	
+				$obj = new Product((int)Tools::getValue('id_product'));
 				$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
 				$images = Image::getImages($this->context->language->id, $obj->id);
 				$imagesTotal = Image::getImagesTotal($obj->id);
 				$html = $this->getLineTableImage($result['success'], $imagesTotal + 1, $this->token, $shops);
-				die(Tools::jsonEncode(array("success" => $html))); 
+				die(Tools::jsonEncode(array("success" => $html)));
 			}
 			else
 				die(Tools::jsonEncode($result));
 		}
-		
+
 		if (Tools::getValue('updateProductImageShopAsso'))
 		{
 			if ($id_image = (int)Tools::getValue('id_image') AND $id_shop = (int)Tools::getValue('id_shop'))
@@ -878,7 +878,7 @@ class AdminProducts extends AdminTab
 				else
 					die(Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' AND `id_shop`='.(int)$id_shop));
 		}
-		
+
 		if (Tools::getValue('deleteImage'))
 		{
 			$image = new Image((int)Tools::getValue('id_image'));
@@ -1491,7 +1491,7 @@ class AdminProducts extends AdminTab
 				/* Tabs */
 		$this->displayFormInformations($obj, $currency);
 		$this->displayFormImages($obj, $this->token);
-		if (Combination::isFeatureActive()) 
+		if (Combination::isFeatureActive())
 			$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
 		$countAttachments = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$obj->id);
 		if ($obj->id)
@@ -1593,7 +1593,7 @@ class AdminProducts extends AdminTab
 		$specificPrices = SpecificPrice::getByProductId((int)($obj->id));
 		$specificPricePriorities = SpecificPrice::getPriority((int)($obj->id));
 
-		$taxRate = $obj->getTaxesRate(Tax::initializeAddress());
+		$taxRate = $obj->getTaxesRate(Address::initialize());
 
 		$tmp = array();
 		foreach ($shops as $shop)
@@ -2643,7 +2643,7 @@ class AdminProducts extends AdminTab
 					</tr>';
 
 			// Check if product has combination, to display the available date only for the product or for each combination
-			if (Combination::isFeatureActive()) 
+			if (Combination::isFeatureActive())
 				$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
 
 			if (isset($countAttributes) && $countAttributes == 0)
@@ -2880,14 +2880,14 @@ class AdminProducts extends AdminTab
 							<p class="clear"></p>
 						</td>
 					</tr>';
-					echo '	
+					echo '
 					<script type="text/javascript">
 						$(function() {
 							changeTagImage();
 							$("#createImageDescription input").change(function(){
 								changeTagImage();
 							});
-							
+
 							var i = 0;
 							$(".addImageDescription").click(function(){
 								if(i == 0){
@@ -2899,7 +2899,7 @@ class AdminProducts extends AdminTab
 								}
 							});
 						});
-						
+
 						function changeTagImage(){
 							var smallImage = $("input[name=smallImage]:checked").attr("value");
 							var leftRight = $("input[name=leftRight]:checked").attr("value");
@@ -3025,11 +3025,11 @@ class AdminProducts extends AdminTab
 		$shops = false;
 		if (Shop::isMultiShopActivated())
 			$shops = Shop::getShops();
-			
+
 		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		$imagesTotal = Image::getImagesTotal($obj->id);
-					
+
 		echo '
 		<div class="tab-page" id="step2">
 				<h4 class="tab" >2. '.$this->l('Images').' (<span id="countImage">'.$countImages.'</span>)</h4>
@@ -3043,10 +3043,10 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td class="col-left">'.$this->l('File:').'</td>
 						<td style="padding-bottom:5px;">
-						<div id="file-uploader">		
-							<noscript>			
+						<div id="file-uploader">
+							<noscript>
 								<p>Please enable JavaScript to use file uploader.</p>
-							</noscript>         
+							</noscript>
 						</div>
 						<div id="progressBarImage" class="progressBarImage"></div>
 						<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
@@ -3056,17 +3056,17 @@ class AdminProducts extends AdminTab
 						<script src="../js/fileuploader.js" type="text/javascript"></script>
 						<script src="../js/jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
 						<script type="text/javascript" src="../js/admin.js"></script>
-						<script type="text/javascript"> 
+						<script type="text/javascript">
 							function deleteImg(id)
 							{
 								var conf = confirm(\''.addslashes($this->l('Are you sure?', __CLASS__, true, false)).'\');
 								if (conf)
 									$.post("ajax-tab.php",
 									{
-										deleteImage: 1, 
-										id_image:id, 
-										id_product : "'.(int)Tools::getValue('id_product').'", 
-										id_category : "'.(int)$this->_category->id.'", 
+										deleteImage: 1,
+										id_image:id,
+										id_product : "'.(int)Tools::getValue('id_product').'",
+										id_category : "'.(int)$this->_category->id.'",
 										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
 										tab : "AdminCatalog",
 										updateproduct : 1},
@@ -3077,12 +3077,12 @@ class AdminProducts extends AdminTab
 												if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
 													cover = 1;
 												$("#tr_" + id).remove();
-												
+
 												if (cover)
 													$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
-													
+
 												$("#countImage").html(parseInt($("#countImage").html()) - 1);
-												
+
 												refreshImagePositions($("#imageTable"));
 											}
 									});
@@ -3092,7 +3092,7 @@ class AdminProducts extends AdminTab
 								$("#img" + id).fadeOut("slow");
 								$("#img" + id).remove();
 							}
-							$(document).ready(function () { 
+							$(document).ready(function () {
 								var filecheck = 1;
 								var uploader = new qq.FileUploader({
 									element: document.getElementById("file-uploader"),
@@ -3127,7 +3127,7 @@ class AdminProducts extends AdminTab
 											$("#img" + id).addClass("red");
 											$("#img" + id + " .errorImg").html(responseJSON.error);
 											$("#img" + id + " .errorImg").show();
-											
+
 										}
 										if (percent >= 100)
 										{
@@ -3140,17 +3140,17 @@ class AdminProducts extends AdminTab
 										$("#listImage").append("<li id=\'img"+id+"\'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px;\" href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
 									},
 									params: {
-										id_product : "'.(int)Tools::getValue('id_product').'", 
-										id_category : "'.(int)$this->_category->id.'", 
+										id_product : "'.(int)Tools::getValue('id_product').'",
+										id_category : "'.(int)$this->_category->id.'",
 										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
 										tab : "AdminCatalog",
 										updateproduct : 1,
 										addImage : 1,
 										},
-									
+
 								});
 							});
-        			  </script>    
+        			  </script>
 							<p class="float" style="clear: both;">
 								'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.($this->maxImageSize / 1000).''.$this->l('Kb max.').'
 							</p>
@@ -3162,7 +3162,7 @@ class AdminProducts extends AdminTab
 							'.(Tools::getValue('id_image') ? '<input type="hidden" name="id_image" value="'.(int)(Tools::getValue('id_image')).'" />' : '').'
 						</td>
 					</tr>
-					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>					
+					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>
 					<tr>
 						<td colspan="2">
 							<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
@@ -3171,7 +3171,7 @@ class AdminProducts extends AdminTab
 								var come_from = \''.$this->table.'\';
 								var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
 							</script>
-							<script type="text/javascript" src="../js/admin-dnd.js"></script>							
+							<script type="text/javascript" src="../js/admin-dnd.js"></script>
 							<table cellspacing="0" cellpadding="0" class="table tableDnD" id="imageTable" style="display:'.($countImages == 0 ? 'none' : '').';">
 								<thead>
 								<tr>
@@ -3185,12 +3185,12 @@ class AdminProducts extends AdminTab
 												$(\'.image_shop\').change(function() {
 													$.post("ajax-tab.php",
 														{
-															updateProductImageShopAsso: 1, 
-															id_image:$(this).attr("name"), 
-															id_shop: $(this).val(), 
+															updateProductImageShopAsso: 1,
+															id_image:$(this).attr("name"),
+															id_shop: $(this).val(),
 															active:$(this).attr("checked"),
-															id_product : "'.(int)Tools::getValue('id_product').'", 
-															id_category : "'.(int)$this->_category->id.'", 
+															id_product : "'.(int)Tools::getValue('id_product').'",
+															id_category : "'.(int)$this->_category->id.'",
 															token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
 															tab : "AdminCatalog",
 															updateproduct : 1,
@@ -3208,7 +3208,7 @@ class AdminProducts extends AdminTab
 
 						foreach ($images AS $k => $image)
 							echo $this->getLineTableImage($image, $imagesTotal, $token, $shops);
-					
+
 
 			echo '
 							</table>
@@ -3240,7 +3240,7 @@ class AdminProducts extends AdminTab
 			echo '
 			</script>';
 	}
-	
+
 	public function getLineTableImage($image, $imagesTotal, $token, $shops)
 	{
 		if (Shop::isMultiShopActivated())
@@ -3273,7 +3273,7 @@ class AdminProducts extends AdminTab
 			</tr>';
 		return $html;
 	}
-	
+
 	public function initCombinationImagesJS()
 	{
 		if (!($obj = $this->loadObject(true)))
@@ -3299,7 +3299,7 @@ class AdminProducts extends AdminTab
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
-		
+
 		$attributeJs = array();
 		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		foreach ($attributes AS $k => $attribute)
@@ -3624,7 +3624,7 @@ class AdminProducts extends AdminTab
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
-		
+
 		parent::displayForm();
 
 		if ($obj->id)

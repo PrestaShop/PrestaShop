@@ -3308,7 +3308,7 @@ class ProductCore extends ObjectModel
 	public function getTaxesRate(Address $address = NULL)
 	{
 		if (!$address OR !$address->id_country)
-			$address = Tax::initializeAddress();
+			$address = Address::initialize();
 
 		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
 		$tax_calculator = $tax_manager->getTaxCalculator();
@@ -3596,3 +3596,4 @@ class ProductCore extends ObjectModel
 		return isset($row['reference']);
 	}
 }
+
