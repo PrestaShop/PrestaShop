@@ -36,7 +36,7 @@ class VATNumberTaxManager implements TaxManagerInterface
 
 	public function getTaxCalculator()
 	{
-		// No tax
+		// If the address matches the european vat number criterias no taxes are applied
 		$tax = new Tax();
 		$tax->rate = 0;
 
