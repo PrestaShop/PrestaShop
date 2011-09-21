@@ -30,6 +30,7 @@ class AttributeGroupCore extends ObjectModel
  	/** @var string Name */
 	public 		$name;
 	public		$is_color_group;
+	public		$position;
 	
 	/** @var string Public Name */
 	public 		$public_name;	
@@ -38,7 +39,7 @@ class AttributeGroupCore extends ObjectModel
 	protected	$fieldsValidate = array('is_color_group' => 'isBool');
  	protected 	$fieldsRequiredLang = array('name', 'public_name');
  	protected 	$fieldsSizeLang = array('name' => 64, 'public_name' => 64);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'public_name' => 'isGenericName');
+ 	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'public_name' => 'isGenericName', 'position' => 'isInt');
 		
 	protected 	$table = 'attribute_group';
 	protected 	$identifier = 'id_attribute_group';
@@ -61,6 +62,7 @@ class AttributeGroupCore extends ObjectModel
 		$this->validateFields();
 
 		$fields['is_color_group'] = (int)($this->is_color_group);
+		$fields['position'] = (int)($this->position);
 
 		return $fields;
 	}
@@ -207,6 +209,84 @@ class AttributeGroupCore extends ObjectModel
 	{
 		$result = Db::getInstance()->executeS('SELECT id_attribute AS id from `'._DB_PREFIX_.'attribute` WHERE id_attribute_group = '.(int)$this->id);
 		return $result;
+	}
+	
+	/**
+	 * Move a group attribute
+	 * @param boolean $way Up (1)  or Down (0)
+	 * @param integer $position
+	 * @return boolean Update result
+	 */
+	public function updatePosition($way, $position)
+	{
+		if (!$res = Db::getInstance()->ExecuteS('
+			SELECT ag.`position`, ag.`id_attribute_group`
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			WHERE ag.`id_attribute_group` = '.(int)Tools::getValue('id_attribute_group', 1).'
+			ORDER BY ag.`position` ASC'
+		))
+			return false;
+
+		foreach ($res AS $group_attribute)
+			if ((int)$group_attribute['id_attribute_group'] == (int)$this->id)
+				$movedGroupAttribute = $group_attribute;
+
+		if (!isset($movedGroupAttribute) || !isset($position))
+			return false;
+
+		// < and > statements rather than BETWEEN operator
+		// since BETWEEN is treated differently according to databases
+		return (Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'attribute_group`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+			WHERE `position`
+			'.($way
+				? '> '.(int)$movedGroupAttribute['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$movedGroupAttribute['position'].' AND `position` >= '.(int)$position))
+		AND Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'attribute_group`
+			SET `position` = '.(int)$position.'
+			WHERE `id_attribute_group`='.(int)$movedGroupAttribute['id_attribute_group']));
+	}
+	
+	/**
+	 * Reorder group attribute position
+	 * Call it after deleting a group attribute.
+	 *
+	 * @return bool $return
+	 */
+	public static function cleanPositions()
+	{
+		$return = true;
+
+		$sql = '
+		SELECT *
+		FROM `'._DB_PREFIX_.'attribute_group`
+		ORDER BY `position`';
+		$result = Db::getInstance()->ExecuteS($sql);
+		$sizeof = sizeof($result);
+
+		for ($i = 0; $i < $sizeof; $i++)
+			$return = Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'attribute_group`
+			SET `position` = '.(int)$i.'
+			WHERE `id_attribute_group` = '.(int)$result[$i]['id_attribute_group']);
+		return $return;
+	}
+
+	/**
+	 * getHigherPosition
+	 * 
+	 * Get the higher group attribute position
+	 * 
+	 * @return integer $position
+	 */
+	public static function getHigherPosition()
+	{
+		$sql = 'SELECT `position`
+				FROM `'._DB_PREFIX_.'attribute_group` 
+				ORDER BY position DESC';
+		return ((DB::getInstance()->getValue($sql)!==false)) ? DB::getInstance()->getValue($sql) : -1;
 	}
 }
 

@@ -146,4 +146,6 @@ ALTER TABLE `PREFIX_attribute` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAUL
 ALTER TABLE `PREFIX_product_download` CHANGE `date_deposit` `date_add` DATETIME NOT NULL ;
 ALTER TABLE `PREFIX_product_download` CHANGE `physically_filename` `filename` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `PREFIX_product_download` ADD `id_product_attribute` INT( 10 ) UNSIGNED NOT NULL AFTER `id_product` , ADD INDEX ( `id_product_attribute` );
-ALTER TABLE `PREFIX_product_download` ADD `is_shareable` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `active` 
+ALTER TABLE `PREFIX_product_download` ADD `is_shareable` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
+
+ALTER TABLE `PREFIX_attribute_group` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';

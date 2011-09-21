@@ -823,3 +823,35 @@ if (array_key_exists('ajaxAttributesPositions', $_POST))
 			}
 		}
 }
+
+/* Modify group attribute position */
+if (array_key_exists('ajaxGroupsAttributesPositions', $_POST))
+{
+	$way = (int)(Tools::getValue('way'));
+	$id_attribute_group = (int)(Tools::getValue('id_attribute_group'));
+	$positions = Tools::getValue('attribute_group');
+
+	$new_positions = array();
+	foreach($positions as $k => $v)
+		if (count(explode('_', $v)) == 3)
+			$new_positions[] = $v;
+
+	foreach ($new_positions AS $position => $value)
+	{
+		// pos[1] = id_attribute_group, pos[2] = old position
+		$pos = explode('_', $value);
+
+		if (isset($pos[1]) AND (int)$pos[1] === $id_attribute_group)
+		{
+			if ($group_attribute = new AttributeGroup((int)$pos[1]))
+				if (isset($position) && $group_attribute->updatePosition($way, $position))
+					echo "ok position $position for group attribute $pos[1]\r\n";
+				else
+					echo '{"hasError" : true, "errors" : "Can not update group attribute '. $id_attribute_group . ' to position '.$position.' "}';
+			else
+				echo '{"hasError" : true, "errors" : "This group attribute ('.$id_attribute_group.') can t be loaded"}';
+
+			break;
+		}
+	}
+}
