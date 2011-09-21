@@ -149,7 +149,7 @@ abstract class AdminTabCore
 
 	public $smarty;
 
-	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute');
+	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group');
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -590,7 +590,11 @@ abstract class AdminTabCore
 								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
 						}
 						elseif ($object->delete())
+						{
+							if(method_exists($object, 'cleanPositions'))
+								$object->cleanPositions();
 							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
+						}
 						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
@@ -1601,7 +1605,7 @@ abstract class AdminTabCore
 		$irow = 0;
 		if ($this->_list AND isset($this->fieldsDisplay['position']))
 		{
-			$positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
+			$positions = array_map(create_function('$elem', 'return (int)$elem[\'position\'];'), $this->_list);
 			sort($positions);
 		}
 		if ($this->_list)

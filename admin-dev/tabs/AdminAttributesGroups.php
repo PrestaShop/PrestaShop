@@ -44,7 +44,8 @@ class AdminAttributesGroups extends AdminTab
 
 		$this->fieldsDisplay = array(
 			'name' => array('title' => $this->l('Name'), 'width' => 140, 'filter_key' => 'b!name'),
-			'attribute' => array('title' => $this->l('Attributes'), 'width' => 240, 'orderby' => false, 'search' => false));
+			'attribute' => array('title' => $this->l('Attributes'), 'width' => 240, 'orderby' => false, 'search' => false),
+			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position'));
 		parent::__construct();
 	}
 
@@ -71,7 +72,8 @@ class AdminAttributesGroups extends AdminTab
 			return;
 		
 		$this->adminAttributes->tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, $this->id);
-		$this->adminAttributes->postProcess($this->token);
+		if (Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitDelattribute'))
+			$this->adminAttributes->postProcess($this->token);
 
 		if(Tools::getValue('submitDel'.$this->table))
 		{
@@ -89,6 +91,26 @@ class AdminAttributesGroups extends AdminTab
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+			// clean position after delete
+			AttributeGroup::cleanPositions();
+		}
+		else if (Tools::isSubmit('submitAdd'.$this->table))
+		{
+			$id_attribute_group = (int)Tools::getValue('id_attribute_group');
+			// Adding last position to the attribute if not exist
+			if ($id_attribute_group <= 0)
+			{
+				$sql = 'SELECT `position`+1
+						FROM `'._DB_PREFIX_.'attribute_group` 
+						ORDER BY position DESC';
+			// set the position of the new group attribute in $_POST for postProcess() method
+				$_POST['position'] = DB::getInstance()->getValue($sql);
+			}
+			// clean \n\r characters
+			foreach ($_POST as $key => $value)
+				if (preg_match('/^name_/Ui', $key))
+					$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
+			parent::postProcess();
 		}
 		else
 			parent::postProcess();
@@ -129,11 +151,16 @@ class AdminAttributesGroups extends AdminTab
 		';
 
 		$irow = 0;
+		if ($this->_list AND isset($this->fieldsDisplay['position']))
+		{
+			$positions = array_map(create_function('$elem', 'return (int)$elem[\'position\'];'), $this->_list);
+			sort($positions);
+		}
 		foreach ($this->_list AS $tr)
 		{
-			$id = (int)($tr['id_'.$this->table]);
+			$id = (int)$tr['id_'.$this->table];
 		 	echo '
-			<tr'.($irow++ % 2 ? ' class="alt_row"' : '').'>
+			<tr'.($irow++ % 2 ? ' class="alt_row"' : '').' id="tr_'.$id.'_'.$tr['position'].'">
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center"><input type="checkbox" name="'.$this->table.'Box[]" value="'.$id.'" class="noborder" /></td>
 				<td style="width: 140px; vertical-align: top; padding: 4px 0 4px 0; cursor: pointer" onclick="$(\'#attributes_'.$id.'\').slideToggle();">'.$tr['name'].'</td>
 				<td style="vertical-align: top; padding: 4px 0 4px 0; width: 340px">';
@@ -142,6 +169,27 @@ class AdminAttributesGroups extends AdminTab
 				</td>';
 
 			echo '
+				<td style="width: 140px; vertical-align: top; padding: 4px 0 4px 0; cursor: pointer" class="dragHandle">';
+				
+			if ($this->_orderBy == 'position' AND $this->_orderWay != 'DESC')
+			{
+				echo '<a'.(!($tr['position'] != $positions[sizeof($positions) - 1]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
+						'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
+						&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token.'">
+						<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'down' : 'up').'.gif"
+						alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>';
+
+				echo '<a'.(!($tr['position'] != $positions[0]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
+						'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
+						&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token.'">
+						<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'up' : 'down').'.gif"
+						alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
+			}
+			else
+				echo (int)($tr['position'] + 1);
+
+			echo '
+				</td>
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center">
 					<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$id.'&update'.$this->table.'&token='.$this->token.'">
 					<img src="../img/admin/edit.gif" border="0" alt="'.$this->l('Edit').'" title="'.$this->l('Edit').'" /></a>&nbsp;

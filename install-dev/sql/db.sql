@@ -91,6 +91,7 @@ CREATE TABLE `PREFIX_attribute` (
 CREATE TABLE `PREFIX_attribute_group` (
   `id_attribute_group` int(10) unsigned NOT NULL auto_increment,
   `is_color_group` tinyint(1) NOT NULL default '0',
+  `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_attribute_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

@@ -91,7 +91,7 @@ $(document).ready(function() {
 						token: token
 					};
 				}
-				if (table.id.indexOf('attribute') != -1) {
+				if (table.id.indexOf('attribute') != -1 && table.id != 'attribute_group') {
 					params = {
 						ajaxAttributesPositions: true,
 						id_attribute_group: ids[1],
@@ -101,6 +101,14 @@ $(document).ready(function() {
 					};
 				}
 				
+				if (table.id == 'attribute_group') {
+					params = {
+						ajaxGroupsAttributesPositions: true,
+						id_attribute_group: ids[1],
+						way: way,
+						token: token
+					}
+				}
 				
 				$.ajax({
 					type: 'POST',
@@ -139,7 +147,7 @@ $(document).ready(function() {
 						}
 						else
 						{
-							if (table.id == 'product' || table.id.indexOf('attribute') != -1)
+							if (table.id == 'product' || table.id.indexOf('attribute') != -1 || table.id == 'attribute_group')
 							{
 								var reg = /_[0-9][0-9]*$/g;
 							}
@@ -149,30 +157,27 @@ $(document).ready(function() {
 							}
 							
 							var up_reg  = new RegExp('position=[-]?[0-9]+&');
-							
-							tableDrag.find('tbody tr').each(function(i) {
+							tableDrag.children('tbody').children('tr').each(function(i) {
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
-								
-								// Update link position								
+								// Update link position
 								// Up links
-								$(this).find('td.dragHandle a:odd').attr('href', $(this).find('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
+								$(this).children('td.dragHandle a:odd').attr('href', $(this).children('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
 								
 								// Down links
-								$(this).find('td.dragHandle a:even').attr('href', $(this).find('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
+								$(this).children('td.dragHandle a:even').attr('href', $(this).children('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
 								
 							});
-							tableDrag.find('tr').not('.nodrag').removeClass('alt_row').removeClass('not_alt_row');
-							tableDrag.find('tr:not(".nodrag"):odd').addClass('alt_row');
-							tableDrag.find('tr:not(".nodrag"):even').addClass('not_alt_row');
-							tableDrag.find('tr td.dragHandle a:hidden').show();
-							
+							tableDrag.children('tbody').children('tr').not('.nodrag').removeClass('alt_row').removeClass('not_alt_row');
+							tableDrag.children('tbody').children('tr:not(".nodrag"):odd').addClass('alt_row');
+							tableDrag.children('tbody').children('tr:not(".nodrag"):even').addClass('not_alt_row');
+							tableDrag.children('tbody').children('tr').children('td.dragHandle').children('a:hidden').show();
 							if (alternate) {
-								tableDrag.find('tr td.dragHandle:first a:odd').hide();
-								tableDrag.find('tr td.dragHandle:last a:even').hide();
+								tableDrag.children('tbody').children('tr').children('td.dragHandle:first').children('a:odd').hide();
+								tableDrag.children('tbody').children('tr').children('td.dragHandle:last').children('a:even').hide();
 							}
 							else {
-								tableDrag.find('tr td.dragHandle:first a:even').hide();
-								tableDrag.find('tr td.dragHandle:last a:odd').hide();
+								tableDrag.children('tbody').children('tr').children('td.dragHandle:first').children('a:even').hide();
+								tableDrag.children('tbody').children('tr').children('td.dragHandle:last').children('a:odd').hide();
 							}
 						}
 					}

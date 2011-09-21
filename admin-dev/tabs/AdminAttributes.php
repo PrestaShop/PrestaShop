@@ -153,7 +153,7 @@ class AdminAttributes extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		elseif (Tools::isSubmit('submitAddattribute'))
+		elseif (Tools::isSubmit('submitAdd'.$this->table))
 		{
 			$id_attribute = (int)Tools::getValue('id_attribute');
 			// Adding last position to the attribute if not exist
