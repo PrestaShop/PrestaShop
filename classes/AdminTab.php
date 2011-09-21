@@ -958,7 +958,7 @@ abstract class AdminTabCore
 					if (!Tools::getValue($field) AND isset($values['default']))
 						$_POST[$field] = $values['default'];
 
-				if (!sizeof($this->_errors))
+				if (1||!sizeof($this->_errors))
 				{
 					foreach ($fields as $key => $options)
 					{
@@ -1024,8 +1024,7 @@ abstract class AdminTabCore
 	{
 		if (isset($field['validation']))
 		{
-			$validate = new Validate();
-			if (method_exists($validate, $field['validation']))
+			if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && method_exists('Validate', $field['validation']))
 			{
 				if (!Validate::$field['validation']($value))
 				{
@@ -1962,7 +1961,7 @@ abstract class AdminTabCore
 	public function displayOptionTypeRadio($key, $field, $value)
 	{
 		foreach ($field['choices'] as $k => $v)
-			echo '<input type="radio" name="'.$key.'" id="'.$key.$k.'_on" value="'.(int)$v.'"'.(($k == $value) ? ' checked="checked"' : '').(isset($field['js'][$k]) ? ' '.$field['js'][$k] : '').' /><label class="t" for="'.$key.$k.'_on"> '.$v.'</label><br />';
+			echo '<input type="radio" name="'.$key.'" id="'.$key.$k.'_on" value="'.(int)$k.'"'.(($k == $value) ? ' checked="checked"' : '').(isset($field['js'][$k]) ? ' '.$field['js'][$k] : '').' /><label class="t" for="'.$key.$k.'_on"> '.$v.'</label><br />';
 		echo '<br />';
 	}
 
