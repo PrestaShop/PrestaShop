@@ -39,7 +39,7 @@ class TaxCore extends ObjectModel
 
 	/** @var boolean true if the tax has been historized */
 	public 		$deleted = 0;
-	
+
  	protected 	$fieldsRequired = array('rate');
  	protected 	$fieldsValidate = array('rate' => 'isFloat');
  	protected 	$fieldsRequiredLang = array('name');
@@ -76,22 +76,22 @@ class TaxCore extends ObjectModel
 	{
 		/* Clean associations */
 		TaxRule::deleteTaxRuleByIdTax((int)$this->id);
-		
+
 		if ($this->isUsed())
 			return $this->historize();
-		else 
-			return parent::delete();		
+		else
+			return parent::delete();
 	}
-	
+
 	/**
 	 * Save the object with the field deleted to true
-	 * 
+	 *
 	 *  @return bool
 	 */
 	public function historize()
 	{
 		$this->deleted = true;
-		return parent::update();		
+		return parent::update();
 	}
 
 	public function toggleStatus()
@@ -107,17 +107,17 @@ class TaxCore extends ObjectModel
 		if (!$this->deleted && $this->isUsed())
 		{
 			$historized_tax = new Tax($this->id);
-			$historized_tax->historize();			
-			
-			// remove the id in order to create a new object 
+			$historized_tax->historize();
+
+			// remove the id in order to create a new object
 			$this->id = 0;
 			$this->add();
-			
+
 			// change tax id in the tax rule table
 			TaxRule::swapTaxId($historized_tax->id, $this->id);
 		} else if (parent::update($nullValues))
 	            return $this->_onStatusChange();
-		
+
         return false;
 	}
 
@@ -128,16 +128,17 @@ class TaxCore extends ObjectModel
 
         return true;
 	}
-	
+
 	/**
 	 * Returns true if the tax is used in an order details
-	 * 
-	 * @return bool 
+	 *
+	 * @return bool
 	 */
 	public function isUsed()
 	{
 		return Db::getInstance()->getValue('
-		SELECT COUNT(*) FROM `'._DB_PREFIX_.'order_detail_tax`
+		SELECT `id_tax`
+		FROM `'._DB_PREFIX_.'order_detail_tax`
 		WHERE `id_tax` = '.(int)$this->id
 		);
 	}
@@ -151,16 +152,16 @@ class TaxCore extends ObjectModel
 	{
 		$query = array();
 		$query['select'] = 'SELECT t.id_tax, t.rate';
-		$query['from'] = 'FROM `'._DB_PREFIX_.'tax` t'; 
+		$query['from'] = 'FROM `'._DB_PREFIX_.'tax` t';
 		$query['where'] = 'WHERE t.`deleted` != 1';
-		
+
 		if ($id_lang)
 		{
 			$query['select'] .= ', tl.name, tl.id_lang ';
 			$query['join'] = 'LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')';
-			$query['order'] = 'ORDER BY `name` ASC'; 
-		} 
-		
+			$query['order'] = 'ORDER BY `name` ASC';
+		}
+
 		if ($active_only)
 			$query['where'] .= ' AND t.`active` = 1';
 
@@ -266,7 +267,7 @@ class TaxCore extends ObjectModel
 		if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode]))
 		{
 		    $tax_rate = TaxRulesGroup::getTotalRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
-		    self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] =  $tax_rate;
+		    self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
 		}
 
 		return self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode];
@@ -288,6 +289,6 @@ class TaxCore extends ObjectModel
 		$tax_calculator = $tax_manager->getTaxCalculator();
 
 		return $tax_calculator->getTotalRate();
-	}	
+	}
 }
 
