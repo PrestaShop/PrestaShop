@@ -36,8 +36,8 @@ class TaxRuleCore extends ObjectModel
 	 public $behavior;
 	 public $description;
 
-	 protected 	$fieldsRequired = array('id_tax_rules_group', 'id_country', 'id_tax');
-	 protected 	$fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId',
+	 protected $fieldsRequired = array('id_tax_rules_group', 'id_country', 'id_tax');
+	 protected $fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId',
 	 											   'id_country' => 'isUnsignedId',
 	 											   'id_state' => 'isUnsignedId',
 	 											   'zipcode_from' => 'isUnsignedId', // TODO: char
@@ -45,20 +45,20 @@ class TaxRuleCore extends ObjectModel
 	 											   'id_tax' => 'isUnsignedId',
 	 											   'behavior' => 'isUnsignedInt',
 	 											   'description' => 'isUnsignedInt'); // TODO:char
-	
-	protected 	$table = 'tax_rule';
-	protected 	$identifier = 'id_tax_rule';
+
+	protected $table = 'tax_rule';
+	protected $identifier = 'id_tax_rule';
 
 	public function getFields()
 	{
 	  $this->validateFields();
-      $fields['id_tax_rules_group'] = (int)($this->id_tax_rules_group);
+      $fields['id_tax_rules_group'] = (int)$this->id_tax_rules_group;
       $fields['id_country'] = (int)$this->id_country;
       $fields['id_state'] = (int)$this->id_state;
       $fields['zipcode_from'] = (int)$this->zipcode_from;
       $fields['zipcode_to'] = (int)$this->zipcode_to;
       $fields['behavior'] = (int)$this->behavior;
-	   $fields['id_tax'] = (int)($this->id_tax);
+	   $fields['id_tax'] = (int)$this->id_tax;
 	   $fields['description'] = $this->description;
 
 	  return $fields;
@@ -81,18 +81,6 @@ class TaxRuleCore extends ObjectModel
     	SELECT * FROM `'._DB_PREFIX_.'tax_rule`
     	WHERE `id_tax_rule` = '.(int)$id_tax_rule);
     }
-/*
-    public static function getTaxRulesByGroupId($id_group)
-    {
-        if (empty($id_group))
-            die(Tools::displayError());
-
-        return Db::getInstance()->ExecuteS('
-        SELECT *
-        FROM `'._DB_PREFIX_.'tax_rule`
-        WHERE `id_tax_rules_group` = '.(int)$id_group
-        );
-    }*/
 
 	public static function getTaxRulesByGroupId($id_lang, $id_group)
 	{
@@ -147,11 +135,11 @@ class TaxRuleCore extends ObjectModel
 	  * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
 	  * @return array an array containing two zipcode ordered by zipcode
 	  */
-    public function breakDownZipCode($zip_codes)
-	 {
+	public function breakDownZipCode($zip_codes)
+	{
 		$zip_codes = preg_split('/-/', $zip_codes);
 
-		if (sizeof($zip_codes) == 2)
+		if (count($zip_codes) == 2)
 		{
 			$from = $zip_codes[0];
 			$to   = $zip_codes[1];
@@ -160,13 +148,13 @@ class TaxRuleCore extends ObjectModel
 				$from = $zip_codes[1];
 				$to   = $zip_codes[0];
 			}
-			elseif ($zip_codes[0] == $zip_codes[1])
+			else if ($zip_codes[0] == $zip_codes[1])
 			{
 				$from = $zip_codes[0];
 				$to   = 0;
 			}
 		}
-		elseif (sizeof($zip_codes) == 1)
+		else if (count($zip_codes) == 1)
 		{
 			$from = $zip_codes[0];
 			$to = 0;
@@ -174,14 +162,20 @@ class TaxRuleCore extends ObjectModel
 
 		return array($from, $to);
 	}
-	
+
+	/**
+	* Replace a tax_rule id by an other one in the tax_rule table
+	*
+	* @param int $old_id
+	* @param int $new_id
+	*/
 	public static function swapTaxId($old_id, $new_id)
 	{
 		return Db::getInstance()->Execute('
 		UPDATE `'._DB_PREFIX_.'tax_rule`
 		SET `id_tax` = '.(int)$new_id.'
 		WHERE `id_tax` = '.(int)$old_id
-		);	
+		);
 	}
 }
 
