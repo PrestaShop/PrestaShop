@@ -24,11 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{include file='header.tpl'}
 <fieldset>
 	<legend><img src="../img/admin/tab-tools.gif" />{l s='Shop Tools'}</legend>
 	<p>{l s='Several tools are available to manage your shop.'}</p>
 	<br />
 	<p>{l s='Please choose a tool by selecting a Tools sub-tab above.'}</p>
 </fieldset>
-{include file='footer.tpl'}

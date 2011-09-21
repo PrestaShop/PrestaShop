@@ -3,6 +3,11 @@ class AdminController extends Controller
 {
 	public $path;
 
+	public $content;
+
+	public $content_only = false;
+	public $layout = 'index.tpl';
+
 	/** @var string Associated table name */
 	public $table;
 
@@ -116,7 +121,14 @@ class AdminController extends Controller
 
 	public function display()
 	{
-
+		if ($this->content_only)
+			$this->context->smarty->display($this->template);
+		else
+		{
+			$this->content = $this->context->smarty->fetch($this->template);
+			$this->context->smarty->assign('content', $this->content);
+			$this->context->smarty->display($this->layout);
+		}
 	}
 
 	/**
@@ -267,7 +279,6 @@ class AdminController extends Controller
 
 		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
-		//$this->context->smarty->display(_PS_ADMIN_DIR_.'/themes/header.tpl');
 	}
 
 	/**

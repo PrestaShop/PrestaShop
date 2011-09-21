@@ -27,16 +27,13 @@
 
 class AdminTools extends AdminController
 {
+	public $template = 'adminTools.tpl';
 	public function __construct()
 	{
 		$this->className = 'AdminTools';
 		parent::__construct();
 	}
 
-	public function display()
-	{
-		parent::display();
-		$this->context->smarty->display('adminTools.tpl');
-	}
+
 }
 
