@@ -43,6 +43,37 @@ abstract class ControllerCore
 	public $js_files = array();
 
 	/**
+	 * @var bool check if header will be displayed
+	 */
+	protected $displayHeader = false;
+
+	/**
+	 * @var string template name for page content
+	 */
+	protected $template;
+
+	/**
+	 * @var string check if footer will be displayed
+	 */
+	protected $displayFooter = false;
+
+	/**
+	 * Initialize the page
+	 */
+	abstract public function init();
+
+	/**
+	 * Do the page treatment : post process, ajax process, etc.
+	 * Enter description here ...
+	 */
+	abstract public function action();
+
+	/**
+	 * Display page view
+	 */
+	abstract public function display();
+
+	/**
 	 * Set default media list for controller
 	 */
 	abstract public function setMedia();
@@ -62,6 +93,31 @@ abstract class ControllerCore
 	public function __construct()
 	{
 		$this->context = Context::getContext();
+	}
+
+	/**
+	 * Start controller process
+	 */
+	public function run()
+	{
+		$this->init();
+		$this->action();
+		$this->display();
+	}
+
+	public function displayHeader($display = true)
+	{
+		$this->displayHeader = $display;
+	}
+
+	public function displayFooter($display = true)
+	{
+		$this->displayFooter = $display;
+	}
+
+	public function setTemplate($template)
+	{
+		$this->template = $template;
 	}
 
 	/**

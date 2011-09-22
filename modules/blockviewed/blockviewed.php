@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -152,7 +152,7 @@ class BlockViewed extends Module
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 				LEFT JOIN `'._DB_PREFIX_.'customer_group` cug ON (cug.`id_group` = cg.`id_group`)
 				WHERE p.`id_product` = '.(int)($id_product).'
-				'.($this->context->customer->id ? 'AND cug.`id_customer` = '.(int)$this->context->customer->id : 
+				'.($this->context->customer->id ? 'AND cug.`id_customer` = '.(int)$this->context->customer->id :
 				'AND cg.`id_group` = 1')
 				);
 				if ($result['total'])
@@ -166,7 +166,7 @@ class BlockViewed extends Module
 			if (!sizeof($productsViewedObj))
 				return ;
 
-			$this->context->smarty->assign(array(
+			$this->smartyAssign(array(
 				'productsViewedObj' => $productsViewedObj,
 				'mediumSize' => Image::getSize('medium')));
 

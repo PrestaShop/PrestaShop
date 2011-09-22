@@ -29,11 +29,10 @@ class FrontControllerCore extends ControllerCore
 {
 	public $errors = array();
 
-	/* Deprecated shortcuts as of 1.5 - Use $context->var instead */
-	protected static $smarty;
-	protected static $cookie;
-	protected static $link;
-	protected static $cart;
+	/**
+	 * @deprecated Deprecated shortcuts as of 1.5 - Use $context->var instead
+	 */
+	protected static $smarty, $cookie, $link, $cart;
 
 	public $iso;
 
@@ -49,15 +48,11 @@ class FrontControllerCore extends ControllerCore
 
 	protected $restrictedCountry = false;
 	protected $maintenance = false;
-	protected $id_current_shop;
-	protected $id_current_group_shop;
 
 	public static $initialized = false;
 
 	protected static $currentCustomerGroups;
 
-	public $css_files;
-	public $js_files;
 	public $nb_items_per_page;
 
 	public function __construct()
@@ -66,16 +61,6 @@ class FrontControllerCore extends ControllerCore
 
 		parent::__construct();
 		$useSSL = $this->ssl;
-	}
-
-	public function run()
-	{
-		$this->init();
-		$this->preProcess();
-		$this->displayHeader();
-		$this->process();
-		$this->displayContent();
-		$this->displayFooter();
 	}
 
 	public function init()
@@ -90,12 +75,6 @@ class FrontControllerCore extends ControllerCore
 		if (self::$initialized)
 			return;
 		self::$initialized = true;
-
-		$this->id_current_shop = Context::getContext()->shop->getID();
-		$this->id_current_group_shop = Context::getContext()->shop->getGroupID();
-
-		$this->css_files = array();
-		$this->js_files = array();
 
 		// For compatibility with globals, DEPRECATED as of version 1.5
 		$css_files = $this->css_files;
@@ -201,8 +180,8 @@ class FrontControllerCore extends ControllerCore
 			$cart->id_lang = (int)($this->context->cookie->id_lang);
 			$cart->id_currency = (int)($this->context->cookie->id_currency);
 			$cart->id_guest = (int)($this->context->cookie->id_guest);
-			$cart->id_group_shop = (int)$this->id_current_group_shop;
-			$cart->id_shop = $this->id_current_shop;
+			$cart->id_group_shop = (int)$this->context->shop->getGroupID();
+			$cart->id_shop = $this->context->shop->getID(true);
 			if ($this->context->cookie->id_customer)
 			{
 				$cart->id_customer = (int)($this->context->cookie->id_customer);
@@ -247,7 +226,9 @@ class FrontControllerCore extends ControllerCore
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
-		$this->canonicalRedirection();
+		// Automatically redirect to the canonical URL if needed
+		if (isset($this->php_self) && !empty($this->php_self) && !Tools::getValue('ajax'))
+			$this->canonicalRedirection($this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id));
 
 		Product::initPricesComputation();
 
@@ -259,6 +240,7 @@ class FrontControllerCore extends ControllerCore
 			if (Validate::isLoadedObject($country))
 				$display_tax_label = $country->display_tax_label;
 		}
+
 		$this->context->smarty->assign(array(
 			'link' => $link,
 			'cart' => $cart,
@@ -351,6 +333,64 @@ class FrontControllerCore extends ControllerCore
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 		$this->context->controller = $this;
+
+		$this->displayHeader();
+		$this->displayFooter();
+	}
+
+	public function action()
+	{
+		// For retrocompatibility
+		if (method_exists($this, 'preProcess'))
+		{
+			Tools::displayAsDeprecated('Method preProcess() is deprecated in controllers, use method postProcess() instead');
+			$this->preProcess();
+		}
+
+		if (Tools::getValue('ajax') == 'true')
+		{
+			$this->displayHeader(false);
+			$this->displayFooter(false);
+			$this->ajaxProcess();
+		}
+		else
+			$this->postProcess();
+
+		// Prepare generation of page display
+		$this->processHeader();
+		$this->process();
+		$this->processFooter();
+	}
+
+	public function ajaxProcess()
+	{
+	}
+
+	public function postProcess()
+	{
+	}
+
+	public function process()
+	{
+	}
+
+	public function display()
+	{
+		if ($this->displayHeader)
+			$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
+
+		if ($this->template)
+			$this->context->smarty->display($this->template);
+
+		if ($this->displayFooter)
+			$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+
+		// live edit
+		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		{
+			$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
+			$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
+		}
 	}
 
 	/* Display a maintenance page if shop is closed */
@@ -372,31 +412,28 @@ class FrontControllerCore extends ControllerCore
 		exit;
 	}
 
-	protected function canonicalRedirection()
+	protected function canonicalRedirection($canonicalURL)
 	{
-		// Automatically redirect to the canonical URL if needed
-		if (isset($this->php_self) AND !empty($this->php_self))
+		if (!Configuration::get('PS_CANONICAL_REDIRECT'))
+			return;
+
+		$matchUrl = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', $matchUrl))
 		{
-			// $_SERVER['HTTP_HOST'] must be replaced by the real canonical domain
+			$params = array();
+			$excludedKey = array('isolang', 'id_lang', 'controller');
+			foreach ($_GET as $key => $value)
+				if (!in_array($key, $excludedKey))
+					$params[] = $key.'='.$value;
 
-			$canonicalURL = $this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id);
-			if (!Tools::getValue('ajax') && !preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', (($this->ssl AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']))
-			{
-				header('HTTP/1.0 301 Moved');
-				$params = array();
-				$excludedKey = array('isolang', 'id_lang', 'controller');
-				foreach ($_GET as $key => $value)
-					if (!in_array($key, $excludedKey))
-						$params[] = $key.'='.$value;
-				if ($params)
-					$params = ((strpos($canonicalURL, '?') === false) ? '?' : '&').implode('&', $params);
-				else
-					$params = '';
+			$strParams = '';
+			if ($params)
+				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').implode('&', $params);
 
-				if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
-					die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.$params.'">'.$canonicalURL.$params.'</a>');
-				Tools::redirectLink($canonicalURL.$params);
-			}
+			header('HTTP/1.0 301 Moved');
+			if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
+				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.$strParams.'">'.$canonicalURL.$strParams.'</a>');
+			Tools::redirectLink($canonicalURL.$strParams);
 		}
 	}
 
@@ -459,10 +496,6 @@ class FrontControllerCore extends ControllerCore
 		return false;
 	}
 
-	public function preProcess()
-	{
-	}
-
 	public function setMedia()
 	{
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
@@ -480,26 +513,13 @@ class FrontControllerCore extends ControllerCore
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 	}
 
-	public function process()
+	public function processHeader()
 	{
-	}
-
-	public function displayContent()
-	{
-		Tools::safePostVars();
-		$this->context->smarty->assign('errors', $this->errors);
-	}
-
-	public function displayHeader()
-	{
-		if (!self::$initialized)
-			$this->init();
-		// if this function is called from a module, do a fast init
-		else if (!$this->context)
-			$this->context = Context::getContext();
-
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
+
+		Tools::safePostVars();
+		$this->context->smarty->assign('errors', $this->errors);
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$this->context->smarty->assign(array(
@@ -531,39 +551,18 @@ class FrontControllerCore extends ControllerCore
 
 		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
-		$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
 	}
 
-	public function displayFooter()
+	public function processFooter()
 	{
-		if (!self::$initialized)
-			$this->init();
-		// if this function is called from a module, do a fast init
-		else if (!$this->context)
-			$this->context = Context::getContext();
-
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),
 			'HOOK_FOOTER' => Module::hookExec('footer'),
-			'content_only' => (int)(Tools::getValue('content_only'))));
-		$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
-		//live edit
-		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
-		{
-			$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
-			$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
-		}
-		else
-			Tools::displayError();
+		));
 	}
 
 	public function productSort()
 	{
-		if (!self::$initialized)
-			$this->init();
-		elseif (!$this->context)
-			$this->context = Context::getContext();
-
 		// $this->orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 		// $this->orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
 		// 'orderbydefault' => Tools::getProductsOrder('by'),

@@ -188,7 +188,7 @@ class DispatcherCore
 			}
 		// Get and instantiate controller
 		$this->getController();
-		$controllers = Dispatcher::getControllers();
+		$controllers = Dispatcher::getControllers(_PS_CONTROLLER_DIR_);
 		if (!$this->controller)
 			$this->controller = 'index';
 		if (!isset($controllers[$this->controller]))
@@ -423,18 +423,28 @@ class DispatcherCore
 	 *
 	 * @return array
 	 */
-	public static function getControllers()
+	public static function getControllers($dir)
 	{
-		$controller_files = scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'controllers');
-		$controllers = array();
+		static $controllers;
+
+		$controller_files = scandir($dir);
 		foreach ($controller_files as $controller_filename)
-			if (substr($controller_filename, -14, 14) == 'Controller.php')
+		{
+			if (!in_array($controller_filename, array('.','..','.svn')) AND is_dir($dir.$controller_filename))
+				$controllers = self::getControllers($dir.$controller_filename.DIRECTORY_SEPARATOR);
+			else if (substr($controller_filename, -14, 14) == 'Controller.php')
+			{
+				$subdir = str_replace(_PS_CONTROLLER_DIR_,'',$dir);
 				$controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
+			}
+		}
 
 		// add default controller
 		$controllers['index'] = 'IndexController';
-		$controllers['authentication'] = $controllers['auth'];
-		$controllers['productscomparison'] = $controllers['compare'];
+		if (isset($controllers['auth']))
+			$controllers['authentication'] = $controllers['auth'];
+		if (isset($controllers['compare']))
+			$controllers['productscomparison'] = $controllers['compare'];
 
 		return $controllers;
 	}

@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -59,7 +59,7 @@
 {/if}
 		{$HOOK_HEADER}
 	</head>
-	
+
 	<body {if $page_name}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if}>
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
