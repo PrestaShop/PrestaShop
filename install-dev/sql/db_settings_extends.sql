@@ -211,14 +211,14 @@ INSERT INTO `PREFIX_supplier_lang` (`id_supplier`, `id_lang`, `description`, `me
 (1, 4, '', '', '', ''),
 (1, 5, '', '', '', '');
 
-INSERT INTO `PREFIX_product` (`id_product`, `indexed`, `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `id_color_default`, `on_sale`, `online_only`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `date_add`, `date_upd`) VALUES
-(1, 1, 1, 1, 1, 2, 2, 0, 0, '0', 0.00, 800, 124.581940, 70.000000, '', '', 0.5, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
-(2, 1, 1, 1, 1, 2, 0, 0, 0, '0', 0.00, 100, 66.053500, 33.000000, '', '', 0, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
-(5, 1, 1, 1, 1, 4, 0, 0, 0, '0', 0.00, 274, 1504.180602, 1000.000000, '', NULL, 1.36, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
-(6, 1, 1, 1, 1, 4, 0, 0, 0, '0', 0.00, 250, 1170.568561, 0.000000, '', NULL, 0.75, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
-(7, 1, 0, 0, 1, 2, 0, 0, 0, '', 0.00, 180, 241.638796, 200.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
-(8, 1, 0, 0, 1, 3, 0, 0, 1, '', 0.00, 1, 25.041806, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
-(9, 1, 2, 2, 1, 3, 0, 0, 1, '', 0.00, 1, 124.581940, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW());
+INSERT INTO `PREFIX_product` (`id_product`, `indexed`, `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `online_only`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `date_add`, `date_upd`) VALUES
+(1, 1, 1, 1, 1, 2, 0, 0, '0', 0.00, 800, 124.581940, 70.000000, '', '', 0.5, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
+(2, 1, 1, 1, 1, 2, 0, 0, '0', 0.00, 100, 66.053500, 33.000000, '', '', 0, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
+(5, 1, 1, 1, 1, 4, 0, 0, '0', 0.00, 274, 1504.180602, 1000.000000, '', NULL, 1.36, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
+(6, 1, 1, 1, 1, 4, 0, 0, '0', 0.00, 250, 1170.568561, 0.000000, '', NULL, 0.75, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
+(7, 1, 0, 0, 1, 2, 0, 0, '', 0.00, 180, 241.638796, 200.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
+(8, 1, 0, 0, 1, 3, 0, 1, '', 0.00, 1, 25.041806, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW()),
+(9, 1, 2, 2, 1, 3, 0, 1, '', 0.00, 1, 124.581940, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW());
 
 INSERT INTO `PREFIX_product_shop` (`id_product`, `id_shop`) (SELECT `id_product`, 1 FROM `PREFIX_product`);
 
