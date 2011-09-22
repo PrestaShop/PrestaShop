@@ -729,23 +729,34 @@ if (Tools::isSubmit('syncImapMail'))
 	OR !$port = Configuration::get('PS_SAV_IMAP_PORT')
 	OR !$user = Configuration::get('PS_SAV_IMAP_USER')
 	OR !$password = Configuration::get('PS_SAV_IMAP_PWD'))
-	die('{"hasError" : true, "errors" : "Configuration is not correct"}');
-
+	die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
+	
+	if (!function_exists('imap_open'))
+		die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
+	
 	$mbox = @imap_open('{'.$url.':'.$port.'}', $user, $password);
-
+	
+	//checks if there is no error when connecting imap server
 	$errors = imap_errors();
+	$str_errors = '';
+	$str_error_delete = '';
 	if (sizeof($errors))
 	{
 		$str_errors = '["';
 		foreach($errors as $error)
-			$str_errors .= $error.',';
-		$str_errors = rtrim($str_errors, ',').'"]';
+			$str_errors .= '"'.$error.'",';
+		$str_errors = rtrim($str_errors, ',').'';
 	}
+	
+	//checks if imap connexion is active
 	if (!$mbox)
-		die('{"hasError" : true, "errors" : ["Can not connect to the mailbox"]}');
-
+		die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox"]}');
+	
+	//Returns information about the current mailbox. Returns FALSE on failure.
 	$check = imap_check($mbox);
-
+	if ($check)
+		die('{"hasError" : true, "errors" : ["Fail to get information about the current mailbox"]}');
+	
 	if ($check->Nmsgs == 0)
 		die('{"hasError" : true, "errors" : ["NO message to sync"]}');
 
@@ -757,16 +768,18 @@ if (Tools::isSubmit('syncImapMail'))
 	   		$subject = $overview->subject;
 	   	else
 	   		$subject = '';
-
-	    $md5 = md5($overview->date.$overview->from.$subject);
+	   	
+		//Creating an md5 to check if message has been allready processed
+	    $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
 	    $exist = Db::getInstance()->getValue(
-			    'SELECT md5_header
+			    'SELECT `md5_header`
 			    FROM `'._DB_PREFIX_.'customer_message_sync_imap`
-			    WHERE md5_header = \''.pSQL($md5).'\'');
+			    WHERE `md5_header` = \''.pSQL($md5).'\'');
 	    if ($exist)
 	    {
 			if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
-				imap_delete($mbox, $overview->msgno);
+				if (!imap_delete($mbox, $overview->msgno))
+					$str_error_delete = ', "Fail to delete message"';
 	    }
 	    else
 	    {
@@ -787,12 +800,12 @@ if (Tools::isSubmit('syncImapMail'))
 					$cm->add();
 				}
 			}
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` VALUES (\''.pSQL($md5).'\')');
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
 	    }
 	}
 	imap_expunge($mbox);
 	imap_close($mbox);
-	die('{"hasError" : false, "errors" : '.$str_errors.'}');
+	die('{"hasError" : false, "errors" : '.$str_errors.$str_errors_delete.'"]}');
 }
 
 /* Modify attribute position */
