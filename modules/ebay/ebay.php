@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.2.4';
+		$this->version = '1.2.5';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -329,7 +329,7 @@ class Ebay extends Module
 
 		// init Var
 		$dateNew = date('Y-m-d').'T'.date('H:i:s').'.000Z';
-		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-45 minutes')).'T'.date('H:i:s', strtotime('-45 minutes')).'.000Z')
+		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-30 minutes')).'T'.date('H:i:s', strtotime('-30 minutes')).'.000Z')
 		{
 			// Lock
 			Configuration::updateValue('EBAY_ORDER_LAST_UPDATE', $dateNew);
@@ -351,7 +351,9 @@ class Ebay extends Module
 			}
 
 			if ($orderList)
-				foreach ($orderList as $order)
+			{
+				foreach ($orderList as $korder => $order)
+				{
 					if ($order['status'] == 'Complete' && $order['amount'] > 0.1 && isset($order['product_list']) && count($order['product_list']))
 					{
 						if (!Db::getInstance()->getValue('SELECT `id_ebay_order` FROM `'._DB_PREFIX_.'ebay_order` WHERE `id_order_ref` = \''.pSQL($order['id_order_ref']).'\''))
@@ -473,10 +475,23 @@ class Ebay extends Module
 									// Register the ebay order ref
 									Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order', array('id_order_ref' => pSQL($order['id_order_ref']), 'id_order' => (int)$id_order), 'INSERT');
 						}
+									else
+										$orderList[$korder]['errors'][] = $this->l('Could not add product to cart (maybe your stock quantity is 0)');
 					}
+								else
+									$orderList[$korder]['errors'][] = $this->l('Could not found products in database');
 						}
+							else
+								$orderList[$korder]['errors'][] = $this->l('Invalid e-mail');
 					}
+						else
+							$orderList[$korder]['errors'][] = $this->l('Order already imported');
 					}
+					else
+						$orderList[$korder]['errors'][] = $this->l('Status not complete or amount less than 0.1 or no product matching');
+		}
+				file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '."'".date('d/m/Y H:i:s')."';\n\n".'$orderList = '.var_export($orderList, true).";\n\n");
+	}
 		}
 	}
 
@@ -488,7 +503,12 @@ class Ebay extends Module
 
 	// Alias
 	public function hookupdateproduct($params) { $this->hookaddproduct($params); }
-	public function hookupdateProductAttribute($params) { $this->hookaddproduct($params); }
+	public function hookupdateProductAttribute($params)
+	{
+		$id_product = Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` = '.(int)$params['id_product_attribute']);
+		$params['product'] = new Product($id_product);
+		$this->hookaddproduct($params);
+	}
 	public function hookdeleteproduct($params) { $this->hookaddproduct($params); }
 	public function hookheader($params) { $this->hookbackOfficeTop($params); }
 	public function hookbackOfficeFooter($params) { $this->hookbackOfficeTop($params); }
@@ -548,7 +568,7 @@ class Ebay extends Module
 
 
 		// Displaying Information from Prestashop
-		$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 2)));
+		$stream_context = @stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 2)));
 		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 		if (!Validate::isCleanHtml($prestashopContent))
 			$prestashopContent = '';
@@ -710,14 +730,16 @@ class Ebay extends Module
 				<li id="menuTab2" class="menuTabButton">2. '.$this->l('Categories settings').'</li>
 				<li id="menuTab3" class="menuTabButton">3. '.$this->l('Template manager').'</li>
 				<li id="menuTab4" class="menuTabButton">4. '.$this->l('eBay Sync').'</li>
-				<li id="menuTab5" class="menuTabButton">5. '.$this->l('Help').'</li>
+				<li id="menuTab5" class="menuTabButton">5. '.$this->l('Orders history').'</li>
+				<li id="menuTab6" class="menuTabButton">6. '.$this->l('Help').'</li>
 			</ul>
 			<div id="tabList">
 				<div id="menuTab1Sheet" class="tabItem selected">'.$this->_displayFormParameters().'</div>
 				<div id="menuTab2Sheet" class="tabItem">'.$this->_displayFormCategory().'</div>
 				<div id="menuTab3Sheet" class="tabItem">'.$this->_displayFormTemplateManager().'</div>
 				<div id="menuTab4Sheet" class="tabItem">'.$this->_displayFormEbaySync().'</div>
-				<div id="menuTab5Sheet" class="tabItem">'.$this->_displayHelp().'</div>
+				<div id="menuTab5Sheet" class="tabItem">'.$this->_displayOrdersHistory().'</div>
+				<div id="menuTab6Sheet" class="tabItem">'.$this->_displayHelp().'</div>
 			</div>
 			<br clear="left" />
 			<br />
@@ -881,6 +903,12 @@ class Ebay extends Module
 		// Check if the module is configured
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
+
+		// Load categories only if necessary
+		if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `'._DB_PREFIX_.'ebay_category_configuration`') > 4 && Tools::getValue('section') != 'category')
+			return '<p align="center"><b>'.$this->l('Your categories have already been configured.').'</b></p>
+			<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=2&section=category" method="post" class="form">
+			<p align="center"><input class="button" name="submitSave" type="submit" value="'.$this->l('See Categories').'" /></p></form>';
 
 		// Display eBay Categories
 		if (!Configuration::get('EBAY_CATEGORY_LOADED'))
@@ -1358,7 +1386,7 @@ class Ebay extends Module
 
 		// Empty error result
 		Configuration::updateValue('EBAY_SYNC_LAST_PRODUCT', 0);
-		@unlink('../modules/ebay/ajax/_ebaySyncError.log.php');
+		@unlink(dirname(__FILE__).'/log/syncError.php');
 
 		if ($_POST['ebay_sync_mode'] == 'A')
 		{
@@ -1450,10 +1478,10 @@ class Ebay extends Module
 		else
 		{
 			echo 'OK|'.$this->displayConfirmation($this->l('Settings updated').' ('.$this->l('Option').' '.Configuration::get('EBAY_SYNC_MODE').' : '.($nbProductsTotal - $nbProductsLess).' / '.$nbProductsTotal.' '.$this->l('product(s) sync with eBay').')');
-			if (file_exists('_ebaySyncError.log.php'))
+			if (file_exists(dirname(__FILE__).'/log/syncError.php'))
 			{
 				global $tab_error;
-				include('_ebaySyncError.log.php');
+				include(dirname(__FILE__).'/log/syncError.php');
 				foreach ($tab_error as $error)
 				{
 					$productsDetails = '<br /><u>'.$this->l('Product(s) concerned').' :</u>';
@@ -1462,7 +1490,7 @@ class Ebay extends Module
 					echo $this->displayError($error['msg'].'<br />'.$productsDetails);
 	}
 				echo '<style>#content .alert { text-align: left; width: 875px; }</style>';
-				@unlink('_ebaySyncError.log.php');
+				@unlink(dirname(__FILE__).'/log/syncError.php');
 			}
 		}
 	}
@@ -1479,10 +1507,10 @@ class Ebay extends Module
 		$categoryDefaultCache = array();
 
 		// Get errors back
-		if (file_exists('_ebaySyncError.log.php'))
+		if (file_exists(dirname(__FILE__).'/log/syncError.php'))
 		{
 			global $tab_error;
-			include('_ebaySyncError.log.php');
+			include(dirname(__FILE__).'/log/syncError.php');
 		}
 
 		// Up the time limit
@@ -1816,8 +1844,74 @@ class Ebay extends Module
 		}
 
 		if ($count_error > 0)
-			file_put_contents('_ebaySyncError.log.php', '<?php $tab_error = '.var_export($tab_error, true).'; ?>');
+			file_put_contents(dirname(__FILE__).'/log/syncError.php', '<?php $tab_error = '.var_export($tab_error, true).'; ?>');
 			}
+
+
+
+
+	/******************************************************************/
+	/** Orders History Methods *******************************************/
+	/******************************************************************/
+
+	private function _displayOrdersHistory()
+	{
+		// Check if the module is configured
+		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
+			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
+
+	
+		$dateLastImport = '-';
+		if (file_exists(dirname(__FILE__).'/log/orders.php'))
+			include(dirname(__FILE__).'/log/orders.php');
+		$html = '<h2>'.$this->l('Last orders Importation').' :</h2><p><b>'.$dateLastImport.'</b></p><br /><br />
+		<h2>'.$this->l('Orders History').' :</h2>';
+
+		if (isset($orderList) && count($orderList) > 0)
+			foreach ($orderList as $order)
+			{
+				$html .= '<style>
+						.orderImportTd1 {border-right:1px solid #000}
+						.orderImportTd2 {border-right:1px solid #000;border-top:1px solid #000}
+						.orderImportTd3 {border-top:1px solid #000}
+					</style>
+					<p>
+					<b>'.$this->l('Order Ref eBay').' :</b> '.$order['id_order_ref'].'<br />
+					<b>'.$this->l('Id Order Seller').' :</b> '.$order['id_order_seller'].'<br />
+					<b>'.$this->l('Amount').' :</b> '.$order['amount'].'<br />
+					<b>'.$this->l('Status').' :</b> '.$order['status'].'<br />
+					<b>'.$this->l('Date').' :</b> '.$order['date'].'<br />
+					<b>'.$this->l('E-mail').' :</b> '.$order['email'].'<br />
+					<b>'.$this->l('Products').' :</b><br />';
+				if (isset($order['product_list']) && count($order['product_list']) > 0)
+				{
+					$html .= '<table border="0" cellpadding="4" cellspacing="0"><tr>
+						<td class="orderImportTd1"><b>'.$this->l('Id Product').'</b></td>
+						<td class="orderImportTd1"><b>'.$this->l('Id Product Attribute').'</b></td>
+						<td class="orderImportTd1"><b>'.$this->l('Quantity').'</b></td><td><b>'.$this->l('Price').'</b></td></tr>';
+					foreach ($order['product_list'] as $product)
+						$html .= '<tr><td class="orderImportTd2">'.$product['id_product'].'</td>
+							  <td class="orderImportTd2">'.$product['id_product'].'</td>
+							  <td class="orderImportTd2">'.$product['quantity'].'</td>
+							  <td class="orderImportTd3">'.$product['price'].'</td></tr>';
+					$html .= '</table>';
+				}
+				if (isset($order['errors']) && count($order['errors']) > 0)
+				{
+					$html .= '<b>'.$this->l('Status Import').' :</b> KO<br />';
+					$html .= '<b>'.$this->l('Failure details').' :</b><br />';
+					foreach ($order['errors'] as $error)
+						$html .= $error.'t<br />';
+				}
+				else
+					$html .= '<b>'.$this->l('Status Import').' :</b> OK';
+				$html .= '</p><br />';
+			}
+
+
+		return $html;
+	}
+
 
 
 	/******************************************************************/

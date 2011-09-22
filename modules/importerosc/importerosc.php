@@ -47,7 +47,7 @@ class importerosc extends ImportModule
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('beforeAuthentication'))
+		if (!parent::install() || !$this->registerHook('beforeAuthentication'))
 			return false;
 		return true;
 	}
@@ -64,26 +64,23 @@ class importerosc extends ImportModule
 		$langagues = $this->ExecuteS('SELECT * FROM  `'.addslashes($this->prefix).'languages`');
 		$curencies = $this->ExecuteS('SELECT * FROM  `'.addslashes($this->prefix).'currencies`');
 
-		$html = '<label style="width:220px">'.$this->l('Default osCommerce language').' : </label>
+		$html = '<label style=\'width:220px\'>'.$this->l('Default osCommerce language  : ').'</label>
 				<div class="margin-form">
-				<select name="defaultOscLang"><option value="0">------</option>';
+				<select name=\'defaultOscLang\'><option value=\'0\'>------</option>';
 				foreach($langagues AS $lang)
 					$html .= '<option value="'.$lang['languages_id'].'">'.$lang['name'].'</option>';
 		$html .= '</select></div>
-				<label style="width:220px">'.$this->l('Default osCommerce currency').' : </label>
-				<div class="margin-form">
-				<select name="defaultOscCurrency"><option value="0">------</option>';
+				<label style=\'width:220px\'>'.$this->l('Default osCommerce currency : ').'</label>
+				<div class=\'margin-form\'>
+				<select name=\'defaultOscCurrency\'><option value=\'0\'>------</option>';
 				foreach($curencies AS $curency)
-					$html .= '<option value="'.$curency['currencies_id'].'">'.$curency['title'].'</option>';
+					$html .= '<option value=\''.$curency['currencies_id'].'\'>'.$curency['title'].'</option>';
 		$html .= '</select></div>';
-		$html .= '<label style="width:220px">'.$this->l('Shop url').' : </label>
-				<div class="margin-form">
+		$html .= '<label style=\'width:220px\'>'.$this->l('Shop url : ').'</label>
+				<div class=\'margin-form\'>
 					http://<input type="text" name="shop_url">/
 					<p>'.$this->l('Specify the root URL of your site oscommerce').'</p>
 				</div>';
-
-
-
 		return $html;
 	}
 

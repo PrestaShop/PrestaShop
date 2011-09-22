@@ -39,7 +39,8 @@ class MondialRelay extends Module
 	
 	public static $modulePath = '';
 	public static $moduleURL = '';
-	static public $MRToken = '';
+	static public $MRFrontToken = '';
+	static public $MRBackToken = '';
 
 	// Added for 1.3 compatibility
 	const ONLY_PRODUCTS = 1;
@@ -171,6 +172,15 @@ class MondialRelay extends Module
 		return true;
 	}
 	
+	/*
+	** Return the token depend of the type 
+	*/
+	static public function getToken($type = 'front')
+	{
+		return ($type == 'front') ? self::$MRFrontToken : (($type == 'back') ? 
+			self::$MRBackToken : NULL);
+	}
+
 	/*
 	** Register hook depending of the Prestashop version used
 	*/
@@ -366,7 +376,8 @@ class MondialRelay extends Module
 	public static function initModuleAccess()
 	{
 		self::$modulePath =	_PS_MODULE_DIR_. 'mondialrelay/';
-		self::$MRToken = sha1('mr'._COOKIE_KEY_.'mrAgain');
+		self::$MRFrontToken = sha1('mr'._COOKIE_KEY_.'Front');
+		self::$MRBackToken = sha1('mr'._COOKIE_KEY_.'Back');
 	
 		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
 			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
@@ -409,7 +420,7 @@ class MondialRelay extends Module
 			<link type="text/css" rel="stylesheet" href="'.$cssFilePath.'" />
 			<script type="text/javascript">
 				var _PS_MR_MODULE_DIR_ = "'.self::$moduleURL.'";
-				var mrtoken = "'.self::$MRToken.'";
+				var mrtoken = "'.self::$MRBackToken.'";
 			</script>
 			<script type="text/javascript" src="'.$jsFilePath.'"></script>';
 	}
@@ -613,7 +624,7 @@ class MondialRelay extends Module
 			$this->context->smarty->assign( array(
 							'one_page_checkout' => (Configuration::get('PS_ORDER_PROCESS_TYPE') ? Configuration::get('PS_ORDER_PROCESS_TYPE') : 0),
 							'new_base_dir' => self::$moduleURL,
-			'MRToken' => self::$MRToken,
+			'MRToken' => self::$MRFrontToken,
 			'carriersextra' => $carriersList));
 			
 			return $this->display(__FILE__, 'mondialrelay.tpl');

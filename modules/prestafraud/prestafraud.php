@@ -583,7 +583,7 @@ class PrestaFraud extends Module
 		}
 		elseif (function_exists('file_get_contents'))
 		{
-			$stream_context = stream_context_create(array('http' => array('timeout' => 5)));
+			$stream_context = @stream_context_create(array('http' => array('timeout' => 5)));
 			return file_get_contents($this->_trustUrl.'?xml='.urlencode(str_replace("\r", "\n", '', $datas)), $stream_context);
 		}
 		else

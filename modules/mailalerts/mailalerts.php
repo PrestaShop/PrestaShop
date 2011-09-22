@@ -291,9 +291,7 @@ class MailAlerts extends Module
 			$params['product'] = get_object_vars($params['product']);
 
 		if (is_array($params['product']['name']))
-		{
 			$params['product']['name'] = $params['product']['name'][(int)Configuration::get('PS_LANG_DEFAULT')];
-		}
 
 		if (isset($params['product']['id_product']))
 			$params['product']['id'] = (int)$params['product']['id_product'];

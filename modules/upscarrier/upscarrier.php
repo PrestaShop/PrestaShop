@@ -55,7 +55,7 @@ class UpsCarrier extends CarrierModule
 	{
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -1798,6 +1798,7 @@ class UpsCarrier extends CarrierModule
 
 		foreach ($wsParams['package_list'] as $p)
 		{
+			if ($p['weight'] < 0.5) $p['weight'] = 0.5;
 			$search = array('[[PackagingTypeCode]]', '[[PackageWeight]]', '[[WeightUnit]]', '[[Width]]', '[[Height]]', '[[Length]]', '[[DimensionUnit]]');
 			$replace = array($p['packaging_type'], $p['weight'], $this->_weightUnit, $p['width'], $p['height'], $p['depth'], $this->_dimensionUnit);
 			$xmlPackageList .= str_replace($search, $replace, $xmlPackageTemplate);

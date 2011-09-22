@@ -279,7 +279,7 @@ class CustomerCore extends ObjectModel
 	  *
 	  * @param string $email e-mail
 	  * @param $return_id boolean
-	  * @param $ignoreGuest boolean, for exclure guest customer
+	  * @param $ignoreGuest boolean, to exclude guest customer
 	  * @return Customer ID if found, false otherwise
 	  */
 	static public function customerExists($email, $return_id = false, $ignoreGuest = true, Shop $shop = null)

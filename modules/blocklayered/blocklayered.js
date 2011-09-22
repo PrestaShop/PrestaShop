@@ -51,7 +51,7 @@ $(document).ready(function()
 	});
 	
 	// Click on label
-	$("label a").live({
+	$('label a').live({
 		  click: function() {
 			if($(this).parent().parent().find('input').attr('disabled') == '')
 			{
@@ -104,19 +104,19 @@ function updatelink(link)
 
 function  getValueSelected(){
 	
-	var checkboxChecked = "";
-	$("#layered_form input:checkbox:checked").each(function(){
-		checkboxChecked += '#' + $(this).attr('id')+"="+$(this).val();
+	var checkboxChecked = '';
+	$('#layered_form input:checkbox:checked').each(function(){
+		checkboxChecked += '#' + $(this).attr('id')+'='+$(this).val();
 	});
-	$("#layered_form input:hidden").each(function(){
-		checkboxChecked += '#' + $(this).attr('name')+"="+$(this).val();
+	$('#layered_form input:hidden').each(function(){
+		checkboxChecked += '#' + $(this).attr('name')+'='+$(this).val();
 	});
 	$(['price','weight']).each(function(i, filter) {
-		if ($("#layered_"+filter+"_slider").length)
+		if ($('#layered_'+filter+'_slider').length)
 		{
-			if (typeof($("#layered_"+filter+"_slider").slider('values', 0)) != 'object')
+			if (typeof($('#layered_'+filter+'_slider').slider('values', 0)) != 'object')
 			{
-				checkboxChecked += '#'+filter+'='+$("#layered_"+filter+"_slider").slider('values', 0)+'_'+$("#layered_"+filter+"_slider").slider('values', 1);
+				checkboxChecked += '#'+filter+'='+$('#layered_'+filter+'_slider').slider('values', 0)+'_'+$('#layered_'+filter+'_slider').slider('values', 1);
 			}
 		}
 	});
@@ -125,7 +125,8 @@ function  getValueSelected(){
 
 function friendlyUrl(link, encode)
 {
-		 var friendlyTab = {
+		 var friendlyTab = 
+		 {
 				 'layered_condition_' : 'cond_',
 				 'layered_id_attribute_group_' : 'g_',
 				 'id_category_layered=' : 'c=',
@@ -134,13 +135,17 @@ function friendlyUrl(link, encode)
 				 'layered_category_' : 'cat_',
 				};
 		
-		 if(encode == 'short'){
-			 $.each(friendlyTab, function(key, value) {
+		 if(encode == 'short')
+		 {
+			$.each(friendlyTab, function(key, value)
+			{
 				 	Expression = new RegExp(key,'g');
 				 	link = link.replace(Expression, value);
 			 });
-		 }else{
-			 $.each(friendlyTab, function(key, value) {
+		 }else
+		 {
+			$.each(friendlyTab, function(key, value)
+			{
 				 Expression = new RegExp(value,'g');
 				 link = link.replace(Expression, key);
 			 });
@@ -176,9 +181,9 @@ function cancelFilter()
 	{
 		if($(this).attr('rel').search(/_slider$/) > 0)
 		{
-			$('#'+$(this).attr('rel')).slider("values" , 0, $('#'+$(this).attr('rel')).slider( "option" , 'min' ));
-			$('#'+$(this).attr('rel')).slider("values" , 1, $('#'+$(this).attr('rel')).slider( "option" , 'max' ));
-			$('#'+$(this).attr('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).attr('rel')).slider( "option" , 'min' ), $('#'+$(this).attr('rel')).slider( "option" , 'max' )]});
+			$('#'+$(this).attr('rel')).slider('values' , 0, $('#'+$(this).attr('rel')).slider('option' , 'min' ));
+			$('#'+$(this).attr('rel')).slider('values' , 1, $('#'+$(this).attr('rel')).slider('option' , 'max' ));
+			$('#'+$(this).attr('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).attr('rel')).slider( 'option' , 'min' ), $('#'+$(this).attr('rel')).slider( 'option' , 'max' )]});
 		}
 		else
 		{
@@ -242,9 +247,8 @@ function reloadContent(params_plus)
 	// Get nb items per page
 	var n = '';
 	$('#pagination #nb_item').children().each(function(it, option) {
-		if(option.selected) {
+		if (option.selected)
 			n = '&n='+option.value;
-		}
 	});
 	
 	ajaxQuery = $.ajax(
@@ -267,14 +271,13 @@ function reloadContent(params_plus)
 			ajaxLoaderOn = 0;
 			
 			// On submiting nb items form, relaod with the good nb of items
-			$("#pagination form").submit(function() {
+			$('#pagination form').submit(function() {
 				val = $('#pagination #nb_item').val();
 				$('#pagination #nb_item').children().each(function(it, option) {
-					if(option.value == val) {
+					if (option.value == val)
 						$(option).attr('selected', 'selected');
-					} else {
+					else
 						$(option).removeAttr('selected');
-					}
 				});
 				// Reload products and pagination
 				reloadContent();
@@ -282,12 +285,28 @@ function reloadContent(params_plus)
 			});
 			ajaxCart.overrideButtonsInThePage();
 			
-			if(typeof(reloadProductComparison) == 'function') {
+			if (typeof(reloadProductComparison) == 'function')
 				reloadProductComparison();
-		}
 			initSliders();
 			
-			if(typeof(current_friendly_url != 'undefined'))
+			// Currente page url
+			if (typeof(current_friendly_url) == 'undefined')
+				current_friendly_url = '#';
+				
+			// Get all sliders value
+			$(['price', 'weight']).each(function(it, sliderType)
+			{
+				if ($('#layered_'+sliderType+'_slider'))
+				{
+					// Check if slider is enable & if slider is used
+					if(typeof($('#layered_'+sliderType+'_slider').slider('values', 0)) != 'object')
+						if ($('#layered_'+sliderType+'_slider').slider('values', 0) != $('#layered_'+sliderType+'_slider').slider('option' , 'min')
+						|| $('#layered_'+sliderType+'_slider').slider('values', 1) != $('#layered_'+sliderType+'_slider').slider('option' , 'max'))
+							current_friendly_url += '/'+sliderType+'-'+$('#layered_'+sliderType+'_slider').slider('values', 0)+'-'+$('#layered_'+sliderType+'_slider').slider('values', 1)
+				}
+			});
+			if (current_friendly_url == '#')
+				current_friendly_url = '#/';
 				window.location = current_friendly_url;
 		}
 	});

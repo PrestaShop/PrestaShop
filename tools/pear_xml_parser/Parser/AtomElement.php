@@ -26,7 +26,7 @@
  * XML_Feed_Parser_Atom with which it shares many methods.
  *
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: @package_version@
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom

@@ -184,7 +184,7 @@ class MoneyBookers extends PaymentModule
 				$contextOptions = $defaultContextOptions;
 
 			// Create a stream context
-			$stream_context = stream_context_create($contextOptions);
+			$stream_context = @stream_context_create($contextOptions);
 
 			if (($fp = @fopen($url, $mode, false, $stream_context)))
 			{

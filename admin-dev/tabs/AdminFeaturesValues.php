@@ -67,8 +67,11 @@ class AdminFeaturesValues extends AdminTab
 					<div id="value_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input size="33" type="text" name="value_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'value', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" /><sup> *</sup>
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-					</div>';
-		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'value', 'value');
+					</div>
+					<script type="text/javascript">
+						var flag_fields = \'value\';
+					</script>';
+		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'flag_fields', 'value', false, true);
 		echo '
 					<div class="clear"></div>
 				</div>
@@ -81,6 +84,7 @@ class AdminFeaturesValues extends AdminTab
 		echo '
 					</select><sup> *</sup>
 				</div>
+				'.Module::hookExec('featureValueForm', array('id_feature_value' => $obj->id)).'
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
@@ -94,6 +98,9 @@ class AdminFeaturesValues extends AdminTab
 	 */
 	public function postProcess($token = NULL)
 	{
+		Module::hookExec('postProcessFeatureValue',
+		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessFeatureValue to stop saving process
+
 		if(Tools::getValue('submitDel'.$this->table))
 		{
 		 	if ($this->tabAccess['delete'] === '1')

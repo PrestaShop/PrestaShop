@@ -142,7 +142,6 @@ $(function(){ldelim}
 	{foreach from=$ordered_adr_fields item=field_name}
 		{if $field_name eq 'company'}
 			<p class="text">
-			<input type="hidden" name="token" value="{$token}" />
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 		</p>
@@ -187,10 +186,7 @@ $(function(){ldelim}
 			<input type="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{else}{if isset($address->city)}{$address->city|escape:'htmlall':'UTF-8'}{/if}{/if}" maxlength="64" />
 			<sup>*</sup>
 		</p>
-		<!--
-			if customer hasn't update his layout address, country has to be verified
-			but it's deprecated
-		-->
+		<!-- If the merchant has not updated his layout address, country has to be verified - however it's deprecated -->
 		{/if}
 		{if $field_name eq 'Country:name' || $field_name eq 'country'}
 		<p class="required select">
@@ -237,6 +233,7 @@ $(function(){ldelim}
 		</p>
 		{/if}
 		{/foreach}
+		<p><input type="hidden" name="token" value="{$token}" /></p>
 		{if $stateExist eq "false"}
 		<p class="required id_state select">
 			<label for="id_state">{l s='State'}</label>

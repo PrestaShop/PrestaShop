@@ -684,7 +684,7 @@ class Socolissimo extends CarrierModule
 	{
 		if (Configuration::get('SOCOLISSIMO_SUP'))
 		{
-			$ctx = stream_context_create(array('http' => array('timeout' => 1)));
+			$ctx = @stream_context_create(array('http' => array('timeout' => 1)));
 			$return = @file_get_contents(Configuration::get('SOCOLISSIMO_SUP_URL'), 0, $ctx);
 
 			if(ini_get('allow_url_fopen') == 0)

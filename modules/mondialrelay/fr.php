@@ -48,6 +48,7 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_cb5e100e5a9a3e7f6d1fd9751221528
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_350c1cc4343826a89f08a33bb49c6d98'] = 'Configuration du Module Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_d21a9f93917604d5490ad529a7cf1ff9'] = 'Pour créer un transporteur Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6a2e6af5fff47adb3afd780b97d9b4b'] = 'Remplissez et sauvegarder vos paramètres Mondial Relay';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_94fbe32464fcfa902feed9f256439833'] = 'Créer un transporteur utilisant le formulaire \"ajouter un transporteur\" ci-dessous';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_b962d8fb95f5a439f50502152f3bad71'] = 'Definissez un prix pour votre transporteur sur';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_faf1247ae6846a9955a466d4f301bbe4'] = 'La page Transporteurs';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_10d78806b84b97ebc774e9f6277af6ac'] = 'Pour générer vos étiquettes, vous devez avoir enregistré une adresse valide de votre boutique sur votre';

@@ -33,10 +33,6 @@
  */
  
 require_once(realpath(dirname(__FILE__).'/../../config/config.inc.php'));
-
-if (Tools::getValue('mrtoken') != sha1('mr'._COOKIE_KEY_.'mrAgain'))
-	die();
-
 require_once(realpath(dirname(__FILE__).'/../../init.php'));
 require(dirname(__FILE__).'/mondialrelay.php');
 require(dirname(__FILE__).'/classes/MRCreateTickets.php');
@@ -44,9 +40,29 @@ require(dirname(__FILE__).'/classes/MRGetTickets.php');
 require(dirname(__FILE__).'/classes/MRGetRelayPoint.php');
 require(dirname(__FILE__).'/classes/MRManagement.php');
 
+MondialRelay::initModuleAccess();
+
+// Access page List liable to the generated token
+$accessPageList = array(
+	MondialRelay::getToken('front') => array(
+		'MRGetRelayPoint',
+		'addSelectedCarrierToDB'),
+	MondialRelay::getToken('back') => array(
+		'MRGetTickets',
+		'MRCreateTickets',
+		'MRDeleteHistory',
+		'uninstallDetail',
+		'DeleteHistory'));
+
 $method = Tools::getValue('method');
+$token = Tools::getValue('mrtoken');
 $params = array();
 $result = array();
+
+// If the method name assoacited to the token received doesn't match with
+// the list, then we kill the request
+if (!isset($accessPageList[$token]) || !in_array($method, $accessPageList[$token]))
+	exit();
 
 // Method name allow to instanciate his object to properly call the 
 // implemented interface method and do his job

@@ -599,6 +599,11 @@ class FrontControllerCore extends ControllerCore
 		asort($nArray);
 		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
 		$this->p = abs((int)(Tools::getValue('p', 1)));
+		
+		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
+		//delete parameter page
+		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', $current_url);
+		
 		$range = 2; /* how many pages around page selected */
 
 		if ($this->p < 0)
@@ -625,7 +630,8 @@ class FrontControllerCore extends ControllerCore
 			'nArray' => $nArray,
 			'range' => (int)($range),
 			'start' => (int)($start),
-			'stop' => (int)($stop)
+			'stop' => (int)($stop),
+			'current_url' => $current_url
 		);
 		$this->context->smarty->assign($pagination_infos);
 	}

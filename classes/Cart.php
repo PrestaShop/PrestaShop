@@ -1206,32 +1206,19 @@ class CartCore extends ObjectModel
 				}
 
 				if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
-				{
 					$shipping = $carrier->getDeliveryPriceByWeight($this->getTotalWeight(), $id_zone);
-
-					if (!isset($tmp))
-						$tmp = $shipping;
-
-					if ($shipping <= $tmp)
-					{
-						$id_carrier = (int)($row['id_carrier']);
-						$tmp = $shipping;
-				}
-				}
-				else // by price
-				{
+				else
 					$shipping = $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)($this->id_currency));
 
-					if (!isset($tmp))
-						$tmp = $shipping;
+				if (!isset($minShippingPrice))
+					$minShippingPrice = $shipping;
 
-					if ($shipping <= $tmp)
+				if ($shipping <= $minShippingPrice)
 					{
 						$id_carrier = (int)($row['id_carrier']);
-						$tmp = $shipping;
+					$minShippingPrice = $shipping;
 				}
 			}
-		}
 		}
 
 		if (empty($id_carrier))
@@ -1701,13 +1688,13 @@ class CartCore extends ObjectModel
 		LEFT JOIN '._DB_PREFIX_.'customized_data cd ON cd.id_customization = c.id_customization
 		WHERE c.id_cart = '.(int)$this->id);
 
-		// Group line by id_customization
+		// Get datas from customization table
 		$customsById = array();
 		foreach ($customs AS $custom)
 		{
 			if(!isset($customsById[$custom['id_customization']]))
-				$customsById[$custom['id_customization']] = array();
-			$customsById[$custom['id_customization']][] = $custom;
+				$customsById[$custom['id_customization']] = array('id_product_attribute' => $custom['id_product_attribute'],
+				'id_product' => $custom['id_product'], 'quantity' => $custom['quantity']);
 		}
 
 		// Insert new customizations
@@ -1716,8 +1703,8 @@ class CartCore extends ObjectModel
 		{
 			Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
 				INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, quantity)
-				VALUES('.(int)$cart->id.', '.(int)$custom['id_product_attribute'].', '.(int)$custom['id_product'].', '.(int)$custom['quantity'].')');
-			$custom_ids[$custom['id_customization']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
+			VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$val['quantity'].')');
+			$custom_ids[$customizationId] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
 		}
 
 		// Insert customized_data

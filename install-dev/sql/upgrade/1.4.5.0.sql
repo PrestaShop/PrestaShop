@@ -23,9 +23,18 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`, `live_edi
 ('attributeGroupForm', 'Add fields to the form "attribute group"', 'Add fields to the form "attribute group"', 0, 0),
 ('afterSaveAttributeGroup', 'On saving attribute group', 'On saving attribute group', 0, 0),
 ('afterDeleteAttributeGroup', 'On deleting attribute group', 'On deleting "attribute group', 0, 0),
-('featureForm', 'Add fileds to the form "feature"', 'Add fileds to the form "feature"', 0, 0),
+('featureForm', 'Add fields to the form "feature"', 'Add fields to the form "feature"', 0, 0),
 ('afterSaveFeature', 'On saving attribute feature', 'On saving attribute feature', 0, 0),
 ('afterDeleteFeature', 'On deleting attribute feature', 'On deleting attribute feature', 0, 0),
 ('afterSaveProduct', 'On saving products', 'On saving products', 0, 0),
-('productListAssign', 'Assign product list to a category', 'Assign product list to a category', 0, 0);
-
+('productListAssign', 'Assign product list to a category', 'Assign product list to a category', 0, 0),
+('postProcessAttributeGroup', 'On post-process in admin attribute group', 'On post-process in admin attribute group', 0, 0),
+('postProcessFeature', 'On post-process in admin feature', 'On post-process in admin feature', 0, 0),
+('featureValueForm', 'Add fields to the form "feature value"', 'Add fields to the form "feature value"', 0, 0),
+('postProcessFeatureValue', 'On post-process in admin feature value', 'On post-process in admin feature value', 0, 0),
+('afterDeleteFeatureValue', 'On deleting attribute feature value', 'On deleting attribute feature value', 0, 0),
+('afterSaveFeatureValue', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0),
+('attributeForm', 'Add fields to the form "feature value"', 'Add fields to the form "feature value"', 0, 0),
+('postProcessAttribute', 'On post-process in admin feature value', 'On post-process in admin feature value', 0, 0),
+('afterDeleteAttribute', 'On deleting attribute feature value', 'On deleting attribute feature value', 0, 0),
+('afterSaveAttribute', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0);

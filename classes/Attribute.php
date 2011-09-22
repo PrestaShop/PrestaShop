@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,25 +26,25 @@
 */
 
 class AttributeCore extends ObjectModel
-{	
+{
 	/** @var integer Group id which attribute belongs */
 	public		$id_attribute_group;
-	
+
 	/** @var string Name */
 	public 		$name;
 	public		$color;
 	public		$position;
 	public		$default;
-	
+
  	protected 	$fieldsRequired = array('id_attribute_group');
 	protected 	$fieldsValidate = array('id_attribute_group' => 'isUnsignedId', 'color' => 'isColor', 'position' => 'isInt');
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 64);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
-		
+
 	protected 	$table = 'attribute';
 	protected 	$identifier = 'id_attribute';
-	
+
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'product_option_values',
 		'objectNodeName' => 'product_option_value',
@@ -52,14 +52,14 @@ class AttributeCore extends ObjectModel
 			'id_attribute_group' => array('xlink_resource'=> 'product_options'),
 		),
 	);
-	
+
 	public function __construct()
 	{
 	 	$this->image_dir =  _PS_COL_IMG_DIR_;
 
 		parent::__construct();
 	}
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -70,7 +70,7 @@ class AttributeCore extends ObjectModel
 
 		return $fields;
 	}
-	
+
 	/**
 	* Check then return multilingual fields for database interaction
 	*
@@ -96,10 +96,30 @@ class AttributeCore extends ObjectModel
 			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` IN ('.implode(', ', $combinationIds).')') === false)
 				return false;
 		}
+
 		/* Reinitializing position */
 		$this->cleanPositions((int)$this->id_attribute_group);
 
-		return parent::delete();
+		$return = parent::delete();
+		if ($return)
+			Module::hookExec('afterDeleteAttribute', array('id_attribute' => $this->id));
+		return $return;
+	}
+
+	public function update($nullValues = false)
+	{
+		$return = parent::update($nullValues);
+		if ($return)
+			Module::hookExec('afterSaveAttribute', array('id_attribute' => $this->id));
+		return $return;
+	}
+
+	public function add($autodate = true, $nullValues = false)
+	{
+		$return = parent::add($autodate, $nullValues);
+		if ($return)
+			Module::hookExec('afterSaveAttribute', array('id_attribute' => $this->id));
+		return $return;
 	}
 
 	/**
@@ -122,7 +142,7 @@ class AttributeCore extends ObjectModel
 		'.($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
 		ORDER BY agl.`name` ASC, a.`position` ASC');
 	}
-	
+
 	/**
 	 * Get quantity for a given attribute combinaison
 	 * Check if quantity is enough to deserve customer
@@ -158,9 +178,9 @@ class AttributeCore extends ObjectModel
 
 		$row = Db::getInstance()->getRow('
 		SELECT SUM(quantity) as quantity
-		FROM `'._DB_PREFIX_.'product_attribute` 
+		FROM `'._DB_PREFIX_.'product_attribute`
 		WHERE `id_product` = '.(int)$id_product);
-		
+
 		if ($row['quantity'] !== NULL)
 			return (int)$row['quantity'];
 		return false;
@@ -179,7 +199,7 @@ class AttributeCore extends ObjectModel
 
 		$id_product = (int)$arr['id_product'];
 		$qty = self::getAttributeQty($id_product);
-		
+
 		if ($qty !== false)
 		{
 			$arr['quantity'] = (int)$qty;
@@ -215,9 +235,9 @@ class AttributeCore extends ObjectModel
 	{
 		$minimal_quantity = Db::getInstance()->getValue('
 		SELECT `minimal_quantity`
-		FROM `'._DB_PREFIX_.'product_attribute` 
+		FROM `'._DB_PREFIX_.'product_attribute`
 		WHERE `id_product_attribute` = '.(int)$id_product_attribute);
-		
+
 		if ($minimal_quantity > 1)
 			return (int)$minimal_quantity;
 		return false;
@@ -262,7 +282,7 @@ class AttributeCore extends ObjectModel
 			WHERE `id_attribute` = '.(int)$movedAttribute['id_attribute'].'
 			AND `id_attribute_group`='.(int)$movedAttribute['id_attribute_group']));
 	}
-	
+
 	/**
 	 * Reorder attribute position in group $id_attribute_group.
 	 * Call it after deleting an attribute from a group.
@@ -299,9 +319,9 @@ class AttributeCore extends ObjectModel
 
 	/**
 	 * getHigherPosition
-	 * 
+	 *
 	 * Get the higher attribute position from a group attribute
-	 * 
+	 *
 	 * @param integer $id_attribute_group
 	 * @return integer $position
 	 */
@@ -309,7 +329,7 @@ class AttributeCore extends ObjectModel
 	{
 		$sql = 'SELECT `position`
 				FROM `'._DB_PREFIX_.'attribute`
-				WHERE id_attribute_group = '.(int)$id_attribute_group.' 
+				WHERE id_attribute_group = '.(int)$id_attribute_group.'
 				ORDER BY position DESC';
 		return ((DB::getInstance()->getValue($sql)!==false)) ? DB::getInstance()->getValue($sql) : -1;
 	}

@@ -783,8 +783,13 @@ class ProductComments extends Module
 			{
 				foreach ($criterions AS $criterion)
 				{
+					if(isset($grades[$criterion['id_product_comment_criterion']]))
+					{
 					$list_product_grades[$criterion['id_product_comment_criterion']][$id_product] = $grades[$criterion['id_product_comment_criterion']];
 					$grade_total += (float)($grades[$criterion['id_product_comment_criterion']]);
+					}
+					else
+						$list_product_grades[$criterion['id_product_comment_criterion']][$id_product] = 0;
 
 					if (!array_key_exists($criterion['id_product_comment_criterion'], $list_grades))
 						$list_grades[$criterion['id_product_comment_criterion']] = $criterion['name'];

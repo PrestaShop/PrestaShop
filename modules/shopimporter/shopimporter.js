@@ -27,7 +27,6 @@ var shopImporter = {
 	
 	syncLangWS : function (onComplete)
 	{
-
 		$.ajax({
 	       type: 'GET',
 	       url: '../modules/shopimporter/ajax.php',
@@ -45,7 +44,6 @@ var shopImporter = {
 	    		}
 	    		else
 	    			onComplete(true);
-
 	       },
 	      error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
@@ -75,7 +73,6 @@ var shopImporter = {
 	    		}
 	    		else
 	    			onComplete(true);
-
 	       },
 	      error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
@@ -99,13 +96,12 @@ var shopImporter = {
 	       {
 				if (jsonData.hasError)
 	    		{
-	    			$('#steps').html('<div id="currency_feedback" style="display:none;" class="error"><img src="'+shopImporter.srcError+'">'+jsonData.error+'</div>');
+	    			$('#steps').html('<div id=\'currency_feedback\' style=\'display:none;\' class=\'error\'><img src=\''+shopImporter.srcError+'\'>'+jsonData.error+'</div>');
 		    		$('#currency_feedback').fadeIn('slow');
 					onComplete(false);
 	    		}
 	    		else
 	    			onComplete(true);
-
 	       },
 	      error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
@@ -114,7 +110,6 @@ var shopImporter = {
 	       		onComplete(false);
 	       }
 	   });
-	 
 	},
 	syncCurrency : function (onComplete)
 	{
@@ -135,7 +130,6 @@ var shopImporter = {
 	    		}
 	    		else
 	    			onComplete(true);
-
 	       },
 	      error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
@@ -149,8 +143,8 @@ var shopImporter = {
 	checkAndSaveConfigWSDL : function (onComplete)
 	{
 		$('#checkAndSaveConfig').fadeOut('slow');
-       	$('#steps').html($('#steps').html()+'<div id="database_feedback" style="display:none;" class="conf"><img src="'+shopImporter.srcConf+'">'+wsOk+'</div>');
-    	$('#steps').html($('#steps').html()+'<input style="display:none" type="submit" name="next" id="next" class="button" value="'+testImport+'">');
+       	$('#steps').html($('#steps').html()+'<div id=\'database_feedback\' style=\'display:none;\' class=\'conf\'><img src=\''+shopImporter.srcConf+'\'>'+wsOk+'</div>');
+    	$('#steps').html($('#steps').html()+'<input style=\'display:none\' type=\'submit\' name=\'next\' id=\'next\' class=\'button\' value=\''+testImport+'\'>');
     	$('#next').fadeIn('slow', function () { 
 	    	$('#next').unbind('click').click(function(){
 				$('#next').fadeOut('fast', function() {
@@ -165,22 +159,18 @@ var shopImporter = {
 	},
 	checkAndSaveConfigWS : function (save)
 	{
-		
 		//sync languages and currency
 		this.syncLangWS(function(isOk) {
 			if (isOk)
 			{
 				shopImporter.syncCurrencyWS(function(isOk) {
-					if (isOk)
-					{
-
 							       	if ($('#technical_error_feedback').length)
 							       		$('#technical_error_feedback').fadeIn('slow');
 							       
 							       
 								       	$('#checkAndSaveConfig').fadeOut('slow');
-								       	$('#steps').html($('#steps').html()+'<div id="database_feedback" style="display:none;" class="conf"><img src="'+shopImporter.srcConf+'">'+databaseOk+'</div>');
-								    	$('#steps').html($('#steps').html()+'<input style="display:none" type="submit" name="next" id="next" class="button" value="'+testImport+'">');
+				       	$('#steps').html($('#steps').html()+'<div id=\'database_feedback\' style=\'display:none;\' class=\'conf\'><img src=\''+shopImporter.srcConf+'\'>'+databaseOk+'</div>');
+				    	$('#steps').html($('#steps').html()+'<input style=\'display:none\' type=\'submit\' name=\'next\' id=\'next\' class=\'button\' value=\''+testImport+'\'>');
 								    	$('#database_feedback').fadeIn('slow', function() {
 						    			if (save)
 								    	{
@@ -209,14 +199,9 @@ var shopImporter = {
 											});
 										}
 							    	});		    	
-					}
 				});
 			}
 		});			    
-						       
-				
-		
-		
 	},
 	checkAndSaveConfig : function (save)
 	{
@@ -225,8 +210,6 @@ var shopImporter = {
 			if (isOk)
 			{
 				shopImporter.syncCurrency(function(isOk) {
-					if (isOk)
-					{
 						$.ajax({
 						       type: 'GET',
 						       url: '../modules/shopimporter/ajax.php',
@@ -281,17 +264,13 @@ var shopImporter = {
 						       },
 						      error: function(XMLHttpRequest, textStatus, errorThrown) 
 						       {
-						       		$('#steps').html($('#steps').html()+'<div id="technical_error_feedback" style="display:none;" class="error"><img src="'+shopImporter.srcError+'">TECHNICAL ERROR<br><br>Details: '+XMLHttpRequest.responseText+'</div>');
+					       		$('#steps').html($('#steps').html()+'<div id=\'technical_error_feedback\' style=\'display:none;\' class=\'error\'><img src="'+shopImporter.srcError+'">TECHNICAL ERROR<br><br>Details: '+XMLHttpRequest.responseText+'</div>');
 						       		$('#technical_error_feedback').fadeIn('slow');
-						       		
 						       }
 						   });
-					}
 				});
 			}
 		});
-		
-		
 	},
 	
 	getDatasWS : function (methodName)
@@ -308,7 +287,7 @@ var shopImporter = {
 		if (typeof(methodName) != 'undefined')
 		{
 			
-			$('#steps').html($('#steps').html()+'<div id="ok_feedback_'+methodName[0]+'" style="display:none;" class="import"><img src="'+this.srcImport+'">'+methodName[1]+'<span id="display_error_'+methodName[0]+'" style="display:none"><span><div id="feedback_'+methodName[0]+'_errors_list"></div></div>');
+			$('#steps').html($('#steps').html()+'<div id=\'ok_feedback_'+methodName[0]+'\' style=\'display:none;\' class="import"><img src=\''+this.srcImport+'\'>'+methodName[1]+'<span id=\'display_error_'+methodName[0]+'\' style=\'display:none\'><span><div id=\'feedback_'+methodName[0]+'_errors_list\'></div></div>');
 			$('#ok_feedback_'+methodName[0]).css('display', '');
 		
 		$('#checkAndSaveConfig').fadeIn('slow');
@@ -318,9 +297,6 @@ var shopImporter = {
 	       async: true,
 	       cache: false,
 	       dataType : "json",
-	       //data: 'ajax=true&token='+this.token+'&getData&className='+methodName[2]+'&getMethod='+methodName[0]+'&moduleName='+this.moduleName+'&server='+this.server+'&user='+this.user+'&password='+this.password+'&database='+this.database+'&prefix='+prefix+'&limit='+this.limit+'&nbr_import='+this.nbr_import+'&save='+this.save+'&errors='+this.errors+'&hasErrors='+this.hasErrors+this.specificOptions+this.imagesOptions ,
-	       
-	       
 	       data: 'ajax=true&token='+this.token+'&getDataWS&className='+methodName[2]+'&getMethod='+methodName[0]+'&moduleName='+this.moduleName+'&url='+this.url+'&loginws='+this.loginws+'&apikey='+this.apikey+'&limit='+this.limit+'&nbr_import='+this.nbr_import+'&save='+this.save+'&errors='+this.errors+'&hasErrors='+this.hasErrors+this.specificOptions+this.imagesOptions ,
 	       success: function(jsonData)
 	       {	
@@ -404,7 +380,6 @@ var shopImporter = {
 	       },
 	       error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
-	       		$('#steps').html($('#steps').html()+'<div id="technical_error_feedback" style="display:none;" class="error"><img src="'+shopImporter.srcError+'">TECHNICAL ERROR<br><br>Details: '+XMLHttpRequest.responseText+'</div>');
 	       		$('#technical_error_feedback').fadeIn('slow');
 	       		$('#checkAndSaveConfig').fadeIn('slow');
 	       }
@@ -562,10 +537,6 @@ var shopImporter = {
 						$('#feedback_'+methodName[0]+'_errors_list > ul').html($('#feedback_'+methodName[0]+'_errors_list > ul').html() + jsonError);
 					}
 	    		}
-	    		else
-	    		{
-	    			
-	    		}
 	    	},
 	    	error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
@@ -584,12 +555,11 @@ var shopImporter = {
 		{
 			if (this.save)
 			{
-				$('#steps').html($('#steps').html()+'<div id="ok_feedback_end" style="display:none;" class="conf"><img src="'+shopImporter.srcConf+'">'+importFinish+'</div>');
+				$('#steps').html($('#steps').html()+'<div id=\'ok_feedback_end\' style=\'display:none;\' class=\'conf\'><img src=\''+shopImporter.srcConf+'\'>'+importFinish+'</div>');
 				$('#ok_feedback_end').fadeIn('slow');
 			}
 			else
 			{
-				
 				$('#steps').html($('#steps').html()+'<input style="display:none" type="button" name="submitImport" id="submitImport" class="button" value="'+runImport+'">');
 				$('#submitImport').fadeIn('slow', function() {
 					$(this).unbind('click').click(function() {
@@ -616,7 +586,6 @@ var shopImporter = {
 	},	
 
 };
-
 
 function enableShowErrors(methodName)
 {
@@ -669,7 +638,7 @@ function initConnexion (moduleName, url, loginws, apikey, token)
 	    	   $('#connectionInformation').removeAttr('style');
 	    	   	if (jsonData.hasError)
 	    		{
-	    	   		$('#connectionInformation').attr("style","width: 400px;background-color: #FAE2E3;border: 1px solid #EC9B9B");
+	    	   		$('#connectionInformation').attr('style','width: 400px;background-color: #FAE2E3;border: 1px solid #EC9B9B');
 	    			for (i=0;i<jsonData.error.length;i++)
 							jsonError = jsonError+'<li>'+jsonData.error[i]+'</li>';
 	    			$('#connectionInformation').slideDown('slow');
@@ -678,7 +647,7 @@ function initConnexion (moduleName, url, loginws, apikey, token)
 				}else
 				{
 					
-					$('#connectionInformation').attr("style","width: 400px;background-color: #DFFAD3;border: 1px solid #72CB67");
+					$('#connectionInformation').attr('style','width: 400px;background-color: #DFFAD3;border: 1px solid #72CB67');
 					$('#connectionInformation').slideDown('slow');
 	    			$('#connectionInformation').html('<ul>Connection successful</ul>');
 	     			$('#connectionInformation').show();
@@ -689,7 +658,6 @@ function initConnexion (moduleName, url, loginws, apikey, token)
 	       error: function(XMLHttpRequest, textStatus, errorThrown)
 		   {
 		   		alert('TECHNICAL ERROR\nDetails:\nError thrown: ' + XMLHttpRequest + '\n' + 'Text status: ' + textStatus);
-
 		   }
 	   });
 }
@@ -702,7 +670,7 @@ function displaySpecificOptionsWsdl(moduleName,token)
 	       url: '../modules/shopimporter/ajax.php',
 	       async: false,
 	       cache: false,
-	       dataType : "html",
+	       dataType : 'html',
 	       data: 'ajax=true&token='+token+'&displaySpecificOptionsWsdl&moduleName='+moduleName ,
 	       success: function(htmlData)
 	       {
@@ -724,7 +692,7 @@ function validateSpecificOptions(moduleName, specificOptions)
 	       url: '../modules/shopimporter/ajax.php',
 	       async: false,
 	       cache: false,
-	       dataType : "json",
+	       dataType : 'json',
 	       data: 'ajax=true&token='+this.token+'&validateSpecificOptions&moduleName='+moduleName+specificOptions ,
 	       success: function(jsonData)
 	       {
@@ -766,7 +734,7 @@ function initConfigConnector()
 			       url: '../modules/shopimporter/ajax.php',
 			       async: false,
 			       cache: false,
-			       dataType : "html",
+			       dataType : 'html',
 
 			       data: 'ajax=true&token='+globalAjaxShopImporterToken+'&displayConfigConnector&moduleName='+$('#import_module_name').val() ,
 			       success: function(html)
@@ -800,9 +768,6 @@ $(document).ready(function(){
 				$(this).html('');
 				$('#steps').fadeIn();
 			});
-			
-			
-			
 			$('#importOptions').fadeOut('slow');
 			$('#displayOptions').show();
 			$('#checkAndSaveConfig').show();
@@ -832,8 +797,6 @@ $(document).ready(function(){
 				return false;
 			}else{
 				$('#connectionInformation').hide();
-				
-				
 		}
 			token = globalAjaxShopImporterToken;
 			initConnexion($('#import_module_name').val(), $('#url').val(), $('#loginws').val(), $('#apikey').val(), token);
@@ -873,7 +836,7 @@ $(document).ready(function(){
 		{
 			if($('#import_module_name').attr('value') == 'importermagento')
 			{
-			$.scrollTo($("#steps"), 300 , {
+				$.scrollTo($('#steps'), 300 , {
 				onAfter:function(){
 								shopImporter.specificOptions = '';
 								$('#specificOptionsContent :input').each(function (){
@@ -899,7 +862,7 @@ $(document).ready(function(){
 				});
 			}else if ($('#import_module_name').attr('value') == 'importerosc')
 			{
-				$.scrollTo($("#steps"), 300 , {
+				$.scrollTo($('#steps'), 300 , {
 					onAfter:function(){
 									shopImporter.specificOptions = '';
 									$('#specificOptionsContent :input').each(function (){
@@ -923,7 +886,6 @@ $(document).ready(function(){
 			});
 		}
 		}
-		
 	});	
 	
 	$('#importOptionsYesNo :radio').change( function () {
@@ -939,7 +901,7 @@ $(document).ready(function(){
 		else
 		{
 			$('#checkAndSaveConfig').fadeOut();
-			$('#steps').html('<div id="one_thing_error_feedback" style="display:none;" class="error"><img src="'+shopImporter.srcError+'">'+oneThing+'</div>');
+			$('#steps').html('<div id=\'one_thing_error_feedback\' style=\'display:none;\' class=\'error\'><img src=\''+shopImporter.srcError+'\'>'+oneThing+'</div>');
 			$('#one_thing_error_feedback').fadeIn('slow');
 		}			
 	});

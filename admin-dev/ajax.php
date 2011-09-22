@@ -639,7 +639,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	$protocol = Tools::usingSecureMode() ? 'https' : 'http';
 	$isoUser = Context::getContext()->language->iso_code;
 	$isoCountry = Context::getContext()->country->iso_code;
-	$stream_context = stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 5)));
+	$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 5)));
 
 	// SCREENCAST
 	if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
