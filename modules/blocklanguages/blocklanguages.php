@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -61,7 +61,7 @@ class BlockLanguages extends Module
 		if (!count($languages))
 			return;
 		$link = new Link();
-			
+
 		if((int)Configuration::get('PS_REWRITING_SETTINGS'))
 		{
 			$default_rewrite = array();
@@ -72,14 +72,14 @@ class BlockLanguages extends Module
 				foreach ($rewrite_infos AS $infos)
 					$default_rewrite[$infos['id_lang']] = $link->getProductLink((int)$id_product, $infos['link_rewrite'], $infos['category_rewrite'], $infos['ean13'], (int)$infos['id_lang']);
 			}
-		
+
 			if ($phpSelf == 'category.php' AND $id_category = (int)Tools::getValue('id_category'))
 			{
 				$rewrite_infos = Category::getUrlRewriteInformations((int)$id_category);
 				foreach ($rewrite_infos AS $infos)
 					$default_rewrite[$infos['id_lang']] = $link->getCategoryLink((int)$id_category, $infos['link_rewrite'], $infos['id_lang']);
 			}
-			
+
 			if ($phpSelf == 'cms.php' AND ($id_cms = (int)Tools::getValue('id_cms') OR $id_cms_category = (int)Tools::getValue('id_cms_category')))
 			{
 				$rewrite_infos = (isset($id_cms) AND !isset($id_cms_category)) ? CMS::getUrlRewriteInformations($id_cms) : CMSCategory::getUrlRewriteInformations($id_cms_category);
@@ -92,13 +92,12 @@ class BlockLanguages extends Module
 				}
 			}
 			if (count($default_rewrite))
-				$smarty->assign('lang_rewrite_urls', $default_rewrite);
+				$this->smartyAssign('lang_rewrite_urls', $default_rewrite);
 		}
-			
-		$this->context->smarty->assign('languages', $languages);
+
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
-	
+
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocklanguages.css', 'all');

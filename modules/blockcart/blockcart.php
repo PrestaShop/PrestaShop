@@ -44,7 +44,7 @@ class BlockCart extends Module
 		$this->description = $this->l('Adds a block containing the customer\'s shopping cart.');
 	}
 
-	public function smartyAssigns(&$smarty, &$params)
+	public function assignContentVars(&$params)
 	{
 		global $errors;
 
@@ -77,10 +77,10 @@ class BlockCart extends Module
 		if ($useTax AND Configuration::get('PS_TAX_DISPLAY') == 1)
 		{
 			$totalToPayWithoutTaxes = $params['cart']->getOrderTotal(false);
-			$smarty->assign('tax_cost', Tools::displayPrice($totalToPay - $totalToPayWithoutTaxes, $currency));
+			$this->smartyAssign('tax_cost', Tools::displayPrice($totalToPay - $totalToPayWithoutTaxes, $currency));
 		}
 
-		$smarty->assign(array(
+		$this->smartyAssign(array(
 			'products' => $products,
 			'customizedDatas' => Product::getAllCustomizedDatas((int)($params['cart']->id)),
 			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
@@ -98,9 +98,9 @@ class BlockCart extends Module
 			'ajax_allowed' => (int)(Configuration::get('PS_BLOCK_CART_AJAX')) == 1 ? true : false
 		));
 		if (sizeof($errors))
-			$smarty->assign('errors', $errors);
+			$this->smartyAssign('errors', $errors);
 		if(isset($this->context->cookie->ajax_blockcart_display))
-			$smarty->assign('colapseExpandStatus', $this->context->cookie->ajax_blockcart_display);
+			$this->smartyAssign('colapseExpandStatus', $this->context->cookie->ajax_blockcart_display);
 	}
 
 	public function getContent()
@@ -159,8 +159,9 @@ class BlockCart extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
 
-		$this->context->smarty->assign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
-		$this->smartyAssigns($this->context->smarty, $params);
+		// @todo this variable seems not used
+		$this->smartyAssign('order_page', strpos($_SERVER['PHP_SELF'], 'order') !== false);
+		$this->assignContentVars($params);
 		return $this->display(__FILE__, 'blockcart.tpl');
 	}
 
@@ -174,7 +175,7 @@ class BlockCart extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
 
-		$this->smartyAssigns($this->context->smarty, $params);
+		$this->assignContentVars($params);
 		$res = $this->display(__FILE__, 'blockcart-json.tpl');
 		return $res;
 	}

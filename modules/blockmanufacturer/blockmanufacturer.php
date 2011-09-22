@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -51,13 +51,12 @@ class BlockManufacturer extends Module
 		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', true);
         return (parent::install() AND $this->registerHook('leftColumn') AND $this->registerHook('header'));
     }
-   
+
     function hookLeftColumn($params)
     {
 
 		$this->context->smarty->assign(array(
 			'manufacturers' => Manufacturer::getManufacturers(),
-			'link' => $this->context->link,
 			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
 			'text_list_nb' => Configuration::get('MANUFACTURER_DISPLAY_TEXT_NB'),
 			'form_list' => Configuration::get('MANUFACTURER_DISPLAY_FORM'),
@@ -65,12 +64,12 @@ class BlockManufacturer extends Module
 		));
 		return $this->display(__FILE__, 'blockmanufacturer.tpl');
 	}
-	
+
 	function hookRightColumn($params)
 	{
 		return $this->hookLeftColumn($params);
 	}
-	
+
 	function getContent()
 	{
 		$output = '<h2>'.$this->displayName.'</h2>';
@@ -96,7 +95,7 @@ class BlockManufacturer extends Module
 		}
 		return $output.$this->displayForm();
 	}
-	
+
 	public function displayForm()
 	{
 		$output = '
@@ -124,9 +123,9 @@ class BlockManufacturer extends Module
 		</form>';
 		return $output;
 	}
-	
+
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockmanufacturer.css', 'all');
-	}	
+	}
 }

@@ -770,28 +770,24 @@ class BlockCms extends Module
 		return $this->_html;
 	}
 
-	public function hookLeftColumn()
+	public function displayBlockCMS($column)
 	{
-		$this->context = Context::getContext();
-		$cms_titles = self::getCMStitles(self::LEFT_COLUMN);
-		$this->context->smarty->assign(array(
+		$cms_titles = self::getCMStitles($column);
+		$this->smartyAssign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
-			'theme_dir' => _PS_THEME_DIR_
 		));
 		return $this->display(__FILE__, 'blockcms.tpl');
 	}
 
+	public function hookLeftColumn()
+	{
+		return $this->displayBlockCMS(self::LEFT_COLUMN);
+	}
+
 	public function hookRightColumn()
 	{
-
-		$cms_titles = self::getCMStitles(self::RIGHT_COLUMN);
-		$this->context->smarty->assign(array(
-			'block' => 1,
-			'cms_titles' => $cms_titles,
-			'theme_dir' => _PS_THEME_DIR_
-		));
-		return $this->display(__FILE__, 'blockcms.tpl');
+		return $this->displayBlockCMS(self::RIGHT_COLUMN);
 	}
 
 	public function hookFooter()
@@ -800,10 +796,9 @@ class BlockCms extends Module
 		if (Configuration::get('FOOTER_BLOCK_ACTIVATION'))
 		{
 			$cms_titles = self::getCMStitlesFooter();
-			$this->context->smarty->assign(array(
+			$this->smartyAssign(array(
 				'block' => 0,
 				'cmslinks' => $cms_titles,
-				'theme_dir' => _PS_THEME_DIR_,
 				'display_stores_footer' => Configuration::get('PS_STORES_DISPLAY_FOOTER'),
 				'display_poweredby' => ((int)Configuration::get('FOOTER_POWEREDBY') === 1 || Configuration::get('FOOTER_POWEREDBY') === false),
 				'footer_text' => Configuration::get('FOOTER_CMS_TEXT_'.(int)$this->context->language->id)

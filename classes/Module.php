@@ -469,7 +469,7 @@ abstract class ModuleCore
 			$this->unregisterExceptions($hookID, $shopList);
 			$result &= $this->registerExceptions($hookID, $except, $shopList);
 		}
-		
+
 		return $result;
 	}
 
@@ -572,9 +572,9 @@ abstract class ModuleCore
 		$modulesNameToCursor = array();
 		$errors = array();
 		$modules_dir = self::getModulesDirOnDisk();
-		
+
 		$memory_limit = Tools::getMemoryLimit();
-		
+
 		foreach ($modules_dir AS $module)
 		{
 			// Memory usage checking
@@ -589,7 +589,7 @@ abstract class ModuleCore
 					break;
 				}
 			}
-			
+
 			$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
 			$xml_exist = file_exists($configFile);
 			if ($xml_exist)
@@ -1152,6 +1152,24 @@ abstract class ModuleCore
 			$result = $context->smarty->fetch(($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template, $cacheId, $compileId);
 		}
 		return $result;
+	}
+
+	/**
+	 * Assign a smarty vars (same syntax as smarty->assign) but prefix all keys with module name
+	 *
+	 * @since 1.5.0
+	 * @param string $key Variable key (can be an array)
+	 * @param mixed $value Variable value
+	 */
+	public function smartyAssign($key, $value = null)
+	{
+		if (is_array($key))
+		{
+			foreach ($key as $k => $v)
+				$this->context->smarty->assign($this->name.'_'.$k, $v);
+		}
+		else
+			$this->context->smarty->assign($this->name.'_'.$key, $value);
 	}
 
 	protected function _getApplicableTemplateDir($template)

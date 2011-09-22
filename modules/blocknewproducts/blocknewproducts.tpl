@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,16 +28,16 @@
 <div id="new-products_block_right" class="block products_block">
 	<h4><a href="{$link->getPageLink('new-products')}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a></h4>
 	<div class="block_content">
-	{if $new_products !== false}
+	{if $blocknewproducts_new_products !== false}
 		<ul class="product_images clearfix">
-		{foreach from=$new_products item='product' name='newProducts'}
+		{foreach from=$blocknewproducts_new_products item='product' name='newProducts'}
 			{if $smarty.foreach.newProducts.index < 2}
-				<li{if $smarty.foreach.newProducts.first} class="first"{/if}><a href="{$product.link}" title="{$product.legend|escape:html:'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium')}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product.legend|escape:html:'UTF-8'}" /></a></li>
+				<li{if $smarty.foreach.newProducts.first} class="first"{/if}><a href="{$product.link}" title="{$product.legend|escape:html:'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium')}" height="{$blocknewproducts_mediumSize.height}" width="{$blocknewproducts_mediumSize.width}" alt="{$product.legend|escape:html:'UTF-8'}" /></a></li>
 			{/if}
 		{/foreach}
 		</ul>
 		<dl class="products">
-		{foreach from=$new_products item=newproduct name=myLoop}
+		{foreach from=$blocknewproducts_new_products item=newproduct name=myLoop}
 			<dt class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$newproduct.link}" title="{$newproduct.name|escape:html:'UTF-8'}">{$newproduct.name|strip_tags|escape:html:'UTF-8'}</a></dt>
 			{if $newproduct.description_short}<dd class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$newproduct.link}">{$newproduct.description_short|strip_tags:'UTF-8'|truncate:50:'...'}</a>&nbsp;<a href="{$newproduct.link}"><img src="{$img_dir}bullet.gif" alt="&gt;&gt;" width="10" height="7" /></a></dd>{/if}
 		{/foreach}
