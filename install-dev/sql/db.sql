@@ -1216,7 +1216,6 @@ CREATE TABLE `PREFIX_product` (
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`),
   KEY `id_category_default` (`id_category_default`),
-  KEY `id_color_default` (`id_color_default`),
   KEY `date_add` (`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
