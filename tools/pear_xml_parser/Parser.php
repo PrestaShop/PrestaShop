@@ -39,7 +39,7 @@ require_once (_PS_PEAR_XML_PARSER_PATH_.'Parser/Exception.php');
  * to the entire feed.
  *
  * @author  James Stewart <james@jystewart.net>
- * @version Release: 1.0.2
+ * @version Release: @package_version@
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser implements Iterator
@@ -87,13 +87,13 @@ class XML_Feed_Parser implements Iterator
     function __construct($feed, $strict = false, $suppressWarnings = false, $tidy = false)
     {
         $this->model = new DOMDocument;
-        if (! $this->model->loadXML($feed)) {
+        if (! @$this->model->loadXML($feed)) { /* PrestaShop - no error display */
             if (extension_loaded('tidy') && $tidy) {
                 $tidy = new tidy;
                 $tidy->parseString($feed, 
                     array('input-xml' => true, 'output-xml' => true));
                 $tidy->cleanRepair();
-                if (! $this->model->loadXML((string) $tidy)) {
+                if (! @$this->model->loadXML((string) $tidy)) {	/* PrestaShop - no error display */
                     throw new XML_Feed_Parser_Exception('Invalid input: this is not ' .
                         'valid XML');
                 }

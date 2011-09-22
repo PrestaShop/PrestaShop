@@ -24,11 +24,8 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4f7c02592a962e40a920f32f3a24
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3f10faa8b44a7175ae8fc5dcb8dec5de'] = 'Tous les fichiers ont été mis à jour. Mise à jour de la base de données en cours.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1ad932e3b85eb2907a817cd3e3e6907e'] = 'Erreur pour la mise à jour de %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_078a325fbcc1dbd50bd9f969ce954965'] = 'encore %2$s fichiers à mettre à jour.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_62740df131433ec9d45bf1810eefb19b'] = 'erreur pendant la mise à jour de la base de données.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9a2f2cf276ea9f79b31a815897c0e3e6'] = '%s ignoré.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_63ded4905ba41ac4bf00373df2739576'] = 'création du répertoire %2$s. encore %3$s fichiers à mettre à jour.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_11978affb3b0dbb16c50d571fd05de6d'] = 'erreur lors  de la création du répertoire %s';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1b854285afc1988b6f83414fde5943ab'] = '%1$s copié dans %2$s. encore %3$s fichiers à mettre à jour.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0e06ce0972ad338e1d96e8589dc21b9c'] = 'erreur lors de la copie de %1$s vers %2$s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5f7f50973696d0a42c1efcc07f7820a0'] = 'Votre site est maintenant restauré.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_28517b8a291c50d80aa53a078407065b'] = 'Répertoire racine nettoyée.';
@@ -138,9 +135,8 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7f786b903ea8045f5b5b7e3c5a4e
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3a3a651c9a67bca9ac902da789466b93'] = 'Mise à jour instable';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a22eff458b4f4bce6d3232e367ff0138'] = 'Votre configuration actuelle indique que vous voulez mettre à jour votre système à partir d\'une branche de développement instable, sans numéro de version. Si vous mettez à jour, vous ne pourrez plus appliquer le processus de versions stables officiel.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_dae8ace18bdcbcc6ae5aece263e14fe8'] = 'Options';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_c747916b25dcb02e0e81ee84dbd966ea'] = 'Vous n\'avez pas besoin d\'utiliser cette fonctionnalité.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_6b3930a184368a458be6e4429f409877'] = 'Mise à jour terminée. Vérifiez votre boutique (essayez de faire une commande, vérifier le thème)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_91195bbbacc2147a736c849c46368ed8'] = 'Voulez vous restaurer votre boutique';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_6b3930a184368a458be6e4429f409877'] = 'Mise à jour terminée. Vérifiez votre boutique (essayez de faire une commande, vérifier le thème)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a498f9476a893d51ee02b3601678d318'] = 'Cliquez pour restaurer la base de donnée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f34d5debb2bba76aa3e077937a07e373'] = 'Cliquez pour restaurer les fichiers';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_60283aa37e2063b2ada2f99216e1332a'] = 'Votre serveur ne peut pas télécharger le fichier. S\'il vous plaît le télécharger d\'abord par ftp dans votre répertoire admin/autoupgrade';

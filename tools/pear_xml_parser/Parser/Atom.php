@@ -30,7 +30,7 @@
  *  person - defaults to name, but parameter based access
  *
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: @package_version@
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
@@ -39,7 +39,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      * The URI of the RelaxNG schema used to (optionally) validate the feed 
      * @var string
      */
-    private $relax = 'atom.rnc';
+    protected $relax = 'atom.rng';
 
     /**
      * We're likely to use XPath, so let's keep it global 
@@ -117,7 +117,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         $this->model = $model;
 
         if ($strict) {
-            if (! $this->model->relaxNGValidateSource($this->relax)) {
+            if (! $this->relaxNGValidate()) {
                 throw new XML_Feed_Parser_Exception('Failed required validation');
             }
         }
@@ -148,7 +148,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
         if ($entries->length > 0) {
             $xmlBase = $entries->item(0)->baseURI;
-            $entry = new $this->itemElement($entries->item(0), $this, $xmlBase);
+            $entry = new $this->itemClass($entries->item(0), $this, $xmlBase);
             
             if (in_array('evaluate', get_class_methods($this->xpath))) {
                 $offset = $this->xpath->evaluate("count(preceding-sibling::atom:entry)", $entries->item(0));
@@ -232,6 +232,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
             }
             return false;
         }
+
         return $this->parseTextConstruct($content);
     }
     
@@ -258,12 +259,11 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         if (strpos($type, 'text/') === 0) {
             $type = 'text';
         }
+
         switch ($type) {
             case 'text':
-                return $content->nodeValue;
-                break;
             case 'html':
-                return str_replace('&lt;', '<', $content->nodeValue);
+                return $content->textContent;
                 break;
             case 'xhtml':
                 $container = $content->getElementsByTagName('div');
@@ -277,7 +277,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
                     foreach ($contents->childNodes as $node) {
                         $result .= $this->traverseNode($node);
                     }
-                    return utf8_decode($result);
+                    return $result;
                 }
                 break;
             case preg_match('@^[a-zA-Z]+/[a-zA-Z+]*xml@i', $type) > 0:

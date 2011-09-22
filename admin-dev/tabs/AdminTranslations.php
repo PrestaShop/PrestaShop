@@ -250,7 +250,7 @@ class AdminTranslations extends AdminTab
 		$arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
-			if ($content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false, stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
+			if ($content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false, @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
 				if (file_put_contents($file, $content))
@@ -712,7 +712,7 @@ class AdminTranslations extends AdminTab
 			$this->displayWarning($this->l('If you choose to update an existing language pack, all your previous customization in the theme named prestashop will be lost. This includes front office expressions and default e-mail templates.'));
 			echo '<div style="font-weight:bold; float:left;">'.$this->l('Language you want to add or update:').' ';
 
-			if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_each_language_pack.php?version='._PS_VERSION_, false, stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
+			if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_each_language_pack.php?version='._PS_VERSION_, false, @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				// Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
 				if ($lang_packs != '' AND $lang_packs = Tools::jsonDecode($lang_packs,true))

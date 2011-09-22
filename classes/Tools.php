@@ -556,7 +556,8 @@ class ToolsCore
 	/**
 	* Display an error according to an error code
 	*
-	* @param integer $code Error code
+	* @param string $string Error message
+	* @param boolean $htmlentities By default at true for parsing error message with htmlentities
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
@@ -656,7 +657,7 @@ class ToolsCore
 			/* Categories specifics meta tags */
 			elseif ($id_category = self::getValue('id_category'))
 			{
-				$page_number = self::getValue('p');
+				$page_number = (int)self::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang` cl
@@ -665,6 +666,8 @@ class ToolsCore
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['description']);
+					
+					// Paginate title
 					if (!empty($row['meta_title']))
 						$row['meta_title'] = $row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
 					else
@@ -677,7 +680,7 @@ class ToolsCore
 			/* Manufacturers specifics meta tags */
 			elseif ($id_manufacturer = self::getValue('id_manufacturer'))
 			{
-				$page_number = self::getValue('p');
+				$page_number = (int)self::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'manufacturer_lang` ml
@@ -1178,7 +1181,7 @@ class ToolsCore
 	public static function file_get_contents($url, $useIncludePath = false, $streamContext = NULL, $curlTimeOut = 5)
     {
 		if ($streamContext == NULL)
-			$streamContext = stream_context_create(array('http' => array('timeout' => 5)));
+			$streamContext = @stream_context_create(array('http' => array('timeout' => 5)));
 
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
 			return @file_get_contents($url, $useIncludePath, $streamContext);

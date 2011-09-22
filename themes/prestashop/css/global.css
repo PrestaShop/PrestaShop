@@ -1175,6 +1175,9 @@ tr.cart_total_price { font-weight: bold }
 	margin: 1em 0
 }
 
+#guest-tracking p.center { width: 100%; text-align: center; }
+#guest-tracking p.center input.exclusive_large { display: inline; }
+
 /* views block */
 #views_block {
 	margin: 0 auto;

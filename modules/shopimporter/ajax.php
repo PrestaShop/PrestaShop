@@ -5,10 +5,12 @@ include_once('../../init.php');
 include_once('../../modules/shopimporter/shopimporter.php');
 ini_set('display_errors', 'off');
 
-if (!Tools::getValue('ajax') OR Tools::getValue('token') != sha1(_COOKIE_KEY_.'ajaxShopImporter'))
+$moduleName = Tools::getValue('moduleName');
+
+if (!Tools::getValue('ajax') || Tools::getValue('token') != sha1(_COOKIE_KEY_.'ajaxShopImporter')  || !ctype_alnum($moduleName))
 	die;
 
-$moduleName = Tools::getValue('moduleName');
+
 $className = Tools::getValue('className');
 $getMethod = Tools::getValue('getMethod');
 $limit = Tools::getValue('limit');
@@ -69,7 +71,7 @@ if (Tools::isSubmit('getData') || Tools::isSubmit('syncLang') || Tools::isSubmit
 		{
 			$return = call_user_func_array(array($importModule, $getMethod), array($limit, $nbr_import));
 			$shopImporter = new shopImporter();
-			$shopImporter->generiqueImport($className, $return, (bool)$save);
+			$shopImporter->genericImport($className, $return, (bool)$save);
 		}
 	}
 }
@@ -93,7 +95,7 @@ if (Tools::isSubmit('getDataWS') || Tools::isSubmit('syncLangWS') || Tools::isSu
 			{
 				$return = call_user_func_array(array($importModule, $getMethod), array($limit, $nbr_import));
 				$shopImporter = new shopImporter();
-				$shopImporter->generiqueImport($className, $return, (bool)$save);
+				$shopImporter->genericImport($className, $return, (bool)$save);
 			}
 			die('{"hasError" : false, "error" : []}');
 		} catch (Exception $e)

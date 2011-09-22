@@ -25,20 +25,19 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class UpgraderCore{
+class UpgraderCore
+{
 	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
-	public $rss_version_link = 'http://www.prestashop.com/xml/version.xml';
+	public $rss_version_link = 'http://www.prestashop.com/xml/upgrader.xml';
 	public $rss_md5file_link_dir = 'http://www.prestashop.com/xml/md5/';
 	/**
 	 * link contains hte url where to download the file
 	 * 
 	 * @var string 
 	 */
-	private $needUpgrade = false;
-	private $noRefresh = false;
-	private $changedFiles = array();
-	private $missingFiles = array();
-	private $versionIsModified = false;
+	private $need_upgrade = false;
+	private $changed_files = array();
+	private $missing_files = array();
 
 	public $version_name;
 	public $version_num;
@@ -50,17 +49,8 @@ class UpgraderCore{
 
 	public function __get($var)
 	{
-		if($var == 'needUpgrade')
+		if ($var == 'need_upgrade')
 			return $this->isLastVersion();
-	}
-	/**
-	 * we need to checkPSVersion when we use that class
-	 * @param boolean noRefresh if true, checkPSVersion will not refresh its information
-	 * @return object Upgrader 
-	 */
-	public function __construct($noRefresh = false)
-	{
-		$this->noRefresh = (bool)$noRefresh;
 	}
 
 	/**
@@ -87,7 +77,7 @@ class UpgraderCore{
 		if (empty($this->link))
 			$this->checkPSVersion();
 
-		return $this->needUpgrade;
+		return $this->need_upgrade;
 
 	}
 
@@ -100,13 +90,15 @@ class UpgraderCore{
 	{
 		if (empty($this->link))
 		{
-
-			$lastCheck = Configuration::get('PS_LAST_VERSION_CHECK');
+			if (class_exists('Configuration'))
+				$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
+			else
+				$last_check = 0;
 			// if we use the autoupgrade process, we will never refresh it
 			// except if no check has been done before
-			if ($force OR ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)) )
+			if ($force || ($last_check < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 			{
-				libxml_set_streams_context(stream_context_create(array('http' => array('timeout' => 3))));
+				libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 				if ($feed = @simplexml_load_file($this->rss_version_link))
 				{
 
@@ -118,7 +110,7 @@ class UpgraderCore{
 					$this->autoupgrade = (int)$feed->autoupgrade;
 					$this->autoupgrade_module = (int)$feed->autoupgrade_module;
 					$this->desc = (string)$feed->desc ;
-					$configLastVersion = array(
+					$config_last_version = array(
 						'name' => $this->version_name,
 						'num' => $this->version_num,
 						'link' => $this->link,
@@ -128,22 +120,24 @@ class UpgraderCore{
 						'changelog' => $this->changelog,
 						'desc' => $this->desc
 					);
-
-					Configuration::updateValue('PS_LAST_VERSION',serialize($configLastVersion));
+					if (class_exists('Configuration'))
+					{
+						Configuration::updateValue('PS_LAST_VERSION', serialize($config_last_version));
 					Configuration::updateValue('PS_LAST_VERSION_CHECK',time());
 				}
 			}
+			}
 			else
 			{
-				$lastVersionCheck = @unserialize(Configuration::get('PS_LAST_VERSION'));
-				$this->version_name = $lastVersionCheck['name'];
-				$this->version_num = $lastVersionCheck['num'];
-				$this->link = $lastVersionCheck['link'];
-				$this->autoupgrade = $lastVersionCheck['autoupgrade'];
-				$this->autoupgrade_module = $lastVersionCheck['autoupgrade_module'];
-				$this->md5 = $lastVersionCheck['md5'];
-				$this->desc = $lastVersionCheck['desc'];
-				$this->changelog = $lastVersionCheck['changelog'];
+				$last_version_check = @unserialize(Configuration::get('PS_LAST_VERSION'));
+				$this->version_name = $last_version_check['name'];
+				$this->version_num = $last_version_check['num'];
+				$this->link = $last_version_check['link'];
+				$this->autoupgrade = $last_version_check['autoupgrade'];
+				$this->autoupgrade_module = $last_version_check['autoupgrade_module'];
+				$this->md5 = $last_version_check['md5'];
+				$this->desc = $last_version_check['desc'];
+				$this->changelog = $last_version_check['changelog'];
 			}
 		}
 		// retro-compatibility :
@@ -151,7 +145,7 @@ class UpgraderCore{
 		// false otherwise
 		if (version_compare(_PS_VERSION_, $this->version_num, '<'))
 		{
-			$this->needUpgrade = true;
+			$this->need_upgrade = true;
 			return array('name' => $this->version_name, 'link' => $this->link);
 		}
 		else
@@ -160,61 +154,69 @@ class UpgraderCore{
 
 	public function getChangedFilesList()
 	{
-		$checksum = simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
+		if (count($this->changed_files) == 0)
+		{
+			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
 		if ($checksum === false)
-			throw new Exception('No checksum xml file for your Prestashop version');
-		$this->browseXmlAndCompare($checksum);	
-		
-		return $this->changedFiles;
+				return false;
+			else
+				$this->browseXmlAndCompare($checksum->ps_root_dir[0]);
 }
+		return $this->changed_files;
+	}
 	protected function addChangedFile($path)
 	{
-		$this->versionIsModified = true;
-		$this->changedFiles[] = $path;
+		$this->version_is_modified = true;
+		$this->changed_files[] = $path;
+		//array_unique($this->changed_files);
 	}
 
 	protected function addMissingFile($path)
 	{
-		$this->versionIsModified = true;
-		$this->missingFiles[] = $path;
+		$this->version_is_modified = true;
+		$this->missing_files[] = $path;
+		//array_unique($this->missingFile);
 	}
 
-	protected function browseXmlAndCompare($node, &$currentPath = array(), $level = 0)
+	protected function browseXmlAndCompare($node, &$current_path = array(), $level = 1)
 	{
 		foreach ($node as $key => $child)
 		{
-			if (is_object($child) && $child->getName() != 'md5file')
+			if (is_object($child) && $child->getName() == 'dir')
 			{
-				$level += 1;
-				$currentPath[$level] = $child->getName();
-				$this->browseXmlAndCompare($child, $currentPath, $level);
-				$level -= 1;
+				$current_path[$level] = (string)$child['name'];
+				$this->browseXmlAndCompare($child, $current_path, $level + 1);
 			}
-			else
+			else if (is_object($child) && $child->getName() == 'md5file')
 			{
-				$path = '';
-				for ($i=1;$i<=$level;$i++)
-					$path .= $currentPath[$i].'/';
-				$path .= (string)$child->attributes()->name;
+					$path = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR;
+					for ($i = 1; $i < $level; $i++)
+						$path .= $current_path[$i].'/';
+					$path .= (string)$child['name'];
 				$path = str_replace('ps_root_dir',_PS_ROOT_DIR_,$path);
+
+					// replace default admin dir by current one 
+					$path = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $path);
 				if(!file_exists($path))
 					$this->addMissingFile($path);
-				else if (!$this->compareChecksum($path, (string)$child->attributes()->sum))
+					else if (!$this->compareChecksum($path, (string)$child))
 					$this->addChangedFile($path);
+					// else, file is original (and ok)
 			}
 		}
 	}
 
-	protected function compareChecksum($path, $originalSum)
+	protected function compareChecksum($path, $original_sum)
 	{
-		if (md5_file($path) == $originalSum)
+		if (md5_file($path) == $original_sum)
 			return true;
 		return false;
 	}
 
 	public function isAuthenticPrestashopVersion()
 	{
-		return !$this->versionIsModified;
+		$this->getChangedFilesList();
+		return !$this->version_is_modified;
 	}
 
 }

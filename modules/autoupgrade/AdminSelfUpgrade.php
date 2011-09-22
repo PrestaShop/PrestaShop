@@ -459,15 +459,29 @@ $this->standalone = true;
 	}
 	public function ajaxProcessCheckFilesVersion()
 	{
-		if ($testOrigCore = $this->upgrader->isAuthenticPrestashopVersion() !== false)
+		if ($this->upgrader->isAuthenticPrestashopVersion() !== false)
+		{
 			$this->nextParams['status'] = 'ok';
+			$testOrigCore = true;
+		}
 		else
-			$this->nextParams['status'] = 'nok';
+		{
+			$testOrigCore = false;
+			$this->nextParams['status'] = 'warn';
+		}
 
 		$changedFileList = $this->upgrader->getChangedFilesList();
-
+		if ($changedFileList === false)
+		{
+			$changedFileList = array();
+			$this->nextParams['msg'] = $this->l('Unable to check files');
+			$this->nextParams['status'] = 'error';
+		}
+		else
+		{
 	//		echo '<img src="'.$originalCore.'" /> '.
 		$this->nextParams['msg'] = ($testOrigCore?$this->l('Core files are ok'):sprintf($this->l('%s core files have been modified'), sizeof($changedFileList)));
+		}
 		$this->nextParams['result'] = $changedFileList;
 	}
 	public function ajaxProcessUpgradeNow()
@@ -534,7 +548,7 @@ $this->standalone = true;
 		if (file_exists($destExtract))
 			Tools::deletedirectory($destExtract);
 
-		if (Tools::ZipExtract($filepath,$destExtract))
+		if (self::ZipExtract($filepath,$destExtract))
 		{
 				$adminDir = str_replace($this->prodRootDir, '', $this->adminDir);
 				rename($this->latestRootDir.DIRECTORY_SEPARATOR.'admin', $this->latestRootDir.DIRECTORY_SEPARATOR.$adminDir);
@@ -935,9 +949,11 @@ $this->standalone = true;
 				if (self::ZipExtract($filepath, $destExtract))
 				{
 					// once it's restored, do not delete the archive file. This has to be done manually
+					// but we can empty the var, to avoid loop.
+					$this->backupFilesFilename = '';
 					if (!empty($this->backupDbFilename) AND file_exists($this->backupDbFilename) )
 					{
-						$this->nextDesc = $this->l('Files restored. No database backup found. Restoration done.');
+						$this->nextDesc = $this->l('Files restored. Checking next step ...');
 						$this->next = 'rollback';
 					}
 					else
@@ -1548,7 +1564,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 				$srcRootWritable = '../img/admin/disabled.gif';
 			echo '<b>'.$this->l('Root directory status').' : </b>'.'<img src="'.$srcRootWritable.'" /> '.($this->rootWritable?$this->l('fully writable'):$this->l('not writable recursively')).'<br/><br/>';
 
-			if ($this->upgrader->needUpgrade)
+			if ($this->upgrader->need_upgrade)
 			{
 				if ($this->upgrader->autoupgrade)
 					$srcAutoupgrade = '../img/admin/enabled.gif';
@@ -1556,6 +1572,12 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 					$srcAutoupgrade = '../img/admin/disabled.gif';
 				echo '<b>'.$this->l('Autoupgrade allowed').' : </b>'.'<img src="'.$srcAutoupgrade.'" /> '.($this->upgrader->autoupgrade?$this->l('This release allow autoupgrade.'):$this->l('This release does not allow autoupgrade')).'. <br/><br/>';
 			}
+			else
+			{
+				$srcAutoupgrade = '../img/admin/disabled.gif';
+				echo '<b>'.$this->l('Autoupgrade allowed').' : </b>'.'<img src="../img/admin/disabled.gif" /> . <br/><br/>';
+			}
+
 
 			if (Configuration::get('PS_SHOP_ENABLE'))
 			{
@@ -1606,7 +1628,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 //			echo '<input class="button" type="submit" name="sumbitUpdateVersion" value="'.$this->l('Backup Database, backup files and update right now and in one click !').'"/>';
 //			echo '<input class="button" type="submit" id="refreshCurrent" value="'.$this->l("refresh update dir / current").'"/>';
 			echo '<br/>';
-		if ($this->upgrader->needUpgrade)
+		if ($this->upgrader->need_upgrade)
 		{
 			if($this->configOk())
 			{
@@ -2129,8 +2151,12 @@ $js.= '$(document).ready(function(){
 				res = $.parseJSON(res);
 				answer = res.nextParams;
 				$("#checkPrestaShopFilesVersion").html("<span>"+answer.msg+"</span> ");
+				if (answer.status == "error")
+					$("#checkPrestaShopFilesVersion").prepend("<img src=\"../img/admin/warning.gif\" /> ");
+				else
+				{
+					$("#checkPrestaShopFilesVersion").prepend(answer.status);
 				$("#checkPrestaShopFilesVersion").append("<a id=\"toggleChangedList\" class=\"button\" href=\"\">'.$this->l('See or hide the list').'</a><br/>");
-
 				$("#checkPrestaShopFilesVersion").append("<div id=\"changedList\" style=\"display:none \">");
 
 				$("#changedList").html("<ul>");
@@ -2139,7 +2165,7 @@ $js.= '$(document).ready(function(){
 				});
 
 $("#toggleChangedList").bind("click",function(e){e.preventDefault();$("#changedList").toggle();});
-
+			}
 			}
 			,
 			error: function(res,textStatus,jqXHR)

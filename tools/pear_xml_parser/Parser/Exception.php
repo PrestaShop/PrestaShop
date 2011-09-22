@@ -31,7 +31,7 @@ require_once(dirname(__FILE__).'/../../pear/PEAR.php');
  * to help with identification of the source of exceptions.
  *
  * @author  James Stewart <james@jystewart.net>
- * @version Release: 1.0.2
+ * @version Release: @package_version@
  * @package XML_Feed_Parser
  */ 
 class XML_Feed_Parser_Exception extends PEAR_Exception

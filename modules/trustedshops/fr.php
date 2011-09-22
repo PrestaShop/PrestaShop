@@ -130,6 +130,7 @@ $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_23a58bf9274bedb19375e527a0
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_fd5291d7f0624933870702ff183bb14e'] = 'module de paiement';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_b3b1a406e097bc87c8745db26e11904e'] = 'Le mettre à jour';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_c9ba5f6e6d58162530424afaa68bf496'] = 'Configuration de la tâche cron';
+$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_12a4fc31ae8a9e4038df56961a5aec9b'] = 'Si vous utilisez un certificat Trusted Shops EXCELLENCE dans votre magasin, mis en place d\'une tâche cron sur votre serveur web.';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_f811271eb84f3df1a430c3c78b6e7640'] = 'Lancez le fichier';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_06ec9154ce96a389f7b1d884e021818b'] = 'avec un intervalle de 10 minutes.';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_f89b7100efcc136900c909690e43f008'] = 'La ligne correspondante dans votre fichier cron apparaît ainsi :';

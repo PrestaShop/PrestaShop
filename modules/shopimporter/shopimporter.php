@@ -289,7 +289,7 @@ class shopimporter extends ImportModule
 		$exportModules = parent::getImportModulesOnDisk();
 		//get installed module only
 		foreach($exportModules as $key => $module)
-			if ($module->name == $this->name OR !(bool)$module->id)
+			if ($module->name == $this->name || !(bool)$module->id)
 				unset($exportModules[$key]);
 		$html = '<script type="text/javascript">var globalAjaxShopImporterToken = "'.sha1(_COOKIE_KEY_.'ajaxShopImporter').'";</script>
 		<script type="text/javascript" src="../modules/shopimporter/shopimporter.js"></script>
@@ -418,7 +418,7 @@ class shopimporter extends ImportModule
 		return $html;
 	}
 
-	public function generiqueImport($className, $fields, $save = false)
+	public function genericImport($className, $fields, $save = false)
 	{
 		$return = '';
 		$json = array();
@@ -432,7 +432,7 @@ class shopimporter extends ImportModule
 		$object = new $className();
 		$rules = call_user_func(array($className, 'getValidationRules'), $className);
 
-		if ((sizeof($rules['requiredLang']) OR sizeof($rules['sizeLang']) OR sizeof($rules['validateLang']) OR Tools::isSubmit('syncLang') OR  Tools::isSubmit('syncCurrency')))
+		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang']) || Tools::isSubmit('syncLang') ||  Tools::isSubmit('syncCurrency')))
 		{
 			$moduleName = Tools::getValue('moduleName');
 			if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
@@ -446,7 +446,7 @@ class shopimporter extends ImportModule
 				$importModule->prefix = Tools::getValue('prefix');
 				$defaultLanguage = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 				$languages = $importModule->getLangagues(0);
-				if (Tools::isSubmit('syncLang') OR Tools::isSubmit('syncLangWS'))
+				if (Tools::isSubmit('syncLang') || Tools::isSubmit('syncLangWS'))
 				{
 					$defaultIdLand = $importModule->getDefaultIdLang();
 					$defaultLanguageImport = new Language(Language::getIdByIso($languages[$defaultIdLand]['iso_code']));
@@ -455,7 +455,7 @@ class shopimporter extends ImportModule
 											'.$importModule->displayName.' : '.$defaultLanguageImport->name.'<br>'.$this->l('Please change default language in your configuration');
 				}
 
-				if (Tools::isSubmit('syncCurrency') OR Tools::isSubmit('syncCurrencyWS'))
+				if (Tools::isSubmit('syncCurrency') || Tools::isSubmit('syncCurrencyWS'))
 				{
 					$defaultIdCurrency = $importModule->getDefaultIdCurrency();
 					$currencies = $importModule->getCurrencies(0);
@@ -499,15 +499,13 @@ class shopimporter extends ImportModule
 			$json['hasError'] = true;
 			$json['error'] = $errors;
 		}
-		//die('');
-		if ($save OR Tools::isSubmit('syncLang') OR Tools::isSubmit('syncLangWS'))
-		{
 			
+		if ($save || Tools::isSubmit('syncLang') || Tools::isSubmit('syncLangWS'))
+		{
 			//add language if not exist in prestashop
 			if ($className == 'Language')
 			{
-				
-				if (Tools::isSubmit('syncLang') OR Tools::isSubmit('syncLangWS'))
+				if (Tools::isSubmit('syncLang') || Tools::isSubmit('syncLangWS'))
 					$add = true;
 				else
 					$add = false;
@@ -540,7 +538,7 @@ class shopimporter extends ImportModule
 		}
 		die(Tools::jsonEncode($json));
 	}
-	public function generiqueImportWS($className, $fields, $save = false)
+	public function genericImportWS($className, $fields, $save = false)
 	{
 
 		$return = '';
@@ -557,7 +555,7 @@ class shopimporter extends ImportModule
 		$rules = call_user_func(array($className, 'getValidationRules'), $className);
 		
 
-		if ((sizeof($rules['requiredLang']) OR sizeof($rules['sizeLang']) OR sizeof($rules['validateLang']) OR Tools::isSubmit('syncLangWS') OR  Tools::isSubmit('syncCurrency')))
+		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang']) || Tools::isSubmit('syncLangWS') ||  Tools::isSubmit('syncCurrency')))
 		{
 			$moduleName = Tools::getValue('moduleName');
 			if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
@@ -565,12 +563,6 @@ class shopimporter extends ImportModule
 				
 				require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
 				$importModule = new $moduleName();
-			/*	$importModule->server = Tools::getValue('server');
-				$importModule->user = Tools::getValue('user');
-				$importModule->passwd = Tools::getValue('password');
-				$importModule->database = Tools::getValue('database');
-				$importModule->prefix = Tools::getValue('prefix');
-				*/
 
 				$defaultLanguage = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 				
@@ -629,12 +621,12 @@ class shopimporter extends ImportModule
 			$json['hasError'] = true;
 			$json['error'] = $errors;
 		}
-		if ($save OR Tools::isSubmit('syncLang') OR Tools::isSubmit('syncLangWS'))
+		if ($save || Tools::isSubmit('syncLang') || Tools::isSubmit('syncLangWS'))
 		{
 			//add language if not exist in prestashop
 			if ($className == 'Language')
 			{
-				if (Tools::isSubmit('syncLang') OR Tools::isSubmit('syncLangWS'))
+				if (Tools::isSubmit('syncLang') || Tools::isSubmit('syncLangWS'))
 					$add = true;
 				else
 					$add = false;
@@ -938,7 +930,7 @@ class shopimporter extends ImportModule
 		foreach ($this->supportedImports[$className]['alterTable'] AS $name => $type)
 		{
 			$moduleName = Tools::getValue('moduleName');
-			Db::getInstance()->ExecuteS("SHOW COLUMNS FROM `"._DB_PREFIX_.pSQL($from)."` LIKE '".$name.'_'.$moduleName."'");
+			Db::getInstance()->ExecuteS("SHOW COLUMNS FROM `"._DB_PREFIX_.pSQL($from)."` LIKE '".pSQL($name).'_'.pSQL($moduleName)."'");
 			if (!Db::getInstance()->numRows() AND !array_key_exists($name.'_'.$moduleName, $result))
 					$queryTmp .= ' ADD `'.$name.'_'.$moduleName.'` '.$type.' NOT NULL,';
 		}
@@ -1065,13 +1057,13 @@ class shopimporter extends ImportModule
 						else
 							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
 
-		if ((sizeof($rules['requiredLang']) OR sizeof($rules['sizeLang']) OR sizeof($rules['validateLang'])))
+		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang'])))
 		{
 		$matchIdLang = $this->getMatchIdLang(0);
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] AS $fieldLang)
 		{
-			if (($empty = $fields[$fieldLang][$matchIdLang[$defaultLanguage->id]]) === false OR empty($empty))
+			if (($empty = $fields[$fieldLang][$matchIdLang[$defaultLanguage->id]]) === false || empty($empty))
 				if ($hasErrors == 2)
 				{
 					if (array_key_exists($fieldLang, $rules['sizeLang']))

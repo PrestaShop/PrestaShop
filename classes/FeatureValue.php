@@ -167,10 +167,30 @@ class FeatureValueCore extends ObjectModel
 		return (int)$id_feature_value;
 	}
 
+	public function add($autodate = true, $nullValues = false)
+	{
+		$return = parent::add($autodate, $nullValues);
+		if ($return)
+			Module::hookExec('afterSaveFeatureValue', array('id_feature_value' => $this->id));
+		return $return;
+	}
+
 	public function delete()
 	{
 		/* Also delete related products */
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature_value` = '.(int)$this->id);
-		return parent::delete();
+		$return = parent::delete();
+		
+		if ($return)
+			Module::hookExec('afterDeleteFeatureValue', array('id_feature_value' => $this->id));
+		return $return;
+	}
+
+	public function update($nullValues = false)
+	{
+		$return = parent::update($nullValues);
+		if ($return)
+			Module::hookExec('afterSaveFeatureValue', array('id_feature_value' => $this->id));
+		return $return;
 	}
 }

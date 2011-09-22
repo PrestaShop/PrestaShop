@@ -75,6 +75,9 @@ class AdminAttributesGroups extends AdminTab
 		if (Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitDelattribute'))
 			$this->adminAttributes->postProcess($this->token);
 
+		Module::hookExec('postProcessAttributeGroup',
+		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessAttributeGroup to stop saving process
+
 		if(Tools::getValue('submitDel'.$this->table))
 		{
 		 	if ($this->tabAccess['delete'] === '1')
@@ -226,8 +229,11 @@ class AdminAttributesGroups extends AdminTab
 					<div id="name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input size="33" type="text" name="name_'.$language['id_lang'].'" value="'.htmlspecialchars($this->getFieldValue($obj, 'name', (int)($language['id_lang']))).'" /><sup> *</sup>
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-					</div>';
-		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'name¤public_name', 'name');
+					</div>
+				<script type="text/javascript">
+					var flag_fields = \'name¤public_name\';
+				</script>';
+		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'flag_fields', 'name', false, true);
 		echo '
 					<div class="clear"></div>
 				</div>
@@ -240,7 +246,7 @@ class AdminAttributesGroups extends AdminTab
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Term or phrase displayed to the customer').'</p>
 					</div>';
-		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'name¤public_name', 'public_name');
+		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'flag_fields', 'public_name', false, true);
 		echo '
 					<div class="clear"></div>
 				</div>

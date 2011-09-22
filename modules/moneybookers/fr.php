@@ -44,9 +44,11 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_3513f0ecb96b6c959454534578ee140
 $_MODULE['<{moneybookers}prestashop>moneybookers_64d37ad3bf2f0aee7c8a321321c7e9d9'] = 'J\'ai déjà un compte Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b0e8c8326985417a5efdd6649f02e385'] = 'Grâce au partenariat PrestaShop/Moneybookers,';
 $_MODULE['<{moneybookers}prestashop>moneybookers_d5086eeb1bc1994c5abf945fd79d4246'] = 'vous bénéficierez d\'un taux de commission préférentiel !';
+$_MODULE['<{moneybookers}prestashop>moneybookers_fd90882b9b7c8653dd645f5e986b5402'] = 'Frais disponible depuis le 21 mars 2011';
 $_MODULE['<{moneybookers}prestashop>moneybookers_68db2cda800ddb2ae307c60b0a96252f'] = 'Solution de Paiement en ligne Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_b9c758264b134743b13a85ca4055c629'] = 'Estimation du volume mensuel passant par Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_7d294d4900ff1a38f5b0a89612916eac'] = 'Pour les marchands au-dessus de €100,000 des tarifs sur mesure peuvent être mis en place.';
+$_MODULE['<{moneybookers}prestashop>moneybookers_1467fcd161d2aee8146c7808c9377852'] = 'Pour voir la dernière mise à jour des frais détaillés';
 $_MODULE['<{moneybookers}prestashop>moneybookers_936ccdb97115e9f35a11d35e3d5b5cad'] = 'Cliquez ici';
 $_MODULE['<{moneybookers}prestashop>moneybookers_11c8ff1cde03aa19406dfe5971b92553'] = 'Porte-monnaie électronique Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_223b661f7b13d33498a9274bb10e3538'] = 'Portail de Paiements Directs Moneybookers ';

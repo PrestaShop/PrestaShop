@@ -49,27 +49,33 @@ class BlockLayered extends Module
 	
 	public function install()
 	{
-		if ($result = parent::install() && $this->registerHook('leftColumn') && $this->registerHook('header') && $this->registerHook('footer')
+		if ($this->registerHook('leftColumn') && $this->registerHook('header') && $this->registerHook('footer')
 		&& $this->registerHook('categoryAddition') && $this->registerHook('categoryUpdate') && $this->registerHook('attributeGroupForm')
 		&& $this->registerHook('afterSaveAttributeGroup') && $this->registerHook('afterDeleteAttributeGroup') && $this->registerHook('featureForm')
 		&& $this->registerHook('afterDeleteFeature') && $this->registerHook('afterSaveFeature') && $this->registerHook('categoryDeletion')
-		&& $this->registerHook('afterSaveProduct') && $this->registerHook('productListAssign'))
+		&& $this->registerHook('afterSaveProduct') && $this->registerHook('productListAssign') && $this->registerHook('postProcessAttributeGroup')
+		&& $this->registerHook('postProcessFeature') && $this->registerHook('featureValueForm') && $this->registerHook('postProcessFeatureValue')
+		&& $this->registerHook('afterDeleteFeatureValue') && $this->registerHook('afterSaveFeatureValue') && $this->registerHook('attributeForm')
+		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
+		&& parent::install())
 		{
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 0);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
 			
 			$this->rebuildLayeredStructure();
 			$this->rebuildLayeredCache();
-		}
-		
 		self::_installPriceIndexTable();
 		self::_installFriendlyUrlTable();
 		self::_installIndexableAttributeTable();
+			self::_installProductAttributeTable();
 
 		$this->indexUrl();
+			$this->indexAttribute();
 		self::fullIndexProcess();
 
-		return $result;
+			return true;
+	}
+		return false;
 	}
 
 	public function uninstall()
@@ -78,22 +84,24 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_HIDE_0_VALUES');
 		Configuration::deleteByName('PS_LAYERED_SHOW_QTIES');
 		
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'price_static_index');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group_lang');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature_lang');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
-		
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_product_attribute');
 		return parent::uninstall();
 	}
 	
 	private function _installPriceIndexTable()
 	{
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS  `'._DB_PREFIX_.'price_static_index`');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_price_index`');
 		
 		Db::getInstance()->Execute('
-		CREATE TABLE `'._DB_PREFIX_.'price_static_index` (
+		CREATE TABLE `'._DB_PREFIX_.'layered_price_index` (
 		`id_product` INT  NOT NULL, `id_currency` INT NOT NULL,
 		`price_min` INT NOT NULL, `price_max` INT NOT NULL,
 		PRIMARY KEY (`id_product`, `id_currency`), INDEX `id_currency` (`id_currency`),
@@ -117,6 +125,7 @@ class BlockLayered extends Module
 	
 	private function _installIndexableAttributeTable()
 	{
+		// Attributes Groups
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS  `'._DB_PREFIX_.'layered_indexable_attribute_group`');
 		Db::getInstance()->Execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_group` (
@@ -127,17 +136,93 @@ class BlockLayered extends Module
 		INSERT INTO `'._DB_PREFIX_.'layered_indexable_attribute_group`
 		SELECT id_attribute_group, 1 FROM `'._DB_PREFIX_.'attribute_group`');
 		
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_group_lang`');
+		Db::getInstance()->Execute('
+		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_group_lang` (
+		`id_attribute_group` INT NOT NULL,
+		`id_lang` INT NOT NULL,
+		`url_name` VARCHAR(20),
+		`meta_title` VARCHAR(20),
+		PRIMARY KEY (`id_attribute_group`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		
+		// Attributes
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_lang`');
+		Db::getInstance()->Execute('
+		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_lang` (
+		`id_attribute` INT NOT NULL,
+		`id_lang` INT NOT NULL,
+		`url_name` VARCHAR(20),
+		`meta_title` VARCHAR(20),
+		PRIMARY KEY (`id_attribute`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		
+		
+		// Features
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS  `'._DB_PREFIX_.'layered_indexable_feature`');
 		Db::getInstance()->Execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature` (
 		`id_feature` INT NOT NULL,
 		`indexable` BOOL NOT NULL DEFAULT 0,
 		PRIMARY KEY (`id_feature`)) ENGINE = '._MYSQL_ENGINE_);
+		
 		Db::getInstance()->Execute('
 		INSERT INTO `'._DB_PREFIX_.'layered_indexable_feature`
 		SELECT id_feature, 1 FROM `'._DB_PREFIX_.'feature`');
+		
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_lang`');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_lang`');
+		Db::getInstance()->Execute('
+		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature_lang` (
+		`id_feature` INT NOT NULL,
+		`id_lang` INT NOT NULL,
+		`url_name` VARCHAR(20) NOT NULL,
+		`meta_title` VARCHAR(20),
+		PRIMARY KEY (`id_feature`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		
+		// Features values
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_value_lang`');
+		Db::getInstance()->Execute('
+		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature_value_lang` (
+		`id_feature_value` INT NOT NULL,
+		`id_lang` INT NOT NULL,
+		`url_name` VARCHAR(20),
+		`meta_title` VARCHAR(20),
+		PRIMARY KEY (`id_feature_value`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
 	}
 	
+	/**
+	 * 
+	 * create table product attribute
+	 */
+	public function _installProductAttributeTable()
+	{
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_product_attribute`');
+		Db::getInstance()->Execute('
+		CREATE TABLE `'._DB_PREFIX_.'layered_product_attribute` (
+		`id_attribute` int(10) unsigned NOT NULL,
+		`id_product` int(10) unsigned NOT NULL,
+		`id_attribute_group` int(10) unsigned NOT NULL DEFAULT "0",
+		KEY `id_attribute` (`id_attribute`)
+		) ENGINE= '._MYSQL_ENGINE_);
+	}
+	
+	/**
+	 * 
+	 * Generate data product attribute
+	 */
+	public function indexAttribute()
+	{
+		Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'layered_product_attribute');
+		
+		Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'layered_product_attribute` (`id_attribute`, `id_product`, `id_attribute_group`) 
+		SELECT pac.id_attribute, pa.id_product, ag.id_attribute_group 
+		FROM '._DB_PREFIX_.'product_attribute pa 
+		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pac.id_product_attribute = pa.id_product_attribute 
+		INNER JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute) 
+		INNER JOIN '._DB_PREFIX_.'attribute_group ag ON ag.id_attribute_group = a.id_attribute_group  
+		GROUP BY a.id_attribute, pa.id_product');
+		
+		return 1;
+	}
 	/*
 	 * Url indexation
 	 */
@@ -159,12 +244,17 @@ class BlockLayered extends Module
 			{
 				case 'id_attribute_group':
 					$attributes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-					SELECT agl.public_name name, a.id_attribute_group id_name, al.name value, a.id_attribute id_value, al.id_lang
+					SELECT agl.public_name name, a.id_attribute_group id_name, al.name value, a.id_attribute id_value, al.id_lang,
+					liagl.url_name name_url_name, lial.url_name value_url_name
 					FROM '._DB_PREFIX_.'attribute_group ag
 					INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = ag.id_attribute_group)
 					INNER JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute_group = ag.id_attribute_group)
 					INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = a.id_attribute)
-					INNER JOIN '._DB_PREFIX_.'layered_indexable_attribute_group liag ON (liag.id_attribute_group = a.id_attribute_group AND liag.indexable = 1)
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group liag ON (liag.id_attribute_group = a.id_attribute_group)
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang liagl
+					ON (liagl.id_attribute_group = ag.id_attribute_group AND liagl.id_lang = '.(int)$filter['id_lang'].')
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang lial
+					ON (lial.id_attribute = a.id_attribute  AND lial.id_lang = '.(int)$filter['id_lang'].')
 					WHERE a.id_attribute_group = '.(int)$filter['id_value'].' AND agl.id_lang = al.id_lang AND agl.id_lang = '.(int)$filter['id_lang']);
 					foreach ($attributes as $attribute)
 					{
@@ -174,19 +264,24 @@ class BlockLayered extends Module
 							$attributeValues[$attribute['id_lang']][$filter['id_category']] = array();
 						if (!isset($attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']]))
 							$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']] = array();
-						$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']][] = array('name' => $attribute['name'],
-						'id_name' => 'c'.$attribute['id_name'], 'value' => $attribute['value'], 'id_value' => $attribute['id_name'].'_'.$attribute['id_value'],
+						$attributeValues[$attribute['id_lang']][$filter['id_category']]['c'.$attribute['id_name']][] = array('name' => (!empty($attribute['name_url_name']) ? $attribute['name_url_name'] : $attribute['name']),
+						'id_name' => 'c'.$attribute['id_name'], 'value' => (!empty($attribute['value_url_name']) ? $attribute['value_url_name'] : $attribute['value']), 'id_value' => $attribute['id_name'].'_'.$attribute['id_value'],
 						'id_id_value' => $attribute['id_value'], 'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					}
 					break;
 				
 				case 'id_feature':
 					$features = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-					SELECT fl.name name, fl.id_feature id_name, fvl.id_feature_value id_value, fvl.value value, fl.id_lang
+					SELECT fl.name name, fl.id_feature id_name, fvl.id_feature_value id_value, fvl.value value, fl.id_lang, fl.id_lang,
+					lifl.url_name name_url_name, lifvl.url_name value_url_name
 					FROM '._DB_PREFIX_.'feature_lang fl
-					INNER JOIN '._DB_PREFIX_.'layered_indexable_feature lif ON (lif.id_feature = fl.id_feature AND indexable = 1)
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature lif ON (lif.id_feature = fl.id_feature)
 					INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature = fl.id_feature)
 					INNER JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fv.id_feature_value)
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_lang lifl
+					ON (lifl.id_feature = fl.id_feature AND lifl.id_lang = '.(int)$filter['id_lang'].')
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang lifvl
+					ON (lifvl.id_feature_value = fvl.id_feature_value AND lifvl.id_lang = '.(int)$filter['id_lang'].')
 					WHERE fl.id_feature = '.(int)$filter['id_value'].' AND fvl.id_lang = fl.id_lang AND fvl.id_lang = '.(int)$filter['id_lang']);
 					foreach ($features as $feature)
 					{
@@ -196,8 +291,8 @@ class BlockLayered extends Module
 							$attributeValues[$feature['id_lang']][$filter['id_category']] = array();
 						if (!isset($attributeValues[$feature['id_lang']][$filter['id_category']]['f'.$feature['id_name']]))
 							$attributeValues[$feature['id_lang']][$filter['id_category']]['f'.$feature['id_name']] = array();
-						$attributeValues[$feature['id_lang']][$filter['id_category']]['f'.$feature['id_name']][] = array('name' => $feature['name'],
-						'id_name' => 'f'.$feature['id_name'], 'value' => $feature['value'], 'id_value' => $feature['id_value'],
+						$attributeValues[$feature['id_lang']][$filter['id_category']]['f'.$feature['id_name']][] = array('name' => (!empty($feature['name_url_name']) ? $feature['name_url_name'] : $feature['name']),
+						'id_name' => 'f'.$feature['id_name'], 'value' => (!empty($attribute['value_url_name']) ? $attribute['value_url_name'] : $feature['value']), 'id_value' => $feature['id_value'],
 						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					}
 					break;
@@ -209,8 +304,7 @@ class BlockLayered extends Module
 					INNER JOIN '._DB_PREFIX_.'category_lang cl ON (c.id_category = cl.id_category)
 					WHERE nleft > (SELECT nleft FROM '._DB_PREFIX_.'category WHERE id_category = '.$filter['id_category'].')
 					AND  nright < (SELECT nright FROM '._DB_PREFIX_.'category WHERE id_category = '.$filter['id_category'].')
-					AND cl.id_lang = '.(int)$filter['id_lang'].'
-					');
+					AND cl.id_lang = '.(int)$filter['id_lang'].' ');
 		foreach($categories as $category)
 		{
 						if (!isset($attributeValues[$category['id_lang']]))
@@ -229,8 +323,7 @@ class BlockLayered extends Module
 					$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 					SELECT m.name as name,l.id_lang as id_lang,  id_manufacturer
 					FROM '._DB_PREFIX_.'manufacturer m , '._DB_PREFIX_.'lang l
-					WHERE l.id_lang = '.(int)$filter['id_lang'].'
-					');
+					WHERE l.id_lang = '.(int)$filter['id_lang'].' ');
 				
 					foreach ($manufacturers as $manufacturer)
 					{
@@ -270,9 +363,7 @@ class BlockLayered extends Module
 	{
 			// Foreach categories
 			foreach($attributesByCategoriesByLang as $id_category => $attributesByCategory)
-			{
 				foreach($attributesByCategory as $attribute)
-				{
 					foreach($attribute as $param)
 				{
 						$selectedFilters = array();
@@ -290,8 +381,6 @@ class BlockLayered extends Module
 					}
 				}
 			}
-		}
-		}
 		if ($ajax)
 			return '{"result": 1}';
 		else
@@ -350,6 +439,8 @@ class BlockLayered extends Module
 		
 		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selectedFilters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
+		//test nofollow link
+		$smarty->assign('no_follow', $filterBlock['nofollow']);
 	}
 	
 	public function hookAfterSaveProduct($params)
@@ -367,6 +458,165 @@ class BlockLayered extends Module
 		
 		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
 		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature VALUES ('.(int)$params['id_feature'].', '.(int)Tools::getValue('layered_indexable').')');
+		
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_lang WHERE id_feature = '.(int)$params['id_feature']); // don't care about the id_lang
+		foreach (Language::getLanguages(false) as $language)
+		{
+			// Data are validated by method "hookPostProcessFeature"
+			$id_lang = (int)$language['id_lang'];
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang
+			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
+			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+	}
+	}
+
+	public function hookAfterSaveFeatureValue($params)
+	{
+		if (!$params['id_feature_value'])
+			return;
+		
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang WHERE id_feature_value = '.(int)$params['id_feature_value']); // don't care about the id_lang
+		foreach (Language::getLanguages(false) as $language)
+		{
+			// Data are validated by method "hookPostProcessFeatureValue"
+			$id_lang = (int)$language['id_lang'];
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang
+			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
+			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+		}
+	}
+	
+	public function hookAfterDeleteFeatureValue($params)
+	{
+		if (!$params['id_feature_value'])
+			return;
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang WHERE id_feature_value = '.(int)$params['id_feature_value']);
+	}
+	
+	public function hookPostProcessFeatureValue($params)
+	{
+		$this->hookPostProcessAttributeGroup($params);
+	}
+	
+	public function hookFeatureValueForm($params)
+	{
+		$languages = Language::getLanguages(false);
+		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$langValue = array();
+		
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang
+		WHERE id_feature_value = '.(int)$params['id_feature_value']);
+		if ($result)
+			foreach ($result as $data)
+				$langValue[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
+		$return = '<div class="clear"></div>
+				<label>'.$this->l('Url:').'</label>
+				<div class="margin-form">
+				<script type="text/javascript">
+					flag_fields += \'¤url_name¤meta_title\';
+				</script>';
+		foreach ($languages as $language)
+			$return .= '
+					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
+						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
+					</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>
+					<label>'.$this->l('Meta title:').' </label>
+					<div class="margin-form">';
+		foreach ($languages as $language)
+			$return .= '
+						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>';
+		return $return;
+	}
+	
+	public function hookAfterSaveAttribute($params)
+	{
+		if (!$params['id_attribute'])
+			return;
+		
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_lang WHERE id_attribute = '.(int)$params['id_attribute']); // don't care about the id_lang
+		foreach (Language::getLanguages(false) as $language)
+		{
+			// Data are validated by method "hookPostProcessAttribute"
+			$id_lang = (int)$language['id_lang'];
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang
+			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
+			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+		}
+	}
+	
+	public function hookAfterDeleteAttribute($params)
+	{
+		if (!$params['id_attribute'])
+			return;
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_lang WHERE id_attribute = '.(int)$params['id_attribute']);
+	}
+	
+	public function hookPostProcessAttribute($params)
+	{
+		$this->hookPostProcessAttributeGroup($params);
+	}
+	
+	public function hookAttributeForm($params)
+	{
+		$languages = Language::getLanguages(false);
+		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$langValue = array();
+		
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_lang
+		WHERE id_attribute = '.(int)$params['id_attribute']);
+		if ($result)
+			foreach ($result as $data)
+				$langValue[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
+		$return = '<div class="clear"></div>
+				<label>'.$this->l('Url:').'</label>
+				<div class="margin-form">
+				<script type="text/javascript">
+					flag_fields += \'¤url_name¤meta_title\';
+				</script>';
+		foreach ($languages as $language)
+			$return .= '
+					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
+						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
+					</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>
+					<label>'.$this->l('Meta title:').' </label>
+					<div class="margin-form">';
+		foreach ($languages as $language)
+			$return .= '
+						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>';
+		return $return;
+	}
+	
+	public function hookPostProcessFeature($params)
+	{
+		$this->hookPostProcessAttributeGroup($params);
 	}
 
 	public function hookAfterDeleteFeature($params)
@@ -383,6 +633,37 @@ class BlockLayered extends Module
 		
 		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group VALUES ('.(int)$params['id_attribute_group'].', '.(int)Tools::getValue('layered_indexable').')');
+
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang WHERE id_attribute_group = '.(int)$params['id_attribute_group']); // don't care about the id_lang
+		foreach (Language::getLanguages(false) as $language)
+		{
+			// Data are validated by method "hookPostProcessAttributeGroup"
+			$id_lang = (int)$language['id_lang'];
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang
+			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
+			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+	}
+	}
+	
+	public function hookPostProcessAttributeGroup($params)
+	{
+		// Limit to one call
+		static $once = false;
+		if ($once)
+			return;
+		$once = true;
+		
+		$errors = array();
+		foreach (Language::getLanguages(false) as $language)
+		{
+			$id_lang = $language['id_lang'];
+			if (Tools::getValue('url_name_'.$id_lang))
+				if (Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)) != strtolower( Tools::getValue('url_name_'.$id_lang)))
+				{
+					// Here use the reference "errors" to stop saving process
+					$params['errors'][] = Tools::displayError(sprintf($this->l('"%s" is not a valid url'), Tools::getValue('url_name_'.$id_lang)));
+				}
+		}
 	}
 	
 	public function hookAfterDeleteAttributeGroup($params)
@@ -391,17 +672,58 @@ class BlockLayered extends Module
 			return;
 
 		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 	}
 	
 	public function hookAttributeGroupForm($params)
 	{
+		$languages = Language::getLanguages(false);
+		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
+		$langValue = array();
+		
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang
+		WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
+		if ($result)
+			foreach ($result as $data)
+				$langValue[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
+
 		if($indexable === false)
 			$on = true;
 		else
 			$on = (bool)$indexable;
 		
-		return '<label>'.$this->l('Indexable:').' </label>
+		$return = '<div class="clear"></div>
+				<label>'.$this->l('Url:').'</label>
+				<div class="margin-form">
+				<script type="text/javascript">
+					flag_fields += \'¤url_name¤meta_title\';
+				</script>';
+		foreach ($languages as $language)
+			$return .= '
+					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
+						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
+					</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>
+					<label>'.$this->l('Meta title:').' </label>
+					<div class="margin-form">';
+		foreach ($languages as $language)
+			$return .= '
+						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>
+			<label>'.$this->l('Indexable:').' </label>
 				<div class="margin-form">
 					<input type="radio" '.(($on)?'checked="checked"':'').' value="1" id="indexable_on" name="layered_indexable">
 					<label for="indexable_on" class="t"><img title="Yes" alt="Enabled" src="../img/admin/enabled.gif"></label>
@@ -409,25 +731,67 @@ class BlockLayered extends Module
 					<label for="indexable_off" class="t"><img title="No" alt="Disabled" src="../img/admin/disabled.gif"></label>
 					<p>'.$this->l('Use this attribute in url generated by the module block layered navigation').'</p>
 				</div>';
+		return $return;
 	}
 	
 	public function hookFeatureForm($params)
 	{
+		$languages = Language::getLanguages(false);
+		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
+		$langValue = array();
+		
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_lang
+		WHERE id_feature = '.(int)$params['id_feature']);
+		if ($result)
+			foreach ($result as $data)
+				$langValue[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
+		 
+		
 		if($indexable === false)
 			$on = true;
 		else
 			$on = (bool)$indexable;
 		
-		return '
+		$return = '<div class="clear"></div>
+				<label>'.$this->l('Url:').'</label>
+				<div class="margin-form">
+				<script type="text/javascript">
+					flag_fields += \'¤url_name¤meta_title\';
+				</script>';
+		foreach ($languages as $language)
+			$return .= '
+					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
+						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
+					</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>
+					<label>'.$this->l('Meta title:').' </label>
+					<div class="margin-form">';
+		foreach ($languages as $language)
+			$return .= '
+						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						</div>';
+		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		$return .= '
+						<div class="clear"></div>
+					</div>
 		<label>'.$this->l('Indexable:').' </label>
 				<div class="margin-form">
 					<input type="radio" '.(($on)?'checked="checked"':'').' value="1" id="indexable_on" name="layered_indexable">
 					<label for="indexable_on" class="t"><img title="Yes" alt="Enabled" src="../img/admin/enabled.gif"></label>
 					<input type="radio" '.((!$on)?'checked="checked"':'').' value="0" id="indexable_off" name="layered_indexable">
 					<label for="indexable_off" class="t"><img title="No" alt="Disabled" src="../img/admin/disabled.gif"></label>
-					<p>'.$this->l('Use this feature in url generated by the module block layered navigation').'</p>
+					<p>'.$this->l('Use this attribute in url generated by the module block layered navigation').'</p>
 				</div>';
+		return $return;
 	}
 	
 	/*
@@ -456,10 +820,10 @@ class BlockLayered extends Module
 		else
 			$nbProducts = (int)Db::getInstance()->getValue(
 			'SELECT COUNT(*) FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN  `'._DB_PREFIX_.'price_static_index` psi ON (psi.id_product = p .id_product)
+			LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
 			WHERE `active` = 1 AND psi.id_product IS NULL');
 		
-		$maxExecutionTime = ini_get('max_execution_time') * 0.9; // 90% of safety margin
+		$maxExecutionTime = @ini_get('max_execution_time');
 		if ($maxExecutionTime > 5 || $maxExecutionTime <= 0)
 			$maxExecutionTime = 5;
 		
@@ -470,11 +834,11 @@ class BlockLayered extends Module
 			$cursor = (int)self::_index((int)$cursor, $full, $smart);
 			$timeElapsed = microtime(true) - $startTime;
 		}
-		while($cursor < $nbProducts AND (Tools::getMemoryLimit() * 0.9) > memory_get_peak_usage() AND $timeElapsed < $maxExecutionTime);
+		while ($cursor < $nbProducts AND (Tools::getMemoryLimit()) > memory_get_peak_usage() AND $timeElapsed < $maxExecutionTime);
 		
 		if (($nbProducts > 0 AND !$full OR $cursor < $nbProducts AND $full) AND !$ajax)
 		{
-			if (!Tools::file_get_contents(Tools::getProtocol().Tools::getHttpHost().'/modules/blocklayered/blocklayered-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&cursor='.(int)$cursor.'&full='.(int)$full))
+			if (!Tools::file_get_contents(Tools::getProtocol().Tools::getHttpHost().'/modules/blocklayered/blocklayered-indexer.php?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&cursor='.(int)$cursor.'&full='.(int)$full))
 				self::_indexer((int)$cursor, (int)$full);
 			return $cursor;
 		}
@@ -512,7 +876,7 @@ class BlockLayered extends Module
 			$query = '
 			SELECT p.id_product
 			FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN  `'._DB_PREFIX_.'price_static_index` psi ON (psi.id_product = p.id_product)
+			LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
 			WHERE `active` = 1 AND psi.id_product is null
 			ORDER by id_product LIMIT 0,'.(int)$length;
 		
@@ -527,9 +891,11 @@ class BlockLayered extends Module
 		static $groups = null;
 
 		if (is_null($groups))
+		{
 			$groups = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_group FROM `'._DB_PREFIX_.'group_reduction`');
 		if(!$groups)
 			$groups = array();
+		}
 		
 		static $currencyList = null;
 		if (is_null($currencyList))
@@ -539,7 +905,7 @@ class BlockLayered extends Module
 		$maxPrice = array();
 		
 		if ($smart)
-			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'price_static_index` WHERE `id_product` = '.(int)$idProduct);
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'layered_price_index` WHERE `id_product` = '.(int)$idProduct);
 		
 		$maxTaxRate = Db::getInstance()->getValue('
 		SELECT max(t.rate) max_rate
@@ -619,7 +985,7 @@ class BlockLayered extends Module
 			$values[] = '('.(int)$idProduct.', '.(int)$currency['id_currency'].', '.(int)$minPrice[$currency['id_currency']].', '.(int)$maxPrice[$currency['id_currency']].')';
 		
 			Db::getInstance()->Execute('
-			INSERT INTO `'._DB_PREFIX_.'price_static_index` (id_product, id_currency, price_min, price_max)
+			INSERT INTO `'._DB_PREFIX_.'layered_price_index` (id_product, id_currency, price_min, price_max)
 			VALUES '.implode(',', $values));
 	}
 
@@ -646,24 +1012,22 @@ class BlockLayered extends Module
 		$categoryTitle = (empty($category->meta_title[$idLang])?$category->name[$idLang]:$category->meta_title[$idLang]);
 
 		// Generate meta title and meta description
-		$selectedFilters = $this->getSelectedFilters();
-		$filterBlock = self::getFilterBlock($selectedFilters);
+		$filterBlock = self::getFilterBlock($this->getSelectedFilters());
 		$title = '';
 		if (is_array($filterBlock['title_values']))
 			foreach ($filterBlock['title_values'] as $key => $val)
 				$title .= $key.' '.implode('/', $val).' – ';
 		$title = rtrim($title, ' – ');
-		$metaComplement = $title;
-		$metaKeyWordsComplement = substr(str_replace(' – ', ', ', strtolower($title)), 1000);
 		
-		if (!empty($metaComplement))
+		if (!empty($title))
 		{
-			$smarty->assign('meta_title', ucfirst(strtolower(str_replace(' - '.Configuration::get('PS_SHOP_NAME'), ' – '.$metaComplement.' - '.Configuration::get('PS_SHOP_NAME'), $categoryMetas['meta_title']))));
-			$smarty->assign('meta_description', rtrim($categoryTitle.' – '.$metaComplement.' – '.$categoryMetas['meta_description'], ' – '));
+			$smarty->assign('meta_title', ucfirst(strtolower(preg_replace('/^'.$categoryTitle.'/', $categoryTitle.' – '.$title, $categoryMetas['meta_title']))));
+			$smarty->assign('meta_description', rtrim($categoryTitle.' – '.$title.' – '.$categoryMetas['meta_description'], ' – '));
 		}
 		else
 			$smarty->assign('meta_title', ucfirst(strtolower($categoryMetas['meta_title'])));
 		
+		$metaKeyWordsComplement = substr(str_replace(' – ', ', ', strtolower($title)), 1000);
 		if (!empty($metaKeyWordsComplement))
 			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$metaKeyWordsComplement.', '.$categoryMetas['meta_keywords'], ', '));
 		
@@ -715,7 +1079,6 @@ class BlockLayered extends Module
 
 		if (Tools::isSubmit('SubmitFilter'))
 		{
-			
 			if(!Tools::getValue('layered_tpl_name'))
 			$html .= '
 				<div class="error">
@@ -733,7 +1096,7 @@ class BlockLayered extends Module
 			{
 				Db::getInstance()->Execute('TRUNCATE TABLE '._DB_PREFIX_.'layered_filter');
 				$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_category FROM '._DB_PREFIX_.'category');
-				foreach ($categories AS $category)
+					foreach ($categories as $category)
 					$_POST['categoryBox'][] = (int)$category['id_category'];
 			}
 			
@@ -741,20 +1104,20 @@ class BlockLayered extends Module
 			{
 				/* Clean categoryBox before use */
 				if (isset($_POST['categoryBox']) AND is_array($_POST['categoryBox']))
-						foreach ($_POST['categoryBox'] AS &$categoryBoxTmp)
+						foreach ($_POST['categoryBox'] as &$categoryBoxTmp)
 							$categoryBoxTmp = (int)$categoryBoxTmp;
 				
 				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_category WHERE id_category IN ('.implode(',', $_POST['categoryBox']).')');
 
 				$filterValues = array();
-					foreach ($_POST['categoryBox'] AS $idc)
+					foreach ($_POST['categoryBox'] as $idc)
 						$filterValues['categories'][] = (int)$idc;
 
 				$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position) VALUES ';
-				foreach ($_POST['categoryBox'] AS $id_category_layered)
+					foreach ($_POST['categoryBox'] as $id_category_layered)
 				{
 					$n = 0;
-					foreach ($_POST AS $key => $value)
+						foreach ($_POST as $key => $value)
 						if (substr($key, 0, 17) == 'layered_selection' AND $value == 'on')
 						{							
 							$filterValues[$key] = $value;
@@ -851,22 +1214,25 @@ class BlockLayered extends Module
 			if($category['id_category'] != 1)
 				$categoryList[] = $category['id_category'];
 		
-
 		$html .= '
-			<a class="bold ajaxcall" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.$this->l('Index all missing prices').'</a>
+			<a class="bold ajaxcall-recurcive" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.$this->l('Index all missing prices').'</a>
 			<br />
-			<a class="bold ajaxcall" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.$this->l('Re-build entire price index').'</a>
+			<a class="bold ajaxcall-recurcive" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.$this->l('Re-build entire price index').'</a>
 			<br />
-			<a class="bold" id="url-indexer" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.$this->l('Build url index').'</a>
+			<a class="bold ajaxcall" id="attribute-indexer" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.$this->l('Build attribute index').'</a>
+			<br />
+			<a class="bold ajaxcall" id="url-indexer" style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index" href="'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.$this->l('Build url index').'</a>
 			<br />
 			<br />
 			'.$this->l('You can set a cron job that will re-build price index using the following URL:').'<br /><b>'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</b>
 			<br />
 			'.$this->l('You can set a cron job that will re-build url index using the following URL:').'<br /><b>'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</b>
+			<br />
+			'.$this->l('You can set a cron job that will re-build attribute index using the following URL:').'<br /><b>'.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</b>
 			<br /><br />
 			'.$this->l('A nightly rebuild is recommended.').'
 			<script type="text/javascript">
-				$(\'#url-indexer\').click(function() {
+				$(\'.ajaxcall\').click(function() {
 					if (this.legend == undefined)
 							this.legend = $(this).html();
 					
@@ -882,21 +1248,20 @@ class BlockLayered extends Module
 					
 					if (typeof(this.restartAllowed) == \'undefined\' || this.restartAllowed)
 					{
-						$(this).html(this.legend+\' (in progress)\');
+						$(this).html(this.legend+\' '.$this->l('(in progress)').'\');
 					$(\'#indexing-warning\').show();
 					}
 					
 					this.restartAllowed = false;
 					
 						$.ajax({
-						url: this.href+\'&ajax=1&cursor=\'+this.cursor,
+						url: this.href+\'&ajax=1\',
 						context: this,
 							dataType: \'json\',
 						success: function(res)
 						{
 							this.running = false;
 							this.restartAllowed = true;
-								this.cursor = 0;
 								$(\'#indexing-warning\').hide();
 								$(this).html(this.legend);
 								$(\'#ajax-message-ok span\').html(\''.$this->l('Url indexation finished').'\');
@@ -911,13 +1276,12 @@ class BlockLayered extends Module
 							$(\'#ajax-message-ko\').show();
 							$(this).html(this.legend);
 							
-							this.cursor = 0;
 							this.running = false;
 							}
 						});
 					return false;
 				});
-				$(\'.ajaxcall\').each(function(it, elm) {
+				$(\'.ajaxcall-recurcive\').each(function(it, elm) {
 					$(elm).click(function() {
 						if (this.cursor == undefined)
 							this.cursor = 0;
@@ -937,7 +1301,7 @@ class BlockLayered extends Module
 						
 						if (typeof(this.restartAllowed) == \'undefined\' || this.restartAllowed)
 						{
-							$(this).html(this.legend+\' (in progress)\');
+							$(this).html(this.legend+\' '.$this->l('(in progress)').'\');
 							$(\'#indexing-warning\').show();
 						}
 							
@@ -960,7 +1324,7 @@ class BlockLayered extends Module
 									return;
 								}
 								this.cursor = parseInt(res.cursor);
-								$(this).html(this.legend+\' (in progress, \'+res.count+\' products to index)\');
+								$(this).html(this.legend+\' '.$this->l('(in progress, %s products to index)').'\'.replace(\'%s\', res.count));
 								$(this).click();
 							},
 							error: function(res)
@@ -997,7 +1361,7 @@ class BlockLayered extends Module
 					<th>'.$this->l('Actions').'</th>
 				</tr>';
 				
-			foreach ($filtersTemplates AS $filtersTemplate)
+			foreach ($filtersTemplates as $filtersTemplate)
 			{
 				/* Clean request URI first */
 				$_SERVER['REQUEST_URI'] = preg_replace('/&deleteFilterTemplate=[0-9]*&id_layered_filter=[0-9]*/', '', $_SERVER['REQUEST_URI']);
@@ -1064,7 +1428,7 @@ class BlockLayered extends Module
 
 			$trads = array();
 			$selectedCat = array();
-			foreach (Helper::$translationsKeysForAdminCategorieTree AS $key)
+			foreach (Helper::$translationsKeysForAdminCategorieTree as $key)
 				$trads[$key] = $this->l($key);
 			$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
 			
@@ -1305,12 +1669,13 @@ class BlockLayered extends Module
 		if ($id_parent == 1)
 			return;
 
+		// Force attributes selection (by url '.../2-mycategory/color-blue' or by get parameter 'selected_filters')
 		if (strpos($_SERVER['SCRIPT_FILENAME'], 'blocklayered-ajax.php') === false || Tools::getValue('selected_filters') !== false)
 		{
 			if(Tools::getValue('selected_filters'))
 				$url = Tools::getValue('selected_filters');
 			else
-				$url = preg_replace('/\/(\w*)\/([0-9]+[-\w]*)/', '', $_SERVER['REQUEST_URI']);
+				$url = preg_replace('/\/(?:\w*)\/(?:[0-9]+[-\w]*)([^\?]*)\??.*/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 			
 			$urlAttributes = explode('/',$url);
 			array_shift($urlAttributes);
@@ -1321,6 +1686,10 @@ class BlockLayered extends Module
 				{
 					$urlParameters = explode('-', $urlAttribute);
 					$attributeName  = array_shift($urlParameters);
+					if (in_array($attributeName, array('price', 'weight')))
+						$selectedFilters[$attributeName] = array($urlParameters[0], $urlParameters[1]);
+					else
+					{
 					foreach($urlParameters as $urlParameter)
 					{
 						$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attributeName.'-'.$urlParameter).'\'');
@@ -1338,13 +1707,14 @@ class BlockLayered extends Module
 							}
 					}
 				}
+				}
 				return $selectedFilters;
 			}
 		}
 
 		/* Analyze all the filters selected by the user and store them into a tab */
 		$selectedFilters = array('category' => array(), 'manufacturer' => array(), 'quantity' => array(), 'condition' => array());
-		foreach ($_GET AS $key => $value)
+		foreach ($_GET as $key => $value)
 			if (substr($key, 0, 8) == 'layered_')
 			{
 				preg_match('/^(.*)_[0-9|new|used|refurbished|slider]+$/', substr($key, 8, strlen($key) - 8), $res);
@@ -1387,7 +1757,7 @@ class BlockLayered extends Module
 		if (!empty($this->products))
 			return $this->products;
 
-		/* If the current category isn't defined of if it's homepage, we have nothing to display */
+		/* If the current category isn't defined or if it's homepage, we have nothing to display */
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
 		if ($id_parent == 1)
 			return false;
@@ -1402,7 +1772,7 @@ class BlockLayered extends Module
 			INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category
 			AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')';
 
-		foreach ($selectedFilters AS $key => $filterValues)
+		foreach ($selectedFilters as $key => $filterValues)
 		{
 			if (!sizeof($filterValues))
 				continue;
@@ -1414,13 +1784,12 @@ class BlockLayered extends Module
 			{
 				case 'id_feature':
 					$subQueries = array();
-					foreach ($filterValues AS $filterValue)
+					foreach ($filterValues as $filterValue)
 					{
 						$filterValueArray = explode('_',$filterValue);
 						if(!isset($subQueries[$filterValueArray[0]]))
 							$subQueries[$filterValueArray[0]] = array();
 						$subQueries[$filterValueArray[0]][] = 'fp.`id_feature_value` = '.(int)$filterValueArray[1];
-						//$queryFiltersWhere .= 'pac.`id_attribute` = '.(int)$filterValue.' OR ';
 					}
 					foreach($subQueries as $subQuery)
 					{
@@ -1433,13 +1802,12 @@ class BlockLayered extends Module
 					$subQueries = array();
 					
 					
-					foreach ($filterValues AS $filterValue)
+					foreach ($filterValues as $filterValue)
 					{
 						$filterValueArray = explode('_',$filterValue);
-						if(!isset($subQuery[$filterValueArray[0]]))
+						if (!isset($subQueries[$filterValueArray[0]]))
 							$subQueries[$filterValueArray[0]] = array();
 						$subQueries[$filterValueArray[0]][] = 'pac.`id_attribute` = '.(int)$filterValueArray[1];
-						//$queryFiltersWhere .= 'pac.`id_attribute` = '.(int)$filterValue.' OR ';
 					}
 					foreach($subQueries as $subQuery)
 					{
@@ -1453,7 +1821,7 @@ class BlockLayered extends Module
 
 				case 'category':
 					$queryFiltersWhere .= ' AND p.id_product IN (SELECT id_product FROM '._DB_PREFIX_.'category_product cp WHERE ';
-					foreach ($selectedFilters['category'] AS $id_category)
+					foreach ($selectedFilters['category'] as $id_category)
 						$queryFiltersWhere .= 'cp.`id_category` = '.(int)$id_category.' OR ';
 					$queryFiltersWhere = rtrim($queryFiltersWhere, 'OR ').')';
 				break;
@@ -1472,7 +1840,7 @@ class BlockLayered extends Module
 					if (sizeof($selectedFilters['condition']) == 3)
 						break;
 					$queryFiltersWhere .= ' AND p.condition IN (';
-					foreach ($selectedFilters['condition'] AS $cond)
+					foreach ($selectedFilters['condition'] as $cond)
 						$queryFiltersWhere .= '\''.$cond.'\',';
 					$queryFiltersWhere = rtrim($queryFiltersWhere, ',').')';
 				break;
@@ -1502,13 +1870,13 @@ class BlockLayered extends Module
 		$priceFilterQueryOut = ''; // All products with a price filters limit on it price range
 		if (isset($priceFilter) AND $priceFilter)
 		{
-			$priceFilterQueryIn = 'INNER JOIN `'._DB_PREFIX_.'price_static_index` psi
+			$priceFilterQueryIn = 'INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi
 			ON psi.price_min >= '.(int)$priceFilter['min'].'
 				AND psi.price_max <= '.(int)$priceFilter['max'].'
 				AND psi.`id_product` = p.`id_product`
 				AND psi.`id_currency` = '.(int)$idCurrency;
 			
-			$priceFilterQueryOut = 'INNER JOIN `'._DB_PREFIX_.'price_static_index` psi
+			$priceFilterQueryOut = 'INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi
 			ON 
 				((psi.price_min < '.(int)$priceFilter['min'].' AND psi.price_max > '.(int)$priceFilter['min'].')
 				OR
@@ -1548,7 +1916,8 @@ class BlockLayered extends Module
 		
 		if ($this->nbr_products == 0)
 			$this->products = array();
-		else {
+		else
+		{
 			$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
 			$this->products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT p.id_product, p.on_sale, p.out_of_stock, p.available_for_order, p.quantity, p.minimal_quantity, p.id_category_default, p.customizable, p.show_price, p.`weight`,
@@ -1636,28 +2005,41 @@ class BlockLayered extends Module
 
 				case 'id_attribute_group':// attribute group
 					$sqlQuery['select'] = '
-					SELECT COUNT(tmp.id_attribute) nbr, tmp.id_attribute_group, tmp.color, tmp.attribute_name name, agl.public_name attributeName,
-					tmp.id_attribute id_attribute, a.is_color_group FROM (SELECT p.id_product, pac.id_attribute, a.color, al.name attribute_name, a.id_attribute_group';
+					SELECT count(lpa.id_attribute) nbr, lpa.id_attribute_group,
+					a.color, al.name attribute_name, agl.public_name attribute_group_name , lpa.id_attribute, ag.is_color_group,
+					liagl.url_name name_url_name, liagl.meta_title name_meta_title, lial.url_name value_url_name, lial.meta_title value_meta_title';
 					$sqlQuery['from'] = '
-					FROM '._DB_PREFIX_.'product_attribute_combination pac
-					LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product_attribute = pac.id_product_attribute)
-					LEFT JOIN '._DB_PREFIX_.'product p ON (pa.id_product = p.id_product)
-					LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = pa.id_product)
+					FROM '._DB_PREFIX_.'layered_product_attribute lpa
+					INNER JOIN '._DB_PREFIX_.'attribute a
+					ON a.id_attribute = lpa.id_attribute
+					INNER JOIN '._DB_PREFIX_.'attribute_lang al
+					ON al.id_attribute = a.id_attribute
+					AND al.id_lang = '.(int)$cookie->id_lang.'
+					INNER JOIN '._DB_PREFIX_.'product as p
+					ON p.id_product = lpa.id_product
+					AND p.active = 1
+					INNER JOIN '._DB_PREFIX_.'attribute_group ag
+					ON ag.id_attribute_group = lpa.id_attribute_group
+					INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl
+					ON agl.id_attribute_group = lpa.id_attribute_group
+					AND agl.id_lang = '.(int)$cookie->id_lang.'
+					LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
 					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')
-					LEFT JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute)
-					LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$cookie->id_lang.') ';
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang liagl
+					ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.(int)$cookie->id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang lial
+					ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.(int)$cookie->id_lang.') ';
+					$sqlQuery['where'] = 'WHERE a.id_attribute_group = '.(int)$filter['id_value'].' ';
 					$sqlQuery['group'] = '
-					WHERE p.`active` = 1 AND a.id_attribute_group = '.(int)$filter['id_value'].'
-					GROUP BY pac.id_attribute, p.id_product) tmp
-					LEFT JOIN '._DB_PREFIX_.'attribute_group_lang al ON (al.id_attribute_group = tmp.id_attribute_group AND al.id_lang = '.(int)$cookie->id_lang.')
-					LEFT JOIN '._DB_PREFIX_.'attribute_group a ON (a.id_attribute_group = al.id_attribute_group)
-					LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (a.id_attribute_group = agl.id_attribute_group AND agl.id_lang = '.(int)$cookie->id_lang.')
-					GROUP BY tmp.id_attribute
+					GROUP BY lpa.id_attribute
 					ORDER BY id_attribute_group, id_attribute';
+					
 					break;
 
 				case 'id_feature':
-					$sqlQuery['select'] = 'SELECT fl.name feature_name, fp.id_feature, fv.id_feature_value, fvl.value, count(fv.id_feature_value) nbr ';
+					$sqlQuery['select'] = 'SELECT fl.name feature_name, fp.id_feature, fv.id_feature_value, fvl.value,
+					count(fv.id_feature_value) nbr,
+					lifl.url_name name_url_name, lifl.meta_title name_meta_title, lifvl.url_name value_url_name, lifvl.meta_title value_meta_title ';
 					$sqlQuery['from'] = '
 					FROM '._DB_PREFIX_.'feature_product fp
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = fp.`id_product`)
@@ -1665,7 +2047,11 @@ class BlockLayered extends Module
 					INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = cp.id_product AND p.active = 1)
 					LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.(int)$cookie->id_lang.')
 					INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
-					LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.(int)$cookie->id_lang.') ';
+					LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.(int)$cookie->id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_lang lifl
+					ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.(int)$cookie->id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang lifvl
+					ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.(int)$cookie->id_lang.') ';
 					$sqlQuery['where'] = 'WHERE p.`active` = 1 ';
 					$sqlQuery['group'] = 'GROUP BY fv.id_feature_value ';
 					break;
@@ -1739,6 +2125,9 @@ class BlockLayered extends Module
 								$priceArray['values'][1] = $product['price_max'];
 							}
 						}
+						
+					if ($priceArray['max'] != $priceArray['min'] && $priceArray['min'] != null)
+					{
 							if (isset($selectedFilters['price']) AND isset($selectedFilters['price'][0])
 					AND isset($selectedFilters['price'][1]))
 							{
@@ -1746,6 +2135,7 @@ class BlockLayered extends Module
 								$priceArray['values'][1] = $selectedFilters['price'][1];
 							}
 						$filterBlocks[] = $priceArray;
+					}
 						break;
 
 					case 'weight':
@@ -1771,6 +2161,8 @@ class BlockLayered extends Module
 								$weightArray['values'][1] = $product['weight'];
 							}
 						}
+					if ($weightArray['max'] != $weightArray['min'] && $weightArray['min'] != null)
+					{
 							if (isset($selectedFilters['weight']) AND isset($selectedFilters['weight'][0])
 					AND isset($selectedFilters['weight'][1]))
 							{
@@ -1778,6 +2170,7 @@ class BlockLayered extends Module
 								$weightArray['values'][1] = $selectedFilters['weight'][1];
 							}
 						$filterBlocks[] = $weightArray;
+					}
 						break;
 
 					case 'condition':
@@ -1808,8 +2201,9 @@ class BlockLayered extends Module
 						break;
 
 					case 'manufacturer':
-						$manufaturersArray = array();
 					if (isset($products) AND $products)
+					{
+						$manufaturersArray = array();
 						foreach ($products as $manufacturer)
 						{
 							$manufaturersArray[$manufacturer['id_manufacturer']] = array('name' => $manufacturer['name'], 'nbr' => $manufacturer['nbr']);
@@ -1817,6 +2211,7 @@ class BlockLayered extends Module
 								$manufaturersArray[$manufacturer['id_manufacturer']]['checked'] = true;
 						}
 						$filterBlocks[] = array('type_lite' => 'manufacturer', 'type' => 'manufacturer', 'id_key' => 0, 'name' => $this->l('Manufacturer'), 'values' => $manufaturersArray);
+					}
 						break;
 
 					case 'id_attribute_group':
@@ -1826,13 +2221,14 @@ class BlockLayered extends Module
 						foreach ($products as $attributes)
 						{
 							if (!isset($attributesArray[$attributes['id_attribute_group']]))
-							{
 								$attributesArray[$attributes['id_attribute_group']] = array ('type_lite' => 'id_attribute_group',
 								'type' => 'id_attribute_group', 'id_key' => (int)$attributes['id_attribute_group'],
-								'name' =>  $attributes['attributeName'], 'is_color_group' => (bool)$attributes['is_color_group'], 'values' => array());
-							}
+								'name' =>  $attributes['attribute_group_name'], 'is_color_group' => (bool)$attributes['is_color_group'], 'values' => array(),
+								'url_name' => $attributes['name_url_name'], 'meta_title' => $attributes['name_meta_title']);
+							
 							$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']] = array(
-							'color' => $attributes['color'], 'name' => $attributes['name'], 'nbr' => (int)$attributes['nbr']);
+							'color' => $attributes['color'], 'name' => $attributes['attribute_name'], 'nbr' => (int)$attributes['nbr'],
+							'url_name' => $attributes['value_url_name'], 'meta_title' => $attributes['value_meta_title']);
 							if (isset($selectedFilters['id_attribute_group'][$attributes['id_attribute']]))
 								$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']]['checked'] = true;
 						}
@@ -1847,8 +2243,11 @@ class BlockLayered extends Module
 						{
 							if (!isset($featureArray[$feature['id_feature']]))
 								$featureArray[$feature['id_feature']] = array('type_lite' => 'id_feature', 'type' => 'id_feature',
-								'id_key' => (int)$feature['id_feature'], 'values' => array(), 'name' => $feature['feature_name']);
-							$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']] = array('nbr' => (int)$feature['nbr'], 'name' => $feature['value']);
+								'id_key' => (int)$feature['id_feature'], 'values' => array(), 'name' => $feature['feature_name'],
+								'url_name' => $feature['name_url_name'], 'meta_title' => $feature['name_meta_title']);
+
+							$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']] = array('nbr' => (int)$feature['nbr'], 'name' => $feature['value'],
+							'url_name' => $feature['value_url_name'], 'meta_title' => $feature['value_meta_title']);
 							if (isset($selectedFilters['id_feature'][$feature['id_feature_value']]))
 								$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']]['checked'] = true;
 						}
@@ -1873,6 +2272,29 @@ class BlockLayered extends Module
 				}
 		}
 				
+		// All non indexable attribute and feature
+		$nonIndexable = array();
+		
+		// Get all non indexable attribute groups
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT public_name
+		FROM `'._DB_PREFIX_.'attribute_group_lang` agl
+		LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_group` liag
+		ON liag.id_attribute_group = agl.id_attribute_group
+		WHERE indexable IS NULL OR indexable = 0
+		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
+			$nonIndexable[] = Tools::link_rewrite($attribute['public_name']);
+		
+		// Get all non indexable features
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT name
+		FROM `'._DB_PREFIX_.'feature_lang` fl
+		LEFT JOIN  `'._DB_PREFIX_.'layered_indexable_feature` lif
+		ON lif.id_feature = fl.id_feature
+		WHERE indexable IS NULL OR indexable = 0
+		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
+			$nonIndexable[] = Tools::link_rewrite($attribute['name']);
+
 		//generate SEO link
 		$paramSelected = '';
 		$optionCheckedArray = array();
@@ -1880,30 +2302,34 @@ class BlockLayered extends Module
 		$titleValues = array();
 		$link = new Link();
 		
-		$linkBase = $link->getCategoryLink($id_parent,Category::getLinkRewrite($id_parent, (int)($cookie->id_lang),(int)($cookie->id_lang) ), (int)($cookie->id_lang));
+		$linkBase = $link->getCategoryLink($id_parent,Category::getLinkRewrite($id_parent, (int)($cookie->id_lang)), (int)($cookie->id_lang));
 		$filterBlockList = array();
+		
 		//get filters checked by group
 		foreach ($filterBlocks as $typeFilter)
 		{
+			$filterName = (!empty($typeFilter['url_name']) ? $typeFilter['url_name'] : $typeFilter['name']);
+			
 			$paramGroupSelected = '';
 			foreach ($typeFilter['values'] as $key => $value)
 			{
 				if (is_array($value) AND array_key_exists('checked', $value ))
 				{
-					$paramGroupSelected .= '-'.str_replace('-', '_', Tools::link_rewrite($value['name']));
-					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][]  = Tools::link_rewrite($value['name']);
+					$valueName = !empty($value['url_name']) ? $value['url_name'] : $value['name'];
+					$paramGroupSelected .= '-'.str_replace('-', '_', Tools::link_rewrite($valueName));
+					$paramGroupSelectedArray [Tools::link_rewrite($filterName)][]  = Tools::link_rewrite($valueName);
 				
-					if (!isset($titleValues[$typeFilter['name']]))
-						$titleValues[$typeFilter['name']] = array();
-					$titleValues[$typeFilter['name']][] = $value['name'];
+					if (!isset($titleValues[$filterName]))
+						$titleValues[$filterName] = array();
+					$titleValues[$filterName][] = $valueName;
 				}
 				else 
-					$paramGroupSelectedArray [Tools::link_rewrite($typeFilter['name'])][] = array();
+					$paramGroupSelectedArray [Tools::link_rewrite($filterName)][] = array();
 			}
 			if(!empty($paramGroupSelected))
 			{
-				$paramSelected .= '/'.str_replace('-', '_', Tools::link_rewrite($typeFilter['name'])).$paramGroupSelected;
-				$optionCheckedArray[Tools::link_rewrite($typeFilter['name'])] = $paramGroupSelected;
+				$paramSelected .= '/'.str_replace('-', '_', Tools::link_rewrite($filterName)).$paramGroupSelected;
+				$optionCheckedArray[Tools::link_rewrite($filterName)] = $paramGroupSelected;
 			}
 		}
 		
@@ -1911,35 +2337,48 @@ class BlockLayered extends Module
 		$nofollow = false;
 		foreach ($filterBlocks as &$typeFilter)
 		{	
+			$filterName = (!empty($typeFilter['url_name']) ? $typeFilter['url_name'] : $typeFilter['name']);
+			
 			if(count($typeFilter) > 0 AND !in_array($typeFilter['type'], $blackList))
 			{	
 				foreach ($typeFilter['values'] as $key => $values)
 				{
 					$nofollow = false;
 					$optionCheckedCloneArray = $optionCheckedArray;
+					
 					//if not filters checked, add parameter
-					if(!in_array(Tools::link_rewrite($values['name']), $paramGroupSelectedArray[Tools::link_rewrite($typeFilter['name'])]))
+					$valueName = !empty($values['url_name']) ? $values['url_name'] : $values['name'];
+					if (!in_array(Tools::link_rewrite($valueName), $paramGroupSelectedArray[Tools::link_rewrite($filterName)]))
 					{
 						//update parameter filter checked before
-						if(array_key_exists(Tools::link_rewrite($typeFilter['name']), $optionCheckedArray)) {
-							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] = $optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])].'-'.str_replace('-', '_', Tools::link_rewrite($values['name']));
+						if (array_key_exists(Tools::link_rewrite($filterName), $optionCheckedArray)) {
+							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = $optionCheckedCloneArray[Tools::link_rewrite($filterName)].'-'.str_replace('-', '_', Tools::link_rewrite($valueName));
 							$nofollow = true;
 						}
 						else 
-							$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] =  '-'.str_replace('-', '_', Tools::link_rewrite($values['name']));
+							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = '-'.str_replace('-', '_', Tools::link_rewrite($valueName));
 					}
 					else
 					{
 						// Remove selected parameters
-						$optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])] = str_replace('-'.str_replace('-', '_', Tools::link_rewrite($values['name'])), '', $optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])]);
-						if(empty($optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])]))
-							unset($optionCheckedCloneArray[Tools::link_rewrite($typeFilter['name'])]);
+						$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = str_replace('-'.str_replace('-', '_', Tools::link_rewrite($valueName)), '', $optionCheckedCloneArray[Tools::link_rewrite($filterName)]);
+						if (empty($optionCheckedCloneArray[Tools::link_rewrite($filterName)]))
+							unset($optionCheckedCloneArray[Tools::link_rewrite($filterName)]);
 					}
 					$parameters = '';
 					foreach ($optionCheckedCloneArray as $keyGroup => $valueGroup)
 						$parameters .= '/'.str_replace('-', '_',$keyGroup).$valueGroup;
-					//write link
+					
+					// Check if there is an non indexable attribute or feature in the url
+					foreach ($nonIndexable as $value)
+						if (strpos($parameters, '/'.$value) !== false)
+							$nofollow = true;
+					//write link by mode rewriting
+					if (!Configuration::get('PS_REWRITING_SETTINGS'))
+						$typeFilter['values'][$key]['link'] = $linkBase.'&selected_filters='.$parameters;
+					else
 					$typeFilter['values'][$key]['link'] =  $linkBase.$parameters;
+						
 					$typeFilter['values'][$key]['rel'] = ($nofollow)?'nofollow':'';
 				}
 			}
@@ -1953,12 +2392,12 @@ class BlockLayered extends Module
 			if($weightArray['min'] == $selectedFilters['weight'][0] && $weightArray['max'] == $selectedFilters['weight'][1])
 				unset($selectedFilters['weight']);
 				
-		foreach ($selectedFilters AS $filters)
+		foreach ($selectedFilters as $filters)
 			$nFilters += sizeof($filters);
 		
 		$cache = array('layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'), 'id_category_layered' => (int)$id_parent,
 		'selected_filters' => $selectedFilters, 'n_filters' => (int)$nFilters, 'nbr_filterBlocks' => sizeof($filterBlocks), 'filters' => $filterBlocks,
-		'title_values' => $titleValues, 'current_friendly_url' => htmlentities($paramSelected), 'nofollow' => $nofollow);
+		'title_values' => $titleValues, 'current_friendly_url' => htmlentities($paramSelected), 'nofollow' => !empty($paramSelected) || $nofollow);
 
 		return $cache;
 	}
@@ -1975,10 +2414,6 @@ class BlockLayered extends Module
 			return false;
 	}
 	
-	/*
-	 * This function must be improved
-	 * For the moment, we don't "filter filters"
-	 */
 	private static function getPriceFilterSubQuery($filterValue)
 	{
 		$idCurrency = (int)Currency::getCurrent()->id;
@@ -1987,14 +2422,14 @@ class BlockLayered extends Module
 		{
 			$idCurrency = Currency::getCurrent()->id;
 			$priceFilterQuery = '
-			INNER JOIN `'._DB_PREFIX_.'price_static_index` psi ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.'
+			INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.'
 			AND psi.price_min <= '.(int)$filterValue[1].' AND psi.price_max >= '.(int)$filterValue[0].') ';
 		}
 		else
 		{
 			$idCurrency = Currency::getCurrent()->id;
 			$priceFilterQuery = '
-			INNER JOIN `'._DB_PREFIX_.'price_static_index` psi 
+			INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi 
 			ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.') ';
 		}
 		
@@ -2033,7 +2468,7 @@ class BlockLayered extends Module
 		if (empty($filterValue))
 			return array();
 		$queryFilters = ' AND p.id_product IN (SELECT id_product FROM '._DB_PREFIX_.'feature_product fp WHERE ';
-		foreach ($filterValue AS $filterVal)
+		foreach ($filterValue as $filterVal)
 			$queryFilters .= 'fp.`id_feature_value` = '.(int)$filterVal.' OR ';
 		$queryFilters = rtrim($queryFilters, 'OR ').') ';
 		
@@ -2049,7 +2484,7 @@ class BlockLayered extends Module
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
 		WHERE ';
 						
-		foreach ($filterValue AS $filterVal)
+		foreach ($filterValue as $filterVal)
 			$queryFilters .= 'pac.`id_attribute` = '.(int)$filterVal.' OR ';
 		$queryFilters = rtrim($queryFilters, 'OR ').') ';
 		
@@ -2062,7 +2497,7 @@ class BlockLayered extends Module
 			return array();
 		$queryFiltersJoin = '';
 		$queryFiltersWhere = ' AND p.id_product IN (SELECT id_product FROM '._DB_PREFIX_.'category_product cp WHERE ';
-		foreach ($filterValue AS $id_category)
+		foreach ($filterValue as $id_category)
 			$queryFiltersWhere .= 'cp.`id_category` = '.(int)$id_category.' OR ';
 		$queryFiltersWhere = rtrim($queryFiltersWhere, 'OR ').') ';
 		
@@ -2098,7 +2533,7 @@ class BlockLayered extends Module
 		if (sizeof($filterValue) == 3 OR empty($filterValue))
 			return array();
 		$queryFilters = ' AND p.condition IN (';
-		foreach ($filterValue AS $cond)
+		foreach ($filterValue as $cond)
 			$queryFilters .= '\''.$cond.'\',';
 		$queryFilters = rtrim($queryFilters, ',').') ';
 		
@@ -2115,13 +2550,13 @@ class BlockLayered extends Module
 			if ($layeredFilter AND isset($layeredFilter['filters']) AND !empty($layeredFilter['filters']))
 				$layeredValues = unserialize($layeredFilter['filters']);
 			if (isset($layeredValues['categories']) AND sizeof($layeredValues['categories']))
-				foreach ($layeredValues['categories'] AS $id_category)
+				foreach ($layeredValues['categories'] as $id_category)
 					$categoryBox[] = (int)$id_category;
 		}
 		
 		/* Clean categoryBox before use */
 		if (isset($categoryBox) AND is_array($categoryBox))
-			foreach ($categoryBox AS &$value)
+			foreach ($categoryBox as &$value)
 				$value = (int)$value;
 		
 		$attributeGroups = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -2166,7 +2601,7 @@ class BlockLayered extends Module
 			if (sizeof($attributeGroups))
 			{
 				$html .= '<ul>';
-				foreach ($attributeGroups AS $attributeGroup)
+				foreach ($attributeGroups as $attributeGroup)
 					$html .= '<li class="ui-state-default layered_right"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input type="checkbox" id="layered_selection_ag_'.(int)$attributeGroup['id_attribute_group'].'" name="layered_selection_ag_'.(int)$attributeGroup['id_attribute_group'].'" /> <span class="position"></span>'.$this->l('Attribute group:').' '.$attributeGroup['name'].' ('.(int)$attributeGroup['n'].' '.($attributeGroup['n'] > 1 ? $this->l('attributes') : $this->l('attribute')).')'.($attributeGroup['is_color_group'] ? ' <img src="../img/admin/color_swatch.png" alt="" title="'.$this->l('This group will allow user to select a color').'" />' : '').'</li>';
 				$html .= '</ul>';
 			}
@@ -2174,7 +2609,7 @@ class BlockLayered extends Module
 			if (sizeof($features))
 			{
 				$html .= '<ul>';
-				foreach ($features AS $feature)
+				foreach ($features as $feature)
 					$html .= '<li class="ui-state-default layered_right"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><input type="checkbox" id="layered_selection_feat_'.(int)$feature['id_feature'].'" name="layered_selection_feat_'.(int)$feature['id_feature'].'" /> <span class="position"></span>'.$this->l('Feature:').' '.$feature['name'].' ('.(int)$feature['n'].' '.($feature['n'] > 1 ? $this->l('values') : $this->l('value')).')</li>';
 				$html .= '</ul>';
 			}
@@ -2192,13 +2627,13 @@ class BlockLayered extends Module
 					$(\'#selected_filters li\').remove();
 			';
 				
-			foreach ($layeredValues AS $key => $layeredValue)
+			foreach ($layeredValues as $key => $layeredValue)
 				if ($key != 'categories')
 					$html .= '$(\'#'.$key.'\').click();'."\n";
 			
 			if (isset($layeredValues['categories']) AND sizeof($layeredValues['categories']))
 			{
-				foreach ($layeredValues['categories'] AS $id_category)
+				foreach ($layeredValues['categories'] as $id_category)
 					$html .= '$(\'#categories-treeview\').find(\'input[name="categoryBox[]"][value='.(int)$id_category.']\').attr(\'checked\', \'checked\');'."\n";
 				$html .= '
 				updCatCounter();
@@ -2240,12 +2675,18 @@ class BlockLayered extends Module
 		$smarty->assign('comparator_max_item', (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')));
 		$smarty->assign('products', $products);
 		
+		// Prevent bug with old template where category.tpl contain the title of the category and category-count.tpl do not exists
+		if(file_exists(_PS_THEME_DIR_.'category-count.tpl'))
+			$categoryCount = $smarty->fetch(_PS_THEME_DIR_.'category-count.tpl');
+		else
+			$categoryCount = '';
+		
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */
 		return Tools::jsonEncode(array(
 		'filtersBlock' => $this->generateFiltersBlock($selectedFilters),
 		'productList' => $smarty->fetch(_PS_THEME_DIR_.'product-list.tpl'),
 		'pagination' => $smarty->fetch(_PS_THEME_DIR_.'pagination.tpl'),
-		'categoryCount' => $smarty->fetch(_PS_THEME_DIR_.'category-count.tpl')));
+		'categoryCount' => $categoryCount));
 	}
 	
 	public function getProducts($selectedFilters, &$products, &$nbProducts, &$p, &$n, &$pages_nb, &$start, &$stop, &$range)
@@ -2282,7 +2723,7 @@ class BlockLayered extends Module
 		@set_time_limit(0);
 		
 		/* Set memory limit to 128M only if current is lower */
-		$memory_limit = ini_get('memory_limit');
+		$memory_limit = @ini_get('memory_limit');
 		if (substr($memory_limit,-1) != 'G' AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0,-1) < 128) OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072)))
 			@ini_set('memory_limit','128M');
 
@@ -2313,7 +2754,7 @@ class BlockLayered extends Module
 		@set_time_limit(0);
 		
 		/* Set memory limit to 128M only if current is lower */
-		$memory_limit = ini_get('memory_limit');
+		$memory_limit = @ini_get('memory_limit');
 		if (substr($memory_limit,-1) != 'G' AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0,-1) < 128) OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072)))
 			@ini_set('memory_limit','128M');
 
@@ -2372,7 +2813,7 @@ class BlockLayered extends Module
 
 			$queryCategory = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position) VALUES ';
 			$toInsert = false;
-			foreach ($c AS $id_category => $category)
+			foreach ($c as $id_category => $category)
 			{
 				if (!isset($nCategories[(int)$id_category]))
 					$nCategories[(int)$id_category] = 1;
@@ -2382,14 +2823,14 @@ class BlockLayered extends Module
 					$queryCategory .= '('.(int)$id_category.',NULL,\'category\','.(int)$nCategories[(int)$id_category]++.'),';
 					$toInsert = true;
 				}
-				foreach ($a AS $kAttribute => $attribute)
+				foreach ($a as $kAttribute => $attribute)
 					if (!isset($doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]]))
 					{
 						$doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]] = true;
 						$queryCategory .= '('.(int)$id_category.','.(int)$attributeGroupsById[(int)$kAttribute].',\'id_attribute_group\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
-				foreach ($f AS $kFeature => $feature)
+				foreach ($f as $kFeature => $feature)
 					if (!isset($doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]]))
 					{
 						$doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]] = true;
@@ -2439,7 +2880,7 @@ class BlockLayered extends Module
 		$filterByLetter = array('id_attribute_group' => 'a', 'id_feature' => 'f', 'category' => 'c', 'manufacturer' => 'id_manufacturer',
 		'quantity' => 'quantity', 'condition' => 'condition', 'weight' => 'weight', 'price' => 'price');
 
-		foreach ($selectedFilters AS $type => $filters)
+		foreach ($selectedFilters as $type => $filters)
 		{		
 			if ($type == $excludeType OR !sizeof($filters))
 				continue;
@@ -2451,14 +2892,14 @@ class BlockLayered extends Module
 				switch ($type)
 				{
 					case 'category':
-						foreach ($products AS $k => $product)
+						foreach ($products as $k => $product)
 							if ($filter = Tools::getValue('id_category_layered'))
 								$productsToKeep[] = (int)$k;
 						//don't break me
 					case 'id_attribute_group':
 					case 'id_feature':
-						foreach ($products AS $k => $product)
-							foreach ($filters AS $filter)
+						foreach ($products as $k => $product)
+							foreach ($filters as $filter)
 								if (in_array($filter, $product[$filterByLetter[$type]]))
 									$productsToKeep[] = (int)$k;
 					break;
@@ -2466,8 +2907,8 @@ class BlockLayered extends Module
 					case 'manufacturer':
 					case 'condition':
 					case 'quantity':
-						foreach ($products AS $k => $product)
-							foreach ($filters AS $filter)
+						foreach ($products as $k => $product)
+							foreach ($filters as $filter)
 								if ($product[$filterByLetter[$type]] == $filter)
 									$productsToKeep[] = (int)$k;
 					break;
@@ -2475,14 +2916,14 @@ class BlockLayered extends Module
 					case 'weight':
 						$min = $filters[0];
 						$max = $filters[1]; 
-						foreach ($products AS $k => $product)
+						foreach ($products as $k => $product)
 							if ((float)$min <= (float)$product[$filterByLetter[$type]] AND (float)$product[$filterByLetter[$type]] <= (float)$max)
 								$productsToKeep[] = (int)$k;
 					break;
 					case 'price':
 						$min = $filters[0];
 						$max = $filters[1]; 
-						foreach ($products AS $k => $product)
+						foreach ($products as $k => $product)
 							if ((float)$min <= (float)$product['price_min'] AND (float)$product['price_max'] <= (float)$max)
 								$productsToKeep[] = (int)$k;
 							elseif ((float)$product['price_min'] < (float)$max AND (float)$product['price_max'] > (float)$max
@@ -2497,7 +2938,7 @@ class BlockLayered extends Module
 					break;
 				}
 
-				foreach ($products AS $k => $product)
+				foreach ($products as $k => $product)
 					if (!in_array($k, $productsToKeep))
 						unset($products[(int)$k]);
 				$productsToKeep = array();
