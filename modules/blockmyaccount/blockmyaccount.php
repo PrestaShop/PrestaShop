@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -60,10 +60,11 @@ class BlockMyAccount extends Module
 	{
 		if (!$this->context->customer->isLogged())
 			return false;
-		$this->context->smarty->assign(array(
-			'voucherAllowed' => (int)(Configuration::get('PS_VOUCHERS')),
-			'returnAllowed' => (int)(Configuration::get('PS_ORDER_RETURN')),
-			'HOOK_BLOCK_MY_ACCOUNT' => Module::hookExec('myAccountBlock')
+
+		$this->smartyAssign(array(
+			'voucherAllowed' => (int)Configuration::get('PS_VOUCHERS'),
+			'returnAllowed' => (int)Configuration::get('PS_ORDER_RETURN'),
+			'HOOK_BLOCK_MY_ACCOUNT' => Module::hookExec('myAccountBlock'),
 		));
 		return $this->display(__FILE__, $this->name.'.tpl');
 	}
