@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -39,7 +39,7 @@ class BlockUserInfo extends Module
 		$this->need_instance = 0;
 
 		parent::__construct();
-		
+
 		$this->displayName = $this->l('User info block');
 		$this->description = $this->l('Adds a block that displays information about the customer.');
 	}
@@ -59,7 +59,8 @@ class BlockUserInfo extends Module
 	{
 		if (!$this->active)
 			return;
-		$this->context->smarty->assign(array(
+
+		$this->smartyAssign(array(
 			'cart' => $this->context->cart,
 			'cart_qties' => $this->context->cart->nbProducts(),
 			'logged' => $this->context->customer->isLogged(),
@@ -70,7 +71,7 @@ class BlockUserInfo extends Module
 		));
 		return $this->display(__FILE__, 'blockuserinfo.tpl');
 	}
-	
+
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockuserinfo.css', 'all');

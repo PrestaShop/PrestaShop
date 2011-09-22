@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,8 +26,8 @@
 
 {ldelim}
 "products": [
-{if $products}
-{foreach from=$products item=product name='products'}
+{if $blockcart_products}
+{foreach from=$blockcart_products item=product name='products'}
 {assign var='productId' value=$product.id_product}
 {assign var='productAttributeId' value=$product.id_product_attribute}
 	{ldelim}
@@ -44,11 +44,11 @@
 {else}
 		"hasAttributes": false,
 {/if}
-		"hasCustomizedDatas": {if isset($customizedDatas.$productId.$productAttributeId)}true{else}false{/if},
+		"hasCustomizedDatas": {if isset($blockcart_customizedDatas.$productId.$productAttributeId)}true{else}false{/if},
 
 		"customizedDatas":[
-		{if isset($customizedDatas.$productId.$productAttributeId)}
-		{foreach from=$customizedDatas.$productId.$productAttributeId key='id_customization' item='customization' name='customizedDatas'}{ldelim}
+		{if isset($blockcart_customizedDatas.$productId.$productAttributeId)}
+		{foreach from=$blockcart_customizedDatas.$productId.$productAttributeId key='id_customization' item='customization' name='customizedDatas'}{ldelim}
 {* This empty line was made in purpose (product addition debug), please leave it here *}
 
 			"customizationId":	{$id_customization},
@@ -80,7 +80,7 @@
 ],
 
 "discounts": [
-{if $discounts}{foreach from=$discounts item=discount name='discounts'}
+{if $blockcart_discounts}{foreach from=$blockcart_discounts item=discount name='discounts'}
 	{ldelim}
 		"id":              "{$discount.id_discount}",
 		"name":            "{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|addslashes|replace:'\\\'':'\''}",
@@ -93,19 +93,19 @@
 {/foreach}{/if}
 ],
 
-"shippingCost": "{$shipping_cost|html_entity_decode:2:'UTF-8'}",
-{if isset($tax_cost)}
-"taxCost": "{$tax_cost|html_entity_decode:2:'UTF-8'}",
+"shippingCost": "{$blockcart_shipping_cost|html_entity_decode:2:'UTF-8'}",
+{if isset($blockcart_tax_cost)}
+"taxCost": "{$blockcart_tax_cost|html_entity_decode:2:'UTF-8'}",
 {/if}
-"wrappingCost": "{$wrapping_cost|html_entity_decode:2:'UTF-8'}",
-"nbTotalProducts": "{$nb_total_products}",
-"total": "{$total|html_entity_decode:2:'UTF-8'}",
-"productTotal": "{$product_total|html_entity_decode:2:'UTF-8'}",
+"wrappingCost": "{$blockcart_wrapping_cost|html_entity_decode:2:'UTF-8'}",
+"nbTotalProducts": "{$blockcart_nb_total_products}",
+"total": "{$blockcart_total|html_entity_decode:2:'UTF-8'}",
+"productTotal": "{$blockcart_product_total|html_entity_decode:2:'UTF-8'}",
 
-{if isset($errors) && $errors}
+{if isset($blockcart_errors) && $blockcart_errors}
 "hasError" : true,
 "errors" : [
-{foreach from=$errors key=k item=error name='errors'}
+{foreach from=$blockcart_errors key=k item=error name='errors'}
 	"{$error|addslashes|html_entity_decode:2:'UTF-8'}"
 	{if !$smarty.foreach.errors.last},{/if}
 {/foreach}

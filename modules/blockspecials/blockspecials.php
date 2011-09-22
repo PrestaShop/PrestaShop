@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,7 +27,7 @@
 
 if (!defined('_PS_VERSION_'))
 	exit;
-	
+
 class BlockSpecials extends Module
 {
 	private $_html = '';
@@ -89,20 +89,21 @@ class BlockSpecials extends Module
 
 		if (!$special = Product::getRandomSpecial((int)$params['cookie']->id_lang) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
 			return;
-		$this->context->smarty->assign(array(
+
+		$this->smartyAssign(array(
 			'special' => $special,
 			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
-			'mediumSize' => Image::getSize('medium')
+			'mediumSize' => Image::getSize('medium'),
 		));
-		
+
 		return $this->display(__FILE__, 'blockspecials.tpl');
 	}
-		
+
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
-		
+
 	public function hookHeader($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))

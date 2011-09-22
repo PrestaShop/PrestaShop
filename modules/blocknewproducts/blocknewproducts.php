@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -99,16 +99,20 @@ class BlockNewProducts extends Module
 		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
 		if (!$newProducts AND !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
-		$this->context->smarty->assign(array('new_products' => $newProducts, 'mediumSize' => Image::getSize('medium')));
+
+		$this->smartyAssign(array(
+			'new_products' => $newProducts,
+			'mediumSize' => Image::getSize('medium'),
+		));
 
 		return $this->display(__FILE__, 'blocknewproducts.tpl');
 	}
-	
+
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
-		
+
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
