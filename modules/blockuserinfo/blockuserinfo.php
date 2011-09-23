@@ -60,7 +60,7 @@ class BlockUserInfo extends Module
 		if (!$this->active)
 			return;
 
-		$this->smartyAssign(array(
+		$this->templateAssign(array(
 			'cart' => $this->context->cart,
 			'cart_qties' => $this->context->cart->nbProducts(),
 			'logged' => $this->context->customer->isLogged(),

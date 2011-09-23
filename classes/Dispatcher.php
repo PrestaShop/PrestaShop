@@ -108,6 +108,14 @@ class DispatcherCore
 				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-]*'),
 			),
 		),
+		'module' => array(
+			'controller' =>	'module',
+			'rule' =>		'module/{name}/{action}',
+			'keywords' => array(
+				'name' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'module'),
+				'action' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'action'),
+			),
+		),
 	);
 
 	/**

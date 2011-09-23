@@ -515,7 +515,7 @@ abstract class ModuleCore
 	  * Return an instance of the specified module
 	  *
 	  * @param string $moduleName Module name
-	  * @return Module instance
+	  * @return Module
 	  */
 	public static function getInstanceByName($moduleName)
 	{
@@ -1159,13 +1159,28 @@ abstract class ModuleCore
 	}
 
 	/**
+	 * Get realpath of a template of current module (check if template is overriden too)
+	 *
+	 * @since 1.5.0
+	 * @param string $template
+	 * @return string
+	 */
+	public function getTemplatePath($template)
+	{
+		$overloaded = $this->_isTemplateOverloaded($template);
+		if (is_null($overloaded))
+			return null;
+		return ($overloaded ? _PS_THEME_DIR_.'modules/'.$this->name : _PS_MODULE_DIR_.$this->name).'/'.$template;
+	}
+
+	/**
 	 * Assign a smarty vars (same syntax as smarty->assign) but prefix all keys with module name
 	 *
 	 * @since 1.5.0
 	 * @param string $key Variable key (can be an array)
 	 * @param mixed $value Variable value
 	 */
-	public function smartyAssign($key, $value = null)
+	public function templateAssign($key, $value = null)
 	{
 		if (is_array($key))
 		{

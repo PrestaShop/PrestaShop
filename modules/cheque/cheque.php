@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -42,7 +42,7 @@ class Cheque extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '2.3';
 		$this->author = 'PrestaShop';
-		
+
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
 
@@ -51,13 +51,13 @@ class Cheque extends PaymentModule
 			$this->chequeName = $config['CHEQUE_NAME'];
 		if (isset($config['CHEQUE_ADDRESS']))
 			$this->address = $config['CHEQUE_ADDRESS'];
-			
+
 		parent::__construct();
 
 		$this->displayName = $this->l('Check');
 		$this->description = $this->l('Module for accepting payments by check.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
-		
+
 		if (!isset($this->chequeName) OR !isset($this->address))
 			$this->warning = $this->l('\'To the order of\' and address must be configured in order to use this module correctly.');
 		if (!sizeof(Currency::checkPaymentCurrencies($this->id)))
@@ -149,26 +149,7 @@ class Cheque extends PaymentModule
 
 	public function execPayment($cart)
 	{
-		if (!$this->active)
-			return ;
-		
-		if (!$this->_checkCurrency($cart))
-			Tools::redirect('index.php?controller=order');
-
-		
-		$this->context->smarty->assign(array(
-			'nbProducts' => $cart->nbProducts(),
-			'cust_currency' => $cart->id_currency,
-			'currencies' => $this->getCurrency((int)$cart->id_currency),
-			'total' => $cart->getOrderTotal(true, Cart::BOTH),
-			'isoCode' => $this->context->language->iso_code,
-			'chequeName' => $this->chequeName,
-			'chequeAddress' => Tools::nl2br($this->address),
-			'this_path' => $this->_path,
-			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
-		));
-
-		return $this->display(__FILE__, 'payment_execution.tpl');
+		return $this->actionPayment(true);
 	}
 
 	public function hookPayment($params)
@@ -203,7 +184,7 @@ class Cheque extends PaymentModule
 			$this->context->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
-	
+
 	private function _checkCurrency($cart)
 	{
 		$currency_order = new Currency((int)($cart->id_currency));
@@ -214,5 +195,33 @@ class Cheque extends PaymentModule
 				if ($currency_order->id == $currency_module['id_currency'])
 					return true;
 		return false;
+	}
+
+	public function actionPayment($direct_call = false)
+	{
+		if (!$this->active)
+			return ;
+
+		$cart = $this->context->cart;
+		if (!$this->_checkCurrency($cart))
+			Tools::redirect('index.php?controller=order');
+
+		$this->context->smarty->assign(array(
+			'nbProducts' => $cart->nbProducts(),
+			'cust_currency' => $cart->id_currency,
+			'currencies' => $this->getCurrency((int)$cart->id_currency),
+			'total' => $cart->getOrderTotal(true, Cart::BOTH),
+			'isoCode' => $this->context->language->iso_code,
+			'chequeName' => $this->chequeName,
+			'chequeAddress' => Tools::nl2br($this->address),
+			'this_path' => $this->_path,
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
+		));
+
+		if (!$direct_call)
+			return $this->getTemplatePath('payment_execution.tpl');
+		else
+			// For retrocompatibility
+			return $this->display(__FILE__, 'payment_execution.tpl');
 	}
 }

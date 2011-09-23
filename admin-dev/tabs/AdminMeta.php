@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -59,7 +59,7 @@ class AdminMeta extends AdminTab
 				'fields' => array(),
 			),
 		);
-		
+
 		// Display route options only if friendly URL is activated
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
@@ -69,9 +69,10 @@ class AdminMeta extends AdminTab
 			$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
 			$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
 			$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
+			$this->addFieldRoute('module', $this->l('Route to modules'));
 		}
 	}
-	
+
 	public function addFieldRoute($routeID, $title)
 	{
 		$keywords = array();
@@ -91,7 +92,7 @@ class AdminMeta extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($meta = $this->loadObject(true)))
 			return;
 		$files = Meta::getPages(true, ($meta->page ? $meta->page : false));
@@ -174,7 +175,7 @@ class AdminMeta extends AdminTab
 			</fieldset>
 		</form>';
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddmeta'))
@@ -210,18 +211,18 @@ class AdminMeta extends AdminTab
 			}
 			Module::hookExec('afterSaveAdminMeta');
 		}
-		
+
 		return parent::postProcess();
 	}
-	
+
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->getID(true));
 	}
-	
+
 	/**
 	 * Validate route syntax and save it in configuration
-	 * 
+	 *
 	 * @param string $routeID
 	 */
 	public function checkAndUpdateRoute($routeID)
@@ -229,7 +230,7 @@ class AdminMeta extends AdminTab
 		$default_routes = Dispatcher::getInstance()->default_routes;
 		if (!isset($default_routes[$routeID]))
 			return ;
-		
+
 		$rule = Tools::getValue('PS_ROUTE_'.$routeID);
 		if (!$rule || $rule == $default_routes[$routeID]['rule'])
 		{
@@ -256,22 +257,22 @@ class AdminMeta extends AdminTab
 	{
 		$this->checkAndUpdateRoute('category_rule');
 	}
-	
+
 	public function updateOptionPsRouteSupplierRule()
 	{
 		$this->checkAndUpdateRoute('supplier_rule');
 	}
-	
+
 	public function updateOptionPsRouteManufacturerRule()
 	{
 		$this->checkAndUpdateRoute('manufacturer_rule');
 	}
-	
+
 	public function updateOptionPsRouteCmsRule()
 	{
 		$this->checkAndUpdateRoute('cms_rule');
 	}
-	
+
 	public function updateOptionPsRouteCmsCategoryRule()
 	{
 		$this->checkAndUpdateRoute('cms_category_rule');

@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class FrontControllerCore extends ControllerCore
+class FrontControllerCore extends Controller
 {
 	public $errors = array();
 

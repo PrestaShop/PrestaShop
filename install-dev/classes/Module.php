@@ -44,7 +44,7 @@ abstract class Module
 
 	/** @var string author of the module */
 	public $author;
-	
+
 	/** @var int need_instance */
 	public $need_instance = 1;
 
@@ -84,11 +84,11 @@ abstract class Module
 	 */
 	protected static $modulesCache;
 	protected static $_hookModulesCache;
-	
+
 	protected static $_INSTANCE = array();
-	
+
 	protected static $_generateConfigXmlMode = false;
-	
+
 	protected static $l_cache = array();
 
 	/**
@@ -168,14 +168,14 @@ abstract class Module
 	}
 
 	/**
-	 * This function enable module $name. If an $name is an array, 
+	 * This function enable module $name. If an $name is an array,
 	 * this will enable all of them
-	 * 
-	 * @param array|string $name 
+	 *
+	 * @param array|string $name
 	 * @return true if succeed
 	 * @since 1.4.1
 	 */
-	public static function enableByName($name) 
+	public static function enableByName($name)
 	{
 		if (!is_array($name))
 			$name = array($name);
@@ -198,16 +198,16 @@ abstract class Module
 		SET `active`= 1
 		WHERE `name` = \''.pSQL($this->name).'\'');
 	}
-	
+
 	/**
-	 * This function disable module $name. If an $name is an array, 
+	 * This function disable module $name. If an $name is an array,
 	 * this will disable all of them
-	 * 
-	 * @param array|string $name 
+	 *
+	 * @param array|string $name
 	 * @return true if succeed
 	 * @since 1.4.1
 	 */
-	public static function disableByName($name) 
+	public static function disableByName($name)
 	{
 		if (!is_array($name))
 			$name = array($name);
@@ -220,11 +220,11 @@ abstract class Module
 		SET `active`= 0
 		WHERE `name` IN ('.implode(',',$name).')');
 	}
-	
+
 	/**
 	 * Called when module is set to deactive
 	 */
-	public function disable() 
+	public function disable()
 	{
 		return Module::disableByName($this->name);
 	}
@@ -369,11 +369,11 @@ abstract class Module
 
 
 	/**
-	 * This function is used to determine the module name 
+	 * This function is used to determine the module name
 	 * of an AdminTab which belongs to a module, in order to keep translation
 	 * related to a module in its directory (instead of $_LANGADM)
-	 * 
-	 * @param mixed $currentClass the 
+	 *
+	 * @param mixed $currentClass the
 	 * @return boolean|string if the class belongs to a module, will return the module name. Otherwise, return false.
 	 */
 	public static function getModuleNameFromClass($currentClass)
@@ -396,7 +396,7 @@ abstract class Module
 				if (Tools::file_exists_cache($file) AND include_once($file))
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 			}
-			else 
+			else
 				self::$classInModule[$currentClass] = false;
 		}
 		// return name of the module, or false
@@ -434,7 +434,7 @@ abstract class Module
 		if(!isset($preloadedModuleNameFromId)) {
 			$preloadedModuleNameFromId = array();
 		}
-		
+
 		if(is_array($ids))
 		{
 			foreach($ids as $id)
@@ -458,12 +458,12 @@ abstract class Module
 			else
 				$preloadedModuleNameFromId[$ids] = false;
 		}
-		
+
 
 		if(is_array($ids)) {
 			return $preloadedModuleNameFromId;
 		} else {
-			if(!isset($preloadedModuleNameFromId[$ids])) 
+			if(!isset($preloadedModuleNameFromId[$ids]))
 				return false;
 			return $preloadedModuleNameFromId[$ids];
 		}
@@ -674,7 +674,7 @@ abstract class Module
 			AND m.`active` = 1
 			ORDER BY hm.`position`', false);
 			self::$_hookModulesCache = array();
-	
+
 			if ($result)
 				while ($row = $db->nextRow())
 				{
@@ -711,7 +711,7 @@ abstract class Module
 				{
 					$live_edit = true;
 					$output .= '<script type="text/javascript"> modules_list.push(\''.$moduleInstance->name.'\');</script>
-								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'" 
+								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'"
 								class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
 								<span><img src="'.$moduleInstance->_path.'/logo.gif">'
 							 	.$moduleInstance->displayName.'<span style="float:right">
@@ -760,7 +760,7 @@ abstract class Module
 	/**
 	 * find translation from $_MODULES and put it in self::$l_cache if not already exist
 	 * and return it.
-	 * 
+	 *
 	 * @param string $name name of the module
 	 * @param string $string term to find
 	 * @param string $source additional param for building translation key
@@ -769,9 +769,9 @@ abstract class Module
 	public static function findTranslation($name, $string, $source)
 	{
 		global $_MODULES;
-		
+
 		$cache_key = $name . '|' . $string . '|' . $source;
-		
+
 		if (!isset(self::$l_cache[$cache_key]))
 		{
 			if (!is_array($_MODULES))
@@ -780,7 +780,7 @@ abstract class Module
 			$_MODULES = array_change_key_case($_MODULES);
 			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.md5($string);
 			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.md5($string);
-			
+
 			if (isset($_MODULES[$currentKey]))
 				$ret = stripslashes($_MODULES[$currentKey]);
 			elseif (isset($_MODULES[Tools::strtolower($currentKey)]))
@@ -791,16 +791,16 @@ abstract class Module
 				$ret = stripslashes($_MODULES[Tools::strtolower($defaultKey)]);
 			else
 				$ret = stripslashes($string);
-			
+
 			self::$l_cache[$cache_key] = str_replace('"', '&quot;', $ret);
-		} 
+		}
 		return self::$l_cache[$cache_key];
 	}
 	/**
 	 * Get translation for a given module text
 	 *
 	 * Note: $specific parameter is mandatory for library files.
-	 * Otherwise, translation key will not match for Module library 
+	 * Otherwise, translation key will not match for Module library
 	 * when module is loaded with eval() Module::getModulesOnDisk()
 	 *
 	 * @param string $string String to translate
@@ -811,14 +811,14 @@ abstract class Module
 	{
 		if (self::$_generateConfigXmlMode)
 			return $string;
-		
+
 		global $_MODULES, $_MODULE, $cookie;
 
 		$id_lang = (!isset($cookie) OR !is_object($cookie)) ? (int)(Configuration::get('PS_LANG_DEFAULT')) : (int)($cookie->id_lang);
 		$file = _PS_MODULE_DIR_.$this->name.'/'.Language::getIsoById($id_lang).'.php';
 		if (Tools::file_exists_cache($file) AND include_once($file))
 			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-		
+
 		$source = $specific ? $specific : $this->name;
 		$string = str_replace('\'', '\\\'', $string);
 		$ret = $this->findTranslation($this->name, $string, $source);
@@ -897,7 +897,7 @@ abstract class Module
 	 */
 	public function getPosition($id_hook)
 	{
-		if(isset(Hook::$preloadModulesFromHooks)) 
+		if(isset(Hook::$preloadModulesFromHooks))
 			if(isset(Hook::$preloadModulesFromHooks[$id_hook]))
 				if(isset(Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id]))
 					return Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id];
@@ -1027,7 +1027,7 @@ abstract class Module
 
 		return $smarty->clearCache($template ? $this->_getApplicableTemplateDir($template).$template : NULL, $cacheId, $compileId);
 	}
-	
+
 	protected function _generateConfigXml()
 	{
 		$xml = '<?xml version="1.0" encoding="UTF-8" ?>
@@ -1044,7 +1044,7 @@ abstract class Module
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
 			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', utf8_encode($xml));
 	}
-	
+
 	/**
 	 * @param string $hook_name
 	 * @return bool if module can be transplanted on hook

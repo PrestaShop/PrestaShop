@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,7 +31,7 @@ class LinkCore
 	protected $allow;
 	protected $url;
 	public static $cache = array('page' => array());
-	
+
 	public $protocol_link;
 	public $protocol_content;
 
@@ -74,7 +74,7 @@ class LinkCore
 	{
 		$dispatcher = Dispatcher::getInstance();
 		$url = _PS_BASE_URL_.__PS_BASE_URI__;
-		
+
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
@@ -97,10 +97,10 @@ class LinkCore
 
 		if ($dispatcher->hasKeyword('product_rule', 'manufacturer'))
 			$params['manufacturer'] = Tools::str2url($product->isFullyLoaded ? $product->manufacturer_name : Manufacturer::getNameById($product->id_manufacturer));
-			
+
 		if ($dispatcher->hasKeyword('product_rule', 'supplier'))
 			$params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
-			
+
 		if ($dispatcher->hasKeyword('product_rule', 'price'))
 			$params['supplier'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, NULL, 6, NULL, false, true, 1, false, NULL, NULL, NULL, $product->specificPrice);
 
@@ -118,7 +118,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCategoryLink($category, $alias = NULL, $id_lang = NULL)
+	public function getCategoryLink($category, $alias = null, $id_lang = null)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
@@ -145,7 +145,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSCategoryLink($category, $alias = NULL, $id_lang = NULL)
+	public function getCMSCategoryLink($category, $alias = null, $id_lang = null)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
@@ -173,7 +173,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = NULL)
+	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
 		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
@@ -201,7 +201,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getSupplierLink($supplier, $alias = NULL, $id_lang = NULL)
+	public function getSupplierLink($supplier, $alias = null, $id_lang = null)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
@@ -228,7 +228,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getManufacturerLink($manufacturer, $alias = NULL, $id_lang = NULL)
+	public function getManufacturerLink($manufacturer, $alias = null, $id_lang = null)
 	{
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
@@ -248,17 +248,41 @@ class LinkCore
 	}
 
 	/**
+	 * Create a link to a supplier
+	 *
+	 * @since 1.5.0
+	 * @param string $name Module name
+	 * @param string $action Action name
+	 * @param int $id_lang
+	 * @return string
+	 */
+	public function getModuleLink($name, $action, $ssl = false, $id_lang = null)
+	{
+		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
+		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+
+		// Set available keywords
+		$params = array();
+		$params['name'] = $name;
+		$params['action'] = $action;
+
+		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
+	}
+
+	/**
 	 * Returns a link to a product image for display
 	 * Note: the new image filesystem stores product images in subdirectories of img/p/
-	 * 
+	 *
 	 * @param string $name rewrite link of the image
 	 * @param string $ids id part of the image filename - can be "id_product-id_image" (legacy support, recommended) or "id_image" (new)
 	 * @param string $type
 	 */
-	public function getImageLink($name, $ids, $type = NULL)
+	public function getImageLink($name, $ids, $type = null)
 	{
 		// legacy mode or default image
-		if ((Configuration::get('PS_LEGACY_IMAGES') 
+		if ((Configuration::get('PS_LEGACY_IMAGES')
 			&& (file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'.jpg')))
 			|| strpos($ids, 'default') !== false)
 		{
@@ -271,13 +295,13 @@ class LinkCore
 			// if ids if of the form id_product-id_image, we want to extract the id_image part
 			$split_ids = explode('-', $ids);
 			$id_image = (isset($split_ids[1]) ? $split_ids[1] : $split_ids[0]);
-			
+
 			if ($this->allow == 1)
 				$uri_path = __PS_BASE_URI__.$id_image.($type ? '-'.$type : '').'/'.$name.'.jpg';
 			else
 				$uri_path = _THEME_PROD_DIR_.Image::getImgFolderStatic($id_image).$id_image.($type ? '-'.$type : '').'.jpg';
 		}
-		
+
 		return $this->protocol_content.Tools::getMediaServer($uri_path).$uri_path;
 	}
 
@@ -288,7 +312,7 @@ class LinkCore
 
 	/**
 	 * Create a simple link
-	 * 
+	 *
 	 * @param string $controller
 	 * @param bool $ssl
 	 * @param int $id_lang
@@ -344,7 +368,7 @@ class LinkCore
 
 		parse_str($_SERVER['QUERY_STRING'], $queryTab);
 		unset($queryTab['isolang'], $queryTab['controller']);
-		
+
 		if (!$this->allow)
 			$queryTab['id_lang'] = $id_lang;
 
@@ -377,11 +401,11 @@ class LinkCore
 			{
 				if (Configuration::get('PS_REWRITING_SETTINGS') AND ($k == 'isolang' OR $k == 'id_lang'))
 					continue;
-				$ifNb = (!$nb OR ($nb AND !in_array($k, $varsNb)));
+				$ifNb = (!$nb || ($nb AND !in_array($k, $varsNb)));
 				$ifSort = (!$sort OR ($sort AND !in_array($k, $varsSort)));
-				$ifPagination = (!$pagination OR ($pagination AND !in_array($k, $varsPagination)));
-				if ($ifNb AND $ifSort AND $ifPagination AND !is_array($value))
-					!$array ? ($vars .= ((!$n++ AND ($this->allow == 1 OR $url == $this->url)) ? '?' : '&').urlencode($k).'='.urlencode($value)) : ($vars[urlencode($k)] = urlencode($value));
+				$ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination)));
+				if ($ifNb && $ifSort && $ifPagination AND !is_array($value))
+					!$array ? ($vars .= ((!$n++ && ($this->allow == 1 || $url == $this->url)) ? '?' : '&').urlencode($k).'='.urlencode($value)) : ($vars[urlencode($k)] = urlencode($value));
 			}
 		if (!$array)
 			return $url.$vars;
