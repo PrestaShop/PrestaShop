@@ -36,7 +36,7 @@
 			<taxRule iso_code_country="ca" iso_code_state="mb" id_tax="1" />
 			<taxRule iso_code_country="ca" iso_code_state="mb" id_tax="5" />
 			<taxRule iso_code_country="ca" iso_code_state="nb" id_tax="3" />
-			<taxRule iso_code_country="ca" iso_code_state="nf" id_tax="3" />
+			<taxRule iso_code_country="ca" iso_code_state="nl" id_tax="3" />
 			<taxRule iso_code_country="ca" iso_code_state="ns" id_tax="4" />
 			<taxRule iso_code_country="ca" iso_code_state="on" id_tax="3" />
 			<taxRule iso_code_country="ca" iso_code_state="pe" id_tax="1" behavior="2" />
