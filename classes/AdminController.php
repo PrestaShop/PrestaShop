@@ -9,7 +9,7 @@ class AdminControllerCore extends Controller
 	public $content_only = false;
 	public $layout = 'index.tpl';
 
-	public $template = 'content.tpl';
+	public $template = '';
 
 	/** @var string Associated table name */
 	public $table;
@@ -38,6 +38,16 @@ class AdminControllerCore extends Controller
 	public function __construct()
 	{
 		parent::__construct();
+		// if this->template is empty, 
+		// generate the filename from the classname, without "Controller" suffix
+		if (empty($this->template))
+		{
+			$tpl_name = substr(get_class($this), 0, -10).'.tpl';
+			$tpl_name[0] = strtolower($tpl_name[0]);
+			if (file_exists($this->context->smarty->template_dir.'/'.$tpl_name))
+				$this->template = $tpl_name;
+		}
+
 		$this->id = Tab::getIdFromClassName($this->className);
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -147,18 +157,18 @@ class AdminControllerCore extends Controller
 				$this->template = 'content.tpl';
 		}
 		else
-			$this->content = $this->context->smarty->fetch($this->template);
+			$content = $this->context->smarty->fetch($this->template);
 
 		if ($this->content_only)
-			echo $this->content;
+			echo $content;
 		else
 		{
 			$this->context->smarty->assign('warnings',$this->warnings);
-			$this->content = $this->context->smarty->fetch($this->template);
+			$content = $this->context->smarty->fetch($this->template);
 
 		}
 
-		$this->context->smarty->assign('content',$this->content);
+		$this->context->smarty->assign('content',$content);
 		$this->context->smarty->display($this->layout);
 	}
 
