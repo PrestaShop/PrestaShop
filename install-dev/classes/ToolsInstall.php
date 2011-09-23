@@ -66,7 +66,7 @@ class ToolsInstall
 				!isset($_GET['name']) OR empty($_GET['name']) OR !Validate::isUnixName($_GET['name']),
 				!isset($_GET['login']) OR empty($_GET['login']) OR !Validate::isUnixName($_GET['login']),
 				!isset($_GET['password']),
-				!isset($_GET['tablePrefix']) OR !Validate::isTablePrefix($_GET['tablePrefix']),
+				(!isset($_GET['tablePrefix']) OR !Validate::isTablePrefix($_GET['tablePrefix'])) && !empty($_GET['tablePrefix']),
 			);
 
 			foreach ($data_check AS $data)

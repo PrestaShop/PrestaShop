@@ -1957,7 +1957,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function getPrice($tax = true, $id_product_attribute = NULL, $decimals = 6, $divisor = NULL, $only_reduc = false, $usereduc = true, $quantity = 1)
 	{
-		return self::getPriceStatic((int)($this->id), $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
+		return Product::getPriceStatic((int)($this->id), $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
 	}
 
 	public function getIdProductAttributeMostExpensive()
@@ -1975,7 +1975,7 @@ class ProductCore extends ObjectModel
 
 	public function getPriceWithoutReduct($notax = false, $id_product_attribute = false)
 	{
-		return self::getPriceStatic((int)($this->id), !$notax, $id_product_attribute, 6, NULL, false, false);
+		return Product::getPriceStatic((int)($this->id), !$notax, $id_product_attribute, 6, NULL, false, false);
 	}
 
 	/**
