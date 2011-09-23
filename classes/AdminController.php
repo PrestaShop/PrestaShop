@@ -135,8 +135,8 @@ class AdminControllerCore extends Controller
 	public function display()
 	{
 		if(!empty($this->content))
-			$this->assign('content', $this->content);
-		if (empty($this->template) or $this->template == 'content.tpl')
+			$this->context->smarty->assign('content', $this->content);
+		if (empty($this->template))
 		{
 			$default_tpl = substr(lcfirst(get_class($this)),0,-10).'.tpl';
 			if (file_exists($this->context->smarty->template_dir.'/'.$default_tpl))
@@ -144,7 +144,7 @@ class AdminControllerCore extends Controller
 				$this->template = $default_tpl;
 			}
 			else
-				return $this->displayNoSmarty();
+				$this->template = 'content.tpl';
 		}
 		else
 			$this->content = $this->context->smarty->fetch($this->template);
