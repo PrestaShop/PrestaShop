@@ -439,7 +439,7 @@ class Blocknewsletter extends Module
 	 */
 	protected function sendConfirmationEmail($email)
 	{
-		return	Mail::Send($params['cookie']->id_lang, 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return	Mail::Send($this->context->language->id, 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 
 	/**
