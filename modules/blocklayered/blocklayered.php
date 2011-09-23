@@ -49,15 +49,14 @@ class BlockLayered extends Module
 	
 	public function install()
 	{
-		if ($this->registerHook('leftColumn') && $this->registerHook('header') && $this->registerHook('footer')
+		if (parent::install() && $this->registerHook('leftColumn') && $this->registerHook('header') && $this->registerHook('footer')
 		&& $this->registerHook('categoryAddition') && $this->registerHook('categoryUpdate') && $this->registerHook('attributeGroupForm')
 		&& $this->registerHook('afterSaveAttributeGroup') && $this->registerHook('afterDeleteAttributeGroup') && $this->registerHook('featureForm')
 		&& $this->registerHook('afterDeleteFeature') && $this->registerHook('afterSaveFeature') && $this->registerHook('categoryDeletion')
 		&& $this->registerHook('afterSaveProduct') && $this->registerHook('productListAssign') && $this->registerHook('postProcessAttributeGroup')
 		&& $this->registerHook('postProcessFeature') && $this->registerHook('featureValueForm') && $this->registerHook('postProcessFeatureValue')
 		&& $this->registerHook('afterDeleteFeatureValue') && $this->registerHook('afterSaveFeatureValue') && $this->registerHook('attributeForm')
-		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
-		&& parent::install())
+		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute'))
 		{
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 0);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
@@ -65,17 +64,24 @@ class BlockLayered extends Module
 			$this->rebuildLayeredStructure();
 			$this->rebuildLayeredCache();
 		self::_installPriceIndexTable();
-		self::_installFriendlyUrlTable();
-		self::_installIndexableAttributeTable();
-			self::_installProductAttributeTable();
+			$this->_installFriendlyUrlTable();
+			$this->_installIndexableAttributeTable();
+			$this->_installProductAttributeTable();
 
 		$this->indexUrl();
 			$this->indexAttribute();
+			
+			if(Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'product`') < 10000) // Lock price indexation if too many products
 		self::fullIndexProcess();
 
 			return true;
 	}
+		else
+		{
+			// Installation failed (or hook registration) => uninstall the module
+			$this->uninstall();
 		return false;
+	}
 	}
 
 	public function uninstall()
@@ -83,6 +89,7 @@ class BlockLayered extends Module
 		/* Delete all configurations */
 		Configuration::deleteByName('PS_LAYERED_HIDE_0_VALUES');
 		Configuration::deleteByName('PS_LAYERED_SHOW_QTIES');
+		Configuration::deleteByName('PS_LAYERED_INDEXED');
 		
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
@@ -96,7 +103,7 @@ class BlockLayered extends Module
 		return parent::uninstall();
 	}
 	
-	private function _installPriceIndexTable()
+	private static function _installPriceIndexTable()
 	{
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_price_index`');
 		
@@ -986,7 +993,8 @@ class BlockLayered extends Module
 		
 			Db::getInstance()->Execute('
 			INSERT INTO `'._DB_PREFIX_.'layered_price_index` (id_product, id_currency, price_min, price_max)
-			VALUES '.implode(',', $values));
+			VALUES '.implode(',', $values).'
+			ON DUPLICATE KEY UPDATE id_product = id_product # avoid duplicate keys');
 	}
 
 	public function hookLeftColumn($params)

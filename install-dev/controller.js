@@ -372,7 +372,7 @@ function verifyDbAccess ()
 			+"&password="+encodeURIComponent($("#dbPassword").val())
 			+"&engine="+$("#dbEngine option:selected").val()
 			+ "&name=" + $("#dbName").val()
-			+ "&tablePrefix=" + $("#db_prefix").val(),
+			+ "&tablePrefix=" + encodeURIComponent($("#db_prefix").val()),
 		success: function(ret)
 		{
 			ret = ret.getElementsByTagName('action')[0];
