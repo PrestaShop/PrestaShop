@@ -224,14 +224,6 @@ function translate($string)
 	return str_replace('"', '&quot;', stripslashes($str));
 }
 
-function recursiveTab($id_tab, $tabs)
-{
-	$adminTab = Tab::getTab((int)Context::getContext()->language->id, $id_tab);
-	$tabs[]= $adminTab;
-	if ($adminTab['id_parent'] > 0)
-		$tabs = recursiveTab($adminTab['id_parent'], $tabs);
-	return $tabs;
-}
 
 /**
  * Returns a new Tab object
@@ -244,22 +236,21 @@ function checkingTab($tab)
 	$tab = trim($tab);
 	if (!Validate::isTabName($tab))
 		return false;
-
 	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module FROM `'._DB_PREFIX_.'tab` WHERE class_name = \''.pSQL($tab).'\'');
 	if (!$row['id_tab'])
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
 			Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-		echo Tools::displayError('Tab cannot be found.');
+		echo sprintf(Tools::displayError('Tab %s cannot be found.'),$tab);
 		return false;
 	}
-	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$tab.'.php'))
-		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$tab.'.php');
-	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$tab.'.php'))
-		include_once(_PS_ADMIN_DIR_.'/tabs/'.$tab.'.php');
+	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.Dispatcher::$controllers[$tab].'.php'))
+		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.Dispatcher::$controllers[$tab].'.php');
+	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.Dispatcher::$controllers[$tab].'.php'))
+		include_once(_PS_ADMIN_DIR_.'/tabs/'.Dispatcher::$controllers[$tab].'.php');
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{
-		echo Tools::displayError('Tab file cannot be found.');
+		echo sprintf(Tools::displayError('Tab file %s cannot be found.'),$tab);
 		return false;
 	}
 	$adminObj = new $tab;
@@ -424,4 +415,144 @@ function generateShopList()
 	$html .= '</select>';
 
 	return $html;
+}
+
+/**
+ * for retrocompatibility with old AdminTab, old index.php
+ * 
+ * @return void
+ */
+function runAdminTab()
+{
+
+require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require_once(_PS_ADMIN_DIR_.'/functions.php');
+require_once(_PS_ADMIN_DIR_.'/init.php');
+if (empty($tab) and !sizeof($_POST))
+{
+	$tab = 'AdminHome';
+	$_POST['tab'] = 'AdminHome';
+	$_POST['token'] = Tools::getAdminTokenLite($tab);
+}
+// $tab = $_REQUEST['tab'];
+if ($adminObj = checkingTab($tab))
+{
+	// init is different for new tabs (AdminController) and old tabs (AdminTab)
+	if ($adminObj instanceof AdminController)
+	{
+		$adminObj->path = dirname($_SERVER["PHP_SELF"]);
+		$adminObj->run();
+	}
+	else
+	{
+		require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+		$isoUser = Context::getContext()->language->id;
+		$tabs = array();
+		$tabs = Tab::recursiveTab($adminObj->id, $tabs);
+		$tabs = array_reverse($tabs);
+		$bread = '';
+		foreach ($tabs AS $key => $item)
+			$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
+			'.((sizeof($tabs) - 1 > $key)
+				? '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">'
+				: '').'
+			'.$item['name'].((sizeof($tabs) - 1 > $key) ? '</a>' : '');
+		
+		// @TODO : a way to desactivate this feature
+		echo'<script type="text/javascript">
+
+		$(function() {
+			$.ajax({
+				type: \'POST\',
+				url: \'ajax.php\',
+				data: \'helpAccess=1&item='.$item['class_name'].'&isoUser='.$isoUser.'&country='.Context::getContext()->country->iso_code.'&version='._PS_VERSION_.'\',
+				async : true,
+				success: function(msg) {
+					$("#help-button").html(msg);
+					$("#help-button").fadeIn("slow");
+				}
+			});
+		});</script>';
+
+		echo '<div class="path_bar">
+		<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
+		</div>
+			<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
+			'.$bread;
+		echo '
+		</div>';
+
+
+		if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
+		{
+			echo '<div class="multishop_info">';
+			if (Context::shop() == Shop::CONTEXT_GROUP)
+				printf(translate('You are configuring your store for group shop %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
+			elseif (Context::shop() == Shop::CONTEXT_SHOP)
+				printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+			echo '</div>';
+		}
+
+		if (Validate::isLoadedObject($adminObj))
+		{
+			if ($adminObj->checkToken())
+			{
+				/* Filter memorization */
+				if (isset($_POST) AND !empty($_POST) AND isset($adminObj->table))
+					foreach ($_POST AS $key => $value)
+						if (is_array($adminObj->table))
+						{
+							foreach ($adminObj->table AS $table)
+								if (strncmp($key, $table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
+									$cookie->$key = !is_array($value) ? $value : serialize($value);
+						}
+						elseif (strncmp($key, $adminObj->table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
+							$cookie->$key = !is_array($value) ? $value : serialize($value);
+
+				if (isset($_GET) AND !empty($_GET) AND isset($adminObj->table))
+					foreach ($_GET AS $key => $value)
+						if (is_array($adminObj->table))
+						{
+							foreach ($adminObj->table AS $table)
+								if (strncmp($key, $table.'OrderBy', 7) === 0 OR strncmp($key, $table.'Orderway', 8) === 0)
+									$cookie->$key = $value;
+						}
+						elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 OR strncmp($key, $adminObj->table.'Orderway', 12) === 0)
+							$cookie->$key = $value;
+				$adminObj->displayConf();
+				$adminObj->postProcess();
+				$adminObj->displayErrors();
+				$adminObj->display();
+			}
+			else
+			{
+				// If this is an XSS attempt, then we should only display a simple, secure page
+				ob_clean();
+
+				// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
+				$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
+				if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
+					$url .= '&token='.$adminObj->token;
+
+				$message = translate('Invalid security token');
+				echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
+					<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
+						<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
+						'.$message.'
+					</div>';
+				echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
+						<input type="button" value="'.Tools::htmlentitiesUTF8(translate('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
+					</a>
+					<a href="index.php" method="get" style="float:left;margin:10px">
+						<input type="button" value="'.Tools::htmlentitiesUTF8(translate('Take me out of here!')).'" style="height:40px" />
+					</a>
+				</body></html>';
+				die;
+			}
+		}
+		include(_PS_ADMIN_DIR_.'/footer.inc.php');
+	}
+}
+
+
 }

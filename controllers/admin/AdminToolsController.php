@@ -25,15 +25,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminTools extends AdminController
+class AdminToolsControllerCore  extends AdminController
 {
-	public $template = 'adminTools.tpl';
 	public function __construct()
 	{
 		$this->className = 'AdminTools';
 		parent::__construct();
 	}
-
 
 }
 

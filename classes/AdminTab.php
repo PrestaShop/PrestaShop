@@ -197,7 +197,7 @@ abstract class AdminTabCore
 	{
 		$this->context = Context::getContext();
 
-		$this->id = Tab::getCurrentTabId();
+		$this->id = Tab::getIdFromClassName(get_class($this));
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
 			3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
