@@ -315,6 +315,8 @@
   'IndexController' => 'override/controllers/front/IndexController.php',
   'ManufacturerControllerCore' => 'controllers/front/ManufacturerController.php',
   'ManufacturerController' => 'override/controllers/front/ManufacturerController.php',
+  'ModuleControllerCore' => 'controllers/front/ModuleController.php',
+  'ModuleController' => 'override/controllers/front/ModuleController.php',
   'MyAccountControllerCore' => 'controllers/front/MyAccountController.php',
   'MyAccountController' => 'override/controllers/front/MyAccountController.php',
   'NewProductsControllerCore' => 'controllers/front/NewProductsController.php',
