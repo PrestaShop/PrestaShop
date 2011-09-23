@@ -61,13 +61,13 @@ class AdminControllerCore extends Controller
 		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
 			$className = 'AdminCatalog';
 
-		// temporary fix for Token retrocompatibility 
+		// temporary fix for Token retrocompatibility
 		// This has to be done when url is built instead of here)
 		if(strpos($className,'Controller'))
 			$className = substr($className,0,-10);
 
 		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
-		
+
 		if (!Shop::isMultiShopActivated())
 			$this->shopLinkType = '';
 	}
@@ -127,7 +127,7 @@ class AdminControllerCore extends Controller
 			die;
 		}
 	}
-	
+
 
 	public function displayNoSmarty()
 	{
@@ -155,17 +155,17 @@ class AdminControllerCore extends Controller
 		{
 			$this->context->smarty->assign('warnings',$this->warnings);
 			$this->content = $this->context->smarty->fetch($this->template);
-			
+
 		}
 
 		$this->context->smarty->assign('content',$this->content);
 		$this->context->smarty->display($this->layout);
 	}
-	
+
 	/**
 	 * add a warning message to display at the top of the page
-	 * 
-	 * @param string $msg 
+	 *
+	 * @param string $msg
 	 */
 	protected function displayWarning($msg)
 	{
@@ -269,7 +269,7 @@ class AdminControllerCore extends Controller
 		foreach ($tabs_breadcrumb AS $key => $item)
 			for ($i = 0; $i < (count($tabs_breadcrumb) - 1); $i++)
 				$tabs_breadcrumb[$key]['token'] = Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)$this->context->employee->id);
-			
+
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$this->context->smarty->assign(array(
