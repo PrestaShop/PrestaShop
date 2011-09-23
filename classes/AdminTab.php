@@ -149,7 +149,7 @@ abstract class AdminTabCore
 
 	public $smarty;
 
-	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group');
+	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group', 'id_feature' => 'id_feature');
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -756,6 +756,7 @@ abstract class AdminTabCore
 					{
 						$object = new $this->className();
 						$this->copyFromPost($object, $this->table);
+//					d($object);
 						if (!$object->add())
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 						elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND !sizeof($this->_errors) AND $this->_redirect)

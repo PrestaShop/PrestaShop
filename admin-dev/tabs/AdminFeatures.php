@@ -40,7 +40,8 @@ class AdminFeatures extends AdminTab
 
 		$this->fieldsDisplay = array(
 			'name' => array('title' => $this->l('Name'), 'width' => 128, 'filter_key' => 'b!name'),
-			'value' => array('title' => $this->l('Values'), 'width' => 255, 'orderby' => false, 'search' => false));
+			'value' => array('title' => $this->l('Values'), 'width' => 255, 'orderby' => false, 'search' => false),
+			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position'));
 
 		parent::__construct();
 	}
@@ -76,12 +77,28 @@ class AdminFeatures extends AdminTab
 		if (!sizeof($this->_list))
 			echo '<tr><td class="center" colspan="'.sizeof($this->_list).'">'.$this->l('No features found.').'</td></tr>';
 
-					$irow = 0;
+
+		echo '
+		<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+		<script type="text/javascript">
+			var token = \''.$this->token.'\';
+			var come_from = \''.$this->table.'\';
+			var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
+		</script>
+		<script type="text/javascript" src="../js/admin-dnd.js"></script>
+		';
+
+		$irow = 0;
+		if ($this->_list AND isset($this->fieldsDisplay['position']))
+		{
+			$positions = array_map(create_function('$elem', 'return (int)$elem[\'position\'];'), $this->_list);
+			sort($positions);
+		}
 		foreach ($this->_list AS $tr)
 		{
 			$id = (int)($tr['id_'.$this->table]);
 		 	echo '
-			<tr'.($irow++ % 2 ? ' class="alt_row"' : '').'>
+			<tr'.($irow++ % 2 ? ' class="alt_row"' : '').' id="tr_'.$tr['id_feature'].'_'.$tr['position'].'">
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center"><input type="checkbox" name="'.$this->table.'Box[]" value="'.$id.'" class="noborder" /></td>
 				<td style="width: 140px; vertical-align: top; padding: 4px 0 4px 0; cursor: pointer" onclick="$(\'#features_values_'.$id.'\').slideToggle();">'.$tr['name'].'</td>
 				<td style="vertical-align: top; padding: 4px 0 4px 0; width: 340px">
@@ -117,6 +134,27 @@ class AdminFeatures extends AdminTab
 					onclick="changeFormParam(this.form, \'?tab=AdminFeatures\', '.$id.'); return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>
 					</div>
 					</td>';
+
+			echo '
+				<td style="width: 140px; vertical-align: top; padding: 4px 0 4px 0; cursor: pointer" class="dragHandle">';
+
+			if ($this->_orderBy == 'position' AND $this->_orderWay != 'DESC')
+			{
+				echo '<a'.(!($tr['position'] != $positions[sizeof($positions) - 1]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
+						'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
+						&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token.'">
+						<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'down' : 'up').'.gif"
+						alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>';
+
+				echo '<a'.(!($tr['position'] != $positions[0]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
+						'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
+						&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token.'">
+						<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'up' : 'down').'.gif"
+						alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
+			}
+			else
+				echo (int)($tr['position'] + 1);
+
 
 			echo '
 				<td style="vertical-align: top; padding: 4px 0 4px 0" class="center">
@@ -194,7 +232,9 @@ class AdminFeatures extends AdminTab
 			return ;
 		
 		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
-		$this->adminFeaturesValues->postProcess($this->token);
+		
+		if (Tools::isSubmit('submitAddfeature_value') || Tools::isSubmit('submitDelfeature_value'))
+			$this->adminFeaturesValues->postProcess($this->token);
 
 		Module::hookExec('postProcessFeature',
 		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessFeature to stop saving process
@@ -215,6 +255,28 @@ class AdminFeatures extends AdminTab
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		else if (Tools::isSubmit('submitAdd'.$this->table))
+		{
+			if ($this->tabAccess['add'] === '1')
+			{
+				$id_feature = (int)Tools::getValue('id_feature');
+				// Adding last position to the feature if not exist
+				if ($id_feature <= 0)
+				{
+					$sql = 'SELECT `position`+1
+							FROM `'._DB_PREFIX_.'feature` 
+							ORDER BY position DESC';
+				// set the position of the new feature in $_POST for postProcess() method
+					$_POST['position'] = DB::getInstance()->getValue($sql);
+				}
+				// clean \n\r characters
+				foreach ($_POST as $key => $value)
+					if (preg_match('/^name_/Ui', $key))
+						$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
+				parent::postProcess();
+			}
+			
 		}
 		else
 			parent::postProcess();

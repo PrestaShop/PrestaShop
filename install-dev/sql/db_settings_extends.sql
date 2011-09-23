@@ -371,7 +371,7 @@ INSERT INTO `PREFIX_product_attribute_combination` (`id_attribute`, `id_product_
 (4, 26),(5, 10),(5, 35),(5, 36),(6, 8),(6, 39),(6, 40),(7, 33),(7, 34),(8, 13),(8, 15),(9, 12),(9, 14),(10, 12),(10, 13),(11, 14),(11, 15),(14, 31),(14, 32),(15, 19),
 (15, 26),(15, 28),(15, 30),(15, 32),(15, 34),(15, 36),(15, 40),(15, 42),(16, 22),(16, 25),(16, 27),(16, 29),(16, 31),(16, 33),(16, 35),(16, 39),(16, 41),(17, 23),(18, 41),(18, 42),(19, 27),(19, 28);
 
-INSERT INTO `PREFIX_feature` (`id_feature`) VALUES (1), (2), (3), (4), (5);
+INSERT INTO `PREFIX_feature` (`id_feature`, `position`) VALUES (1, 0), (2, 1), (3, 2), (4, 3), (5, 4);
 
 INSERT INTO `PREFIX_feature_group_shop` (`id_feature`, `id_group_shop`) (SELECT `id_feature`, 1 FROM PREFIX_feature);
 

@@ -151,3 +151,7 @@ ALTER TABLE `PREFIX_product_download` ADD `is_shareable` TINYINT( 1 ) UNSIGNED N
 ALTER TABLE `PREFIX_attribute_group` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
 /* PHP:add_group_attribute_position(); */;
+
+ALTER TABLE `PREFIX_feature` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+
+/* PHP:add_feature_position(); */;

@@ -641,6 +641,7 @@ CREATE TABLE `PREFIX_employee` (
 
 CREATE TABLE `PREFIX_feature` (
   `id_feature` int(10) unsigned NOT NULL auto_increment,
+  `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_feature`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

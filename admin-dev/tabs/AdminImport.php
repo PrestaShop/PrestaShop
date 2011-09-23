@@ -179,7 +179,8 @@ class AdminImport extends AdminTab
 						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
 						'help' => $this->l('If you do not specify this column and you specify the column images, all images of the product will be replaced by those specified in the import file')
 					),
-					'feature' => array('label' => $this->l('Feature')),
+					'feature' => array('label' => $this->l('Feature(Name:Position)'),
+						'help' => $this->l('Position of the feature.')),
 					'online_only' => array('label' => $this->l('Only available online')),
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(

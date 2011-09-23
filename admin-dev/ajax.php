@@ -868,3 +868,35 @@ if (array_key_exists('ajaxGroupsAttributesPositions', $_POST))
 		}
 	}
 }
+
+/* Modify feature position */
+if (array_key_exists('ajaxFeaturesPositions', $_POST))
+{
+	$way = (int)(Tools::getValue('way'));
+	$id_feature = (int)(Tools::getValue('id_feature'));
+	$positions = Tools::getValue('feature');
+
+	$new_positions = array();
+	foreach($positions as $k => $v)
+		if (!empty($v))
+			$new_positions[] = $v;
+
+	foreach ($new_positions AS $position => $value)
+	{
+		// pos[1] = id_feature, pos[2] = old position
+		$pos = explode('_', $value);
+
+		if (isset($pos[1]) AND (int)$pos[1] === $id_feature)
+		{
+			if ($feature = new Feature((int)$pos[1]))
+				if (isset($position) && $feature->updatePosition($way, $position))
+					echo "ok position $position for feature $pos[1]\r\n";
+				else
+					echo '{"hasError" : true, "errors" : "Can not update feature '. $id_attribute_group . ' to position '.$position.' "}';
+			else
+				echo '{"hasError" : true, "errors" : "This feature ('.$id_attribute_group.') can t be loaded"}';
+
+			break;
+		}
+	}
+}
