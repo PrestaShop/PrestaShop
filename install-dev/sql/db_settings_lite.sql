@@ -1307,3 +1307,25 @@ State:name
 Country:name
 phone' where `id_country`=10;
 
+
+INSERT INTO `PREFIX_gender` (`id_gender`, `type`) VALUES
+(1, 0),
+(2, 1),
+(3, 1);
+
+INSERT INTO `PREFIX_gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
+(1, 1, 'Mr.'),
+(1, 2, 'M.'),
+(1, 3, 'Sr.'),
+(1, 4, 'Herr'),
+(1, 5, 'Sig.'),
+(2, 1, 'Ms.'),
+(2, 2, 'Mme'),
+(2, 3, 'Sra.'),
+(2, 4, 'Frau'),
+(2, 5, 'Sig.ra'),
+(3, 1, 'Miss'),
+(3, 2, 'Melle'),
+(3, 3, 'Miss'),
+(3, 4, 'Miss'),
+(3, 5, 'Miss');
