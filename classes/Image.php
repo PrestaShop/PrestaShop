@@ -27,22 +27,22 @@
 
 class ImageCore extends ObjectModel
 {
-	public		$id;
+	public $id;
 
 	/** @var integer Image ID */
 	public $id_image;
 
 	/** @var integer Product ID */
-	public		$id_product;
+	public $id_product;
 
 	/** @var string HTML title and alt attributes */
-	public		$legend;
+	public $legend;
 
 	/** @var integer Position used to order images of the same product */
-	public		$position;
+	public $position;
 
 	/** @var boolean Image is cover */
-	public		$cover;
+	public $cover;
 
 	/** @var string image extension */
 	public $image_format = 'jpg';
@@ -61,16 +61,16 @@ class ImageCore extends ObjectModel
 
 	protected $tables = array ('image', 'image_lang');
 
-	protected	$fieldsRequired = array('id_product');
-	protected 	$fieldsValidate = array('id_product' => 'isUnsignedId', 'position' => 'isUnsignedInt', 'cover' => 'isBool');
-	protected 	$fieldsRequiredLang = array('legend');
-	protected 	$fieldsSizeLang = array('legend' => 128);
-	protected 	$fieldsValidateLang = array('legend' => 'isGenericName');
+	protected $fieldsRequired = array('id_product');
+	protected $fieldsValidate = array('id_product' => 'isUnsignedId', 'position' => 'isUnsignedInt', 'cover' => 'isBool');
+	protected $fieldsRequiredLang = array('legend');
+	protected $fieldsSizeLang = array('legend' => 128);
+	protected $fieldsValidateLang = array('legend' => 'isGenericName');
 
-	protected 	$table = 'image';
-	protected 	$identifier = 'id_image';
+	protected $table = 'image';
+	protected $identifier = 'id_image';
 
-	protected	static $_cacheGetSize = array();
+	protected static $_cacheGetSize = array();
 
 	public function __construct($id = NULL, $id_lang = NULL)
 	{
@@ -119,12 +119,12 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Return available images for a product
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param integer $id_product Product ID
-	  * @return array Images
-	  */
+	 * Return available images for a product
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param integer $id_product Product ID
+	 * @return array Images
+	 */
 	public static function getImages($id_lang, $id_product)
 	{
 		return Db::getInstance()->ExecuteS('
@@ -136,10 +136,10 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Return Images
-	  *
-	  * @return array Images
-	  */
+	 * Return Images
+	 *
+	 * @return array Images
+	 */
 	public static function getAllImages()
 	{
 		return Db::getInstance()->ExecuteS('
@@ -149,11 +149,11 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Return number of images for a product
-	  *
-	  * @param integer $id_product Product ID
-	  * @return integer number of images
-	  */
+	 * Return number of images for a product
+	 *
+	 * @param integer $id_product Product ID
+	 * @return integer number of images
+	 */
 	public static function getImagesTotal($id_product)
 	{
 		$result = Db::getInstance()->getRow('
@@ -164,11 +164,11 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Return highest position of images for a product
-	  *
-	  * @param integer $id_product Product ID
-	  * @return integer highest position of images
-	  */
+	 * Return highest position of images for a product
+	 *
+	 * @param integer $id_product Product ID
+	 * @return integer highest position of images
+	 */
 	public static function getHighestPosition($id_product)
 	{
 		$result = Db::getInstance()->getRow('
@@ -179,15 +179,15 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Delete product cover
-	  *
-	  * @param integer $id_product Product ID
-	  * @return boolean result
-	  */
+	 * Delete product cover
+	 *
+	 * @param integer $id_product Product ID
+	 * @return boolean result
+	 */
 	public static function deleteCover($id_product)
 	{
-	 	if (!Validate::isUnsignedId($id_product))
-	 		die(Tools::displayError());
+		if (!Validate::isUnsignedId($id_product))
+			die(Tools::displayError());
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
@@ -198,11 +198,11 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  *Get product cover
-	  *
-	  * @param integer $id_product Product ID
-	  * @return boolean result
-	  */
+	 *Get product cover
+	 *
+	 * @param integer $id_product Product ID
+	 * @return boolean result
+	 */
 	public static function getCover($id_product)
 	{
 		return Db::getInstance()->getRow('
@@ -212,11 +212,11 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Copy images from a product to another
-	  *
-	  * @param integer $id_product_old Source product ID
-	  * @param boolean $id_product_new Destination product ID
-	  */
+	 * Copy images from a product to another
+	 *
+	 * @param integer $id_product_old Source product ID
+	 * @param boolean $id_product_new Destination product ID
+	 */
 	public static function duplicateProductImages($id_product_old, $id_product_new, $combinationImages)
 	{
 		$imagesTypes = ImageType::getImagesTypes('products');
@@ -231,23 +231,23 @@ class ImageCore extends ObjectModel
 			$imageNew->id_product = (int)($id_product_new);
 			// A new id is generated for the cloned image when calling add()
 			if ($imageNew->add())
-            {
+			{
 				$new_path = $imageNew->getPathForCreation();
-            	foreach ($imagesTypes AS $imageType)
-            	{
+				foreach ($imagesTypes AS $imageType)
+				{
 					if (file_exists(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'-'.$imageType['name'].'.jpg'))
 					{
 						if (!Configuration::get('PS_LEGACY_IMAGES'))
 						$imageNew->createImgFolder();
 						copy(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'-'.$imageType['name'].'.jpg',
 						$new_path.'-'.$imageType['name'].'.jpg');
-            }
-            	}
-                if (file_exists(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'.jpg'))
-                    copy(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'.jpg', $new_path.'.jpg');
+					}
+				}
+			if (file_exists(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'.jpg'))
+				copy(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'.jpg', $new_path.'.jpg');
 
 				self::replaceAttributeImageAssociationId($combinationImages, (int)($imageOld->id), (int)($imageNew->id));
-            }
+			}
 			else
 				return false;
 		}
@@ -265,10 +265,10 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	* Duplicate product attribute image associations
-	* @param integer $id_product_attribute_old
-	* @return boolean
-	*/
+	 * Duplicate product attribute image associations
+	 * @param integer $id_product_attribute_old
+	 * @return boolean
+	 */
 	public static function duplicateAttributeImageAssociations($combinationImages)
 	{
 		if (!isset($combinationImages['new']) OR !is_array($combinationImages['new']))
@@ -282,12 +282,12 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Reposition image
-	  *
-	  * @param integer $position Position
-	  * @param boolean $direction Direction
-	  * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
-	  */
+	 * Reposition image
+	 *
+	 * @param integer $position Position
+	 * @param boolean $direction Direction
+	 * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
+	 */
 	public function	positionImage($position, $direction)
 	{
 		Tools::displayAsDeprecated();
@@ -354,8 +354,8 @@ class ImageCore extends ObjectModel
 	}
 
 	/**
-	  * Clear all images in tmp dir
-	  */
+	 * Clear all images in tmp dir
+	 */
 	public static function clearTmpDir()
 	{
 		foreach (scandir(_PS_TMP_IMG_DIR_) AS $d)
@@ -417,7 +417,7 @@ class ImageCore extends ObjectModel
 				{
 					$delete_folder = false;
 					break;
-}
+				}
 		}
 		if (isset($delete_folder) && $delete_folder)
 			@rmdir($this->image_dir.$this->getImgFolder());
@@ -587,7 +587,7 @@ class ImageCore extends ObjectModel
 					$new_path = _PS_PROD_IMG_DIR_.$image->getImgPath().(isset($matches[3]) ? $matches[3] : '').'.jpg';
 				if (file_exists($new_path))
 					{
-						if(!file_exists(_PS_PROD_IMG_DIR_.$tmp_folder))
+						if (!file_exists(_PS_PROD_IMG_DIR_.$tmp_folder))
 						{
 							@mkdir(_PS_PROD_IMG_DIR_.$tmp_folder, $access_rights);
 							@chmod(_PS_PROD_IMG_DIR_.$tmp_folder, $access_rights);
@@ -641,16 +641,17 @@ class ImageCore extends ObjectModel
 	{
 		if (!$this->id)
 			return false;
-		if(Configuration::get('PS_LEGACY_IMAGES'))
+		if (Configuration::get('PS_LEGACY_IMAGES'))
 		{
 			if (!$this->id_product)
 				return false;
 			$path = $this->id_product.'-'.$this->id;
-		} else
+		}
+		else
 		{
 			$path = $this->getImgPath();
 			$this->createImgFolder();
-}
+		}
 		return _PS_PROD_IMG_DIR_.$path;
 	}
 }
