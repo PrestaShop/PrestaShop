@@ -75,7 +75,7 @@ echo '
 					html = "";
 					nb_notifs = 0;
 					$.each(json.order, function(property, value) {
-						html += "<li>'.translate('A new order has been made on your shop.').'<br />'.translate('Order number : ').'<strong>#" + parseInt(value.id_order) + "</strong><br />'.translate('Total : ').'<strong>" + value.total_paid_real + "</strong><br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that order').'</a></li>";
+						html += "<li>'.translate('A new order has been made on your shop.').'<br />'.translate('Order number : ').'<strong>#" + parseInt(value.id_order) + "</strong><br />'.translate('Total : ').'<strong>" + value.total_paid_real + "</strong><br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?controller=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that order').'</a></li>";
 					});
 					if (html != "")
 					{
@@ -94,7 +94,7 @@ echo '
 					html = "";
 					nb_notifs = 0;
 					$.each(json.customer, function(property, value) {
-						html += "<li>'.translate('A new customer registered on your shop.').'<br />'.translate('Customer name : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate('Click here to see that customer').'</a></li>";
+						html += "<li>'.translate('A new customer registered on your shop.').'<br />'.translate('Customer name : ').'<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?controller=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'&viewcustomer&id_customer=" + parseInt(value.id_customer) + "\">'.translate('Click here to see that customer').'</a></li>";
 					});
 					if (html != "")
 					{
@@ -113,7 +113,7 @@ echo '
 					html = "";
 					nb_notifs = 0;
 					$.each(json.message, function(property, value) {
-						html += "<li>'.translate('A new message posted on your shop.').'<br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br />'.translate('Excerpt : ').'<strong>" + value.message_customer + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that message').'</a></li>";
+						html += "<li>'.translate('A new message posted on your shop.').'<br />'.translate('From : ').'<strong>" + value.customer_name + "</strong><br />'.translate('Excerpt : ').'<strong>" + value.message_customer + "</strong><br /><a href=\"index.php?controller=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">'.translate('Click here to see that message').'</a></li>";
 					});
 					if (html != "")
 					{
@@ -192,7 +192,7 @@ echo '		var html = "";
 								<h3>'.translate('Last orders').'</h3>
 								<p class="no_notifs">'.translate('No new orders has been made on your shop').'</p>
 								<ul id="list_orders_notif"></ul>
-								<p><a href="index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.translate('Show all orders').'</a></p>
+								<p><a href="index.php?controller=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'">'.translate('Show all orders').'</a></p>
 							</div>
 						</div>';
 				}
@@ -203,7 +203,7 @@ echo '		var html = "";
 								<h3>'.translate('Last customers').'</h3>
 								<p class="no_notifs">'.translate('No new customers registered on your shop').'</p>
 								<ul id="list_customers_notif"></ul>
-								<p><a href="index.php?tab=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.translate('Show all customers').'</a></p>
+								<p><a href="index.php?controller=AdminCustomers&token='.Tools::getAdminTokenLite('AdminCustomers').'">'.translate('Show all customers').'</a></p>
 							</div>
 						</div>';
 				}
@@ -214,7 +214,7 @@ echo '		var html = "";
 								<h3>'.translate('Last messages').'</h3>
 								<p class="no_notifs">'.translate('No new messages posted on your shop').'</p>
 								<ul id="list_messages_notif"></ul>
-								<p><a href="index.php?tab=AdminMessages&token='.Tools::getAdminTokenLite('AdminMessages').'">'.translate('Show all messages').'</a></p>
+								<p><a href="index.php?controller=AdminMessages&token='.Tools::getAdminTokenLite('AdminMessages').'">'.translate('Show all messages').'</a></p>
 							</div>
 						</div>';
 				}
@@ -223,10 +223,10 @@ echo '		var html = "";
 				[ <a href="index.php?logout" id="header_logout"><span>'.translate('logout').'</span></a> ]';
 				if (Context::getContext()->shop->getBaseURL())
 					echo '- <a href="'.Context::getContext()->shop->getBaseURL().'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'"><span>'.translate('View my shop').'</span></a>';
-	echo '		- <a href="index.php?tab=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> '.translate('My preferences').'</a>
+	echo '		- <a href="index.php?controller=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> '.translate('My preferences').'</a>
 			</span></div>
 			<div id="header_search">
-				<form method="post" action="index.php?tab=AdminSearch&token='.Tools::getAdminTokenLite('AdminSearch').'">
+				<form method="post" action="index.php?controller=AdminSearch&token='.Tools::getAdminTokenLite('AdminSearch').'">
 					<input type="text" name="bo_query" id="bo_query"
 						value="'.Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))).'"
 					/>
@@ -256,7 +256,7 @@ echo '		var html = "";
 					<option value="0">'.translate('Quick Access').'</option>';
 foreach (QuickAccess::getQuickAccesses(Context::getContext()->language->id) AS $quick)
 {
-	preg_match('/tab=(.+)(&.+)?$/', $quick['link'], $adminTab);
+	preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $adminTab);
 	if (isset($adminTab[1]))
 	{
 		if (strpos($adminTab[1], '&'))
@@ -282,15 +282,16 @@ $id_parent_tab_current = (int)(Tab::getCurrentParentId());
 $tabs = Tab::getTabs(Context::getContext()->language->id, 0);
 $echoLis = '';
 $mainsubtablist = '';
+
 foreach ($tabs AS $t)
 	if (checkTabRights($t['id_tab']) === true)
 	{
 		$img = (Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.Context::getContext()->employee->bo_theme.'/img/t/'.$t['class_name'].'.gif') ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$t['class_name'].'.gif';
 		if (trim($t['module']) != '')
 			$img = _MODULE_DIR_.$t['module'].'/'.$t['class_name'].'.gif';
-		$current = (($t['class_name'] == $tab) OR ($id_parent_tab_current == $t['id_tab']));
+		$current = ((strtolower($t['class_name']) == $tab) OR ($id_parent_tab_current == $t['id_tab']));
 		echo '<li class="submenu_size '.($current ? 'active' : '').'" id="maintab'.$t['id_tab'].'">
-			<a href="index.php?tab='.$t['class_name'].'&token='.Tools::getAdminToken($t['class_name'].(int)($t['id_tab']).(int)Context::getContext()->employee->id).'">
+			<a href="index.php?controller='.$t['class_name'].'&token='.Tools::getAdminToken($t['class_name'].(int)($t['id_tab']).(int)Context::getContext()->employee->id).'">
 				<img src="'.$img.'" alt="" /> '.$t['name'].'
 			</a>
 		</li>';
@@ -298,7 +299,8 @@ foreach ($tabs AS $t)
 		$subTabs = Tab::getTabs(Context::getContext()->language->id, (int)$t['id_tab']);
 		foreach ($subTabs AS $t2)
 			if (checkTabRights($t2['id_tab']) === true)
-				$echoLi .= '<li><a href="index.php?tab='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
+				$echoLi .= '<li><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
+
 		if ($current)
 			$mainsubtablist = $echoLi;
 		$echoLis .= '<div id="tab'.(int)($t['id_tab']).'_subtabs" style="display:none">'.$echoLi.'</div>';

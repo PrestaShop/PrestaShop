@@ -1,12 +1,15 @@
 <?php
-class AdminController extends Controller
+class AdminControllerCore extends Controller
 {
 	public $path;
 
 	public $content;
+	public $warnings;
 
 	public $content_only = false;
 	public $layout = 'index.tpl';
+
+	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
 	public $table;
@@ -54,10 +57,17 @@ class AdminController extends Controller
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
 		$className = get_class($this);
+
 		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
 			$className = 'AdminCatalog';
-		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
 
+		// temporary fix for Token retrocompatibility 
+		// This has to be done when url is built instead of here)
+		if(strpos($className,'Controller'))
+			$className = substr($className,0,-10);
+
+		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
+		
 		if (!Shop::isMultiShopActivated())
 			$this->shopLinkType = '';
 	}
@@ -87,17 +97,14 @@ class AdminController extends Controller
 		return (!empty($token) AND $token === $this->token);
 	}
 
-	public function run()
+	public function action()
 	{
-		$this->checkAccess();
-		$this->init();
 		$this->postProcess();
 		$this->setMedia();
 		$this->initHeader();
 		$this->initFooter();
 		//$adminObj->displayConf();
 		//$adminObj->displayErrors();
-		$this->display();
 	}
 
 	/**
@@ -112,23 +119,57 @@ class AdminController extends Controller
 			$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$this->token.'$2', $_SERVER['REQUEST_URI']);
 			if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
 				$url .= '&token='.$this->token;
+			if(strpos($url,'?') === false)
+				$url = str_replace('&token', '?controller=AdminHome&token', $url);
 
 			$this->context->smarty->assign('url', htmlentities($url));
-			$this->context->smarty->display(_PS_ADMIN_DIR_.'/themes/invalid_token.tpl');
+			$this->context->smarty->display('invalid_token.tpl');
 			die;
 		}
 	}
+	
 
+	public function displayNoSmarty()
+	{
+	}
 	public function display()
 	{
+		if(!empty($this->content))
+			$this->assign('content', $this->content);
+		if (empty($this->template) or $this->template == 'content.tpl')
+		{
+			$default_tpl = substr(lcfirst(get_class($this)),0,-10).'.tpl';
+			if (file_exists($this->context->smarty->template_dir.'/'.$default_tpl))
+			{
+				$this->template = $default_tpl;
+			}
+			else
+				return $this->displayNoSmarty();
+		}
+		else
+			$this->content = $this->context->smarty->fetch($this->template);
+
 		if ($this->content_only)
-			$this->context->smarty->display($this->template);
+			echo $this->content;
 		else
 		{
+			$this->context->smarty->assign('warnings',$this->warnings);
 			$this->content = $this->context->smarty->fetch($this->template);
-			$this->context->smarty->assign('content', $this->content);
-			$this->context->smarty->display($this->layout);
+			
 		}
+
+		$this->context->smarty->assign('content',$this->content);
+		$this->context->smarty->display($this->layout);
+	}
+	
+	/**
+	 * add a warning message to display at the top of the page
+	 * 
+	 * @param string $msg 
+	 */
+	protected function displayWarning($msg)
+	{
+		$this->warnings[] = $msg;
 	}
 
 	/**
@@ -221,14 +262,14 @@ class AdminController extends Controller
 		}
 		// Breadcrumbs
 		$home_token = Tools::getAdminToken('AdminHome'.intval(Tab::getIdFromClassName('AdminHome')).(int)$this->context->employee->id);
-
 		$tabs_breadcrumb = array();
-		$tabs_breadcrumb = recursiveTab($this->id, $tabs_breadcrumb);
+		$tabs_breadcrumb = Tab::recursiveTab($this->id, $tabs_breadcrumb);
 		$tabs_breadcrumb = array_reverse($tabs_breadcrumb);
 
 		foreach ($tabs_breadcrumb AS $key => $item)
-		for ($i = 0; $i < (count($tabs_breadcrumb) - 1); $i++)
-			$tabs_breadcrumb[$key]['token'] = Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)$this->context->employee->id);
+			for ($i = 0; $i < (count($tabs_breadcrumb) - 1); $i++)
+				$tabs_breadcrumb[$key]['token'] = Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)$this->context->employee->id);
+			
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$this->context->smarty->assign(array(
@@ -309,8 +350,7 @@ class AdminController extends Controller
 		$this->addCSS(_PS_JS_DIR_.'jquery/datepicker/datepicker.css', 'all');
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
 		$this->addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
-
-		$this->addCSS($this->path.'/themes/'.'default/admin.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.'admin-dev/themes/default/admin.css', 'all');
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
@@ -335,7 +375,10 @@ class AdminController extends Controller
 			return Module::findTranslation(Module::$classInModule[$class], $string, $class);
 		}
 		global $_LANGADM;
-		$_LANGADM = array_change_key_case($_LANGADM);
+		if(is_array($_LANGADM))
+			$_LANGADM = array_change_key_case($_LANGADM);
+		else
+			$_LANGADM = array();
 
         //if ($class == __CLASS__)
         //        $class = 'AdminTab';
@@ -363,7 +406,8 @@ class AdminController extends Controller
 
 	public function init()
 	{
-		ob_start();
+		// ob_start();
+		$this->checkAccess();
 		$this->timerStart = microtime(true);
 
 		if (isset($_GET['logout']))

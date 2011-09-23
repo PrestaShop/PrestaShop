@@ -28,6 +28,20 @@
 ob_start();
 $timerStart = microtime(true);
 
+{
+if (!isset($_GET['controller']) && isset($_GET['tab'])){
+	$_GET['controller'] = $_GET['tab'];
+}
+if (!isset($_POST['controller']) && isset($_POST['tab']))
+	$_POST['controller'] = $_POST['tab'];
+
+if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
+	$_REQUEST['controller'] = $_REQUEST['tab'];
+}
+//	$_GET['tab'] = $_GET['controller'];
+//	$_POST['tab'] = $_POST['controller'];
+//	$_REQUEST['tab'] = $_REQUEST['controller'];
+
 $context = Context::getContext();
 if (isset($_GET['logout']))
 	$context->employee->logout();
@@ -38,6 +52,11 @@ if (!isset($context->employee) || !$context->employee->isLoggedBack())
 
 // Set current index 
 $currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
+if (empty($tab))
+{
+	$currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
+	$tab = $controller;
+}
 if ($back = Tools::getValue('back'))
 	$currentIndex .= '&back='.urlencode($back);
 AdminTab::$currentIndex = $currentIndex;
@@ -56,7 +75,7 @@ define('_PS_BASE_URL_', Tools::getShopDomain(true));
 define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 $path = dirname(__FILE__).'/themes/';
-if (empty($context->employee->bo_theme) OR !file_exists($path.$employee->bo_theme.'/admin.css'))
+if (empty($context->employee->bo_theme) OR !file_exists($path.$context->employee->bo_theme.'/admin.css'))
 {
 	if (file_exists($path.'oldschool/admin.css'))
 		$context->employee->bo_theme = 'oldschool';
@@ -84,7 +103,6 @@ if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
 }
 
 $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-$context->country = $defaultCountry;
 
 $shopID = '';
 if ($context->cookie->shopContext)

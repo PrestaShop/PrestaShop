@@ -23,7 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$iso}" lang="{$iso}">
 	<head>
@@ -112,7 +111,7 @@
 							<h3>{l s='Last orders'}</h3>
 							<p class="no_notifs">{l s='No new orders has been made on your shop'}</p>
 							<ul id="list_orders_notif"></ul>
-							<p><a href="index.php?tab=AdminOrders&token={$token_admin_orders}">{l s='Show all orders'}</a></p>
+							<p><a href="index.php?controller=AdminOrders&token={$token_admin_orders}">{l s='Show all orders'}</a></p>
 						</div>
 					</div>
 				{/if}
@@ -125,7 +124,7 @@
 							<h3>{l s='Last customers'}</h3>
 							<p class="no_notifs">{l s='No new customers registered on your shop'}</p>
 							<ul id="list_customers_notif"></ul>
-							<p><a href="index.php?tab=AdminCustomers&token={$token_admin_customers}">{l s='Show all customers'}</a></p>
+							<p><a href="index.php?controller=AdminCustomers&token={$token_admin_customers}">{l s='Show all customers'}</a></p>
 						</div>
 					</div>
 				{/if}
@@ -138,7 +137,7 @@
 							<h3>{l s='Last messages'}</h3>
 							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
 							<ul id="list_messages_notif"></ul>
-							<p><a href="index.php?tab=AdminMessages&token={$token_admin_messages}">{l s='Show all messages'}</a></p>
+							<p><a href="index.php?controller=AdminMessages&token={$token_admin_messages}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
 				{/if}
@@ -151,10 +150,10 @@
 				{if {$base_url}}
 					- <a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><span>{l s='View my shop'}</span></a>
 				{/if}
-				- <a href="index.php?tab=AdminEmployees&id_employee={$employee->id}&updateemployee&token={$token_admin_employees}" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> {l s='My preferences'}</a>
+				- <a href="index.php?controller=AdminEmployees&id_employee={$employee->id}&updateemployee&token={$token_admin_employees}" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> {l s='My preferences'}</a>
 			</span></div>
 			<div id="header_search">
-				<form method="post" action="index.php?tab=AdminSearch&token={$token_admin_search}">
+				<form method="post" action="index.php?controller=AdminSearch&token={$token_admin_search}">
 					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
 					<select name="bo_search_type" id="bo_search_type">
 						<option value="0">{l s='everywhere'}</option>
@@ -197,7 +196,7 @@
 				{/if}
 				{foreach $tabs AS $t}
 					<li class="submenu_size {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-						<a href="index.php?tab={$t.class_name}&token={$t.token}">
+						<a href="index.php?controller={$t.class_name}&token={$t.token}">
 							<img src="{$t.img}" alt="" /> {$t.name}
 						</a>
 					</li>
@@ -206,7 +205,7 @@
 				{foreach $tabs AS $t}
 					<div id="tab{$t.id_tab}_subtabs" style="display:none">
 						{foreach $t.sub_tabs AS $t2}
-							<li><a href="index.php?tab={$t2.class_name}&token={$t2.token}">{$t2.name}</a></li>
+							<li><a href="index.php?controller={$t2.class_name}&token={$t2.token}">{$t2.name}</a></li>
 						{/foreach}
 						{if $t.current}
 							{assign var='mainsubtab' value=$t}
@@ -232,7 +231,7 @@
 				<ul id="submenu" {if isset($mainsubtab)}class="withLeftBorder clearfix"{/if}>
 					{if isset($mainsubtab)}
 						{foreach $mainsubtab.sub_tabs AS $t}
-							<li><a href="index.php?tab={$t.class_name}&token={$t.token}">{$t.name}</a></li>
+							<li><a href="index.php?controller={$t.class_name}&token={$t.token}">{$t.name}</a></li>
 						{/foreach}
 					{/if}
 				</ul>
@@ -244,16 +243,19 @@
 								</div>
 							{/if}
 							
+							{* We should display breadcrumb only if needed *}
+							{if count($tabs_breadcrumb)>1}
 							<div class="path_bar">
 								<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;"></div>
 								<a href="?token={$home_token}">{l s='Back Office'}</a>
 								{foreach $tabs_breadcrumb AS $item}
 									<img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
-									{if isset($item.token)}<a href="?tab={$item.class_name}&token={$item.token}">{/if}
+									{if isset($item.token)}<a href="?controller={$item.class_name}&token={$item.token}">{/if}
 									{$item.name}
 									{if isset($item.token)}</a>{/if}
 								{/foreach}
 							</div>
+							{/if}
 							{if $is_multishop}
 								<div class="multishop_info">
 									{if $shop_context == 'group'}

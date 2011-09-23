@@ -35,6 +35,10 @@ class DispatcherCore
 	 */
 	public static $instance = null;
 
+	/* 
+	 * @var array 
+	 */
+	public static $controllers = array();
 	/**
 	 * List of default routes
 	 *
@@ -196,12 +200,34 @@ class DispatcherCore
 			}
 		// Get and instantiate controller
 		$this->getController();
-		$controllers = Dispatcher::getControllers(_PS_CONTROLLER_DIR_);
+		if(defined('_PS_ADMIN_DIR_'))
+			Dispatcher::getControllers(_PS_ADMIN_DIR_.'/tabs/','');
+		// getControllers load all controller files from the specified dir
+		Dispatcher::getControllers(_PS_CONTROLLER_DIR_);
+
+	
 		if (!$this->controller)
-			$this->controller = 'index';
-		if (!isset($controllers[$this->controller]))
-			$this->controller = 'pagenotfound';
-		Controller::getController($controllers[$this->controller])->run();
+		{
+			if (defined('_PS_ADMIN_DIR_'))
+				$this->controller = 'adminhome';
+			else
+				$this->controller = 'index';
+		}
+
+			// temporary code for AdminTab / AdminController
+			if (defined('_PS_ADMIN_DIR_') && $this->controller != 'adminhome')
+			{
+				if (file_exists(_PS_ADMIN_DIR_.'/tabs/'.self::$controllers[$this->controller].'.php'))
+				{
+					// Tools::displayAsDeprecated('AdminTab is deprecated'); // To put in AdminTab::__construct()
+					require_once(_PS_ADMIN_DIR_.'/functions.php');
+					runAdminTab();
+					die('');
+				}
+			}
+			else if (!isset(self::$controllers[$this->controller]))
+				$this->controller = 'pagenotfound';
+		Controller::getController(self::$controllers[$this->controller])->run();
 	}
 
 	/**
@@ -427,33 +453,34 @@ class DispatcherCore
 	}
 
 	/**
-	 * Get list of available controllers
-	 *
+	 * Get list of available controllers from the specified dir
+	 * @param string dir directory to scan (recursively)
+	 * @param filename suffix (without .php extension). Others files will be ignored.
 	 * @return array
 	 */
-	public static function getControllers($dir)
+	public static function getControllers($dir, $suffix = 'Controller')
 	{
-		static $controllers;
-
 		$controller_files = scandir($dir);
 		foreach ($controller_files as $controller_filename)
 		{
 			if (!in_array($controller_filename, array('.','..','.svn')) AND is_dir($dir.$controller_filename))
-				$controllers = self::getControllers($dir.$controller_filename.DIRECTORY_SEPARATOR);
-			else if (substr($controller_filename, -14, 14) == 'Controller.php')
+			{
+				self::$controllers = self::getControllers($dir.$controller_filename.DIRECTORY_SEPARATOR);
+			}
+			else if (substr($controller_filename, - (strlen($suffix)+4), - 4) == $suffix)
 			{
 				$subdir = str_replace(_PS_CONTROLLER_DIR_,'',$dir);
-				$controllers[strtolower(substr($controller_filename, 0, -14))] = basename($controller_filename, '.php');
+				self::$controllers[strtolower(substr($controller_filename, 0, - (strlen($suffix)+ 4)))] = basename($controller_filename, '.php');
 			}
 		}
 
 		// add default controller
-		$controllers['index'] = 'IndexController';
-		if (isset($controllers['auth']))
-			$controllers['authentication'] = $controllers['auth'];
+		self::$controllers['index'] = 'IndexController';
+		if (isset(self::$controllers['auth']))
+			self::$controllers['authentication'] = self::$controllers['auth'];
 		if (isset($controllers['compare']))
-			$controllers['productscomparison'] = $controllers['compare'];
+			self::$controllers['productscomparison'] = self::$controllers['compare'];
 
-		return $controllers;
+		return self::$controllers;
 	}
 }
