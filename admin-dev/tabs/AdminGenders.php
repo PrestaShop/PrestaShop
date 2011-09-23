@@ -29,14 +29,14 @@ class AdminGenders extends AdminTab
 {
 	public function __construct()
 	{
-	 	$this->table = 'gender';
-	 	$this->className = 'Gender';
+		$this->table = 'gender';
+		$this->className = 'Gender';
 		$this->lang = true;
-	 	$this->edit = true;
-	 	$this->delete = true;
+		$this->edit = true;
+		$this->delete = true;
 
-	 	$this->fieldImageSettings = array('name' => 'image', 'dir' => 'genders');
- 		$this->fieldsDisplay = array(
+		$this->fieldImageSettings = array('name' => 'image', 'dir' => 'genders');
+		$this->fieldsDisplay = array(
 			'id_gender' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Name'), 'width' => 150, 'filter_key' => 'b!name'),
 			'type' => array(
@@ -44,13 +44,13 @@ class AdminGenders extends AdminTab
 				'width' => 100,
 				'orderby' => false,
 				'type' => 'select',
-				'select' => array(0 => $this->l('Male'), 1 => $this->l('Female')),
+				'select' => array(0 => $this->l('Male'), 1 => $this->l('Female'), 2 => $this->l('Neutral')),
 				'filter_key' => 'a!type',
- 				'callback' => 'displayGenderType',
- 				'callback_object' => $this,
- 			),
- 			'image' => array('title' => $this->l('Image'), 'align' => 'center', 'image' => 'genders', 'orderby' => false, 'search' => false),
- 		);
+				'callback' => 'displayGenderType',
+				'callback_object' => $this,
+			),
+			'image' => array('title' => $this->l('Image'), 'align' => 'center', 'image' => 'genders', 'orderby' => false, 'search' => false),
+		);
 
 		parent::__construct();
 	}
@@ -88,6 +88,8 @@ class AdminGenders extends AdminTab
 					<label class="t" for="type_male"> '.$this->l('Male').'</label>
 					<input type="radio" name="type" id="type_female" value="1" '.($this->getFieldValue($obj, 'type') == 1 ? 'checked="checked" ' : '').'/>
 					<label class="t" for="type_female"> '.$this->l('Female').'</label>
+					<input type="radio" name="type" id="type_neutral" value="2" '.($this->getFieldValue($obj, 'type') == 2 ? 'checked="checked" ' : '').'/>
+					<label class="t" for="type_neutral"> '.$this->l('Neutral').'</label>
 				</div>
 				<div class="clear"></div>';
 

@@ -35,11 +35,11 @@ class GenderCore extends ObjectModel
 	public $type;
 
 	protected $fieldsRequired = array('type');
- 	protected $fieldsSize = array();
- 	protected $fieldsValidate = array();
+	protected $fieldsSize = array();
+	protected $fieldsValidate = array();
 	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 20);
- 	protected $fieldsValidateLang = array('name' => 'isString');
+	protected $fieldsSizeLang = array('name' => 20);
+	protected $fieldsValidateLang = array('name' => 'isString');
 
 	protected $table = 'gender';
 	protected $identifier = 'id_gender';
