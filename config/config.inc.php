@@ -100,6 +100,10 @@ Language::loadLanguages();
 $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 Context::getContext()->country = $defaultCountry;
 
+/* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
+if (function_exists('date_default_timezone_set'))
+	@date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
+
 /* Instantiate cookie */
 $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
 if (defined('_PS_ADMIN_DIR_'))
@@ -153,10 +157,6 @@ define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
 define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 
-/* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
-if (function_exists('date_default_timezone_set'))
-	@date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
-
 /* Smarty */
 if (!defined('_PS_ADMIN_DIR_'))
 	require_once(dirname(__FILE__).'/smarty.config.inc.php');
@@ -168,3 +168,4 @@ Context::getContext()->smarty = $smarty;
  (for 'URL' append SMARTY_DEBUG as a parameter to the url)
  default is false for production environment */
 define('SMARTY_DEBUG_CONSOLE', false);
+
