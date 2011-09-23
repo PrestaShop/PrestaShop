@@ -197,6 +197,11 @@ class Cheque extends PaymentModule
 		return false;
 	}
 
+	/**
+	 * This action display payment form
+	 *
+	 * @param bool $direct_call For retrocompatibility
+	 */
 	public function actionPayment($direct_call = false)
 	{
 		if (!$this->active)
@@ -223,5 +228,44 @@ class Cheque extends PaymentModule
 		else
 			// For retrocompatibility
 			return $this->display(__FILE__, 'payment_execution.tpl');
+	}
+
+	/**
+	 * This action validate the payment
+	 */
+	public function actionValidation($direct_call = false)
+	{
+		$cart = $this->context->cart;
+
+		if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->active)
+			Tools::redirect('index.php?controller=order&step=1');
+
+		// Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
+		$authorized = false;
+		foreach (Module::getPaymentModules() as $module)
+			if ($module['name'] == 'cheque')
+			{
+				$authorized = true;
+				break;
+			}
+		if (!$authorized)
+			die(Tools::displayError('This payment method is not available.'));
+
+		$customer = new Customer($cart->id_customer);
+
+		if (!Validate::isLoadedObject($customer))
+			Tools::redirect('index.php?controller=order&step=1');
+
+		$currency = Tools::isSubmit('currency_payement') ? new Currency(Tools::getValue('currency_payement')) : $context->currency;
+		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+
+		$mailVars =	array(
+			'{cheque_name}' => Configuration::get('CHEQUE_NAME'),
+			'{cheque_address}' => Configuration::get('CHEQUE_ADDRESS'),
+			'{cheque_address_html}' => str_replace("\n", '<br />', Configuration::get('CHEQUE_ADDRESS')));
+
+		$this->validateOrder((int)$cart->id, Configuration::get('PS_OS_CHEQUE'), $total, $this->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
+
+		Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)($cart->id).'&id_module='.(int)$this->id.'&id_order='.$this->currentOrder.'&key='.$customer->secure_key);
 	}
 }

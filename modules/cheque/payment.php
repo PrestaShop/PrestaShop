@@ -25,10 +25,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @deprecated This file is deprecated, use moduleController instead
+ */
+
 /* SSL Management */
 $useSSL = true;
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
+Tools::displayFileAsDeprecated();
+
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/cheque.php');
 

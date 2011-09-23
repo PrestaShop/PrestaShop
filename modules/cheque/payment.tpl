@@ -25,7 +25,7 @@
 *}
 
 <p class="payment_module">
-	<a href="{$link->getModuleLink('cheque', 'payment')}" title="{l s='Pay by cheque' mod='cheque'}">
+	<a href="{$link->getModuleLink('cheque', 'payment', true)}" title="{l s='Pay by cheque' mod='cheque'}">
 		<img src="{$this_path}cheque.jpg" alt="{l s='Pay by cheque' mod='cheque'}" width="86" height="49" />
 		{l s='Pay by cheque (order process will be longer)' mod='cheque'}
 	</a>
