@@ -277,8 +277,9 @@ echo '			</select>
 
 if (empty($tab))
 	echo '<div class="mainsubtablist" style="display:none"></div>';
-
-$id_parent_tab_current = (int)(Tab::getCurrentParentId());
+// This is made to display the subtab list
+$id_current_tab = (int)(Tab::getIdFromClassName(Dispatcher::$controllers[$tab]));
+$myCurrentTab = new Tab($id_current_tab);
 $tabs = Tab::getTabs(Context::getContext()->language->id, 0);
 $echoLis = '';
 $mainsubtablist = '';
@@ -289,7 +290,7 @@ foreach ($tabs AS $t)
 		$img = (Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.Context::getContext()->employee->bo_theme.'/img/t/'.$t['class_name'].'.gif') ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$t['class_name'].'.gif';
 		if (trim($t['module']) != '')
 			$img = _MODULE_DIR_.$t['module'].'/'.$t['class_name'].'.gif';
-		$current = ((strtolower($t['class_name']) == $tab) OR ($id_parent_tab_current == $t['id_tab']));
+		$current = ((strtolower($t['class_name']) == $tab) OR ($myCurrentTab->id_parent == $t['id_tab']));
 		echo '<li class="submenu_size '.($current ? 'active' : '').'" id="maintab'.$t['id_tab'].'">
 			<a href="index.php?controller='.$t['class_name'].'&token='.Tools::getAdminToken($t['class_name'].(int)($t['id_tab']).(int)Context::getContext()->employee->id).'">
 				<img src="'.$img.'" alt="" /> '.$t['name'].'
