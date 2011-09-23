@@ -32,7 +32,7 @@ class CmsControllerCore extends FrontController
 	public $cms;
 	public $cms_category;
 
-	public function canonicalRedirection()
+	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms)))
 			parent::canonicalRedirection($canonicalURL);

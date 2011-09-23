@@ -109,7 +109,7 @@ class SearchControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'search.tpl');
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		if (!$this->instantSearch AND !$this->ajaxSearch)
 			parent::displayHeader();
@@ -117,7 +117,7 @@ class SearchControllerCore extends FrontController
 			$this->context->smarty->assign('static_token', Tools::getToken(false));
 	}
 
-	public function displayFooter()
+	public function displayFooter($display = true)
 	{
 		if (!$this->instantSearch AND !$this->ajaxSearch)
 			parent::displayFooter();

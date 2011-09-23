@@ -65,7 +65,7 @@ class OrderControllerCore extends ParentOrderController
 			$this->context->smarty->assign('virtual_cart', $isVirtualCart);
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		if (!Tools::getValue('ajax'))
 			parent::displayHeader();
@@ -149,7 +149,7 @@ class OrderControllerCore extends ParentOrderController
 			'dlv_adr_fields' => $deliveryAddressFields));
 	}
 
-	public function displayFooter()
+	public function displayFooter($display = true)
 	{
 		if (!Tools::getValue('ajax'))
 			parent::displayFooter();

@@ -50,7 +50,7 @@ class ProductControllerCore extends FrontController
 		}
 	}
 
-	public function canonicalRedirection()
+	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Validate::isLoadedObject($this->product))
 			parent::canonicalRedirection($this->context->link->getProductLink($this->product));

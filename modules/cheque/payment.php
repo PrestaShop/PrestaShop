@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -34,7 +34,7 @@ include(dirname(__FILE__).'/cheque.php');
 
 if (!Context::getContext()->customer->isLogged(true))
     Tools::redirect('index.php?controller=authentication&back=order.php');
-	
+
 $cheque = new Cheque();
 echo $cheque->execPayment($cart);
 

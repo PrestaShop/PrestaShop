@@ -37,7 +37,7 @@ class SupplierControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 
-	public function canonicalRedirection()
+	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Validate::isLoadedObject($this->supplier))
 			parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier))
@@ -105,7 +105,7 @@ class SupplierControllerCore extends FrontController
 			$this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		parent::displayHeader();
 		$this->productSort();

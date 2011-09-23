@@ -194,13 +194,13 @@ class OrderDetailControllerCore extends FrontController
 		}
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayHeader();
 	}
 
-	public function displayFooter()
+	public function displayFooter($display = true)
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayFooter();

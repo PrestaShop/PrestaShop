@@ -43,13 +43,13 @@ class CategoryControllerCore extends FrontController
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		parent::displayHeader();
 		$this->productSort();
 	}
 
-	public function canonicalRedirection()
+	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category))
 			parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));

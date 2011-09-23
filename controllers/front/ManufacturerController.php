@@ -36,7 +36,7 @@ class ManufacturerControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 
-	public function canonicalRedirection()
+	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Validate::isLoadedObject($this->manufacturer))
 			parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
@@ -103,7 +103,7 @@ class ManufacturerControllerCore extends FrontController
 		}
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		parent::displayHeader();
 		$this->productSort();
