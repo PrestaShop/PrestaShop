@@ -452,11 +452,15 @@ if ($adminObj = checkingTab($tab))
 		$tabs = array_reverse($tabs);
 		$bread = '';
 		foreach ($tabs AS $key => $item)
-			$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
-			'.((sizeof($tabs) - 1 > $key)
-				? '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">'
-				: '').'
-			'.$item['name'].((sizeof($tabs) - 1 > $key) ? '</a>' : '');
+		{
+			$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />';
+			if (count($tabs) - 1 > $key)
+				$bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">';
+			
+			$bread .= $item['name'];
+			if (count($tabs) - 1 > $key)
+				$bread .= '</a>';
+		}
 		
 		// @TODO : a way to desactivate this feature
 		echo'<script type="text/javascript">

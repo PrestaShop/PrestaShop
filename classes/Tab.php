@@ -259,7 +259,7 @@ class TabCore extends ObjectModel
 		$tabs[]= $adminTab;
 		if ($adminTab['id_parent'] > 0)
 		{
-			$tabs[] = Tab::recursiveTab($adminTab['id_parent'], $tabs);
+			$tabs = Tab::recursiveTab($adminTab['id_parent'], $tabs);
 		}
 		return $tabs;
 	}
