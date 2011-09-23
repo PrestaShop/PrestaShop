@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -37,7 +37,7 @@
 {else}
 
 <h3>{l s='Cheque payment' mod='cheque'}</h3>
-<form action="{$this_path_ssl}validation.php" method="post">
+<form action="{$link->getModuleLink('cheque', 'validation', true)}" method="post">
 	<p>
 		<img src="{$this_path}cheque.jpg" alt="{l s='cheque' mod='cheque'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
 		{l s='You have chosen to pay by cheque.' mod='cheque'}

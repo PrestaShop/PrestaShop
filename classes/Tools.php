@@ -666,7 +666,7 @@ class ToolsCore
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['description']);
-					
+
 					// Paginate title
 					if (!empty($row['meta_title']))
 						$row['meta_title'] = $row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
