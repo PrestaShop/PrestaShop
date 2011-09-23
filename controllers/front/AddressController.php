@@ -281,13 +281,13 @@ class AddressControllerCore extends FrontController
 		$this->context->smarty->assign('ordered_adr_fields', $dlv_adr_fields);
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayHeader();
 	}
 
-	public function displayFooter()
+	public function displayFooter($display = true)
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayFooter();

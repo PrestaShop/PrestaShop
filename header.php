@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,7 +28,10 @@
 if (isset(Context::getContext()->controller))
 	$controller = Context::getContext()->controller;
 else
+{
 	$controller = new FrontController();
+	$controller->init();
+}
 
-$controller->displayHeader();
-
+$controller->processHeader();
+Context::getContext()->smarty->display(_PS_THEME_DIR_.'header.tpl');

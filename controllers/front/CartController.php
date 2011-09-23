@@ -30,7 +30,7 @@ class CartControllerCore extends FrontController
 	public $php_self = 'cart';
 
 	// This is not a public page, so the canonical redirection is disabled
-	public function canonicalRedirection(){}
+	public function canonicalRedirection($canonicalURL = ''){}
 
 	public function ajaxProcess()
 	{

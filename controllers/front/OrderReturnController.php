@@ -78,13 +78,13 @@ class OrderReturnControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
 	}
 
-	public function displayHeader()
+	public function displayHeader($display = true)
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayHeader();
 	}
 
-	public function displayFooter()
+	public function displayFooter($display = true)
 	{
 		if (Tools::getValue('ajax') != 'true')
 			parent::displayFooter();
