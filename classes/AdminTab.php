@@ -1037,7 +1037,7 @@ abstract class AdminTabCore
 		return true;
 	}
 
-	protected function uploadImage($id, $name, $dir, $ext = false)
+	protected function uploadImage($id, $name, $dir, $ext = false, $width = NULL, $height = NULL)
 	{
 		if (isset($_FILES[$name]['tmp_name']) AND !empty($_FILES[$name]['tmp_name']))
 		{
@@ -1058,7 +1058,7 @@ abstract class AdminTabCore
 			{
 				$_FILES[$name]['tmp_name'] = $tmpName;
 				// Copy new image
-				if (!imageResize($tmpName, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, NULL, NULL, ($ext ? $ext : $this->imageType)))
+				if (!imageResize($tmpName, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
 					$this->_errors[] = Tools::displayError('An error occurred while uploading image.');
 				if (sizeof($this->_errors))
 					return false;

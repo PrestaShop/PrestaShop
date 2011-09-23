@@ -34,6 +34,8 @@ class AdminGenders extends AdminTab
 		$this->lang = true;
 		$this->edit = true;
 		$this->delete = true;
+		$this->defaultImageHeight = 16;
+		$this->defaultImageWidth = 16;
 
 		$this->fieldImageSettings = array('name' => 'image', 'dir' => 'genders');
 		$this->fieldsDisplay = array(
@@ -95,11 +97,22 @@ class AdminGenders extends AdminTab
 
 			echo '<label>'.$this->l('Image:').' </label>
 					<div class="margin-form">';
-			echo '	<input type="file" name="image" /> ';
+			echo '	<input type="file" name="image" />';
 			if ($obj->getImage())
 				echo '<img src="'.$obj->getImage().'" />';
 			echo '</div>
-				<div class="clear"></div>';
+				<div class="clear"></div>
+				<label>'.$this->l('Image Width:').' </label>
+				<div class="margin-form">
+					<input size="4" type="text" name="img_width" value="'.$this->defaultImageWidth.'" />
+					<p>'.$this->l('Image width in pixel. "0" to use original size').'</p>
+				</div>
+				<div class="clear"></div>
+				<label>'.$this->l('Image Height:').' </label>
+				<div class="margin-form">
+					<input size="4" type="text" name="img_height" value="'.$this->defaultImageHeight.'" />
+					<p>'.$this->l('Image height in pixel. "0" to use original size').'</p>
+				</div>';
 
 			echo '<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
@@ -107,5 +120,29 @@ class AdminGenders extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form><br />';
+	}
+	
+	protected function postImage($id)
+	{
+		if (isset($this->fieldImageSettings['name']) AND isset($this->fieldImageSettings['dir']))
+		{
+			if(!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height')))
+				$this->_errors[] = Tools::displayError('Width and height must be a numeric');
+			else
+			{
+				if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0)
+				{
+					$width = (int)Tools::getValue('img_width');
+					$height = (int)Tools::getValue('img_height');
+				}
+				else
+				{
+					$width = NULL;
+					$height = NULL;
+				}
+				return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/', false, $width, $height);
+			}
+		}
+		return !sizeof($this->_errors) ? true : false;
 	}
 }
