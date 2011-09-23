@@ -110,6 +110,15 @@ $(document).ready(function() {
 					}
 				}
 				
+				if (table.id == 'feature') {
+					params = {
+						ajaxFeaturesPositions: true,
+						id_feature : ids[1],
+						way: way,
+						token: token
+					}
+				}
+				
 				$.ajax({
 					type: 'POST',
 					async: false,
@@ -147,7 +156,7 @@ $(document).ready(function() {
 						}
 						else
 						{
-							if (table.id == 'product' || table.id.indexOf('attribute') != -1 || table.id == 'attribute_group')
+							if (table.id == 'product' || table.id.indexOf('attribute') != -1 || table.id == 'attribute_group' || table.id == 'feature')
 							{
 								var reg = /_[0-9][0-9]*$/g;
 							}

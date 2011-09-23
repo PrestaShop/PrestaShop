@@ -29,6 +29,7 @@ class FeatureCore extends ObjectModel
 {
  	/** @var string Name */
 	public 		$name;
+	public 		$position;
 	
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 128);
@@ -45,7 +46,7 @@ class FeatureCore extends ObjectModel
 
 	public function getFields()
 	{
-		return array('id_feature' => NULL);
+		return array('id_feature' => NULL, 'position' => (int)$this->position);
 	}
 	
 	/**
@@ -89,7 +90,7 @@ class FeatureCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'feature` f
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)($id_lang).')
-		ORDER BY fl.`name` ASC');
+		ORDER BY f.`position` ASC');
 	}
 	
 	/**
@@ -123,9 +124,14 @@ class FeatureCore extends ObjectModel
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id));
 		/* Also delete related products */
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature` = '.(int)($this->id));
+		
 		$return = parent::delete();
 		if($return)
 			Module::hookExec('afterDeleteFeature', array('id_feature' => $this->id));
+		
+		/* Reinitializing position */
+		$this->cleanPositions();
+		
 		return $return;
 	}
 	
@@ -224,6 +230,84 @@ class FeatureCore extends ObjectModel
 	public static function isFeatureActive()
 	{
 		return Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
+	}
+	
+	/**
+	 * Move a feature
+	 * @param boolean $way Up (1)  or Down (0)
+	 * @param integer $position
+	 * @return boolean Update result
+	 */
+	public function updatePosition($way, $position)
+	{
+		if (!$res = Db::getInstance()->ExecuteS('
+			SELECT `position`, `id_feature`
+			FROM `'._DB_PREFIX_.'feature`
+			WHERE `id_feature` = '.(int)Tools::getValue('id_feature', 1).'
+			ORDER BY `position` ASC'
+		))
+			return false;
+
+		foreach ($res AS $feature)
+			if ((int)$feature['id_feature'] == (int)$this->id)
+				$movedFeature = $feature;
+
+		if (!isset($movedFeature) || !isset($position))
+			return false;
+
+		// < and > statements rather than BETWEEN operator
+		// since BETWEEN is treated differently according to databases
+		return (Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'feature`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+			WHERE `position`
+			'.($way
+				? '> '.(int)$movedFeature['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$movedFeature['position'].' AND `position` >= '.(int)$position))
+		AND Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'feature`
+			SET `position` = '.(int)$position.'
+			WHERE `id_feature`='.(int)$movedFeature['id_feature']));
+	}
+	
+	/**
+	 * Reorder feature position
+	 * Call it after deleting a feature.
+	 *
+	 * @return bool $return
+	 */
+	public static function cleanPositions()
+	{
+		$return = true;
+
+		$sql = '
+		SELECT *
+		FROM `'._DB_PREFIX_.'feature`
+		ORDER BY `position`';
+		$result = Db::getInstance()->ExecuteS($sql);
+		$sizeof = sizeof($result);
+
+		for ($i = 0; $i < $sizeof; $i++)
+			$return = Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'feature`
+			SET `position` = '.(int)$i.'
+			WHERE `id_feature` = '.(int)$result[$i]['id_feature']);
+		return $return;
+	}
+
+	/**
+	 * getHigherPosition
+	 * 
+	 * Get the higher feature position
+	 * 
+	 * @return integer $position
+	 */
+	public static function getHigherPosition()
+	{
+		$sql = 'SELECT `position`
+				FROM `'._DB_PREFIX_.'feature` 
+				ORDER BY position DESC';
+		return ((DB::getInstance()->getValue($sql)!==false)) ? DB::getInstance()->getValue($sql) : -1;
 	}
 }
 
