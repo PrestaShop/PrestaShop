@@ -261,7 +261,7 @@ EOT;
 			else
 			{
 				echo $nbErrors.' '.$this->l('errors').'<br /><ol>';
-				foreach ($this->_errors_tax_rule AS $error)
+				foreach ($this->_errors_tax_rule as $error)
 					echo '<li>'.$error.'</li>';
 				echo '</ol>';
 			}
@@ -449,7 +449,7 @@ EOT;
 
 		$html = '';
 		$tax_rules = TaxRule::getTaxRulesByGroupId((int)$cookie->id_lang, (int)$id_rule_group);
-		if (sizeof($tax_rules) == 0)
+		if (count($tax_rules) == 0)
 		{
 			$html .= '<tr>
 					  	<td colspan="7">'.$this->l('No rules defined').'</td>
@@ -469,7 +469,11 @@ EOT;
 				}
 
 				$tax = ((float)$tax_rule['rate'] == 0 ? '-' : (float)$tax_rule['rate'].'%');
-				$behavior = ($tax_rule['behavior'] == 0 ? $this->l('This tax only') : $this->l('Compute with others'));
+				$behavior = $this->l('This tax only');
+				if (TaxCalculator::COMBINE_METHOD == $tax_rule['behavior'])
+					$behavior = $this->l('Compute with others');
+				else if (TaxCalculator::ONE_AFTER_ANOTHER_METHOD == $tax_rule['behavior'])
+					$behavior = $this->l('One after another');
 
 				// render fields
 				$html .= '<tr>
