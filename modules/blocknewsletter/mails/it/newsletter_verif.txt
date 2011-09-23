@@ -1,0 +1,6 @@
+Hi,
+
+You've just subscribe to our newsletter, please confirm your request by clicking the link below:
+{verif_url}
+
+{shop_url} powered by PrestaShop™

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -46,7 +46,7 @@ class Newsletter extends Module
 
         $this->displayName = $this->l('Newsletter');
         $this->description = $this->l('Generates a .CSV file for mass mailings');
-		
+
 		if ($this->id)
 		{
 			$this->_file = 'export_'.Configuration::get('PS_NEWSLETTER_RAND').'.csv';
@@ -91,7 +91,7 @@ class Newsletter extends Module
 	{
 		return (parent::install() AND Configuration::updateValue('PS_NEWSLETTER_RAND', rand().rand()));
 	}
-	
+
     private function _postProcess()
     {
        if (isset($_POST['submitExport']) AND isset($_POST['action']))
@@ -114,7 +114,7 @@ class Newsletter extends Module
 				fclose($fd);
 				$this->_html .= $this->displayConfirmation(
 				$this->l('The .CSV file has been successfully exported.').
-				' ('.$nb.' '.$this->l('customers found').')<br />> 
+				' ('.$nb.' '.$this->l('customers found').')<br />>
 				<a href="../modules/newsletter/'.strval($_POST['action']).'_'.$this->_file.'"><b>'.$this->l('Download the file').' '.$this->_file.'</b></a>
 				<br />
 				<ol style="margin-top: 10px;">
@@ -128,14 +128,27 @@ class Newsletter extends Module
 
 	private function _getCustomers()
 	{
-		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`, c.`ip_registration_newsletter`, c.`newsletter_date_add`
-		FROM `'._DB_PREFIX_.'customer` c
-		WHERE 1
-		'.((isset($_POST['SUSCRIBERS']) AND (int)($_POST['SUSCRIBERS']) != 0) ? 'AND c.`newsletter` = '.(int)($_POST['SUSCRIBERS'] - 1) : '').'
-		'.((isset($_POST['OPTIN']) AND (int)($_POST['OPTIN']) != 0) ? 'AND c.`optin` = '.(int)($_POST['OPTIN'] - 1) : '').'
-		'.((isset($_POST['COUNTRY']) AND (int)($_POST['COUNTRY']) != 0) ? 'AND (SELECT COUNT(a.`id_address`) as nb_country FROM `'._DB_PREFIX_.'address` a WHERE a.deleted = 0 AND a.`id_customer` = c.`id_customer` AND a.`id_country` = '.(int)($_POST['COUNTRY']).') >= 1' : '').'
-		GROUP BY c.`email`');
+		$dbquery = new DbQuery();
+		$dbquery->select('c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`, c.`ip_registration_newsletter`, c.`newsletter_date_add`')
+				->from('customer c')
+				->groupBy('c.`email`');
+
+		if (Tools::getValue('SUSCRIBERS'))
+			$dbquery->where('c.`newsletter` = '.((int)Tools::getValue('SUSCRIBERS') - 1));
+
+		if (Tools::getValue('OPTIN'))
+			$dbquery->where('c.`optin` = '.((int)Tools::getValue('OPTIN') - 1));
+
+		if (Tools::getValue('COUNTRY'))
+			$dbquery->where('(SELECT COUNT(a.`id_address`) as nb_country
+								FROM `'._DB_PREFIX_.'address` a
+								WHERE a.deleted = 0
+								AND a.`id_customer` = c.`id_customer`
+								AND a.`id_country` = '.(int)Tools::getValue('COUNTRY').') >= 1');
+
+
+		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($dbquery->build());
+
 		$header = array('id_customer', 'lastname', 'firstname', 'email', 'ip_address', 'newsletter_date_add');
 		$result = (is_array($rq) ? array_merge(array($header), $rq) : $header);
 		return $result;
@@ -144,8 +157,10 @@ class Newsletter extends Module
 	private function _getBlockNewsletter()
 	{
 		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'newsletter`');
+		SELECT `id`, `email`, `newsletter_date_add`, `ip_registration_newsletter`
+		FROM `'._DB_PREFIX_.'newsletter`
+		WHERE `active` = 1');
+
 		$header = array('id_customer', 'email', 'newsletter_date_add', 'ip_address');
 		$result = (is_array($rq) ? array_merge(array($header), $rq) : $header);
 		return $result;
