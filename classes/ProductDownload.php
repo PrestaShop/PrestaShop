@@ -80,20 +80,41 @@ class ProductDownloadCore extends ObjectModel
 	protected $table = 'product_download';
 	protected $identifier = 'id_product_download';
 
-	protected static $feature_active = null;
-
 	/**
 	 * Build a virtual product
 	 *
 	 * @param integer $id_product_download Existing productDownload id in order to load object (optional)
 	 */
-	public function __construct($id_product_download = NULL)
+	public function __construct($id_product_download = null)
 	{
 		parent::__construct($id_product_download);
 		// @TODO check if the file is present on hard drive
 	}
 
-	public function delete($deleteFile=false)
+	public function add($autodate = true, $nullValues = false)
+	{
+		if (parent::add($autodate, $nullValues))
+		{
+			// Set cache of feature detachable to true
+			if ($this->active)
+				Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+			return true;
+		}
+		return false;
+	}
+
+	public function update($nullValues = false)
+	{
+		if (parent::update($nullValues))
+		{
+			// Refresh cache of feature detachable because the row can be deactive
+			Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+			return true;
+		}
+		return false;
+	}
+
+	public function delete($deleteFile = false)
 	{
 		if ($deleteFile)
 			return $this->deleteFile();
@@ -117,7 +138,6 @@ class ProductDownloadCore extends ObjectModel
 		$fields['active'] = (int)($this->active);
 		return $fields;
 	}
-
 
 	/**
 	 * Delete the file
@@ -280,14 +300,8 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_product_download`
-				FROM `'._DB_PREFIX_.'product_download`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE');
 	}
-
 }
 
 

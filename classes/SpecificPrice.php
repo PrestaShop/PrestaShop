@@ -47,7 +47,6 @@ class SpecificPriceCore extends ObjectModel
 
 	protected static $_specificPriceCache = array();
 	protected static $_cache_priorities = array();
-	protected static $feature_active = null;
 
 	public function getFields()
 	{
@@ -66,6 +65,28 @@ class SpecificPriceCore extends ObjectModel
 		return $fields;
 	}
 
+	public function add($autodate = true, $nullValues = false)
+	{
+		if (parent::add($autodate, $nullValues))
+		{
+			// Set cache of feature detachable to true
+			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
+			return true;
+		}
+		return false;
+	}
+
+	public function delete()
+	{
+		if (parent::delete())
+		{
+			// Refresh cache of feature detachable
+			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table));
+			return true;
+		}
+		return false;
+	}
+
 	public static function getByProductId($id_product)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -82,7 +103,7 @@ class SpecificPriceCore extends ObjectModel
 			WHERE `id_product` = '.(int)$id_product);
 	}
 
-   // score generation for quantity discount
+	// score generation for quantity discount
 	protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group)
 	{
 	    $select = '(';
@@ -279,7 +300,13 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function deleteByProductId($id_product)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product);
+		if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product))
+		{
+			// Refresh cache of feature detachable
+			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed('specific_price'));
+			return true;
+		}
+		return false;
 	}
 
 	public function duplicate($id_product = false)
@@ -296,12 +323,7 @@ class SpecificPriceCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_specific_price`
-				FROM `'._DB_PREFIX_.'specific_price`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
 	}
 }
 

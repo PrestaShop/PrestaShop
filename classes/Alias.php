@@ -38,8 +38,6 @@ class AliasCore extends ObjectModel
 	protected 	$table = 'alias';
 	protected 	$identifier = 'id_alias';
 
-	protected static $feature_active = null;
-
 	function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{
 		if ($id)
@@ -73,6 +71,28 @@ class AliasCore extends ObjectModel
 		}
 	}
 
+	public function add($autodate = true, $nullValues = false)
+	{
+		if (parent::add($autodate, $nullValues))
+		{
+			// Set cache of feature detachable to true
+			Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', '1');
+			return true;
+		}
+		return false;
+	}
+
+	public function delete()
+	{
+		if (parent::delete())
+		{
+			// Refresh cache of feature detachable
+			Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+			return true;
+		}
+		return false;
+	}
+
 	public function getAliases()
 	{
 		if (!self::isFeatureActive())
@@ -104,12 +124,7 @@ class AliasCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_alias`
-				FROM `'._DB_PREFIX_.'alias`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_ALIAS_FEATURE_ACTIVE');
 	}
 }
 

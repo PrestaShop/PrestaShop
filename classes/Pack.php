@@ -30,7 +30,6 @@ class PackCore extends Product
 	protected static $cachePackItems = array();
 	protected static $cacheIsPack = array();
 	protected static $cacheIsPacked = array();
-	protected static $feature_active = null;
 
 	public static function isPack($id_product)
 	{
@@ -170,8 +169,9 @@ class PackCore extends Product
 
 	public static function deleteItems($id_product)
 	{
-		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)($id_product).' LIMIT 1');
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)($id_product));
+		return Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)($id_product)) &&
+			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', self::isCurrentlyUsed());
 	}
 
 	/**
@@ -184,8 +184,9 @@ class PackCore extends Product
 	*/
 	public static function addItem($id_product, $id_item, $qty)
 	{
-		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)($id_product).' LIMIT 1');
-		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'pack', array('id_product_pack' => (int)($id_product), 'id_product_item' => (int)($id_item), 'quantity' => (int)($qty)), 'INSERT');
+		return Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
+			Db::getInstance()->AutoExecute(_DB_PREFIX_.'pack', array('id_product_pack' => (int)($id_product), 'id_product_item' => (int)($id_item), 'quantity' => (int)($qty)), 'INSERT') &&
+			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
 	}
 
 	public static function duplicate($id_product_old, $id_product_new)
@@ -204,12 +205,23 @@ class PackCore extends Product
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_product_pack`
-				FROM `'._DB_PREFIX_.'pack`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_PACK_FEATURE_ACTIVE');
+	}
+
+	/**
+	 * This method is allow to know if a Pack entity is currently used
+	 * @since 1.5.0.1
+	 * @param $table
+	 * @param $has_active_column
+	 * @return bool
+	 */
+	public static function isCurrentlyUsed($table = null, $has_active_column = false)
+	{
+		// We dont't use the parent method because the identifier isn't id_pack
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `id_product_pack`
+			FROM `'._DB_PREFIX_.'pack`
+		');
 	}
 }
 

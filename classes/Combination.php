@@ -191,16 +191,15 @@ class CombinationCore extends ObjectModel
 	}
 
 	/**
-	 * This method is allow to know if a feature is in use
+	 * This method is allow to know if a Combination entity is currently used
 	 * @since 1.5.0.1
+	 * @param $table
+	 * @param $has_active_column
 	 * @return bool
 	 */
-	public static function isCurrentlyUsed()
+	public static function isCurrentlyUsed($table = null, $has_active_column = false)
 	{
-		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_product_attribute`
-			FROM `'._DB_PREFIX_.'product_attribute`
-		');
+		return parent::isCurrentlyUsed('product_attribute');
 	}
 }
 
