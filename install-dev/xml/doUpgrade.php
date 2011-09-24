@@ -137,6 +137,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_tab.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_detail_taxes.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_feature_detachable_cache.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;

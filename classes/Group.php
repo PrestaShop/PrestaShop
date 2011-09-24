@@ -59,7 +59,6 @@ class GroupCore extends ObjectModel
 
 	protected static $_cacheReduction = array();
 	protected static $_groupPriceDisplayMethod = array();
-	protected static $feature_active = null;
 
 	protected	$webserviceParameters = array();
 
@@ -150,7 +149,15 @@ class GroupCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
-		return parent::add() && Category::setNewGroupForHome((int)($this->id));
+		if (parent::add($autodate, $nullValues))
+		{
+			Category::setNewGroupForHome((int)$this->id);
+
+			// Set cache of feature detachable to true
+			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
+			return true;
+		}
+		return false;
 	}
 
 	public function delete()
@@ -159,11 +166,15 @@ class GroupCore extends ObjectModel
 			return false;
 		if (parent::delete())
 		{
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_group` = '.(int)($this->id));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)($this->id));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)($this->id));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)($this->id));
-			Discount::deleteByIdGroup((int)($this->id));
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
+			Discount::deleteByIdGroup((int)$this->id);
+
+			// Refresh cache of feature detachable
+			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
+
 			return true;
 		}
 		return false;
@@ -176,12 +187,24 @@ class GroupCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_group`
-				FROM `'._DB_PREFIX_.'group`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+	}
+
+	/**
+	 * This method is allow to know if a Discount entity is currently used
+	 * @since 1.5.0.1
+	 * @param $table
+	 * @param $has_active_column
+	 * @return bool
+	 */
+	public static function isCurrentlyUsed($table = null, $has_active_column = false)
+	{
+		// We don't use the parent method, for specific clause reason (id_group != 1)
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `id_group`
+			FROM `'._DB_PREFIX_.'group`
+			WHERE `id_group` != 1
+		');
 	}
 }
 

@@ -905,4 +905,21 @@ abstract class ObjectModelCore
 
 		return isset($row['id']);
 	}
+
+	/**
+	 * This method is allow to know if a entity is currently used
+	 * @since 1.5.0.1
+	 * @param string $table name of table linked to entity
+	 * @param bool $has_active_column true if the table has an active column
+	 * @return bool
+	 */
+	public static function isCurrentlyUsed($table, $has_active_column = false)
+	{
+		$query = new DbQuery();
+		$query->select('`id_'.pSQL($table).'`');
+		$query->from(pSQL($table));
+		if ($has_active_column)
+			$query->where('`active` = 1');
+		return (bool)Db::getInstance()->getValue($query);
+	}
 }

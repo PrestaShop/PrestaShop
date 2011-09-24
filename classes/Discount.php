@@ -101,8 +101,6 @@ class DiscountCore extends ObjectModel
 	protected 	$table = 'discount';
 	protected 	$identifier = 'id_discount';
 
-	protected static $feature_active = null;
-
 	protected	$webserviceParameters = array(
 			'fields' => array(
 			'id_discount_type' => array('sqlId' => 'id_discount_type', 'xlink_resource' => 'discount_types'),
@@ -159,12 +157,15 @@ class DiscountCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false, $categories = null)
 	{
-		$ret = NULL;
 		if (parent::add($autodate, $nullValues))
-			$ret = true;
+		{
+			$this->updateCategories($categories);
 
-		$this->updateCategories($categories);
-		return $ret;
+			// Set cache of feature detachable to true
+			Configuration::updateGlobalValue('PS_DISCOUNT_FEATURE_ACTIVE', '1');
+			return true;
+		}
+		return false;
 	}
 
 	/* Categories initialization is different between add() and update() because the addition will set all categories if none are selected (compatibility with old modules) and update won't update categories if none are selected */
@@ -182,8 +183,12 @@ class DiscountCore extends ObjectModel
 	{
 		if (!parent::delete())
 			return false;
-		return (Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_discount WHERE id_discount = '.(int)($this->id))
-								AND Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'discount_category WHERE id_discount = '.(int)($this->id)));
+
+		// Refresh cache of feature detachable
+		Configuration::updateGlobalValue('PS_DISCOUNT_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+
+		return (Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_discount WHERE id_discount = '.(int)($this->id)) &&
+				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'discount_category WHERE id_discount = '.(int)($this->id)));
 	}
 
 	public function getTranslationsFieldsChild()
@@ -579,12 +584,6 @@ class DiscountCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_discount`
-				FROM `'._DB_PREFIX_.'discount`
-				WHERE `active` = 1
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_DISCOUNT_FEATURE_ACTIVE');
 	}
 }

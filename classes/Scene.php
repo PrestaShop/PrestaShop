@@ -88,7 +88,15 @@ class SceneCore extends ObjectModel
 			return false;
 		if (!$this->updateCategories())
 			return false;
-		return parent::update($nullValues);
+
+		if (parent::update($nullValues))
+		{
+			// Refresh cache of feature detachable
+			Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+			return true;
+		}
+		return false;
+
 	}
 
 	public function add($autodate = true, $nullValues = false)
@@ -98,7 +106,14 @@ class SceneCore extends ObjectModel
 		if (!empty($this->categories))
 			$this->addCategories($this->categories);
 
-		return parent::add($autodate, $nullValues);
+		if (parent::add($autodate, $nullValues))
+		{
+			// Put cache of feature detachable only if this new scene is active else we keep the old value
+			if ($this->active)
+				Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', '1');
+			return true;
+		}
+		return false;
 	}
 
 	public function delete()
@@ -106,7 +121,11 @@ class SceneCore extends ObjectModel
 		$this->deleteZoneProducts();
 		$this->deleteCategories();
 		if (parent::delete())
-			return $this->deleteImage();
+		{
+			return $this->deleteImage() &&
+				Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+		}
+		return false;
 	}
 
 	public function deleteImage()
@@ -273,12 +292,7 @@ class SceneCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_scene`
-				FROM `'._DB_PREFIX_.'scene`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_SCENE_FEATURE_ACTIVE');
 	}
 }
 

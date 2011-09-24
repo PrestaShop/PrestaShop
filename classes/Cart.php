@@ -444,12 +444,12 @@ class CartCore extends ObjectModel
 			return array();
 		foreach ($result AS $row)
 		{
-			if (isset($row['ecotax_attr']) AND $row['ecotax_attr'] > 0)
+			if (isset($row['ecotax_attr']) && $row['ecotax_attr'] > 0)
 				$row['ecotax'] = (float)($row['ecotax_attr']);
 			$row['stock_quantity'] = (int)($row['quantity']);
 			// for compatibility with 1.2 themes
 			$row['quantity'] = (int)($row['cart_quantity']);
-			if (isset($row['id_product_attribute']) AND (int)$row['id_product_attribute'])
+			if (isset($row['id_product_attribute']) && (int)$row['id_product_attribute'] && isset($row['weight_attribute']))
 				$row['weight'] = $row['weight_attribute'];
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{

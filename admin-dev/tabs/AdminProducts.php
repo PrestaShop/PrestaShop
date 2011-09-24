@@ -1232,6 +1232,7 @@ class AdminProducts extends AdminTab
 	 * Update product download
 	 *
 	 * @param object $product Product
+	 * @return bool
 	 */
 	public function updateDownloadProduct($product)
 	{
@@ -1260,17 +1261,16 @@ class AdminProducts extends AdminTab
 				return false;
 			}
 
-			$download = new ProductDownload(Tools::getValue('virtual_product_id'));
-			$download->id_product          = $product->id;
-			$download->display_filename    = Tools::getValue('virtual_product_name');
-			$download->physically_filename = Tools::getValue('virtual_product_filename') ? Tools::getValue('virtual_product_filename') : ProductDownload::getNewFilename();
-			$download->date_deposit        = date('Y-m-d H:i:s');
-			$download->date_expiration     = Tools::getValue('virtual_product_expiration_date') ? Tools::getValue('virtual_product_expiration_date').' 23:59:59' : '';
-			$download->nb_days_accessible  = Tools::getValue('virtual_product_nb_days');
-			$download->nb_downloadable     = Tools::getValue('virtual_product_nb_downloable');
-			$download->active              = 1;
-			if ($download->save())
-				return true;
+			$productDownload = new ProductDownload(Tools::getValue('virtual_product_id'));
+			$productDownload->id_product          = $product->id;
+			$productDownload->display_filename    = Tools::getValue('virtual_product_name');
+			$productDownload->physically_filename = Tools::getValue('virtual_product_filename') ? Tools::getValue('virtual_product_filename') : ProductDownload::getNewFilename();
+			$productDownload->date_deposit        = date('Y-m-d H:i:s');
+			$productDownload->date_expiration     = Tools::getValue('virtual_product_expiration_date') ? Tools::getValue('virtual_product_expiration_date').' 23:59:59' : '';
+			$productDownload->nb_days_accessible  = Tools::getValue('virtual_product_nb_days');
+			$productDownload->nb_downloadable     = Tools::getValue('virtual_product_nb_downloable');
+			$productDownload->active              = 1;
+			return $productDownload->save();
 		}
 		else
 		{

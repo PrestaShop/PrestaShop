@@ -3049,22 +3049,35 @@ class ProductCore extends ObjectModel
 		(!Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product` = '.(int)($this->id).' AND `type` = '.Product::CUSTOMIZE_TEXTFIELD.' AND `id_customization_field` >= '.(int)($customizationFields[Product::CUSTOMIZE_TEXTFIELD][count($customizationFields[Product::CUSTOMIZE_TEXTFIELD]) - $extraText]))
 		OR !Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang` WHERE `id_customization_field` NOT IN (SELECT `id_customization_field` FROM `'._DB_PREFIX_.'customization_field`)')))
 			return false;
+
+		// Refresh cache of feature detachable
+		Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', Customization::isCurrentlyUsed());
+
 		return true;
 	}
 
 	protected function _createLabel(&$languages, $type)
 	{
-		/* Label insertion */
-		if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`) VALUES ('.(int)($this->id).', '.(int)($type).', 0)') OR !$id_customization_field = (int)(Db::getInstance()->Insert_ID()))
+		// Label insertion
+		if (!Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+			VALUES ('.(int)$this->id.', '.(int)($type).', 0)') OR
+			!$id_customization_field = (int)(Db::getInstance()->Insert_ID()))
 			return false;
 
-		/* Multilingual label name creation */
+		// Multilingual label name creation
 		$values = '';
 		foreach ($languages AS $language)
 			$values .= '('.(int)($id_customization_field).', '.(int)($language['id_lang']).', \'\'), ';
 		$values = rtrim($values, ', ');
-		if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`) VALUES '.$values))
+		if (!Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`)
+			VALUES '.$values))
 			return false;
+
+		// Set cache of feature detachable to true
+		Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
+
 		return true;
 	}
 

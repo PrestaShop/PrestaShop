@@ -225,7 +225,15 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (137, 'PS_SHOW_NEW_CUSTOMERS', '1', NOW(), NOW()),
 (138, 'PS_SHOW_NEW_MESSAGES', '1', NOW(), NOW()),
 (139, 'PS_FEATURE_FEATURE_ACTIVE', '1', NOW(), NOW()),
-(140, 'PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW());
+(140, 'PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW()),
+(141, 'PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1', NOW(), NOW()),
+(142, 'PS_SCENE_FEATURE_ACTIVE', '1', NOW(), NOW()),
+(143, 'PS_VIRTUAL_PROD_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(144, 'PS_CUSTOMIZATION_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(145, 'PS_DISCOUNT_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(146, 'PS_GROUP_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(147, 'PS_PACK_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),

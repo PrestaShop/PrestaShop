@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,7 +31,7 @@ class ConfigurationCore extends ObjectModel
 
 	/** @var string Key */
 	public 		$name;
-	
+
 	public		$id_group_shop;
 	public		$id_shop;
 
@@ -53,7 +53,7 @@ class ConfigurationCore extends ObjectModel
 
 	/** @var array Configuration cache */
 	protected static $_CONF;
-	
+
 	/** @var array Vars types */
 	protected static $types = array();
 
@@ -62,7 +62,7 @@ class ConfigurationCore extends ObjectModel
 			'value' => array(),
 		)
 	);
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -87,7 +87,7 @@ class ConfigurationCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('value'));
 	}
-	
+
 	/**
 	 * Return ID a configuration key
 	 *
@@ -104,7 +104,7 @@ class ConfigurationCore extends ObjectModel
 					.Configuration::sqlRestriction($shopGroupID, $shopID);
 		return (int)Db::getInstance()->getValue($sql);
 	}
-	
+
 	/**
 	 * Load all configuration data
 	 */
@@ -132,7 +132,7 @@ class ConfigurationCore extends ObjectModel
 			Configuration::set($row['name'], array($lang => $row['value']), (int)$row['id_group_shop'], (int)$row['id_shop']);
 		}
 	}
-	
+
 	/**
 	  * Get a single configuration value (in one language only)
 	  *
@@ -146,7 +146,7 @@ class ConfigurationCore extends ObjectModel
 		$langID = (int)$langID;
 		if (!isset(self::$_CONF[$langID]))
 			$langID = 0;
-			
+
 		// If conf if not initialized, try manual query
 		if (!self::$_CONF)
 			return Db::getInstance()->getValue('SELECT `value` FROM '._DB_PREFIX_.'configuration WHERE `name` = \''.pSQL($key).'\'');
@@ -159,7 +159,7 @@ class ConfigurationCore extends ObjectModel
 			return self::$_CONF[$langID]['global'][$key];
 		return false;
 	}
-	
+
 	/**
 	  * Get a single configuration value (in multiple languages)
 	  *
@@ -176,7 +176,7 @@ class ConfigurationCore extends ObjectModel
 			$resultsArray[$language['id_lang']] = self::get($key, $language['id_lang'], $id_group_shop, $id_shop);
 		return $resultsArray;
 	}
-	
+
 	/**
 	  * Get several configuration values (in one language only)
 	  *
@@ -200,7 +200,7 @@ class ConfigurationCore extends ObjectModel
 
 	/**
 	 * Check if key exists in configuration
-	 * 
+	 *
 	 * @param string $key
 	 * @param int $id_lang
 	 * @param int $shopGroupID
@@ -216,7 +216,7 @@ class ConfigurationCore extends ObjectModel
 			return isset(self::$_CONF[$langID]['group'][$shopGroupID]) && array_key_exists($key, self::$_CONF[$langID]['group'][$shopGroupID]);
 		return isset(self::$_CONF[$langID]['global']) && array_key_exists($key, self::$_CONF[$langID]['global']);
 	}
-	
+
 	/**
 	  * Set TEMPORARY a single configuration value (in one language only)
 	  *
@@ -230,10 +230,10 @@ class ConfigurationCore extends ObjectModel
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
 		self::getShopFromContext($id_group_shop, $id_shop);
-		
+
 		if (!is_array($values))
 			$values = array($values);
-			
+
 		foreach ($values as $lang => $value)
 		{
 			if ($id_shop)
@@ -242,12 +242,12 @@ class ConfigurationCore extends ObjectModel
 				self::$_CONF[$lang]['group'][$id_group_shop][$key] = $value;
 			else
 				self::$_CONF[$lang]['global'][$key] = $value;
-		}			
+		}
 	}
-	
+
 	/**
 	 * Update configuration key for global context only
-	 * 
+	 *
 	 * @param string $key
 	 * @param mixed $values
 	 * @param bool $html
@@ -257,7 +257,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		return Configuration::updateValue($key, $values, $html, 0, 0);
 	}
-	
+
 	/**
 	  * Update configuration key and value into database (automatically insert if key does not exist)
 	  *
@@ -268,7 +268,7 @@ class ConfigurationCore extends ObjectModel
 	  * @param int $shopID
 	  * @return boolean Update result
 	  */
-	static public function updateValue($key, $values, $html = false, $shopGroupID = NULL, $shopID = NULL)
+	static public function updateValue($key, $values, $html = false, $shopGroupID = null, $shopID = null)
 	{
 		if (!Validate::isConfigName($key))
 	 		die(Tools::displayError());
@@ -337,10 +337,10 @@ class ConfigurationCore extends ObjectModel
 					), 'INSERT');
 				}
 			}
-			
+
 			Configuration::set($key, $value, $shopGroupID, $shopID);
 		}
-		
+
 		return $result;
 	}
 
@@ -362,7 +362,7 @@ class ConfigurationCore extends ObjectModel
 					WHERE `name` = \''.pSQL($key).'\'
 				)';
 		$result = Db::getInstance()->Execute($sql);
-		
+
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'configuration`
 				WHERE `name` = \''.pSQL($key).'\'';
 		$result2 = Db::getInstance()->Execute($sql);
@@ -384,15 +384,15 @@ class ConfigurationCore extends ObjectModel
 		$sql = 'DELETE FROM '._DB_PREFIX_.'configuration
 				WHERE id_configuration = '.$id;
 		Db::getInstance()->Execute($sql);
-		
+
 		$sql = 'DELETE FROM '._DB_PREFIX_.'configuration_lang
 				WHERE id_configuration = '.$id;
 		Db::getInstance()->Execute($sql);
 	}
-	
+
 	/**
 	 * Check if configuration var is defined in given context
-	 * 
+	 *
 	 * @param string $key
 	 * @param int $langID
 	 * @param int $context
@@ -408,7 +408,7 @@ class ConfigurationCore extends ObjectModel
 			return true;
 		return false;
 	}
-	
+
 	public static function isOverridenByCurrentContext($key)
 	{
 		if (Configuration::isLangKey($key))
@@ -424,10 +424,10 @@ class ConfigurationCore extends ObjectModel
 			$testContext = ((Context::shop() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
 							|| (Context::shop() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
 		}
-		
+
 		return (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && $testContext);
 	}
-	
+
 	/**
 	 * Check if a key was loaded as multi lang
 	 *
@@ -452,14 +452,14 @@ class ConfigurationCore extends ObjectModel
 			$id_shop = $shopID;
 		if (is_null($id_group_shop))
 			$id_group_shop = $shopGroupID;
-		
+
 		$id_shop = (int)$id_shop;
 		$id_group_shop = (int)$id_group_shop;
 	}
-	
+
 	/**
-	 * Add SQL restriction on shops for configuration table 
-	 * 
+	 * Add SQL restriction on shops for configuration table
+	 *
 	 * @param int $shopGroupID
 	 * @param int $shopID
 	 * @return string
@@ -476,7 +476,7 @@ class ConfigurationCore extends ObjectModel
 
 	/**
 	 * This method is override to allow TranslatedConfiguration entity
-	 * 
+	 *
 	 * @param $sql_join
 	 * @param $sql_filter
 	 * @param $sql_sort
@@ -488,7 +488,7 @@ class ConfigurationCore extends ObjectModel
 		$query = '
 		SELECT DISTINCT main.`'.$this->identifier.'` FROM `'._DB_PREFIX_.$this->table.'` main
 		'.$sql_join.'
-		WHERE id_configuration NOT IN 
+		WHERE id_configuration NOT IN
 		(	SELECT id_configuration
 			FROM '._DB_PREFIX_.$this->table.'_lang
 		) '.$sql_filter.'

@@ -27,8 +27,6 @@
 
 class CustomizationCore
 {
-	protected static $feature_active = null;
-
 	public static function getReturnedCustomizations($id_order)
 	{
 		if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -105,12 +103,12 @@ class CustomizationCore
 	{
 		$quantity = array();
 
-		$results =  Db::getInstance()->executeS('
-					SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
-					FROM `'._DB_PREFIX_.'customization`
-					WHERE `id_cart` = '.(int)($id_cart).'
-					GROUP BY `id_cart`, `id_product`, `id_product_attribute`'
-					);
+		$results =  Db::getInstance()->ExecuteS('
+			SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
+			FROM `'._DB_PREFIX_.'customization`
+			WHERE `id_cart` = '.(int)$id_cart.'
+			GROUP BY `id_cart`, `id_product`, `id_product_attribute`
+		');
 
 		foreach($results as $row)
 			$quantity[$row['id_product']][$row['product_attribute_id']] = $row['quantity'];
@@ -125,13 +123,22 @@ class CustomizationCore
 	 */
 	public static function isFeatureActive()
 	{
-		if (self::$feature_active === null)
-			self::$feature_active = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_customization_field`
-				FROM `'._DB_PREFIX_.'customization_field`
-			');
-		return self::$feature_active;
+		return Configuration::get('PS_CUSTOMIZATION_FEATURE_ACTIVE');
 	}
 
+	/**
+	 * This method is allow to know if a Customization entity is currently used
+	 * @since 1.5.0.1
+	 * @param $table
+	 * @param $has_active_column
+	 * @return bool
+	 */
+	public static function isCurrentlyUsed()
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_customization_field`
+			FROM `'._DB_PREFIX_.'customization_field`
+		');
+	}
 }
 
