@@ -147,10 +147,10 @@ class AdminHomeControllerCore extends AdminController
 	}
 	public function setMedia()
 	{
-		$this->addJS(_PS_JS_DIR_.'jquery/jquery.flot.min.js');
+		parent::setMedia();
 		if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== false)
 			$this->addJS(_PS_JS_DIR_.'jquery/excanvas.min.js');
-		parent::setMedia();
+		$this->addJS(_PS_JS_DIR_.'jquery/jquery.flot.min.js');
 	}
 
 	protected function warnDomainName()
@@ -357,6 +357,7 @@ class AdminHomeControllerCore extends AdminController
 		$chart->setSize(580, 170);
 		$chart->setTimeMode(strtotime('-7 DAYS', time()), time(), 'd');
 		$chart->getCurve(1)->setLabel($this->l('Sales +Tx').' ('.strtoupper($currency->iso_code).')');
+		
 		$this->content .= $chart->fetch();
 		$this->content .= '	</div>
 			</div>
