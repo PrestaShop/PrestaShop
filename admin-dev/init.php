@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,16 +28,6 @@
 ob_start();
 $timerStart = microtime(true);
 
-{
-if (!isset($_GET['controller']) && isset($_GET['tab'])){
-	$_GET['controller'] = $_GET['tab'];
-}
-if (!isset($_POST['controller']) && isset($_POST['tab']))
-	$_POST['controller'] = $_POST['tab'];
-
-if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
-	$_REQUEST['controller'] = $_REQUEST['tab'];
-}
 //	$_GET['tab'] = $_GET['controller'];
 //	$_POST['tab'] = $_POST['controller'];
 //	$_REQUEST['tab'] = $_REQUEST['controller'];
@@ -50,13 +40,13 @@ if (!isset($context->employee) || !$context->employee->isLoggedBack())
 	Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
 
 
-// Set current index 
-$currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
-if (empty($tab))
-{
+// Set current index
+//$currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
+//if (empty($tab))
+//{
 	$currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
 	$tab = $controller;
-}
+//}
 if ($back = Tools::getValue('back'))
 	$currentIndex .= '&back='.urlencode($back);
 AdminTab::$currentIndex = $currentIndex;

@@ -29,6 +29,15 @@ define('_PS_ADMIN_DIR_', getcwd());
 require(dirname(__FILE__).'/../config/config.inc.php');
 require(dirname(__FILE__).'/functions.php');
 
+// For retrocompatibility with "tab" parameter
+if (!isset($_GET['controller']) && isset($_GET['tab']))
+	$_GET['controller'] = strtolower($_GET['tab']);
+if (!isset($_POST['controller']) && isset($_POST['tab']))
+	$_POST['controller'] = strtolower($_POST['tab']);
+if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
+	$_REQUEST['controller'] = strtolower($_REQUEST['tab']);
+
+// Prepare and trigger admin dispatcher
 Dispatcher::getInstance()->setDefaultController('adminhome');
 Dispatcher::getInstance()->setControllerNotFound('adminhome');
 Dispatcher::getInstance()->setControllerDirectories(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
