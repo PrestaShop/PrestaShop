@@ -27,5 +27,6 @@
 
 define('_PS_ADMIN_DIR_', getcwd());
 require(dirname(__FILE__).'/../config/config.inc.php');
+require(dirname(__FILE__).'/functions.php');
 Dispatcher::getInstance()->dispatch();
 
