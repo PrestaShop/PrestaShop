@@ -1392,6 +1392,13 @@ CREATE TABLE `PREFIX_referrer_shop` (
   PRIMARY KEY  (`id_referrer`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
+  `id_request_sql` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `sql` text NOT NULL,
+  PRIMARY KEY (`id_request_sql`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_scene` (
   `id_scene` int(10) unsigned NOT NULL auto_increment,
   `active` tinyint(1) NOT NULL default '1',

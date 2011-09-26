@@ -157,3 +157,12 @@ ALTER TABLE `PREFIX_attribute_group` ADD `position` INT( 10 ) UNSIGNED NOT NULL 
 ALTER TABLE `PREFIX_feature` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
 /* PHP:add_feature_position(); */;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
+  `id_request_sql` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `sql` text NOT NULL,
+  PRIMARY KEY (`id_request_sql`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+/* PHP:add_new_tab(AdminRequestSql, fr:Requête|es:Solicitud|en:Request|de:Wunsh|it:Richiesta, 9); */;

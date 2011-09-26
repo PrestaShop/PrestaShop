@@ -1317,6 +1317,18 @@ class ToolsCore
 		return false;
 	}
 
+
+	public static function parserSQL($sql)
+	{
+		if (strlen($sql) > 0)
+		{
+			require_once(_PS_TOOL_DIR_.'parser_sql/parser_sql.php');
+			$parser = new parserSql($sql);
+			return $parser->parsed;
+		}
+		return false;
+	}
+
 	public static function minifyCSS($css_content, $fileuri = false)
 	{
 		global $current_css_file;
