@@ -430,6 +430,7 @@ function generateShopList()
 function runAdminTab()
 {
 	require_once(_PS_ADMIN_DIR_.'/init.php');
+	// $cookie = Context::getContext()->cookie;
 	if (empty($tab) and !sizeof($_POST))
 	{
 		$tab = 'AdminHome';
