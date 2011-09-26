@@ -33,7 +33,7 @@ class FeatureCore extends ObjectModel
 	
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 128);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
+ 	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'position' => 'isInt');
 		
 	protected 	$table = 'feature';
 	protected 	$identifier = 'id_feature';
@@ -183,7 +183,7 @@ class FeatureCore extends ObjectModel
 	* @param integer $id_product Product id	
 	* @param array $value Feature Value		
 	*/	
-	public static function addFeatureImport($name)
+	public static function addFeatureImport($name, $position = false)
 	{
 		$rq = Db::getInstance()->getRow('SELECT `id_feature` FROM '._DB_PREFIX_.'feature_lang WHERE `name` = \''.pSQL($name).'\' GROUP BY `id_feature`');
 		if (!empty($rq))
@@ -193,6 +193,10 @@ class FeatureCore extends ObjectModel
 		$languages = Language::getLanguages();
 		foreach ($languages as $language)
 			$feature->name[$language['id_lang']] = strval($name);
+		if ($position)
+			$feature->position = (int)$position;
+		else
+			$feature->position = self::getHigherPosition() + 1;
 		$feature->add();
 		return $feature->id;
 	}
