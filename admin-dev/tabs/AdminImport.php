@@ -179,7 +179,7 @@ class AdminImport extends AdminTab
 						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
 						'help' => $this->l('If you do not specify this column and you specify the column images, all images of the product will be replaced by those specified in the import file')
 					),
-					'feature' => array('label' => $this->l('Feature(Name:Position)'),
+					'features' => array('label' => $this->l('Feature(Name:Position)'),
 						'help' => $this->l('Position of the feature.')),
 					'online_only' => array('label' => $this->l('Only available online')),
 					'condition' => array('label' => $this->l('Condition')),
@@ -894,15 +894,20 @@ class AdminImport extends AdminTab
 				if (isset($product->id_category))
 					$product->updateCategories(array_map('intval', $product->id_category));
 
+				// Features import
 				$features = get_object_vars($product);
-				foreach ($features AS $feature => $value)
-					if (!strncmp($feature, '#F_', 3) AND Tools::strlen($product->{$feature}))
-					{
-						$feature_name = str_replace('#F_', '', $feature);
-						$id_feature = Feature::addFeatureImport($feature_name);
-						$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $product->{$feature});
-						Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
-					}
+				foreach (explode(',', $features['features']) as $single_feature)
+				{
+					$tab_feature = explode(':', $single_feature);
+					$feature_name = $tab_feature[0];
+					$feature_value = $tab_feature[1];
+					$position = isset($tab_feature[2]) ? $tab_feature[1]: false;
+					$id_feature = Feature::addFeatureImport($feature_name, $position);
+					$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value);
+					Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
+				}
+				// clean feature positions to avoid conflict
+				Feature::cleanPositions();
 			}
 		}
 		$this->closeCsvFile($handle);
