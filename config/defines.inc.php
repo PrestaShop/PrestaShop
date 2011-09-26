@@ -71,6 +71,8 @@ define('_MODULE_DIR_',        	__PS_BASE_URI__.'modules/');
 define('_PS_ROOT_DIR_',             realpath($currentDir.'/..'));
 define('_PS_CLASS_DIR_',            _PS_ROOT_DIR_.'/classes/');
 define('_PS_CONTROLLER_DIR_',       _PS_ROOT_DIR_.'/controllers/');
+define('_PS_FRONT_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/front/');
+define('_PS_ADMIN_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/admin/');
 define('_PS_TRANSLATIONS_DIR_',     _PS_ROOT_DIR_.'/translations/');
 define('_PS_DOWNLOAD_DIR_',         _PS_ROOT_DIR_.'/download/');
 define('_PS_MAIL_DIR_',             _PS_ROOT_DIR_.'/mails/');

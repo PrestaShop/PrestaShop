@@ -28,5 +28,8 @@
 define('_PS_ADMIN_DIR_', getcwd());
 require(dirname(__FILE__).'/../config/config.inc.php');
 require(dirname(__FILE__).'/functions.php');
-Dispatcher::getInstance()->dispatch();
 
+Dispatcher::getInstance()->setDefaultController('adminhome');
+Dispatcher::getInstance()->setControllerNotFound('adminhome');
+Dispatcher::getInstance()->setControllerDirectories(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
+Dispatcher::getInstance()->dispatch();

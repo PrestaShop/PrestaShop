@@ -278,7 +278,8 @@ echo '			</select>
 if (empty($tab))
 	echo '<div class="mainsubtablist" style="display:none"></div>';
 // This is made to display the subtab list
-$id_current_tab = (int)(Tab::getIdFromClassName(Dispatcher::$controllers[$tab]));
+$controllers = Dispatcher::getControllers(_PS_ADMIN_DIR_.'/tabs/');
+$id_current_tab = (int)Tab::getIdFromClassName($controllers[$tab]);
 $myCurrentTab = new Tab($id_current_tab);
 $tabs = Tab::getTabs(Context::getContext()->language->id, 0);
 $echoLis = '';

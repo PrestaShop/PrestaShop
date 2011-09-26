@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -92,7 +92,7 @@ class AdminModulesPositions extends AdminTab
 						if (!$this->_errors && !$module->registerExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
 							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					}
-					
+
 					if (!$this->_errors)
 						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
@@ -100,7 +100,7 @@ class AdminModulesPositions extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		
+
 		// Edit module from hook
 		elseif (Tools::isSubmit('submitEditGraft'))
 		{
@@ -111,7 +111,7 @@ class AdminModulesPositions extends AdminTab
 				$module = Module::getInstanceById($id_module);
 				$id_hook = (int)(Tools::getValue('id_hook'));
 				$hook = new Hook($id_hook);
-				
+
 				if (!$id_module OR !Validate::isLoadedObject($module))
 					$this->_errors[] = Tools::displayError('module cannot be loaded');
 				elseif (!$id_hook OR !Validate::isLoadedObject($hook))
@@ -124,19 +124,19 @@ class AdminModulesPositions extends AdminTab
 						foreach ($exceptions as $id => $exception)
 						{
 							$exception = explode(',', str_replace(' ', '', $exception));
-	
+
 							// Check files name
 							foreach ($exception AS $except)
 								if (!Validate::isFileName($except))
 									$this->_errors[] = Tools::displayError('No valid value for field exceptions');
-									
+
 							$exceptions[$id] = $exception;
 						}
 
 						// Add files exceptions
 						if (!$module->editExceptions($id_hook, $exceptions))
 							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
-						
+
 						if (!$this->_errors)
 							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 					}
@@ -226,7 +226,7 @@ class AdminModulesPositions extends AdminTab
 	{
 		$admin_dir = dirname($_SERVER['PHP_SELF']);
 		$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
-		
+
 		echo '
 		<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
 		<script type="text/javascript">
@@ -259,7 +259,7 @@ class AdminModulesPositions extends AdminTab
 			<br /><br />
 			<input type="checkbox" id="hook_position" onclick="autoUrlNoList(\'hook_position\', \''.self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)(Tools::getValue('show_modules')).'&hook_position=\')" '.(Tools::getValue('hook_position') ? 'checked="checked" ' : '').' />&nbsp;<label class="t" for="hook_position">'.$this->l('Display non-positionable hook').'</label>
 		</form>
-		
+
 		<fieldset style="width:250px;float:right"><legend>'.$this->l('Live edit').'</legend>';
 		if (Shop::isMultiShopActivated() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP)
 			echo '<p>'.$this->l('You have to select a shop to use live edit').'</p>';
@@ -350,7 +350,7 @@ class AdminModulesPositions extends AdminTab
 			// Check auth for this page
 			if (!$id_module || !$id_hook)
 				Tools::redirectAdmin(self::$currentIndex . '&token='.$this->token);
-				
+
 			$sql = 'SELECT id_module
 					FROM '._DB_PREFIX_.'hook_module
 					WHERE id_module = '.$id_module.'
@@ -369,7 +369,7 @@ class AdminModulesPositions extends AdminTab
 				foreach ($exceptsList as $k => $v)
 					if (array_diff($v, $first) || array_diff($first, $v))
 						$exceptsDiff = true;
-				
+
 				if (!$exceptsDiff)
 					$excepts = implode(', ', $first);
 			}
@@ -411,7 +411,7 @@ class AdminModulesPositions extends AdminTab
 					echo '
 					</select><sup> *</sup>
 				</div>';
-					
+
 		echo <<<EOF
 			<script type="text/javascript">
 			//<![CDATA
@@ -423,7 +423,7 @@ class AdminModulesPositions extends AdminTab
 				if (!r.test(inputValue))
 					$('#em_text_'+shopID).val(inputValue + ((inputValue.trim()) ? ', ' : '') + listValue);
 			}
-			
+
 			function position_exception_remove(shopID)
 			{
 				var listValue = $('#em_list_'+shopID).val();
@@ -467,7 +467,7 @@ EOF;
 						<br /><br />
 					</div>';
 		}
-		
+
 
 		echo '<div class="margin-form">
 				';
@@ -484,7 +484,7 @@ EOF;
 			</fieldset>
 		</form>';
 	}
-	
+
 	public function displayModuleExceptionList($fileList, $shopID)
 	{
 		if (!is_array($fileList))
@@ -494,15 +494,15 @@ EOF;
 		if ($shopID)
 			echo ' ('.Shop::getInstance($shopID)->name.')';
 		echo '<br /><select id="em_list_'.$shopID.'">';
-		
+
 		// @todo do something better with controllers
-		$controllers = Dispatcher::getControllers();
+		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
 		ksort($controllers);
 		foreach ($controllers as $k => $v)
 		{
 			echo '<option value="'.$k.'">'.$k.'</option>';
 		}
-		echo '</select> <input type="button" class="button" value="'.$this->l('Add').'" onclick="position_exception_add('.$shopID.')" /> 
+		echo '</select> <input type="button" class="button" value="'.$this->l('Add').'" onclick="position_exception_add('.$shopID.')" />
 				<input type="button" class="button" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shopID.')" /><br /><br />';
 	}
 }
