@@ -36,14 +36,7 @@ class DispatcherCore
 	public static $instance = null;
 
 	/**
-	 * @var array list of available controllers
-	 */
-	public static $controllers;
-
-	/**
-	 * List of default routes
-	 *
-	 * @var array
+	 * @var array List of default routes
 	 */
 	public $default_routes = array(
 		'product_rule' => array(
@@ -124,39 +117,44 @@ class DispatcherCore
 	);
 
 	/**
-	 * If true, use routes to build URL (mod rewrite must be activated)
-	 *
-	 * @var bool
+	 * @var bool If true, use routes to build URL (mod rewrite must be activated)
 	 */
 	protected $use_routes = false;
 
 	/**
-	 * List of loaded routes
-	 *
-	 * @var array
+	 * @var array List of loaded routes
 	 */
 	protected $routes = array();
 
 	/**
-	 * Current controller name
-	 *
-	 * @var string
+	 * @var string Current controller name
 	 */
 	protected $controller;
 
 	/**
-	 * Current request uri
-	 *
-	 * @var string
+	 * @var string Current request uri
 	 */
 	protected $request_uri;
 
 	/**
-	 * Store empty route (a route with an empty rule)
-	 *
-	 * @var array
+	 * @var array Store empty route (a route with an empty rule)
 	 */
 	protected $empty_route;
+
+	/**
+	 * @var string Set default controller, which will be used if http parameter 'controller' is empty
+	 */
+	protected $default_controller = 'index';
+
+	/**
+	 * @var string Controller to use if found controller doesn't exist
+	 */
+	protected $controller_not_found = 'pagenotfound';
+
+	/**
+	 * @var array List of controllers where are stored controllers
+	 */
+	protected $controller_directories = array();
 
 	/**
 	 * Get current instance of dispatcher (singleton)
@@ -175,6 +173,8 @@ class DispatcherCore
 	 */
 	protected function __construct()
 	{
+		$this->setDefaultController('index');
+		$this->setControllerDirectories(_PS_FRONT_CONTROLLER_DIR_);
 		$this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$this->loadRoutes();
 
@@ -183,6 +183,38 @@ class DispatcherCore
 			$this->request_uri = $_SERVER['REQUEST_URI'];
 		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
+	}
+
+	/**
+	 * Set default controller, which will be used if http parameter 'controller' is empty
+	 *
+	 * @param string $controller
+	 */
+	public function setDefaultController($controller)
+	{
+		$this->default_controller = $controller;
+	}
+
+	/**
+	 * Controller to use if found controller doesn't exist
+	 *
+	 * @var string $controller
+	 */
+	public function setControllerNotFound($controller)
+	{
+		$this->controller_not_found = $controller;
+	}
+
+	/**
+	 * Set list of controllers where are stored controllers
+	 *
+	 * @param mixed A directory, or an array of directory
+	 */
+	public function setControllerDirectories($dir)
+	{
+		if (!is_array($dir))
+			$dir = array($dir);
+		$this->controller_directories = $dir;
 	}
 
 	/**
@@ -202,20 +234,20 @@ class DispatcherCore
 
 		// Get current controller and list of controllers
 		$this->getController();
-		$controllers = Dispatcher::getControllers();
+		$controllers = Dispatcher::getControllers($this->controller_directories);
 
 		if (!$this->controller)
 			$this->controller = (defined('_PS_ADMIN_DIR_')) ? 'adminhome' : 'index';
 
 		// For retrocompatibility with admin/tabs/ old system
-		if (defined('_PS_ADMIN_DIR_') && file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$this->controller].'.php'))
+		if (isset($controllers[$this->controller]) && defined('_PS_ADMIN_DIR_') && file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$this->controller].'.php'))
 		{
 			require_once(_PS_ADMIN_DIR_.'/functions.php');
 			runAdminTab();
 			return;
 		}
 		else if (!isset($controllers[$this->controller]))
-			$this->controller = 'pagenotfound';
+			$this->controller = $this->controller_not_found;
 
 		// Instantiate controller
 		Controller::getController($controllers[$this->controller])->run();
@@ -446,17 +478,17 @@ class DispatcherCore
 	/**
 	 * Get list of all available controllers
 	 *
+	 * @var mixed $dirs
 	 * @return array
 	 */
-	public static function getControllers()
+	public static function getControllers($dirs)
 	{
-		if (self::$controllers)
-			return self::$controllers;
+		if (!is_array($dirs))
+			$dirs = array($dirs);
 
 		$controllers = array();
-		if (defined('_PS_ADMIN_DIR_'))
-			$controllers = array_merge($controllers, Dispatcher::getControllersInDirectory(_PS_ADMIN_DIR_.'/tabs/', ''));
-		$controllers = array_merge($controllers, Dispatcher::getControllersInDirectory(_PS_CONTROLLER_DIR_));
+		foreach ($dirs as $dir)
+			$controllers = array_merge($controllers, Dispatcher::getControllersInDirectory($dir));
 
 		// Add default controllers
 		$controllers['index'] = 'IndexController';
@@ -465,18 +497,16 @@ class DispatcherCore
 		if (isset($controllers['compare']))
 			$controllers['productscomparison'] = $controllers['compare'];
 
-		self::$controllers = $controllers;
-		return self::$controllers;
+		return $controllers;
 	}
 
 	/**
 	 * Get list of available controllers from the specified dir
 	 *
 	 * @param string dir directory to scan (recursively)
-	 * @param filename suffix (without .php extension). Others files will be ignored.
 	 * @return array
 	 */
-	public static function getControllersInDirectory($dir, $suffix = 'Controller')
+	public static function getControllersInDirectory($dir)
 	{
 		$controllers = array();
 		$controller_files = scandir($dir);
@@ -486,10 +516,10 @@ class DispatcherCore
 			{
 				if (is_dir($dir.$controller_filename))
 					$controllers += Dispatcher::getControllersInDirectory($dir.$controller_filename.DIRECTORY_SEPARATOR);
-				else if (substr($controller_filename, - (strlen($suffix) + 4), - 4) == $suffix)
+				else if ($controller_filename != 'index.php')
 				{
-					$subdir = str_replace(_PS_CONTROLLER_DIR_, '', $dir);
-					$controllers[strtolower(substr($controller_filename, 0, - (strlen($suffix) + 4)))] = basename($controller_filename, '.php');
+					$key = str_replace(array('controller.php', '.php'), array('', ''), strtolower($controller_filename));
+					$controllers[$key] = basename($controller_filename, '.php');
 				}
 			}
 		}

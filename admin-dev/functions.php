@@ -233,6 +233,11 @@ function translate($string)
  */
 function checkingTab($tab)
 {
+	static $controllers;
+
+	if (is_null($controllers))
+		$controllers = Dispatcher::getControllers(_PS_ADMIN_DIR_.'/tabs/');
+
 	$tab = trim($tab);
 	if (!Validate::isTabName($tab))
 		return false;
@@ -244,10 +249,10 @@ function checkingTab($tab)
 		echo sprintf(Tools::displayError('Tab %s cannot be found.'),$tab);
 		return false;
 	}
-	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.Dispatcher::$controllers[$tab].'.php'))
-		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.Dispatcher::$controllers[$tab].'.php');
-	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.Dispatcher::$controllers[$tab].'.php'))
-		include_once(_PS_ADMIN_DIR_.'/tabs/'.Dispatcher::$controllers[$tab].'.php');
+	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab].'.php'))
+		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab].'.php');
+	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab].'.php'))
+		include_once(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab].'.php');
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{
 		echo sprintf(Tools::displayError('Tab file %s cannot be found.'),$tab);
