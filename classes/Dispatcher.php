@@ -236,14 +236,15 @@ class DispatcherCore
 		$this->getController();
 		$controllers = Dispatcher::getControllers($this->controller_directories);
 
-		if (!$this->controller)
+		if (!$this->controller || $this->controller == 'index')
 			$this->controller = (defined('_PS_ADMIN_DIR_')) ? 'adminhome' : 'index';
 
 		// For retrocompatibility with admin/tabs/ old system
 		if (isset($controllers[$this->controller]) && defined('_PS_ADMIN_DIR_') && file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$this->controller].'.php'))
 		{
 			require_once(_PS_ADMIN_DIR_.'/functions.php');
-			runAdminTab();
+			$ajaxMode = !empty($_REQUEST['ajaxMode']);
+			runAdminTab($ajaxMode);
 			return;
 		}
 		else if (!isset($controllers[$this->controller]))
