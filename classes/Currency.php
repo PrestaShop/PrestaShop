@@ -228,12 +228,12 @@ class CurrencyCore extends ObjectModel
 	static public function checkPaymentCurrencies($id_module, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID();
+			$id_shop = Context::getContext()->shop->getID(true);
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'module_currency`
 				WHERE `id_module` = '.(int)$id_module.'
-					AND `id_shop`='.(int)$id_shop;
+					AND `id_shop` = '.(int)$id_shop;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
 
