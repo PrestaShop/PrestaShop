@@ -25,65 +25,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', dirname(__FILE__));
+define('_PS_ADMIN_DIR_', getcwd());
+require(dirname(__FILE__).'/../config/config.inc.php');
+require(dirname(__FILE__).'/functions.php');
 
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-include(_PS_ADMIN_DIR_.'/functions.php');
-
-
-include(_PS_ADMIN_DIR_.'/init.php');
-
-if (empty($tab) and !sizeof($_POST))
-{
-	$tab = 'AdminHome';
-	$_POST['tab'] = 'AdminHome';
-	$_POST['token'] = Tools::getAdminTokenLite($tab);
-}
-	if ($adminObj = checkingTab($tab))
-	{
-    	$isoUser = Context::getContext()->language->iso_code;
-
-		if (Validate::isLoadedObject($adminObj))
-		{
-			$adminObj->ajax = true;
-			if ($adminObj->checkToken())
-			{
-				// the differences with index.php is here
-
-				$adminObj->ajaxPreProcess();
-				$action = Tools::getValue('action');
-
-				// no need to use displayConf() here
-
-				if (!empty($action) AND method_exists($adminObj, 'ajaxProcess'.Tools::toCamelCase($action)) )
-					$adminObj->{'ajaxProcess'.Tools::toCamelCase($action)}();
-				else
-					$adminObj->ajaxProcess();
-
-				// @TODO We should use a displayAjaxError
-				$adminObj->displayErrors();
-				if (!empty($action) AND method_exists($adminObj, 'displayAjax'.Tools::toCamelCase($action)) )
-					$adminObj->{'displayAjax'.$action}();
-				else
-					$adminObj->displayAjax();
-
-			}
-			else
-			{
-				// If this is an XSS attempt, then we should only display a simple, secure page
-				ob_clean();
-
-				// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
-				$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
-				if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
-					$url .= '&token='.$adminObj->token;
-
-				// we can display the correct url
-				// die(Tools::jsonEncode(array(translate('Invalid security token'),$url)));
-				die(Tools::jsonEncode(translate('Invalid security token')));
-			}
-		}
-	}
-
-
+// For retrocompatibility with "tab" parameter
+if (!isset($_GET['controller']) && isset($_GET['tab']))
+	$_GET['controller'] = strtolower($_GET['tab']);
+if (!isset($_POST['controller']) && isset($_POST['tab']))
+	$_POST['controller'] = strtolower($_POST['tab']);
+if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
+	$_REQUEST['controller'] = strtolower($_REQUEST['tab']);
+	
+Dispatcher::getInstance()->setControllerDirectories(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
+Dispatcher::getInstance()->dispatch();
 

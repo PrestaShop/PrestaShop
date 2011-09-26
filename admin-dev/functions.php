@@ -239,6 +239,7 @@ function checkingTab($tab)
 		$controllers = Dispatcher::getControllers(_PS_ADMIN_DIR_.'/tabs/');
 
 	$tab = trim($tab);
+	$tab_lowercase = strtolower($tab);
 	if (!Validate::isTabName($tab))
 		return false;
 	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module FROM `'._DB_PREFIX_.'tab` WHERE class_name = \''.pSQL($tab).'\'');
@@ -249,10 +250,10 @@ function checkingTab($tab)
 		echo sprintf(Tools::displayError('Tab %s cannot be found.'),$tab);
 		return false;
 	}
-	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab].'.php'))
-		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab].'.php');
-	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab].'.php'))
-		include_once(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab].'.php');
+	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab_lowercase].'.php'))
+		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab_lowercase].'.php');
+	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab_lowercase].'.php'))
+		include_once(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab_lowercase].'.php');
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{
 		echo sprintf(Tools::displayError('Tab file %s cannot be found.'),$tab);
@@ -427,8 +428,10 @@ function generateShopList()
  *
  * @return void
  */
-function runAdminTab()
+function runAdminTab($ajaxMode = false)
 {
+	$ajaxMode = (bool)$ajaxMode;
+
 	require_once(_PS_ADMIN_DIR_.'/init.php');
 	$cookie = Context::getContext()->cookie;
 	if (empty($tab) and !sizeof($_POST))
@@ -448,7 +451,8 @@ function runAdminTab()
 		}
 		else
 		{
-			require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+			if (!$ajaxMode)
+				require_once(_PS_ADMIN_DIR_.'/header.inc.php');
 			$isoUser = Context::getContext()->language->id;
 			$tabs = array();
 			$tabs = Tab::recursiveTab($adminObj->id, $tabs);
@@ -466,31 +470,31 @@ function runAdminTab()
 			}
 
 			// @TODO : a way to desactivate this feature
-			echo'<script type="text/javascript">
+			if (!$ajaxMode)
+				echo'<script type="text/javascript">
 
-			$(function() {
-				$.ajax({
-					type: \'POST\',
-					url: \'ajax.php\',
-					data: \'helpAccess=1&item='.$item['class_name'].'&isoUser='.$isoUser.'&country='.Context::getContext()->country->iso_code.'&version='._PS_VERSION_.'\',
-					async : true,
-					success: function(msg) {
-						$("#help-button").html(msg);
-						$("#help-button").fadeIn("slow");
-					}
-				});
-			});</script>';
+				$(function() {
+					$.ajax({
+						type: \'POST\',
+						url: \'ajax.php\',
+						data: \'helpAccess=1&item='.$item['class_name'].'&isoUser='.$isoUser.'&country='.Context::getContext()->country->iso_code.'&version='._PS_VERSION_.'\',
+						async : true,
+						success: function(msg) {
+							$("#help-button").html(msg);
+							$("#help-button").fadeIn("slow");
+						}
+					});
+				});</script>';
 
-			echo '<div class="path_bar">
+			if (!$ajaxMode)
+				echo '<div class="path_bar">
 			<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
 			</div>
 				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
-				'.$bread;
-			echo '
-			</div>';
+				'.$bread.'</div>';
 
 
-			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
+			if (!$ajaxMode && Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
 			{
 				echo '<div class="multishop_info">';
 				if (Context::shop() == Shop::CONTEXT_GROUP)
@@ -499,65 +503,106 @@ function runAdminTab()
 					printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo '</div>';
 			}
-
 			if (Validate::isLoadedObject($adminObj))
 			{
 				if ($adminObj->checkToken())
 				{
-					/* Filter memorization */
-					if (isset($_POST) AND !empty($_POST) AND isset($adminObj->table))
-						foreach ($_POST AS $key => $value)
-							if (is_array($adminObj->table))
-							{
-								foreach ($adminObj->table AS $table)
-									if (strncmp($key, $table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
-										$cookie->$key = !is_array($value) ? $value : serialize($value);
-							}
-							elseif (strncmp($key, $adminObj->table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
-								$cookie->$key = !is_array($value) ? $value : serialize($value);
+					if($ajaxMode)
+					{
+						// the differences with index.php is here 
+						$adminObj->ajaxPreProcess();
+						$action = Tools::getValue('action');
+						// no need to use displayConf() here
 
-					if (isset($_GET) AND !empty($_GET) AND isset($adminObj->table))
-						foreach ($_GET AS $key => $value)
-							if (is_array($adminObj->table))
-							{
-								foreach ($adminObj->table AS $table)
-									if (strncmp($key, $table.'OrderBy', 7) === 0 OR strncmp($key, $table.'Orderway', 8) === 0)
-										$cookie->$key = $value;
-							}
-							elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 OR strncmp($key, $adminObj->table.'Orderway', 12) === 0)
-								$cookie->$key = $value;
-					$adminObj->displayConf();
-					$adminObj->postProcess();
-					$adminObj->displayErrors();
-					$adminObj->display();
+						if (!empty($action) AND method_exists($adminObj, 'ajaxProcess'.Tools::toCamelCase($action)) )
+							$adminObj->{'ajaxProcess'.Tools::toCamelCase($action)}();
+						else
+							$adminObj->ajaxProcess();
+
+						// @TODO We should use a displayAjaxError
+						$adminObj->displayErrors();
+						if (!empty($action) AND method_exists($adminObj, 'displayAjax'.Tools::toCamelCase($action)) )
+							$adminObj->{'displayAjax'.$action}();
+						else
+							$adminObj->displayAjax();
+						
+					
+					}
+					else
+					{
+						/* Filter memorization */
+						if (isset($_POST) AND !empty($_POST) AND isset($adminObj->table))
+							foreach ($_POST AS $key => $value)
+								if (is_array($adminObj->table))
+								{
+									foreach ($adminObj->table AS $table)
+										if (strncmp($key, $table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
+											$cookie->$key = !is_array($value) ? $value : serialize($value);
+								}
+								elseif (strncmp($key, $adminObj->table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
+									$cookie->$key = !is_array($value) ? $value : serialize($value);
+
+						if (isset($_GET) AND !empty($_GET) AND isset($adminObj->table))
+							foreach ($_GET AS $key => $value)
+								if (is_array($adminObj->table))
+								{
+									foreach ($adminObj->table AS $table)
+										if (strncmp($key, $table.'OrderBy', 7) === 0 OR strncmp($key, $table.'Orderway', 8) === 0)
+											$cookie->$key = $value;
+								}
+								elseif (strncmp($key, $adminObj->table.'OrderBy', 7) === 0 OR strncmp($key, $adminObj->table.'Orderway', 12) === 0)
+									$cookie->$key = $value;
+						$adminObj->displayConf();
+						$adminObj->postProcess();
+						$adminObj->displayErrors();
+						$adminObj->display();
+						include(_PS_ADMIN_DIR_.'/footer.inc.php');
+					}
 				}
 				else
 				{
-					// If this is an XSS attempt, then we should only display a simple, secure page
-					ob_clean();
+					if($ajaxMode)
+					{
+						// If this is an XSS attempt, then we should only display a simple, secure page
+						ob_clean();
 
-					// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
-					$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
-					if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
-						$url .= '&token='.$adminObj->token;
+						// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
+						$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
+						if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
+							$url .= '&token='.$adminObj->token;
 
-					$message = translate('Invalid security token');
-					echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
-						<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
-							<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
-							'.$message.'
-						</div>';
-					echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
-							<input type="button" value="'.Tools::htmlentitiesUTF8(translate('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
-						</a>
-						<a href="index.php" method="get" style="float:left;margin:10px">
-							<input type="button" value="'.Tools::htmlentitiesUTF8(translate('Take me out of here!')).'" style="height:40px" />
-						</a>
-					</body></html>';
-					die;
+
+						// we can display the correct url
+						// die(Tools::jsonEncode(array(translate('Invalid security token'),$url)));
+						die(Tools::jsonEncode(translate('Invalid security token')));
+					}
+					else
+					{
+						// If this is an XSS attempt, then we should only display a simple, secure page
+						ob_clean();
+
+						// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
+						$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
+						if (false === strpos($url, '?token=') AND false === strpos($url, '&token='))
+							$url .= '&token='.$adminObj->token;
+
+						$message = translate('Invalid security token');
+						echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
+							<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
+								<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
+								'.$message.'
+							</div>';
+						echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
+								<input type="button" value="'.Tools::htmlentitiesUTF8(translate('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
+							</a>
+							<a href="index.php" method="get" style="float:left;margin:10px">
+								<input type="button" value="'.Tools::htmlentitiesUTF8(translate('Take me out of here!')).'" style="height:40px" />
+							</a>
+						</body></html>';
+						die;
+					}
 				}
 			}
-			include(_PS_ADMIN_DIR_.'/footer.inc.php');
 		}
 	}
 }
