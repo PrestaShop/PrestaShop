@@ -31,29 +31,29 @@ include(PS_ADMIN_DIR.'/../config/config.inc.php');
 include(PS_ADMIN_DIR.'/functions.php');
 
 $file = 'request_sql_'.Tools::getValue('id_request_sql').'.csv';
-if($csv = fopen(PS_ADMIN_DIR.'/export/'.$file, 'w'))
+if ($csv = fopen(PS_ADMIN_DIR.'/export/'.$file, 'w'))
 {
 	$sql = RequestSql::getRequestSqlById(Tools::getValue('id_request_sql'));
 
-	if($sql)
+	if ($sql)
 	{
 		$results = Db::getInstance()->ExecuteS($sql[0]['sql']);
-		foreach(array_keys($results[0]) as $key)
+		foreach (array_keys($results[0]) as $key)
 		{
 			$tab_key[] = $key;
 			fputs($csv, $key.';');
 		}
-		foreach($results as $result)
+		foreach ($results as $result)
 		{
 			fputs($csv, "\n");
-			foreach($tab_key as $name)
+			foreach ($tab_key as $name)
 				fputs($csv, $result[$name].';');
 		}
-		if(file_exists(PS_ADMIN_DIR.'/export/'.$file))
+		if (file_exists(PS_ADMIN_DIR.'/export/'.$file))
 		{
 			$filesize = filesize(PS_ADMIN_DIR.'/export/'.$file);
 			$upload_max_filesize = return_bytes(ini_get('upload_max_filesize'));
-			if($filesize < $upload_max_filesize)
+			if ($filesize < $upload_max_filesize)
 			{
 				header("Content-type: text/csv");
 				header("Cache-Control: no-store, no-cache");
@@ -81,10 +81,12 @@ else
 	die();
 }
 
-function return_bytes($val) {
+function return_bytes($val)
+{
     $val = trim($val);
     $last = strtolower($val[strlen($val)-1]);
-    switch($last) {
+    switch ($last)
+	{
         // Le modifieur 'G' est disponible depuis PHP 5.1.0
         case 'g':
             $val *= 1024;
