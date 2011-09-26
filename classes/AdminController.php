@@ -38,7 +38,7 @@ class AdminControllerCore extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		// if this->template is empty, 
+		// if this->template is empty,
 		// generate the filename from the classname, without "Controller" suffix
 		if (empty($this->template))
 		{
@@ -77,6 +77,10 @@ class AdminControllerCore extends Controller
 			$className = substr($className,0,-10);
 
 		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
+
+		// Fix for AdminHome
+		if ($className == 'AdminHome')
+			$_POST['token'] = $this->token;
 
 		if (!Shop::isMultiShopActivated())
 			$this->shopLinkType = '';

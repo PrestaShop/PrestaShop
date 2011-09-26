@@ -419,7 +419,7 @@ function generateShopList()
 
 /**
  * for retrocompatibility with old AdminTab, old index.php
- * 
+ *
  * @return void
  */
 function runAdminTab()
@@ -456,12 +456,12 @@ if ($adminObj = checkingTab($tab))
 			$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />';
 			if (count($tabs) - 1 > $key)
 				$bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">';
-			
+
 			$bread .= $item['name'];
 			if (count($tabs) - 1 > $key)
 				$bread .= '</a>';
 		}
-		
+
 		// @TODO : a way to desactivate this feature
 		echo'<script type="text/javascript">
 
