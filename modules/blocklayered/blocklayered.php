@@ -1434,10 +1434,17 @@ class BlockLayered extends Module
 						<li>'.$this->l('Press "Save this selection" or close the window to save').'</li>
 					</ol>';
 
-			$trads = array();
 			$selectedCat = array();
-			foreach (Helper::$translationsKeysForAdminCategorieTree as $key)
-				$trads[$key] = $this->l($key);
+			// Translations are not automatic for the moment ;)
+			$trads = array(
+				 'Home' => $this->l('Home'),
+				 'selected' => $this->l('selected'),
+				 'Collapse All' => $this->l('Collapse All'),
+				 'Expand All' => $this->l('Expand All'),
+				 'Check All' => $this->l('Check All'),
+				 'Uncheck All'  => $this->l('Uncheck All'),
+				 'search'  => $this->l('Search a category')
+			);
 			$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
 			
 			$html .= '
