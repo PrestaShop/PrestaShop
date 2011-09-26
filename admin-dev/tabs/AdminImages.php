@@ -460,11 +460,11 @@ class AdminImages extends AdminTab
 				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Move images').'</legend><br />'.
 				$this->l('You can choose to keep your images stored in the previous system - nothing wrong with that.').'<br />'.
 				$this->l('You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below.	Please be patient, as this can take several minutes.').
-				'<br /><br /><p class="hint clear" style="display: block;">&nbsp;'.
+				'<br /><br /><div class="hint clear" style="display: block;">&nbsp;'.
 				$this->l('After moving all of your product images, for best performance go to the '). 
 				'<a style="text-decoration:underline" href="index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on">'.$this->l('product preferences tab').'</a>'.
 				$this->l(' and set "Activate legacy images compatibility" to NO.').'
-				</p>
+				</div>
 				<center><input type="Submit" name="submitMoveImages'.$this->table.'" value="'.$this->l('Move images').'" class="button space" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');" /></center>
 			</fieldset>
 		</form>';
