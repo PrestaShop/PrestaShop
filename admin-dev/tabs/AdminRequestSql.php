@@ -65,7 +65,7 @@ class AdminRequestSql extends AdminTab
 		</div><br />
 		<div class="warn"><img src="../img/admin/warn2.png">'.$this->l('Warning: when saving the query, only the request type "SELECT" are allowed.').'</div>';
 		
-		if(isset($_GET['maxsize']))
+		if (isset($_GET['maxsize']))
 		{
 			echo '<div class="error"><img src="../img/admin/error2.png">'.$this->l('The file is too large and can not be downloaded. Please use the clause "LIMIT" in this query.').'</div>';
 		}
@@ -123,7 +123,7 @@ class AdminRequestSql extends AdminTab
 			$parser = $requestSql->parsingSql($sql);
 			$validate = $requestSql->validateSql($parser, false, $sql);
 			
-			if(!$validate || !empty($requestSql->errorSql))
+			if (!$validate || !empty($requestSql->errorSql))
 				$this->_DisplayError($requestSql->errorSql);
 		}
 	}
@@ -135,35 +135,35 @@ class AdminRequestSql extends AdminTab
 			switch($key)
 			{
 				case 'checkedFrom':
-					if(isset($e[$key]['table']))
+					if (isset($e[$key]['table']))
 						$this->_errors[] = Tools::DisplayError($this->l('The Table ').' "'.$e[$key]['table'].'" '.$this->l(' doesn\'t exist.'));
-					elseif(isset($e[$key]['attribut']))
+					else if (isset($e[$key]['attribut']))
 						$this->_errors[] = Tools::DisplayError($this->l('The attribute ').' "'.$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the following tables: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
 					break;
 				case 'checkedSelect':
-					if(isset($e[$key]['table']))
+					if (isset($e[$key]['table']))
 						$this->_errors[] = Tools::DisplayError($this->l('The Table ').' "'.$e[$key]['table'].'" '.$this->l(' doesn\'t exist.'));
-					elseif(isset($e[$key]['attribut']))
+					else if (isset($e[$key]['attribut']))
 						$this->_errors[] = Tools::DisplayError($this->l('The attribute ').' "'.$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the following tables: ').$e[$key]['attribut'][1].'.');
-					elseif(isset($e[$key]['*']))
+					else if (isset($e[$key]['*']))
 						$this->_errors[] = Tools::DisplayError($this->l('The operand "*" can be used in a nested query.'));
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
 					break;
 				case 'checkedWhere':
-					if(isset($e[$key]['operator']))
+					if (isset($e[$key]['operator']))
 						$this->_errors[] = Tools::DisplayError($this->l('The operator ').' "'.$e[$key]['operator'].'" '.$this->l(' used is incorrect.'));
-					elseif(isset($e[$key]['attribut']))
+					else if (isset($e[$key]['attribut']))
 						$this->_errors[] = Tools::DisplayError($this->l('The attribute ').' "'.$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the following tables: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
 					break;
 				case 'checkedHaving':
-					if(isset($e[$key]['operator']))
+					if (isset($e[$key]['operator']))
 						$this->_errors[] = Tools::DisplayError($this->l('The operator ').' "'.$e[$key]['operator'].'" '.$this->l(' used is incorrect.'));
-					elseif(isset($e[$key]['attribut']))
+					else if(isset($e[$key]['attribut']))
 						$this->_errors[] = Tools::DisplayError($this->l('The attribute ').' "'.$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the following tables: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
@@ -210,19 +210,19 @@ class AdminRequestSql extends AdminTab
 		if($results = Db::getInstance()->ExecuteS($obj->sql))
 		{
 			$tab_key = array();
-			foreach(array_keys($results[0]) as $key)
+			foreach (array_keys($results[0]) as $key)
 				$tab_key[] = $key;
 			echo '
 			<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
 				<tr>';
-				foreach($tab_key as $keyName)
+				foreach ($tab_key as $keyName)
 					echo '<th align="center">'.$keyName.'</th>';
 			echo '
 				</tr>';
-				foreach($results as $result)
+				foreach ($results as $result)
 				{
 					echo '<tr>';
-					foreach($tab_key as $name)
+					foreach ($tab_key as $name)
 						echo '<td>'.$result[$name].'</td>';
 					echo '</tr>';
 				}
@@ -285,10 +285,10 @@ class AdminRequestSql extends AdminTab
 						echo '>';
 					if (isset($params['active']) AND isset($tr[$key]))
 					    $this->_displayEnableLink($token, $id, $tr[$key], $params['active'], Tools::getValue('id_category'), Tools::getValue('id_product'));
-					elseif (isset($params['activeVisu']) AND isset($tr[$key]))
+					else if (isset($params['activeVisu']) AND isset($tr[$key]))
 						echo '<img src="../img/admin/'.($tr[$key] ? 'enabled.gif' : 'disabled.gif').'"
 						alt="'.($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')).'" />';
-					elseif (isset($params['position']))
+					else if (isset($params['position']))
 					{
 						if ($this->_orderBy == 'position' AND $this->_orderWay != 'DESC')
 						{
@@ -306,7 +306,7 @@ class AdminRequestSql extends AdminTab
 						else
 							echo (int)($tr[$key] + 1);
 					}
-					elseif (isset($tr[$key]))
+					else if (isset($tr[$key]))
 					{
 						$echo = $tr[$key];
 
