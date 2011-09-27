@@ -27,9 +27,11 @@
 
 class AdminHomeControllerCore extends AdminController
 {
+	const TIPS_TIMEOUT = 5;
 
 	private function _displayOptimizationTips()
 	{
+		$content = '';
 		$rewrite = 0;
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
@@ -92,7 +94,7 @@ class AdminHomeControllerCore extends AdminController
 		
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
-			$this->content .= '
+			$content .= '
 			<div class="admin-box1">
 				<h5>'.$this->l('A good beginning...')
 				.'
@@ -102,7 +104,7 @@ class AdminHomeControllerCore extends AdminController
 						?'" href="#"><img alt="v" style="padding-top:0px; padding-right: 5px;" src="../img/admin/down-white.gif" /></a>':'href="?hideOptimizationTips" >
 						<img alt="X" style="padding-top:0px; padding-right: 5px;" src="../img/admin/close-white.png" />
 						</a>').'</span></h5>';
-			$this->content .= '
+			$content .= '
 			<script type="text/javascript">
 			$(document).ready(function(){
 				$("#optimizationTipsFold").click(function(e){
@@ -116,7 +118,7 @@ class AdminHomeControllerCore extends AdminController
 			});
 						</script>
 			';
-			$this->content .= '<ul id="list-optimization-tips" class="admin-home-box-list" '
+			$content .= '<ul id="list-optimization-tips" class="admin-home-box-list" '
 				.(Configuration::get('PS_HIDE_OPTIMIZATION_TIPS')?'style="display:none"':'').'>
 				<li style="background-color:'.$lights[$rewrite]['color'].'">
 				<img src="../img/admin/'.$lights[$rewrite]['image'].'" class="pico" />
@@ -143,8 +145,10 @@ class AdminHomeControllerCore extends AdminController
 		<a href="index.php?tab=AdminGenerator&token='.Tools::getAdminTokenLite('AdminGenerator').'">'.$this->l('.htaccess up-to-date').'</a></li>
 					</ul>
 			</div>';
+		}
+		return $content;
 	}
-	}
+
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -161,148 +165,42 @@ class AdminHomeControllerCore extends AdminController
 			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
-	public function display()
-	{
-		$this->warnDomainName();
 
-		$tab = get_class();
-		$protocol = Tools::usingSecureMode()?'https':'http';
-		$isoUser = $this->context->language->iso_code;
-		$currency = Tools::setCurrency($this->context->cookie);
-		$this->content .= '<div>
-		<h1>'.$this->l('Dashboard').'</h1>
-		<hr style="background-color: #812143;color: #812143;" />
-		<br />';
-		if (@ini_get('allow_url_fopen'))
-		{
-			$upgrade = new Upgrader();
-			if($update = $upgrade->checkPSVersion())
-			$this->content .= '<div class="warning warn" style="margin-bottom:30px;"><h3>'.$this->l('New PrestaShop version available').' : <a style="text-decoration: underline;" href="'.$update['link'].'" target="_blank">'.$this->l('Download').'&nbsp;'.$update['name'].'</a> !</h3></div>';
-		}
-		else 
-	    {
-			$this->content .= '<p>'.$this->l('Update notification unavailable').'</p>';
-			$this->content .= '<p>&nbsp;</p>';
-			$this->content .= '<p>'.$this->l('To receive PrestaShop update warnings, you need to activate the <b>allow_url_fopen</b> command in your <b>php.ini</b> config file.').' [<a href="http://www.php.net/manual/'.$isoUser.'/ref.filesystem.php">'.$this->l('more info').'</a>]</p>';
-			$this->content .= '<p>'.$this->l('If you don\'t know how to do that, please contact your host administrator !').'</p><br>';
-		}
-	  $this->content .= '</div>';
+	private function getQuickLinks()
+	{
+		$quick_links['first'] = array(
+			'href' => 'index.php?controller=AdminCatalog&amp;addcategory&amp;token='.Tools::getAdminTokenLite('AdminCatalog'),
+			'title' => $this->l('New category'),
+			'description' => $this->l('Create a new category and organize your products.'),
+		);
+
+		$quick_links['second'] = array(
+			'href' => 'index.php?controller=AdminCatalog&amp;addproduct&amp;token='.Tools::getAdminTokenLite('AdminCatalog'),
+			'title' => $this->l('New product'),
+			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
+		);
 	
-	  	if ($this->context->employee->show_screencast)
-			$this->content .= '
-			<div id="adminpresentation">
-				<iframe src="'.$protocol.'://screencasts.prestashop.com/screencast.php?iso_lang='.Tools::strtolower($isoUser).'" style="border:none;width:100%;height:420px;" scrolling="no"></iframe>
-				<div id="footer_iframe_home">
-					<!--<a href="#">'.$this->l('View more video tutorials').'</a>-->
-					<input type="checkbox" id="screencast_dont_show_again"><label for="screencast_dont_show_again">'.$this->l('don\'t show again').'</label>
-				</div>
-			</div>
-			<script type="text/javascript">
-			$(document).ready(function() {
-				$(\'#screencast_dont_show_again\').click(function() {
-					if ($(this).is(\':checked\'))
-					{
-						$.ajax({
-							type: \'POST\',
-							async: true,
-							url: \'ajax.php?toggleScreencast\',
-							success: function(data) {
-								$(\'#adminpresentation\').slideUp(\'slow\');
-							}
-						});
-					}
-				});
-			});
-			</script>
-			<div class="clear"></div><br />';
-	
-	
-		$this->content .= '
-		<div id="column_left">
-			<ul class="F_list clearfix">
-				<li id="first_block">
-					<h4><a href="index.php?tab=AdminCatalog&addcategory&token='.Tools::getAdminTokenLite('AdminCatalog').'">'.$this->l('New category').'</a></h4>
-					<p>'.$this->l('Create a new category and organize your products.').'</p>
-				</li>
-				<li id="second_block">
-					<h4><a href="index.php?tab=AdminCatalog&id_category=1&addproduct&token='.Tools::getAdminTokenLite('AdminCatalog').'">'.$this->l('New product').'</a></h4>
-					<p>'.$this->l('Fill up your catalog with new articles and attributes.').'</p>
-				</li>
-				<li id="third_block">
-					<h4><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('Statistics').'</a></h4>
-					<p>'.$this->l('Manage your activity with a thorough analysis of your e-shop.').'</p>
-				</li>
-				<li id="fourth_block">
-					<h4><a href="index.php?tab=AdminEmployees&addemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'">'.$this->l('New employee').'</a></h4>
-					<p>'.$this->l('Add a new employee account and discharge a part of your duties of shop owner.').'</p>
-				</li>
-			</ul>
-			';
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT SUM(o.`total_paid_real` / o.conversion_rate) as total_sales, COUNT(*) as total_orders
-			FROM `'._DB_PREFIX_.'orders` o
-			WHERE o.valid = 1
-			AND o.`invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\' ');
-			$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT COUNT(`id_customer`) AS total_registrations
-			FROM `'._DB_PREFIX_.'customer` c
-			WHERE c.`date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'');
-			$result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT SUM(pv.`counter`) AS total_viewed
-			FROM `'._DB_PREFIX_.'page_viewed` pv
-			LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
-			LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
-			LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
-			WHERE pt.`name` = \'product.php\'
-			AND dr.`time_start` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
-			AND dr.`time_end` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'');
-			$results = array_merge($result, array_merge($result2, $result3));
-			$this->content .= '
-			<div class="table_info">
-				<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> '.$this->l('Monthly Statistics').' </h5>
-				<table class="table_info_details">
-					<tr class="tr_odd">
-						<td class="td_align_left">
-						'.$this->l('Sales').'
-						</td>
-						<td>
-							'
-							.Tools::displayPrice($results['total_sales'], $currency)
-							.'
-						</td>
-					</tr>
-					<tr>
-						<td class="td_align_left">
-							'.$this->l('Total registrations').'
-						</td>
-						<td>
-							'.(int)($results['total_registrations']).'
-						</td>
-					</tr>
-					<tr class="tr_odd">
-						<td class="td_align_left">
-							'.$this->l('Total orders').'
-						</td>
-						<td>
-							'.(int)($results['total_orders']).'
-						</td>
-					</tr>
-					<tr>
-						<td class="td_align_left">
-							'.$this->l('Product pages viewed').'
-						</td>
-						<td>
-							'.(int)($results['total_viewed']).'
-						</td>
-					</tr>
-				</table>
-			</div>
-			';
+		$quick_links['third'] = array(
+			'href' => 'index.php?controller=AdminStats&amp;addproduct&amp;token='.Tools::getAdminTokenLite('AdminStats'),
+			'title' => $this->l('Statistics'),
+			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
+		);
+
+		$quick_links['fourth'] = array(
+			'href' => 'index.php?controller=AdminEmployee&amp;addproduct&amp;token='.Tools::getAdminTokenLite('AdminEmployee'),
+			'title' => $this->l('New employee'),
+			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
+		);
+		return $quick_links;
+	}
+
+	public function getCustomersService()
+	{
 			$all = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'customer_thread');
 			$unread = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'customer_thread` WHERE `status` = "open"');
 			$pending = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'customer_thread` WHERE `status` LIKE "%pending%"');
 			$close = $all - ($unread + $pending);
-			$this->content .= '
+			$content = '
 			<div class="table_info" id="table_info_last">
 				<h5><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.$this->l('View more').'</a> '.$this->l('Customers service').'</h5>
 				<table class="table_info_details">
@@ -339,13 +237,81 @@ class AdminHomeControllerCore extends AdminController
 						</td>
 					</tr>
 				</table>
-			</div>
-	
-			<div id="table_info_large">
+			</div>';
+			return $content;
+	}
+
+	public function getMonthlyStatistics()
+	{
+		$currency = Tools::setCurrency($this->context->cookie);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(o.`total_paid_real` / o.conversion_rate) as total_sales, COUNT(*) as total_orders
+		FROM `'._DB_PREFIX_.'orders` o
+		WHERE o.valid = 1
+		AND o.`invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\' ');
+		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT COUNT(`id_customer`) AS total_registrations
+		FROM `'._DB_PREFIX_.'customer` c
+		WHERE c.`date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'');
+		$result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(pv.`counter`) AS total_viewed
+		FROM `'._DB_PREFIX_.'page_viewed` pv
+		LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
+		LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
+		LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
+		WHERE pt.`name` = \'product.php\'
+		AND dr.`time_start` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+		AND dr.`time_end` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'');
+		$results = array_merge($result, array_merge($result2, $result3));
+
+		$content = '<div class="table_info">
+			<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> '.$this->l('Monthly Statistics').' </h5>
+			<table class="table_info_details">
+				<tr class="tr_odd">
+					<td class="td_align_left">
+					'.$this->l('Sales').'
+					</td>
+					<td>
+						'
+						.Tools::displayPrice($results['total_sales'], $currency)
+						.'
+					</td>
+				</tr>
+				<tr>
+					<td class="td_align_left">
+						'.$this->l('Total registrations').'
+					</td>
+					<td>
+						'.(int)($results['total_registrations']).'
+					</td>
+				</tr>
+				<tr class="tr_odd">
+					<td class="td_align_left">
+						'.$this->l('Total orders').'
+					</td>
+					<td>
+						'.(int)($results['total_orders']).'
+					</td>
+				</tr>
+				<tr>
+					<td class="td_align_left">
+						'.$this->l('Product pages viewed').'
+					</td>
+					<td>
+						'.(int)($results['total_viewed']).'
+					</td>
+				</tr>
+			</table>
+		</div>';
+		return $content;
+	}
+
+	public function getStatsSales()
+	{
+		$content = '<div id="table_info_large">
 				<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> <strong>'.$this->l('Statistics').'</strong> / '.$this->l('Sales of the week').'</h5>
 				<div id="stat_google">';
 	
-		define('PS_BASE_URI', __PS_BASE_URI__);
 		$chart = new Chart();
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT total_paid / conversion_rate as total_converted, invoice_date
@@ -356,11 +322,18 @@ class AdminHomeControllerCore extends AdminController
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date']), $row['total_converted']);
 		$chart->setSize(580, 170);
 		$chart->setTimeMode(strtotime('-7 DAYS', time()), time(), 'd');
+		$currency = Tools::setCurrency($this->context->cookie);
 		$chart->getCurve(1)->setLabel($this->l('Sales +Tx').' ('.strtoupper($currency->iso_code).')');
 		
-		$this->content .= $chart->fetch();
-		$this->content .= '	</div>
-			</div>
+		$content .= $chart->fetch();
+		$content .= '	</div>
+		</div>';
+		return $content;
+	}
+	
+	public function getLastOrders()
+	{
+		$content = '
 			<table cellpadding="0" cellspacing="0" id="table_customer">
 				<thead>
 					<tr>
@@ -378,7 +351,7 @@ class AdminHomeControllerCore extends AdminController
 		foreach ($orders AS $order)
 		{
 			$currency = Currency::getCurrency((int)$order['id_currency']);
-			$this->content .= '
+			$content .= '
 					<tr'.($i % 2 ? ' id="order_line1"' : '').'>
 						<td class="order_td_first order_id">'.(int)$order['id_order'].'</td>
 						<td class="order_customer">'.Tools::htmlentitiesUTF8($order['firstname']).' '.Tools::htmlentitiesUTF8($order['lastname']).'</td>
@@ -392,67 +365,169 @@ class AdminHomeControllerCore extends AdminController
 			$i++;
 		}
 	
-		$this->content .= '
+		$content .= '
 				</tbody>
 			</table>
-		</div>
-		<div id="column_right">
-			<script type="text/javascript">
-				$(document).ready(function() {
-					$.ajax({
-						url: "ajax.php",
-						dataType: "json",
-						data: "getAdminHomeElement",
-						success: function(json) {
-							if (json.screencast != \'NOK\')
-								$(\'#adminpresentation\').fadeIn(\'slow\');
-							else
-								$(\'#adminpresentation\').fadeOut(\'slow\');
-								
-							$(\'#partner_preactivation\').fadeOut(\'slow\', function() {
-								if (json.partner_preactivation != \'NOK\')
-									$(\'#partner_preactivation\').html(json.partner_preactivation);
-								else
-									$(\'#partner_preactivation\').html(\'\');
-								$(\'#partner_preactivation\').fadeIn(\'slow\');
-							});
-							
-							$(\'#discover_prestashop\').fadeOut(\'slow\', function() {
-								if (json.discover_prestashop != \'NOK\')
-									$(\'#discover_prestashop\').html(json.discover_prestashop);
-								else
-									$(\'#discover_prestashop\').html(\'\');
-								$(\'#discover_prestashop\').fadeIn(\'slow\');
-							});
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown)
+		</div>';
+		return $content;
+	}
+
+	public function ajaxProcess()
+	{
+		die("{pouet}");
+	}
+
+	public function ajaxProcessGetAdminHomeElement()
+	{
+		$result = array();
+		$content = '';
+
+		$protocol = Tools::usingSecureMode() ? 'https' : 'http';
+		$isoUser = Context::getContext()->language->iso_code;
+		$isoCountry = Context::getContext()->country->iso_code;
+		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
+
+		// SCREENCAST
+		if (@fsockopen('www.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
+			$result['screencast'] = 'OK';
+		else
+			$result['screencast'] = 'NOK';
+
+		// PREACTIVATION
+		$result['partner_preactivation'] = $this->getBlockPartners();
+
+		// PREACTIVATION PAYPAL WARNING
+		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+		$content = explode('|', $content);
+		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
+			Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', $content[1]);
+		else
+			Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', '');
+
+		// DISCOVER PRESTASHOP
+		$result['discover_prestashop'] = $this->getBlockDiscover();
+
+
+			if (@fsockopen('www.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
+				$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://www.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
+			else
+				$result['discover_prestashop'] .= '';
+
+		// SHOW PAYPAL TIPS
+			$content = '';
+			$content = @file_get_contents($protocol.'://www.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+			$content = explode('|', $content);
+			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
+				$result['discover_prestashop'] .= $content[1];
+
+		die(Tools::jsonEncode($result));
+	}
+
+	public function getBlockPartners()
+	{
+		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&date_creation='._PS_CREATION_DATE_.'&v='._PS_VERSION_.'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+		if (!$content)
+			$return = ''; // NOK
+		else
+		{
+			$content = explode('|', $content);
+			if ($content[0] == 'OK' && Validate::isCleanHtml($content[2]) && Validate::isCleanHtml($content[1]))
+			{
+				$return = $content[2];
+				$content[1] = explode('#%#', $content[1]);
+				foreach ($content[1] as $partnerPopUp)
+					if ($partnerPopUp)
+					{
+						$partnerPopUp = explode('%%', $partnerPopUp);
+						if (!Configuration::get('PS_PREACTIVATION_'.strtoupper($partnerPopUp[0])))
 						{
-							$(\'#adminpresentation\').fadeOut(\'slow\');
-							$(\'#partner_preactivation\').fadeOut(\'slow\');	
-							$(\'#discover_prestashop\').fadeOut(\'slow\');
+							$return .= $partnerPopUp[1];
+							Configuration::updateValue('PS_PREACTIVATION_'.strtoupper($partnerPopUp[0]), 'TRUE');
 						}
-					});
-				});
-			</script>
-			<div id="partner_preactivation">
-				<p class="center"><img src="../img/loader.gif" alt="" /> '.$this->l('Loading...').'</p>
-			</div>
-		';
+					}
+			}
+			else
+				$return = ''; // NOK
+		}
+		return $return;
+	}
+
+	public function getBlockDiscover()
+	{
+		$content = '';
+
+		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
+		$protocol = Tools::usingSecureMode() ? 'https' : 'http';
+		$isoUser = Context::getContext()->language->iso_code;
+		$isoCountry = Context::getContext()->country->iso_code;
+
+		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		if (!$content)
+			return ''; // NOK
+		else
+		{
+			if(strpos($content, '|') !== false);
+				$content = explode('|', $content);
+			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
+				return $content[1];
+			else
+				return ''; // NOK
+		}
+	}
+	public function display()
+	{
+		$smarty = $this->context->smarty;
+		$smarty->assign('token',$this->token);
+
+		$this->warnDomainName();
+
+		$tab = get_class();
+		$protocol = Tools::usingSecureMode()?'https':'http';
+		$smarty->assign('protocol',$protocol);
+		$isoUser = $this->context->language->iso_code;
+		$smarty->assign('isoUser',$isoUser);
+		$currency = $this->context->currency;
+		$upgrade = null;
+		if (@ini_get('allow_url_fopen'))
+		{
+			$upgrade = new Upgrader();
+			$upgrade->checkPSVersion();
+		}
+		$smarty->assign('upgrade', $upgrade);
+	
+  	$smarty->assign('show_screencast', $this->context->employee->show_screencast);
+
+		// quick link to add a products, category, attributes etc. 
+		$quick_links = $this->getQuickLinks();
+		$smarty->assign('quick_links',$quick_links);
+		$monthly_statistics = $this->getMonthlyStatistics();
+		$smarty->assign('monthly_statistics', $monthly_statistics);
+
+		$customers_service = $this->getCustomersService();
+		$smarty->assign('customers_service', $customers_service);
+
+		$stats_sales = $this->getStatsSales();
+		$smarty->assign('stats_sales', $stats_sales);
+
+		$last_orders = $this->getLastOrders();
+		$smarty->assign('last_orders', $last_orders);
+
 
 		if (Tools::isSubmit('hideOptimizationTips'))
 			Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1);
 			
-		$this->_displayOptimizationTips();
+		$tips_optimization = $this->_displayOptimizationTips();
+		$smarty->assign('tips_optimization', $tips_optimization);
 
-		$this->content .= '
-			<div id="discover_prestashop">
+		$discover_prestashop = '<div id="discover_prestashop">
 				<p class="center"><img src="../img/loader.gif" alt="" /> '.$this->l('Loading...').'</p>
 			</div>
-		</div>
-		<div class="clear"></div>';
+		</div>';
+		$smarty->assign('discover_prestashop', $discover_prestashop);
 	
-		$this->content .= Module::hookExec('backOfficeHome');
-		$this->context->smarty->assign('content', $this->content);
+		$HOOK_BACKOFFICEHOME = Module::hookExec('backOfficeHome');
+		$smarty->assign('HOOK_BACKOFFICEHOME', $HOOK_BACKOFFICEHOME);
+
 		parent::display();
 	}
 }
