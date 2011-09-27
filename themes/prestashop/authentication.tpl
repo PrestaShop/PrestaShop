@@ -130,7 +130,7 @@ $(function(){ldelim}
 				{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
 				<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
 			</p>
-			<p class="lost_password"><a href="{$link->getPageLink('password')}', ">{l s='Forgot your password?'}</a></p>
+			<p class="lost_password"><a href="{$link->getPageLink('password')}">{l s='Forgot your password?'}</a></p>
 		</fieldset>
 	</form>
 	{if isset($inOrderProcess) && $inOrderProcess && $PS_GUEST_CHECKOUT_ENABLED}
