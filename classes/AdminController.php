@@ -7,7 +7,7 @@ class AdminControllerCore extends Controller
 	public $warnings;
 
 	public $content_only = false;
-	public $layout = 'index.tpl';
+	public $layout = 'layout.tpl';
 
 	public $template = '';
 
@@ -141,7 +141,7 @@ class AdminControllerCore extends Controller
 					$this->{'displayAjax'.$action}();
 				else
 				$this->displayAjax();
-						
+
 		}
 	}
 
