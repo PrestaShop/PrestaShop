@@ -29,7 +29,7 @@
  * Twenga module allow to use the Twenga API to :
  * 1. subscribe to their Ready to Sell engine,
  * 2. activate a tracking for order process if user has been used twenga engine,
- * 3. submit a xml feed of shop products to Twenga. 
+ * 3. submit a xml feed of shop products to Twenga.
  * @author Nans Pellicari - Prestashop
  * @version 1.3
  */
@@ -44,7 +44,7 @@ class Twenga extends PaymentModule
 	 * @var string
 	 */
 	private static $base_dir;
-	
+
 	/**
 	 * Url path to access of module file.
 	 * @var string
@@ -54,53 +54,53 @@ class Twenga extends PaymentModule
 	 * @var TwengaObj
 	 */
 	private static $obj_twenga;
-	
+
 	/**
 	 * @var PrestashopStats
 	 */
 	private static $obj_ps_stats;
-	
+
 	/**
 	 * @var string url used for the subscription to Twenga and prestashop
-	 */ 
+	 */
 	private $site_url;
-	
+
 	/**
 	 * @var string url to acces of the product list for Twenga
 	 */
 	private $feed_url;
-	
+
 	/**
 	 * @var string url returned by Twenga API
 	 */
 	private $inscription_url;
-	
+
 	/**
 	 * @var string used for displaying html
 	 */
 	private $_html;
-	
+
 	/**
 	 * @var string
 	 */
 	private $current_index;
-	
+
 	/**
 	 * @var string
 	 */
 	private $token;
-	
+
 	/**
 	 * Countries where Twenga works.
 	 * need to be in lowercase
 	 * @var array
 	 */
 	public $limited_countries = array('fr', 'de', 'gb', 'uk', 'it', 'es', 'nl');
-	
+
 	private $_allowToWork = true;
 
 	private $_currentIsoCodeCountry = NULL;
-	
+
 	const ONLY_PRODUCTS = 1;
 	const ONLY_DISCOUNTS = 2;
 	const BOTH = 3;
@@ -108,7 +108,7 @@ class Twenga extends PaymentModule
 	const ONLY_SHIPPING = 5;
 	const ONLY_WRAPPING = 6;
 	const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
-	
+
 	/**
 	 * The current country iso code for the shop.
 	 * @var string
@@ -123,9 +123,9 @@ class Twenga extends PaymentModule
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
 	 	$this->version = '1.8';
-		
+
 	 	parent::__construct();
-	
+
 		$this->displayName = $this->l('Twenga API');
 		$this->description = $this->l('Module role: export of your products on Twenga and installation of the sales tracking brought by Twenga (requires sign up to Twenga)');
 
@@ -137,15 +137,15 @@ class Twenga extends PaymentModule
 		self::$base_dir = _PS_ROOT_DIR_.'/modules/twenga/';
 		self::$base_path = $this->site_url.'/modules/twenga/';
 		$this->feed_url = self::$base_path.'export.php?twenga_token='.sha1(Configuration::get('TWENGA_TOKEN')._COOKIE_KEY_);
-		
+
 		self::$shop_country = $this->context->country->iso_code;
-		
+
 		require_once realpath(self::$base_dir.'/lib/PrestashopStats.php');
 		require_once realpath(self::$base_dir.'/lib/TwengaObj.php');
-		
-		// set the base dir to load files needed for the TwengaObj class 
+
+		// set the base dir to load files needed for the TwengaObj class
 		TwengaObj::$base_dir = self::$base_dir.'/lib';
-		
+
 		TwengaObj::setTranslationObject($this);
 		TwengaException::setTranslationObject($this);
 		if (!in_array(strtolower(self::$shop_country), $this->limited_countries))
@@ -154,7 +154,7 @@ class Twenga extends PaymentModule
 			$this->warning = $this->l('Twenga module works only in specific countries (iso code list:').' '.implode(', ',$this->limited_countries).').';;
 			return false;
 		}
-		
+
 		// instanciate (just once) the TwengaObj and PrestashopStats
 		if (self::$obj_twenga === NULL)
 			self::$obj_twenga = new TwengaObj();
@@ -162,7 +162,7 @@ class Twenga extends PaymentModule
 			self::$obj_ps_stats = new PrestashopStats($this->site_url);
 		$this->_initCurrentIsoCodeCountry();
 	}
-	
+
 	public function install()
 	{
 		if (Configuration::updateValue('TWENGA_TOKEN', Tools::passwdGen()))
@@ -170,7 +170,7 @@ class Twenga extends PaymentModule
 		else
 			return false;
 	}
-	
+
 	/**
 	 * For uninstall just need to delete the Merchant Login.
 	 * @return bool see parent class.
@@ -190,7 +190,7 @@ class Twenga extends PaymentModule
 			FROM '._DB_PREFIX_.'country as c
 			LEFT JOIN '._DB_PREFIX_.'country_lang as c_l
 			ON c_l.id_country = c.id_country
-			WHERE c_l.id_lang = '.(int)$this->context->language->id.' 
+			WHERE c_l.id_lang = '.(int)$this->context->language->id.'
 			AND c.id_country = '.(int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		if (isset($country[0]['iso']))
@@ -198,14 +198,14 @@ class Twenga extends PaymentModule
 	}
 
 	public function ajaxRequestType()
-	{	
+	{
 		if (isset($_POST) && isset($_POST['type']) && isset($_POST['base']))
 		{
 			$link = 'http://addons.prestashop.com/'.Language::getIsoById($_POST['id_lang']).
 				'/2053-twenga-ready-to-sell.html';
 
-			$type = (($_POST['type'] == 'desactive') ? $this->l('Disable') : 
-				(($_POST['type'] == 'reset') ? $this->l('Reset') : 
+			$type = (($_POST['type'] == 'desactive') ? $this->l('Disable') :
+				(($_POST['type'] == 'reset') ? $this->l('Reset') :
 				(($_POST['type'] == 'uninstall') ? $this->l('Uninstall') : $this->l('Delete'))));
 
 			if ($_POST['type'] == 'delete')
@@ -213,7 +213,7 @@ class Twenga extends PaymentModule
 			$url = $_POST['base'].'&token='.$_POST['token'].'&module_name='.
 				$_POST['module_name'].'&tab_module='.$_POST['tab_module'].'&'.
 				$_POST['type'].'='.$_POST['module_name'];
-			
+
 			$msg = '
 				<style>
 					#mainContent {
@@ -231,12 +231,12 @@ class Twenga extends PaymentModule
 				'<br /><br />'.$this->l('If there\'s a problem, uninstall this module, install the newer version here and enter the Twenga hashkey again and log in.').'
 				<br /><br />'.$this->l('To unsubscribe or for any question, please contact Twenga on your account.').'
 				<div style="margin: 10px 0 5px 0; font-size:14px; color:#FFF; text-align:center;">
-				<b><a '.(($_POST['type'] == 'uninstall') ? 
-				'onClick="$.fancybox.close(); window.location=\''.$url.'\' '. 
-				$this->_getAjaxScript('send_mail.php', $_POST['type'], $url, false).'"' : ' ') . 
-				'href="'.$url.'">'.$type.'</a></b>  - 
-				<b><a href="'.$link.'">'.
-				$this->l('Newer version').'</a></b> - 
+				<b><a '.(($_POST['type'] == 'uninstall') ?
+				'onClick="$.fancybox.close(); window.location=\''.Tools::safeOutput($url).'\' '.
+				$this->_getAjaxScript('send_mail.php', Tools::safeOutput($_POST['type']), Tools::safeOutput($url), false).'"' : ' ') .
+				'href="'.Tools::safeOutput($url).'">'.Tools::safeOutput($type).'</a></b>  -
+				<b><a href="'.Tools::safeOutput($link).'">'.
+				$this->l('Newer version').'</a></b> -
 				<b><a href="javacript:void(0);"i onclick="$.fancybox.close(); return false;">'.
 				$this->l('Cancel').'</a></b>
 				</div></p>';
@@ -290,7 +290,7 @@ class Twenga extends PaymentModule
 		}
 		return $content;
 	}
-	
+
 	/**
 	 * Method for beeing redirected to Twenga subscription
 	 */
@@ -324,10 +324,10 @@ class Twenga extends PaymentModule
 			$this->_errors[] = $this->l('Your user name is invalid. Please check the e-mail already sent by Twenga.');
 		if (!self::$obj_twenga->setPassword($_POST['twenga_password']))
 			$this->_errors[] = $this->l('Your password is invalid. Please check the e-mail already sent by Twenga.');
-		
+
 		if(empty($this->_errors))
 		{
-			$bool_save = false; 
+			$bool_save = false;
 			try{
 				$bool_save = self::$obj_twenga->saveMerchantLogin();
 				self::$obj_ps_stats->validateSubscription();
@@ -345,7 +345,7 @@ class Twenga extends PaymentModule
 	private function submitTwengaActivateTracking()
 	{
 		$activate = false;
-		
+
 		// Use TwengaObj::siteActivate() method to activate tracking.
 		try {
 		   $activate = self::$obj_twenga->siteActivate();
@@ -393,7 +393,7 @@ class Twenga extends PaymentModule
 	{
 		if ($this->_allowToWork == false)
 			return;
-			
+
 		if((float)$params['order']->total_products_wt <= 0)
 		{
 			$cart = new Cart($params['order']->id_cart);
@@ -420,7 +420,7 @@ class Twenga extends PaymentModule
 	{
 		if ($this->_allowToWork == false)
 			return;
-			
+
 		if( (int)$params['newOrderStatus']->unremovable === 1
 		&& (int)$params['newOrderStatus']->logable === 1
 		&& (int)$params['newOrderStatus']->delivery === 0)
@@ -451,21 +451,21 @@ class Twenga extends PaymentModule
 	{
 		if ($this->_allowToWork == false)
 			return;
-			
+
 		// One page Checkout cause problem with event and document.write use by twenga script
 		// (page completely deleted
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			return ;
-			
+
 		$customer = new Customer($params['cart']->id_customer);
 		$currency = new Currency($params['cart']->id_currency);
 		$address = $customer->getAddresses($params['cart']->id_lang);
 		$address = $address[0];
-		
+
 		// for 1.3 compatibility
 		$type_both = 3;
 		$type_only_shipping = 5;
-		
+
 		/*		const ONLY_PRODUCTS = 1;
 		const ONLY_DISCOUNTS = 2;
 		const BOTH = 3;
@@ -476,12 +476,12 @@ class Twenga extends PaymentModule
 		*/
 		$tva = $params['cart']->getOrderTotal(true, $type_both)-$params['cart']->getOrderTotal(false, $type_both);
 		$tax = ($tva * 100) / $params['cart']->getOrderTotal(true, $type_both);
-		
+
 		$params_to_twenga = array();
 		// @todo delete or not ??
 //		$params_to_twenga['user_id'] = $customer->id;
 //		$params_to_twenga['cli_email'] = $customer->email;
-		
+
 		$params_to_twenga['total_ht'] = $params['cart']->getOrderTotal(false, Twenga::ONLY_PRODUCTS_WITHOUT_SHIPPING);
 		$params_to_twenga['basket_id'] = $params['cart']->id;
 		$params_to_twenga['currency'] = $currency->iso_code;
@@ -506,9 +506,9 @@ class Twenga extends PaymentModule
 			$params_to_twenga['items'][] = $arr_item;
 		}
 		$params_to_twenga = array_filter($params_to_twenga);
-		
+
 		try {
-			// twenga don't saved double orders with the same id, 
+			// twenga don't saved double orders with the same id,
 			// so don't need to use TwengaObj::orderExist() method.
 			$tracking_code = self::$obj_twenga->getTrackingScript($params_to_twenga);
 			return $tracking_code;
@@ -518,13 +518,13 @@ class Twenga extends PaymentModule
 			return $e->getMessage();
 		}
 	}
-	
+
 	/*
 	 ** Get the current country name used literaly
 	 */
 	public static function getCurrentCountryName()
 	{
-		$id_lang = ((isset(Context::getContext()->language->id)) ? Context::getContext()->language->id : 
+		$id_lang = ((isset(Context::getContext()->language->id)) ? Context::getContext()->language->id :
 			((isset($_POST['id_lang'])) ? $_POST['id_lang'] : NULL));
 
 		if ($id_lang === NULL)
@@ -532,9 +532,9 @@ class Twenga extends PaymentModule
 		$country = Db::getInstance()->ExecuteS('
 			SELECT c.name as name
 			FROM '._DB_PREFIX_.'country_lang as c
-			WHERE c.id_lang = '.$id_lang.' 
+			WHERE c.id_lang = '.$id_lang.'
 			AND c.id_country = '.	Configuration::get('PS_COUNTRY_DEFAULT'));
-	
+
 		if (!isset($country[0]['name']))
 			$country[0]['name'] = 'Undefined';
 		return $country[0]['name'];
@@ -552,8 +552,8 @@ class Twenga extends PaymentModule
 				FROM '._DB_PREFIX_.'country_lang as c_l
 				LEFT JOIN '._DB_PREFIX_.'country as c
 				ON c_l.id_country = c.id_country
-				WHERE c_l.id_lang = '.(int)$this->context->language->id.' 
-				AND c.iso_code IN ('; 
+				WHERE c_l.id_lang = '.(int)$this->context->language->id.'
+				AND c.iso_code IN (';
 			foreach($this->limited_countries as $iso)
 				$query .= "'".strtoupper($iso)."', ";
 			$query = rtrim($query, ', ').')';
@@ -600,7 +600,7 @@ class Twenga extends PaymentModule
 		$this->_html .= '<h2>'.$this->displayName.'</h2>';
 		$this->_html .= $this->displayTwengaIntro();
 		$this->_html .= $this->displayTwengaLogin();
-		
+
 		if((self::$obj_twenga->getHashKey() === NULL || self::$obj_twenga->getHashKey() === '')
 		|| (self::$obj_twenga->getUserName() === NULL || self::$obj_twenga->getUserName() === '')
 		|| (self::$obj_twenga->getPassword() === NULL || self::$obj_twenga->getPassword() === '')
@@ -614,9 +614,9 @@ class Twenga extends PaymentModule
 		}
 		return $this->displayErrors().$this->_html;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public function displayTwengaIntro()
 	{
@@ -632,19 +632,19 @@ class Twenga extends PaymentModule
 		if (!empty($errors))
 		{
 			$str_error = $this->l('Errors occurred with the Twenga API subscription link:');
-			$str_error .=  '<ol>'; 
+			$str_error .=  '<ol>';
 			foreach ($errors as $error)
 				$str_error .= '<li><em>'.$error.'</em></li>';
 			$str_error .= '</ol>';
 			$this->_errors[] = $str_error;
 		}
-		
+
 		$defaultIsoCountry = strtolower($this->_currentIsoCodeCountry);
 		if ($defaultIsoCountry == 'gb')
 			$tarifs_link = 'https://rts.twenga.com/media/prices_uk.jpg';
 		else
 			$tarifs_link = 'https://rts.twenga.com/media/prices_'.$defaultIsoCountry.'.jpg';
-		
+
 		$isoUser = strtolower($this->context->language->iso_code);
 
 		$tarif_arr = array(950, 565);
@@ -668,7 +668,7 @@ class Twenga extends PaymentModule
 				</div>'
 				.'<p><strong>'.$this->l('You have already signed up to Twenga Ready to Sell ?').'</strong></p>'
 				.'<ul>'
-					.'<li>'.$this->l('Step 1: Retrieve your Twenga hashkey from your Twenga Ready to Sell account (tools>tracking>hashkey). Also click on "Test the tracking".');			
+					.'<li>'.$this->l('Step 1: Retrieve your Twenga hashkey from your Twenga Ready to Sell account (tools>tracking>hashkey). Also click on "Test the tracking".');
 				$str_return .='
 					<li>'.$this->l('Step 2: Come back here and paste it in the "hash key" field. Click on Save and Activate.').'</li>
 				</ul>
@@ -679,7 +679,7 @@ class Twenga extends PaymentModule
 			$str_return .= '&nbsp;<a href="'.$this->inscription_url.'" target="_blank" class="link">&raquo;'.$this->l('Subscribe').'&laquo;</a>'.'</li>';
 		else
 			$str_return .= '&nbsp;<em style="color:red;">'.$this->l('Error(s) occurred: please contact Twenga').'</em>';
-			
+
 				$str_return .='
 					<li>'.$this->l('Step 2: Fill in the Twenga sign up form').'</li>
 					<li>'.$this->l('Step 3: When you receive the Twenga hash-key by e-mail, come back here and paste it in the "hash key" field. Click on Save and Activate.').'</li>
@@ -692,11 +692,11 @@ class Twenga extends PaymentModule
 				<p>'.$this->l('Get your products listed on Twenga for free : only pay when you sell !').'</p>
 				<p><a href="'.$tarifs_link.'" class="link" id="twenga_tarif">'.$this->l('Twenga Prices').'</a></p>
 			</fieldset>
-			
+
 			<br />';
 		return $str_return;
 	}
-	
+
 	/**
 	 * @return string html form for log to Twenga API.
 	 */
@@ -709,7 +709,7 @@ class Twenga extends PaymentModule
 			$lost_link = 'https://rts.twenga.'.$isoUser.'/lost_password';
 
 		return '
-		<form name="form_set_hashkey" action="" method="post">	
+		<form name="form_set_hashkey" action="" method="post">
 			<fieldset>
 				<legend><img src="../modules/'.$this->name.'/logo.gif" class="middle" /> '.$this->l('Installation of Sales Tracking').'</legend>'
 				.((self::$obj_twenga->getHashKey() === NULL || self::$obj_twenga->getHashKey() === '') ?
@@ -732,7 +732,7 @@ class Twenga extends PaymentModule
 			</fieldset>
 			</form><br />';
 	}
-	
+
 	/**
 	 * Subscription form need to be pre-filled.
 	 * @return string the html form for subscription
@@ -826,7 +826,7 @@ class Twenga extends PaymentModule
 		</fieldset>
 		</form>';
 	}
-	
+
 	/**
 	 * @return string html form for activate or disable the Twenga tracking
 	 */
@@ -842,7 +842,7 @@ class Twenga extends PaymentModule
 				</div>
 			</fieldset>
 		</form>';
-		
+
 		if($this->isRegisteredInHook('payment')
 		&& $this->isRegisteredInHook('updateOrderStatus')
 		&& $this->isRegisteredInHook('cancelProduct'))
@@ -851,7 +851,7 @@ class Twenga extends PaymentModule
 			$str = sprintf($str, $this->l('Activate Tracking'), $this->l('To activate tracking, click on the following button :'), 'submitTwengaActivateTracking', $this->l('Activate'));
 		return $str;
 	}
-	
+
 	/**
 	 * Just set in one method the displaying error message in Prestashop back-office.
 	 */
@@ -867,7 +867,7 @@ class Twenga extends PaymentModule
 		}
 		return $string;
 	}
-	
+
 	/**
 	 * Used by export.php to build the feed required by Twenga.
 	 * See detailed comments in the body of the method
@@ -895,11 +895,11 @@ class Twenga extends PaymentModule
 		{
 			return $this->displayErrors();
 		}
-		
+
 		// Now method build the XML
 		$xmlstr = '<?xml version="1.0" encoding="utf-8"?><catalog></catalog>';
 		$xml = new SimpleXMLElement($xmlstr);
-		
+
 		$parameters = Configuration::getMultiple(array('PS_REWRITING_SETTINGS', 'PS_LANG_DEFAULT', 'PS_SHIPPING_FREE_PRICE', 'PS_SHIPPING_HANDLING', 'PS_SHIPPING_METHOD', 'PS_SHIPPING_FREE_WEIGHT', 'PS_COUNTRY_DEFAULT'));
 		$lang = (int)$parameters['PS_LANG_DEFAULT'];
 		$language = new Language($lang);
@@ -907,32 +907,32 @@ class Twenga extends PaymentModule
 		$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), $language->id);
 
 		$link = new Link();
-		
+
 		$result = Db::getInstance()->ExecuteS('
 		SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `active` = 1');
-		
+
 		foreach ($result AS $k => $row)
 		{
 			$product = new Product((int)$row['id_product']);
-			
+
 			if (Validate::isLoadedObject($product) AND $product->active)
 			{
 				// Check if product declinations exist.
 				$combinations = $this->getCombinations($product, $lang);
-				
+
 				// Set an empty value even no combinations was found to make foreach usable.
 				if(empty($combinations))
 					$combinations[] = array();
-				
+
 				foreach ($combinations as $combination)
 				{
 					// prepared values before insert it in node structure.
 					// In this way we can structure code with checking method and displaying method for more lisibility.
 					$product_values = $this->preparedValues($product, $combination, $lang, $link, $carrier);
-					
+
 					// create the product node for each products and declinations
 					$product_node = $xml->addChild('product', '');
-					
+
 					// required Fields
 					$product_node->addChild('product_url', $product_values['product_url']);
 					$product_node->addChild('designation', '<![CDATA['.$product_values['designation'].']]>');
@@ -941,7 +941,7 @@ class Twenga extends PaymentModule
 					$product_node->addChild('image_url', $product_values['image_url']);
 					$product_node->addChild('description', '<![CDATA['.$product_values['description'].']]>');
 					$product_node->addChild('brand', $product_values['brand']);
-					
+
 					// optionnals fields
 					$product_node->addChild('merchant_id', $product_values['merchant_id']);
 					$product_node->addChild('manufacturer_id', $product_values['manufacturer_id']);
@@ -975,7 +975,7 @@ class Twenga extends PaymentModule
 		$str_features = array();
 		$model = array();
 		$version = str_replace('.', '', _PS_VERSION_);
-		
+
 		// To build description and model tags.
 		if(isset($combination['attributes']))
 		{
@@ -989,11 +989,11 @@ class Twenga extends PaymentModule
 			$str_features[] = 'weight : '.$combination['weight'];
 		else if ($product->weight !== 0)
 			$str_features[] = 'weight : '.$product->weight;
-		
+
 		$features = $product->getFrontFeatures($lang);
 		foreach ($features as $feature)
 			$str_features[] = $feature['name'].' : '.$feature['value'];
-		
+
 		// Category tag
 		$category = new Category((int)$product->id_category_default, $lang);
 		$category_path = ((isset($category->id) AND $category->id) ? Tools::getFullPath((int)($category->id), $product->name[$lang]) : Tools::getFullPath((int)($product->id_category_default), $product->name[$lang]));
@@ -1005,18 +1005,18 @@ class Twenga extends PaymentModule
 			$image = $product->getCover((int)$product->id);
 			$id_image = $image['id_image'];
 		}
-		
+
 		$quantity = Product::getQuantity($product->id, (isset($combination['id_combination']) ? $combination['id_combination'] : NULL));
-		
+
 		$condition = '';
 		 if(strlen((string)$version) < 2)
 			 $version = (string)$version.'0';
 		if((int)substr($version, 0, 2) >= 14)
 			$condition = (($product->condition === 'new') ? 0 : 1);
-		
+
 		$price = $product->getPrice(true, (isset($combination['id_combination']) ? $combination['id_combination'] : NULL), 2);
 		$upc_ean = strlen((string)$product->ean13) == 13 ? $product->ean13 : '';
-		
+
 		$arr_return['product_url'] = $link->getProductLink((int)$product->id, $product->link_rewrite[$lang], $product->ean13, $lang);
 		$arr_return['designation'] = Tools::htmlentitiesUTF8($product->name[$lang].' '.Manufacturer::getNameById($product->id_manufacturer).' '.implode(' ', $model));
 		$arr_return['price'] = $price;
@@ -1031,8 +1031,8 @@ class Twenga extends PaymentModule
 		}
 		else
 		$arr_return['image_url'] = $link->getImageLink($product->link_rewrite[$lang], $product->id.'-'.$id_image, 'large');
-		
-		
+
+
 		// Must description added since Twenga-module v1.1
 		$arr_return['description'] = is_array($product->description) ? strip_tags($product->description[$lang]) : strip_tags($product->description);
 		$arr_return['description'] = trim($arr_return['description'].' '.strip_tags(implode(', ', $str_features)));
@@ -1046,18 +1046,18 @@ class Twenga extends PaymentModule
 		$arr_return['condition'] = $condition;
 		$arr_return['upc_ean'] = $upc_ean;
 		$arr_return['eco_tax'] = $product->ecotax;
-		
+
 		// for prestashop 1.4 and previous version these fields are not managed.
 		// So default values are set.
 		$arr_return['product_type'] = '1';
 		$arr_return['isbn'] = '';
-		
+
 		return $arr_return;
 	}
 	/**
 	 * @param Product $product
 	 * @param int $lang id of a language
-	 * @return array of a product declinations. 
+	 * @return array of a product declinations.
 	 */
 	private function getCombinations(Product $product, $lang)
 	{
@@ -1068,7 +1068,7 @@ class Twenga extends PaymentModule
 			$combinationImages = $product->getCombinationImages((int)$lang);
 			foreach ($attributesGroups AS $k => $row)
 			{
-				$combinations[$row['id_product_attribute']]['id_combination'] = $row['id_product_attribute']; 
+				$combinations[$row['id_product_attribute']]['id_combination'] = $row['id_product_attribute'];
 				$combinations[$row['id_product_attribute']]['attributes'][$row['id_attribute_group']] = array('name'=>$row['attribute_name'], 'group_name'=>$row['public_group_name'], 'id_attribute'=>(int)$row['id_attribute']);
 				$combinations[$row['id_product_attribute']]['price'] = (float)($row['price']);
 				$combinations[$row['id_product_attribute']]['ecotax'] = (float)($row['ecotax']);

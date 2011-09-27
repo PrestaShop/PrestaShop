@@ -85,7 +85,7 @@ class iAdvize extends Module
 				<br />
 				<a href="http://www.iadvize.com/offre_prestashop.html" target="_blank">'.$this->l('For more information, click here').'</a>
 			</p>
-			<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 				<fieldset class="width2">
 					<legend><img src="../img/admin/cog.gif" alt="" class="middle" />'.$this->l('Settings').'</legend>
 					<label>'.$this->l('iAdvize merchant ID:').'</label>

@@ -10,7 +10,10 @@
 	require_once('../init.php');
 	require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "inc" . DIRECTORY_SEPARATOR . "config.php");
 	@ob_start();
-	displayArray($_POST);
+	$safe_post = array();
+	foreach ($_POST AS $key => $value)
+		$safe_post[Tools::safeOutput($key)] = Tools::safeOutput($value);
+	displayArray($safe_post);
 	writeInfo(@ob_get_clean());
 	echo "{";
 	$error = "";

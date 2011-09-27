@@ -105,7 +105,7 @@
 	<fieldset id="modes">
 		<legend>Modes</legend>
 		<form name="formAction" id="formAction" method="post" action="<?php echo appendQueryString(CONFIG_URL_IMAGE_UNDO, makeQueryString(array('path'))); ?>">
-			<input type="hidden" name="file_path" id="file_path" value="<?php echo $_GET['path']; ?>" />
+			<input type="hidden" name="file_path" id="file_path" value="<?php echo Tools::safeOutput($_GET['path']); ?>" />
 			
 			<p><label><?php echo IMG_MODE_RESIZE; ?></label> <input type="radio" name="mode" value="resize" class="input" checked="checked"  onclick="return changeMode();"/>
 			<label><?php echo IMG_MODE_CROP; ?></label> <input type="radio" name="mode" value="crop" class="input" onclick="return changeMode();" />
@@ -131,7 +131,7 @@
 			<p><input type="hidden" name="mode" id="image_mode" value="" />
       <input type="hidden" name="new_name" id="hidden_new_name" value="" />
       <input type="hidden" name="save_to" id="hidden_save_to" value="" />
-			<input type="hidden" name="path" id="path" value="<?php echo $_GET['path']; ?>"  />
+			<input type="hidden" name="path" id="path" value="<?php echo Tools::safeOutput($_GET['path']); ?>"  />
 			<input type="hidden" name="flip_angle" id="flip_angle" value="" />
 			<label><?php echo IMG_LBL_WIDTH; ?></label> <input type="text" name="width" id="width" value="" class="input imageInput"  />
 			<label><?php echo IMG_LBL_HEIGHT; ?></label> <input type="text" name="height" id="height" value="" class="input imageInput" />

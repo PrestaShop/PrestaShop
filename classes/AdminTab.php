@@ -844,7 +844,7 @@ abstract class AdminTabCore
 								if (!Validate::isDate($value[0]))
 									$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
 								else
-									$sqlFilter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+									$sqlFilter .= ' AND `'.bqSQL($key).'` >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
 							}
 
 							if (isset($value[1]) AND !empty($value[1]))
@@ -852,7 +852,7 @@ abstract class AdminTabCore
 								if (!Validate::isDate($value[1]))
 									$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
 								else
-									$sqlFilter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+									$sqlFilter .= ' AND `'.bqSQL($key).'` <= \''.pSQL(Tools::dateTo($value[1])).'\'';
 							}
 						}
 						else

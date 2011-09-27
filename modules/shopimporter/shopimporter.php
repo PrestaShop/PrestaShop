@@ -701,7 +701,7 @@ class shopimporter extends ImportModule
 			{
 				$this->saveMatchId(strtolower($className), (int)$object->id, (int)$id);
 				if ($className == 'Customer')
-					Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET passwd_'.Tools::getValue('moduleName').' = \''.$password.'\' WHERE id_customer = '.(int)$object->id);
+					Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `passwd_'.bqSQL(Tools::getValue('moduleName')).'̀  = \''.pSQL($password).'\' WHERE id_customer = '.(int)$object->id);
 				if (array_key_exists('hasImage', $this->supportedImports[strtolower($className)]) AND Tools::isSubmit('images_'.$className))
 					$this->copyImg($item, $className);
 			}
@@ -795,7 +795,7 @@ class shopimporter extends ImportModule
 								$associatFields .= (int)$match[$association['fields'][1]][$v].'), ';
 							}
 				if ($associatFields != '')
-					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.pSQL($tableAssociation).'` (`'.$associatFieldsName.'`) VALUES '.rtrim($associatFields, ', '));
+					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.bqSQL($tableAssociation).'` (`'.$associatFieldsName.'`) VALUES '.rtrim($associatFields, ', '));
 			}
 		}
 	}
@@ -805,7 +805,7 @@ class shopimporter extends ImportModule
 		$table = $this->supportedImports[$className]['table'];
 		$moduleName = Tools::getValue('moduleName');
 		$identifier = $this->supportedImports[$className]['identifier'];
-		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.pSQL($table).' SET `'.pSQL($identifier).'_'.pSQL($moduleName).'` =  '.(int)$matchId.' WHERE `'.pSQL($identifier).'` = '.(int)$psId);
+		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.bqSQL($table).'` SET `'.bqSQL($identifier).'_'.bqSQL($moduleName).'` =  '.(int)$matchId.' WHERE `'.bqSQL($identifier).'` = '.(int)$psId);
 	}
 
 	private function getMatchId($className)
@@ -813,7 +813,7 @@ class shopimporter extends ImportModule
 		$table = $this->supportedImports[$className]['table'];
 		$moduleName = Tools::getValue('moduleName');
 		$identifier = $this->supportedImports[$className]['identifier'];
-		$returns = Db::getInstance()->ExecuteS('SELECT `'.pSQL($identifier).'_'.pSQL($moduleName).'`, `'.pSQL($identifier).'` FROM '._DB_PREFIX_.pSQL($table).' WHERE `'.pSQL($identifier).'_'.pSQL($moduleName).'` != 0 ');
+		$returns = Db::getInstance()->ExecuteS('SELECT `'.bqSQL($identifier).'_'.bqSQL($moduleName).'`, `'.bqSQL($identifier).'` FROM `'._DB_PREFIX_.bqSQL($table).'` WHERE `'.bqSQL($identifier).'_'.bqSQL($moduleName).'` != 0 ');
 		$match = array();
 		foreach($returns as $return)
 			$match[$return[$identifier.'_'.$moduleName]] = $return[$identifier];
@@ -924,19 +924,19 @@ class shopimporter extends ImportModule
 		$queryTmp = '';
 		$from = $this->supportedImports[$className]['table'];
 		$result = array();
-		$result = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.pSQL($from).'`');
+		$result = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.bqSQL($from).'`');
 		if (!$result)
 			$result = array();
 		foreach ($this->supportedImports[$className]['alterTable'] AS $name => $type)
 		{
 			$moduleName = Tools::getValue('moduleName');
-			Db::getInstance()->ExecuteS("SHOW COLUMNS FROM `"._DB_PREFIX_.pSQL($from)."` LIKE '".pSQL($name).'_'.pSQL($moduleName)."'");
+			Db::getInstance()->ExecuteS("SHOW COLUMNS FROM `"._DB_PREFIX_.bqSQL($from)."` LIKE '".pSQL($name).'_'.pSQL($moduleName)."'");
 			if (!Db::getInstance()->numRows() AND !array_key_exists($name.'_'.$moduleName, $result))
 					$queryTmp .= ' ADD `'.$name.'_'.$moduleName.'` '.$type.' NOT NULL,';
 		}
 		if (!empty($queryTmp))
 		{
-			$query = 'ALTER TABLE  `'._DB_PREFIX_.pSQL($from).'` ';
+			$query = 'ALTER TABLE  `'._DB_PREFIX_.bqSQL($from).'` ';
 			$query .= rtrim($queryTmp, ',');
 			Db::getInstance()->Execute($query);
 		}
@@ -981,7 +981,7 @@ class shopimporter extends ImportModule
 			foreach($this->supportedImports AS $table => $conf)
 				if ($conf['identifier'] == $key2)
 					$from = $this->supportedImports[$table]['table'];
-			$return = Db::getInstance()->ExecuteS('SELECT `'.pSQL($key2).'_'.pSQL($moduleName).'`, `'.pSQL($key2).'` FROM `'._DB_PREFIX_.pSQL($from).'` WHERE `'.pSQL($key2).'_'.pSQL($moduleName).'` != 0');
+			$return = Db::getInstance()->ExecuteS('SELECT `'.bqSQL($key2).'_'.bqSQL($moduleName).'`, `'.bqSQL($key2).'` FROM `'._DB_PREFIX_.bqSQL($from).'` WHERE `'.bqSQL($key2).'_'.bqSQL($moduleName).'` != 0');
 			if (!empty($return))
 				foreach($return AS $name => $val)
 					$match[$key][$val[$key2.'_'.$moduleName]] = $val[$key2];
@@ -993,7 +993,7 @@ class shopimporter extends ImportModule
 	{
 		$id = $this->supportedImports[$table]['identifier'];
 		$moduleName = Tools::getValue('moduleName');
-		$return = Db::getInstance()->ExecuteS('SELECT `'.pSQL($id).'_'.pSQL($moduleName).'`, `'.pSQL($id).'` FROM `'._DB_PREFIX_.pSQL($table).'` WHERE `'.pSQL($id).'_'.pSQL($moduleName).'` != 0');
+		$return = Db::getInstance()->ExecuteS('SELECT `'.bqSQL($id).'_'.bqSQL($moduleName).'`, `'.bqSQL($id).'` FROM `'._DB_PREFIX_.bqSQL($table).'` WHERE `'.bqSQL($id).'_'.bqSQL($moduleName).'` != 0');
 		$match = array();
 		foreach($return AS $name => $val)
 				$match[$val[$id.'_'.$moduleName]] = $val[$id];
@@ -1003,7 +1003,7 @@ class shopimporter extends ImportModule
 	private function getMatchIdLang($order = 1)
 	{
 		$moduleName = Tools::getValue('moduleName');
-		$return = Db::getInstance()->ExecuteS('SELECT `id_lang`, `id_lang_'.pSQL($moduleName).'` FROM `'._DB_PREFIX_.'lang'.'` WHERE `id_lang_'.pSQL($moduleName).'` != 0');
+		$return = Db::getInstance()->ExecuteS('SELECT `id_lang`, `id_lang_'.bqSQL($moduleName).'` FROM `'._DB_PREFIX_.'lang'.'` WHERE `id_lang_'.bqSQL($moduleName).'` != 0');
 		$match = array();
 		foreach($return AS $name => $val)
 			if ((bool)$order)
@@ -1183,7 +1183,7 @@ class shopimporter extends ImportModule
 										{
 											$newId = Language::getIdByIso($iso);
 											Db::getInstance()->Execute('UPDATE  `'._DB_PREFIX_.'lang`
-																		SET  `id_lang_'.pSQL($moduleName).'` =  '.(int)$language['id_lang'].'
+																		SET  `id_lang_'.bqSQL($moduleName).'` =  '.(int)$language['id_lang'].'
 																		WHERE  `id_lang` = '.(int)$newId);
 										}
 									}
@@ -1206,7 +1206,7 @@ class shopimporter extends ImportModule
 			{
 				$newId = Language::getIdByIso($iso);
 				Db::getInstance()->Execute('UPDATE  `'._DB_PREFIX_.'lang`
-											SET  `id_lang_'.pSQL($moduleName).'` =  '.(int)$language['id_lang'].'
+											SET  `id_lang_'.bqSQL($moduleName).'` =  '.(int)$language['id_lang'].'
 											WHERE  `id_lang` = '.(int)$newId);
 			}
 		}
@@ -1290,7 +1290,7 @@ class shopimporter extends ImportModule
 			case 'customer' :
 			case 'zone' :
 			case 'state' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.pSQL($table));
+				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				break;
 		}
 		return true;

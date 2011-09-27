@@ -116,7 +116,7 @@ class StatsRegistrations extends ModuleGraph
 			</p>
 			<p>'.$this->l('Total customer accounts:').' '.$totalRegistrations.'</p>
 			<center>'.$this->engine(array('type' => 'line')).'</center>
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 		</fieldset><br />
 		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Number of customer accounts created').'</h2>

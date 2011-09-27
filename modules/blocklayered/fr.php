@@ -14,7 +14,6 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_b3786b970611c1a3809dd51b630812a
 $_MODULE['<{blocklayered}prestashop>blocklayered_c3ef60194d18cf4026d22051b3a19428'] = 'Indexable :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7c831eb524882fd27ecdab45019d1466'] = 'Utilise cet attribut dans l\'url généré par le module de bloc de navigation à facette';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ccc12c5568381293a27db0232877937b'] = 'Nom du modèle de filtre nécessaire (ne peut être vide)';
-$_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a0'] = 'Catégories';
 $_MODULE['<{blocklayered}prestashop>blocklayered_817c37b9c1f5cd4a450dad384e63e6c7'] = 'Votre filtre';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3185cefd67b575e582063148e4f15860'] = 'a été mis à jour avec succès.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7ccab4d8de5d6b9bb61e99c7bba343ab'] = 'a été ajouté avec succès.';
@@ -35,9 +34,9 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_16349835364cf839e6670b0de7da636
 $_MODULE['<{blocklayered}prestashop>blocklayered_56fc8142961f1f3e9f9ec0c178881b69'] = '(En cours)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_e1e43ed7e0922095a801341dca2f1822'] = 'Indexation des urls terminée';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1c1783101d972ba096fff9756378b0e1'] = 'L\'indexation des urls a échoué';
-$_MODULE['<{blocklayered}prestashop>blocklayered_f83cc9b5e3192cbe1c40ec2effd6cbb4'] = 'Indexation des produits terminée';
-$_MODULE['<{blocklayered}prestashop>blocklayered_638041e8465b00f32e95eeef1d15fc77'] = '(En cours, %s produits à indexer)';
-$_MODULE['<{blocklayered}prestashop>blocklayered_5e123b0351f06875436de2dfde577e19'] = 'Produit d\'indexation a échoué';
+$_MODULE['<{blocklayered}prestashop>blocklayered_e2dd8f544131eaf47a4f722ace7f876b'] = 'Indexation des prix terminée';
+$_MODULE['<{blocklayered}prestashop>blocklayered_7cf7d150dd287df0a8e17eeb4cf2161d'] = '(En cours,% s produits à indexer)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_ceda32b8540dee4f1222cd482a513db8'] = 'L\'Indexation des prix a échouée';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a607dc3941415ecea04bb1eb8a978962'] = 'Modèles de filtres existants';
 $_MODULE['<{blocklayered}prestashop>blocklayered_9923a3739235561cc50eb9446dc1771e'] = 'modèles de filtres sont configurés :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_b718adec73e04ce3ec720dd11a06a308'] = 'ID';

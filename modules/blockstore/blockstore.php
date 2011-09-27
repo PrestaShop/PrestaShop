@@ -102,7 +102,7 @@ class BlockStore extends Module
 	public function getContent()
 	{
 		$output = $this->postProcess().'
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<legend>'.$this->l('Store block configuration').'</legend>';
 		if (Configuration::get('BLOCKSTORE_IMG'))

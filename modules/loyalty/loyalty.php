@@ -258,7 +258,7 @@ class Loyalty extends Module
 			id_language = Number('.$defaultLanguage.');
 		</script>
 		<h2>'.$this->l('Loyalty Program').'</h2>
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>
 				<legend>'.$this->l('Settings').'</legend>
 				

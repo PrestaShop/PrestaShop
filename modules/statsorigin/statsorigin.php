@@ -90,7 +90,7 @@ class StatsOrigin extends ModuleGraph
 			$this->_html .= '
 			<center><p><img src="../img/admin/down.gif" />'. $this->l('Here is the percentage of the 10 most popular referrer websites by which visitors went through to get to your shop.').'</p>
 			'.$this->engine(array('type' => 'pie')).'</center>
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=top"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
 			<div style="overflow-y: scroll; height: 600px;">
 			<center>
 			<table class="table " border="0" cellspacing="0" cellspacing="0">

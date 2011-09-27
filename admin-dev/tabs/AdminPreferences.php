@@ -40,7 +40,7 @@ class AdminPreferences extends AdminTab
 			$taxes[] = array('id' => 0, 'name' => $this->l('None'));
 			foreach (Tax::getTaxes($this->context->language->id) as $tax)
 				$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);
-	
+
 			$order_process_type = array(
 				array(
 					'value' => PS_ORDER_PROCESS_STANDARD,
@@ -51,7 +51,7 @@ class AdminPreferences extends AdminTab
 					'name' => $this->l('One page checkout')
 				)
 			);
-	
+
 			$round_mode = array(
 				array(
 					'value' => PS_ROUND_UP,
@@ -66,7 +66,7 @@ class AdminPreferences extends AdminTab
 					'name' => $this->l('classical')
 				)
 			);
-	
+
 			$cms_tab = array(0 =>
 				array(
 					'id' => 0,
@@ -75,7 +75,7 @@ class AdminPreferences extends AdminTab
 			);
 			foreach (CMS::listCms($this->context->language->id) as $cms_file)
 				$cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
-	
+
 			$fields = array(
 				'PS_SHOP_ENABLE' => array('title' => $this->l('Enable Shop'), 'desc' => $this->l('Activate or deactivate your shop. Deactivate your shop while you perform maintenance on it. Please note that the webservice will not be disabled'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				'PS_MAINTENANCE_IP' => array('title' => $this->l('Maintenance IP'), 'desc' => $this->l('IP addresses allowed to access the Front Office even if shop is disabled. Use a comma to separate them (e.g., 42.24.4.2,127.0.0.1,99.98.97.96)'), 'validation' => 'isGenericName', 'type' => 'maintenance_ip', 'size' => 30, 'default' => ''),
@@ -103,17 +103,17 @@ class AdminPreferences extends AdminTab
 				'PS_SHOW_NEW_CUSTOMERS' => array('title' => $this->l('Show notifications for new customers'), 'desc' => $this->l('This will display notifications when new customers will register on your shop'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				'PS_SHOW_NEW_MESSAGES' => array('title' => $this->l('Show notifications for new messages'), 'desc' => $this->l('This will display notifications when new messages will be posted on your shop'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 			);
-	
+
 			if (function_exists('date_default_timezone_set'))
 				$fields['PS_TIMEZONE'] = array('title' => $this->l('Time Zone:'), 'validation' => 'isAnything', 'type' => 'select', 'list' => $timezones, 'identifier' => 'name', 'visibility' => Shop::CONTEXT_ALL);
-			
+
 			// No HTTPS activation if you haven't already.
 			if (!Tools::usingSecureMode())
 			{
 				$fields['PS_SSL_ENABLED']['type'] = 'disabled';
-				$fields['PS_SSL_ENABLED']['disabled'] = '<a href="https://'.Tools::getShopDomainSsl().$_SERVER['REQUEST_URI'].'">'.$this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';
+				$fields['PS_SSL_ENABLED']['disabled'] = '<a href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.$this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';
 			}
-				
+
 			$this->optionsList = array(
 				'general' => array(
 					'title' =>	$this->l('General'),
@@ -171,7 +171,7 @@ class AdminPreferences extends AdminTab
 		$uploadMaxSize = (int)str_replace('M', '',ini_get('upload_max_filesize'));
 		$postMaxSize = (int)str_replace('M', '', ini_get('post_max_size'));
 		$maxSize = $uploadMaxSize < $postMaxSize ? $uploadMaxSize : $postMaxSize;
-           
+
 		Configuration::update('PS_ATTACHMENT_MAXIMUM_SIZE', ($maxSize < Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE')) ? $maxSize : Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE'));
 	}
 
@@ -183,14 +183,14 @@ class AdminPreferences extends AdminTab
 		echo '<script type="text/javascript">
 				function addRemoteAddr()
 				{
-					var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;	
+					var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
 					if (length > 0)
 						$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
 					else
 						$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 				}
 			</script>';
-		
+
 		$this->displayOptionTypeText($key, $field, $value);
 		echo (isset($field['next']) ? '&nbsp;'.strval($field['next']) : '');
 		echo ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP').'</a>';

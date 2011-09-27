@@ -50,7 +50,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 					$orderToExport[] = self::getOrderDetails((int)($id));
 				}
 				echo '<form action="http://www.envoimoinscher.com/index.html" method="POST">
-						<input type="hidden" name="url_renvoi" value="'.Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').$_SERVER['REQUEST_URI'].'">
+						<input type="hidden" name="url_renvoi" value="'.Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 						<input type="hidden" name="login" value="'.htmlspecialchars(Configuration::get('EMC_LOGIN'), ENT_COMPAT, 'UTF-8').'">
 						<input type="hidden" name="tracking" value="prestashop_module_v1">';
 				self::inputMaker($orderToExport);
@@ -65,7 +65,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 			else echo '<div class="alert error">
 					   <img src="' . _PS_IMG_ . 'admin/forbbiden.gif" alt="nok" />
 					   '.$emc->lang('No order to export').'</div>
-					   <p><a class="button" href="'.Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').$_SERVER['REQUEST_URI'].'">Retour</a></p>';
+					   <p><a class="button" href="'.Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').Tools::safeOutput($_SERVER['REQUEST_URI']).'">Retour</a></p>';
 		}
 		else
 		{
@@ -73,7 +73,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 			 AND Configuration::get('EMC_ADDRESS') AND Configuration::get('EMC_ZIP_CODE') AND Configuration::get('EMC_CITY') AND Configuration::get('EMC_COUNTRY')
 			 AND Configuration::get('EMC_PHONE') AND Configuration::get('EMC_EMAIL') AND Configuration::get('EMC_LOGIN'))
 			{
-				echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+				echo '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="POST">';
 				$orders = self::getOrders();
 				self::displayOrders($orders);
 				echo '<p><input type="submit" value="'.$emc->lang('Send').'" name="submitExport" class="button" style="margin:10px 0px 0px 25px;"></p>

@@ -117,7 +117,7 @@ class Blocknewsletter extends Module
 	private function _displayForm()
 	{
 		$this->_html .= '
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'">
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Settings').'</legend>
 				<label>'.$this->l('Display configuration in a new page?').'</label>

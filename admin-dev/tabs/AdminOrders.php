@@ -891,7 +891,7 @@ class AdminOrders extends AdminTab
 		$slips = OrderSlip::getOrdersSlip($order->id_customer, $order->id);
 		echo '
 		<div style="float: left">
-			<form action="'.$_SERVER['REQUEST_URI'].'&token='.$this->token.'" method="post" onsubmit="if (getE(\'visibility\').checked == true) return confirm(\''.$this->l('Do you want to send this message to the customer?', __CLASS__, true, false).'\');">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&token='.$this->token.'" method="post" onsubmit="if (getE(\'visibility\').checked == true) return confirm(\''.$this->l('Do you want to send this message to the customer?', __CLASS__, true, false).'\');">
 			<fieldset style="width: 400px;">
 				<legend style="cursor: pointer;" onclick="$(\'#message\').slideToggle();$(\'#message_m\').slideToggle();return false"><img src="../img/admin/email_edit.gif" /> '.$this->l('New message').'</legend>
 				<div id="message_m" style="display: '.(Tools::getValue('message') ? 'none' : 'block').'; overflow: auto; width: 400px;">
@@ -926,7 +926,7 @@ class AdminOrders extends AdminTab
 			{
 				echo '<div style="overflow:auto; width:400px;" '.($message['is_new_for_me'] ?'class="new_message"':'').'>';
 				if ($message['is_new_for_me'])
-					echo '<a class="new_message" title="'.$this->l('Mark this message as \'viewed\'').'" href="'.$_SERVER['REQUEST_URI'].'&token='.$this->token.'&messageReaded='.(int)($message['id_message']).'"><img src="../img/admin/enabled.gif" alt="" /></a>';
+					echo '<a class="new_message" title="'.$this->l('Mark this message as \'viewed\'').'" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&token='.$this->token.'&messageReaded='.(int)($message['id_message']).'"><img src="../img/admin/enabled.gif" alt="" /></a>';
 				echo $this->l('At').' <i>'.Tools::displayDate($message['date_add'], $this->context->language->id, true);
 				echo '</i> '.$this->l('from').' <b>'.(($message['elastname']) ? ($message['efirstname'].' '.$message['elastname']) : ($message['cfirstname'].' '.$message['clastname'])).'</b>';
 				echo ((int)($message['private']) == 1 ? '<span style="color:red; font-weight:bold;">'.$this->l('Private:').'</span>' : '');

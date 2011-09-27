@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -37,13 +37,13 @@ class StatsLive extends Module
         $this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
         parent::__construct();
-		
+
         $this->displayName = $this->l('Visitors online');
         $this->description = $this->l('Display the list of customers and visitors currently online.');
     }
-	
+
 	public function install()
 	{
 		return (parent::install() AND $this->registerHook('AdminStatsModules'));
@@ -51,7 +51,7 @@ class StatsLive extends Module
 
 	/**
 	 * Get the number of online customers
-	 * 
+	 *
 	 * @return array(array, int) array of online customers entries, number of online customers
 	 */
 	private function getCustomersOnline()
@@ -74,7 +74,7 @@ class StatsLive extends Module
 
 	/**
 	 * Get the number of online visitors
-	 * 
+	 *
 	 * @return array(array, int) array of online visitors entries, number of online visitors
 	 */
 	private function getVisitorsOnline()
@@ -101,20 +101,20 @@ class StatsLive extends Module
 					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.$this->sqlShopRestriction(false, 'c').'
-						AND c.`date_add` > "'.date('Y-m-d H:i:s', strtotime('-15 minutes')).'"
+						AND TIME_TO_SEC(TIMEDIFF(NOW(), c.`date_add`)) < 900
 					ORDER BY c.date_add DESC';
 		}
-		
+
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 		return array($results, Db::getInstance()->NumRows());
 	}
-	
+
 	public function hookAdminStatsModules($params)
 	{
 		list($customers, $totalCustomers) = $this->getCustomersOnline();
 		list($visitors, $totalVisitors) = $this->getVisitorsOnline();
 		$irow = 0;
-		
+
 		echo '<script type="text/javascript" language="javascript">
 			$("#calendar").next().remove();
 			$("#calendar").remove();

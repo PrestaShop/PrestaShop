@@ -115,7 +115,7 @@ class Newsletter extends Module
 				$this->_html .= $this->displayConfirmation(
 				$this->l('The .CSV file has been successfully exported.').
 				' ('.$nb.' '.$this->l('customers found').')<br />>
-				<a href="../modules/newsletter/'.strval($_POST['action']).'_'.$this->_file.'"><b>'.$this->l('Download the file').' '.$this->_file.'</b></a>
+				<a href="../modules/newsletter/'.Tools::safeOutput(strval($_POST['action'])).'_'.$this->_file.'"><b>'.$this->l('Download the file').' '.$this->_file.'</b></a>
 				<br />
 				<ol style="margin-top: 10px;">
 					<li style="color: red;">'.$this->l('WARNING: If opening this .csv file with Excel, remember to choose UTF-8 encoding or you may see strange characters.').'</li>
@@ -192,14 +192,14 @@ class Newsletter extends Module
 		</p>
         </fieldset><br />
         <fieldset class="width3"><legend>'.$this->l('Export Newsletter Subscribers').'</legend>
-        <form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+        <form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<input type="hidden" name="action" value="blockNewsletter">
 			'.$this->l('Generate a .CSV file based on BlockNewsletter subscribers data.').'.<br /><br />';
 		$this->_html .= '<br />
 		<center><input type="submit" class="button" name="submitExport" value="'.$this->l('Export .CSV file').'" /></center>
         </form></fieldset><br />
 		<fieldset class="width3"><legend>'.$this->l('Export customers').'</legend>
-        <form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+        <form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<input type="hidden" name="action" value="customers">
 			'.$this->l('Generate a .CSV file from customer account data').'.<br /><br />';
 		foreach ($this->_fieldsExport as $key => $field)

@@ -115,7 +115,7 @@ class BlockWishList extends Module
 		if (!$id_customer)
 			$id_customer = $customers[0]['id_customer'];
 		$this->_html .= '<br />
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post" id="listing">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="listing">
 			<fieldset>
 				<legend><img src="'.$this->_path.'img/icon/package_go.png" alt="" title="" />'.$this->l('Listing').'</legend>
 
@@ -297,7 +297,7 @@ class BlockWishList extends Module
 			$this->_html .= $customer->lastname.' '.$customer->firstname.' '.$this->l('No wishlist.');
 		else
 		{
-			$this->_html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" id="listing">';
+			$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="listing">';
 	
 			$id_wishlist = (int)(Tools::getValue('id_wishlist'));
 			if (!$id_wishlist)

@@ -61,7 +61,7 @@ class BirthdayPresent extends Module
 		$this->_html = '
 		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<p>'.$this->l('Create a voucher for customers celebrating their birthday and having at least one valid order').'</p>
-			<form action="'.$_SERVER['REQUEST_URI'].'" method="post" style="margin-top: 15px;">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="margin-top: 15px;">
 				<label>'.$this->l('Active').'</label>
 				<div class="margin-form">
 					<img src="../img/admin/enabled.gif" /> <input type="radio" name="bp_active" value="1"'.(Configuration::get('BIRTHDAY_ACTIVE') ? ' checked="checked"' : '').' />

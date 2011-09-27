@@ -241,16 +241,16 @@ class ReferralProgram extends Module
 		$currencies = Currency::getCurrencies();
 
 		$this->_html .= '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset class="width3">
 			<legend><img src="'._PS_ADMIN_IMG_.'prefs.gif" alt="'.$this->l('Settings').'" />'.$this->l('Settings').'</legend>
 			<p>
 				<label class="t" for="order_quantity">'.$this->l('Minimum number of orders a sponsored friend must place to get their voucher:').'</label>
-				<input type="text" name="order_quantity" id="order_quantity" value="'.Tools::getValue('order_quantity', Configuration::get('REFERRAL_ORDER_QUANTITY')).'" style="width: 50px; text-align: right;" />
+				<input type="text" name="order_quantity" id="order_quantity" value="'.Tools::safeOutput(Tools::getValue('order_quantity', Configuration::get('REFERRAL_ORDER_QUANTITY'))).'" style="width: 50px; text-align: right;" />
 			</p>
 			<p>
 				<label class="t" for="nb_friends">'.$this->l('Number of friends in the referral program invitation form (customer account, referral program section):').'</label>
-				<input type="text" name="nb_friends" id="nb_friends" value="'.Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS')).'" style="width: 50px; text-align: right;" />
+				<input type="text" name="nb_friends" id="nb_friends" value="'.Tools::safeOutput(Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS'))).'" style="width: 50px; text-align: right;" />
 			</p>
 			<p>
 				<label class="t">'.$this->l('Voucher type:').'</label>
@@ -260,7 +260,7 @@ class ReferralProgram extends Module
 				<input type="radio" name="discount_type" id="discount_type2" value="2" onclick="$(\'#voucherbycurrency\').show(); $(\'#voucherbypercentage\').hide();" '.(Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')) == 2 ? 'checked="checked"' : '').' />
 				<label class="t" for="discount_type2">'.$this->l('Voucher offering a fixed amount (by currency)').'</label>
 			</p>
-			<p id="voucherbypercentage"'.(Configuration::get('REFERRAL_DISCOUNT_TYPE') == 2 ? ' style="display: none;"' : '').'><label class="t">'.$this->l('Percentage:').'</label> <input type="text" id="discount_value_percentage" name="discount_value_percentage" value="'.Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE')).'" style="width: 50px; text-align: right;" /> %</p>
+			<p id="voucherbypercentage"'.(Configuration::get('REFERRAL_DISCOUNT_TYPE') == 2 ? ' style="display: none;"' : '').'><label class="t">'.$this->l('Percentage:').'</label> <input type="text" id="discount_value_percentage" name="discount_value_percentage" value="'.Tools::safeOutput(Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE'))).'" style="width: 50px; text-align: right;" /> %</p>
 			<table id="voucherbycurrency" cellpadding="5" style="border: 1px solid #BBB;'.(Configuration::get('REFERRAL_DISCOUNT_TYPE') == 1 ? ' display: none;' : '').'" border="0">
 				<tr>
 					<th style="width: 80px;">'.$this->l('Currency').'</th>
@@ -271,7 +271,7 @@ class ReferralProgram extends Module
 			$this->_html .= '
 			<tr>
 				<td>'.(Configuration::get('PS_CURRENCY_DEFAULT') == $currency['id_currency'] ? '<span style="font-weight: bold;">' : '').htmlentities($currency['name'], ENT_NOQUOTES, 'utf-8').(Configuration::get('PS_CURRENCY_DEFAULT') == $currency['id_currency'] ? '<span style="font-weight: bold;">' : '').'</td>
-				<td><input type="text" name="discount_value['.(int)($currency['id_currency']).']" id="discount_value['.(int)($currency['id_currency']).']" value="'.Tools::getValue('discount_value['.(int)($currency['id_currency']).']', Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)($currency['id_currency']))).'" style="width: 50px; text-align: right;" /> '.$currency['sign'].'</td>
+				<td><input type="text" name="discount_value['.(int)($currency['id_currency']).']" id="discount_value['.(int)($currency['id_currency']).']" value="'.Tools::safeOutput(Tools::getValue('discount_value['.(int)($currency['id_currency']).']', Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)($currency['id_currency'])))).'" style="width: 50px; text-align: right;" /> '.$currency['sign'].'</td>
 			</tr>';
 			
 		$this->_html .= '
@@ -320,7 +320,7 @@ class ReferralProgram extends Module
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
 			<script language="javascript">id_language = Number('.$defaultLanguage.');</script>
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" enctype="multipart/form-data">
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->l('Conditions of the referral program').'</legend>';
 		foreach ($languages AS $language)

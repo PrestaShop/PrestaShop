@@ -371,7 +371,7 @@ class MoneyBookers extends PaymentModule
 		$this->l('Moneybookers changes its name and becomes Skrill!').'<br /><br />
                 <div style="clear: both;"></div>
 
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-settings">
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-settings">
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Settings').'</legend>
 				<div class="margin-form" style="margin:0; padding:0 0 1em 20px">
@@ -399,7 +399,7 @@ class MoneyBookers extends PaymentModule
 				</div>
 			</fieldset>
 		</form>
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-opening">
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-opening">
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Open Account').'</legend>
 				'.$this->l('Start by opening a').' <b>'.$this->l('free account').'</b> '.$this->l('with Moneybookers:').'
@@ -441,7 +441,7 @@ class MoneyBookers extends PaymentModule
 			</fieldset>
 		</form>
 
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-activation"'.((!Configuration::get('MB_PARAMETERS') AND !isset($_POST['SubmitValidation'])) ? ' style="display: none;"' : '').'>
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-activation"'.((!Configuration::get('MB_PARAMETERS') AND !isset($_POST['SubmitValidation'])) ? ' style="display: none;"' : '').'>
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Account validation').'</legend>
 				'.(Configuration::get('MB_PARAMETERS') == 1 ? '<p style="font-weight: bold; color: green;"><img src="../img/admin/ok.gif" alt="" /> '.$this->l('Your account has been activated').'</p>' : '').'
@@ -452,7 +452,7 @@ class MoneyBookers extends PaymentModule
 			</fieldset>
 		</form>
 
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-secret"'.((!Configuration::get('MB_PARAMETERS') AND !isset($_POST['SubmitSecret'])) ? ' style="display: none;"' : '').'>
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-secret"'.((!Configuration::get('MB_PARAMETERS') AND !isset($_POST['SubmitSecret'])) ? ' style="display: none;"' : '').'>
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Secret word validation').'</legend>
 				'.(Configuration::get('MB_PARAMETERS_2') == 1 ? '<p style="font-weight: bold; color: green;"><img src="../img/admin/ok.gif" alt="" /> '.$this->l('Your secret word has been activated').'</p>' : '').'
@@ -473,7 +473,7 @@ class MoneyBookers extends PaymentModule
 			</fieldset>
 		</form>
 
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" id="form-settings"'.(!Configuration::get('MB_PARAMETERS') ? ' style="display: none;"' : '').'>
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-settings"'.(!Configuration::get('MB_PARAMETERS') ? ' style="display: none;"' : '').'>
 			<style type="text/css">
 				label {
 					width: 300px;

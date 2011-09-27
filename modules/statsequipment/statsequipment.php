@@ -111,10 +111,10 @@ class StatsEquipment extends ModuleGraph
 			<center>
 				<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of web browsers used by your customers.').'</p>
 				'.$this->engine(array('type' => 'pie', 'option' => 'wb')).'<br /><br />
-				<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=browser"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 				<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of operating systems used by your customers.').'</p>
 				'.$this->engine(array('type' => 'pie', 'option' => 'os')).'
-				<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=os"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>';
+				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=os"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>';
 				
 		if ($equipment)
 		{

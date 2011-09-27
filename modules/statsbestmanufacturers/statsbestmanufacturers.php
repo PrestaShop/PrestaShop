@@ -104,7 +104,7 @@ class StatsBestManufacturers extends ModuleGrid
 		$this->_html = '
 		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			'.$this->engine($engineParams).'
-			<br /><a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>
+			<br /><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>
 		</fieldset>';
 		return $this->_html;
 	}

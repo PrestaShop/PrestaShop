@@ -417,10 +417,11 @@ class CartCore extends ObjectModel
 							IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
 							(p.`weight`+ pa.`weight`) weight_attribute,
 							IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
-							pai.`id_image` as pai_id_image, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
+							pai.`id_image` as pai_id_image, il.`legend` as pai_legend, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
 
 			$sql->leftJoin('product_attribute pa ON pa.`id_product_attribute` = cp.`id_product_attribute`');
 			$sql->leftJoin('product_attribute_image pai ON pai.`id_product_attribute` = pa.`id_product_attribute`');
+			$sql->leftJoin('image_lang il ON il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
 		else
 			$sql->select('p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity');
@@ -465,30 +466,29 @@ class CartCore extends ObjectModel
 				$row['price'] = Product::getPriceStatic((int)$row['id_product'], false, (int)$row['id_product_attribute'], 6, NULL, false, true, $row['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL), $specificPriceOutput);
 				$row['price_wt'] = Product::getPriceStatic((int)$row['id_product'], true, (int)$row['id_product_attribute'], 2, NULL, false, true, $row['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
 
-				/* In case when you use QuantityDiscount, getPriceStatic() can be return more of 2 decimals */
+				// In case when you use QuantityDiscount, getPriceStatic() can be return more of 2 decimals
 				$row['price_wt'] = Tools::ps_round($row['price_wt'], 2);
 				$row['total_wt'] = $row['price_wt'] * (int)($row['cart_quantity']);
 				$row['total'] = Tools::ps_round($row['price'] * (int)($row['cart_quantity']), 2);
 			}
 
-			$row2 = Db::getInstance()->getRow('
-			SELECT i.`id_image`, il.`legend`
-			FROM `'._DB_PREFIX_.'image` i
-			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-			WHERE '.((isset($row['`pai_id_image`']) AND $row['`pai_id_image`'])
-				? 'i.`id_image` = (
-				SELECT i2.`id_image`
-					FROM `'._DB_PREFIX_.'image` i2
-					INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai2 ON (pai2.`id_image` = i2.`id_image`)
-					WHERE i2.`id_product` = p.`id_product` AND pai2.`id_product_attribute` = pa.`id_product_attribute`
-					ORDER BY i2.`position`
-					LIMIT 1
-				)'
-				: 'i.`id_product` = '.(int)$row['id_product'].' AND i.`cover` = 1').'
-			');
-			if (!$row2)
-				$row2 = array('id_image' => false, 'legend' => false);
-			$row = array_merge($row, $row2);
+			if (!isset($row['pai_id_image']))
+			{
+				$row2 = Db::getInstance()->getRow('
+				SELECT i.`id_image`, il.`legend`
+				FROM `'._DB_PREFIX_.'image` i
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+					WHERE i.`id_product` = '.(int)$row['id_product'].' AND i.`cover` = 1');
+				if (!$row2)
+					$row2 = array('id_image' => false, 'legend' => false);
+					else
+				$row = array_merge($row, $row2);
+			}
+			else
+			{
+				$row['id_image'] = $row['pai_id_image'];
+				$row['legend'] = $row['pai_legend'];
+			}
 
 			$row['reduction_applies'] = ($specificPriceOutput AND (float)$specificPriceOutput['reduction']);
 			$row['quantity_discount_applies'] = ($specificPriceOutput AND $row['cart_quantity'] >= (int)$specificPriceOutput['from_quantity']);
@@ -500,6 +500,7 @@ class CartCore extends ObjectModel
 
 			$this->_products[] = $row;
 		}
+
 		return $this->_products;
 	}
 

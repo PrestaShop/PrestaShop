@@ -59,7 +59,7 @@ class MondialRelay extends Module
 	{
 		$this->name		= 'mondialrelay';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.7';
+		$this->version	= '1.7.3';
 
 		parent::__construct();
 
@@ -394,13 +394,20 @@ class MondialRelay extends Module
 	** Override a jQuery version included by another one us.
 	** Allow a compatibility for Presta < 1.4
 	*/
-	public static function getJqueryCompatibility()
+	public static function getJqueryCompatibility($overloadCurrent = false)
 	{
+		if ($overloadCurrent)
 		return '
 			<script type="text/javascript">
-				jq13 = jQuery.noConflict(true); 
+					current = jQuery.noConflict(true); 
 			</script>
 			<script type="text/javascript" src="'.self::$moduleURL.'/jquery-1.4.4.min.js"></script>';
+
+		return '
+			<script type="text/javascript" src="'.self::$moduleURL.'/jquery-1.4.4.min.js"></script>
+			<script type="text/javascript">
+				MRjQuery = jQuery.noConflict(true); 
+			</script>';
 	}
 	
 	public function hookNewOrder($params)
@@ -422,7 +429,8 @@ class MondialRelay extends Module
 				var _PS_MR_MODULE_DIR_ = "'.self::$moduleURL.'";
 				var mrtoken = "'.self::$MRBackToken.'";
 			</script>
-			<script type="text/javascript" src="'.$jsFilePath.'"></script>';
+			<script type="text/javascript" src="'.$jsFilePath.'"></script>'.
+			self::getJqueryCompatibility(true);
 	}
 	
 	private function _postValidation()
@@ -625,7 +633,8 @@ class MondialRelay extends Module
 							'one_page_checkout' => (Configuration::get('PS_ORDER_PROCESS_TYPE') ? Configuration::get('PS_ORDER_PROCESS_TYPE') : 0),
 							'new_base_dir' => self::$moduleURL,
 			'MRToken' => self::$MRFrontToken,
-			'carriersextra' => $carriersList));
+			'carriersextra' => $carriersList,
+			'jQueryOverload' => self::getJqueryCompatibility()));
 			
 			return $this->display(__FILE__, 'mondialrelay.tpl');
 		}
@@ -768,7 +777,7 @@ class MondialRelay extends Module
 				Db::getInstance()->Execute('
 				INSERT INTO `' . _DB_PREFIX_ . 'carrier`
 				(`url`, `name`, `active`, `is_module`, `range_behavior`)
-				VALUES(NULL, "'.pSQL('mondialrelay').'", "1", "1", "1")');
+				VALUES(NULL, "'.pSQL('mondialrelay').'", "1", "0", "1")');
 
 			$get   = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'carrier` WHERE `id_carrier` = "' . Db::getInstance()->Insert_ID() . '"');
 			Db::getInstance()->Execute('UPDATE `' . _DB_PREFIX_ . 'mr_method` SET `id_carrier` = "' . (int)($get['id_carrier']) . '" WHERE `id_mr_method` = "' . pSQL($mainInsert) . '"');
@@ -806,7 +815,7 @@ class MondialRelay extends Module
 	{
 		$zones = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "zone WHERE active = 1");
 		$output = '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post" >
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" >
 			<fieldset>
 				<legend><img src="../modules/mondialrelay/images/logo.gif" alt="" />'.$this->l('Add a Shipping Method').'</legend>
 				<ul>
@@ -815,7 +824,7 @@ class MondialRelay extends Module
 					</li>
 					<li>
 						<label for="mr_Name" class="shipLabel">'.$this->l('Carrier\'s name').'<sup>*</sup></label>
-						<input type="text" id="mr_Name" name="mr_Name" '.(Tools::getValue('mr_Name') ? 'value="'.Tools::getValue('mr_Name').'"' : '').'/>
+						<input type="text" id="mr_Name" name="mr_Name" '.(Tools::getValue('mr_Name') ? 'value="'.Tools::safeOutput(Tools::getValue('mr_Name')).'"' : '').'/>
 					</li>
 					<li>
 						<label for="mr_ModeCol" class="shipLabel">'.$this->l('Collection Mode').'<sup>*</sup></label>
@@ -878,7 +887,7 @@ class MondialRelay extends Module
 		WHERE c.`deleted` = 0');
 			
 		$output = '
-		<form action="' . $_SERVER['REQUEST_URI'] . '" method="post">
+		<form action="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '" method="post">
 			<fieldset class="shippingList">
 				<legend><img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Shipping Method\'s list').'</legend>
 				<ol>';
@@ -942,7 +951,7 @@ class MondialRelay extends Module
 		
 		// Check if a request exist and if errors occured, use the post variable
 		if (Tools::isSubmit('PS_MRSubmitFieldPersonalization') && count($this->_postErrors))
-			$addr1 = Tools::getValue('Expe_ad1');
+			$addr1 = Tools::safeOutput(Tools::getValue('Expe_ad1'));
 			
 
 		if (!Configuration::get('PS_MR_SHOP_NAME'))
@@ -950,7 +959,7 @@ class MondialRelay extends Module
 				$this->l('Its seems you updated Mondialrelay without use the uninstall / install method, you have to set up this part to make working the generating ticket process').
 				'</div>';			
 		// Form
-		$form = '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form">';
+		$form = '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form">';
 		$form .= '
 			<fieldset class="PS_MRFormStyle">
 				<legend>
@@ -983,7 +992,7 @@ class MondialRelay extends Module
 	{
 		$this->orderState = Configuration::get('MONDIAL_RELAY_ORDER_STATE');
 	    $output = '';
-		$output .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form">';
+		$output .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form">';
 		$output .= '<fieldset><legend><img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Settings').'</legend>';
 		$output .= '<label for="id_order_state">' . $this->l('Order state') . '</label>';
 		$output .= '<div class="margin-form">';
@@ -1012,7 +1021,7 @@ class MondialRelay extends Module
 	public function settingsForm()
 	{
 		$output = '
-			<form action="' . $_SERVER['REQUEST_URI'] . '" method="post" >
+			<form action="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '" method="post" >
 				<fieldset>
 					<legend><img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Mondial Relay Account Settings').'</legend>
 					<div>
@@ -1025,22 +1034,22 @@ class MondialRelay extends Module
 						<li>
 							<label for="mr_Enseigne_WebService" class="mrLabel">' . $this->l('Webservice Enseigne:') . '<sup>*</sup></label>
 							<input id="mr_Enseigne_WebService" class="mrInput" type="text" name="mr_Enseigne_WebService" value="' .
-							(Tools::getValue('mr_Enseigne_WebService') ? Tools::getValue('mr_Enseigne_WebService') : Configuration::get('MR_ENSEIGNE_WEBSERVICE')) . '"/>
+							(Tools::getValue('mr_Enseigne_WebService') ? Tools::safeOutput(Tools::getValue('mr_Enseigne_WebService')) : Configuration::get('MR_ENSEIGNE_WEBSERVICE')) . '"/>
 						</li>
 						<li>
 							<label for="mr_code_marque" class="mrLabel">' . $this->l('Code marque:') . '<sup>*</sup></label>
 							<input id="mr_code_marque" class="mrInput" type="text" name="mr_code_marque" value="' .
-							(Tools::getValue('mr_code_marque') ? Tools::getValue('mr_code_marque') : Configuration::get('MR_CODE_MARQUE')) . '"/>
+							(Tools::getValue('mr_code_marque') ? Tools::safeOutput(Tools::getValue('mr_code_marque')) : Configuration::get('MR_CODE_MARQUE')) . '"/>
 						</li>
 						<li>
 							<label for="mr_Key_WebService" class="mrLabel">' . $this->l('Webservice Key:') . '<sup>*</sup></label>
 							<input id="mr_Key_WebService" class="mrInput" type="text" name="mr_Key_WebService" value="' .
-							(Tools::getValue('mr_Key_WebService') ? Tools::getValue('mr_Key_WebService') : Configuration::get('MR_KEY_WEBSERVICE')) . '"/>
+							(Tools::getValue('mr_Key_WebService') ? Tools::safeOutput(Tools::getValue('mr_Key_WebService')) : Configuration::get('MR_KEY_WEBSERVICE')) . '"/>
 						</li>
 						<li>
 							<label for="mr_Langage" class="mrLabel">' . $this->l('Etiquette\'s Language:') . '<sup>*</sup></label>
 							<select id="mr_Langage" name="mr_Langage" value="'.
-							(Tools::getValue('mr_Langage') ? Tools::getValue('mr_Langage') : Configuration::get('MR_LANGUAGE')).'" >';
+							(Tools::getValue('mr_Langage') ? Tools::safeOutput(Tools::getValue('mr_Langage')) : Configuration::get('MR_LANGUAGE')).'" >';
 		$languages = Language::getLanguages();
 		foreach ($languages as $language)
 			$output .= '<option value="'.strtoupper($language['iso_code']).'" '.(strtoupper($language['iso_code']) == Configuration::get('MR_LANGUAGE') ? 'selected="selected"' : '').'>'.$language['name'].'</option>';
@@ -1050,7 +1059,7 @@ class MondialRelay extends Module
 						<li>
 							<label for="mr_weight_coef" class="mrLabel">' . $this->l('Weight Coefficient:') . '<sup>*</sup></label>
 							<input class="mrInput" type="text" name="mr_weight_coef" value="' . 
-							(Tools::getValue('mr_weight_coef') ? Tools::getValue('mr_weight_coef') : Configuration::get('MR_WEIGHT_COEF')) . '"  style="width:45px;"/>
+							(Tools::getValue('mr_weight_coef') ? Tools::safeOutput(Tools::getValue('mr_weight_coef')) : Configuration::get('MR_WEIGHT_COEF')) . '"  style="width:45px;"/>
 							<span class="indication">(' . $this->l('grammes = 1 ') . Configuration::get('PS_WEIGHT_UNIT').')</span>
 						</li>						
 						<li class="PS_MRSubmit">

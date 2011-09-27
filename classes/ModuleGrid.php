@@ -100,7 +100,7 @@ abstract class ModuleGridCore extends Module
 		if (!file_exists(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			return Tools::displayError('Grid engine selected is unavailable.');
 			
-		$grider = 'grider.php?render='.$render.'&module='.Tools::getValue('module');
+		$grider = 'grider.php?render='.$render.'&module='.Tools::safeOutput(Tools::getValue('module'));
 		
 		$context = Context::getContext();
 		$grider .= '&id_employee='.(int)($context->employee->id);

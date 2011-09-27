@@ -142,7 +142,7 @@ class MRGetTickets implements IMondialRelayWSMethod
 	{
 		$query = '
 			SELECT id FROM `'._DB_PREFIX_.'mr_historique`
-			WHERE `order`=\''.$id_order.'\'';
+			WHERE `order`='.(int)$id_order;
 		
 		$row = Db::getInstance()->getRow($query);
 		if ($row)
@@ -151,9 +151,9 @@ class MRGetTickets implements IMondialRelayWSMethod
 				UPDATE `'._DB_PREFIX_.'mr_historique`
   			SET 
   				`exp` = \''.(int)$expeditionNumber.'\',
-  				`url_a4` = \''.(string)$URLA4.'\',
-  				`url_a5` = \''.(string)$URLA5.'\'
-  			WHERE `order` = \''.$id_order.'\'';
+  				`url_a4` = \''.pSQL((string)$URLA4).'\',
+  				`url_a5` = \''.pSQL((string)$URLA5).'\'
+  			WHERE `order` = '.(int)$id_order;
 		}
 		else
 		{
@@ -161,10 +161,10 @@ class MRGetTickets implements IMondialRelayWSMethod
 				INSERT INTO '._DB_PREFIX_.'mr_historique
 				(`order`, `exp`, `url_a4`, `url_a5`)
 				VALUES (
-					\''.(int)$id_order.'\',
-					\''.(int)$expeditionNumber.'\',
-					\''.(string)$URLA4.'\',
-					\''.(string)$URLA5.'\')';
+					'.(int)$id_order.',
+					'.(int)$expeditionNumber.',
+					\''.pSQL((string)$URLA4).'\',
+					\''.pSQL((string)$URLA5).'\')';
 		}
 		Db::getInstance()->Execute($query);
 		$success['id_mr_history'] = isset($row['id']) ? $row['id'] : Db::getInstance()->Insert_ID();

@@ -720,7 +720,7 @@ class ThemeInstallator extends Module
 				<legend>'.$this->l('Import from the web').'</legend>
 				<label for="linkurl">'.$this->l('Archive URL').'</label>
 				<div class="margin-form">
-					<input type="text"  id="linkurl" name="linkurl" value="'.(Tools::getValue('linkurl') ? Tools::getValue('linkurl') : 'http://').'"/>
+					<input type="text"  id="linkurl" name="linkurl" value="'.(Tools::getValue('linkurl') ? Tools::safeOutput(Tools::getValue('linkurl')) : 'http://').'"/>
 				</div>
 				<input type="submit" class="button" name="submitImport2" value="'.$this->l('Next').'">
 			</fieldset>
@@ -754,14 +754,14 @@ class ThemeInstallator extends Module
 
 	private function displayInformations()
 	{
-		$this->_html .=	'<input type="hidden" name="mainTheme" value="'.Tools::getValue('mainTheme').'" />';
+		$this->_html .=	'<input type="hidden" name="mainTheme" value="'.Tools::safeOutput(Tools::getValue('mainTheme')).'" />';
 		if ($this->error === false AND class_exists('ZipArchive', false) AND ($zip = new ZipArchive()))
 		{
 			if (!($zip->open(_EXPORT_FOLDER_.'archive.zip', ZipArchive::OVERWRITE) === true) OR !$zip->addEmptyDir('test') === true)
 				$this->_html .= parent::displayError('Permission denied. Please set permisssion to 666 on this folder: '._EXPORT_FOLDER_);
 			$zip->close();
 			if ($this->error === false)
-				$this->_html .= parent::displayConfirmation('Fill this formular to export this theme: <b>'.Tools::getValue('mainTheme').'</b> in a ZIP file');
+				$this->_html .= parent::displayConfirmation('Fill this formular to export this theme: <b>'.Tools::safeOutput(Tools::getValue('mainTheme')).'</b> in a ZIP file');
 		}
 	}
 

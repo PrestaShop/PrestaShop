@@ -178,6 +178,9 @@ class AuthControllerCore extends FrontController
 								$this->context->cart->secure_key = $customer->secure_key;
 								$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
 								$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
+
+								// If a logged guest logs in as a customer, the cart secure key was already set and needs to be updated
+								$this->context->cart->secure_key = $customer->secure_key;
 								$this->context->cart->update();
 								Module::hookExec('createAccount', array(
 									'_POST' => $_POST,

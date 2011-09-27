@@ -48,7 +48,7 @@ if ((empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off')
 		$errors[] = translate('SSL is activated. However, your IP is allowed to use unsecure mode (Maintenance or local IP).').'<br/>';
 	else
 		$warningSslMessage = translate('SSL is activated. Please connect using the following url to log in in secure mode (https).')
-		.'<br/><br/><a href="https://'.Tools::getServerName().$_SERVER['REQUEST_URI'].'">https://'.Tools::getServerName().$_SERVER['REQUEST_URI'].'</a>';
+		.'<br/><br/><a href="https://'.Tools::getServerName().Tools::safeOutput($_SERVER['REQUEST_URI']).'">https://'.Tools::getServerName().Tools::safeOutput($_SERVER['REQUEST_URI']).'</a>';
 }
 
 $iso = strtolower(Context::getContext()->language->iso_code);

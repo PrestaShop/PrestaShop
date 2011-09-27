@@ -372,9 +372,11 @@ function PS_MRBackupDatabase()
 */
 function PS_MRAddSelectedRelayPointInDB(relayPointNumber, id_carrier)
 {
+	PS_MRSelectedRelayPoint['relayPointNum'] = relayPointNumber;
+	
 	// Ajax call to add the selection in the database (compatibility for 1.3)
 	// But keep this way to add a selection better that the hook
-	$.ajax({
+	MRjQuery.ajax({
 		type: 'POST',
     url: _PS_MR_MODULE_DIR_ + 'ajax.php',
     data: {'method' : 'addSelectedCarrierToDB',
@@ -384,6 +386,7 @@ function PS_MRAddSelectedRelayPointInDB(relayPointNumber, id_carrier)
     	'mrtoken' : mrtoken},
     success: function(json)
     {
+			
     },
     error: function(xhr, ajaxOptions, thrownError)
     {
@@ -398,6 +401,7 @@ function PS_MRAddSelectedRelayPointInDB(relayPointNumber, id_carrier)
 function PS_MRAddSelectedCarrierInDB(id_carrier)
 {
 	PS_MRHideLastRelayPointList();
+
 	// Make the request
 	$.ajax({
 		type: 'POST',
@@ -417,12 +421,23 @@ function PS_MRAddSelectedCarrierInDB(id_carrier)
 
 function PS_MRCarrierSelectedProcess(carrierSelected, id_carrier, MRLivraisonType)
 {
+	// Reset for any carrier changement
 	if (MRLivraisonType != 'LD1' &&	MRLivraisonType != 'LDS')
+	{
 		// Seek Relay point if it doesn't a home delivery mode
 		PS_MRGetRelayPoint(carrierSelected);
+		
+		// Will have relay points
+		PS_MRSelectedRelayPoint['relayPointNum'] = 0;
+	}
 	else
+	{
 		// Simply add the selected carrier to the db, relay information will be empty
 		PS_MRAddSelectedCarrierInDB(id_carrier);
+		
+		// Won't have any relay points
+		PS_MRSelectedRelayPoint['relayPointNum'] = -1;
+}
 }
 
 /*
@@ -431,6 +446,26 @@ function PS_MRCarrierSelectedProcess(carrierSelected, id_carrier, MRLivraisonTyp
 function PS_MRHideLastRelayPointList()
 {
 	$('.PS_MRSelectedCarrier').fadeOut('fast');
+}
+
+/*
+** Check if the user select a carrier and a relay point if exist
+*/
+function PS_MRCheckSelectedRelayPoint()
+{
+	var input;
+	
+	// Check if the input is linked to the module and look into
+	// a temporary variable if a relay point has been selected
+	if ((input = $('input[name=id_carrier]:checked')).length &&
+		PS_MRCarrierMethodList[input.val()] != undefined &&
+		PS_MRSelectedRelayPoint['relayPointNum'] == 0)
+	{
+		//$('#PS_MRSelectCarrierError').fadeIn('fast');
+		alert(PS_MRTranslationList['errorSelection']);
+		return false;
+	}		
+	return true;
 }
 
 /*
@@ -535,7 +570,7 @@ function PS_MRFetchRelayPoint(carrierSelected)
 		</td></tr>');
 	
 	fetchingRelayPoint[carrier_id] = $('#PS_MRSelectedCarrier_' + carrier_id);
-	$.ajax(
+	MRjQuery.ajax(
 	{
 		type: 'POST',
 		url: _PS_MR_MODULE_DIR_ + 'ajax.php',
@@ -748,6 +783,10 @@ function PS_MRAddGMapMarker(id_carrier, relayPointNumber, contentBlockid)
 
 $(document).ready(function()
 {
+	$('#form').submit(function()
+	{
+		return PS_MRCheckSelectedRelayPoint();
+	});
 	$('#toggleStatusOrderList').click(function()
 	{
 		toggleOrderListSelection();

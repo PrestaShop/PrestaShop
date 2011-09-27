@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -47,9 +47,9 @@ class StatsForecast extends Module
         $this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
         parent::__construct();
-		
+
         $this->displayName = $this->l('Stats Dashboard');
         $this->description = '';
     }
@@ -58,25 +58,25 @@ class StatsForecast extends Module
 	{
 		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
-	
+
 	public function getContent()
 	{
 		Tools::redirectAdmin('index.php?tab=AdminStats&module=statsforecast&token='.Tools::getAdminTokenLite('AdminStats'));
 	}
-	
+
 	public function hookAdminStatsModules()
 	{
 		$ru = AdminTab::$currentIndex.'&module='.$this->name.'&token='.Tools::getValue('token');
-		
+
 		$db = Db::getInstance();
-		
+
 		if (!isset($this->context->cookie->stats_granularity))
 			$this->context->cookie->stats_granularity = 10;
 		if (Tools::isSubmit('submitIdZone'))
-			$this->context->cookie->stats_id_zone = Tools::getValue('stats_id_zone');
+			$this->context->cookie->stats_id_zone = (int)Tools::getValue('stats_id_zone');
 		if (Tools::isSubmit('submitGranularity'))
 			$this->context->cookie->stats_granularity = Tools::getValue('stats_granularity');
-		
+
 		$currency = $this->context->currency;
 		$employee = $this->context->employee;
 
@@ -89,7 +89,7 @@ class StatsForecast extends Module
 		$interval = ($to - $from) / 60 / 60 / 24;
 		$interval2 = ($to2 - $from) / 60 / 60 / 24;
 		$prop30 = $interval / $interval2;
-		
+
 		if ($this->context->cookie->stats_granularity == 7)
 			$intervalAvg = $interval2 / 30;
 		if ($this->context->cookie->stats_granularity == 4)
@@ -98,7 +98,7 @@ class StatsForecast extends Module
 			$intervalAvg = $interval2;
 		if ($this->context->cookie->stats_granularity == 42)
 			$intervalAvg = $interval2 / 7;
-		
+
 		define('PS_BASE_URI', '/');
 		$result = $db->getRow('SELECT UNIX_TIMESTAMP(\'2009-06-05\') as t1, UNIX_TIMESTAMP(\''.$employee->stats_date_from.'\') as t2');
 		$from = max($result['t1'], $result['t2']);
@@ -110,7 +110,7 @@ class StatsForecast extends Module
 		$dateFromGInvoice = ($this->context->cookie->stats_granularity != 42
 			? 'SUBSTRING(invoice_date, 1, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(invoice_date),DAYOFYEAR(invoice_date)-WEEKDAY(invoice_date)), CONCAT(YEAR(invoice_date),"-01-01*"))');
-		
+
 		$sql = 'SELECT
 					'.$dateFromGInvoice.' as fix_date,
 					COUNT(DISTINCT o.id_order) as countOrders,
@@ -137,7 +137,7 @@ class StatsForecast extends Module
 
 		while ($row = $db->nextRow($result))
 			$dataTable[strtotime($row['fix_date'])] = $row;
-		
+
 		$this->_html .= '<div style="float:left;width:660px">
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<p style="float:left">'.$this->l('All amounts are without taxes.').'</p>
@@ -192,7 +192,7 @@ class StatsForecast extends Module
 		{
 			$discountToday = (isset($discountArray[$row['fix_date']]) ? $discountArray[$row['fix_date']] : 0);
 			$visitsToday = (int)(isset($visitArray[$row['fix_date']]) ? $visitArray[$row['fix_date']] : 0);
-			
+
 			$dateFromGReg = ($this->context->cookie->stats_granularity != 42
 				? 'LIKE \''.$row['fix_date'].'%\''
 				: 'BETWEEN \''.substr($row['fix_date'], 0, 10).' 00:00:00\' AND DATE_ADD(\''.substr($row['fix_date'], 0, 8).substr($row['fix_date'], 8, 2).' 23:59:59\', INTERVAL 7 DAY)');
@@ -215,7 +215,7 @@ class StatsForecast extends Module
 				<td align="right">'.Tools::displayPrice($discountToday, $currency).'</td>
 				<td align="right" >'.Tools::displayPrice($totalHT, $currency).'</td>
 			</tr>';
-			
+
 			$this->t1 += $visitsToday;
 			$this->t2 += (int)($row['registrations']);
 			$this->t3 += (int)($row['countOrders']);
@@ -313,7 +313,7 @@ class StatsForecast extends Module
 					AND o.date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o');
 		$orders = Db::getInstance()->getValue($sql);
-		
+
 		$this->_html .= '<div class="clear">&nbsp;</div>
 		<fieldset><legend><img src="../modules/'.$this->name.'/funnel.png" /> '.$this->l('Conversion').'</legend>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Visitors').'<br />'.$visitors.'</span>
@@ -348,13 +348,13 @@ class StatsForecast extends Module
 			'.$this->l('Turn your visitors into money:').'
 			<br />'.$this->l('Each visitor yields').' <b>'.Tools::displayPrice($ca['ventil']['total'] / max(1, $visitors), $currency).'.</b>
 			<br />'.$this->l('Each registered visitor yields').' <b>'.Tools::displayPrice($ca['ventil']['total'] / max(1, $customers), $currency).'</b>.
-		</fieldset>';		
-		
+		</fieldset>';
+
 		$from = strtotime($employee->stats_date_from.' 00:00:00');
 		$to = strtotime($employee->stats_date_to.' 23:59:59');
 		$interval = ($to - $from) / 60 / 60 / 24;
 		$prop5000 = 5000 / 30 * $interval;
-		
+
 		$this->_html .= '
 		<div class="clear">&nbsp;</div>';
 		$this->_html .= '<fieldset><legend id="payment"><img src="../img/t/AdminPayment.gif" />'.$this->l('Payment distibution').'</legend>
@@ -477,7 +477,7 @@ class StatsForecast extends Module
 		$this->_html .= '</table>
 		</fieldset>
 		</div>';
-		
+
 		return $this->_html;
 	}
 
@@ -490,7 +490,7 @@ class StatsForecast extends Module
 		if ((int)$this->context->cookie->stats_id_zone)
 		{
 			$join =  ' LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address LEFT JOIN `'._DB_PREFIX_.'country` co ON co.id_country = a.id_country';
-			$where = ' AND co.id_zone = '.$this->context->cookie->stats_id_zone.' ';
+			$where = ' AND co.id_zone = '.(int)$this->context->cookie->stats_id_zone.' ';
 		}
 
 		$sql = 'SELECT SUM(od.`product_price` * od.`product_quantity` / o.conversion_rate) as orderSum, COUNT(*) AS orderQty, cl.name, AVG(od.`product_price` / o.conversion_rate) as priveAvg
@@ -526,7 +526,7 @@ class StatsForecast extends Module
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o');
 			$ca['lang'] = Db::getInstance()->getRow($sql);
 			arsort($ca['lang']);
-			
+
 			$sql = 'SELECT '.$langValues.'
 					FROM `'._DB_PREFIX_.'orders` o
 					WHERE o.valid = 1

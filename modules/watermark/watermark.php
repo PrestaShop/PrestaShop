@@ -149,7 +149,7 @@ class Watermark extends Module
 	{
 	    $imageTypes = ImageType::getImagesTypes('products');
 		$this->_html .=
-		'<form action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">
+		'<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" />'.$this->l('Watermark details').'</legend>
 				<p>'.$this->l('Once you have set up the module, regenerate the images using the "Images" tool in Preferences. However, the watermark will be added automatically to new images.').'</p>
 				<table border="0" width="500" cellpadding="0" cellspacing="0" id="form">

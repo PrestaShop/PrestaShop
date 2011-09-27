@@ -586,7 +586,7 @@ XML;
 			$output .= '
 			<fieldset>
 				<legend><img src="'.__PS_BASE_URI__.'modules/'.$this->name.'/logo.gif" alt="" />'.$this->l('Settings').'</legend>
-				<form method="post" action="'.$_SERVER['REQUEST_URI'].'" enctype="multipart/form-data">
+				<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
 					<input type="radio" name="trpd_integration_type" value="0" style="vertical-align: middle;" '.((int)(Configuration::get('TREEPODIA_INTEGRATION_TYPE')) == 0 ? 'checked' : '').'/> <label style="font-size: 14px; color: #268CCD; float: none;">'.$this->l('Use built-in integration').'</label>
 					<p>'.$this->l('The built-in integration automatically embeds Treepodia integration code into your store and displays a link to the video on your product page.').'</p><br />
 					<p id="current">'.$this->l('Current logo:').'<br />
