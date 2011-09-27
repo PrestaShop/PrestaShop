@@ -843,13 +843,13 @@ class AdminTranslations extends AdminTab
 		<script type="text/javascript">';
 		if (Tools::getValue('type') == 'mails')
 			$str_output .= '$(document).ready(function(){
-				openCloseAllDiv(\''.$_GET['type'].'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);
+				openCloseAllDiv(\''.Tools::safeOutput($_GET['type']).'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);
 				});';
 		$str_output .= '
 			var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 			var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 		</script>
-		<input type="button" class="button" id="buttonall" onclick="openCloseAllDiv(\''.$_GET['type'].'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);" />
+		<input type="button" class="button" id="buttonall" onclick="openCloseAllDiv(\''.Tools::safeOutput($_GET['type']).'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);" />
 		<script type="text/javascript">toggleElemValue(\'buttonall\', '.($closed ? 'openAll' : 'closeAll').', '.($closed ? 'closeAll' : 'openAll').');</script>';
 		return $str_output;
 	}

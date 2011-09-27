@@ -24,17 +24,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Guests: Track your order'}{/capture}
+{capture name=path}{l s='Track your order'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
-<h1>{l s='Guests: Track your order'}</h1>
+<h1>{l s='Track your order'}</h1>
 
 {if isset($order)}
-	<div id="block-history">
-		<div id="block-order-detail" class="std" style="zoom:1">
 		{include file="$tpl_dir./order-detail.tpl"}
-		</div>
-	</div>
 
 	<h2 id="guestToCustomer">{l s='Create your customer account'}</h2>
 

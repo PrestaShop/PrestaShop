@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -39,7 +39,7 @@ class StatsCheckUp extends Module
 		$this->need_instance = 0;
 
         parent::__construct();
-		
+
         $this->displayName = $this->l('Catalog evaluation');
         $this->description = $this->l('Quick evaluation of your catalog quality.');
     }
@@ -51,7 +51,7 @@ class StatsCheckUp extends Module
 				Configuration::updateValue($confname, (int)$confdefault);
 		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
-	
+
     function hookAdminStatsModules()
     {
 		if (Tools::isSubmit('submitCheckup'))
@@ -73,7 +73,7 @@ class StatsCheckUp extends Module
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 		$employee = Context::getContext()->employee;
 		$prop30 = ((strtotime($employee->stats_date_to.' 23:59:59') - strtotime($employee->stats_date_from.' 00:00:00')) / 60 / 60 / 24) / 30;
-		
+
 		$shopID = $this->context->shop->getID();
 		$shopGroupID = $this->context->shop->getGroupID();
 
@@ -146,20 +146,20 @@ class StatsCheckUp extends Module
 			table.checkup td {padding:5px 10px}
 			table.checkup2 td {text-align:right}
 		</style>
-		<form action="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'" method="post" class="checkup">
+		<form action="'.AdminTab::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="checkup">
 		<table class="table checkup" border="0" cellspacing="0" cellspacing="0">
 			<tr><th></th><th>'.$arrayColors[0].' '.$this->l('Not enough').'</th><th>'.$arrayColors[2].' '.$this->l('Alright').'</th></tr>';
 		foreach ($arrayConf as $conf => $translations)
 			$html .= '<tr>
 				<th>'.$translations['name'].'</th>
-				<td>'.$this->l('lower than').' <input type="text" name="CHECKUP_'.$conf.'_LT" value="'.Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT')).'" /> '.$translations['text'].'
-				<td>'.$this->l('greater than').' <input type="text" name="CHECKUP_'.$conf.'_GT" value="'.Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT')).'" /> '.$translations['text'].'
+				<td>'.$this->l('lower than').' <input type="text" name="CHECKUP_'.$conf.'_LT" value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT'))).'" /> '.$translations['text'].'
+				<td>'.$this->l('greater than').' <input type="text" name="CHECKUP_'.$conf.'_GT" value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT'))).'" /> '.$translations['text'].'
 			</tr>';
 		$html .= '</table>
 			<div><input type="submit" name="submitCheckup" class="button" value="'.$this->l('   Save   ').'" /></div>
 		</form>
 		<div class="clear">&nbsp;</div>
-		<form action="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'" method="post">
+		<form action="'.AdminTab::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post">
 			'.$this->l('Order by').'
 			<select name="submitCheckupOrder" onchange="this.form.submit();" style="width:100px">
 				<option value="1">'.$this->l('ID').'</option>
@@ -203,7 +203,7 @@ class StatsCheckUp extends Module
 			}
 			$scores['average'] = array_sum($scores) / $divisor;
 			$scores['average'] = ($scores['average'] < 1 ? 0 : ($scores['average'] > 1.5 ? 2 : 1));
-			
+
 			$html .= '<tr>
 				<td>'.$row['id_product'].'</td>
 				<td style="text-align:left"><a href="index.php?tab=AdminCatalog&updateproduct&id_product='.$row['id_product'].'&token='.$tokenProducts.'">'.Tools::substr($row['name'], 0, 42).'</a></td>

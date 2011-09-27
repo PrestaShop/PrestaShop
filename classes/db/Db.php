@@ -303,7 +303,7 @@ abstract class DbCore
 	public function	delete($table, $where = false, $limit = false, $use_cache = 1)
 	{
 		$this->_result = false;
-		$sql = 'DELETE FROM `'.pSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
+		$sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
 		$res = $this->query($sql);
 		if ($use_cache AND _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);

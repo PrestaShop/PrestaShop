@@ -100,7 +100,7 @@ abstract class AdminStatsTab extends AdminPreferences
 		$arrayGridEngines = ModuleGridEngine::getGridEngines();
 		
 		echo '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset style="width: 200px;"><legend><img src="../img/admin/tab-preferences.gif" />'.$this->l('Settings', 'AdminStatsTab').'</legend>';
 		echo '<p><strong>'.$this->l('Graph engine', 'AdminStatsTab').' </strong><br />';
 		if (sizeof($arrayGraphEngines))
@@ -153,7 +153,7 @@ abstract class AdminStatsTab extends AdminPreferences
 		return '
 		<fieldset style="width: 200px; font-size:13px;"><legend><img src="../img/admin/date.png" /> '.$translations['Calendar'].'</legend>
 			<div>
-				<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+				<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 					<input type="submit" name="submitDateDay" class="button" value="'.$translations['Day'].'">
 					<input type="submit" name="submitDateMonth" class="button" value="'.$translations['Month'].'">
 					<input type="submit" name="submitDateYear" class="button" value="'.$translations['Year'].'"><br />

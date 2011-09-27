@@ -79,11 +79,11 @@ class GAdsense extends Module
 	public function displayForm()
 	{
 		$output = '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset><legend>'.$this->l('Settings').'</legend>
 				<label>'.$this->l('Your code').'</label>
 				<div class="margin-form">
-					<textarea name="gadsense_id" cols="90" rows="10" />'.Tools::getValue('gadsense_id', Configuration::get('GADSENSE_ID')).'</textarea>
+					<textarea name="gadsense_id" cols="90" rows="10" />'.Tools::safeOutput(Tools::getValue('gadsense_id', Configuration::get('GADSENSE_ID'))).'</textarea>
 					<p class="clear">'.$this->l('Example:').' <br /><br /><img src="../modules/gadsense/adsense_script.gif"></p>
 				</div>
 				<center><input type="submit" name="submitGAdsense" value="'.$this->l('Update settings').'" class="button" /></center>			

@@ -78,12 +78,12 @@ class GAnalytics extends Module
 	public function displayForm()
 	{
 		$output = '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset class="width2">
 				<legend><img src="../img/admin/cog.gif" alt="" class="middle" />'.$this->l('Settings').'</legend>
 				<label>'.$this->l('Your username').'</label>
 				<div class="margin-form">
-					<input type="text" name="ganalytics_id" value="'.Tools::getValue('ganalytics_id', Configuration::get('GANALYTICS_ID')).'" />
+					<input type="text" name="ganalytics_id" value="'.Tools::safeOutput(Tools::getValue('ganalytics_id', Configuration::get('GANALYTICS_ID'))).'" />
 					<p class="clear">'.$this->l('Example:').' UA-1234567-1</p>
 				</div>
 				<center><input type="submit" name="submitGAnalytics" value="'.$this->l('Update ID').'" class="button" /></center>

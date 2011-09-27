@@ -187,7 +187,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			unset($result['STAT']);
 			
 			// Clean Content
-			foreach($result as &$relayPoint)
+			foreach($result as $num => $relayPoint)
 			{
 				$totalEmptyFields = 0;
 				foreach ($relayPoint as $key => &$value)
@@ -197,11 +197,10 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
  						++$totalEmptyFields;
  				}
  				if ($totalEmptyFields == count($relayPoint))
- 				{
- 					$errors[] = $this->_mondialRelay->l('MondialRelay can\'t find any relay point near your address. Maybe your address isn\'t properly filled ?');
- 					break;
+ 					unset($result[$num]);
  				}
- 			}
+ 			if (!count($result))
+ 				$errors[] = $this->_mondialRelay->l('MondialRelay can\'t find any relay point near your address. Maybe your address isn\'t properly filled ?');
 			$success = $result;
 		}
 		$this->_resultList['error'] = $errors;

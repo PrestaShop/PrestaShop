@@ -32,10 +32,10 @@ if (Tools::isSubmit('checkAndSaveConfig'))
 	$shopImporter = new shopImporter();
 	foreach($shopImporter->supportedImports as $key => $import)
 		if (array_key_exists('alterTable', $import))
-			$columns = Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.pSQL($import['table']).'`');
+			$columns = Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.bqSQL($import['table']).'`');
 			foreach ($columns as $column)
 				if ($column['Field'] == $import['identifier'].'_'.$moduleName)
-					Db::getInstance()->Execute('ALTER IGNORE TABLE `'._DB_PREFIX_.pSQL($import['table']).'` DROP `'.pSQL($import['identifier'].'_'.$moduleName).'`');
+					Db::getInstance()->Execute('ALTER IGNORE TABLE `'._DB_PREFIX_.bqSQL($import['table']).'` DROP `'.bqSQL($import['identifier'].'_'.$moduleName).'`');
 	if ($link = @mysql_connect(Tools::getValue('server'), Tools::getValue('user'), Tools::getValue('password')))
 	{
 		if (!@mysql_select_db(Tools::getValue('database'), $link))

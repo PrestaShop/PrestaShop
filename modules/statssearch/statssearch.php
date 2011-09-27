@@ -122,7 +122,7 @@ class StatsSearch extends ModuleGraph
 		
 		if (sizeof($result))
 			$this->_html .= '<center>'.$this->engine(array('type' => 'pie')).'</center>
-									<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 									<br class="clear" />'.$table;
 		else
 			$this->_html .= '<p><strong>'.$this->l('No keywords searched more than once found.').'</strong></p>';

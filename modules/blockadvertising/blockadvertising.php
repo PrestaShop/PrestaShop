@@ -169,7 +169,7 @@ class BlockAdvertising extends Module
 		$this->postProcess();
 		$output = '';
 		$output .= '
-<form action="'.$_SERVER['REQUEST_URI'].'" method="post" enctype="multipart/form-data">
+<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 <fieldset><legend>'.$this->l('Advertising block configuration').'</legend>
 <a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">';
 		if ($this->adv_img)

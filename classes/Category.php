@@ -674,7 +674,7 @@ class CategoryCore extends ObjectModel
 						FROM `'._DB_PREFIX_.'category` c3 
 						WHERE c3.`nleft` > c.`nleft` 
 						AND c3.`nright` < c.`nright`
-						AND c3.`id_category`  IN ('.$selectedCat.')
+			AND c3.`id_category`  IN ('.array_map('intval', $selectedCat).')
 					)' : '0').' AS nbSelectedSubCat
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->sqlLang('cl').'
@@ -1123,7 +1123,7 @@ class CategoryCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'category` c 
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
 			WHERE cl.`id_lang` = '.(int)$id_lang.'
-			AND c.`id_category` IN ('.implode(',', $ids_category).')
+			AND c.`id_category` IN ('.implode(',', array_map('intval', $ids_category)).')
 		');
 		
 		foreach($results as $category)

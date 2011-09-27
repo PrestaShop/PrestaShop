@@ -68,7 +68,7 @@ class AdminMondialRelay extends AdminTab
 			$html.= '<h3 style="color:red;">' . $this->l('No orders with this state.') . '</h3>';
 		else
 		{
-			$html.= '<form method="post" action="'.$_SERVER['REQUEST_URI'].'">';
+			$html.= '<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">';
 			$html.= "\n<table class=\"table\" id='orders'>";
 			$html.= '<tr>';
 			$html.= '<th>'.$this->l('Order ID').'</th>';
@@ -152,7 +152,7 @@ class AdminMondialRelay extends AdminTab
 			<fieldset>
 				<legend>' . $this->l('History of labels creation') . '</legend>
 				<div style="overflow-x: auto;overflow-y: scroller; height: 300px; padding-top: 0.6em;" >
-					<form method="post" action="'.$_SERVER['REQUEST_URI'].'">
+					<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 						<table class="table" id="PS_MRHistoriqueTableList">
 							<tbody>
 								<tr>

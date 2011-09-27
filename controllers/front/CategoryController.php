@@ -156,15 +156,15 @@ class CategoryControllerCore extends FrontController
 	{
 		$hookExecuted = false;
 		Module::hookExec('productListAssign', array('nbProducts' => &$this->nbProducts, 'catProducts' => &$this->cat_products, 'hookExecuted' => &$hookExecuted));
-		if (!$hookExecuted)
+		if (!$hookExecuted) // The hook was not executed, standard working
 		{
-			self::$smarty->assign('categoryNameComplement', '');
+			$this->context->smarty->assign('categoryNameComplement', '');
 			$this->nbProducts = $this->category->getProducts(NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
-			$this->pagination((int)$this->nbProducts);
+			$this->pagination((int)$this->nbProducts); // Pagination must be call after "getProducts"
 			$this->cat_products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
 		}
-		else
-			$this->pagination((int)$this->nbProducts);
+		else // Hook executed, use the override
+			$this->pagination((int)$this->nbProducts); // Pagination must be call after "getProducts"
 		self::$smarty->assign('nb_products', (int)$this->nbProducts);
 	}
 }

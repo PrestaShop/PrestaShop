@@ -117,17 +117,17 @@ class Ogone extends PaymentModule
 			<fieldset><legend><img src="../img/admin/contact.gif" /> '.$this->l('Settings').'</legend>
 				<label for="pspid">'.$this->l('PSPID').'</label>
 				<div class="margin-form">
-					<input type="text" id="pspid" size="20" name="OGONE_PSPID" value="'.Tools::getValue('OGONE_PSPID', Configuration::get('OGONE_PSPID')).'" />
+					<input type="text" id="pspid" size="20" name="OGONE_PSPID" value="'.Tools::safeOutput(Tools::getValue('OGONE_PSPID', Configuration::get('OGONE_PSPID'))).'" />
 				</div>
 				<div class="clear">&nbsp;</div>
 				<label for="sha-in">'.$this->l('SHA-in signature').'</label>
 				<div class="margin-form">
-					<input type="text" id="sha-in" size="20" name="OGONE_SHA_IN" value="'.Tools::getValue('OGONE_SHA_IN', Configuration::get('OGONE_SHA_IN')).'" />
+					<input type="text" id="sha-in" size="20" name="OGONE_SHA_IN" value="'.Tools::safeOutput(Tools::getValue('OGONE_SHA_IN', Configuration::get('OGONE_SHA_IN'))).'" />
 				</div>
 				<div class="clear">&nbsp;</div>
 				<label for="sha-out">'.$this->l('SHA-out signature').'</label>
 				<div class="margin-form">
-					<input type="text" id="sha-out" size="20" name="OGONE_SHA_OUT" value="'.Tools::getValue('OGONE_SHA_OUT', Configuration::get('OGONE_SHA_OUT')).'" />
+					<input type="text" id="sha-out" size="20" name="OGONE_SHA_OUT" value="'.Tools::safeOutput(Tools::getValue('OGONE_SHA_OUT', Configuration::get('OGONE_SHA_OUT'))).'" />
 				</div>
 				<div class="clear">&nbsp;</div>
 				<label>'.$this->l('Mode').'</label>

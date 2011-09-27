@@ -68,7 +68,7 @@ class StatsSales extends ModuleGraph
 			
 		$this->_html = '
 		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-			<form action="'.$_SERVER['REQUEST_URI'].'" method="post" style="float: right; margin-left: 10px;">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right; margin-left: 10px;">
 				<select name="id_country">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
 		foreach (Country::getCountries($this->context->language->id) AS $country)
@@ -82,15 +82,15 @@ class StatsSales extends ModuleGraph
 			<p>'.$this->l('Orders placed:').' '.(int)($totals['orderCount']).'</p>
 			<p>'.$this->l('Products bought:').' '.(int)($totals['products']).'</p>
 			<center>'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'</center>
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
 			<p>'.$this->l('Sales:').' '.Tools::displayPrice($totals['orderSum'], $currency).'</p>
 			<center>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</center></p>
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=2"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
 			<p class="space"><img src="../img/admin/down.gif" />
 				'.$this->l('You can see the order state distribution below.').'
 			</p><br />
 			'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=3"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 		</fieldset>
 		<br class="clear" />
 		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>

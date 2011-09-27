@@ -211,7 +211,7 @@ class Socolissimo extends CarrierModule
 
 	private function _displayForm()
 	{
-		$this->_html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form">
+		$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form">
 		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('Description').'</legend>'.
 		$this->l('SoColissimo is a service offered by La Poste, which allows you to offer buyers 5 modes of delivery.').' :
 		<br/><br/><ul style ="list-style:disc outside none;margin-left:30px;">
@@ -234,13 +234,13 @@ class Socolissimo extends CarrierModule
 
 		<label>'.$this->l('ID So').' : </label>
 		<div class="margin-form">
-		<input type="text" name="id_user" value="'.Tools::getValue('id_user', Configuration::get('SOCOLISSIMO_ID')).'" />
+		<input type="text" name="id_user" value="'.Tools::safeOutput(Tools::getValue('id_user', Configuration::get('SOCOLISSIMO_ID'))).'" />
 		<p>' . $this->l('Id user for back office SoColissimo.') . '</p>
 		</div>
 
 		<label>'.$this->l('Key').' : </label>
 		<div class="margin-form">
-		<input type="text" name="key" value="'.Tools::getValue('key', Configuration::get('SOCOLISSIMO_KEY')).'" />
+		<input type="text" name="key" value="'.Tools::safeOutput(Tools::getValue('key', Configuration::get('SOCOLISSIMO_KEY'))).'" />
 		<p>'.$this->l('Secure key for back office SoColissimo.').'</p>
 		</div>
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -44,7 +44,7 @@ class StatsProduct extends ModuleGraph
 		$this->need_instance = 0;
 
         parent::__construct();
-		
+
         $this->displayName = $this->l('Product details');
         $this->description = $this->l('Get detailed statistics for each product.');
     }
@@ -150,17 +150,17 @@ class StatsProduct extends ModuleGraph
 	{
 		$id_category = (int)(Tools::getValue('id_category'));
 		$currency = Context::getContext()->currency;
-		
+
 		if (Tools::getValue('export'))
 			if (!Tools::getValue('exportType'))
 				$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '42'));
-		
+
 		$this->_html = '<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
 		if ($id_product = (int)(Tools::getValue('id_product')))
 		{
 			if (Tools::getValue('export'))
 				if (Tools::getValue('exportType') == 1)
-					$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product));	
+					$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product));
 				elseif (Tools::getValue('exportType') == 2)
 					$this->csvExport(array('type' => 'pie', 'option' => '3-'.$id_product));
 			$product = new Product($id_product, false, $this->context->language->id);
@@ -174,10 +174,10 @@ class StatsProduct extends ModuleGraph
 			<p>'.$this->l('Conversion rate:').' '.number_format($totalViewed ? $totalBought / $totalViewed : 0, 2).'</p>
 			<center>'.$this->engine(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product)).'</center>
 			<br />
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>';
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>';
 			if ($hasAttribute = $product->hasAttributes() AND $totalBought)
 				$this->_html .= '<h3 class="space">'.$this->l('Attribute sales distribution').'</h3><center>'.$this->engine(array('type' => 'pie', 'option' => '3-'.$id_product)).'</center><br />
-			<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1&exportType=2"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br />';
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=2"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br />';
 			if ($totalBought)
 			{
 				$sales = $this->getSales($id_product, $this->context->language->id);
@@ -208,7 +208,7 @@ class StatsProduct extends ModuleGraph
 						<td>'.Tools::displayprice($sale['total'], $currency).'</td>
 					</tr>';
 				$this->_html .= '</tbody></table></div>';
-				
+
 				$crossSelling = $this->getCrossSales($id_product, $this->context->language->id);
 				if (count($crossSelling))
 				{
@@ -263,12 +263,14 @@ class StatsProduct extends ModuleGraph
 					<th>'.$this->l('Stock').'</th>
 				</tr>
 			</thead><tbody>';
-			foreach ($this->getProducts($this->context->language->id) AS $product)
-				$this->_html .= '<tr><td>'.$product['reference'].'</td><td><a href="'.AdminTab::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a></td><td>'.$product['quantity'].'</td></tr>';
+
+			foreach ($this->getProducts($this->context->language->id) as $product)
+				$this->_html .= '<tr><td>'.$product['reference'].'</td><td><a href="'.AdminTab::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a></td><td>'.$product['quantity'].'</td></tr>';
+
 			$this->_html .= '</tbody></table><br /></div><br />
-				<a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a><br />';
+				<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a><br />';
 		}
-		
+
 		$this->_html .= '</fieldset><br />
 		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 		<h2>'.$this->l('Number of purchases compared to number of viewings').'</h2>
@@ -331,7 +333,7 @@ class StatsProduct extends ModuleGraph
 						GROUP BY od.`product_attribute_id`';
 				$this->_titles['main'] = $this->l('Attributes');
 			break;
-				
+
 			case 42:
 				$this->_titles['main'][1] = $this->l('Ref.');
 				$this->_titles['main'][2] = $this->l('Name');
@@ -358,7 +360,7 @@ class StatsProduct extends ModuleGraph
 		else
 		{
 			$product = new Product($this->_id_product, false, (int)($this->getLang()));
-			
+
 			$combArray = array();
 			$assocNames = array();
 			$combinaisons = $product->getAttributeCombinaisons((int)($this->getLang()));
@@ -372,7 +374,7 @@ class StatsProduct extends ModuleGraph
 				$list = rtrim($list, ', ');
 				$assocNames[$id_product_attribute] = $list;
 			}
-		
+
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query);
 			foreach ($result as $row)
 			{

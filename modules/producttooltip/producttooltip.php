@@ -87,7 +87,7 @@ class ProductToolTip extends Module
 
 		/* Configuration form */
 		$output = '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset class="width2" style="float: left;">
 			<legend><img src="'.__PS_BASE_URI__.'modules/producttooltip/logo.gif" alt="" />'.$this->l('Product tooltips').'</legend>
 			<p>

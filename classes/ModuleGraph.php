@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,16 +28,16 @@
 abstract class ModuleGraphCore extends Module
 {
 	protected $_employee;
-	
+
 	/** @var integer array graph data */
 	protected	$_values = array();
-	
+
 	/** @var string array graph legends (X axis) */
 	protected	$_legend = array();
-	
+
 	/**@var string graph titles */
 	protected	$_titles = array('main' => NULL, 'x' => NULL, 'y' => NULL);
-		
+
 	/** @var ModuleGraphEngine graph engine */
 	protected $_render;
 
@@ -58,7 +58,7 @@ abstract class ModuleGraphCore extends Module
 		// Get dates in a manageable format
 		$fromArray = getdate(strtotime($this->_employee->stats_date_from));
 		$toArray = getdate(strtotime($this->_employee->stats_date_to));
-		
+
 		// If the granularity is inferior to 1 day
 		if ($this->_employee->stats_date_from == $this->_employee->stats_date_to)
 		{
@@ -156,11 +156,11 @@ abstract class ModuleGraphCore extends Module
 				$this->setAllTimeValues($layers);
 		}
 	}
-	
+
 	protected function csvExport($datas)
 	{
 		$context = Context::getContext();
-		
+
 		$this->setEmployee($context->employee->id);
 		$this->setLang($context->language->id);
 
@@ -168,7 +168,7 @@ abstract class ModuleGraphCore extends Module
 		if (isset($datas['option']))
 			$this->setOption($datas['option'], $layers);
 		$this->getData($layers);
-		
+
 		// @todo use native CSV PHP functions ?
 		// Generate first line (column titles)
 		if (is_array($this->_titles['main']))
@@ -191,7 +191,7 @@ abstract class ModuleGraphCore extends Module
 						$total += (is_array($this->_values[$i])  ? $this->_values[$i][$key] : $this->_values[$key]);
 			foreach ($this->_legend AS $key => $legend)
 			{
-				$this->_csv .= $legend.';';		
+				$this->_csv .= $legend.';';
 				for ($i = 0; $i < (is_array($this->_titles['main']) ? sizeof($this->_values) : 1); ++$i)
 				{
 					if (!isset($this->_values[$i]) || !is_array($this->_values[$i]))
@@ -219,7 +219,7 @@ abstract class ModuleGraphCore extends Module
 		}
 		$this->_displayCsv();
 	}
-	
+
 	protected function _displayCsv()
 	{
 		ob_end_clean();
@@ -228,33 +228,33 @@ abstract class ModuleGraphCore extends Module
 		echo $this->_csv;
 		exit;
 	}
-	
+
 	public function create($render, $type, $width, $height, $layers)
 	{
 		if (!Tools::file_exists_cache($file = dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			die(Tools::displayError());
 		require_once($file);
 		$this->_render = new $render($type);
-		
+
 		$this->getData($layers);
 		$this->_render->createValues($this->_values);
 		$this->_render->setSize($width, $height);
 		$this->_render->setLegend($this->_legend);
 		$this->_render->setTitles($this->_titles);
 	}
-	
+
 	public function draw()
 	{
 		$this->_render->draw();
 	}
-	
+
 	/**
 	 * @todo Set this method as abstracted ? Quid of module compatibility.
 	 */
 	public function setOption($option, $layers = 1)
 	{
 	}
-		
+
 	public function engine($params)
 	{
 		$context = Context::getContext();
@@ -262,7 +262,7 @@ abstract class ModuleGraphCore extends Module
 			return Tools::displayError('No graph engine selected');
 		if (!file_exists(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			return Tools::displayError('Graph engine selected is unavailable.');
-			
+
 		$id_employee = (int)($context->employee->id);
 		$id_lang = (int)($context->language->id);
 
@@ -274,25 +274,25 @@ abstract class ModuleGraphCore extends Module
 			$params['width'] = 550;
 		if (!isset($params['height']))
 			$params['height'] = 270;
-			
+
 		$urlParams = $params;
 		$urlParams['render'] = $render;
 		$urlParams['module'] = Tools::getValue('module');
 		$urlParams['id_employee'] = $id_employee;
 		$urlParams['id_lang'] = $id_lang;
-		$drawer = 'drawer.php?' . http_build_query($urlParams);
-			
+		$drawer = 'drawer.php?' . http_build_query(array_map('Tools::safeOutput', $urlParams));
+
 		require_once(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php');
 		return call_user_func(array($render, 'hookGraphEngine'), $params, $drawer);
 	}
-	
+
 	protected static function getEmployee($employee = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 		if (!$employee)
 			$employee = $context->employee;
-		
+
 		if (empty($employee->stats_date_from) OR empty($employee->stats_date_to) OR $employee->stats_date_from == '0000-00-00' OR $employee->stats_date_to == '0000-00-00')
 		{
 			if (empty($employee->stats_date_from) OR $employee->stats_date_from == '0000-00-00')
@@ -303,18 +303,18 @@ abstract class ModuleGraphCore extends Module
 		}
 		return $employee;
 	}
-	
+
 	public function getDate()
 	{
 		return self::getDateBetween($this->_employee);
 	}
-	
+
 	public static function getDateBetween($employee = null)
 	{
 		$employee = self::getEmployee($employee);
 		return ' \''.$employee->stats_date_from.' 00:00:00\' AND \''.$employee->stats_date_to.' 23:59:59\' ';
 	}
-	
+
 	public function getLang()
 	{
 		return $this->_id_lang;

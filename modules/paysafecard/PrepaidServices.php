@@ -328,7 +328,7 @@ abstract class PSCPrepaidServices extends PaymentModule
 		}
 		$currencies_configuration .= '</table>';
 
-		return '<form enctype="multipart/form-data" action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		return '<form enctype="multipart/form-data" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 					<fieldset>
 					<legend><img src="../img/admin/cog.gif" alt="" />'.$this->getL('configuration').'</legend>
 					<label>'.$this->getL('environment').'</label>

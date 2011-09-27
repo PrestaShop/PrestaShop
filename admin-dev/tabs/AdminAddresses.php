@@ -215,7 +215,7 @@ class AdminAddresses extends AdminTab
 		WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').(($this->deleted OR $this->table == 'currency') ? 'AND a.`deleted` = 0 ' : '').$this->_filter.' 
 		'.(isset($this->_group) ? $this->_group.' ' : '').'
 		'.(isset($this->addressType) ? 'AND a.id_'.strval($this->addressType).' != 0' : '').'
-		ORDER BY '.(($orderBy == 'id_'.$this->table) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).' 
+		ORDER BY '.(($orderBy == 'id_'.$this->table) ? 'a.' : '').'`'.bqSQL($orderBy).'` '.bqSQL($orderWay).' 
 		LIMIT '.(int)($start).','.(int)($limit));
 	}
 	

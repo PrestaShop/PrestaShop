@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -42,18 +42,18 @@ class StatsVisits extends ModuleGraph
         $this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-			
+
 		parent::__construct();
-		
+
         $this->displayName = $this->l('Visits and Visitors');
         $this->description = $this->l('Display statistics about your visits and visitors.');
     }
-	
+
 	public function install()
 	{
 		return (parent::install() AND $this->registerHook('AdminStatsModules'));
 	}
-	
+
 	public function getTotalVisits()
 	{
 		$sql = 'SELECT COUNT(c.`id_connections`)
@@ -62,7 +62,7 @@ class StatsVisits extends ModuleGraph
 					'.$this->sqlShopRestriction(false, 'c');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
-	
+
 	public function getTotalGuests()
 	{
 		$sql = 'SELECT COUNT(DISTINCT c.`id_guest`)
@@ -71,7 +71,7 @@ class StatsVisits extends ModuleGraph
 					'.$this->sqlShopRestriction(false, 'c');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
-	
+
 	public function hookAdminStatsModules($params)
 	{
 		$graphParams = array(
@@ -93,8 +93,7 @@ class StatsVisits extends ModuleGraph
 			<div style="margin-top:20px"></div>
 			<p>'.$this->l('Total visits:').' '.$totalVisits.'</p>
 			<p>'.$this->l('Total visitors:').' '.$totalGuests.'</p>
-			'.($totalVisits ? $this->engine($graphParams).'<p><a href="'.$_SERVER['REQUEST_URI'].'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>' : '').'
-			
+			'.($totalVisits ? $this->engine($graphParams).'<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>' : '').'
 		</fieldset>
 		<br class="clear" />
 		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
@@ -106,10 +105,10 @@ class StatsVisits extends ModuleGraph
 				</ul>
 				'.$this->l('This information is mostly qualitative: you have to determine the interest of a disjointed visit.').'<br />
 		</fieldset>';
-		
+
 		return $this->_html;
 	}
-	
+
 	public function setOption($option, $layers = 1)
 	{
 		switch ($option)
@@ -131,12 +130,12 @@ class StatsVisits extends ModuleGraph
 				break;
 		}
 	}
-	
+
 	protected function getData($layers)
 	{
 		$this->setDateGraph($layers, true);
 	}
-	
+
 	protected function setAllTimeValues($layers)
 	{
 		for ($i = 0; $i < $layers; $i++)
@@ -146,7 +145,7 @@ class StatsVisits extends ModuleGraph
 				$this->_values[$i][(int)(substr($row['date_add'], 0, 4))] = (int)($row['total']);
 		}
 	}
-	
+
 	protected function setYearValues($layers)
 	{
 		for ($i = 0; $i < $layers; $i++)
@@ -156,7 +155,7 @@ class StatsVisits extends ModuleGraph
 				$this->_values[$i][(int)(substr($row['date_add'], 5, 2))] = (int)($row['total']);
 		}
 	}
-	
+
 	protected function setMonthValues($layers)
 	{
 		for ($i = 0; $i < $layers; $i++)

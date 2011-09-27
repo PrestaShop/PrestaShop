@@ -74,7 +74,7 @@
 <script type="text/javascript" src="jscripts/ajaxfilemanager.js"></script>-->
 <script type="text/javascript">
 	var globalSettings = {'upload_init':false};
-	var queryString = '<?php echo makeQueryString(array('path')); ?>';
+	var queryString = '<?php echo Tools::safeOutput(makeQueryString(array('path'))); ?>';
 	var paths = {'root':'<?php echo addTrailingSlash(backslashToSlash(CONFIG_SYS_ROOT_PATH)); ?>', 'root_title':'<?php echo LBL_FOLDER_ROOT; ?>'};
 	var parentFolder = {};
 	var urls = {
@@ -90,7 +90,7 @@
 			'text_editor':'<?php echo  CONFIG_URL_TEXT_EDITOR; ?>',
 			'image_editor':'<?php echo  CONFIG_URL_IMAGE_EDITOR; ?>',
 			'download':'<?php echo CONFIG_URL_DOWNLOAD; ?>',
-			'present':'<?php echo getCurrentUrl(); ?>',
+			'present':'<?php echo Tools::safeOutput(getCurrentUrl()); ?>',
 			'home':'<?php echo CONFIG_URL_HOME; ?>',
 			'view':'<?php echo CONFIG_URL_LIST_LISTING; ?>'			
 		};
@@ -131,7 +131,7 @@
 	var searchRequired = false;
 	var supporedPreviewExts = '<?php echo CONFIG_VIEWABLE_VALID_EXTS; ?>'; 
 	var supportedUploadExts = '<?php echo CONFIG_UPLOAD_VALID_EXTS; ?>'
-	var elementId = <?php  echo (!empty($_GET['elementId'])?"'" . $_GET['elementId'] . "'":'null'); ?>;
+	var elementId = <?php  echo (!empty($_GET['elementId'])?"'" . Tools::safeOutput($_GET['elementId']) . "'":'null'); ?>;
 	var files = {};
 $(document).ready(
 	function()
@@ -464,9 +464,9 @@ $(document).ready(
         		<tr>
         			<td>
         		<b><?php echo LBL_SEARCH_MTIME; ?></b><br />
-        		<input type="text" class="input inputMtime" name="search_mtime_from" id="search_mtime_from" value="<?php echo (!empty($_GET['search_mtime_from'])?$_GET['search_mtime_from']:''); ?>" /> 
+        		<input type="text" class="input inputMtime" name="search_mtime_from" id="search_mtime_from" value="<?php echo (!empty($_GET['search_mtime_from'])?Tools::safeOutput($_GET['search_mtime_from']):''); ?>" /> 
         		<span class="leftToRightArrow">&nbsp;</span>
-        		<input type="text" class="input inputMtime" name="search_mtime_to" id="search_mtime_to" value="<?php echo (!empty($_GET['search_mtime_to'])?$_GET['search_mtime_to']:''); ?>" />
+        		<input type="text" class="input inputMtime" name="search_mtime_to" id="search_mtime_to" value="<?php echo (!empty($_GET['search_mtime_to'])?Tools::safeOutput($_GET['search_mtime_to']):''); ?>" />
         	</td></tr>
 
 			<tr>

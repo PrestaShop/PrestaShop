@@ -418,9 +418,9 @@ class UpsCarrier extends CarrierModule
 		if (isset($_GET['id_tab']))
 			$html .= '<script>
 				  $(".menuTabButton.selected").removeClass("selected");
-				  $("#menuTab'.Tools::getValue('id_tab').'").addClass("selected");
+				  $("#menuTab'.Tools::safeOutput(Tools::getValue('id_tab')).'").addClass("selected");
 				  $(".tabItem.selected").removeClass("selected");
-				  $("#menuTab'.Tools::getValue('id_tab').'Sheet").addClass("selected");
+				  $("#menuTab'.Tools::safeOutput(Tools::getValue('id_tab')).'Sheet").addClass("selected");
 			</script>';
 		return $html;
 	}
@@ -454,30 +454,30 @@ class UpsCarrier extends CarrierModule
 			</style>
 
 
-			<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=1&section=general" method="post" class="form" id="configForm">
+			<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=1&section=general" method="post" class="form" id="configForm">
 
 				<fieldset style="border: 0px;">
 					<h4>'.$this->l('General configuration').' :</h4>
 					<label>'.$this->l('Your UPS Login').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_login" value="'.Tools::getValue('ups_carrier_login', Configuration::get('UPS_CARRIER_LOGIN')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_login" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_login', Configuration::get('UPS_CARRIER_LOGIN'))).'" /></div>
 					<label>'.$this->l('Your UPS Password').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_password" value="'.Tools::getValue('ups_carrier_password', Configuration::get('UPS_CARRIER_PASSWORD')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_password" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_password', Configuration::get('UPS_CARRIER_PASSWORD'))).'" /></div>
 					<label>'.$this->l('Your MyUps ID').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_shipper_id" value="'.Tools::getValue('ups_carrier_shipper_id', Configuration::get('UPS_CARRIER_SHIPPER_ID')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_shipper_id" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_shipper_id', Configuration::get('UPS_CARRIER_SHIPPER_ID'))).'" /></div>
 					<label>'.$this->l('Your UPS API Key').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ups_carrier_api_key" value="'.Tools::getValue('ups_carrier_api_key', Configuration::get('UPS_CARRIER_API_KEY')).'" />
+						<input type="text" size="20" name="ups_carrier_api_key" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_api_key', Configuration::get('UPS_CARRIER_API_KEY'))).'" />
 						<p><a href="https://www.ups.com/upsdeveloperkit" target="_blank">' . $this->l('Please click here to get your UPS API Key.') . '</a></p>
 					</div>
 					<br /><br />
 					<label>'.$this->l('Packaging Weight').' : </label>
 					<div class="margin-form">
-						<input type="text" size="5" name="ups_carrier_packaging_weight" value="'.Tools::getValue('ups_carrier_packaging_weight', Configuration::get('UPS_CARRIER_PACKAGING_WEIGHT')).'" />
-						'.Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT')).'
+						<input type="text" size="5" name="ups_carrier_packaging_weight" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_packaging_weight', Configuration::get('UPS_CARRIER_PACKAGING_WEIGHT'))).'" />
+						'.Tools::safeOutput(Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'))).'
 					</div>
 					<label>'.$this->l('Handling Fee').' : </label>
 					<div class="margin-form">
-						<input type="text" size="5" name="ups_carrier_handling_fee" value="'.Tools::getValue('ups_carrier_handling_fee', Configuration::get('UPS_CARRIER_HANDLING_FEE')).'" />
+						<input type="text" size="5" name="ups_carrier_handling_fee" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_handling_fee', Configuration::get('UPS_CARRIER_HANDLING_FEE'))).'" />
 						'.$configCurrency->sign.'
 					</div>	
 				</fieldset>
@@ -486,12 +486,12 @@ class UpsCarrier extends CarrierModule
 					<h4>'.$this->l('Localization configuration').' :</h4>
 					<label>'.$this->l('Weight unit').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ps_weight_unit" value="'.Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT')).'" />
+						<input type="text" size="20" name="ps_weight_unit" value="'.Tools::safeOutput(Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'))).'" />
 						<p>'.$this->l('The weight unit of your shop (eg. kg or lbs)').'</p>
 					</div>
 					<label>'.$this->l('Dimension unit').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ps_dimension_unit" value="'.Tools::getValue('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT')).'" />
+						<input type="text" size="20" name="ps_dimension_unit" value="'.Tools::safeOutput(Tools::getValue('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT'))).'" />
 						<p>'.$this->l('The dimension unit of your shop (eg. cm or in)').'</p>
 					</div>
 				</fieldset>
@@ -499,13 +499,13 @@ class UpsCarrier extends CarrierModule
 				<fieldset style="border: 0px;">
 					<h4>'.$this->l('Address configuration').' :</h4>
 					<label>'.$this->l('Your address line 1').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_address1" value="'.Tools::getValue('ups_carrier_address1', Configuration::get('UPS_CARRIER_ADDRESS1')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_address1" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_address1', Configuration::get('UPS_CARRIER_ADDRESS1'))).'" /></div>
 					<label>'.$this->l('Your address line 2').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_address2" value="'.Tools::getValue('ups_carrier_address2', Configuration::get('UPS_CARRIER_ADDRESS2')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_address2" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_address2', Configuration::get('UPS_CARRIER_ADDRESS2'))).'" /></div>
 					<label>'.$this->l('Zip / Postal Code').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_postal_code" value="'.Tools::getValue('ups_carrier_postal_code', Configuration::get('UPS_CARRIER_POSTAL_CODE')).'" /></div><br />
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_postal_code" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_postal_code', Configuration::get('UPS_CARRIER_POSTAL_CODE'))).'" /></div><br />
 					<label>'.$this->l('Your City').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="ups_carrier_city" value="'.Tools::getValue('ups_carrier_city', Configuration::get('UPS_CARRIER_CITY')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="ups_carrier_city" value="'.Tools::safeOutput(Tools::getValue('ups_carrier_city', Configuration::get('UPS_CARRIER_CITY'))).'" /></div>
 					<label>'.$this->l('Country').' : </label>
 					<div class="margin-form">
 						<select name="ups_carrier_country" id="ups_carrier_country">
@@ -848,10 +848,10 @@ class UpsCarrier extends CarrierModule
 					<td>'.$c['additionnal_charges'].' '.$configCurrency->sign.'</td>
 					<td>'.$services.'</td>
 					<td>
-						<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=edit&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'" style="float: left;">
+						<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=edit&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'" style="float: left;">
 							<img src="'._PS_IMG_.'admin/edit.gif" />
 						</a>
-						<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=delete&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'&id_category='.(int)($c['id_category']).'" method="post" class="form" style="float: left;">
+						<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=delete&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'&id_category='.(int)($c['id_category']).'" method="post" class="form" style="float: left;">
 							<input name="submitSave" type="image" src="'._PS_IMG_.'admin/delete.gif" OnClick="return confirm(\''.$this->l('Are you sure you want to delete this specific UPS configuration for this category ?').'\');" />
 						</form>
 					</td>
@@ -877,8 +877,8 @@ class UpsCarrier extends CarrierModule
 				$path .= $p;
 			}
 
-			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=edit&id_ups_rate_config='.(int)(Tools::getValue('id_ups_rate_config')).'" method="post" class="form">
+			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=edit&id_ups_rate_config='.(int)(Tools::getValue('id_ups_rate_config')).'" method="post" class="form">
 						<label>'.$this->l('Category').' :</label>
 						<div class="margin-form" style="padding: 0.2em 0.5em 0 0; font-size: 12px;">'.$path.' <input type="hidden" name="id_category" value="'.(int)($configSelected['id_category']).'" /></div><br clear="left" />
 						<label>'.$this->l('Packaging Type').' : </label>
@@ -890,7 +890,7 @@ class UpsCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::getValue('additionnal_charges', $configSelected['additionnal_charges']).'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::safeOutput(Tools::getValue('additionnal_charges', $configSelected['additionnal_charges'])).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ups_rate_service_code` WHERE `id_ups_rate_service_group` = '.(int)Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'));	
@@ -908,7 +908,7 @@ class UpsCarrier extends CarrierModule
 		else
 		{
 			$html .= '<p align="center"><b>'.$this->l('Add a rule').'</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=add" method="post" class="form">
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=add" method="post" class="form">
 						<label>'.$this->l('Category').' : </label>
 						<div class="margin-form">
 							<select name="id_category">
@@ -925,7 +925,7 @@ class UpsCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::getValue('additionnal_charges').'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::safeOutput(Tools::getValue('additionnal_charges')).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ups_rate_service_code` WHERE `id_ups_rate_service_group` = '.(int)Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'));	
@@ -1099,10 +1099,10 @@ class UpsCarrier extends CarrierModule
 					<td>'.$c['additionnal_charges'].' '.$configCurrency->sign.'</td>
 					<td>'.$services.'</td>
 					<td>
-						<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=edit&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'" style="float: left;">
+						<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=edit&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'" style="float: left;">
 							<img src="'._PS_IMG_.'admin/edit.gif" />
 						</a>
-						<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=delete&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'&id_product='.(int)($c['id_product']).'" method="post" class="form" style="float: left;">
+						<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=delete&id_ups_rate_config='.(int)($c['id_ups_rate_config']).'&id_product='.(int)($c['id_product']).'" method="post" class="form" style="float: left;">
 							<input name="submitSave" type="image" src="'._PS_IMG_.'admin/delete.gif" OnClick="return confirm(\''.$this->l('Are you sure you want to delete this specific UPS configuration for this product ?').'\');" />
 						</form>
 					</td>
@@ -1120,8 +1120,8 @@ class UpsCarrier extends CarrierModule
 			$configSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'ups_rate_config` WHERE `id_ups_rate_config` = '.(int)(Tools::getValue('id_ups_rate_config')));
 			$product = new Product((int)$configSelected['id_product'], false, $this->context->language->id);
 
-			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=edit&id_ups_rate_config='.(int)(Tools::getValue('id_ups_rate_config')).'" method="post" class="form">
+			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=edit&id_ups_rate_config='.(int)(Tools::getValue('id_ups_rate_config')).'" method="post" class="form">
 						<label>'.$this->l('Product').' :</label>
 						<div class="margin-form" style="padding: 0.2em 0.5em 0 0; font-size: 12px;">'.$product->name.' <input type="hidden" name="id_product" value="'.(int)($configSelected['id_product']).'" /></div><br clear="left" />
 						<label>'.$this->l('Packaging Type').' : </label>
@@ -1133,7 +1133,7 @@ class UpsCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::getValue('additionnal_charges', $configSelected['additionnal_charges']).'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::safeOutput(Tools::getValue('additionnal_charges', $configSelected['additionnal_charges'])).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ups_rate_service_code` WHERE `id_ups_rate_service_group` = '.(int)Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'));	
@@ -1151,7 +1151,7 @@ class UpsCarrier extends CarrierModule
 		else
 		{
 			$html .= '<p align="center"><b>'.$this->l('Add a rule').'</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=add" method="post" class="form">
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=add" method="post" class="form">
 						<label>'.$this->l('Product').' : </label>
 						<div class="margin-form">
 							<select name="id_product">
@@ -1174,7 +1174,7 @@ class UpsCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::getValue('additionnal_charges').'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additionnal_charges" value="'.Tools::safeOutput(Tools::getValue('additionnal_charges')).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ups_rate_service_code` WHERE `id_ups_rate_service_group` = '.(int)Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'));	

@@ -56,7 +56,7 @@ class FedexCarrier extends CarrierModule
 	{
 		$this->name = 'fedexcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2.1';
+		$this->version = '1.2.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -432,9 +432,9 @@ class FedexCarrier extends CarrierModule
 		if (isset($_GET['id_tab']))
 			$html .= '<script>
 				  $(".menuTabButton.selected").removeClass("selected");
-				  $("#menuTab'.Tools::getValue('id_tab').'").addClass("selected");
+				  $("#menuTab'.Tools::safeOutput(Tools::getValue('id_tab')).'").addClass("selected");
 				  $(".tabItem.selected").removeClass("selected");
-				  $("#menuTab'.Tools::getValue('id_tab').'Sheet").addClass("selected");
+				  $("#menuTab'.Tools::safeOutput(Tools::getValue('id_tab')).'Sheet").addClass("selected");
 			</script>';
 		return $html;
 	}
@@ -468,30 +468,30 @@ class FedexCarrier extends CarrierModule
 			</style>
 
 
-			<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=1&section=general" method="post" class="form" id="configForm">
+			<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=1&section=general" method="post" class="form" id="configForm">
 
 				<fieldset style="border: 0px;">
 					<h4>'.$this->l('General configuration').' :</h4>
 					<label>'.$this->l('Your Fedex account').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_account" value="'.Tools::getValue('fedex_carrier_account', Configuration::get('FEDEX_CARRIER_ACCOUNT')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_account" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_account', Configuration::get('FEDEX_CARRIER_ACCOUNT'))).'" /></div>
 					<label>'.$this->l('Your Fedex meter number').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_meter" value="'.Tools::getValue('fedex_carrier_meter', Configuration::get('FEDEX_CARRIER_METER')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_meter" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_meter', Configuration::get('FEDEX_CARRIER_METER'))).'" /></div>
 					<label>'.$this->l('Your Fedex password').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_password" value="'.Tools::getValue('fedex_carrier_password', Configuration::get('FEDEX_CARRIER_PASSWORD')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_password" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_password', Configuration::get('FEDEX_CARRIER_PASSWORD'))).'" /></div>
 					<label>'.$this->l('Your Fedex API Key').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="fedex_carrier_api_key" value="'.Tools::getValue('fedex_carrier_api_key', Configuration::get('FEDEX_CARRIER_API_KEY')).'" />
+						<input type="text" size="20" name="fedex_carrier_api_key" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_api_key', Configuration::get('FEDEX_CARRIER_API_KEY'))).'" />
 						<p><a href="http://www.fedex.com/webtools/" target="_blank">' . $this->l('Please click here to get your Fedex API Key.') . '</a></p>
 					</div>
 					<br /><br />
 					<label>'.$this->l('Packaging Weight').' : </label>
 					<div class="margin-form">
-						<input type="text" size="5" name="fedex_carrier_packaging_weight" value="'.Tools::getValue('fedex_carrier_packaging_weight', Configuration::get('FEDEX_CARRIER_PACKAGING_WEIGHT')).'" />
-						'.Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT')).'
+						<input type="text" size="5" name="fedex_carrier_packaging_weight" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_packaging_weight', Configuration::get('FEDEX_CARRIER_PACKAGING_WEIGHT'))).'" />
+						'.Tools::safeOutput(Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'))).'
 					</div>
 					<label>'.$this->l('Handling Fee').' : </label>
 					<div class="margin-form">
-						<input type="text" size="5" name="fedex_carrier_handling_fee" value="'.Tools::getValue('fedex_carrier_handling_fee', Configuration::get('FEDEX_CARRIER_HANDLING_FEE')).'" />
+						<input type="text" size="5" name="fedex_carrier_handling_fee" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_handling_fee', Configuration::get('FEDEX_CARRIER_HANDLING_FEE'))).'" />
 						'.$configCurrency->sign.'
 					</div>
 				</fieldset>
@@ -500,12 +500,12 @@ class FedexCarrier extends CarrierModule
 					<h4>'.$this->l('Localization configuration').' :</h4>
 					<label>'.$this->l('Weight unit').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ps_weight_unit" value="'.Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT')).'" />
+						<input type="text" size="20" name="ps_weight_unit" value="'.Tools::safeOutput(Tools::getValue('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'))).'" />
 						<p>'.$this->l('The weight unit of your shop (eg. kg or lbs)').'</p>
 					</div>
 					<label>'.$this->l('Dimension unit').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ps_dimension_unit" value="'.Tools::getValue('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT')).'" />
+						<input type="text" size="20" name="ps_dimension_unit" value="'.Tools::safeOutput(Tools::getValue('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT'))).'" />
 						<p>'.$this->l('The dimension unit of your shop (eg. cm or in)').'</p>
 					</div>
 				</fieldset>
@@ -513,13 +513,13 @@ class FedexCarrier extends CarrierModule
 				<fieldset style="border: 0px;">
 					<h4>'.$this->l('Address configuration').' :</h4>
 					<label>'.$this->l('Your address line 1').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_address1" value="'.Tools::getValue('fedex_carrier_address1', Configuration::get('FEDEX_CARRIER_ADDRESS1')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_address1" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_address1', Configuration::get('FEDEX_CARRIER_ADDRESS1'))).'" /></div>
 					<label>'.$this->l('Your address line 2').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_address2" value="'.Tools::getValue('fedex_carrier_address2', Configuration::get('FEDEX_CARRIER_ADDRESS2')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_address2" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_address2', Configuration::get('FEDEX_CARRIER_ADDRESS2'))).'" /></div>
 					<label>'.$this->l('Zip / Postal Code').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_postal_code" value="'.Tools::getValue('fedex_carrier_postal_code', Configuration::get('FEDEX_CARRIER_POSTAL_CODE')).'" /></div><br />
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_postal_code" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_postal_code', Configuration::get('FEDEX_CARRIER_POSTAL_CODE'))).'" /></div><br />
 					<label>'.$this->l('Your City').' : </label>
-					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_city" value="'.Tools::getValue('fedex_carrier_city', Configuration::get('FEDEX_CARRIER_CITY')).'" /></div>
+					<div class="margin-form"><input type="text" size="20" name="fedex_carrier_city" value="'.Tools::safeOutput(Tools::getValue('fedex_carrier_city', Configuration::get('FEDEX_CARRIER_CITY'))).'" /></div>
 					<label>'.$this->l('Country').' : </label>
 					<div class="margin-form">
 						<select name="fedex_carrier_country" id="fedex_carrier_country">
@@ -832,10 +832,10 @@ class FedexCarrier extends CarrierModule
 					<td>'.$c['additional_charges'].' '.$configCurrency->sign.'</td>
 					<td>'.$services.'</td>
 					<td>
-						<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=edit&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'" style="float: left;">
+						<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=edit&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'" style="float: left;">
 							<img src="'._PS_IMG_.'admin/edit.gif" />
 						</a>
-						<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=delete&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'&id_category='.(int)($c['id_category']).'" method="post" class="form" style="float: left;">
+						<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=delete&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'&id_category='.(int)($c['id_category']).'" method="post" class="form" style="float: left;">
 							<input name="submitSave" type="image" src="'._PS_IMG_.'admin/delete.gif" OnClick="return confirm(\''.$this->l('Are you sure you want to delete this specific FEDEX configuration for this category ?').'\');" />
 						</form>
 					</td>
@@ -861,8 +861,8 @@ class FedexCarrier extends CarrierModule
 				$path .= $p;
 			}
 
-			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=edit&id_fedex_rate_config='.(int)(Tools::getValue('id_fedex_rate_config')).'" method="post" class="form">
+			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=edit&id_fedex_rate_config='.(int)(Tools::getValue('id_fedex_rate_config')).'" method="post" class="form">
 						<label>'.$this->l('Category').' :</label>
 						<div class="margin-form" style="padding: 0.2em 0.5em 0 0; font-size: 12px;">'.$path.' <input type="hidden" name="id_category" value="'.(int)($configSelected['id_category']).'" /></div><br clear="left" />
 						<label>'.$this->l('Pickup Type').' : </label>
@@ -882,7 +882,7 @@ class FedexCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::getValue('additional_charges', $configSelected['additional_charges']).'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges', $configSelected['additional_charges'])).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
@@ -900,7 +900,7 @@ class FedexCarrier extends CarrierModule
 		else
 		{
 			$html .= '<p align="center"><b>'.$this->l('Add a rule').'</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=2&section=category&action=add" method="post" class="form">
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=2&section=category&action=add" method="post" class="form">
 						<label>'.$this->l('Category').' : </label>
 						<div class="margin-form">
 							<select name="id_category">
@@ -925,7 +925,7 @@ class FedexCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::getValue('additional_charges').'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges')).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
@@ -1102,10 +1102,10 @@ class FedexCarrier extends CarrierModule
 					<td>'.$c['additional_charges'].' '.$configCurrency->sign.'</td>
 					<td>'.$services.'</td>
 					<td>
-						<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=edit&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'" style="float: left;">
+						<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=edit&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'" style="float: left;">
 							<img src="'._PS_IMG_.'admin/edit.gif" />
 						</a>
-						<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=delete&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'&id_product='.(int)($c['id_product']).'" method="post" class="form" style="float: left;">
+						<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=delete&id_fedex_rate_config='.(int)($c['id_fedex_rate_config']).'&id_product='.(int)($c['id_product']).'" method="post" class="form" style="float: left;">
 							<input name="submitSave" type="image" src="'._PS_IMG_.'admin/delete.gif" OnClick="return confirm(\''.$this->l('Are you sure you want to delete this specific FEDEX configuration for this product ?').'\');" />
 						</form>
 					</td>
@@ -1123,8 +1123,8 @@ class FedexCarrier extends CarrierModule
 			$configSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_fedex_rate_config` = '.(int)(Tools::getValue('id_fedex_rate_config')));
 			$product = new Product((int)$configSelected['id_product'], false, (int)$this->context->language->id);
 
-			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=edit&id_fedex_rate_config='.(int)(Tools::getValue('id_fedex_rate_config')).'" method="post" class="form">
+			$html .= '<p align="center"><b>'.$this->l('Update a rule').' (<a href="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=add">'.$this->l('Add a rule').' ?</a>)</b></p>
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=edit&id_fedex_rate_config='.(int)(Tools::getValue('id_fedex_rate_config')).'" method="post" class="form">
 						<label>'.$this->l('Product').' :</label>
 						<div class="margin-form" style="padding: 0.2em 0.5em 0 0; font-size: 12px;">'.$product->name.' <input type="hidden" name="id_product" value="'.(int)($configSelected['id_product']).'" /></div><br clear="left" />
 						<label>'.$this->l('Pickup Type').' : </label>
@@ -1144,13 +1144,14 @@ class FedexCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::getValue('additional_charges', $configSelected['additional_charges']).'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges', $configSelected['additional_charges'])).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 								foreach($rateServiceList as $rateService)
 								{
-									$configServiceSelected = Db::getInstance()->getValue('SELECT `id_fedex_rate_service_code` FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)(Tools::getValue('id_fedex_rate_config')).' AND `id_fedex_rate_service_code` = '.(int)($rateService['id_fedex_rate_service_code']));
+									$configServiceSelected = Db::getInstance()->getValue('SELECT `id_fedex_rate_service_code` FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)(
+									Tools::getValue('id_fedex_rate_config')).' AND `id_fedex_rate_service_code` = '.(int)($rateService['id_fedex_rate_service_code']));
 									$html .= '<input type="checkbox" name="service[]" value="'.$rateService['id_fedex_rate_service_code'].'" '.(($this->_isPostCheck($rateService['id_fedex_rate_service_code']) == 1 || $configServiceSelected > 0) ? 'checked="checked"' : '').' /> '.$rateService['service'].'<br />';
 								}
 						$html .= '
@@ -1162,7 +1163,7 @@ class FedexCarrier extends CarrierModule
 		else
 		{
 			$html .= '<p align="center"><b>'.$this->l('Add a rule').'</b></p>
-					<form action="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section=product&action=add" method="post" class="form">
+					<form action="index.php?tab='.Tools::safeOutput(Tools::getValue('tab')).'&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'&id_tab=3&section=product&action=add" method="post" class="form">
 						<label>'.$this->l('Product').' : </label>
 						<div class="margin-form">
 							<select name="id_product">
@@ -1193,7 +1194,7 @@ class FedexCarrier extends CarrierModule
 						$html .= '</select>
 						</div>
 						<label>'.$this->l('Additional charges').' : </label>
-						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::getValue('additional_charges').'" /></div><br />
+						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges')).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
 								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
@@ -1692,7 +1693,7 @@ class FedexCarrier extends CarrierModule
 				Db::getInstance()->autoExecute(_DB_PREFIX_.'fedex_cache_test', array('hash' => pSQL(md5(var_export($requestHash, true))), 'result' => pSQL(serialize($resultTab)), 'date_add' => pSQL(date('Y-m-d H:i:s')), 'date_upd' => pSQL(date('Y-m-d H:i:s'))), 'INSERT');
 
 			// Return results
-			if (isset($resultTab->HighestSeverity) && $resultTab->HighestSeverity == 'SUCCESS')
+			if (isset($resultTab->HighestSeverity) && $resultTab->HighestSeverity != 'ERROR' && isset($resultTab->RateReplyDetails->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount))
 				return true;
 
 			if (isset($resultTab->HighestSeverity) && $resultTab->HighestSeverity == 'ERROR')
@@ -1763,7 +1764,7 @@ class FedexCarrier extends CarrierModule
 
 		// Get Rates
 		try { $resultTab = $client->getRates($request); }
-		catch (Exception $e) { return array('connect' => false, 'cost' => 0); }
+		catch (Exception $e) { }
 
 
 		// Check currency
@@ -1775,7 +1776,7 @@ class FedexCarrier extends CarrierModule
 		}
 
 		// Return results
-		if (isset($resultTab->HighestSeverity) && $resultTab->HighestSeverity == 'SUCCESS')
+		if (isset($resultTab->HighestSeverity) && $resultTab->HighestSeverity != 'ERROR' && isset($resultTab->RateReplyDetails->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount))
 			return array('connect' => true, 'cost' => number_format($resultTab->RateReplyDetails->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount,2,'.',',') * $conversionRate);
 
 		if (isset($resultTab->HighestSeverity) && $resultTab->HighestSeverity == 'ERROR')

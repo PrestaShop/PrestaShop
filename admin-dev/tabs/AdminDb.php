@@ -114,7 +114,7 @@ class AdminDb extends AdminPreferences
 					if ($engineType == $tables_engine[$table])
 						$this->_errors[] = $table.' '.$this->l('is already in').' '.$engineType;
 					else
-						if (!Db::getInstance()->Execute('ALTER TABLE '.pSQL($table).' ENGINE='.pSQL($engineType)))
+						if (!Db::getInstance()->Execute('ALTER TABLE `'.bqSQL($table).'` ENGINE=`'.bqSQL($engineType).'`'))
 							$this->_errors[] = $this->l('Can\'t change engine for').' '.$table;
 						else
 							echo '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Engine change of').' '.$table.' '.$this->l('to').' '.$engineType.'</div>';

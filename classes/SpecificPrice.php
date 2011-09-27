@@ -198,8 +198,8 @@ class SpecificPriceCore extends ObjectModel
 
 		return Db::getInstance()->Execute('
 		INSERT INTO `'._DB_PREFIX_.'specific_price_priority` (`id_product`, `priority`)
-		VALUES ('.(int)$id_product.',\''.rtrim($value, ';').'\')
-		ON DUPLICATE KEY UPDATE `priority` = \''.rtrim($value, ';').'\'
+		VALUES ('.(int)$id_product.',\''.pSQL(rtrim($value, ';')).'\')
+		ON DUPLICATE KEY UPDATE `priority` = \''.pSQL(rtrim($value, ';')).'\'
 		');
 	}
 
@@ -285,9 +285,9 @@ class SpecificPriceCore extends ObjectModel
 					`id_group` IN(0, '.(int)$id_group.') AND
 					`from_quantity` = 1 AND
 					(
-						(`from` = \'0000-00-00 00:00:00\' OR \''.$beginning.'\' >= `from`)
+						(`from` = \'0000-00-00 00:00:00\' OR \''.pSQL($beginning).'\' >= `from`)
 						AND
-						(`to` = \'0000-00-00 00:00:00\' OR \''.$ending.'\' <= `to`)
+						(`to` = \'0000-00-00 00:00:00\' OR \''.pSQL($ending).'\' <= `to`)
 					)
 					AND
 					`reduction` > 0

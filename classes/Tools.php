@@ -509,8 +509,8 @@ class ToolsCore
 	public static function safeOutput($string, $html = false)
 	{
 	 	if (!$html)
-			$string = @htmlentities(strip_tags($string), ENT_QUOTES, 'utf-8');
-		return $string;
+			$string = strip_tags($string);
+		return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);;
 	}
 
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)

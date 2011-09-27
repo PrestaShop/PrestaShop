@@ -108,7 +108,7 @@ class Followup extends Module
 		
 		echo '
 		<h2>'.$this->l('Customer follow-up').'</h2>
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset style="width: 400px; float: left;">
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 				<p>'.$this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br /><br />

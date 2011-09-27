@@ -57,6 +57,11 @@ function pSQL($string, $htmlOK = false)
 	return Db::getInstance()->escape($string, $htmlOK);
 }
 
+function bqSQL($string)
+{
+	return str_replace('`', '\`', pSQL($string));
+}
+
 /**
  * @deprecated
  */

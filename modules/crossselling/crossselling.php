@@ -82,7 +82,7 @@ class CrossSelling extends Module
 			$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
 		}
 		$this->_html .= '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 			<label>'.$this->l('Display price on products').'</label>
 			<div class="margin-form">

@@ -95,7 +95,7 @@ class Reverso extends Module
 
 		$this->_html .=
 			'<br /><fieldset><legend>'.$this->l('Configuration').'</legend>
-			<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<label for="serial">'.$this->l('Serial number').' :</label>
 			<div class="margin-form">
 				<input type="text" name="reverso_serial" value="'.$conf['REVERSO_SERIAL'].'" />

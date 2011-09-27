@@ -621,7 +621,7 @@ if (Tools::isSubmit('saveHook'))
 			foreach ($hookedModules as $module)
 			{
 				$ids = explode('_', $module);
-				$value .= '('.$ids[1].', '.$id_shop.', (SELECT id_hook FROM '._DB_PREFIX_.'hook WHERE `name` = \''.pSQL($hook).'\' LIMIT 1), '.$i.'),';
+				$value .= '('.(int)$ids[1].', '.$id_shop.', (SELECT id_hook FROM '._DB_PREFIX_.'hook WHERE `name` = \''.pSQL($hook).'\' LIMIT 1), '.(int)$i.'),';
 				$i++;
 			}
 			$value = rtrim($value, ',');
@@ -730,12 +730,12 @@ if (Tools::isSubmit('syncImapMail'))
 	OR !$user = Configuration::get('PS_SAV_IMAP_USER')
 	OR !$password = Configuration::get('PS_SAV_IMAP_PWD'))
 	die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
-	
+
 	if (!function_exists('imap_open'))
 		die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
-	
+
 	$mbox = @imap_open('{'.$url.':'.$port.'}', $user, $password);
-	
+
 	//checks if there is no error when connecting imap server
 	$errors = imap_errors();
 	$str_errors = '';
@@ -747,16 +747,16 @@ if (Tools::isSubmit('syncImapMail'))
 			$str_errors .= '"'.$error.'",';
 		$str_errors = rtrim($str_errors, ',').'';
 	}
-	
+
 	//checks if imap connexion is active
 	if (!$mbox)
 		die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox"]}');
-	
+
 	//Returns information about the current mailbox. Returns FALSE on failure.
 	$check = imap_check($mbox);
 	if ($check)
 		die('{"hasError" : true, "errors" : ["Fail to get information about the current mailbox"]}');
-	
+
 	if ($check->Nmsgs == 0)
 		die('{"hasError" : true, "errors" : ["NO message to sync"]}');
 
@@ -768,7 +768,7 @@ if (Tools::isSubmit('syncImapMail'))
 	   		$subject = $overview->subject;
 	   	else
 	   		$subject = '';
-	   	
+
 		//Creating an md5 to check if message has been allready processed
 	    $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
 	    $exist = Db::getInstance()->getValue(

@@ -526,7 +526,7 @@ class Ebay extends Module
 		if (Tools::getValue('ebay_country_default_fr') == 'ok')
 			$this->context->cookie->ebay_country_default_fr = true;
 		if (strtolower($this->context->country->iso_code) != 'fr' && !isset($this->context->cookie->ebay_country_default_fr))
-			return $this->_html.$this->displayError($this->l('eBay module currently works only for eBay.fr').'. <a href="'.$_SERVER['REQUEST_URI'].'&ebay_country_default_fr=ok">'.$this->l('Continue anyway ?').'</a>');
+			return $this->_html.$this->displayError($this->l('eBay module currently works only for eBay.fr').'. <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&ebay_country_default_fr=ok">'.$this->l('Continue anyway ?').'</a>');
 
 
 		// Checking Extension
@@ -653,7 +653,7 @@ class Ebay extends Module
 					  success: function(data)
 					  {
 						if (data == \'OK\')
-							window.location.href = \''.$_SERVER['REQUEST_URI'].'&action=validateToken\';
+							window.location.href = \''.Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=validateToken\';
 						else
 							setTimeout ("checkToken()", 5000);
 					  }
@@ -690,7 +690,7 @@ class Ebay extends Module
 					});
 				});
 			</script>
-			<form action="'.$_SERVER['REQUEST_URI'].'&action=logged" method="post">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=logged" method="post">
 				<fieldset>
 					<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Register the module on eBay').'</legend>
 					<label>'.$this->l('Click on the button below').'</label>
@@ -763,9 +763,9 @@ class Ebay extends Module
 		if (isset($_GET['id_tab']))
 			$html .= '<script>
 				  $(".menuTabButton.selected").removeClass("selected");
-				  $("#menuTab'.$_GET['id_tab'].'").addClass("selected");
+				  $("#menuTab'.Tools::safeOutput($_GET['id_tab']).'").addClass("selected");
 				  $(".tabItem.selected").removeClass("selected");
-				  $("#menuTab'.$_GET['id_tab'].'Sheet").addClass("selected");
+				  $("#menuTab'.Tools::safeOutput($_GET['id_tab']).'Sheet").addClass("selected");
 			</script>';
 		return $html;
 	}
@@ -777,22 +777,22 @@ class Ebay extends Module
 
 
 		// Display Form
-		$html = '<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=1&section=parameters" method="post" class="form" id="configForm1">
+		$html = '<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=1&section=parameters" method="post" class="form" id="configForm1">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('To export your products on eBay, you have to create a pro account on eBay (see Help) and configure your eBay-Prestashop module.').'</h4>
 					<label>'.$this->l('eBay Identifier').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ebay_identifier" value="'.Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')).'" />
+						<input type="text" size="20" name="ebay_identifier" value="'.Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))).'" />
 						<p>'.(Configuration::get('EBAY_IDENTIFIER') ? '<a href="http://shop.ebay.fr/'.Configuration::get('EBAY_IDENTIFIER').'/m.html?_ipg=50&_sop=12&_rdc=1" target="_blank">'.$this->l('Your products on eBay').'</a>' : $this->l('Your eBay identifier')).'</p>
 					</div>
 					<label>'.$this->l('eBay shop').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shop" value="'.Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP')).'" />
+						<input type="text" size="20" name="ebay_shop" value="'.Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP'))).'" />
 						<p>'.(Configuration::get('EBAY_SHOP') ? '<a href="http://stores.ebay.fr/'.Configuration::get('EBAY_SHOP').'" target="_blank">'.$this->l('Your shop on eBay').'</a>' : $this->l('Your eBay shop name')).'</p>
 					</div>
 					<label>'.$this->l('Paypal Identifier (e-mail)').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ebay_paypal_email" value="'.Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL')).'" />
+						<input type="text" size="20" name="ebay_paypal_email" value="'.Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))).'" />
 						<p>'.$this->l('You have to set your PayPal e-mail account, it\'s the only payment available with this module').'</p>
 					</div>
 					<label>'.$this->l('Shipping method').' : </label>
@@ -805,12 +805,12 @@ class Ebay extends Module
 					</div>
 					<label>'.$this->l('Shipping cost').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shipping_cost" value="'.Tools::getValue('ebay_shipping_cost', Configuration::get('EBAY_SHIPPING_COST')).'" /> '.$configCurrency->sign.'
+						<input type="text" size="20" name="ebay_shipping_cost" value="'.Tools::safeOutput(Tools::getValue('ebay_shipping_cost', Configuration::get('EBAY_SHIPPING_COST'))).'" /> '.$configCurrency->sign.'
 						<p>'.$this->l('Shipping cost configuration for your products on eBay').'</p>
 					</div>
 					<label>'.$this->l('Shop postal code').' : </label>
 					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shop_postalcode" value="'.Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE')).'" />
+						<input type="text" size="20" name="ebay_shop_postalcode" value="'.Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))).'" />
 						<p>'.$this->l('Your shop\'s postal code').'</p>
 					</div>
 				</fieldset>
@@ -932,13 +932,13 @@ class Ebay extends Module
 		// Display header
 		$html = '<p><b>'.$this->l('To export your products on eBay, you have to associate each one of your shop categories to an eBay category. You can also define an impact of your price on eBay.').'</b></p><br />
 
-		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
+		<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
 			<p><b>'.$this->l('You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.').'</b>
 			<input class="button" name="submitSave" type="submit" value="'.$this->l('Suggest Categories').'" />
 			</p><br />
 		</form>
 
-		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=2&section=category" method="post" class="form" id="configForm2">
+		<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category" method="post" class="form" id="configForm2">
 		<table class="table tableDnD" cellpadding="0" cellspacing="0" width="100%">
 			<thead>
 				<tr class="nodrag nodrop">
@@ -1108,10 +1108,10 @@ class Ebay extends Module
 		$ad = dirname($_SERVER["PHP_SELF"]);
 
 		// Display Form
-		$html = '<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=3&section=template" method="post" class="form" id="configForm3">
+		$html = '<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=3&section=template" method="post" class="form" id="configForm3">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('You can customise the template for your products page on eBay').' :</h4>
-					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">'.Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE')).'</textarea><br />
+					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">'.Tools::safeOutput(Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE'))).'</textarea><br />
 
 					'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '
 					<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -1289,7 +1289,7 @@ class Ebay extends Module
 
 		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 
-		<form action="index.php?tab='.$_GET['tab'].'&configure='.$_GET['configure'].'&token='.$_GET['token'].'&tab_module='.$_GET['tab_module'].'&module_name='.$_GET['module_name'].'&id_tab=4&section=sync" method="post" class="form" id="configForm4">
+		<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=4&section=sync" method="post" class="form" id="configForm4">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('You will now push your products on eBay.').' <b>'.$this->l('Reminder,').'</b> '.$this->l('you will not have to pay any fees if you have a shop on eBay.').'</h4>
 					<label style="width: 250px;">'.$this->l('Sync Mode').' : </label><br clear="left" /><br /><br />

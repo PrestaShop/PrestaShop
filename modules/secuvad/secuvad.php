@@ -607,7 +607,7 @@ class Secuvad extends Module
 	private function _setFormConfigure()
 	{
 		$this->_html .= '
-		<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">
+		<form method="POST" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 			<fieldset style="width:430px;margin-right:10px;margin-bottom:10px;">
 				<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'/modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Company').'</legend>
 				
@@ -645,7 +645,7 @@ class Secuvad extends Module
 			$categories[1]['infos'] = array('name' => $this->l('Home'), 'id_parent' => 0, 'level_depth' => 0);
 			
 			$this->_html .= '
-			<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">
+			<form method="POST" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 				<fieldset style="width:900px;margin-right:10px;margin-bottom:10px;">
 					<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'/modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Secuvad categories').'</legend>
 					
@@ -664,7 +664,7 @@ class Secuvad extends Module
 			';
 			
 			$this->_html .= '
-			<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">
+			<form method="POST" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 				<fieldset style="width:430px;margin-right:10px;margin-bottom:10px;">
 					<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'/modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Secuvad Payment').'</legend>
 					
@@ -699,7 +699,7 @@ class Secuvad extends Module
 			';
 			
 			$this->_html .= '
-			<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">
+			<form method="POST" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 				<fieldset style="width:430px;margin-right:10px;margin-bottom:10px;">
 					<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'/modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Secuvad Carrier').'</legend>
 					
@@ -786,7 +786,7 @@ class Secuvad extends Module
 	{
 		$this->_html .= '
 		<h3>'.$this->l('In order to use the Secuvad module, please fill in this form, then click "Register".').'</h3>
-		<form method="POST" action="'.($lock ? $this->_getSecuvadRegisterURL() : $_SERVER['REQUEST_URI']).'">';
+		<form method="POST" action="'.($lock ? $this->_getSecuvadRegisterURL() : Tools::safeOutput($_SERVER['REQUEST_URI'])).'">';
 		if ($lock)
 		{
 			foreach (Tools::getValue('categories') as $category)

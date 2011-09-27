@@ -196,7 +196,7 @@ class Editorial extends Module
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>';
 		$this->_html .= '
 		<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>
-		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" enctype="multipart/form-data">
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
 			<fieldset style="width: 905px;">
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->displayName.'</legend>
 				<label>'.$this->l('Main title').'</label>
@@ -252,7 +252,7 @@ class Editorial extends Module
 						$this->_html .= '<div id="image" >
 							<img src="'.$this->_path.'homepage_logo.jpg?t='.time().'" />
 							<p align="center">'.$this->l('Filesize').' '.(filesize(dirname(__FILE__).'/homepage_logo.jpg') / 1000).'kb</p>
-							<a href="'.$_SERVER['REQUEST_URI'].'&deleteImage" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+							<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /> '.$this->l('Delete').'</a>
 						</div>';
 						

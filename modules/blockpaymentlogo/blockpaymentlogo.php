@@ -82,7 +82,7 @@ class BlockPaymentLogo extends Module
 		else
 		{
 			$html .= '
-			<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 				<fieldset>
 					<legend><img src="'.$this->_path.'/logo.gif" alt="" /> '.$this->l('Configure').'</legend>
 					<label>'.$this->l('Page CMS for link').':</label>

@@ -172,10 +172,10 @@ class Envoimoinscher extends Module
 		&facturation.contact_ville='.(isset($confs['EMC_CITY']) ? htmlspecialchars($confs['EMC_CITY'], ENT_COMPAT, 'UTF-8') : '' ).'
 		&facturation.contact_tel='.(isset($confs['EMC_PHONE']) ? htmlspecialchars($confs['EMC_PHONE'], ENT_COMPAT, 'UTF-8') : '' ).'
 		&facturation.contact_email='.(isset($confs['EMC_EMAIL']) ? htmlspecialchars($confs['EMC_EMAIL'], ENT_COMPAT, 'UTF-8') : '' ).'
-		&url_renvoi='.urlencode(Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').$_SERVER['REQUEST_URI']).'">';
+		&url_renvoi='.urlencode(Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').Tools::safeOutput($_SERVER['REQUEST_URI'])).'">';
 		
 						
-		$this->_html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form">
+		$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form">
 		<div style="float: right; width: 440px; height: 165px; border: 1px dashed rgb(102, 102, 102); padding: 8px; margin-left: 12px;margin-top: 11px;">'.$link.'
 			<h3>'.$this->l('Create Envoimoinscher account:').'</h3>
 			<p style="text-align:justify">'.$this->l('To create your account on Envoimoinscher, click the image below. You will go to a dedicated personal space where you will find the necessary tools for easy management of your shipments.').'</p>
