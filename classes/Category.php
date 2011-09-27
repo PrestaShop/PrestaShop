@@ -674,7 +674,7 @@ class CategoryCore extends ObjectModel
 						FROM `'._DB_PREFIX_.'category` c3 
 						WHERE c3.`nleft` > c.`nleft` 
 						AND c3.`nright` < c.`nright`
-			AND c3.`id_category`  IN ('.array_map('intval', $selectedCat).')
+			AND c3.`id_category`  IN ('.pSQL($selectedCat).')
 					)' : '0').' AS nbSelectedSubCat
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->sqlLang('cl').'
