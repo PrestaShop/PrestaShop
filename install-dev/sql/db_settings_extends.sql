@@ -285,7 +285,7 @@ INSERT INTO `PREFIX_category_lang` (`id_category`, `id_lang`, `name`, `descripti
 INSERT INTO `PREFIX_category_product` (`id_category`, `id_product`, `position`) VALUES
 (1, 1, 0),(1, 2, 1),(1, 6, 2),(1, 7, 3),(2, 1, 0),(2, 2, 1),(2, 7, 2),(3, 8, 0),(3, 9, 1),(4, 5, 0),(4, 6, 1);
 
-INSERT INTO `PREFIX_attribute_group` (`id_attribute_group`, `is_color_group`, `position`) VALUES (1, 0, 0),(2, 1, 1),(3, 0, 2);
+INSERT INTO `PREFIX_attribute_group` (`id_attribute_group`, `is_color_group`, `group_type`, `position`) VALUES (1, 0, 'select', 0),(2, 1, 'color', 1),(3, 0, 'select', 2);
 INSERT INTO `PREFIX_attribute_group_group_shop` (`id_attribute_group`, `id_group_shop`) (SELECT `id_attribute_group`, 1 FROM `PREFIX_attribute_group`);
 INSERT INTO `PREFIX_attribute_group_lang` (`id_attribute_group`, `id_lang`, `name`, `public_name`) VALUES
 (1, 1, 'Disk space', 'Disk space'),(1, 2, 'Capacité', 'Capacité'),(2, 1, 'Color', 'Color'),(2, 2, 'Couleur', 'Couleur'),(3, 1, 'ICU', 'Processor'),
