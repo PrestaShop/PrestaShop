@@ -98,7 +98,7 @@ class AddressControllerCore extends FrontController
 	 * Start forms process
 	 * @see FrontController::preProcess()
 	 */
-	public function preProcess()
+	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddress'))
 			$this->processSubmitAddress();
@@ -262,9 +262,9 @@ class AddressControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		/* Secure restriction for guest */
 		if ($this->context->customer->is_guest)
