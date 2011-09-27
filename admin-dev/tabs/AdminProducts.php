@@ -1480,7 +1480,7 @@ class AdminProducts extends AdminTab
 				$(\'#mvt_sign\').show();
 			}
 		</script>
-		<script src="../js/tabpane.js" type="text/javascript"></script>
+		<script src="'._PS_JS_DIR_.'tabpane.js" type="text/javascript"></script>
 		<link type="text/css" rel="stylesheet" href="../css/tabpane.css" />
 		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" enctype="multipart/form-data" name="product" id="product">
 			'.$this->_displayDraftWarning($obj->active).'
@@ -2338,7 +2338,7 @@ class AdminProducts extends AdminTab
 	</script>
 	<?php
 		echo '
-		<script type="text/javascript" src="../js/price.js"></script>
+		<script type="text/javascript" src="'._PS_JS_DIR_.'price.js"></script>
 		<script type="text/javascript">
 			var newLabel = \''.$this->l('New label').'\';
 			var choose_language = \''.$this->l('Choose language:').'\';
@@ -2958,7 +2958,7 @@ class AdminProducts extends AdminTab
 							</script>
 
 							<link rel="stylesheet" type="text/css" href="'.__PS_BASE_URI__.'css/jquery.autocomplete.css" />
-							<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.autocomplete.js"></script>
+							<script type="text/javascript" src="'._PS_JS_DIR_.'/jquery/jquery.autocomplete.js"></script>
 							<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
 								<p class="clear">'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'</p>
 								<input type="text" value="" id="product_autocomplete_input" />
@@ -2999,7 +2999,7 @@ class AdminProducts extends AdminTab
 			</div>';
 			// TinyMCE
 		$iso = $this->context->language->iso_code;
-		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
+		$isoTinyMCE = (file_exists(_PS_JS_DIR_.'/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
 			<script type="text/javascript">
@@ -3007,8 +3007,8 @@ class AdminProducts extends AdminTab
 			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
 			var ad = \''.$ad.'\' ;
 			</script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'/tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'/tinymce.inc.js"></script>
 			<script type="text/javascript">
 					toggleVirtualProduct(getE(\'is_virtual_good\'));
 					unitPriceWithTax(\'unit\');
@@ -3045,7 +3045,7 @@ class AdminProducts extends AdminTab
 						<td style="padding-bottom:5px;">
 						<div id="file-uploader">
 							<noscript>
-								<p>Please enable JavaScript to use file uploader.</p>
+								<p>'.$this->l('Please enable JavaScript to use file uploader:').'.</p>
 							</noscript>
 						</div>
 						<div id="progressBarImage" class="progressBarImage"></div>
@@ -3053,9 +3053,9 @@ class AdminProducts extends AdminTab
 						<ul	id="listImage"></ul>
 						<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
 						<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
-						<script src="../js/fileuploader.js" type="text/javascript"></script>
-						<script src="../js/jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
-						<script type="text/javascript" src="../js/admin.js"></script>
+						<script src="'._PS_JS_DIR_.'/fileuploader.js" type="text/javascript"></script>
+						<script src="'._PS_JS_DIR_.'/jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+						<script type="text/javascript" src="'._PS_JS_DIR_.'/admin.js"></script>
 						<script type="text/javascript">
 							function deleteImg(id)
 							{
@@ -3069,6 +3069,7 @@ class AdminProducts extends AdminTab
 										id_category : "'.(int)$this->_category->id.'",
 										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
 										tab : "AdminCatalog",
+										ajaxMode : 1,
 										updateproduct : 1},
 										function (data) {
 											if (data)
@@ -3146,6 +3147,7 @@ class AdminProducts extends AdminTab
 										tab : "AdminCatalog",
 										updateproduct : 1,
 										addImage : 1,
+										ajaxMode : 1,
 										},
 
 								});
@@ -3165,13 +3167,13 @@ class AdminProducts extends AdminTab
 					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>
 					<tr>
 						<td colspan="2">
-							<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+							<script type="text/javascript" src="'._PS_JS_DIR_.'/jquery/jquery.tablednd_0_5.js"></script>
 							<script type="text/javascript">
 								var token = \''.($token!=NULL ? $token : $this->token).'\';
 								var come_from = \''.$this->table.'\';
 								var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
 							</script>
-							<script type="text/javascript" src="../js/admin-dnd.js"></script>
+							<script type="text/javascript" src="'._PS_JS_DIR_.'admin-dnd.js"></script>
 							<table cellspacing="0" cellpadding="0" class="table tableDnD" id="imageTable" style="display:'.($countImages == 0 ? 'none' : '').';">
 								<thead>
 								<tr>
@@ -3217,7 +3219,7 @@ class AdminProducts extends AdminTab
 				</table>
 			</div>';
 			echo '
-			<script type="text/javascript" src="../js/attributesBack.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'attributesBack.js"></script>
 			<script type="text/javascript">
 				var attrs = new Array();
 				var modifyattributegroup = \''.addslashes(html_entity_decode($this->l('Modify this attribute combination'), ENT_COMPAT, 'UTF-8')).'\';
