@@ -306,14 +306,14 @@ class AttributeCore extends ObjectModel
 		$sql .= '
 		ORDER BY `position`';
 		$result = Db::getInstance()->ExecuteS($sql);
-		$sizeof = sizeof($result);
 
-		for ($i = 0; $i < $sizeof; $i++)
+		$i = 0;
+		foreach ($result as $value)
 			$return = Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
-			SET `position` = '.(int)$i.'
+			SET `position` = '.(int)$i++.'
 			WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
-			AND `id_attribute` = '.(int)$result[$i]['id_attribute']);
+			AND `id_attribute` = '.(int)$value['id_attribute']);
 		return $return;
 	}
 
@@ -327,11 +327,11 @@ class AttributeCore extends ObjectModel
 	 */
 	public static function getHigherPosition($id_attribute_group)
 	{
-		$sql = 'SELECT `position`
+		$sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'attribute`
-				WHERE id_attribute_group = '.(int)$id_attribute_group.'
-				ORDER BY position DESC';
-		return ((DB::getInstance()->getValue($sql)!==false)) ? DB::getInstance()->getValue($sql) : -1;
+				WHERE id_attribute_group = '.(int)$id_attribute_group;
+		$position = DB::getInstance()->getValue($sql);
+		return ($position !== false) ? $position : -1;
 	}
 }
 

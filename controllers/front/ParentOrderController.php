@@ -257,11 +257,10 @@ class ParentOrderControllerCore extends FrontController
 				}
 			$this->context->smarty->assign('free_ship', $total_free_ship);
 		}
-		foreach ($summary['products'] AS $key => $product)
+		foreach ($summary['products'] AS $key => &$product)
 		{
-			$summary['products'][$key]['quantity'] = $product['cart_quantity'];// for compatibility with 1.2 themes
-			$std_product = new Product($summary['products'][$key]['id_product']);
-			$summary['products'][$key]['price_without_specific_price'] = $std_product->getPrice(!Product::getTaxCalculationMethod(), $summary['products'][$key]['id_product_attribute']);
+			$product['quantity'] = $product['cart_quantity'];// for compatibility with 1.2 themes
+			$product['price_without_specific_price'] = Product::getPriceStatic($product['id_product'], !Product::getTaxCalculationMethod(), $product['id_product_attribute']);
 		}
 
 		$this->context->smarty->assign($summary);

@@ -34,7 +34,7 @@ function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impa
 	$('#attribute_quantity').html(quantity);
 	$('#attribute_quantity').show();
 	$('#attr_qty_stock').show();
-    if(available_date!=undefined)
+    if(available_date != undefined)
         getE('available_date').value = available_date;
     else
         getE('available_date').value = '0000-00-00';

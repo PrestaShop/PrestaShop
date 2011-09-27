@@ -179,7 +179,7 @@ class AdminImport extends AdminTab
 						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
 						'help' => $this->l('If you do not specify this column and you specify the column images, all images of the product will be replaced by those specified in the import file')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Position)'),
+					'features' => array('label' => $this->l('Feature(Name:Value:Position)'),
 						'help' => $this->l('Position of the feature.')),
 					'online_only' => array('label' => $this->l('Only available online')),
 					'condition' => array('label' => $this->l('Condition')),
@@ -764,7 +764,7 @@ class AdminImport extends AdminTab
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
 				} // Else If id product AND id product already in base, trying to update
-				else if ($product->id AND Product::existsInDatabase((int)($product->id), 'product'))
+				elseif ($product->id AND Product::existsInDatabase((int)($product->id), 'product'))
 				{
 					$datas = Db::getInstance()->getRow('SELECT `date_add` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)($product->id));
 					$product->date_add = pSQL($datas['date_add']);
@@ -962,7 +962,7 @@ class AdminImport extends AdminTab
 					$this->_errors[] = ($fieldError !== true ? $fieldError : '').($langFieldError !== true ? $langFieldError : '').mysql_error();
 				}
 			}
-			else if (isset($info['image_position']) && $info['image_position'])
+			elseif (isset($info['image_position']) && $info['image_position'])
 			{
 				$images = $product->getImages($defaultLanguage);
 

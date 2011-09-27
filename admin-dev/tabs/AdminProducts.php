@@ -3463,7 +3463,7 @@ class AdminProducts extends AdminTab
 		  </tr>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">'.$this->l('Available date:').'</td>
-			  <td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date')!=0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
+			  <td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
 				  <p>'.$this->l('The available date when this product is out of stock').'</p>
 			  </td>
 		  </tr>';
@@ -3569,7 +3569,7 @@ class AdminProducts extends AdminTab
 						$list = rtrim($list, ', ');
 						$jsList = rtrim($jsList, ', ');
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
-						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-j', strtotime($product_attribute['available_date'])) : '0000-00-00';
+						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
 						echo '
 						<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
 							<td>'.stripslashes($list).'</td>
@@ -3583,7 +3583,7 @@ class AdminProducts extends AdminTab
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
-							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\'); calcImpactPriceTI();" /></a>&nbsp;
+							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.pSQL($available_date).'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
 							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
