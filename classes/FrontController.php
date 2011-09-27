@@ -92,7 +92,7 @@ class FrontControllerCore extends Controller
 			$this->displayHeader(false);
 			$this->displayFooter(false);
 		}
-		
+
 		ob_start();
 
 		// Switch language if needed and init cookie language
@@ -353,7 +353,7 @@ class FrontControllerCore extends Controller
 				$this->preProcess();
 			}
 		}*/
-		
+
 		//$this->preProcess();
 	}
 
@@ -362,6 +362,11 @@ class FrontControllerCore extends Controller
 	}
 
 	public function initContent()
+	{
+		$this->process();
+	}
+
+	public function process()
 	{
 	}
 
