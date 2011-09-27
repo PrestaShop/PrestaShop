@@ -43,12 +43,6 @@ class CategoryControllerCore extends FrontController
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
-	public function displayHeader($display = true)
-	{
-		parent::displayHeader();
-		$this->productSort();
-	}
-
 	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category))
@@ -143,6 +137,7 @@ class CategoryControllerCore extends FrontController
 			}
 		}
 
+		$this->productSort();
 		$this->context->smarty->assign(array(
 			'allow_oosp' => (int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')),
 			'comparator_max_item' => (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')),
