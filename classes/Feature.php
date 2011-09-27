@@ -309,7 +309,7 @@ class FeatureCore extends ObjectModel
 	public static function getHigherPosition()
 	{
 		$sql = 'SELECT MAX(`position`)
-				FROM `'._DB_PREFIX_.'feature`;
+				FROM `'._DB_PREFIX_.'feature`';
 		$position = DB::getInstance()->getValue($sql);
 		return ($position !== false) ? $position : -1;
 	}
