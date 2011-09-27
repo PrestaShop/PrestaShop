@@ -860,7 +860,7 @@ class AdminProducts extends AdminTab
 				if (Shop::isMultiShopActivated())
 					$shops = Shop::getShops();
 				$obj = new Product((int)Tools::getValue('id_product'));
-				$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
+				$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'image  WHERE id_product = '.(int)$obj->id);
 				$images = Image::getImages($this->context->language->id, $obj->id);
 				$imagesTotal = Image::getImagesTotal($obj->id);
 				$html = $this->getLineTableImage($result['success'], $imagesTotal + 1, $this->token, $shops);
@@ -1492,8 +1492,8 @@ class AdminProducts extends AdminTab
 		$this->displayFormInformations($obj, $currency);
 		$this->displayFormImages($obj, $this->token);
 		if (Combination::isFeatureActive())
-			$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
-		$countAttachments = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$obj->id);
+			$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
+		$countAttachments = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$obj->id);
 		if ($obj->id)
 			echo '
 			<div class="tab-page" id="step3"><h4 class="tab">3. '.$this->l('Prices').'</h4></div>
@@ -2644,7 +2644,7 @@ class AdminProducts extends AdminTab
 
 			// Check if product has combination, to display the available date only for the product or for each combination
 			if (Combination::isFeatureActive())
-				$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
+				$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
 
 			if (isset($countAttributes) && $countAttributes == 0)
 			{
@@ -3026,7 +3026,7 @@ class AdminProducts extends AdminTab
 		if (Shop::isMultiShopActivated())
 			$shops = Shop::getShops();
 
-		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
+		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		$imagesTotal = Image::getImagesTotal($obj->id);
 
