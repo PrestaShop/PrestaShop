@@ -152,7 +152,9 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('content', $this->content);
 		if (empty($this->template))
 		{
-			$default_tpl = substr(lcfirst(get_class($this)),0,-10).'.tpl';
+			$class_name = get_class($this);
+			$class_name = strtolower($class_name[0]).substr($class_name, 1);
+			$default_tpl = substr($class_name,0,-10).'.tpl';
 			if (file_exists($this->context->smarty->template_dir.'/'.$default_tpl))
 			{
 				$this->template = $default_tpl;
