@@ -177,7 +177,7 @@ class AdminAttributes extends AdminTab
 			}
 			// clean \n\r characters
 			foreach ($_POST as $key => $value)
-				if (preg_match('/^name_/Ui', $key))
+				if (stripos($key, 'name_') !== false)
 					$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 			parent::postProcess();
 		}

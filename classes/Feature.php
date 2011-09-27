@@ -285,17 +285,17 @@ class FeatureCore extends ObjectModel
 		$return = true;
 
 		$sql = '
-		SELECT *
+		SELECT `id_feature`
 		FROM `'._DB_PREFIX_.'feature`
 		ORDER BY `position`';
 		$result = Db::getInstance()->ExecuteS($sql);
-		$sizeof = sizeof($result);
 
-		for ($i = 0; $i < $sizeof; $i++)
+		$i = 0;
+		foreach ($result as $value)
 			$return = Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'feature`
-			SET `position` = '.(int)$i.'
-			WHERE `id_feature` = '.(int)$result[$i]['id_feature']);
+			SET `position` = '.(int)$i++.'
+			WHERE `id_feature` = '.(int)$value['id_feature']);
 		return $return;
 	}
 
@@ -308,10 +308,10 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function getHigherPosition()
 	{
-		$sql = 'SELECT `position`
-				FROM `'._DB_PREFIX_.'feature` 
-				ORDER BY position DESC';
-		return ((DB::getInstance()->getValue($sql)!==false)) ? DB::getInstance()->getValue($sql) : -1;
+		$sql = 'SELECT MAX(`position`)
+				FROM `'._DB_PREFIX_.'feature`;
+		$position = DB::getInstance()->getValue($sql);
+		return ($position !== false) ? $position : -1;
 	}
 }
 
