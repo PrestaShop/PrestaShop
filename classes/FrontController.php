@@ -87,6 +87,12 @@ class FrontControllerCore extends Controller
 			exit();
 		}
 
+		if ($this->ajax)
+		{
+			$this->displayHeader(false);
+			$this->displayFooter(false);
+		}
+		
 		ob_start();
 
 		// Switch language if needed and init cookie language
@@ -335,7 +341,7 @@ class FrontControllerCore extends Controller
 		$this->context->controller = $this;
 	}
 
-	public function action()
+	public function postProcess()
 	{
 		/*// For retrocompatibility with versions before 1.5, preProcess support will be removed on next release
 		if (method_exists(get_class($this), 'preProcess'))
@@ -347,25 +353,15 @@ class FrontControllerCore extends Controller
 				$this->preProcess();
 			}
 		}*/
-
-		if ($this->ajax)
-		{
-			$this->displayHeader(false);
-			$this->displayFooter(false);
-		}
-		$this->preProcess();
-
-		// Prepare generation of page display
-		$this->processHeader();
-		$this->process();
-		$this->processFooter();
+		
+		//$this->preProcess();
 	}
 
 	public function preProcess()
 	{
 	}
 
-	public function process()
+	public function initContent()
 	{
 	}
 
@@ -508,7 +504,7 @@ class FrontControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 	}
 
-	public function processHeader()
+	public function initHeader()
 	{
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
@@ -548,7 +544,7 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 	}
 
-	public function processFooter()
+	public function initFooter()
 	{
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),

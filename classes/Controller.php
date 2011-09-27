@@ -73,7 +73,7 @@ abstract class ControllerCore
 	/**
 	 * Do the page treatment : post process, ajax process, etc.
 	 */
-	abstract public function action();
+	abstract public function postProcess();
 
 	/**
 	 * Display page view
@@ -111,12 +111,18 @@ abstract class ControllerCore
 	public function run()
 	{
 		$this->init();
-		$this->action();
+		$this->postProcess();
+		if ($this->displayHeader)
+		{
+			$this->setMedia();
+			$this->initHeader();
+		}
+		$this->initContent();
+		if ($this->displayFooter)
+			$this->initFooter();
 
 		if ($this->ajax)
-		{
 			$this->displayAjax();
-		}
 		else
 			$this->display();
 	}
@@ -135,7 +141,22 @@ abstract class ControllerCore
 	{
 		$this->template = $template;
 	}
+	
+	/**
+	 * Assign smarty variables for the page header
+	 */
+	abstract public function initHeader();
+	
+	/**
+	 * Assign smarty variables for the page main content
+	 */
+	abstract public function initContent();
 
+	/**
+	 * Assign smarty variables for the page footer
+	 */
+	abstract public function initFooter();
+	
 	/**
 	 * Add a new stylesheet in page header.
 	 *
