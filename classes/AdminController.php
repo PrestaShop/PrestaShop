@@ -111,37 +111,30 @@ class AdminControllerCore extends Controller
 		return (!empty($token) AND $token === $this->token);
 	}
 
-	public function action()
+	public function postProcess()
 	{
-		if (!$this->ajax)
-		{
-			$this->postProcess();
-			$this->setMedia();
-			$this->initHeader();
-			$this->initFooter();
-			//$adminObj->displayConf();
-			//$adminObj->displayErrors();
-		}
-		else
+		if ($this->ajax)
 		{
 			// from ajax-tab.php
-			if(method_exists($this,'ajaxPreprocess'))
+			if (method_exists($this, 'ajaxPreprocess'))
 				$this->ajaxPreProcess();
 
 			$action = Tools::getValue('action');
 			// no need to use displayConf() here
-			if (!empty($action) AND method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)) )
+			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
 				$this->{'ajaxProcess'.Tools::toCamelCase($action)}();
 			else
 				$this->ajaxProcess();
 
-				// @TODO We should use a displayAjaxError
-				$this->displayErrors();
-				if (!empty($action) AND method_exists($this, 'displayAjax'.Tools::toCamelCase($action)) )
-					$this->{'displayAjax'.$action}();
-				else
-				$this->displayAjax();
-
+			// @TODO We should use a displayAjaxError
+			/*$this->displayErrors();
+			if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
+				$this->{'displayAjax'.$action}();
+			else
+				$this->displayAjax();	*/
+		}
+		else
+		{
 		}
 	}
 
@@ -549,10 +542,4 @@ class AdminControllerCore extends Controller
 	{
 		p($this->_errors);
 	}
-
-	public function postProcess()
-	{
-
-	}
-
 }
