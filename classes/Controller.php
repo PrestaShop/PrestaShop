@@ -111,7 +111,7 @@ abstract class ControllerCore
 	public function run()
 	{
 		$this->init();
-		$this->action(array('titi'), $this);
+		$this->action();
 		$this->display();
 	}
 
