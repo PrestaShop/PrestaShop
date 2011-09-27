@@ -472,6 +472,9 @@ class DispatcherCore
 							$_GET[$k] = $v;
 					break;
 				}
+
+			if ($controller == 'index')
+				$controller = $this->default_controller;
 			$this->controller = $controller;
 		}
 		// Default mode, take controller from url
