@@ -117,7 +117,7 @@ class AdminShop extends AdminTab
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend>'.$this->l('Shop').'</legend>
-				<span class="hint" name="help_box" style="display:block;">'.$this->l('You can\'t change the GroupShop when you have more than one Shop').'</span><br />
+				<div class="hint" name="help_box" style="display:block;">'.$this->l('You can\'t change the GroupShop when you have more than one Shop').'</div><br />
 				<label for="name">'.$this->l('Shop name').'</label>
 				<div class="margin-form">
 					<input type="text" name="name" id="name" value="'.$this->getFieldValue($obj, 'name').'" />
