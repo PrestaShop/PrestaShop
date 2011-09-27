@@ -29,26 +29,127 @@ include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 
 class AdminAccess extends AdminTab
 {
-	public function postProcess()
+	private $return_status;
+	private $return_message;
+	
+	public function processSubmitAddAccess()
 	{
-		if (Tools::isSubmit('submitAddaccess') AND $action = Tools::getValue('action') AND $id_tab = (int)(Tools::getValue('id_tab')) AND $id_profile = (int)(Tools::getValue('id_profile')) AND $this->tabAccess['edit'] == 1)
-		{
-			if ($id_tab == -1 AND $action == 'all' AND (int)(Tools::getValue('perm')) == 0)
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.(int)(Tools::getValue('perm')).', `add` = '.(int)(Tools::getValue('perm')).', `edit` = '.(int)(Tools::getValue('perm')).', `delete` = '.(int)(Tools::getValue('perm')).' WHERE `id_profile` = '.(int)($id_profile).' AND `id_tab` != 31');
-			elseif ($id_tab == -1 AND $action == 'all')
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.(int)(Tools::getValue('perm')).', `add` = '.(int)(Tools::getValue('perm')).', `edit` = '.(int)(Tools::getValue('perm')).', `delete` = '.(int)(Tools::getValue('perm')).' WHERE `id_profile` = '.(int)($id_profile));
-			elseif ($id_tab == -1)
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($action).'` = '.(int)(Tools::getValue('perm')).' WHERE `id_profile` = '.(int)($id_profile));
-			elseif ($action == 'all')
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.(int)(Tools::getValue('perm')).', `add` = '.(int)(Tools::getValue('perm')).', `edit` = '.(int)(Tools::getValue('perm')).', `delete` = '.(int)(Tools::getValue('perm')).' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
-			else
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($action).'` = '.(int)(Tools::getValue('perm')).' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
-		}
+		$perm = Tools::getValue('perm') ;
+		if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all')))
+			throw new PrestashopException('permission not exists');
+
+		$enabled = (int)Tools::getValue('enabled') ;
+		$id_tab = (int)(Tools::getValue('id_tab')); 
+		$id_profile = (int)(Tools::getValue('id_profile'));
+		$res = true;
+
+		if ($id_tab == -1 AND $perm == 'all' AND $enabled == 0)
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile).' AND `id_tab` != 31');
+		else if ($id_tab == -1 AND $perm == 'all')
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile));
+		else if ($id_tab == -1)
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile));
+		else if ($perm == 'all')
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
+		else
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
+		
+		$this->return_status = $res?'ok':'error';
+		if ($res)
+			$this->return_message = $this->l('Access successfully updated');
+		else
+			$this->return_message = $this->l('An error when updating access');
+	}
+
+	public function processChangeModuleAccess()
+	{
+		$perm = Tools::getValue('perm');
+		$enabled = (int)Tools::getValue('enabled');
+		$id_module = (int)Tools::getValue('id_module');
+		$id_profile = (int)Tools::getValue('id_profile');
+		$res = true;
+
+		if (!in_array($perm, array('view', 'configure')))
+			throw new PrestashopException('permission not exists');
+			
+		if ($id_module == -1)
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_profile` = '.(int)$id_profile);
+		else
+			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_module` = '.(int)$id_module.' AND `id_profile` = '.(int)$id_profile);
+		
+		$this->return_status = $res?'ok':'error';
+		if ($res)
+			$this->return_message = $this->l('Access successfully updated.');
+		else
+			$this->return_message = $this->l('An error when updating access.');
 	}
 	
+	
+	public function displayAjax()
+	{
+		$return = array('result'=>$this->return_status,'msg'=>$this->return_message);
+		 
+		echo Tools::jsonEncode($return);
+	}
 	public function display()
 	{
 		$this->displayForm();
+		echo '<script type="text/javascript">
+				$(document).ready(function(){
+					$(".ajaxPower").change(function(){
+						var tout = $(this).attr("rel").split("||"); 
+						var id_tab = tout[0];
+						var id_profile = tout[1];
+						var perm = tout[2];
+						var enabled = $(this).is(":checked")? 1 : 0;
+						var tabsize = tout[3];
+						var tabnumber = tout[4];
+						
+						perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber);
+						
+						$.ajax({
+							type:"POST",
+							url : "ajax-tab.php",
+							async: true,
+							data : {
+								id_tab:id_tab,
+								id_profile:id_profile,
+								perm:perm,
+								enabled:enabled,
+								submitAddaccess:"1",
+								ajaxMode : "1",
+								token : "'.$this->token.'",
+								controller:"AdminAccess"
+							},
+							success : function(res,textStatus,jqXHR)
+							{
+								try
+								{
+									res = $.parseJSON(res);
+									if (res.result == "ok")
+										showSuccessMessage(res.msg);
+									else
+										showErrorMessage(res.msg);
+								}
+								catch(e)
+								{
+									alert("oups");
+								}
+							}
+						});
+					});
+				});
+				
+				function showSuccessMessage(msg)
+				{
+					$("#ajax_confirmation").show().html("<div style=\"background-color:green;color:white;padding:20px;position:fixed;bottom:0;width:100%;left:0;text-align:center;\">"+msg+"</div>").delay(3000).fadeOut("slow");
+				}
+				
+				function showErrorMessage(msg)
+				{
+					$("#ajax_confirmation").show().html("<div class=\"error\"><img src=\"../img/admin/error.png\" alt=\"ERROR\" />"+msg+"</div>");
+				}
+			</script>';
 	}
 	
 	/**
@@ -64,11 +165,10 @@ class AdminAccess extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-	 	
 	 	$currentProfile = (int)($this->getCurrentProfileId());
 	 	$tabs = Tab::getTabs($this->context->language->id);
 		$profiles = Profile::getProfiles($this->context->language->id);
-		$accesses = Profile::getProfileAccesses($this->context->employee->id_profile);
+		$accesses = Profile::getProfileAccesses($currentProfile);
 		
 		echo '
 		<script type="text/javascript">
@@ -94,27 +194,27 @@ class AdminAccess extends AdminTab
 			echo '
 				<th class="center">
 					<input type="checkbox" name="1" id="viewall"
-						'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'view\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+						'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||view||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('View').'
 				</th>
 				<th class="center">
 					<input type="checkbox" name="1" id="addall"
-					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'add\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||add||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('Add').'
 				</th>
 				<th class="center">
-					<input type="checkbox" name="1" id="editall"
-					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'edit\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					<input type="checkbox" name="1" id="editall" 
+					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||edit||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('Edit').'
 				</th>
 				<th class="center">
-					<input type="checkbox" name="1" id="deleteall"
-					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'delete\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					<input type="checkbox" name="1" id="deleteall" 
+					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||delete||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('Delete').'
 				</th>
 				<th class="center">
-					<input type="checkbox" name="1" id="allall"
-					'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'all\', -1, '.$currentProfile.', \''.$this->token.'\', \''.$tabsize.'\', \''.sizeof($tabs).'\')"' : 'disabled="disabled"').' />
+					<input type="checkbox" name="1" id="allall" 
+					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||all||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('All').'
 				</th>
 			</tr>';
@@ -131,7 +231,10 @@ class AdminAccess extends AdminTab
 					foreach ($tabs AS $child)
 						if ($child['id_parent'] === $tab['id_tab'])
 							if (isset($accesses[$child['id_tab']]))
-					 		$this->printTabAccess($currentProfile, $child, $accesses[$child['id_tab']], true, $tabsize, sizeof($tabs));
+							{
+							
+								$this->printTabAccess($currentProfile, $child, $accesses[$child['id_tab']], true, $tabsize, sizeof($tabs));
+							}
 				}
 		echo '</table>';
 		
@@ -148,14 +251,14 @@ class AdminAccess extends AdminTab
 		foreach ($perms as $perm)
 		{
 			if ($this->tabAccess['edit'] == 1)
-				echo '<td><input type="checkbox" name="1" id=\''.$perm.(int)($access['id_tab']).'\' class=\''.$perm.' '.(int)($access['id_tab']).'\' onclick="ajax_power(this, \''.$perm.'\', '.(int)($access['id_tab']).', '.(int)($access['id_profile']).', \''.$this->token.'\', \''.$tabsize.'\', \''.$tabnumber.'\')" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').'/></td>';
+				echo '<td><input type="checkbox" name="1" id="'.$perm.(int)($access['id_tab']).'" rel="'.(int)($access['id_tab']).'||'.(int)($currentProfile).'||'.$perm.'||'.$tabsize.'||'.$tabnumber.'" class="ajaxPower '.$perm.' '.(int)($access['id_tab']).'" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').'/></td>';
 			else
 				echo '<td><input type="checkbox" name="1" disabled="disabled" '.((int)($access[$perm]) == 1 ? 'checked="checked"' : '').' /></td>';
 			$result_accesses += $access[$perm];
 		}
 		echo '<td>
-			<input type="checkbox" name="1" id=\'all'.(int)($access['id_tab']).'\' class=\'all '.(int)($access['id_tab']).'\'
-				'.($this->tabAccess['edit'] == 1 ? 'onclick="ajax_power(this, \'all\', '.(int)($access['id_tab']).', '.(int)($access['id_profile']).', \''.$this->token.'\', \''.$tabsize.'\', \''.$tabnumber.'\')"' : 'disabled="disabled"').'
+			<input type="checkbox" name="1" id=\'all'.(int)($access['id_tab']).'\'
+				'.($this->tabAccess['edit'] == 1 ? ' rel="'.(int)($access['id_tab']).'||'.(int)($currentProfile).'||all||'.$tabsize.'||'.$tabnumber.'" class="ajaxPower all '.(int)($access['id_tab']).'"' : '  class="all '.(int)($access['id_tab']).'" disabled="disabled"').'
 				'.($result_accesses == 4 ? 'checked="checked"' : '').'
 			/>
 		</td></tr>';
@@ -163,20 +266,12 @@ class AdminAccess extends AdminTab
 	
 	public function ajaxProcess()
 	{
-		if (Tools::isSubmit('changeModuleAccess'))
+		if ($this->tabAccess['edit'] == 1)
 		{
-			if ($action = Tools::getValue('action') AND $variable = Tools::getValue('variable') AND $id_module = (int)Tools::getValue('id_module') AND $id_profile = (int)Tools::getValue('id_profile') AND $this->tabAccess['edit'] == 1)
-			{
-				if (!in_array($variable, array('view', 'configure')))
-					die (Tools::displayErrors('unknown variable'));
-				$action = ($action == 'true' ? 1 : 0);
-				if ($id_module == -1)
-					Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($variable).'` = '.(int)$action.' WHERE `id_profile` = '.(int)$id_profile);
-				else
-					Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($variable).'` = '.(int)$action.' WHERE `id_module` = '.(int)$id_module.' AND `id_profile` = '.(int)$id_profile);
-				die ('ok');
-			}
-			die ('inconsistent data');
+			if (Tools::isSubmit('submitAddaccess'))
+				$this->processSubmitAddAccess();
+			if (Tools::isSubmit('changeModuleAccess'))
+					$this->processChangeModuleAccess();
 		}
 	}
 	
@@ -184,36 +279,60 @@ class AdminAccess extends AdminTab
 	{
 		echo '
 		<script type="text/javascript">
-			function changeModuleAccess(checkbox, id_module, variable)
-			{
-				getE(\'ajax_confirmation\').innerHTML = \'<span class="bold">\'+lang[2]+\'</span>\';
-				$.post(
-					\'ajax-tab.php?tab=AdminAccess&token='.Tools::getAdminTokenLite('AdminAccess').'&changeModuleAccess\',
-					{id_profile:'.(int)$currentProfile.',id_module:id_module,action:checkbox.checked,variable:variable},
-					function(r) {
-						if (r != \'ok\')
-							getE(\'ajax_confirmation\').innerHTML = \'<span class="bold">'.addslashes(Tools::displayError('An error occurred:')).' \'+lang[1]+\'</span>\';
-						else
+			$(document).ready(function(){
+				$(".changeModuleAccess").change(function(){
+					var tout = $(this).attr("rel").split("||");
+					var id_module = tout[0];
+					var perm = tout[1];
+					var enabled = $(this).is(":checked")? 1 : 0;
+					
+					if (id_module == -1)
+						$(\'.ajax-ma-\'+perm).each(function(key, value) {
+							$(this).attr("checked", enabled);
+						});
+					else if (!enabled)
+						$(\'#ajax-ma-\'+perm+\'-master\').each(function(key, value) {
+							$(this).attr("checked", enabled);
+						});
+
+					$.ajax({
+						type:"POST",
+						url : "ajax-tab.php",
+						async: true,
+						data : {
+							ajaxMode : "1",
+							id_module:id_module,
+							perm:perm,
+							enabled:enabled,
+							id_profile:'.(int)$currentProfile.',
+							changeModuleAccess:"1",
+							token : "'.$this->token.'",
+							controller:"AdminAccess"
+						},
+						success : function(res,textStatus,jqXHR)
 						{
-							getE(\'ajax_confirmation\').innerHTML = \'<span class="bold">\'+lang[0]+\'</span>\';
-							if (id_module == -1)
-								$(\'.ajax-ma-\'+variable).each(function(key, value) {
-									value.checked = checkbox.checked;
-								});
-							else if (!checkbox.checked)
-								$(\'#ajax-ma-\'+variable+\'-master\').each(function(key, value) {
-									value.checked = checkbox.checked;
-								});
+							try
+							{
+								res = $.parseJSON(res);
+								if (res.result == "ok")
+									showSuccessMessage(res.msg);
+								else
+									showErrorMessage(res.msg);
+							}
+							catch(e)
+							{
+								alert("oups");
+							}
 						}
-					}
-				);
-			}
+					});
+				});
+			});
 		</script>		
 		<table class="table float" cellspacing="0" style="margin-left:20px">
 		<tr>
 			<th>'.$this->l('Modules').'</th>
-			<th class="center"><input type="checkbox" id="ajax-ma-view-master" '.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, -1, \'view\');"' : 'disabled="disabled"').' /> '.$this->l('View').'</th>
-			<th class="center"><input type="checkbox" id="ajax-ma-configure-master" '.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, -1, \'configure\');"' : 'disabled="disabled"').' /> '.$this->l('Configure').'</th>
+			<th class="center"><input type="checkbox" id="ajax-ma-view-master" '.($this->tabAccess['edit'] == 1 ? 'class="changeModuleAccess" rel="-1||view"' : 'disabled="disabled"').' /> '.$this->l('View').'</th>
+			<th class="center"><input type="checkbox" id="ajax-ma-configure-master" '.($this->tabAccess['edit'] == 1 ? 'class="changeModuleAccess" rel="-1||configure"' : 'disabled="disabled"').' /> '.$this->l('Configure').'</th>
 		</tr>';
 
 		$modules = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -229,15 +348,15 @@ class AdminAccess extends AdminTab
 				echo '<tr>
 					<td>&raquo; '.$module['name'].'</td>
 					<td>
-						<input type="checkbox" class="ajax-ma-view"
+						<input type="checkbox"
 							'.((int)$module['view'] == 1 ? 'checked="checked"' : '').'
-							'.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, '.(int)$module['id_module'].', \'view\');"' : 'disabled="disabled"').'
+							'.($this->tabAccess['edit'] == 1 ? 'class="ajax-ma-view changeModuleAccess" rel="'.(int)$module['id_module'].'||view"' : ' class="ajax-ma-view" disabled="disabled"').'
 						/>
 					</td>
 					<td>
-						<input type="checkbox" class="ajax-ma-configure"
+						<input type="checkbox"
 							'.((int)$module['configure'] == 1 ? 'checked="checked"' : '').'
-							'.($this->tabAccess['edit'] == 1 ? 'onclick="changeModuleAccess(this, '.(int)$module['id_module'].', \'configure\');"' : 'disabled="disabled"').'
+							'.($this->tabAccess['edit'] == 1 ? ' class="ajax-ma-configure changeModuleAccess" rel="'.(int)$module['id_module'].'||configure"' : ' class="ajax-ma-configure" disabled="disabled"').'
 						/>
 					</td>
 				</tr>';
