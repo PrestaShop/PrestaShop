@@ -112,7 +112,13 @@ abstract class ControllerCore
 	{
 		$this->init();
 		$this->action();
-		$this->display();
+
+		if ($this->ajax)
+		{
+			$this->displayAjax();
+		}
+		else
+			$this->display();
 	}
 
 	public function displayHeader($display = true)

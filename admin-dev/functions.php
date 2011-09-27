@@ -446,6 +446,8 @@ function runAdminTab($ajaxMode = false)
 		// init is different for new tabs (AdminController) and old tabs (AdminTab)
 		if ($adminObj instanceof AdminController)
 		{
+			if($ajaxMode)
+				$adminObj->ajax = true;
 			$adminObj->path = dirname($_SERVER["PHP_SELF"]);
 			$adminObj->run();
 		}

@@ -113,12 +113,36 @@ class AdminControllerCore extends Controller
 
 	public function action()
 	{
-		$this->postProcess();
-		$this->setMedia();
-		$this->initHeader();
-		$this->initFooter();
-		//$adminObj->displayConf();
-		//$adminObj->displayErrors();
+		if (!$this->ajax)
+		{
+			$this->postProcess();
+			$this->setMedia();
+			$this->initHeader();
+			$this->initFooter();
+			//$adminObj->displayConf();
+			//$adminObj->displayErrors();
+		}
+		else
+		{
+			// from ajax-tab.php
+			if(method_exists($this,'ajaxPreprocess'))
+				$this->ajaxPreProcess();
+
+			$action = Tools::getValue('action');
+			// no need to use displayConf() here
+			if (!empty($action) AND method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)) )
+				$this->{'ajaxProcess'.Tools::toCamelCase($action)}();
+			else
+				$this->ajaxProcess();
+
+				// @TODO We should use a displayAjaxError
+				$this->displayErrors();
+				if (!empty($action) AND method_exists($this, 'displayAjax'.Tools::toCamelCase($action)) )
+					$this->{'displayAjax'.$action}();
+				else
+				$this->displayAjax();
+						
+		}
 	}
 
 	/**
@@ -138,13 +162,16 @@ class AdminControllerCore extends Controller
 
 			$this->context->smarty->assign('url', htmlentities($url));
 			$this->context->smarty->display('invalid_token.tpl');
-			die;
 		}
 	}
 
 
 	public function displayNoSmarty()
 	{
+	}
+	public function displayAjax()
+	{
+		echo $this->content;
 	}
 	public function display()
 	{
@@ -197,7 +224,10 @@ class AdminControllerCore extends Controller
 		if (Shop::isMultiShopActivated())
 		{
 			if (Context::shop() == Shop::CONTEXT_ALL)
+			{
 				$shop_context = 'all';
+				$shop_name = '';
+			}
 			elseif (Context::shop() == Shop::CONTEXT_GROUP)
 			{
 				$shop_context = 'group';
@@ -208,6 +238,7 @@ class AdminControllerCore extends Controller
 				$shop_context = 'shop';
 				$shop_name = $this->context->shop->name;
 			}
+
 			$this->context->smarty->assign(array(
 				'shop_name' => $shop_name,
 				'shop_context' => $shop_context,
@@ -423,6 +454,8 @@ class AdminControllerCore extends Controller
 	public function init()
 	{
 		// ob_start();
+		if (Tools::getValue('ajax'))
+			$this->ajax = '1';
 		$this->checkAccess();
 		$this->timerStart = microtime(true);
 

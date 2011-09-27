@@ -32,14 +32,13 @@
 		<script type="text/javascript">
 			var helpboxes = {$help_box};
 			var roundMode = {$round_mode};
-			
 			{if isset($shop_context)}
 				{if $shop_context == 'all'}
-					var youEditFieldFor = {l s='A modification of this field will be applied for all shops'}
+					var youEditFieldFor = "{l s='A modification of this field will be applied for all shops'}";
 				{elseif $shop_context == 'group'}
-					var youEditFieldFor = {l s='A modification of this field will be applied for all shops of group '}<b>{$shop_name}</b>
+					var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group '}<b>{$shop_name}</b>";
 				{else}
-					var youEditFieldFor = {l s='A modification of this field will be applied for the shop '}<b>{$shop_name}</b>
+					var youEditFieldFor = "{l s='A modification of this field will be applied for the shop '}<b>{$shop_name}</b>";
 				{/if}
 			{else}
 				var youEditFieldFor = '';
