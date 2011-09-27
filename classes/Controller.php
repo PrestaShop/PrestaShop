@@ -117,6 +117,7 @@ abstract class ControllerCore
 			$this->setMedia();
 			$this->initHeader();
 		}
+
 		$this->initContent();
 		if ($this->displayFooter)
 			$this->initFooter();
@@ -141,12 +142,12 @@ abstract class ControllerCore
 	{
 		$this->template = $template;
 	}
-	
+
 	/**
 	 * Assign smarty variables for the page header
 	 */
 	abstract public function initHeader();
-	
+
 	/**
 	 * Assign smarty variables for the page main content
 	 */
@@ -156,7 +157,7 @@ abstract class ControllerCore
 	 * Assign smarty variables for the page footer
 	 */
 	abstract public function initFooter();
-	
+
 	/**
 	 * Add a new stylesheet in page header.
 	 *
