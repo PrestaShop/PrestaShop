@@ -374,7 +374,6 @@ class AdminHomeControllerCore extends AdminController
 
 	public function ajaxProcess()
 	{
-		die("{pouet}");
 	}
 
 	public function ajaxProcessGetAdminHomeElement()
