@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0
+ */
 abstract class ControllerCore
 {
 	/**
@@ -58,13 +61,17 @@ abstract class ControllerCore
 	protected $displayFooter = false;
 
 	/**
+	 * @var bool If ajax parameter is detected in request, set this flag to true
+	 */
+	protected $ajax = false;
+
+	/**
 	 * Initialize the page
 	 */
 	abstract public function init();
 
 	/**
 	 * Do the page treatment : post process, ajax process, etc.
-	 * Enter description here ...
 	 */
 	abstract public function action();
 
@@ -92,16 +99,19 @@ abstract class ControllerCore
 
 	public function __construct()
 	{
+		$this->displayHeader(true);
+		$this->displayFooter(true);
 		$this->context = Context::getContext();
+		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
 	}
 
 	/**
-	 * Start controller process
+	 * Start controller process (this method shouldn't be overriden !)
 	 */
 	public function run()
 	{
 		$this->init();
-		$this->action();
+		$this->action(array('titi'), $this);
 		$this->display();
 	}
 

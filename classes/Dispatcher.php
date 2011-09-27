@@ -236,8 +236,8 @@ class DispatcherCore
 		$this->getController();
 		$controllers = Dispatcher::getControllers($this->controller_directories);
 
-		if (!$this->controller || $this->controller == 'index')
-			$this->controller = (defined('_PS_ADMIN_DIR_')) ? 'adminhome' : 'index';
+		if (!$this->controller)
+			$this->controller = $this->default_controller;
 
 		// For retrocompatibility with admin/tabs/ old system
 		if (isset($controllers[$this->controller]) && defined('_PS_ADMIN_DIR_') && file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$this->controller].'.php'))
@@ -251,7 +251,14 @@ class DispatcherCore
 			$this->controller = $this->controller_not_found;
 
 		// Instantiate controller
-		Controller::getController($controllers[$this->controller])->run();
+		try
+		{
+			Controller::getController($controllers[$this->controller])->run();
+		}
+		catch (PrestashopException $e)
+		{
+			$e->displayMessage();
+		}
 	}
 
 	/**
@@ -448,8 +455,8 @@ class DispatcherCore
 		if ($this->use_routes && !$controller)
 		{
 			if (!$this->request_uri)
-				return 'pagenotfound';
-			$controller = 'index';
+				return $this->controller_not_found;
+			$controller = $this->default_controller;
 
 			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 			if ($this->empty_route)

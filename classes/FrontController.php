@@ -333,28 +333,27 @@ class FrontControllerCore extends Controller
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 		$this->context->controller = $this;
-
-		$this->displayHeader();
-		$this->displayFooter();
 	}
 
 	public function action()
 	{
-		// For retrocompatibility
-		if (method_exists($this, 'preProcess'))
+		/*// For retrocompatibility with versions before 1.5, preProcess support will be removed on next release
+		if (method_exists(get_class($this), 'preProcess'))
 		{
-			Tools::displayAsDeprecated('Method preProcess() is deprecated in controllers, use method postProcess() instead');
-			$this->preProcess();
-		}
+			$reflection = new ReflectionClass($this);
+			if (!in_array($reflection->getMethod('preProcess')->class, array('FrontController', 'FrontControllerCore')))
+			{
+				Tools::displayAsDeprecated('Method preProcess() is deprecated in controllers, use method postProcess() instead');
+				$this->preProcess();
+			}
+		}*/
 
-		if (Tools::getValue('ajax') == 'true')
+		if ($this->ajax)
 		{
 			$this->displayHeader(false);
 			$this->displayFooter(false);
-			$this->ajaxProcess();
 		}
-		else
-			$this->postProcess();
+		$this->preProcess();
 
 		// Prepare generation of page display
 		$this->processHeader();
@@ -362,11 +361,7 @@ class FrontControllerCore extends Controller
 		$this->processFooter();
 	}
 
-	public function ajaxProcess()
-	{
-	}
-
-	public function postProcess()
+	public function preProcess()
 	{
 	}
 
