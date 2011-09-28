@@ -42,15 +42,12 @@
 	</td>
 	<td class="cart_unit">
 		<span class="price" id="product_price_{$product.id_product}_{$product.id_product_attribute}">
+			{if isset($product.is_discounted) && $product.is_discounted}
+				<span style="text-decoration:line-through;">{convertPrice price=$product.price_without_specific_price}</span><br />
+			{/if}
 			{if !$priceDisplay}
-				{if {convertPrice price=$product.price_without_specific_price} != {convertPrice price=$product.price_wt}}
-					<span style="text-decoration:line-through;">{convertPrice price=$product.price_without_specific_price}</span><br />
-				{/if}
 				{convertPrice price=$product.price_wt}
 			{else}
-				{if {convertPrice price=$product.price_without_specific_price} != {convertPrice price=$product.price}}
-					<span style="text-decoration:line-through;">{convertPrice price=$product.price_without_specific_price}</span><br />
-				{/if}
 				{convertPrice price=$product.price}
 			{/if}
 		</span>

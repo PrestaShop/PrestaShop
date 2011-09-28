@@ -260,7 +260,11 @@ class ParentOrderControllerCore extends FrontController
 		foreach ($summary['products'] AS $key => &$product)
 		{
 			$product['quantity'] = $product['cart_quantity'];// for compatibility with 1.2 themes
-			$product['price_without_specific_price'] = Product::getPriceStatic($product['id_product'], !Product::getTaxCalculationMethod(), $product['id_product_attribute']);
+			$product['price_without_specific_price'] = Product::getPriceStatic($product['id_product'], !Product::getTaxCalculationMethod(), $product['id_product_attribute'], 2);
+			if (Product::getTaxCalculationMethod())
+				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price'];
+			else
+				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price_wt'];
 		}
 
 		$this->context->smarty->assign($summary);

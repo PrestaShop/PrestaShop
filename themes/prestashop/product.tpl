@@ -349,9 +349,9 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 					{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}
 				</span>
 				
-				{if ($product->available_date && $product->available_date != 0) && ($product->available_date|date_format:"%Y-%m-%d" >= $smarty.now|date_format:"%Y-%m-%d") && $product->quantity <= 0}<br /><span id="availability_date_label">{l s='Restocking:'}</span><span id="availability_date_value" class="success_inline">{$product->available_date|date_format:"%d-%m-%Y"}</span>
+				{if ($product->available_date && $product->available_date != 0) && ($product->available_date >= $smarty.now|date_format:"%Y-%m-%d") && $product->quantity <= 0}<br /><span id="availability_date_label">{l s='Product available on:'}</span><span id="availability_date_value" class="success_inline">{$product->available_date}</span>
 				{else}
-				<br /><span id="availability_date_label" style="display:none">{l s='Restocking:'}</span><span id="availability_date_value" class="success_inline" style="display:none">{$product->available_date|date_format:"%d-%m-%Y"}</span>
+				<br /><span id="availability_date_label" style="display:none">{l s='Product available on:'}</span><span id="availability_date_value" class="success_inline" style="display:none">{$product->available_date}</span>
 				{/if}
 			</p>
 
