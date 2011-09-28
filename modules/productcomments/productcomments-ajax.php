@@ -33,20 +33,24 @@ include_once(dirname(__FILE__).'/productcomments.php');
 
 $productCom = new productcomments();
 
-if (Tools::getValue('action') AND Tools::getValue('id_product_comment') AND Context::getContext()->cookie->id_customer)
+if (Tools::getValue('action') && Tools::getValue('id_product_comment') && Context::getContext()->cookie->id_customer)
 {
 	if (Tools::getValue('action') == 'report')
 	{
-		if (!ProductComment::isAlreadyReport(Tools::getValue('id_product_comment'), Context::getContext()->cookie->id_customer) AND ProductComment::reportComment((int)Tools::getValue('id_product_comment'), (int)Context::getContext()->cookie->id_customer))
+		if (!ProductComment::isAlreadyReport(Tools::getValue('id_product_comment'), Context::getContext()->cookie->id_customer) &&
+			ProductComment::reportComment((int)Tools::getValue('id_product_comment'), (int)Context::getContext()->cookie->id_customer))
 			die('0');
 	}
-	elseif (Tools::getValue('action') == 'usefulness' AND Tools::getValue('value') AND Tools::getValue('value'))
+	else if (Tools::getValue('action') == 'usefulness' && Tools::getValue('value') && Tools::getValue('value'))
 	{
-		if (!ProductComment::isAlreadyUsefulness(Tools::getValue('id_product_comment'), Context::getContext()->cookie->id_customer) AND ProductComment::setCommentUsefulness((int)Tools::getValue('id_product_comment'), (bool)((int)Tools::getValue('value')), Context::getContext()->cookie->id_customer))
+		if (!ProductComment::isAlreadyUsefulness(Tools::getValue('id_product_comment'), Context::getContext()->cookie->id_customer) &&
+			ProductComment::setCommentUsefulness((int)Tools::getValue('id_product_comment'),
+												 (bool)Tools::getValue('value'),
+												 Context::getContext()->cookie->id_customer))
 			die('0');
 	}
 }
-elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productCom->secure_key)
+else if (Tools::getValue('action') && Tools::getValue('secure_key') == $productCom->secure_key)
 {
 		$review = Tools::jsonDecode(Tools::getValue('review'));
 		$id_product = 0;
@@ -56,39 +60,39 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 		$grades = array();
 		foreach ($review as $entry)
 		{
-			if ($entry->key == "id_product")
+			if ($entry->key == 'id_product')
 				$id_product = $entry->value;
-			elseif ($entry->key == "title")
+			else if ($entry->key == 'title')
 				$title = $entry->value;
-			elseif ($entry->key == "content")
+			else if ($entry->key == 'content')
 				$content = $entry->value;
-			elseif ($entry->key  == "customer_name")
+			else if ($entry->key == 'customer_name')
 				$name = $entry->value;
-			elseif (preg_match("/grade/", $entry->key))
+			else if (strstr($entry->key, 'grade'))
 			{
-				$id = array(preg_split("/_/", $entry->key));
+				$id = array(explode('_', $entry->key));
 				$grades[] = array('id' => $id['0']['0'], 'grade' => $entry->value);
 			}
 		}
 
-		if ($title == "" OR $content == "" OR !$id_product OR count($grades) == 0)
+		if ($title == '' || $content == '' || !$id_product || count($grades) == 0)
 			die('0');
 
 		$allow_guests = (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS');
 
-		if (Context::getContext()->customer->id OR (!Context::getContext()->customer->id AND $allow_guests))
+		if (Context::getContext()->customer->id || (!Context::getContext()->customer->id && $allow_guests))
 		{
 			$id_guest = (!$id_customer = (int)Context::getContext()->cookie->id_customer) ? (int)Context::getContext()->cookie->id_guest : false;
 			$customerComment = ProductComment::getByCustomer((int)($id_product), Context::getContext()->cookie->id_customer, true, (int)$id_guest);
 
-			if (!$customerComment OR ($customerComment AND (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
+			if (!$customerComment || ($customerComment && (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
 			{
 				$errors = array();
 				$customer_name = false;
-				if ($id_guest AND (!$customer_name = Context::getContext()->customer->firstname . " " . Context::getContext()->customer->lastname))
+				if ($id_guest && (!$customer_name = Context::getContext()->customer->firstname.' '.Context::getContext()->customer->lastname))
 					$errors[] = $productCom->l('Please fill your name');
 
-				if (!sizeof($errors) AND $content)
+				if (!count($errors) && $content)
 				{
 					$comment = new ProductComment();
 					$comment->content = strip_tags($content);
@@ -102,28 +106,25 @@ elseif (Tools::getValue('action') AND Tools::getValue('secure_key') == $productC
 					$comment->grade = 0;
 					$comment->validate = 0;
 
-					if (!$comment->content)
-						$errors[] = $productCom->l('Invalid comment text posted.');
-					else
+
+					$tgrade = 0;
+					$comment->save();
+					foreach ($grades as $grade)
 					{
-						$tgrade = 0;
-						$comment->save();
-						foreach ($grades as $grade)
-						{
-							$tgrade += $grade['grade'];
-							$productCommentCriterion = new ProductCommentCriterion((int)Tools::getValue('id_product_comment_criterion_'.$grade['id']));
-							if ($productCommentCriterion->id)
-								$productCommentCriterion->addGrade($comment->id, $grade['grade']);
-						}
-
-						if ((count($grades) - 1) >= 0)
-							$comment->grade = (int)($tgrade / ((int)count($grades)));
-
-						if (!$comment->save())
-							$errors[] = $productCom->l('An error occurred while saving your comment.');
-						else
-							Context::getContext()->smarty->assign('confirmation', $productCom->l('Comment posted.').((int)(Configuration::get('PRODUCT_COMMENTS_MODERATE')) ? ' '.$productCom->l('Awaiting moderator validation.') : ''));
+						$tgrade += $grade['grade'];
+						$productCommentCriterion = new ProductCommentCriterion((int)Tools::getValue('id_product_comment_criterion_'.$grade['id']));
+						if ($productCommentCriterion->id)
+							$productCommentCriterion->addGrade($comment->id, $grade['grade']);
 					}
+
+					if ((count($grades) - 1) >= 0)
+						$comment->grade = (int)($tgrade / ((int)count($grades)));
+
+					if (!$comment->save())
+						$errors[] = $productCom->l('An error occurred while saving your comment.');
+					else
+						Context::getContext()->smarty->assign('confirmation', $productCom->l('Comment posted.').((int)(Configuration::get('PRODUCT_COMMENTS_MODERATE')) ? ' '.$productCom->l('Awaiting moderator validation.') : ''));
+
 				}
 				else
 					$errors[] = $productCom->l('Comment text is required.');
