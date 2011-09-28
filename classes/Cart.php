@@ -828,7 +828,7 @@ class CartCore extends ObjectModel
 	 */
 	public	function deleteDiscount($id_discount)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_discount` WHERE `id_discount` = '.(int)($id_discount).' AND `id_cart` = '.(int)($this->id).' LIMIT 1');
+		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_discount` WHERE `id_discount` = '.(int)$id_discount.' AND `id_cart` = '.(int)$this->id.' LIMIT 1');
 	}
 
 	/**
@@ -845,21 +845,21 @@ class CartCore extends ObjectModel
 			unset(self::$_nbProducts[$this->id]);
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
-		if ((int)($id_customization))
+		if ((int)$id_customization)
 		{
-			$productTotalQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity`
+			$productTotalQuantity = (int)Db::getInstance()->getValue('SELECT `quantity`
 				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product` = '.(int)($id_product).' AND `id_product_attribute` = '.(int)($id_product_attribute)));
-			$customizationQuantity = (int)(Db::getInstance()->getValue('SELECT `quantity`
+				WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+			$customizationQuantity = (int)Db::getInstance()->getValue('SELECT `quantity`
 				FROM `'._DB_PREFIX_.'customization`
-				WHERE `id_cart` = '.(int)($this->id).'
-					AND `id_product` = '.(int)($id_product).'
-					AND `id_product_attribute` = '.(int)($id_product_attribute)));
-			if (!$this->_deleteCustomization((int)($id_customization), (int)($id_product), (int)($id_product_attribute)))
+				WHERE `id_cart` = '.(int)$this->id.'
+					AND `id_product` = '.(int)$id_product.'
+					AND `id_product_attribute` = '.(int)$id_product_attribute);
+			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute))
 				return false;
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			return ($customizationQuantity == $productTotalQuantity AND $this->deleteProduct((int)($id_product), $id_product_attribute, NULL));
+			return ($customizationQuantity == $productTotalQuantity && $this->deleteProduct((int)$id_product, $id_product_attribute, null));
 		}
 
 		/* Get customization quantity */
@@ -882,7 +882,7 @@ class CartCore extends ObjectModel
 				($id_product_attribute != NULL ? ' AND `id_product_attribute` = '.(int)($id_product_attribute) : ''));
 
 		/* Product deletion */
-		if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_product` = '.(int)($id_product).($id_product_attribute != NULL ? ' AND `id_product_attribute` = '.(int)($id_product_attribute) : '').' AND `id_cart` = '.(int)($this->id)))
+		if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_product` = '.(int)($id_product).(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)($id_product_attribute) : '').' AND `id_cart` = '.(int)($this->id)))
 		{
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
@@ -906,7 +906,7 @@ class CartCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_customization` = '.(int)($id_customization));
 
-		if ($customization and sizeof($customization))
+		if ($customization)
 		{
 			$custData = Db::getInstance()->getRow('SELECT *
 				FROM `'._DB_PREFIX_.'customized_data`
@@ -940,7 +940,7 @@ class CartCore extends ObjectModel
 
 	public static function getTotalCart($id_cart, $use_tax_display = false)
 	{
-		$cart = new Cart((int)($id_cart));
+		$cart = new Cart($id_cart);
 		if (!Validate::isLoadedObject($cart))
 			die(Tools::displayError());
 	    $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
@@ -973,7 +973,7 @@ class CartCore extends ObjectModel
 	{
 		if (!$this->id)
 			return 0;
-		$type = (int)($type);
+		$type = (int)$type;
 		if (!in_array($type, array(Cart::ONLY_PRODUCTS, Cart::ONLY_DISCOUNTS, Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_SHIPPING, Cart::ONLY_WRAPPING, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)))
 			die(Tools::displayError());
 
@@ -1027,11 +1027,11 @@ class CartCore extends ObjectModel
 		$wrapping_fees = 0;
 		if ($this->gift)
 		{
-			$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
+			$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
 			if ($withTaxes)
 			{
-				$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
-				$wrapping_fees *= 1 + (((float)($wrapping_fees_tax->rate) / 100));
+				$wrapping_fees_tax = new Tax(Configuration::get('PS_GIFT_WRAPPING_TAX'));
+				$wrapping_fees *= 1 + ((float)$wrapping_fees_tax->rate / 100);
 			}
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)($this->id_currency)));
 		}

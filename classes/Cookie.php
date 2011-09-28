@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -50,7 +50,7 @@ class	CookieCore
 
 	/** @var array cipher tool initilization vector */
 	protected $_iv;
-	
+
 	protected $_modified = false;
 
 	/**
@@ -78,13 +78,13 @@ class	CookieCore
 			$this->_cipherTool = new Blowfish($this->_key, $this->_iv);
 		$this->update();
 	}
-	
+
 	protected function getDomain()
 	{
 		$r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
 	    preg_match ($r, Tools::getHttpHost(false, false), $out);
-		if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'. 
-         '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'. 
+		if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'.
+         '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'.
          '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4]))
 			return false;
 		if (!strstr(Tools::getHttpHost(false, false), '.'))
@@ -176,7 +176,7 @@ class	CookieCore
 		Tools::displayAsDeprecated();
 		if (!$withGuest AND $this->is_guest == 1)
 			return false;
-		
+
 		/* Customer is valid only if it can be load and if cookie password is the same as database one */
 	 	if ($this->logged == 1 AND $this->id_customer AND Validate::isUnsignedId($this->id_customer) AND Customer::checkPassword((int)($this->id_customer), $this->passwd))
         	return true;
@@ -235,7 +235,7 @@ class	CookieCore
 		$this->_modified = true;
 		$this->write();
 	}
-	
+
 	function makeNewLog()
 	{
 		unset($this->_content['id_customer']);
@@ -272,17 +272,17 @@ class	CookieCore
 			/* Check if cookie has not been modified */
 			if (!isset($this->_content['checksum']) OR $this->_content['checksum'] != $checksum)
 				$this->logout();
-			
+
 			if (!isset($this->_content['date_add']))
 				$this->_content['date_add'] = date('Y-m-d H:i:s');
 		}
 		else
 			$this->_content['date_add'] = date('Y-m-d H:i:s');
-		
+
 		//checks if the language exists, if not choose the default language
 		if (!Language::getLanguage((int)$this->id_lang))
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-		
+
 	}
 
 	/**
@@ -350,11 +350,21 @@ class	CookieCore
 	}
 
 	/**
-	 *
 	 * @return String name of cookie
 	 */
 	public function getName()
 	{
 		return $this->_name;
+	}
+
+	/**
+	 * Check if the cookie exists
+	 *
+	 * @since 1.5.0
+	 * @return bool
+	 */
+	public function exists()
+	{
+		return isset($_COOKIE[$this->_name]);
 	}
 }
