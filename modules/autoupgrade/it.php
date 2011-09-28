@@ -1,5 +1,5 @@
 <?php
-global $_MODULE
+global $_MODULE;
 $_MODULE = array();
 
 $_MODULE['<{autoupgrade}prestashop>AdminSelfUpgrade_19f823c6453c2b1ffd09cb715214813d'] = 'Campi richiesti';
