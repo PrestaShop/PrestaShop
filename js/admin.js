@@ -887,3 +887,20 @@ function refreshImagePositions(imageTable)
 	imageTable.find("tr td.dragHandle:first a:first").hide();
 	imageTable.find("tr td.dragHandle:last a:last").hide();
 }
+
+/** display a success message in a #ajax_confirmation container
+ * @param string msg string to display
+ */
+function showSuccessMessage(msg)
+{
+	$("#ajax_confirmation").show().html("<div style=\"background-color:green;color:white;padding:20px;position:fixed;bottom:0;width:100%;left:0;text-align:center;\">"+msg+"</div>").delay(3000).fadeOut("slow");
+}
+			
+/** display a warning message in a #ajax_confirmation container
+ * @param string msg string to display
+ */
+function showErrorMessage(msg)
+{
+	$("#ajax_confirmation").show()
+	.html("<div class=\"error\"><img src=\"../img/admin/error.png\" alt=\"ERROR\" />"+msg+"</div>");
+}

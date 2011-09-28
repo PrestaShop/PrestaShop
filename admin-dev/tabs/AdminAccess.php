@@ -140,16 +140,6 @@ class AdminAccess extends AdminTab
 					});
 				});
 				
-				function showSuccessMessage(msg)
-				{
-					$("#ajax_confirmation").show().html("<div style=\"background-color:green;color:white;padding:20px;position:fixed;bottom:0;width:100%;left:0;text-align:center;\">"+msg+"</div>").delay(3000).fadeOut("slow");
-				}
-				
-				function showErrorMessage(msg)
-				{
-					$("#ajax_confirmation").show().html("<div class=\"error\"><img src=\"../img/admin/error.png\" alt=\"ERROR\" />"+msg+"</div>");
-				}
-			</script>';
 	}
 	
 	/**
@@ -174,7 +164,6 @@ class AdminAccess extends AdminTab
 		<script type="text/javascript">
 			setLang(Array(\''.$this->l('Profile updated').'\', \''.$this->l('Request failed!').'\', \''.$this->l('Update in progress. Please wait.').'\', \''.$this->l('Server connection failed!').'\'));
 		</script>
-		<div id="ajax_confirmation"></div>
 		<table class="table float" cellspacing="0">
 			<tr>
 				<th '.($currentProfile == (int)_PS_ADMIN_PROFILE_ ? 'colspan="6"' : '').'>
