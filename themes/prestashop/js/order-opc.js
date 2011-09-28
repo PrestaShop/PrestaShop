@@ -66,12 +66,17 @@ function updateCarrierList(json)
 			else
 				var extraHtml = '';
 			
+			if (taxEnabled && displayPrice == 0)
+				var price = carriers[i].price;
+			else
+				var price = carriers[i].price_tax_exc;
+
 			html = html + 
 			'<tr class="'+itemType+'">'+
 				'<td class="carrier_action radio"><input type="radio" name="id_carrier" value="'+carriers[i].id_carrier+'" id="id_carrier'+carriers[i].id_carrier+'"  onclick="updateCarrierSelectionAndGift();" '+extraHtml+' /></td>'+
 				'<td class="carrier_name"><label for="id_carrier'+carriers[i].id_carrier+'">'+name+'</label></td>'+
 				'<td class="carrier_infos">'+carriers[i].delay+'</td>'+
-				'<td class="carrier_price"><span class="price">'+formatCurrency(carriers[i].price, currencyFormat, currencySign, currencyBlank)+'</span>';
+				'<td class="carrier_price"><span class="price">'+formatCurrency(price, currencyFormat, currencySign, currencyBlank)+'</span>';
 			if (taxEnabled && displayPrice == 0)
 				html = html + ' ' + txtWithTax;
 			else

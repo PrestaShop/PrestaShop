@@ -57,7 +57,7 @@ class eBayRequest
 
 	private $compatibilityLevel;
 
-	private $debug = true;
+	private $debug = false;
 
 	/******************************************************************/
 	/** Constructor And Request Methods *******************************/

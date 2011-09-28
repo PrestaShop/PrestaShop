@@ -310,9 +310,11 @@ class CartCore extends ObjectModel
 			$row['description'] = $discount->description ? $discount->description : $discount->name;
 			$row['value_real'] = $discount->getValue(sizeof($result), $total_products_wt, $shipping_wt, $this->id);
 			$row['value_tax_exc'] = $discount->getValue(sizeof($result), $total_products, $shipping, $this->id, false);
+			if ($row['value_real'] !== 0)
 			self::$_discounts[$this->id][] = $row;
+			else
+				$this->deleteDiscount($row['id_discount']);
 		}
-
 		return isset(self::$_discounts[$this->id]) ? self::$_discounts[$this->id] : NULL;
 	}
 
