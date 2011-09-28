@@ -28,29 +28,37 @@
 class SearchControllerCore extends FrontController
 {
 	public $php_self = 'search';
-	public $instantSearch;
-	public $ajaxSearch;
+	public $instant_search;
+	public $ajax_search;
 
-	public function __construct()
+	/**
+	 * Initialize search controller
+	 * @see FrontController::init()
+	 */
+	public function init()
 	{
-		parent::__construct();
+		parent::init();
 
-		$this->instantSearch = Tools::getValue('instantSearch');
-		$this->ajaxSearch = Tools::getValue('ajaxSearch');
+		$this->instant_search = Tools::getValue('instantSearch');
+		$this->ajax_search = Tools::getValue('ajaxSearch');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$query = urldecode(Tools::getValue('q'));
-		if ($this->ajaxSearch)
+		if ($this->ajax_search)
 		{
 			$searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true);
-			foreach ($searchResults AS &$product)
+			foreach ($searchResults as &$product)
 				$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
 			die(Tools::jsonEncode($searchResults));
 		}
 
-		if ($this->instantSearch && !is_array($query))
+		if ($this->instant_search && !is_array($query))
 		{
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
@@ -60,14 +68,14 @@ class SearchControllerCore extends FrontController
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
 			$this->context->smarty->assign(array(
-			'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
-			'search_products' => $search['result'],
-			'nbProducts' => $search['total'],
-			'search_query' => $query,
-			'instantSearch' => $this->instantSearch,
-			'homeSize' => Image::getSize('home')));
+				'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
+				'search_products' => $search['result'],
+				'nbProducts' => $search['total'],
+				'search_query' => $query,
+				'instant_search' => $this->instant_search,
+				'homeSize' => Image::getSize('home')));
 		}
-		elseif ($query = Tools::getValue('search_query', Tools::getValue('ref')) AND !is_array($query))
+		else if (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query))
 		{
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
@@ -77,32 +85,32 @@ class SearchControllerCore extends FrontController
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
 			$this->context->smarty->assign(array(
-			'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
-			'search_products' => $search['result'],
-			'nbProducts' => $search['total'],
-			'search_query' => $query,
-			'homeSize' => Image::getSize('home')));
+				'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
+				'search_products' => $search['result'],
+				'nbProducts' => $search['total'],
+				'search_query' => $query,
+				'homeSize' => Image::getSize('home')));
 		}
-		elseif ($tag = urldecode(Tools::getValue('tag')) AND !is_array($tag))
+		else if (($tag = urldecode(Tools::getValue('tag'))) && !is_array($tag))
 		{
 			$nbProducts = (int)(Search::searchTag($this->context->language->id, $tag, true));
 			$this->pagination($nbProducts);
 			$result = Search::searchTag($this->context->language->id, $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
-			Module::hookExec('search', array('expr' => $tag, 'total' => sizeof($result)));
+			Module::hookExec('search', array('expr' => $tag, 'total' => count($result)));
 			$this->context->smarty->assign(array(
-			'search_tag' => $tag,
-			'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
-			'search_products' => $result,
-			'nbProducts' => $nbProducts,
-			'homeSize' => Image::getSize('home')));
+				'search_tag' => $tag,
+				'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
+				'search_products' => $result,
+				'nbProducts' => $nbProducts,
+				'homeSize' => Image::getSize('home')));
 		}
 		else
 		{
 			$this->context->smarty->assign(array(
-			'products' => array(),
-			'search_products' => array(),
-			'pages_nb' => 1,
-			'nbProducts' => 0));
+				'products' => array(),
+				'search_products' => array(),
+				'pages_nb' => 1,
+				'nbProducts' => 0));
 		}
 		$this->context->smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
 
@@ -111,7 +119,7 @@ class SearchControllerCore extends FrontController
 
 	public function displayHeader($display = true)
 	{
-		if (!$this->instantSearch AND !$this->ajaxSearch)
+		if (!$this->instant_search && !$this->ajax_search)
 			parent::displayHeader();
 		else
 			$this->context->smarty->assign('static_token', Tools::getToken(false));
@@ -119,7 +127,7 @@ class SearchControllerCore extends FrontController
 
 	public function displayFooter($display = true)
 	{
-		if (!$this->instantSearch AND !$this->ajaxSearch)
+		if (!$this->instant_search && !$this->ajax_search)
 			parent::displayFooter();
 	}
 
@@ -127,8 +135,7 @@ class SearchControllerCore extends FrontController
 	{
 		parent::setMedia();
 
-		if (!$this->instantSearch AND !$this->ajaxSearch)
+		if (!$this->instant_search && !$this->ajax_search)
 			$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 }
-

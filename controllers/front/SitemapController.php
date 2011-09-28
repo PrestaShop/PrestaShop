@@ -36,6 +36,10 @@ class SitemapControllerCore extends FrontController
 		$this->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->context->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
