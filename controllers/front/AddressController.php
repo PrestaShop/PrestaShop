@@ -131,7 +131,7 @@ class AddressControllerCore extends FrontController
 		$address->id_customer = (int)$this->context->customer->id;
 
 		// Check page token
-		if (Configuration::get('PS_TOKEN_ENABLE') == 1 && strcmp(Tools::getToken(false), Tools::getValue('token')) && $this->context->customer->isLogged(true))
+		if ($this->isTokenValid())
 			$this->errors[] = Tools::displayError('Invalid token');
 
 		// Check phone
@@ -361,7 +361,7 @@ class AddressControllerCore extends FrontController
 			$vat_display = 0;
 
 		$this->context->smarty->assign(array(
-			'vatnumber_ajax_call' => (int)file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+			'vatnumber_ajax_call' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'vat_display' => $vat_display,
 		));
 	}

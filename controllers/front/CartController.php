@@ -29,221 +29,235 @@ class CartControllerCore extends FrontController
 {
 	public $php_self = 'cart';
 
-	// This is not a public page, so the canonical redirection is disabled
-	public function canonicalRedirection($canonicalURL = ''){}
+	protected $id_product;
+	protected $id_product_attribute;
+	protected $customization_id;
+	protected $qty;
 
-	public function ajaxProcess()
+	/**
+	 * This is not a public page, so the canonical redirection is disabled
+	 */
+	public function canonicalRedirection($canonicalURL = '')
 	{
+	}
+
+	/**
+	 * Initialize cart controller
+	 * @see FrontController::init()
+	 */
+	public function init()
+	{
+		parent::init();
+
+		// Get page main parameters
+		$this->id_product = (int)Tools::getValue('id_product', null);
+		$this->id_product_attribute = (int)Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
+		$this->customization_id = (int)Tools::getValue('id_customization');
+		$this->qty = abs(Tools::getValue('qty', 1));
+	}
+
+	public function postProcess()
+	{
+		// Check cart discounts
+		$this->processRemoveDiscounts();
+
+		if ($this->isTokenValid())
+			$this->errors[] = Tools::displayError('Invalid token');
+
+		// Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
+		if ($this->context->cookie->exists() && !$this->errors)
+		{
+			if (Tools::getIsset('add') || Tools::getIsset('update'))
+				$this->processChangeProductInCart();
+			else if (Tools::getIsset('delete'))
+				$this->processDeleteProductInCart();
+
+			$this->processRemoveDiscounts();
+
+			// Make redirection
+			if (!$this->errors && !$this->ajax)
+			{
+				$queryString = Tools::safeOutput(Tools::getValue('query', null));
+				if ($queryString && !Configuration::get('PS_CART_REDIRECT'))
+					Tools::redirect('index.php?controller=search&search='.$queryString);
+
+				// Redirect to previous page
+				if (isset($_SERVER['HTTP_REFERER']))
+				{
+					preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
+					if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT'))
+						Tools::redirect($_SERVER['HTTP_REFERER']);
+				}
+
+				Tools::redirect('index.php?controller=order&'.(isset($this->id_product) ? 'ipa='.$this->id_product : ''));
+			}
+		}
+	}
+
+	/**
+	 * This process delete a product from the cart
+	 */
+	protected function processDeleteProductInCart()
+	{
+		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id))
+			if (!Cart::getNbProducts((int)($this->context->cart->id)))
+			{
+				$this->context->cart->id_carrier = 0;
+				$this->context->cart->gift = 0;
+				$this->context->cart->gift_message = '';
+				$this->context->cart->update();
+			}
+	}
+
+	/**
+	 * This process add or update a product in the cart
+	 */
+	protected function processChangeProductInCart()
+	{
+		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
+
+		if ($this->qty == 0)
+			$this->errors[] = Tools::displayError('Null quantity');
+		else if (!$this->id_product)
+			$this->errors[] = Tools::displayError('Product not found');
+
+		$product = new Product($this->id_product, true, $this->context->language->id);
+		if (!$product->id || !$product->active)
+		{
+			$this->errors[] = Tools::displayError('Product is no longer available.', false);
+			return;
+		}
+
+		// Check product quantity availability
+		if ($this->id_product_attribute)
+		{
+			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
+				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+		}
+		else if ($product->hasAttributes())
+		{
+			$minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
+			$this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimumQuantity);
+			// @todo do something better than a redirect admin !!
+			if (!$this->id_product_attribute)
+				Tools::redirectAdmin($this->context->link->getProductLink($product));
+			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
+				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+		}
+		else if (!$product->checkQty($this->qty))
+			$this->errors[] = Tools::displayError('There is not enough product in stock.');
+
+		// Check vouchers compatibility
+		if ($mode == 'add' && (($product->specificPrice && (float)$product->specificPrice['reduction']) || $product->on_sale))
+		{
+			$discounts = $this->context->cart->getDiscounts();
+			$hasUndiscountedProduct = null;
+			foreach ($discounts as $discount)
+			{
+				if (is_null($hasUndiscountedProduct))
+				{
+					$hasUndiscountedProduct = false;
+					foreach ($this->context->cart->getProducts() as $product)
+						if ($product['reduction_applies'] === false)
+						{
+							$hasUndiscountedProduct = true;
+							break;
+						}
+				}
+				if (!$discount['cumulable_reduction'] && ($discount['id_discount_type'] != Discount::PERCENT || !$hasUndiscountedProduct))
+					$this->errors[] = Tools::displayError('Cannot add this product because current voucher does not allow additional discounts.');
+
+			}
+		}
+
+		// If no errors, process product addition
+		if (!$this->errors && $mode == 'add')
+		{
+			// Add cart if no cart found
+			if (!$this->context->cart->id)
+			{
+				$this->context->cart->add();
+				if ($this->context->cart->id)
+					$this->context->cookie->id_cart = (int)$this->context->cart->id;
+			}
+
+			// Check customizable fields
+			if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id)
+				$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
+
+			if (!$this->errors)
+			{
+				$updateQuantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'));
+				if ($updateQuantity < 0)
+				{
+					// If product has attribute, minimal quantity is set with minimal quantity of attribute
+					$minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
+					$this->errors[] = Tools::displayError('You must add').' '.$minimal_quantity.' '.Tools::displayError('Minimum quantity');
+				}
+				else if (!$updateQuantity)
+					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
+			}
+		}
+	}
+
+	/**
+	 * Remove discounts on cart
+	 */
+	protected function processRemoveDiscounts()
+	{
+		$orderTotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$cartProducts = $this->context->cart->getProducts();
+		foreach ($this->context->cart->getDiscounts() as $discount)
+		{
+			$discountObj = new Discount($discount['id_discount'], $this->context->language->id);
+			if ($error = $this->context->cart->checkDiscountValidity($discountObj, $discounts, $orderTotal, $cartProducts, false))
+			{
+				$this->context->cart->deleteDiscount($discount['id_discount']);
+				$this->context->cart->update();
+				$this->errors[] = $error;
+			}
+		}
+	}
+
+	/**
+	 * @see FrontController::initContent()
+	 */
+	public function initContent()
+	{
+		$this->setTemplate(_PS_THEME_DIR_.'errors.tpl');
+	}
+
+	/**
+	 * Display ajax content (this function is called instead of classic display, in ajax mode)
+	 */
+	public function displayAjax()
+	{
+		if ($this->errors)
+			die(Tools::jsonEncode(array('hasError' => true, $this->errors)));
+
 		if (Tools::getIsset('summary'))
 		{
 			if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			{
-				if (Validate::isLoadedObject($this->context->customer))
-					$groups = $this->context->customer->getGroups();
-				else
-					$groups = array(1);
+				$groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
 				if ($this->context->cart->id_address_delivery)
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
-				$result = array('carriers' => Carrier::getCarriersForOrder(Country::getIdZone((isset($deliveryAddress) AND (int)$deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT')), $groups));
+				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
+				$result = array('carriers' => Carrier::getCarriersForOrder(Country::getIdZone($id_country), $groups));
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
 			$result['HOOK_SHOPPING_CART'] = Module::hookExec('shoppingCart', $result['summary']);
 			$result['HOOK_SHOPPING_CART_EXTRA'] = Module::hookExec('shoppingCartExtra', $result['summary']);
+
 			// Display reduced price (or not) without quantity discount
 			if (Tools::getIsset('getproductprice'))
 				foreach ($result['summary']['products'] as $key => &$product)
 					$product['price_without_quantity_discount'] = Product::getPriceStatic($product['id_product'], !Product::getTaxCalculationMethod(), $product['id_product_attribute']);
 			die(Tools::jsonEncode($result));
 		}
-		else
-			$this->includeCartModule();
-	}
-
-	public function includeCartModule()
-	{
-		require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php');
-	}
-
-
-
-	public function init()
-	{
-		parent::init();
-
-		$orderTotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-		$this->cartDiscounts = $this->context->cart->getDiscounts();
-		foreach ($this->cartDiscounts AS $k => $this->cartDiscount)
-			if ($error = $this->context->cart->checkDiscountValidity(new Discount((int)($this->cartDiscount['id_discount'])), $this->cartDiscounts, $orderTotal, $this->context->cart->getProducts(), false))
-				$this->context->cart->deleteDiscount((int)($this->cartDiscount['id_discount']));
-
-		$add = Tools::getIsset('add') ? 1 : 0;
-		$delete = Tools::getIsset('delete') ? 1 : 0;
-
-		if (Configuration::get('PS_TOKEN_ENABLE') == 1 &&
-			strcasecmp(Tools::getToken(false), strval(Tools::getValue('token'))) &&
-			$this->context->customer->isLogged() === true)
-				$this->errors[] = Tools::displayError('Invalid token');
-
-		// Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
-		if (($add OR Tools::getIsset('update') OR $delete) AND isset($_COOKIE[$this->context->cookie->getName()]))
-		{
-			//get the values
-			$idProduct = (int)(Tools::getValue('id_product', NULL));
-			$idProductAttribute = (int)(Tools::getValue('id_product_attribute', Tools::getValue('ipa')));
-			$customizationId = (int)(Tools::getValue('id_customization', 0));
-			$qty = (int)(abs(Tools::getValue('qty', 1)));
-			if ($qty == 0)
-				$this->errors[] = Tools::displayError('Null quantity');
-			elseif (!$idProduct)
-				$this->errors[] = Tools::displayError('Product not found');
-			else
-			{
-				$producToAdd = new Product($idProduct, true, $this->context->language->id);
-				if ((!$producToAdd->id OR !$producToAdd->active) AND !$delete)
-					if (Tools::getValue('ajax') == 'true')
-						die('{"hasError" : true, "errors" : ["'.Tools::displayError('Product is no longer available.', false).'"]}');
-					else
-						$this->errors[] = Tools::displayError('Product is no longer available.', false);
-				else
-				{
-					/* Check the quantity availability */
-					if ($idProductAttribute AND is_numeric($idProductAttribute))
-					{
-						if (!$delete AND !Product::isAvailableWhenOutOfStock($producToAdd->out_of_stock) AND !Attribute::checkAttributeQty((int)$idProductAttribute, (int)$qty))
-							if (Tools::getValue('ajax') == 'true')
-								die('{"hasError" : true, "errors" : ["'.Tools::displayError('There is not enough product in stock.', false).'"]}');
-							else
-								$this->errors[] = Tools::displayError('There is not enough product in stock.');
-					}
-					elseif ($producToAdd->hasAttributes() AND !$delete)
-					{
-						$idProductAttribute = Product::getDefaultAttribute((int)$producToAdd->id, (int)$producToAdd->out_of_stock == 2 ? !(int)Configuration::get('PS_ORDER_OUT_OF_STOCK') : !(int)$producToAdd->out_of_stock);
-						if (!$idProductAttribute)
-							Tools::redirectAdmin($this->context->link->getProductLink($producToAdd));
-						elseif (!$delete AND !Product::isAvailableWhenOutOfStock($producToAdd->out_of_stock) AND !Attribute::checkAttributeQty((int)$idProductAttribute, (int)$qty))
-							if (Tools::getValue('ajax') == 'true')
-								die('{"hasError" : true, "errors" : ["'.Tools::displayError('There is not enough product in stock.', false).'"]}');
-							else
-								$this->errors[] = Tools::displayError('There is not enough product in stock.');
-					}
-					elseif (!$delete AND !$producToAdd->checkQty((int)$qty))
-						if (Tools::getValue('ajax') == 'true')
-								die('{"hasError" : true, "errors" : ["'.Tools::displayError('There is not enough product in stock.').'"]}');
-							else
-								$this->errors[] = Tools::displayError('There is not enough product in stock.');
-					/* Check vouchers compatibility */
-					if ($add AND (($producToAdd->specificPrice AND (float)($producToAdd->specificPrice['reduction'])) OR $producToAdd->on_sale))
-					{
-						$discounts = $this->context->cart->getDiscounts();
-						$hasUndiscountedProduct = null;
-						foreach($discounts as $discount)
-						{
-							if(is_null($hasUndiscountedProduct))
-							{
-								$hasUndiscountedProduct = false;
-								foreach($this->context->cart->getProducts() as $product)
-									if($product['reduction_applies'] === false)
-									{
-										$hasUndiscountedProduct = true;
-										break;
-									}
-							}
-							if (!$discount['cumulable_reduction'] && ($discount['id_discount_type'] != Discount::PERCENT || !$hasUndiscountedProduct))
-								if (Tools::getValue('ajax') == 'true')
-									die('{"hasError" : true, "errors" : ["'.Tools::displayError('Cannot add this product because current voucher does not allow additional discounts.').'"]}');
-								else
-									$this->errors[] = Tools::displayError('Cannot add this product because current voucher does not allow additional discounts.');
-
-						}
-					}
-					if (!sizeof($this->errors))
-					{
-						if ($add AND $qty >= 0)
-						{
-							/* Product addition to the cart */
-							if (!$this->context->cart->id)
-							{
-								$this->context->cart->add();
-								if ($this->context->cart->id)
-									$this->context->cookie->id_cart = (int)$this->context->cart->id;
-							}
-
-							if ($add AND !$producToAdd->hasAllRequiredCustomizableFields() AND !$customizationId)
-								$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
-							if (!sizeof($this->errors))
-							{
-								$updateQuantity = $this->context->cart->updateQty($qty, $idProduct, $idProductAttribute, $customizationId, Tools::getValue('op', 'up'));
-
-								if ($updateQuantity < 0)
-								{
-									/* if product has attribute, minimal quantity is set with minimal quantity of attribute*/
-									if ((int)$idProductAttribute)
-										$minimal_quantity = Attribute::getAttributeMinimalQty($idProductAttribute);
-									else
-										$minimal_quantity = $producToAdd->minimal_quantity;
-									if (Tools::getValue('ajax') == 'true')
-										die('{"hasError" : true, "errors" : ["'.Tools::displayError('You must add', false).' '.$minimal_quantity.' '.Tools::displayError('Minimum quantity', false).'"]}');
-									else
-										$this->errors[] = Tools::displayError('You must add').' '.$minimal_quantity.' '.Tools::displayError('Minimum quantity')
-										.((isset($_SERVER['HTTP_REFERER']) AND basename($_SERVER['HTTP_REFERER']) == 'order.php' OR (!Tools::isSubmit('ajax') AND substr(basename($_SERVER['REQUEST_URI']),0, strlen('cart.php')) == 'cart.php')) ? ('<script language="javascript">setTimeout("history.back()",5000);</script><br />- '.
-										Tools::displayError('You will be redirected to your cart in a few seconds.')) : '');
-								}
-								elseif (!$updateQuantity)
-								{
-									if (Tools::getValue('ajax') == 'true')
-										die('{"hasError" : true, "errors" : ["'.Tools::displayError('You already have the maximum quantity available for this product.', false).'"]}');
-									else
-										$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.')
-										.((isset($_SERVER['HTTP_REFERER']) AND basename($_SERVER['HTTP_REFERER']) == 'order.php' OR (!Tools::isSubmit('ajax') AND substr(basename($_SERVER['REQUEST_URI']),0, strlen('cart.php')) == 'cart.php')) ? ('<script language="javascript">setTimeout("history.back()",5000);</script><br />- '.
-										Tools::displayError('You will be redirected to your cart in a few seconds.')) : '');
-								}
-							}
-						}
-						elseif ($delete)
-						{
-							if ($this->context->cart->deleteProduct($idProduct, $idProductAttribute, $customizationId))
-								if (!Cart::getNbProducts((int)($this->context->cart->id)))
-								{
-									$this->context->cart->id_carrier = 0;
-									$this->context->cart->gift = 0;
-									$this->context->cart->gift_message = '';
-									$this->context->cart->update();
-								}
-						}
-					}
-					$discounts = $this->context->cart->getDiscounts();
-					foreach($discounts AS $discount)
-					{
-						$discountObj = new Discount($discount['id_discount'], $this->context->language->id);
-
-						if ($error = $this->context->cart->checkDiscountValidity($discountObj, $discounts, $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), $this->context->cart->getProducts(), false))
-						{
-							$this->context->cart->deleteDiscount((int)($discount['id_discount']));
-							$this->context->cart->update();
-							$errors[] = $error;
-						}
-					}
-					if (!sizeof($this->errors))
-					{
-						$queryString = Tools::safeOutput(Tools::getValue('query', NULL));
-						if ($queryString AND !Configuration::get('PS_CART_REDIRECT'))
-							Tools::redirect('index.php?controller=search&search='.$queryString);
-						if (isset($_SERVER['HTTP_REFERER']))
-						{
-							// Redirect to previous page
-							preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
-							if (isset($regs[3]) AND !Configuration::get('PS_CART_REDIRECT') AND Tools::getValue('ajax') != 'true')
-								Tools::redirect($_SERVER['HTTP_REFERER']);
-						}
-					}
-				}
-				if (Tools::getValue('ajax') != 'true' AND !sizeof($this->errors))
-					Tools::redirect('index.php?controller=order&'.(isset($idProduct) ? 'ipa='.(int)($idProduct) : ''));
-
-			}
-		}
-
-		$this->setTemplate(_PS_THEME_DIR_.'errors.tpl');
+		// @todo create a hook
+		else if (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))
+			require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php');
 	}
 }

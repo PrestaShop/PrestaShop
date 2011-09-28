@@ -111,7 +111,7 @@ abstract class ControllerCore
 	public function run()
 	{
 		$this->init();
-		
+
 		if ($this->ajax && method_exists($this, 'ajaxProcess'))
 			$this->ajaxProcess();
 		else

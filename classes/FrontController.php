@@ -663,6 +663,17 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
+	 * Check if token is valid
+	 *
+	 * @since 1.5.0
+	 * @return bool
+	 */
+	public function isTokenValid()
+	{
+		return Configuration::get('PS_TOKEN_ENABLE') && strcasecmp(Tools::getToken(false), Tools::getValue('token')) && $this->context->customer->isLogged();
+	}
+
+	/**
 	 * Add one or several CSS for front, checking if css files are overriden in theme/css/modules/ directory
 	 *
 	 * @see Controller::addCSS()
