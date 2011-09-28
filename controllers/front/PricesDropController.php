@@ -35,10 +35,14 @@ class PricesDropControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->productSort();
-		$nbProducts = Product::getPricesDrop($this->context->language->id, NULL, NULL, true);
+		$nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);
 		$this->pagination($nbProducts);
 
 		$this->context->smarty->assign(array(

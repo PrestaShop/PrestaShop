@@ -31,11 +31,15 @@ class PasswordControllerCore extends FrontController
 {
 	public $php_self = 'password';
 
-	public function process()
+	/**
+	 * Start forms process
+	 * @see FrontController::preProcess()
+	 */
+	public function preProcess()
 	{
 		if (Tools::isSubmit('email'))
 		{
-			if (!($email = Tools::getValue('email')) OR !Validate::isEmail($email))
+			if (!($email = Tools::getValue('email')) || !Validate::isEmail($email))
 				$this->errors[] = Tools::displayError('Invalid e-mail address');
 			else
 			{
@@ -50,10 +54,11 @@ class PasswordControllerCore extends FrontController
 					else
 					{
 						if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'),
-						array('{email}' => $customer->email,
-							  '{lastname}' => $customer->lastname,
-							  '{firstname}' => $customer->firstname,
-							  '{url}' => $this->context->link->getPageLink('password', true, NULL, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id)),
+						array(
+							'{email}' => $customer->email,
+							'{lastname}' => $customer->lastname,
+							'{firstname}' => $customer->firstname,
+							'{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id)),
 						$customer->email,
 						$customer->firstname.' '.$customer->lastname))
 							$this->context->smarty->assign(array('confirmation' => 2, 'email' => $customer->email));
@@ -63,7 +68,7 @@ class PasswordControllerCore extends FrontController
 				}
 			}
 		}
-		elseif (($token = Tools::getValue('token')) && ($id_customer = (int)(Tools::getValue('id_customer'))))
+		else if (($token = Tools::getValue('token')) && ($id_customer = (int)(Tools::getValue('id_customer'))))
 		{
 			$email = Db::getInstance()->getValue('SELECT `email` FROM '._DB_PREFIX_.'customer c WHERE c.`secure_key` = "'.pSQL($token).'" AND c.id_customer='.(int)($id_customer));
 			if ($email)
@@ -79,10 +84,11 @@ class PasswordControllerCore extends FrontController
 					if ($customer->update())
 					{
 						if (Mail::Send($this->context->language->id, 'password', Mail::l('Your password'),
-						array('{email}' => $customer->email,
-							  '{lastname}' => $customer->lastname,
-							  '{firstname}' => $customer->firstname,
-							  '{passwd}' => $password),
+						array(
+							'{email}' => $customer->email,
+							'{lastname}' => $customer->lastname,
+							'{firstname}' => $customer->firstname,
+							'{passwd}' => $password),
 						$customer->email,
 						$customer->firstname.' '.$customer->lastname))
 							$this->context->smarty->assign(array('confirmation' => 1, 'email' => $customer->email));
@@ -96,9 +102,16 @@ class PasswordControllerCore extends FrontController
 			else
 				$this->errors[] = Tools::displayError('We cannot regenerate your password with the data you submitted');
 		}
-		elseif (($token = Tools::getValue('token')) || ($id_customer = Tools::getValue('id_customer')))
+		else if (($token = Tools::getValue('token')) || ($id_customer = Tools::getValue('id_customer')))
 			$this->errors[] = Tools::displayError('We cannot regenerate your password with the data you submitted');
-
+	}
+	
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
+	public function process()
+	{
 		$this->setTemplate(_PS_THEME_DIR_.'password.tpl');
 	}
 }
