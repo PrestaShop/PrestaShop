@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,12 +27,12 @@
 
 class AttachmentControllerCore extends FrontController
 {
-	public function process()
+	public function postProcess()
 	{
 		$a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
 		if (!$a->id)
 			Tools::redirect('index.php');
-		
+
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Type: '.$a->mime);
 		header('Content-Length: '.filesize(_PS_DOWNLOAD_DIR_.$a->file));
