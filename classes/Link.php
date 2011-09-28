@@ -272,17 +272,13 @@ class LinkCore
 	}
 
 	/**
-	 * Create a link for a backoffice controller
+	 * use controller name to create link with correct token
 	 *
-	 * @param unknown_type $controller
-	 * @param unknown_type $params
+	 * @param string $controller
 	 */
-	public function getAdminLink($controller, array $params = array())
+	public function getAdminLink($controller)
 	{
-		$url = _PS_BASE_URL_.__PS_BASE_URI__;
-
-		$params['token'] = Tools::getAdminTokenLite($controller);
-		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
+		return Dispatcher::getInstance()->createUrl($controller, array('token' => Tools::getAdminTokenLite($controller)), false);
 	}
 
 	/**
