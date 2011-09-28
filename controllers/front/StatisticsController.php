@@ -27,12 +27,16 @@
 
 class StatisticsControllerCore extends FrontController
 {
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->displayHeader(false);
 		$this->displayFooter(false);
 
-		if (!isset($_POST['token']) OR !isset($_POST['type']))
+		if (!isset($_POST['token']) || !isset($_POST['type']))
 			die;
 
 		if ($_POST['type'] == 'navinfo')
@@ -53,11 +57,11 @@ class StatisticsControllerCore extends FrontController
 			$guest->windows_media = (int)($_POST['windows_media']);
 			$guest->update();
 		}
-		elseif ($_POST['type'] == 'pagetime')
+		else if ($_POST['type'] == 'pagetime')
 		{
 			if (sha1($_POST['id_connections'].$_POST['id_page'].$_POST['time_start']._COOKIE_KEY_) != $_POST['token'])
 				die;
-			if (!Validate::isInt($_POST['time']) OR $_POST['time'] <= 0)
+			if (!Validate::isInt($_POST['time']) || $_POST['time'] <= 0)
 				die;
 			Connection::setPageTime((int)$_POST['id_connections'], (int)$_POST['id_page'], substr($_POST['time_start'], 0, 19), intval($_POST['time']));
 		}
