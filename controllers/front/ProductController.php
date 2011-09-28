@@ -277,7 +277,7 @@ class ProductControllerCore extends FrontController
 							$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
 						$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)($row['quantity']);
 
-						$availableDate = Tools::displayDate(strtotime($row['available_date']), $this->context->language->id);
+						$availableDate = ($row['available_date'] != '0000-00-00') ? Tools::displayDate($row['available_date'], $this->context->language->id) : $row['available_date'];
 
 						$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 						$combinations[$row['id_product_attribute']]['attributes'][] = (int)($row['id_attribute']);
