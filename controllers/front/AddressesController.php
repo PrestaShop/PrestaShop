@@ -32,6 +32,9 @@ class AddressesControllerCore extends FrontController
 	public $authRedirection = 'addresses';
 	public $ssl = true;
 
+	/**
+	 * Set default medias for this controller
+	 */
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -39,54 +42,58 @@ class AddressesControllerCore extends FrontController
 		$this->addJS(_THEME_JS_DIR_.'tools.js');
 	}
 
-	public function process()
+	/**
+	 * Initialize addresses controller
+	 * @see FrontController::init()
+	 */
+	public function init()
 	{
-		$multipleAddressesFormated = array();
-		$ordered_fields = array();
-		$customer = $this->context->customer;
-
-		if (!Validate::isLoadedObject($customer))
+		if (!Validate::isLoadedObject($this->context->customer))
 			die(Tools::displayError('Customer not found'));
+	}
 
-		// Retro Compatibility Theme < 1.4.1
-		$this->context->smarty->assign('addresses', $customer->getAddresses($this->context->language->id));
-
-		$customerAddressesDetailed = $customer->getAddresses($this->context->language->id);
-
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::initContent()
+	 */
+	public function initContent()
+	{
 		$total = 0;
-		foreach($customerAddressesDetailed as $addressDetailed)
+		$multiple_addresses_formated = array();
+		$ordered_fields = array();
+		$addresses = $this->context->customer->getAddresses($this->context->language->id);
+		// @todo getAddresses() should send back objects
+		foreach ($addresses as $detail)
 		{
-			$address = new Address($addressDetailed['id_address']);
-
-			$multipleAddressesFormated[$total] = AddressFormat::getFormattedLayoutData($address);
+			$address = new Address($detail['id_address']);
+			$multiple_addresses_formated[$total] = AddressFormat::getFormattedLayoutData($address);
 			unset($address);
 			++$total;
 
 			// Retro theme < 1.4.2
-      $ordered_fields = AddressFormat::getOrderedAddressFields($addressDetailed['id_country'], false, true);
+			$ordered_fields = AddressFormat::getOrderedAddressFields($detail['id_country'], false, true);
 		}
 
 		// Retro theme 1.4.2
-    	if (($key = array_search('Country:name', $ordered_fields)))
+    	if ($key = array_search('Country:name', $ordered_fields))
        		$ordered_fields[$key] = 'country';
 
 		$this->context->smarty->assign('addresses_style', array(
-								'company' => 'address_company'
-								,'vat_number' => 'address_company'
-								,'firstname' => 'address_name'
-								,'lastname' => 'address_name'
-								,'address1' => 'address_address1'
-								,'address2' => 'address_address2'
-								,'city' => 'address_city'
-								,'country' => 'address_country'
-								,'phone' => 'address_phone'
-								,'phone_mobile' => 'address_phone_mobile'
-								,'alias' => 'address_title'
-							));
-
-		$this->context->smarty->assign(array(
-			'multipleAddresses' => $multipleAddressesFormated,
-			'ordered_fields' => $ordered_fields));
+			'company' => 'address_company',
+			'vat_number' => 'address_company',
+			'firstname' => 'address_name',
+			'lastname' => 'address_name',
+			'address1' => 'address_address1',
+			'address2' => 'address_address2',
+			'city' => 'address_city',
+			'country' => 'address_country',
+			'phone' => 'address_phone',
+			'phone_mobile' => 'address_phone_mobile',
+			'alias' => 'address_title',
+			'multipleAddresses' => $multiple_addresses_formated,
+			'ordered_fields' => $ordered_fields,
+			'addresses' => $addresses, // Retro Compatibility Theme < 1.4.1
+		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'addresses.tpl');
 	}
