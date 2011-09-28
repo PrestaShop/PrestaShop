@@ -111,7 +111,12 @@ abstract class ControllerCore
 	public function run()
 	{
 		$this->init();
-		$this->postProcess();
+		
+		if ($this->ajax && method_exists($this, 'ajaxProcess'))
+			$this->ajaxProcess();
+		else
+			$this->postProcess();
+
 		if ($this->displayHeader)
 		{
 			$this->setMedia();
@@ -122,7 +127,7 @@ abstract class ControllerCore
 		if ($this->displayFooter)
 			$this->initFooter();
 
-		if ($this->ajax)
+		if ($this->ajax && method_exists($this, 'displayAjax'))
 			$this->displayAjax();
 		else
 			$this->display();
