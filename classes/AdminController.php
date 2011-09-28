@@ -3,6 +3,7 @@ class AdminControllerCore extends Controller
 {
 	public $path;
 
+	public static $currentIndex;
 	public $content;
 	public $warnings;
 
@@ -37,6 +38,50 @@ class AdminControllerCore extends Controller
 	/** @var string Default ORDER BY clause when $_orderBy is not defined */
 	protected $_defaultOrderBy = false;
 
+	/** @var array Errors displayed after post processing */
+	public $_errors = array();
+
+	protected $list_display;
+
+	protected $shopLink;
+
+	/** @var array Cache for query results */
+	protected $_list = array();
+
+	/** @var integer Number of results in list */
+	protected $_listTotal = 0;
+
+	/** @var array WHERE clause determined by filter fields */
+	protected $_filter;
+
+	/** @var array Temporary SQL table WHERE clause determinated by filter fields */
+	protected $_tmpTableFilter = '';
+
+	/** @var array Number of results in list per page (used in select field) */
+	protected $_pagination = array(20, 50, 100, 300);
+
+	/** @var string ORDER BY clause determined by field/arrows in list header */
+	protected $_orderBy;
+
+	/** @var string Order way (ASC, DESC) determined by arrows in list header */
+	protected $_orderWay;
+
+	protected $bulk_action;
+
+	protected $is_cms = false;
+
+	protected $is_dnd_identifier = false;
+
+	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute');
+	protected $view;
+	protected $edit;
+	protected $delete;
+	protected $duplicate;
+	protected $noLink;
+	protected $specificConfirmDelete;
+	protected $colorOnBackground;
+
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -50,7 +95,6 @@ class AdminControllerCore extends Controller
 				$this->template = $tpl_name;
 		}
 
-		$this->id = Tab::getIdFromClassName($this->className);
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
 			3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
@@ -69,15 +113,16 @@ class AdminControllerCore extends Controller
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
 		$className = get_class($this);
-
-		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
-			$className = 'AdminCatalog';
-
 		// temporary fix for Token retrocompatibility
 		// This has to be done when url is built instead of here)
 		if(strpos($className,'Controller'))
 			$className = substr($className,0,-10);
 
+		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
+			$className = 'AdminCatalog';
+
+		$this->className = $className;
+		$this->id = Tab::getIdFromClassName($className);
 		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
 
 		// Fix for AdminHome
@@ -137,6 +182,335 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
+			if (!isset($this->table))
+				return false;
+			// set token
+			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+
+			// Sub included tab postProcessing
+			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
+
+			/* Delete object image */
+			if (isset($_GET['deleteImage']))
+			{
+				if (Validate::isLoadedObject($object = $this->loadObject()))
+					if (($object->deleteImage()))
+						Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token);
+				$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
+			}
+
+			/* Delete object */
+			elseif (isset($_GET['delete'.$this->table]))
+			{
+				if ($this->tabAccess['delete'] === '1')
+				{
+					if (Validate::isLoadedObject($object = $this->loadObject()) AND isset($this->fieldImageSettings))
+					{
+						// check if request at least one object with noZeroObject
+						if (isset($object->noZeroObject) AND sizeof(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
+							$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+						else
+						{
+							if ($this->deleted)
+							{
+								$object->deleteImage();
+								$object->deleted = 1;
+								if ($object->update())
+									Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
+							}
+							elseif ($object->delete())
+							{
+								if(method_exists($object, 'cleanPositions'))
+									$object->cleanPositions();
+								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
+							}
+							$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+						}
+					}
+					else
+						$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+			}
+
+			/* Change object statuts (active, inactive) */
+			elseif ((isset($_GET['status'.$this->table]) OR isset($_GET['status'])) AND Tools::getValue($this->identifier))
+			{
+				if ($this->tabAccess['edit'] === '1')
+				{
+					if (Validate::isLoadedObject($object = $this->loadObject()))
+					{
+						if ($object->toggleStatus())
+							Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+						else
+							$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+					}
+					else
+						$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			/* Move an object */
+			elseif (isset($_GET['position']))
+			{
+				if ($this->tabAccess['edit'] !== '1')
+					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				elseif (!Validate::isLoadedObject($object = $this->loadObject()))
+					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				elseif (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
+					$this->_errors[] = Tools::displayError('Failed to update the position.');
+				else
+					Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.$token);
+					 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+			}
+			/* Delete multiple objects */
+			elseif (Tools::getValue('submitDel'.$this->table))
+			{
+				if ($this->tabAccess['delete'] === '1')
+				{
+					if (isset($_POST[$this->table.'Box']))
+					{
+						$object = new $this->className();
+						if (isset($object->noZeroObject) AND
+							// Check if all object will be deleted
+							(sizeof(call_user_func(array($this->className, $object->noZeroObject))) <= 1 OR sizeof($_POST[$this->table.'Box']) == sizeof(call_user_func(array($this->className, $object->noZeroObject)))))
+							$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+						else
+						{
+							$result = true;
+							if ($this->deleted)
+							{
+								foreach(Tools::getValue($this->table.'Box') as $id)
+								{
+									$toDelete = new $this->className($id);
+									$toDelete->deleted = 1;
+									$result = $result AND $toDelete->update();
+								}
+							}
+							else
+								$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
+
+							if ($result)
+								Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token);
+							$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+						}
+					}
+					else
+						$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+			}
+
+			/* Create or update an object */
+			elseif (Tools::getValue('submitAdd'.$this->table))
+			{
+				/* Checking fields validity */
+				$this->validateRules();
+				if (!sizeof($this->_errors))
+				{
+					$id = (int)(Tools::getValue($this->identifier));
+
+					/* Object update */
+					if (isset($id) AND !empty($id))
+					{
+						if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee') AND Tools::isSubmit('updateemployee')))
+						{
+							$object = new $this->className($id);
+							if (Validate::isLoadedObject($object))
+							{
+								/* Specific to objects which must not be deleted */
+								if ($this->deleted AND $this->beforeDelete($object))
+								{
+									// Create new one with old objet values
+									$objectNew = new $this->className($object->id);
+									$objectNew->id = NULL;
+									$objectNew->date_add = '';
+									$objectNew->date_upd = '';
+
+									// Update old object to deleted
+									$object->deleted = 1;
+									$object->update();
+
+									// Update new object with post values
+									$this->copyFromPost($objectNew, $this->table);
+									$result = $objectNew->add();
+									if (Validate::isLoadedObject($objectNew))
+										$this->afterDelete($objectNew, $object->id);
+								}
+								else
+								{
+									$this->copyFromPost($object, $this->table);
+									$result = $object->update();
+									$this->afterUpdate($object);
+								}
+
+								if ($object->id)
+									$this->updateAssoShop($object->id);
+
+								if (!$result)
+									$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
+								elseif ($this->postImage($object->id) AND !sizeof($this->_errors))
+								{
+									$parent_id = (int)(Tools::getValue('id_parent', 1));
+									// Specific back redirect
+									if ($back = Tools::getValue('back'))
+										Tools::redirectAdmin(urldecode($back).'&conf=4');
+									// Specific scene feature
+									if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
+										Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
+									// Save and stay on same form
+									if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+										Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
+									// Save and back to parent
+									if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+										Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token);
+									// Default behavior (save and back)
+									Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token);
+								}
+							}
+							else
+								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+						}
+						else
+							$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+					}
+
+					/* Object creation */
+					else
+					{
+						if ($this->tabAccess['add'] === '1')
+						{
+							$object = new $this->className();
+							$this->copyFromPost($object, $this->table);
+	//					d($object);
+							if (!$object->add())
+								$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+							elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND !sizeof($this->_errors) AND $this->_redirect)
+							{
+								$parent_id = (int)(Tools::getValue('id_parent', 1));
+								$this->afterAdd($object);
+								$this->updateAssoShop($object->id);
+								// Save and stay on same form
+								if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+									Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
+								// Save and back to parent
+								if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+									Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token);
+								// Default behavior (save and back)
+								Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
+							}
+						}
+						else
+							$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+					}
+				}
+				$this->_errors = array_unique($this->_errors);
+			}
+
+			/* Cancel all filters for this tab */
+			elseif (isset($_POST['submitReset'.$this->table]))
+			{
+				$filters = $this->context->cookie->getFamily($this->table.'Filter_');
+				foreach ($filters AS $cookieKey => $filter)
+					if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
+						{
+							$key = substr($cookieKey, 7 + Tools::strlen($this->table));
+							/* Table alias could be specified using a ! eg. alias!field */
+							$tmpTab = explode('!', $key);
+							$key = (count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0]);
+							if (array_key_exists($key, $this->fieldsDisplay))
+								unset($this->context->cookie->$cookieKey);
+						}
+				if (isset($this->context->cookie->{'submitFilter'.$this->table}))
+					unset($this->context->cookie->{'submitFilter'.$this->table});
+				if (isset($this->context->cookie->{$this->table.'Orderby'}))
+					unset($this->context->cookie->{$this->table.'Orderby'});
+				if (isset($this->context->cookie->{$this->table.'Orderway'}))
+					unset($this->context->cookie->{$this->table.'Orderway'});
+				unset($_POST);
+			}
+
+			/* Submit options list */
+			elseif (Tools::getValue('submitOptions'.$this->table))
+			{
+				$this->updateOptions($token);
+			}
+
+			/* Manage list filtering */
+			elseif (Tools::isSubmit('submitFilter'.$this->table) OR $this->context->cookie->{'submitFilter'.$this->table} !== false)
+			{
+				$_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
+				foreach ($_POST AS $key => $value)
+				{
+					/* Extracting filters from $_POST on key filter_ */
+					if ($value != NULL AND !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table)))
+					{
+						$key = Tools::substr($key, 7 + Tools::strlen($this->table));
+						/* Table alias could be specified using a ! eg. alias!field */
+						$tmpTab = explode('!', $key);
+						$filter = count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0];
+						if ($field = $this->filterToField($key, $filter))
+						{
+							$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
+							if (($type == 'date' OR $type == 'datetime') AND is_string($value))
+								$value = unserialize($value);
+							$key = isset($tmpTab[1]) ? $tmpTab[0].'.`'.$tmpTab[1].'`' : '`'.$tmpTab[0].'`';
+							if (array_key_exists('tmpTableFilter', $field))
+								$sqlFilter = & $this->_tmpTableFilter;
+							elseif (array_key_exists('havingFilter', $field))
+								$sqlFilter = & $this->_filterHaving;
+							else
+								$sqlFilter = & $this->_filter;
+
+							/* Only for date filtering (from, to) */
+							if (is_array($value))
+							{
+								if (isset($value[0]) AND !empty($value[0]))
+								{
+									if (!Validate::isDate($value[0]))
+										$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+									else
+										$sqlFilter .= ' AND `'.bqSQL($key).'` >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+								}
+
+								if (isset($value[1]) AND !empty($value[1]))
+								{
+									if (!Validate::isDate($value[1]))
+										$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+									else
+										$sqlFilter .= ' AND `'.bqSQL($key).'` <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+								}
+							}
+							else
+							{
+								$sqlFilter .= ' AND ';
+								if ($type == 'int' OR $type == 'bool')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`' OR $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)($value).' ';
+								elseif ($type == 'decimal')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.(float)($value).' ';
+								elseif ($type == 'select')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+								else
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+							}
+						}
+					}
+				}
+			}
+			elseif(Tools::isSubmit('submitFields') AND $this->requiredDatabase AND $this->tabAccess['add'] === '1' AND $this->tabAccess['delete'] === '1')
+			{
+				if (!is_array($fields = Tools::getValue('fieldsBox')))
+					$fields = array();
+
+				$object = new $this->className();
+				if (!$object->addFieldsRequiredDatabase($fields))
+					$this->_errors[] = Tools::displayError('Error in updating required fields');
+				else
+					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
+			}
 		}
 	}
 
@@ -160,6 +534,22 @@ class AdminControllerCore extends Controller
 		}
 	}
 
+	/**
+	 * @TODO
+	 */
+	public function includeSubTab($methodname, $actions = array())
+	{
+	}
+
+	protected function filterToField($key, $filter)
+	{
+		foreach ($this->fieldsDisplay AS $field)
+			if (array_key_exists('filter_key', $field) AND $field['filter_key'] == $key)
+				return $field;
+		if (array_key_exists($filter, $this->fieldsDisplay))
+			return $this->fieldsDisplay[$filter];
+		return false;
+	}
 
 	public function displayNoSmarty()
 	{
@@ -464,11 +854,11 @@ class AdminControllerCore extends Controller
 			Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
 
 		// Set current index
-		$currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
+		$currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
+
 		if ($back = Tools::getValue('back'))
 			$currentIndex .= '&back='.urlencode($back);
-		AdminTab::$currentIndex = $currentIndex;
-
+		self::$currentIndex = $currentIndex;
 		$iso = $this->context->language->iso_code;
 		include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
 		include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
@@ -481,23 +871,6 @@ class AdminControllerCore extends Controller
 		$this->context->link = $link;
 		//define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		//define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
-
-		/*$path = _PS_ADMIN_DIR_.'/themes/';
-		if (empty($this->context->employee->bo_theme) OR !file_exists($path.$this->context->employee->bo_theme.'/admin.css'))
-		{
-			if (file_exists($path.'oldschool/admin.css'))
-				$this->context->employee->bo_theme = 'oldschool';
-			elseif (file_exists($path.'origins/admin.css'))
-				$this->context->employee->bo_theme = 'origins';
-			else
-				foreach (scandir($path) as $theme)
-					if ($theme[0] != '.' AND file_exists($path.$theme.'/admin.css'))
-					{
-						$employee->bo_theme = $theme;
-						break;
-					}
-			$this->context->employee->update();
-		}*/
 
 		// Change shop context ?
 		if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
@@ -546,5 +919,110 @@ class AdminControllerCore extends Controller
 	public function displayErrors()
 	{
 		p($this->_errors);
+	}
+
+	/**
+	 * Get the current objects' list form the database
+	 *
+	 * @param integer $id_lang Language used for display
+	 * @param string $orderBy ORDER BY clause
+	 * @param string $_orderWay Order way (ASC, DESC)
+	 * @param integer $start Offset in LIMIT clause
+	 * @param integer $limit Row count in LIMIT clause
+	 */
+	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
+	{
+		/* Manage default params values */
+		if (empty($limit))
+			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $this->context->cookie->{$this->table.'_pagination'});
+
+		if (!Validate::isTableOrIdentifier($this->table))
+			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
+
+		if (empty($orderBy))
+			$orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+		if (empty($orderWay))
+			$orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
+
+		$limit = (int)(Tools::getValue('pagination', $limit));
+		$this->context->cookie->{$this->table.'_pagination'} = $limit;
+
+
+		/* Check params validity */
+		if (!Validate::isOrderBy($orderBy) OR !Validate::isOrderWay($orderWay)
+			OR !is_numeric($start) OR !is_numeric($limit)
+			OR !Validate::isUnsignedId($id_lang))
+			die(Tools::displayError('get list params is not valid'));
+
+		/* Determine offset from current page */
+		if ((isset($_POST['submitFilter'.$this->table]) OR
+		isset($_POST['submitFilter'.$this->table.'_x']) OR
+		isset($_POST['submitFilter'.$this->table.'_y'])) AND
+		!empty($_POST['submitFilter'.$this->table]) AND
+		is_numeric($_POST['submitFilter'.$this->table]))
+			$start = (int)($_POST['submitFilter'.$this->table] - 1) * $limit;
+
+		/* Cache */
+		$this->_lang = (int)($id_lang);
+		$this->_orderBy = $orderBy;
+		$this->_orderWay = Tools::strtoupper($orderWay);
+
+		/* SQL table : orders, but class name is Order */
+		$sqlTable = $this->table == 'order' ? 'orders' : $this->table;
+
+		// Add SQL shop restriction
+		$selectShop = $joinShop = $whereShop = '';
+		if ($this->shopLinkType)
+		{
+			$selectShop = ', shop.name as shop_name ';
+			$joinShop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
+							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
+			$whereShop = $this->context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+		}
+		$assos = Shop::getAssoTables();
+		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+		{
+			$filterKey = $assos[$this->table]['type'];
+			$idenfierShop = $this->context->shop->getListOfID();
+		}
+		else if (Context::shop() == Shop::CONTEXT_GROUP)
+		{
+			$assos = GroupShop::getAssoTables();
+			if (isset($assos[$this->table]) AND $assos[$this->table]['type'] == 'group_shop')
+			{
+				$filterKey = $assos[$this->table]['type'];
+				$idenfierShop = array($this->context->shop->getGroupID());
+			}
+		}
+
+		$filterShop = '';
+		if (isset($filterKey))
+		{
+			if (!$this->_group)
+				$this->_group = 'GROUP BY a.'.pSQL($this->identifier);
+			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
+				$this->_group .= ', a.'.pSQL($this->identifier);
+
+			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
+				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
+		}
+
+		/* Query in order to get results with all fields */
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS
+			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
+			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$selectShop.'
+			FROM `'._DB_PREFIX_.$sqlTable.'` a
+			'.$filterShop.'
+			'.($this->lang ? 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'` AND b.`id_lang` = '.(int)$id_lang.($id_lang_shop ? ' AND b.`id_shop`='.(int)$id_lang_shop : '').')' : '').'
+			'.(isset($this->_join) ? $this->_join.' ' : '').'
+			'.$joinShop.'
+			WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').(isset($this->_filter) ? $this->_filter : '').$whereShop.'
+			'.(isset($this->_group) ? $this->_group.' ' : '').'
+			'.((isset($this->_filterHaving) || isset($this->_having)) ? 'HAVING ' : '').(isset($this->_filterHaving) ? ltrim($this->_filterHaving, ' AND ') : '').(isset($this->_having) ? $this->_having.' ' : '').'
+			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
+			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
+			LIMIT '.(int)$start.','.(int)$limit;
+		$this->_list = Db::getInstance()->ExecuteS($sql);
+		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
 }

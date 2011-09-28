@@ -27,11 +27,5 @@
 
 class AdminToolsControllerCore  extends AdminController
 {
-	public function __construct()
-	{
-		$this->className = 'AdminTools';
-		parent::__construct();
-	}
-
 }
 
