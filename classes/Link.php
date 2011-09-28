@@ -272,6 +272,20 @@ class LinkCore
 	}
 
 	/**
+	 * Create a link for a backoffice controller
+	 *
+	 * @param unknown_type $controller
+	 * @param unknown_type $params
+	 */
+	public function getAdminLink($controller, array $params = array())
+	{
+		$url = _PS_BASE_URL_.__PS_BASE_URI__;
+
+		$params['token'] = Tools::getAdminTokenLite($controller);
+		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
+	}
+
+	/**
 	 * Returns a link to a product image for display
 	 * Note: the new image filesystem stores product images in subdirectories of img/p/
 	 *
