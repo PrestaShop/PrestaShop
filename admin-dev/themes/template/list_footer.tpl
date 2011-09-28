@@ -24,4 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$content}
+</table>
+{*
+if ($this->delete)
+<p><input type="submit" class="button" name="submitDel'.$this->table.'" value="'.$this->l('Delete selection').'" onclick="return confirm(\''.$this->l('Delete selected items?', __CLASS__, TRUE, FALSE).'\');" /></p>
+{/if}
+*}
+		</td>
+	</tr>
+</table>
+<input type="hidden" name="token" value="{$token}" />
+</form>
+{*
+if (isset($this->_includeTab) AND sizeof($this->_includeTab))
+	echo '<br /><br />';
+*}
