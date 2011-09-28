@@ -23,8 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript" src="{$module_dir}js/jquery.rating.pack.js"></script>
-<script type="text/javascript" src="{$module_dir}js/jquery.textareaCounter.plugin.js"></script>
 <script type="text/javascript">
 	$(function(){literal}{{/literal} $('input[@type=radio].star').rating(); {literal}}{/literal});
 	$(function(){literal}{{/literal}
