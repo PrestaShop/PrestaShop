@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,49 +24,56 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 define('PS_ADMIN_DIR', getcwd());
 
 include(PS_ADMIN_DIR.'/../config/config.inc.php');
 include(PS_ADMIN_DIR.'/functions.php');
 
-$file = 'request_sql_'.Tools::getValue('id_request_sql').'.csv';
-if ($csv = fopen(PS_ADMIN_DIR.'/export/'.$file, 'w'))
+if ($id = Tools::getValue('id_request_sql'))
 {
-	$sql = RequestSql::getRequestSqlById(Tools::getValue('id_request_sql'));
-
-	if ($sql)
+	$file = 'request_sql_'.$id.'.csv';
+	if ($csv = fopen(PS_ADMIN_DIR.'/export/'.$file, 'w'))
 	{
-		$results = Db::getInstance()->ExecuteS($sql[0]['sql']);
-		foreach (array_keys($results[0]) as $key)
+		$sql = RequestSql::getRequestSqlById($id);
+
+		if ($sql)
 		{
-			$tab_key[] = $key;
-			fputs($csv, $key.';');
-		}
-		foreach ($results as $result)
-		{
-			fputs($csv, "\n");
-			foreach ($tab_key as $name)
-				fputs($csv, $result[$name].';');
-		}
-		if (file_exists(PS_ADMIN_DIR.'/export/'.$file))
-		{
-			$filesize = filesize(PS_ADMIN_DIR.'/export/'.$file);
-			$upload_max_filesize = return_bytes(ini_get('upload_max_filesize'));
-			if ($filesize < $upload_max_filesize)
+			$results = Db::getInstance()->ExecuteS($sql[0]['sql']);
+			foreach (array_keys($results[0]) as $key)
 			{
-				header("Content-type: text/csv");
-				header("Cache-Control: no-store, no-cache");
-				header("Content-Disposition: attachment; filename=\"$file\"");
-				header("Content-Length: ".$filesize);
-				readfile(PS_ADMIN_DIR.'/export/'.$file);
-				die();
+				$tab_key[] = $key;
+				fputs($csv, $key.';');
 			}
-			else
+			foreach ($results as $result)
 			{
-				header('Location: '.$_SERVER['HTTP_REFERER'].'&maxsize=1');
-				die();
+				fputs($csv, "\n");
+				foreach ($tab_key as $name)
+					fputs($csv, '"'.Tools::safeOutput($result[$name]).'";');
 			}
+			if (file_exists(PS_ADMIN_DIR.'/export/'.$file))
+			{
+				$filesize = filesize(PS_ADMIN_DIR.'/export/'.$file);
+				$upload_max_filesize = returnBytes(ini_get('upload_max_filesize'));
+				if ($filesize < $upload_max_filesize)
+				{
+					header('Content-type: text/csv');
+					header('Cache-Control: no-store, no-cache');
+					header('Content-Disposition: attachment; filename="$file"');
+					header('Content-Length: '.$filesize);
+					readfile(PS_ADMIN_DIR.'/export/'.$file);
+					die();
+				}
+				else
+				{
+					header('Location: '.$_SERVER['HTTP_REFERER'].'&maxsize=1');
+					die();
+				}
+			}
+		}
+		else
+		{
+			header('Location: '.$_SERVER['HTTP_REFERER']);
+			die();
 		}
 	}
 	else
@@ -81,13 +88,12 @@ else
 	die();
 }
 
-function return_bytes($val)
+function returnBytes($val)
 {
     $val = trim($val);
-    $last = strtolower($val[strlen($val)-1]);
+    $last = strtolower($val[strlen($val) - 1]);
     switch ($last)
-	{
-        // Le modifieur 'G' est disponible depuis PHP 5.1.0
+    {
         case 'g':
             $val *= 1024;
         case 'm':
@@ -95,6 +101,5 @@ function return_bytes($val)
         case 'k':
             $val *= 1024;
     }
-
     return $val;
 }
