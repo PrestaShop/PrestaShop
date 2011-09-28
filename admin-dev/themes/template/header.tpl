@@ -28,7 +28,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="robots" content="NOFOLLOW, NOINDEX" />
-		<title>PrestaShop&trade; - {l s='Administration panel'|escape:'htmlall':'UTF-8'}</title>
+		<title>{$meta_title} - PrestaShop&trade;</title>
 		<script type="text/javascript">
 			var helpboxes = {$help_box};
 			var roundMode = {$round_mode};

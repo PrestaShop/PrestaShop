@@ -9,6 +9,8 @@ class AdminControllerCore extends Controller
 	public $content_only = false;
 	public $layout = 'layout.tpl';
 
+	public $meta_title = 'Administration panel';
+
 	public $template = '';
 
 	/** @var string Associated table name */
@@ -170,6 +172,9 @@ class AdminControllerCore extends Controller
 	{
 		if(!empty($this->content))
 			$this->context->smarty->assign('content', $this->content);
+
+		$this->context->smarty->assign('meta_title',$this->meta_title);
+
 		if (empty($this->template))
 		{
 			$class_name = get_class($this);

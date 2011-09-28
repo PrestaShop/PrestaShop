@@ -1,17 +1,14 @@
 <div>
 	<h1>{l s='Dashboard'}</h1>
 	<hr style="background-color: #812143;color: #812143;" />
-	<br />
 	{if $upgrade}
-		<div class="warning warn" style="margin-bottom:30px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
+		<div class="warning warn" style="margin-bottom:10px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
 	{else}
 		<p>{l s ='Update notification unavailable'}</p>
 		<p>&nbsp;</p>
 		<p>{l s ='To receive PrestaShop update warnings, you need to activate the <b>allow_url_fopen</b> command in your <b>php.ini</b> config file.'} [<a href="http://www.php.net/manual/'.$isoUser.'/ref.filesystem.php">{l s ='more info'}</a>]</p>
 		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
-
 	{/if}
-</div>
 {if $show_screencast}
 <div id="adminpresentation">
 	<iframe src="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:420px;" scrolling="no"></iframe>
@@ -21,7 +18,6 @@
 		<label for="screencast_dont_show_again">{l s='don\'t show again'}</label>
 	</div>
 </div>
-{/if}
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#screencast_dont_show_again').click(function() {
@@ -39,76 +35,72 @@ $(document).ready(function() {
 	});
 });
 </script>
-<div class="clear"></div><br />
-<div id="column_left">
-	<ul class="F_list clearfix">
-	{foreach from=$quick_links key=k item=link}
-	<li id="{$k}_block">
-		<h4><a href="{$link.href}">{$link.title}</a></h4>
-		<p>{$link.description}</p>
-	</li>
-	{/foreach}
-	</ul>
-	{$monthly_statistics}
-	{$customers_service}
-	
-	{$stats_sales}
-	{$last_orders}
+{/if}
+	<div id="column_left">
+		<ul class="F_list clearfix">
+		{foreach from=$quick_links key=k item=link}
+		<li id="{$k}_block">
+			<h4><a href="{$link.href}">{$link.title}</a></h4>
+			<p>{$link.description}</p>
+		</li>
+		{/foreach}
+		</ul>
+		{$monthly_statistics}
+		{$customers_service}
+		{$stats_sales}
+		{$last_orders}
+	</div>
 
-		<div id="column_right">
+	<div id="column_right">
 	{$tips_optimization}
-			<script type="text/javascript">
-				$(document).ready(function() {
-					$.ajax({
-						url: "ajax-tab.php",
-						type: "POST",
-						data:{
-							token: "{$token}",
-							ajax: "1",
-							controller : "AdminHome",
-							action: "getAdminHomeElement"
-						},
-						dataType: "json",
-						success: function(json) {
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$.ajax({
+				url: "ajax-tab.php",
+				type: "POST",
+				data:{
+					token: "{$token}",
+					ajax: "1",
+					controller : "AdminHome",
+					action: "getAdminHomeElement"
+				},
+				dataType: "json",
+				success: function(json) {
 
-							if (json.screencast != 'NOK')
-								$('#adminpresentation').fadeIn('slow');
-							else
-								$('#adminpresentation').fadeOut('slow');
-								
-							$('#partner_preactivation').fadeOut('slow', function() {
-								if (json.partner_preactivation != 'NOK')
-									$('#partner_preactivation').html(json.partner_preactivation);
-								else
-									$('#partner_preactivation').html('');
-								$('#partner_preactivation').fadeIn('slow');
-							});
-							
-							$('#discover_prestashop').fadeOut('slow', function() {
-								if (json.discover_prestashop != 'NOK')
-									$('#discover_prestashop').html(json.discover_prestashop);
-								else
-									$('#discover_prestashop').html('');
-								$('#discover_prestashop').fadeIn('slow');
-							});
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown)
-						{
-							$('#adminpresentation').fadeOut('slow');
-							$('#partner_preactivation').fadeOut('slow');	
-							$('#discover_prestashop').fadeOut('slow');
-						}
+					if (json.screencast != 'NOK')
+						$('#adminpresentation').fadeIn('slow');
+					else
+						$('#adminpresentation').fadeOut('slow');
+						
+					$('#partner_preactivation').fadeOut('slow', function() {
+						if (json.partner_preactivation != 'NOK')
+							$('#partner_preactivation').html(json.partner_preactivation);
+						else
+							$('#partner_preactivation').html('');
+						$('#partner_preactivation').fadeIn('slow');
 					});
-				});
-			</script>
-			<div id="partner_preactivation">
-				<p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p>
-			</div>
-
-
+					
+					$('#discover_prestashop').fadeOut('slow', function() {
+						if (json.discover_prestashop != 'NOK')
+							$('#discover_prestashop').html(json.discover_prestashop);
+						else
+							$('#discover_prestashop').html('');
+						$('#discover_prestashop').fadeIn('slow');
+					});
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown)
+				{
+					$('#adminpresentation').fadeOut('slow');
+					$('#partner_preactivation').fadeOut('slow');	
+					$('#discover_prestashop').fadeOut('slow');
+				}
+			});
+		});
+		</script>
+		<div id="partner_preactivation">
+		<p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p>
+	</div>
 	{$discover_prestashop}
-<div class="clear"></div>
-
-{$HOOK_BACKOFFICEHOME}
-
-
+	<div class="clear"></div>
+	{$HOOK_BACKOFFICEHOME}
+</div>
