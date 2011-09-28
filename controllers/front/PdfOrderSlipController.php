@@ -27,6 +27,10 @@
 
 class PdfOrderSlipControllerCore extends FrontController
 {
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->displayHeader(false);
@@ -35,17 +39,17 @@ class PdfOrderSlipControllerCore extends FrontController
 		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 
-		if (isset($_GET['id_order_slip']) AND Validate::isUnsignedId($_GET['id_order_slip']))
+		if (isset($_GET['id_order_slip']) && Validate::isUnsignedId($_GET['id_order_slip']))
 			$orderSlip = new OrderSlip((int)($_GET['id_order_slip']));
-		if (!isset($orderSlip) OR !Validate::isLoadedObject($orderSlip))
-		    die(Tools::displayError('Order return not found'));
-		elseif ($orderSlip->id_customer != $this->context->customer->id)
-		    die(Tools::displayError('Order return not found'));
+		if (!isset($orderSlip) || !Validate::isLoadedObject($orderSlip))
+			die(Tools::displayError('Order return not found'));
+		else if ($orderSlip->id_customer != $this->context->customer->id)
+			die(Tools::displayError('Order return not found'));
 		$order = new Order((int)($orderSlip->id_order));
 		if (!Validate::isLoadedObject($order))
-		    die(Tools::displayError('Order not found'));
+			die(Tools::displayError('Order not found'));
 		$order->products = OrderSlip::getOrdersSlipProducts((int)($orderSlip->id), $order);
-		$ref = NULL;
+		$ref = null;
 		PDF::invoice($order, 'D', false, $ref, $orderSlip);
 	}
 }
