@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class RequestSql extends ObjectModel
+class RequestSqlCore extends ObjectModel
 {
 	public $name;
 	public $sql;
