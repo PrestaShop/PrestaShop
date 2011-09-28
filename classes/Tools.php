@@ -1322,7 +1322,7 @@ class ToolsCore
 	{
 		if (strlen($sql) > 0)
 		{
-			require_once(_PS_TOOL_DIR_.'parser_sql/parser_sql.php');
+			require_once(_PS_TOOL_DIR_.'parser_sql/php-sql-parser.php');
 			$parser = new parserSql($sql);
 			return $parser->parsed;
 		}
