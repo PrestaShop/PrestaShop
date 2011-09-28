@@ -65,6 +65,8 @@ class CartControllerCore extends FrontController
 		require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php');
 	}
 
+
+
 	public function init()
 	{
 		parent::init();
