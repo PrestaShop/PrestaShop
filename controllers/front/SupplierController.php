@@ -43,6 +43,10 @@ class SupplierControllerCore extends FrontController
 			parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
 	}
 
+	/**
+	 * Initialize supplier controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
@@ -51,7 +55,7 @@ class SupplierControllerCore extends FrontController
 		{
 			$this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
-			if (!Validate::isLoadedObject($this->supplier) OR !$this->supplier->active)
+			if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active)
 			{
 				header('HTTP/1.1 404 Not Found');
 				header('Status: 404 Not Found');
@@ -62,52 +66,65 @@ class SupplierControllerCore extends FrontController
 		}
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
-		if (Validate::isLoadedObject($this->supplier) AND $this->supplier->active AND $this->supplier->isAssociatedToGroupShop())
-		{
-			$nbProducts = $this->supplier->getProducts($this->supplier->id, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
-			$this->pagination((int)$nbProducts);
-			$this->context->smarty->assign(array(
-				'nb_products' => $nbProducts,
-				'products' => $this->supplier->getProducts($this->supplier->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
-				'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
-				'supplier' => $this->supplier,
-			));
-		}
-		elseif (!Tools::getValue('id_supplier'))
-		{
-			if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
-			{
-				$result = Supplier::getSuppliers(true, $this->context->language->id, true);
-				$nbProducts = count($result);
-				$this->pagination($nbProducts);
-
-				$suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
-				foreach ($suppliers AS &$row)
-					$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];;
-
-				$this->context->smarty->assign(array(
-					'pages_nb' => ceil($nbProducts / (int)$this->n),
-					'nbSuppliers' => $nbProducts,
-					'mediumSize' => Image::getSize('medium'),
-					'suppliers' => $suppliers,
-					'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-				));
-			}
-			else
-				$this->context->smarty->assign('nbSuppliers', 0);
-		}
+		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToGroupShop())
+			$this->assignOne();
+		else if (!Tools::getValue('id_supplier'))
+			$this->assignAll();
 
 		if ($this->supplier)
+		{
+			$this->productSort();
 			$this->setTemplate(_PS_THEME_DIR_.'supplier.tpl');
+		}
 		else
 			$this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
 	}
-
-	public function displayHeader($display = true)
+	
+	/**
+	 * Assign template vars if displaying one supplier
+	 */
+	private function assignOne()
 	{
-		parent::displayHeader();
-		$this->productSort();
+		$nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
+		$this->pagination((int)$nbProducts);
+		$this->context->smarty->assign(array(
+			'nb_products' => $nbProducts,
+			'products' => $this->supplier->getProducts($this->supplier->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
+			'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
+			'supplier' => $this->supplier,
+		));
+	}
+	
+	/**
+	 * Assign template vars if displaying the supplier list
+	 */
+	private function assignAll()
+	{
+		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
+		{
+			$result = Supplier::getSuppliers(true, $this->context->language->id, true);
+			$nbProducts = count($result);
+			$this->pagination($nbProducts);
+
+			$suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
+			foreach ($suppliers as &$row)
+				$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
+
+			$this->context->smarty->assign(array(
+				'pages_nb' => ceil($nbProducts / (int)$this->n),
+				'nbSuppliers' => $nbProducts,
+				'mediumSize' => Image::getSize('medium'),
+				'suppliers' => $suppliers,
+				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
+			));
+		}
+		else
+			$this->context->smarty->assign('nbSuppliers', 0);
 	}
 }
