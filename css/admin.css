@@ -1094,13 +1094,13 @@ html[xmlns] .clearfix {
 #column_left{
 	width: 610px;
 	float: left;
-	padding-top: 20px;
+	padding-top: 5px;
 }
 
 #column_right{
 	width: 315px;
 	float: right;
-	padding-top: 20px;
+	padding-top: 5px;
 }
 
 .F_list{

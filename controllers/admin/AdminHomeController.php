@@ -31,6 +31,8 @@ class AdminHomeControllerCore extends AdminController
 
 	private function _displayOptimizationTips()
 	{
+		$link = $this->context->link;
+
 		$content = '';
 		$rewrite = 0;
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
@@ -94,59 +96,59 @@ class AdminHomeControllerCore extends AdminController
 		
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
-			$content .= '
-			<div class="admin-box1">
-				<h5>'.$this->l('A good beginning...')
-				.'
-					<span style="float:right">
-						<a id="optimizationTipsFold"'.
-						(Configuration::get('PS_HIDE_OPTIMIZATION_TIPS')
-						?'" href="#"><img alt="v" style="padding-top:0px; padding-right: 5px;" src="../img/admin/down-white.gif" /></a>':'href="?hideOptimizationTips" >
-						<img alt="X" style="padding-top:0px; padding-right: 5px;" src="../img/admin/close-white.png" />
-						</a>').'</span></h5>';
-			$content .= '
-			<script type="text/javascript">
-			$(document).ready(function(){
-				$("#optimizationTipsFold").click(function(e){
-					$("#list-optimization-tips").toggle(function(){
-						if($("#optimizationTipsFold").children("img").attr("src") == "../img/admin/down-white.gif")
-							$("#optimizationTipsFold").children("img").attr("src","../img/admin/close-white.png");
-						else
-							$("#optimizationTipsFold").children("img").attr("src","../img/admin/down-white.gif");
-					});
-				})
-			});
-						</script>
-			';
-			$content .= '<ul id="list-optimization-tips" class="admin-home-box-list" '
-				.(Configuration::get('PS_HIDE_OPTIMIZATION_TIPS')?'style="display:none"':'').'>
-				<li style="background-color:'.$lights[$rewrite]['color'].'">
-				<img src="../img/admin/'.$lights[$rewrite]['image'].'" class="pico" />
-					<a href="index.php?tab=AdminGenerator&token='.Tools::getAdminTokenLite('AdminGenerator').'">'.$this->l('URL rewriting').'</a>
-				</li>
-				<li style="background-color:'.$lights[$htaccessOptimized]['color'].'">
-				<img src="../img/admin/'.$lights[$htaccessOptimized]['image'].'" class="pico" />
-				<a href="index.php?tab=AdminGenerator&token='.Tools::getAdminTokenLite('AdminGenerator').'">'.$this->l('Browser cache & compression').'</a>
-				</li>
-				<li style="background-color:'.$lights[$smartyOptimized]['color'].'">
-				<img src="../img/admin/'.$lights[$smartyOptimized]['image'].'" class="pico" />
-				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'">'.$this->l('Smarty optimization').'</a></li>
-				<li style="background-color:'.$lights[$cccOptimized]['color'].'">
-				<img src="../img/admin/'.$lights[$cccOptimized]['image'].'" class="pico" />
-				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'">'.$this->l('Combine, Compress & Cache').'</a></li>
-				<li style="background-color:'.$lights[$shopEnabled]['color'].'">
-				<img src="../img/admin/'.$lights[$shopEnabled]['image'].'" class="pico" />
-				<a href="index.php?tab=AdminPreferences&token='.Tools::getAdminTokenLite('AdminPreferences').'">'.$this->l('Shop enabled').'</a></li>
-				<li style="background-color:'.$lights[$indexRebuiltAfterUpdate]['color'].'">
-					<img src="../img/admin/'.$lights[$indexRebuiltAfterUpdate]['image'].'" class="pico" />
-		<a href="index.php?tab=AdminSearchConf&token='.Tools::getAdminTokenLite('AdminSearchConf').'">'.$this->l('index rebuilt after update').'</a></li>
-				<li style="background-color:'.$lights[$htaccessAfterUpdate]['color'].'">
-					<img src="../img/admin/'.$lights[$htaccessAfterUpdate]['image'].'" class="pico" />
-		<a href="index.php?tab=AdminGenerator&token='.Tools::getAdminTokenLite('AdminGenerator').'">'.$this->l('.htaccess up-to-date').'</a></li>
-					</ul>
-			</div>';
+			$this->context->smarty->assign('hide_tips',Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
+			$opti_list[] = array(
+				'title' => $this->l('URL rewriting'),
+				'href' => $link->getAdminLink('AdminGenerator'),
+				'color' => $lights[$rewrite]['color'],
+				'image' => $lights[$rewrite]['image'],
+			);
+
+			$opti_list[] = array(
+				'title' => $this->l('Browser cache & compression'),
+				'href' => $link->getAdminLink('AdminPerformance'),
+				'color' => $lights[$htaccessOptimized]['color'],
+				'image' => $lights[$htaccessOptimized]['image'],
+			);
+
+			$opti_list[] = array(
+				'title' => $this->l('Smarty optimization'),
+				'href' => $link->getAdminLink('AdminPerformance'),
+				'color' => $lights[$smartyOptimized]['color'],
+				'image' => $lights[$smartyOptimized]['image'],
+			);
+
+			$opti_list[] = array(
+				'title' => $this->l('Combine, Compress & Cache'),
+				'href' => $link->getAdminLink('AdminPerformance'),
+				'color' => $lights[$cccOptimized]['color'],
+				'image' => $lights[$cccOptimized]['image'],
+			);
+				
+			$opti_list[] = array(
+				'title' => $this->l('Shop enabled'),
+				'href' => $link->getAdminLink('AdminPreferences'),
+				'color' => $lights[$shopEnabled]['color'],
+				'image' => $lights[$shopEnabled]['image'],
+			);	
+
+			$opti_list[] = array(
+				'title' => $this->l('index rebuilt after update'),
+				'href' => $link->getAdminLink('AdminSearchConf'),
+				'color' => $lights[$indexRebuiltAfterUpdate]['color'],
+				'image' => $lights[$indexRebuiltAfterUpdate]['image'],
+			);
+				
+			$opti_list[] = array(
+				'title' => $this->l('.htaccess up-to-date'),
+				'href' => $link->getAdminLink('AdminGenerator'),
+				'color' => $lights[$htaccessAfterUpdate]['color'],
+				'image' => $lights[$htaccessAfterUpdate]['image'],
+			);
 		}
-		return $content;
+		$this->context->smarty->assign('opti_list',$opti_list);
+		$this->context->smarty->assign('content',$content);
+		return $this->context->smarty->fetch('home/optimizationTips.tpl');
 	}
 
 	public function setMedia()
@@ -372,10 +374,27 @@ class AdminHomeControllerCore extends AdminController
 		return $content;
 	}
 
-	public function ajaxProcess()
-	{
-	}
 
+	public function ajaxProcessHideOptimizationTips()
+	{
+		if (Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1))
+		{
+			$result['result'] = 'ok';
+			$result['msg'] = $this->l('Optimization Tips will be folded by default');
+		}
+		else
+		{
+			$result['result'] = 'error';
+			$result['msg'] = $this->l('an error occured a');
+		}
+		$this->content = Tools::jsonEncode($result);
+		
+	}
+	
+	public function displayAjax()
+	{
+		echo $this->content;
+	}
 	public function ajaxProcessGetAdminHomeElement()
 	{
 		$result = array();
@@ -419,11 +438,12 @@ class AdminHomeControllerCore extends AdminController
 			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 				$result['discover_prestashop'] .= $content[1];
 
-		die(Tools::jsonEncode($result));
+		$this->content = Tools::jsonEncode($result);
 	}
 
 	public function getBlockPartners()
 	{
+		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
 		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&date_creation='._PS_CREATION_DATE_.'&v='._PS_VERSION_.'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 		if (!$content)
 			$return = ''; // NOK
@@ -453,9 +473,9 @@ class AdminHomeControllerCore extends AdminController
 
 	public function getBlockDiscover()
 	{
+		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
 		$content = '';
 
-		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
 		$protocol = Tools::usingSecureMode() ? 'https' : 'http';
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
@@ -494,29 +514,19 @@ class AdminHomeControllerCore extends AdminController
 		}
 		$smarty->assign('upgrade', $upgrade);
 	
-  	$smarty->assign('show_screencast', $this->context->employee->show_screencast);
+		$smarty->assign('show_screencast', $this->context->employee->show_screencast);
 
-		// quick link to add a products, category, attributes etc. 
-		$quick_links = $this->getQuickLinks();
-		$smarty->assign('quick_links',$quick_links);
-		$monthly_statistics = $this->getMonthlyStatistics();
-		$smarty->assign('monthly_statistics', $monthly_statistics);
+		$smarty->assign('quick_links', $this->getQuickLinks());
 
-		$customers_service = $this->getCustomersService();
-		$smarty->assign('customers_service', $customers_service);
+		$smarty->assign('monthly_statistics', $this->getMonthlyStatistics());
 
-		$stats_sales = $this->getStatsSales();
-		$smarty->assign('stats_sales', $stats_sales);
+		$smarty->assign('customers_service', $this->getCustomersService());
 
-		$last_orders = $this->getLastOrders();
-		$smarty->assign('last_orders', $last_orders);
+		$smarty->assign('stats_sales', $this->getStatsSales());
 
+		$smarty->assign('last_orders',$this->getLastOrders());
 
-		if (Tools::isSubmit('hideOptimizationTips'))
-			Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1);
-			
-		$tips_optimization = $this->_displayOptimizationTips();
-		$smarty->assign('tips_optimization', $tips_optimization);
+		$smarty->assign('tips_optimization',  $this->_displayOptimizationTips());
 
 		$discover_prestashop = '<div id="discover_prestashop">
 				<p class="center"><img src="../img/loader.gif" alt="" /> '.$this->l('Loading...').'</p>
