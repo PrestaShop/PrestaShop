@@ -43,5 +43,6 @@
 				</div>
 			</div>
 		</div>
+		<div id="ajax_confirmation" style="display:none"></div>
 	</body>
 </html>
