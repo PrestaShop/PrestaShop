@@ -138,7 +138,7 @@ class AdminAccess extends AdminTab
 							}
 						});
 					});
-				});
+				});</script>';
 				
 	}
 	
