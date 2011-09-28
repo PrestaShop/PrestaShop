@@ -101,7 +101,7 @@ class AdminGroups extends AdminTab
 							<th>'.$this->l('Value').'</th>
 							<th>'.$this->l('Action').'</th>
 						</tr>';
-				foreach ($groupReductions AS $groupReduction)
+				foreach ($groupReductions as $groupReduction)
 						echo '
 						<tr>
 							<td>'.Tools::htmlentitiesUTF8($groupReduction['category_name']).'</td>
@@ -143,11 +143,11 @@ class AdminGroups extends AdminTab
 			<form action="'.self::$currentIndex.'&update'.$this->table.'&id_group='.$obj->id.'&token='.$this->token.'" method="post" class="width3">
 				<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />
 				<fieldset><legend><img src="../img/admin/tab-groups.gif" />'.$this->l('New group discount').'</legend>
-					<div class="hintGroup">'.$this->l('Beware the reduction applied to a category does not stack with the overall reduction but replaces. The group is automatically added to the category.').'</div>
+					<div class="hintGroup">'.$this->l('Beware the reduction applied to a category does not stack with the overall reduction but replaces it. The group is automatically added to the category.').'</div>
 					<label>'.$this->l('Category:').' </label>
 					<div class="margin-form">
 						<select name="id_category">';
-				foreach ($categories AS $category)
+				foreach ($categories as $category)
 					echo '	<option value="'.(int)($category['id_category']).'">'.Tools::htmlentitiesUTF8($category['name']).'</option>';
 				echo '	</select><sup>*</sup>
 					<p>'.$this->l('Only products that have this category as default category will be affected').'.</p>
@@ -215,21 +215,21 @@ class AdminGroups extends AdminTab
 			if ($customerPageIndex > 1)
 			{
 					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value=1" src="../img/admin/list-prev2.gif">&nbsp';
-					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.($customerPageIndex-1).'" src="../img/admin/list-prev.gif">&nbsp';
+					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.($customerPageIndex - 1).'" src="../img/admin/list-prev.gif">&nbsp';
 			}
 
-			echo    'Page <b><select onChange="submit()" name="customerPageIndex" id="customerPageIndex">';
-			for ($i=1; $i <= $totalPages; $i++)
+			echo	'Page <b><select onChange="submit()" name="customerPageIndex" id="customerPageIndex">';
+			for ($i = 1; $i <= $totalPages; $i++)
 				echo '<option value="'.$i.'"'.((int)$customerPageIndex === $i ? 'selected="selected"' : '').'>'.$i.'</option>';
-			echo 	'</select></b> / '.$totalPages;
+			echo	'</select></b> / '.$totalPages;
 
 			if ($customerPageIndex < $totalPages)
 			{
-					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.((int)$customerPageIndex+1).'" src="../img/admin/list-next.gif">';
+					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.((int)$customerPageIndex + 1).'" src="../img/admin/list-next.gif">';
 					echo '&nbsp<input type="image" onclick="document.getElementById(\'customerPageIndex\').value='.$totalPages.'" src="../img/admin/list-next2.gif">';
 			}
 
-			echo 	'			| Display
+			echo	'			| Display
 						<select onchange="document.getElementById(\'customerPageIndex\').value=1; submit();" name="customerPerPage">';
 			foreach ($perPageOptions as $option)
 				echo '<option value="'.$option.'"'.((int)$customersPerPage == $option ? 'selected="selected"' : '').'>'.$option.'</option>';
@@ -243,13 +243,13 @@ class AdminGroups extends AdminTab
 
 			echo '<table cellspacing="0" cellpadding="0" class="table widthfull">
 				<tr>';
-			foreach ($this->fieldsDisplay AS $field)
+			foreach ($this->fieldsDisplay as $field)
 				echo '<th'.(isset($field['width']) ? 'style="width: '.$field['width'].'"' : '').'>'.$field['title'].'</th>';
 			echo '
 				</tr>';
 			$irow = 0;
 
-			foreach ($customers AS $k => $customer)
+			foreach ($customers as $k => $customer)
 			{
 				echo '
 				<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
@@ -316,8 +316,12 @@ class AdminGroups extends AdminTab
 					$this->_errors[] = Tools::displayError('A reduction already exists for this category.');
 				else
 				{
-					$category = new Category((int)$id_category);
+					$reduction = Tools::getValue('reductionByCategory');
+					$id_category = Tools::getValue('id_category');
+					
+					$category = new Category((int)($id_category));
 					$category->addGroupsIfNoExist(Tools::getValue('id_group'));
+					
 					$groupReduction->id_category = (int)($id_category);
 					$groupReduction->id_group = (int)($obj->id);
 					$groupReduction->reduction = (float)($reduction) / 100;
@@ -334,7 +338,7 @@ class AdminGroups extends AdminTab
 		{
 			if ($this->tabAccess['add'] === '1')
 			{
-				if (Tools::getValue('reduction') > 100 OR Tools::getValue('reduction') < 0)
+				if (Tools::getValue('reduction') > 100 || Tools::getValue('reduction') < 0)
 					$this->_errors[] = Tools::displayError('Reduction value is incorrect');
 				else
 				{
@@ -342,10 +346,10 @@ class AdminGroups extends AdminTab
 					$reductions = Tools::getValue('gr_reduction');
 					if ($id_group_reductions)
 					{
-						foreach ($id_group_reductions AS $key => $id_group_reduction)
-							if (!Validate::isUnsignedId($id_group_reductions[$key]) OR !Validate::isPrice($reductions[$key]))
+						foreach ($id_group_reductions as $key => $id_group_reduction)
+							if (!Validate::isUnsignedId($id_group_reductions[$key]) || !Validate::isPrice($reductions[$key]))
 								$this->_errors[] = Tools::displayError('Invalid reduction (must be a percentage)');
-							elseif ($reductions[$key] > 100 OR $reductions[$key] < 0)
+							else if ($reductions[$key] > 100 || $reductions[$key] < 0)
 								$this->_errors[] = Tools::displayError('Reduction value is incorrect');
 							else
 							{
@@ -362,7 +366,7 @@ class AdminGroups extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		elseif (isset($_GET['delete'.$this->table]))
+		else if (isset($_GET['delete'.$this->table]))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
