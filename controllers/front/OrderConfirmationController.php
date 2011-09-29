@@ -34,6 +34,10 @@ class OrderConfirmationControllerCore extends FrontController
 	public $id_order;
 	public $secure_key;
 
+	/**
+	 * Initialize order confirmation controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
@@ -49,17 +53,21 @@ class OrderConfirmationControllerCore extends FrontController
 		$this->id_module = (int)(Tools::getValue('id_module', 0));
 		$this->id_order = Order::getOrderByCartId((int)($this->id_cart));
 		$this->secure_key = Tools::getValue('key', false);
-		if (!$this->id_order OR !$this->id_module OR !$this->secure_key OR empty($this->secure_key))
+		if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key))
 			Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
 
 		$order = new Order((int)($this->id_order));
-		if (!Validate::isLoadedObject($order) OR $order->id_customer != $this->context->customer->id OR $this->secure_key != $order->secure_key)
+		if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key)
 			Tools::redirect($redirectLink);
 		$module = Module::getInstanceById((int)($this->id_module));
 		if ($order->payment != $module->displayName)
 			Tools::redirect($redirectLink);
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->context->smarty->assign(array(
