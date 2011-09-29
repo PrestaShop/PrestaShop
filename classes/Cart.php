@@ -1530,28 +1530,39 @@ class CartCore extends ObjectModel
 	*/
 	public function isVirtualCart()
 	{
+		$prod = array();
 		if (!ProductDownload::isFeatureActive())
 			return false;
-
+		
 		if (!isset(self::$_isVirtualCart[$this->id]))
 		{
 			$products = $this->getProducts();
-
 			if (!sizeof($products))
 				return false;
 
-			$list = '';
 			foreach ($products AS $product)
-				$list .= (int)($product['id_product']).',';
+			{
+				$prod[] = (int) $product['id_product'];
+			}
+			
+			$unique_product = array_unique($prod);
+			
+			$list = '';
+			foreach ($unique_product AS $product)
+			{
+				$list .= (int)($product).',';
+			}
 			$list = rtrim($list, ',');
-
+			
 			$n = (int)Db::getInstance()->getValue('
 			SELECT COUNT(`id_product_download`) n
 			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` IN ('.pSQL($list).') AND `active` = 1');
+			WHERE `id_product` IN ('.pSQL($list).')
+			AND `active` = 1');
 
 			self::$_isVirtualCart[$this->id] = ($n == sizeof($products));
 		}
+		
 		return self::$_isVirtualCart[$this->id];
 	}
 

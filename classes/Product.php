@@ -1107,10 +1107,10 @@ class ProductCore extends ObjectModel
 		$result = Db::getInstance()->Execute('
 		DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
 		WHERE `id_product_attribute` IN (SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)($this->id).')');
-
 		$result2 = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)($this->id));
+		$result3 = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.(int)($this->id));
 
-		return ($result & $result2);
+		return ($result & $result2 & $result3);
 	}
 
 	/**
@@ -2658,12 +2658,12 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateDownload($id_product_old, $id_product_new)
 	{
-		$resource = Db::getInstance()->ExecuteS('SELECT `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active` FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.(int)($id_product_old));
+		$resource = Db::getInstance()->ExecuteS('SELECT `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable` FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.(int)($id_product_old));
 		if (!Db::getInstance()->NumRows())
 			return true;
-		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES';
+		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`) VALUES';
 		while ($row = Db::getInstance()->nextRow($resource))
-			$query .= ' ('.(int)($id_product_new).', \''.pSQL($row['display_filename']).'\', \''.pSQL($row['physically_filename']).'\', \''.pSQL($row['date_deposit']).'\', \''.pSQL($row['date_expiration']).'\', '.(int)($row['nb_days_accessible']).', '.(int)($row['nb_downloadable']).', '.(int)($row['active']).'),';
+			$query .= ' ('.(int)($id_product_new).', \''.pSQL($row['display_filename']).'\', \''.pSQL($row['filename']).'\', \''.pSQL($row['date_add']).'\', \''.pSQL($row['date_expiration']).'\', '.(int)($row['nb_days_accessible']).', '.(int)($row['nb_downloadable']).', '.(int)($row['active']).'), '.(int)($row['is_shareable']).'),';
 		$query = rtrim($query, ',');
 		return Db::getInstance()->Execute($query);
 	}

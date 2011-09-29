@@ -1,8 +1,8 @@
 <?php
 /*
 * 2007-2011 PrestaShop
-*
 * NOTICE OF LICENSE
+*
 *
 * This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
@@ -25,16 +25,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 include_once(_PS_ADMIN_DIR_.'/tabs/AdminProfiles.php');
+include_once('functions.php');
 
 class AdminProducts extends AdminTab
 {
 	protected $maxFileSize = 20000000;
-
 	private $_category;
 
 	public function __construct()
 	{
-
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
@@ -129,8 +128,6 @@ class AdminProducts extends AdminTab
 		$nb = count($this->_list);
 		if ($this->_list)
 		{
-
-
 			/* update product final price */
 			for ($i = 0; $i < $nb; $i++)
 				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 6, null, false, true, 1, true);
@@ -158,6 +155,14 @@ class AdminProducts extends AdminTab
 		return $productDownload->deleteFile();
 	}
 
+	public function deleteVirtualProductAttribute()
+	{
+		if (!($id_product_download = ProductDownload::getIdFromIdAttibute((int) Tools::getValue('id_product_attribute'))))
+			return false;
+		$productDownload = new ProductDownload((int)($id_product_download));
+		return $productDownload->deleteFile();
+	}
+
 	/**
 	 * postProcess handle every checks before saving products information
 	 *
@@ -180,6 +185,15 @@ class AdminProducts extends AdminTab
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->deleteVirtualProduct();
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+		}	
+		
+		/* Delete a product in the download folder */
+		if (Tools::getValue('deleteVirtualProductAttribute'))
+		{
+			if ($this->tabAccess['delete'] === '1')
+				$this->deleteVirtualProductAttribute();
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
@@ -509,6 +523,7 @@ class AdminProducts extends AdminTab
 											$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 									}
 									Hook::updateProductAttribute((int)$id_product_attribute);
+									$this->updateDownloadProduct($product, 1, $id_product_attribute);
 								}
 								else
 								{
@@ -541,6 +556,7 @@ class AdminProducts extends AdminTab
                                 	Tools::getValue('attribute_default'),
                                 	Tools::getValue('attribute_location'),
                                 	Tools::getValue('attribute_upc'));
+							$this->updateDownloadProduct($product, 0, $id_product_attribute);
 						}
 						else
 							$this->_errors[] = Tools::displayError('You do not have permission to').'<hr>'.Tools::displayError('Edit here.');
@@ -555,7 +571,7 @@ class AdminProducts extends AdminTab
 						if (!$product->cache_default_attribute)
 							Product::updateDefaultAttribute($product->id);
 						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token));
-					}
+					}	
 				}
 			}
 		}
@@ -568,6 +584,14 @@ class AdminProducts extends AdminTab
 				if (($id_product = (int)(Tools::getValue('id_product'))) && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 				{
 					$product->deleteAttributeCombinaison(Tools::getValue('id_product_attribute'));
+					
+					$id_product_download = ProductDownload::getIdFromIdAttibute((int) Tools::getValue('id_product_attribute'));
+					if ($id_product_download)
+					{
+						$productDownload = new ProductDownload((int) $id_product_download);
+						$this->deleteDownloadProduct((int) $id_product_download);
+						$productDownload->deleteFile();
+					}
 					$product->checkDefaultAttributes();
 					$product->updateQuantityProductWithAttributeQuantity();
 					if (!$product->hasAttributes())
@@ -1107,7 +1131,7 @@ class AdminProducts extends AdminTab
 								$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 						}
 						$this->updateAccessories($object);
-						$this->updateDownloadProduct($object);
+						$this->updateDownloadProduct($object, 1);
 						$this->updateAssoShop((int)$object->id);
 
 						if (!$this->updatePackItems($object))
@@ -1234,48 +1258,159 @@ class AdminProducts extends AdminTab
 	 * @param object $product Product
 	 * @return bool
 	 */
-	public function updateDownloadProduct($product)
+	public function updateDownloadProduct($product, $edit = 0, $id_product_attribute = null)
 	{
+		$filename = '';
+		$is_virtual_file = 0;
+		$id_product_download = 0;
+		
+		$is_shareable = 0;
+		$virtual_product_name = '';
+		$virtual_product_nb_days = 0;
+		$virtual_product_filename = '';
+		$virtual_product_nb_downloable = 0;
+		$virtual_product_expiration_date = '';
+		
+		$is_shareable_attribute = 0;
+		$virtual_product_name_attribute = '';
+		$virtual_product_nb_days_attribute = 0;
+		$virtual_product_filename_attribute = '';
+		$virtual_product_nb_downloable_attribute = 0;
+		$virtual_product_expiration_date_attribute = '';
+		
+		$is_virtual_file = (int) Tools::getValue('is_virtual_file');
+	
 		/* add or update a virtual product */
 		if (Tools::getValue('is_virtual_good') == 'true')
 		{
-			if (!Tools::getValue('virtual_product_name'))
+			if (!Tools::getValue('virtual_product_id') && !Tools::getValue('virtual_product_name_attribute') && !empty($is_virtual_file))
 			{
-				$this->_errors[] = $this->l('the field').' <b>'.$this->l('display filename').'</b> '.$this->l('is required');
-				return false;
+				if (!Tools::getValue('virtual_product_name'))
+				{
+					if (!Tools::getValue('virtual_product_name_attribute') && !empty($id_product_attribute))
+					{
+						$this->_errors[] = $this->l('the field').' <b>'.$this->l('display filename attribute').'</b> '.$this->l('is required');
+						return false;
+					}
+					else if (!empty($id_product_attribute))
+					{
+						$this->_errors[] = $this->l('the field').' <b>'.$this->l('display filename').'</b> '.$this->l('is required');
+						return false;
+					}
+				}
 			}
-			if (Tools::getValue('virtual_product_nb_days') === false)
+
+			if (Tools::getValue('virtual_product_nb_days') === false && Tools::getValue('virtual_product_nb_days_attribute') === false && !empty($is_virtual_file))
 			{
-				$this->_errors[] = $this->l('the field').' <b>'.$this->l('number of days').'</b> '.$this->l('is required');
-				return false;
-			}
-			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date')))
+				if (!Tools::getValue('virtual_product_name'))
+				{
+					if (!Tools::getValue('virtual_product_name_attribute'))
+					{
+						$this->_errors[] = $this->l('the field').' <b>'.$this->l('number of days attribute').'</b> '.$this->l('is required');
+						return false;
+					}
+					else
+					{
+						$this->_errors[] = $this->l('the field').' <b>'.$this->l('number of days').'</b> '.$this->l('is required');
+						return false;
+					}			
+				}
+			}		
+			if (Tools::getValue('virtual_product_expiration_date') AND !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file))
+			&& Tools::getValue('virtual_product_expiration_date_attribute') AND !Validate::isDate(Tools::getValue('virtual_product_expiration_date_attribute')))
 			{
-				$this->_errors[] = $this->l('the field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
-				return false;
+				if (!Tools::getValue('virtual_product_expiration_date'))
+				{
+					if (!Tools::getValue('virtual_product_expiration_date_attribute'))
+					{
+						$this->_errors[] = $this->l('the field').' <b>'.$this->l('expiration date attribute').'</b> '.$this->l('is required');
+						return false;
+					}
+					else
+					{
+						$this->_errors[] = $this->l('the field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
+						return false;
+					}			
+				}
 			}
+			
 			// The oos behavior MUST be "Deny orders" for virtual products
 			if (Tools::getValue('out_of_stock') != 0)
 			{
 				$this->_errors[] = $this->l('The "when out of stock" behavior selection must be "deny order" for virtual products');
 				return false;
 			}
+			
+			// Trick's 
+			if ($edit == 1)
+			{
+				$id_product_download_attibute = ProductDownload::getIdFromIdAttibute($id_product_attribute);
+				$id_product_download = ($id_product_download_attibute) ? (int) $id_product_download_attibute : (int) Tools::getValue('virtual_product_id');
+			}
+			
+			$is_shareable = Tools::getValue('virtual_product_is_shareable');
+			$virtual_product_name = Tools::getValue('virtual_product_name');
+			$virtual_product_filename = Tools::getValue('virtual_product_filename');
+			$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
+			$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
+			$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date');
+			
+			$is_shareable_attribute = Tools::getValue('virtual_product_is_shareable_attribute');
+			$virtual_product_name_attribute = Tools::getValue('virtual_product_name_attribute');
+			$virtual_product_filename_attribute = Tools::getValue('virtual_product_filename_attribute');
+			$virtual_product_nb_days_attribute = Tools::getValue('virtual_product_nb_days_attribute');
+			$virtual_product_nb_downloable_attribute = Tools::getValue('virtual_product_nb_downloable_attribute');
+			$virtual_product_expiration_date_attribute = Tools::getValue('virtual_product_expiration_date_attribute');
+			
+			if (!empty($is_shareable_attribute))
+				$is_shareable = $is_shareable_attribute;
+			
+			if (!empty($virtual_product_name_attribute))
+				$virtual_product_name = $virtual_product_name_attribute;
+			
+			if (!empty($virtual_product_nb_days_attribute))
+				$virtual_product_nb_days = $virtual_product_nb_days_attribute;
+		
+			if (!empty($virtual_product_nb_downloable_attribute))
+				$virtual_product_nb_downloable = $virtual_product_nb_downloable_attribute;		
+		
+			if (!empty($virtual_product_expiration_date_attribute))
+				$virtual_product_expiration_date = $virtual_product_expiration_date_attribute;
 
-			$productDownload = new ProductDownload(Tools::getValue('virtual_product_id'));
-			$productDownload->id_product          = $product->id;
-			$productDownload->display_filename    = Tools::getValue('virtual_product_name');
-			$productDownload->physically_filename = Tools::getValue('virtual_product_filename') ? Tools::getValue('virtual_product_filename') : ProductDownload::getNewFilename();
-			$productDownload->date_deposit        = date('Y-m-d H:i:s');
-			$productDownload->date_expiration     = Tools::getValue('virtual_product_expiration_date') ? Tools::getValue('virtual_product_expiration_date').' 23:59:59' : '';
-			$productDownload->nb_days_accessible  = Tools::getValue('virtual_product_nb_days');
-			$productDownload->nb_downloadable     = Tools::getValue('virtual_product_nb_downloable');
-			$productDownload->active              = 1;
-			return $productDownload->save();
+			if (!empty($virtual_product_filename_attribute))
+				$filename = $virtual_product_filename_attribute;
+			else if ($virtual_product_filename)
+				$filename = $virtual_product_filename;
+			else
+				$filename = ProductDownload::getNewFilename();
+			
+			$download = new ProductDownload($id_product_download);
+			$download->id_product = (int) $product->id;
+			$download->id_product_attribute = (int) $id_product_attribute;
+			$download->display_filename = $virtual_product_name;
+			$download->filename = $filename;
+			$download->date_add = date('Y-m-d H:i:s');
+			$download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
+			$download->nb_days_accessible = (int) $virtual_product_nb_days;
+			$download->nb_downloadable = (int) $virtual_product_nb_downloable;
+			$download->active = 1;
+			$download->is_shareable = (int) $is_shareable;
+	
+			if ($download->save())
+				return true;
 		}
 		else
 		{
 			/* unactive download product if checkbox not checked */
-			if ($id_product_download = ProductDownload::getIdFromIdProduct($product->id))
+			if ($edit == 1)
+			{
+				$id_product_download_attibute = ProductDownload::getIdFromIdAttibute($id_product_attribute);
+				$id_product_download = ($id_product_download_attibute) ? (int) $id_product_download_attibute : (int) Tools::getValue('virtual_product_id');
+			}
+			else
+				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
+			
+			if (!empty($id_product_download))
 			{
 				$productDownload = new ProductDownload($id_product_download);
 				$productDownload->date_expiration = date('Y-m-d H:i:s', time()-1);
@@ -1285,7 +1420,19 @@ class AdminProducts extends AdminTab
 		}
 		return false;
 	}
-
+	
+	public function deleteDownloadProduct($id_product_attribute = NULL)
+	{
+		if (!empty($id_product_attribute))
+		{
+			$productDownload = new ProductDownload($id_product_attribute);
+			$productDownload->date_expiration = date('Y-m-d H:i:s', time()-1);
+			$productDownload->active = 0;
+			return $productDownload->save();
+		}
+		return false;
+	}
+	
 	/**
 	 * Update product accessories
 	 *
@@ -1822,7 +1969,6 @@ class AdminProducts extends AdminTab
 		</div>
 		<hr />
 		';
-		include_once('functions.php');
 		includeDatepicker(array('sp_from', 'sp_to'), true);
 	}
 
@@ -2029,7 +2175,143 @@ class AdminProducts extends AdminTab
 		$cover = Product::getCover($obj->id);
 		$this->_applyTaxToEcotax($obj);
 
-		echo '
+		/*
+		* Form for add a virtual product like software, mp3, etc...
+		*/
+		$productDownload = new ProductDownload();
+		if ($id_product_download = $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id')))
+			$productDownload = new ProductDownload($id_product_download);
+
+		$hidden = $display_filename = $check = '';
+	?>
+	
+    <script type="text/javascript">
+    // <![CDATA[
+    	ThickboxI18nImage = '<?php echo $this->l('Image') ?>';
+    	ThickboxI18nOf = '<?php echo $this->l('of') ?>';
+    	ThickboxI18nClose = '<?php echo $this->l('Close') ?>';
+    	ThickboxI18nOrEscKey = '<?php echo $this->l('(or "Esc")') ?>';
+    	ThickboxI18nNext = '<?php echo $this->l('Next >') ?>';
+    	ThickboxI18nPrev = '<?php echo $this->l('< Previous') ?>';
+    	tb_pathToImage = '../img/loadingAnimation.gif';
+    //]]>
+    </script>
+	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>jquery/thickbox-modified.js"></script>
+	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>jquery/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>date.js"></script>
+	<style type="text/css">
+		<!--
+		@import url(<?php echo _PS_CSS_DIR_?>thickbox.css);
+		-->
+	</style>
+	<script type="text/javascript">
+	//<![CDATA[
+	function toggleVirtualProduct(elt)
+	{
+		$("#is_virtual_file_product").hide();
+		$("#virtual_good_attributes").hide();
+			
+		if (elt.checked)
+		{
+			$('#virtual_good').show('slow');
+			$('#virtual_good_more').show('slow');
+			getE('out_of_stock_1').checked = 'checked';
+			getE('out_of_stock_2').disabled = 'disabled';
+			getE('out_of_stock_3').disabled = 'disabled';
+			getE('label_out_of_stock_2').setAttribute('for', '');
+			getE('label_out_of_stock_3').setAttribute('for', '');
+		}
+		else
+		{
+			$('#virtual_good').hide('slow');
+			$('#virtual_good_more').hide('slow');
+			getE('out_of_stock_2').disabled = false;
+			getE('out_of_stock_3').disabled = false;
+			getE('label_out_of_stock_2').setAttribute('for', 'out_of_stock_2');
+			getE('label_out_of_stock_3').setAttribute('for', 'out_of_stock_3');
+		}
+	}
+
+	function uploadFile()
+	{
+		$.ajaxFileUpload (
+			{
+				url:'./uploadProductFile.php',
+				secureuri:false,
+				fileElementId:'virtual_product_file',
+				dataType: 'xml',
+				success: function (data, status)
+				{
+					data = data.getElementsByTagName('return')[0];
+					var result = data.getAttribute("result");
+					var msg = data.getAttribute("msg");
+					var fileName = data.getAttribute("filename")
+					if(result == "error")
+						$("#upload-confirmation").html('<p>error: ' + msg + '</p>');
+					else
+					{
+						$('#virtual_product_file').remove();
+						$('#virtual_product_file_label').hide();
+						$('#file_missing').hide();
+						$('#delete_downloadable_product').show();
+						$('#virtual_product_name').attr('value', fileName);
+						$('#upload-confirmation').html(
+							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
+							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
+					}
+				}
+			}
+		);
+	}	
+
+	function uploadFile2()
+	{
+			var link = '';
+			$.ajaxFileUpload (
+			{
+				url:'./uploadProductFileAttribute.php',
+				secureuri:false,
+				fileElementId:'virtual_product_file_attribute',
+				dataType: 'xml',
+				success: function (data, status)
+				{
+					data = data.getElementsByTagName('return')[0];
+					var result = data.getAttribute("result");
+					var msg = data.getAttribute("msg");
+					var fileName = data.getAttribute("filename");
+					if(result == "error")
+						$("#upload-confirmation2").html('<p>error: ' + msg + '</p>');
+					else
+					{
+						$('#virtual_product_file_attribute').remove();
+						$('#virtual_product_file_label').hide();
+						$('#file_missing').hide();
+						$('#delete_downloadable_product_attribute').show();
+						$('#virtual_product_name_attribute').attr('value', fileName);
+						$('#upload-confirmation2').html(
+							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
+							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
+						
+						link = $("#delete_downloadable_product_attribute").attr('href');		
+						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
+					}
+				}
+			}
+		);
+	}
+	//]]>
+	</script>
+	<?php
+	
+	if(($productDownload->id OR Tools::getValue('is_virtual_good')=='true') AND $productDownload->active) 
+		$check = 'checked="checked"';
+		
+	if(!$productDownload->id OR !$productDownload->active) 
+		$hidden = 'style="display:none;"';
+	
+	$cache_default_attribute = $this->getFieldValue($obj, 'cache_default_attribute');
+			
+	 echo '
 		<div class="tab-page" id="step1">
 			<h4 class="tab">1. '.$this->l('Info.').'</h4>
 			<script type="text/javascript">
@@ -2347,89 +2629,183 @@ class AdminProducts extends AdminTab
 			var customizationTextFieldNumber = '.(int)($this->getFieldValue($obj, 'text_fields')).';
 			var uploadableFileLabel = 0;
 			var textFieldLabel = 0;
-		</script>';
-	?>
+		</script>
 	<tr>
 		<td colspan="2">
-			<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" onclick="toggleVirtualProduct(this);" <?php if (($productDownload->id || Tools::getValue('is_virtual_good')=='true') && $productDownload->active) echo 'checked="checked"' ?> />
-			<label for="is_virtual_good" class="t bold" style="color: black;"><?php echo $this->l('Is this a downloadable product?') ?></label></p>
-			<div id="virtual_good" <?php if (!$productDownload->id || !$productDownload->active) echo 'style="display:none;"' ?> >
-	<?php if (!ProductDownload::checkWritableDir()): ?>
-		<p class="alert">
-			<?php echo $this->l('Your download repository is not writable.'); ?><br/>
-			<?php echo realpath(_PS_DOWNLOAD_DIR_); ?>
-		</p>
-	<?php else: ?>
-			<?php if ($productDownload->id) echo '<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="'.$productDownload->id.'" />' ?>
-				<p class="block">
-	<?php if (!$productDownload->checkFile()): ?>
 
-				<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
-		<?php if ($productDownload->id): ?>
-					<p class="alert" id="file_missing">
-						<?php echo $this->l('This product is missing') ?>:<br/>
-						<?php echo realpath(_PS_DOWNLOAD_DIR_) .'/'. $productDownload->physically_filename ?>
+			<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" onclick="toggleVirtualProduct(this);" '.$check.' />
+			<label for="is_virtual_good" class="t bold" style="color: black;">'.$this->l('Is this a virtual product?').'</label></p>
+			<div id="virtual_good" '.$hidden.'>
+			
+			<br/>'.$this->l('Does this product has an associated file ?').'<br/>';
+			
+			$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
+
+			if ($productDownload->id && file_exists($exists_file) || !empty($productDownload->display_filename))
+			{			
+				echo '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" checked="checked" />'. $this->l('Yes').'
+				<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" />'.$this->l('No').'<br /><br />'; 
+			}
+			else
+			{
+				echo '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" />'. $this->l('Yes').'
+				<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" checked="checked" />'.$this->l('No').'<br /><br />'; 
+			}
+			
+			if (!file_exists($exists_file) && !empty($productDownload->display_filename) && empty($cache_default_attribute))
+			{
+				$msg = sprintf(Tools::displayError('This file "%s" is missing'), $productDownload->display_filename);
+				echo '<p class="alert" id="file_missing">
+					<b>'.$msg.' :<br/>
+					'.realpath(_PS_DOWNLOAD_DIR_) .'/'. $productDownload->filename.'</b>
+				</p>';
+			}			
+
+			if (!ProductDownload::checkWritableDir())
+			{	
+				echo '<p class="alert">
+					'.$this->l('Your download repository is not writable.').'<br/>
+					'.realpath(_PS_DOWNLOAD_DIR_).'
+				</p>';
+			}
+			
+			echo '<div id="is_virtual_file_product" style="display:none;">';
+			if (empty($cache_default_attribute))
+			{
+				if($productDownload->id) 
+					echo '<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="'.$productDownload->id.'" />';
+				
+					echo '<p class="block">';
+			
+					if (!$productDownload->checkFile())
+					{
+						echo '<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
+						<p>'.$this->l('Your server\'s maximum upload file size is') . ':&nbsp;' . ini_get('upload_max_filesize').'</p>';
+						if (!strval(Tools::getValue('virtual_product_filename')) OR $productDownload->id > 0)
+						{
+							echo '<label id="virtual_product_file_label" for="virtual_product_file" class="t">'.$this->l('Upload a file').'</label>
+							<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="'.$this->maxFileSize.'" /></p>';
+						}
+						
+						echo '<div id="upload-confirmation">';
+							if ($up_filename = strval(Tools::getValue('virtual_product_filename')))
+								echo '<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="'.$up_filename.'" />';
+					
+						echo '</div>
+							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true'.'" class="red">'.$this->l('Delete this file').'</a>';
+					}
+					else
+					{
+						echo '<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="'.$productDownload->filename.'" />
+						'.$this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true).'
+						<a onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true'.'" class="red">'.$this->l('Delete this file').'</a>';
+					}
+					
+					$display_filename = ($productDownload->id > 0) ? $productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
+					echo '</p><p class="block">
+						<label for="virtual_product_name" class="t">'.$this->l('Filename').'</label>
+						<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="'.$display_filename.'" />
+						<span class="hint" name="help_box" style="display:none;">'.$this->l('The full filename with its extension (e.g., Book.pdf)').'</span>
 					</p>
-		<?php endif; ?>
-					<p><?php echo $this->l('Your server\'s maximum upload file size is') . ':&nbsp;' . ini_get('upload_max_filesize') ?></p>
-					<?php if (!strval(Tools::getValue('virtual_product_filename'))): ?>
-					<label id="virtual_product_file_label" for="virtual_product_file" class="t"><?php echo $this->l('Upload a file') ?></label>
-					<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="<?php echo $this->maxFileSize ?>" /></p>
-					<?php endif; ?>
-					<div id="upload-confirmation">
-					<?php if ($up_filename = strval(Tools::getValue('virtual_product_filename'))): ?>
-						<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="<?php echo $up_filename ?>" />
-					<?php endif; ?>
+			
+					</div>';
+					
+					if (!$productDownload->id || !$productDownload->active) 
+						$hidden = 'display:none;';
+						
+					$nb_downloadable = ($productDownload->id > 0) ? $productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
+					$date_expiration = ($productDownload->id > 0) ? ((!empty($productDownload->date_expiration) && $productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
+					$nb_days_accessible = ($productDownload->id > 0) ? $productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
+					$is_shareable = ($productDownload->id > 0 && $productDownload->is_shareable) ? 'checked="checked"' : '';
+						
+					echo '<div id="virtual_good_more" style="'.$hidden.'padding:5px;width:40%;float:left;margin-left:10px">
+							<p class="block">
+								<label for="virtual_product_nb_downloable" class="t">'.$this->l('Number of downloads').'</label>
+								<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="'.$nb_downloadable.'" class="" size="6" />
+								<span class="hint" name="help_box" style="display:none">'.$this->l('Number of authorized downloads per customer').'</span>
+							</p>
+							<p class="block">
+								<label for="virtual_product_expiration_date" class="t">'.$this->l('Expiration date').'</label>
+								<input type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="'.$date_expiration.'" size="11" maxlength="10" autocomplete="off" /> '.$this->l('Format: YYYY-MM-DD').'
+								<span class="hint" name="help_box" style="display:none">'.$this->l('No expiration date if you leave this blank').'</span>
+							</p>
+							<p class="block">
+								<label for="virtual_product_nb_days" class="t">'.$this->l('Number of days').'</label>
+								<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="'.$nb_days_accessible.'" class="" size="4" /><sup> *</sup>
+								<span class="hint" name="help_box" style="display:none">'.$this->l('How many days this file can be accessed by customers').' - <em>('.$this->l('set to zero for unlimited access').')</em></span>
+							</p>						
+							<p class="block">
+								<label for="virtual_product_is_shareable" class="t">'.$this->l('is shareable').'</label>
+								<input type="checkbox" id="virtual_product_is_shareable" name="virtual_product_is_shareable" value="1" '.$is_shareable.'/>
+								<span class="hint" name="help_box" style="display:none">'.$this->l('Specify if the file can be shared').'</span>
+							</p>
 					</div>
-					<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('<?php echo addslashes($this->l('Delete this file')) ?>')" href="<?php echo $_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true' ?>" class="red"><?php echo $this->l('Delete this file') ?></a>
-	<?php else: ?>
-					<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="<?php echo $productDownload->physically_filename ?>" />
-					<?php echo $this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true) ?>
-					<a onclick="return confirm('<?php echo addslashes($this->l('Delete this file')) ?>')" href="<?php echo $_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true' ?>" class="red"><?php echo $this->l('Delete this file') ?></a>
-	<?php endif; // check if file exists ?>
-				</p>
-				<p class="block">
-					<label for="virtual_product_name" class="t"><?php echo $this->l('Filename') ?></label>
-					<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="<?php echo $productDownload->id > 0 ? $productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8') ?>" />
-					<span class="hint" name="help_box" style="display:none;"><?php echo $this->l('The full filename with its extension (e.g., Book.pdf)') ?></span>
-				</p>
-
-				</div>
-				<div id="virtual_good_more" style="<?php if (!$productDownload->id || !$productDownload->active) echo 'display:none;' ?>padding:5px;width:40%;float:left;margin-left:10px">
-
-				<p class="block">
-					<label for="virtual_product_nb_downloable" class="t"><?php echo $this->l('Number of downloads') ?></label>
-					<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="<?php echo $productDownload->id > 0 ? $productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8') ?>" class="" size="6" />
-					<span class="hint" name="help_box" style="display:none"><?php echo $this->l('Number of authorized downloads per customer') ?></span>
-				</p>
-				<p class="block">
-					<label for="virtual_product_expiration_date" class="t"><?php echo $this->l('Expiration date') ?></label>
-					<input type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="<?php echo ($productDownload->id > 0) ? ((!empty($productDownload->date_expiration) && $productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($productDownload->date_expiration))
-: '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8') ?>" size="11" maxlength="10" autocomplete="off" /> <?php echo $this->l('Format: YYYY-MM-DD'); ?>
-					<span class="hint" name="help_box" style="display:none"><?php echo $this->l('No expiration date if you leave this blank'); ?></span>
-				</p>
-				<p class="block">
-					<label for="virtual_product_nb_days" class="t"><?php echo $this->l('Number of days') ?></label>
-					<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="<?php echo $productDownload->id > 0 ? $productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8') ?>" class="" size="4" /><sup> *</sup>
-					<span class="hint" name="help_box" style="display:none"><?php echo $this->l('How many days this file can be accessed by customers') ?> - <em>(<?php echo $this->l('set to zero for unlimited access'); ?>)</em></span>
-				</p>
-				</div>
-	<?php endif; // check if download directory is writable ?>
+				';				
+			}
+			else 
+			{
+				$error ='';
+				echo '<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You used combinations, for this reason you can\'t edit your file here, but in the Combinations tab').'</div>
+				<br />';
+				$product_attribute = ProductDownload::getAttributeFromIdProduct($this->getFieldValue($obj, 'id'));
+				foreach ($product_attribute as $product)
+				{
+					$productDownloadAttribute = new ProductDownload($product['id_product_download']);
+					$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownloadAttribute->filename;
+					if (!file_exists($exists_file2))
+					{
+						$msg = sprintf(Tools::displayError('This file "%s" is missing'), $productDownloadAttribute->display_filename);
+						$error .= '<p class="alert" id="file_missing">
+							<b>'.$msg.' :<br/>
+							'.realpath(_PS_DOWNLOAD_DIR_) .'/'. $productDownloadAttribute->filename.'</b>
+						</p>';
+					}
+				}
+				echo $error;
+			}
+			echo '</div>
 			</div>
 		</td>
-	</tr>
-	<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
-	<script type="text/javascript">
-		if ($('#is_virtual_good').attr('checked'))
-		{
-			$('#virtual_good').show('slow');
-			$('#virtual_good_more').show('slow');
-		}
-	</script>
+	</tr>';
+	
+	includeDatepicker('virtual_product_expiration_date');
+	
+	echo '<tr>
+				<td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td>
+		 </tr>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				if ($("#is_virtual_good").attr("checked"))
+				{
+					$("#virtual_good").show("slow");
+					$("#virtual_good_more").show("slow");
+				}
 
-<?php
-
-					echo '
+				if ( $("input[name=is_virtual_file]:checked").val() == 1)
+				{
+					$("#virtual_good_attributes").show();
+					$("#is_virtual_file_product").show();
+				}
+				else
+				{
+					$("#virtual_good_attributes").hide();
+					$("#is_virtual_file_product").hide();
+				}
+				
+				$("input[name=is_virtual_file]").live("change", function() {
+					if($(this).val() == "1")
+					{
+						$("#virtual_good_attributes").show();
+						$("#is_virtual_file_product").show();
+					}
+					else
+					{
+						$("#virtual_good_attributes").hide();
+						$("#is_virtual_file_product").hide();
+					}
+				});
+			});
+		</script>
 					<tr>
 						<td class="col-left">'.$this->l('Pre-tax wholesale price:').'</td>
 						<td style="padding-bottom:5px;">
@@ -2482,7 +2858,6 @@ class AdminProducts extends AdminTab
 					echo '<input type="hidden" value="'.(int)($this->getFieldValue($obj, 'id_tax_rules_group')).'" name="id_tax_rules_group" />';
 				}
 
-
 				echo '</td>
 					</tr>
 				';
@@ -2505,9 +2880,10 @@ class AdminProducts extends AdminTab
 								'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							</td>
 						</tr>';
-				} else {
+				} 
+				else 
 					echo '<input size="11" maxlength="14" id="priceTI" type="hidden" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />';
-				}
+
 				echo '
 					<tr id="tr_unit_price">
 						<td class="col-left">'.$this->l('Unit price without tax:').'</td>
@@ -2669,7 +3045,6 @@ class AdminProducts extends AdminTab
 						</td>
 						</tr>';
 				// date picker include
-				include_once('functions.php');
 				includeDatepicker('available_date');
 			}
 
@@ -3222,8 +3597,6 @@ class AdminProducts extends AdminTab
 
 						foreach ($images as $k => $image)
 							echo $this->getLineTableImage($image, $imagesTotal, $token, $shops);
-
-
 			echo '
 							</table>
 						</td>
@@ -3321,7 +3694,12 @@ class AdminProducts extends AdminTab
 		$currency = $this->context->currency;
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-
+							
+		$productDownload = new ProductDownload();
+		$id_product_download = (int) $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
+		if (!empty($id_product_download))
+			$productDownload = new ProductDownload($id_product_download);
+		
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 		{
@@ -3332,7 +3710,31 @@ class AdminProducts extends AdminTab
 						updateMvtStatus($(this).val());
 					});
 					updateMvtStatus($(this).val());
-				});
+					
+					if ( $("input[name=is_virtual_file]:checked").val() == 1)
+					{
+						$("#virtual_good_attributes").show();
+						$("#is_virtual_file_product").show();
+					}
+					else
+					{
+						$("#virtual_good_attributes").hide();
+						$("#is_virtual_file_product").hide();
+					}
+					
+					$("input[name=is_virtual_file]").live("change", function() {
+						if($(this).val() == "1")
+						{
+							$("#virtual_good_attributes").show();
+							$("#is_virtual_file_product").show();
+						}
+						else
+						{
+							$("#virtual_good_attributes").hide();
+							$("#is_virtual_file_product").hide();
+						}
+					});
+				}); 
 			</script>
 			<table cellpadding="5">
 				<tr>
@@ -3371,6 +3773,7 @@ class AdminProducts extends AdminTab
 				  <select id="product_att_list" name="attribute_combinaison_list[]" multiple="multiple" size="4" style="width: 320px;"></select>
 				</td>
 		  </tr>
+		  
 		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Reference:').'</td>
@@ -3389,7 +3792,59 @@ class AdminProducts extends AdminTab
 				<span class="hint" name="help_box">'.$this->l('Special characters allowed:').' .-_#<span class="hint-pointer">&nbsp;</span></span>
 			  </td>
 		  </tr>
-		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+		 <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+	  <table cellpadding="5" id="virtual_good_attributes" style="width:100%;display:none;">
+		<tr>
+			<td colspan="2">	
+				<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
+					<p>'.$this->l('Your server\'s maximum upload file size is') . ':&nbsp;' . ini_get('upload_max_filesize').'</p>
+					<label id="virtual_product_file_attribute_label" for="virtual_product_file_attribute" class="t">'.$this->l('Upload a file').'</label>
+					<p><input id="virtual_product_file_attribute" name="virtual_product_file_attribute" onchange="uploadFile2();" maxlength="'.$this->maxFileSize.'" type="file"></p>
+					<div id="upload-confirmation2">';
+
+					echo '<p id="gethtmlink" style="display: none;">'.$this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true).'
+					<a id="make_downloadable_product_attribute" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['HTTP_REFERER'].'&deleteVirtualProductAttribute=true'.'" class="red">'.$this->l('Delete this file').'</a></p>';
+						
+					echo '</div>
+					<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['HTTP_REFERER'].'&deleteVirtualProductAttribute=true" class="red">'.$this->l('Delete this file').'</a>';
+					
+					if ($up_filename = strval(Tools::getValue('virtual_product_filename_attribute')))
+						echo '<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="'.$up_filename.'" />';
+	
+					echo '<p class="block">
+						<label for="virtual_product_name" class="t">'.$this->l('Filename').'</label>
+						<input id="virtual_product_name_attribute" name="virtual_product_name_attribute" style="width:200px" value="" type="text">
+						<span class="hint" name="help_box" style="display:none;">'.$this->l('The full filename with its extension (e.g., Book.pdf)').'</span>
+					</p>
+				</div>
+				<div id="virtual_good_more_attribute" style="padding:5px;width:40%;float:left;margin-left:10px">
+					<p class="block">
+						<label for="virtual_product_nb_downloable" class="t">'.$this->l('Number of downloads').'</label>
+						<input type="text" id="virtual_product_nb_downloable_attribute" name="virtual_product_nb_downloable_attribute" value="" class="" size="6" />
+						<span class="hint" name="help_box" style="display:none">'.$this->l('Number of authorized downloads per customer').'</span>
+					</p>
+					<p class="block">
+						<label for="virtual_product_expiration_date_attribute" class="t">'.$this->l('Expiration date').'</label>
+						<input type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> '.$this->l('Format: YYYY-MM-DD').'
+						<span class="hint" name="help_box" style="display:none">'.$this->l('No expiration date if you leave this blank').'</span>
+					</p>
+					<p class="block">
+						<label for="virtual_product_nb_days" class="t">'.$this->l('Number of days').'</label>
+						<input type="text" id="virtual_product_nb_days_attribute" name="virtual_product_nb_days_attribute" value="" class="" size="4" /><sup> *</sup>
+						<span class="hint" name="help_box" style="display:none">'.$this->l('How many days this file can be accessed by customers').' - <em>('.$this->l('set to zero for unlimited access').')</em></span>
+					</p>
+					<p class="block">
+						<label for="virtual_product_is_shareable_attribute" class="t">'.$this->l('is shareable').'</label>
+						<input type="checkbox" id="virtual_product_is_shareable_attribute" name="virtual_product_is_shareable" value="1" />
+						<span class="hint" name="help_box" style="display:none">'.$this->l('Specify if the file can be shared').'</span>
+					</p>
+				</div>';
+				includeDatepicker('virtual_product_expiration_date_attribute');
+			echo '</td>
+		</tr>
+		<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+		</table>
+		 <table>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Wholesale price:').'</td>
 			  <td style="padding-bottom:5px;">'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' ('.$this->l('overrides Wholesale price on Information tab').')</td>
@@ -3480,7 +3935,6 @@ class AdminProducts extends AdminTab
 			  </td>
 		  </tr>';
 		  // date picker include
-		  include_once('functions.php');
 		  includeDatepicker('available_date');
 		echo '
 		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
@@ -3529,8 +3983,18 @@ class AdminProducts extends AdminTab
 							<th>'.$this->l('Reference').'</th>
 							<th>'.$this->l('EAN13').'</th>
 							<th>'.$this->l('UPC').'</th>
-							<th class="center">'.$this->l('Quantity').'</th>
-							<th class="center">'.$this->l('Actions').'</th>
+							<th class="center">'.$this->l('Quantity').'</th>';
+
+							if ($id_product_download && !empty($productDownload->display_filename))
+							{
+								echo '
+								<th class="center">'.$this->l('Filename').'</th>
+								<th class="center">'.$this->l('Number of downloads').'</th>
+								<th class="center">'.$this->l('Number of days').'</th>
+								<th class="center">'.$this->l('Share').'</th>';
+							}
+							
+							echo '<th class="center">'.$this->l('Actions').'</th>
 						</tr>';
 			if ($obj->id)
 			{
@@ -3582,6 +4046,22 @@ class AdminProducts extends AdminTab
 						$jsList = rtrim($jsList, ', ');
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
 						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
+
+						$id_product_download = $productDownload->getIdFromIdAttibute((int) $id_product_attribute);
+								
+						if ($id_product_download)
+							$productDownload = new ProductDownload($id_product_download);
+						
+						$available_date_attribute = substr($productDownload->date_expiration, 0, -9);
+						
+						if ($available_date_attribute == '0000-00-00')
+							$available_date_attribute = '';	
+							
+						if ($productDownload->is_shareable == 1)
+							$is_shareable = $this->l('Yes');
+						else
+							$is_shareable = $this->l('No');
+
 						echo '
 						<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
 							<td>'.stripslashes($list).'</td>
@@ -3590,12 +4070,29 @@ class AdminProducts extends AdminTab
 							<td class="right">'.$product_attribute['reference'].'</td>
 							<td class="right">'.$product_attribute['ean13'].'</td>
 							<td class="right">'.$product_attribute['upc'].'</td>
-							<td class="center">'.$product_attribute['quantity'].'</td>
-							<td class="center">
+							<td class="center">'.$product_attribute['quantity'].'</td>';
+							
+							if ($id_product_download && !empty($productDownload->display_filename))
+							{
+								echo '<td class="right">'.$productDownload->getHtmlLink(false, true).'</td>
+								<td class="center">'.$productDownload->nb_downloadable.'</td>
+								<td class="center">'.$productDownload->nb_downloadable.'</td>
+								<td class="right">'.$is_shareable.'</td>';
+							}
+							
+							$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
+							
+							if ($productDownload->id && file_exists($exists_file))
+								$filename = $productDownload->filename;
+							else
+								$filename = '';
+							
+							echo '<td class="center">
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
-							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.pSQL($available_date).'\'); calcImpactPriceTI();" /></a>&nbsp;
+							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\', 
+							\''.$productDownload->display_filename.'\', \''.$filename.'\', \''.$productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$productDownload->nb_days_accessible.'\',  \''.$productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
 							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
@@ -3992,4 +4489,3 @@ class AdminProducts extends AdminTab
 		$this->displayErrors();
 	}
 }
-
