@@ -107,10 +107,7 @@ class StoresControllerCore extends FrontController
 		));
 	}
 	
-	/**
-	 * Assign template vars for classical stores
-	 */
-	protected function assignStores()
+	public function getStores()
 	{
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
@@ -152,25 +149,35 @@ class StoresControllerCore extends FrontController
 			ORDER BY distance ASC
 			LIMIT 0,20');
 		}
+		
+		return $stores;
+	}
+	
+	/**
+	 * Assign template vars for classical stores
+	 */
+	protected function assignStores()
+	{
+		$this->context->smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
 
-		if ($this->ajax)
-			$this->displayXmlMaps($stores);
-		else
-			$this->context->smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/logo_stores.gif'));
-			
-
+		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
+		if (!in_array($distanceUnit, array('km', 'mi')))
+			$distanceUnit = 'km';
+		
 		$this->context->smarty->assign(array(
 			'distance_unit' => $distanceUnit,
 			'simplifiedStoresDiplay' => false,
-			'stores' => $stores
+			'stores' => $this->getStores()
 		));
 	}
 	
 	/**
 	 * Display the Xml for showing the nodes in the google map
 	 */
-	protected function displayXmlMaps($stores)
+	protected function displayAjax()
 	{
+		$stores = $this->getStores();
+		
 		$dom = new DOMDocument('1.0');
 		$node = $dom->createElement('markers');
 		$parnode = $dom->appendChild($node);
