@@ -40,6 +40,10 @@ class OrderSlipControllerCore extends FrontController
 		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js',_THEME_JS_DIR_.'history.js'));
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->context->smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)($this->context->cookie->id_customer)));

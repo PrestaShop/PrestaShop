@@ -30,6 +30,10 @@ class OrderOpcControllerCore extends ParentOrderController
 	public $php_self = 'order-opc';
 	public $isLogged;
 
+	/**
+	 * Initialize supplier controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
@@ -221,6 +225,10 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		// SHOPPING CART
