@@ -171,25 +171,25 @@ class AdminHomeControllerCore extends AdminController
 	private function getQuickLinks()
 	{
 		$quick_links['first'] = array(
-			'href' => 'index.php?controller=AdminCatalog&amp;addcategory&amp;token='.Tools::getAdminTokenLite('AdminCatalog'),
+			'href' => $this->context->link->getAdminLink('AdminCatalog').'&amp;addcategory',
 			'title' => $this->l('New category'),
 			'description' => $this->l('Create a new category and organize your products.'),
 		);
 
 		$quick_links['second'] = array(
-			'href' => 'index.php?controller=AdminCatalog&amp;addproduct&amp;token='.Tools::getAdminTokenLite('AdminCatalog'),
+			'href' => $this->context->link->getAdminLink('AdminCatalog').'&amp;addproduct',
 			'title' => $this->l('New product'),
 			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
 		);
 	
 		$quick_links['third'] = array(
-			'href' => 'index.php?controller=AdminStats&amp;addproduct&amp;token='.Tools::getAdminTokenLite('AdminStats'),
+			'href' => $this->context->link->getAdminLink('AdminStats'),
 			'title' => $this->l('Statistics'),
 			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
 		);
 
 		$quick_links['fourth'] = array(
-			'href' => 'index.php?controller=AdminEmployee&amp;addproduct&amp;token='.Tools::getAdminTokenLite('AdminEmployee'),
+			'href' => $this->context->link->getAdminLink('AdminEmployees').'&amp;addemployee',
 			'title' => $this->l('New employee'),
 			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
 		);
@@ -493,7 +493,7 @@ class AdminHomeControllerCore extends AdminController
 				return ''; // NOK
 		}
 	}
-	public function display()
+	public function initContent()
 	{
 		$smarty = $this->context->smarty;
 		$smarty->assign('token',$this->token);
@@ -515,29 +515,16 @@ class AdminHomeControllerCore extends AdminController
 		$smarty->assign('upgrade', $upgrade);
 	
 		$smarty->assign('show_screencast', $this->context->employee->show_screencast);
-
 		$smarty->assign('quick_links', $this->getQuickLinks());
-
 		$smarty->assign('monthly_statistics', $this->getMonthlyStatistics());
-
 		$smarty->assign('customers_service', $this->getCustomersService());
-
 		$smarty->assign('stats_sales', $this->getStatsSales());
-
 		$smarty->assign('last_orders',$this->getLastOrders());
-
 		$smarty->assign('tips_optimization',  $this->_displayOptimizationTips());
-
-		$discover_prestashop = '<div id="discover_prestashop">
-				<p class="center"><img src="../img/loader.gif" alt="" /> '.$this->l('Loading...').'</p>
-			</div>
-		</div>';
-		$smarty->assign('discover_prestashop', $discover_prestashop);
 	
 		$HOOK_BACKOFFICEHOME = Module::hookExec('backOfficeHome');
 		$smarty->assign('HOOK_BACKOFFICEHOME', $HOOK_BACKOFFICEHOME);
 
-		parent::display();
 	}
 }
 

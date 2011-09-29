@@ -53,54 +53,52 @@ $(document).ready(function() {
 
 	<div id="column_right">
 	{$tips_optimization}
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$.ajax({
-				url: "ajax-tab.php",
-				type: "POST",
-				data:{
-					token: "{$token}",
-					ajax: "1",
-					controller : "AdminHome",
-					action: "getAdminHomeElement"
-				},
-				dataType: "json",
-				success: function(json) {
-
-					if (json.screencast != 'NOK')
-						$('#adminpresentation').fadeIn('slow');
-					else
-						$('#adminpresentation').fadeOut('slow');
-						
-					$('#partner_preactivation').fadeOut('slow', function() {
-						if (json.partner_preactivation != 'NOK')
-							$('#partner_preactivation').html(json.partner_preactivation);
-						else
-							$('#partner_preactivation').html('');
-						$('#partner_preactivation').fadeIn('slow');
-					});
-					
-					$('#discover_prestashop').fadeOut('slow', function() {
-						if (json.discover_prestashop != 'NOK')
-							$('#discover_prestashop').html(json.discover_prestashop);
-						else
-							$('#discover_prestashop').html('');
-						$('#discover_prestashop').fadeIn('slow');
-					});
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown)
-				{
-					$('#adminpresentation').fadeOut('slow');
-					$('#partner_preactivation').fadeOut('slow');	
-					$('#discover_prestashop').fadeOut('slow');
-				}
-			});
-		});
-		</script>
-		<div id="partner_preactivation">
-		<p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p>
+	<div id="partner_preactivation"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
+	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 	</div>
-	{$discover_prestashop}
-	<div class="clear"></div>
 	{$HOOK_BACKOFFICEHOME}
-</div>
+	<div class="clear">&nbsp;</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$.ajax({
+		url: "ajax-tab.php",
+		type: "POST",
+		data:{
+			token: "{$token}",
+			ajax: "1",
+			controller : "AdminHome",
+			action: "getAdminHomeElement"
+		},
+		dataType: "json",
+		success: function(json) {
+
+			if (json.screencast != 'NOK')
+				$('#adminpresentation').fadeIn('slow');
+			else
+				$('#adminpresentation').fadeOut('slow');
+				
+			$('#partner_preactivation').fadeOut('slow', function() {
+				if (json.partner_preactivation != 'NOK')
+					$('#partner_preactivation').html(json.partner_preactivation);
+				else
+					$('#partner_preactivation').html('');
+				$('#partner_preactivation').fadeIn('slow');
+			});
+			
+			$('#discover_prestashop').fadeOut('slow', function() {
+				if (json.discover_prestashop != 'NOK')
+					$('#discover_prestashop').html(json.discover_prestashop);
+				else
+					$('#discover_prestashop').html('');
+				$('#discover_prestashop').fadeIn('slow');
+			});
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown)
+		{
+			$('#adminpresentation').fadeOut('slow');
+			$('#partner_preactivation').fadeOut('slow');	
+			$('#discover_prestashop').fadeOut('slow');
+		}
+	});
+});
+</script>
