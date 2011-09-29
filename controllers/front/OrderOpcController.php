@@ -109,7 +109,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								'token' => Tools::getToken(false)
 							);
 							if (!sizeof($this->errors))
-								$return['isSaved'] = (bool)$customer->update();
+								$return['isSaved'] = (bool)$this->context->customer->update();
 							else
 								$return['isSaved'] = false;
 							die(Tools::jsonEncode($return));
