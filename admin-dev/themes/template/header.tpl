@@ -187,20 +187,20 @@
 			{if $multi_shop}
 				<div id="header_shoplist">{l s='Select your shop:'}{$shop_list}</div>
 			{/if}
-			<div class="flatclear">&nbsp;</div>
 			{$HOOK_TOP}
 			<ul id="menu">
 				{if !$tab}
-					<div class="mainsubtablist" style="display:none"></div>'
+					<div class="mainsubtablist" style="display:none">
+					</div>
 				{/if}
 				{foreach $tabs AS $t}
-					<li class="submenu_size {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-						<a href="index.php?controller={$t.class_name}&token={$t.token}">
-							<img src="{$t.img}" alt="" /> {$t.name}
-						</a>
-					</li>
+				<li class="submenu_size {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+					<a href="index.php?controller={$t.class_name}&token={$t.token}">
+						<img src="{$t.img}" alt="" /> {$t.name}
+					</a>
+				</li>
 				{/foreach}
-				</ul>
+			</ul>
 				{foreach $tabs AS $t}
 					<div id="tab{$t.id_tab}_subtabs" style="display:none">
 						{foreach $t.sub_tabs AS $t2}
@@ -209,6 +209,7 @@
 						{if $t.current}
 							{assign var='mainsubtab' value=$t}
 						{/if}
+						<div class="flatclear">&nbsp;</div>
 					</div>
 				{/foreach}
 				{if $employee->bo_uimode == 'hover'}
