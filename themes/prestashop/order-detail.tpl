@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{include file="$tpl_dir./errors.tpl"}
 {if !isset($smarty.get.ajax)}
 <div class="block-center" id="block-history">
 	<div id="block-order-detail">
