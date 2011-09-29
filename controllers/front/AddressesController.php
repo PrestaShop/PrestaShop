@@ -80,7 +80,7 @@ class AddressesControllerCore extends FrontController
 		if ($key = array_search('Country:name', $ordered_fields))
 			$ordered_fields[$key] = 'country';
 
-		$this->context->smarty->assign('addresses_style', array(
+		$addresses_style = array(
 			'company' => 'address_company',
 			'vat_number' => 'address_company',
 			'firstname' => 'address_name',
@@ -92,6 +92,10 @@ class AddressesControllerCore extends FrontController
 			'phone' => 'address_phone',
 			'phone_mobile' => 'address_phone_mobile',
 			'alias' => 'address_title',
+		);
+
+		$this->context->smarty->assign(array(
+			'addresses_style' => $addresses_style,
 			'multipleAddresses' => $multiple_addresses_formated,
 			'ordered_fields' => $ordered_fields,
 			'addresses' => $addresses, // Retro Compatibility Theme < 1.4.1
