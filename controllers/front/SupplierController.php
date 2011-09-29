@@ -73,17 +73,16 @@ class SupplierControllerCore extends FrontController
 	public function process()
 	{
 		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToGroupShop())
-			$this->assignOne();
-		else if (!Tools::getValue('id_supplier'))
-			$this->assignAll();
-
-		if ($this->supplier)
 		{
+			$this->assignOne();
 			$this->productSort();
 			$this->setTemplate(_PS_THEME_DIR_.'supplier.tpl');
 		}
 		else
+		{
+			$this->assignAll();
 			$this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
+		}
 	}
 	
 	/**
