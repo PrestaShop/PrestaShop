@@ -71,6 +71,6 @@
 	</div>
 {/if}
 
-{$content}
+{$page}
 
 {include file='footer.tpl'}

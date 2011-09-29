@@ -157,6 +157,9 @@ class AdminAddressesControllerCore extends AdminController
 			else
 				Tools::redirectAdmin(Tools::getValue('back').'&conf=4');
 		}
+
+		if (!isset($this->action))
+			$this->action = 'list';
 	}
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
@@ -223,12 +226,12 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function displayForm($isMainTab = true)
 	{
-		parent::displayForm();
+		$content = parent::displayForm();
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		echo '
-		<form action="'.$this->$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		$content .= '
+		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.((int)($obj->id) ? '<input type="hidden" name="id_'.$this->table.'" value="'.(int)($obj->id).'" />' : '').'
 		'.(($id_order = (int)(Tools::getValue('id_order'))) ? '<input type="hidden" name="id_order" value="'.(int)($id_order).'" />' : '').'
 		'.(($address_type = (int)(Tools::getValue('address_type'))) ? '<input type="hidden" name="address_type" value="'.(int)($address_type).'" />' : '').'
@@ -238,17 +241,17 @@ class AdminAddressesControllerCore extends AdminController
 		switch ($this->addressType)
 		{
 			case 'manufacturer':
-				echo '<label>'.$this->l('Choose manufacturer').'</label>
+				$content .= '<label>'.$this->l('Choose manufacturer').'</label>
 				<div class="margin-form">';
 				$manufacturers = Manufacturer::getManufacturers();
-				echo '<select name="id_manufacturer">';
+				$content .= '<select name="id_manufacturer">';
 				if (!sizeof($manufacturers))
-					echo '<option value="0">'.$this->l('No manufacturer available').'&nbsp</option>';
+					$content .= '<option value="0">'.$this->l('No manufacturer available').'&nbsp</option>';
 				foreach ($manufacturers as $manufacturer)
-					echo '<option value="'.(int)($manufacturer['id_manufacturer']).'"'.($this->getFieldValue($obj, 'id_manufacturer') == $manufacturer['id_manufacturer'] ? ' selected="selected"' : '').'>'.$manufacturer['name'].'&nbsp</option>';
-				echo	'</select>';
-				echo '</div>';
-				echo '<input type="hidden" name="alias" value="manufacturer">';
+					$content .= '<option value="'.(int)($manufacturer['id_manufacturer']).'"'.($this->getFieldValue($obj, 'id_manufacturer') == $manufacturer['id_manufacturer'] ? ' selected="selected"' : '').'>'.$manufacturer['name'].'&nbsp</option>';
+				$content .=	'</select>';
+				$content .= '</div>';
+				$content .= '<input type="hidden" name="alias" value="manufacturer">';
 				break;
 			case 'customer':
 			default:
@@ -256,7 +259,7 @@ class AdminAddressesControllerCore extends AdminController
 				{
 					$customer = new Customer($obj->id_customer);
 					$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
-					echo '
+					$content .= '
 					<label>'.$this->l('Customer').'</label>
 					<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.$tokenCustomer.'">'.$customer->lastname.' '.$customer->firstname.' ('.$customer->email.')</a></div>
 					<input type="hidden" name="id_customer" value="'.$customer->id.'" />
@@ -264,20 +267,20 @@ class AdminAddressesControllerCore extends AdminController
 				}
 				else
 				{
-					echo
+					$content .=
 					'<label>'.$this->l('Customer e-mail').'</label>
 					<div class="margin-form">
 						<input type="text" size="33" name="email" value="'.htmlentities(Tools::getValue('email'), ENT_COMPAT, 'UTF-8').'" style="text-transform: lowercase;" /> <sup>*</sup>
 					</div>';
 				}
-				echo '
+				$content .= '
 					<label for="dni">'.$this->l('Identification Number').'</label>
 					<div class="margin-form">
 					<input type="text" name="dni" id="dni" value="'.htmlentities($this->getFieldValue($obj, 'dni'), ENT_COMPAT, 'UTF-8').'" />
 					<p>'.$this->l('DNI / NIF / NIE').'</p>
 					</div>';
 
-				echo '<label>'.$this->l('Alias').'</label>
+				$content .= '<label>'.$this->l('Alias').'</label>
 				<div class="margin-form">
 					<input type="text" size="33" name="alias" value="'.htmlentities($this->getFieldValue($obj, 'alias'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
 					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
@@ -296,20 +299,20 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				if ($this->addressType != 'manufacturer')
 				{
-					echo '<label>'.$this->l('Company').'</label>
+					$content .= '<label>'.$this->l('Company').'</label>
 						<div class="margin-form">
 						<input type="text" size="33" name="company" value="'.htmlentities($this->getFieldValue($obj, 'company'), ENT_COMPAT, 'UTF-8').'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 						</div>';
 
 					if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-						echo '<div id="vat_area" style="display: visible">';
+						$content .= '<div id="vat_area" style="display: visible">';
 					else if(Configuration::get('VATNUMBER_MANAGEMENT'))
-						echo '<div id="vat_area" style="display: hidden">';
+						$content .= '<div id="vat_area" style="display: hidden">';
 					else
-						echo'<div style="display: none;">';
+						$content .='<div style="display: none;">';
 
-					echo '<label>'.$this->l('VAT number').'</label>
+					$content .= '<label>'.$this->l('VAT number').'</label>
 						<div class="margin-form">
 						<input type="text" size="33" name="vat_number" value="'.htmlentities($this->getFieldValue($obj, 'vat_number'), ENT_COMPAT, 'UTF-8').'" />
 						</div>
@@ -318,7 +321,7 @@ class AdminAddressesControllerCore extends AdminController
 			}
 			elseif ($addr_field_item == 'lastname')
 			{
-				echo '
+				$content .= '
 					<label>'.$this->l('Last name').'</label>
 					<div class="margin-form">
 					<input type="text" size="33" name="lastname" value="'.htmlentities($this->getFieldValue($obj, 'lastname'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
@@ -328,7 +331,7 @@ class AdminAddressesControllerCore extends AdminController
 			elseif ($addr_field_item == 'firstname')
 			{
 
-				echo '
+				$content .= '
 					<label>'.$this->l('First name').'</label>
 					<div class="margin-form">
 					<input type="text" size="33" name="firstname" value="'.htmlentities($this->getFieldValue($obj, 'firstname'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
@@ -338,7 +341,7 @@ class AdminAddressesControllerCore extends AdminController
 			elseif ($addr_field_item == 'address1')
 			{
 
-				echo '
+				$content .= '
 					<label>'.$this->l('Address').'</label>
 					<div class="margin-form">
 					<input type="text" size="33" name="address1" value="'.htmlentities($this->getFieldValue($obj, 'address1'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
@@ -347,7 +350,7 @@ class AdminAddressesControllerCore extends AdminController
 			elseif ($addr_field_item == 'address2')
 			{
 
-				echo '
+				$content .= '
 					<label>'.$this->l('Address').' (2)</label>
 									     <div class="margin-form">
 												      <input type="text" size="33" name="address2" value="'.htmlentities($this->getFieldValue($obj, 'address2'), ENT_COMPAT, 'UTF-8').'" />
@@ -356,7 +359,7 @@ class AdminAddressesControllerCore extends AdminController
 			elseif ($addr_field_item == 'postcode')
 			{
 
-				echo '
+				$content .= '
 					<label>'.$this->l('Postcode/ Zip Code').'</label>
 					<div class="margin-form">
 					<input type="text" size="33" name="postcode" value="'.htmlentities($this->getFieldValue($obj, 'postcode'), ENT_COMPAT, 'UTF-8').'" />
@@ -365,7 +368,7 @@ class AdminAddressesControllerCore extends AdminController
 			elseif ($addr_field_item == 'city')
 			{
 
-				echo '
+				$content .= '
 					<label>'.$this->l('City').'</label>
 					<div class="margin-form">
 					<input type="text" size="33" name="city" value="'.htmlentities($this->getFieldValue($obj, 'city'), ENT_COMPAT, 'UTF-8').'" style="text-transform: uppercase;" /> <sup>*</sup>
@@ -374,18 +377,18 @@ class AdminAddressesControllerCore extends AdminController
 			elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
 			{
 
-				echo '
+				$content .= '
 					<label>'.$this->l('Country').'</label>
 					<div class="margin-form">
 					<select name="id_country" id="id_country" />';
 				$selectedCountry = $this->getFieldValue($obj, 'id_country');
 				foreach ($this->countriesArray AS $id_country => $name)
-					echo '		<option value="'.$id_country.'"'.((!$selectedCountry AND Configuration::get('PS_COUNTRY_DEFAULT') == $id_country) ? ' selected="selected"' : ($selectedCountry == $id_country ? ' selected="selected"' : '')).'>'.$name.'</option>';
-				echo '		</select> <sup>*</sup>
+					$content .= '		<option value="'.$id_country.'"'.((!$selectedCountry AND Configuration::get('PS_COUNTRY_DEFAULT') == $id_country) ? ' selected="selected"' : ($selectedCountry == $id_country ? ' selected="selected"' : '')).'>'.$name.'</option>';
+				$content .= '		</select> <sup>*</sup>
 					</div>';
 
 
-			echo '
+			$content .= '
 				<div id="contains_states" '.(!Country::containsStates((int)$selectedCountry) ? 'style="display:none;"' : '').'>
 				<label>'.$this->l('State').'</label>
 				<div class="margin-form">
@@ -398,7 +401,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$id_country_ajax = (int)$this->getFieldValue($obj, 'id_country');
 
-				echo '
+				$content .= '
 					<script type="text/javascript">
 					$(document).ready(function(){
 							ajaxStates ();
@@ -427,7 +430,7 @@ class AdminAddressesControllerCore extends AdminController
 										}
 									}); ';
 		if (file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'))
-			echo '	$.ajax({
+			$content .= '	$.ajax({
 					type: "GET",
 					url: "'._MODULE_DIR_.'vatnumber/ajax.php?id_country="+$(\'#id_country\').val(),
 					success: function(isApplicable)
@@ -438,38 +441,40 @@ class AdminAddressesControllerCore extends AdminController
 								$(\'#vat_area\').hide();
 						}
 					});';
-		echo '	}; }); </script>';
+		$content .= '	}; }); </script>';
 		}
 
 	} // End foreach
-			echo '
+			$content .= '
 				<label>'.$this->l('Home phone').'</label>
 				<div class="margin-form">
 					<input type="text" size="33" name="phone" value="'.htmlentities($this->getFieldValue($obj, 'phone'), ENT_COMPAT, 'UTF-8').'" />
 				</div>';
 
-			echo '
+			$content .= '
 				<label>'.$this->l('Mobile phone').'</label>
 				<div class="margin-form">
 					<input type="text" size="33" name="phone_mobile" value="'.htmlentities($this->getFieldValue($obj, 'phone_mobile'), ENT_COMPAT, 'UTF-8').'" />
 				</div>';
 
 
-			echo '
+			$content .= '
 				<label>'.$this->l('Other').'</label>
 				<div class="margin-form">
 					<textarea name="other" cols="36" rows="4">'.htmlentities($this->getFieldValue($obj, 'other'), ENT_COMPAT, 'UTF-8').'</textarea>
 					<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 				</div>';
 
-			echo '
+			$content .= '
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>';
-		echo '
+		$content .= '
 		</form>';
+
+		return $content;
 	}
 
 	protected function processAddressFormat()
@@ -501,7 +506,7 @@ class AdminAddressesControllerCore extends AdminController
 		return $out;
 	}
 
-	public function display()
+	/*public function initContent()
 	{
 		$this->getList($this->context->language->id);
 
@@ -515,9 +520,8 @@ class AdminAddressesControllerCore extends AdminController
 		$helper->identifier = $this->identifier;
 		$helper->token = $this->token;
 		$this->context->smarty->assign(array('list' => $helper->generateList($this->_list, $this->fieldsDisplay)));
+	}*/
 
-		parent::display();
-	}
 }
 
 
