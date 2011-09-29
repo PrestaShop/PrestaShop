@@ -29,6 +29,10 @@ class IndexControllerCore extends FrontController
 {
 	public $php_self = 'index';
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->context->smarty->assign('HOOK_HOME', Module::hookExec('home'));
