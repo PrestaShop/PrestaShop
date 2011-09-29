@@ -40,20 +40,25 @@ class CmsControllerCore extends FrontController
 			parent::canonicalRedirection($canonicalURL);
 	}
 
+	/**
+	 * Initialize cms controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
 
 		if ($id_cms = (int)Tools::getValue('id_cms'))
-		    $this->cms = new CMS($id_cms, $this->context->language->id);
-		elseif ($id_cms_category = (int)Tools::getValue('id_cms_category'))
-		    $this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id);
+			$this->cms = new CMS($id_cms, $this->context->language->id);
+		else if ($id_cms_category = (int)Tools::getValue('id_cms_category'))
+			$this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id);
 		$this->canonicalRedirection();
 
 		/* assignCase (1 = CMS page, 2 = CMS category) */
-		if (Validate::isLoadedObject($this->cms) AND ($this->cms->isAssociatedToShop() AND $this->cms->active OR (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id) AND file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php'))))
+		if (Validate::isLoadedObject($this->cms) && ($this->cms->isAssociatedToShop() && $this->cms->active || (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id)
+		&& file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php'))))
 			$this->assignCase = 1;
-		elseif (Validate::isLoadedObject($this->cms_category))
+		else if (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;
 		else
 			Tools::redirect('index.php?controller=404');
@@ -69,6 +74,10 @@ class CmsControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'cms.css');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		parent::process();
@@ -76,15 +85,19 @@ class CmsControllerCore extends FrontController
 		$this->context->smarty->assign('id_current_lang', $this->context->language->id);
 		$this->context->smarty->assign('home_title', $parent_cat->name);
 		$this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
+		if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category)
+			$path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
+		else
+			$path = Tools::getFullPath(1, $this->cms->meta_title, 'CMS');
 		if ($this->assignCase == 1)
 		{
 			$this->context->smarty->assign(array(
 				'cms' => $this->cms,
 				'content_only' => (int)(Tools::getValue('content_only')),
-				'path' => ((isset($this->cms->id_cms_category) AND $this->cms->id_cms_category) ? Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS') : Tools::getFullPath(1, $this->cms->meta_title, 'CMS'))
+				'path' => $path
 			));
 		}
-		elseif ($this->assignCase == 2)
+		else if ($this->assignCase == 2)
 		{
 			$this->context->smarty->assign(array(
 				'category' => $this->cms_category,
