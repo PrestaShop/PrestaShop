@@ -33,5 +33,5 @@ else
 	$controller->init();
 }
 
-$controller->processHeader();
+$controller->initHeader();
 Context::getContext()->smarty->display(_PS_THEME_DIR_.'header.tpl');
