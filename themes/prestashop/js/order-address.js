@@ -96,27 +96,27 @@ function updateAddresses()
 {
 	var idAddress_delivery = $('select#id_address_delivery').val();
 	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length == 1 ? idAddress_delivery : $('select#id_address_invoice').val();
-   
-   $.ajax({
-           type: 'POST',
-           url: baseDir + 'order.php',
-           async: true,
-           cache: false,
-           dataType : "json",
-           data: 'processAddress=true&step=2&ajax=true&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice+ '&token=' + static_token ,
-           success: function(jsonData)
-           	{
-           		if (jsonData.hasError)
-				{
-					var errors = '';
-					for(error in jsonData.errors)
-						//IE6 bug fix
-						if(error != 'indexOf')
-							errors += jsonData.errors[error] + "\n";
-					alert(errors);
-				}
+	
+	$.ajax({
+		type: 'GET',
+		url: baseDir + '?controller=order',
+		async: true,
+		cache: false,
+		dataType : "json",
+		data: 'processAddress=true&step=2&ajax=true&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice+ '&token=' + static_token ,
+		success: function(jsonData)
+		{
+			if (jsonData.hasError)
+			{
+				var errors = '';
+				for(error in jsonData.errors)
+					//IE6 bug fix
+					if(error != 'indexOf')
+						errors += jsonData.errors[error] + "\n";
+				alert(errors);
+			}
 		},
-           error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
-       });
-   resizeAddressesBox();
+		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+	});
+	resizeAddressesBox();
 }
