@@ -77,10 +77,12 @@ class GenderCore extends ObjectModel
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
 
-		$sql = 'SELECT g.id_gender, gl.name
+		$sql = 'SELECT g.*, gl.*
 				FROM '._DB_PREFIX_.'gender g
 				LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON g.id_gender = gl.id_gender AND gl.id_lang = '.(int)$id_lang;
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+
+		return ObjectModel::hydrateCollection('Gender', $results, $id_lang);
 	}
 
 	public static function getStaticImage($id, $useUnknown = false)

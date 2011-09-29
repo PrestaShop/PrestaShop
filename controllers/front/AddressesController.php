@@ -48,6 +48,8 @@ class AddressesControllerCore extends FrontController
 	 */
 	public function init()
 	{
+		parent::init();
+
 		if (!Validate::isLoadedObject($this->context->customer))
 			die(Tools::displayError('Customer not found'));
 	}
