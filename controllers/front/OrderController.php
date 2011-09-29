@@ -29,6 +29,10 @@ class OrderControllerCore extends ParentOrderController
 {
 	public $step;
 
+	/**
+	 * Initialize order controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		global $isVirtualCart, $orderTotal;
@@ -58,7 +62,7 @@ class OrderControllerCore extends ParentOrderController
 			' '.Tools::displayError('is required in order to validate your order.');
 		}
 
-		if (!$this->context->customer->isLogged(true) AND in_array($this->step, array(1, 2, 3)))
+		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
 			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step));
 
 		if ($this->nbProducts)
@@ -71,6 +75,10 @@ class OrderControllerCore extends ParentOrderController
 			parent::displayHeader();
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		/* 4 steps to the order */
@@ -88,7 +96,7 @@ class OrderControllerCore extends ParentOrderController
 			break;
 
 			case 2:
-				if(Tools::isSubmit('processAddress'))
+				if (Tools::isSubmit('processAddress'))
 					$this->processAddress();
 				$this->autoStep();
 				$this->_assignCarrier();
@@ -98,14 +106,14 @@ class OrderControllerCore extends ParentOrderController
 			case 3:
 				//Test that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv');
-				if (Configuration::get('PS_CONDITIONS') AND (!Validate::isBool($cgv)))
+				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv)))
 					Tools::redirect('index.php?controller=order&step=2');
 
-				if(Tools::isSubmit('processCarrier'))
+				if (Tools::isSubmit('processCarrier'))
 					$this->processCarrier();
 				$this->autoStep();
 				/* Bypass payment step if total is 0 */
-				if (($id_order = $this->_checkFreeOrder()) AND $id_order)
+				if (($id_order = $this->_checkFreeOrder()) && $id_order)
 				{
 					if ($this->context->customer->is_guest)
 					{
@@ -160,12 +168,12 @@ class OrderControllerCore extends ParentOrderController
 	{
 		global $isVirtualCart;
 
-		if ($this->step >= 2 AND (!$this->context->cart->id_address_delivery OR !$this->context->cart->id_address_invoice))
+		if ($this->step >= 2 && (!$this->context->cart->id_address_delivery || !$this->context->cart->id_address_invoice))
 			Tools::redirect('index.php?controller=order&step=1');
 		$delivery = new Address((int)($this->context->cart->id_address_delivery));
 		$invoice = new Address((int)($this->context->cart->id_address_invoice));
 
-		if ($delivery->deleted OR $invoice->deleted)
+		if ($delivery->deleted || $invoice->deleted)
 		{
 			if ($delivery->deleted)
 				unset($this->context->cart->id_address_delivery);
@@ -173,7 +181,7 @@ class OrderControllerCore extends ParentOrderController
 				unset($this->context->cart->id_address_invoice);
 			Tools::redirect('index.php?controller=order&step=1');
 		}
-		elseif ($this->step >= 3 AND !$this->context->cart->id_carrier AND !$isVirtualCart)
+		else if ($this->step >= 3 && !$this->context->cart->id_carrier && !$isVirtualCart)
 			Tools::redirect('index.php?controller=order&step=2');
 	}
 
@@ -182,7 +190,7 @@ class OrderControllerCore extends ParentOrderController
 	 */
 	public function processAddress()
 	{
-		if (!Tools::isSubmit('id_address_delivery') OR !Address::isCountryActiveById((int)Tools::getValue('id_address_delivery')))
+		if (!Tools::isSubmit('id_address_delivery') || !Address::isCountryActiveById((int)Tools::getValue('id_address_delivery')))
 			$this->errors[] = Tools::displayError('This address is not in a valid area.');
 		else
 		{
@@ -194,7 +202,7 @@ class OrderControllerCore extends ParentOrderController
 			if (Tools::isSubmit('message'))
 				$this->_updateMessage(Tools::getValue('message'));
 		}
-		if (sizeof($this->errors))
+		if (count($this->errors))
 		{
 			if (Tools::getValue('ajax'))
 				die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
@@ -211,7 +219,7 @@ class OrderControllerCore extends ParentOrderController
 
 		parent::_processCarrier();
 
-		if (sizeof($this->errors))
+		if (count($this->errors))
 		{
 			$this->context->smarty->assign('errors', $this->errors);
 			$this->_assignCarrier();
@@ -243,7 +251,7 @@ class OrderControllerCore extends ParentOrderController
 		// Assign wrapping and TOS
 		$this->_assignWrappingAndTOS();
 
-		$this->context->smarty->assign('is_guest' ,(isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0));
+		$this->context->smarty->assign('is_guest', (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0));
 	}
 
 	/* Payment step */
