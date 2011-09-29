@@ -43,10 +43,14 @@ class HistoryControllerCore extends FrontController
 			_THEME_JS_DIR_.'tools.js'));
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		if ($orders = Order::getCustomerOrders($this->context->customer->id))
-			foreach ($orders AS &$order)
+			foreach ($orders as &$order)
 			{
 				$myOrder = new Order((int)($order['id_order']));
 				if (Validate::isLoadedObject($myOrder))
