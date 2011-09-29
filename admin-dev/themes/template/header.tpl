@@ -255,7 +255,7 @@
 								{/foreach}
 							</div>
 							{/if}
-							{if $is_multishop}
+							{if $is_multishop && $shop_context != 'all'}
 								<div class="multishop_info">
 									{if $shop_context == 'group'}
 										{l s='You are configuring your store for group shop '}<b>{$shop_name}</b>

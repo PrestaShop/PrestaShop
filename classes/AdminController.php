@@ -84,6 +84,18 @@ class AdminControllerCore extends Controller
 
 	public function __construct()
 	{
+	// retro-compatibility : className for admin without controller
+	// This can be overriden in controllers (like for AdminCategories or AdminProducts
+		$controller = get_class($this);
+		// @todo : move this in class AdminCategoriesController and AdminProductsController
+		if ($controller == 'AdminCategoriesController' && $controller == 'AdminProductsController')
+			$controller = 'AdminCatalogController';
+
+		// temporary fix for Token retrocompatibility
+		// This has to be done when url is built instead of here)
+		if(strpos($controller,'Controller'))
+			$controller = substr($controller,0,-10);
+
 		parent::__construct();
 		// if this->template is empty,
 		// generate the filename from the classname, without "Controller" suffix
@@ -94,6 +106,9 @@ class AdminControllerCore extends Controller
 			if (file_exists($this->context->smarty->template_dir.'/'.$tpl_name))
 				$this->template = $tpl_name;
 		}
+
+		$this->id = Tab::getIdFromClassName($controller);
+		$this->token = Tools::getAdminToken($controller.(int)$this->id.(int)$this->context->employee->id);
 
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -112,21 +127,8 @@ class AdminControllerCore extends Controller
 		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
-		$className = get_class($this);
-		// temporary fix for Token retrocompatibility
-		// This has to be done when url is built instead of here)
-		if(strpos($className,'Controller'))
-			$className = substr($className,0,-10);
-
-		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
-			$className = 'AdminCatalog';
-
-		$this->className = $className;
-		$this->id = Tab::getIdFromClassName($className);
-		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
-
 		// Fix for AdminHome
-		if ($className == 'AdminHome')
+		if ($controller == 'AdminHome')
 			$_POST['token'] = $this->token;
 
 		if (!Shop::isMultiShopActivated())
@@ -676,17 +678,17 @@ class AdminControllerCore extends Controller
 				if (trim($tab['module']) != '')
 					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif';
 
-				$tabs[$index]['current'] = ($tab['class_name'] == $this->className) || (Tab::getCurrentParentId() == $tab['id_tab']);
+				// tab[class_name] does not contains the "Controller" suffix
+				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || (Tab::getCurrentParentId() == $tab['id_tab']);
 				$tabs[$index]['img'] = $img;
 				$tabs[$index]['token'] = Tools::getAdminToken($tab['class_name'].(int)($tab['id_tab']).(int)$this->context->employee->id);
 
 				$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
 				foreach ($sub_tabs AS $index2 => $sub_tab)
 				{
+					// class_name is the name of the class controller 
 					if (Tab::checkTabRights($sub_tab) === true)
-					{
-						$sub_tabs[$index2]['token'] = Tools::getAdminTokenLite($sub_tab['class_name']);
-					}
+						$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					else
 						unset($sub_tabs[$index2]);
 				}
