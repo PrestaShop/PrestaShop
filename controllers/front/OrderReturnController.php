@@ -32,6 +32,10 @@ class OrderReturnControllerCore extends FrontController
 	public $authRedirection = 'order-follow';
 	public $ssl = true;
 
+	/**
+	 * Initialize order return controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();

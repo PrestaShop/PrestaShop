@@ -96,7 +96,7 @@ class AddressControllerCore extends FrontController
 
 	/**
 	 * Start forms process
-	 * @see FrontController::preProcess()
+	 * @see FrontController::postProcess()
 	 */
 	public function postProcess()
 	{

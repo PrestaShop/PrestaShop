@@ -75,8 +75,8 @@ class AddressesControllerCore extends FrontController
 		}
 
 		// Retro theme 1.4.2
-    	if ($key = array_search('Country:name', $ordered_fields))
-       		$ordered_fields[$key] = 'country';
+		if ($key = array_search('Country:name', $ordered_fields))
+			$ordered_fields[$key] = 'country';
 
 		$this->context->smarty->assign('addresses_style', array(
 			'company' => 'address_company',
