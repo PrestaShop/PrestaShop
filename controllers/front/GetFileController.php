@@ -27,18 +27,22 @@
 
 class GetFileControllerCore extends FrontController
 {
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->displayHeader(false);
 		$this->displayFooter(false);
 
-		if (isset($this->context->employee) && $this->context->employee->isLoggedBack() AND Tools::getValue('file'))
+		if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file'))
 		{
 			/* Admin can directly access to file */
 			$filename = Tools::getValue('file');
 			if (!Validate::isSha1($filename))
 				die(Tools::displayError());
-			$file = _PS_DOWNLOAD_DIR_.strval(preg_replace('/\.{2,}/', '.',$filename));
+			$file = _PS_DOWNLOAD_DIR_.strval(preg_replace('/\.{2,}/', '.', $filename));
 			$filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
 			if (empty($filename))
 			{
@@ -58,9 +62,9 @@ class GetFileControllerCore extends FrontController
 				$this->displayCustomError('Invalid key.');
 
 			Tools::setCookieLanguage();
-			if (!$this->context->customer->isLogged() AND !Tools::getValue('secure_key') AND !Tools::getValue('id_order'))
+			if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order'))
 				Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
-			elseif (!$this->context->customer->isLogged() AND Tools::getValue('secure_key') AND Tools::getValue('id_order'))
+			else if (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order'))
 			{
 				$order = new Order((int)Tools::getValue('id_order'));
 				if (!Validate::isLoadedObject($order))
@@ -71,7 +75,7 @@ class GetFileControllerCore extends FrontController
 
 			/* Key format: <sha1-filename>-<hashOrder> */
 			$tmp = explode('-', $key);
-			if (sizeof($tmp) != 2)
+			if (count($tmp) != 2)
 				$this->displayCustomError('Invalid key.');
 
 			$filename = $tmp[0];
@@ -81,7 +85,7 @@ class GetFileControllerCore extends FrontController
 				$this->displayCustomError('This product does not exist in our store.');
 
 			/* Product no more present in catalog */
-			if (!isset($info['id_product_download']) OR empty($info['id_product_download']))
+			if (!isset($info['id_product_download']) || empty($info['id_product_download']))
 				$this->displayCustomError('This product has been deleted.');
 
 			if (!file_exists(_PS_DOWNLOAD_DIR_.$filename))
@@ -90,14 +94,14 @@ class GetFileControllerCore extends FrontController
 			$now = time();
 
 			$product_deadline = strtotime($info['download_deadline']);
-			if ($now > $product_deadline AND $info['download_deadline'] != '0000-00-00 00:00:00')
+			if ($now > $product_deadline && $info['download_deadline'] != '0000-00-00 00:00:00')
 				$this->displayCustomError('The product deadline is in the past.');
 
 			$customer_deadline = strtotime($info['date_expiration']);
-			if ($now > $customer_deadline AND $info['date_expiration'] != '0000-00-00 00:00:00')
+			if ($now > $customer_deadline && $info['date_expiration'] != '0000-00-00 00:00:00')
 				$this->displayCustomError('Expiration date exceeded');
 
-			if ($info['download_nb'] >= $info['nb_downloadable'] AND $info['nb_downloadable'])
+			if ($info['download_nb'] >= $info['nb_downloadable'] && $info['nb_downloadable'])
 				$this->displayCustomError('You have reached the maximum number of allowed downloads.');
 
 			/* Access is authorized -> increment download value for the customer */
@@ -115,9 +119,9 @@ class GetFileControllerCore extends FrontController
 			$mimeType = @finfo_file($finfo, $file);
 			@finfo_close($finfo);
 		}
-		elseif (function_exists('mime_content_type'))
+		else if (function_exists('mime_content_type'))
 			$mimeType = @mime_content_type($file);
-		elseif (function_exists('exec'))
+		else if (function_exists('exec'))
 		{
 			$mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($file)));
 			if (!$mimeType)
@@ -281,6 +285,10 @@ class GetFileControllerCore extends FrontController
 		exit;
 	}
 
+	/**
+	 * Display an error message with js
+	 * and redirect using js function
+	 */
 	protected function displayCustomError($msg)
 	{
 		$translations = array(
