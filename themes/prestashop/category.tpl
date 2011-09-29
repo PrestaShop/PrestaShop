@@ -53,7 +53,7 @@
 		{/if}
 
 		{if $category->description}
-			<div class="cat_desc">{$category->description}</div>
+			<div class="cat_desc">{$category->description|nl2br}</div>
 		{/if}
 		{if isset($subcategories)}
 		<!-- Subcategories -->

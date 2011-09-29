@@ -372,6 +372,9 @@ class FrontControllerCore extends Controller
 
 	public function display()
 	{
+		Tools::safePostVars();
+		$this->context->smarty->assign('errors', $this->errors);
+
 		if ($this->displayHeader)
 			$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
 
@@ -513,9 +516,6 @@ class FrontControllerCore extends Controller
 	{
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
-
-		Tools::safePostVars();
-		$this->context->smarty->assign('errors', $this->errors);
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$this->context->smarty->assign(array(
