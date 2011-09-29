@@ -195,7 +195,7 @@
 				{/if}
 				{foreach $tabs AS $t}
 				<li class="submenu_size {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-					<a href="index.php?controller={$t.class_name}&token={$t.token}">
+					<a href="{$t.href}">
 						<img src="{$t.img}" alt="" /> {$t.name}
 					</a>
 				</li>
