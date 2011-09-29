@@ -53,7 +53,7 @@ class ManufacturerControllerCore extends FrontController
 		if ($id_manufacturer = Tools::getValue('id_manufacturer'))
 		{
 			$this->manufacturer = new Manufacturer((int)$id_manufacturer, $this->context->language->id);
-			if (!Validate::isLoadedObject($this->manufacturer) OR !$this->manufacturer->active || !$this->manufacturer->isAssociatedToGroupShop())
+			if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToGroupShop())
 			{
 				header('HTTP/1.1 404 Not Found');
 				header('Status: 404 Not Found');
@@ -64,9 +64,13 @@ class ManufacturerControllerCore extends FrontController
 		}
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
-		if (Validate::isLoadedObject($this->manufacturer) AND $this->manufacturer->active AND $this->manufacturer->isAssociatedToGroupShop())
+		if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToGroupShop())
 		{
 			$this->productSort();
 			$this->assignOne();
@@ -84,7 +88,7 @@ class ManufacturerControllerCore extends FrontController
 	 */
 	protected function assignOne()
 	{
-		$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
+		$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
 		$this->context->smarty->assign(array(
 			'nb_products' => $nbProducts,
@@ -107,7 +111,7 @@ class ManufacturerControllerCore extends FrontController
 
 			$manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false, $id_current_group_shop);
 			$imgDir = _PS_MANU_IMG_DIR_;
-			foreach ($data AS &$item)
+			foreach ($data as &$item)
 				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
 			$this->context->smarty->assign(array(
