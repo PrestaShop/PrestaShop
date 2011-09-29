@@ -269,7 +269,7 @@ class ToolsCore
 	*/
 	public static function getValue($key, $defaultValue = false)
 	{
-	 	if (!isset($key) OR empty($key) OR !is_string($key))
+		if (!isset($key) OR empty($key) OR !is_string($key))
 			return false;
 		$ret = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $defaultValue));
 
@@ -280,9 +280,9 @@ class ToolsCore
 
 	public static function getIsset($key)
 	{
-	 	if (!isset($key) OR empty($key) OR !is_string($key))
+		if (!isset($key) OR empty($key) OR !is_string($key))
 			return false;
-	 	return isset($_POST[$key]) ? true : (isset($_GET[$key]) ? true : false);
+		return isset($_POST[$key]) ? true : (isset($_GET[$key]) ? true : false);
 	}
 
 	/**
