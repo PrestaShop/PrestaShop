@@ -32,6 +32,8 @@ class AdminControllerCore extends Controller
 	/** @var string Security token */
 	public $token;
 
+	protected $_object;
+
 	/** @var string shop | group_shop */
 	public $shopLinkType;
 
@@ -80,7 +82,9 @@ class AdminControllerCore extends Controller
 	protected $noLink;
 	protected $specificConfirmDelete;
 	protected $colorOnBackground;
-
+	/** @string Action to perform : 'edit', 'view', 'add', ... */
+	protected $action;
+	protected $_includeContainer = true;
 
 	public function __construct()
 	{
@@ -97,6 +101,7 @@ class AdminControllerCore extends Controller
 			$controller = substr($controller,0,-10);
 
 		parent::__construct();
+
 		// if this->template is empty,
 		// generate the filename from the classname, without "Controller" suffix
 		if (empty($this->template))
@@ -127,6 +132,8 @@ class AdminControllerCore extends Controller
 		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
+		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
+
 		// Fix for AdminHome
 		if ($controller == 'AdminHome')
 			$_POST['token'] = $this->token;
@@ -387,7 +394,6 @@ class AdminControllerCore extends Controller
 						{
 							$object = new $this->className();
 							$this->copyFromPost($object, $this->table);
-	//					d($object);
 							if (!$object->add())
 								$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 							elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND !sizeof($this->_errors) AND $this->_redirect)
@@ -517,6 +523,77 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * Display form
+	 */
+	public function displayForm($firstCall = true)
+	{
+		$content = '';
+		$allowEmployeeFormLang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		if ($allowEmployeeFormLang && !$this->context->cookie->employee_form_lang)
+			$this->context->cookie->employee_form_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$useLangFromCookie = false;
+		$this->_languages = Language::getLanguages(false);
+		if ($allowEmployeeFormLang)
+			foreach ($this->_languages AS $lang)
+				if ($this->context->cookie->employee_form_lang == $lang['id_lang'])
+					$useLangFromCookie = true;
+		if (!$useLangFromCookie)
+			$this->_defaultFormLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		else
+			$this->_defaultFormLanguage = (int)($this->context->cookie->employee_form_lang);
+
+		// Only if it is the first call to displayForm, otherwise it has already been defined
+		if ($firstCall)
+		{
+			$content .='
+			<script type="text/javascript">
+				$(document).ready(function() {
+					id_language = '.$this->_defaultFormLanguage.';
+					languages = new Array();';
+			foreach ($this->_languages AS $k => $language)
+				$content .= '
+					languages['.$k.'] = {
+						id_lang: '.(int)$language['id_lang'].',
+						iso_code: \''.$language['iso_code'].'\',
+						name: \''.htmlentities($language['name'], ENT_COMPAT, 'UTF-8').'\'
+					};';
+			$content .= '
+					displayFlags(languages, id_language, '.$allowEmployeeFormLang.');
+				});
+			</script>';
+		}
+		return $content;
+	}
+
+	/**
+	 * Load class object using identifier in $_GET (if possible)
+	 * otherwise return an empty object, or die
+	 *
+	 * @param boolean $opt Return an empty object if load fail
+	 * @return object
+	 */
+	protected function loadObject($opt = false)
+	{
+		if ($id = (int)(Tools::getValue($this->identifier)) AND Validate::isUnsignedId($id))
+		{
+			if (!$this->_object)
+				$this->_object = new $this->className($id);
+			if (Validate::isLoadedObject($this->_object))
+				return $this->_object;
+			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
+		}
+		elseif ($opt)
+		{
+			$this->_object = new $this->className();
+			return $this->_object;
+		}
+		else
+			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
+
+		$this->displayErrors();
+	}
+
+	/**
 	 * Check if the token is valid, else display a warning page
 	 */
 	public function checkAccess()
@@ -562,8 +639,7 @@ class AdminControllerCore extends Controller
 	}
 	public function display()
 	{
-		if(!empty($this->content))
-			$this->context->smarty->assign('content', $this->content);
+		$this->context->smarty->assign('content', $this->content);
 
 		$this->context->smarty->assign('meta_title',$this->meta_title);
 
@@ -574,24 +650,23 @@ class AdminControllerCore extends Controller
 			$default_tpl = substr($class_name,0,-10).'.tpl';
 			if (file_exists($this->context->smarty->template_dir.'/'.$default_tpl))
 			{
-				$this->template = $default_tpl;
+				$this->template = $default_tpladdress;
 			}
 			else
 				$this->template = 'content.tpl';
 		}
 		else
-			$content = $this->context->smarty->fetch($this->template);
+			$page = $this->context->smarty->fetch($this->template);
 
 		if ($this->content_only)
-			echo $content;
+			echo $page;
 		else
 		{
 			$this->context->smarty->assign('warnings',$this->warnings);
-			$content = $this->context->smarty->fetch($this->template);
-
+			$page = $this->context->smarty->fetch($this->template);
 		}
 
-		$this->context->smarty->assign('content',$content);
+		$this->context->smarty->assign('page', $page);
 		$this->context->smarty->display($this->layout);
 	}
 
@@ -764,6 +839,41 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
+		if ($this->_errors)
+			$this->content = $this->displayErrors();
+		else
+		{
+			if ($this->action == 'edit' && $this->id_entity)
+			{
+				$this->content .= $this->displayForm();
+				if ($this->tabAccess['view']){
+					if (Tools::getValue('back'))
+						$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+					else
+						$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
+				}
+				// move to form.tpl
+				$this->content .= '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+			}
+			elseif ($this->action == 'list')
+			{
+				$this->getList($this->context->language->id);
+
+				$helper = new HelperList();
+				$helper->view = $this->view;
+				$helper->edit = $this->edit;
+				$helper->delete = $this->delete;
+				$helper->duplicate = $this->duplicate;
+				$helper::$currentIndex = self::$currentIndex;
+				$helper->table = $this->table;
+				$helper->shopLink = $this->shopLink;
+				$helper->shopLinkType = $this->shopLinkType;
+				$helper->identifier = $this->identifier;
+				$helper->token = $this->token;
+				$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
+			}
+		}
+
 	}
 
 	/**
@@ -916,11 +1026,52 @@ class AdminControllerCore extends Controller
 				}
 				elseif (strncmp($key, $this->table.'OrderBy', 7) === 0 OR strncmp($key, $this->table.'Orderway', 12) === 0)
 					$this->context->cookie->$key = $value;
+
+		// Code from postProcess
+		if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
+		{
+			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
+			{
+				$this->action = 'edit';
+				$this->id_entity = (int)$_GET['id_'.$this->table];
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 	}
 
+	/**
+	 * Display errors
+	 */
 	public function displayErrors()
 	{
-		p($this->_errors);
+		if ($nbErrors = count($this->_errors) AND $this->_includeContainer)
+		{
+			$content = '<script type="text/javascript">
+				$(document).ready(function() {
+					$(\'#hideError\').unbind(\'click\').click(function(){
+						$(\'.error\').hide(\'slow\', function (){
+							$(\'.error\').remove();
+						});
+						return false;
+					});
+				});
+			  </script>
+			<div class="error"><span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/error2.png" />';
+			if (count($this->_errors) == 1)
+				$content .= $this->_errors[0];
+			else
+			{
+				$content .= $nbErrors.' '.$this->l('errors').'<br /><ol>';
+				foreach ($this->_errors AS $error)
+					$content .= '<li>'.$error.'</li>';
+				$content .= '</ol>';
+			}
+			$content .= '</div>';
+		}
+		// @TODO includesubtab
+		$this->includeSubTab('displayErrors');
+		return $content;
 	}
 
 	/**
@@ -1026,5 +1177,215 @@ class AdminControllerCore extends Controller
 			LIMIT '.(int)$start.','.(int)$limit;
 		$this->_list = Db::getInstance()->ExecuteS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+	}
+
+	/**
+	 * Return field value if possible (both classical and multilingual fields)
+	 *
+	 * Case 1 : Return value if present in $_POST / $_GET
+	 * Case 2 : Return object value
+	 *
+	 * @param object $obj Object
+	 * @param string $key Field name
+	 * @param integer $id_lang Language id (optional)
+	 * @return string
+	 */
+	protected function getFieldValue($obj, $key, $id_lang = NULL)
+	{
+		if ($id_lang)
+			$defaultValue = ($obj->id AND isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
+		else
+			$defaultValue = isset($obj->{$key}) ? $obj->{$key} : '';
+
+		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $defaultValue);
+	}
+
+	/**
+	 * Manage page display (form, list...)
+	 *
+	 * @param string $className Allow to validate a different class than the current one
+	 */
+	public function validateRules($className = false)
+	{
+		if (!$className)
+			$className = $this->className;
+
+		/* Class specific validation rules */
+		$rules = call_user_func(array($className, 'getValidationRules'), $className);
+
+		if ((sizeof($rules['requiredLang']) OR sizeof($rules['sizeLang']) OR sizeof($rules['validateLang'])))
+		{
+			/* Language() instance determined by default language */
+			$defaultLanguage = new Language((int)(Configuration::get('PS_LANG_DEFAULT')));
+
+			/* All availables languages */
+			$languages = Language::getLanguages(false);
+		}
+
+		/* Checking for required fields */
+		foreach ($rules['required'] AS $field)
+			if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
+				if (!Tools::getValue($this->identifier) OR ($field != 'passwd' AND $field != 'no-picture'))
+					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
+
+		/* Checking for multilingual required fields */
+		foreach ($rules['requiredLang'] AS $fieldLang)
+			if (($empty = Tools::getValue($fieldLang.'_'.$defaultLanguage->id)) === false OR $empty !== '0' AND empty($empty))
+				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$defaultLanguage->name;
+
+		/* Checking for maximum fields sizes */
+		foreach ($rules['size'] AS $field => $maxLength)
+			if (Tools::getValue($field) !== false AND Tools::strlen(Tools::getValue($field)) > $maxLength)
+				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+
+		/* Checking for maximum multilingual fields size */
+		foreach ($rules['sizeLang'] AS $fieldLang => $maxLength)
+			foreach ($languages AS $language)
+				if (Tools::getValue($fieldLang.'_'.$language['id_lang']) !== false AND Tools::strlen(Tools::getValue($fieldLang.'_'.$language['id_lang'])) > $maxLength)
+					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max, html chars including').')';
+
+		/* Overload this method for custom checking */
+		$this->_childValidation();
+
+		/* Checking for fields validity */
+		foreach ($rules['validate'] AS $field => $function)
+			if (($value = Tools::getValue($field)) !== false AND ($field != 'passwd'))
+				if (!Validate::$function($value))
+					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
+
+		/* Checking for passwd_old validity */
+		if (($value = Tools::getValue('passwd')) != false)
+		{
+			if ($className == 'Employee' AND !Validate::isPasswdAdmin($value))
+				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'passwd', $className).'</b> '.$this->l('is invalid');
+			elseif ($className == 'Customer' AND !Validate::isPasswd($value))
+				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'passwd', $className).'</b> '.$this->l('is invalid');
+		}
+
+		/* Checking for multilingual fields validity */
+		foreach ($rules['validateLang'] AS $fieldLang => $function)
+			foreach ($languages AS $language)
+				if (($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])) !== false AND !empty($value))
+					if (!Validate::$function($value))
+						$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
+	}
+
+	/**
+	 * Overload this method for custom checking
+	 */
+	protected function _childValidation() { }
+
+	/**
+	 * Display object details
+	 */
+	public function viewDetails() {}
+
+	/**
+	 * Called before deletion
+	 *
+	 * @param object $object Object
+	 * @return boolean
+	 */
+	protected function beforeDelete($object) { return true; }
+
+	/**
+	 * Called before deletion
+	 *
+	 * @param object $object Object
+	 * @return boolean
+	 */
+	protected function afterDelete($object, $oldId) { return true; }
+
+	protected function afterAdd($object) { return true; }
+
+	protected function afterUpdate($object) { return true; }
+
+	/**
+	 * Check rights to view the current tab
+	 *
+	 * @return boolean
+	 */
+
+	protected function afterImageUpload() {
+		return true;
+	}
+
+	/**
+	 * Copy datas from $_POST to object
+	 *
+	 * @param object &$object Object
+	 * @param string $table Object table
+	 */
+	protected function copyFromPost(&$object, $table)
+	{
+		/* Classical fields */
+		foreach ($_POST AS $key => $value)
+			if (key_exists($key, $object) AND $key != 'id_'.$table)
+			{
+				/* Do not take care of password field if empty */
+				if ($key == 'passwd' AND Tools::getValue('id_'.$table) AND empty($value))
+					continue;
+				/* Automatically encrypt password in MD5 */
+				if ($key == 'passwd' AND !empty($value))
+					$value = Tools::encrypt($value);
+				$object->{$key} = $value;
+			}
+
+		/* Multilingual fields */
+		$rules = call_user_func(array(get_class($object), 'getValidationRules'), get_class($object));
+		if (sizeof($rules['validateLang']))
+		{
+			$languages = Language::getLanguages(false);
+			foreach ($languages AS $language)
+				foreach (array_keys($rules['validateLang']) AS $field)
+					if (isset($_POST[$field.'_'.(int)($language['id_lang'])]))
+						$object->{$field}[(int)($language['id_lang'])] = $_POST[$field.'_'.(int)($language['id_lang'])];
+		}
+	}
+
+	protected function updateAssoShop($id_object = false)
+	{
+		if (!Shop::isMultiShopActivated())
+			return ;
+
+		$shopAsso = Shop::getAssoTables();
+		$groupShopAsso = GroupShop::getAssoTables();
+		if (isset($shopAsso[$this->table]) && $shopAsso[$this->table]['type'] == 'shop')
+			$type = 'shop';
+		else if (isset($groupShopAsso[$this->table]) && $groupShopAsso[$this->table]['type'] == 'group_shop')
+			$type = 'group_shop';
+		else
+			return ;
+
+		$assos = array();
+		foreach ($_POST AS $k => $row)
+		{
+			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
+				continue;
+			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
+			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
+		}
+
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		foreach ($assos AS $asso)
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
+											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
+	}
+
+	/**
+	 * Overload this method for custom checking
+	 *
+	 * @param integer $id Object id used for deleting images
+	 * @return boolean
+	 */
+	protected function postImage($id)
+	{
+		if (isset($this->fieldImageSettings['name']) AND isset($this->fieldImageSettings['dir']))
+			return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/');
+		elseif (!empty($this->fieldImageSettings))
+			foreach ($this->fieldImageSettings AS $image)
+				if (isset($image['name']) AND isset($image['dir']))
+					$this->uploadImage($id, $image['name'], $image['dir'].'/');
+		return !sizeof($this->_errors) ? true : false;
 	}
 }
