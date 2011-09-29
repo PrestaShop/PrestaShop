@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -40,8 +40,8 @@
 	{$ignoreList.6 = "date_add"}
 	{$ignoreList.7 = "date_upd"}
 	{$ignoreList.8 = "active"}
-	{$ignoreList.9 = "deleted"}	
-	
+	{$ignoreList.9 = "deleted"}
+
 	{* PrestaShop < 1.4.2 compatibility *}
 	{if isset($addresses)}
 		{$address_number = 0}
