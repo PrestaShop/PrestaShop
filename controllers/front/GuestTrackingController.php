@@ -29,108 +29,134 @@ class GuestTrackingControllerCore extends FrontController
 {
 	public $php_self = 'guest-tracking';
 
+	/**
+	 * Initialize guest tracking controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
-
 		if ($this->context->customer->isLogged())
 			Tools::redirect('history.php');
 	}
+	
+	/**
+	 * Start forms process
+	 * @see FrontController::postProcess()
+	 */
+	public function postProcess()
+	{
+		if(Tools::isSubmit('submitGuestTracking') || Tools::isSubmit('submitTransformGuestToCustomer'))
+		{
+			$id_order = (int)Tools::getValue('id_order');
+			$email = Tools::getValue('email');
+			$order = new Order((int)$id_order);
+			
+			if (empty($id_order))
+				$this->errors[] = Tools::displayError('Please provide your Order ID');
+			else if (empty($email))
+				$this->errors[] = Tools::displayError('Please provide your e-mail address');
+			else if (!Validate::isEmail($email))
+				$this->errors[] = Tools::displayError('Please provide a valid e-mail address');
+			else if (!Customer::customerExists($email, false, false))
+				$this->errors[] = Tools::displayError('There is no account associated with this e-mail address');
+			else if (Customer::customerExists($email, false, true))
+			{
+				$this->errors[] = Tools::displayError('Your guest account has already been transformed into a customer account.
+					Please log-in to your customer account to view this order, this section is reserved for guest accounts');
+				$this->context->smarty->assign('show_login_link', true);
+			}
+			else if (!Validate::isLoadedObject($order))
+				$this->errors[] = Tools::displayError('Invalid Order ID');
+			else if (!$order->isAssociatedAtGuest($email))
+				$this->errors[] = Tools::displayError('123');
+			else
+			{
+				$this->assignOrderTracking($order);
+				if (Tools::isSubmit('submitTransformGuestToCustomer'))
+				{
+					$customer = new Customer((int)$order->id_customer);
+					if (!Validate::isLoadedObject($customer))
+						$this->errors[] = Tools::displayError('Invalid customer');
+					else if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
+						// @todo clarify error message
+						$this->errors[] = Tools::displayError('An error occurred while transforming guest to customer.');
+					else if (!Tools::getValue('password'))
+						$this->errors[] = Tools::displayError('Invalid password');
+					else
+						$this->context->smarty->assign('transformSuccess', true);
+				}
+			}
+		}
+	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		parent::process();
 
-		$id_order = (int)Tools::getValue('id_order');
-		$email = Tools::getValue('email');
-		$order = new Order((int)$id_order);
-
-		if (empty($id_order))
-			$this->errors[] = Tools::displayError('Please provide your Order ID');
-		elseif (empty($email))
-			$this->errors[] = Tools::displayError('Please provide your e-mail address');
-		elseif (!Validate::isEmail($email))
-			$this->errors[] = Tools::displayError('Please provide a valid e-mail address');
-		elseif (!Customer::customerExists($email, false, false))
-			$this->errors[] = Tools::displayError('There is no account associated with this e-mail address');
-		elseif (Customer::customerExists($email, false, true))
-		{
-			$this->errors[] = Tools::displayError('Your guest account has already been transformed into a customer account. Please log-in to your customer account to view this order, this section is reserved for guest accounts');
-			$this->context->smarty->assign('show_login_link', true);
-		}
-		elseif (!Validate::isLoadedObject($order))
-			$this->errors[] = Tools::displayError('Invalid Order ID');
-		elseif (!$order->isAssociatedAtGuest($email))
-			$this->errors[] = Tools::displayError('123');
-		else
-		{
-			$customer = new Customer((int)$order->id_customer);
-			$id_order_state = (int)($order->getCurrentState());
-			$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
-			$addressInvoice = new Address((int)($order->id_address_invoice));
-			$addressDelivery = new Address((int)($order->id_address_delivery));
-			$inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
-			$dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
-
-			$invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressInvoice, $inv_adr_fields);
-			$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
-
-			if ($order->total_discounts > 0)
-				$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
-			$products = $order->getProducts();
-			$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
-			Product::addCustomizationPrice($products, $customizedDatas);
-
-			$this->processAddressFormat($addressDelivery, $addressInvoice);
-			$this->context->smarty->assign(array(
-				'shop_name' => Configuration::get('PS_SHOP_NAME'),
-				'order' => $order,
-				'return_allowed' => false,
-				'currency' => new Currency($order->id_currency),
-				'order_state' => (int)($id_order_state),
-				'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
-				'invoice' => (OrderState::invoiceAvailable((int)($id_order_state)) AND $order->invoice_number),
-				'order_history' => $order->getHistory((int)$this->context->language->id, false, true),
-				'products' => $products,
-				'discounts' => $order->getDiscounts(),
-				'carrier' => $carrier,
-				'address_invoice' => $addressInvoice,
-				'invoiceState' => (Validate::isLoadedObject($addressInvoice) AND $addressInvoice->id_state) ? new State((int)($addressInvoice->id_state)) : false,
-				'address_delivery' => $addressDelivery,
-				'deliveryState' => (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state) ? new State((int)($addressDelivery->id_state)) : false,
-				'is_guest' => true,
-				'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
-				'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
-				'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
-				'use_tax' => Configuration::get('PS_TAX'),
-				'customizedDatas' => $customizedDatas,
-				'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
-				'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues));
-			if ($carrier->url AND $order->shipping_number)
-				$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-			$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
-			Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
-
-			if (Tools::isSubmit('submitTransformGuestToCustomer'))
-			{
-				$customer = new Customer((int)$order->id_customer);
-				if (!Validate::isLoadedObject($customer))
-					$this->errors[] = Tools::displayError('Invalid customer');
-				if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
-					$this->errors[] = Tools::displayError('An error occurred while transforming guest to customer.');
-				if (!Tools::getValue('password'))
-					$this->errors[] = Tools::displayError('Invalid password');
-				else
-					$this->context->smarty->assign('transformSuccess', true);
-			}
-		}
-
 		/* Handle brute force attacks */
-		if (sizeof($this->errors))
+		if (count($this->errors))
 			sleep(1);
 
 		$this->context->smarty->assign(array('action' => $this->context->link->getPageLink('guest-tracking.php'), 'errors' => $this->errors));
 		$this->setTemplate(_PS_THEME_DIR_.'guest-tracking.tpl');
+	}
+	
+	/**
+	 * Assign template vars related to order tracking informations
+	 */
+	protected function assignOrderTracking($order)
+	{
+		$customer = new Customer((int)$order->id_customer);
+		$id_order_state = (int)($order->getCurrentState());
+		$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
+		$addressInvoice = new Address((int)($order->id_address_invoice));
+		$addressDelivery = new Address((int)($order->id_address_delivery));
+		$inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
+		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
+
+		$invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressInvoice, $inv_adr_fields);
+		$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
+
+		if ($order->total_discounts > 0)
+			$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
+		$products = $order->getProducts();
+		$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
+		Product::addCustomizationPrice($products, $customizedDatas);
+
+		$this->processAddressFormat($addressDelivery, $addressInvoice);
+		$this->context->smarty->assign(array(
+			'shop_name' => Configuration::get('PS_SHOP_NAME'),
+			'order' => $order,
+			'return_allowed' => false,
+			'currency' => new Currency($order->id_currency),
+			'order_state' => (int)($id_order_state),
+			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
+			'invoice' => (OrderState::invoiceAvailable((int)($id_order_state)) && $order->invoice_number),
+			'order_history' => $order->getHistory((int)$this->context->language->id, false, true),
+			'products' => $products,
+			'discounts' => $order->getDiscounts(),
+			'carrier' => $carrier,
+			'address_invoice' => $addressInvoice,
+			'invoiceState' => (Validate::isLoadedObject($addressInvoice) && $addressInvoice->id_state) ? new State((int)($addressInvoice->id_state)) : false,
+			'address_delivery' => $addressDelivery,
+			'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State((int)($addressDelivery->id_state)) : false,
+			'is_guest' => true,
+			'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
+			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
+			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+			'use_tax' => Configuration::get('PS_TAX'),
+			'customizedDatas' => $customizedDatas,
+			'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
+			'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues));
+		if ($carrier->url && $order->shipping_number)
+			$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
+		$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
+		Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
 	}
 
 	public function setMedia()

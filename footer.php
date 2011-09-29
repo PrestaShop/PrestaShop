@@ -33,5 +33,5 @@ else
 	$controller->init();
 }
 
-$controller->processFooter();
+$controller->initFooter();
 Context::getContext()->smarty->display(_PS_THEME_DIR_.'footer.tpl');
