@@ -204,7 +204,7 @@
 				{foreach $tabs AS $t}
 					<div id="tab{$t.id_tab}_subtabs" style="display:none">
 						{foreach $t.sub_tabs AS $t2}
-							<li><a href="index.php?controller={$t2.class_name}&token={$t2.token}">{$t2.name}</a></li>
+							<li><a href="{$t2.href}">{$t2.name}</a></li>
 						{/foreach}
 						{if $t.current}
 							{assign var='mainsubtab' value=$t}
@@ -231,7 +231,7 @@
 				<ul id="submenu" {if isset($mainsubtab)}class="withLeftBorder clearfix"{/if}>
 					{if isset($mainsubtab)}
 						{foreach $mainsubtab.sub_tabs AS $t}
-							<li><a href="index.php?controller={$t.class_name}&token={$t.token}">{$t.name}</a></li>
+							<li><a href="{$t.href}">{$t.name}</a></li>
 						{/foreach}
 					{/if}
 				</ul>
