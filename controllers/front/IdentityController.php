@@ -31,52 +31,60 @@ class IdentityControllerCore extends FrontController
 	public $php_self = 'identity';
 	public $authRedirection = 'identity';
 	public $ssl = true;
-
-	public function process()
+	
+	public function init()
 	{
-		$customer = $this->context->customer;
-
-		if (sizeof($_POST))
+		parent::init();
+		$this->customer = $this->context->customer;
+	}
+	
+	/**
+	 * Start forms process
+	 * @see FrontController::postProcess()
+	 */
+	public function postProcess()
+	{
+		if (count($_POST))
 		{
 			$exclusion = array('secure_key', 'old_passwd', 'passwd', 'active', 'date_add', 'date_upd', 'last_passwd_gen', 'newsletter_date_add', 'id_default_group');
-			$fields = $customer->getFields();
-			foreach ($fields AS $key => $value)
+			$fields = $this->customer->getFields();
+			foreach ($fields as $key => $value)
 				if (!in_array($key, $exclusion))
-					$customer->{$key} = key_exists($key, $_POST) ? trim($_POST[$key]) : 0;
+					$this->customer->{$key} = key_exists($key, $_POST) ? trim($_POST[$key]) : 0;
 		}
 
-		if (isset($_POST['years']) AND isset($_POST['months']) AND isset($_POST['days']))
-			$customer->birthday = (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']);
+		if (isset($_POST['years']) && isset($_POST['months']) && isset($_POST['days']))
+			$this->customer->birthday = (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']);
 
 		if (Tools::isSubmit('submitIdentity'))
 		{
-			if (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) AND
-			!(Tools::getValue('months') == '' AND Tools::getValue('days') == '' AND Tools::getValue('years') == ''))
+			if (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) &&
+			!(Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == ''))
 				$this->errors[] = Tools::displayError('Invalid date of birth');
 			else
 			{
-				$customer->birthday = (empty($_POST['years']) ? '' : (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']));
+				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']));
 
 				$_POST['old_passwd'] = trim($_POST['old_passwd']);
-				if (empty($_POST['old_passwd']) OR (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
+				if (empty($_POST['old_passwd']) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
 					$this->errors[] = Tools::displayError('Your password is incorrect.');
-				elseif ($_POST['passwd'] != $_POST['confirmation'])
+				else if ($_POST['passwd'] != $_POST['confirmation'])
 					$this->errors[] = Tools::displayError('Password and confirmation do not match');
 				else
 				{
-					$prev_id_default_group = $customer->id_default_group;
-					$this->errors = $customer->validateController();
+					$prev_id_default_group = $this->customer->id_default_group;
+					$this->errors = $this->customer->validateController();
 				}
-				if (!sizeof($this->errors))
+				if (!count($this->errors))
 				{
-					$customer->id_default_group = (int)($prev_id_default_group);
-					$customer->firstname = Tools::ucfirst(Tools::strtolower($customer->firstname));
+					$this->customer->id_default_group = (int)($prev_id_default_group);
+					$this->customer->firstname = Tools::ucfirst(Tools::strtolower($this->customer->firstname));
 					if (Tools::getValue('passwd'))
-						$this->context->cookie->passwd = $customer->passwd;
-					if ($customer->update())
+						$this->context->cookie->passwd = $this->customer->passwd;
+					if ($this->customer->update())
 					{
-						$this->context->cookie->customer_lastname = $customer->lastname;
-						$this->context->cookie->customer_firstname = $customer->firstname;
+						$this->context->cookie->customer_lastname = $this->customer->lastname;
+						$this->context->cookie->customer_firstname = $this->customer->firstname;
 						$this->context->smarty->assign('confirmation', 1);
 					}
 					else
@@ -85,10 +93,18 @@ class IdentityControllerCore extends FrontController
 			}
 		}
 		else
-			$_POST = array_map('stripslashes', $customer->getFields());
-
-		if ($customer->birthday)
-			$birthday = explode('-', $customer->birthday);
+			$_POST = array_map('stripslashes', $this->customer->getFields());
+			
+		return $this->customer;
+	}
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
+	public function process()
+	{
+		if ($this->customer->birthday)
+			$birthday = explode('-', $this->customer->birthday);
 		else
 			$birthday = array('-', '-', '-');
 
