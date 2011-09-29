@@ -32,11 +32,15 @@ class DiscountControllerCore extends FrontController
 	public $authRedirection = 'discount';
 	public $ssl = true;
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$discounts = Discount::getCustomerDiscounts($this->context->language->id, $this->context->customer->id, true, false);
 		$nbDiscounts = 0;
-		foreach ($discounts AS $discount)
+		foreach ($discounts as $discount)
 			if ($discount['quantity_for_user'])
 				$nbDiscounts++;
 
