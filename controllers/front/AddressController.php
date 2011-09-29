@@ -107,15 +107,6 @@ class AddressControllerCore extends FrontController
 			$_POST['firstname'] = $this->context->customer->firstname;
 			$_POST['lastname'] = $this->context->customer->lastname;
 		}
-
-		if ($this->ajax && count($this->errors))
-		{
-			$return = array(
-				'hasError' => !empty($this->errors),
-				'errors' => $this->errors
-			);
-			die(Tools::jsonEncode($return));
-		}
 	}
 
 	/**
@@ -365,5 +356,16 @@ class AddressControllerCore extends FrontController
 			'vat_display' => $vat_display,
 		));
 	}
-}
 
+	public function displayAjax()
+	{
+		if (count($this->errors))
+		{
+			$return = array(
+				'hasError' => !empty($this->errors),
+				'errors' => $this->errors
+			);
+			die(Tools::jsonEncode($return));
+		}
+	}
+}

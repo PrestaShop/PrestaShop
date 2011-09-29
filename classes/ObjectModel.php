@@ -31,23 +31,23 @@ abstract class ObjectModelCore
 	public $id;
 
 	/** @var integer lang id */
-	protected $id_lang = NULL;
+	protected $id_lang = null;
 
-	protected $id_shop = NULL;
+	protected $id_shop = null;
 
 	private $getShopFromContext = true;
 
 	/** @var string SQL Table name */
-	protected $table = NULL;
+	protected $table = null;
 
 	/** @var string SQL Table identifier */
-	protected $identifier = NULL;
+	protected $identifier = null;
 
 	/** @var array Required fields for admin panel forms */
  	protected $fieldsRequired = array();
 
 	/** @var fieldsRequiredDatabase */
-	protected static $fieldsRequiredDatabase = NULL;
+	protected static $fieldsRequiredDatabase = null;
 
  	/** @var array Maximum fields size for admin panel forms */
  	protected $fieldsSize = array();
@@ -75,7 +75,7 @@ abstract class ObjectModelCore
 	protected static $_cache = array();
 
 	/** @var  string path to image directory. Used for image deletion. */
-	protected $image_dir = NULL;
+	protected $image_dir = null;
 
 	/** @var string file type of image files. Used for image deletion. */
 	protected $image_format = 'jpg';
@@ -921,5 +921,111 @@ abstract class ObjectModelCore
 		if ($has_active_column)
 			$query->where('`active` = 1');
 		return (bool)Db::getInstance()->getValue($query);
+	}
+
+	/**
+	 * Get object identifier name
+	 *
+	 * @since 1.5.0
+	 * @return string
+	 */
+	public function getIdentifier()
+	{
+		return $this->identifier;
+	}
+
+	/**
+	 * Get list of fields related to language to validate
+	 *
+	 * @since 1.5.0
+	 * @return array
+	 */
+	public function getFieldsValidateLang()
+	{
+		return $this->fieldsValidateLang;
+	}
+
+	/**
+	 * Fill an object with given data. Data must be an array with this syntax: array(objProperty => value, objProperty2 => value, etc.)
+	 *
+	 * @since 1.5.0
+	 * @param array $data
+	 * @param int $id_lang
+	 */
+	public function hydrate(array $data, $id_lang = null)
+	{
+		$identifier = $this->getIdentifier();
+		if (!array_key_exists($identifier, $data))
+			throw new PrestashopException("Identifier '$identifier' not found for class '".get_class($this)."'");
+
+		$this->id_lang = null;
+		$this->id = $data[$identifier];
+		foreach ($data as $key => $value)
+			if (array_key_exists($key, $this))
+				$this->$key = $value;
+	}
+
+	/**
+	 * Fill (hydrate) a list of objects in order to get a collection of these objects
+	 *
+	 * @since 1.5.0
+	 * @param string $class Class of objects to hydrate
+	 * @param array $datas List of data (multi-dimensional array)
+	 * @param int $id_lang
+	 * @return array
+	 */
+	public static function hydrateCollection($class, array $datas, $id_lang = null)
+	{
+		if (!class_exists($class))
+			throw new PrestashopException("Class '$class' not found");
+
+		$collection = array();
+		$group_keys = array();
+		$rows = array();
+		$identifier = $fieldsValidateLang = null;
+		foreach ($datas as $row)
+		{
+			// Get class identifier and fieldsValidateLang only the first time
+			if (is_null($identifier))
+			{
+				$obj = new $class;
+				if (!$obj instanceof ObjectModel)
+					throw new PrestashopException("Class '$class' must be an instance of class ObjectModel");
+				$identifier = $obj->getIdentifier();
+				$fieldsValidateLang = $obj->getFieldsValidateLang();
+			}
+
+			// Get primary key
+			if (!array_key_exists($identifier, $row))
+				throw new PrestashopException("Identifier '$identifier' not found for class '$class'");
+			$id = $row[$identifier];
+
+			// Get object common properties
+			if (!isset($rows[$id]))
+				$rows[$id] = $row;
+
+			// Get object lang properties
+			if (isset($row['id_lang']) && !$id_lang)
+			{
+				foreach ($fieldsValidateLang as $field => $validator)
+				{
+					if (!$id_lang)
+					{
+						if (!is_array($rows[$id][$field]))
+							$rows[$id][$field] = array();
+						$rows[$id][$field][$row['id_lang']] = $row[$field];
+					}
+				}
+			}
+		}
+
+		// Hydrate objects
+		foreach ($rows as $row)
+		{
+			$obj = new $class;
+			$obj->hydrate($row, $id_lang);
+			$collection[] = $obj;
+		}
+		return $collection;
 	}
 }

@@ -50,8 +50,8 @@ class AdminCustomers extends AdminTab
 		$genders = array(0 => $this->l('?'));
 		foreach (Gender::getGenders() as $gender)
 		{
-			$genders_icon[$gender['id_gender']] = '../genders/'.$gender['id_gender'].'.jpg';
-			$genders[$gender['id_gender']] = $gender['name'];
+			$genders_icon[$gender->id] = '../genders/'.$gender->id.'.jpg';
+			$genders[$gender->id] = $gender->name;
 		}
 
  		$this->fieldsDisplay = array(
@@ -723,8 +723,8 @@ class AdminCustomers extends AdminTab
 				<div class="margin-form">';
 				foreach (Gender::getGenders() as $gender)
 				{
-					echo '<input type="radio" size="33" name="id_gender" id="gender_'.$gender['id_gender'].'" value="'.$gender['id_gender'].'" '.($this->getFieldValue($obj, 'id_gender') == $gender['id_gender'] ? 'checked="checked" ' : '').'/>';
-					echo '<label class="t" for="gender_'.$gender['id_gender'].'"> '.$gender['name'].'</label> &nbsp; ';
+					echo '<input type="radio" size="33" name="id_gender" id="gender_'.$gender->id.'" value="'.$gender->id.'" '.($this->getFieldValue($obj, 'id_gender') == $gender->id ? 'checked="checked" ' : '').'/>';
+					echo '<label class="t" for="gender_'.$gender->id.'"> '.$gender->name.'</label> &nbsp; ';
 				}
 				echo '	<input type="radio" size="33" name="id_gender" id="gender_unknown" value="0" '.(($this->getFieldValue($obj, 'id_gender') == 9 || !$this->getFieldValue($obj, 'id_gender')) ? 'checked="checked" ' : '').'/>
 				<label class="t" for="gender_unknown"> '.$this->l('Unknown').'</label>
