@@ -32,22 +32,19 @@ class OrderReturnControllerCore extends FrontController
 	public $authRedirection = 'order-follow';
 	public $ssl = true;
 
-	public function __construct()
+	public function init()
 	{
-		parent::__construct();
+		parent::init();
 
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-	}
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 
-	public function process()
-	{
-		if (!isset($_GET['id_order_return']) OR !Validate::isUnsignedId($_GET['id_order_return']))
+		if (!isset($_GET['id_order_return']) || !Validate::isUnsignedId($_GET['id_order_return']))
 			$this->errors[] = Tools::displayError('Order ID required');
 		else
 		{
 			$orderRet = new OrderReturn((int)($_GET['id_order_return']));
-			if (Validate::isLoadedObject($orderRet) AND $orderRet->id_customer == $this->context->cookie->id_customer)
+			if (Validate::isLoadedObject($orderRet) && $orderRet->id_customer == $this->context->cookie->id_customer)
 			{
 				$order = new Order((int)($orderRet->id_order));
 				if (Validate::isLoadedObject($order))
@@ -69,12 +66,19 @@ class OrderReturnControllerCore extends FrontController
 			else
 				$this->errors[] = Tools::displayError('Cannot find this order return');
 		}
-
+	}
+	
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
+	public function process()
+	{
+		parent::process();
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
 			'nbdaysreturn' => (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'))
 		));
-
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
 	}
 
