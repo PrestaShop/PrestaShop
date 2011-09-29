@@ -38,6 +38,10 @@ class MyAccountControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'my-account.css');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->context->smarty->assign(array(

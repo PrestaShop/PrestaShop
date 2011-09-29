@@ -33,6 +33,10 @@
  */
 class ModuleControllerCore extends FrontController
 {
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		// Check module existence

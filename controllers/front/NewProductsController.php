@@ -35,11 +35,15 @@ class NewProductsControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->productSort();
 
-		$nbProducts = (int)Product::getNewProducts($this->context->language->id, (isset($this->p) ? (int)($this->p) - 1 : NULL), (isset($this->n) ? (int)($this->n) : NULL), true);
+		$nbProducts = (int)Product::getNewProducts($this->context->language->id, (isset($this->p) ? (int)($this->p) - 1 : null), (isset($this->n) ? (int)($this->n) : null), true);
 		$this->pagination($nbProducts);
 
 		$this->context->smarty->assign(array(
