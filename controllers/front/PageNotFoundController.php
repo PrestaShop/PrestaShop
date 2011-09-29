@@ -29,6 +29,10 @@ class PageNotFoundControllerCore extends FrontController
 {
 	public $php_self = '404';
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$this->setTemplate(_PS_THEME_DIR_.'404.tpl');
