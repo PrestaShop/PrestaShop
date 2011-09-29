@@ -47,7 +47,7 @@ class StoresControllerCore extends FrontController
 	/**
 	 * get formatted string address
 	 */
-	private function processStoreAddress($store)
+	protected function processStoreAddress($store)
 	{
 		$ignore_field = array(
 			'firstname',
@@ -87,7 +87,7 @@ class StoresControllerCore extends FrontController
 	/**
 	 * Assign template vars for simplified stores
 	 */
-	private function assignStoresSimplified()
+	protected function assignStoresSimplified()
 	{
 		$stores = Db::getInstance()->ExecuteS('
 		SELECT s.*, cl.name country, st.iso_code state
@@ -110,7 +110,7 @@ class StoresControllerCore extends FrontController
 	/**
 	 * Assign template vars for classical stores
 	 */
-	private function assignStores()
+	protected function assignStores()
 	{
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
@@ -169,7 +169,7 @@ class StoresControllerCore extends FrontController
 	/**
 	 * Display the Xml for showing the nodes in the google map
 	 */
-	private function displayXmlMaps($stores)
+	protected function displayXmlMaps($stores)
 	{
 		$dom = new DOMDocument('1.0');
 		$node = $dom->createElement('markers');

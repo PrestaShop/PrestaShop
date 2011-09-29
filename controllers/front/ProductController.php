@@ -211,7 +211,7 @@ class ProductControllerCore extends FrontController
 	/**
 	 * Assign price and tax to the template
 	 */
-	private function assignPriceAndTax()
+	protected function assignPriceAndTax()
 	{
 		$id_customer = (isset($this->context->customer) ? (int)($this->context->customer->id) : 0);
 		$group_reduction = (100 - Group::getReduction($id_customer)) / 100;
@@ -252,7 +252,7 @@ class ProductControllerCore extends FrontController
 	/**
 	 * Assign template vars related to images
 	 */
-	private function assignImages()
+	protected function assignImages()
 	{
 		$images = $this->product->getImages((int)$this->context->cookie->id_lang);
 		$productImages = array();
@@ -285,7 +285,7 @@ class ProductControllerCore extends FrontController
 	/**
 	 * Assign template vars related to attribute groups and colors
 	 */
-	private function assignAttributesGroups()
+	protected function assignAttributesGroups()
 	{
 		$colors = array();
 		$attributesGroups = $this->product->getAttributesGroups($this->context->language->id); // @todo (RM) should only get groups and not all declination ?
@@ -447,7 +447,7 @@ class ProductControllerCore extends FrontController
 	/**
 	 * Assign template vars related to category
 	 */
-	private function assignCategory()
+	protected function assignCategory()
 	{
 		$category = false;
 		if (isset($_SERVER['HTTP_REFERER'])

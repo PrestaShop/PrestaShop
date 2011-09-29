@@ -51,7 +51,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							{
 								$txtMessage = urldecode(Tools::getValue('message'));
 								$this->_updateMessage($txtMessage);
-						    	if (sizeof($this->errors))
+								if (sizeof($this->errors))
 									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 								die(true);
 							}

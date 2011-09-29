@@ -89,7 +89,7 @@ class SupplierControllerCore extends FrontController
 	/**
 	 * Assign template vars if displaying one supplier
 	 */
-	private function assignOne()
+	protected function assignOne()
 	{
 		$nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
@@ -104,7 +104,7 @@ class SupplierControllerCore extends FrontController
 	/**
 	 * Assign template vars if displaying the supplier list
 	 */
-	private function assignAll()
+	protected function assignAll()
 	{
 		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 		{
