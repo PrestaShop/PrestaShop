@@ -681,7 +681,7 @@ class AdminControllerCore extends Controller
 				// tab[class_name] does not contains the "Controller" suffix
 				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || (Tab::getCurrentParentId() == $tab['id_tab']);
 				$tabs[$index]['img'] = $img;
-				$tabs[$index]['token'] = Tools::getAdminToken($tab['class_name'].(int)($tab['id_tab']).(int)$this->context->employee->id);
+				$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
 				$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
 				foreach ($sub_tabs AS $index2 => $sub_tab)

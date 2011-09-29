@@ -25,27 +25,21 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminTracking extends AdminTab
+class AdminTrackingController extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'none';
-	 	$this->className = 'none';
-
 		parent::__construct();
 	}
 
 	public function display()
 	{
-		echo '<h2 class="space">'.$this->l('Catalog tracking').'</h2>';
-		$this->getObjects('categories_empty');
-		$this->displayCategories();
-		$this->getObjects('products_disabled');
-		$this->displayProducts();
-		$this->getObjects('products_nostock');
-		$this->displayProducts();
-		$this->getObjects('attributes_nostock');
-		$this->displayAttributes();
+		$tpl_vars['categories'] = $this->getObjects('categories_empty')->displayCategories();
+		$tpl_vars['products_disabled'] = $this->getObjects('products_disabled')->displayProducts();
+		$tpl_vars['products_nostock'] = $this->getObjects('products_nostock')->displayProducts();
+		$tpl_vars['attributes_nostock'] = $this->getObjects('attributes_nostock')->displayAttributes();
+		$this->context->smarty->assign($tpl_vars);
+		parent::display();
 	}
 
 	public function getObjects($type)
@@ -106,6 +100,7 @@ class AdminTracking extends AdminTab
 				break ;
 		}
 		$this->_list['obj'] = Db::getInstance()->ExecuteS($sql);
+		return $this;
 	}
 
 	public function displayCategories()
@@ -113,15 +108,15 @@ class AdminTracking extends AdminTab
 		if (isset($this->_list['obj']))
 		{
 			$nbCategories = sizeof($this->_list['obj']);
-			echo '<h3>'.$this->_list['message'].' '.$nbCategories.' '.$this->l('found').'</h3>';
+			$this->content .= '<h3>'.$this->_list['message'].' '.$nbCategories.' '.$this->l('found').'</h3>';
 			if (!$nbCategories)
 				return ;
-			echo '
+			$this->content .= '
 			<table cellspacing="0" cellpadding="0" class="table">';
 			$irow = 0;
 			foreach ($this->_list['obj'] AS $k => $category)
-				echo '<tr class="'.($irow++ % 2 ? 'alt_row' : '').'"><td>'.rtrim(getPath('index.php?tab=AdminCatalog', $category['id_category']), ' >').'</td></tr>';
-			echo '</table><br /><br />';
+				$this->content .= '<tr class="'.($irow++ % 2 ? 'alt_row' : '').'"><td>'.rtrim(getPath('index.php?tab=AdminCatalog', $category['id_category']), ' >').'</td></tr>';
+			$this->content .= '</table><br /><br />';
 		}
 	}
 
@@ -131,7 +126,7 @@ class AdminTracking extends AdminTab
 		if (isset($this->_list['obj']))
 		{
 			$nbProducts = sizeof($this->_list['obj']);
-			echo '<h3>'.$this->_list['message'].' '.$nbProducts.' '.$this->l('found').'</h3>';
+			$this->content .= '<h3>'.$this->_list['message'].' '.$nbProducts.' '.$this->l('found').'</h3>';
 			if (!$nbProducts)
 				return ;
 			$this->fieldsDisplay = (array(
@@ -146,12 +141,12 @@ class AdminTracking extends AdminTab
 					'status' => array('title' => $this->l('Status')),
 					'action' => array('title' => $this->l('Actions'))
 				));
-			echo '
+			$this->content .= '
 			<table class="table" cellpadding="0" cellspacing="0">
 				<tr>';
 			foreach ($this->fieldsDisplay AS $field)
-				echo '<th'.(isset($field['width']) ? 'style="width: '.$field['width'].'"' : '').'>'.$field['title'].'</th>';
-			echo '
+				$this->content .= '<th'.(isset($field['width']) ? 'style="width: '.$field['width'].'"' : '').'>'.$field['title'].'</th>';
+			$this->content .= '
 				</tr>';
 			foreach ($this->_list['obj'] AS $k => $prod)
 			{
@@ -159,7 +154,7 @@ class AdminTracking extends AdminTab
 				$product->name = $product->name[(int)$this->context->language->id];
 				$taxrate = $product->getTaxesRate();
 
-				echo '
+				$this->content .= '
 				<tr>
 					<td>'.$product->id.'</td>
 					<td align="center">'.($product->manufacturer_name != NULL ? stripslashes($product->manufacturer_name) : '--').'</td>
@@ -178,7 +173,7 @@ class AdminTracking extends AdminTab
 					</td>
 				</tr>';
 			}
-			echo '</table><br /><br />';
+			$this->content .= '</table><br /><br />';
 		}
 	}
 
@@ -188,7 +183,7 @@ class AdminTracking extends AdminTab
 		if (isset($this->_list['obj']))
 		{
 			$nbAttributes = sizeof($this->_list['obj']);
-			echo '<h3>'.$this->_list['message'].' '.$nbAttributes.' '.$this->l('found').'</h3>';
+			$this->content .= '<h3>'.$this->_list['message'].' '.$nbAttributes.' '.$this->l('found').'</h3>';
 			if (!$nbAttributes)
 				return ;
 			$this->fieldsDisplay = (array(
@@ -204,12 +199,12 @@ class AdminTracking extends AdminTab
 					'action' => array('title' => $this->l('Actions'))
 				));
 
-			echo '
+			$this->content .= '
 			<table class="table" cellpadding="0" cellspacing="0">
 				<tr>';
 			foreach ($this->fieldsDisplay AS $field)
-				echo '<th'.(isset($field['width']) ? 'style="width: '.$field['width'].'"' : '').'>'.$field['title'].'</th>';
-			echo '
+				$this->content .= '<th'.(isset($field['width']) ? 'style="width: '.$field['width'].'"' : '').'>'.$field['title'].'</th>';
+			$this->content .= '
 				</tr>';
 
 			$attributes = array();
@@ -231,7 +226,7 @@ class AdminTracking extends AdminTab
 				$product = new Product((int)$prod['id_product'], false);
 				$tax_rate = $product->getTaxesRate();
 
-				echo '
+				$this->content .= '
 				<tr>
 					<td>'.$prod['id_product'].'</td>
 					<td align="center">'.($prod['manufacturer_name'] != NULL ? stripslashes($prod['manufacturer_name']) : '--').'</td>
@@ -250,7 +245,7 @@ class AdminTracking extends AdminTab
 					</td>
 				</tr>';
 			}
-			echo '</table><br /><br />';
+			$this->content .= '</table><br /><br />';
 		}
 	}
 }
