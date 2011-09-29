@@ -79,14 +79,7 @@ class ProductControllerCore extends FrontController
 			$this->product->quantity = 0;
 			
 		$this->product->description = $this->transformDescriptionWithImg($this->product->description);
-	}
-	
-	/**
-	 * Start forms process
-	 * @see FrontController::preProcess()
-	 */
-	public function preProcess()
-	{
+
 		if (!Validate::isLoadedObject($this->product))
 			$this->errors[] = Tools::displayError('Product not found');
 		else

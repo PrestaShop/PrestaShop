@@ -33,9 +33,9 @@ class PasswordControllerCore extends FrontController
 
 	/**
 	 * Start forms process
-	 * @see FrontController::preProcess()
+	 * @see FrontController::postProcess()
 	 */
-	public function preProcess()
+	public function postProcess()
 	{
 		if (Tools::isSubmit('email'))
 		{

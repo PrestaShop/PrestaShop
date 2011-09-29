@@ -32,7 +32,11 @@ class OrderFollowControllerCore extends FrontController
 	public $authRedirection = 'order-follow';
 	public $ssl = true;
 
-	public function process()
+	/**
+	 * Start forms process
+	 * @see FrontController::postProcess()
+	 */
+	public function postProcess()
 	{
 		if (Tools::isSubmit('submitReturnMerchandise'))
 		{
@@ -66,7 +70,14 @@ class OrderFollowControllerCore extends FrontController
 			Module::hookExec('orderReturn', array('orderReturn' => $orderReturn));
 			Tools::redirect('index.php?controller=order-follow');
 		}
-
+	}
+	
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
+	public function process()
+	{
 		$ordersReturn = OrderReturn::getOrdersReturn($this->context->customer->id);
 		if (Tools::isSubmit('errorQuantity'))
 			$this->context->smarty->assign('errorQuantity', true);
