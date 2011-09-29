@@ -31,7 +31,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	public $isLogged;
 
 	/**
-	 * Initialize supplier controller
+	 * Initialize order opc controller
 	 * @see FrontController::init()
 	 */
 	public function init()

@@ -40,7 +40,7 @@ class ParentOrderControllerCore extends FrontController
 	public $nbProducts;
 
 	/**
-	 * Initialize product controller
+	 * Initialize parent order controller
 	 * @see FrontController::init()
 	 */
 	public function init()

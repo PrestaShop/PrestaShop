@@ -31,33 +31,38 @@ class OrderDetailControllerCore extends FrontController
 	public $authRedirection = 'history';
 	public $ssl = true;
 
-	public function __construct()
-	{
-		parent::__construct();
-
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-	}
-
+	/**
+	 * Initialize order detail controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
-
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+	}
+	
+	/**
+	 * Start forms process
+	 * @see FrontController::postProcess()
+	 */
+	public function postProcess()
+	{
 		if (Tools::isSubmit('submitMessage'))
 		{
 			$idOrder = (int)(Tools::getValue('id_order'));
 			$msgText = htmlentities(Tools::getValue('msgText'), ENT_COMPAT, 'UTF-8');
 
-			if (!$idOrder OR !Validate::isUnsignedId($idOrder))
+			if (!$idOrder || !Validate::isUnsignedId($idOrder))
 				$this->errors[] = Tools::displayError('Order is no longer valid');
-			elseif (empty($msgText))
+			else if (empty($msgText))
 				$this->errors[] = Tools::displayError('Message cannot be blank');
-			elseif (!Validate::isMessage($msgText))
+			else if (!Validate::isMessage($msgText))
 				$this->errors[] = Tools::displayError('Message is invalid (HTML is not allowed)');
-			if (!sizeof($this->errors))
+			if (!count($this->errors))
 			{
 				$order = new Order($idOrder);
-				if (Validate::isLoadedObject($order) AND $order->id_customer == $this->context->customer->id)
+				if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id)
 				{
 					//check if a thread already exist
 					$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
@@ -112,19 +117,25 @@ class OrderDetailControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('Order not found');
 			}
 		}
-
-		if (!$id_order = (int)(Tools::getValue('id_order')) OR !Validate::isUnsignedId($id_order))
+	}
+	
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
+	public function process()
+	{
+		if (!$id_order = (int)(Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order))
 			$this->errors[] = Tools::displayError('Order ID required');
 		else
 		{
 			$order = new Order($id_order);
-			if (Validate::isLoadedObject($order) AND $order->id_customer == $this->context->customer->id)
+			if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id)
 			{
 				$id_order_state = (int)($order->getCurrentState());
 				$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
 				$addressInvoice = new Address((int)($order->id_address_invoice));
 				$addressDelivery = new Address((int)($order->id_address_delivery));
-			//	$stateInvoiceAddress = new State((int)$addressInvoice->id_state);
 
 				$inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
 				$dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
@@ -148,19 +159,19 @@ class OrderDetailControllerCore extends FrontController
 					'currency' => new Currency($order->id_currency),
 					'order_state' => (int)($id_order_state),
 					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
-					'invoice' => (OrderState::invoiceAvailable($id_order_state) AND $order->invoice_number),
+					'invoice' => (OrderState::invoiceAvailable($id_order_state) && $order->invoice_number),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
 					'discounts' => $order->getDiscounts(),
 					'carrier' => $carrier,
 					'address_invoice' => $addressInvoice,
-					'invoiceState' => (Validate::isLoadedObject($addressInvoice) AND $addressInvoice->id_state) ? new State($addressInvoice->id_state) : false,
+					'invoiceState' => (Validate::isLoadedObject($addressInvoice) && $addressInvoice->id_state) ? new State($addressInvoice->id_state) : false,
 					'address_delivery' => $addressDelivery,
 					'inv_adr_fields' => $inv_adr_fields,
 					'dlv_adr_fields' => $dlv_adr_fields,
 					'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
 					'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
-					'deliveryState' => (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
+					'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
 					'is_guest' => false,
 					'messages' => CustomerMessage::getMessagesByOrderId((int)($order->id), false),
 					'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
@@ -169,7 +180,7 @@ class OrderDetailControllerCore extends FrontController
 					'use_tax' => Configuration::get('PS_TAX'),
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 					'customizedDatas' => $customizedDatas));
-				if ($carrier->url AND $order->shipping_number)
+				if ($carrier->url && $order->shipping_number)
 					$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
 				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
 				Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
