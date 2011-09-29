@@ -338,8 +338,8 @@ class AdminCustomers extends AdminTab
 					<form method="POST" action="index.php?tab=AdminCustomers&id_customer='.(int)$customer->id.'&token='.Tools::getAdminTokenLite('AdminCustomers').'">
 						<input type="hidden" name="id_lang" value="'.(int)(sizeof($orders) ? $orders[0]['id_lang'] : Configuration::get('PS_LANG_DEFAULT')).'" />
 						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="'.$this->l('Transform to customer').'" /></p>
-						'.$this->l('This feature generates a random password and sends an e-mail to the customer
-					</form>');
+						'.$this->l('This feature generates a random password and sends an e-mail to the customer').'
+					</form>';
 				}
 				else
 					echo '</div><div><b style="color:red;">'.$this->l('A registered customer account exists with the same email address').'</b>';
