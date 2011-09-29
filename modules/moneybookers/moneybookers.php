@@ -644,7 +644,7 @@ class MoneyBookers extends PaymentModule
 
 			/* About the cart */
 			$mbParams['transaction_id'] = (int)($params['cart']->id).'_'.date('YmdHis').'_'.$params['cart']->secure_key;
-			$mbParams['currency'] = $currency->iso_code;
+			$mbParams['mb_currency'] = $currency->iso_code;
 			$mbParams['amount'] = number_format($params['cart']->getOrderTotal(), 2, '.', '');
 
 			/* URLs */

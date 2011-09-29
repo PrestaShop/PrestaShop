@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -49,7 +49,7 @@
 		{if isset($state) && !empty($state)}<input type="hidden" name="state" value="{$state}" />{/if}
 		<input type="hidden" name="country" value="{$country}" />
 		<input type="hidden" name="amount" value="{$amount}" />
-		<input type="hidden" name="currency" value="{$currency}" />
+		<input type="hidden" name="currency" value="{$mb_currency}" />
 		<input type="hidden" name="amount2_description" value="{if isset($amount2_description)}{$amount2_description}{/if}" />
 		<input type="hidden" name="amount2" value="{if isset($amount2)}{$amount2}{/if}" />
 		<input type="hidden" name="amount3_description" value="{if isset($amount3_description)}{$amount3_description}{/if}" />
@@ -96,7 +96,7 @@
 		{if isset($state) && !empty($state)}<input type="hidden" name="state" value="{$state}" />{/if}
 		<input type="hidden" name="country" value="{$country}" />
 		<input type="hidden" name="amount" value="{$amount}" />
-		<input type="hidden" name="currency" value="{$currency}" />
+		<input type="hidden" name="currency" value="{$mb_currency}" />
 		<input type="hidden" name="amount2_description" value="{if isset($amount2_description)}{$amount2_description}{/if}" />
 		<input type="hidden" name="amount2" value="{if isset($amount2)}{$amount2}{/if}" />
 		<input type="hidden" name="amount3_description" value="{if isset($amount3_description)}{$amount3_description}{/if}" />
@@ -138,7 +138,7 @@
 		{if isset($state) && (!empty($state))}<input type="hidden" name="state" value="{$state}" />{/if}
 		<input type="hidden" name="country" value="{$country}" />
 		<input type="hidden" name="amount" value="{$amount}" />
-		<input type="hidden" name="currency" value="{$currency}" />
+		<input type="hidden" name="currency" value="{$mb_currency}" />
 		<input type="hidden" name="amount2_description" value="{if isset($amount2_description)}{$amount2_description}{/if}" />
 		<input type="hidden" name="amount2" value="{if isset($amount2)}{$amount2}{/if}" />
 		<input type="hidden" name="amount3_description" value="{if isset($amount3_description)}{$amount3_description}{/if}" />
