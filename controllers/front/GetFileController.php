@@ -107,7 +107,7 @@ class GetFileControllerCore extends FrontController
 			/* Access is authorized -> increment download value for the customer */
 			OrderDetail::incrementDownload($info['id_order_detail']);
 
-			$file = _PS_DOWNLOAD_DIR_.$info['physically_filename'];
+			$file = _PS_DOWNLOAD_DIR_.$info['filename'];
 			$filename = $info['display_filename'];
 		}
 

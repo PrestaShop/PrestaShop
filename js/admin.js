@@ -403,7 +403,10 @@ if (helpboxes)
 		if ($('input'))
 		{
 			//Display by rollover
-			$('input').mouseover(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
+			$('input').mouseover(function() { 
+			console.log($(this).parent());
+			$(this).parent().find('.hint:first').css('display', 'block'); 
+			});
 			$('input').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
 			
 			//display when you press the tab key
