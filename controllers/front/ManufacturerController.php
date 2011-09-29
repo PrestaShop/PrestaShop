@@ -41,7 +41,11 @@ class ManufacturerControllerCore extends FrontController
 		if (Validate::isLoadedObject($this->manufacturer))
 			parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
 	}
-
+	
+	/**
+	 * Initialize manufaturer controller
+	 * @see FrontController::init()
+	 */
 	public function init()
 	{
 		parent::init();
@@ -64,48 +68,57 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Validate::isLoadedObject($this->manufacturer) AND $this->manufacturer->active AND $this->manufacturer->isAssociatedToGroupShop())
 		{
-			$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
-			$this->pagination((int)$nbProducts);
-			$this->context->smarty->assign(array(
-				'nb_products' => $nbProducts,
-				'products' => $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
-				'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
-				'manufacturer' => $this->manufacturer));
-
+			$this->productSort();
+			$this->assignOne();
 			$this->setTemplate(_PS_THEME_DIR_.'manufacturer.tpl');
 		}
 		else
 		{
-			if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
-			{
-				$id_current_group_shop = $this->context->shop->getGroupID();
-				$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_group_shop);
-				$nbProducts = count($data);
-				$this->pagination($nbProducts);
-
-				$manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false, $id_current_group_shop);
-				$imgDir = _PS_MANU_IMG_DIR_;
-				foreach ($data AS &$item)
-					$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
-
-				$this->context->smarty->assign(array(
-					'pages_nb' => ceil($nbProducts / (int)($this->n)),
-					'nbManufacturers' => $nbProducts,
-					'mediumSize' => Image::getSize('medium'),
-					'manufacturers' => $data,
-					'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-				));
-			}
-			else
-				$this->context->smarty->assign('nbManufacturers', 0);
-
+			$this->assignAll();
 			$this->setTemplate(_PS_THEME_DIR_.'manufacturer-list.tpl');
 		}
 	}
-
-	public function displayHeader($display = true)
+	
+	/**
+	 * Assign template vars if displaying one manufacturer
+	 */
+	protected function assignOne()
 	{
-		parent::displayHeader();
-		$this->productSort();
+		$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, NULL, NULL, NULL, $this->orderBy, $this->orderWay, true);
+		$this->pagination((int)$nbProducts);
+		$this->context->smarty->assign(array(
+			'nb_products' => $nbProducts,
+			'products' => $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
+			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
+			'manufacturer' => $this->manufacturer));
+	}
+	
+	/**
+	 * Assign template vars if displaying the manufacturer list
+	 */
+	protected function assignAll()
+	{
+		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
+		{
+			$id_current_group_shop = $this->context->shop->getGroupID();
+			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_group_shop);
+			$nbProducts = count($data);
+			$this->pagination($nbProducts);
+
+			$manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false, $id_current_group_shop);
+			$imgDir = _PS_MANU_IMG_DIR_;
+			foreach ($data AS &$item)
+				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
+
+			$this->context->smarty->assign(array(
+				'pages_nb' => ceil($nbProducts / (int)($this->n)),
+				'nbManufacturers' => $nbProducts,
+				'mediumSize' => Image::getSize('medium'),
+				'manufacturers' => $data,
+				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
+			));
+		}
+		else
+			$this->context->smarty->assign('nbManufacturers', 0);
 	}
 }
