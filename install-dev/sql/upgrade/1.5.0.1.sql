@@ -170,3 +170,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 /* PHP:add_new_tab(AdminRequestSql, fr:SQL Manager|es:SQL Manager|en:SQL Manager|de:Wunsh|it:SQL Manager, 9); */;
+
+
+ALTER TABLE `PREFIX_carrier` ADD COLUMN `id_reference` int(10)  NOT NULL AFTER `id_carrier`;
+UPDATE `PREFIX_carrier` SET id_reference = id_carrier;
