@@ -115,7 +115,6 @@ class ToolsInstall
 		$result = NULL;
 		try
 		{
-
 			if($smtpChecked)
 			{
 
@@ -126,20 +125,15 @@ class ToolsInstall
 				$swift = new Swift($smtp);
 			}
 			else
-			{
 				$swift = new Swift(new Swift_Connection_NativeMail());
-			}
 
 			$message = new Swift_Message($subject, $content, $type);
 
 			if ($swift->send($message, $to, $from))
-			{
 				$result = true;
-			}
 			else
-			{
 				$result = 999;
-			}
+
 			$swift->disconnect();
 		}
 		catch (Swift_Connection_Exception $e)

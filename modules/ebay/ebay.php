@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.2.6';
+		$this->version = '1.2.8';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -656,7 +656,7 @@ class Ebay extends Module
 					  success: function(data)
 					  {
 						if (data == \'OK\')
-							window.location.href = \''.Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=validateToken\';
+							window.location.href = \'index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&action=validateToken\';
 						else
 							setTimeout ("checkToken()", 5000);
 					  }
@@ -1111,10 +1111,11 @@ class Ebay extends Module
 		$ad = dirname($_SERVER["PHP_SELF"]);
 
 		// Display Form
+		$forbiddenJs = array('textarea', 'script', 'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter', 'onmouseleave', 'onerror');
 		$html = '<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=3&section=template" method="post" class="form" id="configForm3">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('You can customise the template for your products page on eBay').' :</h4>
-					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">'.Tools::safeOutput(Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE'))).'</textarea><br />
+					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">'.str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE'))).'</textarea><br />
 
 					'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '
 					<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -1498,6 +1499,14 @@ class Ebay extends Module
 		}
 	}
 
+	public function findIfCategoryParentIsMultiSku($id_category_ref)
+	{
+		$row = Db::getInstance()->getRow('SELECT `id_category_ref_parent`, `is_multi_sku` FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_category_ref` = '.(int)$id_category_ref);
+		if ($row['id_category_ref_parent'] != $id_category_ref)
+			return $this->findIfCategoryParentIsMultiSku($row['id_category_ref_parent']);
+		return $row['is_multi_sku'];
+	}
+
 	private function _syncProducts($productsList)
 	{
 		$fees = 0;
@@ -1529,6 +1538,8 @@ class Ebay extends Module
 				// Load default category matched in cache
 				if (!isset($categoryDefaultCache[$product->id_category_default]))
 					$categoryDefaultCache[$product->id_category_default] = Db::getInstance()->getRow('SELECT ec.`id_category_ref`, ec.`is_multi_sku`, ecc.`percent` FROM `'._DB_PREFIX_.'ebay_category` ec LEFT JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc ON (ecc.`id_ebay_category` = ec.`id_ebay_category`) WHERE ecc.`id_category` = '.(int)$product->id_category_default);
+				if ($categoryDefaultCache[$product->id_category_default]['is_multi_sku'] != 1)
+					$categoryDefaultCache[$product->id_category_default]['is_multi_sku'] = $this->findIfCategoryParentIsMultiSku($categoryDefaultCache[$product->id_category_default]['id_category_ref']);
 
 				// Load Pictures
 				$pictures = array();

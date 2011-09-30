@@ -128,6 +128,10 @@ class PDFCore extends PDF_PageGroupCore
 			$this->AddFont($font);
 			$this->AddFont($font, 'B');
 		}
+		
+		/* If the user is using a ISO code no present in the languages, use the first language available instead */
+		if (!isset(self::$_pdfparams[self::$_iso]) && isset($languages[0]['iso_code']))
+			self::$_iso = strtoupper($languages[0]['iso_code']);
 	}
 
 	/**
@@ -145,9 +149,19 @@ class PDFCore extends PDF_PageGroupCore
 		$conf['PS_SHOP_STATE'] = isset($conf['PS_SHOP_STATE']) ? Tools::iconv('utf-8', self::encoding(), $conf['PS_SHOP_STATE']) : '';
 
 		if (file_exists(_PS_IMG_DIR_.'/logo_invoice.jpg'))
+		{
+			if ($this->_isPngFile(_PS_IMG_DIR_.'/logo_invoice.jpg'))
+				$this->Image(_PS_IMG_DIR_.'/logo_invoice.jpg', 10, 8, 0, 15, 'PNG');
+			else
 			$this->Image(_PS_IMG_DIR_.'/logo_invoice.jpg', 10, 8, 0, 15);
+		}
 		else if (file_exists(_PS_IMG_DIR_.'/logo.jpg'))
+		{
+			if ($this->_isPngFile(_PS_IMG_DIR_.'/logo.jpg'))
+				$this->Image(_PS_IMG_DIR_.'/logo.jpg', 10, 8, 0, 15, 'PNG');
+			else			
 			$this->Image(_PS_IMG_DIR_.'/logo.jpg', 10, 8, 0, 15);
+		}
 		$this->SetFont(self::fontname(), 'B', 15);
 		$this->Cell(115);
 
@@ -164,6 +178,31 @@ class PDFCore extends PDF_PageGroupCore
    }
 
    /*
+	* Detect if the file header match a PNG file
+	* 
+	* @param string $file Filename to check (include full path)
+	* @return boolean True if the file is a PNG file
+	*/
+	private function _isPngFile($file)
+	{
+		$pngReferenceHeader = array(137, 80, 78, 71, 13, 10, 26, 10);
+		$fp = fopen($file, 'r');
+		if ($fp)
+		{
+			for ($n = 0; $n < 8; $n++)
+				if (ord(fread($fp, 1)) !== $pngReferenceHeader[$n])
+				{
+					fclose($fp);
+					return false;
+				}
+		}
+		else
+			return false;
+
+		return true;
+	}
+
+	/*
     * Return the complete Address format
     */
    private function _getCompleteUSAddressFormat($conf)
@@ -209,6 +248,7 @@ class PDFCore extends PDF_PageGroupCore
 	   			"\n".(!empty($conf['PS_SHOP_DETAILS']) ? self::l('Details:').' '.$conf['PS_SHOP_DETAILS'].' - ' : '').
 					(!empty($conf['PS_SHOP_PHONE']) ? self::l('PHONE:').' '.$conf['PS_SHOP_PHONE'] : '');
 	   	}		
+
 		return $footerText;
    }
    

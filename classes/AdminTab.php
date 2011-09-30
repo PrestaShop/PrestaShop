@@ -828,7 +828,7 @@ abstract class AdminTabCore
 						$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
 						if (($type == 'date' OR $type == 'datetime') AND is_string($value))
 							$value = unserialize($value);
-						$key = isset($tmpTab[1]) ? $tmpTab[0].'.`'.$tmpTab[1].'`' : '`'.$tmpTab[0].'`';
+						$key = isset($tmpTab[1]) ? $tmpTab[0].'.'.$tmpTab[1] : $tmpTab[0];
 						if (array_key_exists('tmpTableFilter', $field))
 							$sqlFilter = & $this->_tmpTableFilter;
 						elseif (array_key_exists('havingFilter', $field))
@@ -844,7 +844,7 @@ abstract class AdminTabCore
 								if (!Validate::isDate($value[0]))
 									$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
 								else
-									$sqlFilter .= ' AND `'.bqSQL($key).'` >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+									$sqlFilter .= ' AND '.bqSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
 							}
 
 							if (isset($value[1]) AND !empty($value[1]))
@@ -852,7 +852,7 @@ abstract class AdminTabCore
 								if (!Validate::isDate($value[1]))
 									$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
 								else
-									$sqlFilter .= ' AND `'.bqSQL($key).'` <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+									$sqlFilter .= ' AND '.bqSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
 							}
 						}
 						else

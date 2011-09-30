@@ -1096,7 +1096,8 @@ class eBayRequest
 			foreach ($this->response->OrderArray->Order as $order)
 			{
 				$name = str_replace(array('_', ',', '  '), array('', '', ' '), (string)$order->ShippingAddress->Name); 
-				$name = explode(' ', $name);
+				$name = preg_replace('/\-?\d+/', '', $name);
+				$name = explode(' ', $name, 2);
 				$itemList = array();
 				for ($i = 0; isset($order->TransactionArray->Transaction[$i]); $i++)
 				{
@@ -1110,6 +1111,8 @@ class eBayRequest
 						$tmp = explode('-', (string)$transaction->Item->SKU);
 						if (isset($tmp[1]))
 						$id_product = $tmp[1];
+						if (isset($tmp[2]))
+							$id_product_attribute = $tmp[2];
 					}
 					if (isset($transaction->Variation->SKU))
 					{
@@ -1160,8 +1163,8 @@ class eBayRequest
 					'status' => (string)$order->CheckoutStatus->Status,
 					'date' => substr((string)$order->CreatedTime, 0, 10).' '.substr((string)$order->CreatedTime, 11, 8),
 					'name' => (string)$order->ShippingAddress->Name,
-					'firstname' => $name[0],
-					'familyname' => (isset($name[1]) ? $name[1] : $name[0]),
+					'firstname' => trim($name[0]),
+					'familyname' => (isset($name[1]) ? trim($name[1]) : trim($name[0])),
 					'address1' => (string)$order->ShippingAddress->Street1,
 					'address2' => (string)$order->ShippingAddress->Street2,
 					'city' => (string)$order->ShippingAddress->CityName,

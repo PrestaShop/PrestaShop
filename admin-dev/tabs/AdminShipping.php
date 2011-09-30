@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,7 +24,6 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 
 class AdminShipping extends AdminTab
 {
@@ -92,7 +91,7 @@ class AdminShipping extends AdminTab
 					{
 					 	/* Get configuration values */
 						$shipping_method = $carrier->getShippingMethod();
-						$rangeTable = $carrier->getRangeTable(); 
+						$rangeTable = $carrier->getRangeTable();
 
 						$carrier->deleteDeliveryPrice($rangeTable);
 						$currentList = Carrier::getDeliveryPriceByRanges($rangeTable, $id_carrier);
@@ -104,7 +103,7 @@ class AdminShipping extends AdminTab
 							{
 								$tmpArray = explode('_', $key);
 
-								$price = number_format(abs(str_replace(',', '.', $value)), 2, '.', '');
+								$price = number_format(abs(str_replace(',', '.', $value)), 6, '.', '');
 								$current = 0;
 								foreach ($currentList as $item)
 									if ($item['id_zone'] == $tmpArray[1] && $item['id_'.$rangeTable] == $tmpArray[2])
@@ -115,8 +114,8 @@ class AdminShipping extends AdminTab
 								$priceList[] = array(
 									'id_range_price' => ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) ? (int)$tmpArray[2] : null,
 									'id_range_weight' => ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) ? (int)$tmpArray[2] : null,
-									'id_carrier' => (int)$carrier->id, 
-									'id_zone' => (int)$tmpArray[1], 
+									'id_carrier' => (int)$carrier->id,
+									'id_zone' => (int)$tmpArray[1],
 									'price' => $price,
 								);
 							}
@@ -218,13 +217,13 @@ class AdminShipping extends AdminTab
 				$id_carrier = (int)$carrierArray[0]['id'];
 			$carrierSelected = new Carrier($id_carrier);
 		}
-		
+
 		echo '<br /><br />
 		<h2>'.$this->l('Fees by carrier, geographical zone, and ranges').'</h2>
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" id="fees" name="fees" method="post">
 			<fieldset>
 				<legend><img src="../img/admin/delivery.gif" />'.$this->l('Fees').'</legend>';
-		
+
 		if (!count($carrierArray))
 			echo $this->l('You only have free carriers, there is no need to configure your delivery prices.');
 		else
@@ -266,7 +265,7 @@ class AdminShipping extends AdminTab
 							echo '<td class="center">'.$currency->getSign('left').'<input type="text" id="fees_all_'.$range[$rangeIdentifier].'" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees('.$range[$rangeIdentifier].') }" style="width: 45px;" />'.$currency->getSign('right').'</td>';
 						echo '</tr>';
 					}
-				
+
 					foreach ($zones AS $zone)
 					{
 						echo '
@@ -284,7 +283,7 @@ class AdminShipping extends AdminTab
 						</tr>';
 					}
 				}
-					
+
 			echo '<tr>
 						<td colspan="'.(sizeof($ranges) + 1).'" class="center" style="border-bottom: none; height: 40px;">
 						<input type="hidden" name="submitFees'.$this->table.'" value="1" />';

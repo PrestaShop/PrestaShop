@@ -62,9 +62,9 @@ class OrderHistoryCore extends ObjectModel
 	{
 		$this->validateFields();
 		
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['id_order_state'] = (int)($this->id_order_state);
-		$fields['id_employee'] = (int)($this->id_employee);
+		$fields['id_order'] = (int)$this->id_order;
+		$fields['id_order_state'] = (int)$this->id_order_state;
+		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['date_add'] = pSQL($this->date_add);
 				
 		return $fields;
@@ -143,18 +143,17 @@ class OrderHistoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON oh.`id_order_state` = os.`id_order_state`
 				LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
-			WHERE oh.`id_order_history` = '.(int)($this->id).'
-				AND os.`send_email` = 1');
+		WHERE oh.`id_order_history` = '.(int)($this->id).' AND os.`send_email` = 1');
 
 		if (isset($result['template']) AND Validate::isEmail($result['email']))
 		{
 			$topic = $result['osname'];
-			$data = array('{lastname}' => $result['lastname'], '{firstname}' => $result['firstname'], '{id_order}' => (int)($this->id_order));
+			$data = array('{lastname}' => $result['lastname'], '{firstname}' => $result['firstname'], '{id_order}' => (int)$this->id_order);
 			if ($templateVars)
 				$data = array_merge($data, $templateVars);
-			$order = new Order((int)($this->id_order));
-			$data['{total_paid}'] = Tools::displayPrice((float)($order->total_paid), new Currency((int)($order->id_currency)), false);
-			$data['{order_name}'] = sprintf("#%06d", (int)($order->id));
+			$order = new Order((int)$this->id_order);
+			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
+			$data['{order_name}'] = sprintf("#%06d", (int)$order->id);
 			
 			// An additional email is sent the first time a virtual item is validated
 			if ($virtualProducts = $order->getVirtualProducts() AND (!$lastOrderState OR !$lastOrderState->logable) AND $newOrderState = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT')) AND $newOrderState->logable)

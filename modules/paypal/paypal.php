@@ -886,7 +886,7 @@ class PayPal extends PaymentModule
 				Configuration::updateValue('PAYPAL_API_PASSWORD', trim(Tools::getValue('api_password')));
 				Configuration::updateValue('PAYPAL_API_SIGNATURE', trim(Tools::getValue('api_signature')));
 				Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT', (int)(Tools::isSubmit('paypal_express')));
-				Configuration::updateValue('PAYPAL_MODE_DEBUG', (int)(Tools::isSubmit('paypal_debug')));
+				Configuration::updateValue('PAYPAL_DEBUG_MODE', (int)(Tools::isSubmit('paypal_debug')));
 				Configuration::updateValue('PAYPAL_CAPTURE', (int)(Tools::getValue('paypal_capture')));
 				Configuration::updateValue('PAYPAL_PAYMENT_METHOD', (int)(Tools::getValue('payment_method')));
 				Configuration::updateValue('PAYPAL_TEMPLATE', Tools::getValue('template_paypal'));
