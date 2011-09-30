@@ -88,6 +88,10 @@ class CategoryControllerCore extends FrontController
 		else if (isset($this->context->customer->id_guest))
 			$this->context->smarty->assign('compareProducts', CompareProduct::getGuestCompareProducts($this->context->customer->id_guest));
 
+		$this->assignScenes();
+		if ($this->category->id != 1)
+			$this->assignProductList();
+		
 		$this->productSort();
 		$this->context->smarty->assign(array(
 			'category' => $this->category,
@@ -106,9 +110,6 @@ class CategoryControllerCore extends FrontController
 			'suppliers' => Supplier::getSuppliers()
 		));
 
-		$this->assignScenes();
-		if ($this->category->id != 1)
-			$this->assignProductList();
 
 		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
 	}
