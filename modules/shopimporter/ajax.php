@@ -7,7 +7,7 @@ ini_set('display_errors', 'off');
 
 $moduleName = Tools::getValue('moduleName');
 
-if (!Tools::getValue('ajax') || Tools::getValue('token') != sha1(_COOKIE_KEY_.'ajaxShopImporter')  || !ctype_alnum($moduleName))
+if (!Tools::getValue('ajax') || Tools::getValue('token') != sha1(_COOKIE_KEY_.'ajaxShopImporter')  || (!empty($moduleName) && !ctype_alnum($moduleName)))
 	die;
 
 

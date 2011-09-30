@@ -364,7 +364,7 @@ abstract class PaymentModuleCore extends Module
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 				}
 
-				if (isset($outOfStock) AND $outOfStock)
+				if (isset($outOfStock) && $outOfStock && Configuration::get('PS_STOCK_MANAGEMENT'))
 				{
 					$history = new OrderHistory();
 					$history->id_order = (int)$order->id;

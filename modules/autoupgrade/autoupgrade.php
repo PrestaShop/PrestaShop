@@ -5,7 +5,7 @@ class Autoupgrade extends Module
 		function __construct()
 	{
 		$this->name = 'autoupgrade';
-		$this->tab = 'admin';
+		$this->tab = 'administration';
 		$this->version = 0.1;
 
 		if (!defined('_PS_ADMIN_DIR_'))
@@ -58,10 +58,13 @@ class Autoupgrade extends Module
 			$res &= @mkdir($autoupgradeDir);
 		if(file_exists($autoupgradeDir.DIRECTORY_SEPARATOR.'ajax-upgradetab.php'))
 			$res &= unlink($autoupgradeDir.DIRECTORY_SEPARATOR.'ajax-upgradetab.php');
-		$path = dirname(__FILE__).'/';
+		if (!defined('_PS_MODULE_DIR_'))
+		{
+			define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
+		}
 
-		$res &= copy($path.'ajax-upgradetab.php',$autoupgradeDir . DIRECTORY_SEPARATOR . 'ajax-upgradetab.php');
-		$res &= copy($path.'logo.gif',_PS_ROOT_DIR_. DIRECTORY_SEPARATOR . 'img/t/AdminSelfUpgrade.gif');
+		$res &= copy(_PS_MODULE_DIR_.'autoupgrade/ajax-upgradetab.php',$autoupgradeDir . DIRECTORY_SEPARATOR . 'ajax-upgradetab.php');
+		$res &= copy(_PS_MODULE_DIR_.'autoupgrade/logo.gif',_PS_ROOT_DIR_. DIRECTORY_SEPARATOR . 'img/t/AdminSelfUpgrade.gif');
 
 		if (!$res
 			OR !Tab::getIdFromClassName('AdminSelfUpgrade')

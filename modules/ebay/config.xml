@@ -2,7 +2,7 @@
 <module>
 	<name>ebay</name>
 	<displayName><![CDATA[eBay]]></displayName>
-	<version><![CDATA[1.2.6]]></version>
+	<version><![CDATA[1.2.8]]></version>
 	<description><![CDATA[Open your shop on the eBay market place !]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[market_place]]></tab>

@@ -849,7 +849,7 @@ class ValidateCore
 	*/
 	public static function isCoordinate($data)
 	{
-		return ($data == NULL) OR (bool)(preg_match('/^\-?[0-9]{1,6}\.[0-9]{1,6}$/s', $data));
+		return ($data == NULL) OR (bool)(preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data));
 	}
 	
 	/**

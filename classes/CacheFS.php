@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,15 +26,15 @@
 */
 
 class CacheFSCore extends Cache {
-	
+
 	protected $_depth;
-	
+
 	protected function __construct()
 	{
 		parent::__construct();
 		$this->_init();
 	}
-	
+
 	protected function _init()
 	{
 		$this->_depth = Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name=\'PS_CACHEFS_DIRECTORY_DEPTH\'', false);
@@ -45,23 +45,20 @@ class CacheFSCore extends Cache {
 	{
 		$path = $this->getPath();
 		for ($i = 0; $i < $this->_depth; $i++)
-		{
 			$path .= $key[$i].'/';
-		}
-
-		if (file_put_contents($path.$key, serialize($value)))
+		if (@file_put_contents($path.$key, serialize($value)))
 		{
 			$this->_keysCached[$key] = true;
 			return $key;
 		}
 		return false;
 	}
-	
+
 	public function setNumRows($key, $value, $expire = 0)
 	{
 		return $this->set($key.'_nrows', $value, $expire);
 	}
-	
+
 	public function getNumRows($key)
 	{
 		return $this->get($key.'_nrows');
@@ -150,8 +147,9 @@ class CacheFSCore extends Cache {
 	public function __destruct()
 	{
 		parent::__destruct();
-		file_put_contents($this->getPath().'keysCached', serialize($this->_keysCached));
-		file_put_contents($this->getPath().'tablesCached', serialize($this->_tablesCached));
+
+		@file_put_contents($this->getPath().'keysCached', serialize($this->_keysCached));
+		@file_put_contents($this->getPath().'tablesCached', serialize($this->_tablesCached));
 	}
 
 	public static function deleteCacheDirectory()
@@ -173,7 +171,7 @@ class CacheFSCore extends Cache {
 						self::createCacheDirectories($level_depth - 1, $new_dir);
 		}
 	}
-	
+
 	protected function getPath()
 	{
 		return (defined('_PS_CACHEFS_DIRECTORY_') ? _PS_CACHEFS_DIRECTORY_ : dirname(__FILE__).'/../cache/cachefs/');

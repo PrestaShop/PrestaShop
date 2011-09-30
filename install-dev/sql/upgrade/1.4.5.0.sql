@@ -3,21 +3,18 @@ SET NAMES 'utf8';
 INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_RESTRICT_DELIVERED_COUNTRIES', '0', NOW(), NOW());
 
-UPDATE `PREFIX_country_lang`
-SET `name` = 'United States'
-WHERE `name` = 'United State'
-AND `id_lang` = (
-	SELECT `id_lang`
-	FROM `PREFIX_lang`
-	WHERE `iso_code` = 'en'
-	LIMIT 1
-);
+UPDATE `PREFIX_country_lang` SET `name` = 'United States' WHERE `name` = 'United State';
 
 ALTER TABLE `PREFIX_discount` ADD `include_tax` TINYINT(1) NOT NULL DEFAULT '0';
 
 UPDATE `PREFIX_order_detail` SET `product_price` = `product_price` /( 1-(`group_reduction`/100));
 
 DELETE FROM `PREFIX_configuration` WHERE name IN ('PS_LAYERED_BITLY_USERNAME', 'PS_LAYERED_BITLY_API_KEY', 'PS_LAYERED_SHARE') LIMIT 3;
+
+ALTER TABLE `PREFIX_delivery` CHANGE `price` `price` DECIMAL(20, 6) NOT NULL;
+
+ALTER TABLE `PREFIX_store` CHANGE `latitude` `latitude` DECIMAL(10, 8) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_store` CHANGE `longitude` `longitude` DECIMAL(10, 8) NULL DEFAULT NULL;
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`, `live_edit`) VALUES
 ('attributeGroupForm', 'Add fields to the form "attribute group"', 'Add fields to the form "attribute group"', 0, 0),
@@ -38,3 +35,4 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`, `live_edi
 ('postProcessAttribute', 'On post-process in admin feature value', 'On post-process in admin feature value', 0, 0),
 ('afterDeleteAttribute', 'On deleting attribute feature value', 'On deleting attribute feature value', 0, 0),
 ('afterSaveAttribute', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0);
+
