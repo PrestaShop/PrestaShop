@@ -112,12 +112,10 @@ abstract class ObjectModelCore
 	 * @param integer $id Existing object id in order to load object (optional)
 	 * @param integer $id_lang Required if object is multilingual (optional)
 	 */
-	public function __construct($id = NULL, $id_lang = NULL, $id_shop = NULL)
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		if ($id_lang != NULL && Validate::isLoadedObject(new Language($id_lang)))
-			$this->id_lang = $id_lang;
-		elseif ($id_lang != NULL)
-			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+		if (!is_null($id_lang))
+			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
 		if ($id_shop && $this->langMultiShop)
 		{
@@ -128,14 +126,12 @@ abstract class ObjectModelCore
 		if ($this->langMultiShop && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->getID(true);
 
-	 	/* Connect to database and check SQL table/identifier */
-	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			die(Tools::displayError());
-		$db = Db::getInstance();
-		$this->identifier = pSQL($this->identifier);
-		/* Load object from database if object id is present */
+	 	if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table))
+			throw new PrestashopException(Tools::displayError());
+
 		if ($id)
 		{
+			// Load object from database if object id is present
 			if (!isset(self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang]))
 			{
 				$sql = 'SELECT *
@@ -143,7 +139,7 @@ abstract class ObjectModelCore
 						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
 						.' WHERE 1 AND a.`'.$this->identifier.'` = '.(int)$id.
 							(($this->id_shop AND $id_lang) ? ' AND b.id_shop = '.$this->id_shop : '');
-				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = $db->getRow($sql);
+				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = Db::getInstance()->getRow($sql);
 			}
 
 			$result = self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang];
@@ -159,7 +155,7 @@ abstract class ObjectModelCore
 					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
 							WHERE `'.$this->identifier.'` = '.(int)$id
 							.(($this->id_shop) ? ' AND `id_shop` = '.$this->id_shop : '');
-					$result = $db->ExecuteS($sql);
+					$result = Db::getInstance()->ExecuteS($sql);
 					if ($result)
 						foreach ($result as $row)
 							foreach ($row AS $key => $value)
@@ -954,12 +950,11 @@ abstract class ObjectModelCore
 	 */
 	public function hydrate(array $data, $id_lang = null)
 	{
-		$identifier = $this->getIdentifier();
-		if (!array_key_exists($identifier, $data))
-			throw new PrestashopException("Identifier '$identifier' not found for class '".get_class($this)."'");
+		if (!array_key_exists($this->identifier, $data))
+			throw new PrestashopException("Identifier '$this->identifier' not found for class '".get_class($this)."'");
 
-		$this->id_lang = null;
-		$this->id = $data[$identifier];
+		$this->id_lang = $id_lang;
+		$this->id = $data[$this->identifier];
 		foreach ($data as $key => $value)
 			if (array_key_exists($key, $this))
 				$this->$key = $value;
@@ -983,37 +978,37 @@ abstract class ObjectModelCore
 		$group_keys = array();
 		$rows = array();
 		$identifier = $fieldsValidateLang = null;
-		foreach ($datas as $row)
+		if ($datas)
 		{
-			// Get class identifier and fieldsValidateLang only the first time
-			if (is_null($identifier))
-			{
-				$obj = new $class;
-				if (!$obj instanceof ObjectModel)
-					throw new PrestashopException("Class '$class' must be an instance of class ObjectModel");
-				$identifier = $obj->getIdentifier();
-				$fieldsValidateLang = $obj->getFieldsValidateLang();
-			}
+			// Get identifier and lang fields
+			$obj = new $class;
+			if (!$obj instanceof ObjectModel)
+				throw new PrestashopException("Class '$class' must be an instance of class ObjectModel");
+			$identifier = $obj->getIdentifier();
+			$fieldsValidateLang = $obj->getFieldsValidateLang();
 
-			// Get primary key
-			if (!array_key_exists($identifier, $row))
+			// Check primary key
+			if (!array_key_exists($identifier, $datas[0]))
 				throw new PrestashopException("Identifier '$identifier' not found for class '$class'");
-			$id = $row[$identifier];
 
-			// Get object common properties
-			if (!isset($rows[$id]))
-				$rows[$id] = $row;
-
-			// Get object lang properties
-			if (isset($row['id_lang']) && !$id_lang)
+			foreach ($datas as $row)
 			{
-				foreach ($fieldsValidateLang as $field => $validator)
+				// Get object common properties
+				$id = $row[$identifier];
+				if (!isset($rows[$id]))
+					$rows[$id] = $row;
+
+				// Get object lang properties
+				if (isset($row['id_lang']) && !$id_lang)
 				{
-					if (!$id_lang)
+					foreach ($fieldsValidateLang as $field => $validator)
 					{
-						if (!is_array($rows[$id][$field]))
-							$rows[$id][$field] = array();
-						$rows[$id][$field][$row['id_lang']] = $row[$field];
+						if (!$id_lang)
+						{
+							if (!is_array($rows[$id][$field]))
+								$rows[$id][$field] = array();
+							$rows[$id][$field][$row['id_lang']] = $row[$field];
+						}
 					}
 				}
 			}
