@@ -27,10 +27,14 @@
 
 class ChangeCurrencyControllerCore extends FrontController
 {
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		$currency = new Currency((int)Tools::getValue('id_currency'));
-		if (Validate::isLoadedObject($currency) AND !$currency->deleted)
+		if (Validate::isLoadedObject($currency) && !$currency->deleted)
 		{
 			$this->context->cookie->id_currency = (int)$currency->id;
 			die('1');
