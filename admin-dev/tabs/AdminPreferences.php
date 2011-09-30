@@ -52,6 +52,17 @@ class AdminPreferences extends AdminTab
 				)
 			);
 
+			$registration_process_type = array(
+				array(
+					'value' => PS_REGISTRATION_PROCESS_STANDARD,
+					'name' => $this->l('2 steps (Account creation and address creation)')
+				),
+				array(
+					'value' => PS_REGISTRATION_PROCESS_AIO,
+					'name' => $this->l('Standard (all in one)')
+				)
+			);
+
 			$round_mode = array(
 				array(
 					'value' => PS_ROUND_UP,
@@ -102,6 +113,7 @@ class AdminPreferences extends AdminTab
 				'PS_SHOW_NEW_ORDERS' => array('title' => $this->l('Show notifications for new orders'), 'desc' => $this->l('This will display notifications when new orders will be made on your shop'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				'PS_SHOW_NEW_CUSTOMERS' => array('title' => $this->l('Show notifications for new customers'), 'desc' => $this->l('This will display notifications when new customers will register on your shop'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				'PS_SHOW_NEW_MESSAGES' => array('title' => $this->l('Show notifications for new messages'), 'desc' => $this->l('This will display notifications when new messages will be posted on your shop'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+				'PS_REGISTRATION_PROCESS_TYPE' => array('title' => $this->l('Registration process type'), 'desc' => $this->l('The 2 steps register process allows the customer to register faster, and create his address later.'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $registration_process_type, 'identifier' => 'value'),
 			);
 
 			if (function_exists('date_default_timezone_set'))

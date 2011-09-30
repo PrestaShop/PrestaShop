@@ -279,6 +279,11 @@ class AddressControllerCore extends FrontController
 			$this->context->smarty->assign('back', Tools::safeOutput($back));
 		if ($mod = Tools::getValue('mod'))
 			$this->context->smarty->assign('mod', Tools::safeOutput($mod));
+		if (isset($this->context->cookie->account_created))
+		{
+			$this->context->smarty->assign('account_created', 1);
+			unset($this->context->cookie->account_created);
+		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'address.tpl');
 	}

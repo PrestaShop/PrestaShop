@@ -115,6 +115,11 @@ $(function(){ldelim}
 
 {include file="$tpl_dir./errors.tpl"}
 
+{if isset($account_created)}
+	<p class="success">
+		{l s='Your account is now created. You can create your first address, or surf on this website.'}
+	</p>
+{/if}
 <form action="{$link->getPageLink('address', true)}" method="post" class="std">
 	<fieldset>
 		<h3>{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3>
