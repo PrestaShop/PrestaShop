@@ -35,7 +35,6 @@ class HelperListCore extends Helper
 
 	public $token;
 
-	protected $bulk_action;
 
 	protected $is_cms = false;
 
@@ -62,6 +61,7 @@ class HelperListCore extends Helper
 	public $edit = false;
 	public $delete = false;
 	public $duplicate = false;
+	public $bulk_actions = false;
 	public $specificConfirmDelete;
 	public $colorOnBackground;
 
@@ -225,14 +225,13 @@ class HelperListCore extends Helper
 			'is_dnd_identifier' => $this->is_dnd_identifier,
 			'color_on_bg' => $this->colorOnBackground,
 			'id_category' => $id_category,
-			'bulk_action' => $this->bulk_action,
+			'bulk_actions' => $this->bulk_actions,
 			'key_to_get' => $key_to_get,
 			'positions' => isset($positions) ? $positions : NULL,
 			'is_cms' => $this->is_cms,
 			'fields_display' => $this->fieldsDisplay,
 			'list' => $this->_list,
 			'no_link' => $this->noLink,
-			'bulk_action' => $this->bulk_action,
 			'current_index' => self::$currentIndex,
 			'view' => $this->view,
 			'edit' => $this->edit,
@@ -240,11 +239,6 @@ class HelperListCore extends Helper
 
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_content.tpl');
-	}
-
-	protected function displayAddButton()
-	{
-		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new').'</a><br /><br />';
 	}
 
     protected function _displayDuplicate($token = NULL, $id)
@@ -415,6 +409,7 @@ class HelperListCore extends Helper
 	{
 		$this->context->smarty->assign(array(
 			'token' => $this->token,
+			'bulk_actions' => $this->bulk_actions,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_footer.tpl');
 	}

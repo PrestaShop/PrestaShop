@@ -44,7 +44,7 @@
 {/if}
 				
 {if $add_button}
-	<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" />{l s='Add new'}</a><br /><br />
+	<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
 {/if}
 <a name="{$table}">&nbsp;</a>
 <form method="post" action="{$action}" class="form">
@@ -132,7 +132,7 @@
 										--
 									{else}
 										{if $params.type == 'bool'}
-											<select name="{$table}Filter_{$key}">
+											<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$key}">
 												<option value="">--</option>
 												<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
 												<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
@@ -142,7 +142,7 @@
 											{l s='To'} <input type="text" class="filter" id="{$name_id}_1" name="{$name}[1]" value="{if isset($value.1)}$value.1{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/>
 										{elseif $params.type == 'select'}
 											{if isset($params.filter_key)}
-												<select onchange="$('#submitFilter{$table}').focus();$('#submitFilter{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
+												<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
 													<option value="" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>--</option>
 													{if isset($params.select) && is_array($params.select)}
 														{foreach $params.select AS $option_value => $option_display}
@@ -152,7 +152,7 @@
 												</select>
 											{/if}
 										{else}
-											<input type="text" class="filter" name="{$table}Filter_{if isset($params.filter_key)}$params.filter_key{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width)} style="width:{$params.width}px"{/if} />
+											<input type="text" class="filter" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width)} style="width:{$params.width}px"{/if} />
 										{/if}
 									{/if}
 								</td>

@@ -68,7 +68,24 @@ class AdminControllerCore extends Controller
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
-	protected $bulk_action;
+	/**
+	 * @var array actions to execute on multiple selections
+	 * Usage:
+	 * array(
+	 * 		'actionName' => array(
+	 * 			'text' => $this->l('Message displayed on the submit button (mandatory)'),
+	 * 			'confirm' => $this->l('If set, this confirmation message will pop-up (optional)')),
+	 * 		'anotherAction' => array(...)
+	 * );
+	 *
+	 * If your action is named 'actionName', you need to have a method named bulkactionName() that will be executed when the button is clicked.
+	 */
+	protected $bulk_actions;
+
+	/**
+	 * @var array ids of the rows selected
+	 */
+	protected $boxes;
 
 	protected $is_cms = false;
 
@@ -79,6 +96,10 @@ class AdminControllerCore extends Controller
 	protected $edit;
 	protected $delete;
 	protected $duplicate;
+	/**
+	 * @var bool is a list filter set
+	 */
+	protected $filter;
 	protected $noLink;
 	protected $specificConfirmDelete;
 	protected $colorOnBackground;
@@ -86,6 +107,12 @@ class AdminControllerCore extends Controller
 	protected $action;
 	protected $display;
 	protected $_includeContainer = true;
+
+	/** @var bool Redirect or not ater a creation */
+	protected $_redirect = true;
+
+	/** @var array Name and directory where class image are located */
+	public $fieldImageSettings = array();
 
 	public function __construct()
 	{
@@ -419,72 +446,12 @@ class AdminControllerCore extends Controller
 					if (isset($this->context->cookie->{$this->table.'Orderway'}))
 						unset($this->context->cookie->{$this->table.'Orderway'});
 					unset($_POST);
+					$this->filter = false;
 					break;
 
 				/* Submit options list */
 				case 'update_options':
 					$this->updateOptions($token);
-					break;
-
-				/* Manage list filtering */
-				case 'update_filters':
-					$_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
-					foreach ($_POST AS $key => $value)
-					{
-						/* Extracting filters from $_POST on key filter_ */
-						if ($value != NULL AND !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table)))
-						{
-							$key = Tools::substr($key, 7 + Tools::strlen($this->table));
-							/* Table alias could be specified using a ! eg. alias!field */
-							$tmpTab = explode('!', $key);
-							$filter = count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0];
-							if ($field = $this->filterToField($key, $filter))
-							{
-								$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
-								if (($type == 'date' OR $type == 'datetime') AND is_string($value))
-									$value = unserialize($value);
-								$key = isset($tmpTab[1]) ? $tmpTab[0].'.`'.$tmpTab[1].'`' : '`'.$tmpTab[0].'`';
-								if (array_key_exists('tmpTableFilter', $field))
-									$sqlFilter = & $this->_tmpTableFilter;
-								elseif (array_key_exists('havingFilter', $field))
-									$sqlFilter = & $this->_filterHaving;
-								else
-									$sqlFilter = & $this->_filter;
-
-								/* Only for date filtering (from, to) */
-								if (is_array($value))
-								{
-									if (isset($value[0]) AND !empty($value[0]))
-									{
-										if (!Validate::isDate($value[0]))
-											$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
-										else
-											$sqlFilter .= ' AND `'.bqSQL($key).'` >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
-									}
-
-									if (isset($value[1]) AND !empty($value[1]))
-									{
-										if (!Validate::isDate($value[1]))
-											$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
-										else
-											$sqlFilter .= ' AND `'.bqSQL($key).'` <= \''.pSQL(Tools::dateTo($value[1])).'\'';
-									}
-								}
-								else
-								{
-									$sqlFilter .= ' AND ';
-									if ($type == 'int' OR $type == 'bool')
-										$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`' OR $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)($value).' ';
-									elseif ($type == 'decimal')
-										$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.(float)($value).' ';
-									elseif ($type == 'select')
-										$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
-									else
-										$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
-								}
-							}
-						}
-					}
 					break;
 
 				case 'update_fields':
@@ -497,7 +464,71 @@ class AdminControllerCore extends Controller
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
 					break;
+
 				default:
+					if (method_exists($this, $this->action))
+						call_user_func(array($this, $this->action), $this->boxes);
+			}
+			/* Manage list filtering */
+			if ($this->filter)
+			{
+				$_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
+				foreach ($_POST AS $key => $value)
+				{
+					/* Extracting filters from $_POST on key filter_ */
+					if ($value != NULL AND !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table)))
+					{
+						$key = Tools::substr($key, 7 + Tools::strlen($this->table));
+						/* Table alias could be specified using a ! eg. alias!field */
+						$tmpTab = explode('!', $key);
+						$filter = count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0];
+						if ($field = $this->filterToField($key, $filter))
+						{
+							$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
+							if (($type == 'date' OR $type == 'datetime') AND is_string($value))
+								$value = unserialize($value);
+							$key = isset($tmpTab[1]) ? $tmpTab[0].'.`'.$tmpTab[1].'`' : '`'.$tmpTab[0].'`';
+							if (array_key_exists('tmpTableFilter', $field))
+								$sqlFilter = & $this->_tmpTableFilter;
+							elseif (array_key_exists('havingFilter', $field))
+								$sqlFilter = & $this->_filterHaving;
+							else
+								$sqlFilter = & $this->_filter;
+
+							/* Only for date filtering (from, to) */
+							if (is_array($value))
+							{
+								if (isset($value[0]) AND !empty($value[0]))
+								{
+									if (!Validate::isDate($value[0]))
+										$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+									else
+										$sqlFilter .= ' AND `'.bqSQL($key).'` >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+								}
+
+								if (isset($value[1]) AND !empty($value[1]))
+								{
+									if (!Validate::isDate($value[1]))
+										$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+									else
+										$sqlFilter .= ' AND `'.bqSQL($key).'` <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+								}
+							}
+							else
+							{
+								$sqlFilter .= ' AND ';
+								if ($type == 'int' OR $type == 'bool')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`' OR $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)($value).' ';
+								elseif ($type == 'decimal')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.(float)($value).' ';
+								elseif ($type == 'select')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+								else
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -844,6 +875,7 @@ class AdminControllerCore extends Controller
 				$helper->edit = $this->edit;
 				$helper->delete = $this->delete;
 				$helper->duplicate = $this->duplicate;
+				$helper->bulk_actions = $this->bulk_actions;
 				$helper::$currentIndex = self::$currentIndex;
 				$helper->table = $this->table;
 				$helper->shopLink = $this->shopLink;
@@ -879,7 +911,7 @@ class AdminControllerCore extends Controller
 		$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR,'', _PS_ADMIN_DIR_).'/themes/default/admin.css', 'all');
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
-		
+
 		$this->addJquery();
 		$this->addjQueryPlugin(array('cluetip', 'hoverIntent'));
 
@@ -1007,7 +1039,10 @@ class AdminControllerCore extends Controller
 				elseif (strncmp($key, $this->table.'OrderBy', 7) === 0 OR strncmp($key, $this->table.'Orderway', 12) === 0)
 					$this->context->cookie->$key = $value;
 
-		// Code from postProcess
+		/* Manage list filtering */
+		if (Tools::isSubmit('submitFilter'.$this->table) OR $this->context->cookie->{'submitFilter'.$this->table} !== false)
+			$this->filter = true;
+
 		/* Delete object image */
 		if (isset($_GET['deleteImage']))
 		{
@@ -1041,12 +1076,15 @@ class AdminControllerCore extends Controller
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::getValue('submitDel'.$this->table))
+		elseif ($submitted_action = Tools::getValue('submitAction'.$this->table))
 		{
-			if ($this->tabAccess['delete'] === '1')
-				$this->action = 'multiple_delete';
+			if ($submitted_action == 'delete')
+				if ($this->tabAccess['delete'] === '1')
+					$this->action = 'multiple_delete';
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->action = $submitted_action;
 		}
 		elseif (Tools::getValue('submitAdd'.$this->table))
 		{
@@ -1061,7 +1099,7 @@ class AdminControllerCore extends Controller
 		}
 		elseif (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
-			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
+			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
 				$this->display = 'edit';
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -1072,11 +1110,18 @@ class AdminControllerCore extends Controller
 		/* Submit options list */
 		elseif (Tools::getValue('submitOptions'.$this->table))
 			$this->action = 'update_options';
-		/* Manage list filtering */
-		elseif (Tools::isSubmit('submitFilter'.$this->table) OR $this->context->cookie->{'submitFilter'.$this->table} !== false)
-			$this->action = 'update_filters';
-		elseif(Tools::isSubmit('submitFields') AND $this->requiredDatabase AND $this->tabAccess['add'] === '1' AND $this->tabAccess['delete'] === '1')
+		elseif (Tools::isSubmit('submitFields') && $this->requiredDatabase && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
+		elseif (is_array($this->bulk_actions))
+			foreach ($this->bulk_actions AS $bulk_action => $params)
+			{
+				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table))
+				{
+					$this->action = 'bulk'.$bulk_action;
+					$this->boxes = Tools::getValue($this->table.'Box');
+					break;
+				}
+			}
 	}
 
 	/**
@@ -1426,5 +1471,38 @@ class AdminControllerCore extends Controller
 				if (isset($image['name']) AND isset($image['dir']))
 					$this->uploadImage($id, $image['name'], $image['dir'].'/');
 		return !sizeof($this->_errors) ? true : false;
+	}
+
+	protected function bulkDelete($boxes)
+	{
+		if (is_array($boxes) && !empty($boxes))
+		{
+			$object = new $this->className();
+			if (isset($object->noZeroObject) AND
+				// Check if all object will be deleted
+				(sizeof(call_user_func(array($this->className, $object->noZeroObject))) <= 1 OR sizeof($boxes) == sizeof(call_user_func(array($this->className, $object->noZeroObject)))))
+				$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+			else
+			{
+				$result = true;
+				if ($this->deleted)
+				{
+					foreach($boxes as $id)
+					{
+						$toDelete = new $this->className($id);
+						$toDelete->deleted = 1;
+						$result = $result AND $toDelete->update();
+					}
+				}
+				else
+					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
+
+				if ($result)
+					Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$this->token);
+				$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+			}
+		}
+		else
+			$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
 	}
 }

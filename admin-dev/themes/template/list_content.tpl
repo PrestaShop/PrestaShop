@@ -31,8 +31,8 @@
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
 		<td class="center">
-			{if $bulk_action}
-				<input type="checkbox" name="{$table}Box[]" value="$tr.$identifier" class="noborder" />
+			{if $bulk_actions}
+				<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 			{/if}
 		</td>
 		{foreach $fields_display AS $key => $params}
