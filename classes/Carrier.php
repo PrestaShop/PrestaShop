@@ -661,7 +661,7 @@ class CarrierCore extends ObjectModel
 		// Copy existing ranges price
 		foreach (array('range_price', 'range_weight') as $range)
 		{
-			$sql = 'SELECT * FROM `'._DB_PREFIX_.$range.'`
+			$sql = 'SELECT id_'.$range.' id_range, delimiter1, delimiter2 FROM `'._DB_PREFIX_.$range.'`
 					WHERE id_carrier = '.(int)$oldId;
 			$res = Db::getInstance()->ExecuteS($sql);
 			foreach ($res AS $val)
@@ -673,8 +673,10 @@ class CarrierCore extends ObjectModel
 
 				$rangePriceID = ($range == 'range_price') ? $rangeID : 'NULL';
 				$rangeWeightID = ($range == 'range_weight') ? $rangeID : 'NULL';
-				$sql = 'INSERT INTO '._DB_PREFIX_.$range.' (id_carrier, id_range_price, id_range_weight, id_zone, price)
-						SELECT '.$this->id.', '.$rangePriceID.', '.$rangeWeightID.', id_zone, price FROM '._DB_PREFIX_.$range;
+				$sql = 'INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
+						SELECT '.$this->id.', '.$rangePriceID.', '.$rangeWeightID.', id_zone, price FROM '._DB_PREFIX_.'delivery
+						WHERE id_carrier = '.(int)$oldId.' AND '.(($range == 'range_price') ? 'id_range_price' : 'id_range_weight').' = '.$val['id_range'];
+
 				Db::getInstance()->Execute($sql);
 			}
 		}
