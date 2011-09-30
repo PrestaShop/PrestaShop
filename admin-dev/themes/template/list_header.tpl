@@ -28,8 +28,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('.filter').keypress(function(event){
-			//alert('submitFilterButton_{$table}');
-			//formSubmit(event, 'submitFilterButton{$table}')
+			formSubmit(event, 'submitFilterButton{$table}')
 		})
 	});
 </script>
@@ -44,7 +43,9 @@
 	<script type="text/javascript" src="../js/admin-dnd.js"></script>
 {/if}
 				
-
+{if $add_button}
+	<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" />{l s='Add new'}</a><br /><br />
+{/if}
 <a name="{$table}">&nbsp;</a>
 <form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
@@ -80,9 +81,8 @@
 		<tr>
 			<td>
 				<table
-				{*(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? substr($this->identifier,3,strlen($this->identifier)) : '').'"' : '' )*}
-				class="table"
-				{*(array_key_exists($this->identifier,$this->identifiersDnd) AND ($this->_orderBy != 'position 'AND $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'"*}
+				{if $table_id} id={$table_id}{/if}
+				class="table {if $table_dnd}tableDnd{/if}"
 				cellpadding="0" cellspacing="0">
 					<thead>
 						<tr class="nodrag nodrop">
@@ -138,10 +138,8 @@
 												<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
 											</select>
 										{elseif $params.type == 'date' || $params.type == 'datetime'}
-											{*
-											{l s='From'} <input type="text" id="'.$nameId.'_0" name="'.$name.'[0]" value="'.(isset($value[0]) ? $value[0] : '').'"'.$width.' '.$keyPress.' /><br />
-											{l s='To'} <input type="text" id="'.$nameId.'_1" name="'.$name.'[1]" value="'.(isset($value[1]) ? $value[1] : '').'"'.$width.' '.$keyPress.' />
-											*}
+											{l s='From'} <input type="text" class="filter" id="{$name_id}_0" name="{$name}[0]" value="{if isset($value.0)}$value.0{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/><br />
+											{l s='To'} <input type="text" class="filter" id="{$name_id}_1" name="{$name}[1]" value="{if isset($value.1)}$value.1{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/>
 										{elseif $params.type == 'select'}
 											{if isset($params.filter_key)}
 												<select onchange="$('#submitFilter{$table}').focus();$('#submitFilter{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>

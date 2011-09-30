@@ -157,9 +157,6 @@ class AdminAddressesControllerCore extends AdminController
 			else
 				Tools::redirectAdmin(Tools::getValue('back').'&conf=4');
 		}
-
-		if (!isset($this->action))
-			$this->action = 'list';
 	}
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
@@ -506,21 +503,12 @@ class AdminAddressesControllerCore extends AdminController
 		return $out;
 	}
 
-	/*public function initContent()
+	public function initContent()
 	{
-		$this->getList($this->context->language->id);
-
-		$helper = new HelperList();
-		$helper->edit = $this->edit;
-		$helper->delete = $this->delete;
-		$helper::$currentIndex = self::$currentIndex;
-		$helper->table = $this->table;
-		$helper->shopLink = $this->shopLink;
-		$helper->shopLinkType = $this->shopLinkType;
-		$helper->identifier = $this->identifier;
-		$helper->token = $this->token;
-		$this->context->smarty->assign(array('list' => $helper->generateList($this->_list, $this->fieldsDisplay)));
-	}*/
+		if ($this->display != 'edit')
+			$this->display = 'list';
+		parent::initContent();
+	}
 
 }
 
