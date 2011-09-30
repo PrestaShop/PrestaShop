@@ -38,8 +38,7 @@ $context = Context::getContext();
 if (!$context->customer->isLogged())
 	Tools::redirect('index.php?controller=authentication&back=modules/loyalty/loyalty-program.php');
 
-$context->controller->addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
-$context->controller->addJS(array(_PS_JS_DIR_.'jquery/jquery.dimensions.js',_PS_JS_DIR_.'jquery/jquery.cluetip.js'));
+$context->controller->addJqueryPlugin(array('dimensions', 'cluetip'));
 
 $customerPoints = (int)(LoyaltyModule::getPointsByCustomer((int)($cookie->id_customer)));
 

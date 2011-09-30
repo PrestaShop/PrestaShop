@@ -31,9 +31,6 @@
 
 class HelperCore
 {
-	public static $translationsKeysForAdminCategorieTree = array(
-		 'Home', 'selected', 'selecteds', 'Collapse All', 'Expand All', 'Check All', 'Uncheck All'
-	);
 
 	public function __construct()
 	{
@@ -65,19 +62,32 @@ class HelperCore
 	 * @param type $input_name name of input
 	 * @return string
 	 */
-	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false)
+	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false, $use_search = false)
 	{
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
 
 		$html = '
-		<script src="../js/jquery/treeview/jquery.treeview.js" type="text/javascript"></script>
-		<script src="../js/jquery/treeview/jquery.treeview.async.js" type="text/javascript"></script>
-		<script src="../js/jquery/treeview/jquery.treeview.edit.js" type="text/javascript"></script>
-		<script src="../js/admin-categories-tree.js" type="text/javascript"></script>
+		<script src="'._PS_JS_DIR_.'/jquery/treeview/jquery.treeview.js" type="text/javascript"></script>
+		<script src="'._PS_JS_DIR_.'/jquery/treeview/jquery.treeview.async.js" type="text/javascript"></script>
+		<script src="'._PS_JS_DIR_.'/jquery/treeview/jquery.treeview.edit.js" type="text/javascript"></script>
+		<script src="'._PS_JS_DIR_.'/admin-categories-tree.js" type="text/javascript"></script>'.
+		($use_search ? '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>' : '' ).'
 		<script type="text/javascript">
-			var inputName = "'.$input_name.'";
-		';
+			var inputName = "'.$input_name.'";';
+			if ($use_search)
+			{
+			
+				$html .= '
+				$(\'document\').ready( function() {
+					var dataCat = '. Tools::jsonEncode(array(array('name' => 'toto'), array('name' => 'titi'), array('name' => 'tutu'))).';
+					$(\'input[name="search_cat"]\').autocomplete(dataCat);
+					//$(\'input[name="search_cat"]\').result(function(event, data, formatted) {
+					 //alert(\'toto\');
+					//});
+				});
+			';
+			}
 		if (sizeof($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
@@ -102,7 +112,7 @@ class HelperCore
 			'.(!$use_radio ? '
 			 - <a href="#" id="check_all" >'.$trads['Check All'].'</a>
 			 - <a href="#" id="uncheck_all" >'.$trads['Uncheck All'].'</a>
-			' : '').'
+			 ' : '').($use_search ? '<span style="margin-left:20px">'.$trads['search'].' : <form method="post" id="filternameForm"><input type="text" name="search_cat" id="search_cat"></form></span>' : '').'
 		</div>
 		';
 

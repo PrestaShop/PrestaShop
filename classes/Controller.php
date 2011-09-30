@@ -173,24 +173,19 @@ abstract class ControllerCore
 	public function addCSS($css_uri, $css_media_type = 'all')
 	{
 		if (is_array($css_uri))
-		{
-			foreach ($css_uri as $file => $media_type)
-				self::addCSS($file, $media_type);
-			return true;
-		}
+			foreach($css_uri as $css_file => $media)
+			{
+				if (is_string($css_file))
+				{
+					if ($css_path = Media::getCSSPath($css_file, $media))
+							$this->css_files = array_merge($css_path, $this->css_files);
+				}
+				else if ($css_path = Media::getCSSPath($media, $css_media_type))
+					$this->css_files = array_merge($css_path, $this->css_files);
+			}
 
-		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-		$url_data = parse_url($css_uri);
-		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-
-		// check if css files exists
-		if (!file_exists($file_uri))
-			return true;
-
-		// adding file to the big array...
-		$this->css_files[$css_uri] = $css_media_type;
-
-		return true;
+		else if ($css_path = Media::getCSSPath($css_uri, $css_media_type))
+			$this->css_files = array_merge($css_path, $this->css_files);
 	}
 
 	/**
@@ -202,26 +197,62 @@ abstract class ControllerCore
 	public function addJS($js_uri)
 	{
 		if (is_array($js_uri))
+			foreach($js_uri as $js_file)
+				if ($js_path = Media::getJSPath($js_file))
+					$this->js_files[] = $js_path;
+		else if ($js_path = Media::getJSPath($js_uri))
+			$this->js_files[] = $js_path;
+	}
+	
+	/**
+	 * Add a new javascript file in page header.
+	 *
+	 * @param mixed $js_uri
+	 * @return void
+	 */
+	public function addJquery($version = null, $folder = null, $minifier = true)
+	{
+		$this->addJS(Media::getJqueryPath($version, $folder, $minifier));
+	}
+	
+	/**
+	 * Add a new javascript file in page header.
+	 *
+	 * @param mixed $js_uri
+	 * @return void
+	 */
+	public function addJqueryUI($component)
+	{
+		if (is_array($component))
+			foreach($component as $ui)
+				$ui_path = Media::getJqueryUIPath($ui);
+		else
+			$ui_path = Media::getJqueryUIPath($component);
+		$this->addJS($ui_path);
+	}
+	
+	/**
+	 * Add a new javascript file in page header.
+	 *
+	 * @param mixed $js_uri
+	 * @return void
+	 */
+	public function addJqueryPlugin($name)
+	{
+		$plugin_path = array();
+		if (is_array($name))
 		{
-			foreach ($js_uri as $file)
-				self::addJS($file);
-			return true;
+			foreach($name as $plugin)
+			{
+				$plugin_path = Media::getJqueryPluginPath($plugin);
+				$this->addJS($plugin_path['js']);
+				$this->addCSS($plugin_path['css']);				
+			}
 		}
-
-		if (in_array($js_uri, $this->js_files))
-			return true;
-
-		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-		$url_data = parse_url($js_uri);
-		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-
-		// check if js files exists
-		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !file_exists($file_uri))
-			return true;
-
-		// adding file to the big array...
-		$this->js_files[] = $js_uri;
-
-		return true;
+		else
+			$plugin_path = Media::getJqueryPluginPath($name);
+		
+		$this->addCSS($plugin_path['css']);
+		$this->addJS($plugin_path['js']);
 	}
 }

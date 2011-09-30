@@ -1052,10 +1052,9 @@ class BlockLayered extends Module
 		if (!empty($metaKeyWordsComplement))
 			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$metaKeyWordsComplement.', '.$categoryMetas['meta_keywords'], ', '));
 		
-		Tools::addJS(($this->_path).'blocklayered.js');
-		Tools::addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
-		Tools::addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
-		Tools::addCSS(($this->_path).'blocklayered.css', 'all');		
+		$this->context->controller->addJs($this->_path.'blocklayered.js');
+		$this->context->controller->addJqueryUI('ui.slider');
+		$this->context->controller->addCSS($this->_path.'blocklayered.css', 'all');		
 	}
 	
 	public function hookFooter($params)
@@ -1923,7 +1922,7 @@ class BlockLayered extends Module
 			}
 		}
 		
-		$idCurrency = Currency::getCurrent()->id;
+		$idCurrency = (int)$this->context->currency->id;;
 		$priceFilterQueryIn = ''; // All products with price range between price filters limits
 		$priceFilterQueryOut = ''; // All products with a price filters limit on it price range
 		if (isset($priceFilter) && $priceFilter)
@@ -2164,7 +2163,7 @@ class BlockLayered extends Module
 				{
 					case 'price':
 						$priceArray = array('type_lite' => 'price', 'type' => 'price', 'id_key' => 0, 'name' => $this->l('Price'),
-						'slider' => true, 'max' => '0', 'min' => null, 'values' => array ('1' => 0), 'unit' => Currency::getCurrent()->sign);
+						'slider' => true, 'max' => '0', 'min' => null, 'values' => array ('1' => 0), 'unit' => (int)$this->context->currency->sign);
 					if (isset($products) && $products)
 						foreach ($products as $product)
 						{
@@ -2477,18 +2476,17 @@ class BlockLayered extends Module
 	
 	private static function getPriceFilterSubQuery($filterValue)
 	{
-		$idCurrency = (int)Currency::getCurrent()->id;
+		$idCurrency = (int)Context::getContext()->currency->id;
 		$priceFilterQuery = '';
 		if (isset($filterValue) && $filterValue)
 		{
-			$idCurrency = Currency::getCurrent()->id;
 			$priceFilterQuery = '
 			INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.'
 			AND psi.price_min <= '.(int)$filterValue[1].' AND psi.price_max >= '.(int)$filterValue[0].') ';
 		}
 		else
 		{
-			$idCurrency = Currency::getCurrent()->id;
+			
 			$priceFilterQuery = '
 			INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi 
 			ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$idCurrency.') ';

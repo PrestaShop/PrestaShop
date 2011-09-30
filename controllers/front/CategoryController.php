@@ -36,8 +36,8 @@ class CategoryControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
+		//TODO : check why cluetip css is include without js file
 		$this->addCSS(array(
-			_PS_CSS_DIR_.'jquery.cluetip.css' => 'all',
 			_THEME_CSS_DIR_.'scenes.css' => 'all',
 			_THEME_CSS_DIR_.'category.css' => 'all',
 			_THEME_CSS_DIR_.'product_list.css' => 'all',

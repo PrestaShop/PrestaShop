@@ -37,10 +37,11 @@ class HistoryControllerCore extends FrontController
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'history.css');
 		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+		$this->addJqueryPlugin('scrollTo');
 		$this->addJS(array(
-			_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js',
-			_THEME_JS_DIR_.'history.js',
-			_THEME_JS_DIR_.'tools.js'));
+					_THEME_JS_DIR_.'history.js',
+					_THEME_JS_DIR_.'tools.js')
+					);
 	}
 
 	/**

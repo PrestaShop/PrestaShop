@@ -163,13 +163,13 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
 
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
-    $tpl_output = Tools::minifyHTML($tpl_output);
+    $tpl_output = Media::minifyHTML($tpl_output);
     return $tpl_output;
 }
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
-    $tpl_output = Tools::packJSinHTML($tpl_output);
+    $tpl_output = Media::packJSinHTML($tpl_output);
     return $tpl_output;
 }
 

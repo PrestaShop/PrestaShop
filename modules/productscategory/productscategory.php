@@ -175,6 +175,7 @@ class productsCategory extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'productscategory.css', 'all');
-		$this->context->controller->addJS(array($this->_path.'productscategory.js', _PS_JS_DIR_.'jquery/jquery.serialScroll-1.2.2-min.js'));
+		$this->context->controller->addJS($this->_path.'productscategory.js');
+		$this->context->controller->addJqueryPlugin('serialScroll');
 	}
 }
