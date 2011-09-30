@@ -37,9 +37,9 @@ class PricesDropControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$this->productSort();
 		$nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);

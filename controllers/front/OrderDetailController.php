@@ -41,7 +41,7 @@ class OrderDetailControllerCore extends FrontController
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 	}
-	
+
 	/**
 	 * Start forms process
 	 * @see FrontController::postProcess()
@@ -118,12 +118,12 @@ class OrderDetailControllerCore extends FrontController
 			}
 		}
 	}
-	
+
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		if (!$id_order = (int)(Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order))
 			$this->errors[] = Tools::displayError('Order ID required');
@@ -203,17 +203,5 @@ class OrderDetailControllerCore extends FrontController
 			$this->addCSS(_THEME_CSS_DIR_.'history.css');
 			$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
 		}
-	}
-
-	public function displayHeader($display = true)
-	{
-		if (Tools::getValue('ajax') != 'true')
-			parent::displayHeader();
-	}
-
-	public function displayFooter($display = true)
-	{
-		if (Tools::getValue('ajax') != 'true')
-			parent::displayFooter();
 	}
 }

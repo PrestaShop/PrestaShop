@@ -362,7 +362,7 @@ class AuthControllerCore extends FrontController
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 
-	public function process()
+	public function initContent()
 	{
 		parent::process();
 

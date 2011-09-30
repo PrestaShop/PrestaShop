@@ -27,43 +27,64 @@
 
 class StatisticsControllerCore extends FrontController
 {
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::process()
-	 */
-	public function process()
-	{
-		$this->displayHeader(false);
-		$this->displayFooter(false);
+	public $display_header = false;
+	public $display_footer = false;
 
-		if (!isset($_POST['token']) || !isset($_POST['type']))
+	protected $param_token;
+
+	public function postProcess()
+	{
+		$this->param_token = Tools::getValue('token');
+		if (!$this->param_token)
 			die;
 
 		if ($_POST['type'] == 'navinfo')
-		{
-			if (sha1($_POST['id_guest']._COOKIE_KEY_) != $_POST['token'])
-				die;
-
-			$guest = new Guest((int)$_POST['id_guest']);
-			$guest->javascript = true;
-			$guest->screen_resolution_x = (int)($_POST['screen_resolution_x']);
-			$guest->screen_resolution_y = (int)($_POST['screen_resolution_y']);
-			$guest->screen_color = (int)($_POST['screen_color']);
-			$guest->sun_java = (int)($_POST['sun_java']);
-			$guest->adobe_flash = (int)($_POST['adobe_flash']);
-			$guest->adobe_director = (int)($_POST['adobe_director']);
-			$guest->apple_quicktime = (int)($_POST['apple_quicktime']);
-			$guest->real_player = (int)($_POST['real_player']);
-			$guest->windows_media = (int)($_POST['windows_media']);
-			$guest->update();
-		}
+			$this->processNavigationStats();
 		else if ($_POST['type'] == 'pagetime')
-		{
-			if (sha1($_POST['id_connections'].$_POST['id_page'].$_POST['time_start']._COOKIE_KEY_) != $_POST['token'])
-				die;
-			if (!Validate::isInt($_POST['time']) || $_POST['time'] <= 0)
-				die;
-			Connection::setPageTime((int)$_POST['id_connections'], (int)$_POST['id_page'], substr($_POST['time_start'], 0, 19), intval($_POST['time']));
-		}
+			$this->processPageTime();
+		else
+			exit;
+	}
+
+	/**
+	 * Log statistics on navigation (resolution, plugins, etc.)
+	 */
+	protected function processNavigationStats()
+	{
+		$id_guest = (int)Tools::getValue('id_guest');
+		if (sha1($id_guest._COOKIE_KEY_) != $this->param_token)
+			die;
+
+		$guest = new Guest($id_guest);
+		$guest->javascript = true;
+		$guest->screen_resolution_x = (int)Tools::getValue('screen_resolution_x');
+		$guest->screen_resolution_y = (int)Tools::getValue('screen_resolution_y');
+		$guest->screen_color = (int)Tools::getValue('screen_color');
+		$guest->sun_java = (int)Tools::getValue('sun_java');
+		$guest->adobe_flash = (int)Tools::getValue('adobe_flash');
+		$guest->adobe_director = (int)Tools::getValue('adobe_director');
+		$guest->apple_quicktime = (int)Tools::getValue('apple_quicktime');
+		$guest->real_player = (int)Tools::getValue('real_player');
+		$guest->windows_media = (int)Tools::getValue('windows_media');
+		$guest->update();
+	}
+
+	/**
+	 * Log statistics on time spend on pages
+	 */
+	protected function processPageTime()
+	{
+		$id_connection = (int)Tools::getValue('id_connections');
+		$time = (int)Tools::getValue('time');
+		$time_start = Tools::getValue('time_start');
+		$id_page = (int)Tools::getValue('id_page');
+
+		if (sha1($id_connection.$id_page.$time_start._COOKIE_KEY_) != $this->param_token)
+			die;
+
+		if ($time <= 0)
+			die;
+
+		Connection::setPageTime($id_connection, $id_page, substr($time_start, 0, 19), $time);
 	}
 }

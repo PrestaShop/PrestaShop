@@ -31,9 +31,9 @@ class PageNotFoundControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$this->setTemplate(_PS_THEME_DIR_.'404.tpl');
 	}

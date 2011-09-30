@@ -46,9 +46,9 @@ class HistoryControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		if ($orders = Order::getCustomerOrders($this->context->customer->id))
 			foreach ($orders as &$order)

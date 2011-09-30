@@ -89,8 +89,8 @@ class FrontControllerCore extends Controller
 
 		if ($this->ajax)
 		{
-			$this->displayHeader(false);
-			$this->displayFooter(false);
+			$this->display_header = false;
+			$this->display_footer = false;
 		}
 
 		ob_start();
@@ -375,13 +375,13 @@ class FrontControllerCore extends Controller
 		Tools::safePostVars();
 		$this->context->smarty->assign('errors', $this->errors);
 
-		if ($this->displayHeader)
+		if ($this->display_header)
 			$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
 
 		if ($this->template)
 			$this->context->smarty->display($this->template);
 
-		if ($this->displayFooter)
+		if ($this->display_footer)
 			$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 
 		// live edit

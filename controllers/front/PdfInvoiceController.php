@@ -27,21 +27,20 @@
 
 class PdfInvoiceControllerCore extends FrontController
 {
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::process()
-	 */
-	public function process()
-	{
-		$this->displayHeader(false);
-		$this->displayFooter(false);
+	protected $display_header = false;
+	protected $display_footer = false;
 
+	public function postProcess()
+	{
 		if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key'))
 			Tools::redirect('index.php?controller=authentication&back=pdf-invoice');
-		if (!(int)(Configuration::get('PS_INVOICE')))
+
+		if (!(int)Configuration::get('PS_INVOICE'))
 			die(Tools::displayError('Invoices are disabled in this shop.'));
+
 		if (isset($_GET['id_order']) && Validate::isUnsignedId($_GET['id_order']))
-			$order = new Order((int)($_GET['id_order']));
+			$order = new Order($_GET['id_order']);
+
 		if (!isset($order) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invoice not found'));
 		else if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key')))

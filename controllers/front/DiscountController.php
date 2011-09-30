@@ -34,9 +34,9 @@ class DiscountControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$discounts = Discount::getCustomerDiscounts($this->context->language->id, $this->context->customer->id, true, false);
 		$nbDiscounts = 0;

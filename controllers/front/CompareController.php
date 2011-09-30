@@ -81,9 +81,9 @@ class CompareControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		//Clean compare product table
 		CompareProduct::cleanCompareProducts('week');

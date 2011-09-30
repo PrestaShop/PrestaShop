@@ -29,7 +29,7 @@ class BestSalesControllerCore extends FrontController
 {
 	public $php_self = 'best-sales';
 
-	public function process()
+	public function initContent()
 	{
 		$this->productSort();
 		$nbProducts = (int)ProductSale::getNbSales();

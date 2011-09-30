@@ -45,9 +45,9 @@ class SearchControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$query = urldecode(Tools::getValue('q'));
 		if ($this->ajax_search)
