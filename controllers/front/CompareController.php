@@ -38,35 +38,36 @@ class CompareControllerCore extends FrontController
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
-	public function init()
+	/**
+	 * Display ajax content (this function is called instead of classic display, in ajax mode)
+	 */
+	public function displayAjax()
 	{
-		parent::init();
-
 		//Add or remove product with Ajax
-		if (Tools::getValue('ajax') AND Tools::getValue('id_product') AND Tools::getValue('action'))
+		if (Tools::getValue('id_product') && Tools::getValue('action'))
 		{
 			if (Tools::getValue('action') == 'add')
 			{
 				if (isset($this->context->customer->id))
 				{
-					if(CompareProduct::getCustomerNumberProducts($this->context->customer->id) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+					if (CompareProduct::getCustomerNumberProducts($this->context->customer->id) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
 						CompareProduct::addCustomerCompareProduct((int)$this->context->customer->id, (int)Tools::getValue('id_product'));
 					else
 						die('0');
 				}
 				else
 				{
-					if ((isset($this->context->customer->id_guest) AND CompareProduct::getGuestNumberProducts($this->context->customer->id_guest) < Configuration::get('PS_COMPARATOR_MAX_ITEM')))
+					if ((isset($this->context->customer->id_guest) && CompareProduct::getGuestNumberProducts($this->context->customer->id_guest) < Configuration::get('PS_COMPARATOR_MAX_ITEM')))
 						CompareProduct::addGuestCompareProduct((int)$this->context->customer->id_guest, (int)Tools::getValue('id_product'));
 					else
 						die('0');
 				}
 			}
-			elseif (Tools::getValue('action') == 'remove')
+			else if (Tools::getValue('action') == 'remove')
 			{
 				if (isset($this->context->customer->id))
 					CompareProduct::removeCustomerCompareProduct((int)$this->context->customer->id, (int)Tools::getValue('id_product'));
-				elseif (isset($this->context->customer->id_guest))
+				else if (isset($this->context->customer->id_guest))
 					CompareProduct::removeGuestCompareProduct((int)$this->context->customer->id_guest, (int)Tools::getValue('id_product'));
 				else
 					die('0');
@@ -78,6 +79,10 @@ class CompareControllerCore extends FrontController
 		}
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
 		//Clean compare product table
@@ -88,35 +93,35 @@ class CompareControllerCore extends FrontController
 		if (!Configuration::get('PS_COMPARATOR_MAX_ITEM'))
 				return Tools::redirect('index.php?controller=404');
 
-		if ($product_list = Tools::getValue('compare_product_list') AND $postProducts = (isset($product_list) ? rtrim($product_list,'|') : ''))
+		if ($product_list = Tools::getValue('compare_product_list') && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
 			$ids = array_unique(explode('|', $postProducts));
-		elseif (isset($this->context->customer->id))
+		else if (isset($this->context->customer->id))
 			$ids = CompareProduct::getCustomerCompareProducts($this->context->customer->id);
-		elseif(isset($this->context->customer->id_guest))
+		else if (isset($this->context->customer->id_guest))
 			$ids = CompareProduct::getGuestCompareProducts($this->context->customer->id_guest);
 		else
 			$ids = null;
 
 		if ($ids)
 		{
-			if (sizeof($ids) > 0)
+			if (count($ids) > 0)
 			{
-				if (sizeof($ids) > Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-					$ids = array_slice($ids, 0,  Configuration::get('PS_COMPARATOR_MAX_ITEM'));
+				if (count($ids) > Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+					$ids = array_slice($ids, 0, Configuration::get('PS_COMPARATOR_MAX_ITEM'));
 
 				$listProducts = array();
 				$listFeatures = array();
 
-				foreach ($ids AS $k => &$id)
+				foreach ($ids as $k => &$id)
 				{
 					$curProduct = new Product((int)$id, true, $this->context->language->id);
-					if (!$curProduct->active OR !$curProduct->isAssociatedToShop())
+					if (!$curProduct->active || !$curProduct->isAssociatedToShop())
 					{
 						unset($ids[$k]);
 						continue;
 					}
 
-					if (!$curProduct->active OR !$curProduct->isAssociatedToShop())
+					if (!$curProduct->active || !$curProduct->isAssociatedToShop())
 					{
 						unset($ids[$k]);
 						continue;
@@ -131,7 +136,7 @@ class CompareControllerCore extends FrontController
 						continue;
 					}
 
-					foreach ($curProduct->getFrontFeatures($this->context->language->id) AS $feature)
+					foreach ($curProduct->getFrontFeatures($this->context->language->id) as $feature)
 						$listFeatures[$curProduct->id][$feature['id_feature']] = $feature['value'];
 
 					$cover = Product::getCover((int)$id);
@@ -141,9 +146,9 @@ class CompareControllerCore extends FrontController
 					$listProducts[] = $curProduct;
 				}
 
-				if (sizeof($listProducts) > 0)
+				if (count($listProducts) > 0)
 				{
-					$width = 80 / sizeof($listProducts);
+					$width = 80 / count($listProducts);
 
 					$hasProduct = true;
 					$ordered_features = Feature::getFeaturesForComparison($ids, $this->context->language->id);
