@@ -84,6 +84,7 @@ class AdminControllerCore extends Controller
 	protected $colorOnBackground;
 	/** @string Action to perform : 'edit', 'view', 'add', ... */
 	protected $action;
+	protected $display;
 	protected $_includeContainer = true;
 
 	public function __construct()
@@ -496,6 +497,7 @@ class AdminControllerCore extends Controller
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
 					break;
+				default:
 			}
 		}
 	}
@@ -821,7 +823,7 @@ class AdminControllerCore extends Controller
 			$this->content = $this->displayErrors();
 		else
 		{
-			if ($this->action == 'edit' && $this->id_entity)
+			if ($this->display == 'edit')
 			{
 				$this->content .= $this->displayForm();
 				if ($this->tabAccess['view']){
@@ -833,7 +835,7 @@ class AdminControllerCore extends Controller
 				// move to form.tpl
 				$this->content .= '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 			}
-			elseif ($this->action == 'list')
+			elseif ($this->display == 'list')
 			{
 				$this->getList($this->context->language->id);
 
@@ -851,7 +853,6 @@ class AdminControllerCore extends Controller
 				$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 			}
 		}
-
 	}
 
 	/**
@@ -993,7 +994,6 @@ class AdminControllerCore extends Controller
 				}
 				elseif (strncmp($key, $this->table.'Filter_', 7) === 0 OR strncmp($key, 'submitFilter', 12) === 0)
 					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
-
 		if (isset($_GET) AND !empty($_GET) AND isset($this->table))
 			foreach ($_GET AS $key => $value)
 				if (is_array($this->table))
@@ -1047,7 +1047,23 @@ class AdminControllerCore extends Controller
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		elseif (Tools::getValue('submitAdd'.$this->table))
+		{
 			$this->action = 'save';
+			$this->display = 'edit';
+			//$this->id_entity = (int)$_GET['id_'.$this->table];
+		}
+		elseif (isset($_GET['add'.$this->table]))
+		{
+			$this->action = 'new';
+			$this->display = 'edit';
+		}
+		elseif (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
+		{
+			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
+				$this->display = 'edit';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		/* Cancel all filters for this tab */
 		elseif (isset($_POST['submitReset'.$this->table]))
 			$this->action = 'reset_filters';
@@ -1059,16 +1075,6 @@ class AdminControllerCore extends Controller
 			$this->action = 'update_filters';
 		elseif(Tools::isSubmit('submitFields') AND $this->requiredDatabase AND $this->tabAccess['add'] === '1' AND $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
-		elseif (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
-		{
-			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
-			{
-				$this->action = 'edit';
-				$this->id_entity = (int)$_GET['id_'.$this->table];
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
 	}
 
 	/**

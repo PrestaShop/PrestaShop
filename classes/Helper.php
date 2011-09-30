@@ -35,6 +35,12 @@ class HelperCore
 		 'Home', 'selected', 'selecteds', 'Collapse All', 'Expand All', 'Check All', 'Uncheck All'
 	);
 
+	public function __construct()
+	{
+		$this->context = Context::getContext();
+	}
+
+
 	/**
 	 *
 	 * @param type $trads values of translations keys
@@ -63,7 +69,7 @@ class HelperCore
 	{
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
-		
+
 		$html = '
 		<script src="../js/jquery/treeview/jquery.treeview.js" type="text/javascript"></script>
 		<script src="../js/jquery/treeview/jquery.treeview.async.js" type="text/javascript"></script>
@@ -159,7 +165,7 @@ class HelperCore
 			$select_html .= '<option value="">'.$select_options['empty'].'</option>';
 
 		if (isset($select_options['selected']) && !is_array($select_options['selected']))
-			$select_options['selected'] = array($select_options['selected']);	
+			$select_options['selected'] = array($select_options['selected']);
 		// render options fields
 		foreach ($values as $key => $value)
 		{
@@ -195,6 +201,44 @@ class HelperCore
 				$html .= Tools::htmlentitiesUTF8($html_option).'="'.Tools::htmlentitiesUTF8($value).'" ';
 
 		return rtrim($html, ' ');
+	}
+
+	function bindDatepicker($id, $time)
+	{
+		if ($time)
+		echo '
+			var dateObj = new Date();
+			var hours = dateObj.getHours();
+			var mins = dateObj.getMinutes();
+			var secs = dateObj.getSeconds();
+			if (hours < 10) { hours = "0" + hours; }
+			if (mins < 10) { mins = "0" + mins; }
+			if (secs < 10) { secs = "0" + secs; }
+			var time = " "+hours+":"+mins+":"+secs;';
+
+		echo '
+		$(function() {
+			$("#'.$id.'").datepicker({
+				prevText:"",
+				nextText:"",
+				dateFormat:"yy-mm-dd"'.($time ? '+time' : '').'});
+		});';
+	}
+
+	// id can be a identifier or an array of identifiers
+	function includeDatepicker($id, $time = false)
+	{
+		echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>';
+		$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
+		if ($iso != 'en')
+			echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/datepicker/ui/i18n/ui.datepicker-'.$iso.'.js"></script>';
+		echo '<script type="text/javascript">';
+			if (is_array($id))
+				foreach ($id as $id2)
+					bindDatepicker($id2, $time);
+			else
+				bindDatepicker($id, $time);
+		echo '</script>';
 	}
 }
 

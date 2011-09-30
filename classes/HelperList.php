@@ -1,5 +1,5 @@
 <?php
-class HelperList
+class HelperListCore extends Helper
 {
 	/** @var array Cache for query results */
 	protected $_list = array();
@@ -66,11 +66,6 @@ class HelperList
 	public $colorOnBackground;
 
 	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute');
-
-	public function __construct()
-	{
-		$this->context = Context::getContext();
-	}
 
 	/**
 	 * Return an html list given the data to fill it up
@@ -340,6 +335,12 @@ class HelperList
 		// Check if object can be modified, deleted or detailed
 		$has_actions = ($this->edit OR $this->delete OR ($this->view AND $this->view !== 'noActionColumn')) ? true : false;
 
+		if (array_key_exists($this->identifier,$this->identifiersDnd) && (int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1)))
+			$table_id = substr($this->identifier,3,strlen($this->identifier));
+
+		if (array_key_exists($this->identifier,$this->identifiersDnd) && ($this->_orderBy != 'position' && $this->_orderWay != 'DESC'))
+			$table_dnd = true;
+
 		foreach ($this->fieldsDisplay as $key => $params)
 		{
 			if (!isset($params['type']))
@@ -357,9 +358,9 @@ class HelperList
 						$value = unserialize($value);
 					if (!Validate::isCleanHtml($value[0]) OR !Validate::isCleanHtml($value[1]))
 						$value = '';
-					//$name = $this->table.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
-					//$nameId = str_replace('!', '__', $name);
-					//includeDatepicker(array($nameId.'_0', $nameId.'_1'));
+					$name = $this->table.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
+					$name_id = str_replace('!', '__', $name);
+					$this->includeDatepicker(array($name_id.'_0', $name_id.'_1'));
 					break;
 				case 'select':
 					foreach ($params['select'] AS $option_value => $option_display)
@@ -397,7 +398,11 @@ class HelperList
 			'id_cat' => $id_cat,
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => $has_actions,
-
+			'add_button' => $this->edit AND (!isset($this->noAdd) OR !$this->noAdd),
+			'table_id' => isset($table_id) ? $table_id : null,
+			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
+			'name' => isset($name) ? $name : null,
+			'name_id' => isset($name_id) ? $name_id : null,
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_header.tpl');
