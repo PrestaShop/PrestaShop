@@ -879,15 +879,17 @@ class AdminControllerCore extends Controller
 		$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR,'', _PS_ADMIN_DIR_).'/themes/default/admin.css', 'all');
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+		
+		$this->addJquery();
+		$this->addjQueryPlugin(array('cluetip', 'hoverIntent'));
 
-		$this->addJS(_PS_JS_DIR_.'jquery/jquery-1.4.4.min.js');
-		$this->addJS(_PS_JS_DIR_.'jquery/jquery.hoverIntent.minified.js');
-		$this->addJS(_PS_JS_DIR_.'jquery/jquery.cluetip.js');
-		$this->addJS(_PS_JS_DIR_.'admin.js');
-		$this->addJS(_PS_JS_DIR_.'toggle.js');
-		$this->addJS(_PS_JS_DIR_.'tools.js');
-		$this->addJS(_PS_JS_DIR_.'ajax.js');
-		$this->addJS(_PS_JS_DIR_.'notifications.js');
+		$this->addJS(array(
+					_PS_JS_DIR_.'admin.js',
+					_PS_JS_DIR_.'toggle.js',
+					_PS_JS_DIR_.'tools.js',
+					_PS_JS_DIR_.'ajax.js',
+					_PS_JS_DIR_.'notifications.js')
+					);
 	}
 
 	public static function translate($string, $class, $addslashes = FALSE, $htmlentities = TRUE)

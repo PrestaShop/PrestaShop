@@ -358,7 +358,8 @@ class AuthControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'authentication.css');
-		$this->addJS(array(_THEME_JS_DIR_.'tools/statesManagement.js', _PS_JS_DIR_.'jquery/jquery-typewatch.pack.js'));
+		$this->addJqueryPlugin('typewatch');
+		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 
 	public function process()

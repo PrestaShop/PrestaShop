@@ -221,7 +221,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->addCSS(_THEME_CSS_DIR_.'order-opc.css');
 		// Adding JS files
 		$this->addJS(_THEME_JS_DIR_.'order-opc.js');
-		$this->addJS(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
+		$this->addJqueryPlugin('scrollTo');
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 

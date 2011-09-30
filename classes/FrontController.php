@@ -498,15 +498,16 @@ class FrontControllerCore extends Controller
 	public function setMedia()
 	{
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
-		$this->addJS(array(_PS_JS_DIR_.'jquery/jquery-1.4.4.min.js', _PS_JS_DIR_.'jquery/jquery.easing.1.3.js', _PS_JS_DIR_.'tools.js'));
+		$this->addjquery();	
+		$this->addjqueryPlugin('easing');
+		$this->addJS(_PS_JS_DIR_.'tools.js');
+		
 		if (Tools::isSubmit('live_edit') AND Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
-			$this->addJS(array(
-							_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js',
-							_PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js',
-							_PS_JS_DIR_.'hookLiveEdit.js')
-							);
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css');
+			$this->addJqueryUI('ui.sortable');
+			$this->addjqueryPlugin('fancybox');
+			$this->addJS(_PS_JS_DIR_.'hookLiveEdit.js');
+			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'all'); //TODO
 		}
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
@@ -538,13 +539,11 @@ class FrontControllerCore extends Controller
 		{
 			// CSS compressor management
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
-				$this->css_files = Tools::cccCSS($this->css_files);
-
+				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Tools::cccJs($this->js_files);
+				$this->js_files = Media::cccJs($this->js_files);
 		}
-
 		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 	}

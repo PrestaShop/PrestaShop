@@ -155,8 +155,8 @@ class AdminHomeControllerCore extends AdminController
 	{
 		parent::setMedia();
 		if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== false)
-			$this->addJS(_PS_JS_DIR_.'jquery/excanvas.min.js');
-		$this->addJS(_PS_JS_DIR_.'jquery/jquery.flot.min.js');
+			$this->addJqueryPlugin('excanvas');
+		$this->addJqueryPlugin('flot');
 	}
 
 	protected function warnDomainName()

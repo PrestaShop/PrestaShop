@@ -3345,7 +3345,7 @@ class AdminProducts extends AdminTab
 							</script>
 
 							<link rel="stylesheet" type="text/css" href="'.__PS_BASE_URI__.'css/jquery.autocomplete.css" />
-							<script type="text/javascript" src="'._PS_JS_DIR_.'/jquery/jquery.autocomplete.js"></script>
+							<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>
 							<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
 								<p class="clear">'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'</p>
 								<input type="text" value="" id="product_autocomplete_input" />
@@ -3386,7 +3386,7 @@ class AdminProducts extends AdminTab
 			</div>';
 			// TinyMCE
 		$iso = $this->context->language->iso_code;
-		$isoTinyMCE = (file_exists(_PS_JS_DIR_.'/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
+		$isoTinyMCE = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
 			<script type="text/javascript">
@@ -3394,8 +3394,8 @@ class AdminProducts extends AdminTab
 			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
 			var ad = \''.$ad.'\' ;
 			</script>
-			<script type="text/javascript" src="'._PS_JS_DIR_.'/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'._PS_JS_DIR_.'/tinymce.inc.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'tinymce.inc.js"></script>
 			<script type="text/javascript">
 					toggleVirtualProduct(getE(\'is_virtual_good\'));
 					unitPriceWithTax(\'unit\');
@@ -3440,9 +3440,9 @@ class AdminProducts extends AdminTab
 						<ul	id="listImage"></ul>
 						<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
 						<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
-						<script src="'._PS_JS_DIR_.'/fileuploader.js" type="text/javascript"></script>
-						<script src="'._PS_JS_DIR_.'/jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
-						<script type="text/javascript" src="'._PS_JS_DIR_.'/admin.js"></script>
+						<script src="'._PS_JS_DIR_.'fileuploader.js" type="text/javascript"></script>
+						<script src="'._PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+						<script type="text/javascript" src="'._PS_JS_DIR_.'admin.js"></script>
 						<script type="text/javascript">
 							function deleteImg(id)
 							{
@@ -3554,7 +3554,7 @@ class AdminProducts extends AdminTab
 					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>
 					<tr>
 						<td colspan="2">
-							<script type="text/javascript" src="'._PS_JS_DIR_.'/jquery/jquery.tablednd_0_5.js"></script>
+							<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.tablednd_0_5.js"></script>
 							<script type="text/javascript">
 								var token = \''.($token != null ? $token : $this->token).'\';
 								var come_from = \''.$this->table.'\';

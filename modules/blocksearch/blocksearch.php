@@ -89,10 +89,7 @@ class BlockSearch extends Module
 		$instantSearch = (int)(Configuration::get('PS_INSTANT_SEARCH'));
 		$this->context->smarty->assign('instantsearch', $instantSearch);
 		if ($ajaxSearch)
-		{
-			$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery.autocomplete.css');
-			$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery.autocomplete.js');
-		}
+			$this->context->controller->addJqueryPlugin('autocomplete');
 		$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
 		$this->context->controller->addCSS(($this->_path).'blocksearch.css', 'all');
 		return true;
