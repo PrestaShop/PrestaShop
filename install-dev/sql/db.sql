@@ -124,6 +124,7 @@ CREATE TABLE `PREFIX_attribute_lang` (
 
 CREATE TABLE `PREFIX_carrier` (
   `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_reference` int(10) unsigned NOT NULL,
   `id_tax_rules_group` int(10) unsigned DEFAULT '0',
   `name` varchar(64) NOT NULL,
   `url` varchar(255) DEFAULT NULL,

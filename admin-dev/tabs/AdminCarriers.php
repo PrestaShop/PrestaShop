@@ -50,9 +50,10 @@ class AdminCarriers extends AdminTab
 
 		$this->optionsList = array(
 			'general' => array(
-				'title' =>	$this->l('Carrier options'),
-				'fields' =>	array(
-					'PS_CARRIER_DEFAULT' => array('title' => $this->l('Default carrier:'), 'desc' => $this->l('The default carrier used in shop'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_carrier', 'list' => Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true , false,false, NULL, Carrier::ALL_CARRIERS)),
+				'title' => $this->l('Carrier options'),
+				'fields' => array(
+					'PS_CARRIER_DEFAULT' => array('title' => $this->l('Default carrier:'), 'desc' => $this->l('The default carrier used in shop'), 'cast' => 'intval', 'type' => 'select',
+					'identifier' => 'id_carrier', 'list' => Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS)),
 				),
 			),
 		);
@@ -62,8 +63,8 @@ class AdminCarriers extends AdminTab
 
 	public function displayTop()
 	{
-		echo 
-		'<div class="hint clear" style="display:block;">'.
+		echo '
+		<div class="hint clear" style="display:block;">'.
 			'&nbsp;<b>'.$this->l('How to create a new carrier?').'</b>'.
 			'<br />'.
 			'<ul>'.'
@@ -133,11 +134,11 @@ class AdminCarriers extends AdminTab
 					$carrier_zones = $obj->getZones();
 					$carrier_zones_ids = array();
 					if (is_array($carrier_zones))
-						foreach($carrier_zones as $carrier_zone)
+						foreach ($carrier_zones as $carrier_zone)
 							$carrier_zones_ids[] = $carrier_zone['id_zone'];
 					
 					$zones = Zone::getZones(false);
-					foreach ($zones AS $zone)
+					foreach ($zones as $zone)
 						echo '<input type="checkbox" id="zone_'.$zone['id_zone'].'" name="zone_'.$zone['id_zone'].'" value="true" '.
 							Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids) ? ' checked="checked"' : '')).'>
 							<label class="t" for="zone_'.$zone['id_zone'].'"> <b>'.$zone['name'].'</b></label><br />';
@@ -147,7 +148,7 @@ class AdminCarriers extends AdminTab
 				<label>'.$this->l('Group access').'</label>
 				<div class="margin-form">';
 					$groups = Group::getGroups(Context::getContext()->language->id);
-					if (sizeof($groups))
+					if (count($groups))
 					{
 						echo '
 					<table cellspacing="0" cellpadding="0" class="table" style="width: 28em;">
@@ -160,7 +161,9 @@ class AdminCarriers extends AdminTab
 						foreach ($groups as $group)
 							echo '
 							<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
-								<td><input type="checkbox" name="groupBox[]" class="groupBox" id="groupBox_'.$group['id_group'].'" value="'.$group['id_group'].'" '.((Db::getInstance()->getValue('SELECT id_group FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier='.(int)($obj->id).' AND id_group='.(int)($group['id_group'])) OR (!isset($obj->id))) ? 'checked="checked" ' : '').'/></td>
+								<td><input type="checkbox" name="groupBox[]" class="groupBox" id="groupBox_'.$group['id_group'].'" value="'.$group['id_group'].'"
+								'.((Db::getInstance()->getValue('SELECT id_group FROM '._DB_PREFIX_.'carrier_group
+									WHERE id_carrier='.(int)($obj->id).' AND id_group='.(int)($group['id_group'])) || (!isset($obj->id))) ? 'checked="checked" ' : '').'/></td>
 								<td>'.$group['id_group'].'</td>
 								<td><label for="groupBox_'.$group['id_group'].'" class="t">'.$group['name'].'</label></td>
 							</tr>';
@@ -191,9 +194,9 @@ class AdminCarriers extends AdminTab
 				<div id="shipping_costs_div">
 				<label>'.$this->l('Tax').'</label>
 				<div class="margin-form">
-					 <select name="id_tax_rules_group" id="id_tax_rules_group" '.(Tax::excludeTaxeOption() ? 'disabled="disabled"' : '' ).'>
-					    <option value="0">'.$this->l('No Tax').'</option>';
-						foreach (TaxRulesGroup::getTaxRulesGroups(true) AS $tax_rules_group)
+					<select name="id_tax_rules_group" id="id_tax_rules_group" '.(Tax::excludeTaxeOption() ? 'disabled="disabled"' : '' ).'>
+						<option value="0">'.$this->l('No Tax').'</option>';
+						foreach (TaxRulesGroup::getTaxRulesGroups(true) as $tax_rules_group)
 							echo '<option value="'.$tax_rules_group['id_tax_rules_group'].'" '.(($this->getFieldValue($obj, 'id_tax_rules_group') == $tax_rules_group['id_tax_rules_group']) ? ' selected="selected"' : '').'>'.$tax_rules_group['name'].'</option>';
 				echo '</select>
 				</div>
@@ -222,7 +225,7 @@ class AdminCarriers extends AdminTab
 					</select>
 					<p>'.$this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)').'</p>
 				</div>';
-				if($this->getFieldValue($obj, 'is_module'))
+				if ($this->getFieldValue($obj, 'is_module'))
 				{
 					echo '<label>'.$this->l('Module:').' </label>
 						  <div class="margin-form"><p> - '.
@@ -230,12 +233,12 @@ class AdminCarriers extends AdminTab
 						  <input type="hidden" name="is_module" value="1">
 						  <input type="hidden" name="external_module_name" value="'.$this->getFieldValue($obj, 'external_module_name').'">';
 
-					if($this->getFieldValue($obj, 'shipping_external'))
+					if ($this->getFieldValue($obj, 'shipping_external'))
 					{
 						echo '<p> - '.$this->l('The shipping costs are calculated outside of your shop').'</p>
 						<input type="hidden" name="shipping_external" value="1">';
 					}
-					if($this->getFieldValue($obj, 'need_range'))
+					if ($this->getFieldValue($obj, 'need_range'))
 					{
 						echo '<p> - '.$this->l('This carrier uses PrestaShop range to calculate shipping costs').'</p>
 						<input type="hidden" name="need_range" value="1">';
@@ -275,7 +278,7 @@ class AdminCarriers extends AdminTab
 			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier='.(int)($id_carrier));
 		$groups = Db::getInstance()->ExecuteS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
 		foreach ($groups as $group)
-			if (in_array($group['id_group'], $_POST['groupBox']))
+			if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox')))
 				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'carrier_group (id_group, id_carrier) VALUES('.(int)($group['id_group']).','.(int)($id_carrier).')');
 	}
 
@@ -285,12 +288,12 @@ class AdminCarriers extends AdminTab
 		{
 		 	/* Checking fields validity */
 			$this->validateRules();
-			if (!sizeof($this->_errors))
+			if (!count($this->_errors))
 			{
 				$id = (int)(Tools::getValue('id_'.$this->table));
 
 				/* Object update */
-				if (isset($id) AND !empty($id))
+				if (isset($id) && !empty($id))
 				{
 					if ($this->tabAccess['edit'] === '1')
 					{
@@ -311,7 +314,7 @@ class AdminCarriers extends AdminTab
 							$this->changeGroups($objectNew->id);
 							if (!$result)
 								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
-							elseif ($this->postImage($objectNew->id))
+							else if ($this->postImage($objectNew->id))
 								{
 									$this->changeZones($objectNew->id);
 									Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
@@ -333,7 +336,7 @@ class AdminCarriers extends AdminTab
 						$this->copyFromPost($object, $this->table);
 						if (!$object->add())
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
-						elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
+						else if (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
 						{
 							$this->changeZones($object->id);
 							$this->changeGroups($object->id);
@@ -348,7 +351,7 @@ class AdminCarriers extends AdminTab
 		else
 		{
 			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
-				OR (isset($_GET['delete'.$this->table]) AND Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
+				|| (isset($_GET['delete'.$this->table]) && Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
 					$this->_errors[] = $this->l('Please set another carrier as default before deleting');
 			else
 				parent::postProcess();
@@ -356,24 +359,24 @@ class AdminCarriers extends AdminTab
 	}
 
 
-	function changeZones($id)
+	public function changeZones($id)
 	{
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
 			die (Tools::displayError('Object cannot be loaded'));
 		$zones = Zone::getZones(true);
 		foreach ($zones as $zone)
-			if (sizeof($carrier->getZone($zone['id_zone'])))
+			if (count($carrier->getZone($zone['id_zone'])))
 			{
-				if (!isset($_POST['zone_'.$zone['id_zone']]) OR !$_POST['zone_'.$zone['id_zone']])
+				if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']])
 					$carrier->deleteZone($zone['id_zone']);
 			}
 			else
-				if (isset($_POST['zone_'.$zone['id_zone']]) AND $_POST['zone_'.$zone['id_zone']])
+				if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
 					$carrier->addZone($zone['id_zone']);
 	}
 
-	public function displayListContent($token = NULL)
+	public function displayListContent($token = null)
 	{
 		foreach ($this->_list as $key => $list)
 			if ($list['name'] == '0')
