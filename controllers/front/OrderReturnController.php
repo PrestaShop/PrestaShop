@@ -71,31 +71,18 @@ class OrderReturnControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Cannot find this order return');
 		}
 	}
-	
+
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
-		parent::process();
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
 			'nbdaysreturn' => (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'))
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
-	}
-
-	public function displayHeader($display = true)
-	{
-		if (Tools::getValue('ajax') != 'true')
-			parent::displayHeader();
-	}
-
-	public function displayFooter($display = true)
-	{
-		if (Tools::getValue('ajax') != 'true')
-			parent::displayFooter();
 	}
 }
 

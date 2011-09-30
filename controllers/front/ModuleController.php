@@ -35,9 +35,9 @@ class ModuleControllerCore extends FrontController
 {
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		// Check module existence
 		$name = Tools::getValue('module');

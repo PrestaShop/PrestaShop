@@ -68,9 +68,9 @@ class SupplierControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToGroupShop())
 		{
@@ -84,7 +84,7 @@ class SupplierControllerCore extends FrontController
 			$this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
 		}
 	}
-	
+
 	/**
 	 * Assign template vars if displaying one supplier
 	 */
@@ -99,7 +99,7 @@ class SupplierControllerCore extends FrontController
 			'supplier' => $this->supplier,
 		));
 	}
-	
+
 	/**
 	 * Assign template vars if displaying the supplier list
 	 */

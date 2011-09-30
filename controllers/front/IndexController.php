@@ -31,9 +31,9 @@ class IndexControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$this->context->smarty->assign('HOOK_HOME', Module::hookExec('home'));
 		$this->setTemplate(_PS_THEME_DIR_.'index.tpl');

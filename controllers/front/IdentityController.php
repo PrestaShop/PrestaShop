@@ -31,13 +31,13 @@ class IdentityControllerCore extends FrontController
 	public $php_self = 'identity';
 	public $authRedirection = 'identity';
 	public $ssl = true;
-	
+
 	public function init()
 	{
 		parent::init();
 		$this->customer = $this->context->customer;
 	}
-	
+
 	/**
 	 * Start forms process
 	 * @see FrontController::postProcess()
@@ -94,14 +94,14 @@ class IdentityControllerCore extends FrontController
 		}
 		else
 			$_POST = array_map('stripslashes', $this->customer->getFields());
-			
+
 		return $this->customer;
 	}
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		if ($this->customer->birthday)
 			$birthday = explode('-', $this->customer->birthday);

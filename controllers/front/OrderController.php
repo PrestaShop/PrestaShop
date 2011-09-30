@@ -43,45 +43,41 @@ class OrderControllerCore extends ParentOrderController
 		if (!$this->nbProducts)
 			$this->step = -1;
 
-		/* If some products have disappear */
+		// If some products have disappear
 		if (!$this->context->cart->checkQuantities())
 		{
 			$this->step = 0;
 			$this->errors[] = Tools::displayError('An item in your cart is no longer available for this quantity, you cannot proceed with your order.');
 		}
 
-		/* Check minimal amount */
+		// Check minimal amount
 		$currency = Currency::getCurrency((int)$this->context->cart->id_currency);
 
 		$orderTotal = $this->context->cart->getOrderTotal();
-		$minimalPurchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase && $this->step != -1)
+		$minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
+		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step != -1)
 		{
 			$this->step = 0;
-			$this->errors[] = Tools::displayError('A minimum purchase total of').' '.Tools::displayPrice($minimalPurchase, $currency).
+			$this->errors[] = Tools::displayError('A minimum purchase total of').' '.Tools::displayPrice($minimal_purchase, $currency).
 			' '.Tools::displayError('is required in order to validate your order.');
 		}
 
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
 			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step));
-
-		if ($this->nbProducts)
-			$this->context->smarty->assign('virtual_cart', $isVirtualCart);
-	}
-
-	public function displayHeader($display = true)
-	{
-		if (!Tools::getValue('ajax'))
-			parent::displayHeader();
 	}
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
-		/* 4 steps to the order */
+		global $isVirtualCart;
+
+		if ($this->nbProducts)
+			$this->context->smarty->assign('virtual_cart', $isVirtualCart);
+
+		// 4 steps to the order
 		switch ((int)$this->step)
 		{
 			case -1;
@@ -104,7 +100,7 @@ class OrderControllerCore extends ParentOrderController
 			break;
 
 			case 3:
-				//Test that the conditions (so active) were accepted by the customer
+				// Test that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv');
 				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv)))
 					Tools::redirect('index.php?controller=order&step=2');
@@ -112,7 +108,8 @@ class OrderControllerCore extends ParentOrderController
 				if (Tools::isSubmit('processCarrier'))
 					$this->processCarrier();
 				$this->autoStep();
-				/* Bypass payment step if total is 0 */
+
+				// Bypass payment step if total is 0
 				if (($id_order = $this->_checkFreeOrder()) && $id_order)
 				{
 					if ($this->context->customer->is_guest)
@@ -146,8 +143,8 @@ class OrderControllerCore extends ParentOrderController
 
 	private function processAddressFormat()
 	{
-		$addressDelivery = new Address((int)($this->context->cart->id_address_delivery));
-		$addressInvoice = new Address((int)($this->context->cart->id_address_invoice));
+		$addressDelivery = new Address((int)$this->context->cart->id_address_delivery);
+		$addressInvoice = new Address((int)$this->context->cart->id_address_invoice);
 
 		$invoiceAddressFields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country, false, true);
 		$deliveryAddressFields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country, false, true);
@@ -157,21 +154,17 @@ class OrderControllerCore extends ParentOrderController
 			'dlv_adr_fields' => $deliveryAddressFields));
 	}
 
-	public function displayFooter($display = true)
-	{
-		if (!Tools::getValue('ajax'))
-			parent::displayFooter();
-	}
-
-	/* Order process controller */
+	/**
+	 * Order process controller
+	 */
 	public function autoStep()
 	{
 		global $isVirtualCart;
 
 		if ($this->step >= 2 && (!$this->context->cart->id_address_delivery || !$this->context->cart->id_address_invoice))
 			Tools::redirect('index.php?controller=order&step=1');
-		$delivery = new Address((int)($this->context->cart->id_address_delivery));
-		$invoice = new Address((int)($this->context->cart->id_address_invoice));
+		$delivery = new Address((int)$this->context->cart->id_address_delivery);
+		$invoice = new Address((int)$this->context->cart->id_address_invoice);
 
 		if ($delivery->deleted || $invoice->deleted)
 		{
@@ -194,25 +187,29 @@ class OrderControllerCore extends ParentOrderController
 			$this->errors[] = Tools::displayError('This address is not in a valid area.');
 		else
 		{
-			$this->context->cart->id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
-			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
+			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
 			if (!$this->context->cart->update())
 				$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
 
 			if (Tools::isSubmit('message'))
 				$this->_updateMessage(Tools::getValue('message'));
 		}
-		if (count($this->errors))
+
+		if ($this->errors)
 		{
 			if (Tools::getValue('ajax'))
 				die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 			$this->step = 1;
 		}
-		if (Tools::getValue('ajax'))
+
+		if ($this->ajax)
 			die(true);
 	}
 
-	/* Carrier step */
+	/**
+	 * Carrier step
+	 */
 	protected function processCarrier()
 	{
 		global $orderTotal;
@@ -231,7 +228,9 @@ class OrderControllerCore extends ParentOrderController
 		$orderTotal = $this->context->cart->getOrderTotal();
 	}
 
-	/* Address step */
+	/**
+	 * Address step
+	 */
 	protected function _assignAddress()
 	{
 		parent::_assignAddress();
@@ -241,7 +240,9 @@ class OrderControllerCore extends ParentOrderController
 			Tools::redirect('index.php?controller=order&step=2');
 	}
 
-	/* Carrier step */
+	/**
+	 * Carrier step
+	 */
 	protected function _assignCarrier()
 	{
 		if (!isset($this->context->customer->id))
@@ -254,7 +255,9 @@ class OrderControllerCore extends ParentOrderController
 		$this->context->smarty->assign('is_guest', (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0));
 	}
 
-	/* Payment step */
+	/**
+	 * Payment step
+	 */
 	protected function _assignPayment()
 	{
 		global $orderTotal;

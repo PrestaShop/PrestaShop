@@ -192,7 +192,7 @@ class FrontController extends FrontControllerCore
 
 		$this->_memory[2] = memory_get_usage();
 		$this->_time[2] = microtime(true);
-		if ($this->displayHeader)
+		if ($this->display_header)
 		{
 			$this->setMedia();
 			$this->initHeader();
@@ -205,7 +205,7 @@ class FrontController extends FrontControllerCore
 
 		$this->_memory[4] = memory_get_usage();
 		$this->_time[4] = microtime(true);
-		if ($this->displayFooter)
+		if ($this->display_footer)
 			$this->initFooter();
 
 		$this->_memory[5] = memory_get_usage();

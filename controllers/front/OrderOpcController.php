@@ -227,9 +227,9 @@ class OrderOpcControllerCore extends ParentOrderController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		// SHOPPING CART
 		$this->_assignSummaryInformations();
@@ -284,18 +284,6 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->_processAddressFormat();
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
-	}
-
-	public function displayHeader($display = true)
-	{
-		if (Tools::getValue('ajax') != 'true')
-			parent::displayHeader();
-	}
-
-	public function displayFooter($display = true)
-	{
-		if (Tools::getValue('ajax') != 'true')
-			parent::displayFooter();
 	}
 
 	protected function _getGuestInformations()

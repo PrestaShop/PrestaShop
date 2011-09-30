@@ -48,7 +48,7 @@ abstract class ControllerCore
 	/**
 	 * @var bool check if header will be displayed
 	 */
-	protected $displayHeader = false;
+	protected $display_header;
 
 	/**
 	 * @var string template name for page content
@@ -58,7 +58,7 @@ abstract class ControllerCore
 	/**
 	 * @var string check if footer will be displayed
 	 */
-	protected $displayFooter = false;
+	protected $display_footer;
 
 	/**
 	 * @var bool If ajax parameter is detected in request, set this flag to true
@@ -99,8 +99,12 @@ abstract class ControllerCore
 
 	public function __construct()
 	{
-		$this->displayHeader(true);
-		$this->displayFooter(true);
+		if (is_null($this->display_header))
+			$this->display_header = true;
+
+		if (is_null($this->display_footer))
+			$this->display_footer = true;
+
 		$this->context = Context::getContext();
 		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
 	}
@@ -117,14 +121,14 @@ abstract class ControllerCore
 		else
 			$this->postProcess();
 
-		if ($this->displayHeader)
+		if ($this->display_header)
 		{
 			$this->setMedia();
 			$this->initHeader();
 		}
 
 		$this->initContent();
-		if ($this->displayFooter)
+		if ($this->display_footer)
 			$this->initFooter();
 
 		if ($this->ajax && method_exists($this, 'displayAjax'))
@@ -135,12 +139,12 @@ abstract class ControllerCore
 
 	public function displayHeader($display = true)
 	{
-		$this->displayHeader = $display;
+		$this->display_header = $display;
 	}
 
 	public function displayFooter($display = true)
 	{
-		$this->displayFooter = $display;
+		$this->display_footer = $display;
 	}
 
 	public function setTemplate($template)

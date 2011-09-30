@@ -193,12 +193,12 @@ class ContactControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$this->assignOrderList();
-		
+
 		$email = Tools::safeOutput(Tools::getValue('from',
 		((isset($this->context->cookie) && isset($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email)) ? $this->context->cookie->email : '')));
 		$this->context->smarty->assign(array(
@@ -221,7 +221,7 @@ class ContactControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'contact-form.tpl');
 	}
-	
+
 	/**
 	 * Assign template vars related to order list and product list ordered by the customer
 	 */

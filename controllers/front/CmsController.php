@@ -76,11 +76,10 @@ class CmsControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
-		parent::process();
 		$parent_cat = new CMSCategory(1, $this->context->language->id);
 		$this->context->smarty->assign('id_current_lang', $this->context->language->id);
 		$this->context->smarty->assign('home_title', $parent_cat->name);

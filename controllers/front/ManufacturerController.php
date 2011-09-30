@@ -41,7 +41,7 @@ class ManufacturerControllerCore extends FrontController
 		if (Validate::isLoadedObject($this->manufacturer))
 			parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
 	}
-	
+
 	/**
 	 * Initialize manufaturer controller
 	 * @see FrontController::init()
@@ -66,9 +66,9 @@ class ManufacturerControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToGroupShop())
 		{
@@ -82,7 +82,7 @@ class ManufacturerControllerCore extends FrontController
 			$this->setTemplate(_PS_THEME_DIR_.'manufacturer-list.tpl');
 		}
 	}
-	
+
 	/**
 	 * Assign template vars if displaying one manufacturer
 	 */
@@ -96,7 +96,7 @@ class ManufacturerControllerCore extends FrontController
 			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 			'manufacturer' => $this->manufacturer));
 	}
-	
+
 	/**
 	 * Assign template vars if displaying the manufacturer list
 	 */

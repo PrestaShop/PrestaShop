@@ -27,20 +27,17 @@
 
 class PdfOrderReturnControllerCore extends FrontController
 {
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::process()
-	 */
-	public function process()
-	{
-		$this->displayHeader(false);
-		$this->displayFooter(false);
+	protected $display_header = false;
+	protected $display_footer = false;
 
+	public function postProcess()
+	{
 		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 
 		if (isset($_GET['id_order_return']) && Validate::isUnsignedId($_GET['id_order_return']))
-			$orderReturn = new OrderReturn((int)($_GET['id_order_return']));
+			$orderReturn = new OrderReturn($_GET['id_order_return']);
+
 		if (!isset($orderReturn) || !Validate::isLoadedObject($orderReturn))
 			die(Tools::displayError('Order return not found'));
 		else if ($orderReturn->id_customer != $this->context->customer->id)

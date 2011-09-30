@@ -71,12 +71,12 @@ class OrderFollowControllerCore extends FrontController
 			Tools::redirect('index.php?controller=order-follow');
 		}
 	}
-	
+
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$ordersReturn = OrderReturn::getOrdersReturn($this->context->customer->id);
 		if (Tools::isSubmit('errorQuantity'))

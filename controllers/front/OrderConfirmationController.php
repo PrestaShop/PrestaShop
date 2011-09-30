@@ -66,9 +66,9 @@ class OrderConfirmationControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		$this->context->smarty->assign(array(
 			'is_guest' => $this->context->customer->is_guest,

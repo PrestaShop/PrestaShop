@@ -39,7 +39,7 @@ class GuestTrackingControllerCore extends FrontController
 		if ($this->context->customer->isLogged())
 			Tools::redirect('history.php');
 	}
-	
+
 	/**
 	 * Start forms process
 	 * @see FrontController::postProcess()
@@ -51,7 +51,7 @@ class GuestTrackingControllerCore extends FrontController
 			$id_order = (int)Tools::getValue('id_order');
 			$email = Tools::getValue('email');
 			$order = new Order((int)$id_order);
-			
+
 			if (empty($id_order))
 				$this->errors[] = Tools::displayError('Please provide your Order ID');
 			else if (empty($email))
@@ -92,20 +92,21 @@ class GuestTrackingControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
-		parent::process();
-
 		/* Handle brute force attacks */
 		if (count($this->errors))
 			sleep(1);
 
-		$this->context->smarty->assign(array('action' => $this->context->link->getPageLink('guest-tracking.php'), 'errors' => $this->errors));
+		$this->context->smarty->assign(array(
+			'action' => $this->context->link->getPageLink('guest-tracking.php'),
+			'errors' => $this->errors,
+		));
 		$this->setTemplate(_PS_THEME_DIR_.'guest-tracking.tpl');
 	}
-	
+
 	/**
 	 * Assign template vars related to order tracking informations
 	 */

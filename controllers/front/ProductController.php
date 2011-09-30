@@ -74,7 +74,7 @@ class ProductControllerCore extends FrontController
 
 		if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
 			$this->product->quantity = 0;
-			
+
 		$this->product->description = $this->transformDescriptionWithImg($this->product->description);
 
 		if (!Validate::isLoadedObject($this->product))
@@ -101,13 +101,11 @@ class ProductControllerCore extends FrontController
 
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
-		parent::process();
-
-		if (!count($this->errors))
+		if (!$this->errors)
 		{
 			// Assign to the tempate the id of the virtuale product. "0" if the product is not downloadable.
 			$this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)($this->product->id)));
@@ -153,7 +151,7 @@ class ProductControllerCore extends FrontController
 			$this->assignCategory();
 			// Assign template vars related to the price and tax
 			$this->assignPriceAndTax();
-			
+
 
 			// Assign template vars related to the images
 			$this->assignImages();
@@ -197,7 +195,7 @@ class ProductControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
 	}
-	
+
 	/**
 	 * Assign price and tax to the template
 	 */
@@ -223,9 +221,9 @@ class ProductControllerCore extends FrontController
 			$ecotaxTaxAmount = Tools::ps_round($ecotaxTaxAmount * (1 + $ecotax_rate / 100), 2);
 
 		$quantityDiscounts = SpecificPrice::getQuantityDiscounts((int)$this->product->id, $this->context->shop->getID(true), (int)$this->context->cookie->id_currency, $id_country, $id_group);
-		
+
 		$productPrice = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
-		
+
 		$this->context->smarty->assign(array(
 			'quantity_discounts' => $this->formatQuantityDiscounts($quantityDiscounts, $productPrice, (float)$tax),
 			'ecotax_tax_inc' => $ecotaxTaxAmount,
@@ -238,7 +236,7 @@ class ProductControllerCore extends FrontController
 			'tax_enabled' => Configuration::get('PS_TAX')
 		));
 	}
-	
+
 	/**
 	 * Assign template vars related to images
 	 */
@@ -271,7 +269,7 @@ class ProductControllerCore extends FrontController
 		if (count($productImages))
 			$this->context->smarty->assign('images', $productImages);
 	}
-	
+
 	/**
 	 * Assign template vars related to attribute groups and colors
 	 */
@@ -301,7 +299,7 @@ class ProductControllerCore extends FrontController
 						'group_type' => $row['group_type'],
 						'default' => -1,
 					);
-					
+
 					$groups = array();
 					$combinationImages = $this->product->getCombinationImages($this->context->language->id);
 					foreach ($attributesGroups AS $k => $row)
@@ -388,7 +386,7 @@ class ProductControllerCore extends FrontController
 					$availableDate = Tools::displayDate($row['available_date'], $this->context->language->id);
 				else
 					$availableDate = $row['available_date'];
-				
+
 				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 				$combinations[$row['id_product_attribute']]['attributes'][] = (int)($row['id_attribute']);
 				$combinations[$row['id_product_attribute']]['price'] = (float)($row['price']);
@@ -433,7 +431,7 @@ class ProductControllerCore extends FrontController
 				'combinationImages' => $combinationImages));
 		}
 	}
-	
+
 	/**
 	 * Assign template vars related to category
 	 */
@@ -474,7 +472,7 @@ class ProductControllerCore extends FrontController
 		}
 		else
 			$this->context->smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
-		
+
 		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
 		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::productFooter($this->product, $category)));
 	}

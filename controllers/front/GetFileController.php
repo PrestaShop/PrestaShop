@@ -27,18 +27,14 @@
 
 class GetFileControllerCore extends FrontController
 {
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::process()
-	 */
-	public function process()
-	{
-		$this->displayHeader(false);
-		$this->displayFooter(false);
+	protected $display_header = false;
+	protected $display_footer = false;
 
+	public function postProcess()
+	{
 		if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file'))
 		{
-			/* Admin can directly access to file */
+			// Admin can directly access to file
 			$filename = Tools::getValue('file');
 			if (!Validate::isSha1($filename))
 				die(Tools::displayError());

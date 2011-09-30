@@ -99,20 +99,20 @@ class StoresControllerCore extends FrontController
 
 		foreach ($stores as &$store)
 			$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
-		
+
 
 		$this->context->smarty->assign(array(
 			'simplifiedStoresDiplay' => true,
 			'stores' => $stores
 		));
 	}
-	
+
 	public function getStores()
 	{
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
 			$distanceUnit = 'km';
-		
+
 		if (Tools::getValue('all') == 1)
 		{
 			$stores = Db::getInstance()->ExecuteS('
@@ -149,10 +149,10 @@ class StoresControllerCore extends FrontController
 			ORDER BY distance ASC
 			LIMIT 0,20');
 		}
-		
+
 		return $stores;
 	}
-	
+
 	/**
 	 * Assign template vars for classical stores
 	 */
@@ -163,25 +163,25 @@ class StoresControllerCore extends FrontController
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
 			$distanceUnit = 'km';
-		
+
 		$this->context->smarty->assign(array(
 			'distance_unit' => $distanceUnit,
 			'simplifiedStoresDiplay' => false,
 			'stores' => $this->getStores()
 		));
 	}
-	
+
 	/**
 	 * Display the Xml for showing the nodes in the google map
 	 */
 	protected function displayAjax()
 	{
 		$stores = $this->getStores();
-		
+
 		$dom = new DOMDocument('1.0');
 		$node = $dom->createElement('markers');
 		$parnode = $dom->appendChild($node);
-	
+
 		$days[1] = 'Monday';
 		$days[2] = 'Tuesday';
 		$days[3] = 'Wednesday';
@@ -189,7 +189,7 @@ class StoresControllerCore extends FrontController
 		$days[5] = 'Friday';
 		$days[6] = 'Saturday';
 		$days[7] = 'Sunday';
-	
+
 		foreach ($stores as $store)
 		{
 			$days_datas = array();
@@ -197,12 +197,12 @@ class StoresControllerCore extends FrontController
 			$newnode = $parnode->appendChild($node);
 			$newnode->setAttribute('name', $store['name']);
 			$address = $this->processStoreAddress($store);
-	
+
 			$other = '';
 			if (!empty($store['hours']))
 			{
 				$hours = unserialize($store['hours']);
-	
+
 				for ($i = 1; $i < 8; $i++)
 				{
 					$hours_datas = array();
@@ -212,10 +212,10 @@ class StoresControllerCore extends FrontController
 				}
 				$this->context->smarty->assign('days_datas', $days_datas);
 				$this->context->smarty->assign('id_country', $store['id_country']);
-	
+
 				$other .= $this->context->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 			}
-	
+
 			$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
 			$newnode->setAttribute('address', $address);
 			$newnode->setAttribute('other', $other);
@@ -224,20 +224,20 @@ class StoresControllerCore extends FrontController
 			$newnode->setAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
 			$newnode->setAttribute('lat', (float)($store['latitude']));
 			$newnode->setAttribute('lng', (float)($store['longitude']));
-	
+
 			if (isset($store['distance']))
 				$newnode->setAttribute('distance', (int)($store['distance']));
 		}
-	
+
 		header('Content-type: text/xml');
 		die($dom->saveXML());
 	}
-	
+
 	/**
 	 * Assign template vars related to page content
-	 * @see FrontController::process()
+	 * @see FrontController::initContent()
 	 */
-	public function process()
+	public function initContent()
 	{
 		if (Configuration::get('PS_STORES_SIMPLIFIED'))
 			$stores = $this->assignStoresSimplified();
@@ -250,7 +250,7 @@ class StoresControllerCore extends FrontController
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
 			'searchUrl' => $this->context->link->getPageLink('stores')
 		));
-		
+
 		$this->setTemplate(_PS_THEME_DIR_.'stores.tpl');
 	}
 
