@@ -1,13 +1,13 @@
 <?php
 
-include('../config/defines.inc.php');
+include('../config/config.inc.php');
 header('content-type: application/x-javascript');
 
 $plugins_folder = __DIR__.'/jquery/plugins/';
 
 $plugins = array(
 				'ajaxfileupload.js' => 
-					array('new_file' => $plugins_folder.'jquery.ajaxfileupload.js', 'name' => 'ajaxfileupload'),
+					array('new_file' => $plugins_folder.'ajaxfileupload/jquery.ajaxfileupload.js', 'name' => 'ajaxfileupload'),
 				'jquery-colorpicker.js' => 
 					array('new_file' => $plugins_folder.'jquery.colorpicker.js', 'name' => 'colorpicker'),
 				'jquery.cluetip.js' => 
@@ -21,7 +21,7 @@ $plugins = array(
 				'jquery.pngFix.pack.js' => 
 					array('new_file' => $plugins_folder.'jquery.pngFix.js', 'name' => 'pngFix'),
 				'thickbox-modified.js' => 
-					array('new_file' => $plugins_folder.'jquery.thickbox.js', 'name' => 'thickbox'),
+					array('new_file' => $plugins_folder.'thickbox/jquery.thickbox.js', 'name' => 'thickbox'),
 				'excanvas.min.js' => 
 					array('new_file' => $plugins_folder.'jquery.excanvas.js', 'name' => 'excanvas'),
 				'jquery-typewatch.pack.js' => 
@@ -61,6 +61,8 @@ $plugins = array(
 				'jquery.treeview.sortable.js' => 
 					array('new_file' => $plugins_folder.'treeview/jquery.treeview.sortable.js', 'name' => 'treeview.sortable'),
 				'tabpane.js' => 
+					array('new_file' => $plugins_folder.'tabpane/jquery.tabpane.js', 'name' => 'tabpane'),
+				'ui.datepicker-js' => 
 					array('new_file' => $plugins_folder.'tabpane/jquery.tabpane.js', 'name' => 'tabpane'),
 );
 
