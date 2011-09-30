@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -87,12 +87,12 @@ class FrontController extends FrontControllerCore
 	public $_memory = array();
 	public $_time = array();
 	private static $_footer = true;
-	
+
 	public static function disableParentCalls()
 	{
 		self::$_footer = false;
 	}
-	
+
 	private function displayMemoryColor($n)
 	{
 		$n /= 1048576;
@@ -102,7 +102,7 @@ class FrontController extends FrontControllerCore
 			return '<span style="color:orange">'.round($n, 2).' Mb</span>';
 		return '<span style="color:green">'.round($n, 2).' Mb</span>';
 	}
-	
+
 	private function displaySQLQueries($n)
 	{
 		if ($n > 150)
@@ -111,7 +111,7 @@ class FrontController extends FrontControllerCore
 			return '<span style="color:orange">'.$n.' queries</span>';
 		return '<span style="color:green">'.$n.' quer'.($n == 1 ? 'y' : 'ies').'</span>';
 	}
-	
+
 	private function displayLoadTimeColor($n, $kikoo = false)
 	{
 		if ($n > 1)
@@ -120,7 +120,7 @@ class FrontController extends FrontControllerCore
 			return '<span style="color:orange">'.round($n * 1000).'ms</span>'.($kikoo ? '<br />I hope it is a shared hosting' : '');
 		return '<span style="color:green">'.round($n * 1000).'ms</span>'.($kikoo ? '<br />Good boy! That\'s what I call a webserver!' : '');
 	}
-	
+
 	private function getTimeColor($n)
 	{
 		if ($n > 4)
@@ -129,7 +129,7 @@ class FrontController extends FrontControllerCore
 			return 'style="color:orange"';
 		return 'style="color:green"';
 	}
-	
+
 	private function getQueryColor($n)
 	{
 		if ($n > 5)
@@ -138,7 +138,7 @@ class FrontController extends FrontControllerCore
 			return 'style="color:orange"';
 		return 'style="color:green"';
 	}
-	
+
 	private function getTableColor($n)
 	{
 		if ($n > 30)
@@ -147,24 +147,26 @@ class FrontController extends FrontControllerCore
 			return 'style="color:orange"';
 		return 'style="color:green"';
 	}
-	
+
 	public function __construct()
 	{
+		parent::__construct();
+
 		// error management
 		set_error_handler('developpementErrorHandler');
 		ini_set('html_errors', 'on');
 		ini_set('display_errors', 'on');
 		error_reporting(E_ALL | E_STRICT);
-		
+
 		$this->_memory = array_fill(0, 10, 0);
 		$this->_time = array_fill(0, 10, 0);
 
 		// Usually set in the parent constructor, but here I need it to evaluate init()
 		$useSSL = $this->ssl;
-		
+
 		if (!self::$_footer)
 			return;
-	
+
 		$this->_memory[-3] = memory_get_usage();
 		$this->_time[-3] = microtime(true);
 		$this->init();
@@ -174,29 +176,46 @@ class FrontController extends FrontControllerCore
 		$this->_memory[-1] = memory_get_usage();
 		$this->_time[-1] = microtime(true);
 	}
-	
+
 	public function run()
 	{
 		$this->_memory[0] = memory_get_usage();
 		$this->_time[0] = microtime(true);
-		$this->preProcess();
+		$this->init();
+
 		$this->_memory[1] = memory_get_usage();
 		$this->_time[1] = microtime(true);
-		$this->setMedia();
+		if ($this->ajax && method_exists($this, 'ajaxProcess'))
+			$this->ajaxProcess();
+		else
+			$this->postProcess();
+
 		$this->_memory[2] = memory_get_usage();
 		$this->_time[2] = microtime(true);
-		$this->displayHeader();
+		if ($this->displayHeader)
+		{
+			$this->setMedia();
+			$this->initHeader();
+		}
+
 		$this->_memory[3] = memory_get_usage();
 		$this->_time[3] = microtime(true);
-		$this->process();
+		$this->initContent();
+
+
 		$this->_memory[4] = memory_get_usage();
 		$this->_time[4] = microtime(true);
-		$this->displayContent();
+		if ($this->displayFooter)
+			$this->initFooter();
+
 		$this->_memory[5] = memory_get_usage();
 		$this->_time[5] = microtime(true);
-		$this->displayFooter();
+		if ($this->ajax && method_exists($this, 'displayAjax'))
+			$this->displayAjax();
+		else
+			$this->display();
 	}
-	
+
 	function ini_get_display_errors()
 	{
 		$a = 'display_errors';
@@ -217,31 +236,33 @@ class FrontController extends FrontControllerCore
 
 	private function sizeofvar($var)
 	{
-		$start_memory = memory_get_usage();   
-		$tmp = unserialize(serialize($var));   
+		$start_memory = memory_get_usage();
+		$tmp = unserialize(serialize($var));
 		$size = memory_get_usage() - $start_memory;
 		return $size;
 	}
-	
-	public function displayFooter()
+
+	public function display()
 	{
 		global $start_time;
-		
+
+		parent::display();
+
 		if (self::$_footer)
 			parent::displayFooter();
-			
+
 		if (!$this->ini_get_display_errors())
 			return;
-		
+
 		$this->_memory[6] = memory_get_usage();
 		$this->_time[6] = microtime(true);
-		
+
 		$hr = '<hr style="color:#F5F5F5;margin:2px" />';
 
 		$totalSize = 0;
 		foreach (get_included_files() as $file)
 			$totalSize += filesize($file);
-			
+
 		$totalQueryTime = 0;
 		foreach (Db::getInstance()->queries as $data)
 			$totalQueryTime += $data['time'];
@@ -251,7 +272,7 @@ class FrontController extends FrontControllerCore
 		$totalHookTime = 0;
 		foreach ($hooktime as $time)
 			$totalHookTime += $time;
-			
+
 		$globalSize = array();
 		$totalGlobalSize = 0;
 		foreach ($GLOBALS as $key => $value)
@@ -262,7 +283,7 @@ class FrontController extends FrontControllerCore
 					$globalSize[$key] = round($size / 1024, 1);
 			}
 		arsort($globalSize);
-			
+
 		echo '<br /><br />
 		<div class="rte" style="text-align:left;padding:8px;float:left">
 			<b>Load time</b>: '.$this->displayLoadTimeColor($this->_time[6] - $start_time, true).'';
@@ -320,7 +341,7 @@ class FrontController extends FrontControllerCore
 			echo '<li>'.$global.' &asymp; '.$size.' Ko</li>';
 		echo '</ul>
 		</div>';
-		
+
 		echo '
 		<div class="rte" style="text-align:left;padding:8px;clear:both;margin-top:20px">
 			<ul>
