@@ -24,12 +24,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-</table>
-{*
-if ($this->delete)
-<p><input type="submit" class="button" name="submitDel'.$this->table.'" value="'.$this->l('Delete selection').'" onclick="return confirm(\''.$this->l('Delete selected items?', __CLASS__, TRUE, FALSE).'\');" /></p>
-{/if}
-*}
+			</table>
+			{if $bulk_actions}
+				<p>
+					{foreach $bulk_actions as $key => $params}
+						<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text|escape:'htmlall':'UTF-8'}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm|escape:'htmlall':'UTF-8'}');"{/if} />
+					{/foreach}
+				</p>
+			{/if}
 		</td>
 	</tr>
 </table>
