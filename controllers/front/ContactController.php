@@ -30,45 +30,16 @@ class ContactControllerCore extends FrontController
 	public $php_self = 'contact';
 	public $ssl = true;
 
-	public function init()
+	/**
+	 * Start forms process
+	 * @see FrontController::postProcess()
+	 */
+	public function postProcess()
 	{
-		parent::init();
-
-		if ($this->context->customer->isLogged())
-		{
-			$this->context->smarty->assign('isLogged', 1);
-
-			$products = array();
-			$orders = array();
-			$getOrders = Db::getInstance()->ExecuteS('
-				SELECT id_order
-				FROM '._DB_PREFIX_.'orders
-				WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
-			foreach ($getOrders as $row)
-			{
-				$order = new Order($row['id_order']);
-				$date = explode(' ', $order->date_add);
-				$orders[$row['id_order']] = Tools::displayDate($date[0], $this->context->language->id);
-				$tmp = $order->getProducts();
-				foreach ($tmp as $key => $val)
-					$products[$val['product_id']] = $val['product_name'];
-			}
-
-			$orderList = '';
-			foreach ($orders as $key => $val)
-				$orderList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_order')) == $key ? 'selected' : '').' >'.$key.' -- '.$val.'</option>';
-			$orderedProductList = '';
-
-			foreach ($products as $key => $val)
-				$orderedProductList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_product')) == $key ? 'selected' : '').' >'.$val.'</option>';
-			$this->context->smarty->assign('orderList', $orderList);
-			$this->context->smarty->assign('orderedProductList', $orderedProductList);
-		}
-
 		if (Tools::isSubmit('submitMessage'))
 		{
-			$fileAttachment = NULL;
-			if (isset($_FILES['fileUpload']['name']) AND !empty($_FILES['fileUpload']['name']) AND !empty($_FILES['fileUpload']['tmp_name']))
+			$fileAttachment = null;
+			if (isset($_FILES['fileUpload']['name']) && !empty($_FILES['fileUpload']['name']) && !empty($_FILES['fileUpload']['tmp_name']))
 			{
 				$extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
 				$filename = uniqid().substr($_FILES['fileUpload']['name'], -5);
@@ -77,17 +48,17 @@ class ContactControllerCore extends FrontController
 				$fileAttachment['mime'] = $_FILES['fileUpload']['type'];
 			}
 			$message = Tools::htmlentitiesUTF8(Tools::getValue('message'));
-			if (!($from = trim(Tools::getValue('from'))) OR !Validate::isEmail($from))
+			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid e-mail address');
-			elseif (!($message = Tools::nl2br($message)))
+			else if (!($message = Tools::nl2br($message)))
 				$this->errors[] = Tools::displayError('Message cannot be blank');
-			elseif (!Validate::isCleanHtml($message))
+			else if (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
-			elseif (!($id_contact = (int)(Tools::getValue('id_contact'))) OR !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
+			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
 				$this->errors[] = Tools::displayError('Please select a subject on the list.');
-			elseif (!empty($_FILES['fileUpload']['name']) AND $_FILES['fileUpload']['error'] != 0)
+			else if (!empty($_FILES['fileUpload']['name']) && $_FILES['fileUpload']['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file upload');
-			elseif (!empty($_FILES['fileUpload']['name']) AND !in_array(substr($_FILES['fileUpload']['name'], -4), $extension) AND !in_array(substr($_FILES['fileUpload']['name'], -5), $extension))
+			else if (!empty($_FILES['fileUpload']['name']) && !in_array(substr($_FILES['fileUpload']['name'], -4), $extension) && !in_array(substr($_FILES['fileUpload']['name'], -5), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
 			{
@@ -99,10 +70,10 @@ class ContactControllerCore extends FrontController
 
 				if (!((
 						$id_customer_thread = (int)Tools::getValue('id_customer_thread')
-						AND (int)Db::getInstance()->getValue('
+						&& (int)Db::getInstance()->getValue('
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
 						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->context->shop->getID(true).' AND token = \''.pSQL(Tools::getValue('token')).'\'')
-					) OR (
+					) || (
 						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, (int)Tools::getValue('id_order'))
 					)))
 				{
@@ -116,17 +87,17 @@ class ContactControllerCore extends FrontController
 					foreach ($fields as $key => $row)
 					{
 						$tmp = 0;
-						if ((int)$row['id_customer'] AND $row['id_customer'] != $customer->id AND $row['email'] != $from)
+						if ((int)$row['id_customer'] && $row['id_customer'] != $customer->id && $row['email'] != $from)
 							continue;
-						if ($row['id_order'] != 0 AND Tools::getValue('id_order') != $row['id_order'])
+						if ($row['id_order'] != 0 && Tools::getValue('id_order') != $row['id_order'])
 							continue;
 						if ($row['email'] == $from)
 							$tmp += 4;
 						if ($row['id_contact'] == $id_contact)
 							$tmp++;
-						if (Tools::getValue('id_product') != 0 AND $row['id_product'] ==  Tools::getValue('id_product'))
+						if (Tools::getValue('id_product') != 0 && $row['id_product'] == Tools::getValue('id_product'))
 							$tmp += 2;
-						if ($tmp >= 5 AND $tmp >= $score)
+						if ($tmp >= 5 && $tmp >= $score)
 						{
 							$score = $tmp;
 							$id_customer_thread = $row['id_customer_thread'];
@@ -146,8 +117,10 @@ class ContactControllerCore extends FrontController
 				}
 				if (!empty($contact->email))
 				{
-					if (Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form'), array('{email}' => $from, '{message}' => stripslashes($message)), $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''), $fileAttachment)
-						AND Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), array('{message}' => stripslashes($message)), $from))
+					if (Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form'),
+					array('{email}' => $from, '{message}' => stripslashes($message)), $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
+					$fileAttachment)
+						&& Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), array('{message}' => stripslashes($message)), $from))
 						$this->context->smarty->assign('confirmation', 1);
 					else
 						$this->errors[] = Tools::displayError('An error occurred while sending message.');
@@ -190,7 +163,7 @@ class ContactControllerCore extends FrontController
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
 						$cm->message = htmlentities($message, ENT_COMPAT, 'UTF-8');
-						if (isset($filename) AND rename($_FILES['fileUpload']['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
+						if (isset($filename) && rename($_FILES['fileUpload']['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
 							$cm->file_name = $filename;
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -218,9 +191,16 @@ class ContactControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
 	}
 
+	/**
+	 * Assign template vars related to page content
+	 * @see FrontController::process()
+	 */
 	public function process()
 	{
-		$email = Tools::safeOutput(Tools::getValue('from', ((isset($this->context->cookie) AND isset($this->context->cookie->email) AND Validate::isEmail($this->context->cookie->email)) ? $this->context->cookie->email : '')));
+		$this->assignOrderList();
+		
+		$email = Tools::safeOutput(Tools::getValue('from',
+		((isset($this->context->cookie) && isset($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email)) ? $this->context->cookie->email : '')));
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
 			'email' => $email,
@@ -228,7 +208,7 @@ class ContactControllerCore extends FrontController
 		));
 
 
-		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread') AND $token = Tools::getValue('token'))
+		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread') && $token = Tools::getValue('token'))
 		{
 			$customerThread = Db::getInstance()->getRow('
 			SELECT cm.* FROM '._DB_PREFIX_.'customer_thread cm
@@ -239,10 +219,44 @@ class ContactControllerCore extends FrontController
 		'message' => html_entity_decode(Tools::getValue('message'))
 		));
 
-		// @todo I don't know who did this code, but it's not me
-
-
 		$this->setTemplate(_PS_THEME_DIR_.'contact-form.tpl');
+	}
+	
+	/**
+	 * Assign template vars related to order list and product list ordered by the customer
+	 */
+	protected function assignOrderList()
+	{
+		if ($this->context->customer->isLogged())
+		{
+			$this->context->smarty->assign('isLogged', 1);
+
+			$products = array();
+			$orders = array();
+			$getOrders = Db::getInstance()->ExecuteS('
+				SELECT id_order
+				FROM '._DB_PREFIX_.'orders
+				WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
+			foreach ($getOrders as $row)
+			{
+				$order = new Order($row['id_order']);
+				$date = explode(' ', $order->date_add);
+				$orders[$row['id_order']] = Tools::displayDate($date[0], $this->context->language->id);
+				$tmp = $order->getProducts();
+				foreach ($tmp as $key => $val)
+					$products[$val['product_id']] = $val['product_name'];
+			}
+
+			$orderList = '';
+			foreach ($orders as $key => $val)
+				$orderList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_order')) == $key ? 'selected' : '').' >'.$key.' -- '.$val.'</option>';
+			$orderedProductList = '';
+
+			foreach ($products as $key => $val)
+				$orderedProductList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_product')) == $key ? 'selected' : '').' >'.$val.'</option>';
+			$this->context->smarty->assign('orderList', $orderList);
+			$this->context->smarty->assign('orderedProductList', $orderedProductList);
+		}
 	}
 }
 
