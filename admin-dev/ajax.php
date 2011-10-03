@@ -32,9 +32,9 @@ require_once(dirname(__FILE__).'/init.php');
 
 $context = Context::getContext();
 
-if (isset($_GET['changeParentUrl']))
+if (Tools::isSubmit('changeParentUrl'))
 	echo '<script type="text/javascript">parent.parent.document.location.href = "'.addslashes(urldecode(Tools::getValue('changeParentUrl'))).'";</script>';
-if (isset($_GET['installBoughtModule']))
+if (Tools::isSubmit('installBoughtModule'))
 {
 	$file = false;
 	while ($file === false OR file_exists(_PS_MODULE_DIR_.$file))
@@ -66,9 +66,12 @@ if (isset($_GET['installBoughtModule']))
 	die(displayJavascriptAlert('Module copied to disk'));
 }
 
-function displayJavascriptAlert($s){echo '<script type="text/javascript">alert(\''.addslashes($s).'\');</script>';}
+function displayJavascriptAlert($s)
+{
+	echo '<script type="text/javascript">alert(\''.addslashes($s).'\');</script>';
+}
 
-if (isset($_GET['ajaxProductManufacturers']))
+if (Tools::isSubmit('ajaxProductManufacturers'))
 {
 	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$manufacturers = Manufacturer::getManufacturers();
@@ -80,12 +83,12 @@ if (isset($_GET['ajaxProductManufacturers']))
 		die('['.implode(',', $jsonArray).']');
 	}
 }
-if (isset($_GET['ajaxReferrers']))
+if (Tools::isSubmit('ajaxReferrers'))
 {
 	require('tabs/AdminReferrers.php');
 }
 
-if (isset($_GET['ajaxProductSuppliers']))
+if (Tools::isSubmit('ajaxProductSuppliers'))
 {
 	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$suppliers = Supplier::getSuppliers();
@@ -98,7 +101,7 @@ if (isset($_GET['ajaxProductSuppliers']))
 	}
 }
 
-if (isset($_GET['ajaxProductAccessories']))
+if (Tools::isSubmit('ajaxProductAccessories'))
 {
 	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$jsonArray = array();
@@ -121,7 +124,7 @@ if (isset($_GET['ajaxProductAccessories']))
 	die('['.implode(',', $jsonArray).']');
 }
 
-if (isset($_GET['ajaxDiscountCustomers']))
+if (Tools::isSubmit('ajaxDiscountCustomers'))
 {
 	AdminTab::$currentIndex = 'index.php?tab=AdminDiscounts';
 	$jsonArray = array();
@@ -186,7 +189,7 @@ if ($step = (int)(Tools::getValue('ajaxProductTab')))
 		$admin->{$switchArray[$step]}($product, $languages, $defaultLanguage);
 }
 
-if (isset($_GET['getAvailableFields']) and isset($_GET['entity']))
+if (Tools::isSubmit('getAvailableFields') AND Tools::isSubmit('entity'))
 {
 	AdminTab::$currentIndex = 'index.php?tab=AdminImport';
 	$jsonArray = array();
@@ -201,7 +204,7 @@ if (isset($_GET['getAvailableFields']) and isset($_GET['entity']))
 	die('['.implode(',', $jsonArray).']');
 }
 
-if (array_key_exists('ajaxModulesPositions', $_POST))
+if (Tools::isSubmit('ajaxModulesPositions'))
 {
 	$id_module = (int)(Tools::getValue('id_module'));
 	$id_hook = (int)(Tools::getValue('id_hook'));
@@ -218,7 +221,7 @@ if (array_key_exists('ajaxModulesPositions', $_POST))
 		die('{"hasError" : true, "errors" : "This module can not be loaded"}');
 }
 
-if (array_key_exists('ajaxCategoriesPositions', $_POST))
+if (Tools::isSubmit('ajaxCategoriesPositions'))
 {
 	$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
 	$id_category_parent = (int)(Tools::getValue('id_category_parent'));
@@ -250,7 +253,7 @@ if (array_key_exists('ajaxCategoriesPositions', $_POST))
 
 }
 
-if (array_key_exists('ajaxCMSCategoriesPositions', $_POST))
+if (Tools::isSubmit('ajaxCMSCategoriesPositions'))
 {
 	$id_cms_category_to_move = (int)(Tools::getValue('id_cms_category_to_move'));
 	$id_cms_category_parent = (int)(Tools::getValue('id_cms_category_parent'));
@@ -278,7 +281,7 @@ if (array_key_exists('ajaxCMSCategoriesPositions', $_POST))
 		die('{"hasError" : true, "errors" : "This cms category can not be loaded"}');
 }
 
-if (array_key_exists('ajaxCMSPositions', $_POST))
+if (Tools::isSubmit('ajaxCMSPositions'))
 {
 	$id_cms = (int)(Tools::getValue('id_cms'));
 	$id_category = (int)(Tools::getValue('id_cms_category'));
@@ -307,7 +310,7 @@ if (array_key_exists('ajaxCMSPositions', $_POST))
 }
 
 /* Modify product position in catalog */
-if (array_key_exists('ajaxProductsPositions', $_POST))
+if (Tools::isSubmit('ajaxProductsPositions'))
 {
 	$way = (int)(Tools::getValue('way'));
 	$id_product = (int)(Tools::getValue('id_product'));
@@ -335,7 +338,7 @@ if (array_key_exists('ajaxProductsPositions', $_POST))
 		}
 }
 
-if (array_key_exists('ajaxProductImagesPositions', $_POST))
+if (Tools::isSubmit('ajaxProductImagesPositions'))
 {
 	$id_image = (int)(Tools::getValue('id_image'));
 	$way = (int)(Tools::getValue('way'));
@@ -365,7 +368,7 @@ if (array_key_exists('ajaxProductImagesPositions', $_POST))
 }
 
 
-if (isset($_GET['ajaxProductPackItems']))
+if (Tools::isSubmit('ajaxProductPackItems'))
 {
 	$jsonArray = array();
 	$products = Db::getInstance()->ExecuteS('
@@ -382,7 +385,7 @@ if (isset($_GET['ajaxProductPackItems']))
 	die('['.implode(',', $jsonArray).']');
 }
 
-if (isset($_GET['ajaxStates']) AND isset($_GET['id_country']))
+if (Tools::isSubmit('ajaxStates') AND Tools::isSubmit('id_country'))
 {
 	$states = Db::getInstance()->ExecuteS('
 	SELECT s.id_state, s.name
@@ -812,7 +815,7 @@ if (Tools::isSubmit('syncImapMail'))
 }
 
 /* Modify attribute position */
-if (array_key_exists('ajaxAttributesPositions', $_POST))
+if (Tools::isSubmit('ajaxAttributesPositions'))
 {
 	$way = (int)(Tools::getValue('way'));
 	$id_attribute = (int)(Tools::getValue('id_attribute'));
@@ -841,7 +844,7 @@ if (array_key_exists('ajaxAttributesPositions', $_POST))
 }
 
 /* Modify group attribute position */
-if (array_key_exists('ajaxGroupsAttributesPositions', $_POST))
+if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 {
 	$way = (int)(Tools::getValue('way'));
 	$id_attribute_group = (int)(Tools::getValue('id_attribute_group'));
@@ -873,7 +876,7 @@ if (array_key_exists('ajaxGroupsAttributesPositions', $_POST))
 }
 
 /* Modify feature position */
-if (array_key_exists('ajaxFeaturesPositions', $_POST))
+if (Tools::isSubmit('ajaxFeaturesPositions'))
 {
 	$way = (int)(Tools::getValue('way'));
 	$id_feature = (int)(Tools::getValue('id_feature'));
