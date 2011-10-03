@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,13 +32,13 @@
 class WebserviceOutputBuilderCore
 {
 	/**
-	 * 
+	 *
 	 * @var int constant
 	 */
 	const VIEW_LIST = 1;
 	const VIEW_DETAILS = 2;
-	
-	protected $wsUrl;	
+
+	protected $wsUrl;
 	protected $output;
 	public $objectRender;
 	protected $wsResource;
@@ -47,7 +47,7 @@ class WebserviceOutputBuilderCore
 	protected $fieldsToDisplay;
 	protected $specificFields = array();
 	protected $virtualFields = array();
-	
+
 	// Header properties
 	protected $headerParams = array(
 		'Access-Time'	=> 0,
@@ -55,22 +55,22 @@ class WebserviceOutputBuilderCore
 		'PSWS-Version'	=> 0,
 		'Content-Type'	=> 0,
 	);
-	
-	/** 
+
+	/**
 	 * @var string Status header sent at return
 	 */
 	protected $status;
-	
+
 	public function __construct($ws_url)
 	{
 		$this->status = $_SERVER['SERVER_PROTOCOL'].' 200 OK';
 		$this->wsUrl = $ws_url;
 	}
-	
+
 	/**
 	 * Set the render object for set the output format.
 	 * Set the Content-type for the http header.
-	 * 
+	 *
 	 * @param WebserviceOutputInterface $obj_render
 	 * @throw WebserviceException if the object render is not an instance of WebserviceOutputInterface
 	 * @return $this
@@ -79,14 +79,14 @@ class WebserviceOutputBuilderCore
 	{
 		if (!$obj_render instanceof WebserviceOutputInterface)
 			throw new WebserviceException('Obj_render param must be an WebserviceOutputInterface object type', array(83, 500));
-		
+
 		$this->objectRender = $obj_render;
 		$this->objectRender->setWsUrl($this->wsUrl);
 		if ($this->objectRender->getContentType())
 			$this->setHeaderParams('Content-Type', $this->objectRender->getContentType());
 		return $this;
 	}
-	
+
 	/**
 	 * getter
 	 * @return WebserviceOutputInterface
@@ -94,12 +94,12 @@ class WebserviceOutputBuilderCore
 	public function getObjectRender()
 	{
 		return $this->objectRender;
-	} 
-	
+	}
+
 	/**
 	 * Need to have the resource list to get the class name for an entity,
-	 * To build 
-	 * 
+	 * To build
+	 *
 	 * @param array $resources
 	 * @return $this
 	 */
@@ -108,13 +108,13 @@ class WebserviceOutputBuilderCore
 		$this->wsResource = $resources;
 		return $this;
 	}
-	
+
 	/**
 	 * This method return an array with each http header params for a content.
 	 * This check each required params.
-	 * 
+	 *
 	 * If this method is overrided don't forget to check required specific params (for xml etc...)
-	 * 
+	 *
 	 * @return array
 	 */
 	public function buildHeader()
@@ -127,7 +127,7 @@ class WebserviceOutputBuilderCore
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * @param $key The normalized key expected for an http response
 	 * @param $value
@@ -142,7 +142,7 @@ class WebserviceOutputBuilderCore
 		$this->headerParams[$key] = $value;
 		return $this;
 	}
-	
+
 	/**
 	 * @param null|string $key if null get all header params otherwise the params specified by the key
 	 * @throw WebserviceException if the key is corrupted (use Validate::isCleanHtml method)
@@ -152,10 +152,10 @@ class WebserviceOutputBuilderCore
 	public function getHeaderParams($key = null)
 	{
 		$return = '';
-		
+
 		if (!is_null($key))
 		{
-			if (!is_null($key) && Validate::isCleanHtml($key))
+			if (!Validate::isCleanHtml($key))
 				throw new WebserviceException('the key you write is a corrupted text.', array(95, 500));
 			if (!array_key_exists($key, $this->headerParams))
 				throw new WebserviceException(sprintf('The key %s does\'nt exist', $key), array(96, 500));
@@ -163,13 +163,13 @@ class WebserviceOutputBuilderCore
 		}
 		else
 			$return = $this->headerParams;
-		
+
 		return $return;
 	}
-	
+
 	/**
 	 * Delete all Header parameters previously set.
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function resetHeaderParams()
@@ -177,7 +177,7 @@ class WebserviceOutputBuilderCore
 		$this->headerParams = array();
 		return $this;
 	}
-	
+
 	/**
 	 * @return string the normalized status for http request
 	 */
@@ -233,10 +233,10 @@ class WebserviceOutputBuilderCore
 				break;
 		}
 	}
-	
+
 	/**
 	 * Build errors output using an error array
-	 * 
+	 *
 	 * @param array $errors
 	 * @return string output in the format specified by WebserviceOutputBuilder::objectRender
 	 */
@@ -264,7 +264,7 @@ class WebserviceOutputBuilderCore
 		}
 		return $str_output;
 	}
-	
+
 	/**
 	 * Build the resource list in the output format specified by WebserviceOutputBuilder::objectRender
 	 * @param $key_permissions
@@ -290,11 +290,11 @@ class WebserviceOutputBuilderCore
 					'head'				=> (in_array('HEAD', $key_permissions[$resourceName]) ? 'true' : 'false'),
 				);
 				$output .= $this->objectRender->renderNodeHeader($resourceName, array(), $more_attr);
-				
+
 				$output .= $this->objectRender->renderNodeHeader('description', array(), $more_attr);
 				$output .= $resource['description'];
 				$output .= $this->objectRender->renderNodeFooter('description', array());
-				
+
 				if (!isset($resource['specific_management']) || !$resource['specific_management'])
 				{
 					$more_attr_schema = array(
@@ -322,8 +322,8 @@ class WebserviceOutputBuilderCore
 	 * 		- list of entities,
 	 * 		- tree diagram of entity details (full or minimum),
 	 * 		- schema (synopsis & blank),
-	 * 
-	 * @param array $objects each object created by entity asked 
+	 *
+	 * @param array $objects each object created by entity asked
 	 * 		  @see WebserviceOutputBuilder::executeEntityGetAndHead
 	 * @param null|string $schema_to_display if null display the entities list or entity details.
 	 * @param string|array $fields_to_display the fields allow for the output
@@ -336,22 +336,22 @@ class WebserviceOutputBuilderCore
 		$this->fieldsToDisplay = $fields_to_display;
 		$this->depth = $depth;
 		$output = '';
-		
+
 		if ($schema_to_display != null)
 		{
 			$this->schemaToDisplay = $schema_to_display;
 			$this->objectRender->setSchemaToDisplay($this->schemaToDisplay);
-			
-			// If a shema is asked the view must be an details type 
+
+			// If a shema is asked the view must be an details type
 			$type_of_view = self::VIEW_DETAILS;
 		}
-		
+
 		$ws_params = $objects['empty']->getWebserviceParameters();
-		
+
 		// If a list is asked, need to wrap with a plural node
 		if ($type_of_view === self::VIEW_LIST)
 			$output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectsNodeName'], $ws_params);
-		
+
 		if (is_null($this->schemaToDisplay))
 		{
 			foreach ($objects as $key => $object)
@@ -369,11 +369,11 @@ class WebserviceOutputBuilderCore
 		{
 			$output .= $this->renderSchema($objects['empty'], $ws_params);
 		}
-		
+
 		// If a list is asked, need to wrap with a plural node
 		if ($type_of_view === self::VIEW_LIST)
 			$output .= $this->setIndent($depth).$this->objectRender->renderNodeFooter($ws_params['objectsNodeName'], $ws_params);
-		
+
 		if ($override)
 		$output = $this->objectRender->overrideContent($output);
 		return $output;
@@ -381,7 +381,7 @@ class WebserviceOutputBuilderCore
 
 	/**
 	 * Create the tree diagram with no details
-	 * 
+	 *
 	 * @param $object create by the entity
 	 * @param $depth the depth for the tree diagram
 	 * @return string
@@ -397,7 +397,7 @@ class WebserviceOutputBuilderCore
 
 	/**
 	 * Build a schema blank or synopsis
-	 * 
+	 *
 	 * @param $object create by the entity
 	 * @param $ws_params webserviceParams from the entity
 	 * @return string
@@ -420,7 +420,7 @@ class WebserviceOutputBuilderCore
 
 	/**
 	 * Build the entity detail.
-	 * 
+	 *
 	 * @param ObjectModel $object create by the entity
 	 * @param int $depth the depth for the tree diagram
 	 * @return string
@@ -430,14 +430,14 @@ class WebserviceOutputBuilderCore
 		$output = '';
 		$ws_params = $object->getWebserviceParameters();
 		$output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
-		
+
 		if ($object->id != 0)
 		{
 			// This to add virtual Fields for a particular entity.
 			$virtual_fields = $this->addVirtualFields($ws_params['objectsNodeName'], $object);
 			if (!empty($virtual_fields))
 				$ws_params['fields'] = array_merge($ws_params['fields'], $virtual_fields);
-			
+
 			foreach ($ws_params['fields'] as $field_name => $field)
 			{
 				if ($this->fieldsToDisplay === 'full' || array_key_exists($field_name, $this->fieldsToDisplay))
@@ -468,7 +468,7 @@ class WebserviceOutputBuilderCore
 
 	/**
 	 * Build a field and use recursivity depend on the depth parameter.
-	 * 
+	 *
 	 * @param ObjectModel $object create by the entity
 	 * @param array $ws_params webserviceParams from the entity
 	 * @param string $field_name
@@ -480,7 +480,7 @@ class WebserviceOutputBuilderCore
 	{
 		$output = '';
 		$show_field = true;
-		
+
 		if (isset($ws_params['hidden_fields']) && in_array($field_name, $ws_params['hidden_fields']))
 			return;
 
@@ -489,9 +489,10 @@ class WebserviceOutputBuilderCore
 			$field['synopsis_details'] = $this->getSynopsisDetails($field);
 			if ($field_name === 'id')
 				$show_field = false;
-			elseif (isset($field['setter']) && !$field['setter'])
-				$show_field = false;
 		}
+		else if ($this->schemaToDisplay === 'blank')
+			if (isset($field['setter']) && !$field['setter'])
+				$show_field = false;
 
 		// don't set any value for a schema
 		if (isset($field['synopsis_details']) || $this->schemaToDisplay === 'blank')
@@ -504,10 +505,10 @@ class WebserviceOutputBuilderCore
 			$field['value'] = $object->$field['getter']();
 		elseif (!isset($field['value']))
 			$field['value'] = $object->$field_name;
-		
+
 		// this apply specific function for a particular field on a choosen entity
 		$field = $this->overrideSpecificField($ws_params['objectsNodeName'], $field_name, $field, $object, $ws_params);
-		
+
 		// don't display informations for a not existant id
 		if (substr($field['sqlId'], 0, 3) == 'id_' && $field['value'] == 0)
 		{
@@ -519,8 +520,8 @@ class WebserviceOutputBuilderCore
 		// set "id" for each node name which display the id of the entity
 		if ($field_name === 'id')
 			$field['sqlId'] = 'id';
-		
-		
+
+
 		// don't display the node id for a synopsis schema
 		if ($show_field)
 			$output .= $this->setIndent($depth-1).$this->objectRender->renderField($field);
@@ -528,8 +529,8 @@ class WebserviceOutputBuilderCore
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param $object
 	 * @param $depth
 	 * @param $associations
@@ -545,17 +546,17 @@ class WebserviceOutputBuilderCore
 			{
 				$getter = $association['getter'];
 				$objects_assoc = array();
-				
+
 				$fields_assoc = array();
 				if (isset($association['fields']))
-					$fields_assoc = $association['fields']; 
-				
+					$fields_assoc = $association['fields'];
+
 				$parent_details = array(
 						'object_id'	=> $object->id,
 						'entity_name'	=> $ws_params['objectNodeName'],
 						'entities_name'	=> $ws_params['objectsNodeName'],
 					);
-				
+
 				if (method_exists($object, $getter) && is_null($this->schemaToDisplay))
 				{
 					$association_resources = $object->$getter();
@@ -571,7 +572,7 @@ class WebserviceOutputBuilderCore
 				{
 					$objects_assoc[] = '';
 				}
-				
+
 				$class_name = null;
 				if (isset($this->wsResource[$assoc_name]['class']) && class_exists($this->wsResource[$assoc_name]['class'], true))
 					$class_name = $this->wsResource[$assoc_name]['class'];
@@ -614,7 +615,7 @@ class WebserviceOutputBuilderCore
 		$output .= $this->objectRender->renderAssociationWrapperFooter();
 		return $output;
 	}
-	
+
 	private function renderFlatAssociation($object, $depth, $assoc_name, $resource_name, $fields_assoc, $object_assoc, $parent_details)
 	{
 		$output = '';
@@ -627,7 +628,7 @@ class WebserviceOutputBuilderCore
 				$more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/'.$object_assoc['id'];
 		}
 		$output .= $this->setIndent($depth-1).$this->objectRender->renderNodeHeader($resource_name, array(), $more_attr);
-		
+
 		foreach ($fields_assoc as $field_name=>$field)
 		{
 			if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name]))
@@ -644,17 +645,17 @@ class WebserviceOutputBuilderCore
 				}
 				$field['entities_name'] = $assoc_name;
 				$field['entity_name'] = $resource_name;
-				
+
 				if (!is_null($this->schemaToDisplay))
 					$field['synopsis_details'] = $this->getSynopsisDetails($field);
-				
+
 				$output .= $this->setIndent($depth-1).$this->objectRender->renderField($field);
 			}
 		}
 		$output .= $this->setIndent($depth-1).$this->objectRender->renderNodeFooter($resource_name, array());
 		return $output;
 	}
-	
+
 	public function setIndent($depth)
 	{
 		$string = '';
@@ -663,7 +664,7 @@ class WebserviceOutputBuilderCore
 			$string .= "\t";
 		return $string;
 	}
-	
+
 	public function getSynopsisDetails($field)
 	{
 		$arr_details = '';
@@ -675,9 +676,9 @@ class WebserviceOutputBuilderCore
 			$arr_details['format'] = $field['validateMethod'];
 		return $arr_details;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string|object $object
 	 * @param string $method
 	 * @return $this
@@ -689,9 +690,9 @@ class WebserviceOutputBuilderCore
 		} catch (WebserviceException $e) {
 			throw $e;
 		}
-		
+
 		$this->specificFields[$field_name] = array('entity'=>$entity_name, 'object' => $object, 'method' => $method, 'type' => gettype($object));
-		return $this;	
+		return $this;
 	}
 	private function validateObjectAndMethod($object, $method)
 	{
@@ -712,7 +713,7 @@ class WebserviceOutputBuilderCore
 				$object = new $this->specificFields[$field_name]['object']();
 			elseif ($this->specificFields[$field_name]['type'] == 'object')
 				$object= $this->specificFields[$field_name]['object'];
-			
+
 			$field = $object->{$this->specificFields[$field_name]['method']}($field, $entity_object, $ws_params);
 		}
 		return $field;
@@ -724,7 +725,7 @@ class WebserviceOutputBuilderCore
 		} catch (WebserviceException $e) {
 			throw $e;
 		}
-		
+
 		$this->virtualFields[$entity_name][] = array('parameters' => $parameters, 'object' => $object, 'method' => $method, 'type' => gettype($object));
 	}
 	public function getVirtualFields()
@@ -743,7 +744,7 @@ class WebserviceOutputBuilderCore
 					$object = new $function_infos['object']();
 				elseif ($function_infos['type'] == 'object')
 					$object= $function_infos['object'];
-				
+
 				$return_fields = $object->{$function_infos['method']}($entity_object, $function_infos['parameters']);
 				foreach ($return_fields as $field_name => $value)
 				{
@@ -756,7 +757,7 @@ class WebserviceOutputBuilderCore
 		}
 		return $arr_return;
 	}
-	
+
 	public function setFieldsToDisplay($fields)
 	{
 		$this->fieldsToDisplay = $fields;

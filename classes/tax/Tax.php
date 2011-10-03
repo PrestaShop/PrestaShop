@@ -52,6 +52,10 @@ class TaxCore extends ObjectModel
 	protected static $_product_country_tax = array();
 	protected static $_product_tax_via_rules = array();
 
+	protected	$webserviceParameters = array(
+		'objectsNodeName' => 'taxes',
+	);
+
 	public function getFields()
 	{
 		$this->validateFields();

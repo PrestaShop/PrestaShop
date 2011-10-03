@@ -730,7 +730,7 @@ if ($lm->getIncludeTradFilename())
 				</div>
 				</div>
 
-				<div id="benefitsBlock">
+				<div id="benefitsBlock" style="display: none;">
 				<!-- Partner Modules -->
 				<?php
 					if (!isset($_GET['language']))

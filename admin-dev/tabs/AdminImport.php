@@ -1376,6 +1376,18 @@ class AdminImport extends AdminTab
 					};
 			</script>';
 		echo '
+		<fieldset style="float:right;margin:0 10px 10px 0">
+			<legend><img src="../img/admin/excel_file.png">'.$this->l('Sample files').'</legend>
+				<ul style="">
+					<li style="text-decoration: underline"><a href="../docs/csv_import/categories_import.csv">'.$this->l('Categories sample file').'</a></li>
+					<li style="text-decoration: underline"><a href="../docs/csv_import/products_import.csv">'.$this->l('Products sample file').'</a></li>
+					<li style="text-decoration: underline"><a href="../docs/csv_import/combinations_import.csv">'.$this->l('Combinations sample file').'</a></li>
+					<li style="text-decoration: underline"><a href="../docs/csv_import/customers_import.csv">'.$this->l('Customers sample file').'</a></li>
+					<li style="text-decoration: underline"><a href="../docs/csv_import/addresses_import.csv">'.$this->l('Addresses sample file').'</a></li>
+					<li style="text-decoration: underline"><a href="../docs/csv_import/manufacturers_import.csv">'.$this->l('Manufacturers sample file').'</a></li>
+					<li style="text-decoration: underline"><a href="../docs/csv_import/suppliers_import.csv">'.$this->l('Suppliers sample file').'</a></li>
+				</ul>
+		</fieldset>
 		<fieldset class="width3">
 			<legend><img src="../img/admin/import.gif" />'.$this->l('Upload').'</legend>
 			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="POST" enctype="multipart/form-data">
@@ -1456,12 +1468,11 @@ class AdminImport extends AdminTab
 							<div class="space margin-form">
 								<input type="submit" name="submitImportFile" value="'.$this->l('Next step').'" class="button"/>
 							</div>
-							<div>
-							'.$this->l('Note that the category import does not support categories of the same name').'.
+						<div class="warn">
+							<p>'.$this->l('Note that the category import does not support categories of the same name').'.</p>
+
+							<p>'.$this->l('Note that references are not specified as UNIQUE in the database').'.</p>
 							</div>
-						<div>
-							'.$this->l('Note that references are not specified as UNIQUE in the database').'.
-						</div>
 						';
 				}
 				else

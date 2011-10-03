@@ -36,7 +36,6 @@ if (!isset($_POST['controller']) && isset($_POST['tab']))
 	$_POST['controller'] = strtolower($_POST['tab']);
 if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
 	$_REQUEST['controller'] = strtolower($_REQUEST['tab']);
-	
+
 Dispatcher::getInstance()->setControllerDirectories(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
 Dispatcher::getInstance()->dispatch();
-

@@ -2656,7 +2656,11 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateDownload($id_product_old, $id_product_new)
 	{
-		$resource = Db::getInstance()->ExecuteS('SELECT `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable` FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.(int)($id_product_old));
+		$sql = 'SELECT `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`
+				FROM `'._DB_PREFIX_.'product_download`
+				WHERE `id_product` = '.(int)$id_product_old;
+		$resource = Db::getInstance()->Execute($sql);
+
 		if (!Db::getInstance()->NumRows())
 			return true;
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`) VALUES';

@@ -1427,45 +1427,8 @@ $this->standalone = true;
 			}
 		}
 
-		if ($this->apacheModExists('evasive'))
+		if (Tools::apacheModExists('evasive'))
 			sleep(1);
-	}
-	/**
-	 * apacheModExists return true if the apache module $name is loaded
-	 * @TODO move this method in class Information (when it will exist)
-	 *
-	 * @param string $name module name
-	 * @return boolean true if exists
-	 */
-	function apacheModExists($name)
-	{
-		if(function_exists('apache_get_modules'))
-		{
-			static $apacheModuleList = null;
-
-			if (!is_array($apacheModuleList))
-				$apacheModuleList = apache_get_modules();
-
-			// we need strpos (example can be evasive20
-			foreach($apacheModuleList as $module)
-			{
-				if (strpos($module, $name)!==false)
-					return true;
-		}
-		}
-		else{
-			// If apache_get_modules does not exists,
-			// one solution should be parsing httpd.conf,
-			// but we could simple parse phpinfo(INFO_MODULES) return string
-			ob_start();
-			phpinfo(INFO_MODULES);
-			$phpinfo = ob_get_contents();
-			ob_end_clean();
-			if (strpos($phpinfo, $module) !== false)
-				return true;
-		}
-
-		return false;
 	}
 
 	private function _getJsErrorMsgs()

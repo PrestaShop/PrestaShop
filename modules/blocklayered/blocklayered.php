@@ -484,7 +484,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang
 			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
-			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 	}
 	}
 
@@ -500,7 +500,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang
 			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
-			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 		}
 	}
 	
@@ -537,7 +537,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
@@ -550,7 +550,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
@@ -572,7 +572,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang
 			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
-			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 		}
 	}
 	
@@ -609,7 +609,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
@@ -622,7 +622,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
@@ -659,7 +659,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang
 			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang)).'\',
-			\''.pSQL(htmlspecialchars(Tools::getValue('meta_title_'.$id_lang))).'\')');
+			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 	}
 	}
 	
@@ -722,7 +722,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
@@ -735,7 +735,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
@@ -782,7 +782,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['url_name']).'" />
+						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['url_name'], true).'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
@@ -795,7 +795,7 @@ class BlockLayered extends Module
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.htmlspecialchars(@$langValue[$language['id_lang']]['meta_title']).'" />
+							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
 		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
@@ -1732,7 +1732,7 @@ class BlockLayered extends Module
 			if(Tools::getValue('selected_filters'))
 				$url = Tools::getValue('selected_filters');
 			else
-				$url = preg_replace('/\/(?:\w*)\/(?:[0-9]+[-\w]*)([^\?]*)\??.*/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
+				$url = preg_replace('/\/(?:\w*)\/(?:[0-9]+[-\w]*)([^\?]*)\??.*/', '$1', Tools::safeOutput($_SERVER['REQUEST_URI'], true));
 			
 			$urlAttributes = explode('/',$url);
 			array_shift($urlAttributes);

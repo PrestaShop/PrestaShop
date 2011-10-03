@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2010 PrestaShop 
+* 2007-2010 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,173 +28,173 @@
 class WebserviceRequestCore
 {
 	protected $_available_languages = null;
-	/** 
+	/**
 	 * Errors triggered at execution
 	 * @var array
 	 */
 	public $errors = array();
-	
+
 	/**
 	 * Set if return should display content or not
 	 * @var boolean
 	 */
 	protected $_outputEnabled = true;
-	
+
 	/**
 	 * Set if the management is specific or if it is classic (entity management)
 	 * @var boolean
 	 */
 	protected $objectSpecificManagement = false;
-	
+
 	/**
 	 * Base PrestaShop webservice URL
 	 * @var string
 	 */
 	public $wsUrl;
-	
+
 	/**
 	 * PrestaShop Webservice Documentation URL
-	 * @var string 
+	 * @var string
 	 */
 	protected $_docUrl = 'http://prestashop.com/docs/1.4/webservice';
-	
+
 	/**
 	 * Set if the authentication key was checked
 	 * @var boolean
 	 */
 	protected $_authenticated = false;
-	
+
 	/**
 	 * HTTP Method to support
 	 * @var string
 	 */
 	public $method;
-	
+
 	/**
 	 * The segment of the URL
 	 * @var array
 	 */
 	public $urlSegment = array();
-	
+
 	/**
 	 * The segment list of the URL after the "api" segment
 	 * @var array
 	 */
 	public $urlFragments = array();
-	
+
 	/**
 	 * The time in microseconds of the start of the execution of the web service request
 	 * @var int
 	 */
 	protected $_startTime = 0;
-	
+
 	/**
 	 * The list of each resources manageable via web service
 	 * @var array
 	 */
 	public $resourceList;
-	
+
 	/**
 	 * The configuration parameters of the current resource
 	 * @var array
 	 */
 	public $resourceConfiguration;
-	
+
 	/**
 	 * The permissions for the current key
 	 * @var array
 	 */
 	public $keyPermissions;
-	
+
 	/**
 	 * The XML string to display if web service call succeed
 	 * @var string
 	 */
 	protected $specificOutput = '';
-	
+
 	/**
 	 * The list of objects to display
 	 * @var array
 	 */
 	public $objects;
-	
+
 	/**
 	 * The current object to support, it extends the PrestaShop ObjectModel
 	 * @var ObjectModel
 	 */
 	protected $_object;
-	
+
 	/**
-	 * The schema to display. 
+	 * The schema to display.
 	 * If null, no schema have to be displayed and normal management has to be performed
-	 * @var string 
+	 * @var string
 	 */
 	public $schemaToDisplay;
-	
+
 	/**
 	 * The fields to display. These fields will be displayed when retrieving objects
 	 * @var string
 	 */
 	public $fieldsToDisplay = 'minimum';
-	
+
 	/**
 	 * If we are in PUT or POST case, we use this attribute to store the xml string value during process
 	 * @var string
 	 */
 	protected $_inputXml;
-	
+
 	/**
 	 * Object instance for singleton
 	 * @var WebserviceRequest
 	 */
 	protected static $_instance;
-	
+
 	/**
 	 * Key used for authentication
 	 * @var string
 	 */
 	protected $_key;
-	
+
 	/**
 	 * This is used to have a deeper tree diagram.
 	 * @var int
 	 */
 	public $depth = 0;
-	
+
 	/**
 	 * Name of the output format
 	 * @var string
 	 */
 	protected $outputFormat = 'xml';
-	
+
 	/**
 	 * The object to build the output.
 	 * @var WebserviceOutputBuilder
 	 */
 	protected $objOutput;
-	
+
 	/**
 	 * Save the class name for override used in getInstance()
 	 * @var ws_current_classname
 	 */
 	public static $ws_current_classname;
-	
-	
+
+
 	public static $shopIDs;
 
-	
+
 	public function getOutputEnabled()
 	{
 		return $this->_outputEnabled;
 	}
-	
+
 	public function setOutputEnabled($bool)
 	{
 		if (Validate::isBool($bool))
-			$this->_outputEnabled = $bool; 
+			$this->_outputEnabled = $bool;
 		return $this;
 	}
-	
+
 	/**
 	 * Get WebserviceRequest object instance (Singleton)
 	 *
@@ -206,7 +206,7 @@ class WebserviceRequestCore
 			self::$_instance = new WebserviceRequest::$ws_current_classname();
 		return self::$_instance;
 	}
-	
+
 	protected function getOutputObject($type)
 	{
 		switch ($type)
@@ -218,7 +218,7 @@ class WebserviceRequestCore
 		}
 		return $obj_render;
 	}
-	
+
 	public static function getResources()
 	{
 		$resources = array(
@@ -262,16 +262,17 @@ class WebserviceRequestCore
 			'stock_movement_reasons' => array('description' => 'The stock movement reason', 'class' => 'StockMvtReason'),
 			'shops' => array('description' => 'Shops from multi-shop feature', 'class' => 'Shop'),
 			'shop_groups' => array('description' => 'Shop groups from multi-shop feature', 'class' => 'GroupShop'),
+			'taxes' => array('description' => 'The tax rate', 'class' => 'Tax'),
 		);
 		ksort($resources);
 		return $resources;
 	}
-	
+
 	// @todo Check how get parameters
 	// @todo : set this method out
 	/**
 	 * This method is used for calculate the price for products on the output details
-	 * 
+	 *
 	 * @param $field
 	 * @param $entity_object
 	 * @param $ws_params
@@ -286,11 +287,11 @@ class WebserviceRequestCore
 		}
 		return $field;
 	}
-	
+
 	// @todo : set this method out
 	/**
 	 * This method is used for calculate the price for products on a virtual fields
-	 * 
+	 *
 	 * @param $entity_object
 	 * @param array $parameters
 	 * @return array
@@ -318,12 +319,12 @@ class WebserviceRequestCore
 			$decimals = (isset($value['decimals']) ? $value['decimals'] : Configuration::get('PS_PRICE_ROUND_MODE'));
 			$id_product_attribute = (isset($value['product_attribute']) ? $value['product_attribute'] : null);
 			$id_county = (isset($value['county']) ? $value['county'] : null);
-			
+
 			$only_reduc = (isset($value['only_reduction']) ? $value['only_reduction'] : false);
 			$use_reduc = (isset($value['use_reduction']) ? $value['use_reduction'] : true);
 			$use_ecotax = (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
 			$specific_price_output = null;
-			$return_value = Product::priceCalculation(null, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity, 
+			$return_value = Product::priceCalculation(null, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
 									$use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
 			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>$return_value);
 		}
@@ -332,7 +333,7 @@ class WebserviceRequestCore
 	// @todo : set this method out
 	/**
 	 * This method is used for calculate the price for products on a virtual fields
-	 * 
+	 *
 	 * @param $entity_object
 	 * @param array $parameters
 	 * @return array
@@ -347,7 +348,7 @@ class WebserviceRequestCore
 		$arr_return = $this->specificPriceCalculation($parameters);
 		return $arr_return;
 	}
-	
+
 	/**
 	 * Start Webservice request
 	 * 	Check webservice activation
@@ -356,7 +357,7 @@ class WebserviceRequestCore
 	 * 	Check HTTP Method
 	 * 	Execute the action
 	 * 	Display the result
-	 *	
+	 *
 	 * @param string $key
 	 * @param string $method
 	 * @param string $url
@@ -370,7 +371,7 @@ class WebserviceRequestCore
 		// Time logger
 		$this->_startTime = microtime(true);
 		$this->objects = array();
-		
+
 		// Two global vars, for compatibility with the PS core...
 		global $webservice_call, $display_errors;
 		$webservice_call = true;
@@ -379,13 +380,13 @@ class WebserviceRequestCore
 		$this->wsUrl = Tools::getHttpHost(true).__PS_BASE_URI__;
 		// set the output object which manage the content and header structure and informations
 		$this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
-		
+
 		// Error handler
 		set_error_handler(array($this, 'webserviceErrorHandler'));
 		ini_set('html_errors', 'off');
-		
+
 		$this->_key = trim($key);
-		
+
 		$this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;
 		// Set the render object to build the output on the asked format (XML, JSON, CSV, ...)
 		$this->objOutput->setObjectRender($this->getOutputObject($this->outputFormat));
@@ -400,8 +401,8 @@ class WebserviceRequestCore
 			$this->urlFragments = $params;
 			$this->_inputXml = $inputXml;
 			$this->depth = isset($this->urlFragments['depth']) ? (int)$this->urlFragments['depth'] : $this->depth;
-			
-			
+
+
 			try {
 				// Method below set a particular fonction to use on the price field for products entity
 				// @see WebserviceRequest::getPriceForProduct() method
@@ -415,7 +416,7 @@ class WebserviceRequestCore
 			} catch (Exception $e) {
 				$this->setError(500, $e->getMessage(), $e->getCode());
 			}
-			
+
 			if (isset($this->urlFragments['language']))
 				$this->_available_languages = $this->filterLanguage();
 			else
@@ -423,25 +424,25 @@ class WebserviceRequestCore
 				foreach (Language::getLanguages() as $key=>$language)
 					$this->_available_languages[] = $language['id_lang'];
 			}
-			
+
 			if (empty($this->_available_languages))
 				$this->setError(400, 'language is not available', 81);
-			
+
 			// Need to set available languages for the render object.
 			// Thus we can filter i18n field for the output
 			// @see WebserviceOutputXML::renderField() method for example
 			$this->objOutput->objectRender->setLanguages($this->_available_languages);
-			
+
 			// check method and resource
 			if (empty($this->errors) && $this->checkResource() && $this->checkHTTPMethod())
 			{
 				// The resource list is necessary for build the output
 				$this->objOutput->setWsResources($this->resourceList);
-				
+
 				// if the resource is a core entity...
 				if (!isset($this->resourceList[$this->urlSegment[0]]['specific_management']) || !$this->resourceList[$this->urlSegment[0]]['specific_management'])
 				{
-					
+
 					// load resource configuration
 					if ($this->urlSegment[0] != '')
 					{
@@ -472,7 +473,7 @@ class WebserviceRequestCore
 							$this->executeEntityDelete();
 							break;
 					}
-					// Need to set an object for the WebserviceOutputBuilder object in any case  
+					// Need to set an object for the WebserviceOutputBuilder object in any case
 					// because schema need to get webserviceParameters of this object
 					if (isset($object))
 						$this->objects['empty'] = $object;
@@ -489,7 +490,7 @@ class WebserviceRequestCore
 						$this->objectSpecificManagement = new $specificObjectName();
 						$this->objectSpecificManagement->setObjectOutput($this->objOutput)
 													   ->setWsObject($this);
-						
+
 						try {
 							$this->objectSpecificManagement->manage();
 						} catch (WebserviceException $e) {
@@ -506,8 +507,8 @@ class WebserviceRequestCore
 		unset($webservice_call);
 		unset ($display_errors);
 	}
-	
-	
+
+
 	/**
 	 * Set a webservice error
 	 *
@@ -522,7 +523,7 @@ class WebserviceRequestCore
 		$this->objOutput->setStatus($status);
 		$this->errors[] = $display_errors ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
 	}
-	
+
 	/**
 	 * Set a webservice error and propose a new value near from the available values
 	 *
@@ -537,7 +538,7 @@ class WebserviceRequestCore
 	{
 		$this->setError($num, $label.'. Did you mean: "'.$this->getClosest($value, $available_values).'"?'.(count($available_values) > 1 ? ' The full list is: "'.implode('", "', $available_values).'"' : ''), $code);
 	}
-	
+
 	/**
 	 * Return the nearest value picked in the values list
 	 *
@@ -565,9 +566,9 @@ class WebserviceRequestCore
 		}
 		return $closest;
 	}
-	
+
 	/**
-	 * Used to replace the default PHP error handler, in order to display PHP errors in a XML format 
+	 * Used to replace the default PHP error handler, in order to display PHP errors in a XML format
 	 *
 	 * @param string $errno contains the level of the error raised, as an integer
 	 * @param array $errstr contains the error message, as a string
@@ -579,7 +580,7 @@ class WebserviceRequestCore
 	{
 		if (!(error_reporting() & $errno))
 			return;
-		
+
 		switch($errno)
 		{
 			case E_ERROR:
@@ -626,7 +627,7 @@ class WebserviceRequestCore
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Check if there is one or more error
 	 *
@@ -636,7 +637,7 @@ class WebserviceRequestCore
 	{
 		return (boolean)$this->errors;
 	}
-	
+
 	/**
 	 * Check request authentication
 	 *
@@ -675,7 +676,7 @@ class WebserviceRequestCore
 					{
 						$this->setError(401, 'Authentification key is not active', 20);
 					}
-					
+
 					if (!$this->keyPermissions)
 					{
 						$this->setError(401, 'No permission for this authentication key', 21);
@@ -696,7 +697,7 @@ class WebserviceRequestCore
 			}
 		}
 	}
-	
+
 	/**
 	 * Check webservice activation
 	 *
@@ -711,7 +712,7 @@ class WebserviceRequestCore
 		}
 		return true;
 	}
-	
+
 	protected function shopHasRight($key)
 	{
 		$sql = 'SELECT 1
@@ -727,7 +728,7 @@ class WebserviceRequestCore
 		}
 		return true;
 	}
-	
+
 	protected function shopExists($params)
 	{
 		// Case no shop specified
@@ -736,7 +737,7 @@ class WebserviceRequestCore
 			self::$shopIDs[] = Configuration::get('PS_SHOP_DEFAULT');
 			return true;
 		}
-		
+
 		if ($params['id_shop'][0] == '[' && $params['id_shop'][strlen($params['id_shop']) - 1] == ']')
 			$shops = explode(',', substr($params['id_shop'], 1, strlen($params['id_shop']) - 2));
 		else
@@ -767,7 +768,7 @@ class WebserviceRequestCore
 		$this->setError(404, 'This shop id doesn\'t exist', 129);
 		return false;
 	}
-	
+
 	/**
 	 * Check HTTP method
 	 *
@@ -785,7 +786,7 @@ class WebserviceRequestCore
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Check resource validity
 	 *
@@ -812,8 +813,8 @@ class WebserviceRequestCore
 		}
 		return true;
 	}
-	
-	
+
+
 	protected function setObjects()
 	{
 		$objects = array();
@@ -840,18 +841,18 @@ class WebserviceRequestCore
 					$objects[] = $object;
 			}
 		}
-		
+
 		if (!empty($arr_avoid_id) || empty($ids))
 		{
 			$this->setError(404, 'Id(s) not exists: '.implode(', ', $arr_avoid_id), 87);
 			$this->_outputEnabled = true;
 		}
-		else 
+		else
 		{
-			
+
 		}
 	}
-	
+
 	protected function parseDisplayFields($str)
 	{
 		$bracket_level = 0;
@@ -891,7 +892,7 @@ class WebserviceRequestCore
 		}
 		return $fields;
 	}
-	
+
 	public function setFieldsToDisplay()
 	{
 		// set the fields to display in the list : "full", "minimum", "field_1", "field_1,field_2,field_3"
@@ -943,7 +944,7 @@ class WebserviceRequestCore
 		}
 		return true;
 	}
-	
+
 	protected function manageFilters()
 	{
 		// filtered fields which can not use filters : hidden_fields
@@ -953,12 +954,12 @@ class WebserviceRequestCore
 		foreach ($this->resourceConfiguration['fields'] as $fieldName => $field)
 			if ((!isset($this->resourceConfiguration['hidden_fields']) ||
 				(isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields']))))
-				if ((!isset($field['i18n']) || 
+				if ((!isset($field['i18n']) ||
 				(isset($field['i18n']) && !$field['i18n'])))
 					$available_filters[] = $fieldName;
 				else
 					$i18n_available_filters[] = $fieldName;
-		
+
 		// Date feature : date=1
 		if (!empty($this->urlFragments['date']) && $this->urlFragments['date'])
 		{
@@ -1011,7 +1012,7 @@ class WebserviceRequestCore
 								{
 									// contruct SQL join for linked tables
 									$sql_join .= 'LEFT JOIN `'._DB_PREFIX_.pSQL($this->resourceConfiguration['linked_tables'][$field]['table']).'` '.pSQL($field).' ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.pSQL($field).'.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
-					
+
 									// construct SQL filter for linked tables
 									foreach ($url_param as $field2 => $value)
 									{
@@ -1081,7 +1082,7 @@ class WebserviceRequestCore
 					}
 			}
 		}
-		
+
 		if (!$this->setFieldsToDisplay())
 			return false;
 		// construct SQL Sort
@@ -1093,7 +1094,7 @@ class WebserviceRequestCore
 				$sorts = explode(',', $matches[1]);
 			else
 				$sorts = array($this->urlFragments['sort']);
-	
+
 			$sql_sort .= ' ORDER BY ';
 			foreach ($sorts as $sort)
 			{
@@ -1147,12 +1148,12 @@ class WebserviceRequestCore
 		$filters['sql_filter'] = $sql_filter;
 		$filters['sql_sort'] = $sql_sort;
 		$filters['sql_limit'] = $sql_limit;
-		
+
 		return $filters;
 	}
-	
-	
-	
+
+
+
 	public function getFilteredObjectList()
 	{
 		$objects = array();
@@ -1162,7 +1163,7 @@ class WebserviceRequestCore
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_limit'];
 		//list entities
-		
+
 		$tmp = new $this->resourceConfiguration['retrieveData']['className']();
 		$sqlObjects = call_user_func_array(array($tmp, $this->resourceConfiguration['retrieveData']['retrieveMethod']), $this->resourceConfiguration['retrieveData']['params']);
 		if ($sqlObjects)
@@ -1174,13 +1175,13 @@ class WebserviceRequestCore
 			return $objects;
 		}
 	}
-	
+
 	public function getFilteredObjectDetails()
 	{
 		$objects = array();
-		if (!isset($this->urlFragments['display'])) 
+		if (!isset($this->urlFragments['display']))
 			$this->fieldsToDisplay = 'full';
-		
+
 		// Check if Object is accessible for this/those id_shop
 		$assoc = Shop::getAssoTables();
 		if (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
@@ -1207,15 +1208,15 @@ class WebserviceRequestCore
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Execute GET and HEAD requests
-	 * 
+	 *
 	 * Build filter
 	 * Build fields display
 	 * Build sort
 	 * Build limit
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function executeEntityGetAndHead()
@@ -1226,7 +1227,7 @@ class WebserviceRequestCore
 				$return = $this->getFilteredObjectList();
 			else
 				$return = $this->getFilteredObjectDetails();
-			
+
 			if (!$return)
 				return false;
 			else
@@ -1234,20 +1235,20 @@ class WebserviceRequestCore
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Execute POST method on a PrestaShop entity
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function executeEntityPost()
 	{
 		return $this->saveEntityFromXml(201);
 	}
-	
+
 	/**
 	 * Execute PUT method on a PrestaShop entity
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function executeEntityPut()
@@ -1255,13 +1256,13 @@ class WebserviceRequestCore
 		return $this->saveEntityFromXml(200);
 
 	}
-	
-	
 
-	
+
+
+
 	/**
 	 * Execute DELETE method on a PrestaShop entity
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function executeEntityDelete()
@@ -1290,13 +1291,13 @@ class WebserviceRequestCore
 					$objects[] = $object;
 			}
 		}
-		
+
 		if (!empty($arr_avoid_id) || empty($ids))
 		{
 			$this->setError(404, 'Id(s) not exists: '.implode(', ', $arr_avoid_id), 87);
 			$this->_outputEnabled = true;
 		}
-		else 
+		else
 		{
 			$assoc = Shop::getAssoTables();
 			foreach ($objects as $object)
@@ -1305,12 +1306,12 @@ class WebserviceRequestCore
 					$result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
 				else
 					$result = $object->delete();
-				
+
 				if (!$result)
 					$arr_avoid_id[] = $object->id;
 				elseif (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
 				{
-					$sql = 'DELETE FROM `'._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].'` 
+					$sql = 'DELETE FROM `'._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].'`
 							WHERE '.$this->resourceConfiguration['fields']['id']['sqlId'].' = '.$object->id;
 					Db::getInstance()->Execute($sql);
 				}
@@ -1326,16 +1327,16 @@ class WebserviceRequestCore
 			}
 		}
 	}
-	
+
 	/**
 	 * Write XML output after GET and HEAD action
-	 * 
+	 *
 	 * @return void
 	 */
-		
+
 	/**
 	 * save Entity Object from XML
-	 * 
+	 *
 	 * @param int $successReturnCode
 	 * @return boolean
 	 */
@@ -1352,9 +1353,9 @@ class WebserviceRequestCore
 		}
 		$xmlEntities = $xml->children();
 		$object = null;
-		
+
 		$ids = array();
-		foreach ($xmlEntities as $entity) 
+		foreach ($xmlEntities as $entity)
 		{
 			// To cast in string allow to check null values
 			if ((string)$entity->id != '')
@@ -1380,11 +1381,11 @@ class WebserviceRequestCore
 			$this->setError(400, 'id is forbidden when adding a new resource', 91);
 			return false;
 		}
-		
+
 		foreach ($xmlEntities as $xmlEntity)
 		{
 			$attributes = $xmlEntity->children();
-			
+
 			if ($this->method == 'POST')
 				$object = new $this->resourceConfiguration['retrieveData']['className']();
 			elseif ($this->method == 'PUT')
@@ -1402,7 +1403,7 @@ class WebserviceRequestCore
 			foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties)
 			{
 				$sqlId = $fieldProperties['sqlId'];
-				
+
 				if ($fieldName == 'id')
 					$sqlId = $fieldName;
 				if (isset($attributes->$fieldName) && isset($fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n']))
@@ -1423,7 +1424,7 @@ class WebserviceRequestCore
 						$object->$sqlId = (string)$attributes->$fieldName;
 					else
 						$this->setError(400, 'Parameter "'.$fieldName.'" can\'t be set to the object "'.$this->resourceConfiguration['retrieveData']['className'].'"', 123);
-						
+
 				}
 				elseif (isset($fieldProperties['required']) && $fieldProperties['required'] && !$fieldProperties['i18n'])
 				{
@@ -1432,7 +1433,7 @@ class WebserviceRequestCore
 				}
 				elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && Tools::property_exists($object, $sqlId))
 					$object->$sqlId = null;
-				
+
 				if (isset($fieldProperties['i18n']) && $fieldProperties['i18n'])
 				{
 					$i18n = true;
@@ -1440,7 +1441,7 @@ class WebserviceRequestCore
 						$object->{$fieldName}[(int)$lang->attributes()->id] = (string)$lang;
 				}
 			}
-					
+
 			if (!$this->hasErrors())
 			{
 				if ($i18n && ($retValidateFieldsLang = $object->validateFieldsLang(false, true)) !== true)
@@ -1512,10 +1513,10 @@ class WebserviceRequestCore
 			return true;
 		}
 	}
-	
+
 	/**
 	 * get SQL retrieve Filter
-	 * 
+	 *
 	 * @param string $sqlId
 	 * @param string $filterValue
 	 * @param string $tableAlias = 'main.'
@@ -1565,7 +1566,7 @@ class WebserviceRequestCore
 			$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` '.(Validate::isFloat(pSQL($filterValue)) ? 'LIKE' : '=').' "'.pSQL($filterValue)."\"\n";
 		return $ret;
 	}
-	
+
 	public function filterLanguage()
 	{
 		$arr_languages = array();
@@ -1617,40 +1618,40 @@ class WebserviceRequestCore
 			$this->setError(400, 'Language ID must be numeric', 80);
 			return false;
 		}
-		
+
 		foreach ($arr_languages as $key=>$id_lang)
 			if (!Language::getLanguage($id_lang))
 				unset($arr_languages[$key]);
-		
+
 		return $arr_languages;
 	}
-	
+
 	/**
-	 * Thanks to the (WebserviceOutputBuilder) WebserviceKey::objOutput 
+	 * Thanks to the (WebserviceOutputBuilder) WebserviceKey::objOutput
 	 * Method build the output depend on the WebserviceRequest::outputFormat
 	 * and set HTTP header parameters.
-	 * 
+	 *
 	 * @return array with displaying informations (used in the dispatcher).
 	 */
 	protected function returnOutput()
 	{
 		$return = array();
-		
+
 		// write headers
 		$this->objOutput->setHeaderParams('Access-Time', time())
 						->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
 						->setHeaderParams('PSWS-Version', _PS_VERSION_)
 						->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime,3));
-		
-		
+
+
 		$return['type'] = strtolower($this->outputFormat);
-		
+
 		// write this header only now (avoid hackers happiness...)
 		if ($this->_authenticated)
 		{
 			$this->objOutput->setHeaderParams('PSWS-Version', _PS_VERSION_);
 		}
-		
+
 		// If Specific Management is asked
 		if ($this->objectSpecificManagement instanceof WebserviceSpecificManagementInterface)
 		{
@@ -1663,7 +1664,7 @@ class WebserviceRequestCore
 					$this->setError($e->getStatus(), $e->getMessage(), $e->getCode());
 			}
 		}
-		
+
 		// for use a general output
 		if (!$this->hasErrors() && $this->objectSpecificManagement == null)
 		{
@@ -1685,13 +1686,13 @@ class WebserviceRequestCore
 						$type_of_view = WebserviceOutputBuilder::VIEW_DETAILS;
 					else
 						$type_of_view = WebserviceOutputBuilder::VIEW_LIST;
-					
+
 					if (in_array($this->method, array('PUT', 'POST')))
 					{
 						$type_of_view = WebserviceOutputBuilder::VIEW_DETAILS;
 						$this->fieldsToDisplay = 'full';
-					}	
-					
+					}
+
 					$return['content'] = $this->objOutput->getContent($this->objects, $this->schemaToDisplay, $this->fieldsToDisplay, $this->depth, $type_of_view);
 				} catch (WebserviceException $e) {
 					if ($e->getType() == WebserviceException::DID_YOU_MEAN)
@@ -1703,7 +1704,7 @@ class WebserviceRequestCore
 				}
 			}
 		}
-		
+
 		// if the output is not enable, delete the content
 		// the type content too
 		if (!$this->_outputEnabled)
@@ -1713,18 +1714,18 @@ class WebserviceRequestCore
 			if (isset($return['content']))
 				unset($return['content']);
 		}
-			
+
 		elseif (isset($return['content']))
 			$this->objOutput->setHeaderParams('Content-Sha1', sha1($return['content']));
-		
-		// if errors happends when creating returned xml, 
+
+		// if errors happends when creating returned xml,
 		// the usual xml content is replaced by the nice error handler content
 		if ($this->hasErrors())
 		{
 			$this->_outputEnabled = true;
 			$return['content'] = $this->objOutput->getErrors($this->errors);
 		}
-		
+
 		if (!isset($return['content']) || strlen($return['content']) <= 0)
 		{
 			$this->objOutput->setHeaderParams('Content-Type', '');

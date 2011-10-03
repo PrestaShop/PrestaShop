@@ -1,0 +1,3 @@
+ID;Active (0/1);Gender ID (Mr=1, Ms=2, else 9);E-mail*;Password*;Birthday;Lastname*;Firstname*;Newletter (0/1);Opt-in (0/1)
+1;1;1;johndoe@prestashop.com;#res152EDRF;sous quelle forme ? ;Doe;John;1;1
+2;1;2;mariedoe@prestashop.com;58@ret26#;sous quelle forme ? ;Doe;Marie;0;1
