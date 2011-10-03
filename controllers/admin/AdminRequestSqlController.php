@@ -29,6 +29,7 @@ class AdminRequestSqlControllerCore extends AdminController
 {
 	private $info = true;
 	private $warning = true;
+	private $tab_form = array();
 
 	public function __construct()
 	{
@@ -41,6 +42,8 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->export = true;
 		$this->requiredDatabase = true;
 		$this->context = Context::getContext();
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+	 								'export' => array('text' => $this->l('Export selected')));
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
@@ -74,49 +77,86 @@ class AdminRequestSqlControllerCore extends AdminController
 			parent::postProcess();
 	}
 
+	public function bulkexport($boxes)
+	{
+		if (!$boxes || count($boxes) > 1)
+			$this->_errors[] = Tools::DisplayError('You must select a query to export the results.');
+
+		$id = (int)$boxes[0];
+
+		$file = 'request_sql_'.$id.'.csv';
+		if ($csv = fopen(_PS_ADMIN_DIR_.'/export/'.$file, 'w'))
+		{
+			$sql = RequestSql::getRequestSqlById($id);
+
+			if ($sql)
+			{
+				$results = Db::getInstance()->ExecuteS($sql[0]['sql']);
+				foreach (array_keys($results[0]) as $key)
+				{
+					$tab_key[] = $key;
+					fputs($csv, $key.';');
+				}
+				foreach ($results as $result)
+				{
+					fputs($csv, "\n");
+					foreach ($tab_key as $name)
+						fputs($csv, '"'.Tools::safeOutput($result[$name]).'";');
+				}
+				if (file_exists(_PS_ADMIN_DIR_.'/export/'.$file))
+				{
+					$filesize = filesize(_PS_ADMIN_DIR_.'/export/'.$file);
+					$upload_max_filesize = $this->returnBytes(ini_get('upload_max_filesize'));
+					if ($filesize < $upload_max_filesize)
+					{
+						header('Content-type: text/csv');
+						header('Cache-Control: no-store, no-cache');
+						header('Content-Disposition: attachment; filename="$file"');
+						header('Content-Length: '.$filesize);
+						readfile(_PS_ADMIN_DIR_.'/export/'.$file);
+						die();
+					}
+					else
+						$this->_errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the clause "LIMIT" in this query.');
+				}
+			}
+		}
+	}
+
+	public function returnBytes($val)
+	{
+	    $val = trim($val);
+	    $last = strtolower($val[strlen($val) - 1]);
+	    switch ($last)
+	    {
+	        case 'g':
+	            $val *= 1024;
+	        case 'm':
+	            $val *= 1024;
+	        case 'k':
+	            $val *= 1024;
+	    }
+	    return $val;
+	}
+
 	public function viewRequest_sql()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
+
 		$view = array();
-		//$content = '<h2>'.$obj->name.'</h2>';
 
 		if ($results = Db::getInstance()->ExecuteS($obj->sql))
 		{
 			foreach (array_keys($results[0]) as $key)
 				$tab_key[] = $key;
-				
+
 			$view['name'] = $obj->name;
 			$view['key'] = $tab_key;
 			$view['results'] = $results;
-			/*
-			$tab_key = array();
-			foreach (array_keys($results[0]) as $key)
-				$tab_key[] = $key;
-			$content .= '
-			<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
-				<tr>';
-				foreach ($tab_key as $key_name)
-					$content .= '<th align="center">'.$key_name.'</th>';
-				$content .= '
-				</tr>';
-				$request_sql = new RequestSql();
-				$attributes = $request_sql->attributes;
-				foreach ($results as $result)
-				{
-					$content .= '<tr>';
-					foreach ($tab_key as $name)
-					{
-						if (!isset($attributes[$name]))
-							$content .= '<td>'.Tools::safeOutput($result[$name]).'</td>';
-						else
-							$content .= '<td>'.$attributes[$name].'</td>';
-					}
-					$content .= '</tr>';
-				}
-			$content .= '</table>';
-			*/
 		}
+		else
+			$view['error'] = true;
 		return $view;
 	}
 
@@ -221,31 +261,19 @@ class AdminRequestSqlControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$this->content .= '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
-		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
-			<fieldset><legend><img src="../img/admin/subdomain.gif" /> '.$this->l('Request').'</legend>
-				<label>'.$this->l('Name:').' <sup>*</sup></label>
-				<div class="margin-form">
-					<input type="text" name="name" value="'.$this->getFieldValue($obj, 'name').'" size="103" />
-				</div>
-				<label>'.$this->l('Request:').' <sup>*</sup></label>
-				<div class="margin-form">
-					<textarea name="sql" cols="100" rows="10">'.$this->getFieldValue($obj, 'sql').'</textarea>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
+		$smarty = $this->context->smarty;
+		$smarty->assign('tab_form', array('current' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
+										'id' => $obj->id,
+										'table' => $this->table,
+										'name' => $this->getFieldValue($obj, 'name'),
+										'sql' => $this->getFieldValue($obj, 'sql')));
 	}
-	
+
 	public function init()
 	{
 		if (isset($_GET['view'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
-			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
+			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
 				$this->display = 'view';
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -256,7 +284,6 @@ class AdminRequestSqlControllerCore extends AdminController
 	public function initContent()
 	{
 		$smarty = $this->context->smarty;
-		
 		switch ($this->display)
 		{
 			case 'edit':

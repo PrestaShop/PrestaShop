@@ -42,30 +42,52 @@
 {/if}
 
 {if isset($view)}
-	<h2>{$view['name']}</h2>
-	<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
-		<tr>
-			{foreach $view['key'] AS $key}
-				<th align="center">{$key}</th>
-			{/foreach}
-		</tr>
-		{foreach $view['results'] AS $result}
+	{if isset($view['error'])}
+		<p>{l s ='This query has no result.'}</p>
+	{else}
+		<h2>{$view['name']}</h2>
+		<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
 			<tr>
-				{foreach $view['key'] AS $name}
-					<td>{$result[$name]}</td>
+				{foreach $view['key'] AS $key}
+					<th align="center">{$key}</th>
 				{/foreach}
 			</tr>
-		{/foreach}
-	</table>
-	
-	<script type="text/javascript">
-		$(function(){
-			var width = $('#viewRequestSql').width();
-			if (width > 990){
-				$('#viewRequestSql').css('display','block').css('overflow-x', 'scroll');
-			}
-		});
-	</script>
+			{foreach $view['results'] AS $result}
+				<tr>
+					{foreach $view['key'] AS $name}
+						<td>{$result[$name]}</td>
+					{/foreach}
+				</tr>
+			{/foreach}
+		</table>
+		
+		<script type="text/javascript">
+			$(function(){
+				var width = $('#viewRequestSql').width();
+				if (width > 990){
+					$('#viewRequestSql').css('display','block').css('overflow-x', 'scroll');
+				}
+			});
+		</script>
+	{/if}
+{elseif isset($tab_form)}
+	<form action="{$tab_form['current']}" method="post">
+		{if $tab_form['id']}<input type="hidden" name="id_{$tab_form['table']}" value="{$tab_form['id']}" />{/if}
+		<fieldset><legend><img src="../img/admin/subdomain.gif" />{l s ='Request'}</legend>
+			<label>{l s ='Name:'} <sup>*</sup></label>
+			<div class="margin-form">
+				<input type="text" name="name" value="{$tab_form['name']}" size="103" />
+			</div>
+			<label>{l s ='Request:'} <sup>*</sup></label>
+			<div class="margin-form">
+				<textarea name="sql" cols="100" rows="10">{$tab_form['sql']}</textarea>
+			</div>
+			<div class="margin-form">
+				<input type="submit" value="{l s ='Save'}" name="submitAdd{$tab_form['table']}" class="button" />
+			</div>
+			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
+		</fieldset>
+	</form>
 {/if}
 
 {$content}
