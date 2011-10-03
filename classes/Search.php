@@ -173,7 +173,6 @@ class SearchCore
 			{
 				$word = str_replace('%', '\\%', $word);
 				$word = str_replace('_', '\\_', $word);
-
 				$intersectArray[] = 'SELECT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
@@ -337,6 +336,20 @@ class SearchCore
 		return $features;
 	}
 
+	protected static function getProductsToIndex($nbLanguages, $limit = 50)
+	{
+		// Adjust the limit to get only "whole" products, in every languages (and at least one)
+		$limit = min(1, round($limit / $nbLanguages) * $nbLanguages);
+		return Db::getInstance()->ExecuteS('
+		SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname
+		FROM '._DB_PREFIX_.'product p
+		LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
+		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang)
+		LEFT JOIN '._DB_PREFIX_.'manufacturer m ON m.id_manufacturer = p.id_manufacturer
+		WHERE p.indexed = 0
+		LIMIT '.(int)$limit);
+	}
+
 	public static function indexation($full = false, $id_product = false)
 	{
 		$db = Db::getInstance();
@@ -399,15 +412,6 @@ class SearchCore
 			'features' => Configuration::get('PS_SEARCH_WEIGHT_FEATURE')
 		);
 
-		// All the product not yet indexed are retrieved
-		$sql = 'SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname, pl.id_shop
-				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
-				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang AND pl.id_shop = cl.id_shop)
-				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON m.id_manufacturer = p.id_manufacturer
-				WHERE p.indexed = 0';
-		$products = $db->ExecuteS($sql, false);
-
 		// Those are kind of global variables required to save the processed data in the database every X occurences, in order to avoid overloading MySQL
 		$countWords = 0;
 		$countProducts = 0;
@@ -427,107 +431,110 @@ class SearchCore
 			$wordIdsByWord[$wordId['id_shop']][$wordId['id_lang']]['_'.$wordId['word']] = (int)$wordId['id_word'];
 		}
 
-		// Now each non-indexed product is processed one by one, langage by langage
-		while ($product = $db->nextRow($products))
+		// Retrieve the number of languages
+		$nbLanguages = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'lang');
+
+		// Products are processed 50 by 50 in order to avoid overloading MySQL
+		while ($products = Search::getProductsToIndex($nbLanguages, 50) AND count($products) > 0)
 		{
-			$product['tags'] = Search::getTags($db, (int)$product['id_product'], (int)$product['id_lang']);
-			$product['attributes'] = Search::getAttributes($db, (int)$product['id_product'], (int)$product['id_lang']);
-			$product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
-
-			// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
-			$pArray = array();
-			foreach ($product AS $key => $value)
-				if (strncmp($key, 'id_', 3))
-				{
-					$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true));
-					foreach ($words AS $word)
-						if (!empty($word))
-						{
-							$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
-							// Remove accents
-							$word = Tools::replaceAccentedChars($word);
-
-							if (!isset($pArray[$word]))
-								$pArray[$word] = 0;
-							$pArray[$word] += $weightArray[$key];
-						}
-				}
-
-			// If we find words that need to be indexed, they're added to the word table in the database
-			if (sizeof($pArray))
+			// Now each non-indexed product is processed one by one, langage by langage
+			foreach ($products as $product)
 			{
-				$list = '';
-				foreach ($pArray AS $word => $weight)
-					$list .= '\''.$word.'\',';
-				$list = rtrim($list, ',');
+				$product['tags'] = Search::getTags($db, (int)$product['id_product'], (int)$product['id_lang']);
+				$product['attributes'] = Search::getAttributes($db, (int)$product['id_product'], (int)$product['id_lang']);
+				$product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
 
-				$queryArray = array();
-				$queryArray2 = array();
-				foreach ($pArray AS $word => $weight)
-					if ($weight AND !isset($wordIdsByWord['_'.$word]))
+				// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
+				$pArray = array();
+				foreach ($product AS $key => $value)
+					if (strncmp($key, 'id_', 3))
 					{
-						$queryArray[$word] = '('.(int)$product['id_lang'].', '.(int)$product['id_shop'].', \''.pSQL($word).'\')';
-						$queryArray2[] = '\''.pSQL($word).'\'';
-						$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word] = 0;
+						$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true));
+						foreach ($words AS $word)
+							if (!empty($word))
+							{
+								$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
+								// Remove accents
+								$word = Tools::replaceAccentedChars($word);
+
+								if (!isset($pArray[$word]))
+									$pArray[$word] = 0;
+								$pArray[$word] += $weightArray[$key];
+							}
 					}
 
-				$existingWords = $db->ExecuteS('
-					SELECT word FROM '._DB_PREFIX_.'search_word
-					WHERE word IN ('.implode(',', $queryArray2).')
-					AND id_lang = '.(int)$product['id_lang'].' GROUP BY word');
-
-				if($existingWords)
-					foreach($existingWords as $data)
-						unset($queryArray[Tools::replaceAccentedChars($data['word'])]);
-
-				if (count($queryArray))
+				// If we find words that need to be indexed, they're added to the word table in the database
+				if (count($pArray))
 				{
-					// The words are inserted...
-					$db->Execute('
-					INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
-					VALUES '.implode(',',$queryArray));
+					$list = '';
+					foreach ($pArray AS $word => $weight)
+						$list .= '\''.$word.'\',';
+					$list = rtrim($list, ',');
+
+					$queryArray = array();
+					$queryArray2 = array();
+					foreach ($pArray AS $word => $weight)
+						if ($weight AND !isset($wordIdsByWord['_'.$word]))
+						{
+							$queryArray[$word] = '('.(int)$product['id_lang'].', '.(int)$product['id_shop'].', \''.pSQL($word).'\')';
+							$queryArray2[] = '\''.pSQL($word).'\'';
+							$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word] = 0;
+						}
+
+					$existingWords = $db->ExecuteS('
+						SELECT word FROM '._DB_PREFIX_.'search_word
+						WHERE word IN ('.implode(',', $queryArray2).')
+						AND id_lang = '.(int)$product['id_lang'].' GROUP BY word');
+
+					if($existingWords)
+						foreach($existingWords as $data)
+							unset($queryArray[Tools::replaceAccentedChars($data['word'])]);
+
+					if (count($queryArray))
+					{
+						// The words are inserted...
+						$db->Execute('
+						INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
+						VALUES '.implode(',',$queryArray));
+					}
+					if (count($queryArray2))
+					{
+						// ...then their IDs are retrieved and added to the cache
+						$addedWords = $db->ExecuteS('
+						SELECT sw.id_word, sw.word
+						FROM '._DB_PREFIX_.'search_word sw
+						WHERE sw.word IN ('.implode(',', $queryArray2).')
+						AND sw.id_lang = '.(int)$product['id_lang'].'
+						AND sw.id_shop = '.(int)$product['id_shop'].'
+						LIMIT '.count($queryArray2));
+						// replace accents from the retrieved words so that words without accents or with differents accents can still be linked
+						foreach ($addedWords AS $wordId)
+							$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.Tools::replaceAccentedChars($wordId['word'])] = (int)$wordId['id_word'];
+					}
 				}
-				if (count($queryArray2))
+
+				foreach ($pArray AS $word => $weight)
 				{
-					// ...then their IDs are retrieved and added to the cache
-					$addedWords = $db->ExecuteS('
-					SELECT sw.id_word, sw.word
-					FROM '._DB_PREFIX_.'search_word sw
-					WHERE sw.word IN ('.implode(',', $queryArray2).')
-					AND sw.id_lang = '.(int)$product['id_lang'].'
-					AND sw.id_shop = '.(int)$product['id_shop'].'
-					LIMIT '.count($queryArray2));
-					// replace accents from the retrieved words so that words without accents or with differents accents can still be linked
-					foreach ($addedWords AS $wordId)
-						$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.Tools::replaceAccentedChars($wordId['word'])] = (int)$wordId['id_word'];
+					if (!$weight)
+						continue;
+					if (!isset($wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word]))
+						continue;
+					if (!$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word])
+						continue;
+					$queryArray3[] = '('.(int)$product['id_product'].','.(int)$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word].','.(int)$weight.')';
+					// Force save every 200 words in order to avoid overloading MySQL
+					if (++$countWords % 200 == 0)
+						Search::saveIndex($queryArray3);
 				}
-			}
 
-			foreach ($pArray AS $word => $weight)
-			{
-				if (!$weight)
-					continue;
-				if (!isset($wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word]))
-					continue;
-				if (!$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word])
-					continue;
-				$queryArray3[] = '('.(int)$product['id_product'].','.(int)$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word].','.(int)$weight.')';
-				// Force save every 200 words in order to avoid overloading MySQL
-				if (++$countWords % 200 == 0)
-					Search::saveIndex($queryArray3);
-			}
+				if (!in_array($product['id_product'], $productsArray))
+					$productsArray[] = (int)$product['id_product'];
+				}
+					Search::setProductsAsIndexed($productsArray);
 
-			if (!in_array($product['id_product'], $productsArray))
-				$productsArray[] = (int)$product['id_product'];
-
-			// Force save every 50 products in order to avoid overloading MySQL
-			if (++$countProducts % 50 == 0)
-				Search::setProductsAsIndexed($productsArray);
+			// One last save is done at the end in order to save what's left
+			Search::saveIndex($queryArray3);
 		}
-
-		// One last save is done at the end in order to save what's left
-		Search::saveIndex($queryArray3);
-		Search::setProductsAsIndexed($productsArray);
 
 		// If it has been deleted, the index is created again once the indexation is done
 		if (!$dropIndex)

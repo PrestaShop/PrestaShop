@@ -297,10 +297,10 @@ abstract class PSCPrepaidServices extends PaymentModule
 		foreach ($this->_getAllowedCurrencies() AS $currency)
 		{
 			$mid = Configuration::get($this->prefix.'MERCHANT_ID_'.$currency['iso_code']);
-			$certificateExiste = '';
+			$certificate = '';
 			$passwordExist = '';
 			if (file_exists($this->certificat_dir.$mid.'.pem'))
-				$certificateExiste = '<div style="color:#00b511; text-align:center;">'.$this->l('A certificate has been found for this configuration').' : '.$mid.'.pem'.'</div><br />';
+				$certificate = '<div style="color:#00b511; text-align:center;">'.$this->l('A certificate has been found for this configuration').' : '.$mid.'.pem'.'</div><br />';
 			if (Configuration::get($this->prefix.'KEYRING_PW_'.$currency['iso_code']))
 				$passwordExist = '<div style="color:#00b511; text-align:center;">'.$this->l('A password has already been saved');
 				
@@ -317,7 +317,7 @@ abstract class PSCPrepaidServices extends PaymentModule
 					<div class="margin-form">
 						<input type="file" name="ct_keyring_certificate_'.$currency['iso_code'].'" />
 					</div>
-					'.$certificateExiste.'
+					'.$certificate.'
 					<label>'.$this->getL('keyring_pw').'</label>
 					<div class="margin-form">
 						<input type="password" name="ct_keyring_pw_'.$currency['iso_code'].'" value=""/>

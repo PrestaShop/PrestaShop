@@ -98,15 +98,17 @@ class CacheFSCore extends Cache {
 	public function setQuery($query, $result)
 	{
 		$md5_query = md5($query);
-		if (isset($this->_keysCached[$md5_query]))
-			return true;
 		if ($this->isBlacklist($query))
+			return true;
+		$this->_setKeys();
+		if (isset($this->_keysCached[$md5_query]))
 			return true;
 		$key = $this->set($md5_query, $result);
 		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
 			foreach($res[1] AS $table)
 				if(!isset($this->_tablesCached[$table][$key]))
 					$this->_tablesCached[$table][$key] = true;
+		$this->_writeKeys();
 	}
 
 	public function delete($key, $timeout = 0)
@@ -126,7 +128,7 @@ class CacheFSCore extends Cache {
 
 	public function deleteQuery($query)
 	{
-
+		$this->_setKeys();
 		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
 			foreach ($res[1] AS $table)
 				if (isset($this->_tablesCached[$table]))
@@ -138,15 +140,15 @@ class CacheFSCore extends Cache {
 					}
 					unset($this->_tablesCached[$table]);
 				}
+		$this->_writeKeys();
 	}
 
 	public function flush()
 	{
 	}
 
-	public function __destruct()
+	private function _writeKeys()
 	{
-		parent::__destruct();
 
 		@file_put_contents($this->getPath().'keysCached', serialize($this->_keysCached));
 		@file_put_contents($this->getPath().'tablesCached', serialize($this->_tablesCached));

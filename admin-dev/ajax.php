@@ -535,8 +535,11 @@ if (Tools::isSubmit('loadImportMatchs'))
 
 if (Tools::isSubmit('toggleScreencast'))
 {
-	$context->employee->show_screencast = (int)(!(bool)$context->employee->show_screencast);
-	$context->employee->save();
+	if (Validate::isLoadedObject($context->employee))
+	{
+		$context->employee->bo_show_screencast = !$context->employee->bo_show_screencast;
+		$context->employee->update();
+	}
 }
 
 if (Tools::isSubmit('helpAccess'))

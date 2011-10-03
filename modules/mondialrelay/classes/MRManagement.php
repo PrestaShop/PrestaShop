@@ -63,7 +63,7 @@ class MRManagement extends MondialRelay
 				SET `id_method` = '.(int)$this->_params['id_mr_method'].', ';
 			if (is_array($this->_params['relayPointInfo']))
 				foreach($this->_params['relayPointInfo'] as $nameKey => $value)
-					$query .= '`MR_Selected_'.$nameKey.'` = "'.$value.'", ';
+					$query .= '`MR_Selected_'.pSQL($nameKey).'` = "'.pSQL($value).'", ';
 			else // Clean the existing relay point data
 				$query .= '
 					MR_Selected_Num = NULL,
@@ -82,14 +82,14 @@ class MRManagement extends MondialRelay
 				(`id_customer`, `id_method`, `id_cart`, ';
 			if (is_array($this->_params['relayPointInfo']))
 				foreach($this->_params['relayPointInfo'] as $nameKey => $value)
-					$query .= '`MR_Selected_'.$nameKey.'`, ';
+					$query .= '`MR_Selected_'.pSQL($nameKey).'`, ';
 			$query = rtrim($query, ', ').') VALUES (
 					'.$this->_params['id_customer'].',
 					'.$this->_params['id_mr_method'].',
 					'.$this->_params['id_cart'].', ';
 			if (is_array($this->_params['relayPointInfo']))
 				foreach($this->_params['relayPointInfo'] as $nameKey => $value)
-					$query .= '"'.$value.'", ';
+					$query .= '"'.pSQL($value).'", ';
 			$query = rtrim($query, ', ').')';
 		}
 		Db::getInstance()->Execute($query);

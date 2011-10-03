@@ -116,13 +116,13 @@ class CarrierCompare extends Module
 		if (!Validate::isInt($id_state))
 			$errors[] = $this->l('Invalid state ID');
 		if ($id_state != 0 && !Validate::isLoadedObject(new State($id_state)))
-			$errors[] = $this->l('Invalid state ID');
+			$errors[] = $this->l('Please select a state');
 		if (!Validate::isInt($id_country) || !Validate::isLoadedObject(new Country($id_country)))
-			$errors[] = $this->l('Invalid country ID');
+			$errors[] = $this->l('Please select a country');
 		if (!$this->checkZipcode($zipcode, $id_country))
 			$errors[] = $this->l('Please use a valid zip/postal code depending on your country selection');
 		if (!Validate::isInt($id_carrier) || !Validate::isLoadedObject(new Carrier($id_carrier)))
-			$errors[] = $this->l('Invalid carrier ID');
+			$errors[] = $this->l('Please select a carrier');
 
 		if (sizeof($errors))
 			return $errors;

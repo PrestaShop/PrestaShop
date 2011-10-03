@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -34,21 +34,21 @@ class AdminScenes extends AdminTab
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
-		
+
 		$this->fieldImageSettings = array(
 			array('name' => 'image', 'dir' => 'scenes'),
 			array('name' => 'thumb', 'dir' => 'scenes/thumbs')
 		);
-				
+
 		$this->fieldsDisplay = array(
 			'id_scene' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Image Maps'), 'width' => 150, 'filter_key' => 'b!name'),
 			'active' => array('title' => $this->l('Activated'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
-	
+
 		parent::__construct();
 	}
-	
+
 	public function afterImageUpload()
 	{
 		/* Generate image with differents size */
@@ -73,64 +73,17 @@ class AdminScenes extends AdminTab
 		}
 		return true;
 	}
-	
-	/**
-	 * Build a categories tree
-	 *
-	 * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-	 * @param array $categories Categories to list
-	 * @param array $current Current category
-	 * @param integer $id_category Current category id
-	 */
-	public function recurseCategoryForInclude($indexedCategories, $categories, $current, $id_category = 1, $id_category_default = NULL, $has_suite = array())
-	{
-		global $done;
-		static $irow;
-		
-		$id_obj = (int)(Tools::getValue($this->id));
 
-		if (!isset($done[$current['infos']['id_parent']]))
-			$done[$current['infos']['id_parent']] = 0;
-		$done[$current['infos']['id_parent']] += 1;
-
-		$todo = sizeof($categories[$current['infos']['id_parent']]);
-		$doneC = $done[$current['infos']['id_parent']];
-
-		$level = $current['infos']['level_depth'] + 1;
-
-		echo '
-		<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
-			<td>
-				<input type="checkbox" name="categories[]" class="categoryBox'.($id_category_default == $id_category ? ' id_category_default' : '').'" id="categoryBox_'.$id_category.'" value="'.$id_category.'"'.((in_array($id_category, $indexedCategories) OR ((int)(Tools::getValue('id_category')) == $id_category AND !(int)($id_obj))) ? ' checked="checked"' : '').' />
-			</td>
-			<td>
-				'.$id_category.'
-			</td>
-			<td>';
-			for ($i = 2; $i < $level; $i++)
-				echo '<img src="../img/admin/lvl_'.$has_suite[$i - 2].'.gif" alt="" style="vertical-align: middle;"/>';
-			echo '<img src="../img/admin/'.($level == 1 ? 'lv1.gif' : 'lv2_'.($todo == $doneC ? 'f' : 'b').'.gif').'" alt="" style="vertical-align: middle;"/> &nbsp;
-			<label for="categoryBox_'.$id_category.'" class="t">'.stripslashes($current['infos']['name']).'</label></td>
-		</tr>';
-
-		if ($level > 1)
-			$has_suite[] = ($todo == $doneC ? 0 : 1);
-		if (isset($categories[$id_category]))
-			foreach ($categories[$id_category] AS $key => $row)
-				if ($key != 'infos')
-					$this->recurseCategoryForInclude($indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
-	}
-	
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
-		
+
 		$langtags = 'name';
 		$active = $this->getFieldValue($obj, 'active');
-		
+
 		echo '
 		<script type="text/javascript">';
 			echo 'startingData = new Array();'."\n";
@@ -139,7 +92,7 @@ class AdminScenes extends AdminTab
 				$productObj = new Product($product['id_product'], true, $this->context->language->id);
 				echo 'startingData['.$key.'] = new Array(\''.$productObj->name.'\', '.$product['id_product'].', '.$product['x_axis'].', '.$product['y_axis'].', '.$product['zone_width'].', '.$product['zone_height'].');';
 			}
-			
+
 		echo
 		'</script>
 		<form id="scenesForm" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
@@ -151,7 +104,7 @@ class AdminScenes extends AdminTab
 				'.$this->l('When a customer hovers over the image with the mouse, a pop-up appears displaying a brief description of the product. The customer can then click to open the product\'s full product page. To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up. Left-click with your mouse to draw the four-sided mapping zone, then release. Then, begin typing the name of the associated product. A list of products appears. Click the appropriate product, then click OK. Repeat these steps for each mapping zone you wish to create. When you have finished mapping zones, click Save Image Map.').'
 			</div>
 			';
-		
+
 		echo '<label>'.$this->l('Image map name:').' </label>
 				<div class="margin-form">';
 		foreach ($this->_languages as $language)
@@ -162,8 +115,8 @@ class AdminScenes extends AdminTab
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $langtags, 'name');
 		echo '		<div class="clear"></div>
 				</div>';
-			
-			
+
+
 			 	echo '<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">
 					<input type="radio" name="active" id="active_on" value="1" '.((!$obj->id OR Tools::getValue('active', $obj->active)) ? 'checked="checked" ' : '').'/>
@@ -172,8 +125,8 @@ class AdminScenes extends AdminTab
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Deactivated').'" title="'.$this->l('Deactivated').'" /></label>
 					<p>'.$this->l('Activate or deactivate the image map').'</p>
 				</div>';
-				
-				
+
+
 					$sceneImageTypes = ImageType::getImagesTypes('scenes');
 					$largeSceneImageType = NULL;
 					$thumbSceneImageType = NULL;
@@ -184,14 +137,14 @@ class AdminScenes extends AdminTab
 						if ($sceneImageType['name'] == 'thumb_scene')
 							$thumbSceneImageType = $sceneImageType;
 					}
-					
-	
+
+
 		echo '<label>'.$this->l('Image to be mapped:').' </label>
 				<div class="margin-form">
 					<input type="hidden" id="stay_here" name="stay_here" value="" />
 					<input type="file" name="image" id="image_input" /> <input type="button" value="'.$this->l('Upload image').'" onclick="{$(\'#stay_here\').val(\'true\');$(\'#scenesForm\').submit();}" class="button" /><br/>
 					<p>'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('KB max.').' '.$this->l('If larger than the image size setting, the image will be reduced to ').' '.$largeSceneImageType['width'].'x'.$largeSceneImageType['height'].'px '.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'.<br />'.$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).').'</p>';
-					
+
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg'))
 		{
 			echo '<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.$obj->id.'-large_scene.jpg" /><br />';
@@ -223,29 +176,23 @@ class AdminScenes extends AdminTab
 			echo '</div>
 				 ';
 
-			echo '<label>'.$this->l('Category:').' </label>
-					<div class="margin-form">
-						<div style="overflow: auto; max-height: 300px; padding-top: 0.6em;" id="categoryList">
-							<table cellspacing="0" cellpadding="0" class="table" style="width: 600px;">
-									<tr>
-									<th><input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \'categories[]\', this.checked)" /></th>
-									<th>'.$this->l('ID').'</th>
-									<th>'.$this->l('Image map name:').'</th>
-								</tr>';
-					$categories = Category::getCategories($this->context->language->id, false);
-					$done = array();
-					$index = array();
-					if (Tools::isSubmit('categories'))
-						foreach (Tools::getValue('categories') AS $k => $row)
-							$index[] = $row;
-					elseif ($obj->id)
-						foreach (Scene::getIndexedCategories($obj->id) AS $k => $row)
-							$index[] = $row['id_category'];
-					$this->recurseCategoryForInclude($index, $categories, $categories[0][1], 1, null);
-			echo '</table>
-						<p style="padding:0px; margin:0px 0px 10px 0px;">'.$this->l('Mark all checkbox(es) of the categories for which the image map is to appear.').'<sup> *</sup></p>
-					</div>
-				</div>';
+			$selectedCat = array();
+			if (Tools::isSubmit('categories'))
+				foreach (Tools::getValue('categories') as $k => $row)
+					$selectedCat[] = $row;
+			else if ($obj->id)
+				foreach (Scene::getIndexedCategories($obj->id) as $k => $row)
+					$selectedCat[] = $row['id_category'];
+
+			$trads = array(
+				 'Home' => $this->l('Home'),
+				 'selected' => $this->l('selected'),
+				 'Collapse All' => $this->l('Collapse All'),
+				 'Expand All' => $this->l('Expand All'),
+				 'Check All' => $this->l('Check All'),
+				 'Uncheck All'  => $this->l('Uncheck All')
+			);
+
 			if (Shop::isMultiShopActivated())
 			{
 				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
@@ -253,9 +200,16 @@ class AdminScenes extends AdminTab
 				echo '</div>';
 			}
 			echo '
+				<label>'.$this->l('Categories:').'</label>
+				<div class="margin-form">
+			';
+			echo Helper::renderAdminCategorieTree($trads, $selectedCat, 'categories');
+			echo '
+				</div>
 					<div id="save_scene" class="margin-form" '.(($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg')) ? '' : 'style="display:none;"') .'>
 						<input type="submit" name="save_image_map" value="'.$this->l('Save Image Map(s)').'" class="button" />
-					</div>';
+				</div>
+			';
 		}
 		else
 		{
@@ -267,7 +221,7 @@ class AdminScenes extends AdminTab
 				$this->displayAssoShop();
 				echo '</div>';
 			}
-			
+
 		}
 		echo '
 		<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
@@ -275,7 +229,7 @@ class AdminScenes extends AdminTab
 		</form>
 		';
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('save_image_map'))

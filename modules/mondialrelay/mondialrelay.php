@@ -922,12 +922,14 @@ class MondialRelay extends Module
 			<fieldset class="PS_MRFormStyle">
 				<legend>
 					<img src="../modules/mondialrelay/images/logo.gif" />'.$this->l('Advanced Settings'). ' - 
-					<a href="javascript:void(0);" id="PS_MRDisplayPersonalizedOptions"><font style="color:#00b511;">'.$this->l('Click to display / hide the options').'</font>	</a>'.
+					<a href="javascript:void(0);" id="PS_MRDisplayPersonalizedOptions">
+						<font style="color:#00b511;">'.$this->l('Click to display / hide the options').'</font>
+					</a>'.
 			'</legend>
 			<div id="PS_MRAdvancedSettings">
-				<p>
-					'.$this->l('URL Cron Task:').' '.Tools::getHttpHost(true, true)
-					._MODULE_DIR_.$this->name.'/cron.php?secure_key='.
+				<p>'.
+					$this->l('URL Cron Task:').' '.Tools::getHttpHost(true, true).
+					_MODULE_DIR_.$this->name.'/cron.php?secure_key='.
 					Configuration::get('MONDIAL_RELAY_SECURE_KEY').
 				'</p>
 			</div>

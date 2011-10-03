@@ -446,6 +446,7 @@ class AdminPerformance extends AdminTab
 						</select>
 					</div>
 					<div id="directory_depth">
+						<div class="warn">'.$this->l('The system CacheFS should be used only when the infrastructure contain only one front-end server. Ask your hosting company if you don\'t know.').'</div>
 						<label>'.$this->l('Directory depth:').' </label>
 						<div class="margin-form">
 							<input type="text" name="ps_cache_fs_directory_depth" value="'.($depth ? $depth : 1).'" />

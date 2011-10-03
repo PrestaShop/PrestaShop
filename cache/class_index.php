@@ -298,6 +298,8 @@
   'AdminAddressesController' => '',
   'AdminHomeControllerCore' => 'controllers/admin/AdminHomeController.php',
   'AdminHomeController' => 'override/controllers/admin/AdminHomeController.php',
+  'AdminRequestSqlControllerCore' => 'controllers/admin/AdminRequestSqlController.php',
+  'AdminRequestSqlController' => '',
   'AdminToolsControllerCore' => 'controllers/admin/AdminToolsController.php',
   'AdminToolsController' => 'override/controllers/admin/AdminToolsController.php',
   'AdminTrackingController' => 'controllers/admin/AdminTrackingController.php',

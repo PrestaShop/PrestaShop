@@ -24,6 +24,7 @@
 *	@license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
 */
+
 if(!defined('_PS_ADMIN_DIR_'))
 	define('_PS_ADMIN_DIR_', _PS_ADMIN_DIR_);
 if(!defined('_PS_USE_SQL_SLAVE_'))
@@ -480,10 +481,11 @@ $this->standalone = true;
 		else
 		{
 	//		echo '<img src="'.$originalCore.'" /> '.
-		$this->nextParams['msg'] = ($testOrigCore?$this->l('Core files are ok'):sprintf($this->l('%s core files have been modified'), sizeof($changedFileList)));
+			$this->nextParams['msg'] = ($testOrigCore?$this->l('Core files are ok'):sprintf($this->l('%1$s core files have been modified (%2$s total)'), count($changedFileList['core']), count(array_merge($changedFileList['core'], $changedFileList['mail'], $changedFileList['translation']))));
 		}
 		$this->nextParams['result'] = $changedFileList;
 	}
+
 	public function ajaxProcessUpgradeNow()
 	{
 		$this->nextDesc = $this->l('Starting upgrade ...');
@@ -1727,6 +1729,9 @@ echo '</script>';
 #dbResultCheck{ padding-left:20px;}
 #checkPrestaShopFilesVersion{margin-bottom:20px;}
 #changedList ul{list-style-type:circle}
+.changedFileList {margin-left:20px; padding-left:5px;}
+.changedNotice li{color:lightgrey;}
+.changedImportant li{color:red;font-weight:bold}
 </style>';
 		$this->displayWarning($this->l('This function is experimental. It\'s highly recommended to make a backup of your files and database before starting the upgrade process.'));
 
@@ -1870,7 +1875,7 @@ function handleXMLResult(xmlRet, previousParams)
 	switch(previousParams.upgradeDbStep)
 	{
 		case 0: // getVersionFromDb
-		result = "ok";
+		resGlobal.result = "ok";
 		break;
 		case 1: // getVersionFromDb
 		result = resGlobal.result;
@@ -2134,6 +2139,19 @@ function handleError(res)
 }
 ';
 // ajax to check md5 files
+		$js .= 'function addModifiedFileList(title, fileList, css_class)
+{
+	subList = $("<ul class=\"changedFileList "+css_class+"\"></ul>");
+
+	$(fileList).each(function(k,v){
+		$(subList).append("<li>"+v+"</li>");
+	});
+	$("#changedList").append("<h3><a class=\"toggleSublist\">"+title+"</a></h3>");
+	$("#changedList").append(subList);
+	$("#cchangedList").append("<br/>");
+
+}';
+					
 $js.= '$(document).ready(function(){
 	$.ajax({
 			type:"POST",
@@ -2155,16 +2173,15 @@ $js.= '$(document).ready(function(){
 					$("#checkPrestaShopFilesVersion").prepend("<img src=\"../img/admin/warning.gif\" /> ");
 				else
 				{
-					$("#checkPrestaShopFilesVersion").prepend(answer.status);
+					$("#checkPrestaShopFilesVersion").prepend("<img src=\"../img/admin/warning.gif\" /> ");
 				$("#checkPrestaShopFilesVersion").append("<a id=\"toggleChangedList\" class=\"button\" href=\"\">'.$this->l('See or hide the list').'</a><br/>");
-				$("#checkPrestaShopFilesVersion").append("<div id=\"changedList\" style=\"display:none \">");
-
-				$("#changedList").html("<ul>");
-				$(answer.result).each(function(k,v){
-					$("#changedList ul").append("<li>"+v+"</li>");
-				});
+					$("#checkPrestaShopFilesVersion").append("<div id=\"changedList\" style=\"display:none \"><br/>");
+					addModifiedFileList("'.$this->l('Core files').'", answer.result.core, "changedImportant");
+					addModifiedFileList("'.$this->l('Mail files').'", answer.result.mail, "changedNotice");
+					addModifiedFileList("'.$this->l('Translation files').'", answer.result.translation, "changedNotice");
 
 $("#toggleChangedList").bind("click",function(e){e.preventDefault();$("#changedList").toggle();});
+					$(".toggleSublist").live("click",function(e){e.preventDefault();$(this).parent().next().toggle();});
 			}
 			}
 			,
@@ -2183,6 +2200,7 @@ $("#toggleChangedList").bind("click",function(e){e.preventDefault();$("#changedL
 });';
 		return $js;
 	}
+
 	private function _cleanUp($path)
 	{
 		// as we need theses files for restore operation, we can't remove them.
