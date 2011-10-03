@@ -509,7 +509,6 @@ class OrderCore extends ObjectModel
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
-		p($resultArray);		
 		
 		return $resultArray;
 	}
