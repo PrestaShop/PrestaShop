@@ -905,9 +905,7 @@ class AdminControllerCore extends Controller
 
 	public function setMedia()
 	{
-		$this->addCSS(_PS_JS_DIR_.'jquery/datepicker/datepicker.css', 'all');
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
-		$this->addCSS(_PS_CSS_DIR_.'jquery.cluetip.css', 'all');
 		$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR,'', _PS_ADMIN_DIR_).'/themes/default/admin.css', 'all');
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
