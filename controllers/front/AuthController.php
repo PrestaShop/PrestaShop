@@ -314,7 +314,7 @@ class AuthControllerCore extends FrontController
 		if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile') && Configuration::get('PS_REGISTRATION_PROCESS_TYPE'))
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
-		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax)
+		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 		{
 			if (!count($this->errors))
 			{
@@ -449,7 +449,7 @@ class AuthControllerCore extends FrontController
 					else
 					{
 						$address->id_customer = (int)$customer->id;
-						if ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || $this->ajax) && !$address->add())
+						if ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || $this->ajax || Tools::isSubmit('submitGuestAccount')) && !$address->add())
 							$this->errors[] = Tools::displayError('An error occurred while creating your address.');
 						else
 						{
@@ -482,7 +482,7 @@ class AuthControllerCore extends FrontController
 								die(Tools::jsonEncode($return));
 							}
 							// if registration type is in two steps, we redirect to register address
-							if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax)
+							if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 								Tools::redirect('index.php?controller=address');
 							if ($back = Tools::getValue('back'))
 								Tools::redirect('index.php?controller='.$back);
