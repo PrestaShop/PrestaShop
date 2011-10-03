@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 //include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
-if(Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
+if (Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
 	include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 
 class AdminAddressesControllerCore extends AdminController
@@ -64,7 +64,7 @@ class AdminAddressesControllerCore extends AdminController
 		'city' => array('title' => $this->l('City'), 'width' => 150),
 		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
 
-		$this->template = 'address.tpl';
+		$this->template = 'adminAddresses.tpl';
 
 		parent::__construct();
 	}
