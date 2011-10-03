@@ -40,44 +40,83 @@ class AdminModules extends AdminTab
 	private $listTabModules;
 	private $listPartnerModules = array();
 	private $listNativeModules = array();
-	private $_moduleCacheFile;
+	private $_moduleCacheFile = '/config/modules_list.xml';
+ 	public static $xml_modules_list = 'http://www.prestashop.com/xml/modules_list.xml';
 	static private $MAX_DISP_AUTHOR = 20;		// maximum length to display
 
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
-		$this->_moduleCacheFile = _PS_ROOT_DIR_.'/config/modules_list.xml';
+		$this->listTabModules['administration'] = $this->l('Administration');
+		$this->listTabModules['advertising_marketing'] = $this->l('Advertising & Marketing');
+		$this->listTabModules['analytics_stats'] = $this->l('Analytics & Stats');
+		$this->listTabModules['billing_invoicing'] = $this->l('Billing & Invoicing');
+		$this->listTabModules['checkout'] = $this->l('Checkout');
+		$this->listTabModules['content_management'] = $this->l('Content Management');
+		$this->listTabModules['export'] = $this->l('Export');
+		$this->listTabModules['front_office_features'] = $this->l('Front Office Features');
+		$this->listTabModules['i18n_localization'] = $this->l('I18n & Localization');
+		$this->listTabModules['merchandizing'] = $this->l('Merchandizing');
+		$this->listTabModules['migration_tools'] = $this->l('Migration Tools');
+		$this->listTabModules['payments_gateways'] = $this->l('Payments & Gateways');
+		$this->listTabModules['payment_security'] = $this->l('Payment Security');
+		$this->listTabModules['pricing_promotion'] = $this->l('Pricing & Promotion');
+		$this->listTabModules['quick_bulk_update'] = $this->l('Quick / Bulk update');
+		$this->listTabModules['search_filter'] = $this->l('Search & Filter');
+		$this->listTabModules['seo'] = $this->l('SEO');
+		$this->listTabModules['shipping_logistics'] = $this->l('Shipping & Logistics');
+		$this->listTabModules['slideshows'] = $this->l('Slideshows');
+		$this->listTabModules['smart_shopping'] = $this->l('Smart Shopping');
+		$this->listTabModules['market_place'] = $this->l('Market Place');
+		$this->listTabModules['social_networks'] = $this->l('Social Networks');
+		$this->listTabModules['others'] = $this->l('Other Modules');
 
-		// refresh modules_list.xml every week
+		if (file_exists(_PS_ROOT_DIR_.$this->_moduleCacheFile))
+			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.$this->_moduleCacheFile);
+		else
+			$xmlModules = false;
+
+		if ($xmlModules)
+		{
+			foreach($xmlModules->children() as $xmlModule)
+			{
+				if ($xmlModule->attributes() == 'native')
+					foreach($xmlModule->children() as $module)
+						foreach($module->attributes() as $key => $value)
+							if ($key == 'name')
+								$this->listNativeModules[] = (string)$value;
+
+				if ($xmlModule->attributes() == 'partner')
+					foreach ($xmlModule->children() as $module)
+						foreach ($module->attributes() as $key => $value)
+							if ($key == 'name')
+								$this->listPartnerModules[] = (string)$value;
+			}
+		}
+	}
+
+	/** if modules_list.xml is outdated,
+	 * this function will re-upload it from prestashop.com
+	 *
+	 * @return null
+	 */
+	public function ajaxProcessRefreshModuleList()
+	{
+		//refresh modules_list.xml every week
 		if (!$this->isFresh())
+		{
 			$this->refresh();
+			$this->status = 'refresh';
+		}
+		else
+			$this->status = 'cache';
+	}
 
-		$this->listTabModules = array(
-			'administration' => $this->l('Administration'), 'advertising_marketing' => $this->l('Advertising & Marketing'),
-			 'analytics_stats' => $this->l('Analytics & Stats'), 'billing_invoicing' => $this->l('Billing & Invoicing'), 'checkout' => $this->l('Checkout'),
-			 'content_management' => $this->l('Content Management'), 'export' => $this->l('Export'), 'front_office_features' => $this->l('Front Office Features'),
-			 'i18n_localization' => $this->l('I18n & Localization'), 'merchandizing' => $this->l('Merchandizing'), 'migration_tools' => $this->l('Migration Tools'),
-			 'payments_gateways' => $this->l('Payments & Gateways'), 'payment_security' => $this->l('Payment Security'), 'pricing_promotion' => $this->l('Pricing & Promotion'),
-			 'quick_bulk_update' => $this->l('Quick / Bulk update'), 'search_filter' => $this->l('Search & Filter'), 'seo' => $this->l('SEO'), 'shipping_logistics' => $this->l('Shipping & Logistics'),
-			 'slideshows' => $this->l('Slideshows'), 'smart_shopping' => $this->l('Smart Shopping'), 'market_place' => $this->l('Market Place'), 'social_networks' => $this->l('Social Networks'),
-			 'others'=> $this->l('Other Modules')
-		 );
-
-		 $xmlModules = @simplexml_load_file($this->_moduleCacheFile);
-
-		 foreach($xmlModules->children() as $xmlModule)
-		 	if ($xmlModule->attributes() == 'native')
-		 		foreach($xmlModule->children() as $module)
-		 			foreach($module->attributes() as $key => $value)
-						if ($key == 'name')
-							$this->listNativeModules[] = (string)$value;
-		 	if ($xmlModule->attributes() == 'partner')
-		 		foreach($xmlModule->children() as $module)
-		 			foreach($module->attributes() as $key => $value)
-						if ($key == 'name')
-							$this->listPartnerModules[] = (string)$value;
+	public function displayAjaxRefreshModuleList()
+	{
+		echo Tools::jsonEncode(array('status' => $this->status));
 	}
 
 	public function postProcess()
@@ -343,7 +382,7 @@ class AdminModules extends AdminTab
 								$return = ($method == 'install' ? 12 : 13);
 							elseif ($echo === false)
 								$module_errors[] = $name;
-								
+
 							if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 							{
 								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
@@ -443,10 +482,38 @@ class AdminModules extends AdminTab
 				$(\'input[name="filtername"]\').result(function(event, data, formatted) {
 				 $(\'#filternameForm\').submit();
 				});
-			});
+			});';
 
+			// the following to get modules_list.xml from prestashop.com
+			echo '$(document).ready(function(){
+				try
+				{
+					resAjax = $.ajax({
+							type:"POST",
+							url : "'. str_replace('index','ajax-tab',$currentIndex) . '",
+							async: true,
+							data : {
+								ajaxMode : "1",
+								ajax : "1",
+								token : "'.$this->token.'",
+								tab : "AdminModules",
+								action : "refreshModuleList"
+							},
+							success : function(res,textStatus,jqXHR)
+							{
+								// res.status  = cache or refresh
+							},
+							error: function(res,textStatus,jqXHR)
+							{
+								alert("TECHNICAL ERROR"+res);
+							}
+			});
+				}
+				catch(e){}
+			});
 		</script>';
 	}
+
 	public static function sortModule($a, $b)
 	{
 	    if (sizeof($a) == sizeof($b)) {
@@ -666,7 +733,6 @@ class AdminModules extends AdminTab
 			'.$this->l('Add a module from my computer').'
 		</span>
 		&nbsp;|&nbsp;';
-		if (@fsockopen('www.prestashop.com', 80))
 		echo '<a href="index.php?tab=AdminAddonsMyAccount&token='.Tools::getAdminTokenLite('AdminAddonsMyAccount').'">
 			<img src="https://addons.prestashop.com/modules.php?'.(isset($_SERVER['SERVER_ADDR']) ? 'server='.ip2long($_SERVER['SERVER_ADDR']).'&' : '').'mods='.$serialModules.'" alt="Add" class="middle" />
 			'.$this->l('Add a module from PrestaShop Addons').'
@@ -968,15 +1034,15 @@ class AdminModules extends AdminTab
 
 	public function isFresh($timeout = 604800000)
 	{
-		if (file_exists($this->_moduleCacheFile))
-			return ((time() - filemtime($this->_moduleCacheFile)) < $timeout);
+		if (file_exists(_PS_ROOT_DIR_ . $this->_moduleCacheFile))
+			return ((time() - filemtime(_PS_ROOT_DIR_ . $this->_moduleCacheFile)) < $timeout);
 		else
 			return false;
 	}
 
 	public function refresh()
 	{
-		return file_put_contents($this->_moduleCacheFile, Tools::file_get_contents('http://www.prestashop.com/xml/modules_list.xml'));
+		return file_put_contents(_PS_ROOT_DIR_.$this->_moduleCacheFile, Tools::file_get_contents($this->xml_modules_list));
 	}
 
 	public function displaySelectedFilter()

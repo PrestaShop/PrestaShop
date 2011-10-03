@@ -1206,11 +1206,11 @@ class ToolsCore
 		else
 			return false;
 	}
-	
+
 	/**
 	* @deprecated as of 1.5 use Media::minifyHTML()
 	*/
-	
+
 	public static function minifyHTML($html_content)
 	{
 		Tools::displayAsDeprecated();
@@ -1237,7 +1237,7 @@ class ToolsCore
 		$b = hexdec(substr($hex, 4, 2));
 		return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
 	}
-	
+
 	/**
 	* @deprecated as of 1.5 use Media::minifyHTMLpregCallback()
 	*/
@@ -1246,7 +1246,7 @@ class ToolsCore
 		Tools::displayAsDeprecated();
 		return Media::minifyHTMLpregCallback($preg_matches);
 	}
-	
+
 	/**
 	* @deprecated as of 1.5 use Media::packJSinHTML()
 	*/
@@ -1255,7 +1255,7 @@ class ToolsCore
 		Tools::displayAsDeprecated();
 		return Media::packJSinHTML($html_content);
 	}
-	
+
 	/**
 	* @deprecated as of 1.5 use Media::packJSinHTMLpregCallback()
 	*/
@@ -1285,7 +1285,7 @@ class ToolsCore
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @deprecated as of 1.5 use Media::minifyCSS()
 	 */
@@ -1341,7 +1341,7 @@ class ToolsCore
 	/**
 	* @deprecated as of 1.5 use Media::cccCss()
 	*/
-	public static function cccCss($css_files) 
+	public static function cccCss($css_files)
 	{
 		Tools::displayAsDeprecated();
 		return Media::cccCss($css_files);
@@ -1351,14 +1351,14 @@ class ToolsCore
 	/**
 	* @deprecated as of 1.5 use Media::cccJS()
 	*/
-	public static function cccJS($js_files) 
+	public static function cccJS($js_files)
 	{
 		Tools::displayAsDeprecated();
 		return Media::cccJS($css_files);
 	}
 
 	private static $_cache_nb_media_servers = null;
-	
+
 	public static function getMediaServer($filename)
 	{
 		if (self::$_cache_nb_media_servers === null)
@@ -1911,6 +1911,46 @@ FileETag INode MTime Size
 		else
 			$result = min($post_max_size, $upload_max_filesize);
 		return $result;
+	}
+
+	/**
+	 * apacheModExists return true if the apache module $name is loaded
+	 * @TODO move this method in class Information (when it will exist)
+	 *
+	 * @param string $name module name
+	 * @return boolean true if exists
+	 * @since 1.4.5.0
+	 */
+	public static function apacheModExists($name)
+	{
+		if (function_exists('apache_get_modules'))
+		{
+			static $apacheModuleList = null;
+
+			if (!is_array($apacheModuleList))
+				$apacheModuleList = apache_get_modules();
+
+			// we need strpos (example can be evasive20
+			foreach ($apacheModuleList as $module)
+			{
+				if (strpos($module, $name)!==false)
+					return true;
+			}
+		}
+		else
+		{
+			// If apache_get_modules does not exists,
+			// one solution should be parsing httpd.conf,
+			// but we could simple parse phpinfo(INFO_MODULES) return string
+			ob_start();
+			phpinfo(INFO_MODULES);
+			$phpinfo = ob_get_contents();
+			ob_end_clean();
+			if (strpos($phpinfo, $module) !== false)
+				return true;
+		}
+
+		return false;
 	}
 }
 

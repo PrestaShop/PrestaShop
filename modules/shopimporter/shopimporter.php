@@ -701,7 +701,7 @@ class shopimporter extends ImportModule
 			{
 				$this->saveMatchId(strtolower($className), (int)$object->id, (int)$id);
 				if ($className == 'Customer')
-					Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `passwd_'.bqSQL(Tools::getValue('moduleName')).'̀  = \''.pSQL($password).'\' WHERE id_customer = '.(int)$object->id);
+					Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `passwd_'.bqSQL(Tools::getValue('moduleName')).'` = \''.pSQL($password).'\' WHERE id_customer = '.(int)$object->id);
 				if (array_key_exists('hasImage', $this->supportedImports[strtolower($className)]) AND Tools::isSubmit('images_'.$className))
 					$this->copyImg($item, $className);
 			}

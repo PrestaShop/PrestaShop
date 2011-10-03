@@ -1,0 +1,4 @@
+ID;Alias*;Active (0/1);Customer e-mail;Manufacturer;Supplier;Company;Lastname*;Firstname*;Address 1*;Address 2;Postcode* / Zipcode*;City*;Country*;State;Other;Phone;Mobile Phone;VAT number
+1;My Adress;1;johndoe@prestashop.com;;;;Doe;John;16, Main street;2nd floor;75000;PARIS ;France;;;140138844;;
+2;My work;1;johndoe@prestashop.com;;;My Company;Doe;John;535, Baker street;;13000;Marseile;France;;;235445588;;
+3;My work;0;;Apple Computer, Inc;;;Jobs;Steve;1 Infinite Loop;;95014;CUPERTINO;United States;California;;(800) 275-2273;;

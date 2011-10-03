@@ -29,7 +29,7 @@ class ProductDownloadCore extends ObjectModel
 {
 	/** @var integer Product id which download belongs */
 	public $id_product;
-	
+
 	/** @var integer Attribute Product id which download belongs */
 	public $id_product_attribute;
 
@@ -38,13 +38,13 @@ class ProductDownloadCore extends ObjectModel
 
 	/** @var string PhysicallyFilename the name of the file on hard disk */
 	public $filename;
-	
+
 	/** @var string DateDeposit when the file is upload */
 	public $date_add;
 
 	/** @var string DateExpiration deadline of the file */
 	public $date_expiration;
-	
+
 	/** @var string NbDaysAccessible how many days the customer can access to file */
 	public $nb_days_accessible;
 
@@ -53,7 +53,7 @@ class ProductDownloadCore extends ObjectModel
 
 	/** @var boolean Active if file is accessible or not */
 	public $active = 1;
-	
+
 	/** @var boolean is_shareable indicates whether the product can be shared */
 	public $is_shareable = 0;
 
@@ -133,20 +133,20 @@ class ProductDownloadCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
+		$date_expiration = $this->date_expiration;
+		if (!$date_expiration)
+			$date_expiration = '0000-00-00 00:00:00';
 
-		if (!$this->date_expiration)
-			$this->date_expiration = '0000-00-00 00:00:00';
-
-		$fields['id_product'] = (int)($this->id_product);
+		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = pSQL($this->id_product_attribute);
 		$fields['display_filename'] = pSQL($this->display_filename);
 		$fields['filename'] = pSQL($this->filename);
 		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_expiration'] = pSQL($this->date_expiration);
-		$fields['nb_days_accessible'] = (int)($this->nb_days_accessible);
-		$fields['nb_downloadable'] = (int)($this->nb_downloadable);
-		$fields['active'] = (int)($this->active);
-		$fields['is_shareable'] = (int)($this->is_shareable);
+		$fields['date_expiration'] = pSQL($date_expiration);
+		$fields['nb_days_accessible'] = (int)$this->nb_days_accessible;
+		$fields['nb_downloadable'] = (int)$this->nb_downloadable;
+		$fields['active'] = (int)$this->active;
+		$fields['is_shareable'] = (int)$this->is_shareable;
 		return $fields;
 	}
 
@@ -220,7 +220,7 @@ class ProductDownloadCore extends ObjectModel
 		WHERE `id_product_attribute` = '.(int)$id_product_attribute.' AND `active` = 1');
 		return self::$_productIds[$id_product_attribute];
 	}
-	
+
 	/**
 	 * Return the display filename from a physical filename
 	 *
@@ -237,7 +237,7 @@ class ProductDownloadCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_download`
 		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');
 	}
-	
+
 	/**
 	 * Return the display filename from a physical filename
 	 *
@@ -254,7 +254,7 @@ class ProductDownloadCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_download`
 		WHERE `filename` = \''.pSQL($filename).'\'');
 	}
-	
+
 	/**
 	 * Return the filename from an id_product
 	 *

@@ -466,11 +466,6 @@ class SearchCore
 				// If we find words that need to be indexed, they're added to the word table in the database
 				if (count($pArray))
 				{
-					$list = '';
-					foreach ($pArray AS $word => $weight)
-						$list .= '\''.$word.'\',';
-					$list = rtrim($list, ',');
-
 					$queryArray = array();
 					$queryArray2 = array();
 					foreach ($pArray AS $word => $weight)

@@ -1315,7 +1315,6 @@ State:name
 Country:name
 phone' where `id_country`=10;
 
-
 INSERT INTO `PREFIX_gender` (`id_gender`, `type`) VALUES
 (1, 0),
 (2, 1),
@@ -1337,3 +1336,11 @@ INSERT INTO `PREFIX_gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
 (3, 3, 'Miss'),
 (3, 4, 'Miss'),
 (3, 5, 'Miss');
+
+UPDATE `PREFIX_address_format` set `format` = 'firstname lastname
+company
+address1
+address2
+city State:name postcode
+Country:name
+phone' WHERE `PREFIX_address_format`.`id_country` =4;
