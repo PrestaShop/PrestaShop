@@ -32,6 +32,8 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	public $type;
 	public $tax_calculator;
 
+	private static $cache_tax_calculator;
+
 
 	public function __construct(Address $address, $type)
 	{
@@ -63,37 +65,42 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 		if (!empty($this->address->postcode))
 			$postcode = $this->address->postcode;
 
-		$rows = Db::getInstance()->ExecuteS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'tax_rule`
-		WHERE `id_country` = '.(int)$this->address->id_country.'
-		AND `id_tax_rules_group` = '.(int)$this->type.'
-		AND `id_state` IN (0, '.(int)$this->address->id_state.')
-		AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR `zipcode_from` = 0 OR `zipcode_from` = \''.pSQL($postcode).'\')
-		ORDER BY `zipcode_from` DESC, `zipcode_to` DESC, `id_state` DESC, `id_country` DESC');
-
-		$behavior = 0;
-		$first_row = true;
-		$taxes = array();
-
-		foreach ($rows as $row)
+		if (!isset(self::$cache_tax_calculator[$postcode]))
 		{
-			$tax = new Tax((int)$row['id_tax']);
+			$rows = Db::getInstance()->ExecuteS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_country` = '.(int)$this->address->id_country.'
+			AND `id_tax_rules_group` = '.(int)$this->type.'
+			AND `id_state` IN (0, '.(int)$this->address->id_state.')
+			AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR `zipcode_from` = 0 OR `zipcode_from` = \''.pSQL($postcode).'\')
+			ORDER BY `zipcode_from` DESC, `zipcode_to` DESC, `id_state` DESC, `id_country` DESC');
 
-			$taxes[] = $tax;
+			$behavior = 0;
+			$first_row = true;
+			$taxes = array();
 
-			// the applied behavior correspond to the most specific rules
-			if ($first_row)
+			foreach ($rows as $row)
 			{
-				$behavior = $row['behavior'];
-				$first_row = false;
+				$tax = new Tax((int)$row['id_tax']);
+
+				$taxes[] = $tax;
+
+				// the applied behavior correspond to the most specific rules
+				if ($first_row)
+				{
+					$behavior = $row['behavior'];
+					$first_row = false;
+				}
+
+				if ($row['behavior'] == 0)
+					 break;
 			}
 
-			if ($row['behavior'] == 0)
-				 break;
+			self::$cache_tax_calculator[$postcode] = new TaxCalculator($taxes, $behavior);
 		}
 
-		return new TaxCalculator($taxes, $behavior);
+		return self::$cache_tax_calculator[$postcode];
 	}
 }
 
