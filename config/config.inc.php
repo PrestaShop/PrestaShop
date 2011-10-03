@@ -56,6 +56,7 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 	exit;
 }
 require_once(dirname(__FILE__).'/settings.inc.php');
+require_once(dirname(__FILE__).'/autoload.php');
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
 if (!isset($_SERVER['REQUEST_URI']) OR empty($_SERVER['REQUEST_URI']))
@@ -70,8 +71,10 @@ if (!isset($_SERVER['REQUEST_URI']) OR empty($_SERVER['REQUEST_URI']))
 	}
 }
 
-/* Autoload */
-require_once(dirname(__FILE__).'/autoload.php');
+// Trying to redefine HTTP_HOST if empty (on some webservers...)
+if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
+	$_SERVER['HTTP_HOST'] = @getenv('HTTP_HOST');
+
 
 if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 	define('_PS_MAGIC_QUOTES_GPC_',         get_magic_quotes_gpc());

@@ -9,6 +9,7 @@ $_MODULE['<{ebay}prestashop>ebay_8acabcc788c316f92b7850c76265b49b'] = 'Vous deve
 $_MODULE['<{ebay}prestashop>ebay_d591cbc447d01e5a6165096ebfdf804e'] = 'Vous devez activer l\'extension cURL sur votre serveur si vous désirez utiliser ce module.';
 $_MODULE['<{ebay}prestashop>ebay_1b18bd5d9d85f4f667614345ee20e3b2'] = 'Vous devez activer l\'option allow_url_fopen sur votre serveur si vous désirez utiliser ce module.';
 $_MODULE['<{ebay}prestashop>ebay_8e64bc164aee46723ed2d70273c6f8ab'] = 'Vous devez enregistrer le module sur eBay';
+$_MODULE['<{ebay}prestashop>ebay_55798d71e1cce07f08e25d9a4da60f4a'] = 'Etes-vous sûr de vouloir désinstaller ce module? Toute votre configuration sera perdue.';
 $_MODULE['<{ebay}prestashop>ebay_5f8d9c30e0606a91c5d7b6e1bf1217ac'] = 'N\'a pas pu ajouté les produits au panier (peut être votre stock est il à 0)';
 $_MODULE['<{ebay}prestashop>ebay_25fff46a6fe5b9512e2f4054f4ff6060'] = 'N\'a pas pu trouvé les produits dans votre catalogue';
 $_MODULE['<{ebay}prestashop>ebay_eaa0d1591e6369a298dcd6cb1a8eba8a'] = 'E-mail invalide';

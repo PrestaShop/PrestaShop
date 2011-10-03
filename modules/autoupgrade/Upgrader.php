@@ -165,18 +165,37 @@ class UpgraderCore
 }
 		return $this->changed_files;
 	}
+
+	/** populate $this->changed_files with $path
+	 * in sub arrays  mail, translation and core items 
+	 * @param string $path filepath to add, relative to _PS_ROOT_DIR_
+	 */
 	protected function addChangedFile($path)
 	{
 		$this->version_is_modified = true;
-		$this->changed_files[] = $path;
-		//array_unique($this->changed_files);
+		
+		if (strpos($path, 'mails/') !== false)
+			$this->changed_files['mail'][] = $path;
+		else if (
+			strpos($path, '/en.php') !== false
+			|| strpos($path, '/fr.php') !== false
+			|| strpos($path, '/es.php') !== false
+			|| strpos($path, '/it.php') !== false
+			|| strpos($path, '/de.php') !== false
+			|| strpos($path, 'translations/') !== false
+		)
+			$this->changed_files['translation'][] = $path;
+		else
+			$this->changed_files['core'][] = $path;
 	}
 
+	/** populate $this->missing_files with $path
+	 * @param string $path filepath to add, relative to _PS_ROOT_DIR_
+	 */
 	protected function addMissingFile($path)
 	{
 		$this->version_is_modified = true;
 		$this->missing_files[] = $path;
-		//array_unique($this->missingFile);
 	}
 
 	protected function browseXmlAndCompare($node, &$current_path = array(), $level = 1)
@@ -190,18 +209,22 @@ class UpgraderCore
 			}
 			else if (is_object($child) && $child->getName() == 'md5file')
 			{
-					$path = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR;
+				// We will store only relative path.
+				// absolute path is only used for file_exists and compare
+				$relative_path = '';
 					for ($i = 1; $i < $level; $i++)
-						$path .= $current_path[$i].'/';
-					$path .= (string)$child['name'];
-				$path = str_replace('ps_root_dir',_PS_ROOT_DIR_,$path);
+					$relative_path .= $current_path[$i].'/';
+				$relative_path .= (string)$child['name'];
+				$fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR . $relative_path;
+
+				$fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
 					// replace default admin dir by current one 
-					$path = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $path);
-				if(!file_exists($path))
-					$this->addMissingFile($path);
-					else if (!$this->compareChecksum($path, (string)$child))
-					$this->addChangedFile($path);
+				$fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
+				if (!file_exists($fullpath))
+					$this->addMissingFile($relative_path);
+				else if (!$this->compareChecksum($fullpath, (string)$child))
+					$this->addChangedFile($relative_path);
 					// else, file is original (and ok)
 			}
 		}

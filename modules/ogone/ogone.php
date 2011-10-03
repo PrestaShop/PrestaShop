@@ -96,6 +96,7 @@ class Ogone extends PaymentModule
 						<li><a href="../modules/'.$this->name.'/docs/en2.png">'.$this->l('See the screenshot for step').' 2</a></li>
 						<li><a href="../modules/'.$this->name.'/docs/en3.png">'.$this->l('See the screenshot for step').' 3</a></li>
 						<li><a href="../modules/'.$this->name.'/docs/en4.png">'.$this->l('See the screenshot for step').' 4</a></li>
+						<li><a href="../modules/'.$this->name.'/docs/en5.png">'.$this->l('See the screenshot for step').' 5</a></li>
 					</ol>
 				</li>
 			</ol>

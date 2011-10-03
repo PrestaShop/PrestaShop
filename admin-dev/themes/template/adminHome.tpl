@@ -9,7 +9,7 @@
 		<p>{l s ='To receive PrestaShop update warnings, you need to activate the <b>allow_url_fopen</b> command in your <b>php.ini</b> config file.'} [<a href="http://www.php.net/manual/'.$isoUser.'/ref.filesystem.php">{l s ='more info'}</a>]</p>
 		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
 	{/if}
-{if $show_screencast}
+{if $employee->bo_show_screencast}
 <div id="adminpresentation">
 	<iframe src="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:420px;" scrolling="no"></iframe>
 	<div id="footer_iframe_home">
@@ -76,7 +76,7 @@ $(document).ready(function() {
 				$('#adminpresentation').fadeIn('slow');
 			else
 				$('#adminpresentation').fadeOut('slow');
-				
+
 			$('#partner_preactivation').fadeOut('slow', function() {
 				if (json.partner_preactivation != 'NOK')
 					$('#partner_preactivation').html(json.partner_preactivation);
@@ -84,7 +84,7 @@ $(document).ready(function() {
 					$('#partner_preactivation').html('');
 				$('#partner_preactivation').fadeIn('slow');
 			});
-			
+
 			$('#discover_prestashop').fadeOut('slow', function() {
 				if (json.discover_prestashop != 'NOK')
 					$('#discover_prestashop').html(json.discover_prestashop);
@@ -96,7 +96,7 @@ $(document).ready(function() {
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{
 			$('#adminpresentation').fadeOut('slow');
-			$('#partner_preactivation').fadeOut('slow');	
+			$('#partner_preactivation').fadeOut('slow');
 			$('#discover_prestashop').fadeOut('slow');
 		}
 	});

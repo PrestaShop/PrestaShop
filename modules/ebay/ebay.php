@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.2.8';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -113,6 +113,9 @@ class Ebay extends Module
 
 			// Loading Shipping Method
 			$this->loadShippingMethod();
+
+			// Warning uninstall
+			$this->confirmUninstall = $this->l('Are you sure you want uninstall this module ? All your configuration will be lost.');
 		}
 	}
 
@@ -434,6 +437,8 @@ class Ebay extends Module
 							$cartAdd->id_carrier = 1;
 							$cartAdd->id_lang = $this->id_lang;
 							$cartAdd->id_currency = Currency::getIdByIsoCode('EUR');
+									$cartAdd->recyclable = 0;
+									$cartAdd->gift = 0;
 		 					$cartAdd->add();
 							foreach ($order['product_list'] as $product)
 										if ($cartAdd->updateQty((int)($product['quantity']), (int)($product['id_product']), ((isset($product['id_product_attribute']) && $product['id_product_attribute'] > 0) ? $product['id_product_attribute'] : NULL)))

@@ -36,3 +36,4 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`, `live_edi
 ('afterDeleteAttribute', 'On deleting attribute feature value', 'On deleting attribute feature value', 0, 0),
 ('afterSaveAttribute', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0);
 
+ALTER TABLE `PREFIX_employee` ADD `bo_show_screencast` TINYINT(1) NOT NULL DEFAULT '1' AFTER `bo_uimode`;

@@ -152,6 +152,14 @@ class AdminEmployees extends AdminTab
 					<input type="radio" name="bo_uimode" id="uimode_off" value="click" '.($this->getFieldValue($obj, 'bo_uimode') == 'click' ? 'checked="checked" ' : '').'/>
 					<label class="t" for="uimode_off">'.$this->l('Click on tabs').'</label>
 				</div><div class="clear">&nbsp;</div>
+				<label>'.$this->l('Show screencast:').' </label>
+				<div class="margin-form">
+					<input type="radio" name="bo_show_screencast" id="bo_show_screencast_on" value="1" '.($this->getFieldValue($obj, 'bo_show_screencast') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="active_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
+					<input type="radio" name="bo_show_screencast" id="bo_show_screencast_off" value="0" '.(!$this->getFieldValue($obj, 'bo_show_screencast') ? 'checked="checked" ' : '').'/>
+					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
+					<p>'.$this->l('Show the welcome video on the dashbord of the back office').'</p>
+				</div>
 				<label>'.$this->l('Status:').' </label>
 				<div class="margin-form">
 					<input type="radio" name="active" id="active_on" value="1" '.($this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>

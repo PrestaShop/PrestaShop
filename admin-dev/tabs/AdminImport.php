@@ -101,6 +101,9 @@ class AdminImport extends AdminTab
 					'image_position' => array('label' => $this->l('Image position'),
 						'help' => $this->l('Position of the product image to use for this combination. If you use this field, leave image URL empty.')),
 					'image_url' => array('label' => $this->l('Image URL')),
+					'delete_existing_images' => array(
+											'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
+											'help' => $this->l('If you do not specify this column and you specify the column images, all images of the product will be replaced by those specified in the import file')),
 				);
 
 				self::$default_values = array(
@@ -475,8 +478,7 @@ class AdminImport extends AdminTab
 				$path = _PS_CAT_IMG_DIR_.(int)($id_entity);
 			break;
 		}
-
-		if (copy(trim($url), $tmpfile))
+		if (copy(str_replace(' ', '%20', trim($url)), $tmpfile))
 		{
 			imageResize($tmpfile, $path.'.jpg');
 			$imagesTypes = ImageType::getImagesTypes($entity);
@@ -938,6 +940,11 @@ class AdminImport extends AdminTab
 
 			$product = new Product((int)($info['id_product']), false, $defaultLanguage);
 			$id_image = null;
+			//delete existing images if "delete_existing_images" is set to 1
+			if (array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'])
+				$product->deleteImages();
+			elseif (array_key_exists('image_url', $info))
+				$product->deleteImages();
 
 			if (isset($info['image_url']) && $info['image_url'])
 			{

@@ -167,9 +167,9 @@ class AdminCarts extends AdminTab
 								SELECT id_image
 								FROM '._DB_PREFIX_.'image
 								WHERE id_product = '.(int)($product['id_product']).' AND cover = 1');
-						 	
+
 							$productObj = new Product($product['id_product']);
-								
+
 							/* Customization display */
 							$this->displayCustomizedDatas($customizedDatas, $product, $currency, $image, $tokenCatalog, $stock);
 							if ($product['cart_quantity'] > $product['customizationQuantityTotal'])
@@ -257,10 +257,7 @@ class AdminCarts extends AdminTab
 
 		if (is_array($customizedDatas) AND isset($customizedDatas[(int)($product['id_product'])][(int)($product['id_product_attribute'])]))
 		{
-			if (isset($image['id_image']))
-				$image = new Image($image['id_image']);
-			else
-				$image = new Image();
+			if ($image = new Image($image['id_image']))
 			echo '
 			<tr>
 				<td align="center">'.($image->id ? cacheImage(_PS_IMG_DIR_.'p/'.$image->getExistingImgPath().'.jpg',
@@ -319,17 +316,17 @@ class AdminCarts extends AdminTab
 			$this->displayList();
 		}
 	}
-	
+
 	protected function _displayDeleteLink($token = NULL, $id)
-	{	
+	{
 		foreach ($this->_list as $cart)
 			if ($id == $cart['id_cart'])
 				if ($cart['id_order'])
 					return;
-		
+
 		$_cacheLang['Delete'] = $this->l('Delete', __CLASS__, true, false);
 		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false).$id.' ?)';
-		
+
 		echo '
 			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].'\');">
 			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>

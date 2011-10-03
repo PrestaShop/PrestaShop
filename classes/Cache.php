@@ -29,7 +29,7 @@ abstract class CacheCore
 {
 	/** @var Cache */
 	protected static $_instance;
-	protected $_keysCached;
+	protected $_keysCached = array();
 	protected $_tablesCached = array();
 	protected $_blackList = array('cart',
 												'cart_discount',

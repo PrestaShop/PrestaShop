@@ -637,12 +637,24 @@ abstract class ModuleCore
 
 			if (!$useConfig OR !$xml_exist OR (isset($xml_module->need_instance) AND (int)$xml_module->need_instance == 1) OR $needNewConfigFile)
 			{
+				// If class already exists, don't include the file
+				if (!class_exists($module, false))
+				{
+					$filepath = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
 				$file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
 				if (substr($file, 0, 5) == '<?php')
 					$file = substr($file, 5);
 				if (substr($file, -2) == '?>')
 					$file = substr($file, 0, -2);
-				if (class_exists($module, false) OR eval($file) !== false)
+					// if (false) is a trick to not load the class with "eval".
+					// this way require_once will works correctly
+					if (eval('if (false){	'.$file.' }') !== false)
+						require_once( _PS_MODULE_DIR_.$module.'/'.$module.'.php' );
+					else
+						$errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($filepath, strlen(_PS_ROOT_DIR_)));
+				}
+				
+				if (class_exists($module,false))
 				{
 					$moduleList[$moduleListCursor++] = new $module;
 					if (!$xml_exist OR $needNewConfigFile)
@@ -654,7 +666,7 @@ abstract class ModuleCore
 					}
 				}
 				else
-					$errors[] = $module;
+					$errors[] = sprintf(Tools::displayError('%1$s (class missing in %2$s)'), $module, substr($filepath, strlen(_PS_ROOT_DIR_)));
 			}
 		}
 
@@ -679,7 +691,7 @@ abstract class ModuleCore
 
 		if ($errors)
 		{
-			echo '<div class="alert error"><h3>'.Tools::displayError('Parse error(s) in module(s)').'</h3><ol>';
+			echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) couldn\'t be loaded').':</h3><ol>';
 			foreach ($errors AS $error)
 				echo '<li>'.$error.'</li>';
 			echo '</ol></div>';
