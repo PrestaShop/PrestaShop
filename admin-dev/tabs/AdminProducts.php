@@ -3441,7 +3441,9 @@ class AdminProducts extends AdminTab
 						<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
 						<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
 						<script src="'._PS_JS_DIR_.'fileuploader.js" type="text/javascript"></script>
-						<script src="'._PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+						<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.core.min.js" type="text/javascript"></script>
+						<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.widget.min.js" type="text/javascript"></script>
+						<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
 						<script type="text/javascript" src="'._PS_JS_DIR_.'admin.js"></script>
 						<script type="text/javascript">
 							function deleteImg(id)
