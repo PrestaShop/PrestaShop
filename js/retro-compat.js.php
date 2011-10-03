@@ -35,7 +35,7 @@ $plugins = array(
 				'jqminmax-compressed.js' => 
 					array('new_file' => $plugins_folder.'jquery.jqminmax.js', 'name' => 'jqminmax'),
 				'jquery.fancybox-1.3.4.js' => 
-					array('new_file' => $plugins_folder.'jquery.fancybox.js', 'name' => 'fancybox'),
+					array('new_file' => $plugins_folder.'fancybox/jquery.fancybox.js', 'name' => 'fancybox'),
 				'jquery.jqzoom.js' => 
 					array('new_file' => $plugins_folder.'jquery.jqzoom.js', 'name' => 'jqzoom'),
 				'jquery.serialScroll-1.2.2-min.js' => 
