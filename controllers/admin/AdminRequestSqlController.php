@@ -29,7 +29,6 @@ class AdminRequestSqlControllerCore extends AdminController
 {
 	private $info = true;
 	private $warning = true;
-	private $tab_form = array();
 
 	public function __construct()
 	{
@@ -54,7 +53,7 @@ class AdminRequestSqlControllerCore extends AdminController
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
 
-		$this->template = 'requestSql.tpl';
+		$this->template = 'adminRequestSql.tpl';
 
 		parent::__construct();
 	}
