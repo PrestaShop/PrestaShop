@@ -495,12 +495,22 @@ class OrderCore extends ObjectModel
 			$this->setProductPrices($row);
 
 			/* Add information for virtual product */
-			if ($row['download_hash'] AND !empty($row['download_hash']))
-				$row['filename'] = ProductDownload::getFilenameFromIdProduct($row['product_id']);
-
+			if ($row['download_hash'] && !empty($row['download_hash']))
+			{
+				if ($row['product_attribute_id'] && !empty($row['product_attribute_id']))
+				{
+					$row['filename'] = ProductDownload::getFilenameFromIdAttribute((int)$row['product_id'], (int)$row['product_attribute_id']);
+				}
+				else
+				{
+					$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
+				}
+			}
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
+		p($resultArray);		
+		
 		return $resultArray;
 	}
 
