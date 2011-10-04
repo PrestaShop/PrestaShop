@@ -156,22 +156,22 @@ class HelperListCore extends Helper
 					$this->_list[$index]['view'] = $this->_displayViewLink($token, $id);
 				if ($this->edit)
 					$this->_list[$index]['edit'] = $this->_displayEditLink($token, $id);
-				if ($this->delete AND (!isset($this->_listSkipDelete) OR !in_array($id, $this->_listSkipDelete)))
+				if ($this->delete AND (!isset($this->_listSkipDelete) || !in_array($id, $this->_listSkipDelete)))
 					$this->_list[$index]['delete'] = $this->_displayDeleteLink($token, $id);
 				if ($this->duplicate)
 					$this->_list[$index]['duplicate'] = $this->_displayDuplicate($token, $id);
 			}
 
-			foreach ($this->fieldsDisplay AS $key => $params)
+			foreach ($this->fieldsDisplay as $key => $params)
 			{
 				$tmp = explode('!', $key);
 				$key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
 
 				if (isset($params['active']))
-					$this->_list[$index][$key] = $this->_displayEnableLink($this->token, $tr['identifier'], $tr[$key], $params['active'], Tools::getValue('id_category'), Tools::getValue('id_product'));
-				elseif (isset($params['activeVisu']))
+					$this->_list[$index][$key] = $this->_displayEnableLink($this->token, $id, $tr[$key], $params['active'], Tools::getValue('id_category'), Tools::getValue('id_product'));
+				else if (isset($params['activeVisu']))
 					$this->_list[$index][$key] = (bool)$tr[$key];
-				elseif (isset($params['position']))
+				else if (isset($params['position']))
 				{
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
@@ -183,7 +183,7 @@ class HelperListCore extends Helper
 							'&way=0&position='.(int)($tr['position'] - 1).'&token='.$this->token
 					);
 				}
-				elseif (isset($params['image']))
+				else if (isset($params['image']))
 				{
 					// item_id is the product id in a product image context, else it is the image id.
 					$item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
