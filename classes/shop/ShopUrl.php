@@ -34,10 +34,9 @@ class ShopUrlCore extends ObjectModel
 	public $virtual_uri;
 	public $main;
 	public $active;
-	
-	private static $main_domain = NULL;
-	private static $main_domain_ssl = NULL;
-	
+
+	private static $main_domain = null;
+	private static $main_domain_ssl = null;
 
 	protected $fieldsRequired = array('domain', 'id_shop');
 	protected $fieldsSize = array('domain' => 255, 'physical_uri' => 64, 'virtual_uri' => 64);
@@ -69,16 +68,16 @@ class ShopUrlCore extends ObjectModel
 		$fields['active'] = (int)$this->active;
 		return $fields;
 	}
-	
+
 	public function getURL($ssl = false)
 	{
 		if (!$this->id)
-			return ;
+			return;
 
 		$url = ($ssl) ? 'https://'.$this->domain_ssl : 'http://'.$this->domain;
 		return $url.$this->physical_uri.$this->virtual_uri;
 	}
-	
+
 	public static function getShopUrls($id_shop = false)
 	{
 		$sql = 'SELECT *
@@ -87,7 +86,7 @@ class ShopUrlCore extends ObjectModel
 					'.($id_shop ? ' AND id_shop = '.(int)$id_shop : '');
 		return Db::getInstance()->ExecuteS($sql);
 	}
-		
+
 	public function setMain()
 	{
 		$res = Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 0), 'UPDATE', 'id_shop = '.(int)$this->id_shop);
@@ -96,7 +95,7 @@ class ShopUrlCore extends ObjectModel
 
 		return $res;
 	}
-		
+
 	public function canAddThisUrl($domain, $domain_ssl, $physical_uri, $virtual_uri)
 	{
 		$physical_uri = trim($physical_uri, '/');
@@ -104,7 +103,7 @@ class ShopUrlCore extends ObjectModel
 			$physical_uri = preg_replace('#/+#', '/', '/'.$physical_uri.'/');
 		else
 			$this->physical_uri = '/';
-			
+
 		$virtual_uri = trim($virtual_uri, '/');
 		if ($virtual_uri)
 			$virtual_uri = preg_replace('#/+#', '/', trim($virtual_uri, '/')).'/';
@@ -117,7 +116,7 @@ class ShopUrlCore extends ObjectModel
 					.($this->id ? ' AND id_shop_url != '.(int)$this->id : '');
 		return Db::getInstance()->getValue($sql);
 	}
-	
+
 	public static function getMainShopDomain()
 	{
 		if (!self::$main_domain)
@@ -126,7 +125,7 @@ class ShopUrlCore extends ObjectModel
 															WHERE main=1 AND id_shop = '.Context::getContext()->shop->getID(true));
 		return self::$main_domain;
 	}
-	
+
 	public static function getMainShopDomainSSL()
 	{
 		if (!self::$main_domain)
