@@ -27,35 +27,35 @@
 
 class GroupCore extends ObjectModel
 {
-	public 		$id;
+	public $id;
 
 	/** @var string Lastname */
-	public 		$name;
+	public $name;
 
 	/** @var string Reduction */
-	public 		$reduction;
+	public $reduction;
 
 	/** @var int Price display method (tax inc/tax exc) */
-	public		$price_display_method;
+	public $price_display_method;
 
 	/** @var string Object creation date */
-	public 		$date_add;
+	public $date_add;
 
 	/** @var string Object last modification date */
-	public 		$date_upd;
+	public $date_upd;
 
 	protected $tables = array ('group');
 
- 	protected 	$fieldsRequired = array('price_display_method');
- 	protected 	$fieldsSize = array();
- 	protected 	$fieldsValidate = array('reduction' => 'isFloat', 'price_display_method' => 'isPriceDisplayMethod');
+	protected $fieldsRequired = array('price_display_method');
+	protected $fieldsSize = array();
+	protected $fieldsValidate = array('reduction' => 'isFloat', 'price_display_method' => 'isPriceDisplayMethod');
 
 	protected	$fieldsRequiredLang = array('name');
 	protected	$fieldsSizeLang = array('name' => 32);
 	protected	$fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected 	$table = 'group';
-	protected 	$identifier = 'id_group';
+	protected $table = 'group';
+	protected $identifier = 'id_group';
 
 	protected static $_cacheReduction = array();
 	protected static $_groupPriceDisplayMethod = array();
@@ -110,7 +110,7 @@ class GroupCore extends ObjectModel
 		'.($limit > 0 ? 'LIMIT '.(int)$start.', '.(int)$limit : ''));
 	}
 
-	public static function getReduction($id_customer = NULL)
+	public static function getReduction($id_customer = null)
 	{
 		if (!isset(self::$_cacheReduction['customer'][(int)$id_customer]))
 			self::$_cacheReduction['customer'][(int)$id_customer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
