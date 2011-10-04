@@ -41,7 +41,7 @@ class AdminModules extends AdminTab
 	private $listPartnerModules = array();
 	private $listNativeModules = array();
 	private $_moduleCacheFile = '/config/modules_list.xml';
- 	public static $xml_modules_list = 'http://www.prestashop.com/xml/modules_list.xml';
+ 	public $xml_modules_list = 'http://www.prestashop.com/xml/modules_list.xml';
 	static private $MAX_DISP_AUTHOR = 20;		// maximum length to display
 
 
@@ -107,8 +107,10 @@ class AdminModules extends AdminTab
 		//refresh modules_list.xml every week
 		if (!$this->isFresh())
 		{
-			$this->refresh();
-			$this->status = 'refresh';
+			if ($this->refresh())
+				$this->status = 'refresh';
+			else
+				$this->status = 'error';
 		}
 		else
 			$this->status = 'cache';
@@ -490,7 +492,7 @@ class AdminModules extends AdminTab
 				{
 					resAjax = $.ajax({
 							type:"POST",
-							url : "'. str_replace('index','ajax-tab',$currentIndex) . '",
+							url : "'. str_replace('index','ajax-tab',self::$currentIndex) . '",
 							async: true,
 							data : {
 								ajaxMode : "1",
