@@ -906,3 +906,33 @@ if (Tools::isSubmit('ajaxFeaturesPositions'))
 		}
 	}
 }
+
+if (Tools::isSubmit('searchCategory'))
+{
+	$q = Tools::getValue('q');
+	$limit = Tools::getValue('limit');
+	$results = Db::getInstance()->executeS(
+		'SELECT c.`id_category`, cl.`name`
+		FROM `'._DB_PREFIX_.'category` c
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.$context->shop->sqlLang('cl').')
+		WHERE cl.`id_lang` = '.(int)($context->language->id).'
+		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
+		GROUP BY c.id_category
+		ORDER BY c.`position`
+		LIMIT '.(int)$limit);
+	if ($results)
+	foreach ($results AS $result)
+		echo trim($result['name']).'|'.(int)($result['id_category'])."\n";
+}
+
+if (Tools::isSubmit('getParentCategoriesId') AND $id_category = Tools::getValue('id_category'))
+{
+	$category = new Category((int)$id_category);
+	$results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
+	$output = array();
+	foreach($results as $result)
+		$output[] = $result;
+	
+	die(Tools::jsonEncode($output));
+}
+

@@ -3106,9 +3106,10 @@ class AdminProducts extends AdminTab
 						 'Collapse All' => $this->l('Collapse All'),
 						 'Expand All' => $this->l('Expand All'),
 						 'Check All' => $this->l('Check All'),
-						 'Uncheck All'  => $this->l('Uncheck All')
+						 'Uncheck All'  => $this->l('Uncheck All'),
+						 'search' => $this->l('Search a category')
 					);
-					echo Helper::renderAdminCategorieTree($trads, $selectedCat).'
+					echo Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox', false, true).'
 						</td>
 					</tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>

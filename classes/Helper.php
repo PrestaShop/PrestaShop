@@ -75,28 +75,15 @@ class HelperCore
 		($use_search ? '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>' : '' ).'
 		<script type="text/javascript">
 			var inputName = "'.$input_name.'";';
-			if ($use_search)
-			{
-			
-				$html .= '
-				$(\'document\').ready( function() {
-					var dataCat = '. Tools::jsonEncode(array(array('name' => 'toto'), array('name' => 'titi'), array('name' => 'tutu'))).';
-					$(\'input[name="search_cat"]\').autocomplete(dataCat);
-					//$(\'input[name="search_cat"]\').result(function(event, data, formatted) {
-					 //alert(\'toto\');
-					//});
-				});
-			';
-			}
 		if (sizeof($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
 				$html .= 'var selectedCat = "'.implode(',', $selected_cat).'"';
 			else
 				$html .= 'var selectedCat = "'.implode(',', array_keys($selected_cat)).'"';
-		} else {
-			$html .= 'var selectedCat = ""';
 		}
+		else
+			$html .= 'var selectedCat = ""';
 		$html .= '
 			var selectedLabel = \''.$trads['selected'].'\';
 			var home = \''.$trads['Home'].'\';

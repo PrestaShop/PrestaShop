@@ -257,3 +257,78 @@ function updateNbSubCategorySelected(category, add)
 	if (currentSpan.parent().children('.nb_sub_cat_selected').length != 0)
 		updateNbSubCategorySelected(currentSpan.parent().children('input'), add);
 }
+
+$(document).ready( function() {
+	var category_to_check;
+	$('#search_cat').autocomplete('ajax.php?searchCategory=1', {
+		delay: 100,
+		minChars: 3,
+		autoFill: true,
+		max:20,
+		matchContains: true,
+		mustMatch:true,
+		scroll:false,
+		cacheLength:0,
+		multipleSeparator:'||',
+		formatItem: function(item) 
+		{
+			return item[1]+' - '+item[0];
+		}
+	}).result(function(event, item)
+	{ 
+		parent_ids = getParentCategoriesIdAndOpen(item[1]);
+	});
+});
+
+function getParentCategoriesIdAndOpen(id_category)
+{
+	category_to_check = id_category;
+	$.ajax({
+        type: 'POST',
+        url: 'ajax.php',
+        async: true,
+        dataType: 'json',
+        data: 'ajax=true&getParentCategoriesId=true&id_category=' + id_category ,
+        success: function(jsonData) {
+            for(var i= 0; i < jsonData.length; i++)
+			    if (jsonData[i].id_category != 1)
+			    	arrayCatToExpand.push(jsonData[i].id_category);
+			readyToExpand = true;   	
+			interval = setInterval(openParentCategories, 10);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+        }
+    });
+}
+
+function openParentCategories()
+{
+	if (id >= arrayCatToExpand.length && !readyToExpand)
+	{
+		clearInterval(interval);
+		// delete interval value
+		interval = null;
+		readyToExpand = false;
+		intervalCheck = setInterval(checkCategory, 10);
+	}
+	
+	if (readyToExpand)
+	{
+		if ($('li#'+arrayCatToExpand[id]+'.hasChildren').length > 0)
+			readyToExpand = false;
+		$('li#'+arrayCatToExpand[id]+'.expandable:visible span.category_label').trigger('click');
+		id++;
+	}
+}
+
+function checkCategory()
+{
+	if ($('li#'+category_to_check+' input[type=checkbox]').attr('checked') == 'checked')
+	{
+		clearInterval(intervalCheck);
+		intervalCheck = null;
+	}
+	else
+		$('li#'+category_to_check+' input[type=checkbox]').attr('checked', 'checked');
+}
