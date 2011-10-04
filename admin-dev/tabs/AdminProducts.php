@@ -2643,14 +2643,25 @@ class AdminProducts extends AdminTab
 
 			if ($productDownload->id && file_exists($exists_file) || !empty($productDownload->display_filename))
 			{			
-				echo '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" checked="checked" />'. $this->l('Yes').'
-				<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" />'.$this->l('No').'<br /><br />'; 
+				$check_yes = 'checked="checked"';
+				$check_no = '';
 			}
 			else
 			{
-				echo '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" />'. $this->l('Yes').'
-				<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" checked="checked" />'.$this->l('No').'<br /><br />'; 
+				if ($productDownload->id && !empty($cache_default_attribute))
+				{
+					$check_yes = 'checked="checked"';
+					$check_no = '';
+				}
+				else
+				{
+					$check_yes = '';
+					$check_no = 'checked="checked"';
+				}
 			}
+			
+			echo '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" '.$check_yes.'/>'. $this->l('Yes').'
+			<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" '.$check_no.'/>'.$this->l('No').'<br /><br />'; 
 			
 			if (!file_exists($exists_file) && !empty($productDownload->display_filename) && empty($cache_default_attribute))
 			{
@@ -2752,7 +2763,7 @@ class AdminProducts extends AdminTab
 				{
 					$productDownloadAttribute = new ProductDownload($product['id_product_download']);
 					$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownloadAttribute->filename;
-					if (!file_exists($exists_file2))
+					if (!file_exists($exists_file2) && !empty($productDownloadAttribute->id_product_attribute))
 					{
 						$msg = sprintf(Tools::displayError('This file "%s" is missing'), $productDownloadAttribute->display_filename);
 						$error .= '<p class="alert" id="file_missing">
@@ -3702,7 +3713,7 @@ class AdminProducts extends AdminTab
 		$id_product_download = (int) $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
 		if (!empty($id_product_download))
 			$productDownload = new ProductDownload($id_product_download);
-		
+			
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 		{
@@ -3988,13 +3999,13 @@ class AdminProducts extends AdminTab
 							<th>'.$this->l('UPC').'</th>
 							<th class="center">'.$this->l('Quantity').'</th>';
 
-							if ($id_product_download && !empty($productDownload->display_filename))
+							if ($id_product_download && !empty($productDownload->filename))
 							{
 								echo '
-								<th class="center">'.$this->l('Filename').'</th>
-								<th class="center">'.$this->l('Number of downloads').'</th>
-								<th class="center">'.$this->l('Number of days').'</th>
-								<th class="center">'.$this->l('Share').'</th>';
+								<th class="center virtual_header">'.$this->l('Filename').'</th>
+								<th class="center virtual_header">'.$this->l('Number of downloads').'</th>
+								<th class="center virtual_header">'.$this->l('Number of days').'</th>
+								<th class="center virtual_header">'.$this->l('Share').'</th>';
 							}
 							
 							echo '<th class="center">'.$this->l('Actions').'</th>
@@ -4051,7 +4062,6 @@ class AdminProducts extends AdminTab
 						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
 
 						$id_product_download = $productDownload->getIdFromIdAttibute((int) $id_product_attribute);
-								
 						if ($id_product_download)
 							$productDownload = new ProductDownload($id_product_download);
 						
