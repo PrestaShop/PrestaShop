@@ -223,7 +223,6 @@ class HelperListCore extends Helper
 
 		if(isset($this->_listSkipDelete))
 		{
-			info($this->_listSkipDelete);
 			$this->context->smarty->assign('listSkipDelete', $this->_listSkipDelete);
 		}
 
