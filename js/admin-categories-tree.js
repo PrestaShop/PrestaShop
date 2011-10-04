@@ -317,7 +317,7 @@ function openParentCategories()
 	{
 		if ($('li#'+arrayCatToExpand[id]+'.hasChildren').length > 0)
 			readyToExpand = false;
-		$('li#'+arrayCatToExpand[id]+'.expandable:visible span.category_label').trigger('click');
+		$('li#'+arrayCatToExpand[id]+' span').trigger('click');
 		id++;
 	}
 }
