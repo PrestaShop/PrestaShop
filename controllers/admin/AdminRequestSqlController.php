@@ -186,7 +186,8 @@ class AdminRequestSqlControllerCore extends AdminController
 						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
-					break;
+				break;
+
 				case 'checkedSelect':
 					if (isset($e[$key]['table']))
 						$this->_errors[] = Tools::DisplayError($this->l('The Table ').' "'.$e[$key]['table'].'" '.$this->l(' doesn\'t exist.'));
@@ -197,7 +198,8 @@ class AdminRequestSqlControllerCore extends AdminController
 						$this->_errors[] = Tools::DisplayError($this->l('The operand "*" can be used in a nested query.'));
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
-					break;
+				break;
+
 				case 'checkedWhere':
 					if (isset($e[$key]['operator']))
 						$this->_errors[] = Tools::DisplayError($this->l('The operator ').' "'.$e[$key]['operator'].'" '.$this->l(' used is incorrect.'));
@@ -206,7 +208,8 @@ class AdminRequestSqlControllerCore extends AdminController
 						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
-					break;
+				break;
+
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
 						$this->_errors[] = Tools::DisplayError($this->l('The operator ').' "'.$e[$key]['operator'].'" '.$this->l(' used is incorrect.'));
@@ -215,40 +218,43 @@ class AdminRequestSqlControllerCore extends AdminController
 						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
-					break;
+				break;
+
 				case 'checkedOrder':
 					if (isset($e[$key]['attribut']))
 						$this->_errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
 						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
-					break;
+				break;
+
 				case 'checkedGroupBy':
 					if (isset($e[$key]['attribut']))
 						$this->_errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
 						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
 					else
 						$this->_errors[] = Tools::DisplayError($this->l('Error'));
-					break;
+				break;
+
 				case 'checkedLimit':
 						$this->_errors[] = Tools::DisplayError($this->l('The LIMIT clause must contain numeric arguments.'));
-					break;
+				break;
+
 				case 'returnNameTable':
 						if (isset($e[$key]['reference']))
 							$this->_errors[] = Tools::DisplayError($this->l('The reference ').'"'.
 							$e[$key]['reference'][0].'"'.$this->l(' doesn\'t exist in : ').$e[$key]['reference'][1]);
 						else
 							$this->_errors[] = Tools::DisplayError($this->l('When multiple tables are used, each attribute must be referenced to a table.'));
-					break;
+				break;
+
 				case 'testedRequired':
 						$this->_errors[] = Tools::DisplayError($e[$key].' '.$this->l(' doesn\'t exist.'));
 					break;
+
 				case 'testedUnauthorized':
 						$this->_errors[] = Tools::DisplayError($e[$key].' '.$this->l(' is a unauthorized keyword.'));
-					break;
-				default:
-
-					break;
+				break;
 			}
 		}
 	}
@@ -261,11 +267,13 @@ class AdminRequestSqlControllerCore extends AdminController
 			return;
 
 		$smarty = $this->context->smarty;
-		$smarty->assign('tab_form', array('current' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
-										'id' => $obj->id,
-										'table' => $this->table,
-										'name' => $this->getFieldValue($obj, 'name'),
-										'sql' => $this->getFieldValue($obj, 'sql')));
+		$smarty->assign('tab_form', array(
+			'current' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
+			'id' => $obj->id,
+			'table' => $this->table,
+			'name' => $this->getFieldValue($obj, 'name'),
+			'sql' => $this->getFieldValue($obj, 'sql')
+		));
 	}
 
 	public function init()
@@ -298,8 +306,10 @@ class AdminRequestSqlControllerCore extends AdminController
 				break;
 		}
 
-		$smarty->assign('info', $this->info);
-		$smarty->assign('warning', $this->warning);
+		$smarty->assign(array(
+			'info' =>	$this->info,
+			'warning' =>$this->warning,
+		));
 
 		parent::initContent();
 	}
