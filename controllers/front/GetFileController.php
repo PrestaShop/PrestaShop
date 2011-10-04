@@ -30,7 +30,7 @@ class GetFileControllerCore extends FrontController
 	protected $display_header = false;
 	protected $display_footer = false;
 
-	public function postProcess()
+	public function init()
 	{
 		if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file'))
 		{
