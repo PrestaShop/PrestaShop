@@ -25,8 +25,43 @@
 *}
 
 {include file='header.tpl'}
-{if count($warnings)}
 
+{if isset($conf)}
+	<div class="conf">
+		<img src="../img/admin/ok2.png" alt="" />{$conf}
+	</div>
+{/if}
+
+{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#hideError').unbind('click').click(function()
+	{
+		$('.error').hide('slow', function (){
+			$('.error').remove();
+		});
+		return false;
+	});
+});
+</script>
+<div class="error">
+	<span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/error2.png" />
+	{if count($errors) == 1}
+		{$errors[0]}
+	{else}
+		{$errors|count} {l s='errors'}
+		<br/>
+		<ol>
+			{foreach from=$errors item=$error}
+			<li>{$error}</li>
+			{/foreach}
+		</ol>
+	{/if}
+</div>
+{/if}
+
+{if count($warnings)}
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#linkSeeMore').unbind('click').click(function(){
@@ -65,10 +100,10 @@
 	</span>
 	<ul style="display:none;" id="seeMore">
 	{foreach $warnings item=warning}
-		<li>{$warning}</mo>
+		<li>{$warning}</li>
 	{/foreach}
 	</ul>
-	</div>
+</div>
 {/if}
 
 {$page}
