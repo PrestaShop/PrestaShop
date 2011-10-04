@@ -149,10 +149,13 @@ class AdminRequestSqlControllerCore extends AdminController
 		{
 			foreach (array_keys($results[0]) as $key)
 				$tab_key[] = $key;
-
+			
 			$view['name'] = $obj->name;
 			$view['key'] = $tab_key;
 			$view['results'] = $results;
+			
+			$request_sql = new RequestSql();
+			$view['attributes'] = $request_sql->attributes;
 		}
 		else
 			$view['error'] = true;
