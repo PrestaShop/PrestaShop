@@ -882,6 +882,8 @@ class AdminControllerCore extends Controller
 				$helper->shopLinkType = $this->shopLinkType;
 				$helper->identifier = $this->identifier;
 				$helper->token = $this->token;
+				$helper->_listSkipDelete = $this->_listSkipDelete;
+		
 				$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 			}
 		}
