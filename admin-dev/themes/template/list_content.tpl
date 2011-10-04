@@ -52,7 +52,7 @@
 			{if isset($params.active)}
 			    {$tr.$key}
 			{elseif isset($params.activeVisu)}
-				<img src="../img/admin/{if $tr.$key}'enabled.gif'{else}'disabled.gif'{/if}"
+				<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
 				alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
 			{elseif isset($params.position)}
 				{if $orderBy == 'position' && $orderWay != 'DESC'}
