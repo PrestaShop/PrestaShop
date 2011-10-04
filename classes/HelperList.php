@@ -221,6 +221,12 @@ class HelperListCore extends Helper
 			}
 		}
 
+		if(isset($this->_listSkipDelete))
+		{
+			info($this->_listSkipDelete);
+			$this->context->smarty->assign('listSkipDelete', $this->_listSkipDelete);
+		}
+
 		$this->context->smarty->assign(array(
 			'is_dnd_identifier' => $this->is_dnd_identifier,
 			'color_on_bg' => $this->colorOnBackground,
@@ -236,7 +242,6 @@ class HelperListCore extends Helper
 			'view' => $this->view,
 			'edit' => $this->edit,
 			'has_actions' => $has_actions,
-
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_content.tpl');
 	}
