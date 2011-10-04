@@ -866,7 +866,7 @@ class AdminControllerCore extends Controller
 				// move to form.tpl
 				$this->content .= '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 			}
-			elseif ($this->display == 'list')
+			else if ($this->display == 'list')
 			{
 				$this->getList($this->context->language->id);
 
@@ -882,8 +882,10 @@ class AdminControllerCore extends Controller
 				$helper->shopLinkType = $this->shopLinkType;
 				$helper->identifier = $this->identifier;
 				$helper->token = $this->token;
-				$helper->_listSkipDelete = $this->_listSkipDelete;
-		
+
+				if (isset($this->_listSkipDelete))
+					$helper->_listSkipDelete = $this->_listSkipDelete;
+
 				$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 			}
 		}
