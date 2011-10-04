@@ -35,6 +35,7 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->edit = true;
 		$this->delete = true;
 		$this->requiredDatabase = true;
+		$this->_listSkipDelete = array(1);
 
 		$this->context = Context::getContext();
 
@@ -43,7 +44,8 @@ class AdminShopUrlControllerCore extends AdminController
 
 	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
-		$this->_listSkipDelete = array(1);
+
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
 			'id_shop_url' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -62,6 +64,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		info($this->action);
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
@@ -74,10 +77,10 @@ class AdminShopUrlControllerCore extends AdminController
 
 			if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
 				$this->_errors[] = Tools::displayError('You can\'t disable a main url');
-
+			
 			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
-
+			
 			parent::postProcess();
 			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
 		}
@@ -104,48 +107,52 @@ class AdminShopUrlControllerCore extends AdminController
 			return parent::postProcess();
 	}
 
-	protected function afterUpdate($object)
-	{
-		if (Tools::getValue('main'))
-			$object->setMain();
-	}
-
 	public function displayForm($isMainTab = true)
 	{
 		$this->content = parent::displayForm($isMainTab);
 
 		if (!($obj = $this->loadObject(true)))
 			return;
-		$currentShop = Shop::initialize();
+		$current_shop = Shop::initialize();
 
-		$listShopWithUrl = array();
+		$list_shop_with_url = array();
 		foreach (Shop::getShops(false, null, true) as $id)
-			$listShopWithUrl[$id] = (bool)count(ShopUrl::getShopUrls($id));
-		$jsShopUrl = Tools::jsonEncode($listShopWithUrl);
+			$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
 
-		$domain = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $currentShop->domain;
-		$domain_ssl = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $currentShop->domain_ssl;
-		$physical_uri = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $currentShop->physical_uri;
+		$js_shop_url = Tools::jsonEncode($list_shop_with_url);
 
-		$this->context->smarty->assign('tab_form', array('current' => self::$currentIndex,
-														'table' => $this->table,
-														'token' => $this->token,
-														'id' => $obj->id,
-														'domain' => $domain,
-														'domain_ssl' => $domain_ssl,
-														'physical_uri' => $physical_uri,
-														'virtual_uri' => $this->getFieldValue($obj, 'virtual_uri'),
-														'getTree' => Shop::getTree(),
-														'id_shop' => $obj->id_shop,
-														'main' => $this->getFieldValue($obj, 'main') ? true : false,
-														'active' => $this->getFieldValue($obj, 'active') ? true : false,
-														'jsShopUrl' => $jsShopUrl));
+		$domain = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain;
+		$domain_ssl = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $current_shop->domain_ssl;
+		$physical_uri = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri;
+
+		$this->context->smarty->assign('tab_form', array(
+			'current' => self::$currentIndex,
+			'table' => $this->table,
+			'token' => $this->token,
+			'id' => $obj->id,
+			'domain' => $domain,
+			'domain_ssl' => $domain_ssl,
+			'physical_uri' => $physical_uri,
+			'virtual_uri' => $this->getFieldValue($obj, 'virtual_uri'),
+			'getTree' => Shop::getTree(),
+			'id_shop' => $obj->id_shop,
+			'main' => $this->getFieldValue($obj, 'main') ? true : false,
+			'active' => $this->getFieldValue($obj, 'active') ? true : false,
+			'jsShopUrl' => $js_shop_url
+		));
+	}
+
+	protected function afterUpdate($object)
+	{
+		if (Tools::getValue('main'))
+			$object->setMain();
 	}
 
 	public function initContent()
 	{
 		if ($this->display != 'edit')
 			$this->display = 'list';
+
 		parent::initContent();
 	}
 

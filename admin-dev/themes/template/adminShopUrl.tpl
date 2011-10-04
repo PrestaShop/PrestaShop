@@ -23,55 +23,57 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-	//<![CDATA[
-	function fillShopUrl()
-	{
-		var domain = $('#domain').val();
-		var physical = $('#physical_uri').val();
-		var virtual = $('#virtual_uri').val();
-		url = ((domain) ? domain : '???');
-		if (physical)
-		url += '/'+physical;
-		if (virtual)
-		url += '/'+virtual;
-		url = url.replace(/\/+/g, "/");
-		$('#final_url').val('http://'+url);
-	};
-
-	var shopUrl = {$tab_form['jsShopUrl']};
-	
-	function checkMainUrlInfo(shopID)
-	{
-		if (!shopID)
-			shopID = $('#id_shop').val();
-
-		if (!shopUrl[shopID])
-		{
-			$('#main_off').attr('disabled', true);
-			$('#main_on').attr('checked', true);
-			$('#mainUrlInfo').css('display', 'block');
-			$('#mainUrlInfoExplain').css('display', 'none');
-		}
-		else
-		{
-			$('#main_off').attr('disabled', false);
-			$('#mainUrlInfo').css('display', 'none');
-			$('#mainUrlInfoExplain').css('display', 'block');
-		}
-	}
-
-	$().ready(function()
-	{
-		fillShopUrl();
-		checkMainUrlInfo();
-		$('#domain, #physical_uri, #virtual_uri').keyup(fillShopUrl);
-	});
-	
-	//]]>
-</script>
 
 {if isset($tab_form)}
+
+	<script type="text/javascript">
+		//<![CDATA[
+		function fillShopUrl()
+		{
+			var domain = $('#domain').val();
+			var physical = $('#physical_uri').val();
+			var virtual = $('#virtual_uri').val();
+			url = ((domain) ? domain : '???');
+			if (physical)
+			url += '/'+physical;
+			if (virtual)
+			url += '/'+virtual;
+			url = url.replace(/\/+/g, "/");
+			$('#final_url').val('http://'+url);
+		};
+	
+		var shopUrl = {$tab_form['jsShopUrl']};
+		
+		function checkMainUrlInfo(shopID)
+		{
+			if (!shopID)
+				shopID = $('#id_shop').val();
+	
+			if (!shopUrl[shopID])
+			{
+				$('#main_off').attr('disabled', true);
+				$('#main_on').attr('checked', true);
+				$('#mainUrlInfo').css('display', 'block');
+				$('#mainUrlInfoExplain').css('display', 'none');
+			}
+			else
+			{
+				$('#main_off').attr('disabled', false);
+				$('#mainUrlInfo').css('display', 'none');
+				$('#mainUrlInfoExplain').css('display', 'block');
+			}
+		}
+	
+		$().ready(function()
+		{
+			fillShopUrl();
+			checkMainUrlInfo();
+			$('#domain, #physical_uri, #virtual_uri').keyup(fillShopUrl);
+		});
+		
+		//]]>
+	</script>
+	
 	<form action="{$tab_form['current']}&submitAdd{$tab_form['table']}=1&token={$tab_form['token']}" method="post">
 		{if $tab_form['id']}<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />{/if}
 		<fieldset><legend>{l s ='Shop Url'}</legend>
@@ -112,9 +114,9 @@
 			<label>{l s ='Main URL:'}</label>
 			<div class="margin-form">
 				<input type="radio" name="main" id="main_on" value="1" {if $tab_form['main']} checked="checked"{/if}/>
-				<label class="t" for="main_on"> <img src="../img/admin/enabled.gif" alt="{l s ='Enabled'}" title="{l s ='Enabled'}" /></label>
+				<label class="t" for="main_on"><img src="../img/admin/enabled.gif" alt="{l s ='Enabled'}" title="{l s ='Enabled'}" /></label>
 				<input type="radio" name="main" id="main_off" value="0" {if !$tab_form['main']} checked="checked"{/if} />
-				<label class="t" for="main_off"> <img src="../img/admin/disabled.gif" alt="{l s ='Disabled'}" title="{l s ='Disabled'}" /></label>
+				<label class="t" for="main_off"><img src="../img/admin/disabled.gif" alt="{l s ='Disabled'}" title="{l s ='Disabled'}" /></label>
 				<p>{l s ='If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url (you can only have one main url per shop).'}</p>
 				<p id="mainUrlInfo">{l s ='Since the selected shop has no main url, you have to set this url as main'}</p>
 				<p id="mainUrlInfoExplain">{l s ='The selected shop has already a main url, if you set this one as main url, the older one will be set as normal url'}</p>
@@ -133,5 +135,7 @@
 			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
 		</fieldset>
 	</form>
+	
 {/if}
+
 {$content}
