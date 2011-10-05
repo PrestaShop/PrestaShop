@@ -45,6 +45,8 @@ class AdminControllerCore extends Controller
 
 	protected $list_display;
 
+	protected $_listSkipDelete = array();
+
 	protected $shopLink;
 
 	/** @var array Cache for query results */
@@ -880,9 +882,7 @@ class AdminControllerCore extends Controller
 			$helper->shopLinkType = $this->shopLinkType;
 			$helper->identifier = $this->identifier;
 			$helper->token = $this->token;
-
-			if (isset($this->_listSkipDelete))
-				$helper->_listSkipDelete = $this->_listSkipDelete;
+			$helper->_listSkipDelete = $this->_listSkipDelete;
 
 			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 		}
