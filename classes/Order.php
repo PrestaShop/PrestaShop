@@ -505,6 +505,8 @@ class OrderCore extends ObjectModel
 				{
 					$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
 				}
+				// Get the display filename
+				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
@@ -547,7 +549,7 @@ class OrderCore extends ObjectModel
 		foreach ($products AS $product)
 		{
 			$pd = ProductDownload::getIdFromIdProduct((int)($product['product_id']));
-			if ($pd AND Validate::isUnsignedInt($pd) AND $product['download_hash'])
+			if ($pd AND Validate::isUnsignedInt($pd) AND $product['download_hash'] AND $product['display_filename'] != '')
 			{
 				if ($strict === false)
 					return true;
