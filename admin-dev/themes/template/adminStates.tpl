@@ -60,9 +60,9 @@
 			</div>
 			<label>{l s ='Status:'} </label>
 			<div class="margin-form">
-				<input type="radio" name="active" id="active_on" value="1" {if !$tab_form['id'] || $tab_form['active']} checked="checked"{/if}/>
+				<input type="radio" name="active" id="active_on" value="1" {if $tab_form['active']}checked="checked"{/if}/>
 				<label class="t" for="active_on"> <img src="../img/admin/enabled.gif" alt="{l s ='Enabled'}" title="{l s ='Enabled'}" /></label>
-				<input type="radio" name="active" id="active_off" value="0" {if $tab_form['id'] || !$tab_form['active']} checked="checked"{/if}/>
+				<input type="radio" name="active" id="active_off" value="0" {if !$tab_form['active']}checked="checked"{/if}/>
 				<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="{l s ='Disabled'}" title="{l s ='Disabled'}" /></label>
 				<p>{l s ='Enabled or disabled'}</p>
 			</div>
