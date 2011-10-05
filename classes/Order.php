@@ -526,7 +526,7 @@ class OrderCore extends ObjectModel
 	public function getVirtualProducts()
 	{
 		$sql = '
-			SELECT `product_id`, `download_hash`, `download_deadline`
+			SELECT `product_id`, `product_attribute_id`, `download_hash`, `download_deadline`
 			FROM `'._DB_PREFIX_.'order_detail` od
 			WHERE od.`id_order` = '.(int)($this->id).'
 				AND `download_hash` <> \'\'';
