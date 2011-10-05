@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -47,7 +47,7 @@ class AdminCategories extends AdminTab
 		'description' => array('title' => $this->l('Description'), 'width' => 500, 'maxlength' => 90, 'callback' => 'getDescriptionClean', 'orderby' => false),
 		'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 		'active' => array('title' => $this->l('Displayed'), 'active' => 'status', 'align' => 'center', 'type' => 'bool', 'orderby' => false));
-		
+
 		$this->_category = AdminCatalog::getCurrentCategory();
 		$this->_filter = 'AND `id_parent` = '.(int)($this->_category->id);
 		$this->_select = 'position ';
@@ -76,6 +76,7 @@ class AdminCategories extends AdminTab
 		echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subcategory')))).' '.$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
 		if ($this->tabAccess['add'] === '1')
 			echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?tab=AdminCatalog&add'.$this->table.'&id_parent='.$this->_category->id.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new subcategory').'</a>';
+
 		echo '<div style="margin:10px;">';
 		$this->displayList($token);
 		echo '</div>';
@@ -215,9 +216,9 @@ class AdminCategories extends AdminTab
 				<div class="margin-form">';
 				// Translations are not automatic for the moment ;)
 				$trads = array(
-					 'Home' => $this->l('Home'), 
-					 'selected' => $this->l('selected'), 
-					 'Collapse All' => $this->l('Collapse All'), 
+					 'Home' => $this->l('Home'),
+					 'selected' => $this->l('selected'),
+					 'Collapse All' => $this->l('Collapse All'),
 					 'Expand All' => $this->l('Expand All')
 				);
 				echo Helper::renderAdminCategorieTree($trads, array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1)), 'id_parent', true);
@@ -237,7 +238,7 @@ class AdminCategories extends AdminTab
 		echo '	<br /><input type="file" name="image" />
 					<p>'.$this->l('Upload category logo from your computer').'</p>
 				</div>
-				<div class="clear"><br /></div>	
+				<div class="clear"><br /></div>
 				<label>'.$this->l('Meta title:').' </label>
 				<div class="margin-form translatable">';
 		foreach ($this->_languages AS $language)

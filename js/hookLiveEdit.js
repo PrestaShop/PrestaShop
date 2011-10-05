@@ -126,6 +126,16 @@ function getHookableList() {
         dataType: 'json',
         data: 'ajax=true&getHookableList&hooks_list=' + hooks_list + '&modules_list=' + modules_list + '&id_shop=' + get('id_shop'),
         success: function(jsonData) {
+        	if (jsonData.hasError)
+        	{
+	        	var errors = '';
+				for(error in jsonData.errors)
+					//IE6 bug fix
+					if(error != 'indexOf')
+						errors += jsonData.errors[error] + "\n";
+				alert(errors);
+			}
+			else
             hookable_list = jsonData;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {

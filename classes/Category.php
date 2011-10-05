@@ -1004,6 +1004,12 @@ class CategoryCore extends ObjectModel
 		return $return;
 	}
 
+	/** this function return the number of category + 1 having $id_category_parent as parent.
+	 * 
+	 * @todo rename that function to make it understandable (getNewLastPosition for example)
+	 * @param int $id_category_parent the parent category
+	 * @return int
+	 */
 	public static function getLastPosition($id_category_parent)
 	{
 		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'category` WHERE `id_parent` = '.(int)($id_category_parent)));

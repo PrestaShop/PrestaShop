@@ -816,6 +816,8 @@ CREATE TABLE `PREFIX_lang` (
   `active` tinyint(3) unsigned NOT NULL default '0',
   `iso_code` char(2) NOT NULL,
   `language_code` char(5) NOT NULL,
+  `date_format_lite` char(32) NOT NULL DEFAULT 'Y-m-d',
+  `date_format_full` char(32) NOT NULL DEFAULT 'Y-m-d H:i:s',
   `is_rtl` TINYINT(1) NOT NULL default '0',
   PRIMARY KEY  (`id_lang`),
   KEY `lang_iso_code` (`iso_code`)

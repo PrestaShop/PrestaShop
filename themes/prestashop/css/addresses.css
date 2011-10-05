@@ -24,6 +24,7 @@ ul.address {
 	position: relative;
 	width: 268px
 }
+ul.address.full_width { width: 536px }
 ul.address li {
 	padding-left: 1.4em;
 	margin-top: 0.6em
@@ -39,6 +40,7 @@ li.address_title {
 }
 ul.item li.address_title { background-image: url('../img/address_alias_left.gif') }
 ul.alternate_item li.address_title { background-image: url('../img/address_alias_right.gif') }
+ul.full_width li.address_title { background-image: url('../img/address_alias_full_width.gif') }
 li.address_name,
 li.address_firstname,
 li.address_lastname,

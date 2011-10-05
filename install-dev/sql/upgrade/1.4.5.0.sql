@@ -37,3 +37,14 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`, `live_edi
 ('afterSaveAttribute', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0);
 
 ALTER TABLE `PREFIX_employee` ADD `bo_show_screencast` TINYINT(1) NOT NULL DEFAULT '1' AFTER `bo_uimode`;
+
+UPDATE `PREFIX_country` SET id_zone = (SELECT id_zone FROM `PREFIX_zone` WHERE name = 'Oceania') WHERE iso_code = 'KI' LIMIT 1
+
+ALTER TABLE `PREFIX_lang` ADD `date_format_lite` char(32) NOT NULL DEFAULT 'Y-m-d' AFTER language_code;
+ALTER TABLE `PREFIX_lang` ADD `date_format_full` char(32) NOT NULL DEFAULT 'Y-m-d H:i:s' AFTER date_format_lite;
+UPDATE `PREFIX_lang` SET `date_format_lite` = 'd/m/Y' WHERE `iso_code` IN ('fr', 'es', 'it');
+UPDATE `PREFIX_lang` SET `date_format_full` = 'd/m/Y H:i:s' WHERE `iso_code` IN ('fr', 'es', 'it');
+UPDATE `PREFIX_lang` SET `date_format_lite` = 'd.m.Y' WHERE `iso_code` = 'de';
+UPDATE `PREFIX_lang` SET `date_format_full` = 'd.m.Y H:i:s' WHERE `iso_code` = 'de';
+UPDATE `PREFIX_lang` SET `date_format_lite` = 'm/d/Y' WHERE `iso_code` = 'en';
+UPDATE `PREFIX_lang` SET `date_format_full` = 'm/d/Y H:i:s' WHERE `iso_code` = 'en';

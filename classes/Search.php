@@ -353,7 +353,6 @@ class SearchCore
 	public static function indexation($full = false, $id_product = false)
 	{
 		$db = Db::getInstance();
-		$dropIndex = false;
 
 		if ($id_product)
 			$full = false;
@@ -363,11 +362,10 @@ class SearchCore
 			$db->Execute('TRUNCATE '._DB_PREFIX_.'search_index');
 			$db->Execute('TRUNCATE '._DB_PREFIX_.'search_word');
 			$db->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0');
-			$dropIndex = true;
 		}
 		else
 		{
-			// Do it even if you already know the product id on order to be sure that it exists
+			// Do it even if you already know the product id in order to be sure that it exists
 			$products = $db->ExecuteS('
 			SELECT id_product
 			FROM '._DB_PREFIX_.'product
@@ -377,24 +375,8 @@ class SearchCore
 			if ($products)
 				foreach($products AS $product)
 					$ids[] = (int)$product['id_product'];
-			if (sizeof($ids))
+			if (count($ids))
 				$db->Execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $ids).')');
-
-
-			if (count($products) > 2000)
-				$dropIndex = true;
-		}
-
-		if ($dropIndex)
-		{
-			$dropIndex = false;
-			$result = $db->ExecuteS('SHOW INDEX FROM `'._DB_PREFIX_.'search_index`');
-			foreach ($result as $row)
-				if (strtolower($row['Key_name']) == 'primary')
-					$dropIndex = true;
-			if ($dropIndex)
-				$db->Execute('ALTER TABLE '._DB_PREFIX_.'search_index DROP PRIMARY KEY');
-			$dropIndex = true;
 		}
 
 		// Every fields are weighted according to the configuration in the backend
@@ -477,11 +459,10 @@ class SearchCore
 						}
 
 					$existingWords = $db->ExecuteS('
-						SELECT word FROM '._DB_PREFIX_.'search_word
+					SELECT DISTINCT word FROM '._DB_PREFIX_.'search_word
 						WHERE word IN ('.implode(',', $queryArray2).')
-						AND id_lang = '.(int)$product['id_lang'].' GROUP BY word');
+					AND id_lang = '.(int)$product['id_lang']);
 
-					if($existingWords)
 						foreach($existingWords as $data)
 							unset($queryArray[Tools::replaceAccentedChars($data['word'])]);
 
@@ -530,20 +511,6 @@ class SearchCore
 			// One last save is done at the end in order to save what's left
 			Search::saveIndex($queryArray3);
 		}
-
-		// If it has been deleted, the index is created again once the indexation is done
-		if (!$dropIndex)
-		{
-			$dropIndex = true;
-			$result = $db->ExecuteS('SHOW INDEX FROM `'._DB_PREFIX_.'search_index`');
-			foreach ($result as $row)
-				if (strtolower($row['Key_name']) == 'primary')
-					$dropIndex = false;
-		}
-		if ($dropIndex)
-			$db->Execute('ALTER TABLE `'._DB_PREFIX_.'search_index` ADD PRIMARY KEY (`id_word`, `id_product`)');
-
-		Configuration::updateValue('PS_NEED_REBUILD_INDEX', 0);
 		return true;
 	}
 

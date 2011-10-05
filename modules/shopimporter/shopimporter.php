@@ -1434,7 +1434,7 @@ class shopimporter extends ImportModule
 			$carrier = new Carrier((int)$item['id_carrier']);
 
 			$currency = new Currency($order->id_currency);
-			$order->conversion_rate = $currency->conversion_rate;
+			$order->conversion_rate = !empty($currency->conversion_rate) ? $currency->conversion_rate : 1;
 			$order->total_products = (float)$item['total_products'];
 			$order->total_products_wt = (float)$item['total_products_wt'];
 			$order->total_discounts = (float)$item['total_discounts'];

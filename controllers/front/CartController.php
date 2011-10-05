@@ -237,13 +237,15 @@ class CartControllerCore extends FrontController
 
 		if (Tools::getIsset('summary'))
 		{
+			$result = array();
 			if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			{
 				$groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
 				if ($this->context->cart->id_address_delivery)
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
 				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
-				$result = array('carriers' => Carrier::getCarriersForOrder(Country::getIdZone($id_country), $groups));
+				$result['carriers'] = Carrier::getCarriersForOrder(Country::getIdZone($id_country), $groups);
+				$result['checked'] = Carrier::getDefaultCarrierSelection($result['carriers'], (int)$this->cart->id_carrier);
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);

@@ -148,6 +148,7 @@ abstract class ObjectModelCore
 				$this->id = (int)($id);
 				foreach ($result AS $key => $value)
 					if (key_exists($key, $this))
+						// Todo: stripslashes() MUST BE removed in 1.4.6 and later, but is kept in 1.4.5 for a compatibility issue
 						$this->{$key} = stripslashes($value);
 
 				if (!$id_lang AND method_exists($this, 'getTranslationsFieldsChild'))
@@ -164,6 +165,8 @@ abstract class ObjectModelCore
 								{
 									if (!is_array($this->{$key}))
 										$this->{$key} = array();
+
+									// @Todo: stripslashes() MUST BE removed in 1.4.6 and later, but is kept in 1.4.5 for a compatibility issue
 									$this->{$key}[$row['id_lang']] = stripslashes($value);
 								}
 							}
@@ -200,7 +203,7 @@ abstract class ObjectModelCore
 	public function add($autodate = true, $nullValues = false)
 	{
 	 	if (!Validate::isTableOrIdentifier($this->table))
-			die(Tools::displayError());
+			die(Tools::displayError('not table or identifier : ').$this->table);
 
 		/* Automatically fill dates */
 		if ($autodate AND key_exists('date_add', $this))
@@ -229,7 +232,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) AS $key)
 					 	if (!Validate::isTableOrIdentifier($key))
-			 				die(Tools::displayError());
+			 				die(Tools::displayError('key is not table or identifier, ').$key);
 					$field[$this->identifier] = (int)$this->id;
 
 					if (isset($assos[$this->table.'_lang']) && $assos[$this->table.'_lang']['type'] == 'fk_shop')
@@ -401,7 +404,7 @@ abstract class ObjectModelCore
 	{
 		/* WARNING : Product do not use this function, so do not forget to report any modification if necessary */
 	 	if (!Validate::isTableOrIdentifier($this->identifier))
-	 		die(Tools::displayError());
+	 		die(Tools::displayError('identifier is not table or identifier : ').$this->identifier);
 
 		$fields = array();
 

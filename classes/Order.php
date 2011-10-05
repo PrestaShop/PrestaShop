@@ -537,6 +537,8 @@ class OrderCore extends ObjectModel
 
 	/**
 	* Check if order contains (only) virtual products
+	* 
+	* @param boolean $strict If false return true if there are at least one product virtual
 	* @return boolean true if is a virtual order or false
 	*
 	*/
@@ -545,7 +547,7 @@ class OrderCore extends ObjectModel
 		$products = $this->getProducts();
 		if (count($products) < 1)
 			return false;
-		$virtual = false;
+		$virtual = true;
 		foreach ($products AS $product)
 		{
 			$pd = ProductDownload::getIdFromIdProduct((int)($product['product_id']));
@@ -553,8 +555,9 @@ class OrderCore extends ObjectModel
 			{
 				if ($strict === false)
 					return true;
-				$virtual &= true;
 			}
+			else
+				$virtual &= false;
 		}
 		return $virtual;
 	}

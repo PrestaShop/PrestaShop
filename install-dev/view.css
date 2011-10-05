@@ -638,7 +638,7 @@ ul#optional {
 	.blockInfoEnd a.BO,
 	.blockInfoEnd a.FO {
 		float:right;
-		padding:0 0 0 12px;
+		padding:0 0 0 10px;
 		height:33px;
 		line-height:33px;
 		color:#fff;

@@ -3340,15 +3340,15 @@ class AdminProducts extends AdminTab
 						<td style="padding-bottom:5px;">
 							<div id="divAccessories">';
 					foreach ($accessories as $accessory)
-						echo $accessory['name'].(!empty($accessory['reference']) ? ' ('.$accessory['reference'].')' : '').' <span onclick="delAccessory('.$accessory['id_product'].');" style="cursor: pointer;"><img src="../img/admin/delete.gif" class="middle" alt="" /></span><br />';
+						echo htmlentities($accessory['name'], ENT_COMPAT, 'UTF-8').(!empty($accessory['reference']) ? ' ('.$accessory['reference'].')' : '').' <span onclick="delAccessory('.$accessory['id_product'].');" style="cursor: pointer;"><img src="../img/admin/delete.gif" class="middle" alt="" /></span><br />';
 					echo '</div>
 							<input type="hidden" name="inputAccessories" id="inputAccessories" value="';
 					foreach ($accessories as $accessory)
-						echo $accessory['id_product'].'-';
+						echo (int)$accessory['id_product'].'-';
 					echo '" />
 							<input type="hidden" name="nameAccessories" id="nameAccessories" value="';
 					foreach ($accessories as $accessory)
-						echo $accessory['name'].'¤';
+						echo htmlentities($accessory['name'], ENT_COMPAT, 'UTF-8').'¤';
 
 					echo '" />
 							<script type="text/javascript">

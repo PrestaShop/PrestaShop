@@ -38,15 +38,22 @@ class LanguageCore extends ObjectModel
 	/** @var string 5-letter iso code */
 	public 		$language_code;
 
+	/** @var string date format http://http://php.net/manual/en/function.date.php with the date only */
+	public 		$date_format_lite = 'Y-m-d';
+
+	/** @var string date format http://http://php.net/manual/en/function.date.php with hours and minutes */
+	public 		$date_format_full = 'Y-m-d H:i:s';
+
 	/** @var bool true if this language is right to left language */
 	public		$is_rtl = false;
 
 	/** @var boolean Status */
 	public 		$active = true;
 
-	protected 	$fieldsRequired = array('name', 'iso_code');
-	protected 	$fieldsSize = array('name' => 32, 'iso_code' => 2, 'language_code' => 5);
-	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'language_code' => 'isLanguageCode', 'active' => 'isBool', 'is_rtl' => 'isBool');
+	protected 	$fieldsRequired = array('name', 'iso_code', 'date_format_lite', 'date_format_full');
+	protected 	$fieldsSize = array('name' => 32, 'iso_code' => 2, 'language_code' => 5, 'date_format_lite' => 32, 'date_format_full' => 32);
+	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'language_code' => 'isLanguageCode',
+	'active' => 'isBool', 'is_rtl' => 'isBool', 'date_format_lite' => 'isPhpDateFormat', 'date_format_full' => 'isPhpDateFormat');
 
 	protected 	$table = 'lang';
 	protected 	$identifier = 'id_lang';
@@ -82,17 +89,19 @@ class LanguageCore extends ObjectModel
 		$fields['is_rtl'] = (int)$this->is_rtl;
 		if (empty($fields['language_code']))
 			$fields['language_code'] = $fields['iso_code'];
+		$fields['date_format_lite'] = pSQL($this->date_format_lite);
+		$fields['date_format_full'] = pSQL($this->date_format_full);
 		$fields['active'] = (int)$this->active;
 		return $fields;
 	}
 
 	/**
 	 * Generate traslations files
-	 * 
+	 *
 	 */
 	private function _generateFiles($newIso){
 		$iso_code = $newIso?$newIso:$this->iso_code;
-	
+
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))
 			mkdir(_PS_TRANSLATIONS_DIR_.$iso_code);
 		foreach ($this->translationsFilesAndVars as $file => $var)
@@ -102,7 +111,7 @@ class LanguageCore extends ObjectModel
 	$'.$var.' = array();
 ?>');
 	}
-	
+
 	/**
 	 * Move translations files after editiing language iso code
 	 */
@@ -122,7 +131,7 @@ class LanguageCore extends ObjectModel
 		{
 			if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code))
 				rename(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code, _PS_MODULE_DIR_.$moduleDir.'/mails/'.$newIso);
-			
+
 			if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php'))
 				rename(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php', _PS_MODULE_DIR_.$moduleDir.'/'.$newIso.'.php');
 		}
@@ -140,7 +149,7 @@ class LanguageCore extends ObjectModel
 					rename(_PS_ALL_THEMES_DIR_.$theme.'/modules/'.$module.'/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme.'/modules/'.$module.'/'.$newIso.'.php');
 	}
 	}
-	
+
 	/**
 	  * Return an array with themes and thumbnails
 	  *
@@ -152,10 +161,10 @@ class LanguageCore extends ObjectModel
 		while ($folder = readdir($dir))
 			if ($folder != '.' AND $folder != '..' AND file_exists(_PS_ALL_THEMES_DIR_.'/'.$folder.'/preview.jpg'))
 				$themes[$folder]['name'] = $folder;
-		closedir($dir);	
+		closedir($dir);
 		return isset($themes) ? $themes : array();
 	}
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (!parent::add($autodate))
@@ -237,37 +246,19 @@ class LanguageCore extends ObjectModel
 		}
 
 		$lFiles = array('admin'.'.php', 'errors'.'.php', 'fields'.'.php', 'pdf'.'.php');
-		$mFiles =  array(
-			'account.html',					'account.txt',
-			'bankwire.html',				'bankwire.txt',
-			'cheque.html',					'cheque.txt',
-			'contact.html',					'contact.txt',
-			'contact_form.html',			'contact_form.txt',
-			'credit_slip.html',				'credit_slip.txt',
-			'download_product.html',		'download_product.txt',
-			'download-product.tpl',
-			'employee_password.html',		'employee_password.txt',
-			'forward_msg.html',				'forward_msg.txt',
-			'guest_to_customer.html',		'guest_to_customer.txt',
-			'in_transit.html',				'in_transit.txt',
-			'newsletter.html',				'newsletter.txt',
-			'order_canceled.html',			'order_canceled.txt',
-			'order_conf.html',				'order_conf.txt',
-			'order_customer_comment.html',	'order_customer_comment.txt',
-			'order_merchant_comment.html',	'order_merchant_comment.txt',
-			'order_return_state.html',		'order_return_state.txt',
-			'outofstock.html',				'outofstock.txt',
-			'password.html',				'password.txt',
-			'password_query.html',			'password_query.txt',
-			'payment.html',					'payment.txt',
-			'payment_error.html',			'payment_error.txt',
-			'preparation.html',				'preparation.txt',
-			'refund.html',					'refund.txt',
-			'reply_msg.html',				'reply_msg.txt',
-			'shipped.html',					'shipped.txt',
-			'test.html',					'test.txt',
-			'voucher.html',					'voucher.txt',
-		);
+		$mFiles =  array('account.html', 'account.txt', 'bankwire.html', 'bankwire.txt',
+		'cheque.html', 'cheque.txt', 'contact.html', 'contact.txt', 'contact_form.html',
+		'contact_form.txt', 'credit_slip.html', 'credit_slip.txt', 'download_product.html',
+		'download_product.txt', 'download-product.tpl', 'employee_password.html', 'employee_password.txt',
+		'forward_msg.html', 'forward_msg.txt', 'guest_to_customer.html', 'guest_to_customer.txt',
+		'in_transit.html', 'in_transit.txt', 'log_alert.html', 'log_alert.txt', 'newsletter.html', 'newsletter.txt',
+		'order_canceled.html', 'order_canceled.txt', 'order_conf.html', 'order_conf.txt',
+		'order_customer_comment.html', 'order_customer_comment.txt', 'order_merchant_comment.html',
+		'order_merchant_comment.txt', 'order_return_state.html', 'order_return_state.txt',
+		'outofstock.html', 'outofstock.txt', 'password.html', 'password.txt', 'password_query.html',
+		'password_query.txt', 'payment.html', 'payment.txt', 'payment_error.html', 'payment_error.txt',
+		'preparation.html', 'preparation.txt', 'refund.html', 'refund.txt', 'reply_msg.html',
+		'reply_msg.txt', 'shipped.html', 'shipped.txt', 'test.html', 'test.txt', 'voucher.html', 'voucher.txt');
 
 		$number = -1;
 
@@ -276,7 +267,6 @@ class LanguageCore extends ObjectModel
 		$files_theme = array();
 		$files_mail = array();
 		$files_modules = array();
-
 
 		// When a copy is made from a theme in specific language
 		// to an other theme for the same language,
@@ -351,7 +341,7 @@ class LanguageCore extends ObjectModel
 
 	/**
 	 * loadUpdateSQL will create default lang values when you create a new lang, based on default id lang
-	 * 
+	 *
 	 * @return boolean true if succeed
 	 */
 	public function loadUpdateSQL()
@@ -612,18 +602,14 @@ class LanguageCore extends ObjectModel
 	{
 		self::$_LANGUAGES = array();
 
-		$result = Db::getInstance()->ExecuteS('
-		SELECT l.`id_lang`, l.`name`, l.`iso_code`, l.`active`, ls.`id_shop`
-		FROM `'._DB_PREFIX_.'lang` l
-		LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)');
-		
+		$sql = 'SELECT l.*, ls.`id_shop`
+				FROM `'._DB_PREFIX_.'lang` l
+				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
+		$result = Db::getInstance()->ExecuteS($sql);
 		foreach ($result AS $row)
 		{
 			if (!isset(self::$_LANGUAGES[(int)$row['id_lang']]))
-			self::$_LANGUAGES[(int)$row['id_lang']] = array('id_lang' => (int)$row['id_lang'], 
-																											'name' => $row['name'], 
-																											'iso_code' => $row['iso_code'], 
-																											'active' => (int)$row['active'],);
+				self::$_LANGUAGES[(int)$row['id_lang']] = $row;
 			self::$_LANGUAGES[(int)$row['id_lang']]['shops'][(int)$row['id_shop']] = true;
 		}
 	}
@@ -631,7 +617,7 @@ class LanguageCore extends ObjectModel
 	public function update($nullValues = false)
 	{
 
-		
+
 		if (!parent::update($nullValues))
 			return false;
 
@@ -732,7 +718,7 @@ class LanguageCore extends ObjectModel
 
 	/**
 	 * Check if more on than one language is activated
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @return bool
 	 */

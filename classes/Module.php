@@ -870,6 +870,13 @@ abstract class ModuleCore
 		return $output;
 	}
 
+
+	/**
+	 * Returns the list of the payment module associated to the current customer
+	 * @see PaymentModule::getInstalledPaymentModules() if you don't care about the context
+	 *
+	 * @return array module informations
+	 */
 	public static function getPaymentModules()
 	{
 		$context = Context::getContext();

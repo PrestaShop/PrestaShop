@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -57,7 +57,7 @@ class StatsSearch extends ModuleGraph
         $this->displayName = $this->l('Shop search');
         $this->description = $this->l('Display which keywords have been searched by your visitors.');
     }
- 
+
 	function install()
 	{
 		if (!parent::install() OR !$this->registerHook('search') OR !$this->registerHook('AdminStatsModules'))
@@ -119,7 +119,7 @@ class StatsSearch extends ModuleGraph
 				</tr>';
 		}
 		$table .= '</tbody></table></div>';
-		
+
 		if (sizeof($result))
 			$this->_html .= '<center>'.$this->engine(array('type' => 'pie')).'</center>
 									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
