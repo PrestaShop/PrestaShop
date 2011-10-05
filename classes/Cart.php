@@ -371,7 +371,7 @@ class CartCore extends ObjectModel
 		$sql = new DbQuery();
 
 		// Build SELECT
-		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`,
+		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`,
 						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`,
 						p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
@@ -427,6 +427,7 @@ class CartCore extends ObjectModel
 		}
 		else
 			$sql->select('p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity');
+
 
 		$result = Db::getInstance()->ExecuteS($sql);
 
@@ -1528,9 +1529,8 @@ class CartCore extends ObjectModel
 	* @return boolean true if is a virtual cart or false
 	*
 	*/
-	public function isVirtualCart()
+	public function isVirtualCart($strict = false)
 	{
-		$prod = array();
 		if (!ProductDownload::isFeatureActive())
 			return false;
 		
@@ -1539,33 +1539,19 @@ class CartCore extends ObjectModel
 			$products = $this->getProducts();
 			if (!sizeof($products))
 				return false;
-
+			
+			$is_virtual = 1;
 			foreach ($products AS $product)
 			{
-				$prod[] = (int) $product['id_product'];
+				if (empty($product['is_virtual']))
+					$is_virtual = 0;
 			}
-			
-			$unique_product = array_unique($prod);
-			
-			$list = '';
-			foreach ($unique_product AS $product)
-			{
-				$list .= (int)($product).',';
-			}
-			$list = rtrim($list, ',');
-			
-			$n = (int)Db::getInstance()->getValue('
-			SELECT COUNT(`id_product_download`) n
-			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` IN ('.pSQL($list).')
-			AND `active` = 1');
-
-			self::$_isVirtualCart[$this->id] = ($n == sizeof($products));
+			self::$_isVirtualCart[$this->id] = (int) $is_virtual;
 		}
 		
 		return self::$_isVirtualCart[$this->id];
 	}
-
+	
 	public static function getCartByOrderId($id_order)
 	{
 		if ($id_cart = self::getCartIdByOrderId($id_order))

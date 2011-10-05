@@ -198,7 +198,10 @@ class ProductDownloadCore extends ObjectModel
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');
+		WHERE `id_product` = '.(int)$id_product.' 
+		AND `active` = 1
+		ORDER BY `id_product_download` DESC');
+
 		return self::$_productIds[$id_product];
 	}
 
@@ -208,7 +211,7 @@ class ProductDownloadCore extends ObjectModel
 	 * @param int $id_product Product the id
 	 * @return integer Product the id for this virtual product
 	 */
-	public static function getIdFromIdAttibute($id_product, $id_product_attribute)
+	public static function getIdFromIdAttribute($id_product, $id_product_attribute)
 	{
 		if (!self::isFeatureActive())
 			return false;

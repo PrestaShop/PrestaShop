@@ -196,7 +196,8 @@ class ProductCore extends ObjectModel
 	protected $langMultiShop = true;
 
 	public $cache_is_pack;
-	public $cache_has_attachments;
+	public $cache_has_attachments;	
+	public $is_virtual;
 	public $cache_default_attribute;
 
 	public static $_taxCalculationMethod = PS_TAX_EXC;
@@ -252,6 +253,7 @@ class ProductCore extends ObjectModel
 		'upc' => 'isUpc',
 		'indexed' => 'isBool',
 		'cache_is_pack' => 'isBool',
+		'is_virtual' => 'isBool',
 		'cache_has_attachments' => 'isBool'
 	);
 	protected $fieldsRequiredLang = array('link_rewrite', 'name');
@@ -381,6 +383,7 @@ class ProductCore extends ObjectModel
 		$fields['indexed'] = 0; // Reset indexation every times
 		$fields['cache_is_pack'] = (int)($this->cache_is_pack);
 		$fields['cache_has_attachments'] = (int)($this->cache_has_attachments);
+		$fields['is_virtual'] = (int)($this->is_virtual);
 		$fields['cache_default_attribute'] = (int)($this->cache_default_attribute);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
@@ -2867,6 +2870,7 @@ class ProductCore extends ObjectModel
 		$row['id_image'] = Product::defineProductImage($row, $id_lang);
 		$row['features'] = Product::getFrontFeaturesStatic((int)$id_lang, $row['id_product']);
 		$row['attachments'] = ((!isset($row['cache_has_attachments']) OR $row['cache_has_attachments']) ? Product::getAttachmentsStatic((int)($id_lang), $row['id_product']) : array());
+		$row['virtual'] = ((!isset($row['is_virtual']) OR $row['is_virtual']) ? 1 : 0);
 
 		// Pack management
 		$row['pack'] = (!isset($row['cache_is_pack']) ? Pack::isPack($row['id_product']) : (int)$row['cache_is_pack']);

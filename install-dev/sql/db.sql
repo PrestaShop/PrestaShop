@@ -1214,6 +1214,7 @@ CREATE TABLE `PREFIX_product` (
   `indexed` tinyint(1) NOT NULL default '0',
   `cache_is_pack` tinyint(1) NOT NULL default '0',
   `cache_has_attachments` tinyint(1) NOT NULL default '0',
+  `is_virtual` tinyint(1) NOT NULL default '0',
   `cache_default_attribute` int(10) unsigned default NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
