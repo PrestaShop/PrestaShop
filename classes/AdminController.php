@@ -89,6 +89,21 @@ class AdminControllerCore extends Controller
 	 */
 	protected $boxes;
 
+	/** @var string Add fields into data query to display list */
+	protected $_select;
+
+	/** @var string Join tables into data query to display list */
+	protected $_join;
+
+	/** @var string Add conditions into data query to display list */
+	protected $_where;
+
+	/** @var string Group rows into data query to display list */
+	protected $_group;
+
+	/** @var string Having rows into data query to display list */
+	protected $_having;
+
 	protected $is_cms = false;
 
 	protected $is_dnd_identifier = false;
