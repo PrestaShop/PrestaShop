@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,25 +20,37 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminAliases extends AdminTab
+class AdminAliasesControllerCore extends AdminController
 {
-	function __construct()
+	public function __construct()
 	{
 	 	$this->table = 'alias';
-	 	$this->className = 'Alias';
+		$this->className = 'Alias';
 	 	$this->edit = true;
 		$this->delete = true;
-		
+	 	$this->lang = false;
+		$this->requiredDatabase = true;
+
+		$this->context = Context::getContext();
+
+		if (!Tools::getValue('realedit'))
+			$this->deleted = false;
+
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->fieldsDisplay = array(
 		'alias' => array('title' => $this->l('Aliases'), 'width' => 160),
 		'search' => array('title' => $this->l('Search'), 'width' => 40),
 		'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
+
+		$this->template = 'adminAliases.tpl';
+
 		parent::__construct();
 	}
 
@@ -47,21 +59,21 @@ class AdminAliases extends AdminTab
 		if (isset($_POST['submitAdd'.$this->table]))
 		{
 			$search = strval(Tools::getValue('search'));
-			$string = strval(Tools::getValue('alias'));	
+			$string = strval(Tools::getValue('alias'));
 		 	$aliases = explode(',', $string);
-			if (empty($search) OR empty($string))
+			if (empty($search) || empty($string))
 				$this->_errors[] = $this->l('aliases and result are both required');
 			if (!Validate::isValidSearch($search))
 				$this->_errors[] = $search.' '.$this->l('is not a valid result');
-		 	foreach ($aliases AS $alias)
+		 	foreach ($aliases as $alias)
 				if (!Validate::isValidSearch($alias))
 					$this->_errors[] = $alias.' '.$this->l('is not a valid alias');
-			
-			if (!sizeof($this->_errors))
+
+			if (!count($this->_errors))
 			{
-			 	foreach ($aliases AS $alias)
+			 	foreach ($aliases as $alias)
 			 	{
-					$obj = new Alias(NULL, trim($alias), trim($search));
+					$obj = new Alias(null, trim($alias), trim($search));
 					$obj->save();
 				}
 			}
@@ -70,33 +82,31 @@ class AdminAliases extends AdminTab
 			parent::postProcess();
 	}
 
-	public function displayForm($isMainTab = true)
+	public function displayForm($is_main_tab = true)
 	{
-		parent::displayForm();
-		
+		parent::displayForm($is_main_tab);
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		echo '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
-		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
-			<fieldset><legend><img src="../img/admin/search.gif" />'.$this->l('Aliases').'</legend>
-				<label>'.$this->l('Alias:').' </label>
-				<div class="margin-form">
-					<input type="text" size="40" name="alias" value="'.Tools::getValue('alias', htmlentities($obj->getAliases(), ENT_COMPAT, 'UTF-8')).'" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Enter each alias separated by a comma (\',\')').' '.$this->l('(e.g., \'prestshop,preztashop,prestasohp\')').'<br />
-					'.$this->l('Forbidden characters:').' <>;=#{}</p>
-				</div>
-				<label>'.$this->l('Result:').' </label>
-				<div class="margin-form">
-					<input type="text" size="15" name="search" value="'.htmlentities($this->getFieldValue($obj, 'search'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Search this word instead.').'</p>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
+		$this->context->smarty->assign('tab_form', array(
+			'current' => self::$currentIndex,
+			'table' => $this->table,
+			'token' => $this->token,
+			'id' => $obj->id,
+			'alias' => Tools::getValue('alias', $obj->getAliases()),
+			'search' => $this->getFieldValue($obj, 'search')
+		));
 	}
+
+	public function initContent()
+	{
+		if ($this->display != 'edit')
+			$this->display = 'list';
+
+		parent::initContent();
+	}
+
 }
+
+
