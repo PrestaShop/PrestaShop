@@ -208,7 +208,7 @@ class ProductDownloadCore extends ObjectModel
 	 * @param int $id_product Product the id
 	 * @return integer Product the id for this virtual product
 	 */
-	public static function getIdFromIdAttibute($id_product_attribute)
+	public static function getIdFromIdAttibute($id_product, $id_product_attribute)
 	{
 		if (!self::isFeatureActive())
 			return false;
@@ -217,7 +217,8 @@ class ProductDownloadCore extends ObjectModel
 		self::$_productIds[$id_product_attribute] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product_attribute` = '.(int)$id_product_attribute.' AND `active` = 1');
+		WHERE `id_product` = '.(int)$id_product.'
+		AND `id_product_attribute` = '.(int)$id_product_attribute.' AND `active` = 1');
 		return self::$_productIds[$id_product_attribute];
 	}
 
@@ -312,7 +313,7 @@ class ProductDownloadCore extends ObjectModel
 	public function getTextLink($admin = true, $hash = false)
 	{
 		$key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
-		$link = ($admin) ? 'get-file-admin.php?' : Tools::getHttpHost(true, true).'index.php?controller=get-file&';
+		$link = ($admin) ? 'get-file-admin.php?' : _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=get-file&';
 		$link .= ($admin) ? 'file='.$this->filename : 'key='.$key;
 		return $link;
 	}
