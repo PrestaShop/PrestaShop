@@ -161,17 +161,21 @@ class OrderHistoryCore extends ObjectModel
 				$assign = array();
 				foreach ($virtualProducts AS $key => $virtualProduct)
 				{
-					$id_product_download = ProductDownload::getIdFromIdProduct($virtualProduct['product_id']);
+					$id_product_download = ProductDownload::getIdFromIdAttibute($virtualProduct['product_id'], $virtualProduct['product_attribute_id']);
 					$product_download = new ProductDownload($id_product_download);
-					$assign[$key]['name'] = $product_download->display_filename;
-					$dl_link = $product_download->getTextLink(false, $virtualProduct['download_hash'])
-						.'&id_order='.$order->id
-						.'&secure_key='.$order->secure_key;
-					$assign[$key]['link'] = $dl_link;
-					if ($virtualProduct['download_deadline'] != '0000-00-00 00:00:00')
-						$assign[$key]['deadline'] = Tools::displayDate($virtualProduct['download_deadline'], $order->id_lang);
-					if ($product_download->nb_downloadable != 0)
-						$assign[$key]['downloadable'] = $product_download->nb_downloadable;
+					// If this virtual item has an associated file, we'll provide the link to download the file in the email
+					if ($product_download->display_filename != '')
+					{
+						$assign[$key]['name'] = $product_download->display_filename;
+						$dl_link = $product_download->getTextLink(false, $virtualProduct['download_hash'])
+							.'&id_order='.$order->id
+							.'&secure_key='.$order->secure_key;
+						$assign[$key]['link'] = $dl_link;
+						if ($virtualProduct['download_deadline'] != '0000-00-00 00:00:00')
+							$assign[$key]['deadline'] = Tools::displayDate($virtualProduct['download_deadline'], $order->id_lang);
+						if ($product_download->nb_downloadable != 0)
+							$assign[$key]['downloadable'] = $product_download->nb_downloadable;
+					}
 				}
 				$context->smarty->assign('virtualProducts', $assign);
 				$context->smarty->assign('id_order', $order->id);
@@ -179,7 +183,9 @@ class OrderHistoryCore extends ObjectModel
 				$links = $context->smarty->fetch(_PS_MAIL_DIR_.$iso.'/download-product.tpl');
 				$tmpArray = array('{nbProducts}' => count($virtualProducts), '{virtualProducts}' => $links);
 				$data = array_merge ($data, $tmpArray);
-				Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $result['email'], $result['firstname'].' '.$result['lastname']);
+				// If there's at least one downloadable file
+				if (!empty($assign))
+					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $result['email'], $result['firstname'].' '.$result['lastname']);
 			}
 
 			if (Validate::isLoadedObject($order))
