@@ -300,6 +300,8 @@
   'AdminHomeController' => 'override/controllers/admin/AdminHomeController.php',
   'AdminRequestSqlControllerCore' => 'controllers/admin/AdminRequestSqlController.php',
   'AdminRequestSqlController' => '',
+  'AdminShopUrlControllerCore' => 'controllers/admin/AdminShopUrlController.php',
+  'AdminShopUrlController' => '',
   'AdminToolsControllerCore' => 'controllers/admin/AdminToolsController.php',
   'AdminToolsController' => 'override/controllers/admin/AdminToolsController.php',
   'AdminTrackingController' => 'controllers/admin/AdminTrackingController.php',
