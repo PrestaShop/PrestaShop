@@ -303,10 +303,12 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginPath($name)
+	public static function getJqueryPluginPath($name, $folder = null)
 	{
 		$plugin_path = array('js' => array(), 'css' => array());
-		$folder = _PS_JS_DIR_.'jquery/plugins/';	
+		if (is_null($folder))
+			$folder = _PS_JS_DIR_.'jquery/plugins/'; //set default folder
+			
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
