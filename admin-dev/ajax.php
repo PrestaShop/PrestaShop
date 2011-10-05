@@ -915,7 +915,7 @@ if (Tools::isSubmit('searchCategory'))
 		'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.$context->shop->sqlLang('cl').')
-		WHERE cl.`id_lang` = '.(int)($context->language->id).'
+		WHERE cl.`id_lang` = '.(int)($context->language->id).' AND c.`level_depth` <> 0
 		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
 		GROUP BY c.id_category
 		ORDER BY c.`position`
