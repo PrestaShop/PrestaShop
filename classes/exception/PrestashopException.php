@@ -67,7 +67,7 @@ class PrestashopExceptionCore extends Exception
 				$relative_file = ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/');
 
 				echo '<li>';
-				echo '<b>'.$trace['class'].$trace['type'].$trace['function'].'</b>';
+				echo '<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>';
 				echo ' - <a href="#" style="font-size: 12px; color: #000000" onclick="document.getElementById(\'psTrace_'.$id.'\').style.display = (document.getElementById(\'psTrace_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">[line '.$trace['line'].' - '.$relative_file.']</a>';
 
 				if (count($trace['args']))
