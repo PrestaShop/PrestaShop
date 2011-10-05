@@ -40,7 +40,7 @@ class AdminGroupShopControllerCore extends AdminController
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
-		
+
 		$this->fieldsDisplay = array(
 			'id_group_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('County'), 'width' => 130, 'filter_key' => 'b!name'),
@@ -54,45 +54,45 @@ class AdminGroupShopControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('delete'.$this->table) OR Tools::isSubmit('status') OR Tools::isSubmit('status'.$this->table))
+		if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
 		{
 			$object = $this->loadObject();
 			if (GroupShop::getTotalGroupShops() == 1)
 				$this->_errors[] = Tools::displayError('You cannot delete or disable the last groupshop.');
 			else if ($object->haveShops())
 				$this->_errors[] = Tools::displayError('You cannot delete or disable a groupshop which have this shops using it.');
-			
-			if (sizeof($this->_errors))
+
+			if (count($this->_errors))
 				return false;
 		}
 		return parent::postProcess();
 	}
-	
-	public function afterAdd($newGroupShop)
+
+	public function afterAdd($new_group_shop)
 	{
-		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
-			$newGroupShop->copyGroupShopData(Tools::getValue('importFromShop'), $importData);
-	}
-	
-	public function afterUpdate($newGroupShop)
-	{
-		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
-			$newGroupShop->copyGroupShopData(Tools::getValue('importFromShop'), $importData);
+		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
+			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
 	}
 
-	public function displayForm($isMainTab = true)
+	public function afterUpdate($new_group_shop)
 	{
-		parent::displayForm($isMainTab);
-		
+		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
+			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
+	}
+
+	public function displayForm($is_main_tab = true)
+	{
+		parent::displayForm($is_main_tab);
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		if (Shop::getTotalShops() > 1 AND $obj->id)
+		if (Shop::getTotalShops() > 1 && $obj->id)
 			$disabled = 'disabled="disabled"';
 		else
 			$disabled = '';
-			
-		$importData = array(
+
+		$import_data = array(
 			'attribute_group' => $this->l('Attribute groups'),
 			'attribute' => $this->l('Attributes'),
 			//'customer_group' => $this->l('Customer groups'),
@@ -115,7 +115,7 @@ class AdminGroupShopControllerCore extends AdminController
 			'share_stock' => $this->getFieldValue($obj, 'share_stock') ? true : false,
 			'share_order' => $this->getFieldValue($obj, 'share_order') ? true : false,
 			'active' => $this->getFieldValue($obj, 'active') ? true : false,
-			'importData' => $importData,
+			'importData' => $import_data,
 			'getTree' => Shop::getTree(),
 			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
 			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID()
