@@ -50,6 +50,10 @@
 	{/literal}
 	//]]>
 	</script>
+{else}
+	<script type="text/javascript">
+		var txtFree = "{l s='Free!'}";
+	</script>
 {/if}
 
 {if !$virtual_cart && $giftAllowed && $cart->gift == 1}

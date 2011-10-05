@@ -46,11 +46,11 @@ class ParentOrderControllerCore extends FrontController
 	public function init()
 	{
 		parent::init();
-		
+
 		/* Disable some cache related bugs on the cart/order */
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		
+
 		$this->nbProducts = $this->context->cart->nbProducts();
 
 		global $isVirtualCart;
@@ -131,7 +131,7 @@ class ParentOrderControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		
+
 		// Adding CSS style sheet
 		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
 		// Adding JS files
@@ -462,27 +462,10 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function _setDefaultCarrierSelection($carriers)
 	{
-		if (count($carriers))
-		{
-			$defaultCarrierIsPresent = false;
-			if ((int)self::$cart->id_carrier != 0)
-				foreach ($carriers as $carrier)
-					if ($carrier['id_carrier'] == (int)self::$cart->id_carrier)
-						$defaultCarrierIsPresent = true;
-			if (!$defaultCarrierIsPresent)
-				foreach ($carriers as $carrier)
-					if ($carrier['id_carrier'] == (int)Configuration::get('PS_CARRIER_DEFAULT'))
-					{
-						$defaultCarrierIsPresent = true;
-						self::$cart->id_carrier = (int)$carrier['id_carrier'];
-					}
-			if (!$defaultCarrierIsPresent)
-				self::$cart->id_carrier = (int)$carriers[0]['id_carrier'];
-		}
-		else
-			self::$cart->id_carrier = 0;
-		if (self::$cart->update())
-			return self::$cart->id_carrier;
+		$this->cart->id_carrier = Carrier::getDefaultCarrierSelection($carriers, (int)$this->cart->id_carrier);
+
+		if ($this->cart->update())
+			return $this->cart->id_carrier;
 		return 0;
 	}
 

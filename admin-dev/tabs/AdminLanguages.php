@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -34,18 +34,20 @@ class AdminLanguages extends AdminTab
 	 	$this->lang = false;
 	 	$this->edit = true;
 	 	$this->delete = true;
- 		
+
  		$this->fieldImageSettings = array(array('name' => 'flag', 'dir' => 'l'), array('name' => 'no-picture', 'dir' => 'p'));
-		
+
 		$this->fieldsDisplay = array(
 			'id_lang' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'flag' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'l', 'orderby' => false, 'search' => false),
 			'name' => array('title' => $this->l('Name'), 'width' => 120),
 			'iso_code' => array('title' => $this->l('ISO code'), 'width' => 70, 'align' => 'center'),
 			'language_code' => array('title' => $this->l('Language code'), 'width' => 70, 'align' => 'center'),
+			'date_format_lite' => array('title' => $this->l('Date format')),
+			'date_format_full' => array('title' => $this->l('Date format (full)')),
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
 		);
-		
+
 		$this->optionsList = array(
 			'general' => array(
 				'title' =>	$this->l('Languages options'),
@@ -57,7 +59,7 @@ class AdminLanguages extends AdminTab
 
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Copy a no-product image
 	 *
@@ -79,7 +81,7 @@ class AdminLanguages extends AdminTab
 				if (!imageResize($tmpName, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
 					$this->_errors[] = Tools::displayError('An error occurred while copying no-picture image to your manufacturer folder');
 				else
-				{	
+				{
 					$imagesTypes = ImageType::getImagesTypes('products');
 					foreach ($imagesTypes AS $k => $imageType)
 					{
@@ -94,11 +96,11 @@ class AdminLanguages extends AdminTab
 				unlink($tmpName);
 			}
 	}
-	
+
 	/**
 	 * deleteNoPictureImages will delete all default image created for the language id_language
-	 * 
-	 * @param string $id_language 
+	 *
+	 * @param string $id_language
 	 * @return boolean true if no error
 	 */
 	private function deleteNoPictureImages($id_language)
@@ -133,7 +135,7 @@ class AdminLanguages extends AdminTab
 	{
 		if (isset($_GET['delete'.$this->table]))
 		{
-			if ($this->tabAccess['delete'] === '1') 	
+			if ($this->tabAccess['delete'] === '1')
 		 	{
 				if (Validate::isLoadedObject($object = $this->loadObject()) AND isset($this->fieldImageSettings))
 				{
@@ -242,26 +244,26 @@ class AdminLanguages extends AdminTab
 		else
 			return parent::postProcess();
 	}
-	
+
 	public function beforeUpdateOptions()
 	{
 		$lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
 		if (!$lang->active)
 			$this->_errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
 	}
-	
+
 	public function displayList()
 	{
 		$this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
 		parent::displayList();
 		$languages = Language::getLanguages(false);
 	}
-	
+
 	public function displayListContent($token=NULL)
 	{
 		$irow = 0;
 		if ($this->_list)
-			
+
 			foreach ($this->_list AS $tr)
 			{
 				$id = $tr[$this->identifier];
@@ -314,11 +316,11 @@ class AdminLanguages extends AdminTab
 				echo '</tr>';
 			}
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -337,17 +339,27 @@ class AdminLanguages extends AdminTab
 				<input type="hidden" value="'._PS_VERSION_.'" name="ps_version" id="ps_version" />
 				<label>'.$this->l('Name:').' </label>
 				<div class="margin-form">
-					<input type="text" size="8" maxlength="32" name="name" value="'.htmlentities($this->getFieldValue($obj, 'name'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
+					<input type="text" size="8" maxlength="32" name="name" value="'.Tools::htmlentitiesUTF8($this->getFieldValue($obj, 'name')).'" /> <sup>*</sup>
 				</div>
 				<label>'.$this->l('ISO code:').' </label>
 				<div class="margin-form">
-					<input type="text" size="4" maxlength="2" name="iso_code" id="iso_code" value="'.htmlentities($this->getFieldValue($obj, 'iso_code'), ENT_COMPAT, 'UTF-8').'" onKeyUp="checkLangPack();" /> <sup>*</sup>
+					<input type="text" size="4" maxlength="2" name="iso_code" id="iso_code" value="'.Tools::htmlentitiesUTF8($this->getFieldValue($obj, 'iso_code')).'" onKeyUp="checkLangPack();" /> <sup>*</sup>
 					<p>'.$this->l('2-letter ISO code (e.g., fr, en, de)').'</p>
 				</div>
 				<label>'.$this->l('Language code:').' </label>
 				<div class="margin-form">
-					<input type="text" size="10" maxlength="5" name="language_code" id="language_code" value="'.htmlentities($this->getFieldValue($obj, 'language_code'), ENT_COMPAT, 'UTF-8').'"/> <sup>*</sup>
+					<input type="text" size="10" maxlength="5" name="language_code" id="language_code" value="'.Tools::htmlentitiesUTF8($this->getFieldValue($obj, 'language_code')).'"/> <sup>*</sup>
 					<p>'.$this->l('Full language code (e.g., en-us, pt-br)').'</p>
+				</div>
+				<label>'.$this->l('Date format:').' </label>
+				<div class="margin-form">
+					<input type="text" size="15" name="date_format_lite" id="date_format_lite" value="'.Tools::htmlentitiesUTF8($this->getFieldValue($obj, 'date_format_lite')).'"/> <sup>*</sup>
+					<p>'.$this->l('Date format, lite (e.g., Y-m-d, d/m/Y)').'</p>
+				</div>
+				<label>'.$this->l('Date format (full):').' </label>
+				<div class="margin-form">
+					<input type="text" size="25" name="date_format_full" id="date_format_full" value="'.Tools::htmlentitiesUTF8($this->getFieldValue($obj, 'date_format_full')).'"/> <sup>*</sup>
+					<p>'.$this->l('Date format, full (e.g., Y-m-d H:i:s, d/m/Y H:i)').'</p>
 				</div>
 				<label>'.$this->l('Flag:').' </label>
 				<div class="margin-form">
@@ -389,7 +401,7 @@ class AdminLanguages extends AdminTab
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
-		
+
 		if ($obj->id AND !$obj->checkFiles())
 		{
 			echo '
@@ -420,7 +432,7 @@ class AdminLanguages extends AdminTab
 			</fieldset>';
 		}
 	}
-	
+
 	public function displayFilesList($files)
 	{
 		foreach ($files as $key => $file)

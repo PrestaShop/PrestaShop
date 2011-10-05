@@ -275,11 +275,11 @@ class AdminCarriers extends AdminTab
 	private function changeGroups($id_carrier, $delete = true)
 	{
 		if ($delete)
-			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier='.(int)($id_carrier));
+			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);
 		$groups = Db::getInstance()->ExecuteS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
 		foreach ($groups as $group)
 			if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox')))
-				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'carrier_group (id_group, id_carrier) VALUES('.(int)($group['id_group']).','.(int)($id_carrier).')');
+				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'carrier_group (id_group, id_carrier) VALUES('.(int)$group['id_group'].','.(int)$id_carrier.')');
 	}
 
 	public function postProcess()
@@ -300,7 +300,7 @@ class AdminCarriers extends AdminTab
 						$object = new $this->className($id);
 						if (Validate::isLoadedObject($object))
 						{
-							Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier='.(int)($id));
+							Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id);
 							$object->deleted = 1;
 							$object->update();
 							$objectNew = new $this->className();
@@ -348,6 +348,18 @@ class AdminCarriers extends AdminTab
 				}
 			}
 		}
+		elseif ((isset($_GET['status'.$this->table]) OR isset($_GET['status'])) AND Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
+					$this->_errors[] = Tools::displayError('You can\'t disable the default carrier, please change your default carrier first.');
+		else
+					parent::postProcess();
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		else
 		{
 			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
@@ -384,4 +396,3 @@ class AdminCarriers extends AdminTab
 		parent::displayListContent($token);
 	}
 }
-

@@ -40,7 +40,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.8.1';
+		$this->version = '2.8.2';
 		
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -59,11 +59,16 @@ class PayPal extends PaymentModule
 			$this->warning = $this->l('All features of Paypal API module are be include in the new Paypal module. In order to don\'t have any conflict, please don\'t use and remove PayPalAPI module.');
 
 		/* For 1.4.3 and less compatibility */
-		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
-		if (!Configuration::get('PS_OS_PAYMENT'))
-			foreach ($updateConfig as $u)
-				if (!Configuration::get($u) && defined('_'.$u.'_'))
+		$updateConfig = array('PS_OS_CHEQUE' => 1, 'PS_OS_PAYMENT' => 2, 'PS_OS_PREPARATION' => 3, 'PS_OS_SHIPPING' => 4, 'PS_OS_DELIVERED' => 5, 'PS_OS_CANCELED' => 6,
+				      'PS_OS_REFUND' => 7, 'PS_OS_ERROR' => 8, 'PS_OS_OUTOFSTOCK' => 9, 'PS_OS_BANKWIRE' => 10, 'PS_OS_PAYPAL' => 11, 'PS_OS_WS_PAYMENT' => 12);
+		foreach ($updateConfig as $u => $v)
+			if (!Configuration::get($u) || (int)Configuration::get($u) < 1)
+			{
+				if (defined('_'.$u.'_') && (int)constant('_'.$u.'_') > 0)
 					Configuration::updateValue($u, constant('_'.$u.'_'));
+				else
+					Configuration::updateValue($u, $v);
+			}
 
 		/* Check preactivation warning */
 		if (Configuration::get('PS_PREACTIVATION_PAYPAL_WARNING'))

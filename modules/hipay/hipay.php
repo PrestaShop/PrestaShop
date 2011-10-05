@@ -154,6 +154,14 @@ class Hipay extends PaymentModule
 		return $id_currency;
 	}
 
+	private function formatLanguageCode($language_code)
+	{
+		$languageCodeArray = preg_split('/-|_/', $language_code);
+		if (!isset($languageCodeArray[1]))
+			$languageCodeArray[1] = $languageCodeArray[0];
+		return strtoupper($languageCodeArray[0]).'_'.strtolower($languageCodeArray[1]);
+	}
+
 	public function payment()
 	{
 		$id_currency = (int)$this->getModuleCurrency($this->context->cart);
@@ -178,7 +186,11 @@ class Hipay extends PaymentModule
 		$paymentParams = new HIPAY_MAPI_PaymentParams();
 		$paymentParams->setLogin($hipayAccount, $hipayPassword);
 		$paymentParams->setAccounts($hipayAccount, $hipayAccount);
-		$paymentParams->setDefaultLang(strtolower($language->iso_code).'_'.strtoupper($language->iso_code));
+		// EN_us is not a standard format, but that's what Hipay uses 
+		if (isset($language->language_code))
+			$paymentParams->setDefaultLang($this->formatLanguageCode($language->language_code));
+		else
+			$paymentParams->setDefaultLang(strtoupper($language->iso_code).'_'.strtolower($language->iso_code));
 		$paymentParams->setMedia('WEB');
 		$paymentParams->setRating(Configuration::get('HIPAY_RATING'));
 		$paymentParams->setPaymentMethod(HIPAY_MAPI_METHOD_SIMPLE);

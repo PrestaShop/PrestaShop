@@ -17,21 +17,15 @@
 
 	// Insert Service in database
 	$sql[] = "INSERT INTO `"._DB_PREFIX_."usps_rate_service_code` (`id_carrier`, `id_carrier_history`, `code`, `service`, `active`) VALUES
-			('0', '', 'FIRST CLASS', 'First Class', '0'),
-			('0', '', 'PRIORITY', 'Priority', '0'),
-			('0', '', 'PRIORITY COMMERCIAL', 'Priority Commercial', '0'),
-			('0', '', 'EXPRESS', 'Express', '0'),
-			('0', '', 'EXPRESS COMMERCIAL', 'Express Commercial', '0'),
-			('0', '', 'EXPRESS SH', 'Express SH', '0'),
-			('0', '', 'EXPRESS SH COMMERCIAL', 'Express SH Commercial', '0'),
-			('0', '', 'EXPRESS HFP', 'Express HFP', '0'),
-			('0', '', 'EXPRESS HFP COMMERCIAL', 'Express HFP Commercial', '0'),
-			('0', '', 'BPM', 'BPM', '0'),
-			('0', '', 'PARCEL', 'Parcel', '0'),
-			('0', '', 'MEDIA', 'Media', '0'),
-			('0', '', 'LIBRARY', 'Library', '0'),
-			('0', '', 'ALL', 'All', '0'),
-			('0', '', 'ONLINE', 'Online', '0');";
+			('0', '', 'FIRST CLASS', 'First-Class Mail (2-3 days)', '0'),
+			('0', '', 'FIRST CLASS COMMERCIAL', 'First-Class Mail (2-3 days)', '0'),
+			('0', '', 'PRIORITY', 'Priority Mail (1-3 days)', '0'),
+			('0', '', 'PRIORITY COMMERCIAL', 'Priority Mail (1-3 days)', '0'),
+			('0', '', 'EXPRESS', 'Express Mail (1-2 days)', '0'),
+			('0', '', 'EXPRESS COMMERCIAL', 'Express Mail (1-2 days)', '0'),
+			('0', '', 'PARCEL', 'Parcel Post (2-9 days)', '0'),
+			('0', '', 'MEDIA', 'Media Mail (2-9 days)', '0'),
+			('0', '', 'LIBRARY', 'Library Mail (2-9 days)', '0');";
 
 	// Create Cache Table in Database
 	$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'usps_cache` (
@@ -82,4 +76,4 @@
 			PRIMARY KEY  (`id_usps_rate_config_service`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-?>
+

@@ -126,6 +126,11 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 		foreach($this->_fields['list'] as $paramName => &$valueDetailed)
 			if ($paramName != 'Texte' && $paramName != 'Security')
 			{
+				// Mac server make an empty string instead of a cleaned string
+				// TODO : test on windows and linux server
+				$cleanedString = MRTools::replaceAccentedCharacters($valueDetailed['value']);
+				$valueDetailed['value'] = !empty($cleanedString) ? strtoupper($cleanedString) : strtoupper($valueDetailed['value']);
+
 				$valueDetailed['value'] = strtoupper($valueDetailed['value']);
 				// Call a pointer function if exist to do different test
 				if (isset($valueDetailed['methodValidation']) &&

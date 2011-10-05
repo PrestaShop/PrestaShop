@@ -775,7 +775,7 @@ class PDFCore extends PDF_PageGroupCore
 				$products = self::$order->getProducts();
 		}
 		else
-			$products = self::$orderSlip->getProducts();
+			$products = self::$orderSlip->getOrdersSlipProducts(self::$orderSlip->id, self::$order);
 		$customizedDatas = Product::getAllCustomizedDatas((int)(self::$order->id_cart));
 		Product::addCustomizationPrice($products, $customizedDatas);
 
@@ -974,7 +974,10 @@ class PDFCore extends PDF_PageGroupCore
 		$tmp = 0;
 		$product = &$tmp;
 		/* And secondly assign to each tax its own reduction part */
+		$discountAmount = 0;
+		if (!self::$orderSlip)
 		$discountAmount = (float)(self::$order->total_discounts);
+
 		foreach ($products as $product)
 		{
 			$ratio = $amountWithoutTax == 0 ? 0 : $product['priceWithoutTax'] / $amountWithoutTax;

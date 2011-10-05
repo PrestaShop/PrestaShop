@@ -445,6 +445,29 @@ class CarrierCore extends ObjectModel
 	}
 
 	/**
+	 * Return the default carrier to use
+	 *
+	 * @param array $carriers
+	 * @param array $defaultCarrier the last carrier selected
+	 * @return number the id of the default carrier
+	 */
+	public static function getDefaultCarrierSelection($carriers, $defaultCarrier = 0)
+	{
+		if(empty($carriers))
+			return 0;
+		
+		if ((int)$defaultCarrier != 0)
+			foreach ($carriers AS $carrier)
+				if ($carrier['id_carrier'] == (int)$defaultCarrier)
+					return (int)$carrier['id_carrier'];
+		foreach ($carriers AS $carrier)
+			if ($carrier['id_carrier'] == (int)Configuration::get('PS_CARRIER_DEFAULT'))
+				return (int)$carrier['id_carrier'];
+			
+		return (int)$carriers[0]['id_carrier'];
+	}
+	
+	/**
 	 *
 	 * @param int $id_zone
 	 * @param Array $groups group of the customer

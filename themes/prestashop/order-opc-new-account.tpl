@@ -60,6 +60,7 @@
 					<ul class="bullet">
 						<li>{l s='Personalized and secure access'}</li>
 						<li>{l s='Fast and easy check out'}</li>
+						<li>{l s='Separate billing and shipping addresses'}</li>
 					</ul>
 					<p>
 						<input type="button" class="button_large" id="opc_createAccount" value="{l s='Create an account'}" />

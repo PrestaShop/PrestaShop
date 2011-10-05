@@ -70,9 +70,18 @@ class TabCore extends ObjectModel
 		return $this->getTranslationsFields(array('name'));
 	}
 
-	public function add($autodate = true, $null_values = false)
+	/**
+	 * additionnal treatments for Tab when creating new one :
+	 * - generate a new position
+	 * - add access for admin profile
+	 *
+	 * @param boolean $autodate
+	 * @param boolean $nullValues
+	 * @return int id_tab
+	 */
+	public function add($autodate = true, $nullValues = false)
 	{
-		$this->position = self::getNbTabs($this->id_parent) + 1;
+		$this->position = self::getNewLastPosition($this->id_parent);
 		if (parent::add($autodate, $null_values))
 		{
 			// refresh cache when adding new tab
@@ -82,6 +91,12 @@ class TabCore extends ObjectModel
 		return false;
 	}
 
+	/** When creating a new tab $id_tab, this add default rights to the table access
+	 *
+	 * @todo this should not be public static but protected
+	 * @param int $id_tab
+	 * @return boolean true if succeed
+	 */
 	public static function initAccess($id_tab, Context $context = null)
 	{
 		if (!$context)
@@ -89,16 +104,22 @@ class TabCore extends ObjectModel
 	 	if (!$context->employee->id_profile)
 	 		return false;
 	 	/* Profile selection */
-	 	$profiles = Db::getInstance()->ExecuteS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile');
+	 	$profiles = Db::getInstance()->ExecuteS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile where `id_profile` != 1');
 	 	if (!$profiles || empty($profiles))
 	 		return false;
 	 	/* Query definition */
-	 	$query = 'INSERT INTO `'._DB_PREFIX_.'access` VALUES ';
+		// note : insert ignore should be avoided
+	 	$query = 'INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
+		// default admin
+		$query .= '(1, '.(int)$id_tab.', 1, 1, 1, 1),';
 	 	foreach ($profiles as $profile)
 	 	{
-	 	 	$rights = (((int)$profile['id_profile'] == 1 || (int)$profile['id_profile'] == $context->employee->id_profile) ? 1 : 0);
-	 	 	$query .= ($profile === $profiles[0] ? '' : ', ').'('.(int)$profile['id_profile'].', '.(int)($id_tab).', '.$rights.', '.$rights.', '.$rights.', '.$rights.')';
+			// no cast needed for profile[id_profile], which cames from db
+			// And we disable all profile but current one
+	 	 	$rights = $profile['id_profile'] == $context->employee->id_profile ? 1 : 0;
+			$query .= '('.$profile['id_profile'].', '.(int)$id_tab.', '.$rights.', '.$rights.', '.$rights.', '.$rights.'),';
 	 	}
+		$query = trim($query, ', ');
 	 	return Db::getInstance()->Execute($query);
 	}
 
@@ -203,6 +224,17 @@ class TabCore extends ObjectModel
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'tab` t
 		'.(!is_null($id_parent) ? 'WHERE t.`id_parent` = '.(int)$id_parent : ''));
+	}
+
+	/**
+	 * return an available position in subtab for parent $id_parent
+	 *
+	 * @param mixed $id_parent
+	 * @return int
+	 */
+	public static function getNewLastPosition($id_parent)
+	{
+		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)($id_parent)));
 	}
 
 	public function move($direction)

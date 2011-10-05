@@ -485,19 +485,15 @@ class ToolsCore
 	*/
 	public static function displayDate($date, $id_lang, $full = false, $separator='-')
 	{
-	 	if (!$date OR !strtotime($date))
+	 	if (!$date OR !($time = strtotime($date)))
 	 		return $date;
 		if (!Validate::isDate($date) OR !Validate::isBool($full))
 			die (self::displayError('Invalid date'));
-	 	$tmpTab = explode($separator, substr($date, 0, 10));
-	 	$hour = ' '.substr($date, -8);
 
-		$language = Language::getLanguage((int)($id_lang));
-	 	if ($language AND strtolower($language['iso_code']) == 'fr')
-	 		return ($tmpTab[2].'-'.$tmpTab[1].'-'.$tmpTab[0].($full ? $hour : ''));
-	 	else
-	 		return ($tmpTab[0].'-'.$tmpTab[1].'-'.$tmpTab[2].($full ? $hour : ''));
+		$language = Language::getLanguage((int)$id_lang);
+		return date($full ? $language['date_format_full'] : $language['date_format_lite'], $time);
 	}
+
 
 	/**
 	* Sanitize a string
@@ -1191,6 +1187,7 @@ class ToolsCore
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $url);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curlTimeOut);
+			curl_setopt($curl, CURLOPT_TIMEOUT, $curlTimeOut);
 			$content = curl_exec($curl);
 			curl_close($curl);
 			return $content;

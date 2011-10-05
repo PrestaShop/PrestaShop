@@ -66,21 +66,29 @@ function updateCarrierList(json)
 			else
 				var extraHtml = '';
 			
-			if (taxEnabled && displayPrice == 0)
-				var price = carriers[i].price;
+			if (carriers[i].price == 0)
+				var price = txtFree;
 			else
-				var price = carriers[i].price_tax_exc;
+			{
+			if (taxEnabled && displayPrice == 0)
+					var price = '<span class="price">'+formatCurrency(carriers[i].price, currencyFormat, currencySign, currencyBlank)+'</span>';
+			else
+					var price = '<span class="price">'+formatCurrency(carriers[i].price_tax_exc, currencyFormat, currencySign, currencyBlank)+'</span>';
+			}
 
 			html = html + 
 			'<tr class="'+itemType+'">'+
 				'<td class="carrier_action radio"><input type="radio" name="id_carrier" value="'+carriers[i].id_carrier+'" id="id_carrier'+carriers[i].id_carrier+'"  onclick="updateCarrierSelectionAndGift();" '+extraHtml+' /></td>'+
 				'<td class="carrier_name"><label for="id_carrier'+carriers[i].id_carrier+'">'+name+'</label></td>'+
 				'<td class="carrier_infos">'+carriers[i].delay+'</td>'+
-				'<td class="carrier_price"><span class="price">'+formatCurrency(price, currencyFormat, currencySign, currencyBlank)+'</span>';
+				'<td class="carrier_price">'+price;
+			if (carriers[i].price != 0)
+			{
 			if (taxEnabled && displayPrice == 0)
 				html = html + ' ' + txtWithTax;
 			else
 				html = html + ' ' + txtWithoutTax;
+			}
 			html = html + '</td>'+
 			'</tr>';
 		}
@@ -143,7 +151,12 @@ function updateAddressSelection()
 					$('#opc_payment_methods-overlay').fadeOut('slow');
 				}
 			},
-           error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+				$('#opc_account-overlay').fadeOut('slow');
+				$('#opc_delivery_methods-overlay').fadeOut('slow');
+				$('#opc_payment_methods-overlay').fadeOut('slow');
+			}
 	});
 }
 
@@ -226,7 +239,11 @@ function updateCarrierSelectionAndGift()
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
     		}
     	},
-       error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save carrier \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("TECHNICAL ERROR: unable to save carrier \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			$('#opc_payment_methods-overlay').fadeOut('slow');
+			$('#opc_delivery_methods-overlay').fadeOut('slow');
+		}
    });
 }
 
@@ -325,7 +342,12 @@ function saveAddress(type)
 				result = true;
 			}
 		},
-       error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			$('#opc_new_account-overlay').fadeOut('slow');
+			$('#opc_delivery_methods-overlay').fadeOut('slow');
+			$('#opc_payment_methods-overlay').fadeOut('slow');
+		}
     });
 
 	return result;
@@ -371,7 +393,11 @@ function updateNewAccountToAddressBlock()
 				});
 			});
 		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			$('#opc_delivery_methods-overlay').fadeOut('slow');
+			$('#opc_payment_methods-overlay').fadeOut('slow');
+		}
 	});
 }
 
@@ -603,7 +629,12 @@ $(function() {
 					$('#opc_delivery_methods-overlay').fadeOut('slow');
 					$('#opc_payment_methods-overlay').fadeOut('slow');
 				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save account \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("TECHNICAL ERROR: unable to save account \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+					$('#opc_new_account-overlay').fadeOut('slow');
+					$('#opc_delivery_methods-overlay').fadeOut('slow');
+					$('#opc_payment_methods-overlay').fadeOut('slow');
+				}
 			});
 			return false;
 		});
@@ -633,7 +664,10 @@ $(function() {
            		else
            			$('#opc_delivery_methods-overlay').fadeOut('slow');
 			},
-           error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save message \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("TECHNICAL ERROR: unable to save message \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+				$('#opc_delivery_methods-overlay').fadeOut('slow');
+			}
        });
 	});
 	

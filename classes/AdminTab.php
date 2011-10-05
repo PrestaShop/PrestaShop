@@ -180,6 +180,12 @@ abstract class AdminTabCore
 
 	public $ajax = false;
 
+	/**
+	 * if true, ajax-tab will not wait 1 sec
+	 * @var boolean
+	 */
+	public $ignore_sleep = false;
+
 	public static $tabParenting = array(
 		'AdminProducts' => 'AdminCatalog',
 		'AdminCategories' => 'AdminCatalog',

@@ -175,6 +175,25 @@ class GroupCore extends ObjectModel
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
 
+			// Add default group (id 1) to customers without groups
+			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (
+				SELECT c.id_customer, 1 FROM `'._DB_PREFIX_.'customer` c
+				LEFT JOIN `'._DB_PREFIX_.'customer_group` cg
+				ON cg.id_customer = c.id_customer
+				WHERE cg.id_customer IS NULL)');
+
+			// Set to the customer the default group
+			// Select the minimal id from customer_group
+			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` cg
+				SET id_default_group =
+					IFNULL((
+						SELECT min(id_group) FROM `'._DB_PREFIX_.'customer_group`
+						WHERE id_customer = cg.id_customer),
+						1)
+				WHERE `id_default_group` = '.(int)$this->id);
+
+			Discount::deleteByIdGroup($this->id);
+
 			return true;
 		}
 		return false;
