@@ -5,7 +5,7 @@ $css_folder = __DIR__.'/../js/jquery/';
 
 $css_files = array(
 				'datepicker.css' => 
-					array('new_file' => $css_folder.'themes/base/jquery.ui.datepicker.css'),
+					array('new_file' => $css_folder.'ui/themes/base/jquery.ui.datepicker.css'),
 				'fileuploader.css' => 
 					array('new_file' => $css_folder.'plugins/ajaxfileupload/jquery.ajaxfileupload.css'),
 				'jquery.autocomplete.css' => 
