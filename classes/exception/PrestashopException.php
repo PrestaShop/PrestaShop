@@ -58,6 +58,8 @@ class PrestashopExceptionCore extends Exception
 				ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
 			);
 
+			$this->displayFileDebug($this->getFile(), $this->getLine());
+
 			// Display debug backtrace
 			echo '<ul>';
 			foreach ($this->getTrace() as $id => $trace)
@@ -96,7 +98,7 @@ class PrestashopExceptionCore extends Exception
 	 * @param int $line
 	 * @param string $id
 	 */
-	protected function displayFileDebug($file, $line, $id)
+	protected function displayFileDebug($file, $line, $id = null)
 	{
 		$lines = file($file);
 		$offset = $line - 6;
@@ -108,7 +110,7 @@ class PrestashopExceptionCore extends Exception
 		}
 		$lines = array_slice($lines, $offset, $total);
 
-		echo '<div class="psTrace" id="psTrace_'.$id.'"><pre>';
+		echo '<div class="psTrace" id="psTrace_'.$id.'" '.((is_null($id) ? 'style="display: block"' : '')).'><pre>';
 		foreach ($lines as $k => $l)
 		{
 			if ($offset + $k == $line - 1)
