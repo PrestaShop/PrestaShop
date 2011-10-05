@@ -277,6 +277,7 @@ $(document).ready( function() {
 	}).result(function(event, item)
 	{ 
 		parent_ids = getParentCategoriesIdAndOpen(item[1]);
+		intervalCheck = setInterval(checkCategory, 10);
 	});
 });
 
@@ -310,7 +311,6 @@ function openParentCategories()
 		// delete interval value
 		interval = null;
 		readyToExpand = false;
-		intervalCheck = setInterval(checkCategory, 10);
 	}
 	
 	if (readyToExpand)
