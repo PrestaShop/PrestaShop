@@ -75,8 +75,9 @@
 	</script>
 	
 	<form action="{$tab_form['current']}&submitAdd{$tab_form['table']}=1&token={$tab_form['token']}" method="post">
-		{if $tab_form['id']}<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />{/if}
-		<fieldset><legend>{l s ='Shop Url'}</legend>
+		{if $tab_form['id']}<input type="hidden" name="id_{$tab_form['table']}" value="{$tab_form['id']}" />{/if}
+		<fieldset>
+			<legend>{l s ='Shop Url'}</legend>
 			<label for="domain">{l s ='Domain'}</label>
 			<div class="margin-form">
 				<input type="text" name="domain" id="domain" value="{$tab_form['domain']}" />

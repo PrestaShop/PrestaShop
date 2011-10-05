@@ -64,7 +64,6 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		info($this->action);
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
