@@ -483,17 +483,16 @@ class ToolsCore
 	* @param boolean $full With time or not (optional)
 	* @return string Date
 	*/
-	public static function displayDate($date, $id_lang, $full = false, $separator='-')
+	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
 	{
-	 	if (!$date OR !($time = strtotime($date)))
+	 	if (!$date || !($time = strtotime($date)))
 	 		return $date;
-		if (!Validate::isDate($date) OR !Validate::isBool($full))
+		if (!Validate::isDate($date) || !Validate::isBool($full))
 			die (self::displayError('Invalid date'));
 
-		$language = Language::getLanguage((int)$id_lang);
-		return date($full ? $language['date_format_full'] : $language['date_format_lite'], $time);
+		$context = Context::getContext();
+		return date($full ? $context->language->date_format_full : $context->language->date_format_lite, $time);
 	}
-
 
 	/**
 	* Sanitize a string
