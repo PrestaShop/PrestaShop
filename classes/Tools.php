@@ -481,6 +481,7 @@ class ToolsCore
 	* @param string $date Date to display format UNIX
 	* @param integer $id_lang Language id
 	* @param boolean $full With time or not (optional)
+	* @param string $separator DEPRECATED
 	* @return string Date
 	*/
 	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
@@ -491,7 +492,8 @@ class ToolsCore
 			die (self::displayError('Invalid date'));
 
 		$context = Context::getContext();
-		return date($full ? $context->language->date_format_full : $context->language->date_format_lite, $time);
+		$date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
+		return date($date_format, $time);
 	}
 
 	/**
