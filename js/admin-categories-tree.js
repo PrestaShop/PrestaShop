@@ -333,7 +333,7 @@ function checkCategory()
 	}
 	else
 	{
-		$('li#'+category_to_check+' > input[type=checkbox]').attr('checked', 'checked');
+		$('li#'+category_to_check+' > input').attr('checked', 'checked');
 		updateNbSubCategorySelected($('li#'+category_to_check+' > input[type=checkbox]'), true);
 	}
 }

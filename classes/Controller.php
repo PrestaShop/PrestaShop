@@ -273,7 +273,7 @@ abstract class ControllerCore
 			}
 		}
 		else
-			$plugin_path = Media::getJqueryPluginPath($name);
+			$plugin_path = Media::getJqueryPluginPath($name, $folder);
 
 		$this->addCSS($plugin_path['css']);
 		$this->addJS($plugin_path['js']);

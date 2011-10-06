@@ -76,7 +76,7 @@ class HelperCore
 		($use_search ? '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>' : '' ).'
 		<script type="text/javascript">
 			var inputName = "'.$input_name.';";
-			var use_radio = \''.($use_radio ? 'radio' : 'select').'\';';
+			var use_radio = '.($use_radio ? '1' : '0').';';
 		if (sizeof($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
