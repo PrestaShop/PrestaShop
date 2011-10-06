@@ -170,6 +170,7 @@ class GroupCore extends ObjectModel
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
+			$this->truncateRestrictionsModules($this->id);
 			Discount::deleteByIdGroup((int)$this->id);
 
 			// Refresh cache of feature detachable
@@ -224,6 +225,67 @@ class GroupCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'group`
 			WHERE `id_group` != 1
 		');
+	}
+
+	/**
+	 * Truncate all modules restrictions for the group
+	 * @param integer id_group
+	 * @return boolean result
+	 */
+	public static function truncateModulesRestrictions($id_group)
+	{
+		return Db::getInstance()->Execute('
+		DELETE FROM `'._DB_PREFIX_.'group_module_restriction`
+		WHERE `id_group` = '.(int)$id_group);
+	}
+
+	/**
+	 * Truncate all restrictions by module
+	 * @param integer id_module
+	 * @return boolean result
+	 */
+	public static function truncateRestrictionsByModule($id_module)
+	{
+		return Db::getInstance()->Execute('
+		DELETE FROM `'._DB_PREFIX_.'group_module_restriction`
+		WHERE `id_module` = '.(int)$id_module);
+	}
+
+	/**
+	 * Adding restrictions modules to the group with id $id_group
+	 * @param integer id_group
+	 * @param array modules
+	 * @param integer authorized
+	 */
+	public static function addModulesRestrictions($id_group, $modules, $authorized)
+	{
+		if (!is_array($modules))
+			return false;
+		else
+		{
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
+			foreach ($modules as $mod)
+				$sql .= '("'.(int)$id_group.'", "'.(int)Module::getModuleIdByName($mod).'", "'.(int)$authorized.'"),';
+			// removing last comma to avoid SQL error
+			$sql = substr($sql, 0, strlen($sql) - 1);
+			Db::getInstance()->Execute($sql);
+		}
+	}
+
+	/**
+	 * Add restrictions for a new module
+	 * We authorize every groups to the new module
+	 * @param integer id_module
+	 */
+	public static function addRestrictionsForModule($id_module)
+	{
+		$groups = Group::getGroups(Context::getContext()->language->id);
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
+		foreach ($groups as $g)
+			$sql .= '("'.(int)$g['id_group'].'", "'.(int)$id_module.'", "1"),';
+		// removing last comma to avoid SQL error
+		$sql = substr($sql, 0, strlen($sql) - 1);
+		Db::getInstance()->Execute($sql);
 	}
 }
 

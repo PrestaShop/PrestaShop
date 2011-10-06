@@ -1954,3 +1954,10 @@ PRIMARY KEY (`id_discount`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_group_module_restriction` (
+  `id_group` INT(11) UNSIGNED NOT NULL ,
+  `id_module` INT(11) UNSIGNED NOT NULL ,
+  `authorized` tinyint(1) NOT NULL DEFAULT '0',
+PRIMARY KEY (`id_group`,`id_module`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+

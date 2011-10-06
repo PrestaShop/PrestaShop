@@ -65,7 +65,7 @@ class AdminGroups extends AdminTab
 		$categories = Category::getSimpleCategories($this->context->language->id);
 
 		echo '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
+		<form id="group" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/tab-groups.gif" />'.$this->l('Group').'</legend>
 				<label>'.$this->l('Name:').' </label>
@@ -130,11 +130,14 @@ class AdminGroups extends AdminTab
 					$this->displayAssoShop('group_shop');
 					echo '</div>';
 				}
+
 				echo '<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
+			</fieldset>';
+			$this->displayFormRestrictions($obj->id);
+			echo '
 		</form><br />';
 
 		if ($obj->id)
@@ -163,7 +166,140 @@ class AdminGroups extends AdminTab
 					<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 				</fieldset>
 			</form>';
+
 		}
+	}
+
+	/**
+	 * display form client groups restrictions
+	 */
+	protected function displayFormRestrictions($id = false)
+	{
+		$modules = Module::getModulesInstalled();
+		$authorized_modules = '';
+		$auth_modules = array();
+		$unauth_modules = array();
+
+		if ($id)
+			$authorized_modules = Module::getAuthorizedModules($id);
+		else
+			$id = '';
+
+		if (is_array($authorized_modules))
+		{
+			foreach ($modules as $module)
+			{
+				$authorized = false;
+				foreach ($authorized_modules as $auth_module)
+					if ($module['name'] == $auth_module['name'])
+						$authorized = true;
+
+				if ($authorized)
+					$auth_modules[] = $module;
+				else
+					$unauth_modules[] = $module;
+			}
+		}
+		else
+			$auth_modules = $modules;
+
+		echo '
+		<br />
+		<script type="text/javascript" language="javascript">
+			$(document).ready(function(){
+				$(\'#addRestrictions\').click(function() {
+					return !$(\'#selectRestrictions1 option:selected\').remove().appendTo(\'#selectRestrictions2\');
+				});
+				$(\'#removeRestrictions\').click(function() {
+					return !$(\'#selectRestrictions2 option:selected\').remove().appendTo(\'#selectRestrictions1\');
+				});
+				$(\'#group\').submit(function() {
+					$(\'#selectRestrictions1 option\').each(function(i) {
+						$(this).attr("selected", "selected");
+					});
+					$(\'#selectRestrictions2 option\').each(function(i) {
+						$(this).attr("selected", "selected");
+					});
+				});
+				$(\'#restriction\').submit(function() {
+					$(\'#selectRestrictions1 option\').each(function(i) {
+						$(this).attr("selected", "selected");
+					});
+					$(\'#selectRestrictions2 option\').each(function(i) {
+						$(this).attr("selected", "selected");
+					});
+				});
+				$(\'#selectAll1\').click(function() {
+					if ($(\'#selectRestrictions1 option:selected\').size() != $(\'#selectRestrictions1 option\').size())
+					{
+						$(\'#selectRestrictions1 option\').attr(\'selected\', \'selected\');
+						$(this).text(\''.$this->l('Unselect All', get_class($this), false, false).'\');
+					}
+					else
+					{
+						$(\'#selectRestrictions1 option\').removeAttr(\'selected\');
+						$(this).text(\''.$this->l('Select All', get_class($this), false, false).'\');
+					}
+					return false;
+				});
+				$(\'#selectAll2\').click(function() {
+					if ($(\'#selectRestrictions2 option:selected\').size() != $(\'#selectRestrictions2 option\').size())
+					{
+						$(\'#selectRestrictions2 option\').attr(\'selected\', \'selected\');
+						$(this).text(\''.$this->l('Unselect All', get_class($this), false, false).'\');
+					}
+					else
+					{
+						$(\'#selectRestrictions2 option\').removeAttr(\'selected\');
+						$(this).text(\''.$this->l('Select All', get_class($this), false, false).'\');
+					}
+					return false;
+				});
+			});
+		</script>
+		<fieldset><legend><img src="../img/admin/access.png" />'.$this->l('Modules restrictions').'</legend>
+			<table class="margin-form">
+				<tr>
+					<td>
+						<p>'.$this->l('Unauthorized modules:').'</p>
+						<select multiple id="selectRestrictions1" name="unauthorized_modules[]" style="width:300px;height:160px;">';
+				foreach ($unauth_modules as $module)
+				{
+					$module = Module::getInstanceById($module['id_module']);
+					echo '	<option value="'.$module->name.'">'.Tools::htmlentitiesUTF8($module->displayName).'</option>';
+				}
+				echo '	</select><br /><br />
+						<a href="#" id="selectAll1" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+							'.$this->l('Select All').'
+						</a>
+						<a href="#" id="addRestrictions" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+							'.$this->l('Authorize').' &gt;&gt;
+						</a>
+					</td>
+					<td style="padding-left:20px;">
+						<p>'.$this->l('Authorized modules:').'</p>
+						<select multiple id="selectRestrictions2" name="authorized_modules[]" style="width:300px;height:160px;">';
+				foreach ($auth_modules as $module)
+				{
+					$module = Module::getInstanceById($module['id_module']);
+					echo '		<option value="'.$module->name.'">'.Tools::htmlentitiesUTF8($module->displayName).'</option>';
+				}
+				echo '	</select><br /><br />
+						<a href="#" id="selectAll2" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+							'.$this->l('Select All').'
+						</a>
+						<a href="#" id="removeRestrictions" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+							&lt;&lt; '.$this->l('Unauthorize').'
+						</a>
+					</div>
+					</td>
+				</tr>
+			</table>
+			<div class="clear">&nbsp;</div>
+			<div class="margin-form">
+				<input type="submit" name="submitRestrictions" id="submitRestrictions" value="'.$this->l('Update restrictions').'" class="button" />
+			</div>
+		</fieldset>';
 	}
 
 	public function viewgroup()
@@ -334,6 +470,12 @@ class AdminGroups extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
+
+		if (Tools::isSubmit('submitRestrictions'))
+		{
+			$this->updateRestrictions();
+		}
+
 		if (Tools::isSubmit('submitAddgroup'))
 		{
 			if ($this->tabAccess['add'] === '1')
@@ -359,7 +501,7 @@ class AdminGroups extends AdminTab
 									$this->_errors[] = Tools::displayError('Cannot update group reductions');
 							}
 					}
-					if (!sizeof($this->_errors))
+					if (!count($this->_errors))
 						parent::postProcess();
 				}
 			}
@@ -389,5 +531,20 @@ class AdminGroups extends AdminTab
 		}
 		else
 			parent::postProcess();
+	}
+
+	/**
+	 * Update (or create) restrictions for modules by group
+	 */
+	protected function updateRestrictions()
+	{
+		$id_group = Tools::getValue('id_group');
+		$unauth_modules = Tools::getValue('unauthorized_modules');
+		$auth_modules = Tools::getValue('authorized_modules');
+		Group::truncateModulesRestrictions($id_group);
+		if (is_array($auth_modules))
+			Group::addModulesRestrictions($id_group, $auth_modules, 1);
+		if (is_array($unauth_modules))
+			Group::addModulesRestrictions($id_group, $unauth_modules, 0);
 	}
 }

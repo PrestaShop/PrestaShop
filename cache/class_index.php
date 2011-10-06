@@ -304,6 +304,8 @@
   'AdminHomeController' => 'override/controllers/admin/AdminHomeController.php',
   'AdminRequestSqlControllerCore' => 'controllers/admin/AdminRequestSqlController.php',
   'AdminRequestSqlController' => '',
+  'AdminSearchEnginesControllerCore' => 'controllers/admin/AdminSearchEnginesController.php',
+  'AdminSearchEnginesController' => '',
   'AdminShopUrlControllerCore' => 'controllers/admin/AdminShopUrlController.php',
   'AdminShopUrlController' => '',
   'AdminStatesControllerCore' => 'controllers/admin/AdminStatesController.php',
