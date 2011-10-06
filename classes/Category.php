@@ -652,6 +652,19 @@ class CategoryCore extends ObjectModel
 		ORDER BY `position` ASC');
 	}
 
+	/** return an array of all children of the current category
+	 * 
+	 * @return array rows of table category
+	 * @todo return hydrateCollection
+	 */
+	public function getAllChildren()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'category`
+		WHERE '. $this->nleft . ' < nleft AND nright < '. $this->nright);
+	}
+
 	/**
 	 * This method allow to return children categories with the number of sub children selected for a product
 	 * 

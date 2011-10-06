@@ -176,3 +176,7 @@ ALTER TABLE `PREFIX_carrier` ADD COLUMN `id_reference` int(10)  NOT NULL AFTER `
 UPDATE `PREFIX_carrier` SET id_reference = id_carrier;
 
 ALTER TABLE `PREFIX_product` ADD `is_virtual` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `cache_has_attachments` 
+
+/* PHP:add_new_tab(AdminProducts, fr:Products|es:Products|en:Products|de:Products|it:Products, 1); */;
+/* PHP:add_new_tab(AdminCategories, fr:Categories|es:Categories|en:Categories|de:Categories|it:Categories, 1); */;
+

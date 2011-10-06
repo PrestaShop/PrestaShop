@@ -41,14 +41,16 @@ echo '
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'jquery.cluetip.css" />
 		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/admin.css" />
-		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>
-		<script type="text/javascript">
+		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>';
+$hoverindent = Media::getJqueryPluginPath('hoverIntent');
+$cluetip = Media::getJqueryPluginPath('cluetip');
+echo '<script type="text/javascript">
 			var helpboxes = '.Configuration::get('PS_HELPBOX').';
 			var roundMode = '.Configuration::get('PS_PRICE_ROUND_MODE').';
 		</script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery-1.4.4.min.js"></script>
-		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.hoverIntent.minified.js"></script>
-		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.cluetip.js"></script>
+		<script type="text/javascript" src="'.$hoverindent['js'].'"></script>
+		<script type="text/javascript" src="'.$cluetip['js'].'"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'admin.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'toggle.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'tools.js"></script>

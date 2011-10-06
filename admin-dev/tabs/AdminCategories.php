@@ -28,13 +28,14 @@
 class AdminCategories extends AdminTab
 {
 	/** @var object Category() instance for navigation*/
-	private $_category;
+	private $_category = null;
 
 	public function __construct()
 	{
 		$this->table = 'category';
 	 	$this->className = 'Category';
 	 	$this->lang = true;
+	 	$this->add = true;
 	 	$this->edit = true;
 	 	$this->view = true;
 	 	$this->delete = true;
@@ -47,8 +48,13 @@ class AdminCategories extends AdminTab
 		'description' => array('title' => $this->l('Description'), 'width' => 500, 'maxlength' => 90, 'callback' => 'getDescriptionClean', 'orderby' => false),
 		'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 		'active' => array('title' => $this->l('Displayed'), 'active' => 'status', 'align' => 'center', 'type' => 'bool', 'orderby' => false));
+		
+		if ($id_category = Tools::getvalue('id_category'))
+			$this->_category = new Category($id_category);
+		else
+			$this->_category = new Category(1);
 
-		$this->_category = AdminCatalog::getCurrentCategory();
+
 		$this->_filter = 'AND `id_parent` = '.(int)($this->_category->id);
 		$this->_select = 'position ';
 
@@ -71,15 +77,24 @@ class AdminCategories extends AdminTab
 
 	public function display($token = NULL)
 	{
-
-		$this->getList((int)($this->context->language->id), !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $this->context->shop->getID(true));
-		echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subcategory')))).' '.$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
-		if ($this->tabAccess['add'] === '1')
-			echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?tab=AdminCatalog&add'.$this->table.'&id_parent='.$this->_category->id.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new subcategory').'</a>';
-
-		echo '<div style="margin:10px;">';
-		$this->displayList($token);
-		echo '</div>';
+		if (((Tools::isSubmit('submitAddcategory') OR Tools::isSubmit('submitAddcategoryAndStay')) AND sizeof($this->_errors)) OR isset($_GET['updatecategory']) OR isset($_GET['addcategory']))
+		{
+			$this->displayForm($this->token);
+			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
+		}
+		else
+		{
+			$this->getList((int)($this->context->language->id), !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL, 0, NULL, $this->context->shop->getID(true));
+			echo '<h3>'.(!$this->_listTotal ? ($this->l('There are no subcategories')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('subcategories') : $this->l('subcategory')))).' '.$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
+			if ($this->tabAccess['add'] === '1')
+				echo '<a href="'.__PS_BASE_URI__.substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)).'?controller=AdminCategories&add'.$this->table.'&id_parent='.$this->_category->id.'&token='.($token!=NULL ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new subcategory').'</a>';
+				echo '<a href="'.$this->context->link->getAdminLink('AdminProducts').'&amp;addproduct&amp;id_parent='.$this->_category->id.'">
+					<img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
+	
+			echo '<div style="margin:10px;">';
+			$this->displayList($token);
+			echo '</div>';
+		}
 	}
 
 	public function postProcess($token = NULL)
@@ -136,7 +151,7 @@ class AdminCategories extends AdminTab
 			if (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCatalog'));
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
 		}
 		/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))
@@ -151,7 +166,7 @@ class AdminCategories extends AdminTab
 					if ($result)
 					{
 						$category->cleanPositions((int)(Tools::getValue('id_category')));
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCatalog').'&id_category='.(int)(Tools::getValue('id_category')));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCategories').'&id_category='.(int)(Tools::getValue('id_category')));
 					}
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 
@@ -234,7 +249,7 @@ class AdminCategories extends AdminTab
 				</div>
 				<label>'.$this->l('Image:').' </label>
 				<div class="margin-form">';
-		echo 		$this->displayImage($obj->id, _PS_IMG_DIR_.'c/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id), true);
+		echo 		$this->displayImage($obj->id, _PS_IMG_DIR_.'c/'.$obj->id.'.jpg', 350, NULL, Tools::getAdminToken('AdminCategories'.(int)(Tab::getIdFromClassName('AdminCategories')).$this->context->employee->id), true);
 		echo '	<br /><input type="file" name="image" />
 					<p>'.$this->l('Upload category logo from your computer').'</p>
 				</div>

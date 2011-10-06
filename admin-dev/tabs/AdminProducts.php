@@ -56,7 +56,11 @@ class AdminProducts extends AdminTab
 			'a!active' => array('title' => $this->l('Displayed'), 'active' => 'status', 'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false));
 
 		/* Join categories table */
-		$this->_category = AdminCatalog::getCurrentCategory();
+		if ($id_category = Tools::getvalue('id_category'))
+			$this->_category = new Category($id_category);
+		else
+			$this->_category = new Category(1);
+
 		$this->_join = Product::sqlStock('a').'
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
@@ -179,6 +183,7 @@ class AdminProducts extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
+		else
 
 		/* Delete a product in the download folder */
 		if (Tools::getValue('deleteVirtualProduct'))
@@ -188,7 +193,7 @@ class AdminProducts extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}	
-		
+		else 
 		/* Delete a product in the download folder */
 		if (Tools::getValue('deleteVirtualProductAttribute'))
 		{
@@ -1462,20 +1467,57 @@ class AdminProducts extends AdminTab
 
 	public function display($token = null)
 	{
-		if ($id_category = (int)Tools::getValue('id_category'))
-			AdminTab::$currentIndex .= '&id_category='.$id_category;
-		$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
+		if (((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND sizeof($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
+		{
+			$this->displayForm($this->token);
+			if (Tools::getValue('id_category') > 1)
+				echo '<br /><br /><a href="index.php?tab='.Tools::getValue('tab').'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to home').'</a><br />';
+			else
+				echo '<br /><br /><a href="index.php?tab='.Tools::getValue('tab').'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to catalog').'</a><br />';
+		}
+		else
+		{
+			if ($id_category = (int)Tools::getValue('id_category'))
+				AdminTab::$currentIndex .= '&id_category='.$id_category;
+			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
 
-		$id_category = Tools::getValue('id_category', 1);
-		if (!$id_category)
-			$id_category = 1;
-		echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).' '.
-		$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
-		if ($this->tabAccess['add'] === '1')
-			echo '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token != null ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
-		echo '<div style="margin:10px;">';
-		$this->displayList($token);
-		echo '</div>';
+			$id_category = Tools::getValue('id_category', 1);
+			if (!$id_category)
+				$id_category = 1;
+			echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).'</h3>';
+			////////////////////////
+			// @todo lot of ergonomy works around here 
+			echo '<p>'.$this->l('Go to category');
+			$select_child = ' <select id="go_to_categ"><option value="0">Jump to ...</option>';
+			// @todo : move blockcategories select queries in class Category
+			$root_categ = Category::getRootCategory();
+			$children = $root_categ->getAllChildren();
+			$all_cats = array();
+			foreach ($children as $categ)
+			{
+//				$all_cats[$categ['id_parent']]
+				$categ  = new Category($categ['id_category'],$this->context->language->id);
+				$select_child .= '<option value="'.$categ->id.'" '.($this->_category->id_category == $categ->id ? 'selected="selected" class="selected level-depth-'.$categ->level_depth.'"':'class="level-depth-'.$categ->level_depth.'"') .'>' . str_repeat('&nbsp;-&nbsp;',$categ->level_depth). $categ->name .' ('.$categ->id.')</option>';
+			}
+			
+			$select_child .= '</select>';
+			echo $select_child;
+			echo '</p>
+			<script type="text/javascript">
+			$("#go_to_categ").change(function(e){
+				console.log("pouet");
+				document.location.href = "'.$this->context->link->getAdminLink('AdminProducts').'&id_category="+$(this).val();
+			});
+
+			</script>';
+			////////////////////////
+			$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
+			if ($this->tabAccess['add'] === '1')
+				echo '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token != null ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
+			echo '<div style="margin:10px;">';
+			$this->displayList($token);
+			echo '</div>';
+		}
 	}
 
 	/**
@@ -1612,9 +1654,11 @@ class AdminProducts extends AdminTab
 					$(\'#mvt_sign\').html(\'<img src="../img/admin/arrow_up.png" /> '.$this->l('Increase your stock').'\');
 				$(\'#mvt_sign\').show();
 			}
-		</script>
-		<script src="'._PS_JS_DIR_.'tabpane.js" type="text/javascript"></script>
-		<link type="text/css" rel="stylesheet" href="../css/tabpane.css" />
+		</script>';
+		$tabpane = Media::getJqueryPluginPath('tabpane');
+		$tabpane['css'] = key($tabpane['css']);
+		echo '<script src="'.$tabpane['js'].'" type="text/javascript"></script>
+		<link type="text/css" rel="stylesheet" href="'.$tabpane['css'].'" />
 		<form action="'.self::$currentIndex.'&token='.Tools::getValue('token').'" method="post" enctype="multipart/form-data" name="product" id="product">
 			'.$this->_displayDraftWarning($obj->active).'
 
@@ -2169,125 +2213,7 @@ class AdminProducts extends AdminTab
 			$productDownload = new ProductDownload($id_product_download);
 
 		$hidden = $display_filename = $check = '';
-	?>
-	
-    <script type="text/javascript">
-    // <![CDATA[
-    	ThickboxI18nImage = '<?php echo $this->l('Image') ?>';
-    	ThickboxI18nOf = '<?php echo $this->l('of') ?>';
-    	ThickboxI18nClose = '<?php echo $this->l('Close') ?>';
-    	ThickboxI18nOrEscKey = '<?php echo $this->l('(or "Esc")') ?>';
-    	ThickboxI18nNext = '<?php echo $this->l('Next >') ?>';
-    	ThickboxI18nPrev = '<?php echo $this->l('< Previous') ?>';
-    	tb_pathToImage = '../img/loadingAnimation.gif';
-    //]]>
-    </script>
-	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>jquery/thickbox-modified.js"></script>
-	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>jquery/ajaxfileupload.js"></script>
-	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>date.js"></script>
-	<style type="text/css">
-		<!--
-		@import url(<?php echo _PS_CSS_DIR_?>thickbox.css);
-		-->
-	</style>
-	<script type="text/javascript">
-	//<![CDATA[
-	function toggleVirtualProduct(elt)
-	{
-		$("#is_virtual_file_product").hide();
-		$("#virtual_good_attributes").hide();
-			
-		if (elt.checked)
-		{
-			$('#virtual_good').show('slow');
-			$('#virtual_good_more').show('slow');
-			getE('out_of_stock_1').checked = 'checked';
-			getE('out_of_stock_2').disabled = 'disabled';
-			getE('out_of_stock_3').disabled = 'disabled';
-			getE('label_out_of_stock_2').setAttribute('for', '');
-			getE('label_out_of_stock_3').setAttribute('for', '');
-		}
-		else
-		{
-			$('#virtual_good').hide('slow');
-			$('#virtual_good_more').hide('slow');
-			getE('out_of_stock_2').disabled = false;
-			getE('out_of_stock_3').disabled = false;
-			getE('label_out_of_stock_2').setAttribute('for', 'out_of_stock_2');
-			getE('label_out_of_stock_3').setAttribute('for', 'out_of_stock_3');
-		}
-	}
-
-	function uploadFile()
-	{
-		$.ajaxFileUpload (
-			{
-				url:'./uploadProductFile.php',
-				secureuri:false,
-				fileElementId:'virtual_product_file',
-				dataType: 'xml',
-				success: function (data, status)
-				{
-					data = data.getElementsByTagName('return')[0];
-					var result = data.getAttribute("result");
-					var msg = data.getAttribute("msg");
-					var fileName = data.getAttribute("filename")
-					if(result == "error")
-						$("#upload-confirmation").html('<p>error: ' + msg + '</p>');
-					else
-					{
-						$('#virtual_product_file').remove();
-						$('#virtual_product_file_label').hide();
-						$('#file_missing').hide();
-						$('#delete_downloadable_product').show();
-						$('#virtual_product_name').attr('value', fileName);
-						$('#upload-confirmation').html(
-							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
-							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
-					}
-				}
-			}
-		);
-	}	
-
-	function uploadFile2()
-	{
-			var link = '';
-			$.ajaxFileUpload (
-			{
-				url:'./uploadProductFileAttribute.php',
-				secureuri:false,
-				fileElementId:'virtual_product_file_attribute',
-				dataType: 'xml',
-				success: function (data, status)
-				{
-					data = data.getElementsByTagName('return')[0];
-					var result = data.getAttribute("result");
-					var msg = data.getAttribute("msg");
-					var fileName = data.getAttribute("filename");
-					if(result == "error")
-						$("#upload-confirmation2").html('<p>error: ' + msg + '</p>');
-					else
-					{
-						$('#virtual_product_file_attribute').remove();
-						$('#virtual_product_file_label').hide();
-						$('#file_missing').hide();
-						$('#delete_downloadable_product_attribute').show();
-						$('#virtual_product_name_attribute').attr('value', fileName);
-						$('#upload-confirmation2').html(
-							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
-							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
-						
-						link = $("#delete_downloadable_product_attribute").attr('href');		
-						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
-					}
-				}
-			}
-		);
-	}
-	//]]>
-	</script>
-	<?php
+		$this->displayInitInformationAndAttachment();
 
 	if(!$productDownload->id OR !$productDownload->active) 
 		$hidden = 'style="display:none;"';
@@ -2526,91 +2452,8 @@ class AdminProducts extends AdminTab
 	$productDownload = new ProductDownload();
 	if ($id_product_download = $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id')))
 		$productDownload = new ProductDownload($id_product_download);
+	$this->displayInitInformationAndAttachment();
 
-?>
-    <script type="text/javascript">
-    // <![CDATA[
-    	ThickboxI18nImage = '<?php echo $this->l('Image') ?>';
-    	ThickboxI18nOf = '<?php echo $this->l('of') ?>';
-    	ThickboxI18nClose = '<?php echo $this->l('Close') ?>';
-    	ThickboxI18nOrEscKey = '<?php echo $this->l('(or "Esc")') ?>';
-    	ThickboxI18nNext = '<?php echo $this->l('Next >') ?>';
-    	ThickboxI18nPrev = '<?php echo $this->l('< Previous') ?>';
-    	tb_pathToImage = '../img/loadingAnimation.gif';
-    //]]>
-    </script>
-	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>jquery/thickbox-modified.js"></script>
-	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>jquery/ajaxfileupload.js"></script>
-	<script type="text/javascript" src="<?php echo _PS_JS_DIR_ ?>date.js"></script>
-	<style type="text/css">
-		<!--
-		@import url(<?php echo _PS_CSS_DIR_?>thickbox.css);
-		-->
-	</style>
-	<script type="text/javascript">
-	//<![CDATA[
-	function toggleVirtualProduct(elt)
-	{
-		if (elt.checked)
-		{
-			$('#virtual_good').show('slow');
-			$('#virtual_good_more').show('slow');
-			getE('out_of_stock_1').checked = 'checked';
-			getE('out_of_stock_2').disabled = 'disabled';
-			getE('out_of_stock_3').disabled = 'disabled';
-			getE('label_out_of_stock_2').setAttribute('for', '');
-			getE('label_out_of_stock_3').setAttribute('for', '');
-		}
-		else
-		{
-			$('#virtual_good').hide('slow');
-			$('#virtual_good_more').hide('slow');
-			getE('out_of_stock_2').disabled = false;
-			getE('out_of_stock_3').disabled = false;
-			getE('label_out_of_stock_2').setAttribute('for', 'out_of_stock_2');
-			getE('label_out_of_stock_3').setAttribute('for', 'out_of_stock_3');
-		}
-	}
-
-	function uploadFile()
-	{
-		$.ajaxFileUpload (
-			{
-				url:'./uploadProductFile.php',
-				secureuri:false,
-				fileElementId:'virtual_product_file',
-				dataType: 'xml',
-
-				success: function (data, status)
-				{
-					data = data.getElementsByTagName('return')[0];
-					var result = data.getAttribute("result");
-					var msg = data.getAttribute("msg");
-					var fileName = data.getAttribute("filename");
-
-					if (result == "error")
-					{
-						$("#upload-confirmation").html('<p>error: ' + msg + '</p>');
-					}
-					else
-					{
-						$('#virtual_product_file').remove();
-						$('#virtual_product_file_label').hide();
-						$('#file_missing').hide();
-						$('#delete_downloadable_product').show();
-						$('#virtual_product_name').attr('value', fileName);
-						$('#upload-confirmation').html(
-							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
-							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
-					}
-				}
-			}
-		);
-	}
-
-	//]]>
-	</script>
-	<?php
 		echo '
 		<script type="text/javascript" src="'._PS_JS_DIR_.'price.js"></script>
 		<script type="text/javascript">
@@ -3350,10 +3193,12 @@ class AdminProducts extends AdminTab
 							<script type="text/javascript">
 								var formProduct;
 								var accessories = new Array();
-							</script>
+							</script>';
 
-							<link rel="stylesheet" type="text/css" href="'.__PS_BASE_URI__.'css/jquery.autocomplete.css" />
-							<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>
+							$autocomplete = Media::getJqueryPluginPath('autocomplete');
+
+							echo '<link rel="stylesheet" type="text/css" href="'.key($autocomplete['css']).'" />
+							<script type="text/javascript" src="'.$autocomplete['js'].'"></script>
 							<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
 								<p class="clear">'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'</p>
 								<input type="text" value="" id="product_autocomplete_input" />
@@ -4497,5 +4342,134 @@ class AdminProducts extends AdminTab
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
 
 		$this->displayErrors();
+	}
+	public function displayInitInformationAndAttachment()
+	{
+  ?>
+	<script type="text/javascript">
+    // <![CDATA[
+    	ThickboxI18nImage = '<?php echo $this->l('Image') ?>';
+    	ThickboxI18nOf = '<?php echo $this->l('of') ?>';
+    	ThickboxI18nClose = '<?php echo $this->l('Close') ?>';
+    	ThickboxI18nOrEscKey = '<?php echo $this->l('(or "Esc")') ?>';
+    	ThickboxI18nNext = '<?php echo $this->l('Next >') ?>';
+    	ThickboxI18nPrev = '<?php echo $this->l('< Previous') ?>';
+    	tb_pathToImage = '../img/loadingAnimation.gif';
+    //]]>
+    </script>
+<?php
+$tmp_jss = array();
+$tmp_jss[] = Media::getJqueryPluginPath('thickbox');
+$tmp_jss[] = Media::getJqueryPluginPath('ajaxfileupload');
+$tmp_jss[] = Media::getJqueryPluginPath('date');
+foreach($tmp_jss as $tmp_js)
+{
+	echo '<script type="text/javascript" src="'. $tmp_js['js'].'"></script>';
+	if (empty ($tmp_js['css']))
+		continue;
+	$tmp_js['css'] = key($tmp_js['css']);
+	echo '<style type="text/css">';
+	echo '@import url('.$tmp_js['css'].')';
+	echo '</style>';
+}
+?>
+	<script type="text/javascript">
+	//<![CDATA[
+	function toggleVirtualProduct(elt)
+	{
+		$("#is_virtual_file_product").hide();
+		$("#virtual_good_attributes").hide();
+			
+		if (elt.checked)
+		{
+			$('#virtual_good').show('slow');
+			$('#virtual_good_more').show('slow');
+			getE('out_of_stock_1').checked = 'checked';
+			getE('out_of_stock_2').disabled = 'disabled';
+			getE('out_of_stock_3').disabled = 'disabled';
+			getE('label_out_of_stock_2').setAttribute('for', '');
+			getE('label_out_of_stock_3').setAttribute('for', '');
+		}
+		else
+		{
+			$('#virtual_good').hide('slow');
+			$('#virtual_good_more').hide('slow');
+			getE('out_of_stock_2').disabled = false;
+			getE('out_of_stock_3').disabled = false;
+			getE('label_out_of_stock_2').setAttribute('for', 'out_of_stock_2');
+			getE('label_out_of_stock_3').setAttribute('for', 'out_of_stock_3');
+		}
+	}
+
+	function uploadFile()
+	{
+		$.ajaxFileUpload (
+			{
+				url:'./uploadProductFile.php',
+				secureuri:false,
+				fileElementId:'virtual_product_file',
+				dataType: 'xml',
+				success: function (data, status)
+				{
+					data = data.getElementsByTagName('return')[0];
+					var result = data.getAttribute("result");
+					var msg = data.getAttribute("msg");
+					var fileName = data.getAttribute("filename")
+					if(result == "error")
+						$("#upload-confirmation").html('<p>error: ' + msg + '</p>');
+					else
+					{
+						$('#virtual_product_file').remove();
+						$('#virtual_product_file_label').hide();
+						$('#file_missing').hide();
+						$('#delete_downloadable_product').show();
+						$('#virtual_product_name').attr('value', fileName);
+						$('#upload-confirmation').html(
+							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
+							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
+					}
+				}
+			}
+		);
+	}	
+
+	function uploadFile2()
+	{
+			var link = '';
+			$.ajaxFileUpload (
+			{
+				url:'./uploadProductFileAttribute.php',
+				secureuri:false,
+				fileElementId:'virtual_product_file_attribute',
+				dataType: 'xml',
+				success: function (data, status)
+				{
+					data = data.getElementsByTagName('return')[0];
+					var result = data.getAttribute("result");
+					var msg = data.getAttribute("msg");
+					var fileName = data.getAttribute("filename");
+					if(result == "error")
+						$("#upload-confirmation2").html('<p>error: ' + msg + '</p>');
+					else
+					{
+						$('#virtual_product_file_attribute').remove();
+						$('#virtual_product_file_label').hide();
+						$('#file_missing').hide();
+						$('#delete_downloadable_product_attribute').show();
+						$('#virtual_product_name_attribute').attr('value', fileName);
+						$('#upload-confirmation2').html(
+							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
+							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
+						
+						link = $("#delete_downloadable_product_attribute").attr('href');		
+						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
+					}
+				}
+			}
+		);
+	}
+	//]]>
+	</script>
+<?php
 	}
 }
