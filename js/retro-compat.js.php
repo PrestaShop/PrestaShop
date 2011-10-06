@@ -62,8 +62,6 @@ $plugins = array(
 					array('new_file' => $plugins_folder.'treeview/jquery.treeview.sortable.js', 'name' => 'treeview.sortable'),
 				'tabpane.js' => 
 					array('new_file' => $plugins_folder.'tabpane/jquery.tabpane.js', 'name' => 'tabpane'),
-				'ui.datepicker-js' => 
-					array('new_file' => $plugins_folder.'tabpane/jquery.tabpane.js', 'name' => 'tabpane'),
 );
 
 
