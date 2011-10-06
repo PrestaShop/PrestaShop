@@ -752,7 +752,7 @@ if ($lm->getIncludeTradFilename())
 									$('#benefitsBlock').show();
 							$.ajax({
 								type: "GET",
-								url: "./php?controller=country_to_timezone.php?country="+$("select#infosCountry option:selected").attr('rel'),
+								url: "./php/country_to_timezone.php?country="+$("select#infosCountry option:selected").attr('rel'),
 								success: function(timezone){
 									$("select#infosTimezone").val(timezone);
 								}

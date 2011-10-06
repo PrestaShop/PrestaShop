@@ -187,8 +187,8 @@ abstract class AdminTabCore
 	public $ignore_sleep = false;
 
 	public static $tabParenting = array(
-		'AdminProducts' => 'AdminCatalog',
-		'AdminCategories' => 'AdminCatalog',
+//		'AdminProducts' => 'AdminCatalog',
+//		'AdminCategories' => 'AdminCatalog',
 		'AdminCMS' => 'AdminCMSContent',
 		'AdminCMSCategories' => 'AdminCMSContent',
 		'AdminOrdersStates' => 'AdminStatuses',
@@ -222,8 +222,8 @@ abstract class AdminTabCore
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
 		$className = get_class($this);
-		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
-			$className = 'AdminCatalog';
+//		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
+//			$className = 'AdminCatalog';
 		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
 
 		if (!Shop::isMultiShopActivated())

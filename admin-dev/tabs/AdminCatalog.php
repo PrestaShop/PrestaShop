@@ -99,9 +99,7 @@ class AdminCatalog extends AdminTab
 
 	public function postProcess()
 	{
-		if (!Tools::getValue('id_product'))
-			$this->adminCategories->postProcess();
-		elseif (isset($_GET['attributegenerator']))
+		if (isset($_GET['attributegenerator']))
 		{
 			if (!isset($this->attributeGenerator))
 			{
@@ -136,20 +134,8 @@ class AdminCatalog extends AdminTab
 
 	public function display()
 	{
-		if (((Tools::isSubmit('submitAddcategory') OR Tools::isSubmit('submitAddcategoryAndStay')) AND sizeof($this->adminCategories->_errors)) OR isset($_GET['updatecategory']) OR isset($_GET['addcategory']))
-		{
-			$this->adminCategories->displayForm($this->token);
-			echo '<br /><br /><a href="'.self::$currentIndex.'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to list').'</a><br />';
-		}
-		elseif (((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND sizeof($this->adminProducts->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
-		{
-			$this->adminProducts->displayForm($this->token);
-			if (Tools::getValue('id_category') > 1)
-				echo '<br /><br /><a href="index.php?tab='.Tools::getValue('tab').'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to home').'</a><br />';
-			else
-				echo '<br /><br /><a href="index.php?tab='.Tools::getValue('tab').'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to catalog').'</a><br />';
-		}
-		elseif (isset($_GET['attributegenerator']))
+		// @todo : this has to be dealt in AdminAttributeGenerator !!
+		if (isset($_GET['attributegenerator']))
 		{
 			if (!isset($this->attributeGenerator))
 			{
@@ -175,11 +161,12 @@ class AdminCatalog extends AdminTab
 					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
 					
 			echo '<div class="cat_bar"><span style="color: #3C8534;">'.$this->l('Current category').' :</span>&nbsp;&nbsp;&nbsp;'.getPath($catBarIndex, $id_category, '', '', 'catalog', $home).'</div>';
-			echo '<h2>'.$this->l('Categories').'</h2>';
-			$this->adminCategories->display($this->token);
+			//echo '<h2>'.$this->l('Categories').'</h2>';
+			echo '<h1><a class="button" href="'.$this->context->link->getAdminLink('AdminCategories').'">'.$this->l('Categories').'</a></h1>';
+			//$this->adminCategories->display($this->token);
 			echo '<div style="margin:10px">&nbsp;</div>';
-			echo '<h2>'.$this->l('Products in this category').'</h2>';
-			$this->adminProducts->display($this->token);
+			echo '<h1><a class="button" href="'.$this->context->link->getAdminLink('AdminProducts').'">'.$this->l('Products').'</a></h1>';
+			//$this->adminProducts->display($this->token);
 		}
 	}
 }
