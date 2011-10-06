@@ -241,14 +241,14 @@ abstract class ControllerCore
 	 * @param mixed $js_uri
 	 * @return void
 	 */
-	public function addJqueryUI($component)
+	public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
 	{
 		$ui_path = array();
 		if (is_array($component))
 			foreach($component as $ui)
-				$ui_path = Media::getJqueryUIPath($ui);
+				$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
 		else
-			$ui_path = Media::getJqueryUIPath($component);
+			$ui_path = Media::getJqueryUIPath($component, $theme, $check_dependencies);
 
 		$this->addCSS($ui_path['css']);
 		$this->addJS($ui_path['js']);
@@ -260,14 +260,14 @@ abstract class ControllerCore
 	 * @param mixed $js_uri
 	 * @return void
 	 */
-	public function addJqueryPlugin($name)
+	public function addJqueryPlugin($name, $folder = null)
 	{
 		$plugin_path = array();
 		if (is_array($name))
 		{
 			foreach($name as $plugin)
 			{
-				$plugin_path = Media::getJqueryPluginPath($plugin);
+				$plugin_path = Media::getJqueryPluginPath($plugin, $folder);
 				$this->addJS($plugin_path['js']);
 				$this->addCSS($plugin_path['css']);
 			}
