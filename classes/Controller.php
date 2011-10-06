@@ -106,6 +106,7 @@ abstract class ControllerCore
 			$this->display_footer = true;
 
 		$this->context = Context::getContext();
+		$this->context->controller = $this;
 		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
 	}
 
@@ -185,7 +186,7 @@ abstract class ControllerCore
 					if ($css_path)
 						$this->css_files = array_merge($css_path, $this->css_files);
 				}
-				else 
+				else
 				{
 					$css_path = Media::getCSSPath($media, $css_media_type);
 					if ($css_path)
@@ -222,7 +223,7 @@ abstract class ControllerCore
 					$this->js_files[] = $js_path;
 		}
 	}
-	
+
 	/**
 	 * Add a new javascript file in page header.
 	 *
@@ -233,7 +234,7 @@ abstract class ControllerCore
 	{
 		$this->addJS(Media::getJqueryPath($version, $folder, $minifier));
 	}
-	
+
 	/**
 	 * Add a new javascript file in page header.
 	 *
@@ -252,7 +253,7 @@ abstract class ControllerCore
 		$this->addCSS($ui_path['css']);
 		$this->addJS($ui_path['js']);
 	}
-	
+
 	/**
 	 * Add a new javascript file in page header.
 	 *
@@ -268,12 +269,12 @@ abstract class ControllerCore
 			{
 				$plugin_path = Media::getJqueryPluginPath($plugin);
 				$this->addJS($plugin_path['js']);
-				$this->addCSS($plugin_path['css']);				
+				$this->addCSS($plugin_path['css']);
 			}
 		}
 		else
 			$plugin_path = Media::getJqueryPluginPath($name);
-		
+
 		$this->addCSS($plugin_path['css']);
 		$this->addJS($plugin_path['js']);
 	}
