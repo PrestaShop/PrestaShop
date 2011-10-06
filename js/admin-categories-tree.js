@@ -28,6 +28,7 @@ var readyToExpand = true;
 var needCheckAll = false;
 var needUncheckAll = false;
 var interval = null;
+var intervalCheck = null;
 var id = 0;
 var arrayCatToExpand = new Array();
 
@@ -304,13 +305,14 @@ function getParentCategoriesIdAndOpen(id_category)
 
 function openParentCategories()
 {
+	intervalCheck = setInterval(checkCategory, 20);
+	
 	if (id >= arrayCatToExpand.length && !readyToExpand)
 	{
 		clearInterval(interval);
 		// delete interval value
 		interval = null;
 		readyToExpand = false;
-		intervalCheck = setInterval(checkCategory, 10);
 	}
 	
 	if (readyToExpand)
@@ -324,15 +326,13 @@ function openParentCategories()
 
 function checkCategory()
 {
-	if ($('li#'+category_to_check+' > input[type=checkbox]').is('checked'))
+	if ($('li#'+category_to_check+' > input[type=checkbox]').attr('checked'))
 	{
-		console.log('titi');
 		clearInterval(intervalCheck);
 		intervalCheck = null;
 	}
 	else
 	{
 		$('li#'+category_to_check+' > input[type=checkbox]').attr('checked', 'checked');
-		updateNbSubCategorySelected($('li#'+category_to_check+' input[type=checkbox]'), true);
 	}
 }
