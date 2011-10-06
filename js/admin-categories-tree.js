@@ -277,7 +277,6 @@ $(document).ready( function() {
 	}).result(function(event, item)
 	{ 
 		parent_ids = getParentCategoriesIdAndOpen(item[1]);
-		intervalCheck = setInterval(checkCategory, 10);
 	});
 });
 
@@ -311,6 +310,7 @@ function openParentCategories()
 		// delete interval value
 		interval = null;
 		readyToExpand = false;
+		intervalCheck = setInterval(checkCategory, 10);
 	}
 	
 	if (readyToExpand)
@@ -324,11 +324,15 @@ function openParentCategories()
 
 function checkCategory()
 {
-	if ($('li#'+category_to_check+' input[type=checkbox]').attr('checked') == 'checked')
+	if ($('li#'+category_to_check+' > input[type=checkbox]').is('checked'))
 	{
+		console.log('titi');
 		clearInterval(intervalCheck);
 		intervalCheck = null;
 	}
 	else
-		$('li#'+category_to_check+' input[type=checkbox]').attr('checked', 'checked');
+	{
+		$('li#'+category_to_check+' > input[type=checkbox]').attr('checked', 'checked');
+		updateNbSubCategorySelected($('li#'+category_to_check+' input[type=checkbox]'), true);
+	}
 }
