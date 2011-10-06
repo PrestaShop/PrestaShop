@@ -338,7 +338,6 @@ class FrontControllerCore extends Controller
 
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
-		$this->context->controller = $this;
 	}
 
 	public function postProcess()
@@ -498,10 +497,10 @@ class FrontControllerCore extends Controller
 	public function setMedia()
 	{
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
-		$this->addjquery();	
+		$this->addjquery();
 		$this->addjqueryPlugin('easing');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
-		
+
 		if (Tools::isSubmit('live_edit') AND Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
 			$this->addJqueryUI('ui.sortable');
