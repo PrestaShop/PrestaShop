@@ -319,7 +319,7 @@ function openParentCategories()
 	{
 		if ($('li#'+arrayCatToExpand[id]+'.hasChildren').length > 0)
 			readyToExpand = false;
-		$('li#'+arrayCatToExpand[id]+' span').trigger('click');
+		$('li#'+arrayCatToExpand[id]+'.expandable span').trigger('click');
 		id++;
 	}
 }
@@ -334,5 +334,6 @@ function checkCategory()
 	else
 	{
 		$('li#'+category_to_check+' > input[type=checkbox]').attr('checked', 'checked');
+		updateNbSubCategorySelected($('li#'+category_to_check+' > input[type=checkbox]'), true);
 	}
 }
