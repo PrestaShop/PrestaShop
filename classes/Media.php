@@ -196,7 +196,7 @@ class MediaCore
 	 */
 	public static function getJSPath($js_uri)
 	{
-		if (is_array($js_uri) OR is_null($js_uri))
+		if (is_array($js_uri) OR is_null($js_uri) OR empty($js_uri))
 			return false;
 		$url_data = parse_url($js_uri);
 		if (!array_key_exists('host', $url_data))
@@ -221,6 +221,8 @@ class MediaCore
 	 */
 	public static function getCSSPath($css_uri, $css_media_type = 'all')
 	{
+		if (empty($css_uri))
+			return false;
 		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
@@ -266,7 +268,7 @@ class MediaCore
 		if ($addNoConflict)
 			return self::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
 	}
-	
+
 	/**
 	 * return jqueryUI component path.
 	 *
@@ -285,16 +287,37 @@ class MediaCore
 			foreach(self::$jquery_ui_dependencies[$component]['dependencies'] as $dependency)
 				$ui_tmp[] = self::getJqueryUIPath($dependency, $theme,  false);
 		
+		if (self::$jquery_ui_dependencies[$component]['theme'] AND $check_dependencies)
+		{
+			$theme_css = self::getCSSPath($folder.'themes/'.$theme.'/jquery.ui.theme.css');
+			$comp_css = self::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$component.'.css');
+			if (!empty($theme_css) OR $theme_css)
+				$ui_path['css'] = array_merge($ui_path['css'], $theme_css);
+			if (!empty($comp_css) OR $comp_css)
+				$ui_path['css'] = array_merge($ui_path['css'], $comp_css);
+		}
+		
+		
 		if (file_exists($file_uri))
 		{
 			if (!empty($ui_tmp))
 			{
-				$ui_tmp[] = self::getJSPath($folder.$file);
-				return $ui_tmp;
+				foreach($ui_tmp as $ui)
+				{
+					$ui_path['js'][] = $ui['js'];
+					$ui_path['css'][] = $ui['css'];
+				}					
+				$ui_path['js'][] = self::getJSPath($folder.$file);
 			}
 			else
-				return self::getJSPath($folder.$file);
+				$ui_path['js'] = self::getJSPath($folder.$file);
 		}
+		
+		//add i18n file for datepicker
+		if ($component == 'ui.datepicker')
+			$ui_path['js'][] = self::getJSPath($folder.'i18n/jquery.ui.datepicker-'.Context::getContext()->language->iso_code.'.js');		
+	
+		return $ui_path;
 	}
 	
 	/**

@@ -242,12 +242,15 @@ abstract class ControllerCore
 	 */
 	public function addJqueryUI($component)
 	{
+		$ui_path = array();
 		if (is_array($component))
 			foreach($component as $ui)
 				$ui_path = Media::getJqueryUIPath($ui);
 		else
 			$ui_path = Media::getJqueryUIPath($component);
-		$this->addJS($ui_path);
+
+		$this->addCSS($ui_path['css']);
+		$this->addJS($ui_path['js']);
 	}
 	
 	/**
