@@ -275,7 +275,7 @@ class MediaCore
 	 * @param mixed $component
 	 * @return string
 	 */
-	public static function getJqueryUIPath($component, $theme = 'base', $check_dependencies = true)
+	public static function getJqueryUIPath($component, $theme, $check_dependencies)
 	{
 		$ui_path = array('js' => array(), 'css' => array());
 		$folder = _PS_JS_DIR_.'jquery/ui/';
@@ -326,7 +326,7 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginPath($name, $folder = null)
+	public static function getJqueryPluginPath($name, $folder)
 	{
 		$plugin_path = array('js' => array(), 'css' => array());
 		if (is_null($folder))
