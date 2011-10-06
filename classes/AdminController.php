@@ -1,4 +1,30 @@
 <?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision$
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 class AdminControllerCore extends Controller
 {
 	public $path;
@@ -858,9 +884,6 @@ class AdminControllerCore extends Controller
 			'HOOK_HEADER' => Module::hookExec('backOfficeHeader'),
 			'HOOK_TOP' => Module::hookExec('backOfficeTop'),
 		));
-
-		$this->context->smarty->assign('css_files', $this->css_files);
-		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 	}
 
 	/**
@@ -884,7 +907,6 @@ class AdminControllerCore extends Controller
 		else if ($this->display == 'list')
 		{
 			$this->getList($this->context->language->id);
-
 			$helper = new HelperList();
 			$helper->view = $this->view;
 			$helper->edit = $this->edit;
@@ -909,6 +931,10 @@ class AdminControllerCore extends Controller
 	 */
 	public function initFooter()
 	{
+		// We assign js and css files on the last step before display template, because controller can add many js and css files
+		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('js_files', array_unique($this->js_files));
+
 		$this->context->smarty->assign(array(
 			'ps_version' => _PS_VERSION_,
 			'end_time' => number_format(microtime(true) - $this->timerStart, 3, '.', ''),
@@ -931,12 +957,12 @@ class AdminControllerCore extends Controller
 		$this->addjQueryPlugin(array('cluetip', 'hoverIntent'));
 
 		$this->addJS(array(
-					_PS_JS_DIR_.'admin.js',
-					_PS_JS_DIR_.'toggle.js',
-					_PS_JS_DIR_.'tools.js',
-					_PS_JS_DIR_.'ajax.js',
-					_PS_JS_DIR_.'notifications.js')
-					);
+			_PS_JS_DIR_.'admin.js',
+			_PS_JS_DIR_.'toggle.js',
+			_PS_JS_DIR_.'tools.js',
+			_PS_JS_DIR_.'ajax.js',
+			_PS_JS_DIR_.'notifications.js'
+		));
 	}
 
 	public static function translate($string, $class, $addslashes = false, $htmlentities = true)
@@ -964,6 +990,7 @@ class AdminControllerCore extends Controller
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
+
 	/**
 	 * use translations files to replace english expression.
 	 *
