@@ -790,14 +790,14 @@ abstract class ModuleCore
 		{
 			$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 			$list = $context->shop->getListOfID();
-			if (isset($context->customer))
+			if (isset($context->customer) && $context->customer->isLogged())
 				$groups = $context->customer->getGroups();
 
 			$sql = 'SELECT h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`
 					FROM `'._DB_PREFIX_.'module` m
 					LEFT JOIN `'._DB_PREFIX_.'hook_module` hm
 						ON hm.`id_module` = m.`id_module`';
-			if (isset($context->customer))
+			if (isset($context->customer) && $context->customer->isLogged())
 				$sql .= '
 					LEFT JOIN `'._DB_PREFIX_.'group_module_restriction` gmr
 						ON gmr.`id_module` = m.`id_module`';
@@ -806,7 +806,7 @@ abstract class ModuleCore
 						ON hm.`id_hook` = h.`id_hook`
 					WHERE (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 						AND hm.id_shop IN('.implode(', ', $list).')';
-			if (isset($context->customer))
+			if (isset($context->customer) && $context->customer->isLogged())
 				$sql .= '
 						AND (gmr.`authorized` = 1 AND gmr.`id_group` IN('.implode(', ', $groups).'))';
 			$sql .= '
