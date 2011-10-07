@@ -56,4 +56,3 @@ abstract class StockManagerModule extends Module
 		return false;
 	}
 }
-
