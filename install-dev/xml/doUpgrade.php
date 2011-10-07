@@ -256,7 +256,7 @@ $datas = array(
 	array('_DB_PASSWD_', _DB_PASSWD_),
 	array('_DB_PREFIX_', _DB_PREFIX_),
 	array('_MYSQL_ENGINE_', $mysqlEngine),
-	array('_PS_CACHING_SYSTEM_', (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'MemCached') ? _PS_CACHING_SYSTEM_ : 'MCached'),
+	array('_PS_CACHING_SYSTEM_', (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache') ? _PS_CACHING_SYSTEM_ : 'CacheMemcache'),
 	array('_PS_CACHE_ENABLED_', defined('_PS_CACHE_ENABLED_') ? _PS_CACHE_ENABLED_ : '0'),
 	array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : ''),
 	array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : ''),
@@ -335,8 +335,8 @@ foreach ($arrayToClean as $dir)
 $depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
 if($depth)
 {
-	CacheFS::deleteCacheDirectory();
-	CacheFS::createCacheDirectories((int)$depth);
+	CacheFs::deleteCacheDirectory();
+	CacheFs::createCacheDirectories((int)$depth);
 }
 
 //sql file execution

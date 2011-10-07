@@ -66,7 +66,7 @@ $datas = array(
 	array('_DB_PASSWD_', trim($_GET['password'])),
 	array('_DB_PREFIX_', trim($_GET['tablePrefix'])),
 	array('_MYSQL_ENGINE_', trim($_GET['engine'])),
-	array('_PS_CACHING_SYSTEM_', 'MCached'),
+	array('_PS_CACHING_SYSTEM_', 'CacheMemcache'),
 	array('_PS_CACHE_ENABLED_', '0'),
 	array('_MEDIA_SERVER_1_', ''),
 	array('_MEDIA_SERVER_2_', ''),
