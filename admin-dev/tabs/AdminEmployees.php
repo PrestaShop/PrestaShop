@@ -34,21 +34,21 @@ class AdminEmployees extends AdminTab
 	{
 		$this->context = Context::getContext();
 	 	$this->table = 'employee';
-	 	$this->className = 'Employee';
+		$this->className = 'Employee';
 	 	$this->lang = false;
 	 	$this->edit = true; 
-	 	$this->delete = true;		
+	 	$this->delete = true;
  		$this->_select = 'pl.`name` AS profile';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile` 
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
-		
+
 		$profiles = Profile::getProfiles($this->context->language->id);
 		if (!$profiles)
 			$this->_errors[] = Tools::displayError('No profile');
 		else
-			foreach ($profiles AS $profile)
+			foreach ($profiles as $profile)
 				$this->profilesArray[$profile['name']] = $profile['name'];
-		
+
 		$this->fieldsDisplay = array(
 			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'lastname' => array('title' => $this->l('Last name'), 'width' => 130),
@@ -64,8 +64,8 @@ class AdminEmployees extends AdminTab
 				'fields' =>	array(
 					'PS_PASSWD_TIME_BACK' => array('title' => $this->l('Password regenerate:'), 'desc' => $this->l('Security minimum time to wait to regenerate a new password'), 'cast' => 'intval', 'size' => 5, 'type' => 'text', 'suffix' => ' '.$this->l('minutes'), 'visibility' => Shop::CONTEXT_ALL),
 					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array('title' => $this->l('Memorize form language:'), 'desc' => $this->l('Allow employees to save their own default form language'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
-						'0' => array('value' => 0, 'name' => $this->l('No')), 
-						'1' => array('value' => 1, 'name' => $this->l('Yes')) 
+						'0' => array('value' => 0, 'name' => $this->l('No')),
+						'1' => array('value' => 1, 'name' => $this->l('Yes'))
 					), 'visibility' => Shop::CONTEXT_ALL)
 				),
 			),
@@ -73,22 +73,22 @@ class AdminEmployees extends AdminTab
 
 		parent::__construct();
 	}
-	
-	protected function _childValidation() 
+
+	protected function _childValidation()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return false;
 		$email = $this->getFieldValue($obj, 'email');
 		if (!Validate::isEmail($email))
 	 		$this->_errors[] = Tools::displayError('Invalid e-mail');
-		else if (Employee::employeeExists($email) AND !Tools::getValue('id_employee'))
+		else if (Employee::employeeExists($email) && !Tools::getValue('id_employee'))
 			$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$email;
 	}
 
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$profiles = Profile::getProfiles($this->context->language->id);
@@ -138,7 +138,7 @@ class AdminEmployees extends AdminTab
 					<select name="bo_theme">';
 		$path = dirname(__FILE__).'/../themes/';
 		foreach (scandir($path) as $theme)
-			if ($theme[0] != '.' AND file_exists($path.$theme.'/admin.css'))
+			if ($theme[0] != '.' && file_exists($path.$theme.'/admin.css'))
 				echo '	<option value="'.Tools::htmlentitiesUTF8($theme).'" '.($this->getFieldValue($obj, 'bo_theme') == $theme ? 'selected="selected"' : '').'>'.Tools::htmlentitiesUTF8($theme).'</option>';
 		echo '		</select> <sup>*</sup>
 				</div>';
@@ -172,10 +172,32 @@ class AdminEmployees extends AdminTab
 				<div class="margin-form">
 					<select name="id_profile">
 						<option value="">'.$this->l('-- Choose --').'</option>';
-						foreach ($profiles AS $profile)
+						foreach ($profiles as $profile)
 						 	echo '<option value="'.$profile['id_profile'].'"'.($profile['id_profile'] === $this->getFieldValue($obj, 'id_profile') ? ' selected="selected"' : '').'>'.$profile['name'].'</option>';
 				echo '</select> <sup>*</sup>
 				</div>';
+				if (Shop::isMultiShopActivated())
+				{
+					echo '
+					<script type="text/javascript">
+						$(document).ready(function(){
+							$(\'select[name=id_profile]\').change(function(){
+								var val = $(this).val();
+								if(val == '._PS_ADMIN_PROFILE_.')
+								{
+									$(\'.assoShop input[type=checkbox]\').attr(\'disabled\', \'disabled\');
+									$(\'.assoShop input[type=checkbox]\').attr(\'checked\', \'checked\');
+								}
+								else
+									$(\'.assoShop input[type=checkbox]\').attr(\'disabled\', \'\');
+							});
+						});
+					</script>
+					';
+					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
+					$this->displayAssoShop();
+					echo '</div>';
+				}
 		}
 		echo '<div class="clear">&nbsp;</div>
 				<center>
@@ -185,47 +207,51 @@ class AdminEmployees extends AdminTab
 			</fieldset>
 		</form>';
 	}
-	
+
 	public function postProcess()
 	{
-		$this->context = Context::getContext();		
-		if (Tools::isSubmit('deleteemployee') OR Tools::isSubmit('status') OR Tools::isSubmit('statusemployee'))
+		$this->context = Context::getContext();
+		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
 		{
 			if ($this->context->employee->id == Tools::getValue('id_employee'))
 			{
 				$this->_errors[] = Tools::displayError('You cannot disable or delete your own account.');
 				return false;
 			}
-			
+
 			$employee = new Employee(Tools::getValue('id_employee'));
-			if ($employee->isLastAdmin()) 
+			if ($employee->isLastAdmin())
 			{
 					$this->_errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
 					return false;
 			}
 		}
-		elseif (Tools::isSubmit('submitAddemployee'))
+		else if (Tools::isSubmit('submitAddemployee'))
 		{
 			$employee = new Employee((int)Tools::getValue('id_employee'));
 			if (!(int)$this->tabAccess['edit'])
 				$_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
-			
-			if ($employee->isLastAdmin()) 
+
+			if ($employee->isLastAdmin())
 			{
-				if  (Tools::getValue('id_profile') != (int)_PS_ADMIN_PROFILE_) 
+				if (Tools::getValue('id_profile') != (int)_PS_ADMIN_PROFILE_)
 				{
 					$this->_errors[] = Tools::displayError('You should have at least one employee in the administrator group.');
 					return false;
 				}
-				
+
 				if (Tools::getvalue('active') == 0)
 				{
 					$this->_errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
 					return false;
 				}
 			}
+
+			$assos = self::getAssoShop($this->table);
+
+			if (!count($assos[0]) && $this->table = 'employee')
+				$this->_errors[] = Tools::displayError('The employee must be associated with at least one shop');
 		}
-		
 		return parent::postProcess();
 	}
 }

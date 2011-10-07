@@ -898,11 +898,21 @@ abstract class AdminTabCore
 		if (!Shop::isMultiShopActivated())
 			return ;
 
+		$assos = self::getAssoShop($this->table, $id_object);
+
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$assos[1].($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		foreach ($assos[0] as $asso)
+			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$assos[1].' (`'.pSQL($this->identifier).'`, id_'.$assos[1].')
+											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$assos[1]].')');
+	}
+	
+	protected static function getAssoShop($table, $id_object = false)
+	{
 		$shopAsso = Shop::getAssoTables();
 		$groupShopAsso = GroupShop::getAssoTables();
-		if (isset($shopAsso[$this->table]) && $shopAsso[$this->table]['type'] == 'shop')
+		if (isset($shopAsso[$table]) && $shopAsso[$table]['type'] == 'shop')
 			$type = 'shop';
-		else if (isset($groupShopAsso[$this->table]) && $groupShopAsso[$this->table]['type'] == 'group_shop')
+		else if (isset($groupShopAsso[$table]) && $groupShopAsso[$table]['type'] == 'group_shop')
 			$type = 'group_shop';
 		else
 			return ;
@@ -910,16 +920,12 @@ abstract class AdminTabCore
 		$assos = array();
 		foreach ($_POST as $k => $row)
 		{
-			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
+			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
 				continue;
 			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
 			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
 		}
-
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
-		foreach ($assos as $asso)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
-											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
+		return array($assos, $type);
 	}
 
 	/**
