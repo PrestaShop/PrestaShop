@@ -36,15 +36,27 @@ class StockWarehouseCore extends ObjectModel
 	public $id_employee;
 	public $stock_management;
 
-	protected $fieldsRequired = array('id_address', 'reference', 'name', 'id_employee', 'stock_management');
-	protected $fieldsSize = array('stock_management' => 32, 'reference' => 45, 'name' => 45);
+	protected $fieldsRequired = array(
+		'id_address',
+		'reference',
+		'name',
+		'id_employee',
+		'stock_management'
+	);
+
+	protected $fieldsSize = array(
+		'stock_management' => 32,
+		'reference' => 45,
+		'name' => 45
+	);
 
 	protected $fieldsValidate = array(
 		'id_address' => 'isUnsignedId',
 		'reference' => 'isString',
 		'name' => 'isString',
 		'id_employee' => 'isUnsignedId',
-		'stock_management' => 'isStockManagement');
+		'stock_management' => 'isStockManagement'
+	);
 
 	protected $table = 'warehouse';
 	protected $identifier = 'id_warehouse';
@@ -54,14 +66,16 @@ class StockWarehouseCore extends ObjectModel
 		$this->validateFields();
 		$fields['id_address'] = (int)$this->id_addresse;
 		$fields['reference'] = $this->reference;
-		$fields['name'] = $this->name;
+		$fields['name'] = pSQL($this->name);
 		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['stock_management'] = $this->$stock_management;
 		return $fields;
 	}
 
 	/**
-	 * Get a list of shop ids linked to a warehouse
+	 * For the current warehouse, gets its shops ids list
+	 *
+	 * @return array
 	 */
 	public function getIdShopList()
 	{
@@ -71,29 +85,25 @@ class StockWarehouseCore extends ObjectModel
 		$query->where($this->identifier.' = '.(int)$this->id);
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
 	}
-	
 
 	/**
-	 * Linked a list of shop ids to a warehouse
-	 * 
-	 * @param $shopIdList List of shop ids to linked to the warehouse
+	 * For the current warehouse, sets its shop ids list
+	 *
+	 * @param array $id_shop_list List of shop ids
 	 */
 	public function setIdShopList($id_shop_list)
 	{
-		$row_to_instert = array();
+		$row_to_insert = array();
 		foreach ($id_shop_list as $id_shop)
-		{
-			$row_to_instert = array(
-				$this->reference => $this->id,
-				'id_shop' => $id_shop);
-		}
+			$row_to_insert = array($this->reference => $this->id, 'id_shop' => $id_shop);
+
 		Db::getInstance()->ExecuteS('DELETE INTO `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
-		Db::getInstance()->autoExecute('warehouse_shop', $row_to_instert, 'INSERT');
+		Db::getInstance()->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
 	}
-	
+
 	/**
-	 * Check if a warehouse exists or not
-	 * 
+	 * For a given warehouse, checks if it exists
+	 *
 	 * @param $id_warehouse warehouse identifier
 	 */
 	public static function exists($id_warehouse)

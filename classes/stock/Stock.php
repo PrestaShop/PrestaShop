@@ -30,21 +30,32 @@
  */
 class StockCore extends ObjectModel
 {
+	public $id_warehouse;
 	public $id_product;
 	public $id_product_attribute;
 	public $physical_quantity;
 	public $usable_quantity;
 	public $price_te;
 
-	protected $fieldsRequired = array('id_product', 'id_product_attribute', 'physical_quantity', 'usable_quantity', 'price_te');
+	protected $fieldsRequired = array(
+		'id_warehouse',
+		'id_product',
+		'id_product_attribute',
+		'physical_quantity',
+		'usable_quantity',
+		'price_te'
+	);
+
 	protected $fieldsSize = array();
 
 	protected $fieldsValidate = array(
+		'id_warehouse' => 'isUnsignedId',
 		'id_product' => 'isUnsignedId',
 		'id_product_attribute' => 'isUnsignedId',
 		'physical_quantity' => 'isUnsignedInt',
 		'usable_quantity' => 'isInt',
-		'price_te' => 'isPrice');
+		'price_te' => 'isPrice'
+	);
 
 	protected $table = 'stock';
 	protected $identifier = 'id_stock';
@@ -52,21 +63,12 @@ class StockCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
+		$fields['id_warehouse'] = (int)$this->id_warehouse;
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['physical_quantity'] = (int)$this->physical_quantity;
 		$fields['usable_quantity'] = (int)$this->usable_quantity;
 		$fields['price_te'] = (float)$this->price_te;
 		return $fields;
-	}
-
-	public static function getStockId($id_product, $id_product_attribute)
-	{
-		$query = array();
-		$query['select'] = 's.id_stock';
-		$query['from'] = _DB_PREFIX_.'stock s';
-		$query['where'] = 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute;
-
-		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(Tools::buildQuery($query));
 	}
 }
