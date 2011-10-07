@@ -42,19 +42,19 @@ class AdminPerformance extends AdminTab
 					$this->_errors[] = Tools::displayError('Caching system is missing');
 				else
 					$settings = preg_replace('/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]+)\'\);/Ui', 'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');', $settings);
-				if ($cache_active AND $caching_system == 'MCached' AND !extension_loaded('memcache'))
+				if ($cache_active AND $caching_system == 'CacheMemcache' AND !extension_loaded('memcache'))
 					$this->_errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').' <a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
-				elseif ($cache_active AND $caching_system == 'CacheFS' AND !is_writable(_PS_CACHEFS_DIRECTORY_))
+				elseif ($cache_active AND $caching_system == 'CacheFs' AND !is_writable(_PS_CACHEFS_DIRECTORY_))
 					$this->_errors[] = Tools::displayError('To use CacheFS the directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.Tools::displayError('must be writable');
 
-				if ($caching_system == 'CacheFS')
+				if ($caching_system == 'CacheFs')
 				{
 					if (!($depth = Tools::getValue('ps_cache_fs_directory_depth')))
 						$this->_errors[] = Tools::displayError('Please set a directory depth');
 					if (!sizeof($this->_errors))
 					{
-						CacheFS::deleteCacheDirectory();
-						CacheFS::createCacheDirectories((int)$depth);
+						CacheFs::deleteCacheDirectory();
+						CacheFs::createCacheDirectories((int)$depth);
 						Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
 					}
 				}
@@ -82,7 +82,7 @@ class AdminPerformance extends AdminTab
 					$this->_errors[] = Tools::displayError('Memcached weight is missing');
 				if (!sizeof($this->_errors))
 				{
-					if (MCached::addServer(pSQL(Tools::getValue('memcachedIp')), (int)Tools::getValue('memcachedPort'), (int)Tools::getValue('memcachedWeight')))
+					if (CacheMemcache::addServer(pSQL(Tools::getValue('memcachedIp')), (int)Tools::getValue('memcachedPort'), (int)Tools::getValue('memcachedWeight')))
 						Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 					else
 						$this->_errors[] = Tools::displayError('Cannot add Memcached server');
@@ -95,7 +95,7 @@ class AdminPerformance extends AdminTab
 		{
 			if ($this->tabAccess['add'] === '1')
 			{
-				if (MCached::deleteServer((int)Tools::getValue('deleteMemcachedServer')))
+				if (CacheMemcache::deleteServer((int)Tools::getValue('deleteMemcachedServer')))
 					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 				else
 					$this->_errors[] = Tools::displayError('Error in deleting Memcached server');
@@ -441,8 +441,8 @@ class AdminPerformance extends AdminTab
 					<label>'.$this->l('Caching system:').' </label>
 					<div class="margin-form">
 						<select name="caching_system" id="caching_system">
-							<option value="MCached" '.(_PS_CACHING_SYSTEM_ == 'MCached' ? 'selected="selected"' : '' ).'>'.$this->l('Memcached').'</option>
-							<option value="CacheFS" '.(_PS_CACHING_SYSTEM_ == 'CacheFS' ? 'selected="selected"' : '' ).'>'.$this->l('File System').'</option>
+							<option value="CacheMemcache" '.(_PS_CACHING_SYSTEM_ == 'CacheMemcache' ? 'selected="selected"' : '' ).'>'.$this->l('Memcached').'</option>
+							<option value="CacheFs" '.(_PS_CACHING_SYSTEM_ == 'CacheFs' ? 'selected="selected"' : '' ).'>'.$this->l('File System').'</option>
 						</select>
 					</div>
 					<div id="directory_depth">
@@ -479,7 +479,7 @@ class AdminPerformance extends AdminTab
 							</div>
 						</form>
 					</div>';
-			$servers = MCached::getMemcachedServers();
+			$servers = CacheMemcache::getMemcachedServers();
 			if ($servers)
 			{
 				echo '<div class="margin-form">

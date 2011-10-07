@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CacheFSCore extends Cache {
+class CacheFsCore extends Cache {
 
 	protected $_depth;
 
