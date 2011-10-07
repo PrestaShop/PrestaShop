@@ -475,7 +475,7 @@ class AdminModules extends AdminTab
 					matchContains: true,
 					highlightItem: true,
 					formatItem: function(row, i, max, term) {
-						return "<img src=\"../modules/"+row.name+"/logo.gif\" style=\"float:left;margin:5px\"><strong>" + row.displayName + "</strong>"+((row.author != \'\') ? " '.$this->l("by").' "+ truncate_author(row.author) :"") + "<br /><span style=\'font-size: 80%;\'>"+ row.desc +"</span>";
+						return "<img src=\"../modules/"+row.name+"/logo.gif\" style=\"float:left;margin:5px\"><strong>" + row.displayName + "</strong>"+((row.author != \'\') ? " '.$this->l("by").' "+ truncate_author(row.author) :"") + "<br /><span style=\'font-size: 80%;\'>"+ row.desc +"</span><br/><div style=\"height:15px;padding-top:5px\">"+ row.option +"</div>";
 					},
 					formatResult: function(row) {
 						return row.displayName;
@@ -721,7 +721,8 @@ class AdminModules extends AdminTab
 				'displayName' => (string)$module->displayName,
 				'desc' => (string)$module->description,
 				'name' => (string)$module->name,
-				'author' => (string)$module->author
+				'author' => (string)$module->author,
+				'option' => $this->displayOptions($module)
 			)).', ';
 
 		$autocompleteList = rtrim($autocompleteList, ' ,').'];';
