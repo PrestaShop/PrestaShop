@@ -56,7 +56,11 @@ class AdminProducts extends AdminTab
 			'a!active' => array('title' => $this->l('Displayed'), 'active' => 'status', 'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false));
 
 		/* Join categories table */
-		$this->_category = AdminCatalog::getCurrentCategory();
+		if ($id_category = Tools::getvalue('id_category'))
+			$this->_category = new Category($id_category);
+		else
+			$this->_category = new Category(1);
+
 		$this->_join = Product::sqlStock('a').'
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
@@ -179,6 +183,7 @@ class AdminProducts extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
+		else
 
 		/* Delete a product in the download folder */
 		if (Tools::getValue('deleteVirtualProduct'))
@@ -188,7 +193,7 @@ class AdminProducts extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}	
-		
+		else 
 		/* Delete a product in the download folder */
 		if (Tools::getValue('deleteVirtualProductAttribute'))
 		{
@@ -1462,20 +1467,57 @@ class AdminProducts extends AdminTab
 
 	public function display($token = null)
 	{
-		if ($id_category = (int)Tools::getValue('id_category'))
-			AdminTab::$currentIndex .= '&id_category='.$id_category;
-		$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
+		if (((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND sizeof($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
+		{
+			$this->displayForm($this->token);
+			if (Tools::getValue('id_category') > 1)
+				echo '<br /><br /><a href="index.php?tab='.Tools::getValue('tab').'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to home').'</a><br />';
+			else
+				echo '<br /><br /><a href="index.php?tab='.Tools::getValue('tab').'&token='.$this->token.'"><img src="../img/admin/arrow2.gif" /> '.$this->l('Back to catalog').'</a><br />';
+		}
+		else
+		{
+			if ($id_category = (int)Tools::getValue('id_category'))
+				AdminTab::$currentIndex .= '&id_category='.$id_category;
+			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
 
-		$id_category = Tools::getValue('id_category', 1);
-		if (!$id_category)
-			$id_category = 1;
-		echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).' '.
-		$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
-		if ($this->tabAccess['add'] === '1')
-			echo '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token != null ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
-		echo '<div style="margin:10px;">';
-		$this->displayList($token);
-		echo '</div>';
+			$id_category = Tools::getValue('id_category', 1);
+			if (!$id_category)
+				$id_category = 1;
+			echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).'</h3>';
+			////////////////////////
+			// @todo lot of ergonomy works around here 
+			echo '<p>'.$this->l('Go to category');
+			$select_child = ' <select id="go_to_categ"><option value="0">Jump to ...</option>';
+			// @todo : move blockcategories select queries in class Category
+			$root_categ = Category::getRootCategory();
+			$children = $root_categ->getAllChildren();
+			$all_cats = array();
+			foreach ($children as $categ)
+			{
+//				$all_cats[$categ['id_parent']]
+				$categ  = new Category($categ['id_category'],$this->context->language->id);
+				$select_child .= '<option value="'.$categ->id.'" '.($this->_category->id_category == $categ->id ? 'selected="selected" class="selected level-depth-'.$categ->level_depth.'"':'class="level-depth-'.$categ->level_depth.'"') .'>' . str_repeat('&nbsp;-&nbsp;',$categ->level_depth). $categ->name .' ('.$categ->id.')</option>';
+			}
+			
+			$select_child .= '</select>';
+			echo $select_child;
+			echo '</p>
+			<script type="text/javascript">
+			$("#go_to_categ").change(function(e){
+				console.log("pouet");
+				document.location.href = "'.$this->context->link->getAdminLink('AdminProducts').'&id_category="+$(this).val();
+			});
+
+			</script>';
+			////////////////////////
+			$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
+			if ($this->tabAccess['add'] === '1')
+				echo '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token != null ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
+			echo '<div style="margin:10px;">';
+			$this->displayList($token);
+			echo '</div>';
+		}
 	}
 
 	/**
