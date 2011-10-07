@@ -229,27 +229,33 @@ class AdminGroups extends AdminTab
 						$(this).attr("selected", "selected");
 					});
 				});
+				select1 = true;
+				select2 = true;
 				$(\'#selectAll1\').click(function() {
-					if ($(\'#selectRestrictions1 option:selected\').size() != $(\'#selectRestrictions1 option\').size())
+					if (select1)
 					{
+						select2 = false;
 						$(\'#selectRestrictions1 option\').attr(\'selected\', \'selected\');
 						$(this).text(\''.$this->l('Unselect All', get_class($this), false, false).'\');
 					}
 					else
 					{
+						select2 = true;
 						$(\'#selectRestrictions1 option\').removeAttr(\'selected\');
 						$(this).text(\''.$this->l('Select All', get_class($this), false, false).'\');
 					}
 					return false;
 				});
 				$(\'#selectAll2\').click(function() {
-					if ($(\'#selectRestrictions2 option:selected\').size() != $(\'#selectRestrictions2 option\').size())
+					if (select2)
 					{
+						select2 = false;
 						$(\'#selectRestrictions2 option\').attr(\'selected\', \'selected\');
 						$(this).text(\''.$this->l('Unselect All', get_class($this), false, false).'\');
 					}
 					else
 					{
+						select2 = true;
 						$(\'#selectRestrictions2 option\').removeAttr(\'selected\');
 						$(this).text(\''.$this->l('Select All', get_class($this), false, false).'\');
 					}
