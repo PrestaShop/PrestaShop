@@ -138,9 +138,11 @@ class ProductComment extends ObjectModel
 		.($last ? 'LIMIT 1' : '')
 		);
 
-		if ($last)
+		if (!$results)
+			return false;
+		elseif ($last)
 			return array_shift($results);
-
+		else
 		return $results;
 	}
 

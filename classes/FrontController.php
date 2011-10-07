@@ -412,7 +412,7 @@ class FrontControllerCore extends Controller
 
 	protected function canonicalRedirection($canonicalURL = '')
 	{
-		if (!$canonicalURL || !Configuration::get('PS_CANONICAL_REDIRECT'))
+		if (!$canonicalURL || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET')
 			return;
 
 		$matchUrl = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];

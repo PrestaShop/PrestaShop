@@ -34,7 +34,7 @@ class CarrierCompare extends Module
 	{
 		$this->name = 'carriercompare';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -96,8 +96,15 @@ class CarrierCompare extends Module
 	/*
 	** Get carriers by country id, called by the ajax process
 	*/
-	public function getCarriersListByIdZone($id_country, $id_state = 0)
+	public function getCarriersListByIdZone($id_country, $id_state = 0, $zipcode = 0)
 	{
+		// cookie saving/updating
+		$this->context->cookie->id_country = $id_country;
+		if ($id_state != 0)
+			$this->context->cookie->id_state = $id_state;
+		if ($zipcode != 0)
+			$this->context->cookie->postcode = $zipcode;
+
 		$id_zone = 0;
 		if ($id_state != 0)
 			$id_zone = State::getIdZone($id_state);
@@ -106,7 +113,7 @@ class CarrierCompare extends Module
 
 		$carriers = Carrier::getCarriersForOrder((int)$id_zone);
 
-		return (sizeof($carriers) ? $carriers : array());
+		return (count($carriers) ? $carriers : array());
 	}
 
 	public function saveSelection($id_country, $id_state, $zipcode, $id_carrier)
@@ -128,7 +135,7 @@ class CarrierCompare extends Module
 			return $errors;
 
 		$ids_carrier = array();
-		foreach (self::getCarriersListByIdZone($id_country, $id_state) as $carrier)
+		foreach (self::getCarriersListByIdZone($id_country, $id_state, $zipcode) as $carrier)
 			$ids_carrier[] = $carrier['id_carrier'];
 		if (!in_array($id_carrier, $ids_carrier))
 			$errors[] = $this->l('This carrier ID isn\'t available for your selection');

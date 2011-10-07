@@ -51,7 +51,7 @@ function updateCarriersList()
 	$.ajax({
 		type: 'POST',
 		url: baseDir + 'modules/carriercompare/ajax.php',
-		data: 'method=getCarriers&id_country=' + $('#id_country').val()+'&id_state=' + $('#id_state').val(),
+		data: 'method=getCarriers&id_country=' + $('#id_country').val() + '&id_state=' + $('#id_state').val() + '&zipcode=' + $('#zipcode').val(),
 		dataType: 'json',
 		success: function(json) {
 			$('#carriers_list').children().remove();

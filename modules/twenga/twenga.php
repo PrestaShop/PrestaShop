@@ -30,7 +30,6 @@
  * 1. subscribe to their Ready to Sell engine,
  * 2. activate a tracking for order process if user has been used twenga engine,
  * 3. submit a xml feed of shop products to Twenga.
- * @author Nans Pellicari - Prestashop
  * @version 1.3
  */
 
@@ -524,16 +523,16 @@ class Twenga extends PaymentModule
 	 */
 	public static function getCurrentCountryName()
 	{
-		$id_lang = ((isset(Context::getContext()->language->id)) ? Context::getContext()->language->id :
-			((isset($_POST['id_lang'])) ? $_POST['id_lang'] : NULL));
+		$id_lang = ((Context::getContext()->language) ? Context::getContext()->language->id :
+			((isset($_POST['id_lang'])) ? (int)$_POST['id_lang'] : null));
 
 		if ($id_lang === NULL)
 			return 'Undefined id_lang';
 		$country = Db::getInstance()->ExecuteS('
 			SELECT c.name as name
 			FROM '._DB_PREFIX_.'country_lang as c
-			WHERE c.id_lang = '.$id_lang.'
-			AND c.id_country = '.	Configuration::get('PS_COUNTRY_DEFAULT'));
+			WHERE c.id_lang = '.(int)$id_lang.'
+			AND c.id_country = '.(int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		if (!isset($country[0]['name']))
 			$country[0]['name'] = 'Undefined';

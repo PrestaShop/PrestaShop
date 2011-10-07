@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,20 +25,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/**
- * @author Lucas Cherifi - Nans Pellicari - Anatole Korczak - PrestaShop Team
- */
- 
 class WebserviceExceptionCore extends Exception
 {
 	protected $status;
 	protected $wrong_value;
 	protected $available_values;
 	protected $type;
-	
+
 	const SIMPLE = 0;
 	const DID_YOU_MEAN = 1;
-	
+
 	public function __construct($message, $code)
 	{
 		$exception_code = $code;
@@ -52,12 +48,12 @@ class WebserviceExceptionCore extends Exception
 	}
 	public function getType()
 	{
-		return $this->type;	
+		return $this->type;
 	}
 	public function setType($type)
 	{
 		$this->type = $type;
-		return $this;	
+		return $this;
 	}
 	public function setStatus($status)
 	{

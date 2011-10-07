@@ -55,7 +55,7 @@ class UpsCarrier extends CarrierModule
 	{
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2.1';
+		$this->version = '1.2.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -1539,6 +1539,14 @@ class UpsCarrier extends CarrierModule
 	{	
 		// Init var
 		$address = new Address($params->id_address_delivery);
+		if (!Validate::isLoadedObject($address))
+		{
+			// If address is not loaded, we take data from shipping estimator module (if installed)
+			global $cookie;
+			$address->id_country = $cookie->id_country;
+			$address->id_state = $cookie->id_state;
+			$address->postcode = $cookie->postcode;
+		}
 		$recipient_country = Db::getInstance()->getRow('SELECT `iso_code` FROM `'._DB_PREFIX_.'country` WHERE `id_country` = '.(int)($address->id_country));
 		$recipient_state = Db::getInstance()->getRow('SELECT `iso_code` FROM `'._DB_PREFIX_.'state` WHERE `id_state` = '.(int)($address->id_state));
 		$shipper_country = Db::getInstance()->getRow('SELECT `iso_code` FROM `'._DB_PREFIX_.'country` WHERE `id_country` = '.(int)(Configuration::get('UPS_CARRIER_COUNTRY')));

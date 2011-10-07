@@ -33,7 +33,7 @@ function alter_productcomments_guest_index()
 		return;
 	
 	DB::getInstance()->Execute('
-	ALTER TABLE `'._DB_PREFIX_.'product_comment` DROP INDEX `id_guest`,
-	ADD INDEX `id_guest` USING BTREE(`id_guest`);');
+	ALTER TABLE `'._DB_PREFIX_.'product_comment`
+	DROP INDEX `id_guest`, ADD INDEX `id_guest` (`id_guest`);');
 }
 

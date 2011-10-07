@@ -7,11 +7,11 @@
 		<language iso_code="it" />
 	</languages>
 	<taxes>
-		<tax id="1" name="IVA IT 20%" rate="20" />
+		<tax id="1" name="IVA IT 21%" rate="21" />
 		<tax id="2" name="IVA IT 10%" rate="10" />
 		<tax id="3" name="IVA IT 4%" rate="4" />
 		
-		<taxRulesGroup name="IT Standard Rate (20%)">
+		<taxRulesGroup name="IT Standard Rate (21%)">
 			<taxRule iso_code_country="be" id_tax="1" />
 			<taxRule iso_code_country="bg" id_tax="1" />
 			<taxRule iso_code_country="cz" id_tax="1" />

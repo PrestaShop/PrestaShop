@@ -35,7 +35,6 @@
  * - compare an array of values to check if required fields are set.
  * - use the twenga API method and throw exceptions if error or exceptions occurred.
  * - Transform the xml response into PHP values.
- * @author Nans Pellicari - Prestashop
  * @version 1.3
  */
 abstract class TwengaFields

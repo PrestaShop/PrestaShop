@@ -25,10 +25,6 @@
  *  International Registered Trademark & Property of PrestaShop SA
  **/
 
-/**
- * @author Nans Pellicari - Prestashop
- * @version 1.3
- */
 class TwengaFieldsSiteExist extends TwengaFields
 {
 	public function __construct()

@@ -29,7 +29,6 @@
  * This Class allow to use Twenga API.
  * See details for more infos.
  * 
- * @author Nans Pellicari - Prestashop
  * @version 1.3
  */
 class TwengaObj

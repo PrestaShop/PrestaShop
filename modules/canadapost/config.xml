@@ -2,7 +2,7 @@
 <module>
 	<name>canadapost</name>
 	<displayName><![CDATA[Canada Post Carrier]]></displayName>
-	<version><![CDATA[0.1]]></version>
+	<version><![CDATA[0.5]]></version>
 	<description><![CDATA[Offer your customers, different delivery methods with Canada Post]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

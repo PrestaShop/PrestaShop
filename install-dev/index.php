@@ -73,7 +73,7 @@ if (file_exists(INSTALL_PATH.'/../config/settings.inc.php'))
 {
 	require_once(INSTALL_PATH.'/../config/settings.inc.php');
 	$oldversion =_PS_VERSION_;
-	
+
 	// fix : complete version number if there is not all 4 numbers
 	// for example replace 1.4.3 by 1.4.3.0
 	// consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
@@ -86,7 +86,7 @@ if (file_exists(INSTALL_PATH.'/../config/settings.inc.php'))
 
 	$oldversion = implode('.', $arrayVersion);
 	// end of fix
-	
+
 	$tooOld = (version_compare($oldversion, MINIMUM_VERSION_TO_UPDATE) == -1);
 	$sameVersions = (version_compare($oldversion, INSTALL_VERSION) == 0);
 	$installOfOldVersion = (version_compare($oldversion, INSTALL_VERSION) == 1);
@@ -230,7 +230,7 @@ if ($lm->getIncludeTradFilename())
 				{
 					$.ajax({
 						url: 'model.php?method=getVersionFromDb&language='+id_lang,
-						success: function (xml) 
+						success: function (xml)
 						{
 							var action = $(xml).find('action');
 							if (action.attr('result') == 'ko')
@@ -276,7 +276,7 @@ if ($lm->getIncludeTradFilename())
 	</ul>
 
 	<div id="PrestaShopLogo">PrestaShop</div>
-	
+
 	<div id="infosSup">
 		<div class="installerVersion" id="installerVersion-<?php echo $lm->getIsoCodeSelectedLang()?>">PrestaShop <?php echo INSTALL_VERSION.'<br />'.lang('Installer'); ?></div>
 		<div class="updaterVersion" id="updaterVersion-<?php echo $lm->getIsoCodeSelectedLang()?>">PrestaShop <?php echo INSTALL_VERSION.'<br />'.lang('Updater'); ?></div>
@@ -306,7 +306,7 @@ if ($lm->getIncludeTradFilename())
 	<div class="sheet shown" id="sheet_lang">
 		<div class="contentTitle">
 			<h1><?php echo lang('Welcome')?></h1>
-			
+
 			<ul id="stepList_1" class="stepList clearfix">
 				<li>Etape 1</li>
 				<li>Etape 2</li>
@@ -315,7 +315,7 @@ if ($lm->getIncludeTradFilename())
 				<li>Etape 5</li>
 			</ul>
 		</div>
-		
+
 		<h2 id="welcome-title"><?php echo lang('Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.'); ?></h2>
 		<script type="text/javascript">$('#welcome-title').html(Step1Title);</script>
 		<p><?php echo lang('Please allow 5-15 minutes to complete the installation process.')?></p>
@@ -381,7 +381,7 @@ if ($lm->getIncludeTradFilename())
 			<p><strong>14. Definition of "You" in This License.</strong> "You" throughout this License, whether in upper or lower case, means an individual or a legal entity exercising rights under, and complying with all of the terms of, this License. For legal entities, "You" includes any entity that controls, is controlled by, or is under common control with you. For purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.</p>
 			<p><strong>15. Right to Use.</strong> You may use the Original Work in all ways not otherwise restricted or conditioned by this License or by law, and Licensor promises not to interfere with or be responsible for such uses by You.</p>
 			<p><strong>16. Modification of This License.</strong> This License is Copyright &copy; 2005 Lawrence Rosen. Permission is granted to copy, distribute, or communicate this License without modification. Nothing in this License permits You to modify this License as applied to the Original Work or to Derivative Works. However, You may modify the text of this License and copy, distribute or communicate your modified version (the "Modified License") and apply it to other original works of authorship subject to the following conditions: (i) You may not indicate in any way that your Modified License is the "Open Software License" or "OSL" and you may not use those names in the name of your Modified License; (ii) You must replace the notice specified in the first paragraph above with the notice "Licensed under Open Software License ("OSL") v. 3.0" or with a notice of your own that is not confusingly similar to the notice in this License; and (iii) You may not claim that your original works are open source software unless your Modified License has been approved by Open Source Initiative (OSI) and You comply with its license review and certification process.</p>
-			
+
 			<h3>Modules and Themes: Academic Free License ("AFL") v. 3.0</h3>
 			<p>This Academic Free License (the "License") applies to any original work of authorship (the "Original Work") whose owner (the "Licensor") has placed the following licensing notice adjacent to the copyright notice for the Original Work:</p>
 			<h4>Licensed under the Academic Free License version 3.0</h4>
@@ -488,7 +488,7 @@ if ($lm->getIncludeTradFilename())
 				<li>Etape 5</li>
 			</ul>
 			</div>
-			
+
 			<div id="dbPart">
 				<h2><?php echo lang('Configure your database by filling out the following fields:')?></h2>
 				<p><?php echo lang('You have to create a database, help available in readme_en.txt'); ?></p>
@@ -517,7 +517,7 @@ if ($lm->getIncludeTradFilename())
 					</select>
 				</p>
 					<p class="last">
-						<label for="db_prefix"><?php echo lang('Tables prefix:')?></label> 
+						<label for="db_prefix"><?php echo lang('Tables prefix:')?></label>
 						<input class="text" type="text" id="db_prefix" value="ps_"/>
 					</p>
 				<p class="aligned">
@@ -537,7 +537,7 @@ if ($lm->getIncludeTradFilename())
 				</form>
 				<p id="dbCreateResultCheck"></p>
 			</div>
-			
+
 			<div id="mailPart">
 				<h2><?php echo lang('E-mail delivery set-up')?></h2>
 
@@ -579,7 +579,7 @@ if ($lm->getIncludeTradFilename())
 					</form>
 				</div>
 				<p>
-					<input class="text" id="testEmail" type="text" size="15" value="<?php echo lang('enter@your.email'); ?>" /> &nbsp; 
+					<input class="text" id="testEmail" type="text" size="15" value="<?php echo lang('enter@your.email'); ?>" /> &nbsp;
 					<input id="btVerifyMail" class="button" type="submit" value="<?php echo lang('Send me a test email!'); ?>" />
 				</p>
 
@@ -664,7 +664,7 @@ if ($lm->getIncludeTradFilename())
 							<p id="alignedLogo"><img id="uploadedImage" src="<?php echo PS_BASE_URI ?>img/logo.jpg" alt="Logo" /></p>
 						</span>
 						<p class="userInfos aligned"><?php echo lang('recommended dimensions: 230px X 75px'); ?></p>
-						
+
 						<span id="inputFileLogo" class="contentinput">
 					<input type="file" onchange="uploadLogo()" name="fileToUpload" id="fileToUpload"/>
 						</span>
@@ -725,7 +725,7 @@ if ($lm->getIncludeTradFilename())
 					<input type="checkbox" id="infosNotification" class="aligned" style="vertical-align: middle;" /><label for="infosNotification"><?php echo lang('Receive notifications by e-mail'); ?></label><br/>
 					<span id="resultInfosNotification" class="result aligned"></span>
 						</span>
-						
+
 					<p class="userInfos aligned"><?php echo lang('If you check this box and your mail configuration is wrong, your installation might be blocked. If so, please uncheck the box to go to the next step.'); ?></p>
 				</div>
 				</div>
@@ -757,7 +757,7 @@ if ($lm->getIncludeTradFilename())
 									$("select#infosTimezone").val(timezone);
 								}
 							});
-								
+
 								autoCheckField("#infosCountry", "#resultInfosCountry", "required");
 								autoCheckField("#infosTimezone", "#resultInfosTimezone", "required");
 						});
@@ -797,7 +797,7 @@ if ($lm->getIncludeTradFilename())
 										foreach ($p->prechecked AS $country_iso_code)
 										$modulesPrechecked[trim($p->key)][trim($country_iso_code)] = 1;
 							}
-								
+
 								if (sizeof($modulesHelpInstall))
 								{
 									echo '
@@ -946,7 +946,7 @@ if ($lm->getIncludeTradFilename())
 						<?php }} ?>
 					</select>
 				</div>
-				
+
 				</div>
 			</form>
 
@@ -957,10 +957,10 @@ if ($lm->getIncludeTradFilename())
 		</div>
 
 		<div class="sheet clearfix" id="sheet_end">
-			
+
 			<div class="contentTitle">
 				<h1><?php echo lang('PrestaShop is ready!'); ?></h1>
-				
+
 				<ul id="stepList_5" class="stepList clearfix">
 					<li class="ok">Etape 1 ok</li>
 					<li class="ok">Etape 2 ok</li>
@@ -994,7 +994,7 @@ if ($lm->getIncludeTradFilename())
 				</table>
 
 				<h3 class="infosBlock"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files(readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?></h3>
-				
+
 				<div id="boBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_boBlock.png" />
 						<h3><?php echo lang('Back Office'); ?></h3>
@@ -1007,7 +1007,7 @@ if ($lm->getIncludeTradFilename())
 						<p class="description"><?php echo lang('Find your store as your future customers will see!'); ?></p>
 						<a href="../" id="access" class="FO" target="_blank"><span><?php echo lang('Discover your store'); ?></span></a>
 				</div>
-				
+
 				<div id="resultEnd"></div>
 			</div>
 			<?php
@@ -1023,7 +1023,7 @@ if ($lm->getIncludeTradFilename())
 		<div class="sheet clearfix" id="sheet_disclaimer">
 			<div class="contentTitle">
 				<h1><?php echo lang('Disclaimer'); ?></h1>
-		
+
 				<ul id="stepList_6" class="stepList clearfix">
 					<li class="ok">Etape 1</li>
 					<li>Etape 2</li>
@@ -1054,7 +1054,7 @@ if ($lm->getIncludeTradFilename())
 							url: 'xml/getNonNativeModules.php',
 							async: true,
 							dataType: "json",
-							success: function (json) 
+							success: function (json)
 							{
 								if (json.length == 0)
 									$('#nonNativeModules').hide();
@@ -1073,7 +1073,7 @@ if ($lm->getIncludeTradFilename())
 						});
 					});
 				</script>
-				
+
 				<div id="nonNativeModules" style="font-weight: bold; background-color: #ffdeb7; color: #000; padding: 10px; border: 1px solid #999; margin-top: 10px;">
 					<p><img src="../img/admin/warning.gif" alt="" style="vertical-align: middle;" /> <?php echo lang('It\'s dangerous to keep non-native modules activated during the update. If you really want to take this risk, uncheck the following box.'); ?></p>
 
@@ -1083,13 +1083,13 @@ if ($lm->getIncludeTradFilename())
 						<?php echo lang('Ok, please desactivate the following modules, I will reactivate them later:'); ?>
 					</label>
 					<ul id="nonNativeModulesLi">
-						
+
 					</ul>
 				</div>
 				<?php
 
 				endif;
-				
+
 				function sortnatversion($a, $b)
 				{
 					return strnatcmp($a['version'], $b['version']);
@@ -1286,9 +1286,9 @@ if ($lm->getIncludeTradFilename())
 					<li>Etape 4</li>
 				</ul>
 			</div>
-			
+
 			<h3><?php echo lang('One or more errors have occurred, you can find more informations below or in the log/installation.log file.'); ?></h3>
-			
+
 			<p id="resultUpdate" class="errorBlock"></p>
 			<br />
 			<p id="detailsError" class="infosBlock"><?php echo lang('No more informations'); ?></p>
@@ -1330,7 +1330,7 @@ if ($lm->getIncludeTradFilename())
 				<div class="infosBlock">
 					<?php echo lang('WARNING: For more security, you must delete the \'install\' folder and readme files (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'); ?>
 			</div>
-				
+
 				<div id="foBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_foBlock.png" />
 						<h3><?php echo lang('Front Office'); ?></h3>

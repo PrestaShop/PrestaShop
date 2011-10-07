@@ -269,6 +269,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		$allowed = (ConfigurationTest::test_fopen() && $this->rootWritable);
 		$allowed &= !Configuration::get('PS_SHOP_ENABLE');
+		$allowed &= $this->upgrader->autoupgrade;
 		$allowed &= (Configuration::get('PS_AUTOUP_KEEP_TRAD') !== false);
 
 		return $allowed;

@@ -48,3 +48,8 @@ UPDATE `PREFIX_lang` SET `date_format_lite` = 'd.m.Y' WHERE `iso_code` = 'de';
 UPDATE `PREFIX_lang` SET `date_format_full` = 'd.m.Y H:i:s' WHERE `iso_code` = 'de';
 UPDATE `PREFIX_lang` SET `date_format_lite` = 'm/d/Y' WHERE `iso_code` = 'en';
 UPDATE `PREFIX_lang` SET `date_format_full` = 'm/d/Y H:i:s' WHERE `iso_code` = 'en';
+
+ALTER IGNORE TABLE `PREFIX_specific_price_priority` ADD UNIQUE (
+`id_product`
+);
+

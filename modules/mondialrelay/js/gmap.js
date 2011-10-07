@@ -1,7 +1,7 @@
 /*
  *  GMAP3 Plugin for JQuery 
- *  Version   : 3.4
- *  Date      : July 04, 2011
+ *  Version   : 4.0
+ *  Date      : 2011-08-23
  *  Licence   : GPL v3 : http://www.gnu.org/licenses/gpl.html  
  *  Author    : DEMONTE Jean-Baptiste
  *  Contact   : jbdemonte@gmail.com
@@ -42,72 +42,234 @@
   /*                                STACK                                    */
   /***************************************************************************/
   function Stack (){
-    var st={};
-    this.init = function (id){
-      if (!st[id]){
-        st[id] = [];
-      }
-    }
-    this.empty = function (id){
-      var i;
-      if (!st[id]) {
-        return true;
-      }    
-      for(i = 0; i < st[id].length; i++){
-        if (st[id][i]){
+    var st = [];
+    this.empty = function (){
+      for(var i = 0; i < st.length; i++){
+        if (st[i]){
           return false
         }
       }
       return true;
     }
-    this.add = function (id, v){
-      this.init(id);
-      st[id].push(v);
+    this.add = function(v){
+      st.push(v);
     }
-    this.addNext = function (id, v){
+    this.addNext = function ( v){
       var t=[], i, k = 0;
-      this.init(id);
-      for(i = 0; i < st[id].length; i++){
-        if (!st[id][i]){
+      for(i = 0; i < st.length; i++){
+        if (!st[i]){
           continue;
         }
         if (k == 1) {
           t.push(v);
         }
-        t.push(st[id][i]);
+        t.push(st[i]);
         k++;
       }
       if (k < 2) {
         t.push(v);
       }
-      st[id] = t;
+      st = t;
     }
-    this.get = function (id){
-      var i;
-      if (st[id]){
-        for(i = 0; i < st[id].length; i++){
-          if (st[id][i]) {
-            return st[id][i];
+    this.get = function (){
+      for(var i = 0; i < st.length; i++){
+        if (st[i]) {
+          return st[i];
           }
         }
+      return false;
       }
+    this.ack = function (){
+      for(var i = 0; i < st.length; i++){                     
+        if (st[i]) {
+          delete st[i];
+          break;
+        }
+      }
+      if (this.empty()){
+        st = [];
+      }
+    }
+  }
+  
+  /***************************************************************************/
+  /*                                STORE                                    */
+  /***************************************************************************/
+  function Store(){
+    var store = {};
+    
+    /**
+     * add a mixed to the store
+     **/
+    this.add = function(name, obj, todo){
+      name = name.toLowerCase();
+      if (!store[name]){
+        store[name] = [];
+      }
+      store[name].push({obj:obj, tag:ival(todo, 'tag')});
+      return name + '-' + (store[name].length-1);
+    }
+    
+    /**
+     * return a stored mixed
+     **/
+    this.get = function(name, last, tag){
+      var i, idx, add;
+      name = name.toLowerCase();
+      if (!store[name] || !store[name].length){
+        return null;
+      }
+      idx = last ? store[name].length : -1;
+      add = last ? -1 : 1;
+      for(i=0; i<store[name].length; i++){
+        idx += add;
+        if (store[name][idx]){
+          if (tag !== undefined) {
+            if ( (store[name][idx].tag === undefined) || ($.inArray(store[name][idx].tag, tag) < 0) ){
+              continue;
+            }
+          }
+          return store[name][idx].obj;
+        }
+      }
+      return null;
+    }
+    
+    /**
+     * return all stored mixed
+     **/
+    this.all = function(name, tag){
+      var i, result = [];
+      name = name.toLowerCase();
+      if (!store[name] || !store[name].length){
+        return result;
+      }
+      for(i=0; i<store[name].length; i++){
+        if (!store[name][i]){
+          continue;
+        }
+        if ( (tag !== undefined) && ( (store[name][i].tag === undefined) || ($.inArray(store[name][i].tag, tag) < 0) ) ){
+          continue;
+        }
+        result.push(store[name][i].obj);
+      }
+      return result;
+    }
+    
+    /**
+     * return all storation groups
+     **/
+    this.names = function(){
+      var name, result = [];
+      for(name in store){
+        result.push(name);
+      }
+      return result;
+    }
+    
+    /**
+     * return an object from its reference
+     **/
+    this.refToObj = function(ref){
+      ref = ref.split('-'); // name - idx
+      if ((ref.length == 2) && store[ref[0]] && store[ref[0]][ref[1]]){
+        return store[ref[0]][ref[1]].obj;
+      }
+      return null;
+    }
+    
+    /**
+     * remove one object from the store
+     **/
+    this.rm = function(name, tag, pop){
+      var idx, i, tmp;
+      name = name.toLowerCase();
+      if (!store[name]) {
       return false;
     }
-    this.ack = function (id){
-      var i;
-      if (st[id]) {
-        for(i = 0; i < st[id].length; i++){                     
-          if (st[id][i]) {
-            delete st[id][i];
+      if (tag !== undefined){
+        if (pop){
+          for(idx = store[name].length - 1; idx >= 0; idx--){
+            if ( (store[name][idx] !== undefined) && (store[name][idx].tag !== undefined) && ($.inArray(store[name][idx].tag, tag) >= 0) ){
             break;
           }
         }
-        if (this.empty(id)){
-          delete st[id];
+        } else {
+          for(idx = 0; idx < store[name].length; idx++){
+            if ( (store[name][idx] !== undefined) && (store[name][idx].tag !== undefined) && ($.inArray(store[name][idx].tag, tag) >= 0) ){
+              break;
+        }
+      }
+    }
+      } else {
+        idx = pop ? store[name].length - 1 : 0;
+  }
+      if ( !(idx in store[name]) ) {
+        return false;
+      }
+      // Google maps element
+      if (typeof(store[name][idx].obj.setMap) === 'function') {
+        store[name][idx].obj.setMap(null);
+      }
+      // jQuery
+      if (typeof(store[name][idx].obj.remove) === 'function') {
+        store[name][idx].obj.remove();
+      }
+      // internal (cluster)
+      if (typeof(store[name][idx].obj.free) === 'function') {
+        store[name][idx].obj.free();
+      }
+      delete store[name][idx].obj;
+      if (tag !== undefined){
+        tmp = [];
+        for(i=0; i<store[name].length; i++){
+          if (i !== idx){
+            tmp.push(store[name][i]);
+          }
+        }
+        store[name] = tmp;
+      } else {
+        if (pop) {
+          store[name].pop();
+        } else {
+          store[name].shift();
+        }
+      }
+      return true;
+    }
+    
+    /**
+     * remove objects from the store
+     **/
+    this.clear = function(list, last, first, tag){
+      var k, i, name;
+      if (!list || !list.length){
+        list = [];
+        for(k in store){
+          list.push(k);
+        }
+      } else {
+        list = array(list);
+      }
+      for(i=0; i<list.length; i++){
+        if (list[i]){
+          name = list[i].toLowerCase();
+          if (!store[name]){
+            continue;
+          }
+          if (last){
+            this.rm(name, tag, true);
+          } else if (first){
+            this.rm(name, tag, false);
+          } else {
+            // all
+            while (this.rm(name, tag, false));
+          }
         }
       }
     }
   }
+  
   /***************************************************************************/
   /*                              CLUSTERER                                  */
   /***************************************************************************/
@@ -154,8 +316,8 @@
       redraw  = fnc;
     }
     
-    this.store = function(data, obj){
-      stored.push({data:data, obj:obj});
+    this.store = function(data, obj, shadow){
+      stored.push({data:data, obj:obj, shadow:shadow});
     }
     
     this.free = function(){
@@ -172,6 +334,15 @@
       }
       if (typeof(stored[i].obj.remove) === 'function') {
         stored[i].obj.remove();
+      }
+      if (stored[i].shadow){ // only overlays has shadow
+        if (typeof(stored[i].shadow.remove) === 'function') {
+          stored[i].obj.remove();
+        }
+        if (typeof(stored[i].shadow.setMap) === 'function') {
+          stored[i].shadow.setMap(null);
+        }
+        delete stored[i].shadow;
       }
       delete stored[i].obj;
       delete stored[i].data;
@@ -348,887 +519,791 @@
   }
 
   /***************************************************************************/
-  /*                                GMAP3                                    */
+  /*                           GMAP3 GLOBALS                                 */
   /***************************************************************************/
   
-  var gmap3 = {
-    _ids:{},
-    _properties:['events','onces','options','apply', 'callback', 'data', 'tag'],
-    
-    _default:{
+  var _default = {
       verbose:false,
-      unit: 'mi',
+      queryLimit:{
+        attempt:5,
+        delay:250, // setTimeout(..., delay + random);
+        random:250
+      },
       init:{
         mapTypeId : google.maps.MapTypeId.ROADMAP,
         center:[46.578498,2.457275],
         zoom: 2
+      },
+      classes:{
+        Map               : google.maps.Map,
+        Marker            : google.maps.Marker,
+        InfoWindow        : google.maps.InfoWindow,
+        Circle            : google.maps.Circle,
+        Rectangle         : google.maps.Rectangle,
+        OverlayView       : google.maps.OverlayView,
+        StreetViewPanorama: google.maps.StreetViewPanorama,
+        KmlLayer          : google.maps.KmlLayer,
+        TrafficLayer      : google.maps.TrafficLayer,
+        BicyclingLayer    : google.maps.BicyclingLayer,
+        GroundOverlay     : google.maps.GroundOverlay,
+        StyledMapType     : google.maps.StyledMapType
       }
     },
-    _running:{
-    },
-    _stack: new Stack(),
-    /**
-     * @desc create default structure if not existing
-     **/
-    _init: function($this, id){
-      if (!this._ids[id]) {
-        this._ids[id] = {
-          $this:$this,
-          styles: {},
-          stored:{},
-          map:null
-        };
-      }
-    },
-    /**
-     * @desc store actions to do in a stack manager
-     **/
-    _plan: function($this, id, list){
-      var k;
-      this._init($this, id);
-      for(k = 0; k < list.length; k++) {
-        this._stack.add(id, list[k] );
-      }
-      this._run(id);
-    },
-    /**
-     * @desc return true if action has to be executed directly
-     **/
-    _isDirect: function(id, todo){
-      var action = this._ival(todo, 'action'),
-          directs = {
-            distance    :true,
-            earthradius :true,
-            get         :true
-          };
-      return action in directs;
-    },
-    /**
-     * @desc execute action directly
-     **/
-    _direct: function(id, todo){
-      var action = this._ival(todo, 'action');
-      if (action.substr(0,1) == ':'){
-        action = action.substr(1);
-      }
-      return this[action](id, $.extend({}, action in this._default ? this._default[action] : {}, todo.args ? todo.args : todo));
-    }, 
-    /**
-     * @desc store one action to do in a stack manager after the first
-     **/
-    _planNext: function(id, a){
-      var $this = this._jObject(id);
-      this._init($this, id);
-      this._stack.addNext(id, a);
-    },
-    /**
-     * @desc called when action in finished, to acknoledge the current in stack and start next one
-     **/
-    _end: function(id){
-      delete this._running[id];
-      this._stack.ack(id);
-      this._run(id);
-    },
-    /**
-     * @desc if not running, start next action in stack
-     **/
-    _run: function(id){
-      if (this._running[id]) return;
-      var a = this._stack.get(id);
-      if (!a) return;
-      this._running[id] = true;
-      this._proceed(id, a);
-    },
+    _properties = ['events','onces','options','apply', 'callback', 'data', 'tag'],
+    _noInit = ['init', 'geolatlng', 'getlatlng', 'getroute', 'getelevation', 'getdistance', 'addstyledmap', 'setdefault', 'destroy'],
+    _directs = ['get'],
+    geocoder = directionsService = elevationService = maxZoomService = distanceMatrixService = null;
     
-    _geocoder: null,
-    _getGeocoder: function(){
-      if (!this._geocoder) this._geocoder = new google.maps.Geocoder();
-      return this._geocoder;
-    },
-    
-    _directionsService: null,
-    _getDirectionsService: function(){
-      if (!this._directionsService) this._directionsService = new google.maps.DirectionsService();
-      return this._directionsService;
-    },
-    
-    _elevationService: null,
-    _getElevationService: function(){
-      if (!this._elevationService) this._elevationService = new google.maps.ElevationService();
-      return this._elevationService;
-    },
-    
-    _maxZoomService:null,
-    _getMaxZoomService: function(){
-      if (!this._maxZoomService) this._maxZoomService = new google.maps.MaxZoomService();
-      return this._maxZoomService;
-    },
-    
-    _getMap: function( id ){
-      return this._ids[id].map;
-    },
-    
-    _setMap: function (id, map){
-      this._ids[id].map = map;
-    },
-    
-    _jObject: function( id ){
-      return this._ids[id].$this;
-    },
-    
-    _addStyle: function(id, styleId, style){
-      this._ids[id].styles[ styleId ] = style;
-    },
-    
-    _getStyles: function(id){
-      return this._ids[id].styles;
-    },
-    
-    _getStyle: function(id, styleId){
-      return this._ids[id].styles[ styleId ];
-    },
-    
-    _styleExist: function(id, styleId){
-      return this._ids[id] && this._ids[id].styles[ styleId ];
-    },
-    
-    _getDirectionRenderer: function(id){
-      return this._getStored(id, 'directionrenderer');
-    },
-    
-    _exist: function(id){
-      return this._ids[id].map ? true : false;
-    },
-    
-    /**
-     * @desc return last non-null object
-     **/
-    _getStored: function(id, name, last, tag){
-      if (!this._ids[id].stored[name] || !this._ids[id].stored[name].length){
-        return null;
-      }
-      var t = this._ids[id].stored[name],
-          i,
-          idx = last ? t.length : -1,
-          add = last ? -1 : 1;
-      for(i=0; i<t.length; i++){
-        idx += add;
-        if (t[idx]){
-          if (tag !== undefined) {
-            if ( (t[idx].tag === undefined) || ($.inArray(t[idx].tag, tag) < 0) ){
-              continue;
-            }
-          }
-          return t[idx].obj;
-        }
-      }
-      return null;
-    },
-    
-    /**
-     * @desc return an object from its reference
-     **/
-    _getStoredId: function(id, ref){
-      ref = ref.split('-');
-      if ((ref.length == 2) && this._ids[id].stored[ref[0]] && this._ids[id].stored[ref[0]][ref[1]]){
-        return this._ids[id].stored[ref[0]][ref[1]].obj;
-      }
-      return null;
-    },
-    
-    /**
-     * @desc add an object in the stored structure
-     **/
-    _store: function(id, name, obj, todo){
-      name = name.toLowerCase();
-      if (!this._ids[id].stored[name]){
-        this._ids[id].stored[name] = [];
-      }
-      this._ids[id].stored[name].push({obj:obj, tag:this._ival(todo, 'tag')});
-      return name + '-' + (this._ids[id].stored[name].length-1);
-    },
-    
-    /**
-     * @desc remove an object from the stored structure
-     **/
-    _unstore: function(id, name, tag, pop){
-      var idx, t = this._ids[id].stored[name];
-      if (!t) return false;
-      if (tag !== undefined){
-        if (pop){
-          for(idx = t.length - 1; idx >= 0; idx--){
-            if ( (t[idx] !== undefined) && (t[idx].tag !== undefined) && ($.inArray(t[idx].tag, tag) >= 0) ){
-              break;
-            }
-          }
-        } else {
-          for(idx = 0; idx < t.length; idx++){
-            if ( (t[idx] !== undefined) && (t[idx].tag !== undefined) && ($.inArray(t[idx].tag, tag) >= 0) ){
-              break;
-            }
-          }
-        }
+  function setDefault(values){
+    for(var k in values){
+      if (typeof(_default[k]) === 'object'){
+        _default[k] = $.extend({}, _default[k], values[k]);
       } else {
-        idx = pop ? t.length - 1 : 0;
+        _default[k] = values[k];
       }
-      if ( !(idx in t) ) {
+    }
+  }
+  
+  function autoInit(iname){
+    if (!iname){
+      return true;
+    }
+    for(var i = 0; i < _noInit.length; i++){
+      if (_noInit[i] === iname) {
         return false;
       }
-      // Google Map element
-      if (typeof(t[idx].obj.setMap) === 'function') {
-        t[idx].obj.setMap(null);
-      }
-      // JQuery
-      if (typeof(t[idx].obj.remove) === 'function') {
-        t[idx].obj.remove();
-      }
-      // internal (cluster)
-      if (typeof(t[idx].obj.free) === 'function') {
-        t[idx].obj.free();
-      }
-      delete t[idx].obj;
-      if (tag !== undefined){
-        this._ids[id].stored[name] = this._rmFromArray(t,idx);
-      } else {
-        if (pop) {
-          t.pop();
-        } else {
-          t.shift();
-        }
-      }
-      return true;
-    },
+    }
+    return true;
+  }
+  
     
     /**
-     * @desc manage remove objects
+   * return true if action has to be executed directly
      **/
-    _clear: function(id, list, last, first, tag){
-      var n, i;
-      if (!list || !list.length){
-        list = [];
-        for(k in this._ids[id].stored){ 
-          list.push(k);
-        }
-      } else {
-        list = this._array(list);
-      }
-      for(i = 0; i < list.length; i++){
-        if (list[i]){
-          n = list[i].toLowerCase();
-          if (!this._ids[id].stored[n]) continue;
-          if (last){
-            this._unstore(id, n, tag, true);
-          } else if (first){
-            this._unstore(id, n, tag, false);
-          } else {
-            while (this._unstore(id, n, tag, false));
-          }
-        }
-      }
-    },
-    
-    /**
-     * @desc return true if "init" action must be run
-     **/
-    _autoInit: function(name){
-      var i,
-          names = [
-            'init', 
-            'geolatlng', 
-            'getlatlng', 
-            'getroute',
-            'getelevation', 
-            'addstyledmap',
-            'setdefault', 
-            'destroy'
-          ];
-      if ( !name ) {
+  function isDirect (todo){
+    var action = ival(todo, 'action');
+    for(var i = 0; i < _directs.length; i++){
+      if (_directs[i] === action) {
         return true;
       }
-      for(i = 0; i < names.length; i++){
-        if (names[i] === name) {
-          return false;
+    }
+    return false;
+  }
+        
+  //-----------------------------------------------------------------------//
+  // Objects tools
+  //-----------------------------------------------------------------------//
+  
+    /**
+   * return the real key by an insensitive seach
+     **/
+  function ikey (object, key){
+    if (key.toLowerCase){
+      key = key.toLowerCase();
+      for(var k in object){
+        if (k.toLowerCase && (k.toLowerCase() == key)) {
+          return k;
+      }
+      }
+    }
+    return false;
+  }
+  
+    /**
+   * return the value of real key by an insensitive seach
+     **/
+  function ival (object, key, def){
+    var k = ikey(object, key);
+    return k ? object[k] : def;
+  }
+  
+    /**
+   * return true if at least one key is set in object
+   * nb: keys in lowercase
+     **/
+  function hasKey (object, keys){
+    var n, k;
+    if (!object || !keys) {
+      return false;
+      }
+    keys = array(keys);
+    for(n in object){
+      if (n.toLowerCase){
+        n = n.toLowerCase();
+        for(k in keys){
+          if (n == keys[k]) {
+            return true;
+          }
         }
       }
-      return true;
-    },
+    }
+    return false;
+  }
+  
     /**
-     * @desc call functions associated
-     * @param
-     *  id      : string
-     *  action  : string : function wanted
-     *     
-     *  options : {}
-     *     
-     *    O1    : {}
-     *    O2    : {}
-     *    ...
-     *    On    : {}
-     *      => On : option : {}
-     *          action : string : function name
-     *          ... (depending of functions called)
-     *             
-     *  args    : [] : parameters for directs call to map
-     *  target? : object : replace map to call function 
+   * return a standard object
+   * nb: include in lowercase
      **/
-    _proceed: function(id, todo){
-      todo = todo || {};
-      var action = this._ival(todo, 'action') || 'init',
-          iaction = action.toLowerCase(),
-          ok = true,
-          target = this._ival(todo, 'target'), 
-          args = this._ival(todo, 'args'),
-          map, out;
-      if ( !this._exist(id) && this._autoInit(iaction) ){
-        this.init(id, $.extend({}, this._default.init, todo.args && todo.args.map ? todo.args.map : todo.map ? todo.map : {}), true);
+  function extractObject (todo, include, result/* = {} */){
+    if (hasKey(todo, _properties) || hasKey(todo, include)){ // #1 classical object definition
+      var i, k;
+      // get defined properties values from todo
+      for(i=0; i<_properties.length; i++){
+        k = ikey(todo, _properties[i]);
+        result[ _properties[i] ] = k ? todo[k] : {};
       }
-      if (!target && !args && (iaction in this) && (typeof(this[iaction]) === 'function')){
-        // framework functions
-        this[iaction](id, $.extend({}, iaction in this._default ? this._default[iaction] : {}, todo.args ? todo.args : todo)); // call fnc and extends defaults data
-      } else {
-        if (target && (typeof(target) === 'object')){
-          if (typeof(target[action]) === 'function'){
-            out = target[action].apply(target, todo.args ? todo.args : []);
-          } else ok = false;
-        // gm direct function :  no result so not rewrited, directly wrapped using array "args" as parameters (ie. setOptions, addMapType, ...)
+      if (include && include.length){
+        for(i=0; i<include.length; i++){
+          if(k = ikey(todo, include[i])){
+            result[ include[i] ] = todo[k];
+          }
+        }
+      }
+      return result;
+    } else { // #2 simplified object (all excepted "action" are options properties)
+      result.options= {};
+      for(k in todo){
+        if (k !== 'action'){
+          result.options[k] = todo[k];
+        }
+      }
+      return result;
+    }
+  }
+  
+    /**
+   * identify object from object list or parameters list : [ objectName:{data} ] or [ otherObject:{}, ] or [ object properties ]
+   * nb: include, exclude in lowercase
+     **/
+  function getObject(name, todo, include, exclude){
+    var iname = ikey(todo, name),
+        i, result = {}, keys=['map'];
+    // include callback from high level
+    result['callback'] = ival(todo, 'callback');
+    include = array(include);
+    exclude = array(exclude);
+    if (iname) {
+      return extractObject(todo[iname], include, result);
+    }
+    if (exclude && exclude.length){
+      for(i=0; i<exclude.length; i++) {
+        keys.push(exclude[i]);
+      }
+    }
+    if (!hasKey(todo, keys)){
+      result = extractObject(todo, include, result);
+    }
+    // initialize missing properties
+    for(i=0; i<_properties.length; i++){
+      if (_properties[i] in result){
+        continue;
+      }
+      result[ _properties[i] ] = {};
+    }
+    return result;
+  }
+    
+  //-----------------------------------------------------------------------//
+  // Service tools
+  //-----------------------------------------------------------------------//
+    
+  function getGeocoder(){
+    if (!geocoder) {
+      geocoder = new google.maps.Geocoder();
+    }
+    return geocoder;
+  }
+    
+  function getDirectionsService(){
+    if (!directionsService) {
+      directionsService = new google.maps.DirectionsService();
+    }
+    return directionsService;
+  }
+    
+  function getElevationService(){
+    if (!elevationService) {
+      elevationService = new google.maps.ElevationService();
+      }
+    return elevationService;
+            }
+  
+  function getMaxZoomService(){
+    if (!maxZoomService) {
+      maxZoomService = new google.maps.MaxZoomService();
+          }
+    return maxZoomService;
+        }
+    
+  function getDistanceMatrixService(){
+    if (!distanceMatrixService) {
+      distanceMatrixService = new google.maps.DistanceMatrixService();
+      }
+    return distanceMatrixService;
+  }
+    
+  //-----------------------------------------------------------------------//
+  // Unit tools
+  //-----------------------------------------------------------------------//
+  
+    /**
+   * return true if mixed is usable as number
+     **/
+  function numeric(mixed){
+    return (typeof(mixed) === 'number' || typeof(mixed) === 'string') && mixed !== '' && !isNaN(mixed);
+      }
+    
+    /**
+   * convert data to array
+     **/
+  function array(mixed){
+    var k, a = [];
+    if (mixed !== undefined){
+      if (typeof(mixed) === 'object'){
+        if (typeof(mixed.length) === 'number') {
+          a = mixed;
         } else {
-          map = this._getMap(id);
-          if (typeof(map[action]) === 'function'){
-            out = map[action].apply(map, todo.args ? todo.args : [] );
-          } else ok = false;
-        }
-        if (!ok && this._default.verbose) alert("unknown action : " + action);
-        this._callback(id, out, todo);
-        this._end(id);
-      }
-    },
-    
-    /**
-     * @desc call a function of framework or google map object of the instance
-     * @param
-     *  id      : string : instance
-     *  fncName : string : function name
-     *  ... (depending on function called)
-     **/
-    _call: function(/* id, fncName [, ...] */){
-      if ( (arguments.length < 2) || (!this._exist(arguments[0])) ){
-        return ;
-      }
-      var i, id = arguments[0],
-          fname = arguments[1],
-          map = this._getMap(id),
-          args = [];
-      if (typeof(map[ fname ]) !== 'function') {
-        return;
-      }
-      for(i=2; i<arguments.length; i++){
-        args.push(arguments[i]);
-      }
-      return map[ fname ].apply( map, args );
-    },
-    
-    /**
-     * @desc convert data to array
-     **/
-    _array: function(mixed){
-      var k, a = [];
-      if (mixed !== undefined){
-        if (typeof(mixed) === 'object'){
           for(k in mixed) {
             a.push(mixed[k]);
+            }
           }
-        } else{ 
-          a.push(mixed);
+        } else {
+        a.push(mixed);
+            }
+          }
+    return a;
+        }
+  
+  /**
+   * convert mixed [ lat, lng ] objet to google.maps.LatLng
+   **/
+  function toLatLng (mixed, emptyReturnMixed, noFlat){
+    var empty = emptyReturnMixed ? mixed : null;
+    if (!mixed || (typeof(mixed) === 'string')){
+      return empty;
+      }
+    // defined latLng
+    if (mixed.latLng) {
+      return toLatLng(mixed.latLng);
+      }
+    // google.maps.LatLng object
+    if (typeof(mixed.lat) === 'function') {
+      return mixed;
+      }
+    // {lat:X, lng:Y} object
+    else if ( numeric(mixed.lat) ) {
+      return new google.maps.LatLng(mixed.lat, mixed.lng);
+      }
+    // [X, Y] object 
+    else if ( !noFlat && mixed.length){ // and "no flat" object allowed
+      if ( !numeric(mixed[0]) || !numeric(mixed[1]) ) {
+        return empty;
+      }
+      return new google.maps.LatLng(mixed[0], mixed[1]);
+        }
+    return empty;
+      }
+    
+    /**
+   * convert mixed [ sw, ne ] object by google.maps.LatLngBounds
+     **/
+  function toLatLngBounds(mixed, flatAllowed, emptyReturnMixed){
+    var ne, sw, empty;
+    if (!mixed) {
+      return null;
+        }
+    empty = emptyReturnMixed ? mixed : null;
+    if (typeof(mixed.getCenter) === 'function') {
+      return mixed;
+      }
+    if (mixed.length){
+      if (mixed.length == 2){
+        ne = toLatLng(mixed[0]);
+        sw = toLatLng(mixed[1]);
+      } else if (mixed.length == 4){
+        ne = toLatLng([mixed[0], mixed[1]]);
+        sw = toLatLng([mixed[2], mixed[3]]);
+      }
+          } else {
+      if ( ('ne' in mixed) && ('sw' in mixed) ){
+        ne = toLatLng(mixed.ne);
+        sw = toLatLng(mixed.sw);
+      } else if ( ('n' in mixed) && ('e' in mixed) && ('s' in mixed) && ('w' in mixed) ){
+        ne = toLatLng([mixed.n, mixed.e]);
+        sw = toLatLng([mixed.s, mixed.w]);
+          }
+        }
+    if (ne && sw){
+      return new google.maps.LatLngBounds(sw, ne);
+      }
+    return empty;
+  }
+    
+  /***************************************************************************/
+  /*                                GMAP3                                    */
+  /***************************************************************************/
+  
+  function Gmap3($this){
+  
+    var stack = new Stack(),
+        store = new Store(),
+        map = null,
+        styles = {},
+        running = false;
+    
+    //-----------------------------------------------------------------------//
+    // Stack tools
+    //-----------------------------------------------------------------------//
+        
+    /**
+     * store actions to execute in a stack manager
+     **/
+    this._plan = function(list){
+      for(var k = 0; k < list.length; k++) {
+        stack.add(list[k]);
+      }
+      this._run();
+        }
+     
+    /**
+     * store one action to execute in a stack manager after the current
+     **/
+    this._planNext = function(todo){
+      stack.addNext(todo);
+      }
+    
+    /**
+     * execute action directly
+     **/
+    this._direct = function(todo){
+      var action = ival(todo, 'action');
+      return this[action]($.extend({}, action in _default ? _default[action] : {}, todo.args ? todo.args : todo));
+    }
+    
+    /**
+     * called when action in finished, to acknoledge the current in stack and start next one
+     **/
+    this._end = function(){
+      running = false;
+      stack.ack();
+      this._run();
+    },
+    /**
+     * if not running, start next action in stack
+     **/
+    this._run = function(){
+      if (running) {
+        return;
+      }
+      var todo = stack.get();
+      if (!todo) {
+        return;
+      }
+      running = true;
+      this._proceed(todo);
+    }
+    
+    //-----------------------------------------------------------------------//
+    // Call tools
+    //-----------------------------------------------------------------------//
+    
+    /**
+     * run the appropriated function
+     **/
+    this._proceed = function(todo){
+      todo = todo || {};
+      var action = ival(todo, 'action') || 'init',
+          iaction = action.toLowerCase(),
+          ok = true,
+          target = ival(todo, 'target'), 
+          args = ival(todo, 'args'),
+          out;
+      // check if init should be run automatically
+      if ( !map && autoInit(iaction) ){
+        this.init($.extend({}, _default.init, todo.args && todo.args.map ? todo.args.map : todo.map ? todo.map : {}), true);
+      }
+      
+      // gmap3 function
+      if (!target && !args && (iaction in this) && (typeof(this[iaction]) === 'function')){
+        this[iaction]($.extend({}, iaction in _default ? _default[iaction] : {}, todo.args ? todo.args : todo)); // call fnc and extends defaults data
+      } else {
+        // "target" object function
+        if (target && (typeof(target) === 'object')){
+          if (ok = (typeof(target[action]) === 'function')){
+            out = target[action].apply(target, todo.args ? todo.args : []);
+          }
+        // google.maps.Map direct function :  no result so not rewrited, directly wrapped using array "args" as parameters (ie. setOptions, addMapType, ...)
+        } else if (map){
+          if (ok = (typeof(map[action]) === 'function')){
+            out = map[action].apply(map, todo.args ? todo.args : [] );
         }
       }
-      return a;
+        if (!ok && _default.verbose) {
+          alert("unknown action : " + action);
+      }
+        this._callback(out, todo);
+        this._end();
+      }
+      }
+    
+  
+    /**
+     * returns the geographical coordinates from an address and call internal method
+     **/
+     this._resolveLatLng = function(todo, method, all, attempt){
+      var address = ival(todo, 'address'),
+          params,
+          that = this;
+      if ( address ){
+        if (!attempt){ // convert undefined to int
+          attempt = 0;
+          }
+        if (typeof(address) === 'object'){
+          params = address;
+        } else{ 
+          params = {'address': address};
+        }
+        getGeocoder().geocode(
+          params, 
+          function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK){
+            that[method](todo, all ? results : results[0].geometry.location);
+          } else if ( (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) && (attempt < _default.queryLimit.attempt) ){
+            setTimeout(function(){
+                that._resolveLatLng(todo, method, all, attempt+1);
+              },
+              _default.queryLimit.delay + Math.floor(Math.random() * _default.queryLimit.random)
+            );
+          } else {
+            if (_default.verbose){
+              alert('Geocode error : ' + status);
+      }
+            that[method](todo, false);
+          }
+        }
+      );
+      } else {
+        that[method](todo, toLatLng(todo, false, true));
+      }
     },
     
     /**
-     * @desc create a new Array without some entries
+     * call a function of framework or google map object of the instance
      **/
-     _rmFromArray: function(a, key){
-      var k, r = [];
-      for(k in a){
-        if (k != key){
-          r.push(a[k]);
+    this._call = function(/* fncName [, ...] */){
+      var i, fname = arguments[0], args = [];
+      if ( !arguments.length || !map || (typeof(map[fname]) !== 'function') ){
+        return;
         }
+      for(i=1; i<arguments.length; i++){
+        args.push(arguments[i]);
       }
-      return r;
-     },
+      return map[fname].apply(map, args);
+    }
     
     /**
-     * @desc init if not and manage map subcall (zoom, center)
+     * init if not and manage map subcall (zoom, center)
      **/
-    _subcall: function(id, todo, latLng){
+    this._subcall = function(todo, latLng){
       var opts = {};
       if (!todo.map) return;
       if (!latLng) {
-        latLng = this._ival(todo.map, 'latlng');
+        latLng = ival(todo.map, 'latlng');
       }
-      if (!this._exist(id)){
+      if (!map){
         if (latLng) {
           opts = {center:latLng};
         }
-        this.init(id, $.extend({}, todo.map, opts), true);
+        this.init($.extend({}, todo.map, opts), true);
       } else { 
-        if (todo.map.center && latLng) this._call(id, "setCenter", latLng);
-        if (todo.map.zoom !== undefined) this._call(id, "setZoom", todo.map.zoom);
-        if (todo.map.mapTypeId !== undefined) this._call(id, "setMapTypeId", todo.map.mapTypeId);
+        if (todo.map.center && latLng){
+          this._call("setCenter", latLng);
       }
-    },
+        if (todo.map.zoom !== undefined){
+          this._call("setZoom", todo.map.zoom);
+        }
+        if (todo.map.mapTypeId !== undefined){
+          this._call("setMapTypeId", todo.map.mapTypeId);
+        }
+      }
+    }
     
     /**
-     * @desc attach an event to a sender (once) 
+     * attach an event to a sender 
      **/
-    _attachEvent: function(id, sender, name, f, data, once){
-      var that=this, $o = this._jObject(id);
+    this._attachEvent = function(sender, name, fnc, data, once){
       google.maps.event['addListener'+(once?'Once':'')](sender, name, function(event) {
-        f.apply($o, [sender, event, data]);
+        fnc.apply($this, [sender, event, data]);
       });
-    },
+    }
     
     /**
-     * @desc attach events from a container to a sender 
+     * attach events from a container to a sender 
      * todo[
      *  events => { eventName => function, }
      *  onces  => { eventName => function, }  
      *  data   => mixed data         
      * ]
      **/
-    _attachEvents : function(id, sender, todo){
+    this._attachEvents = function(sender, todo){
       var name;
-      if (!todo) return
+      if (!todo) {
+        return
+      }
       if (todo.events){
         for(name in todo.events){
           if (typeof(todo.events[name]) === 'function'){
-            this._attachEvent(id, sender, name, todo.events[name], todo.data, false);
+            this._attachEvent(sender, name, todo.events[name], todo.data, false);
           }
         }
       }
       if (todo.onces){
         for(name in todo.onces){
           if (typeof(todo.onces[name]) === 'function'){
-            this._attachEvent(id, sender, name, todo.onces[name], todo.data, true);
+            this._attachEvent(sender, name, todo.onces[name], todo.data, true);
           }
         }
       }
-    },
+    }
     
     /**
-     * @desc execute callback functions 
+     * execute callback functions 
      **/
-    _callback: function(mixed, result, todo){
-      var k, $j;
+    this._callback = function(result, todo){
       if (typeof(todo.callback) === 'function') {
-        $j = typeof(mixed) === 'number' ? this._jObject(mixed) : mixed;
-        todo.callback.apply($j, [result]);
+        todo.callback.apply($this, [result]);
       } else if (typeof(todo.callback) === 'object') {
-        for(k in todo.callback){
-          if (!$j) $j = typeof(mixed) === 'number' ? this._jObject(mixed) : mixed;
-          if (typeof(todo.callback[k]) === 'function') todo.callback[k].apply($j, [result]);
+        for(var i=0; i<todo.callback.length; i++){
+          if (typeof(todo.callback[i]) === 'function') {
+            todo.callback[k].apply($this, [result]);
         }
       }
-    },
+          }
+          }
     
     /**
-     * @desc execute end functions 
+     * execute ending functions 
      **/
-    _manageEnd: function(id, sender, todo, internal){
-      var k, c;
-      if (sender && (typeof(sender) === 'object')){
-        this._attachEvents(id, sender, todo);
-        for(k in todo.apply){
-          c = todo.apply[k];
-          if(!c.action) continue;
-          if (typeof(sender[c.action]) !== 'function') { 
-            continue;
-          }
-          if (c.args) {
-            sender[c.action].apply(sender, c.args);
-          } else {
-            sender[c.action]();
+    this._manageEnd = function(result, todo, internal){
+      var i, apply;
+      if (result && (typeof(result) === 'object')){
+        // attach events
+        this._attachEvents(result, todo);
+        // execute "apply"
+        if (todo.apply && todo.apply.length){
+          for(i=0; i<todo.apply.length; i++){
+            apply = todo.apply[i];
+            // need an existing "action" function in the result object
+            if(!apply.action || (typeof(result[apply.action]) !== 'function') ) { 
+              continue;
+      }
+            if (apply.args) {
+              result[apply.action].apply(result, apply.args);
+        } else {
+              result[apply.action]();
+            }
           }
         }
-      }
+          }
       if (!internal) {
-        this._callback(id, sender, todo);
-        this._end(id);
-      }
-    },
-    
-    /**
-     * @desc return true if mixed is usable as number
-     **/
-    _isNumeric: function (mixed){
-      return (typeof(mixed) === 'number' || typeof(mixed) === 'string') && mixed !== '' && !isNaN(mixed);
-    },
-    
-    /**
-     *  @desc convert mixed [ lat, lng ] objet by google.maps.LatLng
-     **/
-    _latLng: function(mixed, emptyReturnMixed, noFlat){
-      var k, latLng={}, i=0,
-          empty = emptyReturnMixed ? mixed : null;
-      if (!mixed || (typeof(mixed) === 'string')){
-        return empty;
-      }
-      if (mixed.latLng) {
-        return this._latLng(mixed.latLng);
-      }
-      if (typeof(mixed.lat) === 'function') {
-        return mixed;
-      } else if ( this._isNumeric(mixed.lat) ) {
-        return new google.maps.LatLng(mixed.lat, mixed.lng);
-      } else if ( !noFlat ){
-        for(k in mixed){
-          if ( !this._isNumeric(mixed[k]) ) return empty;
-          latLng[i?'lng':'lat'] = mixed[k];
-          if (i) break;
-          i++;
+        this._callback(result, todo);
+        this._end();
         }
-        if (i) return new google.maps.LatLng(latLng.lat, latLng.lng);
       }
-      return empty;
-    },
     
-    _count: function(mixed){
-      var k, c = 0;
-      for(k in mixed) c++;
-      return c;
-    },
+    //-----------------------------------------------------------------------//
+    // gmap3 functions
+    //-----------------------------------------------------------------------//
     
     /**
-     * @desc convert mixed [ sw, ne ] object by google.maps.LatLngBounds
+     * destroy an existing instance
      **/
-    _latLngBounds: function(mixed, flatAllowed, emptyReturnMixed){
-      var empty, cnt, ne, sw, k, t, ok, nesw, i;
-      if (!mixed) {
-        return null;
-      }
-      empty = emptyReturnMixed ? mixed : null;
-      if (typeof(mixed.getCenter) === 'function') {
-        return mixed;
-      }
-      cnt = this._count(mixed);
-      if (cnt == 2){
-        if (mixed.ne && mixed.sw){
-          ne = this._latLng(mixed.ne);
-          sw = this._latLng(mixed.sw);
-        } else {
-          for(k in mixed){
-            if (!ne) {
-              ne = this._latLng(mixed[k]);
-            } else {
-              sw = this._latLng(mixed[k]);
-            }
+    this.destroy = function(todo){
+      var k;
+      store.clear();
+      $this.empty();
+      for(k in styles){
+        delete styles[ k ];
           }
+      styles = {};
+      if (map){
+        delete map;
         }
-        if (sw && ne) return new google.maps.LatLngBounds(sw, ne);
-        return empty;
-      } else if (cnt == 4){
-        t = ['n', 'e', 's', 'w'];
-        ok=true;
-        for(i in t) ok &= this._isNumeric(mixed[t[i]]);
-        if (ok) return new google.maps.LatLngBounds(this._latLng([mixed.s, mixed.w]), this._latLng([mixed.n, mixed.e]));
-        if (flatAllowed){
-          i=0;
-          nesw={};
-          for(k in mixed){
-            if (!this._isNumeric(mixed[k])) return empty;
-            nesw[t[i]] = mixed[k];
-            i++;
-          }
-          return new google.maps.LatLngBounds(this._latLng([nesw.s, nesw.w]), this._latLng([nesw.n, nesw.e]));
-        }
+      this._callback($this, null, todo);
+      this._end();
       }
-      return empty;
-    },
     
     /**
-     * @desc search an (insensitive) key
+     * Initialize google.maps.Map object
      **/
-    _ikey: function(object, key){
-      if (key.toLowerCase){
-        key = key.toLowerCase();
-        for(var k in object){
-          if (k.toLowerCase && (k.toLowerCase() == key)) return k;
+    this.init = function(todo, internal){
+      var o, k;
+      if (map) { // already initialized
+        return this._end();
         }
-      }
-      return false;
-    },
     
-    /**
-     * @desc search an (insensitive) key
-     **/
-    _ival: function(object, key, def){
-      var k = this._ikey(object, key);
-      if ( k ) return object[k];
-      return def;
-    },
-    
-    /**
-     * @desc return true if at least one key is set in object
-     * nb: keys in lowercase
-     **/
-    _hasKey: function(object, keys){
-      var n, k;
-      if (!object || !keys) return false;
-      for(n in object){
-        if (n.toLowerCase){
-          n = n.toLowerCase();
-          for(k in keys){
-            if (n == keys[k]) return true;
-          }
-        }
-      }
-      return false;
-    },
-    
-    /**
-     * @desc return a standard object
-     * nb: include in lowercase
-     **/
-    _extractObject: function(todo, include, r){
-      if (this._hasKey(todo, this._properties) || this._hasKey(todo, include)){
-        var k, p, ip, r={};
-        for(k in this._properties){
-          p=this._properties[k];
-          ip = this._ikey(todo, p);
-          r[p] = ip ? todo[ip] : {};
-        }
-        for(k in include){
-          p=include [k];
-          ip = this._ikey(todo, p);
-          if (ip) r[p] = todo[ip];
-        }
-        return r;
-      } else {
-        r.options= {};
-        for(k in todo){
-          if (k === 'action') continue;
-          r.options[k] = todo[k];
-        }
-        return r;
-      }
-    },
-    
-    /**
-     * @desc identify object from object list or parameters list : [ objectName:{data} ] or [ otherObject:{}, ] or [ object properties ]
-     * nb: include, exclude in lowercase
-     **/
-    _object: function(name, todo, include, exclude){
-      var k = this._ikey(todo, name),
-          p, r = {}, keys=['map'], 
-          cb='callback';
-      r[cb] = this._ival(todo, cb);
-      if (k) return this._extractObject(todo[k], include, r);
-      for(k in exclude) keys.push(exclude[k]);
-      if (!this._hasKey(todo, keys)) r = this._extractObject(todo, include, r);
-      for(k in this._properties){
-        p=this._properties[k];
-        if (!r[p]) r[p] = {};
-      }
-      return r;
-    },
-    
-    /**
-     * @desc Returns the geographical coordinates from an address and call internal method
-     **/
-    _resolveLatLng: function(id, todo, method, all){
-      var address = this._ival(todo, 'address'),
-          region, params,
-          that = this, cb;
-      if ( address ){
-          cb = function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK){
-            that[method](id, todo, all ? results : results[0].geometry.location);
-          } else {
-            if (that._default.verbose){
-              alert('Geocode error : ' + status);
-            }
-            that[method](id, todo, false);
-          }
-        };
-        if (typeof(address) === 'object'){
-          params = address;
-        } else {
-          params = { 'address': address };
-          region = this._ival(todo, 'region');
-          if (region){
-            params.region = region;
-          }
-        }
-        this._getGeocoder().geocode( params, cb );
-      } else {
-        this[method](id, todo, this._latLng(todo, false, true));
-      }
-    },
-    
-    /*============================*/
-    /*          PUBLIC            */
-    /*============================*/
-    
-    /**
-     * @desc Destroy an existing instance
-     **/
-    destroy: function(id, todo){
-      var k, $j;
-      if (this._ids[id]){
-        this._clear(id);
-        this._ids[id].$this.empty();
-        if (this._ids[id].bl) delete this._ids[id].bl;
-        for(k in this._ids[id].styles){
-          delete this._ids[id].styles[ k ];
-        }
-        delete this._ids[id].map;
-        $j = this._jObject(id);
-        delete this._ids[id];
-        this._callback($j, null, todo);
-      }
-      this._end(id);
-    },
-    
-    /**
-     * @desc Initialize google map object an attach it to the dom element (using id)
-     **/
-    init: function(id, todo, internal){
-      var o, opts, map, styles, k, $this;
-      if ( (id == '') || (this._exist(id)) ) return this._end(id);
-      o = this._object('map', todo);
+      o = getObject('map', todo);
       if ( (typeof(o.options.center) === 'boolean') && o.options.center) {
         return false; // wait for an address resolution
       }
-      opts = $.extend({}, this._default.init, o.options);
+      opts = $.extend({}, _default.init, o.options);
       if (!opts.center) {
-        opts.center = [this._default.init.center.lat, this._default.init.center.lng];
+        opts.center = [_default.init.center.lat, _default.init.center.lng];
       }
-      opts.center = this._latLng(opts.center);
-      $this = this._jObject(id);
-      this._setMap(id, new google.maps.Map($this.get(0), opts));
-      map = this._getMap(id);
+      opts.center = toLatLng(opts.center);
+      map = new _default.classes.Map($this.get(0), opts);
       
       // add previous added styles
-      styles = this._getStyles( id );
-      for(k in styles) map.mapTypes.set(k, styles[k]);
+      for(k in styles) {
+        map.mapTypes.set(k, styles[k]);
+      }
       
-      this._manageEnd(id, map, o, internal);
+      this._manageEnd(map, o, internal);
       return true;
-    },
+    }
     
     /**
-     * @desc Returns the geographical coordinates from an address
+     * returns the geographical coordinates from an address
      **/
-    getlatlng: function(id, todo){
-      this._resolveLatLng(id, todo, '_getLatLng', true);
-    },
-    _getLatLng: function(id, todo, results){
-      this._manageEnd(id, results, todo);
+    this.getlatlng = function(todo){
+      this._resolveLatLng(todo, '_getLatLng', true);
     },
     
+    this._getLatLng = function(todo, results){
+      this._manageEnd(results, todo);
+    },
+    
+    
     /**
-     * @desc Return address from latlng        
+     * returns address from latlng        
      **/
-    getaddress: function(id, todo){
-      var callback,
-          $this = this._jObject(id),
-          latLng = this._latLng(todo, false, true),
-          address = this._ival(todo, 'address'),
+    this.getaddress = function(todo){
+      var latLng = toLatLng(todo, false, true),
+          address = ival(todo, 'address'),
           params = latLng ?  {latLng:latLng} : ( address ? (typeof(address) === 'string' ? {address:address} : address) : null),
-          cb = this._ival(todo, 'callback');
-      if (params && cb && typeof(cb) === 'function') {
-        callback = function(results, status) {
-          var out = status == google.maps.GeocoderStatus.OK ? results : false;
-          cb.apply($this, [out, status]);
-        };
-        this._getGeocoder().geocode(params, callback);
+          callback = ival(todo, 'callback');
+      if (params && typeof(callback) === 'function') {
+        getGeocoder().geocode(
+          params, 
+          function(results, status) {
+            var out = status === google.maps.GeocoderStatus.OK ? results : false;
+            callback.apply($this, [out, status]);
       }
-      this._end(id);
-    },
+        );
+      }
+      this._end();
+    }
     
     /**
-     * @desc Return a route
+     * return a route
      **/
-    getroute: function(id, todo){
-      var callback,
-          $this = this._jObject(id),
-          cb = this._ival(todo, 'callback');
-      if ( (typeof(cb) === 'function') && todo.options ) {
-        todo.options.origin = this._latLng(todo.options.origin, true);
-        todo.options.destination = this._latLng(todo.options.destination, true);
-        callback = function(results, status) {
+    this.getroute = function(todo){
+      var callback = ival(todo, 'callback');
+      if ( (typeof(callback) === 'function') && todo.options ) {
+        todo.options.origin = toLatLng(todo.options.origin, true);
+        todo.options.destination = toLatLng(todo.options.destination, true);
+        getDirectionsService().route(
+          todo.options,
+          function(results, status) {
           var out = status == google.maps.DirectionsStatus.OK ? results : false;
-          cb.apply($this, [out, status]);
-        };
-        this._getDirectionsService().route( todo.options, callback );
+            callback.apply($this, [out, status]);
       }
-      this._end(id);
-    },
+        );
+      }
+      this._end();
+    }
+    
     /**
-     *  @desc return elevation
+     * return the elevation of a location
      **/
-    getelevation: function(id, todo){
-      var callback, latLng, ls, k, path, samples,
+    this.getelevation = function(todo){
+      var fnc, latLng, path, samples, i,
           locations = [],
-          $this = this._jObject(id),
-          cb = this._ival(todo, 'callback'),
-          latLng = this._ival(todo, 'latlng');
-      if (cb && typeof(cb) === 'function') {
-        callback = function(results, status) {
-          var out = status == google.maps.ElevationStatus.OK ? results : false;
-          cb.apply($this, [out, status]);
+          callback = ival(todo, 'callback'),
+          latLng = ival(todo, 'latlng');
+          
+      if (typeof(callback) === 'function'){
+        fnc = function(results, status){
+          var out = status === google.maps.ElevationStatus.OK ? results : false;
+          callback.apply($this, [out, status]);
         };
         if (latLng){
-          locations.push( this._latLng(latLng) );
+          locations.push(toLatLng(latLng));
         } else {
-          ls = this._ival(todo, 'locations');
-          if (ls){
-            for(k in ls){
-              locations.push( this._latLng(ls[k]) );
+          locations = ival(todo, 'locations') || [];
+          if (locations){
+            locations = array(locations);
+            for(i=0; i<locations.length; i++){
+              locations[i] = toLatLng(locations[i]);
             }
           }
         }
         if (locations.length){
-          this._getElevationService().getElevationForLocations({locations:locations}, callback);
+          getElevationService().getElevationForLocations({locations:locations}, fnc);
         } else {
-          path = this._ival(todo, 'path');
-          samples = this._ival(todo, 'samples');
+          path = ival(todo, 'path');
+          samples = ival(todo, 'samples');
           if (path && samples){
-            for(k in path){
-              locations.push(this._latLng(path[k]));
+            for(i=0; i<path.length; i++){
+              locations.push(toLatLng(path[i]));
             }
             if (locations.length){
-              this._getElevationService().getElevationAlongPath( {path:locations, samples:samples}, callback );
+              getElevationService().getElevationAlongPath({path:locations, samples:samples}, fnc);
             }
           }
         }
       }
-      this._end(id);
-    },
+      this._end();
+    }
     
     /**
-     * @desc Add a marker to a map after address resolution
+     * return the distance between an origin and a destination
+     *      
+     **/
+    this.getdistance = function(todo){
+      var i, callback = ival(todo, 'callback');
+      if ( (typeof(callback) === 'function') && todo.options && todo.options.origins && todo.options.destinations ) {
+        // origins and destinations are array containing one or more address strings and/or google.maps.LatLng objects
+        todo.options.origins = array(todo.options.origins);
+        for(i=0; i<todo.options.origins.length; i++){
+          todo.options.origins[i] = toLatLng(todo.options.origins[i], true);
+        }
+        todo.options.destinations = array(todo.options.destinations);
+        for(i=0; i<todo.options.destinations.length; i++){
+          todo.options.destinations[i] = toLatLng(todo.options.destinations[i], true);
+        }
+        getDistanceMatrixService().getDistanceMatrix(
+          todo.options,
+          function(results, status) {
+            var out = status == google.maps.DistanceMatrixStatus.OK ? results : false;
+            callback.apply($this, [out, status]);
+          }
+        );
+      }
+    }
+    
+    /**
+     * Add a marker to a map after address resolution
      * if [infowindow] add an infowindow attached to the marker   
      **/
-    addmarker: function(id, todo){
-      this._resolveLatLng(id, todo, '_addMarker');
-    },
+    this.addmarker = function(todo){
+      this._resolveLatLng(todo, '_addMarker');
+    }
     
-    _addMarker: function(id, todo, latLng, internal){
+    this._addMarker = function(todo, latLng, internal){
       var result, oi, to,
-          n = 'marker', niw = 'infowindow',
-          o = this._object(n, todo, ['to']);
+          o = getObject('marker', todo, 'to');
       if (!internal){
         if (!latLng) {
-          this._manageEnd(id, false, o);
+          this._manageEnd(false, o);
           return;
         }
-        this._subcall(id, todo, latLng);
+        this._subcall(todo, latLng);
       } else if (!latLng){
         return;
       }
       if (o.to){
-        to = this._getStoredId(id, o.to);
+        to = store.refToObj(o.to);
         result = to && (typeof(to.add) === 'function');
         if (result){
           to.add(latLng, todo);
@@ -1237,143 +1312,106 @@
           }
         }
         if (!internal){
-          this._manageEnd(id, result, o);
+          this._manageEnd(result, o);
         }
       } else {
         o.options.position = latLng;
-        o.options.map = this._getMap(id);
-        result = new google.maps.Marker(o.options);
-        if ( todo[niw] ){
-          oi = this._object(niw, todo[niw], ['open']);
-          if ( (oi['open'] === undefined) || oi['open'] ) {
-            oi.apply = this._array(oi.apply);
-            oi.apply.unshift({action:'open', args:[this._getMap(id), result]});
+        o.options.map = map;
+        result = new _default.classes.Marker(o.options);
+        if (hasKey(todo, 'infowindow')){
+          oi = getObject('infowindow', todo['infowindow'], 'open');
+          // if "open" is not defined, add it in first position
+          if ( (oi.open === undefined) || oi.open ){
+            oi.apply = array(oi.apply);
+            oi.apply.unshift({action:'open', args:[map, result]});
           }
-          oi.action = 'add'+niw;
-          this._planNext(id, oi); 
+          oi.action = 'addinfowindow';
+          this._planNext(oi); 
         }
         if (!internal){
-          this._store(id, n, result, o);
-          this._manageEnd(id, result, o);
+          store.add('marker', result, o);
+          this._manageEnd(result, o);
         }
       }
       return result;
-    },
+    }
     
     /**
-     * @desc Add markers (without address resolution)
+     * add markers (without address resolution)
      **/
-    addmarkers: function(id, todo){
-      if (this._ival(todo, 'clusters')){
-        this._addclusteredmarkers(id, todo);
+    this.addmarkers = function(todo){
+      if (ival(todo, 'clusters')){
+        this._addclusteredmarkers(todo);
       } else {
-        this._addmarkers(id, todo);
+        this._addmarkers(todo);
       }
-    },
-    _addmarkers: function(id, todo){
-      var result, o, k, latLng, marker, options = {}, tmp, to,
-          n = 'marker',
-          markers = this._ival(todo, 'markers');
-      this._subcall(id, todo);
-      if ( !markers || (typeof(markers) !== 'object') ) {
-        return this._end(id);
       }
-      o = this._object(n, todo, ['to', 'markers']);
+      
+    this._addmarkers = function(todo){
+      var result, o, i, latLng, marker, options = {}, tmp, to, 
+          markers = ival(todo, 'markers');
+      this._subcall(todo);
+      if (typeof(markers) !== 'object') {
+        return this._end();
+      }
+      o = getObject('marker', todo, ['to', 'markers']);
       
       if (o.to){
-        to = this._getStoredId(id, o.to);
+        to = store.refToObj(o.to);
         result = to && (typeof(to.add) === 'function');
         if (result){
-          for(k in markers){
-            latLng = this._latLng(markers[k]);
-            if (!latLng) continue;
-            to.add(latLng, markers[k]);
+          for(i=0; i<markers.length; i++){
+            if (latLng = toLatLng(markers[i])) {
+              to.add(latLng, markers[i]);
+          }
           }
           if (typeof(to.redraw) === 'function'){
             to.redraw();
           }
         }
-        this._manageEnd(id, result, o);
+        this._manageEnd(result, o);
       } else {
         $.extend(true, options, o.options);
-        options.map = this._getMap(id);
+        options.map = map;
         result = [];
-        for(k in markers){
-          latLng = this._latLng(markers[k]);
-          if (!latLng) continue;
-          if (markers[k].options){
+        for(i=0; i<markers.length; i++){
+          if (latLng = toLatLng(markers[i])){
+            if (markers[i].options){
             tmp = {};
-            $.extend(true, tmp, options, markers[k].options);
+              $.extend(true, tmp, options, markers[i].options);
             o.options = tmp;
           } else {
             o.options = options;
           }
           o.options.position = latLng;
-          marker = new google.maps.Marker(o.options);
+            marker = new _default.classes.Marker(o.options);
           result.push(marker);
-          o.data = markers[k].data;
-          o.tag = markers[k].tag;
-          this._store(id, n, marker, o);
-          this._manageEnd(id, marker, o, true);
+            o.data = markers[i].data;
+            o.tag = markers[i].tag;
+            store.add('marker', marker, o);
+            this._manageEnd(marker, o, true);
+        }
         }
         o.options = options; // restore previous for futur use
-        this._callback(id, result, todo);
-        this._end(id);
+        this._callback(result, todo);
+        this._end();
       }
-    },
+    }
     
-    resize: function(id)
-    {
-    	google.maps.event.trigger(this._getMap(id), 'resize');
-    },
-    
-    getscale: function(id, todo, internal){
-      var map = this._getMap(id),
-          zoom = map.getZoom(),
-          scales = [
-            77.864462034120315,
-            45.42785688110077,
-            16.220730575856892,
-            6.879509682822463,
-            3.5034960477802986,
-            1.8034610362879133,
-            0.9127181102723314,
-            0.4598746767146186,
-            0.23053567913908648,
-            0.11545247438886701,
-            0.05775371939320953,
-            0.02881647975962874,
-            0.014414070716531697,
-            0.007207618499622224,
-            0.003603886381819732,
-            0.0018015948787526637,
-            0.0009008246767800296,
-            0.0004504160086085826,
-            0.00022520761796505934,
-            0.00011260535432642145,
-            0.00005630113180858676
-          ];
-      scale = scales[zoom];
-      if (!internal){
-        this._callback(id, scale, todo);
-        this._end(id);
-      }
-      return scale;
-    },
-    _addclusteredmarkers:function(id, todo){
+    this._addclusteredmarkers = function(todo){
       var clusterer, i, latLng, storeId,
           that = this,
-          radius = this._ival(todo, 'radius'),
-          markers = this._ival(todo, 'markers'),
-          styles = this._ival(todo, 'clusters');
+          radius = ival(todo, 'radius'),
+          markers = ival(todo, 'markers'),
+          styles = ival(todo, 'clusters');
           
-      if (! this._getMap(id).getBounds() ){ // map not initialised => bounds not available
+      if (!map.getBounds()){ // map not initialised => bounds not available
         // wait for map
         google.maps.event.addListenerOnce(
-          this._getMap(id), 
+          map, 
           'bounds_changed', 
           function() {
-            that._addclusteredmarkers(id, todo);
+            that._addclusteredmarkers(todo);
           }
         );
         return;
@@ -1382,25 +1420,25 @@
       if (typeof(radius) === 'number'){
         clusterer = new Clusterer();
         for (i = 0 ; i < markers.length; i++){
-          latLng = this._latLng(markers[i]);
+          latLng = toLatLng(markers[i]);
           clusterer.add(latLng, markers[i]);
         }
-        storeId = this._initClusters(id, todo, clusterer, radius, styles);
+        storeId = this._initClusters(todo, clusterer, radius, styles);
       }
       
-      this._callback(id, storeId, todo);
-      this._end(id);
-    },
+      this._callback(storeId, todo);
+      this._end();
+    }
     
-    _initClusters: function(id, todo, clusterer, radius, styles){
-      var that=this, 
-          map = this._getMap(id);
           
+    this._initClusters = function(todo, clusterer, radius, styles){
+      var that = this;
+      
       clusterer.setRedraw(function(force){
         var same, clusters = clusterer.clusters(map, radius, force);
         if (clusters){
           same = clusterer.freeDiff(clusters);
-          that._displayClusters(id, todo, clusterer, clusters, same, styles);
+          that._displayClusters(todo, clusterer, clusters, same, styles);
         }
       });
       
@@ -1422,14 +1460,14 @@
       );
       
       clusterer.redraw();
-      return this._store(id, 'cluster', clusterer, todo);
-    },
+      return store.add('cluster', clusterer, todo);
+    }
     
-    _displayClusters: function(id, todo, clusterer, clusters, same, styles){
-      var k, i, ii, m, done, obj, cluster, options = {}, tmp,
+    this._displayClusters = function(todo, clusterer, clusters, same, styles){
+      var k, i, ii, m, done, obj, shadow, cluster, options, tmp, w, h,
           atodo,
-          ctodo = this._ival(todo, 'cluster') || {},
-          mtodo = this._ival(todo, 'marker') || todo;
+          ctodo = hasKey(todo, 'cluster') ? getObject('', ival(todo, 'cluster')) : {},
+          mtodo = hasKey(todo, 'marker') ? getObject('', ival(todo, 'marker')) : {};
       for(i = 0; i < clusters.length; i++){
         if (i in same){
           continue;
@@ -1437,24 +1475,43 @@
         cluster = clusters[i];
         done = false;
         if (cluster.idx.length > 1){
+          // look for the cluster design to use
           m = 0;
           for(k in styles){
             if ( (k > m) && (k <= cluster.idx.length) ){
               m = k;
             }
           }
-          if (styles[m]){
-            atodo = {
+          if (styles[m]){ // cluster defined for the current markers count
+            w = ival(styles[m], 'width');
+            h = ival(styles[m], 'height');
+            
+            // create a custom _addOverlay command
+            atodo = {};
+            $.extend(
+              true, 
+              atodo, 
+              ctodo, 
+              { options:{
+                  pane: 'overlayLayer',
               content:styles[m].content.replace('CLUSTER_COUNT', cluster.idx.length),
               offset:{
-                x: -this._ival(styles[m], 'width')/2,
-                y: -this._ival(styles[m], 'height')/2
+                    x: -w/2,
+                    y: -h/2
               }
-            };
-            obj = this._addOverlay(id, atodo, this._latLng(cluster), true);
+                }
+              }
+            );
+            obj = this._addOverlay(atodo, toLatLng(cluster), true);
+            atodo.options.pane = 'floatShadow';
+            atodo.options.content = $('<div></div>');
+            atodo.options.content.width(w);
+            atodo.options.content.height(h);
+            shadow = this._addOverlay(atodo, toLatLng(cluster), true);
             
+            // store data to the clusterer
             ctodo.data = {
-              latLng: this._latLng(cluster),
+              latLng: toLatLng(cluster),
               markers:[]
             };
             for(ii=0; ii<cluster.idx.length; ii++){
@@ -1462,12 +1519,14 @@
                 clusterer.get(cluster.idx[ii]).marker
               );
             }
-            this._attachEvents(id, obj, ctodo);
-            clusterer.store(cluster, obj);
+            this._attachEvents(shadow, ctodo);
+            clusterer.store(cluster, obj, shadow);
             done = true;
           }
         }
-        if (!done){
+        if (!done){ // cluster not defined (< min count) or = 1 so display all markers of the current cluster
+          // save the defaults options for the markers
+          options = {};
           $.extend(true, options, mtodo.options);
           for(ii = 0; ii <cluster.idx.length; ii++){
             m = clusterer.get(cluster.idx[ii]);
@@ -1481,116 +1540,125 @@
             } else {
               mtodo.options = options;
             }
-            obj = this._addMarker(id, mtodo, mtodo.latLng, true);
-            this._attachEvents(id, obj, mtodo);
+            obj = this._addMarker(mtodo, mtodo.latLng, true);
+            this._attachEvents(obj, mtodo);
             clusterer.store(cluster, obj);
           }
           mtodo.options = options; // restore previous for futur use
         }
       }
-    },
+    }
     
     /**
-     * @desc Add an infowindow after address resolution
+     * add an infowindow after address resolution
      **/
-    addinfowindow: function(id, todo){ 
-      this._resolveLatLng(id, todo, '_addInfoWindow');
-    },
-    _addInfoWindow: function(id, todo, latLng){
-      var o, infowindow, args = [],
-          n = 'infowindow';
-      this._subcall(id, todo, latLng);
-      o = this._object(n, todo, ['open', 'anchor']);
+    this.addinfowindow = function(todo){ 
+      this._resolveLatLng(todo, '_addInfoWindow');
+    }
+    
+    this._addInfoWindow = function(todo, latLng){
+      var o, infowindow, args = [];
+      this._subcall(todo, latLng);
+      o = getObject('infowindow', todo, ['open', 'anchor']);
       if (latLng) {
         o.options.position = latLng;
       }
-      infowindow = new google.maps.InfoWindow(o.options);
+      infowindow = new _default.classes.InfoWindow(o.options);
       if ( (o.open === undefined) || o.open ){
-        o.apply = this._array(o.apply);
-        args.push(this._getMap(id));
+        o.apply = array(o.apply);
+        args.push(map);
         if (o.anchor){
           args.push(o.anchor);
         }
         o.apply.unshift({action:'open', args:args});
       }
-      this._store(id, n, infowindow, o);
-      this._manageEnd(id, infowindow, o);
-    },
+      store.add('infowindow', infowindow, o);
+      this._manageEnd(infowindow, o);
+    }
+    
     
     /**
-     * @desc add a polygone / polylin on a map
+     * add a polygone / polylin on a map
      **/
-    addpolyline: function(id, todo){
-      this._addPoly(id, todo, 'Polyline', 'path');
-    },
-    addpolygon: function(id, todo){
-      this._addPoly(id, todo, 'Polygon', 'paths');
-    },
-    _addPoly: function(id, todo, poly, path){
+    this.addpolyline = function(todo){
+      this._addPoly(todo, 'Polyline', 'path');
+    }
+    
+    this.addpolygon = function(todo){
+      this._addPoly(todo, 'Polygon', 'paths');
+    }
+    
+    this._addPoly = function(todo, poly, path){
       var i, 
           obj, latLng, 
-          o = this._object(poly.toLowerCase(), todo, [path]);
+          o = getObject(poly.toLowerCase(), todo, path);
       if (o[path]){
         o.options[path] = [];
         for(i = 0; i < o[path].length; i++){
-          latLng = this._latLng(o[path][i]);
-          if (latLng){
-            o.options[path].push(this._latLng(o[path][i]));
+          if (latLng = toLatLng(o[path][i])){
+            o.options[path].push(latLng);
           }
         }
       }
       obj = new google.maps[poly](o.options);
-      obj.setMap(this._getMap(id));
-      this._store(id, poly.toLowerCase(), obj, o);
-      this._manageEnd(id, obj, o);
-    },
+      obj.setMap(map);
+      store.add(poly.toLowerCase(), obj, o);
+      this._manageEnd(obj, o);
+    }
     
     /**
-     * @desc add a circle   
+     * add a circle   
      **/
-    addcircle: function(id, todo){
-      this._resolveLatLng(id, todo, '_addCircle');
-    },
-    _addCircle: function(id, todo, latLng ){
-      var c, n = 'circle',
-          o = this._object(n, todo);
-      if (!latLng) latLng = this._latLng(o.options.center);
-      if (!latLng) return this._manageEnd(id, false, o);
-      this._subcall(id, todo, latLng);
+    this.addcircle = function(todo){
+      this._resolveLatLng(todo, '_addCircle');
+    }
+    
+    this._addCircle = function(todo, latLng){
+      var c, o = getObject('circle', todo);
+      if (!latLng) {
+        latLng = toLatLng(o.options.center);
+      }
+      if (!latLng) {
+        return this._manageEnd(false, o);
+      }
+      this._subcall(todo, latLng);
       o.options.center = latLng;
-      o.options.map = this._getMap(id);
-      c = new google.maps.Circle(o.options);
-      this._store(id, n, c, o);
-      this._manageEnd(id, c, o);
-    },
+      o.options.map = map;
+      c = new _default.classes.Circle(o.options);
+      store.add('circle', c, o);
+      this._manageEnd(c, o);
+    }
     
     /**
-     * @desc add a rectangle   
+     * add a rectangle   
      **/
-    addrectangle: function(id, todo){
-      this._resolveLatLng(id, todo, '_addRectangle');
-    },
-    _addRectangle: function(id, todo, latLng ){
-      var r, n = 'rectangle',
-          o = this._object(n, todo);
-      o.options.bounds = this._latLngBounds(o.options.bounds, true);
-      if (!o.options.bounds) return this._manageEnd(id, false, o);
-      this._subcall(id, todo, o.options.bounds.getCenter());
-      o.options.map = this._getMap(id);
-      r = new google.maps.Rectangle(o.options);
-      this._store(id, n, r, o);
-      this._manageEnd(id, r, o);
-    },
+    this.addrectangle = function(todo){
+      this._resolveLatLng(todo, '_addRectangle');
+    }
+    
+    this._addRectangle = function(todo, latLng ){
+      var r, o = getObject('rectangle', todo);
+      o.options.bounds = toLatLngBounds(o.options.bounds, true);
+      if (!o.options.bounds) {
+        return this._manageEnd(false, o);
+      }
+      this._subcall(todo, o.options.bounds.getCenter());
+      o.options.map = map;
+      r = new _default.classes.Rectangle(o.options);
+      store.add('rectangle', r, o);
+      this._manageEnd(r, o);
+    }    
     
     /**
-     * @desc add an overlay to a map after address resolution
+     * add an overlay to a map after address resolution
      **/
-    addoverlay: function(id, todo){
-      this._resolveLatLng(id, todo, '_addOverlay');
-    },
-    _addOverlay: function(id, todo, latLng, internal){
-      var ov, map,
-          o = this._object('overlay', todo),
+    this.addoverlay = function(todo){
+      this._resolveLatLng(todo, '_addOverlay');
+    }
+    
+    this._addOverlay = function(todo, latLng, internal){
+      var ov,  
+          o = getObject('overlay', todo),
           opts =  $.extend({
                     pane: 'floatPane',
                     content: '',
@@ -1602,21 +1670,18 @@
           $div = $('<div></div>'),
           listeners = [];
       
-      this._subcall(id, todo, latLng);
-      map = this._getMap(id);
-       
       $div
         .css('border', 'none')
         .css('borderWidth', '0px')
         .css('position', 'absolute');
-      $div.append($(opts.content));
+        $div.append(opts.content);
       
       function f() {
-       google.maps.OverlayView.call(this);
+       _default.classes.OverlayView.call(this);
         this.setMap(map);
       }            
       
-      f.prototype = new google.maps.OverlayView();
+      f.prototype = new _default.classes.OverlayView();
       
       f.prototype.onAdd = function() {
         var panes = this.getPanes();
@@ -1679,36 +1744,35 @@
       }
       ov = new f();
       if (!internal){
-        this._store(id, 'overlay', ov, o);
-        this._manageEnd(id, ov, o);
+        store.add('overlay', ov, o);
+        this._manageEnd(ov, o);
       }
       return ov;
-    },
+    }
     
     /**
-     * @desc add fixed panel to a map
+     * add a fix panel to a map
      **/
-    addfixpanel: function(id, todo){
-      var n = 'fixpanel',
-          o = this._object(n, todo),
-          x=0, y=0, $c, $div;
+    this.addfixpanel = function(todo){
+      var o = getObject('fixpanel', todo),
+          x=y=0, $c, $div;
       if (o.options.content){
         $c = $(o.options.content);
         
         if (o.options.left !== undefined){
           x = o.options.left;
         } else if (o.options.right !== undefined){
-          x = this._jObject(id).width() - $c.width() - o.options.right;
+          x = $this.width() - $c.width() - o.options.right;
         } else if (o.options.center){
-          x = (this._jObject(id).width() - $c.width()) / 2;
+          x = ($this.width() - $c.width()) / 2;
         }
         
         if (o.options.top !== undefined){
           y = o.options.top;
         } else if (o.options.bottom !== undefined){
-          y = this._jObject(id).height() - $c.height() - o.options.bottom;
+          y = $this.height() - $c.height() - o.options.bottom;
         } else if (o.options.middle){
-          y = (this._jObject(id).height() - $c.height()) / 2
+          y = ($this.height() - $c.height()) / 2
         }
       
         $div = $('<div></div>')
@@ -1716,328 +1780,281 @@
                 .css('top', y+'px')
                 .css('left', x+'px')
                 .css('z-index', '1000')
-                .append(o.options.content);
+                .append($c);
         
-        this._jObject(id).first().prepend($div);
-        this._attachEvents(id, this._getMap(id), o);
-        this._store(id, n, $div, o);
-        this._callback(id, $div, o);
+        $this.first().prepend($div);
+        this._attachEvents(map, o);
+        store.add('fixpanel', $div, o);
+        this._callback($div, o);
       }
-      this._end(id);
-    },
+      this._end();
+    }
     
     /**
-     * @desc Add a direction renderer to a map
+     * add a direction renderer to a map
      **/
-    adddirectionsrenderer: function(id, todo, internal){
-      var n = 'directionrenderer',
-          dr, o = this._object(n, todo, ['panelId']);
-      this._clear(id, n);
-      o.options.map = this._getMap(id);
+    this.adddirectionsrenderer = function(todo, internal){
+      var dr, o = getObject('directionrenderer', todo, 'panelId');
+      store.rm('directionrenderer');
+      o.options.map = map;
       dr = new google.maps.DirectionsRenderer(o.options);
       if (o.panelId) {
         dr.setPanel(document.getElementById(o.panelId));
       }
-      this._store(id, n, dr, o);
-      this._manageEnd(id, dr, o, internal);
-    },
+      store.add('directionrenderer', dr, o);
+      this._manageEnd(dr, o, internal);
+      return dr;
+    }
     
     /**
-     * @desc Set direction panel to a dom element from it ID
+     * set a direction panel to a dom element from its ID
      **/
-    setdirectionspanel: function(id, todo){
-      var dr, o = this._object('directionpanel', todo, ['id']);
-      if (o.id) {
-        dr = this._getDirectionRenderer(id);
+    this.setdirectionspanel = function(todo){
+      var dr = store.get('directionrenderer'),
+          o = getObject('directionpanel', todo, 'id');
+      if (dr && o.id) {
         dr.setPanel(document.getElementById(o.id));
       }
-      this._manageEnd(id, dr, o);
-    },
+      this._manageEnd(dr, o);
+    }
     
     /**
-     * @desc Set directions on a map (create Direction Renderer if needed)
+     * set directions on a map (create Direction Renderer if needed)
      **/
-    setdirections: function(id, todo){
-      var dr, o = this._object('directions', todo);
-      if (todo) o.options.directions = todo.directions ? todo.directions : (todo.options && todo.options.directions ? todo.options.directions : null);
+    this.setdirections = function(todo){
+      var dr = store.get('directionrenderer'),
+          o = getObject('directions', todo);
+      if (todo) {
+        o.options.directions = todo.directions ? todo.directions : (todo.options && todo.options.directions ? todo.options.directions : null);
+      }
       if (o.options.directions) {
-        dr = this._getDirectionRenderer(id);
         if (!dr) {
-          this.adddirectionsrenderer(id, o, true);
-          dr = this._getDirectionRenderer(id);
+          dr = this.adddirectionsrenderer(o, true);
         } else {
           dr.setDirections(o.options.directions);
         }
       }
-      this._manageEnd(id, dr, o);
-    },
+      this._manageEnd(dr, o);
+    }
     
     /**
-     * @desc set a streetview to a map
+     * set a streetview to a map
      **/
-    setstreetview: function(id, todo){
-      var o = this._object('streetview', todo, ['id']),
-          panorama;
+    this.setstreetview = function(todo){
+      var panorama,
+          o = getObject('streetview', todo, 'id');
       if (o.options.position){
-        o.options.position = this._latLng(o.options.position);
+        o.options.position = toLatLng(o.options.position);
       }
-      panorama = new google.maps.StreetViewPanorama(document.getElementById(o.id),o.options);
-      this._getMap(id).setStreetView(panorama);
-      this._manageEnd(id, panorama, o);
-    },
+      panorama = new _default.classes.StreetViewPanorama(document.getElementById(o.id),o.options);
+      if (panorama){
+        map.setStreetView(panorama);
+      }
+      this._manageEnd(panorama, o);
+    }
     
     /**
-     * @desc add a kml layer to a map
+     * add a kml layer to a map
      **/
-    addkmllayer: function(id, todo){
-      var n = 'kmllayer',
-          o = this._object(n, todo, ['url']),
-          kml;
-      o.options.map = this._getMap(id);
-      kml = new google.maps.KmlLayer(o.url, o.options);
-      this._store(id, n, kml, o);
-      this._manageEnd(id, kml, o);
-    },
+    this.addkmllayer = function(todo){
+      var kml,
+          o = getObject('kmllayer', todo, 'url');
+      o.options.map = map;
+      if (typeof(o.url) === 'string'){
+        kml = new _default.classes.KmlLayer(o.url, o.options);
+      }
+      store.add('kmllayer', kml, o);
+      this._manageEnd(kml, o);
+    }
     
     /**
-     * @desc add a traffic layer to a map
+     * add a traffic layer to a map
      **/
-    addtrafficlayer: function(id, todo){
-      var n = 'trafficlayer', 
-          o = this._object(n, todo),
-          tl = this._getStored(id, n);
+    this.addtrafficlayer = function(todo){
+      var o = getObject('trafficlayer', todo),
+          tl = store.get('trafficlayer');
       if (!tl){
-        tl = new google.maps.TrafficLayer();
-        tl.setMap(this._getMap(id));
-        this._store(id, n, tl, o);
+        tl = new _default.classes.TrafficLayer();
+        tl.setMap(map);
+        store.add('trafficlayer', tl, o);
       }
-      this._manageEnd(id, tl, o);
-    },
+      this._manageEnd(tl, o);
+    }
     
     /**
-     * @desc set a bicycling layer to a map
+     * add a bicycling layer to a map
      **/
-    addbicyclinglayer: function(id, todo){
-      var n = 'bicyclinglayer',
-          o = this._object(n, todo),
-          bl = this._getStored(id, n);
+    this.addbicyclinglayer = function(todo){
+      var o = getObject('bicyclinglayer', todo),
+          bl = store.get('bicyclinglayer');
       if (!bl){
-        bl = new google.maps.BicyclingLayer();
-        bl.setMap(this._getMap(id));
-        this._store(id, n, bl, o);
+        bl = new _default.classes.BicyclingLayer();
+        bl.setMap(map);
+        store.add('bicyclinglayer', bl, o);
       }
-      this._manageEnd(id, bl, o);
-    },
-    
+      this._manageEnd(bl, o);
+    }
     
     /**
-     * @desc add a ground overlay to a map
+     * add a ground overlay to a map
      **/
-    addgroundoverlay: function(id, todo){
-      var n = 'groundoverlay',
-          o = this._object(n, todo, ['bounds', 'url']),
-          ov;
-      o.bounds = this._latLngBounds(o.bounds);
-      if (o.bounds && o.url){
-        ov = new google.maps.GroundOverlay(o.url, o.bounds);
-        ov.setMap(this._getMap(id));
-        this._store(id, n, ov, o);
+    this.addgroundoverlay = function(todo){
+      var ov,
+          o = getObject('groundoverlay', todo, ['bounds', 'url']);
+      o.bounds = toLatLngBounds(o.bounds);
+      if (o.bounds && (typeof(o.url) === 'string')){
+        ov = new _default.classes.GroundOverlay(o.url, o.bounds);
+        ov.setMap(map);
+        store.add('groundoverlay', ov, o);
       }
-      this._manageEnd(id, ov, o);
-    },
+      this._manageEnd(ov, o);
+    }
     
     /**
-     * @desc Geolocalise the user and return a LatLng
+     * geolocalise the user and return a LatLng
      **/
-    geolatlng: function(id, todo){
-      var geo,
-          cb = this._ival(todo, 'callback'),
-          $this = this._jObject(id);
-      if (typeof(cb) === 'function') {
+    this.geolatlng = function(todo){
+      var callback = ival(todo, 'callback');
+      if (typeof(callback) === 'function') {
         if(navigator.geolocation) {
-          browserSupportFlag = true;
-          navigator.geolocation.getCurrentPosition(function(position) {
+          navigator.geolocation.getCurrentPosition(
+            function(position) {
             var out = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-            cb.apply($this, [out]);
-          }, function() {
+              callback.apply($this, [out]);
+            }, 
+            function() {
             var out = false;
-            cb.apply($this, [out]);
-          });
+              callback.apply($this, [out]);
+            }
+          );
         } else if (google.gears) {
-          browserSupportFlag = true;
-          geo = google.gears.factory.create('beta.geolocation');
-          geo.getCurrentPosition(function(position) {
+          google.gears.factory.create('beta.geolocation').getCurrentPosition(
+            function(position) {
             var out = new google.maps.LatLng(position.latitude,position.longitude);
-            cb.apply($this, [out]);
-          }, function() {
+              callback.apply($this, [out]);
+            }, 
+            function() {
             out = false;
-            cb.apply($this, [out]);
-          });
+              callback.apply($this, [out]);
+            }
+          );
         } else {
-            out = false;
-            cb.apply($this, [out]);
+          callback.apply($this, [false]);
         }
       }
-      this._end(id);
-    },
+      this._end();
+    }
     
     /**
-     * @desc Add a style to a map
+     * add a style to a map
      **/
-    addstyledmap: function(id, todo, internal){
-      var o = this._object('styledmap', todo, ['id', 'style']),
-          style;
-      if  (o.style && o.id && !this._styleExist(id, o.id)) {
-        style = new google.maps.StyledMapType(o.style, o.options);
-        this._addStyle(id, o.id, style);
-        if (this._getMap(id)) this._getMap(id).mapTypes.set(o.id, style);
+    this.addstyledmap = function(todo, internal){
+      var o = getObject('styledmap', todo, ['id', 'style']);
+      if  (o.style && o.id && !styles[o.id]) {
+        styles[o.id] = new _default.classes.StyledMapType(o.style, o.options);
+        if (map) {
+          map.mapTypes.set(o.id, styles[o.id]);
       }
-      this._manageEnd(id, style, o, internal);
-    },
+      }
+      this._manageEnd(styles[o.id], o, internal);
+    }
     
     /**
-     * @desc Set a style to a map (add it if needed)
+     * set a style to a map (add it if needed)
      **/
-    setstyledmap: function(id, todo){
-      var o = this._object('styledmap', todo, ['id', 'style']),
-          style;
+    this.setstyledmap = function(todo){
+      var o = getObject('styledmap', todo, ['id', 'style']);
       if (o.id) {
-        this.addstyledmap(id, o, true);
-        style = this._getStyle(id, o.id);
-        if (style) {
-          this._getMap(id).setMapTypeId(o.id);
-          this._callback(id, style, todo);
+        this.addstyledmap(o, true);
+        if (styles[o.id]) {
+          map.setMapTypeId(o.id);
+          this._callback(styles[o.id], todo);
         }
       }
-      this._manageEnd(id, style, o);
-    },
+      this._manageEnd(styles[o.id], o);
+    }
     
     /**
-     * @desc Remove objects from a map
+     * remove objects from a map
      **/
-    clear: function(id, todo){
-      var list = this._array(this._ival(todo, 'list') || this._ival(todo, 'name')),
-          last = this._ival(todo, 'last', false),
-          first = this._ival(todo, 'first', false),
-          tag = this._ival(todo, 'tag');
+    this.clear = function(todo){
+      var list = array(ival(todo, 'list') || ival(todo, 'name')),
+          last = ival(todo, 'last', false),
+          first = ival(todo, 'first', false),
+          tag = ival(todo, 'tag');
       if (tag !== undefined){
-        tag = this._array(tag);
+        tag = array(tag);
       }
-      this._clear(id, list, last, first, tag);
-      this._end(id);
-    },
+      store.clear(list, last, first, tag);
+      this._end();
+    }
     
     /**
-     * @desc Return Google object(s) wanted
+     * return objects previously created
      **/
-    get: function(id, todo){
-      var name = this._ival(todo, 'name') || 'map',
-          first= this._ival(todo, 'first'),
-          all  = this._ival(todo, 'all'),
-          tag = this._ival(todo, 'tag'),
-          r, i, t;
+    this.get = function(todo){
+      var name = ival(todo, 'name') || 'map',
+          first= ival(todo, 'first'),
+          all  = ival(todo, 'all'),
+          tag = ival(todo, 'tag');
       name = name.toLowerCase();
-      if (tag !== undefined){
-        tag = this._array(tag);
+      if (name === 'map'){
+        return map;
       }
-      if (name == 'map'){
-        return this._getMap(id);
+      if (tag !== undefined){
+        tag = array(tag);
       }
       if (first){
-        return this._getStored(id, name, false, tag);
+        return store.get(name, false, tag);
       } else if (all){
-        r = new Array();
-        t = this._ids[id].stored[name];
-        if (t){
-          for(i = 0; i < t.length; i++){
-            if (!t[i]){
-              continue;
-            }
-            if (tag !== undefined) {
-              if ( (t[i].tag === undefined) || ($.inArray(t[i].tag, tag) < 0) ){
-                continue;
-              }
-            }
-            r.push(t[i].obj);
-          }
-        }
-        return r;
+        return store.all(name, tag);
       } else {
-        return this._getStored(id, name, true, tag);
-      }
-    },
+        return store.get(name, true, tag);
+            }
+              }
     
     /**
-     * @desc return the radius of the earth depending on the unit
+     * return the max zoom of a location
      **/
-    earthradius: function(unit){
-      unit = unit ? unit : this._default.unit;
-      return (typeof(unit) === 'string' && (unit.toLowerCase() === 'km')) ? 6371 : 3959;
-    },
+    this.getmaxzoom = function(todo){
+      this._resolveLatLng(todo, '_getMaxZoom');
+            }
     
-    /**
-     * @desc the distance between 2 latLng depending on the unit
-     **/
-    distance: function(id, todo){
-      var unit = this._ival(todo, 'unit'),
-          a = this._latLng(this._ival(todo, 'a')),
-          b = this._latLng(this._ival(todo, 'b')),
-          e,f,g,h, dist;
-      if (a && b){
-        e=(Math.PI*a.lat()/180);
-        f=(Math.PI*a.lng()/180);
-        g=(Math.PI*b.lat()/180);
-        h=(Math.PI*b.lng()/180);
-        dist = this.earthradius(unit)*Math.acos(Math.min(Math.cos(e)*Math.cos(g)*Math.cos(f)*Math.cos(h)+Math.cos(e)*Math.sin(f)*Math.cos(g)*Math.sin(h)+Math.sin(e)*Math.sin(g),1)); 
-      }
-      return dist;
-    },
-    
-    /**
-     * @desc return the max zoom of a latlng
-     **/
-    getmaxzoom: function(id, todo){
-      this._resolveLatLng(id, todo, '_getMaxZoom');
-    },
-    _getMaxZoom: function(id, todo, latLng){
-      var callback,
-          $this = this._jObject(id), 
-          cb = this._ival(todo, 'callback');
-      if (cb && typeof(cb) === 'function') {
-        callback = function(result) {
-          var zoom = result.status == google.maps.MaxZoomStatus.OK ? result.zoom : false;
-          cb.apply($this, [zoom, result.status]);
-        };
-        this._getMaxZoomService().getMaxZoomAtLatLng(latLng, callback);
-      }
-      this._end(id);
-    },
-  
-    /**
-     * @desc modify default values
-     **/
-    setdefault: function(id, todo, internal){
-      for(var k in todo){
-        if (typeof(this._default[k]) === 'object'){
-          this._default[k] = jQuery.extend({}, this._default[k], todo[k]);
-        } else {
-          this._default[k] = todo[k];
+    this._getMaxZoom = function(todo, latLng){
+      var callback = ival(todo, 'callback');
+      if (callback && typeof(callback) === 'function') {
+        getMaxZoomService().getMaxZoomAtLatLng(
+          latLng, 
+          function(result) {
+            var zoom = result.status === google.maps.MaxZoomStatus.OK ? result.zoom : false;
+            callback.apply($this, [zoom, result.status]);
+          }
+        );
         }
+      this._end();
       }
-      if (!internal){
-        this._end(id);
-      }
-    },
+    
     /**
-     * @desc : autofit a map using its overlays (markers, rectangles ...)
+     * modify default values
      **/
-    autofit: function(id, todo, internal){
-      var n, i, stored, obj, empty = true, bounds = new google.maps.LatLngBounds();
-      if (id in this._ids){
-        for(n in this._ids[id].stored){
-          stored = this._ids[id].stored[n];
-          for(i = 0; i < stored.length; i++){
-            obj = stored[i].obj;
+    this.setdefault = function(todo){
+      setDefault(todo);
+      this._end();
+      }
+    
+    /**
+     * autofit a map using its overlays (markers, rectangles ...)
+     **/
+    this.autofit = function(todo, internal){
+      var names, list, obj, i, j,
+          empty = true, 
+          bounds = new google.maps.LatLngBounds();
+  
+      names = store.names();
+      for(i=0; i<names.length; i++){
+        list = store.all(names[i]);
+        for(j=0; j<list.length; j++){
+          obj = list[j];
             if (obj.getPosition){
               bounds.extend(obj.getPosition());
               empty = false;
@@ -2064,52 +2081,51 @@
           }
         }
         if (!empty){
-          this._getMap(id).fitBounds(bounds);
+        map.fitBounds(bounds);
         }
-      }
       if (!internal){
-        this._manageEnd(id, empty ? false : bounds, todo, internal);
+        this._manageEnd(empty ? false : bounds, todo, internal);
       }
     }
     
   };
   
-  var globalId = 0;
+  //-----------------------------------------------------------------------//
+  // jQuery plugin
+  //-----------------------------------------------------------------------//
   
   $.fn.gmap3 = function(){
-    var a,i,
-        todo = [],
-        results = [],
-        empty = true;
+    var i, args, list = [], empty = true, results = [];
+    // store all arguments in a todo list 
     for(i=0; i<arguments.length; i++){
-      a = arguments[i] || {};
-      if (typeof(a) === 'string'){
-        a = {action:a};
+      args = arguments[i] || {};
+      // resolve string todo - action without parameters can be simplified as string 
+      if (typeof(args) === 'string'){
+        args = {action:args};
       }
-      if (a.action && (a.action.substr(0, 1) == ':')){
-        a.action = a.action.substr(1);
+      list.push(args);
       }
-      todo.push(a);
+    // resolve empty call - run init
+    if (!list.length) {
+      list.push({});
     }
-    if (!todo.length) todo.push({});
+    // loop on each jQuery object
     $.each(this, function() {
       var $this = $(this),
-          id = $this.data('id');
+          gmap3 = $this.data('gmap3');
       empty = false;
-      if (!id){
-        id = ++globalId;
-        $this.data('id', id);
+      if (!gmap3){
+        gmap3 = new Gmap3($this);
+        $this.data('gmap3', gmap3);
       }
-      if (todo.length == 1){
-        if (gmap3._isDirect(id, todo[0])){
-          results.push(gmap3._direct(id, todo[0]));
+      // direct call : bypass jQuery method (not stackable, return mixed)
+      if ( (list.length == 1) && (isDirect(list[0])) ){
+        results.push(gmap3._direct(list[0]));
         } else {
-          gmap3._plan($this, id, todo);
+        gmap3._plan(list);
         }
-      } else {
-        gmap3._plan($this, id, todo);
-      }
     });
+    // return for direct call (only) 
     if (results.length){
       if (results.length === 1){ // 1 css selector
         return results[0];
@@ -2117,8 +2133,9 @@
         return results;
       }
     }
+    // manage setDefault call
     if (empty && (arguments.length == 2) && (typeof(arguments[0]) === 'string') && (arguments[0].toLowerCase() === 'setdefault')){
-      gmap3.setdefault(0, arguments[1], true);
+      setDefault(arguments[1]);
     }
     return this;
   }

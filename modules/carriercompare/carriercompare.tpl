@@ -67,7 +67,7 @@
 		
 		<p>
 			<label for="zipcode">{l s='Zipcode' mod='carriercompare'}</label>
-			<input type="text" name="zipcode" id="zipcode" value="{$zipcode|escape:'htmlall':'UTF-8'}"/>
+			<input type="text" name="zipcode" id="zipcode" value="{$zipcode|escape:'htmlall':'UTF-8'}"/> ({l s='Needed for certain carriers' mod='carriercompare'})
 		</p>
 		
 		<div id="availableCarriers" style="display: none;">
@@ -88,7 +88,7 @@
 		<p class="warning center" id="noCarrier" style="display: none;">{l s='No carrier is available for this selection' mod='carriercompare'}</p>
 		
 		<p class="center">
-			<input class="exclusive_large" id="carriercompare_submit" type="submit" name="carriercompare_submit" value="{l s='Update my shipping option' mod='carriercompare'}"/>
+			<input class="exclusive_large" id="carriercompare_submit" type="submit" name="carriercompare_submit" value="{l s='Refresh' mod='carriercompare'}"/>
 		</p>
 	</fieldset>
 </form>

@@ -950,10 +950,10 @@ class shopimporter extends ImportModule
 									INNER JOIN
 									'._DB_PREFIX_.'category c2
 									ON
-									c.id_parent = c2.id_category_'.pSQL($moduleName).'
+									c.id_parent = c2.`id_category_'.bqSQL($moduleName).'`
 									SET
 									c.id_parent = c2.id_category
-									WHERE c.id_category_'.pSQL($moduleName).' != 0');
+									WHERE c.`id_category_'.bqSQL($moduleName).'` != 0');
 		$category = new Category();
 		$cats = $category->getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT'));
 		foreach($cats as $cat)
