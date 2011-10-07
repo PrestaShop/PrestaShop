@@ -903,11 +903,11 @@ class ValidateCore
 	/**
 	 *
 	 * @param array $zones
-	 * @return array return true if array contain all value required for an image map zone 
+	 * @return boolean return true if array contain all value required for an image map zone 
 	 */
 	public static function isSceneZones($zones)
 	{
-		foreach($zones as $zone)
+		foreach ($zones as $zone)
 		{
 			if (!isset($zone['x1']) || !self::isUnsignedInt($zone['x1']))
 				return false;
@@ -920,6 +920,18 @@ class ValidateCore
 			if (!isset($zone['id_product']) || !self::isUnsignedInt($zone['id_product']))
 				return false;
 		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param array $stock_management
+	 * @return boolean return true if is a valide stock management
+	 */
+	public static function isStockManagement($stock_management)
+	{
+		if (!in_array($stock_management, array('WA', 'FIFO', 'LIFO')))
+			return false;
 		return true;
 	}
 }
