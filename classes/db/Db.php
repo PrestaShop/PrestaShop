@@ -217,28 +217,47 @@ abstract class DbCore
 	 * Filter SQL query within a blacklist
 	 *
 	 * @param string $table Table where insert/update data
-	 * @param string $values Data to insert/update
+	 * @param string $data Data to insert/update
 	 * @param string $type INSERT or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
 	 * @param string $limit LIMIT clause (optional)
 	 * @param bool $useNull If true, replace empty strings and NULL by a NULL value
 	 * @return mixed|boolean SQL query result
 	 */
-	public function	autoExecute($table, $data, $type, $where = false, $limit = false, $use_cache = 1, $useNull = false)
+	public function autoExecute($table, $data, $type, $where = false, $limit = false, $use_cache = 1, $useNull = false)
 	{
 		if (!$data)
 			return true;
 
 		if (strtoupper($type) == 'INSERT')
 		{
-			$keys = $values = array();
-			foreach ($data AS $key => $value)
+			// Check if $data is a list of row
+			if (!is_array(current($data)))
+				$data = array($data);
+			
+			$keys = array();
+			$values_stringified = array();
+			foreach ($data as $row_data)
 			{
-				$keys[] = "`$key`";
-				$values[] = ($useNull && ($value === '' || is_null($value))) ? 'NULL' : "'$value'";
+				$values = array();
+				foreach ($row_data AS $key => $value)
+				{
+					if (isset($keys_stringified))
+					{
+						// Check if row array mapping are the same
+						if (!in_array("`$key`", $keys))
+							throw new PrestashopDatabaseException('Keys form $data subarray don\'t match');
+					}
+					else
+						$keys[] = "`$key`";
+					
+					$values[] = ($useNull && ($value === '' || is_null($value))) ? 'NULL' : "'$value'";
+				}
+				$keys_stringified = implode(', ', $keys);
+				$values_stringified[] = '('.implode(', ', $values).')';
 			}
 
-			$sql = 'INSERT INTO `'.$table.'` ('.implode(', ', $keys).') VALUES ('.implode(', ', $values).')';
+			$sql = 'INSERT INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
 			if ($limit)
 				$sql .= ' LIMIT '.(int)$limit;
 			return $this->q($sql, $use_cache);
@@ -256,7 +275,7 @@ abstract class DbCore
 			return $this->q($sql, $use_cache);
 		}
 		else
-			die('Wrong argument (miss type) in Db::autoExecute()');
+			throw new PrestashopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
 
 		return false;
 	}
@@ -271,7 +290,7 @@ abstract class DbCore
 	 * @param string $limit LIMIT clause (optional)
 	 * @return mixed|boolean SQL query result
 	 */
-	public function	autoExecuteWithNullValues($table, $values, $type, $where = false, $limit = false)
+	public function autoExecuteWithNullValues($table, $values, $type, $where = false, $limit = false)
 	{
 		return $this->autoExecute($table, $values, $type, $where, $limit, 0, true);
 	}
@@ -300,7 +319,7 @@ abstract class DbCore
 	 * @param bool $use_cache Use cache or not
 	 * @return bool
 	 */
-	public function	delete($table, $where = false, $limit = false, $use_cache = 1)
+	public function delete($table, $where = false, $limit = false, $use_cache = 1)
 	{
 		$this->_result = false;
 		$sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
@@ -317,7 +336,7 @@ abstract class DbCore
 	 * @param bool $use_cache
 	 * @return mixed
 	 */
-	public function	Execute($sql, $use_cache = 1)
+	public function Execute($sql, $use_cache = 1)
 	{
 		$sql = (string)$sql;
 		$this->_result = $this->query($sql);
@@ -334,7 +353,7 @@ abstract class DbCore
 	 * @param int $use_cache if query has been already executed, use its result
 	 * @return array or result object
 	 */
-	public function	ExecuteS($sql, $array = true, $use_cache = 1)
+	public function ExecuteS($sql, $array = true, $use_cache = 1)
 	{
 		$sql = (string)$sql;
 		$this->_result = false;
@@ -370,7 +389,7 @@ abstract class DbCore
 	 * @param int $use_cache find it in cache first
 	 * @return array associative array of (field=>value)
 	 */
-	public function	getRow($sql, $use_cache = 1)
+	public function getRow($sql, $use_cache = 1)
 	{
 		$sql = (string)$sql;
 		$sql .= ' LIMIT 1';
@@ -400,7 +419,7 @@ abstract class DbCore
 	 * @param int $use_cache
 	 * @return void
 	 */
-	public function	getValue($sql, $use_cache = 1)
+	public function getValue($sql, $use_cache = 1)
 	{
 		$sql = (string)$sql;
 		if (!$result = $this->getRow($sql, $use_cache))
@@ -413,7 +432,7 @@ abstract class DbCore
 	 *
 	 * @return int
 	 */
-	public function	NumRows()
+	public function NumRows()
 	{
 		if (!$this->_lastCached && $this->_result)
 		{
