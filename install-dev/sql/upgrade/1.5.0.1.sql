@@ -181,4 +181,3 @@ ALTER TABLE `PREFIX_product` ADD `is_virtual` TINYINT( 1 ) NOT NULL DEFAULT '0' 
 /* PHP:add_new_tab(AdminCategories, fr:Categories|es:Categories|en:Categories|de:Categories|it:Categories, 1); */;
 
 /* PHP:add_default_restrictions_modules_groups(); */;
-
