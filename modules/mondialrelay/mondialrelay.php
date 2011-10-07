@@ -59,7 +59,7 @@ class MondialRelay extends Module
 	{
 		$this->name		= 'mondialrelay';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.7.5';
+		$this->version	= '1.7.5.1';
 
 		parent::__construct();
 

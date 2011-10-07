@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,10 +24,6 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-/**
- * @author Lucas Cherifi - Nans Pellicari - Anatole Korczak - PrestaShop Team
- */
 
 interface WebserviceOutputInterface
 {

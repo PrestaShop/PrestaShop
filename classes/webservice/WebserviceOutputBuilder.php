@@ -27,7 +27,6 @@
 
 /**
  * @todo : Create typed exception for more finer errors check
- * @author Lucas Cherifi - Nans Pellicari - Anatole Korczak - PrestaShop Team
  */
 class WebserviceOutputBuilderCore
 {

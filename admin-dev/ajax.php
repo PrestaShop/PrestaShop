@@ -561,11 +561,11 @@ if (Tools::isSubmit('getHookableList'))
 {
 	if (!strlen(Tools::getValue('hooks_list')))
 		die('{"hasError" : true, "errors" : ["Live Edit : no module on this page"]}');
-	
+
 	$modules_list = explode(',', Tools::getValue('modules_list'));
 	$hooks_list = explode(',', Tools::getValue('hooks_list'));
 	$hookableList = array();
-	
+
 	foreach ($modules_list as $module)
 	{
 		$module = trim($module);
@@ -718,7 +718,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 
 if (Tools::isSubmit('getChildrenCategories') && Tools::getValue('id_category_parent'))
 {
-	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat', array()), Context::getContext()->language->id);
+	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id);
 	die(Tools::jsonEncode($children_categories));
 }
 
@@ -937,7 +937,7 @@ if (Tools::isSubmit('getParentCategoriesId') AND $id_category = Tools::getValue(
 	$output = array();
 	foreach($results as $result)
 		$output[] = $result;
-	
+
 	die(Tools::jsonEncode($output));
 }
 

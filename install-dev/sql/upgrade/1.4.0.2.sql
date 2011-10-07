@@ -587,9 +587,9 @@ INSERT INTO `PREFIX_meta_lang` (`id_lang`, `id_meta`, `title`, `url_rewrite`) VA
 (3, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'order'), 'Carrito', 'carrito');
 INSERT INTO `PREFIX_meta` (`page`) VALUES ('search');
 INSERT INTO `PREFIX_meta_lang` (`id_lang`, `id_meta`, `title`, `url_rewrite`) VALUES
-(1, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'search'), 'Search', 'search'),
-(2, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'search'), 'Recherche', 'recherche'),
-(3, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'search'), 'Buscar', 'buscar');
+(1, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'search' LIMIT 1), 'Search', 'search'),
+(2, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'search' LIMIT 1), 'Recherche', 'recherche'),
+(3, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'search' LIMIT 1), 'Buscar', 'buscar');
 INSERT INTO `PREFIX_meta` (`page`) VALUES ('stores');
 INSERT INTO `PREFIX_meta_lang` (`id_lang`, `id_meta`, `title`, `url_rewrite`) VALUES
 (1, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'stores'), 'Stores', 'stores'),

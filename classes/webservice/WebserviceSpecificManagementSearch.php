@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,32 +25,28 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/**
- * @author Lucas Cherifi - Nans Pellicari - Anatole Korczak - PrestaShop Team
- */
- 
 class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManagementInterface
 {
 	protected $objOutput;
 	protected $output;
 	protected $wsObject;
-	
+
 	// ------------------------------------------------
 	// GETTERS & SETTERS
 	// ------------------------------------------------
-	
+
 	public function setObjectOutput(WebserviceOutputBuilderCore $obj)
 	{
 		$this->objOutput = $obj;
 		return $this;
 	}
-	
+
 	public function setWsObject(WebserviceRequestCore $obj)
 	{
 		$this->wsObject = $obj;
 		return $this;
 	}
-	
+
 	public function getWsObject()
 	{
 		return $this->wsObject;
@@ -59,36 +55,36 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 	{
 		return $this->objOutput;
 	}
-	
+
 	public function setUrlSegment($segments)
 	{
 		$this->urlSegment = $segments;
 		return $this;
 	}
-	
+
 	public function getUrlSegment()
 	{
 		return $this->urlSegment;
 	}
-	
+
 	/**
 	 * Management of search
-	 * 
+	 *
 	 */
 	public function manage()
 	{
 		if (!isset($this->wsObject->urlFragments['query']) || !isset($this->wsObject->urlFragments['language']))
 			throw new WebserviceException('You have to set both the \'language\' and \'query\' parameters to get a result', array(100, 400));
 		$objects_products = array();
-		$objects_categories = array(); 
+		$objects_categories = array();
 		$objects_products['empty'] = new Product();
 		$objects_categories['empty'] = new Category();
-		
+
 		$this->_resourceConfiguration = $objects_products['empty']->getWebserviceParameters();
-		
+
 		if (!$this->wsObject->setFieldsToDisplay())
 			return false;
-		
+
 		$results = Search::find($this->wsObject->urlFragments['language'], $this->wsObject->urlFragments['query'], 1, 1, 'position', 'desc', true, false);
 		$categories = array();
 		foreach ($results AS $result)
@@ -109,13 +105,13 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 		// $this->_resourceConfiguration = $objects_categories['empty']->getWebserviceParameters();
 		// if (!$this->setFieldsToDisplay())
 			// return false;
-		
+
 		$this->output .= $this->objOutput->getContent($objects_categories, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
 	}
-	
+
 	/**
 	 * This must be return an array with specific values as WebserviceRequest expects.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getContent()

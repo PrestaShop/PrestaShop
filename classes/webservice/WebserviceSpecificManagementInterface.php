@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,22 +25,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/**
- * @author Lucas Cherifi - Nans Pellicari - Anatole Korczak - PrestaShop Team
- */
- 
 interface WebserviceSpecificManagementInterface
 {
 	public function setObjectOutput(WebserviceOutputBuilderCore $obj);
 	public function getObjectOutput();
 	public function setWsObject(WebserviceRequestCore $obj);
 	public function getWsObject();
-	
+
 	public function manage();
-	
+
 	/**
 	 * This must be return an array with specific values as WebserviceRequest expects.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getContent();

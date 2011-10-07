@@ -107,7 +107,7 @@ class AdminStores extends AdminTab
 				$_POST[$kp] = trim($vp);
 
 			/* If the selected country does not contain states */
-			$id_state = (int)(Tools::getValue('id_state'));
+			$id_state = (int)Tools::getValue('id_state');
 			if ($id_country = Tools::getValue('id_country') AND $country = new Country((int)($id_country)) AND !(int)($country->contains_states) AND $id_state)
 				$this->_errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
 
@@ -115,8 +115,8 @@ class AdminStores extends AdminTab
 			if ((int)($country->contains_states) AND !$id_state)
 				$this->_errors[] = Tools::displayError('An address located in a country containing states must have a state selected.');
 
-			$latitude = (float)(Tools::getValue('latitude'));
-		    $longitude = (float)(Tools::getValue('longitude'));
+			$latitude = (float)Tools::getValue('latitude');
+			$longitude = (float)Tools::getValue('longitude');
 
 			if(empty($latitude) OR empty($longitude))
 			   $this->_errors[] = Tools::displayError('Latitude and longitude are required.');

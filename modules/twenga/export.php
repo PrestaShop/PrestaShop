@@ -25,10 +25,6 @@
  *  International Registered Trademark & Property of PrestaShop SA
  **/
 
-/**
- * @author Nans Pellicari - Prestashop
- * @version 1.3
- */
 include_once('../../config/config.inc.php');
 include_once('../../init.php');
 include_once(dirname(__FILE__).'/twenga.php');

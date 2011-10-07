@@ -30,6 +30,9 @@
 */
 class MRTools
 {
+	/*
+	** Replace all accented chars to normal
+	*/
 	static public function replaceAccentedCharacters($string)
 	{
 		if (function_exists('iconv'))
@@ -46,6 +49,17 @@ class MRTools
 		return $cleanedString;
 	}
 	
+	/*
+	** Fix security and compatibility for PS < 1.4.5
+	*/
+	static function bqSQL($string)
+	{
+		return str_replace('`', '\`', pSQL($string));
+	}
+	
+	/*
+	** Check zip code by country
+	*/
 	static public function checkZipcodeByCountry($zipcode, $params)
 	{
 		$id_country = $params['id_country'];

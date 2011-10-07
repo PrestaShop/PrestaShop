@@ -339,7 +339,7 @@ class SearchCore
 	protected static function getProductsToIndex($nbLanguages, $limit = 50)
 	{
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
-		$limit = min(1, round($limit / $nbLanguages) * $nbLanguages);
+		$limit = max(1, round($limit / $nbLanguages) * $nbLanguages);
 		return Db::getInstance()->ExecuteS('
 		SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname
 		FROM '._DB_PREFIX_.'product p
