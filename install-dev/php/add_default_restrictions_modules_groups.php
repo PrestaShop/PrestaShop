@@ -24,8 +24,6 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-include(dirname(__FILE__).'/../../config/config.inc.php');
-add_default_restrictions_modules_groups();
 
 function add_default_restrictions_modules_groups()
 {
