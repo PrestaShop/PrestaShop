@@ -131,6 +131,7 @@ class CustomerCore extends ObjectModel
 
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();
+	protected static $_customer_groups = array();
 
 	public function getFields()
 	{
@@ -484,19 +485,22 @@ class CustomerCore extends ObjectModel
 		if (!Group::isFeatureActive())
 			return array(1);
 
-		$groups = array();
-		$result = Db::getInstance()->ExecuteS('
-		SELECT cg.`id_group`
-		FROM '._DB_PREFIX_.'customer_group cg
-		WHERE cg.`id_customer` = '.(int)($id_customer));
-		foreach ($result AS $group)
-			$groups[] = (int)($group['id_group']);
-		return $groups;
+		if (!isset(self::$_customer_groups[$id_customer]))
+		{
+			self::$_customer_groups[$id_customer] = array();
+			$result = Db::getInstance()->ExecuteS('
+			SELECT cg.`id_group`
+			FROM '._DB_PREFIX_.'customer_group cg
+			WHERE cg.`id_customer` = '.(int)$id_customer);
+			foreach ($result as $group)
+				self::$_customer_groups[$id_customer][] = (int)$group['id_group'];
+		}
+		return self::$_customer_groups[$id_customer];
 	}
 
 	public function getGroups()
 	{
-		return self::getGroupsStatic((int)($this->id));
+		return self::getGroupsStatic((int)$this->id);
 	}
 
 	public function isUsed()
