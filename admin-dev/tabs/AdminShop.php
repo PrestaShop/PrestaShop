@@ -32,12 +32,12 @@ class AdminShop extends AdminTab
 	{
 		$this->context = Context::getContext();
 	 	$this->table = 'shop';
-	 	$this->className = 'Shop';
+		$this->className = 'Shop';
 	 	$this->edit = true;
 		$this->delete = false;
 		$this->deleted = false;
-		
-	 	$this->_select = 'gs.name group_shop_name, cl.name category_name';
+
+		$this->_select = 'gs.name group_shop_name, cl.name category_name';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'group_shop` gs ON (a.id_group_shop = gs.id_group_shop)
 	 						 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')';
 	 	$this->_group = 'GROUP BY a.id_shop';
@@ -66,7 +66,7 @@ class AdminShop extends AdminTab
 		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
 			$newShop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
 	}
-	
+
 	public function afterUpdate($newShop)
 	{
 		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
@@ -82,7 +82,7 @@ class AdminShop extends AdminTab
 			else if (Shop::getTotalShops() == 1)
 				$this->_errors[] = Tools::displayError('You cannot disable the last shop.');
 		}
-		
+
 		if ($this->_errors)
 			return false;
 		return parent::postProcess();
@@ -133,7 +133,7 @@ class AdminShop extends AdminTab
 				else
 				{
 					echo '<select '.$disabled.' name="id_group_shop" id="id_group_shop">';
-					foreach (GroupShop::getGroupShops() AS $group)
+					foreach (GroupShop::getGroupShops() as $group)
 						echo '<option value="'.(int)$group['id_group_shop'].'" '.($obj->id_group_shop ==  $group['id_group_shop'] ? 'selected="selected"' : '').'">'.$group['name'].'</option>';
 					echo '</select>';
 				}

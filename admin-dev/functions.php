@@ -408,13 +408,14 @@ function generateShopList()
 		$value = '';
 
 	// Generate HTML
-	$url = $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=';
+	$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
 	$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
-	$html .= '<option value="" class="first">'.translate('All shops').'</option>';
-	foreach ($tree as $gID => $groupData)
+	$html .= (Context::getContext()->employee->id_profile == _PS_ADMIN_PROFILE_) ? '<option value="" class="first">'.translate('All shops').'</option>' : '';
+	foreach ($tree as $gID => $group_data)
 	{
-		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.htmlspecialchars($groupData['name']).'</option>';
-		foreach ($groupData['shops'] as $sID => $shopData)
+		$disabled = ($group_data['totalShops'] != count($group_data['shops'])) ? 'disabled="disabled"' : '';
+		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.htmlspecialchars($group_data['name']).'</option>';
+		foreach ($group_data['shops'] as $sID => $shopData)
 			if ($shopData['active'])
 				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
 	}

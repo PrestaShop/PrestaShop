@@ -181,3 +181,39 @@ ALTER TABLE `PREFIX_product` ADD `is_virtual` TINYINT( 1 ) NOT NULL DEFAULT '0' 
 /* PHP:add_new_tab(AdminCategories, fr:Categories|es:Categories|en:Categories|de:Categories|it:Categories, 1); */;
 
 /* PHP:add_default_restrictions_modules_groups(); */;
+
+
+
+CREATE TABLE IF NOT EXISTS `PREFIX_employee_shop` (
+`id_employee` INT( 11 ) UNSIGNED NOT NULL ,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+PRIMARY KEY ( `id_employee` , `id_shop` )
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+INSERT INTO `PREFIX_employee_shop` (`id_employee`, `id_shop`) (SELECT `id_employee`, 1 FROM `PREFIX_employee`);
+
+UPDATE `PREFIX_access` SET `view` = 0, `add` = 0, `edit` = 0, `delete` = 0 WHERE `id_tab` = 88 AND `id_profile` != 1;
+
+INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (5);
+
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 5 WHERE `id_profile` = 4;
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 4 WHERE `id_profile` = 3;
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 3 WHERE `id_profile` = 2;
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 2 WHERE `id_profile` = 1;
+
+INSERT INTO `PREFIX_profile_lang` (`id_profile`, `id_lang`, `name`) VALUES (1, 1, 'SuperAdmin'),(1, 2, 'SuperAdmin'),(1, 3, 'SuperAdmin'),(1, 4, 'SuperAdmin'),(1, 5, 'SuperAdmin');
+
+UPDATE `PREFIX_access` SET `id_profile` = 5 WHERE `id_profile` = 4;
+UPDATE `PREFIX_access` SET `id_profile` = 4 WHERE `id_profile` = 3;
+UPDATE `PREFIX_access` SET `id_profile` = 3 WHERE `id_profile` = 2;
+UPDATE `PREFIX_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
+
+UPDATE `PREFIX_module_access` SET `id_profile` = 5 WHERE `id_profile` = 4;
+UPDATE `PREFIX_module_access` SET `id_profile` = 4 WHERE `id_profile` = 3;
+UPDATE `PREFIX_module_access` SET `id_profile` = 3 WHERE `id_profile` = 2;
+UPDATE `PREFIX_module_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
+
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 1, `id_module`, 1, 1 FROM `PREFIX_module`);
+
+
+

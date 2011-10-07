@@ -641,6 +641,13 @@ CREATE TABLE `PREFIX_employee` (
   KEY `id_profile` (`id_profile`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_employee_shop` (
+`id_employee` INT( 11 ) UNSIGNED NOT NULL ,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+  PRIMARY KEY ( `id_employee` , `id_shop` ),
+  KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_feature` (
   `id_feature` int(10) unsigned NOT NULL auto_increment,
   `position` int(10) unsigned NOT NULL default '0',
