@@ -248,7 +248,6 @@ class EmployeeCore extends ObjectModel
 		switch ($type = $context->shop->getContextType())
 		{
 			case 1:
-				info('context shop');
 				if ($context->shop->checkIfShopExist($context->shop->id))
 				{
 					if (!in_array($context->shop->id, self::getEmployeeShopById($id_employee)))
@@ -259,7 +258,6 @@ class EmployeeCore extends ObjectModel
 			break;
 
 			case 2:
-				info('context group');
 				if ($context->shop->checkIfGroupShopExist($context->shop->getGroupID()))
 				{
 					$shops = $context->shop->getIdShopsByIdGroupShop($context->shop->getGroupID());
@@ -272,7 +270,6 @@ class EmployeeCore extends ObjectModel
 			break;
 
 			case 3:
-				info('context all');
 				if ($context->employee->id_profile == _PS_ADMIN_PROFILE_ ||
 					$context->shop->getTotalShopsWhoExists() == self::getTotalEmployeeShopById($id_employee))
 					return true;
