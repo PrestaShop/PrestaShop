@@ -26,6 +26,7 @@
 */
 
 /**
+ * This represents the physical stock
  * @since 1.5.0
  */
 class StockCore extends ObjectModel
@@ -70,5 +71,18 @@ class StockCore extends ObjectModel
 		$fields['usable_quantity'] = (int)$this->usable_quantity;
 		$fields['price_te'] = (float)$this->price_te;
 		return $fields;
+	}
+
+	/**
+	 * @TODO
+	 */
+	public static function getStockId($id_product, $id_product_attribute, $id_shop)
+	{
+		$sql = 'SELECT id_stock
+				FROM '._DB_PREFIX_.'stock
+				WHERE id_product = '.(int)$id_product.'
+					AND id_product_attribute = '.(int)$id_product_attribute.'
+					AND id_shop = '.(int)$id_shop;
+		return (int)Db::getInstance()->getValue($sql);
 	}
 }
