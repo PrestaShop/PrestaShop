@@ -62,7 +62,7 @@ class StockManagerCore implements StockManagerInterface
 		// Get context to have employee informations
 		$context = Context::getContext();
 
-		// sets mvt params to save stock mvt (only one movement possible when adding product quantities)
+		// sets mvt params to save stock mvt (only one mvt possible when adding product quantities)
 		$mvt_params = array(
 			'id_stock' => null,
 			'physical_quantity' => $quantity,
@@ -159,7 +159,8 @@ class StockManagerCore implements StockManagerInterface
 			break;
 		}
 
-		if (!$stock_exists) {
+		if (!$stock_exists)
+		{
 			// creates a new stock for this product
 			$stock = new Stock();
 
@@ -200,34 +201,47 @@ class StockManagerCore implements StockManagerInterface
 								  $is_usable = true,
 								  $id_order = null)
 	{
+		$return = array();
+
 		if (!is_object($warehouse) || !$price_te || !$quantity || (!$id_product || !$id_product_attribute))
-			return false;
+			return $return;
 
 		if (!StockmvtReason::exists($id_stock_mvt_reason))
 			$id_stock_mvt_reason = StockMvtReason::STOCK_MVT_DEFAULT_REASON;
 
-		// gets context to have employee informations
+		// gets context to have the employee informations
 		$context = Context::getContext();
 
-		// gets total quantitiy for the current product
-		$quantity_in_stock = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouse->id_warehouse, $usable);
+		// gets total quantitiy in stock for the current product
+		$quantity_in_stock = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id_warehouse), $usable);
 
 		// checks if it's possible to remove the given quantity
-		if($quantity_in_stock < $quantity)
-			return false;
+		if ($quantity_in_stock < $quantity)
+			return $return;
 
 		// gets stock collection for the given product
 		$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id_warehouse);
 
+		// check if the collection is well loaded
+		if (count($stock_collection) <= 0)
+			return $return;
+
+		// prepare utils variables
+		$stock_history_qty_available = array();
+		$mvt_params = array();
+		$stock_params = array();
+		$quantity_to_decrement_by_stock = array();
+		$global_quantity_to_decrement = $quantity;
+
 		// switch on STOCK_MANAGEMENT_MODE
-		switch ($warehouse->stock_management)
+		switch ($warehouse->management_type)
 		{
 			// case CUMP mode
 			case 'WA':
 				// There is one and only one stock for a given product in a warehouse in this mode
 				$stock = $stock_collection[0];
 
-				// sets mvt params to save stock mvt (only one movement possible when removing product quantities in this mode)
+				// sets mvt params to save stock mvt (only one mvt is possible when removing product quantities in this mode)
 				$mvt_params = array(
 					'id_stock' => $stock->id_stock,
 					'physical_quantity' => $quantity,
@@ -237,13 +251,13 @@ class StockManagerCore implements StockManagerInterface
 					'id_employee' => $context->employee->id_employee
 				);
 
-				// set new stock params
+				// sets new stock params
 				$stock_params = array(
 					'physical_quantity' => ($stock->physical_quantity - $quantity),
 					'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity),
 				);
 
-				// save stock in warehouse
+				// saves stock in warehouse
 				$stock->hydrate($stock_params);
 				$stock->update();
 
@@ -253,23 +267,126 @@ class StockManagerCore implements StockManagerInterface
 				$stock_mvt->save();
 			break;
 
-			// case FIFO mode
-			case 'FIFO':
-				// have to decrement oldest stock in priority
-				return false; //@TODO
-			break;
-
 			case 'LIFO':
-				// have to decrement newest stock in priority
-				return false; //@TODO
-			break;
+			case 'FIFO':
 
-			default:
-				return false;
+				// for each stock, parse its mvts history to determine left quantities for each positive mvt,
+				// according to instant available quantities for this stock
+				foreach ($stock_collection as $stock)
+				{
+					$left_quantity_to_check = $stock->physical_quantity;
+					if ($left_quantity_to_check <= 0)
+						continue;
+
+					$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
+						SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`)) as qty
+						FROM `'._DB_PREFIX_.'stock_mvt` sm
+						JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`stock_mvt_referer` = sm.`id_stock_mvt`
+						WHERE sm.`sign` = 1
+						AND sm.`id_stock` = '.(int)$stock->id_stock.'
+						AND sm2.`sign` = -1
+						ORDER BY sm.`date_add` DESC'
+					);
+
+					while ($row = Db::getInstance()->nextRow($resource))
+					{
+						// stop while - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
+						if ($warehouse->management_type == 'FIFO')
+							if ($row['qty'] >= $row['physical_quantity'])
+								break;
+
+						// converts date to timestamp
+						$date = new DateTime($row['date_add']);
+						$timestamp = $date->format('U');
+
+						// history of the mvt
+						$stock_history_qty_available[$timestamp] = array(
+							'id_stock' => $stock->id_stock,
+							'id_stock_mvt' => (int)$row['id_stock_mvt'],
+							'qty' => (int)$row['qty']
+						);
+
+						// stop while - in LIFO mode, checks only the necessary history to handle the global quantity for the current stock
+						if ($warehouse->management_type == 'LIFO')
+						{
+							$left_quantity_to_check -= (int)$row['physical_quantity'];
+							if ($left_quantity_to_check <= 0)
+								break;
+						}
+					}
+				}
+
+				if ($warehouse->management_type == 'LIFO')
+					// orders stock history by timestamp to get newest history first
+					krsort($stock_history);
+				else
+					// orders stock history by timestamp to get oldest history first
+					ksort($stock_history);
+
+				// checks each stock to manage the real quantity to decrement for each of them
+				foreach ($stock_history as $entry)
+				{
+					if ($entry['qty'] >= $global_quantity_to_decrement)
+					{
+						$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $global_quantity_to_decrement;
+						$global_quantity_to_decrement = 0;
+					}
+					else {
+						$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $entry['qty'];
+						$global_quantity_to_decrement -= $entry['qty'];
+					}
+
+					if ($global_quantity_to_decrement <= 0)
+						break;
+				}
+
+				// for each stock, decrements it and logs the mvts
+				foreach ($stock_collection as $stock)
+				{
+					if (array_key_exists($stock->id_stock, $quantity_to_decrement_by_stock) && is_array($quantity_to_decrement_by_stock[$stock->id_stock]))
+					{
+						$total_quantity_for_current_stock = 0;
+
+						foreach ($quantity_to_decrement_by_stock[$stock->id_stock] as $id_mvt_referrer => $qte)
+						{
+							// sets mvt params to save stock mvt
+							$mvt_params = array(
+								'id_stock' => $stock->id_stock,
+								'physical_quantity' => $qte,
+								'id_stock_mvt_reason' => $id_stock_mvt_reason,
+								'id_order' => $id_order,
+								'price_te' => $stock->price_te,
+								'sign' => -1,
+								'stock_mvt_referer' => $id_mvt_referrer,
+								'id_employee' => $context->employee->id_employee
+							);
+
+							// saves stock mvt
+							$stock_mvt = new StockMvt();
+							$stock_mvt->hydrate($mvt_params);
+							$stock_mvt->save();
+
+							$total_quantity_for_current_stock += $qte;
+						}
+
+						// sets new stock params
+						$stock_params = array(
+							'physical_quantity' => ($stock->physical_quantity - $total_quantity_for_current_stock),
+							'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity),
+						);
+
+						$return[$stock->id_stock]['quantity'] = $total_quantity_for_current_stock;
+						$return[$stock->id_stock]['price_te'] = $stock->price_te;
+
+						// saves stock in warehouse
+						$stock->hydrate($stock_params);
+						$stock->update();
+					}
+				}
 			break;
 		}
 
-		return true;
+		return $return;
 	}
 
 	/**

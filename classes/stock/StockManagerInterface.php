@@ -64,7 +64,7 @@ interface StockManagerInterface
 	 * @param int $id_stock_mouvement_reason
 	 * @param bool $is_usable
 	 * @param int $id_order Optionnal
-	 * @return bool
+	 * @return array - empty if an error occured, details of removed products quantities with corresponding prices otherwise
 	 */
 	public function removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mouvement_reason, $is_usable, $id_order = null);
 
