@@ -82,7 +82,7 @@ class StockWarehouseCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('ws.id_shop');
-		$query->from(_DB_PREFIX_.'warehouse_shop ws');
+		$query->from('warehouse_shop ws');
 		$query->where($this->identifier.' = '.(int)$this->id);
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
 	}
