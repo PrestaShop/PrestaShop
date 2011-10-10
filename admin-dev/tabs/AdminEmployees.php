@@ -182,16 +182,23 @@ class AdminEmployees extends AdminTab
 					<script type="text/javascript">
 						$(document).ready(function(){
 							$(\'select[name=id_profile]\').change(function(){
-								var val = $(this).val();
-								if(val == '._PS_ADMIN_PROFILE_.')
-								{
-									$(\'.assoShop input[type=checkbox]\').attr(\'disabled\', \'disabled\');
-									$(\'.assoShop input[type=checkbox]\').attr(\'checked\', \'checked\');
-								}
-								else
-									$(\'.assoShop input[type=checkbox]\').attr(\'disabled\', \'\');
+								ifSuperAdmin($(this));
 							});
+							
+							ifSuperAdmin($(\'select[name=id_profile]\'));
 						});
+
+						function ifSuperAdmin(el)
+						{
+							var val = $(el).val();
+							if(val == '._PS_ADMIN_PROFILE_.')
+							{
+								$(\'.assoShop input[type=checkbox]\').attr(\'disabled\', \'disabled\');
+								$(\'.assoShop input[type=checkbox]\').attr(\'checked\', \'checked\');
+							}
+							else
+								$(\'.assoShop input[type=checkbox]\').attr(\'disabled\', \'\');
+						}
 					</script>
 					';
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';

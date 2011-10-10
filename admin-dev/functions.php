@@ -397,6 +397,7 @@ function simpleXMLToArray ($xml, $flattenValues = true, $flattenAttributes = tru
 function generateShopList()
 {
 	$tree = Shop::getTree();
+	$context = Context::getContext();
 
 	// Get default value
 	list($shopID, $shopGroupID) = Shop::getContext();
@@ -410,14 +411,18 @@ function generateShopList()
 	// Generate HTML
 	$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
 	$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
-	$html .= (Context::getContext()->employee->id_profile == _PS_ADMIN_PROFILE_) ? '<option value="" class="first">'.translate('All shops').'</option>' : '';
+
+	if ($context->employee->id_profile == _PS_ADMIN_PROFILE_ ||
+					$context->shop->getTotalShopsWhoExists() == Employee::getTotalEmployeeShopById($context->employee->id))
+		$html .= '<option value="" class="first">'.translate('All shops').'</option>';
+	/*$html .= (Context::getContext()->employee->id_profile == _PS_ADMIN_PROFILE_) ? '<option value="" class="first">'.translate('All shops').'</option>' : '';*/
 	foreach ($tree as $gID => $group_data)
 	{
 		$disabled = ($group_data['totalShops'] != count($group_data['shops'])) ? 'disabled="disabled"' : '';
 		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.htmlspecialchars($group_data['name']).'</option>';
 		foreach ($group_data['shops'] as $sID => $shopData)
 			if ($shopData['active'])
-				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
+				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID || $context->shop->id == $sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
 	}
 	$html .= '</select>';
 
@@ -495,7 +500,6 @@ function runAdminTab($ajaxMode = false)
 			</div>
 				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
 				'.$bread.'</div>';
-
 
 			if (!$ajaxMode && Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
 			{

@@ -64,7 +64,7 @@ class ProfileCore extends ObjectModel
 		SELECT p.`id_profile`, `name`
 		FROM `'._DB_PREFIX_.'profile` p
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)($id_lang).')
-		ORDER BY `name` ASC');
+		ORDER BY `id_profile` ASC');
 	}
 
 	/**
