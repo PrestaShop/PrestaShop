@@ -46,13 +46,13 @@ interface StockManagerInterface
 	 * @param int id_product_attribute
 	 * @param Warehouse $warehouse
 	 * @param int $quantity
-	 * @param int $id_stock_mouvement_reason
+	 * @param int $id_stock_movement_reason
 	 * @param float $price_te
 	 * @param bool $is_usable
 	 * @param int $id_supplier_order Optionnal
 	 * @return bool
 	 */
-	public function addProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mouvement_reason, $price_te, $is_usable, $id_supplier_order = null);
+	public function addProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_movement_reason, $price_te, $is_usable, $id_supplier_order = null);
 
 	/**
 	 * For a given product, removes a given quantity
@@ -61,12 +61,12 @@ interface StockManagerInterface
 	 * @param int id_product_attribute
 	 * @param Warehouse $warehouse
 	 * @param int $quantity
-	 * @param int $id_stock_mouvement_reason
+	 * @param int $id_stock_movement_reason
 	 * @param bool $is_usable
 	 * @param int $id_order Optionnal
 	 * @return array - empty if an error occured, details of removed products quantities with corresponding prices otherwise
 	 */
-	public function removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mouvement_reason, $is_usable, $id_order = null);
+	public function removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_movement_reason, $is_usable, $id_order = null);
 
 	/**
 	 * For a given product, returns its physical quantity
@@ -101,12 +101,13 @@ interface StockManagerInterface
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $quantity
+	 * @param int $id_stock_movement_reason
 	 * @param Warehouse $warehouse_from
 	 * @param Warehouse $warehouse_to
 	 * @param bool $usable_from true by default
 	 * @param bool $usable_to true by default
 	 * @return bool
 	 */
-	public function transferBetweenWarehouses($id_product, $id_product_attribute, $quantity, $warehouse_from, $warehouse_to, $usable_from = true, $usable_to = true);
+	public function transferBetweenWarehouses($id_product, $id_product_attribute, $quantity, $id_stock_movement_reason, $warehouse_from, $warehouse_to, $usable_from = true, $usable_to = true);
 
 }
