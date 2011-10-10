@@ -394,7 +394,13 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouses_id = null, $usable = false)
 	{
-
+		$query = new DbQuery();
+		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
+		$query->from('stock s');
+		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		if (count($warehouses_id))
+			$query->where('s.id_warehouse IN('.implode(', ', $warehouses_id).')');
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 
 	/**
@@ -402,7 +408,20 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductRealQuantities($id_product, $id_product_attribute, $warehouses_id = null, $usable = false)
 	{
+		// Gets clients_orders_qty
+		$query = new DbQuery();
+		$query->select('SUM(od.product_quantity)');
+		$query->from('order_detail od');
+		$query->leftjoin('orders o ON o.id_order = od.id_order');
+		$query->where('od.product_id = '.(int)$id_product.' AND od.product_attribute_id = '.(int)$id_product_attribute);
+		$query->where('o.delivery_number = 0');
+		$clients_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
+		// Gets {physical OR usable}_qty
+		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouses_id, $usable);
+
+		// Returns real_qty = qty - clients_orders_qty
+		return ($qty - $clients_orders_qty);
 	}
 
 	/**
@@ -411,12 +430,44 @@ class StockManagerCore implements StockManagerInterface
 	public function transferBetweenWarehouses($id_product,
 											  $id_product_attribute,
 											  $quantity,
+											  $id_stock_movement_reason,
 											  $id_warehouse_from,
 											  $id_warehouse_to,
 											  $usable_from = true,
 											  $usable_to = true)
 	{
+		// Checks if this transfer is possible
+		if (getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity)
+			return false;
 
+		// Checks if the given warehouses are available
+		$warehouse_from = new Warehouse($id_warehouse_from);
+		$warehouse_to = new Warehouse($id_warehouse_to);
+		if (!Validate::isLoadedObject($warehouse_from) ||
+			!Validate::isLoadedObject($warehouse_to))
+			return false;
+
+		// Removes from warehouse_from
+		if (!count($stocks = $this->removeProduct($id_product,
+									   		 	  $id_product_attribute,
+									   		 	  $warehouse_from,
+									   		 	  $quantity,
+									   		 	  $id_stock_movement_reason,
+									   		 	  $is_usable_from)))
+			return false;
+		// Adds in warehouse_to
+		foreach ($stocks as $stock)
+		{
+			if (!$this->addProduct($id_product,
+								   $id_product_attribute,
+								   $warehouse_to,
+								   $stock['quantity'],
+								   $id_stock_movement_reason,
+								   $stock['price_te'],
+								   $usable_to))
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -446,15 +497,14 @@ class StockManagerCore implements StockManagerInterface
 		$query = new DbQuery();
 		$query->select('s.id_stock, s.physical_quantity, s.usable_quantity, s.price_te');
 		$query->from('stock s');
-		$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute);
-		if ($id_warehouse != null)
-			$query->where('id_warehouse = '.(int)$id_warehouse);
-		if ($price_te != null)
-			$query->where('price_te = '.(float)$price_te);
+		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		if ($id_warehouse)
+			$query->where('s.id_warehouse = '.(int)$id_warehouse);
+		if ($price_te)
+			$query->where('s.price_te = '.(float)$price_te);
 
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		return ObjectModel::hydrateCollection('Stock', $results);
 	}
-
 }
