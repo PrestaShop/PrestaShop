@@ -106,7 +106,7 @@ if (Tools::isSubmit('ajaxProductAccessories'))
 	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$jsonArray = array();
 
-	$products = Db::getInstance()->ExecuteS('
+	$products = Db::getInstance()->executeS('
 	SELECT p.`id_product`, pl.`name`
 	FROM `'._DB_PREFIX_.'product` p
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
@@ -133,7 +133,7 @@ if (Tools::isSubmit('ajaxDiscountCustomers'))
 	if (Validate::isBool_Id($filter))
 		$filterArray = explode('_', $filter);
 
-	$customers = Db::getInstance()->ExecuteS('
+	$customers = Db::getInstance()->executeS('
 	SELECT `id_customer`, `email`, CONCAT(`lastname`, \' \', `firstname`) as name
 	FROM `'._DB_PREFIX_.'customer`
 	WHERE `deleted` = 0 AND is_guest = 0
@@ -145,7 +145,7 @@ if (Tools::isSubmit('ajaxDiscountCustomers'))
 	ORDER BY CONCAT(`lastname`, \' \', `firstname`) ASC
 	LIMIT 50');
 
-	$groups = Db::getInstance()->ExecuteS('
+	$groups = Db::getInstance()->executeS('
 	SELECT g.`id_group`, gl.`name`
 	FROM `'._DB_PREFIX_.'group` g
 	LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($context->language->id).')
@@ -371,7 +371,7 @@ if (Tools::isSubmit('ajaxProductImagesPositions'))
 if (Tools::isSubmit('ajaxProductPackItems'))
 {
 	$jsonArray = array();
-	$products = Db::getInstance()->ExecuteS('
+	$products = Db::getInstance()->executeS('
 	SELECT p.`id_product`, pl.`name`
 	FROM `'._DB_PREFIX_.'product` p
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
@@ -387,7 +387,7 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 
 if (Tools::isSubmit('ajaxStates') AND Tools::isSubmit('id_country'))
 {
-	$states = Db::getInstance()->ExecuteS('
+	$states = Db::getInstance()->executeS('
 	SELECT s.id_state, s.name
 	FROM '._DB_PREFIX_.'state s
 	LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
@@ -417,7 +417,7 @@ if (Tools::isSubmit('submitCustomerNote') AND $id_customer = (int)Tools::getValu
 	$note = html_entity_decode(Tools::getValue('note'));
 	if (!empty($note) AND !Validate::isCleanHtml($note))
 		die ('error:validation');
-	if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `note` = "'.pSQL($note, true).'" WHERE id_customer = '.(int)$id_customer.' LIMIT 1'))
+	if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `note` = "'.pSQL($note, true).'" WHERE id_customer = '.(int)$id_customer.' LIMIT 1'))
 		die ('error:update');
 	die('ok');
 }
@@ -509,7 +509,7 @@ if (Tools::isSubmit('submitTrackClickOnHelp'))
 if (Tools::isSubmit('saveImportMatchs'))
 {
    $match = implode('|', Tools::getValue('type_value'));
-   Db::getInstance()->Execute('INSERT INTO  `'._DB_PREFIX_.'import_match` (
+   Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'import_match` (
 								`id_import_match` ,
 								`name` ,
 								`match`,
@@ -527,12 +527,12 @@ if (Tools::isSubmit('saveImportMatchs'))
 
 if (Tools::isSubmit('deleteImportMatchs'))
 {
-   Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
+   Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
 }
 
 if (Tools::isSubmit('loadImportMatchs'))
 {
-   $return = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
+   $return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
    die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'.$return[0]['skip'].'"}');
 }
 
@@ -595,7 +595,7 @@ if (Tools::isSubmit('getHookableModuleList'))
 	include('../init.php');
 	$hook_name = Tools::getValue('hook');
 	$hookableModulesList = array();
-	$modules = Db::getInstance()->ExecuteS('SELECT id_module, name FROM `'._DB_PREFIX_.'module` ');
+	$modules = Db::getInstance()->executeS('SELECT id_module, name FROM `'._DB_PREFIX_.'module` ');
 	foreach ($modules as $module)
 	{
 		if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php'))
@@ -625,7 +625,7 @@ if (Tools::isSubmit('saveHook'))
 			$sql = 'DELETE FROM '._DB_PREFIX_.'hook_module
 					WHERE id_hook = (SELECT id_hook FROM '._DB_PREFIX_.'hook WHERE `name` = \''.pSQL($hook).'\' LIMIT 1)
 						AND id_shop = '.$id_shop;
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 			$hookedModules = explode(',', Tools::getValue($hook));
 			$i = 1;
 			$value = '';
@@ -636,7 +636,7 @@ if (Tools::isSubmit('saveHook'))
 				$i++;
 			}
 			$value = rtrim($value, ',');
-			Db::getInstance()->Execute('INSERT INTO  '._DB_PREFIX_.'hook_module (id_module, id_shop, id_hook, position) VALUES '.$value);
+			Db::getInstance()->execute('INSERT INTO  '._DB_PREFIX_.'hook_module (id_module, id_shop, id_hook, position) VALUES '.$value);
 
 		}
 	}

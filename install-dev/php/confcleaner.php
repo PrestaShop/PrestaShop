@@ -27,7 +27,7 @@
 
 function configuration_double_cleaner()
 {
-	$result = Db::getInstance()->ExecuteS('
+	$result = Db::getInstance()->executeS('
 	SELECT name, MIN(id_configuration) AS minid
 	FROM '._DB_PREFIX_.'configuration
 	GROUP BY name

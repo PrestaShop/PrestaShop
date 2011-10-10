@@ -80,7 +80,7 @@ class OrderSlipCore extends ObjectModel
 
 	public static function getOrdersSlip($customer_id, $order_id = false)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_slip`
 		WHERE `id_customer` = '.(int)($customer_id).
@@ -90,7 +90,7 @@ class OrderSlipCore extends ObjectModel
 
 	public static function getOrdersSlipDetail($id_order_slip = true, $id_order_detail = false)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		($id_order_detail ? 'SELECT SUM(`product_quantity`) AS `total`' : 'SELECT *').
 		'FROM `'._DB_PREFIX_.'order_slip_detail`'
 		.($id_order_slip ? ' WHERE `id_order_slip` = '.(int)($id_order_slip) : '')
@@ -131,7 +131,7 @@ class OrderSlipCore extends ObjectModel
 
 	public function getProducts()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *, osd.product_quantity
 		FROM `'._DB_PREFIX_.'order_slip_detail` osd
 		INNER JOIN `'._DB_PREFIX_.'order_detail` od ON osd.id_order_detail = od.id_order_detail
@@ -149,7 +149,7 @@ class OrderSlipCore extends ObjectModel
 
 	public static function getSlipsIdByDate($dateFrom, $dateTo)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT `id_order_slip`
 		FROM `'._DB_PREFIX_.'order_slip`
 		WHERE `date_add` BETWEEN \''.pSQL($dateFrom).' 00:00:00\' AND \''.pSQL($dateTo).' 23:59:59\'

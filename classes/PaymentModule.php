@@ -42,14 +42,14 @@ abstract class PaymentModuleCore extends Module
 		// Insert currencies availability
 		if ($this->currencies_mode == 'checkbox')
 		{
-			if (!Db::getInstance()->Execute('
+			if (!Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
 			SELECT '.(int)($this->id).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0'))
 				return false;
 		}
 		elseif ($this->currencies_mode == 'radio')
 		{
-			if (!Db::getInstance()->Execute('
+			if (!Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
 			VALUES ('.(int)($this->id).', -2)'))
 				return false;
@@ -58,11 +58,11 @@ abstract class PaymentModuleCore extends Module
 			Tools::displayError('No currency mode for payment module');
 
 		// Insert countries availability
-		$return = Db::getInstance()->Execute('
+		$return = Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
 		SELECT '.(int)($this->id).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
 		// Insert group availability
-		$return &= Db::getInstance()->Execute('
+		$return &= Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'module_group` (id_module, id_group)
 		SELECT '.(int)($this->id).', id_group FROM `'._DB_PREFIX_.'group`');
 
@@ -71,9 +71,9 @@ abstract class PaymentModuleCore extends Module
 
 	public function uninstall()
 	{
-		if (!Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int)($this->id))
-			OR !Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int)($this->id))
-			OR !Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int)($this->id)))
+		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int)($this->id))
+			OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int)($this->id))
+			OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int)($this->id)))
 			return false;
 		return parent::uninstall();
 	}
@@ -563,7 +563,7 @@ abstract class PaymentModuleCore extends Module
 
 		if (!empty($values))
 		{
-			return Db::getInstance()->Execute('
+			return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
 			VALUES '.rtrim($values, ',')
 			);

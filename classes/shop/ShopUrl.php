@@ -84,7 +84,7 @@ class ShopUrlCore extends ObjectModel
 				FROM '._DB_PREFIX_.'shop_url
 				WHERE 1
 					'.($id_shop ? ' AND id_shop = '.(int)$id_shop : '');
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 
 	public function setMain()

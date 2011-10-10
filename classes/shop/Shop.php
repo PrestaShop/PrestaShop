@@ -175,7 +175,7 @@ class ShopCore extends ObjectModel
 				$id = 'id_shop';
 			else
 				$table_name .= '_'.$row['type'];
-			$res &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
+			$res &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
 		}
 
 		Shop::cacheShops(true);
@@ -340,7 +340,7 @@ class ShopCore extends ObjectModel
 				FROM '._DB_PREFIX.'shop_url
 				WHERE active = 1
 					AND id_shop = '.(int)$this->id;
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/**
@@ -399,7 +399,7 @@ class ShopCore extends ObjectModel
 					'.$where.'
 				ORDER BY gs.name, s.name';
 
-		if ($results = Db::getInstance()->ExecuteS($sql))
+		if ($results = Db::getInstance()->executeS($sql))
 		{
 			$group_shop = new GroupShop();
 			foreach ($results as $row)
@@ -790,12 +790,12 @@ class ShopCore extends ObjectModel
 					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
 								(SELECT '.$keys.', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
 								WHERE `'.$id.'` = '.(int)$old_id.')';
-					Db::getInstance()->Execute($sql);
+					Db::getInstance()->execute($sql);
 				}
 			}
 			/*else
 			{
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
 			}*/
 		}
 	}

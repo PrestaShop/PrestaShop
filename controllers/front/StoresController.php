@@ -89,7 +89,7 @@ class StoresControllerCore extends FrontController
 	 */
 	protected function assignStoresSimplified()
 	{
-		$stores = Db::getInstance()->ExecuteS('
+		$stores = Db::getInstance()->executeS('
 		SELECT s.*, cl.name country, st.iso_code state
 		FROM '._DB_PREFIX_.'store s
 		'.$this->context->shop->sqlAsso('shop', 's').'
@@ -115,7 +115,7 @@ class StoresControllerCore extends FrontController
 
 		if (Tools::getValue('all') == 1)
 		{
-			$stores = Db::getInstance()->ExecuteS('
+			$stores = Db::getInstance()->executeS('
 			SELECT s.*, cl.name country, st.iso_code state
 			FROM '._DB_PREFIX_.'store s
 			'.$this->context->shop->sqlAsso('shop', 's').'
@@ -128,7 +128,7 @@ class StoresControllerCore extends FrontController
 			$distance = (int)(Tools::getValue('radius', 100));
 			$multiplicator = ($distanceUnit == 'km' ? 6371 : 3959);
 
-			$stores = Db::getInstance()->ExecuteS('
+			$stores = Db::getInstance()->executeS('
 			SELECT s.*, cl.name country, st.iso_code state,
 			('.(int)($multiplicator).'
 				* acos(

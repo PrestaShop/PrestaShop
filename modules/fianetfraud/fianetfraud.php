@@ -101,7 +101,7 @@ class Fianetfraud extends Module
 		$sql = str_replace('PREFIX_', _DB_PREFIX_, $sql);
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach ($sql AS $query)
-			if ($query AND sizeof($query) AND !Db::getInstance()->Execute(trim($query)))
+			if ($query AND sizeof($query) AND !Db::getInstance()->execute(trim($query)))
 				return false;
 		$langs = Language::getLanguages();
 
@@ -300,17 +300,17 @@ class Fianetfraud extends Module
 				if($module->id)
 				{
 					$module->country = array();
-					$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)($module->id));
+					$countries = DB::getInstance()->executeS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)($module->id));
 					foreach ($countries as $country)
 						$module->country[] = $country['id_country'];
 
 					$module->currency = array();
-					$currencies = DB::getInstance()->ExecuteS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)($module->id));
+					$currencies = DB::getInstance()->executeS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)($module->id));
 					foreach ($currencies as $currency)
 						$module->currency[] = $currency['id_currency'];
 
 					$module->group = array();
-					$groups = DB::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)($module->id));
+					$groups = DB::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)($module->id));
 					foreach ($groups as $group)
 						$module->group[] = $group['id_group'];
 				}
@@ -351,17 +351,17 @@ class Fianetfraud extends Module
 	{
 		if ($_SERVER['REMOTE_ADDR'] == '0.0.0.0' OR $_SERVER['REMOTE_ADDR'] == '' OR $_SERVER['REMOTE_ADDR'] === false)
 			return true;
-		$res = Db::getInstance()->ExecuteS('
+		$res = Db::getInstance()->executeS('
 		SELECT `id_cart`
 		FROM '._DB_PREFIX_.'fianet_fraud
 		WHERE id_cart = '.(int)($params['cart']->id));
 		if (Db::getInstance()->NumRows() > 0)
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'fianet_fraud`
 			SET `ip_address` = '.ip2long($_SERVER['REMOTE_ADDR']).', `date` = \''.pSQL(date('Y-m-d H:i:s')).'\'
 			WHERE `id_cart` = '.(int)($params['cart']->id).' LIMIT 1');
 		else
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'fianet_fraud` (`id_cart`, `ip_address`, `date`)
 			VALUES ('.(int)($params['cart']->id).', '.ip2long($_SERVER['REMOTE_ADDR']).',\''.date('Y-m-d H:i:s').'\')');
 		return true;
@@ -526,17 +526,17 @@ class Fianetfraud extends Module
 
 		$sender->add_order($orderFianet);
 		$res = $sender->send_orders_stacking();
-		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'fianet_fraud_orders(id_order, date_add) VALUES('.(int)($params['order']->id).', \''.pSQL(date('Y-m-d H:i:s')).'\')');
+		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'fianet_fraud_orders(id_order, date_add) VALUES('.(int)($params['order']->id).', \''.pSQL(date('Y-m-d H:i:s')).'\')');
 		return true;
 	}
 
 	public static function checkWaitingOrders()
 	{
-		$orders = Db::getInstance()->ExecuteS('SELECT id_order FROM '._DB_PREFIX_.'fianet_fraud_orders WHERE `date_add` > \''.pSQL(strtotime('+5 minute')).'\'');
+		$orders = Db::getInstance()->executeS('SELECT id_order FROM '._DB_PREFIX_.'fianet_fraud_orders WHERE `date_add` > \''.pSQL(strtotime('+5 minute')).'\'');
 		foreach ($orders AS $order)
 		{
 			self::updateOrderHistory((int)($order['id_order']));
-			Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'fianet_fraud_orders WHERE id_order='.(int)($order['id_order']));
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'fianet_fraud_orders WHERE id_order='.(int)($order['id_order']));
 		}
 	}
 
@@ -615,7 +615,7 @@ class Fianetfraud extends Module
 
 	public function getSACCategories()
 	{
-		$categories = Db::getInstance()->ExecuteS('SELECT id_category, id_sac FROM '._DB_PREFIX_.'sac_categories');
+		$categories = Db::getInstance()->executeS('SELECT id_category, id_sac FROM '._DB_PREFIX_.'sac_categories');
 		$sac_cat = array();
 		if ($categories)
 			foreach ($categories AS $category)

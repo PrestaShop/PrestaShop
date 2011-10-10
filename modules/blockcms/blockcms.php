@@ -58,7 +58,7 @@ class BlockCms extends Module
 		$queryLang .= '(1, '.(int)($language['id_lang']).'),';
 
 		if (!parent::install() OR !$this->registerHook('leftColumn') OR !$this->registerHook('rightColumn') OR !$this->registerHook('footer') OR !$this->registerHook('header') OR
-		!Db::getInstance()->Execute('
+		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
 		`id_cms_block` int(10) unsigned NOT NULL auto_increment,
 		`id_cms_category` int(10) unsigned NOT NULL,
@@ -67,17 +67,17 @@ class BlockCms extends Module
 		`display_store` tinyint(1) unsigned NOT NULL default \'1\',
 		PRIMARY KEY (`id_cms_block`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
-		!Db::getInstance()->Execute('
+		!Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`) VALUES(1, 0, 0)') OR
-		!Db::getInstance()->Execute('
+		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_lang`(
 		`id_cms_block` int(10) unsigned NOT NULL,
 		`id_lang` int(10) unsigned NOT NULL,
 		`name` varchar(40) NOT NULL default \'\',
 		PRIMARY KEY (`id_cms_block`, `id_lang`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
-		!Db::getInstance()->Execute(rtrim($queryLang, ',')) OR
-		!Db::getInstance()->Execute('
+		!Db::getInstance()->execute(rtrim($queryLang, ',')) OR
+		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_page`(
 		`id_cms_block_page` int(10) unsigned NOT NULL auto_increment,
 		`id_cms_block` int(10) unsigned NOT NULL,
@@ -98,14 +98,14 @@ class BlockCms extends Module
 		!Configuration::deleteByName('FOOTER_CMS') OR
 		!Configuration::deleteByName('FOOTER_BLOCK_ACTIVATION') OR
 		!Configuration::deleteByName('FOOTER_POWEREDBY') OR
-		!Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'cms_block` , `'._DB_PREFIX_.'cms_block_page`, `'._DB_PREFIX_.'cms_block_lang`'))
+		!Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'cms_block` , `'._DB_PREFIX_.'cms_block_page`, `'._DB_PREFIX_.'cms_block_lang`'))
 		return false;
 		return true;
 	}
 
 	public function getBlockCMS($id_cms_block)
 	{
-		$cmsBlocks = Db::getInstance()->ExecuteS('
+		$cmsBlocks = Db::getInstance()->executeS('
 		SELECT cb.`id_cms_category`, cb.`location`, cb.`display_store`, cbl.id_lang, cbl.name
 		FROM `'._DB_PREFIX_.'cms_block` cb
 		LEFT JOIN `'._DB_PREFIX_.'cms_block_lang` cbl ON (cbl.`id_cms_block` = cb.`id_cms_block`)
@@ -125,7 +125,7 @@ class BlockCms extends Module
 	private function getBlocksCMS($location)
 	{
 
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT bc.`id_cms_block`, bcl.`name` block_name, ccl.`name` category_name, bc.`position`, bc.`id_cms_category`, bc.`display_store`
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
@@ -185,7 +185,7 @@ class BlockCms extends Module
 	{
 		$context = Context::getContext();
 
-		$cmsCategories = Db::getInstance()->ExecuteS('
+		$cmsCategories = Db::getInstance()->executeS('
 		SELECT bc.`id_cms_block`, bc.`id_cms_category`, bc.`display_store`, ccl.`link_rewrite`, ccl.`name` category_name, bcl.`name` block_name
 		FROM `'._DB_PREFIX_.'cms_block` bc
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
@@ -201,7 +201,7 @@ class BlockCms extends Module
 			$key = (int)$cmsCategory['id_cms_block'];
 			$content[$key]['display_store'] = $cmsCategory['display_store'];
 
-			$content[$key]['cms'] = Db::getInstance()->ExecuteS('
+			$content[$key]['cms'] = Db::getInstance()->executeS('
 				SELECT cl.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_block_page` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON (bcp.`id_cms` = cl.`id_cms`)
@@ -219,7 +219,7 @@ class BlockCms extends Module
 
 			$content[$key]['cms'] = $links;
 
-			$content[$key]['categories'] = Db::getInstance()->ExecuteS('
+			$content[$key]['categories'] = Db::getInstance()->executeS('
 				SELECT bcp.`id_cms`, cl.`name`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_block_page` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (bcp.`id_cms` = cl.`id_cms_category`)
@@ -606,24 +606,24 @@ class BlockCms extends Module
 		$this->_html .= 'pos change!';
 		if (Tools::getValue('way') == 0)
 		{
-			if (Db::getInstance()->Execute('
+			if (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'cms_block`
 			SET `position` = '.((int)Tools::getValue('position') + 1).'
 			WHERE `position` = '.((int)Tools::getValue('position')).'
 			AND `location` = '.(int)Tools::getValue('location')))
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cms_block`
 				SET `position` = '.((int)Tools::getValue('position')).'
 				WHERE `id_cms_block` = '.(int)Tools::getValue('id_cms_block'));
 		}
 		elseif (Tools::getValue('way') == 1)
 		{
-			if(Db::getInstance()->Execute('
+			if(Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'cms_block`
 			SET `position` = '.((int)Tools::getValue('position') - 1).'
 			WHERE `position` = '.((int)Tools::getValue('position')).'
 			AND `location` = '.(int)Tools::getValue('location')))
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cms_block`
 				SET `position` = '.((int)Tools::getValue('position')).'
 				WHERE `id_cms_block` = '.(int)Tools::getValue('id_cms_block'));
@@ -642,18 +642,18 @@ class BlockCms extends Module
 			$languages = Language::getLanguages(false);
 			if (Tools::isSubmit('addBlockCMS'))
 			{
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`, `display_store`)
 				VALUES('.(int)Tools::getValue('id_category').', '.(int)Tools::getValue('block_location').',
 				'.(int)$position.', '.(int)Tools::getValue('PS_STORES_DISPLAY_CMS').')');
 				$id_cms_block = Db::getInstance()->Insert_ID();
 				foreach ($languages as $language)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`)
 					VALUES('.(int)$id_cms_block.', '.(int)$language['id_lang'].',
 					"'.pSQL(Tools::getValue('block_name_'.$language['id_lang'])).'")');
 
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cms_block`
 				SET `display_store` = '.Configuration::get('PS_STORES_DISPLAY_FOOTER'));
 			}
@@ -661,23 +661,23 @@ class BlockCms extends Module
 			{
 				$id_cms_block = Tools::getvalue('id_cms_block');
 
-				$old_block = Db::getInstance()->ExecuteS('
+				$old_block = Db::getInstance()->executeS('
 				SELECT `location`, `position`
 				FROM `'._DB_PREFIX_.'cms_block`
 				WHERE `id_cms_block` = '.(int)$id_cms_block);
 
 				$location_change = ($old_block[0]['location'] != (int)Tools::getvalue('block_location'));
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'cms_block_page`
 				WHERE `id_cms_block` = '.(int)$id_cms_block);
 
 				if ($location_change == true)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'cms_block`
 					SET `position` = (`position` - 1) WHERE `position` > '.(int)$old_block[0]['position'].'
 					AND `location` = '.(int)$old_block[0]['location']);
 
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cms_block`
 				SET `location` = '.(int)(Tools::getvalue('block_location')).',
 				`id_cms_category` = '.(int)(Tools::getvalue('id_category')).'
@@ -689,7 +689,7 @@ class BlockCms extends Module
 				Configuration::updateValue('PS_STORES_DISPLAY_FOOTER', (int)(Tools::getValue('PS_STORES_DISPLAY_CMS')));
 
 				foreach ($languages as $language)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'cms_block_lang`
 					SET `name` = "'.pSQL(Tools::getValue('block_name_'.$language['id_lang'])).'"
 					WHERE `id_cms_block` = '.(int)$id_cms_block.'
@@ -700,7 +700,7 @@ class BlockCms extends Module
 			foreach ($cmsBoxes as $cmsBox)
 			{
 				$cms_properties = explode('_', $cmsBox);
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`)
 					VALUES('.(int)$id_cms_block.', '.(int)$cms_properties[1].', '.(int)$cms_properties[0].')');
 			}
@@ -711,20 +711,20 @@ class BlockCms extends Module
 		}
 		elseif (Tools::isSubmit('deleteBlockCMS') AND Tools::getValue('id_cms_block'))
 		{
-			$old_block = Db::getInstance()->ExecuteS('SELECT `location`, `position` FROM `'._DB_PREFIX_.'cms_block` WHERE `id_cms_block` = '.Tools::getvalue('id_cms_block'));
+			$old_block = Db::getInstance()->executeS('SELECT `location`, `position` FROM `'._DB_PREFIX_.'cms_block` WHERE `id_cms_block` = '.Tools::getvalue('id_cms_block'));
 			if (sizeof($old_block))
 			{
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cms_block`
 				SET `position` = (`position` - 1)
 				WHERE `position` > '.(int)$old_block[0]['position'].'
 				AND `location` = '.(int)$old_block[0]['location']);
 
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'cms_block`
 				WHERE `id_cms_block` = '.(int)(Tools::getValue('id_cms_block')));
 
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'cms_block_page`
 				WHERE `id_cms_block` = '.(int)(Tools::getValue('id_cms_block')));
 

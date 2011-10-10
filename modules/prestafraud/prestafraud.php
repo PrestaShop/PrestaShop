@@ -98,7 +98,7 @@ class PrestaFraud extends Module
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
 
 		foreach ($sql as $query)
-			if ($query AND sizeof($query) AND !Db::getInstance()->Execute(trim($query)))
+			if ($query AND sizeof($query) AND !Db::getInstance()->execute(trim($query)))
 				return false;
 		return true;
 	}
@@ -410,7 +410,7 @@ class PrestaFraud extends Module
 
 		$carrier_infos->addChild('type', $carriers_type[$carrier->id]);
 		if ($this->_pushDatas($root->asXml()) !== false)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'prestafraud_orders (id_order) VALUES('.(int)$params['order']->id.')');
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'prestafraud_orders (id_order) VALUES('.(int)$params['order']->id.')');
 		return true;
 	}
 	
@@ -425,12 +425,12 @@ class PrestaFraud extends Module
 		FROM '._DB_PREFIX_.'prestafraud_carts
 		WHERE id_cart='.(int)($params['cart']->id));
 		if ($res)
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'prestafraud_carts`
 			SET `ip_address` = '.ip2long($_SERVER['REMOTE_ADDR']).', `date` = \''.pSQL(date('Y-m-d H:i:s')).'\'
 			WHERE `id_cart` = '.(int)($params['cart']->id).' LIMIT 1');
 		else
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'prestafraud_carts` (`id_cart`, `ip_address`, `date`)
 			VALUES ('.(int)($params['cart']->id).', '.ip2long($_SERVER['REMOTE_ADDR']).',\''.date('Y-m-d H:i:s').'\')');
 		return true;
@@ -453,7 +453,7 @@ class PrestaFraud extends Module
 		FROM '._DB_PREFIX_.'orders
 		WHERE valid=0 AND id_order!='.(int)$order->id.' AND id_customer = '.(int)$order->id_customer);
 
-		$ip_addresses = Db::getInstance()->ExecuteS('
+		$ip_addresses = Db::getInstance()->executeS('
 		SELECT c.ip_address
 		FROM '._DB_PREFIX_.'guest g
 		LEFT JOIN '._DB_PREFIX_.'connections c ON (c.id_guest = g.id_guest)
@@ -513,7 +513,7 @@ class PrestaFraud extends Module
 				return false;
 			$xml = simplexml_load_string($result);
 			if ((int)$xml->check_scoring->status != -1)
-				Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'prestafraud_orders SET scoring = '.(float)$xml->check_scoring->scoring.', comment = \''.pSQL($xml->check_scoring->comment).'\' WHERE id_order='.(int)$id_order);
+				Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'prestafraud_orders SET scoring = '.(float)$xml->check_scoring->scoring.', comment = \''.pSQL($xml->check_scoring->comment).'\' WHERE id_order='.(int)$id_order);
 			$scoring = 	array('scoring' => (float)$xml->check_scoring->scoring, 'comment' => (string)$xml->check_scoring->comment);
 		}
 		return $scoring;
@@ -530,7 +530,7 @@ class PrestaFraud extends Module
 	
 	private function _getConfiguredCarriers()
 	{
-		$res =  Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'prestafraud_carrier');
+		$res =  Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'prestafraud_carrier');
 		$carriers = array();
 		foreach ($res AS $row)
 			$carriers[$row['id_carrier']] = $row['id_prestafraud_carrier_type'];
@@ -540,7 +540,7 @@ class PrestaFraud extends Module
 	
 	private function _getConfiguredPayments()
 	{
-		$res =  Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'prestafraud_payment');
+		$res =  Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'prestafraud_payment');
 		$payments = array();
 		foreach ($res AS $row)
 			$payments[$row['id_module']] = $row['id_prestafraud_payment_type'];
@@ -550,21 +550,21 @@ class PrestaFraud extends Module
 	
 	private function _setCarriersConfiguration($carriers)
 	{
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'prestafraud_carrier');
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'prestafraud_carrier');
 		foreach ($carriers AS $id_carrier => $id_carrier_type)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'prestafraud_carrier (id_carrier, id_prestafraud_carrier_type) VALUES ('.(int)$id_carrier.', '.(int)$id_carrier_type.')');
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'prestafraud_carrier (id_carrier, id_prestafraud_carrier_type) VALUES ('.(int)$id_carrier.', '.(int)$id_carrier_type.')');
 	}
 	
 	private function _setPaymentsConfiguration($payments)
 	{
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'prestafraud_payment');
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'prestafraud_payment');
 		foreach ($payments AS $id_module => $id_payment_type)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'prestafraud_payment (id_module, id_prestafraud_payment_type) VALUES ('.(int)$id_module.', '.(int)$id_payment_type.')');
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'prestafraud_payment (id_module, id_prestafraud_payment_type) VALUES ('.(int)$id_module.', '.(int)$id_payment_type.')');
 	}
 	
 	private function _updateConfiguredCarrier($old, $new)
 	{
-		return Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'prestafraud_carrier SET id_carrier='.(int)$new.' WHERE id_carrier='.(int)$old);
+		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'prestafraud_carrier SET id_carrier='.(int)$new.' WHERE id_carrier='.(int)$old);
 	}
 	
 	private function _pushDatas($datas)

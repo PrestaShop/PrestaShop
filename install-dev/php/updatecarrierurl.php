@@ -31,12 +31,12 @@ function update_carrier_url()
 	$sql = '
 		SELECT c.`id_carrier`, c.`url`
 		FROM `'._DB_PREFIX_.'carrier` c';
-	$carriers = Db::getInstance()->ExecuteS($sql);
+	$carriers = Db::getInstance()->executeS($sql);
 
 	// Check each one and erase carrier URL if not correct URL
 	foreach ($carriers as $carrier)
 		if (!Validate::isAbsoluteUrl($carrier['url']))
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'carrier`
 				SET `url` = \'\'
 				WHERE  `id_carrier`= '.(int)($carrier['id_carrier']));

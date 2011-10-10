@@ -38,7 +38,7 @@ if ($id = Tools::getValue('id_request_sql'))
 
 		if ($sql)
 		{
-			$results = Db::getInstance()->ExecuteS($sql[0]['sql']);
+			$results = Db::getInstance()->executeS($sql[0]['sql']);
 			foreach (array_keys($results[0]) as $key)
 			{
 				$tab_key[] = $key;

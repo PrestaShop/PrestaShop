@@ -187,8 +187,8 @@ class DiscountCore extends ObjectModel
 		// Refresh cache of feature detachable
 		Configuration::updateGlobalValue('PS_DISCOUNT_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
 
-		return (Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_discount WHERE id_discount = '.(int)($this->id)) &&
-				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'discount_category WHERE id_discount = '.(int)($this->id)));
+		return (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_discount WHERE id_discount = '.(int)($this->id)) &&
+				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'discount_category WHERE id_discount = '.(int)($this->id)));
 	}
 
 	public function getTranslationsFieldsChild()
@@ -205,7 +205,7 @@ class DiscountCore extends ObjectModel
 	  */
 	public static function getDiscountTypes($id_lang)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM '._DB_PREFIX_.'discount_type dt
 		LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)($id_lang).')');
@@ -279,7 +279,7 @@ class DiscountCore extends ObjectModel
 		if ($hasStock)
 			$sql .= ' AND d.`quantity` != 0';
 
-		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		foreach ($res as &$discount)
 			if ($discount['quantity_per_user'])
@@ -390,7 +390,7 @@ class DiscountCore extends ObjectModel
 
 	public static function getCategories($id_discount)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'discount_category`
 		WHERE `id_discount` = '.(int)($id_discount));
@@ -404,24 +404,24 @@ class DiscountCore extends ObjectModel
 		if ($categories === null)
 		{
 			// Compatibility for modules which create discount without setting categories (ex. fidelity, sponsorship)
-			$result = Db::getInstance()->ExecuteS('SELECT id_category FROM '._DB_PREFIX_.'category');
+			$result = Db::getInstance()->executeS('SELECT id_category FROM '._DB_PREFIX_.'category');
 			$categories = array();
 			foreach ($result as $row)
 				$categories[] = $row['id_category'];
 		}
 		elseif (!is_array($categories) OR !sizeof($categories))
 			return false;
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'discount_category`
 			WHERE `id_discount`='.(int)$this->id);
 		foreach($categories AS $category)
 		{
-			Db::getInstance()->ExecuteS('
+			Db::getInstance()->executeS('
 			SELECT `id_discount`
 			FROM `'._DB_PREFIX_.'discount_category`
 			WHERE `id_discount`='.(int)($this->id).' AND `id_category`='.(int)($category));
 			if (Db::getInstance()->NumRows() == 0)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`, `id_category`)
 					VALUES('.(int)($this->id).','.(int)($category).')');
 		}
@@ -545,29 +545,29 @@ class DiscountCore extends ObjectModel
 
 		$sql .= ')'; // close parenthesis openned above
 
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 
 	public static function deleteByIdCustomer($id_customer)
 	{
-		$discounts = Db::getInstance()->ExecuteS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount` WHERE `id_customer` = '.(int)($id_customer));
+		$discounts = Db::getInstance()->executeS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount` WHERE `id_customer` = '.(int)($id_customer));
 		foreach ($discounts as $discount)
 		{
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)($discount['id_discount']));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_category` WHERE `id_discount` = '.(int)($discount['id_discount']));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_lang` WHERE `id_discount` = '.(int)($discount['id_discount']));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)($discount['id_discount']));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'discount_category` WHERE `id_discount` = '.(int)($discount['id_discount']));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'discount_lang` WHERE `id_discount` = '.(int)($discount['id_discount']));
 		}
 		return true;
 	}
 
 	public static function deleteByIdGroup($id_group)
 	{
-		$discounts = Db::getInstance()->ExecuteS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount` WHERE `id_group` = '.(int)($id_group));
+		$discounts = Db::getInstance()->executeS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount` WHERE `id_group` = '.(int)($id_group));
 		foreach ($discounts as $discount)
 		{
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)($discount['id_discount']));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_category` WHERE `id_discount` = '.(int)($discount['id_discount']));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'discount_lang` WHERE `id_discount` = '.(int)($discount['id_discount']));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'discount` WHERE `id_discount` = '.(int)($discount['id_discount']));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'discount_category` WHERE `id_discount` = '.(int)($discount['id_discount']));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'discount_lang` WHERE `id_discount` = '.(int)($discount['id_discount']));
 		}
 		return true;
 	}

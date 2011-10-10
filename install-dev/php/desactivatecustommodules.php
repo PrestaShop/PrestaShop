@@ -41,7 +41,7 @@ function desactivate_custom_modules()
 				$arrNativeModules[] = '"'.pSQL($module['name']).'"';
 		}
 
-	$arrNonNative = $db->ExecuteS('
+	$arrNonNative = $db->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'module` m
 		WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
@@ -57,7 +57,7 @@ function desactivate_custom_modules()
 	foreach ($uninstallMe as $k=>$v)
 		$uninstallMe[$k] = '"'.pSQL($v).'"';
 
-	return Db::getInstance()->Execute('
+	return Db::getInstance()->execute('
 	UPDATE `'._DB_PREFIX_.'module`
 	SET `active`= 0
 	WHERE `name` IN ('.implode(',',$uninstallMe).')');

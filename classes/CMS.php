@@ -91,7 +91,7 @@ class CMSCore extends ObjectModel
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
 		FROM '._DB_PREFIX_.'cms c
 		LEFT JOIN '._DB_PREFIX_.'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = '.(int)($id_lang).')
@@ -115,7 +115,7 @@ class CMSCore extends ObjectModel
 		if (empty($id_lang))
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, l.meta_title
 		FROM  '._DB_PREFIX_.'cms c
 		JOIN '._DB_PREFIX_.'cms_lang l ON (c.id_cms = l.id_cms)
@@ -126,7 +126,7 @@ class CMSCore extends ObjectModel
 
 	public function updatePosition($way, $position)
 	{
-		if (!$res = Db::getInstance()->ExecuteS('
+		if (!$res = Db::getInstance()->executeS('
 			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category` 
 			FROM `'._DB_PREFIX_.'cms` cp
 			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.' 
@@ -143,7 +143,7 @@ class CMSCore extends ObjectModel
 
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'cms`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position` 
@@ -151,7 +151,7 @@ class CMSCore extends ObjectModel
 				? '> '.(int)($movedCms['position']).' AND `position` <= '.(int)($position)
 				: '< '.(int)($movedCms['position']).' AND `position` >= '.(int)($position)).'
 			AND `id_cms_category`='.(int)($movedCms['id_cms_category']))
-		&& Db::getInstance()->Execute('
+		&& Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'cms`
 			SET `position` = '.(int)($position).'
 			WHERE `id_cms` = '.(int)($movedCms['id_cms']).'
@@ -160,7 +160,7 @@ class CMSCore extends ObjectModel
 
 	public static function cleanPositions($id_category)
 	{
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_cms`
 		FROM `'._DB_PREFIX_.'cms`
 		WHERE `id_cms_category` = '.(int)($id_category).'
@@ -171,7 +171,7 @@ class CMSCore extends ObjectModel
 					SET `position` = '.(int)$i.'
 					WHERE `id_cms_category` = '.(int)$id_category.'
 						AND `id_cms` = '.(int)$result[$i]['id_cms'];
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 		}
 		return true;
 	}
@@ -183,7 +183,7 @@ class CMSCore extends ObjectModel
 
 	public static function getCMSPages($id_lang = null, $id_cms_category = null, $active = true)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'cms` c
 		JOIN `'._DB_PREFIX_.'cms_lang` l ON (c.id_cms = l.id_cms)'.
@@ -200,6 +200,6 @@ class CMSCore extends ObjectModel
 				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
 				WHERE c.`id_cms` = '.(int)$id_cms.'
 				AND l.`active` = 1';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 }

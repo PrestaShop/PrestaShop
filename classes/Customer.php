@@ -198,7 +198,7 @@ class CustomerCore extends ObjectModel
 			$obj = new Address((int)($address['id_address']));
 			$obj->delete();
 		}
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($this->id));
 		Discount::deleteByIdCustomer((int)($this->id));
 		return parent::delete();
 	}
@@ -217,7 +217,7 @@ class CustomerCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE 1 '.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `id_customer` ASC';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/**
@@ -344,7 +344,7 @@ class CustomerCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
 				WHERE `id_lang` = '.(int)($id_lang).' AND `id_customer` = '.(int)($this->id).' AND a.`deleted` = 0';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/**
@@ -399,7 +399,7 @@ class CustomerCore extends ObjectModel
 						OR `lastname` LIKE \'%'.pSQL($query).'%\'
 						OR `firstname` LIKE \'%'.pSQL($query).'%\'
 					)'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER);
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/**
@@ -433,7 +433,7 @@ class CustomerCore extends ObjectModel
 
 	public function getLastConnections()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
         FROM `'._DB_PREFIX_.'guest` g
         LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
@@ -468,7 +468,7 @@ class CustomerCore extends ObjectModel
 
 	public function cleanGroups()
 	{
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)($this->id));
 	}
 
 	public function addGroups($groups)
@@ -488,7 +488,7 @@ class CustomerCore extends ObjectModel
 		if (!isset(self::$_customer_groups[$id_customer]))
 		{
 			self::$_customer_groups[$id_customer] = array();
-			$result = Db::getInstance()->ExecuteS('
+			$result = Db::getInstance()->executeS('
 			SELECT cg.`id_group`
 			FROM '._DB_PREFIX_.'customer_group cg
 			WHERE cg.`id_customer` = '.(int)$id_customer);
@@ -510,7 +510,7 @@ class CustomerCore extends ObjectModel
 
 	public function getBoughtProducts()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT * FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE o.valid = 1 AND o.`id_customer` = '.(int)($this->id));
@@ -543,7 +543,7 @@ class CustomerCore extends ObjectModel
 		parent::toggleStatus();
 
 		/* Change status to active/inactive */
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		UPDATE `'.pSQL(_DB_PREFIX_.$this->table).'`
 		SET `date_upd` = NOW()
 		WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));

@@ -68,6 +68,6 @@ class StockMvtReasonCore extends ObjectModel
 		$sql = 'SELECT smrl.name, smr.id_stock_mvt_reason, smr.sign
 				FROM '._DB_PREFIX_.'stock_mvt_reason smr
 				LEFT JOIN '._DB_PREFIX_.'stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 }

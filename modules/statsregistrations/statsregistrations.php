@@ -150,14 +150,14 @@ class StatsRegistrations extends ModuleGraph
 	
 	protected function setAllTimeValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		foreach ($result AS $row)
 		    $this->_values[(int)(substr($row['date_add'], 0, 4))]++;
 	}
 	
 	protected function setYearValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		foreach ($result AS $row)
 		{
 			$mounth = (int)substr($row['date_add'], 5, 2);
@@ -169,14 +169,14 @@ class StatsRegistrations extends ModuleGraph
 	
 	protected function setMonthValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		foreach ($result AS $row)
 			$this->_values[(int)(substr($row['date_add'], 8, 2))]++;
 	}
 
 	protected function setDayValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate());
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		foreach ($result AS $row)
 		    $this->_values[(int)(substr($row['date_add'], 11, 2))]++;
 	}

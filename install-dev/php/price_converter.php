@@ -32,7 +32,7 @@ function convert_product_price()
 	$taxRates = array();
 	foreach ($taxes as $data)
 		$taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
-	$resource = DB::getInstance()->ExecuteS('SELECT `id_product`, `price`, `id_tax` FROM `'._DB_PREFIX_.'product`', false);
+	$resource = DB::getInstance()->executeS('SELECT `id_product`, `price`, `id_tax` FROM `'._DB_PREFIX_.'product`', false);
 	if (!$resource)
 		die(Db::getInstance()->getMsgError());
 	while ($row = DB::getInstance()->nextRow($resource))

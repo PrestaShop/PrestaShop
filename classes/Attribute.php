@@ -84,16 +84,16 @@ class AttributeCore extends ObjectModel
 
 	public function delete()
 	{
-		if (($result = Db::getInstance()->ExecuteS('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id)) === false)
+		if (($result = Db::getInstance()->executeS('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id)) === false)
 			return false;
 		$combinationIds = array();
 		if (Db::getInstance()->numRows())
 		{
 			foreach ($result AS $row)
 				$combinationIds[] = (int)$row['id_product_attribute'];
-			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
+			if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
 				return false;
-			if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` IN ('.implode(', ', $combinationIds).')') === false)
+			if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` IN ('.implode(', ', $combinationIds).')') === false)
 				return false;
 		}
 
@@ -133,7 +133,7 @@ class AttributeCore extends ObjectModel
 	{
 		if (!Combination::isFeatureActive())
 			return array();
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
 		FROM `'._DB_PREFIX_.'attribute_group` ag
 		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
@@ -221,7 +221,7 @@ class AttributeCore extends ObjectModel
 				SELECT `id_attribute_group` FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute` = '.(int)$this->id.')
 				AND group_type = \'color\''))
 			return false;
-		return Db::getInstance()->NumRows();
+		return Db::getInstance()->numRows();
 	}
 
 	/**
@@ -251,7 +251,7 @@ class AttributeCore extends ObjectModel
 	 */
 	public function updatePosition($way, $position)
 	{
-		if (!$res = Db::getInstance()->ExecuteS('
+		if (!$res = Db::getInstance()->executeS('
 			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
 			FROM `'._DB_PREFIX_.'attribute` a
 			WHERE a.`id_attribute_group` = '.(int)Tools::getValue('id_attribute_group', 1).'
@@ -268,7 +268,7 @@ class AttributeCore extends ObjectModel
 
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
@@ -276,7 +276,7 @@ class AttributeCore extends ObjectModel
 				? '> '.(int)$movedAttribute['position'].' AND `position` <= '.(int)$position
 				: '< '.(int)$movedAttribute['position'].' AND `position` >= '.(int)$position).'
 			AND `id_attribute_group`='.(int)$movedAttribute['id_attribute_group'])
-		AND Db::getInstance()->Execute('
+		AND Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position` = '.(int)$position.'
 			WHERE `id_attribute` = '.(int)$movedAttribute['id_attribute'].'
@@ -305,11 +305,11 @@ class AttributeCore extends ObjectModel
 			AND `id_attribute` != '.(int)$this->id;
 		$sql .= '
 		ORDER BY `position`';
-		$result = Db::getInstance()->ExecuteS($sql);
+		$result = Db::getInstance()->executeS($sql);
 
 		$i = 0;
 		foreach ($result as $value)
-			$return = Db::getInstance()->Execute('
+			$return = Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position` = '.(int)$i++.'
 			WHERE `id_attribute_group` = '.(int)$id_attribute_group.'

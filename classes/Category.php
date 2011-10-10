@@ -269,7 +269,7 @@ class CategoryCore extends ObjectModel
 	 	if (!is_array($toDelete) OR !$id_category)
 	 		die(Tools::displayError());
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category`
 		WHERE `id_parent` = '.(int)($id_category));
@@ -293,10 +293,10 @@ class CategoryCore extends ObjectModel
 
 		/* Delete category and its child from database */
 		$list = sizeof($toDelete) > 1 ?  implode(',', array_map('intval',$toDelete)) : (int)($this->id);
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` IN ('.$list.')');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE `id_category` IN ('.$list.')');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE `id_category` IN ('.$list.')');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.$list.')');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` IN ('.$list.')');
 
 		self::cleanPositions($this->id_parent);
 
@@ -309,7 +309,7 @@ class CategoryCore extends ObjectModel
 		}
 
 		/* Delete products which were not in others categories */
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_product`
 		FROM `'._DB_PREFIX_.'product`
 		WHERE `id_product` NOT IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product`)');
@@ -321,7 +321,7 @@ class CategoryCore extends ObjectModel
 		}
 
 		/* Set category default to 1 where categorie no more exists */
-		$result = Db::getInstance()->Execute('
+		$result = Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'product`
 		SET `id_category_default` = 1
 		WHERE `id_category_default`
@@ -379,7 +379,7 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function regenerateEntireNtree()
 	{
-		$categories = Db::getInstance()->ExecuteS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_category ASC');
+		$categories = Db::getInstance()->executeS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_category ASC');
 		$categoriesArray = array();
 		foreach ($categories AS $category)
 			$categoriesArray[(int)$category['id_parent']]['subcategories'][(int)$category['id_category']] = 1;
@@ -395,7 +395,7 @@ class CategoryCore extends ObjectModel
 				self::_subTree($categories, (int)$id_subcategory, $n);
 		$right = (int)$n++;
 
-		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'category SET nleft = '.(int)$left.', nright = '.(int)$right.' WHERE id_category = '.(int)$id_category.' LIMIT 1');
+		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'category SET nleft = '.(int)$left.', nright = '.(int)$right.' WHERE id_category = '.(int)$id_category.' LIMIT 1');
 	}
 
 	/**
@@ -406,7 +406,7 @@ class CategoryCore extends ObjectModel
 	public function recalculateLevelDepth($id_category)
 	{
 		/* Gets all children */
-		$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT id_category, id_parent, level_depth
 			FROM '._DB_PREFIX_.'category
 			WHERE id_parent = '.(int)$id_category);
@@ -418,7 +418,7 @@ class CategoryCore extends ObjectModel
 		/* Updates level_depth for all children */
 		foreach ($categories as $sub_category)
 		{
-			Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
+			Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'category
 				SET level_depth = '.(int)($level['level_depth'] + 1).'
 				WHERE id_category = '.(int)$sub_category['id_category']);
@@ -438,7 +438,7 @@ class CategoryCore extends ObjectModel
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').'
@@ -461,7 +461,7 @@ class CategoryCore extends ObjectModel
 
 	public static function getSimpleCategories($id_lang)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
@@ -485,7 +485,7 @@ class CategoryCore extends ObjectModel
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sqlGroups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
@@ -597,7 +597,7 @@ class CategoryCore extends ObjectModel
 			$sql .= ' ORDER BY '.(isset($orderByPrefix) ? $orderByPrefix.'.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).'
 			LIMIT '.(((int)($p) - 1) * (int)($n)).','.(int)($n);
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if ($orderBy == 'orderprice')
 			Tools::orderbyPrice($result, $orderWay);
 
@@ -642,7 +642,7 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').'
@@ -659,7 +659,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public function getAllChildren()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'category`
 		WHERE '. $this->nleft . ' < nleft AND nright < '. $this->nright);
@@ -695,7 +695,7 @@ class CategoryCore extends ObjectModel
 				WHERE `id_lang` = '.(int)($id_lang).'
 					AND c.`id_parent` = '.(int)($id_parent).'
 				ORDER BY `position` ASC';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/**
@@ -710,14 +710,14 @@ class CategoryCore extends ObjectModel
 		$sql = 'SELECT `id_category`
 				FROM `'._DB_PREFIX_.'category_product`
 				WHERE `id_product` = '.(int)$id_old;
-		$result = Db::getInstance()->ExecuteS($sql);
+		$result = Db::getInstance()->executeS($sql);
 
 		$row = array();
 		if ($result)
 			foreach ($result AS $i)
 				$row[] = '('.implode(', ', array((int)($id_new), $i['id_category'], '(SELECT tmp.max + 1 FROM (SELECT MAX(cp.`position`) AS max FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_category`='.(int)($i['id_category']).') AS tmp)')).')';
 
-		$flag = Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`) VALUES '.implode(',', $row));
+		$flag = Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'category_product` (`id_product`, `id_category`, `position`) VALUES '.implode(',', $row));
 		return $flag;
 	}
 
@@ -799,7 +799,7 @@ class CategoryCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
 			WHERE `name` LIKE \''.pSQL($query).'\'');
 		else
-			return Db::getInstance()->ExecuteS('
+			return Db::getInstance()->executeS('
 			SELECT c.*, cl.*
 			FROM `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
@@ -840,7 +840,7 @@ class CategoryCore extends ObjectModel
 		$idCurrent = $this->id;
 		while (true)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
@@ -872,7 +872,7 @@ class CategoryCore extends ObjectModel
 
 	public function cleanGroups()
 	{
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)($this->id));
 	}
 
 	public function addGroups($groups)
@@ -887,7 +887,7 @@ class CategoryCore extends ObjectModel
 	public function getGroups()
 	{
 		$groups = array();
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT cg.`id_group`
 		FROM '._DB_PREFIX_.'category_group cg
 		WHERE cg.`id_category` = '.(int)($this->id));
@@ -948,7 +948,7 @@ class CategoryCore extends ObjectModel
 	{
 		if (!(int)($id_group))
 			return false;
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'category_group`
 		VALUES (1, '.(int)($id_group).')
 		');
@@ -956,7 +956,7 @@ class CategoryCore extends ObjectModel
 
 	public function updatePosition($way, $position)
 	{
-		if (!$res = Db::getInstance()->ExecuteS('
+		if (!$res = Db::getInstance()->executeS('
 			SELECT cp.`id_category`, cp.`position`, cp.`id_parent`
 			FROM `'._DB_PREFIX_.'category` cp
 			WHERE cp.`id_parent` = '.(int)$this->id_parent.'
@@ -972,7 +972,7 @@ class CategoryCore extends ObjectModel
 			return false;
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
-		$result = (Db::getInstance()->Execute('
+		$result = (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
@@ -980,7 +980,7 @@ class CategoryCore extends ObjectModel
 				? '> '.(int)($movedCategory['position']).' AND `position` <= '.(int)($position)
 				: '< '.(int)($movedCategory['position']).' AND `position` >= '.(int)($position)).'
 			AND `id_parent`='.(int)($movedCategory['id_parent']))
-		AND Db::getInstance()->Execute('
+		AND Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category`
 			SET `position` = '.(int)($position).'
 			WHERE `id_parent` = '.(int)($movedCategory['id_parent']).'
@@ -1001,7 +1001,7 @@ class CategoryCore extends ObjectModel
 	{
 		$return = true;
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category`
 		WHERE `id_parent` = '.(int)($id_category_parent).'
@@ -1013,7 +1013,7 @@ class CategoryCore extends ObjectModel
 				SET `position` = '.(int)($i).'
 				WHERE `id_parent` = '.(int)($id_category_parent).'
 				AND `id_category` = '.(int)($result[$i]['id_category']);
-				$return &= Db::getInstance()->Execute($sql);
+				$return &= Db::getInstance()->execute($sql);
 			}
 		return $return;
 	}
@@ -1031,7 +1031,7 @@ class CategoryCore extends ObjectModel
 
     public static function getUrlRewriteInformations($id_category)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT l.`id_lang`, c.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category_lang` AS c
 		LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
@@ -1076,7 +1076,7 @@ class CategoryCore extends ObjectModel
 
 	public function getChildrenWs()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_category` as id
 		FROM `'._DB_PREFIX_.'category` c
 		WHERE c.`id_parent` = '.(int)($this->id).'
@@ -1087,7 +1087,7 @@ class CategoryCore extends ObjectModel
 
 	public function getProductsWs()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cp.`id_product` as id
 		FROM `'._DB_PREFIX_.'category_product` cp
 		WHERE cp.`id_category` = '.(int)($this->id).'
@@ -1112,7 +1112,7 @@ class CategoryCore extends ObjectModel
 
 	public function getWsNbProductsRecursive()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT count(distinct(id_product)) as nb_product_recursive FROM  `'._DB_PREFIX_.'category_product`
 		WHERE id_category IN (SELECT id_category
 		FROM `'._DB_PREFIX_.'category`
@@ -1138,7 +1138,7 @@ class CategoryCore extends ObjectModel
 			return;
 
 		$categories = array();
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, cl.`id_lang`
 			FROM `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')

@@ -1277,7 +1277,7 @@ class AdminControllerCore extends Controller
 			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
 			LIMIT '.(int)$start.','.(int)$limit;
-		$this->_list = Db::getInstance()->ExecuteS($sql);
+		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
 
@@ -1481,9 +1481,9 @@ class AdminControllerCore extends Controller
 			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
 		}
 
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 		foreach ($assos as $asso)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
 											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
 	}
 

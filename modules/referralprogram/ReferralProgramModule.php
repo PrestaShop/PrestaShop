@@ -143,7 +143,7 @@ class ReferralProgramModule extends ObjectModel
 				$query.= ' AND s.`id_customer` != 0';
 		}
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
 	/**

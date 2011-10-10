@@ -119,7 +119,7 @@ class TagCore extends ObjectModel
 			$data .= '('.(int)$tag.','.(int)$id_product.'),';
 		$data = rtrim($data, ',');
 
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`)
 		VALUES '.$data);
 	}
@@ -129,7 +129,7 @@ class TagCore extends ObjectModel
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT t.name, COUNT(pt.id_tag) AS times
 		FROM `'._DB_PREFIX_.'product_tag` pt
 		LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
@@ -149,7 +149,7 @@ class TagCore extends ObjectModel
 
 	public static function getProductTags($id_product)
 	{
-	 	if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+	 	if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT t.`id_lang`, t.`name`
 		FROM '._DB_PREFIX_.'tag t
 		LEFT JOIN '._DB_PREFIX_.'product_tag pt ON (pt.id_tag = t.id_tag)
@@ -171,7 +171,7 @@ class TagCore extends ObjectModel
 			return array();
 
 		$in = $associated ? 'IN' : 'NOT IN';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT pl.name, pl.id_product
 		FROM `'._DB_PREFIX_.'product` p
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product'.$context->shop->sqlLang('pl').'
@@ -183,22 +183,22 @@ class TagCore extends ObjectModel
 
 	public function setProducts($array)
 	{
-		$result = Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'product_tag WHERE id_tag = '.(int)$this->id);
+		$result = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_tag WHERE id_tag = '.(int)$this->id);
 		if (is_array($array))
 		{
 			$array = array_map('intval', $array);
-			$result &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0 WHERE id_product IN ('.implode(',', $array).')');
+			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0 WHERE id_product IN ('.implode(',', $array).')');
 			$ids = array();
 			foreach ($array as $id_product)
 				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';
-			return ($result && Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids)) && Search::indexation(false));
+			return ($result && Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids)) && Search::indexation(false));
 		}
 		return $result;
 	}
 
 	public static function deleteTagsForProduct($id_product)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product);
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product);
 	}
 }
 

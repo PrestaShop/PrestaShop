@@ -68,7 +68,7 @@ class StatsLive extends Module
 					AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
 				GROUP BY c.id_connections
 				ORDER BY u.firstname, u.lastname';
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		return array($results, Db::getInstance()->NumRows());
 	}
 
@@ -105,7 +105,7 @@ class StatsLive extends Module
 					ORDER BY c.date_add DESC';
 		}
 
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		return array($results, Db::getInstance()->NumRows());
 	}
 

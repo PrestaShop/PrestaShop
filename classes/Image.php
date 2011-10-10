@@ -102,7 +102,7 @@ class ImageCore extends ObjectModel
 			return false;
 
 		// update positions
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'image`
 		WHERE `id_product` = '.(int)$this->id_product.'
@@ -127,7 +127,7 @@ class ImageCore extends ObjectModel
 	 */
 	public static function getImages($id_lang, $id_product)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'image` i
 		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)
@@ -142,7 +142,7 @@ class ImageCore extends ObjectModel
 	 */
 	public static function getAllImages()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT `id_image`, `id_product`
 		FROM `'._DB_PREFIX_.'image`
 		ORDER BY `id_image` ASC');
@@ -191,7 +191,7 @@ class ImageCore extends ObjectModel
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'image`
 		SET `cover` = 0
 		WHERE `id_product` = '.(int)($id_product));
@@ -220,7 +220,7 @@ class ImageCore extends ObjectModel
 	public static function duplicateProductImages($id_product_old, $id_product_new, $combinationImages)
 	{
 		$imagesTypes = ImageType::getImagesTypes('products');
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_image`
 		FROM `'._DB_PREFIX_.'image`
 		WHERE `id_product` = '.(int)($id_product_old));
@@ -298,18 +298,18 @@ class ImageCore extends ObjectModel
 		// temporary position
 		$high_position = Image::getHighestPosition($this->id_product) + 1;
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'image`
 		SET `position` = '.(int)($high_position).'
 		WHERE `id_product` = '.(int)($this->id_product).'
 		AND `position` = '.($direction ? $position - 1 : $position + 1));
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'image`
 		SET `position` = `position`'.($direction ? '-1' : '+1').'
 		WHERE `id_image` = '.(int)($this->id));
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'image`
 		SET `position` = '.$this->position.'
 		WHERE `id_product` = '.(int)($this->id_product).'
@@ -330,7 +330,7 @@ class ImageCore extends ObjectModel
 
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
-		$result = (Db::getInstance()->Execute('
+		$result = (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
@@ -338,7 +338,7 @@ class ImageCore extends ObjectModel
 				? '> '.(int)($this->position).' AND `position` <= '.(int)($position)
 				: '< '.(int)($this->position).' AND `position` >= '.(int)($position)).'
 			AND `id_product`='.(int)($this->id_product))
-		&& Db::getInstance()->Execute('
+		&& Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `position` = '.(int)($position).'
 			WHERE `id_image` = '.(int)($this->id_image)));
@@ -367,7 +367,7 @@ class ImageCore extends ObjectModel
 	 */
 	public function deleteProductAttributeImage()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			DELETE
 			FROM `'._DB_PREFIX_.'product_attribute_image`
 			WHERE `id_image` = '.(int)($this->id)

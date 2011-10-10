@@ -3,7 +3,7 @@ class MenuTopLinks
 {
   public static function gets($id_lang, $id_link = null)
   {
-    return Db::getInstance()->ExecuteS('
+    return Db::getInstance()->executeS('
     SELECT l.id_link, l.new_window, l.link, ll.label 
     FROM '._DB_PREFIX_.'linksmenutop l 
     LEFT JOIN '._DB_PREFIX_.'linksmenutop_lang ll ON (l.id_link = ll.id_link AND ll.id_lang = "'.$id_lang.'") 

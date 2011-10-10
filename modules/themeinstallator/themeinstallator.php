@@ -396,7 +396,7 @@ class ThemeInstallator extends Module
 			if ((int)(Tools::getValue('imagesConfig')) == 1 AND $foo)
 				continue ;
 			if ($foo)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'image_type` i
 					SET `width` = '.(int)($row['width']).',
 					`height` = '.(int)($row['height']).',
@@ -407,7 +407,7 @@ class ThemeInstallator extends Module
 					`scenes` = '.($row['scenes'] == 'true' ? 1 : 0).'
 					WHERE i.name LIKE \''.pSQL($row['name']).'\'');
 			else
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
 					VALUES (
 						\''.pSQL($row['name']).'\',
@@ -455,27 +455,27 @@ class ThemeInstallator extends Module
 				self::recurseCopy(_IMPORT_FOLDER_.'modules/'.$row, _PS_ROOT_DIR_.'/modules/'.$row);
 				$obj = Module::getInstanceByName($row);
 				if (Validate::isLoadedObject($obj))
-					Db::getInstance()->Execute('
+					Db::getInstance()->execute('
 						UPDATE `'._DB_PREFIX_.'module`
 						SET `active`= 1
 						WHERE `name` = \''.pSQL($row).'\'');
 				else if (!$obj OR !$obj->install())
 					continue;
-				Db::getInstance()->Execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
+				Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
 				$msg .= '<i>- '.pSQL($row).'</i><br />';
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'hook_module`
 					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop = '.$shopID);
 				$count = -1;
 				while (isset($hookedModule[++$count]))
 					if ($hookedModule[$count] == $row)
 					{
-						Db::getInstance()->Execute('
+						Db::getInstance()->execute('
 							INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 							VALUES ('.(int)$obj->id.', '.$shopID.', '.(int)Hook::getIdByName($hook[$count]).', '.(int)$position[$count].')');
 						if ($exceptions[$count])
 							foreach ($exceptions[$count] as $file_name)
-								Db::getInstance()->Execute('
+								Db::getInstance()->execute('
 									INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, `id_hook`, `file_name`)
 									VALUES ('.(int)$obj->id.', '.(int)Hook::getIdByName($hook[$count]).', "'.pSQL($file_name).'")');
 			}
@@ -493,7 +493,7 @@ class ThemeInstallator extends Module
 						if ($flag++ == 0)
 							$msg .= '<b>'.$this->l('The following modules have been disabled').' :</b><br />';
 						$msg .= '<i>- '.pSQL($row).'</i><br />';
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'module_shop`
 					WHERE `id_module` = '.pSQL($obj->id).' AND id_shop = '.$shopID);
 					}
@@ -505,30 +505,30 @@ class ThemeInstallator extends Module
 					$obj = Module::getInstanceByName($row);
 					if (Validate::isLoadedObject($obj))
 					{
-						Db::getInstance()->Execute('
+						Db::getInstance()->execute('
 							UPDATE `'._DB_PREFIX_.'module`
 							SET `active`= 1
 							WHERE `name` = \''.pSQL($row).'\'');
-						Db::getInstance()->Execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
+						Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
 					}
 					else if (!is_object($obj) OR !$obj->install())
 						continue ;
 					if ($flag++ == 0)
 						$msg .= '<b>'.$this->l('The following modules have been enabled').' :</b><br />';
 					$msg .= '<i>- '.pSQL($row).'</i><br />';
-					Db::getInstance()->Execute('
+					Db::getInstance()->execute('
 						DELETE FROM `'._DB_PREFIX_.'hook_module`
 						WHERE `id_module` = '.pSQL($obj->id).' AND id_shop = '.$shopID);
 					$count = -1;
 					while (isset($hookedModule[++$count]))
 						if ($hookedModule[$count] == $row)
 						{
-							Db::getInstance()->Execute('
+							Db::getInstance()->execute('
 								INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 								VALUES ('.(int)$obj->id.', '.$shopID.', '.(int)Hook::getIdByName($hook[$count]).', '.(int)$position[$count].')');
 							foreach ($exceptions[$count] as $filename)
 								if (!empty($filename))
-									Db::getInstance()->Execute('
+									Db::getInstance()->execute('
 										INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, id_shop, `id_hook`, `file_name`)
 										VALUES ('.(int)$obj->id.', '.$shopID.', '.(int)Hook::getIdByName($hook[$count]).', "'.pSQL($filename).'")');
 						}
@@ -919,8 +919,8 @@ class ThemeInstallator extends Module
 	private function _initList()
 	{
 		$this->native_modules = self::getTheNativeModules();
-		$this->module_list = Db::getInstance()->ExecuteS('SELECT id_module, name, active FROM `'._DB_PREFIX_.'module`');
-		$this->hook_list = Db::getInstance()->ExecuteS('
+		$this->module_list = Db::getInstance()->executeS('SELECT id_module, name, active FROM `'._DB_PREFIX_.'module`');
+		$this->hook_list = Db::getInstance()->executeS('
 			SELECT a.id_hook, a.name as name_hook, c.position, c.id_module, d.name as name_module, GROUP_CONCAT(hme.file_name, ",") as exceptions
 			FROM `'._DB_PREFIX_.'hook` a
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` c ON c.id_hook = a.id_hook
@@ -989,7 +989,7 @@ class ThemeInstallator extends Module
 	*/
 	private function getImageState()
 	{
-		$table = Db::getInstance()->ExecuteS('SELECT name, width, height, products, categories, manufacturers, suppliers, scenes FROM `'._DB_PREFIX_.'image_type`');
+		$table = Db::getInstance()->executeS('SELECT name, width, height, products, categories, manufacturers, suppliers, scenes FROM `'._DB_PREFIX_.'image_type`');
 		foreach ($table as $row)
 			$this->image_list[] = $row['name'].';'.$row['width'].';'.$row['height'].';'.
 			($row['products'] == 1 ? 'true' : 'false').';'.

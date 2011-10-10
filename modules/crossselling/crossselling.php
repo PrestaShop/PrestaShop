@@ -127,7 +127,7 @@ class CrossSelling extends Module
 			$pIds[] = (int)$product['id_product'];
 		}
 		$qOrders .= ')';
-		$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($qOrders);
+		$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($qOrders);
 
 		if (sizeof($orders))
 		{
@@ -138,7 +138,7 @@ class CrossSelling extends Module
 			$list = rtrim($list, ',');
 
 			$list_product_ids = join(',', $pIds);
-			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, p.show_price, cl.link_rewrite category, p.ean13
 			FROM '._DB_PREFIX_.'order_detail od
 			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
@@ -173,7 +173,7 @@ class CrossSelling extends Module
 	public function hookProductFooter($params)
 	{
 
-		$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT o.id_order
 		FROM '._DB_PREFIX_.'orders o
 		LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
@@ -186,7 +186,7 @@ class CrossSelling extends Module
 				$list .= (int)$order['id_order'].',';
 			$list = rtrim($list, ',');
 
-			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, p.show_price, cl.link_rewrite category, p.ean13
 			FROM '._DB_PREFIX_.'order_detail od
 			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)

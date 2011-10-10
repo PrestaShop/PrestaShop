@@ -46,6 +46,6 @@ class ThemeCore extends ObjectModel
 		$sql = 'SELECT *
 				FROM '._DB_PREFIX_.'theme
 				ORDER BY name';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 }

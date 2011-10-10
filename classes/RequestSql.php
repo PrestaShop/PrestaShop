@@ -67,7 +67,7 @@ class RequestSqlCore extends ObjectModel
 
 	public static function getRequestSql()
 	{
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'request_sql` ORDER BY `id_request_sql`'))
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'request_sql` ORDER BY `id_request_sql`'))
 			return false;
 		$request_sql = array();
 		foreach ($result as $row)
@@ -77,7 +77,7 @@ class RequestSqlCore extends ObjectModel
 
 	public static function getRequestSqlById($id)
 	{
-		return Db::getInstance()->ExecuteS(sprintf('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = %d', $id));
+		return Db::getInstance()->executeS(sprintf('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = %d', $id));
 	}
 
 	public function parsingSql($sql)
@@ -140,14 +140,14 @@ class RequestSqlCore extends ObjectModel
 		}
 
 		if (empty($this->_errors))
-			if (!Db::getInstance()->ExecuteS($sql))
+			if (!Db::getInstance()->executeS($sql))
 				return false;
 		return true;
 	}
 
 	public function showTables()
 	{
-		$results = Db::getInstance()->ExecuteS('SHOW TABLES');
+		$results = Db::getInstance()->executeS('SHOW TABLES');
 		foreach ($results as $result)
 		{
 			$key = array_keys($result);
@@ -223,7 +223,7 @@ class RequestSqlCore extends ObjectModel
 	{
 		if (is_array($table) && (count($table) == 1))
 			$table = $table[0];
-		$attributs = Db::getInstance()->ExecuteS(sprintf('DESCRIBE `%s`', $table));
+		$attributs = Db::getInstance()->executeS(sprintf('DESCRIBE `%s`', $table));
 		foreach ($attributs as $attribut)
 			if ($attribut['Field'] == trim($attr))
 				return true;

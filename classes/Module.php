@@ -120,7 +120,7 @@ abstract class ModuleCore
 						) as total
 						FROM '._DB_PREFIX_.'module m';
 				self::$modulesCache = array();
-				$result = Db::getInstance()->ExecuteS($sql);
+				$result = Db::getInstance()->executeS($sql);
 				foreach ($result as $row)
 				{
 					self::$modulesCache[$row['name']] = $row;
@@ -167,14 +167,14 @@ abstract class ModuleCore
 		$this->enable(true);
 
 		// Permissions management
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
 			SELECT id_profile, '.(int)$this->id.', 1, 1
 			FROM '._DB_PREFIX_.'access a
 			WHERE id_tab = (SELECT `id_tab` FROM '._DB_PREFIX_.'tab WHERE class_name = \'AdminModules\' LIMIT 1)
 			AND a.`view` = 1
 		)');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
 			SELECT id_profile, '.(int)$this->id.', 1, 0
 			FROM '._DB_PREFIX_.'access a
@@ -200,23 +200,23 @@ abstract class ModuleCore
 		$sql = 'SELECT id_hook
 				FROM '._DB_PREFIX_.'hook_module hm
 				WHERE id_module = '.(int)$this->id;
-		$result = Db::getInstance()->ExecuteS($sql);
+		$result = Db::getInstance()->executeS($sql);
 		foreach	($result AS $row)
 		{
 			$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
 					WHERE `id_module` = '.(int)$this->id.'
 						AND `id_hook` = '.(int)$row['id_hook'];
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 			$this->cleanPositions($row['id_hook']);
 		}
 		$this->disable(true);
 
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_module` = '.(int)$this->id);
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_module` = '.(int)$this->id);
 
 		// Remove restrictions for client groups
 		Group::truncateRestrictionsByModule($this->id);
 
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'module`
 			WHERE `id_module` = '.(int)$this->id);
 	}
@@ -414,7 +414,7 @@ abstract class ModuleCore
 				WHERE `id_module` = '.(int)$this->id.'
 					AND `id_hook` = '.(int)$hook_id
 					.(($shopList) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '');
-		$result = Db::getInstance()->Execute($sql);
+		$result = Db::getInstance()->execute($sql);
 		$this->cleanPositions($hook_id, $shopList);
 		return $result;
 	}
@@ -433,7 +433,7 @@ abstract class ModuleCore
 				WHERE `id_module` = '.(int)$this->id.'
 					AND `id_hook` = '.(int)$hook_id
 					.(($shopList) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '');
-		return Db::getInstance()->Execute($sql);
+		return Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -742,7 +742,7 @@ abstract class ModuleCore
 					$arrNativeModules[] = '"'.pSQL($module['name']).'"';
 			}
 
-		return $db->ExecuteS('
+		return $db->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'module` m
 			WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
@@ -763,7 +763,7 @@ abstract class ModuleCore
 					LEFT JOIN `'._DB_PREFIX_.'hook` k ON hm.`id_hook` = k.`id_hook`
 					WHERE k.`position` = 1
 					GROUP BY m.id_module';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/**
@@ -812,7 +812,7 @@ abstract class ModuleCore
 			$sql .= '
 					GROUP BY hm.id_hook, hm.id_module
 					ORDER BY hm.`position`';
-			$result = $db->ExecuteS($sql, false);
+			$result = $db->executeS($sql, false);
 			self::$_hookModulesCache = array();
 
 			if ($result)
@@ -925,7 +925,7 @@ abstract class ModuleCore
 		$sql .= '
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		return $result;
 	}
@@ -1016,7 +1016,7 @@ abstract class ModuleCore
 					WHERE hm.`id_hook` = '.(int)$id_hook.'
 						AND hm.id_shop = '.$shopID.'
 					ORDER BY hm.`position` '.($way ? 'ASC' : 'DESC');
-			if (!$res = Db::getInstance()->ExecuteS($sql))
+			if (!$res = Db::getInstance()->executeS($sql))
 				continue;
 
 			foreach ($res AS $key => $values)
@@ -1038,7 +1038,7 @@ abstract class ModuleCore
 					WHERE position between '.(int)(min(array($from['position'], $to['position']))) .' AND '.(int)(max(array($from['position'], $to['position']))).'
 						AND `id_hook`='.(int)$from['id_hook'].'
 						AND id_shop = '.$shopID;
-			if (!Db::getInstance()->Execute($sql))
+			if (!Db::getInstance()->execute($sql))
 				return false;
 
 			$sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
@@ -1046,7 +1046,7 @@ abstract class ModuleCore
 					WHERE `'.pSQL($this->identifier).'` = '.(int)($from[$this->identifier]).'
 						AND `id_hook` = '.(int)($to['id_hook']).'
 						AND id_shop = '.$shopID;
-			if (!Db::getInstance()->Execute($sql))
+			if (!Db::getInstance()->execute($sql))
 				return false;
 		}
 	}
@@ -1064,7 +1064,7 @@ abstract class ModuleCore
 				WHERE id_hook = '.(int)$id_hook.'
 				'.((!is_null($shopList)) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '').'
 				ORDER BY position';
-		$results = Db::getInstance()->ExecuteS($sql);
+		$results = Db::getInstance()->executeS($sql);
 		$position = array();
 		foreach ($results as $row)
 		{
@@ -1076,7 +1076,7 @@ abstract class ModuleCore
 					WHERE id_hook = '.(int)$id_hook.'
 						AND id_module = '.$row['id_module'].'
 						AND id_shop = '.$row['id_shop'];
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 			$position[$row['id_shop']]++;
 		}
 
@@ -1117,7 +1117,7 @@ abstract class ModuleCore
 			$sql = 'SELECT *
 					FROM `'._DB_PREFIX_.'hook_module_exceptions`
 					WHERE id_shop IN ('.implode(', ', Context::getContext()->shop->getListOfID()).')';
-			$result = Db::getInstance()->ExecuteS($sql);
+			$result = Db::getInstance()->executeS($sql);
 			foreach ($result as $row)
 			{
 				if (!$row['file_name'])
@@ -1154,7 +1154,7 @@ abstract class ModuleCore
 
 	public static function isInstalled($moduleName)
 	{
-		Db::getInstance()->ExecuteS('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($moduleName).'\'');
+		Db::getInstance()->executeS('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($moduleName).'\'');
 		return (bool)Db::getInstance()->NumRows();
 	}
 
@@ -1293,7 +1293,7 @@ abstract class ModuleCore
 		if (!isset($cache_permissions[$employee->id_profile]))
 		{
 			$cache_permissions[$employee->id_profile] = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_module, `view`, `configure` FROM '._DB_PREFIX_.'module_access WHERE id_profile = '.(int)$employee->id_profile);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_module, `view`, `configure` FROM '._DB_PREFIX_.'module_access WHERE id_profile = '.(int)$employee->id_profile);
 			foreach ($result as $row)
 			{
 				$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
@@ -1309,7 +1309,7 @@ abstract class ModuleCore
 	 */
 	public static function getAuthorizedModules($group_id)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 			SELECT m.id_module, m.name FROM `'._DB_PREFIX_.'group_module_restriction` gmr
 			LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = gmr.`id_module`)
 			WHERE gmr.`id_group` = '.(int) $group_id.'

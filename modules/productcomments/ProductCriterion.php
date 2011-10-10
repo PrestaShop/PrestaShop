@@ -37,7 +37,7 @@ class ProductCommentCriterion
 		if (!Validate::isUnsignedId($id_lang) ||
 			!Validate::isMessage($name))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'product_comment_criterion`
 		(`id_lang`, `name`) VALUES(
 		'.(int)($id_lang).',
@@ -54,7 +54,7 @@ class ProductCommentCriterion
 		if (!Validate::isUnsignedId($id_product_comment_criterion) ||
 			!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'product_comment_criterion_product`
 		(`id_product_comment_criterion`, `id_product`) VALUES(
 		'.(int)($id_product_comment_criterion).',
@@ -75,7 +75,7 @@ class ProductCommentCriterion
 			$grade = 0;
 		else if ($grade > 10)
 			$grade = 10;
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'product_comment_grade`
 		(`id_product_comment`, `id_product_comment_criterion`, `grade`) VALUES(
 		'.(int)($id_product_comment).',
@@ -94,7 +94,7 @@ class ProductCommentCriterion
 			!Validate::isUnsignedId($id_lang) ||
 			!Validate::isMessage($name))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'product_comment_criterion` SET
 		`name` = \''.pSQL($name).'\'
 		WHERE `id_product_comment_criterion` = '.(int)($id_product_comment_criterion).' AND
@@ -111,7 +111,7 @@ class ProductCommentCriterion
 		if (!Validate::isUnsignedId($id_product) ||
 			!Validate::isUnsignedId($id_lang))
 			die(Tools::displayError());
-		return (Db::getInstance()->ExecuteS('
+		return (Db::getInstance()->executeS('
 		SELECT pcc.`id_product_comment_criterion`, pcc.`name`
 		FROM `'._DB_PREFIX_.'product_comment_criterion` pcc
 		INNER JOIN `'._DB_PREFIX_.'product_comment_criterion_product` pccp ON pcc.`id_product_comment_criterion` = pccp.`id_product_comment_criterion`
@@ -128,7 +128,7 @@ class ProductCommentCriterion
 	{
 		if (!Validate::isUnsignedId($id_lang))
 			die(Tools::displayError());
-		return (Db::getInstance()->ExecuteS('
+		return (Db::getInstance()->executeS('
 		SELECT pcc.`id_product_comment_criterion`, pcc.`name`
 		  FROM `'._DB_PREFIX_.'product_comment_criterion` pcc
 		WHERE pcc.`id_lang` = '.(int)($id_lang).'
@@ -144,7 +144,7 @@ class ProductCommentCriterion
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_criterion_product`
 		WHERE `id_product` = '.(int)($id_product)));
 	}
@@ -158,17 +158,17 @@ class ProductCommentCriterion
 	{
 		if (!Validate::isUnsignedId($id_product_comment_criterion))
 			die(Tools::displayError());
-		$result = Db::getInstance()->Execute('
+		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 		WHERE `id_product_comment_criterion` = '.(int)($id_product_comment_criterion));
 		if ($result === false)
 			return ($result);
-		$result = Db::getInstance()->Execute('
+		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_criterion_product`
 		WHERE `id_product_comment_criterion` = '.(int)($id_product_comment_criterion));
 		if ($result === false)
 			return ($result);
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_criterion`
 		WHERE `id_product_comment_criterion` = '.(int)($id_product_comment_criterion)));
 	}

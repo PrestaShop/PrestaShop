@@ -108,7 +108,7 @@ class ProductComment extends ObjectModel
 		if ($n != null && $n <= 0)
 			$n = 5;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT pc.`id_product_comment`,
 		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful,
 		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment`) as total_advice, '.
@@ -129,7 +129,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getByCustomer($id_product, $id_customer, $last = false, $id_guest = false)
 	{
-		$results = Db::getInstance()->ExecuteS('
+		$results = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'product_comment` pc
 		WHERE pc.`id_product` = '.(int)$id_product.'
@@ -159,7 +159,7 @@ class ProductComment extends ObjectModel
 		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
 
 
-		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT pc.`id_product_comment`, pcg.`grade`, pccl.`name`, pcc.`id_product_comment_criterion`
 		FROM `'._DB_PREFIX_.'product_comment` pc
 		LEFT JOIN `'._DB_PREFIX_.'product_comment_grade` pcg ON (pcg.`id_product_comment` = pc.`id_product_comment`)
@@ -250,7 +250,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getByValidate($validate = '0', $deleted = false)
 	{
-		return (Db::getInstance()->ExecuteS('
+		return (Db::getInstance()->executeS('
 		SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
 		FROM `'._DB_PREFIX_.'product_comment` pc
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
@@ -266,7 +266,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getAll()
 	{
-		return (Db::getInstance()->ExecuteS('
+		return (Db::getInstance()->executeS('
 		SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
 		FROM `'._DB_PREFIX_.'product_comment` pc
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
@@ -283,7 +283,7 @@ class ProductComment extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($this->id))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'product_comment` SET
 		`validate` = '.(int)$validate.'
 		WHERE `id_product_comment` = '.(int)$this->id));
@@ -298,7 +298,7 @@ class ProductComment extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
 	}
@@ -312,7 +312,7 @@ class ProductComment extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
 			die(Tools::displayError());
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_report`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
 	}
@@ -327,7 +327,7 @@ class ProductComment extends ObjectModel
 		if (!Validate::isUnsignedId($id_product_comment))
 			die(Tools::displayError());
 
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_usefulness`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
 	}
@@ -339,7 +339,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function reportComment($id_product_comment, $id_customer)
 	{
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'product_comment_report` (`id_product_comment`, `id_customer`)
 			VALUES ('.(int)$id_product_comment.', '.(int)$id_customer.')'));
 	}
@@ -365,7 +365,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function setCommentUsefulness($id_product_comment, $usefulness, $id_customer)
 	{
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'product_comment_usefulness` (`id_product_comment`, `usefulness`, `id_customer`)
 			VALUES ('.(int)$id_product_comment.', '.(int)$usefulness.', '.(int)$id_customer.')'));
 	}
@@ -391,7 +391,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getReportedComments()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT(pc.`id_product_comment`), pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
 		FROM `'._DB_PREFIX_.'product_comment_report` pcr
 		LEFT JOIN `'._DB_PREFIX_.'product_comment` pc

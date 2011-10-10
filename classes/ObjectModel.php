@@ -156,7 +156,7 @@ abstract class ObjectModelCore
 					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
 							WHERE `'.$this->identifier.'` = '.(int)$id
 							.(($this->id_shop) ? ' AND `id_shop` = '.$this->id_shop : '');
-					$result = Db::getInstance()->ExecuteS($sql);
+					$result = Db::getInstance()->executeS($sql);
 					if ($result)
 						foreach ($result as $row)
 							foreach ($row AS $key => $value)
@@ -342,13 +342,13 @@ abstract class ObjectModelCore
 		$this->clearCache();
 
 		/* Database deletion */
-		$result = Db::getInstance()->Execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+		$result = Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
 		if (!$result)
 			return false;
 
 		/* Database deletion for multilingual fields related to the object */
 		if (method_exists($this, 'getTranslationsFieldsChild'))
-			Db::getInstance()->Execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+			Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
 		return $result;
 	}
 
@@ -388,7 +388,7 @@ abstract class ObjectModelCore
 	 	$this->active = (int)(!$this->active);
 
 		/* Change status to active/inactive */
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		UPDATE `'.pSQL(_DB_PREFIX_.$this->table).'`
 		SET `active` = !`active`
 		WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
@@ -733,12 +733,12 @@ abstract class ObjectModelCore
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '').'
 		';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
 	public function getFieldsRequiredDatabase($all = false)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT id_required_field, object_name, field_name
 		FROM '._DB_PREFIX_.'required_field
 		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
@@ -749,7 +749,7 @@ abstract class ObjectModelCore
 		if (!is_array($fields))
 			return false;
 
-		if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'required_field WHERE object_name = \''.pSQL(get_class($this)).'\''))
+		if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'required_field WHERE object_name = \''.pSQL(get_class($this)).'\''))
 			return false;
 
 		foreach ($fields AS $field)
@@ -807,7 +807,7 @@ abstract class ObjectModelCore
 		}
 
 		if (!empty($sql))
-			return Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
+			return Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
 		return true;
 	}
 
@@ -841,7 +841,7 @@ abstract class ObjectModelCore
 		$sql = 'SELECT id_shop
 				FROM '._DB_PREFIX_.$this->table.'_shop
 				WHERE '.$this->identifier.' = '.(int)$id;
-		if ($results = Db::getInstance()->ExecuteS($sql))
+		if ($results = Db::getInstance()->executeS($sql))
 		{
 			$ids = array();
 			foreach ($results as $row)

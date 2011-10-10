@@ -136,7 +136,7 @@ class OrderReturnCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$data = Db::getInstance()->ExecuteS('
+		$data = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_return`
 		WHERE `id_customer` = '.(int)($customer_id).
@@ -153,7 +153,7 @@ class OrderReturnCore extends ObjectModel
 	
 	public static function getOrdersReturnDetail($id_order_return)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_return_detail`
 		WHERE `id_order_return` = '.(int)($id_order_return));
@@ -199,7 +199,7 @@ class OrderReturnCore extends ObjectModel
 
 	public static function deleteOrderReturnDetail($id_order_return, $id_order_detail, $id_customization = 0)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int)($id_order_detail).' AND `id_order_return` = '.(int)($id_order_return).' AND `id_customization` = '.(int)($id_customization));
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int)($id_order_detail).' AND `id_order_return` = '.(int)($id_order_return).' AND `id_customization` = '.(int)($id_customization));
 	}
 }
 

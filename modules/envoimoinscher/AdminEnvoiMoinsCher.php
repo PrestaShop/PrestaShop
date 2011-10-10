@@ -107,7 +107,7 @@ class AdminEnvoiMoinsCher extends AdminTab
 			AND o.id_carrier = '.pSQL($id_carrier).'
 			GROUP BY o.`id_order`, od.`id_order`
 			ORDER BY o.`date_add` ASC';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}	
 
 	private function displayOrders($orders)

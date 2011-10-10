@@ -98,7 +98,7 @@ class AliasCore extends ObjectModel
 		if (!self::isFeatureActive())
 			return '';
 
-		$aliases = Db::getInstance()->ExecuteS('
+		$aliases = Db::getInstance()->executeS('
 		SELECT a.alias
 		FROM `'._DB_PREFIX_.'alias` a
 		WHERE `search` = \''.pSQL($this->search).'\'');

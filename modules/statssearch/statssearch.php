@@ -62,7 +62,7 @@ class StatsSearch extends ModuleGraph
 	{
 		if (!parent::install() OR !$this->registerHook('search') OR !$this->registerHook('AdminStatsModules'))
 			return false;
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'statssearch` (
 			id_statssearch INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 			id_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
@@ -78,7 +78,7 @@ class StatsSearch extends ModuleGraph
     {
         if (!parent::uninstall())
 			return false;
-		return (Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'statssearch`'));
+		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'statssearch`'));
     }
 
     /**
@@ -88,7 +88,7 @@ class StatsSearch extends ModuleGraph
 	{
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'statssearch` (`id_shop`, `id_group_shop`, `keywords`, `results`, `date_add`)
 				VALUES ('.$this->context->shop->getID(true).', '.$this->context->shop->getGroupID().', \''.pSQL($params['expr']).'\', '.(int)$params['total'].', NOW())';
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 	}
 
 	function hookAdminStatsModules()
@@ -96,7 +96,7 @@ class StatsSearch extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('type' => 'pie'));
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$this->_html = '
 		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
 		$table = '<div style="overflow-y: scroll; height: 600px;">
@@ -133,12 +133,12 @@ class StatsSearch extends ModuleGraph
 	protected function getData($layers)
 	{
 		$this->_titles['main'] = $this->l('First 10 keywords');
-		$totalResult = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2);
+		$totalResult = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		$total = 0;
 		$total2 = 0;
 		foreach ($totalResult as $totalRow)
 			$total += $totalRow['occurences'];
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2.' LIMIT 9');
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2.' LIMIT 9');
 		foreach ($result as $row)
 		{
 			if (!$row['occurences'])

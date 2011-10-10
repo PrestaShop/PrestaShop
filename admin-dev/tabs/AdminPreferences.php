@@ -36,7 +36,7 @@ class AdminPreferences extends AdminTab
 		// Prevent classes which extend AdminPreferences to load useless data
 		if (get_class($this) == 'AdminPreferences')
 		{
-			$timezones = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT name FROM '._DB_PREFIX_.'timezone');
+			$timezones = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone');
 			$taxes[] = array('id' => 0, 'name' => $this->l('None'));
 			foreach (Tax::getTaxes($this->context->language->id) as $tax)
 				$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);

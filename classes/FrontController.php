@@ -641,7 +641,7 @@ class FrontControllerCore extends Controller
 		if (!is_array(self::$currentCustomerGroups))
 		{
 			self::$currentCustomerGroups = array();
-			$result = Db::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'customer_group WHERE id_customer = '.(int)$context->customer->id);
+			$result = Db::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'customer_group WHERE id_customer = '.(int)$context->customer->id);
 			foreach ($result as $row)
 				self::$currentCustomerGroups[] = $row['id_group'];
 		}

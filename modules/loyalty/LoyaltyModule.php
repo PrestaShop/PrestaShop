@@ -169,7 +169,7 @@ class LoyaltyModule extends ObjectModel
 		$query .= ' GROUP BY f.id_loyalty '.
 		($pagination ? 'LIMIT '.(((int)($page) - 1) * (int)($nb)).', '.(int)($nb) : '');
 
-		return Db::getInstance()->ExecuteS($query);
+		return Db::getInstance()->executeS($query);
 	}
 
 	public static function getDiscountByIdCustomer($id_customer, $last=false)
@@ -185,7 +185,7 @@ class LoyaltyModule extends ObjectModel
 			$query.= ' ORDER BY f.id_loyalty DESC LIMIT 0,1';
 		$query.= ' GROUP BY f.id_discount';
 
-		return Db::getInstance()->ExecuteS($query);
+		return Db::getInstance()->executeS($query);
 	}
 
 	public static function registerDiscount($discount)
@@ -211,7 +211,7 @@ class LoyaltyModule extends ObjectModel
 
 	public static function getOrdersByIdDiscount($id_discount)
 	{
-		$items = Db::getInstance()->ExecuteS('
+		$items = Db::getInstance()->executeS('
 		SELECT f.id_order AS id_order, f.points AS points, f.date_upd AS date
 		FROM `'._DB_PREFIX_.'loyalty` f
 		WHERE f.id_discount = '.(int)($id_discount).' AND f.id_loyalty_state = '.(int)(LoyaltyStateModule::getConvertId()));
@@ -235,7 +235,7 @@ class LoyaltyModule extends ObjectModel
 	/* Register all transaction in a specific history table */
 	private function historize()
 	{
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'loyalty_history` (`id_loyalty`, `id_loyalty_state`, `points`, `date_add`)
 		VALUES ('.(int)($this->id).', '.(int)($this->id_loyalty_state).', '.(int)($this->points).', NOW())');
 	}

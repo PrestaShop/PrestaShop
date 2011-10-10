@@ -37,7 +37,7 @@ class RatingAlert
 
 	private static function _getAlertsInformations($nb_days = 10)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT a.id_alert, c.`email`, o.`id_order`, o.`id_lang`
 		FROM `'._DB_PREFIX_.self::TABLE_NAME.'` a  
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (a.id_order = o.id_order)
@@ -51,7 +51,7 @@ class RatingAlert
 		foreach ($ids AS $id)
 			$to_remove[] = (int)($id);
 		
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.self::TABLE_NAME.'` WHERE `id_alert` IN (\''.implode('\',\'', $to_remove).'\')');
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.self::TABLE_NAME.'` WHERE `id_alert` IN (\''.implode('\',\'', $to_remove).'\')');
 	}
 	
 	public static function executeCronTask()
@@ -86,7 +86,7 @@ class RatingAlert
 	
 	public static function createTable()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.self::TABLE_NAME.'` (
 			`id_alert` INT NOT NULL AUTO_INCREMENT,
 			`id_order` INT NOT NULL,
@@ -97,12 +97,12 @@ class RatingAlert
 	
 	public static function dropTable()
 	{
-		return Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.self::TABLE_NAME.'`');
+		return Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.self::TABLE_NAME.'`');
 	}
 	
 	public static function truncateTable()
 	{
-		return Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.self::TABLE_NAME.'`');
+		return Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.self::TABLE_NAME.'`');
 	}
 }
 

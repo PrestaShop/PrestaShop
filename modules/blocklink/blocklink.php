@@ -52,14 +52,14 @@ class BlockLink extends Module
 	{
 		if (!parent::install() OR
 			!$this->registerHook('leftColumn') OR
-			!Db::getInstance()->Execute('
+			!Db::getInstance()->execute('
 			CREATE TABLE '._DB_PREFIX_.'blocklink (
 			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
 			`url` varchar(255) NOT NULL,
 			`new_window` TINYINT(1) NOT NULL,
 			PRIMARY KEY(`id_blocklink`))
 			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') OR
-			!Db::getInstance()->Execute('
+			!Db::getInstance()->execute('
 			CREATE TABLE '._DB_PREFIX_.'blocklink_lang (
 			`id_blocklink` int(2) NOT NULL,
 			`id_lang` int(2) NOT NULL,
@@ -74,8 +74,8 @@ class BlockLink extends Module
 	public function uninstall()
 	{
 		if (!parent::uninstall() OR
-			!Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'blocklink') OR
-			!Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'blocklink_lang') OR
+			!Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'blocklink') OR
+			!Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'blocklink_lang') OR
 			!Configuration::deleteByName('PS_BLOCKLINK_TITLE') OR
 			!Configuration::deleteByName('PS_BLOCKLINK_URL'))
 			return false;
@@ -106,7 +106,7 @@ class BlockLink extends Module
 	{
 		$result = array();
 		/* Get id and url */
-		if (!$links = Db::getInstance()->ExecuteS('SELECT `id_blocklink`, `url`, `new_window` FROM '._DB_PREFIX_.'blocklink'.((int)(Configuration::get('PS_BLOCKLINK_ORDERWAY')) == 1 ? ' ORDER BY `id_blocklink` DESC' : '')))
+		if (!$links = Db::getInstance()->executeS('SELECT `id_blocklink`, `url`, `new_window` FROM '._DB_PREFIX_.'blocklink'.((int)(Configuration::get('PS_BLOCKLINK_ORDERWAY')) == 1 ? ' ORDER BY `id_blocklink` DESC' : '')))
 			return false;
 		$i = 0;
 		foreach ($links AS $link)
@@ -115,7 +115,7 @@ class BlockLink extends Module
 			$result[$i]['url'] = $link['url'];
 			$result[$i]['newWindow'] = $link['new_window'];
 			/* Get multilingual text */
-			if (!$texts = Db::getInstance()->ExecuteS('SELECT `id_lang`, `text` FROM '._DB_PREFIX_.'blocklink_lang WHERE `id_blocklink`='.(int)($link['id_blocklink'])))
+			if (!$texts = Db::getInstance()->executeS('SELECT `id_lang`, `text` FROM '._DB_PREFIX_.'blocklink_lang WHERE `id_blocklink`='.(int)($link['id_blocklink'])))
 				return false;
 			foreach ($texts AS $text)
 				$result[$i]['text_'.$text['id_lang']] = $text['text'];
@@ -127,7 +127,7 @@ class BlockLink extends Module
 	public function addLink()
 	{
 		/* Url registration */
-		if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink VALUES (NULL, \''.pSQL($_POST['url']).'\', '.((isset($_POST['newWindow']) AND $_POST['newWindow']) == 'on' ? 1 : 0).')') OR !$lastId = Db::getInstance()->Insert_ID())
+		if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink VALUES (NULL, \''.pSQL($_POST['url']).'\', '.((isset($_POST['newWindow']) AND $_POST['newWindow']) == 'on' ? 1 : 0).')') OR !$lastId = Db::getInstance()->Insert_ID())
 			return false;
 		/* Multilingual text */
 		$languages = Language::getLanguages();
@@ -137,11 +137,11 @@ class BlockLink extends Module
 		foreach ($languages AS $language)
 			if (!empty($_POST['text_'.$language['id_lang']]))
 			{
-				if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($lastId).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$language['id_lang']]).'\')'))
+				if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($lastId).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$language['id_lang']]).'\')'))
 					return false;
 			}
 			else
-				if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($lastId).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$defaultLanguage]).'\')'))
+				if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($lastId).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$defaultLanguage]).'\')'))
 					return false;
 		return true;
 	}
@@ -149,30 +149,30 @@ class BlockLink extends Module
 	public function updateLink()
 	{
 		/* Url registration */
-		if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'blocklink SET `url`=\''.pSQL($_POST['url']).'\', `new_window`='.(isset($_POST['newWindow']) ? 1 : 0).' WHERE `id_blocklink`='.(int)($_POST['id'])))
+		if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'blocklink SET `url`=\''.pSQL($_POST['url']).'\', `new_window`='.(isset($_POST['newWindow']) ? 1 : 0).' WHERE `id_blocklink`='.(int)($_POST['id'])))
 			return false;
 		/* Multilingual text */
 		$languages = Language::getLanguages();
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		if (!$languages)
 			 return false;
-		if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'blocklink_lang WHERE `id_blocklink` = '.(int)($_POST['id'])))
+		if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'blocklink_lang WHERE `id_blocklink` = '.(int)($_POST['id'])))
 			return false ;
 		foreach ($languages AS $language)
 			if (!empty($_POST['text_'.$language['id_lang']]))
 	 	 	{
-				if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($_POST['id']).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$language['id_lang']]).'\')'))
+				if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($_POST['id']).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$language['id_lang']]).'\')'))
 					return false;
 	 	 	}
 			else
-				if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($_POST['id']).', '.$language['id_lang'].', \''.pSQL($_POST['text_'.$defaultLanguage]).'\')'))
+				if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($_POST['id']).', '.$language['id_lang'].', \''.pSQL($_POST['text_'.$defaultLanguage]).'\')'))
 					return false;
 		return true;
 	}
 	
 	public function deleteLink()
 	{
-		return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'blocklink WHERE `id_blocklink`='.(int)($_GET['id']));
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'blocklink WHERE `id_blocklink`='.(int)($_GET['id']));
 	}
 	
 	public function updateTitle()

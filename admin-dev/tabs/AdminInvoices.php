@@ -48,7 +48,7 @@ class AdminInvoices extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		$statuses = OrderState::getOrderStates($this->context->language->id);
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT COUNT(*) as nbOrders, (
 			SELECT oh.id_order_state
 			FROM '._DB_PREFIX_.'order_history oh

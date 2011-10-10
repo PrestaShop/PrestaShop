@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -34,18 +34,18 @@ class MySQLCore extends Db
 	{
 		if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
 			define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
-		
-		if (!$this->_link = mysql_connect($this->_server, $this->_user, $this->_password))
+
+		if (!$this->link = mysql_connect($this->server, $this->user, $this->password))
 			die(Tools::displayError('Link to database cannot be established.'));
 
-		if (!$this->set_db($this->_database))
+		if (!$this->set_db($this->database))
 			die(Tools::displayError('The database selection cannot be made.'));
 
 		// UTF-8 support
-		if (!mysql_query('SET NAMES \'utf8\'', $this->_link))
+		if (!mysql_query('SET NAMES \'utf8\'', $this->link))
 			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
 
-		return $this->_link;
+		return $this->link;
 	}
 
 	/**
@@ -53,15 +53,15 @@ class MySQLCore extends Db
 	 */
 	public function	disconnect()
 	{
-		mysql_close($this->_link);
+		mysql_close($this->link);
 	}
-	
+
 	/**
 	 * @see DbCore::_query()
 	 */
 	protected function _query($sql)
 	{
-		return mysql_query($sql, $this->_link);
+		return mysql_query($sql, $this->link);
 	}
 
 	/**
@@ -69,9 +69,9 @@ class MySQLCore extends Db
 	 */
 	public function nextRow($result = false)
 	{
-		return mysql_fetch_assoc($result ? $result : $this->_result);
+		return mysql_fetch_assoc($result ? $result : $this->result);
 	}
-	
+
 	/**
 	 * @see DbCore::_numRows()
 	 */
@@ -79,13 +79,13 @@ class MySQLCore extends Db
 	{
 		return mysql_num_rows($result);
 	}
-	
+
 	/**
 	 * @see DbCore::Insert_ID()
 	 */
 	public function	Insert_ID()
 	{
-		return mysql_insert_id($this->_link);
+		return mysql_insert_id($this->link);
 	}
 
 	/**
@@ -93,7 +93,7 @@ class MySQLCore extends Db
 	 */
 	public function	Affected_Rows()
 	{
-		return mysql_affected_rows($this->_link);
+		return mysql_affected_rows($this->link);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class MySQLCore extends Db
 	 */
 	public function getMsgError($query = false)
 	{
-		return mysql_error($this->_link);
+		return mysql_error($this->link);
 	}
 
 	/**
@@ -109,31 +109,31 @@ class MySQLCore extends Db
 	 */
 	public function getNumberError()
 	{
-		return mysql_errno($this->_link);
+		return mysql_errno($this->link);
 	}
-	
+
 	/**
 	 * @see DbCore::getVersion()
 	 */
 	public function getVersion()
 	{
-		return mysql_get_server_info($this->_link);
+		return mysql_get_server_info($this->link);
 	}
-	
+
 	/**
 	 * @see DbCore::_escape()
 	 */
 	public function _escape($str)
 	{
-		return _PS_MYSQL_REAL_ESCAPE_STRING_ ? mysql_real_escape_string($str, $this->_link) : addslashes($str);
+		return _PS_MYSQL_REAL_ESCAPE_STRING_ ? mysql_real_escape_string($str, $this->link) : addslashes($str);
 	}
-	
+
 	/**
 	 * @see DbCore::set_db()
 	 */
 	public function set_db($db_name)
 	{
-		return mysql_select_db($db_name, $this->_link);
+		return mysql_select_db($db_name, $this->link);
 	}
 
 	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)

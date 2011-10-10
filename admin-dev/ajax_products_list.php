@@ -59,7 +59,7 @@ $sql = 'SELECT p.`id_product`, `reference`, pl.name
 		WHERE (pl.name LIKE \'%'.pSQL($query).'%\' OR p.reference LIKE \'%'.pSQL($query).'%\')'.
 		(!empty($excludeIds) ? ' AND p.id_product NOT IN ('.$excludeIds.') ' : ' ').
 		($excludeVirtuals ? 'AND p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))' : '');
-$items = Db::getInstance()->ExecuteS($sql);
+$items = Db::getInstance()->executeS($sql);
 
 if ($items)
 	foreach ($items AS $item)

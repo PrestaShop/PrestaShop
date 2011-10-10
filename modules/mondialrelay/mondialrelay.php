@@ -81,14 +81,14 @@ class MondialRelay extends Module
 		if (!parent::install())
 			return false;
 
-		Db::getInstance()->ExecuteS(
+		Db::getInstance()->executeS(
 			'SELECT `name` 
 			FROM `' . _DB_PREFIX_ . 'hook` 
 			WHERE `name` = \''.$name.'\' 
 			AND `title` = \''.$title.'\'');
 
 		if (!Db::getInstance()->NumRows())
-			Db::getInstance()->Execute('INSERT INTO ' . _DB_PREFIX_ . 'hook 
+			Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'hook 
 			(name, title, description, position) 
 			VALUES(\''.$name.'\', \''.$title.'\', NULL, 0)');
 
@@ -103,7 +103,7 @@ class MondialRelay extends Module
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach($sql AS $k => $query)
 			if (!empty($query))
-				Db::getInstance()->Execute(trim($query));
+				Db::getInstance()->execute(trim($query));
 
 		$result = Db::getInstance()->getRow('
 			SELECT id_tab  
@@ -121,7 +121,7 @@ class MondialRelay extends Module
 
 			$pos = (isset($result['position'])) ? $result['position'] + 1 : 0;
 
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				INSERT INTO ' . _DB_PREFIX_ . 'tab 
 				(id_parent, class_name, position, module) 
 				VALUES(3, "AdminMondialRelay",  "'.(int)($pos).'", "mondialrelay")');	 	
@@ -130,14 +130,14 @@ class MondialRelay extends Module
 			
 			$languages = Language::getLanguages();
 			foreach ($languages as $language)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				INSERT INTO ' . _DB_PREFIX_ . 'tab_lang 
 				(id_lang, id_tab, name) 
 				VALUES("'.(int)($language['id_lang']).'", "'.(int)($id_tab).'", "Mondial Relay")');
 
 			$profiles = Profile::getProfiles(Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($profiles as $profile)
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				INSERT INTO ' . _DB_PREFIX_ . 'access 
 				(`id_profile`,`id_tab`,`view`,`add`,`edit`,`delete`)
 				VALUES('.$profile['id_profile'].', '.(int)($id_tab).', 1, 1, 1, 1)');
@@ -162,7 +162,7 @@ class MondialRelay extends Module
 		else 
 		{
 			// Reactive transport if database wasn't remove at the last uninstall
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'carrier` c, `'._DB_PREFIX_.'mr_method` m
 					SET `deleted` = 0
 					WHERE c.id_carrier = m.id_carrier');
@@ -215,19 +215,19 @@ class MondialRelay extends Module
 			$id_tab = $result['id_tab'];
 			if (isset($id_tab) && !empty($id_tab))
 			{	
-				Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = '.(int)($id_tab));
-				Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'tab_lang WHERE id_tab = '.(int)($id_tab));
-				Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'access WHERE id_tab = '.(int)($id_tab));
+				Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = '.(int)($id_tab));
+				Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'tab_lang WHERE id_tab = '.(int)($id_tab));
+				Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'access WHERE id_tab = '.(int)($id_tab));
 			}
 		}
 
 		if (_PS_VERSION_ >= '1.4' && 
-				!Db::getInstance()->Execute('
+				!Db::getInstance()->execute('
 					UPDATE  '._DB_PREFIX_ .'carrier  
 					SET `active` = 0, `deleted` = 1 
 					WHERE `external_module_name` = "mondialrelay"'))
 			return false;
-		else if (!Db::getInstance()->Execute('
+		else if (!Db::getInstance()->execute('
 					UPDATE  '._DB_PREFIX_ .'carrier  
 					SET `active` = 0, `deleted` = 1 
 					WHERE `name` = "mondialrelay"'))
@@ -270,13 +270,13 @@ class MondialRelay extends Module
 			return false;
 			
 		// Drop databases
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 					DROP TABLE 
 					'._DB_PREFIX_ .'mr_historique, 
 					'._DB_PREFIX_ .'mr_method, 
 					'._DB_PREFIX_ .'mr_selected'))
 			return false;
-		else if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'carrier SET `active` = 0, `deleted` = 1 WHERE `name` = "mondialrelay"'))
+		else if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'carrier SET `active` = 0, `deleted` = 1 WHERE `name` = "mondialrelay"'))
 			return false; 
 			
 		return true;
@@ -313,7 +313,7 @@ class MondialRelay extends Module
 	*/
 	private function _update_v1_4()
 	{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'carrier` 
 				SET 
 					`shipping_external` = 0, 
@@ -552,7 +552,7 @@ class MondialRelay extends Module
 					FROM `'._DB_PREFIX_.'mr_method` 
 					WHERE `id_carrier` = '.(int)($params['id_carrier']));
 				
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'mr_method` 
 					(mr_Name, mr_Pays_list, mr_ModeCol, mr_ModeLiv, mr_ModeAss, id_carrier)
 					VALUES (
@@ -572,7 +572,7 @@ class MondialRelay extends Module
 	{
 		// Query don't use the external_module_name to keep the 
 		// 1.3 compatibility	
-		$carriers = Db::getInstance()->ExecuteS('
+		$carriers = Db::getInstance()->executeS('
 			SELECT 
 				c.id_carrier,
 				c.range_behavior,
@@ -707,7 +707,7 @@ class MondialRelay extends Module
 	public function mrDelete($id)
 	{
 		$id = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_ .'mr_method` WHERE `id_mr_method` = "'.(int)($id).'"');
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_ .'carrier` SET `active` = 0, `deleted` = 1 WHERE `id_carrier` = "'.(int)($id).'"');
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_ .'carrier` SET `active` = 0, `deleted` = 1 WHERE `id_carrier` = "'.(int)($id).'"');
 		$this->_html .= '<div class="conf confirm"><img src="'._PS_ADMIN_IMG_.'/ok.gif" /> '.$this->l('Delete successful').'</div>';
 	}
 	
@@ -728,7 +728,7 @@ class MondialRelay extends Module
 			{
 				$key    = explode(',', $Key);
 				$id = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_ .'mr_method` WHERE `id_mr_method` = "'.(int)($key[0]).'"');
-				Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'carrier SET active = "'.(int)($value).'" WHERE `id_carrier` = "'.(int)($id).'"');
+				Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'carrier SET active = "'.(int)($value).'" WHERE `id_carrier` = "'.(int)($id).'"');
 			}
 		}
 		else if ($type == 'addShipping') 
@@ -753,11 +753,11 @@ class MondialRelay extends Module
 			}
 			$query .= ')';
 
-			Db::getInstance()->Execute($query);
+			Db::getInstance()->execute($query);
 		
 			$mainInsert = Db::getInstance()->Insert_ID();
-			$default = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "configuration WHERE name = 'PS_CARRIER_DEFAULT'");
-			$check   = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "carrier");
+			$default = Db::getInstance()->executeS("SELECT * FROM " . _DB_PREFIX_ . "configuration WHERE name = 'PS_CARRIER_DEFAULT'");
+			$check   = Db::getInstance()->executeS("SELECT * FROM " . _DB_PREFIX_ . "carrier");
 			$checkD = array();
 
 			foreach($check AS $Key)
@@ -769,40 +769,40 @@ class MondialRelay extends Module
 
 			// Added for 1.3 compatibility to match with the right key
 			if (_PS_VERSION_ >= '1.4')
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 					INSERT INTO `' . _DB_PREFIX_ . 'carrier` 
 					(`id_tax_rules_group`, `url`, `name`, `active`, `is_module`, `range_behavior`, `shipping_external`, `need_range`, `external_module_name`, `shipping_method`)
 									VALUES("0", NULL, "'.pSQL($array[0]).'", "1", "1", "1", "0", "1", "mondialrelay", "1")');
 			else
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				INSERT INTO `' . _DB_PREFIX_ . 'carrier`
 				(`url`, `name`, `active`, `is_module`, `range_behavior`)
 				VALUES(NULL, "'.pSQL('mondialrelay').'", "1", "0", "1")');
 
 			$get   = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'carrier` WHERE `id_carrier` = "' . Db::getInstance()->Insert_ID() . '"');
-			Db::getInstance()->Execute('UPDATE `' . _DB_PREFIX_ . 'mr_method` SET `id_carrier` = "' . (int)($get['id_carrier']) . '" WHERE `id_mr_method` = "' . pSQL($mainInsert) . '"');
+			Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'mr_method` SET `id_carrier` = "' . (int)($get['id_carrier']) . '" WHERE `id_mr_method` = "' . pSQL($mainInsert) . '"');
 			$weight_coef = Configuration::get('MR_WEIGHT_COEF');
 			$range_weight = array('24R' => array(0, 20000 / $weight_coef), 'DRI' => array(20000 / $weight_coef, 130000 / $weight_coef), 'LD1' => array(0, 60000 / $weight_coef), 'LDS' => array(30000 / $weight_coef, 130000 / $weight_coef));
-			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'range_weight` (`id_carrier`, `delimiter1`, `delimiter2`)
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'range_weight` (`id_carrier`, `delimiter1`, `delimiter2`)
 										VALUES ('.(int)($get['id_carrier']).', '.$range_weight[$array[2]][0].', '.$range_weight[$array[2]][1].')');
-			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'range_price` (`id_carrier`, `delimiter1`, `delimiter2`) VALUES ('.(int)($get['id_carrier']).', 0.000000, 10000.000000)');
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'range_price` (`id_carrier`, `delimiter1`, `delimiter2`) VALUES ('.(int)($get['id_carrier']).', 0.000000, 10000.000000)');
 			$groups = Group::getGroups(Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($groups as $group)
 
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'carrier_group` (id_carrier, id_group) VALUES('.(int)($get['id_carrier']).', '.(int)($group['id_group']).')');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_group` (id_carrier, id_group) VALUES('.(int)($get['id_carrier']).', '.(int)($group['id_group']).')');
 			
 			$zones = Zone::getZones();
 			foreach ($zones as $zone)
 			{
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'carrier_zone` (id_carrier, id_zone) VALUES('.(int)($get['id_carrier']).', '.(int)($zone['id_zone']).')');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_zone` (id_carrier, id_zone) VALUES('.(int)($get['id_carrier']).', '.(int)($zone['id_zone']).')');
 				$range_price_id = Db::getInstance()->getValue('SELECT id_range_price FROM ' . _DB_PREFIX_ . 'range_price WHERE id_carrier = "'.(int)($get['id_carrier']).'"');
 				$range_weight_id = Db::getInstance()->getValue('SELECT id_range_weight FROM ' . _DB_PREFIX_ . 'range_weight WHERE id_carrier = "'.(int)($get['id_carrier']).'"');
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'delivery` (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUES('.(int)($get['id_carrier']).', '.(int)($range_price_id).', NULL,'.(int)($zone['id_zone']).', 0.00)');
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'delivery` (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUES('.(int)($get['id_carrier']).', NULL, '.(int)($range_weight_id).','.(int)($zone['id_zone']).', 0.00)');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'delivery` (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUES('.(int)($get['id_carrier']).', '.(int)($range_price_id).', NULL,'.(int)($zone['id_zone']).', 0.00)');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'delivery` (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUES('.(int)($get['id_carrier']).', NULL, '.(int)($range_weight_id).','.(int)($zone['id_zone']).', 0.00)');
 			}
 			
 			if(!in_array($default[0]['value'], $checkD))
-				$default = Db::getInstance()->ExecuteS("UPDATE " . _DB_PREFIX_ . "configuration SET value = '" . (int)($get['id_carrier']) . "' WHERE name = 'PS_CARRIER_DEFAULT'");
+				$default = Db::getInstance()->executeS("UPDATE " . _DB_PREFIX_ . "configuration SET value = '" . (int)($get['id_carrier']) . "' WHERE name = 'PS_CARRIER_DEFAULT'");
 		}
 		else 
 			return false;
@@ -813,7 +813,7 @@ class MondialRelay extends Module
 	
 	public function addMethodForm()
 	{
-		$zones = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "zone WHERE active = 1");
+		$zones = Db::getInstance()->executeS("SELECT * FROM " . _DB_PREFIX_ . "zone WHERE active = 1");
 		$output = '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" >
 			<fieldset>
@@ -879,7 +879,7 @@ class MondialRelay extends Module
 	
 	public function shippingForm()
 	{
-		$query = Db::getInstance()->ExecuteS('
+		$query = Db::getInstance()->executeS('
 		SELECT m.*
 		FROM `'._DB_PREFIX_.'mr_method` m
 			JOIN `'._DB_PREFIX_.'carrier` c 
@@ -1077,7 +1077,7 @@ class MondialRelay extends Module
 	public function displayInfoByCart($id_cart)
 	{
 		$html = '<p>';
-		$simpleresul = Db::getInstance()->ExecuteS('
+		$simpleresul = Db::getInstance()->executeS('
 			SELECT * FROM ' . _DB_PREFIX_ . 'mr_selected 
 			WHERE id_cart='.(int)($id_cart));
 	
@@ -1113,7 +1113,7 @@ class MondialRelay extends Module
 	  	FROM '._DB_PREFIX_ .'mr_selected 
 	  	WHERE id_mr_selected=\''.(int)($shipping_number).'\';';
 	  	  
-		$settings = Db::getInstance()->ExecuteS($query);
+		$settings = Db::getInstance()->executeS($query);
 		
 		return $settings[0]['url_suivi'];
 	}
@@ -1123,7 +1123,7 @@ class MondialRelay extends Module
 		if ($key == 'name')
 			$key = 'mr_Name';
 			
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			UPDATE ' . _DB_PREFIX_ . 'mr_method 
 			SET '.pSQL($key).'="'.pSQL($value).'" 
 			WHERE id_carrier=\''.(int)($id_carrier).'\' ; ');
@@ -1231,7 +1231,7 @@ class MondialRelay extends Module
 		$sql .= '
 			GROUP BY o.`id_order`
 			ORDER BY o.`date_add` ASC';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 	
 	public function getErrorCodeDetail($code)

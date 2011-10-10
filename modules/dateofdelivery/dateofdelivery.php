@@ -51,7 +51,7 @@ class DateOfDelivery extends Module
 		if (!parent::install() OR !$this->registerHook('beforeCarrier') OR !$this->registerHook('orderDetailDisplayed'))
 			return false;
 		
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'dateofdelivery_carrier_rule` (
 			`id_carrier_rule` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			`id_carrier` INT NOT NULL,
@@ -79,7 +79,7 @@ class DateOfDelivery extends Module
 		Configuration::deleteByName('DOD_PREPARATION_SATURDAY');
 		Configuration::deleteByName('DOD_PREPARATION_SUNDAY');
 		Configuration::deleteByName('DOD_DATE_FORMAT');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'dateofdelivery_carrier_rule`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'dateofdelivery_carrier_rule`');
 		
 		return parent::uninstall();
 	}
@@ -174,7 +174,7 @@ class DateOfDelivery extends Module
 			{
 				if (Tools::isSubmit('addCarrierRule'))
 				{
-					if (Db::getInstance()->Execute('
+					if (Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'dateofdelivery_carrier_rule`(`id_carrier`, `minimal_time`, `maximal_time`, `delivery_saturday`, `delivery_sunday`) 
 					VALUES ('.(int)($carrier->id).', '.(int)(Tools::getValue('minimal_time')).', '.(int)(Tools::getValue('maximal_time')).', '.(int)(Tools::isSubmit('delivery_saturday')).', '.(int)(Tools::isSubmit('delivery_sunday')).')
 					'))
@@ -184,7 +184,7 @@ class DateOfDelivery extends Module
 				}
 				else
 				{
-					if (Db::getInstance()->Execute('
+					if (Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'dateofdelivery_carrier_rule`  
 					SET `id_carrier` = '.(int)($carrier->id).', `minimal_time` = '.(int)(Tools::getValue('minimal_time')).', `maximal_time` = '.(int)(Tools::getValue('maximal_time')).', `delivery_saturday` = '.(int)(Tools::isSubmit('delivery_saturday')).', `delivery_sunday` = '.(int)(Tools::isSubmit('delivery_sunday')).'
 					WHERE `id_carrier_rule` = '.(int)(Tools::getValue('id_carrier_rule'))
@@ -368,7 +368,7 @@ class DateOfDelivery extends Module
 	
 	private function _getCarrierRulesWithCarrierName()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'dateofdelivery_carrier_rule` dcr 
 		LEFT JOIN `'._DB_PREFIX_.'carrier` c ON (c.`id_carrier` = dcr.`id_carrier`)
@@ -412,7 +412,7 @@ class DateOfDelivery extends Module
 	{
 		if (!(int)($id_carrier_rule))
 			return false;
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'dateofdelivery_carrier_rule` 
 		WHERE `id_carrier_rule` = '.(int)($id_carrier_rule)
 		);

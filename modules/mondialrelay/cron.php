@@ -31,7 +31,7 @@ include_once('mondialrelay.php');
 if (Tools::getValue('secure_key') != Configuration::get('MONDIAL_RELAY_SECURE_KEY'))
 	exit;
 
-$expeditions = Db::getInstance()->ExecuteS('
+$expeditions = Db::getInstance()->executeS('
 SELECT ms.`exp_number`, ms.`id_cart`, o.`id_order`
 FROM `'._DB_PREFIX_.'mr_selected` ms
 LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_cart` = ms.`id_cart`) 

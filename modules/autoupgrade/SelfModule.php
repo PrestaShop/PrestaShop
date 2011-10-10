@@ -105,7 +105,7 @@ abstract class SelfModule
 			if (self::$modulesCache == NULL AND !is_array(self::$modulesCache))
 			{
 				self::$modulesCache = array();
-				$result = Db::getInstance()->ExecuteS('SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'`');
+				$result = Db::getInstance()->executeS('SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'`');
 				foreach ($result as $row)
 					self::$modulesCache[$row['name']] = $row;
 			}
@@ -150,19 +150,19 @@ abstract class SelfModule
 	{
 		if (!Validate::isUnsignedId($this->id))
 			return false;
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_hook`
 		FROM `'._DB_PREFIX_.'hook_module` hm
 		WHERE `id_module` = '.(int)($this->id));
 		foreach	($result AS $row)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_module` = '.(int)($this->id).'
 			AND `id_hook` = '.(int)($row['id_hook']));
 			$this->cleanPositions($row['id_hook']);
 		}
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'module`
 			WHERE `id_module` = '.(int)($this->id));
 	}
@@ -183,7 +183,7 @@ abstract class SelfModule
 		foreach ($name as $k=>$v)
 			$name[$k] = '"'.pSQL($v).'"';
 
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'module`
 		SET `active`= 1
 		WHERE `name` IN ('.implode(',',$name).')');
@@ -193,7 +193,7 @@ abstract class SelfModule
 	 */
 	public function enable()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'module`
 		SET `active`= 1
 		WHERE `name` = \''.pSQL($this->name).'\'');
@@ -215,7 +215,7 @@ abstract class SelfModule
 		foreach ($name as $k=>$v)
 			$name[$k] = '"'.pSQL($v).'"';
 
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'module`
 		SET `active`= 0
 		WHERE `name` IN ('.implode(',',$name).')');
@@ -268,7 +268,7 @@ abstract class SelfModule
 			return false;
 
 		// Register module in hook
-		$return = Db::getInstance()->Execute('
+		$return = Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
 		VALUES ('.(int)($this->id).', '.(int)($result['id_hook']).', '.(int)($result2['position'] + 1).')');
 
@@ -313,7 +313,7 @@ abstract class SelfModule
 	  */
 	public function unregisterHook($hook_id)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE
 		FROM `'._DB_PREFIX_.'hook_module`
 		WHERE `id_module` = '.(int)($this->id).'
@@ -328,7 +328,7 @@ abstract class SelfModule
 	  */
 	public function unregisterExceptions($hook_id)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE
 		FROM `'._DB_PREFIX_.'hook_module_exceptions`
 		WHERE `id_module` = '.(int)($this->id).'
@@ -348,7 +348,7 @@ abstract class SelfModule
 		{
 			if (!empty($except))
 			{
-				$result = Db::getInstance()->Execute('
+				$result = Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, `id_hook`, `file_name`)
 				VALUES ('.(int)($this->id).', '.(int)($id_hook).', \''.pSQL(strval($except)).'\')');
 				if (!$result)
@@ -361,7 +361,7 @@ abstract class SelfModule
 	public function editExceptions($id_hook, $excepts)
 	{
 		// Cleaning...
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions`
 				WHERE `id_module` = '.(int)($this->id).' AND `id_hook` ='.(int)($id_hook));
 		return $this->registerExceptions($id_hook, $excepts);
@@ -642,7 +642,7 @@ abstract class SelfModule
 					$arrNativeModules[] = '"'.pSQL($module['name']).'"';
 			}
 
-		return $db->ExecuteS('
+		return $db->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'module` m
 			WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
@@ -656,7 +656,7 @@ abstract class SelfModule
 		*/
 	public static function getModulesInstalled($position = 0)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'module` m
 		'.($position ? '
@@ -689,7 +689,7 @@ abstract class SelfModule
 		if (!isset(self::$_hookModulesCache))
 		{
 			$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
-			$result = $db->ExecuteS('
+			$result = $db->executeS('
 			SELECT h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`
 			FROM `'._DB_PREFIX_.'module` m
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
@@ -774,7 +774,7 @@ abstract class SelfModule
 		$id_customer = (int)($cookie->id_customer);
 		$billing = new Address((int)($cart->id_address_invoice));
 		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module_country` mc
 		LEFT JOIN `'._DB_PREFIX_.'module` m ON m.`id_module` = mc.`id_module`
@@ -868,7 +868,7 @@ abstract class SelfModule
 	 */
 	public function updatePosition($id_hook, $way, $position = NULL)
 	{
-		if (!$res = Db::getInstance()->ExecuteS('
+		if (!$res = Db::getInstance()->executeS('
 		SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
 		FROM `'._DB_PREFIX_.'hook_module` hm
 		WHERE hm.`id_hook` = '.(int)($id_hook).'
@@ -888,13 +888,13 @@ abstract class SelfModule
 		if (isset($position) and !empty($position))
 			$to['position'] = (int)($position);
 
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'hook_module`
 		SET `position`= position '.($way ? '-1' : '+1').'
 		WHERE position between '.(int)(min(array($from['position'], $to['position']))) .' AND '.(int)(max(array($from['position'], $to['position']))).'
 		AND `id_hook`='.(int)($from['id_hook']))
 		AND
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'hook_module`
 		SET `position`='.(int)($to['position']).'
 		WHERE `'.pSQL($this->identifier).'` = '.(int)($from[$this->identifier]).' AND `id_hook`='.(int)($to['id_hook']))
@@ -908,14 +908,14 @@ abstract class SelfModule
 	 */
 	public function cleanPositions($id_hook)
 	{
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_module`
 		FROM `'._DB_PREFIX_.'hook_module`
 		WHERE `id_hook` = '.(int)($id_hook).'
 		ORDER BY `position`');
 		$sizeof = sizeof($result);
 		for ($i = 0; $i < $sizeof; ++$i)
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'hook_module`
 			SET `position` = '.(int)($i + 1).'
 			WHERE `id_hook` = '.(int)($id_hook).'
@@ -976,7 +976,7 @@ abstract class SelfModule
 		if (self::$exceptionsCache == NULL AND !is_array(self::$exceptionsCache))
 		{
 			self::$exceptionsCache = array();
-			$result = Db::getInstance()->ExecuteS('
+			$result = Db::getInstance()->executeS('
 			SELECT CONCAT(id_hook, \'-\', id_module) as `key`, `file_name` as value
 			FROM `'._DB_PREFIX_.'hook_module_exceptions`');
 			foreach ($result as $row)
@@ -993,7 +993,7 @@ abstract class SelfModule
 
 	public static function isInstalled($moduleName)
 	{
-		Db::getInstance()->ExecuteS('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($moduleName).'\'');
+		Db::getInstance()->executeS('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($moduleName).'\'');
 		return (bool)Db::getInstance()->NumRows();
 	}
 

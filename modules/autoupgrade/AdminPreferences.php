@@ -34,7 +34,7 @@ class AdminPreferences extends AdminTab
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
-		$timezones = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT name FROM '._DB_PREFIX_.'timezone');
+		$timezones = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone');
 		$taxes[] = array('id' => 0, 'name' => $this->l('None'));
 /*		foreach (Tax::getTaxes((int)($cookie->id_lang)) as $tax)
 			$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);

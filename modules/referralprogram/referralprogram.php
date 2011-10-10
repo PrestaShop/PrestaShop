@@ -84,7 +84,7 @@ class ReferralProgram extends Module
 
 	public function installDB()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'referralprogram` (
 			`id_referralprogram` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_sponsor` INT UNSIGNED NOT NULL,
@@ -116,7 +116,7 @@ class ReferralProgram extends Module
 
 	public function uninstallDB()
 	{
-		return Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'referralprogram`;');
+		return Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'referralprogram`;');
 	}
 
 	public function removeMail()

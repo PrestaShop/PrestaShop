@@ -114,7 +114,7 @@ class AdminDb extends AdminPreferences
 					if ($engineType == $tables_engine[$table])
 						$this->_errors[] = $table.' '.$this->l('is already in').' '.$engineType;
 					else
-						if (!Db::getInstance()->Execute('ALTER TABLE `'.bqSQL($table).'` ENGINE=`'.bqSQL($engineType).'`'))
+						if (!Db::getInstance()->execute('ALTER TABLE `'.bqSQL($table).'` ENGINE=`'.bqSQL($engineType).'`'))
 							$this->_errors[] = $this->l('Can\'t change engine for').' '.$table;
 						else
 							echo '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Engine change of').' '.$table.' '.$this->l('to').' '.$engineType.'</div>';
@@ -155,7 +155,7 @@ class AdminDb extends AdminPreferences
 	
 	private function _getEngines()
 	{
-		$engines = Db::getInstance()->ExecuteS('SHOW ENGINES');
+		$engines = Db::getInstance()->executeS('SHOW ENGINES');
 		$allowed_engines = array();
 		foreach ($engines AS $engine)
 		{
@@ -167,7 +167,7 @@ class AdminDb extends AdminPreferences
 	
 	private function _getTablesStatus()
 	{
-		return Db::getInstance()->ExecuteS('SHOW TABLE STATUS');
+		return Db::getInstance()->executeS('SHOW TABLE STATUS');
 	}
 }
 

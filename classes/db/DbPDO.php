@@ -39,7 +39,7 @@ class DbPDOCore extends Db
 	{
 		try
 		{
-			$this->_link = new PDO('mysql:dbname='.$this->_database.';host='.$this->_server, $this->_user, $this->_password);
+			$this->link = new PDO('mysql:dbname='.$this->database.';host='.$this->server, $this->user, $this->password);
 		}
 		catch (PDOException $e)
 		{
@@ -47,10 +47,10 @@ class DbPDOCore extends Db
 		}
 
 		// UTF-8 support
-		if ($this->_link->exec('SET NAMES \'utf8\'') === false)
+		if ($this->link->exec('SET NAMES \'utf8\'') === false)
 			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
 
-		return $this->_link;
+		return $this->link;
 	}
 
 	/**
@@ -58,7 +58,7 @@ class DbPDOCore extends Db
 	 */
 	public function	disconnect()
 	{
-		unset($this->_link);
+		unset($this->link);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class DbPDOCore extends Db
 	 */
 	protected function _query($sql)
 	{
-		return $this->_link->query($sql);
+		return $this->link->query($sql);
 	}
 
 	/**
@@ -75,7 +75,7 @@ class DbPDOCore extends Db
 	public function nextRow($result = false)
 	{
 		if (!$result)
-			$result = $this->_result;
+			$result = $this->result;
 		return $result->fetch();
 	}
 
@@ -92,7 +92,7 @@ class DbPDOCore extends Db
 	 */
 	public function	Insert_ID()
 	{
-		return $this->_link->lastInsertId();
+		return $this->link->lastInsertId();
 	}
 
 	/**
@@ -100,7 +100,7 @@ class DbPDOCore extends Db
 	 */
 	public function	Affected_Rows()
 	{
-		return $this->_result->rowCount();
+		return $this->result->rowCount();
 	}
 
 	/**
@@ -108,7 +108,7 @@ class DbPDOCore extends Db
 	 */
 	public function getMsgError($query = false)
 	{
-		$error = $this->_link->errorInfo();
+		$error = $this->link->errorInfo();
 		return $error[2];
 	}
 
@@ -117,7 +117,7 @@ class DbPDOCore extends Db
 	 */
 	public function getNumberError()
 	{
-		$error = $this->_link->errorInfo();
+		$error = $this->link->errorInfo();
 		return $error[1];
 	}
 
@@ -145,7 +145,7 @@ class DbPDOCore extends Db
 	 */
 	public function set_db($db_name)
 	{
-		return $this->_link->exec('USE '.pSQL($db_name));
+		return $this->link->exec('USE '.pSQL($db_name));
 	}
 
 	/**

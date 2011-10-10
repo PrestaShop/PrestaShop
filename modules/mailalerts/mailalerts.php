@@ -77,7 +77,7 @@ class MailAlerts extends Module
 		Configuration::updateValue('MA_MERCHANT_MAILS', Configuration::get('PS_SHOP_EMAIL'));
 		Configuration::updateValue('MA_LAST_QTIES', Configuration::get('PS_LAST_QTIES'));
 
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'mailalert_customer_oos` (
 				`id_customer` int(10) unsigned NOT NULL,
 				`customer_email` varchar(128) NOT NULL,
@@ -100,7 +100,7 @@ class MailAlerts extends Module
 		Configuration::deleteByName('MA_CUSTOMER_QTY');
 		Configuration::deleteByName('MA_MERCHANT_MAILS');
 		Configuration::deleteByName('MA_LAST_QTIES');
-	 	if (!Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'mailalert_customer_oos'))
+	 	if (!Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'mailalert_customer_oos'))
 	 		return false;
 		return parent::uninstall();
 	}
@@ -276,7 +276,7 @@ class MailAlerts extends Module
 
 	public function customerHasNotification($id_customer, $id_product, $id_product_attribute)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT * 
 			FROM `'._DB_PREFIX_.'mailalert_customer_oos` 
 			WHERE `id_customer` = '.(int)($id_customer).' 
@@ -336,7 +336,7 @@ class MailAlerts extends Module
 	
 	public function sendCustomerAlert($id_product, $id_product_attribute)
 	{
-		$customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT id_customer, customer_email
 		FROM `'._DB_PREFIX_.'mailalert_customer_oos`
 		WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
@@ -498,7 +498,7 @@ class MailAlerts extends Module
 				'.Product::sqlStock('p', 0).'
 				WHERE p.`active` = 1
 					ma.`id_customer` = '.$id_customer;
-		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		if (empty($products) === true OR !sizeof($products))
 			return array();
@@ -511,7 +511,7 @@ class MailAlerts extends Module
 			if (isset($products[$i]['id_product_attribute']) AND
 				Validate::isUnsignedInt($products[$i]['id_product_attribute']))
 			{
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT al.`name` AS attribute_name
 					FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 					LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
@@ -555,7 +555,7 @@ class MailAlerts extends Module
 
 	public static function deleteAlert($id_customer, $customer_email, $id_product, $id_product_attribute)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos` 
 			WHERE `id_customer` = '.(int)($id_customer).'
 			AND `customer_email` = \''.pSQL($customer_email).'\'
@@ -565,16 +565,16 @@ class MailAlerts extends Module
 	
 	public function hookDeleteProduct($params)
 	{
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos` WHERE `id_product` = '.(int)$params['product']->id);
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos` WHERE `id_product` = '.(int)$params['product']->id);
 	}
 	
 	public function hookDeleteProductAttribute($params)
 	{
 		if ($params['deleteAllAttributes'])
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos`
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos`
 			WHERE `id_product` = '.(int)$params['id_product']);
 		else
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos`
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'mailalert_customer_oos`
 			WHERE `id_product_attribute` = '.(int)$params['id_product_attribute'].' 
 			AND `id_product` = '.(int)$params['id_product']);
 	}

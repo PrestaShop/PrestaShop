@@ -170,7 +170,7 @@ class Ebay extends Module
 		// Install SQL
 		include(dirname(__FILE__).'/sql-install.php');
 		foreach ($sql as $s)
-			if (!Db::getInstance()->Execute($s))
+			if (!Db::getInstance()->execute($s))
 				return false;
 
 		// Install Module
@@ -210,7 +210,7 @@ class Ebay extends Module
 		// Uninstall SQL
 		include(dirname(__FILE__).'/sql-uninstall.php');
 		foreach ($sql as $s)
-			if (!Db::getInstance()->Execute($s))
+			if (!Db::getInstance()->execute($s))
 				return false;
 		Configuration::deleteByName('EBAY_API_SESSION');
 		Configuration::deleteByName('EBAY_API_USERNAME');
@@ -258,7 +258,7 @@ class Ebay extends Module
 			// Upgrade SQL
 			include(dirname(__FILE__).'/sql-upgrade-1-2.php');
 			foreach ($sql as $s)
-				if (!Db::getInstance()->Execute($s))
+				if (!Db::getInstance()->execute($s))
 					return false;
 			Configuration::updateValue('EBAY_VERSION', $this->version);
 		}
@@ -278,7 +278,7 @@ class Ebay extends Module
 		if (Configuration::get('EBAY_SYNC_MODE') == 'A')
 		{
 			// Retrieve product list for eBay (which have matched categories) AND Send each product on eBay
-			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE '.$sql.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
+			$productsList = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE '.$sql.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
 			foreach ($productList as $k => $v)
 				$productList[$k]['noPriceUpdate'] = 1;
 			if ($productsList)
@@ -287,7 +287,7 @@ class Ebay extends Module
 		else if (Configuration::get('EBAY_SYNC_MODE') == 'B')
 		{
 			// Select the sync Categories and Retrieve product list for eBay (which have matched and sync categories) AND Send each product on eBay
-			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE '.$sql.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
+			$productsList = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE '.$sql.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
 			foreach ($productList as $k => $v)
 				$productList[$k]['noPriceUpdate'] = 1;
 			if ($productsList)
@@ -307,14 +307,14 @@ class Ebay extends Module
 		if (Configuration::get('EBAY_SYNC_MODE') == 'A')
 		{
 			// Retrieve product list for eBay (which have matched categories) AND Send each product on eBay
-			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
+			$productsList = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
 			if ($productsList)
 				$this->_syncProducts($productsList);
 		}
 		else if (Configuration::get('EBAY_SYNC_MODE') == 'B')
 		{
 			// Select the sync Categories and Retrieve product list for eBay (which have matched and sync categories) AND Send each product on eBay
-			$productsList = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
+			$productsList = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product.' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
 			if ($productsList)
 				$this->_syncProducts($productsList);
 		}
@@ -930,11 +930,11 @@ class Ebay extends Module
 
 		// Loading categories
 		$categoryConfigList = array();
-		$categoryConfigListTmp = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
+		$categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 		foreach ($categoryConfigListTmp as $c)
 			$categoryConfigList[$c['id_category']] = $c;
 		$categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
-		$eBayCategoryList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
+		$eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
 
 		// Display header
@@ -1041,10 +1041,10 @@ class Ebay extends Module
 			// Loading categories
 			$ebay = new eBayRequest();
 			$categoryConfigList = array();
-			$categoryConfigListTmp = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
+			$categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 			foreach ($categoryConfigListTmp as $c)
 				$categoryConfigList[$c['id_category']] = $c;
-			$categoryList = Db::getInstance()->ExecuteS('SELECT `id_category`, `name` FROM `'._DB_PREFIX_.'category_lang` WHERE `id_lang` = '.(int)$this->id_lang.$this->context->shop->sqlLang('cl'));
+			$categoryList = Db::getInstance()->executeS('SELECT `id_category`, `name` FROM `'._DB_PREFIX_.'category_lang` WHERE `id_lang` = '.(int)$this->id_lang.$this->context->shop->sqlLang('cl'));
 
 			foreach ($categoryList as $k => $c)
 				if (!isset($categoryConfigList[$c['id_category']]))
@@ -1087,7 +1087,7 @@ class Ebay extends Module
 				if ($arraySQL)
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $arraySQL, 'UPDATE', '`id_category` = '.(int)$id_category);
 				else
-					Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` = '.(int)$id_category);
+					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` = '.(int)$id_category);
 			}
 			elseif ($arraySQL)
 			{
@@ -1317,7 +1317,7 @@ class Ebay extends Module
 
 		// Loading categories
 		$categoryConfigList = array();
-		$categoryConfigListTmp = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
+		$categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 		foreach ($categoryConfigListTmp as $c)
 			$categoryConfigList[$c['id_category']] = $c;
 		$categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
@@ -1428,7 +1428,7 @@ class Ebay extends Module
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
 
 			// Retrieve products list for eBay (which have matched categories)
-			$productsList = Db::getInstance()->ExecuteS('
+			$productsList = Db::getInstance()->executeS('
 			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)
@@ -1455,7 +1455,7 @@ class Ebay extends Module
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
 
 			// Retrieve products list for eBay (which have matched categories)
-			$productsList = Db::getInstance()->ExecuteS('
+			$productsList = Db::getInstance()->executeS('
 			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)
@@ -1684,7 +1684,7 @@ class Ebay extends Module
 							if ($ebay->errorCode == 291)
 							{
 								// We delete from DB and Add it on eBay
-								Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
+								Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
 								$ebay->addFixedPriceItemMultiSku($datas);
 								if ($ebay->itemID > 0)
 									Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => 0, 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
@@ -1754,7 +1754,7 @@ class Ebay extends Module
 								{
 									// Delete
 									if ($ebay->endFixedPriceItem($datasTmp))
-										Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datasTmp['itemID']).'\'');
+										Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datasTmp['itemID']).'\'');
 								}
 								else
 								{
@@ -1766,7 +1766,7 @@ class Ebay extends Module
 								if ($ebay->errorCode == 291)
 								{
 									// We delete from DB and Add it on eBay
-									Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datasTmp['itemID']).'\'');
+									Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datasTmp['itemID']).'\'');
 									$ebay->addFixedPriceItem($datasTmp);
 									if ($ebay->itemID > 0)
 										Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => (int)$datasTmp['id_attribute'], 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
@@ -1814,7 +1814,7 @@ class Ebay extends Module
 						{
 							// Delete
 							if ($ebay->endFixedPriceItem($datas))
-								Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
+								Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
 						}
 						else
 						{
@@ -1826,7 +1826,7 @@ class Ebay extends Module
 						if ($ebay->errorCode == 291)
 						{
 							// We delete from DB and Add it on eBay
-							Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
+							Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
 							$ebay->addFixedPriceItem($datas);
 							if ($ebay->itemID > 0)
 								Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => 0, 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');

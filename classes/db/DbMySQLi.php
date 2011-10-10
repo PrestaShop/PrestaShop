@@ -35,17 +35,17 @@ class DbMySQLiCore extends Db
 	 */
 	public function	connect()
 	{
-		$this->_link = new mysqli($this->_server, $this->_user, $this->_password, $this->_database);
+		$this->link = new mysqli($this->server, $this->user, $this->password, $this->database);
 
 		// Do not use object way for error because this work bad before PHP 5.2.9
 		if (mysqli_connect_error())
 			die(Tools::displayError('Link to database cannot be established : '.mysqli_connect_error()));
 
 		// UTF-8 support
-		if (!$this->_link->query('SET NAMES \'utf8\''))
+		if (!$this->link->query('SET NAMES \'utf8\''))
 			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
 
-		return $this->_link;
+		return $this->link;
 	}
 
 	/**
@@ -53,7 +53,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function	disconnect()
 	{
-		$this->_link->close();
+		$this->link->close();
 	}
 
 	/**
@@ -61,7 +61,7 @@ class DbMySQLiCore extends Db
 	 */
 	protected function _query($sql)
 	{
-		return $this->_link->query($sql);
+		return $this->link->query($sql);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class DbMySQLiCore extends Db
 	public function nextRow($result = false)
 	{
 		if (!$result)
-			$result = $this->_result;
+			$result = $this->result;
 		return $result->fetch_assoc();
 	}
 
@@ -87,7 +87,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function	Insert_ID()
 	{
-		return $this->_link->insert_id;
+		return $this->link->insert_id;
 	}
 
 	/**
@@ -95,7 +95,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function	Affected_Rows()
 	{
-		return $this->_link->affected_rows;
+		return $this->link->affected_rows;
 	}
 
 	/**
@@ -103,7 +103,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function getMsgError($query = false)
 	{
-		return $this->_link->error;
+		return $this->link->error;
 	}
 
 	/**
@@ -111,7 +111,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function getNumberError()
 	{
-		return $this->_link->errno;
+		return $this->link->errno;
 	}
 
 	/**
@@ -127,7 +127,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function _escape($str)
 	{
-		return $this->_link->real_escape_string($str);
+		return $this->link->real_escape_string($str);
 	}
 
 	/**
@@ -135,7 +135,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function set_db($db_name)
 	{
-		return $this->_link->query('USE '.pSQL($db_name));
+		return $this->link->query('USE '.pSQL($db_name));
 	}
 
 	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)

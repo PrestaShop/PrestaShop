@@ -136,7 +136,7 @@ class StatsPersonalInfos extends ModuleGraph
 						WHERE 1
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER, 'c').'
 						GROUP BY c.id_gender';
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 				$gendersResults = array();
 				foreach ($result as $row)
@@ -262,7 +262,7 @@ class StatsPersonalInfos extends ModuleGraph
 						WHERE a.id_customer != 0
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER, 'cu').'
 						GROUP BY c.`id_country`';
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
 				{
 				    $this->_values[] = $row['total'];
@@ -278,7 +278,7 @@ class StatsPersonalInfos extends ModuleGraph
 						WHERE 1
 							'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 						GROUP BY c.`id_currency`';
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
 				{
 				    $this->_values[] = $row['total'];
@@ -294,7 +294,7 @@ class StatsPersonalInfos extends ModuleGraph
 						WHERE 1
 							'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 						GROUP BY c.`id_lang`';
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
 				{
 				    $this->_values[] = $row['total'];

@@ -101,7 +101,7 @@ class StatsCarrier extends ModuleGraph
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					'.$stateQuery.'
 				GROUP BY c.`id_carrier`';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		foreach ($result as $row)
 		{
 		    $this->_values[] = $row['total'];

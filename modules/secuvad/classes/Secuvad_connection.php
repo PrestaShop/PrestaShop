@@ -96,7 +96,7 @@ class Secuvad_connection
     				$this->secuvad_h->secuvad_log('secuvad_connection.php::report_fraud() '."\n\t".' Fraud: '.(int)($idtransaction).'/'.$feedback);
     			elseif ($balise == 'impaye_report')
     				$this->secuvad_h->secuvad_log('secuvad_connection.php::report_fraud() '."\n\t".' Unpaid: '.(int)($idtransaction).'/'.$feedback);
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'secuvad_order` 
 				SET `is_fraud` = 1 
 				WHERE `id_secuvad_order` = '.(int)($idtransaction));
@@ -131,7 +131,7 @@ class Secuvad_connection
    			if (!empty($erreur))
     		{
     			$this->secuvad_h->secuvad_log('secuvad_connection.php::send_transaction() '."\n\t".' Error: '.$erreur);	
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'secuvad_order` 
 				SET `secuvad_status` = 4, `error` = \''.pSQL($erreur).'\' 
 				WHERE `id_secuvad_order` = '.(int)($idtransaction)); 
@@ -140,7 +140,7 @@ class Secuvad_connection
     		{
     			$this->secuvad_h->secuvad_log('secuvad_connection.php::send_transaction() '."\n\t".' Response: '.(int)($idtransaction).'/'.(int)($score).'/'.$advice);    				    				  
     			if(preg_match('/[0-9]+/', $score))
-					Db::getInstance()->Execute('
+					Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'secuvad_order` 
 					SET `secuvad_status` = 5, `score` = '.(int)($score).', error = \'\' 
 					WHERE `id_secuvad_order` = '.(int)($idtransaction));   
@@ -158,7 +158,7 @@ class Secuvad_connection
 						$secuvad_status	= 2;
 					else
 						$secuvad_status	= 4;
-					Db::getInstance()->Execute('
+					Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'secuvad_order` 
 					SET `advice` = \''.pSQL($advice).'\', `error` = \'\', `secuvad_status` = '.(int)($secuvad_status).' 
 					WHERE `id_secuvad_order` = '.(int)($idtransaction));

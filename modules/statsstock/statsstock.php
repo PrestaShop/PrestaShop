@@ -77,7 +77,7 @@ class StatsStock extends Module
 				INNER JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
 				WHERE 1 = 1
 				'.$filter;
-		$products = Db::getInstance()->ExecuteS($sql);
+		$products = Db::getInstance()->executeS($sql);
 
 		echo '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>

@@ -28,13 +28,13 @@ class blocktopmenu extends Module
 
   public function installDb()
   {
-    Db::getInstance()->ExecuteS('
+    Db::getInstance()->executeS('
     CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop` (
       `id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
       `new_window` TINYINT( 1 ) NOT NULL,
       `link` VARCHAR( 128 ) NOT NULL
     ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;');
-    Db::getInstance()->ExecuteS('
+    Db::getInstance()->executeS('
     CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
     `id_link` INT NOT NULL ,
     `id_lang` INT NOT NULL ,
@@ -56,8 +56,8 @@ class blocktopmenu extends Module
 
   private function uninstallDb()
   {
-    Db::getInstance()->ExecuteS('DROP TABLE `'._DB_PREFIX_.'linksmenutop`');
-    Db::getInstance()->ExecuteS('DROP TABLE `'._DB_PREFIX_.'linksmenutop_lang`');
+    Db::getInstance()->executeS('DROP TABLE `'._DB_PREFIX_.'linksmenutop`');
+    Db::getInstance()->executeS('DROP TABLE `'._DB_PREFIX_.'linksmenutop_lang`');
     return true;
   }
 

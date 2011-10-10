@@ -101,7 +101,7 @@ class BlockViewed extends Module
 			$defaultCover = Language::getIsoById($params['cookie']->id_lang).'-default';
 
 			$productIds = implode(',', $productsViewed);
-			$productsImages = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$productsImages = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT i.id_image, p.id_product, il.legend, p.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
 			FROM '._DB_PREFIX_.'product p
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.$this->context->shop->sqlLang('pl').')

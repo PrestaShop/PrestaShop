@@ -116,7 +116,7 @@ class PageCore extends ObjectModel
 				WHERE `id_date_range` = '.(int)$id_date_range.'
 					AND `id_page` = '.(int)$id_page.'
 					AND `id_shop` = ' . $context->shop->getID();
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 
 		// If no one has seen the page in this date range, it is added
 		if (Db::getInstance()->Affected_Rows() == 0)

@@ -99,7 +99,7 @@ class AdminTrackingController extends AdminController
 				$this->_list['message'] = $this->l('List of out of stock products with attributes:');
 				break ;
 		}
-		$this->_list['obj'] = Db::getInstance()->ExecuteS($sql);
+		$this->_list['obj'] = Db::getInstance()->executeS($sql);
 		return $this;
 	}
 

@@ -124,7 +124,7 @@ class StatsForecast extends Module
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY '.$dateFromGInvoice.'
 				ORDER BY fix_date';
-		$result = $db->ExecuteS($sql, false);
+		$result = $db->executeS($sql, false);
 
 		$dataTable = array();
 		if ($this->context->cookie->stats_granularity == 10)
@@ -170,7 +170,7 @@ class StatsForecast extends Module
 				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween().'
 				'.$this->sqlShopRestriction(false, 'c').'
 				GROUP BY '.$dateFromGAdd;
-		$visits = Db::getInstance()->ExecuteS($sql, false);
+		$visits = Db::getInstance()->executeS($sql, false);
 		while ($row = $db->nextRow($visits))
 			$visitArray[$row['fix_date']] = $row['visits'];
 
@@ -183,7 +183,7 @@ class StatsForecast extends Module
 					AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween()
 					.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY '.$dateFromGInvoice;
-		$discounts = Db::getInstance()->ExecuteS($sql, false);
+		$discounts = Db::getInstance()->executeS($sql, false);
 		while ($row = $db->nextRow($discounts))
 			$discountArray[$row['fix_date']] = $row['total'];
 
@@ -504,7 +504,7 @@ class StatsForecast extends Module
 					'.$where.'
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY p.id_category_default';
-		$ca['cat'] = Db::getInstance()->ExecuteS($sql);
+		$ca['cat'] = Db::getInstance()->executeS($sql);
 		uasort($ca['cat'], 'statsforecast_sort');
 
 		$langValues = '';
@@ -512,7 +512,7 @@ class StatsForecast extends Module
 				FROM `'._DB_PREFIX_.'lang` l
 				'.$this->context->shop->sqlAsso('lang', 'l').'
 				WHERE l.active = 1';
-		$languages = Db::getInstance()->ExecuteS($sql);
+		$languages = Db::getInstance()->executeS($sql);
 		foreach ($languages as $language)
 			$langValues .= 'SUM(IF(o.id_lang = '.(int)$language['id_lang'].', total_products / o.conversion_rate, 0)) as '.pSQL($language['iso_code']).',';
 		$langValues = rtrim($langValues, ',');
@@ -549,7 +549,7 @@ class StatsForecast extends Module
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY o.module
 				ORDER BY total DESC';
-		$ca['payment'] = Db::getInstance()->ExecuteS($sql);
+		$ca['payment'] = Db::getInstance()->executeS($sql);
 
 		$sql = 'SELECT z.name, SUM(o.total_products / o.conversion_rate) as total, COUNT(*) as nb
 				FROM `'._DB_PREFIX_.'orders` o
@@ -561,7 +561,7 @@ class StatsForecast extends Module
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY c.id_zone
 				ORDER BY total DESC';
-		$ca['zones'] = Db::getInstance()->ExecuteS($sql);
+		$ca['zones'] = Db::getInstance()->executeS($sql);
 
 		$sql = 'SELECT cu.name, SUM(o.total_products / o.conversion_rate) as total, COUNT(*) as nb
 				FROM `'._DB_PREFIX_.'orders` o
@@ -573,7 +573,7 @@ class StatsForecast extends Module
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY o.id_currency
 				ORDER BY total DESC';
-		$ca['currencies'] = Db::getInstance()->ExecuteS($sql);
+		$ca['currencies'] = Db::getInstance()->executeS($sql);
 
 		$sql = 'SELECT SUM(total_products / o.conversion_rate) as total, COUNT(*) AS nb
 				FROM `'._DB_PREFIX_.'orders` o
@@ -593,7 +593,7 @@ class StatsForecast extends Module
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY pac.id_attribute';
-		$ca['attributes'] = Db::getInstance()->ExecuteS($sql);
+		$ca['attributes'] = Db::getInstance()->executeS($sql);
 
 		return $ca;
 	}

@@ -70,7 +70,7 @@ abstract class ImportModuleCore extends Module
 	public function getValue($query)
 	{
 		$this->initDatabaseConnection();
-		$result = $this->ExecuteS($query);
+		$result = $this->executeS($query);
 		if (!sizeof($result))
 			return 0;
 		else

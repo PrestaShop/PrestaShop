@@ -903,9 +903,9 @@ class AdminProducts extends AdminTab
 		{
 			if ($id_image = (int)Tools::getValue('id_image') && $id_shop = (int)Tools::getValue('id_shop'))
 				if (Tools::getValue('active') == "true")
-					die(Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')'));
+					die(Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')'));
 				else
-					die(Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
+					die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
 		}
 
 		if (Tools::getValue('deleteImage'))
@@ -917,7 +917,7 @@ class AdminProducts extends AdminTab
 				$first_img = Db::getInstance()->getRow('
 				SELECT `id_image` FROM `'._DB_PREFIX_.'image`
 				WHERE `id_product` = '.(int)($image->id_product));
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'image`
 				SET `cover` = 1
 				WHERE `id_image` = '.(int)($first_img['id_image']));
@@ -1454,7 +1454,7 @@ class AdminProducts extends AdminTab
 	{
 		$tagError = true;
 		/* Reset all tags for THIS product */
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_tag`
 		WHERE `id_product` = '.(int)($product->id)))
 			return false;

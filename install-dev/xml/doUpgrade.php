@@ -394,7 +394,7 @@ foreach($sqlContent as $query)
 		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
 	</request>'."\n";
 		}
-		elseif(!Db::getInstance()->Execute($query))
+		elseif(!Db::getInstance()->execute($query))
 		{
 			$logger->logError('SQL query: '."\r\n".$query);
 			$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());

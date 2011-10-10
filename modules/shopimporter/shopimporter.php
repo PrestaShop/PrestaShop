@@ -701,7 +701,7 @@ class shopimporter extends ImportModule
 			{
 				$this->saveMatchId(strtolower($className), (int)$object->id, (int)$id);
 				if ($className == 'Customer')
-					Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `passwd_'.bqSQL(Tools::getValue('moduleName')).'` = \''.pSQL($password).'\' WHERE id_customer = '.(int)$object->id);
+					Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `passwd_'.bqSQL(Tools::getValue('moduleName')).'` = \''.pSQL($password).'\' WHERE id_customer = '.(int)$object->id);
 				if (array_key_exists('hasImage', $this->supportedImports[strtolower($className)]) AND Tools::isSubmit('images_'.$className))
 					$this->copyImg($item, $className);
 			}
@@ -795,7 +795,7 @@ class shopimporter extends ImportModule
 								$associatFields .= (int)$match[$association['fields'][1]][$v].'), ';
 							}
 				if ($associatFields != '')
-					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.bqSQL($tableAssociation).'` (`'.$associatFieldsName.'`) VALUES '.rtrim($associatFields, ', '));
+					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.bqSQL($tableAssociation).'` (`'.$associatFieldsName.'`) VALUES '.rtrim($associatFields, ', '));
 			}
 		}
 	}
@@ -805,7 +805,7 @@ class shopimporter extends ImportModule
 		$table = $this->supportedImports[$className]['table'];
 		$moduleName = Tools::getValue('moduleName');
 		$identifier = $this->supportedImports[$className]['identifier'];
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.bqSQL($table).'` SET `'.bqSQL($identifier).'_'.bqSQL($moduleName).'` =  '.(int)$matchId.' WHERE `'.bqSQL($identifier).'` = '.(int)$psId);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.bqSQL($table).'` SET `'.bqSQL($identifier).'_'.bqSQL($moduleName).'` =  '.(int)$matchId.' WHERE `'.bqSQL($identifier).'` = '.(int)$psId);
 	}
 
 	private function getMatchId($className)
@@ -813,7 +813,7 @@ class shopimporter extends ImportModule
 		$table = $this->supportedImports[$className]['table'];
 		$moduleName = Tools::getValue('moduleName');
 		$identifier = $this->supportedImports[$className]['identifier'];
-		$returns = Db::getInstance()->ExecuteS('SELECT `'.bqSQL($identifier).'_'.bqSQL($moduleName).'`, `'.bqSQL($identifier).'` FROM `'._DB_PREFIX_.bqSQL($table).'` WHERE `'.bqSQL($identifier).'_'.bqSQL($moduleName).'` != 0 ');
+		$returns = Db::getInstance()->executeS('SELECT `'.bqSQL($identifier).'_'.bqSQL($moduleName).'`, `'.bqSQL($identifier).'` FROM `'._DB_PREFIX_.bqSQL($table).'` WHERE `'.bqSQL($identifier).'_'.bqSQL($moduleName).'` != 0 ');
 		$match = array();
 		foreach($returns as $return)
 			$match[$return[$identifier.'_'.$moduleName]] = $return[$identifier];
@@ -930,7 +930,7 @@ class shopimporter extends ImportModule
 		foreach ($this->supportedImports[$className]['alterTable'] AS $name => $type)
 		{
 			$moduleName = Tools::getValue('moduleName');
-			Db::getInstance()->ExecuteS("SHOW COLUMNS FROM `"._DB_PREFIX_.bqSQL($from)."` LIKE '".pSQL($name).'_'.pSQL($moduleName)."'");
+			Db::getInstance()->executeS("SHOW COLUMNS FROM `"._DB_PREFIX_.bqSQL($from)."` LIKE '".pSQL($name).'_'.pSQL($moduleName)."'");
 			if (!Db::getInstance()->numRows() AND !array_key_exists($name.'_'.$moduleName, $result))
 					$queryTmp .= ' ADD `'.$name.'_'.$moduleName.'` '.$type.' NOT NULL,';
 		}
@@ -938,14 +938,14 @@ class shopimporter extends ImportModule
 		{
 			$query = 'ALTER TABLE  `'._DB_PREFIX_.bqSQL($from).'` ';
 			$query .= rtrim($queryTmp, ',');
-			Db::getInstance()->Execute($query);
+			Db::getInstance()->execute($query);
 		}
 	}
 
 	private function updateCat()
 	{
 		$moduleName = Tools::getValue('moduleName');
-		Db::getInstance()->Execute('UPDATE
+		Db::getInstance()->execute('UPDATE
 									'._DB_PREFIX_.'category c
 									INNER JOIN
 									'._DB_PREFIX_.'category c2
@@ -981,7 +981,7 @@ class shopimporter extends ImportModule
 			foreach($this->supportedImports AS $table => $conf)
 				if ($conf['identifier'] == $key2)
 					$from = $this->supportedImports[$table]['table'];
-			$return = Db::getInstance()->ExecuteS('SELECT `'.bqSQL($key2).'_'.bqSQL($moduleName).'`, `'.bqSQL($key2).'` FROM `'._DB_PREFIX_.bqSQL($from).'` WHERE `'.bqSQL($key2).'_'.bqSQL($moduleName).'` != 0');
+			$return = Db::getInstance()->executeS('SELECT `'.bqSQL($key2).'_'.bqSQL($moduleName).'`, `'.bqSQL($key2).'` FROM `'._DB_PREFIX_.bqSQL($from).'` WHERE `'.bqSQL($key2).'_'.bqSQL($moduleName).'` != 0');
 			if (!empty($return))
 				foreach($return AS $name => $val)
 					$match[$key][$val[$key2.'_'.$moduleName]] = $val[$key2];
@@ -993,7 +993,7 @@ class shopimporter extends ImportModule
 	{
 		$id = $this->supportedImports[$table]['identifier'];
 		$moduleName = Tools::getValue('moduleName');
-		$return = Db::getInstance()->ExecuteS('SELECT `'.bqSQL($id).'_'.bqSQL($moduleName).'`, `'.bqSQL($id).'` FROM `'._DB_PREFIX_.bqSQL($table).'` WHERE `'.bqSQL($id).'_'.bqSQL($moduleName).'` != 0');
+		$return = Db::getInstance()->executeS('SELECT `'.bqSQL($id).'_'.bqSQL($moduleName).'`, `'.bqSQL($id).'` FROM `'._DB_PREFIX_.bqSQL($table).'` WHERE `'.bqSQL($id).'_'.bqSQL($moduleName).'` != 0');
 		$match = array();
 		foreach($return AS $name => $val)
 				$match[$val[$id.'_'.$moduleName]] = $val[$id];
@@ -1003,7 +1003,7 @@ class shopimporter extends ImportModule
 	private function getMatchIdLang($order = 1)
 	{
 		$moduleName = Tools::getValue('moduleName');
-		$return = Db::getInstance()->ExecuteS('SELECT `id_lang`, `id_lang_'.bqSQL($moduleName).'` FROM `'._DB_PREFIX_.'lang'.'` WHERE `id_lang_'.bqSQL($moduleName).'` != 0');
+		$return = Db::getInstance()->executeS('SELECT `id_lang`, `id_lang_'.bqSQL($moduleName).'` FROM `'._DB_PREFIX_.'lang'.'` WHERE `id_lang_'.bqSQL($moduleName).'` != 0');
 		$match = array();
 		foreach($return AS $name => $val)
 			if ((bool)$order)
@@ -1182,7 +1182,7 @@ class shopimporter extends ImportModule
 										else
 										{
 											$newId = Language::getIdByIso($iso);
-											Db::getInstance()->Execute('UPDATE  `'._DB_PREFIX_.'lang`
+											Db::getInstance()->execute('UPDATE  `'._DB_PREFIX_.'lang`
 																		SET  `id_lang_'.bqSQL($moduleName).'` =  '.(int)$language['id_lang'].'
 																		WHERE  `id_lang` = '.(int)$newId);
 										}
@@ -1205,7 +1205,7 @@ class shopimporter extends ImportModule
 			else
 			{
 				$newId = Language::getIdByIso($iso);
-				Db::getInstance()->Execute('UPDATE  `'._DB_PREFIX_.'lang`
+				Db::getInstance()->execute('UPDATE  `'._DB_PREFIX_.'lang`
 											SET  `id_lang_'.bqSQL($moduleName).'` =  '.(int)$language['id_lang'].'
 											WHERE  `id_lang` = '.(int)$newId);
 			}
@@ -1217,80 +1217,80 @@ class shopimporter extends ImportModule
 		switch ($table)
 		{
 			case 'customer' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group');
 				break;
 			case 'address' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'address');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address');
 				break;
 			case 'country' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'state');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'country');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'country_lang');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'country');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'state');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'country');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'country_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'country');
 			case 'group' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'ps_group_lang');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'group');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'ps_group_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'group');
 				break;
 			case 'combination' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination');
 				break;
 			case 'category' :
-				Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category != 1');
-				Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category != 1');
-				Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 2 ');
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category != 1');
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category != 1');
+				Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 2 ');
 				foreach (scandir(_PS_CAT_IMG_DIR_) AS $d)
 						if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 							unlink(_PS_CAT_IMG_DIR_.$d);
 				Image::clearTmpDir();
 			break;
 			case 'product' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'image');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');
 
 				Image::deleteAllImages(_PS_PROD_IMG_DIR_);
 				Image::clearTmpDir();
 				break;
 			case 'manufacturer' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
 				foreach (scandir(_PS_MANU_IMG_DIR_) AS $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_MANU_IMG_DIR_.$d);
 				Image::clearTmpDir();
 				break;
 			case 'Suppliers' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
 				foreach (scandir(_PS_SUPP_IMG_DIR_) AS $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_SUPP_IMG_DIR_.$d);
 				Image::clearTmpDir();
 				break;
 			case 'attribute' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_lang');
 				break;
 			case 'attributegroup' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group');
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_lang');
 				break;
 			case 'currency' :
 			case 'customer' :
 			case 'zone' :
 			case 'state' :
-				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				break;
 		}
 		return true;

@@ -60,7 +60,7 @@ class GroupReductionCore extends ObjectModel
 
 	public function delete()
 	{
-		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.`id_product`
 			FROM `'._DB_PREFIX_.'product` p
 			WHERE p.`id_category_default` = '.(int)($this->id_category)
@@ -69,7 +69,7 @@ class GroupReductionCore extends ObjectModel
 		while ($row = Db::getInstance()->nextRow($resource))
 		{
 			$query = 'DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_product` = '.(int)($row['id_product']);
-			if (Db::getInstance()->Execute($query) === false)
+			if (Db::getInstance()->execute($query) === false)
 				return false;
 	}
 		return (parent::delete());
@@ -77,12 +77,12 @@ class GroupReductionCore extends ObjectModel
 
 	protected function _clearCache()
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)($this->id_group));
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)($this->id_group));
 	}
 
 	protected function _setCache()
 	{
-		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.`id_product`
 			FROM `'._DB_PREFIX_.'product` p
 			WHERE p.`id_category_default` = '.(int)($this->id_category)
@@ -97,13 +97,13 @@ class GroupReductionCore extends ObjectModel
 	}
 
 		if ($updated)
-			return (Db::getInstance()->Execute(rtrim($query, ', ')));
+			return (Db::getInstance()->execute(rtrim($query, ', ')));
 		return true;
 	}
 
 	protected function _updateCache()
 	{
-		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.`id_product`
 			FROM `'._DB_PREFIX_.'product` p
 			WHERE p.`id_category_default` = '.(int)($this->id_category)
@@ -114,7 +114,7 @@ class GroupReductionCore extends ObjectModel
 			$query = 'UPDATE `'._DB_PREFIX_.'product_group_reduction_cache`
                                   SET `reduction` = '.(float)($this->reduction).'
                                   WHERE `id_product` = '.(int)($row['id_product']).' AND `id_group` = '.(int)($this->id_group);
-			if (Db::getInstance()->Execute($query) === false)
+			if (Db::getInstance()->execute($query) === false)
 				return false;
 		}
 		return true;
@@ -122,7 +122,7 @@ class GroupReductionCore extends ObjectModel
 
 	public static function getGroupReductions($id_group, $id_lang)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT gr.`id_group_reduction`, gr.`id_group`, gr.`id_category`, gr.`reduction`, cl.`name` AS category_name
 			FROM `'._DB_PREFIX_.'group_reduction` gr
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = gr.`id_category` AND cl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('cl').')
@@ -180,13 +180,13 @@ class GroupReductionCore extends ObjectModel
                                   SET `reduction` = '.(float)($reduction).'
                                   WHERE `id_product` = '.(int)($id_product).' AND `id_group` = '.(int)($id_group);
 
-		return (Db::getInstance()->Execute($query));
+		return (Db::getInstance()->execute($query));
 	}
 	
 	public static function deleteProductReduction($id_product)
 	{
 		$query = 'DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_product` = '.(int)($id_product);
-		if (Db::getInstance()->Execute($query) === false)
+		if (Db::getInstance()->execute($query) === false)
 			return false;
 		return true;
 	}
@@ -203,13 +203,13 @@ class GroupReductionCore extends ObjectModel
 		
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
 		$query .= '('.(int)($id_product).', '.(int)($row['id_group']).', '.(float)($row['reduction']).')';
-		return (Db::getInstance()->Execute($query));
+		return (Db::getInstance()->execute($query));
 	}
 	
 	public static function deleteCategory($id_category)
 	{
 		$query = 'DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_category` = '.(int)($id_category);
-		if (Db::getInstance()->Execute($query) === false)
+		if (Db::getInstance()->execute($query) === false)
 			return false;
 		return true;
 	}

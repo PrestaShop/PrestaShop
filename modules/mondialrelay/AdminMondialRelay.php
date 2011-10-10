@@ -146,7 +146,7 @@ class AdminMondialRelay extends AdminTab
 		$mondialrelay = new MondialRelay();
 		$_html = '';
 	  $query = "SELECT * FROM `" . _DB_PREFIX_ ."mr_historique` ORDER BY `id` DESC ;";
-		$query = Db::getInstance()->ExecuteS($query);
+		$query = Db::getInstance()->executeS($query);
 		
 		$_html.= '
 			<fieldset>

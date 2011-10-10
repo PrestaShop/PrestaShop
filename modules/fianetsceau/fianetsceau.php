@@ -54,7 +54,7 @@ class FianetSceau extends Module
 		return (parent::install() AND
 		$this->registerHook('rightColumn') AND
 		$this->registerHook('updateOrderStatus') AND
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'fianet_seal`(
 			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `id_order` int(10) unsigned NOT NULL,
@@ -208,7 +208,7 @@ class FianetSceau extends Module
 				return;
 			if ($params['newOrderStatus']->logable == 1)
 				$upload_success = self::sendXML();
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.'fianet_seal (id_order, upload_success, valid, status, date_upd, date_add)
 				VALUES ('.(int)$order->id.', 0,'.(int)$params['newOrderStatus']->logable.', '.(int)$params['newOrderStatus']->id.', NOW(), NOW())');
 		}
@@ -218,7 +218,7 @@ class FianetSceau extends Module
 				return;
 			if ($params['newOrderStatus']->logable == 1)
 				$upload_success = self::sendXML();
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'fianet_seal` a
 				SET valid = '.(int)$params['newOrderStatus']->logable.', upload_success = '.(int)$upload_success.', status = '.(int)$params['newOrderStatus']->id.', date_upd = NOW()
 				WHERE a.id = '.(int)$res['id']);

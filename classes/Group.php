@@ -84,7 +84,7 @@ class GroupCore extends ObjectModel
 
 	public static function getGroups($id_lang)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT g.`id_group`, g.`reduction`, g.`price_display_method`, gl.`name`
 		FROM `'._DB_PREFIX_.'group` g
 		LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($id_lang).')
@@ -100,7 +100,7 @@ class GroupCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
 			WHERE cg.`id_group` = '.(int)$this->id.'
 			AND c.`deleted` != 1');
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT cg.`id_customer`, c.*
 		FROM `'._DB_PREFIX_.'customer_group` cg
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
@@ -166,10 +166,10 @@ class GroupCore extends ObjectModel
 			return false;
 		if (parent::delete())
 		{
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_group` = '.(int)$this->id);
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
 			$this->truncateRestrictionsModules($this->id);
 			Discount::deleteByIdGroup((int)$this->id);
 
@@ -177,7 +177,7 @@ class GroupCore extends ObjectModel
 			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
 
 			// Add default group (id 1) to customers without groups
-			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (
 				SELECT c.id_customer, 1 FROM `'._DB_PREFIX_.'customer` c
 				LEFT JOIN `'._DB_PREFIX_.'customer_group` cg
 				ON cg.id_customer = c.id_customer
@@ -185,7 +185,7 @@ class GroupCore extends ObjectModel
 
 			// Set to the customer the default group
 			// Select the minimal id from customer_group
-			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` cg
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` cg
 				SET id_default_group =
 					IFNULL((
 						SELECT min(id_group) FROM `'._DB_PREFIX_.'customer_group`
@@ -234,7 +234,7 @@ class GroupCore extends ObjectModel
 	 */
 	public static function truncateModulesRestrictions($id_group)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'group_module_restriction`
 		WHERE `id_group` = '.(int)$id_group);
 	}
@@ -246,7 +246,7 @@ class GroupCore extends ObjectModel
 	 */
 	public static function truncateRestrictionsByModule($id_module)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'group_module_restriction`
 		WHERE `id_module` = '.(int)$id_module);
 	}
@@ -268,7 +268,7 @@ class GroupCore extends ObjectModel
 				$sql .= '("'.(int)$id_group.'", "'.(int)Module::getModuleIdByName($mod).'", "'.(int)$authorized.'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 		}
 	}
 
@@ -285,7 +285,7 @@ class GroupCore extends ObjectModel
 			$sql .= '("'.(int)$g['id_group'].'", "'.(int)$id_module.'", "1"),';
 		// removing last comma to avoid SQL error
 		$sql = substr($sql, 0, strlen($sql) - 1);
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 	}
 }
 

@@ -342,7 +342,7 @@ abstract class AdminTabCore
 			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
 
 
-		$table_fields = Db::getInstance()->ExecuteS('SHOW COLUMNS FROM '.pSQL(_DB_PREFIX_.$this->table));
+		$table_fields = Db::getInstance()->executeS('SHOW COLUMNS FROM '.pSQL(_DB_PREFIX_.$this->table));
 		$irow = 0;
 		foreach ($table_fields as $field)
 		{
@@ -900,9 +900,9 @@ abstract class AdminTabCore
 
 		$assos = self::getAssoShop($this->table, $id_object);
 
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$assos[1].($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$assos[1].($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 		foreach ($assos[0] as $asso)
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$assos[1].' (`'.pSQL($this->identifier).'`, id_'.$assos[1].')
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$assos[1].' (`'.pSQL($this->identifier).'`, id_'.$assos[1].')
 											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$assos[1]].')');
 	}
 	
@@ -1352,7 +1352,7 @@ abstract class AdminTabCore
 			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
 			LIMIT '.(int)$start.','.(int)$limit;
-		$this->_list = Db::getInstance()->ExecuteS($sql);
+		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 
 	}
@@ -2341,7 +2341,7 @@ abstract class AdminTabCore
 		$assos = array();
 		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
 				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
-		foreach (Db::getInstance()->ExecuteS($sql) as $row)
+		foreach (Db::getInstance()->executeS($sql) as $row)
 			$assos[$row['id_'.$type]][] = $row[$this->identifier];
 
 		$html = <<<EOF

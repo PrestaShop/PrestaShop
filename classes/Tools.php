@@ -856,7 +856,7 @@ class ToolsCore
 							AND cl.id_lang = '.(int)$context->language->id.'
 							AND c.active = 1
 						ORDER BY c.level_depth ASC';
-				$categories = Db::getInstance()->ExecuteS($sql);
+				$categories = Db::getInstance()->executeS($sql);
 
 				$n = 1;
 				$nCategories = (int)sizeof($categories);

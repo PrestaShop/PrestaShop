@@ -167,7 +167,7 @@ class StatsSales extends ModuleGraph
 	
 	protected function setAllTimeValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		foreach ($result AS $row)
 			if ($this->_option == 1)
 			{
@@ -180,7 +180,7 @@ class StatsSales extends ModuleGraph
 	
 	protected function setYearValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		foreach ($result AS $row) {
 			$mounth = (int)substr($row['invoice_date'], 5, 2);
 			if ($this->_option == 1)
@@ -203,7 +203,7 @@ class StatsSales extends ModuleGraph
 	
 	protected function setMonthValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		foreach ($result AS $row)
 			if ($this->_option == 1)
 			{
@@ -216,7 +216,7 @@ class StatsSales extends ModuleGraph
 
 	protected function setDayValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		foreach ($result AS $row)
 			if ($this->_option == 1)
 			{
@@ -229,7 +229,7 @@ class StatsSales extends ModuleGraph
 	
 	private function getStatesData()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT osl.`name`, COUNT(oh.`id_order`) as total
 		FROM `'._DB_PREFIX_.'order_state` os
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)($this->getLang()).')

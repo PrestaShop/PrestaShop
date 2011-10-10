@@ -65,7 +65,7 @@ class DejalaCart extends ObjectModel
 		parent::save($nullValues, $autodate) ;
 		if (isset($this->wanted_cart_id)) 
 		{
-			Db::getInstance()->Execute('UPDATE ' . _DB_PREFIX_ . $this->table . ' SET ' . $this->identifier . ' = ' . (int)$this->wanted_cart_id . ' WHERE ' . $this->identifier . ' = ' . (int)$this->id);
+			Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . $this->table . ' SET ' . $this->identifier . ' = ' . (int)$this->wanted_cart_id . ' WHERE ' . $this->identifier . ' = ' . (int)$this->id);
 			$this->id = (int)$this->wanted_cart_id ;
 			unset($this->wanted_cart_id) ;			
 		}		

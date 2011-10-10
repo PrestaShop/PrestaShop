@@ -210,7 +210,7 @@ class OrderDetailCore extends ObjectModel
 			SET `download_nb` = `download_nb` + '.(int)($increment).'
 			WHERE `id_order_detail`= '.(int)($id_order_detail).'
 			LIMIT 1';
-		return Db::getInstance()->Execute($sql);
+		return Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -236,7 +236,7 @@ class OrderDetailCore extends ObjectModel
 
 		$computation_method = 1;
 		$taxes = array();
-		if ($results = Db::getInstance()->ExecuteS($sql))
+		if ($results = Db::getInstance()->executeS($sql))
 		{
 			
 			foreach ($results AS $result)
@@ -267,7 +267,7 @@ class OrderDetailCore extends ObjectModel
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax)
 				VALUES '.$values;
 
-		return Db::getInstance()->Execute($sql);
+		return Db::getInstance()->execute($sql);
 	}
 }
 

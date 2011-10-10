@@ -141,7 +141,7 @@ class Criteo extends Module
 			'PS_CURRENCY_DEFAULT',
 			'PS_CARRIER_DEFAULT'));
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT DISTINCT p.`id_product`, i.`id_image`
 		FROM `'._DB_PREFIX_.'product` p
 		JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.id_product = p.id_product)
@@ -205,7 +205,7 @@ class Criteo extends Module
 			'PS_CARRIER_DEFAULT'));
 
 		/* Searching for products */
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT DISTINCT p.`id_product`, i.`id_image`
 		FROM `'._DB_PREFIX_.'product` p
 		JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.id_product = p.id_product)

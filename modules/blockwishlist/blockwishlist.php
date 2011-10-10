@@ -60,7 +60,7 @@ class BlockWishList extends Module
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach ($sql AS $query)
 			if($query)
-				if(!Db::getInstance()->Execute(trim($query)))
+				if(!Db::getInstance()->execute(trim($query)))
 					return false;
 		if (!parent::install() OR
 						!$this->registerHook('rightColumn') OR
@@ -79,10 +79,10 @@ class BlockWishList extends Module
 	public function uninstall()
 	{
 		return (
-			Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'wishlist') AND
-			Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'wishlist_email') AND
-			Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'wishlist_product') AND
-			Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'wishlist_product_cart') AND 
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist') AND
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_email') AND
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product') AND
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product_cart') AND 
 			parent::uninstall()
 		);
 	}

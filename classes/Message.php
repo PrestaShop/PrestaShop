@@ -106,7 +106,7 @@ class MessageCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 		
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname, (COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
 		FROM `'._DB_PREFIX_.'message` m
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
@@ -133,7 +133,7 @@ class MessageCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 			
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname, (COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
 		FROM `'._DB_PREFIX_.'message` m
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
@@ -156,7 +156,7 @@ class MessageCore extends ObjectModel
 	 	if (!Validate::isUnsignedId($id_message) OR !Validate::isUnsignedId($id_employee))
 	 		die(Tools::displayError());
 
-		$result = Db::getInstance()->Execute('
+		$result = Db::getInstance()->execute('
 		INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
 		('.(int)($id_message).', '.(int)($id_employee).', NOW());
 		');

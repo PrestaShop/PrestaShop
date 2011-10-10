@@ -108,7 +108,7 @@ class StatsProduct extends ModuleGraph
 				WHERE pl.`id_lang` = '.(int)($id_lang).'
 					'.(Tools::getValue('id_category') ? 'AND cp.id_category = '.(int)(Tools::getValue('id_category')) : '').'
 				ORDER BY pl.`name`';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	private function getSales($id_product, $id_lang)
@@ -120,7 +120,7 @@ class StatsProduct extends ModuleGraph
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND od.product_id = '.(int)($id_product);
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	private function getCrossSales($id_product, $id_lang)
@@ -143,7 +143,7 @@ class StatsProduct extends ModuleGraph
 					AND od.product_id != '.(int)$id_product.'
 				GROUP BY od.product_id
 				ORDER BY pqty DESC';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	public function hookAdminStatsModules($params)
@@ -375,7 +375,7 @@ class StatsProduct extends ModuleGraph
 				$assocNames[$id_product_attribute] = $list;
 			}
 
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
 			foreach ($result as $row)
 			{
 			    $this->_values[] = $row['total'];
@@ -388,7 +388,7 @@ class StatsProduct extends ModuleGraph
 	{
 		for ($i = 0; $i < $layers; $i++)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query[$i]);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i]);
 			foreach ($result AS $row)
 			    $this->_values[$i][(int)(substr($row['date_add'], 0, 4))] += $row['total'];
 		}
@@ -398,7 +398,7 @@ class StatsProduct extends ModuleGraph
 	{
 		for ($i = 0; $i < $layers; $i++)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query[$i]);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i]);
 			foreach ($result AS $row)
 			    $this->_values[$i][(int)(substr($row['date_add'], 5, 2))] += $row['total'];
 		}
@@ -408,7 +408,7 @@ class StatsProduct extends ModuleGraph
 	{
 		for ($i = 0; $i < $layers; $i++)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query[$i]);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i]);
 			foreach ($result AS $row)
 			    $this->_values[$i][(int)(substr($row['date_add'], 8, 2))] += $row['total'];
 		}
@@ -418,7 +418,7 @@ class StatsProduct extends ModuleGraph
 	{
 		for ($i = 0; $i < $layers; $i++)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query[$i]);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i]);
 			foreach ($result AS $row)
 			    $this->_values[$i][(int)(substr($row['date_add'], 11, 2))] += $row['total'];
 		}

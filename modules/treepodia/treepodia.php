@@ -99,7 +99,7 @@ class Treepodia extends Module
 		$defaultCurrencyIsoCode = strtoupper(Db::getInstance()->getValue('SELECT c.iso_code FROM '._DB_PREFIX_.'currency c WHERE c.id_currency = '.(int)Configuration::get('PS_CURRENCY_DEFAULT')));
 		$defaultIdLang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-		$sqlLangs = Db::getInstance()->ExecuteS('SELECT l.id_lang, l.iso_code FROM '._DB_PREFIX_.'lang l');
+		$sqlLangs = Db::getInstance()->executeS('SELECT l.id_lang, l.iso_code FROM '._DB_PREFIX_.'lang l');
 
 		foreach ($sqlLangs AS $sqlLang)
 			$langs[$sqlLang['id_lang']] = $sqlLang['iso_code'];
@@ -116,7 +116,7 @@ XML;
 		$infos->addCData('url', $this->_getShopURL());
 		$infos->addCData('logo', $this->_getShopURL());
 
-		$languages = Db::getInstance()->ExecuteS('
+		$languages = Db::getInstance()->executeS('
 		SELECT l.iso_code
 		FROM '._DB_PREFIX_.'lang l
 		WHERE l.active = 1');
@@ -134,7 +134,7 @@ XML;
 			$limit_sql = ' LIMIT '.(int)$limit_start.','.(int)$limit_end;
 		}
 
-		$sqlProducts = Db::getInstance()->ExecuteS('
+		$sqlProducts = Db::getInstance()->executeS('
 		SELECT p.id_product, p.reference, p.weight, m.name manufacturer, s.name supplier, p.on_sale, p.id_manufacturer, pd.id_product_download
 		FROM '._DB_PREFIX_.'product p
 		LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
@@ -157,7 +157,7 @@ XML;
 			$name = $product->addChild('name');
 			$languageVariant = $name->addChild('language-variant');
 
-			$texts = Db::getInstance()->ExecuteS('
+			$texts = Db::getInstance()->executeS('
 			SELECT pl.name, pl.description_short, pl.link_rewrite, l.iso_code, l.id_lang
 			FROM '._DB_PREFIX_.'product_lang pl
 			LEFT JOIN '._DB_PREFIX_.'lang l ON (l.id_lang = pl.id_lang)
@@ -186,7 +186,7 @@ XML;
 				$variant->addCData('value', Tools::htmlentitiesDecodeUTF8(strip_tags($text['description_short'])));
 			}
 
-			$accessories = Db::getInstance()->ExecuteS('
+			$accessories = Db::getInstance()->executeS('
 			SELECT a.id_product_2
 			FROM '._DB_PREFIX_.'accessory a
 			WHERE a.id_product_1 = '.(int)$sqlProduct['id_product']);
@@ -215,7 +215,7 @@ XML;
 
 			$product->addChild('downloadable', $sqlProduct['id_product_download'] >= 1 ? 1 : 0);
 
-			$pack = Db::getInstance()->ExecuteS('
+			$pack = Db::getInstance()->executeS('
 			SELECT p.id_product, pp.quantity
 			FROM '._DB_PREFIX_.'pack pp
 			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = pp.id_product_item)
@@ -232,7 +232,7 @@ XML;
 				}
 			}
 
-			$images = Db::getInstance()->ExecuteS('
+			$images = Db::getInstance()->executeS('
 			SELECT i.id_image, il.legend, l.iso_code
 			FROM '._DB_PREFIX_.'image i
 			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (il.id_image = i.id_image)
@@ -275,7 +275,7 @@ XML;
 
 			if (version_compare(_PS_VERSION_, '1.4') < 0)
 			{
-				$quantityDiscounts = Db::getInstance()->ExecuteS('
+				$quantityDiscounts = Db::getInstance()->executeS('
 				SELECT dq.quantity, dq.value, dq.id_discount_type
 				FROM '._DB_PREFIX_.'discount_quantity dq
 				WHERE dq.id_product = '.intval($sqlProduct['id_product']));
@@ -299,7 +299,7 @@ XML;
 				}
 			}
 
-			$categories = Db::getInstance()->ExecuteS('
+			$categories = Db::getInstance()->executeS('
 			SELECT cl.name, l.iso_code
 			FROM '._DB_PREFIX_.'category_product cp
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = cp.id_category'.$this->context->shop->sqlLang('cl').')
@@ -319,7 +319,7 @@ XML;
 				}
 			}
 
-			$tags = Db::getInstance()->ExecuteS('
+			$tags = Db::getInstance()->executeS('
 			SELECT pt.id_product, pt.id_tag, l.iso_code, t.name
 			FROM '._DB_PREFIX_.'product_tag pt
 			LEFT JOIN '._DB_PREFIX_.'tag t ON (t.id_tag = pt.id_tag)
@@ -347,7 +347,7 @@ XML;
 				}
 			}
 
-			$groupAttributes = Db::getInstance()->ExecuteS('
+			$groupAttributes = Db::getInstance()->executeS('
 			SELECT DISTINCT agl.id_attribute_group, agl.name, l.iso_code, a.id_attribute, al.name as attribute_name, al.id_lang, pa.id_product_attribute
 			FROM '._DB_PREFIX_.'attribute_group_lang agl
 			LEFT JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute_group = agl.id_attribute_group)
@@ -408,7 +408,7 @@ XML;
 				}
 			}
 
-			$groupAttributes = Db::getInstance()->ExecuteS('
+			$groupAttributes = Db::getInstance()->executeS('
 			SELECT agl.id_attribute_group, agl.name, l.iso_code, a.id_attribute, al.name attribute_name, al.id_lang, pa.id_product_attribute
 			FROM '._DB_PREFIX_.'attribute_group_lang agl
 			LEFT JOIN '._DB_PREFIX_.'lang l ON (l.id_lang = agl.id_lang)
@@ -428,7 +428,7 @@ XML;
 				$combinaison[$id_product_attribute][$id_group_attribute] = $id_attribute;
 			}
 
-			$productAttributes = Db::getInstance()->ExecuteS('
+			$productAttributes = Db::getInstance()->executeS('
 			SELECT pa.id_product_attribute, pa.weight, pa.quantity, pi.id_image
 			FROM '._DB_PREFIX_.'product_attribute pa
 			LEFT JOIN '._DB_PREFIX_.'product_attribute_image pi ON (pa.id_product_attribute = pi.id_product_attribute)

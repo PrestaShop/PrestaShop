@@ -60,7 +60,7 @@ class ProfileCore extends ObjectModel
 	*/
 	public static function getProfiles($id_lang)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
 		FROM `'._DB_PREFIX_.'profile` p
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)($id_lang).')
@@ -89,8 +89,8 @@ class ProfileCore extends ObjectModel
 	{
 	 	if (parent::add($autodate, true))
 			return (
-				Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)')
-				&& Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'module_access (`id_profile`, `id_module`, `configure`, `view`) (SELECT '.(int)$this->id.', id_module, 0, 1 FROM '._DB_PREFIX_.'module)')
+				Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)')
+				&& Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_access (`id_profile`, `id_module`, `configure`, `view`) (SELECT '.(int)$this->id.', id_module, 0, 1 FROM '._DB_PREFIX_.'module)')
 			);
 		return false;
 	}
@@ -99,8 +99,8 @@ class ProfileCore extends ObjectModel
 	{
 	 	if (parent::delete())
 	 	 	return (
-				Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
-				&& Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
+				&& Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
 			);
 		return false;
 	}
@@ -117,7 +117,7 @@ class ProfileCore extends ObjectModel
 	{
 		if (!isset(self::$_cache_accesses[$id_profile]))
 		{
-			$result = Db::getInstance()->ExecuteS('
+			$result = Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'access`
 			WHERE `id_profile` = '.(int)$id_profile);

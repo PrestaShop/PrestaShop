@@ -148,7 +148,7 @@ class AdminAttributeGenerator extends AdminTab
         foreach ($tab AS $group)
             foreach ($group AS $attribute)
                 $attributes[] = '('.(int)($id_product).', '.(int)($attribute).', '.(float)($_POST['price_impact_'.(int)($attribute)]).', '.(float)($_POST['weight_impact'][(int)($attribute)]).')';
-        return Db::getInstance()->Execute(
+        return Db::getInstance()->execute(
         'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
         VALUES '.implode(',', $attributes).'
         ON DUPLICATE KEY UPDATE `price`=VALUES(price), `weight`=VALUES(weight)'
@@ -158,7 +158,7 @@ class AdminAttributeGenerator extends AdminTab
     private static function getAttributesImpacts($id_product)
     {
         $tab = array();
-        $result = Db::getInstance()->ExecuteS(
+        $result = Db::getInstance()->executeS(
         'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
 		FROM `'._DB_PREFIX_.'attribute_impact` ai
 		WHERE ai.`id_product` = '.(int)($id_product));

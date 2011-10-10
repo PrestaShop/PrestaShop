@@ -89,7 +89,7 @@ class HookCore extends ObjectModel
 
 	static public function getHooks($position = false)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'hook` h
 		'.($position ? 'WHERE h.`position` = 1' : ''));

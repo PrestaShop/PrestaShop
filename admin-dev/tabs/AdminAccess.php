@@ -44,15 +44,15 @@ class AdminAccess extends AdminTab
 		$res = true;
 
 		if ($id_tab == -1 AND $perm == 'all' AND $enabled == 0)
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile).' AND `id_tab` != 31');
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile).' AND `id_tab` != 31');
 		else if ($id_tab == -1 AND $perm == 'all')
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile));
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile));
 		else if ($id_tab == -1)
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile));
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_profile` = '.(int)($id_profile));
 		else if ($perm == 'all')
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
 		else
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
 		
 		$this->return_status = $res?'ok':'error';
 		if ($res)
@@ -73,9 +73,9 @@ class AdminAccess extends AdminTab
 			throw new PrestashopException('permission not exists');
 			
 		if ($id_module == -1)
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_profile` = '.(int)$id_profile);
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_profile` = '.(int)$id_profile);
 		else
-			$res &= Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_module` = '.(int)$id_module.' AND `id_profile` = '.(int)$id_profile);
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_module` = '.(int)$id_module.' AND `id_profile` = '.(int)$id_profile);
 		
 		$this->return_status = $res?'ok':'error';
 		if ($res)
@@ -324,7 +324,7 @@ class AdminAccess extends AdminTab
 			<th class="center"><input type="checkbox" id="ajax-ma-configure-master" '.($this->tabAccess['edit'] == 1 ? 'class="changeModuleAccess" rel="-1||configure"' : 'disabled="disabled"').' /> '.$this->l('Configure').'</th>
 		</tr>';
 
-		$modules = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$modules = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT ma.id_module, m.name, ma.`view`, ma.`configure`
 		FROM '._DB_PREFIX_.'module_access ma
 		LEFT JOIN '._DB_PREFIX_.'module m ON ma.id_module = m.id_module

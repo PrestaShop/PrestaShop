@@ -60,7 +60,7 @@ class CustomerMessageCore extends ObjectModel
 	
 	public static function getMessagesByOrderId($id_order, $private = true)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname, (COUNT(cm.id_customer_message) = 0 AND ct.id_customer != 0) AS is_new_for_me
 		FROM `'._DB_PREFIX_.'customer_message` cm
 		LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct ON ct.`id_customer_thread` = cm.`id_customer_thread`

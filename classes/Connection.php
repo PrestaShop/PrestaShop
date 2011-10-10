@@ -153,7 +153,7 @@ class ConnectionCore extends ObjectModel
 		// Limited to 5 minutes because more than 5 minutes is considered as an error
 		if ($time > 300000)
 			$time = 300000;
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'connections_page`
 		SET `time_end` = `time_start` + INTERVAL '.(int)($time / 1000).' SECOND
 		WHERE `id_connections` = '.(int)($id_connections).'
@@ -177,7 +177,7 @@ class ConnectionCore extends ObjectModel
 		if ($interval != null)
 		{
 			// Records of connections details older than the beginning of the  specified interval are deleted
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'connections_page`
 			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL '.$interval.'))');
 		}

@@ -184,7 +184,7 @@ class Twenga extends PaymentModule
 
 	private function _initCurrentIsoCodeCountry()
 	{
-		$country = Db::getInstance()->ExecuteS('
+		$country = Db::getInstance()->executeS('
 			SELECT c.iso_code as iso
 			FROM '._DB_PREFIX_.'country as c
 			LEFT JOIN '._DB_PREFIX_.'country_lang as c_l
@@ -361,7 +361,7 @@ class Twenga extends PaymentModule
 
 	private function submitTwengaDisableTracking()
 	{
-		$return = Db::getInstance()->ExecuteS('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = \''.pSQL($this->id).'\'');
+		$return = Db::getInstance()->executeS('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = \''.pSQL($this->id).'\'');
 		foreach ($return as $hook)
 		{
 			$this->unregisterHook($hook['id_hook']);
@@ -528,7 +528,7 @@ class Twenga extends PaymentModule
 
 		if ($id_lang === NULL)
 			return 'Undefined id_lang';
-		$country = Db::getInstance()->ExecuteS('
+		$country = Db::getInstance()->executeS('
 			SELECT c.name as name
 			FROM '._DB_PREFIX_.'country_lang as c
 			WHERE c.id_lang = '.(int)$id_lang.'
@@ -556,7 +556,7 @@ class Twenga extends PaymentModule
 			foreach($this->limited_countries as $iso)
 				$query .= "'".strtoupper($iso)."', ";
 			$query = rtrim($query, ', ').')';
-			$countriesName = Db::getInstance()->ExecuteS($query);
+			$countriesName = Db::getInstance()->executeS($query);
 			$htmlError = '
 				<div class="error">
 					<p>'.$this->l('Your default country is').' : '.Twenga::getCurrentCountryName().'</p>
@@ -907,7 +907,7 @@ class Twenga extends PaymentModule
 
 		$link = new Link();
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `active` = 1');
 
 		foreach ($result AS $k => $row)

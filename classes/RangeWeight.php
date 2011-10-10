@@ -61,7 +61,7 @@ class RangeWeightCore extends ObjectModel
 	*/
 	public static function getRanges($id_carrier)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'range_weight`
 		WHERE `id_carrier` = '.(int)($id_carrier).'

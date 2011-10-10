@@ -58,15 +58,15 @@ if (isset($return['infoexterne']) AND isset($return['token']) AND isset($return[
 				$history->addWithemail();
 				
 				$db = Db::getInstance();
-				$db->ExecuteS('SELECT * FROM '._DB_PREFIX_.'envoimoinscher WHERE id_order = '.(int)($id_order));
+				$db->executeS('SELECT * FROM '._DB_PREFIX_.'envoimoinscher WHERE id_order = '.(int)($id_order));
 				$numRows = (int)($db->NumRows());
 				if ($numRows == 0)
 				{
-					if (Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'envoimoinscher VALUES (\''.(int)($id_order).'\', \''.pSQL($return['envoi']).'\');'));
+					if (Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'envoimoinscher VALUES (\''.(int)($id_order).'\', \''.pSQL($return['envoi']).'\');'));
 				}
 				else
 				{
-					if (Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'envoimoinscher SET shipping_number=\''.pSQL($return['envoi']).'\' WHERE id_order=\''.(int)($id_order).'\' '));	
+					if (Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'envoimoinscher SET shipping_number=\''.pSQL($return['envoi']).'\' WHERE id_order=\''.(int)($id_order).'\' '));	
 				}
 			
 			break;

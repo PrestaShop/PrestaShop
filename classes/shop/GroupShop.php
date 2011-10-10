@@ -75,7 +75,7 @@ class GroupShopCore extends ObjectModel
 	
 	public static function getGroupShops($active = true)
 	{
-		return Db::getInstance()->ExecuteS('SELECT * 
+		return Db::getInstance()->executeS('SELECT * 
 														FROM '._DB_PREFIX_.'group_shop
 														WHERE `deleted`= 0 AND `active`='.(int)$active);
 	}
@@ -92,7 +92,7 @@ class GroupShopCore extends ObjectModel
 				$id = 'id_group_shop';
 			else
 				$table_name .= '_'.$row['type'];
-			$res &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
+			$res &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
 		}
 
 		return $res;
@@ -164,12 +164,12 @@ class GroupShopCore extends ObjectModel
 					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
 								(SELECT '.$keys.', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
 								WHERE `'.$id.'` = '.(int)$old_id.')';
-					Db::getInstance()->Execute($sql);
+					Db::getInstance()->execute($sql);
 				}
 			}
 			else
 			{
-				//Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
+				//Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
 			}
 		}
 	}

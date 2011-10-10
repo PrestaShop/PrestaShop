@@ -218,14 +218,14 @@ class SearchCore
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
-		$result = $db->ExecuteS($sql, false);
+		$result = $db->executeS($sql, false);
 
 		$eligibleProducts = array();
 		while ($row = $db->nextRow($result))
 			$eligibleProducts[] = $row['id_product'];
 		foreach ($intersectArray as $query)
 		{
-			$result = $db->ExecuteS($query, false);
+			$result = $db->executeS($query, false);
 			$eligibleProducts2 = array();
 			while ($row = $db->nextRow($result))
 				$eligibleProducts2[] = $row['id_product'];
@@ -253,7 +253,7 @@ class SearchCore
 					INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
 					WHERE p.`id_product` '.$productPool.'
 					ORDER BY position DESC LIMIT 10';
-			return $db->ExecuteS($sql);
+			return $db->executeS($sql);
 		}
 
 		$sql = 'SELECT p.*, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
@@ -270,7 +270,7 @@ class SearchCore
 				WHERE p.`id_product` '.$productPool.'
 				'.($orderBy ? 'ORDER BY  '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
-		$result = $db->ExecuteS($sql);
+		$result = $db->executeS($sql);
 
 		$sql = 'SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'product p
@@ -296,7 +296,7 @@ class SearchCore
 	public static function getTags($db, $id_product, $id_lang)
 	{
 		$tags = '';
-		$tagsArray = $db->ExecuteS('
+		$tagsArray = $db->executeS('
 		SELECT t.name FROM '._DB_PREFIX_.'product_tag pt
 		LEFT JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.(int)$id_lang.')
 		WHERE pt.id_product = '.(int)$id_product);
@@ -311,7 +311,7 @@ class SearchCore
 			return '';
 
 		$attributes = '';
-		$attributesArray = $db->ExecuteS('
+		$attributesArray = $db->executeS('
 		SELECT al.name FROM '._DB_PREFIX_.'product_attribute pa
 		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pa.id_product_attribute = pac.id_product_attribute
 		INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang = '.(int)$id_lang.')
@@ -327,7 +327,7 @@ class SearchCore
 			return '';
 
 		$features = '';
-		$featuresArray = $db->ExecuteS('
+		$featuresArray = $db->executeS('
 		SELECT fvl.value FROM '._DB_PREFIX_.'feature_product fp
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fp.id_feature_value = fvl.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
 		WHERE fp.id_product = '.(int)$id_product);
@@ -340,7 +340,7 @@ class SearchCore
 	{
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$limit = max(1, round($limit / $nbLanguages) * $nbLanguages);
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname
 		FROM '._DB_PREFIX_.'product p
 		LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
@@ -366,7 +366,7 @@ class SearchCore
 		else
 		{
 			// Do it even if you already know the product id in order to be sure that it exists
-			$products = $db->ExecuteS('
+			$products = $db->executeS('
 			SELECT id_product
 			FROM '._DB_PREFIX_.'product
 			WHERE '.($id_product ? 'id_product = '.(int)$id_product : 'indexed = 0'));
@@ -402,7 +402,7 @@ class SearchCore
 
 		// Every indexed words are cached into a PHP array
 		$wordIdsByWord = array();
-		$wordIds = Db::getInstance()->ExecuteS('
+		$wordIds = Db::getInstance()->executeS('
 		SELECT id_word, word, id_lang, id_shop
 		FROM '._DB_PREFIX_.'search_word', false);
 		$wordIdsByWord = array();
@@ -458,7 +458,7 @@ class SearchCore
 							$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word] = 0;
 						}
 
-					$existingWords = $db->ExecuteS('
+					$existingWords = $db->executeS('
 					SELECT DISTINCT word FROM '._DB_PREFIX_.'search_word
 						WHERE word IN ('.implode(',', $queryArray2).')
 					AND id_lang = '.(int)$product['id_lang']);
@@ -476,7 +476,7 @@ class SearchCore
 					if (count($queryArray2))
 					{
 						// ...then their IDs are retrieved and added to the cache
-						$addedWords = $db->ExecuteS('
+						$addedWords = $db->executeS('
 						SELECT sw.id_word, sw.word
 						FROM '._DB_PREFIX_.'search_word sw
 						WHERE sw.word IN ('.implode(',', $queryArray2).')
@@ -517,7 +517,7 @@ class SearchCore
 	protected static function setProductsAsIndexed(&$products)
 	{
 		if (count($products))
-			Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 1 WHERE id_product IN ('.implode(',', $products).') LIMIT '.(int)count($products));
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET indexed = 1 WHERE id_product IN ('.implode(',', $products).') LIMIT '.(int)count($products));
 		$productsArray = array();
 	}
 
@@ -525,7 +525,7 @@ class SearchCore
 	protected static function saveIndex(&$queryArray3)
 	{
 		if (count($queryArray3))
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight) VALUES '.implode(',', $queryArray3).' ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)');
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight) VALUES '.implode(',', $queryArray3).' ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)');
 		$queryArray3 = array();
 	}
 
@@ -587,7 +587,7 @@ class SearchCore
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
 				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql))
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 
 		return Product::getProductsProperties((int)$id_lang, $result);

@@ -86,7 +86,7 @@ class StatsGeoLocation extends Module
 
 		if ( !parent::install() OR !$this->registerHook('AdminStatsModules'))
 			return false;
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'location_coords` (
 			`id_location_coords` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 			`x` int(4) NOT NULL,
@@ -98,7 +98,7 @@ class StatsGeoLocation extends Module
 
 		$flag = 0;
 		$query = 'INSERT INTO `'._DB_PREFIX_.'location_coords` (`x`, `y`, `id_country`) VALUES ';
-		$result = Db::getInstance()->ExecuteS('SELECT `id_country`, `iso_code` FROM `'._DB_PREFIX_.'country`;');
+		$result = Db::getInstance()->executeS('SELECT `id_country`, `iso_code` FROM `'._DB_PREFIX_.'country`;');
 		foreach ($result as $index => $row)
 		{
 			if (isset($countries[$row['iso_code']]))
@@ -109,14 +109,14 @@ class StatsGeoLocation extends Module
 				$flag = 1;
 			}
 		}
-		return Db::getInstance()->Execute($query.';');
+		return Db::getInstance()->execute($query.';');
 	}
 	
 	function uninstall()
 	{
 		if (!parent::uninstall())
 			return false;
-		return (Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'location_coords`'));
+		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'location_coords`'));
 	}
 
 	function hookAdminStatsModules()

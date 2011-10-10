@@ -2,7 +2,7 @@
 
 function update_order_detail_taxes()
 {
-	$order_detail_taxes = Db::getInstance()->ExecuteS('
+	$order_detail_taxes = Db::getInstance()->executeS('
 	SELECT `id_order_detail`, `tax_name`, `tax_rate` FROM `'._DB_PREFIX_.'order_detail`
 	');
 
@@ -36,7 +36,7 @@ function update_order_detail_taxes()
 			$id_tax = $tax->id;
 		}
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (`id_order_detail`, `id_tax`)
 		VALUES ('.(int)$order_detail_tax['id_order_detail'].','.$id_tax.')
 		');

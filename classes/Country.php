@@ -126,7 +126,7 @@ class CountryCore extends ObjectModel
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 			
-		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'state` s
 		ORDER BY s.`name` ASC');
@@ -140,7 +140,7 @@ class CountryCore extends ObjectModel
 					.($active ? ' AND c.active = 1' : '')
 					.(!is_null($containStates) ? ' AND c.`contains_states` = '.(int)($containStates) : '').'
 		ORDER BY cl.name ASC';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		$countries = array();
 		foreach ($result AS &$country)
 			$countries[$country['id_country']] = $country;
@@ -295,7 +295,7 @@ class CountryCore extends ObjectModel
 		        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
         		WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
         			AND `id_lang` = '.(int)$id_lang;
-        return Db::getInstance()->ExecuteS($sql);
+        return Db::getInstance()->executeS($sql);
     }
 
 	public function isNeedDni()

@@ -74,7 +74,7 @@ class PackCore extends Product
 
 		if (array_key_exists($id_product, self::$cachePackItems))
 			return self::$cachePackItems[$id_product];
-		$result = Db::getInstance()->ExecuteS('SELECT id_product_item, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)($id_product));
+		$result = Db::getInstance()->executeS('SELECT id_product_item, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)($id_product));
 		$arrayResult = array();
 		foreach ($result AS $row)
 		{
@@ -116,7 +116,7 @@ class PackCore extends Product
 			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
 				WHERE a.`id_product_pack` = '.(int)$id_product;
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!$full)
 			return $result;
 
@@ -156,7 +156,7 @@ class PackCore extends Product
 			AND p.`id_product` IN ('.$packs.')';
 		if ($limit)
 			$sql .= ' LIMIT '.(int)$limit;
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!$full)
 			return $result;
 
@@ -169,8 +169,8 @@ class PackCore extends Product
 
 	public static function deleteItems($id_product)
 	{
-		return Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)($id_product)) &&
+		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)($id_product)) &&
 			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', self::isCurrentlyUsed());
 	}
 
@@ -184,14 +184,14 @@ class PackCore extends Product
 	*/
 	public static function addItem($id_product, $id_item, $qty)
 	{
-		return Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
+		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
 			Db::getInstance()->AutoExecute(_DB_PREFIX_.'pack', array('id_product_pack' => (int)($id_product), 'id_product_item' => (int)($id_item), 'quantity' => (int)($qty)), 'INSERT') &&
 			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
 	}
 
 	public static function duplicate($id_product_old, $id_product_new)
 	{
-		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'pack (id_product_pack, id_product_item, quantity)
+		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'pack (id_product_pack, id_product_item, quantity)
 		(SELECT '.(int)($id_product_new).', id_product_item, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)($id_product_old).')');
 
 		// If return query result, a non-pack product will return false

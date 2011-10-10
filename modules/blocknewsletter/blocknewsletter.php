@@ -67,7 +67,7 @@ class Blocknewsletter extends Module
 
  	 	Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
 
- 	 	return Db::getInstance()->Execute('
+ 	 	return Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS '._DB_PREFIX_.'newsletter (
 			`id` int(6) NOT NULL AUTO_INCREMENT,
 			`id_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
@@ -85,7 +85,7 @@ class Blocknewsletter extends Module
  	{
  	 	if (!parent::uninstall())
  	 		return false;
- 	 	return Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'newsletter');
+ 	 	return Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
  	}
 
 	public function getContent()
@@ -199,13 +199,13 @@ class Blocknewsletter extends Module
 	 	 		return $this->error = $this->l('E-mail address not registered');
 	 	 	else if ($register_status == self::GUEST_REGISTERED)
 	 	 	{
-			  	if (!Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
+			  	if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
 	 	 			return $this->error = $this->l('Error during unsubscription');
 	 	 		return $this->valid = $this->l('Unsubscription successful');
 	 	 	}
 			else if ($register_status == self::CUSTOMER_REGISTERED)
 			{
-	 	 		if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
+	 	 		if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
 	 	 			return $this->error = $this->l('Error during unsubscription');
 	 	 		return $this->valid = $this->l('Unsubscription successful');
 			}
@@ -299,7 +299,7 @@ class Blocknewsletter extends Module
 				WHERE `email` = \''.pSQL($email).'\'
 				AND id_shop = '.$this->context->shop->getID(true);
 
-	 	return Db::getInstance()->Execute($sql);
+	 	return Db::getInstance()->execute($sql);
  	}
 
  	/**
@@ -327,13 +327,13 @@ class Blocknewsletter extends Module
 				'.(int)$active.'
 				)';
 
-		return Db::getInstance()->Execute($sql);
+		return Db::getInstance()->execute($sql);
  	}
 
 
  	public function activateGuest($email)
  	{
- 		return Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'newsletter`
+ 		return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'newsletter`
  						SET `active` = 1
  						WHERE `email` = \''.pSQL($email).'\''
  				);

@@ -315,7 +315,7 @@ class AdminHomeControllerCore extends AdminController
 				<div id="stat_google">';
 	
 		$chart = new Chart();
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT total_paid / conversion_rate as total_converted, invoice_date
 			FROM '._DB_PREFIX_.'orders o
 			WHERE valid = 1

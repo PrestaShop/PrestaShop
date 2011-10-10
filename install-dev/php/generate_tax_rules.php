@@ -17,7 +17,7 @@ function generate_tax_rules()
         $id_tax_rules_group = $group->id;
 
 
-        $countries = Db::getInstance()->ExecuteS('
+        $countries = Db::getInstance()->executeS('
         SELECT * FROM `'._DB_PREFIX_.'country` c
         LEFT JOIN `'._DB_PREFIX_.'zone` z ON (c.`id_zone` = z.`id_zone`)
         LEFT JOIN `'._DB_PREFIX_.'tax_zone` tz ON (tz.`id_zone` = z.`id_zone`)
@@ -27,7 +27,7 @@ function generate_tax_rules()
         {
             foreach ($countries AS $country)
             {
-					 $res = Db::getInstance()->Execute('
+					 $res = Db::getInstance()->execute('
 					 INSERT INTO `'._DB_PREFIX_.'tax_rule` (`id_tax_rules_group`, `id_country`, `id_state`, `state_behavior`, `id_tax`)
 					 VALUES (
 					 '.(int)$group->id.',
@@ -40,7 +40,7 @@ function generate_tax_rules()
             }
         }
 
-        $states = Db::getInstance()->ExecuteS('
+        $states = Db::getInstance()->executeS('
         SELECT * FROM `'._DB_PREFIX_.'states s
         LEFT JOIN `'._DB_PREFIX_.'tax_state ts ON (ts.`id_state` = s.`id_state`)
         WHERE `id_tax` = '.(int)$id_tax
@@ -55,7 +55,7 @@ function generate_tax_rules()
                 else
                     $tax_behavior = $state['tax_behavior'];
 
-					 $res = Db::getInstance()->Execute('
+					 $res = Db::getInstance()->execute('
 					 INSERT INTO `'._DB_PREFIX_.'tax_rule` (`id_tax_rules_group`, `id_country`, `id_state`, `state_behavior`, `id_tax`)
 					 VALUES (
 					 '.(int)$group->id.',
@@ -67,13 +67,13 @@ function generate_tax_rules()
             }
         }
 
-        Db::getInstance()->Execute('
+        Db::getInstance()->execute('
         UPDATE `'._DB_PREFIX_.'product`
         SET `id_tax_rules_group` = '.(int)$group->id.'
         WHERE `id_tax` = '.(int)$id_tax
         );
 
-        Db::getInstance()->Execute('
+        Db::getInstance()->execute('
         UPDATE `'._DB_PREFIX_.'carrier`
         SET `id_tax_rules_group` = '.(int)$group->id.'
         WHERE `id_tax` = '.(int)$id_tax
