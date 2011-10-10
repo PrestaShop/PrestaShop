@@ -114,7 +114,7 @@ class ConfigurationCore extends ObjectModel
 		$sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_group_shop, c.id_shop
 				FROM `'._DB_PREFIX_.'configuration` c
 				LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.id_configuration = cl.id_configuration)';
-		if (!$results = Db::getInstance()->ExecuteS($sql))
+		if (!$results = Db::getInstance()->executeS($sql))
 			return;
 
 		foreach ($results as $row)
@@ -307,7 +307,7 @@ class ConfigurationCore extends ObjectModel
 									WHERE c.name = \''.pSQL($key).'\''
 										.Configuration::sqlRestriction($shopGroupID, $shopID)
 								.')';
-					$result &= Db::getInstance()->Execute($sql);
+					$result &= Db::getInstance()->execute($sql);
 				}
 			}
 			// If key does not exists, create it
@@ -361,11 +361,11 @@ class ConfigurationCore extends ObjectModel
 					FROM `'._DB_PREFIX_.'configuration`
 					WHERE `name` = \''.pSQL($key).'\'
 				)';
-		$result = Db::getInstance()->Execute($sql);
+		$result = Db::getInstance()->execute($sql);
 
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'configuration`
 				WHERE `name` = \''.pSQL($key).'\'';
-		$result2 = Db::getInstance()->Execute($sql);
+		$result2 = Db::getInstance()->execute($sql);
 		return ($result && $result2);
 	}
 
@@ -383,11 +383,11 @@ class ConfigurationCore extends ObjectModel
 		$id = Configuration::getIdByName($key, $shopGroupID, $shopID);
 		$sql = 'DELETE FROM '._DB_PREFIX_.'configuration
 				WHERE id_configuration = '.$id;
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 
 		$sql = 'DELETE FROM '._DB_PREFIX_.'configuration_lang
 				WHERE id_configuration = '.$id;
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -495,6 +495,6 @@ class ConfigurationCore extends ObjectModel
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '').'
 		';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 }

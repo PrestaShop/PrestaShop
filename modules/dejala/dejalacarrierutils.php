@@ -70,7 +70,7 @@ class DejalaCarrierUtils
 
 		$carrier->addZone((int)$id_zone) ;
 		/*$sql = 'INSERT INTO `'._DB_PREFIX_.'carrier_zone` (`id_carrier` , `id_zone`) VALUES ('.(int)($carrier->id).', ' . (int)($id_zone) . ')';
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 
 		$rangeW = new RangeWeight();
 		$rangeW->id_carrier = $carrier->id;

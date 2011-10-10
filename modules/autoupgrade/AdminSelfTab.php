@@ -522,7 +522,7 @@ abstract class AdminSelfTab
 			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
 
 
-		$table_fields = Db::getInstance()->ExecuteS('SHOW COLUMNS FROM '.pSQL(_DB_PREFIX_.$this->table));
+		$table_fields = Db::getInstance()->executeS('SHOW COLUMNS FROM '.pSQL(_DB_PREFIX_.$this->table));
 		$irow = 0;
 		foreach ($table_fields AS $field)
 		{
@@ -1397,7 +1397,7 @@ abstract class AdminSelfTab
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
 			LIMIT '.(int)($start).','.(int)($limit);
 
-		$this->_list = Db::getInstance()->ExecuteS($sql);
+		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 
 	}

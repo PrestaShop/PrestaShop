@@ -85,7 +85,7 @@ class Secuvad extends Module
 		
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach ($sql as $query)
-			if ($query AND sizeof($query) AND !Db::getInstance()->Execute(trim($query)))
+			if ($query AND sizeof($query) AND !Db::getInstance()->execute(trim($query)))
 				return false;
 		
 		$langs = Language::getLanguages();
@@ -130,7 +130,7 @@ class Secuvad extends Module
 				(14,\'Services\',14,'.(int)($lang['id_lang']).'),';
 			}
 		$query = rtrim($query, ',');
-		Db::getInstance()->Execute($query);
+		Db::getInstance()->execute($query);
 		
 		$query = '
 		INSERT IGNORE INTO '._DB_PREFIX_.'secuvad_payment(`code`, `name`, `id_lang`)
@@ -157,7 +157,7 @@ class Secuvad extends Module
 				(\'contre-remboursement\',\'On delivery\','.(int)($lang['id_lang']).'),';
 			}
 		$query = rtrim($query, ',');
-		Db::getInstance()->Execute($query);
+		Db::getInstance()->execute($query);
 		
 		$query = '
 		INSERT IGNORE INTO '._DB_PREFIX_.'secuvad_transport(`transport_id`, `transport_name`, `id_lang`)
@@ -184,7 +184,7 @@ class Secuvad extends Module
 				(6,\'Immaterial Good/Service\','.(int)($lang['id_lang']).'),';
 			}
 		$query = rtrim($query, ',');
-		Db::getInstance()->Execute($query);		
+		Db::getInstance()->execute($query);		
 		
 		$query = '
 		INSERT IGNORE INTO `'._DB_PREFIX_.'secuvad_transport_delay`(`transport_delay_id`, `transport_delay_name`, `id_lang`)
@@ -194,12 +194,12 @@ class Secuvad extends Module
 			(1,\'express\','.(int)($lang['id_lang']).'),
 			(2,\'standard\','.(int)($lang['id_lang']).'),';
 		$query = rtrim($query, ',');
-		Db::getInstance()->Execute($query);
+		Db::getInstance()->execute($query);
 		
 		if (!file_exists(dirname(__FILE__).'/../../classes/PaymentCC.php'))
 		{
 			@copy(dirname(__FILE__).'/classes/PaymentCC.php', dirname(__FILE__).'/../../classes/PaymentCC.php');
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'hook`(`name`, `title`, `position`) 
 			VALUES (\'paymentCCAdded\', \'paymentCCAdded\', 0)');
 			$this->registerHook('paymentCCAdded');
@@ -231,15 +231,15 @@ class Secuvad extends Module
 	    || !Configuration::deleteByName('SECUVAD_XML_ENCODING'))
 	    return false;
 		
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_assoc_category`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_assoc_payment`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_assoc_transport`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_category`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_logs`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_order`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_payment`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_transport`');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_transport_delay`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_assoc_category`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_assoc_payment`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_assoc_transport`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_category`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_logs`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_order`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_payment`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_transport`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'secuvad_transport_delay`');
 		return true;
 	}
 
@@ -296,7 +296,7 @@ class Secuvad extends Module
 		WHERE `id_secuvad_order` = '.(int)($id_order));
 		if (!$exists)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'secuvad_order`(`id_secuvad_order`, `ip`, `ip_time`) 
 			VALUES ('.(int)($id_order).', \''.pSQL($this->getRemoteIPaddress()).'\', \''.pSQL(date("Y-m-d H:i:s")).'\')
 			');		
@@ -328,7 +328,7 @@ class Secuvad extends Module
 		WHERE `id_secuvad_order` = '.(int)($id_order));
 		if (!$exists)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'secuvad_order`(`id_secuvad_order`, `ip`, `ip_time`) 
 			VALUES ('.(int)($id_order).', \''.pSQL($this->getRemoteIPaddress()).'\', \''.pSQL(date("Y-m-d H:i:s")).'\')
 			');		
@@ -391,7 +391,7 @@ class Secuvad extends Module
 
 	private function _getSecuvadCategories()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_category` sc
 		WHERE sc.`id_lang` = '.(int)$this->context->language->id);
@@ -399,7 +399,7 @@ class Secuvad extends Module
 	
 	private function _getSecuvadCategoryAssoc()
 	{
-		$data = Db::getInstance()->ExecuteS('
+		$data = Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_assoc_category`');
 		
@@ -414,7 +414,7 @@ class Secuvad extends Module
 	
 	private function _getSecuvadPayment()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT IF(sp.name IS NULL, "Unknown", sp.name) AS `secuvad_name`, sp.`code`, m.`id_module`, m.`name` AS `module_name` 
 		FROM `'._DB_PREFIX_.'secuvad_assoc_payment` sac
 		JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = sac.`id_module`)
@@ -423,7 +423,7 @@ class Secuvad extends Module
 	
 	private function _getSecuvadCodePayment()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_payment` 
 		WHERE `id_lang` = '.(int)$this->context->language->id
@@ -432,7 +432,7 @@ class Secuvad extends Module
 	
 	private function _getSecuvadCarrier()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_assoc_transport` sat
 		JOIN '._DB_PREFIX_.'carrier c ON (c.id_carrier = sat.id_carrier)
@@ -443,7 +443,7 @@ class Secuvad extends Module
 	
 	private function _getSecuvadCarrierType()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_transport` 
 		WHERE `id_lang` = '.(int)$this->context->language->id
@@ -452,7 +452,7 @@ class Secuvad extends Module
 	
 	private function _getSecuvadCarrierDelay()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * 
 		FROM `'._DB_PREFIX_.'secuvad_transport_delay` 
 		WHERE `id_lang` = '.(int)$this->context->language->id
@@ -543,7 +543,7 @@ class Secuvad extends Module
 		
 		if (Tools::isSubmit('submitSecuvadCategory'))
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_category`
 			');
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'secuvad_assoc_category` VALUES';
@@ -554,7 +554,7 @@ class Secuvad extends Module
 					$sql .= '(NULL, '.(int)($id_category).', '.(int)($category_id).'),';
 				}
 			$sql = rtrim($sql, ',');
-			if (Db::getInstance()->Execute($sql))
+			if (Db::getInstance()->execute($sql))
 				$this->_html .= $this->displayConfirmation($this->l('Settings are updated'));
 			else
 				$this->_html .= $this->displayError($this->l('Error during update'));
@@ -562,7 +562,7 @@ class Secuvad extends Module
 		
 		if (Tools::isSubmit('submitSecuvadPayment'))
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_payment`
 			');
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'secuvad_assoc_payment` VALUES';
@@ -573,7 +573,7 @@ class Secuvad extends Module
 					$sql .= '(NULL, '.(int)($id_module).', \''.pSQL($code).'\'),';
 				}
 			$sql = rtrim($sql, ',');
-			if (Db::getInstance()->Execute($sql))
+			if (Db::getInstance()->execute($sql))
 				$this->_html .= $this->displayConfirmation($this->l('Settings are updated'));
 			else
 				$this->_html .= $this->displayError($this->l('Error during update'));
@@ -581,7 +581,7 @@ class Secuvad extends Module
 		
 		if (Tools::isSubmit('submitSecuvadCarrier'))
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_transport`
 			');
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'secuvad_assoc_transport` VALUES';
@@ -592,7 +592,7 @@ class Secuvad extends Module
 					$sql .= '(NULL, '.(int)($id_carrier).', '.(int)($value).', '.(int)($_POST['secuvad_carrier_delay_'.(int)($id_carrier)]).'),';
 				}
 			$sql = rtrim($sql, ',');
-			if (Db::getInstance()->Execute($sql))
+			if (Db::getInstance()->execute($sql))
 				$this->_html .= $this->displayConfirmation($this->l('Settings are updated'));
 			else
 				$this->_html .= $this->displayError($this->l('Error during update'));
@@ -959,7 +959,7 @@ class Secuvad extends Module
 		$report .= $this->l('Mail:').$mail."\n\n";
 		$report .= $this->l('Issue description:')."\n".$probleme."\n\n";
 		$report .= $this->l('Log files:')."\n";
-		$res = Db::getInstance()->ExecuteS('
+		$res = Db::getInstance()->executeS('
 		SELECT `message`, `date` 
 		FROM `'._DB_PREFIX_.'secuvad_logs` 
 		ORDER BY `date` DESC 
@@ -996,7 +996,7 @@ class Secuvad extends Module
 	private function check_payment()
 	{
 		$result = true;
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_payment` 
 		WHERE `id_module` NOT IN 
 		(
@@ -1008,7 +1008,7 @@ class Secuvad extends Module
 		)
 		');
 		
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'secuvad_assoc_payment` (`id_module`) 
 		(
 			SELECT m.`id_module` FROM `'._DB_PREFIX_.'hook` h 
@@ -1019,7 +1019,7 @@ class Secuvad extends Module
 			AND sap.`id_module` IS NULL
 		)');
 	
-		$module_not_assoc = Db::getInstance()->ExecuteS('
+		$module_not_assoc = Db::getInstance()->executeS('
 		SELECT m.`name`, m.`id_module` 
 		FROM `'._DB_PREFIX_.'hook` h 
 		JOIN `'._DB_PREFIX_.'hook_module` hm ON (hm.`id_hook` = h.`id_hook`) 
@@ -1042,7 +1042,7 @@ class Secuvad extends Module
 	private function check_transport()
 	{
 		$result = true;
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_transport` 
 		WHERE `id_carrier` NOT IN 
 		(
@@ -1051,7 +1051,7 @@ class Secuvad extends Module
 		)
 		');
 		
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'secuvad_assoc_transport`(id_carrier) 
 		(
 			SELECT c.`id_carrier` 
@@ -1062,7 +1062,7 @@ class Secuvad extends Module
 		)
 		');
 			
-		$module_not_assoc = Db::getInstance()->ExecuteS('
+		$module_not_assoc = Db::getInstance()->executeS('
 		SELECT c.`name`, c.`id_carrier` 
 		FROM `'._DB_PREFIX_.'carrier` c 
 		JOIN `'._DB_PREFIX_.'secuvad_assoc_transport` sat ON (sat.`id_carrier` = c.`id_carrier`) 
@@ -1087,7 +1087,7 @@ class Secuvad extends Module
 	private function check_category()
 	{
 		$result = true;
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'secuvad_assoc_category` 
 		WHERE `id_category` NOT IN 
 		(
@@ -1096,7 +1096,7 @@ class Secuvad extends Module
 		)
 		');
 		
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'secuvad_assoc_category`(id_category) 
 		(
 			SELECT c.`id_category` 
@@ -1106,7 +1106,7 @@ class Secuvad extends Module
 		)
 		');
 		
-		$module_not_assoc = Db::getInstance()->ExecuteS('
+		$module_not_assoc = Db::getInstance()->executeS('
 		SELECT cl.`name`, c.`id_category` 
 		FROM `'._DB_PREFIX_.'category` c 
 		JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = c.`id_category`'.$this->context->shop->sqlLang('cl').') 
@@ -1204,11 +1204,11 @@ class Secuvad extends Module
 		SELECT COUNT(0) nb 
 		FROM `'._DB_PREFIX_.'secuvad_logs`');
 		if($res > $this->get_secuvad_max_log_size())
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'secuvad_logs` 
 			ORDER BY `date` 
 			LIMIT '.(int)($this->get_secuvad_log_size()));
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'secuvad_logs` (`message`) 
 		VALUES (\''.pSQL($message).'\')
 		');

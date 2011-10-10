@@ -52,7 +52,7 @@ class TaxRulesGroupCore extends ObjectModel
 
 	public static function getTaxRulesGroups($only_active = true)
 	{
-	    return Db::getInstance()->ExecuteS('
+	    return Db::getInstance()->executeS('
 	    SELECT *
 	    FROM `'._DB_PREFIX_.'tax_rules_group` g'
 	    .($only_active ? ' WHERE g.`active` = 1' : '')
@@ -74,7 +74,7 @@ class TaxRulesGroupCore extends ObjectModel
 	*/
 	public static function getAssociatedTaxRatesByIdCountry($id_country)
 	{
-	    $rows = Db::getInstance()->ExecuteS('
+	    $rows = Db::getInstance()->executeS('
 	    SELECT rg.`id_tax_rules_group`, t.`rate`
 	    FROM `'._DB_PREFIX_.'tax_rules_group` rg
    	    LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)

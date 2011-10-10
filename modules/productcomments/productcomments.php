@@ -63,7 +63,7 @@ class ProductComments extends Module
 		$sql = preg_split("/;\s*[\r\n]+/", trim($sql));
 
 		foreach ($sql as $query)
-			if (!Db::getInstance()->Execute(trim($query)))
+			if (!Db::getInstance()->execute(trim($query)))
 				return false;
 		if (parent::install() == false ||
 			!$this->registerHook('productTab') ||
@@ -95,7 +95,7 @@ class ProductComments extends Module
 
 	public function deleteTables()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
+		return Db::getInstance()->execute('
 			DROP TABLE IF EXISTS
 			`'._DB_PREFIX_.'product_comment`,
 			`'._DB_PREFIX_.'product_comment_criterion`,

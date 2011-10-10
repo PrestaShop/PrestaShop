@@ -110,7 +110,7 @@ XML;
     			WHERE s.active = 1
     				AND s.deleted = 0
     				AND su.active = 1';
-    	if (!$result = Db::getInstance()->ExecuteS($sql))
+    	if (!$result = Db::getInstance()->executeS($sql))
     		return false;
     	
     	$res = true;
@@ -181,7 +181,7 @@ XML;
 						AND cs.id_shop = '.$shopID.'
 					ORDER BY cl.id_cms, cl.id_lang ASC';
 		
-		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		foreach ($cmss AS $cms)
 		{
 			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $this->context->link->getCMSLink((int)$cms['id_cms'], $cms['link_rewrite'], false, (int)$cms['id_lang']) : $this->context->link->getCMSLink((int)$cms['id_cms']);
@@ -202,7 +202,7 @@ XML;
 						AND nleft >= '.$limits['nleft'].'
 						AND nright <= '.$limits['nright'].'
 					ORDER BY cl.id_category, cl.id_lang ASC';
-			$categories = Db::getInstance()->ExecuteS($sql);
+			$categories = Db::getInstance()->executeS($sql);
 		}
 		else
 		{
@@ -211,7 +211,7 @@ XML;
 					WHERE nleft >= '.$limits['nleft'].'
 						AND nright <= '.$limits['nright'].'
 					ORDER BY c.id_category ASC';
-			$categories = Db::getInstance()->ExecuteS($sql);			
+			$categories = Db::getInstance()->executeS($sql);			
 		}
 		
 		foreach($categories as $category)
@@ -241,7 +241,7 @@ XML;
 					AND ps.id_shop = '.$shopID.'
 				'.(Configuration::get('GSITEMAP_ALL_PRODUCTS') ? '' : 'HAVING level_depth IS NOT NULL').'
 				ORDER BY pl.id_product, pl.id_lang ASC';
-		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				
 		$tmp = null;
 		$res = null;

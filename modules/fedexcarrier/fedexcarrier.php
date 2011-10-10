@@ -182,7 +182,7 @@ class FedexCarrier extends CarrierModule
 		// Install SQL
 		include(dirname(__FILE__).'/sql-install.php');
 		foreach ($sql as $s)
-			if (!Db::getInstance()->Execute($s))
+			if (!Db::getInstance()->execute($s))
 				return false;
 
 		// Install Carriers
@@ -208,7 +208,7 @@ class FedexCarrier extends CarrierModule
 		// Uninstall SQL
 		include(dirname(__FILE__).'/sql-uninstall.php');
 		foreach ($sql as $s)
-			if (!Db::getInstance()->Execute($s))
+			if (!Db::getInstance()->execute($s))
 				return false;
 
 		// Uninstall Module
@@ -224,7 +224,7 @@ class FedexCarrier extends CarrierModule
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'fedex_rate_service_code', array('active' => 0), 'UPDATE');
 
 		// Get all services availables
-		$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+		$rateServiceList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 		foreach ($rateServiceList as $rateService)
 			if (!$rateService['id_carrier'])
 			{
@@ -536,7 +536,7 @@ class FedexCarrier extends CarrierModule
 					<label>'.$this->l('State').' : </label>
 					<div class="margin-form">';
 						$id_country_current = 0;
-						$statesList = Db::getInstance()->ExecuteS('
+						$statesList = Db::getInstance()->executeS('
 						SELECT `id_state`, `id_country`, `name`
 						FROM `'._DB_PREFIX_.'state` WHERE `active` = 1
 						ORDER BY `id_country`, `name` ASC');
@@ -586,7 +586,7 @@ class FedexCarrier extends CarrierModule
 					</div>
 					<label>'.$this->l('Delivery Service').' : </label>
 					<div class="margin-form">';
-						$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+						$rateServiceList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 						foreach($rateServiceList as $rateService)
 							$html .= '<input type="checkbox" name="service[]" value="'.$rateService['id_fedex_rate_service_code'].'" '.(($rateService['active'] == 1) ? 'checked="checked"' : '').' /> '.$rateService['service'].' '.($this->webserviceTest($rateService['code']) ? '('.$this->l('Available').')' : '('.$this->l('Not available').')').'<br />';
 					$html .= '
@@ -722,7 +722,7 @@ class FedexCarrier extends CarrierModule
 
 		if (isset($category['id_category']))
 		{
-			$categories = Db::getInstance()->ExecuteS('
+			$categories = Db::getInstance()->executeS('
 			SELECT c.id_category, cl.name, cl.link_rewrite
 			FROM '._DB_PREFIX_.'category c
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.$this->context->shop->sqlLang('cl').')
@@ -792,7 +792,7 @@ class FedexCarrier extends CarrierModule
 			<tbody>';
 
 		// Loading config list
-		$configCategoryList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_category` > 0');
+		$configCategoryList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_category` > 0');
 		if (!$configCategoryList)
 			$html .= '<tr><td colspan="6">'.$this->l('There is no specific FEDEX configuration for categories at this point.').'</td></tr>';
 		foreach ($configCategoryList as $k => $c)
@@ -811,7 +811,7 @@ class FedexCarrier extends CarrierModule
 
 			// Loading services attached to this config
 			$services = '';
-			$servicesTab = Db::getInstance()->ExecuteS('
+			$servicesTab = Db::getInstance()->executeS('
 			SELECT ursc.`service`
 			FROM `'._DB_PREFIX_.'fedex_rate_config_service` urcs
 			LEFT JOIN `'._DB_PREFIX_.'fedex_rate_service_code` ursc ON (ursc.`id_fedex_rate_service_code` = urcs.`id_fedex_rate_service_code`)
@@ -885,7 +885,7 @@ class FedexCarrier extends CarrierModule
 						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges', $configSelected['additional_charges'])).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
-								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+								$rateServiceList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 								foreach($rateServiceList as $rateService)
 								{
 									$configServiceSelected = Db::getInstance()->getValue('SELECT `id_fedex_rate_service_code` FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)(Tools::getValue('id_fedex_rate_config')).' AND `id_fedex_rate_service_code` = '.(int)($rateService['id_fedex_rate_service_code']));
@@ -928,7 +928,7 @@ class FedexCarrier extends CarrierModule
 						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges')).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
-								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+								$rateServiceList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 								foreach($rateServiceList as $rateService)
 									$html .= '<input type="checkbox" name="service[]" value="'.$rateService['id_fedex_rate_service_code'].'" '.(($this->_isPostCheck($rateService['id_fedex_rate_service_code']) == 1) ? 'checked="checked"' : '').' /> '.$rateService['service'].'<br />';
 						$html .= '
@@ -1010,7 +1010,7 @@ class FedexCarrier extends CarrierModule
 				'date_upd' => pSQL($date)
 			);
 			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'fedex_rate_config', $updTab, 'UPDATE', '`id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
 			foreach ($services as $s)
 			{
 				$addTab = array('id_fedex_rate_service_code' => pSQL($s), 'id_fedex_rate_config' => (int)Tools::getValue('id_fedex_rate_config'), 'date_add' => pSQL($date), 'date_upd' => pSQL($date));
@@ -1027,8 +1027,8 @@ class FedexCarrier extends CarrierModule
 		// Delete Script
 		if (Tools::getValue('action') == 'delete' && Tools::getValue('id_fedex_rate_config'))
 		{
-			$result1 = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
-			$result2 = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
+			$result1 = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
+			$result2 = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
 
 			// Display Results
 			if ($result1)
@@ -1068,7 +1068,7 @@ class FedexCarrier extends CarrierModule
 			<tbody>';
 
 		// Loading config list
-		$configProductList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_product` > 0');
+		$configProductList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_product` > 0');
 		if (!$configProductList)
 			$html .= '<tr><td colspan="6">'.$this->l('There is no specific FEDEX configuration for products at this point.').'</td></tr>';
 		foreach ($configProductList as $k => $c)
@@ -1081,7 +1081,7 @@ class FedexCarrier extends CarrierModule
 
 			// Loading services attached to this config
 			$services = '';
-			$servicesTab = Db::getInstance()->ExecuteS('
+			$servicesTab = Db::getInstance()->executeS('
 			SELECT ursc.`service`
 			FROM `'._DB_PREFIX_.'fedex_rate_config_service` urcs
 			LEFT JOIN `'._DB_PREFIX_.'fedex_rate_service_code` ursc ON (ursc.`id_fedex_rate_service_code` = urcs.`id_fedex_rate_service_code`)
@@ -1147,7 +1147,7 @@ class FedexCarrier extends CarrierModule
 						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges', $configSelected['additional_charges'])).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
-								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+								$rateServiceList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 								foreach($rateServiceList as $rateService)
 								{
 									$configServiceSelected = Db::getInstance()->getValue('SELECT `id_fedex_rate_service_code` FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)(
@@ -1168,7 +1168,7 @@ class FedexCarrier extends CarrierModule
 						<div class="margin-form">
 							<select name="id_product">
 								<option value="0">'.$this->l('Select a product ...').'</option>';
-						$productsList = Db::getInstance()->ExecuteS('
+						$productsList = Db::getInstance()->executeS('
 						SELECT pl.* FROM `'._DB_PREFIX_.'product` p
 						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
 						WHERE p.`active` = 1
@@ -1197,7 +1197,7 @@ class FedexCarrier extends CarrierModule
 						<div class="margin-form"><input type="text" size="20" name="additional_charges" value="'.Tools::safeOutput(Tools::getValue('additional_charges')).'" /></div><br />
 						<label>'.$this->l('Delivery Service').' : </label>
 							<div class="margin-form">';
-								$rateServiceList = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+								$rateServiceList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 								foreach($rateServiceList as $rateService)
 									$html .= '<input type="checkbox" name="service[]" value="'.$rateService['id_fedex_rate_service_code'].'" '.(($this->_isPostCheck($rateService['id_fedex_rate_service_code']) == 1) ? 'checked="checked"' : '').' /> '.$rateService['service'].'<br />';
 						$html .= '
@@ -1279,7 +1279,7 @@ class FedexCarrier extends CarrierModule
 				'date_upd' => pSQL($date)
 			);
 			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'fedex_rate_config', $updTab, 'UPDATE', '`id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
 			foreach ($services as $s)
 			{
 				$addTab = array('id_fedex_rate_service_code' => pSQL($s), 'id_fedex_rate_config' => (int)Tools::getValue('id_fedex_rate_config'), 'date_add' => pSQL($date), 'date_upd' => pSQL($date));
@@ -1296,8 +1296,8 @@ class FedexCarrier extends CarrierModule
 		// Delete Script
 		if (Tools::getValue('action') == 'delete' && Tools::getValue('id_fedex_rate_config'))
 		{
-			$result1 = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
-			$result2 = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
+			$result1 = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
+			$result2 = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'fedex_rate_config_service` WHERE `id_fedex_rate_config` = '.(int)Tools::getValue('id_fedex_rate_config'));
 
 			// Display Results
 			if ($result1)
@@ -1440,7 +1440,7 @@ class FedexCarrier extends CarrierModule
 			$productConfiguration = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_product` = '.(int)($product['id_product']));
 			if ($productConfiguration['id_fedex_rate_config'])
 			{
-				$servicesConfiguration = Db::getInstance()->ExecuteS('
+				$servicesConfiguration = Db::getInstance()->executeS('
 				SELECT urcs.*, ursc.`id_carrier`
 				FROM `'._DB_PREFIX_.'fedex_rate_config_service` urcs
 				LEFT JOIN `'._DB_PREFIX_.'fedex_rate_service_code` ursc ON (ursc.`id_fedex_rate_service_code` = urcs.`id_fedex_rate_service_code`)
@@ -1457,7 +1457,7 @@ class FedexCarrier extends CarrierModule
 			$categoryConfiguration = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_config` WHERE `id_category` = '.(int)($product['id_category_default']));
 			if ($categoryConfiguration['id_fedex_rate_config'])
 			{
-				$servicesConfiguration = Db::getInstance()->ExecuteS('
+				$servicesConfiguration = Db::getInstance()->executeS('
 				SELECT urcs.*, ursc.`id_carrier`
 				FROM `'._DB_PREFIX_.'fedex_rate_config_service` urcs
 				LEFT JOIN `'._DB_PREFIX_.'fedex_rate_service_code` ursc ON (ursc.`id_fedex_rate_service_code` = urcs.`id_fedex_rate_service_code`)
@@ -1470,7 +1470,7 @@ class FedexCarrier extends CarrierModule
 
 		// Return general config
 		$config['pickup_type_code'] = Configuration::get('FEDEX_CARRIER_PICKUP_TYPE');
-		$servicesConfiguration = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code` WHERE `active` = 1');
+		$servicesConfiguration = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code` WHERE `active` = 1');
 		foreach ($servicesConfiguration as $service)
 			$config['services'][$service['id_fedex_rate_service_code']] = $service;
 		return $config;
@@ -1500,7 +1500,7 @@ class FedexCarrier extends CarrierModule
 			$weight += Tools::getValue('fedex_carrier_packaging_weight', Configuration::get('FEDEX_CARRIER_PACKAGING_WEIGHT'));
 
 			// Get service in adequation with carrier and check if available
-			$servicesConfiguration = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code` WHERE `active` = 1');
+			$servicesConfiguration = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code` WHERE `active` = 1');
 			foreach ($servicesConfiguration as $service)
 				$config['services'][$service['id_fedex_rate_service_code']] = $service;
 			$serviceSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'fedex_rate_service_code` WHERE `id_carrier` = '.(int)($this->id_carrier));
@@ -1676,7 +1676,7 @@ class FedexCarrier extends CarrierModule
 		if (!empty($service))
 			$servicesList = array(array('code' => $service));
 		else
-			$servicesList = Db::getInstance()->ExecuteS('SELECT `code` FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
+			$servicesList = Db::getInstance()->executeS('SELECT `code` FROM `'._DB_PREFIX_.'fedex_rate_service_code`');
 
 
 		// Testing Service

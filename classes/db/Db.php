@@ -31,25 +31,25 @@ if (file_exists(dirname(__FILE__).'/../config/settings.inc.php'))
 abstract class DbCore
 {
 	/** @var string Server (eg. localhost) */
-	protected $_server;
+	protected $server;
 
 	/** @var string Database user (eg. root) */
-	protected $_user;
+	protected $user;
 
 	/** @var string Database password (eg. can be empty !) */
-	protected $_password;
+	protected $password;
 
 	/** @var string Database name */
-	protected $_database;
+	protected $database;
 
 	/** @var mixed Ressource link */
-	protected $_link;
+	protected $link;
 
 	/** @var mixed SQL cached result */
-	protected $_result;
+	protected $result;
 
 	/** @var array List of DB instance */
-	protected static $_instance = array();
+	protected static $instance = array();
 
 	/** @var array Object instance for singleton */
 	protected static $_servers = array(
@@ -64,14 +64,14 @@ abstract class DbCore
 	 *
 	 * @var string
 	 */
-	protected $_lastQuery;
+	protected $last_query;
 
 	/**
 	 * Last cached query
 	 *
 	 * @var string
 	 */
-	protected $_lastCached;
+	protected $last_cached;
 
 	/**
 	 * Open a connection
@@ -149,22 +149,27 @@ abstract class DbCore
 	{
 		static $id = 0;
 
-		$nServers = sizeof(self::$_servers);
-		if ($master || $nServers == 1)
-			$idServer = 0;
+		$total_servers = count(self::$_servers);
+		if ($master || $total_servers == 1)
+			$id_server = 0;
 		else
 		{
 			$id++;
-			$idServer = ($nServers > 2 && ($id % $nServers) != 0) ? $id : 1;
+			$id_server = ($total_servers > 2 && ($id % $total_servers) != 0) ? $id : 1;
 		}
 
-		if (!isset(self::$_instance[$idServer]))
+		if (!isset(self::$instance[$id_server]))
 		{
 			$class = Db::getClass();
-			self::$_instance[$idServer] = new $class(self::$_servers[$idServer]['server'], self::$_servers[$idServer]['user'], self::$_servers[$idServer]['password'], self::$_servers[$idServer]['database']);
+			self::$instance[$id_server] = new $class(
+				self::$_servers[$id_server]['server'],
+				self::$_servers[$id_server]['user'],
+				self::$_servers[$id_server]['password'],
+				self::$_servers[$id_server]['database']
+			);
 		}
 
-		return self::$_instance[$idServer];
+		return self::$instance[$id_server];
 	}
 
 	/**
@@ -191,11 +196,11 @@ abstract class DbCore
 	 */
 	public function __construct($server, $user, $password, $database, $connect = true)
 	{
-		$this->_server = $server;
-		$this->_user = $user;
-		$this->_password = $password;
-		$this->_type = _DB_TYPE_;
-		$this->_database = $database;
+		$this->server = $server;
+		$this->user = $user;
+		$this->password = $password;
+		$this->type = _DB_TYPE_;
+		$this->database = $database;
 
 		if (!defined('_PS_DEBUG_SQL_'))
 			define('_PS_DEBUG_SQL_', false);
@@ -209,7 +214,7 @@ abstract class DbCore
 	 */
 	public function __destruct()
 	{
-		if ($this->_link)
+		if ($this->link)
 			$this->disconnect();
 	}
 
@@ -221,10 +226,10 @@ abstract class DbCore
 	 * @param string $type INSERT or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
 	 * @param string $limit LIMIT clause (optional)
-	 * @param bool $useNull If true, replace empty strings and NULL by a NULL value
+	 * @param bool $use_null If true, replace empty strings and NULL by a NULL value
 	 * @return mixed|boolean SQL query result
 	 */
-	public function autoExecute($table, $data, $type, $where = false, $limit = false, $use_cache = 1, $useNull = false)
+	public function autoExecute($table, $data, $type, $where = false, $limit = false, $use_cache = 1, $use_null = false)
 	{
 		if (!$data)
 			return true;
@@ -234,13 +239,13 @@ abstract class DbCore
 			// Check if $data is a list of row
 			if (!is_array(current($data)))
 				$data = array($data);
-			
+
 			$keys = array();
 			$values_stringified = array();
 			foreach ($data as $row_data)
 			{
 				$values = array();
-				foreach ($row_data AS $key => $value)
+				foreach ($row_data as $key => $value)
 				{
 					if (isset($keys_stringified))
 					{
@@ -250,8 +255,8 @@ abstract class DbCore
 					}
 					else
 						$keys[] = "`$key`";
-					
-					$values[] = ($useNull && ($value === '' || is_null($value))) ? 'NULL' : "'$value'";
+
+					$values[] = ($use_null && ($value === '' || is_null($value))) ? 'NULL' : "'$value'";
 				}
 				$keys_stringified = implode(', ', $keys);
 				$values_stringified[] = '('.implode(', ', $values).')';
@@ -265,8 +270,8 @@ abstract class DbCore
 		else if (strtoupper($type) == 'UPDATE')
 		{
 			$sql = 'UPDATE `'.$table.'` SET ';
-			foreach ($data AS $key => $value)
-				$sql .= ($useNull && ($value === '' || is_null($value))) ? "`$key` = NULL," : "`$key` = '$value',";
+			foreach ($data as $key => $value)
+				$sql .= ($use_null && ($value === '' || is_null($value))) ? "`$key` = NULL," : "`$key` = '$value',";
 			$sql = rtrim($sql, ',');
 			if ($where)
 				$sql .= ' WHERE '.$where;
@@ -321,10 +326,10 @@ abstract class DbCore
 	 */
 	public function delete($table, $where = false, $limit = false, $use_cache = 1)
 	{
-		$this->_result = false;
+		$this->result = false;
 		$sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
 		$res = $this->query($sql);
-		if ($use_cache AND _PS_CACHE_ENABLED_)
+		if ($use_cache && _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);
 		return $res;
 	}
@@ -336,13 +341,13 @@ abstract class DbCore
 	 * @param bool $use_cache
 	 * @return mixed
 	 */
-	public function Execute($sql, $use_cache = 1)
+	public function execute($sql, $use_cache = 1)
 	{
 		$sql = (string)$sql;
-		$this->_result = $this->query($sql);
-		if ($use_cache AND _PS_CACHE_ENABLED_)
+		$this->result = $this->query($sql);
+		if ($use_cache && _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);
-		return $this->_result;
+		return $this->result;
 	}
 
 	/**
@@ -353,32 +358,32 @@ abstract class DbCore
 	 * @param int $use_cache if query has been already executed, use its result
 	 * @return array or result object
 	 */
-	public function ExecuteS($sql, $array = true, $use_cache = 1)
+	public function executeS($sql, $array = true, $use_cache = 1)
 	{
 		$sql = (string)$sql;
-		$this->_result = false;
-		$this->_lastQuery = $sql;
-		if ($use_cache AND _PS_CACHE_ENABLED_ && $array AND ($result = Cache::getInstance()->get(md5($sql))))
+		$this->result = false;
+		$this->last_query = $sql;
+		if ($use_cache && _PS_CACHE_ENABLED_ && $array && ($result = Cache::getInstance()->get(md5($sql))))
 		{
-			$this->_lastCached = true;
+			$this->last_cached = true;
 			return $result;
 		}
 
-		$this->_result = $this->query($sql);
-		if (!$this->_result)
+		$this->result = $this->query($sql);
+		if (!$this->result)
 			return false;
 
-		$this->_lastCached = false;
+		$this->last_cached = false;
 		if (!$array)
-			return $this->_result;
+			return $this->result;
 
-		$resultArray = array();
-		while ($row = $this->nextRow($this->_result))
-			$resultArray[] = $row;
+		$result_array = array();
+		while ($row = $this->nextRow($this->result))
+			$result_array[] = $row;
 
-		if ($use_cache AND _PS_CACHE_ENABLED_)
-			Cache::getInstance()->setQuery($sql, $resultArray);
-		return $resultArray;
+		if ($use_cache && _PS_CACHE_ENABLED_)
+			Cache::getInstance()->setQuery($sql, $result_array);
+		return $result_array;
 	}
 
 	/**
@@ -393,21 +398,21 @@ abstract class DbCore
 	{
 		$sql = (string)$sql;
 		$sql .= ' LIMIT 1';
-		$this->_result = false;
-		$this->_lastQuery = $sql;
+		$this->result = false;
+		$this->last_query = $sql;
 		if ($use_cache && _PS_CACHE_ENABLED_ && ($result = Cache::getInstance()->get(md5($sql))))
 		{
-			$this->_lastCached = true;
+			$this->last_cached = true;
 			return $result;
 		}
 
-		$this->_result = $this->query($sql);
-		if (!$this->_result)
+		$this->result = $this->query($sql);
+		if (!$this->result)
 			return false;
 
-		$this->_lastCached = false;
-		$result = $this->nextRow($this->_result);
-		if ($use_cache AND _PS_CACHE_ENABLED_)
+		$this->last_cached = false;
+		$result = $this->nextRow($this->result);
+		if ($use_cache && _PS_CACHE_ENABLED_)
 			Cache::getInstance()->setQuery($sql, $result);
 		return $result;
 	}
@@ -432,17 +437,17 @@ abstract class DbCore
 	 *
 	 * @return int
 	 */
-	public function NumRows()
+	public function numRows()
 	{
-		if (!$this->_lastCached && $this->_result)
+		if (!$this->last_cached && $this->result)
 		{
-			$nrows = $this->_numRows($this->_result);
+			$nrows = $this->_numRows($this->result);
 			if (_PS_CACHE_ENABLED_)
-				Cache::getInstance()->setNumRows(md5($this->_lastQuery), $nrows);
+				Cache::getInstance()->setNumRows(md5($this->last_query), $nrows);
 			return $nrows;
 		}
-		else if (_PS_CACHE_ENABLED_ AND $this->_lastCached)
-			return Cache::getInstance()->getNumRows(md5($this->_lastQuery));
+		else if (_PS_CACHE_ENABLED_ && $this->last_cached)
+			return Cache::getInstance()->getNumRows(md5($this->last_query));
 	}
 
 	/**
@@ -457,9 +462,9 @@ abstract class DbCore
 		global $webservice_call;
 
 		$sql = (string)$sql;
-		$this->_result = false;
+		$this->result = false;
 		$result = $this->query($sql);
-		if ($use_cache AND _PS_CACHE_ENABLED_)
+		if ($use_cache && _PS_CACHE_ENABLED_)
 			Cache::getInstance()->deleteQuery($sql);
 		return $result;
 	}
@@ -476,7 +481,7 @@ abstract class DbCore
 		$errno = $this->getNumberError();
 		if ($webservice_call && $errno)
 			WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.$this->getMsgError().'. Query was : '.$sql, 97);
-		elseif (_PS_DEBUG_SQL_ AND $errno AND !defined('PS_INSTALLATION_IN_PROGRESS'))
+		else if (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS'))
 		{
 			if ($sql)
 				die(Tools::displayError($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>'));
@@ -488,17 +493,17 @@ abstract class DbCore
 	 * Sanitize data which will be injected into SQL query
 	 *
 	 * @param string $string SQL data which will be injected into SQL query
-	 * @param boolean $htmlOK Does data contain HTML code ? (optional)
+	 * @param boolean $html_ok Does data contain HTML code ? (optional)
 	 * @return string Sanitized data
 	 */
-	public function escape($string, $htmlOK)
+	public function escape($string, $html_ok)
 	{
 		if (_PS_MAGIC_QUOTES_GPC_)
 			$string = stripslashes($string);
 		if (!is_numeric($string))
 		{
 			$string = $this->_escape($string);
-			if (!$htmlOK)
+			if (!$html_ok)
 				$string = strip_tags(Tools::nl2br($string));
 		}
 
@@ -515,9 +520,9 @@ abstract class DbCore
 	 * @param bool $newDbLink
 	 * @return int
 	 */
-	static public function checkConnection($server, $user, $pwd, $db, $newDbLink = true)
+	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true)
 	{
-		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $newDbLink));
+		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link));
 	}
 
 	/**
@@ -528,7 +533,7 @@ abstract class DbCore
 	 * @param string $pwd Password for database connection
 	 * @return int
 	 */
-	static public function checkEncoding($server, $user, $pwd)
+	public static function checkEncoding($server, $user, $pwd)
 	{
 		return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
 	}
@@ -539,19 +544,19 @@ abstract class DbCore
 	 * @acces string query The query to execute
 	 * @return array Array of line returned by MySQL
 	 */
-	static public function s($sql, $use_cache = 1)
+	public static function s($sql, $use_cache = 1)
 	{
-		return Db::getInstance()->ExecuteS($sql, true, $use_cache);
+		return Db::getInstance()->executeS($sql, true, $use_cache);
 	}
 
-	static public function ps($sql, $use_cache = 1)
+	public static function ps($sql, $use_cache = 1)
 	{
 		$ret = Db::s($sql, $use_cache);
 		p($ret);
 		return $ret;
 	}
 
-	static public function ds($sql, $use_cache = 1)
+	public static function ds($sql, $use_cache = 1)
 	{
 		Db::s($sql, $use_cache);
 		die();

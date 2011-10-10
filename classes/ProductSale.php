@@ -37,7 +37,7 @@ class ProductSaleCore
 				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
 				SELECT od.product_id, COUNT(od.product_id), SUM(od.product_quantity), NOW()
 							FROM '._DB_PREFIX_.'order_detail od GROUP BY od.product_id';
-		return Db::getInstance()->Execute($sql);
+		return Db::getInstance()->execute($sql);
 	}
 
 	/*
@@ -103,7 +103,7 @@ class ProductSaleCore
 					)
 				ORDER BY `'.pSQL($orderBy).'` '.pSQL($orderWay).'
 				LIMIT '.(int)($pageNumber * $nbProducts).', '.(int)$nbProducts;
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		if ($orderBy == 'price')
 			Tools::orderbyPrice($result,$orderWay);
@@ -147,7 +147,7 @@ class ProductSaleCore
 					)
 				ORDER BY sales DESC
 				LIMIT '.(int)($pageNumber * $nbProducts).', '.(int)$nbProducts;
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql))
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 
 		foreach ($result AS &$row)
@@ -160,7 +160,7 @@ class ProductSaleCore
 
 	public static function addProductSale($product_id, $qty = 1)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'product_sale
 			(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
 			VALUES ('.(int)($product_id).', '.(int)($qty).', 1, NOW())
@@ -179,9 +179,9 @@ class ProductSaleCore
 	{
 		$nbrSales = self::getNbrSales($id_product);
 		if ($nbrSales > 1)
-			return Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product_sale SET `quantity` = `quantity` - '.(int)($qty).', `sale_nbr` = `sale_nbr` - 1, `date_upd` = NOW() WHERE `id_product` = '.(int)($id_product));
+			return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product_sale SET `quantity` = `quantity` - '.(int)($qty).', `sale_nbr` = `sale_nbr` - 1, `date_upd` = NOW() WHERE `id_product` = '.(int)($id_product));
 		elseif ($nbrSales == 1)
-			return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'product_sale WHERE `id_product` = '.(int)($id_product));
+			return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_sale WHERE `id_product` = '.(int)($id_product));
 		return true;
 	}
 }

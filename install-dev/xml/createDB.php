@@ -131,7 +131,7 @@ switch (_DB_TYPE_) {
 		foreach($db_structure_settings as $query){
 			$query = trim($query);
 			if(!empty($query)){
-				if(!Db::getInstance()->Execute($query)){
+				if(!Db::getInstance()->execute($query)){
 					if(Db::getInstance()->getNumberError() == 1050){
 						$logger->logError('A Prestashop database already exists, please drop it or change the prefix.');
 						die('<action result="fail" error="14" />'."\n");
@@ -185,7 +185,7 @@ switch (_DB_TYPE_) {
 		foreach($db_data_settings as $query){
 			$query = trim($query);
 			if(!empty($query)){
-				if(!Db::getInstance()->Execute($query)){
+				if(!Db::getInstance()->execute($query)){
 					if(Db::getInstance()->getNumberError() == 1050){
 						die('<action result="fail" error="14" />'."\n");
 					} else {
@@ -208,13 +208,13 @@ switch (_DB_TYPE_) {
 }
 $xml = '<result><action result="ok" error="" />'."\n";
 
-$countries = Db::getInstance()->ExecuteS('
+$countries = Db::getInstance()->executeS('
 SELECT c.`id_country`, cl.`name`, c.`iso_code` FROM `'.$_GET['tablePrefix'].'country` c
 INNER JOIN `'.$_GET['tablePrefix'].'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 WHERE cl.`id_lang` = '.(int)($_GET['language'] + 1).'
 ORDER BY cl.`name`');
 
-$timezones = Db::getInstance()->ExecuteS('
+$timezones = Db::getInstance()->executeS('
 SELECT * FROM `'.$_GET['tablePrefix'].'timezone`
 ORDER BY `name`');
 

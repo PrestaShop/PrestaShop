@@ -77,7 +77,7 @@ class NotificationCore
 					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
 
 		$json = array();
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql) as $key => $value)
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $key => $value)
 		{
 			if (isset($value['id_order']))
 			{
@@ -108,7 +108,7 @@ class NotificationCore
 	{
 		if (in_array($type, $this->types))
 			// We update the last item viewed
-			return Db::getInstance()->Execute('
+			return Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'employee`
 					SET `id_last_'.pSQL($type).'` = (SELECT MAX(`id_'.$type.'`)
 					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`)

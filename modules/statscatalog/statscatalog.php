@@ -115,7 +115,7 @@ class StatsCatalog extends Module
 					'.$this->_where.'
 					AND p.`active` = 1
 				GROUP BY p.`id_product`';
-		$precalc = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$precalc = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$precalc2 = array();
 		foreach ($precalc as $array)
@@ -128,7 +128,7 @@ class StatsCatalog extends Module
 				WHERE p.`active` = 1
 					'.(sizeof($precalc2) ? 'AND p.`id_product` NOT IN ('.implode(',', $precalc2).')' : '').'
 					'.$this->_where;
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		return array('total' => Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows(), 'result' => $result);
 	}
 

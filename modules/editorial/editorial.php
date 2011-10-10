@@ -53,7 +53,7 @@ class Editorial extends Module
 		if (!parent::install() OR !$this->registerHook('home') OR !$this->registerHook('header'))
 			return false;
 		
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'editorial` (
 		`id_editorial` int(10) unsigned NOT NULL auto_increment,
 		`body_home_logo_link` varchar(255) NOT NULL,
@@ -61,7 +61,7 @@ class Editorial extends Module
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 			return false;
 		
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'editorial_lang` (
 		`id_editorial` int(10) unsigned NOT NULL,
 		`id_lang` int(10) unsigned NOT NULL,
@@ -73,17 +73,17 @@ class Editorial extends Module
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 			return false;
 		
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'editorial`(`id_editorial`, `body_home_logo_link`) 
 		VALUES(1, "http://www.prestashop.com")'))
 			return false;
 		
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'editorial_lang`(`id_editorial`, `id_lang`, `body_title`, `body_subheading`, `body_paragraph`, `body_logo_subheading`)
 		VALUES(1, 1, "Lorem ipsum dolor sit amet", "Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua", "&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&lt;/p&gt;", "Excepteur sint prestashop cupidatat non proident")'))
 			return false;
 		
-		if (!Db::getInstance()->Execute('
+		if (!Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'editorial_lang`(`id_editorial`, `id_lang`, `body_title`, `body_subheading`, `body_paragraph`, `body_logo_subheading`)
 		VALUES(1, 2, "Lorem ipsum dolor sit amet", "Excepteur sint occaecat cupidatat non proident", "&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&lt;/p&gt;", "Lorem ipsum presta shop amet")'))
 			return false;
@@ -94,8 +94,8 @@ class Editorial extends Module
 	{
 		if (!parent::uninstall())
 			return false;
-		return (Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'editorial`') AND
-				Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'editorial_lang`'));
+		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'editorial`') AND
+				Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'editorial_lang`'));
 	}
 
 	public function putContent($xml_data, $key, $field, $forbidden, $section)

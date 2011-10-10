@@ -60,7 +60,7 @@ class ZoneCore extends ObjectModel
 	*/
 	public static function getZones($active = false)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'zone`
 		'.($active ? 'WHERE active = 1' : '').'
@@ -90,12 +90,12 @@ class ZoneCore extends ObjectModel
 		if (parent::delete())
 		{
 			/* Delete regarding delivery preferences */
-			$result = Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'carrier_zone WHERE id_zone = '.(int)$this->id);
-			$result &= Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'delivery WHERE id_zone = '.(int)$this->id);
+			$result = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_zone WHERE id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'delivery WHERE id_zone = '.(int)$this->id);
 
 			/* Update Country & state zone with 0 */
-			$result &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'country SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
-			$result &= Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'state SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'state SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
 
 			return $result;
 		}

@@ -108,7 +108,7 @@ class ReferrerCore extends ObjectModel
 					LEFT JOIN '._DB_PREFIX_.'connections_source cs ON ('.self::$_join.')
 					WHERE id_connections_source = '.(int)($id_connections_source).'
 				)';
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 	}
 	
 	/**
@@ -127,7 +127,7 @@ class ReferrerCore extends ObjectModel
 				WHERE g.id_customer = '.(int)($id_customer).'
 					AND r.name IS NOT NULL
 				ORDER BY c.date_add DESC';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/**
@@ -266,7 +266,7 @@ class ReferrerCore extends ObjectModel
 	public static function refreshCache($referrers = null, $employee = null)
 	{
 		if (!$referrers OR !is_array($referrers))
-			$referrers = Db::getInstance()->ExecuteS('SELECT id_referrer FROM '._DB_PREFIX_.'referrer');
+			$referrers = Db::getInstance()->executeS('SELECT id_referrer FROM '._DB_PREFIX_.'referrer');
 		foreach ($referrers as $row)
 		{
 			$referrer = new Referrer($row['id_referrer']);
@@ -307,8 +307,8 @@ class ReferrerCore extends ObjectModel
 	{
 		if (!$referrers OR !is_array($referrers))
 		{
-			Db::getInstance()->Execute('TRUNCATE '._DB_PREFIX_.'referrer_cache');
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'referrer_cache');
+			Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'referrer_cache (id_referrer, id_connections_source) (
 				SELECT id_referrer, id_connections_source
 				FROM '._DB_PREFIX_.'referrer r
@@ -318,8 +318,8 @@ class ReferrerCore extends ObjectModel
 		else
 			foreach ($referrers as $row)
 			{
-				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'referrer_cache WHERE id_referrer = '.(int)($row['id_referrer']));
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'referrer_cache WHERE id_referrer = '.(int)($row['id_referrer']));
+				Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.'referrer_cache (id_referrer, id_connections_source) (
 					SELECT id_referrer, id_connections_source
 					FROM '._DB_PREFIX_.'referrer r

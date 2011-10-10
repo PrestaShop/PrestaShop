@@ -166,7 +166,7 @@ class MRGetTickets implements IMondialRelayWSMethod
 					\''.pSQL((string)$URLA4).'\',
 					\''.pSQL((string)$URLA5).'\')';
 		}
-		Db::getInstance()->Execute($query);
+		Db::getInstance()->execute($query);
 		$success['id_mr_history'] = isset($row['id']) ? $row['id'] : Db::getInstance()->Insert_ID();
 	}
 	

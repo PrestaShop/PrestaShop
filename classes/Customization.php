@@ -29,7 +29,7 @@ class CustomizationCore
 {
 	public static function getReturnedCustomizations($id_order)
 	{
-		if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
 			FROM `'._DB_PREFIX_.'order_return` ore
 			INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
@@ -43,7 +43,7 @@ class CustomizationCore
 
 	public static function getOrderedCustomizations($id_cart)
 	{
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_customization`, `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int)($id_cart)))
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int)($id_cart)))
 			return false;
 		$customizations = array();
 		foreach ($result AS $row)
@@ -87,7 +87,7 @@ class CustomizationCore
 
 		if (!empty($in_values))
 		{
-			$results =  Db::getInstance()->ExecuteS(
+			$results =  Db::getInstance()->executeS(
 							'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `'._DB_PREFIX_.'customization`
 							 WHERE `id_customization` IN ('.$in_values.')');
@@ -103,7 +103,7 @@ class CustomizationCore
 	{
 		$quantity = array();
 
-		$results =  Db::getInstance()->ExecuteS('
+		$results =  Db::getInstance()->executeS('
 			SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
 			FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_cart` = '.(int)$id_cart.'

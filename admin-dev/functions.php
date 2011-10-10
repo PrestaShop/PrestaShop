@@ -149,7 +149,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC
 					LIMIT '.(!$home ? (int)($category['level_depth'] + 1) : 1);
-			$categories = Db::getInstance()->ExecuteS($sql);
+			$categories = Db::getInstance()->executeS($sql);
 			$fullPath = '';
 			$n = 1;
 			$nCategories = (int)sizeof($categories);

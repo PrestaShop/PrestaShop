@@ -146,7 +146,7 @@ class SceneCore extends ObjectModel
 		$result = true;
 		foreach ($categories AS $category)
 		{
-			if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'scene_category` ( `id_scene` , `id_category`) VALUES ('.(int)($this->id).', '.(int)($category).')'))
+			if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'scene_category` ( `id_scene` , `id_category`) VALUES ('.(int)($this->id).', '.(int)($category).')'))
 				$result = false;
 		}
 		return $result;
@@ -154,7 +154,7 @@ class SceneCore extends ObjectModel
 
 	public function deleteCategories()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'scene_category`
 		WHERE `id_scene` = '.(int)($this->id));
 	}
@@ -175,7 +175,7 @@ class SceneCore extends ObjectModel
 		{
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'scene_products` ( `id_scene` , `id_product` , `x_axis` , `y_axis` , `zone_width` , `zone_height`) VALUES
 				 ('.(int)($this->id).', '.(int)($zone['id_product']).', '.(int)($zone['x1']).', '.(int)($zone['y1']).', '.(int)($zone['width']).', '.(int)($zone['height']).')';
-			if (!Db::getInstance()->Execute($sql))
+			if (!Db::getInstance()->execute($sql))
 				$result = false;
 		}
 		return $result;
@@ -183,7 +183,7 @@ class SceneCore extends ObjectModel
 
 	public function deleteZoneProducts()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'scene_products`
 		WHERE `id_scene` = '.(int)($this->id));
 	}
@@ -220,7 +220,7 @@ class SceneCore extends ObjectModel
 					AND sl.id_lang = '.(int)$id_lang
 					.($onlyActive ? ' AND s.active = 1' : '').'
 				ORDER BY sl.name ASC';
-		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		if (!$liteResult AND $scenes)
 			foreach($scenes AS &$scene)
@@ -242,7 +242,7 @@ class SceneCore extends ObjectModel
 			$context = Context::getContext();
 		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
-		$products = Db::getInstance()->ExecuteS('
+		$products = Db::getInstance()->executeS('
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'scene_products` s
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = s.id_product)
@@ -268,7 +268,7 @@ class SceneCore extends ObjectModel
 	*/
 	public static function getIndexedCategories($id_scene)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'scene_category`
 		WHERE `id_scene` = '.(int)($id_scene));

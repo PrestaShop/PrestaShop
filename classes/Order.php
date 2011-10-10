@@ -355,12 +355,12 @@ class OrderCore extends ObjectModel
 			return false;
 
 		if ($this->hasBeenDelivered())
-			return Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_returned` = `quantity_returned` + '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id));
+			return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_returned` = `quantity_returned` + '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id));
 		elseif ($this->hasBeenPaid())
-			return Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_refunded` = `quantity_refunded` + '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id));
-		if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity` = `quantity` - '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id)))
+			return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_refunded` = `quantity_refunded` + '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id));
+		if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity` = `quantity` - '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id)))
 			return false;
-		if (!Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `quantity` = 0'))
+		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `quantity` = 0'))
 			return false;
 		return $this->_deleteProduct($orderDetail, (int)($quantity));
 	}
@@ -380,7 +380,7 @@ class OrderCore extends ObjectModel
 		if (!isset(self::$_historyCache[$id_order_state]) OR $no_hidden)
 		{
 			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
-			$result = Db::getInstance()->ExecuteS('
+			$result = Db::getInstance()->executeS('
 			SELECT oh.*, e.`firstname` AS employee_firstname, e.`lastname` AS employee_lastname, osl.`name` AS ostate_name
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON o.`id_order` = oh.`id_order`
@@ -400,7 +400,7 @@ class OrderCore extends ObjectModel
 
 	public function getProductsDetail()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_detail` od
 		WHERE od.`id_order` = '.(int)($this->id));
@@ -532,7 +532,7 @@ class OrderCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'order_detail` od
 			WHERE od.`id_order` = '.(int)($this->id).'
 				AND `download_hash` <> \'\'';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/**
@@ -570,7 +570,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDiscounts($details = false)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_discount` od '.
 		($details ? 'LEFT JOIN `'._DB_PREFIX_.'discount` d ON (d.`id_discount` = od.`id_discount`)' : '').'
@@ -647,7 +647,7 @@ class OrderCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
     	
-    	$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+    	$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.*, (SELECT SUM(od.`product_quantity`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products
         FROM `'._DB_PREFIX_.'orders` o
         WHERE o.`id_customer` = '.(int)$id_customer.'
@@ -658,7 +658,7 @@ class OrderCore extends ObjectModel
 
 		foreach ($res AS $key => $val)
 		{
-			$res2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$res2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`
 				FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
@@ -680,7 +680,7 @@ class OrderCore extends ObjectModel
 					'.Context::getContext()->shop->sqlRestriction()
 					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '');
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
 		foreach ($result AS $order)
@@ -708,7 +708,7 @@ class OrderCore extends ObjectModel
 					'.Context::getContext()->shop->sqlRestriction(false, 'o').'
 				ORDER BY o.`date_add` DESC
 				'.((int)$limit ? 'LIMIT 0, '.(int)$limit : '');
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	public static function getOrdersIdInvoiceByDate($date_from, $date_to, $id_customer = NULL, $type = NULL)
@@ -720,7 +720,7 @@ class OrderCore extends ObjectModel
 					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '').
 				' ORDER BY invoice_date ASC';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
 		foreach ($result AS $order)
@@ -741,7 +741,7 @@ class OrderCore extends ObjectModel
 				)
 				'.Context::getContext()->shop->sqlRestriction(false, 'o').'
 				ORDER BY invoice_date ASC';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
 		foreach ($result AS $order)
@@ -884,7 +884,7 @@ class OrderCore extends ObjectModel
 		                    FROM `'._DB_PREFIX_.'orders`)
 		                 tmp )';
         // a way to avoid duplicate invoice number
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'orders`
 		SET `invoice_number` = '.$number.', `invoice_date` = \''.date('Y-m-d H:i:s').'\'
 		WHERE `id_order` = '.(int)$this->id
@@ -1030,7 +1030,7 @@ class OrderCore extends ObjectModel
 
 	public function deleteAssociations()
 	{
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'order_detail`
 				WHERE `id_order` = '.(int)($this->id)) !== false);
 	}

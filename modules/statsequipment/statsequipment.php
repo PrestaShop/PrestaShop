@@ -63,7 +63,7 @@ class StatsEquipment extends ModuleGraph
 				LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_guest` = c.`id_guest`
 				WHERE c.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$this->sqlShopRestriction(false, 'c');
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql, false);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, false);
 		
 		$calcArray = array('jsOK' => 0, 'jsKO' => 0, 'javaOK' => 0, 'javaKO' => 0, 'wmpOK' => 0, 'wmpKO' => 0, 'qtOK' => 0, 'qtKO' => 0, 'realOK' => 0, 'realKO' => 0, 'flashOK' => 0, 'flashKO' => 0, 'directorOK' => 0, 'directorKO' => 0);
 		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))
@@ -169,7 +169,7 @@ class StatsEquipment extends ModuleGraph
 	
 	protected function getData($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($this->_query.$this->getDate().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
 		$this->_values = array();
 		$i = 0;
 		foreach ($result as $row)

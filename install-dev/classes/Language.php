@@ -289,19 +289,19 @@ class Language extends ObjectModel
 	 */
 	public function loadUpdateSQL()
 	{
-		$tables = Db::getInstance()->ExecuteS('SHOW TABLES LIKE \''._DB_PREFIX_.'%_lang\' ');
+		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'%_lang\' ');
 		$langTables = array();
 
 		foreach($tables as $table)
 			foreach($table as $t)
 				$langTables[] = $t;
 
-		Db::getInstance()->Execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
+		Db::getInstance()->execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
 		$return = true;
 		foreach($langTables as $name)
 		{
 			$fields = '';
-			$columns = Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'.$name.'`');
+			$columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
 			foreach($columns as $column)
 				$fields .= $column['Field'].', ';
 			$fields = rtrim($fields, ', ');
@@ -316,7 +316,7 @@ class Language extends ObjectModel
 			}
 			$sql = rtrim($sql, ', ');
 			$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.str_replace('_lang', '', $name).'`) ;';
-			$return &= Db::getInstance()->Execute(pSQL($sql));
+			$return &= Db::getInstance()->execute(pSQL($sql));
 		}
 		return $return;
 	}
@@ -346,17 +346,17 @@ class Language extends ObjectModel
 			$this->iso_code = self::getIsoById($this->id);
 
 		// Database translations deletion
-		$result = Db::getInstance()->ExecuteS('SHOW TABLES FROM `'._DB_NAME_.'`');
+		$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 		foreach ($result AS $row)
 			if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]))
-				if (!Db::getInstance()->Execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($this->id)))
+				if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($this->id)))
 					return false;
 
 		// Delete tags
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)($this->id));
 
 		// Delete search words
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)($this->id));
 
 		// Files deletion
 		foreach (self::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
@@ -507,19 +507,19 @@ class Language extends ObjectModel
 	  */
 	public static function getIsoIds($active = true)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang` '.($active ? 'WHERE active = 1' : ''));
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang` '.($active ? 'WHERE active = 1' : ''));
 	}
 
 	public static function copyLanguageData($from, $to)
 	{
-		$result = Db::getInstance()->ExecuteS('SHOW TABLES FROM `'._DB_NAME_.'`');
+		$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 		foreach ($result AS $row)
 			if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]) AND $row['Tables_in_'._DB_NAME_] != _DB_PREFIX_.'lang')
 			{
-				$result2 = Db::getInstance()->ExecuteS('SELECT * FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($from));
+				$result2 = Db::getInstance()->executeS('SELECT * FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($from));
 				if (!sizeof($result2))
 					continue;
-				Db::getInstance()->Execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($to));
+				Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($to));
 				$query = 'INSERT INTO `'.$row['Tables_in_'._DB_NAME_].'` VALUES ';
 				foreach ($result2 AS $row2)
 				{
@@ -530,7 +530,7 @@ class Language extends ObjectModel
 					$query = rtrim($query, ',').'),';
 				}
 				$query = rtrim($query, ',');
-				Db::getInstance()->Execute($query);
+				Db::getInstance()->execute($query);
 			}
 		return true;
 	}
@@ -542,7 +542,7 @@ class Language extends ObjectModel
 	{
 		self::$_LANGUAGES = array();
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_lang`, `name`, `iso_code`, `active`
 		FROM `'._DB_PREFIX_.'lang`');
 
@@ -635,7 +635,7 @@ class Language extends ObjectModel
 		if (self::$_cache_language_installation === null)
 		{
 			self::$_cache_language_installation = array();
-			$result = Db::getInstance()->ExecuteS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang`');
+			$result = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang`');
 			foreach ($result as $row)
 				self::$_cache_language_installation[$row['iso_code']] = $row['id_lang'];
 		}

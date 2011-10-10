@@ -147,7 +147,7 @@ class Newsletter extends Module
 								AND a.`id_country` = '.(int)Tools::getValue('COUNTRY').') >= 1');
 
 
-		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($dbquery->build());
+		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($dbquery->build());
 
 		$header = array('id_customer', 'lastname', 'firstname', 'email', 'ip_address', 'newsletter_date_add');
 		$result = (is_array($rq) ? array_merge(array($header), $rq) : $header);
@@ -156,7 +156,7 @@ class Newsletter extends Module
 
 	private function _getBlockNewsletter()
 	{
-		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT `id`, `email`, `newsletter_date_add`, `ip_registration_newsletter`
 		FROM `'._DB_PREFIX_.'newsletter`
 		WHERE `active` = 1');

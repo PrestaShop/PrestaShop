@@ -81,7 +81,7 @@ class StatsCheckUp extends Module
 		$sql = 'SELECT l.*
 				FROM '._DB_PREFIX_.'lang l'
 				.$this->context->shop->sqlAsso('lang', 'l');
-		$languages = $db->ExecuteS($sql);
+		$languages = $db->executeS($sql);
 
 		$arrayColors = array(
 			0 => '<img src="../modules/'.$this->name.'/red.png" alt="'.$this->l('bad').'" />',
@@ -125,7 +125,7 @@ class StatsCheckUp extends Module
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
 				'.$this->context->shop->sqlAsso('product', 'p').'
 				ORDER BY '.$orderBy;
-		$result = $db->ExecuteS($sql);
+		$result = $db->executeS($sql);
 
 		if (!$result)
 			return $this->l('No product found');
@@ -194,7 +194,7 @@ class StatsCheckUp extends Module
 			$totals['images'] += (int)$scores['images'];
 			$totals['sales'] += (int)$scores['sales'];
 			$totals['stock'] += (int)$scores['stock'];
-			$descriptions = $db->ExecuteS('SELECT l.iso_code, pl.description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang WHERE id_product = '.(int)$row['id_product'].$this->context->shop->sqlLang('pl'));
+			$descriptions = $db->executeS('SELECT l.iso_code, pl.description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang WHERE id_product = '.(int)$row['id_product'].$this->context->shop->sqlLang('pl'));
 			foreach ($descriptions as $description)
 			{
 				$row['desclength_'.$description['iso_code']] = Tools::strlen(strip_tags($description['description']));

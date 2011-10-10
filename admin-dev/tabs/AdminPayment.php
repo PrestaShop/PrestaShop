@@ -43,19 +43,19 @@ class AdminPayment extends AdminTab
 				{
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->country = array();
-					$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
+					$countries = DB::getInstance()->executeS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
 					foreach ($countries as $country)
 						$module->country[] = $country['id_country'];
 						
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->currency = array();
-					$currencies = DB::getInstance()->ExecuteS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
+					$currencies = DB::getInstance()->executeS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
 					foreach ($currencies as $currency)
 						$module->currency[] = $currency['id_currency'];
 						
 					if(!get_class($module) == 'SimpleXMLElement')
 						$module->group = array();
-					$groups = DB::getInstance()->ExecuteS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
+					$groups = DB::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
 					foreach ($groups as $group)
 						$module->group[] = $group['id_group'];
 				}
@@ -84,13 +84,13 @@ class AdminPayment extends AdminTab
 	
 	private function saveRestrictions($type)
 	{
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop = '.Context::getContext()->shop->getID(true));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop = '.Context::getContext()->shop->getID(true));
 		foreach ($this->paymentModules as $module)
 			if ($module->active AND isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)
 					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID(true).', '.(int)$selected.')';
 		if (sizeof($values))
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
 		Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
 	}
 

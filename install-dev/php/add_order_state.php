@@ -42,7 +42,7 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 			$template_lang[$temp[0]] = $temp[1];
 		}
 	
-	Db::getInstance()->Execute('
+	Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'order_state` (`invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`) 
 		VALUES ('.(int)$invoice.', '.(int)$send_email.', \''.pSQL($color).'\', '.(int)$unremovable.', '.(int)$logable.', '.(int)$delivery.')');
 	
@@ -53,7 +53,7 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 	
 	foreach (Language::getLanguages() AS $lang)
 	{
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT IGNORE INTO `'._DB_PREFIX_.'order_state_lang` (`id_lang`, `id_order_state`, `name`, `template`) 
 		VALUES ('.(int)$lang['id_lang'].', '.(int)$id_order_state.', \''.pSQL(isset($name_lang[$lang['iso_code']]) ? $name_lang[$lang['iso_code']] : $name_lang['en']).'\', \''.pSQL(isset($template_lang[$lang['iso_code']]) ? $template_lang[$lang['iso_code']] : (isset($template_lang['en']) ? $template_lang['en'] : '')).'\')
 		');

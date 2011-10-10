@@ -205,7 +205,7 @@ class TSBuyerProtection extends AbsTrustedShops
 			`creation_date` VARCHAR( 25 ) NOT NULL
 			);
 		';
-		Db::getInstance()->Execute($req);
+		Db::getInstance()->execute($req);
 
 		$req = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.TSBuyerProtection::DB_APPLI.'` (
 			`id_application` INT NOT NULL PRIMARY KEY,
@@ -216,7 +216,7 @@ class TSBuyerProtection extends AbsTrustedShops
 			`last_update` DATETIME NOT NULL
 			);
 		';
-		Db::getInstance()->Execute($req);
+		Db::getInstance()->execute($req);
 
 		//add hidden category
 		$category = new Category();
@@ -446,7 +446,7 @@ class TSBuyerProtection extends AbsTrustedShops
 		FROM `'._DB_PREFIX_.TSBuyerProtection::DB_APPLI.'`
 		WHERE `id_order` = "'.(int)$params['shopOrderID'].'"
 		';
-		$order = Db::getInstance()->ExecuteS($sql);
+		$order = Db::getInstance()->executeS($sql);
 
 		// If an order was already added, no need to continue.
 		// Otherwise a new application is created by TrustedShops.
@@ -486,7 +486,7 @@ class TSBuyerProtection extends AbsTrustedShops
 				"'.$date.'"
 				)
 				';
-				Db::getInstance()->Execute($sql);
+				Db::getInstance()->execute($sql);
 
 				// To reset product quantity in database.
 				$sql = '
@@ -494,7 +494,7 @@ class TSBuyerProtection extends AbsTrustedShops
 				FROM `'._DB_PREFIX_.TSBuyerProtection::DB_ITEMS.'`
 				WHERE `ts_product_id` = "'.(int)$params['tsProductID'].'"
 				';
-				$ts_product = Db::getInstance()->ExecuteS($sql);
+				$ts_product = Db::getInstance()->executeS($sql);
 				$product = new Product($ts_product[0]['id_product']);
 				$product->quantity = 1000;
 				$product->update();
@@ -560,7 +560,7 @@ class TSBuyerProtection extends AbsTrustedShops
 		FROM `'.$db_name.'`
 		WHERE `last_update` >= "'.$date.'" OR `statut_number` <= 0
 		';
-		$to_check = Db::getInstance()->ExecuteS($sql);
+		$to_check = Db::getInstance()->executeS($sql);
 		foreach ($to_check as $application)
 		{
 			$code = $this->_getRequestState(array('tsID'=>$application['ts_id'], 'applicationID'=>$application['id_application']));
@@ -578,7 +578,7 @@ class TSBuyerProtection extends AbsTrustedShops
 			SET `statut_number` = "'.$code.'"
 			WHERE `id_application` >= "'.$application['id_application'].'"
 			';
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 			$msg = new Message();
 			$msg->message = $return_message;
 			$msg->id_order = (int)$application['id_order'];
@@ -652,7 +652,7 @@ class TSBuyerProtection extends AbsTrustedShops
 		LEFT JOIN `ps_product` AS p ON ts.`id_product` = p.`id_product`
 		LEFT JOIN `ps_product_lang` AS pl ON ts.`id_product` = pl.`id_product`
 		WHERE ts.`ts_id`="'.$ts_id.'"';
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 
 		foreach ($protection_items as $key=>$item)
 		{
@@ -717,7 +717,7 @@ class TSBuyerProtection extends AbsTrustedShops
 				"'.pSQL($item->protectionDurationInt).'",
 				"'.pSQL($item->tsProductID).'"
 				)';
-				Db::getInstance()->Execute($sql);
+				Db::getInstance()->execute($sql);
 			}
 			else {
 				$this->errors['products'] = $this->l('Product wasn\'t saved.');
@@ -1265,7 +1265,7 @@ class TSBuyerProtection extends AbsTrustedShops
 			AND `currency` = "'.$currency->iso_code.'"
 			ORDER BY `protected_amount_decimal`
 			LIMIT 0,1';
-			$items = Db::getInstance()->ExecuteS($sql);
+			$items = Db::getInstance()->executeS($sql);
 			if (empty($items))
 			{
 				$sql = '
@@ -1276,7 +1276,7 @@ class TSBuyerProtection extends AbsTrustedShops
 				AND `currency` = "'.$currency->iso_code.'"
 				ORDER BY `protected_amount_decimal`
 				LIMIT 0,1';
-				$items = Db::getInstance()->ExecuteS($sql);
+				$items = Db::getInstance()->executeS($sql);
 			}
 
 			TSBuyerProtection::$smarty->assign(array(
@@ -1315,7 +1315,7 @@ class TSBuyerProtection extends AbsTrustedShops
 		AND `ts_id` ="'.TSBuyerProtection::$CERTIFICATE[$lang]['tsID'].'"
 		AND `currency` = "'.$currency->iso_code.'"
 		';
-		$item = Db::getInstance()->ExecuteS($sql);
+		$item = Db::getInstance()->executeS($sql);
 
 		// No items ? means no buyer protection products was bought.
 		if(empty($item))

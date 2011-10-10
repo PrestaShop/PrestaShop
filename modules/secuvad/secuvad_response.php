@@ -53,7 +53,7 @@ if (in_array($secuvad->getRemoteIPaddress(), $secuvad->get_secuvad_ip()))
     	if (!empty($erreur))
     	{
     		$secuvad->secuvad_log('secuvad_response.php '."\n\t".' Error: '.$erreur);					
-    		Db::getInstance()->Execute('
+    		Db::getInstance()->execute('
     		UPDATE `'._DB_PREFIX_.'secuvad_order` 
     		SET `secuvad_status` = 4, `error` = '.pSQL($erreur).' 
 			WHERE `id_secuvad_order` = '.(int)($idtransaction));  
@@ -63,7 +63,7 @@ if (in_array($secuvad->getRemoteIPaddress(), $secuvad->get_secuvad_ip()))
     		$secuvad->secuvad_log('secuvad_response.php '."\n\t".' Response: '.$rep);
     		  
     		if (preg_match('/[0-9]+/Ui', $score))
-    			Db::getInstance()->Execute('
+    			Db::getInstance()->execute('
     			UPDATE `'._DB_PREFIX_.'secuvad_order` 
     			SET `secuvad_status` = 5, `score` =  '.(int)($score).' 
 				WHERE `id_secuvad_order` = '.(int)($idtransaction));
@@ -81,7 +81,7 @@ if (in_array($secuvad->getRemoteIPaddress(), $secuvad->get_secuvad_ip()))
 	    			$secuvad_status	= 2;
 	    		else
 					$secuvad_status	= 4;
-    			Db::getInstance()->Execute('
+    			Db::getInstance()->execute('
     			UPDATE `'._DB_PREFIX_.'secuvad_order` 
     			SET `secuvad_status` = '.(int)($secuvad_status).', `advice` = \''.pSQL($advice).'\' 
 				WHERE `id_secuvad_order` = '.(int)($idtransaction));

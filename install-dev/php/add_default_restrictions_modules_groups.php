@@ -27,10 +27,10 @@
 
 function add_default_restrictions_modules_groups()
 {
-	$groups = Db::getInstance()->ExecuteS('
+	$groups = Db::getInstance()->executeS('
 		SELECT `id_group`
 		FROM `'._DB_PREFIX_.'group`');
-	$modules = Db::getInstance()->ExecuteS('
+	$modules = Db::getInstance()->executeS('
 		SELECT m.*
 		FROM `'._DB_PREFIX_.'module` m');
 	foreach ($groups as $group)
@@ -44,7 +44,7 @@ function add_default_restrictions_modules_groups()
 				$sql .= '("'.(int)$group['id_group'].'", "'.(int)$mod['id_module'].'", "1"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
-			Db::getInstance()->Execute($sql);
+			Db::getInstance()->execute($sql);
 		}
 	}
 }

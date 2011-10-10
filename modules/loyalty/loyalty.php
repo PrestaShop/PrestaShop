@@ -98,7 +98,7 @@ class Loyalty extends Module
 
 	function installDB()
 	{
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'loyalty` (
 			`id_loyalty` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_loyalty_state` INT UNSIGNED NOT NULL DEFAULT 1,
@@ -115,7 +115,7 @@ class Loyalty extends Module
 			INDEX index_loyalty_customer (`id_customer`)
 		) DEFAULT CHARSET=utf8 ;');
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'loyalty_history` (
 			`id_loyalty_history` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_loyalty` INT UNSIGNED DEFAULT NULL,
@@ -127,7 +127,7 @@ class Loyalty extends Module
 			INDEX `index_loyalty_history_loyalty_state` (`id_loyalty_state`)
 		) DEFAULT CHARSET=utf8 ;');
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'loyalty_state` (
 			`id_loyalty_state` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_order_state` INT UNSIGNED DEFAULT NULL,
@@ -135,7 +135,7 @@ class Loyalty extends Module
 			INDEX index_loyalty_state_order_state (`id_order_state`)
 		) DEFAULT CHARSET=utf8 ;');
 
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'loyalty_state_lang` (
 			`id_loyalty_state` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_lang` INT UNSIGNED NOT NULL,
@@ -157,10 +157,10 @@ class Loyalty extends Module
 
 	function uninstallDB()
 	{
-		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'loyalty`;');
-		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'loyalty_state`;');
-		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'loyalty_state_lang`;');
-		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'loyalty_history`;');
+		Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'loyalty`;');
+		Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'loyalty_state`;');
+		Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'loyalty_state_lang`;');
+		Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'loyalty_history`;');
 
 		return true;
 	}

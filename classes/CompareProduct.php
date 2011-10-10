@@ -62,7 +62,7 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function getGuestCompareProducts($id_guest)
 	{
-		$results = Db::getInstance()->ExecuteS('
+		$results = Db::getInstance()->executeS('
 		SELECT DISTINCT `id_product`
 		FROM `'._DB_PREFIX_.'compare_product`
 		WHERE `id_guest` = '.(int)($id_guest));
@@ -84,7 +84,7 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function addGuestCompareProduct($id_guest, $id_product)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `id_customer`, `date_add`, `date_upd`) 
 			VALUES ('.(int)($id_product).', '.(int)($id_guest).', 0, NOW(), NOW())
 		');
@@ -98,7 +98,7 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function removeGuestCompareProduct($id_guest, $id_product)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'compare_product` WHERE `id_guest` = '.(int)($id_guest).' AND `id_product` = '.(int)($id_product));
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'compare_product` WHERE `id_guest` = '.(int)($id_guest).' AND `id_product` = '.(int)($id_product));
 	}
 		
 	
@@ -123,7 +123,7 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function getCustomerCompareProducts($id_customer)
 	{
-		$results = Db::getInstance()->ExecuteS('
+		$results = Db::getInstance()->executeS('
 		SELECT DISTINCT `id_product`
 		FROM `'._DB_PREFIX_.'compare_product`
 		WHERE `id_customer` = '.(int)($id_customer));
@@ -145,7 +145,7 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function addCustomerCompareProduct($id_customer, $id_product)
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `id_customer`, `date_add`, `date_upd`)
 			VALUES ('.(int)($id_product).', 0, '.(int)($id_customer).', NOW(), NOW())');
 	}
@@ -158,7 +158,7 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function removeCustomerCompareProduct($id_customer, $id_product)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'compare_product` WHERE `id_customer` = '.(int)($id_customer).' AND `id_product` = '.(int)($id_product));
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'compare_product` WHERE `id_customer` = '.(int)($id_customer).' AND `id_product` = '.(int)($id_product));
 	}	
 	
 	
@@ -194,7 +194,7 @@ class CompareProductCore extends ObjectModel
 			
 		if ($interval != null)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'compare_product`
 			WHERE date_upd < DATE_SUB(NOW(), INTERVAL '.pSQL($interval).')');
 		}

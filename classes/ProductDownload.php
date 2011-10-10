@@ -236,7 +236,7 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function getAttributeFromIdProduct($id_product)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
 		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');

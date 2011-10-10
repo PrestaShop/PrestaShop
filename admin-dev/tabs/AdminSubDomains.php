@@ -73,7 +73,7 @@ class AdminSubDomains extends AdminTab
 	
 	public function postProcess()
 	{
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 			SELECT `id_subdomain`
 			FROM `'._DB_PREFIX_.'subdomain`
 		');

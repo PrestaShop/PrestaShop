@@ -104,7 +104,7 @@ class TabCore extends ObjectModel
 	 	if (!$context->employee->id_profile)
 	 		return false;
 	 	/* Profile selection */
-	 	$profiles = Db::getInstance()->ExecuteS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile where `id_profile` != 1');
+	 	$profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile where `id_profile` != 1');
 	 	if (!$profiles || empty($profiles))
 	 		return false;
 	 	/* Query definition */
@@ -120,12 +120,12 @@ class TabCore extends ObjectModel
 			$query .= '('.$profile['id_profile'].', '.(int)$id_tab.', '.$rights.', '.$rights.', '.$rights.', '.$rights.'),';
 	 	}
 		$query = trim($query, ', ');
-	 	return Db::getInstance()->Execute($query);
+	 	return Db::getInstance()->execute($query);
 	}
 
 	public function delete()
 	{
-	 	if (Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
+	 	if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
 			return $this->cleanPositions($this->id_parent);
 		return false;
 	}
@@ -178,7 +178,7 @@ class TabCore extends ObjectModel
 		if (!isset(self::$_cache_tabs[$id_lang]))
 		{
 			self::$_cache_tabs[$id_lang] = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'tab` t
 			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
@@ -211,7 +211,7 @@ class TabCore extends ObjectModel
 		if (self::$_getIdFromClassName === null)
 		{
 			self::$_getIdFromClassName = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`');
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`');
 			foreach ($result as $row)
 				self::$_getIdFromClassName[$row['class_name']] = $row['id_tab'];
 		}
@@ -250,7 +250,7 @@ class TabCore extends ObjectModel
 			return false;
 
 		$new_position = ($direction == 'l') ? $this->position - 1 : $this->position + 1;
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'tab` t
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'tab` t
 				SET position = '.(int)$this->position.'
 				WHERE id_parent = '.(int)$this->id_parent.' AND position = '.(int)$new_position);
 		$this->position = $new_position;
@@ -259,14 +259,14 @@ class TabCore extends ObjectModel
 
 	public function cleanPositions($id_parent)
 	{
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT `id_tab`
 		FROM `'._DB_PREFIX_.'tab`
 		WHERE `id_parent` = '.(int)$id_parent.'
 		ORDER BY `position`');
 		$sizeof = count($result);
 		for ($i = 0; $i < $sizeof; ++$i)
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'tab`
 			SET `position` = '.($i + 1).'
 			WHERE `id_tab` = '.(int)$result[$i]['id_tab']);

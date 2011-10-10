@@ -42,7 +42,7 @@ function remove_module_from_hook($module_name, $hook_name)
 
 		if ((int)$id_hook > 0)
 		{
-			$result = Db::getInstance()->Execute('
+			$result = Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_module` = '.(int)$id_module.' AND `id_hook` = '.(int)$id_hook);
 		}

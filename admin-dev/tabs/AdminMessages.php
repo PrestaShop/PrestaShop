@@ -71,7 +71,7 @@ class AdminMessages extends AdminTab
 		is_numeric($_POST['submitFilter'.$this->table]))
 			$start = (int)($_POST['submitFilter'.$this->table] - 1) * $limit;
 
-		$this->_list = Db::getInstance()->ExecuteS('
+		$this->_list = Db::getInstance()->executeS('
 		SELECT SQL_CALC_FOUND_ROWS m.id_message, m.id_cart, m.id_employee, IF(m.id_order > 0, m.id_order, \'--\') id_order, m.message, m.private, m.date_add, CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS customer,
 		c.id_customer, count(m.id_message) nb_messages, (SELECT message FROM '._DB_PREFIX_.'message WHERE id_order = m.id_order ORDER BY date_add DESC LIMIT 1) last_message,
 		(SELECT COUNT(m2.id_message) FROM '._DB_PREFIX_.'message m2 WHERE 1 AND m2.id_customer != 0 AND m2.id_order = m.id_order AND m2.id_message NOT IN 

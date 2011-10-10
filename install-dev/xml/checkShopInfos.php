@@ -149,11 +149,11 @@ if(isFormValid())
 	foreach ($_GET['infosWL'] AS $wl)
 		$sqlLanguages[] = "INSERT INTO `"._DB_PREFIX_."lang` (`id_lang` ,`name` ,`active` ,`iso_code`)VALUES (NULL , '".ToolsInstall::getLangString($wl)."', '1', '".pSQL($wl)."')";
 	foreach($sqlLanguages AS $query)
-		if(!Db::getInstance()->Execute($query))
+		if(!Db::getInstance()->execute($query))
 			$error['infosLanguages'] = '11';
 
 	// Flags copy
-	if(!$languagesId = Db::getInstance()->ExecuteS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang`'))
+	if(!$languagesId = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang`'))
 		$error['infosLanguages'] = '11';
 
 	unset($dbInstance);*/

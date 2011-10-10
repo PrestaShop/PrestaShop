@@ -63,7 +63,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 			SELECT `id_request_sql`
 			FROM `'._DB_PREFIX_.'request_sql`
 		');
@@ -90,7 +90,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 			if ($sql)
 			{
-				$results = Db::getInstance()->ExecuteS($sql[0]['sql']);
+				$results = Db::getInstance()->executeS($sql[0]['sql']);
 				foreach (array_keys($results[0]) as $key)
 				{
 					$tab_key[] = $key;
@@ -145,7 +145,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		$view = array();
 
-		if ($results = Db::getInstance()->ExecuteS($obj->sql))
+		if ($results = Db::getInstance()->executeS($obj->sql))
 		{
 			foreach (array_keys($results[0]) as $key)
 				$tab_key[] = $key;

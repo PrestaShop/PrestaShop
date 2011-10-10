@@ -169,7 +169,7 @@ class TaxCore extends ObjectModel
 		if ($active_only)
 			$sql->where('t.`active` = 1');
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	public static function excludeTaxeOption()

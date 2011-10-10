@@ -111,16 +111,16 @@ class AdminCustomerThreads extends AdminTab
 		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
 		{
 			if (($id_contact = (int)Tools::getValue('id_contact')))
-				Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer_thread SET id_contact = '.(int)$id_contact.' WHERE id_customer_thread = '.(int)$id_customer_thread);
+				Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer_thread SET id_contact = '.(int)$id_contact.' WHERE id_customer_thread = '.(int)$id_customer_thread);
 			if ($id_status = (int)Tools::getValue('setstatus'))
 			{
 				$statusArray = array(1 => 'open', 2 => 'closed', 3 => 'pending1', 4 => 'pending2');
-				Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'customer_thread SET status = "'.$statusArray[$id_status].'" WHERE id_customer_thread = '.(int)$id_customer_thread.' LIMIT 1');
+				Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer_thread SET status = "'.$statusArray[$id_status].'" WHERE id_customer_thread = '.(int)$id_customer_thread.' LIMIT 1');
 			}
 			if (isset($_POST['id_employee_forward']))
 			{
 				// Todo: need to avoid doubles 
-				$messages = Db::getInstance()->ExecuteS('
+				$messages = Db::getInstance()->executeS('
 				SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name, CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
 				FROM '._DB_PREFIX_.'customer_thread ct
 				LEFT JOIN '._DB_PREFIX_.'customer_message cm ON (ct.id_customer_thread = cm.id_customer_thread)
@@ -233,7 +233,7 @@ class AdminCustomerThreads extends AdminTab
 	
 	public function displayListHeader($token = NULL)
 	{
-		$contacts = Db::getInstance()->ExecuteS('
+		$contacts = Db::getInstance()->executeS('
 			SELECT cl.*, COUNT(*) as total, (
 				SELECT id_customer_thread
 				FROM '._DB_PREFIX_.'customer_thread ct2
@@ -245,7 +245,7 @@ class AdminCustomerThreads extends AdminTab
 			LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$this->context->language->id.')
 			WHERE ct.status = "open"
 			GROUP BY ct.id_contact HAVING COUNT(*) > 0');
-		$categories = Db::getInstance()->ExecuteS('
+		$categories = Db::getInstance()->executeS('
 			SELECT cl.*
 			FROM '._DB_PREFIX_.'contact ct
 			LEFT JOIN '._DB_PREFIX_.'contact_lang cl ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)$this->context->language->id.')
@@ -430,7 +430,7 @@ class AdminCustomerThreads extends AdminTab
 			return;
 		$this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $thread->id_contact;
 		
-		$employees = Db::getInstance()->ExecuteS('
+		$employees = Db::getInstance()->executeS('
 		SELECT e.id_employee, e.firstname, e.lastname FROM '._DB_PREFIX_.'employee e
 		WHERE e.active = 1 ORDER BY e.lastname ASC');
 
@@ -465,7 +465,7 @@ class AdminCustomerThreads extends AdminTab
 		</form>
 		<div class="clear">&nbsp;</div>';
 		
-		$messages = Db::getInstance()->ExecuteS('
+		$messages = Db::getInstance()->executeS('
 		SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name, CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
 		FROM '._DB_PREFIX_.'customer_thread ct
 		LEFT JOIN '._DB_PREFIX_.'customer_message cm ON (ct.id_customer_thread = cm.id_customer_thread)

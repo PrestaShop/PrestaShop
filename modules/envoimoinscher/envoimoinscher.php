@@ -87,7 +87,7 @@ class Envoimoinscher extends Module
 		$sql = str_replace(array('PREFIX_', 'ENGINE_TYPE'), array(_DB_PREFIX_, _MYSQL_ENGINE_), $sql);
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach ($sql AS $query)
-			if ($query AND sizeof($query) AND !Db::getInstance()->Execute(trim($query)))
+			if ($query AND sizeof($query) AND !Db::getInstance()->execute(trim($query)))
 				return false;
 		if (substr(_PS_VERSION_, 2, 3) <= 3.1)
 		{
@@ -95,7 +95,7 @@ class Envoimoinscher extends Module
 					$this->_errors[] = $this->l('Please manually copy ') .dirname(__FILE__).'/AdminEnvoiMoinsCher.gif'.' in the '._PS_IMG_DIR_.'/t/AdminEnvoiMoinsCher.gif folder located in your admin directory.';
 		}
 		if (!parent::install() OR  !Configuration::updateValue('EMC_EMAILS', 1) OR !$this->registerHook('AdminOrder') OR !self::adminInstall()
-		OR !Db::getInstance()->Execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'envoimoinscher` (`id_order` int(10) unsigned NOT NULL, `shipping_number` varchar(30) NOT NULL ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=latin1;'))
+		OR !Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'envoimoinscher` (`id_order` int(10) unsigned NOT NULL, `shipping_number` varchar(30) NOT NULL ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=latin1;'))
 			return false;
 		return true; 					
 	}
@@ -118,7 +118,7 @@ class Envoimoinscher extends Module
 	 */
 	public function uninstall()
 	{
-		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'envoimoinscher_contenu`');
+		Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'envoimoinscher_contenu`');
 		
 		$tab = new Tab(Tab::getIdFromClassName('AdminEnvoiMoinsCher'));
 		if (!parent::uninstall() OR !$tab->delete() OR !$this->unregisterHook('AdminOrder'))
@@ -528,7 +528,7 @@ class Envoimoinscher extends Module
 		$order = new Order($params['id_order']);
 		if ($order->id_carrier == Configuration::get('EMC_CARRIER'))
 		{
-			$return = Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'envoimoinscher WHERE id_order = \''.(int)($order->id).'\' LIMIT 1');
+			$return = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'envoimoinscher WHERE id_order = \''.(int)($order->id).'\' LIMIT 1');
 			if (isset($return[0]['shipping_number']))
 			{
 				$html = '<br><br><fieldset style="width: 400px;"><legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('Envoimoinscher').'</legend>';

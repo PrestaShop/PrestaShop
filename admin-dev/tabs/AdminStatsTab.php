@@ -187,7 +187,7 @@ abstract class AdminStatsTab extends AdminPreferences
 					AND m.`active` = 1
 				GROUP BY hm.id_module
 				ORDER BY hm.`position`';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 	
 	public function displayMenu()

@@ -89,7 +89,7 @@ class MetaCore extends ObjectModel
 	
 	public static function getMetas()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM '._DB_PREFIX_.'meta
 		ORDER BY page ASC');
@@ -106,7 +106,7 @@ class MetaCore extends ObjectModel
 				WHERE ml.`id_lang` = '.(int)$id_lang
 					.$shop->sqlLang('ml').
 				'ORDER BY page ASC';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		
 	}
 

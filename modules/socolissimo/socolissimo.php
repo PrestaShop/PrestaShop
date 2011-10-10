@@ -138,7 +138,7 @@ class Socolissimo extends CarrierModule
 				  PRIMARY KEY  (`id_cart`,`id_customer`)
 				) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-		if(!Db::getInstance()->Execute($sql))
+		if(!Db::getInstance()->execute($sql))
 			return false;
 
 		//add carrier in back office
@@ -153,7 +153,7 @@ class Socolissimo extends CarrierModule
 		$so_id = (int)Configuration::get('SOCOLISSIMO_CARRIER_ID');
 
 		if (!parent::uninstall()
-			OR !Db::getInstance()->Execute('DROP TABLE IF EXISTS`'._DB_PREFIX_.'socolissimo_delivery_info`')
+			OR !Db::getInstance()->execute('DROP TABLE IF EXISTS`'._DB_PREFIX_.'socolissimo_delivery_info`')
 		    OR !$this->unregisterHook('extraCarrier')
 		    OR !$this->unregisterHook('payment')
 		    OR !$this->unregisterHook('AdminOrder')
@@ -533,7 +533,7 @@ class Socolissimo extends CarrierModule
 				$groups = Group::getgroups(true);
 				foreach ($groups as $group)
 				{
-					Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'carrier_group VALUE (\''.(int)($carrier->id).'\',\''.(int)($group['id_group']).'\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'carrier_group VALUE (\''.(int)($carrier->id).'\',\''.(int)($group['id_group']).'\')');
 				}
 				$rangePrice = new RangePrice();
 				$rangePrice->id_carrier = $carrier->id;
@@ -550,9 +550,9 @@ class Socolissimo extends CarrierModule
 				$zones = Zone::getZones(true);
 				foreach ($zones as $zone)
 				{
-					Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'carrier_zone VALUE (\''.(int)($carrier->id).'\',\''.(int)($zone['id_zone']).'\')');
-					Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'delivery VALUE (\'\',\''.(int)($carrier->id).'\',\''.(int)($rangePrice->id).'\',NULL,\''.(int)($zone['id_zone']).'\',\'1\')');
-					Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'delivery VALUE (\'\',\''.(int)($carrier->id).'\',NULL,\''.(int)($rangeWeight->id).'\',\''.(int)($zone['id_zone']).'\',\'1\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'carrier_zone VALUE (\''.(int)($carrier->id).'\',\''.(int)($zone['id_zone']).'\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'delivery VALUE (\'\',\''.(int)($carrier->id).'\',\''.(int)($rangePrice->id).'\',NULL,\''.(int)($zone['id_zone']).'\',\'1\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'delivery VALUE (\'\',\''.(int)($carrier->id).'\',NULL,\''.(int)($rangeWeight->id).'\',\''.(int)($zone['id_zone']).'\',\'1\')');
 				}
 				//copy logo
 				if (!copy(dirname(__FILE__).'/socolissimo.jpg',_PS_SHIP_IMG_DIR_.'/'.$carrier->id.'.jpg'))

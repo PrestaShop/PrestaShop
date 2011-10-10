@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,13 +29,13 @@ class WebserviceKeyCore extends ObjectModel
 {
  	/** @var string Key */
 	public 		$key;
-	
+
 	/** @var boolean Webservice Account statuts */
 	public 		$active = true;
-	
+
 	/** @var string Webservice Account description */
 	public 		$description;
-	
+
  	protected 	$fieldsRequired = array('key');
  	protected 	$fieldsSize = array('key' => 32);
  	protected 	$fieldsValidate = array('active' => 'isBool');
@@ -43,56 +43,56 @@ class WebserviceKeyCore extends ObjectModel
 	protected 	$table = 'webservice_account';
 	protected 	$identifier = 'id_webservice_account';
 
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (WebserviceKey::keyExists($this->key))
 			return false;
 		return parent::add($autodate = true, $nullValues = false);
 	}
-	
+
 	static public function keyExists($key)
 	{
-		return (!Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `key` 
-			FROM '._DB_PREFIX_.'webservice_account 
+		return (!Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `key`
+			FROM '._DB_PREFIX_.'webservice_account
 			WHERE `key` = \''.pSQL($key).'\'') ? false : true);
 	}
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
-		
+
 		$fields['key'] = pSQL($this->key);
 		$fields['active'] = (int)($this->active);
 		$fields['description'] = pSQL($this->description);
 		return $fields;
 	}
-	
+
 	public function delete()
 	{
 		if (!parent::delete() OR $this->deleteAssociations() === false)
 			return false;
 		return true;
 	}
-	
+
 	public function deleteAssociations()
 	{
 		if (
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'webservice_permission`
 				WHERE `id_webservice_account` = '.(int)($this->id)) === false
 			||
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'webservice_permission`
 				WHERE `id_webservice_account` = '.(int)($this->id)) === false
 			)
 			return false;
 		return true;
 	}
-	
+
 	public static function getPermissionForAccount($auth_key)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.*
 			FROM `'._DB_PREFIX_.'webservice_permission` p
 			LEFT JOIN `'._DB_PREFIX_.'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
@@ -104,10 +104,10 @@ class WebserviceKeyCore extends ObjectModel
 				$permissions[$row['resource']][] = $row['method'];
 		return $permissions;
 	}
-	
+
 	public static function isKeyActive($auth_key)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT a.active
 			FROM `'._DB_PREFIX_.'webservice_account` a
 			WHERE a.key = \''.pSQL($auth_key).'\'
@@ -119,10 +119,10 @@ class WebserviceKeyCore extends ObjectModel
 			return isset($result[0]['active']) && $result[0]['active'];
 		}
 	}
-	
+
 	public static function getClassFromKey($auth_key)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT a.class_name as class
 			FROM `'._DB_PREFIX_.'webservice_account` a
 			WHERE a.key = \''.pSQL($auth_key).'\'
@@ -134,12 +134,12 @@ class WebserviceKeyCore extends ObjectModel
 			return $result[0]['class'];
 		}
 	}
-	
+
 	public static function setPermissionForAccount($idAccount, $permissionsToSet)
 	{
 		$ok = true;
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'webservice_permission` WHERE `id_webservice_account` = '.(int)($idAccount);
-		if(!Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute($sql))
+		if (!Db::getInstance()->execute($sql))
 			$ok = false;
 		if (isset($permissionsToSet))
 			{
@@ -158,7 +158,7 @@ class WebserviceKeyCore extends ObjectModel
 					foreach ($permissions as $permission)
 						$sql .= '(NULL , \''.pSQL($permission[1]).'\', \''.pSQL($permission[0]).'\', '.(int)($idAccount).'), ';
 					$sql = rtrim($sql, ', ');
-					if(!Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute($sql))
+					if (!Db::getInstance()->execute($sql))
 						$ok = false;
 				}
 			}

@@ -33,7 +33,7 @@ class AdminSearch extends AdminTab
 		if (!ip2long(trim($query)))
 			return;
 
-		$this->_list['customers'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$this->_list['customers'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT c.*
 		FROM `'._DB_PREFIX_.'customer` c
 		LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.id_customer = c.id_customer
@@ -84,7 +84,7 @@ class AdminSearch extends AdminTab
 			{
 				global $_LANGADM;
 				$tabs = array();
-				$result = Db::getInstance()->ExecuteS('SELECT class_name, name FROM '._DB_PREFIX_.'tab t INNER JOIN '._DB_PREFIX_.'tab_lang tl ON t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id);
+				$result = Db::getInstance()->executeS('SELECT class_name, name FROM '._DB_PREFIX_.'tab t INNER JOIN '._DB_PREFIX_.'tab_lang tl ON t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id);
 				foreach ($result as $row)
 					$tabs[$row['class_name']] = $row['name'];
 				foreach (AdminTab::$tabParenting as $key => $value)

@@ -92,7 +92,7 @@ class MRManagement extends MondialRelay
 					$query .= '"'.pSQL($value).'", ';
 			$query = rtrim($query, ', ').')';
 		}
-		Db::getInstance()->Execute($query);
+		Db::getInstance()->execute($query);
 	}
 
 	public function uninstallDetail()
@@ -143,7 +143,7 @@ class MRManagement extends MondialRelay
 			$query = trim($query, ', ').')';
 			
 			$success['deletedListId'] = $this->_params['historyIdList'];
-			$totalDeleted = Db::getInstance()->Execute($query);
+			$totalDeleted = Db::getInstance()->execute($query);
 			if (count($success['deletedListId']) != $totalDeleted)
 			{
 				$error[] = $this->l('Some items can\'t be removed, please try to remove it again');

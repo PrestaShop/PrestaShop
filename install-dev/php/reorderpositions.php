@@ -35,10 +35,10 @@ function reorderpositions()
 	//clean Category position and delete old position system
 	Language::loadLanguages();
 	$language = Language::getLanguages();
-	$cat_parent = Db::getInstance()->ExecuteS('SELECT DISTINCT c.id_parent FROM `'._DB_PREFIX_.'category` c WHERE id_category != 1');
+	$cat_parent = Db::getInstance()->executeS('SELECT DISTINCT c.id_parent FROM `'._DB_PREFIX_.'category` c WHERE id_category != 1');
 	foreach($cat_parent AS $parent)
 	{
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
 							FROM `'._DB_PREFIX_.'category` c 
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)(Configuration::get('PS_LANG_DEFAULT')).')
@@ -46,14 +46,14 @@ function reorderpositions()
 							ORDER BY name ASC');
 		foreach($result AS $i => $categ)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category`
 			SET `position` = '.(int)($i).'
 			WHERE `id_parent` = '.(int)($categ['id_parent']).'
 			AND `id_category` = '.(int)($categ['id_category']));
 		}
 		
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
 							FROM `'._DB_PREFIX_.'category` c 
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
@@ -62,7 +62,7 @@ function reorderpositions()
 		
 		// Remove number from category name
 		foreach($result AS $i => $categ)
-			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'category` c 
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c 
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
 			SET `name` = \''.preg_replace('/^[0-9]+\./', '',$categ['name']).'\' 
 			WHERE c.id_category = '.(int)($categ['id_category']).' AND id_lang = \''.(int)($categ['id_lang']).'\'');

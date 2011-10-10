@@ -86,7 +86,7 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function getFeatures($id_lang)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'feature` f
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)($id_lang).')
@@ -120,10 +120,10 @@ class FeatureCore extends ObjectModel
 	public function delete()
 	{
 	 	/* Also delete related attributes */
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_value_lang` WHERE `id_feature_value` IN (SELECT id_feature_value FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id).')');
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value_lang` WHERE `id_feature_value` IN (SELECT id_feature_value FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id).')');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id));
 		/* Also delete related products */
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature` = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature` = '.(int)($this->id));
 		
 		$return = parent::delete();
 		if($return)
@@ -215,7 +215,7 @@ class FeatureCore extends ObjectModel
 		if (empty($ids))
 			return false;
 			
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT * , COUNT(*) as nb
 		FROM `'._DB_PREFIX_.'feature` f
 		LEFT JOIN `'._DB_PREFIX_.'feature_product` fp ON f.`id_feature` = fp.`id_feature`
@@ -244,7 +244,7 @@ class FeatureCore extends ObjectModel
 	 */
 	public function updatePosition($way, $position)
 	{
-		if (!$res = Db::getInstance()->ExecuteS('
+		if (!$res = Db::getInstance()->executeS('
 			SELECT `position`, `id_feature`
 			FROM `'._DB_PREFIX_.'feature`
 			WHERE `id_feature` = '.(int)Tools::getValue('id_feature', 1).'
@@ -261,14 +261,14 @@ class FeatureCore extends ObjectModel
 
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
-		return (Db::getInstance()->Execute('
+		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'feature`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
 				? '> '.(int)$movedFeature['position'].' AND `position` <= '.(int)$position
 				: '< '.(int)$movedFeature['position'].' AND `position` >= '.(int)$position))
-		AND Db::getInstance()->Execute('
+		AND Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'feature`
 			SET `position` = '.(int)$position.'
 			WHERE `id_feature`='.(int)$movedFeature['id_feature']));
@@ -288,11 +288,11 @@ class FeatureCore extends ObjectModel
 		SELECT `id_feature`
 		FROM `'._DB_PREFIX_.'feature`
 		ORDER BY `position`';
-		$result = Db::getInstance()->ExecuteS($sql);
+		$result = Db::getInstance()->executeS($sql);
 
 		$i = 0;
 		foreach ($result as $value)
-			$return = Db::getInstance()->Execute('
+			$return = Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'feature`
 			SET `position` = '.(int)$i++.'
 			WHERE `id_feature` = '.(int)$value['id_feature']);

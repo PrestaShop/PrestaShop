@@ -161,7 +161,7 @@ class StockMvtCore extends ObjectModel
 				) = 0
 				GROUP BY s.id_product, s.id_shop
 				HAVING qty <> 0';
-		$products_without_attributes = Db::getInstance()->ExecuteS($sql);
+		$products_without_attributes = Db::getInstance()->executeS($sql);
 
 		// Search missing stock movement on products with attributes
 		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
@@ -176,7 +176,7 @@ class StockMvtCore extends ObjectModel
 					) > 0
 				GROUP BY s.id_product_attribute
 				HAVING qty <> 0';
-		$products_with_attributes = Db::getInstance()->ExecuteS($sql);
+		$products_with_attributes = Db::getInstance()->executeS($sql);
 
 		// Add missing stock movements
 		$products = array_merge($products_without_attributes, $products_with_attributes);

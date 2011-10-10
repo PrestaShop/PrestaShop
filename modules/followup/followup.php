@@ -55,7 +55,7 @@ class Followup extends Module
 	
 	public function install()
 	{
-		$logEmailTable = Db::getInstance()->Execute('
+		$logEmailTable = Db::getInstance()->execute('
 		CREATE TABLE '._DB_PREFIX_.'log_email (
 		`id_log_email` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 		`id_email_type` INT UNSIGNED NOT NULL ,
@@ -82,7 +82,7 @@ class Followup extends Module
 			
 		Configuration::deleteByName('PS_FOLLOWUP_SECURE_KEY');
 		
-		Db::getInstance()->Execute('DROP TABLE '._DB_PREFIX_.'log_email');
+		Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'log_email');
 
 		return parent::uninstall();
 	}
@@ -193,7 +193,7 @@ class Followup extends Module
 						<th colspan="3">'.$this->l('Bad cust.').'</th>
 					</tr>';
 					
-			$stats = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$stats = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DATE_FORMAT(l.date_add, \'%Y-%m-%d\') date_stat, l.id_email_type, COUNT(l.id_log_email) nb, 
 			(SELECT COUNT(l2.id_discount) 
 			FROM '._DB_PREFIX_.'log_email l2
@@ -284,7 +284,7 @@ class Followup extends Module
 		if(!empty($emailLogs))
 			$sql .= ' AND c.id_cart NOT IN ('.join(',', $emailLogs).')';
 
-		$emails = Db::getInstance()->ExecuteS($sql);
+		$emails = Db::getInstance()->executeS($sql);
 		
 		if ($count OR !sizeof($emails))
 			return sizeof($emails);
@@ -317,7 +317,7 @@ class Followup extends Module
 			$query = '
 			SELECT id_cart, id_customer, id_email_type FROM '._DB_PREFIX_.'log_email
 			WHERE id_email_type <> 4 OR date_add >= DATE_SUB(date_add,INTERVAL '.(int)(Configuration::get('PS_FOLLOW_UP_DAYS_THRESHOLD_4')).' DAY)';
-			$results = Db::getInstance()->ExecuteS($query);
+			$results = Db::getInstance()->executeS($query);
 			foreach ($results as $line)
 			{
 				switch ($line['id_email_type'])
@@ -355,7 +355,7 @@ class Followup extends Module
 		if(!empty($emailLogs))
 			$sql .= ' NOT IN ('.join(',', $emailLogs).')';
 
-		$emails = Db::getInstance()->ExecuteS($sql);
+		$emails = Db::getInstance()->executeS($sql);
 
 		if ($count OR !sizeof($emails))
 			return sizeof($emails);
@@ -392,7 +392,7 @@ class Followup extends Module
 		GROUP BY o.id_customer
 			HAVING total >= '.(float)(Configuration::get('PS_FOLLOW_UP_THRESHOLD_3'));
 		
-		$emails = Db::getInstance()->ExecuteS($sql);
+		$emails = Db::getInstance()->executeS($sql);
 		
 		if ($count OR !sizeof($emails))
 			return sizeof($emails);
@@ -435,7 +435,7 @@ class Followup extends Module
 
 		$sql .= 'GROUP BY cu.id_customer HAVING nb_orders >= 1';
 
-		$emails = Db::getInstance()->ExecuteS($sql);
+		$emails = Db::getInstance()->executeS($sql);
 
 		if ($count OR !sizeof($emails))
 			return sizeof($emails);
@@ -497,7 +497,7 @@ class Followup extends Module
 		/* Clean-up database by deleting all outdated discounts */
 		if ($conf['PS_FOLLOW_UP_CLEAN_DB'] == 1)
 		{
-			$outdatedDiscounts = Db::getInstance()->ExecuteS('SELECT id_discount FROM '._DB_PREFIX_.'discount WHERE date_to < NOW()');
+			$outdatedDiscounts = Db::getInstance()->executeS('SELECT id_discount FROM '._DB_PREFIX_.'discount WHERE date_to < NOW()');
 			foreach ($outdatedDiscounts AS $outdatedDiscount)
 			{
 				$discount = new Discount((int)($outdatedDiscount['id_discount']));

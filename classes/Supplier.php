@@ -120,7 +120,7 @@ class SupplierCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'supplier_lang` sl ON (s.`id_supplier` = sl.`id_supplier` AND sl.`id_lang` = '.(int)($id_lang).')
 		'.($active ? ' WHERE s.`active` = 1 ' : '');
 		$query .= ' ORDER BY s.`name` ASC'.($p ? ' LIMIT '.(((int)($p) - 1) * (int)($n)).','.(int)($n) : '');
-		$suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		$suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		if ($suppliers === false)
 			return false;
 		if ($getNbProducts)
@@ -146,7 +146,7 @@ class SupplierCore extends ObjectModel
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sqlGroups.'
 					)');
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				$suppliers[$key]['nb_products'] = sizeof($result);
 			}
 		}
@@ -210,7 +210,7 @@ class SupplierCore extends ObjectModel
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sqlGroups.'
 				)';
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			return (int)(sizeof($result));
 		}
 
@@ -239,7 +239,7 @@ class SupplierCore extends ObjectModel
 				ORDER BY '.(($orderBy == 'id_product') ? 'p.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).'
 				LIMIT '.(((int)($p) - 1) * (int)($n)).','.(int)($n);
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!$result)
 			return false;
 		if ($orderBy == 'price')
@@ -249,7 +249,7 @@ class SupplierCore extends ObjectModel
 
 	public function getProductsLite($id_lang)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT p.`id_product`,  pl.`name`
 		FROM `'._DB_PREFIX_.'product` p
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).')

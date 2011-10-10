@@ -100,7 +100,7 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams)
 						  'RDV' => 'Livraison sur Rendez-vous');
 				  
 	$db = Db::getInstance();
-	$db->ExecuteS('SELECT * FROM '._DB_PREFIX_.'socolissimo_delivery_info WHERE id_cart = '.(int)($idCart).' AND id_customer ='.(int)($idCustomer));
+	$db->executeS('SELECT * FROM '._DB_PREFIX_.'socolissimo_delivery_info WHERE id_cart = '.(int)($idCart).' AND id_customer ='.(int)($idCustomer));
 	$numRows = (int)($db->NumRows());
 	if ($numRows == 0)
 	{	
@@ -144,7 +144,7 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams)
 					'.(isset($soParams['CEDOORCODE1']) ? '\''.pSQL($soParams['CEDOORCODE1']).'\'' : '\'\'').',
 					'.(isset($soParams['CEDOORCODE2']) ? '\''.pSQL($soParams['CEDOORCODE2']).'\'' : '\'\'').')';
 
-	if (Db::getInstance()->Execute($sql))	
+	if (Db::getInstance()->execute($sql))	
 		return true;
 	}
 	else

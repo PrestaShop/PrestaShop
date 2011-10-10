@@ -156,7 +156,7 @@ class BlockCategories extends Module
 		if (!$this->isCached('blockcategories.tpl', $smartyCacheId))
 		{
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
-			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.$this->context->shop->sqlLang('cl').')
@@ -229,7 +229,7 @@ class BlockCategories extends Module
 		{
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
 
-			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.$this->context->shop->sqlLang('cl').')

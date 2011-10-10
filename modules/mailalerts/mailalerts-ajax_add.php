@@ -42,7 +42,7 @@ if (!Context::getContext()->customer->isLogged())
 
 	$id_customer = (int)Db::getInstance()->getValue('SELECT id_customer FROM '._DB_PREFIX_.'customer WHERE email=\''.pSQL($customer_email).'\' AND is_guest=0');
 	// Check if already in DB
-	if (Db::getInstance()->ExecuteS('
+	if (Db::getInstance()->executeS('
 	SELECT * 
 	FROM `'._DB_PREFIX_.'mailalert_customer_oos` 
 	WHERE `id_customer` = '.(int)($id_customer).'
@@ -57,7 +57,7 @@ else
 	$customer_email = 0;
 }
 
-if (Db::getInstance()->Execute('
+if (Db::getInstance()->execute('
 	REPLACE INTO `'._DB_PREFIX_.'mailalert_customer_oos` (`id_customer`, `customer_email`, `id_product` , `id_product_attribute`)
 	VALUES ('.(int)($id_customer).', \''.pSQL($customer_email).'\', '.(int)($id_product).', '.(int)($id_product_attribute).')'))
 	die ('1');

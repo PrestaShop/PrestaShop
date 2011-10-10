@@ -278,7 +278,7 @@ class DispatcherCore
 					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.$context->shop->sqlLang('ml').')
 					WHERE id_lang = '.(int)$context->language->id.'
 					ORDER BY LENGTH(ml.url_rewrite) DESC';
-			if ($results = Db::getInstance()->ExecuteS($sql))
+			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
 				{
 					if ($row['url_rewrite'])

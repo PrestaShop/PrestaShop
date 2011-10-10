@@ -65,7 +65,7 @@ class AttachmentCore extends ObjectModel
 	public function delete()
 	{
 		@unlink(_PS_DOWNLOAD_DIR_.$this->file);
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)($this->id));
 		return parent::delete();
 	}
 	
@@ -82,7 +82,7 @@ class AttachmentCore extends ObjectModel
 	
 	public static function getAttachments($id_lang, $id_product, $include = true)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM '._DB_PREFIX_.'attachment a
 		LEFT JOIN '._DB_PREFIX_.'attachment_lang al ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int)($id_lang).')
@@ -91,14 +91,14 @@ class AttachmentCore extends ObjectModel
 	
 	public static function attachToProduct($id_product, $array)
 	{
-		$result1 = Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)($id_product));
+		$result1 = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)($id_product));
 		if (is_array($array))
 		{
 			$ids = array();
 			foreach ($array as $id_attachment)
 				$ids[] = '('.(int)($id_product).','.(int)($id_attachment).')';
-			Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'product SET cache_has_attachments = '.(count($ids) ? '1' : '0').' WHERE id_product = '.(int)($id_product).' LIMIT 1');
-			return ($result1 && Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'product_attachment (id_product, id_attachment) VALUES '.implode(',',$ids)));
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_has_attachments = '.(count($ids) ? '1' : '0').' WHERE id_product = '.(int)($id_product).' LIMIT 1');
+			return ($result1 && Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_attachment (id_product, id_attachment) VALUES '.implode(',',$ids)));
 		}
 		return $result1;
 	}

@@ -335,7 +335,7 @@ class StockManagerCore implements StockManagerInterface
 		if ($price_te != null)
 			$query->where('price_te = '.(float)$price_te);
 
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		return ObjectModel::hydrateCollection('Stock', $results);
 	}

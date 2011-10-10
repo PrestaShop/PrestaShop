@@ -67,7 +67,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 
 		if (!isset(self::$cache_tax_calculator[$postcode]))
 		{
-			$rows = Db::getInstance()->ExecuteS('
+			$rows = Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'tax_rule`
 			WHERE `id_country` = '.(int)$this->address->id_country.'

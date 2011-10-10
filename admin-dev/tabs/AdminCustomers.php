@@ -262,7 +262,7 @@ class AdminCustomers extends AdminTab
 			$customer = new Customer($id_customer);
 			if (!Validate::isLoadedObject($customer))
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			$update = Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
+			$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
 			if (!$update)
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
@@ -273,7 +273,7 @@ class AdminCustomers extends AdminTab
 			$customer = new Customer($id_customer);
 			if (!Validate::isLoadedObject($customer))
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			$update = Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
+			$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)($customer->id));
 			if (!$update)
 				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
@@ -638,7 +638,7 @@ class AdminCustomers extends AdminTab
 						JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
 						WHERE o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
 					)';
-		$interested = Db::getInstance()->ExecuteS($sql);
+		$interested = Db::getInstance()->executeS($sql);
 		if (count($interested))
 		{
 			echo '<div style="float:left;margin-left:20px">

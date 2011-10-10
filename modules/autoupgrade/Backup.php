@@ -214,7 +214,7 @@ class BackupCore
 		fwrite($fp, "\n".'SET NAMES \'utf8\';'."\n\n");
 
 		// Find all tables
-		$tables = Db::getInstance()->ExecuteS('SHOW TABLES');
+		$tables = Db::getInstance()->executeS('SHOW TABLES');
 		$found = 0;
 		foreach ($tables AS $table)
 		{
@@ -225,7 +225,7 @@ class BackupCore
 				continue;
 
 			// Export the table schema
-			$schema = Db::getInstance()->ExecuteS('SHOW CREATE TABLE `' . $table . '`');
+			$schema = Db::getInstance()->executeS('SHOW CREATE TABLE `' . $table . '`');
 
 			if (count($schema) != 1 || !isset($schema[0]['Table']) || !isset($schema[0]['Create Table']))
 			{
@@ -244,7 +244,7 @@ class BackupCore
 
 			if (!in_array($schema[0]['Table'], $ignore_insert_table))
 			{
-				$data = Db::getInstance()->ExecuteS('SELECT * FROM `' . $schema[0]['Table'] . '`', false);
+				$data = Db::getInstance()->executeS('SELECT * FROM `' . $schema[0]['Table'] . '`', false);
 				$sizeof = DB::getInstance()->NumRows();
 				$lines = explode("\n", $schema[0]['Create Table']);
 

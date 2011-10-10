@@ -410,7 +410,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	 */
 	private function _updateTable($params, $expeditionNum, $ticketURL, $trackingURL, $id_mr_selected)
 	{
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'mr_selected`
 			SET `MR_poids` = \''.pSQL($params['Poids']).'\',
 					`exp_number` = \''.pSQL($expeditionNum).'\',

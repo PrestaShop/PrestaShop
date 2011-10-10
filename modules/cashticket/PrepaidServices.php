@@ -149,7 +149,7 @@ abstract class PrepaidServices extends PaymentModule
 	private function _getAllowedCurrencies()
 	{
 		if (empty($this->allowed_currencies))
-			$this->allowed_currencies = DB::getInstance()->ExecuteS(
+			$this->allowed_currencies = DB::getInstance()->executeS(
 				'SELECT c.id_currency, c.iso_code, c.name, c.sign
 				FROM '._DB_PREFIX_.'currency c
 				WHERE c.deleted = 0

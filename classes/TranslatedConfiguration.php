@@ -43,7 +43,7 @@ class TranslatedConfigurationCore extends Configuration
 		// Otherwise configuration is not set as translated configuration.
 		if ($id !== null)
 		{
-			$id_translated = Db::getInstance()->ExecuteS('SELECT `'.$this->identifier.'` FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.$this->identifier.'`='.pSQL($id).' LIMIT 0,1');
+			$id_translated = Db::getInstance()->executeS('SELECT `'.$this->identifier.'` FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.$this->identifier.'`='.pSQL($id).' LIMIT 0,1');
 			if (empty($id_translated))
 				$id = null;
 		}
@@ -90,6 +90,6 @@ class TranslatedConfigurationCore extends Configuration
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '').'
 		';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 }

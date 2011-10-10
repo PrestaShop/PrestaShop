@@ -177,7 +177,7 @@ class ManufacturerCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int)($id_lang).')
 		WHERE mgs.id_group_shop='.(int)$id_group_shop.($active ? ' AND m.`active` = 1' : '');
 		$sql.= ' ORDER BY m.`name` ASC'.($p ? ' LIMIT '.(((int)($p) - 1) * (int)($n)).','.(int)($n) : '');
-		$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if ($manufacturers === false)
 			return false;
 		if ($getNbProducts)
@@ -190,7 +190,7 @@ class ManufacturerCore extends ObjectModel
 			}
 			foreach ($manufacturers as $key => $manufacturer)
 			{
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT p.`id_product`
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 				WHERE m.`id_manufacturer` = '.(int)($manufacturer['id_manufacturer']).
@@ -273,7 +273,7 @@ class ManufacturerCore extends ObjectModel
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sqlGroups.'
 				)';
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			return (int)(sizeof($result));
 		}
 
@@ -303,7 +303,7 @@ class ManufacturerCore extends ObjectModel
 				ORDER BY '.(($orderBy == 'id_product') ? 'p.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!$result)
 			return false;
 		if ($orderBy == 'price')
@@ -317,7 +317,7 @@ class ManufacturerCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->sqlLang('pl').')
 				WHERE p.`id_manufacturer` = '.(int)$this->id;
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 	/*
 	* Specify if a manufacturer already in base
@@ -337,7 +337,7 @@ class ManufacturerCore extends ObjectModel
 
 	public function getAddresses($id_lang)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT a.*, cl.name AS `country`, s.name AS `state`
 		FROM `'._DB_PREFIX_.'address` AS a
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` AS cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)($id_lang).')
@@ -348,7 +348,7 @@ class ManufacturerCore extends ObjectModel
 	
 	public function getWsAddresses()
 	{
-			return Db::getInstance()->ExecuteS('
+			return Db::getInstance()->executeS('
 		SELECT a.id_address as id
 		FROM `'._DB_PREFIX_.'address` AS a
 		WHERE `id_manufacturer` = '.(int)($this->id).'
@@ -360,14 +360,14 @@ class ManufacturerCore extends ObjectModel
 		$ids = array();
 		foreach ($id_addresses as $id)
 			$ids[] = (int)$id['id'];
-		$result1 = (Db::getInstance()->Execute('
+		$result1 = (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'address` 
 			SET id_manufacturer = 0 
 			WHERE id_manufacturer = '.(int)$this->id.' 
 			AND deleted = 0') !== false);
 		$result2 = true;
 		if (count($ids))
-			$result2 = (Db::getInstance()->Execute('
+			$result2 = (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'address` 
 			SET id_customer = 0, id_supplier = 0, id_manufacturer = '.(int)$this->id.' 
 			WHERE id_address IN('.implode(',', $ids).') 

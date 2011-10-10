@@ -111,7 +111,7 @@ class ImageTypeCore extends ObjectModel
 				$where = '';
 
 			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.'ORDER BY `name` ASC';
-			self::$images_types_cache[$type] = Db::getInstance()->ExecuteS($query);
+			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 
 		return self::$images_types_cache[$type];
@@ -128,7 +128,7 @@ class ImageTypeCore extends ObjectModel
 		if (!Validate::isImageTypeName($typeName))
 			die(Tools::displayError());
 			
-		Db::getInstance()->ExecuteS('
+		Db::getInstance()->executeS('
 		SELECT `id_image_type`
 		FROM `'._DB_PREFIX_.'image_type`
 		WHERE `name` = \''.pSQL($typeName).'\'');

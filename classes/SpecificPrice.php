@@ -89,7 +89,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getByProductId($id_product)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE `id_product` = '.(int)$id_product);
@@ -97,7 +97,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getIdsByProductId($id_product)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT `id_specific_price`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE `id_product` = '.(int)$id_product);
@@ -185,7 +185,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function deletePriorities()
 	{
-	    return Db::getInstance()->Execute('
+	    return Db::getInstance()->execute('
 	    TRUNCATE `'._DB_PREFIX_.'specific_price_priority`
 	    ');
 	}
@@ -196,7 +196,7 @@ class SpecificPriceCore extends ObjectModel
 		foreach ($priorities as $priority)
 			$value .= pSQL($priority).';';
 
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'specific_price_priority` (`id_product`, `priority`)
 		VALUES ('.(int)$id_product.',\''.pSQL(rtrim($value, ';')).'\')
 		ON DUPLICATE KEY UPDATE `priority` = \''.pSQL(rtrim($value, ';')).'\'
@@ -209,7 +209,7 @@ class SpecificPriceCore extends ObjectModel
 			return array();
 
 		$now = date('Y-m-d H:i:s');
-		$res =  Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$res =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 			FROM `'._DB_PREFIX_.'specific_price`
@@ -276,7 +276,7 @@ class SpecificPriceCore extends ObjectModel
 		if (!self::isFeatureActive())
 			return array();
 
-		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)$id_shop.') AND
@@ -300,7 +300,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function deleteByProductId($id_product)
 	{
-		if (Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product))
+		if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product))
 		{
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed('specific_price'));

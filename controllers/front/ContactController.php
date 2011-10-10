@@ -77,7 +77,7 @@ class ContactControllerCore extends FrontController
 						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, (int)Tools::getValue('id_order'))
 					)))
 				{
-					$fields = Db::getInstance()->ExecuteS('
+					$fields = Db::getInstance()->executeS('
 					SELECT cm.id_customer_thread, cm.id_contact, cm.id_customer, cm.id_order, cm.id_product, cm.email
 					FROM '._DB_PREFIX_.'customer_thread cm
 					WHERE email = \''.pSQL($from).'\' AND cm.id_shop = '.(int)$this->context->shop->getID(true).' AND ('.
@@ -233,7 +233,7 @@ class ContactControllerCore extends FrontController
 
 			$products = array();
 			$orders = array();
-			$getOrders = Db::getInstance()->ExecuteS('
+			$getOrders = Db::getInstance()->executeS('
 				SELECT id_order
 				FROM '._DB_PREFIX_.'orders
 				WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');

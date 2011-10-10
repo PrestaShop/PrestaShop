@@ -1313,7 +1313,7 @@ class WebserviceRequestCore
 				{
 					$sql = 'DELETE FROM `'._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].'`
 							WHERE '.$this->resourceConfiguration['fields']['id']['sqlId'].' = '.$object->id;
-					Db::getInstance()->Execute($sql);
+					Db::getInstance()->execute($sql);
 				}
 			}
 			if (!empty($arr_avoid_id))
@@ -1499,7 +1499,7 @@ class WebserviceRequestCore
 							$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].'` (id_shop, '.$this->resourceConfiguration['fields']['id']['sqlId'].') VALUES ';
 							foreach (self::$shopIDs as $id)
 								$sql .= '('.$id.','.$object->id.')';
-							Db::getInstance()->Execute($sql);
+							Db::getInstance()->execute($sql);
 						}
 					}
 					else

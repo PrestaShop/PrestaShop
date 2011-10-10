@@ -90,16 +90,16 @@ class Dejala extends CarrierModule
 			if (!isset($this->dejalaConfig->internal_version) || $this->dejalaConfig->internal_version < $this->internal_version)
 			{
 				$this->unregisterHook('cart') ;
-				$res = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'dejala_cart` LIMIT 1') ;
+				$res = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'dejala_cart` LIMIT 1') ;
 				if ($res)
 				{
 					if (!array_key_exists('cart_date_upd', (int)$res[0]))
 					{
-						Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'dejala_cart` ADD COLUMN cart_date_upd DATETIME DEFAULT 0;');
+						Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'dejala_cart` ADD COLUMN cart_date_upd DATETIME DEFAULT 0;');
 					}
 					if (!array_key_exists('delivery_price', (int)$res[0]))
 					{
-						Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'dejala_cart` ADD COLUMN delivery_price FLOAT DEFAULT NULL;');
+						Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'dejala_cart` ADD COLUMN delivery_price FLOAT DEFAULT NULL;');
 					}
 				}
 				$this->dejalaConfig->internal_version = $this->internal_version ;
@@ -125,7 +125,7 @@ class Dejala extends CarrierModule
 	foreach ($sql as $query)
 		if (!empty($query))
 		{
-			if (!Db::getInstance()->Execute(trim($query)))
+			if (!Db::getInstance()->execute(trim($query)))
 			return (false);
 		}
 

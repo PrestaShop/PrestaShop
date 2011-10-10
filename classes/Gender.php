@@ -80,7 +80,7 @@ class GenderCore extends ObjectModel
 		$sql = 'SELECT g.*, gl.*
 				FROM '._DB_PREFIX_.'gender g
 				LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON g.id_gender = gl.id_gender AND gl.id_lang = '.(int)$id_lang;
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		return ObjectModel::hydrateCollection('Gender', $results, $id_lang);
 	}

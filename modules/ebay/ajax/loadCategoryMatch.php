@@ -34,9 +34,9 @@ if (file_exists($configPath))
 		if ($_GET['level'] >= $i)
 		{
 			if ($i == 0)
-				$eBayCategoryListLevel = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `level` = 1 AND `id_category_ref` = `id_category_ref_parent`');
+				$eBayCategoryListLevel = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `level` = 1 AND `id_category_ref` = `id_category_ref_parent`');
 			else
-				$eBayCategoryListLevel = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `level` = '.(int)($i + 1).' AND `id_category_ref_parent` IN (SELECT `id_category_ref` FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_ebay_category` = '.(int)($_GET['level'.$i]).')');
+				$eBayCategoryListLevel = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category` WHERE `level` = '.(int)($i + 1).' AND `id_category_ref_parent` IN (SELECT `id_category_ref` FROM `'._DB_PREFIX_.'ebay_category` WHERE `id_ebay_category` = '.(int)($_GET['level'.$i]).')');
 			if ($eBayCategoryListLevel)
 			{
 				$levelExists[$i + 1] = true;

@@ -190,7 +190,7 @@ class CurrencyCore extends ObjectModel
 				WHERE `deleted` = 0'
 					.($active == 1 ? ' AND c.`active` = 1' : '').'
 				ORDER BY `name` ASC';
-		$tab = Db::getInstance()->ExecuteS($sql);
+		$tab = Db::getInstance()->executeS($sql);
 		if ($object)
 			foreach ($tab as $key => $currency)
 				$tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);
@@ -222,7 +222,7 @@ class CurrencyCore extends ObjectModel
 					AND c.`active` = 1
 					AND mc.id_shop = '.(int)$id_shop.'
 				ORDER BY c.`name` ASC';
-		return Db::getInstance()->ExecuteS($sql);
+		return Db::getInstance()->executeS($sql);
 	}
 
 	static public function checkPaymentCurrencies($id_module, $id_shop = null)
@@ -234,7 +234,7 @@ class CurrencyCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'module_currency`
 				WHERE `id_module` = '.(int)$id_module.'
 					AND `id_shop` = '.(int)$id_shop;
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	public static function getCurrency($id_currency)

@@ -50,7 +50,7 @@ class Pagesnotfound extends Module
 	{
 		if (!parent::install() OR !$this->registerHook('top') OR !$this->registerHook('AdminStatsModules'))
 			return false;
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'pagenotfound` (
 		  id_pagenotfound INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 		  id_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
@@ -65,7 +65,7 @@ class Pagesnotfound extends Module
 
     function uninstall()
     {
-        return (parent::uninstall() AND Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'pagenotfound`'));
+        return (parent::uninstall() AND Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'pagenotfound`'));
     }
 
 	private function getPages()
@@ -75,7 +75,7 @@ class Pagesnotfound extends Module
 				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween()
 					.$this->sqlShopRestriction().
 				'GROUP BY http_referer, request_uri';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$pages = array();
 		foreach ($result as $row)
@@ -96,12 +96,12 @@ class Pagesnotfound extends Module
     {
 		if (Tools::isSubmit('submitTruncatePNF'))
 		{
-			Db::getInstance()->Execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
+			Db::getInstance()->execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
 			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found has been emptied.').'</div>';
 		}
 		elseif (Tools::isSubmit('submitDeletePNF'))
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'pagenotfound`
 				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween());
 			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found have been deleted.').'</div>';
@@ -166,7 +166,7 @@ class Pagesnotfound extends Module
 		{
 			$http_referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 			if (empty($http_referer) OR Validate::isAbsoluteUrl($http_referer))
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_group_shop`) VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.$this->context->shop->getID().', '.$this->context->shop->getGroupID().')');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_group_shop`) VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.$this->context->shop->getID().', '.$this->context->shop->getGroupID().')');
 		}
 	}
 }

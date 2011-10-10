@@ -83,7 +83,7 @@ class FeatureValueCore extends ObjectModel
 	 */
 	public static function getFeatureValues($id_feature)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'feature_value`
 		WHERE `id_feature` = '.(int)$id_feature);
@@ -99,7 +99,7 @@ class FeatureValueCore extends ObjectModel
 	 */
 	public static function getFeatureValuesWithLang($id_lang, $id_feature)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'feature_value` v
 		LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` vl ON (v.`id_feature_value` = vl.`id_feature_value` AND vl.`id_lang` = '.(int)$id_lang.')
@@ -116,7 +116,7 @@ class FeatureValueCore extends ObjectModel
 	 */
 	public static function getFeatureValueLang($id_feature_value)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'feature_value_lang`
 		WHERE `id_feature_value` = '.(int)$id_feature_value.'
@@ -140,7 +140,7 @@ class FeatureValueCore extends ObjectModel
 	
 	public static function addFeatureValueImport($id_feature, $name)
 	{
-		$rq = Db::getInstance()->ExecuteS('
+		$rq = Db::getInstance()->executeS('
 		SELECT fv.`id_feature_value`
 		FROM '._DB_PREFIX_.'feature_value fv
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.`id_feature_value` = fv.`id_feature_value`)
@@ -178,7 +178,7 @@ class FeatureValueCore extends ObjectModel
 	public function delete()
 	{
 		/* Also delete related products */
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature_value` = '.(int)$this->id);
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature_value` = '.(int)$this->id);
 		$return = parent::delete();
 		
 		if ($return)

@@ -102,7 +102,7 @@ class PayPal extends PaymentModule
 		
 
 		/* Set database */
-		if (!Db::getInstance()->Execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_order` (
+		if (!Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_order` (
 		  `id_order` int(10) unsigned NOT NULL,
 		  `id_transaction` varchar(255) NOT NULL,
 		  `payment_method` int(10) unsigned NOT NULL,
@@ -651,7 +651,7 @@ class PayPal extends PaymentModule
 			FROM `'._DB_PREFIX_.'orders` 
 			WHERE `id_cart` = '.(int)$cart->id);
 			
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'paypal_order` (`id_order`, `id_transaction`, `payment_method`, `payment_status`, `capture`) 
 			VALUES ('.(int)$id_order.', \''.pSQL($extraVars['transaction_id']).'\', '.(int)Configuration::get('PAYPAL_PAYMENT_METHOD').', \''.pSQL($extraVars['payment_status']).((isset($extraVars['pending_reason']) AND $extraVars['pending_reason'] == 'authorization') ? '_authorization' : '').'\', '.(int)(Configuration::get('PAYPAL_CAPTURE')).')');
 		}
@@ -1052,7 +1052,7 @@ class PayPal extends PaymentModule
 		if (array_key_exists('ACK', $response) AND $response['ACK'] == 'Success' AND $response['REFUNDTRANSACTIONID'] != '')
 		{
 			$message .= $this->l('PayPal refund successful!');
-			if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `payment_status` = \'Refunded\' WHERE `id_order` = '.(int)($id_order)))
+			if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `payment_status` = \'Refunded\' WHERE `id_order` = '.(int)($id_order)))
 				die(Tools::displayError('Error when updating PayPal database'));
 			$history = new OrderHistory();
 			$history->id_order = (int)($id_order);
@@ -1097,7 +1097,7 @@ class PayPal extends PaymentModule
 		}
 		elseif (isset($response['PAYMENTSTATUS']))
 			$message .= $this->l('Transaction error!');
-		if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `capture` = 0, `payment_status` = \''.pSQL($response['PAYMENTSTATUS']).'\', `id_transaction` = \''.pSQL($response['TRANSACTIONID']).'\' WHERE `id_order` = '.(int)$id_order))
+		if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `capture` = 0, `payment_status` = \''.pSQL($response['PAYMENTSTATUS']).'\', `id_transaction` = \''.pSQL($response['TRANSACTIONID']).'\' WHERE `id_order` = '.(int)$id_order))
 			die(Tools::displayError('Error when updating PayPal database'));
 		$this->_addNewPrivateMessage((int)($id_order), $message);
 
@@ -1147,7 +1147,7 @@ class PayPal extends PaymentModule
 						$history->changeIdOrderState(Configuration::get('PS_OS_ERROR'), (int)($id_order));
 						$history->addWithemail();
 					}
-					if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `payment_status` = \''.pSQL($response['PAYMENTSTATUS']).($response['PENDINGREASON'] == 'authorization' ? '_authorization' : '').'\' WHERE `id_order` = '.(int)$id_order))
+					if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'paypal_order` SET `payment_status` = \''.pSQL($response['PAYMENTSTATUS']).($response['PENDINGREASON'] == 'authorization' ? '_authorization' : '').'\' WHERE `id_order` = '.(int)$id_order))
 						die(Tools::displayError('Error when updating PayPal database'));
 				}
 			}
@@ -1191,14 +1191,14 @@ class PayPal extends PaymentModule
 				}
 			}
 			/* Create Table */
-			if (!Db::getInstance()->Execute('
+			if (!Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_order` (
 			`id_order` int(10) unsigned NOT NULL auto_increment,
 			`id_transaction` varchar(255) NOT NULL,
 			PRIMARY KEY (`id_order`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 				$ok = false;
-			if (!Db::getInstance()->Execute('
+			if (!Db::getInstance()->execute('
 			ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `payment_method` INT NOT NULL,
 			ADD `payment_status` VARCHAR(255) NOT NULL,
 			ADD `capture` INT NOT NULL'))

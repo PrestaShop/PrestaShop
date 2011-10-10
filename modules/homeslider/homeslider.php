@@ -85,7 +85,7 @@ class HomeSlider extends Module
 	protected function createTables()
 	{
 		/* Slides */
-		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
+		$res = Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
 				`id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
@@ -94,7 +94,7 @@ class HomeSlider extends Module
 		');
 
 		/* Slides configuration */
-		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
+		$res &= Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
 			  `id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `position` int(10) unsigned NOT NULL DEFAULT \'0\',
@@ -104,7 +104,7 @@ class HomeSlider extends Module
 		');
 
 		/* Slides lang configuration */
-		$res &= Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
+		$res &= Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
 			  `id_slide` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
@@ -128,7 +128,7 @@ class HomeSlider extends Module
 			$to_del = new HomeSlide($slide['id_slide']);
 			$to_del->delete();
 		}
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('
+		return Db::getInstance()->execute('
 			DROP TABLE `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
 		');
 	}
@@ -629,7 +629,7 @@ class HomeSlider extends Module
 		$idShop = $this->context->shop->getID();
 		$idLang = $this->context->language->id;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT hs.`id_slide` AS id_slide, hssl.`image` as image, hss.`position` AS position, hss.`active` as active, hssl.`title` as title, hssl.`url` as url, hssl.`legend` as legend
 			FROM `'._DB_PREFIX_.'homeslider` hs, `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider_slides_lang` hssl
 			WHERE hs.`id_shop` = '.(int)$idShop.((int)$idShop != 0 ? ' OR hs.`id_shop` = 0' : '').' AND hs.`id_slide` = hss.`id_slide` AND hss.`id_slide` = hssl.`id_slide` AND hs.`id_slide` = hssl.`id_slide`

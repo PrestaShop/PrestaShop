@@ -52,7 +52,7 @@ class blockreinsurance extends Module
 	
 	public function installDB()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance` (
 			`id_contactinfos` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`filename` VARCHAR(100) NOT NULL,
@@ -69,7 +69,7 @@ class blockreinsurance extends Module
 	
 	public function uninstallDB()
 	{
-		return Db::getInstance()->Execute('
+		return Db::getInstance()->execute('
 		DROP TABLE IF EXISTS `'._DB_PREFIX_.'reinsurance`');
 	}
 	
@@ -90,7 +90,7 @@ class blockreinsurance extends Module
 						return false;
 					unlink($tmpName);
 				}
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`,`text`) 
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`,`text`) 
 											VALUES ("'.((isset($filename[0]) AND $filename[0] != '') ? pSQL($filename[0]) : '').
 											'", "'.((isset($_POST['info'.$i.'_text']) AND $_POST['info'.$i.'_text'] != '') ? pSQL($_POST['info'.$i.'_text']) : '').'")');
 			}
@@ -112,12 +112,12 @@ class blockreinsurance extends Module
 		}
 		closedir($dir);
 
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'reinsurance`');
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'reinsurance`');
 	}
 		
 	public function getAllFromDB()
 	{
-		return Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'reinsurance`');
+		return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'reinsurance`');
 	}
 		
 	public function getContent()

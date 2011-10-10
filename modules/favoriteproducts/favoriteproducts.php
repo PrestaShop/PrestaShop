@@ -52,7 +52,7 @@ class FavoriteProducts extends Module
 				OR !$this->registerHook('header'))
 					return false;
 
-			if (!Db::getInstance()->Execute('
+			if (!Db::getInstance()->execute('
 				CREATE TABLE `'._DB_PREFIX_.'favorite_product` (
 				`id_favorite_product` int(10) unsigned NOT NULL auto_increment,
 				`id_product` int(10) unsigned NOT NULL,
@@ -69,7 +69,7 @@ class FavoriteProducts extends Module
 
 	public function uninstall()
 	{
-		if (!parent::uninstall() OR !Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'favorite_product`'))
+		if (!parent::uninstall() OR !Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'favorite_product`'))
 			return false;
 		return true;
 	}
