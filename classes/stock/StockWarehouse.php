@@ -30,6 +30,7 @@
  */
 class StockWarehouseCore extends ObjectModel
 {
+	public $id;
 	public $id_address;
 	public $reference;
 	public $name;
@@ -73,7 +74,7 @@ class StockWarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * For the current warehouse, gets its shops ids list
+	 * For the current warehouse, gets the shops it is associated to
 	 *
 	 * @return array
 	 */
@@ -87,7 +88,7 @@ class StockWarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * For the current warehouse, sets its shop ids list
+	 * For the current warehouse, sets the shops it is associated to
 	 *
 	 * @param array $id_shop_list List of shop ids
 	 */
@@ -97,17 +98,22 @@ class StockWarehouseCore extends ObjectModel
 		foreach ($id_shop_list as $id_shop)
 			$row_to_insert = array($this->reference => $this->id, 'id_shop' => $id_shop);
 
-		Db::getInstance()->ExecuteS('DELETE INTO `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
-		Db::getInstance()->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('DELETE INTO `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
 	}
 
 	/**
 	 * For a given warehouse, checks if it exists
 	 *
-	 * @param $id_warehouse warehouse identifier
+	 * @param int $id_warehouse
+	 * @return bool
 	 */
 	public static function exists($id_warehouse)
 	{
-		return (bool)Db::getInstance()->getValue('SELECT count(*) INTO `warehouse` w WHERE w.id_warehouse = '.(int)$id_warehouse);
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT w.id_warehouse
+			FROM `warehouse` w
+			WHERE w.id_warehouse = '.(int)$id_warehouse.'
+			LIMIT 1');
 	}
 }
