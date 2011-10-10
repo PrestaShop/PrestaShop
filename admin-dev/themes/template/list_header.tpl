@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -42,7 +42,16 @@
 	</script>
 	<script type="text/javascript" src="../js/admin-dnd.js"></script>
 {/if}
-				
+
+<script type="text/javascript">
+	$(function() {
+		$(".datepicker").datepicker({
+			prevText:"",
+			nextText:""
+		});
+	});
+</script>
+
 {if $add_button}
 	<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
 {/if}
@@ -104,7 +113,7 @@
 									{/if}
 								</th>
 							{/foreach}
-				
+
 							{if $shop_link_type}
 								<th style="width: 80px">
 									{if $shop_link_type == 'shop'}
@@ -113,7 +122,7 @@
 										{l s='Group shop'}
 									{/if}
 								</th>
-							{/if}			
+							{/if}
 							{if $has_actions}
 								<th style="width: 52px">{l s='Actions'}</th>
 							{/if}
@@ -124,7 +133,7 @@
 									--
 								{/if}
 							</td>
-				
+
 							{* Filters (input, select, date or bool) *}
 							{foreach $fields_display AS $key => $params}
 								<td {if isset($params.align)} class="{$params.align}" {/if}>
@@ -138,8 +147,8 @@
 												<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
 											</select>
 										{elseif $params.type == 'date' || $params.type == 'datetime'}
-											{l s='From'} <input type="text" class="filter" id="{$name_id}_0" name="{$name}[0]" value="{if isset($value.0)}$value.0{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/><br />
-											{l s='To'} <input type="text" class="filter" id="{$name_id}_1" name="{$name}[1]" value="{if isset($value.1)}$value.1{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/>
+											{l s='From'} <input type="text" class="filter datepicker" id="{$name_id}_0" name="{$name}[0]" value="{if isset($value.0)}$value.0{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/><br />
+											{l s='To'} <input type="text" class="filter datepicker" id="{$name_id}_1" name="{$name}[1]" value="{if isset($value.1)}$value.1{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/>
 										{elseif $params.type == 'select'}
 											{if isset($params.filter_key)}
 												<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
@@ -157,7 +166,7 @@
 									{/if}
 								</td>
 							{/foreach}
-							
+
 							{if $shop_link_type}
 								<td>--</td>
 							{/if}

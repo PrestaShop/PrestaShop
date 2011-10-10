@@ -241,7 +241,7 @@ class HelperListCore extends Helper
 					else
 						$echo = $tr[$key];
 
-					$this->_list[$index][$key] = isset($params['callback']) ? call_user_func_array(array((isset($params['callback_object'])) ? $params['callback_object'] : $this->className, $params['callback']), array($echo, $tr)) : $echo;
+					$this->_list[$index][$key] = isset($params['callback']) ? call_user_func_array(array((isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller, $params['callback']), array($echo, $tr)) : $echo;
 				}
 			}
 		}
@@ -383,7 +383,7 @@ class HelperListCore extends Helper
 						$value = '';
 					$name = $this->table.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
 					$name_id = str_replace('!', '__', $name);
-					$this->includeDatepicker(array($name_id.'_0', $name_id.'_1'));
+					$this->context->controller->addJqueryUI('ui.datepicker');
 					break;
 				case 'select':
 					foreach ($params['select'] AS $option_value => $option_display)
