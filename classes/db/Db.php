@@ -443,11 +443,11 @@ abstract class DbCore
 		{
 			$nrows = $this->_numRows($this->result);
 			if (_PS_CACHE_ENABLED_)
-				Cache::getInstance()->setNumRows(md5($this->last_query), $nrows);
+				Cache::getInstance()->set(md5($this->last_query).'_nrows', $nrows);
 			return $nrows;
 		}
 		else if (_PS_CACHE_ENABLED_ && $this->last_cached)
-			return Cache::getInstance()->getNumRows(md5($this->last_query));
+			return Cache::getInstance()->get(md5($this->last_query).'_nrows');
 	}
 
 	/**
