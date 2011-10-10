@@ -84,7 +84,7 @@ class StockWarehouseCore extends ObjectModel
 		$query->select('ws.id_shop');
 		$query->from('warehouse_shop ws');
 		$query->where($this->identifier.' = '.(int)$this->id);
-		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($query);
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
 	/**
@@ -98,7 +98,7 @@ class StockWarehouseCore extends ObjectModel
 		foreach ($id_shop_list as $id_shop)
 			$row_to_insert = array($this->reference => $this->id, 'id_shop' => $id_shop);
 
-		Db::getInstance()->Execute('DELETE FROM `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
+		Db::getInstance()->execute('DELETE FROM `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
 		Db::getInstance()->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
 	}
 
