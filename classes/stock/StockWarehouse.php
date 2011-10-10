@@ -98,7 +98,7 @@ class StockWarehouseCore extends ObjectModel
 		foreach ($id_shop_list as $id_shop)
 			$row_to_insert = array($this->reference => $this->id, 'id_shop' => $id_shop);
 
-		Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('DELETE INTO `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('DELETE FROM `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
 		Db::getInstance(_PS_USE_SQL_SLAVE_)->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
 	}
 
