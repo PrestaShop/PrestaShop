@@ -202,47 +202,5 @@ class HelperCore
 		return rtrim($html, ' ');
 	}
 
-	public function bindDatepicker($id, $time = false)
-	{
-		if ($time)
-			echo '
-				var dateObj = new Date();
-				var hours = dateObj.getHours();
-				var mins = dateObj.getMinutes();
-				var secs = dateObj.getSeconds();
-				if (hours < 10) { hours = "0" + hours; }
-				if (mins < 10) { mins = "0" + mins; }
-				if (secs < 10) { secs = "0" + secs; }
-				var time = " "+hours+":"+mins+":"+secs;';
-
-		echo '
-		$(function() {
-			$("#'.$id.'").datepicker({
-				prevText:"",
-				nextText:"",
-				dateFormat:"yy-mm-dd"'.($time ? '+time' : '').'});
-		});';
-	}
-
-	// id can be a identifier or an array of identifiers
-	public function includeDatepicker($id, $time = false)
-	{
-		$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
-		if (!$iso)
-			$iso = 'en';
-		// TODO : change in order to use Media::addJqueryUi()
-		echo '
-		<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
-		<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/datepicker/ui/i18n/ui.datepicker-'.$iso.'.js"></script>
-		<script type="text/javascript">';
-
-		if (is_array($id))
-			foreach ($id as $id2)
-				bindDatepicker($id2, $time);
-		else
-			bindDatepicker($id, $time);
-
-		echo '</script>';
-	}
 }
 
