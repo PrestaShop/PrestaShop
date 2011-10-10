@@ -222,6 +222,7 @@ class AdminControllerCore extends Controller
 	{
 		if ($disable)
 			return true;
+
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 
 		if ($this->tabAccess['view'] === '1')
@@ -1050,14 +1051,24 @@ class AdminControllerCore extends Controller
 			Tools::redirectAdmin($url['path'].'?'.http_build_query($parseQuery));
 		}
 
-		$shopID = '';
+		$shop_id = '';
 		if ($this->context->cookie->shopContext)
 		{
 			$split = explode('-', $this->context->cookie->shopContext);
 			if (count($split) == 2 && $split[0] == 's')
-				$shopID = (int)$split[1];
+				$shop_id = (int)$split[1];
 		}
-		$this->context->shop = new Shop($shopID);
+		else if ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
+			$shop_id = '';
+		else if ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
+		{
+			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
+			$shop_id = (int)$shops[0];
+		}
+		else
+			Employee::getEmployeeShopAccess((int)$this->context->employee->id);
+
+		$this->context->shop = new Shop($shop_id);
 
 		/* Filter memorization */
 		if (isset($_POST) && !empty($_POST) && isset($this->table))

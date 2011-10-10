@@ -898,7 +898,8 @@ abstract class AdminTabCore
 		if (!Shop::isMultiShopActivated())
 			return ;
 
-		$assos = self::getAssoShop($this->table, $id_object);
+		if(!$assos = self::getAssoShop($this->table, $id_object))
+			return;
 
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$assos[1].($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 		foreach ($assos[0] as $asso)
@@ -915,7 +916,7 @@ abstract class AdminTabCore
 		else if (isset($groupShopAsso[$table]) && $groupShopAsso[$table]['type'] == 'group_shop')
 			$type = 'group_shop';
 		else
-			return ;
+			return;
 
 		$assos = array();
 		foreach ($_POST as $k => $row)

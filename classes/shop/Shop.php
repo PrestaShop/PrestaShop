@@ -440,6 +440,7 @@ class ShopCore extends ObjectModel
 	public static function getShops($active = true, $id_group_shop = null, $get_as_list_id = false)
 	{
 		Shop::cacheShops();
+
 		$results = array();
 		foreach (self::$shops as $group_id => $group_data)
 			foreach ($group_data['shops'] as $id => $shop_data)
@@ -495,9 +496,26 @@ class ShopCore extends ObjectModel
 	/**
 	 * @return int Total of shops
 	 */
+	public static function getTotalShopsWhoExists()
+	{
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop`');
+	}
+
+	/**
+	 * @return int Total of shops
+	 */
 	public static function getTotalShopsByIdGroupShop($id)
 	{
-		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop WHERE id_group_shop = %d', (int)$id));
+		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = %d', (int)$id));
+	}
+
+	public static function getIdShopsByIdGroupShop($id)
+	{
+		$result = Db::getInstance()->executeS(sprintf('SELECT `id_shop`, `id_group_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = %d', (int)$id));
+		$data = array();
+		foreach ($result as $group_data)
+			$data[] = (int)$group_data['id_shop'];
+		return $data;
 	}
 
 	/**
@@ -761,5 +779,15 @@ class ShopCore extends ObjectModel
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
 			}*/
 		}
+	}
+
+	public function checkIfShopExist($id)
+	{
+		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop` WHERE `id_shop` = %d', (int)$id));
+	}
+
+	public function checkIfGroupShopExist($id)
+	{
+		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'group_shop` WHERE `id_group_shop` = %d', (int)$id));
 	}
 }
