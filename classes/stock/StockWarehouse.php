@@ -69,7 +69,7 @@ class StockWarehouseCore extends ObjectModel
 		$fields['reference'] = $this->reference;
 		$fields['name'] = pSQL($this->name);
 		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['stock_management'] = $this->$stock_management;
+		$fields['stock_management'] = $this->stock_management;
 		return $fields;
 	}
 
