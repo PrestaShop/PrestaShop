@@ -415,12 +415,14 @@ class StockManagerCore implements StockManagerInterface
 		$query->leftjoin('orders o ON o.id_order = od.id_order');
 		$query->where('od.product_id = '.(int)$id_product.' AND od.product_attribute_id = '.(int)$id_product_attribute);
 		$query->where('o.delivery_number = 0');
+		$query->where('o.valid = 1');
 		$clients_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets {physical OR usable}_qty
 		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouses_id, $usable);
 
 		// Returns real_qty = qty - clients_orders_qty
+		// @TODO include suplliers orders in the calcul when they will be implemented
 		return ($qty - $clients_orders_qty);
 	}
 
