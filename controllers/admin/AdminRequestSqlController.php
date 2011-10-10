@@ -68,10 +68,6 @@ class AdminRequestSqlControllerCore extends AdminController
 			FROM `'._DB_PREFIX_.'request_sql`
 		');
 
-		if (count($result) === 1)
-			foreach ($result as $row)
-				$this->_listSkipDelete = array($row['id_request_sql']);
-
 		if (!count($this->_errors))
 			parent::postProcess();
 	}
