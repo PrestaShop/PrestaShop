@@ -585,43 +585,6 @@ class ShopCore extends ObjectModel
 		else if ($type == 'group')
 			return $shop_group_id;
 		return array($shop_id, $shop_group_id);
-
-		if (!$executed)
-		{
-			$context = Context::getContext();
-			if (defined('_PS_ADMIN_DIR_'))
-			{
-				// While cookie is not instancied in admin, we wait ...
-				if (!isset($context->cookie))
-					return ($type == 'shop' || $type == 'group') ? '' : array('', '');
-
-				// Parse shopContext cookie value (E.g. s-2, g-4)
-				$split = explode('-', $context->cookie->shopContext);
-				if (count($split) == 2)
-				{
-					if ($split[0] == 's')
-						$shop_id = (int)$split[1];
-					else if ($split[0] == 'g')
-						$shop_group_id = (int)$split[1];
-
-					if ($shop_id && !$shop_group_id)
-						$shop_group_id = Shop::getGroupFromShop($shop_id);
-				}
-			}
-			else
-			{
-
-				$shop_id = (int)$context->shop->getID();
-				$shop_group_id = (int)$context->shop->id_group_shop;
-			}
-			$executed = true;
-		}
-
-		if ($type == 'shop')
-			return $shop_id;
-		else if ($type == 'group')
-			return $shop_group_id;
-		return array($shop_id, $shop_group_id);
 	}
 
 	/**
