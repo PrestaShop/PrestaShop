@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,14 +36,14 @@
 			{/if}
 		</td>
 		{foreach $fields_display AS $key => $params}
-			<td 
-				{if isset($params.position)} 
+			<td
+				{if isset($params.position)}
 					id="td_{if $id_category}$id_category{else}0{/if}_{$tr.$identifier}"
 				{/if}
 				class="{if !$no_link}pointer{/if}
 					   {if isset($params.position) && $order_by == 'position'} dragHandle{/if}
 					   {if isset($params.align)} {$params.align}{/if}"
-				
+
 			{if (!isset($params.position) && !$no_link)}
 				onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">{if isset($params.prefix)}$params.prefix{/if}
 			{else}
@@ -68,8 +68,8 @@
 				{/if}
 			{elseif isset($params.image)}
 				{$tr.$key}
-			{*{elseif (isset($params.icon) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))}
-				<img src="../img/admin/{$tr.$key.icon_path}" alt="$tr.$key" title="$tr.$key" />*}
+			{elseif (isset($params.icon))}
+				<img src="../img/admin/{$tr[$key]}" alt="{$tr[$key]}" title="{$tr[$key]}" />
             {elseif isset($params.price)}
 				{$tr.$key}
 			{elseif isset($params.float)}
