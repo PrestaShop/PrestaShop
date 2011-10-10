@@ -27,148 +27,145 @@
 
 class CacheMemcacheCore extends Cache
 {
-	protected $_memcacheObj;
-	protected $_isConnected = false;
+	/**
+	 * @var Memcache
+	 */
+	protected $memcache;
 
-	protected function __construct()
+	/**
+	 * @var bool Connection status
+	 */
+	protected $is_connected = false;
+
+	public function __construct()
 	{
-		parent::__construct();
 		$this->connect();
+		$this->keys = $this->memcache->get(self::KEYS_NAME);
 	}
 
+	public function __destruct()
+	{
+		$this->close();
+	}
+
+	/**
+	 * Connect to memcache server
+	 */
 	public function connect()
 	{
-		$this->_memcacheObj = new Memcache();
+		$this->memcache = new Memcache();
 		$servers = self::getMemcachedServers();
 		if (!$servers)
 			return false;
 		foreach ($servers AS $server)
-			$this->_memcacheObj->addServer($server['ip'], $server['port'], $server['weight']);
+			$this->memcache->addServer($server['ip'], $server['port'], $server['weight']);
 
-		$this->_isConnected = true;
-		return $this->_setKeys();
+		$this->is_connected = true;
 	}
 
-	public function set($key, $value, $expire = 0)
+	/**
+	 * @see Cache::_set()
+	 */
+	protected function _set($key, $value, $ttl = 0)
 	{
-		if (!$this->_isConnected)
+		if (!$this->is_connected)
 			return false;
-		if ($this->_memcacheObj->set($key, $value, 0, $expire))
-		{
-			$this->_keysCached[$key] = true;
-			return $key;
-		}
+		return $this->memcache->set($key, $value, 0, $ttl);
 	}
 
-	public function setNumRows($key, $value, $expire = 0)
+	/**
+	 * @see Cache::_get()
+	 */
+	protected function _get($key)
 	{
-		return $this->set($key.'_nrows', $value, $expire);
-	}
-
-	public function getNumRows($key)
-	{
-		return $this->get($key.'_nrows');
-	}
-
-	public function get($key)
-	{
-		if (!isset($this->_keysCached[$key]))
+		if (!$this->is_connected)
 			return false;
-		return $this->_memcacheObj->get($key);
+		return $this->memcache->get($key);
 	}
 
-	protected function _setKeys()
+	/**
+	 * @see Cache::_exists()
+	 */
+	protected function _exists($key)
 	{
-		if (!$this->_isConnected)
+		if (!$this->is_connected)
 			return false;
-		$this->_keysCached = $this->_memcacheObj->get('keysCached');
-		$this->_tablesCached = $this->_memcacheObj->get('tablesCached');
-
-		return true;
+		return isset($this->keys[$key]);
 	}
 
-	public function setQuery($query, $result)
+	/**
+	 * @see Cache::_delete()
+	 */
+	protected function _delete($key)
 	{
-		if (!$this->_isConnected)
+		if (!$this->is_connected)
 			return false;
-		if ($this->isBlacklist($query))
-			return true;
-		$md5_query = md5($query);
-		$this->_setKeys();
-		if (isset($this->_keysCached[$md5_query]))
-			return true;
-		$key = $this->set($md5_query, $result);
-		if(preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
-			foreach($res[1] AS $table)
-				if(!isset($this->_tablesCached[$table][$key]))
-					$this->_tablesCached[$table][$key] = true;
-		$this->_writeKeys();
+		return $this->memcache->delete($key);
 	}
 
-	public function delete($key, $timeout = 0)
+	/**
+	 * @see Cache::_writeKeys()
+	 */
+	protected function _writeKeys()
 	{
-		if (!$this->_isConnected)
+		if (!$this->is_connected)
 			return false;
-		if (!empty($key) AND $this->_memcacheObj->delete($key, $timeout))
-			unset($this->_keysCached[$key]);
+		$this->memcache->set(self::KEYS_NAME, $this->keys, 0, 0);
 	}
 
-	public function deleteQuery($query)
-	{
-		if (!$this->_isConnected)
-			return false;
-		$this->_setKeys();
-		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
-			foreach ($res[1] AS $table)
-				if (isset($this->_tablesCached[$table]))
-				{
-					foreach ($this->_tablesCached[$table] AS $memcachedKey => $foo)
-					{
-						$this->delete($memcachedKey);
-						$this->delete($memcachedKey.'_nrows');
-					}
-					unset($this->_tablesCached[$table]);
-				}
-		$this->_writeKeys();
-	}
-
-	protected function close()
-	{
-		if (!$this->_isConnected)
-			return false;
-		return $this->_memcacheObj->close();
-	}
-
+	/**
+	 * @see Cache::flush()
+	 */
 	public function flush()
 	{
-		if(!$this->_isConnected)
+		if(!$this->is_connected)
 			return false;
-		if ($this->_memcacheObj->flush())
+		if ($this->memcache->flush())
 			return $this->_setKeys();
 		return false;
 	}
 
-	private function _writeKeys()
+	/**
+	 * Close connection to memcache server
+	 *
+	 * @return bool
+	 */
+	protected function close()
 	{
-		if (!$this->_isConnected)
+		if (!$this->is_connected)
 			return false;
-		$this->_memcacheObj->set('keysCached', $this->_keysCached, 0, 0);
-		$this->_memcacheObj->set('tablesCached', $this->_tablesCached, 0, 0);
-		$this->close();
+		return $this->memcache->close();
 	}
 
+	/**
+	 * Add a memcache server
+	 *
+	 * @param string $ip
+	 * @param int $port
+	 * @param int $weight
+	 */
 	public static function addServer($ip, $port, $weight)
 	{
-		return Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (ip, port, weight) VALUES(\''.pSQL($ip).'\', '.(int)$port.', '.(int)$weight.')', false);
+		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (ip, port, weight) VALUES(\''.pSQL($ip).'\', '.(int)$port.', '.(int)$weight.')', false);
 	}
 
+	/**
+	 * Get list of memcached servers
+	 *
+	 * @return array
+	 */
 	public static function getMemcachedServers()
 	{
-			return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM '._DB_PREFIX_.'memcached_servers', true, false);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'memcached_servers', true, false);
 	}
 
+	/**
+	 * Delete a memcache server
+	 *
+	 * @param int $id_server
+	 */
 	public static function deleteServer($id_server)
 	{
-		return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'memcached_servers WHERE id_memcached_server='.(int)$id_server);
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'memcached_servers WHERE id_memcached_server='.(int)$id_server);
 	}
 }

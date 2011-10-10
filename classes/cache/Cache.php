@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,54 +27,277 @@
 
 abstract class CacheCore
 {
-	/** @var Cache */
-	protected static $_instance;
-	protected $_keysCached = array();
-	protected $_tablesCached = array();
-	protected $_blackList = array('cart',
-												'cart_discount',
-												'cart_product',
-												'connections',
-												'connections_source',
-												'connections_page',
-												'customer',
-												'customer_group',
-												'customized_data',
-												'guest',
-												'pagenotfound',
-												'page_viewed');
-	
+	/**
+	 * Name of keys index
+	 */
+	const KEYS_NAME = '__keys__';
+
+	/**
+	 * Name of SQL cache index
+	 */
+	const SQL_TABLES_NAME = 'tablesCached';
+
+	/**
+	 * @var Cache
+	 */
+	protected static $instance;
+
+	/**
+	 * @var array List all keys of cached data and their associated ttl
+	 */
+	protected $keys = array();
+
+	/**
+	 * @var array Store list of tables and their associated keys for SQL cache (warning: this var must not be initialized here !)
+	 */
+	protected $sql_tables_cached;
+
+	/**
+	 * @var array List of blacklisted tables for SQL cache, these tables won't be indexed
+	 */
+	protected $blacklist = array(
+		'cart',
+		'cart_discount',
+		'cart_product',
+		'connections',
+		'connections_source',
+		'connections_page',
+		'customer',
+		'customer_group',
+		'customized_data',
+		'guest',
+		'pagenotfound',
+		'page_viewed',
+	);
+
+	/**
+	 * Cache a data
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param int $ttl
+	 * @return bool
+	 */
+	abstract protected function _set($key, $value, $ttl = 0);
+
+	/**
+	 * Retrieve a cached data by key
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	abstract protected function _get($key);
+
+	/**
+	 * Check if a data is cached by key
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	abstract protected function _exists($key);
+
+	/**
+	 * Delete a data from the cache by key
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	abstract protected function _delete($key);
+
+	/**
+	 * Write keys index
+	 */
+	abstract protected function _writeKeys();
+
+	/**
+	 * Clean all cached data
+	 */
+	abstract public function flush();
+
 	/**
 	 * @return Cache
 	 */
 	public static function getInstance()
-	{	
-		if(!isset(self::$_instance))
-		{
-			$caching_system =  _PS_CACHING_SYSTEM_;
-			self::$_instance = new $caching_system();
-			
-		}
-		return self::$_instance;
-	}
-	
-	protected function __construct()
 	{
+		if (!self::$instance)
+		{
+			$caching_system = _PS_CACHING_SYSTEM_;
+			self::$instance = new $caching_system();
+
+		}
+		return self::$instance;
 	}
-	
+
+	/**
+	 * Store a data in cache
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param int $ttl
+	 * @return bool
+	 */
+	public function set($key, $value, $ttl = 0)
+	{
+		if ($this->_set($key, $value))
+		{
+			if ($ttl < 0)
+				$ttl = 0;
+
+			$this->keys[$key] = ($ttl == 0) ? 0 : time() + $ttl;
+			$this->_writeKeys();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Retrieve a data from cache
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		if (!isset($this->keys[$key]))
+			return false;
+
+		if ($this->keys[$key] > 0 && $this->keys[$key] < time())
+		{
+			$this->delete($key);
+			return false;
+		}
+
+		return $this->_get($key);
+	}
+
+	/**
+	 * Check if a data is cached
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function exists($key)
+	{
+		if (!isset($this->keys[$key]))
+			return false;
+
+		if ($this->keys[$key] > 0 && $this->keys[$key] < time())
+		{
+			$this->delete($key);
+			return false;
+		}
+
+		return $this->_exists($key);
+	}
+
+	/**
+	 * Delete one or several data from cache (* joker can be used)
+	 * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+	 *
+	 * @param string $key
+	 * @return array List of deleted keys
+	 */
+	public function delete($key)
+	{
+		$keys = array();
+		if ($key == '*')
+			$keys = $this->keys;
+		else if (strpos($key, '*') === false)
+			$keys = array($key);
+		else
+		{
+			$pattern = str_replace('\\*', '.*', preg_quote($key));
+			foreach ($this->keys as $k => $ttl)
+				if (preg_match('#^'.$pattern.'$#', $k))
+					$keys[] = $k;
+
+		}
+
+		d($keys);
+
+		if (!isset($this->keys[$key]))
+			return false;
+
+		if ($this->_delete($key))
+		{
+			unset($this->keys[$key]);
+			$this->_writeKeys();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Store a query in cache
+	 *
+	 * @param string $query
+	 * @param array $result
+	 */
+	public function setQuery($query, $result)
+	{
+		if ($this->isBlacklist($query))
+			return true;
+
+		if (is_null($this->sql_tables_cached))
+		{
+			$this->sql_tables_cached = $this->get(self::SQL_TABLES_NAME);
+			if (!is_array($this->sql_tables_cached))
+				$this->sql_tables_cached = array();
+		}
+
+		// Store query results in cache if this query is not already cached
+		$key = md5($query);
+		if ($this->exists($key))
+			return true;
+		$this->set($key, $result);
+
+		// Get all table from the query and save them in cache
+		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
+			foreach($res[1] as $table)
+				if (!isset($this->sql_tables_cached[$table][$key]))
+					$this->sql_tables_cached[$table][$key] = true;
+		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
+	}
+
+	/**
+	 * Delete a query from cache
+	 *
+	 * @param string $query
+	 */
+	public function deleteQuery($query)
+	{
+		if (is_null($this->sql_tables_cached))
+		{
+			$this->sql_tables_cached = $this->get(self::SQL_TABLES_NAME);
+			if (!is_array($this->sql_tables_cached))
+				$this->sql_tables_cached = array();
+		}
+
+		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
+			foreach ($res[1] as $table)
+				if (isset($this->sql_tables_cached[$table]))
+				{
+					foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key)
+					{
+						$this->delete($fs_key);
+						$this->delete($fs_key.'_nrows');
+					}
+					unset($this->sql_tables_cached[$table]);
+				}
+		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
+	}
+
+	/**
+	 * Check if a query contain blacklisted tables
+	 *
+	 * @param string $query
+	 * @return bool
+	 */
 	protected function isBlacklist($query)
 	{
-		foreach ($this->_blackList AS $find)
+		foreach ($this->blacklist as $find)
 			if (strpos($query, $find))
 				return true;
 		return false;
 	}
-
-	abstract public function get($key);
-	abstract public function delete($key, $timeout = 0);
-	abstract public function set($key, $value, $expire = 0);
-	abstract public function flush();
-	abstract public function setQuery($query, $result);
-	abstract public function deleteQuery($query);
-	
 }
