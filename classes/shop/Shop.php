@@ -379,8 +379,8 @@ class ShopCore extends ObjectModel
 
 		$employee = Context::getContext()->employee;
 
-		/* if the profile isn't a superAdmin */
-		if ($employee && $employee->id_profile != _PS_ADMIN_PROFILE_)
+		// If the profile isn't a superAdmin
+		if (Validate::isLoadedObject($employee) && $employee->id_profile != _PS_ADMIN_PROFILE_)
 		{
 			$select .= ', es.id_employee';
 			$from .= 'LEFT JOIN '._DB_PREFIX_.'employee_shop es ON es.id_shop = s.id_shop';
