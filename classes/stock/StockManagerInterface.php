@@ -62,21 +62,22 @@ interface StockManagerInterface
 	 * @param Warehouse $warehouse
 	 * @param int $quantity
 	 * @param int $id_stock_mouvement_reason
+	 * @param bool $is_usable
 	 * @param int $id_order Optionnal
 	 * @return bool
 	 */
-	public function removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mouvement_reason, $id_order = null);
+	public function removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mouvement_reason, $is_usable, $id_order = null);
 
 	/**
 	 * For a given product, returns its physical quantity
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
-	 * @param Warehouse $warehouse Optional
+	 * @param array $warehouses_id Optional
 	 * @param bool $usable false default - in this case we retrieve all physical quantities, otherwise we retrieve physical quantities flagged as usable
 	 * @return int
 	 */
-	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouse = null, $usable = false);
+	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouses_id = null, $usable = false);
 
 	/**
 	 * For a given product, returns its real quantity
@@ -86,10 +87,10 @@ interface StockManagerInterface
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param bool $usable false by default
-	 * @param Warehouse $warehouse Optional
+	 * @param array $warehouses_id Optional
 	 * @return int
 	 */
-	public function getProductRealQuantities($id_product, $id_product_attribute, $warehouse = null, $usable = false);
+	public function getProductRealQuantities($id_product, $id_product_attribute, $warehouses_id = null, $usable = false);
 
 	/**
 	 * For a given product, transfers quantities between two warehouses
