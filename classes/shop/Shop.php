@@ -388,14 +388,14 @@ class ShopCore extends ObjectModel
 		}
 
 		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri'.$select.'
-				FROM '._DB_PREFIX_.'group_shop gs 
-				LEFT JOIN '._DB_PREFIX_.'shop s 
-					ON s.id_group_shop = gs.id_group_shop 
-				LEFT JOIN '._DB_PREFIX_.'shop_url su 
-					ON s.id_shop = su.id_shop AND su.main = 1 
-				'.$from.' 
-				WHERE s.deleted = 0 
-					AND gs.deleted = 0 
+				FROM '._DB_PREFIX_.'group_shop gs
+				LEFT JOIN '._DB_PREFIX_.'shop s
+					ON s.id_group_shop = gs.id_group_shop
+				LEFT JOIN '._DB_PREFIX_.'shop_url su
+					ON s.id_shop = su.id_shop AND su.main = 1
+				'.$from.'
+				WHERE s.deleted = 0
+					AND gs.deleted = 0
 					'.$where.'
 				ORDER BY gs.name, s.name';
 
