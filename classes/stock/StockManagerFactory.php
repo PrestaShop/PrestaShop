@@ -60,12 +60,12 @@ class StockManagerFactoryCore
 	 */
 	public static function execHookStockManagerFactory()
 	{
-		$module_infos = Hook::getModulesHookFrom(Hook::getIdByName('stockManager'));
+		$modules_infos = Hook::getModulesFromHook(Hook::getIdByName('stockManager'));
 		$stock_manager = false;
 
 		foreach ($modules_infos as $module_infos)
 		{
-			$module_instance = Module::getInstanceByName($modules_infos['name']);
+			$module_instance = Module::getInstanceByName($module_infos['name']);
 
 			if (is_callable(array($module_instance, 'hookStockManager')))
 				$stock_manager = $module_instance->hookStockManager();
