@@ -31,7 +31,8 @@ class AdminControllerCore extends Controller
 
 	public static $currentIndex;
 	public $content;
-	public $warnings;
+	public $warnings = array();
+	public $informations = array();
 
 	public $content_only = false;
 	public $layout = 'layout.tpl';
@@ -715,6 +716,7 @@ class AdminControllerCore extends Controller
 
 			$this->context->smarty->assign('errors', $this->_errors);
 			$this->context->smarty->assign('warnings', $this->warnings);
+			$this->context->smarty->assign('informations', $this->informations);
 		}
 
 		$this->context->smarty->assign('page', $page);
@@ -729,6 +731,16 @@ class AdminControllerCore extends Controller
 	protected function displayWarning($msg)
 	{
 		$this->warnings[] = $msg;
+	}
+
+	/**
+	 * add a info message to display at the top of the page
+	 *
+	 * @param string $msg
+	 */
+	protected function displayInformation($msg)
+	{
+		$this->informations[] = $msg;
 	}
 
 	/**
@@ -889,7 +901,25 @@ class AdminControllerCore extends Controller
 	{
 		if ($this->display == 'edit')
 		{
-			$this->content .= $this->displayForm();
+
+			if (!($obj = $this->loadObject(true)))
+				return;
+
+			if (isset($this->fields_form))
+			{
+				$helper = new HelperForm();
+				$helper::$currentIndex = self::$currentIndex;
+				$helper->token = $this->token;
+				$helper->table = $this->table;
+				$helper->table = $this->table;
+				$helper->id = $obj->id;
+				$helper->fields_value = $this->getFieldsValue($obj);
+				$this->content .= $helper->generateForm($this->fields_form);
+			}
+			else
+			//@TODO à supprimer
+				$this->content .= $this->displayForm();
+
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))
@@ -897,8 +927,6 @@ class AdminControllerCore extends Controller
 				else
 					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
 			}
-			// move to form.tpl
-			$this->content .= '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 		}
 		else if ($this->display == 'list')
 		{
@@ -1286,6 +1314,14 @@ class AdminControllerCore extends Controller
 			LIMIT '.(int)$start.','.(int)$limit;
 		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+	}
+
+	public function getFieldsValue($obj)
+	{
+		foreach ($this->fields_form['input'] as $input)
+			if (empty($this->fields_value[$input['name']]))
+				$this->fields_value[$input['name']] = $this->getFieldValue($obj, $input['name']);
+		return $this->fields_value;
 	}
 
 	/**
