@@ -235,7 +235,7 @@
   'CacheCore' => 'classes/cache/Cache.php',
   'Cache' => 'override/classes/cache/Cache.php',
   'CacheApcCore' => 'classes/cache/CacheApc.php',
-  'CacheApc' => '',
+  'CacheApc' => 'override/classes/cache/CacheApc.php',
   'CacheFsCore' => 'classes/cache/CacheFs.php',
   'CacheFs' => 'override/classes/cache/CacheFs.php',
   'CacheMemcacheCore' => 'classes/cache/CacheMemcache.php',

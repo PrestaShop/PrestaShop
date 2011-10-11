@@ -17,10 +17,10 @@ class blocktopmenu extends Module
 
   public function install()
   {
-    if(!parent::install() || 
-       !$this->registerHook('top') || 
-       !Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') || 
-       !Configuration::updateValue('MOD_BLOCKTOPMENU_SEARCH', '1') || 
+    if(!parent::install() ||
+       !$this->registerHook('top') ||
+       !Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
+       !Configuration::updateValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
        !$this->installDB())
       return false;
     return true;
@@ -28,13 +28,13 @@ class blocktopmenu extends Module
 
   public function installDb()
   {
-    Db::getInstance()->executeS('
+    Db::getInstance()->execute('
     CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop` (
       `id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
       `new_window` TINYINT( 1 ) NOT NULL,
       `link` VARCHAR( 128 ) NOT NULL
     ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;');
-    Db::getInstance()->executeS('
+    Db::getInstance()->execute('
     CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
     `id_link` INT NOT NULL ,
     `id_lang` INT NOT NULL ,
@@ -46,9 +46,9 @@ class blocktopmenu extends Module
 
   public function uninstall()
   {
-    if(!parent::uninstall() || 
-       !Configuration::deleteByName('MOD_BLOCKTOPMENU_ITEMS') || 
-       !Configuration::deleteByName('MOD_BLOCKTOPMENU_SEARCH') || 
+    if(!parent::uninstall() ||
+       !Configuration::deleteByName('MOD_BLOCKTOPMENU_ITEMS') ||
+       !Configuration::deleteByName('MOD_BLOCKTOPMENU_SEARCH') ||
        !$this->uninstallDB())
       return false;
     return true;
@@ -56,8 +56,8 @@ class blocktopmenu extends Module
 
   private function uninstallDb()
   {
-    Db::getInstance()->executeS('DROP TABLE `'._DB_PREFIX_.'linksmenutop`');
-    Db::getInstance()->executeS('DROP TABLE `'._DB_PREFIX_.'linksmenutop_lang`');
+    Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'linksmenutop`');
+    Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'linksmenutop_lang`');
     return true;
   }
 
@@ -156,7 +156,7 @@ class blocktopmenu extends Module
                 // END Menu Top Links
                 $this->_html .= '</select><br />
                 <br />
-                <a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Add').'</a>			
+                <a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Add').'</a>
               </td>
             </tr>
           </tbody>
@@ -247,7 +247,7 @@ class blocktopmenu extends Module
         </p>
   		</form>
     </fieldset><br />';
-    
+
     $this->_html .= '
     <fieldset>
       <legend><img src="../img/admin/details.gif" alt="" title="" />'.$this->l('List Menu Top Link').'</legend>

@@ -180,7 +180,7 @@ abstract class DbCore
 	public static function getClass()
 	{
 		$class = 'MySQL';
-		if (class_exists('mysqli', false))
+		if (0&&class_exists('mysqli', false))
 			$class = 'DbMySQLi';
 		return $class;
 	}
@@ -361,6 +361,11 @@ abstract class DbCore
 	public function executeS($sql, $array = true, $use_cache = 1)
 	{
 		$sql = (string)$sql;
+
+		// This methode must be used only with queries which display results
+		if (!preg_match('#^\s*(select|show|explain)\s#i', $sql))
+			throw new PrestashopDatabaseException('Db->executeS() must be used only with select, show or explain queries');
+
 		$this->result = false;
 		$this->last_query = $sql;
 		if ($use_cache && _PS_CACHE_ENABLED_ && $array && ($result = Cache::getInstance()->get(md5($sql))))
