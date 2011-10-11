@@ -289,6 +289,14 @@ class PDFCore extends PDF_PageGroupCore
 		$this->SetFont(self::fontname(), '', 7);
 		$this->Cell(190, 5, ' '."\n".Tools::iconv('utf-8', self::encoding(), 'P. ').$this->GroupPageNo().' / '.$this->PageGroupAlias(), 'T', 1, 'R');
 
+		global $cookie;
+		if (Configuration::get('PS_INVOICE_FREE_TEXT', $cookie->id_lang))
+		{
+
+			$this->Cell(0, 10, utf8_decode(Configuration::get('PS_INVOICE_FREE_TEXT', $cookie->id_lang)), 0, 0, 'C', 0);
+			$this->Ln(4);
+		}
+
 		/*
 		 * Display a message for customer
 		 */

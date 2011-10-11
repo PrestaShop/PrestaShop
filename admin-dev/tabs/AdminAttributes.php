@@ -116,7 +116,7 @@ class AdminAttributes extends AdminTab
 					<label>'.$this->l('Current texture:').' </label>
 					<div class="margin-form">
 						<p>'.(file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg')
-							? '<img src="../img/'.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg" alt="" title="" /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage=1"><img src="../img/admin/delete.gif" alt="'.$this->l('delete').'" title="" /></a>'
+							? '<img src="../img/'.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg" alt="" title="" /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage=1"><img src="../img/admin/delete.gif" alt="" title="'.$this->l('Delete').'" />'.$this->l('Delete').'</a>'
 							: $this->l('None')
 						).'</p>
 					</div>

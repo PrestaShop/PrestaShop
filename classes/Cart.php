@@ -475,7 +475,7 @@ class CartCore extends ObjectModel
 				$row['total'] = Tools::ps_round($row['price'] * (int)($row['cart_quantity']), 2);
 			}
 
-			if (!isset($row['pai_id_image']))
+			if (!isset($row['pai_id_image']) OR $row['pai_id_image'] == 0)
 			{
 				$row2 = Db::getInstance()->getRow('
 				SELECT i.`id_image`, il.`legend`

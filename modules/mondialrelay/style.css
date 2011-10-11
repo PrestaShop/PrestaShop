@@ -96,8 +96,7 @@ div#PS_MRUnRemovedItem
 }
 
 .shippingList {
-	width: 400px;
-	float: right;
+
 }
 .shippingList li {
 	margin: 5px;
@@ -326,3 +325,18 @@ div#PS_MRPersonalizedFields
 }
 .clearfix:after {clear: both}
 .clearfix {zoom: 1}
+
+.PS_MRGmapBulbe
+{
+	width:405px;
+	height:66px;
+	overflow: hidden;
+}
+
+.MR_date {width:450px;position:relative;float:right; line-height: 9px;}
+.MR_date span.titre {margin-left:50px;font-weight:bold;}
+.MR_date span.vacances {margin-left:5px;color:Red; }
+.MR_date table {border-spacing:3px;font-size:11pt; border: solid 1px #eee;}
+.MR_date tr.p {background-color:#e9e9e9; height:9px;}
+.MR_date td.g {font-weight:bold;}
+.MR_date td.d {}

@@ -38,7 +38,7 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`, `live_edi
 
 ALTER TABLE `PREFIX_employee` ADD `bo_show_screencast` TINYINT(1) NOT NULL DEFAULT '1' AFTER `bo_uimode`;
 
-UPDATE `PREFIX_country` SET id_zone = (SELECT id_zone FROM `PREFIX_zone` WHERE name = 'Oceania') WHERE iso_code = 'KI' LIMIT 1
+UPDATE `PREFIX_country` SET id_zone = (SELECT id_zone FROM `PREFIX_zone` WHERE name = 'Oceania' LIMIT 1) WHERE iso_code = 'KI' LIMIT 1;
 
 ALTER TABLE `PREFIX_lang` ADD `date_format_lite` char(32) NOT NULL DEFAULT 'Y-m-d' AFTER language_code;
 ALTER TABLE `PREFIX_lang` ADD `date_format_full` char(32) NOT NULL DEFAULT 'Y-m-d H:i:s' AFTER date_format_lite;

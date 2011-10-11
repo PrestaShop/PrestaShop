@@ -129,7 +129,7 @@ class AdminCounty extends AdminTab
 			<fieldset><legend><img src="../img/admin/world.gif" />'.$this->l('Counties').'</legend>';
 
 				if (!isset($obj->id))
-					echo '<div class="hint clear" style="display:block;">'.$this->l('Save this county then you will be able to associate zipcodes').'</div><br />';
+					echo '<div class="hint clear" style="display:block;">&nbsp;'.$this->l('Save this county then you will be able to associate zipcodes').'</div><br />';
 
 		$countries = Country::getCountries($this->context->language->id, true, true);
 		echo '<label>'.$this->l('Country:').' </label>

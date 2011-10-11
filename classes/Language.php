@@ -99,7 +99,8 @@ class LanguageCore extends ObjectModel
 	 * Generate traslations files
 	 *
 	 */
-	private function _generateFiles($newIso){
+	private function _generateFiles($newIso = null)
+	{
 		$iso_code = $newIso?$newIso:$this->iso_code;
 
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))

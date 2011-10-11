@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+// @since 1.4.5.0
+// add the following comment in a module file to skip it in translations
+// IGNORE_THIS_FILE_FOR_TRANSLATION 
 abstract class AdminSelfTab
 {
 	/** @var integer Tab id */

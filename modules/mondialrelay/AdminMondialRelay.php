@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,6 +26,7 @@
 */
 
 require_once(dirname(__FILE__).'/classes/MondialRelayClass.php');
+require_once(dirname(__FILE__).'/classes/MRCreateTickets.php');
 require_once(dirname(__FILE__).'/mondialrelay.php');
 
 class AdminMondialRelay extends AdminTab
@@ -35,10 +36,10 @@ class AdminMondialRelay extends AdminTab
 	public function __construct()
 	{
 		MondialRelay::initModuleAccess();
-		
+
 		$this->table = 'mr_selected';
 		$this->className = 'MondialRelayClass';
-		
+
 		parent::__construct();
 	}
 
@@ -47,14 +48,31 @@ class AdminMondialRelay extends AdminTab
 		$mondialrelay = new MondialRelay();
 		$order_state = new OrderState((int)(Configuration::get('MONDIAL_RELAY_ORDER_STATE')), $this->context->language->id);
 		$mr_weight_coef = (int)(Configuration::get('MR_WEIGHT_COEF'));
-		
+
 		$html = '';
-		
-		$html .= $this->l('To generate labels, you must register a correct address for your store on').
+
+		// Simulate a ticket generation
+		$MRCreateTicket = new MRCreateTickets(array(
+			'orderIdList' => NULL,
+			'totalOrder' => NULL,
+			'weightList' => NULL));
+
+		$errorListTicket = $MRCreateTicket->checkPreValidation();
+
+		if (count($errorListTicket))
+		{
+			$html .= '<div class="error">'.
+				$this->l('Thanks to kindly correct the following errors on ').
 			' <a href="index.php?tab=AdminContact&token='.Tools::getAdminToken('AdminContact'.
-			(int)(Tab::getIdFromClassName('AdminContact')).(int)$this->context->employee->id).'" class="green">'.
-			$this->l('The contact page').'</a>';
-		$html .= '<p>'.$this->l('All orders which have the state').' "<b>'.$order_state->name.'</b>"';
+				(int)(Tab::getIdFromClassName('AdminContact')).(int)$this->context->id_employee).'" style="color:#f00;">'.
+			$this->l('the contact page').'</a>:<ul>';
+			foreach($errorListTicket as $type => $error)
+				$html .= '<li>'.$type.': '.$error.'</li>';
+			$html .= '</ul></div>';
+		}
+
+		$html .= '<p>'.$this->l('All orders which have the state').' "<b>'.$order_state->name.'</b>" '.
+			$this->l('will be available for sticker creation');
 		$html .= '.&nbsp;<a href="index.php?tab=AdminModules&configure=mondialrelay&token='.
 			Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).
 			(int)$this->context->employee->id).'" class="green">' . $this->l('Change configuration') . '</a></p>
@@ -63,7 +81,7 @@ class AdminMondialRelay extends AdminTab
 							<span></span>
 					</div>';
 
-		$orders = MondialRelay::getOrders(array(), MondialRelay::WITHOUT_HOME_DELIVERY);
+		$orders = MondialRelay::getOrders(array());
 		if (empty($orders))
 			$html.= '<h3 style="color:red;">' . $this->l('No orders with this state.') . '</h3>';
 		else
@@ -71,22 +89,22 @@ class AdminMondialRelay extends AdminTab
 			$html.= '<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">';
 			$html.= "\n<table class=\"table\" id='orders'>";
 			$html.= '<tr>';
+			$html.= '<th><input type="checkbox" id="toggleStatusOrderList" /></th>';
 			$html.= '<th>'.$this->l('Order ID').'</th>';
 			$html.= '<th>'.$this->l('Customer').'</th>';
 			$html.= '<th>'.$this->l('Total price').'</th>';
 			$html.= '<th>'.$this->l('Total shipping').'</th>';
 			$html.= '<th>'.$this->l('Date').'</th>';
 			$html.= '<th>'.$this->l('Put a Weight (grams)').'</th>';
-			$html.= '<th class="fixed"><a href="javascript:void(0);" id="toggleStatusOrderList">'.$this->l('Toggle selection').'</a><br /></th>';
 			$html.= '<th>'.$this->l('MR Number').'</th>';
 			$html.= '<th>'.$this->l('MR Country').'</th>';
 			$html.= '<th>'.$this->l('Exp Number').'</th>';
 			$html.= '<th>'.$this->l('Detail').'</th>';
 			$html.= '</tr>';
-			
+
 			foreach ($orders as $order)
 			{
-				if ($order['weight'] == 0) 
+				if ($order['weight'] == 0)
 				{
 					$result_weight = Db::getInstance()->getRow('
 					SELECT SUM(product_weight * product_quantity) as weight
@@ -96,13 +114,13 @@ class AdminMondialRelay extends AdminTab
 				}
 
 				$html .= '<tr id="PS_MRLineOrderInformation-'.$order['id_order'].'">';
+				$html .= '<td><input type="checkbox" class="order_id_list" name="order_id_list[]" id="order_id_list" value="'.$order['id_order'].'" /></td>';
 				$html .= '<td>'.$order['id_order'].'</td>';
 				$html .= '<td>'.$order['customer'].'</td>';
 				$html .= '<td>'.Tools::displayPrice($order['total'], new Currency($order['id_currency'])) . '</td>';
 				$html .= '<td>'.Tools::displayPrice($order['shipping'], new Currency($order['id_currency'])) . '</td>';
 				$html .= '<td>'.Tools::displayDate($order['date'], $order['id_lang']).'</td>';
 				$html .= '<td><input type="text" name="weight_'.$order['id_order'].'" id="weight_' . $order['id_order'] . '" size="7" value="'.$order['weight'].'" /></td>';
-				$html .= '<td><input type="checkbox" class="order_id_list" name="order_id_list[]" id="order_id_list" value="'.$order['id_order'].'" /></td>';
 				$html .= '<td>'.$order['MR_Selected_Num'].'</td>';
 				$html .= '<td>'.$order['MR_Selected_Pays'].'</td>';
 				$html .= '<td>'.$order['exp_number'].'</td>';
@@ -147,7 +165,7 @@ class AdminMondialRelay extends AdminTab
 		$_html = '';
 	  $query = "SELECT * FROM `" . _DB_PREFIX_ ."mr_historique` ORDER BY `id` DESC ;";
 		$query = Db::getInstance()->executeS($query);
-		
+
 		$_html.= '
 			<fieldset>
 				<legend>' . $this->l('History of labels creation') . '</legend>
@@ -156,13 +174,13 @@ class AdminMondialRelay extends AdminTab
 						<table class="table" id="PS_MRHistoriqueTableList">
 							<tbody>
 								<tr>
-									<th><a href="javascript:void(0);" id="toggleStatusHistoryList">' . $this->l('Toggle selection') . '</a></th>
+									<th><input type="checkbox" id="toggleStatusHistoryList" /></th>
 			 						<th>' . $this->l('Order ID') . '</th>
 			 						<th>' . $this->l('Exp num') . '</th>
 			 						<th>' . $this->l('Print stick A4') . '</th>
 			 						<th>' . $this->l('Print stick A5') . '</th>
 			 					</tr>';
-		foreach ($query AS $k => $row) 
+		foreach ($query AS $k => $row)
 	  {
 			$_html.= '
 				<tr id="detailHistory_'.$row['order'].'">
@@ -194,9 +212,9 @@ class AdminMondialRelay extends AdminTab
 	}
 
 	public function display()
-	{	
+	{
 		$html = '';
-		
+
 		// Allow to override the older jquery to use a new one :)
 		// Added for the 1.3 compatibility to keep using the recent code
 		if (_PS_VERSION_ < '1.4')
@@ -206,7 +224,7 @@ class AdminMondialRelay extends AdminTab
 				<script type="text/javascript" language="javascript">
 				var _PS_MR_MODULE_DIR_ = "'.MondialRelay::$moduleURL.'";
 				</script>';
-			
+
 			$html .= $this->displayOrdersTable();
 			$html .= '<br/><br/>';
 			$html .= $this->displayhistoriqueForm();

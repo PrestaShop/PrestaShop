@@ -31,20 +31,17 @@
 		<tax id="8" name="PST 5%" rate="5" />
 
 		<taxRulesGroup name="CA Standard Rate">
-			<taxRule iso_code_country="ca" iso_code_state="ab" id_tax="1" />
-			<taxRule iso_code_country="ca" iso_code_state="bc" id_tax="2" />
-			<taxRule iso_code_country="ca" iso_code_state="mb" id_tax="1" />
-			<taxRule iso_code_country="ca" iso_code_state="mb" id_tax="5" />
-			<taxRule iso_code_country="ca" iso_code_state="nb" id_tax="3" />
-			<taxRule iso_code_country="ca" iso_code_state="nl" id_tax="3" />
-			<taxRule iso_code_country="ca" iso_code_state="ns" id_tax="4" />
-			<taxRule iso_code_country="ca" iso_code_state="on" id_tax="3" />
-			<taxRule iso_code_country="ca" iso_code_state="pe" id_tax="1" behavior="2" />
-			<taxRule iso_code_country="ca" iso_code_state="pe" id_tax="6" behavior="2" />
-			<taxRule iso_code_country="ca" iso_code_state="qc" id_tax="1" behavior="2" />
-			<taxRule iso_code_country="ca" iso_code_state="qc" id_tax="7" behavior="2" />
-			<taxRule iso_code_country="ca" iso_code_state="sk" id_tax="1" />
-			<taxRule iso_code_country="ca" iso_code_state="sk" id_tax="8" />
+			<taxRule iso_code_country="ca" id_tax="1" />
+			<taxRule iso_code_country="ca" iso_code_state="ab" id_tax="1" state_behavior="1" />
+			<taxRule iso_code_country="ca" iso_code_state="bc" id_tax="2" state_behavior="1" />
+			<taxRule iso_code_country="ca" iso_code_state="mb" id_tax="5" state_behavior="2" />
+			<taxRule iso_code_country="ca" iso_code_state="nb" id_tax="3" state_behavior="1" />
+			<taxRule iso_code_country="ca" iso_code_state="nl" id_tax="3" state_behavior="1" />
+			<taxRule iso_code_country="ca" iso_code_state="ns" id_tax="4" state_behavior="1" />
+			<taxRule iso_code_country="ca" iso_code_state="on" id_tax="3" state_behavior="1" />
+			<taxRule iso_code_country="ca" iso_code_state="pe" id_tax="6" state_behavior="2" />
+			<taxRule iso_code_country="ca" iso_code_state="qc" id_tax="7" state_behavior="2" />
+			<taxRule iso_code_country="ca" iso_code_state="sk" id_tax="8" state_behavior="2" />
 		</taxRulesGroup>
 	</taxes>
 	<units>

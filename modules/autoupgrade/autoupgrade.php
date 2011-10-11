@@ -47,7 +47,7 @@ class Autoupgrade extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Autoupgrade module');
-		$this->description = $this->l('Provides an automated method to upgrade your shop to the last PrestaShop version');
+		$this->description = $this->l('Provides an automated method to upgrade your shop to the last PrestaShop version. Caution : custom theme are not updated.');
 
 	}
 

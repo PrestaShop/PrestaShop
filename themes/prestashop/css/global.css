@@ -1508,3 +1508,5 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 }
 
 .page404_input { float: left; }
+
+#order #discount_name { width: 130px; }
