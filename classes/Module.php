@@ -156,7 +156,7 @@ abstract class ModuleCore
 		SELECT `id_module`
 		FROM `'._DB_PREFIX_.'module`
 		WHERE `name` = \''.pSQL($this->name).'\'');
-		if ($result)
+		if (0&&$result)
 			return false;
 
 		$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1), 'INSERT');
@@ -658,7 +658,7 @@ abstract class ModuleCore
 					else
 						$errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($filepath, strlen(_PS_ROOT_DIR_)));
 				}
-				
+
 				if (class_exists($module,false))
 				{
 					$moduleList[$moduleListCursor++] = new $module;
