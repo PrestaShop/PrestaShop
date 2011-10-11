@@ -914,7 +914,7 @@ class AdminControllerCore extends Controller
 			$helper->delete = $this->delete;
 			$helper->duplicate = $this->duplicate;
 			$helper->bulk_actions = $this->bulk_actions;
-			$helper::$currentIndex = self::$currentIndex;
+			HelperList::$currentIndex = self::$currentIndex;
 			$helper->className = $this->className;
 			$helper->table = $this->table;
 			$helper->shopLink = $this->shopLink;
