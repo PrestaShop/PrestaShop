@@ -56,6 +56,9 @@ class MRManagement extends MondialRelay
 					FROM `' . _DB_PREFIX_ . 'mr_selected`
 					WHERE `id_cart` = '.(int)$this->_params['id_cart'];
 		
+		// Not exist and needed for database
+		unset($this->_params['relayPointInfo']['permaLinkDetail']);
+		
 		// Update if Exist else add a new entry	
 		if (Db::getInstance()->getRow($query))
 		{

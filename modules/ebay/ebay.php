@@ -915,7 +915,7 @@ class Ebay extends Module
 		// Load categories only if necessary
 		if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `'._DB_PREFIX_.'ebay_category_configuration`') > 4 && Tools::getValue('section') != 'category')
 			return '<p align="center"><b>'.$this->l('Your categories have already been configured.').'</b></p>
-			<form action="index.php?tab='.Tools::safeOuput($_GET['tab']).'&configure='.Tools::safeOuput($_GET['configure']).'&token='.Tools::safeOuput($_GET['token']).'&tab_module='.Tools::safeOuput($_GET['tab_module']).'&module_name='.Tools::safeOuput($_GET['module_name']).'&id_tab=2&section=category" method="post" class="form">
+			<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category" method="post" class="form">
 			<p align="center"><input class="button" name="submitSave" type="submit" value="'.$this->l('See Categories').'" /></p></form>';
 
 		// Display eBay Categories

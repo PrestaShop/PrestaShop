@@ -39,7 +39,7 @@ class AdminGeolocation extends AdminTab
 		
 		echo '
 		<form method="POST" action="'.self::$currentIndex.'&token='.Tools::getValue('token').'">
-			<fieldset>
+			<fieldset class="width3">
 				<legend><img src="../img/admin/world.gif" alt="" /> '.$this->l('Geolocation by IP').'</legend>
 				
 				<label>'.$this->l('Geolocation by IP:').'</label>
@@ -58,7 +58,7 @@ class AdminGeolocation extends AdminTab
 		$allowedCountries = explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'));
 		echo '
 		<form method="POST" action="'.self::$currentIndex.'&token='.Tools::getValue('token').'">
-			<fieldset style="margin-top:10px;">
+			<fieldset style="margin-top: 10px;" class="width3">
 				<legend><img src="../img/admin/world.gif" alt="" /> '.$this->l('Options').'</legend>
 				
 				<div class="hint" style="display:block;margin-bottom:20px;">
@@ -87,7 +87,7 @@ class AdminGeolocation extends AdminTab
 				<div class="clear" style="margin-top:10px;"></div>
 				
 				<label>'.$this->l('Select countries that can access your store:').'</label>
-				<div class="margin-form">
+				<div class="margin-form" style="float: left; padding-left: 0; width: 317px; margin-top: 6px; height: 300px; overflow-y: auto;">
 					<table class="table" cellspacing="0">
 						<thead>
 							<tr>
@@ -108,7 +108,8 @@ class AdminGeolocation extends AdminTab
 						</tbody>
 					</table>
 				</div>
-				
+				<div class="clear"></div>
+				<br />
 				<div class="margin-form">
 					<input type="submit" class="button" name="submitGeolocationCountries" value="'.$this->l('Save').'" />
 				</div>
@@ -116,7 +117,7 @@ class AdminGeolocation extends AdminTab
 		</form>
 		
 		<form method="POST" action="'.self::$currentIndex.'&token='.Tools::getValue('token').'">
-			<fieldset style="margin-top:10px;">
+			<fieldset style="margin-top: 10px;" class="width3">
 				<legend><img src="../img/admin/world.gif" alt="" /> '.$this->l('Whitelist of IP addresses').'</legend>
 				
 				<div class="hint" style="display:block;margin-bottom:20px;">

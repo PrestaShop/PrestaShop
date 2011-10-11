@@ -32,6 +32,8 @@ define ('TEXTAREA_SIZED', 70);
 
 class AdminTranslations extends AdminTab
 {
+
+	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
 	protected $total_expression = 0;
 	protected $all_iso_lang = array();
 	protected $modules_translations = array();
@@ -394,8 +396,11 @@ class AdminTranslations extends AdminTab
 		{
 			if ((preg_match('/^(.*).tpl$/', $template_file) OR ($is_default AND preg_match('/^(.*).php$/', $template_file))) AND file_exists($tpl = $dir.$template_file))
 			{
-				// Get translations key
 				$content = file_get_contents($tpl);
+				// module files can now be ignored by adding this string in a file
+				if (strpos($content, 'IGNORE_THIS_FILE_FOR_TRANSLATION') !== false)
+					continue;
+				// Get translations key
 				preg_match_all(substr($template_file, -4) == '.tpl' ? self::$tpl_regexp : self::$php_regexp, $content, $matches);
 
 				// Write each translation on its module file
@@ -712,7 +717,7 @@ class AdminTranslations extends AdminTab
 			$this->displayWarning($this->l('If you choose to update an existing language pack, all your previous customization in the theme named prestashop will be lost. This includes front office expressions and default e-mail templates.'));
 			echo '<div style="font-weight:bold; float:left;">'.$this->l('Language you want to add or update:').' ';
 
-			if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_each_language_pack.php?version='._PS_VERSION_, false, @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
+			if ($lang_packs = Tools::file_get_contents($this->link_lang_pack .'?version='._PS_VERSION_, false, @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				// Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
 				if ($lang_packs != '' AND $lang_packs = Tools::jsonDecode($lang_packs,true))
@@ -1323,10 +1328,12 @@ class AdminTranslations extends AdminTab
 								<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="'.(isset($mails['subject'][$subject_mail]) ? $mails['subject'][$subject_mail] : '').'" />
 							</div>
 						</div>';
-					} else {
+					}
+					else
+					{
 						$str_return .= '
 						<div class="label-subject">
-							<b>'.sprintf($this->l('No Subject was found for %s.'), '<em>'.$mail_name.'</em>').'</b>'
+							<b>'.sprintf($this->l('No Subject was found for %s, or subject is generated in database.'), '<em>'.$mail_name.'</em>').'</b>'
 						.'</div>';
 					}
 					if (key_exists('html', $mail_files))
@@ -1587,7 +1594,7 @@ class AdminTranslations extends AdminTab
 		echo $str_output;
 	}
 
-	protected function getSubjectMail($directory, $subject_mail)
+	protected static function getSubjectMail($directory, $subject_mail)
 	{
 		foreach (scandir($directory) AS $filename)
 		{
@@ -1605,7 +1612,7 @@ class AdminTranslations extends AdminTab
 							if ($tab2 && isset($tab2[1]))
 							{
 								$tab2[1] = trim(str_replace('\'', '', $tab2[1]));
-								if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'\)/s', $tab2[2], $tab3))
+								if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'/s', $tab2[2], $tab3))
 									$tab2[2] = $tab3[1];
 								$subject_mail[$tab2[1]] = $tab2[2];
 							}
@@ -1848,8 +1855,8 @@ class AdminTranslations extends AdminTab
 		@include(_PS_TRANSLATIONS_DIR_.$lang.'/pdf.php');
 		$files = array();
 		$count = 0;
-		$tabsArray = array($tab=>array());
 		$tab = 'PDF_invoice';
+		$tabsArray = array($tab=>array());
 		$regex = '/self::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 		// need to parse PDF.php in order to find $regex and add this to $tabsArray
 		// this has to be done for the core class, and eventually for the override

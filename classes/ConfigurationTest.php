@@ -55,7 +55,7 @@ class	ConfigurationTestCore
 	
 	static function test_magicquotes()
 	{
-		return !ini_get('magic_quotes_gpc');
+		return !get_magic_quotes_gpc();
 	}
 
 	static	function test_upload()

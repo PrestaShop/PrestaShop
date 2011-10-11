@@ -1,6 +1,6 @@
-<?php 
+<?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,13 +31,14 @@
  * Each Name method allow to instanciate an object containing
  * methods to manage correctly the data and name fields
  */
- 
+
 require_once(realpath(dirname(__FILE__).'/../../config/config.inc.php'));
 require_once(realpath(dirname(__FILE__).'/../../init.php'));
 require(dirname(__FILE__).'/mondialrelay.php');
 require(dirname(__FILE__).'/classes/MRCreateTickets.php');
 require(dirname(__FILE__).'/classes/MRGetTickets.php');
 require(dirname(__FILE__).'/classes/MRGetRelayPoint.php');
+require(dirname(__FILE__).'/classes/MRRelayDetail.php');
 require(dirname(__FILE__).'/classes/MRManagement.php');
 
 MondialRelay::initModuleAccess();
@@ -64,7 +65,7 @@ $result = array();
 if (!isset($accessPageList[$token]) || !in_array($method, $accessPageList[$token]))
 	exit();
 
-// Method name allow to instanciate his object to properly call the 
+// Method name allow to instanciate his object to properly call the
 // implemented interface method and do his job
 switch($method)
 {
@@ -98,12 +99,12 @@ switch($method)
 }
 
 // Try to instanciate the method object name and call the necessaries method
-try 
+try
 {
 	if (class_exists($method, false))
 	{
 		$obj = new $method($params);
-		
+
 		// Verify that the class implement correctly the interface
 		// Else use a Management class to do some ajax stuff
 		if (($obj instanceof IMondialRelayWSMethod))
@@ -117,7 +118,7 @@ try
 	else if (($management = new MRManagement($params)) &&
 				method_exists($management, $method))
 			$result = $management->{$method}();
-	else 
+	else
 		throw new Exception('Method Class : '.$method.' can\'t be found');
 	unset($management);
 }

@@ -2,7 +2,7 @@
 <module>
 	<name>socolissimo</name>
 	<displayName><![CDATA[So Colissimo]]></displayName>
-	<version><![CDATA[2.0]]></version>
+	<version><![CDATA[2.1]]></version>
 	<description><![CDATA[Offer your customers, different delivery methods with LaPoste.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

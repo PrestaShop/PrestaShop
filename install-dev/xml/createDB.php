@@ -46,7 +46,8 @@ global $logger;
 //check db access
 include_once(INSTALL_PATH.'/classes/ToolsInstall.php');
 $resultDB = ToolsInstall::checkDB($_GET['server'], $_GET['login'], $_GET['password'], $_GET['name'], true);
-if ($resultDB !== true){
+if ($resultDB !== true)
+{
 	$logger->logError('Invalid database configuration');
 	die("<action result='fail' error='".$resultDB."'/>\n");
 }
@@ -102,19 +103,20 @@ require_once(SETTINGS_FILE);
 //-----------
 //import SQL data
 //-----------
-switch (_DB_TYPE_) {
-	case "MySQL" :
+switch (_DB_TYPE_)
+{
+	case 'MySQL':
 
 		$filePrefix = 'PREFIX_';
 		$engineType = 'ENGINE_TYPE';
 		//send the SQL structure file requests
-		$structureFile = dirname(__FILE__)."/../sql/db.sql";
+		$structureFile = dirname(__FILE__).'/../sql/db.sql';
 		if(!file_exists($structureFile))
 		{
 			$logger->logError('Impossible to access to a MySQL content file. ('.$structureFile.')');
 			die('<action result="fail" error="10" />'."\n");
 		}
-		$db_structure_settings ="";
+		$db_structure_settings = '';
 		if ( !$db_structure_settings .= file_get_contents($structureFile) )
 		{
 			$logger->logError('Impossible to read the content of a MySQL content file. ('.$structureFile.')');
@@ -128,14 +130,20 @@ switch (_DB_TYPE_) {
 			array_unshift($db_structure_settings, 'CREATE DATABASE `'.trim($_GET['name']).'`;');
 			array_unshift($db_structure_settings, 'DROP DATABASE `'.trim($_GET['name']).'`;');
 		}
-		foreach($db_structure_settings as $query){
+		foreach ($db_structure_settings as $query)
+		{
 			$query = trim($query);
-			if(!empty($query)){
-				if(!Db::getInstance()->execute($query)){
-					if(Db::getInstance()->getNumberError() == 1050){
+			if (!empty($query))
+			{
+				if (!Db::getInstance()->Execute($query))
+				{
+					if (Db::getInstance()->getNumberError() == 1050)
+					{
 						$logger->logError('A Prestashop database already exists, please drop it or change the prefix.');
 						die('<action result="fail" error="14" />'."\n");
-					} else {
+					}
+					else
+					{
 						$logger->logError('SQL query: '."\r\n".$query);
 						$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
 						die(
@@ -153,17 +161,17 @@ switch (_DB_TYPE_) {
 		}
 
 		//send the SQL data file requests
+		$db_data_settings = '';
 
-		$db_data_settings = "";
-
-		$liteFile = dirname(__FILE__)."/../sql/db_settings_lite.sql";
+		$liteFile = dirname(__FILE__).'/../sql/db_settings_lite.sql';
 		if(!file_exists($liteFile))
 			die('<action result="fail" error="10" />'."\n");
 		if ( !$db_data_settings .= file_get_contents( $liteFile ) )
 			die('<action result="fail" error="9" />'."\n");
 
-		if($_GET['mode'] == "full"){
-			$fullFile = dirname(__FILE__)."/../sql/db_settings_extends.sql";
+		if ($_GET['mode'] == 'full')
+		{
+			$fullFile = dirname(__FILE__).'/../sql/db_settings_extends.sql';
 			if(!file_exists($fullFile))
 			{
 				$logger->logError('Impossible to access to a MySQL content file. ('.$fullFile.')');
@@ -182,13 +190,17 @@ switch (_DB_TYPE_) {
 		$db_data_settings = preg_split("/;\s*[\r\n]+/",$db_data_settings);
 		/* UTF-8 support */
 		array_unshift($db_data_settings, 'SET NAMES \'utf8\';');
-		foreach($db_data_settings as $query){
+		foreach ($db_data_settings as $query)
+		{
 			$query = trim($query);
-			if(!empty($query)){
-				if(!Db::getInstance()->execute($query)){
-					if(Db::getInstance()->getNumberError() == 1050){
+			if (!empty($query))
+			{
+				if (!Db::getInstance()->Execute($query))
+				{
+					if (Db::getInstance()->getNumberError() == 1050)
 						die('<action result="fail" error="14" />'."\n");
-					} else {
+					else
+					{
 						$logger->logError('SQL query: '."\r\n".$query);
 						$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
 						die(
@@ -206,6 +218,7 @@ switch (_DB_TYPE_) {
 		}
 	break;
 }
+
 $xml = '<result><action result="ok" error="" />'."\n";
 
 $countries = Db::getInstance()->executeS('
@@ -227,4 +240,3 @@ foreach ($timezones as $timezone)
 $xml .= '</timezones></result>'."\n";
 
 die($xml);
-

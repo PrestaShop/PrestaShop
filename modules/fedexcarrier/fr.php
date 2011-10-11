@@ -97,6 +97,7 @@ $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_5cdd307ba6e260beb4801c0c10e22a3
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_78945de8de090e90045d299651a68a9b'] = 'Disponible';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_2d25c72c1b18e562f6654fff8e11711e'] = 'Non disponible';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_d63e135774e62574e2a1921267dad142'] = 'Choissisez les services de livraison qui seront disponibles pour vos clients';
+$_MODULE['<{fedexcarrier}prestashop>fedexcarrier_f1206f9fadc5ce41694f69129aecac26'] = 'Configurer';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_9b8c4a7116e8c44e4ebc955fafd47586'] = 'Votre compte fedex n\'est pas spécifié';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_b9cc1a101547b3ece6d946dbbe3469d7'] = 'Votre Fedex meter number n\'est pas spécifié';
 $_MODULE['<{fedexcarrier}prestashop>fedexcarrier_5ce0f66588bbbbbb3ef0634e5ea7da69'] = 'Votre mot de passe Fedex n\'est pas spécifié';

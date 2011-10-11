@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -60,20 +60,20 @@ class BlockStore extends Module
 	{
 		return $this->hookRightColumn($params);
 	}
-	
+
 	function hookRightColumn($params)
 	{
-		
-		
+
+
 		$this->context->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		return $this->display(__FILE__, 'blockstore.tpl');
 	}
-	
+
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blockstore.css', 'all');
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitStoreConf'))
@@ -98,7 +98,7 @@ class BlockStore extends Module
 		}
 		return '';
 	}
-	
+
 	public function getContent()
 	{
 		$output = $this->postProcess().'
@@ -112,7 +112,7 @@ class BlockStore extends Module
 				<div class="margin-form">
 					<input id="store_img" type="file" name="store_img" /> ( '.$this->l('image will be displayed as 174x115').' )
 				</div>
-		
+
 				<p class="center">
 					<input class="button" type="submit" name="submitStoreConf" value="'.$this->l('Save').'"/>
 				</p>

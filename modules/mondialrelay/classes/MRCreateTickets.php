@@ -49,7 +49,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			'ModeLiv'				=>  array(
 						'required'				=> true,
 						'value'						=> '',
-						'regexValidation' => '#^(LCC|LDR|LDS|24R|ESP|DRI)$#'),
+						'regexValidation' => '#^(LCC|LD1|LDS|24R|ESP|DRI)$#'),
 			'NDossier' 			=>  array(
 						'required'				=> false,
 						'value'						=> '',
@@ -272,7 +272,6 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	 */
 	private function _setRequestDefaultValue()
 	{
-
 		$this->_fields['list']['Enseigne']['value'] = Configuration::get('MR_ENSEIGNE_WEBSERVICE');
 		$this->_fields['list']['Expe_Langage']['value'] = Configuration::get('MR_LANGUAGE');
 		$this->_fields['list']['Expe_Ad1']['value'] = Configuration::get('PS_MR_SHOP_NAME');
@@ -422,7 +421,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		$order = new Order($params['NDossier']);
 
 	 	// Update the database for order and orderHistory
-		$order->shipping_number = $id_mr_selected;
+		$order->shipping_number = $expeditionNum;
 		$order->update();
 
 		$templateVars = array('{followup}' => $trackingURL);
@@ -507,6 +506,60 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			throw new Exception($this->_mondialRelay->l('The Mondial Relay webservice isn\'t currently reliable'));
 	}
 
+	/*
+	** Check if the shop parameter are currently well configured
+	*/
+	public function checkPreValidation()
+	{
+		$errorList = array();
+		
+		if (!$this->_mondialRelay)
+			$this->_mondialRelay = new MondialRelay();
+		
+		$list = array(
+			'Expe_Langage' => array(
+				'value' => Configuration::get('MR_LANGUAGE'),
+				'error' => $this->_mondialRelay->l('Please check your language configuration')),
+			'Expe_Ad1' => array(
+				'value' => Configuration::get('PS_MR_SHOP_NAME'),
+				'error' => $this->_mondialRelay->l('Please check your shop name configuration')),
+			'Expe_Ad3' => array(
+				'value' => Configuration::get('PS_SHOP_ADDR1'),
+				'error' => $this->_mondialRelay->l('Please check your address 1 configuration')),
+			'Expe_Ville' =>	array(
+				'value' => Configuration::get('PS_SHOP_CITY'),
+				'error' => $this->_mondialRelay->l('Please check your city configuration')),
+			'Expe_CP' => array(
+				'value' => Configuration::get('PS_SHOP_CODE'),
+				'error' => $this->_mondialRelay->l('Please check your zipcode configuration')),
+			'Expe_Pays' => array(
+				'value' => ((_PS_VERSION_ >= '1.4') ? 
+					Country::getIsoById(Configuration::get('PS_SHOP_COUNTRY_ID')) : 
+					substr(Configuration::get('PS_SHOP_COUNTRY'), 0, 2)),
+				'error' => $this->_mondialRelay->l('Please check your country configuration')),
+			'Expe_Tel1' => array(
+				'value' => str_replace(array('.', ' ', '-'), '', Configuration::get('PS_SHOP_PHONE')),
+				'error' => $this->_mondialRelay->l('Please check your Phone configuration')),
+			'Expe_Mail' => array(
+				'value' => Configuration::get('PS_SHOP_EMAIL'),
+				'error' => $this->_mondialRelay->l('Please check your mail configuration')));
+		
+		foreach($list as $name => $tab)
+		{
+			$tab['value'] = strtoupper($tab['value']);
+			if ($name == 'Expe_CP')
+			{
+				if (!MRTools::checkZipcodeByCountry($tab['value'], array(
+						'id_country' => Configuration::get('PS_COUNTRY_DEFAULT'))))
+					$errorList[$name] = $tab['error'];
+			}
+			else if (isset($this->_fields['list'][$name]['regexValidation']) && 
+					(!preg_match($this->_fields['list'][$name]['regexValidation'], $tab['value'], $matches)))
+				$errorList[$name] = $tab['error'];
+		}
+		return $errorList;
+	}
+	
 	/*
 	 * Get the values with associated fields name
 	 * @fields : array containing multiple values information

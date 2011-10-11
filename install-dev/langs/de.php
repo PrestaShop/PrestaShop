@@ -140,7 +140,6 @@ $_LANG['Update is complete!'] = 'Aktualisierung beendet!';
 $_LANG['Upgrade: get the latest stable version!'] = 'Aktualisierung: Installieren Sie die neueste Version von PrestaShop';
 $_LANG['Verify now!'] = 'Testen der SQL-Verbindung';
 $_LANG['Verify system compatibility'] = 'Systemkompatibilit√§t';
-$_LANG['WARNING: For more security, you must delete the \'install\' folder and readme files(readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).'] = 'VORSICHT: Aus Sicherheitsgr√ºnden l√∂schen Sie bitte den Ordner \'/install\' und die readme-Dateien (readme_fr.txt, readme_en.txt, readme_es.txt, readme_de.txt, readme_it.txt, CHANGELOG).';
 $_LANG['Warning: a manual backup is HIGHLY recommended before continuing!'] = 'Vorsicht: eine manuelle Sicherung ist UNERL√ÑSSLICH, bevor mit der Aktualisierung der PrestaShop-Anwendung begonnen wird, um jeglichen versehentlichen Datenverlust zu verhindern';
 $_LANG['Welcome'] = 'Willkommen';
 $_LANG['Welcome to the PrestaShop %s Installer'] = 'Willkommen bei der Installation von PrestaShop %s';

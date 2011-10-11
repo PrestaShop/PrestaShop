@@ -27,13 +27,15 @@
 
 require_once ('../../config/config.inc.php');
 
+$onload_script = 'parent.$.fancybox.close();';
+if (Tools::isSubmit('firstcall'))	
+	$onload_script = 'document.getElementById(\'socoForm\').submit();';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr"> 
 	<head>
 	</head>
-	
-	<body onload="document.getElementById('socoForm').submit();">
+	<body onload="<?php echo $onload_script; ?>">
 		<?php
 		echo '<form id="socoForm" name="form" action="'.Configuration::get('SOCOLISSIMO_URL').'" method="POST">';
 		foreach($_GET as $key => $val)

@@ -1110,7 +1110,7 @@ class AdminUpgrade extends AdminPreferences
 			}
 			else if (!method_exists(get_class($this), 'ajaxProcess'.$action))
 			{
-				$this->nextDesc = sprintf($this->l('action "%1$s" non trouvée '), $action);
+				$this->nextDesc = sprintf($this->l('action "%1$s" not found'), $action);
 				$this->next = 'error';
 				$this->error = '1';
 			}

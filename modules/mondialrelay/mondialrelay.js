@@ -1,6 +1,7 @@
 var toggle_status_order_list = false;
 var toggle_history_order_list = false;
 var relay_point_max = 10;
+var last_gmap_info_clicked = '';
 
 // /!\ All the following list data could be store into the same variable
 // But for a better reading of the code, there are separated
@@ -665,7 +666,7 @@ function PS_MRGmapResizeEvent($map)
 ** Move the view of the gmap to a marker 
 ** liable to the relay point 
 */
-function PS_MRGmapPlaceViewOnMarker($map, marker)
+function PS_MRGmapPlaceViewOnMarker($map, marker, relayNum)
 {
 	$map.gmap3(
 	{
@@ -673,6 +674,7 @@ function PS_MRGmapPlaceViewOnMarker($map, marker)
 			args:[marker.position],
 			callback: function()
 			{
+        PS_MRDisplayClickedGmapWindow(marker, relayNum, $map);
 				(function(m)
 				{
       		setTimeout(function() 
@@ -713,7 +715,7 @@ function PS_MRDisplayGmap(contentBlockid, $map)
 		$('#PS_MRGmap_' + id_carrier).slideDown('fast', function()
 		{
 			PS_MRGmapResizeEvent($map);
-			PS_MRGmapPlaceViewOnMarker($map, markerList[id_carrier][relayPointNumber]);
+			PS_MRGmapPlaceViewOnMarker($map, markerList[id_carrier][relayPointNumber], relayPointNumber);
 		});
 	}
 	else
@@ -727,11 +729,58 @@ function PS_MRDisplayGmap(contentBlockid, $map)
 				$('#' + contentBlockid).after($(this));	
 				$('#PS_MRGmap_' + id_carrier).slideDown('fast', function()
 				{
-					PS_MRGmapPlaceViewOnMarker($map, markerList[id_carrier][relayPointNumber]);
+					PS_MRGmapPlaceViewOnMarker($map, markerList[id_carrier][relayPointNumber], relayPointNumber);
 				});
 			}
 		});
 	}
+}
+
+/*
+** Generate an html block to display the opening hours details
+*/
+function PS_MRGetTimeRelayDetail(relayInfo)
+{
+	onClick = 'onClick="PS_MROpenPopupDetail(\'' + relayInfo.permaLinkDetail + '\')"';
+	
+	var html = ' \
+		<div class="PS_MRGmapBulbe"> \
+			<img src="' + _PS_MR_MODULE_DIR_ + 'logo_hd.png" width="10%" style="float:left;" /> \
+			<p><b>' + relayInfo.LgAdr1 + '</b><br /> ' +  relayInfo.LgAdr3
+			+ ' - ' + relayInfo.CP + ' - ' + relayInfo.Ville
+			+ ' ' + relayInfo.Pays + '</p> \
+			<a href="javascript:void(0)" ' + onClick + '>' + PS_MRTranslationList['moreDetails'] + '</a> \
+		</div>';
+	return html;
+}
+
+/*
+** Call a MondialRelay page into a popup
+*/
+function PS_MROpenPopupDetail(url)
+{
+	window.open(url, 'MondialRelay', 
+		'height=200, width=400, top=100, left=100, toolbar=no, menubar=yes, \
+		location=no, resizable=yes, scrollbars=no, status=no');
+}
+
+/*
+** Display the gmap windows selected by the user
+*/
+function PS_MRDisplayClickedGmapWindow(marker, relayNum, mapObject)
+{	
+	if (last_gmap_info_clicked.length)
+  {
+   	// Close the last opening window in gmap
+	  if ((lastWin = mapObject.gmap3({action:'get', name:'infowindow', tag:last_gmap_info_clicked})))
+	  	lastWin.close();
+	}
+
+	// Open the selected detail window
+ 	map = mapObject.gmap3('get');
+  if ((currentWindow = mapObject.gmap3({action:'get', name:'infowindow', tag:relayNum})))
+		currentWindow.open(map, marker);
+  last_gmap_info_clicked = relayNum;
 }
 
 /*
@@ -743,20 +792,30 @@ function PS_MRAddGMapMarker(id_carrier, relayPointNumber, contentBlockid)
 	// Check if the gmap has been properly created
 	if (GmapList[id_carrier] == undefined)
 		return ;
-	relayInfo = relayPointDataContainers[relayPointNumber];
+	var relayInfo = relayPointDataContainers[relayPointNumber];
+	var detailContentHtml = PS_MRGetTimeRelayDetail(relayInfo);
 	
 	// Add Marker to the map
-	fullFormatedAddress = relayInfo.LgAdr1 + ' ' + relayInfo.LgAdr3 + ' ' + 
+	var fullFormatedAddress = relayInfo.LgAdr1 + ' ' + relayInfo.LgAdr3 + ' ' + 
 		relayInfo.CP + ' ' + relayInfo.Ville + ' ' + relayInfo.Pays;
 	GmapList[id_carrier].gmap3(
 	{ 
 		action: 'addMarker',
 		address: fullFormatedAddress,
+		tag:relayInfo.Num,
 		map:
 		{
     	center: true,
     	zoom: 14
   	},
+  	marker: {
+  		events:
+      {
+       	click:function(marker, event, data)
+       	{
+       		PS_MRDisplayClickedGmapWindow(marker, relayInfo.Num, $(this));
+        }
+      },
 		callback: function(marker)
 		{
 			if (marker)
@@ -776,6 +835,18 @@ function PS_MRAddGMapMarker(id_carrier, relayPointNumber, contentBlockid)
 				return true;
 			}
 		}
+		},
+		infowindow:
+		{
+			options: {content:detailContentHtml},
+			tag:relayInfo.Num,
+			callback: function() {
+				// To avoid any bug, foreach anytime the elements and try to close them
+				var windowList = $(this).gmap3({action:'get', name:'infowindow', all:true});
+				for (var x in windowList)
+					windowList[x].close();
+			}
+		}	
 	});
 	return false;
 }	

@@ -317,4 +317,3 @@ class AdminAttributeGenerator extends AdminTab
 		</form>';
 	}
 }
-
