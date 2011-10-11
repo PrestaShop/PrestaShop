@@ -27,6 +27,9 @@
 
 class AdminRequestSqlControllerCore extends AdminController
 {
+	private $info = true;
+	private $warning = true;
+
 	public function __construct()
 	{
 		$this->table = 'request_sql';
@@ -38,7 +41,6 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->export = true;
 		$this->requiredDatabase = true;
 		$this->context = Context::getContext();
-
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 	 								'export' => array('text' => $this->l('Export selected')));
 
@@ -51,32 +53,7 @@ class AdminRequestSqlControllerCore extends AdminController
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
 
-		$this->fields_form = array(
-			'legend' => array(
-				'title' => $this->l('Request')
-			),
-			'input' => array(
-				array(
-					'type' => 'text',
-					'label' => $this->l('Name:'),
-					'name' => 'name',
-					'size' => 103,
-					'required' => true
-				),
-				array(
-					'type' => 'textarea',
-					'label' => $this->l('Request:'),
-					'name' => 'sql',
-					'cols' => 100,
-					'rows' => 10,
-					'required' => true
-				)
-			),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			)
-		);
+		$this->template = 'adminRequestSql.tpl';
 
 		parent::__construct();
 	}
@@ -157,7 +134,7 @@ class AdminRequestSqlControllerCore extends AdminController
 	    return $val;
 	}
 
-	public function viewRequestSql()
+	public function viewRequest_sql()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -168,19 +145,17 @@ class AdminRequestSqlControllerCore extends AdminController
 		{
 			foreach (array_keys($results[0]) as $key)
 				$tab_key[] = $key;
-
+			
 			$view['name'] = $obj->name;
 			$view['key'] = $tab_key;
 			$view['results'] = $results;
-
+			
 			$request_sql = new RequestSql();
 			$view['attributes'] = $request_sql->attributes;
 		}
 		else
 			$view['error'] = true;
-
-		$this->context->smarty->assign('view', $view);
-		return $this->context->smarty->fetch('requestSql/view.tpl');
+		return $view;
 	}
 
 	public function _childValidation()
@@ -283,6 +258,23 @@ class AdminRequestSqlControllerCore extends AdminController
 		}
 	}
 
+	public function displayForm($isMainTab = true)
+	{
+		$this->content .= parent::displayForm();
+
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$smarty = $this->context->smarty;
+		$smarty->assign('tab_form', array(
+			'current' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
+			'id' => $obj->id,
+			'table' => $this->table,
+			'name' => $this->getFieldValue($obj, 'name'),
+			'sql' => $this->getFieldValue($obj, 'sql')
+		));
+	}
+
 	public function init()
 	{
 		if (isset($_GET['view'.$this->table]) && isset($_GET['id_'.$this->table]))
@@ -297,30 +289,26 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
-		$this->displayInformation('<b>'.$this->l('How to create a new sql query?').'</b>
-			<br />
-			<ul>
-				<li>'.$this->l('Click "Add new".').'<br /></li>
-				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-				<li>'.$this->l('You can then view the query results by clicking on the tab: ').' <img src="../img/admin/details.gif"></li>
-				<li>'.$this->l('You can then export the query results as a file. Csv file by clicking on the tab: ').' <img src="../img/admin/export.gif"></li>
-			</ul>');
-
 		$smarty = $this->context->smarty;
 		switch ($this->display)
 		{
 			case 'edit':
-				$this->informations = false;
+				$this->info = false;
 				break;
 			case 'view':
-				$this->informations = false;
-				$smarty->assign('view', $this->viewRequestSql());
+				$this->info = false;
+				$this->warning = false;
+				$smarty->assign('view', $this->viewRequest_sql());
 				break;
 			default:
 				$this->display = 'list';
 				break;
 		}
+
+		$smarty->assign(array(
+			'info' =>	$this->info,
+			'warning' =>$this->warning,
+		));
 
 		parent::initContent();
 	}
