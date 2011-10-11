@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -144,7 +144,7 @@ class AdminShop extends AdminTab
 		$categories = Category::getCategories($this->context->language->id, false);
 		Category::recurseCategory($categories, $categories[0][1], 1, $obj->id_category);
 
-		echo '		
+		echo '
 						</select>
 					</div>
 			<label>'.$this->l('Status:').' </label>

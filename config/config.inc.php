@@ -56,6 +56,7 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 	exit;
 }
 require_once(dirname(__FILE__).'/settings.inc.php');
+require_once(dirname(__FILE__).'/defines.inc.php');
 require_once(dirname(__FILE__).'/autoload.php');
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
@@ -84,8 +85,8 @@ Context::getContext()->shop = Shop::initialize();
 define('_THEME_NAME_', Context::getContext()->shop->getTheme());
 define('__PS_BASE_URI__', Context::getContext()->shop->getBaseURI());
 
-/* Include all defines */
-require_once(dirname(__FILE__).'/defines.inc.php');
+/* Include all defines related to base uri and theme name */
+require_once(dirname(__FILE__).'/defines_uri.inc.php');
 
 if (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_',           _PS_ROOT_DIR_.'/modules/');

@@ -906,7 +906,7 @@ abstract class AdminTabCore
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$assos[1].' (`'.pSQL($this->identifier).'`, id_'.$assos[1].')
 											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$assos[1]].')');
 	}
-	
+
 	protected static function getAssoShop($table, $id_object = false)
 	{
 		$shopAsso = Shop::getAssoTables();

@@ -36,14 +36,14 @@ class MySQLCore extends Db
 			define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 
 		if (!$this->link = mysql_connect($this->server, $this->user, $this->password))
-			die(Tools::displayError('Link to database cannot be established.'));
+			throw new PrestashopDatabaseException(Tools::displayError('Link to database cannot be established.'));
 
 		if (!$this->set_db($this->database))
-			die(Tools::displayError('The database selection cannot be made.'));
+			throw new PrestashopDatabaseException(Tools::displayError('The database selection cannot be made.'));
 
 		// UTF-8 support
 		if (!mysql_query('SET NAMES \'utf8\'', $this->link))
-			die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+			throw new PrestashopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
 
 		return $this->link;
 	}
