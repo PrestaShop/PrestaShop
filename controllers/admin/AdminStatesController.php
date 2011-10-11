@@ -30,7 +30,7 @@ class AdminStatesControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->table = 'state';
-	 	$this->className = 'State';
+		$this->className = 'State';
 	 	$this->lang = false;
 	 	$this->edit = true;
 	 	$this->delete = true;
@@ -53,7 +53,84 @@ class AdminStatesControllerCore extends AdminController
 			'zone' => array('title' => $this->l('Zone'), 'width' => 100, 'filter_key' => 'z!name')
 		);
 
-		$this->template = 'adminStates.tpl';
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('States'),
+				'image' => '../img/admin/world.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'size' => 30,
+					'maxlength' => 32,
+					'required' => true,
+					'p' => $this->l('State name to display in addresses and on invoices')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('ISO code:'),
+					'name' => 'iso_code',
+					'size' => 5,
+					'maxlength' => 4,
+					'required' => true,
+					'class' => 'uppercase',
+					'p' => $this->l('1 to 4 letter ISO code (search on Wikipedia if you don\'t know)')
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Country:'),
+					'name' => 'id_country',
+					'required' => false,
+					'options' => array(
+						'query' => Country::getCountries($this->context->language->id, false, true),
+						'id' => 'id_country',
+						'name' => 'name'
+					),
+					'p' => $this->l('Country where state, region or city is located')
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Zone:'),
+					'name' => 'id_zone',
+					'required' => false,
+					'options' => array(
+						'query' => Zone::getZones(),
+						'id' => 'id_zone',
+						'name' => 'name'
+					),
+					'p' => array(
+						$this->l('Geographical zone where this state is located'),
+						$this->l('Used for shipping')
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Status:'),
+					'name' => 'active',
+					'required' => false,
+					'class' => 't',
+					'values' => array(
+						array(
+							'id' => 'active_on',
+							'value' => 1,
+							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+						),
+						array(
+							'id' => 'active_off',
+							'value' => 0,
+							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+						)
+					),
+					'p' => $this->l('Enabled or disabled')
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
 
 		parent::__construct();
 	}
@@ -106,29 +183,6 @@ class AdminStatesControllerCore extends AdminController
 		}
 		else
 			parent::postProcess();
-	}
-
-	public function displayForm($is_main_tab = true)
-	{
-		$this->content = parent::displayForm($is_main_tab);
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-		$current_shop = Shop::initialize();
-
-		$this->context->smarty->assign('tab_form', array(
-			'current' => self::$currentIndex,
-			'table' => $this->table,
-			'token' => $this->token,
-			'id' => $obj->id,
-			'name' => $this->getFieldValue($obj, 'name'),
-			'iso_code' => $this->getFieldValue($obj, 'iso_code'),
-			'countries' => Country::getCountries($this->context->language->id, false, true),
-			'id_country' => $this->getFieldValue($obj, 'id_country'),
-			'zones' => Zone::getZones(),
-			'id_zone' => $this->getFieldValue($obj, 'id_zone'),
-			'active' => $this->getFieldValue($obj, 'active') ? true : false
-		));
 	}
 
 	public function initContent()
