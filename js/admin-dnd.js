@@ -119,6 +119,15 @@ $(document).ready(function() {
 					}
 				}
 				
+				if (table.id == 'carrier') {
+					params = {
+						ajaxCarriersPositions: true,
+						id_carrier : ids[2],
+						way: way,
+						token: token
+					}
+				}
+				
 				$.ajax({
 					type: 'POST',
 					async: false,

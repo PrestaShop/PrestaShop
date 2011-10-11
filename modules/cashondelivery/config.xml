@@ -2,7 +2,7 @@
 <module>
 	<name>cashondelivery</name>
 	<displayName><![CDATA[Cash on delivery (COD)]]></displayName>
-	<version><![CDATA[0.3]]></version>
+	<version><![CDATA[0.4]]></version>
 	<description><![CDATA[Accept cash on delivery payments]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

@@ -215,5 +215,6 @@ UPDATE `PREFIX_module_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
 
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 1, `id_module`, 1, 1 FROM `PREFIX_module`);
 
+ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
-
+/* PHP:add_carrier_position();*/

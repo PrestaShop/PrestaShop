@@ -28,25 +28,25 @@
 class AttributeCore extends ObjectModel
 {
 	/** @var integer Group id which attribute belongs */
-	public		$id_attribute_group;
+	public $id_attribute_group;
 
 	/** @var string Name */
-	public 		$name;
-	public		$color;
-	public		$position;
-	public		$default;
+	public $name;
+	public $color;
+	public $position;
+	public $default;
 
- 	protected 	$fieldsRequired = array('id_attribute_group');
-	protected 	$fieldsValidate = array('id_attribute_group' => 'isUnsignedId', 'color' => 'isColor', 'position' => 'isInt');
- 	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 64);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
+ 	protected $fieldsRequired = array('id_attribute_group');
+	protected $fieldsValidate = array('id_attribute_group' => 'isUnsignedId', 'color' => 'isColor', 'position' => 'isInt');
+ 	protected $fieldsRequiredLang = array('name');
+ 	protected $fieldsSizeLang = array('name' => 64);
+ 	protected $fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected 	$table = 'attribute';
-	protected 	$identifier = 'id_attribute';
+	protected $table = 'attribute';
+	protected $identifier = 'id_attribute';
 	protected	$image_dir = _PS_COL_IMG_DIR_;
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_option_values',
 		'objectNodeName' => 'product_option_value',
 		'fields' => array(
@@ -56,7 +56,7 @@ class AttributeCore extends ObjectModel
 
 	public function __construct()
 	{
-	 	$this->image_dir =  _PS_COL_IMG_DIR_;
+		$this->image_dir = _PS_COL_IMG_DIR_;
 
 		parent::__construct();
 	}
@@ -85,16 +85,23 @@ class AttributeCore extends ObjectModel
 
 	public function delete()
 	{
-		if (($result = Db::getInstance()->executeS('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id)) === false)
+		if (($result = Db::getInstance()->executeS('
+			SELECT `id_product_attribute`
+			FROM `'._DB_PREFIX_.'product_attribute_combination`
+			WHERE `'.$this->identifier.'` = '.(int)$this->id)) === false)
 			return false;
-		$combinationIds = array();
+		$combination_ids = array();
 		if (Db::getInstance()->numRows())
 		{
-			foreach ($result AS $row)
-				$combinationIds[] = (int)$row['id_product_attribute'];
-			if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_combination` WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
+			foreach ($result as $row)
+				$combination_ids[] = (int)$row['id_product_attribute'];
+			if (Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
+				WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
 				return false;
-			if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` IN ('.implode(', ', $combinationIds).')') === false)
+			if (Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'product_attribute`
+				WHERE `id_product_attribute` IN ('.implode(', ', $combination_ids).')') === false)
 				return false;
 		}
 
@@ -107,17 +114,17 @@ class AttributeCore extends ObjectModel
 		return $return;
 	}
 
-	public function update($nullValues = false)
+	public function update($null_values = false)
 	{
-		$return = parent::update($nullValues);
+		$return = parent::update($null_values);
 		if ($return)
 			Module::hookExec('afterSaveAttribute', array('id_attribute' => $this->id));
 		return $return;
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-		$return = parent::add($autodate, $nullValues);
+		$return = parent::add($autodate, $null_values);
 		if ($return)
 			Module::hookExec('afterSaveAttribute', array('id_attribute' => $this->id));
 		return $return;
@@ -130,7 +137,7 @@ class AttributeCore extends ObjectModel
 	 * @param boolean $notNull Get only not null fields if true
 	 * @return array Attributes
 	 */
-	public static function getAttributes($id_lang, $notNull = false)
+	public static function getAttributes($id_lang, $not_null = false)
 	{
 		if (!Combination::isFeatureActive())
 			return array();
@@ -140,7 +147,7 @@ class AttributeCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute_group` = ag.`id_attribute_group`
 		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
-		'.($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
+		'.($not_null ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
 		ORDER BY agl.`name` ASC, a.`position` ASC');
 	}
 
@@ -152,7 +159,7 @@ class AttributeCore extends ObjectModel
 	 * @param integer $qty Quantity needed
 	 * @return boolean Quantity is available or not
 	 */
-	static public function checkAttributeQty($id_product_attribute, $qty, Shop $shop = null)
+	public static function checkAttributeQty($id_product_attribute, $qty, Shop $shop = null)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -163,7 +170,7 @@ class AttributeCore extends ObjectModel
 					.$shop->sqlRestriction(Shop::SHARE_STOCK);
 		$result = (int)Db::getInstance()->getValue($sql);
 
-		return ($result AND $qty <= $result);
+		return ($result && $qty <= $result);
 	}
 
 	/**
@@ -182,7 +189,7 @@ class AttributeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_attribute`
 		WHERE `id_product` = '.(int)$id_product);
 
-		if ($row['quantity'] !== NULL)
+		if ($row['quantity'] !== null)
 			return (int)$row['quantity'];
 		return false;
 	}
@@ -260,11 +267,11 @@ class AttributeCore extends ObjectModel
 		))
 			return false;
 
-		foreach ($res AS $attribute)
+		foreach ($res as $attribute)
 			if ((int)$attribute['id_attribute'] == (int)$this->id)
-				$movedAttribute = $attribute;
+				$moved_attribute = $attribute;
 
-		if (!isset($movedAttribute) || !isset($position))
+		if (!isset($moved_attribute) || !isset($position))
 			return false;
 
 		// < and > statements rather than BETWEEN operator
@@ -274,14 +281,14 @@ class AttributeCore extends ObjectModel
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
-				? '> '.(int)$movedAttribute['position'].' AND `position` <= '.(int)$position
-				: '< '.(int)$movedAttribute['position'].' AND `position` >= '.(int)$position).'
-			AND `id_attribute_group`='.(int)$movedAttribute['id_attribute_group'])
-		AND Db::getInstance()->execute('
+				? '> '.(int)$moved_attribute['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$moved_attribute['position'].' AND `position` >= '.(int)$position).'
+			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group'])
+		&& Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position` = '.(int)$position.'
-			WHERE `id_attribute` = '.(int)$movedAttribute['id_attribute'].'
-			AND `id_attribute_group`='.(int)$movedAttribute['id_attribute_group']));
+			WHERE `id_attribute` = '.(int)$moved_attribute['id_attribute'].'
+			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']));
 	}
 
 	/**
@@ -301,7 +308,7 @@ class AttributeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'attribute`
 		WHERE `id_attribute_group` = '.(int)$id_attribute_group;
 		// when delete, you must use $use_last_attribute
-		if($use_last_attribute)
+		if ($use_last_attribute)
 			$sql .= '
 			AND `id_attribute` != '.(int)$this->id;
 		$sql .= '

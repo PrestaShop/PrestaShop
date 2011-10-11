@@ -45,7 +45,8 @@ class AdminCarriers extends AdminTab
 			'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 's', 'orderby' => false, 'search' => false),
 			'delay' => array('title' => $this->l('Delay'), 'width' => 300, 'orderby' => false),
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
-			'is_free' => array('title' => $this->l('Is Free'), 'align' => 'center', 'icon' => array(0 => 'disabled.gif', 1 => 'enabled.gif', 'default' => 'disabled.gif'), 'type' => 'bool', 'orderby' => false)
+			'is_free' => array('title' => $this->l('Is Free'), 'align' => 'center', 'icon' => array(0 => 'disabled.gif', 1 => 'enabled.gif', 'default' => 'disabled.gif'), 'type' => 'bool', 'orderby' => false),
+			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position')
 		);
 
 		$this->optionsList = array(
@@ -81,7 +82,7 @@ class AdminCarriers extends AdminTab
 			</ul>
 		</div><br />';
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
@@ -163,7 +164,7 @@ class AdminCarriers extends AdminTab
 							<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
 								<td><input type="checkbox" name="groupBox[]" class="groupBox" id="groupBox_'.$group['id_group'].'" value="'.$group['id_group'].'"
 								'.((Db::getInstance()->getValue('SELECT id_group FROM '._DB_PREFIX_.'carrier_group
-									WHERE id_carrier='.(int)($obj->id).' AND id_group='.(int)($group['id_group'])) || (!isset($obj->id))) ? 'checked="checked" ' : '').'/></td>
+									WHERE id_carrier='.(int)$obj->id.' AND id_group='.(int)$group['id_group']) || (!isset($obj->id))) ? 'checked="checked" ' : '').'/></td>
 								<td>'.$group['id_group'].'</td>
 								<td><label for="groupBox_'.$group['id_group'].'" class="t">'.$group['name'].'</label></td>
 							</tr>';
@@ -290,7 +291,7 @@ class AdminCarriers extends AdminTab
 			$this->validateRules();
 			if (!count($this->_errors))
 			{
-				$id = (int)(Tools::getValue('id_'.$this->table));
+				$id = (int)Tools::getValue('id_'.$this->table);
 
 				/* Object update */
 				if (isset($id) && !empty($id))
@@ -303,22 +304,23 @@ class AdminCarriers extends AdminTab
 							Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id);
 							$object->deleted = 1;
 							$object->update();
-							$objectNew = new $this->className();
-							$this->copyFromPost($objectNew, $this->table);
-							$result = $objectNew->add();
-							if (Validate::isLoadedObject($objectNew))
+							$object_new = new $this->className();
+							$this->copyFromPost($object_new, $this->table);
+							$object_new->position = $object->position;
+							$result = $object_new->add();
+							if (Validate::isLoadedObject($object_new))
 							{
-								$this->afterDelete($objectNew, $object->id);
-								Hook::updateCarrier((int)($object->id), $objectNew);
+								$this->afterDelete($object_new, $object->id);
+								Hook::updateCarrier((int)$object->id, $object_new);
 							}
-							$this->changeGroups($objectNew->id);
+							$this->changeGroups($object_new->id);
 							if (!$result)
 								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
-							else if ($this->postImage($objectNew->id))
-								{
-									$this->changeZones($objectNew->id);
-									Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
-								}
+							else if ($this->postImage($object_new->id))
+							{
+								$this->changeZones($object_new->id);
+								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4&token='.$this->token);
+							}
 						}
 						else
 							$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
@@ -334,6 +336,7 @@ class AdminCarriers extends AdminTab
 					{
 						$object = new $this->className();
 						$this->copyFromPost($object, $this->table);
+						$object->position = Carrier::getHigherPosition() + 1;
 						if (!$object->add())
 							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 						else if (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
@@ -348,7 +351,7 @@ class AdminCarriers extends AdminTab
 				}
 			}
 		}
-		elseif ((isset($_GET['status'.$this->table]) OR isset($_GET['status'])) AND Tools::getValue($this->identifier))
+		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -394,5 +397,14 @@ class AdminCarriers extends AdminTab
 			if ($list['name'] == '0')
 				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
 		parent::displayListContent($token);
+	}
+
+	/**
+	 * Modifying initial getList method to display position feature (drag and drop)
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		$order_by = ($order_by && $this->context->cookie->__get($this->table.'Orderby')) ? $this->context->cookie->__get($this->table.'Orderby'): 'position';
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 }

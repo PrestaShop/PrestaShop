@@ -315,7 +315,7 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		if ($full AND $this->id)
+		if ($full && $this->id)
 		{
 			$this->isFullyLoaded = $full;
 			$this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
@@ -330,7 +330,7 @@ class ProductCore extends ObjectModel
 			$this->tax_rate = $this->getTaxesRate(new Address($address));
 
 			$this->new = $this->isNew();
-			$this->price = Product::getPriceStatic((int)($this->id), false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
+			$this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
 			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
 			if ($this->id)
 				$this->tags = Tag::getProductTags((int)$this->id);
@@ -346,45 +346,45 @@ class ProductCore extends ObjectModel
 	{
 		$this->validateFields();
 		if (isset($this->id))
-			$fields['id_product'] = (int)($this->id);
-		$fields['id_tax_rules_group'] = (int)($this->id_tax_rules_group);
-		$fields['id_manufacturer'] = (int)($this->id_manufacturer);
-		$fields['id_supplier'] = (int)($this->id_supplier);
-		$fields['id_category_default'] = (int)($this->id_category_default);
-		$fields['quantity'] = (int)($this->quantity);
-		$fields['minimal_quantity'] = (int)($this->minimal_quantity);
-		$fields['price'] = (float)($this->price);
-		$fields['additional_shipping_cost'] = (float)($this->additional_shipping_cost);
-		$fields['wholesale_price'] = (float)($this->wholesale_price);
-		$fields['on_sale'] = (int)($this->on_sale);
-		$fields['online_only'] = (int)($this->online_only);
-		$fields['ecotax'] = (float)($this->ecotax);
+			$fields['id_product'] = (int)$this->id;
+		$fields['id_tax_rules_group'] = (int)$this->id_tax_rules_group;
+		$fields['id_manufacturer'] = (int)$this->id_manufacturer;
+		$fields['id_supplier'] = (int)$this->id_supplier;
+		$fields['id_category_default'] = (int)$this->id_category_default;
+		$fields['quantity'] = (int)$this->quantity;
+		$fields['minimal_quantity'] = (int)$this->minimal_quantity;
+		$fields['price'] = (float)$this->price;
+		$fields['additional_shipping_cost'] = (float)$this->additional_shipping_cost;
+		$fields['wholesale_price'] = (float)$this->wholesale_price;
+		$fields['on_sale'] = (int)$this->on_sale;
+		$fields['online_only'] = (int)$this->online_only;
+		$fields['ecotax'] = (float)$this->ecotax;
 		$fields['unity'] = pSQL($this->unity);
-		$fields['unit_price_ratio'] = (float)($this->unit_price > 0 ? $this->price / $this->unit_price : 0);
+		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
 		$fields['ean13'] = pSQL($this->ean13);
 		$fields['upc'] = pSQL($this->upc);
 		$fields['reference'] = pSQL($this->reference);
 		$fields['supplier_reference'] = pSQL($this->supplier_reference);
 		$fields['location'] = pSQL($this->location);
-		$fields['width'] = (float)($this->width);
-		$fields['height'] = (float)($this->height);
-		$fields['depth'] = (float)($this->depth);
-		$fields['weight'] = (float)($this->weight);
+		$fields['width'] = (float)$this->width;
+		$fields['height'] = (float)$this->height;
+		$fields['depth'] = (float)$this->depth;
+		$fields['weight'] = (float)$this->weight;
 		$fields['out_of_stock'] = pSQL($this->out_of_stock);
-		$fields['quantity_discount'] = (int)($this->quantity_discount);
-		$fields['customizable'] = (int)($this->customizable);
-		$fields['uploadable_files'] = (int)($this->uploadable_files);
-		$fields['text_fields'] = (int)($this->text_fields);
-		$fields['active'] = (int)($this->active);
-		$fields['available_for_order'] = (int)($this->available_for_order);
+		$fields['quantity_discount'] = (int)$this->quantity_discount;
+		$fields['customizable'] = (int)$this->customizable;
+		$fields['uploadable_files'] = (int)$this->uploadable_files;
+		$fields['text_fields'] = (int)$this->text_fields;
+		$fields['active'] = (int)$this->active;
+		$fields['available_for_order'] = (int)$this->available_for_order;
 		$fields['available_date'] = pSQL($this->available_date);
 		$fields['condition'] = pSQL($this->condition);
-		$fields['show_price'] = (int)($this->show_price);
+		$fields['show_price'] = (int)$this->show_price;
 		$fields['indexed'] = 0; // Reset indexation every times
-		$fields['cache_is_pack'] = (int)($this->cache_is_pack);
-		$fields['cache_has_attachments'] = (int)($this->cache_has_attachments);
-		$fields['is_virtual'] = (int)($this->is_virtual);
-		$fields['cache_default_attribute'] = (int)($this->cache_default_attribute);
+		$fields['cache_is_pack'] = (int)$this->cache_is_pack;
+		$fields['cache_has_attachments'] = (int)$this->cache_has_attachments;
+		$fields['is_virtual'] = (int)$this->is_virtual;
+		$fields['cache_default_attribute'] = (int)$this->cache_default_attribute;
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
 
@@ -432,10 +432,10 @@ class ProductCore extends ObjectModel
 	{
 		if ($id_customer)
 		{
-			$customer = new Customer((int)($id_customer));
+			$customer = new Customer((int)$id_customer);
 			if (!Validate::isLoadedObject($customer))
 				die(Tools::displayError());
-			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
+			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 		}
 		else if (Validate::isLoadedObject(Context::getContext()->customer))
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod(Context::getContext()->customer->id_default_group);
@@ -446,8 +446,8 @@ class ProductCore extends ObjectModel
 	public static function getTaxCalculationMethod($id_customer = null)
 	{
 		if ($id_customer)
-			self::initPricesComputation((int)($id_customer));
-		return (int)(self::$_taxCalculationMethod);
+			self::initPricesComputation((int)$id_customer);
+		return (int)self::$_taxCalculationMethod;
 	}
 
 	/**
@@ -461,13 +461,13 @@ class ProductCore extends ObjectModel
 		if (!$res = Db::getInstance()->executeS('
 			SELECT cp.`id_product`, cp.`position`, cp.`id_category`
 			FROM `'._DB_PREFIX_.'category_product` cp
-			WHERE cp.`id_category` = '.(int)(Tools::getValue('id_category', 1)).'
+			WHERE cp.`id_category` = '.(int)Tools::getValue('id_category', 1).'
 			ORDER BY cp.`position` ASC'
 		))
 			return false;
 
 		foreach ($res as $product)
-			if ((int)($product['id_product']) == (int)($this->id))
+			if ((int)$product['id_product'] == (int)$this->id)
 				$movedProduct = $product;
 
 		if (!isset($movedProduct) || !isset($position))
@@ -480,14 +480,14 @@ class ProductCore extends ObjectModel
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
-				? '> '.(int)($movedProduct['position']).' AND `position` <= '.(int)($position)
-				: '< '.(int)($movedProduct['position']).' AND `position` >= '.(int)($position)).'
-			AND `id_category`='.(int)($movedProduct['id_category']))
+				? '> '.(int)$movedProduct['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$movedProduct['position'].' AND `position` >= '.(int)$position).'
+			AND `id_category`='.(int)$movedProduct['id_category'])
 		AND Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position` = '.(int)($position).'
-			WHERE `id_product` = '.(int)($movedProduct['id_product']).'
-			AND `id_category`='.(int)($movedProduct['id_category'])));
+			SET `position` = '.(int)$position.'
+			WHERE `id_product` = '.(int)$movedProduct['id_product'].'
+			AND `id_category`='.(int)$movedProduct['id_category']));
 	}
 
 	/*
@@ -503,16 +503,16 @@ class ProductCore extends ObjectModel
 		$result = Db::getInstance()->executeS('
 		SELECT `id_product`
 		FROM `'._DB_PREFIX_.'category_product`
-		WHERE `id_category` = '.(int)($id_category).'
+		WHERE `id_category` = '.(int)$id_category.'
 		ORDER BY `position`');
 		$sizeof = count($result);
 
 		for ($i = 0; $i < $sizeof; $i++)
 			$return &= Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position` = '.(int)($i).'
-			WHERE `id_category` = '.(int)($id_category).'
-			AND `id_product` = '.(int)($result[$i]['id_product']));
+			SET `position` = '.(int)$i.'
+			WHERE `id_category` = '.(int)$id_category.'
+			AND `id_product` = '.(int)$result[$i]['id_product']);
 		return $return;
 	}
 
@@ -566,7 +566,7 @@ class ProductCore extends ObjectModel
 	public static function updateDefaultAttribute($id_product)
 	{
 		$id_product_attribute = self::getDefaultAttribute($id_product);
-		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_default_attribute = '.(int)($id_product_attribute).' WHERE id_product = '.(int)($id_product).' LIMIT 1');
+		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_default_attribute = '.(int)$id_product_attribute.' WHERE id_product = '.(int)$id_product.' LIMIT 1');
 	}
 
 	public function validateFieldsLang($die = true, $errorReturn = false)
@@ -601,7 +601,7 @@ class ProductCore extends ObjectModel
 			!$this->deleteAttributesImpacts() OR
 			!$this->deleteAttachments() OR
 			!$this->deleteCustomization() OR
-			!SpecificPrice::deleteByProductId((int)($this->id)) OR
+			!SpecificPrice::deleteByProductId((int)$this->id) OR
 			!$this->deletePack() OR
 			!$this->deleteProductSale() OR
 			!$this->deleteSceneProducts() OR
@@ -620,7 +620,7 @@ class ProductCore extends ObjectModel
 		$return = 1;
 		foreach ($products as $id_product)
 		{
-			$product = new Product((int)($id_product));
+			$product = new Product((int)$id_product);
 			$return &= $product->delete();
 		}
 		return $return;
@@ -712,8 +712,8 @@ class ProductCore extends ObjectModel
 	 */
 	public function deleteCategory($id_category, $cleanPositions = true)
 	{
-		$result = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)($this->id).' AND id_category = '.(int)$id_category.'');
-		$return = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)($this->id).' AND id_category = '.(int)$id_category.'');
+		$result = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)$this->id.' AND id_category = '.(int)$id_category.'');
+		$return = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)$this->id.' AND id_category = '.(int)$id_category.'');
 		if ($cleanPositions === true)
 			foreach ($result as $row)
 				$this->cleanPositions((int)$row['id_category']);
@@ -728,12 +728,12 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteCategories($cleanPositions = false)
 	{
-		$return = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)($this->id));
+		$return = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)$this->id);
 		if ($cleanPositions === true)
 		{
-			$result = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)($this->id));
+			$result = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)$this->id);
 			foreach ($result as $row)
-				$this->cleanPositions((int)($row['id_category']));
+				$this->cleanPositions((int)$row['id_category']);
 		}
 		return $return;
 	}
@@ -745,7 +745,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteTags()
 	{
-		return (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)($this->id))
+		return (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$this->id)
 		AND Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'tag` WHERE `id_tag` NOT IN (SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag`)'));
 	}
 
@@ -756,7 +756,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteCartProducts()
 	{
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_product` = '.(int)($this->id));
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_product` = '.(int)$this->id);
 	}
 
 	/**
@@ -769,7 +769,7 @@ class ProductCore extends ObjectModel
 		$result = Db::getInstance()->executeS('
 		SELECT `id_image`
 		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)($this->id));
+		WHERE `id_product` = '.(int)$this->id);
 
 		$status = true;
 		if ($result)
@@ -786,7 +786,7 @@ class ProductCore extends ObjectModel
 		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `price`
 		FROM `'._DB_PREFIX_.'product_attribute`
-		WHERE `id_product_attribute` = '.(int)($id_product_attribute));
+		WHERE `id_product_attribute` = '.(int)$id_product_attribute);
 		return $rq['price'];
 	}
 
@@ -845,7 +845,7 @@ class ProductCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'product` p
 				'.$context->shop->sqlAsso('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
-				WHERE pl.`id_lang` = '.(int)($id_lang).'
+				WHERE pl.`id_lang` = '.(int)$id_lang.'
 				ORDER BY pl.`name`';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
@@ -855,7 +855,7 @@ class ProductCore extends ObjectModel
 		$result = Db::getInstance()->executeS('
 			SELECT id_product FROM `'._DB_PREFIX_.'product` p
 			WHERE 1
-			AND id_product = '.(int)($this->id).'
+			AND id_product = '.(int)$this->id.'
 			AND DATEDIFF(p.`date_add`,
 			DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
 		');
@@ -3000,9 +3000,9 @@ class ProductCore extends ObjectModel
 				if (isset($customizedDatas[$productId][$productAttributeId]))
 					foreach ($customizedDatas[$productId][$productAttributeId] as $customization)
 					{
-						$customizationQuantity += (int)($customization['quantity']);
-						$customizationQuantityRefunded += (int)($customization['quantity_refunded']);
-						$customizationQuantityReturned += (int)($customization['quantity_returned']);
+						$customizationQuantity += (int)$customization['quantity'];
+						$customizationQuantityRefunded += (int)$customization['quantity_refunded'];
+						$customizationQuantityReturned += (int)$customization['quantity_returned'];
 					}
 				$productUpdate['customizationQuantityTotal'] = $customizationQuantity;
 				$productUpdate['customizationQuantityRefunded'] = $customizationQuantityRefunded;
@@ -3034,32 +3034,32 @@ class ProductCore extends ObjectModel
 
 	protected function _deleteOldLabels()
 	{
-		$max = array(Product::CUSTOMIZE_FILE => (int)(Tools::getValue('uploadable_files')), Product::CUSTOMIZE_TEXTFIELD => (int)(Tools::getValue('text_fields')));
+		$max = array(Product::CUSTOMIZE_FILE => (int)Tools::getValue('uploadable_files'), Product::CUSTOMIZE_TEXTFIELD => (int)Tools::getValue('text_fields'));
 		/* Get customization field ids */
-		if (($result = Db::getInstance()->executeS('SELECT `id_customization_field`, `type` FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product` = '.(int)($this->id).'
+		if (($result = Db::getInstance()->executeS('SELECT `id_customization_field`, `type` FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product` = '.(int)$this->id.'
 		ORDER BY `id_customization_field`')) === false)
 			return false;
 		if (empty($result))
 			return true;
 		$customizationFields = array(Product::CUSTOMIZE_FILE => array(), Product::CUSTOMIZE_TEXTFIELD => array());
 		foreach ($result as $row)
-			$customizationFields[(int)($row['type'])][] = (int)($row['id_customization_field']);
+			$customizationFields[(int)$row['type']][] = (int)$row['id_customization_field'];
 		$extraFile = count($customizationFields[Product::CUSTOMIZE_FILE]) - $max[Product::CUSTOMIZE_FILE];
 		$extraText = count($customizationFields[Product::CUSTOMIZE_TEXTFIELD]) - $max[Product::CUSTOMIZE_TEXTFIELD];
 
 		/* If too much inside the database, deletion */
 		if ($extraFile > 0 && count($customizationFields[Product::CUSTOMIZE_FILE]) - $extraFile >= 0 &&
 		(!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)($this->id).' AND `type` = '.Product::CUSTOMIZE_FILE.'
-			AND `id_customization_field` >= '.(int)($customizationFields[Product::CUSTOMIZE_FILE][count($customizationFields[Product::CUSTOMIZE_FILE]) - $extraFile]))
+			WHERE `id_product` = '.(int)$this->id.' AND `type` = '.Product::CUSTOMIZE_FILE.'
+			AND `id_customization_field` >= '.(int)$customizationFields[Product::CUSTOMIZE_FILE][count($customizationFields[Product::CUSTOMIZE_FILE]) - $extraFile])
 		|| !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang`
 			WHERE `id_customization_field` NOT IN (SELECT `id_customization_field` FROM `'._DB_PREFIX_.'customization_field`)')))
 			return false;
 
 		if ($extraText > 0 && count($customizationFields[Product::CUSTOMIZE_TEXTFIELD]) - $extraText >= 0 &&
 		(!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)($this->id).' AND `type` = '.Product::CUSTOMIZE_TEXTFIELD.'
-			AND `id_customization_field` >= '.(int)($customizationFields[Product::CUSTOMIZE_TEXTFIELD][count($customizationFields[Product::CUSTOMIZE_TEXTFIELD]) - $extraText]))
+			WHERE `id_product` = '.(int)$this->id.' AND `type` = '.Product::CUSTOMIZE_TEXTFIELD.'
+			AND `id_customization_field` >= '.(int)$customizationFields[Product::CUSTOMIZE_TEXTFIELD][count($customizationFields[Product::CUSTOMIZE_TEXTFIELD]) - $extraText])
 		|| !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang`
 			WHERE `id_customization_field` NOT IN (SELECT `id_customization_field` FROM `'._DB_PREFIX_.'customization_field`)')))
 			return false;
@@ -3075,14 +3075,14 @@ class ProductCore extends ObjectModel
 		// Label insertion
 		if (!Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
-			VALUES ('.(int)$this->id.', '.(int)($type).', 0)') ||
-			!$id_customization_field = (int)(Db::getInstance()->Insert_ID()))
+			VALUES ('.(int)$this->id.', '.(int)$type.', 0)') ||
+			!$id_customization_field = (int)Db::getInstance()->Insert_ID())
 			return false;
 
 		// Multilingual label name creation
 		$values = '';
 		foreach ($languages as $language)
-			$values .= '('.(int)($id_customization_field).', '.(int)($language['id_lang']).', \'\'), ';
+			$values .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', \'\'), ';
 		$values = rtrim($values, ', ');
 		if (!Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`)
@@ -3098,12 +3098,12 @@ class ProductCore extends ObjectModel
 	public function createLabels($uploadableFiles, $textFields)
 	{
 		$languages = Language::getLanguages();
-		if ((int)($uploadableFiles) > 0)
-			for ($i = 0; $i < (int)($uploadableFiles); $i++)
+		if ((int)$uploadableFiles > 0)
+			for ($i = 0; $i < (int)$uploadableFiles; $i++)
 				if (!$this->_createLabel($languages, Product::CUSTOMIZE_FILE))
 					return false;
-		if ((int)($textFields) > 0)
-			for ($i = 0; $i < (int)($textFields); $i++)
+		if ((int)$textFields > 0)
+			for ($i = 0; $i < (int)$textFields; $i++)
 				if (!$this->_createLabel($languages, Product::CUSTOMIZE_TEXTFIELD))
 					return false;
 		return true;
@@ -3121,16 +3121,16 @@ class ProductCore extends ObjectModel
 				/* Multilingual label name update */
 				if (!Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'customization_field_lang`
-					(`id_customization_field`, `id_lang`, `name`) VALUES ('.(int)($tmp[2]).', '.(int)($tmp[3]).', \''.pSQL($value).'\')
+					(`id_customization_field`, `id_lang`, `name`) VALUES ('.(int)$tmp[2].', '.(int)$tmp[3].', \''.pSQL($value).'\')
 					ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))
 					return false;
-				$isRequired = isset($_POST['require_'.(int)($tmp[1]).'_'.(int)($tmp[2])]) ? 1 : 0;
+				$isRequired = isset($_POST['require_'.(int)$tmp[1].'_'.(int)$tmp[2]]) ? 1 : 0;
 				$hasRequiredFields |= $isRequired;
 				/* Require option update */
-				if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field` SET `required` = '.(int)($isRequired).' WHERE `id_customization_field` = '.(int)($tmp[2])))
+				if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field` SET `required` = '.(int)$isRequired.' WHERE `id_customization_field` = '.(int)$tmp[2]))
 					return false;
 			}
-		if ($hasRequiredFields && !Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = 2 WHERE `id_product` = '.(int)($this->id)))
+		if ($hasRequiredFields && !Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = 2 WHERE `id_product` = '.(int)$this->id))
 			return false;
 		if (!$this->_deleteOldLabels())
 			return false;
@@ -3145,14 +3145,14 @@ class ProductCore extends ObjectModel
 			SELECT cf.`id_customization_field`, cf.`type`, cf.`required`, cfl.`name`, cfl.`id_lang`
 			FROM `'._DB_PREFIX_.'customization_field` cf
 			NATURAL JOIN `'._DB_PREFIX_.'customization_field_lang` cfl
-			WHERE cf.`id_product` = '.(int)($this->id).($id_lang ? ' AND cfl.`id_lang` = '.(int)($id_lang) : '').'
+			WHERE cf.`id_product` = '.(int)$this->id.($id_lang ? ' AND cfl.`id_lang` = '.(int)$id_lang : '').'
 			ORDER BY cf.`id_customization_field`'))
 			return false;
 		if ($id_lang)
 			return $result;
 		$customizationFields = array();
 		foreach ($result as $row)
-			$customizationFields[(int)($row['type'])][(int)($row['id_customization_field'])][(int)($row['id_lang'])] = $row;
+			$customizationFields[(int)$row['type']][(int)$row['id_customization_field']][(int)$row['id_lang']] = $row;
 		return $customizationFields;
 	}
 
@@ -3163,7 +3163,7 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `type`
 			FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)($this->id));
+			WHERE `id_product` = '.(int)$this->id);
 	}
 
 	public function getRequiredCustomizableFields()
@@ -3173,7 +3173,7 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `type`
 			FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)($this->id).'
+			WHERE `id_product` = '.(int)$this->id.'
 			AND `required` = 1'
 		);
 	}
@@ -3210,9 +3210,9 @@ class ProductCore extends ObjectModel
 	{
 		if (!((int)$id_product > 0) || !is_array($categories) || empty($categories))
 			return false;
-		$sql = 'SELECT id_product FROM `'._DB_PREFIX_.'category_product` WHERE `id_product`='.(int)($id_product).' AND `id_category` IN(';
+		$sql = 'SELECT id_product FROM `'._DB_PREFIX_.'category_product` WHERE `id_product`='.(int)$id_product.' AND `id_category` IN(';
 		foreach ($categories as $category)
-			$sql .= (int)($category['id_category']).',';
+			$sql .= (int)$category['id_category'].',';
 		$sql = rtrim($sql, ',').')';
 
 		if (isset(self::$_incat[md5($sql)]))
@@ -3451,7 +3451,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function getWsCombinations()
 	{
-		$result = Db::getInstance()->executeS('SELECT `id_product_attribute` as id FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)($this->id));
+		$result = Db::getInstance()->executeS('SELECT `id_product_attribute` as id FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)$this->id);
 		return $result;
 	}
 
@@ -3468,7 +3468,7 @@ class ProductCore extends ObjectModel
 			$ids_new[] = (int)$combination['id'];
 
 		$ids_orig = array();
-		$original = Db::getInstance()->executeS('SELECT `id_product_attribute` as id FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)($this->id));
+		$original = Db::getInstance()->executeS('SELECT `id_product_attribute` as id FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)$this->id);
 		if (is_array($original))
 			foreach ($original as $id)
 				$ids_orig[] = $id['id'];
@@ -3527,8 +3527,8 @@ class ProductCore extends ObjectModel
 	{
 		$result = Db::getInstance()->executeS('SELECT position
 			FROM `'._DB_PREFIX_.'category_product`
-			WHERE id_category = '.(int)($this->id_category_default).'
-			AND id_product = '.(int)($this->id));
+			WHERE id_category = '.(int)$this->id_category_default.'
+			AND id_product = '.(int)$this->id);
 		if (count($result) > 0)
 			return $result[0]['position'];
 		return '';
@@ -3553,10 +3553,10 @@ class ProductCore extends ObjectModel
 	public function setCoverWs($id_image)
 	{
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image`
-									SET `cover` = 0 WHERE `id_product` = '.(int)($this->id).'
+									SET `cover` = 0 WHERE `id_product` = '.(int)$this->id.'
 									');
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image`
-									SET `cover` = 1 WHERE `id_product` = '.(int)($this->id).' AND `id_image` = '.(int)$id_image);
+									SET `cover` = 1 WHERE `id_product` = '.(int)$this->id.' AND `id_image` = '.(int)$id_image);
 		return true;
 	}
 
@@ -3570,7 +3570,7 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('
 		SELECT `id_image` as id
 		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)($this->id).'
+		WHERE `id_product` = '.(int)$this->id.'
 		ORDER BY `position`');
 	}
 
@@ -3579,7 +3579,7 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->executeS('
 		SELECT `id_tag` as id
 		FROM `'._DB_PREFIX_.'product_tag`
-		WHERE `id_product` = '.(int)($this->id));
+		WHERE `id_product` = '.(int)$this->id);
 	}
 
 
