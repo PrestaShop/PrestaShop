@@ -70,7 +70,6 @@ class HelperFormCore extends Helper
 		else
 			$defaultFormLanguage = (int)($this->context->cookie->employee_form_lang);
 
-		info($this->fields_value);
 		$this->context->smarty->assign(array(
 			'firstCall' => $this->first_call,
 			'current' => self::$currentIndex,
