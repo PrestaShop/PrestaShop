@@ -119,7 +119,7 @@ class TaxCalculatorCore
 
 	/**
 	 * Return the tax amount associated to each taxes of the TaxCalculator
-	 * 
+	 *
 	 * @param float $price_te
 	 * @return array $taxes_amount
 	 */
@@ -135,7 +135,7 @@ class TaxCalculatorCore
 				$price_te = $price_te + $taxes_amounts[$tax->rate];
 			}
 			else
-				$taxes_amounts[$tax->rate] = ($price * (abs($tax->rate) / 100));
+				$taxes_amounts[$tax->rate] = ($price_te * (abs($tax->rate) / 100));
 		}
 
 		return $taxes_amounts;
