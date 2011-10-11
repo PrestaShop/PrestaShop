@@ -46,6 +46,8 @@ class AdminPerformance extends AdminTab
 					$this->_errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').' <a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
 				else if ($cache_active && $caching_system == 'CacheApc' && !extension_loaded('apc'))
 					$this->_errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').' <a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
+				else if ($cache_active && $caching_system == 'CacheXcache' && !extension_loaded('xcache'))
+					$this->_errors[] = Tools::displayError('To use Xcache, you must install the Xcache extension on your server.').' <a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 				else if ($cache_active && $caching_system == 'CacheFs' && !is_writable(_PS_CACHEFS_DIRECTORY_))
 					$this->_errors[] = Tools::displayError('To use CacheFS the directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.Tools::displayError('must be writable');
 
@@ -224,6 +226,9 @@ class AdminPerformance extends AdminTab
 			$warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').' <a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
 		if (!extension_loaded('apc'))
 			$warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').' <a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
+		if (!extension_loaded('xcache'))
+			$warnings[] = $this->l('To use Xcache, you must install the Xcache extension on your server.').' <a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
+
 		if (!is_writable(_PS_CACHEFS_DIRECTORY_))
 			$warnings[] = $this->l('To use CacheFS the directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
 
@@ -447,6 +452,7 @@ class AdminPerformance extends AdminTab
 						<select name="caching_system" id="caching_system">
 							<option value="CacheMemcache" '.(_PS_CACHING_SYSTEM_ == 'CacheMemcache' ? 'selected="selected"' : '' ).'>'.$this->l('Memcached').'</option>
 							<option value="CacheApc" '.(_PS_CACHING_SYSTEM_ == 'CacheApc' ? 'selected="selected"' : '' ).'>'.$this->l('APC').'</option>
+							<option value="CacheXcache" '.(_PS_CACHING_SYSTEM_ == 'CacheXcache' ? 'selected="selected"' : '' ).'>'.$this->l('Xcache').'</option>
 							<option value="CacheFs" '.(_PS_CACHING_SYSTEM_ == 'CacheFs' ? 'selected="selected"' : '' ).'>'.$this->l('File System').'</option>
 						</select>
 					</div>
