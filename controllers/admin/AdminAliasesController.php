@@ -44,12 +44,42 @@ class AdminAliasesControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
-		'alias' => array('title' => $this->l('Aliases'), 'width' => 160),
-		'search' => array('title' => $this->l('Search'), 'width' => 40),
-		'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'alias' => array('title' => $this->l('Aliases'), 'width' => 160),
+			'search' => array('title' => $this->l('Search'), 'width' => 40),
+			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
-		$this->template = 'adminAliases.tpl';
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Aliases'),
+				'image' => '../img/admin/search.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Alias:'),
+					'name' => 'alias',
+					'size' => 40,
+					'required' => true,
+					'p' => array(
+						$this->l('Enter each alias separated by a comma (\',\') (e.g., \'prestshop,preztashop,prestasohp\')'),
+						$this->l('Forbidden characters: <>;=#{}')
+					)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Result:'),
+					'name' => 'search',
+					'size' => 15,
+					'required' => true,
+					'p' => $this->l('Search this word instead.')
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
 
 		parent::__construct();
 	}
@@ -74,33 +104,21 @@ class AdminAliasesControllerCore extends AdminController
 			 	foreach ($aliases as $alias)
 			 	{
 					$obj = new Alias(null, trim($alias), trim($search));
-					$obj->save();
-				}
+						$obj->save();
+			 	}
 			}
 		}
 		else
 			parent::postProcess();
 	}
 
-	public function displayForm($is_main_tab = true)
+	public function initContent()
 	{
-		parent::displayForm($is_main_tab);
-
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$this->context->smarty->assign('tab_form', array(
-			'current' => self::$currentIndex,
-			'table' => $this->table,
-			'token' => $this->token,
-			'id' => $obj->id,
-			'alias' => Tools::getValue('alias', $obj->getAliases()),
-			'search' => $this->getFieldValue($obj, 'search')
-		));
-	}
+		$this->fields_value = array('alias' => $obj->getAliases());
 
-	public function initContent()
-	{
 		if ($this->display != 'edit')
 			$this->display = 'list';
 
