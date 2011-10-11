@@ -38,7 +38,7 @@ class AdminControllerCore extends Controller
 
 	public $meta_title = 'Administration panel';
 
-	public $template = '';
+	public $template = 'content.tpl';
 
 	/** @var string Associated table name */
 	public $table;
@@ -172,16 +172,6 @@ class AdminControllerCore extends Controller
 			$controller = substr($controller, 0, -10);
 
 		parent::__construct();
-
-		// if this->template is empty,
-		// generate the filename from the classname, without "Controller" suffix
-		if (empty($this->template))
-		{
-			$tpl_name = substr(get_class($this), 0, -10).'.tpl';
-			$tpl_name[0] = strtolower($tpl_name[0]);
-			if (file_exists($this->context->smarty->template_dir.'/'.$tpl_name))
-				$this->template = $tpl_name;
-		}
 
 		$this->id = Tab::getIdFromClassName($controller);
 		$this->token = Tools::getAdminToken($controller.(int)$this->id.(int)$this->context->employee->id);
@@ -688,25 +678,31 @@ class AdminControllerCore extends Controller
 	public function displayNoSmarty()
 	{
 	}
+
 	public function displayAjax()
 	{
 		echo $this->content;
 	}
+
 	public function display()
 	{
 		$this->context->smarty->assign('content', $this->content);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
-		if (empty($this->template))
-		{
-			$class_name = get_class($this);
-			$class_name = strtolower($class_name[0]).substr($class_name, 1);
-			$default_tpl = substr($class_name, 0, -10).'.tpl';
-			if (file_exists($this->context->smarty->template_dir.'/'.$default_tpl))
-				$this->template = $default_tpladdress;
-			else
-				$this->template = 'content.tpl';
-		}
+		$class_name = get_class($this);
+		$class_name = strtolower($class_name[5]).substr($class_name, 6);
+		$class_name = Tools::toUnderscoreCase(substr($class_name, 0, -10));
+
+		$tpl = $class_name.'/content.tpl';
+		$tpl_action = $class_name.'/'.$this->display.'.tpl';
+
+		// Check if action template has been override
+		if (file_exists($this->context->smarty->template_dir.'/'.$tpl_action))
+			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
+
+		// Check if content template has been override
+		if (file_exists($this->context->smarty->template_dir.'/'.$tpl))
+			$page =  $this->context->smarty->fetch($tpl);
 		else
 			$page = $this->context->smarty->fetch($this->template);
 
@@ -719,7 +715,6 @@ class AdminControllerCore extends Controller
 
 			$this->context->smarty->assign('errors', $this->_errors);
 			$this->context->smarty->assign('warnings', $this->warnings);
-			$page = $this->context->smarty->fetch($this->template);
 		}
 
 		$this->context->smarty->assign('page', $page);
@@ -922,6 +917,7 @@ class AdminControllerCore extends Controller
 			$helper->identifier = $this->identifier;
 			$helper->token = $this->token;
 			$helper->_listSkipDelete = $this->_listSkipDelete;
+			$helper->colorOnBackground = $this->colorOnBackground;
 
 			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 		}

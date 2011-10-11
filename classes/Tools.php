@@ -1227,6 +1227,17 @@ class ToolsCore
 		return preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
+	/**
+	 *
+	 * Transform a CamelCase string to underscore_case string
+	 * @param string $string
+	 * @return string
+	 */
+	public static function toUnderscoreCase($string)
+	{
+		return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $string));
+	}
+
 	public static function getBrightness($hex)
 	{
 		$hex = str_replace('#', '', $hex);
