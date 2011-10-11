@@ -74,7 +74,11 @@ class AuthControllerCore extends FrontController
 
 		$this->assignCountries();
 
-		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		$active_module_newsletter = false;
+		if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
+			$active_module_newsletter = $module_newsletter->active;
+
+		$this->context->smarty->assign('newsletter', (int)$active_module_newsletter);
 
 		$back = Tools::getValue('back');
 		$key = Tools::safeOutput(Tools::getValue('key'));
@@ -561,15 +565,15 @@ class AuthControllerCore extends FrontController
 	protected function sendConfirmationMail(Customer $customer)
 	{
 		return Mail::Send(
-			$this->context->language->id, 
-			'account', 
+			$this->context->language->id,
+			'account',
 			Mail::l('Welcome!'),
 			array(
-				'{firstname}' => $customer->firstname, 
-				'{lastname}' => $customer->lastname, 
-				'{email}' => $customer->email, 
-				'{passwd}' => Tools::getValue('passwd')), 
-			$customer->email, 
+				'{firstname}' => $customer->firstname,
+				'{lastname}' => $customer->lastname,
+				'{email}' => $customer->email,
+				'{passwd}' => Tools::getValue('passwd')),
+			$customer->email,
 			$customer->firstname.' '.$customer->lastname
 		);
 	}
