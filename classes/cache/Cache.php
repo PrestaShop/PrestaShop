@@ -111,6 +111,8 @@ abstract class CacheCore
 
 	/**
 	 * Clean all cached data
+	 *
+	 * @return bool
 	 */
 	abstract public function flush();
 
@@ -161,12 +163,6 @@ abstract class CacheCore
 		if (!isset($this->keys[$key]))
 			return false;
 
-		if ($this->keys[$key] > 0 && $this->keys[$key] < time())
-		{
-			$this->delete($key);
-			return false;
-		}
-
 		return $this->_get($key);
 	}
 
@@ -181,12 +177,6 @@ abstract class CacheCore
 		if (!isset($this->keys[$key]))
 			return false;
 
-		if ($this->keys[$key] > 0 && $this->keys[$key] < time())
-		{
-			$this->delete($key);
-			return false;
-		}
-
 		return $this->_exists($key);
 	}
 
@@ -199,6 +189,7 @@ abstract class CacheCore
 	 */
 	public function delete($key)
 	{
+		// Get list of keys to delete
 		$keys = array();
 		if ($key == '*')
 			$keys = $this->keys;
@@ -213,18 +204,18 @@ abstract class CacheCore
 
 		}
 
-		d($keys);
-
-		if (!isset($this->keys[$key]))
-			return false;
-
-		if ($this->_delete($key))
+		// Delete keys
+		foreach ($keys as $key)
 		{
-			unset($this->keys[$key]);
-			$this->_writeKeys();
-			return true;
+			if (!isset($this->keys[$key]))
+				continue;
+
+			if ($this->_delete($key))
+				unset($this->keys[$key]);
 		}
-		return false;
+
+		$this->_writeKeys();
+		return $keys;
 	}
 
 	/**

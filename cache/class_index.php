@@ -234,6 +234,8 @@
   'Zone' => 'override/classes/Zone.php',
   'CacheCore' => 'classes/cache/Cache.php',
   'Cache' => 'override/classes/cache/Cache.php',
+  'CacheApcCore' => 'classes/cache/CacheApc.php',
+  'CacheApc' => '',
   'CacheFsCore' => 'classes/cache/CacheFs.php',
   'CacheFs' => 'override/classes/cache/CacheFs.php',
   'CacheMemcacheCore' => 'classes/cache/CacheMemcache.php',

@@ -25,6 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * This class require PECL Memcache extension
+ *
+ */
 class CacheMemcacheCore extends Cache
 {
 	/**
@@ -40,7 +44,16 @@ class CacheMemcacheCore extends Cache
 	public function __construct()
 	{
 		$this->connect();
-		$this->keys = $this->memcache->get(self::KEYS_NAME);
+
+		// Get keys (this code come from Doctrine 2 project)
+		$this->keys = array();
+		foreach ($this->memcache->getExtendedStats('slabs') as $server => $slabs)
+            if (is_array($slabs))
+                foreach (array_keys($slabs) as $slab_id)
+                    if ($this->memcache->getExtendedStats('cachedump', (int)$slab_id))
+                        foreach ($dump as $entries)
+                            foreach ($entries as $entry)
+                                $this->keys[$entry] = 0;;
 	}
 
 	public function __destruct()
@@ -108,9 +121,6 @@ class CacheMemcacheCore extends Cache
 	 */
 	protected function _writeKeys()
 	{
-		if (!$this->is_connected)
-			return false;
-		$this->memcache->set(self::KEYS_NAME, $this->keys, 0, 0);
 	}
 
 	/**
@@ -118,11 +128,9 @@ class CacheMemcacheCore extends Cache
 	 */
 	public function flush()
 	{
-		if(!$this->is_connected)
+		if (!$this->is_connected)
 			return false;
-		if ($this->memcache->flush())
-			return $this->_setKeys();
-		return false;
+		return $this->memcache->flush();
 	}
 
 	/**

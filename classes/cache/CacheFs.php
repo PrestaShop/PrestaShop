@@ -32,15 +32,9 @@ class CacheFsCore extends Cache
 	 */
 	protected $depth;
 
-	/**
-	 * @var string Cache directory path
-	 */
-	protected $path;
-
 	protected function __construct()
 	{
 		$this->depth = Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name= \'PS_CACHEFS_DIRECTORY_DEPTH\'', false);
-		$this->path = _PS_CACHEFS_DIRECTORY_;
 
 		$keys_filename = $this->getFilename(self::KEYS_NAME);
 		if (file_exists($keys_filename))
@@ -60,6 +54,12 @@ class CacheFsCore extends Cache
 	 */
 	protected function _get($key)
 	{
+		if ($this->keys[$key] > 0 && $this->keys[$key] < time())
+		{
+			$this->delete($key);
+			return false;
+		}
+
 		$filename = $this->getFilename($key);
 		if (!file_exists($filename))
 		{
@@ -76,7 +76,13 @@ class CacheFsCore extends Cache
 	 */
 	protected function _exists($key)
 	{
-		return file_exists($this->getFilename($key));
+		if ($this->keys[$key] > 0 && $this->keys[$key] < time())
+		{
+			$this->delete($key);
+			return false;
+		}
+
+		return isset($this->keys[$key]) && file_exists($this->getFilename($key));
 	}
 
 	/**
@@ -104,6 +110,7 @@ class CacheFsCore extends Cache
 	public function flush()
 	{
 		$this->delete('*');
+		return true;
 	}
 
 	/**
@@ -111,7 +118,7 @@ class CacheFsCore extends Cache
 	 */
 	public static function deleteCacheDirectory()
 	{
-		Tools::deleteDirectory($this->path, false);
+		Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
 	}
 
 	/**
@@ -123,7 +130,7 @@ class CacheFsCore extends Cache
 	public static function createCacheDirectories($level_depth, $directory = false)
 	{
 		if (!$directory)
-			$directory = $this->path;
+			$directory = _PS_CACHEFS_DIRECTORY_;
 		$chars = '0123456789abcdefghijklmnopqrstuvwxyz';
 		for ($i = 0; $i < strlen($chars); $i++)
 		{
@@ -143,7 +150,7 @@ class CacheFsCore extends Cache
 	 */
 	protected function getFilename($key)
 	{
-		$path = $this->path;
+		$path = _PS_CACHEFS_DIRECTORY_;
 		for ($i = 0; $i < $this->depth; $i++)
 			$path .= $key[$i].'/';
 
