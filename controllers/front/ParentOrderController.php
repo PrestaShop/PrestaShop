@@ -462,10 +462,10 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function _setDefaultCarrierSelection($carriers)
 	{
-		$this->cart->id_carrier = Carrier::getDefaultCarrierSelection($carriers, (int)$this->cart->id_carrier);
+		$this->context->cart->id_carrier = Carrier::getDefaultCarrierSelection($carriers, (int)$this->context->cart->id_carrier);
 
-		if ($this->cart->update())
-			return $this->cart->id_carrier;
+		if ($this->context->cart->update())
+			return $this->context->cart->id_carrier;
 		return 0;
 	}
 
