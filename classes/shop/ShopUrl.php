@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -92,6 +92,17 @@ class ShopUrlCore extends ObjectModel
 		$res = Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 0), 'UPDATE', 'id_shop = '.(int)$this->id_shop);
 		$res &= Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 1), 'UPDATE', 'id_shop_url = '.(int)$this->id);
 		$this->main = true;
+
+		// Reset main URL for all shops to prevent problems
+		$sql = 'SELECT s1.id_shop_url FROM '._DB_PREFIX_.'shop_url s1
+				WHERE (
+					SELECT COUNT(*) FROM '._DB_PREFIX_.'shop_url s2
+					WHERE s2.main = 1
+					AND s2.id_shop = s1.id_shop
+				) = 0
+				GROUP BY s1.id_shop';
+		foreach (Db::getInstance()->executeS($sql) as $row)
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 1), 'UPDATE', 'id_shop_url = '.$row['id_shop_url']);
 
 		return $res;
 	}
