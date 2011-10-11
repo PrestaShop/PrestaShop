@@ -131,7 +131,7 @@
 				<p>{l s ='Enable or disable URL'}</p>
 			</div>
 			<div class="margin-form">
-				<input type="submit" value="{l s ='   Save   '}" name="submitAdd{$tab_form['table']}" class="button" />
+				<input type="submit" value="{l s ='   Save   '}" name="submitAdd'.$this->table.'" class="button" />
 			</div>
 			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
 		</fieldset>
