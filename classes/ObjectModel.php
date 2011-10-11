@@ -953,11 +953,9 @@ abstract class ObjectModelCore
 	 */
 	public function hydrate(array $data, $id_lang = null)
 	{
-		if (!array_key_exists($this->identifier, $data))
-			throw new PrestashopException("Identifier '$this->identifier' not found for class '".get_class($this)."'");
-
 		$this->id_lang = $id_lang;
-		$this->id = $data[$this->identifier];
+		if (isset($data[$this->identifier]))
+			$this->id = $data[$this->identifier];
 		foreach ($data as $key => $value)
 			if (array_key_exists($key, $this))
 				$this->$key = $value;
