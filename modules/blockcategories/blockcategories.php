@@ -112,7 +112,7 @@ class BlockCategories extends Module
 					<label class="t" for="dhtml_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p class="clear">'.$this->l('Activate dynamic (animated) mode for sublevels').'</p>
 				</div>
-				<label>'.$this->l('Footer columns number').'</label>			
+				<label>'.$this->l('Footer columns number').'</label>
 				<div class="margin-form">
 					<input type="text" name="nbrColumns" value="'.Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER').'" />
 					<p class="clear">'.$this->l('Set the number of footer columns').'</p>
@@ -167,7 +167,7 @@ class BlockCategories extends Module
 				GROUP BY id_category
 				ORDER BY `level_depth` ASC, c.`position` ASC')
 			)
-				
+
 				return;
 
 			$resultParents = array();
@@ -215,7 +215,7 @@ class BlockCategories extends Module
 	public function hookFooter($params)
 	{
 		$id_current_shop = $this->context->shop->getID();
-		
+
 		$id_customer = (int)($params['cookie']->id_customer);
 		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
 		$groups = $id_customer ? implode(', ', Customer::getGroupsStatic($id_customer)) : _PS_DEFAULT_CUSTOMER_GROUP_;
@@ -256,7 +256,7 @@ class BlockCategories extends Module
 			$widthColumn= floor(100/$nbrColumns);
 			$this->context->smarty->assign('numberColumn', $numberColumn);
 			$this->context->smarty->assign('widthColumn', $widthColumn);
-			
+
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents, $resultIds);
 
@@ -322,7 +322,7 @@ class BlockCategories extends Module
 	{
 		$this->_clearBlockcategoriesCache();
 	}
-	
+
 	public function hookAfterSaveAdminMeta($params)
 	{
 		$this->_clearBlockcategoriesCache();

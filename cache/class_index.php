@@ -240,6 +240,8 @@
   'CacheFs' => 'override/classes/cache/CacheFs.php',
   'CacheMemcacheCore' => 'classes/cache/CacheMemcache.php',
   'CacheMemcache' => 'override/classes/cache/CacheMemcache.php',
+  'CacheXcacheCore' => 'classes/cache/CacheXcache.php',
+  'CacheXcache' => 'override/classes/cache/CacheXcache.php',
   'DbCore' => 'classes/db/Db.php',
   'Db' => 'override/classes/db/Db.php',
   'DbMySQLiCore' => 'classes/db/DbMySQLi.php',
