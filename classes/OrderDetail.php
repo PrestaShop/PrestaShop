@@ -163,31 +163,31 @@ class OrderDetailCore extends ObjectModel
 	{
 		$this->validateFields();
 
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['product_id'] = (int)($this->product_id);
-		$fields['product_attribute_id'] = (int)($this->product_attribute_id);
+		$fields['id_order'] = (int)$this->id_order;
+		$fields['product_id'] = (int)$this->product_id;
+		$fields['product_attribute_id'] = (int)$this->product_attribute_id;
 		$fields['product_name'] = pSQL($this->product_name);
-		$fields['product_quantity'] = (int)($this->product_quantity);
-		$fields['product_quantity_in_stock'] = (int)($this->product_quantity_in_stock);
-		$fields['product_quantity_return'] = (int)($this->product_quantity_return);
-		$fields['product_quantity_refunded'] = (int)($this->product_quantity_refunded);
-		$fields['product_quantity_reinjected'] = (int)($this->product_quantity_reinjected);
-		$fields['product_price'] = (float)($this->product_price);
-		$fields['reduction_percent'] = (float)($this->reduction_percent);
-		$fields['reduction_amount'] = (float)($this->reduction_amount);
-		$fields['group_reduction'] = (float)($this->group_reduction);
-		$fields['product_quantity_discount'] = (float)($this->product_quantity_discount);
+		$fields['product_quantity'] = (int)$this->product_quantity;
+		$fields['product_quantity_in_stock'] = (int)$this->product_quantity_in_stock;
+		$fields['product_quantity_return'] = (int)$this->product_quantity_return;
+		$fields['product_quantity_refunded'] = (int)$this->product_quantity_refunded;
+		$fields['product_quantity_reinjected'] = (int)$this->product_quantity_reinjected;
+		$fields['product_price'] = (float)$this->product_price;
+		$fields['reduction_percent'] = (float)$this->reduction_percent;
+		$fields['reduction_amount'] = (float)$this->reduction_amount;
+		$fields['group_reduction'] = (float)$this->group_reduction;
+		$fields['product_quantity_discount'] = (float)$this->product_quantity_discount;
 		$fields['product_ean13'] = pSQL($this->product_ean13);
 		$fields['product_upc'] = pSQL($this->product_upc);
 		$fields['product_reference'] = pSQL($this->product_reference);
 		$fields['product_supplier_reference'] = pSQL($this->product_reference);
-		$fields['product_weight'] = (float)($this->product_weight);
+		$fields['product_weight'] = (float)$this->product_weight;
 		$fields['tax_name'] = pSQL($this->tax_name);
-		$fields['tax_rate'] = (float)($this->tax_rate);
-		$fields['ecotax'] = (float)($this->ecotax);
-		$fields['ecotax_tax_rate'] = (float)($this->ecotax_tax_rate);
+		$fields['tax_rate'] = (float)$this->tax_rate;
+		$fields['ecotax'] = (float)$this->ecotax;
+		$fields['ecotax_tax_rate'] = (float)$this->ecotax_tax_rate;
 		$fields['download_hash'] = pSQL($this->download_hash);
-		$fields['download_nb'] = (int)($this->download_nb);
+		$fields['download_nb'] = (int)$this->download_nb;
 		$fields['download_deadline'] = pSQL($this->download_deadline);
 
 		return $fields;
@@ -204,11 +204,11 @@ class OrderDetailCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 
-	public static function incrementDownload($id_order_detail, $increment=1)
+	public static function incrementDownload($id_order_detail, $increment = 1)
 	{
 		$sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
-			SET `download_nb` = `download_nb` + '.(int)($increment).'
-			WHERE `id_order_detail`= '.(int)($id_order_detail).'
+			SET `download_nb` = `download_nb` + '.(int)$increment.'
+			WHERE `id_order_detail`= '.(int)$id_order_detail.'
 			LIMIT 1';
 		return Db::getInstance()->execute($sql);
 	}
@@ -238,8 +238,7 @@ class OrderDetailCore extends ObjectModel
 		$taxes = array();
 		if ($results = Db::getInstance()->executeS($sql))
 		{
-			
-			foreach ($results AS $result)
+			foreach ($results as $result)
 				$taxes[] = new Tax((int)$result['id_tax']);
 
 			$computation_method = $result['tax_computation_method'];
@@ -256,11 +255,11 @@ class OrderDetailCore extends ObjectModel
 	 */
 	public static function saveTaxCalculatorStatic($id_order_detail, TaxCalculator $tax_calculator)
 	{
-		if (sizeof($tax_calculator->taxes) == 0)
+		if (count($tax_calculator->taxes) == 0)
 			return true;
 
 		$values = '';
-		foreach ($tax_calculator->taxes AS $tax)
+		foreach ($tax_calculator->taxes as $tax)
 			$values .= '('.(int)$id_order_detail.','.(float)$tax->id.'),';
 
 		$values = rtrim($values, ',');
