@@ -1515,6 +1515,11 @@ class AdminControllerCore extends Controller
 		return !count($this->_errors) ? true : false;
 	}
 
+	/**
+	 * Delete multiple items
+	 *
+	 * @param array $boxes ids of the item to be processed
+	 */
 	protected function bulkDelete($boxes)
 	{
 		if (is_array($boxes) && !empty($boxes))
