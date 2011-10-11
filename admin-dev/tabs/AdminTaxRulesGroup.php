@@ -335,7 +335,11 @@ EOT;
             die(Tools::displayError('Unable to load the tax rule!'));
 
 		$country_select = Helper::selectInput(Country::getCountries((int)$cookie->id_lang),
- 				 			  					 array('id' => 'country', 'name' => 'country[]', 'onclick' => 'populateStates($(this).val(), \'\')', 'multiple' => 'multiple'),
+ 				 			  					 array('id' => 'country',
+ 				 			  					 		'name' => 'country[]',
+ 				 			  					 		'onclick' => 'populateStates($(this).val(), \'\')',
+ 				 			  					 		'multiple' => 'multiple',
+												 		'size' => 15),
 												 array('key' => 'id_country',
 												 		'value' => 'name',
 												 		'selected' => $this->selected_countries,
