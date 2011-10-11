@@ -49,31 +49,33 @@ class AdminSearchEnginesControllerCore extends AdminController
 			'getvar' => array('title' => $this->l('GET variable'), 'width' => 40)
 		);
 
-		$this->template = 'adminSearchEngines.tpl';
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Referrer')
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Server:'),
+					'name' => 'server',
+					'size' => 20,
+					'required' => true
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('$_GET variable:'),
+					'name' => 'getvar',
+					'size' => 40,
+					'required' => true
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
 
 		parent::__construct();
-	}
-
-	public function postProcess()
-	{
-		parent::postProcess();
-	}
-
-	public function displayForm($is_main_tab = true)
-	{
-		parent::displayForm($is_main_tab);
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$this->context->smarty->assign('tab_form', array(
-			'current' => self::$currentIndex,
-			'table' => $this->table,
-			'token' => $this->token,
-			'id' => $obj->id,
-			'server' => $this->getFieldValue($obj, 'server'),
-			'getvar' => $this->getFieldValue($obj, 'getvar')
-		));
 	}
 
 	public function initContent()
