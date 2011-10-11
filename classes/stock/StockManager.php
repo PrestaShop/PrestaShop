@@ -264,12 +264,13 @@ class StockManagerCore implements StockManagerInterface
 						continue;
 
 					$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
-						SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`)) as qty
+						SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
+							IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
 						FROM `'._DB_PREFIX_.'stock_mvt` sm
-						JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`stock_mvt_referer` = sm.`id_stock_mvt`
+						LEFT JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
 						WHERE sm.`sign` = 1
 						AND sm.`id_stock` = '.(int)$stock->id.'
-						AND sm2.`sign` = -1
+						GROUP BY sm.`id_stock_mvt`
 						ORDER BY sm.`date_add` DESC'
 					);
 
@@ -277,7 +278,7 @@ class StockManagerCore implements StockManagerInterface
 					{
 						// break - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
 						if ($warehouse->management_type == 'FIFO')
-							if ($row['qty'] >= $row['physical_quantity'])
+							if ($row['qty'] == 0)
 								break;
 
 						// converts date to timestamp
@@ -303,20 +304,21 @@ class StockManagerCore implements StockManagerInterface
 
 				if ($warehouse->management_type == 'LIFO')
 					// orders stock history by timestamp to get newest history first
-					krsort($stock_history);
+					krsort($stock_history_qty_available);
 				else
 					// orders stock history by timestamp to get oldest history first
-					ksort($stock_history);
+					ksort($stock_history_qty_available);
 
 				// checks each stock to manage the real quantity to decrement for each of them
-				foreach ($stock_history as $entry)
+				foreach ($stock_history_qty_available as $entry)
 				{
 					if ($entry['qty'] >= $global_quantity_to_decrement)
 					{
 						$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $global_quantity_to_decrement;
 						$global_quantity_to_decrement = 0;
 					}
-					else {
+					else
+					{
 						$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $entry['qty'];
 						$global_quantity_to_decrement -= $entry['qty'];
 					}
@@ -341,7 +343,7 @@ class StockManagerCore implements StockManagerInterface
 								'id_order' => $id_order,
 								'price_te' => $stock->price_te,
 								'sign' => -1,
-								'stock_mvt_referer' => $id_mvt_referrer,
+								'referer' => $id_mvt_referrer,
 								'id_employee' => $context->employee->id
 							);
 
