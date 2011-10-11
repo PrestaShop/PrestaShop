@@ -1177,7 +1177,7 @@ INSERT INTO `PREFIX_cms_category_lang` (`id_cms_category`, `id_lang`, `name`, `d
 INSERT INTO `PREFIX_cms_category` (`id_cms_category`, `id_parent`, `level_depth`, `active`, `date_add`, `date_upd`) VALUES(1, 0, 0, 1, NOW(), NOW());
 
 /* Carrier */
-INSERT INTO `PREFIX_carrier` (`id_carrier`, `id_reference`, `id_tax_rules_group`, `name`, `active`, `deleted`, `shipping_handling`) VALUES (1, 1, 0, 0, 1, 0, 0);
+INSERT INTO `PREFIX_carrier` (`id_carrier`, `id_reference`, `id_tax_rules_group`, `name`, `active`, `deleted`, `shipping_handling`, `position`) VALUES (1, 1, 0, 0, 1, 0, 0, 0);
 
 INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) VALUES (1, 1);
 

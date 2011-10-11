@@ -138,6 +138,7 @@ CREATE TABLE `PREFIX_carrier` (
   `need_range` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `external_module_name` varchar(64) DEFAULT NULL,
   `shipping_method` int(2) NOT NULL DEFAULT '0',
+  `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`,`active`),
   KEY `id_tax_rules_group` (`id_tax_rules_group`)

@@ -149,7 +149,7 @@ abstract class AdminTabCore
 
 	public $smarty;
 
-	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group', 'id_feature' => 'id_feature');
+	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group', 'id_feature' => 'id_feature', 'id_carrier' => 'id_carrier');
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -592,6 +592,8 @@ abstract class AdminTabCore
 						{
 							$object->deleteImage();
 							$object->deleted = 1;
+							if(method_exists($object, 'cleanPositions'))
+								$object->cleanPositions();
 							if ($object->update())
 								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
 						}
@@ -673,6 +675,8 @@ abstract class AdminTabCore
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token);
 						$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 					}
+					// clean carriers positions
+					Carrier::cleanPositions();
 				}
 				else
 					$this->_errors[] = Tools::displayError('You must select at least one element to delete.');

@@ -737,9 +737,9 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 if (Tools::isSubmit('syncImapMail'))
 {
 	if (!$url = Configuration::get('PS_SAV_IMAP_URL')
-	OR !$port = Configuration::get('PS_SAV_IMAP_PORT')
-	OR !$user = Configuration::get('PS_SAV_IMAP_USER')
-	OR !$password = Configuration::get('PS_SAV_IMAP_PWD'))
+	|| !$port = Configuration::get('PS_SAV_IMAP_PORT')
+	|| !$user = Configuration::get('PS_SAV_IMAP_USER')
+	|| !$password = Configuration::get('PS_SAV_IMAP_PWD'))
 	die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
 
 	if (!function_exists('imap_open'))
@@ -798,7 +798,7 @@ if (Tools::isSubmit('syncImapMail'))
 	    	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
 	    	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
 
-			if (isset($matches1[1]) AND isset($matches2[1]))
+			if (isset($matches1[1]) && isset($matches2[1]))
 			{
 				//check if order exist in database
 				$ct = new CustomerThread((int)$matches1[1]);
@@ -822,18 +822,18 @@ if (Tools::isSubmit('syncImapMail'))
 /* Modify attribute position */
 if (Tools::isSubmit('ajaxAttributesPositions'))
 {
-	$way = (int)(Tools::getValue('way'));
-	$id_attribute = (int)(Tools::getValue('id_attribute'));
-	$id_attribute_group = (int)(Tools::getValue('id_attribute_group'));
-	$positions = Tools::getValue('attribute_'.(int)(Tools::getValue('id_attribute_group')));
+	$way = (int)Tools::getValue('way');
+	$id_attribute = (int)Tools::getValue('id_attribute');
+	$id_attribute_group = (int)Tools::getValue('id_attribute_group');
+	$positions = Tools::getValue('attribute_'.(int)Tools::getValue('id_attribute_group'));
 
 	if (is_array($positions))
-		foreach ($positions AS $position => $value)
+		foreach ($positions as $position => $value)
 		{
 			// pos[1] = id_attribute_group, pos[2] = id_attribute, pos[3]=old position
 			$pos = explode('_', $value);
 
-			if ((isset($pos[1]) AND isset($pos[2])) AND ($pos[1] == $id_attribute_group AND (int)$pos[2] === $id_attribute))
+			if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_attribute_group && (int)$pos[2] === $id_attribute))
 			{
 				if ($attribute = new Attribute((int)$pos[2]))
 					if (isset($position) && $attribute->updatePosition($way, $position))
@@ -851,8 +851,8 @@ if (Tools::isSubmit('ajaxAttributesPositions'))
 /* Modify group attribute position */
 if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 {
-	$way = (int)(Tools::getValue('way'));
-	$id_attribute_group = (int)(Tools::getValue('id_attribute_group'));
+	$way = (int)Tools::getValue('way');
+	$id_attribute_group = (int)Tools::getValue('id_attribute_group');
 	$positions = Tools::getValue('attribute_group');
 
 	$new_positions = array();
@@ -860,12 +860,12 @@ if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 		if (count(explode('_', $v)) == 3)
 			$new_positions[] = $v;
 
-	foreach ($new_positions AS $position => $value)
+	foreach ($new_positions as $position => $value)
 	{
 		// pos[1] = id_attribute_group, pos[2] = old position
 		$pos = explode('_', $value);
 
-		if (isset($pos[1]) AND (int)$pos[1] === $id_attribute_group)
+		if (isset($pos[1]) && (int)$pos[1] === $id_attribute_group)
 		{
 			if ($group_attribute = new AttributeGroup((int)$pos[1]))
 				if (isset($position) && $group_attribute->updatePosition($way, $position))
@@ -883,8 +883,8 @@ if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 /* Modify feature position */
 if (Tools::isSubmit('ajaxFeaturesPositions'))
 {
-	$way = (int)(Tools::getValue('way'));
-	$id_feature = (int)(Tools::getValue('id_feature'));
+	$way = (int)Tools::getValue('way');
+	$id_feature = (int)Tools::getValue('id_feature');
 	$positions = Tools::getValue('feature');
 
 	$new_positions = array();
@@ -892,20 +892,47 @@ if (Tools::isSubmit('ajaxFeaturesPositions'))
 		if (!empty($v))
 			$new_positions[] = $v;
 
-	foreach ($new_positions AS $position => $value)
+	foreach ($new_positions as $position => $value)
 	{
 		// pos[1] = id_feature, pos[2] = old position
 		$pos = explode('_', $value);
 
-		if (isset($pos[1]) AND (int)$pos[1] === $id_feature)
+		if (isset($pos[1]) && (int)$pos[1] === $id_feature)
 		{
 			if ($feature = new Feature((int)$pos[1]))
 				if (isset($position) && $feature->updatePosition($way, $position))
 					echo "ok position $position for feature $pos[1]\r\n";
 				else
-					echo '{"hasError" : true, "errors" : "Can not update feature '. $id_attribute_group . ' to position '.$position.' "}';
+					echo '{"hasError" : true, "errors" : "Can not update feature '. $id_feature . ' to position '.$position.' "}';
 			else
-				echo '{"hasError" : true, "errors" : "This feature ('.$id_attribute_group.') can t be loaded"}';
+				echo '{"hasError" : true, "errors" : "This feature ('.$id_feature.') can t be loaded"}';
+
+			break;
+		}
+	}
+}
+
+/* Modify carrier position */
+if (Tools::isSubmit('ajaxCarriersPositions'))
+{
+	$way = (int)(Tools::getValue('way'));
+	$id_carrier = (int)(Tools::getValue('id_carrier'));
+	$positions = Tools::getValue('carrier');
+
+
+	foreach ($positions as $position => $value)
+	{
+		$pos = explode('_', $value);
+
+		if (isset($pos[2]) && (int)$pos[2] === $id_carrier)
+		{
+			if ($carrier = new Carrier((int)$pos[2]))
+				if (isset($position) && $carrier->updatePosition($way, $position))
+					echo "ok position $position for carrier $pos[1]\r\n";
+				else
+					echo '{"hasError" : true, "errors" : "Can not update carrier '. $id_carrier . ' to position '.$position.' "}';
+			else
+				echo '{"hasError" : true, "errors" : "This carrier ('.$id_carrier.') can t be loaded"}';
 
 			break;
 		}
