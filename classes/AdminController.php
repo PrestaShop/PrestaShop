@@ -151,6 +151,7 @@ class AdminControllerCore extends Controller
 	protected $action;
 	protected $display;
 	protected $_includeContainer = true;
+	protected $tpl_folder;
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -202,6 +203,10 @@ class AdminControllerCore extends Controller
 
 		if (!Shop::isMultiShopActivated())
 			$this->shopLinkType = '';
+
+		// Get the name of the folder containing the custom tpl files
+		$this->tpl_folder = strtolower($controller[5]).substr($controller, 6);
+		$this->tpl_folder = Tools::toUnderscoreCase($this->tpl_folder).'/';
 	}
 
 	/**
@@ -690,20 +695,16 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign('content', $this->content);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
-		$class_name = get_class($this);
-		$class_name = strtolower($class_name[5]).substr($class_name, 6);
-		$class_name = Tools::toUnderscoreCase(substr($class_name, 0, -10));
-
-		$tpl = $class_name.'/content.tpl';
-		$tpl_action = $class_name.'/'.$this->display.'.tpl';
-
+		// Template override
+		$tpl = $this->tpl_folder.'content.tpl';
+		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 		// Check if action template has been override
 		if (file_exists($this->context->smarty->template_dir.'/'.$tpl_action))
 			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
 
 		// Check if content template has been override
 		if (file_exists($this->context->smarty->template_dir.'/'.$tpl))
-			$page =  $this->context->smarty->fetch($tpl);
+			$page = $this->context->smarty->fetch($tpl);
 		else
 			$page = $this->context->smarty->fetch($this->template);
 
@@ -899,15 +900,17 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
-		if ($this->display == 'edit')
+		if ($this->display == 'edit' || $this->display == 'add')
 		{
-
 			if (!($obj = $this->loadObject(true)))
 				return;
 
 			if (isset($this->fields_form))
 			{
 				$helper = new HelperForm();
+				// Check if form template has been overriden
+				if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
+					$helper->tpl = $this->tpl_folder.'form.tpl';
 				$helper::$currentIndex = self::$currentIndex;
 				$helper->token = $this->token;
 				$helper->table = $this->table;
@@ -916,7 +919,7 @@ class AdminControllerCore extends Controller
 				$this->content .= $helper->generateForm($this->fields_form);
 			}
 			else
-			//@TODO à supprimer
+			// TODO delete when all forms use the helper
 				$this->content .= $this->displayForm();
 
 			if ($this->tabAccess['view'])
@@ -931,6 +934,13 @@ class AdminControllerCore extends Controller
 		{
 			$this->getList($this->context->language->id);
 			$helper = new HelperList();
+			// Check if list templates have been overriden
+			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_header.tpl'))
+				$helper->header_tpl = $this->tpl_folder.'list_header.tpl';
+			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_content.tpl'))
+				$helper->header_tpl = $this->tpl_folder.'list_content.tpl';
+			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_footer.tpl'))
+				$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
 			$helper->view = $this->view;
 			$helper->edit = $this->edit;
 			$helper->delete = $this->delete;
@@ -1030,6 +1040,9 @@ class AdminControllerCore extends Controller
 		return self::translate($string, $class, $addslashes, $htmlentities);
 	}
 
+	/**
+	 * Init context and dependencies, handles POST and GET
+	 */
 	public function init()
 	{
 		// ob_start();
@@ -1171,7 +1184,7 @@ class AdminControllerCore extends Controller
 		else if (isset($_GET['add'.$this->table]))
 		{
 			$this->action = 'new';
-			$this->display = 'edit';
+			$this->display = 'add';
 		}
 		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{

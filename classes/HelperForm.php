@@ -35,7 +35,7 @@ class HelperFormCore extends Helper
 	/**
 	 * @var array of forms fields
 	 * Usage :
-	 * 
+	 *
 	 */
 	protected $fields_form = array();
 
@@ -46,6 +46,8 @@ class HelperFormCore extends Helper
 	public $token;
 
 	public static $currentIndex;
+
+	public $tpl = 'form.tpl';
 
 	public function generateForm($fields_form)
 	{
@@ -85,7 +87,7 @@ class HelperFormCore extends Helper
 			'requiredFields' => $this->getFieldsRequired()
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/form.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
 	}
 
 	public function getFieldsRequired()
