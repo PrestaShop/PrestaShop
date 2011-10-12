@@ -401,7 +401,7 @@ class PrestaFraud extends Module
 		$order->addChild('payment_name', $paymentModule->displayName);
 		$order->addChild('payment_type', (int)$configured_payments[$paymentModule->id]);
 		$order->addChild('order_date', $params['order']->date_add);
-		$order->addChild('order_ip_address', $this->_getIpByCart($id_cart));
+		$order->addChild('order_ip_address', $this->_getIpByCart((int)$params['order']->id_cart));
 
 		$carrier = new Carrier((int)$params['order']->id_carrier);
 		$carrier_infos = $order->addChild('carrier_infos');

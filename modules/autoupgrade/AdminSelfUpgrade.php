@@ -243,12 +243,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		$this->_fieldsAutoUpgrade['PS_AUTOUP_KEEP_TRAD'] = array(
 			'title' => $this->l('Keep translations'), 'cast' => 'intval', 'validation' => 'isBool',
-			'type' => 'bool', 'desc'=>$this->l('If set too yes, you will keep all your translations'),
+			'type' => 'bool', 'desc'=>$this->l('If set to yes, you will keep all your translations'),
 		);
 
 		$this->_fieldsAutoUpgrade['PS_AUTOUP_CUSTOM_MOD_DESACT'] = array(
-			'title' => $this->l('Desactivate custom modules'), 'cast' => 'intval', 'validation' => 'isBool',
-			'type' => 'bool', 'desc'=>$this->l('If you don\'t desactivate your modules, you can have some compatibility problem and the Modules page might not load correctly.'),
+			'title' => $this->l('Deactivate custom modules'), 'cast' => 'intval', 'validation' => 'isBool',
+			'type' => 'bool', 'desc'=>$this->l('If you don\'t deactivate your modules, you can have some compatibility problems and the Modules page might not load correctly.'),
 		);
 		// allow manual mode only for dev
 		if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_)

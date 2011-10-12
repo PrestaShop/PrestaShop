@@ -3,7 +3,7 @@
 include_once('../../config/config.inc.php');
 include_once('../../init.php');
 include_once('../../modules/shopimporter/shopimporter.php');
-ini_set('display_errors', 'off');
+
 
 $moduleName = Tools::getValue('moduleName');
 

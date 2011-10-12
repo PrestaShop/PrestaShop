@@ -377,7 +377,7 @@ class OrderCore extends ObjectModel
 		if (!$id_order_state)
 			$id_order_state = 0;
 
-		if (!isset(self::$_historyCache[$id_order_state]) OR $no_hidden)
+		if (!isset(self::$_historyCache[$this->id.'_'.$id_order_state]) OR $no_hidden)
 		{
 			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
 			$result = Db::getInstance()->executeS('
@@ -393,9 +393,9 @@ class OrderCore extends ObjectModel
 			ORDER BY oh.date_add DESC, oh.id_order_history DESC');
 			if ($no_hidden)
 				return $result;
-			self::$_historyCache[$id_order_state] = $result;
+			self::$_historyCache[$this->id.'_'.$id_order_state] = $result;
 		}
-		return self::$_historyCache[$id_order_state];
+		return self::$_historyCache[$this->id.'_'.$id_order_state];
 	}
 
 	public function getProductsDetail()

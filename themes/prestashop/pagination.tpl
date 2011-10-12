@@ -81,7 +81,7 @@
 		{/if}
 		</ul>
 	{/if}
-	{if $nb_products > 10}
+	{if $nb_products > $products_per_page}
 		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="pagination">
 			<p>
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
