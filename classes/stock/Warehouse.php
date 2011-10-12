@@ -103,6 +103,20 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
+	 * For the current warehouse, returns if the warehouse is empty
+	 *
+	 * @return bool
+	 */
+	public function isEmpty()
+	{
+		$query = new DbQuery();
+		$query->select('SUM(s.physical_quantity)');
+		$query->from('stock s');
+		$query->where($this->identifier.' = '.(int)$this->id);
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 0);
+	}
+
+	/**
 	 * For a given warehouse, checks if it exists
 	 *
 	 * @param int $id_warehouse
