@@ -911,7 +911,6 @@ class AdminControllerCore extends Controller
 				$helper::$currentIndex = self::$currentIndex;
 				$helper->token = $this->token;
 				$helper->table = $this->table;
-				$helper->table = $this->table;
 				$helper->id = $obj->id;
 				$helper->fields_value = $this->getFieldsValue($obj);
 				$this->content .= $helper->generateForm($this->fields_form);

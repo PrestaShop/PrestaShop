@@ -27,9 +27,6 @@
 
 class AdminRequestSqlControllerCore extends AdminController
 {
-	private $info = true;
-	private $warning = true;
-
 	public function __construct()
 	{
 		$this->table = 'request_sql';
@@ -53,23 +50,125 @@ class AdminRequestSqlControllerCore extends AdminController
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
 
-		$this->template = 'adminRequestSql.tpl';
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Request')
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'size' => 103,
+					'required' => true
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('Request:'),
+					'name' => 'sql',
+					'cols' => 100,
+					'rows' => 10,
+					'required' => true
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
 
 		parent::__construct();
 	}
 
-	public function postProcess()
+	public function viewRequestSql()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$result = Db::getInstance()->executeS('
-			SELECT `id_request_sql`
-			FROM `'._DB_PREFIX_.'request_sql`
+		$content = array();
+
+		if ($results = Db::getInstance()->executeS($obj->sql))
+		{
+			foreach (array_keys($results[0]) as $key)
+				$tab_key[] = $key;
+
+			$content['name'] = $obj->name;
+			$content['key'] = $tab_key;
+			$content['results'] = $results;
+
+			$request_sql = new RequestSql();
+			$content['attributes'] = $request_sql->attributes;
+		}
+		else
+			$content['error'] = true;
+
+		return $content;
+	}
+
+	public function _childValidation()
+	{
+		if (Tools::getValue('submitAdd'.$this->table) && $sql = Tools::getValue('sql'))
+		{
+			$request_sql = new RequestSql();
+			$parser = $request_sql->parsingSql($sql);
+			$validate = $request_sql->validateParser($parser, false, $sql);
+
+			if (!$validate || !empty($request_sql->error_sql))
+				$this->displayError($request_sql->error_sql);
+		}
+	}
+
+	public function init()
+	{
+		if (isset($_GET['view'.$this->table]) && isset($_GET['id_'.$this->table]))
+		{
+			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
+				$this->display = 'view';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		parent::init();
+	}
+
+	public function initContent()
+	{
+		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
+		$this->displayInformation('
+			<strong>'.$this->l('How to create a new sql query?').'</strong>
+			<br />
+			<ul>
+				<li>'.$this->l('Click "Add new".').'<br /></li>
+				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
+				<li>'.$this->l('You can then view the query results by clicking on the tab: ').' <img src="../img/admin/details.gif"></li>
+				<li>'.$this->l('You can then export the query results as a file. Csv file by clicking on the tab: ').' <img src="../img/admin/export.gif"></li>
+			</ul>
 		');
 
-		if (!count($this->_errors))
-			parent::postProcess();
+		$smarty = $this->context->smarty;
+		switch ($this->display)
+		{
+			case 'edit':
+				$this->informations = false;
+			break;
+
+			case 'view':
+				$this->warnings = false;
+				$this->informations = false;
+
+				if (Tools::getValue('back'))
+					$smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+				else
+					$smarty->assign('back', Tools::safeOutput(self::$currentIndex.'&token='.$this->token));
+
+				$smarty->assign('view', $this->viewRequestSql());
+			break;
+
+			default:
+				$this->display = 'list';
+			break;
+		}
+
+		parent::initContent();
 	}
 
 	public function bulkexport($boxes)
@@ -132,43 +231,6 @@ class AdminRequestSqlControllerCore extends AdminController
 	            $val *= 1024;
 	    }
 	    return $val;
-	}
-
-	public function viewRequest_sql()
-	{
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$view = array();
-
-		if ($results = Db::getInstance()->executeS($obj->sql))
-		{
-			foreach (array_keys($results[0]) as $key)
-				$tab_key[] = $key;
-			
-			$view['name'] = $obj->name;
-			$view['key'] = $tab_key;
-			$view['results'] = $results;
-			
-			$request_sql = new RequestSql();
-			$view['attributes'] = $request_sql->attributes;
-		}
-		else
-			$view['error'] = true;
-		return $view;
-	}
-
-	public function _childValidation()
-	{
-		if (Tools::getValue('submitAdd'.$this->table) && $sql = Tools::getValue('sql'))
-		{
-			$request_sql = new RequestSql();
-			$parser = $request_sql->parsingSql($sql);
-			$validate = $request_sql->validateParser($parser, false, $sql);
-
-			if (!$validate || !empty($request_sql->error_sql))
-				$this->displayError($request_sql->error_sql);
-		}
 	}
 
 	public function displayError($e)
@@ -257,62 +319,6 @@ class AdminRequestSqlControllerCore extends AdminController
 			}
 		}
 	}
-
-	public function displayForm($isMainTab = true)
-	{
-		$this->content .= parent::displayForm();
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$smarty = $this->context->smarty;
-		$smarty->assign('tab_form', array(
-			'current' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
-			'id' => $obj->id,
-			'table' => $this->table,
-			'name' => $this->getFieldValue($obj, 'name'),
-			'sql' => $this->getFieldValue($obj, 'sql')
-		));
-	}
-
-	public function init()
-	{
-		if (isset($_GET['view'.$this->table]) && isset($_GET['id_'.$this->table]))
-		{
-			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
-				$this->display = 'view';
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		parent::init();
-	}
-
-	public function initContent()
-	{
-		$smarty = $this->context->smarty;
-		switch ($this->display)
-		{
-			case 'edit':
-				$this->info = false;
-				break;
-			case 'view':
-				$this->info = false;
-				$this->warning = false;
-				$smarty->assign('view', $this->viewRequest_sql());
-				break;
-			default:
-				$this->display = 'list';
-				break;
-		}
-
-		$smarty->assign(array(
-			'info' =>	$this->info,
-			'warning' =>$this->warning,
-		));
-
-		parent::initContent();
-	}
-
 }
 
 
