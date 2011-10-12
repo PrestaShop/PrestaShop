@@ -233,11 +233,11 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (145, 'PS_DISCOUNT_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (146, 'PS_GROUP_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (147, 'PS_PACK_FEATURE_ACTIVE', '0', NOW(), NOW()),
-(148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW(),
+(148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW()),
 (149, 'PS_CARRIER_DEFAULT', '1', NOW(), NOW()),
 (150, 'PS_TAX_ADDRESS_TYPE', 'id_address_delivery', NOW(), NOW()),
 (151, 'PS_SHOP_DEFAULT', '1', NOW(), NOW()),
-(152, 'PS_CARRIER_DEFAULT_SORT', '0', NOW(), NOW()));
+(152, 'PS_CARRIER_DEFAULT_SORT', '0', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
