@@ -57,7 +57,115 @@ class AdminShopUrlControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
 		);
 
-		$this->template = 'adminShopUrl.tpl';
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Shop Url')
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Domain:'),
+					'name' => 'domain'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Domain SSL:'),
+					'name' => 'domain_ssl'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Physical URI:'),
+					'name' => 'physical_uri',
+					'p' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path.')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Virtual URI:'),
+					'name' => 'virtual_uri',
+					'p' => array(
+						$this->l('This virtual folder must not exist on your server and is used to associate an URI to a shop.'),
+						'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
+					)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Your final URL will be:'),
+					'name' => 'final_url',
+					'size' => 76,
+					'readonly' => true
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Shop:'),
+					'name' => 'id_shop',
+					'onchange' => 'checkMainUrlInfo(this.value);',
+					'options' => array(
+						'optiongroup' => array (
+							'query' =>  Shop::getTree(),
+							'label' => 'name'
+						),
+						'options' => array (
+							'query' => 'shops',
+							'id' => 'id_shop',
+							'name' => 'name'
+						)
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Main URL:'),
+					'name' => 'main',
+					'class' => 't',
+					'values' => array(
+						array(
+							'id' => 'main_on',
+							'value' => 1,
+							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+						),
+						array(
+							'id' => 'main_off',
+							'value' => 0,
+							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+						)
+					),
+					'p' => array(
+						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url (you can only have one main url per shop).'),
+						array(
+							'text' => $this->l('Since the selected shop has no main url, you have to set this url as main'),
+							'id' => 'mainUrlInfo'
+						),
+						array(
+							'text' => $this->l('The selected shop has already a main url, if you set this one as main url, the older one will be set as normal url'),
+							'id' => 'mainUrlInfoExplain'
+						)
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Status:'),
+					'name' => 'active',
+					'required' => false,
+					'class' => 't',
+					'values' => array(
+						array(
+							'id' => 'active_on',
+							'value' => 1,
+							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+						),
+						array(
+							'id' => 'active_off',
+							'value' => 0,
+							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+						)
+					),
+					'p' => $this->l('Enabled or disabled')
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
 
 		parent::__construct();
 	}
@@ -76,10 +184,10 @@ class AdminShopUrlControllerCore extends AdminController
 
 			if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
 				$this->_errors[] = Tools::displayError('You can\'t disable a main url');
-			
+
 			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
-			
+
 			parent::postProcess();
 			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
 		}
@@ -106,41 +214,6 @@ class AdminShopUrlControllerCore extends AdminController
 			return parent::postProcess();
 	}
 
-	public function displayForm($isMainTab = true)
-	{
-		$this->content = parent::displayForm($isMainTab);
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-		$current_shop = Shop::initialize();
-
-		$list_shop_with_url = array();
-		foreach (Shop::getShops(false, null, true) as $id)
-			$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
-
-		$js_shop_url = Tools::jsonEncode($list_shop_with_url);
-
-		$domain = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain;
-		$domain_ssl = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $current_shop->domain_ssl;
-		$physical_uri = Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri;
-
-		$this->context->smarty->assign('tab_form', array(
-			'current' => self::$currentIndex,
-			'table' => $this->table,
-			'token' => $this->token,
-			'id' => $obj->id,
-			'domain' => $domain,
-			'domain_ssl' => $domain_ssl,
-			'physical_uri' => $physical_uri,
-			'virtual_uri' => $this->getFieldValue($obj, 'virtual_uri'),
-			'getTree' => Shop::getTree(),
-			'id_shop' => $obj->id_shop,
-			'main' => $this->getFieldValue($obj, 'main') ? true : false,
-			'active' => $this->getFieldValue($obj, 'active') ? true : false,
-			'jsShopUrl' => $js_shop_url
-		));
-	}
-
 	protected function afterUpdate($object)
 	{
 		if (Tools::getValue('main'))
@@ -149,12 +222,31 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function initContent()
 	{
-		if ($this->display != 'edit')
+		if ($this->display != 'edit' && $this->display != 'add')
 			$this->display = 'list';
+		else
+		{
+			if (!($obj = $this->loadObject(true)))
+				return;
+			$current_shop = Shop::initialize();
+
+			$list_shop_with_url = array();
+			foreach (Shop::getShops(false, null, true) as $id)
+				$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
+
+			$smarty = $this->context->smarty;
+			$smarty->assign('jsShopUrl', Tools::jsonEncode($list_shop_with_url));
+			$smarty->assign('script', $smarty->fetch($smarty->template_dir.'/'.$this->tpl_folder.'script.tpl'));
+
+			$this->fields_value = array(
+				'domain' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain,
+				'domain_ssl' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $current_shop->domain_ssl,
+				'physical_uri' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri
+			);
+		}
 
 		parent::initContent();
 	}
-
 }
 
 

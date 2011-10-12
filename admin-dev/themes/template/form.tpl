@@ -38,6 +38,9 @@
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
 		});
+		{if isset($script)}
+			{$script}
+		{/if}
 	</script>
 {/if}
 
@@ -57,27 +60,55 @@
 					<label>{$input.label} </label>
 					<div class="margin-form">
 						{if $input.type == 'text'}
-							<input type="text" {if isset($input.size)}size="{$input.size}"{/if} name="{$input.name}" value="{$fields_value[$input.name]}" {if isset($input.class)}class="{$input.class}"{/if} />
+							<input type="text" 
+									name="{$input.name}" 
+									id="{$input.name}" 
+									value="{$fields_value[$input.name]}" 
+									{if isset($input.size)}size="{$input.size}"{/if} 
+									{if isset($input.class)}class="{$input.class}"{/if} 
+									{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 						{elseif $input.type == 'select'}
-							<select name="{$input.name}">
-								{foreach $input.options.query AS $option}
-									<option value="{$option[$input.options.id]}" {if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
-								{/foreach}
+							<select name="{$input.name}" id="{$input.name}" {if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+								{if isset($input.options.optiongroup)}
+									{foreach $input.options.optiongroup.query AS $optiongroup}
+										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
+											{foreach $optiongroup[$input.options.options.query] as $option}
+												<option value="{$option[$input.options.options.id]}" 
+														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]}</option>
+											{/foreach}
+										</optgroup>
+									{/foreach}
+								{else}
+									{foreach $input.options.query AS $option}
+										<option value="{$option[$input.options.id]}" 
+												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
+									{/foreach}
+								{/if}
 							</select>
 						{elseif $input.type == 'radio'}
 							{foreach $input.values as $value}
-								<input type="radio" name="{$input.name}" id="{$value.id}" value="{$value.value}" {if $fields_value[$input.name] == $value.value}checked="checked"{/if}/>
+								<input type="radio" 
+										name="{$input.name}" 
+										id="{$value.id}" 
+										value="{$value.value}" 
+										{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
 								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}"> {$value.label}</label>
 							{/foreach}
 						{elseif $input.type == 'textarea'}
-							<textarea name="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
+							<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
+						{elseif $input.type == 'checkbox'}
+							
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
 							<p class="clear">
 								{if is_array($input.p)}
 									{foreach $input.p as $p}
-										{$p}<br />
+										{if is_array($p)}
+											<span id="{$p.id}">{$p.text}</span><br />
+										{else}
+											{$p}<br />
+										{/if}
 									{/foreach}
 								{else}
 									{$input.p}
