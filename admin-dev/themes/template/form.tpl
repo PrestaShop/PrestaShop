@@ -26,22 +26,36 @@
 
 {if $firstCall}
 	<script type="text/javascript">
-		$(document).ready(function() {
+		var vat_number = {$vat_number};
+		var module_dir = '{$module_dir}';
+	
+		$(document).ready(function() {ldelim}
 			var id_language = {$defaultFormLanguage};
 			var languages = new Array();
 			{foreach $languages as $k => $language}
-				languages[{$k}] = {
+				languages[{$k}] = {ldelim}
 					id_lang: {$language.id_lang},
 					iso_code: '{$language.iso_code}',
 					name: '{$language.name}'
-				};
+				{rdelim};
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
-		});
+		
+			{literal}
+			if ($('#id_country'))
+			{
+				ajaxStates();
+				$('#id_country').change(function() {
+					ajaxStates();
+				});
+			}
+			{/literal}
+		{rdelim});
 		{if isset($script)}
 			{$script}
 		{/if}
 	</script>
+	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
 
 <form action="{$current}&submitAdd{$table}=1&token={$token}" method="post">
@@ -57,6 +71,9 @@
 				</legend>
 			{elseif $key == 'input'}
 				{foreach $field as $input}
+					{if $input.name == 'id_state'}
+						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
+					{/if}
 					<label>{$input.label} </label>
 					<div class="margin-form">
 						{if $input.type == 'text'}
@@ -116,6 +133,9 @@
 							</p>
 						{/if}
 					</div>
+					{if $input.name == 'id_state'}
+						</div>
+					{/if}
 				{/foreach}
 			{elseif $key == 'submit'}
 				<div class="margin-form">
