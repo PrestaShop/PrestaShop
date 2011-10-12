@@ -46,7 +46,7 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function addProduct($id_product,
 							   $id_product_attribute = 0,
-							   $warehouse,
+							   Warehouse $warehouse,
 							   $quantity,
 							   $id_stock_mvt_reason,
 							   $price_te,
@@ -103,7 +103,7 @@ class StockManagerCore implements StockManagerInterface
 						'physical_quantity' => ($stock->physical_quantity + $quantity),
 						'price_te' => $current_wa,
 						'usable_quantity' => ($is_usable ? ($stock->usable_quantity + $quantity) : $stock->usable_quantity),
-						'id_warehouse' => $warehouse->id
+						'id_warehouse' => $warehouse->id,
 					);
 
 					// saves stock in warehouse
@@ -162,7 +162,8 @@ class StockManagerCore implements StockManagerInterface
 				'physical_quantity' => $quantity,
 				'price_te' => round($price_te, 6),
 				'usable_quantity' => ($is_usable ? $quantity : 0),
-				'id_warehouse' => $warehouse->id
+				'id_warehouse' => $warehouse->id,
+				'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
 			);
 
 			// saves stock in warehouse
@@ -185,7 +186,7 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function removeProduct($id_product,
 								  $id_product_attribute = null,
-								  $warehouse,
+								  Warehouse $warehouse,
 								  $quantity,
 								  $id_stock_mvt_reason,
 								  $is_usable = true,
@@ -240,6 +241,9 @@ class StockManagerCore implements StockManagerInterface
 				$stock_params = array(
 					'physical_quantity' => ($stock->physical_quantity - $quantity),
 					'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity),
+					'last_wa' => $stock->price_te,
+					'current_wa' => $stock->price_te,
+					'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
 				);
 
 				// saves stock in warehouse
@@ -250,6 +254,10 @@ class StockManagerCore implements StockManagerInterface
 				$stock_mvt = new StockMvt();
 				$stock_mvt->hydrate($mvt_params);
 				$stock_mvt->save();
+
+				$return[$stock->id]['quantity'] = $quantity;
+				$return[$stock->id]['price_te'] = $stock->price_te;
+
 			break;
 
 			case 'LIFO':
@@ -358,6 +366,7 @@ class StockManagerCore implements StockManagerInterface
 						$stock_params = array(
 							'physical_quantity' => ($stock->physical_quantity - $total_quantity_for_current_stock),
 							'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity),
+							'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
 						);
 
 						$return[$stock->id]['quantity'] = $total_quantity_for_current_stock;
@@ -376,21 +385,21 @@ class StockManagerCore implements StockManagerInterface
 	/**
 	 * @see StockManagerInterface::getProductPhysicalQuantities()
 	 */
-	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouses_id = null, $usable = false)
+	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $id_warehouses = null, $usable = false)
 	{
 		$query = new DbQuery();
 		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
 		$query->from('stock s');
 		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
-		if (count($warehouses_id))
-			$query->where('s.id_warehouse IN('.implode(', ', $warehouses_id).')');
+		if (count($id_warehouses))
+			$query->where('s.id_warehouse IN('.implode(', ', $id_warehouses).')');
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 
 	/**
 	 * @see StockManagerInterface::getProductRealQuantities()
 	 */
-	public function getProductRealQuantities($id_product, $id_product_attribute, $warehouses_id = null, $usable = false)
+	public function getProductRealQuantities($id_product, $id_product_attribute, $id_warehouses = null, $usable = false)
 	{
 		// Gets clients_orders_qty
 		$query = new DbQuery();
@@ -403,7 +412,7 @@ class StockManagerCore implements StockManagerInterface
 		$clients_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets {physical OR usable}_qty
-		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $warehouses_id, $usable);
+		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $id_warehouses, $usable);
 
 		// Returns real_qty = qty - clients_orders_qty
 		// @TODO include suplliers orders in the calcul when they will be implemented
@@ -423,7 +432,7 @@ class StockManagerCore implements StockManagerInterface
 											  $usable_to = true)
 	{
 		// Checks if this transfer is possible
-		if (getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity)
+		if ($this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity)
 			return false;
 
 		// Checks if the given warehouses are available
@@ -434,13 +443,15 @@ class StockManagerCore implements StockManagerInterface
 			return false;
 
 		// Removes from warehouse_from
-		if (!count($stocks = $this->removeProduct($id_product,
-									   		 	  $id_product_attribute,
-									   		 	  $warehouse_from,
-									   		 	  $quantity,
-									   		 	  $id_stock_mvt_reason,
-									   		 	  $is_usable_from)))
+		$stocks = $this->removeProduct($id_product,
+									   $id_product_attribute,
+									   $warehouse_from,
+									   $quantity,
+									   $id_stock_mvt_reason,
+									   $usable_from);
+		if (!count($stocks))
 			return false;
+
 		// Adds in warehouse_to
 		foreach ($stocks as $stock)
 		{
