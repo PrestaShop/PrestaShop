@@ -145,6 +145,10 @@ class AdminRequestSqlControllerCore extends AdminController
 		');
 
 		$smarty = $this->context->smarty;
+		
+		if ($this->display != 'edit' && $this->display != 'add')
+			$this->display = 'list';
+
 		switch ($this->display)
 		{
 			case 'edit':
@@ -161,10 +165,6 @@ class AdminRequestSqlControllerCore extends AdminController
 					$smarty->assign('back', Tools::safeOutput(self::$currentIndex.'&token='.$this->token));
 
 				$smarty->assign('view', $this->viewRequestSql());
-			break;
-
-			default:
-				$this->display = 'list';
 			break;
 		}
 
