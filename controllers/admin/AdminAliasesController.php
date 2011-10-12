@@ -119,7 +119,7 @@ class AdminAliasesControllerCore extends AdminController
 
 		$this->fields_value = array('alias' => $obj->getAliases());
 
-		if ($this->display != 'edit')
+		if ($this->display != 'edit' && $this->display != 'add')
 			$this->display = 'list';
 
 		parent::initContent();
