@@ -80,7 +80,7 @@ class AdminSearchEnginesControllerCore extends AdminController
 
 	public function initContent()
 	{
-		if ($this->display != 'edit')
+		if ($this->display != 'edit' && $this->display != 'add')
 			$this->display = 'list';
 
 		parent::initContent();
