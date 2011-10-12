@@ -87,7 +87,7 @@ class HelperFormCore extends Helper
 			'requiredFields' => $this->getFieldsRequired(),
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
-			'contains_states' => Country::containsStates($this->fields_value['id_country'])
+			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);

@@ -49,7 +49,8 @@ class AdminAddressesControllerCore extends AdminController
 			$this->deleted = true;
 		$this->_select = 'cl.`name` as country';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON
-		(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
+			(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
+		$this->_where = 'AND a.id_customer != 0';
 
 		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries AS $country)
@@ -64,46 +65,174 @@ class AdminAddressesControllerCore extends AdminController
 		'city' => array('title' => $this->l('City'), 'width' => 150),
 		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
 
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Addresses'),
+				'image' => '../img/admin/contact.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Customer'),
+					'name' => 'id_customer',
+					'size' => 33,
+					'required' => true,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Identification Number'),
+					'name' => 'dni',
+					'size' => 30,
+					'required' => false,
+					'p' => $this->l('DNI / NIF / NIE')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Alias'),
+					'name' => 'alias',
+					'size' => 33,
+					'required' => true,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('First name'),
+					'name' => 'firstname',
+					'size' => 33,
+					'required' => true,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Last name'),
+					'name' => 'lastname',
+					'size' => 33,
+					'required' => true,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Company'),
+					'name' => 'company',
+					'size' => 33,
+					'required' => false,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('VAT number'),
+					'name' => 'vat_number',
+					'size' => 33,
+					''
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Address'),
+					'name' => 'address1',
+					'size' => 33,
+					'required' => true,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Address').' (2)',
+					'name' => 'address2',
+					'size' => 33,
+					'required' => false,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Postcode/ Zip Code'),
+					'name' => 'postcode',
+					'size' => 33,
+					'required' => false,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('City'),
+					'name' => 'city',
+					'size' => 33,
+					'required' => true,
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Country:'),
+					'name' => 'id_country',
+					'required' => false,
+					'options' => array(
+						'query' => Country::getCountries($this->context->language->id),
+						'id' => 'id_country',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('State'),
+					'name' => 'id_state',
+					'required' => false,
+					'options' => array(
+						'id' => 'id_state',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Home phone'),
+					'name' => 'phone',
+					'size' => 33,
+					'required' => false,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'size' => 33,
+					'required' => false,
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('Other'),
+					'name' => 'other',
+					'cols' => 36,
+					'rows' => 4,
+					'required' => false,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
 		parent::__construct();
 	}
 
 	public function postProcess()
 	{
-		if (isset($_POST['submitAdd'.$this->table]))
+		if ($this->action == 'save')
 		{
 			// Transform e-mail in id_customer for parent processing
-			if ($this->addressType == 'customer')
+			if (Validate::isEmail(Tools::getValue('email')))
 			{
-				if (Validate::isEmail(Tools::getValue('email')))
-				{
-					$customer = new Customer();
-					$customer->getByEmail(Tools::getValue('email'));
-					if (Validate::isLoadedObject($customer))
-						$_POST['id_customer'] = $customer->id;
-					else
-						$this->_errors[] = Tools::displayError('This e-mail address is not registered.');
-				}
-				elseif ($id_customer = Tools::getValue('id_customer'))
-				{
-					$customer = new Customer((int)($id_customer));
-					if (Validate::isLoadedObject($customer))
-						$_POST['id_customer'] = $customer->id;
-					else
-						$this->_errors[] = Tools::displayError('Unknown customer');
-				}
+				$customer = new Customer();
+				$customer->getByEmail(Tools::getValue('email'));
+				if (Validate::isLoadedObject($customer))
+					$_POST['id_customer'] = $customer->id;
+				else
+					$this->_errors[] = Tools::displayError('This e-mail address is not registered.');
+			}
+			elseif ($id_customer = Tools::getValue('id_customer'))
+			{
+				$customer = new Customer((int)($id_customer));
+				if (Validate::isLoadedObject($customer))
+					$_POST['id_customer'] = $customer->id;
 				else
 					$this->_errors[] = Tools::displayError('Unknown customer');
-				if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) AND !Tools::getValue('dni'))
-					$this->_errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
 			}
-
-			// Check manufacturer selected
-			if ($this->addressType == 'manufacturer')
-			{
-				$manufacturer = new Manufacturer((int)(Tools::getValue('id_manufacturer')));
-				if (!Validate::isLoadedObject($manufacturer))
-					$this->_errors[] = Tools::displayError('Manufacturer selected is not valid.');
-			}
+			else
+				$this->_errors[] = Tools::displayError('Unknown customer');
+			if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) AND !Tools::getValue('dni'))
+				$this->_errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
 
 			/* If the selected country does not contain states */
 			$id_state = (int)(Tools::getValue('id_state'));
@@ -150,7 +279,7 @@ class AdminAddressesControllerCore extends AdminController
 
 		/* Reassignation of the order's new (invoice or delivery) address */
 		$address_type = ((int)(Tools::getValue('address_type')) == 2 ? 'invoice' : ((int)(Tools::getValue('address_type')) == 1 ? 'delivery' : ''));
-		if (isset($_POST['submitAdd'.$this->table]) AND ($id_order = (int)(Tools::getValue('id_order'))) AND !sizeof($this->_errors) AND !empty($address_type))
+		if ($this->action == 'save' AND ($id_order = (int)(Tools::getValue('id_order'))) AND !sizeof($this->_errors) AND !empty($address_type))
 		{
 			if(!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.$address_type.'` = '.Db::getInstance()->Insert_ID().' WHERE `id_order` = '.$id_order))
 				$this->_errors[] = Tools::displayError('An error occurred while linking this address to its order.');
@@ -173,55 +302,38 @@ class AdminAddressesControllerCore extends AdminController
 		'.(Tools::getValue('realedit') ? '<input type="hidden" name="realedit" value="1" />' : '').'
 			<fieldset>
 				<legend><img src="../img/admin/contact.gif" alt="" />'.$this->l('Addresses').'</legend>';
-		switch ($this->addressType)
-		{
-			case 'manufacturer':
-				$content .= '<label>'.$this->l('Choose manufacturer').'</label>
-				<div class="margin-form">';
-				$manufacturers = Manufacturer::getManufacturers();
-				$content .= '<select name="id_manufacturer">';
-				if (!sizeof($manufacturers))
-					$content .= '<option value="0">'.$this->l('No manufacturer available').'&nbsp</option>';
-				foreach ($manufacturers as $manufacturer)
-					$content .= '<option value="'.(int)($manufacturer['id_manufacturer']).'"'.($this->getFieldValue($obj, 'id_manufacturer') == $manufacturer['id_manufacturer'] ? ' selected="selected"' : '').'>'.$manufacturer['name'].'&nbsp</option>';
-				$content .=	'</select>';
-				$content .= '</div>';
-				$content .= '<input type="hidden" name="alias" value="manufacturer">';
-				break;
-			case 'customer':
-			default:
-				if ($obj->id)
-				{
-					$customer = new Customer($obj->id_customer);
-					$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
-					$content .= '
-					<label>'.$this->l('Customer').'</label>
-					<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.$tokenCustomer.'">'.$customer->lastname.' '.$customer->firstname.' ('.$customer->email.')</a></div>
-					<input type="hidden" name="id_customer" value="'.$customer->id.'" />
-					<input type="hidden" name="email" value="'.$customer->email.'" />';
-				}
-				else
-				{
-					$content .=
-					'<label>'.$this->l('Customer e-mail').'</label>
-					<div class="margin-form">
-						<input type="text" size="33" name="email" value="'.htmlentities(Tools::getValue('email'), ENT_COMPAT, 'UTF-8').'" style="text-transform: lowercase;" /> <sup>*</sup>
-					</div>';
-				}
-				$content .= '
-					<label for="dni">'.$this->l('Identification Number').'</label>
-					<div class="margin-form">
-					<input type="text" name="dni" id="dni" value="'.htmlentities($this->getFieldValue($obj, 'dni'), ENT_COMPAT, 'UTF-8').'" />
-					<p>'.$this->l('DNI / NIF / NIE').'</p>
-					</div>';
 
-				$content .= '<label>'.$this->l('Alias').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="alias" value="'.htmlentities($this->getFieldValue($obj, 'alias'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-				</div>';
-				break;
+		if ($obj->id)
+		{
+			$customer = new Customer($obj->id_customer);
+			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
+			$content .= '
+			<label>'.$this->l('Customer').'</label>
+			<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.$tokenCustomer.'">'.$customer->lastname.' '.$customer->firstname.' ('.$customer->email.')</a></div>
+			<input type="hidden" name="id_customer" value="'.$customer->id.'" />
+			<input type="hidden" name="email" value="'.$customer->email.'" />';
 		}
+		else
+		{
+			$content .=
+			'<label>'.$this->l('Customer e-mail').'</label>
+			<div class="margin-form">
+				<input type="text" size="33" name="email" value="'.htmlentities(Tools::getValue('email'), ENT_COMPAT, 'UTF-8').'" style="text-transform: lowercase;" /> <sup>*</sup>
+			</div>';
+		}
+		$content .= '
+			<label for="dni">'.$this->l('Identification Number').'</label>
+			<div class="margin-form">
+			<input type="text" name="dni" id="dni" value="'.htmlentities($this->getFieldValue($obj, 'dni'), ENT_COMPAT, 'UTF-8').'" />
+			<p>'.$this->l('DNI / NIF / NIE').'</p>
+			</div>';
+
+		$content .= '<label>'.$this->l('Alias').'</label>
+		<div class="margin-form">
+			<input type="text" size="33" name="alias" value="'.htmlentities($this->getFieldValue($obj, 'alias'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
+			<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+		</div>';
+
 
 		$addresses_fields = $this->processAddressFormat();
 		$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
@@ -230,27 +342,24 @@ class AdminAddressesControllerCore extends AdminController
 		{
 			if ($addr_field_item == 'company')
 			{
-				if ($this->addressType != 'manufacturer')
-				{
-					$content .= '<label>'.$this->l('Company').'</label>
-						<div class="margin-form">
-						<input type="text" size="33" name="company" value="'.htmlentities($this->getFieldValue($obj, 'company'), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-						</div>';
+				$content .= '<label>'.$this->l('Company').'</label>
+					<div class="margin-form">
+					<input type="text" size="33" name="company" value="'.htmlentities($this->getFieldValue($obj, 'company'), ENT_COMPAT, 'UTF-8').'" />
+					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+					</div>';
 
-					if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-						$content .= '<div id="vat_area" style="display: visible">';
-					else if(Configuration::get('VATNUMBER_MANAGEMENT'))
-						$content .= '<div id="vat_area" style="display: hidden">';
-					else
-						$content .='<div style="display: none;">';
+				if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
+					$content .= '<div id="vat_area" style="display: visible">';
+				else if(Configuration::get('VATNUMBER_MANAGEMENT'))
+					$content .= '<div id="vat_area" style="display: hidden">';
+				else
+					$content .='<div style="display: none;">';
 
-					$content .= '<label>'.$this->l('VAT number').'</label>
-						<div class="margin-form">
-						<input type="text" size="33" name="vat_number" value="'.htmlentities($this->getFieldValue($obj, 'vat_number'), ENT_COMPAT, 'UTF-8').'" />
-						</div>
-						</div>';
-				}
+				$content .= '<label>'.$this->l('VAT number').'</label>
+					<div class="margin-form">
+					<input type="text" size="33" name="vat_number" value="'.htmlentities($this->getFieldValue($obj, 'vat_number'), ENT_COMPAT, 'UTF-8').'" />
+					</div>
+					</div>';
 			}
 			elseif ($addr_field_item == 'lastname')
 			{
@@ -441,8 +550,29 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function initContent()
 	{
-		if ($this->display != 'edit')
+		if ($this->display != 'edit' && $this->display != 'add')
 			$this->display = 'list';
+
+		if (!($address = $this->loadObject(true)))
+			return false;
+
+		if (Validate::isLoadedObject($address))
+		{
+			$customer = new Customer($address->id_customer);
+			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
+		}
+
+		if (Configuration::get('VATNUMBER_MANAGEMENT'))
+			if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
+				$vat = 'is_applicable';
+			else
+				$vat = 'management';
+
+		$this->context->smarty->assign(array(
+			'vat' => isset($vat) ? $vat : null,
+			'customer' => isset($customer) ? $customer : null,
+			'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
+		));
 		parent::initContent();
 	}
 
