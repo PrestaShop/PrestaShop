@@ -49,12 +49,19 @@ class AdminCarriers extends AdminTab
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position')
 		);
 
+		$carrier_default_sort = array(
+			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
+			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
+		);
+
 		$this->optionsList = array(
 			'general' => array(
 				'title' => $this->l('Carrier options'),
 				'fields' => array(
 					'PS_CARRIER_DEFAULT' => array('title' => $this->l('Default carrier:'), 'desc' => $this->l('The default carrier used in shop'), 'cast' => 'intval', 'type' => 'select',
 					'identifier' => 'id_carrier', 'list' => Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS)),
+					'PS_CARRIER_DEFAULT_SORT' => array('title' => $this->l('Carrier default sort:'), 'desc' => $this->l('This default sort will be available only on front-office'), 'cast' => 'intval', 'type' => 'select',
+					'identifier' => 'value', 'list' => $carrier_default_sort),
 				),
 			),
 		);
@@ -357,7 +364,7 @@ class AdminCarriers extends AdminTab
 			{
 				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
 					$this->_errors[] = Tools::displayError('You can\'t disable the default carrier, please change your default carrier first.');
-		else
+				else
 					parent::postProcess();
 			}
 			else
