@@ -64,8 +64,6 @@ class AdminAddressesControllerCore extends AdminController
 		'city' => array('title' => $this->l('City'), 'width' => 150),
 		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
 
-		$this->template = 'adminAddresses.tpl';
-
 		parent::__construct();
 	}
 
