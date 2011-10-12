@@ -235,14 +235,14 @@ class StockManagerCore implements StockManagerInterface
 					'id_stock_mvt_reason' => $id_stock_mvt_reason,
 					'id_order' => $id_order,
 					'price_te' => $stock->price_te,
+					'last_wa' => $stock->price_te,
+					'current_wa' => $stock->price_te,
 					'id_employee' => $context->employee->id,
 					'sign' => -1
 				);
 				$stock_params = array(
 					'physical_quantity' => ($stock->physical_quantity - $quantity),
 					'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity),
-					'last_wa' => $stock->price_te,
-					'current_wa' => $stock->price_te,
 					'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
 				);
 
