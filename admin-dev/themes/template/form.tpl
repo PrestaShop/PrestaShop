@@ -42,7 +42,7 @@
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
 		
 			{literal}
-			if ($('#id_country'))
+			if ($('#id_country') && $('#id_state'))
 			{
 				ajaxStates();
 				$('#id_country').change(function() {
