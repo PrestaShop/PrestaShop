@@ -233,7 +233,11 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (145, 'PS_DISCOUNT_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (146, 'PS_GROUP_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (147, 'PS_PACK_FEATURE_ACTIVE', '0', NOW(), NOW()),
-(148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW());
+(148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW(),
+(149, 'PS_CARRIER_DEFAULT', '1', NOW(), NOW()),
+(150, 'PS_TAX_ADDRESS_TYPE', 'id_address_delivery', NOW(), NOW()),
+(151, 'PS_SHOP_DEFAULT', '1', NOW(), NOW()),
+(152, 'PS_CARRIER_DEFAULT_SORT', '0', NOW(), NOW()));
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -1187,8 +1191,6 @@ INSERT INTO `PREFIX_carrier_zone` (`id_carrier`, `id_zone`) VALUES (1, 1);
 
 INSERT INTO `PREFIX_carrier_shop` (`id_carrier`, `id_shop`) VALUES (1,1);
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES	('PS_CARRIER_DEFAULT', '1', NOW(), NOW());
-
 /* Timezone */
 INSERT INTO `PREFIX_timezone` (`name`) VALUES ('Africa/Abidjan'),('Africa/Accra'),('Africa/Addis_Ababa'),('Africa/Algiers'),
 ('Africa/Asmara'),('Africa/Asmera'),('Africa/Bamako'),('Africa/Bangui'),('Africa/Banjul'),('Africa/Bissau'),('Africa/Blantyre'),
@@ -1275,7 +1277,6 @@ INSERT INTO `PREFIX_group_lang` (`id_group`, `id_lang`, `name`) VALUES	(1, 1, 'D
 INSERT INTO `PREFIX_group_group_shop` (`id_group`, `id_group_shop`) (SELECT `id_group`, 1 FROM `PREFIX_group`);
 
 INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) VALUES (1, 1);
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_TAX_ADDRESS_TYPE', 'id_address_delivery', NOW(), NOW());
 
 INSERT INTO `PREFIX_stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`) VALUES
 (1, 1, NOW(), NOW()), (2, -1, NOW(), NOW()), (3, -1, NOW(), NOW()), (4, -1, NOW(), NOW()), (5, 1, NOW(), NOW());
@@ -1318,7 +1319,6 @@ phone' where `id_country`=21;
 
 INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`, `deleted`, `share_stock`, `share_customer`, `share_order`) VALUES (1, 'Default', 1, 0, 0, 0, 0);
 INSERT INTO `PREFIX_shop` (`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`) VALUES (1, 1, 'Default', 1, 1, 1, 0);
-INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, 'PS_SHOP_DEFAULT', '1', NOW(), NOW());
 
 INSERT INTO `PREFIX_theme` (`id_theme`, `name`) VALUES (1, 'prestashop');
 

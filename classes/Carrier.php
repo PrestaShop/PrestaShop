@@ -41,6 +41,9 @@ class CarrierCore extends ObjectModel
 	const SHIPPING_METHOD_PRICE = 2;
 	const SHIPPING_METHOD_FREE = 3;
 
+	const SORT_BY_PRICE = 0;
+	const SORT_BY_POSITION = 1;
+
 	/** @var int Tax id (none = 0) */
 	public $id_tax_rules_group;
 
@@ -538,6 +541,17 @@ class CarrierCore extends ObjectModel
 			}
 			$results_array[] = $row;
 		}
+
+		// if we have to sort carriers by price
+		if (Configuration::get('PS_CARRIER_DEFAULT_SORT') == Carrier::SORT_BY_PRICE)
+		{
+			foreach ($results_array as $r)
+			{
+				$prices[] = $r['price'];
+			}
+			array_multisort($prices, SORT_NUMERIC, $results_array);
+		}
+
 		return $results_array;
 	}
 
