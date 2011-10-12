@@ -18,7 +18,7 @@ if (!Tools::getValue('ajax'))
 	}
 	
 	// Return a content without waiting the end of index execution
-	header('Location: '.Tools::getProtocol().Tools::getHttpHost().'/modules/blocklayered/blocklayered-price-indexer.php?token='.Tools::getValue('token') .'&return_message='.(int)Tools::getValue('cursor'));
+	header('Location: '.Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php?token='.Tools::getValue('token') .'&return_message='.(int)Tools::getValue('cursor'));
 	flush();
 }
 if(Tools::getValue('full'))

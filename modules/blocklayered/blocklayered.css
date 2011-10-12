@@ -73,3 +73,6 @@
 #layered_block_left ul li .disabled {
 	color: #666;
 }
+#product_list .warning {
+	margin-top: 13px;
+}

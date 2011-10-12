@@ -59,7 +59,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.3';
+		$this->version = '1.3.1';
 		$this->author = 'PrestaShop';
 		parent::__construct ();
 		$this->displayName = $this->l('eBay');
@@ -913,7 +913,7 @@ class Ebay extends Module
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
 
 		// Load categories only if necessary
-		if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `'._DB_PREFIX_.'ebay_category_configuration`') > 4 && Tools::getValue('section') != 'category')
+		if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `'._DB_PREFIX_.'ebay_category_configuration`') >= 1 && Tools::getValue('section') != 'category')
 			return '<p align="center"><b>'.$this->l('Your categories have already been configured.').'</b></p>
 			<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category" method="post" class="form">
 			<p align="center"><input class="button" name="submitSave" type="submit" value="'.$this->l('See Categories').'" /></p></form>';
@@ -1281,10 +1281,12 @@ class Ebay extends Module
 				eBaySyncProduct(option);
 			}
 
+			var counter = 0;
 			function eBaySyncProduct(option)
 			{
+				counter++;
 				$.ajax({
-				  url: \''._MODULE_DIR_.'ebay/ajax/eBaySyncProduct.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&option=\'+option+\'&time='.pSQL(date('Ymdhis').rand()).'\',
+				  url: \''._MODULE_DIR_.'ebay/ajax/eBaySyncProduct.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&option=\'+option+\'&time='.pSQL(date('Ymdhis')).'\'+counter,
 				  success: function(data)
 				  {
 					tab = data.split("|");
@@ -1554,9 +1556,9 @@ class Ebay extends Module
 				$images = $product->getImages($this->id_lang);
 				foreach ($images as $image)
 				{
-					$pictures[] = str_replace('https://', 'http://', $prefix.$this->context->link->getImageLink('', $product->id.'-'.$image['id_image'], null));
-					$picturesMedium[] = str_replace('https://', 'http://', $prefix.$this->context->link->getImageLink('', $product->id.'-'.$image['id_image'], 'medium'));
-					$picturesLarge[] = str_replace('https://', 'http://', $prefix.$this->context->link->getImageLink('', $product->id.'-'.$image['id_image'], 'large'));
+					$pictures[] = str_replace('https://', 'http://', $prefix.$this->context->link->getImageLink('ebay', $product->id.'-'.$image['id_image'], 'large'));
+					$picturesMedium[] = str_replace('https://', 'http://', $prefix.$this->context->link->getImageLink('ebay', $product->id.'-'.$image['id_image'], 'medium'));
+					$picturesLarge[] = str_replace('https://', 'http://', $prefix.$this->context->link->getImageLink('ebay', $product->id.'-'.$image['id_image'], 'large'));
 				}
 
 				// Load Variations
@@ -1618,6 +1620,7 @@ class Ebay extends Module
 					'name' => str_replace('&', '&amp;', $product->name),
 					'brand' => $product->manufacturer_name,
 					'description' => $product->description,
+					'description_short' => $product->description_short,
 					'price' => $price,
 					'quantity' => $product->quantity,
 					'categoryId' => $categoryDefaultCache[$product->id_category_default]['id_category_ref'],
@@ -1644,8 +1647,8 @@ class Ebay extends Module
 
 				// Load eBay Description
 				$datas['description'] = str_replace(
-					array('{DESCRIPTION}', '{EBAY_IDENTIFIER}', '{EBAY_SHOP}', '{SLOGAN}', '{PRODUCT_NAME}'),
-					array($datas['description'], Configuration::get('EBAY_IDENTIFIER'), Configuration::get('EBAY_SHOP'), '', $product->name),
+					array('{DESCRIPTION_SHORT}', '{DESCRIPTION}', '{EBAY_IDENTIFIER}', '{EBAY_SHOP}', '{SLOGAN}', '{PRODUCT_NAME}'),
+					array($datas['description_short'], $datas['description'], Configuration::get('EBAY_IDENTIFIER'), Configuration::get('EBAY_SHOP'), '', $product->name),
 					Configuration::get('EBAY_PRODUCT_TEMPLATE')
 				);
 

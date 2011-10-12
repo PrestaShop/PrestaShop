@@ -1,6 +1,4 @@
 <?php
-if(!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_'))
-	define('_PS_DISPLAY_COMPATIBILITY_WARNING_',false);
 /*
 * 2007-2011 PrestaShop
 *
@@ -26,9 +24,14 @@ if(!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_'))
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+if (!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_'))
+	define('_PS_DISPLAY_COMPATIBILITY_WARNING_', false);
+
 if(!class_exists('Tools14',false))
 {
-class Tools14Core
+
+class Tools14
 {
 	protected static $file_exists_cache = array();
 	protected static $_forceCompile;
@@ -62,7 +65,10 @@ class Tools14Core
 			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
 				$url = substr($url, strlen($baseUri));
 			$explode = explode('?', $url, 2);
-			$url = $link->getPageLink($explode[0], true);
+			// don't use ssl if url is home page 
+			// used when logout for example
+			$useSSL = !empty($url);
+			$url = $link->getPageLink($explode[0], $useSSL);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
 			$baseUri = '';
@@ -213,7 +219,13 @@ class Tools14Core
 	*/
 	public static function usingSecureMode()
 	{
-		return !(empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off');
+		if (isset($_SERVER['HTTPS']))
+			return ($_SERVER['HTTPS'] == 1 || strtolower($_SERVER['HTTPS']) == 'on');
+		// $_SERVER['SSL'] exists only in some specific configuration
+		if (isset($_SERVER['SSL']))
+			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+		
+		return false;
 	}
 
 	/**
@@ -466,18 +478,13 @@ class Tools14Core
 	*/
 	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
 	{
-	 	if (!$date OR !strtotime($date))
+	 	if (!$date OR !($time = strtotime($date)))
 	 		return $date;
 		if (!Validate::isDate($date) OR !Validate::isBool($full))
 			die (self::displayError('Invalid date'));
-	 	$tmpTab = explode($separator, substr($date, 0, 10));
-	 	$hour = ' '.substr($date, -8);
 
-		$language = Language::getLanguage((int)($id_lang));
-	 	if ($language AND strtolower($language['iso_code']) == 'fr')
-	 		return ($tmpTab[2].'-'.$tmpTab[1].'-'.$tmpTab[0].($full ? $hour : ''));
-	 	else
-	 		return ($tmpTab[0].'-'.$tmpTab[1].'-'.$tmpTab[2].($full ? $hour : ''));
+		$language = Language::getLanguage((int)$id_lang);
+		return date($full ? $language['date_format_full'] : $language['date_format_lite'], $time);
 	}
 
 	/**
@@ -490,8 +497,8 @@ class Tools14Core
 	public static function safeOutput($string, $html = false)
 	{
 	 	if (!$html)
-			$string = @htmlentities(strip_tags($string), ENT_QUOTES, 'utf-8');
-		return $string;
+			$string = strip_tags($string);
+		return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);;
 	}
 
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
@@ -537,7 +544,8 @@ class Tools14Core
 	/**
 	* Display an error according to an error code
 	*
-	* @param integer $code Error code
+	* @param string $string Error message
+	* @param boolean $htmlentities By default at true for parsing error message with htmlentities
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true)
 	{
@@ -636,6 +644,7 @@ class Tools14Core
 			/* Categories specifics meta tags */
 			elseif ($id_category = self::getValue('id_category'))
 			{
+				$page_number = (int)self::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang`
@@ -644,6 +653,13 @@ class Tools14Core
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['description']);
+					
+					// Paginate title
+					if (!empty($row['meta_title']))
+						$row['meta_title'] = $row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					else
+						$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					
 					return self::completeMetaTags($row, $row['name']);
 				}
 			}
@@ -651,6 +667,7 @@ class Tools14Core
 			/* Manufacturers specifics meta tags */
 			elseif ($id_manufacturer = self::getValue('id_manufacturer'))
 			{
+				$page_number = (int)self::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'manufacturer_lang` ml
@@ -660,9 +677,9 @@ class Tools14Core
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['meta_description']);
-					if (!empty($row['meta_title']))
-						$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['name']);
+					$row['meta_title'] .= $row['name'] . (!empty($page_number) ? ' ('.$page_number.')' : '');
+					$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
+					return self::completeMetaTags($row, $row['meta_title']);
 				}
 			}
 
@@ -739,11 +756,11 @@ class Tools14Core
 	{
 		global $cookie;
 
-		if ($metaTags['meta_title'] == NULL)
+		if (empty($metaTags['meta_title']))
 			$metaTags['meta_title'] = $defaultValue.' - '.Configuration::get('PS_SHOP_NAME');
-		if ($metaTags['meta_description'] == NULL)
+		if (empty($metaTags['meta_description']))
 			$metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', (int)($cookie->id_lang)) ? Configuration::get('PS_META_DESCRIPTION', (int)($cookie->id_lang)) : '';
-		if ($metaTags['meta_keywords'] == NULL)
+		if (empty($metaTags['meta_keywords']))
 			$metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', (int)($cookie->id_lang)) ? Configuration::get('PS_META_KEYWORDS', (int)($cookie->id_lang)) : '';
 		return $metaTags;
 	}
@@ -957,6 +974,29 @@ class Tools14Core
 			$str = mb_strtolower($str, 'utf-8');
 
 		$str = trim($str);
+		$str = self::replaceAccentedChars($str);
+
+		// Remove all non-whitelist chars.
+		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
+		$str = preg_replace('/[\s\'\:\/\[\]-]+/',' ', $str);
+		$str = preg_replace('/[ ]/','-', $str);
+		$str = preg_replace('/[\/]/','-', $str);
+
+		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
+		// This way we lose fewer special chars.
+		$str = strtolower($str);
+
+		return $str;
+	}
+
+	/**
+	 * Replace all accented chars by their equivalent non accented chars.
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	public static function replaceAccentedChars($str)
+	{
 		$str = preg_replace('/[\x{0105}\x{0104}\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}]/u','a', $str);
 		$str = preg_replace('/[\x{00E7}\x{010D}\x{0107}\x{0106}]/u','c', $str);
 		$str = preg_replace('/[\x{010F}]/u','d', $str);
@@ -974,17 +1014,6 @@ class Tools14Core
 		$str = preg_replace('/[\x{017C}\x{017A}\x{017B}\x{0179}\x{017E}]/u','z', $str);
 		$str = preg_replace('/[\x{00E6}]/u','ae', $str);
 		$str = preg_replace('/[\x{0153}]/u','oe', $str);
-
-		// Remove all non-whitelist chars.
-		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
-		$str = preg_replace('/[\s\'\:\/\[\]-]+/',' ', $str);
-		$str = preg_replace('/[ ]/','-', $str);
-		$str = preg_replace('/[\/]/','-', $str);
-
-		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
-		// This way we lose fewer special chars.
-		$str = strtolower($str);
-
 		return $str;
 	}
 
@@ -1228,15 +1257,20 @@ class Tools14Core
 		return self::$file_exists_cache[$filename];
 	}
 
-	public static function file_get_contents($url, $useIncludePath = false, $streamContext = NULL)
+	public static function file_get_contents($url, $useIncludePath = false, $streamContext = NULL, $curlTimeOut = 5)
 	{
+		if ($streamContext == NULL)
+			$streamContext = @stream_context_create(array('http' => array('timeout' => 5)));
+
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return file_get_contents($url, $useIncludePath, $streamContext);
-		elseif (function_exists('curl_init'))
+			return @file_get_contents($url, $useIncludePath, $streamContext);
+		elseif (function_exists('curl_init') && in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
 		{
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curlTimeOut);
+			curl_setopt($curl, CURLOPT_TIMEOUT, $curlTimeOut);
 			$content = curl_exec($curl);
 			curl_close($curl);
 			return $content;
@@ -1248,11 +1282,7 @@ class Tools14Core
 	public static function simplexml_load_file($url, $class_name = null)
 	{
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return simplexml_load_file($url, $class_name);
-		elseif (function_exists('curl_init'))
-		{
 			return simplexml_load_string(Tools::file_get_contents($url), $class_name);
-		}
 		else
 			return false;
 	}
@@ -1721,18 +1751,12 @@ class Tools14Core
 
 		$tab['RewriteRule']['content']['^c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$'] = 'img/c/$1$2.jpg [L]';
 		$tab['RewriteRule']['content']['^c/([a-zA-Z-]+)/[a-zA-Z0-9-]+\.jpg$'] = 'img/c/$1.jpg [L]';
-		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$1 [QSA,L]';
-		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*'] = 'category.php?id_category=$1 [QSA,L]';
-		$tab['RewriteRule']['content']['^[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$1 [QSA,L]';
-		$tab['RewriteRule']['content']['^([0-9]+)__([a-zA-Z0-9-]*)'] = 'supplier.php?id_supplier=$1 [QSA,L]';
-		$tab['RewriteRule']['content']['^([0-9]+)_([a-zA-Z0-9-]*)'] = 'manufacturer.php?id_manufacturer=$1 [QSA,L]';
-		$tab['RewriteRule']['content']['^content/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'cms.php?id_cms=$1 [QSA,L]';
-		$tab['RewriteRule']['content']['^content/category/([0-9]+)\-([a-zA-Z0-9-]*)'] = 'cms.php?id_cms_category=$1 [QSA,L]';
 
 		if ($multilang)
 		{
 			$tab['RewriteRule']['content']['^([a-z]{2})/[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$2&isolang=$1 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$2&isolang=$1 [QSA,L]';
+			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*(/[a-zA-Z0-9-]*)+'] = 'category.php?id_category=$2&isolang=$1&noredirect=1 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*'] = 'category.php?id_category=$2&isolang=$1 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/content/([0-9]+)\-[a-zA-Z0-9-]*'] = 'cms.php?isolang=$1&id_cms=$2 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/content/category/([0-9]+)\-[a-zA-Z0-9-]*'] = 'cms.php?isolang=$1&id_cms_category=$2 [QSA,L]';
@@ -1745,6 +1769,9 @@ class Tools14Core
 
 		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$1 [QSA,L]';
 		$tab['RewriteRule']['content']['^[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$1 [QSA,L]';
+		// Notice : the id_category rule has to be after product rules.
+		// If not, category with number in their name will result a bug
+		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*(/[a-zA-Z0-9-]*)+'] = 'category.php?id_category=$1&noredirect=1 [QSA,L]';
 		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*'] = 'category.php?id_category=$1 [QSA,L]';
 		$tab['RewriteRule']['content']['^([0-9]+)__([a-zA-Z0-9-]*)'] = 'supplier.php?id_supplier=$1 [QSA,L]';
 		$tab['RewriteRule']['content']['^([0-9]+)_([a-zA-Z0-9-]*)'] = 'manufacturer.php?id_manufacturer=$1 [QSA,L]';
@@ -2058,14 +2085,26 @@ FileETag INode MTime Size
 	 * @param string $type by|way
 	 * @param string $value If no index given, use default order from admin -> pref -> products
 	 */
-	public static function getProductsOrder($type, $value = null)
+	public static function getProductsOrder($type, $value = null, $prefix = false)
 	{
 		switch ($type)
 		{
 			case 'by' :
+				$orderByPrefix = '';
+				if($prefix) {
+					if ($value == 'id_product' || $value == 'date_add' || $value == 'price')
+						$orderByPrefix = 'p.';
+					elseif ($value == 'name')
+						$orderByPrefix = 'pl.';
+					elseif ($value == 'manufacturer')
+						$orderByPrefix = 'm.';
+					elseif ($value == 'position' || empty($value))
+						$orderByPrefix = 'cp.';
+				}
+				
 				$value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
 				$list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
-				return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position'));
+				return $orderByPrefix.((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position'));
 			break;
 
 			case 'way' :
@@ -2207,293 +2246,4 @@ FileETag INode MTime Size
 	}
 }
 }
-
-// if FB class is already loaded, just enable it. else, enable it only if fb.php exists and is loaded
-if (!defined('PS_USE_FIREPHP') AND class_exists('FB',false))
-	define('PS_USE_FIREPHP',true);
-elseif (file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'fb.php'))
-{
-	if (!defined('PS_USE_FIREPHP'))
-	{
-		require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'fb.php');
-		define('PS_USE_FIREPHP',true);
-	}
-	else
-		define('PS_USE_FIREPHP',false);
-}
-else
-	if(!defined('PS_USE_FIREPHP'))
-		define('PS_USE_FIREPHP',class_exists('FB',false));
-
-
-class Tools14 extends Tools14Core
-{
-
-	/**
-	* Redirect user to another page after 5 sec
-	*
-	* @param string $url Desired URL
-	* @param string $baseUri Base URI (optional)
-	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__)
-	{
-		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
-		{
-			global $link;
-			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
-				$url = substr($url, strlen($baseUri));
-			$explode = explode('?', $url);
-			$url = $link->getPageLink($explode[0], true);
-			if (isset($explode[1]))
-				$url .= '?'.$explode[1];
-			$baseUri = '';
-		}
-
-		if (isset($_SERVER['HTTP_REFERER']) AND ($url == $_SERVER['HTTP_REFERER']))
-    	header('Refresh: 5; url='.$_SERVER['HTTP_REFERER']);
-		else
-			header('Refresh: 5; url='.$baseUri.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
-
-	}
-
-
-	/**
-	* Redirect url wich allready PS_BASE_URI after 5 sec
-	*
-	* @param string $url Desired URL
-	*/
-	public static function redirectLink($url)
-	{
-		if (!preg_match('@^https?://@i', $url))
-		{
-			global $link;
-			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
-				$url = substr($url, strlen(__PS_BASE_URI__));
-			$explode = explode('?', $url);
-			$url = $link->getPageLink($explode[0]);
-			if (isset($explode[1]))
-				$url .= '?'.$explode[1];
-		}
-
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
-	}
-	/**
-	* Redirect user to another admin page after 5 sec
-	*
-	* @param string $url Desired URL
-	*/
-	public static function redirectAdmin($url)
-	{
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
-	}
-
-
-	/**
-	* Display an error with detailed object
-	* (display in firefox console if Firephp is enabled)
-	*
-	* @param mixed $object
-	* @param boolean $kill
-	* @return $object if $kill = false;
-	*/
-	public static function dieObject($object, $kill = true)
-	{
-		if (PS_USE_FIREPHP)
-			FB::error($object);
-		else
-			return parent::dieObject($object,$kill);
-
-		if ($kill)
-			die('END');
-		return $object;
-	}
-
-	/**
-	* ALIAS OF dieObject() - Display an error with detailed object 
-	* (display in firefox console if Firephp is enabled)
-	*
-	* @param object $object Object to display
-	*/
-	public static function d($obj, $kill = true)
-	{
-		if (PS_USE_FIREPHP)
-			FB::error($obj);
-		else
-			parent::d($obj,$kill);
-
-		if ($kill)
-			die('END');
-		return $object;
-	}
-
-	/**
-	* ALIAS OF dieObject() - Display an error with detailed object but don't stop the execution
-	* (display in firefox console if Firephp is enabled)
-	*
-	* @param object $object Object to display
-	*/
-	public static function p($object)
-	{
-		if (PS_USE_FIREPHP)
-			FB::info($object);
-		else 
-			return parent::p($object);
-		return $object;
-	}
-
-	/**
-	* Display a warning message indicating that the method is deprecated
-	* (display in firefox console if Firephp is enabled)
-	*/
-	public static function displayAsDeprecated()
-	{
-
-		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
-		{
-		$backtrace = debug_backtrace();
-		$callee = next($backtrace);
-		if (PS_USE_FIREPHP)
-			FB::warn('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', 'Deprecated method');
-		else
-			trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
-
-		$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
-		Logger::addLog($message, 3, $callee['class']);
-	}
-	}
-
-	/**
-	 * Display a warning message indicating that the parameter is deprecated
-	* (display in firefox console if Firephp is enabled)
-	 */
-	public static function displayParameterAsDeprecated($parameter)
-	{
-		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
-		{
-		$backtrace = debug_backtrace();
-		$callee = next($backtrace);
-			trigger_error('Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />', E_USER_WARNING);
-
-			if (PS_USE_FIREPHP)
-				FB::trace('Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />', 'deprecated parameter');
-			else
-				$message = Tools::displayError('The parameter').' '.$parameter.' '.Tools::displayError(' in function ').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['Line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
-
-			Logger::addLog($message, 3, $callee['class']);
-		}
-	}
-
-	/**
-	 * use of FirePHP::error() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
-	 * @return void
-	 */
-	public static function error($obj, $label = '')
-	{
-		if (PS_USE_FIREPHP)
-			FB::error($obj, $label);
-	}
-
-	/**
-	 * use of FirePHP::warn() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
-	 * @return void
-	 */
-	public static function warn($obj, $label = '')
-	{
-		if (PS_USE_FIREPHP)
-			FB::warn($obj, $label);
-	}
-
-	/**
-	 * use of FirePHP::info() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
-	 * @return void
-	 */
-	public static function info($obj, $label = '')
-	{
-		if (PS_USE_FIREPHP)
-			FB::info($obj, $label);
-	}
-
-	/**
-	 * use of FirePHP::log() if allowed
-	 * 
-	 * @param mixed $obj 
-	 * @param string $label 
-	 * @return void
-	 */
-	public static function log($obj, $label = '')
-	{
-		if (PS_USE_FIREPHP)
-			FB::log($obj,$label);
-	}
-	/**
-	* display debug_backtrace() 
-	* (display in firefox console if Firephp is enabled)
-	* 
-	* @param mixed $obj 
-	* @return void
-	*/
-	public static function trace($obj = NULL, $label = '')
-	{
-		if (PS_USE_FIREPHP)
-			FB::trace($obj, $label);
-		else{
-			Tools::p($obj);
-			echo'<pre><h1>'.$label.'</h1><br/>';
-			debug_print_backtrace();
-			echo '</pre>';
-		}
-	}
-}
-// Add some convenient shortcut
-
-if (!function_exists('error'))
-{
-	function error($obj, $label = ''){
-		return Tools::error($obj, $label);
-	}
-}
-
-if (!function_exists('warn'))
-{
-	function warn($obj, $label = ''){
-		return Tools::warn($obj,$label);
-	}
-}
-
-if (!function_exists('info'))
-{
-	function info($obj, $label = ''){
-		return Tools::info($obj, $label);
-	}
-}
-
-if (!function_exists('log'))
-{
-	function log($obj, $label = ''){
-		return Tools::log($obj, $label);
-	}
-}
-
-if (!function_exists('trace'))
-{
-	function trace($obj, $label = ''){
-		return Tools::trace($obj, $label);
-	}
-}
-
 

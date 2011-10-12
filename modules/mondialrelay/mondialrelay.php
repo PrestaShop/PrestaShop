@@ -540,37 +540,26 @@ class MondialRelay extends Module
 	{
 	}
 
+	/*
+	** Update the carrier id to use the new one if changed
+	*/ 
 	public function hookupdateCarrier($params)
 	{
-		// TODO : History shipping
-		/*if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
+		if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
     {
-      $serviceSelected = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'mr_method` WHERE `id_carrier` = '.(int)$params['id_carrier']);
-      $update = array('id_carrier' => (int)($params['carrier']->id), 'id_carrier_history' => pSQL($serviceSelected['id_carrier_history'].'|'.(int)($params['carrier']->id)));
-      Db::getInstance()->autoExecute(_DB_PREFIX_.'mr_method', $update, 'UPDATE', '`id_carrier` = '.(int)$params['id_carrier']);
-    }*/
-
-		// TODO : Delete for shipping history
-		$new_carrier = $params['carrier'];
-		// Depends of the Prestashop version, the matches key isn't the same
-		if ((_PS_VERSION_ >= '1.4' && $new_carrier->external_module_name == 'mondialrelay') ||
-				$new_carrier->name = 'mondialrelay')
-		{
-				$mr_data = Db::getInstance()->getRow('
-					SELECT *
-					FROM `'._DB_PREFIX_.'mr_method`
-					WHERE `id_carrier` = '.(int)($params['id_carrier']));
-
 				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'mr_method`
 					(mr_Name, mr_Pays_list, mr_ModeCol, mr_ModeLiv, mr_ModeAss, id_carrier)
-					VALUES (
-						"'.pSQL($mr_data['mr_Name']).'",
-						"'.pSQL($mr_data['mr_Pays_list']).'",
-						"'.pSQL($mr_data['mr_ModeCol']).'",
-						"'.pSQL($mr_data['mr_ModeLiv']).'",
-						"'.pSQL($mr_data['mr_ModeAss']).'",
-						'.(int)($new_carrier->id).')');
+				(
+					SELECT 
+						mr_Name, 
+						mr_Pays_list, 
+						mr_ModeCol, 
+						mr_ModeLiv, 
+						mr_ModeAss, 
+						"'.(int)$params['carrier']->id.'" 
+					FROM `'._DB_PREFIX_.'mr_method` 
+					WHERE id_carrier ='.(int)$params['id_carrier'].')');
 		}
 	}
 

@@ -992,6 +992,9 @@ if ($lm->getIncludeTradFilename())
 						<td id="endEmail" class="resultEnd">&nbsp;</td>
 					</tr>
 				</table>
+
+				<h3 class="infosBlock"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder.'); ?></h3>
+
 				<div id="boBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_boBlock.png" />
 						<h3><?php echo lang('Back Office'); ?></h3>
@@ -1323,6 +1326,11 @@ if ($lm->getIncludeTradFilename())
 					}
 
 				?>
+
+				<div class="infosBlock">
+					<?php echo lang('WARNING: For more security, you must delete the \'install\' folder.'); ?>
+				</div>
+
 				<div id="foBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_foBlock.png" />
 						<h3><?php echo lang('Front Office'); ?></h3>

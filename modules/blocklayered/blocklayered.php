@@ -858,7 +858,7 @@ class BlockLayered extends Module
 		if (($nbProducts > 0 && !$full || $cursor < $nbProducts && $full) && !$ajax)
 		{
 			$token = substr(Tools::encrypt('blocklayered/index'), 0, 10);
-			if (!Tools::file_get_contents(Tools::getProtocol().Tools::getHttpHost().'/modules/blocklayered/blocklayered-price-indexer.php?token='.$token.'&cursor='.(int)$cursor.'&full='.(int)$full))
+			if (!Tools::file_get_contents(Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php?token='.$token.'&cursor='.(int)$cursor.'&full='.(int)$full))
 				self::indexPrices((int)$cursor, (int)$full);
 			return $cursor;
 		}
@@ -1025,6 +1025,11 @@ class BlockLayered extends Module
 	{
 		global $smarty, $cookie;
 		
+		// No filters => module disable
+		if ($filterBlock = $this->getFilterBlock($this->getSelectedFilters()))
+			if ($filterBlock['nbr_filterBlocks'] == 0)
+				return false;
+		
 		if (Tools::getValue('id_category', Tools::getValue('id_category_layered', 1)) == 1)
 			return;
 
@@ -1034,7 +1039,6 @@ class BlockLayered extends Module
 		$categoryTitle = (empty($category->meta_title[$idLang])?$category->name[$idLang]:$category->meta_title[$idLang]);
 
 		// Generate meta title and meta description
-		$filterBlock = self::getFilterBlock($this->getSelectedFilters());
 		$title = '';
 		if (is_array($filterBlock['title_values']))
 			foreach ($filterBlock['title_values'] as $key => $val)
@@ -1056,6 +1060,7 @@ class BlockLayered extends Module
 		$this->context->controller->addJs($this->_path.'blocklayered.js');
 		$this->context->controller->addJqueryUI('ui.slider');
 		$this->context->controller->addCSS($this->_path.'blocklayered.css', 'all');		
+		Tools::addJS(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
 	}
 	
 	public function hookFooter($params)
@@ -2090,13 +2095,15 @@ class BlockLayered extends Module
 					INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl
 					ON agl.id_attribute_group = lpa.id_attribute_group
 					AND agl.id_lang = '.(int)$cookie->id_lang.'
-					LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
-					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value liagl
 					ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.(int)$cookie->id_lang.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang_value lial
 					ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.(int)$cookie->id_lang.') ';
-					$sqlQuery['where'] = 'WHERE a.id_attribute_group = '.(int)$filter['id_value'].' ';
+					$sqlQuery['where'] = 'WHERE a.id_attribute_group = '.(int)$filter['id_value'].'
+					AND p.id_product IN (
+					SELECT id_product
+					FROM '._DB_PREFIX_.'category_product cp
+					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')) ';
 					$sqlQuery['group'] = '
 					GROUP BY lpa.id_attribute
 					ORDER BY id_attribute_group, id_attribute';
@@ -2143,10 +2150,16 @@ class BlockLayered extends Module
 				if (method_exists('BlockLayered', $methodName) &&
 				(!in_array($filter['type'], array('price', 'weight')) && $filter['type'] != $filterTmp['type'] || $filter['type'] == $filterTmp['type']))
 				{
-					if ($filter['type'] == $filterTmp['type'])
-						$subQueryFilter = self::$methodName(array(), $filter['type'] == $filterTmp['type']);
+					if ($filter['type'] == $filterTmp['type'] && $filter['id_value'] == $filterTmp['id_value'])
+						$subQueryFilter = self::$methodName(array(), true);
 					else
-						$subQueryFilter = self::$methodName(@$selectedFilters[$filterTmp['type']], $filter['type'] == $filterTmp['type']);
+					{
+						if (!is_null($filterTmp['id_value']))
+							$selected_filters_cleaned = $this->cleanFilterByIdValue(@$selectedFilters[$filterTmp['type']], $filterTmp['id_value']);
+						else
+							$selected_filters_cleaned = @$selectedFilters[$filterTmp['type']];
+						$subQueryFilter = self::$methodName($selected_filters_cleaned, $filter['type'] == $filterTmp['type']);
+					}
 					foreach ($subQueryFilter as $key => $value)
 						$sqlQuery[$key] .= $value;
 					}
@@ -2471,12 +2484,29 @@ class BlockLayered extends Module
 		return $cache;
 	}
 	
+	public function cleanFilterByIdValue($attributes, $id_value)
+	{
+		$selected_filters = array();
+		if (is_array($attributes))
+			foreach ($attributes as $attribute)
+			{
+				$attribute_data = explode('_', $attribute);
+				if ($attribute_data[0] == $id_value)
+					$selected_filters[] = $attribute_data[1];
+			}
+		return $selected_filters;
+	}
+	
 	public function generateFiltersBlock($selectedFilters)
 	{
 		global $smarty;
 		if($filterBlock = $this->getFilterBlock($selectedFilters))
 		{
-		$smarty->assign($this->getFilterBlock($selectedFilters));
+			if ($filterBlock['nbr_filterBlocks'] == 0)
+				return false;
+				
+			$smarty->assign($filterBlock);
+			
 		return $this->display(__FILE__, 'blocklayered.tpl');
 	}
 		else
@@ -2795,10 +2825,15 @@ class BlockLayered extends Module
 		else
 			$categoryCount = '';
 		
+		if ($nbProducts == 0)
+			$product_list_tpl = 'blocklayered-no-products.tpl';
+		else
+			$product_list_tpl = _PS_THEME_DIR_.'product-list.tpl';
+		
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */
 		return Tools::jsonEncode(array(
 		'filtersBlock' => $this->generateFiltersBlock($selectedFilters),
-		'productList' => $smarty->fetch(_PS_THEME_DIR_.'product-list.tpl'),
+		'productList' => $smarty->fetch($product_list_tpl),
 		'pagination' => $smarty->fetch(_PS_THEME_DIR_.'pagination.tpl'),
 		'categoryCount' => $categoryCount));
 	}

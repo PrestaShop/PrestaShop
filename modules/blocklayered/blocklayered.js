@@ -242,8 +242,12 @@ function reloadContent(params_plus)
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
 	}
 	
+	var slideUp = true;
 	if(params_plus == undefined)
+	{
 		params_plus = '';
+		slideUp = false;
+	}
 	
 	// Get nb items per page
 	var n = '';
@@ -311,6 +315,9 @@ function reloadContent(params_plus)
 				current_friendly_url = '#/';
 				window.location = current_friendly_url;
 			lockLocationChecking = true;
+			
+			if(slideUp)
+				$.scrollTo('#product_list', 400);
 		}
 	});
 	ajaxQueries.push(ajaxQuery);
