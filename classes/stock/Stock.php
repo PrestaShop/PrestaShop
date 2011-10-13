@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,25 +20,47 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 1.4 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
+ * Represents the products kept in warehouses
+ *
  * @since 1.5.0
  */
 class StockCore extends ObjectModel
 {
+	public $id_warehouse;
 	public $id_product;
 	public $id_product_attribute;
-	public $id_group_shop;
-	public $id_shop;
-	public $quantity;
+	public $physical_quantity;
+	public $usable_quantity;
+	public $price_te;
+	public $id_currency;
 
-	protected $fieldsRequired = array('id_shop', 'id_group_shop', 'id_product', 'id_product_attribute');
+	protected $fieldsRequired = array(
+		'id_warehouse',
+		'id_product',
+		'id_product_attribute',
+		'physical_quantity',
+		'usable_quantity',
+		'price_te',
+		'id_currency'
+	);
+
 	protected $fieldsSize = array();
-	protected $fieldsValidate = array();
+
+	protected $fieldsValidate = array(
+		'id_warehouse' => 'isUnsignedId',
+		'id_product' => 'isUnsignedId',
+		'id_product_attribute' => 'isUnsignedId',
+		'physical_quantity' => 'isUnsignedInt',
+		'usable_quantity' => 'isInt',
+		'price_te' => 'isPrice',
+		'id_currency' => 'isUnsignedInt'
+	);
 
 	protected $table = 'stock';
 	protected $identifier = 'id_stock';
@@ -46,21 +68,13 @@ class StockCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
+		$fields['id_warehouse'] = (int)$this->id_warehouse;
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['quantity'] = (int)$this->quantity;
+		$fields['physical_quantity'] = (int)$this->physical_quantity;
+		$fields['usable_quantity'] = (int)$this->usable_quantity;
+		$fields['price_te'] = (float)$this->price_te;
+		$fields['id_currency'] = (int)$this->id_currency;
 		return $fields;
-	}
-
-	public static function getStockId($id_product, $id_product_attribute, $shopID)
-	{
-		$sql = 'SELECT id_stock
-				FROM '._DB_PREFIX_.'stock
-				WHERE id_product = '.(int)$id_product.'
-					AND id_product_attribute = '.(int)$id_product_attribute.'
-					AND id_shop = '.(int)$shopID;
-		return (int)Db::getInstance()->getValue($sql);
 	}
 }
