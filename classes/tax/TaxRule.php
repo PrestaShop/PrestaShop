@@ -40,11 +40,11 @@ class TaxRuleCore extends ObjectModel
 	 protected $fieldsValidate = array('id_tax_rules_group' => 'isUnsignedId',
 	 											   'id_country' => 'isUnsignedId',
 	 											   'id_state' => 'isUnsignedId',
-	 											   'zipcode_from' => 'isUnsignedId', // TODO: char
-	 											   'zipcode_to' => 'isUnsignedId',	 // TODO: char
+	 											   'zipcode_from' => 'isPostCode',
+	 											   'zipcode_to' => 'isPostCode',
 	 											   'id_tax' => 'isUnsignedId',
 	 											   'behavior' => 'isUnsignedInt',
-	 											   'description' => 'isUnsignedInt'); // TODO:char
+	 											   'description' => 'isString');
 
 	protected $table = 'tax_rule';
 	protected $identifier = 'id_tax_rule';
