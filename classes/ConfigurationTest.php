@@ -44,12 +44,17 @@ class ConfigurationTestCore
 
 	public static function test_phpversion()
 	{
-		return version_compare(substr(phpversion(), 0, 3), '5.1', '>=');
+		return version_compare(substr(phpversion(), 0, 5), '5.1.0', '>=');
 	}
 
 	public static function test_mysql_support()
 	{
-		return function_exists('mysql_connect');
+		return extension_loaded('mysql') || extension_loaded('mysqli') || extension_loaded('pdo_mysql');
+	}
+
+	public static function test_pdo_mysql()
+	{
+		return extension_loaded('pdo_mysql');
 	}
 
 	public static function test_magicquotes()
