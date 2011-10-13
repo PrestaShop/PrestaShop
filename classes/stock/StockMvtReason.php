@@ -59,12 +59,16 @@ class StockMvtReasonCore extends ObjectModel
 		return $this->getTranslationsFields(array('name'));
 	}
 
-	public static function getStockMvtReasons($id_lang)
+	public static function getStockMvtReasons($id_lang, $sign = null)
 	{
 		$query = new DbQuery();
 		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
 		$query->from('stock_mvt_reason smr');
 		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+
+		if ($sign != null)
+			$query->where('smr.sign = '.(int)$sign);
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
