@@ -32,11 +32,11 @@ class OrderCore extends ObjectModel
 
 	/** @var integer Invoice address id */
 	public 		$id_address_invoice;
-	
+
 	public 		$id_group_shop;
-	
+
 	public		$id_shop;
-	
+
 	/** @var integer Cart id */
 	public 		$id_cart;
 
@@ -174,7 +174,7 @@ class OrderCore extends ObjectModel
 			'date_upd' => array(),
 		),
 		'associations' => array(
-			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true, 
+			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
 				'fields' => array(
 					'id' =>  array(),
 					'product_id' => array('required' => true),
@@ -276,7 +276,7 @@ class OrderCore extends ObjectModel
 	protected function _deleteProduct($orderDetail, $quantity)
 	{
 		$tax_calculator = $orderDetail->getTaxCalculator();
-		
+
 		$price = $tax_calculator->addTaxes($orderDetail->product_price);
 		if ($orderDetail->reduction_percent != 0.00)
 			$reduction_amount = $price * $orderDetail->reduction_percent / 100;
@@ -295,14 +295,14 @@ class OrderCore extends ObjectModel
 		/* Update order */
 		$shippingDiff = $this->total_shipping - $cart->getOrderShippingCost();
 		$this->total_products -= $productPriceWithoutTax;
-		
+
 		// After upgrading from old version
 		// total_products_wt is null
 		// removing a product made order total negative
 		// and don't recalculating totals (on getTotalProductsWithTaxes)
 		if ($this->total_products_wt != 0)
 		$this->total_products_wt -= $productPrice;
-		
+
 		$this->total_shipping = $cart->getOrderShippingCost();
 
 		/* It's temporary fix for 1.3 version... */
@@ -415,10 +415,10 @@ class OrderCore extends ObjectModel
 
 	public function setProductPrices(&$row)
 	{
-		$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$row['id_order_detail']);		
+		$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$row['id_order_detail']);
 		$row['tax_calculator'] = $tax_calculator;
 		$row['tax_rate'] = $tax_calculator->getTotalRate();
-		
+
 		if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
 		else
@@ -447,9 +447,9 @@ class OrderCore extends ObjectModel
 		if ($row['group_reduction'] > 0)
 		{
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = $row['product_price'] * $group_reduction; 
+				$row['product_price'] = $row['product_price'] * $group_reduction;
 			else
-				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2); 
+				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2);
 		}
 
 		if (($row['reduction_percent'] OR $row['reduction_amount'] OR $row['group_reduction']) AND $this->_taxCalculationMethod == PS_TAX_EXC)
@@ -477,7 +477,7 @@ class OrderCore extends ObjectModel
 	{
 		if (!$products)
 			$products = $this->getProductsDetail();
-			
+
 		$resultArray = array();
 		foreach ($products AS $row)
 		{
@@ -491,7 +491,7 @@ class OrderCore extends ObjectModel
 				if (!$row['product_quantity'])
 					continue ;
 			}
-		
+
 			$this->setProductPrices($row);
 
 			/* Add information for virtual product */
@@ -511,7 +511,7 @@ class OrderCore extends ObjectModel
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
-		
+
 		return $resultArray;
 	}
 
@@ -537,7 +537,7 @@ class OrderCore extends ObjectModel
 
 	/**
 	* Check if order contains (only) virtual products
-	* 
+	*
 	* @param boolean $strict If false return true if there are at least one product virtual
 	* @return boolean true if is a virtual order or false
 	*
@@ -646,7 +646,7 @@ class OrderCore extends ObjectModel
     {
 		if (!$context)
 			$context = Context::getContext();
-    	
+
     	$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.*, (SELECT SUM(od.`product_quantity`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products
         FROM `'._DB_PREFIX_.'orders` o
@@ -666,8 +666,10 @@ class OrderCore extends ObjectModel
 			WHERE oh.`id_order` = '.(int)($val['id_order']).(!$showHiddenStatus ? ' AND os.`hidden` != 1' : '').'
 				ORDER BY oh.`date_add` DESC, oh.`id_order_history` DESC
 			LIMIT 1');
+
 			if ($res2)
 				$res[$key] = array_merge($res[$key], $res2[0]);
+
 		}
 		return $res;
     }
@@ -769,12 +771,18 @@ class OrderCore extends ObjectModel
 		if ($this->total_products_wt != '0.00' AND !$products)
 			return $this->total_products_wt;
 		/* Retro-compatibility (now set directly on the validateOrder() method) */
+
+
 		if (!$products)
 			$products = $this->getProductsDetail();
 
 		$return = 0;
+
 		foreach ($products AS $row)
 		{
+			if (!isset($row['tax_rate']))
+				$row['tax_rate'] = 0;
+
 			$price = Tools::ps_round($row['product_price'] * (1 + $row['tax_rate'] / 100), 2);
 			if ($row['reduction_percent'])
 				$price -= $price * ($row['reduction_percent'] * 0.01);
