@@ -196,7 +196,7 @@ class ProductCore extends ObjectModel
 	protected $langMultiShop = true;
 
 	public $cache_is_pack;
-	public $cache_has_attachments;	
+	public $cache_has_attachments;
 	public $is_virtual;
 	public $cache_default_attribute;
 
@@ -336,7 +336,10 @@ class ProductCore extends ObjectModel
 				$this->tags = Tag::getProductTags((int)$this->id);
 		}
 
-		$this->quantity = $this->getStock();
+		/**
+		 * @FIXME
+		 */
+		$this->quantity = 0;
 
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);

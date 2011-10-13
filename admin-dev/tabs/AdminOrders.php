@@ -780,12 +780,8 @@ class AdminOrders extends AdminTab
 								SELECT id_image
 								FROM '._DB_PREFIX_.'image
 								WHERE id_product = '.(int)($product['product_id']).' AND cover = 1');
-						 	$stock = Db::getInstance()->getRow('
-							SELECT '.($product['product_attribute_id'] ? 'pa' : 'p').'.quantity
-							FROM '._DB_PREFIX_.'product p
-							'.($product['product_attribute_id'] ? 'LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON p.id_product = pa.id_product' : '').'
-							WHERE p.id_product = '.(int)($product['product_id']).'
-							'.($product['product_attribute_id'] ? 'AND pa.id_product_attribute = '.(int)($product['product_attribute_id']) : ''));
+							// @FIXME
+						 	$stock = StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true);
 							if (isset($image['id_image']))
 							{
 								$target = _PS_TMP_IMG_DIR_.'product_mini_'.(int)($product['product_id']).(isset($product['product_attribute_id']) ? '_'.(int)($product['product_attribute_id']) : '').'.jpg';
@@ -794,7 +790,7 @@ class AdminOrders extends AdminTab
 							}
 							// Customization display
 							$this->displayCustomizedDatas($customizedDatas, $product, $currency, $image, $tokenCatalog, $k);
-							
+
 							if (!isset($product['customizationQuantityTotal']))
 								$product['customizationQuantityTotal'] = 0;
 							// Normal display
@@ -816,7 +812,7 @@ class AdminOrders extends AdminTab
 									<td align="center" class="productQuantity" '.($product['product_quantity'] > 1 ? 'style="font-weight:700;font-size:1.1em;color:red"' : '').'>'.(int)$product['product_quantity'].'</td>
 									'.($order->hasBeenPaid() ? '<td align="center" class="productQuantity">'.(int)($product['product_quantity_refunded']).'</td>' : '').'
 									'.($order->hasBeenDelivered() ? '<td align="center" class="productQuantity">'.(int)($product['product_quantity_return']).'</td>' : '').'
-									<td align="center" class="productQuantity">'.$productObj->getStock($product['product_attribute_id']).'</td>
+									<td align="center" class="productQuantity">'.StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true).'</td>
 									<td align="center">'.Tools::displayPrice(Tools::ps_round($product_price, 2) * ((int)($product['product_quantity']) - $product['customizationQuantityTotal']), $currency, false).'</td>
 									<td align="center" class="cancelCheck">
 										<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="'.(int)($product['product_quantity_return']).'" />
