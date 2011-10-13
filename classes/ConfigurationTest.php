@@ -156,11 +156,6 @@ class ConfigurationTestCore
 		return self::test_dir($dir, true);
 	}
 
-	public static function test_tools_dir($dir)
-	{
-		return self::test_dir($dir);
-	}
-
 	public static function test_cache_dir($dir)
 	{
 		return self::test_dir($dir);

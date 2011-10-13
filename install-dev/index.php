@@ -446,8 +446,7 @@ if ($lm->getIncludeTradFilename())
 				<li class="required"><?php echo lang('MySQL support is on')?></li>
 				<li class="title"><?php echo lang('Write permissions on files and folders:')?></li>
 				<li class="required first">/config</li>
-				<li class="required">/tools/smarty/compile</li>
-				<li class="required">/tools/smarty/cache</li>
+				<li class="required">/cache</li>
 				<li class="required">/sitemap.xml</li>
 				<li class="required">/log</li>
 				<li class="title"><?php echo lang('Write permissions on folders (and subfolders):')?></li>
@@ -1245,8 +1244,7 @@ if ($lm->getIncludeTradFilename())
 				<li class="required"><?php echo lang('MySQL support is on')?></li>
 				<li class="title"><?php echo lang('Write permissions on folders:')?></li>
 				<li class="required first">/config</li>
-				<li class="required">/tools/smarty/compile</li>
-				<li class="required">/tools/smarty/cache</li>
+				<li class="required">/cache</li>
 				<li class="required">/sitemap.xml</li>
 				<li class="required">/log</li>
 				<li class="title"><?php echo lang('Write permissions on folders (and subfolders):')?></li>
