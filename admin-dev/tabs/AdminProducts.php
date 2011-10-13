@@ -2843,14 +2843,7 @@ class AdminProducts extends AdminTab
 					}
 				});
 			});
-		</script>
-					<tr>
-						<td class="col-left">'.$this->l('Pre-tax wholesale price:').'</td>
-						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" name="wholesale_price" type="text" value="'.htmlentities($this->getFieldValue($obj, 'wholesale_price'), ENT_COMPAT, 'UTF-8').'" onchange="this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
-							<span style="margin-left:10px">'.$this->l('The wholesale price at which you bought this product').'</span>
-						</td>
-					</tr>';
+		</script>';
 					echo '
 					<tr>
 						<td class="col-left">'.$this->l('Pre-tax retail price:').'</td>
@@ -3666,11 +3659,11 @@ class AdminProducts extends AdminTab
 	{
 
 		// Get all id_product_atribute
-		$attributes = $obj->getAttributeCombinaisons($this->context->language->id);
+		$attributes = $obj->getAttributesResume($this->context->language->id);
 		if (empty($attributes))
 			$attributes[] = array(
 				'id_product_attribute' => 0,
-				'attribute_name' => ''
+				'attribute_designation' => ''
 			);
 
 		// Get physical quantities & available quantities
@@ -3687,7 +3680,7 @@ class AdminProducts extends AdminTab
 			$availableQuantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct((int)$obj->id, $attribute['id_product_attribute']);
 
 			// Get all product designation
-			$productDesignation[$attribute['id_product_attribute']] = $obj->name[$this->context->language->id].' '.$attribute['attribute_name'];
+			$productDesignation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
 		}
 
 		$return = '
@@ -4202,56 +4195,37 @@ class AdminProducts extends AdminTab
 		  </tr>';
 		if (Configuration::get('PS_USE_ECOTAX'))
 			echo'
-				  <tr>
-					  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Eco-tax:').'</td>
-					  <td style="padding-bottom:5px;">'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' ('.$this->l('overrides Eco-tax on Information tab').')</td>
-				  </tr>';
+				<tr>
+					<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Eco-tax:').'</td>
+					<td style="padding-bottom:5px;">'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' ('.$this->l('overrides Eco-tax on Information tab').')</td>
+				</tr>';
 
 		echo'
-		  <tr id="initial_stock_attribute">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">'.$this->l('Initial stock:').'</td>
-				<td><input type="text" name="attribute_quantity" size="3" maxlength="6" value="0"/></td>
-		  </tr>
-		  </tr>
-			<tr id="stock_mvt_attribute" style="display:none;">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">'.$this->l('Stock movement:').'</td>
-				<td style="padding-bottom:5px;">
-					<select id="id_mvt_reason" name="id_mvt_reason">
-						<option value="-1">--</option>';
-			$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
-			foreach ($reasons as $reason)
-				echo '<option rel="'.$reason['sign'].'" value="'.$reason['id_stock_mvt_reason'].'" '.(Configuration::get('PS_STOCK_MVT_REASON_DEFAULT') == $reason['id_stock_mvt_reason'] ? 'selected="selected"' : '').'>'.$reason['name'].'</option>';
-			echo '</select>
-					<input type="text" name="attribute_mvt_quantity" size="3" maxlength="6" value="0"/>&nbsp;&nbsp;
-					<span style="display:none;" id="mvt_sign"></span>
-					<br />
-					<div class="hint clear" style="display: block;width: 70%;">'.$this->l('Choose the reason and enter the quantity that you want to increase or decrease in your stock').'</div>
-				</td>
-			</tr>
-			<tr>
-			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">'.$this->l('Minimum quantity:').'</td>
-				<td style="padding-bottom:5px;">
-					<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
-					<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
-				</td>
-			</tr>
-		  <tr style="display:none;" id="attr_qty_stock">
-			  <td style="width:150px">'.$this->l('Quantity in stock:').'</td>
-			  <td style="padding-bottom:5px;"><b><span style="display:none;" id="attribute_quantity"></span></b></td>
-		  </tr>
-		  <tr>
-			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">'.$this->l('Available date:').'</td>
-			  <td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
-				  <p>'.$this->l('The available date when this product is out of stock').'</p>
-			  </td>
-		  </tr>';
-		  // date picker include
-		  includeDatepicker('available_date');
+		</tr>
+		<tr>
+		<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">'.$this->l('Minimum quantity:').'</td>
+			<td style="padding-bottom:5px;">
+				<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
+				<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
+			</td>
+		</tr>
+		<tr style="display:none;" id="attr_qty_stock">
+			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Quantity in stock:').'</td>
+			<td style="padding-bottom:5px;"><b><span style="display:none;" id="attribute_quantity"></span></b></td>
+		</tr>
+		<tr>
+			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">'.$this->l('Available date:').'</td>
+			<td style="padding-bottom:5px;"><input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
+				<p>'.$this->l('The available date when this product is out of stock').'</p>
+			</td>
+		</tr>';
+		// date picker include
+		includeDatepicker('available_date');
 		echo '
-		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
-		  <tr>
-			  <td style="width:150px">'.$this->l('Image:').'</td>
-			  <td style="padding-bottom:5px;">
+		<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+		<tr>
+			<td style="width:150px">'.$this->l('Image:').'</td>
+			<td style="padding-bottom:5px;">
 				<ul id="id_image_attr">';
 			$i = 0;
 			$imageType = ImageType::getByNameNType('small', 'products');
