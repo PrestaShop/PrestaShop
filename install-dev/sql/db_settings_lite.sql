@@ -237,7 +237,9 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (149, 'PS_CARRIER_DEFAULT', '1', NOW(), NOW()),
 (150, 'PS_TAX_ADDRESS_TYPE', 'id_address_delivery', NOW(), NOW()),
 (151, 'PS_SHOP_DEFAULT', '1', NOW(), NOW()),
-(152, 'PS_CARRIER_DEFAULT_SORT', '0', NOW(), NOW());
+(152, 'PS_CARRIER_DEFAULT_SORT', '0', NOW(), NOW()),
+(153, 'PS_STOCK_MVT_INC_REASON_DEFAULT', '1', NOW(), NOW()),
+(154, 'PS_STOCK_MVT_DEC_REASON_DEFAULT', '2', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -850,12 +852,15 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (48, 'AdminPDF', 3, 8),(44, 'AdminLocalization', 8, 9),(67, 'AdminSearchConf', 8, 10),(32, 'AdminLanguages', 9, 1),(33, 'AdminTranslations', 9, 2),
 (35, 'AdminTabs', 29, 3),(37, 'AdminQuickAccesses', 9, 4),(40, 'AdminAliases', 8, 5),(41, 'AdminImport', 9, 6),(52, 'AdminSubDomains', 9, 7),
 (53, 'AdminBackup', 9, 8),(57, 'AdminCMSContent', 9, 9),(64, 'AdminGenerator', 9, 10),(43, 'AdminSearch', -1, 0),(69, 'AdminInformation', 9, 5),
-(70, 'AdminPerformance', 8, 11),(71, 'AdminCustomerThreads', 29, 4),(72, 'AdminWebservice', 9, 12),(73, 'AdminStockMvt', 1, 11),
+(70, 'AdminPerformance', 8, 11),(71, 'AdminCustomerThreads', 29, 4),(72, 'AdminWebservice', 9, 12),(73, 'AdminStockMvt', 95, 3),
 (80, 'AdminAddonsCatalog', 7, 1),(81, 'AdminAddonsMyAccount', 7, 2),(83, 'AdminThemes', 7, 3),(84, 'AdminGeolocation', 8, 12),
 (85, 'AdminTaxRulesGroup', 4, 3),(86, 'AdminLogs', 9, 13), (87,'AdminHome',-1,0),
 (88,'AdminShop', 0, 11), (89,'AdminGroupShop', 88, 1),(90, 'AdminShopUrl', 88, 2),(91, 'AdminGenders', 2, 4),(92, 'AdminRequestSql', 9, 14),
 (93, 'AdminProducts', 1, 1),
-(94, 'AdminCategories', 1, 2);
+(94, 'AdminCategories', 1, 2),
+(95, 'AdminStock', 0, 15),
+(96, 'AdminWarehouses', 95, 1),
+(97, 'AdminStockManagement', 95, 2);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -874,7 +879,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 80, 'Modules & Themes Catalog'),(1, 81, 'My Account'),(1, 82, 'Stores'),(1, 83, 'Themes'),(1, 84, 'Geolocation'),(1, 85, 'Tax Rules'),(1, 86, 'Log'),
 (1, 87, 'Home'), (1, 88, 'Shops'), (1, 89, 'Group Shops'), (1, 90, 'Shop Urls'),(1, 91, 'Genders'),(1, 92, 'SQL Manager'),
 (1, 93, 'Products'),
-(1, 94, 'Categories');
+(1, 94, 'Categories'),
+(1, 95, 'Stock'),
+(1, 96, 'Warehouses'),
+(1, 97, 'Stock Management');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -891,7 +899,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 80, 'Catalogue de modules et thèmes'),(2, 81, 'Mon compte'),(2, 82, 'Magasins'),(2, 83, 'Thèmes'),(2, 84, 'Géolocalisation'),(2, 85, 'Règles de taxes'),(2, 86, 'Log'),
 (2, 87,'Accueil'), (2, 88, 'Boutiques'), (2, 89, 'Groupes de boutique'), (2, 90, 'URLs de boutique'),(2, 91, 'Genres'),(2, 92, 'SQL Manager'),
 (2, 93, 'Produits'),
-(2, 94, 'Catégories');
+(2, 94, 'Catégories'),
+(2, 95, 'Stock'),
+(2, 96, 'Entrepôts'),
+(2, 97, 'Gestion du stock');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -907,7 +918,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 69, 'Informaciones'),(3, 70, 'Rendimiento'),(3, 72, 'Web service'),(3, 71, 'Servicio al cliente'),(3, 73, 'Movimiento de Stock'), (3, 82, 'Tiendas'),(3, 83, 'Temas'),(3, 84, 'Geolocalización'),(3, 85, 'Reglas de Impuestos'),(3, 86, 'Log'),
 (3, 87,'Home'), (3, 88, 'Shops'), (3, 89, 'Group Shops'), (3, 90, 'Shop Urls'),(3, 91, 'Genders'),(3, 92, 'SQL Manager'),
 (3, 93, 'Products'),
-(3, 94, 'Categories');
+(3, 94, 'Categories'),
+(3, 95, 'Stock'),
+(3, 96, 'Warehouses'),
+(3, 97, 'Stock Management');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -924,7 +938,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 80, 'Module und Themenkatalog'),(4, 81, 'Mein Konto'),(4, 82, 'Shops'),(4, 83, 'Themen'),(4, 84, 'Geotargeting'),(4, 85, 'Steuerregeln'),(4, 86, 'Log'),
 (4, 87,'Home'), (4, 88, 'Shops'), (4, 89, 'Group Shops'), (4, 90, 'Shop Urls'),(4, 91, 'Genders'),(4, 92, 'SQL Manager'),
 (4, 93, 'Products'),
-(4, 94, 'Categories');
+(4, 94, 'Categories'),
+(4, 95, 'Stock'),
+(4, 96, 'Warehouses'),
+(4, 97, 'Stock Management');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -941,7 +958,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 80, 'Moduli & Temi catalogo'),(5, 81, 'Il mio Account'),(5, 82, 'Negozi'),(5, 83, 'Temi'),(5, 84, 'Geolocalizzazione'),(5, 85, 'Regimi fiscali'),(5, 86, 'Log'),
 (5, 87,'Home'), (5, 88, 'Shops'), (5, 89, 'Group Shops'), (5, 90, 'Shop Urls'),(5, 91, 'Genders'),(5, 92, 'SQL Manager'),
 (5, 93, 'Products'),
-(5, 94, 'Categories');
+(5, 94, 'Categories'),
+(5, 95, 'Stock'),
+(5, 96, 'Warehouses'),
+(5, 97, 'Stock Management');
 
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
@@ -1360,4 +1380,4 @@ address1
 address2
 city State:name postcode
 Country:name
-phone' WHERE `PREFIX_address_format`.`id_country` =4;
+phone' WHERE `PREFIX_address_format`.`id_country` = 4;

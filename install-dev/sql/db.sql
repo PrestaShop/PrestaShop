@@ -1586,38 +1586,6 @@ CREATE TABLE `PREFIX_carrier_group` (
   UNIQUE KEY `id_carrier` (`id_carrier`,`id_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-
-CREATE TABLE `PREFIX_stock_mvt` (
-  `id_stock_mvt` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_stock` int(11) unsigned NOT NULL,
-  `id_order` int(11) unsigned DEFAULT NULL,
-  `id_stock_mvt_reason` int(11) unsigned NOT NULL,
-  `id_employee` int(11) unsigned NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_stock_mvt`),
-  KEY `id_order` (`id_order`),
-  KEY `id_stock` (`id_stock`),
-  KEY `id_stock_mvt_reason` (`id_stock_mvt_reason`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_stock_mvt_reason` (
-  `id_stock_mvt_reason` int(11) NOT NULL AUTO_INCREMENT,
-   `sign` tinyint(1) NOT NULL DEFAULT 1,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_stock_mvt_reason`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `PREFIX_stock_mvt_reason_lang` (
-  `id_stock_mvt_reason` int(11) NOT NULL,
-  `id_lang` int(11) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`id_stock_mvt_reason`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
 CREATE TABLE `PREFIX_store` (
   `id_store` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_country` int(10) unsigned NOT NULL,
@@ -1802,19 +1770,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme_specific` (
   PRIMARY KEY (`id_theme`,`id_shop`, `entity`,`id_object`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_stock` (
-`id_stock` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT,
-`id_product` INT( 11 ) UNSIGNED NOT NULL,
-`id_product_attribute` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT(11) UNSIGNED NOT NULL,
-`quantity` INT(11) NOT NULL,
-  PRIMARY KEY (`id_stock`),
-  KEY `id_product` (`id_product`),
-  KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `id_shop` (`id_shop`),
-  UNIQUE KEY `product_stock` (`id_product` ,`id_product_attribute` ,`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
 CREATE TABLE `PREFIX_country_shop` (
 `id_country` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
@@ -1969,3 +1924,93 @@ CREATE TABLE `PREFIX_group_module_restriction` (
 PRIMARY KEY (`id_group`,`id_module`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_stock_mvt` (
+  `id_stock_mvt` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_stock` INT(11) UNSIGNED NOT NULL,
+  `id_order` INT(11) UNSIGNED DEFAULT NULL,
+  `id_supplier_order` INT(11) UNSIGNED DEFAULT NULL,
+  `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL,
+  `id_employee` INT(11) UNSIGNED NOT NULL,
+  `physical_quantity` INT(11) UNSIGNED NOT NULL,
+  `date_add` DATETIME NOT NULL,
+  `sign` tinyint(1) NOT NULL DEFAULT 1,
+  `price_te` DECIMAL(20,6) DEFAULT '0.000000',
+  `last_wa` DECIMAL(20,6) DEFAULT '0.000000',
+  `current_wa` DECIMAL(20,6) DEFAULT '0.000000',
+  `referer` bigint UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`id_stock_mvt`),
+  KEY `id_stock` (`id_stock`),
+  KEY `id_stock_mvt_reason` (`id_stock_mvt_reason`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_stock_mvt_reason` (
+  `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sign` tinyint(1) NOT NULL DEFAULT 1,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_stock_mvt_reason`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_stock_mvt_reason_lang` (
+  `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL,
+  `id_lang` INT(11) UNSIGNED NOT NULL,
+  `name` VARCHAR(255) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id_stock_mvt_reason`,`id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_stock` (
+`id_stock` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+`id_warehouse` INT(11) UNSIGNED NOT NULL,
+`id_product` INT(11) UNSIGNED NOT NULL,
+`id_product_attribute` INT(11) UNSIGNED NOT NULL,
+`id_currency` INT(11) UNSIGNED NOT NULL,
+`physical_quantity` INT(11) UNSIGNED NOT NULL,
+`usable_quantity` INT(11) UNSIGNED NOT NULL,
+`price_te` DECIMAL(20,6) DEFAULT '0.000000',
+  PRIMARY KEY (`id_stock`),
+  KEY `id_warehouse` (`id_warehouse`),  
+  KEY `id_product` (`id_product`),
+  KEY `id_product_attribute` (`id_product_attribute`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_warehouse` (
+`id_warehouse` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+`id_address` INT(11) UNSIGNED NOT NULL,
+`id_employee` INT(11) UNSIGNED NOT NULL,
+`reference` VARCHAR(32) DEFAULT NULL,
+`name` VARCHAR(45) NOT NULL,
+`management_type` ENUM('WA', 'FIFO', 'LIFO') NOT NULL DEFAULT 'WA',
+  PRIMARY KEY (`id_warehouse`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_warehouse_product_location` (
+`id_product` INT(11) UNSIGNED NOT NULL,
+`id_product_attribute` INT(11) UNSIGNED NOT NULL,
+`id_warehouse` INT(11) UNSIGNED NOT NULL,
+`location` VARCHAR(64) DEFAULT NULL,
+  PRIMARY KEY (`id_product`, `id_product_attribute`, `id_warehouse`),
+  KEY `id_warehouse` (`id_warehouse`),
+  KEY `id_product` (`id_product`),
+  KEY `id_product_attribute` (`id_product_attribute`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_warehouse_shop` (
+`id_shop` INT(11) UNSIGNED NOT NULL,
+`id_warehouse` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id_warehouse`, `id_shop`),
+  KEY `id_warehouse` (`id_warehouse`),
+  KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_stock_available` (
+`id_product` INT(11) UNSIGNED NOT NULL,
+`id_product_attribute` INT(11) UNSIGNED NOT NULL,
+`id_shop` INT(11) UNSIGNED NOT NULL,
+`quantity` INT(10) NOT NULL DEFAULT '0',
+`depends_on_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+`out_of_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_product`, `id_product_attribute`, `id_shop`),
+  KEY `id_shop` (`id_shop`),
+  KEY `id_product` (`id_product`),
+  KEY `id_product_attribute` (`id_product_attribute`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
