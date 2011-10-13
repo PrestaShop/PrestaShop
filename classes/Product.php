@@ -1299,6 +1299,29 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
+	* Get all available product attributes resume
+	*
+	* @param integer $id_lang Language id
+	* @return array Product attributes combinaisons
+	*/
+	public function getAttributesResume($id_lang, $attribute_value_separator = ' - ', $attribute_separator = ', ')
+	{
+		if (!Combination::isFeatureActive())
+			return array();
+		$sql = 'SELECT pa.*, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\', al.`name` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation, stock.quantity
+				FROM `'._DB_PREFIX_.'product_attribute` pa
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
+				'.Product::sqlStock('pa', 'pa').'
+				WHERE pa.`id_product` = '.(int)$this->id.'
+				GROUP BY pa.`id_product_attribute`';
+		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
 	* Get all available product attributes combinaisons
 	*
 	* @param integer $id_lang Language id
