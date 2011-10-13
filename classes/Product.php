@@ -572,6 +572,11 @@ class ProductCore extends ObjectModel
 		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_default_attribute = '.(int)$id_product_attribute.' WHERE id_product = '.(int)$id_product.' LIMIT 1');
 	}
 
+	public static function updateIsVirtual($id_product)
+	{
+		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET is_virtual = 1 WHERE id_product = '.(int)$id_product.' LIMIT 1');
+	}
+
 	public function validateFieldsLang($die = true, $errorReturn = false)
 	{
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
