@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,34 +20,30 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7307 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class StockMvtReasonCore extends ObjectModel
 {
-	public		$id;
-	public		$name;
-	
-	public		$sign;
-	
-	public		$date_add;
-	public		$date_upd;
-	
-	protected	$table = 'stock_mvt_reason';
-	protected 	$identifier = 'id_stock_mvt_reason';
-	
+	public $id;
+	public $name;
+	public $sign;
+	public $date_add;
+	public $date_upd;
+	protected $table = 'stock_mvt_reason';
+	protected $identifier = 'id_stock_mvt_reason';
 
- 	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 255);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
-	
-	protected	$webserviceParameters = array(
+ 	protected $fieldsRequiredLang = array('name');
+ 	protected $fieldsSizeLang = array('name' => 255);
+ 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+
+	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movement_reasons',
 		'objectNodeName' => 'stock_movement_reason',
 	);
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -56,18 +52,34 @@ class StockMvtReasonCore extends ObjectModel
 		$fields['date_upd'] = pSQL($this->date_upd);
 		return $fields;
 	}
-	
+
 	public function getTranslationsFieldsChild()
 	{
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name'));
 	}
-	
+
 	public static function getStockMvtReasons($id_lang)
 	{
-		$sql = 'SELECT smrl.name, smr.id_stock_mvt_reason, smr.sign
-				FROM '._DB_PREFIX_.'stock_mvt_reason smr
-				LEFT JOIN '._DB_PREFIX_.'stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')';
-		return Db::getInstance()->executeS($sql);
+		$query = new DbQuery();
+		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
+		$query->from('stock_mvt_reason smr');
+		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
+	/**
+	 * @since 1.5.0
+	 *
+	 * @param int $id_stock_mvt_reason
+	 * @return bool
+	 */
+	public static function exists($id_stock_mvt_reason)
+	{
+		$query = new DbQuery();
+		$query->select('smr.id_stock_mvt_reason');
+		$query->from('stock_mvt_reason smr');
+		$query->where('smr.id_stock_mvt_reason = '.(int)$id_stock_mvt_reason);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,73 +20,142 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7307 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class StockMvtCore extends ObjectModel
 {
-	public		$id;
+	public $id;
+	public $date_add;
+	public $id_employee;
 
 	/**
-	 * @since 1.5.0 id_stock replace old id_product and id_product_attribute fields in this table
+	 * @since 1.5.0
 	 * @var int
 	 */
-	public		$id_stock;
+	public $id_stock;
 
-	public 		$id_order = NULL;
-	public 		$id_employee = NULL;
-	public 		$quantity;
-	public 		$id_stock_mvt_reason;
+	/**
+	 * @since 1.5.0
+	 * @var int
+	 */
+	public $physical_quantity;
 
-	public		$date_add;
-	public		$date_upd;
+	public $id_stock_mvt_reason;
+	public $id_order = null;
 
-	protected	$table = 'stock_mvt';
-	protected 	$identifier = 'id_stock_mvt';
+	/**
+	 * @since 1.5.0
+	 * @var int
+	 */
+	public $sign;
 
- 	protected 	$fieldsRequired = array('id_stock', 'id_stock_mvt_reason', 'quantity');
- 	protected 	$fieldsValidate = array(
- 					'id_stock' => 'isUnsignedId',
- 					'id_order' => 'isUnsignedId',
- 					'id_employee' => 'isUnsignedId',
- 					'quantity' => 'isInt',
- 					'id_stock_mvt_reason' => 'isUnsignedId',
- 				);
+	/**
+	 * @since 1.5.0
+	 * @var int Will be used when supplier order are implemented
+	 */
+	public $id_supplier_order = null;
 
-	protected	$webserviceParameters = array(
+	/**
+	 * @since 1.5.0
+	 * @var float Last value of the weighted-average method
+	 */
+	public $last_wa = null;
+
+	/**
+	 * @since 1.5.0
+	 * @var float Current value of the weighted-average method
+	 */
+	public $current_wa = null;
+
+	/**
+	 * @since 1.5.0
+	 * @var float
+	 */
+	public $price_te;
+
+	/**
+	 * @since 1.5.0
+	 * @var int Refers to an other id_stock_mvt : used for LIFO/FIFO implementation in StockManager
+	 */
+	public $referer;
+
+	/**
+	 * @deprecated since 1.5.0
+	 * @deprecated stock movement will not be updated anymore
+	 */
+	public $date_upd;
+
+	/**
+	 * @deprecated since 1.5.0
+	 * @see physical_quantity
+	 * @var int
+	 */
+	public $quantity;
+
+	protected $table = 'stock_mvt';
+	protected $identifier = 'id_stock_mvt';
+
+ 	protected $fieldsRequired = array(
+ 		'date_add',
+ 		'id_employee',
+ 		'id_stock',
+ 		'physical_quantity',
+ 		'id_stock_mvt_reason',
+ 		'sign',
+ 		'price_te'
+ 	);
+
+ 	protected $fieldsValidate = array(
+ 		'date_add' => 'isDate',
+ 		'id_employee' => 'isUnsignedId',
+ 		'id_stock' => 'isUnsignedId',
+ 		'physical_quantity' => 'isUnsignedInt',
+ 	 	'id_stock_mvt_reason' => 'isUnsignedId',
+ 		'id_order' => 'isUnsignedId',
+ 		'sign' => 'isInt',
+ 		'last_wa' => 'isPrice',
+ 		'current_wa' => 'isPrice',
+ 		'price_te' => 'isPrice',
+ 		'referer' => 'isUnsignedId'
+ 	);
+
+	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movements',
 		'objectNodeName' => 'stock_movement',
 		'fields' => array(
-			'id_product' => array('xlink_resource'=> 'products'),
-			'id_product_attribute' => array('xlink_resource'=> 'product_option_values'),
-			'id_order' => array('xlink_resource'=> 'orders'),
 			'id_employee' => array('xlink_resource'=> 'employees'),
+			'id_stock' => array('xlink_resource'=> 'stock'),
 			'id_stock_mvt_reason' => array('xlink_resource'=> 'stock_movement_reasons'),
+			'id_order' => array('xlink_resource'=> 'orders')
 		),
 	);
 
 	public function getFields()
 	{
 		$this->validateFields();
-		$fields['id_stock'] = (int)$this->id_stock;
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['id_stock_mvt_reason'] = (int)$this->id_stock_mvt_reason;
-		$fields['quantity'] = (int)$this->quantity;
 		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
+		$fields['id_employee'] = (int)$this->id_employee;
+		$fields['id_stock'] = (int)$this->id_stock;
+		$fields['physical_quantity'] = (int)$this->physical_quantity;
+		$fields['id_stock_mvt_reason'] = (int)$this->id_stock_mvt_reason;
+		$fields['id_order'] = (int)$this->id_order;
+		$fields['sign'] = (int)$this->sign;
+		$fields['last_wa'] = (float)$this->last_wa;
+		$fields['current_wa'] = (float)$this->current_wa;
+		$fields['price_te'] = (float)$this->price_te;
+		$fields['referer'] = (int)$this->referer;
 		return $fields;
 	}
 
 	/**
-	 * Add missing stock movement (compare the quantity of a products with all movements : if there is a difference, create a stock movement to correct it)
-	 * 
-	 * @param int $id_employee
+	 * @deprecated since 1.5.0
 	 */
 	public static function addMissingMvt($id_employee)
 	{
+		Tools::displayAsDeprecated();
 		// Search missing stock movement on products without attributes
 		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
 				FROM '._DB_PREFIX_.'product p
@@ -119,7 +188,7 @@ class StockMvtCore extends ObjectModel
 		// Add missing stock movements
 		$products = array_merge($products_without_attributes, $products_with_attributes);
 		if ($products)
-			foreach ($products AS $product)
+			foreach ($products as $product)
 			{
 				$mvt = new StockMvt();
 				$mvt->id_stock = $product['id_stock'];
