@@ -26,7 +26,8 @@
 */
 
 /**
- * StockAvailable : represents the products kept in warehouses
+ * Represents quantities available
+ * It is either synchronized with Stock or manualy set by the seller
  *
  * @since 1.5.0
  */
