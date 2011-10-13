@@ -41,15 +41,13 @@
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
 		
-			{literal}
 			if ($('#id_country') && $('#id_state'))
-			{
-				ajaxStates();
-				$('#id_country').change(function() {
+			{ldelim}
+				ajaxStates({$fields_value.id_state});
+				$('#id_country').change(function() {ldelim}
 					ajaxStates();
-				});
-			}
-			{/literal}
+				{rdelim});
+			{rdelim}
 		{rdelim});
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
@@ -94,6 +92,7 @@
 									{/foreach}
 								{else}
 									{foreach $input.options.query AS $option}
+										{$fields_value[$input.name]|@p}
 										<option value="{$option[$input.options.id]}" 
 												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
 									{/foreach}

@@ -96,86 +96,6 @@ class AdminAddressesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('First name'),
-					'name' => 'firstname',
-					'size' => 33,
-					'required' => true,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Last name'),
-					'name' => 'lastname',
-					'size' => 33,
-					'required' => true,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Company'),
-					'name' => 'company',
-					'size' => 33,
-					'required' => false,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('VAT number'),
-					'name' => 'vat_number',
-					'size' => 33,
-					''
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Address'),
-					'name' => 'address1',
-					'size' => 33,
-					'required' => true,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Address').' (2)',
-					'name' => 'address2',
-					'size' => 33,
-					'required' => false,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Postcode/ Zip Code'),
-					'name' => 'postcode',
-					'size' => 33,
-					'required' => false,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('City'),
-					'name' => 'city',
-					'size' => 33,
-					'required' => true,
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Country:'),
-					'name' => 'id_country',
-					'required' => false,
-					'options' => array(
-						'query' => Country::getCountries($this->context->language->id),
-						'id' => 'id_country',
-						'name' => 'name'
-					),
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('State'),
-					'name' => 'id_state',
-					'required' => false,
-					'options' => array(
-						'id' => 'id_state',
-						'name' => 'name'
-					),
-				),
-				array(
-					'type' => 'text',
 					'label' => $this->l('Home phone'),
 					'name' => 'phone',
 					'size' => 33,
@@ -550,29 +470,149 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function initContent()
 	{
-		if ($this->display != 'edit' && $this->display != 'add')
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			if (!($address = $this->loadObject(true)))
+				return false;
+
+			if (Validate::isLoadedObject($address))
+			{
+				$customer = new Customer($address->id_customer);
+				$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
+			}
+
+			if (Configuration::get('VATNUMBER_MANAGEMENT'))
+				if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
+					$vat = 'is_applicable';
+				else
+					$vat = 'management';
+
+			$this->context->smarty->assign(array(
+				'vat' => isset($vat) ? $vat : null,
+				'customer' => isset($customer) ? $customer : null,
+				'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
+			));
+
+			// Order address fields depending on country norm
+			$addresses_fields = $this->processAddressFormat();
+			$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
+
+			$temp_fields = array();
+
+			foreach($addresses_fields as $addr_field_item)
+			{
+				if ($addr_field_item == 'company')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('Company'),
+						'name' => 'company',
+						'size' => 33,
+						'required' => false,
+						'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+					);
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('VAT number'),
+						'name' => 'vat_number',
+						'size' => 33,
+						''
+					);
+				}
+				elseif ($addr_field_item == 'lastname')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('Last name'),
+						'name' => 'lastname',
+						'size' => 33,
+						'required' => true,
+						'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+					);
+				}
+				elseif ($addr_field_item == 'firstname')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('First name'),
+						'name' => 'firstname',
+						'size' => 33,
+						'required' => true,
+						'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+					);
+				}
+				elseif ($addr_field_item == 'address1')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('Address'),
+						'name' => 'address1',
+						'size' => 33,
+						'required' => true,
+					);
+				}
+				elseif ($addr_field_item == 'address2')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('Address').' (2)',
+						'name' => 'address2',
+						'size' => 33,
+						'required' => false,
+					);
+				}
+				elseif ($addr_field_item == 'postcode')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('Postcode/ Zip Code'),
+						'name' => 'postcode',
+						'size' => 33,
+						'required' => false,
+					);
+				}
+				elseif ($addr_field_item == 'city')
+				{
+					$temp_fields[] = array(
+						'type' => 'text',
+						'label' => $this->l('City'),
+						'name' => 'city',
+						'size' => 33,
+						'required' => true,
+					);
+				}
+				elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
+				{
+					$temp_fields[] = array(
+						'type' => 'select',
+						'label' => $this->l('Country:'),
+						'name' => 'id_country',
+						'required' => false,
+						'options' => array(
+							'query' => Country::getCountries($this->context->language->id),
+							'id' => 'id_country',
+							'name' => 'name'
+						)
+					);
+					$temp_fields[] = array(
+						'type' => 'select',
+						'label' => $this->l('State'),
+						'name' => 'id_state',
+						'required' => false,
+						'options' => array(
+							'id' => 'id_state',
+							'name' => 'name'
+						)
+					);
+
+				}
+			}
+			// merge address format with the rest of the form
+			array_splice($this->fields_form['input'], 3, 0, $temp_fields);
+		}
+		else
 			$this->display = 'list';
 
-		if (!($address = $this->loadObject(true)))
-			return false;
-
-		if (Validate::isLoadedObject($address))
-		{
-			$customer = new Customer($address->id_customer);
-			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
-		}
-
-		if (Configuration::get('VATNUMBER_MANAGEMENT'))
-			if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-				$vat = 'is_applicable';
-			else
-				$vat = 'management';
-
-		$this->context->smarty->assign(array(
-			'vat' => isset($vat) ? $vat : null,
-			'customer' => isset($customer) ? $customer : null,
-			'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
-		));
 		parent::initContent();
 	}
 

@@ -575,6 +575,7 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Display form
+	 * TODO to be removed
 	 */
 	public function displayForm($firstCall = true)
 	{

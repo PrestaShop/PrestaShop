@@ -40,16 +40,14 @@
 				{rdelim};
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
-		
-			{literal}
+			
 			if ($('#id_country'))
-			{
-				ajaxStates();
-				$('#id_country').change(function() {
+			{ldelim}
+				ajaxStates({$fields_value.id_state});
+				$('#id_country').change(function() {ldelim}
 					ajaxStates();
-				});
-			}
-			{/literal}
+				{rdelim});
+			{rdelim}
 		{rdelim});
 		{if isset($script)}
 			{$script}
