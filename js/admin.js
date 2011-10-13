@@ -134,11 +134,11 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code)
 	var fields = fieldsString.split('¤');
 	for (var i = 0; i < fields.length; ++i)
 	{
-		getE(fields[i] + '_' + id_language).style.display = 'none';
-		getE(fields[i] + '_' + id_language_new).style.display = 'block';
-		getE('language_current_' + fields[i]).src = '../img/l/' + id_language_new + '.jpg';
+		$('#'+fields[i]+'_'+id_language).hide();
+		$('#'+fields[i]+'_'+id_language_new).show();
+		$('#'+'language_current_'+fields[i]).attr('src', '../img/l/' + id_language_new + '.jpg');
 	}
- 	getE('languages_' + field).style.display = 'none';
+	$('#languages_' + field).hide();
 	id_language = id_language_new;
 }
 
