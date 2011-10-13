@@ -65,7 +65,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 		if (!empty($this->address->postcode))
 			$postcode = $this->address->postcode;
 
-		if (!isset(self::$cache_tax_calculator[$postcode]))
+		if (!isset(self::$cache_tax_calculator[$postcode.'-'.$this->type]))
 		{
 			$rows = Db::getInstance()->executeS('
 			SELECT *
@@ -97,10 +97,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 					 break;
 			}
 
-			self::$cache_tax_calculator[$postcode] = new TaxCalculator($taxes, $behavior);
+			self::$cache_tax_calculator[$postcode.'-'.$this->type] = new TaxCalculator($taxes, $behavior);
 		}
 
-		return self::$cache_tax_calculator[$postcode];
+		return self::$cache_tax_calculator[$postcode.'-'.$this->type];
 	}
 }
 
