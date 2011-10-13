@@ -479,6 +479,9 @@ class AdminProducts extends AdminTab
 		{
 			if (!Combination::isFeatureActive())
 				return;
+				
+			$is_virtual = (int)Tools::getValue('is_virtual');
+			
 			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 			{
 				if (!isset($_POST['attribute_price']) || $_POST['attribute_price'] == null)
@@ -574,7 +577,11 @@ class AdminProducts extends AdminTab
 					if (!sizeof($this->_errors))
 					{
 						if (!$product->cache_default_attribute)
-							Product::updateDefaultAttribute($product->id);
+							Product::updateDefaultAttribute($product->id);						
+						
+						if (!empty($is_virtual))
+							Product::updateIsVirtual($product->id);
+							
 						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token));
 					}	
 				}
@@ -926,8 +933,8 @@ class AdminProducts extends AdminTab
 			@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
 			die(true);
 		}
-
 	}
+	
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group))
@@ -1072,7 +1079,7 @@ class AdminProducts extends AdminTab
 			$saveShort = $_POST['description_short'];
 			$_POST['description_short'] = strip_tags($_POST['description_short']);
 		}
-
+		
 		/* Check description short size without html */
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
 		if ($limit <= 0) $limit = 400;
@@ -2331,20 +2338,20 @@ class AdminProducts extends AdminTab
 	</script>
 	<?php
 
-	if(!$productDownload->id OR !$productDownload->active) 
+	if(!$productDownload->id || !$productDownload->active) 
 		$hidden = 'style="display:none;"';
 	
-	$cache_default_attribute = (int) $this->getFieldValue($obj, 'cache_default_attribute');
-	$is_virtual = (int) $this->getFieldValue($obj, 'is_virtual');
+	$cache_default_attribute = (int)$this->getFieldValue($obj, 'cache_default_attribute');
+	$is_virtual = (int)$this->getFieldValue($obj, 'is_virtual');
 
 	if($is_virtual && $productDownload->active) 
 		$check = 'checked="checked"';
-		
-	if($is_virtual) 
+
+	if($productDownload->id) 
 		$virtual = 1;
 	else
 		$virtual = 0;
-	
+
 	 echo '
 		<div class="tab-page" id="step1">
 			<h4 class="tab">1. '.$this->l('Info.').'</h4>
@@ -2659,8 +2666,8 @@ class AdminProducts extends AdminTab
 			var newLabel = \''.$this->l('New label').'\';
 			var choose_language = \''.$this->l('Choose language:').'\';
 			var required = \''.$this->l('required').'\';
-			var customizationUploadableFileNumber = '.(int) $this->getFieldValue($obj, 'uploadable_files').';
-			var customizationTextFieldNumber = '.(int) $this->getFieldValue($obj, 'text_fields').';
+			var customizationUploadableFileNumber = '.(int)$this->getFieldValue($obj, 'uploadable_files').';
+			var customizationTextFieldNumber = '.(int)$this->getFieldValue($obj, 'text_fields').';
 			var uploadableFileLabel = 0;
 			var textFieldLabel = 0;
 		</script>
@@ -2673,10 +2680,9 @@ class AdminProducts extends AdminTab
 			<input type="hidden" id="is_virtual" name="is_virtual" value="'.$virtual.'" />
 			<br/>'.$this->l('Does this product has an associated file ?').'<br/>';
 
-			// todo gérer le is_virtual avec la valeur du produit 
 			$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
 			
-			if ($productDownload->id && !empty($cache_default_attribute) && !empty($productDownload->display_filename))
+			if ($productDownload->id && !empty($cache_default_attribute) || !empty($productDownload->display_filename))
 			{
 				$check_yes = 'checked="checked"';
 				$check_no = '';
