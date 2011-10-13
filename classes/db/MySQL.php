@@ -30,7 +30,7 @@ class MySQLCore extends Db
 	/**
 	 * @see DbCore::connect()
 	 */
-	public function	connect()
+	public function connect()
 	{
 		if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
 			define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
@@ -51,7 +51,7 @@ class MySQLCore extends Db
 	/**
 	 * @see DbCore::disconnect()
 	 */
-	public function	disconnect()
+	public function disconnect()
 	{
 		mysql_close($this->link);
 	}
@@ -83,7 +83,7 @@ class MySQLCore extends Db
 	/**
 	 * @see DbCore::Insert_ID()
 	 */
-	public function	Insert_ID()
+	public function Insert_ID()
 	{
 		return mysql_insert_id($this->link);
 	}
@@ -91,7 +91,7 @@ class MySQLCore extends Db
 	/**
 	 * @see DbCore::Affected_Rows()
 	 */
-	public function	Affected_Rows()
+	public function Affected_Rows()
 	{
 		return mysql_affected_rows($this->link);
 	}
