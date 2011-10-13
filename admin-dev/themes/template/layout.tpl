@@ -53,7 +53,7 @@
 			{$errors|count} {l s='errors'}
 			<br/>
 			<ol>
-				{foreach from=$errors item=$error}
+				{foreach $errors as $error}
 					<li>{$error}</li>
 				{/foreach}
 			</ol>
@@ -107,7 +107,7 @@
 			<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
 		</span>
 		<ul style="display:none;" id="seeMore">
-		{foreach $warnings item=warning}
+		{foreach $warnings as $warning}
 			<li>{$warning}</li>
 		{/foreach}
 		</ul>

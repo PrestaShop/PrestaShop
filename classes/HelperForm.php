@@ -45,6 +45,10 @@ class HelperFormCore extends Helper
 
 	public $token;
 
+	public $languages = null;
+	public $default_form_language = null;
+	public $allow_employee_form_lang = null;
+
 	public static $currentIndex;
 
 	public $tpl = 'form.tpl';
@@ -58,29 +62,14 @@ class HelperFormCore extends Helper
 
 	public function displayForm()
 	{
-		$cookie = $this->context->cookie;
-		$allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-		if ($allow_employee_form_lang && !$cookie->employee_form_lang)
-			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-		$use_lang_from_cookie = false;
-		$languages = Language::getLanguages(false);
-		if ($allow_employee_form_lang)
-			foreach ($languages as $lang)
-				if ($cookie->employee_form_lang == $lang['id_lang'])
-					$use_lang_from_cookie = true;
-		if (!$use_lang_from_cookie)
-			$default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
-		else
-			$default_form_language = (int)$cookie->employee_form_lang;
-
 		$this->context->smarty->assign(array(
 			'firstCall' => $this->first_call,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 			'table' => $this->table,
-			'defaultFormLanguage' => $default_form_language,
-			'languages' => $languages,
-			'allowEmployeeFormLang' => $allow_employee_form_lang,
+			'languages' => $this->languages,
+			'defaultFormLanguage' => $this->default_form_language,
+			'allowEmployeeFormLang' => $this->allow_employee_form_lang,
 			'form_id' => $this->id,
 			'back' => Tools::getValue('back'),
 			'fields' => $this->fields_form,

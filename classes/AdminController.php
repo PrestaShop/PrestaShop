@@ -34,6 +34,10 @@ class AdminControllerCore extends Controller
 	public $warnings = array();
 	public $informations = array();
 
+	public $_languages = array();
+	public $default_form_language;
+	public $allow_employee_form_lang;
+
 	public $content_only = false;
 	public $layout = 'layout.tpl';
 
@@ -135,7 +139,14 @@ class AdminControllerCore extends Controller
 
 	protected $is_dnd_identifier = false;
 
-	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute');
+	protected $identifiersDnd = array(
+		'id_product' => 'id_product',
+		'id_category' => 'id_category_to_move',
+		'id_cms_category' => 'id_cms_category_to_move',
+		'id_cms' => 'id_cms',
+		'id_attribute' => 'id_attribute'
+	);
+	
 	protected $view;
 	protected $edit;
 	protected $delete;
@@ -575,7 +586,6 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Display form
-	 * TODO to be removed
 	 */
 	public function displayForm($firstCall = true)
 	{
@@ -908,6 +918,7 @@ class AdminControllerCore extends Controller
 
 			if (isset($this->fields_form))
 			{
+				$this->getlanguages();
 				$helper = new HelperForm();
 				// Check if form template has been overriden
 				if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
@@ -916,6 +927,9 @@ class AdminControllerCore extends Controller
 				$helper->token = $this->token;
 				$helper->table = $this->table;
 				$helper->id = $obj->id;
+				$helper->languages = $this->_languages;
+				$helper->default_form_language = $this->default_form_language;
+				$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 				$helper->fields_value = $this->getFieldsValue($obj);
 				$this->content .= $helper->generateForm($this->fields_form);
 			}
@@ -1328,12 +1342,35 @@ class AdminControllerCore extends Controller
 		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
+	
+	public function getlanguages()
+	{
+		$cookie = $this->context->cookie;
+		$this->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		if ($this->allow_employee_form_lang && !$cookie->employee_form_lang)
+			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+		$use_lang_from_cookie = false;
+		$this->_languages = Language::getLanguages(false);
+		if ($this->allow_employee_form_lang)
+			foreach ($this->_languages as $lang)
+				if ($cookie->employee_form_lang == $lang['id_lang'])
+					$use_lang_from_cookie = true;
+		if (!$use_lang_from_cookie)
+			$this->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
+		else
+			$this->default_form_language = (int)$cookie->employee_form_lang;
+	}
 
 	public function getFieldsValue($obj)
 	{
 		foreach ($this->fields_form['input'] as $input)
 			if (empty($this->fields_value[$input['name']]))
-				$this->fields_value[$input['name']] = $this->getFieldValue($obj, $input['name']);
+				if (isset($input['lang']) && $input['lang'])
+					foreach ($this->_languages as $language)
+						$this->fields_value[$input['name']][$language['id_lang']] = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
+				else
+					$this->fields_value[$input['name']] = $this->getFieldValue($obj, $input['name']);
+
 		return $this->fields_value;
 	}
 
@@ -1419,7 +1456,7 @@ class AdminControllerCore extends Controller
 			else if ($className == 'Customer' && !Validate::isPasswd($value))
 				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'passwd', $className).'</b> '.$this->l('is invalid');
 		}
-
+		
 		/* Checking for multilingual fields validity */
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
