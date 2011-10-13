@@ -147,9 +147,6 @@ class ProductCore extends ObjectModel
 	/** @var string Meta tag title */
 	public $meta_title;
 
-	/** @var integer Out of stock behavior */
-	public $out_of_stock = 2;
-
 	/** @var boolean Product statuts */
 	public $quantity_discount = 0;
 
@@ -239,7 +236,6 @@ class ProductCore extends ObjectModel
 		'height' => 'isUnsignedFloat',
 		'depth' => 'isUnsignedFloat',
 		'weight' => 'isUnsignedFloat',
-		'out_of_stock' => 'isUnsignedInt',
 		'quantity_discount' => 'isBool',
 		'customizable' => 'isUnsignedInt',
 		'uploadable_files' => 'isUnsignedInt',
@@ -274,7 +270,6 @@ class ProductCore extends ObjectModel
 			'id_manufacturer' => array('xlink_resource' => 'manufacturers'),
 			'id_supplier' => array('xlink_resource' => 'suppliers'),
 			'id_category_default' => array('xlink_resource' => 'categories'),
-			'out_of_stock' => array('required' => true),
 			'new' => array(),
 			'cache_default_attribute' => array(),
 			'id_default_image' => array('getter' => 'getCoverWs', 'setter' => 'setCoverWs', 'xlink_resource' => array('resourceName' => 'images', 'subResourceName' => 'products')),
@@ -340,6 +335,8 @@ class ProductCore extends ObjectModel
 		 * @FIXME
 		 */
 		$this->quantity = 0;
+		$this->out_of_stock = $this->getOutOfStock();
+		$this->depends_on_stock = $this->getDependsOnStock();
 
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
@@ -373,7 +370,6 @@ class ProductCore extends ObjectModel
 		$fields['height'] = (float)$this->height;
 		$fields['depth'] = (float)$this->depth;
 		$fields['weight'] = (float)$this->weight;
-		$fields['out_of_stock'] = pSQL($this->out_of_stock);
 		$fields['quantity_discount'] = (int)$this->quantity_discount;
 		$fields['customizable'] = (int)$this->customizable;
 		$fields['uploadable_files'] = (int)$this->uploadable_files;
@@ -1407,7 +1403,7 @@ class ProductCore extends ObjectModel
 		}
 
 		$sql = new DbQuery();
-		$sql->select('p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
+		$sql->select('p.*, sa.out_of_stock, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
 						i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
 						(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice');
@@ -1420,6 +1416,7 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('tax_rule tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)');
 		$sql->leftJoin('tax t ON (t.`id_tax` = tr.`id_tax`)');
 		$sql->leftJoin('manufacturer m ON (m.`id_manufacturer` = p.`id_manufacturer`)');
+		$sql->leftJoin('stock_available sa ON (sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0)');
 
 		$sql->where('p.`active` = 1');
 		$sql->where('DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0');
@@ -1500,7 +1497,7 @@ class ProductCore extends ObjectModel
 		if (!$id_product)
 			return false;
 
-		$sql = 'SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
+		$sql = 'SELECT p.*, sa.out_of_stock, sa.out_of_stock out_of_stock, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
 					i.`id_image`, il.`legend`, t.`rate`
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
@@ -1510,6 +1507,7 @@ class ProductCore extends ObjectModel
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0
 				WHERE p.id_product = '.(int)$id_product;
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
@@ -1565,7 +1563,7 @@ class ProductCore extends ObjectModel
 			return (int)($result['nb']);
 		}
 
-		$sql = 'SELECT p.*, stock.quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
+		$sql = 'SELECT p.*, sa.out_of_stock, stock.quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
@@ -1579,6 +1577,7 @@ class ProductCore extends ObjectModel
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+				LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0)
 				WHERE p.`active` = 1
 					AND p.`show_price` = 1
 					'.((!$beginning AND !$ending) ? ' AND p.`id_product` IN ('.((is_array($ids_product) AND count($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
@@ -2066,7 +2065,7 @@ class ProductCore extends ObjectModel
 		{
 			// @todo remove this code when query builder is accepted or removed
 			$method = ($innerJoin) ? 'innerJoin' : 'leftJoin';
-			$sql->$method('stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product');
+			$sql->$method('stock_available stock ON stock.id_product = '.pSQL($productAlias).'.id_product');
 			if (!is_null($productAttribute))
 			{
 				if (!Combination::isFeatureActive())
@@ -2080,7 +2079,7 @@ class ProductCore extends ObjectModel
 		}
 		else
 		{
-			$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
+			$sql = (($innerJoin) ? ' INNER ' : ' LEFT ').'JOIN '._DB_PREFIX_.'stock_available stock ON stock.id_product = '.pSQL($productAlias).'.id_product';
 			if (!is_null($productAttribute))
 			{
 				if (!Combination::isFeatureActive())
@@ -2192,7 +2191,7 @@ class ProductCore extends ObjectModel
 		if (!isset(self::$cacheStock[$this->id][$id_product_attribute]))
 		{
 			$sql = 'SELECT quantity
-					FROM '._DB_PREFIX_.'stock
+					FROM '._DB_PREFIX_.'stock_available
 					WHERE id_product = '.$this->id.'
 					AND id_product_attribute = '.(int)$id_product_attribute.
 					$context->shop->sqlRestriction(Shop::SHARE_STOCK);
@@ -2200,6 +2199,54 @@ class ProductCore extends ObjectModel
 			self::$cacheStock[$this->id][$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
 		}
 		return self::$cacheStock[$this->id][$id_product_attribute];
+	}
+
+	/**
+	 * Get the value of "out of stock" of current product
+	 * "ouf of stock" allow to order product without stock
+	 *
+	 * @since 1.5.0
+	 * @param Context $context
+	 * @return int
+	 */
+	public function getOutOfStock(Context $context = null)
+	{
+		if (!$this->id)
+			return 0;
+		if (!$context)
+			$context = Context::getContext();
+
+		$id_shop = $context->shop->getID(true);
+		$sql = 'SELECT out_of_stock
+				FROM '._DB_PREFIX_.'stock_available
+				WHERE id_product = '.$this->id.'
+				AND id_product_attribute = 0'.
+				$context->shop->sqlRestriction(Shop::SHARE_STOCK);
+		return (int)Db::getInstance()->getValue($sql);
+	}
+
+	/**
+	 * Get the value of "depends on stock" of current product
+	 * "depends on stock" allow managing quantity available manually
+	 *
+	 * @since 1.5.0
+	 * @param Context $context
+	 * @return int
+	 */
+	public function getDependsOnStock(Context $context = null)
+	{
+		if (!$this->id)
+			return 0;
+		if (!$context)
+			$context = Context::getContext();
+
+		$id_shop = $context->shop->getID(true);
+		$sql = 'SELECT depends_on_stock
+				FROM '._DB_PREFIX_.'stock_available
+				WHERE id_product = '.$this->id.'
+				AND id_product_attribute = 0'.
+				$context->shop->sqlRestriction(Shop::SHARE_STOCK);
+		return (int)Db::getInstance()->getValue($sql);
 	}
 
 	/**
@@ -2255,9 +2302,9 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
-	public static function isAvailableWhenOutOfStock($oos)
+	public static function isAvailableWhenOutOfStock($out_of_stock)
 	{
-		return !Configuration::get('PS_STOCK_MANAGEMENT') ? true : ((int)($oos) == 2 ? (int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) : (int)($oos));
+		return !Configuration::get('PS_STOCK_MANAGEMENT') ? true : ((int)($out_of_stock) == 2 ? (int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) : (int)($out_of_stock));
 	}
 
 	/**
@@ -2386,7 +2433,7 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = 'SELECT p.*, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
+		$sql = 'SELECT p.*, sa.out_of_stock, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
 					i.`id_image`, il.`legend`, t.`rate`, m.`name` as manufacturer_name, cl.`name` AS category_default, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'accessory`
@@ -2401,6 +2448,7 @@ class ProductCore extends ObjectModel
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0)
 				WHERE `id_product_1` = '.(int)($this->id).
 				($active ? ' AND p.`active` = 1' : '');
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
@@ -3632,6 +3680,21 @@ class ProductCore extends ObjectModel
 		WHERE p.reference = "'.pSQL($reference).'"');
 
 		return isset($row['reference']);
+	}
+	
+	/**
+	 * Get all product attributes ids
+	 * 
+	 * @since 1.5.0
+	 * @param int $id_product the id of the product
+	 * @return array product attribute id list
+	 */
+	public static function getProductAttributesIds($id_product)
+	{
+		return Db::getInstance()->executeS('
+		SELECT id_product_attribute
+		FROM `'._DB_PREFIX_.'product_attribute`
+		WHERE `id_product` = '.(int)$id_product);
 	}
 }
 

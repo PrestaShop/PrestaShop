@@ -373,7 +373,7 @@ class CartCore extends ObjectModel
 		// Build SELECT
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`,
-						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, p.`out_of_stock`,
+						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, sa.`out_of_stock`,
 						p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`) AS unique_id');
 
@@ -388,6 +388,7 @@ class CartCore extends ObjectModel
 										AND tr.`id_state` = 0
 										AND tr.`zipcode_from` = 0');
 		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
+		$sql->leftJoin('stock_available sa ON sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0');
 		$sql->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang);
 		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
 
@@ -632,7 +633,7 @@ class CartCore extends ObjectModel
 			{
 				if ($operator == 'up')
 				{
-					$sql = 'SELECT p.out_of_stock, stock.quantity
+					$sql = 'SELECT stock.out_of_stock, stock.quantity
 							FROM '._DB_PREFIX_.'product p
 							'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 							WHERE p.id_product = '.$id_product;
@@ -673,7 +674,7 @@ class CartCore extends ObjectModel
 			/* Add product to the cart */
 			else
 			{
-				$sql = 'SELECT p.out_of_stock, stock.quantity
+				$sql = 'SELECT stock.out_of_stock, stock.quantity
 						FROM '._DB_PREFIX_.'product p
 						'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 						WHERE p.id_product = '.$id_product;
