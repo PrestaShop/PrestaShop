@@ -507,7 +507,7 @@ class ToolsCore
 	{
 	 	if (!$html)
 			$string = strip_tags($string);
-		return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);;
+		return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);
 	}
 
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
