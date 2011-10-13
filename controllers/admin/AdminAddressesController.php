@@ -184,7 +184,6 @@ class AdminAddressesControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('Your zip/postal code is incorrect.');
 			}
 
-
 			/* If this address come from order's edition and is the same as the other one (invoice or delivery one)
 			** we delete its id_address to force the creation of a new one */
 			if ((int)(Tools::getValue('id_order')))
