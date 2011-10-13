@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,7 +32,7 @@ class AdminInformation extends AdminTab
 		$html = '';
 		// Functions list to test with 'test_system'
 		$funcs = array('fopen', 'fclose', 'fread', 'fwrite', 'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir', 'getcwd', 'chdir', 'chmod');
-		
+
 		// Test list to execute (function/args)
 		$tests = array(
 			'phpversion' => false,
@@ -41,8 +41,7 @@ class AdminInformation extends AdminTab
 			'gd' => false,
 			'mysql_support' => false,
 			'config_dir' => _PS_ADMIN_DIR_.'/../config/',
-			'tools_dir' => _PS_ADMIN_DIR_.'/../tools/smarty/compile',
-			'cache_dir' => _PS_ADMIN_DIR_.'/../tools/smarty/cache/',
+			'cache_dir' => _PS_CACHE_DIR_,
 			'sitemap' => _PS_ADMIN_DIR_.'/../sitemap.xml',
 			'img_dir' => _PS_ADMIN_DIR_.'/../img/',
 			'mails_dir' => _PS_ADMIN_DIR_.'/../mails/',
@@ -66,7 +65,6 @@ class AdminInformation extends AdminTab
 			'gd' => $this->l('Enable the GD library on your server'),
 			'mysql_support' => $this->l('Enable the MySQL support on your server'),
 			'config_dir' => $this->l('Set write permissions for config folder'),
-			'tools_dir' => $this->l('Set write permissions for tools folder'),
 			'cache_dir' => $this->l('Set write permissions for cache folder'),
 			'sitemap' => $this->l('Set write permissions for sitemap.xml file'),
 			'img_dir' => $this->l('Set write permissions for img folder and subfolders/recursively'),
@@ -102,7 +100,7 @@ class AdminInformation extends AdminTab
 					$html .= '<li>'.$testsErrors[$key].'</li>';
 			$html .= '</ul>';
 		}
-		
+
 		$html .= '
 			<p>
 				<b>'.$this->l('Optional parameters').':</b>';
@@ -121,10 +119,10 @@ class AdminInformation extends AdminTab
 					$html .= '<li>'.$testsErrors[$key].'</li>';
 			$html .= '</ul>';
 		}
-		
+
 		return $html;
 	}
-	
+
 	public function display()
 	{
 		echo '
@@ -138,28 +136,28 @@ class AdminInformation extends AdminTab
 			<legend><img src="../img/t/AdminInformation.gif" alt="" /> '.$this->l('Information about your configuration').'</legend>
 			<h3>'.$this->l('Server information').'</h3>
 			<p>
-				<b>'.$this->l('Prestashop Version').':</b> 
+				<b>'.$this->l('Prestashop Version').':</b>
 				'._PS_VERSION_.'
 			</p>';
-			
+
 		if (function_exists('php_uname'))
 			echo '
 			<p>
-				<b>'.$this->l('Server information').':</b> 
+				<b>'.$this->l('Server information').':</b>
 				'.php_uname('s').' '.php_uname('v').' '.php_uname('m').'
 			</p>';
-			
+
 		echo '
 			<p>
-				<b>'.$this->l('Server software Version').':</b> 
+				<b>'.$this->l('Server software Version').':</b>
 				'.$_SERVER['SERVER_SOFTWARE'].'
 			</p>
 			<p>
-				<b>'.$this->l('PHP Version').':</b> 
+				<b>'.$this->l('PHP Version').':</b>
 				'.phpversion().'
 			</p>
 			<p>
-				<b>'.$this->l('MySQL Version').':</b> 
+				<b>'.$this->l('MySQL Version').':</b>
 				'.Db::getInstance()->getVersion().'
 			</p>';
 		if (function_exists('apache_get_modules') AND in_array('mod_instaweb', apache_get_modules()))
@@ -168,11 +166,11 @@ class AdminInformation extends AdminTab
 			<hr />
 			<h3>'.$this->l('Store information').'</h3>
 			<p>
-				<b>'.$this->l('URL of your website').':</b> 
+				<b>'.$this->l('URL of your website').':</b>
 				'.Tools::getHttpHost(true).__PS_BASE_URI__.'
 			</p>
 			<p>
-				<b>'.$this->l('Theme name used').':</b> 
+				<b>'.$this->l('Theme name used').':</b>
 				'._THEME_NAME_.'
 			</p>
 			<hr />
@@ -187,23 +185,23 @@ class AdminInformation extends AdminTab
 			echo $this->l('You use your own SMTP parameters').'</p>';
 			echo '
 			<p>
-				<b>'.$this->l('SMTP server').':</b> 
+				<b>'.$this->l('SMTP server').':</b>
 				'.Configuration::get('PS_MAIL_SERVER').'
 			</p>
 			<p>
-				<b>'.$this->l('SMTP user').':</b> 
+				<b>'.$this->l('SMTP user').':</b>
 				'.(Configuration::get('PS_MAIL_USER') ? $this->l('Defined') : '<span style="color:red;">'.$this->l('Not defined').'</span>').'
 			</p>
 			<p>
-				<b>'.$this->l('SMTP password').':</b> 
+				<b>'.$this->l('SMTP password').':</b>
 				'.(Configuration::get('PS_MAIL_PASSWD') ? $this->l('Defined') : '<span style="color:red;">'.$this->l('Not defined').'</span>').'
 			</p>
 			<p>
-				<b>'.$this->l('Encryption').':</b> 
+				<b>'.$this->l('Encryption').':</b>
 				'.Configuration::get('PS_MAIL_SMTP_ENCRYPTION').'
 			</p>
 			<p>
-				<b>'.$this->l('Port').':</b> 
+				<b>'.$this->l('Port').':</b>
 				'.Configuration::get('PS_MAIL_SMTP_PORT').'
 			</p>
 			';
@@ -212,7 +210,7 @@ class AdminInformation extends AdminTab
 			<hr />
 			<h3>'.$this->l('Your information').'</h3>
 			<p>
-				<b>'.$this->l('Information from you').':</b> 
+				<b>'.$this->l('Information from you').':</b>
 				'.$_SERVER["HTTP_USER_AGENT"].'
 			</p>
 		</fieldset>
@@ -223,7 +221,7 @@ class AdminInformation extends AdminTab
 		</fieldset>
 		';
 	}
-	
+
 	static private function		check($tests)
 	{
 		$res = array();
@@ -231,20 +229,20 @@ class AdminInformation extends AdminTab
 			$res[$key] = self::run($key, $test);
 		return $res;
 	}
-	
+
 	static private function		run($ptr, $arg = 0)
 	{
 		if (call_user_func(array('self', 'test_'.$ptr), $arg))
 			return ('ok');
 		return ('fail');
 	}
-	
-	// Misc functions	
+
+	// Misc functions
 	static private function		test_phpversion()
 	{
 		return PHP_VERSION_ID >= 50000; /* PHP version > 5.0 */
 	}
-	
+
 	static private function		test_mysql_support()
 	{
 		return function_exists('mysql_connect');
@@ -272,20 +270,20 @@ class AdminInformation extends AdminTab
 	{
 		return function_exists('imagecreatetruecolor');
 	}
-	
+
 	static private function		test_register_globals()
 	{
 		return !ini_get('register_globals');
 	}
-	
+
 	static private function		test_gz()
 	{
 		if (function_exists('gzencode'))
-			return !(@gzencode('dd') === false); 
+			return !(@gzencode('dd') === false);
 		return false;
 	}
-	
-	// is_writable dirs	
+
+	// is_writable dirs
 	static private function		test_dir($dir, $recursive = false)
 	{
 		if (!is_writable($dir) OR !$dh = opendir($dir))
@@ -300,23 +298,23 @@ class AdminInformation extends AdminTab
 		closedir($dh);
 		return true;
 	}
-	
-	// is_writable files	
+
+	// is_writable files
 	static private function		test_file($file)
 	{
 		return (file_exists($file) AND is_writable($file));
 	}
-	
+
 	static private function		test_config_dir($dir)
 	{
 		return self::test_dir($dir);
 	}
-	
+
 	static private function		test_sitemap($dir)
 	{
 		return self::test_file($dir);
 	}
-	
+
 	static private function		test_root_dir($dir)
 	{
 		return self::test_dir($dir);
@@ -326,42 +324,37 @@ class AdminInformation extends AdminTab
 	{
 		return self::test_dir($dir);
 	}
-	
+
 	static private function		test_img_dir($dir)
 	{
 		return self::test_dir($dir, true);
 	}
-	
+
 	static private function		test_module_dir($dir)
 	{
 		return self::test_dir($dir, true);
 	}
-	
-	static private function		test_tools_dir($dir)
-	{
-		return self::test_dir($dir);
-	}
-	
+
 	static function		test_cache_dir($dir)
 	{
 		return self::test_dir($dir);
 	}
-	
+
 	static private function		test_download_dir($dir)
 	{
 		return self::test_dir($dir);
 	}
-	
+
 	static private function		test_mails_dir($dir)
 	{
 		return self::test_dir($dir, true);
 	}
-	
+
 	static private function		test_translations_dir($dir)
 	{
 		return self::test_dir($dir, true);
 	}
-	
+
 	static private function		test_theme_lang_dir($dir)
 	{
 		return self::test_dir($dir, true);
@@ -371,7 +364,7 @@ class AdminInformation extends AdminTab
 	{
 		return self::test_dir($dir);
 	}
-	
+
 	static private function		test_virtual_products_dir($dir)
 	{
 		return self::test_dir($dir);
