@@ -102,57 +102,65 @@ class StockAvailableCore extends ObjectModel
 
 
 	/**
-	 * For a given id_product, synchronizes StockAvailable.quantity with Stock.usable_quantity
+	 * For a given id_product, synchronizes StockAvailable::quantity with Stock::usable_quantity
 	 *
 	 * @param int $id_product
 	 */
 	public static function synchronize($id_product)
 	{
+		// used var in algorithm
+		$ids_warehouse = array();
+		$ids_product_attribute = array();
+
+		// builds query to get all warehouses/shops
 		$query = new DbQuery();
 		$query->select('id_warehouse, id_shop');
 		$query->from('warehouse_shop');
 		$query->orderBy('id_shop');
 
-		// gets warehouses id group by shop id
-		$ids_warehouse = array();
+		// queries to get warehouse ids grouped by shops
 		foreach (Db::getInstance()->executeS($query) as $row)
 			$ids_warehouse[$row['id_shop']][] = $row['id_warehouse'];
 
-		// gets all id_product_atribute
-		$ids_product_attribute = array();
+		// gets all product attributes ids
 		foreach (Product::getProductAttributesIds($id_product) as $id_product_attribute)
 			$ids_product_attribute[] = $id_product_attribute['id_product_attribute'];
 
+		// loops on ids_warehouse to synchronize
 		foreach ($ids_warehouse as $id_shop => $warehouses)
 		{
 			$total_quantity = 0;
 
-			// saves quantities for all products combinations
+			// if there are no product attributes
+			if (empty($ids_product_attribute))
+				$total_quantity = StockManagerFactory::getManager()->getProductRealQuantities($id_product, null, $warehouses, true);
+
+			// else loops on id_product_attribute and to get $total_quantity
 			foreach ($ids_product_attribute as $id_product_attribute)
 			{
 				$quantity = StockManagerFactory::getManager()->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
 
-				Db::getInstance()->autoExecute(
-					'stock_available',
-					array('quantity' => $quantity),
-					'UPDATE',
-					'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.' AND id_shop = '.(int)$id_shop
+				$query = array(
+					'table' => 'stock_available',
+					'data' => array('quantity' => $quantity),
+					'type' => 'UPDATE',
+					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.' AND id_shop = '.(int)$id_shop
 				);
+
+				Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
+
 				$total_quantity += $quantity;
 			}
 
-			if (empty($ids_product_attribute))
-				$total_quantity = StockManagerFactory::getManager()->getProductRealQuantities($id_product, null, $warehouses, true);
+			$query = array(
+					'table' => 'stock_available',
+					'data' => array('quantity' => $total_quantity),
+					'type' => 'UPDATE',
+					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0 AND id_shop = '.(int)$id_shop
+				);
 
 			// saves quantities
-			Db::getInstance()->autoExecute(
-				'stock_available',
-				array('quantity' => $total_quantity),
-				'UPDATE',
-				'id_product = '.(int)$id_product.' AND id_product_attribute = 0 AND id_shop = '.(int)$id_shop
-			);
-
-			$total_quantity += $quantity;
+			Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
 		}
 	}
 }
