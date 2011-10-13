@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function ajaxStates ()
+function ajaxStates (id_state_selected)
 {
 	$.ajax({
 		url: "ajax.php",
@@ -41,7 +41,7 @@ function ajaxStates ()
 			{
 				$("#id_state").html(html);
 				$("#contains_states").fadeIn();
-				$('#id_state option[value={$obj->id_state}]').attr("selected", "selected");
+				$('#id_state option[value=' + id_state_selected + ']').attr("selected", "selected");
 			}
 		}
 	});
