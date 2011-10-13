@@ -26,6 +26,8 @@
 */
 
 /**
+ * Holds Stock
+ *
  * @since 1.5.0
  */
 class WarehouseCore extends ObjectModel
@@ -35,6 +37,11 @@ class WarehouseCore extends ObjectModel
 	public $reference;
 	public $name;
 	public $id_employee;
+
+	/**
+	 * Describes the way a Warehouse is managed
+	 * @var enum WA|LIFO|FIFO
+	 */
 	public $management_type;
 
 	protected $fieldsRequired = array(
@@ -74,7 +81,7 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * For the current warehouse, gets the shops it is associated to
+	 * Gets the shops a warehouse is associated to
 	 *
 	 * @return array
 	 */
@@ -88,22 +95,25 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * For the current warehouse, sets the shops it is associated to
+	 * Sets the shops a warehouse is associated to
 	 *
-	 * @param array $id_shop_list List of shop ids
+	 * @param array $ids_shop
 	 */
-	public function setShops($id_shop_list)
+	public function setShops($ids_shop)
 	{
 		$row_to_insert = array();
-		foreach ($id_shop_list as $id_shop)
+		foreach ($ids_shop as $id_shop)
 			$row_to_insert = array($this->reference => $this->id, 'id_shop' => $id_shop);
 
-		Db::getInstance()->execute('DELETE FROM `warehouse_shop` ws WHERE ws.'.$this->identifier.' = '.(int)$this->id);
+		Db::getInstance()->execute('
+			DELETE FROM `warehouse_shop` ws
+			WHERE ws.'.$this->identifier.' = '.(int)$this->id);
+
 		Db::getInstance()->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
 	}
 
 	/**
-	 * For the current warehouse, returns if the warehouse is empty
+	 * Checks if a warehouse is empty - holds no stock
 	 *
 	 * @return bool
 	 */
@@ -117,17 +127,64 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * For a given warehouse, checks if it exists
+	 * Checks if the given warehouse exists
 	 *
 	 * @param int $id_warehouse
 	 * @return bool
 	 */
 	public static function exists($id_warehouse)
 	{
-		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT w.id_warehouse
-			FROM `warehouse` w
-			WHERE w.id_warehouse = '.(int)$id_warehouse.'
-			LIMIT 1');
+		$query = new DbQuery();
+		$query->select('id_warehouse');
+		$query->from('warehouse');
+		$query->where('id_warehouse = '.(int)$id_warehouse);
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
+	}
+
+	/**
+	 * For a given {product, product attribute} sets its location in the given warehouse
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $id_warehouse
+	 * @param string $location
+	 * @return bool
+	 */
+	public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
+	{
+		Db::getInstance()->execute('
+			DELETE FROM `warehouse_product_location` wpl
+			WHERE wpl.id_product = '.(int)$id_product.'
+			AND wpl.id_product_attribute = '.(int)$id_product_attribute.'
+			AND wpl.id_warehouse = '.(int)$id_warehouse);
+
+		$query = '
+			UPDATE warehouse_product_location
+			SET location = '.pSQL($location).'
+			WHERE id_product = '.(int)$id_product.'
+			AND id_product_attribute = '.(int)$id_product_attribute.'
+			AND id_warehouse = '.(int)$id_warehouse;
+
+		return (Db::getInstance()->execute($query));
+	}
+
+	/**
+	 * For a given {product, product attribute} gets its location in the given warehouse
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $id_warehouse
+	 * @return string
+	 */
+	public static function getProductLocation($id_product, $id_product_attribute, $id_warehouse)
+	{
+		$query = new DbQuery();
+		$query->select('location');
+		$query->from('warehouse_product_location');
+		$query->where('id_warehouse = '.(int)$id_warehouse);
+		$query->where('id_product = '.(int)$id_product);
+		$query->where('id_product_attribute = '.(int)$id_product_attribute);
+
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 	}
 }
