@@ -180,8 +180,10 @@ abstract class DbCore
 	public static function getClass()
 	{
 		$class = 'MySQL';
-		if (0&&class_exists('mysqli', false))
+		if (extension_loaded('mysqli'))
 			$class = 'DbMySQLi';
+		else if (extension_loaded('pdo_mysql'))
+			$class = 'DbPDO';
 		return $class;
 	}
 
@@ -525,9 +527,9 @@ abstract class DbCore
 	 * @param bool $newDbLink
 	 * @return int
 	 */
-	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true)
+	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null)
 	{
-		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link));
+		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine));
 	}
 
 	/**

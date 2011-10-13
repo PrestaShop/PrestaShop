@@ -136,12 +136,23 @@ class MySQLCore extends Db
 		return mysql_select_db($db_name, $this->link);
 	}
 
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
+	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
 	{
 		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
 			return 1;
 		if (!@mysql_select_db($db, $link))
 			return 2;
+
+		if (strtolower($engine) == 'innodb')
+		{
+			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+			$result = mysql_query($sql);
+			if (!$result)
+				return 4;
+			$row = mysql_fetch_assoc($result);
+			if (!$row || strtolower($row['Value']) != 'yes')
+				return 4;
+		}
 		@mysql_close($link);
 		return 0;
 	}

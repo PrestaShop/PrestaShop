@@ -138,11 +138,22 @@ class DbMySQLiCore extends Db
 		return $this->link->query('USE '.pSQL($db_name));
 	}
 
-	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true)
+	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
 		if (mysqli_connect_error())
-			return 1;
+			return (mysqli_connect_errno() == 1049) ? 2 : 1;
+
+		if (strtolower($engine) == 'innodb')
+		{
+			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+			$result = $link->query($sql);
+			if (!$result)
+				return 4;
+			$row = $result->fetch_assoc();
+			if (!$row || strtolower($row['Value']) != 'yes')
+				return 4;
+		}
 		$link->close();
 		return 0;
 	}

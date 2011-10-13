@@ -84,7 +84,7 @@ class DbPDOCore extends Db
 	 */
 	protected function _numRows($result)
 	{
-		return $result->rowCount();;
+		return $result->rowCount();
 	}
 
 	/**
@@ -151,17 +151,28 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::tryToConnect()
 	 */
-	static public function tryToConnect($server, $user, $pwd, $db)
+	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
 	{
 		try
 		{
-			$test = new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd);
+			$link = @new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd);
 		}
 		catch (PDOException $e)
 		{
-			return 1;
+			return ($e->getCode() == 1049) ? 2 : 1;
 		}
-		unset($test);
+
+		if (strtolower($engine) == 'innodb')
+		{
+			$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+			$result = $link->query($sql);
+			if (!$result)
+				return 4;
+			$row = $result->fetch();
+			if (!$row || strtolower($row['Value']) != 'yes')
+				return 4;
+		}
+		unset($link);
 		return 0;
 	}
 
@@ -172,14 +183,14 @@ class DbPDOCore extends Db
 	{
 		try
 		{
-			$test = new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd);
+			$link = new PDO('mysql:host='.$server, $user, $pwd);
 		}
 		catch (PDOException $e)
 		{
 			return false;
 		}
-		$result = $test->exec('SET NAMES \'utf8\'');
-		unset($test);
+		$result = $link->exec('SET NAMES \'utf8\'');
+		unset($link);
 
 		return ($result === false) ? false : true;
 	}
