@@ -60,8 +60,8 @@ class StockAvailableCore extends ObjectModel
 		'id_product_attribute' => 'isUnsignedId',
 		'id_shop' => 'isUnsignedId',
 		'quantity' => 'isInt',
-		'depends_on_stocks' => 'isBool',
-		'out_of_stock' => 'isBool'
+		'depends_on_stock' => 'isBool',
+		'out_of_stock' => 'isInt'
 	);
 
 	protected $table = 'stock_available';
@@ -74,7 +74,7 @@ class StockAvailableCore extends ObjectModel
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_shop'] = (int)$this->id_shop;
 		$fields['quantity'] = (int)$this->quantity;
-		$fields['depends_on_stocks'] = (bool)$this->depends_on_stocks;
+		$fields['depends_on_stock'] = (bool)$this->depends_on_stock;
 		$fields['out_of_stock'] = (bool)$this->out_of_stock;
 		return $fields;
 	}
@@ -87,8 +87,11 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $id_shop
 	 * @return int
 	 */
-	public static function getIdStockAvailable($id_product, $id_product_attribute = null, $id_shop)
+	public static function getIdStockAvailable($id_product, $id_product_attribute = null, $id_shop = null)
 	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+		
 		$query = new DbQuery();
 		$query->select('id_stock_available');
 		$query->from('stock_available');
@@ -161,6 +164,99 @@ class StockAvailableCore extends ObjectModel
 
 			// saves quantities
 			Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
+		}
+	}
+	
+	/**
+	 * For a given id_product, sets if stock available depends on stock
+	 *
+	 * @param int $depends_on_stock
+	 * @param int $id_product
+	 * @param int $id_shop
+	 */
+	public static function setProductDependsOnStock($depends_on_stock, $id_product, $id_shop = null)
+	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+		
+		Db::getInstance()->autoExecute(
+			'stock_available',
+			array('depends_on_stock' => (boolean)$depends_on_stock),
+			'UPDATE',
+			'id_product = '.(int)$id_product.' AND id_shop = '.(int)$id_shop
+		);
+		if($depends_on_stock)
+			StockAvailable::synchronize($id_product);
+	}
+	
+	/**
+	 * For a given id_product, sets if product is available out of stocks
+	 *
+	 * @param int $out_of_stock
+	 * @param int $id_product
+	 * @param int $id_shop
+	 */
+	public static function setProductOutOfStock($out_of_stock, $id_product, $id_shop = null)
+	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+		
+		Db::getInstance()->autoExecute(
+			'stock_available',
+			array('out_of_stock' => (int)$out_of_stock),
+			'UPDATE',
+			'id_product = '.(int)$id_product.' AND id_shop = '.(int)$id_shop
+		);
+	}
+	
+	/**
+	 * For a given id_product and id_product_attribute, gets stock available
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $id_shop
+	 */
+	public static function getStockAvailableForProduct($id_product, $id_product_attribute = null, $id_shop = null)
+	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+		
+		$query = new DbQuery();
+		$query->select('quantity');
+		$query->from('stock_available');
+		$query->where('id_product = '.(int)$id_product);
+		$query->where('id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('id_shop = '.(int)$id_shop);
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+	
+	/**
+	 * After saving a quantity available, upgrade the total_quantity_available
+	 */
+	public function save($nullValues = false, $autodate = true)
+	{
+		if (!parent::save($nullValues, $autodate))
+			return false;
+		
+		if ($this->id_product_attribute = 0)
+			return true;
+		
+		$id_stock_available = StockAvailable::getIdStockAvailable($this->id_product, 0, $this->id_shop);
+		
+		$total_quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT sum(quantity) FROM '._DB_PREFIX_.'stock_available
+			WHERE id_product = '.(int)$this->id_product.' AND id_shop = '.(int)$this->id_shop.' AND id_product_attribute <> 0');
+		
+		if (!$id_stock_available)
+		{
+			return (int)Db::getInstance()->execute('INSERT '._DB_PREFIX_.'stock_available
+				SET id_product = '.(int)$this->id_product.', id_product_attribute = 0, id_shop = '.(int)$this->id_shop.'
+				quantity = '.(int)$total_quantity);
+		}
+		else
+		{
+			return (int)Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'stock_available
+				SET quantity = '.(int)$total_quantity.'
+				WHERE id_stock_available = '.(int)$id_stock_available);
 		}
 	}
 }

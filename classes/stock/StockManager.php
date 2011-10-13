@@ -32,9 +32,9 @@
 class StockManagerCore implements StockManagerInterface
 {
 
-    /**
-     * @see StockManagerInterface::isAvailable()
-     */
+	/**
+	 * @see StockManagerInterface::isAvailable()
+	 */
 	public static function isAvailable()
 	{
 		// Default Manager : always available

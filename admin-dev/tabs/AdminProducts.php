@@ -555,15 +555,15 @@ class AdminProducts extends AdminTab
 									Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
 									Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
 									Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
-                                	Tools::getValue('attribute_ecotax'),
-                                	Tools::getValue('attribute_quantity'),
-                                	Tools::getValue('id_image_attr'),
-                                	Tools::getValue('attribute_reference'),
-                                	Tools::getValue('attribute_supplier_reference'),
-                                	Tools::getValue('attribute_ean13'),
-                                	Tools::getValue('attribute_default'),
-                                	Tools::getValue('attribute_location'),
-                                	Tools::getValue('attribute_upc'));
+									Tools::getValue('attribute_ecotax'),
+									Tools::getValue('attribute_quantity'),
+									Tools::getValue('id_image_attr'),
+									Tools::getValue('attribute_reference'),
+									Tools::getValue('attribute_supplier_reference'),
+									Tools::getValue('attribute_ean13'),
+									Tools::getValue('attribute_default'),
+									Tools::getValue('attribute_location'),
+									Tools::getValue('attribute_upc'));
 							$this->updateDownloadProduct($product, 0, $id_product_attribute);
 						}
 						else
@@ -1682,7 +1682,8 @@ class AdminProducts extends AdminTab
 			<div class="tab-page" id="step4"><h4 class="tab">4. '.$this->l('Combinations').(isset($countAttributes) ? ' ('.$countAttributes.')' : '').'</h4></div>
 			<div class="tab-page" id="step5"><h4 class="tab">5. '.$this->l('Features').'</h4></div>
 			<div class="tab-page" id="step6"><h4 class="tab">6. '.$this->l('Customization').'</h4></div>
-			<div class="tab-page" id="step7"><h4 class="tab">7. '.$this->l('Attachments').' ('.$countAttachments.')</h4></div>';
+			<div class="tab-page" id="step7"><h4 class="tab">7. '.$this->l('Attachments').' ('.$countAttachments.')</h4></div>'
+			.$this->displayQuantities($obj);
 		echo '<script type="text/javascript">
 					var toload = new Array();
 					toload[3] = true;
@@ -1939,21 +1940,21 @@ class AdminProducts extends AdminTab
 					echo '<option value="'.(int)($shop['id_shop']).'">'.Tools::htmlentitiesUTF8($shop['name']).'</option>';
 				echo '
 				</select>
-	            &gt;
+				&gt;
 				<select name="sp_id_currency" id="spm_currency_0" onchange="changeCurrencySpecificPrice(0);">
 					<option value="0">'.$this->l('All currencies').'</option>';
 				foreach ($currencies as $currency)
 					echo '<option value="'.(int)($currency['id_currency']).'">'.Tools::htmlentitiesUTF8($currency['name']).'</option>';
 				echo '
 				</select>
-	            &gt;
+				&gt;
 				<select name="sp_id_country">
 					<option value="0">'.$this->l('All countries').'</option>';
 				foreach ($countries as $country)
 					echo '<option value="'.(int)($country['id_country']).'">'.Tools::htmlentitiesUTF8($country['name']).'</option>';
 				echo '
 				</select>
-	            &gt;
+				&gt;
 				<select name="sp_id_group">
 					<option value="0">'.$this->l('All groups').'</option>';
 				foreach ($groups as $group)
@@ -1989,7 +1990,7 @@ class AdminProducts extends AdminTab
 
 			<label>'.$this->l('Apply a discount of:').'</label>
 			<div class="margin-form">
-	    		<input type="text" name="sp_reduction" value="0.00" size="11" />
+				<input type="text" name="sp_reduction" value="0.00" size="11" />
 				<select name="sp_reduction_type">
 					<option selected="selected">---</option>
 					<option value="amount">'.$this->l('Amount').'</option>
@@ -2250,20 +2251,11 @@ class AdminProducts extends AdminTab
 		{
 			$('#virtual_good').show('slow');
 			$('#virtual_good_more').show('slow');
-			getE('out_of_stock_1').checked = 'checked';
-			getE('out_of_stock_2').disabled = 'disabled';
-			getE('out_of_stock_3').disabled = 'disabled';
-			getE('label_out_of_stock_2').setAttribute('for', '');
-			getE('label_out_of_stock_3').setAttribute('for', '');
 		}
 		else
 		{
 			$('#virtual_good').hide('slow');
 			$('#virtual_good_more').hide('slow');
-			getE('out_of_stock_2').disabled = false;
-			getE('out_of_stock_3').disabled = false;
-			getE('label_out_of_stock_2').setAttribute('for', 'out_of_stock_2');
-			getE('label_out_of_stock_3').setAttribute('for', 'out_of_stock_3');
 		}
 	}
 
@@ -2449,7 +2441,7 @@ class AdminProducts extends AdminTab
 							<span class="hint" name="help_box">'.$this->l('Special characters allowed:').' .-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
 					</tr>
-                	<tr>
+					<tr>
 						<td class="col-left">'.$this->l('Supplier Reference:').'</td>
 						<td style="padding-bottom:5px;">
 							<input size="55" type="text" name="supplier_reference" value="'.htmlentities($this->getFieldValue($obj, 'supplier_reference'), ENT_COMPAT, 'UTF-8').'" style="width: 130px; margin-right: 44px;" />
@@ -2604,20 +2596,11 @@ class AdminProducts extends AdminTab
 		{
 			$('#virtual_good').show('slow');
 			$('#virtual_good_more').show('slow');
-			getE('out_of_stock_1').checked = 'checked';
-			getE('out_of_stock_2').disabled = 'disabled';
-			getE('out_of_stock_3').disabled = 'disabled';
-			getE('label_out_of_stock_2').setAttribute('for', '');
-			getE('label_out_of_stock_3').setAttribute('for', '');
 		}
 		else
 		{
 			$('#virtual_good').hide('slow');
 			$('#virtual_good_more').hide('slow');
-			getE('out_of_stock_2').disabled = false;
-			getE('out_of_stock_3').disabled = false;
-			getE('label_out_of_stock_2').setAttribute('for', 'out_of_stock_2');
-			getE('label_out_of_stock_3').setAttribute('for', 'out_of_stock_3');
 		}
 	}
 
@@ -3109,14 +3092,6 @@ class AdminProducts extends AdminTab
 					</script>
 
 					<tr>
-						<td class="col-left">'.$this->l('When out of stock:').'</td>
-						<td style="padding-bottom:5px;">
-							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0" '.((int)($this->getFieldValue($obj, 'out_of_stock')) == 0 ? 'checked="checked"' : '').'/> <label for="out_of_stock_1" class="t" id="label_out_of_stock_1">'.$this->l('Deny orders').'</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" '.($this->getFieldValue($obj, 'out_of_stock') == 1 ? 'checked="checked"' : '').'/> <label for="out_of_stock_2" class="t" id="label_out_of_stock_2">'.$this->l('Allow orders').'</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$this->context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
-						</td>
-					</tr>
-					<tr>
 						<td colspan="2" style="padding-bottom:5px;">
 							<hr style="width:100%;" />
 						</td>
@@ -3486,118 +3461,118 @@ class AdminProducts extends AdminTab
 					<tr>
 						<td class="col-left">'.$this->l('File:').'</td>
 						<td style="padding-bottom:5px;">
-						<div id="file-uploader">
-							<noscript>
-								<p>'.$this->l('Please enable JavaScript to use file uploader:').'.</p>
-							</noscript>
-						</div>
-						<div id="progressBarImage" class="progressBarImage"></div>
-						<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
-						<ul	id="listImage"></ul>
-						<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
-						<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
-						<script src="'._PS_JS_DIR_.'fileuploader.js" type="text/javascript"></script>
-						<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.core.min.js" type="text/javascript"></script>
-						<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.widget.min.js" type="text/javascript"></script>
-						<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
-						<script type="text/javascript" src="'._PS_JS_DIR_.'admin.js"></script>
-						<script type="text/javascript">
-							function deleteImg(id)
-							{
-								var conf = confirm(\''.addslashes($this->l('Are you sure?', __CLASS__, true, false)).'\');
-								if (conf)
-									$.post("ajax-tab.php",
-									{
-										deleteImage: 1,
-										id_image:id,
-										id_product : "'.(int)Tools::getValue('id_product').'",
-										id_category : "'.(int)$this->_category->id.'",
-										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
-										tab : "AdminCatalog",
-										ajaxMode : 1,
-										updateproduct : 1},
-										function (data) {
-											if (data)
+							<div id="file-uploader">
+								<noscript>
+									<p>'.$this->l('Please enable JavaScript to use file uploader:').'.</p>
+								</noscript>
+							</div>
+							<div id="progressBarImage" class="progressBarImage"></div>
+							<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
+							<ul id="listImage"></ul>
+							<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
+							<script type="text/javascript">var upbutton = "'.$this->l('Upload a file').'"; </script>
+							<script src="'._PS_JS_DIR_.'fileuploader.js" type="text/javascript"></script>
+							<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.core.min.js" type="text/javascript"></script>
+							<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.widget.min.js" type="text/javascript"></script>
+							<script src="'._PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
+							<script type="text/javascript" src="'._PS_JS_DIR_.'admin.js"></script>
+							<script type="text/javascript">
+								function deleteImg(id)
+								{
+									var conf = confirm(\''.addslashes($this->l('Are you sure?', __CLASS__, true, false)).'\');
+									if (conf)
+										$.post("ajax-tab.php",
+										{
+											deleteImage: 1,
+											id_image:id,
+											id_product : "'.(int)Tools::getValue('id_product').'",
+											id_category : "'.(int)$this->_category->id.'",
+											token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
+											tab : "AdminCatalog",
+											ajaxMode : 1,
+											updateproduct : 1},
+											function (data) {
+												if (data)
+												{
+													cover = 0;
+													if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
+														cover = 1;
+													$("#tr_" + id).remove();
+	
+													if (cover)
+														$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
+	
+													$("#countImage").html(parseInt($("#countImage").html()) - 1);
+	
+													refreshImagePositions($("#imageTable"));
+												}
+										});
+								}
+								function delQueue(id)
+								{
+									$("#img" + id).fadeOut("slow");
+									$("#img" + id).remove();
+								}
+								$(document).ready(function () {
+									var filecheck = 1;
+									var uploader = new qq.FileUploader({
+										element: document.getElementById("file-uploader"),
+										action: \'ajax-tab.php\',
+										debug: false,
+										onComplete: function(id, fileName, responseJSON){
+											var percent = ((filecheck * 100) / nbfile);
+											$("#progressBarImage").progressbar({value: percent });
+											if (percent != 100)
 											{
-												cover = 0;
-												if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
-													cover = 1;
-												$("#tr_" + id).remove();
-
-												if (cover)
-													$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
-
-												$("#countImage").html(parseInt($("#countImage").html()) - 1);
-
+												$("#imageUpload").html(parseInt(filecheck));
+												$("#imageTotal").html(" / " + parseInt(nbfile) + " '.$this->l('Images').'");
+												$("#progressBarImage").show();
+												$("#showCounter").show();
+											}
+											else
+											{
+												$("#progressBarImage").progressbar({value: 0 });
+												$("#progressBarImage").hide();
+												$("#showCounter").hide();
+												nbfile = 0;
+												filecheck = 0;
+											}
+											if (responseJSON.success)
+											{
+												$("#imageTable tr:last").after(responseJSON.success);
+												$("#countImage").html(parseInt($("#countImage").html()) + 1);
+												$("#img" + id).remove();
+											}
+											else
+											{
+												$("#img" + id).addClass("red");
+												$("#img" + id + " .errorImg").html(responseJSON.error);
+												$("#img" + id + " .errorImg").show();
+	
+											}
+											if (percent >= 100)
+											{
 												refreshImagePositions($("#imageTable"));
 											}
-									});
-							}
-							function delQueue(id)
-							{
-								$("#img" + id).fadeOut("slow");
-								$("#img" + id).remove();
-							}
-							$(document).ready(function () {
-								var filecheck = 1;
-								var uploader = new qq.FileUploader({
-									element: document.getElementById("file-uploader"),
-									action: \'ajax-tab.php\',
-									debug: false,
-									onComplete: function(id, fileName, responseJSON){
-										var percent = ((filecheck * 100) / nbfile);
-										$("#progressBarImage").progressbar({value: percent });
-										if (percent != 100)
-										{
-											$("#imageUpload").html(parseInt(filecheck));
-											$("#imageTotal").html(" / " + parseInt(nbfile) + " '.$this->l('Images').'");
-											$("#progressBarImage").show();
-											$("#showCounter").show();
-										}
-										else
-										{
-											$("#progressBarImage").progressbar({value: 0 });
-											$("#progressBarImage").hide();
-											$("#showCounter").hide();
-											nbfile = 0;
-											filecheck = 0;
-										}
-										if (responseJSON.success)
-										{
-											$("#imageTable tr:last").after(responseJSON.success);
-											$("#countImage").html(parseInt($("#countImage").html()) + 1);
-											$("#img" + id).remove();
-										}
-										else
-										{
-											$("#img" + id).addClass("red");
-											$("#img" + id + " .errorImg").html(responseJSON.error);
-											$("#img" + id + " .errorImg").show();
-
-										}
-										if (percent >= 100)
-										{
-											refreshImagePositions($("#imageTable"));
-										}
-										filecheck++;
-									},
-									onSubmit: function(id, filename){
-										$("#imageTable").show();
-										$("#listImage").append("<li id=\'img"+id+"\'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px;\" href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
-									},
-									params: {
-										id_product : "'.(int)Tools::getValue('id_product').'",
-										id_category : "'.(int)$this->_category->id.'",
-										token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
-										tab : "AdminCatalog",
-										updateproduct : 1,
-										addImage : 1,
-										ajaxMode : 1,
+											filecheck++;
 										},
-
+										onSubmit: function(id, filename){
+											$("#imageTable").show();
+											$("#listImage").append("<li id=\'img"+id+"\'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px;\" href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
+										},
+										params: {
+											id_product : "'.(int)Tools::getValue('id_product').'",
+											id_category : "'.(int)$this->_category->id.'",
+											token : "'.Tools::getAdminTokenLite('AdminCatalog').'",
+											tab : "AdminCatalog",
+											updateproduct : 1,
+											addImage : 1,
+											ajaxMode : 1,
+											},
+	
+									});
 								});
-							});
-        			  </script>
+							</script>
 							<p class="float" style="clear: both;">
 								'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('Filesize:').' '.($this->maxImageSize / 1000).''.$this->l('Kb max.').'
 							</p>
@@ -3684,6 +3659,284 @@ class AdminProducts extends AdminTab
 			}
 			echo '
 			</script>';
+	}
+	
+	
+	function displayQuantities($obj)
+	{
+		
+		// Get all id_product_atribute
+		$attributes = $obj->getAttributeCombinaisons($this->context->language->id);
+		if (empty($attributes))
+			$attributes[] = array(
+				'id_product_attribute' => 0,
+				'attribute_name' => ''
+			);
+		
+		// Get physical quantities & available quantities
+		$totalQuantity = 0;
+		$physicalQuantity = array();
+		$availableQuantity = array();
+		$productDesignation = array();
+		foreach ($attributes as $attribute)
+		{
+			$physicalQuantity[$attribute['id_product_attribute']] = (int)rand(0, 100);//StockManagerFactory::getManager()->getProductPhysicalQuantities((int)$obj->id, $attribute['id_product_attribute']);
+			$totalQuantity += $physicalQuantity[$attribute['id_product_attribute']];
+			
+			// @TODO
+			$availableQuantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct((int)$obj->id, $attribute['id_product_attribute']);
+			
+			// Get all product designation
+			$productDesignation[$attribute['id_product_attribute']] = $obj->name[$this->context->language->id].' '.$attribute['attribute_name'];
+		}
+		
+		$return = '
+		<div class="tab-page" id="step8">
+			<h4 class="tab">8. '.$this->l('Quantities').'</h4>
+			<table cellpadding="5">
+				<tbody>
+					<tr>
+						<td colspan="2">
+							<b>'.$this->l('Available stock in warehouses').'</b>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<hr style="width:100%;" />
+			<p>'.sprintf($this->l('There is %s quantities available in stock for this product'), '<b>'.$totalQuantity.'</b>').'</p>
+			<table cellpadding="5" style="width:100%">
+				<tbody>
+					<tr>
+						<td valign="top" style="text-align:center;vertical-align:top;">
+							<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
+								<thead>
+									<tr>
+										<th>'.$this->l('Quantity').'</th>
+										<th>'.$this->l('Designation').'</th>
+									</tr>
+								</thead>
+								<tbody>';
+		foreach ($attributes as $attribute)
+			$return .= '
+									<tr>
+										<td>'.$physicalQuantity[$attribute['id_product_attribute']].'</td>
+										<td>'.$productDesignation[$attribute['id_product_attribute']].'</td>
+									</tr>';
+		$return .= '
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<table cellpadding="5">
+				<tbody>
+					<tr>
+						<td colspan="2">
+							<b>'.$this->l('Available quantities for sale').'</b>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<hr style="width:100%;" />
+			<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
+			<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
+			<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
+			';
+		$return .= '
+			<table cellpadding="5" style="width:100%">
+				<tbody>
+					<tr>
+						<td valign="top" style="vertical-align:top;">
+							<input '.(($obj->depends_on_stock) ? 'checked="checked"' : '' ).' type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
+							<label style="float:none;font-weight:normal" for="depends_on_stock_1">'.$this->l('Available quantities for current product and its combinations are based on stock in the warehouses').'</label>
+							<br /><br />
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="vertical-align:top;">
+							<input '.((!$obj->depends_on_stock) ? 'checked="checked"' : '' ).' type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
+							<label style="float:none;font-weight:normal" for="depends_on_stock_0">'.$this->l('I want to specify available quantities manually, and manage my stock independently').'</label>
+							<br /><br />
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" style="text-align:center;vertical-align:top;">
+							<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
+								<thead>
+									<tr>
+										<th style="width:200px;">'.$this->l('Quantity').'</th>
+										<th>'.$this->l('Designation').'</th>
+									</tr>
+								</thead>
+								<tbody>';
+		foreach ($attributes as $attribute)
+			$return .= '
+									<tr>
+										<td  class="available_quantity" id="qty_'.$attribute['id_product_attribute'].'">
+											<span>'.$availableQuantity[$attribute['id_product_attribute']].'</span>
+											<input type="text" value="'.$availableQuantity[$attribute['id_product_attribute']].'"/>
+										</td>
+										<td>'.$productDesignation[$attribute['id_product_attribute']].'</td>
+									</tr>';
+		$return .= '
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr id="when_out_of_stock">
+						<td>
+							<table style="margin-top: 15px;">
+								<tbody>
+									<tr>
+										<td class="col-left">'.$this->l('When out of stock:').'</td>
+										<td style="padding-bottom:5px;">
+											<input '.(($obj->out_of_stock == 0) ? 'checked="checked"' : '' ).' id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
+											<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">'.$this->l('Deny orders').'</label>
+											<br>
+											<input '.(($obj->out_of_stock == 1) ? 'checked="checked"' : '' ).' id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
+											<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">'.$this->l('Allow orders').'</label>
+											<br>
+											<input '.(($obj->out_of_stock == 2) ? 'checked="checked"' : '' ).' id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
+											<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
+												Default:
+												<i>Deny orders</i>
+												'.sprintf($this->l('(as set in %s)'),
+													'<a onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?').'\');"
+													href="index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'">
+														'.$this->l('Preferences').'</a>').'
+											</label>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>';
+		$return .= '
+		</div>
+		<script type="text/javascript">
+			var showAjaxError = function(msg)
+			{
+				$(\'#available_quantity_ajax_error_msg\').html(msg);
+				$(\'#available_quantity_ajax_error_msg\').show();
+				$(\'#available_quantity_ajax_msg\').hide();
+				$(\'#available_quantity_ajax_success_msg\').hide();
+			};
+			
+			var showAjaxSuccess = function(msg)
+			{
+				$(\'#available_quantity_ajax_success_msg\').html(msg);
+				$(\'#available_quantity_ajax_error_msg\').hide();
+				$(\'#available_quantity_ajax_msg\').hide();
+				$(\'#available_quantity_ajax_success_msg\').show();
+			};
+			
+			var showAjaxMsg = function(msg)
+			{
+				$(\'#available_quantity_ajax_msg\').html(msg);
+				$(\'#available_quantity_ajax_error_msg\').hide();
+				$(\'#available_quantity_ajax_msg\').show();
+				$(\'#available_quantity_ajax_success_msg\').hide();
+			};
+			
+			var ajaxCall = function(data)
+			{
+				data.ajaxProductQuantity = 1;
+				data.id_product = '.(int)$obj->id.';
+				showAjaxMsg(\''.$this->l('Saving data...').'\');
+				$.ajax({
+					type: "POST",
+					url: "ajax.php",
+					data: data,
+					dataType: \'json\',
+					async : true,
+					success: function(msg)
+					{
+						if (msg.error)
+						{
+							showAjaxError(\''.$this->l('Error durring saving data').'\');
+							return;
+						}
+						showAjaxSuccess(\''.$this->l('Data saved').'\');
+					},
+					error: function(msg)
+					{
+						showAjaxError(\''.$this->l('Error durring saving data').'\');
+					}
+				});
+			};
+			var refreshQtyAvaibilityForm = function()
+			{
+				if ($(\'#depends_on_stock_0\').attr(\'checked\'))
+				{
+					$(\'.available_quantity\').find(\'input\').show();
+					$(\'.available_quantity\').find(\'span\').hide();
+				}
+				else
+				{
+					$(\'.available_quantity\').find(\'input\').hide();
+					$(\'.available_quantity\').find(\'span\').show();
+				}
+			};
+			$(\'.depends_on_stock\').click(function(e)
+			{
+				refreshQtyAvaibilityForm();
+				ajaxCall({action: \'depends_on_stock\', value: $(this).attr(\'value\')});
+			});
+			$(\'.available_quantity\').find(\'input\').change(function(e)
+			{
+				ajaxCall({action: \'set_qty\', id_product_attribute: $(this).parent().attr(\'id\').split(\'_\')[1], value: $(this).val()});
+			});
+			$(\'.out_of_stock\').click(function(e)
+			{
+				ajaxCall({action: \'out_of_stock\', value: $(this).val()});
+			});
+			refreshQtyAvaibilityForm();
+		</script>';
+		
+		return $return;
+	}
+	
+	public function ajaxProductQuantity($obj)
+	{
+		if(!Tools::getValue('action'))
+			return Tools::jsonEncode(array('error' => 'Undefined action'));
+		
+		switch(Tools::getValue('action'))
+		{
+			case 'depends_on_stock':elog((int)Tools::getValue('value'));
+				if (Tools::getValue('value') === false)
+					return Tools::jsonEncode(array('error' => 'Undefined value'));
+				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
+					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+				
+				StockAvailable::setProductDependsOnStock((int)Tools::getValue('value'), $obj->id);
+				break;
+				
+			case 'out_of_stock':
+				if (Tools::getValue('value') === false)
+					return Tools::jsonEncode(array('error' => 'Undefined value'));
+				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
+					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+				
+				StockAvailable::setProductOutOfStock((int)Tools::getValue('value'), $obj->id);
+				break;
+				
+			case 'set_qty':
+				if (Tools::getValue('value') === false)
+					return Tools::jsonEncode(array('error' => 'Undefined value'));
+				if (Tools::getValue('id_product_attribute') === false)
+					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
+				$stock_available = new StockAvailable(StockAvailable::getIdStockAvailable($obj->id, (int)Tools::getValue('id_product_attribute')));
+				$stock_available->quantity = (int)Tools::getValue('value');
+				$stock_available->save();
+				break;
+		}
+		
+		return Tools::jsonEncode(array('error' => false));
 	}
 
 	public function getLineTableImage($image, $imagesTotal, $token, $shops)

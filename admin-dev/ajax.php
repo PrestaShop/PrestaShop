@@ -83,6 +83,23 @@ if (Tools::isSubmit('ajaxProductManufacturers'))
 		die('['.implode(',', $jsonArray).']');
 	}
 }
+
+if (Tools::isSubmit('ajaxProductQuantity'))
+{
+	require_once(dirname(__FILE__).'/tabs/AdminCatalog.php');
+	$catalog = new AdminCatalog();
+	$admin = new AdminProducts();
+
+	$languages = Language::getLanguages(false);
+	$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+	$product = new Product((int)(Tools::getValue('id_product')));
+	if (!Validate::isLoadedObject($product))
+		die (Tools::displayError('Product cannot be loaded'));
+
+	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
+	echo $admin->ajaxProductQuantity($product);
+}
+
 if (Tools::isSubmit('ajaxReferrers'))
 {
 	require('tabs/AdminReferrers.php');

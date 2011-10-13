@@ -325,7 +325,7 @@ class MailAlerts extends Module
 	public function hookUpdateProductAttribute($params)
 	{
 		$sql = 'SELECT id_product, quantity
-				FROM '._DB_PREFIX_.'stock
+				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product_attribute = '.(int)$params['id_product_attribute']
 					.Context::getContext()->shop->sqlRestriction(Shop::SHARE_STOCK);
 		$result = Db::getInstance()->getRow($sql);
