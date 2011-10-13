@@ -51,9 +51,6 @@
 			}
 			{/literal}
 		{rdelim});
-		{if isset($script)}
-			{$script}
-		{/if}
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}

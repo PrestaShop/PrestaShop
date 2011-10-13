@@ -58,28 +58,29 @@ class HelperFormCore extends Helper
 
 	public function displayForm()
 	{
-		$allowEmployeeFormLang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-		if ($allowEmployeeFormLang && !$this->context->cookie->employee_form_lang)
-			$this->context->cookie->employee_form_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
-		$useLangFromCookie = false;
+		$cookie = $this->context->cookie;
+		$allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		if ($allow_employee_form_lang && !$cookie->employee_form_lang)
+			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+		$use_lang_from_cookie = false;
 		$languages = Language::getLanguages(false);
-		if ($allowEmployeeFormLang)
+		if ($allow_employee_form_lang)
 			foreach ($languages as $lang)
-				if ($this->context->cookie->employee_form_lang == $lang['id_lang'])
-					$useLangFromCookie = true;
-		if (!$useLangFromCookie)
-			$defaultFormLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+				if ($cookie->employee_form_lang == $lang['id_lang'])
+					$use_lang_from_cookie = true;
+		if (!$use_lang_from_cookie)
+			$default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
 		else
-			$defaultFormLanguage = (int)($this->context->cookie->employee_form_lang);
+			$default_form_language = (int)$cookie->employee_form_lang;
 
 		$this->context->smarty->assign(array(
 			'firstCall' => $this->first_call,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 			'table' => $this->table,
-			'defaultFormLanguage' => $defaultFormLanguage,
+			'defaultFormLanguage' => $default_form_language,
 			'languages' => $languages,
-			'allowEmployeeFormLang' => $allowEmployeeFormLang,
+			'allowEmployeeFormLang' => $allow_employee_form_lang,
 			'form_id' => $this->id,
 			'back' => Tools::getValue('back'),
 			'fields' => $this->fields_form,
@@ -95,9 +96,10 @@ class HelperFormCore extends Helper
 
 	public function getFieldsRequired()
 	{
-		foreach ($this->fields_form['input'] as $input)
-			if (array_key_exists('required', $input) && $input['required'])
-				return true;
+		if (isset($this->fields_form['input']))
+			foreach ($this->fields_form['input'] as $input)
+				if (array_key_exists('required', $input) && $input['required'])
+					return true;
 
 		return false;
 	}

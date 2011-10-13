@@ -234,9 +234,7 @@ class AdminShopUrlControllerCore extends AdminController
 			foreach (Shop::getShops(false, null, true) as $id)
 				$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
 
-			$smarty = $this->context->smarty;
-			$smarty->assign('jsShopUrl', Tools::jsonEncode($list_shop_with_url));
-			$smarty->assign('script', $smarty->fetch($smarty->template_dir.'/'.$this->tpl_folder.'script.tpl'));
+			$this->context->smarty->assign('jsShopUrl', Tools::jsonEncode($list_shop_with_url));
 
 			$this->fields_value = array(
 				'domain' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain,
