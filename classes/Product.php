@@ -3306,6 +3306,8 @@ class ProductCore extends ObjectModel
 	/**
 	 * Add a stock movement for current product
 	 *
+	 * @deprecated since 1.5.0
+	 *
 	 * @param int $quantity
 	 * @param int $id_reason
 	 * @param int $id_product_attribute
@@ -3346,6 +3348,9 @@ class ProductCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * @deprecated since 1.5.0
+	 */
 	public function getStockMvts($id_lang)
 	{
 		return Db::getInstance()->executeS('
