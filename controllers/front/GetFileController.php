@@ -267,7 +267,6 @@ class GetFileControllerCore extends FrontController
 				$mimeType = 'application/octet-stream';
 		}
 
-
 		/* Set headers for download */
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Type: '.$mimeType);
