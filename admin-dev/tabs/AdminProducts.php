@@ -192,8 +192,8 @@ class AdminProducts extends AdminTab
 				$this->deleteVirtualProduct();
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}	
-		else 
+		}
+		else
 		/* Delete a product in the download folder */
 		if (Tools::getValue('deleteVirtualProductAttribute'))
 		{
@@ -479,9 +479,9 @@ class AdminProducts extends AdminTab
 		{
 			if (!Combination::isFeatureActive())
 				return;
-				
+
 			$is_virtual = (int)Tools::getValue('is_virtual');
-			
+
 			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 			{
 				if (!isset($_POST['attribute_price']) || $_POST['attribute_price'] == null)
@@ -577,13 +577,13 @@ class AdminProducts extends AdminTab
 					if (!sizeof($this->_errors))
 					{
 						if (!$product->cache_default_attribute)
-							Product::updateDefaultAttribute($product->id);						
-						
+							Product::updateDefaultAttribute($product->id);
+
 						if (!empty($is_virtual))
 							Product::updateIsVirtual($product->id);
-							
+
 						Tools::redirectAdmin(self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token));
-					}	
+					}
 				}
 			}
 		}
@@ -596,7 +596,7 @@ class AdminProducts extends AdminTab
 				if (($id_product = (int)(Tools::getValue('id_product'))) && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 				{
 					$product->deleteAttributeCombinaison(Tools::getValue('id_product_attribute'));
-					
+
 					$id_product_download = ProductDownload::getIdFromIdAttribute((int) $id_product, (int) Tools::getValue('id_product_attribute'));
 					if ($id_product_download)
 					{
@@ -934,7 +934,7 @@ class AdminProducts extends AdminTab
 			die(true);
 		}
 	}
-	
+
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group))
@@ -1079,7 +1079,7 @@ class AdminProducts extends AdminTab
 			$saveShort = $_POST['description_short'];
 			$_POST['description_short'] = strip_tags($_POST['description_short']);
 		}
-		
+
 		/* Check description short size without html */
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
 		if ($limit <= 0) $limit = 400;
@@ -1273,7 +1273,7 @@ class AdminProducts extends AdminTab
 	public function updateDownloadProduct($product, $edit = 0, $id_product_attribute = null)
 	{
 		$is_virtual_file = (int) Tools::getValue('is_virtual_file');
-	
+
 		/* add or update a virtual product */
 		if (Tools::getValue('is_virtual_good') == 'true')
 		{
@@ -1310,10 +1310,10 @@ class AdminProducts extends AdminTab
 					{
 						$this->_errors[] = $this->l('the field').' <b>'.$this->l('number of days').'</b> '.$this->l('is required');
 						return false;
-					}			
+					}
 				}
 			}
-			
+
 			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file))
 			&& Tools::getValue('virtual_product_expiration_date_attribute') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date_attribute')))
 			{
@@ -1328,50 +1328,50 @@ class AdminProducts extends AdminTab
 					{
 						$this->_errors[] = $this->l('the field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
 						return false;
-					}			
+					}
 				}
 			}
-			
+
 			// The oos behavior MUST be "Deny orders" for virtual products
 			if (Tools::getValue('out_of_stock') != 0)
 			{
 				$this->_errors[] = $this->l('The "when out of stock" behavior selection must be "deny order" for virtual products');
 				return false;
 			}
-			
-			// Trick's 
+
+			// Trick's
 			if ($edit == 1)
 			{
 				$id_product_download_attibute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
 				$id_product_download = ($id_product_download_attibute) ? (int) $id_product_download_attibute : (int) Tools::getValue('virtual_product_id');
 			}
-			
+
 			$is_shareable = Tools::getValue('virtual_product_is_shareable');
 			$virtual_product_name = Tools::getValue('virtual_product_name');
 			$virtual_product_filename = Tools::getValue('virtual_product_filename');
 			$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
 			$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
 			$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date');
-			
+
 			$is_shareable_attribute = Tools::getValue('virtual_product_is_shareable_attribute');
 			$virtual_product_name_attribute = Tools::getValue('virtual_product_name_attribute');
 			$virtual_product_filename_attribute = Tools::getValue('virtual_product_filename_attribute');
 			$virtual_product_nb_days_attribute = Tools::getValue('virtual_product_nb_days_attribute');
 			$virtual_product_nb_downloable_attribute = Tools::getValue('virtual_product_nb_downloable_attribute');
 			$virtual_product_expiration_date_attribute = Tools::getValue('virtual_product_expiration_date_attribute');
-			
+
 			if (!empty($is_shareable_attribute))
 				$is_shareable = $is_shareable_attribute;
-			
+
 			if (!empty($virtual_product_name_attribute))
 				$virtual_product_name = $virtual_product_name_attribute;
-			
+
 			if (!empty($virtual_product_nb_days_attribute))
 				$virtual_product_nb_days = $virtual_product_nb_days_attribute;
-		
+
 			if (!empty($virtual_product_nb_downloable_attribute))
-				$virtual_product_nb_downloable = $virtual_product_nb_downloable_attribute;		
-		
+				$virtual_product_nb_downloable = $virtual_product_nb_downloable_attribute;
+
 			if (!empty($virtual_product_expiration_date_attribute))
 				$virtual_product_expiration_date = $virtual_product_expiration_date_attribute;
 
@@ -1381,7 +1381,7 @@ class AdminProducts extends AdminTab
 				$filename = $virtual_product_filename;
 			else
 				$filename = ProductDownload::getNewFilename();
-			
+
 			$download = new ProductDownload($id_product_download);
 			$download->id_product = (int) $product->id;
 			$download->id_product_attribute = (int) $id_product_attribute;
@@ -1393,7 +1393,7 @@ class AdminProducts extends AdminTab
 			$download->nb_downloadable = (int) $virtual_product_nb_downloable;
 			$download->active = 1;
 			$download->is_shareable = (int) $is_shareable;
-	
+
 			if ($download->save())
 				return true;
 		}
@@ -1407,7 +1407,7 @@ class AdminProducts extends AdminTab
 			}
 			else
 				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
-			
+
 			if (!empty($id_product_download))
 			{
 				$productDownload = new ProductDownload($id_product_download);
@@ -1418,7 +1418,7 @@ class AdminProducts extends AdminTab
 		}
 		return false;
 	}
-	
+
 	public function deleteDownloadProduct($id_product_attribute = NULL)
 	{
 		if (!empty($id_product_attribute))
@@ -1430,7 +1430,7 @@ class AdminProducts extends AdminTab
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Update product accessories
 	 *
@@ -1493,7 +1493,7 @@ class AdminProducts extends AdminTab
 				$id_category = 1;
 			echo '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).'</h3>';
 			////////////////////////
-			// @todo lot of ergonomy works around here 
+			// @todo lot of ergonomy works around here
 			echo '<p>'.$this->l('Go to category');
 			$select_child = ' <select id="go_to_categ"><option value="0">Jump to ...</option>';
 			// @todo : move blockcategories select queries in class Category
@@ -1506,7 +1506,7 @@ class AdminProducts extends AdminTab
 				$categ  = new Category($categ['id_category'],$this->context->language->id);
 				$select_child .= '<option value="'.$categ->id.'" '.($this->_category->id_category == $categ->id ? 'selected="selected" class="selected level-depth-'.$categ->level_depth.'"':'class="level-depth-'.$categ->level_depth.'"') .'>' . str_repeat('&nbsp;-&nbsp;',$categ->level_depth). $categ->name .' ('.$categ->id.')</option>';
 			}
-			
+
 			$select_child .= '</select>';
 			echo $select_child;
 			echo '</p>
@@ -2220,7 +2220,7 @@ class AdminProducts extends AdminTab
 
 		$hidden = $display_filename = $check = '';
 	?>
-	
+
     <script type="text/javascript">
     // <![CDATA[
     	ThickboxI18nImage = '<?php echo $this->l('Image') ?>';
@@ -2246,7 +2246,7 @@ class AdminProducts extends AdminTab
 	{
 		$("#is_virtual_file_product").hide();
 		$("#virtual_good_attributes").hide();
-			
+
 		if (elt.checked)
 		{
 			$('#virtual_good').show('slow');
@@ -2289,7 +2289,7 @@ class AdminProducts extends AdminTab
 				}
 			}
 		);
-	}	
+	}
 
 	function uploadFile2()
 	{
@@ -2318,8 +2318,8 @@ class AdminProducts extends AdminTab
 						$('#upload-confirmation2').html(
 							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'"><?php echo $this->l('The file') ?>&nbsp;"' + fileName + '"&nbsp;<?php echo $this->l('has successfully been uploaded') ?></a>' +
 							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
-						
-						link = $("#delete_downloadable_product_attribute").attr('href');		
+
+						link = $("#delete_downloadable_product_attribute").attr('href');
 						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
 					}
 				}
@@ -2330,16 +2330,16 @@ class AdminProducts extends AdminTab
 	</script>
 	<?php
 
-	if(!$productDownload->id || !$productDownload->active) 
+	if(!$productDownload->id || !$productDownload->active)
 		$hidden = 'style="display:none;"';
-	
+
 	$cache_default_attribute = (int)$this->getFieldValue($obj, 'cache_default_attribute');
 	$is_virtual = (int)$this->getFieldValue($obj, 'is_virtual');
 
-	if($is_virtual && $productDownload->active) 
+	if($is_virtual && $productDownload->active)
 		$check = 'checked="checked"';
 
-	if($productDownload->id) 
+	if($productDownload->id)
 		$virtual = 1;
 	else
 		$virtual = 0;
@@ -2664,7 +2664,7 @@ class AdminProducts extends AdminTab
 			<br/>'.$this->l('Does this product has an associated file ?').'<br/>';
 
 			$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
-			
+
 			if ($productDownload->id && !empty($cache_default_attribute) || !empty($productDownload->display_filename))
 			{
 				$check_yes = 'checked="checked"';
@@ -2675,10 +2675,10 @@ class AdminProducts extends AdminTab
 				$check_yes = '';
 				$check_no = 'checked="checked"';
 			}
-			
+
 			echo '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" '.$check_yes.'/>'. $this->l('Yes').'
-			<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" '.$check_no.'/>'.$this->l('No').'<br /><br />'; 
-			
+			<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" '.$check_no.'/>'.$this->l('No').'<br /><br />';
+
 			if (!file_exists($exists_file) && !empty($productDownload->display_filename) && empty($cache_default_attribute))
 			{
 				$msg = sprintf(Tools::displayError('This file "%s" is missing'), $productDownload->display_filename);
@@ -2686,24 +2686,24 @@ class AdminProducts extends AdminTab
 					<b>'.$msg.' :<br/>
 					'.realpath(_PS_DOWNLOAD_DIR_) .'/'. $productDownload->filename.'</b>
 				</p>';
-			}			
+			}
 
 			if (!ProductDownload::checkWritableDir())
-			{	
+			{
 				echo '<p class="alert">
 					'.$this->l('Your download repository is not writable.').'<br/>
 					'.realpath(_PS_DOWNLOAD_DIR_).'
 				</p>';
 			}
-			
+
 			echo '<div id="is_virtual_file_product" style="display:none;">';
 			if (empty($cache_default_attribute))
 			{
-				if($productDownload->id) 
+				if($productDownload->id)
 					echo '<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="'.$productDownload->id.'" />';
-				
+
 					echo '<p class="block">';
-			
+
 					if (!$productDownload->checkFile())
 					{
 						echo '<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
@@ -2713,11 +2713,11 @@ class AdminProducts extends AdminTab
 							echo '<label id="virtual_product_file_label" for="virtual_product_file" class="t">'.$this->l('Upload a file').'</label>
 							<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="'.$this->maxFileSize.'" /></p>';
 						}
-						
+
 						echo '<div id="upload-confirmation">';
 							if ($up_filename = strval(Tools::getValue('virtual_product_filename')))
 								echo '<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="'.$up_filename.'" />';
-					
+
 						echo '</div>
 							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true'.'" class="red">'.$this->l('Delete this file').'</a>';
 					}
@@ -2727,24 +2727,24 @@ class AdminProducts extends AdminTab
 						'.$this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true).'
 						<a onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true'.'" class="red">'.$this->l('Delete this file').'</a>';
 					}
-					
+
 					$display_filename = ($productDownload->id > 0) ? $productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
 					echo '</p><p class="block">
 						<label for="virtual_product_name" class="t">'.$this->l('Filename').'</label>
 						<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="'.$display_filename.'" />
 						<span class="hint" name="help_box" style="display:none;">'.$this->l('The full filename with its extension (e.g., Book.pdf)').'</span>
 					</p>
-			
+
 					</div>';
-					
-					if (!$productDownload->id || !$productDownload->active) 
+
+					if (!$productDownload->id || !$productDownload->active)
 						$hidden = 'display:none;';
-						
+
 					$nb_downloadable = ($productDownload->id > 0) ? $productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
 					$date_expiration = ($productDownload->id > 0) ? ((!empty($productDownload->date_expiration) && $productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
 					$nb_days_accessible = ($productDownload->id > 0) ? $productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
 					$is_shareable = ($productDownload->id > 0 && $productDownload->is_shareable) ? 'checked="checked"' : '';
-						
+
 					echo '<div id="virtual_good_more" style="'.$hidden.'padding:5px;width:40%;float:left;margin-left:10px">
 							<p class="block">
 								<label for="virtual_product_nb_downloable" class="t">'.$this->l('Number of downloads').'</label>
@@ -2760,16 +2760,16 @@ class AdminProducts extends AdminTab
 								<label for="virtual_product_nb_days" class="t">'.$this->l('Number of days').'</label>
 								<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="'.$nb_days_accessible.'" class="" size="4" /><sup> *</sup>
 								<span class="hint" name="help_box" style="display:none">'.$this->l('How many days this file can be accessed by customers').' - <em>('.$this->l('set to zero for unlimited access').')</em></span>
-							</p>						
+							</p>
 							<p class="block">
 								<label for="virtual_product_is_shareable" class="t">'.$this->l('is shareable').'</label>
 								<input type="checkbox" id="virtual_product_is_shareable" name="virtual_product_is_shareable" value="1" '.$is_shareable.'/>
 								<span class="hint" name="help_box" style="display:none">'.$this->l('Specify if the file can be shared').'</span>
 							</p>
 					</div>
-				';				
+				';
 			}
-			else 
+			else
 			{
 				$error ='';
 				echo '<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You used combinations, for this reason you can\'t edit your file here, but in the Combinations tab').'</div>
@@ -2794,9 +2794,9 @@ class AdminProducts extends AdminTab
 			</div>
 		</td>
 	</tr>';
-	
+
 	includeDatepicker('virtual_product_expiration_date');
-	
+
 	echo '<tr>
 				<td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td>
 		 </tr>
@@ -2818,7 +2818,7 @@ class AdminProducts extends AdminTab
 					$("#virtual_good_attributes").hide();
 					$("#is_virtual_file_product").hide();
 				}
-				
+
 				$("input[name=is_virtual_file]").live("change", function() {
 					if($(this).val() == "1")
 					{
@@ -2830,8 +2830,8 @@ class AdminProducts extends AdminTab
 						$("#virtual_good_attributes").hide();
 						$("#is_virtual_file_product").hide();
 					}
-				});	
-				
+				});
+
 				$("input[name=is_virtual_good]").live("change", function() {
 					if($(this).attr("checked"))
 					{
@@ -2918,8 +2918,8 @@ class AdminProducts extends AdminTab
 								'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							</td>
 						</tr>';
-				} 
-				else 
+				}
+				else
 					echo '<input size="11" maxlength="14" id="priceTI" type="hidden" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />';
 
 				echo '
@@ -3032,7 +3032,7 @@ class AdminProducts extends AdminTab
 						</tr>
 					';
 				}
-							
+
 				echo '
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr>
@@ -3498,12 +3498,12 @@ class AdminProducts extends AdminTab
 													if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
 														cover = 1;
 													$("#tr_" + id).remove();
-	
+
 													if (cover)
 														$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
-	
+
 													$("#countImage").html(parseInt($("#countImage").html()) - 1);
-	
+
 													refreshImagePositions($("#imageTable"));
 												}
 										});
@@ -3548,7 +3548,7 @@ class AdminProducts extends AdminTab
 												$("#img" + id).addClass("red");
 												$("#img" + id + " .errorImg").html(responseJSON.error);
 												$("#img" + id + " .errorImg").show();
-	
+
 											}
 											if (percent >= 100)
 											{
@@ -3569,7 +3569,7 @@ class AdminProducts extends AdminTab
 											addImage : 1,
 											ajaxMode : 1,
 											},
-	
+
 									});
 								});
 							</script>
@@ -3660,11 +3660,11 @@ class AdminProducts extends AdminTab
 			echo '
 			</script>';
 	}
-	
-	
+
+
 	function displayQuantities($obj)
 	{
-		
+
 		// Get all id_product_atribute
 		$attributes = $obj->getAttributeCombinaisons($this->context->language->id);
 		if (empty($attributes))
@@ -3672,7 +3672,7 @@ class AdminProducts extends AdminTab
 				'id_product_attribute' => 0,
 				'attribute_name' => ''
 			);
-		
+
 		// Get physical quantities & available quantities
 		$totalQuantity = 0;
 		$physicalQuantity = array();
@@ -3680,16 +3680,16 @@ class AdminProducts extends AdminTab
 		$productDesignation = array();
 		foreach ($attributes as $attribute)
 		{
-			$physicalQuantity[$attribute['id_product_attribute']] = (int)rand(0, 100);//StockManagerFactory::getManager()->getProductPhysicalQuantities((int)$obj->id, $attribute['id_product_attribute']);
+			$physicalQuantity[$attribute['id_product_attribute']] = (int)StockManagerFactory::getManager()->getProductPhysicalQuantities((int)$obj->id, $attribute['id_product_attribute']);
 			$totalQuantity += $physicalQuantity[$attribute['id_product_attribute']];
-			
+
 			// @TODO
 			$availableQuantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct((int)$obj->id, $attribute['id_product_attribute']);
-			
+
 			// Get all product designation
 			$productDesignation[$attribute['id_product_attribute']] = $obj->name[$this->context->language->id].' '.$attribute['attribute_name'];
 		}
-		
+
 		$return = '
 		<div class="tab-page" id="step8">
 			<h4 class="tab">8. '.$this->l('Quantities').'</h4>
@@ -3825,7 +3825,7 @@ class AdminProducts extends AdminTab
 				$(\'#available_quantity_ajax_msg\').hide();
 				$(\'#available_quantity_ajax_success_msg\').hide();
 			};
-			
+
 			var showAjaxSuccess = function(msg)
 			{
 				$(\'#available_quantity_ajax_success_msg\').html(msg);
@@ -3833,7 +3833,7 @@ class AdminProducts extends AdminTab
 				$(\'#available_quantity_ajax_msg\').hide();
 				$(\'#available_quantity_ajax_success_msg\').show();
 			};
-			
+
 			var showAjaxMsg = function(msg)
 			{
 				$(\'#available_quantity_ajax_msg\').html(msg);
@@ -3841,7 +3841,7 @@ class AdminProducts extends AdminTab
 				$(\'#available_quantity_ajax_msg\').show();
 				$(\'#available_quantity_ajax_success_msg\').hide();
 			};
-			
+
 			var ajaxCall = function(data)
 			{
 				data.ajaxProductQuantity = 1;
@@ -3896,15 +3896,15 @@ class AdminProducts extends AdminTab
 			});
 			refreshQtyAvaibilityForm();
 		</script>';
-		
+
 		return $return;
 	}
-	
+
 	public function ajaxProductQuantity($obj)
 	{
 		if(!Tools::getValue('action'))
 			return Tools::jsonEncode(array('error' => 'Undefined action'));
-		
+
 		switch(Tools::getValue('action'))
 		{
 			case 'depends_on_stock':elog((int)Tools::getValue('value'));
@@ -3912,19 +3912,19 @@ class AdminProducts extends AdminTab
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
-				
+
 				StockAvailable::setProductDependsOnStock((int)Tools::getValue('value'), $obj->id);
 				break;
-				
+
 			case 'out_of_stock':
 				if (Tools::getValue('value') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
-				
+
 				StockAvailable::setProductOutOfStock((int)Tools::getValue('value'), $obj->id);
 				break;
-				
+
 			case 'set_qty':
 				if (Tools::getValue('value') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
@@ -3935,7 +3935,7 @@ class AdminProducts extends AdminTab
 				$stock_available->save();
 				break;
 		}
-		
+
 		return Tools::jsonEncode(array('error' => false));
 	}
 
@@ -4005,12 +4005,12 @@ class AdminProducts extends AdminTab
 		$currency = $this->context->currency;
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-							
+
 		$productDownload = new ProductDownload();
 		$id_product_download = (int) $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
 		if (!empty($id_product_download))
-			$productDownload = new ProductDownload($id_product_download);					
-			
+			$productDownload = new ProductDownload($id_product_download);
+
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 		{
@@ -4021,7 +4021,7 @@ class AdminProducts extends AdminTab
 						updateMvtStatus($(this).val());
 					});
 					updateMvtStatus($(this).val());
-					
+
 					if ( $("input[name=is_virtual_file]:checked").val() == 1)
 					{
 						$("#virtual_good_attributes").show();
@@ -4032,7 +4032,7 @@ class AdminProducts extends AdminTab
 						$("#virtual_good_attributes").hide();
 						$("#is_virtual_file_product").hide();
 					}
-					
+
 					$("input[name=is_virtual_file]").live("change", function() {
 						if($(this).val() == "1")
 						{
@@ -4045,7 +4045,7 @@ class AdminProducts extends AdminTab
 							$("#is_virtual_file_product").hide();
 						}
 					});
-				}); 
+				});
 			</script>
 			<table cellpadding="5">
 				<tr>
@@ -4084,7 +4084,7 @@ class AdminProducts extends AdminTab
 				  <select id="product_att_list" name="attribute_combinaison_list[]" multiple="multiple" size="4" style="width: 320px;"></select>
 				</td>
 		  </tr>
-		  
+
 		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Reference:').'</td>
@@ -4106,7 +4106,7 @@ class AdminProducts extends AdminTab
 		 <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 	  <table cellpadding="5" id="virtual_good_attributes" style="width:100%;display:none;">
 		<tr>
-			<td colspan="2">	
+			<td colspan="2">
 				<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
 					<p>'.$this->l('Your server\'s maximum upload file size is') . ':&nbsp;' . ini_get('upload_max_filesize').'</p>
 					<label id="virtual_product_file_attribute_label" for="virtual_product_file_attribute" class="t">'.$this->l('Upload a file').'</label>
@@ -4115,13 +4115,13 @@ class AdminProducts extends AdminTab
 
 					echo '<p id="gethtmlink" style="display: none;">'.$this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true).'
 					<a id="make_downloadable_product_attribute" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['HTTP_REFERER'].'&deleteVirtualProductAttribute=true'.'" class="red">'.$this->l('Delete this file').'</a></p>';
-						
+
 					echo '</div>
 					<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['HTTP_REFERER'].'&deleteVirtualProductAttribute=true" class="red">'.$this->l('Delete this file').'</a>';
-					
+
 					if ($up_filename = strval(Tools::getValue('virtual_product_filename_attribute')))
 						echo '<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="'.$up_filename.'" />';
-	
+
 					echo '<p class="block">
 						<label for="virtual_product_name" class="t">'.$this->l('Filename').'</label>
 						<input id="virtual_product_name_attribute" name="virtual_product_name_attribute" style="width:200px" value="" type="text">
@@ -4296,7 +4296,7 @@ class AdminProducts extends AdminTab
 							<th>'.$this->l('UPC').'</th>
 							<th class="center">'.$this->l('Quantity').'</th>';
 
-							
+
 							if ($id_product_download && !empty($productDownload->display_filename))
 							{
 								echo '
@@ -4305,7 +4305,7 @@ class AdminProducts extends AdminTab
 								<th class="center virtual_header">'.$this->l('Number of days').'</th>
 								<th class="center virtual_header">'.$this->l('Share').'</th>';
 							}
-							
+
 							echo '<th class="center">'.$this->l('Actions').'</th>
 						</tr>';
 			if ($obj->id)
@@ -4362,12 +4362,12 @@ class AdminProducts extends AdminTab
 						$id_product_download = $productDownload->getIdFromIdAttribute((int) $obj->id, (int) $id_product_attribute);
 						if ($id_product_download)
 							$productDownload = new ProductDownload($id_product_download);
-						
+
 						$available_date_attribute = substr($productDownload->date_expiration, 0, -9);
-						
+
 						if ($available_date_attribute == '0000-00-00')
-							$available_date_attribute = '';	
-							
+							$available_date_attribute = '';
+
 						if ($productDownload->is_shareable == 1)
 							$is_shareable = $this->l('Yes');
 						else
@@ -4382,7 +4382,7 @@ class AdminProducts extends AdminTab
 							<td class="right">'.$product_attribute['ean13'].'</td>
 							<td class="right">'.$product_attribute['upc'].'</td>
 							<td class="center">'.$product_attribute['quantity'].'</td>';
-							
+
 							if ($id_product_download && !empty($productDownload->display_filename))
 							{
 								echo '<td class="right">'.$productDownload->getHtmlLink(false, true).'</td>
@@ -4390,19 +4390,19 @@ class AdminProducts extends AdminTab
 								<td class="center">'.$productDownload->nb_downloadable.'</td>
 								<td class="right">'.$is_shareable.'</td>';
 							}
-							
+
 							$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
-							
+
 							if ($productDownload->id && file_exists($exists_file))
 								$filename = $productDownload->filename;
 							else
 								$filename = '';
-							
+
 							echo '<td class="center">
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
-							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\', 
+							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
 							\''.$productDownload->display_filename.'\', \''.$filename.'\', \''.$productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$productDownload->nb_days_accessible.'\',  \''.$productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'

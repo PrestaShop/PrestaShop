@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -34,23 +34,24 @@ class AdminStockMvt extends AdminTab
 	 	$this->className = 'StockMvt';
 	 	$this->edit = false;
 		$this->delete = false;
-		$this->view = true;
-				
+		$this->view = false;
+
 		$this->fieldsDisplay = array(
 			'id_stock_mvt' => array('title' => $this->l('ID'), 'width' => 40),
-			'product_name' => array('title' => $this->l('Product Name'), 'width' => 250, 'havingFilter' => true),
-			'quantity' => array('title' => $this->l('Quantity'), 'width' => 40),
-			'reason' => array('title' => $this->l('Reason'), 'width' => 250),
+			'product_name' => array('title' => $this->l('Product Name'), 'width' => 200, 'havingFilter' => true),
+			'physical_quantity' => array('title' => $this->l('Quantity'), 'width' => 40),
+			'reason' => array('title' => $this->l('Reason'), 'width' => 200),
 			'id_order' => array('title' => $this->l('ID Order'), 'width' => 40),
 			'employee' => array('title' => $this->l('Employee'), 'width' => 100, 'havingFilter' => true),
+			'warehouse' => array('title' => $this->l('Warehouse'), 'width' => 100, 'havingFilter' => true),
 		);
-		
-		
-		$this->_select = 'CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason';
-		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock '.$this->context->shop->sqlRestriction(Shop::SHARE_STOCK, 'stock').'
+
+		$this->_select = 'CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) AS employee, mrl.name AS reason, CONCAT(w.reference, " - ", w.name) AS warehouse';
+		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock
 							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (stock.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
 							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (a.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$this->context->language->id.')
 							LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
+							LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = stock.id_warehouse)
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
 							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.id_attribute = pac.id_attribute AND al.id_lang = '.(int)$this->context->language->id.')';
 		$this->_group = 'GROUP BY a.id_stock_mvt';
@@ -59,11 +60,11 @@ class AdminStockMvt extends AdminTab
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('rebuildStock'))
-			StockMvt::addMissingMvt($this->context->employee->id, false);
+		/*if (Tools::isSubmit('rebuildStock'))
+			StockMvt::addMissingMvt($this->context->employee->id, false);*/
 		return parent::postProcess();
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
@@ -90,14 +91,14 @@ class AdminStockMvt extends AdminTab
 						<option value="-1">'.$this->l('Decrease stock').'</option>
 					</select>
 				</div>
-				<div class="clear space">&nbsp;</div>';
-		echo 	'<div class="margin-form">
+				<div class="clear space">&nbsp;</div>
+				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
 			</fieldset>
 		</form>';
 	}
-	
+/*
 	public function viewstock_mvt()
 	{
 		$stockMvt = new StockMvt((int)Tools::getValue('id_stock_mvt'));
@@ -131,20 +132,19 @@ class AdminStockMvt extends AdminTab
 			}
 			echo '</table>';
 	}
-	
+*/
 	public function display()
 	{
 		$old_post = false;
-		
-		if (!isset($_GET['addstock_mvt_reason']) OR (Tools::isSubmit('submitAddstock_mvt_reason') AND Tools::getValue('id_stock_mvt_reason')))
+
+		if (!isset($_GET['addstock_mvt_reason']) || (Tools::isSubmit('submitAddstock_mvt_reason') && Tools::getValue('id_stock_mvt_reason')))
 		{
 			if (isset($_POST))
-			{
 				$old_post = $_POST;
-			}
+
 			echo '<h2>'.$this->l('Stock movement history').'</h2>';
 			parent::display();
-			if (!isset($_GET['view'.$this->table]))
+			/*if (!isset($_GET['view'.$this->table]))
 				echo '
 				<fieldset>
 					<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'&rebuildMvt=1">
@@ -153,7 +153,7 @@ class AdminStockMvt extends AdminTab
 							<input class="button" type="submit" name="rebuildStock" value="'.$this->l('Submit').'" />
 						</div>
 					</form>
-				</fieldset><br />';
+				</fieldset><br />';*/
 		}
 		if (isset($_GET['view'.$this->table]))
 			return;
@@ -169,35 +169,41 @@ class AdminStockMvt extends AdminTab
 		$this->add = true;
 		$this->view = false;
 		$this->_listSkipDelete = array(1,2,3,4);
-		
+
 
 		$this->_defaultOrderBy = $this->identifier;
 		$this->fieldsDisplay = array('id_stock_mvt_reason' => array('title' => $this->l('ID'), 'width' => 40),
 												'sign' => array('title' => $this->l('Sign'), 'width' => 15, 'align' => 'center', 'type' => 'select',  'icon' => array(-1 => 'arrow_down.png', 1 => 'arrow_up.png'), 'orderby' => false),
 												'name' => array('title' => $this->l('Name'), 'width' => 500));
-		
-		$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
+
+		$reasons_inc = StockMvtReason::getStockMvtReasons($this->context->language->id, 1);
+		$reasons_dec = StockMvtReason::getStockMvtReasons($this->context->language->id, -1);
 
 		$this->optionsList = array(
 			'general' => array(
 				'title' =>	$this->l('Options'),
 				'fields' =>	array(
-					'PS_STOCK_MVT_REASON_DEFAULT' => array(
-						'title' => $this->l('Default Stock Movement reason:'), 
-						'cast' => 'intval', 
-						'type' => 'select', 
-						'list' => $reasons, 
+					'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
+						'title' => $this->l('Default Stock Movement reason for increment stock:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_inc,
+						'identifier' => 'id_stock_mvt_reason'
+					),
+					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
+						'title' => $this->l('Default Stock Movement reason for decrement stock:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_dec,
 						'identifier' => 'id_stock_mvt_reason'
 					),
 				),
 			),
 		);
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
-		
+
 		echo '<h2>'.$this->l('Stock movement reason').'</h2>';
 		$this->postProcess();
 		return parent::display();
 	}
 }
-
-
