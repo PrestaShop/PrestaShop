@@ -76,6 +76,8 @@ class AdminControllerCore extends Controller
 
 	protected $list_display;
 
+	protected $form_list;
+
 	protected $_listSkipDelete = array();
 
 	protected $shopLink;
@@ -160,6 +162,7 @@ class AdminControllerCore extends Controller
 	protected $edit;
 	protected $delete;
 	protected $duplicate;
+	protected $deleted;
 	/**
 	 * @var bool is a list filter set
 	 */
@@ -943,7 +946,7 @@ class AdminControllerCore extends Controller
 				// Check if form template has been overriden
 				if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
 					$helper->tpl = $this->tpl_folder.'form.tpl';
-				HelperForm::$currentIndex = self::$currentIndex;
+				$helper->currentIndex = self::$currentIndex;
 				$helper->token = $this->token;
 				$helper->table = $this->table;
 				$helper->id = $obj->id;
@@ -993,7 +996,7 @@ class AdminControllerCore extends Controller
 			$helper->duplicate = $this->duplicate;*/
 
 			$helper->bulk_actions = $this->bulk_actions;
-			HelperList::$currentIndex = self::$currentIndex;
+			$helper->currentIndex = self::$currentIndex;
 			$helper->className = $this->className;
 			$helper->table = $this->table;
 			$helper->shopLink = $this->shopLink;
@@ -1005,6 +1008,11 @@ class AdminControllerCore extends Controller
 			$helper->colorOnBackground = $this->colorOnBackground;
 
 			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
+		}
+		else if ($this->display == 'options')
+		{
+			$helper = new HelperOptions();
+			$this->content .= $helper->generateOptions();
 		}
 	}
 
@@ -1123,6 +1131,8 @@ class AdminControllerCore extends Controller
 		$this->context->link = $link;
 		//define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		//define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+
+		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		// Change shop context ?
 		if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
@@ -1611,6 +1621,135 @@ class AdminControllerCore extends Controller
 		foreach ($assos as $asso)
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
 											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
+	}
+
+	protected function validateField($value, $field)
+	{
+		if (isset($field['validation']))
+		{
+			if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && method_exists('Validate', $field['validation']))
+			{
+				if (!Validate::$field['validation']($value))
+				{
+					$this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Can be overriden
+	 */
+	public function beforeUpdateOptions()
+	{
+	}
+
+	/**
+	 * Update options and preferences
+	 *
+	 * @param string $token
+	 */
+	protected function updateOptions($token)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$this->beforeUpdateOptions();
+
+			$languages = Language::getLanguages(false);
+
+			foreach ($this->form_list as $option_list)
+			{
+				foreach ($option_list as $category => $categoryData)
+				{
+					$fields = $categoryData['fields'];
+
+					/* Check required fields */
+					foreach ($fields as $field => $values)
+						if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
+							if (isset($values['type']) && $values['type'] == 'textLang')
+							{
+								foreach ($languages as $language)
+									if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
+										$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+							}
+							elseif (($value = Tools::getValue($field)) == false && (string)$value != '0')
+								$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+
+					/* Check fields validity */
+					foreach ($fields as $field => $values)
+						if (isset($values['type']) && $values['type'] == 'textLang')
+						{
+							foreach ($languages as $language)
+								if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
+									if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
+										$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+						}
+						elseif (Tools::getValue($field) && isset($values['validation']))
+							if (!Validate::$values['validation'](Tools::getValue($field)))
+								$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+
+					/* Default value if null */
+					foreach ($fields as $field => $values)
+						if (!Tools::getValue($field) && isset($values['default']))
+							$_POST[$field] = $values['default'];
+
+					if (1||!count($this->_errors))
+					{
+						foreach ($fields as $key => $options)
+						{
+							if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
+								continue;
+
+							if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
+							{
+								Configuration::deleteFromContext($key);
+								continue;
+							}
+
+							// check if a method updateOptionFieldName is available
+							$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+							if (method_exists($this, $method_name))
+								$this->$method_name(Tools::getValue($key));
+							else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+							{
+								$list = array();
+								foreach ($languages as $language)
+								{
+									$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key.'_'.$language['id_lang'])) : Tools::getValue($key.'_'.$language['id_lang']));
+									if ($this->validateField($val, $options))
+									{
+										if (Validate::isCleanHtml($val))
+											$list[$language['id_lang']] = $val;
+										else
+											$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+									}
+								}
+								Configuration::updateValue($key, $list);
+							}
+							else
+							{
+								$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+								if ($this->validateField($val, $options))
+								{
+									if (Validate::isCleanHtml($val))
+										Configuration::updateValue($key, $val);
+									else
+										$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (count($this->_errors) <= 0)
+				Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$token);
+		}
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 	}
 
 	/**

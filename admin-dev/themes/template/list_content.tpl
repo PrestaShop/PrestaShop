@@ -79,7 +79,7 @@
 			{elseif isset($params.type) && $params.type == 'datetime'}
 				{$tr.$key}
 			{elseif isset($tr.$key)}
-				{$tr.$key}
+				{$tr.$key|escape:'htmlall':'UTF-8'}
 			{else}
 				--
 			{/if}
@@ -88,7 +88,7 @@
 		{/foreach}
 
 	{if $shop_link_type}
-		<td class="center" {if $name != $tr.shop_name}title="$tr.shop_name"{/if}>$tr.shop_short_name</td>
+		<td class="center" {if $name != $tr.shop_name}title="$tr.shop_name"{/if}>{$tr.shop_short_name}</td>
 	{/if}
 	{if $has_actions}
 		<td class="center" style="white-space: nowrap;">

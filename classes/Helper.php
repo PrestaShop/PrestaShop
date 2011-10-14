@@ -32,6 +32,10 @@
 
 class HelperCore
 {
+	public $currentIndex;
+	public $table;
+	public $token;
+	public $context;
 
 	public function __construct()
 	{
@@ -200,6 +204,35 @@ class HelperCore
 				$html .= Tools::htmlentitiesUTF8($html_option).'="'.Tools::htmlentitiesUTF8($value).'" ';
 
 		return rtrim($html, ' ');
+	}
+
+	/**
+	 * use translations files to replace english expression.
+	 *
+	 * @param mixed $string term or expression in english
+	 * @param string $class
+	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @return string the translation if available, or the english default text.
+	 */
+	protected function l($string, $class = 'AdminTab', $addslashes = FALSE, $htmlentities = TRUE)
+	{
+		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
+		$currentClass = get_class($this);
+		if(Module::getModuleNameFromClass($currentClass))
+		{
+			$string = str_replace('\'', '\\\'', $string);
+			return Module::findTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
+		}
+		global $_LANGADM;
+
+        if ($class == __CLASS__)
+                $class = 'AdminTab';
+
+		$key = md5(str_replace('\'', '\\\'', $string));
+		$str = (key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
+		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
+		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 
 }

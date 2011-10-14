@@ -49,8 +49,6 @@ class HelperFormCore extends Helper
 	public $default_form_language = null;
 	public $allow_employee_form_lang = null;
 
-	public static $currentIndex;
-
 	public $tpl = 'form.tpl';
 
 	public function generateForm($fields_form)
@@ -64,7 +62,7 @@ class HelperFormCore extends Helper
 	{
 		$this->context->smarty->assign(array(
 			'firstCall' => $this->first_call,
-			'current' => self::$currentIndex,
+			'current' => $this->currentIndex,
 			'token' => $this->token,
 			'table' => $this->table,
 			'languages' => $this->languages,
@@ -85,10 +83,9 @@ class HelperFormCore extends Helper
 
 	public function getFieldsRequired()
 	{
-		if (isset($this->fields_form['input']))
-			foreach ($this->fields_form['input'] as $input)
-				if (array_key_exists('required', $input) && $input['required'])
-					return true;
+		foreach ($this->fields_form['input'] as $input)
+			if (array_key_exists('required', $input) && $input['required'])
+				return true;
 
 		return false;
 	}
