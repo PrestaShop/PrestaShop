@@ -64,6 +64,171 @@ class AdminImagesController extends AdminController
 			)
 		);
 
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Images'),
+				'image' => '../img/admin/picture.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Type name:'),
+					'name' => 'name',
+					'required' => true,
+					'p' => $this->l('Letters only (e.g., small, medium, large, extra-large)')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Width:'),
+					'name' => 'width',
+					'required' => true,
+					'size' => 4,
+					'maxlength' => 5,
+					'p' => $this->l('Maximum image width in pixels')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Height:'),
+					'name' => 'height',
+					'required' => true,
+					'size' => 4,
+					'maxlength' => 5,
+					'p' => $this->l('Maximum image height in pixels')
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Products:'),
+					'name' => 'products',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('This type will be applied to product images'),
+					'values' => array(
+						array(
+							'id' => 'products_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'products_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						),
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Categories:'),
+					'name' => 'categories',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('This type will be applied to categories images'),
+					'values' => array(
+						array(
+							'id' => 'categories_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'categories_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						),
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Manufacturers:'),
+					'name' => 'manufacturers',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('This type will be applied to manufacturers images'),
+					'values' => array(
+						array(
+							'id' => 'manufacturers_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'manufacturers_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						),
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Suppliers:'),
+					'name' => 'suppliers',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('This type will be applied to suppliers images'),
+					'values' => array(
+						array(
+							'id' => 'suppliers_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'suppliers_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						),
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Scenes:'),
+					'name' => 'scenes',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('This type will be applied to scenes images'),
+					'values' => array(
+						array(
+							'id' => 'scenes_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'scenes_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						),
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('stores:'),
+					'name' => 'stores',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('This type will be applied to stores images'),
+					'values' => array(
+						array(
+							'id' => 'stores_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'stores_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						),
+					)
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
+
 		parent::__construct();
 	}
 
@@ -117,91 +282,6 @@ class AdminImagesController extends AdminController
 			$this->_errors[] = Tools::displayError('This name already exists.');
 	}
 
-	public function displayForm($isMainTab = true)
-	{
-		parent::displayForm();
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		echo $obj->id ? $this->displayWarning($this->l('After modification, do not forget to regenerate thumbnails')) : '';
-
-		echo '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
-		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
-			<fieldset>
-				<legend><img src="../img/admin/picture.gif" />'.$this->l('Images').'</legend><br />
-				<label>'.$this->l('Type name:').' </label>
-				<div class="margin-form">
-					<input type="text" name="name" value="'.htmlentities($this->getFieldValue($obj, 'name'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Letters only (e.g., small, medium, large, extra-large)').'</p>
-				</div>
-				<label>'.$this->l('Width:').' </label>
-				<div class="margin-form">
-					<input type="text" size="4" maxlength="5" name="width" value="'.(int)($this->getFieldValue($obj, 'width')).'" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Maximum image width in pixels').'</p>
-				</div>
-				<label>'.$this->l('Height:').' </label>
-				<div class="margin-form">
-					<input type="text" size="4" maxlength="5" name="height" value="'.(int)($this->getFieldValue($obj, 'height')).'" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Maximum image height in pixels').'</p>
-				</div>
-				<label>'.$this->l('Products:').' </label>
-				<div class="margin-form">
-					<input type="radio" name="products" id="products_on" value="1" '.($this->getFieldValue($obj, 'products') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="products_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="products" id="products_off" value="0" '.(!$this->getFieldValue($obj, 'products') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="products_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('This type will be applied to product images').'</p>
-				</div>
-				<label>'.$this->l('Categories:').' </label>
-				<div class="margin-form">
-					<input type="radio" name="categories" id="categories_on" value="1" '.($this->getFieldValue($obj, 'categories') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="categories_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="categories" id="categories_off" value="0" '.(!$this->getFieldValue($obj, 'categories') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="categories_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('This type will be applied to category images').'</p>
-				</div>
-				<label>'.$this->l('Manufacturers:').' </label>
-				<div class="margin-form">
-					<input type="radio" name="manufacturers" id="manufacturers_on" value="1" '.($this->getFieldValue($obj, 'manufacturers') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="manufacturers_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="manufacturers" id="manufacturers_off" value="0" '.(!$this->getFieldValue($obj, 'manufacturers') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="manufacturers_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('This type will be applied to manufacturer images').'</p>
-				</div>
-				<label>'.$this->l('Suppliers:').' </label>
-				<div class="margin-form">
-					<input type="radio" name="suppliers" id="suppliers_on" value="1" '.($this->getFieldValue($obj, 'suppliers') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="suppliers_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="suppliers" id="suppliers_off" value="0" '.(!$this->getFieldValue($obj, 'suppliers') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="suppliers_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('This type will be applied to suppliers images').'</p>
-				</div>
-				<label>'.$this->l('Scenes:').' </label>
-				<div class="margin-form">
-					<input type="radio" name="scenes" id="scenes_on" value="1" '.($this->getFieldValue($obj, 'scenes') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="scenes_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="scenes" id="scenes_off" value="0" '.(!$this->getFieldValue($obj, 'scenes') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="scenes_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('This type will be applied to scenes images').'</p>
-				</div>
-				<label>'.$this->l('Stores:').' </label>
-				<div class="margin-form">
-					<input type="radio" name="stores" id="stores_on" value="1" '.($this->getFieldValue($obj, 'stores') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="stores_on"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="stores" id="stores_off" value="0" '.(!$this->getFieldValue($obj, 'stores') ? 'checked="checked" ' : '').'/>
-					<label class="t" for="stores_off"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" /></label>
-					<p>'.$this->l('This type will be applied to stores images').'</p>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
-	}
-
 	/**
 	  * Display form for thumbnails regeneration
 	  */
@@ -218,7 +298,7 @@ class AdminImagesController extends AdminController
 		$this->content .= '
 		<h2 class="space">'.$this->l('Regenerate thumbnails').'</h2>
 		'.$this->l('Regenerates thumbnails for all existing product images').'.<br /><br /><div  class="width4">';
-		$this->displayWarning($this->l('Please be patient, as this can take several minutes').'<br />'.$this->l('Be careful! Manually generated thumbnails will be erased by automatically generated thumbnails.'));
+		$this->content .= '<div class="warn">'.$this->l('Please be patient, as this can take several minutes').'<br />'.$this->l('Be careful! Manually generated thumbnails will be erased by automatically generated thumbnails.').'</div>';
 		$this->content .= '</div>
 
 		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
@@ -502,47 +582,6 @@ class AdminImagesController extends AdminController
 		return (sizeof($this->_errors) > 0 ? false : true);
 	}
 
-	/**
-	 * Display the block for moving images
-	 */
-	public function displayImagePreferences()
-	{
-		$this->content .= '<br />
-		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-			<fieldset class="width4">
-				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Images').'</legend>'.'
-				<p>'.$this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
-				<br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issue, turn it off by selecting "Use JPEG".').'</p>
-				<br />
-				<label>'.$this->l('Image quality').' </label>
-				<div class="margin-form">
-					<input type="radio" value="jpg" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_0" '.(Configuration::get('PS_IMAGE_QUALITY') == 'jpg' ? 'checked="checked"' : '').' />
-					<label class="t" for="PS_IMAGE_QUALITY_0">'.$this->l('Use JPEG').'</label>
-					<br />
-					<input type="radio" value="png" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_1" '.(Configuration::get('PS_IMAGE_QUALITY') == 'png' ? 'checked="checked"' : '').' />
-					<label class="t" for="PS_IMAGE_QUALITY_1">'.$this->l('Use PNG  only if the base image is in PNG format').'</label>
-					<br />
-					<input type="radio" value="png_all" name="PS_IMAGE_QUALITY" id="PS_IMAGE_QUALITY_2" '.(Configuration::get('PS_IMAGE_QUALITY') == 'png_all' ? 'checked="checked"' : '').' />
-					<label class="t" for="PS_IMAGE_QUALITY_2">'.$this->l('Use PNG for all images').'</label>
-				</div>
-				<br />
-				<label for="PS_JPEG_QUALITY">'.$this->l('JPEG quality').'</label>
-				<div class="margin-form">
-					<input type="text" name="PS_JPEG_QUALITY" id="PS_JPEG_QUALITY" value="'.(int)Configuration::get('PS_JPEG_QUALITY').'" size="3" />
-					<p>'.$this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)').'</p>
-				</div>
-				<label for="PS_PNG_QUALITY">'.$this->l('PNG quality').'</label>
-				<div class="margin-form">
-					<input type="text" name="PS_PNG_QUALITY" id="PS_PNG_QUALITY" value="'.(int)Configuration::get('PS_PNG_QUALITY').'" size="3" />
-					<p>'.$this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)').'</p>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitImagePreferences" class="button" />
-				</div>
-			</fieldset>
-		</form>';
-	}
-
 	public function initContent()
 	{
 		if ($this->display != 'edit' && $this->display != 'add')
@@ -550,7 +589,7 @@ class AdminImagesController extends AdminController
 
 		parent::initContent();
 
-		if ($this->display = 'list')
+		if ($this->display == 'list')
 		{
 			$this->context->smarty->assign('list', true);
 
@@ -559,9 +598,11 @@ class AdminImagesController extends AdminController
 			$helper->currentIndex = self::$currentIndex;
 			$this->content .= $helper->generateOptions($this->form_list['options_image_pref']);
 
-			//$this->displayImagePreferences();
 			$this->displayRegenerate();
 			$this->displayMoveImages();
 		}
+
+		if ($this->display == 'edit')
+			$this->warnings[] = $this->l('After modification, do not forget to regenerate thumbnails');
 	}
 }

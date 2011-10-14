@@ -140,7 +140,17 @@
 										id="{$value.id}" 
 										value="{$value.value|escape:'htmlall':'UTF-8'}" 
 										{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
-								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}"> {$value.label}</label>
+								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
+								 {if isset($input.is_bool) && $input.is_bool == true}
+								 	{if $value.value == 1}
+								 		<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
+								 	{else}
+								 		<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
+								 	{/if}
+								 {else}
+								 	{$value.label}
+								 {/if}
+								</label>
 							{/foreach}
 						{elseif $input.type == 'textarea'}
 							{if isset($input.lang) && isset($input.attributeLang)}
