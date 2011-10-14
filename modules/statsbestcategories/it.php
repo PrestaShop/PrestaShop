@@ -12,5 +12,3 @@ $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_c13329e42ec01a10f
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_6e3b3150807da868ebd33ad2c991b8d7'] = 'Migliori categorie';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_a2e1fa19a6a3405a4e82cb5daa66310d'] = 'Elenco dei migliori categorie';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_998e4c5c80f27dec552e99dfed34889a'] = 'Esporta CSV ';
-
-?>

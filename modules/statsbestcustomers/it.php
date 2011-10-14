@@ -20,6 +20,4 @@ $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_689416adced81b3cdae
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_410008089d5bb723438103a84d48a59c'] = 'Al fine di raggiungere questo obiettivo è possibile organizzare:';
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_397a5e109a5897ee7d699050cbc93347'] = 'operazioni puntuali: premi commerciali (offerte speciali personalizzate, prodotto o servizio offerto), premi non commerciale (gestione prioritaria di un ordine o un prodotto), premi pecuniari (obbligazioni, buoni sconto, ...).';
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_4bc24eed56e0ba89fc3ab4e094d18d8a'] = 'operazioni sostenibili: le carte fedeltà o punti, che non solo giustificano la comunicazione tra commerciante e cliente, ma offre anche vantaggi ai clienti (offerte private, sconti).';
-$_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_2ac84f3e753fa299ebe4a6dfe57f1d9c'] = 'Queste operazioni incoraggiano i clienti ad acquistare e a tornare regolarmente al tu negozio online .';
-
-?>
+$_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_b18d224f0c27b329bc0bd2f7f876228b'] = 'Queste operazioni incoraggiare i clienti ad acquistare prodotti e visitare il vostro negozio online regolarmente.';

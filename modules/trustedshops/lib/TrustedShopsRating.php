@@ -311,7 +311,7 @@ class TrustedShopsRating extends AbsTrustedShops
 						</script>';
 		
 		$content = $javascript .
-				  '<form action="'.$this->_makeFormAction(Tools::safeOutput($_SERVER['REQUEST_URI']), $this->id_tab).'" method="post">
+				  '<form action="'.$this->_makeFormAction(strip_tags($_SERVER['REQUEST_URI']), $this->id_tab).'" method="post">
 					<fieldset>
 						<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Basic Settings').'</legend>
 						<p>'.$this->l('Please fill your Trusted Shops ID (one different ID per language):').'</p>

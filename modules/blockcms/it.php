@@ -2,12 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{blockcms}prestashop>blockcms_34c869c542dee932ef8cd96d2f91cae6'] = 'I nostri negozi';
-$_MODULE['<{blockcms}prestashop>blockcms_d1aa22a3126f04664e0fe3f598994014'] = 'Speciali';
-$_MODULE['<{blockcms}prestashop>blockcms_9ff0635f5737513b1a6f559ac2bff745'] = 'Nuovi prodotti';
-$_MODULE['<{blockcms}prestashop>blockcms_3cb29f0ccc5fd220a97df89dafe46290'] = 'Vendite migliori';
-$_MODULE['<{blockcms}prestashop>blockcms_02d4482d332e1aef3437cd61c9bcc624'] = 'Contattaci';
-$_MODULE['<{blockcms}prestashop>blockcms_7a52e36bf4a1caa031c75a742fb9927a'] = 'Powered by';
 $_MODULE['<{blockcms}prestashop>blockcms_cd275312651aebf8cbbb8d3bb1c086ae'] = 'Blocco CMS ';
 $_MODULE['<{blockcms}prestashop>blockcms_cdca12007979fc49008fd125cdb775fc'] = 'Aggiungi un blocco con diversi link CMS';
 $_MODULE['<{blockcms}prestashop>blockcms_97390dd0b5ba7867120aee2ff22bfa38'] = 'Blocchi di configurazione CMS';
@@ -25,6 +19,7 @@ $_MODULE['<{blockcms}prestashop>blockcms_f2a6c498fb90ee345d997f888fce3b18'] = 'E
 $_MODULE['<{blockcms}prestashop>blockcms_8f08c1af47e3e9611289c1882befc3a8'] = 'Non vi è alcuna blocco CMS impostato';
 $_MODULE['<{blockcms}prestashop>blockcms_0a40c06f34e5c794a7f0d3085d17d63a'] = 'Elenco di blocchi CMS di destra';
 $_MODULE['<{blockcms}prestashop>blockcms_965be994da393e5aa15bd3a2444c6ccf'] = 'Configurazione dei link  a piè di pagina';
+$_MODULE['<{blockcms}prestashop>blockcms_32c532e462a1f85b1b103ed9989a1aba'] = 'Display \"Powered by Prestashop\"';
 $_MODULE['<{blockcms}prestashop>blockcms_fab8ca8250236ed20b96f9750e1eacc7'] = 'Visualizzare i vari link a piè di pagina ';
 $_MODULE['<{blockcms}prestashop>blockcms_49ee3087348e8d44e1feda1917443987'] = 'Nome';
 $_MODULE['<{blockcms}prestashop>blockcms_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
@@ -52,8 +47,12 @@ $_MODULE['<{blockcms}prestashop>blockcms_5dab5acc3c6a2a7e87e8d8926a2c763e'] = 'S
 $_MODULE['<{blockcms}prestashop>blockcms_138218281781fd0d938a140892d7386c'] = 'Piè di pagine CMS aggiornato con successo';
 $_MODULE['<{blockcms}prestashop>blockcms_ddd7d8a072783afaf23e5e6843398fc9'] = 'Aggiunta del blocco CMS riuscito ';
 $_MODULE['<{blockcms}prestashop>blockcms_31a22821c66edf7e3aa33ef1c8109f4c'] = 'Modifica del blocco CMS riuscito';
-$_MODULE['<{blockcms}prestashop>blockcms_10432af9a9d55d5aa8b0f380194af673'] = 'Soppressione riuscita';
+$_MODULE['<{blockcms}prestashop>blockcms_87a2663d841b78f01c27c0edb4f50b76'] = 'Cancellazione di successo';
 $_MODULE['<{blockcms}prestashop>blockcms_be58fccb15fb119b8c3d485e3a8561c4'] = 'Configurazione del blocco CMS';
 $_MODULE['<{blockcms}prestashop>blockcms_78edb384f1a71576034e00ed6844bcc2'] = 'Non c\'è nulla da visualizzare in questa categoria CMS';
-
-?>
+$_MODULE['<{blockcms}prestashop>blockcms_34c869c542dee932ef8cd96d2f91cae6'] = 'I nostri negozi';
+$_MODULE['<{blockcms}prestashop>blockcms_d1aa22a3126f04664e0fe3f598994014'] = 'Speciali';
+$_MODULE['<{blockcms}prestashop>blockcms_9ff0635f5737513b1a6f559ac2bff745'] = 'Nuovi prodotti';
+$_MODULE['<{blockcms}prestashop>blockcms_3cb29f0ccc5fd220a97df89dafe46290'] = 'Vendite migliori';
+$_MODULE['<{blockcms}prestashop>blockcms_02d4482d332e1aef3437cd61c9bcc624'] = 'Contattaci';
+$_MODULE['<{blockcms}prestashop>blockcms_7a52e36bf4a1caa031c75a742fb9927a'] = 'Powered by';

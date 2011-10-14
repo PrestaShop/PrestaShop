@@ -10,5 +10,3 @@ $_MODULE['<{statscarrier}prestashop>statscarrier_0bed2833289bf7aae607f86b0750101
 $_MODULE['<{statscarrier}prestashop>statscarrier_998e4c5c80f27dec552e99dfed34889a'] = 'Esporta CSV';
 $_MODULE['<{statscarrier}prestashop>statscarrier_07701328e4cdbd1c145f234f136892b5'] = 'Nessun ordine valido per questo periodo.';
 $_MODULE['<{statscarrier}prestashop>statscarrier_ca190d96c8c6f00f57f5e572708253fb'] = 'Percentuale degli ordini per corriere';
-
-?>

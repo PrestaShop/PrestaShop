@@ -2116,9 +2116,7 @@ class BlockLayered extends Module
 					lifl.url_name name_url_name, lifl.meta_title name_meta_title, lifvl.url_name value_url_name, lifvl.meta_title value_meta_title ';
 					$sqlQuery['from'] = '
 					FROM '._DB_PREFIX_.'feature_product fp
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = fp.`id_product`)
-					INNER JOIN `'._DB_PREFIX_.'category` c ON (c.id_category = cp.id_category AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')
-					INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = cp.id_product AND p.active = 1)
+					INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = fp.id_product AND p.active = 1)
 					LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.(int)$cookie->id_lang.')
 					INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
 					LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.(int)$cookie->id_lang.')
@@ -2126,7 +2124,11 @@ class BlockLayered extends Module
 					ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.(int)$cookie->id_lang.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang_value lifvl
 					ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.(int)$cookie->id_lang.') ';
-					$sqlQuery['where'] = 'WHERE p.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].' ';
+					$sqlQuery['where'] = 'WHERE p.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].'
+					AND p.id_product IN (
+					SELECT id_product
+					FROM '._DB_PREFIX_.'category_product cp
+					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.')) ';
 					$sqlQuery['group'] = 'GROUP BY fv.id_feature_value ';
 					break;
 

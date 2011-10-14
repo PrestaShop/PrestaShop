@@ -27,5 +27,3 @@ $_MODULE['<{watermark}prestashop>watermark_489f2e730102b59aec48b5c27d2cbe1c'] = 
 $_MODULE['<{watermark}prestashop>watermark_8d92a725c5abead5353e60e0b2fc7d6d'] = 'Scegli i tipi di immagine per la protezione della filigrana';
 $_MODULE['<{watermark}prestashop>watermark_b17f3f4dcf653a5776792498a9b44d6a'] = 'Aggiorna le impostazioni';
 $_MODULE['<{watermark}prestashop>watermark_220d9102465c9223781b8f99af48c154'] = 'l\'immagine della filigrana non è un vero e proprio gif, per favore CONVERTI e non rinominarlo';
-
-?>

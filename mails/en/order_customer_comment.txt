@@ -1,8 +1,10 @@
-Hi {firstname} {lastname},
+Hello,
 
-You have received a new message regarding order #{id_order}:
+You have received a new message from a customer regarding order #{id_order}.
 
+Customer: {firstname} {lastname} ({email})
+
+Message:
 {message}
-
 
 {shop_url} powered by PrestaShop™

@@ -1,12 +1,11 @@
 Hi {firstname} {lastname},
 
-This is to inform you about the generation of a credit slip in your name from your order #{id_order}.
+Thank you for shopping at {shop_name}!
 
-You can review this credit slip and download the invoice from the "Order follow" section of your account by clicking "My account" on our Website.
+We have generated a credit slip in your name for order #{id_order}.
 
-Thank you for shopping at {shop_name}.
+You can review this credit slip and download the invoice from the "Order follow" section of your account by clicking "My account" on our shop.
 
 {shop_name} - {shop_url}
-
 
 {shop_url} powered by PrestaShop™

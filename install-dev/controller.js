@@ -558,13 +558,15 @@ function verifyMail()
 				
 				if (ret.getAttribute("result") == "ok")
 				{
-					$("#mailResultCheck").addClass("okBlock").removeClass("errorBlock").removeClass('infosBlock').html(mailSended);
+					$('#mailResultCheck').addClass("okBlock").removeClass("errorBlock").removeClass('infosBlock').html(mailSended+' '+$('#testEmail').val());
+					$('#mailResultCheck').css('margin-top', '10px');
 					mailIsOk = true;
 				}
 				else
 				{
 					mailIsOk = false;
 					$("#mailResultCheck").addClass("errorBlock").removeClass("okBlock").removeClass('infosBlock').html(txtError[26]);
+					$('#mailResultCheck').css('margin-top', '10px');
 				}
 		   }
 		 }

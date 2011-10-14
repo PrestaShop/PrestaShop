@@ -289,7 +289,7 @@ class ValidateCore
 	*/
 	public static function isMessage($message)
 	{
-		return preg_match('/^([^<>{}]|<br \/>)*$/i', $message);
+		return !preg_match('/[<>{}]/i', $message);
 	}
 
 	/**

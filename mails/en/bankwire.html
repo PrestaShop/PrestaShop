@@ -17,43 +17,41 @@
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
-			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">Your order #{id_order} history</td>
+			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">Your order {order_name} - Awaiting wire payment</td>
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td align="left">
-				Your order has been placed successfully, and will be shipped as soon as payment is received.
+				Thank you for shopping at {shop_name}!<br /><br />
+				Your order {order_name} has been placed successfully and will be <b>shipped as soon as we receive your payment</b>.
 			</td>
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td align="left">
-				Please note that you have selected to pay by bank wire. Please send your wire to :
+				You have selected to pay by wire transfer.<br /><br />Here are the bank details for your wire or transfer:
 				<br /><br />
-				<strong>{bankwire_owner}</strong>
-				<br /><br />
-				{bankwire_details}
-				<br /><br />
-				{bankwire_address}
-				<br /><br />
-				Order total amount is {total_paid}
+				<b>Amount:</b> {total_paid}<br /><br />
+				<b>Account owner:</b> {bankwire_owner}<br /><br />
+				<b>Account details:</b><br /><br />{bankwire_details}<br /><br />
+				<b>Bank address:</b> {bankwire_address}
 			</td>
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td align="left">
-				You can review this order and download your invoice from the <a href="{shop_url}history.php" style="color:#DB3484; font-weight:bold; text-decoration:none;">"Order history"</a> section of your account by clicking <a href="{shop_url}my-account.php" style="color:#DB3484; font-weight:bold; text-decoration:none;">"My account"</a> on our Website.
+				You can review your order and download your invoice from the <a href="{shop_url}history.php" style="color:#DB3484; font-weight:bold; text-decoration:none;">"Order history"</a> section of your customer account by clicking <a href="{shop_url}my-account.php" style="color:#DB3484; font-weight:bold; text-decoration:none;">"My account"</a> on our shop.<br /><br />
 			</td>
 		</tr>
 		<tr>
 			<td align="left">
-				If you have guest account, you can follow your order at <a href="{shop_url}guest-tracking.php" style="color:#DB3484; font-weight:bold; text-decoration:none;">"Guest Tracking"</a> section on our Website.
+				If you have guest account, you can follow your order via the <a href="{shop_url}guest-tracking.php" style="color:#DB3484; font-weight:bold; text-decoration:none;">"Guest Tracking"</a> section on our shop.
 			</td>
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td align="center" style="font-size:10px; border-top: 1px solid #D9DADE;">
-				<a href="{shop_url}" style="color:#DB3484; font-weight:bold; text-decoration:none;">{shop_name}</a> powered with <a href="http://www.prestashop.com/" style="text-decoration:none; color:#374953;">PrestaShop™</a>
+				<a href="{shop_url}" style="color:#DB3484; font-weight:bold; text-decoration:none;">{shop_name}</a> powered by <a href="http://www.prestashop.com/" style="text-decoration:none; color:#374953;">PrestaShop™</a>
 			</td>
 		</tr>
 	</table>

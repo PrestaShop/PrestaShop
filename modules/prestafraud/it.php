@@ -36,6 +36,7 @@ $_MODULE['<{prestafraud}prestashop>prestafraud_7e97953add2f27fce07653151ba3e862'
 $_MODULE['<{prestafraud}prestashop>prestafraud_3b2aee63259f6dc9b94914884474f8de'] = 'Ho già un account';
 $_MODULE['<{prestafraud}prestashop>prestafraud_9d5c4ae518b30bacdb69912d87b3406a'] = 'Il tuo indirizzo email:';
 $_MODULE['<{prestafraud}prestashop>prestafraud_6c3b9b51615d1d57773f25903da2018c'] = 'Url negozio';
+$_MODULE['<{prestafraud}prestashop>prestafraud_432dc11f749f7a5ea483a3c71e34e119'] = 'Sono d\'accordo con i termini di PrestaShop Servizio di sicurezza e io aderisco incondizionatamente.';
 $_MODULE['<{prestafraud}prestashop>prestafraud_42369faa6a6b243aac58683f3874bf99'] = 'Crea un account';
 $_MODULE['<{prestafraud}prestashop>prestafraud_212713efb37cd2f521ee584f1dbb5f0b'] = 'ID negozio:';
 $_MODULE['<{prestafraud}prestashop>prestafraud_c6b84387320705147af2f9e79d72c6fc'] = 'KEY negozio:';
@@ -60,5 +61,3 @@ $_MODULE['<{prestafraud}prestashop>prestafraud_a8bbb000124c9697aa5d63e7e758b64d'
 $_MODULE['<{prestafraud}prestashop>prestafraud_08eb31af908e2244867f6e812f82e935'] = 'Punto di ritiro';
 $_MODULE['<{prestafraud}prestashop>prestafraud_880f973e4ddae42c6bebd2c31bb977f8'] = 'Spedizione lenta oltre 3 giorni';
 $_MODULE['<{prestafraud}prestashop>prestafraud_b61de91e556aee84e83c3fde8ef67ddc'] = 'Spedizione express';
-
-?>

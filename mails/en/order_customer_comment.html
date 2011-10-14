@@ -17,12 +17,13 @@
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
-			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">Message from {firstname} {lastname} ({email})</td>
+			<td align="left" style="background-color:#DB3484; color:#FFF; font-size: 12px; font-weight:bold; padding: 0.5em 1em;">Message from a customer</td>
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td align="left">
-				<b>You have received a new message regarding order #{id_order}:</b>
+				<b>You have received a new message regarding order #{id_order}.</b><br /><br />
+				<b>Customer:</b> {firstname} {lastname} ({email})
 				<br /><br />
 				{message}
 			</td>
@@ -30,7 +31,7 @@
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td align="center" style="font-size:10px; border-top: 1px solid #D9DADE;">
-				<a href="{shop_url}" style="color:#DB3484; font-weight:bold; text-decoration:none;">{shop_name}</a> powered with <a href="http://www.prestashop.com/" style="text-decoration:none; color:#374953;">PrestaShop™</a>
+				<a href="{shop_url}" style="color:#DB3484; font-weight:bold; text-decoration:none;">{shop_name}</a> powered by <a href="http://www.prestashop.com/" style="text-decoration:none; color:#374953;">PrestaShop™</a>
 			</td>
 		</tr>
 	</table>

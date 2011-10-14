@@ -11,7 +11,7 @@ $_MODULE['<{statslive}prestashop>statslive_b718adec73e04ce3ec720dd11a06a308'] = 
 $_MODULE['<{statslive}prestashop>statslive_49ee3087348e8d44e1feda1917443987'] = 'Nome';
 $_MODULE['<{statslive}prestashop>statslive_f88589c3e803217e3f6fe9d8e740e6e8'] = 'Pagina corrente';
 $_MODULE['<{statslive}prestashop>statslive_4351cfebe4b61d8aa5efa1d020710005'] = 'Visualizza';
-$_MODULE['<{statslive}prestashop>statslive_bc59449a563c905a40eb3c871bb36d03'] = 'Non ci sono clienti online adesso.';
+$_MODULE['<{statslive}prestashop>statslive_2fb60e2c82df1e84e827b2f50661403e'] = 'Non ci sono clienti on line.';
 $_MODULE['<{statslive}prestashop>statslive_adb831a7fdd83dd1e2a309ce7591dff8'] = 'Ospite';
 $_MODULE['<{statslive}prestashop>statslive_a12a3079e14ced46e69ba52b8a90b21a'] = 'IP';
 $_MODULE['<{statslive}prestashop>statslive_38c50b731f70abc42c8baa3e7399b413'] = 'Da';
@@ -20,5 +20,3 @@ $_MODULE['<{statslive}prestashop>statslive_b6f05e5ddde1ec63d992d61144452dfa'] = 
 $_MODULE['<{statslive}prestashop>statslive_ec0fc0100c4fc1ce4eea230c3dc10360'] = 'Indefinito';
 $_MODULE['<{statslive}prestashop>statslive_334c4a4c42fdb79d7ebc3e73b517e6f8'] = 'nessuno';
 $_MODULE['<{statslive}prestashop>statslive_a55533db46597bee3cd16899c007257e'] = 'Non ci sono visitatori online adesso.';
-
-?>

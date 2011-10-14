@@ -71,6 +71,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_4218c2cb615fbc2870f6b1e8d
 $_MODULE['<{referralprogram}prestashop>referralprogram_bb7476567f5e12e60b01436dad77a533'] = 'ist ungültig.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_addae886b20a06e2954461706c90cd7d'] = 'Rabatt-Typ ist erforderlich / ungültig.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_ac3357de2dec8d74d89dd378962ec621'] = 'Anzahl der Freunde ist erforderlich / ungültig.';
+$_MODULE['<{referralprogram}prestashop>referralprogram_18d0d79eb088abb4357e3666eec35660'] = 'Rabatt Prozentsatz erforderlich ist / ungültig.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_3d31dd445991f35b1ee6491eec7ac71c'] = 'Kann die XML-Datei nicht schreiben.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_96191c1f54bb6311624210333ef797eb'] = 'Kann die XML-Datei nicht schließen.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_21cc1fccae3b04bb8cd2719cc5269e1e'] = 'Kann die XML-Datei nicht aktualisieren. Bitte überprüfen Sie die Schreibrechte der XML-Datei.';
@@ -87,6 +88,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_edf7f0a17b8a8f1732f12856f
 $_MODULE['<{referralprogram}prestashop>referralprogram_8465d83b5c1b569299af284c14d957bb'] = 'Gutscheinbeschreibung:';
 $_MODULE['<{referralprogram}prestashop>referralprogram_b17f3f4dcf653a5776792498a9b44d6a'] = 'Einstellungen aktualisieren';
 $_MODULE['<{referralprogram}prestashop>referralprogram_562ad64cf21ac2da656134355115133d'] = 'Ihr Text ist leer.';
+$_MODULE['<{referralprogram}prestashop>referralprogram_6b719c160f9b08dad4760bcc4b52ed48'] = 'Geschäftsbedingungen des Referral-Programm';
 $_MODULE['<{referralprogram}prestashop>referralprogram_c5afb9c76a7880978cba32872d01f068'] = 'Aktualisieren Sie den Text';
 $_MODULE['<{referralprogram}prestashop>referralprogram_6b31baf25848e7a6563ecc3946626c80'] = 'Referral Programm';
 $_MODULE['<{referralprogram}prestashop>referralprogram_7790d51a3d62c85aae65464dee12ee8b'] = 'Kundensponsor:';

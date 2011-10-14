@@ -34,5 +34,3 @@ $_MODULE['<{fianetfraud}prestashop>fianetfraud_88183b946cc5f0e8c96b2e66e1c74a7e'
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_d13270d4831bb2a2723f0fb5b573807c'] = 'Convalida Fianet';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_e010021939a49b7cce07f0e546c1d54f'] = 'Vedi dettaglio';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_b086843368d1c92d0a86cbee76b20b6f'] = 'Valutaz.';
-
-?>

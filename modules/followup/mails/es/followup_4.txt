@@ -1,0 +1,15 @@
+{shop_name}
+ 
+Hola {firstname} {lastname},
+ 
+Su cesta de {shop_name}
+ 
+Usted es parte de nuestros mejores clientes, sin embargo, no han ordenado para {days_threshold} días.
+
+Queremos darle las gracias por la confianza que ustedes depositan en nosotros y nosotros le concedemos un descuento de {amount}% válido en su próximo pedido! Esta oferta es válida para {days} días, así que no pierdas un instante!
+ 
+Aquí está tu cupón: {voucher_num}
+
+Introduzca este código en tu carrito de compras para obtener el descuento.
+ 
+{shop_name} desarrollado por PrestaShop™

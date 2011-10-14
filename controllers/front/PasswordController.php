@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('MIN_PASSWD_LENGTH', 8);
-
 class PasswordControllerCore extends FrontController
 {
 	public $php_self = 'password';
@@ -70,7 +68,7 @@ class PasswordControllerCore extends FrontController
 		}
 		else if (($token = Tools::getValue('token')) && ($id_customer = (int)(Tools::getValue('id_customer'))))
 		{
-			$email = Db::getInstance()->getValue('SELECT `email` FROM '._DB_PREFIX_.'customer c WHERE c.`secure_key` = "'.pSQL($token).'" AND c.id_customer='.(int)($id_customer));
+			$email = Db::getInstance()->getValue('SELECT `email` FROM '._DB_PREFIX_.'customer c WHERE c.`secure_key` = \''.pSQL($token).'\' AND c.id_customer='.(int)$id_customer);
 			if ($email)
 			{
 				$customer = new Customer();
@@ -79,7 +77,7 @@ class PasswordControllerCore extends FrontController
 					Tools::redirect('index.php?controller=authentication&error_regen_pwd');
 				else
 				{
-					$customer->passwd = Tools::encrypt($password = Tools::passwdGen((int)(MIN_PASSWD_LENGTH)));
+					$customer->passwd = Tools::encrypt($password = Tools::passwdGen(MIN_PASSWD_LENGTH));
 					$customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 					if ($customer->update())
 					{

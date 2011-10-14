@@ -34,5 +34,3 @@ $_MODULE['<{treepodia}prestashop>treepodia_86102199212f7d05ab38d8df0a2045a7'] = 
 $_MODULE['<{treepodia}prestashop>treepodia_d4dccb8ca2dac4e53c01bd9954755332'] = 'Salva impostazioni';
 $_MODULE['<{treepodia}prestashop>treepodia_3832f6deff5d50413adcbc9c06388c32'] = 'Tipo di file non valido';
 $_MODULE['<{treepodia}prestashop>treepodia_c888438d14855d7d96a2724ee9c306bd'] = 'Impostazioni aggiornate';
-
-?>

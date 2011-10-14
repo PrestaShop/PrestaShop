@@ -8,9 +8,6 @@ $_MODULE['<{ogone}prestashop>hookorderconfirmation_30163d8fc3068e8297e7ab5bf32ae
 $_MODULE['<{ogone}prestashop>hookorderconfirmation_0db71da7150c27142eef9d22b843b4a9'] = 'Per eventuali domande o per ulteriori informazioni, contatta la nostra';
 $_MODULE['<{ogone}prestashop>hookorderconfirmation_64430ad2835be8ad60c59e7d44e4b0b1'] = 'assistenza clienti';
 $_MODULE['<{ogone}prestashop>hookorderconfirmation_8de637e24570c1edb0357826a2ad5aea'] = 'Abbiamo notato un problema con il tuo ordine. Se pensi che sia un errore, contatta la nostra';
-$_MODULE['<{ogone}prestashop>ogone_75310bf8b7cf2ca4e09332871f98c271'] = 'Paga con Ogone';
-$_MODULE['<{ogone}prestashop>ogone_51e550f8a0e9e127a566c21e9a15538b'] = 'Logo Ogone';
-$_MODULE['<{ogone}prestashop>ogone_15ee0c3bac84f0ff0a2af1e6cdc1a048'] = 'Paga in modo sicuro e veloce alla pagina successiva con IDEAL / Mastercard / Visa / Paypal / Mister Cash / Bancontact.';
 $_MODULE['<{ogone}prestashop>ogone_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configurazione aggiornata';
 $_MODULE['<{ogone}prestashop>ogone_6a26f548831e6a8c26bfbbd9f6ec61e0'] = 'Aiuto';
 $_MODULE['<{ogone}prestashop>ogone_c3aace2676937d5cb50e536abbe9113d'] = 'Prima di tutto, si potrebbe procedere come segue:';
@@ -31,7 +28,9 @@ $_MODULE['<{ogone}prestashop>ogone_650be61892bf690026089544abbd9d26'] = 'Modalit
 $_MODULE['<{ogone}prestashop>ogone_0cbc6611f5540bd0809a388dc95a615b'] = 'Prova';
 $_MODULE['<{ogone}prestashop>ogone_756d97bb256b8580d4d71ee0c547804e'] = 'Produzione';
 $_MODULE['<{ogone}prestashop>ogone_b17f3f4dcf653a5776792498a9b44d6a'] = 'Aggiornare le impostazioni';
-$_MODULE['<{ogone}prestashop>waiting_1fe3bb016fa11dd93fb1929f118fd492'] = 'Si prega di attendere l\'ordine è in fase di elaborazione ...';
+$_MODULE['<{ogone}prestashop>ogone_75310bf8b7cf2ca4e09332871f98c271'] = 'Paga con Ogone';
+$_MODULE['<{ogone}prestashop>ogone_51e550f8a0e9e127a566c21e9a15538b'] = 'Logo Ogone';
+$_MODULE['<{ogone}prestashop>ogone_15ee0c3bac84f0ff0a2af1e6cdc1a048'] = 'Paga in modo sicuro e veloce alla pagina successiva con IDEAL / Mastercard / Visa / Paypal / Mister Cash / Bancontact.';
 $_MODULE['<{ogone}prestashop>validation_e9f77209121063c8aedd7698f20f4878'] = 'Parametri ricevuti:';
 $_MODULE['<{ogone}prestashop>validation_273e5454628021d87e34051074ac62d1'] = 'Parametri mancanti:';
 $_MODULE['<{ogone}prestashop>validation_cbb285f0e88adea7d492a5b14b9e6d1d'] = 'Errore (aut. rifiutata)';
@@ -41,5 +40,4 @@ $_MODULE['<{ogone}prestashop>validation_a04830387e55082ed6096ab698ac8238'] = 'Fi
 $_MODULE['<{ogone}prestashop>validation_7eaab6a852dfe4707acde8847dba7ce9'] = 'SHA-1 dato:';
 $_MODULE['<{ogone}prestashop>validation_8fbed6331a34a844224bfee15145e00f'] = 'SHA-1 calcolato:';
 $_MODULE['<{ogone}prestashop>validation_671c1f78cd9a17103c43a10d19157678'] = 'Chiave semplice:';
-
-?>
+$_MODULE['<{ogone}prestashop>waiting_1fe3bb016fa11dd93fb1929f118fd492'] = 'Si prega di attendere l\'ordine è in fase di elaborazione ...';

@@ -315,21 +315,23 @@ ol#tabs{
 	margin:0;
 	padding:0;
 }
+
 	ol#tabs li{
-		padding:9px 0 9px 16px;
+	padding: 9px 0 9px 20px;
 		font-size:14px;
 		color:#adadad;
 	}
+
 		ol#tabs li.selected{
 			font-weight: bold;
 			color:#000;
 			background : url(img/bg-li-tabs.png) no-repeat 1px 15px;
 		}
+
 		ol#tabs li.finished{
 			color:#78a531;
 			background : url(img/bg-li-tabs-finished.png) no-repeat 0 12px;
 		}
-
 
 /* ****************************************************************************
       FOOTER

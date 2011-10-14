@@ -22,5 +22,3 @@ $_MODULE['<{statssales}prestashop>statssales_7442e29d7d53e549b78d93c46b8cdcfc'] 
 $_MODULE['<{statssales}prestashop>statssales_068f80c7519d0528fb08e82137a72131'] = 'Prodotti';
 $_MODULE['<{statssales}prestashop>statssales_14f1c54626d722168ee62dff05ed811e'] = 'Le vendite in';
 $_MODULE['<{statssales}prestashop>statssales_33eee7690a8cd62490ed9eeadd47d163'] = 'Percentuale degli ordini in base allo stato';
-
-?>

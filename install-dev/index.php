@@ -113,6 +113,7 @@ if ($lm->getIncludeTradFilename())
 	<meta http-equiv="Cache" content="no store" />
 	<meta http-equiv="Expires" content="-1" />
 	<meta name="robots" content="noindex" />
+	<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
 	<title><?php echo sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?></title>
 	<link rel="stylesheet" type="text/css" media="all" href="view.css"/>
 	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/jquery-1.4.4.min.js"></script>
@@ -129,12 +130,12 @@ if ($lm->getIncludeTradFilename())
 		//localWords
 		var Step1Title = "<?php echo sprintf(lang('Welcome to the PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step2title = "<?php echo lang('System Compatibility').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
-		var step3title = "<?php echo lang('System Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step3title = "<?php echo lang('Database Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step4title = "<?php echo lang('Shop Configuration').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step5title = "<?php echo lang('Ready, set, go!').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step6title = "<?php echo lang('Disclaimer').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step7title = "<?php echo lang('System Compatibility').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
-		var step8title = "<?php echo lang('Errors while updating...').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
+		var step8title = "<?php echo lang('Error(s) while updating...').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var step9title = "<?php echo lang('Ready, set, go!').' - '.sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?>";
 		var txtNext = "<?php echo lang('Next')?>"
 		var txtDbLoginEmpty = "<?php echo lang('Please set a database login'); ?>";
@@ -150,7 +151,7 @@ if ($lm->getIncludeTradFilename())
 		var txtDbCreated = "<?php echo lang('Database is created!'); ?>";
 		var testMsg = "<?php echo lang('This is a test message, your server is now available to send email'); ?>";
 		var testSubject = "<?php echo lang('Test message - Prestashop'); ?>";
-		var mailSended = "<?php echo lang('An email has been sent!'); ?>";
+		var mailSended = "<?php echo lang('A test e-mail has been sent to'); ?>";
 		var mailSubject = "<?php echo lang('Congratulation, your online shop is now ready!'); ?>";
 		var txtTabUpdater1 = "<?php echo lang('Welcome'); ?>";
 		var txtTabUpdater2 = "<?php echo lang('Disclaimer'); ?>";
@@ -158,24 +159,24 @@ if ($lm->getIncludeTradFilename())
 		var txtTabUpdater4 = "<?php echo lang('Update is complete!'); ?>";
 		var txtTabInstaller1 = "<?php echo lang('Welcome'); ?>";
 		var txtTabInstaller2 = "<?php echo lang('Verify system compatibility'); ?>";
-		var txtTabInstaller3 = "<?php echo lang('System Configuration'); ?>";
+		var txtTabInstaller3 = "<?php echo lang('Database Configuration'); ?>";
 		var txtTabInstaller4 = "<?php echo lang('Shop Configuration'); ?>";
 		var txtTabInstaller5 = "<?php echo lang('Installation is complete!'); ?>";
-		var txtConfigIsOk = "<?php echo lang('Your configuration is valid, click next to continue!'); ?>";
+		var txtConfigIsOk = "<?php echo lang('Your configuration is valid, click \"Next\" to continue!'); ?>";
 		var txtConfigIsNotOk = "<?php echo lang('Your configuration is invalid. Please fix the issues below:'); ?>";
 
 		var txtError = new Array();
 		txtError[0] = "<?php echo lang('Required field'); ?>";
-		txtError[1] = "<?php echo lang('Too long!'); ?>";
+		txtError[1] = "<?php echo lang('Too long'); ?>";
 		txtError[2] = "<?php echo lang('Fields are different!'); ?>";
-		txtError[3] = "<?php echo lang('This email adress is wrong!'); ?>";
-		txtError[4] = "<?php echo lang('Impossible to send the email!'); ?>";
-		txtError[5] = "<?php echo lang('Can\'t create settings file, if /config/settings.inc.php exists, please give the public write permissions to this file, else please create a file named settings.inc.php in config directory.'); ?>";
+		txtError[3] = "<?php echo lang('This e-mail address is invalid!'); ?>";
+		txtError[4] = "<?php echo lang('Cannot send the email!'); ?>";
+		txtError[5] = "<?php echo lang('Can\'t create settings file, if /config/settings.inc.php exists, please give the public write permissions to this file, otherwise please create a file named settings.inc.php in config directory.'); ?>";
 		txtError[6] = "<?php echo lang('Can\'t write settings file, please create a file named settings.inc.php in config directory.'); ?>";
-		txtError[7] = "<?php echo lang('Impossible to upload the file!'); ?>";
+		txtError[7] = "<?php echo lang('Cannot upload the file!'); ?>";
 		txtError[8] = "<?php echo lang('Your database connection settings are not valid. Please check your server, name, login and prefix.'); ?>";
-		txtError[9] = "<?php echo lang('Impossible to read the content of a MySQL content file.'); ?>";
-		txtError[10] = "<?php echo lang('Impossible the access the a MySQL content file.'); ?>";
+		txtError[9] = "<?php echo lang('Cannot read the content of a MySQL data file.'); ?>";
+		txtError[10] = "<?php echo lang('Cannot access the a MySQL data file.'); ?>";
 		txtError[11] = "<?php echo lang('Error while inserting data in the database:'); ?>";
 		txtError[12] = "<?php echo lang('The password is incorrect (alphanumeric string at least 8 characters).'); ?>";
 		txtError[14] = "<?php echo lang('A Prestashop database already exists, please drop it or change the prefix.'); ?>";
@@ -183,13 +184,13 @@ if ($lm->getIncludeTradFilename())
 		txtError[16] = "<?php echo lang('This is not a valid image file.'); ?>";
 		txtError[17] = "<?php echo lang('Error while creating the /config/settings.inc.php file.'); ?>";
 		txtError[18] = "<?php echo lang('Error:'); ?>";
-		txtError[19] = "<?php echo lang('This PrestaShop database already exists. Please revalidate your authentication informations to the database.'); ?>";
+		txtError[19] = "<?php echo lang('This PrestaShop database already exists. Please revalidate your authentication information to the database.'); ?>";
 		txtError[22] = "<?php echo lang('An error occurred while resizing the picture.'); ?>";
 		txtError[23] = "<?php echo lang('Database connection is available!'); ?>";
-		txtError[24] = "<?php echo lang('Database Server is available but database is not found'); ?>";
-		txtError[25] = "<?php echo lang('Database Server is not found. Please verify the login, password and server fields.'); ?>";
+		txtError[24] = "<?php echo lang('Database server is available but database was not found'); ?>";
+		txtError[25] = "<?php echo lang('Database server was not found. Please verify the login, password and server fields.'); ?>";
 		txtError[26] = "<?php echo lang('An error occurred while sending email, please verify your parameters.'); ?>";
-		txtError[37] = "<?php echo lang('Impossible to write the image /img/logo.jpg. If this image already exists, please delete it.'); ?>";
+		txtError[37] = "<?php echo lang('Cannot write the image /img/logo.jpg. If this image already exists, please delete it.'); ?>";
 		txtError[38] = "<?php echo lang('The uploaded file exceeds the upload_max_filesize directive in php.ini'); ?>";
 		txtError[39] = "<?php echo lang('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'); ?>";
 		txtError[40] = "<?php echo lang('The uploaded file was only partially uploaded'); ?>";
@@ -197,11 +198,11 @@ if ($lm->getIncludeTradFilename())
 		txtError[42] = "<?php echo lang('Missing a temporary folder'); ?>";
 		txtError[43] = "<?php echo lang('Failed to write file to disk'); ?>";
 		txtError[44] = "<?php echo lang('File upload stopped by extension'); ?>";
-		txtError[45] = "<?php echo lang('Cannot convert your database\'s data to utf-8.'); ?>";
+		txtError[45] = "<?php echo lang('Cannot convert your database\'s data to UTF-8.'); ?>";
 		txtError[46] = "<?php echo lang('Invalid shop name'); ?>";
 		txtError[47] = "<?php echo lang('Your firstname contains some invalid characters'); ?>";
 		txtError[48] = "<?php echo lang('Your lastname contains some invalid characters'); ?>";
-		txtError[49] = "<?php echo lang('Your database server does not support the utf-8 charset.'); ?>";
+		txtError[49] = "<?php echo lang('Your database server does not support the UTF-8 charset.'); ?>";
 		txtError[50] = "<?php echo lang('Your MySQL server doesn\'t support this engine, please use another one like MyISAM'); ?>";
 		txtError[51] = "<?php echo lang('The file /img/logo.jpg is not writable, please CHMOD 755 this file or CHMOD 777'); ?>";
 		txtError[52] = "<?php echo lang('Invalid catalog mode'); ?>";
@@ -255,13 +256,13 @@ if ($lm->getIncludeTradFilename())
 <body>
 
 <div id="noJavaScript">
-	<?php echo lang('This application need you to activate Javascript to correctly work.'); ?>
+	<?php echo lang('This application needs you to activate Javascript to correctly work.'); ?>
 </div>
 
 <div id="container">
 <div id="header" class="clearfix">
 	<ul id="headerLinks">
-		<li class="lnk_forum"><a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Forum'); ?></a></li>
+		<li class="lnk_forum"><a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Forums'); ?></a></li>
 		<li class="lnk_blog last"><a href="http://www.prestashop.com/blog/"><?php echo lang('Blog'); ?></a></li>
 		<?php if ((isset($_GET['language']) AND $_GET['language'] == 1) OR $lm->getIsoCodeSelectedLang() == 'fr'): ?>
 		<li id="phone_block" class="last">
@@ -295,7 +296,7 @@ if ($lm->getIncludeTradFilename())
 
 		<div class="content">
 			<p class="title"><?php echo lang('Need help?'); ?></p>
-			<p class="title_down"><?php echo lang('All tips and advice about PrestaShop'); ?></p>
+			<p class="title_down"><?php echo lang('PrestaShop tips and advice'); ?></p>
 		</div>
 	</div><!-- /end help -->
 </div><!-- /end leftpannel -->
@@ -318,18 +319,18 @@ if ($lm->getIncludeTradFilename())
 
 		<h2 id="welcome-title"><?php echo lang('Welcome to the PrestaShop '.INSTALL_VERSION.' Installer.'); ?></h2>
 		<script type="text/javascript">$('#welcome-title').html(Step1Title);</script>
-		<p><?php echo lang('Please allow 5-15 minutes to complete the installation process.')?></p>
-		<p><?php echo lang('The PrestaShop Installer will do most of the work in just a few clicks.')?><br /><?php echo lang('However, you must know how to do the following manually:')?></p>
+		<p><?php echo lang('Please allow 10-15 minutes to complete the installation process.')?></p>
+		<p><?php echo lang('The PrestaShop Installer will do most of the work for you in just a few clicks.')?><br /><br />
+		<?php echo lang('However, you must know how to do the following:')?></p>
 		<ul>
-			<li><?php echo lang('Set permissions on folders & subfolders using Terminal or an FTP client')?></li>
-			<li><?php echo lang('Access and configure PHP 5.0+ on your hosting server')?></li>
-			<li><?php echo lang('Back up your database and all application files (update only)')?></li>
+			<li><?php echo lang('Set permissions on folders & subfolders using an FTP client')?></li>
+			<li><?php echo lang('Create a MySQL database using phpMyAdmin (or by asking your hosting provider)')?></li>
 		</ul>
 		<p>
-			<?php echo lang('For more information, please consult our') ?> <a href="http://www.prestashop.com/wiki/Getting_Started/"><?php echo lang('online documentation') ?></a>.
+			<?php echo lang('For more information, please consult our') ?> <a href="http://doc.prestashop.com/display/PS14/Getting+Started"><?php echo lang('online documentation') ?></a>.
 		</p>
 
-		<h2><?php echo lang('Choose the installer language:')?></h2>
+		<h2><?php echo lang('Choose your prefered language for the installation:')?></h2>
 		<form id="formSetInstallerLanguage" action="<?php $_SERVER['REQUEST_URI']; ?>" method="get">
 			<ul id="langList" style="line-height: 20px;">
 			<?php foreach ($lm->getAvailableLangs() AS $lang): ?>
@@ -344,15 +345,21 @@ if ($lm->getIncludeTradFilename())
 		</form>
 		<h3 class="no-margin"><?php echo lang('Did you know?'); ?></h3>
 		<p>
-			<?php echo lang('Prestashop and community offers over 40 different languages for free download on'); ?> <a href="http://www.prestashop.com" target="_blank">http://www.prestashop.com</a>
+			<?php 
+			
+				$isoForLink = (in_array($lm->getIsoCodeSelectedLang(), array('fr', 'it', 'de', 'en', 'es')) ? $lm->getIsoCodeSelectedLang() : 'en');
+				echo lang('Prestashop and its community offers over 40 different languages for free download at');
+			
+			?><br /><a href="http://www.prestashop.com/<?php echo $isoForLink; ?>/downloads/#lang_pack" target="_blank">http://www.prestashop.com/<?php echo $isoForLink; ?>/downloads/#lang_pack</a>
 		</p>
 
-		<h2><?php echo lang('Installation method')?></h2>
+		<h2><?php echo lang('What do you want to do?')?></h2>
 		<form id="formSetMethod" action="<?php $_SERVER['REQUEST_URI']; ?>" method="post">
-			<p><input <?php echo (!($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion)) ? 'checked="checked"' : '' ?> type="radio" value="install" name="typeInstall" id="typeInstallInstall"/><label for="typeInstallInstall"><?php echo lang('Installation : complete install of the PrestaShop Solution')?></label></p>
-			<p <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? '' : 'class="disabled"'; ?>><input <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? 'checked="checked"' : 'disabled="disabled"'; ?> type="radio" value="upgrade" name="typeInstall" id="typeInstallUpgrade"/><label <?php echo ($oldversion === false) ? 'class="disabled"' : ''; ?> for="typeInstallUpgrade"><?php echo lang('Upgrade: get the latest stable version!')?> <?php echo ($oldversion === false) ? lang('(no old version detected)') : ("(".(  ($tooOld) ? lang('the already installed version detected is too old, no more update available') : ($installOfOldVersion ? lang('the already installed version detected is too recent, no update available') : lang('installed version detected').' : '.$oldversion    )).")") ?></label></p>
+			<p><input <?php echo (!($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion)) ? 'checked="checked"' : '' ?> type="radio" value="install" name="typeInstall" id="typeInstallInstall" style="vertical-align: middle;" /> <label for="typeInstallInstall"><?php echo lang('I want to').' <b>'.lang('install').'</b> '.lang('a new online shop with PrestaShop'); ?></label></p>
+			<p style="font-style: italic;"><?php echo lang('- or -'); ?></p>
+			<p <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? '' : 'class="disabled"'; ?>><input <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? 'checked="checked"' : 'disabled="disabled"'; ?> type="radio" value="upgrade" name="typeInstall" id="typeInstallUpgrade" style="vertical-align: middle;" /> <label <?php echo ($oldversion === false) ? 'class="disabled"' : ''; ?> for="typeInstallUpgrade"><?php echo lang('I want to').' <b>'.lang('update').'</b> '.lang('my existing PrestaShop to a newer version'); ?> <?php echo ($oldversion === false) ? lang('(No previous version detected)') : ("(".(($tooOld) ? lang('Your current version is too old, updates are possible only from version').' '.MINIMUM_VERSION_TO_UPDATE.' '.lang('and higher') : ($installOfOldVersion ? lang('Your current version is already up-to-date') : lang('Currently installed version detected:').' <b>v'.$oldversion.'</b>')).")") ?></label></p>
 		</form>
-		<h2><?php echo lang('Licenses Agreement')?></h2>
+		<h2><?php echo lang('License Agreement')?></h2>
 		<div style="height:200px; border:1px solid #ccc; margin-bottom:8px; padding:5px; background:#fff; overflow: auto; overflow-x:hidden; overflow-y:scroll;">
 			<strong><?php echo lang('PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.')?></strong>
 			<h3>Core: Open Software License ("OSL") v. 3.0</h3>
@@ -416,7 +423,7 @@ if ($lm->getIncludeTradFilename())
 
 		<div class="sheet clearfix" id="sheet_require">
 			<div class="contentTitle">
-				<h1><?php echo lang('System and permissions')?></h1>
+				<h1><?php echo lang('System Compatibility')?></h1>
 
 			<ul id="stepList_2" class="stepList clearfix">
 				<li class="ok">Etape 1</li>
@@ -427,21 +434,21 @@ if ($lm->getIncludeTradFilename())
 			</ul>
 			</div>
 
-			<h2><?php echo lang('Required set-up. Please verify the following checklist items are true.')?></h2>
+			<h2><?php echo lang('Required set-up. Please verify the following checklist items:')?></h2>
 
 			<p>
 				<?php echo lang('If you have any questions, please visit our '); ?>
-				<a href="http://www.prestashop.com/wiki/Getting_Started/ " target="_blank"><?php echo lang('Documentation Wiki'); ?></a>
+				<a href="http://doc.prestashop.com/display/PS14/Getting+Started " target="_blank"><?php echo lang('Online documentation'); ?></a>
 				<?php echo lang('and/or'); ?>
 				<a href="http://www.prestashop.com/forums/" target="_blank"><?php echo lang('Community Forum'); ?></a><?php echo lang('.'); ?>
 			</p>
 
 			<h3 id="resultConfig"></h3>
 			<ul id="required">
-				<li class="title"><?php echo lang('PHP parameters:')?></li>
+				<li class="title"><?php echo lang('PHP settings (for assistance, ask your hosting provider):')?></li>
 				<li class="required first"><?php echo lang('PHP 5.0 or later installed')?></li>
 				<li class="required"><?php echo lang('File upload allowed')?></li>
-				<li class="required"><?php echo lang('Create new files and folders allowed')?></li>
+				<li class="required"><?php echo lang('Creation of new files and folders allowed')?></li>
 				<li class="required"><?php echo lang('GD Library installed')?></li>
 				<li class="required"><?php echo lang('MySQL support is on')?></li>
 				<li class="title"><?php echo lang('Write permissions on files and folders:')?></li>
@@ -460,9 +467,9 @@ if ($lm->getIncludeTradFilename())
 				<li class="required">/download</li>
 			</ul>
 
-			<h3><?php echo lang('Optional set-up')?></h3>
+			<h3 style="padding-bottom: 0;"><?php echo lang('Optional set-up')?></h3>
 			<ul id="optional">
-				<li class="title"><?php echo lang('PHP parameters:')?></li>
+				<li class="title"><?php echo lang('PHP settings (for assistance, ask your hosting provider):')?></li>
 				<li class="optional"><?php echo lang('Open external URLs allowed')?></li>
 				<li class="optional"><?php echo lang('PHP register global option is off (recommended)')?></li>
 				<li class="optional"><?php echo lang('GZIP compression is on (recommended)')?></li>
@@ -471,10 +478,8 @@ if ($lm->getIncludeTradFilename())
 				<li class="optional"><?php echo lang('Dom extension loaded')?></li>
 			</ul>
 			<h3 style="display:none;" id="resultConfigHelper"><?php echo lang('If you do not know how to fix these issues, use turnkey solution PrestaBox at');?> <a href="http://www.prestabox.com">http://www.prestabox.com</a></h3>
-			<p><input class="button" value="<?php echo lang('Refresh these settings')?>" type="button" id="req_bt_refresh"/></p>
-
+			<p><input class="button" value="<?php echo lang('Check my settings again')?>" type="button" id="req_bt_refresh"/><br /><br /></p>
 		</div>
-
 		<div class="sheet clearfix" id="sheet_db">
 			<div class="contentTitle">
 				<h1><?php echo lang('Database configuration')?></h1>
@@ -489,8 +494,8 @@ if ($lm->getIncludeTradFilename())
 			</div>
 
 			<div id="dbPart">
-				<h2><?php echo lang('Configure your database by filling out the following fields:')?></h2>
-				<p><?php echo lang('You have to create a database, help available in readme_en.txt'); ?></p>
+				<h2 style="padding-bottom: 0;"><?php echo lang('Configure your database by filling out the following fields:')?></h2>
+				<p style="padding: 10px 0 0 0;"><?php echo lang('Please create a MySQL database and then verify your settings below. If you need assistance, please ask your hosting provider for this information.'); ?></p>
 			<form id="formCheckSQL" class="aligned" action="<?php $_SERVER['REQUEST_URI']; ?>" onsubmit="verifyDbAccess(); return false;" method="post">
 					<p class="first" style="margin-top: 15px;">
 					<label for="dbServer"><?php echo lang('Server:')?> </label>
@@ -501,11 +506,11 @@ if ($lm->getIncludeTradFilename())
 					<input size="10" class="text" type="text" id="dbName" value="prestashop"/>
 				</p>
 				<p>
-					<label for="dbLogin"><?php echo lang('Login:')?> </label>
+						<label for="dbLogin"><?php echo lang('Database login:')?> </label>
 					<input class="text" size="10" type="text" id="dbLogin" value="root"/>
 				</p>
 				<p>
-					<label for="dbPassword"><?php echo lang('Password:')?> </label>
+						<label for="dbPassword"><?php echo lang('Database password:')?> </label>
 					<input class="text" autocomplete="off" size="10" type="password" id="dbPassword"/>
 				</p>
 				<p>
@@ -519,8 +524,8 @@ if ($lm->getIncludeTradFilename())
 						<label for="db_prefix"><?php echo lang('Tables prefix:')?></label>
 						<input class="text" type="text" id="db_prefix" value="ps_"/>
 					</p>
-				<p class="aligned">
-					<input id="btTestDB" class="button" type="submit" value="<?php echo lang('Verify now!')?>"/>
+					<p class="aligned" style="background: none;">
+						<input id="btTestDB" class="button" type="submit" value="<?php echo lang('Verify my database settings')?>"/>
 				</p>
 					<p id="dbResultCheck" style="display:none;"></p>
 			</form>
@@ -529,20 +534,21 @@ if ($lm->getIncludeTradFilename())
 			<div id="dbTableParam">
 				<form action="#" method="post" onsubmit="createDB(); return false;">
 				<h2><?php echo lang('Installation type')?></h2>
-				<p id="dbModeSetter" style="line-height: 20px;">
-					<input value="lite" type="radio" name="db_mode" id="db_mode_simple" style="vertical-align: middle;" /> <label for="db_mode_simple"><?php echo lang('Simple mode: Basic installation')?> <span><?php echo lang('(FREE)'); ?></span></label><br />
-					<input value="full" type="radio" name="db_mode" checked="checked" id="db_mode_complet" style="vertical-align: middle;" /> <label for="db_mode_complet"><?php echo lang('Full mode: includes').' <b>'.lang('100+ additional modules').'</b> '.lang('and demo products'); ?> <span><?php echo lang('(FREE too!)'); ?></span></label>
+				<p id="dbModeSetter" style="line-height: 20px; padding-bottom: 0;">
+					<input value="lite" type="radio" name="db_mode" id="db_mode_simple" style="vertical-align: middle;" /> <label for="db_mode_simple"><?php echo lang('Lite mode: Basic installation')?> <span><?php echo lang('(FREE)'); ?></span></label><br />
+					<span style="font-style: italic;"><?php echo lang('- or -'); ?></span><br />
+					<input value="full" type="radio" name="db_mode" checked="checked" id="db_mode_complet" style="vertical-align: middle;" /> <label for="db_mode_complet"><?php echo lang('Full mode: includes core modules,').' <b>'.lang('100+ additional modules').'</b> '.lang('and demo products'); ?> <span><?php echo lang('(FREE)'); ?></span></label>
 				</p>
 				</form>
 				<p id="dbCreateResultCheck"></p>
 			</div>
 
 			<div id="mailPart">
-				<h2><?php echo lang('E-mail delivery set-up')?></h2>
+				<h2><?php echo lang('E-mail configuration')?></h2>
 
 				<p id="configsmtp">
 					<input type="checkbox" id="set_stmp" style="vertical-align: middle;" /><label for="set_stmp"><?php echo lang('Configure SMTP manually (advanced users only)'); ?></label><br/>
-					<span class="userInfos"><?php echo lang('By default, the PHP \'mail()\' function is used'); ?></span>
+					<span class="userInfos"><?php echo lang('By default, the PHP \'mail()\' function is used (recommended)'); ?></span>
 				</p>
 
 				<div id="mailSMTPParam">
@@ -577,11 +583,10 @@ if ($lm->getIncludeTradFilename())
 
 					</form>
 				</div>
-				<p>
+				<p style="padding-bottom: 0;">
 					<input class="text" id="testEmail" type="text" size="15" value="<?php echo lang('enter@your.email'); ?>" /> &nbsp;
 					<input id="btVerifyMail" class="button" type="submit" value="<?php echo lang('Send me a test email!'); ?>" />
 				</p>
-
 				<p id="mailResultCheck"></p>
 			</div>
 		</div>
@@ -601,7 +606,7 @@ if ($lm->getIncludeTradFilename())
 				</div>
 
 				<div id="infosShopBlock">
-					<h2><?php echo lang('Merchant info'); ?></h2>
+					<h2><?php echo lang('Shop settings and merchant account information'); ?></h2>
 				<div class="field">
 						<label for="infosShop" class="aligned"><?php echo lang('Shop name:'); ?> </label>
 						<span class="contentinput">
@@ -632,12 +637,12 @@ if ($lm->getIncludeTradFilename())
 						<option value="16"><?php echo lang('Mobile and Telecom'); ?></option>
 						<option value="17"><?php echo lang('Services'); ?></option>
 						<option value="18"><?php echo lang('Shoes and accessories'); ?></option>
-						<option value="19"><?php echo lang('Sport and Entertainment'); ?></option>
+								<option value="19"><?php echo lang('Sports and Entertainment'); ?></option>
 						<option value="20"><?php echo lang('Travel'); ?></option>
 						<option value="0"><?php echo lang('Other activity...'); ?></option>
 					</select>
 						</span>
-					<p class="userInfos aligned"><?php echo lang('This information isn\'t required, it will be used for statistical purposes. This information doesn\'t change anything in your store.'); ?></p>
+						<p class="userInfos aligned"><?php echo lang('This information is not required, it will only be used for statistical purposes. This information does not change anything in your store.'); ?></p>
 				</div>
 				<div class="field">
 					<label for="infosCountry" class="aligned"><?php echo lang('Default country:'); ?></label>
@@ -649,7 +654,7 @@ if ($lm->getIncludeTradFilename())
 						<span id="resultInfosCountry" class="result aligned"></span>
 				</div>
 				<div class="field">
-					<label for="infosTimezone" class="aligned"><?php echo lang('Shop\'s timezone:'); ?></label>
+						<label for="infosTimezone" class="aligned"><?php echo lang('Shop timezone:'); ?></label>
 						<span class="contentinput">
 							<select name="infosTimezone" id="infosTimezone">
 								<option disabled="disabled"><?php echo lang('-- Select your timezone --'); ?></option>
@@ -658,11 +663,11 @@ if ($lm->getIncludeTradFilename())
 						<span id="resultInfosTimezone" class="result aligned"></span>
 				</div>
 				<div class="field">
-					<label for="infosLogo" class="aligned logo"><?php echo lang('Shop logo'); ?> : </label>
+						<label for="infosLogo" class="aligned logo"><?php echo lang('Shop logo:'); ?></label>
 						<span class="contentinput">
 							<p id="alignedLogo"><img id="uploadedImage" src="<?php echo PS_BASE_URI ?>img/logo.jpg" alt="Logo" /></p>
 						</span>
-						<p class="userInfos aligned"><?php echo lang('recommended dimensions: 230px X 75px'); ?></p>
+						<p class="userInfos aligned"><?php echo lang('Recommended dimensions:') ?><br />230px x 75px</p>
 
 						<span id="inputFileLogo" class="contentinput">
 					<input type="file" onchange="uploadLogo()" name="fileToUpload" id="fileToUpload"/>
@@ -670,14 +675,14 @@ if ($lm->getIncludeTradFilename())
 					<span id="resultInfosLogo" class="result"></span>
 				</div>
 				<div class="field">
-					<label for="catalogMode" class="aligned"><?php echo lang('Catalog mode:'); ?></label>
+						<label for="catalogMode" class="aligned"><?php echo lang('Catalog mode only:'); ?></label>
 						<span class="contentinput">
 					<input type="radio" name="catalogMode" id="catalogMode_1" value="1" />
 							<label for="catalogMode_1" class="radiolabel"><?php echo lang('Yes'); ?></label>&nbsp; &nbsp;
 					<input type="radio" name="catalogMode" id="catalogMode_0" value="0" checked="checked"/>
 							<label for="catalogMode_0" class="radiolabel"><?php echo lang('No'); ?></label>
 						</span>
-					<p class="userInfos aligned"><?php echo lang('If you activate this feature, all purchase features will be disabled. You can activate this feature later in your back office'); ?></p>
+						<p class="userInfos aligned"><?php echo lang('If you activate this feature, all purchasing will be disabled. However, you will be able to enable purchasing later in your Back Office.'); ?></p>
 				</div>
 
 				<div class="field">
@@ -718,17 +723,14 @@ if ($lm->getIncludeTradFilename())
 						</span>
 					<span id="resultInfosPasswordRepeat" class="result aligned"></span>
 				</div>
-
 					<div class="field" id="contentInfosNotification">
 						<span class="contentinput">
-					<input type="checkbox" id="infosNotification" class="aligned" style="vertical-align: middle;" /><label for="infosNotification"><?php echo lang('Receive notifications by e-mail'); ?></label><br/>
+							<input type="checkbox" id="infosNotification" class="aligned" style="vertical-align: middle;" /> <label for="infosNotification"><?php echo lang('Receive this information by e-mail'); ?></label><br/>
 					<span id="resultInfosNotification" class="result aligned"></span>
 						</span>
-
-					<p class="userInfos aligned"><?php echo lang('If you check this box and your mail configuration is wrong, your installation might be blocked. If so, please uncheck the box to go to the next step.'); ?></p>
+						<p class="userInfos aligned"><?php echo lang('Warning: If you check this box and your e-mail configuration is incorrect, you might not be able to continue the installation.'); ?></p>
 				</div>
 				</div>
-
 				<div id="benefitsBlock" style="display: none;">
 				<!-- Partner Modules -->
 				<?php
@@ -971,8 +973,8 @@ if ($lm->getIncludeTradFilename())
 
 			<div class="clearfix">
 				<h2><?php echo lang('Your installation is finished!'); ?></h2>
-				<p><?php echo lang('You have just installed and configured PrestaShop as your online shop solution. We wish you all the best with the success of your online shop.'); ?></p>
-				<p><?php echo lang('Here are your shop information. You can modify them once logged in.'); ?></p>
+				<p><?php echo lang('You have just installed and configured PrestaShop as your online shop. We wish you all the best with the success of your online shop.'); ?></p>
+				<p><?php echo lang('Here is your shop information. You can modify it once you are logged in.'); ?></p>
 				<table cellpadding="0" cellspacing="0" border="0" id="resultInstall" width="620">
 					<tr class="odd">
 						<td width="220" class="label"><?php echo lang('Shop name:'); ?></td>
@@ -992,18 +994,18 @@ if ($lm->getIncludeTradFilename())
 					</tr>
 				</table>
 
-				<h3 class="infosBlock"><?php echo lang('WARNING: For more security, you must delete the \'install\' folder.'); ?></h3>
+				<h3 class="infosBlock"><?php echo lang('WARNING: For security purposes, you must delete the "install" folder.'); ?></h3>
 
 				<div id="boBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_boBlock.png" />
 						<h3><?php echo lang('Back Office'); ?></h3>
-						<p class="description"><?php echo lang('Manage your store with your back office. Manage your orders and customers, add modules, change your theme, etc...'); ?></p>
+						<p class="description"><?php echo lang('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.'); ?></p>
 						<a href="../admin" id="access" class="BO" target="_blank"><span><?php echo lang('Manage your store'); ?></span></a>
 				</div>
 				<div id="foBlock" class="blockInfoEnd last clearfix">
 						<img src="img/visu_foBlock.png" />
 						<h3><?php echo lang('Front Office'); ?></h3>
-						<p class="description"><?php echo lang('Find your store as your future customers will see!'); ?></p>
+						<p class="description"><?php echo lang('Discover your store as your future customers will see it!'); ?></p>
 						<a href="../" id="access" class="FO" target="_blank"><span><?php echo lang('Discover your store'); ?></span></a>
 				</div>
 
@@ -1032,7 +1034,7 @@ if ($lm->getIncludeTradFilename())
 			</div>
 			<h2><?php echo lang('Warning: a manual backup is HIGHLY recommended before continuing!'); ?></h2>
 			<p><?php echo lang('Please backup the database and application files.'); ?></p>
-			<p><?php echo lang('When your files and database are saving in an other support, please certify that your shop is really backed up.'); ?><br /><br /></p>
+			<p><?php echo lang('When your backup is complete, please confirm that it is fully functional.'); ?><br /><br /></p>
 
 			<div id="versionWarning" style="font-weight: bold; background-color: #ffdeb7; color: #000; padding: 10px; border: 1px solid #999; margin-top: 10px; margin-bottom: 10px; display: none">
 				<p><img src="../img/admin/warning.gif" alt="" style="vertical-align: middle;" /> <span></span></p>
@@ -1076,10 +1078,10 @@ if ($lm->getIncludeTradFilename())
 				<div id="nonNativeModules" style="font-weight: bold; background-color: #ffdeb7; color: #000; padding: 10px; border: 1px solid #999; margin-top: 10px;">
 					<p><img src="../img/admin/warning.gif" alt="" style="vertical-align: middle;" /> <?php echo lang('It\'s dangerous to keep non-native modules activated during the update. If you really want to take this risk, uncheck the following box.'); ?></p>
 
-					<p><?php echo lang('You will be able to manually reactivate them in your back-office, once the update process has succeeded.'); ?></p>
+					<p><?php echo lang('You will be able to manually reactivate them in your Back Office once the update process has succeeded.'); ?></p>
 					<input id="customModuleDesactivation" type="checkbox" checked="checked" value="1" name="customModuleDesactivation" />
 					<label for="customModuleDesactivation">
-						<?php echo lang('Ok, please desactivate the following modules, I will reactivate them later:'); ?>
+						<?php echo lang('Ok, please deactivate the following modules, I will reactivate them later:'); ?>
 					</label>
 					<ul id="nonNativeModulesLi">
 
@@ -1096,11 +1098,11 @@ if ($lm->getIncludeTradFilename())
 
 				echo '<h2>'.lang('Theme compatibility').'</h2>';
 				echo '<p>'.lang('Before updating, you need to check that your theme is compatible with version').' <b>'.INSTALL_VERSION.'</b> '.lang('of PrestaShop.').'</p>
-	<p><b>'.lang('In this aim, use our').'</b> <a target="_blank" href="http://validator.prestashop.com?version='.INSTALL_VERSION.'" title="'.lang('Link to the validator').'"><b>'.lang('Online Theme Validator').'</b></a>.'.'</p>';
+	<p><b>'.lang('To do this, use our').'</b> <a target="_blank" href="http://validator.prestashop.com?version='.INSTALL_VERSION.'" title="'.lang('Link to the validator').'"><b>'.lang('Online Theme Validator').'</b></a>.'.'</p>';
 	echo '<p>'.lang('If your theme is not valid, you may experience some problems in your front-office aspect, but don\'t panic ! To solve this, you can make it compatible by correcting the validators errors or by using a theme compatible with ').' '.INSTALL_VERSION.' '.lang('version').'.</p>';
 
 				echo '<h2>'.lang('Let\'s go!').'</h2>
-				<p>'.lang('Click on the "Next" button to start the upgrade, this can take several minutes,').' <u style="font-weight: bold; text-decoration: underline;">'.lang('do not close the window and be patient.').'</u></p>';
+				<p>'.lang('Click on the "Next" button to start the upgrade, this can take several minutes,').' <u style="font-weight: bold; text-decoration: underline;">'.lang('please be patient and do not close this window.').'</u></p>';
 				echo '<h2>'.lang('Details about this upgrade').' (v'.INSTALL_VERSION.')</h2>
 				<p>'.
 				lang('Thank you, you will be able to continue the upgrade process by clicking on the "Next" button.').'<br /><br />'.
@@ -1159,7 +1161,7 @@ if ($lm->getIncludeTradFilename())
 						<i style="font-size: 11px;">'.lang('Depending on your server and the size of your shop').'</i></p>';
 
 						if ($majorReleases > 1)
-							echo '<p style="margin-top: 8px;"><b>'.lang('You did not update your shop for a while,').' '.(int)$majorReleases.' '.lang('stable releases have been made ​​available since.').'</b> '.lang('This is not a problem however the update may take several minutes, try to update your shop more frequently.').'</p>';
+							echo '<p style="margin-top: 8px;"><b>'.lang('You have not updated your shop in a while,').' '.(int)$majorReleases.' '.lang('stable releases have been made ​​available since.').'</b> '.lang('This is not a problem however the update may take several minutes, try to update your shop more frequently.').'</p>';
 					}
 					else
 						echo '<p>'.lang('No files to process, this might be an error.').'</p>';
@@ -1182,7 +1184,7 @@ if ($lm->getIncludeTradFilename())
 				echo '
 				<br />
 				<h2>'.lang('Hosting parameters').'</h2>
-				<p>'.lang('PrestaShop tries to automatically set the best settings for your server in order the update to be successful.').'</p>
+				<p>'.lang('PrestaShop tries to automatically set the best settings for your server in order for the update to be successful.').'</p>
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<th>'.lang('PHP parameter').'</th>
@@ -1205,7 +1207,7 @@ if ($lm->getIncludeTradFilename())
 				if ($color == '#D9F2D0')
 					echo '<img src="../img/admin/ok.gif" alt="" style="vertical-align: absmiddle;" /> '.lang('All your settings seem to be OK, go for it!');
 				elseif ($color == '#FFDEB7')
-					echo '<img src="../img/admin/warning.gif" alt="" style="vertical-align: absmiddle;" /> '.lang('Beware, your settings look correct but are not optimal, if you encounter problems (upgrade too long, memory error...), please ask your hosting provider to increase the values of these parameters (max_execution_time & memory_limit).');
+					echo '<img src="../img/admin/warning.gif" alt="" style="vertical-align: absmiddle;" /> '.lang('Beware, your settings look correct but are not optimal, if you encounter problems (upgrade too long, memory error...), please ask your hosting provider to increase the values of these parameters: "max_execution_time" and "memory_limit".');
 				elseif ($color == '#FAE2E3')
 					echo '<img src="../img/admin/error2.png" alt="" style="vertical-align: absmiddle;" /> '.lang('We strongly recommend that you inform your hosting provider to modify the settings before process to the update.');
 				echo '</div>';
@@ -1216,7 +1218,7 @@ if ($lm->getIncludeTradFilename())
 
 		<div class="sheet clearfix" id="sheet_require_update">
 			<div class="contentTitle">
-				<h1><?php echo lang('System and permissions')?></h1>
+				<h1><?php echo lang('System Compatibility')?></h1>
 
 				<ul id="stepList_7" class="stepList clearfix">
 					<li class="ok">Etape 1 ok</li>
@@ -1225,7 +1227,7 @@ if ($lm->getIncludeTradFilename())
 					<li>Etape 4</li>
 				</ul>
 			</div>
-			<h2><?php echo lang('Required set-up. Please verify the following checklist items are true.'); ?></h2>
+			<h2><?php echo lang('Required set-up. Please verify the following checklist items:'); ?></h2>
 
 			<p>
 				<?php echo lang('If you have any questions, please visit our '); ?>
@@ -1269,7 +1271,7 @@ if ($lm->getIncludeTradFilename())
 				<li class="optional"><?php echo lang('Dom extension loaded')?></li>
 			</ul>
 
-			<p><input class="button" value="<?php echo lang('Refresh these settings'); ?>" type="button" id="req_bt_refresh_update"/></p>
+			<p><input class="button" value="<?php echo lang('Check my settings again'); ?>" type="button" id="req_bt_refresh_update"/></p>
 
 		</div>
 
@@ -1285,17 +1287,17 @@ if ($lm->getIncludeTradFilename())
 				</ul>
 			</div>
 
-			<h3><?php echo lang('One or more errors have occurred, you can find more informations below or in the log/installation.log file.'); ?></h3>
+			<h3><?php echo lang('One or more errors have occurred, you can find more information below or in the log/installation.log file.'); ?></h3>
 
 			<p id="resultUpdate" class="errorBlock"></p>
 			<br />
-			<p id="detailsError" class="infosBlock"><?php echo lang('No more informations'); ?></p>
+			<p id="detailsError" class="infosBlock"><?php echo lang('No more information'); ?></p>
 		</div>
 
 		<div class="sheet clearfix" id="sheet_end_update">
 			<div>
 				<div class="contentTitle">
-				<h1><?php echo lang('Your update is completed!'); ?></h1>
+					<h1><?php echo lang('Your update is complete!'); ?></h1>
 
 					<ul id="stepList_7" class="stepList clearfix">
 						<li class="ok">Etape 1 ok</li>
@@ -1310,7 +1312,7 @@ if ($lm->getIncludeTradFilename())
 				<p class="errorBlock" id="txtErrorUpdateSQL" style="display:none;"></p>
 				<p style="padding-bottom: 5px;"><a href="javascript:showUpdateLog()"><?php echo lang('view the log'); ?></a></p>
 				<div id="updateLog"></div>
-				<p><?php echo lang('You have just updated and configured PrestaShop as your online shop solution. We wish you all the best with the success of your online shop.'); ?></p>
+				<p><?php echo lang('You have just updated and configured PrestaShop as your online shop. We wish you all the best with the success of your online shop.'); ?></p>
 
 				<?php
 
@@ -1326,13 +1328,13 @@ if ($lm->getIncludeTradFilename())
 				?>
 
 				<div class="infosBlock">
-					<?php echo lang('WARNING: For more security, you must delete the \'install\' folder.'); ?>
+					<?php echo lang('WARNING: For security purposes, you must delete the "install" folder.'); ?>
 				</div>
 
 				<div id="foBlock" class="blockInfoEnd clearfix">
 						<img src="img/visu_foBlock.png" />
 						<h3><?php echo lang('Front Office'); ?></h3>
-						<p class="description"><?php echo lang('Find your store as your future customers will see!'); ?></p>
+						<p class="description"><?php echo lang('Discover your store as your future customers will see it!'); ?></p>
 						<a href="../" id="access" class="FO" target="_blank"><span><?php echo lang('Discover your store'); ?></span></a>
 				</div>
 			</div>
@@ -1355,11 +1357,10 @@ if ($lm->getIncludeTradFilename())
 
 </div>
 <ul id="footer">
-	<li><a href="http://www.prestashop.com/forum/" title="<?php echo lang('Official forum'); ?>"><?php echo lang('Official forum'); ?></a> | </li>
-	<li><a href="http://www.prestashop.com" title="PrestaShop.com">PrestaShop.com</a> | </li>
-	<li><a href="http://www.prestashop.com/contact.php" title="<?php echo lang('Contact us!'); ?>"><?php echo lang('Contact us!'); ?></a> | </li>
-	<li>&copy; 2005-<?php echo date('Y'); ?></li>
+	<li><a href="http://www.prestashop.com/forums/" title="<?php echo lang('PrestaShop Forums'); ?>" target="_blank"><?php echo lang('PrestaShop Forums'); ?></a> | </li>
+	<li><a href="http://www.prestashop.com" title="PrestaShop.com" target="_blank">PrestaShop.com</a> | </li>
+	<li><a href="http://www.prestashop.com/contact.php" title="<?php echo lang('Contact us!'); ?>" target="_blank"><?php echo lang('Contact us!'); ?></a> | </li>
+	<li>&copy; 2007-<?php echo date('Y'); ?></li>
 </ul>
 </body>
 </html>
-

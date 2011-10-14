@@ -54,7 +54,6 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_f284fe53995a4cc2e1e099cb1e511ec
 $_MODULE['<{moneybookers}prestashop>moneybookers_c5093f03229416cc06a625654429d7f2'] = 'Su cuenta ha sido activada';
 $_MODULE['<{moneybookers}prestashop>moneybookers_bd8df5ae85f76ba759fa979ada8566ea'] = 'Necesita';
 $_MODULE['<{moneybookers}prestashop>moneybookers_558b256c79bbcf473cc7347ec1ca9d54'] = 'validar su cuenta';
-$_MODULE['<{moneybookers}prestashop>moneybookers_61725fab1e3a4ccf8388c89bdc93d7c5'] = '¡Cuidado! Asegúrese de que ha sustituido el correo electrónico de prueba «testmerchant@moneybookers.com» por el correo electrónico que ha  utilizado para abrir su cuenta de Moneybookers:';
 $_MODULE['<{moneybookers}prestashop>moneybookers_71b5b9efebe9c2f73fad6dd1849b4312'] = 'Validar mi cuenta';
 $_MODULE['<{moneybookers}prestashop>moneybookers_ece6bf0de28bb0442df6e3a1fd7657d4'] = 'Si necesita ayuda, lea la activación manual';
 $_MODULE['<{moneybookers}prestashop>moneybookers_0b65457508cf73c9ed8c96f56b8910ce'] = 'Validación de la palabra secreta';

@@ -11,4 +11,5 @@ $_MODULE['<{blockadvertising}prestashop>blockadvertising_706bebc78ad992a07e4c1ce
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_8c38cf08a0d0a01bd44c682479432350'] = 'Bild ändern';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_56d9dfa26d7848a3fbcd2ae3091d38d9'] = 'Bild wird mit 155x163 gezeigt';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_9ce38727cff004a058021a6c7351a74a'] = 'Bild-Link';
+$_MODULE['<{blockadvertising}prestashop>blockadvertising_b78a3223503896721cca1303f776159b'] = 'Titel';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_f9ab05454998236921a6b0e281fae632'] = 'bestätigen';

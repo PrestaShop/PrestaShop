@@ -1,11 +1,12 @@
-Your message has been correctly sent to our Customer Service.
+Hello,
+
+Your message has been sent successfully to {shop_name} Customer Service.
 
 Your message:
 
 {message}
 
-
-We will answer as soon as possible.
+We will respond as soon as possible.
 
 Regards,
 

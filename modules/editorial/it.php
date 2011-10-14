@@ -21,5 +21,3 @@ $_MODULE['<{editorial}prestashop>editorial_28d74ee805e3a162047d8f917b74dcb3'] = 
 $_MODULE['<{editorial}prestashop>editorial_62f6077d6d15a35ff4929a225205892f'] = 'Link utilizzato sul secondo logo';
 $_MODULE['<{editorial}prestashop>editorial_98039e8f2a0d93fc0fff503f9166f59b'] = 'Sottotitolo logo home page ';
 $_MODULE['<{editorial}prestashop>editorial_c260ede55f0be17068302e7f842802f3'] = 'Aggiorna l\'editor';
-
-?>
