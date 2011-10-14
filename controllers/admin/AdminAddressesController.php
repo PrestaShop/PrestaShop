@@ -38,12 +38,13 @@ class AdminAddressesControllerCore extends AdminController
 	 	$this->table = 'address';
 	 	$this->className = 'Address';
 	 	$this->lang = false;
-	 	$this->edit = true;
-	 	$this->delete = true;
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->requiredDatabase = true;
 		$this->addressType = 'customer';
 		$this->context = Context::getContext();
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;

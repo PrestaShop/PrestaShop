@@ -101,6 +101,15 @@ class AdminControllerCore extends Controller
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
+	/** @var array list of available actions for each list row */
+	protected $actions_available = array('view', 'edit', 'delete', 'duplicate');
+
+	/** @var array list of required actions for each list row */
+	protected $actions = array();
+
+	/** @var array $cache_lang cache for traduction */
+	public static $cache_lang = array();
+
 	/**
 	 * @var array actions to execute on multiple selections
 	 * Usage:
@@ -146,7 +155,7 @@ class AdminControllerCore extends Controller
 		'id_cms' => 'id_cms',
 		'id_attribute' => 'id_attribute'
 	);
-	
+
 	protected $view;
 	protected $edit;
 	protected $delete;
@@ -910,6 +919,14 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * Declare an action to use for each row in the list
+	 */
+	public function addRowAction($action)
+	{
+		$this->actions[] = $action;
+	}
+
+	/**
 	 * Assign smarty variables for the page main content
 	 */
 	public function initContent()
@@ -926,7 +943,7 @@ class AdminControllerCore extends Controller
 				// Check if form template has been overriden
 				if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
 					$helper->tpl = $this->tpl_folder.'form.tpl';
-				$helper::$currentIndex = self::$currentIndex;
+				HelperForm::$currentIndex = self::$currentIndex;
 				$helper->token = $this->token;
 				$helper->table = $this->table;
 				$helper->id = $obj->id;
@@ -959,10 +976,22 @@ class AdminControllerCore extends Controller
 				$helper->header_tpl = $this->tpl_folder.'list_content.tpl';
 			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_footer.tpl'))
 				$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
-			$helper->view = $this->view;
+
+			// For compatibility reasons, we have to check standard actions in class attributes
+			foreach($this->actions_available as $action) {
+				if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
+					$this->actions[] = $action;
+			}
+
+			//
+			$helper->actions = $this->actions;
+
+
+			/*$helper->view = $this->view;
 			$helper->edit = $this->edit;
 			$helper->delete = $this->delete;
-			$helper->duplicate = $this->duplicate;
+			$helper->duplicate = $this->duplicate;*/
+
 			$helper->bulk_actions = $this->bulk_actions;
 			HelperList::$currentIndex = self::$currentIndex;
 			$helper->className = $this->className;
@@ -1346,7 +1375,7 @@ class AdminControllerCore extends Controller
 		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
-	
+
 	public function getlanguages()
 	{
 		$cookie = $this->context->cookie;
@@ -1460,7 +1489,7 @@ class AdminControllerCore extends Controller
 			else if ($className == 'Customer' && !Validate::isPasswd($value))
 				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'passwd', $className).'</b> '.$this->l('is invalid');
 		}
-		
+
 		/* Checking for multilingual fields validity */
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
