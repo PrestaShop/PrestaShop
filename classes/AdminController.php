@@ -170,6 +170,9 @@ class AdminControllerCore extends Controller
 	/** @var array Name and directory where class image are located */
 	public $fieldImageSettings = array();
 
+	/** @var string Image type */
+	public $imageType = 'jpg';
+
 	public function __construct()
 	{
 	// retro-compatibility : className for admin without controller
@@ -968,6 +971,7 @@ class AdminControllerCore extends Controller
 			$helper->shopLinkType = $this->shopLinkType;
 			$helper->identifier = $this->identifier;
 			$helper->token = $this->token;
+			$helper->imageType = $this->imageType;
 			$helper->_listSkipDelete = $this->_listSkipDelete;
 			$helper->colorOnBackground = $this->colorOnBackground;
 
@@ -1388,11 +1392,11 @@ class AdminControllerCore extends Controller
 	protected function getFieldValue($obj, $key, $id_lang = null)
 	{
 		if ($id_lang)
-			$defaultValue = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
+			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
 		else
-			$defaultValue = isset($obj->{$key}) ? $obj->{$key} : '';
+			$default_value = isset($obj->{$key}) ? $obj->{$key} : '';
 
-		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $defaultValue);
+		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $default_value);
 	}
 
 	/**
@@ -1595,6 +1599,42 @@ class AdminControllerCore extends Controller
 				if (isset($image['name']) && isset($image['dir']))
 					$this->uploadImage($id, $image['name'], $image['dir'].'/');
 		return !count($this->_errors) ? true : false;
+	}
+
+	protected function uploadImage($id, $name, $dir, $ext = false, $width = NULL, $height = NULL)
+	{
+		if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name']))
+		{
+			// Delete old image
+			if (Validate::isLoadedObject($object = $this->loadObject()))
+				$object->deleteImage();
+			else
+				return false;
+
+
+			// Check image validity
+			$max_size = isset($this->maxImageSize) ? $this->maxImageSize : 0;
+			if ($error = checkImage($_FILES[$name], Tools::getMaxUploadSize($max_size)))
+				$this->_errors[] = $error;
+			elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName))
+				return false;
+			else
+			{
+				$tmpName = $_FILES[$name]['tmp_name'];
+				// Copy new image
+				if (!imageResize($tmpName, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
+					$this->_errors[] = Tools::displayError('An error occurred while uploading image.');
+				if (count($this->_errors))
+					return false;
+				if ($this->afterImageUpload())
+				{
+					unlink($tmpName);
+					return true;
+				}
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

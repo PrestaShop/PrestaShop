@@ -85,15 +85,15 @@ class GenderCore extends ObjectModel
 		return ObjectModel::hydrateCollection('Gender', $results, $id_lang);
 	}
 
-	public static function getStaticImage($id, $useUnknown = false)
+	public static function getStaticImage($id, $use_unknown = false)
 	{
 		if (!file_exists(_PS_GENDERS_DIR_.$id.'.jpg'))
-			return ($useUnknown) ?  _PS_ADMIN_IMG_.'unknown.gif' : false;
+			return ($use_unknown) ?  _PS_ADMIN_IMG_.'unknown.gif' : false;
 		return _THEME_GENDERS_DIR_.$id.'.jpg';
 	}
 
-	public function getImage($useUnknown = false)
+	public function getImage($use_unknown = false)
 	{
-		return Gender::getStaticImage($this->id, $useUnknown);
+		return Gender::getStaticImage($this->id, $use_unknown);
 	}
 }

@@ -55,7 +55,7 @@
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
 
-<form action="{$current}&submitAdd{$table}=1&token={$token}" method="post">
+<form action="{$current}&submitAdd{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" value="{$form_id}" />
 	{/if}
@@ -172,6 +172,9 @@
 							{/if}
 						{elseif $input.type == 'checkbox'}
 							
+						{elseif $input.type == 'file'}
+							<input type="file" name="{$input.name}" />
+							<img src="{$fields_value[$input.name]}" />
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
