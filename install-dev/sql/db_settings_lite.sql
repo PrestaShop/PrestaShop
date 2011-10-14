@@ -1327,6 +1327,46 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 (5, 4, 'Auffüllung'),
 (5, 5, 'Riassortimento');
 
+INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_product_attribute`, `id_shop`, `quantity`, `depends_on_stock`, `out_of_stock`) VALUES
+(1, 2, 7, 1, 10, 0, 2),
+(2, 2, 8, 1, 20, 0, 2),
+(3, 2, 9, 1, 30, 0, 2),
+(4, 2, 10, 1, 40, 0, 2),
+(5, 5, 12, 1, 100, 0, 2),
+(6, 5, 13, 1, 99, 0, 2),
+(7, 5, 14, 1, 50, 0, 2),
+(8, 5, 15, 1, 25, 0, 2),
+(9, 7, 19, 1, 50, 0, 2),
+(10, 7, 22, 1, 60, 0, 2),
+(11, 7, 23, 1, 70, 0, 2),
+(12, 1, 25, 1, 50, 0, 2),
+(13, 1, 26, 1, 50, 0, 2),
+(14, 1, 27, 1, 50, 0, 2),
+(15, 1, 28, 1, 50, 0, 2),
+(16, 1, 29, 1, 50, 0, 2),
+(17, 1, 30, 1, 50, 0, 2),
+(18, 1, 31, 1, 50, 0, 2),
+(19, 1, 32, 1, 50, 0, 2),
+(20, 1, 33, 1, 50, 0, 2),
+(21, 1, 34, 1, 50, 0, 2),
+(22, 1, 35, 1, 50, 0, 2),
+(23, 1, 36, 1, 50, 0, 2),
+(24, 1, 39, 1, 50, 0, 2),
+(25, 1, 40, 1, 50, 0, 2),
+(26, 1, 41, 1, 50, 0, 2),
+(27, 1, 42, 1, 50, 0, 2),
+(32, 1, 0, 1, 800, 0, 2),
+(33, 2, 0, 1, 100, 0, 2),
+(34, 5, 0, 1, 274, 0, 2),
+(35, 6, 0, 1, 248, 0, 2),
+(36, 7, 0, 1, 180, 0, 2),
+(37, 8, 0, 1, 1, 0, 2),
+(38, 9, 0, 1, 1, 0, 2);
+
+INSERT INTO `PREFIX_warehouse` (`id_warehouse`, `id_address`, `id_employee`, `reference`, `name`, `management_type`) VALUES
+(1, 0, 1, 'default_warehouse', 'default warehous', 'FIFO');
+
+
 INSERT INTO `PREFIX_address_format` (`id_country`, `format`)
 (SELECT `id_country` as id_country, 'firstname lastname\ncompany\nvat_number\naddress1\naddress2\npostcode city\nCountry:name\nphone' as format FROM `PREFIX_country`);
 
