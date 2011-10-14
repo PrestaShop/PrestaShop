@@ -2003,13 +2003,14 @@ CREATE TABLE `PREFIX_warehouse_shop` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_stock_available` (
+`id_stock_available` INT(11) UNSIGNED NOT NULL,
 `id_product` INT(11) UNSIGNED NOT NULL,
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(10) NOT NULL DEFAULT '0',
 `depends_on_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 `out_of_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_product`, `id_product_attribute`, `id_shop`),
+  PRIMARY KEY (`id_stock_available`),
   KEY `id_shop` (`id_shop`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`)
