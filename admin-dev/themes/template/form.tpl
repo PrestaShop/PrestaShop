@@ -83,6 +83,7 @@
 												{if isset($input.size)}size="{$input.size}"{/if} 
 												{if isset($input.class)}class="{$input.class}"{/if} 
 												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
+										{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 									</div>
 								{/foreach}
 								{if count($languages) > 1}
@@ -111,6 +112,7 @@
 										{if isset($input.size)}size="{$input.size}"{/if} 
 										{if isset($input.class)}class="{$input.class}"{/if} 
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
+								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'select'}
 							<select name="{$input.name}" id="{$input.name}" {if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
@@ -187,11 +189,11 @@
 								{/if}
 							</p>
 						{/if}
+						{if isset($languages)}<div class="clear"></div>{/if}
 					</div>
 					{if $input.name == 'id_state'}
 						</div>
 					{/if}
-					<div class="clear"></div>
 				{/foreach}
 			{elseif $key == 'submit'}
 				<div class="margin-form">

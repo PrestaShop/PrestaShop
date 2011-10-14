@@ -28,32 +28,32 @@
 class QuickAccessCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
-	
-	/** @var string Link */
-	public 		$link;
-	
-	/** @var boolean New windows or not */
-	public 		$new_window;
-	
- 	protected 	$fieldsRequired = array('link', 'new_window');
- 	protected 	$fieldsSize = array('link' => 128);
- 	protected 	$fieldsValidate = array('link' => 'isUrl', 'new_window' => 'isBool');
- 	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 32);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
+	public $name;
 
-	protected 	$table = 'quick_access';
-	protected 	$identifier = 'id_quick_access';
-		
+	/** @var string Link */
+	public $link;
+
+	/** @var boolean New windows or not */
+	public $new_window;
+
+ 	protected $fieldsRequired = array('link', 'new_window');
+ 	protected $fieldsSize = array('link' => 128);
+ 	protected $fieldsValidate = array('link' => 'isUrl', 'new_window' => 'isBool');
+ 	protected $fieldsRequiredLang = array('name');
+ 	protected $fieldsSizeLang = array('name' => 32);
+ 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+
+	protected $table = 'quick_access';
+	protected $identifier = 'id_quick_access';
+
 	public function getFields()
 	{
 		$this->validateFields();
 		$fields['link'] = pSQL($this->link);
-		$fields['new_window'] = (int)($this->new_window);
+		$fields['new_window'] = (int)$this->new_window;
 		return $fields;
 	}
-	
+
 	/**
 	* Check then return multilingual fields for database interaction
 	*
@@ -64,7 +64,7 @@ class QuickAccessCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name'));
 	}
-	
+
 	/**
 	* Get all available quick_accesses
 	*
@@ -75,7 +75,7 @@ class QuickAccessCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'quick_access` qa
-		LEFT JOIN `'._DB_PREFIX_.'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int)$id_lang.')
 		ORDER BY `name` ASC');
 	}
 }
