@@ -207,237 +207,11 @@ class AdminAddressesControllerCore extends AdminController
 		}
 	}
 
-	public function displayForm($isMainTab = true)
-	{
-		$content = parent::displayForm();
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$content .= '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
-		'.((int)($obj->id) ? '<input type="hidden" name="id_'.$this->table.'" value="'.(int)($obj->id).'" />' : '').'
-		'.(($id_order = (int)(Tools::getValue('id_order'))) ? '<input type="hidden" name="id_order" value="'.(int)($id_order).'" />' : '').'
-		'.(($address_type = (int)(Tools::getValue('address_type'))) ? '<input type="hidden" name="address_type" value="'.(int)($address_type).'" />' : '').'
-		'.(Tools::getValue('realedit') ? '<input type="hidden" name="realedit" value="1" />' : '').'
-			<fieldset>
-				<legend><img src="../img/admin/contact.gif" alt="" />'.$this->l('Addresses').'</legend>';
-
-		if ($obj->id)
-		{
-			$customer = new Customer($obj->id_customer);
-			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
-			$content .= '
-			<label>'.$this->l('Customer').'</label>
-			<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer='.$customer->id.'&viewcustomer&token='.$tokenCustomer.'">'.$customer->lastname.' '.$customer->firstname.' ('.$customer->email.')</a></div>
-			<input type="hidden" name="id_customer" value="'.$customer->id.'" />
-			<input type="hidden" name="email" value="'.$customer->email.'" />';
-		}
-		else
-		{
-			$content .=
-			'<label>'.$this->l('Customer e-mail').'</label>
-			<div class="margin-form">
-				<input type="text" size="33" name="email" value="'.htmlentities(Tools::getValue('email'), ENT_COMPAT, 'UTF-8').'" style="text-transform: lowercase;" /> <sup>*</sup>
-			</div>';
-		}
-		$content .= '
-			<label for="dni">'.$this->l('Identification Number').'</label>
-			<div class="margin-form">
-			<input type="text" name="dni" id="dni" value="'.htmlentities($this->getFieldValue($obj, 'dni'), ENT_COMPAT, 'UTF-8').'" />
-			<p>'.$this->l('DNI / NIF / NIE').'</p>
-			</div>';
-
-		$content .= '<label>'.$this->l('Alias').'</label>
-		<div class="margin-form">
-			<input type="text" size="33" name="alias" value="'.htmlentities($this->getFieldValue($obj, 'alias'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-			<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-		</div>';
-
-
-		$addresses_fields = $this->processAddressFormat();
-		$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
-
-		foreach($addresses_fields as $addr_field_item)
-		{
-			if ($addr_field_item == 'company')
-			{
-				$content .= '<label>'.$this->l('Company').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="company" value="'.htmlentities($this->getFieldValue($obj, 'company'), ENT_COMPAT, 'UTF-8').'" />
-					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-					</div>';
-
-				if ((Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php')) && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-					$content .= '<div id="vat_area" style="display: visible">';
-				else if(Configuration::get('VATNUMBER_MANAGEMENT'))
-					$content .= '<div id="vat_area" style="display: hidden">';
-				else
-					$content .='<div style="display: none;">';
-
-				$content .= '<label>'.$this->l('VAT number').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="vat_number" value="'.htmlentities($this->getFieldValue($obj, 'vat_number'), ENT_COMPAT, 'UTF-8').'" />
-					</div>
-					</div>';
-			}
-			elseif ($addr_field_item == 'lastname')
-			{
-				$content .= '
-					<label>'.$this->l('Last name').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="lastname" value="'.htmlentities($this->getFieldValue($obj, 'lastname'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>
-					</div>';
-			}
-			elseif ($addr_field_item == 'firstname')
-			{
-
-				$content .= '
-					<label>'.$this->l('First name').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="firstname" value="'.htmlentities($this->getFieldValue($obj, 'firstname'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>
-					</div>';
-			}
-			elseif ($addr_field_item == 'address1')
-			{
-
-				$content .= '
-					<label>'.$this->l('Address').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="address1" value="'.htmlentities($this->getFieldValue($obj, 'address1'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					</div>';
-			}
-			elseif ($addr_field_item == 'address2')
-			{
-
-				$content .= '
-					<label>'.$this->l('Address').' (2)</label>
-									     <div class="margin-form">
-												      <input type="text" size="33" name="address2" value="'.htmlentities($this->getFieldValue($obj, 'address2'), ENT_COMPAT, 'UTF-8').'" />
-															      </div>';
-			}
-			elseif ($addr_field_item == 'postcode')
-			{
-
-				$content .= '
-					<label>'.$this->l('Postcode/ Zip Code').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="postcode" value="'.htmlentities($this->getFieldValue($obj, 'postcode'), ENT_COMPAT, 'UTF-8').'" />
-					</div>';
-			}
-			elseif ($addr_field_item == 'city')
-			{
-
-				$content .= '
-					<label>'.$this->l('City').'</label>
-					<div class="margin-form">
-					<input type="text" size="33" name="city" value="'.htmlentities($this->getFieldValue($obj, 'city'), ENT_COMPAT, 'UTF-8').'" style="text-transform: uppercase;" /> <sup>*</sup>
-					</div>';
-			}
-			elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
-			{
-
-				$content .= '
-					<label>'.$this->l('Country').'</label>
-					<div class="margin-form">
-					<select name="id_country" id="id_country" />';
-				$selectedCountry = $this->getFieldValue($obj, 'id_country');
-				foreach ($this->countriesArray AS $id_country => $name)
-					$content .= '		<option value="'.$id_country.'"'.((!$selectedCountry AND Configuration::get('PS_COUNTRY_DEFAULT') == $id_country) ? ' selected="selected"' : ($selectedCountry == $id_country ? ' selected="selected"' : '')).'>'.$name.'</option>';
-				$content .= '		</select> <sup>*</sup>
-					</div>';
-
-
-			$content .= '
-				<div id="contains_states" '.(!Country::containsStates((int)$selectedCountry) ? 'style="display:none;"' : '').'>
-				<label>'.$this->l('State').'</label>
-				<div class="margin-form">
-				<select name="id_state" id="id_state">
-				</select>
-				<sup>*</sup>
-				</div>
-				</div>';
-
-
-				$id_country_ajax = (int)$this->getFieldValue($obj, 'id_country');
-
-				$content .= '
-					<script type="text/javascript">
-					$(document).ready(function(){
-							ajaxStates ();
-							$(\'#id_country\').change(function() {
-								ajaxStates ();
-								});
-							function ajaxStates ()
-							{
-								$.ajax({
-									url: "ajax.php",
-									cache: false,
-									data: "ajaxStates=1&id_country="+$(\'#id_country\').val()+"&id_state="+$(\'#id_state\').val(),
-									success: function(html)
-										{
-											if (html == \'false\')
-											{
-												$("#contains_states").fadeOut();
-												$(\'#id_state option[value=0]\').attr("selected", "selected");
-}
-											else
-											{
-												$("#id_state").html(html);
-												$("#contains_states").fadeIn();
-												$(\'#id_state option[value='.(int)$obj->id_state.']\').attr("selected", "selected");
-											}
-										}
-									}); ';
-		if (file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'))
-			$content .= '	$.ajax({
-					type: "GET",
-					url: "'._MODULE_DIR_.'vatnumber/ajax.php?id_country="+$(\'#id_country\').val(),
-					success: function(isApplicable)
-						{
-							if(isApplicable == 1)
-								$(\'#vat_area\').show();
-							else
-								$(\'#vat_area\').hide();
-						}
-					});';
-		$content .= '	}; }); </script>';
-		}
-
-	} // End foreach
-			$content .= '
-				<label>'.$this->l('Home phone').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="phone" value="'.htmlentities($this->getFieldValue($obj, 'phone'), ENT_COMPAT, 'UTF-8').'" />
-				</div>';
-
-			$content .= '
-				<label>'.$this->l('Mobile phone').'</label>
-				<div class="margin-form">
-					<input type="text" size="33" name="phone_mobile" value="'.htmlentities($this->getFieldValue($obj, 'phone_mobile'), ENT_COMPAT, 'UTF-8').'" />
-				</div>';
-
-
-			$content .= '
-				<label>'.$this->l('Other').'</label>
-				<div class="margin-form">
-					<textarea name="other" cols="36" rows="4">'.htmlentities($this->getFieldValue($obj, 'other'), ENT_COMPAT, 'UTF-8').'</textarea>
-					<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-				</div>';
-
-			$content .= '
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>';
-		$content .= '
-		</form>';
-
-		return $content;
-	}
-
+	/**
+	 * Get Address formats used by the country where the address id retrieved from POST/GET is.
+	 *
+	 * @return array address formats
+	 */
 	protected function processAddressFormat()
 	{
 		$tmp_addr = new Address((int)Tools::getValue("id_address"));
@@ -492,7 +266,7 @@ class AdminAddressesControllerCore extends AdminController
 				'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
 			));
 
-			// Order address fields depending on country norm
+			// Order address fields depending on country format
 			$addresses_fields = $this->processAddressFormat();
 			$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
 
@@ -614,7 +388,6 @@ class AdminAddressesControllerCore extends AdminController
 
 		parent::initContent();
 	}
-
 }
 
 
