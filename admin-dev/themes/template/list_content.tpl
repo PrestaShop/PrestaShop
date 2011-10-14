@@ -92,18 +92,11 @@
 	{/if}
 	{if $has_actions}
 		<td class="center" style="white-space: nowrap;">
-			{if isset($tr.view)}
-            	{$tr.view}
-            {/if}
-			{if isset($tr.edit)}
-			    {$tr.edit}
-			{/if}
-			{if isset($tr.delete)}
-			    {$tr.delete}
-			{/if}
-			{if isset($tr.duplicate)}
-			    {$tr.duplicate}
-			{/if}
+			{foreach $actions AS $action}
+				{if isset($tr.$action)}
+	            	{$tr.$action}
+	            {/if}
+			{/foreach}
 		</td>
 	{/if}
 	</tr>
