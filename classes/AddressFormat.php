@@ -348,7 +348,7 @@ class AddressFormatCore extends ObjectModel
 	 * @newLine is a string containing the newLine format
 	 * @separator is a string containing the separator format
 	 */
-	public static function generateAddress(Address $address, $patternRules, $newLine = "\r\n", $separator = ' ', $style = array())
+	public static function generateAddress(Address $address, $patternRules = array(), $newLine = "\r\n", $separator = ' ', $style = array())
 	{
 		$addressFields = AddressFormat::getOrderedAddressFields($address->id_country);
 		$addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
@@ -359,8 +359,9 @@ class AddressFormatCore extends ObjectModel
 				{
 					$tmpText = '';
 					foreach($patternsList as $pattern)
-						if (!in_array($pattern, $patternRules['avoid']))
-							$tmpText .= (isset($addressFormatedValues[$pattern])) ?
+						if ((!array_key_exists('avoid', $patternRules)) || 
+								(array_key_exists('avoid', $patternRules) && !in_array($pattern, $patternRules['avoid'])))
+							$tmpText .= (isset($addressFormatedValues[$pattern]) && !empty($addressFormatedValues[$pattern])) ?
 								(((isset($style[$pattern])) ? 
 									(sprintf($style[$pattern], $addressFormatedValues[$pattern])) : 
 									$addressFormatedValues[$pattern]).$separator) : '';
