@@ -92,12 +92,8 @@
 <th style="text-align: left; padding: 0.3em 1em;">Lieferanschrift</th> <th style="text-align: left; padding: 0.3em 1em;">Rechnungsanschrift</th>
 </tr>
 <tr>
-<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">
-{delivery_block_html}
-</td>
-<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">
-{invoice_block_html}
-</td>
+<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">{delivery_company} <br /><span style="color: #db3484; font-weight: bold;">{delivery_firstname} {delivery_lastname}</span> <br />{delivery_address1} <br />{delivery_address2} <br />{delivery_city} {delivery_postal_code} <br />{delivery_country} {delivery_state} <br />{delivery_phone} <br />{delivery_other}</td>
+<td style="padding: 0.5em 0 0.5em 0.5em; background-color: #ebecee;">{invoice_company} <br /><span style="color: #db3484; font-weight: bold;">{invoice_firstname} {invoice_lastname}</span> <br />{invoice_address1} <br />{invoice_address2} <br />{invoice_city} {invoice_postal_code} <br />{invoice_country} {invoice_state} <br />{invoice_phone} <br />{invoice_other}</td>
 </tr>
 </tbody>
 </table>
@@ -116,7 +112,7 @@
 <td>&nbsp;</td>
 </tr>
 <tr>
-<td style="font-size: 10px; border-top: 1px solid #D9DADE;" align="center"><a style="color: #db3484; font-weight: bold; text-decoration: none;" href="{shop_url}">{shop_name}</a> powered with <a style="text-decoration: none; color: #374953;" href="http://www.prestashop.com/">PrestaShop&trade;</a></td>
+<td style="font-size: 10px; border-top: 1px solid #D9DADE;" align="center"><a style="color: #db3484; font-weight: bold; text-decoration: none;" href="versions/1.4.1.0/mails/en/%7Bshop_url%7D">{shop_name}</a> powered with <a style="text-decoration: none; color: #374953;" href="http://www.prestashop.com/">PrestaShop&trade;</a></td>
 </tr>
 </tbody>
 </table>

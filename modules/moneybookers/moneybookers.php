@@ -38,7 +38,7 @@ class MoneyBookers extends PaymentModule
 	{
 		$this->name = 'moneybookers';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6';
+		$this->version = '1.6.1';
 
 		parent::__construct();
 
@@ -50,11 +50,16 @@ class MoneyBookers extends PaymentModule
 			$this->warning = $this->l('You are currently using the default Moneybookers e-mail address, please use your own e-mail address.');
 
 		/* For 1.4.3 and less compatibility */
-		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
-		if (!Configuration::get('PS_OS_PAYMENT'))
-			foreach ($updateConfig as $u)
-				if (!Configuration::get($u) && defined('_'.$u.'_'))
+		$updateConfig = array('PS_OS_CHEQUE' => 1, 'PS_OS_PAYMENT' => 2, 'PS_OS_PREPARATION' => 3, 'PS_OS_SHIPPING' => 4, 'PS_OS_DELIVERED' => 5, 'PS_OS_CANCELED' => 6,
+				      'PS_OS_REFUND' => 7, 'PS_OS_ERROR' => 8, 'PS_OS_OUTOFSTOCK' => 9, 'PS_OS_BANKWIRE' => 10, 'PS_OS_PAYPAL' => 11, 'PS_OS_WS_PAYMENT' => 12);
+		foreach ($updateConfig as $u => $v)
+			if (!Configuration::get($u) || (int)Configuration::get($u) < 1)
+			{
+				if (defined('_'.$u.'_') && (int)constant('_'.$u.'_') > 0)
 					Configuration::updateValue($u, constant('_'.$u.'_'));
+				else
+					Configuration::updateValue($u, $v);
+			}
 
 		/* MoneyBookers payment methods */
 		$this->_internationalPaymentMethods = array(
@@ -123,7 +128,7 @@ class MoneyBookers extends PaymentModule
 			!$this->registerHook('paymentReturn'))
 			return false;
 		Configuration::updateValue('MB_HIDE_LOGIN', 1);
-		Configuration::updateValue('MB_PAY_TO_EMAIL', Configuration::get('PS_SHOP_EMAIL'));
+		Configuration::updateValue('MB_PAY_TO_EMAIL', '');
 		Configuration::updateValue('MB_CANCEL_URL', (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__);
 		Configuration::updateValue('MB_ID_LOGO', 1);
 		Configuration::updateValue('MB_ID_LOGO_WALLET', 1);
@@ -374,6 +379,7 @@ class MoneyBookers extends PaymentModule
 		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-settings">
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Settings').'</legend>
+				<div class="margin-form" style="margin:0; padding:0 0 1em 20px">'.$this->l('You can display the Skrill/Moneybookers logo on your shop, this may reassure your customers about the fact that you are a serious merchant.').'</div>
 				<div class="margin-form" style="margin:0; padding:0 0 1em 20px">
 					<b>'.$this->l('Select the logo position').'</b> :
 					<select name="logo_position">';
@@ -445,10 +451,14 @@ class MoneyBookers extends PaymentModule
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Account validation').'</legend>
 				'.(Configuration::get('MB_PARAMETERS') == 1 ? '<p style="font-weight: bold; color: green;"><img src="../img/admin/ok.gif" alt="" /> '.$this->l('Your account has been activated').'</p>' : '').'
-				<p style="line-height: 20px;">'.$this->l('You need to').' <b>'.$this->l('validate your account').'</b>.<br />'.$this->l('Beware ! Be sure that you replaced the test e-mail « testmerchant@moneybookers.com » by your e-mail used to open your Moneybookers account :').'<br /><br />
+				<p style="line-height: 20px;">'.$this->l('You need to').' <b>'.$this->l('validate your account').'</b>.<br /><br />
 				<input type="text" name="mb_email_to_validate" value="'.Configuration::get('MB_PAY_TO_EMAIL').'" style="width: 250px;" />
 				<input type="submit" name="SubmitValidation" class="button" value="'.$this->l('Validate my account').'" /></p>
 				<p style="font-size: 14px;"><a href="'.$manual_links[$iso_manual].'" target="_blank"><img src="../img/admin/pdf.gif" alt="" /></a><a href="'.$manual_links[$iso_manual].'" target="_blank"><b>'.$this->l('For help, refer to the activation manual.').'</b></a></p>
+				<p style="font-size: 12px;">
+'.$this->l('You can test Moneybookers paiement with the test account testaccount2@moneybookers.com and the secret word mbtest.').'<br />
+'.$this->l('Beware, this is only a test account: you will not receive money if you use this test account on your shop. To receive money, you have to use the login and password of your personal Moneybookers account !').'
+				</p>
 			</fieldset>
 		</form>
 

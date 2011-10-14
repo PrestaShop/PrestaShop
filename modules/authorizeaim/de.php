@@ -3,11 +3,13 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_cb313e911b15b21b57f4fc7b53058e4f'] = 'Zahlung mit Authorize.net erhalten ';
+$_MODULE['<{authorizeaim}prestashop>authorizeaim_9d5b40ff49295ac0b4a5a13a88ccd285'] = 'cURL-Erweiterung muss auf dem Server aktiviert sein, um dieses Modul verwenden.';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Konfiguration aktualisiert';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_6a26f548831e6a8c26bfbbd9f6ec61e0'] = 'Hilfe';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_11a4b229c0e206b831f729572618553f'] = 'In Ihrem PrestaShop Admin-Panel';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_bc6781f2b59d4e973bd0075baab62a40'] = 'Füllen Sie das Login-ID-Feld mit der von Authorize.net vorgesehenen Kennung aus';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_95eb440b753d6505aad5c3f72b50eec9'] = 'Füllen Sie das Schlüsselfeld mit dem Transaktionsschlüssel von Authorize.net aus';
+$_MODULE['<{authorizeaim}prestashop>authorizeaim_a7180ba675bb293f415aab47e52a1732'] = 'Achtung: Ihre Website muss ein SSL-Zertifikat auf die Authorize.net AIM-Zahlungssystem nutzen zu besitzen. Sie sind verantwortlich für die Sicherheit Ihrer Kunden Bankdaten. PrestaShop kann nicht für jede Frage der Sicherheit auf Ihrer Website verantwortlich gemacht werden.';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_f3ef34226d51e9ca88eaa2f20d7ffb91'] = 'Login-ID';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_897356954c2cd3d41b221e3f24f99bba'] = 'Schlüssel';

@@ -12,6 +12,7 @@ $_MODULE['<{producttooltip}prestashop>producttooltip_2c8de3180924949acc5f6250af6
 $_MODULE['<{producttooltip}prestashop>producttooltip_640fd0cc0ffa0316ae087652871f4486'] = 'Minuten';
 $_MODULE['<{producttooltip}prestashop>producttooltip_8a8110f8a25a0e445f51edf84fd98a96'] = 'Wenn Sie die Option aktivieren, müssen Sie ebenfalls die erste Option von StartData aktivieren';
 $_MODULE['<{producttooltip}prestashop>producttooltip_1e358b149c2d4105f3a74c1961d1d9fb'] = 'Datum der letzten Bestellung dieses Produkts anzeigen?';
+$_MODULE['<{producttooltip}prestashop>producttooltip_dbcfa4aa50cd5f7ad099b3ba50e1137c'] = 'Wenn nicht bestellt noch, Anzeige der letzten Zeit das Produkt in einen Warenkorb hinzugefügt wurde?';
 $_MODULE['<{producttooltip}prestashop>producttooltip_a536f110cc080569666e95e8f49fda9b'] = 'Keine Ereignisse, anzeigen, die älter sind als :';
 $_MODULE['<{producttooltip}prestashop>producttooltip_44fdec47036f482b68b748f9d786801b'] = 'Tage';
 $_MODULE['<{producttooltip}prestashop>producttooltip_b17f3f4dcf653a5776792498a9b44d6a'] = 'Einstellungen aktualisieren';

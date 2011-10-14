@@ -42,5 +42,3 @@ $_MODULE['<{followup}prestashop>followup_edf9feeab43a7623f6afc152d1ede515'] = 'S
 $_MODULE['<{followup}prestashop>followup_a053fc9952a7dfc79282eba56ab8ad3a'] = 'Grazie per il vostro ordine';
 $_MODULE['<{followup}prestashop>followup_7fcd592dd47028c7c1f2d0ce9168a303'] = 'Sei uno dei nostri migliori clienti';
 $_MODULE['<{followup}prestashop>followup_c2ab23672d4bb31c7664bf8e854a10f7'] = 'Ci manchi';
-
-?>

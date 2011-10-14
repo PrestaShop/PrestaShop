@@ -11,6 +11,8 @@ $_MODULE['<{upscarrier}prestashop>upscarrier_f795d6b3e974858bb6720cfc2b4d22d6'] 
 $_MODULE['<{upscarrier}prestashop>upscarrier_fe4ee8226f826b73619fc422ca5b7382'] = 'UPS Kennwort';
 $_MODULE['<{upscarrier}prestashop>upscarrier_5e20501e9384bef70cc36012e20c49a1'] = 'MyUps ID';
 $_MODULE['<{upscarrier}prestashop>upscarrier_70620de307a173fe781d1a9a575346cb'] = 'UPS API Key';
+$_MODULE['<{upscarrier}prestashop>upscarrier_20449d3f0b6c6b9265a5cd2a470a6451'] = 'Gewicht der Verpackung';
+$_MODULE['<{upscarrier}prestashop>upscarrier_bfc00de34bc04366e7fee516adf7dca5'] = 'Bearbeitungsgebühr';
 $_MODULE['<{upscarrier}prestashop>upscarrier_3d2c007374b08d6999fa43e037d54b53'] = 'UPS Abholungsart';
 $_MODULE['<{upscarrier}prestashop>upscarrier_ead6e6f6c0c0be25f6275464f2ae0d3c'] = 'UPS Verpackungsart';
 $_MODULE['<{upscarrier}prestashop>upscarrier_885d2a3462e6b8b6ab763b95a0ce3a63'] = 'UPS Bewertungsservice-Gruppe';
@@ -41,6 +43,8 @@ $_MODULE['<{upscarrier}prestashop>upscarrier_fe78f3efbfa84d8485d589031596c5b8'] 
 $_MODULE['<{upscarrier}prestashop>upscarrier_e6fa03fa9e7d145171a6d2668fff42b0'] = 'Kleine Express Box';
 $_MODULE['<{upscarrier}prestashop>upscarrier_6c76ef0e25b3771e10e409179d2808ae'] = 'Mittlere Express Box';
 $_MODULE['<{upscarrier}prestashop>upscarrier_39a6651a951bf99fa4c3198a271a9c27'] = 'Große Express Box';
+$_MODULE['<{upscarrier}prestashop>upscarrier_386aad80d82f8245e9ef80352a2240e8'] = 'Alle Artikel in einem Paket';
+$_MODULE['<{upscarrier}prestashop>upscarrier_f35eb2a913a3fd6fd8e661012cf0ebd8'] = 'Split ein Stück pro Paket';
 $_MODULE['<{upscarrier}prestashop>upscarrier_ff00c491eedc4e610f8ec9d02a46cf1b'] = 'UPS Modulstatus';
 $_MODULE['<{upscarrier}prestashop>upscarrier_a6adb58e6abd44d96cec7996c0e38629'] = 'UPS Carrier ist richtig konfiguriert und online!';
 $_MODULE['<{upscarrier}prestashop>upscarrier_3184c79dd129c671b26afaefd7614488'] = 'UPS Carrier ist noch nicht konfiguriert, Sie müssen:';
@@ -58,6 +62,8 @@ $_MODULE['<{upscarrier}prestashop>upscarrier_32b02316cc0c3e871dd2ba4451abbb23'] 
 $_MODULE['<{upscarrier}prestashop>upscarrier_c4906d203203052c2119c2c27e7cef65'] = 'Ihre MyUps ID';
 $_MODULE['<{upscarrier}prestashop>upscarrier_e75761482891a9ad8c6a1339dd143119'] = 'Ihr UPS API Key';
 $_MODULE['<{upscarrier}prestashop>upscarrier_bdfcb5fba4c72a81163a0b403a25338d'] = 'Bitte klicken Sie hier, um Ihren UPS API Key zu erhalten.';
+$_MODULE['<{upscarrier}prestashop>upscarrier_db06a2900c66a3a2cb78fe3a470f1b85'] = 'Verpackung Gewicht';
+$_MODULE['<{upscarrier}prestashop>upscarrier_0274f749472f365e7d48a501e14793e6'] = 'Handling Fee';
 $_MODULE['<{upscarrier}prestashop>upscarrier_83ad4fdaf06650e6d9d7ca18f82fb975'] = 'Lokalisierungskonfiguration';
 $_MODULE['<{upscarrier}prestashop>upscarrier_f489118ea95c746d648d36bb50c226f0'] = 'Gewichtseinheit';
 $_MODULE['<{upscarrier}prestashop>upscarrier_659c95668841b7d6602ead454b28d4ba'] = 'Die Gewichtseinheit Ihres Shops (z.B. kg oder lbs)';
@@ -84,6 +90,8 @@ $_MODULE['<{upscarrier}prestashop>upscarrier_4db2ac4ca0617d113b4df01fe69d3118'] 
 $_MODULE['<{upscarrier}prestashop>upscarrier_da42caf26ef85de3d7e48e16ca60b891'] = 'Verpackungsart';
 $_MODULE['<{upscarrier}prestashop>upscarrier_8d2ee0603dfce09b57d60db628cde269'] = 'Wählen Sie eine Verpackungsart ...';
 $_MODULE['<{upscarrier}prestashop>upscarrier_795de10b1bdcb843b3703c63ad577fc6'] = 'Wählen Sie die Verpackungsart aus der Liste.';
+$_MODULE['<{upscarrier}prestashop>upscarrier_8d6bd50f3fe3ee2f4513066c25e5fb4a'] = 'Calcul Modus';
+$_MODULE['<{upscarrier}prestashop>upscarrier_3169c5057093f8e6c2750f1949a0900d'] = 'Mit dem calcul Modus \"Alle Elemente in einem Paket\" verwendet automatisch Standard-Packungsgröße, Verpackungsart und Zustelldienste. Besonderheiten Konfigurationen für Kategorien oder Produkte nicht verwendet werden.';
 $_MODULE['<{upscarrier}prestashop>upscarrier_5cdd307ba6e260beb4801c0c10e22a3a'] = 'Liefer-Service';
 $_MODULE['<{upscarrier}prestashop>upscarrier_78945de8de090e90045d299651a68a9b'] = 'Verfügbar';
 $_MODULE['<{upscarrier}prestashop>upscarrier_2d25c72c1b18e562f6654fff8e11711e'] = 'Nicht verfügbar';

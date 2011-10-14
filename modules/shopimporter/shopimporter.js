@@ -144,7 +144,7 @@ var shopImporter = {
 	{
 		$('#checkAndSaveConfig').fadeOut('slow');
        	$('#steps').html($('#steps').html()+'<div id=\'database_feedback\' style=\'display:none;\' class=\'conf\'><img src=\''+shopImporter.srcConf+'\'>'+wsOk+'</div>');
-    	$('#steps').html($('#steps').html()+'<input style=\'display:none\' type=\'submit\' name=\'next\' id=\'next\' class=\'button\' value=\''+testImport+'\'>');
+    	$('#steps').html($('#steps').html()+'<input style=\'display:none\' type=\'submit\' name=\'next\' id=\'next\' class=\'button\' value="'+testImport+'">');
     	$('#next').fadeIn('slow', function () { 
 	    	$('#next').unbind('click').click(function(){
 				$('#next').fadeOut('fast', function() {
@@ -170,7 +170,7 @@ var shopImporter = {
 							       
 								       	$('#checkAndSaveConfig').fadeOut('slow');
 				       	$('#steps').html($('#steps').html()+'<div id=\'database_feedback\' style=\'display:none;\' class=\'conf\'><img src=\''+shopImporter.srcConf+'\'>'+databaseOk+'</div>');
-				    	$('#steps').html($('#steps').html()+'<input style=\'display:none\' type=\'submit\' name=\'next\' id=\'next\' class=\'button\' value=\''+testImport+'\'>');
+				    	$('#steps').html($('#steps').html()+'<input style=\'display:none\' type=\'submit\' name=\'next\' id=\'next\' class=\'button\' value="'+testImport+'">');
 								    	$('#database_feedback').fadeIn('slow', function() {
 						    			if (save)
 								    	{
@@ -675,8 +675,7 @@ function displaySpecificOptionsWsdl(moduleName,token)
 	       success: function(htmlData)
 	       {
 	    	   	$('#specificOptionsContent').html(htmlData);
-	    	   	$('#specificOptions').show();
-				$('#displayOptions').hide();
+	    	   	$('#specificOptions').hide();
 				$('#importOptions').show();
 	       },
 	       error: function(XMLHttpRequest, textStatus, errorThrown)

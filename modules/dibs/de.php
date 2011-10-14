@@ -10,6 +10,7 @@ $_MODULE['<{dibs}prestashop>dibs_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Konfigura
 $_MODULE['<{dibs}prestashop>dibs_323d72a644340f9f2152febe46a52259'] = 'Ein DIBS-Konto erhalten';
 $_MODULE['<{dibs}prestashop>dibs_a24f296af38bde709dffc364b28bdebb'] = 'Klicken Sie bitte auf den Link, um den DIBS Anmeldeformular zu sehen:';
 $_MODULE['<{dibs}prestashop>dibs_97e7c9a7d06eac006a28bf05467fcc8b'] = 'Link';
+$_MODULE['<{dibs}prestashop>dibs_d826f3c7dc81b9d9b855f34bb855d9f6'] = 'Je nach Sprache und Land Regeln, können Abo-Parameter unterschiedlich sein.';
 $_MODULE['<{dibs}prestashop>dibs_d076f6d79396f176263a61ad3a1fe945'] = 'Bitte klicken Sie auf die entsprechende Flagge:';
 $_MODULE['<{dibs}prestashop>dibs_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
 $_MODULE['<{dibs}prestashop>dibs_794b8837b6ee6ddc4301f557915f9486'] = 'Logo-Farbe';

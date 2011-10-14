@@ -1,12 +1,11 @@
-	Hi {firstname} {lastname},
+Hi {firstname} {lastname},
 
-	Your order payment has been refunded.
+We have processed your {shop_name} refund for order #{id_order}.
 
-	You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website.
-	If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
 
-	{shop_name} - {shop_url}
+If you have guest account, you can follow your order using this link: {shop_url}guest-tracking.php
 
+{shop_name} - {shop_url}
 
-
-	{shop_url} powered by PrestaShop™
+{shop_url} powered by PrestaShop™

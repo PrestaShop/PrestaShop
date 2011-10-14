@@ -1,21 +1,23 @@
 Hi {firstname} {lastname},
 
-Your order {order_name} has been placed successfully. Your order will be shipped as soon as payment is received.
+Thank you for shopping at {shop_name}!
 
-Please note that you have selected to pay by cheque. Please include on your cheque:
+Your order {order_name} has been placed successfully and will be shipped as soon as we receive your payment.
 
-- an amount of {total_paid}
+You have selected to pay by cheque. Please include on your cheque:
 
-- payable to the order of {cheque_name}
+Amount: {total_paid}
 
-- mail to {cheque_address}
+Payable to the order of: {cheque_name}
 
-You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website.
-If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+Please mail your cheque to:
 
-Thank you for shopping at {shop_name}.
+{cheque_address}
+
+You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
+
+If you have guest account, you can follow your order using this link: {shop_url}guest-tracking.php
 
 {shop_name} - {shop_url}
-
 
 {shop_url} powered by PrestaShop™

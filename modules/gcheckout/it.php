@@ -19,10 +19,13 @@ $_MODULE['<{gcheckout}prestashop>gcheckout_4402acab1c8f90dcf4a31dc96833bd86'] = 
 $_MODULE['<{gcheckout}prestashop>gcheckout_82b8bb0d807e6d2e43a068f954c3559f'] = 'ID commerciante sembra essere sbagliato';
 $_MODULE['<{gcheckout}prestashop>gcheckout_9dd37c2106ceacbf0a40778b2109c386'] = 'Chiave commerciante sembra essere sbagliata';
 $_MODULE['<{gcheckout}prestashop>gcheckout_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';
+$_MODULE['<{gcheckout}prestashop>gcheckout_cd1c5e22d4513c1912be45c9ce9ddbe2'] = 'La versione API utilizzate da questo modulo è pari a 2,0';
 $_MODULE['<{gcheckout}prestashop>gcheckout_a1ffd2dc2538ea3093532029514d42ac'] = 'In primo luogo, utilizza la pagina per testare il modulo, poi puoi utilizzare la modalità reale se va tutto bene. Non dimenticare di cambiare la chiave e l\'ID commerciante secondo la modalità!';
 $_MODULE['<{gcheckout}prestashop>gcheckout_650be61892bf690026089544abbd9d26'] = 'Modalità';
 $_MODULE['<{gcheckout}prestashop>gcheckout_7f80fcc452c2f1ed2bb51b39d0864df1'] = 'Reale';
 $_MODULE['<{gcheckout}prestashop>gcheckout_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
+$_MODULE['<{gcheckout}prestashop>gcheckout_96fb435ae559f8a759f22f0823d57f7d'] = 'Non dimenticare di specificare la valuta utilizzata nelle schede di pagamento nella sezione di valuta';
+$_MODULE['<{gcheckout}prestashop>gcheckout_386c339d37e737a436499d423a77df0c'] = 'Valuta';
 $_MODULE['<{gcheckout}prestashop>gcheckout_76055653a95e0a559b734ec322d89632'] = 'È possibile trovare queste chiavi nel tuo account Google Checkout> Impostazioni> Integrazione. Sandbox e modalità reale hanno entrambe queste chiavi.';
 $_MODULE['<{gcheckout}prestashop>gcheckout_229a7ec501323b94db7ff3157a7623c9'] = 'ID commerciante';
 $_MODULE['<{gcheckout}prestashop>gcheckout_795acb9a0c89791314d3032fe65eeb92'] = 'Chiave commerciante';
@@ -39,6 +42,3 @@ $_MODULE['<{gcheckout}prestashop>gcheckout_dba727a9adc372723baef4533a7fc9da'] = 
 $_MODULE['<{gcheckout}prestashop>gcheckout_0d46d15f70a7cfa670545b308c022840'] = 'Gli ordini devono essere posizionati con la stessa valuta del tuo account venditore. Carrelli in altre valute saranno convertiti se il cliente sceglie di pagare con questo modulo.';
 $_MODULE['<{gcheckout}prestashop>gcheckout_8dd85f4218069de952672fe3180dacdb'] = 'Paga con GoogleCheckout';
 $_MODULE['<{gcheckout}prestashop>gcheckout_ba794350deb07c0c96fe73bd12239059'] = 'Confezione';
-$_MODULE['<{gcheckout}prestashop>gcheckout_9f06b28a40790c4c4df5739bce3c1eb0'] = 'Costi di spedizione';
-
-?>

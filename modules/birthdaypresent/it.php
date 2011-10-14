@@ -26,5 +26,3 @@ $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_3e788301a1b0ce341aa5ce15b
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_f299b58558601a85c98a2d1d7867d523'] = 'Operazioni sostenibili: carte fedeltà o punti, che non solo giustificano la comunicazione tra commerciante e cliente, ma offre anche vantaggi ai clienti (offerte private, sconti).';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d434c183a411611f50fa7e121b0f6565'] = 'Queste operazioni incoraggiano i clienti a comprare e a tornare al tuo negozio online regolarmente.';
 $_MODULE['<{birthdaypresent}prestashop>birthdaypresent_d46bd07675d08116e85f8a4c7866de53'] = 'Il tuo regalo di compleanno!';
-
-?>

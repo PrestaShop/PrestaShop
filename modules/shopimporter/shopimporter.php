@@ -729,8 +729,11 @@ class shopimporter extends ImportModule
 			foreach($item['order_products'] as $k => $order_products)
 			{
 				foreach($order_products as $key => $val)
-					if (array_key_exists($key, $foreignKey))
-						if (array_key_exists($val, $foreignKey[$key]))
+					if (array_key_exists($key, $foreignKey) OR $key == 'product_id')
+						//patch to correct a mistake naming column in the database
+						if ($key == 'product_id')
+							$item['order_products'][$k]['product_id'] =  $foreignKey['id_product'][$val];
+						elseif (array_key_exists($val, $foreignKey[$key]))
 							$item['order_products'][$k][$key] = $foreignKey[$key][$val];
 						else
 							$item['order_products'][$k][$key] = 0;
@@ -856,6 +859,7 @@ class shopimporter extends ImportModule
 		}
 		$cover = 1;
 		if (array_key_exists($item[$identifier], $matchId))
+			if(array_key_exists('images', $item) && !is_null($item['images']))
 			foreach($item['images'] as $key => $image)
 			{
 				$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'import');

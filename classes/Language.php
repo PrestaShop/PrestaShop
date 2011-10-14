@@ -547,7 +547,7 @@ class LanguageCore extends ObjectModel
 	public static function getIdByIso($iso_code)
 	{
 	 	if (!Validate::isLanguageIsoCode($iso_code))
-	 		die(Tools::displayError('Fatal error : iso code is not correct : ').$iso_code);
+	 		die(Tools::displayError('Fatal error: ISO code is not correct').' '.$iso_code);
 
 		return Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 	}
@@ -555,7 +555,7 @@ class LanguageCore extends ObjectModel
 	public static function getLanguageCodeByIso($iso_code)
 	{
 	 	if (!Validate::isLanguageIsoCode($iso_code))
-	 		die(Tools::displayError('Fatal error : iso code is not correct : ').$iso_code);
+			die(Tools::displayError('Fatal error: ISO code is not correct').' '.$iso_code);
 
 		return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 	}

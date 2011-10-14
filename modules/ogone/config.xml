@@ -2,7 +2,7 @@
 <module>
 	<name>ogone</name>
 	<displayName><![CDATA[Ogone]]></displayName>
-	<version><![CDATA[2.1]]></version>
+	<version><![CDATA[2.2]]></version>
 	<description><![CDATA[]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

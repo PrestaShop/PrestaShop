@@ -26,6 +26,7 @@ $_MODULE['<{socolissimo}prestashop>socolissimo_417434a4e55adbc67c9c391902cea7f3'
 $_MODULE['<{socolissimo}prestashop>socolissimo_140c34f0b21b932e34d11575509d093b'] = 'Ungültige Transaktions-ID';
 $_MODULE['<{socolissimo}prestashop>socolissimo_28ee1015b475a3a70613ea9c98d712b6'] = 'Format falsch Versandkosten';
 $_MODULE['<{socolissimo}prestashop>socolissimo_afa50e8b2fc14bf578331b2b8e98179d'] = 'Socolissimo Server nicht verfügbar';
+$_MODULE['<{socolissimo}prestashop>socolissimo_27e0a4f1ce5bb4ad9687a021e95367df'] = 'So Colissimo nicht konform mit One Page Checkout-Funktion, um dieses Modul zu nutzen, aktivieren Sie bitte die Standard-Bestellprozess (Preferences> \"Order-Prozess-Typ\")';
 $_MODULE['<{socolissimo}prestashop>socolissimo_b5a7adde1af5c87d7fd797b6245c2a39'] = 'Beschreibung';
 $_MODULE['<{socolissimo}prestashop>socolissimo_d0b34d3e1cb0cc1150ae6bf650e9b569'] = 'SoColissimo ist ein Service von La Poste, der Ihren Käufern 5 Zustellungsarten anbietet';
 $_MODULE['<{socolissimo}prestashop>socolissimo_e5c7c47a2cc967ae4834ad5c076734df'] = 'Nach Hause';
@@ -52,11 +53,14 @@ $_MODULE['<{socolissimo}prestashop>socolissimo_d38ac03101faea9ed5f9ea96bf8627b4'
 $_MODULE['<{socolissimo}prestashop>socolissimo_9954970bc5804ff557ced19516e2a55c'] = 'Seien Sie SEHR VORSICHTIG mit diesen Einstellungen, Änderungen können zu einer Fehlfunktion des Moduls führen';
 $_MODULE['<{socolissimo}prestashop>socolissimo_b0b2896e75025245cbb05e96bd1466d6'] = 'Url So';
 $_MODULE['<{socolissimo}prestashop>socolissimo_ce88aabea3b363c753b02ddcb2fbafff'] = 'URL des SoColissimo Backoffice.';
-$_MODULE['<{socolissimo}prestashop>socolissimo_85068ddf0b9bcbb6913008356fe328a0'] = 'Kontrolle';
+$_MODULE['<{socolissimo}prestashop>socolissimo_45313bad96da16bf04f88c1fb39419b7'] = 'Fancybox';
 $_MODULE['<{socolissimo}prestashop>socolissimo_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Aktiviert';
 $_MODULE['<{socolissimo}prestashop>socolissimo_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deaktiviert';
+$_MODULE['<{socolissimo}prestashop>socolissimo_09dbe81fba2031934c74555768a0e990'] = 'Wenn Sie diese Option aktivieren, wird die Seite von socolissimo in einem fancybox angezeigt';
+$_MODULE['<{socolissimo}prestashop>socolissimo_85068ddf0b9bcbb6913008356fe328a0'] = 'Kontrolle';
 $_MODULE['<{socolissimo}prestashop>socolissimo_fdd526b84abc0b8fc17060e62d022b84'] = 'Verfügbarkeit von Service SoColissimo erlauben oder nicht erlauben ';
 $_MODULE['<{socolissimo}prestashop>socolissimo_32996bdf4214d6cb8bf7fa02273813c8'] = 'URL Kontrolle';
+$_MODULE['<{socolissimo}prestashop>socolissimo_947d84460ad5676c9d79fa05727f1e8a'] = 'Die URL der Aufsicht ist es, die Verfügbarkeit des Dienstes socolissimo gewährleisten. Es ist nicht ratsam, deaktiviert.';
 $_MODULE['<{socolissimo}prestashop>socolissimo_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{socolissimo}prestashop>socolissimo_a82be0f551b8708bc08eb33cd9ded0cf'] = 'Information';
 $_MODULE['<{socolissimo}prestashop>socolissimo_3e387f5ebd657c6372f0594c8226863e'] = 'Hier sind zwei Adressen, die Sie in Ihrem Back Office SoColissimo ausfüllen müssen ';
@@ -70,6 +74,8 @@ $_MODULE['<{socolissimo}prestashop>socolissimo_c3288acdf9ecd0a4fb1e308442b06867'
 $_MODULE['<{socolissimo}prestashop>socolissimo_1a89bc7d83f6e90b2368e3401690a87a'] = 'Ungültige Mehraufwendungen';
 $_MODULE['<{socolissimo}prestashop>socolissimo_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Konfiguration aktualisiert';
 $_MODULE['<{socolissimo}prestashop>socolissimo_126d781eae70fa41e9e848f3013e1799'] = 'Kann Einstellungen nicht speichern';
+$_MODULE['<{socolissimo}prestashop>socolissimo_898d22b4259367825dbbbc174f049197'] = 'Wählen Lieferung Modus';
+$_MODULE['<{socolissimo}prestashop>socolissimo_6e55ec92b403f0ab31c29f62c837834a'] = 'Bearbeiten Lieferung Modus';
 $_MODULE['<{socolissimo}prestashop>socolissimo_7ea4eac85d1d1967562869cf1e14b1d0'] = 'Klicken Sie auf eine Liefermethode, um SoColissimo auszuwählen';
 $_MODULE['<{socolissimo}prestashop>socolissimo_201bdb87f8e278b943d07ae924d5de6e'] = 'Liefermodus';
 $_MODULE['<{socolissimo}prestashop>socolissimo_ce26601dac0dea138b7295f02b7620a7'] = 'Kunde';

@@ -10,13 +10,13 @@ INSERT INTO `PREFIX_carrier_zone` (`id_carrier`, `id_zone`) VALUES (2, 1),(2, 2)
 UPDATE `PREFIX_configuration` SET `value` = '2' WHERE `name` = 'PS_CARRIER_DEFAULT';
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
-	('MB_PAY_TO_EMAIL', 'testmerchant@moneybookers.com', NOW(), NOW()),
-	('MB_SECRET_WORD', 'mbtest', NOW(), NOW()),
+	('MB_PAY_TO_EMAIL', '', NOW(), NOW()),
+	('MB_SECRET_WORD', '', NOW(), NOW()),
 	('MB_HIDE_LOGIN', 1, NOW(), NOW()),
 	('MB_ID_LOGO', 1, NOW(), NOW()),
 	('MB_ID_LOGO_WALLET', 1, NOW(), NOW()),
-	('MB_PARAMETERS', 1, NOW(), NOW()),
-	('MB_PARAMETERS_2', 1, NOW(), NOW()),
+	('MB_PARAMETERS', 0, NOW(), NOW()),
+	('MB_PARAMETERS_2', 0, NOW(), NOW()),
 	('MB_DISPLAY_MODE', 0, NOW(), NOW()),
 	('MB_CANCEL_URL', 'http://www.yoursite.com', NOW(), NOW()),
 	('MB_LOCAL_METHODS', '2', NOW(), NOW()),

@@ -1,10 +1,10 @@
+Dear merchant,
+
 You have received a message from a customer via your shop: {shop_name}
 
-Details of message:
+Customer e-mail address: {email}
 
-E-mail address: {email}
-
-Message:
+Customer message:
 
 {message}
 

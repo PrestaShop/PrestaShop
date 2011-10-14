@@ -1,0 +1,14 @@
+{shop_name}
+ 
+Hola {firstname} {lastname},
+ 
+Gracias por su orden en {shop_name}
+ 
+Con carácter excepcional, le concedemos un descuento de {amount}% fuera de su próximo pedido! Esta oferta es válida para {days} días, así que no pierdas un instante!
+
+ 
+Aquí está tu cupón: {voucher_num}
+
+Introduzca este código en tu carrito de compras para obtener el descuento.
+ 
+{shop_name} desarrollado por PrestaShop™

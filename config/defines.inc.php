@@ -125,6 +125,8 @@ define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_.'/cache/cachefs/');
 define('_PS_GEOLOCATION_NO_CATALOG_', 0);
 define('_PS_GEOLOCATION_NO_ORDER_', 1);
 
+define('MIN_PASSWD_LENGTH', 8);
+
 if (!defined('_PS_CACHE_ENABLED_'))
     define('_PS_CACHE_ENABLED_', 0);
 

@@ -1,23 +1,26 @@
 Hi {firstname} {lastname},
 
-Your order #{id_order} has been placed successfully. Your order will be shipped as soon as payment is received.
+Thank you for shopping at {shop_name}!
 
-Please note that you have selected to pay by bank wire. Please send your wire to:
+Your order {order_name} has been placed successfully and will be shipped as soon as we receive your payment.
 
-{bankwire_owner}
+You have selected to pay by wire transfer.
 
+Here are the bank details for your wire or transfer:
+
+Amount: {total_paid}
+
+Account owner: {bankwire_owner}
+
+Account details:
 {bankwire_details}
 
-{bankwire_address}
+Bank address: {bankwire_address}
 
-Order total amount is {total_paid}
+You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
 
-You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website.
-If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
-
-Thank you for shopping at {shop_name}.
+If you have guest account, you can follow your order using this link: {shop_url}guest-tracking.php
 
 {shop_name} - {shop_url}
-
 
 {shop_url} powered by PrestaShop™

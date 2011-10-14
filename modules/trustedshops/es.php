@@ -3,7 +3,6 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{trustedshops}prestashop>display_products_02ecb4a4709d9bcc590f1a25fc82c0e2'] = 'Trusted Shops protección comprador (recomendado)';
-$_MODULE['<{trustedshops}prestashop>display_products_b55aab8932a39ca85bb0a1b6eb83f83f'] = 'Protección comprador hasta';
 $_MODULE['<{trustedshops}prestashop>display_products_69db1ddc2a15253abb0a11beb1eae734'] = 'incl. IVA';
 $_MODULE['<{trustedshops}prestashop>display_products_b3c25d2f94cf87ece3dbb2907318520c'] = 'La protección del comprador  Trusted Shops hace segura su compra en línea. Añado mi dirección de correo electrónico que se transfiere y ';
 $_MODULE['<{trustedshops}prestashop>display_products_536a056b710e94b16169efd17a4a657b'] = 'la guarda';
