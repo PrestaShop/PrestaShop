@@ -25,12 +25,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminOrderMessageController extends AdminController
+class AdminQuickAccessesController extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'order_message';
-		$this->className = 'OrderMessage';
+	 	$this->table = 'quick_access';
+		$this->className = 'QuickAccess';
 	 	$this->lang = true;
 	 	$this->edit = true;
 	 	$this->delete = true;
@@ -44,46 +44,70 @@ class AdminOrderMessageController extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
-			'id_order_message' => array(
+			'id_quick_access' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'width' => 25
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 140
+				'width' => 200
 			),
-			'message' => array(
-				'title' => $this->l('Message'),
-				'width' => 600,
-				'maxlength' => 300
+			'link' => array(
+				'title' => $this->l('Link'),
+				'width' => 300
+			),
+			'new_window' => array(
+				'title' => $this->l('New window'),
+				'align' => 'center',
+				'type' => 'bool',
+				'activeVisu' => 'new_window'
 			)
 		);
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Order messages'),
-				'image' => '../img/admin/email.gif'
+				'title' => $this->l('Quick Access menu'),
+				'image' => '../img/admin/quick.gif'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'lang' => true,
-					'attributeLang' => 'name¤message',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 53,
+					'lang' => true,
+					'attributeLang' => 'name',
+					'size' => 33,
+					'maxlength' => 32,
+					'required' => true,
+					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('URL:'),
+					'name' => 'link',
+					'size' => 60,
+					'maxlength' => 128,
 					'required' => true
 				),
 				array(
-					'type' => 'textarea',
-					'lang' => true,
-					'attributeLang' => 'name¤message',
-					'label' => $this->l('Message:'),
-					'name' => 'message',
-					'cols' => 50,
-					'rows' => 15,
-					'required' => true
+					'type' => 'radio',
+					'label' => $this->l('Open in new window:'),
+					'name' => 'new_window',
+					'required' => false,
+					'class' => 't',
+					'values' => array(
+						array(
+							'id' => 'new_window_on',
+							'value' => 1,
+							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+						),
+						array(
+							'id' => 'new_window_off',
+							'value' => 0,
+							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+						)
+					)
 				)
 			),
 			'submit' => array(
