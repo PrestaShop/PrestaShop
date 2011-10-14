@@ -29,10 +29,10 @@ class AdminGroupShopControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'group_shop';
+		$this->table = 'group_shop';
 		$this->className = 'GroupShop';
-	 	$this->lang = false;
-	 	$this->edit = true;
+		$this->lang = false;
+		$this->edit = true;
 		$this->delete = false;
 		$this->requiredDatabase = true;
 
@@ -240,7 +240,7 @@ class AdminGroupShopControllerCore extends AdminController
 			// Check if form template has been overriden
 			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form_import.tpl'))
 				$helper->tpl = $this->tpl_folder.'form_import.tpl';
-			$helper::$currentIndex = self::$currentIndex;
+			HelperForm::$currentIndex = self::$currentIndex;
 			$helper->token = $this->token;
 			$helper->table = $this->table;
 			$helper->id = $obj->id;
