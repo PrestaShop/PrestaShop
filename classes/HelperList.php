@@ -51,15 +51,9 @@ class HelperListCore extends Helper
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
-	protected $context;
-
 	public $identifier;
 
 	protected $deleted = 0;
-
-	public static $currentIndex;
-
-	public $token;
 
 	public static $cache_lang = array();
 
@@ -145,7 +139,7 @@ class HelperListCore extends Helper
 	 */
 	protected function _displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
-	    return '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
+	    return '<a href="'.$this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
 	        ((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
 	        <img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
 	        alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
@@ -216,10 +210,10 @@ class HelperListCore extends Helper
 				{
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
-						'position_url_down' => self::$currentIndex.
+						'position_url_down' => $this->currentIndex.
 							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
 							'&way=1&position='.(int)($tr['position'] + 1).'&token='.$this->token,
-						'position_url_up' => self::$currentIndex.
+						'position_url_up' => $this->currentIndex.
 							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
 							'&way=0&position='.(int)($tr['position'] - 1).'&token='.$this->token
 					);
@@ -289,7 +283,7 @@ class HelperListCore extends Helper
 			'list' => $this->_list,
 			'actions' => $this->actions,
 			'no_link' => $this->noLink,
-			'current_index' => self::$currentIndex,
+			'current_index' => $this->currentIndex,
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
 			'has_actions' => (bool)count($this->actions),
@@ -305,10 +299,10 @@ class HelperListCore extends Helper
         if (!array_key_exists('Copy images too?', self::$cache_lang))
 	        self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, true, false);
 
-    	$duplicate = self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
+    	$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
     	$this->context->smarty->assign(array(
-			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Duplicate'],
     		'confirm' => self::$cache_lang['Copy images too?'],
     		'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
@@ -325,7 +319,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['View'] = $this->l('View');
 
 		$this->context->smarty->assign(array(
-			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['View'],
 		));
 
@@ -339,7 +333,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['Edit'] = $this->l('Edit');
 
 		$this->context->smarty->assign(array(
-			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Edit'],
 		));
 
@@ -356,7 +350,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		$this->context->smarty->assign(array(
-			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'confirm' => self::$cache_lang['DeleteItem'].$id.' ?'.(!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : ''),
 			'action' => self::$cache_lang['Delete'],
 		));
@@ -384,7 +378,7 @@ class HelperListCore extends Helper
 
 		if (!$total_pages) $total_pages = 1;
 
-		$action = self::$currentIndex
+		$action = $this->currentIndex
 		  	.(Tools::getIsset($this->identifier)
 		  		? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier)
 		  		: '')
@@ -419,7 +413,7 @@ class HelperListCore extends Helper
 
 		// Cleaning links
 		if (Tools::getValue($this->table.'Orderby') && Tools::getValue($this->table.'Orderway'))
-			self::$currentIndex = preg_replace('/&'.$this->table.'Orderby=([a-z _]*)&'.$this->table.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+			$this->currentIndex = preg_replace('/&'.$this->table.'Orderby=([a-z _]*)&'.$this->table.'Orderway=([a-z]*)/i', '', $this->currentIndex);
 
 		if (array_key_exists($this->identifier, $this->identifiersDnd) && (int)Tools::getValue($this->identifiersDnd[$this->identifier], 1))
 			$table_id = substr($this->identifier, 3, strlen($this->identifier));
@@ -468,7 +462,7 @@ class HelperListCore extends Helper
 
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
-			'currentIndex' => self::$currentIndex,
+			'currentIndex' => $this->currentIndex,
 			'action' => $action,
 			'page' => $page,
 			'total_pages' => $total_pages,
@@ -504,36 +498,5 @@ class HelperListCore extends Helper
 			'bulk_actions' => $this->bulk_actions,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_footer.tpl');
-	}
-
-	/**
-	 * use translations files to replace english expression.
-	 *
-	 * @param mixed $string term or expression in english
-	 * @param string $class
-	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
-	 * @return string the translation if available, or the english default text.
-	 */
-	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
-	{
-		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		$current_class = get_class($this);
-		if (Module::getModuleNameFromClass($current_class))
-		{
-			$string = str_replace('\'', '\\\'', $string);
-			return Module::findTranslation(Module::$classInModule[$current_class], $string, $current_class);
-		}
-		global $_LANGADM;
-
-        if ($class == __CLASS__)
-                $class = 'AdminTab';
-
-		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = key_exists(get_class($this).$key, $_LANGADM)
-			? $_LANGADM[get_class($this).$key]
-			: ((key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
-		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
-		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 }

@@ -53,7 +53,7 @@
 			{$errors|count} {l s='errors'}
 			<br/>
 			<ol>
-				{foreach $errors as $error}
+				{foreach $errors AS $error}
 					<li>{$error}</li>
 				{/foreach}
 			</ol>

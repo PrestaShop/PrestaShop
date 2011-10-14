@@ -78,7 +78,7 @@
 						{else}
 							<label>{l s='Customer e-mail'}</label>
 							<div class="margin-form">
-								<input type="text" size="33" name="email" value="{$fields_value[$input.name]}" style="text-transform: lowercase;" /> <sup>*</sup>
+								<input type="text" size="33" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" style="text-transform: lowercase;" /> <sup>*</sup>
 							</div>
 						{/if}
 					{else}				
@@ -99,7 +99,7 @@
 								<input type="text" 
 										name="{$input.name}" 
 										id="{$input.name}" 
-										value="{$fields_value[$input.name]}" 
+										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" 
 										{if isset($input.size)}size="{$input.size}"{/if} 
 										{if isset($input.class)}class="{$input.class}"{/if} 
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
@@ -110,14 +110,14 @@
 											<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
 												{foreach $optiongroup[$input.options.options.query] as $option}
 													<option value="{$option[$input.options.options.id]}" 
-															{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]}</option>
+															{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
 												{/foreach}
 											</optgroup>
 										{/foreach}
 									{else}
 										{foreach $input.options.query AS $option}
 											<option value="{$option[$input.options.id]}" 
-													{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
+													{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
 										{/foreach}
 									{/if}
 								</select>
@@ -126,12 +126,12 @@
 									<input type="radio" 
 											name="{$input.name}" 
 											id="{$value.id}" 
-											value="{$value.value}" 
+											value="{$value.value|escape:'htmlall':'UTF-8'}" 
 											{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
 									<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}"> {$value.label}</label>
 								{/foreach}
 							{elseif $input.type == 'textarea'}
-								<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
+								<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 							{elseif $input.type == 'checkbox'}
 								
 							{/if}

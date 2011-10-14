@@ -1,0 +1,193 @@
+<?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision$
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+/**
+ * Use this helper to generate preferences forms, with values stored in the configuration table
+ */
+class HelperOptionsCore extends Helper
+{
+	public $first_call = true;
+
+	/**
+	 * @var array of forms fields
+	 * Usage :
+	 *
+	 */
+	protected $fields_form = array();
+
+	public $fields_value = array();
+
+	public $tpl = 'options.tpl';
+
+	/**
+	 * Generate a form for options
+	 * @param array options
+	 * @return string html
+	 */
+	public function generateOptions($option_list)
+	{
+		$tab = Tab::getTab($this->context->language->id, $this->id);
+
+		foreach ($option_list as $category => $category_data)
+		{
+			$required = false;
+			foreach ($category_data['fields'] as $key => $field)
+			{
+				// Field value
+				$option_list[$category]['fields'][$key]['value'] = $this->getOptionValue($key, $field);
+
+				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
+				$isDisabled = $isInvisible = false;
+				if (Shop::isMultiShopActivated())
+				{
+					if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+					{
+						$isDisabled = true;
+						$isInvisible = true;
+					}
+					else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+						$isDisabled = true;
+				}
+				$option_list[$category]['fields'][$key]['is_disabled'] = $isDisabled;
+				$option_list[$category]['fields'][$key]['is_invisible'] = $isInvisible;
+
+				// Cast options values if specified
+				if ($field['type'] == 'select' && isset($field['cast']))
+					foreach ($field['list'] as $option_key => $option)
+						$option_list[$category]['fields'][$key]['list'][$option_key][$field['identifier']] = $field['cast']($option[$field['identifier']]);
+
+				// Fill values for all languages for all lang fields
+				if (substr($field['type'], -4) == 'Lang')
+				{
+					if (!isset($languages))
+						$languages = Language::getLanguages(false);
+
+					foreach ($languages as $language)
+					{
+						if ($field['type'] == 'textLang')
+							$value = Tools::safeOutput(Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang'])));
+						elseif ($field['type'] == 'textareaLang')
+							$value = Configuration::get($key, $language['id_lang']);
+						$option_list[$category]['fields'][$key]['languages'][$language['id_lang']] = $value;
+					}
+					$option_list[$category]['fields'][$key]['flags'] = $this->displayFlags($languages, $this->context->language->id, $key, $key, true);
+				}
+
+				// Multishop default value
+				$option_list[$category]['fields'][$key]['multishop_default'] = (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
+			}
+		}
+		$this->context->smarty->assign(array(
+			'img_legend' => (!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif',
+			'current' => $this->currentIndex,
+			'optionsList' => $option_list,
+			'current_id_lang' => $this->context->language->id,
+		));
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
+	}
+
+	/**
+	 * Type = image
+	 * @ TODO
+	 */
+	public function displayOptionTypeImage($key, $field, $value)
+	{
+		echo '<table cellspacing="0" cellpadding="0">';
+		echo '<tr>';
+
+		$i = 0;
+		foreach ($field['list'] as $theme)
+		{
+			echo '<td class="center" style="width: 180px; padding:0px 20px 20px 0px;">';
+				echo '<input type="radio" name="'.$key.'" id="'.$key.'_'.$theme['name'].'_on" style="vertical-align: text-bottom;" value="'.$theme['name'].'"'.(_THEME_NAME_ == $theme['name'] ? 'checked="checked"' : '').' />';
+				echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
+				echo '<br />';
+				echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on">';
+					echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
+				echo '</label>';
+			echo '</td>';
+			if (isset($field['max']) && ($i +1 ) % $field['max'] == 0)
+				echo '</tr><tr>';
+			$i++;
+		}
+		echo '</tr>';
+		echo '</table>';
+	}
+
+
+	/**
+	 * Type = selectLang
+	 * @ TODO
+	 */
+	public function displayOptionTypeSelectLang($key, $field, $value)
+	{
+		$languages = Language::getLanguages(false);
+		foreach ($languages as $language)
+		{
+			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="margin-bottom:8px; display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left; vertical-align: top;">';
+			echo  '<select name="'.$key.'_'.strtoupper($language['iso_code']).'">';
+			foreach ($field['list'] as $k => $v)
+				echo  '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.strtoupper($language['iso_code']), (Configuration::get($key.'_'.strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
+			echo  '</select>';
+			echo  '</div>';
+		}
+		$this->displayFlags($languages, $this->context->language->id, $key, $key);
+	}
+
+	/**
+	 * Type = price
+	 * @ TODO
+	 */
+	public function displayOptionTypePrice($key, $field, $value)
+	{
+		echo $this->context->currency->getSign('left');
+		$this->displayOptionTypeText($key, $field, $value);
+		echo $this->context->currency->getSign('right').' '.$this->l('(tax excl.)');
+	}
+
+	/**
+	 * Type = disabled
+	 *
+	 * @ TODO
+	 */
+	public function displayOptionTypeDisabled($key, $field, $value)
+	{
+		echo $field['disabled'];
+	}
+
+	public function getOptionValue($key, $field)
+	{
+		$value = Tools::getValue($key, Configuration::get($key));
+		if (!Validate::isCleanHtml($value))
+			$value = Configuration::get($key);
+
+		if (isset($field['defaultValue']) && !$value)
+			$value = $field['defaultValue'];
+		return $value;
+	}
+
+}

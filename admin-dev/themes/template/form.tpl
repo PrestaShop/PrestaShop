@@ -121,7 +121,7 @@
 										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
 											{foreach $optiongroup[$input.options.options.query] as $option}
 												<option value="{$option[$input.options.options.id]}" 
-														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]}</option>
+														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
 											{/foreach}
 										</optgroup>
 									{/foreach}
@@ -129,7 +129,7 @@
 									{foreach $input.options.query AS $option}
 										{$fields_value[$input.name]|@p}
 										<option value="{$option[$input.options.id]}" 
-												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
+												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
 									{/foreach}
 								{/if}
 							</select>
@@ -138,7 +138,7 @@
 								<input type="radio" 
 										name="{$input.name}" 
 										id="{$value.id}" 
-										value="{$value.value}" 
+										value="{$value.value|escape:'htmlall':'UTF-8'}" 
 										{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
 								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}"> {$value.label}</label>
 							{/foreach}
