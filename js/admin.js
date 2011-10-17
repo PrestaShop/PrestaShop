@@ -415,6 +415,22 @@ if (helpboxes)
 					$('input').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
 				}
 			});
+		}		
+		if ($('select'))
+		{
+			//Display by rollover
+			$('select').mouseover(function() { 
+			$(this).parent().find('.hint:first').css('display', 'block'); 
+			});
+			$('select').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			
+			//display when you press the tab key
+			$('select').keydown(function (e) {
+				if ( e.keyCode === 9 ){
+					$('select').focus(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
+					$('select').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+				}
+			});
 		}
 	});
 }
