@@ -55,6 +55,7 @@ class HelperListCore extends Helper
 
 	protected $deleted = 0;
 
+	/** @var array $cache_lang use to cache texts in current language */
 	public static $cache_lang = array();
 
 	protected $is_cms = false;
@@ -161,7 +162,8 @@ class HelperListCore extends Helper
 			sort($positions);
 		}
 
-		$key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.(in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '');
+		$identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
+		$key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.$identifier;
 
 		$fields = array();
 
@@ -235,11 +237,10 @@ class HelperListCore extends Helper
 				else if (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
 					$this->_list[$index][$key] = isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'];
 	            else if (isset($params['price']))
-					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], (isset($params['currency'])
-						?
-						Currency::getCurrencyInstance($tr['id_currency'])
-						:
-						$this->context->currency), false);
+	            {
+	            	$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
+	            	$this->_list[$index][$key] = Tools::displayPrice($tr[$key], ($currency), false);
+	            }
 				else if (isset($params['float']))
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
 				else if (isset($params['type']) && $params['type'] == 'date')
@@ -291,6 +292,9 @@ class HelperListCore extends Helper
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_content.tpl');
 	}
 
+	/**
+	 * Display duplicate action link
+	 */
     protected function _displayDuplicateLink($token = null, $id)
     {
     	if (!array_key_exists('Duplicate', self::$cache_lang))
@@ -310,9 +314,11 @@ class HelperListCore extends Helper
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_duplicate.tpl');
-
     }
 
+	/**
+	 * Display view action link
+	 */
 	protected function _displayViewLink($token = null, $id)
 	{
 		if (!array_key_exists('View', self::$cache_lang))
@@ -327,6 +333,9 @@ class HelperListCore extends Helper
 
 	}
 
+	/**
+	 * Display edit action link
+	 */
 	protected function _displayEditLink($token = null, $id)
 	{
 		if (!array_key_exists('Edit', self::$cache_lang))
@@ -341,6 +350,9 @@ class HelperListCore extends Helper
 
 	}
 
+	/**
+	 * Display delete action link
+	 */
 	protected function _displayDeleteLink($token = null, $id)
 	{
 		if (!array_key_exists('Delete', self::$cache_lang))
@@ -370,23 +382,21 @@ class HelperListCore extends Helper
 			$token = $this->token;
 
 		/* Determine total page number */
-		$total_pages = ceil($this->_listTotal / Tools::getValue('pagination', (isset($this->context->cookie->{$this->table.'_pagination'})
-			?
-			$this->context->cookie->{$this->table.'_pagination'}
-			:
-			$this->_pagination[0])));
+		if (isset($this->context->cookie->{$this->table.'_pagination'}))
+			$default_pagination = $this->context->cookie->{$this->table.'_pagination'};
+		else
+			$default_pagination = $this->_pagination[0];
+
+		$total_pages = ceil($this->_listTotal / Tools::getValue('pagination', ($default_pagination)));
 
 		if (!$total_pages) $total_pages = 1;
 
-		$action = $this->currentIndex
-		  	.(Tools::getIsset($this->identifier)
-		  		? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier)
-		  		: '')
-		  	.'&token='.$token
-			.(Tools::getIsset($this->table.'Orderby')
-		  		? '&'.$this->table.'Orderby='.urlencode($this->_orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->_orderWay))
-		  		: '')
-		  	.'#'.$this->table;
+		$identifier = Tools::getIsset($this->identifier) ? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier) : '';
+		$order = '';
+		if (Tools::getIsset($this->table.'Orderby'))
+			$order = '&'.$this->table.'Orderby='.urlencode($this->_orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->_orderWay));
+
+		$action = $this->currentIndex.$identifier.'&token='.$token.$order.'#'.$this->table;
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->table);
@@ -499,4 +509,5 @@ class HelperListCore extends Helper
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_footer.tpl');
 	}
+
 }
