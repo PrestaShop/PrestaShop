@@ -32,10 +32,11 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->table = 'shop_url';
 		$this->className = 'ShopUrl';
 	 	$this->lang = false;
-	 	$this->edit = true;
-		$this->delete = true;
 		$this->requiredDatabase = true;
 		$this->_listSkipDelete = array(1);
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->context = Context::getContext();
 

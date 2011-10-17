@@ -32,9 +32,10 @@ class AdminQuickAccessesController extends AdminController
 	 	$this->table = 'quick_access';
 		$this->className = 'QuickAccess';
 	 	$this->lang = true;
-	 	$this->edit = true;
-	 	$this->delete = true;
 		$this->requiredDatabase = true;
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->context = Context::getContext();
 

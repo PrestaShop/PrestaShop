@@ -31,10 +31,11 @@ class AdminSearchEnginesControllerCore extends AdminController
 	{
 	 	$this->table = 'search_engine';
 	 	$this->className = 'SearchEngine';
-	 	$this->edit = true;
-		$this->delete = true;
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->context = Context::getContext();
 

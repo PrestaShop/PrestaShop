@@ -390,5 +390,3 @@ class AdminAddressesControllerCore extends AdminController
 		parent::initContent();
 	}
 }
-
-

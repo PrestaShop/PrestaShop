@@ -35,8 +35,9 @@ class AdminImagesController extends AdminController
 		$this->table = 'image_type';
 		$this->className = 'ImageType';
 		$this->lang = false;
-		$this->edit = true;
-	 	$this->delete = true;
+
+	 	$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->fieldsDisplay = array(
 			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
