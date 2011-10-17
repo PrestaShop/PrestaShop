@@ -971,6 +971,7 @@ class AdminControllerCore extends Controller
 		else if ($this->display == 'list')
 		{
 			$this->getList($this->context->language->id);
+			
 			$helper = new HelperList();
 			// Check if list templates have been overriden
 			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_header.tpl'))
@@ -1004,9 +1005,9 @@ class AdminControllerCore extends Controller
 			$helper->identifier = $this->identifier;
 			$helper->token = $this->token;
 			$helper->imageType = $this->imageType;
+			$helper->no_add = isset($this->no_add) ? $this->no_add : false;
 			$helper->_listSkipDelete = $this->_listSkipDelete;
 			$helper->colorOnBackground = $this->colorOnBackground;
-
 			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 		}
 		else if ($this->display == 'options')
@@ -1194,6 +1195,7 @@ class AdminControllerCore extends Controller
 		if (isset($_GET['deleteImage']))
 		{
 			$this->action = 'delete_image';
+			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 			if (Validate::isLoadedObject($object = $this->loadObject()))
 				if (($object->deleteImage()))
 					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token);
@@ -1277,7 +1279,7 @@ class AdminControllerCore extends Controller
 	public function displayErrors()
 	{
 		// @TODO includesubtab
-		$this->includeSubTab('displayErrors');
+		$content = $this->includeSubTab('displayErrors');
 		return $content;
 	}
 
@@ -1337,7 +1339,7 @@ class AdminControllerCore extends Controller
 			$selectShop = ', shop.name as shop_name ';
 			$joinShop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
-			$whereShop = $this->context->shop->addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+			$whereShop = $this->context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 		$assos = Shop::getAssoTables();
 		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')

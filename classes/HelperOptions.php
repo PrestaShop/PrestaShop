@@ -31,6 +31,7 @@
 class HelperOptionsCore extends Helper
 {
 	public $first_call = true;
+	public $required = false;
 
 	/**
 	 * @var array of forms fields
@@ -51,10 +52,8 @@ class HelperOptionsCore extends Helper
 	public function generateOptions($option_list)
 	{
 		$tab = Tab::getTab($this->context->language->id, $this->id);
-
 		foreach ($option_list as $category => $category_data)
 		{
-			$required = false;
 			foreach ($category_data['fields'] as $key => $field)
 			{
 				// Field value
@@ -74,6 +73,8 @@ class HelperOptionsCore extends Helper
 				}
 				$option_list[$category]['fields'][$key]['is_disabled'] = $isDisabled;
 				$option_list[$category]['fields'][$key]['is_invisible'] = $isInvisible;
+
+				$option_list[$category]['fields'][$key]['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
