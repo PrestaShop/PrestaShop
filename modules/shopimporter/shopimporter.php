@@ -729,7 +729,7 @@ class shopimporter extends ImportModule
 			foreach($item['order_products'] as $k => $order_products)
 			{
 				foreach($order_products as $key => $val)
-					if (array_key_exists($key, $foreignKey) OR $key == 'product_id')
+					if (array_key_exists($key, $foreignKey) || $key == 'product_id')
 						//patch to correct a mistake naming column in the database
 						if ($key == 'product_id')
 							$item['order_products'][$k]['product_id'] =  $foreignKey['id_product'][$val];
@@ -1449,6 +1449,15 @@ class shopimporter extends ImportModule
 			$order->total_paid_real = (float)$item['total_paid_real'];
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
+			if(array_key_exists('date_add', $item))
+				$order->date_add = $item['date_add'];
+			if(array_key_exists('date_upd', $item))
+				$order->date_upd = $item['date_upd'];
+			//test valid paid
+			if($item['total_paid'] == $item['total_paid_real'])
+				$order->valid = 1;
+			else
+				$order->valid = 0;
 			$order->save(false, false);
 
 			$this->saveMatchId('order', (int)$order->id, (int)$item['id_cart']);

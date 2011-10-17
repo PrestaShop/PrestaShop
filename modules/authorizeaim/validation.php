@@ -42,8 +42,8 @@ foreach ($_POST AS $key => $value)
 		$postString .= $key.'='.urlencode($value).'&';
 $postString .= 'x_exp_date='.str_pad($_POST["x_exp_date_m"], 2, "0",STR_PAD_LEFT).$_POST["x_exp_date_y"];
 
-if (Tools::getValue('x_test_request'))
-	$postString .= 'Test_Mode=1';
+if (Tools::getValue('AUTHORIZE_AIM_DEMO'))
+	$postString .= 'Test_Mode=TRUE';
 
 /* Do the CURL request ro Authorize.net */
 $request = curl_init('https://secure.authorize.net/gateway/transact.dll');

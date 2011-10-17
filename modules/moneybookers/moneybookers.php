@@ -456,7 +456,7 @@ class MoneyBookers extends PaymentModule
 				<input type="submit" name="SubmitValidation" class="button" value="'.$this->l('Validate my account').'" /></p>
 				<p style="font-size: 14px;"><a href="'.$manual_links[$iso_manual].'" target="_blank"><img src="../img/admin/pdf.gif" alt="" /></a><a href="'.$manual_links[$iso_manual].'" target="_blank"><b>'.$this->l('For help, refer to the activation manual.').'</b></a></p>
 				<p style="font-size: 12px;">
-'.$this->l('You can test Moneybookers paiement with the test account testaccount2@moneybookers.com and the secret word mbtest.').'<br />
+'.$this->l('You can test Moneybookers payment with the test account testaccount2@moneybookers.com and the secret word mbtest.').'<br />
 '.$this->l('Beware, this is only a test account: you will not receive money if you use this test account on your shop. To receive money, you have to use the login and password of your personal Moneybookers account !').'
 				</p>
 			</fieldset>

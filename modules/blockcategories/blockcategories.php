@@ -85,6 +85,9 @@ class BlockCategories extends Module
 				Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', (int)($maxDepth));
 				Configuration::updateValue('BLOCK_CATEG_DHTML', (int)($dhtml));
 				Configuration::updateValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', $nbrColumns);
+				Configuration::updateValue('BLOCK_CATEG_SORT_WAY', Tools::getValue('BLOCK_CATEG_SORT_WAY'));
+				Configuration::updateValue('BLOCK_CATEG_SORT', Tools::getValue('BLOCK_CATEG_SORT'));
+				
 				$this->_clearBlockcategoriesCache();
 				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
 			}
@@ -111,6 +114,18 @@ class BlockCategories extends Module
 					<input type="radio" name="dhtml" id="dhtml_off" value="0" '.(!Tools::getValue('dhtml', Configuration::get('BLOCK_CATEG_DHTML')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="dhtml_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p class="clear">'.$this->l('Activate dynamic (animated) mode for sublevels').'</p>
+				</div>
+				<label>'.$this->l('Sort').'</label>
+
+				<div class="margin-form">
+					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_on" value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
+					<label class="t" for="sort_on"> <img src="../modules/'.$this->name.'/sort_number.png" alt="'.$this->l('Enabled').'" title="'.$this->l('By position').'" />'.$this->l('By position').'</label>
+					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_off" value="1" '.(Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
+					<label class="t" for="sort_off"> <img src="../modules/'.$this->name.'/sort_alphabet.png" alt="'.$this->l('Disabled').'" title="'.$this->l('By name').'" />'.$this->l('By name').'</label> - 
+					<select name="BLOCK_CATEG_SORT_WAY">
+						<option value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Ascending').'</option>
+						<option value="1" '.(Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Descending').'</option>
+					</select>
 				</div>
 				<label>'.$this->l('Footer columns number').'</label>
 				<div class="margin-form">
@@ -165,7 +180,7 @@ class BlockCategories extends Module
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
 				AND cg.`id_group` IN ('.pSQL($groups).')
 				GROUP BY id_category
-				ORDER BY `level_depth` ASC, c.`position` ASC')
+				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'))
 			)
 
 				return;
@@ -237,7 +252,7 @@ class BlockCategories extends Module
 				WHERE (c.`active` = 1 OR c.`id_category` = 1)
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
 				AND cg.`id_group` IN ('.pSQL($groups).')
-				ORDER BY `level_depth` ASC, c.`position` ASC')
+				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'))
 			)
 				return;
 			$resultParents = array();

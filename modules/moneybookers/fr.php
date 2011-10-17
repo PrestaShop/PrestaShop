@@ -59,7 +59,7 @@ $_MODULE['<{moneybookers}prestashop>moneybookers_bd8df5ae85f76ba759fa979ada8566e
 $_MODULE['<{moneybookers}prestashop>moneybookers_558b256c79bbcf473cc7347ec1ca9d54'] = 'votre compte Moneybookers';
 $_MODULE['<{moneybookers}prestashop>moneybookers_71b5b9efebe9c2f73fad6dd1849b4312'] = 'Valider mon compte';
 $_MODULE['<{moneybookers}prestashop>moneybookers_ece6bf0de28bb0442df6e3a1fd7657d4'] = 'Si vous avez besoin d\'aide, lisez le manuel d\'activation';
-$_MODULE['<{moneybookers}prestashop>moneybookers_4d8e842055eff4180273c00c3c6dbb51'] = 'Vous pouvez tester le paiement Moneybookers avec le compte testaccount2@moneybookers.com et le mot secret mbtest.';
+$_MODULE['<{moneybookers}prestashop>moneybookers_32e70e9f3def9ebdcdbc872b739b919f'] = 'Vous pouvez tester le paiement Moneybookers avec le compte testaccount2@moneybookers.com et le mot secret mbtest.';
 $_MODULE['<{moneybookers}prestashop>moneybookers_f5944cfc42cfb20119407c59a97bd9d1'] = 'Attention, ceci est juste un compte test : vous ne recevrez pas d’argent si vous utilisez ce compte sur votre boutique. Pour recevoir de l’argent, il faut utiliser le login et mot secret de votre compte Moneybookers ! »';
 $_MODULE['<{moneybookers}prestashop>moneybookers_0b65457508cf73c9ed8c96f56b8910ce'] = 'Validation de votre mot secret';
 $_MODULE['<{moneybookers}prestashop>moneybookers_e44efbda9396a5641d730f0ac4866e52'] = 'Votre mot secret a bien été validé';

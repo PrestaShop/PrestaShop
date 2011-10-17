@@ -140,7 +140,7 @@ $(function(){ldelim}
 				<div id="opc_account_form" style="display: block; ">
 					<!-- Account -->
 					<p class="required text">
-						<label for="email">{l s='E-mail address'}</label>
+						<label for="guest_email">{l s='E-mail address'}</label>
 						<input type="text" class="text" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}">
 						<sup>*</sup>
 					</p>

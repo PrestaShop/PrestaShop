@@ -1488,6 +1488,7 @@ class AdminTranslations extends AdminTab
 			_PS_ROOT_DIR_.'/controllers',
 			_PS_ROOT_DIR_.'/classes',
 		_PS_ADMIN_DIR_.'/tabs',
+			PS_ADMIN_DIR,
 		);
 		$arr_files_to_parse = array_merge($arr_files_to_parse, $modules_has_mails);
 		foreach ($arr_files_to_parse as $path) {
@@ -1612,7 +1613,7 @@ class AdminTranslations extends AdminTab
 							if ($tab2 && isset($tab2[1]))
 							{
 								$tab2[1] = trim(str_replace('\'', '', $tab2[1]));
-								if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'/s', $tab2[2], $tab3))
+								if (preg_match('/Mail::l\(\''._PS_TRANS_PATTERN_.'\'(\)|,)/s', $tab2[2], $tab3))
 									$tab2[2] = $tab3[1];
 								$subject_mail[$tab2[1]] = $tab2[2];
 							}

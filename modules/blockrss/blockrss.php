@@ -79,7 +79,7 @@ class Blockrss extends Module
 			elseif (stristr($urlfeed, $_SERVER['HTTP_HOST'].__PS_BASE_URI__))
 				$errors[] = $this->l('You have selected a feed URL on your own website. Please choose another URL');
 			elseif (!($contents = @file_get_contents($urlfeed)))
-				$errors[] = $this->l('Feed is unreacheable, check your URL');
+				$errors[] = $this->l('Feed is unreachable, check your URL');
 			/* Even if the feed was reachable, We need to make sure that the feed is well formated */
 			else
 			{
