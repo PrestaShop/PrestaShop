@@ -140,10 +140,10 @@ class HelperListCore extends Helper
 	 */
 	protected function _displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
-	    return '<a href="'.$this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
-	        ((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
-	        <img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
-	        alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
+		return '<a href="'.$this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
+			((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
+			<img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
+			alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
 	}
 
 	public function displayListContent($token = null)
@@ -236,11 +236,11 @@ class HelperListCore extends Helper
 				}
 				else if (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
 					$this->_list[$index][$key] = isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'];
-	            else if (isset($params['price']))
-	            {
-	            	$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
-	            	$this->_list[$index][$key] = Tools::displayPrice($tr[$key], ($currency), false);
-	            }
+				else if (isset($params['price']))
+				{
+					$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
+					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], ($currency), false);
+				}
 				else if (isset($params['float']))
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
 				else if (isset($params['type']) && $params['type'] == 'date')
@@ -295,26 +295,48 @@ class HelperListCore extends Helper
 	/**
 	 * Display duplicate action link
 	 */
-    protected function _displayDuplicateLink($token = null, $id)
-    {
-    	if (!array_key_exists('Duplicate', self::$cache_lang))
-        	self::$cache_lang['Duplicate'] = $this->l('Duplicate');
+	protected function _displayDuplicateLink($token = null, $id)
+	{
+		if (!array_key_exists('Duplicate', self::$cache_lang))
+			self::$cache_lang['Duplicate'] = $this->l('Duplicate');
 
-        if (!array_key_exists('Copy images too?', self::$cache_lang))
-	        self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, true, false);
+		if (!array_key_exists('Copy images too?', self::$cache_lang))
+			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, true, false);
 
-    	$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
+		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
-    	$this->context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Duplicate'],
-    		'confirm' => self::$cache_lang['Copy images too?'],
-    		'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
-    		'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\\',
+			'confirm' => self::$cache_lang['Copy images too?'],
+			'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
+			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\\',
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_duplicate.tpl');
-    }
+	}
+	
+
+	/**
+	 * Display action to see details of a table row
+	 * This action need an ajax request with a return like this:
+	 *   {
+	 *     data:
+	 *       [
+	 *         {field_name: 'value'}
+	 *       ],
+	 *     fields_display: // attribute $fieldsDisplay of the admin controller
+	 *   }
+	 */
+	protected function _displayDetailsLink($token = null, $id)
+	{
+		$this->context->smarty->assign(array(
+			'id' => $id,
+			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
+			'token' => $this->token
+		));
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_details.tpl');
+	}
 
 	/**
 	 * Display view action link
