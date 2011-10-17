@@ -394,7 +394,6 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $nullValues))
 			return false;
-		$this->setStock($this->quantity);
 		Module::hookExec('afterSaveProduct', array('id_product' => $this->id));
 		return true;
 	}
@@ -2119,112 +2118,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * Set the stock quantity of current product
-	 *
-	 * @since 1.5.0
-	 * @param int $quantity
-	 * @param int $id_product_attribute
-	 * @param bool $update
-	 * @param Context $context
-	 */
-	public function setStock($quantity, $id_product_attribute = 0, $update = false, Context $context = null)
-	{
-		if (!$this->id)
-			return;
-		if (!$context)
-			$context = Context::getContext();
-		$shop = $context->shop;
-
-		// For retrocompatibility
-		$id_product_attribute = (int)$id_product_attribute;
-		$quantity = (int)$quantity;
-		if ($shop->isDefaultShop())
-		{
-			if ($id_product_attribute)
-			{
-				$sql = 'UPDATE '._DB_PREFIX_.'product_attribute
-						SET quantity = quantity + '.(int)$quantity.'
-						WHERE id_product = '.$this->id.'
-							AND id_product_attribute = '.$id_product_attribute;
-				Db::getInstance()->execute($sql);
-			}
-			else
-			{
-				$sql = 'UPDATE '._DB_PREFIX_.'product
-						SET quantity = quantity + '.(int)$quantity.'
-						WHERE id_product='.$this->id;
-				Db::getInstance()->execute($sql);
-			}
-		}
-
-		// Change stock quantity on product attribute
-		if ($id_product_attribute)
-		{
-			if ($id_stock = Stock::getStockId($this->id, $id_product_attribute, $shop->getID(true)))
-			{
-				$sql = 'UPDATE '._DB_PREFIX_.'stock
-						SET quantity = '.(($update) ? 'quantity + '.$quantity : $quantity).'
-						WHERE id_stock = '.$id_stock;
-				Db::getInstance()->execute($sql);
-			}
-			else
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'stock', array(
-					'id_product' =>				$this->id,
-					'id_product_attribute' =>	$id_product_attribute,
-					'id_shop' =>				$shop->getID(true),
-					'quantity' =>				$quantity,
-				), 'INSERT');
-		}
-
-		// Change stock quantity on product
-		if ($id_stock = Stock::getStockId($this->id, 0, $shop->getID(true)))
-		{
-			$sql = 'UPDATE '._DB_PREFIX_.'stock
-					SET quantity = '.(($update) ? 'quantity + '.$quantity : $quantity).'
-					WHERE id_stock = '.$id_stock;
-			Db::getInstance()->execute($sql);
-		}
-		else
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'stock', array(
-				'id_product' =>				$this->id,
-				'id_product_attribute' =>	0,
-				'id_shop' =>				$shop->getID(true),
-				'quantity' =>				$quantity,
-			), 'INSERT');
-
-		self::$cacheStock[$shop->getID(true)][$this->id][$id_product_attribute] = null;
-	}
-
-	/**
-	 * Get the stock quantity of current product
-	 *
-	 * @since 1.5.0
-	 * @param int $id_product_attribute
-	 * @param Context $context
-	 * @return int
-	 */
-	public function getStock($id_product_attribute = 0, Context $context = null)
-	{
-		if (!$this->id)
-			return 0;
-		if (!$context)
-			$context = Context::getContext();
-
-		$id_shop = $context->shop->getID(true);
-		if (!isset(self::$cacheStock[$this->id][$id_product_attribute]))
-		{
-			$sql = 'SELECT quantity
-					FROM '._DB_PREFIX_.'stock_available
-					WHERE id_product = '.$this->id.'
-					AND id_product_attribute = '.(int)$id_product_attribute.
-					$context->shop->addSqlRestriction(Shop::SHARE_STOCK);
-
-			self::$cacheStock[$this->id][$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
-		}
-		return self::$cacheStock[$this->id][$id_product_attribute];
-	}
-
-	/**
 	 * Get the value of "out of stock" of current product
 	 * "ouf of stock" allow to order product without stock
 	 *
@@ -3709,10 +3602,10 @@ class ProductCore extends ObjectModel
 
 		return isset($row['reference']);
 	}
-	
+
 	/**
 	 * Get all product attributes ids
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @param int $id_product the id of the product
 	 * @return array product attribute id list

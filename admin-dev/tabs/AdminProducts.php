@@ -2207,7 +2207,8 @@ class AdminProducts extends AdminTab
 		parent::displayForm(false);
 
 		$has_attribute = $obj->hasAttributes();
-		$qty = $obj->getStock();
+		// @FIXME Stock
+		$qty = 0;
 		$cover = Product::getCover($obj->id);
 		$this->_applyTaxToEcotax($obj);
 
