@@ -39,22 +39,38 @@ class AdminWarehousesControllerCore extends AdminController
 
 		$this->addRowAction('edit');
 
-	 	if (!Tools::getValue('realedit'))
-			$this->deleted = false;
-
 		$this->fieldsDisplay = array(
-			'reference' => array('title' => $this->l('Reference'), 'width' => 40),
-			'name' => array('title' => $this->l('Name'), 'width' => 300, 'havingFilter' => true),
-			'management_type' => array('title' => $this->l('Managment type'), 'width' => 40),
-			'employee' => array('title' => $this->l('Manager'), 'width' => 150, 'havingFilter' => true),
-			'location' => array('title' => $this->l('Location'), 'width' => 150),
-			'contact' => array('title' => $this->l('Phone Number'), 'width' => 50),
+			'reference'	=> array(
+				'title' => $this->l('Reference'),
+				'width' => 40
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 300,
+				'havingFilter' => true
+			),
+			'management_type' => array(
+				'title' => $this->l('Managment type'),
+				 'width' => 40
+			),
+			'employee' => array(
+				'title' => $this->l('Manager'),
+				'width' => 150,
+				'havingFilter' => true
+			),
+			'location' => array(
+				'title' => $this->l('Location'),
+				'width' => 150
+			),
+			'contact' => array(
+				'title' => $this->l('Phone Number'),
+				'width' => 50
+			),
 		);
 
-		$this->_select = 'reference, name, management_type,
-							CONCAT(e.lastname, \' \', e.firstname) AS employee,
-							ad.phone AS contact,
-							CONCAT(ad.city, \' \', c.iso_code) location';
+		$this->_select = 'reference, name, management_type, CONCAT(e.lastname, \' \', e.firstname) AS employee,
+						  ad.phone AS contact, CONCAT(ad.city, \' \', c.iso_code) location';
+
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
@@ -64,7 +80,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$query->select('id_employee, CONCAT(lastname," ",firstname) as name');
 		$query->from('employee');
 		$query->where('active = 1');
-		$this->employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		$employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		$this->fields_form = array(
 			'legend' => array(
@@ -161,7 +177,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'id_employee',
 					'required' => true,
 					'options' => array(
-						'query' => $this->employees_array,
+						'query' => $employees_array,
 						'id' => 'id_employee',
 						'name' => 'name'
 					),
@@ -233,39 +249,39 @@ class AdminWarehousesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (isset($_POST['submitAdd'.$this->table]))
+		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
 			if (!($obj = $this->loadObject(true)))
 				return;
 
 			//handle shops associations
-			if (isset($_POST['ids_shops']))
-				$obj->setShops($_POST['ids_shops']);
+			if (Tools::isSubmit('ids_shops'))
+				$obj->setShops(Tools::getValue('ids_shops'));
 
 			//handle carriers associations
-			if (isset($_POST['ids_carriers']))
-				$obj->setCarriers($_POST['ids_carriers']);
+			if (Tools::isSubmit('ids_carriers'))
+				$obj->setCarriers(Tools::getValue('ids_carriers'));
 
 			// update/create address if not exists
-			if (isset($_POST['id_address']) && $_POST['id_address'] > 0)
+			if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
 				//update address
-				$address = new Address((int)$_POST['id_address']);
+				$address = new Address((int)Tools::getValue('id_address'));
 			else
 				//create address
 				$address = new Address();
 
-			$address->alias = $_POST['name'];
-			$address->lastname = $_POST['name'];
-			$address->firstname = $_POST['name'];
-			$address->address1 = $_POST['address'];
-			$address->address2 = $_POST['address2'];
-			$address->postcode = $_POST['postcode'];
-			$address->phone = $_POST['phone'];
-			$address->id_country = $_POST['id_country'];
-			$address->id_state = $_POST['id_state'];
-			$address->city = $_POST['city'];
+			$address->alias = Tools::getValue('name');
+			$address->lastname = Tools::getValue('name');
+			$address->firstname = Tools::getValue('name');
+			$address->address1 = Tools::getValue('address');
+			$address->address2 = Tools::getValue('address2');
+			$address->postcode = Tools::getValue('postcode');
+			$address->phone = Tools::getValue('phone');
+			$address->id_country = Tools::getValue('id_country');
+			$address->id_state = Tools::getValue('id_state');
+			$address->city = Tools::getValue('city');
 
-			if (isset($_POST['id_address']) && $_POST['id_address'] > 0)
+			if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
 			{
 				//update address
 				$address->update();
