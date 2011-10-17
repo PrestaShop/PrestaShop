@@ -26,7 +26,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#details_{$id}').click(function() {
-
 		if (typeof(this.dataMaped) == 'undefined') {
 			$.ajax({
 				url: 'index.php',
@@ -42,25 +41,33 @@ $(document).ready(function() {
 				context: this,
 				async: false,
 				success: function(data) {
-					$.each(data.data, function(it, row)
+					if(typeof(data.use_parent_structure) == 'undefined' || data.use_parent_structure)
+						$.each(data.data, function(it, row)
+						{
+							if($('#details_{$id}').parent().parent().hasClass('alt_row'))
+								var content = $('<tr class="details_{$id} alt_row"></tr>');
+							else
+								var content = $('<tr class="details_{$id}"></tr>');
+							content.append($('<td></td>'));
+							$.each(data.fields_display, function(it, line)
+							{
+								if (typeof(row[it]) == 'undefined')
+									content.append($('<td class="'+this.align+'"></td>'));
+								else
+									content.append($('<td class="'+this.align+'">'+row[it]+'</td>'));
+							});
+							content.append($('<td></td>'));
+							$('#details_{$id}').parent().parent().after(content);
+						});
+					else
 					{
-						//console.log(row);
 						if($('#details_{$id}').parent().parent().hasClass('alt_row'))
 							var content = $('<tr class="details_{$id} alt_row"></tr>');
 						else
 							var content = $('<tr class="details_{$id}"></tr>');
-						content.append($('<td></td>'));
-						$.each(data.fields_display, function(it, line)
-						{
-							if (typeof(row[it]) == 'undefined')
-								content.append($('<td class="'+this.align+'"></td>'));
-							else
-								content.append($('<td class="'+this.align+'">'+row[it]+'</td>'));
-						});
-						console.log($(this));
-						content.append($('<td></td>'));
+						content.append($('<td>'+data+'</td>').attr('colspan', $('#details_{$id}').parent().parent().find('td').length));
 						$('#details_{$id}').parent().parent().after(content);
-					});
+					}
 					this.dataMaped = true;
 					this.opened = false;
 				}
@@ -69,7 +76,6 @@ $(document).ready(function() {
 
 		if(this.opened)
 		{
-			console.log($(this).find('img'));
 			$(this).find('img').attr('src', '../img/admin/more.png');
 			$(this).parent().parent().parent().find('.details_{$id}').hide();
 			this.opened = false
