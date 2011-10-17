@@ -235,6 +235,14 @@ class AdminImagesController extends AdminController
 
 	public function postProcess()
 	{
+		// When moving images, if duplicate images were found they are moved to a folder named duplicates/
+		if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/'))
+		{
+			$this->warnings[] = $this->l('Duplicate images were found when moving the product images. It is probably caused by unused demonstration images. Please make sure that the folder ').
+				_PS_PROD_IMG_DIR_.'duplicates/'.
+				$this->l(' only contains demonstration images then delete this folder.');
+		}
+
 		if (Tools::getValue('submitRegenerate'.$this->table))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
@@ -273,6 +281,7 @@ class AdminImagesController extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+
 		else
 			parent::postProcess();
 	}
@@ -284,9 +293,9 @@ class AdminImagesController extends AdminController
 	}
 
 	/**
-	  * Display form for thumbnails regeneration
+	  * Init display for the thumbnails regeneration block
 	  */
-	public function displayRegenerate()
+	public function initRegenerate()
 	{
 		$types = array(
 			'categories' => $this->l('Categories'),
@@ -296,55 +305,15 @@ class AdminImagesController extends AdminController
 			'products' => $this->l('Products'),
 			'stores' => $this->l('Stores')
 		);
-		$this->content .= '
-		<h2 class="space">'.$this->l('Regenerate thumbnails').'</h2>
-		'.$this->l('Regenerates thumbnails for all existing product images').'.<br /><br /><div  class="width4">';
-		$this->content .= '<div class="warn">'.$this->l('Please be patient, as this can take several minutes').'<br />'.$this->l('Be careful! Manually generated thumbnails will be erased by automatically generated thumbnails.').'</div>';
-		$this->content .= '</div>
 
-		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
+		$formats = array();
+		foreach ($types as $i => $type)
+			$formats[$i] = ImageType::getImagesTypes($i);
 
-			<fieldset class="width4">
-				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Regenerate thumbnails').'</legend><br />
-				<label>'.$this->l('Select image').'</label>
-				<div class="margin-form">
-					<select name="type" onchange="changeFormat(this)">
-						<option value="all">'.$this->l('All').'</option>';
-				foreach ($types AS $k => $type)
-					$this->content .= '<option value="'.$k.'">'.$type.'</option>';
-				$this->content .= '
-					</select>
-				</div>';
-
-			foreach ($types AS $k => $type)
-			{
-				$formats = ImageType::getImagesTypes($k);
-				$this->content .= '
-				<label class="second-select format_'.$k.'" style="display:none;">'.$this->l('Select format').'</label>
-				<div class="second-select margin-form format_'.$k.'" style="display:none;">
-				<select class="second-select format_'.$k.'" name="format_'.$k.'">
-					<option value="all">'.$this->l('All').'</option>';
-				foreach ($formats AS $format)
-					$this->content .= '<option value="'.$format['id_image_type'].'">'.$format['name'].'</option>';
-				$this->content .= '</select></div>';
-			}
-			$this->content .= '
-				<script>
-					function changeFormat(elt)
-					{
-						$(\'.second-select\').hide();
-						$(\'.format_\' + $(elt).val()).show();
-					}
-				</script>
-				<label>'.$this->l('Erase previous images').'</label>
-				<div class="margin-form">
-					<input name="erase" type="checkbox" value="1" checked="checked" />
-					<p>'.$this->l('Uncheck this checkbox only if your server timed out and you need to resume the regeneration.').'</p>
-				</div>
-				<div class="clear"></div>
-				<center><input type="Submit" name="submitRegenerate'.$this->table.'" value="'.$this->l('Regenerate thumbnails').'" class="button space" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');" /></center>
-			</fieldset>
-		</form>';
+		$this->context->smarty->assign(array(
+			'types' => $types,
+			'formats' => $formats,
+		));
 	}
 
 	/**
@@ -526,41 +495,14 @@ class AdminImagesController extends AdminController
 	}
 
 	/**
-	 * Display the block for moving images
+	 * Init display for move images block
 	 */
-	public function displayMoveImages()
+	public function initMoveImages()
 	{
-		$safe_mode = ini_get('safe_mode');
-
-		$this->content .= '
-		<br /><h2 class="space">'.$this->l('Move images').'</h2>'.
-		$this->l('A new storage system for product images is now used by PrestaShop. It offers better performance if your shop has a very large number of products.').'<br />'.
-		'<br />';
-		if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/'))
-		{
-			$this->content .= '<div class="width4">';
-			$this->displayWarning($this->l('Duplicate images were found when moving the product images. It is probably caused by unused demonstration images. Please make sure that the folder ').
-				_PS_PROD_IMG_DIR_.'duplicates/'.
-				$this->l(' only contains demonstration images then delete this folder.'));
-			$this->content .= '</div>';
-		}
-		if($safe_mode)
-			$this->displayWarning($this->l('PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the actual system.'));
-		else
-			$this->content .= '
-		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-				<fieldset class="width4">
-				<legend><img src="../img/admin/picture.gif" /> '.$this->l('Move images').'</legend><br />'.
-				$this->l('You can choose to keep your images stored in the previous system - nothing wrong with that.').'<br />'.
-				$this->l('You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below.	Please be patient, as this can take several minutes.').
-				'<br /><br /><div class="hint clear" style="display: block;">&nbsp;'.
-				$this->l('After moving all of your product images, for best performance go to the ').
-				'<a style="text-decoration:underline" href="index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on">'.$this->l('product preferences tab').'</a>'.
-					$this->l(' and set "Use the legacy image filesystem" to NO.').'
-				</div>
-				<center><input type="Submit" name="submitMoveImages'.$this->table.'" value="'.$this->l('Move images').'" class="button space" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');" /></center>
-			</fieldset>
-		</form>';
+		$this->context->smarty->assign(array(
+			'safe_mode' => ini_get('safe_mode'),
+			'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
+		));
 }
 
 	/**
@@ -592,15 +534,19 @@ class AdminImagesController extends AdminController
 
 		if ($this->display == 'list')
 		{
-			$this->context->smarty->assign('list', true);
 
 			$helper = new HelperOptions();
 			$helper->id = $this->id;
 			$helper->currentIndex = self::$currentIndex;
 			$this->content .= $helper->generateOptions($this->form_list['options_image_pref']);
 
-			$this->displayRegenerate();
-			$this->displayMoveImages();
+			$this->initRegenerate();
+			$this->initMoveImages();
+
+			$this->context->smarty->assign(array(
+				'display_regenerate' => true,
+				'display_move' => true
+			));
 		}
 
 		if ($this->display == 'edit')
