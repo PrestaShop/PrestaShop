@@ -32,9 +32,9 @@ class AdminGroupShopControllerCore extends AdminController
 		$this->table = 'group_shop';
 		$this->className = 'GroupShop';
 		$this->lang = false;
-		$this->edit = true;
-		$this->delete = false;
 		$this->requiredDatabase = true;
+
+		$this->addRowAction('edit');
 
 		$this->context = Context::getContext();
 

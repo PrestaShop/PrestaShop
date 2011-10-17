@@ -32,9 +32,10 @@ class AdminOrderMessageController extends AdminController
 	 	$this->table = 'order_message';
 		$this->className = 'OrderMessage';
 	 	$this->lang = true;
-	 	$this->edit = true;
-	 	$this->delete = true;
 		$this->requiredDatabase = true;
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->context = Context::getContext();
 

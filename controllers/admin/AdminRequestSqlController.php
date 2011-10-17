@@ -32,11 +32,13 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->table = 'request_sql';
 		$this->className = 'RequestSql';
 	 	$this->lang = false;
-	 	$this->edit = true;
-	 	$this->delete = true;
-		$this->view = true;
 		$this->export = true;
 		$this->requiredDatabase = true;
+
+		$this->addRowAction('view');
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
 		$this->context = Context::getContext();
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 	 								'export' => array('text' => $this->l('Export selected')));

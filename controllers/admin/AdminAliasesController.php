@@ -31,10 +31,11 @@ class AdminAliasesControllerCore extends AdminController
 	{
 	 	$this->table = 'alias';
 		$this->className = 'Alias';
-	 	$this->edit = true;
-		$this->delete = true;
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->context = Context::getContext();
 
