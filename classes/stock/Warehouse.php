@@ -81,21 +81,31 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the shops a warehouse is associated to
+	 * Gets the shops associated to the current warehouse
 	 *
 	 * @return array
 	 */
 	public function getShops()
 	{
+		$shop_ids = array();
+
 		$query = new DbQuery();
 		$query->select('ws.id_shop');
 		$query->from('warehouse_shop ws');
 		$query->where($this->identifier.' = '.(int)$this->id);
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		// Parse the result to return a simple array of ids
+		foreach($res as $shops)
+			foreach($shops as $shop)
+				$shop_ids[] = $shop;
+
+		return $shop_ids;
 	}
 
 	/**
-	 * Sets the shops a warehouse is associated to
+	 * Sets the shops associated to the current warehouse
 	 *
 	 * @param array $ids_shop
 	 */
@@ -103,13 +113,55 @@ class WarehouseCore extends ObjectModel
 	{
 		$row_to_insert = array();
 		foreach ($ids_shop as $id_shop)
-			$row_to_insert = array($this->reference => $this->id, 'id_shop' => $id_shop);
+			$row_to_insert[] = array($this->identifier => $this->id, 'id_shop' => (int)$id_shop);
 
 		Db::getInstance()->execute('
-			DELETE FROM `warehouse_shop` ws
-			WHERE ws.'.$this->identifier.' = '.(int)$this->id);
+			DELETE FROM '._DB_PREFIX_.'warehouse_shop
+			WHERE '.$this->identifier.' = '.(int)$this->id);
 
-		Db::getInstance()->autoExecute('warehouse_shop', $row_to_insert, 'INSERT');
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_shop', $row_to_insert, 'INSERT');
+	}
+
+	/**
+	 * Gets the carriers associated to the current warehouse
+	 *
+	 * @return array
+	 */
+	public function getCarriers()
+	{
+		$carriers_ids = array();
+
+		$query = new DbQuery();
+		$query->select('wc.id_carrier');
+		$query->from('warehouse_carrier wc');
+		$query->where($this->identifier.' = '.(int)$this->id);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		// Parse the result to return a simple array of ids
+		foreach($res as $carriers)
+			foreach($carriers as $carrier)
+				$carriers_ids[] = $carrier;
+
+		return $carriers_ids;
+	}
+
+	/**
+	 * Sets the carriers associated to the current warehouse
+	 *
+	 * @param array $ids_carriers
+	 */
+	public function setCarriers($ids_carriers)
+	{
+		$row_to_insert = array();
+		foreach ($ids_carriers as $id_carrier)
+			$row_to_insert[] = array($this->identifier => $this->id, 'id_carrier' => (int)$id_carrier);
+
+		Db::getInstance()->execute('
+			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
+			WHERE '.$this->identifier.' = '.(int)$this->id);
+
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_carrier', $row_to_insert, 'INSERT');
 	}
 
 	/**
@@ -153,13 +205,13 @@ class WarehouseCore extends ObjectModel
 	public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
 	{
 		Db::getInstance()->execute('
-			DELETE FROM `warehouse_product_location` wpl
+			DELETE FROM '._DB_PREFIX_.'`warehouse_product_location` wpl
 			WHERE wpl.id_product = '.(int)$id_product.'
 			AND wpl.id_product_attribute = '.(int)$id_product_attribute.'
 			AND wpl.id_warehouse = '.(int)$id_warehouse);
 
 		$query = '
-			UPDATE warehouse_product_location
+			UPDATE '._DB_PREFIX_.'warehouse_product_location
 			SET location = '.pSQL($location).'
 			WHERE id_product = '.(int)$id_product.'
 			AND id_product_attribute = '.(int)$id_product_attribute.'

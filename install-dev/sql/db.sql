@@ -2002,6 +2002,14 @@ CREATE TABLE `PREFIX_warehouse_shop` (
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_warehouse_carrier` (
+`id_carrier` INT(11) UNSIGNED NOT NULL,
+`id_warehouse` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id_warehouse`, `id_carrier`),
+  KEY `id_warehouse` (`id_warehouse`),
+  KEY `id_carrier` (`id_carrier`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_stock_available` (
 `id_stock_available` INT(11) UNSIGNED NOT NULL,
 `id_product` INT(11) UNSIGNED NOT NULL,
