@@ -327,7 +327,7 @@ class MailAlerts extends Module
 		$sql = 'SELECT id_product, quantity
 				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product_attribute = '.(int)$params['id_product_attribute']
-					.Context::getContext()->shop->sqlRestriction(Shop::SHARE_STOCK);
+					.Context::getContext()->shop->addSqlRestriction(Shop::SHARE_STOCK);
 		$result = Db::getInstance()->getRow($sql);
 
 		if ($this->_customer_qty AND $result['quantity'] > 0)
@@ -494,7 +494,7 @@ class MailAlerts extends Module
 		$sql = 'SELECT ma.`id_product`, stock.quantity AS product_quantity, pl.`name`, ma.`id_product_attribute`
 				FROM `'._DB_PREFIX_.'mailalert_customer_oos` ma
 				JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ma.`id_product`
-				JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product` AND pl.`id_lang` = '.$id_lang.Context::getContext()->shop->sqlLang('pl').'
+				JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product` AND pl.`id_lang` = '.$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'
 				'.Product::sqlStock('p', 0).'
 				WHERE p.`active` = 1
 					ma.`id_customer` = '.$id_customer;

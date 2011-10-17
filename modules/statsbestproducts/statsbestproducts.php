@@ -164,8 +164,8 @@ class StatsBestProducts extends ModuleGrid
 					AND dr.time_end BETWEEN '.$dateBetween.'
 				) AS totalPageViewed
 				FROM '._DB_PREFIX_.'product p
-				'.$this->context->shop->sqlAsso('product', 'p').'
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->getLang().$this->context->shop->sqlLang('pl').')
+				'.$this->context->shop->addSqlAssociation('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->getLang().$this->context->shop->addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'order_detail od ON od.product_id = p.id_product
 				LEFT JOIN '._DB_PREFIX_.'orders o ON od.id_order = o.id_order
 				WHERE p.active = 1

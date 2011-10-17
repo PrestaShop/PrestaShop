@@ -80,7 +80,7 @@ class StatsCheckUp extends Module
 		// Get languages
 		$sql = 'SELECT l.*
 				FROM '._DB_PREFIX_.'lang l'
-				.$this->context->shop->sqlAsso('lang', 'l');
+				.$this->context->shop->addSqlAssociation('lang', 'l');
 		$languages = $db->executeS($sql);
 
 		$arrayColors = array(
@@ -107,7 +107,7 @@ class StatsCheckUp extends Module
 		$sql = 'SELECT p.id_product, p.active, pl.name, (
 					SELECT COUNT(*)
 					FROM '._DB_PREFIX_.'image i
-					'.$this->context->shop->sqlAsso('image', 'i').'
+					'.$this->context->shop->addSqlAssociation('image', 'i').'
 					WHERE i.id_product = p.id_product
 				) as nbImages, (
 					SELECT SUM(od.product_quantity)
@@ -122,8 +122,8 @@ class StatsCheckUp extends Module
 					WHERE pa.id_product = p.id_product
 				), p.quantity) as stock
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
-				'.$this->context->shop->sqlAsso('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
+				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				ORDER BY '.$orderBy;
 		$result = $db->executeS($sql);
 
@@ -194,7 +194,7 @@ class StatsCheckUp extends Module
 			$totals['images'] += (int)$scores['images'];
 			$totals['sales'] += (int)$scores['sales'];
 			$totals['stock'] += (int)$scores['stock'];
-			$descriptions = $db->executeS('SELECT l.iso_code, pl.description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang WHERE id_product = '.(int)$row['id_product'].$this->context->shop->sqlLang('pl'));
+			$descriptions = $db->executeS('SELECT l.iso_code, pl.description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang WHERE id_product = '.(int)$row['id_product'].$this->context->shop->addSqlRestrictionOnLang('pl'));
 			foreach ($descriptions as $description)
 			{
 				$row['desclength_'.$description['iso_code']] = Tools::strlen(strip_tags($description['description']));

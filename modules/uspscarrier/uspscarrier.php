@@ -673,7 +673,7 @@ class UspsCarrier extends CarrierModule
 			$categories = Db::getInstance()->executeS('
 			SELECT c.id_category, cl.name, cl.link_rewrite
 			FROM '._DB_PREFIX_.'category c
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.$this->context->shop->sqlLang('cl').')
+			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.$this->context->shop->addSqlRestrictionOnLang('cl').')
 			WHERE c.nleft <= '.(int)$category['nleft'].' AND c.nright >= '.(int)$category['nright'].' AND cl.id_lang = '.(int)($this->context->language->id).'
 			ORDER BY c.level_depth ASC
 			LIMIT '.(int)($category['level_depth'] + 1));
@@ -1147,7 +1147,7 @@ class UspsCarrier extends CarrierModule
 								<option value="0">'.$this->l('Select a product ...').'</option>';
 						$productsList = Db::getInstance()->executeS('
 						SELECT pl.* FROM `'._DB_PREFIX_.'product` p
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
 						WHERE p.`active` = 1
 						ORDER BY pl.`name`');
 						foreach ($productsList as $product)

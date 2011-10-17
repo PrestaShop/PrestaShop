@@ -382,7 +382,7 @@ class CartCore extends ObjectModel
 
 		// Build JOIN
 		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
-		$sql->leftJoin('product_lang pl ON p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('pl'));
+		$sql->leftJoin('product_lang pl ON p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl'));
 		$sql->leftJoin('tax_rule tr ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 										AND tr.`id_country` = '.(int)$id_country.'
 										AND tr.`id_state` = 0
@@ -390,7 +390,7 @@ class CartCore extends ObjectModel
 		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
 		$sql->leftJoin('stock_available sa ON sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0');
 		$sql->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang);
-		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->sqlLang('cl'));
+		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl'));
 
 		// @todo test if everything is ok, then refactorise call of this method
 		Product::sqlStock('cp', 'cp', false, null, $sql);
@@ -1518,7 +1518,7 @@ class CartCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders o ON (c.`id_cart` = o.`id_cart`)
 				WHERE c.`id_customer` = '.(int)($id_customer).'
 					AND o.`id_cart` IS NULL
-					'.Context::getContext()->shop->sqlRestriction(Shop::SHARE_ORDER, 'c').'
+					'.Context::getContext()->shop->addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
 	 	if (!$id_cart = Db::getInstance()->getValue($sql))
 	 		return false;

@@ -820,8 +820,8 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.*, pl.* , t.`rate` AS tax_rate, m.`name` AS manufacturer_name, s.`name` AS supplier_name
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
+				'.$context->shop->addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 		 		  AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 		 		  AND tr.`id_state` = 0)
@@ -847,8 +847,8 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.`id_product`, pl.`name`
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p', false).'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->sqlLang('pl').')
+				'.$context->shop->addSqlAssociation('product', 'p', false).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->addSqlRestrictionOnLang('pl').')
 				WHERE pl.`id_lang` = '.(int)$id_lang.'
 				ORDER BY pl.`name`';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1412,7 +1412,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->sqlAsso('product', 'p').'
+					'.$context->shop->addSqlAssociation('product', 'p').'
 					WHERE `active` = 1
 					AND DATEDIFF(p.`date_add`,
 					DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0
@@ -1432,8 +1432,8 @@ class ProductCore extends ObjectModel
 						(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice');
 
 		$sql->from('product p');
-		$sql->join($context->shop->sqlAsso('product', 'p'));
-		$sql->leftJoin('product_lang pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')');
+		$sql->join($context->shop->addSqlAssociation('product', 'p'));
+		$sql->leftJoin('product_lang pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')');
 		$sql->leftJoin('image i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)');
 		$sql->leftJoin('image_lang il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')');
 		$sql->leftJoin('tax_rule tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)');
@@ -1505,7 +1505,7 @@ class ProductCore extends ObjectModel
 		// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
 		$sql = 'SELECT p.id_product
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p').'
+				'.$context->shop->addSqlAssociation('product', 'p').'
 				WHERE p.`active` = 1
 					'.(($ids_product) ? 'AND p.`id_product` IN ('.implode(', ', $ids_product).')' : '').'
 					AND p.`id_product` IN (
@@ -1523,7 +1523,7 @@ class ProductCore extends ObjectModel
 		$sql = 'SELECT p.*, sa.out_of_stock, sa.out_of_stock out_of_stock, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
 					i.`id_image`, il.`legend`, t.`rate`
 				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -1572,7 +1572,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS nb
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->sqlAsso('product', 'p').'
+					'.$context->shop->addSqlAssociation('product', 'p').'
 					WHERE p.`active` = 1
 						AND p.`show_price` = 1
 			'.((!$beginning AND !$ending) ? ' AND p.`id_product` IN('.((is_array($ids_product) AND count($ids_product)) ? implode(', ', array_map('intval', $ids_product)) : 0).')' : '').'
@@ -1590,9 +1590,9 @@ class ProductCore extends ObjectModel
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->sqlAsso('product', 'p').'
+				'.$context->shop->addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 0, false, $context->shop).'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -1642,7 +1642,7 @@ class ProductCore extends ObjectModel
 		$ret = array();
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cp.`id_category`, cl.`name`, cl.`link_rewrite` FROM `'._DB_PREFIX_.'category_product` cp
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cp.`id_category` = cl.`id_category`'.Context::getContext()->shop->sqlLang('cl').')
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cp.`id_category` = cl.`id_category`'.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
 		WHERE cp.`id_product` = '.(int)$id_product.'
 		AND cl.`id_lang` = '.(int)$id_lang);
 		foreach ($row as $val)
@@ -1673,7 +1673,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT i.`cover`, i.`id_image`, il.`legend`, i.`position`
 				FROM `'._DB_PREFIX_.'image` i
-				'.$context->shop->sqlAsso('image', 'i').'
+				'.$context->shop->addSqlAssociation('image', 'i').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE i.`id_product` = '.(int)$this->id.'
 				ORDER BY `position`';
@@ -1692,7 +1692,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT i.`id_image`
 				FROM `'._DB_PREFIX_.'image` i
-				'.$context->shop->sqlAsso('image', 'i').'
+				'.$context->shop->addSqlAssociation('image', 'i').'
 				WHERE i.`id_product` = '.(int)($id_product).'
 				AND i.`cover` = 1';
 		return Db::getInstance()->getRow($sql);
@@ -2098,7 +2098,7 @@ class ProductCore extends ObjectModel
 				else if (is_string($productAttribute))
 					$sql->where('stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)');
 			}
-			$sql->where(ltrim($shop->sqlRestriction(Shop::SHARE_STOCK, 'stock'), ' AND '));
+			$sql->where(ltrim($shop->addSqlRestriction(Shop::SHARE_STOCK, 'stock'), ' AND '));
 		}
 		else
 		{
@@ -2112,7 +2112,7 @@ class ProductCore extends ObjectModel
 				else if (is_string($productAttribute))
 					$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
 			}
-			$sql .= $shop->sqlRestriction(Shop::SHARE_STOCK, 'stock').' ';
+			$sql .= $shop->addSqlRestriction(Shop::SHARE_STOCK, 'stock').' ';
 		}
 
 		return $sql;
@@ -2217,7 +2217,7 @@ class ProductCore extends ObjectModel
 					FROM '._DB_PREFIX_.'stock_available
 					WHERE id_product = '.$this->id.'
 					AND id_product_attribute = '.(int)$id_product_attribute.
-					$context->shop->sqlRestriction(Shop::SHARE_STOCK);
+					$context->shop->addSqlRestriction(Shop::SHARE_STOCK);
 
 			self::$cacheStock[$this->id][$id_product_attribute] = (int)Db::getInstance()->getValue($sql);
 		}
@@ -2244,7 +2244,7 @@ class ProductCore extends ObjectModel
 				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product = '.$this->id.'
 				AND id_product_attribute = 0'.
-				$context->shop->sqlRestriction(Shop::SHARE_STOCK);
+				$context->shop->addSqlRestriction(Shop::SHARE_STOCK);
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
@@ -2268,7 +2268,7 @@ class ProductCore extends ObjectModel
 				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product = '.$this->id.'
 				AND id_product_attribute = 0'.
-				$context->shop->sqlRestriction(Shop::SHARE_STOCK);
+				$context->shop->addSqlRestriction(Shop::SHARE_STOCK);
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
@@ -2439,8 +2439,8 @@ class ProductCore extends ObjectModel
 		$sql = 'SELECT p.`id_product`, p.`reference`, pl.`name`
 				FROM `'._DB_PREFIX_.'accessory`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= `id_product_2`)
-				'.$context->shop->sqlAsso('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
+				'.$context->shop->addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')
 				WHERE `id_product_1` = '.(int)$id_product;
 		return Db::getInstance()->executeS($sql);
 	}
@@ -2461,9 +2461,9 @@ class ProductCore extends ObjectModel
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'accessory`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = `id_product_2`
-				'.$context->shop->sqlAsso('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('cl').')
+				'.$context->shop->addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
@@ -2617,8 +2617,8 @@ class ProductCore extends ObjectModel
 		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`');
 		$sql->from('category_product cp');
 		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
-		$sql->join($context->shop->sqlAsso('product', 'p'));
-		$sql->leftJoin('product_lang pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->sqlLang('pl').')');
+		$sql->join($context->shop->addSqlAssociation('product', 'p'));
+		$sql->leftJoin('product_lang pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')');
 		$sql->leftJoin('manufacturer m ON m.`id_manufacturer` = p.`id_manufacturer`');
 
 		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\' OR p.`reference` LIKE \'%'.pSQL($query).'%\' OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
@@ -3380,7 +3380,7 @@ class ProductCore extends ObjectModel
 			SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order,
 			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
 			FROM `'._DB_PREFIX_.'stock_mvt` sm
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (sm.id_product = pl.id_product AND pl.id_lang = '.(int)$id_lang.Context::getContext()->shop->sqlLang('pl').')
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (sm.id_product = pl.id_product AND pl.id_lang = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
 			LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (sm.id_stock_mvt_reason = mrl.id_stock_mvt_reason AND mrl.id_lang = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = sm.id_employee)
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = sm.id_product_attribute)
@@ -3395,9 +3395,9 @@ class ProductCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT pl.`id_lang`, pl.`link_rewrite`, p.`ean13`, cl.`link_rewrite` AS category_rewrite
 			FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`'.Context::getContext()->shop->sqlLang('pl').')
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
 			LEFT JOIN `'._DB_PREFIX_.'lang` l ON (pl.`id_lang` = l.`id_lang`)
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = p.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`'.Context::getContext()->shop->sqlLang('cl').')
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = p.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`'.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
 			WHERE p.`id_product` = '.(int)$id_product.'
 			AND l.`active` = 1
 		');

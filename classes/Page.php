@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,15 +29,15 @@ class PageCore extends ObjectModel
 {
 	public $id_page_type;
 	public $id_object;
-	
+
 	public $name;
 
-	protected $fieldsRequired = array ('id_page_type');	
+	protected $fieldsRequired = array ('id_page_type');
 	protected $fieldsValidate = array ('id_page_type' => 'isUnsignedId', 'id_object' => 'isUnsignedId');
 
 	protected $table = 'page';
 	protected $identifier = 'id_page';
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -45,7 +45,7 @@ class PageCore extends ObjectModel
 		$fields['id_object'] = (int)($this->id_object);
 		return $fields;
 	}
-	
+
 	/**
 	 * @return int Current page ID
 	 */
@@ -53,7 +53,7 @@ class PageCore extends ObjectModel
 	{
 		$controller = Dispatcher::getInstance()->getController();
 		$pageTypeID = Page::getPageTypeByName($controller);
-		
+
 		// Some pages must be distinguished in order to record exactly what is being seen
 		// @todo dispatcher module
 		$specialArray = array(
@@ -85,10 +85,10 @@ class PageCore extends ObjectModel
 		Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.'page', $insertData, 'INSERT');
 		return Db::getInstance()->Insert_ID();
 	}
-	
+
 	/**
 	 * Return page type ID from page name
-	 * 
+	 *
 	 * @param string $name Page name (E.g. product.php)
 	 */
 	public static function getPageTypeByName($name)
@@ -98,18 +98,18 @@ class PageCore extends ObjectModel
 				WHERE name = \''.pSQL($name).'\'';
 		if ($value = Db::getInstance()->getValue($sql))
 			return $value;
-			
+
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'page_type', array(
 			'name' =>	$name,
 		), 'INSERT');
 		return Db::getInstance()->Insert_ID();
 	}
-	
+
 	public static function setPageViewed($id_page)
 	{
 		$id_date_range = DateRange::getCurrentRange();
 		$context = Context::getContext();
-		
+
 		// Try to increment the visits counter
 		$sql = 'UPDATE `'._DB_PREFIX_.'page_viewed`
 				SET `counter` = `counter` + 1

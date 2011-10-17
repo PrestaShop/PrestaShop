@@ -91,7 +91,7 @@ class AdminTrackingController extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$this->context->language->id.')
 						LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$this->context->language->id.')
 						LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pa.`id_product`)
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.$this->context->shop->sqlLang('pl').')
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
 						'.Product::sqlStock('p', 'pa').'
 						LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer` = m.`id_manufacturer`)
 						WHERE stock.quantity <= 0

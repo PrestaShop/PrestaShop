@@ -79,7 +79,7 @@ class ShopCore extends ObjectModel
 		'module_currency' => 		array('type' => 'fk_shop'),
 		'module_country' => 		array('type' => 'fk_shop'),
 		'module_group' => 			array('type' => 'fk_shop'),
-		'stock' => 					array('type' => 'fk_shop', 'primary' => 'id_stock'),
+		//'stock' => 					array('type' => 'fk_shop', 'primary' => 'id_stock'),
 		'product' => 				array('type' => 'shop'),
 		'product_lang' => 			array('type' => 'fk_shop'),
 		'referrer' => 				array('type' => 'shop'),
@@ -163,12 +163,12 @@ class ShopCore extends ObjectModel
 		foreach (Shop::getAssoTables() as $table_name => $row)
 		{
 			// Special case for stock if current shop is in a share stock group
-			if ($table_name == 'stock')
+			/*if ($table_name == 'stock')
 			{
 				$group = new GroupShop($this->id_group_shop);
 				if ($group->share_stock && $group->getTotalShops() > 1)
 					continue;
-			}
+			}*/
 
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_shop')
@@ -647,7 +647,7 @@ class ShopCore extends ObjectModel
 	 * @param string $alias
 	 * @param string $type shop|group_shop
 	 */
-	public function sqlRestriction($share = false, $alias = null, $type = 'shop')
+	public function addSqlRestriction($share = false, $alias = null, $type = 'shop')
 	{
 		if ($type != 'shop' && $type != 'group_shop')
 			$type = 'shop';
@@ -686,7 +686,7 @@ class ShopCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public function sqlAsso($table, $alias, $inner_join = true)
+	public function addSqlAssociation($table, $alias, $inner_join = true)
 	{
 		$table_alias = ' asso_shop_'.$table;
 		if (strpos($table, '.') !== false)
@@ -709,7 +709,7 @@ class ShopCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public function sqlLang($alias = null)
+	public function addSqlRestrictionOnLang($alias = null)
 	{
 		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$this->getID(true).' ';
 	}
@@ -745,12 +745,12 @@ class ShopCore extends ObjectModel
 				continue;
 
 			// Special case for stock if current shop is in a share stock group
-			if ($table_name == 'stock')
+			/*if ($table_name == 'stock')
 			{
 				$group = new GroupShop($this->id_group_shop);
 				if ($group->share_stock && $group->haveShops())
 					continue;
-			}
+			}*/
 
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_shop')

@@ -160,8 +160,8 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
 				'.$join.'
 				WHERE cs.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.$shop->sqlRestriction(false, 'rs').'
-					'.$shop->sqlRestriction(false, 'c').'
+					'.$shop->addSqlRestriction(false, 'rs').'
+					'.$shop->addSqlRestriction(false, 'c').'
 					AND rc.id_referrer = '.(int)$this->id
 					.$where;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -195,9 +195,9 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'customer cu ON cu.id_customer = g.id_customer
 				'.$join.'
 				WHERE cu.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.$shop->sqlRestriction(false, 'rs').'
-					'.$shop->sqlRestriction(false, 'c').'
-					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
+					'.$shop->addSqlRestriction(false, 'rs').'
+					'.$shop->addSqlRestriction(false, 'c').'
+					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
 					AND cu.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)($this->id)
 					.$where;
@@ -230,9 +230,9 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders oo ON oo.id_customer = g.id_customer
 				'.$join.'
 				WHERE oo.invoice_date BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.$shop->sqlRestriction(false, 'rs').'
-					'.$shop->sqlRestriction(false, 'c').'
-					'.$shop->sqlRestriction(Shop::SHARE_ORDER, 'oo').'
+					'.$shop->addSqlRestriction(false, 'rs').'
+					'.$shop->addSqlRestriction(false, 'c').'
+					'.$shop->addSqlRestriction(Shop::SHARE_ORDER, 'oo').'
 					AND oo.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)($this->id).'
 					AND oo.valid = 1'
@@ -249,7 +249,7 @@ class ReferrerCore extends ObjectModel
 			$sql = 'SELECT COUNT(id_order) AS orders, SUM(total_paid_real / conversion_rate) AS sales
 					FROM '._DB_PREFIX_.'orders
 					WHERE id_order IN ('.implode($implode, ',').')
-						'.$shop->sqlRestriction(Shop::SHARE_ORDER).'
+						'.$shop->addSqlRestriction(Shop::SHARE_ORDER).'
 						AND valid = 1';
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		}
