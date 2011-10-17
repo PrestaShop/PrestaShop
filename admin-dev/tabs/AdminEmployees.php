@@ -256,8 +256,9 @@ class AdminEmployees extends AdminTab
 
 			$assos = self::getAssoShop($this->table);
 
-			if (!count($assos[0]) && $this->table = 'employee')
-				$this->_errors[] = Tools::displayError('The employee must be associated with at least one shop');
+			if (count($assos[0]) == 0 && $this->table = 'employee')
+				if (Shop::isMultiShopActivated() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
+					$this->_errors[] = Tools::displayError('The employee must be associated with at least one shop');
 		}
 		return parent::postProcess();
 	}
