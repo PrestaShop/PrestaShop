@@ -83,9 +83,10 @@ class HelperFormCore extends Helper
 
 	public function getFieldsRequired()
 	{
-		foreach ($this->fields_form['input'] as $input)
-			if (array_key_exists('required', $input) && $input['required'])
-				return true;
+		if (isset($this->fields_form['input']))
+			foreach ($this->fields_form['input'] as $input)
+				if (array_key_exists('required', $input) && $input['required'])
+					return true;
 
 		return false;
 	}

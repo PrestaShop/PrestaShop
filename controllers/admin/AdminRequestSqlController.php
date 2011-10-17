@@ -145,8 +145,8 @@ class AdminRequestSqlControllerCore extends AdminController
 		');
 
 		$smarty = $this->context->smarty;
-		
-		if ($this->display != 'edit' && $this->display != 'add')
+
+		if ($this->display != 'edit' && $this->display != 'add' && $this->display != 'view')
 			$this->display = 'list';
 
 		switch ($this->display)
