@@ -318,13 +318,21 @@ class HelperListCore extends Helper
 	
 
 	/**
-	 * Display action to see details of a table row
+	 * Display action show details of a table row
 	 * This action need an ajax request with a return like this:
 	 *   {
+	 *     use_parent_structure: true // If false, data need to be an html
 	 *     data:
 	 *       [
 	 *         {field_name: 'value'}
 	 *       ],
+	 *     fields_display: // attribute $fieldsDisplay of the admin controller
+	 *   }
+	 * or somethins like this:
+	 *   {
+	 *     use_parent_structure: false // If false, data need to be an html
+	 *     data:
+	 *       '<p>My html content</p>',
 	 *     fields_display: // attribute $fieldsDisplay of the admin controller
 	 *   }
 	 */
