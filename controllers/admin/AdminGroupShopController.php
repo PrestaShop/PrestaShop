@@ -240,7 +240,7 @@ class AdminGroupShopControllerCore extends AdminController
 			// Check if form template has been overriden
 			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form_import.tpl'))
 				$helper->tpl = $this->tpl_folder.'form_import.tpl';
-			HelperForm::$currentIndex = self::$currentIndex;
+			$helper->currentIndex = self::$currentIndex;
 			$helper->token = $this->token;
 			$helper->table = $this->table;
 			$helper->id = $obj->id;
