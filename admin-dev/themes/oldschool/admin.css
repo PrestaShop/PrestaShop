@@ -32,7 +32,7 @@ fieldset{background:#FFFFF0;border:1px solid #DFD5C3;font-size:1.1em;margin:0;pa
 legend{background:#FFF6D3;border:1px solid #DFD5C3;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
 #menu{float:left;height:30px;line-height:normal;margin:10px 0 0;*margin:7px 0 0;padding:0;width:100%;padding:0 1px}
 #menu li{background:url(bg-tab.png) repeat-x 0 -2px;float:left;height:29px;list-style:none;margin:0 1px 0 0;list-style:none;display:block;border:1px solid #999999;-moz-border-radius-topright:6px;-moz-border-radius-topleft:6px;-webkit-border-top-right-radius:6px;-webkit-border-top-left-radius:6px}
-#menu li a{color:#000;display:block;height:20px;padding:8px 8px 4px 0;font-weight:bold;font-size:0.95em;}
+#menu li a{color:#000;display:block;height:20px;padding:8px 7px 4px 0;font-weight:bold;font-size:0.95em;}
 #menu img{display:inline;padding:0 3px 0 6px;vertical-align:top;width:16px;height:16px}
 #menu li.active,#menu li:hover{background-position:0 -38px;white-space:nowrap;}
 #menu li.active a{color:#000}
