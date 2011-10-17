@@ -352,7 +352,7 @@ class AdminControllerCore extends Controller
 						$this->_errors[] = Tools::displayError('Failed to update the position.');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.$token);
-						 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+						Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
 					break;
 
 				/* Delete multiple objects */
@@ -971,7 +971,7 @@ class AdminControllerCore extends Controller
 		else if ($this->display == 'list')
 		{
 			$this->getList($this->context->language->id);
-			
+
 			$helper = new HelperList();
 			// Check if list templates have been overriden
 			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_header.tpl'))
@@ -982,20 +982,13 @@ class AdminControllerCore extends Controller
 				$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
 
 			// For compatibility reasons, we have to check standard actions in class attributes
-			foreach($this->actions_available as $action) {
+			foreach ($this->actions_available as $action)
+			{
 				if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
 					$this->actions[] = $action;
 			}
 
-			//
 			$helper->actions = $this->actions;
-
-
-			/*$helper->view = $this->view;
-			$helper->edit = $this->edit;
-			$helper->delete = $this->delete;
-			$helper->duplicate = $this->duplicate;*/
-
 			$helper->bulk_actions = $this->bulk_actions;
 			$helper->currentIndex = self::$currentIndex;
 			$helper->className = $this->className;
@@ -1006,8 +999,16 @@ class AdminControllerCore extends Controller
 			$helper->token = $this->token;
 			$helper->imageType = $this->imageType;
 			$helper->no_add = isset($this->no_add) ? $this->no_add : false;
-			$helper->_listSkipDelete = $this->_listSkipDelete;
 			$helper->colorOnBackground = $this->colorOnBackground;
+
+			// For each action, try to add the corresponding skip elements list
+			foreach ($this->actions as $action)
+			{
+				$skip_attribute = '_listSkip'.ucfirst($action);
+				if (isset($this->$skip_attribute))
+					$helper->$skip_attribute = $this->$skip_attribute;
+			}
+
 			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 		}
 		else if ($this->display == 'options')
