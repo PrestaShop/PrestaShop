@@ -45,10 +45,11 @@
 
 <script type="text/javascript">
 	$(function() {
-		$(".datepicker").datepicker({
-			prevText:"",
-			nextText:""
-		});
+		if ($(".datepicker").length > 0)
+			$(".datepicker").datepicker({
+				prevText: '',
+				nextText: ''
+			});
 	});
 </script>
 
