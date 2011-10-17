@@ -102,8 +102,8 @@ class StatsProduct extends ModuleGraph
 		$sql = 'SELECT p.`id_product`, p.reference, pl.`name`, IFNULL(
 					(SELECT SUM(pa.quantity) FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.id_product = p.id_product), p.quantity) as quantity
 				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.`id_product` = pl.`id_product`'.$this->context->shop->sqlLang('pl').'
-				'.$this->context->shop->sqlAsso('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.`id_product` = pl.`id_product`'.$this->context->shop->addSqlRestrictionOnLang('pl').'
+				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				'.(Tools::getValue('id_category') ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`' : '').'
 				WHERE pl.`id_lang` = '.(int)($id_lang).'
 					'.(Tools::getValue('id_category') ? 'AND cp.id_category = '.(int)(Tools::getValue('id_category')) : '').'
@@ -128,7 +128,7 @@ class StatsProduct extends ModuleGraph
 		$sql = 'SELECT pl.name as pname, pl.id_product, SUM(od.product_quantity) as pqty, AVG(od.product_price) as pprice
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = od.product_id AND pl.id_lang = '.(int)$id_lang.$this->context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = od.product_id AND pl.id_lang = '.(int)$id_lang.$this->context->shop->addSqlRestrictionOnLang('pl').')
 				WHERE o.id_customer IN (
 						SELECT o.id_customer
 						FROM `'._DB_PREFIX_.'orders` o

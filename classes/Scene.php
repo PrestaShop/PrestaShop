@@ -214,7 +214,7 @@ class SceneCore extends ObjectModel
 		$sql = 'SELECT s.*
 				FROM `'._DB_PREFIX_.'scene_category` sc
 				LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
-				'.$context->shop->sqlAsso('scene', 's').'
+				'.$context->shop->addSqlAssociation('scene', 's').'
 				LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
 				WHERE sc.id_category = '.(int)$id_category.'
 					AND sl.id_lang = '.(int)$id_lang

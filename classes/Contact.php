@@ -83,7 +83,7 @@ class ContactCore extends ObjectModel
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'contact` c
-				'.$shop->sqlAsso('contact', 'c', false).'
+				'.$shop->addSqlAssociation('contact', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				ORDER BY `name` ASC';

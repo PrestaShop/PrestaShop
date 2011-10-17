@@ -123,7 +123,7 @@ class StatsCatalog extends Module
 
 		$sql = 'SELECT p.id_product, pl.name, pl.link_rewrite
 				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.$this->context->shop->sqlLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.$this->context->shop->addSqlRestrictionOnLang('pl').')
 				'.$this->_join.'
 				WHERE p.`active` = 1
 					'.(sizeof($precalc2) ? 'AND p.`id_product` NOT IN ('.implode(',', $precalc2).')' : '').'
@@ -144,7 +144,7 @@ class StatsCatalog extends Module
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)';
 			$this->_where = ' AND cp.`id_category` = '.$id_category;
 		}
-		$this->_join .= $this->context->shop->sqlAsso('product', 'p');
+		$this->_join .= $this->context->shop->addSqlAssociation('product', 'p');
 
 		$result1 = $this->getQuery1(true);
 		$total = $result1['total'];

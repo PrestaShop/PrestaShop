@@ -142,7 +142,7 @@ abstract class ModuleCore
 
 	protected function sqlShopRestriction($share = false, $alias = null)
 	{
-		return $this->context->shop->sqlRestriction($share, $alias, 'shop');
+		return $this->context->shop->addSqlRestriction($share, $alias, 'shop');
 	}
 
 	/**

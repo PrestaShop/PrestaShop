@@ -215,7 +215,7 @@ class CustomerCore extends ObjectModel
 
 		$sql = 'SELECT `id_customer`, `email`, `firstname`, `lastname`
 				FROM `'._DB_PREFIX_.'customer`
-				WHERE 1 '.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
+				WHERE 1 '.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `id_customer` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
@@ -239,7 +239,7 @@ class CustomerCore extends ObjectModel
 				FROM `'._DB_PREFIX_	.'customer`
 				WHERE `active` = 1
 					AND `email` = \''.pSQL($email).'\'
-					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
+					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					'.(isset($passwd) ? 'AND `passwd` = \''.md5(_COOKIE_KEY_.$passwd).'\'' : '').'
 					AND `deleted` = 0
 					AND `is_guest` = 0';
@@ -294,7 +294,7 @@ class CustomerCore extends ObjectModel
 	 	$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
-					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).
+					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).
 					($ignoreGuest ? 'AND `is_guest` = 0' : '');
 		$result = Db::getInstance()->getRow($sql);
 
@@ -398,7 +398,7 @@ class CustomerCore extends ObjectModel
 						OR `id_customer` LIKE \'%'.pSQL($query).'%\'
 						OR `lastname` LIKE \'%'.pSQL($query).'%\'
 						OR `firstname` LIKE \'%'.pSQL($query).'%\'
-					)'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER);
+					)'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 

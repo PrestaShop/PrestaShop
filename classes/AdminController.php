@@ -1337,7 +1337,7 @@ class AdminControllerCore extends Controller
 			$selectShop = ', shop.name as shop_name ';
 			$joinShop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
-			$whereShop = $this->context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+			$whereShop = $this->context->shop->addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 		$assos = Shop::getAssoTables();
 		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')

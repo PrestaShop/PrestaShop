@@ -103,7 +103,7 @@ class ConnectionCore extends ObjectModel
 			$sql = 'SELECT `id_connections` FROM `'._DB_PREFIX_.'connections`
 					WHERE ip_address = '.ip2long(Tools::getRemoteAddr()).'
 						AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
-						'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
+						'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					ORDER BY `date_add` DESC';
 			if ($id_connections = Db::getInstance()->getValue($sql))
 			{
@@ -117,7 +117,7 @@ class ConnectionCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `id_guest` = '.(int)($cookie->id_guest).'
 					AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
-					'.$shop->sqlRestriction(Shop::SHARE_CUSTOMER).'
+					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `date_add` DESC';
 		$result = Db::getInstance()->getRow($sql);
 		if (!$result['id_guest'] AND (int)($cookie->id_guest))
