@@ -115,7 +115,11 @@ class importerosc extends ImportModule
 	public function getLangagues($limit = 0, $nrb_import = 100)
 	{
 		$identifier = 'id_lang';
-		$langagues = $this->executeS('SELECT languages_id as id_lang, name as name, code as iso_code, 1 as active FROM  `'.bqSQL($this->prefix).'languages` LIMIT '.(int)($limit).' , '.(int)$nrb_import);
+
+		$langagues = $this->ExecuteS('
+			SELECT languages_id as id_lang, name as name, code as iso_code, 1 as active, (\'m/j/Y\') as date_format_lite, (\'m/j/Y H:i:s\') as date_format_full
+			FROM  `'.bqSQL($this->prefix).'languages`
+			LIMIT '.(int)$limit.' , '.(int)$nrb_import);
 		return $this->autoFormat($langagues, $identifier);
 	}
 
@@ -218,7 +222,7 @@ class importerosc extends ImportModule
 
 		$categories = $this->executeS('
 									SELECT c.categories_id as id_category, c.parent_id as id_parent, 0 as level_depth, cd.language_id as id_lang, cd.categories_name as name , 1 as active, categories_image as images
-									FROM `'.bqSQL($this->prefix).'categories` c 
+									FROM `'.bqSQL($this->prefix).'categories` c
 									LEFT JOIN `'.bqSQL($this->prefix).'categories_description` cd ON (c.categories_id = cd.categories_id)
 									WHERE cd.categories_name IS NOT NULL AND cd.language_id IS NOT NULL
 									ORDER BY c.categories_id, cd.language_id
@@ -238,7 +242,7 @@ class importerosc extends ImportModule
 		$identifier = 'id_attribute_group';
 		$countries = $this->executeS('
 									SELECT products_options_id as id_attribute_group, products_options_name as name , products_options_name as public_name, language_id as id_lang, 0 as is_color_group
-									FROM  `'.bqSQL($this->prefix).'products_options` 
+									FROM  `'.bqSQL($this->prefix).'products_options`
 									LIMIT '.(int)($limit).' , '.(int)$nrb_import);
 		return $this->autoFormat($countries, $identifier, $keyLanguage, $multiLangFields);
 	}
@@ -267,7 +271,7 @@ class importerosc extends ImportModule
 									pd.products_description as description, CONCAT(\''.pSQL(Tools::getProtocol()).pSQL(Tools::getValue('shop_url')).'\/images/\',p.`products_image`) as images,
 									(SELECT ptc.categories_id FROM `'.bqSQL($this->prefix).'products_to_categories` ptc WHERE ptc.`products_id` = p.`products_id` LIMIT 1) as id_category_default,
 									p.`products_date_added` as date_add
-									FROM	`'.bqSQL($this->prefix).'products` p 
+									FROM	`'.bqSQL($this->prefix).'products` p
 									LEFT JOIN `'.bqSQL($this->prefix).'products_description` pd ON (p.products_id = pd.products_id)
 									WHERE pd.products_name IS NOT NULL AND pd.language_id IS NOT NULL
 									LIMIT '.(int)($limit).' , '.(int)$nrb_import);
