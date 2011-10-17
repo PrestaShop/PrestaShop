@@ -57,7 +57,7 @@ class ImageCore extends ObjectModel
 	protected $existing_path;
 
 	/** @var int access rights of created folders (octal) */
-	protected $access_rights = 0775;
+	protected static $access_rights = 0775;
 
 	protected $tables = array ('image', 'image_lang');
 
@@ -445,20 +445,23 @@ class ImageCore extends ObjectModel
 		}
 
 		// Can we remove the image folder?
-		$remove_folder = true;
-		foreach (scandir($path) as $file)
-			if (($file != '.' && $file != '..'&& $file != 'index.php'))
-			{
-				$remove_folder = false;
-				break;
-			}
-
-		if ($remove_folder)
+		if (is_numeric(basename($path)))
 		{
-			// we're only removing index.php if it's a folder we want to delete
-			if (file_exists($path.'index.php'))
-				@unlink ($path.'index.php');
-			@rmdir($path);
+			$remove_folder = true;
+			foreach (scandir($path) as $file)
+				if (($file != '.' && $file != '..'&& $file != 'index.php'))
+				{
+					$remove_folder = false;
+					break;
+				}
+
+			if ($remove_folder)
+			{
+				// we're only removing index.php if it's a folder we want to delete
+				if (file_exists($path.'index.php'))
+					@unlink ($path.'index.php');
+				@rmdir($path);
+			}
 		}
 
 		return true;
@@ -514,8 +517,8 @@ class ImageCore extends ObjectModel
 		if (!file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder()))
 		{
 			// Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), $access_rights, true)
-						|| @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), $access_rights);
+			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true)
+						|| @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights);
 
 			// Create an index.php file in the new folder
 			if ($success
@@ -589,8 +592,8 @@ class ImageCore extends ObjectModel
 					{
 						if (!file_exists(_PS_PROD_IMG_DIR_.$tmp_folder))
 						{
-							@mkdir(_PS_PROD_IMG_DIR_.$tmp_folder, $access_rights);
-							@chmod(_PS_PROD_IMG_DIR_.$tmp_folder, $access_rights);
+							@mkdir(_PS_PROD_IMG_DIR_.$tmp_folder, self::$access_rights);
+							@chmod(_PS_PROD_IMG_DIR_.$tmp_folder, self::$access_rights);
 						}
 						$tmp_path = _PS_PROD_IMG_DIR_.$tmp_folder.basename($file);
 						if (!@rename($new_path, $tmp_path) || !file_exists($tmp_path))
@@ -607,6 +610,11 @@ class ImageCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Try to create and delete some folders to check if moving images to new file system will be possible
+	 *
+	 * @return boolean success
+	 */
 	public static function testFileSystem()
 	{
 		$safe_mode = ini_get('safe_mode');
@@ -614,6 +622,7 @@ class ImageCore extends ObjectModel
 			return false;
 		$folder1 = _PS_PROD_IMG_DIR_.'testfilesystem/';
 		$test_folder = $folder1.'testsubfolder/';
+		// check if folders are already existing from previous failed test
 		if (file_exists($test_folder))
 		{
 			@rmdir($test_folder);
@@ -621,8 +630,9 @@ class ImageCore extends ObjectModel
 		}
 		if (file_exists($test_folder))
 			return false;
-		@mkdir($test_folder, $access_rights, true);
-		@chmod($test_folder, $access_rights);
+
+		@mkdir($test_folder, self::$access_rights, true);
+		@chmod($test_folder, self::$access_rights);
 		if (!is_writeable($test_folder))
 			return false;
 		@rmdir($test_folder);
