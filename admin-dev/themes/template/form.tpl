@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -71,74 +71,93 @@
 					{if $input.name == 'id_state'}
 						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 					{/if}
+					{if isset($input.label)}
 					<label>{$input.label} </label>
+					{/if}
 					<div class="margin-form">
 						{if $input.type == 'text'}
 							{if isset($input.lang) && isset($input.attributeLang)}
 								{foreach $languages as $language}
 									<div id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-										<input type="text" 
+										<input type="text"
 												name="{$input.name}_{$language.id_lang}"
 												value="{$fields_value[$input.name][$language.id_lang]}"
-												{if isset($input.size)}size="{$input.size}"{/if} 
-												{if isset($input.class)}class="{$input.class}"{/if} 
+												{if isset($input.size)}size="{$input.size}"{/if}
+												{if isset($input.class)}class="{$input.class}"{/if}
 												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 										{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 									</div>
 								{/foreach}
 								{if count($languages) > 1}
 									<div class="displayed_flag">
-										<img src="../img/l/{$defaultFormLanguage}.jpg" 
-											class="pointer" 
-											id="language_current_{$input.name}" 
+										<img src="../img/l/{$defaultFormLanguage}.jpg"
+											class="pointer"
+											id="language_current_{$input.name}"
 											onclick="toggleLanguageFlags(this);" />
 									</div>
 									<div id="languages_{$input.name}" class="language_flags">
 										{l s='Choose language:'}<br /><br />
 										{foreach $languages as $language}
-												<img src="../img/l/{$language.id_lang}.jpg" 
-													class="pointer" 
-													alt="{$language.name}" 
-													title="{$language.name}" 
+												<img src="../img/l/{$language.id_lang}.jpg"
+													class="pointer"
+													alt="{$language.name}"
+													title="{$language.name}"
 													onclick="changeLanguage('{$input.name}', '{$input.attributeLang}', {$language.id_lang}, '{$language.iso_code}');" />
 										{/foreach}
 									</div>
 								{/if}
 							{else}
-								<input type="text" 
-										name="{$input.name}" 
-										id="{$input.name}" 
-										value="{$fields_value[$input.name]}" 
-										{if isset($input.size)}size="{$input.size}"{/if} 
-										{if isset($input.class)}class="{$input.class}"{/if} 
+								<input type="text"
+										name="{$input.name}"
+										id="{$input.name}"
+										value="{$fields_value[$input.name]}"
+										{if isset($input.size)}size="{$input.size}"{/if}
+										{if isset($input.class)}class="{$input.class}"{/if}
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
+						{elseif $input.type == 'hidden'}
+							<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
 						{elseif $input.type == 'select'}
-							<select name="{$input.name}" id="{$input.name}" {if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+							<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 								{if isset($input.options.optiongroup)}
 									{foreach $input.options.optiongroup.query AS $optiongroup}
 										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
 											{foreach $optiongroup[$input.options.options.query] as $option}
-												<option value="{$option[$input.options.options.id]}" 
-														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
+												<option value="{$option[$input.options.options.id]}"
+													{if isset($input.multiple)}
+														{foreach $fields_value[$input.name] as $field_value}
+															{if $field_value == $option[$input.options.options.id]}selected="selected"{/if}
+														{/foreach}
+													{else}
+														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}
+													{/if}
+												>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
 											{/foreach}
 										</optgroup>
 									{/foreach}
 								{else}
 									{foreach $input.options.query AS $option}
-										{$fields_value[$input.name]|@p}
-										<option value="{$option[$input.options.id]}" 
-												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
+										<option value="{$option[$input.options.id]}"
+											{if isset($input.multiple)}
+												{foreach $fields_value[$input.name] as $field_value}
+													{$field_value}
+													{if $field_value == $option[$input.options.id]}selected="selected"{/if}
+												{/foreach}
+											{else}
+												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
+											{/if}
+										>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
 									{/foreach}
 								{/if}
 							</select>
+							{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 						{elseif $input.type == 'radio'}
 							{foreach $input.values as $value}
-								<input type="radio" 
-										name="{$input.name}" 
-										id="{$value.id}" 
-										value="{$value.value|escape:'htmlall':'UTF-8'}" 
+								<input type="radio"
+										name="{$input.name}"
+										id="{$value.id}"
+										value="{$value.value|escape:'htmlall':'UTF-8'}"
 										{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
 								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
 								 {if isset($input.is_bool) && $input.is_bool == true}
@@ -161,18 +180,18 @@
 								{/foreach}
 								{if count($languages) > 1}
 									<div class="displayed_flag">
-										<img src="../img/l/{$defaultFormLanguage}.jpg" 
-											class="pointer" 
-											id="language_current_{$input.name}" 
+										<img src="../img/l/{$defaultFormLanguage}.jpg"
+											class="pointer"
+											id="language_current_{$input.name}"
 											onclick="toggleLanguageFlags(this);" />
 									</div>
 									<div id="languages_{$input.name}" class="language_flags">
 										{l s='Choose language:'}<br /><br />
 										{foreach $languages as $language}
-												<img src="../img/l/{$language.id_lang}.jpg" 
-													class="pointer" 
-													alt="{$language.name}" 
-													title="{$language.name}" 
+												<img src="../img/l/{$language.id_lang}.jpg"
+													class="pointer"
+													alt="{$language.name}"
+													title="{$language.name}"
 													onclick="changeLanguage('{$input.name}', '{$input.attributeLang}', {$language.id_lang}, '{$language.iso_code}');" />
 										{/foreach}
 									</div>
@@ -181,7 +200,7 @@
 								<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
 							{/if}
 						{elseif $input.type == 'checkbox'}
-							
+
 						{elseif $input.type == 'file'}
 							<input type="file" name="{$input.name}" />
 							<img src="{$fields_value[$input.name]}" />
