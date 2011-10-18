@@ -339,10 +339,13 @@ class HelperListCore extends Helper
 	 */
 	protected function displayDetailsLink($token = null, $id)
 	{
+		if (!array_key_exists('Details', self::$cache_lang))
+			self::$cache_lang['Details'] = $this->l('Details');
 		$this->context->smarty->assign(array(
 			'id' => $id,
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
-			'token' => $this->token
+			'token' => $this->token,
+			'action' => self::$cache_lang['Details'],
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_details.tpl');
 	}
