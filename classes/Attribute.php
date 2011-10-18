@@ -165,9 +165,9 @@ class AttributeCore extends ObjectModel
 			$shop = Context::getContext()->shop;
 
 		$sql = 'SELECT quantity
-				FROM '._DB_PREFIX_.'stock
+				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product_attribute = '.(int)$id_product_attribute
-					.$shop->addSqlRestriction(Shop::SHARE_STOCK);
+				.$shop->addSqlRestriction();
 		$result = (int)Db::getInstance()->getValue($sql);
 
 		return ($result && $qty <= $result);
