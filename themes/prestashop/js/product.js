@@ -553,3 +553,68 @@ function colorPickerClick(elt)
 	$('#color_pick_hidden').val(id_attribute);
 	findCombination();
 }
+
+
+function getProductAttribute()
+{
+	// get product attribute id
+	product_attribute_id = $('#idCombination').val();
+	product_id = $('#product_page_product_id').val();
+
+	// get every attributes values
+	request = '';
+	//create a temporary 'tab_attributes' array containing the choices of the customer
+	var tab_attributes = new Array();
+	$('div#attributes select, div#attributes input[type=hidden], div#attributes input[type=radio]:checked').each(function(){
+		tab_attributes.push($(this).val());
+	});
+
+	// build new request
+	for (i in attributesCombinations)
+		for (a in tab_attributes)
+			if (attributesCombinations[i]['id_attribute'] == tab_attributes[a])
+				request += '&'+attributesCombinations[i]['group']+'='+attributesCombinations[i]['attribute'];
+	request = request.replace(request.substring(0, 1), '#');
+	url = window.location+'';
+
+	// redirection
+	if (url.indexOf('#') != -1)
+		url = url.substring(0, url.indexOf('#'));
+	window.location = url+request;
+}
+
+$(document).ready(function(){
+	url = window.location+'';
+	// if we need to load a specific combination
+	if (url.indexOf('#') != -1)
+	{
+		// get the params to fill
+		params = url.substring(url.indexOf('#') + 1, url.length);
+		tabParams = params.split('&');
+		tabValues = new Array();
+		for (i in tabParams)
+			tabValues.push(tabParams[i].split('='));
+		product_id = $('#product_page_product_id').val();
+		// fill html with values
+		$('.color_pick').removeClass('selected');
+		count = 0;
+		for (z in tabValues)
+			for (a in attributesCombinations)
+				if (attributesCombinations[a]['group'] == tabValues[z][0]
+					&& attributesCombinations[a]['attribute'] == tabValues[z][1])
+				{
+					count++;
+					// add class 'selected' to the selected color
+					$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
+					$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', 'checked');
+					$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+					$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+				}
+		// find combination
+		if (count == tabValues.length)
+			findCombination();
+		// no combination found = removing attributes from url
+		else
+			window.location = url.substring(0, url.indexOf('#'));
+	}
+});

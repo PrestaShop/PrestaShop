@@ -3615,5 +3615,48 @@ class ProductCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_attribute`
 		WHERE `id_product` = '.(int)$id_product);
 	}
+
+	/**
+	 * Get label by lang and value by lang too
+	 * @param int $id_product
+	 * @param int $product_attribute_id
+	 */
+	public static function getAttributesParams($id_product, $id_product_attribute)
+	{
+		return Db::getInstance()->executeS('
+		SELECT al.`name`, agl.`name` as `group`
+		FROM `'._DB_PREFIX_.'attribute` a
+		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+			ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
+			ON (pac.`id_attribute` = a.`id_attribute`)
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
+			ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
+		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+			ON (a.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)Context::getContext()->language->id.')
+		WHERE pa.`id_product` = '.(int)$id_product.'
+			AND pac.`id_product_attribute` = '.(int)$id_product_attribute.'
+			AND agl.`id_lang` = '.(int)Context::getContext()->language->id);
+	}
+
+	/**
+	 * @param int $id_product
+	 */
+	public static function getAttributesInformationsByProduct($id_product)
+	{
+		return Db::getInstance()->executeS('
+		SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+		FROM `'._DB_PREFIX_.'attribute` a
+		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+			ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+			ON (a.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)Context::getContext()->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
+			ON (a.`id_attribute` = pac.`id_attribute`)
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
+			ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+		WHERE pa.`id_product` = '.(int)$id_product);
+	}
+
 }
 
