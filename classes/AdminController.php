@@ -697,7 +697,8 @@ class AdminControllerCore extends Controller
 	 */
 	protected function loadObject($opt = false)
 	{
-		if ($id = (int)Tools::getValue($this->identifier) && Validate::isUnsignedId($id))
+		$id = (int)Tools::getValue($this->identifier);
+		if ($id && Validate::isUnsignedId($id))
 		{
 			if (!$this->_object)
 				$this->_object = new $this->className($id);
