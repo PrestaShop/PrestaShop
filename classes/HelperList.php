@@ -79,7 +79,13 @@ class HelperListCore extends Helper
 	public $header_tpl = 'list_header.tpl';
 	public $content_tpl = 'list_content.tpl';
 	public $footer_tpl = 'list_footer.tpl';
+
+	/** @var array list of required actions for each list row */
 	public $actions = array();
+
+	/** @var array list of row ids associated with a given action for witch this action have to not be available */
+	public $list_skip_actions = array();
+
 	public $bulk_actions = false;
 	public $specificConfirmDelete;
 	public $colorOnBackground;
@@ -138,7 +144,7 @@ class HelperListCore extends Helper
 	 * @param unknown_type $id_category
 	 * @param unknown_type $id_product
 	 */
-	protected function _displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
+	protected function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		return '<a href="'.$this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
 			((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
@@ -177,18 +183,15 @@ class HelperListCore extends Helper
 			// Check all available actions to add to the current list row
 			foreach ($this->actions as $action)
 			{
-				$skip = '_listSkip'.ucfirst($action);
-				$method_name = 'display'.ucfirst($action).'Link';
-				if (!isset($this->$skip) || !in_array($id, $this->$skip))
+				//Check if the action is available for the current row
+				if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action]))
 				{
+					$method_name = 'display'.ucfirst($action).'Link';
+
 					if (method_exists($this->context->controller, $method_name))
 						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id);
-
-					else if (method_exists($this, '_'.$method_name))
-					{
-						$method_name = '_'.$method_name;
+					else if (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($token, $id);
-					}
 				}
 			}
 
@@ -198,7 +201,7 @@ class HelperListCore extends Helper
 				$key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
 
 				if (isset($params['active']))
-					$this->_list[$index][$key] = $this->_displayEnableLink(
+					$this->_list[$index][$key] = $this->displayEnableLink(
 						$this->token,
 						$id,
 						$tr[$key],
@@ -214,10 +217,10 @@ class HelperListCore extends Helper
 						'position' => $tr[$key],
 						'position_url_down' => $this->currentIndex.
 							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
-							'&way=1&position='.(int)($tr['position'] + 1).'&token='.$this->token,
+							'&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token,
 						'position_url_up' => $this->currentIndex.
 							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
-							'&way=0&position='.(int)($tr['position'] - 1).'&token='.$this->token
+							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
 				}
 				else if (isset($params['image']))
@@ -269,9 +272,6 @@ class HelperListCore extends Helper
 			}
 		}
 
-		if (isset($this->_listSkipDelete))
-			$this->context->smarty->assign('listSkipDelete', $this->_listSkipDelete);
-
 		$this->context->smarty->assign(array(
 			'is_dnd_identifier' => $this->is_dnd_identifier,
 			'color_on_bg' => $this->colorOnBackground,
@@ -288,6 +288,7 @@ class HelperListCore extends Helper
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
 			'has_actions' => (bool)count($this->actions),
+			'list_skip_actions' => $this->list_skip_actions,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_content.tpl');
 	}
@@ -295,7 +296,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display duplicate action link
 	 */
-	protected function _displayDuplicateLink($token = null, $id)
+	protected function displayDuplicateLink($token = null, $id)
 	{
 		if (!array_key_exists('Duplicate', self::$cache_lang))
 			self::$cache_lang['Duplicate'] = $this->l('Duplicate');
@@ -315,7 +316,7 @@ class HelperListCore extends Helper
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_duplicate.tpl');
 	}
-	
+
 
 	/**
 	 * Display action show details of a table row
@@ -336,7 +337,7 @@ class HelperListCore extends Helper
 	 *     fields_display: // attribute $fieldsDisplay of the admin controller
 	 *   }
 	 */
-	protected function _displayDetailsLink($token = null, $id)
+	protected function displayDetailsLink($token = null, $id)
 	{
 		$this->context->smarty->assign(array(
 			'id' => $id,
@@ -349,7 +350,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display view action link
 	 */
-	protected function _displayViewLink($token = null, $id)
+	protected function displayViewLink($token = null, $id)
 	{
 		if (!array_key_exists('View', self::$cache_lang))
 			self::$cache_lang['View'] = $this->l('View');
@@ -366,7 +367,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display edit action link
 	 */
-	protected function _displayEditLink($token = null, $id)
+	protected function displayEditLink($token = null, $id)
 	{
 		if (!array_key_exists('Edit', self::$cache_lang))
 			self::$cache_lang['Edit'] = $this->l('Edit');
@@ -383,7 +384,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display delete action link
 	 */
-	protected function _displayDeleteLink($token = null, $id)
+	protected function displayDeleteLink($token = null, $id)
 	{
 		if (!array_key_exists('Delete', self::$cache_lang))
 			self::$cache_lang['Delete'] = $this->l('Delete');
@@ -404,7 +405,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display list header (filtering, pagination and column names)
 	 */
-	public function displayListHeader($token = NULL)
+	public function displayListHeader($token = null)
 	{
 		$id_cat = Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
 
