@@ -1667,12 +1667,15 @@ FileETag INode MTime Size
 	/**
 	 * Function property_exists does not exist in PHP < 5.1
 	 *
+	 * @deprecated since 1.5.0 (PHP 5.1 required, so property_exists() is now natively supported)
 	 * @param object or class $class
 	 * @param string $property
 	 * @return boolean
 	 */
 	public static function property_exists($class, $property)
 	{
+		Tools::displayAsDeprecated();
+
 		if (function_exists('property_exists'))
 			return property_exists($class, $property);
 

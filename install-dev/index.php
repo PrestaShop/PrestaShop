@@ -345,11 +345,11 @@ if ($lm->getIncludeTradFilename())
 		</form>
 		<h3 class="no-margin"><?php echo lang('Did you know?'); ?></h3>
 		<p>
-			<?php 
-			
+			<?php
+
 				$isoForLink = (in_array($lm->getIsoCodeSelectedLang(), array('fr', 'it', 'de', 'en', 'es')) ? $lm->getIsoCodeSelectedLang() : 'en');
 				echo lang('Prestashop and its community offers over 40 different languages for free download at');
-			
+
 			?><br /><a href="http://www.prestashop.com/<?php echo $isoForLink; ?>/downloads/#lang_pack" target="_blank">http://www.prestashop.com/<?php echo $isoForLink; ?>/downloads/#lang_pack</a>
 		</p>
 
@@ -772,9 +772,9 @@ if ($lm->getIncludeTradFilename())
 
 					function getPreinstallXmlLang($object, $field)
 					{
-						if (Tools::property_exists($object, $field.'_'.((int)($_GET['language'])+1)))
+						if (property_exists($object, $field.'_'.((int)($_GET['language'])+1)))
 							return str_replace(array('!|', '|!'), array('<', '>'), trim($object->{$field.'_'.((int)($_GET['language'])+1)}));
-						if (Tools::property_exists($object, $field.'_1'))
+						if (property_exists($object, $field.'_1'))
 							return str_replace(array('!|', '|!'), array('<', '>'), trim($object->{$field.'_1'}));
 						return '';
 					}
