@@ -37,6 +37,7 @@ class WarehouseCore extends ObjectModel
 	public $reference;
 	public $name;
 	public $id_employee;
+	public $id_currency;
 
 	/**
 	 * Describes the way a Warehouse is managed
@@ -49,7 +50,8 @@ class WarehouseCore extends ObjectModel
 		'reference',
 		'name',
 		'id_employee',
-		'management_type'
+		'management_type',
+		'id_currency'
 	);
 
 	protected $fieldsSize = array(
@@ -63,7 +65,8 @@ class WarehouseCore extends ObjectModel
 		'reference' => 'isString',
 		'name' => 'isString',
 		'id_employee' => 'isUnsignedId',
-		'management_type' => 'isStockManagement'
+		'management_type' => 'isStockManagement',
+		'id_currency' => 'isUnsignedId'
 	);
 
 	protected $table = 'warehouse';
@@ -77,17 +80,18 @@ class WarehouseCore extends ObjectModel
 		$fields['name'] = pSQL($this->name);
 		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['management_type'] = pSQL($this->management_type);
+		$fields['id_currency'] = (int)$this->id_currency;
 		return $fields;
 	}
 
 	/**
 	 * Gets the shops associated to the current warehouse
 	 *
-	 * @return array
+	 * @return array ids
 	 */
 	public function getShops()
 	{
-		$shop_ids = array();
+		$ids_shop = array();
 
 		$query = new DbQuery();
 		$query->select('ws.id_shop');
@@ -96,12 +100,11 @@ class WarehouseCore extends ObjectModel
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-		// Parse the result to return a simple array of ids
-		foreach($res as $shops)
-			foreach($shops as $shop)
-				$shop_ids[] = $shop;
+		foreach ($res as $shops)
+			foreach ($shops as $shop)
+				$ids_shop[] = $shop;
 
-		return $shop_ids;
+		return $ids_shop;
 	}
 
 	/**
@@ -125,11 +128,11 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * Gets the carriers associated to the current warehouse
 	 *
-	 * @return array
+	 * @return array ids
 	 */
 	public function getCarriers()
 	{
-		$carriers_ids = array();
+		$ids_carrier = array();
 
 		$query = new DbQuery();
 		$query->select('wc.id_carrier');
@@ -138,12 +141,11 @@ class WarehouseCore extends ObjectModel
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-		// Parse the result to return a simple array of ids
-		foreach($res as $carriers)
-			foreach($carriers as $carrier)
-				$carriers_ids[] = $carrier;
+		foreach ($res as $carriers)
+			foreach ($carriers as $carrier)
+				$ids_carrier[] = $carrier;
 
-		return $carriers_ids;
+		return $ids_carrier;
 	}
 
 	/**
