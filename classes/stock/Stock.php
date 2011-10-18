@@ -73,7 +73,7 @@ class StockCore extends ObjectModel
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['physical_quantity'] = (int)$this->physical_quantity;
 		$fields['usable_quantity'] = (int)$this->usable_quantity;
-		$fields['price_te'] = (float)$this->price_te;
+		$fields['price_te'] = (float)round($this->price_te, 6);
 		$fields['id_currency'] = (int)$this->id_currency;
 		return $fields;
 	}
