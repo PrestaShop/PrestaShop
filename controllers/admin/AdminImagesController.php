@@ -47,20 +47,18 @@ class AdminImagesController extends AdminController
 		);
 
 		$this->options = array(
-			'options_image_pref' => array(
-				'images' => array(
-					'title' =>	$this->l('Images'),
-					'icon' =>	'tab-orders',
-					'class' =>	'width4',
-					'top' => '',
-					'bottom' => '',
-					'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
-									  <br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issue, turn it off by selecting "Use JPEG".'),
-					'fields' =>	array(
-						'PS_IMAGE_QUALITY' => array('title' => $this->l('Image quality'), 'show' => true, 'required' => true, 'type' => 'radio', 'choices' => array('jpg' => $this->l('Use JPEG'), 'png' => $this->l('Use PNG only if the base image is in PNG format'), 'png_all' => $this->l('Use PNG for all images'))),
-						'PS_JPEG_QUALITY' => array('title' => $this->l('JPEG quality'), 'desc' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text'),
-			 			'PS_PNG_QUALITY' => array('title' => $this->l('PNG quality'), 'desc' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text'),
-					),
+			'images' => array(
+				'title' =>	$this->l('Images'),
+				'icon' =>	'tab-orders',
+				'class' =>	'width4',
+				'top' => '',
+				'bottom' => '',
+				'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
+								  <br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issue, turn it off by selecting "Use JPEG".'),
+				'fields' =>	array(
+					'PS_IMAGE_QUALITY' => array('title' => $this->l('Image quality'), 'show' => true, 'required' => true, 'type' => 'radio', 'choices' => array('jpg' => $this->l('Use JPEG'), 'png' => $this->l('Use PNG only if the base image is in PNG format'), 'png_all' => $this->l('Use PNG for all images'))),
+					'PS_JPEG_QUALITY' => array('title' => $this->l('JPEG quality'), 'desc' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text'),
+		 			'PS_PNG_QUALITY' => array('title' => $this->l('PNG quality'), 'desc' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text'),
 				),
 			)
 		);
@@ -537,7 +535,7 @@ class AdminImagesController extends AdminController
 			$helper = new HelperOptions();
 			$helper->id = $this->id;
 			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options['options_image_pref']);
+			$this->content .= $helper->generateOptions($this->options);
 
 			$this->initRegenerate();
 			$this->initMoveImages();

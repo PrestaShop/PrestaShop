@@ -1784,86 +1784,83 @@ class AdminControllerCore extends Controller
 
 			$languages = Language::getLanguages(false);
 
-			foreach ($this->options as $option_list)
+			foreach ($this->options as $category => $category_data)
 			{
-				foreach ($option_list as $category => $category_data)
-				{
-					$fields = $category_data['fields'];
+				$fields = $category_data['fields'];
 
-					/* Check required fields */
-					foreach ($fields as $field => $values)
-						if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
-							if (isset($values['type']) && $values['type'] == 'textLang')
-							{
-								foreach ($languages as $language)
-									if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
-										$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-							}
-							else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-								$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-
-					/* Check fields validity */
-					foreach ($fields as $field => $values)
+				/* Check required fields */
+				foreach ($fields as $field => $values)
+					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
 						if (isset($values['type']) && $values['type'] == 'textLang')
 						{
 							foreach ($languages as $language)
-								if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
-									if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
-										$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
+									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 						}
-						else if (Tools::getValue($field) && isset($values['validation']))
-							if (!Validate::$values['validation'](Tools::getValue($field)))
-								$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+						else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
+							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 
-					/* Default value if null */
-					foreach ($fields as $field => $values)
-						if (!Tools::getValue($field) && isset($values['default']))
-							$_POST[$field] = $values['default'];
-
-					if (1 || !count($this->_errors))
+				/* Check fields validity */
+				foreach ($fields as $field => $values)
+					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
-						foreach ($fields as $key => $options)
+						foreach ($languages as $language)
+							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
+								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
+									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+					}
+					else if (Tools::getValue($field) && isset($values['validation']))
+						if (!Validate::$values['validation'](Tools::getValue($field)))
+							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+
+				/* Default value if null */
+				foreach ($fields as $field => $values)
+					if (!Tools::getValue($field) && isset($values['default']))
+						$_POST[$field] = $values['default'];
+
+				if (1 || !count($this->_errors))
+				{
+					foreach ($fields as $key => $options)
+					{
+						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
+							continue;
+
+						if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
 						{
-							if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
-								continue;
+							Configuration::deleteFromContext($key);
+							continue;
+						}
 
-							if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
+						// check if a method updateOptionFieldName is available
+						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+						if (method_exists($this, $method_name))
+							$this->$method_name(Tools::getValue($key));
+						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+						{
+							$list = array();
+							foreach ($languages as $language)
 							{
-								Configuration::deleteFromContext($key);
-								continue;
-							}
-
-							// check if a method updateOptionFieldName is available
-							$method_name = 'updateOption'.Tools::toCamelCase($key, true);
-							if (method_exists($this, $method_name))
-								$this->$method_name(Tools::getValue($key));
-							else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
-							{
-								$list = array();
-								foreach ($languages as $language)
-								{
-									$key_lang = Tools::getValue($key.'_'.$language['id_lang']);
-									$val = (isset($options['cast']) ? $options['cast']($key_lang) : $key_lang);
-									if ($this->validateField($val, $options))
-									{
-										if (Validate::isCleanHtml($val))
-											$list[$language['id_lang']] = $val;
-										else
-											$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
-									}
-								}
-								Configuration::updateValue($key, $list);
-							}
-							else
-							{
-								$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+								$key_lang = Tools::getValue($key.'_'.$language['id_lang']);
+								$val = (isset($options['cast']) ? $options['cast']($key_lang) : $key_lang);
 								if ($this->validateField($val, $options))
 								{
 									if (Validate::isCleanHtml($val))
-										Configuration::updateValue($key, $val);
+										$list[$language['id_lang']] = $val;
 									else
-										$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
 								}
+							}
+							Configuration::updateValue($key, $list);
+						}
+						else
+						{
+							$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+							if ($this->validateField($val, $options))
+							{
+								if (Validate::isCleanHtml($val))
+									Configuration::updateValue($key, $val);
+								else
+									$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
 							}
 						}
 					}

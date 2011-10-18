@@ -24,10 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <br />
-<script type="text/javascript">
-	id_language = Number({$id_lang});
-</script>
-
 <form action="{$current}&submitOptions{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
 {foreach $optionsList AS $category => $categoryData}
 	{if isset($categoryData['top'])}{$categoryData['top']}{/if}
@@ -123,7 +119,7 @@
 			{$field['flags']}
 		{elseif $field['type'] == 'textareaLang'}
 			{foreach $field['languages'] AS $id_lang => $value}
-				<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}'block'{else}'none'{/if}; float: left;">';
+				<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left;">
 					<textarea rows="{$field['rows']}" cols="{$field['cols']|intval}"  name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 				</div>
 			{/foreach}
