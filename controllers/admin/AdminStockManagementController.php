@@ -93,8 +93,8 @@ class AdminStockManagementController extends AdminController
 			$this->identifier = 'id_product_attribute';
 			$this->display = 'list';
 
-			// get list
-			$this->getList($this->context->language->id);
+			// get list and force no limit clause in the request
+			$this->getList($this->context->language->id, null, null, 0, false);
 
 			// Render list
 			$helper = new HelperList();
