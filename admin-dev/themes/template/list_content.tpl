@@ -31,7 +31,7 @@
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
 		<td class="center">
-			{if $bulk_actions AND isset($listSkipDelete) AND !in_array($tr.$identifier, $listSkipDelete)}
+			{if $bulk_actions AND array_key_exists('delete', $list_skip_actions) AND !in_array($tr.$identifier, $list_skip_actions['delete'])}
 				<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 			{/if}
 		</td>

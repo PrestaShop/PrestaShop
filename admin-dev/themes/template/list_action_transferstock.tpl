@@ -19,27 +19,9 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9197 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-			</table>
-			{if $bulk_actions}
-				<p>
-					{foreach $bulk_actions as $key => $params}
-						<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text|escape:'htmlall':'UTF-8'}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm|escape:'htmlall':'UTF-8'}');"{/if} />
-					{/foreach}
-				</p>
-			{/if}
-		</td>
-	</tr>
-</table>
-{if !$simple_header}
-<input type="hidden" name="token" value="{$token}" />
-</form>
-{/if}
-{*
-if (isset($this->_includeTab) AND sizeof($this->_includeTab))
-	echo '<br /><br />';
-*}
+<a href="{$href}">
+<img src="../img/admin/arrow-right.png" alt="{$action}" title="{$action}" /></a>

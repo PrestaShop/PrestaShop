@@ -24,7 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{if !$simple_header}
+
 <link href="../css/admin.css" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('.filter').keypress(function(event){
@@ -57,9 +60,12 @@
 	<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
 {/if}
 <a name="{$table}">&nbsp;</a>
+
 <form method="post" action="{$action}" class="form">
+{/if}{* End if simple_header *}
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
-	<table>
+	<table style="table-layout: fixed; width: 100%;">
+		{if !$simple_header}
 		<tr>
 			<td style="vertical-align: bottom;">
 				<span style="float: left;">
@@ -88,22 +94,25 @@
 				<span class="clear"></span>
 			</td>
 		</tr>
+		{/if}
 		<tr>
-			<td>
+			<td{if $simple_header} style="border:none;"{/if}>
 				<table
 				{if $table_id} id={$table_id}{/if}
 				class="table {if $table_dnd}tableDnd{/if}"
-				cellpadding="0" cellspacing="0">
+				cellpadding="0" cellspacing="0"
+				style="width: 100%; margin-bottom:10px;"
+				>
 					<thead>
 						<tr class="nodrag nodrop">
-							<th>
+							<th style="width:10px;">
 								{if $delete}
 									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
 								{/if}
 							</th>
 							{foreach $fields_display AS $key => $params}
-								<th {if isset($params.widthColumn)} style="width: {$params.widthColumn}px"{/if}>{$params.title}
-									{if !isset($params.orderby) || $params.orderby}
+								<th {if isset($params.widthColumn)} style="width: {if $params.widthColumn == 'auto'}auto{else}{$params.widthColumn}px{/if}"{/if}>{$params.title}
+									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}">
 											<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}'_d'{/if}.gif" />
@@ -128,6 +137,7 @@
 								<th style="width: 52px">{l s='Actions'}</th>
 							{/if}
 						</tr>
+ 						{if !$simple_header}
 						<tr class="nodrag nodrop" style="height: 35px;">
 							<td class="center">
 								{if $delete}
@@ -175,4 +185,5 @@
 								<td class="center">--</td>
 							{/if}
 							</tr>
+						{/if}
 						</thead>

@@ -98,6 +98,9 @@ class HelperListCore extends Helper
 		'id_attribute' => 'id_attribute'
 	);
 
+	// @var boolean ask for simple header : no filters, no paginations and no sorting
+	public $simple_header = false;
+
 	/**
 	 * Return an html list given the data to fill it up
 	 *
@@ -509,6 +512,7 @@ class HelperListCore extends Helper
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
 			'page' => $page,
+			'simple_header' => $this->simple_header,
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
@@ -539,6 +543,7 @@ class HelperListCore extends Helper
 	{
 		$this->context->smarty->assign(array(
 			'token' => $this->token,
+			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_footer.tpl');
