@@ -214,42 +214,40 @@ class AdminStoresControllerCore extends AdminController
 		);
 
 		$this->options = array(
-			'option_store_pref' => array(
-				'general' => array(
-					'title' =>	$this->l('Parameters'),
-					'fields' =>	array(
-						'PS_STORES_DISPLAY_FOOTER' => array(
-							'title' => $this->l('Display in the footer:'),
-							'desc' => $this->l('Display a link to the store locator in the footer'),
-							'cast' => 'intval',
-							'type' => 'bool'
-						),
-						'PS_STORES_DISPLAY_SITEMAP' => array(
-							'title' => $this->l('Display in the sitemap page:'),
-							'desc' => $this->l('Display a link to the store locator in the sitemap page'),
-							'cast' => 'intval',
-							'type' => 'bool'
-						),
-						'PS_STORES_SIMPLIFIED' => array(
-							'title' => $this->l('Show a simplified store locator:'),
-							'desc' => $this->l('No map, no search, only a store directory'),
-							'cast' => 'intval',
-							'type' => 'bool'
-						),
-						'PS_STORES_CENTER_LAT' => array(
-							'title' => $this->l('Latitude by default:'),
-							'desc' => $this->l('Used for the position by default of the map'),
-							'cast' => 'floatval',
-							'type' => 'text',
-							'size' => '10'
-						),
-						'PS_STORES_CENTER_LONG' => array(
-							'title' => $this->l('Longitude by default:'),
-							'desc' => $this->l('Used for the position by default of the map'),
-							'cast' => 'floatval',
-							'type' => 'text',
-							'size' => '10'
-						)
+			'general' => array(
+				'title' =>	$this->l('Parameters'),
+				'fields' =>	array(
+					'PS_STORES_DISPLAY_FOOTER' => array(
+						'title' => $this->l('Display in the footer:'),
+						'desc' => $this->l('Display a link to the store locator in the footer'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_STORES_DISPLAY_SITEMAP' => array(
+						'title' => $this->l('Display in the sitemap page:'),
+						'desc' => $this->l('Display a link to the store locator in the sitemap page'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_STORES_SIMPLIFIED' => array(
+						'title' => $this->l('Show a simplified store locator:'),
+						'desc' => $this->l('No map, no search, only a store directory'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_STORES_CENTER_LAT' => array(
+						'title' => $this->l('Latitude by default:'),
+						'desc' => $this->l('Used for the position by default of the map'),
+						'cast' => 'floatval',
+						'type' => 'text',
+						'size' => '10'
+					),
+					'PS_STORES_CENTER_LONG' => array(
+						'title' => $this->l('Longitude by default:'),
+						'desc' => $this->l('Used for the position by default of the map'),
+						'cast' => 'floatval',
+						'type' => 'text',
+						'size' => '10'
 					)
 				)
 			)
@@ -371,7 +369,7 @@ class AdminStoresControllerCore extends AdminController
 
 			$helper->id = $this->id;
 			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options['option_store_pref']);
+			$this->content .= $helper->generateOptions($this->options);
 		}
 	}
 

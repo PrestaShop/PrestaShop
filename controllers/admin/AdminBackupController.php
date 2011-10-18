@@ -51,15 +51,13 @@ class AdminBackupControllerCore extends AdminController
 		);
 
 		$this->options = array(
-			'options_general' => array(
-				'general' => array(
-					'title' =>	$this->l('Backup options'),
-					'fields' =>	array(
-						'PS_BACKUP_ALL' => array('title' => $this->l('Ignore statistics tables:'),
-							'desc' => $this->l('The following tables will NOT be backed up if you enable this option:').'<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_.'connections_source, '._DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch', 'cast' => 'intval', 'type' => 'bool'),
-						'PS_BACKUP_DROP_TABLE' => array('title' => $this->l('Drop existing tables during import:'),
-							'desc' => $this->l('Select this option to instruct the backup file to drop your tables prior to restoring the backed up data').'<br />(ie. "DROP TABLE IF EXISTS")', 'cast' => 'intval', 'type' => 'bool'),
-					),
+			'general' => array(
+				'title' =>	$this->l('Backup options'),
+				'fields' =>	array(
+					'PS_BACKUP_ALL' => array('title' => $this->l('Ignore statistics tables:'),
+						'desc' => $this->l('The following tables will NOT be backed up if you enable this option:').'<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_.'connections_source, '._DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch', 'cast' => 'intval', 'type' => 'bool'),
+					'PS_BACKUP_DROP_TABLE' => array('title' => $this->l('Drop existing tables during import:'),
+						'desc' => $this->l('Select this option to instruct the backup file to drop your tables prior to restoring the backed up data').'<br />(ie. "DROP TABLE IF EXISTS")', 'cast' => 'intval', 'type' => 'bool'),
 				),
 			),
 		);
@@ -123,7 +121,7 @@ class AdminBackupControllerCore extends AdminController
 			$helper = new HelperOptions();
 			$helper->id = $this->id;
 			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options['options_general']);
+			$this->content .= $helper->generateOptions($this->options);
 		}
 	}
 
