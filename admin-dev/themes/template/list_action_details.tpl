@@ -41,7 +41,7 @@ $(document).ready(function() {
 				context: this,
 				async: false,
 				success: function(data) {
-					if(typeof(data.use_parent_structure) == 'undefined' || data.use_parent_structure)
+					if(typeof(data.use_parent_structure) == 'undefined' || (data.use_parent_structure == true))
 						$.each(data.data, function(it, row)
 						{
 							if($('#details_{$id}').parent().parent().hasClass('alt_row'))
@@ -65,7 +65,7 @@ $(document).ready(function() {
 							var content = $('<tr class="details_{$id} alt_row"></tr>');
 						else
 							var content = $('<tr class="details_{$id}"></tr>');
-						content.append($('<td>'+data+'</td>').attr('colspan', $('#details_{$id}').parent().parent().find('td').length));
+						content.append($('<td style="border:none!important;">'+data.data+'</td>').attr('colspan', $('#details_{$id}').parent().parent().find('td').length));
 						$('#details_{$id}').parent().parent().after(content);
 					}
 					this.dataMaped = true;
