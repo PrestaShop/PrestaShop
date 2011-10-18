@@ -30,7 +30,7 @@ $(document).ready(function() {
 			$.ajax({
 				url: 'index.php',
 				data: {
-					id : {$id},
+					id: '{$id}',
 					controller: '{$controller}',
 					token: '{$token}',
 					action: '{$action}',
