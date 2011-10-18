@@ -91,10 +91,14 @@ class PackCore extends Product
 		if (!self::isFeatureActive())
 			return true;
 
-		$items = self::getItems((int)($id_product), Configuration::get('PS_LANG_DEFAULT'));
-		foreach ($items AS $item)
-			if ($item->quantity < $item->pack_quantity AND !$item->isAvailableWhenOutOfStock((int)($item->out_of_stock)))
+		$items = self::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
+
+		foreach ($items as $item)
+		{
+			// Updated for 1.5.0
+			if ($item->getQuantity() < $item->pack_quantity || !$item->isAvailableWhenOutOfStock((int)$item->getOutOfStock()))
 				return false;
+		}
 		return true;
 	}
 

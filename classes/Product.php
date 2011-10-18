@@ -331,10 +331,7 @@ class ProductCore extends ObjectModel
 				$this->tags = Tag::getProductTags((int)$this->id);
 		}
 
-		/**
-		 * @FIXME
-		 */
-		$this->quantity = 0;
+		$this->quantity = StockAvailable::getStockAvailableForProduct($id_product, 0, Context::getContext()->shop->getID());
 		$this->out_of_stock = $this->getOutOfStock();
 		$this->depends_on_stock = $this->getDependsOnStock();
 
@@ -2062,11 +2059,11 @@ class ProductCore extends ObjectModel
 	public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
 	{
 		$lang = Configuration::get('PS_LANG_DEFAULT');
-		if (((int)$cache_is_pack OR ($cache_is_pack === null AND Pack::isPack((int)$id_product, (int)$lang))) AND !Pack::isInStock((int)$id_product, (int)$lang))
+		if (((int)$cache_is_pack || ($cache_is_pack === null && Pack::isPack((int)$id_product, (int)$lang))) && !Pack::isInStock((int)$id_product, (int)$lang))
 			return 0;
 
-		$product = new Product($id_product);
-		return $product->getStock($id_product_attribute);
+		// @since 1.5.0
+		return (StockAvailable::getStockAvailableForProduct($id_product, $id_product_attribute, Context::getContext()->shop->getID()));
 	}
 
 	/**
@@ -2220,6 +2217,7 @@ class ProductCore extends ObjectModel
 
 	public static function isAvailableWhenOutOfStock($out_of_stock)
 	{
+		// @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK
 		return !Configuration::get('PS_STOCK_MANAGEMENT') ? true : ((int)($out_of_stock) == 2 ? (int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) : (int)($out_of_stock));
 	}
 
@@ -2231,13 +2229,13 @@ class ProductCore extends ObjectModel
 	 */
 	public function checkQty($qty)
 	{
-		if (Pack::isPack((int)($this->id)) AND !Pack::isInStock((int)($this->id)))
+		if (Pack::isPack((int)$this->id) && !Pack::isInStock((int)$this->id))
 			return false;
 
-		if ($this->isAvailableWhenOutOfStock($this->out_of_stock))
+		if ($this->isAvailableWhenOutOfStock($this->getOutOfStock()))
 			return true;
 
-		return ($qty <= $this->getStock());
+		return ($qty <= StockAvailable::getStockAvailableForProduct($id_product, $id_product_attribute, Context::getContext()->shop->getID()));
 	}
 
 	/**
