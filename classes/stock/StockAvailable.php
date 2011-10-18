@@ -263,4 +263,19 @@ class StockAvailableCore extends ObjectModel
 				WHERE id_stock_available = '.(int)$id_stock_available);
 		}
 	}
+	
+	/**
+	 * For a given id_product and id_product_attribute update quantity the quantity available
+	 */
+	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
+	{
+		$id_stock = self::getIdStockAvailable($id_product, $id_product_attribute, $id_shop);
+		
+		if (!$id_stock)
+			return false;
+		
+		$stock_available = new StockAvailable($id_stock);
+		$stock_available->quantity = $stock_available->quantity + $delta_quantity;
+		$stock_available->save();
+	}
 }
