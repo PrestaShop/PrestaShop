@@ -906,7 +906,7 @@ class ProductCore extends ObjectModel
 	* @param boolean $default Is default attribute for product
 	* @return mixed $id_product_attribute or false
 	*/
-	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
+	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
 	{
 		if (!$this->id)
 			return;
@@ -931,12 +931,9 @@ class ProductCore extends ObjectModel
 
 		$id_product_attribute = Db::getInstance()->Insert_ID();
 
-		$this->setStock($quantity, $id_product_attribute);
 		Product::updateDefaultAttribute($this->id);
 		if (!$id_product_attribute)
 			return false;
-
-		$this->addStockMvt((int)$quantity, 1, $id_product_attribute);
 
 		if (empty($id_images))
 			return (int)($id_product_attribute);
@@ -949,9 +946,9 @@ class ProductCore extends ObjectModel
 		return (int)($id_product_attribute);
 	}
 
-	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
+	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
 	{
-		$id_product_attribute = $this->addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
+		$id_product_attribute = $this->addProductAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
 		$result = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_attribute` SET `wholesale_price` = '.(float)$wholesale_price.' WHERE `id_product_attribute` = '.(int)$id_product_attribute);
 		if (!$id_product_attribute OR !$result)
 			return false;
@@ -1037,7 +1034,7 @@ class ProductCore extends ObjectModel
 	* @param string $minimal_quantity Minimal quantity
 	* @return array Update result
 	*/
-	public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
+	public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
 	{
 		Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
@@ -1060,12 +1057,6 @@ class ProductCore extends ObjectModel
 			'minimal_quantity' => (int)($minimal_quantity),
 			'available_date' => pSQL($available_date)
 		);
-
-		if ($quantity)
-		{
-			$data['quantity'] = (int)$quantity;
-			$this->setStock($data['quantity'], $id_product_attribute);
-		}
 
 		if (!Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute', $data, 'UPDATE', '`id_product_attribute` = '.(int)($id_product_attribute)) OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_image` WHERE `id_product_attribute` = '.(int)($id_product_attribute)))
 			return false;
