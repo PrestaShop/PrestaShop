@@ -316,8 +316,8 @@ class AddressFormatCore extends ObjectModel
 
 								// Check if the property exist in both classes
 								if (($totalName == 2) && class_exists($associateName[0]) &&
-									Tools::property_exists($associateName[0], $associateName[1]) &&
-									Tools::property_exists($address, 'id_'.strtolower($associateName[0])))
+									property_exists($associateName[0], $associateName[1]) &&
+									property_exists($address, 'id_'.strtolower($associateName[0])))
 								{
 									$idFieldName = 'id_'.strtolower($associateName[0]);
 
