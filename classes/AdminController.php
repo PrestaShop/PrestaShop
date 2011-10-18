@@ -76,7 +76,8 @@ class AdminControllerCore extends Controller
 
 	protected $list_display;
 
-	protected $form_list;
+	/** @var array list of option forms to be generated */
+	protected $options;
 
 	protected $_listSkipDelete = array();
 
@@ -292,7 +293,6 @@ class AdminControllerCore extends Controller
 
 			// Sub included tab postProcessing
 			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
-
 			switch ($this->action)
 			{
 				/* Delete object image */
@@ -725,6 +725,7 @@ class AdminControllerCore extends Controller
 		$tpl = $this->tpl_folder.'content.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 		// Check if action template has been override
+
 		if (file_exists($this->context->smarty->template_dir.'/'.$tpl_action))
 			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
 
@@ -934,6 +935,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
+		$this->context->smarty->assign(array(
+			'current' => self::$currentIndex,
+			'token' => $this->token
+		));
+
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!($obj = $this->loadObject(true)))
@@ -1195,12 +1201,10 @@ class AdminControllerCore extends Controller
 		/* Delete object image */
 		if (isset($_GET['deleteImage']))
 		{
-			$this->action = 'delete_image';
-			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-			if (Validate::isLoadedObject($object = $this->loadObject()))
-				if (($object->deleteImage()))
-					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token);
-			$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
+			if ($this->tabAccess['delete'] === '1')
+				$this->action = 'delete_image';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		/* Delete object */
 		else if (isset($_GET['delete'.$this->table]))
@@ -1249,10 +1253,18 @@ class AdminControllerCore extends Controller
 		}
 		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
+			// @TODO move the employee condition to AdminEmployee
 			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
 				$this->display = 'edit';
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		if (isset($_GET['view'.$this->table]))
+		{
+			if ($this->tabAccess['view'] === '1')
+				$this->display = 'view';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to view here.');
 		}
 		/* Cancel all filters for this tab */
 		else if (isset($_POST['submitReset'.$this->table]))
@@ -1663,7 +1675,7 @@ class AdminControllerCore extends Controller
 
 			$languages = Language::getLanguages(false);
 
-			foreach ($this->form_list as $option_list)
+			foreach ($this->options as $option_list)
 			{
 				foreach ($option_list as $category => $categoryData)
 				{
