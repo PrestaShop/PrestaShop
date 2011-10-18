@@ -64,7 +64,7 @@ class AdminStockInstantStateControllerCore  extends AdminController
 	public function ajaxProcess()
 	{
 		$query = 'SELECT physical_quantity, usable_quantity, s.price_te
-		FROM stock s
+		FROM '._DB_PREFIX_.'stock s
 		INNER JOIN '._DB_PREFIX_.'product p
 			ON (p.id_product = s.id_product)
 		INNER JOIN '._DB_PREFIX_.'product_lang pl
