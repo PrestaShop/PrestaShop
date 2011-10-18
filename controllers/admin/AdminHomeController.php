@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -47,7 +47,7 @@ class AdminHomeControllerCore extends AdminController
 					$rewrite = 0;
 			}
 		}
-		
+
 		$htaccessAfterUpdate = 2;
 		$htaccessOptimized = (Configuration::get('PS_HTACCESS_CACHE_CONTROL') ? 2 : 0);
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
@@ -61,7 +61,7 @@ class AdminHomeControllerCore extends AdminController
 			$dateUpdHtaccess = Db::getInstance()->getValue('SELECT date_upd FROM '._DB_PREFIX_.'configuration WHERE name = "PS_HTACCESS_CACHE_CONTROL"');
 			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL') AND strtotime($dateUpdHtaccess) > $stat['mtime'])
 				$htaccessOptimized = 1;
-			
+
 			$dateUpdate = Configuration::get('PS_LAST_SHOP_UPDATE');
 			if ($dateUpdate AND strtotime($dateUpdate) > $stat['mtime'])
 				$htaccessAfterUpdate = 0;
@@ -70,7 +70,7 @@ class AdminHomeControllerCore extends AdminController
 		$needRebuild=Configuration::get('PS_NEED_REBUILD_INDEX');
 		if($needRebuild !='0');
 			$indexRebuiltAfterUpdate = 2;
-		
+
 		$smartyOptimized = 0;
 		if (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_NO_COMPILE_)
 			++$smartyOptimized;
@@ -85,15 +85,15 @@ class AdminHomeControllerCore extends AdminController
 			$cccOptimized = 2;
 		else
 			$cccOptimized = 1;
-			
+
 		$shopEnabled = (Configuration::get('PS_SHOP_ENABLE') ? 2 : 1);
-		
+
 		$lights = array(
-		0 => array('image'=>'error2.png','color'=>'#fbe8e8'), 
+		0 => array('image'=>'error2.png','color'=>'#fbe8e8'),
 		1 => array('image'=>'warn2.png','color'=>'#fffac6'),
 		2 => array('image'=>'ok2.png','color'=>'#dffad3'));
-		
-		
+
+
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
 			$this->context->smarty->assign('hide_tips',Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
@@ -124,13 +124,13 @@ class AdminHomeControllerCore extends AdminController
 				'color' => $lights[$cccOptimized]['color'],
 				'image' => $lights[$cccOptimized]['image'],
 			);
-				
+
 			$opti_list[] = array(
 				'title' => $this->l('Shop enabled'),
 				'href' => $link->getAdminLink('AdminPreferences'),
 				'color' => $lights[$shopEnabled]['color'],
 				'image' => $lights[$shopEnabled]['image'],
-			);	
+			);
 
 			$opti_list[] = array(
 				'title' => $this->l('index rebuilt after update'),
@@ -138,7 +138,7 @@ class AdminHomeControllerCore extends AdminController
 				'color' => $lights[$indexRebuiltAfterUpdate]['color'],
 				'image' => $lights[$indexRebuiltAfterUpdate]['image'],
 			);
-				
+
 			$opti_list[] = array(
 				'title' => $this->l('.htaccess up-to-date'),
 				'href' => $link->getAdminLink('AdminGenerator'),
@@ -181,7 +181,7 @@ class AdminHomeControllerCore extends AdminController
 			'title' => $this->l('New product'),
 			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
 		);
-	
+
 		$quick_links['third'] = array(
 			'href' => $this->context->link->getAdminLink('AdminStats'),
 			'title' => $this->l('Statistics'),
@@ -313,7 +313,7 @@ class AdminHomeControllerCore extends AdminController
 		$content = '<div id="table_info_large">
 				<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> <strong>'.$this->l('Statistics').'</strong> / '.$this->l('Sales of the week').'</h5>
 				<div id="stat_google">';
-	
+
 		$chart = new Chart();
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT total_paid / conversion_rate as total_converted, invoice_date
@@ -326,13 +326,13 @@ class AdminHomeControllerCore extends AdminController
 		$chart->setTimeMode(strtotime('-7 DAYS', time()), time(), 'd');
 		$currency = Tools::setCurrency($this->context->cookie);
 		$chart->getCurve(1)->setLabel($this->l('Sales +Tx').' ('.strtoupper($currency->iso_code).')');
-		
+
 		$content .= $chart->fetch();
 		$content .= '	</div>
 		</div>';
 		return $content;
 	}
-	
+
 	public function getLastOrders()
 	{
 		$content = '
@@ -347,7 +347,7 @@ class AdminHomeControllerCore extends AdminController
 					<tr>
 				</thead>
 				<tbody>';
-	
+
 		$orders = Order::getOrdersWithInformations(10);
 		$i = 0;
 		foreach ($orders AS $order)
@@ -366,7 +366,7 @@ class AdminHomeControllerCore extends AdminController
 				';
 			$i++;
 		}
-	
+
 		$content .= '
 				</tbody>
 			</table>
@@ -388,9 +388,9 @@ class AdminHomeControllerCore extends AdminController
 			$result['msg'] = $this->l('an error occured a');
 		}
 		$this->content = Tools::jsonEncode($result);
-		
+
 	}
-	
+
 	public function displayAjax()
 	{
 		echo $this->content;
@@ -496,7 +496,6 @@ class AdminHomeControllerCore extends AdminController
 	public function initContent()
 	{
 		$smarty = $this->context->smarty;
-		$smarty->assign('token',$this->token);
 
 		$this->warnDomainName();
 
@@ -513,7 +512,7 @@ class AdminHomeControllerCore extends AdminController
 			$upgrade->checkPSVersion();
 		}
 		$smarty->assign('upgrade', $upgrade);
-	
+
 		$smarty->assign('show_screencast', $this->context->employee->show_screencast);
 		$smarty->assign('quick_links', $this->getQuickLinks());
 		$smarty->assign('monthly_statistics', $this->getMonthlyStatistics());
@@ -521,7 +520,7 @@ class AdminHomeControllerCore extends AdminController
 		$smarty->assign('stats_sales', $this->getStatsSales());
 		$smarty->assign('last_orders',$this->getLastOrders());
 		$smarty->assign('tips_optimization',  $this->_displayOptimizationTips());
-	
+
 		$HOOK_BACKOFFICEHOME = Module::hookExec('backOfficeHome');
 		$smarty->assign('HOOK_BACKOFFICEHOME', $HOOK_BACKOFFICEHOME);
 

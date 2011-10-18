@@ -120,18 +120,6 @@ class AdminRequestSqlControllerCore extends AdminController
 		}
 	}
 
-	public function init()
-	{
-		if (isset($_GET['view'.$this->table]) && isset($_GET['id_'.$this->table]))
-		{
-			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
-				$this->display = 'view';
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		parent::init();
-	}
-
 	public function initContent()
 	{
 		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));

@@ -213,7 +213,7 @@ class AdminStoresControllerCore extends AdminController
 			)
 		);
 
-		$this->form_list = array(
+		$this->options = array(
 			'option_store_pref' => array(
 				'general' => array(
 					'title' =>	$this->l('Parameters'),
@@ -371,7 +371,7 @@ class AdminStoresControllerCore extends AdminController
 
 			$helper->id = $this->id;
 			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->form_list['option_store_pref']);
+			$this->content .= $helper->generateOptions($this->options['option_store_pref']);
 		}
 	}
 

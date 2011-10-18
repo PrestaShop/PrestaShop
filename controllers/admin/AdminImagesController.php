@@ -46,7 +46,7 @@ class AdminImagesController extends AdminController
 			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5)
 		);
 
-		$this->form_list = array(
+		$this->options = array(
 			'options_image_pref' => array(
 				'images' => array(
 					'title' =>	$this->l('Images'),
@@ -534,11 +534,10 @@ class AdminImagesController extends AdminController
 
 		if ($this->display == 'list')
 		{
-
 			$helper = new HelperOptions();
 			$helper->id = $this->id;
 			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->form_list['options_image_pref']);
+			$this->content .= $helper->generateOptions($this->options['options_image_pref']);
 
 			$this->initRegenerate();
 			$this->initMoveImages();
