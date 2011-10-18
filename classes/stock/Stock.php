@@ -38,7 +38,6 @@ class StockCore extends ObjectModel
 	public $physical_quantity;
 	public $usable_quantity;
 	public $price_te;
-	public $id_currency;
 
 	protected $fieldsRequired = array(
 		'id_warehouse',
@@ -47,7 +46,6 @@ class StockCore extends ObjectModel
 		'physical_quantity',
 		'usable_quantity',
 		'price_te',
-		'id_currency'
 	);
 
 	protected $fieldsSize = array();
@@ -59,7 +57,6 @@ class StockCore extends ObjectModel
 		'physical_quantity' => 'isUnsignedInt',
 		'usable_quantity' => 'isInt',
 		'price_te' => 'isPrice',
-		'id_currency' => 'isUnsignedInt'
 	);
 
 	protected $table = 'stock';
@@ -74,7 +71,6 @@ class StockCore extends ObjectModel
 		$fields['physical_quantity'] = (int)$this->physical_quantity;
 		$fields['usable_quantity'] = (int)$this->usable_quantity;
 		$fields['price_te'] = (float)round($this->price_te, 6);
-		$fields['id_currency'] = (int)$this->id_currency;
 		return $fields;
 	}
 }

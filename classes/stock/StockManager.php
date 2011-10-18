@@ -66,7 +66,7 @@ class StockManagerCore implements StockManagerInterface
 			'physical_quantity' => $quantity,
 			'id_stock_mvt_reason' => $id_stock_mvt_reason,
 			'id_supplier_order' => $id_supplier_order,
-			'price_te' => round($price_te, 6),
+			'price_te' => $price_te,
 			'last_wa' => null,
 			'current_wa' => null,
 			'id_employee' => $context->employee->id,
@@ -92,8 +92,8 @@ class StockManagerCore implements StockManagerInterface
 					$stock = $stock_collection[0];
 
 					// calculates WA price
-					$last_wa = round($stock->price_te, 6);
-					$current_wa = round($this->calculateWA($stock, $quantity, $price_te), 6);
+					$last_wa = $stock->price_te;
+					$current_wa = $this->calculateWA($stock, $quantity, $price_te);
 
 					$mvt_params['id_stock'] = $stock->id;
 					$mvt_params['last_wa'] = $last_wa;
@@ -113,7 +113,7 @@ class StockManagerCore implements StockManagerInterface
 				else // else, the product is not in sock
 				{
 					$mvt_params['last_wa'] = 0;
-					$mvt_params['current_wa'] = round($price_te, 6);
+					$mvt_params['current_wa'] = $price_te;
 				}
 			break;
 
@@ -160,10 +160,9 @@ class StockManagerCore implements StockManagerInterface
 				'id_product_attribute' => $id_product_attribute,
 				'id_product' => $id_product,
 				'physical_quantity' => $quantity,
-				'price_te' => round($price_te, 6),
+				'price_te' => $price_te,
 				'usable_quantity' => ($is_usable ? $quantity : 0),
-				'id_warehouse' => $warehouse->id,
-				'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
+				'id_warehouse' => $warehouse->id
 			);
 
 			// saves stock in warehouse
@@ -242,8 +241,7 @@ class StockManagerCore implements StockManagerInterface
 				);
 				$stock_params = array(
 					'physical_quantity' => ($stock->physical_quantity - $quantity),
-					'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity),
-					'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
+					'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity)
 				);
 
 				// saves stock in warehouse
@@ -365,8 +363,7 @@ class StockManagerCore implements StockManagerInterface
 
 						$stock_params = array(
 							'physical_quantity' => ($stock->physical_quantity - $total_quantity_for_current_stock),
-							'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity),
-							'id_currency' => (int)Configuration::get('PS_CURRENCY_DEFAULT')
+							'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity)
 						);
 
 						$return[$stock->id]['quantity'] = $total_quantity_for_current_stock;

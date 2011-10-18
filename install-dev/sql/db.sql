@@ -1963,7 +1963,6 @@ CREATE TABLE `PREFIX_stock` (
 `id_warehouse` INT(11) UNSIGNED NOT NULL,
 `id_product` INT(11) UNSIGNED NOT NULL,
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
-`id_currency` INT(11) UNSIGNED NOT NULL,
 `physical_quantity` INT(11) UNSIGNED NOT NULL,
 `usable_quantity` INT(11) UNSIGNED NOT NULL,
 `price_te` DECIMAL(20,6) DEFAULT '0.000000',
@@ -1975,6 +1974,7 @@ CREATE TABLE `PREFIX_stock` (
 
 CREATE TABLE `PREFIX_warehouse` (
 `id_warehouse` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+`id_currency` INT(11) UNSIGNED NOT NULL,
 `id_address` INT(11) UNSIGNED NOT NULL,
 `id_employee` INT(11) UNSIGNED NOT NULL,
 `reference` VARCHAR(32) DEFAULT NULL,
