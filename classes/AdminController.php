@@ -1371,7 +1371,10 @@ class AdminControllerCore extends Controller
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		/* Manage default params values */
-		if (empty($limit))
+		$use_limit = true;
+		if ($limit === false)
+			$use_limit = false;
+		elseif (empty($limit))
 			if (!isset($this->context->cookie->{$this->table.'_pagination'}))
 				$limit = $this->_pagination[1];
 			else
@@ -1472,6 +1475,10 @@ class AdminControllerCore extends Controller
 			 	$having_clause .= $this->_having.' ';
 		}
 
+		if($use_limit === true) {
+
+		}
+
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS
 			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
 			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
@@ -1485,8 +1492,8 @@ class AdminControllerCore extends Controller
 			'.(isset($this->_group) ? $this->_group.' ' : '').'
 			'.$having_clause.'
 			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
-			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
-			LIMIT '.(int)$start.','.(int)$limit;
+			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
+			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
 		$this->_list = Db::getInstance()->executeS($sql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
