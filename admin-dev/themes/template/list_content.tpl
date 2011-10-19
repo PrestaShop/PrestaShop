@@ -38,7 +38,7 @@
 		{foreach $fields_display AS $key => $params}
 			<td
 				{if isset($params.position)}
-					id="td_{if $id_category}$id_category{else}0{/if}_{$tr.$identifier}"
+					id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
 				{/if}
 				class="{if !$no_link}pointer{/if}
 					   {if isset($params.position) && $order_by == 'position'} dragHandle{/if}
@@ -55,16 +55,16 @@
 				<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
 				alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
 			{elseif isset($params.position)}
-				{if $orderBy == 'position' && $orderWay != 'DESC'}
-					<a {if !($tr.$key.position != $positions[sizeof($positions) - 1])}style="display: none;"{/if} href="{$tr.$key.position_url_down}">
-							<img src="../img/admin/{if $orderWay == 'ASC'}down{else}up{/if}.gif"
-							alt="{l s='Down'}" title="{l s='Down'}" /></a>
+				{if $order_by == 'position' && $order_way != 'DESC'}
+					<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
+						<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
+					</a>
 
-					<a {if !($tr.$key.position != $positions.0)}style="display: none;"{/if} href="{$tr.$key.position_url_up}">
-							<img src="../img/admin/{if $orderWay == 'ASC'}up{else}down{/if}.gif"
-							alt="{l s='Up'}" title="{l s='Up'}" /></a>';
+					<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
+						<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
+					</a>
 				{else}
-					{$tr.$key.position} + 1
+					{$tr.$key.position + 1}
 				{/if}
 			{elseif isset($params.image)}
 				{$tr.$key}

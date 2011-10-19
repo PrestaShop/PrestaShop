@@ -43,13 +43,13 @@ class HelperListCore extends Helper
 	protected $_pagination = array(20, 50, 100, 300);
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
-	protected $_orderBy;
+	public $_orderBy;
 
 	/** @var string Default ORDER BY clause when $_orderBy is not defined */
 	protected $_defaultOrderBy = false;
 
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
-	protected $_orderWay;
+	public $_orderWay;
 
 	public $identifier;
 
@@ -95,7 +95,8 @@ class HelperListCore extends Helper
 		'id_category' => 'id_category_to_move',
 		'id_cms_category' => 'id_cms_category_to_move',
 		'id_cms' => 'id_cms',
-		'id_attribute' => 'id_attribute'
+		'id_attribute' => 'id_attribute',
+		'id_carrier' => 'id_carrier'
 	);
 
 	// @var boolean ask for simple header : no filters, no paginations and no sorting
@@ -217,7 +218,7 @@ class HelperListCore extends Helper
 				else if (isset($params['position']))
 				{
 					$this->_list[$index][$key] = array(
-						'position' => $tr[$key],
+						'position' => (int)$tr[$key],
 						'position_url_down' => $this->currentIndex.
 							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
 							'&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token,
@@ -281,6 +282,7 @@ class HelperListCore extends Helper
 			'id_category' => $id_category,
 			'bulk_actions' => $this->bulk_actions,
 			'key_to_get' => $key_to_get,
+			'order_by' => $this->_orderBy,
 			'positions' => isset($positions) ? $positions : null,
 			'is_cms' => $this->is_cms,
 			'fields_display' => $this->fieldsDisplay,

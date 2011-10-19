@@ -1068,6 +1068,8 @@ class AdminControllerCore extends Controller
 			$helper->currentIndex = self::$currentIndex;
 			$helper->className = $this->className;
 			$helper->table = $this->table;
+			$helper->_orderBy = $this->_orderBy;
+			$helper->_orderWay = $this->_orderWay;
 			$helper->shopLink = $this->shopLink;
 			$helper->shopLinkType = $this->shopLinkType;
 			$helper->identifier = $this->identifier;
