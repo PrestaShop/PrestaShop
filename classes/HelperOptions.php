@@ -120,9 +120,11 @@ class HelperOptionsCore extends Helper
 
 		$this->context->smarty->assign(array(
 			'current' => $this->currentIndex,
+			'table' => $this->table,
+			'token' => $this->token,
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
-			'required_fields' => $this->required,
+			'required_fields' => isset($required_fields) ? $required_fields : false,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
 	}
