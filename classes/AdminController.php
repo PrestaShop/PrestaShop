@@ -60,6 +60,9 @@ class AdminControllerCore extends Controller
 	/** @var integer Tab id */
 	public $id = -1;
 
+	/** @var array noTabLink array of admintab names witch have no content */
+	public $noTabLink = array('AdminCatalog', 'AdminTools');
+
 	/** @var string Security token */
 	public $token;
 
@@ -160,7 +163,8 @@ class AdminControllerCore extends Controller
 		'id_attribute' => 'id_attribute'
 	);
 
-	protected $deleted;
+	/** @var boolean Table records are not deleted but marked as deleted if set to true */
+	protected $deleted = false;
 	/**
 	 * @var bool is a list filter set
 	 */
@@ -188,9 +192,6 @@ class AdminControllerCore extends Controller
 	// retro-compatibility : className for admin without controller
 	// This can be overriden in controllers (like for AdminCategories or AdminProducts
 		$controller = get_class($this);
-		// @todo : move this in class AdminCategoriesController and AdminProductsController
-		if ($controller == 'AdminCategoriesController' && $controller == 'AdminProductsController')
-			$controller = 'AdminCatalogController';
 
 		// temporary fix for Token retrocompatibility
 		// This has to be done when url is built instead of here)
@@ -266,13 +267,12 @@ class AdminControllerCore extends Controller
 			// from ajax-tab.php
 			if (method_exists($this, 'ajaxPreprocess'))
 				$this->ajaxPreProcess();
-
 			$action = Tools::getValue('action');
 			// no need to use displayConf() here
 			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
 				$this->{'ajaxProcess'.Tools::toCamelCase($action)}();
-			else
-				$this->ajaxProcess();
+			else if (method_exists($this, 'ajaxProcess')) 
+					$this->ajaxProcess();
 
 			// @TODO We should use a displayAjaxError
 			/*$this->displayErrors();
@@ -765,6 +765,8 @@ class AdminControllerCore extends Controller
 
 	public function display()
 	{
+		$this->context->smarty->assign('display_header',$this->display_header);
+		$this->context->smarty->assign('display_footer',$this->display_footer);
 		$this->context->smarty->assign('content', $this->content);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
@@ -773,11 +775,13 @@ class AdminControllerCore extends Controller
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 		// Check if action template has been override
 
-		if (file_exists($this->context->smarty->template_dir.'/'.$tpl_action))
+		// new smarty : template_dir is an array.
+		// @todo : add override path to the smarty config, and checking all array item
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action))
 			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
 
 		// Check if content template has been override
-		if (file_exists($this->context->smarty->template_dir.'/'.$tpl))
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
 			$page = $this->context->smarty->fetch($tpl);
 		else
 			$page = $this->context->smarty->fetch($this->template);
@@ -792,10 +796,10 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('errors', $this->_errors);
 			$this->context->smarty->assign('warnings', $this->warnings);
 			$this->context->smarty->assign('informations', $this->informations);
+			// page & layout if content_only = 1
+			$this->context->smarty->assign('page', $page);
+			$this->context->smarty->display($this->layout);
 		}
-
-		$this->context->smarty->assign('page', $page);
-		$this->context->smarty->display($this->layout);
 	}
 
 	/**
@@ -910,6 +914,9 @@ class AdminControllerCore extends Controller
 						unset($sub_tabs[$index2]);
 				}
 				$tabs[$index]['sub_tabs'] = $sub_tabs;
+				// @todo need a better way than using noTabLink property, keeping the fact to avoid db modification
+				if (!in_array($tab['class_name'], $this->noTabLink))
+					array_unshift($tabs[$index]['sub_tabs'], $tabs[$index]);
 			}
 			else
 				unset($tabs[$index]);
@@ -936,6 +943,7 @@ class AdminControllerCore extends Controller
 			'iso_user' => $this->context->language->id,
 			'country_iso_code' => $this->context->country->iso_code,
 			'version' => _PS_VERSION_,
+			'autorefresh_notifications' => Configuration::get('PS_ADMIN_REFRESH_NOTIFICATION'),
 			'help_box' => Configuration::get('PS_HELPBOX'),
 			'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
 			'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
@@ -1000,7 +1008,9 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Assign smarty variables for the page main content
+	 * initContent 
+	 * Assign smarty variables for all default views, list and form
+	 * 
 	 */
 	public function initContent()
 	{
@@ -1023,7 +1033,7 @@ class AdminControllerCore extends Controller
 				$this->getlanguages();
 				$helper = new HelperForm();
 				// Check if form template has been overriden
-				if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
+				if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
 					$helper->tpl = $this->tpl_folder.'form.tpl';
 				$helper->currentIndex = self::$currentIndex;
 				$helper->token = $this->token;
@@ -1056,11 +1066,11 @@ class AdminControllerCore extends Controller
 
 			$helper = new HelperList();
 			// Check if list templates have been overriden
-			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_header.tpl'))
+			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_header.tpl'))
 				$helper->header_tpl = $this->tpl_folder.'list_header.tpl';
-			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_content.tpl'))
+			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_content.tpl'))
 				$helper->header_tpl = $this->tpl_folder.'list_content.tpl';
-			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'list_footer.tpl'))
+			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_footer.tpl'))
 				$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
 
 			// For compatibility reasons, we have to check standard actions in class attributes
@@ -1238,8 +1248,11 @@ class AdminControllerCore extends Controller
 		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
-		//define('_PS_BASE_URL_', Tools::getShopDomain(true));
-		//define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+		// @todo : put the definitions in Controller class 
+		if (!defined('_PS_BASE_URL_'))
+			define('_PS_BASE_URL_', Tools::getShopDomain(true));
+		if (!defined('_PS_BASE_URL_SSL_'))
+			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
@@ -1822,6 +1835,117 @@ class AdminControllerCore extends Controller
 	 */
 	public function beforeUpdateOptions()
 	{
+	}
+
+	/**
+	 * displayAssoShop 
+	 * @todo : create assoshop.tpl and use smarty var asso_shop in pages
+	 *
+	 * @param string $type 
+	 * @return void
+	 */
+	protected function displayAssoShop($type = 'shop')
+	{
+		if (!Shop::isFeatureActive() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
+			return;
+
+		if ($type != 'shop' && $type != 'group_shop')
+			$type = 'shop';
+
+		$assos = array();
+		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
+				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
+		foreach (Db::getInstance()->executeS($sql) as $row)
+			$assos[$row['id_'.$type]][] = $row[$this->identifier];
+
+		$html = <<<EOF
+			<script type="text/javascript">
+			$().ready(function()
+			{
+				// Click on "all shop"
+				$('.input_all_shop').click(function()
+				{
+					var checked = $(this).attr('checked');
+					$('.input_group_shop').attr('checked', checked);
+					$('.input_shop').attr('checked', checked);
+				});
+
+				// Click on a group shop
+				$('.input_group_shop').click(function()
+				{
+					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
+					check_all_shop();
+				});
+
+				// Click on a shop
+				$('.input_shop').click(function()
+				{
+					check_group_shop_status($(this).val());
+					check_all_shop();
+				});
+
+				// Initialize checkbox
+				$('.input_shop').each(function(k, v)
+				{
+					check_group_shop_status($(v).val());
+					check_all_shop();
+				});
+			});
+
+			function check_group_shop_status(id_group)
+			{
+				var groupChecked = true;
+				$('.input_shop[value='+id_group+']').each(function(k, v)
+				{
+					if (!$(v).attr('checked'))
+						groupChecked = false;
+				});
+				$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
+			}
+
+			function check_all_shop()
+			{
+				var allChecked = true;
+				$('.input_group_shop').each(function(k, v)
+				{
+					if (!$(v).attr('checked'))
+						allChecked = false;
+				});
+				$('.input_all_shop').attr('checked', allChecked);
+			}
+			</script>
+EOF;
+
+		$html .= '<div class="assoShop">';
+		$html .= '<table class="table" cellpadding="0" cellspacing="0" width="100%">
+					<tr><th>'.$this->l('Shop').'</th></tr>';
+		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
+		foreach (Shop::getTree() as $groupID => $groupData)
+		{
+			$groupChecked = ($type == 'group_shop' && ((isset($assos[$groupID]) && in_array($this->_object->id, $assos[$groupID])) || !$this->_object->id));
+			$html .= '<tr'.(($type == 'shop') ? ' class="alt_row"' : '').'>';
+			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_group_shop" type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
+			$html .= '</tr>';
+
+			if ($type == 'shop')
+			{
+				$total = count($groupData['shops']);
+				$j = 0;
+				foreach ($groupData['shops'] as $shopID => $shopData)
+				{
+					$checked = ((isset($assos[$shopID]) && in_array($this->_object->id, $assos[$shopID])) || !$this->_object->id);
+					$html .= '<tr>';
+					$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" /><label class="child">';
+					$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
+					$html .= $shopData['name'].'</label></td>';
+					$html .= '</tr>';
+					$j++;
+				}
+			}
+		}
+		$html .= '</table></div>';
+		$this->context->smarty->assign('asso_shop',$html);
+		return $html;
 	}
 
 	/**
