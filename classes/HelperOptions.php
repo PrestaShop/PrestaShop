@@ -67,7 +67,7 @@ class HelperOptionsCore extends Helper
 
 				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
 				$isDisabled = $isInvisible = false;
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
 					{
@@ -105,7 +105,7 @@ class HelperOptionsCore extends Helper
 				}
 
 				// Multishop default value
-				$field['multishop_default'] = (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
+				$field['multishop_default'] = (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
 
 				// Assign the modifications back to parent array
 				$category_data['fields'][$key] = $field;

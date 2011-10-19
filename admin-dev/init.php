@@ -82,7 +82,7 @@ if (empty($context->employee->bo_theme) OR !file_exists($path.$context->employee
 }
 
 // Change shop context ?
-if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
+if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false)
 {
 	$context->cookie->shopContext = Tools::getValue('setShopContext');
 	$url = parse_url($_SERVER['REQUEST_URI']);

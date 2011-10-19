@@ -225,7 +225,7 @@ class AdminControllerCore extends Controller
 		if ($controller == 'AdminHome')
 			$_POST['token'] = $this->token;
 
-		if (!Shop::isMultiShopActivated())
+		if (!Shop::isFeatureActive())
 			$this->shopLinkType = '';
 
 		// Get the name of the folder containing the custom tpl files
@@ -824,7 +824,7 @@ class AdminControllerCore extends Controller
 	public function initHeader()
 	{
 		// Shop context
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			if (Context::shop() == Shop::CONTEXT_ALL)
 			{
@@ -854,7 +854,7 @@ class AdminControllerCore extends Controller
 		}
 
 			// Multishop
-		$is_multishop = Shop::isMultiShopActivated();// && Context::shop() != Shop::CONTEXT_ALL;
+		$is_multishop = Shop::isFeatureActive();// && Context::shop() != Shop::CONTEXT_ALL;
 		/*if ($is_multishop)
 		{
 			if (Context::shop() == Shop::CONTEXT_GROUP)
@@ -959,8 +959,8 @@ class AdminControllerCore extends Controller
 			'search_type' => Tools::getValue('bo_search_type'),
 			'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
 			'quick_access' => $quick_access,
-			'multi_shop' => Shop::isMultiShopActivated(),
-			'shop_list' => (Shop::isMultiShopActivated() ? generateShopList() : null), //@TODO refacto
+			'multi_shop' => Shop::isFeatureActive(),
+			'shop_list' => (Shop::isFeatureActive() ? generateShopList() : null), //@TODO refacto
 			'tab' => $tab,
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
@@ -1208,7 +1208,7 @@ class AdminControllerCore extends Controller
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		// Change shop context ?
-		if (Shop::isMultiShopActivated() && Tools::getValue('setShopContext') !== false)
+		if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false)
 		{
 			$this->context->cookie->shopContext = Tools::getValue('setShopContext');
 			$url = parse_url($_SERVER['REQUEST_URI']);
@@ -1449,7 +1449,7 @@ class AdminControllerCore extends Controller
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
 			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filter_key).'`? *sa#', $this->_join);
-			if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && $test_join)
+			if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $test_join)
 			{
 				$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_'.$filter_key.'` sa ';
 				$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filter_key.' IN ('.implode(', ', $idenfier_shop).'))';
@@ -1729,7 +1729,7 @@ class AdminControllerCore extends Controller
 
 	protected function updateAssoShop($id_object = false)
 	{
-		if (!Shop::isMultiShopActivated())
+		if (!Shop::isFeatureActive())
 			return;
 
 		$shop_asso = Shop::getAssoTables();
@@ -1835,7 +1835,7 @@ class AdminControllerCore extends Controller
 						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
 							continue;
 
-						if (Shop::isMultiShopActivated() && isset($_POST['configUseDefault'][$key]))
+						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
 						{
 							Configuration::deleteFromContext($key);
 							continue;

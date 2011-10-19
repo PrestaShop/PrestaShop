@@ -248,7 +248,7 @@ abstract class ObjectModelCore
 				}
 		}
 
-		if (!Shop::isMultishopActivated())
+		if (!Shop::isFeatureActive())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 			{

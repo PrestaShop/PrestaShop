@@ -193,7 +193,7 @@ class AdminScenes extends AdminTab
 				 'Uncheck All'  => $this->l('Uncheck All')
 			);
 
-			if (Shop::isMultiShopActivated())
+			if (Shop::isFeatureActive())
 			{
 				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 				$this->displayAssoShop();
@@ -215,7 +215,7 @@ class AdminScenes extends AdminTab
 		{
 			echo '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image...').'</span><br/><br/>';
 			echo '</div>';
-			if (Shop::isMultiShopActivated())
+			if (Shop::isFeatureActive())
 			{
 				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 				$this->displayAssoShop();

@@ -388,7 +388,7 @@ class AdminLanguages extends AdminTab
 					<p>'.$this->l('Allow or disallow this language to be selected by the customer').'</p>
 				</div>
 				<p id="resultCheckLangPack"><img src="'._PS_IMG_.'admin/ajax-loader.gif" alt="" /> '.$this->l('Check if a language pack is available for this ISO code...').'</p>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop();

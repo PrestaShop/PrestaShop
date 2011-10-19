@@ -344,7 +344,7 @@ class AdminModules extends AdminTab
 						else
 						{
 							// If we install a module, force temporary global context for multishop
-							if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
+							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
 							{
 								Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
 								Context::getContext()->shop = new Shop();
@@ -371,7 +371,7 @@ class AdminModules extends AdminTab
 									</tr>';
 
 								// Display checkbox in toolbar if multishop
-								if (Shop::isMultiShopActivated())
+								if (Shop::isFeatureActive())
 								{
 									$activateOnclick = 'onclick="location.href = \''.$this->getCurrentUrl('enable').'&enable=\'+(($(this).attr(\'checked\')) ? 1 : 0)"';
 									$toolbar .= '<tr>
@@ -399,7 +399,7 @@ class AdminModules extends AdminTab
 							elseif ($echo === false)
 								$module_errors[] = $name;
 
-							if (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
+							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 							{
 								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
 								unset(Context::getContext()->tmpOldShop);
@@ -1035,12 +1035,12 @@ class AdminModules extends AdminTab
 		$return = '';
 		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&tab_module='.$module->tab;
 		if ($module->id)
-			$return .= '<a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isMultiShopActivated()) ? 'title="'.htmlspecialchars($module->active ? $this->l('Disable this module') : $this->l('Enable this module for all shops')).'"' : '').'>'.($module->active ? $this->l('Disable') : $this->l('Enable')).'</a>&nbsp;&nbsp;';
+			$return .= '<a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->l('Disable this module') : $this->l('Enable this module for all shops')).'"' : '').'>'.($module->active ? $this->l('Disable') : $this->l('Enable')).'</a>&nbsp;&nbsp;';
 
 		if ($module->id AND $module->active)
 			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->l('Reset').'</a>&nbsp;&nbsp;';
 
-		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isMultiShopActivated()))
+		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isFeatureActive()))
 			$return .= '<a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Configure').'</a>&nbsp;&nbsp;';
 
 		$hrefDelete = self::$currentIndex.'&deleteModule='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);

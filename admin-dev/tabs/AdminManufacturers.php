@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -44,7 +44,7 @@ class AdminManufacturers extends AdminTab
 		$countries = Country::getCountries($this->context->language->id);
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
-		
+
 		$this->fieldsDisplayAddresses = array(
 		'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 		'm!manufacturer_name' => array('title' => $this->l('Manufacturer'), 'width' => 100),
@@ -54,7 +54,7 @@ class AdminManufacturers extends AdminTab
 		'city' => array('title' => $this->l('City'), 'width' => 150),
 		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
 		$this->_includeTabTitle = array($this->l('Manufacturers addresses'));
-		$this->_joinAddresses = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON 
+		$this->_joinAddresses = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON
 		(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.') ';
 	 	$this->_joinAddresses .= 'LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (a.`id_manufacturer` = m.`id_manufacturer`)';
 		$this->_selectAddresses = 'cl.`name` as country, m.`name` AS manufacturer_name';
@@ -88,11 +88,11 @@ class AdminManufacturers extends AdminTab
 				imageResize(_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg', _PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height']));
 		}
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($manufacturer = $this->loadObject(true)))
 			return;
 		$langtags = 'cdesc2¤cdesc¤mmeta_title¤mmeta_keywords¤mmeta_description';
@@ -117,7 +117,7 @@ class AdminManufacturers extends AdminTab
 							</div>';
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $langtags, 'cdesc2');
 		echo '</div>';
-				
+
 		echo '<br class="clear" /><br /><br /><label>'.$this->l('Description').'</label>
 				<div class="margin-form">';
 		foreach ($this->_languages as $language)
@@ -127,13 +127,13 @@ class AdminManufacturers extends AdminTab
 							</div>';
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $langtags, 'cdesc');
 		echo '</div>';
-		
+
 		// TinyMCE
 		$iso = $this->context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
-			<script type="text/javascript">	
+			<script type="text/javascript">
 			var iso = \''.$isoTinyMCE.'\' ;
 			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
 			var ad = \''.$ad.'\' ;
@@ -185,7 +185,7 @@ class AdminManufacturers extends AdminTab
 					<input type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($manufacturer, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop('group_shop');
@@ -208,7 +208,7 @@ class AdminManufacturers extends AdminTab
 
 		$products = $manufacturer->getProductsLite($this->context->language->id);
 		$addresses = $manufacturer->getAddresses($this->context->language->id);
-		
+
 		echo '<h3>'.$this->l('Total addresses:').' '.sizeof($addresses).'</h3>';
 		echo '<hr />';
 		foreach ($addresses AS $addresse)

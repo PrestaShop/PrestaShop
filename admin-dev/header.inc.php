@@ -137,7 +137,7 @@ echo '
 		{
 			var hints = $(\'.translatable span.hint\');
 			';
-			if (Shop::isMultiShopActivated())
+			if (Shop::isFeatureActive())
 			{
 				if (Context::shop() == Shop::CONTEXT_ALL)
 					$youEditFieldFor = translate('A modification of this field will be applied for all shops');
@@ -268,7 +268,7 @@ foreach (QuickAccess::getQuickAccesses(Context::getContext()->language->id) AS $
 echo '			</select>
 			</div>';
 
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 			echo '<div id="header_shoplist">'.translate('Select your shop:').' '.generateShopList().'</div>';
 
 		echo '<div class="flatclear">&nbsp;</div>';

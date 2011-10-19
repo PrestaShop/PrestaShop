@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -65,12 +65,12 @@ class AdminAttributesGroups extends AdminTab
 		else
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 	}
-	
+
 	public function postProcess()
-	{	
+	{
 		if (!Combination::isFeatureActive())
 			return;
-		
+
 		$this->adminAttributes->tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, $this->id);
 		if (Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitDelattribute'))
 			$this->adminAttributes->postProcess($this->token);
@@ -104,7 +104,7 @@ class AdminAttributesGroups extends AdminTab
 			if ($id_attribute_group <= 0)
 			{
 				$sql = 'SELECT `position`+1
-						FROM `'._DB_PREFIX_.'attribute_group` 
+						FROM `'._DB_PREFIX_.'attribute_group`
 						ORDER BY position DESC';
 			// set the position of the new group attribute in $_POST for postProcess() method
 				$_POST['position'] = DB::getInstance()->getValue($sql);
@@ -139,7 +139,7 @@ class AdminAttributesGroups extends AdminTab
 
 		if (!sizeof($this->_list))
 			echo '<tr><td class="center" colspan="'.sizeof($this->_list).'">'.$this->l('No elements found').'</td></tr>';
-			
+
 		//$this->displayListContent($this->token);
 
 
@@ -173,7 +173,7 @@ class AdminAttributesGroups extends AdminTab
 
 			echo '
 				<td style="width: 140px; vertical-align: top; padding: 4px 0 4px 0; cursor: pointer" class="dragHandle">';
-				
+
 			if ($this->_orderBy == 'position' AND $this->_orderWay != 'DESC')
 			{
 				echo '<a'.(!($tr['position'] != $positions[sizeof($positions) - 1]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
@@ -212,7 +212,7 @@ class AdminAttributesGroups extends AdminTab
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
-		
+
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -259,7 +259,7 @@ class AdminAttributesGroups extends AdminTab
 					</select>
 					<p>'.$this->l('Choose the type of the attribute group').'</p>
 				</div>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop('group_shop');
@@ -274,10 +274,10 @@ class AdminAttributesGroups extends AdminTab
 			</fieldset>
 		</form>';
 	}
-	
+
 	/**
 	 * displayListAttributes
-	 * 
+	 *
 	 * Display a list of attributes from a group
 	 */
 	public function displayListAttributes($id, $irow, $tr)
