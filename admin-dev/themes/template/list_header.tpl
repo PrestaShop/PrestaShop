@@ -114,10 +114,10 @@
 									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}">
-											<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}'_d'{/if}.gif" />
+											<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" />
 										</a>
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}">
-											<img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}'_d'{/if}.gif" />
+											<img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" />
 										</a>
 									{/if}
 								</th>
