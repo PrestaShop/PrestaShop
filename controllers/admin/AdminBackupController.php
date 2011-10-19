@@ -127,11 +127,19 @@ class AdminBackupControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			return;
+		}
+		/* PrestaShop demo mode*/
+
 		// Test if the backup dir is writable
-		if(!is_writable(_PS_ADMIN_DIR_.'/backups/'))
+		if (!is_writable(_PS_ADMIN_DIR_.'/backups/'))
 			$this->warnings[] = $this->l('"Backups" Directory in admin directory must be writeable (CHMOD 755 / 777)');
 
-		if($this->action == 'new' && is_writable(_PS_ADMIN_DIR_.'/backups/'))
+		if ($this->action == 'new' && is_writable(_PS_ADMIN_DIR_.'/backups/'))
 		{
 			if (($object = $this->loadObject()))
 			{

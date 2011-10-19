@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,17 +29,17 @@ class AdminEmployees extends AdminTab
 {
  	/** @var array profiles list */
 	private $profilesArray = array();
- 
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();
 	 	$this->table = 'employee';
 		$this->className = 'Employee';
 	 	$this->lang = false;
-	 	$this->edit = true; 
+	 	$this->edit = true;
 	 	$this->delete = true;
  		$this->_select = 'pl.`name` AS profile';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile` 
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
 
 		$profiles = Profile::getProfiles($this->context->language->id);
@@ -53,7 +53,7 @@ class AdminEmployees extends AdminTab
 			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'lastname' => array('title' => $this->l('Last name'), 'width' => 130),
 			'firstname' => array('title' => $this->l('First name'), 'width' => 130),
-			'email' => array('title' => $this->l('E-mail address'), 'width' => 180), 
+			'email' => array('title' => $this->l('E-mail address'), 'width' => 180),
 			'profile' => array('title' => $this->l('Profile'), 'width' => 90, 'type' => 'select', 'select' => $this->profilesArray, 'filter_key' => 'pl!name'),
 			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool'),
 		);
@@ -98,7 +98,7 @@ class AdminEmployees extends AdminTab
 				var employeePage = true;
 		 	 </script>
 
-		
+
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.((int)$this->tabAccess['view'] ? '' : '&updateemployee&id_employee='.(int)$obj->id).'" method="post" enctype="multipart/form-data" autocomplete="off">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 		'.((int)$this->tabAccess['view'] ? '' : '<input type="hidden" name="back" value="'.self::$currentIndex.'&token='.$this->token.'&updateemployee&id_employee='.(int)$obj->id.'" />').'
@@ -184,7 +184,7 @@ class AdminEmployees extends AdminTab
 							$(\'select[name=id_profile]\').change(function(){
 								ifSuperAdmin($(this));
 							});
-							
+
 							ifSuperAdmin($(\'select[name=id_profile]\'));
 						});
 
@@ -220,6 +220,14 @@ class AdminEmployees extends AdminTab
 		$this->context = Context::getContext();
 		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
 		{
+			/* PrestaShop demo mode */
+			if (_PS_MODE_DEMO_ && $id_employee = Tools::getValue('id_employee') && (int)$id_employee == _PS_DEMO_MAIN_BO_ACCOUNT_)
+			{
+				$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+				return;
+			}
+			/* PrestaShop demo mode*/
+
 			if ($this->context->employee->id == Tools::getValue('id_employee'))
 			{
 				$this->_errors[] = Tools::displayError('You cannot disable or delete your own account.');

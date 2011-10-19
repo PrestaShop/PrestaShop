@@ -6,7 +6,7 @@
 class DejalaCarrierUtils
 {
 	/**
-	* creates of a dejala carrier corresponding to $dejalaProduct
+	* creates a dejala carrier corresponding to $dejalaProduct
 	*/
 	public static function createDejalaCarrier($dejalaConfig)
 	{
@@ -43,7 +43,7 @@ class DejalaCarrierUtils
 				$tr->id_tax_rules_group = $trg_id;
 				$tr->id_country = (int) $countryID;
 				$tr->id_state = 0;
-				$tr->id_tax = (int)$tax->id;				
+				$tr->id_tax = (int)$tax->id;
 				$tr->state_behavior = 0;
 				$tr->save();
 			}
@@ -65,35 +65,68 @@ class DejalaCarrierUtils
 		$languages = Language::getLanguages(true);
 		foreach ($languages as $language)
 			$carrier->delay[$language['id_lang']] = 'Dejala' ;
-				
+
 		$carrier->add();
 
 		$carrier->addZone((int)$id_zone) ;
-		/*$sql = 'INSERT INTO `'._DB_PREFIX_.'carrier_zone` (`id_carrier` , `id_zone`) VALUES ('.(int)($carrier->id).', ' . (int)($id_zone) . ')';
-		Db::getInstance()->execute($sql);
 
-		$rangeW = new RangeWeight();
-		$rangeW->id_carrier = $carrier->id;
-		$rangeW->delimiter1 = 0;
-		$rangeW->delimiter2 = $dejalaProduct['max_weight'];
-		$rangeW->add();
-		$vat_factor = (1+ ($dejalaProduct['vat'] / 100));
-		$priceTTC = round(($dejalaProduct['price']*$vat_factor) + $dejalaProduct['margin'], 2);
-		$priceHT = round($priceTTC/$vat_factor, 2);
-		$priceList = '(NULL'.','.$rangeW->id.','.$carrier->id.','.$id_zone.','.$priceHT.')';
-		$carrier->addDeliveryPrice($priceList);*/
+		$groups = Group::getGroups(true);
+		foreach ($groups as $group)
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier_group', array('id_carrier' => (int)($carrier->id), 'id_group' => (int)($group['id_group'])), 'INSERT');
+
+
+//		$rangeW = new RangeWeight();
+//		$rangeW->id_carrier = $carrier->id;
+//		$rangeW->delimiter1 = 0;
+//		$rangeW->delimiter2 = $dejalaProduct['max_weight'];
+//		$rangeW->add();
+//		$vat_factor = (1+ ($dejalaProduct['vat'] / 100));
+//		$priceTTC = round(($dejalaProduct['price']*$vat_factor) + $dejalaProduct['margin'], 2);
+//		$priceHT = round($priceTTC/$vat_factor, 2);
+//		$priceList = '(NULL'.','.$rangeW->id.','.$carrier->id.','.$id_zone.','.$priceHT.')';
+//		$carrier->addDeliveryPrice($priceList);
 
 		return true;
 	}
 
-	public static function getCarrierByName($name)
-	{
-		$carriers = Carrier::getCarriers(Context::getContext()->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
-		foreach($carriers as $carrier)
-			if (!$carrier['deleted'] AND $carrier['external_module_name'] == $name)
+	public static function getCarrierByName($name, $includeInactive = false) {
+		global $cookie ;
+
+		$carriers = Carrier::getCarriers((int)$cookie->id_lang, false, false, false, NULL, ALL_CARRIERS);
+		foreach($carriers as $carrier) {
+			if ($carrier['deleted']) continue ;
+			if ($includeInactive !== true && $carrier['active'] != 1) continue ;
+
+			if (self::getCarrierName($carrier) == $name) {
 				return new Carrier((int)$carrier['id_carrier']) ;
-		
+			}
+		}
+		return null ;
 	}
 
+	public static function getFirstActiveCarrierWithNameNotBeing($name) {
+		global $cookie ;
+
+		$carriers = Carrier::getCarriers((int)$cookie->id_lang, false, false, false, NULL, ALL_CARRIERS);
+		foreach($carriers as $carrier) {
+			if ($carrier['deleted']) continue ;
+
+			if ((self::getCarrierName($carrier) != $name) && $carrier['active'] == 1) {
+				return new Carrier((int)$carrier['id_carrier']) ;
+			}
+		}
+		return null ;
+	}
+
+	public static function getCarrierName($carrier) {
+		if (is_object($carrier)) {
+			if (!empty($carrier->external_module_name)) return $carrier->external_module_name ;
+			return $carrier->name ;
+		}
+		else {
+			if (array_key_exists("external_module_name", $carrier) && !empty($carrier['external_module_name'])) return $carrier['external_module_name'] ;
+			return $carrier['name'] ;
+		}
+	}
 }
 

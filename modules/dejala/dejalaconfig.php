@@ -113,7 +113,6 @@ class DejalaConfig
 		if ($this->useSSL !== 0)
 			if (0 === strpos($l_serviceURL, 'http:'))
 				$l_serviceURL = 'https'.substr($l_serviceURL, 4);
-				
 		return ($l_serviceURL);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,7 +31,7 @@ class AdminAccess extends AdminTab
 {
 	private $return_status;
 	private $return_message;
-	
+
 	public function processSubmitAddAccess()
 	{
 		$perm = Tools::getValue('perm') ;
@@ -39,7 +39,7 @@ class AdminAccess extends AdminTab
 			throw new PrestashopException('permission not exists');
 
 		$enabled = (int)Tools::getValue('enabled') ;
-		$id_tab = (int)(Tools::getValue('id_tab')); 
+		$id_tab = (int)(Tools::getValue('id_tab'));
 		$id_profile = (int)(Tools::getValue('id_profile'));
 		$res = true;
 
@@ -53,7 +53,7 @@ class AdminAccess extends AdminTab
 			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
 		else
 			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'access` SET `'.pSQL($perm).'` = '.$enabled.' WHERE `id_tab` = '.(int)($id_tab).' AND `id_profile` = '.(int)($id_profile));
-		
+
 		$this->return_status = $res?'ok':'error';
 		if ($res)
 			$this->return_message = $this->l('Access successfully updated');
@@ -71,24 +71,24 @@ class AdminAccess extends AdminTab
 
 		if (!in_array($perm, array('view', 'configure')))
 			throw new PrestashopException('permission not exists');
-			
+
 		if ($id_module == -1)
 			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_profile` = '.(int)$id_profile);
 		else
 			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module_access` SET `'.pSQL($perm).'` = '.(int)$enabled.' WHERE `id_module` = '.(int)$id_module.' AND `id_profile` = '.(int)$id_profile);
-		
+
 		$this->return_status = $res?'ok':'error';
 		if ($res)
 			$this->return_message = $this->l('Access successfully updated.');
 		else
 			$this->return_message = $this->l('An error when updating access.');
 	}
-	
-	
+
+
 	public function displayAjax()
 	{
 		$return = array('result'=>$this->return_status,'msg'=>$this->return_message);
-		 
+
 		echo Tools::jsonEncode($return);
 	}
 	public function display()
@@ -97,16 +97,16 @@ class AdminAccess extends AdminTab
 		echo '<script type="text/javascript">
 				$(document).ready(function(){
 					$(".ajaxPower").change(function(){
-						var tout = $(this).attr("rel").split("||"); 
+						var tout = $(this).attr("rel").split("||");
 						var id_tab = tout[0];
 						var id_profile = tout[1];
 						var perm = tout[2];
 						var enabled = $(this).is(":checked")? 1 : 0;
 						var tabsize = tout[3];
 						var tabnumber = tout[4];
-						
+
 						perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber);
-						
+
 						$.ajax({
 							type:"POST",
 							url : "ajax-tab.php",
@@ -139,9 +139,9 @@ class AdminAccess extends AdminTab
 						});
 					});
 				});</script>';
-				
+
 	}
-	
+
 	/**
 	* Get the current profile id
 	*
@@ -151,7 +151,7 @@ class AdminAccess extends AdminTab
 	{
 	 	return (isset($_GET['profile']) AND !empty($_GET['profile']) AND is_numeric($_GET['profile'])) ? (int)($_GET['profile']) : 1;
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
@@ -159,7 +159,7 @@ class AdminAccess extends AdminTab
 	 	$tabs = Tab::getTabs($this->context->language->id);
 		$profiles = Profile::getProfiles($this->context->language->id);
 		$accesses = Profile::getProfileAccesses($currentProfile);
-		
+
 		echo '
 		<script type="text/javascript">
 			setLang(Array(\''.$this->l('Profile updated').'\', \''.$this->l('Request failed!').'\', \''.$this->l('Update in progress. Please wait.').'\', \''.$this->l('Server connection failed!').'\'));
@@ -178,7 +178,7 @@ class AdminAccess extends AdminTab
 				$tabsize = $tab['id_tab'];
 		echo '		</select>
 				</th>';
-		
+
 		if ($currentProfile != (int)(_PS_ADMIN_PROFILE_))
 			echo '
 				<th class="center">
@@ -192,17 +192,17 @@ class AdminAccess extends AdminTab
 					'.$this->l('Add').'
 				</th>
 				<th class="center">
-					<input type="checkbox" name="1" id="editall" 
+					<input type="checkbox" name="1" id="editall"
 					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||edit||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('Edit').'
 				</th>
 				<th class="center">
-					<input type="checkbox" name="1" id="deleteall" 
+					<input type="checkbox" name="1" id="deleteall"
 					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||delete||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('Delete').'
 				</th>
 				<th class="center">
-					<input type="checkbox" name="1" id="allall" 
+					<input type="checkbox" name="1" id="allall"
 					'.($this->tabAccess['edit'] == 1 ? ' rel="-1||'.$currentProfile.'||all||'.$tabsize.'||'.sizeof($tabs).'" class="ajaxPower"' : 'disabled="disabled"').' />
 					'.$this->l('All').'
 				</th>
@@ -212,7 +212,7 @@ class AdminAccess extends AdminTab
 			echo '<tr><td colspan="5">'.$this->l('No tab').'</td></tr>';
 		elseif ($currentProfile == (int)(_PS_ADMIN_PROFILE_))
 			echo '<tr><td colspan="5">'.$this->l('Administrator permissions can\'t be modified.').'</td></tr>';
-		else 
+		else
 			foreach ($tabs AS $tab)
 				if (!$tab['id_parent'] OR (int)($tab['id_parent']) == -1)
 				{
@@ -221,17 +221,17 @@ class AdminAccess extends AdminTab
 						if ($child['id_parent'] === $tab['id_tab'])
 							if (isset($accesses[$child['id_tab']]))
 							{
-							
+
 								$this->printTabAccess($currentProfile, $child, $accesses[$child['id_tab']], true, $tabsize, sizeof($tabs));
 							}
 				}
 		echo '</table>';
-		
+
 		if ($currentProfile != (int)(_PS_ADMIN_PROFILE_))
 			$this->displayModuleAccesses($currentProfile);
 		echo '<div class="clear">&nbsp;</div>';
 	}
-	
+
 	private function printTabAccess($currentProfile, $tab, $access, $is_child, $tabsize, $tabnumber)
 	{
 		$result_accesses = 0;
@@ -252,9 +252,17 @@ class AdminAccess extends AdminTab
 			/>
 		</td></tr>';
 	}
-	
+
 	public function ajaxProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			return;
+		}
+		/* PrestaShop demo mode*/
+
 		if ($this->tabAccess['edit'] == 1)
 		{
 			if (Tools::isSubmit('submitAddaccess'))
@@ -263,7 +271,7 @@ class AdminAccess extends AdminTab
 					$this->processChangeModuleAccess();
 		}
 	}
-	
+
 	private function displayModuleAccesses($currentProfile)
 	{
 		echo '
@@ -274,7 +282,7 @@ class AdminAccess extends AdminTab
 					var id_module = tout[0];
 					var perm = tout[1];
 					var enabled = $(this).is(":checked")? 1 : 0;
-					
+
 					if (id_module == -1)
 						$(\'.ajax-ma-\'+perm).each(function(key, value) {
 							$(this).attr("checked", enabled);
@@ -316,7 +324,7 @@ class AdminAccess extends AdminTab
 					});
 				});
 			});
-		</script>		
+		</script>
 		<table class="table float" cellspacing="0" style="margin-left:20px">
 		<tr>
 			<th>'.$this->l('Modules').'</th>
@@ -332,7 +340,7 @@ class AdminAccess extends AdminTab
 		ORDER BY m.name');
 		if (!sizeof($modules))
 			echo '<tr><td colspan="2">'.$this->l('No modules installed').'</td></tr>';
-		else 
+		else
 			foreach ($modules AS $module)
 				echo '<tr>
 					<td>&raquo; '.$module['name'].'</td>

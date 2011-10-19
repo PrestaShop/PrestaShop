@@ -35,8 +35,13 @@ $errors = array();
 $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 $iso = strtolower(Language::getIsoById((int)$id_lang));
 include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
-
-if (isset($_POST['Submit']))
+/* PrestaShop demo mode */
+if (_PS_MODE_DEMO_)
+{
+	$errors[] = Tools::displayError('This functionnality has been disabled.');
+}
+/* PrestaShop demo mode*/
+else if (isset($_POST['Submit']))
 {
 	$errors = array();
 	if (empty($_POST['email']))

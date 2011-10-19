@@ -1732,6 +1732,7 @@ class AdminImport extends AdminTab
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');
 				Image::deleteAllImages(_PS_PROD_IMG_DIR_);
+				mkdir(_PS_PROD_IMG_DIR_);
 				break;
 			case $this->entities[$this->l('Customers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
@@ -1770,6 +1771,14 @@ class AdminImport extends AdminTab
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			return;
+		}
+		/* PrestaShop demo mode*/
+
 		if (Tools::isSubmit('submitFileUpload'))
 		{
 			if (isset($_FILES['file']) AND !empty($_FILES['file']['error']))

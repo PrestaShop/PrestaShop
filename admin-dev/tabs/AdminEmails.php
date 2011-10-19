@@ -66,6 +66,14 @@ class AdminEmails extends AdminPreferences
 
 	public function beforeUpdateOptions()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			return;
+		}
+		/* PrestaShop demo mode*/
+
 		if ($_POST['PS_MAIL_METHOD'] == 2 AND (empty($_POST['PS_MAIL_SERVER']) OR empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->_errors[] = Tools::displayError('You must define a SMTP server and a SMTP port. If you do not know, use the PHP mail() function instead.');
 	}
@@ -73,6 +81,7 @@ class AdminEmails extends AdminPreferences
 	public function display()
 	{
 		parent::display();
+
 		$this->_displayMailTest();
 	}
 

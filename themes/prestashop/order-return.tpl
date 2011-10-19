@@ -61,7 +61,7 @@
 									{if $type == $smarty.const._CUSTOMIZE_FILE_}
 									<ul class="customizationUploaded">
 										{foreach from=$datas item='data'}
-											<li>WAHOU<img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
+										<li><img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
 										{/foreach}
 									</ul>
 									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}

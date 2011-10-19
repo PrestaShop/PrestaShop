@@ -74,6 +74,7 @@ class CalendarUtils
 		
 		return $dateUtc ;
 	}
+
 	public function skipCurDay($dateUtc) 
 	{
 		$currentDayZero = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
@@ -84,6 +85,7 @@ class CalendarUtils
 		}		
 		return $dateUtc ;
 	}
+
 	/**
 	 *	Renvoie la prochaine journée disponible (soit $dateUtc, soit la prochaine à 00h00)
 	 *	Si aucune ds les 15j, renvoie NULL
@@ -97,6 +99,7 @@ class CalendarUtils
 		$loopcount = 0;
 		// on positionne au début de journée
 		$dateUtc = mktime(0, 0, 0, date('m', $dateUtc), date('d', $dateUtc), date('Y', $dateUtc));
+
 		// on boucle pour trouver une journée dispo (si ds les 15j, y a pas : on laisse tomber
 		do 
 		{
@@ -107,6 +110,7 @@ class CalendarUtils
 		while (!$isDateFree && ($loopcount < 15) );
 		if ($isDateFree)
 			return ($dateUtc);			
+
 		return (NULL);	
 	}
 
@@ -117,10 +121,13 @@ class CalendarUtils
 	{
 		// jour ferié ?
 		$mCalDate = date("d/m/Y", $dateUtc);
+
 		if (in_array($mCalDate, $exceptions))
 			return (false);
+
 		// jour fermé ?
 		$wd = date('w', $dateUtc);
+
 		if (!isset($calendar[$wd]))
 			return (false);
 			
@@ -128,8 +135,10 @@ class CalendarUtils
 		$stopHour = (int)($calendar[$wd]['stop_hour']);
 		$currentHour = (int)(date('H', $dateUtc));
 		$currentMin = (int)(date('i', $dateUtc));		
+
 		if ($currentMin > 0)
 			$currentHour = $currentHour + 1;
+
 		// avant l'heure de fermeture ?
 		if ($currentHour <= $stopHour)
 			return (true);
