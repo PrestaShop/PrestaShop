@@ -63,7 +63,7 @@
 				</div>
 			{/if}
 		{/foreach}
-		{if $requiredFields}
+		{if $required_fields}
 			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
 		{/if}
 	</fieldset>

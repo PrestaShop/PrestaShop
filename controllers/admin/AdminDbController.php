@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,18 +25,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminDb extends AdminPreferences
+class AdminDbControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
- 
+
 		parent::__construct();
 
-		$this->optionsList = array(
+		$this->options = array(
 			'database' => array(
 				'title' =>	$this->l('Database'),
 				'icon' =>	'database_gear',
@@ -48,75 +46,100 @@ class AdminDb extends AdminPreferences
 					'db_user' => array('title' => $this->l('User:'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_USER_, 'visibility' => Shop::CONTEXT_ALL),
 					'db_passwd' => array('title' => $this->l('Password:'), 'size' => 30, 'type' => 'password', 'desc' => $this->l('Leave blank if no change'), 'defaultValue' => _DB_PASSWD_, 'visibility' => Shop::CONTEXT_ALL),
 				),
+				'submit' => array()
 			),
 		);
+
+		$this->fieldsDisplay = array (
+			'table' => array('title' => $this->l('Table'), 'type' => 'string', 'width' => 120),
+			'table_engine' => array('title' => $this->l('Table Engine'), 'type' => 'string', 'width' => 120),
+		);
 	}
-	
+
+	public function initContent()
+	{
+		parent::initContent();
+
+		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.');
+
+		$helper = new HelperOptions();
+		$helper->id = $this->id;
+		$helper->currentIndex = self::$currentIndex;
+		$this->content .= $helper->generateOptions($this->options);
+
+		$table_status = $this->getTablesStatus();
+		foreach ($table_status as $key => $table)
+			if (!preg_match('#^'._DB_PREFIX_.'.*#Ui', $table['Name']))
+				unset($table_status[$key]);
+
+		$this->context->smarty->assign(array(
+			'update_url' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
+			'table_status' => $table_status,
+			'engines' => $this->getEngines(),
+		));
+
+	}
+
 	public function postProcess()
 	{
-		/* PrestaShop demo mode */
+		// PrestaShop demo mode
 		if (_PS_MODE_DEMO_)
 		{
 			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
-		/* PrestaShop demo mode*/
-		
-		if (isset($_POST['submitDatabase'.$this->table]))
-		{
-		 	if ($this->tabAccess['edit'] === '1')	 	
-		 	{
-				foreach ($this->optionsList['database']['fields'] AS $field => $values)
-					if (isset($values['required']) AND $values['required'])
-						if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-	
-				if (!sizeof($this->_errors))
-				{
-					/* Datas are not saved in database but in config/settings.inc.php */
-					$settings = array();
-				 	foreach ($this->optionsList['database']['fields'] as $k => $data)
-						if ($value = Tools::getValue($k))
-							$settings['_'.Tools::strtoupper($k).'_'] = $value;
 
-					if (Db::checkConnection(
-						isset($settings['_DB_SERVER_']) ? $settings['_DB_SERVER_'] : _DB_SERVER_,
-						isset($settings['_DB_USER_']) ? $settings['_DB_USER_'] : _DB_USER_,
-						isset($settings['_DB_PASSWD_']) ? $settings['_DB_PASSWD_'] : _DB_PASSWD_,
-						isset($settings['_DB_NAME_']) ? $settings['_DB_NAME_'] : _DB_NAME_,
-						true
-					) == 0)
-					{
-				 		rewriteSettingsFile(NULL, NULL, $settings);
-				 		Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
-					}
-					else
-						$this->_errors[] = Tools::displayError('Unable to connect to a database with these identifiers.');
+		if ($this->action == 'update_options')
+		{
+			foreach ($this->optionsList['database']['fields'] AS $field => $values)
+				if (isset($values['required']) AND $values['required'])
+					if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
+						$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+
+			if (!sizeof($this->_errors))
+			{
+				/* Datas are not saved in database but in config/settings.inc.php */
+				$settings = array();
+			 	foreach ($this->optionsList['database']['fields'] as $k => $data)
+					if ($value = Tools::getValue($k))
+						$settings['_'.Tools::strtoupper($k).'_'] = $value;
+
+				if (Db::checkConnection(
+					isset($settings['_DB_SERVER_']) ? $settings['_DB_SERVER_'] : _DB_SERVER_,
+					isset($settings['_DB_USER_']) ? $settings['_DB_USER_'] : _DB_USER_,
+					isset($settings['_DB_PASSWD_']) ? $settings['_DB_PASSWD_'] : _DB_PASSWD_,
+					isset($settings['_DB_NAME_']) ? $settings['_DB_NAME_'] : _DB_NAME_,
+					true
+				) == 0)
+				{
+			 		rewriteSettingsFile(NULL, NULL, $settings);
+			 		Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 				}
+				else
+					$this->_errors[] = Tools::displayError('Unable to connect to a database with these identifiers.');
 			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
-		if (Tools::isSubmit('submitEngine'))
+		// Change engine
+		if ($this->action == 'save')
 		{
 			if (!isset($_POST['tablesBox']) OR !sizeof($_POST['tablesBox']))
 				$this->_errors[] = Tools::displayError('You did not select any tables');
 			else
 			{
-				$available_engines = $this->_getEngines();
-				$tables_status = $this->_getTablesStatus();
+				$available_engines = $this->getEngines();
+				$tables_status = $this->getTablesStatus();
 				$tables_engine = array();
 
 				foreach ($tables_status AS $table)
 					$tables_engine[$table['Name']] = $table['Engine'];
-				
+
 				$engineType = pSQL(Tools::getValue('engineType'));
-				
+
 				/* Datas are not saved in database but in config/settings.inc.php */
 				$settings = array('_MYSQL_ENGINE_' => $engineType);
 			    rewriteSettingsFile(NULL, NULL, $settings);
-				
+
 				foreach ($_POST['tablesBox'] AS $table)
 				{
 					if ($engineType == $tables_engine[$table])
@@ -132,36 +155,7 @@ class AdminDb extends AdminPreferences
 
 	}
 
-	public function display()
-	{
-		echo $this->displayWarning($this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.')).'<br />';
-		$this->displayOptionsList();
-		$engines = $this->_getEngines();
-		$irow = 0;
-		echo '<br /><fieldset class="width2"><legend>'.$this->l('MySQL Engine').'</legend><form name="updateEngine" action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post"><table cellspacing="0" cellpadding="0" class="table width2 clear">
-				<tr><th><input type="checkbox" onclick="checkDelBoxes(this.form, \'tablesBox[]\', this.checked)" class="noborder" name="checkme"></th><th>'.$this->l('Table').'</th><th>'.$this->l('Table Engine').'</th></tr>';
-		$tables_status = $this->_getTablesStatus();
-		foreach ($tables_status AS $table)
-		{
-			if (!preg_match('/^'._DB_PREFIX_.'.*/Ui', $table['Name']))
-				continue;
-			echo '<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
-						<td class="noborder"><input type="checkbox" name="tablesBox[]" value="'.$table['Name'].'"/></td><td>'.$table['Name'].'</td><td>'.$table['Engine'].'</td>
-					</tr>';
-		}
-		echo '</table><br />
-		<label for="dbEngine">'.$this->l('Change Engine to').'</label>
-		<div class="margin-form">
-			<select name="engineType">';
-			foreach ($engines AS $engine)
-				echo 	'<option value="'.$engine.'">'.$engine.'</option>';
-			echo '</select>
-			<input style="margin-left:15px;" class="button" type="submit" value="Submit" name="submitEngine" />
-		</div>
-		</fieldset>';
-	}
-	
-	private function _getEngines()
+	public function getEngines()
 	{
 		$engines = Db::getInstance()->executeS('SHOW ENGINES');
 		$allowed_engines = array();
@@ -172,8 +166,8 @@ class AdminDb extends AdminPreferences
 		}
 		return $allowed_engines;
 	}
-	
-	private function _getTablesStatus()
+
+	public function getTablesStatus()
 	{
 		return Db::getInstance()->executeS('SHOW TABLE STATUS');
 	}

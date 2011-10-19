@@ -72,7 +72,7 @@ class HelperFormCore extends Helper
 			'back' => Tools::getValue('back'),
 			'fields' => $this->fields_form,
 			'fields_value' => $this->fields_value,
-			'requiredFields' => $this->getFieldsRequired(),
+			'required_fields' => $this->getFieldsRequired(),
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,

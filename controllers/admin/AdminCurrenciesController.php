@@ -63,6 +63,7 @@ class AdminCurrenciesControllerCore extends AdminController
 							'list' => Currency::getCurrencies()
 						),
 				),
+				'submit' => array()
 			),
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),

@@ -59,6 +59,7 @@ class AdminBackupControllerCore extends AdminController
 					'PS_BACKUP_DROP_TABLE' => array('title' => $this->l('Drop existing tables during import:'),
 						'desc' => $this->l('Select this option to instruct the backup file to drop your tables prior to restoring the backed up data').'<br />(ie. "DROP TABLE IF EXISTS")', 'cast' => 'intval', 'type' => 'bool'),
 				),
+				'submit' => array()
 			),
 		);
 		$this->identifier = 'filename';
