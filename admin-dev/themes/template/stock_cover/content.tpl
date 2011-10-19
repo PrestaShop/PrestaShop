@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{l Considering the coverage period choosen and the quantity of products/combinations that you sold, this array gives you an idea of when one product will run out of stock}
+{l s="Considering the coverage period choosen and the quantity of products/combinations that you sold, this array gives you an idea of when one product will run out of stock"}
 
 {if count($stock_cover_periods) > 1}
 	<form type="get" onchange="submit();">
