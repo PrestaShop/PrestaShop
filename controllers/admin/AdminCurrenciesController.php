@@ -224,7 +224,7 @@ class AdminCurrenciesControllerCore extends AdminController
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			),
-			'asso_shop' => Shop::isMultiShopActivated()
+			'asso_shop' => Shop::isFeatureActive()
 		);
 		parent::__construct();
 	}
