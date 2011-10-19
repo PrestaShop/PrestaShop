@@ -2006,7 +2006,7 @@ class ProductCore extends ObjectModel
 	*/
 	public static function convertPrice($params, &$smarty)
 	{
-		return Tools::displayPrice($params['price'], $smarty->ps_currency);
+		return Tools::displayPrice($params['price'], Context::getContext()->currency);
 	}
 
 	/**
@@ -2025,7 +2025,7 @@ class ProductCore extends ObjectModel
 
 	public static function displayWtPrice($params, &$smarty)
 	{
-		return Tools::displayPrice($params['p'], $smarty->ps_currency);
+		return Tools::displayPrice($params['p'], Context::getContext()->currency);
 	}
 
 	/**

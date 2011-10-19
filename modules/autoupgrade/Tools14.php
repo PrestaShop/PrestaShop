@@ -465,7 +465,7 @@ class Tools14
 	*/
 	public static function dateFormat($params, &$smarty)
 	{
-		return self::displayDate($params['date'], $smarty->ps_language->id, (isset($params['full']) ? $params['full'] : false));
+		return self::displayDate($params['date'], Context::getContext()->language->id, (isset($params['full']) ? $params['full'] : false));
 	}
 
 	/**
