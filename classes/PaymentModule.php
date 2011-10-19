@@ -109,7 +109,6 @@ abstract class PaymentModuleCore extends Module
 			$order->id_customer = (int)($cart->id_customer);
 			$order->id_address_invoice = (int)($cart->id_address_invoice);
 			$order->id_address_delivery = (int)($cart->id_address_delivery);
-			$vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 			$order->id_currency = ($currency_special ? (int)($currency_special) : (int)($cart->id_currency));
 			$order->id_lang = (int)($cart->id_lang);
 			$order->id_cart = (int)($cart->id);
@@ -176,84 +175,19 @@ abstract class PaymentModuleCore extends Module
 					}
 				}
 
+				// Insert new Order detail list using cart for the current order
+				$orderDetail = new OrderDetail($this->context);
+				$orderDetail->createList($order, $cart, $id_order_state);
+				
 				// Insert products from cart into order_detail table
-				$products = $cart->getProducts();
 				$productsList = '';
-				$db = Db::getInstance();
-				$query = 'INSERT INTO `'._DB_PREFIX_.'order_detail`
-					(`id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_in_stock`, `product_price`, `reduction_percent`, `reduction_amount`, `group_reduction`, `product_quantity_discount`, `product_ean13`, `product_upc`, `product_reference`, `product_supplier_reference`, `product_weight`, `tax_computation_method`, `ecotax`, `ecotax_tax_rate`, `discount_quantity_applied`, `download_deadline`, `download_hash`)
-				VALUES ';
-
-				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
-				Product::addCustomizationPrice($products, $customizedDatas);
-				$outOfStock = false;
+				$products = $cart->getProducts();
 				foreach ($products AS $key => $product)
 				{
-					$productQuantity = (int)(Product::getQuantity((int)($product['id_product']), ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL)));
-					$quantityInStock = ($productQuantity - (int)($product['cart_quantity']) < 0) ? $productQuantity : (int)($product['cart_quantity']);
-					if ($id_order_state != Configuration::get('PS_OS_CANCELED') AND $id_order_state != Configuration::get('PS_OS_ERROR'))
-					{
-						if (StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']))
-							$product['stock_quantity'] -= $product['cart_quantity'];
-						if ($product['stock_quantity'] < 0 && Configuration::get('PS_STOCK_MANAGEMENT'))
-							$outOfStock = true;
 
-						Product::updateDefaultAttribute($product['id_product']);
-					}
 					$price = Product::getPriceStatic((int)($product['id_product']), false, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 6, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-					$price_wt = Product::getPriceStatic((int)($product['id_product']), true, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 2, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-					// Add some informations for virtual products
-					$deadline = '0000-00-00 00:00:00';
-					$download_hash = NULL;
-					if ($id_product_download = ProductDownload::getIdFromIdProduct((int)($product['id_product'])))
-					{
-						$productDownload = new ProductDownload((int)($id_product_download));
-						$deadline = $productDownload->getDeadLine();
-						$download_hash = $productDownload->getHash();
-					}
-
-					// Exclude VAT
-					$tax_calculator = new TaxCalculator();
-					if (!Tax::excludeTaxeOption())
-					{
-						$address = Address::initialize($vat_address->id);
-						$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product']);
-
-						$tax_manager = TaxManagerFactory::getManager($vat_address, $id_tax_rules);
-						$tax_calculator = $tax_manager->getTaxCalculator();
-					}
-
-					$ecotaxTaxRate = 0;
-					if (!empty($product['ecotax']))
-						$ecotaxTaxRate = Tax::getProductEcotaxRate($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-
-					$product_price = (float)Product::getPriceStatic((int)($product['id_product']), false, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), (Product::getTaxCalculationMethod((int)($order->id_customer)) == PS_TAX_EXC ? 2 : 6), NULL, false, false, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}), $specificPrice, false, false);
-					$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $this->context->shop->getID(), (int)$cart->id_currency, (int)$vat_address->id_country, (int)$customer->id_default_group, (int)$product['cart_quantity']);
-					$unitPrice = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? intval($product['id_product_attribute']) : NULL), 2, NULL, false, true, 1, false, (int)$order->id_customer, NULL, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-					$quantityDiscountValue = $quantityDiscount ? ((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ? Tools::ps_round($unitPrice, 2) : $unitPrice) - $tax_calculator->addTaxes($quantityDiscount['price'])) : 0.00;
-					$query .= '('.(int)($order->id).',
-						'.(int)($product['id_product']).',
-						'.(isset($product['id_product_attribute']) ? (int)($product['id_product_attribute']) : 'NULL').',
-						\''.pSQL($product['name'].((isset($product['attributes']) AND $product['attributes'] != NULL) ? ' - '.$product['attributes'] : '')).'\',
-						'.(int)($product['cart_quantity']).',
-						'.$quantityInStock.',
-						'.$product_price.',
-						'.(float)(($specificPrice AND $specificPrice['reduction_type'] == 'percentage') ? $specificPrice['reduction'] * 100 : 0.00).',
-						'.(float)(($specificPrice AND $specificPrice['reduction_type'] == 'amount') ? (!$specificPrice['id_currency'] ? Tools::convertPrice($specificPrice['reduction'], $order->id_currency) : $specificPrice['reduction']) : 0.00).',
-						'.(float)(Group::getReduction((int)($order->id_customer))).',
-						'.$quantityDiscountValue.',
-						'.(empty($product['ean13']) ? 'NULL' : '\''.pSQL($product['ean13']).'\'').',
-						'.(empty($product['upc']) ? 'NULL' : '\''.pSQL($product['upc']).'\'').',
-						'.(empty($product['reference']) ? 'NULL' : '\''.pSQL($product['reference']).'\'').',
-						'.(empty($product['supplier_reference']) ? 'NULL' : '\''.pSQL($product['supplier_reference']).'\'').',
-						'.(float)($product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight']).',
-						'.(int)$tax_calculator->computation_method.',
-						'.(float)Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency)).',
-						'.(float)$ecotaxTaxRate.',
-						'.(($specificPrice AND $specificPrice['from_quantity'] > 1) ? 1 : 0).',
-						\''.pSQL($deadline).'\',
-						\''.pSQL($download_hash).'\'),';
-
+          $price_wt = Product::getPriceStatic((int)($product['id_product']), true, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 2, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+          
 					$customizationQuantity = 0;
 					if (isset($customizedDatas[$product['id_product']][$product['id_product_attribute']]))
 					{
@@ -293,12 +227,7 @@ abstract class PaymentModuleCore extends Module
 							<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(((int)($product['cart_quantity']) - $customizationQuantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
 						</tr>';
 				} // end foreach ($products)
-				$query = rtrim($query, ',');
-				$result = $db->Execute($query);
-
-				OrderDetail::saveTaxCalculatorStatic($db->Insert_ID(), $tax_calculator);
-				unset($tax_calculator);
-
+			
 				// Insert discounts from cart into order_discount table
 				$discounts = $cart->getDiscounts();
 				$discountsList = '';
@@ -339,9 +268,13 @@ abstract class PaymentModuleCore extends Module
 					$objDiscount->update();
 
 					$discountsList .=
-					'<tr style="background-color:#EBECEE;">
-							<td colspan="4" style="padding: 0.6em 0.4em; text-align: right;">'.$this->l('Voucher code:').' '.$objDiscount->name.'</td>
-							<td style="padding: 0.6em 0.4em; text-align: right;">'.($value != 0.00 ? '-' : '').Tools::displayPrice($value, $currency, false).'</td>
+						'<tr style="background-color:#EBECEE;">
+							<td colspan="4" style="padding: 0.6em 0.4em; text-align: right;">'.
+								$this->l('Voucher code:').' '.$objDiscount->name.
+							'</td>
+							<td style="padding: 0.6em 0.4em; text-align: right;">'.
+								($value != 0.00 ? '-' : '').Tools::displayPrice($value, $currency, false).
+							'</td>
 					</tr>';
 				}
 
@@ -364,7 +297,7 @@ abstract class PaymentModuleCore extends Module
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 				}
 
-				if (isset($outOfStock) && $outOfStock && Configuration::get('PS_STOCK_MANAGEMENT'))
+				if (Configuration::get('PS_STOCK_MANAGEMENT') && $orderDetail->getStockState())
 				{
 					$history = new OrderHistory();
 					$history->id_order = (int)$order->id;
@@ -372,6 +305,8 @@ abstract class PaymentModuleCore extends Module
 					$history->addWithemail();
 				}
 
+				unset($orderDetail);
+				
 				// Set order state in order history ONLY even if the "out of stock" status has not been yet reached
 				// So you migth have two order states
 				$new_history = new OrderHistory();
@@ -381,7 +316,7 @@ abstract class PaymentModuleCore extends Module
 
 				// Order is reloaded because the status just changed
 				$order = new Order($order->id);
-
+				
 				// Send an e-mail to customer
 				if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED') AND $customer->id)
 				{

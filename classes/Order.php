@@ -1042,4 +1042,13 @@ class OrderCore extends ObjectModel
 				DELETE FROM `'._DB_PREFIX_.'order_detail`
 				WHERE `id_order` = '.(int)($this->id)) !== false);
 	}
+	
+	/*
+	** Get the an order detail list of the current order
+	*/
+	public function getOrderDetailList()
+	{
+		return OrderDetail::getList($this->id);
+	}
+	
 }
