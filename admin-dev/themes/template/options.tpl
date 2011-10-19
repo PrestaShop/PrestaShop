@@ -154,8 +154,8 @@
 				/>
 			</div>
 		{/if}
-		{if $field['required']}
-			<div class="small"><sup>*</sup> {l s='Required field'}</div>
+		{if $required_fields}
+			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
 		{/if}
 		</fieldset><br />
 		{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}

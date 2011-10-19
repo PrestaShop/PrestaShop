@@ -25,75 +25,74 @@
 *}
 
 {if !$simple_header}
-
-<link href="../css/admin.css" rel="stylesheet" type="text/css" />
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('.filter').keypress(function(event){
-			formSubmit(event, 'submitFilterButton{$table}')
-		})
-	});
-</script>
-{* Display column names and arrows for ordering (ASC, DESC) *}
-{if $is_order_position}
-	<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+	<link href="../css/admin.css" rel="stylesheet" type="text/css" />
+	
 	<script type="text/javascript">
-		var token = '{$token}';
-		var come_from = '{$table}';
-		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
+		$(document).ready(function() {
+			$('.filter').keypress(function(event){
+				formSubmit(event, 'submitFilterButton{$table}')
+			})
+		});
 	</script>
-	<script type="text/javascript" src="../js/admin-dnd.js"></script>
-{/if}
-
-<script type="text/javascript">
-	$(function() {
-		if ($(".datepicker").length > 0)
-			$(".datepicker").datepicker({
-				prevText: '',
-				nextText: ''
-			});
-	});
-</script>
-
-{if $add_button}
-	<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
-{/if}
-<a name="{$table}">&nbsp;</a>
-
-<form method="post" action="{$action}" class="form">
+	{* Display column names and arrows for ordering (ASC, DESC) *}
+	{if $is_order_position}
+		<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+		<script type="text/javascript">
+			var token = '{$token}';
+			var come_from = '{$table}';
+			var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
+		</script>
+		<script type="text/javascript" src="../js/admin-dnd.js"></script>
+	{/if}
+	
+	<script type="text/javascript">
+		$(function() {
+			if ($(".datepicker").length > 0)
+				$(".datepicker").datepicker({
+					prevText: '',
+					nextText: ''
+				});
+		});
+	</script>
+	
+	{if $add_button}
+		<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
+	{/if}
+	<a name="{$table}">&nbsp;</a>
+	
+	<form method="post" action="{$action}" class="form">
 {/if}{* End if simple_header *}
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 	<table style="table-layout: fixed; width: 100%;">
 		{if !$simple_header}
-		<tr>
-			<td style="vertical-align: bottom;">
-				<span style="float: left;">
-					{if $page > 1}
-						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE(\'submitFilter{$table}\').value=1"/>&nbsp;
-						<input type="image" src="../img/admin/list-prev.gif" onclick="getE(\'submitFilter{$table}\').value={$page - 1}"/>
-					{/if}
-					{l s='Page '}<b>{$page}</b> / {$total_pages}
-					{if $page < $total_pages}
-						<input type="image" src="../img/admin/list-next.gif" onclick="getE(\'submitFilter{$table}\').value={$page + 1}"/>&nbsp;
-						<input type="image" src="../img/admin/list-next2.gif" onclick="getE(\'submitFilter{$table}'\').value={$total_pages}"/>
-					{/if}
-					| {l s='Display'}
-					<select name="pagination">
-						{* Choose number of results per page *}
-						{foreach $pagination AS $value}
-							<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
-						{/foreach}
-					</select>
-					/ {$list_total} {l s='result(s)'}
-				</span>
-				<span style="float: right;">
-					<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
-					<input type="submit" id="submitFilterButton{$table}" name="submitFilter" value="{l s='Filter'}" class="button" />
-				</span>
-				<span class="clear"></span>
-			</td>
-		</tr>
+			<tr>
+				<td style="vertical-align: bottom;">
+					<span style="float: left;">
+						{if $page > 1}
+							<input type="image" src="../img/admin/list-prev2.gif" onclick="getE(\'submitFilter{$table}\').value=1"/>&nbsp;
+							<input type="image" src="../img/admin/list-prev.gif" onclick="getE(\'submitFilter{$table}\').value={$page - 1}"/>
+						{/if}
+						{l s='Page '}<b>{$page}</b> / {$total_pages}
+						{if $page < $total_pages}
+							<input type="image" src="../img/admin/list-next.gif" onclick="getE(\'submitFilter{$table}\').value={$page + 1}"/>&nbsp;
+							<input type="image" src="../img/admin/list-next2.gif" onclick="getE(\'submitFilter{$table}'\').value={$total_pages}"/>
+						{/if}
+						| {l s='Display'}
+						<select name="pagination">
+							{* Choose number of results per page *}
+							{foreach $pagination AS $value}
+								<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
+							{/foreach}
+						</select>
+						/ {$list_total} {l s='result(s)'}
+					</span>
+					<span style="float: right;">
+						<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
+						<input type="submit" id="submitFilterButton{$table}" name="submitFilter" value="{l s='Filter'}" class="button" />
+					</span>
+					<span class="clear"></span>
+				</td>
+			</tr>
 		{/if}
 		<tr>
 			<td{if $simple_header} style="border:none;"{/if}>

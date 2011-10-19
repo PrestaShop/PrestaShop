@@ -53,6 +53,7 @@ class AdminContactsControllerCore extends AdminController
 					)),
 					'PS_CUSTOMER_SERVICE_SIGNATURE' => array('title' => $this->l('Pre-defined message'), 'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'), 'cast' => 'pSQL', 'type' => 'textareaLang', 'identifier' => 'value', 'cols' => 40, 'rows' => 8),
 				),
+				'submit' => array()
 			),
 		);
 

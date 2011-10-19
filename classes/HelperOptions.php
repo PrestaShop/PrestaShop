@@ -109,6 +109,10 @@ class HelperOptionsCore extends Helper
 
 				// Assign the modifications back to parent array
 				$category_data['fields'][$key] = $field;
+
+				// Is at least one required field present?
+				if (isset($field['required']) && $field['required'])
+					$required_fields = true;
 			}
 			// Assign the modifications back to parent array
 			$option_list[$category] = $category_data;
@@ -118,6 +122,7 @@ class HelperOptionsCore extends Helper
 			'current' => $this->currentIndex,
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
+			'required_fields' => $required_fields,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
 	}
@@ -202,4 +207,13 @@ class HelperOptionsCore extends Helper
 		return $value;
 	}
 
+	public function getFieldsRequired()
+	{
+		if (isset($this->fields_form['input']))
+			foreach ($this->fields_form['input'] as $input)
+				if (array_key_exists('required', $input) && $input['required'])
+					return true;
+
+		return false;
+	}
 }

@@ -1006,7 +1006,8 @@ class AdminControllerCore extends Controller
 	{
 		$this->context->smarty->assign(array(
 			'current' => self::$currentIndex,
-			'token' => $this->token
+			'token' => $this->token,
+			'table' => $this->table
 		));
 
 		if ($this->display == 'edit' || $this->display == 'add')
