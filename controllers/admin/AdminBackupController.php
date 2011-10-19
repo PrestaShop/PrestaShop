@@ -116,14 +116,6 @@ class AdminBackupControllerCore extends AdminController
 			));
 		}
 		parent::initContent();
-
-		if ($this->display == 'list')
-		{
-			$helper = new HelperOptions();
-			$helper->id = $this->id;
-			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options);
-		}
 	}
 
 	public function postProcess()

@@ -281,14 +281,6 @@ class AdminCurrenciesControllerCore extends AdminController
 			$this->display = 'list';
 
 		parent::initContent();
-
-		if ($this->display = 'list')
-		{
-			$helper = new HelperOptions();
-			$helper->id = $this->id;
-			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options);
-		}
 	}
 }
 
