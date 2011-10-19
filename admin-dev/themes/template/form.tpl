@@ -83,6 +83,7 @@
 												name="{$input.name}_{$language.id_lang}"
 												value="{$fields_value[$input.name][$language.id_lang]}"
 												{if isset($input.size)}size="{$input.size}"{/if}
+												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 												{if isset($input.class)}class="{$input.class}"{/if}
 												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 										{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
@@ -112,6 +113,7 @@
 										id="{$input.name}"
 										value="{$fields_value[$input.name]}"
 										{if isset($input.size)}size="{$input.size}"{/if}
+										{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 										{if isset($input.class)}class="{$input.class}"{/if}
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
@@ -120,6 +122,9 @@
 							<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
 						{elseif $input.type == 'select'}
 							<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+								{if isset($input.options.default)}
+									<option value="{$input.options.default.value}">{$input.options.default.label}</option>
+								{/if}
 								{if isset($input.options.optiongroup)}
 									{foreach $input.options.optiongroup.query AS $optiongroup}
 										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
@@ -170,6 +175,7 @@
 								 	{$value.label}
 								 {/if}
 								</label>
+								{if isset($input.br) && $input.br}<br />{/if}
 							{/foreach}
 						{elseif $input.type == 'textarea'}
 							{if isset($input.lang) && isset($input.attributeLang)}
@@ -200,7 +206,11 @@
 								<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
 							{/if}
 						{elseif $input.type == 'checkbox'}
-
+							{foreach $input.values.query as $value}
+								{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
+								<input type="checkbox" name="{$id_checkbox}" id="{$id_checkbox}" {if $fields_value[$id_checkbox]}checked="checked"{/if} />
+								<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
+							{/foreach}
 						{elseif $input.type == 'file'}
 							<input type="file" name="{$input.name}" />
 							<img src="{$fields_value[$input.name]}" />
