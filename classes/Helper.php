@@ -269,7 +269,7 @@ class HelperCore
 
 	protected function displayAssoShop($type = 'shop')
 	{
-		if (!Shop::isMultiShopActivated() || (!$this->id && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Shop::isFeatureActive() || (!$this->id && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		if ($type != 'shop' && $type != 'group_shop')
