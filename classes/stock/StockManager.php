@@ -382,21 +382,29 @@ class StockManagerCore implements StockManagerInterface
 	/**
 	 * @see StockManagerInterface::getProductPhysicalQuantities()
 	 */
-	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $id_warehouses = null, $usable = false)
+	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
+		// in case $ids_warehouse is not an array
+		if (!is_array($ids_warehouse))
+			$ids_warehouse = array($ids_warehouse);
+
+		// casts for security reason
+		$ids_warehouse = array_map('intval', $ids_warehouse);
+
 		$query = new DbQuery();
 		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
 		$query->from('stock s');
 		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
-		if (count($id_warehouses))
-			$query->where('s.id_warehouse IN('.implode(', ', $id_warehouses).')');
+
+		if (count($ids_warehouse))
+			$query->where('s.id_warehouse IN('.implode(', ', $ids_warehouse).')');
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 
 	/**
 	 * @see StockManagerInterface::getProductRealQuantities()
 	 */
-	public function getProductRealQuantities($id_product, $id_product_attribute, $id_warehouses = null, $usable = false)
+	public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
 		// Gets clients_orders_qty
 		$query = new DbQuery();
@@ -409,7 +417,7 @@ class StockManagerCore implements StockManagerInterface
 		$clients_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets {physical OR usable}_qty
-		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $id_warehouses, $usable);
+		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse, $usable);
 
 		// Returns real_qty = qty - clients_orders_qty
 		// @TODO include suplliers orders in the calcul when they will be implemented
@@ -462,6 +470,43 @@ class StockManagerCore implements StockManagerInterface
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @see StockManagerInterface::getProductCoverage()
+	 * Here, $coverage is a number of days
+	 * @return int number of days left
+	 */
+	public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)
+	{
+		if (!$id_product_attribute)
+			$id_product_attribute = 0;
+
+		// gets all stock_mvt for the given coverage period
+		$query = '
+			SELECT SUM(sm.`physical_quantity`) as quantity_out
+			FROM `'._DB_PREFIX_.'stock_mvt` sm
+			LEFT JOIN `'._DB_PREFIX_.'stock` s ON (sm.`id_stock` = s.`id_stock`)
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product` AND p.`id_product` = '.(int)$id_product.')
+			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND pa.id_product_attribute = '.(int)$id_product_attribute.')
+			WHERE sm.`sign` = -1
+			AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.
+			($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'
+			GROUP BY sm.`id_stock_mvt`
+			ORDER BY sm.`date_add` DESC';
+
+		$quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		if (!$quantity_out)
+			return 0;
+
+		$quantity_per_day = round($quantity_out / $coverage);
+		$physical_quantity = $this->getProductPhysicalQuantities($id_product,
+															     $id_product_attribute,
+															     ($id_warehouse ? array($id_warehouse) : null),
+															     true);
+		$time_left = round($physical_quantity / $quantity_per_day);
+
+		return $time_left;
 	}
 
 	/**
