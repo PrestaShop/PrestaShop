@@ -50,6 +50,13 @@
 					{rdelim});
 				{rdelim}
 			{/if}
+
+			// At the loading
+			($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();
+
+			$("input[name='is_free']").live('change', function() {ldelim}
+				($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();			
+			{rdelim});
 		{rdelim});
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
@@ -71,8 +78,12 @@
 					{if $input.name == 'id_state'}
 						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 					{/if}
+					{if $input.name == 'id_tax_rules_group'}<div id="shipping_costs_div">{/if}
 					{if isset($input.label)}
-					<label>{$input.label} </label>
+						{if $input.name == 'is_module' && $fields_value['is_module'] == 0}
+						{else}
+							<label>{$input.label} </label>
+						{/if}
 					{/if}
 					<div class="margin-form">
 						{if $input.type == 'text'}
@@ -119,7 +130,23 @@
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
+							{if $input.name == 'is_module'}
+								{if $fields_value['is_module'] != 0}
+									<p> - {l s='This carrier is bound to this module '} : {$fields_value['external_module_name']}</p>
+									<input type="hidden" name="is_module" value="1">
+									<input type="hidden" name="external_module_name" value="{$fields_value['external_module_name']}">
+									{if $fields_value['shipping_external'] != 0}
+										<p> - {l s='The shipping costs are calculated outside of your shop'}</p>
+										<input type="hidden" name="shipping_external" value="1">
+									{/if}
+									{if $fields_value['need_range'] != 0}
+										<p> - {l s='This carrier uses PrestaShop range to calculate shipping costs'}</p>
+										<input type="hidden" name="need_range" value="1">
+									{/if}
+								{/if}
+							{else}
+								<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
+							{/if}
 						{elseif $input.type == 'select'}
 							<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 								{if isset($input.options.default)}
@@ -241,11 +268,9 @@
 								{/if}
 							</p>
 						{/if}
-						{if isset($languages)}<div class="clear"></div>{/if}
 					</div>
-					{if $input.name == 'id_state'}
-						</div>
-					{/if}
+					{if $input.name == 'range_behavior'}</div>{/if}
+					{if $input.name == 'id_state'}</div>{/if}
 				{/foreach}
 			{elseif $key == 'submit'}
 				<div class="margin-form">

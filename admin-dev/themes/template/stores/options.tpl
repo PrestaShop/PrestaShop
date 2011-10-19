@@ -24,9 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <br />
-<script type="text/javascript">
-	id_language = Number({$id_lang});
-</script>
 
 <form action="{$current}&submitOptions{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
 {foreach $optionsList AS $category => $categoryData}

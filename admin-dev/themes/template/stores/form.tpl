@@ -83,13 +83,13 @@
 							{if $input.name == 'latitude'}
 								<input type="text"
 									{if isset($input.size)}size="{$input.size}"{/if}
-									{if isset($input.maxlength)}size="{$input.maxlength}"{/if}
+									{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 									name="latitude"
 									id="latitude"
 									value="{$fields_value[$input.name]}" /> /
 								<input type="text"
 									{if isset($input.size)}size="{$input.size}"{/if}
-									{if isset($input.maxlength)}size="{$input.maxlength}"{/if}
+									{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 									name="longitude"
 									id="longitude"
 									value="{$fields_value['longitude']}" />
@@ -100,7 +100,8 @@
 											<input type="text" 
 													name="{$input.name}_{$language.id_lang}"
 													value="{$fields_value[$input.name][$language.id_lang]}"
-													{if isset($input.size)}size="{$input.size}"{/if} 
+													{if isset($input.size)}size="{$input.size}"{/if}
+													{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if} 
 													{if isset($input.class)}class="{$input.class}"{/if} 
 													{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 											{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
@@ -129,7 +130,8 @@
 											name="{$input.name}" 
 											id="{$input.name}" 
 											value="{$fields_value[$input.name]}" 
-											{if isset($input.size)}size="{$input.size}"{/if} 
+											{if isset($input.size)}size="{$input.size}"{/if}
+											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 											{if isset($input.class)}class="{$input.class}"{/if} 
 											{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 									{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}

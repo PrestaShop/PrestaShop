@@ -546,9 +546,7 @@ class CarrierCore extends ObjectModel
 		if (Configuration::get('PS_CARRIER_DEFAULT_SORT') == Carrier::SORT_BY_PRICE)
 		{
 			foreach ($results_array as $r)
-			{
 				$prices[] = $r['price'];
-			}
 			array_multisort($prices, SORT_NUMERIC, $results_array);
 		}
 
@@ -617,6 +615,19 @@ class CarrierCore extends ObjectModel
 			DELETE FROM `'._DB_PREFIX_.'carrier_zone`
 			WHERE `id_carrier` = '.(int)$this->id.'
 			AND `id_zone` = '.(int)$id_zone.' LIMIT 1');
+	}
+
+	/**
+	 * Get a specific group
+	 *
+	 * @return array Group
+	 */
+	public function getGroups()
+	{
+		return Db::getInstance()->executeS('
+			SELECT id_group
+			FROM '._DB_PREFIX_.'carrier_group
+			WHERE id_carrier='.(int)$this->id);
 	}
 
 	/**
