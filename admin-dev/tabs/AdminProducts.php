@@ -893,7 +893,7 @@ class AdminProducts extends AdminTab
 			if (isset($result['success']))
 			{
 				$shops = false;
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 					$shops = Shop::getShops();
 				$obj = new Product((int)Tools::getValue('id_product'));
 				$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'image  WHERE id_product = '.(int)$obj->id);
@@ -2504,7 +2504,7 @@ class AdminProducts extends AdminTab
 						</td>
 					</tr>
 					<tr id="shop_association">
-					<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;'.(!Shop::isMultiShopActivated() ? 'display:none;' : '').'">'.$this->l('Shop association:').'</td><td style="padding-bottom:5px;">';
+					<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;'.(!Shop::isFeatureActive() ? 'display:none;' : '').'">'.$this->l('Shop association:').'</td><td style="padding-bottom:5px;">';
 					$this->displayAssoShop();
 					echo '</td>
 					</tr>
@@ -3435,7 +3435,7 @@ class AdminProducts extends AdminTab
 			return '';
 		global $attributeJs, $images;
 		$shops = false;
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 			$shops = Shop::getShops();
 
 		$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
@@ -3935,7 +3935,7 @@ class AdminProducts extends AdminTab
 
 	public function getLineTableImage($image, $imagesTotal, $token, $shops)
 	{
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 			$imgObj = new Image((int)$image['id_image']);
 		$image_obj = new Image($image['id_image']);
 		$img_path = $image_obj->getExistingImgPath();
@@ -3953,7 +3953,7 @@ class AdminProducts extends AdminTab
 				<a '.($image['position'] == $imagesTotal ? ' style="display: none;"' : '').' href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a>';
 		$html .= '
 				</td>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 			foreach ($shops as $shop)
 				$html .= '
 				<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';

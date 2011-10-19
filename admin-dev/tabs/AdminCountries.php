@@ -80,9 +80,9 @@ class AdminCountries extends AdminTab
 					$tmp_addr_format = new AddressFormat();
 					$tmp_addr_format->id_country = $id_country;
 				}
-				
+
 				$tmp_addr_format->format = Tools::getValue('address_layout');
-				
+
 				if (strlen($tmp_addr_format->format) > 0)
 				{
 					if ($tmp_addr_format->checkFormatFields())
@@ -93,7 +93,7 @@ class AdminCountries extends AdminTab
 						foreach($errorList as $numError => $error)
 							$this->_errors[] = $error;
 					}
-						
+
 
 					if (!$save_status)
 						$this->_errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
@@ -109,10 +109,10 @@ class AdminCountries extends AdminTab
 	{
 		$html = '<ul>';
 		$appendContainer = '';
-		
+
 		$objectList = AddressFormat::getLiableClass('Address');
 		$objectList['Address'] = NULL;
-		
+
 		// Get the available properties for each class
 		foreach($objectList as $className => &$object)
 		{
@@ -130,13 +130,13 @@ class AdminCountries extends AdminTab
 		}
 		return $html .= '</ul>';
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		$defaultLayout = '';
-		
+
 		$defaultLayoutTab = array(
 			array('firstname', 'lastname'),
 			array('company'),
@@ -146,19 +146,19 @@ class AdminCountries extends AdminTab
 			array('postcode', 'city'),
 			array('Country:name'),
 			array('phone'));
-			
+
 		if (!($obj = $this->loadObject(true)))
 			return;
-			
+
 		foreach ($defaultLayoutTab as $line)
 			$defaultLayout .= implode(' ', $line)."\r\n";
 
 		echo '
 		<script type="text/javascript" language="javascript" src="'._PS_JS_DIR_.'jquery/jquery-fieldselection.js"></script>
 		<script type="text/javascript" language="javascript">
-			
+
 			lastLayoutModified = "";
-			
+
 			$(document).ready(function()
 			{
 				$(".availableFieldsList").css("display", "none");
@@ -187,9 +187,9 @@ class AdminCountries extends AdminTab
 				{
 					switchExplanationText("'.$this->l('Will delete the current layout').'");
 				});
-				
+
 			});
-			
+
 			function  switchExplanationText(text)
 			{
 				$("#explanationText").fadeOut("fast", function()
@@ -198,12 +198,12 @@ class AdminCountries extends AdminTab
 					$(this).fadeIn("fast");
 				});
 			}
-			
+
 			function addFieldsToCursorPosition(pattern)
 			{
 				$("#ordered_fields").replaceSelection(pattern + " ");
 			}
-			
+
 			function displayAvailableFields(containerName)
 			{
 				$(".availableFieldsList").each( function (){
@@ -212,7 +212,7 @@ class AdminCountries extends AdminTab
 				});
 				$("#availableListFieldsFor_" + containerName).slideToggle();
 			}
-			
+
 			function resetLayout(defaultLayout, type)
 			{
 				if (confirm("'.$this->l('Are you sure to apply this selection ?').'"))
@@ -220,7 +220,7 @@ class AdminCountries extends AdminTab
 				$("#ordered_fields").val(unescape(defaultLayout.replace(/\+/g, " ")));
 			}
 			}
-			
+
 		</script>
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
@@ -267,7 +267,7 @@ class AdminCountries extends AdminTab
 		$address_layout = AddressFormat::getAddressCountryFormat($obj->id);
 		if ($value = Tools::getValue('address_layout'))
 			$address_layout = $value;
-			
+
 		echo '		</select>
 					<p>'.$this->l('Geographical zone where country is located').'</p>
 				</div>
@@ -334,7 +334,7 @@ class AdminCountries extends AdminTab
 					<input type="radio" name="display_tax_label" id="display_tax_label_off" value="0" '.((!$this->getFieldValue($obj, 'display_tax_label') AND $obj->id) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="display_tax_label_off"> <img src="../img/admin/disabled.gif" alt="" title="" />'.$this->l('No').'</label>
 				</div>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop();

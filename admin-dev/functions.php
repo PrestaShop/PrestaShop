@@ -501,7 +501,7 @@ function runAdminTab($ajaxMode = false)
 				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
 				'.$bread.'</div>';
 
-			if (!$ajaxMode && Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL)
+			if (!$ajaxMode && Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
 			{
 				echo '<div class="multishop_info">';
 				if (Context::shop() == Shop::CONTEXT_GROUP)
@@ -516,7 +516,7 @@ function runAdminTab($ajaxMode = false)
 				{
 					if($ajaxMode)
 					{
-						// the differences with index.php is here 
+						// the differences with index.php is here
 						$adminObj->ajaxPreProcess();
 						$action = Tools::getValue('action');
 						// no need to use displayConf() here
@@ -532,8 +532,8 @@ function runAdminTab($ajaxMode = false)
 							$adminObj->{'displayAjax'.$action}();
 						else
 							$adminObj->displayAjax();
-						
-					
+
+
 					}
 					else
 					{

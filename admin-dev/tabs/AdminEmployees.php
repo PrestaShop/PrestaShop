@@ -176,7 +176,7 @@ class AdminEmployees extends AdminTab
 						 	echo '<option value="'.$profile['id_profile'].'"'.($profile['id_profile'] === $this->getFieldValue($obj, 'id_profile') ? ' selected="selected"' : '').'>'.$profile['name'].'</option>';
 				echo '</select> <sup>*</sup>
 				</div>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '
 					<script type="text/javascript">
@@ -265,7 +265,7 @@ class AdminEmployees extends AdminTab
 			$assos = self::getAssoShop($this->table);
 
 			if (count($assos[0]) == 0 && $this->table = 'employee')
-				if (Shop::isMultiShopActivated() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
+				if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
 					$this->_errors[] = Tools::displayError('The employee must be associated with at least one shop');
 		}
 		return parent::postProcess();

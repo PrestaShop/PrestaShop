@@ -124,7 +124,7 @@ class AdminGroups extends AdminTab
 					<p>'.$this->l('How the prices are displayed on order summary for this customer group (tax included or excluded).').'</p>
 				</div>
 				<div class="clear">&nbsp;</div>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop('group_shop');
@@ -460,10 +460,10 @@ class AdminGroups extends AdminTab
 				{
 					$reduction = Tools::getValue('reductionByCategory');
 					$id_category = Tools::getValue('id_category');
-					
+
 					$category = new Category((int)($id_category));
 					$category->addGroupsIfNoExist(Tools::getValue('id_group'));
-					
+
 					$groupReduction->id_category = (int)($id_category);
 					$groupReduction->id_group = (int)($obj->id);
 					$groupReduction->reduction = (float)($reduction) / 100;

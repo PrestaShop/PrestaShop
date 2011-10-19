@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -51,7 +51,7 @@ class AdminAttributes extends AdminTab
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
-		
+
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -88,13 +88,13 @@ class AdminAttributes extends AdminTab
 				<label>'.$this->l('Group:').' </label>
 				<div class="margin-form">
 					<select name="id_attribute_group" id="id_attribute_group" onchange="showAttributeColorGroup(\'id_attribute_group\', \'colorAttributeProperties\')">';
-		
+
 		foreach ($attributes_groups AS $attribute_group)
 			echo '<option value="'.$attribute_group['id_attribute_group'].'"'.($this->getFieldValue($obj, 'id_attribute_group') == $attribute_group['id_attribute_group'] ? ' selected="selected"' : '').'>'.$attribute_group['name'].'</option>';
 		echo '
 					</select><sup> *</sup>
 				</div>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop('group_shop');
@@ -140,11 +140,11 @@ class AdminAttributes extends AdminTab
 	{
 		if (!Combination::isFeatureActive())
 			return;
-		
-		
+
+
 		Module::hookExec('postProcessAttribute',
 		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessFeatureValue to stop saving process
-		
+
 		if (Tools::getValue('submitDel'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')
@@ -170,7 +170,7 @@ class AdminAttributes extends AdminTab
 			{
 				$sql = 'SELECT `position`+1
 						FROM `'._DB_PREFIX_.'attribute`
-						WHERE id_attribute_group = '.(int)Tools::getValue('id_attribute_group').' 
+						WHERE id_attribute_group = '.(int)Tools::getValue('id_attribute_group').'
 						ORDER BY position DESC';
 			// set the position of the new attribute in $_POST for postProcess() method
 				$_POST['position'] = DB::getInstance()->getValue($sql);
@@ -184,7 +184,7 @@ class AdminAttributes extends AdminTab
 		else
 			parent::postProcess();
 	}
-	
+
 
 }
 

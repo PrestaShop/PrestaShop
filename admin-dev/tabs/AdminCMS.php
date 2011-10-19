@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,7 +28,7 @@
 include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 
 class AdminCMS extends AdminTab
-{	
+{
 	private $_category;
 
 	public function __construct()
@@ -39,7 +39,7 @@ class AdminCMS extends AdminTab
 	 	$this->edit = true;
 	 	$this->view = true;
 	 	$this->delete = true;
-		
+
 		$this->fieldsDisplay = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'link_rewrite' => array('title' => $this->l('URL'), 'width' => 200),
@@ -47,19 +47,19 @@ class AdminCMS extends AdminTab
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 			);
-			
+
 		$this->_category = AdminCMSContent::getCurrentCMSCategory();
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
 		$this->_select = 'a.position ';
 		$this->_filter = 'AND c.id_cms_category = '.(int)($this->_category->id);
-		
+
 		parent::__construct();
 	}
-	
+
 	private function _displayDraftWarning($active)
 	{
-		return 
+		return
 		'<div class="warn draft" style="'.($active ? 'display:none' : '').'">
 			<p>
 			<span style="float: left">
@@ -72,11 +72,11 @@ class AdminCMS extends AdminTab
 			</p>
 		</div>';
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		$obj = $this->loadObject(true);
 		$divLangName = 'meta_title¤meta_description¤meta_keywords¤ccontent¤link_rewrite';
 
@@ -85,7 +85,7 @@ class AdminCMS extends AdminTab
 			'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			'.$this->_displayDraftWarning($obj->active).'
 			<fieldset><legend><img src="../img/admin/cms.gif" />'.$this->l('CMS page').'</legend>';
-			
+
 		// META TITLE
 		echo '<label>'.$this->l('CMS Category:').' </label>
 				<div class="margin-form">
@@ -101,10 +101,10 @@ class AdminCMS extends AdminTab
 			echo '	<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 						<input size="40" type="text" onkeyup="copyMeta2friendlyURL();" id="name_'.$language['id_lang'].'" name="meta_title_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'meta_title', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" /><sup> *</sup>
 					</div>';
-		
+
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $divLangName, 'meta_title');
 		echo '	</div><div class="clear space">&nbsp;</div>';
-		
+
 		// META DESCRIPTION
 		echo '	<label>'.$this->l('Meta description').' </label>
 				<div class="margin-form">';
@@ -114,7 +114,7 @@ class AdminCMS extends AdminTab
 					</div>';
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $divLangName, 'meta_description');
 		echo '	</div><div class="clear space">&nbsp;</div>';
-		
+
 		// META KEYWORDS
 		echo '	<label>'.$this->l('Meta keywords').' </label>
 				<div class="margin-form">';
@@ -124,7 +124,7 @@ class AdminCMS extends AdminTab
 					</div>';
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $divLangName, 'meta_keywords');
 		echo '	</div><div class="clear space">&nbsp;</div>';
-		
+
 		// LINK REWRITE
 		echo '	<label>'.$this->l('Friendly URL').' </label>
 				<div class="margin-form">';
@@ -134,7 +134,7 @@ class AdminCMS extends AdminTab
 					</div>';
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $divLangName, 'link_rewrite');
 		echo '	</div><div class="clear space">&nbsp;</div>';
-		
+
 		// CONTENT
 		echo '	<label>'.$this->l('Page content').' </label>
 				<div class="margin-form">';
@@ -151,7 +151,7 @@ class AdminCMS extends AdminTab
 					<input type="radio" name="active" id="active_off" onclick="toggleDraftWarning(true);" value="0" '.(!$this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop();
@@ -169,7 +169,7 @@ class AdminCMS extends AdminTab
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$this->context->language->iso_code.'.js') ? $this->context->language->iso_code : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		echo '
-			<script type="text/javascript">	
+			<script type="text/javascript">
 			var iso = \''.$isoTinyMCE.'\' ;
 			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
 			var ad = \''.$ad.'\' ;
@@ -177,10 +177,10 @@ class AdminCMS extends AdminTab
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>';
 	}
-	
+
 	public function display($token = NULL)
 	{
-		
+
 		if (($id_cms_category = (int)Tools::getValue('id_cms_category')))
 			self::$currentIndex .= '&id_cms_category='.$id_cms_category;
 		$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : NULL, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : NULL);
@@ -194,9 +194,9 @@ class AdminCMS extends AdminTab
 		$this->displayList($token);
 		echo '</div>';
 	}
-	
+
 	public function displayList($token = NULL)
-	{	
+	{
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader($token);
 		if (!sizeof($this->_list))
@@ -279,7 +279,7 @@ class AdminCMS extends AdminTab
 							$admin_dir = dirname($_SERVER['PHP_SELF']);
 							$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
 							$token = Tools::encrypt('PreviewCMS'.$cms->id);
-	
+
 							$preview_url .= $object->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
 						}
 						Tools::redirectAdmin($preview_url);
@@ -301,7 +301,7 @@ class AdminCMS extends AdminTab
 							$admin_dir = dirname($_SERVER['PHP_SELF']);
 							$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
 							$token = Tools::encrypt('PreviewCMS'.$cms->id);
-	
+
 							$preview_url .= $object->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
 						}
 						Tools::redirectAdmin($preview_url);

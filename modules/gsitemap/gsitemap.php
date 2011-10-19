@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -40,7 +40,7 @@ class Gsitemap extends Module
 		$this->version = '1.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
 		parent::__construct();
 
 		$this->displayName = $this->l('Google sitemap');
@@ -55,7 +55,7 @@ class Gsitemap extends Module
 		file_put_contents(GSITEMAP_FILE, '');
 		return parent::uninstall();
 	}
-	
+
 	private function _postValidation()
 	{
 		file_put_contents(GSITEMAP_FILE, '');
@@ -64,7 +64,7 @@ class Gsitemap extends Module
 		else
 			fclose($fp);
 	}
-	
+
 	private function getUrlWith($url, $key, $value)
 	{
 		if (empty($value))
@@ -79,7 +79,7 @@ class Gsitemap extends Module
 		Configuration::updateValue('GSITEMAP_ALL_CMS', (int)Tools::getValue('GSITEMAP_ALL_CMS'));
 		Configuration::updateValue('GSITEMAP_ALL_PRODUCTS', (int)Tools::getValue('GSITEMAP_ALL_PRODUCTS'));
 
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 			$res = $this->generateSitemapIndex();
 		else
 			$res = $this->generateSitemap(Configuration::get('PS_SHOP_DEFAULT'), GSITEMAP_FILE);
@@ -88,10 +88,10 @@ class Gsitemap extends Module
         $this->_html .= $res ? $this->l('Sitemap file generated') : $this->l('Error while creating sitemap file');
         $this->_html .= '</h3>';
     }
-    
+
     /**
      * Generate sitemap index to reference the sitemap of each shop
-     * 
+     *
      * @return bool
      */
     private function generateSitemapIndex()
@@ -112,7 +112,7 @@ XML;
     				AND su.active = 1';
     	if (!$result = Db::getInstance()->executeS($sql))
     		return false;
-    	
+
     	$res = true;
     	foreach ($result as $row)
     	{
@@ -125,14 +125,14 @@ XML;
     			$this->_addSitemapIndexNode($xml, 'http://'.$row['domain'].(($row['uri']) ? $row['uri'] : '/').$filename, date('Y-m-d'));
     		$res &= $last;
     	}
-    	
+
 		$fp = fopen(GSITEMAP_FILE, 'w');
 		fwrite($fp, $xml->asXML());
 		fclose($fp);
-		
+
 		return $res && file_exists(GSITEMAP_FILE);
     }
-    
+
     /**
      * Generate a sitemap for a shop
      *
@@ -146,14 +146,14 @@ XML;
 		$shop = new Shop($shopID);
 		if (!$shop->id)
 			return false;
-				
+
 		$xmlString = <<<XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 </urlset>
 XML;
-		
+
 		$xml = new SimpleXMLElement($xmlString);
 
 		if (Configuration::get('PS_REWRITING_SETTINGS') AND sizeof($langs) > 1)
@@ -161,7 +161,7 @@ XML;
 				$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__.$lang['iso_code'].'/', '1.00', 'daily', date('Y-m-d'));
 		else
 			$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__, '1.00', 'daily', date('Y-m-d'));
-		
+
 		/* CMS Generator */
 		if (Configuration::get('GSITEMAP_ALL_CMS') OR !Module::isInstalled('blockcms'))
 			$sql = 'SELECT DISTINCT '.(Configuration::get('PS_REWRITING_SETTINGS') ? 'cl.id_cms, cl.link_rewrite, cl.id_lang' : 'cl.id_cms').'
@@ -180,14 +180,14 @@ XML;
 					WHERE l.`active` = 1
 						AND cs.id_shop = '.$shopID.'
 					ORDER BY cl.id_cms, cl.id_lang ASC';
-		
+
 		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		foreach ($cmss AS $cms)
 		{
 			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $this->context->link->getCMSLink((int)$cms['id_cms'], $cms['link_rewrite'], false, (int)$cms['id_lang']) : $this->context->link->getCMSLink((int)$cms['id_cms']);
-			$this->_addSitemapNode($xml, $tmpLink, '0.8', 'daily');				
+			$this->_addSitemapNode($xml, $tmpLink, '0.8', 'daily');
 		}
-		
+
 		/* Categories Generator */
 		$limits = Category::getInterval($shop->getCategory());
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
@@ -211,15 +211,15 @@ XML;
 					WHERE nleft >= '.$limits['nleft'].'
 						AND nright <= '.$limits['nright'].'
 					ORDER BY c.id_category ASC';
-			$categories = Db::getInstance()->executeS($sql);			
+			$categories = Db::getInstance()->executeS($sql);
 		}
-		
+
 		foreach($categories as $category)
 		{
 			if (($priority = 0.9 - ($category['level_depth'] / 10)) < 0.1)
 				$priority = 0.1;
-			
-			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $this->context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang']) : $this->context->link->getCategoryLink((int)$category['id_category']);	
+
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $this->context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang']) : $this->context->link->getCategoryLink((int)$category['id_category']);
 			$this->_addSitemapNode($xml, $tmpLink, $priority, 'weekly', substr($category['date_upd'], 0, 10));
 		}
 
@@ -242,7 +242,7 @@ XML;
 				'.(Configuration::get('GSITEMAP_ALL_PRODUCTS') ? '' : 'HAVING level_depth IS NOT NULL').'
 				ORDER BY pl.id_product, pl.id_lang ASC';
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-				
+
 		$tmp = null;
 		$res = null;
 		foreach($products AS $product)
@@ -257,7 +257,7 @@ XML;
 				$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
 			}
 		}
-		
+
 		foreach ($res as $product)
 		{
 			if (($priority = 0.7 - ($product['level_depth'] / 10)) < 0.1)
@@ -267,30 +267,30 @@ XML;
 			$sitemap = $this->_addSitemapNode($xml, $tmpLink, $priority, 'weekly', substr($product['date_upd'], 0, 10));
 			$sitemap = $this->_addSitemapNodeImage($sitemap, $product);
 		}
-		
+
 		/* Add classic pages (contact, best sales, new products...) */
 		$pages = array(
-			'authentication' => true, 
-			'best-sales' => false, 
-			'contact' => true, 
-			'discount' => false, 
-			'index' => false, 
-			'manufacturer' => false, 
-			'new-products' => false, 
-			'prices-drop' => false, 
-			'supplier' => false, 
+			'authentication' => true,
+			'best-sales' => false,
+			'contact' => true,
+			'discount' => false,
+			'index' => false,
+			'manufacturer' => false,
+			'new-products' => false,
+			'prices-drop' => false,
+			'supplier' => false,
 			'store' => false);
-		
+
 		// Don't show suppliers and manufacturers if they are disallowed
 		if (!Module::getInstanceByName('blockmanufacturer')->id && !Configuration::get('PS_DISPLAY_SUPPLIERS'))
 			unset($pages['manufacturer']);
-			
+
 		if (!Module::getInstanceByName('blocksupplier')->id && !Configuration::get('PS_DISPLAY_SUPPLIERS'))
 			unset($pages['supplier']);
 
 		// Generate nodes for pages
-		if(Configuration::get('PS_REWRITING_SETTINGS'))		
-			foreach ($pages AS $page => $ssl)		
+		if(Configuration::get('PS_REWRITING_SETTINGS'))
+			foreach ($pages AS $page => $ssl)
 				foreach($langs as $lang)
 					$this->_addSitemapNode($xml, $this->context->link->getPageLink($page, $ssl, $lang['id_lang']), '0.5', 'monthly');
 		else
@@ -298,7 +298,7 @@ XML;
 				$this->_addSitemapNode($xml, $this->context->link->getPageLink($page, $ssl), '0.5', 'monthly');
 
         $xmlString = $xml->asXML();
-        
+
         // Replace URL in XML strings by real shops URL
         if ($replaceUrl)
         	$xmlString = str_replace(array(Tools::getShopDomain(true), Tools::getShopDomainSsl(true)), $replaceUrl, $xmlString);
@@ -306,20 +306,20 @@ XML;
         $fp = fopen($filename, 'w');
         fwrite($fp, $xmlString);
         fclose($fp);
-        
+
         return file_exists($filename);
     }
-    
+
 	private function _addSitemapIndexNode($xml, $loc, $last_mod)
-	{		
+	{
 		$sitemap = $xml->addChild('sitemap');
 		$sitemap->addChild('loc', htmlspecialchars($loc));
 		$sitemap->addChild('lastmod', $last_mod);
 		return $sitemap;
 	}
-	
+
 	private function _addSitemapNode($xml, $loc, $priority, $change_freq, $last_mod = NULL)
-	{		
+	{
 		$sitemap = $xml->addChild('url');
 		$sitemap->addChild('loc', htmlspecialchars($loc));
 		$sitemap->addChild('priority',  $priority);
@@ -328,7 +328,7 @@ XML;
 		$sitemap->addChild('changefreq', $change_freq);
 		return $sitemap;
 	}
-	
+
 	private function _addSitemapNodeImage($xml, $product)
 	{
 		foreach ($product['images'] as $img)
@@ -345,12 +345,12 @@ XML;
     private function _displaySitemap()
     {
         if (file_exists(GSITEMAP_FILE) AND filesize(GSITEMAP_FILE))
-        {			
+        {
             $fp = fopen(GSITEMAP_FILE, 'r');
             $fstat = fstat($fp);
             fclose($fp);
             $xml = simplexml_load_file(GSITEMAP_FILE);
-			
+
             $nbPages = sizeof($xml->url);
 
             $this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
@@ -376,7 +376,7 @@ XML;
 			value="'.((!file_exists(GSITEMAP_FILE)) ? $this->l('Generate sitemap file') : $this->l('Update sitemap file')).'" />
 		</form>';
 	}
-	
+
 	public function getContent()
 	{
 		$this->_html .= '<h2>'.$this->l('Search Engine Optimization').'</h2>

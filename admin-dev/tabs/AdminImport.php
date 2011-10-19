@@ -791,7 +791,7 @@ class AdminImport extends AdminTab
 			else
 			{
 				// Associate product to shop
-				if (Shop::isMultiShopActivated() && $product->shop)
+				if (Shop::isFeatureActive() && $product->shop)
 				{
 					$product->shop = explode(',', $product->shop);
 					$shops = array();
@@ -1067,7 +1067,7 @@ class AdminImport extends AdminTab
 				$customer->passwd = md5(_COOKIE_KEY_.$customer->passwd);
 
 			// Associate product to shop
-			if (Shop::isMultiShopActivated() && $customer->id_shop)
+			if (Shop::isFeatureActive() && $customer->id_shop)
 			{
 				if (!is_numeric($customer->id_shop))
 					$customer->id_shop = Shop::getIdByName($customer->id_shop);
@@ -1259,7 +1259,7 @@ class AdminImport extends AdminTab
 				if ($res)
 				{
 					// Associate supplier to group shop
-					if (Shop::isMultiShopActivated() && $manufacturer->shop)
+					if (Shop::isFeatureActive() && $manufacturer->shop)
 					{
 						$manufacturer->shop = explode(',', $manufacturer->shop);
 						$shops = array();
@@ -1316,7 +1316,7 @@ class AdminImport extends AdminTab
 				else
 				{
 					// Associate supplier to group shop
-					if (Shop::isMultiShopActivated() && $supplier->shop)
+					if (Shop::isFeatureActive() && $supplier->shop)
 					{
 						$supplier->shop = explode(',', $supplier->shop);
 						$shops = array();

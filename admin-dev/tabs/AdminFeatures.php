@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -177,7 +177,7 @@ class AdminFeatures extends AdminTab
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
-		
+
 		parent::displayForm();
 
 		if (!($obj = $this->loadObject(true)))
@@ -204,7 +204,7 @@ class AdminFeatures extends AdminTab
 		echo '
 					<div class="clear"></div>
 				</div>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop('group_shop');
@@ -230,9 +230,9 @@ class AdminFeatures extends AdminTab
 	{
 		if (!Feature::isFeatureActive())
 			return ;
-		
+
 		$this->adminFeaturesValues->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
-		
+
 		if (Tools::isSubmit('submitAddfeature_value') || Tools::isSubmit('submitDelfeature_value'))
 			$this->adminFeaturesValues->postProcess($this->token);
 
@@ -265,7 +265,7 @@ class AdminFeatures extends AdminTab
 				if ($id_feature <= 0)
 				{
 					$sql = 'SELECT `position`+1
-							FROM `'._DB_PREFIX_.'feature` 
+							FROM `'._DB_PREFIX_.'feature`
 							ORDER BY position DESC';
 				// set the position of the new feature in $_POST for postProcess() method
 					$_POST['position'] = DB::getInstance()->getValue($sql);
@@ -276,7 +276,7 @@ class AdminFeatures extends AdminTab
 						$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 				parent::postProcess();
 			}
-			
+
 		}
 		else
 			parent::postProcess();

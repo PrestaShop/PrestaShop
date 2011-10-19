@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,20 +36,20 @@ class AdminZones extends AdminTab
 	 	$this->lang = false;
 	 	$this->edit = true;
 	 	$this->delete = true;
-				
+
 		$this->fieldsDisplay = array(
 		'id_zone' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 		'name' => array('title' => $this->l('Zone'), 'width' => 150),
 		'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
-	
+
 		parent::__construct();
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 		echo '
@@ -70,7 +70,7 @@ class AdminZones extends AdminTab
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Allow or disallow shipping to this zone').'</p>
 				</div>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop('group_shop');

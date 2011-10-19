@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,9 +36,9 @@ class AdminSuppliers extends AdminTab
 	 	$this->delete = true;
 		$this->_select = 'COUNT(p.`id_product`) AS products';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_supplier` = p.`id_supplier`)';
-		
+
  		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
-		
+
 		$this->fieldsDisplay = array(
 			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Name'), 'width' => 120),
@@ -46,16 +46,16 @@ class AdminSuppliers extends AdminTab
 			'products' => array('title' => $this->l('Number of products'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
-	
+
 		parent::__construct();
 	}
-	
+
 	public function viewsupplier()
 	{
 		if (!($supplier = $this->loadObject()))
-			return;	
+			return;
 		echo '<h2>'.$supplier->name.'</h2>';
-		
+
 		$products = $supplier->getProductsLite($this->context->language->id);
 		echo '<h3>'.$this->l('Total products:').' '.sizeof($products).'</h3>';
 		foreach ($products AS $product)
@@ -118,11 +118,11 @@ class AdminSuppliers extends AdminTab
 			}
 		}
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($supplier = $this->loadObject(true)))
 			return;
 
@@ -144,7 +144,7 @@ class AdminSuppliers extends AdminTab
 						<input size="33" type="text" name="description_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($supplier, 'description', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 						<p class="clear">'.$this->l('Will appear in supplier list').'</p>
-					</div>';							
+					</div>';
 				$this->displayFlags($this->_languages, $this->_defaultFormLanguage, $langtags, 'description');
 		echo '	<div class="clear"></div>
 				</div>
@@ -193,7 +193,7 @@ class AdminSuppliers extends AdminTab
 					<input type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($supplier, 'active') ? 'checked="checked" ' : '').'/>
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				</div>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('GroupShop association:').'</label><div class="margin-form">';
 			$this->displayAssoShop('group_shop');
@@ -207,7 +207,7 @@ class AdminSuppliers extends AdminTab
 			</fieldset>
 		</form>';
 	}
-	
+
 	public function afterImageUpload()
 	{
 		/* Generate image with differents size */

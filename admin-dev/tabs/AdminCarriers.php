@@ -101,9 +101,9 @@ class AdminCarriers extends AdminTab
 			$(document).ready(function(){
 				// At the loading
 				($("input[name=\'is_free\']:checked").val() == 0) ? $("#shipping_costs_div").show(): $("#shipping_costs_div").hide();
-			
+
 				$("input[name=\'is_free\']").live("change", function(){
-					($("input[name=\'is_free\']:checked").val() == 0) ? $("#shipping_costs_div").show(): $("#shipping_costs_div").hide();			
+					($("input[name=\'is_free\']:checked").val() == 0) ? $("#shipping_costs_div").show(): $("#shipping_costs_div").hide();
 				});
 			});
 		</script>
@@ -144,13 +144,13 @@ class AdminCarriers extends AdminTab
 					if (is_array($carrier_zones))
 						foreach ($carrier_zones as $carrier_zone)
 							$carrier_zones_ids[] = $carrier_zone['id_zone'];
-					
+
 					$zones = Zone::getZones(false);
 					foreach ($zones as $zone)
 						echo '<input type="checkbox" id="zone_'.$zone['id_zone'].'" name="zone_'.$zone['id_zone'].'" value="true" '.
 							Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids) ? ' checked="checked"' : '')).'>
 							<label class="t" for="zone_'.$zone['id_zone'].'"> <b>'.$zone['name'].'</b></label><br />';
-					
+
 				echo '<p>'.$this->l('The zone in which this carrier is to be used').'</p>
 	</div>
 				<label>'.$this->l('Group access').'</label>
@@ -255,7 +255,7 @@ class AdminCarriers extends AdminTab
 					echo '</div>';
 				}
 				echo '</div>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop();

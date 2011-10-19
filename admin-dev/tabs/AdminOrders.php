@@ -681,7 +681,7 @@ class AdminOrders extends AdminTab
 		<br />
 		<fieldset style="width: 400px">
 			<legend><img src="../img/admin/details.gif" /> '.$this->l('Order details').'</legend>';
-		if (Shop::isMultiShopActivated())
+		if (Shop::isFeatureActive())
 		{
 			echo '<label>'.$this->l('Shop:').' </label>
 			<div style="margin: 2px 0 1em 190px;">'.Shop::getInstance($order->id_shop)->name.'</div>';

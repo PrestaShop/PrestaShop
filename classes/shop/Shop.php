@@ -728,7 +728,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * @return bool Return true if there is more than one shop
 	 */
-	public static function isMultiShopActivated()
+	public static function isFeatureActive()
 	{
 		static $total = null;
 

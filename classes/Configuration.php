@@ -425,7 +425,7 @@ class ConfigurationCore extends ObjectModel
 							|| (Context::shop() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
 		}
 
-		return (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && $testContext);
+		return (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $testContext);
 	}
 
 	/**

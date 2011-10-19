@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,7 +29,7 @@ class AdminDiscounts extends AdminTab
 {
 	public function __construct()
 	{
-		$this->context = Context::getContext();	 	
+		$this->context = Context::getContext();
 		$this->table = 'discount';
 	 	$this->className = 'Discount';
 	 	$this->lang = true;
@@ -42,12 +42,12 @@ class AdminDiscounts extends AdminTab
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'currency` c ON (c.`id_currency` = a.`id_currency`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type` dt ON (dt.`id_discount_type` = a.`id_discount_type`)
 						LEFT JOIN `'._DB_PREFIX_.'discount_type_lang` dtl ON (dt.`id_discount_type` = dtl.`id_discount_type` AND dtl.`id_lang` = '.(int)$this->context->language->id.')';
-		
+
 		$typesArray = array();
 		$types = Discount::getDiscountTypes($this->context->language->id);
 		foreach ($types AS $type)
 			$typesArray[$type['id_discount_type']] = $type['name'];
-			
+
 		$this->fieldsDisplay = array(
 			'id_discount' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Code'), 'width' => 85, 'prefix' => '<span class="discount_name">', 'suffix' => '</span>', 'filter_key' => 'a!name'),
@@ -71,11 +71,11 @@ class AdminDiscounts extends AdminTab
 
 		parent::__construct();
 	}
-	
+
 	protected function copyFromPost(&$object, $table)
-	{		
+	{
 		parent::copyFromPost($object, $table);
-	
+
 		$object->cumulable = (!isset($_POST['cumulable']) ? false : true);
 		$object->cumulable_reduction = (!isset($_POST['cumulable_reduction']) ? false : true);
 	}
@@ -92,7 +92,7 @@ class AdminDiscounts extends AdminTab
 			if (Tools::getValue('id_discount_type') == 0)
 				$this->_errors[] = Tools::displayError('Please set a type for this voucher.');
 			if (Tools::getValue('id_discount_type') == Discount::AMOUNT AND Tools::getValue('id_currency') == 0)
-				$this->_errors[] = Tools::displayError('Please set a currency for this voucher.');			
+				$this->_errors[] = Tools::displayError('Please set a currency for this voucher.');
 			if ((Tools::getValue('id_discount_type') == Discount::PERCENT || Tools::getValue('id_discount_type') == 2) && !Tools::getValue('value'))
 				$this->_errors[] = Tools::displayError('Please set a amount for this voucher.');
 			if (!Validate::isBool_Id(Tools::getValue('id_target')))
@@ -173,7 +173,7 @@ class AdminDiscounts extends AdminTab
 										'{lastname}' => $customer->lastname,
 										'{email}' => $customer->email,
 										'{voucher_num}' => $object->name);
-								
+
 									@Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'voucher_new', Mail::l('New voucher'), $data, $customer->email, $customer->firstname.' '.$customer->lastname);
 								}
 							}
@@ -181,7 +181,7 @@ class AdminDiscounts extends AdminTab
 							{
 								$customer = null;
 								$customers = $group->getCustomers();
-								
+
 								if ($customers)
 									foreach ($customers as $customer)
 									{
@@ -190,11 +190,11 @@ class AdminDiscounts extends AdminTab
 											'{lastname}' => $customer['lastname'],
 											'{email}' => $customer['email'],
 											'{voucher_num}' => $object->name);
-									
+
 										@Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'voucher_new', Mail::l('New voucher'), $data, $customer['email'], $customer['firstname'].' '.$customer['lastname']);
 									}
 							}
-							
+
 							Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&token='.$token);
 						}
 					}
@@ -211,10 +211,10 @@ class AdminDiscounts extends AdminTab
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
-		
+
 		echo '
 		<script type="text/javascript">
 			function discountType()
@@ -233,13 +233,13 @@ class AdminDiscounts extends AdminTab
 					$("#percent-span").css("display", "none");
 					$("#id_currency").css("display", "block");
 					$(\'#behavior_not_exhausted\').show();
-					
+
 				}
 				else if ($("#id_discount_type").val() == '.Discount::FREE_SHIPPING.')
 					$("#value-div").css("display", "none");
 				if ($(\'#id_discount_type\').val() != '.Discount::AMOUNT.')
 					$(\'#behavior_not_exhausted\').hide();
-					
+
 			}
 			$(document).ready(function(){
 				$("#id_discount_type").change(function(){discountType();});
@@ -298,7 +298,7 @@ class AdminDiscounts extends AdminTab
 						<input size="33" type="text" name="description_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'description', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" /><sup> *</sup>
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 						<p class="clear">'.$this->l('Will appear in cart next to voucher code').'</p>
-					</div>';							
+					</div>';
 		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'description', 'description');
 		echo '	</div>
 				<div class="clear" / >
@@ -365,13 +365,13 @@ class AdminDiscounts extends AdminTab
 						</optgroup>
 					</select><br />'.$this->l('Filter:').' <input type="text" size="25" name="filter" id="filter" onkeyup="fillCustomersAjax();" class="space" value="" />
 					<script type="text/javascript">
-						var formDiscount = document.layers ? document.forms.discount : document.discount;	
+						var formDiscount = document.layers ? document.forms.discount : document.discount;
 						function fillCustomersAjax()
 						{
 							var filterValue = \''.(($value = (int)($this->getFieldValue($obj, 'id_customer'))) ? '0_'.$value : (($value = (int)($this->getFieldValue($obj, 'id_group'))) ? '1_'.$value : '')).'\';
 							if ($(\'#filter\').val())
 								filterValue = $(\'#filter\').val();
-							
+
 							$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",{ajaxDiscountCustomers:1,filter:filterValue},
 								function(obj) {
 									var groups_length = obj.groups.length;
@@ -381,7 +381,7 @@ class AdminDiscounts extends AdminTab
 									if (obj.customers.length == 0)
 										customers_length = 1;
 									formDiscount.id_target.length = 1 + customers_length + groups_length;
-									
+
 									if (obj.groups.length == 0)
 									{
 										formDiscount.id_target.options[1].value = -1;
@@ -403,13 +403,13 @@ class AdminDiscounts extends AdminTab
 											formDiscount.id_target.options[50].className = "groups_filtered";
 										}
 									}
-									
+
 									if (obj.customers.length == 0)
 									{
 										formDiscount.id_target.options[groups_length+1].value = -1;
 										formDiscount.id_target.options[groups_length+1].text = \''.$this->l('No match found').'\';
 										formDiscount.id_target.options[groups_length+1].className = "customers_filtered";
-									}										
+									}
 									else
 									{
 										for (i = 0; i < obj.customers.length && i < 50; i++)
@@ -441,11 +441,11 @@ class AdminDiscounts extends AdminTab
 								}
 							);
 						}
-						fillCustomersAjax(); 
+						fillCustomersAjax();
 					</script>
 				</div><br />';
 		includeDatepicker(array('date_from', 'date_to'), true);
-		echo '		
+		echo '
 				<label>'.$this->l('From:').' </label>
 				<div class="margin-form">
 					<input type="text" size="20" id="date_from" name="date_from" value="'.($this->getFieldValue($obj, 'date_from') ? htmlentities($this->getFieldValue($obj, 'date_from'), ENT_COMPAT, 'UTF-8') : date('Y-m-d H:i:s')).'" /> <sup>*</sup>
@@ -472,7 +472,7 @@ class AdminDiscounts extends AdminTab
 					<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 					<p>'.$this->l('Enable or disable voucher').'</p>
 				</div>';
-				if (Shop::isMultiShopActivated())
+				if (Shop::isFeatureActive())
 				{
 					echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 					$this->displayAssoShop();

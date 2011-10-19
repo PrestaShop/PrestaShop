@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -58,7 +58,7 @@ class AdminReferrers extends AdminTab
 	 	$this->view = true;
 	 	$this->edit = true;
 		$this->delete = true;
-		
+
 		parent::__construct();
 
 		$this->_select = 'SUM(sa.cache_visitors) AS cache_visitors, SUM(sa.cache_visits) AS cache_visits, SUM(sa.cache_pages) AS cache_pages,
@@ -88,19 +88,19 @@ class AdminReferrers extends AdminTab
 	{
 		return (!Tools::isSubmit('add'.$this->table) AND !Tools::isSubmit('submitAdd'.$this->table) AND !Tools::isSubmit('update'.$this->table));
 	}
-	
+
 	public function displayJavascript()
 	{
 		$products = Product::getSimpleProducts($this->context->language->id);
 		$productsArray = array();
 		foreach ($products as $product)
 			$productsArray[] = $product['id_product'];
-			
+
 		return '
 			<script type="text/javascript">
 				var productIds = new Array(\''.implode('\',\'', $productsArray).'\');
 				var referrerStatus = new Array();
-				
+
 				function newProductLine(id_referrer, result)
 				{
 					return \'\'+
@@ -123,7 +123,7 @@ class AdminReferrers extends AdminTab
 					\'	<td align="center">--</td>\'+
 					\'</tr>\';
 				}
-				
+
 				function showProductLines(id_referrer)
 				{
 					if (!referrerStatus[id_referrer])
@@ -146,12 +146,12 @@ class AdminReferrers extends AdminTab
 				}
 			</script>';
 	}
-	
+
 	public function display()
 	{
 		if (!Tools::isSubmit('viewreferrer'))
 			echo $this->displayJavascript();
-		
+
 		if ($this->enableCalendar())
 		{
 			echo '
@@ -195,7 +195,7 @@ class AdminReferrers extends AdminTab
 		parent::display();
 		echo '<div class="clear space">&nbsp;</div>';
 	}
-	
+
 	public function postProcess()
 	{
 		if ($this->enableCalendar())
@@ -213,14 +213,14 @@ class AdminReferrers extends AdminTab
 			Referrer::refreshCache();
 		if (Tools::isSubmit('submitRefreshIndex'))
 			Referrer::refreshIndex();
-		
+
 		return parent::postProcess();
 	}
-	
+
 	public function displayForm($isMainTab = true)
 	{
 		parent::displayForm();
-		
+
 		if (!($obj = $this->loadObject(true)))
 			return;
 		foreach (array('http_referer_like', 'http_referer_regexp', 'request_uri_like', 'request_uri_regexp') as $field)
@@ -262,7 +262,7 @@ class AdminReferrers extends AdminTab
 					<input type="text" size="8" name="percent_fee" value="'.number_format((float)($this->getFieldValue($obj, 'percent_fee')), 2).'" />
 					<p>'.$this->l('Percent of the sales.').'</p>
 				</div>';
-			if (Shop::isMultiShopActivated())
+			if (Shop::isFeatureActive())
 			{
 				echo '<label>'.$this->l('Shop association:').'</label><div class="margin-form">';
 				$this->displayAssoShop();
@@ -370,7 +370,7 @@ class AdminReferrers extends AdminTab
 			<br class="clear" />
 		</form>';
 	}
-	
+
 	public function viewreferrer()
 	{
 		$referrer = new Referrer((int)(Tools::getValue('id_referrer')));
@@ -399,7 +399,7 @@ class AdminReferrers extends AdminTab
 		echo '		}
 				)
 			}
-			
+
 			function fillProducts(filter)
 			{
 				var form = document.layers ? document.forms.product : document.product;
@@ -407,7 +407,7 @@ class AdminReferrers extends AdminTab
 				$.getJSON("'.dirname(self::$currentIndex).'/ajax.php",
 					{ajaxReferrers:1,ajaxFillProducts:1,id_employee:'.(int)$this->context->employee->id.',token:"'.Tools::getValue('token').'",id_lang:'.(int)$this->context->language->id.',filter:filter},
 					function(j) {
-						
+
 						form.selectProduct.length = j.length + 1;
 						for (var i = 0; i < j.length; i++)
 						{
@@ -436,7 +436,7 @@ class AdminReferrers extends AdminTab
 			updateConversionRate(0);
 		</script>';
 	}
-	
+
 	public function displayListContent($token = NULL)
 	{
 		$irow = 0;
