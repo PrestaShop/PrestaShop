@@ -41,14 +41,13 @@ class AdminStockInstantStateControllerCore  extends AdminController
 		$this->context = Context::getContext();
 
 		$this->fieldsDisplay = array(
-			'id_product' => array('title' => $this->l('Id product'), 'align' => 'center', 'width' => 25, 'filter_key' => 's!id_product'),
-			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 25),
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 25, 'filter_key' => 'p!reference'),
-			'designation' => array('title' => $this->l('Product name'), 'width' => 130, 'filter_key' => 'designation', 'havingFilter' => true),
-			'physical_quantity' => array('title' => $this->l('Physical quantity'), 'align' => 'center', 'havingFilter' => true),
-			'price_te' => array('title' => $this->l('Price'), 'align' => 'center', 'width' => 25, 'havingFilter' => true),
-			'usable_quantity' => array('title' => $this->l('Usable quantity'), 'align' => 'center', 'havingFilter' => true),
-			'real_quantity' => array('title' => $this->l('Real quantity'), 'align' => 'center', 'filter' => false, 'search' => false, 'orderby' => false)
+			'ean13' => array('title' => $this->l('EAN13'), 'width' => 110, 'widthColumn' => 110),
+			'reference' => array('title' => $this->l('Reference'), 'width' => 110, 'widthColumn' => 110, 'filter_key' => 'p!reference'),
+			'designation' => array('title' => $this->l('Product name'), 'filter_key' => 'designation', 'havingFilter' => true, 'width' => 300),
+			'physical_quantity' => array('title' => $this->l('Physical quantity'), 'align' => 'center', 'width' => 25, 'widthColumn' => 25, 'havingFilter' => true),
+			'price_te' => array('title' => $this->l('Price'), 'align' => 'center', 'width' => 45, 'widthColumn' => 45, 'havingFilter' => true),
+			'usable_quantity' => array('title' => $this->l('Usable quantity'), 'align' => 'center', 'width' => 25, 'widthColumn' => 25, 'havingFilter' => true),
+			'real_quantity' => array('title' => $this->l('Real quantity'), 'align' => 'center', 'width' => 25, 'widthColumn' => 25, 'filter' => false, 'search' => false, 'orderby' => false)
 		);
 
 		$this->display = 'list';
@@ -82,8 +81,11 @@ class AdminStockInstantStateControllerCore  extends AdminController
 			AND s.id_warehouse = (SELECT id_warehouse FROM '._DB_PREFIX_.'stock WHERE id_stock = '.(int)Tools::getValue('id').')
 		GROUP BY id_stock';
 		
+		$data = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		foreach ($data as &$row)
+			$row['price_te'] = Tools::displayPrice($row['price_te'], $this->getCurrency());
 		echo Tools::jsonEncode(array(
-				'data'=> Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query),
+				'data'=> $data,
 				'fields_display' => $this->fieldsDisplay
 		));
 		die();
@@ -114,6 +116,16 @@ class AdminStockInstantStateControllerCore  extends AdminController
 		return $warehouse;
 	}
 	
+	protected function getCurrency()
+	{
+		static $currency = null;
+		if (is_null($currency))
+		{
+			$warehouse = new Warehouse($this->getCurrentWarehouseId());
+			$currency = new Currency($warehouse->id_currency);
+		}
+		return $currency;
+	}
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		/* Manage default params values */
@@ -135,8 +147,8 @@ class AdminStockInstantStateControllerCore  extends AdminController
 		$query = 'SELECT SQL_CALC_FOUND_ROWS
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as designation,
 			id_stock, p.id_product, s.id_product_attribute, ean13, p.reference,
-			IF(((count(id_stock) - count(DISTINCT id_stock))>1), s.price_te, \'--\') as price_te,
-			IF(((count(id_stock) - count(DISTINCT id_stock))>1), 0, 1) as need_details,
+			IF((count(DISTINCT id_stock)=1), s.price_te, \'--\') as price_te,
+			IF((count(DISTINCT id_stock)=1), 0, 1) as need_details,
 			CAST((SUM(physical_quantity) / (count(id_stock) - count(DISTINCT id_stock) + 1)) AS SIGNED INTEGER) AS physical_quantity,
 			CAST((SUM(usable_quantity) / (count(id_stock) - count(DISTINCT id_stock) + 1)) AS SIGNED INTEGER) AS usable_quantity
 		FROM '._DB_PREFIX_.'stock s
@@ -165,7 +177,9 @@ class AdminStockInstantStateControllerCore  extends AdminController
 		
 		foreach ($this->_list as &$row)
 		{
-			if(!$row['need_details'])
+			if (is_numeric($row['price_te']))
+				$row['price_te'] = Tools::displayPrice($row['price_te'], $this->getCurrency());
+			if (!$row['need_details'])
 				$this->addRowActionSkipList('details', $row['id_stock']);
 			$row['real_quantity'] = $manager->getProductRealQuantities($row['id_product'], $row['id_product_attribute'], array($this->getCurrentWarehouseId()), true);
 		}
