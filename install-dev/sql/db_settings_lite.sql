@@ -925,7 +925,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 95, 'Stock'),
 (3, 96, 'Warehouses'),
 (3, 97, 'Stock Management'),
-(1, 98, 'Stock instant state');
+(3, 98, 'Stock instant state');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
