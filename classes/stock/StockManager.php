@@ -482,6 +482,9 @@ class StockManagerCore implements StockManagerInterface
 		if (!$id_product_attribute)
 			$id_product_attribute = 0;
 
+		if ($coverage == 0 || !$coverage)
+			$coverage = 7; // Week by default
+
 		// gets all stock_mvt for the given coverage period
 		$query = '
 			SELECT SUM(sm.`physical_quantity`) as quantity_out
@@ -504,7 +507,8 @@ class StockManagerCore implements StockManagerInterface
 															     $id_product_attribute,
 															     ($id_warehouse ? array($id_warehouse) : null),
 															     true);
-		$time_left = round($physical_quantity / $quantity_per_day);
+
+		$time_left = ($quantity_per_day == 0) ? 365 : round($physical_quantity / $quantity_per_day);
 
 		return $time_left;
 	}
