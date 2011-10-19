@@ -73,11 +73,11 @@ interface StockManagerInterface
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
-	 * @param array|int $id_warehouses optional
+	 * @param array|int $ids_warehouse optional
 	 * @param bool $usable false default - in this case we retrieve all physical quantities, otherwise we retrieve physical quantities flagged as usable
 	 * @return int
 	 */
-	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $id_warehouses = null, $usable = false);
+	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false);
 
 	/**
 	 * For a given product, returns its real quantity
@@ -86,11 +86,11 @@ interface StockManagerInterface
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
-	 * @param array|int $warehouses_id optional
+	 * @param array|int $ids_warehouse optional
 	 * @param bool $usable false by default
 	 * @return int
 	 */
-	public function getProductRealQuantities($id_product, $id_product_attribute, $id_warehouses = null, $usable = false);
+	public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false);
 
 	/**
 	 * For a given product, transfers quantities between two warehouses
@@ -110,4 +110,15 @@ interface StockManagerInterface
 	 */
 	public function transferBetweenWarehouses($id_product, $id_product_attribute, $quantity, $id_stock_movement_reason, $warehouse_from, $warehouse_to, $usable_from = true, $usable_to = true);
 
+	/**
+	 * For a given product, returns the time left before being out of stock.
+	 * By default, for the given product, it will use sum(quantities removed/added in all warehouses)
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $coverage
+	 * @param int $id_warehouse optional
+	 * @return int time
+	 */
+	public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null);
 }
