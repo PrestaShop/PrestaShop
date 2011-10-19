@@ -41,27 +41,58 @@ $(document).ready(function() {
 				context: this,
 				async: false,
 				success: function(data) {
-					if(typeof(data.use_parent_structure) == 'undefined' || (data.use_parent_structure == true))
+					if (typeof(data.use_parent_structure) == 'undefined' || (data.use_parent_structure == true))
+					{
+						if ($('#details_{$id}').parent().parent().hasClass('alt_row'))
+							var alt_row = true;
+						else
+							var alt_row = false;
+						$('#details_{$id}').parent().parent().after($('<tr class="details_{$id} small '+(alt_row ? 'alt_row' : '')+'"></tr>')
+									.append($('<td style="border:none!important;" class="empty"></td>')
+									.attr('colspan', $('#details_{$id}').parent().parent().find('td').length)));
 						$.each(data.data, function(it, row)
 						{
-							if($('#details_{$id}').parent().parent().hasClass('alt_row'))
-								var content = $('<tr class="details_{$id} alt_row"></tr>');
-							else
-								var content = $('<tr class="details_{$id}"></tr>');
-							content.append($('<td></td>'));
+							var content = $('<tr class="action_details details_{$id} '+(alt_row ? 'alt_row' : '')+'"></tr>');
+							content.append($('<td class="empty"></td>'));
+							var first = true;
+							var count = 0; // Number of non-empty collum
+							$.each(row, function(it)
+							{
+								count++;
+							});
 							$.each(data.fields_display, function(it, line)
 							{
+								console.log(it);
 								if (typeof(row[it]) == 'undefined')
-									content.append($('<td class="'+this.align+'"></td>'));
+								{
+									if (first || count == 0)
+										content.append($('<td class="'+this.align+' empty"></td>'));
+									else
+										content.append($('<td class="'+this.align+'"></td>'));
+								}
 								else
-									content.append($('<td class="'+this.align+'">'+row[it]+'</td>'));
+								{
+									console.log(first);
+									console.log(count);
+									count--;
+									if (first)
+									{
+										first = false;
+										content.append($('<td class="'+this.align+' first">'+row[it]+'</td>'));
+									}
+									else if (count == 0)
+										content.append($('<td class="'+this.align+' last">'+row[it]+'</td>'));
+									else
+										content.append($('<td class="'+this.align+count+'">'+row[it]+'</td>'));
+								}
 							});
-							content.append($('<td></td>'));
+							content.append($('<td class="empty"></td>'));
 							$('#details_{$id}').parent().parent().after(content);
 						});
+					}
 					else
 					{
-						if($('#details_{$id}').parent().parent().hasClass('alt_row'))
+						if ($('#details_{$id}').parent().parent().hasClass('alt_row'))
 							var content = $('<tr class="details_{$id} alt_row"></tr>');
 						else
 							var content = $('<tr class="details_{$id}"></tr>');
@@ -74,7 +105,7 @@ $(document).ready(function() {
 			});
 		}
 
-		if(this.opened)
+		if (this.opened)
 		{
 			$(this).find('img').attr('src', '../img/admin/more.png');
 			$(this).parent().parent().parent().find('.details_{$id}').hide();
