@@ -25,6 +25,12 @@ a.button{padding:3px 15px;color:white;}
 .table a:hover{text-decoration:none}
 .table tr th{background:#7AB51D url(thead.png) repeat-x top left;border-bottom:1px solid #416110;color:#FFF;padding:4px 6px}
 .table tr td{border-bottom:1px solid #F0EADA;color:#963;font-size:.9em;height:23px;padding:0 4px 0 6px}
+.table tr.action_details td{background:#FAFAFA;}
+.table tr.alt_row.action_details td{background:#E8E8E8;}
+.table tr td.empty{border-bottom:none;background:white!important}
+.table tr td.first{border-left:1px solid #DEDEDE}
+.table tr td.last{border-right:1px solid #DEDEDE}
+.table tr.small td{height:15px}
 .table tr.last td{border-bottom:none}
 .alt_row{background-color:#EFEFEF}
 .path_bar{background-color:#E2EBEE;border:1px solid #999999;font-family:Trebuchet,Arial,Helvetica,sans-serif;font-size:13px;margin-bottom:20px;padding:5px}

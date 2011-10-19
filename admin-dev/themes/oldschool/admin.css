@@ -21,6 +21,12 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table a:hover{text-decoration:none}
 .table tr th{background:#F4E6C9 url(news-bg.gif) repeat-x top left;padding:4px 6px}
 .table tr td{border-bottom:1px solid #DEDEDE;color:#963;font-size:.9em;height:23px;padding:0 4px 0 6px}
+.table tr.action_details td{background:#FAFAFA;}
+.table tr.alt_row.action_details td{background:#E8E8E8;}
+.table tr td.empty{border-bottom:none;background:white!important}
+.table tr td.first{border-left:1px solid #DEDEDE}
+.table tr td.last{border-right:1px solid #DEDEDE}
+.table tr.small td{height:15px}
 .table tr.last td{border-bottom:none}
 .alt_row{background-color:#EFEFEF}
 .not_alt_row{background-color:#FFF}
