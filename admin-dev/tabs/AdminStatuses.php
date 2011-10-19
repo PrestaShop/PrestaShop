@@ -26,7 +26,7 @@
 */
 
 include(_PS_ADMIN_DIR_.'/tabs/AdminOrdersStates.php');
-include(_PS_CONTROLLER_DIR_.'/admin/AdminReturnStatesController.php');
+include(_PS_ADMIN_DIR_.'/tabs/AdminReturnStates.php');
 
 class AdminStatuses extends AdminTab
 {
@@ -37,7 +37,7 @@ class AdminStatuses extends AdminTab
 	{
 		$this->table = array('order_state', 'order_return_state');
 		$this->adminOrdersStates = new adminOrdersStates();
-		$this->adminReturnStates = new AdminReturnStatesController();
+		$this->adminReturnStates = new adminReturnStates();
 
 		parent::__construct();
 	}
@@ -77,8 +77,7 @@ class AdminStatuses extends AdminTab
 			if (!Tools::isSubmit('updateorder_return_state') AND !Tools::isSubmit('submitAddorder_return_state'))
 				echo '<div style="margin:10px">&nbsp;</div>';
 			echo '<h2>'.$this->l('Order return statuses').'</h2>';
-			$this->adminReturnStates->initContent($this->token);
+			$this->adminReturnStates->display($this->token);
 		}
 	}
 }
-
