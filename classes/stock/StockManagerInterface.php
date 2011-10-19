@@ -112,7 +112,7 @@ interface StockManagerInterface
 
 	/**
 	 * For a given product, returns the time left before being out of stock.
-	 * By default, for the given product, it will use sum(quantities removed/added in all warehouses)
+	 * By default, for the given product, it will use sum(quantities removed in all warehouses)
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
