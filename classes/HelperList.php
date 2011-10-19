@@ -519,6 +519,7 @@ class HelperListCore extends Helper
 			'list_total' => $this->_listTotal,
 			'is_order_position' => array_key_exists($this->identifier, $this->identifiersDnd) && $this->_orderBy == 'position',
 			'order_way' => $this->_orderWay,
+			'order_by' => $this->_orderBy,
 			'token' => $this->token,
 			'fields_display' => $this->fieldsDisplay,
 			'delete' => in_array('delete', $this->actions),
