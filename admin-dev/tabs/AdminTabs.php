@@ -55,6 +55,14 @@ class AdminTabs extends AdminTab
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			return;
+		}
+		/* PrestaShop demo mode*/
+		
 		if (($id_tab = (int)(Tools::getValue('id_tab'))) AND ($direction = Tools::getValue('move')) AND Validate::isLoadedObject($tab = new Tab($id_tab)))
 		{
 			if ($tab->move($direction))

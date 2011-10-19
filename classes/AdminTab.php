@@ -641,8 +641,7 @@ abstract class AdminTabCore
 			elseif (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.$token);
-				 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_identifier = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_identifier) : '').'&token='.$token);
 		}
 		/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))

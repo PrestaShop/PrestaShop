@@ -45,7 +45,6 @@ class DejalaUtils
 		$responseArray = $this->makeRequest($dejalaConfig, $serviceURL, $postargs, 'POST', FALSE);
 		return ($responseArray);
 	}
-	
 	public static function wtf($var, $arrayOfObjectsToHide=null, $fontSize=11)
 	{
 		$text = print_r($var, true);
@@ -114,7 +113,6 @@ class DejalaUtils
 			if ($nodeList->length > 0)
 				foreach ($nodeList as $element)
 					$calendar['exceptions'][] = $this->getNodeValue($element);
-					
 		}
 		return ($responseArray);
 	}
@@ -143,7 +141,6 @@ class DejalaUtils
 						if ($nodeList)
 							foreach ($nodeList as $element)
    								$currentContactNode[$element->nodeName] = $element->textContent;
-   								
 						$contacts[$name] = $currentContactNode;
 					}
 			}
@@ -184,19 +181,19 @@ class DejalaUtils
 	    {
 	    	if (($a['price'] == $b['price'])) 
 	    		return ($a['id'] < $b['id']) ? -1 : 1 ;
-
 	        return ($a['price'] < $b['price']) ? -1 : 1 ;
 	    }
 	    return ($a['priority'] < $b['priority']) ? -1 : 1;
 	}
 	
-	public function getStoreQuotation($dejalaConfig, $quotationElements, &$products)
+	public function getStoreQuotation($dejalaConfig, $quotationElements, &$products, &$storeAttributes)
 	{
-		$serviceURL = $dejalaConfig->getRootServiceURI() . '/mystore/quotation';
+		$serviceURL = $dejalaConfig->getRootServiceURI() . '/mystore/quotationV2';
 		$postargs = $quotationElements;
 		$responseArray = $this->makeRequest($dejalaConfig, $serviceURL, $postargs, 'GET', TRUE);
-		if (!($xml = strstr($responseArray['response'], '<?xml')))
+		if (!($xml = strstr($responseArray['response'], '<?xml'))) {
 			$xml = null;
+		}
 		else
 		{
 			$doc = new DOMDocument();
@@ -206,17 +203,27 @@ class DejalaUtils
 			{
 				$currentProduct = $this->getNodeValue($productNode);
 				unset($currentProduct['calendar']['entries']['entry']);
-				$calendarNodeList = $doc->getElementsByTagName('entry');
-				foreach ($calendarNodeList as $calendarNode)
-				{
+				unset($currentProduct['computed_calendar']['entries']['entry']);
+				$productCalendars = $productNode->getElementsByTagName('calendar');
+				$calendarNodeList = $productCalendars->item(0)->getElementsByTagName('entry');
+				foreach ($calendarNodeList as $calendarNode) {
 					$calendarEntry = $this->getNodeValue($calendarNode);
 					$currentProduct['calendar']['entries'][$calendarEntry['weekday']] = $calendarEntry;
 				}
 				$exceptionNodeList = $doc->getElementsByTagName('exception');
 				$currentProduct['calendar']['exceptions'] = array();
-				foreach ($exceptionNodeList as $exceptionNode) 
+				foreach ($exceptionNodeList as $exceptionNode) {
 					$currentProduct['calendar']['exceptions'][] = $this->getNodeValue($exceptionNode);
+				}
 
+				$productComputedCalendars = $productNode->getElementsByTagName('computed_calendar');
+				if ($productComputedCalendars->length > 0) {
+					$calendarNodeList = $productComputedCalendars->item(0)->getElementsByTagName('computed_entry');
+					foreach ($calendarNodeList as $calendarNode) {
+						$calendarEntry = $this->getNodeValue($calendarNode);
+						$currentProduct['computed_calendar']['entries'][] = $calendarEntry;
+					}
+				}
 				/*$currentProduct = array();
 				$nodeList = $productNode->childNodes;
 				foreach ($nodeList as $element) {
@@ -226,8 +233,17 @@ class DejalaUtils
 				if (count($currentProduct))
 					$products[] = $currentProduct;
 			}
+
+			$nodeList = $doc->getElementsByTagName('store');
+			if ($nodeList->length > 0) {
+				$nodeList = $nodeList->item(0)->getElementsByTagName('attributes');
+				if ($nodeList->length > 0) {
+					$storeAttributes = $this->getNodeValue($nodeList->item(0));
+		}
+			}			
 		}
 		usort($products, array("DejalaUtils", "cmpProducts"));
+
 		return ($responseArray);
 	}
 
@@ -248,13 +264,11 @@ class DejalaUtils
 				$childNodes = $fatherNodeList->item(0)->childNodes;
 				foreach ($childNodes as $childNode)
 					$store[$childNode->nodeName] = $childNode->textContent;
-
 			}
 			$nodeList = $doc->getElementsByTagName('attributes');
 			$store['attributes'] = array();
 			if ($nodeList->length > 0)
 				$store['attributes'] = $this->getNodeValue($nodeList->item(0));
-				
 		}
 		return ($responseArray);
 	}
@@ -362,7 +376,6 @@ class DejalaUtils
 			$childNodes = $doc->getElementsByTagName('delivery');
 			foreach ($childNodes as $childNode)
 				$deliveries[] = $this->getNodeValue($childNode);
-				
 		}
 		return ($responseArray);
 	}
@@ -479,11 +492,9 @@ class DejalaUtils
 
 	public function mylog($msg) 
 	{
-
 			require_once(dirname(__FILE__) . "/MyLogUtils.php");
 			$myFile = dirname(__FILE__) . "/logFile.txt";
 			MyLogUtils::myLog($myFile, $msg);
-
 	}
 
 	// get a string of a value for Log purposes

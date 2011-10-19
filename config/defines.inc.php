@@ -26,6 +26,8 @@
 */
 
 define('_PS_MODE_DEV_', true);
+define('_PS_MODE_DEMO_', false);
+define('_PS_DEMO_MAIN_BO_ACCOUNT_', 1);
 
 $currentDir = dirname(__FILE__);
 

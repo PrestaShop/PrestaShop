@@ -293,7 +293,13 @@ class importerosc extends ImportModule
 				$images[] = Tools::getProtocol().Tools::getValue('shop_url').'/images/'.$res['image'];
 			$product['images'] = array_merge(array($product['images']), $images);
 			$product['link_rewrite'] = Tools::link_rewrite($product['name']);
-			$product['association'] = array('category_product' => array($product['id_category_default'] => $product['id_product']));
+			
+			
+			$result = $this->ExecuteS('SELECT `categories_id` FROM `'.bqSQL($this->prefix).'products_to_categories` WHERE products_id = '.(int)$product['id_product']);
+			$category_product = array('category_product' => array($product['id_category_default'] => $product['id_product']));
+			foreach($result as $res)
+				$category_product['category_product'][$res['categories_id']] = $product['id_product'];
+			$product['association'] = $category_product;
 		}
 		return $this->autoFormat($products, $identifier, $keyLanguage, $multiLangFields);
 	}

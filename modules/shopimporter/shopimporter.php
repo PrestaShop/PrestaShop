@@ -1265,6 +1265,7 @@ class shopimporter extends ImportModule
 
 				Image::deleteAllImages(_PS_PROD_IMG_DIR_);
 				Image::clearTmpDir();
+				@mkdir(_PS_PROD_IMG_DIR_);
 				break;
 			case 'manufacturer' :
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');

@@ -210,6 +210,8 @@ var shopImporter = {
 			if (isOk)
 			{
 				shopImporter.syncCurrency(function(isOk) {
+					if (isOk)
+					{
 						$.ajax({
 						       type: 'GET',
 						       url: '../modules/shopimporter/ajax.php',
@@ -268,6 +270,7 @@ var shopImporter = {
 						       		$('#technical_error_feedback').fadeIn('slow');
 						       }
 						   });
+					}
 				});
 			}
 		});
@@ -692,7 +695,7 @@ function validateSpecificOptions(moduleName, specificOptions)
 	       async: false,
 	       cache: false,
 	       dataType : 'json',
-	       data: 'ajax=true&token='+this.token+'&validateSpecificOptions&moduleName='+moduleName+specificOptions ,
+	       data: 'ajax=true&token='+token+'&validateSpecificOptions&moduleName='+moduleName+specificOptions ,
 	       success: function(jsonData)
 	       {
 	       		var jsonError = '';

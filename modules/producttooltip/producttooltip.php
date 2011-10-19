@@ -56,7 +56,7 @@ class ProductToolTip extends Module
 		Configuration::updateValue('PS_PTOOLTIP_DAYS', 3);
 		Configuration::updateValue('PS_PTOOLTIP_LIFETIME', 30);
 
-	 	return $this->registerHook('productfooter');
+	 	return $this->registerHook('header') AND $this->registerHook('productfooter');
 	}
 	
 	public function uninstall()
@@ -129,6 +129,12 @@ class ProductToolTip extends Module
 		</form>';
 		
 		return $output;
+	}
+	
+	public function hookHeader($params)
+	{
+		Tools::addCSS(__PS_BASE_URI__.'css/jquery.jgrowl.css', 'all');
+		Tools::addJS(__PS_BASE_URI__.'js/jquery/jquery.jgrowl-1.2.1.min.js');
 	}
 	
 	public function hookProductFooter($params)
