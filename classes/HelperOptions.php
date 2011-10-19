@@ -112,7 +112,7 @@ class HelperOptionsCore extends Helper
 
 				// Is at least one required field present?
 				if (isset($field['required']) && $field['required'])
-					$required_fields = true;
+					$this->required = true;
 			}
 			// Assign the modifications back to parent array
 			$option_list[$category] = $category_data;
@@ -122,7 +122,7 @@ class HelperOptionsCore extends Helper
 			'current' => $this->currentIndex,
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
-			'required_fields' => $required_fields,
+			'required_fields' => $this->required,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
 	}

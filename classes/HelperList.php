@@ -31,7 +31,7 @@ class HelperListCore extends Helper
 	protected $_list = array();
 
 	/** @var integer Number of results in list */
-	protected $_listTotal = 0;
+	public $_listTotal = 0;
 
 	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
@@ -95,7 +95,8 @@ class HelperListCore extends Helper
 		'id_category' => 'id_category_to_move',
 		'id_cms_category' => 'id_cms_category_to_move',
 		'id_cms' => 'id_cms',
-		'id_attribute' => 'id_attribute'
+		'id_attribute' => 'id_attribute',
+		'id_carrier' => 'id_carrier'
 	);
 
 	// @var boolean ask for simple header : no filters, no paginations and no sorting

@@ -82,7 +82,8 @@
 									name="{$input.name}" 
 									id="{$input.name}" 
 									value="{$fields_value[$input.name]}" 
-									{if isset($input.size)}size="{$input.size}"{/if} 
+									{if isset($input.size)}size="{$input.size}"{/if}
+									{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 									{if isset($input.class)}class="{$input.class}"{/if} 
 									{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 						{elseif $input.type == 'select'}

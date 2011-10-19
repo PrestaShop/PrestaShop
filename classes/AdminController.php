@@ -1077,6 +1077,7 @@ class AdminControllerCore extends Controller
 			$helper->table = $this->table;
 			$helper->_orderBy = $this->_orderBy;
 			$helper->_orderWay = $this->_orderWay;
+			$helper->_listTotal = $this->_listTotal;
 			$helper->shopLink = $this->shopLink;
 			$helper->shopLinkType = $this->shopLinkType;
 			$helper->identifier = $this->identifier;
@@ -1088,15 +1089,19 @@ class AdminControllerCore extends Controller
 			// For each action, try to add the corresponding skip elements list
 			$helper->list_skip_actions = $this->list_skip_actions;
 			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
-		}
-		else if ($this->display == 'options')
-		{
+
 			// init options declaration
 			$this->initOptions();
-
-			$helper = new HelperOptions();
-			$this->content .= $helper->generateOptions();
+	
+			if ($this->options)
+			{
+				$helper = new HelperOptions();
+				$helper->id = $this->id;
+				$helper->currentIndex = self::$currentIndex;
+				$this->content .= $helper->generateOptions($this->options);
+			}
 		}
+
 	}
 
 	/**
@@ -1758,7 +1763,13 @@ class AdminControllerCore extends Controller
 		}
 	}
 
-	protected function updateAssoShop($id_object = false)
+	/**
+	 * Update the associations of shops
+	 * 
+	 * @param int $id_object
+	 * @param int $new_id_object
+	 */
+	protected function updateAssoShop($id_object = false, $new_id_object = false)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -1782,9 +1793,10 @@ class AdminControllerCore extends Controller
 		}
 
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+
 		foreach ($assos as $asso)
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
-											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$type].')');
+											VALUES('.($new_id_object ? $new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].')');
 	}
 
 	protected function validateField($value, $field)
@@ -1825,6 +1837,8 @@ class AdminControllerCore extends Controller
 
 			$languages = Language::getLanguages(false);
 
+			// init options declaration
+			$this->initOptions();
 			foreach ($this->options as $category => $category_data)
 			{
 				$fields = $category_data['fields'];
