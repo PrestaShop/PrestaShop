@@ -261,7 +261,7 @@ abstract class DbCore
 		{
 			// Check if $data is a list of row
 			$current = current($data);
-			if (!is_array($current) || !isset($current['type']))
+			if (!is_array($current) || isset($current['type']))
 				$data = array($data);
 
 			$keys = array();
