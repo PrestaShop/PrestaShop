@@ -33,7 +33,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->className = 'ShopUrl';
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
-		$this->_listSkipDelete = array(1);
+		$this->addRowActionSkipList('delete', array(1));
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
