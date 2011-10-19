@@ -225,7 +225,6 @@ abstract class AdminTabCore
 //		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
 //			$className = 'AdminCatalog';
 		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$this->context->employee->id);
-
 		if (!Shop::isFeatureActive())
 			$this->shopLinkType = '';
 	}
@@ -561,6 +560,7 @@ abstract class AdminTabCore
 	{
 		if (!isset($this->table))
 			return false;
+
 		// set token
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
@@ -1271,7 +1271,7 @@ abstract class AdminTabCore
 			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $this->context->cookie->{$this->table.'_pagination'});
 
 		if (!Validate::isTableOrIdentifier($this->table))
-			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
+			$this->_errors[] = Tools::displayError('Table name is invalid:').' "'.$this->table.'"';
 
 		if (empty($orderBy))
 			$orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
@@ -1340,7 +1340,7 @@ abstract class AdminTabCore
 			if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
 				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		}
-
+		///////////////////////
 		/* Query in order to get results with all fields */
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS
 			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
