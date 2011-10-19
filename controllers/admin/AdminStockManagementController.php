@@ -43,17 +43,55 @@ class AdminStockManagementController extends AdminController
 		$this->addRowAction('transferstock');
 
 		$this->fieldsDisplay = array(
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 100, 'widthColumn' => 150),
-			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 75, 'widthColumn' => 100),
-			'name' => array('title' => $this->l('Name'), 'width' => 350, 'widthColumn' => 'auto', 'filter_key' => 'b!name'),
-			'stock' => array('title' => $this->l('Total quantities in stock'), 'width' => 50, 'widthColumn' => 60),
+			'reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center',
+				'width' => 100,
+				'widthColumn' => 150
+			),
+			'ean13' => array(
+				'title' => $this->l('EAN13'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 350,
+				'widthColumn' => 'auto',
+				'filter_key' => 'b!name'
+			),
+			'stock' => array(
+				'title' => $this->l('Total quantities in stock'),
+				'width' => 50,
+				'widthColumn' => 60,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
 		);
 
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
-
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)';
 
+		// Manage specific forms for stock management
+		$this->declareStockManagementForms();
+
 		parent::__construct();
+	}
+
+	/**
+	 * init override
+	 */
+	public function init()
+	{
+		parent::init();
+
+		if (isset($_GET['addstock']))
+		{
+			$this->action = 'addstock';
+			$this->display = 'addstock';
+		}
 	}
 
 	/**
@@ -64,10 +102,10 @@ class AdminStockManagementController extends AdminController
 		// test if an id is submit
 		if (Tools::isSubmit('id'))
 		{
-			// desactivate lang gestion
+			// desactivate native lang gestion of the controller
 			$this->lang = false;
 
-			// get lang id
+			// get current lang id
 			$lang_id = (int)$this->context->language->id;
 
 			// Get product id
@@ -159,7 +197,7 @@ class AdminStockManagementController extends AdminController
 
 	/**
 	 * Check stock for a given product or product attribute
-	 * and manage action available in consequence
+	 * and manage available actions in consequence
 	 *
 	 * @param array $item reference to the current item
 	 * @param bool $is_product_attribute specify if it's a product or a product variation
@@ -185,15 +223,198 @@ class AdminStockManagementController extends AdminController
 		}
 	}
 
+	private function declareStockManagementForms() {
+
+		$this->stock_management_forms['addstock'] = array(
+			'legend' => array(
+				'title' => $this->l('Warehouse'),
+				'image' => '../img/admin/tab.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'hidden',
+					'name' => 'id_address',
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Reference:'),
+					'name' => 'reference',
+					'size' => 30,
+					'maxlength' => 32,
+					'required' => true,
+					'p' => $this->l('Code / Reference of this warehouse'),
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'size' => 40,
+					'maxlength' => 45,
+					'required' => true,
+					'p' => $this->l('Name of this warehouse')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Phone:'),
+					'name' => 'phone',
+					'size' => 15,
+					'maxlength' => 16,
+					'p' => $this->l('Phone number of this warehouse')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Adress:'),
+					'name' => 'address',
+					'size' => 100,
+					'maxlength' => 128,
+					'required' => true
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Adress:').' (2)',
+					'name' => 'address2',
+					'size' => 100,
+					'maxlength' => 128,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Postcode/ Zip Code:'),
+					'name' => 'postcode',
+					'size' => 10,
+					'maxlength' => 12,
+					'required' => true,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('City:'),
+					'name' => 'city',
+					'size' => 10,
+					'maxlength' => 12,
+					'required' => true,
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Country:'),
+					'name' => 'id_country',
+					'required' => true,
+					'options' => array(
+						'query' => Country::getCountries($this->context->language->id, false),
+						'id' => 'id_country',
+						'name' => 'name'
+					),
+					'p' => $this->l('Country where state, region or city is located')
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('State'),
+					'name' => 'id_state',
+					'required' => true,
+					'options' => array(
+						'id' => 'id_state',
+						'name' => 'name'
+					)
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Management type:'),
+					'name' => 'management_type',
+					'required' => true,
+					'options' => array(
+						'query' => array(
+							array(
+								'id' => 'WA',
+								'name' => $this->l('Weight Average')
+							),
+							array(
+								'id' => 'FIFO',
+								'name' => $this->l('First In, First Out')
+							),
+							array(
+								'id' => 'LIFO',
+								'name' => $this->l('Last In, First Out')
+							),
+						),
+						'id' => 'id',
+						'name' => 'name'
+					),
+					'p' => $this->l('Onventory valuation method'),
+					'hint' => $this->l('Do not change this value before the end of the accounting period for this Warehouse.'),
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Associated shops:'),
+					'name' => 'ids_shops[]',
+					'required' => true,
+					'multiple' => true,
+					'options' => array(
+						'query' => Shop::getShops(),
+						'id' => 'id_shop',
+						'name' => 'name'
+					),
+					'p' => $this->l('Associated shops'),
+					'hint' => $this->l('By associating a shop to a warehouse, all products in this warehouse will be available for sale in the associated shop. Shipment of an order of this shop is also possible from this warehouse'),
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Associated carriers:'),
+					'name' => 'ids_carriers[]',
+					'required' => true,
+					'multiple' => true,
+					'options' => array(
+						'query' => Carrier::getCarriers($this->context->language->id, true),
+						'id' => 'id_carrier',
+						'name' => 'name'
+					),
+					'p' => $this->l('Associated carrier'),
+					'hint' => $this->l('You can specifiy the carriers availables for shipping orders from this warehouse'),
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+	}
+
 	/**
 	 * initContent override
 	 */
 	public function initContent()
 	{
-		if ($this->display != 'edit' && $this->display != 'add')
+		if ($this->display != 'addstock')
 			$this->display = 'list';
 
 		parent::initContent();
+
+		if ($this->display == 'addstock')
+		{
+			$this->fields_form = $this->stock_management_forms['addstock'];
+
+			$this->getlanguages();
+			$helper = new HelperForm();
+			// Check if form template has been overriden
+			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
+				$helper->tpl = $this->tpl_folder.'form.tpl';
+			$helper->currentIndex = self::$currentIndex;
+			$helper->token = $this->token;
+			$helper->table = $this->table;
+			$helper->id = $obj->id;
+			$helper->languages = $this->_languages;
+			$helper->default_form_language = $this->default_form_language;
+			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+			$helper->fields_value = $this->getFieldsValue($obj);
+			$this->content .= $helper->generateForm($this->fields_form);
+
+			if ($this->tabAccess['view'])
+			{
+				if (Tools::getValue('back'))
+					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+				else
+					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
+			}
+
+		}
+
 	}
 
 	 /**

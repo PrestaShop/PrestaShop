@@ -37,6 +37,11 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->lang = false;
 
+		parent::__construct();
+	}
+
+	public function initList()
+	{
 		$this->addRowAction('edit');
 
 		$this->fieldsDisplay = array(
@@ -74,7 +79,10 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
+	}
 
+	public function initForm()
+	{
 		// Get employee list for warehouse manager
 		$query = new DbQuery();
 		$query->select('id_employee, CONCAT(lastname," ",firstname) as name');
@@ -181,7 +189,6 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_employee',
 						'name' => 'name'
 					),
-					'p' => $this->l('Manager of this warehouse')
 				),
 				array(
 					'type' => 'select',
@@ -206,7 +213,19 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'p' => $this->l('Onventory valuation method'),
+					'p' => $this->l('Inventory valuation method'),
+					'hint' => $this->l('Do not change this value before the end of the accounting period for this Warehouse.'),
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Stock valuation currency:'),
+					'name' => 'id_currency',
+					'required' => true,
+					'options' => array(
+						'query' => Currency::getCurrencies(),
+						'id' => 'id_currency',
+						'name' => 'name'
+					),
 					'hint' => $this->l('Do not change this value before the end of the accounting period for this Warehouse.'),
 				),
 				array(
@@ -243,8 +262,6 @@ class AdminWarehousesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
-		parent::__construct();
 	}
 
 	public function postProcess()
@@ -306,6 +323,7 @@ class AdminWarehousesControllerCore extends AdminController
 				return;
 
 			//load current address for this warehouse if possible
+			$address = null;
 			if ($obj->id_address > 0)
 				$address = new Address($obj->id_address);
 
@@ -316,17 +334,19 @@ class AdminWarehousesControllerCore extends AdminController
 			$carriers = $obj->getCarriers();
 
 			//force specific fields values
-			$this->fields_value = array(
-				'phone' => $address->phone,
-				'address' => $address->address1,
-				'address2' => $address->address2,
-				'postcode' => $address->postcode,
-				'city' => $address->city,
-				'id_country' => $address->id_country,
-				'id_state' => $address->id_state,
-				'ids_shops[]' => $shops,
-				'ids_carriers[]' => $carriers,
-			);
+			if ($address != null)
+				$this->fields_value = array(
+					'phone' => $address->phone,
+					'address' => $address->address1,
+					'address2' => $address->address2,
+					'postcode' => $address->postcode,
+					'city' => $address->city,
+					'id_country' => $address->id_country,
+					'id_state' => $address->id_state,
+				);
+
+			$this->fields_value['ids_shops[]'] = $shops;
+			$this->fields_value['ids_carriers[]'] = $carriers;
 		}
 
 		parent::initContent();

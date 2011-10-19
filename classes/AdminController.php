@@ -1014,6 +1014,9 @@ class AdminControllerCore extends Controller
 			if (!($obj = $this->loadObject(true)))
 				return;
 
+			// init form declaration
+			$this->initForm();
+
 			if (isset($this->fields_form))
 			{
 				$this->getlanguages();
@@ -1045,6 +1048,9 @@ class AdminControllerCore extends Controller
 		}
 		else if ($this->display == 'list')
 		{
+			// init list declaration
+			$this->initList();
+
 			$this->getList($this->context->language->id);
 
 			$helper = new HelperList();
@@ -1084,6 +1090,9 @@ class AdminControllerCore extends Controller
 		}
 		else if ($this->display == 'options')
 		{
+			// init options declaration
+			$this->initOptions();
+
 			$helper = new HelperOptions();
 			$this->content .= $helper->generateOptions();
 		}
@@ -1107,6 +1116,27 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign(array(
 			'HOOK_FOOTER' => Module::hookExec('backOfficeFooter'),
 		));
+	}
+
+	/**
+	 * Function used to initialise the list to display for this controller
+	 */
+	public function initList()
+	{
+	}
+
+	/**
+	 * Function used to initialise the form to display for this controller
+	 */
+	public function initForm()
+	{
+	}
+
+	/**
+	 * Function used to initialise the options to display for this controller
+	 */
+	public function initOptions()
+	{
 	}
 
 	public function setMedia()
