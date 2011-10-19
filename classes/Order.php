@@ -923,6 +923,26 @@ class OrderCore extends ObjectModel
 		$this->update();
 	}
 
+	public static function printPDFIcons($id_order, $tr)
+	{
+		$order = new Order($id_order);
+		$orderState = OrderHistory::getLastOrderState($id_order);
+		if (!Validate::isLoadedObject($orderState) OR !Validate::isLoadedObject($order))
+			die(Tools::displayError('Invalid objects'));
+		echo '<span style="width:20px; margin-right:5px;">';
+		if (($orderState->invoice AND $order->invoice_number) AND (int)($tr['product_number']))
+			echo '<a href="pdf.php?id_order='.(int)($order->id).'&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
+		else
+			echo '&nbsp;';
+		echo '</span>';
+		echo '<span style="width:20px;">';
+		if ($orderState->delivery AND $order->delivery_number)
+			echo '<a href="pdf.php?id_delivery='.(int)($order->delivery_number).'"><img src="../img/admin/delivery.gif" alt="delivery" /></a>';
+		else
+			echo '&nbsp;';
+		echo '</span>';
+	}
+
 	public static function getByDelivery($id_delivery)
 	{
 		$sql = 'SELECT id_order
