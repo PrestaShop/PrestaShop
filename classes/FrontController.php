@@ -103,11 +103,6 @@ class FrontControllerCore extends Controller
 		Tools::setCookieLanguage($this->context->cookie);
 		$currency = Tools::setCurrency($this->context->cookie);
 
-		if (Validate::isLoadedObject($currency))
-			$this->context->smarty->ps_currency = $currency;
-
-		$this->context->smarty->ps_language = $this->context->language;
-
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://' : 'http://';
 		$useSSL = ((isset($this->ssl) AND $this->ssl AND Configuration::get('PS_SSL_ENABLED')) OR Tools::usingSecureMode()) ? true : false;
 		$protocol_content = ($useSSL) ? 'https://' : 'http://';
@@ -208,8 +203,6 @@ class FrontControllerCore extends Controller
 		setlocale(LC_CTYPE, $locale);
 		setlocale(LC_TIME, $locale);
 		setlocale(LC_NUMERIC, 'en_US.UTF-8');
-
-		$this->context->smarty->ps_language = $this->context->language;
 
 		/* get page name to display it in body id */
 		// @todo check here

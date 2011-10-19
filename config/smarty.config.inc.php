@@ -40,7 +40,6 @@ $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_S
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'URL'; // 'NONE' on production
-$smarty->deprecation_notices = false; // so many depreciated yet not migrated smarty calls
 
 if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
 	$smarty->registerFilter('output', 'smartyMinifyHTML');
@@ -71,7 +70,7 @@ function smartyTranslate($params, &$smarty)
 	if (!isset($params['mod'])) $params['mod'] = false;
 
 	$string = str_replace('\'', '\\\'', $params['s']);
-	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_filepath : $smarty->compiler_object->template->getTemplateFilepath());
+	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
 	$lang_array = $_LANG;
 	if ($params['mod'])
