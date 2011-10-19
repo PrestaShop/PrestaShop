@@ -495,6 +495,7 @@ class AdminHomeControllerCore extends AdminController
 	}
 	public function initContent()
 	{
+		parent::initContent();
 		$smarty = $this->context->smarty;
 
 		$this->warnDomainName();
