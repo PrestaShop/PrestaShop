@@ -342,7 +342,7 @@ class SearchCore
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$limit = max(1, round($limit / $nbLanguages) * $nbLanguages);
 		return Db::getInstance()->executeS('
-		SELECT p.id_product, pl.id_lang, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname
+		SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc, pl.description_short, pl.description, cl.name cname, m.name mname
 		FROM '._DB_PREFIX_.'product p
 		LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
 		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang)
@@ -462,7 +462,8 @@ class SearchCore
 					$existingWords = $db->executeS('
 					SELECT DISTINCT word FROM '._DB_PREFIX_.'search_word
 						WHERE word IN ('.implode(',', $queryArray2).')
-					AND id_lang = '.(int)$product['id_lang']);
+					AND id_lang = '.(int)$product['id_lang'].' 
+					AND id_shop = '.(int)$product['id_shop']);
 
 						foreach($existingWords as $data)
 							unset($queryArray[Tools::replaceAccentedChars($data['word'])]);
