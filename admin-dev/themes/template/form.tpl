@@ -204,6 +204,11 @@
 						{elseif $input.type == 'file'}
 							<input type="file" name="{$input.name}" />
 							<img src="{$fields_value[$input.name]}" />
+						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
+							<label>{l s='Shop association:'}</label>
+							<div class="margin-form">
+								{$asso_shop}
+							</div>
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}

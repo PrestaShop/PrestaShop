@@ -1,0 +1,293 @@
+<?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 7300 $
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
+
+class AdminCurrenciesControllerCore extends AdminController
+{
+	public function __construct()
+	{
+	 	$this->table = 'currency';
+	 	$this->className = 'Currency';
+	 	$this->lang = false;
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
+		$this->fieldsDisplay = array(
+			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Currency'), 'width' => 100),
+			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 35),
+			'iso_code_num' => array('title' => $this->l('ISO code num'), 'align' => 'center', 'width' => 35),
+			'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false),
+			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'float' => true, 'align' => 'center', 'width' => 50, 'search' => false),
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+		);
+		$this->_where = 'AND a.`deleted` = 0';
+
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Currencies options'),
+				'fields' =>	array(
+					'PS_CURRENCY_DEFAULT' => array(
+						'title' => $this->l('Default currency:'),
+						'desc' => $this->l('The default currency used in shop')
+							.'<div class=warn"><img src="../img/admin/warn2.png" />'.$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
+							'cast' => 'intval',
+							'type' => 'select',
+							'identifier' => 'id_currency',
+							'list' => Currency::getCurrencies()
+						),
+				),
+			),
+			'change' => array(
+				'title' =>	$this->l('Currency rates'),
+				'image' => '../img/admin/exchangesrate.gif',
+				'description' => $this->l('Update your currencies exchanges rates with a real-time tool'),
+				'submit' => array(
+					'title' => $this->l('Update currency rates'),
+					'class' => 'button',
+					'name' => 'SubmitExchangesRates'
+				),
+			),
+			'cron' => array(
+				'title' =>	$this->l('Currency rates update'),
+				'image' => '../img/admin/tab-tools.gif',
+				'info' => $this->l('Place this URL in crontab or call it manually daily').':<br />
+					<b>'.Tools::getShopDomain(true, true). __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
+			),
+		);
+
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Currencies:'),
+				'image' => '../img/admin/money.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Currency:'),
+					'name' => 'name',
+					'size' => 30,
+					'maxlength' => 32,
+					'required' => true,
+					'hint' => $this->l('Only letters and the minus character are allowed'),
+					'p' => $this->l('Will appear on Front Office, e.g., euro, dollar').'...',
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('ISO code:'),
+					'name' => 'iso_code',
+					'size' => 30,
+					'maxlength' => 32,
+					'required' => true,
+					'p' => $this->l('ISO code, e.g., USD for dollar, EUR for euro').'...',
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Numeric ISO code:'),
+					'name' => 'iso_code_num',
+					'size' => 30,
+					'maxlength' => 32,
+					'required' => true,
+					'p' => $this->l('Numeric ISO code, e.g., 840 for dollar, 978 for euro').'...',
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Symbol:'),
+					'name' => 'sign',
+					'size' => 3,
+					'maxlength' => 8,
+					'required' => true,
+					'p' => $this->l('Will appear on Front Office, e.g., &euro;, $').'...',
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Conversion rate:'),
+					'name' => 'conversion_rate',
+					'size' => 3,
+					'maxlength' => 11,
+					'required' => true,
+					'p' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Formatting:'),
+					'name' => 'format',
+					'size' => 3,
+					'maxlength' => 11,
+					'required' => true,
+					'p' =>$this->l('Applies to all prices, e.g.,').' $1,240.15',
+					'options' => array(
+						'query' => array(
+							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('as with dollars').')'),
+							array('key' => 2, 'name' => '0 000,00X ('.$this->l('as with euros').')'),
+							array('key' => 3, 'name' => 'X0.000,00'),
+							array('key' => 4, 'name' => '0,000.00X'),
+						),
+						'name' => 'name',
+						'id' => 'key'
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Decimals:'),
+					'name' => 'decimals',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('Display decimals on prices'),
+					'values' => array(
+						array(
+							'id' => 'decimals_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'decimals_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Blank:'),
+					'name' => 'blank',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'p' => $this->l('Include a blank between sign and price, e.g.,').'<br />$1,240.15 -> $ 1,240.15',
+					'values' => array(
+						array(
+							'id' => 'blank_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'blank_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Enable:'),
+					'name' => 'active',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'active_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'active_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),
+				array(
+					'type' => 'asso_shop',
+					'name' => ''
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			),
+			'asso_shop' => Shop::isMultiShopActivated()
+		);
+		parent::__construct();
+	}
+
+	public function postProcess()
+	{
+		if ($this->action == 'delete')
+		{
+			if (Validate::isLoadedObject($object = $this->loadObject()))
+			{
+				if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+					$this->_errors[] = $this->l('You can\'t delete the default currency');
+				elseif ($object->delete())
+					Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
+				else
+					$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+			}
+			else
+				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		}
+		elseif ($this->action == 'status')
+		{
+			if (Validate::isLoadedObject($object = $this->loadObject()))
+			{
+				if ($object->active AND $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+					$this->_errors[] = $this->l('You can\'t disable the default currency');
+				elseif ($object->toggleStatus())
+					Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
+				else
+					$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+			}
+			else
+				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		}
+		elseif (Tools::isSubmit('submitExchangesRates'))
+		{
+			if (!$this->_errors[] = Currency::refreshCurrencies())
+				Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
+		}
+		else
+			parent::postProcess();
+	}
+
+	public function updateOptionPsCurrencyDefault($value)
+	{
+		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
+		Currency::refreshCurrencies();
+	}
+
+	public function initContent()
+	{
+		if ($this->display != 'edit' && $this->display != 'add')
+			$this->display = 'list';
+
+		parent::initContent();
+
+		if ($this->display = 'list')
+		{
+			$helper = new HelperOptions();
+			$helper->id = $this->id;
+			$helper->currentIndex = self::$currentIndex;
+			$this->content .= $helper->generateOptions($this->options);
+		}
+	}
+}
+

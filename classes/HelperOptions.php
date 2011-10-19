@@ -54,10 +54,16 @@ class HelperOptionsCore extends Helper
 		$tab = Tab::getTab($this->context->language->id, $this->id);
 		foreach ($option_list as $category => $category_data)
 		{
+			if (!isset($category_data['image']))
+				$category_data['image'] = (!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif';
+
+			if (!isset($category_data['fields']))
+				$category_data['fields'] = array();
+
 			foreach ($category_data['fields'] as $key => $field)
 			{
-				// Field value
-				$option_list[$category]['fields'][$key]['value'] = $this->getOptionValue($key, $field);
+				// Set field value
+				$field['value'] = $this->getOptionValue($key, $field);
 
 				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
 				$isDisabled = $isInvisible = false;
@@ -71,15 +77,15 @@ class HelperOptionsCore extends Helper
 					else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
 						$isDisabled = true;
 				}
-				$option_list[$category]['fields'][$key]['is_disabled'] = $isDisabled;
-				$option_list[$category]['fields'][$key]['is_invisible'] = $isInvisible;
+				$field['is_disabled'] = $isDisabled;
+				$field['is_invisible'] = $isInvisible;
 
-				$option_list[$category]['fields'][$key]['required'] = isset($field['required']) ? $field['required'] : $this->required;
+				$field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
 					foreach ($field['list'] as $option_key => $option)
-						$option_list[$category]['fields'][$key]['list'][$option_key][$field['identifier']] = $field['cast']($option[$field['identifier']]);
+						$field['list'][$option_key][$field['identifier']] = $field['cast']($option[$field['identifier']]);
 
 				// Fill values for all languages for all lang fields
 				if (substr($field['type'], -4) == 'Lang')
@@ -93,19 +99,24 @@ class HelperOptionsCore extends Helper
 							$value = Tools::safeOutput(Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang'])));
 						elseif ($field['type'] == 'textareaLang')
 							$value = Configuration::get($key, $language['id_lang']);
-						$option_list[$category]['fields'][$key]['languages'][$language['id_lang']] = $value;
+						$field['languages'][$language['id_lang']] = $value;
 					}
-					$option_list[$category]['fields'][$key]['flags'] = $this->displayFlags($languages, $this->context->language->id, $key, $key, true);
+					$field['flags'] = $this->displayFlags($languages, $this->context->language->id, $key, $key, true);
 				}
 
 				// Multishop default value
-				$option_list[$category]['fields'][$key]['multishop_default'] = (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
+				$field['multishop_default'] = (Shop::isMultiShopActivated() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
+
+				// Assign the modifications back to parent array
+				$category_data['fields'][$key] = $field;
 			}
+			// Assign the modifications back to parent array
+			$option_list[$category] = $category_data;
 		}
+
 		$this->context->smarty->assign(array(
-			'img_legend' => (!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif',
 			'current' => $this->currentIndex,
-			'optionsList' => $option_list,
+			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
