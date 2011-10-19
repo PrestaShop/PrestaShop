@@ -946,7 +946,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 95, 'Stock'),
 (4, 96, 'Warehouses'),
 (4, 97, 'Stock Management'),
-(1, 98, 'Stock instant state');
+(4, 98, 'Stock instant state');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -1429,3 +1429,4 @@ address2
 city State:name postcode
 Country:name
 phone' WHERE `PREFIX_address_format`.`id_country` = 4;
+
