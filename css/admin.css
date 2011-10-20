@@ -1713,3 +1713,6 @@ div.progressBarImage
 	text-align: center;
 	float: left;
 }
+#menu .submenu_size .submenu { display: none; position:absolute}
+#menu .submenu_size:hover > .submenu { display: block; }
+.submenu li{float:none;clear:left;}

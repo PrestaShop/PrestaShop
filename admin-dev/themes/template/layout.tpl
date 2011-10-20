@@ -23,9 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{include file='header.tpl'}
-
+{if $display_header}
+	{include file='header.tpl'}
+{/if}
 {if isset($conf)}
 	<div class="conf">
 		<img src="../img/admin/ok2.png" alt="" />{$conf}
@@ -61,7 +61,7 @@
 	</div>
 {/if}
 
-{if count($informations) && $informations}
+{if isset($informations) && count($informations) && $informations}
 	<div class="hint clear" style="display:block;">
 		{foreach $informations as $info}
 			{$info}
@@ -115,5 +115,6 @@
 {/if}
 
 {$page}
-
-{include file='footer.tpl'}
+{if $display_footer}
+	{include file='footer.tpl'}
+{/if}

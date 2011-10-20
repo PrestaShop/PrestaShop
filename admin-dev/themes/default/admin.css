@@ -36,23 +36,25 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 fieldset{background:#FFFFF0;border:1px solid #DFD5C3;font-size:1.1em;margin:0;padding:1em}
 legend{background:#FFF6D3;border:1px solid #DFD5C3;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
 #menu{float:left;height:30px;line-height:normal;margin:10px 0 0;*margin:7px 0 0;padding:0;width:100%;padding:0 1px}
-#menu li{background:url(bg-tab.png) repeat-x 0 -2px;float:left;height:29px;list-style:none;margin:0 1px 0 0;list-style:none;display:block;border:1px solid #999999;-moz-border-radius-topright:6px;-moz-border-radius-topleft:6px;-webkit-border-top-right-radius:6px;-webkit-border-top-left-radius:6px}
-#menu li a{color:#000;display:block;height:20px;padding:8px 6px 4px 0;font-weight:bold;font-size:0.95em;}
+#menu li.maintab{background:url(bg-tab.png) repeat-x 0 -2px;float:left;height:29px;list-style:none;margin:0 1px 0 0;list-style:none;display:block;border:1px solid #999999;-moz-border-radius-topright:6px;-moz-border-radius-topleft:6px;-webkit-border-top-right-radius:6px;-webkit-border-top-left-radius:6px}
+#menu li.submenu_size .title{color:#000;display:block;height:20px;padding:8px 6px 4px 0;font-weight:bold;font-size:0.95em;}
+#menu li.submenu_size .title{_display:inline;_padding:6px 5px 4px 0}
+#menu li{_height:32px;_padding-top:3px}
 #menu img{display:inline;padding:0 3px 0 6px;vertical-align:top;width:16px;height:16px}
 #menu li.active,#menu li:hover{background-position:0 -38px;white-space:nowrap;}
 #menu li.active a{color:#000}
-#submenu{background:#ECEADE;clear:both;color:#666;margin:0;padding:0;border:1px solid #999999}
+.submenu{background:#ECEADE;clear:both;color:#666;margin:0;padding:0;border:1px solid #999999;z-index:9999}
 .withLeftBorder{background:transparent url(separator_subnav.png) no-repeat 0 5px}
-#submenu li{display:inline;list-style:none;margin:0;background:transparent url(separator_subnav.png) no-repeat right 0;padding-left:7px;padding-right:7px;margin-top:8px;float:left;height:29px}
-#submenu li a{text-decoration:underline}
-#menu li{_height:32px;_padding-top:3px}
-#menu li a{_display:inline;_padding:6px 5px 4px 0}
-.tab-page {border:1px solid #ccc;background:#FFFFF0}
-.tab-row .tab.selected {border:1px solid #ccc;background:#FFF6D3;margin:1px -3px -3px 0px;top:-2px}
-.tab-row .tab {background:#EFEFEF}
+.submenu li{list-style:none;margin:0;padding-left:7px;padding-right:7px;margin-top:8px;float:left;height:16px;}
+.submenu li a{text-decoration:underline}
+.tab-row {height:24px;width:100px;margin-left:25px;border:1px solid #cccccc}
+.tab-row .tab .selected {background:#FFF6D3;margin:1px -3px -3px 25px;top:-2px;background-color:#eeeeee}
+.tab-row .tab {background:#EFEFEF;width:100px;}
+.tab-row .tab-page.selected {background:#FFF6D3;font-weight:bold;margin:1px -3px -3px 0px;top:-2px;background-color:#eeeeee}
+.tab-row .tab-page {background:#EFEFEF;width:100px;}
 hr {height: 1px;color:#E0D0B1;background-color:#E0D0B1}
 #footer {height:40px;background:#ECEADE url(footer-bg.png) repeat-x scroll left bottom;border:1px solid #999999;font-size:12px;clear:both;font-size:0.9em;color:#666666}
-#content {background-color:#FFF;border-left:1px solid #999999;border-right:1px solid #999999}
+#content {background-color:#FFF;border-left:1px solid #999999;border-right:1px solid #999999; border-top:1px solid #999999}
 input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #E0D0B1}
 select {border: 1px solid #E0D0B1}
 select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
@@ -86,3 +88,5 @@ a.module_toggle_all{color: #268CCD;}
 #header_infos .notifs_wrapper a {font-weight: bold;color: black;}
 .notifs_wrapper p {font-size: 12px;padding-top:8px;margin:0;border-top: 2px solid #E0E0E0;}
 .notifs_wrapper p.no_notifs {border: none;}
+.productTabs ol{padding:0;}
+.productTabs{background-color:#e0e0e0;border:1px solid #cccccc;position:absolute;top:100px;left:50px;}

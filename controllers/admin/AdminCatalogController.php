@@ -25,17 +25,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
-include(_PS_ADMIN_DIR_.'/tabs/AdminCategories.php');
-include(_PS_ADMIN_DIR_.'/tabs/AdminProducts.php');
 
-class AdminCatalog extends AdminTab
+class AdminCatalogController extends AdminController
 {
 	/** @var object AdminCategories() instance */
-	private $adminCategories;
+	//private $adminCategories;
 
 	/** @var object AdminProducts() instance */
-	private $adminProducts;
+	// private $adminProducts;
 
 	/** @var object AttributeGenerator() instance */
 	private $attributeGenerator;
@@ -73,8 +70,8 @@ class AdminCatalog extends AdminTab
 			die('Category cannot be loaded');
 
 		$this->table = array('category', 'product');
-		$this->adminCategories = new AdminCategories();
-		$this->adminProducts = new AdminProducts();
+		// $this->adminCategories = new AdminCategories();
+		// $this->adminProducts = new AdminProducts();
 
 		parent::__construct();
 	}
@@ -108,7 +105,7 @@ class AdminCatalog extends AdminTab
 			}
 			$this->attributeGenerator->postProcess();
 		}
-		$this->adminProducts->postProcess($this->token);
+	 //	$this->adminProducts->postProcess($this->token);
 	}
 	public function ajaxProcess()
 	{
@@ -132,7 +129,7 @@ class AdminCatalog extends AdminTab
 			$this->imageResize->displayErrors();
 	}
 
-	public function display()
+	public function initContent()
 	{
 		// @todo : this has to be dealt in AdminAttributeGenerator !!
 		if (isset($_GET['attributegenerator']))
@@ -160,13 +157,7 @@ class AdminCatalog extends AdminTab
 				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) 
 					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
 					
-			echo '<div class="cat_bar"><span style="color: #3C8534;">'.$this->l('Current category').' :</span>&nbsp;&nbsp;&nbsp;'.getPath($catBarIndex, $id_category, '', '', 'catalog', $home).'</div>';
-			//echo '<h2>'.$this->l('Categories').'</h2>';
-			echo '<h1><a class="button" href="'.$this->context->link->getAdminLink('AdminCategories').'">'.$this->l('Categories').'</a></h1>';
-			//$this->adminCategories->display($this->token);
-			echo '<div style="margin:10px">&nbsp;</div>';
-			echo '<h1><a class="button" href="'.$this->context->link->getAdminLink('AdminProducts').'">'.$this->l('Products').'</a></h1>';
-			//$this->adminProducts->display($this->token);
+			$this->context->smarty->assign('cat_bar',getPath($catBarIndex, $id_category, '', '', 'catalog', $home));
 		}
 	}
 }
