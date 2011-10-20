@@ -185,10 +185,14 @@ class AdminProductsController extends AdminController
 	 */
 	public function postProcess($token = null)
 	{
+		info($_POST);
 		/* Add a new product */
 		if (Tools::isSubmit('submitAddproduct') || Tools::isSubmit('submitAddproductAndStay') ||  Tools::isSubmit('submitAddProductAndPreview'))
 		{
-			if ((Tools::getValue('id_product') && $this->tabAccess['edit'] === '1') || ($this->tabAccess['add'] === '1' && !Tools::isSubmit('id_product')))
+			$id_product = Tools::getValue('id_product');
+			if (($id_product && $this->tabAccess['edit'] === '1') 
+				|| ($this->tabAccess['add'] == 1 && Tools::isSubmit('submitAddproduct') && !$id_product)
+			)
 				$this->submitAddproduct($token);
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
