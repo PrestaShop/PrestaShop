@@ -1045,6 +1045,7 @@ class AdminControllerCore extends Controller
 				$helper->currentIndex = self::$currentIndex;
 				$helper->token = $this->token;
 				$helper->table = $this->table;
+				$helper->identifier = $this->identifier;
 				$helper->id = $obj->id;
 				$helper->languages = $this->_languages;
 				$helper->default_form_language = $this->default_form_language;
