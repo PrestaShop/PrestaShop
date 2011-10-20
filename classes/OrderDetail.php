@@ -441,7 +441,7 @@ class OrderDetailCore extends ObjectModel
 	 * @param array $product
 	 * @param int $id_order_status
    */
-	protected function _create(Order $order, Cart $cart, $product, $id_order_state)
+	protected function create(Order $order, Cart $cart, $product, $id_order_state)
 	{
 		$this->tax_calculator = new TaxCalculator();
 	
@@ -492,7 +492,7 @@ class OrderDetailCore extends ObjectModel
 		$this->outOfStock = false;
 		
 		foreach ($products as $product)
-			$this->_create($order, $cart, $product, $id_order_state);
+			$this->create($order, $cart, $product, $id_order_state);
 		
 		unset($this->vat_address);
 		unset($products);
