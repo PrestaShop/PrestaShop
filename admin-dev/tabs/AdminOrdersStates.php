@@ -59,6 +59,7 @@ class AdminOrdersStates extends AdminTab
 			$_POST['logable'] = Tools::getValue('logable');
 			$_POST['send_email'] = Tools::getValue('send_email');
 			$_POST['hidden'] = Tools::getValue('hidden');
+			$_POST['shipped'] = Tools::getValue('shipped');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);
@@ -164,7 +165,13 @@ class AdminOrdersStates extends AdminTab
 					(($this->getFieldValue($obj, 'send_email')) ? 'checked="checked"' : '').' value="1" />
 						<label class="t" for="send_email"> '.$this->l('Send e-mail to customer when order is changed to this status').'</label>
 					</p>
-				</div>				
+				</div>
+				<div class="margin-form">
+					<p>'.elog($this->getFieldValue($obj, 'shipped')).'
+						<input type="checkbox" style="vertical-align: text-bottom;" name="shipped"'.(($this->getFieldValue($obj, 'shipped') == 1) ? ' checked="checked"' : '').' id="shipped_on" value="1" />
+						<label class="t" for="shipped_on"> '.$this->l('Set order as shipped').'</label>
+					</p>
+				</div>
 				<div id="tpl" style="display: '.($this->getFieldValue($obj, 'send_email') ? 'block' : 'none').';">
 					<label>'.$this->l('Template').'</label>
 					<div class="margin-form">';

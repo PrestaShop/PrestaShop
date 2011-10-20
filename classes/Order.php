@@ -607,7 +607,7 @@ class OrderCore extends ObjectModel
 	public function getCurrentStateFull($id_lang)
 	{
 		return Db::getInstance()->getRow('
-		SELECT oh.`id_order_state`, osl.`name`, os.`logable`
+		SELECT oh.`id_order_state`, osl.`name`, os.`logable`, os.`shipped`
 		FROM `'._DB_PREFIX_.'order_history` oh
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = oh.`id_order_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)

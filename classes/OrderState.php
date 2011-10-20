@@ -28,40 +28,43 @@
 class OrderStateCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
+	public $name;
 	
 	/** @var string Template name if there is any e-mail to send */	
-	public 		$template;
+	public $template;
 	
 	/** @var boolean Send an e-mail to customer ? */
-	public 		$send_email;
+	public $send_email;
 	
 	/** @var boolean Allow customer to view and download invoice when order is at this state */
-	public		$invoice;
+	public $invoice;
 	
 	/** @var string Display state in the specified color */
-	public		$color;
+	public $color;
 	
-	public		$unremovable;
+	public $unremovable;
 
 	/** @var boolean Log authorization */
-	public		$logable;
+	public $logable;
 	
 	/** @var boolean Delivery */
-	public		$delivery;
+	public $delivery;
 
 	/** @var boolean Hidden */
-	public		$hidden;
+	public $hidden;
+	
+	/** @var boolean Shipped */
+	public $shipped;
 
- 	protected 	$fieldsValidate = array('send_email' => 'isBool', 'invoice' => 'isBool', 'color' => 'isColor', 'logable' => 'isBool');
-	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 64, 'template' => 64);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'template' => 'isTplName');
+ 	protected $fieldsValidate = array('send_email' => 'isBool', 'invoice' => 'isBool', 'color' => 'isColor', 'logable' => 'isBool', 'shipped' => 'isBool');
+	protected $fieldsRequiredLang = array('name');
+ 	protected $fieldsSizeLang = array('name' => 64, 'template' => 64);
+ 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'template' => 'isTplName');
 	
-	protected 	$table = 'order_state';
-	protected 	$identifier = 'id_order_state';
+	protected $table = 'order_state';
+	protected $identifier = 'id_order_state';
 	
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'unremovable' => array(),
 			'delivery' => array(),
@@ -79,6 +82,7 @@ class OrderStateCore extends ObjectModel
 		$fields['logable'] = (int)($this->logable);
 		$fields['delivery'] = (int)($this->delivery);
 		$fields['hidden'] = (int)($this->hidden);
+		$fields['shipped'] = (int)($this->shipped);
 		return $fields;
 	}
 	

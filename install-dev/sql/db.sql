@@ -1118,14 +1118,15 @@ CREATE TABLE `PREFIX_order_slip_detail` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_state` (
-  `id_order_state` int(10) unsigned NOT NULL auto_increment,
-  `invoice` tinyint(1) unsigned default '0',
-  `send_email` tinyint(1) unsigned NOT NULL default '0',
+  `id_order_state` int(10) UNSIGNED NOT NULL auto_increment,
+  `invoice` tinyint(1) UNSIGNED default '0',
+  `send_email` tinyint(1) UNSIGNED NOT NULL default '0',
   `color` varchar(32) default NULL,
-  `unremovable` tinyint(1) unsigned NOT NULL,
+  `unremovable` tinyint(1) UNSIGNED NOT NULL,
   `hidden` tinyint(1) UNSIGNED NOT NULL default '0',
   `logable` tinyint(1) NOT NULL default '0',
-  `delivery` tinyint(1) unsigned NOT NULL default '0',
+  `delivery` tinyint(1) UNSIGNED NOT NULL default '0',
+  `shipped` tinyint(1) UNSIGNED NOT NULL default '0',
   PRIMARY KEY  (`id_order_state`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

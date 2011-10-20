@@ -241,4 +241,13 @@ class WarehouseCore extends ObjectModel
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 	}
+	
+	public static function getWarehouseList()
+	{ 
+		$query = new DbQuery();
+		$query->select('w.id_warehouse, name');
+		$query->from('warehouse w');
+		$query->innerJoin('warehouse_shop ws ON ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.Context::getContext()->shop->getID(true));
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
 }

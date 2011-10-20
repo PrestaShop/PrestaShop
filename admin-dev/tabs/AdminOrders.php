@@ -30,19 +30,19 @@ class AdminOrders extends AdminTab
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-	 	$this->table = 'order';
-	 	$this->className = 'Order';
-	 	$this->view = true;
+		$this->table = 'order';
+		$this->className = 'Order';
+		$this->view = true;
 		$this->colorOnBackground = true;
-	 	$this->_select = '
+		$this->_select = '
 			a.id_order AS id_pdf,
 			CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 			osl.`name` AS `osname`,
 			os.`color`,
 			IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
 			(SELECT COUNT(od.`id_order`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = a.`id_order` GROUP BY `id_order`) AS product_number';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
-	 	LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
+		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_where = 'AND oh.`id_order_history` = (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` moh WHERE moh.`id_order` = a.`id_order` GROUP BY moh.`id_order`)';
@@ -52,7 +52,7 @@ class AdminOrders extends AdminTab
 
 		foreach ($states AS $state)
 			$statesArray[$state['id_order_state']] = $state['name'];
- 		$this->fieldsDisplay = array(
+		$this->fieldsDisplay = array(
 		'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 		'new' => array('title' => $this->l('New'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'filter_key' => 'new', 'tmpTableFilter' => true, 'icon' => array(0 => 'blank.gif', 1 => 'news-new.gif'), 'orderby' => false),
 		'customer' => array('title' => $this->l('Customer'), 'widthColumn' => 160, 'width' => 140, 'filter_key' => 'customer', 'tmpTableFilter' => true),
@@ -61,14 +61,13 @@ class AdminOrders extends AdminTab
 		'osname' => array('title' => $this->l('Status'), 'widthColumn' => 230, 'type' => 'select', 'select' => $statesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int', 'width' => 200),
 		'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false));
- 		$this->shopLinkType = 'shop';
- 		$this->shopShareDatas = Shop::SHARE_ORDER;
+		$this->shopLinkType = 'shop';
+		$this->shopShareDatas = Shop::SHARE_ORDER;
 		parent::__construct();
 	}
 
 	public function postProcess()
 	{
-
 		/* Update shipping number */
 		if (Tools::isSubmit('submitShippingNumber') AND ($id_order = (int)(Tools::getValue('id_order'))) AND Validate::isLoadedObject($order = new Order($id_order)))
 		{
@@ -116,24 +115,29 @@ class AdminOrders extends AdminTab
 					$history = new OrderHistory();
 					$history->id_order = (int)$id_order;
 					$history->id_employee = (int)$this->context->employee->id;
-					$history->changeIdOrderState((int)($newOrderStatusId), (int)($id_order));
-					$order = new Order((int)$order->id);
-					$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
-					$templateVars = array();
-					if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') AND $order->shipping_number)
-						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-					elseif ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
-						$templateVars = array(
-							'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
-							'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : ''));
-					elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
-						$templateVars = array(
-							'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
-							'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
-							'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : ''));
-					if ($history->addWithemail(true, $templateVars))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
-					$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
+					if (!(int)Tools::getValue('id_warehouse'))
+						$this->_errors[] = Tools::displayError('An error occurred while changing the status.');
+					else
+					{
+						$history->changeIdOrderState((int)($newOrderStatusId), (int)($id_order), (int)Tools::getValue('id_warehouse'));
+						$order = new Order((int)$order->id);
+						$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
+						$templateVars = array();
+						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') AND $order->shipping_number)
+							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+						else if ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
+							$templateVars = array(
+								'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
+								'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : ''));
+						elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
+							$templateVars = array(
+								'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
+								'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
+								'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : ''));
+						if ($history->addWithemail(true, $templateVars))
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
+						$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
+					}
 				}
 			}
 			else
@@ -144,7 +148,7 @@ class AdminOrders extends AdminTab
 		elseif (isset($_POST['submitMessage']))
 		{
 			$_GET['view'.$this->table] = true;
-		 	if ($this->tabAccess['edit'] === '1')
+			if ($this->tabAccess['edit'] === '1')
 			{
 				if (!($id_order = (int)(Tools::getValue('id_order'))) OR !($id_customer = (int)(Tools::getValue('id_customer'))))
 					$this->_errors[] = Tools::displayError('An error occurred before sending message');
@@ -232,14 +236,14 @@ class AdminOrders extends AdminTab
 				$full_product_list = $productList;
 				$full_quantity_list = $qtyList;
 
-                if ($customizationList)
-                {
-    				foreach ($customizationList as $key => $id_order_detail)
-	    			{
-	    			    $full_product_list[$id_order_detail] = $id_order_detail;
-	    			    $full_quantity_list[$id_order_detail] = $customizationQtyList[$key];
-	    			}
-	    		}
+				if ($customizationList)
+				{
+					foreach ($customizationList as $key => $id_order_detail)
+					{
+						$full_product_list[$id_order_detail] = $id_order_detail;
+						$full_quantity_list[$id_order_detail] = $customizationQtyList[$key];
+					}
+				}
 
 				if ($productList OR $customizationList)
 				{
@@ -575,9 +579,37 @@ class AdminOrders extends AdminTab
 				<select name="id_order_state">';
 		$currentStateTab = $order->getCurrentStateFull($this->context->language->id);
 		foreach ($states AS $state)
-			echo '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == $currentStateTab['id_order_state']) ? ' selected="selected"' : '').'>'.stripslashes($state['name']).'</option>';
+		{
+			if ($currentStateTab['shipped'] == 0 && $state['shipped'] == 1)
+				$needWarehouse = true;
+			else
+				$needWarehouse = false;
+			echo '<option onclick="'.($needWarehouse ? 'showWarehouseList()' : 'hideWarehouseList()').'" value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == $currentStateTab['id_order_state']) ? ' selected="selected"' : '').'>'.stripslashes($state['name']).'</option>';
+		}
+		echo '
+				</select>';
+		$warehouse_list = Warehouse::getWarehouseList();
+			echo '<select name="id_warehouse" id="warehouse">';
+			foreach ($warehouse_list as $warehouse)
+				echo '<option value="'.$warehouse['id_warehouse'].'">'.$warehouse['name'].'</option>';
+			echo '</select>';
+
 		echo '
 				</select>
+				<script type="text/javascript">
+					function showWarehouseList()
+					{';
+					if (count($warehouse_list) > 1)
+						echo '
+						$(\'#warehouse\').show();';
+					echo '
+					}
+					function hideWarehouseList()
+					{
+						$(\'#warehouse\').hide();
+					}
+					hideWarehouseList();
+				</script>
 				<input type="hidden" name="id_order" value="'.$order->id.'" />
 				<input type="submit" name="submitState" value="'.$this->l('Change').'" class="button" />
 			</form>';
@@ -594,7 +626,7 @@ class AdminOrders extends AdminTab
 			{
 				echo '
 				'.$this->l('This order has been placed by a').' <b>'.$this->l('guest').'</b>';
-				if(!Customer::customerExists($customer->email))
+				if (!Customer::customerExists($customer->email))
 				{
 					echo '<form method="POST" action="index.php?tab=AdminCustomers&id_customer='.(int)$customer->id.'&token='.Tools::getAdminTokenLite('AdminCustomers').'">
 						<input type="hidden" name="id_lang" value="'.(int)$order->id_lang.'" />
@@ -764,10 +796,10 @@ class AdminOrders extends AdminTab
 						$tokenCatalog = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id);
 						foreach ($products as $k => $product)
 						{
-					        if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
-                                $product_price = $product['product_price'] + $product['ecotax'];
-                            else
-                                $product_price = $product['product_price_wt'];
+							if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+								$product_price = $product['product_price'] + $product['ecotax'];
+							else
+								$product_price = $product['product_price_wt'];
 
 							$image = array();
 							if (isset($product['product_attribute_id']) AND (int)($product['product_attribute_id']))
@@ -775,13 +807,13 @@ class AdminOrders extends AdminTab
 								SELECT id_image
 								FROM '._DB_PREFIX_.'product_attribute_image
 								WHERE id_product_attribute = '.(int)($product['product_attribute_id']));
-						 	if (!isset($image['id_image']) OR !$image['id_image'])
+							if (!isset($image['id_image']) OR !$image['id_image'])
 								$image = Db::getInstance()->getRow('
 								SELECT id_image
 								FROM '._DB_PREFIX_.'image
 								WHERE id_product = '.(int)($product['product_id']).' AND cover = 1');
 							// @FIXME
-						 	$stock = StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true);
+							$stock = StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true);
 							if (isset($image['id_image']))
 							{
 								$target = _PS_TMP_IMG_DIR_.'product_mini_'.(int)($product['product_id']).(isset($product['product_attribute_id']) ? '_'.(int)($product['product_attribute_id']) : '').'.jpg';
@@ -897,8 +929,8 @@ class AdminOrders extends AdminTab
 					<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, \''.$this->l('Do you want to overwrite your existing message?').'\')">
 						<option value="0" selected="selected">-- '.$this->l('Choose a standard message').' --</option>';
 		$orderMessages = OrderMessage::getOrderMessages((int)($order->id_lang));
-        foreach ($orderMessages AS $orderMessage)
-            echo '		<option value="'.htmlentities($orderMessage['message'], ENT_COMPAT, 'UTF-8').'">'.$orderMessage['name'].'</option>';
+		foreach ($orderMessages AS $orderMessage)
+			echo '		<option value="'.htmlentities($orderMessage['message'], ENT_COMPAT, 'UTF-8').'">'.$orderMessage['name'].'</option>';
 		echo '		</select><br /><br />
 					<b>'.$this->l('Display to consumer?').'</b>
 					<input type="radio" name="visibility" id="visibility" value="0" /> '.$this->l('Yes').'

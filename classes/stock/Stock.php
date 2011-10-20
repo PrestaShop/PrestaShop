@@ -73,4 +73,29 @@ class StockCore extends ObjectModel
 		$fields['price_te'] = (float)round($this->price_te, 6);
 		return $fields;
 	}
+	
+	/**
+	 * For a given id_product and id_product_attribute update the quantity in stock
+	 */
+	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_warehouse, $id_order = null)
+	{
+		$warehouse = new Warehouse($id_warehouse);
+		// Update quantity of the pack products
+		if (Pack::isPack($id_product))
+		{
+			$products_pack = Pack::getItems((int)($product['id_product']), (int)(Configuration::get('PS_LANG_DEFAULT')));
+			foreach ($products_pack as $product_pack)
+			{
+				$pack_id_product_attribute = Product::getDefaultAttribute($tab_product_pack['id_product'], 1);
+				self::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_warehouse, $id_order);
+			}
+		}
+		if ($delta_quantity > 0)
+			$id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_INC_REASON_DEFAULT');
+		else
+			$id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_DEC_REASON_DEFAULT');
+		
+		StockManagerFactory::getManager()
+			->removeProduct($id_product, $id_product_attribute, $warehouse, $delta_quantity, $id_stock_mvt_reason, true, (int)$id_order);
+	}
 }
