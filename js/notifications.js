@@ -1,4 +1,4 @@
-function getPush()
+function getPush(refresh)
 {
 	$.post("ajax.php",{"getNotifications" : "1"}, function(data) {
 		if (data)
@@ -62,44 +62,8 @@ function getPush()
 				$("#messages_notif_number_wrapper").hide();
 			}
 		}
-		setTimeout("getPush()",60000);
+		if(refresh)
+			setTimeout("getPush(1)",60000);
 	});
 }
 
-$().ready(function()
-{
-	var hints = $('.translatable span.hint');
-	if (youEditFieldFor)
-	{
-		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
-	}
-	var html = "";		
-	var nb_notifs = 0;
-	var wrapper_id = "";
-	var type = new Array();
-	
-	$(".notifs").live("click", function(){
-		wrapper_id = $(this).attr("id");
-		type = wrapper_id.split("s_notif")
-		$.post("ajax.php",{"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]}, function(data) {
-			if(data)
-			{
-				if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
-				{
-					$(".notifs_wrapper").hide();
-					$("#" + wrapper_id + "_number_wrapper").hide();  
-					$("#" + wrapper_id + "_wrapper").show();  
-				}else
-				{
-					$("#" + wrapper_id + "_wrapper").hide();							
-				}
-			}				
-		});
-	});
-	
-	$("#main").click(function(){
-		$(".notifs_wrapper").hide();
-	});
-
-	getPush();
-});

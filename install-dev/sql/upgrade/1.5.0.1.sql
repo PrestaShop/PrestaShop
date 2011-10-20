@@ -70,7 +70,8 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ('PS_SHOW_NEW_CUSTOMERS', '1', NOW(), NOW()),
 ('PS_SHOW_NEW_MESSAGES', '1', NOW(), NOW()),
 ('PS_FEATURE_FEATURE_ACTIVE', '1', NOW(), NOW()),
-('PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW());
+('PS_COMBINATION_FEATURE_ACTIVE', '1', NOW(), NOW()),
+('PS_ADMINREFRESH_NOTIFICATION', '1', NOW(), NOW());
 
 /* PHP:update_feature_detachable_cache(); */;
 

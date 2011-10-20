@@ -267,13 +267,14 @@ class AdminControllerCore extends Controller
 		return (!empty($token) && $token === $this->token);
 	}
 
+	/**
+	 * @todo uses redirectAdmin only if !$this->ajax
+	 */
 	public function postProcess()
 	{
 		if ($this->ajax)
 		{
 			// from ajax-tab.php
-			if (method_exists($this, 'ajaxPreprocess'))
-				$this->ajaxPreProcess();
 			$action = Tools::getValue('action');
 			// no need to use displayConf() here
 			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
@@ -306,7 +307,10 @@ class AdminControllerCore extends Controller
 						if (($object->deleteImage()))
 						{
 							$redirect = self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token;
-							Tools::redirectAdmin($redirect);
+							if (!$this->ajax)
+								Tools::redirectAdmin($redirect);
+							else
+								$this->content = 'ok';
 						}
 					$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
 					break;
@@ -655,6 +659,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function displayForm($firstCall = true)
 	{
+		$this->initForm();
 		$content = '';
 		$allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 
@@ -1140,8 +1145,8 @@ class AdminControllerCore extends Controller
 			$this->content .= $helper->generateForm($this->fields_form);
 		}
 		// TODO delete when all forms use the helper
-		else
-			$this->content .= $this->displayForm();
+//		else
+//			$this->content .= $this->displayForm();
 	}
 
 	/**
@@ -1403,6 +1408,8 @@ class AdminControllerCore extends Controller
 					break;
 				}
 			}
+			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
+				$this->ajaxPreProcess();
 	}
 
 	/**
@@ -2149,5 +2156,42 @@ EOF;
 		}
 		else
 			$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+	}
+
+	/**
+	  * Display flags in forms for translations
+	  *
+	  * @param array $languages All languages available
+	  * @param integer $default_language Default language id
+	  * @param string $ids Multilingual div ids in form
+	  * @param string $id Current div id]
+	  * @param boolean $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
+	  * 
+		* @todo : delete return params :
+		* @param return define the return way : false for a display, true for a return
+		* 
+		*	@return string
+	  */
+	public function getTranslationsFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
+	{
+		if (count($languages) == 1)
+			return false;
+		$output = '
+		<div class="displayed_flag">
+			<img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
+		</div>
+		<div id="languages_'.$id.'" class="language_flags">
+			'.$this->l('Choose language:').'<br /><br />';
+		foreach ($languages as $language)
+			if($use_vars_instead_of_ids)
+				$output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
+			else
+			$output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', \''.$ids.'\', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
+		$output .= '</div>';
+
+		if ($return)
+			return $output;
+
+		return $output;
 	}
 }
