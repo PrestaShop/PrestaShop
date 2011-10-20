@@ -52,6 +52,8 @@ class HelperOptionsCore extends Helper
 	public function generateOptions($option_list)
 	{
 		$tab = Tab::getTab($this->context->language->id, $this->id);
+		if (!isset($languages))
+			$languages = Language::getLanguages(false);
 		foreach ($option_list as $category => $category_data)
 		{
 			if (!isset($category_data['image']))
@@ -90,8 +92,6 @@ class HelperOptionsCore extends Helper
 				// Fill values for all languages for all lang fields
 				if (substr($field['type'], -4) == 'Lang')
 				{
-					if (!isset($languages))
-						$languages = Language::getLanguages(false);
 
 					foreach ($languages as $language)
 					{
