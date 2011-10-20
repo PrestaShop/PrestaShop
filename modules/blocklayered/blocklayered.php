@@ -319,8 +319,8 @@ class BlockLayered extends Module
 					FROM '._DB_PREFIX_.'category c
 					INNER JOIN '._DB_PREFIX_.'category_lang cl ON (c.id_category = cl.id_category)
 					WHERE cl.id_lang = '.(int)$filter['id_lang']);
-		foreach($categories as $category)
-		{
+					foreach($categories as $category)
+					{
 						if (!isset($attributeValuesByLang[$category['id_lang']]))
 							$attributeValuesByLang[$category['id_lang']] = array();
 						if (!isset($attributeValuesByLang[$category['id_lang']]['category']))
@@ -328,7 +328,7 @@ class BlockLayered extends Module
 						$attributeValuesByLang[$category['id_lang']]['category'][] = array('name' => $this->l('Categories'),
 						'id_name' => null, 'value' => $category['name'], 'id_value' => $category['id_category'],
 						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
-		}
+					}
 					break;
 					
 				case 'manufacturer':
@@ -371,14 +371,14 @@ class BlockLayered extends Module
 						'id_name' => null, 'value' => $condition, 'id_value' => $key,
 						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					break;
-	}
+			}
 
 		// Foreach langs
 		foreach ($attributeValuesByLang as $id_lang => $attributeValues)
-	{
+		{
 			// Foreach attributes generate a couple "/<attribute_name>_<atttribute_value>". For example: color_blue
 			foreach ($attributeValues as $attribute)
-					foreach($attribute as $param)
+				foreach($attribute as $param)
 				{
 						$selectedFilters = array();
 						$link = '/'.str_replace('-', '_', Tools::link_rewrite($param['name'])).'-'.str_replace('-', '_', Tools::link_rewrite($param['value']));
@@ -395,7 +395,7 @@ class BlockLayered extends Module
 						$idLayeredFriendlyUrl = Db::getInstance()->Insert_ID();
 					}
 				}
-			}
+		}
 		if ($ajax)
 			return '{"result": 1}';
 		else
@@ -1773,7 +1773,7 @@ class BlockLayered extends Module
 									if(!isset($selectedFilters[$keyParams][$keyParam]))
 										$selectedFilters[$keyParams][$keyParam] = array();
 									$selectedFilters[$keyParams][$keyParam] = $param;
-		}
+								}
 							}
 					}
 				}
