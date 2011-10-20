@@ -69,13 +69,13 @@
 				<td style="vertical-align: bottom;">
 					<span style="float: left;">
 						{if $page > 1}
-							<input type="image" src="../img/admin/list-prev2.gif" onclick="getE(\'submitFilter{$table}\').value=1"/>&nbsp;
-							<input type="image" src="../img/admin/list-prev.gif" onclick="getE(\'submitFilter{$table}\').value={$page - 1}"/>
+							<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
+							<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
 						{/if}
 						{l s='Page '}<b>{$page}</b> / {$total_pages}
 						{if $page < $total_pages}
-							<input type="image" src="../img/admin/list-next.gif" onclick="getE(\'submitFilter{$table}\').value={$page + 1}"/>&nbsp;
-							<input type="image" src="../img/admin/list-next2.gif" onclick="getE(\'submitFilter{$table}'\').value={$total_pages}"/>
+							<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
+							<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}'').value={$total_pages}"/>
 						{/if}
 						| {l s='Display'}
 						<select name="pagination">
