@@ -118,7 +118,7 @@
 					echo '</table>';
 			*}
 				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang'}
-					{if if $field['type'] == 'textLang'}
+					{if $field['type'] == 'textLang'}
 						{foreach $field['languages'] AS $id_lang => $value}
 							<div id="{$key}_{$id_lang}" style="margin-bottom:8px; display: {if $id_lang == $current_id_lang}'block'{else}'none'{/if}; float: left; vertical-align: top;">
 								<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}_{$id_lang}" value="{$value}" />
