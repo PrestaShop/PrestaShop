@@ -31,7 +31,7 @@ class HelperListCore extends Helper
 	protected $_list = array();
 
 	/** @var integer Number of results in list */
-	public $_listTotal = 0;
+	public $listTotal = 0;
 
 	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
@@ -43,13 +43,13 @@ class HelperListCore extends Helper
 	protected $_pagination = array(20, 50, 100, 300);
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
-	public $_orderBy;
+	public $orderBy;
 
-	/** @var string Default ORDER BY clause when $_orderBy is not defined */
+	/** @var string Default ORDER BY clause when $orderBy is not defined */
 	public $_defaultOrderBy = false;
 
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
-	public $_orderWay;
+	public $orderWay;
 
 	public $identifier;
 
@@ -425,14 +425,14 @@ class HelperListCore extends Helper
 		else
 			$default_pagination = $this->_pagination[0];
 
-		$total_pages = ceil($this->_listTotal / Tools::getValue('pagination', ($default_pagination)));
+		$total_pages = ceil($this->listTotal / Tools::getValue('pagination', ($default_pagination)));
 
 		if (!$total_pages) $total_pages = 1;
 
 		$identifier = Tools::getIsset($this->identifier) ? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier) : '';
 		$order = '';
 		if (Tools::getIsset($this->table.'Orderby'))
-			$order = '&'.$this->table.'Orderby='.urlencode($this->_orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->_orderWay));
+			$order = '&'.$this->table.'Orderby='.urlencode($this->orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->orderWay));
 
 		$action = $this->currentIndex.$identifier.'&token='.$token.$order.'#'.$this->table;
 
@@ -455,7 +455,7 @@ class HelperListCore extends Helper
 				substr($this->identifier,3,strlen($this->identifier)))
 		}
 		.' class="table'.(
-		if ($is_dnd_identifier AND ($this->_orderBy != 'position 'AND $this->_orderWay != 'DESC'))
+		if ($is_dnd_identifier AND ($this->orderBy != 'position 'AND $this->orderWay != 'DESC'))
 			' tableDnD'
 		.'" cellpadding="0" cellspacing="0">*/
 
@@ -466,7 +466,7 @@ class HelperListCore extends Helper
 		if (array_key_exists($this->identifier, $this->identifiersDnd) && (int)Tools::getValue($this->identifiersDnd[$this->identifier], 1))
 			$table_id = substr($this->identifier, 3, strlen($this->identifier));
 
-		if (array_key_exists($this->identifier, $this->identifiersDnd) && ($this->_orderBy != 'position' && $this->_orderWay != 'DESC'))
+		if (array_key_exists($this->identifier, $this->identifiersDnd) && ($this->orderBy != 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
 
 		foreach ($this->fieldsDisplay as $key => $params)
@@ -517,10 +517,10 @@ class HelperListCore extends Helper
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
-			'list_total' => $this->_listTotal,
-			'is_order_position' => array_key_exists($this->identifier, $this->identifiersDnd) && $this->_orderBy == 'position',
-			'order_way' => $this->_orderWay,
-			'order_by' => $this->_orderBy,
+			'list_total' => $this->listTotal,
+			'is_order_position' => array_key_exists($this->identifier, $this->identifiersDnd) && $this->orderBy == 'position',
+			'order_way' => $this->orderWay,
+			'order_by' => $this->orderBy,
 			'token' => $this->token,
 			'fields_display' => $this->fieldsDisplay,
 			'delete' => in_array('delete', $this->actions),

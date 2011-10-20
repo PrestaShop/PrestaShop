@@ -48,6 +48,21 @@ class AdminAddressesControllerCore extends AdminController
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;
+
+		$this->fieldsDisplay = array(
+			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'firstname' => array('title' => $this->l('First name'), 'width' => 80, 'filter_key' => 'a!firstname'),
+			'lastname' => array('title' => $this->l('Last name'), 'width' => 100, 'filter_key' => 'a!lastname'),
+			'address1' => array('title' => $this->l('Address'), 'width' => 200),
+			'postcode' => array('title' => $this->l('Postcode/ Zip Code'), 'align' => 'right', 'width' => 50),
+			'city' => array('title' => $this->l('City'), 'width' => 150),
+			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
+
+		parent::__construct();
+	}
+
+	public function initList()
+	{
 		$this->_select = 'cl.`name` as country';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON
 			(cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
@@ -57,15 +72,11 @@ class AdminAddressesControllerCore extends AdminController
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
 
-		$this->fieldsDisplay = array(
-		'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'firstname' => array('title' => $this->l('First name'), 'width' => 80, 'filter_key' => 'a!firstname'),
-		'lastname' => array('title' => $this->l('Last name'), 'width' => 100, 'filter_key' => 'a!lastname'),
-		'address1' => array('title' => $this->l('Address'), 'width' => 200),
-		'postcode' => array('title' => $this->l('Postcode/ Zip Code'), 'align' => 'right', 'width' => 50),
-		'city' => array('title' => $this->l('City'), 'width' => 150),
-		'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
+		parent::initList();
+	}
 
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
@@ -125,7 +136,143 @@ class AdminAddressesControllerCore extends AdminController
 			)
 		);
 
-		parent::__construct();
+		if (Validate::isLoadedObject($this->object))
+		{
+			$customer = new Customer($this->object->id_customer);
+			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
+		}
+
+		if (Configuration::get('VATNUMBER_MANAGEMENT'))
+			if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
+				$vat = 'is_applicable';
+			else
+				$vat = 'management';
+
+		$this->context->smarty->assign(array(
+			'vat' => isset($vat) ? $vat : null,
+			'customer' => isset($customer) ? $customer : null,
+			'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
+		));
+
+		// Order address fields depending on country format
+		$addresses_fields = $this->processAddressFormat();
+		$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
+
+		$temp_fields = array();
+
+		foreach($addresses_fields as $addr_field_item)
+		{
+			if ($addr_field_item == 'company')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Company'),
+					'name' => 'company',
+					'size' => 33,
+					'required' => false,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+				);
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('VAT number'),
+					'name' => 'vat_number',
+					'size' => 33,
+					''
+				);
+			}
+			elseif ($addr_field_item == 'lastname')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Last name'),
+					'name' => 'lastname',
+					'size' => 33,
+					'required' => true,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+				);
+			}
+			elseif ($addr_field_item == 'firstname')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('First name'),
+					'name' => 'firstname',
+					'size' => 33,
+					'required' => true,
+					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+				);
+			}
+			elseif ($addr_field_item == 'address1')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Address'),
+					'name' => 'address1',
+					'size' => 33,
+					'required' => true,
+				);
+			}
+			elseif ($addr_field_item == 'address2')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Address').' (2)',
+					'name' => 'address2',
+					'size' => 33,
+					'required' => false,
+				);
+			}
+			elseif ($addr_field_item == 'postcode')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Postcode/ Zip Code'),
+					'name' => 'postcode',
+					'size' => 33,
+					'required' => false,
+				);
+			}
+			elseif ($addr_field_item == 'city')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('City'),
+					'name' => 'city',
+					'size' => 33,
+					'required' => true,
+				);
+			}
+			elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
+			{
+				$temp_fields[] = array(
+					'type' => 'select',
+					'label' => $this->l('Country:'),
+					'name' => 'id_country',
+					'required' => false,
+					'options' => array(
+						'query' => Country::getCountries($this->context->language->id),
+						'id' => 'id_country',
+						'name' => 'name'
+					)
+				);
+				$temp_fields[] = array(
+					'type' => 'select',
+					'label' => $this->l('State'),
+					'name' => 'id_state',
+					'required' => false,
+					'options' => array(
+						'id' => 'id_state',
+						'name' => 'name'
+					)
+				);
+
+			}
+		}
+
+		// merge address format with the rest of the form
+		array_splice($this->fields_form['input'], 3, 0, $temp_fields);
+
+		parent::initForm();
 	}
 
 	public function postProcess()
@@ -240,153 +387,5 @@ class AdminAddressesControllerCore extends AdminController
 		}
 
 		return $out;
-	}
-
-	public function initContent()
-	{
-		if ($this->display == 'edit' || $this->display == 'add')
-		{
-			if (!($address = $this->loadObject(true)))
-				return false;
-
-			if (Validate::isLoadedObject($address))
-			{
-				$customer = new Customer($address->id_customer);
-				$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
-			}
-
-			if (Configuration::get('VATNUMBER_MANAGEMENT'))
-				if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
-					$vat = 'is_applicable';
-				else
-					$vat = 'management';
-
-			$this->context->smarty->assign(array(
-				'vat' => isset($vat) ? $vat : null,
-				'customer' => isset($customer) ? $customer : null,
-				'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
-			));
-
-			// Order address fields depending on country format
-			$addresses_fields = $this->processAddressFormat();
-			$addresses_fields = $addresses_fields["dlv_all_fields"];	// we use  delivery address
-
-			$temp_fields = array();
-
-			foreach($addresses_fields as $addr_field_item)
-			{
-				if ($addr_field_item == 'company')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('Company'),
-						'name' => 'company',
-						'size' => 33,
-						'required' => false,
-						'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
-					);
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('VAT number'),
-						'name' => 'vat_number',
-						'size' => 33,
-						''
-					);
-				}
-				elseif ($addr_field_item == 'lastname')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('Last name'),
-						'name' => 'lastname',
-						'size' => 33,
-						'required' => true,
-						'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
-					);
-				}
-				elseif ($addr_field_item == 'firstname')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('First name'),
-						'name' => 'firstname',
-						'size' => 33,
-						'required' => true,
-						'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
-					);
-				}
-				elseif ($addr_field_item == 'address1')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('Address'),
-						'name' => 'address1',
-						'size' => 33,
-						'required' => true,
-					);
-				}
-				elseif ($addr_field_item == 'address2')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('Address').' (2)',
-						'name' => 'address2',
-						'size' => 33,
-						'required' => false,
-					);
-				}
-				elseif ($addr_field_item == 'postcode')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('Postcode/ Zip Code'),
-						'name' => 'postcode',
-						'size' => 33,
-						'required' => false,
-					);
-				}
-				elseif ($addr_field_item == 'city')
-				{
-					$temp_fields[] = array(
-						'type' => 'text',
-						'label' => $this->l('City'),
-						'name' => 'city',
-						'size' => 33,
-						'required' => true,
-					);
-				}
-				elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
-				{
-					$temp_fields[] = array(
-						'type' => 'select',
-						'label' => $this->l('Country:'),
-						'name' => 'id_country',
-						'required' => false,
-						'options' => array(
-							'query' => Country::getCountries($this->context->language->id),
-							'id' => 'id_country',
-							'name' => 'name'
-						)
-					);
-					$temp_fields[] = array(
-						'type' => 'select',
-						'label' => $this->l('State'),
-						'name' => 'id_state',
-						'required' => false,
-						'options' => array(
-							'id' => 'id_state',
-							'name' => 'name'
-						)
-					);
-
-				}
-			}
-			// merge address format with the rest of the form
-			array_splice($this->fields_form['input'], 3, 0, $temp_fields);
-		}
-		else
-			$this->display = 'list';
-
-		parent::initContent();
 	}
 }

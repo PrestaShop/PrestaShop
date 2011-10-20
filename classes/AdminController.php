@@ -77,7 +77,11 @@ class AdminControllerCore extends Controller
 	/** @var array Errors displayed after post processing */
 	public $_errors = array();
 
-	protected $list_display;
+	/** @var array list to be generated */
+	protected $fieldsDisplay;
+
+	/** @var array edit form to be generated */
+	protected $fields_form;
 
 	/** @var array list of option forms to be generated */
 	protected $options;
@@ -187,6 +191,9 @@ class AdminControllerCore extends Controller
 	/** @var string Image type */
 	public $imageType = 'jpg';
 
+	/** @var instanciation of the class associated with the AdminController */
+	protected $object;
+
 	public function __construct()
 	{
 	// retro-compatibility : className for admin without controller
@@ -271,7 +278,7 @@ class AdminControllerCore extends Controller
 			// no need to use displayConf() here
 			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
 				$this->{'ajaxProcess'.Tools::toCamelCase($action)}();
-			else if (method_exists($this, 'ajaxProcess')) 
+			else if (method_exists($this, 'ajaxProcess'))
 					$this->ajaxProcess();
 
 			// @TODO We should use a displayAjaxError
@@ -290,6 +297,7 @@ class AdminControllerCore extends Controller
 
 			// Sub included tab postProcessing
 			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
+
 			switch ($this->action)
 			{
 				/* Delete object image */
@@ -1009,111 +1017,26 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * initContent 
-	 * Assign smarty variables for all default views, list and form
-	 * 
+	 * Assign smarty variables for all default views, list and form, then call other init functions
 	 */
 	public function initContent()
 	{
-		$this->context->smarty->assign(array(
-			'current' => self::$currentIndex,
-			'token' => $this->token,
-			'table' => $this->table
-		));
-
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			if (!($obj = $this->loadObject(true)))
+			if (!($this->object = $this->loadObject(true)))
 				return;
-
-			// init form declaration
 			$this->initForm();
-
-			if (isset($this->fields_form))
-			{
-				$this->getlanguages();
-				$helper = new HelperForm();
-				// Check if form template has been overriden
-				if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
-					$helper->tpl = $this->tpl_folder.'form.tpl';
-				$helper->currentIndex = self::$currentIndex;
-				$helper->token = $this->token;
-				$helper->table = $this->table;
-				$helper->identifier = $this->identifier;
-				$helper->id = $obj->id;
-				$helper->languages = $this->_languages;
-				$helper->default_form_language = $this->default_form_language;
-				$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-				$helper->fields_value = $this->getFieldsValue($obj);
-				$this->content .= $helper->generateForm($this->fields_form);
-			}
-			else
-			// TODO delete when all forms use the helper
-				$this->content .= $this->displayForm();
-
-			if ($this->tabAccess['view'])
-			{
-				if (Tools::getValue('back'))
-					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
-				else
-					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
-			}
 		}
-		else if ($this->display == 'list')
+		else if ($this->display != 'view')
 		{
-			// init list declaration
 			$this->initList();
-
-			$this->getList($this->context->language->id);
-
-			$helper = new HelperList();
-			// Check if list templates have been overriden
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_header.tpl'))
-				$helper->header_tpl = $this->tpl_folder.'list_header.tpl';
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_content.tpl'))
-				$helper->header_tpl = $this->tpl_folder.'list_content.tpl';
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_footer.tpl'))
-				$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
-
-			// For compatibility reasons, we have to check standard actions in class attributes
-			foreach ($this->actions_available as $action)
-			{
-				if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
-					$this->actions[] = $action;
-			}
-
-			$helper->actions = $this->actions;
-			$helper->bulk_actions = $this->bulk_actions;
-			$helper->currentIndex = self::$currentIndex;
-			$helper->className = $this->className;
-			$helper->table = $this->table;
-			$helper->_orderBy = $this->_orderBy;
-			$helper->_orderWay = $this->_orderWay;
-			$helper->_listTotal = $this->_listTotal;
-			$helper->shopLink = $this->shopLink;
-			$helper->shopLinkType = $this->shopLinkType;
-			$helper->identifier = $this->identifier;
-			$helper->token = $this->token;
-			$helper->imageType = $this->imageType;
-			$helper->no_add = isset($this->no_add) ? $this->no_add : false;
-			$helper->colorOnBackground = $this->colorOnBackground;
-
-			// For each action, try to add the corresponding skip elements list
-			$helper->list_skip_actions = $this->list_skip_actions;
-			$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
-
-			// init options declaration
 			$this->initOptions();
-	
-			if ($this->options)
-			{
-				$helper = new HelperOptions();
-				$helper->id = $this->id;
-				$helper->currentIndex = self::$currentIndex;
-				$this->content .= $helper->generateOptions($this->options);
-			}
 		}
-
+		$this->context->smarty->assign(array(
+			'table' => $this->table,
+			'current' => self::$currentIndex,
+			'token' => $this->token,
+		));
 	}
 
 	/**
@@ -1141,6 +1064,48 @@ class AdminControllerCore extends Controller
 	 */
 	public function initList()
 	{
+		if (!($this->fieldsDisplay && is_array($this->fieldsDisplay)))
+			return false;
+		$this->getList($this->context->language->id);
+
+		if (!($this->_list && is_array($this->_list)))
+			return false;
+
+		$helper = new HelperList();
+		// Check if list templates have been overriden
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_header.tpl'))
+			$helper->header_tpl = $this->tpl_folder.'list_header.tpl';
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_content.tpl'))
+			$helper->header_tpl = $this->tpl_folder.'list_content.tpl';
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_footer.tpl'))
+			$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
+
+		// For compatibility reasons, we have to check standard actions in class attributes
+		foreach ($this->actions_available as $action)
+		{
+			if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
+				$this->actions[] = $action;
+		}
+
+		$helper->actions = $this->actions;
+		$helper->bulk_actions = $this->bulk_actions;
+		$helper->currentIndex = self::$currentIndex;
+		$helper->className = $this->className;
+		$helper->table = $this->table;
+		$helper->orderBy = $this->_orderBy;
+		$helper->orderWay = $this->_orderWay;
+		$helper->listTotal = $this->_listTotal;
+		$helper->shopLink = $this->shopLink;
+		$helper->shopLinkType = $this->shopLinkType;
+		$helper->identifier = $this->identifier;
+		$helper->token = $this->token;
+		$helper->imageType = $this->imageType;
+		$helper->no_add = isset($this->no_add) ? $this->no_add : false;
+		$helper->colorOnBackground = $this->colorOnBackground;
+
+		// For each action, try to add the corresponding skip elements list
+		$helper->list_skip_actions = $this->list_skip_actions;
+		$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
 	}
 
 	/**
@@ -1148,6 +1113,35 @@ class AdminControllerCore extends Controller
 	 */
 	public function initForm()
 	{
+		if ($this->fields_form && is_array($this->fields_form))
+		{
+			$this->getlanguages();
+			$helper = new HelperForm();
+			// Check if form template has been overriden
+			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
+				$helper->tpl = $this->tpl_folder.'form.tpl';
+			$helper->currentIndex = self::$currentIndex;
+			$helper->token = $this->token;
+			$helper->table = $this->table;
+			$helper->identifier = $this->identifier;
+			$helper->id = $this->object->id;
+			$helper->languages = $this->_languages;
+			$helper->default_form_language = $this->default_form_language;
+			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+			$helper->fields_value = $this->getFieldsValue($this->object);
+			if ($this->tabAccess['view'])
+			{
+				if (Tools::getValue('back'))
+					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+				else
+					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
+			}
+
+			$this->content .= $helper->generateForm($this->fields_form);
+		}
+		// TODO delete when all forms use the helper
+		else
+			$this->content .= $this->displayForm();
 	}
 
 	/**
@@ -1155,6 +1149,14 @@ class AdminControllerCore extends Controller
 	 */
 	public function initOptions()
 	{
+		if ($this->options && is_array($this->options))
+		{
+			$helper = new HelperOptions();
+			$helper->id = $this->id;
+			$helper->token = $this->token;
+			$helper->currentIndex = self::$currentIndex;
+			$this->content .= $helper->generateOptions($this->options);
+		}
 	}
 
 	public function setMedia()
@@ -1250,7 +1252,7 @@ class AdminControllerCore extends Controller
 		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
-		// @todo : put the definitions in Controller class 
+		// @todo : put the definitions in Controller class
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
@@ -1386,7 +1388,7 @@ class AdminControllerCore extends Controller
 		else if (isset($_POST['submitReset'.$this->table]))
 			$this->action = 'reset_filters';
 		/* Submit options list */
-		else if (Tools::getValue('submitOptions'.$this->table))
+		else if (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
 			$this->action = 'update_options';
 		else if (Tools::isSubmit('submitFields') && $this->requiredDatabase && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
@@ -1440,7 +1442,6 @@ class AdminControllerCore extends Controller
 			$orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
 		if (empty($orderWay))
 			$orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
-
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
 
@@ -1780,7 +1781,7 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Update the associations of shops
-	 * 
+	 *
 	 * @param int $id_object
 	 * @param int $new_id_object
 	 */
@@ -1840,10 +1841,10 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * displayAssoShop 
+	 * displayAssoShop
 	 * @todo : create assoshop.tpl and use smarty var asso_shop in pages
 	 *
-	 * @param string $type 
+	 * @param string $type
 	 * @return void
 	 */
 	protected function displayAssoShop($type = 'shop')

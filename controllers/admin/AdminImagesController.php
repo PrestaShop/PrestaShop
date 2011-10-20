@@ -527,17 +527,7 @@ class AdminImagesController extends AdminController
 	public function initContent()
 	{
 		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-
-		if ($this->display == 'list')
 		{
-			$helper = new HelperOptions();
-			$helper->id = $this->id;
-			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options);
-
 			$this->initRegenerate();
 			$this->initMoveImages();
 
@@ -549,5 +539,7 @@ class AdminImagesController extends AdminController
 
 		if ($this->display == 'edit')
 			$this->warnings[] = $this->l('After modification, do not forget to regenerate thumbnails');
+
+		parent::initContent();
 	}
 }

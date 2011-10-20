@@ -274,13 +274,5 @@ class AdminCurrenciesControllerCore extends AdminController
 		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
 		Currency::refreshCurrencies();
 	}
-
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-	}
 }
 
