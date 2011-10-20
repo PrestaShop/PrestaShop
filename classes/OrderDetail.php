@@ -318,7 +318,7 @@ class OrderDetailCore extends ObjectModel
 	 * Set virtual product information 
 	 * @param array $product
 	 */
-	protected function _setVirtualProductInformation($product)
+	protected function setVirtualProductInformation($product)
 	{
 		// Add some informations for virtual products
 		$this->download_deadline = '0000-00-00 00:00:00';
@@ -339,9 +339,9 @@ class OrderDetailCore extends ObjectModel
 	 * @param array $product
 	 * @param int $id_order_state
 	 */
-	protected function _checkProductStock($product, $id_order_state)
+	protected function checkProductStock($product, $id_order_state)
 	{
-		if ($id_order_state != Configuration::get('PS_OS_CANCELED') AND $id_order_state != Configuration::get('PS_OS_ERROR'))
+		if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR'))
 		{
 			if (StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']))
 				$product['stock_quantity'] -= $product['cart_quantity'];
@@ -356,7 +356,7 @@ class OrderDetailCore extends ObjectModel
 	 * @param object $order
 	 * @param array $product
 	 */
-	protected function _setProductTax(Order $order, $product)
+	protected function setProductTax(Order $order, $product)
 	{
 		$this->ecotax = Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency));
 		
@@ -380,7 +380,7 @@ class OrderDetailCore extends ObjectModel
 	 * Set specific price of the product
 	 * @param object $order
 	 */
-	protected function _setSpecificPrice(Order $order)
+	protected function setSpecificPrice(Order $order)
 	{
 		$this->reduction_amont = 0.00;
 		$this->reduction_percent = 0.00;
@@ -404,7 +404,7 @@ class OrderDetailCore extends ObjectModel
 	 * @param object $cart
 	 * @param array $product
 	 */
-	protected function _setDetailProductPrice(Order $order, Cart $cart, $product)
+	protected function setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
 		$this->specificPrice = null;
 		
@@ -414,7 +414,7 @@ class OrderDetailCore extends ObjectModel
 			null, false, false, $product['cart_quantity'], false, (int)($order->id_customer), 
 			(int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}), $this->specificPrice, false, false);
 		
-		$this->_setSpecificPrice($order);
+		$this->setSpecificPrice($order);
 		
 		$this->group_reduction = (float)(Group::getReduction((int)($order->id_customer)));
 		
@@ -431,7 +431,7 @@ class OrderDetailCore extends ObjectModel
 				Tools::ps_round($unitPrice, 2) : $unitPrice) - $this->tax_calculator->addTaxes($quantityDiscount['price'])) : 
 				0.00);
 				
-		$this->discount_quantity_applied = (($this->specificPrice AND $this->specificPrice['from_quantity'] > 1) ? 1 : 0);
+		$this->discount_quantity_applied = (($this->specificPrice && $this->specificPrice['from_quantity'] > 1) ? 1 : 0);
 	}
 	
 	/**
@@ -450,7 +450,7 @@ class OrderDetailCore extends ObjectModel
 		$this->product_id = (int)($product['id_product']);
 		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null);
 		$this->product_name = pSQL($product['name'].
-			((isset($product['attributes']) AND $product['attributes'] != null) ? 
+			((isset($product['attributes']) && $product['attributes'] != null) ? 
 				' - '.$product['attributes'] : ''));
 			
 		$this->product_quantity = (int)($product['cart_quantity']);
@@ -464,10 +464,10 @@ class OrderDetailCore extends ObjectModel
 		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ? 
 			$productQuantity : (int)($product['cart_quantity']);
 			
-		$this->_setVirtualProductInformation($product);
-		$this->_checkProductStock($product, $id_order_state);
-		$this->_setProductTax($order, $product);
-		$this->_setDetailProductPrice($order, $cart, $product);	
+		$this->setVirtualProductInformation($product);
+		$this->checkProductStock($product, $id_order_state);
+		$this->setProductTax($order, $product);
+		$this->setDetailProductPrice($order, $cart, $product);	
 	
 		// Add new entry to the table
 		$this->save();						
