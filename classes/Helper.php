@@ -34,6 +34,7 @@ class HelperCore
 {
 	public $currentIndex;
 	public $table;
+	public $identifier;
 	public $token;
 	public $context;
 
