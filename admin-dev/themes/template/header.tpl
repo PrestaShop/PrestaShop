@@ -95,6 +95,51 @@
 				color:{$brightness}
 			}
 		</style>
+
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	var hints = $('.translatable span.hint');
+	if (youEditFieldFor)
+	{
+		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
+	}
+	var html = "";		
+	var nb_notifs = 0;
+	var wrapper_id = "";
+	var type = new Array();
+	
+	$(".notifs").live("click", function(){
+		wrapper_id = $(this).attr("id");
+		type = wrapper_id.split("s_notif")
+		$.post("ajax.php",
+			{
+				"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]
+			}, function(data) {
+			if(data)
+			{
+				if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
+				{
+					$(".notifs_wrapper").hide();
+					$("#" + wrapper_id + "_number_wrapper").hide();  
+					$("#" + wrapper_id + "_wrapper").show();  
+				}else
+				{
+					$("#" + wrapper_id + "_wrapper").hide();							
+				}
+			}				
+		});
+	});
+	
+	$("#main").click(function(){
+		$(".notifs_wrapper").hide();
+	});
+
+	// call it once immediately, then use setTimeout if refresh is activated
+	getPush({$autorefresh_notifications});
+});
+</script>
 	</head>
 	<body {if $bo_color} style="background:{$bo_color}" {/if}>
 	<div id="top_container">
@@ -194,24 +239,27 @@
 					</div>
 				{/if}
 				{foreach $tabs AS $t}
-				<li class="submenu_size {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-					<a href="{$t.href}">
-						<img src="{$t.img}" alt="" /> {$t.name}
-					</a>
+				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+					<span class="title">
+						<img src="{$t.img}" alt="" />{$t.name}
+					</span>
+<ul class="submenu">
+{foreach from=$t.sub_tabs item=t2}
+<li><a href="{$t2.href}">{$t2.name}</a></li>
+{/foreach}
+</ul>
 				</li>
 				{/foreach}
 			</ul>
 				{foreach $tabs AS $t}
 					<div id="tab{$t.id_tab}_subtabs" style="display:none">
 						{foreach $t.sub_tabs AS $t2}
-							<li><a href="{$t2.href}">{$t2.name}</a></li>
+							<li class="subitem" ><a href="{$t2.href}">{$t2.name}</a></li>
 						{/foreach}
-						{if $t.current}
-							{assign var='mainsubtab' value=$t}
-						{/if}
 						<div class="flatclear">&nbsp;</div>
 					</div>
 				{/foreach}
+{* @todo : handle bo_uimode == hover  / not hover ?
 				{if $employee->bo_uimode == 'hover'}
 					<script type="text/javascript">
 						$("#menu li").hoverIntent( { over:hoverTabs,timeout:100,out:outTabs } );
@@ -231,10 +279,12 @@
 				<ul id="submenu" {if isset($mainsubtab)}class="withLeftBorder clearfix"{/if}>
 					{if isset($mainsubtab)}
 						{foreach $mainsubtab.sub_tabs AS $t}
-							<li><a href="{$t.href}">{$t.name}</a></li>
+							<li>
+							<a href="{$t.href}">{$t.name}</a></li>
 						{/foreach}
 					{/if}
 				</ul>
+*}
 					<div id="main">
 						<div id="content">
 							{if $install_dir_exists}
