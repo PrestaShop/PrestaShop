@@ -50,6 +50,11 @@ class AdminAliasesControllerCore extends AdminController
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
+		parent::__construct();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Aliases'),
@@ -82,11 +87,6 @@ class AdminAliasesControllerCore extends AdminController
 			)
 		);
 
-		parent::__construct();
-	}
-
-	public function initForm()
-	{
 		$this->fields_value = array('alias' => $this->object->getAliases());
 
 		parent::initForm();

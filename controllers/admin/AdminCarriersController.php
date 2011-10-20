@@ -48,15 +48,6 @@ class AdminCarriersControllerCore extends AdminController
 			'dir' => 'st'
 		);
 
-		parent::__construct();
-	}
-
-	public function initList()
-	{
-		$this->_select = 'b.*';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier';
-		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
-
 		$this->fieldsDisplay = array(
 			'id_carrier' => array(
 				'title' => $this->l('ID'),
@@ -105,10 +96,7 @@ class AdminCarriersControllerCore extends AdminController
 				'position' => 'position'
 			)
 		);
-	}
 
-	public function initOptions()
-	{
 		$carrier_default_sort = array(
 			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
 			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
@@ -138,6 +126,17 @@ class AdminCarriersControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
+
+		parent::__construct();
+	}
+
+	public function initList()
+	{
+		$this->_select = 'b.*';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier';
+		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
+
+		parent::initList();
 	}
 
 	public function initForm()
@@ -357,6 +356,8 @@ class AdminCarriersControllerCore extends AdminController
 			'title' => $this->l('   Save   '),
 			'class' => 'button'
 		);
+
+		parent::initForm();
 	}
 
 	public function postProcess()

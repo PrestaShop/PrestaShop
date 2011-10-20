@@ -48,14 +48,6 @@ class AdminCountriesControllerCore extends AdminController
 			'dir' => 'st'
 		);
 
-		parent::__construct();
-	}
-
-	public function initList()
-	{
-	 	$this->_select = 'z.`name` AS zone';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
-
 		$this->fieldsDisplay = array(
 			'id_country' => array(
 				'title' => $this->l('ID'),
@@ -92,10 +84,7 @@ class AdminCountriesControllerCore extends AdminController
 				'filter_key' => 'a!active'
 			)
 		);
-	}
 
-	public function initOptions()
-	{
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Countries options'),
@@ -118,6 +107,16 @@ class AdminCountriesControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
+
+		parent::__construct();
+	}
+
+	public function initList()
+	{
+	 	$this->_select = 'z.`name` AS zone';
+	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+
+	 	parent::initList();
 	}
 
 	public function initForm()
@@ -353,6 +352,8 @@ class AdminCountriesControllerCore extends AdminController
 			'title' => $this->l('   Save   '),
 			'class' => 'button'
 		);
+
+		parent::initForm();
 	}
 
 	public function postProcess()
@@ -399,14 +400,6 @@ class AdminCountriesControllerCore extends AdminController
 
 			return parent::postProcess();
 		}
-	}
-
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
 	}
 
 	private function displayValidFields()

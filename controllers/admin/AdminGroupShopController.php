@@ -47,9 +47,11 @@ class AdminGroupShopControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
 		);
 
-		$enabled = '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />';
-		$disabled = '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />';
+		parent::__construct();
+	}
 
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('GroupShop')
@@ -66,16 +68,17 @@ class AdminGroupShopControllerCore extends AdminController
 					'name' => 'share_customer',
 					'required' => true,
 					'class' => 't',
+					'is_bool' => true,
 					'values' => array(
 						array(
 							'id' => 'share_customer_on',
 							'value' => 1,
-							'label' => $enabled
+							'label' => $this->l('Enabled')
 						),
 						array(
 							'id' => 'share_customer_off',
 							'value' => 0,
-							'label' => $disabled
+							'label' => $this->l('Disabled')
 						)
 					),
 					'p' => $this->l('Share customers between shops of this group')
@@ -86,16 +89,17 @@ class AdminGroupShopControllerCore extends AdminController
 					'name' => 'share_stock',
 					'required' => true,
 					'class' => 't',
+					'is_bool' => true,
 					'values' => array(
 						array(
 							'id' => 'share_stock_on',
 							'value' => 1,
-							'label' => $enabled
+							'label' => $this->l('Enabled')
 						),
 						array(
 							'id' => 'share_stock_off',
 							'value' => 0,
-							'label' => $disabled
+							'label' => $this->l('Disabled')
 						)
 					),
 					'p' => $this->l('Share stock between shops of this group')
@@ -106,16 +110,17 @@ class AdminGroupShopControllerCore extends AdminController
 					'name' => 'share_order',
 					'required' => true,
 					'class' => 't',
+					'is_bool' => true,
 					'values' => array(
 						array(
 							'id' => 'share_order_on',
 							'value' => 1,
-							'label' => $enabled
+							'label' => $this->l('Enabled')
 						),
 						array(
 							'id' => 'share_order_off',
 							'value' => 0,
-							'label' => $disabled
+							'label' => $this->l('Disabled')
 						)
 					),
 					'p' => $this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and stock)')
@@ -126,16 +131,17 @@ class AdminGroupShopControllerCore extends AdminController
 					'name' => 'active',
 					'required' => true,
 					'class' => 't',
+					'is_bool' => true,
 					'values' => array(
 						array(
 							'id' => 'active_on',
 							'value' => 1,
-							'label' => $enabled
+							'label' => $this->l('Enabled')
 						),
 						array(
 							'id' => 'active_off',
 							'value' => 0,
-							'label' => $disabled
+							'label' => $this->l('Disabled')
 						)
 					),
 					'p' => $this->l('Enable or disable shop')
@@ -146,6 +152,27 @@ class AdminGroupShopControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		if (Shop::getTotalShops() > 1 && $obj->id)
+			$disabled = array(
+				'share_customer' => true,
+				'share_stock' => true,
+				'share_order' => true,
+				'active' => false
+			);
+		else
+			$disabled = false;
+
+		$this->context->smarty->assign(array(
+			'disabled' => $disabled,
+			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
+			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID()
+		));
+
+		parent::initForm();
 
 		$import_data = array(
 			'attribute_group' => $this->l('Attribute groups'),
@@ -189,7 +216,16 @@ class AdminGroupShopControllerCore extends AdminController
 			)
 		);
 
-		parent::__construct();
+		$helper = new HelperForm();
+		// Check if form template has been overriden
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form_import.tpl'))
+			$helper->tpl = $this->tpl_folder.'form_import.tpl';
+		$helper->currentIndex = self::$currentIndex;
+		$helper->token = $this->token;
+		$helper->table = $this->table;
+		$helper->id = $obj->id;
+		$helper->fields_value = $this->getFieldsValue($obj);
+		$this->content .= $helper->generateForm($this->fields_import_form);
 	}
 
 	public function postProcess()
@@ -206,47 +242,6 @@ class AdminGroupShopControllerCore extends AdminController
 				return false;
 		}
 		return parent::postProcess();
-	}
-
-	public function initContent()
-	{
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		if (Shop::getTotalShops() > 1 && $obj->id)
-			$disabled = array(
-				'share_customer' => true,
-				'share_stock' => true,
-				'share_order' => true,
-				'active' => false
-			);
-		else
-			$disabled = false;
-
-		$this->context->smarty->assign(array(
-			'disabled' => $disabled,
-			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
-			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID()
-		));
-
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-
-		if ($this->display == 'edit' || $this->display == 'add')
-		{
-			$helper = new HelperForm();
-			// Check if form template has been overriden
-			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form_import.tpl'))
-				$helper->tpl = $this->tpl_folder.'form_import.tpl';
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->table = $this->table;
-			$helper->id = $obj->id;
-			$helper->fields_value = $this->getFieldsValue($obj);
-			$this->content .= $helper->generateForm($this->fields_import_form);
-		}
 	}
 
 	public function afterAdd($new_group_shop)

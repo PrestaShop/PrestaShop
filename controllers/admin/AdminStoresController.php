@@ -48,14 +48,6 @@ class AdminStoresControllerCore extends AdminController
 			'dir' => 'st'
 		);
 
-		$this->_select = 'cl.`name` country, st.`name` state';
-		$this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
-				ON (cl.`id_country` = a.`id_country`
-				AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'state` st
-				ON (st.`id_state` = a.`id_state`)';
-
 		$this->fieldsDisplay = array(
 			'id_store' => array(
 				'title' => $this->l('ID'),
@@ -80,6 +72,65 @@ class AdminStoresControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Parameters'),
+				'fields' =>	array(
+					'PS_STORES_DISPLAY_FOOTER' => array(
+						'title' => $this->l('Display in the footer:'),
+						'desc' => $this->l('Display a link to the store locator in the footer'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_STORES_DISPLAY_SITEMAP' => array(
+						'title' => $this->l('Display in the sitemap page:'),
+						'desc' => $this->l('Display a link to the store locator in the sitemap page'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_STORES_SIMPLIFIED' => array(
+						'title' => $this->l('Show a simplified store locator:'),
+						'desc' => $this->l('No map, no search, only a store directory'),
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_STORES_CENTER_LAT' => array(
+						'title' => $this->l('Latitude by default:'),
+						'desc' => $this->l('Used for the position by default of the map'),
+						'cast' => 'floatval',
+						'type' => 'text',
+						'size' => '10'
+					),
+					'PS_STORES_CENTER_LONG' => array(
+						'title' => $this->l('Longitude by default:'),
+						'desc' => $this->l('Used for the position by default of the map'),
+						'cast' => 'floatval',
+						'type' => 'text',
+						'size' => '10'
+					)
+				),
+				'submit' => array()
+			)
+		);
+
+		parent::__construct();
+	}
+
+	public function initList()
+	{
+		$this->_select = 'cl.`name` country, st.`name` state';
+		$this->_join = '
+			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
+				ON (cl.`id_country` = a.`id_country`
+				AND cl.`id_lang` = '.(int)$this->context->language->id.')
+			LEFT JOIN `'._DB_PREFIX_.'state` st
+				ON (st.`id_state` = a.`id_state`)';
+
+		parent::initList();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Stores'),
@@ -213,48 +264,34 @@ class AdminStoresControllerCore extends AdminController
 			)
 		);
 
-		$this->options = array(
-			'general' => array(
-				'title' =>	$this->l('Parameters'),
-				'fields' =>	array(
-					'PS_STORES_DISPLAY_FOOTER' => array(
-						'title' => $this->l('Display in the footer:'),
-						'desc' => $this->l('Display a link to the store locator in the footer'),
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_STORES_DISPLAY_SITEMAP' => array(
-						'title' => $this->l('Display in the sitemap page:'),
-						'desc' => $this->l('Display a link to the store locator in the sitemap page'),
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_STORES_SIMPLIFIED' => array(
-						'title' => $this->l('Show a simplified store locator:'),
-						'desc' => $this->l('No map, no search, only a store directory'),
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_STORES_CENTER_LAT' => array(
-						'title' => $this->l('Latitude by default:'),
-						'desc' => $this->l('Used for the position by default of the map'),
-						'cast' => 'floatval',
-						'type' => 'text',
-						'size' => '10'
-					),
-					'PS_STORES_CENTER_LONG' => array(
-						'title' => $this->l('Longitude by default:'),
-						'desc' => $this->l('Used for the position by default of the map'),
-						'cast' => 'floatval',
-						'type' => 'text',
-						'size' => '10'
-					)
-				),
-				'submit' => array()
-			)
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$image = cacheImage(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
+
+		$days = array();
+		$days[1] = $this->l('Monday');
+		$days[2] = $this->l('Tuesday');
+		$days[3] = $this->l('Wednesday');
+		$days[4] = $this->l('Thursday');
+		$days[5] = $this->l('Friday');
+		$days[6] = $this->l('Saturday');
+		$days[7] = $this->l('Sunday');
+
+		$hours = $this->getFieldValue($obj, 'hours');
+		if (!empty($hours))
+			$hours_unserialized = unserialize($hours);
+
+		$this->fields_value = array(
+			'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
+			'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
+			'image' => $image ? $image : false,
+			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg') / 1000 : false,
+			'days' => $days,
+			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
 		);
 
-		parent::__construct();
+		parent::initForm();
 	}
 
 	public function postProcess()
@@ -326,52 +363,6 @@ class AdminStoresControllerCore extends AdminController
 
 		if (!count($this->_errors))
 			parent::postProcess();
-	}
-
-	public function initContent()
-	{
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$image = cacheImage(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
-
-		$days = array();
-		$days[1] = $this->l('Monday');
-		$days[2] = $this->l('Tuesday');
-		$days[3] = $this->l('Wednesday');
-		$days[4] = $this->l('Thursday');
-		$days[5] = $this->l('Friday');
-		$days[6] = $this->l('Saturday');
-		$days[7] = $this->l('Sunday');
-
-		$hours = $this->getFieldValue($obj, 'hours');
-		if (!empty($hours))
-			$hours_unserialized = unserialize($hours);
-
-		$this->fields_value = array(
-			'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
-			'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
-			'image' => $image ? $image : false,
-			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg') / 1000 : false,
-			'days' => $days,
-			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
-		);
-
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-		if ($this->display == 'list')
-		{
-			$helper = new HelperOptions();
-
-			if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'options.tpl'))
-				$helper->tpl = $this->tpl_folder.'options.tpl';
-
-			$helper->id = $this->id;
-			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options);
-		}
 	}
 
 	protected function postImage($id)
