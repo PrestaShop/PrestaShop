@@ -179,7 +179,7 @@ class StockAvailableCore extends ObjectModel
 			$id_shop = Context::getContext()->shop->getID(true);
 
 		Db::getInstance()->autoExecute(
-			'stock_available',
+			_DB_PREFIX_.'stock_available',
 			array('depends_on_stock' => (bool)$depends_on_stock),
 			'UPDATE',
 			'id_product = '.(int)$id_product.' AND id_shop = '.(int)$id_shop
