@@ -117,23 +117,39 @@
 					echo '</tr>';
 					echo '</table>';
 			*}
-				{elseif $field['type'] == 'textLang'}
-					{foreach $field['languages'] AS $id_lang => $value}
-						<div id="{$key}_{$id_lang}" style="margin-bottom:8px; display: {if $id_lang == $current_id_lang}'block'{else}'none'{/if}; float: left; vertical-align: top;">
-							<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}_{$id_lang}" value="{$value}" />
+				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang'}
+					{if if $field['type'] == 'textLang'}
+						{foreach $field['languages'] AS $id_lang => $value}
+							<div id="{$key}_{$id_lang}" style="margin-bottom:8px; display: {if $id_lang == $current_id_lang}'block'{else}'none'{/if}; float: left; vertical-align: top;">
+								<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}_{$id_lang}" value="{$value}" />
+							</div>
+						{/foreach}
+					{elseif $field['type'] == 'textareaLang' }
+						{foreach $field['languages'] AS $id_lang => $value}
+							<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left;">
+								<textarea rows="{$field['rows']}" cols="{$field['cols']|intval}"  name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
+							</div>
+						{/foreach}
+					{/if}
+					{if count($languages) > 1}
+						<div class="displayed_flag">
+							<img src="../img/l/{$current_id_lang}.jpg"
+								class="pointer"
+								id="language_current_{$key}"
+								onclick="toggleLanguageFlags(this);" />
 						</div>
-					{/foreach}
-					{$field['flags']}
-				{elseif $field['type'] == 'textareaLang'}
-					{foreach $field['languages'] AS $id_lang => $value}
-						<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left;">
-							<textarea rows="{$field['rows']}" cols="{$field['cols']|intval}"  name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
+						<div id="languages_{$key}" class="language_flags">
+							{l s='Choose language:'}<br /><br />
+							{foreach $languages as $language}
+									<img src="../img/l/{$language.id_lang}.jpg"
+										class="pointer"
+										alt="{$language.name}"
+										title="{$language.name}"
+										onclick="changeLanguage('{$key}', '{$key}', {$language.id_lang}, '{$language.iso_code}');" />
+							{/foreach}
 						</div>
-					{/foreach}
-					{$field['flags']}
+					{/if}
 					<br style="clear:both">			
-					
-					
 				{/if}
 				{if isset($field['method'])}$field['method']{/if}
 		
