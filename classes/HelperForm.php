@@ -43,6 +43,12 @@ class HelperFormCore extends Helper
 
 	public $table;
 
+	/**
+	 * Used to override default 'submitAdd' parameter in form action attribute
+	 * @var string
+	 */
+	public $submit_action = '';
+
 	public $token;
 
 	public $languages = null;
@@ -60,7 +66,11 @@ class HelperFormCore extends Helper
 
 	public function displayForm()
 	{
+		if ($this->submit_action == '')
+			$this->submit_action = 'submitAdd'.$this->table;
+
 		$this->context->smarty->assign(array(
+			'submit_action' => $this->submit_action,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,
 			'token' => $this->token,
