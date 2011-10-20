@@ -1727,13 +1727,14 @@ if (false)
 			throw new Exception('object not loaded');
 		$smarty = $this->context->smarty;
 		$product_tabs = array();
-		foreach($this->available_tabs as $product_tab)
-		{
-			$product_tabs[$product_tab] = array(
-				'name' => $product_tab,
-				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
-				);
-		}
+		if(Tools::getValue('id_product'))
+			foreach($this->available_tabs as $product_tab)
+			{
+				$product_tabs[$product_tab] = array(
+					'name' => $product_tab,
+					'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
+					);
+			}
 		$smarty->assign('product_tabs', $product_tabs);
 
 		if ($id_category_back = (int)(Tools::getValue('id_category')))
