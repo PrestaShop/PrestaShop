@@ -168,7 +168,7 @@ class Tools extends ToolsCore
 	* Display a warning message indicating that the method is deprecated
 	* (display in firefox console if Firephp is enabled)
 	*/
-	public static function displayAsDeprecated()
+	public static function displayAsDeprecated($message = null)
 	{
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
