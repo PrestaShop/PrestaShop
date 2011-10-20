@@ -101,7 +101,6 @@ class HelperOptionsCore extends Helper
 							$value = Configuration::get($key, $language['id_lang']);
 						$field['languages'][$language['id_lang']] = $value;
 					}
-					$field['flags'] = $this->displayFlags($languages, $this->context->language->id, $key, $key, true);
 				}
 
 				// Multishop default value
@@ -125,7 +124,7 @@ class HelperOptionsCore extends Helper
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
 			'required_fields' => isset($required_fields) ? $required_fields : false,
-			'languages' => $languages
+			'languages' => isset($languages) ? $languages : false
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
 	}

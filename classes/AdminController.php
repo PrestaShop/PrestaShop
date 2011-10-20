@@ -539,9 +539,6 @@ class AdminControllerCore extends Controller
 							$tmp_tab = explode('!', $key);
 							$key = (count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0]);
 
-							// init list declaration
-							$this->initList();
-
 							if (array_key_exists($key, $this->fieldsDisplay))
 								unset($this->context->cookie->$cookie_key);
 						}
@@ -750,9 +747,6 @@ class AdminControllerCore extends Controller
 
 	protected function filterToField($key, $filter)
 	{
-		// init list declaration
-		$this->initList();
-
 		foreach ($this->fieldsDisplay as $field)
 			if (array_key_exists('filter_key', $field) && $field['filter_key'] == $key)
 				return $field;
@@ -1969,8 +1963,6 @@ EOF;
 
 			$languages = Language::getLanguages(false);
 
-			// init options declaration
-			$this->initOptions();
 			foreach ($this->options as $category => $category_data)
 			{
 				$fields = $category_data['fields'];

@@ -23,6 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<script type="text/javascript">
+	id_language = Number({$current_id_lang});
+</script>
 <br />
 <form action="{$current}&submitOptions{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{foreach $option_list AS $category => $categoryData}
@@ -120,7 +123,7 @@
 				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang'}
 					{if $field['type'] == 'textLang'}
 						{foreach $field['languages'] AS $id_lang => $value}
-							<div id="{$key}_{$id_lang}" style="margin-bottom:8px; display: {if $id_lang == $current_id_lang}'block'{else}'none'{/if}; float: left; vertical-align: top;">
+							<div id="{$key}_{$id_lang}" style="margin-bottom:8px; display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left; vertical-align: top;">
 								<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}_{$id_lang}" value="{$value}" />
 							</div>
 						{/foreach}
