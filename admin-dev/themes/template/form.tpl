@@ -55,7 +55,7 @@
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
 
-<form action="{$current}&submitAdd{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
+<form action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" value="{$form_id}" />
 	{/if}
@@ -74,6 +74,9 @@
 					{if isset($input.label)}
 					<label>{$input.label} </label>
 					{/if}
+					{if $input.type == 'hidden'}
+						<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
+					{else}
 					<div class="margin-form">
 						{if $input.type == 'text'}
 							{if isset($input.lang) && isset($input.attributeLang)}
@@ -85,7 +88,8 @@
 												{if isset($input.size)}size="{$input.size}"{/if}
 												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 												{if isset($input.class)}class="{$input.class}"{/if}
-												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
+												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
+												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 										{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 									</div>
 								{/foreach}
@@ -115,11 +119,10 @@
 										{if isset($input.size)}size="{$input.size}"{/if}
 										{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 										{if isset($input.class)}class="{$input.class}"{/if}
-										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
+										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
+										{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
-						{elseif $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
 						{elseif $input.type == 'select'}
 							<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 								{if isset($input.options.default)}
@@ -243,13 +246,14 @@
 						{/if}
 						{if isset($languages)}<div class="clear"></div>{/if}
 					</div>
+					{/if}
 					{if $input.name == 'id_state'}
 						</div>
 					{/if}
 				{/foreach}
 			{elseif $key == 'submit'}
 				<div class="margin-form">
-					<input type="submit" value="{$field.title}" name="submitAdd{$table}" {if isset($field.class)}class="{$field.class}"{/if} />
+					<input type="submit" value="{$field.title}" name="{$submit_action}" {if isset($field.class)}class="{$field.class}"{/if} />
 				</div>
 			{/if}
 		{/foreach}
