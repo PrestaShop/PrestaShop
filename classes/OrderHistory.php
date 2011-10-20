@@ -91,8 +91,10 @@ class OrderHistoryCore extends ObjectModel
 					/* If becoming unlogable => removing sale */
 					else if (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
-					// The product is removed from the physical stock. $id_warehouse is needed
-					if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0)
+					
+					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))
+						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity']);
+					else if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0) // The product is removed from the physical stock. $id_warehouse is needed
 						Stock::updateQuantity($product['id_product'], $product['id_product_attribute'], -$product['cart_quantity'], $id_warehouse, $id_order);
 					// @todo If the old order states was "shipped" and the new is "not shipped" the stock is not decremented
 				}
