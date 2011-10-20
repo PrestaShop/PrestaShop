@@ -85,6 +85,13 @@ class AdminAliasesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initForm()
+	{
+		$this->fields_value = array('alias' => $this->object->getAliases());
+
+		parent::initForm();
+	}
+
 	public function postProcess()
 	{
 		if (isset($_POST['submitAdd'.$this->table]))
@@ -112,20 +119,6 @@ class AdminAliasesControllerCore extends AdminController
 		else
 			parent::postProcess();
 	}
-
-	public function initContent()
-	{
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$this->fields_value = array('alias' => $obj->getAliases());
-
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-	}
-
 }
 
 

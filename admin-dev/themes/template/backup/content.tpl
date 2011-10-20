@@ -46,7 +46,6 @@
 			<li>{l s='Always check your data.'}</li>
 			<li>{l s='Never restore a Backup on a live site.'}</li>
 		</ol>
-
 	{if $show_form}
 		<form action="{$current}&add{$table}&token={$token}" method="post" style="text-align: center;">
 			<input type="submit" class="button" value="{l s='I read the disclaimer - Create a new Backup'}" style="padding: 10px; font-weight: bold; border: 1px solid;" />

@@ -36,12 +36,13 @@ class AdminBackupControllerCore extends AdminController
 		$this->className = 'Backup';
 		parent::__construct();
 
-		$this->addRowAction('delete');
 		$this->addRowAction('view');
+		$this->addRowAction('delete');
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 	 	$this->deleted = false;
-
 		$this->requiredDatabase = false;
+		$this->identifier = 'filename';
 
 		$this->fieldsDisplay = array (
 			'date' => array('title' => $this->l('Date'), 'type' => 'datetime', 'width' => 120, 'align' => 'right'),
@@ -62,7 +63,6 @@ class AdminBackupControllerCore extends AdminController
 				'submit' => array()
 			),
 		);
-		$this->identifier = 'filename';
 	}
 
 	/**
@@ -107,7 +107,6 @@ class AdminBackupControllerCore extends AdminController
 				$this->display = 'list';
 				$show_form = true;
 			}
-
 			$this->context->smarty->assign(array(
 				'current' => self::$currentIndex,
 				'show_form' => $show_form,
@@ -115,6 +114,7 @@ class AdminBackupControllerCore extends AdminController
 				'how_to' => true,
 			));
 		}
+
 		parent::initContent();
 	}
 
@@ -154,7 +154,6 @@ class AdminBackupControllerCore extends AdminController
 
 	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = NULL)
 	{
-
 		if (!Validate::isTableOrIdentifier($this->table))
 			die('filter is corrupted');
 		if (empty($orderBy))

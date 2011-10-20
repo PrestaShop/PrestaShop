@@ -90,18 +90,6 @@ class AdminEmailsControllerCore extends AdminController
  		);
 	}
 
-	public function initContent()
-	{
-		$helper = new HelperOptions();
-		$helper->id = $this->id;
-		$helper->currentIndex = self::$currentIndex;
-		$helper->table = $this->table;
-		$helper->token = $this->token;
-		$this->content .= $helper->generateOptions($this->options);
-
-		parent::initContent();
-	}
-
 	public function beforeUpdateOptions()
 	{
 		/* PrestaShop demo mode */
