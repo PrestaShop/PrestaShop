@@ -117,10 +117,8 @@ abstract class ControllerCore
 	{
 		$this->init();
 
-		if ($this->ajax && method_exists($this, 'ajaxProcess'))
-			$this->ajaxProcess();
-		else
-			$this->postProcess();
+		// postProcess handles ajaxProcess
+		$this->postProcess();
 
 		if ($this->display_header)
 		{
