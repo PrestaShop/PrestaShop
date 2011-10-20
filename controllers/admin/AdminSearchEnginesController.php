@@ -79,14 +79,6 @@ class AdminSearchEnginesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-	}
-
 }
 
 

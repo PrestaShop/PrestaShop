@@ -43,9 +43,6 @@ class AdminShopUrlControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
 
-	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
-
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
@@ -58,6 +55,19 @@ class AdminShopUrlControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
 		);
 
+		parent::__construct();
+	}
+
+	public function initList()
+	{
+	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
+	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
+
+	 	parent::initList();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Shop Url')
@@ -168,7 +178,23 @@ class AdminShopUrlControllerCore extends AdminController
 			)
 		);
 
-		parent::__construct();
+		if (!($obj = $this->loadObject(true)))
+			return;
+		$current_shop = Shop::initialize();
+
+		$list_shop_with_url = array();
+		foreach (Shop::getShops(false, null, true) as $id)
+			$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
+
+		$this->context->smarty->assign('jsShopUrl', Tools::jsonEncode($list_shop_with_url));
+
+		$this->fields_value = array(
+			'domain' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain,
+			'domain_ssl' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $current_shop->domain_ssl,
+			'physical_uri' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri
+		);
+
+		parent::initForm();
 	}
 
 	public function postProcess()
@@ -219,32 +245,6 @@ class AdminShopUrlControllerCore extends AdminController
 	{
 		if (Tools::getValue('main'))
 			$object->setMain();
-	}
-
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-		else
-		{
-			if (!($obj = $this->loadObject(true)))
-				return;
-			$current_shop = Shop::initialize();
-
-			$list_shop_with_url = array();
-			foreach (Shop::getShops(false, null, true) as $id)
-				$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
-
-			$this->context->smarty->assign('jsShopUrl', Tools::jsonEncode($list_shop_with_url));
-
-			$this->fields_value = array(
-				'domain' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain,
-				'domain_ssl' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $current_shop->domain_ssl,
-				'physical_uri' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri
-			);
-		}
-
-		parent::initContent();
 	}
 }
 

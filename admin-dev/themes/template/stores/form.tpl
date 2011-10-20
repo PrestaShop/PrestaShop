@@ -243,7 +243,7 @@
 							<input type="file" name="{$input.name}" />
 							<p class="clear">{$input.p}</p>
 							{if isset($fields_value.image) && $fields_value.image}
-								<div id="image" style="width:390px;">
+								<div id="image" style="width:370px;">
 									{$fields_value.image}
 									<p align="center">{l s='File size'} {$fields_value.size}kb</p>
 									<a href="{$current}&id_store={$form_id}&token={$token}&deleteImage=1">

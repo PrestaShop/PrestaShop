@@ -44,9 +44,6 @@ class AdminStatesControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->_select = 'z.`name` AS zone';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
-
 		$this->fieldsDisplay = array(
 			'id_state' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Name'), 'width' => 140, 'filter_key' => 'a!name'),
@@ -54,6 +51,19 @@ class AdminStatesControllerCore extends AdminController
 			'zone' => array('title' => $this->l('Zone'), 'width' => 100, 'filter_key' => 'z!name')
 		);
 
+		parent::__construct();
+	}
+
+	public function initList()
+	{
+		$this->_select = 'z.`name` AS zone';
+	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+
+	 	parent::initList();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('States'),
@@ -133,7 +143,7 @@ class AdminStatesControllerCore extends AdminController
 			)
 		);
 
-		parent::__construct();
+		parent::initForm();
 	}
 
 	public function postProcess()
@@ -185,15 +195,6 @@ class AdminStatesControllerCore extends AdminController
 		else
 			parent::postProcess();
 	}
-
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		parent::initContent();
-	}
-
 }
 
 

@@ -86,6 +86,11 @@ class AdminGendersController extends AdminController
 			)
 		);
 
+		parent::__construct();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Gender'),
@@ -153,26 +158,16 @@ class AdminGendersController extends AdminController
 			)
 		);
 
-		parent::__construct();
-	}
+		if (!($obj = $this->loadObject(true)))
+			return;
 
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-		else
-		{
-			if (!($obj = $this->loadObject(true)))
-				return;
+		$this->fields_value = array(
+			'img_width' => $this->default_image_width,
+			'img_height' => $this->default_image_height,
+			'image' => $obj->getImage()
+		);
 
-			$this->fields_value = array(
-				'img_width' => $this->default_image_width,
-				'img_height' => $this->default_image_height,
-				'image' => $obj->getImage()
-			);
-		}
-
-		parent::initContent();
+		parent::initForm();
 	}
 
 	public function displayGenderType($value, $tr)
