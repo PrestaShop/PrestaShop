@@ -265,9 +265,9 @@ INSERT INTO `PREFIX_category` (`id_category`, `id_parent`, `level_depth`, `nleft
 INSERT INTO `PREFIX_category_lang` (`id_category`, `id_lang`, `name`, `description`, `link_rewrite`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
 (1, 1, 'Home', '', 'home', NULL, NULL, NULL),(1, 2, 'Accueil', '', 'home', NULL, NULL, NULL),(1, 3, 'Inicio', '', 'home', NULL, NULL, NULL),(1, 4, 'Start', '', 'home', NULL, NULL, NULL),(1, 5, 'Home page', '', 'home', NULL, NULL, NULL);
 
-INSERT INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`) VALUES
-(1, 0, 1, 'lightblue', 1, 0, 0),(2, 1, 1, '#DDEEFF', 1, 1, 0),(3, 1, 1, '#FFDD99', 1, 1, 1),(4, 1, 1, '#EEDDFF', 1, 1, 1),(5, 1, 0, '#DDFFAA', 1, 1, 1),
-(6, 0, 1, '#DADADA', 1, 0, 0),(7, 1, 1, '#FFFFBB', 1, 0, 0),(8, 0, 1, '#FFDFDF', 1, 0, 0),(9, 1, 1, '#FFD3D3', 1, 0, 0),(10, 0, 1, 'lightblue', 1, 0, 0),(11, 0, 0, 'lightblue', 1, 0, 0),(12, 1, 0, '#DDEEFF', 1, 1, 0);
+INSERT INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`, `shipped`) VALUES
+(1, 0, 1, 'lightblue', 1, 0, 0, 0),(2, 1, 1, '#DDEEFF', 1, 1, 0, 0),(3, 1, 1, '#FFDD99', 1, 1, 1, 0),(4, 1, 1, '#EEDDFF', 1, 1, 1, 1),(5, 1, 0, '#DDFFAA', 1, 1, 1, 1),
+(6, 0, 1, '#DADADA', 1, 0, 0, 0),(7, 1, 1, '#FFFFBB', 1, 0, 0, 0),(8, 0, 1, '#FFDFDF', 1, 0, 0, 0),(9, 1, 1, '#FFD3D3', 1, 0, 0, 0),(10, 0, 1, 'lightblue', 1, 0, 0, 0),(11, 0, 0, 'lightblue', 1, 0, 0, 0),(12, 1, 0, '#DDEEFF', 1, 1, 0, 0);
 
 INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `template`) VALUES
 (1, 1, 'Awaiting cheque payment', 'cheque'),
@@ -1370,7 +1370,7 @@ INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_pr
 (38, 9, 0, 1, 1, 0, 2);
 
 INSERT INTO `PREFIX_warehouse` (`id_warehouse`, `id_currency`, `id_address`, `id_employee`, `reference`, `name`, `management_type`) VALUES
-(1, 1, 0, 1, 'default_warehouse', 'default warehous', 'FIFO');
+(1, 1, 0, 1, 'default_warehouse', 'default warehouse', 'FIFO');
 
 INSERT INTO `PREFIX_warehouse_shop` (`id_warehouse`, `id_shop`) VALUES
 (1, 1);

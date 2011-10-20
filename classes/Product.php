@@ -2156,6 +2156,8 @@ class ProductCore extends ObjectModel
 	/**
 	 * Update available product quantities
 	 *
+	 * @deprecated since 1.5.0
+	 * 
 	 * @param array $product Array with ordered product (quantity, id_product_attribute if applicable)
 	 * @return mixed Query result
 	 */

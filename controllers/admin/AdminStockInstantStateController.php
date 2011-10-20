@@ -93,12 +93,7 @@ class AdminStockInstantStateControllerCore  extends AdminController
 	
 	public function initContent()
 	{
-		$query = new DbQuery();
-		$query->select('w.id_warehouse, name');
-		$query->from('warehouse w');
-		$query->innerJoin('warehouse_shop ws ON ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.Context::getContext()->shop->getID(true));
-		
-		$this->context->smarty->assign('warehouse_list', Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query));
+		$this->context->smarty->assign('warehouse_list', Warehouse::getWarehouseList());
 		$this->context->smarty->assign('current_warehouse', $this->getCurrentWarehouseId());
 		
 		parent::initContent();

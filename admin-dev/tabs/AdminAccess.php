@@ -38,7 +38,7 @@ class AdminAccess extends AdminTab
 		if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all')))
 			throw new PrestashopException('permission not exists');
 
-		$enabled = (int)Tools::getValue('enabled') ;
+		$enabled = (int)Tools::getValue('enabled');
 		$id_tab = (int)(Tools::getValue('id_tab'));
 		$id_profile = (int)(Tools::getValue('id_profile'));
 		$res = true;

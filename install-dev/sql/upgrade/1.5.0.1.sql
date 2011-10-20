@@ -218,3 +218,6 @@ INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `vie
 ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
 /* PHP:add_carrier_position();*/
+
+ALTER TABLE `PREFIX_order_state` ADD COLUMN `shipped` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `delivery`;
+UPDATE `PREFIX_order_state` SET `shipped` = 1 WHERE id_order_states IN (4, 5);

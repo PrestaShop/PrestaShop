@@ -27,50 +27,50 @@
 
 class CurrencyCore extends ObjectModel
 {
-	public 		$id;
+	public $id;
 
 	/** @var string Name */
-	public 		$name;
+	public $name;
 
 	/** @var string Iso code */
-	public 		$iso_code;
+	public $iso_code;
 
 	/** @var string Iso code numeric */
-	public 		$iso_code_num;
+	public $iso_code_num;
 
 	/** @var string Symbol for short display */
-	public 		$sign;
+	public $sign;
 
 	/** @var int bool used for displaying blank between sign and price */
-	public		$blank;
+	public $blank;
 
 	/** @var string Conversion rate from euros */
-	public 		$conversion_rate;
+	public $conversion_rate;
 
 	/** @var boolean True if currency has been deleted (staying in database as deleted) */
-	public 		$deleted = 0;
+	public $deleted = 0;
 
 	/** @var int ID used for displaying prices */
-	public		$format;
+	public $format;
 
 	/** @var int bool Display decimals on prices */
-	public		$decimals;
+	public $decimals;
 
 	/** @var int bool active */
-	public		$active;
+	public $active;
 
- 	protected 	$fieldsRequired = array('name', 'iso_code', 'sign', 'conversion_rate', 'format', 'decimals');
- 	protected 	$fieldsSize = array('name' => 32, 'iso_code' => 3, 'iso_code_num' => 3, 'sign' => 8);
- 	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'iso_code_num' => 'isNumericIsoCode', 'blank' => 'isInt', 'sign' => 'isGenericName',
+ 	protected $fieldsRequired = array('name', 'iso_code', 'sign', 'conversion_rate', 'format', 'decimals');
+ 	protected $fieldsSize = array('name' => 32, 'iso_code' => 3, 'iso_code_num' => 3, 'sign' => 8);
+ 	protected $fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'iso_code_num' => 'isNumericIsoCode', 'blank' => 'isInt', 'sign' => 'isGenericName',
 		'format' => 'isUnsignedId', 'decimals' => 'isBool', 'conversion_rate' => 'isFloat', 'deleted' => 'isBool', 'active' => 'isBool');
 
-	protected 	$table = 'currency';
-	protected 	$identifier = 'id_currency';
+	protected $table = 'currency';
+	protected $identifier = 'id_currency';
 
 	/** @var array Currency cache */
-	static protected	$currencies = array();
+	static protected $currencies = array();
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'objectsNodeName' => 'currencies',
 	);
 
@@ -152,11 +152,11 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	  * Return formated sign
-	  *
-	  * @param string $side left or right
-	  * @return string formated sign
-	  */
+	 * Return formated sign
+	 *
+	 * @param string $side left or right
+	 * @return string formated sign
+	 */
 	public function getSign($side=NULL)
 	{
 		if (!$side)
@@ -175,10 +175,10 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	  * Return available currencies
-	  *
-	  * @return array Currencies
-	  */
+	 * Return available currencies
+	 *
+	 * @return array Currencies
+	 */
 	static public function getCurrencies($object = false, $active = 1, Shop $shop = null)
 	{
 		if (!$shop)
@@ -267,13 +267,13 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	* Refresh the currency conversion rate
-	* The XML file define conversion rate for each from a default currency ($isoCodeSource).
-	*
-	* @param $data XML content which contains all the conversion rates
-	* @param $isoCodeSource The default currency used in the XML file
-	* @param $defaultCurrency The default currency object
-	*/
+	 * Refresh the currency conversion rate
+	 * The XML file define conversion rate for each from a default currency ($isoCodeSource).
+	 *
+	 * @param $data XML content which contains all the conversion rates
+	 * @param $isoCodeSource The default currency used in the XML file
+	 * @param $defaultCurrency The default currency object
+	 */
 	public function refreshCurrency($data, $isoCodeSource, $defaultCurrency)
 	{
 		// fetch the conversion rate of the default currency

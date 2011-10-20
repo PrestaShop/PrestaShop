@@ -70,7 +70,7 @@ class OrderHistoryCore extends ObjectModel
 		return $fields;
 	}
 
-	public function changeIdOrderState($new_order_state, $id_order)
+	public function changeIdOrderState($new_order_state, $id_order, $id_warehouse = null)
 	{
 		if ($new_order_state != NULL)
 		{
@@ -89,12 +89,12 @@ class OrderHistoryCore extends ObjectModel
 					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
 						ProductSale::addProductSale($product['id_product'], $product['cart_quantity']);
 					/* If becoming unlogable => removing sale */
-					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
+					else if (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
-					if (!$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))
-					{
-						Product::updateQuantity($product);
-					}
+					// The product is removed from the physical stock. $id_warehouse is needed
+					if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0)
+						Stock::updateQuantity($product['id_product'], $product['id_product_attribute'], -$product['cart_quantity'], $id_warehouse, $id_order);
+					// @todo If the old order states was "shipped" and the new is "not shipped" the stock is not decremented
 				}
 			
 			$this->id_order_state = (int)($new_order_state);
