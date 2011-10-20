@@ -94,6 +94,7 @@ class AdminCustomerThreads extends AdminTab
 					'PS_SAV_IMAP_PORT' => array('title' => $this->l('Imap port'), 'desc' => $this->l('Port to use to connect imap server'), 'type' => 'text', 'defaultValue' => 143, 'visibility' => Shop::CONTEXT_ALL),
 					'PS_SAV_IMAP_USER' => array('title' => $this->l('Imap user'), 'desc' => $this->l('User to use to connect imap server'), 'type' => 'text', 'size' => 40, 'visibility' => Shop::CONTEXT_ALL),
 					'PS_SAV_IMAP_PWD' => array('title' => $this->l('Imap password'), 'desc' => $this->l('Password to use to connect imap server'), 'type' => 'text', 'size' => 40, 'visibility' => Shop::CONTEXT_ALL),
+					'PS_SAV_IMAP_SSL' => array('title' => $this->l('Imap use ssl'), 'type' => 'bool', 'visibility' => Shop::CONTEXT_ALL),
 					'PS_SAV_IMAP_DELETE_MSG' => array('title' => $this->l('Deletes messages'), 'desc' => $this->l('Deletes message after sync. If you do not active this option, the sync will be longer'), 'cast' => 'intval', 'type' => 'select', 'identifier' => 'value', 'list' => array(
 						'0' => array('value' => 0, 'name' => $this->l('No')), 
 						'1' => array('value' => 1, 'name' => $this->l('Yes')) 
