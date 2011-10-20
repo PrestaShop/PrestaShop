@@ -97,23 +97,6 @@ class ProductControllerCore extends FrontController
 		}
 	}
 
-	public function ajaxProcess()
-	{
-		if (Tools::getValue('getAttributesParams'))
-		{
-			$product_id = Tools::getValue('id_product');
-			$ipa = Tools::getValue('ipa');
-			$tab_params = Product::getAttributesParams($product_id, $ipa);
-			foreach ($tab_params as &$param)
-				$param = array_map('Tools::str2url', $param);
-			die(Tools::jsonEncode($tab_params));
-		}
-		if (Tools::getValue('couleur'))
-		{
-			d('cc');
-		}
-	}
-
 	/**
 	 * Assign template vars related to page content
 	 * @see FrontController::initContent()
@@ -398,11 +381,6 @@ class ProductControllerCore extends FrontController
 						$attribute_list = rtrim($attribute_list, ',');
 						$combinations[$id_product_attribute]['list'] = $attribute_list;
 					}
-					// if we need to display a combination and not a single product
-					/*if (true)
-					{
-						
-					}*/
 					$this->context->smarty->assign(array(
 						'groups' => $groups,
 						'combinaisons' => $combinations, /* Kept for compatibility purpose only */
