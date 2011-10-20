@@ -3899,7 +3899,7 @@ class AdminProducts extends AdminTab
 
 		switch(Tools::getValue('action'))
 		{
-			case 'depends_on_stock':elog((int)Tools::getValue('value'));
+			case 'depends_on_stock':
 				if (Tools::getValue('value') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)

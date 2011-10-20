@@ -167,7 +167,7 @@ class AdminOrdersStates extends AdminTab
 					</p>
 				</div>
 				<div class="margin-form">
-					<p>'.elog($this->getFieldValue($obj, 'shipped')).'
+					<p>
 						<input type="checkbox" style="vertical-align: text-bottom;" name="shipped"'.(($this->getFieldValue($obj, 'shipped') == 1) ? ' checked="checked"' : '').' id="shipped_on" value="1" />
 						<label class="t" for="shipped_on"> '.$this->l('Set order as shipped').'</label>
 					</p>
