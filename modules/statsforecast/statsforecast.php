@@ -98,8 +98,10 @@ class StatsForecast extends Module
 			$intervalAvg = $interval2;
 		if ($this->context->cookie->stats_granularity == 42)
 			$intervalAvg = $interval2 / 7;
-
-		define('PS_BASE_URI', '/');
+		
+		// @todo : to remove
+		if (!defined('PS_BASE_URI'))
+			define('PS_BASE_URI', '/');
 		$result = $db->getRow('SELECT UNIX_TIMESTAMP(\'2009-06-05\') as t1, UNIX_TIMESTAMP(\''.$employee->stats_date_from.'\') as t2');
 		$from = max($result['t1'], $result['t2']);
 		$to = strtotime($employee->stats_date_to.'');
