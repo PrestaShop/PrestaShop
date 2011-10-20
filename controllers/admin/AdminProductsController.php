@@ -1571,8 +1571,6 @@ if (false)
 			</script>';
 			////////////////////////
 			$this->l('in category').' "'.stripslashes($this->_category->getName()).'"</h3>';
-			if ($this->tabAccess['add'] === '1')
-				$this->content .= '<a href="'.self::$currentIndex.'&id_category='.$id_category.'&add'.$this->table.'&token='.($token != null ? $token : $this->token).'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add a new product').'</a>';
 			$this->content .= '<div style="margin:10px;">';
 	//		$this->displayList($token);
 //	$this->display = 'list';
