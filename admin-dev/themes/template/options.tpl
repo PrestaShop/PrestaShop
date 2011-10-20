@@ -26,7 +26,6 @@
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
 </script>
-<br />
 <form action="{$current}&submitOptions{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}

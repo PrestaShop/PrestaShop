@@ -1154,6 +1154,7 @@ class AdminControllerCore extends Controller
 			$helper = new HelperOptions();
 			$helper->id = $this->id;
 			$helper->token = $this->token;
+			$helper->table = $this->table;
 			$helper->currentIndex = self::$currentIndex;
 			$this->content .= $helper->generateOptions($this->options);
 		}

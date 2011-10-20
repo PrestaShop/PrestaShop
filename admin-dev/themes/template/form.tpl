@@ -54,7 +54,7 @@
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
-
+{if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 <form action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" value="{$form_id}" />
@@ -264,7 +264,7 @@
 </form>
 
 <br /><br />
-{if $firstCall}
+{if $firstCall && !$no_back}
 	{if $back}
 		<a href="{$back}"><img src="../img/admin/arrow2.gif" />{l s='Back'}</a>
 	{else}
