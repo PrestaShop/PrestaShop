@@ -39,12 +39,14 @@ $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_S
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'URL'; // 'NONE' on production
 
+
 if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
 	$smarty->registerFilter('output', 'smartyMinifyHTML');
 if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
 	$smarty->registerFilter('output', 'smartyPackJSinHTML');
 
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
+smartyRegisterFunction($smarty, 'modifier', 'htmlentitiesUTF8', 'smarty_modifier_htmlentitiesUTF8');
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
 smartyRegisterFunction($smarty, 'function', 't', 'smartyTruncate'); // unused
@@ -129,6 +131,10 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
 		return $string;
 }
 
+function smarty_modifier_htmlentitiesUTF8($string)
+{
+		return Tools::htmlentitiesUTF8($string);
+}
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
     $tpl_output = Media::minifyHTML($tpl_output);
