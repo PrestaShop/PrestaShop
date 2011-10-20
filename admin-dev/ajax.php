@@ -84,21 +84,6 @@ if (Tools::isSubmit('ajaxProductManufacturers'))
 	}
 }
 
-if (Tools::isSubmit('ajaxProductQuantity'))
-{
-	require_once(dirname(__FILE__).'/tabs/AdminCatalog.php');
-	$catalog = new AdminCatalog();
-	$admin = new AdminProducts();
-
-	$languages = Language::getLanguages(false);
-	$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-	$product = new Product((int)(Tools::getValue('id_product')));
-	if (!Validate::isLoadedObject($product))
-		die (Tools::displayError('Product cannot be loaded'));
-
-	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
-	echo $admin->ajaxProductQuantity($product);
-}
 
 if (Tools::isSubmit('ajaxReferrers'))
 {
@@ -571,7 +556,7 @@ if (Tools::isSubmit('helpAccess'))
 
 	if (isset($item) AND isset($isoUser) AND isset($country))
 		die(HelpAccess::displayHelp($item, $isoUser,  $country, $version));
-	die();
+	die('{nohelp}');
 }
 
 if (Tools::isSubmit('getHookableList'))
