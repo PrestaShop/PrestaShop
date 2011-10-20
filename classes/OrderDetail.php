@@ -166,24 +166,26 @@ class OrderDetailCore extends ObjectModel
 	);
 	
 	/** @var bool */
-	private $_outOfStock = false;
+	protected $outOfStock = false;
 	
 	/** @var TaxCalculator object */
-	private $_tax_calculator = NULL;
+	protected $tax_calculator = null;
 	
 	/** @var Address object */
-	private $_vat_address = NULL;
+	protected $vat_address = null;
 	
 	/** @var Address object */
-	private $_specificPrice = NULL;
+	protected $specificPrice = null;
 	
-	private $_customer = NULL;
+	/** @var Customer object */
+	protected $customer = null;
 	
-	private $_context = NULL;
+	/** @var Context object */
+	protected $context = null;
 
-	public function __construct($context = NULL)
+	public function __construct($context = null)
 	{
-		$this->_context = $context;
+		$this->context = $context;
 	}
 	
 	public function getFields()
@@ -297,9 +299,11 @@ class OrderDetailCore extends ObjectModel
 		return Db::getInstance()->execute($sql);
 	}	
 	
-	/*
-	** Get a detailed order list of an id_order
-	*/
+	/**
+	 * Get a detailed order list of an id_order
+	 * @param int $id_order
+	 * @return array
+	 */
 	public static function getList($id_order)
 	{
 		$sql = '
@@ -311,13 +315,14 @@ class OrderDetailCore extends ObjectModel
 	}
 	
 	/*
-	** Set virtual product information 
-	*/
-	private function _setVirtualProductInformation($product)
+	 * Set virtual product information 
+	 * @param array $product
+	 */
+	protected function _setVirtualProductInformation($product)
 	{
 		// Add some informations for virtual products
 		$this->download_deadline = '0000-00-00 00:00:00';
-		$this->download_hash = NULL;
+		$this->download_hash = null;
 		
 		if ($id_product_download = ProductDownload::getIdFromIdProduct((int)($product['id_product'])))
 		{
@@ -329,25 +334,29 @@ class OrderDetailCore extends ObjectModel
 		}
 	}
 	
-	/*
-	** Check the order state
-	*/
-	private function _checkProductStock($product, $id_order_state)
+	/**
+	 * Check the order state
+	 * @param array $product
+	 * @param int $id_order_state
+	 */
+	protected function _checkProductStock($product, $id_order_state)
 	{
 		if ($id_order_state != Configuration::get('PS_OS_CANCELED') AND $id_order_state != Configuration::get('PS_OS_ERROR'))
 		{
 			if (StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']))
 				$product['stock_quantity'] -= $product['cart_quantity'];
 			if ($product['stock_quantity'] < 0 && Configuration::get('PS_STOCK_MANAGEMENT'))
-				$this->_outOfStock = true;
+				$this->outOfStock = true;
 			Product::updateDefaultAttribute($product['id_product']);
 		}
 	}
 	
-	/*
-	** Apply tax to the product
-	*/
-	private function _setProductTax(Order $order, $product)
+	/**
+	 * Apply tax to the product
+	 * @param object $order
+	 * @param array $product
+	 */
+	protected function _setProductTax(Order $order, $product)
 	{
 		$this->ecotax = Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency));
 		
@@ -356,91 +365,99 @@ class OrderDetailCore extends ObjectModel
 		{
 			$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product']);
 
-			$tax_manager = TaxManagerFactory::getManager($this->_vat_address, $id_tax_rules);
-			$this->_tax_calculator = $tax_manager->getTaxCalculator();
+			$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
+			$this->tax_calculator = $tax_manager->getTaxCalculator();
 		}
 
     $this->ecotax_tax_rate = 0;
     if (!empty($product['ecotax']))
      	$this->ecotax_tax_rate = Tax::getProductEcotaxRate($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
     
-   	$this->tax_computation_method = (int)$this->_tax_calculator->computation_method;
+   	$this->tax_computation_method = (int)$this->tax_calculator->computation_method;
 	}
 	
-	/*
-	** Set specific price of the product
-	*/
-	private function _setSpecificPrice(Order $order)
+	/**
+	 * Set specific price of the product
+	 * @param object $order
+	 */
+	protected function _setSpecificPrice(Order $order)
 	{
 		$this->reduction_amont = 0.00;
 		$this->reduction_percent = 0.00;
 	
-		if ($this->_specificPrice)
-			switch($this->_specificPrice['reduction_type'])
+		if ($this->specificPrice)
+			switch($this->specificPrice['reduction_type'])
 			{
 				case 'percentage':
-					$this->reduction_percent = (float)$this->_specificPrice['reduction'] * 100;
+					$this->reduction_percent = (float)$this->specificPrice['reduction'] * 100;
 					break;
 				case 'amount':
-					$price = Tools::convertPrice($this->_specificPrice['reduction'], $order->id_currency);
-					$this->reduction_amont = (float)(!$this->_specificPrice['id_currency'] ?  
-						$price : $this->_specificPrice['reduction']);
+					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
+					$this->reduction_amont = (float)(!$this->specificPrice['id_currency'] ?  
+						$price : $this->specificPrice['reduction']);
 			}
 	}
 	
-	/*
-	** Set detailed product price to the order detail
-	*/
-	private function _setDetailProductPrice(Order $order, Cart $cart, $product)
+	/**
+	 * Set detailed product price to the order detail
+	 * @param object $order
+	 * @param object $cart
+	 * @param array $product
+	 */
+	protected function _setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
-		$this->_specificPrice = NULL;
+		$this->specificPrice = null;
 		
 		$this->product_price = (float)Product::getPriceStatic((int)($product['id_product']), false, 
-			($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 
+			($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null), 
 			(Product::getTaxCalculationMethod((int)($order->id_customer)) == PS_TAX_EXC ? 2 : 6), 
-			NULL, false, false, $product['cart_quantity'], false, (int)($order->id_customer), 
-			(int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}), $this->_specificPrice, false, false);
+			null, false, false, $product['cart_quantity'], false, (int)($order->id_customer), 
+			(int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}), $this->specificPrice, false, false);
 		
 		$this->_setSpecificPrice($order);
 		
 		$this->group_reduction = (float)(Group::getReduction((int)($order->id_customer)));
 		
-		$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $this->_context->shop->getID(), 
-			(int)$cart->id_currency, (int)$this->_vat_address->id_country,
-			(int)$this->_customer->id_default_group, (int)$product['cart_quantity']);
+		$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $this->context->shop->getID(), 
+			(int)$cart->id_currency, (int)$this->vat_address->id_country,
+			(int)$this->customer->id_default_group, (int)$product['cart_quantity']);
 		
 		$unitPrice = Product::getPriceStatic((int)$product['id_product'], true, 
-			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : NULL), 
-			2, NULL, false, true, 1, false, (int)$order->id_customer, NULL, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null), 
+			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		
 		$this->product_quantity_discount = (float)($quantityDiscount ? 
 			((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ? 
-				Tools::ps_round($unitPrice, 2) : $unitPrice) - $this->_tax_calculator->addTaxes($quantityDiscount['price'])) : 
+				Tools::ps_round($unitPrice, 2) : $unitPrice) - $this->tax_calculator->addTaxes($quantityDiscount['price'])) : 
 				0.00);
 				
-		$this->discount_quantity_applied = (($this->_specificPrice AND $this->_specificPrice['from_quantity'] > 1) ? 1 : 0);
+		$this->discount_quantity_applied = (($this->specificPrice AND $this->specificPrice['from_quantity'] > 1) ? 1 : 0);
 	}
 	
-	/*
-	** Create an order detail liable to an id_order
-	*/
-	private function _create(Order $order, Cart $cart, $product, $id_order_state)
+	/**
+	 * Create an order detail liable to an id_order
+	 * @param object $order
+	 * @param object $cart
+	 * @param array $product
+	 * @param int $id_order_status
+   */
+	protected function _create(Order $order, Cart $cart, $product, $id_order_state)
 	{
-		$this->_tax_calculator = new TaxCalculator();
+		$this->tax_calculator = new TaxCalculator();
 	
-		$this->id = NULL;
+		$this->id = null;
 			
 		$this->product_id = (int)($product['id_product']);
-		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL);
+		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null);
 		$this->product_name = pSQL($product['name'].
-			((isset($product['attributes']) AND $product['attributes'] != NULL) ? 
+			((isset($product['attributes']) AND $product['attributes'] != null) ? 
 				' - '.$product['attributes'] : ''));
 			
 		$this->product_quantity = (int)($product['cart_quantity']);
-		$this->product_en13 = empty($product['ean13']) ? NULL : pSQL($product['ean13']);
-		$this->product_upc = empty($product['upc']) ? NULL : pSQL($product['upc']);
-		$this->product_reference = empty($product['reference']) ? NULL : pSQL($product['reference']);
-		$this->product_supplier_reference = empty($product['supplier_reference']) ? NULL : pSQL($product['supplier_reference']);
+		$this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
+		$this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
+		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
+		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
 		$this->product_weight = (float)$product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight'];
 		
 		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
@@ -455,36 +472,40 @@ class OrderDetailCore extends ObjectModel
 		// Add new entry to the table
 		$this->save();						
 
-		OrderDetail::saveTaxCalculatorStatic($this->id, $this->_tax_calculator);
-		unset($this->_tax_calculator);
+		OrderDetail::saveTaxCalculatorStatic($this->id, $this->tax_calculator);
+		unset($this->tax_calculator);
 	}
 	
-	/*
-	** Create a list of order detail for a specified id_order using cart
+	/**
+	 * Create a list of order detail for a specified id_order using cart
+	 * @param object $order
+	 * @param object $cart
+	 * @param int $id_order_status
 	*/
 	public function createList(Order $order, Cart $cart, $id_order_state)
 	{	
-		$this->_vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-		$this->_customer = new Customer((int)($order->id_customer));
+		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+		$this->customer = new Customer((int)($order->id_customer));
 		
 		$this->id_order = $order->id;
 		$products = $cart->getProducts();
-		$this->_outOfStock = false;
+		$this->outOfStock = false;
 		
 		foreach ($products as $product)
 			$this->_create($order, $cart, $product, $id_order_state);
 		
-		unset($this->_vat_address);
+		unset($this->vat_address);
 		unset($products);
-		unset($this->_customer);
+		unset($this->customer);
 	}
 	
-	/*
-	** Get the state of the current stock product
+	/**
+	 * Get the state of the current stock product
+	 * @return array
 	*/
 	public function getStockState()
 	{
-		return $this->_oufOfStock;
+		return $this->outOfStock;
 	}
 }
 
