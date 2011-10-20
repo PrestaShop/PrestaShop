@@ -251,12 +251,12 @@ class LinkCore
 	 * Create a link to a supplier
 	 *
 	 * @since 1.5.0
-	 * @param string $name Module name
+	 * @param string $module Module name
 	 * @param string $action Action name
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getModuleLink($name, $action, $ssl = false, $id_lang = null)
+	public function getModuleLink($module, $action, $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
@@ -265,7 +265,7 @@ class LinkCore
 
 		// Set available keywords
 		$params = array();
-		$params['name'] = $name;
+		$params['module'] = $module;
 		$params['action'] = $action;
 
 		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
@@ -336,16 +336,13 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
 
-		if (is_array($request))
-		{
-			unset($request['controller']);
-			$request = http_build_query($request);
-		}
+		if (!is_array($request))
+			parse_str($request, $request);
+		unset($request['controller']);
 
-		$uri_path = Dispatcher::getInstance()->createUrl($controller);
+		$uri_path = Dispatcher::getInstance()->createUrl($controller, $request);
 		$url = ($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
 		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
-		$url .= ($request ? ((strpos($url, '?') === false ? '?' : '&amp;').trim($request)) : '');
 
 		return $url;
 	}
