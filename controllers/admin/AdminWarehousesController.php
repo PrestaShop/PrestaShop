@@ -40,29 +40,33 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
-				'width' => 40
+				'width' => 40,
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
 				'width' => 300,
-				'havingFilter' => true
 			),
 			'management_type' => array(
 				'title' => $this->l('Managment type'),
-				 'width' => 40
+				 'width' => 40,
 			),
 			'employee' => array(
 				'title' => $this->l('Manager'),
 				'width' => 150,
-				'havingFilter' => true
 			),
 			'location' => array(
 				'title' => $this->l('Location'),
-				'width' => 150
+				'width' => 150,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
 			),
 			'contact' => array(
 				'title' => $this->l('Phone Number'),
-				'width' => 50
+				'width' => 50,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
 			),
 		);
 
