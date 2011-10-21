@@ -54,6 +54,7 @@ class HelperOptionsCore extends Helper
 		$tab = Tab::getTab($this->context->language->id, $this->id);
 		if (!isset($languages))
 			$languages = Language::getLanguages(false);
+
 		foreach ($option_list as $category => $category_data)
 		{
 			if (!isset($category_data['image']))
@@ -99,7 +100,10 @@ class HelperOptionsCore extends Helper
 							$value = Tools::safeOutput(Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang'])));
 						elseif ($field['type'] == 'textareaLang')
 							$value = Configuration::get($key, $language['id_lang']);
+						elseif ($field['type'] == 'selectLang')
+							$value = Configuration::get($key, $language['id_lang']);
 						$field['languages'][$language['id_lang']] = $value;
+						$field['value'][$language['id_lang']] = $this->getOptionValue($key.'_'.strtoupper($language['iso_code']), $field);
 					}
 				}
 
@@ -155,25 +159,6 @@ class HelperOptionsCore extends Helper
 		}
 		echo '</tr>';
 		echo '</table>';
-	}
-
-	/**
-	 * Type = selectLang
-	 * @ TODO
-	 */
-	public function displayOptionTypeSelectLang($key, $field, $value)
-	{
-		$languages = Language::getLanguages(false);
-		foreach ($languages as $language)
-		{
-			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="margin-bottom:8px; display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left; vertical-align: top;">';
-			echo  '<select name="'.$key.'_'.strtoupper($language['iso_code']).'">';
-			foreach ($field['list'] as $k => $v)
-				echo  '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.strtoupper($language['iso_code']), (Configuration::get($key.'_'.strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
-			echo  '</select>';
-			echo  '</div>';
-		}
-		$this->displayFlags($languages, $this->context->language->id, $key, $key);
 	}
 
 	/**

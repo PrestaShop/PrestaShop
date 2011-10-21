@@ -2006,6 +2006,19 @@ EOF;
 			{
 				$fields = $category_data['fields'];
 
+				foreach ($fields as $field => $values)
+					if (isset($values['type']) && $values['type'] == 'selectLang')
+					{
+						foreach ($languages as $lang)
+							if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
+								$fields[$field.'_'.strtoupper($lang['iso_code'])] = array(
+									'type' => 'select',
+									'cast' => 'strval',
+									'identifier' => 'mode',
+									'list' => $values['list']
+								);
+					}
+
 				/* Check required fields */
 				foreach ($fields as $field => $values)
 					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
