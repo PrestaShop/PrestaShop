@@ -63,7 +63,7 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 
-	 	parent::initList();
+	 	return parent::initList();
 	}
 
 	public function initForm()
@@ -194,7 +194,7 @@ class AdminShopUrlControllerCore extends AdminController
 			'physical_uri' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri
 		);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function postProcess()

@@ -126,7 +126,7 @@ class AdminStoresControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'state` st
 				ON (st.`id_state` = a.`id_state`)';
 
-		parent::initList();
+		return parent::initList();
 	}
 
 	public function initForm()
@@ -291,7 +291,7 @@ class AdminStoresControllerCore extends AdminController
 			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
 		);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function postProcess()

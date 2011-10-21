@@ -659,8 +659,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function displayForm($firstCall = true)
 	{
-		$this->initForm();
 		$content = '';
+		$content .= $this->initForm();
 		$allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 
 		if ($allow_employee_form_lang && !$this->context->cookie->employee_form_lang)
@@ -781,7 +781,6 @@ class AdminControllerCore extends Controller
 	{
 		$this->context->smarty->assign('display_header',$this->display_header);
 		$this->context->smarty->assign('display_footer',$this->display_footer);
-		$this->context->smarty->assign('content', $this->content);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
 		// Template override
@@ -1030,17 +1029,18 @@ class AdminControllerCore extends Controller
 		{
 			if (!($this->object = $this->loadObject(true)))
 				return;
-			$this->initForm();
+			$content .= $this->initForm();
 		}
 		else if ($this->display != 'view')
 		{
-			$this->initList();
-			$this->initOptions();
+			$content .= $this->initList();
+			$content .= $this->initOptions();
 		}
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
+			'content', $this->content
 		));
 	}
 
@@ -1073,7 +1073,8 @@ class AdminControllerCore extends Controller
 			return false;
 		$this->getList($this->context->language->id);
 
-		if (!($this->_list && is_array($this->_list)))
+		// Empty list is ok
+		if (!is_array($this->_list))
 			return false;
 
 		$helper = new HelperList();
@@ -1110,7 +1111,7 @@ class AdminControllerCore extends Controller
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
-		$this->content .= $helper->generateList($this->_list, $this->fieldsDisplay);
+		return $helper->generateList($this->_list, $this->fieldsDisplay);
 	}
 
 	/**
@@ -1142,11 +1143,8 @@ class AdminControllerCore extends Controller
 					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
 			}
 
-			$this->content .= $helper->generateForm($this->fields_form);
+			return $helper->generateForm($this->fields_form);
 		}
-		// TODO delete when all forms use the helper
-//		else
-//			$this->content .= $this->displayForm();
 	}
 
 	/**
@@ -1164,7 +1162,7 @@ class AdminControllerCore extends Controller
 			$helper->token = $this->token;
 			$helper->table = $this->table;
 			$helper->currentIndex = self::$currentIndex;
-			$this->content .= $helper->generateOptions($this->options);
+			return $helper->generateOptions($this->options);
 		}
 	}
 
@@ -1792,7 +1790,7 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Returns an array with selected shops and type (group or boutique shop)
-	 * 
+	 *
 	 * @param string $table
 	 * @param int $id_object
 	 */
@@ -2197,10 +2195,10 @@ EOF;
 	  * @param string $ids Multilingual div ids in form
 	  * @param string $id Current div id]
 	  * @param boolean $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
-	  * 
+	  *
 		* @todo : delete return params :
 		* @param return define the return way : false for a display, true for a return
-		* 
+		*
 		*	@return string
 	  */
 	public function getTranslationsFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)

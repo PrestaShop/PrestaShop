@@ -102,7 +102,7 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
 
-		parent::initList();
+		return parent::initList();
 	}
 
 	public function initForm()
@@ -293,7 +293,7 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
 		}
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	protected function _childValidation()

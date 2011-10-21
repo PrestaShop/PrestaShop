@@ -79,6 +79,8 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
+
+		return parent::initList();
 	}
 
 	public function initForm()
@@ -262,6 +264,8 @@ class AdminWarehousesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+
+		return parent::initForm();
 	}
 
 	public function postProcess()

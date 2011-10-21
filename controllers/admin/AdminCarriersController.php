@@ -136,7 +136,7 @@ class AdminCarriersControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier';
 		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
 
-		parent::initList();
+		return parent::initList();
 	}
 
 	public function initForm()
@@ -357,7 +357,7 @@ class AdminCarriersControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function postProcess()

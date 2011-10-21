@@ -89,7 +89,7 @@ class AdminAliasesControllerCore extends AdminController
 
 		$this->fields_value = array('alias' => $this->object->getAliases());
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function postProcess()

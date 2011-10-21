@@ -72,7 +72,7 @@ class AdminAddressesControllerCore extends AdminController
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
 
-		parent::initList();
+		return parent::initList();
 	}
 
 	public function initForm()
@@ -272,7 +272,7 @@ class AdminAddressesControllerCore extends AdminController
 		// merge address format with the rest of the form
 		array_splice($this->fields_form['input'], 3, 0, $temp_fields);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function postProcess()

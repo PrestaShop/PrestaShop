@@ -167,7 +167,7 @@ class AdminGendersController extends AdminController
 			'image' => $obj->getImage()
 		);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function displayGenderType($value, $tr)

@@ -116,7 +116,7 @@ class AdminCountriesControllerCore extends AdminController
 	 	$this->_select = 'z.`name` AS zone';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
 
-	 	parent::initList();
+	 	return parent::initList();
 	}
 
 	public function initForm()
@@ -353,7 +353,7 @@ class AdminCountriesControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 	public function postProcess()
