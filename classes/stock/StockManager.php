@@ -56,6 +56,8 @@ class StockManagerCore implements StockManagerInterface
 		if (!Validate::isLoadedObject($warehouse) || !$price_te || !$quantity || !$id_product)
 			return false;
 
+		$price_te = (float)round($price_te, 6);
+
 		if (!StockMvtReason::exists($id_stock_mvt_reason))
 			$id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_INC_REASON_DEFAULT');
 
@@ -117,7 +119,7 @@ class StockManagerCore implements StockManagerInterface
 				}
 			break;
 
-			// case FIFO mode
+			// case FIFO / LIFO mode
 			case 'FIFO':
 			case 'LIFO':
 
@@ -168,7 +170,6 @@ class StockManagerCore implements StockManagerInterface
 			// saves stock in warehouse
 			$stock->hydrate($stock_params);
 			$stock->add();
-
 			$mvt_params['id_stock'] = $stock->id;
 		}
 
@@ -202,7 +203,14 @@ class StockManagerCore implements StockManagerInterface
 		$context = Context::getContext();
 
 		// gets total quantities in stock for the current product
-		$quantity_in_stock = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), $is_usable);
+		$physical_quantity_in_stock = (int)$this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), false);
+		$usable_quantity_in_stock = (int)$this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
+
+		// check quantity if we want to decrement unusable quantity
+		if (!$is_usable)
+			$quantity_in_stock = $physical_quantity_in_stock - $usable_quantity_in_stock;
+		else
+			$quantity_in_stock = $usable_quantity_in_stock;
 
 		// checks if it's possible to remove the given quantity
 		if ($quantity_in_stock < $quantity)
@@ -384,12 +392,17 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
-		// in case $ids_warehouse is not an array
-		if (!is_array($ids_warehouse))
-			$ids_warehouse = array($ids_warehouse);
+		if (!is_null($ids_warehouse))
+		{
+			// in case $ids_warehouse is not an array
+			if (!is_array($ids_warehouse))
+				$ids_warehouse = array($ids_warehouse);
 
-		// casts for security reason
-		$ids_warehouse = array_map('intval', $ids_warehouse);
+			// casts for security reason
+			$ids_warehouse = array_map('intval', $ids_warehouse);
+		}
+		else
+			$ids_warehouse = array();
 
 		$query = new DbQuery();
 		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
@@ -398,6 +411,7 @@ class StockManagerCore implements StockManagerInterface
 
 		if (count($ids_warehouse))
 			$query->where('s.id_warehouse IN('.implode(', ', $ids_warehouse).')');
+
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 
@@ -440,6 +454,9 @@ class StockManagerCore implements StockManagerInterface
 		if ($this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity)
 			return false;
 
+		if ($id_warehouse_from == $id_warehouse_to)
+			return false;
+
 		// Checks if the given warehouses are available
 		$warehouse_from = new Warehouse($id_warehouse_from);
 		$warehouse_to = new Warehouse($id_warehouse_to);
@@ -460,12 +477,24 @@ class StockManagerCore implements StockManagerInterface
 		// Adds in warehouse_to
 		foreach ($stocks as $stock)
 		{
+			$price = $stock['price_te'];
+
+			// convert product price to destination warehouse currency if needed
+			if ($warehouse_from->id_currency != $warehouse_to->id_currency)
+			{
+				// First convert price to the default currency
+				$price_converted_to_default_currency = Tools::convertPrice($price, $warehouse_from->id_currency, false);
+
+				// Convert the new price from default currency to needed currency
+				$price = Tools::convertPrice($price_converted_to_default_currency, $warehouse_to->id_currency, true);
+			}
+
 			if (!$this->addProduct($id_product,
 								   $id_product_attribute,
 								   $warehouse_to,
 								   $stock['quantity'],
 								   $id_stock_mvt_reason,
-								   $stock['price_te'],
+								   $price,
 								   $usable_to))
 				return false;
 		}

@@ -74,7 +74,7 @@ class HelperListCore extends Helper
 	protected $fieldsDisplay;
 
 	/** @var boolean Content line is clickable if true */
-	public $noLink = false;
+	public $no_link = false;
 
 	public $header_tpl = 'list_header.tpl';
 	public $content_tpl = 'list_content.tpl';
@@ -287,7 +287,7 @@ class HelperListCore extends Helper
 			'fields_display' => $this->fieldsDisplay,
 			'list' => $this->_list,
 			'actions' => $this->actions,
-			'no_link' => $this->noLink,
+			'no_link' => $this->no_link,
 			'current_index' => $this->currentIndex,
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
