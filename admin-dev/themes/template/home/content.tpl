@@ -2,11 +2,13 @@
 	<h1>{l s='Dashboard'}</h1>
 	<hr style="background-color: #812143;color: #812143;" />
 	{if $upgrade}
-		<div class="warning warn" style="margin-bottom:10px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
+		{if $upgrade->need_upgrade}
+			<div class="warning warn" style="margin-bottom:10px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
+		{/if}
 	{else}
 		<p>{l s ='Update notification unavailable'}</p>
 		<p>&nbsp;</p>
-		<p>{l s ='To receive PrestaShop update warnings, you need to activate the <b>allow_url_fopen</b> command in your <b>php.ini</b> config file.'} [<a href="http://www.php.net/manual/'.$isoUser.'/ref.filesystem.php">{l s ='more info'}</a>]</p>
+		<p>{l s ='To receive PrestaShop update warnings, you need to activate '} <b>allow_url_fopen</b> [<a href="http://www.php.net/manual/{$isoUser}/ref.filesystem.php">{l s ='more info on php.net'}</a>]</p>
 		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
 	{/if}
 {if $employee->bo_show_screencast}
