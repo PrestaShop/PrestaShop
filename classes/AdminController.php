@@ -1157,6 +1157,9 @@ class AdminControllerCore extends Controller
 		if ($this->options && is_array($this->options))
 		{
 			$helper = new HelperOptions();
+			// Check if form template has been overriden
+			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'options.tpl'))
+				$helper->tpl = $this->tpl_folder.'options.tpl';
 			$helper->id = $this->id;
 			$helper->token = $this->token;
 			$helper->table = $this->table;

@@ -48,6 +48,29 @@ class AdminCountriesControllerCore extends AdminController
 			'dir' => 'st'
 		);
 
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Countries options'),
+				'fields' =>	array(
+					'PS_COUNTRY_DEFAULT' => array(
+						'title' => $this->l('Default country:'),
+						'desc' => $this->l('The default country used in shop'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'id_country',
+						'list' => Country::getCountries(Context::getContext()->language->id)
+					),
+					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
+						'title' => $this->l('Restrict countries in FO by those delivered by active carriers'),
+						'cast' => 'intval',
+						'type' => 'bool',
+						'default' => '0'
+					)
+				),
+				'submit' => array()
+			)
+		);
+
 		$this->fieldsDisplay = array(
 			'id_country' => array(
 				'title' => $this->l('ID'),
@@ -82,29 +105,6 @@ class AdminCountriesControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'a!active'
-			)
-		);
-
-		$this->options = array(
-			'general' => array(
-				'title' =>	$this->l('Countries options'),
-				'fields' =>	array(
-					'PS_COUNTRY_DEFAULT' => array(
-						'title' => $this->l('Default country:'),
-						'desc' => $this->l('The default country used in shop'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'id_country',
-						'list' => Country::getCountries(Context::getContext()->language->id)
-					),
-					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
-						'title' => $this->l('Restrict countries in FO by those delivered by active carriers'),
-						'cast' => 'intval',
-						'type' => 'bool',
-						'default' => '0'
-					)
-				),
-				'submit' => array()
 			)
 		);
 
@@ -168,7 +168,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'p' => $this->l('2- or 3-letter ISO code, e.g., FR for France').'. 
+					'p' => $this->l('2- or 3-letter ISO code, e.g., FR for France').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
 							</a>.'
@@ -234,7 +234,7 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
-					'p' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France. 
+					'p' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France.
 									No verification if undefined')
 				),
 				array(

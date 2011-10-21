@@ -46,6 +46,7 @@
 		{/if}
 	
 		{foreach $categoryData['fields'] AS $key => $field}
+			
 			{if $field['type'] == 'hidden'}
 				<input type="hidden" name="{$key}" value="{$field['value']}" />
 			{else}
@@ -57,8 +58,9 @@
 					{/if}
 					{$field['title']}</label>
 				{/if}
-				<div class="margin-form">
-				
+				{block name="start_field_block"}
+					<div class="margin-form">
+				{/block}
 				{if $field['type'] == 'select'}
 					<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}">
 						{foreach $field['list'] AS $k => $option}
@@ -165,6 +167,7 @@
 				{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
 				{if $field['is_invisible']}<p class="multishop_warning">{l s='You can\'t change the value of this configuration field in this shop context'}</p>{/if}
 				</div></div>
+				{block name="end_field_block"}{/block}
 			{/if}
 		{/foreach}
 		{if isset($categoryData['submit'])}
