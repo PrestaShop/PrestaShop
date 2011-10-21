@@ -61,7 +61,7 @@ class AdminControllerCore extends Controller
 	public $id = -1;
 
 	/** @var array noTabLink array of admintab names witch have no content */
-	public $noTabLink = array('AdminCatalog', 'AdminTools');
+	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock');
 
 	/** @var string Security token */
 	public $token;
@@ -117,6 +117,9 @@ class AdminControllerCore extends Controller
 
 	/** @var array list of row ids associated with a given action for witch this action have to not be available */
 	protected $list_skip_actions = array();
+
+	/** @var bool boolean List content lines are clickable if true */
+	protected $list_no_link = false;
 
 	/** @var array $cache_lang cache for traduction */
 	public static $cache_lang = array();
@@ -657,7 +660,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Display form
 	 */
-	public function displayForm($firstCall = true)
+	public function displayForm($first_call = true)
 	{
 		$content = '';
 		$content .= $this->initForm();
@@ -680,7 +683,7 @@ class AdminControllerCore extends Controller
 			$this->_defaultFormLanguage = (int)$this->context->cookie->employee_form_lang;
 
 		// Only if it is the first call to displayForm, otherwise it has already been defined
-		if ($firstCall)
+		if ($first_call)
 		{
 			$content .= '
 			<script type="text/javascript">
@@ -779,8 +782,8 @@ class AdminControllerCore extends Controller
 
 	public function display()
 	{
-		$this->context->smarty->assign('display_header',$this->display_header);
-		$this->context->smarty->assign('display_footer',$this->display_footer);
+		$this->context->smarty->assign('display_header', $this->display_header);
+		$this->context->smarty->assign('display_footer', $this->display_footer);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
 		// Template override
@@ -1108,10 +1111,12 @@ class AdminControllerCore extends Controller
 		$helper->token = $this->token;
 		$helper->imageType = $this->imageType;
 		$helper->no_add = isset($this->no_add) ? $this->no_add : false;
+		$helper->no_link = $this->list_no_link;
 		$helper->colorOnBackground = $this->colorOnBackground;
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
+
 		return $helper->generateList($this->_list, $this->fieldsDisplay);
 	}
 
@@ -1428,35 +1433,39 @@ class AdminControllerCore extends Controller
 	 * Get the current objects' list form the database
 	 *
 	 * @param integer $id_lang Language used for display
-	 * @param string $orderBy ORDER BY clause
+	 * @param string $order_by ORDER BY clause
 	 * @param string $_orderWay Order way (ASC, DESC)
 	 * @param integer $start Offset in LIMIT clause
 	 * @param integer $limit Row count in LIMIT clause
 	 */
-	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = false)
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		/* Manage default params values */
 		$use_limit = true;
 		if ($limit === false)
 			$use_limit = false;
-		elseif (empty($limit))
+		else if (empty($limit))
+		{
 			if (!isset($this->context->cookie->{$this->table.'_pagination'}))
 				$limit = $this->_pagination[1];
 			else
 				$limit = $this->context->cookie->{$this->table.'_pagination'};
+		}
 
 		if (!Validate::isTableOrIdentifier($this->table))
 			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
 
-		if (empty($orderBy))
-			$orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
-		if (empty($orderWay))
-			$orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
+		if (empty($order_by))
+			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+
+		if (empty($order_way))
+			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
+
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
 
 		/* Check params validity */
-		if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay)
+		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)
 			|| !is_numeric($start) || !is_numeric($limit)
 			|| !Validate::isUnsignedId($id_lang))
 			die(Tools::displayError('get list params is not valid'));
@@ -1471,8 +1480,8 @@ class AdminControllerCore extends Controller
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
-		$this->_orderBy = $orderBy;
-		$this->_orderWay = Tools::strtoupper($orderWay);
+		$this->_orderBy = $order_by;
+		$this->_orderWay = Tools::strtoupper($order_way);
 
 		/* SQL table : orders, but class name is Order */
 		$sql_table = $this->table == 'order' ? 'orders' : $this->table;
@@ -1486,6 +1495,7 @@ class AdminControllerCore extends Controller
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
 			$where_shop = $this->context->shop->sqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
+
 		$assos = Shop::getAssoTables();
 		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 		{
@@ -1539,10 +1549,6 @@ class AdminControllerCore extends Controller
 			 	$having_clause .= $this->_having.' ';
 		}
 
-		if($use_limit === true) {
-
-		}
-
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS
 			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
 			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
@@ -1555,7 +1561,7 @@ class AdminControllerCore extends Controller
 			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 			'.(isset($this->_group) ? $this->_group.' ' : '').'
 			'.$having_clause.'
-			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
+			ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
@@ -1985,7 +1991,7 @@ EOF;
 			}
 		}
 		$html .= '</table></div>';
-		$this->context->smarty->assign('asso_shop',$html);
+		$this->context->smarty->assign('asso_shop', $html);
 		return $html;
 	}
 
