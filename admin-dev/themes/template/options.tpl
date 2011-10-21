@@ -121,7 +121,7 @@
 					echo '</tr>';
 					echo '</table>';
 			*}
-				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang'}
+				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 					{if $field['type'] == 'textLang'}
 						{foreach $field['languages'] AS $id_lang => $value}
 							<div id="{$key}_{$id_lang}" style="margin-bottom:8px; display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left; vertical-align: top;">
@@ -133,6 +133,19 @@
 							<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left;">
 								<textarea rows="{$field['rows']}" cols="{$field['cols']|intval}"  name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 							</div>
+						{/foreach}
+					{elseif $field['type'] == 'selectLang' }
+						{foreach $languages as $language}
+						<div id="{$key}_{$language.id_lang}" style="margin-bottom:8px; display: {if $language.id_lang == $current_id_lang}block{else}none{/if}; float: left; vertical-align: top;">
+							<select name="{$key}_{$language.iso_code|upper}">
+								{foreach $field['list'] AS $k => $v}
+									<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]}{else}{$v[$field.identifier]}{/if}"
+										{if $field['value'][$language.id_lang] == $v['name']} selected="selected"{/if}>
+										{$v['name']}
+									</option>
+								{/foreach}
+							</select>
+						</div>
 						{/foreach}
 					{/if}
 					{if count($languages) > 1}
@@ -149,7 +162,7 @@
 										class="pointer"
 										alt="{$language.name}"
 										title="{$language.name}"
-										onclick="changeLanguage('{$key}', '{$key}', {$language.id_lang}, '{$language.iso_code}');" />
+										onclick="changeLanguage('{$key}', '{if isset($custom_key)}{$custom_key}{else}{$key}{/if}', {$language.id_lang}, '{$language.iso_code}');" />
 							{/foreach}
 						</div>
 					{/if}

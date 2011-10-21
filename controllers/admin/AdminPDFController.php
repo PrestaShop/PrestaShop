@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,48 +20,53 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminPDF extends AdminPreferences
+class AdminPDFControllerCore extends AdminController
 {
+	private $encoding_list = array();
+
+	private $font_list = array();
+
 	public function __construct()
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		
-		parent::__construct();
-
-		/* Collect all font files and build array for combo box */
-		$fontFiles = scandir(_PS_FPDF_PATH_.'font');
-		$fontList = array();
-		$arr = array();
-		
-		foreach ($fontFiles AS $file)
-			if (substr($file, -4) == '.php' AND $file != 'index.php' AND substr($file, -6) != 'bi.php' AND substr($file, -5) != 'b.php' AND substr($file, -5) != 'i.php')
-			{
-				$arr['mode'] = substr($file, 0, -4);
-				$arr['name'] = substr($file, 0, -4);
-				array_push($fontList, $arr);
-			}
+		$this->lang = true;
+		$this->context = Context::getContext();
 
 		/* Collect all encoding map files and build array for combo box */
-		$encodingFiles = scandir(_PS_FPDF_PATH_.'font/makefont');
-		$encodingList = array();
+		$encoding_files = scandir(_PS_FPDF_PATH_.'font/makefont');
 		$arr = array();
-		foreach ($encodingFiles AS $file)
+
+		foreach ($encoding_files as $file)
 			if (substr($file, -4) == '.map')
 			{
 				$arr['mode'] = substr($file, 0, -4);
 				$arr['name'] = substr($file, 0, -4);
-				array_push($encodingList, $arr);
+				array_push($this->encoding_list, $arr);
 			}
 
-		$this->optionsList = array(
+		/* Collect all font files and build array for combo box */
+		$font_files = scandir(_PS_FPDF_PATH_.'font');
+		$arr = array();
+
+		foreach ($font_files as $file)
+			if (substr($file, -4) == '.php' &&
+					$file != 'index.php' &&
+					substr($file, -6) != 'bi.php' &&
+					substr($file, -5) != 'b.php' &&
+					substr($file, -5) != 'i.php')
+			{
+				$arr['mode'] = substr($file, 0, -4);
+				$arr['name'] = substr($file, 0, -4);
+				array_push($this->font_list, $arr);
+			}
+
+		$this->options = array(
 			'PDF' => array(
 				'title' =>	$this->l('PDF settings for the current language:').' '.$this->context->language->name,
 				'icon' =>	'pdf',
@@ -72,40 +77,24 @@ class AdminPDF extends AdminPreferences
 						'desc' => $this->l('Encoding for PDF invoice'),
 						'type' => 'selectLang',
 						'cast' => 'strval',
-						'identifier' => 'mode', 
-						'list' => $encodingList),
+						'identifier' => 'mode',
+						'list' => $this->encoding_list
+					),
 					'PS_PDF_FONT' => array(
 						'title' => $this->l('Font:'),
 						'desc' => $this->l('Font for PDF invoice'),
 						'type' => 'selectLang',
 						'cast' => 'strval',
-						'identifier' => 'mode', 
-						'list' => $fontList),
+						'identifier' => 'mode',
+						'list' => $this->font_list
+					)
 				),
-			),
+				'submit' => array()
+			)
 		);
-	}
 
-	public function postProcess()
-	{
-		if (isset($_POST['submitPDF'.$this->table]))
-		{
-			// @todo automatize selectLang post process
-			$fieldLangPDF = array();
-			$languages = Language::getLanguages(false);
-			foreach ($this->optionsList['PDF']['fields'] as $field => $fieldvalue)
-				foreach ($languages as $lang)
-					if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
-						$this->optionsList['PDF']['fields'][$field.'_'.strtoupper($lang['iso_code'])] = array('type' => 'select', 'cast' => 'strval', 'identifier' => 'mode', 'list' => $fieldvalue['list']);
+		$this->context->smarty->assign('custom_key', 'PS_PDF_ENCODING¤PS_PDF_FONT');
 
-		 	parent::postProcess();
-		}
-	}	
-
-	public function display()
-	{
-		if (!Validate::isLoadedObject($this->context->language))
-			die(Tools::displayError());
-		$this->displayOptionsList();
+		parent::__construct();
 	}
 }
