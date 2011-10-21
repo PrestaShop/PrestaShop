@@ -25,17 +25,19 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminMeta extends AdminTab
+class AdminMetaControllerCore extends AdminController
 {
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
-	public $edit = true;
-	public $delete = true;
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
 			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -45,13 +47,14 @@ class AdminMeta extends AdminTab
 		);
 		$this->_group = 'GROUP BY a.id_meta';
 
-		$this->optionsList = array(
+		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('URLs Setup'),
 				'fields' =>	array(
 					'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<p class="hint clear" style="display: block;">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$this->context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></p><div class="clear"></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 					'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				),
+				'submit' => array()
 			),
 			'routes' => array(
 				'title' =>	$this->l('Schema of URLs'),
@@ -70,6 +73,7 @@ class AdminMeta extends AdminTab
 			$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
 			$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
 			$this->addFieldRoute('module', $this->l('Route to modules'));
+			$this->options['routes']['submit'] = array();
 		}
 	}
 
@@ -79,7 +83,7 @@ class AdminMeta extends AdminTab
 		foreach (Dispatcher::getInstance()->default_routes[$routeID]['keywords'] as $keyword => $data)
 			$keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
 
-		$this->optionsList['routes']['fields']['PS_ROUTE_'.$routeID] = array(
+		$this->options['routes']['fields']['PS_ROUTE_'.$routeID] = array(
 			'title' =>	$title,
 			'desc' => sprintf($this->l('Keywords: %s'), implode(', ', $keywords)),
 			'validation' => 'isString',
@@ -89,91 +93,84 @@ class AdminMeta extends AdminTab
 		);
 	}
 
-	public function displayForm($isMainTab = true)
+	public function initForm()
 	{
-		parent::displayForm();
+		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
+		$pages = array();
+		foreach ($files as $file)
+			$pages[] = array('page' => $file);
 
-		if (!($meta = $this->loadObject(true)))
-			return;
-		$files = Meta::getPages(true, ($meta->page ? $meta->page : false));
-		echo '
-		<form action="'.self::$currentIndex.'&token='.$this->token.'&submitAdd'.$this->table.'=1" method="post">
-		'.($meta->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$meta->id.'" />' : '').'
-			<fieldset><legend><img src="../img/admin/metatags.gif" />'.$this->l('Meta-Tags').'</legend>
-				<label>'.$this->l('Page:').' </label>
-				<div class="margin-form">';
-				if (!sizeof($files))
-					echo '<p>'.$this->l('There is no page available!').'</p>';
-				else
-				{
-					echo '
-					<select name="page">';
-					foreach ($files as $file)
-					{
-						echo '<option value="'.$file.'"';
-						echo $meta->page == $file? ' selected="selected"' : '' ;
-						echo'>'.$file.'</option>';
-					}
-					echo '
-					</select><sup> *</sup>
-					<p class="clear">'.$this->l('Name of the related page').'</p>';
-				}
-				echo '
-				</div>
-				<label>'.$this->l('Page\'s title:').' </label>
-				<div class="margin-form">';
-				foreach ($this->_languages as $language)
-					echo '
-					<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="title_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($meta, 'title', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-						<p class="clear">'.$this->l('Title of this page').'</p>
-					</div>';
-				$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'title¤description¤keywords¤url_rewrite', 'title');
-		echo '	</div>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('Meta description:').' </label>
-				<div class="margin-form">';
-				foreach ($this->_languages as $language)
-					echo '
-					<div id="description_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<input size="50" type="text" name="description_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($meta, 'description', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-						<p class="clear">'.$this->l('A short description').'</p>
-					</div>';
-				$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'title¤description¤keywords¤url_rewrite', 'description');
-		echo '	</div>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('Meta keywords:').' </label>
-				<div class="margin-form">';
-				foreach ($this->_languages as $language)
-					echo '
-					<div id="keywords_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<input size="50" type="text" name="keywords_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($meta, 'keywords', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-						<p class="clear">'.$this->l('List of keywords').'</p>
-					</div>';
-				$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'title¤description¤keywords¤url_rewrite', 'keywords');
-		echo '	</div>
-				<div style="clear:both;">&nbsp;</div>
-				<label>'.$this->l('Rewritten URL:').' </label>
-				<div class="margin-form">';
-				foreach ($this->_languages as $language)
-					echo '
-					<div id="url_rewrite_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<input style="width:300px" type="text" name="url_rewrite_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($meta, 'url_rewrite', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-						<p class="clear" style="width:300px">'.$this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php').'</p>
-					</div>';
-				$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'title¤description¤keywords¤url_rewrite', 'url_rewrite');
-		echo '	</div>
-				<div style="clear:both;">&nbsp;</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
+ 		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Meta-Tags'),
+				'image' => '../img/admin/metatags.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'hidden',
+					'name' => 'id_meta',
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Page:'),
+					'name' => 'page',
+					'options' => array(
+						'query' => $pages,
+						'id' => 'page',
+						'name' => 'page',
+					),
+					'p' => $this->l('Name of the related page'),
+					'required' => true,
+					'empty_message' => '<p>'.$this->l('There is no page available!').'</p>',
+					'size' => 30
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Page\'s title:'),
+					'name' => 'title',
+					'lang' => true,
+					'attributeLang' => 'title',
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('Title of this page'),
+					'size' => 30
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Meta description:'),
+					'name' => 'description',
+					'lang' => true,
+					'attributeLang' => 'description',
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('A short description'),
+					'size' => 50
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Meta keywords:'),
+					'name' => 'keywords',
+					'lang' => true,
+					'attributeLang' => 'keywords',
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('List of keywords'),
+					'size' => 50
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Rewritten URL:'),
+					'name' => 'url_rewrite',
+					'lang' => true,
+					'attributeLang' => 'url_rewrite',
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
+					'size' => 50
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+		return parent::initForm();
 	}
 
 	public function postProcess()

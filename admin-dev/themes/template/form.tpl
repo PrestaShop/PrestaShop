@@ -124,42 +124,48 @@
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'select'}
-							<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
-								{if isset($input.options.default)}
-									<option value="{$input.options.default.value}">{$input.options.default.label}</option>
-								{/if}
-								{if isset($input.options.optiongroup)}
-									{foreach $input.options.optiongroup.query AS $optiongroup}
-										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
-											{foreach $optiongroup[$input.options.options.query] as $option}
-												<option value="{$option[$input.options.options.id]}"
-													{if isset($input.multiple)}
-														{foreach $fields_value[$input.name] as $field_value}
-															{if $field_value == $option[$input.options.options.id]}selected="selected"{/if}
-														{/foreach}
-													{else}
-														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}
-													{/if}
-												>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
-											{/foreach}
-										</optgroup>
-									{/foreach}
-								{else}
-									{foreach $input.options.query AS $option}
-										<option value="{$option[$input.options.id]}"
-											{if isset($input.multiple)}
-												{foreach $fields_value[$input.name] as $field_value}
-													{$field_value}
-													{if $field_value == $option[$input.options.id]}selected="selected"{/if}
+							{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
+								{$input.empty_message}
+								{$input.required = false}
+								{$input.p = null}
+							{else}
+								<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+									{if isset($input.options.default)}
+										<option value="{$input.options.default.value}">{$input.options.default.label}</option>
+									{/if}
+									{if isset($input.options.optiongroup)}
+										{foreach $input.options.optiongroup.query AS $optiongroup}
+											<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
+												{foreach $optiongroup[$input.options.options.query] as $option}
+													<option value="{$option[$input.options.options.id]}"
+														{if isset($input.multiple)}
+															{foreach $fields_value[$input.name] as $field_value}
+																{if $field_value == $option[$input.options.options.id]}selected="selected"{/if}
+															{/foreach}
+														{else}
+															{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}
+														{/if}
+													>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
 												{/foreach}
-											{else}
-												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
-											{/if}
-										>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
-									{/foreach}
-								{/if}
-							</select>
+											</optgroup>
+										{/foreach}
+									{else}
+										{foreach $input.options.query AS $option}
+											<option value="{$option[$input.options.id]}"
+												{if isset($input.multiple)}
+													{foreach $fields_value[$input.name] as $field_value}
+														{$field_value}
+														{if $field_value == $option[$input.options.id]}selected="selected"{/if}
+													{/foreach}
+												{else}
+													{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
+												{/if}
+											>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
+										{/foreach}
+									{/if}
+								</select>
 							{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+							{/if}
 						{elseif $input.type == 'radio'}
 							{foreach $input.values as $value}
 								<input type="radio"
