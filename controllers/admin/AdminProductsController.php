@@ -1527,7 +1527,7 @@ if (false)
 					$languages = Language::getLanguages(false);
 					$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 					$product = new Product((int)(Tools::getValue('id_product')));
-					$content .= $this->initForm();
+					$this->initForm();
 					return $this->{'initForm'.$this->action}($product, $languages, $defaultLanguage);
 				}
 			}
@@ -1723,6 +1723,7 @@ if (false)
 
 	public function displayForm($isMainTab = true)
 	{
+		$content = '';
 		parent::displayForm();
 		if (!($obj = $this->loadObject(true)))
 			throw new Exception('object not loaded');
@@ -3605,7 +3606,7 @@ switch ($this->action)
 				$stock_available->save();
 				break;
 		}
-		$this->content = Tools::jsonEncode(array('error' => false));
+		die(Tools::jsonEncode(array('error' => false)));
 	}
 
 	public function getLineTableImage($image, $imagesTotal, $token, $shops)
