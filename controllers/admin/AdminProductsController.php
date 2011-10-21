@@ -185,7 +185,6 @@ class AdminProductsController extends AdminController
 	 */
 	public function postProcess($token = null)
 	{
-		info($_POST);
 		/* Add a new product */
 		if (Tools::isSubmit('submitAddproduct') || Tools::isSubmit('submitAddproductAndStay') ||  Tools::isSubmit('submitAddProductAndPreview'))
 		{
