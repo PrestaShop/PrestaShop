@@ -9,7 +9,7 @@
 		<ol class="tab">
 		{foreach $product_tabs key=numStep item=tab}
 			<li class="tab-row">
-				<a class="tab-page" id="link-{$tab.name}" href="{$tab.href}">{$tab.name}</a>{*todo href when nojs*}
+				<a class="tab-page {if $tab.selected}selected{/if}" id="link-{$tab.id}" href="{$tab.href}">{$tab.name}</a>{*todo href when nojs*}
 			</li>
 		{/foreach}
 		</ol>
@@ -20,36 +20,53 @@ var pos_select = {$pos_select};
 $(document).ready(function(){
 	$(".tab-page").click(function(e){
 		e.preventDefault();
+		// currentId is the current producttab id
+		currentId = $(".productTabs a.selected").attr('id').substr(5);
+		// id is the wanted producttab id
 		id = $(this).attr('id').substr(5);
 		$(".tab-page").removeClass('selected');
-		$("#product-tab-content").html("... LOADING ...");
-		$("#link-"+id).addClass('selected');
-		myurl = $(this).attr("href")+"&ajax=1";
-		$.ajax({
-			url : myurl,
-			async : true,
-			success :function(data)
-			{
-				$("#product-tab-content").html(data);
-				var languages = new Array();
-				if (id == 3)
-				populate_attrs();
-				if (id == 7)
+		$("#product-tab-content-"+currentId).hide();
+		$("#product-tab-content-wait").show();;
+		
+
+		if($("#product-tab-content-"+id).hasClass('not-loaded'))
+		{
+			myurl = $(this).attr("href")+"&ajax=1";
+			$.ajax({
+				url : myurl,
+				async : true,
+				success :function(data)
 				{
-					$("#addAttachment").click(function() {
-						return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
-					});
-					$("#removeAttachment").click(function() {
-						return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
-					});
-					$("#product").submit(function() {
-						$("#selectAttachment1 option").each(function(i) {
-							$(this).attr("selected", "selected");
-						});
-					});
+					$("#product-tab-content-"+id).html(data);
+					$("#product-tab-content-"+id).removeClass('not-loaded');
+					$("#product-tab-content-"+id).show();
+					$("#link-"+id).addClass('selected');
 				}
-			}
-		});
+			});
+		}
+		else
+		{
+			$("#product-tab-content-"+id).show();
+			$("#link-"+id).addClass('selected');
+		}
+		
+		var languages = new Array();
+		if (id == 3)
+			populate_attrs();
+		if (id == 7)
+		{
+			$("#addAttachment").click(function() {
+				return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
+			});
+			$("#removeAttachment").click(function() {
+				return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
+			});
+			$("#product").submit(function() {
+				$("#selectAttachment1 option").each(function(i) {
+					$(this).attr("selected", "selected");
+				});
+			});
+		}
 	});
 });
 
@@ -169,9 +186,14 @@ $(document).ready(function(){
 <input type="hidden" name="id_product" value="{$id_product}" />
 <input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
-<div id="product-tab-content">
-{$content}
+	<div id="product-tab-content-wait" style="display:none" ></div>
+	{foreach $product_tabs key=numStep item=tab}
+		<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
+{if $tab.selected}{$content}{/if}
+		</div>
+	{/foreach}
 </div>
+			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 </form>
 <br/>
 <a href="{$link->getAdminLink('AdminCatalog')}"><img src="../img/admin/arrow2.gif" />{l s='Back to list'}</a><br/>
