@@ -1029,18 +1029,19 @@ class AdminControllerCore extends Controller
 		{
 			if (!($this->object = $this->loadObject(true)))
 				return;
-			$content .= $this->initForm();
+			$this->content .= $this->initForm();
 		}
 		else if ($this->display != 'view')
 		{
-			$content .= $this->initList();
-			$content .= $this->initOptions();
+			$this->content .= $this->initList();
+			$this->content .= $this->initOptions();
 		}
+
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
-			'content', $this->content
+			'content' => $this->content
 		));
 	}
 
