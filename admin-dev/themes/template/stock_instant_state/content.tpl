@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -23,13 +23,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if count($warehouse_list) > 1}
+{if count($list_warehouses) > 1}
 	<form type="get" onchange="submit();">
 		<label for="wareouse">{l s="Select a warehouse:"}</label>
 		<input type="hidden" name="controller" value="AdminStockInstantState" />
 		<input type="hidden" name="token" value="{$token}" />
 		<select name="warehouse">
-			{foreach $warehouse_list as $warehouse}
+			{foreach $list_warehouses as $warehouse}
 				<option {if $warehouse.id_warehouse == $current_warehouse}selected="selected"{/if} value="{$warehouse.id_warehouse}">{$warehouse.name}</option>
 			{/foreach}
 		</select>
