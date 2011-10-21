@@ -753,6 +753,8 @@ function stockManagementActivationAuthorization()
 		getE('PS_ORDER_OUT_OF_STOCK_off').disabled = false;
 		getE('PS_DISPLAY_QTIES_on').disabled = false;
 		getE('PS_DISPLAY_QTIES_off').disabled = false;
+		getE('PS_ADVANCED_STOCK_MANAGEMENT_on').disabled = false;
+		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').disabled = false;
 	}
 	else
 	{
@@ -762,6 +764,9 @@ function stockManagementActivationAuthorization()
 		getE('PS_ORDER_OUT_OF_STOCK_on').checked = true;
 		getE('PS_ORDER_OUT_OF_STOCK_on').disabled = 'disabled';
 		getE('PS_ORDER_OUT_OF_STOCK_off').disabled = 'disabled';
+		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').checked = true;
+		getE('PS_ADVANCED_STOCK_MANAGEMENT_on').disabled = 'disabled';
+		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').disabled = 'disabled';
 	}
 }
 
