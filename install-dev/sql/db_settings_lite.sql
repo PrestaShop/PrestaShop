@@ -863,7 +863,8 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (95, 'AdminStock', 0, 15),
 (96, 'AdminWarehouses', 95, 1),
 (97, 'AdminStockManagement', 95, 2),
-(98, 'AdminStockInstantState', 95, 4);
+(98, 'AdminStockInstantState', 95, 4),
+(99, 'AdminStockCover', 95, 5);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -886,7 +887,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 95, 'Stock'),
 (1, 96, 'Warehouses'),
 (1, 97, 'Stock Management'),
-(1, 98, 'Stock instant state');
+(1, 98, 'Stock instant state'),
+(1, 99, 'Stock cover');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -907,7 +909,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 95, 'Stock'),
 (2, 96, 'Entrepôts'),
 (2, 97, 'Gestion du stock'),
-(2, 98, 'Etat instantané du stock');
+(2, 98, 'Etat instantané du stock'),
+(2, 99, 'Couverture de stock');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -927,7 +930,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 95, 'Stock'),
 (3, 96, 'Warehouses'),
 (3, 97, 'Stock Management'),
-(3, 98, 'Stock instant state');
+(3, 98, 'Stock instant state'),
+(3, 99, 'Stock cover');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -948,7 +952,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 95, 'Stock'),
 (4, 96, 'Warehouses'),
 (4, 97, 'Stock Management'),
-(4, 98, 'Stock instant state');
+(4, 98, 'Stock instant state'),
+(4, 99, 'Stock cover');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -969,8 +974,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 95, 'Stock'),
 (5, 96, 'Warehouses'),
 (5, 97, 'Stock Management'),
-(5, 98, 'Stock instant state');
-
+(5, 98, 'Stock instant state'),
+(5, 99, 'Stock cover');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`

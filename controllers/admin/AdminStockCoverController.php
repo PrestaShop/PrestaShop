@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class AdminStockCoverController extends AdminController
+class AdminStockCoverControllerCore extends AdminController
 {
 	public function __construct()
 	{
@@ -37,19 +37,42 @@ class AdminStockCoverController extends AdminController
 		$this->className = 'Product';
 		$this->lang = true;
 
-		$this->addRowAction('details');
-
 		$this->fieldsDisplay = array(
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 100, 'widthColumn' => 150),
-			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 75, 'widthColumn' => 100),
-			'name' => array('title' => $this->l('Name'), 'width' => 350, 'widthColumn' => 'auto', 'filter_key' => 'b!name'),
-			'coverage' => array('title' => $this->l('Average time left'), 'width' => 50, 'widthColumn' => 60, 'orderby' => false, 'search' => false),
-			'stock' => array('title' => $this->l('Qty in stock'), 'width' => 50, 'widthColumn' => 60, 'orderby' => false, 'search' => false),
+			'reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center',
+				'width' => 100,
+				'widthColumn' => 150,
+				'filter_key' => 'a!reference'
+			),
+			'ean13' => array(
+				'title' => $this->l('EAN13'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'filter_key' => 'a!ean13'
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 350,
+				'widthColumn' => 'auto',
+				'filter_key' => 'b!name'
+			),
+			'coverage' => array(
+				'title' => $this->l('Average time left'),
+				'width' => 50,
+				'widthColumn' => 60,
+				'orderby' => false,
+				'search' => false
+			),
+			'stock' => array(
+				'title' => $this->l('Qty in stock'),
+				'width' => 50,
+				'widthColumn' => 60,
+				'orderby' => false,
+				'search' => false
+			),
 		);
-
-		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
-						LEFT JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product AND s.id_product_attribute = 0)';
 
 		parent::__construct();
 	}
@@ -62,7 +85,6 @@ class AdminStockCoverController extends AdminController
 	{
 		if (Tools::isSubmit('id'))
 		{
-
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
 			$product_id = (int)Tools::getValue('id');
@@ -70,7 +92,7 @@ class AdminStockCoverController extends AdminController
 			$query = '
 			SELECT a.id_product_attribute as id, a.id_product, a.reference, a.ean13,
 				   IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				   s.physical_quantity as stock
+				   IFNULL(s.physical_quantity, 0) as stock
 			FROM '._DB_PREFIX_.'product_attribute a
 			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
 			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
@@ -83,7 +105,7 @@ class AdminStockCoverController extends AdminController
 
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			foreach ($datas as &$data)
-				$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id'], $data['id_product'], 7);
+				$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod());
 
 			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
 		}
@@ -91,12 +113,19 @@ class AdminStockCoverController extends AdminController
 	}
 
 	/**
-	 * AdminController::initContent() override
-	 * @see AdminController::initContent()
+	 * AdminController::initList() override
+	 * @see AdminController::initList()
 	 */
-	public function initContent()
+	public function initList()
 	{
-		$this->display = 'list';
+		$this->addRowAction('details');
+
+		//no link on list rows
+		$this->list_no_link = true;
+
+		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
+						LEFT JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product AND s.id_product_attribute = 0)';
 
 		$stock_cover_periods = array(
 			$this->l('One week') => 7,
@@ -110,28 +139,31 @@ class AdminStockCoverController extends AdminController
 		$this->context->smarty->assign('stock_cover_periods', $stock_cover_periods);
 		$this->context->smarty->assign('stock_cover_cur_period', $this->getCurrentCoveragePeriod());
 
-		parent::initContent();
+		$this->displayInformation(
+			$this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
+				this interface gives you an idea of when one product will run out of stock .'
+			)
+		);
+
+		return parent::initList();
 	}
 
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
 	 */
-	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = false)
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
-		if ($this->display == 'list')
+		$nb_items = count($this->_list);
+		for ($i = 0; $i < $nb_items; ++$i)
 		{
-			$nb_items = count($this->_list);
-			for ($i = 0; $i < $nb_items; ++$i)
+			$item = &$this->_list[$i];
+			if ((int)$item['variations'] <= 0)
 			{
-				$item = &$this->_list[$i];
-				if ((int)$item['variations'] <= 0)
-				{
-					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, 4);
-					$this->addRowActionSkipList('details', array($item['id']));
-				}
+				$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, 4);
+				$this->addRowActionSkipList('details', array($item['id']));
 			}
 		}
 	}

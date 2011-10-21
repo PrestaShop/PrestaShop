@@ -943,6 +943,11 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (3, 90, 0, 0, 0, 0),
 (3, 91, 0, 0, 0, 0),
 (3, 92, 0, 0, 0, 0),
+(3, 95, 1, 1, 1, 1),
+(3, 96, 1, 1, 1, 1),
+(3, 97, 1, 1, 1, 1),
+(3, 98, 1, 1, 1, 1),
+(3, 99, 1, 1, 1, 1),
 (4, 1, 1, 1, 1, 1),
 (4, 2, 0, 0, 0, 0),
 (4, 3, 0, 0, 0, 0),
@@ -1026,6 +1031,11 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (4, 90, 0, 0, 0, 0),
 (4, 91, 0, 0, 0, 0),
 (4, 92, 0, 0, 0, 0),
+(4, 95, 0, 0, 0, 0),
+(4, 96, 0, 0, 0, 0),
+(4, 97, 0, 0, 0, 0),
+(4, 98, 0, 0, 0, 0),
+(4, 99, 0, 0, 0, 0),
 (5, 1, 1, 1, 1, 1),
 (5, 2, 1, 1, 1, 1),
 (5, 3, 1, 1, 1, 1),
@@ -1108,7 +1118,12 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (5, 89, 0, 0, 0, 0),
 (5, 90, 0, 0, 0, 0),
 (5, 91, 0, 0, 0, 0),
-(5, 92, 0, 0, 0, 0);
+(5, 92, 0, 0, 0, 0),
+(5, 95, 0, 0, 0, 0),
+(5, 96, 0, 0, 0, 0),
+(5, 97, 0, 0, 0, 0),
+(5, 98, 0, 0, 0, 0),
+(5, 99, 0, 0, 0, 0);
 
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 2, id_module, 0, 1 FROM PREFIX_module);
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 3, id_module, 0, 1 FROM PREFIX_module);
