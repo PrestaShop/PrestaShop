@@ -37,13 +37,6 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->lang = false;
 
-		parent::__construct();
-	}
-
-	public function initList()
-	{
-		$this->addRowAction('edit');
-
 		$this->fieldsDisplay = array(
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
@@ -73,8 +66,19 @@ class AdminWarehousesControllerCore extends AdminController
 			),
 		);
 
+		parent::__construct();
+	}
+
+	/**
+	 * AdminController::initList() override
+	 * @see AdminController::initList()
+	 */
+	public function initList()
+	{
+		$this->addRowAction('edit');
+
 		$this->_select = 'reference, name, management_type, CONCAT(e.lastname, \' \', e.firstname) AS employee,
-						  ad.phone AS contact, CONCAT(ad.city, \' \', c.iso_code) location';
+						  ad.phone AS contact, CONCAT(ad.city, \' - \', c.iso_code) location';
 
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
@@ -83,6 +87,10 @@ class AdminWarehousesControllerCore extends AdminController
 		return parent::initList();
 	}
 
+	/**
+	 * AdminController::initForm() override
+	 * @see AdminController::initForm()
+	 */
 	public function initForm()
 	{
 		// Get employee list for warehouse manager
@@ -242,7 +250,8 @@ class AdminWarehousesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'p' => $this->l('Associated shops'),
-					'hint' => $this->l('By associating a shop to a warehouse, all products in this warehouse will be available for sale in the associated shop. Shipment of an order of this shop is also possible from this warehouse'),
+					'hint' => $this->l('By associating a shop to a warehouse, all products in this warehouse will be available
+						for sale in the associated shop. Shipment of an order of this shop is also possible from this warehouse'),
 				),
 				array(
 					'type' => 'select',
@@ -265,9 +274,43 @@ class AdminWarehousesControllerCore extends AdminController
 			)
 		);
 
+		//loas current warehouse
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		//load current address for this warehouse if possible
+		$address = null;
+		if ($obj->id_address > 0)
+			$address = new Address($obj->id_address);
+
+		//load current shops associated with this warehouse
+		$shops = $obj->getShops();
+
+		//load current carriers associated with this warehouse
+		$carriers = $obj->getCarriers();
+
+		//force specific fields values
+		if ($address != null)
+			$this->fields_value = array(
+				'phone' => $address->phone,
+				'address' => $address->address1,
+				'address2' => $address->address2,
+				'postcode' => $address->postcode,
+				'city' => $address->city,
+				'id_country' => $address->id_country,
+				'id_state' => $address->id_state,
+			);
+
+		$this->fields_value['ids_shops[]'] = $shops;
+		$this->fields_value['ids_carriers[]'] = $carriers;
+
 		return parent::initForm();
 	}
 
+	/**
+	 * AdminController::postProcess() override
+	 * @see AdminController::postProcess()
+	 */
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAdd'.$this->table))
@@ -291,68 +334,33 @@ class AdminWarehousesControllerCore extends AdminController
 				//create address
 				$address = new Address();
 
-			$address->alias = Tools::getValue('name');
-			$address->lastname = Tools::getValue('name');
-			$address->firstname = Tools::getValue('name');
-			$address->address1 = Tools::getValue('address');
-			$address->address2 = Tools::getValue('address2');
-			$address->postcode = Tools::getValue('postcode');
-			$address->phone = Tools::getValue('phone');
-			$address->id_country = Tools::getValue('id_country');
-			$address->id_state = Tools::getValue('id_state');
-			$address->city = Tools::getValue('city');
+			$address->alias = Tools::getValue('name', null);
+			$address->lastname = Tools::getValue('name', null);
+			$address->firstname = Tools::getValue('name', null);
+			$address->address1 = Tools::getValue('address', null);
+			$address->address2 = Tools::getValue('address2', null);
+			$address->postcode = Tools::getValue('postcode', null);
+			$address->phone = Tools::getValue('phone', null);
+			$address->id_country = Tools::getValue('id_country', null);
+			$address->id_state = Tools::getValue('id_state', null);
+			$address->city = Tools::getValue('city', null);
 
-			if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+			// check address validity
+			if (!$address->validateFields(false))
+				$this->_errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+			else
 			{
-				//update address
-				$address->update();
-			}
-			else {
-				$address->save();
-				$_POST['id_address'] = $address->id;
+				if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+					$address->update();
+				else
+				{
+					$address->save();
+					$_POST['id_address'] = $address->id;
+				}
 			}
 		}
 
 		return parent::postProcess();
 	}
 
-	public function initContent()
-	{
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-		else
-		{
-			//loas current warehouse
-			if (!($obj = $this->loadObject(true)))
-				return;
-
-			//load current address for this warehouse if possible
-			$address = null;
-			if ($obj->id_address > 0)
-				$address = new Address($obj->id_address);
-
-			//load current shops associated with this warehouse
-			$shops = $obj->getShops();
-
-			//load current carriers associated with this warehouse
-			$carriers = $obj->getCarriers();
-
-			//force specific fields values
-			if ($address != null)
-				$this->fields_value = array(
-					'phone' => $address->phone,
-					'address' => $address->address1,
-					'address2' => $address->address2,
-					'postcode' => $address->postcode,
-					'city' => $address->city,
-					'id_country' => $address->id_country,
-					'id_state' => $address->id_state,
-				);
-
-			$this->fields_value['ids_shops[]'] = $shops;
-			$this->fields_value['ids_carriers[]'] = $carriers;
-		}
-
-		parent::initContent();
-	}
 }
