@@ -86,6 +86,8 @@
 				{$tr.$key}
 			{elseif isset($params.type) && $params.type == 'datetime'}
 				{$tr.$key}
+			{elseif isset($params.callback)}
+				{$tr.$key}
 			{elseif isset($tr.$key)}
 				{$tr.$key|escape:'htmlall':'UTF-8'}
 			{else}

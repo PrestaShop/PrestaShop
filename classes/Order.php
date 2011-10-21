@@ -408,9 +408,12 @@ class OrderCore extends ObjectModel
 
 	public function getFirstMessage()
 	{
-		$sql = 'SELECT `message` FROM `'._DB_PREFIX_.'message` WHERE `id_order` = '.(int)($this->id).' ORDER BY `id_message` asc';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-		return $result['message'];
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `message`
+			FROM `'._DB_PREFIX_.'message`
+			WHERE `id_order` = '.(int)$this->id.'
+			ORDER BY `id_message`
+		');
 	}
 
 	public function setProductPrices(&$row)
@@ -478,6 +481,8 @@ class OrderCore extends ObjectModel
 		if (!$products)
 			$products = $this->getProductsDetail();
 
+		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
+
 		$resultArray = array();
 		foreach ($products AS $row)
 		{
@@ -492,19 +497,18 @@ class OrderCore extends ObjectModel
 					continue ;
 			}
 
+			$this->setProductImageInformations($row);
+			$this->setProductCurrentStock($row);
 			$this->setProductPrices($row);
+			$this->setProductCustomizedDatas($row, $customized_datas);
 
-			/* Add information for virtual product */
+			// Add information for virtual product
 			if ($row['download_hash'] && !empty($row['download_hash']))
 			{
 				if ($row['product_attribute_id'] && !empty($row['product_attribute_id']))
-				{
 					$row['filename'] = ProductDownload::getFilenameFromIdAttribute((int)$row['product_id'], (int)$row['product_attribute_id']);
-				}
 				else
-				{
 					$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
-				}
 				// Get the display filename
 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}
@@ -512,7 +516,56 @@ class OrderCore extends ObjectModel
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
 
+		if ($customized_datas)
+			Product::addCustomizationPrice($resultArray, $customized_datas);
+
 		return $resultArray;
+	}
+
+	protected function setProductCustomizedDatas(&$product, $customized_datas)
+	{
+		$product['customizedDatas'] = null;
+		if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
+			$product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
+		else
+			$product['customizationQuantityTotal'] = 0;
+	}
+
+	/**
+	 *
+	 * This method allow to add stock information on a product detail
+	 * @param array &$product
+	 */
+	protected function setProductCurrentStock(&$product)
+	{
+		$product['current_stock'] = StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true);
+	}
+
+	/**
+	 *
+	 * This method allow to add image information on a product detail
+	 * @param array &$product
+	 */
+	protected function setProductImageInformations(&$product)
+	{
+		if (isset($product['product_attribute_id']) && $product['product_attribute_id'])
+			$id_image = Db::getInstance()->getValue('
+				SELECT id_image
+				FROM '._DB_PREFIX_.'product_attribute_image
+				WHERE id_product_attribute = '.(int)$product['product_attribute_id']);
+
+		if (!isset($image['id_image']) || !$image['id_image'])
+			$id_image = Db::getInstance()->getValue('
+				SELECT id_image
+				FROM '._DB_PREFIX_.'image
+				WHERE id_product = '.(int)($product['product_id']).' AND cover = 1
+			');
+
+		$product['image'] = null;
+		$product['image_size'] = null;
+
+		if ($id_image)
+			$product['image'] = new Image($id_image);
 	}
 
 	public function getTaxesAverageUsed()
@@ -771,7 +824,6 @@ class OrderCore extends ObjectModel
 		if ($this->total_products_wt != '0.00' AND !$products)
 			return $this->total_products_wt;
 		/* Retro-compatibility (now set directly on the validateOrder() method) */
-
 
 		if (!$products)
 			$products = $this->getProductsDetail();
@@ -1042,13 +1094,40 @@ class OrderCore extends ObjectModel
 				DELETE FROM `'._DB_PREFIX_.'order_detail`
 				WHERE `id_order` = '.(int)($this->id)) !== false);
 	}
-	
-	/*
-	** Get the an order detail list of the current order
-	*/
+
+	/**
+	 * This method return the ID of the previous order
+	 * @return int
+	 */
+	public function getPreviousOrderId()
+	{
+		return Db::getInstance()->getValue('
+			SELECT id_order
+			FROM '._DB_PREFIX_.'orders
+			WHERE id_order < '.(int)$this->id.'
+			ORDER BY id_order DESC');
+	}
+
+	/**
+	 * This method return the ID of the next order
+	 * @return int
+	 */
+	public function getNextOrderId()
+	{
+		return Db::getInstance()->getValue('
+		SELECT id_order
+		FROM '._DB_PREFIX_.'orders
+		WHERE id_order > '.(int)$this->id.'
+		ORDER BY id_order ASC');
+	}
+
+	/**
+	 * Get the an order detail list of the current order
+	 * @return array
+	 */
 	public function getOrderDetailList()
 	{
 		return OrderDetail::getList($this->id);
 	}
-	
+
 }

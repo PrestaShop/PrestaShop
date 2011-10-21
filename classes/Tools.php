@@ -818,6 +818,12 @@ class ToolsCore
 		return Tools::getAdminToken($tab.(int)Tab::getIdFromClassName($tab).(int)$context->employee->id);
 	}
 
+	public static function getAdminTokenLiteSmarty($params, &$smarty)
+	{
+		$context = Context::getContext();
+		return Tools::getAdminToken($params['tab'].(int)Tab::getIdFromClassName($params['tab']).(int)$context->employee->id);
+	}
+
 	/**
 	* Get the user's journey
 	*
