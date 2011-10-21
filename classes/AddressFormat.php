@@ -341,12 +341,13 @@ class AddressFormatCore extends ObjectModel
 		return $tab;
 	}
 
-	/*
+	/**
 	 * Generates the full address text
-	 * @address is an instanciate object of Address class
-	 * @patternrules is a defined rules array to avoid some pattern
-	 * @newLine is a string containing the newLine format
-	 * @separator is a string containing the separator format
+	 * @param address is an instanciate object of Address class
+	 * @param patternrules is a defined rules array to avoid some pattern
+	 * @param newLine is a string containing the newLine format
+	 * @param separator is a string containing the separator format
+	 * @return string
 	 */
 	public static function generateAddress(Address $address, $patternRules = array(), $newLine = "\r\n", $separator = ' ', $style = array())
 	{
@@ -373,6 +374,17 @@ class AddressFormatCore extends ObjectModel
 		$addressText = rtrim($addressText, $separator);
 
 		return $addressText;
+	}
+
+	public static function generateAddressSmarty($params, &$smarty)
+	{
+		return self::generateAddress(
+			$params['address'],
+			(isset($params['patternRules']) ? $params['patternRules'] : array()),
+			(isset($params['newLine']) ? $params['newLine'] : "\r\n"),
+			(isset($params['separator']) ? $params['separator'] : ''),
+			(isset($params['style']) ? $params['style'] : array())
+		);
 	}
 
 	/**
