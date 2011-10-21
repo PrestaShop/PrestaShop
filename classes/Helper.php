@@ -80,8 +80,9 @@ class HelperCore
 		<script src="'._PS_JS_DIR_.'/admin-categories-tree.js" type="text/javascript"></script>'.
 		($use_search ? '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js"></script>' : '' ).'
 		<script type="text/javascript">
-			var inputName = "'.$input_name.';";
-			var use_radio = '.($use_radio ? '1' : '0').';';
+			var inputName = "'.$input_name.'";
+			var use_radio = '.($use_radio ? '1' : '0').';
+		';
 		if (sizeof($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
