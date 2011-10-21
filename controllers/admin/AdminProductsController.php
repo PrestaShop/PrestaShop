@@ -189,7 +189,7 @@ class AdminProductsController extends AdminController
 		if (Tools::isSubmit('submitAddproduct') || Tools::isSubmit('submitAddproductAndStay') ||  Tools::isSubmit('submitAddProductAndPreview'))
 		{
 			$id_product = Tools::getValue('id_product');
-			if (($id_product && $this->tabAccess['edit'] === '1') 
+			if (($id_product && $this->tabAccess['edit'] === '1')
 				|| ($this->tabAccess['add'] == 1 && Tools::isSubmit('submitAddproduct') && !$id_product)
 			)
 				$this->submitAddproduct($token);
@@ -1370,50 +1370,50 @@ if (false)
 					{
 						$this->_errors[] = $this->l('the field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
 						return false;
-					}			
+					}
 				}
 			}
-			
+
 			// The oos behavior MUST be "Deny orders" for virtual products
 			if (Tools::getValue('out_of_stock') != 0)
 			{
 				$this->_errors[] = $this->l('The "when out of stock" behavior selection must be "deny order" for virtual products');
 				return false;
 			}
-			
-			// Trick's 
+
+			// Trick's
 			if ($edit == 1)
 			{
 				$id_product_download_attibute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
 				$id_product_download = ($id_product_download_attibute) ? (int) $id_product_download_attibute : (int) Tools::getValue('virtual_product_id');
 			}
-			
+
 			$is_shareable = Tools::getValue('virtual_product_is_shareable');
 			$virtual_product_name = Tools::getValue('virtual_product_name');
 			$virtual_product_filename = Tools::getValue('virtual_product_filename');
 			$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
 			$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
 			$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date');
-			
+
 			$is_shareable_attribute = Tools::getValue('virtual_product_is_shareable_attribute');
 			$virtual_product_name_attribute = Tools::getValue('virtual_product_name_attribute');
 			$virtual_product_filename_attribute = Tools::getValue('virtual_product_filename_attribute');
 			$virtual_product_nb_days_attribute = Tools::getValue('virtual_product_nb_days_attribute');
 			$virtual_product_nb_downloable_attribute = Tools::getValue('virtual_product_nb_downloable_attribute');
 			$virtual_product_expiration_date_attribute = Tools::getValue('virtual_product_expiration_date_attribute');
-			
+
 			if (!empty($is_shareable_attribute))
 				$is_shareable = $is_shareable_attribute;
-			
+
 			if (!empty($virtual_product_name_attribute))
 				$virtual_product_name = $virtual_product_name_attribute;
-			
+
 			if (!empty($virtual_product_nb_days_attribute))
 				$virtual_product_nb_days = $virtual_product_nb_days_attribute;
-		
+
 			if (!empty($virtual_product_nb_downloable_attribute))
-				$virtual_product_nb_downloable = $virtual_product_nb_downloable_attribute;		
-		
+				$virtual_product_nb_downloable = $virtual_product_nb_downloable_attribute;
+
 			if (!empty($virtual_product_expiration_date_attribute))
 				$virtual_product_expiration_date = $virtual_product_expiration_date_attribute;
 
@@ -1423,7 +1423,7 @@ if (false)
 				$filename = $virtual_product_filename;
 			else
 				$filename = ProductDownload::getNewFilename();
-			
+
 			$download = new ProductDownload($id_product_download);
 			$download->id_product = (int) $product->id;
 			$download->id_product_attribute = (int) $id_product_attribute;
@@ -1435,7 +1435,7 @@ if (false)
 			$download->nb_downloadable = (int) $virtual_product_nb_downloable;
 			$download->active = 1;
 			$download->is_shareable = (int) $is_shareable;
-	
+
 			if ($download->save())
 				return true;
 		}
@@ -1449,7 +1449,7 @@ if (false)
 			}
 			else
 				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
-			
+
 			if (!empty($id_product_download))
 			{
 				$productDownload = new ProductDownload($id_product_download);
@@ -1460,7 +1460,7 @@ if (false)
 		}
 		return false;
 	}
-	
+
 	public function deleteDownloadProduct($id_product_attribute = NULL)
 	{
 		if (!empty($id_product_attribute))
@@ -1472,7 +1472,7 @@ if (false)
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Update product accessories
 	 *
@@ -1527,7 +1527,7 @@ if (false)
 					$languages = Language::getLanguages(false);
 					$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 					$product = new Product((int)(Tools::getValue('id_product')));
-					$this->initForm();
+					$content .= $this->initForm();
 					return $this->{'initForm'.$this->action}($product, $languages, $defaultLanguage);
 				}
 			}
@@ -1557,7 +1557,7 @@ if (false)
 			{
 //				$all_cats[$categ['id_parent']]
 				$categ  = new Category($categ['id_category'],$this->context->language->id);
-				$select_child .= '<option value="'.$categ->id.'" '.($this->_category->id_category == $categ->id 
+				$select_child .= '<option value="'.$categ->id.'" '.($this->_category->id_category == $categ->id
 					? 'selected="selected" class="selected level-depth-'.$categ->level_depth.'"'
 					:'class="level-depth-'.$categ->level_depth.'"')
 				 .'>' . str_repeat('&nbsp;-&nbsp;',$categ->level_depth). $categ->name .' ('.$categ->id.')</option>';
@@ -1581,7 +1581,7 @@ if (false)
 		}
 		parent::initContent();
 	}
-	
+
 	public function ajaxProcessProductManufacturers()
 	{
 		$manufacturers = Manufacturer::getManufacturers();
@@ -1707,7 +1707,6 @@ if (false)
 
 	public function initForm()
 	{
-		parent::initForm();
 		$this->addJqueryUI('ui.datepicker');
 		$this->context->smarty->assign('pos_select', (($tab = Tools::getValue('tabs')) ? $tab : '0'));
 		$this->context->smarty->assign('token',$this->token);
@@ -1719,6 +1718,7 @@ if (false)
 		if (!($obj = $this->loadObject(true)))
 			throw new Exception('object not loaded');
 		$this->_displayDraftWarning($obj->active);
+		return parent::initForm();
 	}
 
 	public function displayForm($isMainTab = true)
@@ -1747,14 +1747,14 @@ if (false)
 		$currency = Tools::setCurrency($this->context->cookie);
 //		if ($obj->id)
 //			self::$currentIndex .= '&id_product='.$obj->id;
-	
+
 
 	//	$this->addJqueryPlugin('tabpane');
 
 		$action = $this->action;
 		if (empty($action) || !method_exists($this,'initForm'.$action))
 			$action = 'informations';
-		$this->initForm();
+		$content .= $this->initForm();
 		$this->{'initForm'.$action}($obj, null);
 		/* Tabs */
 /*
@@ -1767,13 +1767,13 @@ switch ($this->action)
 		*/
 		if (Combination::isFeatureActive())
 			$smarty->assign('countAttributes', Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
-		
+
 		$smarty->assign('countAttachments', Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$obj->id));
 
 		if (Tools::getValue('id_category') > 1)
 		{
 			$productIndex = preg_replace('/(&id_product=[0-9]*)/', '', self::$currentIndex);
-/** @TODO 
+/** @TODO
 			$this->content .= '
 			<br /><br />
 			<a href="'.$productIndex.($this->token ? '&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id) : '').'">
@@ -2206,7 +2206,7 @@ switch ($this->action)
 		$content .= parent::displayForm();
 
 		$has_attribute = $obj->hasAttributes();
-		// @FIXME Stock, need to use StockManagerFactory 
+		// @FIXME Stock, need to use StockManagerFactory
 		$qty = 0;
 		$cover = Product::getCover($obj->id);
 		$this->_applyTaxToEcotax($obj);
@@ -2222,18 +2222,18 @@ switch ($this->action)
 		$this->displayInitInformationAndAttachment();
 	if(!$productDownload->id || !$productDownload->active)
 		$hidden = 'style="display:none;"';
-	
+
 	$cache_default_attribute = (int) $this->getFieldValue($obj, 'cache_default_attribute');
 	$is_virtual = (int) $this->getFieldValue($obj, 'is_virtual');
 
-	if($is_virtual && $productDownload->active) 
+	if($is_virtual && $productDownload->active)
 		$check = 'checked="checked"';
-		
-	if($is_virtual) 
+
+	if($is_virtual)
 		$virtual = 1;
 	else
 		$virtual = 0;
-	
+
 		$preview_url = '';
 		if (isset($obj->id))
 		{
@@ -2440,7 +2440,7 @@ switch ($this->action)
 			}
 
 			$content .= '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" '.$check_yes.'/>'. $this->l('Yes').'
-			<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" '.$check_no.'/>'.$this->l('No').'<br /><br />'; 
+			<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" '.$check_no.'/>'.$this->l('No').'<br /><br />';
 
 			if (!file_exists($exists_file) && !empty($productDownload->display_filename) && empty($cache_default_attribute))
 			{
@@ -2500,7 +2500,7 @@ switch ($this->action)
 
 					</div>';
 
-					if (!$productDownload->id || !$productDownload->active) 
+					if (!$productDownload->id || !$productDownload->active)
 						$hidden = 'display:none;';
 
 					$nb_downloadable = ($productDownload->id > 0) ? $productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
@@ -2681,8 +2681,8 @@ switch ($this->action)
 								'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							</td>
 						</tr>';
-				} 
-				else 
+				}
+				else
 					$content .= '<input size="11" maxlength="14" id="priceTI" type="hidden" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />';
 
 				$content .= '
@@ -2795,7 +2795,7 @@ switch ($this->action)
 						</tr>
 					';
 				}
-							
+
 				$content .= '
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr>
@@ -3672,7 +3672,7 @@ switch ($this->action)
 			return;
 		}
 		$content = '';
-		
+
 		$attributeJs = array();
 		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		foreach ($attributes as $k => $attribute)
@@ -3680,12 +3680,12 @@ switch ($this->action)
 		$currency = $this->context->currency;
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-							
+
 		$productDownload = new ProductDownload();
 		$id_product_download = (int) $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
 		if (!empty($id_product_download))
-			$productDownload = new ProductDownload($id_product_download);					
-			
+			$productDownload = new ProductDownload($id_product_download);
+
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 		{
@@ -3696,7 +3696,7 @@ switch ($this->action)
 						updateMvtStatus($(this).val());
 					});
 					updateMvtStatus($(this).val());
-					
+
 					if ( $("input[name=is_virtual_file]:checked").val() == 1)
 					{
 						$("#virtual_good_attributes").show();
@@ -3707,7 +3707,7 @@ switch ($this->action)
 						$("#virtual_good_attributes").hide();
 						$("#is_virtual_file_product").hide();
 					}
-					
+
 					$("input[name=is_virtual_file]").live("change", function() {
 						if($(this).val() == "1")
 						{
@@ -3720,7 +3720,7 @@ switch ($this->action)
 							$("#is_virtual_file_product").hide();
 						}
 					});
-				}); 
+				});
 			</script>
 			<table cellpadding="5">
 				<tr>
@@ -3759,7 +3759,7 @@ switch ($this->action)
 				  <select id="product_att_list" name="attribute_combinaison_list[]" multiple="multiple" size="4" style="width: 320px;"></select>
 				</td>
 		  </tr>
-		  
+
 		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Reference:').'</td>
@@ -3781,7 +3781,7 @@ switch ($this->action)
 		 <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
 	  <table cellpadding="5" id="virtual_good_attributes" style="width:100%;display:none;">
 		<tr>
-			<td colspan="2">	
+			<td colspan="2">
 				<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
 					<p>'.$this->l('Your server\'s maximum upload file size is') . ':&nbsp;' . ini_get('upload_max_filesize').'</p>
 					<label id="virtual_product_file_attribute_label" for="virtual_product_file_attribute" class="t">'.$this->l('Upload a file').'</label>
@@ -3790,13 +3790,13 @@ switch ($this->action)
 
 					$content .= '<p id="gethtmlink" style="display: none;">'.$this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true).'
 					<a id="make_downloadable_product_attribute" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['HTTP_REFERER'].'&deleteVirtualProductAttribute=true'.'" class="red">'.$this->l('Delete this file').'</a></p>';
-						
+
 					$content .= '</div>
 					<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['HTTP_REFERER'].'&deleteVirtualProductAttribute=true" class="red">'.$this->l('Delete this file').'</a>';
-					
+
 					if ($up_filename = strval(Tools::getValue('virtual_product_filename_attribute')))
 						$content .= '<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="'.$up_filename.'" />';
-	
+
 					$content .= '<p class="block">
 						<label for="virtual_product_name" class="t">'.$this->l('Filename').'</label>
 						<input id="virtual_product_name_attribute" name="virtual_product_name_attribute" style="width:200px" value="" type="text">
@@ -3969,7 +3969,7 @@ switch ($this->action)
 							<th>'.$this->l('UPC').'</th>
 							<th class="center">'.$this->l('Quantity').'</th>';
 
-							
+
 							if ($id_product_download && !empty($productDownload->display_filename))
 							{
 								$content .= '
@@ -3978,7 +3978,7 @@ switch ($this->action)
 								<th class="center virtual_header">'.$this->l('Number of days').'</th>
 								<th class="center virtual_header">'.$this->l('Share').'</th>';
 							}
-							
+
 							$content .= '<th class="center">'.$this->l('Actions').'</th>
 						</tr>';
 			if ($obj->id)
@@ -4035,12 +4035,12 @@ switch ($this->action)
 						$id_product_download = $productDownload->getIdFromIdAttribute((int) $obj->id, (int) $id_product_attribute);
 						if ($id_product_download)
 							$productDownload = new ProductDownload($id_product_download);
-						
+
 						$available_date_attribute = substr($productDownload->date_expiration, 0, -9);
-						
+
 						if ($available_date_attribute == '0000-00-00')
-							$available_date_attribute = '';	
-							
+							$available_date_attribute = '';
+
 						if ($productDownload->is_shareable == 1)
 							$is_shareable = $this->l('Yes');
 						else
@@ -4055,7 +4055,7 @@ switch ($this->action)
 							<td class="right">'.$product_attribute['ean13'].'</td>
 							<td class="right">'.$product_attribute['upc'].'</td>
 							<td class="center">'.$product_attribute['quantity'].'</td>';
-							
+
 							if ($id_product_download && !empty($productDownload->display_filename))
 							{
 								$content .= '<td class="right">'.$productDownload->getHtmlLink(false, true).'</td>
@@ -4063,19 +4063,19 @@ switch ($this->action)
 								<td class="center">'.$productDownload->nb_downloadable.'</td>
 								<td class="right">'.$is_shareable.'</td>';
 							}
-							
+
 							$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
-							
+
 							if ($productDownload->id && file_exists($exists_file))
 								$filename = $productDownload->filename;
 							else
 								$filename = '';
-							
+
 							$content .= '<td class="center">
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
-							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\', 
+							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
 							\''.$productDownload->display_filename.'\', \''.$filename.'\', \''.$productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$productDownload->nb_days_accessible.'\',  \''.$productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'

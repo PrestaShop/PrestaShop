@@ -111,7 +111,7 @@ class AdminContactsControllerCore extends AdminController
 			)
 		);
 
-		parent::initForm();
+		return parent::initForm();
 	}
 
 }
