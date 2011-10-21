@@ -25,29 +25,30 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminInvoices extends AdminTab
+class AdminInvoicesControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->table = 'invoice';
 
-		$this->optionsList = array(
+		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Invoice options'),
 				'fields' =>	array(
 					'PS_INVOICE' => array('title' => $this->l('Enable invoices:'), 'desc' => $this->l('Select whether or not to activate invoices for your shop'), 'cast' => 'intval', 'type' => 'bool'),
 					'PS_INVOICE_PREFIX' => array('title' => $this->l('Invoice prefix:'), 'desc' => $this->l('Prefix used for invoices'), 'size' => 6, 'type' => 'textLang'),
-			'PS_INVOICE_START_NUMBER' => array('title' => $this->l('Invoice number:'), 'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (#').(Order::getLastInvoiceNumber() + 1).').', 'size' => 6, 'type' => 'text', 'cast' => 'intval'),
-			'PS_INVOICE_FREE_TEXT' => array('title' => $this->l('Free Text:'), 'desc' => $this->l('This text will appear at the bottom of the invoice'), 'size' => 6, 'type' => 'textareaLang',
-			'cols' => 40, 'rows' => 8)
+					'PS_INVOICE_START_NUMBER' => array('title' => $this->l('Invoice number:'), 'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (#').(Order::getLastInvoiceNumber() + 1).').', 'size' => 6, 'type' => 'text', 'cast' => 'intval'),
+					'PS_INVOICE_FREE_TEXT' => array('title' => $this->l('Free Text:'), 'desc' => $this->l('This text will appear at the bottom of the invoice'), 'size' => 6, 'type' => 'textareaLang',
+						'cols' => 40, 'rows' => 8)
 				),
+				'submit' => array()
 			),
 		);
 
 		parent::__construct();
 	}
 
-	public function displayForm($isMainTab = true)
+	public function initContent()
 	{
 		$statuses = OrderState::getOrderStates($this->context->language->id);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -65,56 +66,13 @@ class AdminInvoices extends AdminTab
 		foreach ($result as $row)
 			$statusStats[$row['id_order_state']] = $row['nbOrders'];
 
-		echo '
-		<h2>'.$this->l('Print PDF invoices').'</h2>
-		<fieldset style="float:left;width:300px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('By date').'</legend>
-			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-				<label style="width:90px">'.$this->l('From:').' </label>
-				<div class="margin-form" style="padding-left:100px">
-					<input type="text" size="4" maxlength="10" name="date_from" value="'.(date('Y-m-d')).'" style="width: 120px;" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Format: 2007-12-31 (inclusive)').'</p>
-				</div>
-				<label style="width:90px">'.$this->l('To:').' </label>
-				<div class="margin-form" style="padding-left:100px">
-					<input type="text" size="4" maxlength="10" name="date_to" value="'.(date('Y-m-d')).'" style="width: 120px;" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Format: 2008-12-31 (inclusive)').'</p>
-				</div>
-				<div class="margin-form" style="padding-left:100px">
-					<input type="submit" value="'.$this->l('Generate PDF file').'" name="submitPrint" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required fields').'</div>
-			</form>
-		</fieldset>
-		<fieldset style="float:left;width: 500px;margin-left:10px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('By statuses').'</legend>
-			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-				<label style="width:90px">'.$this->l('Statuses').' :</label>
-				<div class="margin-form" style="padding-left:100px">
-					<ul>';
-		foreach ($statuses as $status)
-			echo '		<li style="list-style: none;">
-							<input type="checkbox" name="id_order_state[]" value="'.(int)$status['id_order_state'].'" id="id_order_state_'.(int)$status['id_order_state'].'">
-							<label for="id_order_state_'.(int)$status['id_order_state'].'" style="float:none;'.((isset($statusStats[$status['id_order_state']]) AND $statusStats[$status['id_order_state']]) ? '' : 'font-weight:normal;').'padding:0;text-align:left;width:100%;color:#000">
-								<img src="../img/admin/charged_'.($status['invoice'] ? 'ok' : 'ko').'.gif" alt="" />
-								'.$status['name'].' ('.((isset($statusStats[$status['id_order_state']]) AND $statusStats[$status['id_order_state']]) ? $statusStats[$status['id_order_state']] : '0').')
-							</label>
-						</li>';
-		echo '		</ul>
-					<p class="clear">'.$this->l('You can also export orders which have not been charged yet.').'(<img src="../img/admin/charged_ko.gif" alt="" />)</p>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('Generate PDF file').'" name="submitPrint2" class="button" />
-				</div>
-			</form>
-		</fieldset>
-		<div class="clear">&nbsp;</div>';
-
-		return parent::displayForm();
-	}
-
-	public function display()
-	{
-		$this->displayForm();
-		$this->displayOptionsList();
+		$this->context->smarty->assign(array(
+			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'date' => date('Y-m-d'),
+			'statuses' => $statuses,
+			'statusStats' => $statusStats
+		));
+		parent::initContent();
 	}
 
 	public function postProcess()
@@ -148,7 +106,7 @@ class AdminInvoices extends AdminTab
 		else
 			parent::postProcess();
 	}
-	
+
 	public function beforeUpdateOptions()
 	{
 		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 AND (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
