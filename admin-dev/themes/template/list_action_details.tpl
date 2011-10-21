@@ -83,7 +83,7 @@ $(document).ready(function() {
 									else if (count == 0)
 										content.append($('<td class="'+this.align+' last">'+row[it]+'</td>'));
 									else
-										content.append($('<td class="'+this.align+count+'">'+row[it]+'</td>'));
+										content.append($('<td class="'+this.align+'">'+row[it]+'</td>'));
 								}
 							});
 							content.append($('<td class="empty"></td>'));

@@ -222,7 +222,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			WHERE id_warehouse = '.$this->getCurrentWarehouseId().' '.(isset($this->_where) ? $this->_where.' ' : '').
 			($this->deleted ? 'AND a.`deleted` = 0 ' : '').
 			(isset($this->_filter) ? $this->_filter : '').'
-			GROUP BY pac.id_product_attribute
+			GROUP BY pac.id_product_attribute, p.id_product
 			'.((isset($this->_filterHaving) || isset($this->_having)) ? 'HAVING ' : '').
 			(isset($this->_filterHaving) ? ltrim($this->_filterHaving, ' AND ') : '').
 			(isset($this->_having) ? $this->_having.' ' : '').'
