@@ -1791,6 +1791,34 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * Returns an array with selected shops and type (group or boutique shop)
+	 * 
+	 * @param string $table
+	 * @param int $id_object
+	 */
+	protected static function getAssoShop($table, $id_object = false)
+	{
+		$shopAsso = Shop::getAssoTables();
+		$groupShopAsso = GroupShop::getAssoTables();
+		if (isset($shopAsso[$table]) && $shopAsso[$table]['type'] == 'shop')
+			$type = 'shop';
+		else if (isset($groupShopAsso[$table]) && $groupShopAsso[$table]['type'] == 'group_shop')
+			$type = 'group_shop';
+		else
+			return;
+
+		$assos = array();
+		foreach ($_POST as $k => $row)
+		{
+			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
+				continue;
+			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
+			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
+		}
+		return array($assos, $type);
+	}
+
+	/**
 	 * Update the associations of shops
 	 *
 	 * @param int $id_object

@@ -23,13 +23,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $firstCall}
 	<script type="text/javascript">
 		var vat_number = {$vat_number};
 		var module_dir = '{$module_dir}';
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
+		var employeePage = true;
 
 		$(document).ready(function() {ldelim}
 			{foreach $languages as $k => $language}
@@ -146,16 +146,29 @@
 									{/foreach}
 								{else}
 									{foreach $input.options.query AS $option}
-										<option value="{$option[$input.options.id]}"
-											{if isset($input.multiple)}
-												{foreach $fields_value[$input.name] as $field_value}
-													{$field_value}
-													{if $field_value == $option[$input.options.id]}selected="selected"{/if}
-												{/foreach}
-											{else}
-												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
-											{/if}
-										>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
+										{if $input.name == 'bo_theme'}
+											<option value="{$option}"
+												{if isset($input.multiple)}
+													{foreach $fields_value[$input.name] as $field_value}
+														{$field_value}
+														{if $field_value == $option}selected="selected"{/if}
+													{/foreach}
+												{else}
+													{if $fields_value[$input.name] == $option}selected="selected"{/if}
+												{/if}
+											>{$option|escape:'htmlall':'UTF-8'}</option>
+										{else}
+											<option value="{$option[$input.options.id]}"
+												{if isset($input.multiple)}
+													{foreach $fields_value[$input.name] as $field_value}
+														{$field_value}
+														{if $field_value == $option[$input.options.id]}selected="selected"{/if}
+													{/foreach}
+												{else}
+													{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
+												{/if}
+											>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
+										{/if}
 									{/foreach}
 								{/if}
 							</select>
@@ -226,12 +239,41 @@
 							{assign var=groups value=$input.values}
 							{include file='form_group.tpl'}
 						{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
+							<script type="text/javascript">
+								$(document).ready(function(){
+									$('select[name=id_profile]').change(function(){
+										ifSuperAdmin($(this));
+									});
+		
+									ifSuperAdmin($('select[name=id_profile]'));
+								});
+		
+								function ifSuperAdmin(el)
+								{
+									var val = $(el).val();
+									if(val == {$_PS_ADMIN_PROFILE_})
+									{
+										$('.assoShop input[type=checkbox]').attr('disabled', 'disabled');
+										$('.assoShop input[type=checkbox]').attr('checked', 'checked');
+									}
+									else
+										$('.assoShop input[type=checkbox]').attr('disabled', '');
+								}
+							</script>
 							{include file='form_shop.tpl'}
 						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 							<label>{l s='Shop association:'}</label>
 							<div class="margin-form">
 								{$asso_shop}
 							</div>
+						{elseif $input.type == 'color'}
+							<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
+							<input type="color"
+								size="{$input.size}"
+								data-hex="true"
+								class="{$input.class}"
+								name="{$input.name}"
+								value="{$fields_value[$input.name]}" />
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
