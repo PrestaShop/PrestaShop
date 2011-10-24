@@ -625,7 +625,7 @@ class AdminControllerCore extends Controller
 									if (!Validate::isDate($value[0]))
 										$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
 									else
-										$sql_filter .= ' AND `'.bqSQL($key).'` >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+										$sql_filter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
 								}
 
 								if (isset($value[1]) && !empty($value[1]))
@@ -633,7 +633,7 @@ class AdminControllerCore extends Controller
 									if (!Validate::isDate($value[1]))
 										$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
 									else
-										$sql_filter .= ' AND `'.bqSQL($key).'` <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+										$sql_filter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
 								}
 							}
 							else
