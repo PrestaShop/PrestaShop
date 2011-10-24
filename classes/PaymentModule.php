@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(dirname(__FILE__).'/../config/config.inc.php');
-
 abstract class PaymentModuleCore extends Module
 {
 	/** @var integer Current order's id */
@@ -178,7 +176,7 @@ abstract class PaymentModuleCore extends Module
 				// Insert new Order detail list using cart for the current order
 				$orderDetail = new OrderDetail($this->context);
 				$orderDetail->createList($order, $cart, $id_order_state);
-				
+
 				// Insert products from cart into order_detail table
 				$productsList = '';
 				$products = $cart->getProducts();
@@ -187,7 +185,7 @@ abstract class PaymentModuleCore extends Module
 
 					$price = Product::getPriceStatic((int)($product['id_product']), false, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 6, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
           $price_wt = Product::getPriceStatic((int)($product['id_product']), true, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 2, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-          
+
 					$customizationQuantity = 0;
 					if (isset($customizedDatas[$product['id_product']][$product['id_product_attribute']]))
 					{
@@ -227,7 +225,7 @@ abstract class PaymentModuleCore extends Module
 							<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(((int)($product['cart_quantity']) - $customizationQuantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
 						</tr>';
 				} // end foreach ($products)
-			
+
 				// Insert discounts from cart into order_discount table
 				$discounts = $cart->getDiscounts();
 				$discountsList = '';
@@ -306,7 +304,7 @@ abstract class PaymentModuleCore extends Module
 				}
 
 				unset($orderDetail);
-				
+
 				// Set order state in order history ONLY even if the "out of stock" status has not been yet reached
 				// So you migth have two order states
 				$new_history = new OrderHistory();
@@ -316,7 +314,7 @@ abstract class PaymentModuleCore extends Module
 
 				// Order is reloaded because the status just changed
 				$order = new Order($order->id);
-				
+
 				// Send an e-mail to customer
 				if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED') AND $customer->id)
 				{

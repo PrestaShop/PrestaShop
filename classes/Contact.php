@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,25 +28,25 @@
 class ContactCore extends ObjectModel
 {
 	public 		$id;
-	
+
 	/** @var string Name */
 	public 		$name;
-	
+
 	/** @var string e-mail */
 	public 		$email;
 
 	/** @var string Detailed description */
 	public 		$description;
-	
+
 	public 		$customer_service;
-	
+
  	protected 	$fieldsRequired = array();
  	protected 	$fieldsSize = array('email' => 128);
  	protected 	$fieldsValidate = array('email' => 'isEmail', 'customer_service' => 'isBool');
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 32);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
-	
+
 	protected 	$table = 'contact';
 	protected 	$identifier = 'id_contact';
 
@@ -57,7 +57,7 @@ class ContactCore extends ObjectModel
 		$fields['customer_service'] = (int)($this->customer_service);
 		return $fields;
 	}
-	
+
 	/**
 	  * Check then return multilingual fields for database interaction
 	  *
@@ -68,7 +68,7 @@ class ContactCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name', 'description'));
 	}
-	
+
 	/**
 	  * Return available contacts
 	  *
