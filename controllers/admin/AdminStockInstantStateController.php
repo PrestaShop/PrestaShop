@@ -154,6 +154,9 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$warehouse = 1;
 			if ((int)Tools::getValue('warehouse'))
 				$warehouse = (int)Tools::getValue('warehouse');
+			else if ((int)$this->context->cookie->warehouse)
+				$warehouse = (int)$this->context->cookie->warehouse;
+			$this->context->cookie->warehouse = $warehouse;
 		}
 
 		return $warehouse;
