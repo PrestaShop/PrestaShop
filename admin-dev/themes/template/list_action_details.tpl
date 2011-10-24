@@ -58,7 +58,8 @@ $(document).ready(function() {
 							var count = 0; // Number of non-empty collum
 							$.each(row, function(it)
 							{
-								count++;
+								if(typeof(data.fields_display[it]) != 'undefined')
+									count++;
 							});
 							$.each(data.fields_display, function(it, line)
 							{
@@ -80,7 +81,7 @@ $(document).ready(function() {
 									else if (count == 0)
 										content.append($('<td class="'+this.align+' last">'+row[it]+'</td>'));
 									else
-										content.append($('<td class="'+this.align+'">'+row[it]+'</td>'));
+										content.append($('<td class="'+this.align+' '+count+'">'+row[it]+'</td>'));
 								}
 							});
 							content.append($('<td class="empty"></td>'));
