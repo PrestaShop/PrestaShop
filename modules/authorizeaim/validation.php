@@ -29,24 +29,27 @@ include(dirname(__FILE__). '/../../init.php');
 include(dirname(__FILE__). '/authorizeaim.php');
 
 /* Transform the POST from the template to a GET for the CURL */
-if (isset($_POST['x_exp_date']) && isset($_POST['x_exp_date_m']) && isset($_POST['x_exp_date_y']) && isset($_POST['x_exp_date_y']) && isset($_POST['name']))
+if (isset($_POST['x_exp_date_m']) && isset($_POST['x_exp_date_y']))
 {
 	$_POST['x_exp_date'] = $_POST['x_exp_date_m'].$_POST['x_exp_date_y'];
 	unset($_POST['x_exp_date_m']);
 	unset($_POST['x_exp_date_y']);
-	unset($_POST['name']);
 }
 $postString = '';
-foreach ($_POST AS $key => $value)
-	if ($key != "x_exp_date_m" OR $key != "x_exp_date_m")
-		$postString .= $key.'='.urlencode($value).'&';
-$postString .= 'x_exp_date='.str_pad($_POST["x_exp_date_m"], 2, "0",STR_PAD_LEFT).$_POST["x_exp_date_y"];
+foreach ($_POST as $key => $value)
+	$postString .= $key.'='.urlencode($value).'&';
 
-if (Tools::getValue('AUTHORIZE_AIM_DEMO'))
-	$postString .= 'Test_Mode=TRUE';
+$postString = trim($postString, '&');
+
+$url = 'https://secure.authorize.net/gateway/transact.dll';
+if (Configuration::get('AUTHORIZE_AIM_DEMO'))
+{
+	$postString .= '&x_test_request=TRUE';
+	$url = 'https://test.authorize.net/gateway/transact.dll';
+}
 
 /* Do the CURL request ro Authorize.net */
-$request = curl_init('https://secure.authorize.net/gateway/transact.dll');
+$request = curl_init($url);
 curl_setopt($request, CURLOPT_HEADER, 0);
 curl_setopt($request, CURLOPT_RETURNTRANSFER, 1); 
 curl_setopt($request, CURLOPT_POSTFIELDS, $postString);
@@ -79,7 +82,10 @@ else
 	$authorizeaim = new authorizeaim();
 	$message = $response[3];
 	if ($response[0] == 1)
+	{
 		$authorizeaim->validateOrder((int)$cart->id, Configuration::get('PS_OS_PAYMENT'), (float)$response[9], $authorizeaim->displayName, $message, NULL, NULL, false, $customer->secure_key);
+		$authorizeaim->setTransactionDetail($response);		
+	}
 	else
 		$authorizeaim->validateOrder((int)$cart->id, Configuration::get('PS_OS_ERROR'), (float)$response[9], $authorizeaim->displayName, $message, NULL, NULL, false, $customer->secure_key);
 

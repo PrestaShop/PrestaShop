@@ -25,6 +25,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+function logvardump($var)
+{
+    ob_start();
+    var_dump($var);
+    $result = ob_get_clean();
+    file_put_contents(dirname(__FILE__).'/debugValidation.txt', $result, FILE_APPEND);
+}
+
 if (!defined('_PS_VERSION_'))
 	exit;
 	
@@ -34,19 +42,31 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.2';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->need_instance = 0;
 
-        parent::__construct();
+   	parent::__construct();
 
-        $this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
-        $this->description = $this->l('Receive payment with Authorize.net');
+		$this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
+    $this->description = $this->l('Receive payment with Authorize.net');
 
 		/* For 1.4.3 and less compatibility */
-		$updateConfig = array('PS_OS_CHEQUE' => 1, 'PS_OS_PAYMENT' => 2, 'PS_OS_PREPARATION' => 3, 'PS_OS_SHIPPING' => 4, 'PS_OS_DELIVERED' => 5, 'PS_OS_CANCELED' => 6,
-				      'PS_OS_REFUND' => 7, 'PS_OS_ERROR' => 8, 'PS_OS_OUTOFSTOCK' => 9, 'PS_OS_BANKWIRE' => 10, 'PS_OS_PAYPAL' => 11, 'PS_OS_WS_PAYMENT' => 12);
+		$updateConfig = array(
+			'PS_OS_CHEQUE' => 1, 
+			'PS_OS_PAYMENT' => 2, 
+			'PS_OS_PREPARATION' => 3, 
+			'PS_OS_SHIPPING' => 4, 
+			'PS_OS_DELIVERED' => 5, 
+			'PS_OS_CANCELED' => 6,
+			'PS_OS_REFUND' => 7, 
+			'PS_OS_ERROR' => 8, 
+			'PS_OS_OUTOFSTOCK' => 9, 
+			'PS_OS_BANKWIRE' => 10, 
+			'PS_OS_PAYPAL' => 11, 
+			'PS_OS_WS_PAYMENT' => 12);
+			
 		foreach ($updateConfig as $u => $v)
 			if (!Configuration::get($u) || (int)Configuration::get($u) < 1)
 			{
@@ -54,7 +74,7 @@ class authorizeAIM extends PaymentModule
 					Configuration::updateValue($u, constant('_'.$u.'_'));
 				else
 					Configuration::updateValue($u, $v);
-	}
+			}
 
 		/* Check if cURL is enabled */
 		if (!is_callable('curl_exec'))
@@ -63,7 +83,8 @@ class authorizeAIM extends PaymentModule
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('orderConfirmation') AND $this->registerHook('payment') AND Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1));
+		return (parent::install() AND $this->registerHook('orderConfirmation') AND 
+			$this->registerHook('payment') AND Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1));
 	}
 
 	public function uninstall()
@@ -184,6 +205,41 @@ class authorizeAIM extends PaymentModule
 
 			return $this->display(__FILE__, 'authorizeaim.tpl');
 		}
-    }
+	}
+	
+  /**
+  * Set the detail of a payment - Call after un validateOrder
+  * See Authorize documentation to know the associated key => value
+  * @param array fields
+  * @return bool success state
+  */
+  public function setTransactionDetail($response)
+  {
+  	$pcc = new PaymentCC();
+		
+		$order = Db::getInstance()->getRow('
+			SELECT * 
+			FROM '._DB_PREFIX_.'orders 
+			WHERE id_cart = '.(int)$response[7]);
+		
+		$pcc->id_order = (int)$order['id_order'];
+		$pcc->id_currency = (int)$order['id_currency'];
+		$pcc->amount = (float)$response[9];
+		$pcc->transaction_id = (string)$response[6];
+		
+		// 50 => Card number (XXXX0000)
+		$pcc->card_number = (string)$response[50];
+		
+		// 51 => Card Mark (Visa, Master card)
+		$pcc->card_brand = (string)$response[51];
+		
+		$pcc->card_expiration = (string)Tools::getValue('x_exp_date');
+		
+		// 68 => Owner name
+		$pcc->card_holder = (string)$response[68];
+		$pcc->add();
+		
+		unset($pcc);
+  }
 }
 ?>
