@@ -2773,11 +2773,6 @@ switch ($this->action)
 								</td>
 							</tr>';
 						}
-						else
-							$content .= '<tr><td class="col-left">'.$this->l('Initial stock:').'</td>
-									<td style="padding-bottom:5px;">
-										<input size="3" maxlength="6" name="quantity" type="text" value="0" />
-									</td>';
 						$content .=  '<tr>
 								<td class="col-left">'.$this->l('Minimum quantity:').'</td>
 									<td style="padding-bottom:5px;">
