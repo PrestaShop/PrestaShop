@@ -108,9 +108,9 @@ class DispatcherCore
 		),
 		'module' => array(
 			'controller' =>	'module',
-			'rule' =>		'module/{name}/{action}',
+			'rule' =>		'module/{module}/{action}',
 			'keywords' => array(
-				'name' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'module'),
+				'module' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'module'),
 				'action' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'action'),
 			),
 		),
