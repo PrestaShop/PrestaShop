@@ -36,7 +36,6 @@ class AdminWarehousesControllerCore extends AdminController
 	 	$this->className = 'Warehouse';
 		$this->context = Context::getContext();
 		$this->lang = false;
-
 		$this->fieldsDisplay = array(
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
@@ -79,18 +78,19 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function initList()
 	{
+		$this->list_no_link = true;
 		$this->addRowAction('edit');
+		$this->addRowAction('details');
 
 		$this->_select = 'reference, name, management_type, CONCAT(e.lastname, \' \', e.firstname) AS employee,
 						  ad.phone AS contact, CONCAT(ad.city, \' - \', c.iso_code) location';
-
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
 
 		$this->displayInformation(
-			$this->l('This interface allows you to manage your warehouses. Before manage any stock in your warehouses, check the general default currency used in the soclution.
-			For each warehouse, according to the law in your country, you have to verify the management type, the valuation currency, and the associated carriers and shops.')
+			$this->l('This interface allows you to manage your warehouses. Before managing any stock in your warehouses, check the general default currency used.
+			For each warehouse, according to the law in your country, you have to check the management type, the valuation currency, and the associated carriers and shops.')
 		);
 
 		return parent::initList();
@@ -102,7 +102,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
-		// Get employee list for warehouse manager
+		// gets the manager of the warehouse
 		$query = new DbQuery();
 		$query->select('id_employee, CONCAT(lastname," ",firstname) as name');
 		$query->from('employee');
@@ -283,22 +283,22 @@ class AdminWarehousesControllerCore extends AdminController
 			)
 		);
 
-		//loas current warehouse
+		// loads current warehouse
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		//load current address for this warehouse if possible
+		// loads current address for this warehouse - if possible
 		$address = null;
 		if ($obj->id_address > 0)
 			$address = new Address($obj->id_address);
 
-		//load current shops associated with this warehouse
+		// loads current shops associated with this warehouse
 		$shops = $obj->getShops();
 
-		//load current carriers associated with this warehouse
+		// loads current carriers associated with this warehouse
 		$carriers = $obj->getCarriers();
 
-		//force specific fields values
+		// force specific fields values
 		if ($address != null)
 			$this->fields_value = array(
 				'id_address' => $address->id,
@@ -330,20 +330,20 @@ class AdminWarehousesControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 
-			//handle shops associations
+			// handles shops associations
 			if (Tools::isSubmit('ids_shops'))
 				$obj->setShops(Tools::getValue('ids_shops'));
 
-			//handle carriers associations
+			// handles carriers associations
 			if (Tools::isSubmit('ids_carriers'))
 				$obj->setCarriers(Tools::getValue('ids_carriers'));
 
-			// update/create address if not exists
+			// updates/creates address if it does not exist
 			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
-				//update address
+				// updates address
 				$address = new Address((int)Tools::getValue('id_address'));
 			else
-				//create address
+				// creates address
 				$address = new Address();
 
 			$address->alias = Tools::getValue('reference', null);
@@ -359,7 +359,7 @@ class AdminWarehousesControllerCore extends AdminController
 
 			$validation = $address->validateController();
 
-			// check address validity
+			// checks address validity
 			if (count($validation) > 0)
 			{
 				foreach ($validation as $item)
@@ -381,4 +381,36 @@ class AdminWarehousesControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
+	public function ajaxProcess()
+	{
+		if (Tools::isSubmit('id'))
+		{
+			$this->lang = false;
+			$lang_id = (int)$this->context->language->id;
+			$id_warehouse = (int)Tools::getValue('id');
+
+			$query = '
+			SELECT COUNT(t.id_stock)
+			FROM
+				(SELECT s.id_stock
+				 FROM ps_stock s
+				 WHERE s.id_warehouse = 1
+				 GROUP BY s.id_product, s.id_product_attribute) as t';
+			$refs = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+
+			$query = new DbQuery();
+			$query->select('SUM(s.`price_te`) as total, c.`sign` as sign, SUM(s.`physical_quantity`) as quantity');
+			$query->from('stock s');
+			$query->leftJoin('warehouse w ON (w.`id_warehouse` = s.`id_warehouse`)');
+			$query->leftJoin('currency c ON (w.`id_currency` = c.`id_currency`)');
+			$query->where('s.`id_warehouse` = '.$id_warehouse);
+			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+			$content = '<div class="path_bar">';
+			$content .= sprintf($this->l('There are %s references (%d quantity), for a total of %d %s'), $refs, $res[0]['quantity'], $res[0]['total'], $res[0]['sign']);
+			$content .= '</div>';
+			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+		}
+		die;
+	}
 }
