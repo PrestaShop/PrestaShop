@@ -503,7 +503,7 @@ class AdminOrdersControllerCore extends AdminController
 			'carrier' => $carrier = new Carrier($order->id_carrier),
 			'history' => $order->getHistory($this->context->language->id),
 			'states' => OrderState::getOrderStates($this->context->language->id),
-			'warehouse_list' => Warehouse::getWarehouseList(),
+			'warehouse_list' => Warehouse::getWarehouseList(false, $order->id_shop),
 			'sources' => ConnectionsSource::getOrderSources($order->id),
 			'currentState' => OrderHistory::getLastOrderState($order->id),
 			'currency' => new Currency($order->id_currency),
