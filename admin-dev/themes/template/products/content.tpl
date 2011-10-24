@@ -187,11 +187,15 @@ $(document).ready(function(){
 <input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
 	<div id="product-tab-content-wait" style="display:none" ></div>
+	{if !$newproduct}
 	{foreach $product_tabs key=numStep item=tab}
 		<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 {if $tab.selected}{$content}{/if}
 		</div>
 	{/foreach}
+	{else}{* @todo : this is a temporary fix*}
+		<div id="product-tab-content-1" class="product-tab-content">{$content}</div>
+	{/if}
 </div>
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 </form>

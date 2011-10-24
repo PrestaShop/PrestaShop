@@ -1756,6 +1756,8 @@ if (false)
 					);
 			}
 		}
+		else
+				$smarty->assign('newproduct', 1);
 
 		$smarty->assign('product_tabs', $product_tabs);
 
