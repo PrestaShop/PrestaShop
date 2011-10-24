@@ -519,14 +519,14 @@ class StockManagerCore implements StockManagerInterface
 			SELECT SUM(sm.`physical_quantity`) as quantity_out
 			FROM `'._DB_PREFIX_.'stock_mvt` sm
 			LEFT JOIN `'._DB_PREFIX_.'stock` s ON (sm.`id_stock` = s.`id_stock`)
-			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product` AND p.`id_product` = '.(int)$id_product.')
-			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND pa.id_product_attribute = '.(int)$id_product_attribute.')
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
 			WHERE sm.`sign` = -1
-			AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.
+			AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
+			AND s.`id_product` = '.(int)$id_product.'
+			AND s.`id_product_attribute` = '.(int)$id_product_attribute.
 			($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'
-			GROUP BY sm.`id_stock_mvt`
 			ORDER BY sm.`date_add` DESC';
-
 		$quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 		if (!$quantity_out)
 			return 0;
@@ -536,7 +536,6 @@ class StockManagerCore implements StockManagerInterface
 															     $id_product_attribute,
 															     ($id_warehouse ? array($id_warehouse) : null),
 															     true);
-
 		$time_left = ($quantity_per_day == 0) ? 365 : round($physical_quantity / $quantity_per_day);
 
 		return $time_left;

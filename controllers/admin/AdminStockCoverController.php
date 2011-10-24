@@ -30,6 +30,9 @@
  */
 class AdminStockCoverControllerCore extends AdminController
 {
+	private $stock_cover_warehouses;
+	private $stock_cover_periods;
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();
@@ -74,6 +77,18 @@ class AdminStockCoverControllerCore extends AdminController
 			),
 		);
 
+		$this->stock_cover_periods = array(
+			$this->l('One week') => 7,
+			$this->l('Two weeks') => 14,
+			$this->l('Three weeks') => 21,
+			$this->l('One month') => 31,
+			$this->l('Six months') => 186,
+			$this->l('One year') => 365
+		);
+
+		$this->stock_cover_warehouses = Warehouse::getWarehouseList(true);
+		array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
+
 		parent::__construct();
 	}
 
@@ -100,12 +115,18 @@ class AdminStockCoverControllerCore extends AdminController
 			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
 			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
 			LEFT JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
-			WHERE a.id_product = '.$product_id.'
+			WHERE a.id_product = '.$product_id.
+			($this->getCurrentCoverageWarehouse() != -1 ? ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse() : '').'
 			GROUP BY a.id_product_attribute';
 
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			foreach ($datas as &$data)
-				$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod());
+			{
+				if ($this->getCurrentCoverageWarehouse() == -1)
+					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod());
+				else
+					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod(), $this->getCurrentCoverageWarehouse());
+			}
 
 			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
 		}
@@ -126,22 +147,17 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
 						LEFT JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product AND s.id_product_attribute = 0)';
+		if ($this->getCurrentCoverageWarehouse() != -1)
+			$this->_where = 'AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
-		$stock_cover_periods = array(
-			$this->l('One week') => 7,
-			$this->l('Two weeks') => 14,
-			$this->l('Three weeks') => 21,
-			$this->l('One month') => 31,
-			$this->l('Six months') => 186,
-			$this->l('One year') => 365
-		);
-
-		$this->context->smarty->assign('stock_cover_periods', $stock_cover_periods);
+		$this->context->smarty->assign('stock_cover_periods', $this->stock_cover_periods);
 		$this->context->smarty->assign('stock_cover_cur_period', $this->getCurrentCoveragePeriod());
+		$this->context->smarty->assign('stock_cover_warehouses', $this->stock_cover_warehouses);
+		$this->context->smarty->assign('stock_cover_cur_warehouse', $this->getCurrentCoverageWarehouse());
 
 		$this->displayInformation(
 			$this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
-				this interface gives you an idea of when one product will run out of stock .'
+					  this interface gives you an idea of when one product will run out of stock .'
 			)
 		);
 
@@ -162,7 +178,10 @@ class AdminStockCoverControllerCore extends AdminController
 			$item = &$this->_list[$i];
 			if ((int)$item['variations'] <= 0)
 			{
-				$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, 4);
+				if ($this->getCurrentCoverageWarehouse() == -1)
+					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, $this->getCurrentCoveragePeriod());
+				else
+					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, $this->getCurrentCoveragePeriod(), $this->getCurrentCoverageWarehouse());
 				$this->addRowActionSkipList('details', array($item['id']));
 			}
 		}
@@ -177,9 +196,33 @@ class AdminStockCoverControllerCore extends AdminController
 	{
 		static $coverage_period = 0;
 
-		// if coverage period == 0 then it is set to 7, otherwise, checks if we can get it via $_GET
-		$coverage_period = ($coverage_period == 0 ? 7 : ((int)Tools::getValue('coverage_period') ? (int)Tools::getValue('coverage_period') : 7));
-
+		if ($coverage_period == 0)
+		{
+			$coverage_period = 7; // Week by default
+			if ((int)Tools::getValue('coverage_period'))
+				$coverage_period = (int)Tools::getValue('coverage_period');
+		}
 		return $coverage_period;
+	}
+
+	/**
+	 * Gets the current warehouse used
+	 *
+	 * @return int id_warehouse
+	 */
+	private function getCurrentCoverageWarehouse()
+	{
+		static $warehouse = 0;
+
+		if ($warehouse == 0)
+		{
+			$warehouse = null;
+			if ((int)Tools::getValue('coverage_warehouse'))
+				$warehouse = (int)Tools::getValue('coverage_warehouse');
+			else if ((int)$this->context->cookie->warehouse)
+				$warehouse = (int)$this->context->cookie->warehouse;
+			$this->context->cookie->warehouse = $warehouse;
+		}
+		return $warehouse;
 	}
 }
