@@ -241,7 +241,9 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (153, 'PS_STOCK_MVT_INC_REASON_DEFAULT', '1', NOW(), NOW()),
 (154, 'PS_STOCK_MVT_DEC_REASON_DEFAULT', '2', NOW(), NOW()),
 (155, 'PS_ADVANCED_STOCK_MANAGEMENT', '1', NOW(), NOW()),
-(156, 'PS_ADMINREFRESH_NOTIFICATION', '1', NOW(), NOW());
+(156, 'PS_ADMINREFRESH_NOTIFICATION', '1', NOW(), NOW()),
+(157, 'PS_STOCK_MVT_TRANSFER_TO', '6', NOW(), NOW()),
+(158, 'PS_STOCK_MVT_TRANSFER_FROM', '7', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -1312,7 +1314,7 @@ INSERT INTO `PREFIX_group_group_shop` (`id_group`, `id_group_shop`) (SELECT `id_
 INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) VALUES (1, 1);
 
 INSERT INTO `PREFIX_stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`) VALUES
-(1, 1, NOW(), NOW()), (2, -1, NOW(), NOW()), (3, -1, NOW(), NOW()), (4, -1, NOW(), NOW()), (5, 1, NOW(), NOW());
+(1, 1, NOW(), NOW()), (2, -1, NOW(), NOW()), (3, -1, NOW(), NOW()), (4, -1, NOW(), NOW()), (5, 1, NOW(), NOW()), (6, 1, NOW(), NOW()), (7, -1, NOW(), NOW());
 INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`) VALUES
 (1, 1, 'Increase'),
 (1, 2, 'Augmenter'),
@@ -1338,7 +1340,17 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 (5, 2, 'Réassort'),
 (5, 3, 'Reaprovisionar'),
 (5, 4, 'Auffüllung'),
-(5, 5, 'Riassortimento');
+(5, 5, 'Riassortimento'),
+(6, 1, 'Transfer (to)'),
+(6, 2, 'Transferer (vers)'),
+(6, 3, 'Transfer (to)'),
+(6, 4, 'Transfer (to)'),
+(6, 5, 'Transfer (to)'),
+(7, 1, 'Transfer (from)'),
+(7, 2, 'Transferer (depuis)'),
+(7, 3, 'Transfer (from)'),
+(7, 4, 'Transfer (from)'),
+(7, 5, 'Transfer (from)');
 
 INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_product_attribute`, `id_shop`, `quantity`, `depends_on_stock`, `out_of_stock`) VALUES
 (1, 2, 7, 1, 10, 0, 2),
