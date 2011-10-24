@@ -101,14 +101,13 @@ interface StockManagerInterface
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $quantity
-	 * @param int $id_stock_movement_reason
 	 * @param int $warehouse_from
 	 * @param int $warehouse_to
 	 * @param bool $usable_from true by default
 	 * @param bool $usable_to true by default
 	 * @return bool
 	 */
-	public function transferBetweenWarehouses($id_product, $id_product_attribute, $quantity, $id_stock_movement_reason, $warehouse_from, $warehouse_to, $usable_from = true, $usable_to = true);
+	public function transferBetweenWarehouses($id_product, $id_product_attribute, $quantity, $warehouse_from, $warehouse_to, $usable_from = true, $usable_to = true);
 
 	/**
 	 * For a given product, returns the time left before being out of stock.

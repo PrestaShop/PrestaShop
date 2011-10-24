@@ -444,7 +444,6 @@ class StockManagerCore implements StockManagerInterface
 	public function transferBetweenWarehouses($id_product,
 											  $id_product_attribute,
 											  $quantity,
-											  $id_stock_mvt_reason,
 											  $id_warehouse_from,
 											  $id_warehouse_to,
 											  $usable_from = true,
@@ -454,7 +453,7 @@ class StockManagerCore implements StockManagerInterface
 		if ($this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity)
 			return false;
 
-		if ($id_warehouse_from == $id_warehouse_to)
+		if ($id_warehouse_from == $id_warehouse_to && $usable_from == $usable_to)
 			return false;
 
 		// Checks if the given warehouses are available
@@ -469,7 +468,7 @@ class StockManagerCore implements StockManagerInterface
 									   $id_product_attribute,
 									   $warehouse_from,
 									   $quantity,
-									   $id_stock_mvt_reason,
+									   Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
 									   $usable_from);
 		if (!count($stocks))
 			return false;
@@ -493,7 +492,7 @@ class StockManagerCore implements StockManagerInterface
 								   $id_product_attribute,
 								   $warehouse_to,
 								   $stock['quantity'],
-								   $id_stock_mvt_reason,
+								   Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
 								   $price,
 								   $usable_to))
 				return false;
@@ -522,6 +521,7 @@ class StockManagerCore implements StockManagerInterface
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
 			WHERE sm.`sign` = -1
+			AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'
 			AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
 			AND s.`id_product` = '.(int)$id_product.'
 			AND s.`id_product_attribute` = '.(int)$id_product_attribute.
