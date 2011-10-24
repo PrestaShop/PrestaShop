@@ -156,7 +156,7 @@ abstract class ModuleCore
 		SELECT `id_module`
 		FROM `'._DB_PREFIX_.'module`
 		WHERE `name` = \''.pSQL($this->name).'\'');
-		if (0&&$result)
+		if ($result)
 			return false;
 
 		$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1), 'INSERT');
