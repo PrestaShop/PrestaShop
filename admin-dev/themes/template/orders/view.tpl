@@ -32,12 +32,15 @@
 			$('#warehouse').show();
 		{/literal}{/if}{literal}
 	}
-
+	
 	function hideWarehouseList()
 	{
 		$('#warehouse').hide();
 	}
-	hideWarehouseList();
+	$(document).ready(function()
+	{
+		hideWarehouseList();
+	});
 {/literal}
 </script>
 
