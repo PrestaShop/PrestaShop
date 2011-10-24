@@ -83,7 +83,7 @@ class MailCore
 		}
 
 		/* Construct multiple recipients list if needed */
-		if (is_array($to))
+		if (is_array($to) and isset($to))
 		{
 			$to_list = new Swift_RecipientList();
 			foreach ($to AS $key => $addr)
