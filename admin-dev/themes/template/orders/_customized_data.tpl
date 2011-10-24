@@ -27,11 +27,13 @@
 {if ($product.customizedDatas)}
 	<tr>
 		<td align="center">{if ($product.image->id)}{$product.image_tag}{else}'--'{/if}</td>
-		<td><a href="index.php?tab=AdminCatalog&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminCatalog'}">
+		<td>
+			<a href="index.php?tab=AdminCatalog&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminCatalog'}">
 			<span class="productName">{$product['product_name']} - {l s='customized'}</span><br />
 			{if ($product['product_reference'])}{l s='Ref:'} {$product['product_reference']}<br />{/if}
 			{if ($product['product_supplier_reference'])}{l s='Ref Supplier:'} {$product['product_supplier_reference']}{/if}
-			.'</a></td>
+			</a>
+		</td>
 		<td align="center">{displayPrice price=$product['product_price_wt'] currency=$currency->id}</td>
 		<td align="center" class="productQuantity">{$product['customizationQuantityTotal']}</td>
 		{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">{$product['customizationQuantityRefunded']}</td>{/if}
