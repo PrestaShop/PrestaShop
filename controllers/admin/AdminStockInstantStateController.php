@@ -203,34 +203,46 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
 
 		$query = 'SELECT SQL_CALC_FOUND_ROWS
-				IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as designation,
-				id_stock, p.id_product, s.id_product_attribute, ean13, p.reference,
-				IF((count(DISTINCT id_stock)=1), s.price_te, \'--\') as price_te,
-				IF((count(DISTINCT id_stock)=1), 0, 1) as need_details,
-				CAST((SUM(physical_quantity) / (count(id_stock) - count(DISTINCT id_stock) + 1)) AS SIGNED INTEGER) AS physical_quantity,
-				CAST((SUM(usable_quantity) / (count(id_stock) - count(DISTINCT id_stock) + 1)) AS SIGNED INTEGER) AS usable_quantity
-			FROM '._DB_PREFIX_.'stock s
-			INNER JOIN '._DB_PREFIX_.'product p
-				ON (p.id_product = s.id_product)
-			INNER JOIN '._DB_PREFIX_.'product_lang pl
-				ON (pl.id_product = p.id_product AND pl.id_lang = '.$id_lang.')
-			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac
-				ON (pac.id_product_attribute = s.id_product_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute a
-				ON (a.id_attribute = pac.id_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute_lang al
-				ON (al.id_attribute = a.id_attribute AND al.id_lang = '.$id_lang.')
-			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl
-				ON (agl.id_attribute_group = a.id_attribute_group AND agl.id_lang = '.$id_lang.')
-			WHERE id_warehouse = '.$this->getCurrentWarehouseId().' '.(isset($this->_where) ? $this->_where.' ' : '').
-			($this->deleted ? 'AND a.`deleted` = 0 ' : '').
-			(isset($this->_filter) ? $this->_filter : '').'
-			GROUP BY pac.id_product_attribute, p.id_product
-			'.((isset($this->_filterHaving) || isset($this->_having)) ? 'HAVING ' : '').
-			(isset($this->_filterHaving) ? ltrim($this->_filterHaving, ' AND ') : '').
-			(isset($this->_having) ? $this->_having.' ' : '').'
-			ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
-			LIMIT '.(int)$start.','.(int)$limit;
+					id_stock,
+					id_product,
+					id_product_attribute,
+					designation,
+					IF((count(id_stock)=1), s.price_te, \'--\') as price_te,
+					SUM(physical_quantity) physical_quantity,
+					SUM(usable_quantity) usable_quantity,
+					ean13,
+					reference,
+					IF((count(id_stock)=1), 0, 1) as need_details
+				FROM (SELECT
+					IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')), pl.name) as designation,
+					id_stock, p.id_product, s.id_product_attribute, ean13, p.reference,
+					s.price_te,
+					physical_quantity,
+					usable_quantity
+					FROM '._DB_PREFIX_.'stock s
+					INNER JOIN '._DB_PREFIX_.'product p
+						ON (p.id_product = s.id_product)
+					INNER JOIN '._DB_PREFIX_.'product_lang pl
+						ON (pl.id_product = p.id_product AND pl.id_lang = '.$id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac
+						ON (pac.id_product_attribute = s.id_product_attribute)
+					LEFT JOIN '._DB_PREFIX_.'attribute a
+						ON (a.id_attribute = pac.id_attribute)
+					LEFT JOIN '._DB_PREFIX_.'attribute_lang al
+						ON (al.id_attribute = a.id_attribute AND al.id_lang = '.$id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl
+						ON (agl.id_attribute_group = a.id_attribute_group AND agl.id_lang = '.$id_lang.')
+					WHERE id_warehouse = '.$this->getCurrentWarehouseId().' '.(isset($this->_where) ? $this->_where.' ' : '').
+					($this->deleted ? 'AND a.`deleted` = 0 ' : '').
+					(isset($this->_filter) ? $this->_filter : '').'
+					GROUP BY id_stock
+					'.((isset($this->_filterHaving) || isset($this->_having)) ? 'HAVING ' : '').
+					(isset($this->_filterHaving) ? ltrim($this->_filterHaving, ' AND ') : '').
+					(isset($this->_having) ? $this->_having.' ' : '').'
+				) s
+				GROUP BY id_product_attribute, id_product
+				ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
+				LIMIT '.(int)$start.','.(int)$limit;
 
 		$this->_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		$manager = StockManagerFactory::getManager();
