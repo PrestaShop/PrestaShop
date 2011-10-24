@@ -116,7 +116,7 @@ class AdminStockCoverControllerCore extends AdminController
 			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
 			INNER JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
 			WHERE a.id_product = '.$product_id.
-			($this->getCurrentCoverageWarehouse() != -1 ? ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse() : '').'
+			($this->getCurrentCoverageWarehouse() != -1 ? ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse() : ' ').'
 			GROUP BY a.id_product_attribute';
 
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
