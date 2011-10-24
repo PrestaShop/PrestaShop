@@ -190,7 +190,7 @@ class AdminProductsController extends AdminController
 		{
 			$id_product = Tools::getValue('id_product');
 			if (($id_product && $this->tabAccess['edit'] === '1')
-				|| ($this->tabAccess['add'] == 1 && Tools::isSubmit('submitAddproduct') && !$id_product)
+				|| ($this->tabAccess['add'] == 1 && (Tools::isSubmit('submitAddproduct') ||  Tools::isSubmit('submitAddproductAndStay') ) && !$id_product)
 			)
 				$this->submitAddproduct($token);
 			else
@@ -1755,6 +1755,7 @@ if (false)
 					'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
 					);
 			}
+				$smarty->assign('newproduct', 0);
 		}
 		else
 				$smarty->assign('newproduct', 1);
