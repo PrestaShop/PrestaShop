@@ -247,13 +247,13 @@ function init_elems()
 	try
 	{
 		if (impact.options[impact.selectedIndex].value == 0)
-			getE('span_impact').style.display = 'none';
+			$('#span_impact').hide();
 		if (impact2.options[impact.selectedIndex].value == 0)
 			getE('span_weight_impact').style.display = 'none';
 	}
 	catch (e)
 	{
-		getE('span_impact').style.display = 'none';
+		$('#span_impact').hide();
 		getE('span_weight_impact').style.display = 'none';
 	}
 }
