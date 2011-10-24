@@ -595,6 +595,7 @@ class AdminControllerCore extends Controller
 			if ($this->filter)
 			{
 				$_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
+
 				foreach ($_POST as $key => $value)
 				{
 					/* Extracting filters from $_POST on key filter_ */
@@ -604,6 +605,7 @@ class AdminControllerCore extends Controller
 						/* Table alias could be specified using a ! eg. alias!field */
 						$tmp_tab = explode('!', $key);
 						$filter = count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0];
+
 						if ($field = $this->filterToField($key, $filter))
 						{
 							$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));

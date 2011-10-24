@@ -88,6 +88,11 @@ class AdminWarehousesControllerCore extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
 
+		$this->displayInformation(
+			$this->l('This interface allows you to manage your warehouses. Before manage any stock in your warehouses, check the general default currency used in the soclution.
+			For each warehouse, according to the law in your country, you have to verify the management type, the valuation currency, and the associated carriers and shops.')
+		);
+
 		return parent::initList();
 	}
 
@@ -296,6 +301,7 @@ class AdminWarehousesControllerCore extends AdminController
 		//force specific fields values
 		if ($address != null)
 			$this->fields_value = array(
+				'id_address' => $address->id,
 				'phone' => $address->phone,
 				'address' => $address->address1,
 				'address2' => $address->address2,
@@ -304,6 +310,8 @@ class AdminWarehousesControllerCore extends AdminController
 				'id_country' => $address->id_country,
 				'id_state' => $address->id_state,
 			);
+		else
+			$this->fields_value['id_address'] = 0;
 
 		$this->fields_value['ids_shops[]'] = $shops;
 		$this->fields_value['ids_carriers[]'] = $carriers;
@@ -331,16 +339,16 @@ class AdminWarehousesControllerCore extends AdminController
 				$obj->setCarriers(Tools::getValue('ids_carriers'));
 
 			// update/create address if not exists
-			if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
 				//update address
 				$address = new Address((int)Tools::getValue('id_address'));
 			else
 				//create address
 				$address = new Address();
 
-			$address->alias = Tools::getValue('name', null);
-			$address->lastname = Tools::getValue('name', null);
-			$address->firstname = Tools::getValue('name', null);
+			$address->alias = Tools::getValue('reference', null);
+			$address->lastname = 'warehouse'; // skip problem with numeric characters in warehouse name
+			$address->firstname = 'warehouse'; // skip problem with numeric characters in warehouse name
 			$address->address1 = Tools::getValue('address', null);
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
@@ -349,9 +357,15 @@ class AdminWarehousesControllerCore extends AdminController
 			$address->id_state = Tools::getValue('id_state', null);
 			$address->city = Tools::getValue('city', null);
 
+			$validation = $address->validateController();
+
 			// check address validity
-			if (!$address->validateFields(false))
+			if (count($validation) > 0)
+			{
+				foreach ($validation as $item)
+					$this->_errors[] = $item;
 				$this->_errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+			}
 			else
 			{
 				if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)

@@ -29,7 +29,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.filter').keypress(function(event){
+			$('table.{$table} .filter').keypress(function(event){
 				formSubmit(event, 'submitFilterButton{$table}')
 			})
 		});
@@ -47,8 +47,8 @@
 
 	<script type="text/javascript">
 		$(function() {
-			if ($(".datepicker").length > 0)
-				$(".datepicker").datepicker({
+			if ($("table.{$table} .datepicker").length > 0)
+				$("table.{$table} .datepicker").datepicker({
 					prevText: '',
 					nextText: '',
 					dateFormat: 'yy-mm-dd'
@@ -99,7 +99,7 @@
 			<td{if $simple_header} style="border:none;"{/if}>
 				<table
 				{if $table_id} id={$table_id}{/if}
-				class="table {if $table_dnd}tableDnd{/if}"
+				class="table {if $table_dnd}tableDnd{/if} {$table}"
 				cellpadding="0" cellspacing="0"
 				style="width: 100%; margin-bottom:10px;"
 				>

@@ -63,7 +63,7 @@ class WarehouseCore extends ObjectModel
 	protected $fieldsValidate = array(
 		'id_address' => 'isUnsignedId',
 		'reference' => 'isString',
-		'name' => 'isString',
+		'name' => 'isName',
 		'id_employee' => 'isUnsignedId',
 		'management_type' => 'isStockManagement',
 		'id_currency' => 'isUnsignedId'
