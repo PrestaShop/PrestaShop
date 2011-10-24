@@ -26,7 +26,7 @@
 
 {if !$simple_header}
 	<link href="../css/admin.css" rel="stylesheet" type="text/css" />
-	
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('.filter').keypress(function(event){
@@ -44,22 +44,23 @@
 		</script>
 		<script type="text/javascript" src="../js/admin-dnd.js"></script>
 	{/if}
-	
+
 	<script type="text/javascript">
 		$(function() {
 			if ($(".datepicker").length > 0)
 				$(".datepicker").datepicker({
 					prevText: '',
-					nextText: ''
+					nextText: '',
+					dateFormat: 'yy-mm-dd'
 				});
 		});
 	</script>
-	
+
 	{if $add_button}
 		<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
 	{/if}
 	<a name="{$table}">&nbsp;</a>
-	
+
 	<form method="post" action="{$action}" class="form">
 {/if}{* End if simple_header *}
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
