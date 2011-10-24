@@ -147,6 +147,7 @@ class OrderDetailControllerCore extends FrontController
 					$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
 				$products = $order->getProducts();
 
+				/* DEPRECATED: customizedDatas @since 1.5 */
 				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
 				Product::addCustomizationPrice($products, $customizedDatas);
 
@@ -175,11 +176,14 @@ class OrderDetailControllerCore extends FrontController
 					'is_guest' => false,
 					'messages' => CustomerMessage::getMessagesByOrderId((int)($order->id), false),
 					'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
-					'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+					'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 					'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
 					'use_tax' => Configuration::get('PS_TAX'),
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
-					'customizedDatas' => $customizedDatas));
+					/* DEPRECATED: customizedDatas @since 1.5 */
+					'customizedDatas' => $customizedDatas
+					/* DEPRECATED: customizedDatas @since 1.5 */
+				));
 				if ($carrier->url && $order->shipping_number)
 					$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
 				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));

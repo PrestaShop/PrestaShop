@@ -94,10 +94,10 @@
 		{elseif $field_item eq "address2" && $address_invoice->address2}<li class="address_address2">{$address_invoice->address2|escape:'htmlall':'UTF-8'}</li>
 		{elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<li class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'htmlall':'UTF-8'}</li>
 		{else}
-				{assign var=address_words value=" "|explode:$field_item} 
+				{assign var=address_words value=" "|explode:$field_item}
 				<li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$invoiceAddressFormatedValues[$word_item]|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
 		{/if}
-	
+
 	{/foreach}
 </ul>
 <ul class="address alternate_item {if $order->isVirtual()}full_width{/if}">
@@ -107,7 +107,7 @@
 		{elseif $field_item eq "address2" && $address_delivery->address2}<li class="address_address2">{$address_delivery->address2|escape:'htmlall':'UTF-8'}</li>
 		{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<li class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</li>
 		{else}
-				{assign var=address_words value=" "|explode:$field_item} 
+				{assign var=address_words value=" "|explode:$field_item}
 				<li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item}">{$deliveryAddressFormatedValues[$word_item]|escape:'htmlall':'UTF-8'}</span>{/foreach}</li>
 		{/if}
 	{/foreach}
@@ -169,13 +169,13 @@
 			{if !isset($product.deleted)}
 				{assign var='productId' value=$product.product_id}
 				{assign var='productAttributeId' value=$product.product_attribute_id}
-				{if isset($customizedDatas.$productId.$productAttributeId)}
+				{if isset($product.customizedDatas)}
 					{assign var='productQuantity' value=$product.product_quantity-$product.customizationQuantityTotal}
 				{else}
 					{assign var='productQuantity' value=$product.product_quantity}
 				{/if}
 				<!-- Customized products -->
-				{if isset($customizedDatas.$productId.$productAttributeId)}
+				{if isset($product.customizedDatas)}
 					<tr class="item">
 						{if $return_allowed}<td class="order_cb"></td>{/if}
 						<td><label for="cb_{$product.id_order_detail|intval}">{if $product.product_reference}{$product.product_reference|escape:'htmlall':'UTF-8'}{else}--{/if}</label></td>
@@ -210,7 +210,7 @@
 							</label>
 						</td>
 					</tr>
-					{foreach from=$customizedDatas.$productId.$productAttributeId item='customization' key='customizationId'}
+					{foreach from=$product.customizedDatas item='customization' key='customizationId'}
 					<tr class="alternate_item">
 						{if $return_allowed}<td class="order_cb"><input type="checkbox" id="cb_{$product.id_order_detail|intval}" name="customization_ids[{$product.id_order_detail|intval}][]" value="{$customizationId|intval}" /></td>{/if}
 						<td colspan="2">

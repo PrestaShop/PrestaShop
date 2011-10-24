@@ -141,7 +141,7 @@
 	{foreach from=$sources item=source}
 		<li>
 			{dateFormat date=$source['date_add'] full=true}<br />
-			<b>{l s='From:'}</b> <a href="{$source['http_referer']}">{parse_url($source['http_referer'], PHP_URL_HOST)|regex_replace:'/^www./':''}</a><br />
+			<b>{l s='From:'}</b> <a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a><br />
 			<b>{l s='To:'}</b> {$source['request_uri']}<br />
 			{if $source['keywords']}<b>{l s='Keywords:'}</b> {$source['keywords']}<br />{/if}<br />
 		</li>
@@ -159,7 +159,7 @@
 	<fieldset style="width: 400px">
 	{if (($currentState->invoice OR $order->invoice_number) AND count($products))}
 		<legend><a href="pdf.php?id_order={$order->id}&pdf"><img src="../img/admin/charged_ok.gif" /> {l s='Invoice'}</a></legend>
-		<a href="pdf.php?id_order={$order->id}&pdf">{l s='Invoice #'}<b>{$PS_INVOICE_PREFIX}{"%06d"|sprintf:$order->invoice_number}</b></a>
+		<a href="pdf.php?id_order={$order->id}&pdf">{l s='Invoice #'}<b>{Configuration::get('PS_INVOICE_PREFIX', $id_lang)}{"%06d"|sprintf:$order->invoice_number}</b></a>
 		<br />{l s='Created on:'} {dateFormat date=$order->invoice_date full=true}
 	{else}
 		<legend><img src="../img/admin/charged_ko.gif" /> {l s='Invoice'}</legend>
@@ -170,11 +170,11 @@
 
 	<fieldset style="width:400px">
 		<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping information'}</legend>
-		{l s='Total weight:'} <b>{$order->getTotalWeight()|string_format:"%.3f"} {$PS_WEIGHT_UNIT}</b><br />
-		{l s='Carrier:'} <b>{if $carrier->name == '0'}{$PS_SHOP_NAME}{else}{$carrier->name}{/if}</b><br />
+		{l s='Total weight:'} <b>{$order->getTotalWeight()|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</b><br />
+		{l s='Carrier:'} <b>{if $carrier->name == '0'}{Configuration::get('PS_SHOP_NAME')}{else}{$carrier->name}{/if}</b><br />
 
 		{if ($currentState->delivery || $order->delivery_number)}
-		<br /><a href="pdf.php?id_delivery={$order->delivery_number}">{l s='Delivery slip #'}<b>{$PS_DELIVERY_PREFIX}{"%06d"|sprintf:$order->delivery_number}</b></a><br />
+		<br /><a href="pdf.php?id_delivery={$order->delivery_number}">{l s='Delivery slip #'}<b>{Configuration::get('PS_DELIVERY_PREFIX', $id_lang)}{"%06d"|sprintf:$order->delivery_number}</b></a><br />
 		{/if}
 
 		{if $order->shipping_number}
@@ -327,7 +327,7 @@
 
 			<div style="float:left; width:280px; margin-top:15px;">
 				<sup>*</sup> {l s='According to the group of this customer, prices are printed:'}
-				{if ($order->getTaxCalculationMethod() == PS_TAX_EXC)}
+				{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 					{l s='tax excluded.'}
 				{else}
 					{l s='tax included.'}

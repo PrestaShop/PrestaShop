@@ -38,7 +38,7 @@
 		{if ($order->hasBeenDelivered())}<td align="center" class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
 		<td align="center" class="productQuantity"> - </td>
 		<td align="center">
-		{if ($order->getTaxCalculationMethod() == PS_TAX_EXC)}
+		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{displayPrice price=Tools::ps_round($product['product_price'] * $product['customizationQuantityTotal'], 2) currency=$currency->id}
 		{else}
 			{displayPrice price=Tools::ps_round($product['product_price_wt'] * $product['customizationQuantityTotal'], 2) currency=$currency->id}
@@ -73,7 +73,7 @@
 			{if ($order->hasBeenDelivered())}<td align="center">{$customization['quantity_returned']}</td>{/if}
 			<td align="center">-</td>
 			<td align="center">
-			{if ($order->getTaxCalculationMethod() == PS_TAX_EXC)}
+			{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 				{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id}
 			{else}
 				{displayPrice price=Tools::ps_round($product['product_price_wt'] * $customization['quantity'], 2) currency=$currency->id}

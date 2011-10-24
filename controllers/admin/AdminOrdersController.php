@@ -512,10 +512,7 @@ class AdminOrdersControllerCore extends AdminController
 			'currentIndex' => self::$currentIndex,
 			'carrierModuleCall' => $carrier_module_call,
 			'iso_code_lang' => $this->context->language->iso_code,
-			'PS_INVOICE_PREFIX' => Configuration::get('PS_INVOICE_PREFIX', $this->context->language->id),
-			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
-			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
-			'PS_DELIVERY_PREFIX' => Configuration::get('PS_DELIVERY_PREFIX', $this->context->language->id)
+			'id_lang' => $this->context->language->id
 		));
 
 		// Assign Hook
