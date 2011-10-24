@@ -62,7 +62,6 @@ $(document).ready(function() {
 							});
 							$.each(data.fields_display, function(it, line)
 							{
-								console.log(it);
 								if (typeof(row[it]) == 'undefined')
 								{
 									if (first || count == 0)
@@ -72,8 +71,6 @@ $(document).ready(function() {
 								}
 								else
 								{
-									console.log(first);
-									console.log(count);
 									count--;
 									if (first)
 									{
