@@ -370,6 +370,8 @@
   'AdminStockInstantStateController' => '',
   'AdminStockManagementControllerCore' => 'controllers/admin/AdminStockManagementController.php',
   'AdminStockManagementController' => '',
+  'AdminStockMvtControllerCore' => 'controllers/admin/AdminStockMvtController.php',
+  'AdminStockMvtController' => '',
   'AdminStoresControllerCore' => 'controllers/admin/AdminStoresController.php',
   'AdminStoresController' => '',
   'AdminToolsControllerCore' => 'controllers/admin/AdminToolsController.php',

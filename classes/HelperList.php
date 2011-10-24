@@ -99,7 +99,7 @@ class HelperListCore extends Helper
 		'id_carrier' => 'id_carrier'
 	);
 
-	// @var boolean ask for simple header : no filters, no paginations and no sorting
+	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
 
 	/**
