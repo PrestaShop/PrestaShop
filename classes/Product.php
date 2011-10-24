@@ -2227,8 +2227,13 @@ class ProductCore extends ObjectModel
 
 		if ($this->isAvailableWhenOutOfStock($this->getOutOfStock()))
 			return true;
+		
+		if(isset($this->id_product_attribute))
+			$id_product_attribute = $this->id_product_attribute;
+		else
+			$id_product_attribute = 0;
 
-		return ($qty <= StockAvailable::getStockAvailableForProduct($id_product, $id_product_attribute, Context::getContext()->shop->getID()));
+		return ($qty <= StockAvailable::getStockAvailableForProduct($this->id, $id_product_attribute, Context::getContext()->shop->getID()));
 	}
 
 	/**
