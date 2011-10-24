@@ -149,7 +149,7 @@ class AdminStockCoverControllerCore extends AdminController
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
 		$this->_where = 'AND s.id_product_attribute = 0';
 		if ($this->getCurrentCoverageWarehouse() != -1)
-			$this->_where .= 'AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
+			$this->_where .= ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
 		$this->context->smarty->assign('stock_cover_periods', $this->stock_cover_periods);
 		$this->context->smarty->assign('stock_cover_cur_period', $this->getCurrentCoveragePeriod());
