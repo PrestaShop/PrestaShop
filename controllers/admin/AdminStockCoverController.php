@@ -114,7 +114,7 @@ class AdminStockCoverControllerCore extends AdminController
 			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
 			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
 			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
+			INNER JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
 			WHERE a.id_product = '.$product_id.
 			($this->getCurrentCoverageWarehouse() != -1 ? ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse() : '').'
 			GROUP BY a.id_product_attribute';
@@ -147,7 +147,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
-		$this->where = 'AND s.id_product_attribute = 0';
+		$this->_where = 'AND s.id_product_attribute = 0';
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= 'AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
