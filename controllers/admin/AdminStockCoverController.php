@@ -146,9 +146,10 @@ class AdminStockCoverControllerCore extends AdminController
 
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
-						LEFT JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product AND s.id_product_attribute = 0)';
+						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
+		$this->where = 'AND s.id_product_attribute = 0';
 		if ($this->getCurrentCoverageWarehouse() != -1)
-			$this->_where = 'AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
+			$this->_where .= 'AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
 		$this->context->smarty->assign('stock_cover_periods', $this->stock_cover_periods);
 		$this->context->smarty->assign('stock_cover_cur_period', $this->getCurrentCoveragePeriod());

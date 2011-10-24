@@ -650,7 +650,6 @@ class AdminStockManagementControllerCore extends AdminController
 					$id_product,
 					$id_product_attribute,
 					$quantity,
-					1, //@TOTO specify new default movement for transfer
 					$id_warehouse_from,
 					$id_warehouse_to,
 					$usable_from,
