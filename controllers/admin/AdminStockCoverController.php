@@ -216,7 +216,7 @@ class AdminStockCoverControllerCore extends AdminController
 
 		if ($warehouse == 0)
 		{
-			$warehouse = null;
+			$warehouse = -1;
 			if ((int)Tools::getValue('coverage_warehouse'))
 				$warehouse = (int)Tools::getValue('coverage_warehouse');
 			else if ((int)$this->context->cookie->warehouse)
