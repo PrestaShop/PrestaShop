@@ -25,14 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function logvardump($var)
-{
-    ob_start();
-    var_dump($var);
-    $result = ob_get_clean();
-    file_put_contents(dirname(__FILE__).'/debugValidation.txt', $result, FILE_APPEND);
-}
-
 if (!defined('_PS_VERSION_'))
 	exit;
 	
