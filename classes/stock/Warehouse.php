@@ -167,7 +167,7 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Checks if a warehouse is empty - holds no stock
+	 * Checks if a warehouse is empty - i.e. holds no stock
 	 *
 	 * @return bool
 	 */
@@ -242,6 +242,14 @@ class WarehouseCore extends ObjectModel
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 	}
 
+	/**
+	 * Gets the list of warehouses
+	 * It is possible via ignore_shop and id_shop to filter the list with shop id
+	 *
+	 * @param bool $ignore_shop false by default
+	 * @param int $id_shop null by default
+	 * @return array
+	 */
 	public static function getWarehouseList($ignore_shop = false, $id_shop = null)
 	{
 		if (!$ignore_shop)
