@@ -228,10 +228,6 @@
 	</td>
 	</tr>
 {/if}
-		  <tr id="initial_stock_attribute">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">{l s='Initial stock:' }</td>
-				<td><input type="text" name="attribute_quantity" size="3" maxlength="6" value="0"/></td>
-		  </tr>
 			<tr id="stock_mvt_attribute" style=";">
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">{l s='Stock movement:' }</td>
 				<td style="padding-bottom:5px;">
@@ -242,8 +238,9 @@
 							rel="{$reason.sign}" value="{$reason.id_stock_mvt_reason}" 
 							{if $ps_stock_mvt_reason_default == $reason.id_stock_mvt_reason}
 								selected="selected"
-							{/if}>{$reason.name}</option>
-					{/foreach}
+							{/if}>{$reason.name}
+						</option>
+						{/foreach}
 			</select>
 					<input type="text" name="attribute_mvt_quantity" size="3" maxlength="6" value="0"/>&nbsp;&nbsp;
 					<span style="display:none;" id="mvt_sign"></span>
