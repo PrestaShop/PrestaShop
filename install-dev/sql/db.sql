@@ -1012,6 +1012,8 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_reference` varchar(32) default NULL,
   `product_supplier_reference` varchar(32) default NULL,
   `product_weight` float NOT NULL,
+  `tax_name` varchar(16) NOT NULL,
+  `tax_rate` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
   `tax_computation_method` tinyint(1) unsigned NOT NULL default '0',
   `ecotax` decimal(21,6) NOT NULL default '0.00',
   `ecotax_tax_rate` DECIMAL(5,3) NOT NULL DEFAULT '0.000',
