@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class	CookieCore
+class CookieCore
 {
 	/** @var array Contain cookie content in a key => value format */
 	protected $_content;
@@ -54,12 +54,12 @@ class	CookieCore
 	protected $_modified = false;
 
 	/**
-	  * Get data if the cookie exists and else initialize an new one
-	  *
-	  * @param $name Cookie name before encrypting
-	  * @param $path
-	  */
-	public function __construct($name, $path = '', $expire = NULL)
+	 * Get data if the cookie exists and else initialize an new one
+	 *
+	 * @param $name Cookie name before encrypting
+	 * @param $path
+	 */
+	public function __construct($name, $path = '', $expire = null)
 	{
 		$this->_content = array();
 		$this->_expire = isset($expire) ? (int)($expire) : (time() + 1728000);
@@ -82,10 +82,10 @@ class	CookieCore
 	protected function getDomain()
 	{
 		$r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
-	    preg_match ($r, Tools::getHttpHost(false, false), $out);
+		preg_match ($r, Tools::getHttpHost(false, false), $out);
 		if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'.
-         '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'.
-         '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4]))
+			'{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'.
+			'{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4]))
 			return false;
 		if (!strstr(Tools::getHttpHost(false, false), '.'))
 			return false;
@@ -93,7 +93,7 @@ class	CookieCore
 		$subDomains = SubDomain::getSubDomains();
 		if ($subDomains === false)
 			die(Tools::displayError('Bad SubDomain SQL query.'));
-		foreach ($subDomains AS $subDomain)
+		foreach ($subDomains as $subDomain)
 		{
 			$subDomainLength = strlen($subDomain) + 1;
 			if (strncmp($subDomain.'.', $domain, $subDomainLength) == 0)
@@ -103,60 +103,60 @@ class	CookieCore
 	}
 
 	/**
-	  * Set expiration date
-	  *
-	  * @param integer $expire Expiration time from now
-	  */
-	function setExpire($expire)
+	 * Set expiration date
+	 *
+	 * @param integer $expire Expiration time from now
+	 */
+	public function setExpire($expire)
 	{
 		$this->_expire = (int)($expire);
 	}
 
 	/**
-	  * Magic method wich return cookie data from _content array
-	  *
-	  * @param $key key wanted
-	  * @return string value corresponding to the key
-	  */
+	 * Magic method wich return cookie data from _content array
+	 *
+	 * @param $key key wanted
+	 * @return string value corresponding to the key
+	 */
 	public function __get($key)
 	{
 		return isset($this->_content[$key]) ? $this->_content[$key] : false;
 	}
 
 	/**
-	  * Magic method which check if key exists in the cookie
-	  *
-	  * @param $key key wanted
-	  * @return boolean key existence
-	  */
+	 * Magic method which check if key exists in the cookie
+	 *
+	 * @param $key key wanted
+	 * @return boolean key existence
+	 */
 	public function __isset($key)
 	{
 		return isset($this->_content[$key]);
 	}
 
 	/**
-	  * Magic method wich add data into _content array
-	  *
-	  * @param $key key desired
-	  * @param $value value corresponding to the key
-	  */
+	 * Magic method wich add data into _content array
+	 *
+	 * @param $key key desired
+	 * @param $value value corresponding to the key
+	 */
 	public function __set($key, $value)
 	{
 		if (is_array($value))
 			die(Tools::displayError());
 		if (preg_match('/¤|\|/', $key.$value))
 			throw new Exception('Forbidden chars in cookie');
-		if (!$this->_modified AND (!isset($this->_content[$key]) OR (isset($this->_content[$key]) AND $this->_content[$key] != $value)))
+		if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value)))
 			$this->_modified = true;
 		$this->_content[$key] = $value;
 		$this->write();
 	}
 
 	/**
-	  * Magic method wich delete data into _content array
-	  *
-	  * @param $key key wanted
-	  */
+	 * Magic method wich delete data into _content array
+	 *
+	 * @param $key key wanted
+	 */
 	public function __unset($key)
 	{
 		if (isset($this->_content[$key]))
@@ -174,36 +174,36 @@ class	CookieCore
 	public function isLogged($withGuest = false)
 	{
 		Tools::displayAsDeprecated();
-		if (!$withGuest AND $this->is_guest == 1)
+		if (!$withGuest && $this->is_guest == 1)
 			return false;
 
 		/* Customer is valid only if it can be load and if cookie password is the same as database one */
-	 	if ($this->logged == 1 AND $this->id_customer AND Validate::isUnsignedId($this->id_customer) AND Customer::checkPassword((int)($this->id_customer), $this->passwd))
-        	return true;
-        return false;
+		if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int)($this->id_customer), $this->passwd))
+			return true;
+		return false;
 	}
 
 	/**
-	  * Check employee informations saved into cookie and return employee validity
-	  *
-	  * @deprecated as of version 1.5 use Employee::isLoggedBack() instead
-	  * @return boolean employee validity
-	  */
+	 * Check employee informations saved into cookie and return employee validity
+	 *
+	 * @deprecated as of version 1.5 use Employee::isLoggedBack() instead
+	 * @return boolean employee validity
+	 */
 	public function isLoggedBack()
 	{
 		Tools::displayAsDeprecated();
 		/* Employee is valid only if it can be load and if cookie password is the same as database one */
-	 	return ($this->id_employee
-			AND Validate::isUnsignedId($this->id_employee)
-			AND Employee::checkPassword((int)$this->id_employee, $this->passwd)
-			AND (!isset($this->_content['remote_addr']) OR $this->_content['remote_addr'] == ip2long(Tools::getRemoteAddr()) OR !Configuration::get('PS_COOKIE_CHECKIP'))
+		return ($this->id_employee
+			&& Validate::isUnsignedId($this->id_employee)
+			&& Employee::checkPassword((int)$this->id_employee, $this->passwd)
+			&& (!isset($this->_content['remote_addr']) || $this->_content['remote_addr'] == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
 		);
 	}
 
 	/**
-	  * Delete cookie
-	  * As of version 1.5 don't call this function, use Customer::logout() or Employee::logout() instead;
-	  */
+	 * Delete cookie
+	 * As of version 1.5 don't call this function, use Customer::logout() or Employee::logout() instead;
+	 */
 	public function logout()
 	{
 		$this->_content = array();
@@ -214,10 +214,10 @@ class	CookieCore
 	}
 
 	/**
-	  * Soft logout, delete everything links to the customer
-	  * but leave there affiliate's informations.
-	  * As of version 1.5 don't call this function, use Customer::mylogout() instead;
-	  */
+	 * Soft logout, delete everything links to the customer
+	 * but leave there affiliate's informations.
+	 * As of version 1.5 don't call this function, use Customer::mylogout() instead;
+	 */
 	public function mylogout()
 	{
 		unset($this->_content['id_customer']);
@@ -236,7 +236,7 @@ class	CookieCore
 		$this->write();
 	}
 
-	function makeNewLog()
+	public function makeNewLog()
 	{
 		unset($this->_content['id_customer']);
 		unset($this->_content['id_guest']);
@@ -245,9 +245,9 @@ class	CookieCore
 	}
 
 	/**
-	  * Get cookie content
-	  */
-	function update($nullValues = false)
+	 * Get cookie content
+	 */
+	public function update($nullValues = false)
 	{
 		if (isset($_COOKIE[$this->_name]))
 		{
@@ -259,10 +259,10 @@ class	CookieCore
 
 			/* Unserialize cookie content */
 			$tmpTab = explode('¤', $content);
-			foreach ($tmpTab AS $keyAndValue)
+			foreach ($tmpTab as $keyAndValue)
 			{
 				$tmpTab2 = explode('|', $keyAndValue);
-				if (sizeof($tmpTab2) == 2)
+				if (count($tmpTab2) == 2)
 					 $this->_content[$tmpTab2[0]] = $tmpTab2[1];
 			 }
 			/* Blowfish fix */
@@ -270,7 +270,7 @@ class	CookieCore
 				$this->_content['checksum'] = (int)($this->_content['checksum']);
 
 			/* Check if cookie has not been modified */
-			if (!isset($this->_content['checksum']) OR $this->_content['checksum'] != $checksum)
+			if (!isset($this->_content['checksum']) || $this->_content['checksum'] != $checksum)
 				$this->logout();
 
 			if (!isset($this->_content['date_add']))
@@ -286,9 +286,9 @@ class	CookieCore
 	}
 
 	/**
-	  * Setcookie according to php version
-	  */
-	protected function _setcookie($cookie = NULL)
+	 * Setcookie according to php version
+	 */
+	protected function _setcookie($cookie = null)
 	{
 		if ($cookie)
 		{
@@ -315,7 +315,7 @@ class	CookieCore
 
 		/* Serialize cookie content */
 		if (isset($this->_content['checksum'])) unset($this->_content['checksum']);
-		foreach ($this->_content AS $key => $value)
+		foreach ($this->_content as $key => $value)
 			$cookie .= $key.'|'.$value.'¤';
 
 		/* Add checksum to cookie */
@@ -333,7 +333,7 @@ class	CookieCore
 		$result = array();
 		if (count($this->_content) == 0)
 			return $result;
-		foreach ($this->_content AS $key => $value)
+		foreach ($this->_content as $key => $value)
 			if (strncmp($key, $origin, strlen($origin)) == 0)
 				$result[$key] = $value;
 		return $result;
@@ -345,7 +345,7 @@ class	CookieCore
 	public function unsetFamily($origin)
 	{
 		$family = $this->getFamily($origin);
-		foreach (array_keys($family) AS $member)
+		foreach (array_keys($family) as $member)
 			unset($this->$member);
 	}
 
