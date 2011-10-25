@@ -173,6 +173,7 @@ class SceneCore extends ObjectModel
 		$result = true;
 		foreach ($zones AS $zone)
 		{
+			// @todo use multiple insert
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'scene_products` ( `id_scene` , `id_product` , `x_axis` , `y_axis` , `zone_width` , `zone_height`) VALUES
 				 ('.(int)($this->id).', '.(int)($zone['id_product']).', '.(int)($zone['x1']).', '.(int)($zone['y1']).', '.(int)($zone['width']).', '.(int)($zone['height']).')';
 			if (!Db::getInstance()->execute($sql))

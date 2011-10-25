@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,19 +32,19 @@ class AttributeGroupCore extends ObjectModel
 	public		$is_color_group;
 	public		$position;
 	public		$group_type;
-	
+
 	/** @var string Public Name */
-	public 		$public_name;	
-	
+	public 		$public_name;
+
 	protected	$fieldsRequired = array();
 	protected	$fieldsValidate = array('is_color_group' => 'isBool');
  	protected 	$fieldsRequiredLang = array('name', 'public_name');
  	protected 	$fieldsSizeLang = array('name' => 64, 'public_name' => 64);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'public_name' => 'isGenericName', 'position' => 'isInt');
-		
+
 	protected 	$table = 'attribute_group';
 	protected 	$identifier = 'id_attribute_group';
-	
+
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'product_options',
 		'objectNodeName' => 'product_option',
@@ -68,21 +68,24 @@ class AttributeGroupCore extends ObjectModel
 
 		return $fields;
 	}
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
+		if ($this->position <= 0)
+			$this->position = AttributeGroup::getHigherPosition() + 1;
+
 		$return = parent::add($autodate, true);
 		Module::hookExec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
-	
+
 	public function update($nullValues = false)
 	{
 		$return = parent::update($nullValues);
 		Module::hookExec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
-	
+
 	/**
 	* Check then return multilingual fields for database interaction
 	*
@@ -129,7 +132,7 @@ class AttributeGroupCore extends ObjectModel
 			Module::hookExec('afterDeleteAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
-	
+
 	/**
 	 * Get all attributes for a given language / group
 	 *
@@ -148,7 +151,7 @@ class AttributeGroupCore extends ObjectModel
 		WHERE a.`id_attribute_group` = '.(int)($id_attribute_group).'
 		ORDER BY `position` ASC');
 	}
-	
+
 	/**
 	 * Get all attributes groups for a given language
 	 *
@@ -165,7 +168,7 @@ class AttributeGroupCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND `id_lang` = '.(int)($id_lang).')
 		ORDER BY `name` ASC');
 	}
-	
+
 	/**
 	 * Delete several objects from database
 	 *
@@ -174,7 +177,7 @@ class AttributeGroupCore extends ObjectModel
 	public function deleteSelection($selection)
 	{
 		/* Also delete Attributes */
-		foreach ($selection AS $value) 
+		foreach ($selection AS $value)
 		{
 			$obj = new AttributeGroup($value);
 			if (!$obj->delete())
@@ -182,7 +185,7 @@ class AttributeGroupCore extends ObjectModel
 		}
 		return true;
 	}
-	
+
 	public function setWsProductOptionValues($values)
 	{
 		$ids = array();
@@ -206,13 +209,13 @@ class AttributeGroupCore extends ObjectModel
 		}
 		return $ok;
 	}
-	
+
 	public function getWsProductOptionValues()
 	{
 		$result = Db::getInstance()->executeS('SELECT id_attribute AS id from `'._DB_PREFIX_.'attribute` WHERE id_attribute_group = '.(int)$this->id);
 		return $result;
 	}
-	
+
 	/**
 	 * Move a group attribute
 	 * @param boolean $way Up (1)  or Down (0)
@@ -250,7 +253,7 @@ class AttributeGroupCore extends ObjectModel
 			SET `position` = '.(int)$position.'
 			WHERE `id_attribute_group`='.(int)$movedGroupAttribute['id_attribute_group']));
 	}
-	
+
 	/**
 	 * Reorder group attribute position
 	 * Call it after deleting a group attribute.
@@ -278,9 +281,9 @@ class AttributeGroupCore extends ObjectModel
 
 	/**
 	 * getHigherPosition
-	 * 
+	 *
 	 * Get the higher group attribute position
-	 * 
+	 *
 	 * @return integer $position
 	 */
 	public static function getHigherPosition()
@@ -288,7 +291,7 @@ class AttributeGroupCore extends ObjectModel
 		$sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'attribute_group`';
 		$position = DB::getInstance()->getValue($sql);
-		return ($position !== false) ? $position : -1;
+		return (is_numeric($position)) ? $position : -1;
 	}
 }
 
