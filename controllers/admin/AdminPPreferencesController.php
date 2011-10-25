@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,22 +25,19 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminPPreferences extends AdminPreferences
+class AdminPPreferencesControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		
+
 		parent::__construct();
-		
-		$this->optionsList = array(
+
+		$this->options = array(
 			'products' => array(
 				'title' =>	$this->l('Products'),
 				'icon' =>	'tab-orders',
-				'class' =>	'width3',
 				'fields' =>	array(
 					'PS_CATALOG_MODE' => array('title' => $this->l('Catalog mode:'), 'desc' => $this->l('When active, all features for shopping will be disabled'), 'validation' => 'isBool', 'cast' => 'intval', 'required' => true, 'type' => 'bool'),
 		 			'PS_ORDER_OUT_OF_STOCK' => array('title' => $this->l('Allow ordering out-of-stock product:'), 'desc' => $this->l('Add to cart button is hidden when product is unavailable'), 'validation' => 'isBool', 'cast' => 'intval', 'required' => true, 'type' => 'bool'),
@@ -56,7 +53,7 @@ class AdminPPreferences extends AdminPreferences
 					'PS_NB_DAYS_NEW_PRODUCT' => array('title' => $this->l('Number of days during which the product is considered \'new\':'), 'validation' => 'isUnsignedInt', 'cast' => 'intval', 'type' => 'text'),
 					'PS_CART_REDIRECT' => array('title' => $this->l('Re-direction after adding product to cart:'), 'desc' => $this->l('Concerns only the non-AJAX version of the cart'), 'cast' => 'intval', 'show' => true, 'required' => true, 'type' => 'radio', 'validation' => 'isBool', 'choices' => array(0 => $this->l('previous page'), 1 => $this->l('cart summary'))),
 					'PS_PRODUCTS_PER_PAGE' => array('title' => $this->l('Products per page:'), 'desc' => $this->l('Products displayed per page. Default is 10.'), 'validation' => 'isUnsignedInt', 'cast' => 'intval', 'type' => 'text'),
-					'PS_PRODUCTS_ORDER_BY' => array('title' => $this->l('Default order by:'), 'desc' => $this->l('Default order by for product list'), 'type' => 'select', 'list' => 
+					'PS_PRODUCTS_ORDER_BY' => array('title' => $this->l('Default order by:'), 'desc' => $this->l('Default order by for product list'), 'type' => 'select', 'list' =>
 						array(
 							array('id' => '0', 'name' => $this->l('Product name')),
 							array('id' => '1', 'name' => $this->l('Product price')),
@@ -72,12 +69,14 @@ class AdminPPreferences extends AdminPreferences
 					'PS_PRODUCT_PICTURE_WIDTH' => array('title' => $this->l('Product pictures width:'), 'desc' => $this->l('The maximum width of pictures uploadable by customers'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
 					'PS_PRODUCT_PICTURE_HEIGHT' => array('title' => $this->l('Product pictures height:'), 'desc' => $this->l('The maximum height of pictures uploadable by customers'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
 					'PS_LEGACY_IMAGES' => array('title' => $this->l('Use the legacy image filesystem:'), 'desc' => $this->l('This should be set to yes unless you successfully moved images in Preferences > Images tab'), 'validation' => 'isBool', 'cast' => 'intval', 'required' => true, 'type' => 'bool', 'visibility' => Shop::CONTEXT_ALL),
-			'PS_QTY_DISCOUNT_ON_COMBINATION' => array('title' => $this->l('Quantity discounts based on:'), 'desc' => $this->l('How to calculate quantity discounts'), 'cast' => 'intval', 'show' => true, 'required' => true, 'type' => 'radio', 'validation' => 'isBool', 'choices' => array(0 => $this->l('Products'), 1 => $this->l('Combinations')))
+					'PS_QTY_DISCOUNT_ON_COMBINATION' => array('title' => $this->l('Quantity discounts based on:'), 'desc' => $this->l('How to calculate quantity discounts'), 'cast' => 'intval', 'show' => true, 'required' => true, 'type' => 'radio', 'validation' => 'isBool', 'choices' => array(0 => $this->l('Products'), 1 => $this->l('Combinations')))
 				),
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
+				'submit' => array()
 			),
 		);
 	}
-	
+
 	public function beforeUpdateOptions()
 	{
 		if (!Tools::getValue('PS_STOCK_MANAGEMENT'))
@@ -85,10 +84,5 @@ class AdminPPreferences extends AdminPreferences
 			$_POST['PS_ORDER_OUT_OF_STOCK'] = 1;
 			$_POST['PS_DISPLAY_QTIES'] = 0;
 		}
-	}
-
-	public function displayBottomOptionCategory($category, $categoryData)
-	{
-		echo '<script type="text/javascript">stockManagementActivationAuthorization();</script>';
 	}
 }
