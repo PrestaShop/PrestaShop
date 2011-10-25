@@ -26,12 +26,12 @@
 <br />
 
 <form action="{$current}&submitOptions{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
-{foreach $optionsList AS $category => $categoryData}
+{foreach $option_list AS $category => $categoryData}
 	{if isset($categoryData['top'])}{$categoryData['top']}{/if}
 	<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if}>
 	{* Options category title *}
 	<legend>
-		<img src="{$img_legend}"/>
+		<img src="{$categoryData['image']}"/>
 		{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
 	</legend>
 
