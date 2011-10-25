@@ -215,26 +215,32 @@
 				<input type="submit" name="setTransactionId" value="{l s='Update'}"/>
 			</form>
 		</li>
-		<li>
-			<font style="font-weight:bolder;">{l s='Card Holder:'} </font>
-			{if $paymentCCDetails}{$paymentCCDetails['card_holder']}{/if}
-		</li>
-		<li>
-			<font style="font-weight:bolder;">{l s='Card Number:'} </font>
-			{if $paymentCCDetails}
-				{if $paymentCCDetails['card_number'] != ''}
-					****{$paymentCCDetails['card_number']|substr:-4}
-				{/if}
+		{if $paymentCCDetails}
+			{if $paymentCCDetails['card_holder'] != ''}
+				<li>
+					<font style="font-weight:bolder;">{l s='Card Holder:'} </font>
+					{if $paymentCCDetails}{$paymentCCDetails['card_holder']}{/if}
+				</li>
 			{/if}
-		</li>
-		<li>
-			<font style="font-weight:bolder;">{l s='Card Brand:'} </font>
-			{if $paymentCCDetails}{$paymentCCDetails['card_brand']}{/if}
-		</li>
-		<li>
-			<font style="font-weight:bolder;">{l s='Card expiration:'} </font>
-			{if $paymentCCDetails}{$paymentCCDetails['card_expiration']}{/if}
-		</li>
+			{if $paymentCCDetails['card_number'] != ''}
+				<li>
+					<font style="font-weight:bolder;">{l s='Card Number:'} </font>						
+					****{$paymentCCDetails['card_number']|substr:-4}
+				</li>
+			{/if}
+			{if $paymentCCDetails['card_brand'] != ''}
+				<li>
+					<font style="font-weight:bolder;">{l s='Card Brand:'} </font>
+						{$paymentCCDetails['card_brand']}
+				</li>
+			{/if}
+			{if $paymentCCDetails['card_expiration'] != ''}
+				<li>
+					<font style="font-weight:bolder;">{l s='Card expiration:'} </font>
+					{$paymentCCDetails['card_expiration']}
+				</li>
+			{/if}
+		{/if}
 	</ul>
 </fieldset>
 
