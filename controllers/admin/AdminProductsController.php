@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once('functions.php');
-
 class AdminProductsController extends AdminController
 {
 	protected $maxFileSize = 20000000;
@@ -1527,7 +1525,8 @@ if (false)
 					$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 					$product = new Product((int)(Tools::getValue('id_product')));
 					$this->initForm();
-					return $this->{'initForm'.$this->action}($product, $languages, $defaultLanguage);
+					$this->{'initForm'.$this->action}($product, $languages, $defaultLanguage);
+					$this->context->smarty->assign('product',$product);
 				}
 			}
 			else
@@ -1719,6 +1718,7 @@ if (false)
 		$this->context->smarty->assign('form_action', $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$id_product);
 		$this->context->smarty->assign('id_product',$id_product);
 
+		$this->context->smarty->assign('upload_max_filesize', ini_get('upload_max_filesize'));
 		$this->context->smarty->assign('country_display_tax_label', $this->context->country->display_tax_label);
 
 		if (!($obj = $this->loadObject(true)))
@@ -1732,7 +1732,7 @@ if (false)
 		$content = '';
 		parent::displayForm();
 		$this->addJs(_PS_JS_DIR_.'attributesBack.js');
-		if (!($obj = $this->loadObject(true)))
+		if (!($product = $this->loadObject(true)))
 			throw new Exception('object not loaded');
 		$smarty = $this->context->smarty;
 		$product_tabs = array();
@@ -1761,34 +1761,90 @@ if (false)
 
 		$smarty->assign('product_tabs', $product_tabs);
 
+		$preview_url = '';
+		if (isset($product->id))
+		{
+			$preview_url = ($this->context->link->getProductLink($this->getFieldValue($product, 'id'), $this->getFieldValue($product, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id)));
+			if (!$product->active)
+			{
+				$admin_dir = dirname($_SERVER['PHP_SELF']);
+				$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+				$token = Tools::encrypt('PreviewProduct'.$product->id);
+
+				$preview_url .= $product->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
+				$smarty->assign('preview_url', $preview_url);
+			}
+		}
+		if($this->tabAccess['delete'])
+			$available_btn['delete'] = array(
+				'short' => 'Delete',
+				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct', 
+				'desc' => $this->l('Delete this product'),
+				'confirm' => 1);
+
+		if($this->tabAccess['add'])
+			$available_btn['duplicate'] = array(
+				'short' => 'Duplicate',
+				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate this product'), 
+				'confirm' => 1
+			);
+// @TODO navigation
+		$available_btn['preview'] = array(
+		'short' => 'Preview', 
+		'href' => $preview_url, 'desc' => 'prevdesc', 
+		);
+		if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
+			$available_btn['stats'] = array(
+			'short' => 'Statistics',
+			'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id, 
+			'desc' => $this->l('View product sales'), 
+			);
+		
+		$available_btn['cancel'] = array(
+		'short' => 'Close',
+		'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel modification'), 
+		 'confirm' => 1);
+		if($this->tabAccess['add'])
+			$available_btn['new'] = array(
+			'short' => 'Create',
+			'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create new product'), 
+		);
+		if($this->tabAccess['edit'])
+			$available_btn['save'] = array(
+			'short' => 'Save',
+			'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save your modifications'), 
+		);
+
+		$smarty->assign('available_btn', $available_btn);
+
 		if ($id_category_back = (int)(Tools::getValue('id_category')))
 			self::$currentIndex .= '&id_category='.$id_category_back;
 
-		if (!($obj = $this->loadObject(true)))
+		if (!($product = $this->loadObject(true)))
 			return;
 
 		$currency = Tools::setCurrency($this->context->cookie);
-//		if ($obj->id)
-//			self::$currentIndex .= '&id_product='.$obj->id;
+//		if ($product->id)
+//			self::$currentIndex .= '&id_product='.$product->id;
 
 
 	//	$this->addJqueryPlugin('tabpane');
 
 		$content .= $this->initForm();
-		$this->{'initForm'.$action}($obj, null);
+		$this->{'initForm'.$action}($product, null);
 		/* Tabs */
 /*
 switch ($this->action)
 		{
 			default:
-				$this->initFormInformations($obj, $currency);
-//		$this->initFormImages($obj, $this->token);
+				$this->initFormInformations($product, $currency);
+//		$this->initFormImages($product, $this->token);
 		}
 		*/
 		if (Combination::isFeatureActive())
-			$smarty->assign('countAttributes', Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
+			$smarty->assign('countAttributes', Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product->id));
 
-		$smarty->assign('countAttachments', Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$obj->id));
+		$smarty->assign('countAttachments', Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$product->id));
 
 		if (Tools::getValue('id_category') > 1)
 		{
@@ -2218,350 +2274,120 @@ switch ($this->action)
 		<input type="submit" name="submitAttachments" id="submitAttachments" value="'.$this->l('Update attachments').'" class="button" />';
 	}
 
-	function initFormInformations($obj, $currency)
+	function initFormInformations($product, $currency)
 	{
 		$content = '';
 		$smarty = $this->context->smarty;
 		$content .= parent::displayForm();
 
-		$has_attribute = $obj->hasAttributes();
+		$has_attribute = $product->hasAttributes();
 		// @FIXME Stock, need to use StockManagerFactory
 		$qty = 0;
-		$cover = Product::getCover($obj->id);
-		$this->_applyTaxToEcotax($obj);
+		$cover = Product::getCover($product->id);
+		$this->_applyTaxToEcotax($product);
 
 		/*
 		* Form for add a virtual product like software, mp3, etc...
 		*/
 		$productDownload = new ProductDownload();
-		if ($id_product_download = $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id')))
+		if ($id_product_download = $productDownload->getIdFromIdProduct($this->getFieldValue($product, 'id')))
 			$productDownload = new ProductDownload($id_product_download);
+		$product->{'productDownload'} = $productDownload;
 
-		$hidden = $display_filename = $check = '';
 		$this->displayInitInformationAndAttachment();
-	if(!$productDownload->id || !$productDownload->active)
-		$hidden = 'style="display:none;"';
 
-	$cache_default_attribute = (int) $this->getFieldValue($obj, 'cache_default_attribute');
-	$is_virtual = (int) $this->getFieldValue($obj, 'is_virtual');
 
-	if($is_virtual && $productDownload->active)
-		$check = 'checked="checked"';
-
-	if($is_virtual)
-		$virtual = 1;
-	else
-		$virtual = 0;
-
-		$preview_url = '';
-		if (isset($obj->id))
+	$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
+		$languages = $this->_languages;
+		foreach ($languages as $k => $language)
 		{
-			$preview_url = ($this->context->link->getProductLink($this->getFieldValue($obj, 'id'), $this->getFieldValue($obj, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($obj, 'id_category_default'), $this->context->language->id)));
-			if (!$obj->active)
-			{
-				$admin_dir = dirname($_SERVER['PHP_SELF']);
-				$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
-				$token = Tools::encrypt('PreviewProduct'.$obj->id);
-
-				$preview_url .= $obj->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
-			}
-
-			$content .= '
-			<a href="index.php?tab=AdminProducts&id_product='.$obj->id.'&deleteproduct&token='.$this->token.'" style="float:right;"
-			onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
-			<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this product').'" title="'.$this->l('Delete this product').'" /> '.$this->l('Delete this product').'</a>
-			<a href="'.$preview_url.'" target="_blank"><img src="../img/admin/details.gif" alt="'.$this->l('View product in shop').'" title="'.$this->l('View product in shop').'" /> '.$this->l('View product in shop').'</a>';
-
-			if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
-				$content .= '&nbsp;-&nbsp;<a href="index.php?tab=AdminStats&module=statsproduct&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminStats'.(int)(Tab::getIdFromClassName('AdminStats')).(int)$this->context->employee->id).'"><img src="../modules/statsproduct/logo.gif" alt="'.$this->l('View product sales').'" title="'.$this->l('View product sales').'" /> '.$this->l('View product sales').'</a>';
+			$languages[$k]['name'] = $this->getFieldValue($product, 'name', $language['id_lang']);
+			$languages[$k]['is_default'] = ($language['id_lang'] == $this->_defaultFormLanguage);
 		}
-		$content .= '
-			<hr class="clear"/>
-			<br />
-				<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
-					<tr>
-						<td class="col-left">'.$this->l('Name:').'</td>
-						<td style="padding-bottom:5px;" class="translatable">';
-		foreach ($this->_languages as $language)
-			$content .= '<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-								<input size="43" type="text" id="name_'.$language['id_lang'].'" name="name_'.$language['id_lang'].'"
-								value="'.stripslashes(htmlspecialchars($this->getFieldValue($obj, 'name', $language['id_lang']))).'"'.((!$obj->id) ? ' onkeyup="if (isArrowKey(event)) return; copy2friendlyURL();"' : '').' onkeyup="if (isArrowKey(event)) return; updateCurrentText();" onchange="updateCurrentText();" /><sup> *</sup>
-								<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-							</div>';
-		$content .= '		</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Reference:').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="55" type="text" name="reference" value="'.htmlentities($this->getFieldValue($obj, 'reference'), ENT_COMPAT, 'UTF-8').'" style="width: 130px; margin-right: 44px;" />
-							<span class="hint" name="help_box">'.$this->l('Special characters allowed:').' .-_#\<span class="hint-pointer">&nbsp;</span></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Supplier Reference:').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="55" type="text" name="supplier_reference" value="'.htmlentities($this->getFieldValue($obj, 'supplier_reference'), ENT_COMPAT, 'UTF-8').'" style="width: 130px; margin-right: 44px;" />
-							<span class="hint" name="help_box">'.$this->l('Special characters allowed:').' .-_#\<span class="hint-pointer">&nbsp;</span></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('EAN13 or JAN:').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="55" maxlength="13" type="text" name="ean13" value="'.htmlentities($this->getFieldValue($obj, 'ean13'), ENT_COMPAT, 'UTF-8').'" style="width: 130px; margin-right: 5px;" /> <span class="small">'.$this->l('(Europe, Japan)').'</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('UPC:').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="55" maxlength="12" type="text" name="upc" value="'.htmlentities($this->getFieldValue($obj, 'upc'), ENT_COMPAT, 'UTF-8').'" style="width: 130px; margin-right: 5px;" /> <span class="small">'.$this->l('(US, Canada)').'</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Location (warehouse):').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="55" type="text" name="location" value="'.htmlentities($this->getFieldValue($obj, 'location'), ENT_COMPAT, 'UTF-8').'" style="width: 130px; margin-right: 44px;" />
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Width ( package ) :').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="6" maxlength="6" name="width" type="text" value="'.htmlentities($this->getFieldValue($obj, 'width'), ENT_COMPAT, 'UTF-8').'" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" /> '.Configuration::get('PS_DIMENSION_UNIT').'
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Height ( package ) :').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="6" maxlength="6" name="height" type="text" value="'.htmlentities($this->getFieldValue($obj, 'height'), ENT_COMPAT, 'UTF-8').'" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" /> '.Configuration::get('PS_DIMENSION_UNIT').'
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Deep ( package ) :').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="6" maxlength="6" name="depth" type="text" value="'.htmlentities($this->getFieldValue($obj, 'depth'), ENT_COMPAT, 'UTF-8').'" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" /> '.Configuration::get('PS_DIMENSION_UNIT').'
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left">'.$this->l('Weight ( package ) :').'</td>
-						<td style="padding-bottom:5px;">
-							<input size="6" maxlength="6" name="weight" type="text" value="'.htmlentities($this->getFieldValue($obj, 'weight'), ENT_COMPAT, 'UTF-8').'" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\');" /> '.Configuration::get('PS_WEIGHT_UNIT').'
-						</td>
-					</tr>
-				</table>
-				<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
-					<tr>
-						<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Status:').'</td>
-						<td style="padding-bottom:5px;">
-							<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" '.($this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
-							<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" style="float:left; padding:0px 5px 0px 5px;" />'.$this->l('Enabled').'</label>
-							<br class="clear" />
-							<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" '.(!$this->getFieldValue($obj, 'active') ? 'checked="checked" ' : '').'/>
-							<label for="active_off" class="t"><img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" style="float:left; padding:0px 5px 0px 5px" />'.$this->l('Disabled').($obj->active ? '' : ' (<a href="'.$preview_url.'" alt="" target="_blank">'.$this->l('View product in shop').'</a>)').'</label>
-						</td>
-					</tr>
-					<tr id="shop_association">
-					<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;'.(!Shop::isFeatureActive() ? 'display:none;' : '').'">'.$this->l('Shop association:').'</td><td style="padding-bottom:5px;">';
-					$content .= $this->displayAssoShop();
-					$content .= '</td>
-					</tr>
-					<tr id="product_options" '.(!$obj->active ? 'style="display:none"' : '').'>
-						<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Options:').'</td>
-						<td style="padding-bottom:5px;">
-							<input style="float: left;" type="checkbox" name="available_for_order" id="available_for_order" value="1" '.($this->getFieldValue($obj, 'available_for_order') ? 'checked="checked" ' : '').' onclick="if ($(this).is(\':checked\')){$(\'#show_price\').attr(\'checked\', \'checked\');$(\'#show_price\').attr(\'disabled\', \'disabled\');}else{$(\'#show_price\').attr(\'disabled\', \'\');}"/>
-							<label for="available_for_order" class="t"><img src="../img/admin/products.gif" alt="'.$this->l('available for order').'" title="'.$this->l('available for order').'" style="float:left; padding:0px 5px 0px 5px" />'.$this->l('available for order').'</label>
-							<br class="clear" />
-							<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" '.($this->getFieldValue($obj, 'show_price') ? 'checked="checked" ' : '').' />
-							<label for="show_price" class="t"><img src="../img/admin/gold.gif" alt="'.$this->l('display price').'" title="'.$this->l('show price').'" style="float:left; padding:0px 5px 0px 5px" />'.$this->l('show price').'</label>
-							<br class="clear" />
-							<input style="float: left;" type="checkbox" name="online_only" id="online_only" value="1" '.($this->getFieldValue($obj, 'online_only') ? 'checked="checked" ' : '').' />
-							<label for="online_only" class="t"><img src="../img/admin/basket_error.png" alt="'.$this->l('online only').'" title="'.$this->l('online only').'" style="float:left; padding:0px 5px 0px 5px" />'.$this->l('online only (not sold in store)').'</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Condition:').'</td>
-						<td style="padding-bottom:5px;">
-							<select name="condition" id="condition">
-								<option value="new" '.($obj->condition == 'new' ? 'selected="selected"' : '').'>'.$this->l('New').'</option>
-								<option value="used" '.($obj->condition == 'used' ? 'selected="selected"' : '').'>'.$this->l('Used').'</option>
-								<option value="refurbished" '.($obj->condition == 'refurbished' ? 'selected="selected"' : '').'>'.$this->l('Refurbished').'</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Manufacturer:').'</td>
-						<td style="padding-bottom:5px;">
-							<select name="id_manufacturer" id="id_manufacturer">
-								<option value="0">-- '.$this->l('Choose (optional)').' --</option>';
-		if ($id_manufacturer = $this->getFieldValue($obj, 'id_manufacturer'))
-			$content .= '				<option value="'.$id_manufacturer.'" selected="selected">'.Manufacturer::getNameById($id_manufacturer).'</option>
-								<option disabled="disabled">----------</option>';
-		$content .= '
-							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminManufacturers&addmanufacturer&token='.Tools::getAdminToken('AdminManufacturers'.(int)(Tab::getIdFromClassName('AdminManufacturers')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete product information entered?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
-						</td>
-					</tr>
-					<tr>
-						<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">'.$this->l('Supplier:').'</td>
-						<td style="padding-bottom:5px;">
-							<select name="id_supplier" id="id_supplier">
-								<option value="0">-- '.$this->l('Choose (optional)').' --</option>';
-		if ($id_supplier = $this->getFieldValue($obj, 'id_supplier'))
-			$content .= '				<option value="'.$id_supplier.'" selected="selected">'.Supplier::getNameById($id_supplier).'</option>
-								<option disabled="disabled">----------</option>';
-		$content .= '
-							</select>&nbsp;&nbsp;&nbsp;<a href="?tab=AdminSuppliers&addsupplier&token='.Tools::getAdminToken('AdminSuppliers'.(int)(Tab::getIdFromClassName('AdminSuppliers')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a>
-						</td>
-					</tr>
-				</table>
-				<div class="clear"></div>
-				<table cellpadding="5" style="width: 100%;">
-					<tr><td colspan="2"><hr style="width:100%;" /></td></tr>';
-					$this->displayPack($obj);
-		$content .= '		<tr><td colspan="2"><hr style="width:100%;" /></td></tr>';
+		$smarty->assign('languages', $languages);
+		$smarty->assign('feature_shop_active', Shop::isFeatureActive());
+		$smarty->assign('displayAssoShop', $this->displayAssoShop());
+		
+		$product_props = array();
+		// global informations
+		array_push($product_props, 'reference', 'supplier_reference', 'ean13', 'upc', 'location',
+		'available_for_order', 'show_price', 'online_only',
+		'id_manufacturer', 'id_supplier'
+		);
+		
+		// specific / detailled information 
+		array_push($product_props, 
+		// physical product 
+		'width', 'height', 'weight', 'active',
+		// virtual product
+		'is_virtual', 'cache_default_attribute',
+		// customization
+		'uploadable_files', 'text_fields'
+		);
+		foreach($product_props as $prop)
+			$product->$prop = $this->getFieldValue($product, $prop);
+$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
+$product->supplier_name = Supplier::getNameById($product->id_supplier);
+
+		$smarty->assign('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT'));
+		$smarty->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
+		//$product->{'pack_info'} =	
+		$this->initPack($product);
 
 /*
  * Form for add a virtual product like software, mp3, etc...
  */
 	$productDownload = new ProductDownload();
-	if ($id_product_download = $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id')))
-		$productDownload = new ProductDownload($id_product_download);
+	if ($id_product_download = $productDownload->getIdFromIdProduct($this->getFieldValue($product, 'id')))
+		$product->{'product_download'} = new ProductDownload($id_product_download);
+
 	$this->displayInitInformationAndAttachment();
-		$content .= '
-			<script type="text/javascript" src="'._PS_JS_DIR_.'price.js"></script>
-			<script type="text/javascript">
-			var newLabel = \''.$this->l('New label').'\';
-			var choose_language = \''.$this->l('Choose language:').'\';
-			var required = \''.$this->l('required').'\';
-			var customizationUploadableFileNumber = '.(int) $this->getFieldValue($obj, 'uploadable_files').';
-			var customizationTextFieldNumber = '.(int) $this->getFieldValue($obj, 'text_fields').';
-			var uploadableFileLabel = 0;
-			var textFieldLabel = 0;
-		</script>
-	<tr>
-		<td colspan="2">
+	// price.js is used in information 
+	$this->addJs(_PS_JS_DIR_.'price.js');
 
-			<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" onclick="toggleVirtualProduct(this);" '.$check.' />
-			<label for="is_virtual_good" class="t bold" style="color: black;">'.$this->l('Is this a virtual product?').'</label></p>
-			<div id="virtual_good" '.$hidden.'>
-			<input type="hidden" id="is_virtual" name="is_virtual" value="'.$virtual.'" />
-			<br/>'.$this->l('Does this product has an associated file ?').'<br/>';
-
-			// todo handle is_virtual with the value of the product
-			$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
-
-			if ($productDownload->id && !empty($cache_default_attribute) && !empty($productDownload->display_filename))
+				// todo handle is_virtual with the value of the product
+				$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
+				$smarty->assign('product_downloaded', 
+				$product->productDownload->id 
+				// it seems the following is not used
+				// && !empty($product->cache_default_attribute) 
+				&& !empty($product->productDownload->display_filename));
+			if (!file_exists($exists_file) 
+				&& !empty($product->productDownload->display_filename) 
+				&& !empty($product->cache_default_attribute))
 			{
-				$check_yes = 'checked="checked"';
-				$check_no = '';
+
+				$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
 			}
 			else
+				$msg = '';
+
+			$smarty->assign('download_product_file_missing', $msg);
+			$smarty->assign('download_dir_writable', ProductDownload::checkWritableDir());
+
+			if (empty($product->cache_default_attribute))
 			{
-				$check_yes = '';
-				$check_no = 'checked="checked"';
-			}
-
-			$content .= '<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" '.$check_yes.'/>'. $this->l('Yes').'
-			<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" '.$check_no.'/>'.$this->l('No').'<br /><br />';
-
-			if (!file_exists($exists_file) && !empty($productDownload->display_filename) && empty($cache_default_attribute))
-			{
-				$msg = sprintf(Tools::displayError('This file "%s" is missing'), $productDownload->display_filename);
-				$content .= '<p class="alert" id="file_missing">
-					<b>'.$msg.' :<br/>
-					'.realpath(_PS_DOWNLOAD_DIR_) .'/'. $productDownload->filename.'</b>
-				</p>';
-			}
-
-			if (!ProductDownload::checkWritableDir())
-			{
-				$content .= '<p class="alert">
-					'.$this->l('Your download repository is not writable.').'<br/>
-					'.realpath(_PS_DOWNLOAD_DIR_).'
-				</p>';
-			}
-
-			$content .= '<div id="is_virtual_file_product" style="display:none;">';
-			if (empty($cache_default_attribute))
-			{
-				if($productDownload->id)
-					$content .= '<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="'.$productDownload->id.'" />';
-
-					$content .= '<p class="block">';
-
-					if (!$productDownload->checkFile())
-					{
-						$content .= '<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
-						<p>'.$this->l('Your server\'s maximum upload file size is') . ':&nbsp;' . ini_get('upload_max_filesize').'</p>';
-						if (!strval(Tools::getValue('virtual_product_filename')) OR $productDownload->id > 0)
-						{
-							$content .= '<label id="virtual_product_file_label" for="virtual_product_file" class="t">'.$this->l('Upload a file').'</label>
-							<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="'.$this->maxFileSize.'" /></p>';
-						}
-
-						$content .= '<div id="upload-confirmation">';
+					$smarty->assign('show_file_input', !strval(Tools::getValue('virtual_product_filename')) OR $product->productDownload->id > 0);
 						// found in informations and combination : to merge
 						$smarty->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
-							if ($up_filename = strval(Tools::getValue('virtual_product_filename')))
-								$content .= '<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="'.$up_filename.'" />';
+					$display_filename = ($product->productDownload->id > 0) ? $product->productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
 
-						$content .= '</div>
-							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true'.'" class="red">'.$this->l('Delete this file').'</a>';
-					}
-					else
-					{
-						$content .= '<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="'.$productDownload->filename.'" />
-						'.$this->l('This is the link').':&nbsp;'.$productDownload->getHtmlLink(false, true).'
-						<a onclick="return confirm(\''.addslashes($this->l('Delete this file')).'\')" href="'.$_SERVER['REQUEST_URI'].'&deleteVirtualProduct=true'.'" class="red">'.$this->l('Delete this file').'</a>';
-					}
-
-					$display_filename = ($productDownload->id > 0) ? $productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
-					$content .= '</p><p class="block">
-						<label for="virtual_product_name" class="t">'.$this->l('Filename').'</label>
-						<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="'.$display_filename.'" />
-						<span class="hint" name="help_box" style="display:none;">'.$this->l('The full filename with its extension (e.g., Book.pdf)').'</span>
-					</p>
-
-					</div>';
-
-					if (!$productDownload->id || !$productDownload->active)
+					if (!$product->productDownload->id || !$product->productDownload->active)
 						$hidden = 'display:none;';
+					else $hidden ='';
 
-					$nb_downloadable = ($productDownload->id > 0) ? $productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
-					$date_expiration = ($productDownload->id > 0) ? ((!empty($productDownload->date_expiration) && $productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
-					$nb_days_accessible = ($productDownload->id > 0) ? $productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
-					$is_shareable = ($productDownload->id > 0 && $productDownload->is_shareable) ? 'checked="checked"' : '';
-
-					$content .= '<div id="virtual_good_more" style="'.$hidden.'padding:5px;width:40%;float:left;margin-left:10px">
-							<p class="block">
-								<label for="virtual_product_nb_downloable" class="t">'.$this->l('Number of downloads').'</label>
-								<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="'.$nb_downloadable.'" class="" size="6" />
-								<span class="hint" name="help_box" style="display:none">'.$this->l('Number of authorized downloads per customer').'</span>
-							</p>
-							<p class="block">
-								<label for="virtual_product_expiration_date" class="t">'.$this->l('Expiration date').'</label>
-								<input type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="'.$date_expiration.'" size="11" maxlength="10" autocomplete="off" /> '.$this->l('Format: YYYY-MM-DD').'
-								<span class="hint" name="help_box" style="display:none">'.$this->l('No expiration date if you leave this blank').'</span>
-							</p>
-							<p class="block">
-								<label for="virtual_product_nb_days" class="t">'.$this->l('Number of days').'</label>
-								<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="'.$nb_days_accessible.'" class="" size="4" /><sup> *</sup>
-								<span class="hint" name="help_box" style="display:none">'.$this->l('How many days this file can be accessed by customers').' - <em>('.$this->l('set to zero for unlimited access').')</em></span>
-							</p>
-							<p class="block">
-								<label for="virtual_product_is_shareable" class="t">'.$this->l('is shareable').'</label>
-								<input type="checkbox" id="virtual_product_is_shareable" name="virtual_product_is_shareable" value="1" '.$is_shareable.'/>
-								<span class="hint" name="help_box" style="display:none">'.$this->l('Specify if the file can be shared').'</span>
-							</p>
-					</div>
-				';
+					$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
+					$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
+					$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
+					$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
 			}
 			else
 			{
 				$error ='';
-				$content .= '<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You used combinations, for this reason you can\'t edit your file here, but in the Combinations tab').'</div>
-				<br />';
-				$product_attribute = ProductDownload::getAttributeFromIdProduct($this->getFieldValue($obj, 'id'));
-				foreach ($product_attribute as $product)
+				$product_attribute = ProductDownload::getAttributeFromIdProduct($this->getFieldValue($product, 'id'));
+				foreach ($product_attribute as $p)
 				{
-					$productDownloadAttribute = new ProductDownload($product['id_product_download']);
+					$productDownloadAttribute = new ProductDownload($p['id_product_download']);
 					$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownloadAttribute->filename;
 					if (!file_exists($exists_file2) && !empty($productDownloadAttribute->id_product_attribute))
 					{
@@ -2572,66 +2398,15 @@ switch ($this->action)
 						</p>';
 					}
 				}
-				$content .= $error;
+				$smarty->assign('error_product_download', $error);
 			}
-			$content .= '</div>
-			</div>
-		</td>
-	</tr>';
 
 	$currency = $this->context->currency;
-	$content .= '<tr>
-				<td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td>
-		 </tr>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				if ($("#is_virtual_good").attr("checked"))
-				{
-					$("#virtual_good").show("slow");
-					$("#virtual_good_more").show("slow");
-				}
-
-				if ( $("input[name=is_virtual_file]:checked").val() == 1)
-				{
-					$("#virtual_good_attributes").show();
-					$("#is_virtual_file_product").show();
-				}
-				else
-				{
-					$("#virtual_good_attributes").hide();
-					$("#is_virtual_file_product").hide();
-				}
-
-				$("input[name=is_virtual_file]").live("change", function() {
-					if($(this).val() == "1")
-					{
-						$("#virtual_good_attributes").show();
-						$("#is_virtual_file_product").show();
-					}
-					else
-					{
-						$("#virtual_good_attributes").hide();
-						$("#is_virtual_file_product").hide();
-					}
-				});
-
-				$("input[name=is_virtual_good]").live("change", function() {
-					if($(this).attr("checked"))
-					{
-						$("#is_virtual").val(1);
-					}
-					else
-					{
-						$("#is_virtual").val(0);
-					}
-				});
-			});
-		</script>';
 					$content .= '
 					<tr>
 						<td class="col-left">'.$this->l('Pre-tax wholesale price:').'</td>
 						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" name="wholesale_price" type="text" value="'.htmlentities($this->getFieldValue($obj, 'wholesale_price'), ENT_COMPAT, 'UTF-8').'" onchange="this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
+							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" name="wholesale_price" type="text" value="'.htmlentities($this->getFieldValue($product, 'wholesale_price'), ENT_COMPAT, 'UTF-8').'" onchange="this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							<span style="margin-left:10px">'.$this->l('The wholesale price at which you bought this product').'</span>
 						</td>
 					</tr>';
@@ -2639,7 +2414,7 @@ switch ($this->action)
 					<tr>
 						<td class="col-left">'.$this->l('Pre-tax retail price:').'</td>
 						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="'.$this->getFieldValue($obj, 'price').'" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<sup> *</sup>
+							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="'.$this->getFieldValue($product, 'price').'" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<sup> *</sup>
 							<span style="margin-left:2px">'.$this->l('The pre-tax retail price to sell this product').'</span>
 						</td>
 					</tr>';
@@ -2668,16 +2443,16 @@ switch ($this->action)
 					     <option value="0">'.$this->l('No Tax').'</option>';
 
 						foreach ($tax_rules_groups as $tax_rules_group)
-							$content .= '<option value="'.$tax_rules_group['id_tax_rules_group'].'" '.(($this->getFieldValue($obj, 'id_tax_rules_group') == $tax_rules_group['id_tax_rules_group']) ? ' selected="selected"' : '').'>'.Tools::htmlentitiesUTF8($tax_rules_group['name']).'</option>';
+							$content .= '<option value="'.$tax_rules_group['id_tax_rules_group'].'" '.(($this->getFieldValue($product, 'id_tax_rules_group') == $tax_rules_group['id_tax_rules_group']) ? ' selected="selected"' : '').'>'.Tools::htmlentitiesUTF8($tax_rules_group['name']).'</option>';
 
 				$content .= '</select>
 
-				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)$this->context->employee->id).'&id_product='.(int)$obj->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
+				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)$this->context->employee->id).'&id_product='.(int)$product->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
 				';
 				if (Tax::excludeTaxeOption())
 				{
 					$content .= '<span style="margin-left:10px; color:red;">'.$this->l('Taxes are currently disabled').'</span> (<b><a href="index.php?tab=AdminTaxes&token='.Tools::getAdminToken('AdminTaxes'.(int)(Tab::getIdFromClassName('AdminTaxes')).(int)$this->context->employee->id).'">'.$this->l('Tax options').'</a></b>)';
-					$content .= '<input type="hidden" value="'.(int)($this->getFieldValue($obj, 'id_tax_rules_group')).'" name="id_tax_rules_group" />';
+					$content .= '<input type="hidden" value="'.(int)($this->getFieldValue($product, 'id_tax_rules_group')).'" name="id_tax_rules_group" />';
 				}
 
 				$content .= '</td>
@@ -2688,7 +2463,7 @@ switch ($this->action)
 					<tr>
 						<td class="col-left">'.$this->l('Eco-tax (tax incl.):').'</td>
 						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="'.$this->getFieldValue($obj, 'ecotax').'" onkeyup="if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, \'.\'); if (parseInt(this.value) > getE(\'priceTE\').value) this.value = getE(\'priceTE\').value; if (isNaN(this.value)) this.value = 0;" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
+							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="'.$this->getFieldValue($product, 'ecotax').'" onkeyup="if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, \'.\'); if (parseInt(this.value) > getE(\'priceTE\').value) this.value = getE(\'priceTE\').value; if (isNaN(this.value)) this.value = 0;" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							<span style="margin-left:10px">('.$this->l('already included in price').')</span>
 						</td>
 					</tr>';
@@ -2710,15 +2485,15 @@ switch ($this->action)
 					<tr id="tr_unit_price">
 						<td class="col-left">'.$this->l('Unit price without tax:').'</td>
 						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="'.($this->getFieldValue($obj, 'unit_price_ratio') != 0 ? Tools::ps_round($this->getFieldValue($obj, 'price') / $this->getFieldValue($obj, 'unit_price_ratio'), 2) : 0).'" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); unitPriceWithTax(\'unit\');"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <input size="6" maxlength="10" id="unity" name="unity" type="text" value="'.htmlentities($this->getFieldValue($obj, 'unity'), ENT_QUOTES, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>'.
-							(Configuration::get('PS_TAX') && $this->context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($obj, 'unity').'</span> '.$this->l('with tax') : '').'</span>
+							'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="'.($this->getFieldValue($product, 'unit_price_ratio') != 0 ? Tools::ps_round($this->getFieldValue($product, 'price') / $this->getFieldValue($product, 'unit_price_ratio'), 2) : 0).'" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); unitPriceWithTax(\'unit\');"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <input size="6" maxlength="10" id="unity" name="unity" type="text" value="'.htmlentities($this->getFieldValue($product, 'unity'), ENT_QUOTES, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>'.
+							(Configuration::get('PS_TAX') && $this->context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($product, 'unity').'</span> '.$this->l('with tax') : '').'</span>
 							<p>'.$this->l('Eg. $15 per Lb').'</p>
 						</td>
 					</tr>
 					<tr>
 						<td class="col-left">&nbsp;</td>
 						<td style="padding-bottom:5px;">
-							<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" '.($this->getFieldValue($obj, 'on_sale') ? 'checked="checked"' : '').'value="1" />&nbsp;<label for="on_sale" class="t">'.$this->l('Display "on sale" icon on product page and text on product listing').'</label>
+							<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" '.($this->getFieldValue($product, 'on_sale') ? 'checked="checked"' : '').'value="1" />&nbsp;<label for="on_sale" class="t">'.$this->l('Display "on sale" icon on product page and text on product listing').'</label>
 						</td>
 					</tr>
 					<tr>
@@ -2752,7 +2527,7 @@ switch ($this->action)
 							<tr>
 							<td class="col-left">'.$this->l('Minimum quantity:').'</td>
 								<td style="padding-bottom:5px;">
-									<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
+									<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1).'" />
 									<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
 								</td>
 							</tr>';
@@ -2784,7 +2559,7 @@ switch ($this->action)
 					<tr>
 						<td class="col-left">'.$this->l('Additional shipping cost:').'</td>
 						<td style="padding-bottom:5px;">
-							<input type="text" name="additional_shipping_cost" value="'.($this->getFieldValue($obj, 'additional_shipping_cost')).'" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
+							<input type="text" name="additional_shipping_cost" value="'.($this->getFieldValue($product, 'additional_shipping_cost')).'" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
 							if ($this->context->country->display_tax_label)
 								$content .= ' ('.$this->l('tax excl.').')';
 
@@ -2797,7 +2572,7 @@ switch ($this->action)
 		foreach ($this->_languages as $language)
 			$content .= '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 								<input size="30" type="text" id="available_now_'.$language['id_lang'].'" name="available_now_'.$language['id_lang'].'"
-								value="'.stripslashes(htmlentities($this->getFieldValue($obj, 'available_now', $language['id_lang']), ENT_COMPAT, 'UTF-8')).'" />
+								value="'.stripslashes(htmlentities($this->getFieldValue($product, 'available_now', $language['id_lang']), ENT_COMPAT, 'UTF-8')).'" />
 								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 							</div>';
 		$content .= '			</td>
@@ -2808,7 +2583,7 @@ switch ($this->action)
 		foreach ($this->_languages as $language)
 			$content .= '		<div  class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 								<input size="30" type="text" id="available_later_'.$language['id_lang'].'" name="available_later_'.$language['id_lang'].'"
-								value="'.stripslashes(htmlentities($this->getFieldValue($obj, 'available_later', $language['id_lang']), ENT_COMPAT, 'UTF-8')).'" />
+								value="'.stripslashes(htmlentities($this->getFieldValue($product, 'available_later', $language['id_lang']), ENT_COMPAT, 'UTF-8')).'" />
 								<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 							</div>';
 			$content .= '	</td>
@@ -2816,7 +2591,7 @@ switch ($this->action)
 
 			// Check if product has combination, to display the available date only for the product or for each combination
 			if (Combination::isFeatureActive())
-				$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id);
+				$countAttributes = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product->id);
 
 			if (isset($countAttributes) && $countAttributes == 0)
 			{
@@ -2824,7 +2599,7 @@ switch ($this->action)
 						<tr>
 							<td class="col-left">'.$this->l('Available date:').'</td>
 							<td style="padding-bottom:5px;">
-							<input id="available_date" name="available_date" value="'.(($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
+							<input id="available_date" name="available_date" value="'.(($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
 								<p>'.$this->l('The available date when this product is out of stock').'</p>
 						</td>
 						</tr>';
@@ -2839,9 +2614,9 @@ switch ($this->action)
 					<tr>
 						<td class="col-left">'.$this->l('When out of stock:').'</td>
 						<td style="padding-bottom:5px;">
-							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0" '.((int)($this->getFieldValue($obj, 'out_of_stock')) == 0 ? 'checked="checked"' : '').'/> <label for="out_of_stock_1" class="t" id="label_out_of_stock_1">'.$this->l('Deny orders').'</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" '.($this->getFieldValue($obj, 'out_of_stock') == 1 ? 'checked="checked"' : '').'/> <label for="out_of_stock_2" class="t" id="label_out_of_stock_2">'.$this->l('Allow orders').'</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($obj, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$this->context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
+							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0" '.((int)($this->getFieldValue($product, 'out_of_stock')) == 0 ? 'checked="checked"' : '').'/> <label for="out_of_stock_1" class="t" id="label_out_of_stock_1">'.$this->l('Deny orders').'</label>
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" '.($this->getFieldValue($product, 'out_of_stock') == 1 ? 'checked="checked"' : '').'/> <label for="out_of_stock_2" class="t" id="label_out_of_stock_2">'.$this->l('Allow orders').'</label>
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" '.($this->getFieldValue($product, 'out_of_stock') == 2 ? 'checked="checked"' : '').'/> <label for="out_of_stock_3" class="t" id="label_out_of_stock_3">'.$this->l('Default:').' <i>'.$this->l(((int)(Configuration::get('PS_ORDER_OUT_OF_STOCK')) ? 'Allow orders' : 'Deny orders')).'</i> ('.$this->l('as set in').' <a href="index.php?tab=AdminPPreferences&token='.Tools::getAdminToken('AdminPPreferences'.(int)(Tab::getIdFromClassName('AdminPPreferences')).(int)$this->context->employee->id).'"  onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');">'.$this->l('Preferences').'</a>)</label>
 						</td>
 					</tr>
 					<tr>
@@ -2857,7 +2632,7 @@ switch ($this->action)
 							var post_selected_cat;
 						</script>';
 						$default_category = Tools::getValue('id_category', 1);
-						if (!$obj->id)
+						if (!$product->id)
 						{
 							$selectedCat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->_defaultFormLanguage);
 							$content .= '
@@ -2870,12 +2645,12 @@ switch ($this->action)
 							if (Tools::isSubmit('categoryBox'))
 								$selectedCat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->_defaultFormLanguage);
 							else
-							$selectedCat = Product::getProductCategoriesFull($obj->id, $this->_defaultFormLanguage);
+							$selectedCat = Product::getProductCategoriesFull($product->id, $this->_defaultFormLanguage);
 						}
 
 						$content .= '<select id="id_category_default" name="id_category_default">';
 							foreach ($selectedCat as $cat)
-								$content .= '<option value="'.$cat['id_category'].'" '.($obj->id_category_default == $cat['id_category'] ? 'selected' : '').'>'.$cat['name'].'</option>';
+								$content .= '<option value="'.$cat['id_category'].'" '.($product->id_category_default == $cat['id_category'] ? 'selected' : '').'>'.$cat['name'].'</option>';
 						$content .= '</select>
 						</td>
 					</tr>
@@ -2906,7 +2681,7 @@ switch ($this->action)
 		foreach ($this->_languages as $language)
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_title_'.$language['id_lang'].'" name="meta_title_'.$language['id_lang'].'"
-											value="'.htmlentities($this->getFieldValue($obj, 'meta_title', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
+											value="'.htmlentities($this->getFieldValue($product, 'meta_title', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
 											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		$content .= '						<p class="clear">'.$this->l('Product page title; leave blank to use product name').'</p>
@@ -2918,7 +2693,7 @@ switch ($this->action)
 		foreach ($this->_languages as $language)
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_description_'.$language['id_lang'].'" name="meta_description_'.$language['id_lang'].'"
-											value="'.htmlentities($this->getFieldValue($obj, 'meta_description', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
+											value="'.htmlentities($this->getFieldValue($product, 'meta_description', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
 											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		$content .= '						<p class="clear">'.$this->l('A single sentence for HTML header').'</p>
@@ -2930,7 +2705,7 @@ switch ($this->action)
 		foreach ($this->_languages as $language)
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="meta_keywords_'.$language['id_lang'].'" name="meta_keywords_'.$language['id_lang'].'"
-											value="'.htmlentities($this->getFieldValue($obj, 'meta_keywords', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
+											value="'.htmlentities($this->getFieldValue($product, 'meta_keywords', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" />
 											<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		$content .= '						<p class="clear">'.$this->l('Keywords for HTML header, separated by a comma').'</p>
@@ -2943,7 +2718,7 @@ switch ($this->action)
 		{
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 											<input size="55" type="text" id="link_rewrite_'.$language['id_lang'].'" name="link_rewrite_'.$language['id_lang'].'"
-											value="'.htmlentities($this->getFieldValue($obj, 'link_rewrite', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();" onchange="updateFriendlyURL();" /><sup> *</sup>
+											value="'.htmlentities($this->getFieldValue($product, 'link_rewrite', $language['id_lang']), ENT_COMPAT, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();" onchange="updateFriendlyURL();" /><sup> *</sup>
 											<span class="hint" name="help_box">'.$this->l('Only letters and the "less" character are allowed').'<span class="hint-pointer">&nbsp;</span></span>
 										</div>';
 		}
@@ -2960,7 +2735,7 @@ switch ($this->action)
 						<td style="padding-bottom:5px;" class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
-								<textarea class="rte" cols="100" rows="10" id="description_short_'.$language['id_lang'].'" name="description_short_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($obj, 'description_short', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
+								<textarea class="rte" cols="100" rows="10" id="description_short_'.$language['id_lang'].'" name="description_short_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($product, 'description_short', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
 							</div>';
 		$content .= '<p class="clear"></p>
 			</td>
@@ -2970,12 +2745,12 @@ switch ($this->action)
 						<td style="padding-bottom:5px;" class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
-								<textarea class="rte" cols="100" rows="20" id="description_'.$language['id_lang'].'" name="description_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($obj, 'description', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
+								<textarea class="rte" cols="100" rows="20" id="description_'.$language['id_lang'].'" name="description_'.$language['id_lang'].'">'.htmlentities(stripslashes($this->getFieldValue($product, 'description', $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
 							</div>';
 		$content .= '<p class="clear"></p>
 					</td>
 					</tr>';
-				$images = Image::getImages($this->context->language->id, $obj->id);
+				$images = Image::getImages($this->context->language->id, $product->id);
 				if ($images)
 				{
 					$content .= '
@@ -2999,7 +2774,7 @@ switch ($this->action)
 												$content .= '
 													<li>
 														<input type="radio" name="smallImage" id="smallImage_'.$key.'" value="'.$image['id_image'].'" '.$checked.'>';
-												$urlImage = $this->context->link->getImageLink($obj->link_rewrite[$this->context->language->id], $obj->id.'-'.$image['id_image'], 'small');
+												$urlImage = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small');
 												$content .= '
 														<label for="smallImage_'.$key.'" class="t"><img src="'.$urlImage.'" alt="'.$image['legend'].'" /></label>
 													</li>';
@@ -3083,20 +2858,20 @@ switch ($this->action)
 					<tr>
 						<td class="col-left">'.$this->l('Tags:').'</td>
 						<td style="padding-bottom:5px;" class="translatable">';
-				if ($obj->id)
-					$obj->tags = Tag::getProductTags((int)$obj->id);
+				if ($product->id)
+					$product->tags = Tag::getProductTags((int)$product->id);
 				foreach ($this->_languages as $language)
 				{
 					$content .= '<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
 							<input size="55" type="text" id="tags_'.$language['id_lang'].'" name="tags_'.$language['id_lang'].'"
-							value="'.htmlentities(Tools::getValue('tags_'.$language['id_lang'], $obj->getTags($language['id_lang'], true)), ENT_COMPAT, 'UTF-8').'" />
+							value="'.htmlentities(Tools::getValue('tags_'.$language['id_lang'], $product->getTags($language['id_lang'], true)), ENT_COMPAT, 'UTF-8').'" />
 							<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' !<>;?=+#"&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
 						  </div>';
 				}
 				$content .= '	<p class="clear">'.$this->l('Tags separated by commas (e.g., dvd, dvd player, hifi)').'</p>
 						</td>
 					</tr>';
-				$accessories = Product::getAccessoriesLight($this->context->language->id, $obj->id);
+				$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
 
 				if ($postAccessories = Tools::getValue('inputAccessories'))
 				{
@@ -3160,7 +2935,7 @@ switch ($this->action)
 
 								function getAccessorieIds()
 								{
-									var ids = '. $obj->id.'+\',\';
+									var ids = '. $product->id.'+\',\';
 									ids += $(\'#inputAccessories\').val().replace(/\\-/g,\',\').replace(/\\,$/,\'\');
 									ids = ids.replace(/\,$/,\'\');
 
@@ -3195,6 +2970,8 @@ switch ($this->action)
 					unitPriceWithTax(\'unit\');
 			</script>';
 		$categoryBox = Tools::getValue('categoryBox', array());
+
+		$smarty->assign('product', $product);
 		$smarty->assign('content', $content);
 		$this->content = $this->context->smarty->fetch('products/informations.tpl');
 	}
@@ -3662,18 +3439,17 @@ switch ($this->action)
 		$smarty->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
-		$productDownload = new ProductDownload();
-		$id_product_download = (int) $productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
+		$product->productDownload = new ProductDownload();
+		$id_product_download = (int) $product->productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
 		if (!empty($id_product_download))
-			$productDownload = new ProductDownload($id_product_download);
+			$product->productDownload = new ProductDownload($id_product_download);
 
-		$smarty->assign('productDownload', $productDownload);
+	//	$smarty->assign('productDownload', $productDownload);
 		$smarty->assign('currency', $currency);
 
 		$images = Image::getImages($this->context->language->id, $obj->id);
 		if ($obj->id)
 		{
-			$smarty->assign('upload_max_filesize', ini_get('upload_max_filesize'));
 			$smarty->assign('tax_exclude_option', Tax::excludeTaxeOption());
 			$smarty->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
 
@@ -3982,190 +3758,52 @@ switch ($this->action)
 		return false;
 	}
 
-	private function displayPack(Product $obj)
+	private function initPack(Product $product)
 	{
-		$boolPack = (($obj->id && Pack::isPack($obj->id)) || Tools::getValue('ppack')) ? true : false;
-		$packItems = $boolPack ? Pack::getItems($obj->id, $this->context->language->id) : array();
+		$smarty = $this->context->smarty;
+		$smarty->assign('is_pack', ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack'));
+		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
+		
+		$input_pack_items = '';
+		if(Tools::getValue('inputPackItems'))
+			$input_pack_items = Tools::getValue('inputPackItems');
+		else
+			foreach ($product->packItems as $packItem)
+				$input_pack_items .= $packItem->pack_quantity.'x'.$packItem->id.'-';
+		$smarty->assign('input_pack_items',$input_pack_items);
 
-		$this->content .= '
-		<tr>
-			<td>
-				<input type="checkbox" name="ppack" id="ppack" value="1"'.($boolPack ? ' checked="checked"' : '').' onclick="$(\'#ppackdiv\').slideToggle();" />
-				<label class="t" for="ppack">'.$this->l('Pack').'</label>
-			</td>
-			<td>
-				<div id="ppackdiv" '.($boolPack ? '' : ' style="display: none;"').'>
-					<div id="divPackItems">';
-		foreach ($packItems as $packItem)
-			$this->content .= $packItem->pack_quantity.' x '.$packItem->name.'<span onclick="delPackItem('.$packItem->id.');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
-		$this->content .= '		</div>
-					<input type="hidden" name="inputPackItems" id="inputPackItems" value="';
-					if (Tools::getValue('inputPackItems'))
-						$this->content .= Tools::getValue('inputPackItems');
-					else
-						foreach ($packItems as $packItem)
-							$this->content .= $packItem->pack_quantity.'x'.$packItem->id.'-';
-					$this->content .= '" />
-					<input type="hidden" name="namePackItems" id="namePackItems" value="';
-					if (Tools::getValue('namePackItems'))
-						$this->content .= Tools::getValue('namePackItems');
-					else
-					foreach ($packItems as $packItem)
-						$this->content .= $packItem->pack_quantity.' x '.$packItem->name.'¤';
-					$this->content .= '" />
-					<input type="hidden" size="2" id="curPackItemId" />
-
-					<p class="clear">'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'
-					<br />'.$this->l('You cannot add downloadable products to a pack.').'</p>
-					<input type="text" size="25" id="curPackItemName" />
-					<input type="text" name="curPackItemQty" id="curPackItemQty" value="1" size="1" />
-					<script language="javascript">
-					'.$this->addPackItem().'
-					'.$this->delPackItem().'
-
-					</script>
-					<span onclick="addPackItem();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="'.$this->l('Add an item to the pack').'" title="'.$this->l('Add an item to the pack').'" /></span>
-				</td>
-			</div>
-		</tr>';
-		// param multipleSeparator:'||' ajouté à cause de bug dans lib autocomplete
-		$this->content .= '<script type="text/javascript">
-								urlToCall = null;
-								/* function autocomplete */
-								function getSelectedIds()
-								{
-									// input lines QTY x ID-
-									var ids = '. $obj->id.'+\',\';
-									ids += $(\'#inputPackItems\').val().replace(/\\d+x/g, \'\').replace(/\-/g,\',\');
-									ids = ids.replace(/\,$/,\'\');
-
-									return ids;
-
-								}
-
-								$(function() {
-									$(\'#curPackItemName\')
-										.autocomplete(\'ajax_products_list.php\', {
-											delay: 100,
-											minChars: 1,
-											autoFill: true,
-											max:20,
-											matchContains: true,
-											mustMatch:true,
-											scroll:false,
-											cacheLength:0,
-											multipleSeparator:\'||\',
-											formatItem: function(item) {
-												return item[1]+\' - \'+item[0];
-											}
-										}).result(function(event, item){
-											$(\'#curPackItemId\').val(item[1]);
-										});
-										$(\'#curPackItemName\').setOptions({
-											extraParams: {excludeIds : getSelectedIds(), excludeVirtuals : 1}
-										});
-
-								});
-			</script>';
-
+		$input_namepack_items = '';
+		if (Tools::getValue('namePackItems'))
+			$input_namepack_items = Tools::getValue('namePackItems');
+		else
+			foreach ($product->packItems as $packItem)
+				$input_namepack_items.= $packItem->pack_quantity.' x '.$packItem->name.'¤';
+		$smarty->assign('input_namepack_items',$input_namepack_items);
 	}
 
-	private function addPackItem()
-	{
-		return '
-			function addPackItem()
-			{
-				if ($(\'#curPackItemId\').val() == \'\' || $(\'#curPackItemName\').val() == \'\')
-				{
-					alert(\''.$this->l('Thanks to select at least one product.').'\');
-					return false;
-				}
-				else if ($(\'#curPackItemId\').val() == \'\' || $(\'#curPackItemQty\').val() == \'\')
-				{
-					alert(\''.$this->l('Thanks to set a quantity to add a product.').'\');
-					return false;
-				}
 
-			var lineDisplay = $(\'#curPackItemQty\').val()+ \'x \' +$(\'#curPackItemName\').val();
-
-			var divContent = $(\'#divPackItems\').html();
-			divContent += lineDisplay;
-			divContent += \'<span onclick="delPackItem(\' + $(\'#curPackItemId\').val() + \');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />\';
-
-			// QTYxID-QTYxID
-			var line = $(\'#curPackItemQty\').val()+ \'x\' +$(\'#curPackItemId\').val();
-
-
-			$(\'#inputPackItems\').val($(\'#inputPackItems\').val() + line  + \'-\');
-			$(\'#divPackItems\').html(divContent);
-				$(\'#namePackItems\').val($(\'#namePackItems\').val() + lineDisplay + \'Â¤\');
-
-			$(\'#curPackItemId\').val(\'\');
-			$(\'#curPackItemName\').val(\'\');
-
-			$(\'#curPackItemName\').setOptions({
-				extraParams: {excludeIds :  getSelectedIds()}
-			});
-			}
-		';
-	}
-
-	private function delPackItem()
-	{
-		return '
-		function delPackItem(id)
-		{
-			var reg = new RegExp(\'-\', \'g\');
-			var regx = new RegExp(\'x\', \'g\');
-
-			var div = getE(\'divPackItems\');
-			var input = getE(\'inputPackItems\');
-			var name = getE(\'namePackItems\');
-			var select = getE(\'curPackItemId\');
-			var select_quantity = getE(\'curPackItemQty\');
-
-			var inputCut = input.value.split(reg);
-			var nameCut = name.value.split(new RegExp(\'¤\', \'g\'));
-
-			input.value = \'\';
-			name.value = \'\';
-			div.innerHTML = \'\';
-
-			for (var i = 0; i < inputCut.length; ++i)
-				if (inputCut[i])
-				{
-					var inputQty = inputCut[i].split(regx);
-					if (inputQty[1] != id)
-					{
-						input.value += inputCut[i] + \'-\';
-						name.value += nameCut[i] + \'¤\';
-						div.innerHTML += nameCut[i] + \' <span onclick="delPackItem(\' + inputQty[1] + \');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />\';
-					}
-				}
-
-			$(\'#curPackItemName\').setOptions({
-				extraParams: {excludeIds :  getSelectedIds()}
-			});
-		}';
-	}
 
 	public function updatePackItems($product)
 	{
 		Pack::deleteItems($product->id);
 
 		// lines format: QTY x ID-QTY x ID
-		if (Tools::getValue('ppack') && $items = Tools::getValue('inputPackItems') && sizeof($lines = array_unique(explode('-', $items))))
+		if (Tools::getValue('ppack'))
 		{
-			foreach ($lines as $line)
-			{
-				// line format QTY x ID
-				list($qty, $item_id) = explode('x', $line);
-				if ($qty > 0 && isset($item_id))
-				{
-					if (!Pack::addItem((int)($product->id), (int)($item_id), (int)($qty)))
-						return false;
-				}
-			}
+			$items = Tools::getValue('inputPackItems');
+			$lines = array_unique(explode('-', $items));
+			// lines is an array of string with format : QTYxID
+			if(count($lines))
+				foreach ($lines as $line)
+					if (!empty($line))
+					{
+						list($qty, $item_id) = explode('x', $line);
+						if ($qty > 0 && isset($item_id))
+						{
+							if (!Pack::addItem((int)($product->id), (int)($item_id), (int)($qty)))
+							return false;
+						}
+					}
 		}
 		return true;
 	}
@@ -4210,6 +3848,7 @@ switch ($this->action)
 
 		$this->displayErrors();
 	}
+
 	public function displayInitInformationAndAttachment()
 	{
 		$this->addJqueryPlugin('thickbox');

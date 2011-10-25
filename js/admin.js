@@ -101,6 +101,7 @@ function strToAltImgAttr(str,encoding,ucfirst)
 function copy2friendlyURL()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
+	return;
 }
 
 function copyMeta2friendlyURL()
@@ -927,3 +928,24 @@ function showErrorMessage(msg)
 	$("#ajax_confirmation").show()
 	.html("<div class=\"error\"><img src=\"../img/admin/error.png\" alt=\"ERROR\" />"+msg+"</div>");
 }
+
+$(document).ready(function(){
+	$(".copy2friendlyURL").live('keyup',function(e){
+		if(!isArrowKey(e))
+			return copy2friendlyURL()
+	});
+	
+	// on live will make this binded for dynamic content
+	$(".updateCurrentText").live('keyup change',function(e){
+		if(typeof e == KeyboardEvent)
+			if(isArrowKey(e))
+				return;
+
+		updateCurrentText()
+	});
+
+	$(".copyMeta2friendlyURL").live('keyup',function(e){
+		if(!isArrowKey(e))
+			return copyMeta2friendlyURL()
+	});
+});

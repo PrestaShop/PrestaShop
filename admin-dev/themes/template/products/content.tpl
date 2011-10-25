@@ -18,6 +18,7 @@
 var toload = new Array();
 var pos_select = {$pos_select};
 $(document).ready(function(){
+	{* submenu binding *}
 	$(".tab-page").click(function(e){
 		e.preventDefault();
 		// currentId is the current producttab id
@@ -181,8 +182,18 @@ $(document).ready(function(){
 	}
 	//]]>
 </script>
+
 <form action="{$form_action}" method="post" enctype="multipart/form-data" name="product" id="product">
 {$draft_warning}
+<ul class="cc_button">
+{foreach from=$available_btn item=btn key=k}
+	<li>
+		<a class="available_btn" href="{$btn.href}" title="{$btn.desc}">
+			<span class="process-icon-{$k}">{$btn.short}</span>
+		</a>
+	</li> 
+{/foreach}
+</ul>
 <input type="hidden" name="id_product" value="{$id_product}" />
 <input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
