@@ -26,6 +26,7 @@
 
 					</div>
 				</div>
+{if $display_footer}
 				{$HOOK_FOOTER}
 				<div id="footer">
 					<div style="float:left;margin-left:10px;padding-top:6px">
@@ -44,5 +45,6 @@
 			</div>
 		</div>
 		<div id="ajax_confirmation" style="display:none"></div>
+{/if}
 	</body>
 </html>
