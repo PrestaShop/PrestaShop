@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,29 +25,52 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminProfiles extends AdminTab
+class AdminProfilesControllerCore extends AdminController
 {
 	public function __construct()
 	{
-		$this->context = Context::getContext();	
+		$this->context = Context::getContext();
 	 	$this->table = 'profile';
 	 	$this->className = 'Profile';
 	 	$this->lang = true;
-	 	$this->edit = true;
-	 	$this->delete = true;
-		
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->fieldsDisplay = array(
-		'id_profile' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Name'), 'width' => 200));
+			'id_profile' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Name'), 'width' => 200));
 		$this->identifier = 'id_profile';
-		
+
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Profils'),
+				'image' => '../img/admin/profiles.png'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'size' => 33,
+					'required' => true,
+					'lang' => true,
+					'attributeLang' => 'name',
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
 		$list_profile = array();
 		foreach(Profile::getProfiles($this->context->language->id) as $profil)
 			$list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
-		
+
 		parent::__construct();
 	}
-	
+
 	public function postProcess()
 	{
 	 	/* PrestaShop demo mode */
@@ -57,40 +80,11 @@ class AdminProfiles extends AdminTab
 			return;
 		}
 		/* PrestaShop demo mode*/
-	 	
+
 	 	if (isset($_GET['delete'.$this->table]) AND $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
 			$this->_errors[] = $this->l('For security reasons, you cannot delete the Administrator profile');
 		else
 			parent::postProcess();
-	}
-	
-	public function displayForm($isMainTab = true)
-	{
-		parent::displayForm();
-		
-		if (!($obj = $this->loadObject(true)))
-			return;
-		
-		echo '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
-			'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
-			<fieldset><legend><img src="../img/admin/profiles.png" />'.$this->l('Profiles').'</legend>
-				<label>'.$this->l('Name:').' </label>
-				<div class="margin-form">';
-		foreach ($this->_languages as $language)
-			echo '
-					<div id="name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="name_'.$language['id_lang'].'" value="'.htmlentities($this->getFieldValue($obj, 'name', (int)($language['id_lang'])), ENT_COMPAT, 'UTF-8').'" /><sup> *</sup>
-					</div>';
-		$this->displayFlags($this->_languages, $this->_defaultFormLanguage, 'name', 'name');
-		echo '		<div class="clear"></div>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
 	}
 }
 

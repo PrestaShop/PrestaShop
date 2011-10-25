@@ -64,7 +64,7 @@
 	<form method="post" action="{$action}" class="form">
 {/if}{* End if simple_header *}
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
-	<table style="table-layout: fixed; width: 100%;">
+	<table>
 		{if !$simple_header}
 			<tr>
 				<td style="vertical-align: bottom;">

@@ -24,7 +24,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminProfiles.php');
+
 include_once('functions.php');
 
 class AdminProductsController extends AdminController
@@ -1707,7 +1707,7 @@ if (false)
 
 	/**
 	 * initForm contains all necessary initialization needed for all tabs
-	 * 
+	 *
 	 * @return void
 	 */
 	public function initForm()
@@ -1743,7 +1743,7 @@ if (false)
 			$action = 'Informations';
 		if(Tools::getValue('id_product'))
 		{
-			// i is used as producttab id 
+			// i is used as producttab id
 			$i = 0;
 			foreach($this->available_tabs as $product_tab)
 			{
@@ -3686,7 +3686,7 @@ switch ($this->action)
 			$smarty->assign('minimal_quantity', $this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1);
 			$smarty->assign('available_date', ($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00');
 		  // date picker include
-		
+
 
 			$i = 0;
 			$smarty->assign('imageType', ImageType::getByNameNType('small', 'products'));
@@ -3815,7 +3815,7 @@ switch ($this->action)
 								$filename = $productDownload->filename;
 							else
 								$filename = '';
-							// @todo : a better way to "fillCombinaison" maybe ? 
+							// @todo : a better way to "fillCombinaison" maybe ?
 							$content .= '<td class="center">
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
@@ -3856,9 +3856,9 @@ switch ($this->action)
 				else
 					$content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
 		$this->context->smarty->assign('content', $content);
-		// @todo 
+		// @todo
 		$smarty->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
-		
+
 		$this->content = $this->context->smarty->fetch('products/combinations.tpl');
 	}
 
