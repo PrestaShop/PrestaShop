@@ -211,7 +211,15 @@
 		<label>{l s='Original cart:'}</label>
 		<div style="margin: 2px 0 1em 190px;"><a href="?tab=AdminCarts&id_cart={$cart->id}&viewcart&token={getAdminToken tab='AdminCarts'}">{l s='Cart #'}{"%06d"|sprintf:$cart->id}</a></div>
 		<label>{l s='Payment mode:'}</label>
-		<div style="margin: 2px 0 1em 190px;">{substr($order->payment, 0, 32)}{if $order->module} ({$order->module}){/if}</div>
+		<div style="margin: 2px 0 1em 190px; padding: 2px 0px;">{substr($order->payment, 0, 32)}{if $order->module} ({$order->module}){/if}</div>
+		
+		{if $paymentCCDetails}		
+			<div style="margin-top:10px;">
+				<label>{l s='Transaction id:'}</label> 
+				<div style="margin: 2px 0 1em 190px; padding: 2px 0px;">{$paymentCCDetails['transaction_id']}</div>
+			</div>
+		{/if}
+
 		<div style="margin: 2px 0 1em 50px;">
 			<table class="table" width="300px;" cellspacing="0" cellpadding="0">
 				<tr>
@@ -267,7 +275,7 @@
 			<img src="../img/admin/disabled.gif" />
 			{/if}
 		</div>
-	</fieldset>
+		</fieldset>
 </div>
 <div class="clear">&nbsp;</div>
 

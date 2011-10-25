@@ -513,7 +513,8 @@ class AdminOrdersControllerCore extends AdminController
 			'currentIndex' => self::$currentIndex,
 			'carrierModuleCall' => $carrier_module_call,
 			'iso_code_lang' => $this->context->language->iso_code,
-			'id_lang' => $this->context->language->id
+			'id_lang' => $this->context->language->id,
+			'paymentCCDetails' => PaymentCC::getByOrderId($order->id)
 		));
 
 		// Assign Hook
