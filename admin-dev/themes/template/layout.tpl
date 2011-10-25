@@ -64,7 +64,7 @@
 {if isset($informations) && count($informations) && $informations}
 	<div class="hint clear" style="display:block;">
 		{foreach $informations as $info}
-			{$info}
+			{$info}<br />
 		{/foreach}
 	</div><br />
 {/if}
