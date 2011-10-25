@@ -228,28 +228,6 @@
 	</td>
 	</tr>
 {/if}
-			<tr id="stock_mvt_attribute" style=";">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">{l s='Stock movement:' }</td>
-				<td style="padding-bottom:5px;">
-					<select id="id_mvt_reason" name="id_mvt_reason">
-						<option value="-1">--</option>
-						{foreach from=$reasons item=reason}
-						<option 
-							rel="{$reason.sign}" value="{$reason.id_stock_mvt_reason}" 
-							{if $ps_stock_mvt_reason_default == $reason.id_stock_mvt_reason}
-								selected="selected"
-							{/if}>{$reason.name}
-						</option>
-						{/foreach}
-			</select>
-					<input type="text" name="attribute_mvt_quantity" size="3" maxlength="6" value="0"/>&nbsp;&nbsp;
-					<span style="display:none;" id="mvt_sign"></span>
-					<br />
-					<div class="hint clear" style="display: block;width: 70%;">
-						{l s='Choose the reason and enter the quantity that you want to increase or decrease in your stock'}
-					</div>
-				</td>
-			</tr>
 			<tr>
 			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">{l s='Minimum quantity:' }
 			</td>
@@ -258,14 +236,10 @@
 				<p>{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 				</td>
 			</tr>
-		  <tr style="display:none;" id="attr_qty_stock">
-			  <td style="width:150px">{l s='Quantity in stock:' }</td>
-			  <td style="padding-bottom:5px;"><b><span style="display:none;" id="attribute_quantity"></span></b></td>
-		  </tr>
-		  <tr>
-			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">{l s='Available date:'}</td>
-			  <td style="padding-bottom:5px;"><input class="datepicker" id="available_date" name="available_date" value="{$available_date}" style="text-align: center;" type="text" />
-				  <p>{l s='The available date when this product is out of stock'}</p>
+			<tr>
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">{l s='Available date:'}</td>
+				<td style="padding-bottom:5px;"><input class="datepicker" id="available_date" name="available_date" value="{$available_date}" style="text-align: center;" type="text" />
+					<p>{l s='The available date when this product is out of stock'}</p>
 	<script type="text/javascript">
 		$(document).ready(function(){
 				$(".datepicker").datepicker({
