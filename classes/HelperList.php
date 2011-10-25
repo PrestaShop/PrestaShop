@@ -401,7 +401,7 @@ class HelperListCore extends Helper
 
 		$this->context->smarty->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => self::$cache_lang['DeleteItem'].$id.' ?'.(!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : ''),
+			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$id.' ? '),
 			'action' => self::$cache_lang['Delete'],
 		));
 
