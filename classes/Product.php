@@ -2085,7 +2085,7 @@ class ProductCore extends ObjectModel
 				else if (is_string($productAttribute))
 					$sql->where('stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)');
 			}
-			$sql->where(ltrim($shop->addSqlRestriction(Shop::SHARE_STOCK, 'stock'), ' AND '));
+			$sql->where(ltrim($shop->addSqlRestriction(false, 'stock'), ' AND '));
 		}
 		else
 		{
@@ -2099,7 +2099,7 @@ class ProductCore extends ObjectModel
 				else if (is_string($productAttribute))
 					$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($productAttribute).'.id_product_attribute, 0)';
 			}
-			$sql .= $shop->addSqlRestriction(Shop::SHARE_STOCK, 'stock').' ';
+			$sql .= $shop->addSqlRestriction(false, 'stock').' ';
 		}
 
 		return $sql;
@@ -2125,7 +2125,7 @@ class ProductCore extends ObjectModel
 				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product = '.$this->id.'
 				AND id_product_attribute = 0'.
-				$context->shop->addSqlRestriction(Shop::SHARE_STOCK);
+				$context->shop->addSqlRestriction();
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
@@ -2149,7 +2149,7 @@ class ProductCore extends ObjectModel
 				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product = '.$this->id.'
 				AND id_product_attribute = 0'.
-				$context->shop->addSqlRestriction(Shop::SHARE_STOCK);
+				$context->shop->addSqlRestriction();
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
@@ -2157,7 +2157,7 @@ class ProductCore extends ObjectModel
 	 * Update available product quantities
 	 *
 	 * @deprecated since 1.5.0
-	 * 
+	 *
 	 * @param array $product Array with ordered product (quantity, id_product_attribute if applicable)
 	 * @return mixed Query result
 	 */
@@ -2185,6 +2185,9 @@ class ProductCore extends ObjectModel
 		return $productObj->addStockMvt(-(int)$product['cart_quantity'], (int)_STOCK_MOVEMENT_ORDER_REASON_, (int)$product['id_product_attribute'], (int)$id_order, null);
 	}
 
+	/**
+	 * @deprecated since 1.5.0
+	 */
 	public static function reinjectQuantities(&$orderDetail, $quantity, Context $context = null)
 	{
 		if (!$context)
@@ -2227,7 +2230,7 @@ class ProductCore extends ObjectModel
 
 		if ($this->isAvailableWhenOutOfStock($this->getOutOfStock()))
 			return true;
-		
+
 		if(isset($this->id_product_attribute))
 			$id_product_attribute = $this->id_product_attribute;
 		else

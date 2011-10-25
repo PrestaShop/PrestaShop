@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -34,15 +34,13 @@ class GroupShopCore extends ObjectModel
 	public	$active;
 	public	$share_customer;
 	public	$share_order;
-	public	$share_stock;
 	public	$deleted;
-	
+
 	protected	$fieldsSize = array('name' => 64);
  	protected	$fieldsValidate = array(
  					'active' => 'isBool',
  					'share_customer' => 'isBool',
  					'share_order' => 'isBool',
- 					'share_stock' => 'isBool',
  					'name' => 'isGenericName',
  				);
 	protected	$table = 'group_shop';
@@ -51,7 +49,6 @@ class GroupShopCore extends ObjectModel
 	private	static $assoTables = array(
 		'attribute_group' => 		array('type' => 'group_shop'),
 		'attribute' => 				array('type' => 'group_shop'),
-		//'customer_group' => 		array('type' => 'group_shop'),
 		'feature' => 				array('type' => 'group_shop'),
 		'group' => 					array('type' => 'group_shop'),
 		'manufacturer' => 			array('type' => 'group_shop'),
@@ -66,20 +63,19 @@ class GroupShopCore extends ObjectModel
 
 		$fields['name'] = pSQL($this->name);
 		$fields['share_customer'] = (int)$this->share_customer;
-		$fields['share_stock'] = (int)$this->share_stock;
-		$fields['share_order'] = ($fields['share_customer'] && $fields['share_stock']) ? (int)$this->share_order : false;
+		$fields['share_order'] = ($fields['share_customer']) ? (int)$this->share_order : false;
 		$fields['active'] = (int)$this->active;
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
 	}
-	
+
 	public static function getGroupShops($active = true)
 	{
-		return Db::getInstance()->executeS('SELECT * 
+		return Db::getInstance()->executeS('SELECT *
 														FROM '._DB_PREFIX_.'group_shop
 														WHERE `deleted`= 0 AND `active`='.(int)$active);
 	}
-	
+
 	public function delete()
 	{
 		if (!$res = parent::delete())
@@ -126,7 +122,7 @@ class GroupShopCore extends ObjectModel
 
 	/**
 	 * Return a group shop ID from group shop name
-	 * 
+	 *
 	 * @param string $name
 	 * @return int
 	 */
@@ -137,7 +133,7 @@ class GroupShopCore extends ObjectModel
 				WHERE name = \''.pSQL($name).'\'';
 		return (int)Db::getInstance()->getValue($sql);
 	}
-	
+
 	public function copyGroupShopData($old_id, $tables_import = false, $deleted = false)
 	{
 		foreach (GroupShop::getAssoTables() AS $table_name => $row)
