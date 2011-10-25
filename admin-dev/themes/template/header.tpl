@@ -142,6 +142,7 @@ $(document).ready(function()
 </script>
 	</head>
 	<body {if $bo_color} style="background:{$bo_color}" {/if}>
+{if $display_header}
 	<div id="top_container">
 		<div id="container">
 			<div id="header_infos"><span>
@@ -285,6 +286,7 @@ $(document).ready(function()
 					{/if}
 				</ul>
 *}
+{/if}
 					<div id="main">
 						<div id="content">
 							{if $install_dir_exists}
