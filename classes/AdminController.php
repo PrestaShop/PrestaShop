@@ -1111,6 +1111,7 @@ class AdminControllerCore extends Controller
 		$helper->shopLinkType = $this->shopLinkType;
 		$helper->identifier = $this->identifier;
 		$helper->token = $this->token;
+		$helper->specificConfirmDelete = $this->specificConfirmDelete;
 		$helper->imageType = $this->imageType;
 		$helper->no_add = isset($this->no_add) ? $this->no_add : false;
 		$helper->no_link = $this->list_no_link;
