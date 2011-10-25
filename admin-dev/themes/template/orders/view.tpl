@@ -200,6 +200,44 @@
 		{/if}
 	</fieldset>
 
+<br />
+<fieldset>
+	<legend>
+		<img widtdh="20" height="16" src="../img/admin/order-detail-icone.png" />
+		{l s='Payment detail'}
+	</legend>
+	<ul style="list-style:none; display:block; line-height: 1.5em; padding 4px 0;">
+		<li style="margin-bottom:10px;">
+			<form method="post" action="{$smarty.server.REQUEST_URI}">
+				<font style="font-weight:bolder;">{l s='Set the transaction id:'}</font> 
+				<input type="text" name="transaction_id" value="{if $paymentCCDetails}{$paymentCCDetails['transaction_id']}{/if}" />
+				<input type="hidden" name="id_payment_cc" value="{if $paymentCCDetails}{$paymentCCDetails['id_payment_cc']}{/if}" />
+				<input type="submit" name="setTransactionId" value="{l s='Update'}"/>
+			</form>
+		</li>
+		<li>
+			<font style="font-weight:bolder;">{l s='Card Holder:'} </font>
+			{if $paymentCCDetails}{$paymentCCDetails['card_holder']}{/if}
+		</li>
+		<li>
+			<font style="font-weight:bolder;">{l s='Card Number:'} </font>
+			{if $paymentCCDetails}
+				{if $paymentCCDetails['card_number'] != ''}
+					****{$paymentCCDetails['card_number']|substr:-4}
+				{/if}
+			{/if}
+		</li>
+		<li>
+			<font style="font-weight:bolder;">{l s='Card Brand:'} </font>
+			{if $paymentCCDetails}{$paymentCCDetails['card_brand']}{/if}
+		</li>
+		<li>
+			<font style="font-weight:bolder;">{l s='Card expiration:'} </font>
+			{if $paymentCCDetails}{$paymentCCDetails['card_expiration']}{/if}
+		</li>
+	</ul>
+</fieldset>
+
 	<br />
 	<fieldset style="width: 400px">
 		<legend><img src="../img/admin/details.gif" /> {l s='Order details'}</legend>
@@ -212,14 +250,6 @@
 		<div style="margin: 2px 0 1em 190px;"><a href="?tab=AdminCarts&id_cart={$cart->id}&viewcart&token={getAdminToken tab='AdminCarts'}">{l s='Cart #'}{"%06d"|sprintf:$cart->id}</a></div>
 		<label>{l s='Payment mode:'}</label>
 		<div style="margin: 2px 0 1em 190px; padding: 2px 0px;">{substr($order->payment, 0, 32)}{if $order->module} ({$order->module}){/if}</div>
-		
-		{if $paymentCCDetails}		
-			<div style="margin-top:10px;">
-				<label>{l s='Transaction id:'}</label> 
-				<div style="margin: 2px 0 1em 190px; padding: 2px 0px;">{$paymentCCDetails['transaction_id']}</div>
-			</div>
-		{/if}
-
 		<div style="margin: 2px 0 1em 50px;">
 			<table class="table" width="300px;" cellspacing="0" cellpadding="0">
 				<tr>
