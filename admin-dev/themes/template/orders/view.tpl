@@ -212,7 +212,7 @@
 				<font style="font-weight:bolder;">{l s='Set the transaction id:'}</font> 
 				<input type="text" name="transaction_id" value="{if $paymentCCDetails}{$paymentCCDetails['transaction_id']}{/if}" />
 				<input type="hidden" name="id_payment_cc" value="{if $paymentCCDetails}{$paymentCCDetails['id_payment_cc']}{/if}" />
-				<input type="submit" name="setTransactionId" value="{l s='Update'}"/>
+				<input class="button" type="submit" name="setTransactionId" value="{l s='Update'}"/>
 			</form>
 		</li>
 		{if $paymentCCDetails}
