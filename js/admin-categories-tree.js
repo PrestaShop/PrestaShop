@@ -261,24 +261,27 @@ function updateNbSubCategorySelected(category, add)
 
 $(document).ready( function() {
 	var category_to_check;
-	$('#search_cat').autocomplete('ajax.php?searchCategory=1', {
-		delay: 100,
-		minChars: 3,
-		autoFill: true,
-		max:20,
-		matchContains: true,
-		mustMatch:true,
-		scroll:false,
-		cacheLength:0,
-		multipleSeparator:'||',
-		formatItem: function(item) 
-		{
-			return item[1]+' - '+item[0];
-		}
-	}).result(function(event, item)
-	{ 
-		parent_ids = getParentCategoriesIdAndOpen(item[1]);
-	});
+	if ($('#search_cat').length)
+	{
+		$('#search_cat').autocomplete('ajax.php?searchCategory=1', {
+			delay: 100,
+			minChars: 3,
+			autoFill: true,
+			max:20,
+			matchContains: true,
+			mustMatch:true,
+			scroll:false,
+			cacheLength:0,
+			multipleSeparator:'||',
+			formatItem: function(item) 
+			{
+				return item[1]+' - '+item[0];
+			}
+		}).result(function(event, item)
+		{ 
+			parent_ids = getParentCategoriesIdAndOpen(item[1]);
+		});
+	}
 });
 
 function getParentCategoriesIdAndOpen(id_category)
