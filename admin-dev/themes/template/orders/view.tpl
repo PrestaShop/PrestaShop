@@ -219,7 +219,7 @@
 			{if $paymentCCDetails['card_holder'] != ''}
 				<li>
 					<font style="font-weight:bolder;">{l s='Card Holder:'} </font>
-					{if $paymentCCDetails}{$paymentCCDetails['card_holder']}{/if}
+					{$paymentCCDetails['card_holder']}
 				</li>
 			{/if}
 			{if $paymentCCDetails['card_number'] != ''}
