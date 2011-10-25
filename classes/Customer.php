@@ -196,7 +196,7 @@ class CustomerCore extends ObjectModel
 		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'customer_group', $row, 'INSERT');
 	}
 
-	public function update()
+	public function update($nullValues = false)
 	{
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		if ($this->newsletter && !$this->newsletter_date_add)
