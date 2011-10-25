@@ -124,6 +124,9 @@ class AttributeCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
+		if ($this->position <= 0)
+			$this->position = Attribute::getHigherPosition($this->id_attribute_group) + 1;
+
 		$return = parent::add($autodate, $null_values);
 		if ($return)
 			Module::hookExec('afterSaveAttribute', array('id_attribute' => $this->id));
@@ -339,7 +342,7 @@ class AttributeCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'attribute`
 				WHERE id_attribute_group = '.(int)$id_attribute_group;
 		$position = DB::getInstance()->getValue($sql);
-		return ($position !== false) ? $position : -1;
+		return (is_numeric($position)) ? $position : -1;
 	}
 }
 

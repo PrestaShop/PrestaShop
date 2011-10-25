@@ -94,6 +94,14 @@ class ImageCore extends ObjectModel
 		return $this->getTranslationsFields(array('legend'));
 	}
 
+	public function add($autodate = true, $null_values = false)
+	{
+		if ($this->position <= 0)
+			$this->position = Image::getHighestPosition($this->id_product) + 1;
+
+		return parent::add($autodate, $null_values);
+	}
+
 	public function delete()
 	{
 		if (!parent::delete() ||
