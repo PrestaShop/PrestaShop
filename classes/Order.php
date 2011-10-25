@@ -538,7 +538,7 @@ class OrderCore extends ObjectModel
 	 */
 	protected function setProductCurrentStock(&$product)
 	{
-		$product['current_stock'] = StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true);
+		$product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
 	}
 
 	/**

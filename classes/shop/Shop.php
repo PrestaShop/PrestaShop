@@ -79,7 +79,6 @@ class ShopCore extends ObjectModel
 		'module_currency' => 		array('type' => 'fk_shop'),
 		'module_country' => 		array('type' => 'fk_shop'),
 		'module_group' => 			array('type' => 'fk_shop'),
-		//'stock' => 					array('type' => 'fk_shop', 'primary' => 'id_stock'),
 		'product' => 				array('type' => 'shop'),
 		'product_lang' => 			array('type' => 'fk_shop'),
 		'referrer' => 				array('type' => 'shop'),
@@ -108,7 +107,6 @@ class ShopCore extends ObjectModel
 	 */
 	const SHARE_CUSTOMER = 'share_customer';
 	const SHARE_ORDER = 'share_order';
-	const SHARE_STOCK = 'share_stock';
 
 	public function getFields()
 	{
@@ -162,14 +160,6 @@ class ShopCore extends ObjectModel
 
 		foreach (Shop::getAssoTables() as $table_name => $row)
 		{
-			// Special case for stock if current shop is in a share stock group
-			/*if ($table_name == 'stock')
-			{
-				$group = new GroupShop($this->id_group_shop);
-				if ($group->share_stock && $group->getTotalShops() > 1)
-					continue;
-			}*/
-
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_shop')
 				$id = 'id_shop';
@@ -410,7 +400,6 @@ class ShopCore extends ObjectModel
 						'name' => 			$row['group_name'],
 						'share_customer' =>	$row['share_customer'],
 						'share_order' =>	$row['share_order'],
-						'share_stock' =>	$row['share_stock'],
 						'totalShops' =>		self::getTotalShopsByIdGroupShop($row['id_group_shop']),
 						'shops' => 			array(),
 					);
@@ -537,12 +526,12 @@ class ShopCore extends ObjectModel
 	 * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID
 	 *
 	 * @param int $shop_id
-	 * @param int $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER | Shop::SHARE_STOCK
+	 * @param int $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER
 	 * @return array
 	 */
 	public static function getSharedShops($shop_id, $type)
 	{
-		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, Shop::SHARE_STOCK)))
+		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER)))
 			die('Wrong argument ($type) in Shop::getSharedShops() method');
 
 		Shop::cacheShops();
@@ -670,8 +659,8 @@ class ShopCore extends ObjectModel
 		{
 			if ($shop_id || $shop_group_id)
 				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
-			else if ($share == Shop::SHARE_STOCK)
-				$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
+			//else if ($share == Shop::SHARE_STOCK)
+			//	$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
 		}
 
 		return $restriction;

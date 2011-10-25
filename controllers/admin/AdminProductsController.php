@@ -59,7 +59,6 @@ class AdminProductsController extends AdminController
 			'name_category' => array('title' => $this->l('Category'), 'width' => 100, 'filter_key' => 'cl!name'),
 			'price' => array('title' => $this->l('Base price'), 'width' => 70, 'price' => true, 'align' => 'right', 'filter_key' => 'a!price'),
 			'price_final' => array('title' => $this->l('Final price'), 'width' => 70, 'price' => true, 'align' => 'right', 'havingFilter' => true, 'orderby' => false),
-			'quantity' => array('title' => $this->l('Quantity'), 'width' => 30, 'align' => 'right', 'filter_key' => 'a!quantity', 'type' => 'decimal'),
 			'active' => array('title' => $this->l('Displayed'), 'active' => 'status', 'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false),
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position'),
 		);
@@ -70,14 +69,14 @@ class AdminProductsController extends AdminController
 		else
 			$this->_category = new Category(1);
 
-		$this->_join = Product::sqlStock('a').'
+		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
-		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, SUM(stock.quantity) AS quantity';
+		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final';
 
 		parent::__construct();
 	}
