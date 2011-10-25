@@ -161,7 +161,8 @@ class ConfigurationTestCore
 
 	public static function test_dir($relative_dir, $recursive = false)
 	{
-		$dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.ltrim($relative_dir, '/');
+		$root_dir = dirname(dirname(__FILE__)); // @TODO FIXME
+		$dir = $root_dir.DIRECTORY_SEPARATOR.ltrim($relative_dir, '/');
 		if (!file_exists($dir) OR !$dh = opendir($dir))
 			return false;
 		$dummy = rtrim($dir, '/').'/'.uniqid();
@@ -186,7 +187,8 @@ class ConfigurationTestCore
 
 	public static function test_file($file_relative)
 	{
-		$file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
+		$root_dir = dirname(dirname(__FILE__)); // @TODO FIXME
+		$file = $root_dir.DIRECTORY_SEPARATOR.$file_relative;
 		return (file_exists($file) AND is_writable($file));
 	}
 
