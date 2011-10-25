@@ -88,10 +88,13 @@ class AdminWarehousesControllerCore extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
 
-		$this->displayInformation(
-			$this->l('This interface allows you to manage your warehouses. Before managing any stock in your warehouses, check the general default currency used.
-			For each warehouse, according to the law in your country, you have to check the management type, the valuation currency, and the associated carriers and shops.')
-		);
+		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
+		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the general default currency used.').'<br />');
+		$this->displayInformation($this->l('Futhermore, for each warehouse, you have to check :
+											the management type (according to the law in your country), the valuation currency,
+											its associated carriers and shops.').'<br />');
+		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation,
+											the number of products and quantities stored.'));
 
 		return parent::initList();
 	}
@@ -126,7 +129,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'p' => $this->l('Code / Reference of this warehouse'),
+					'p' => $this->l('Reference of this warehouse'),
 				),
 				array(
 					'type' => 'text',
@@ -186,7 +189,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name'
 					),
-					'p' => $this->l('Country where state, region or city is located')
+					'p' => $this->l('Country where the state, region or city is located')
 				),
 				array(
 					'type' => 'select',
@@ -233,7 +236,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'p' => $this->l('Inventory valuation method'),
-					'hint' => $this->l('Do not change this value before the end of the accounting period for this Warehouse.'),
+					'hint' => $this->l('Do not change this value before the end of the accounting period for this warehouse.'),
 				),
 				array(
 					'type' => 'select',
@@ -245,7 +248,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_currency',
 						'name' => 'name'
 					),
-					'hint' => $this->l('Do not change this value before the end of the accounting period for this Warehouse.'),
+					'hint' => $this->l('Do not change this value before the end of the accounting period for this warehouse.'),
 				),
 				array(
 					'type' => 'select',
@@ -258,13 +261,13 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_shop',
 						'name' => 'name'
 					),
-					'p' => $this->l('Associated shops'),
-					'hint' => $this->l('By associating a shop to a warehouse, all products in this warehouse will be available
-						for sale in the associated shop. Shipment of an order of this shop is also possible from this warehouse'),
+					'p' => $this->l('Shops'),
+					'hint' => $this->l('By associating a shop to a warehouse, all products in the warehouse will be available
+						for sale in it. It is also possible to ship orders of this shop from this warehouse'),
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Associated carriers:'),
+					'label' => $this->l('Carriers:'),
 					'name' => 'ids_carriers[]',
 					'required' => true,
 					'multiple' => true,
@@ -273,8 +276,8 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_carrier',
 						'name' => 'name'
 					),
-					'p' => $this->l('Associated carrier'),
-					'hint' => $this->l('You can specifiy the carriers availables for shipping orders from this warehouse'),
+					'p' => $this->l('Associated carriers'),
+					'hint' => $this->l('You can specifiy the carriers available to ship orders from this warehouse'),
 				),
 			),
 			'submit' => array(
@@ -407,7 +410,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 			$content = '<div class="path_bar">';
-			$content .= sprintf($this->l('There are %s references (%d quantity), for a total of %d %s'), $refs, $res[0]['quantity'], $res[0]['total'], $res[0]['sign']);
+			$content .= sprintf($this->l('This warehouse stores %s reference(s) (%d quantity/ies), worth %d %s'), $refs, $res[0]['quantity'], $res[0]['total'], $res[0]['sign']);
 			$content .= '</div>';
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}

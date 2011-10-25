@@ -94,6 +94,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 */
 	public function initList()
 	{
+		$this->displayInformation($this->l('This interface allows you to display detailed informations on your stock, per warehouse.').'<br />');
+
 		$this->addRowAction('details');
 
 		//no link on list rows
@@ -246,7 +248,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 		$this->_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		$this->_listTotal = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
-		
+
 		$manager = StockManagerFactory::getManager();
 
 		foreach ($this->_list as &$row)
