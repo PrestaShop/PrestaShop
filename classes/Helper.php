@@ -86,7 +86,7 @@ class HelperCore
 		if (sizeof($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
-				$html .= 'var selectedCat = "'.implode(',', $selected_cat).'":';
+				$html .= 'var selectedCat = "'.implode(',', $selected_cat).'";';
 			else
 				$html .= 'var selectedCat = "'.implode(',', array_keys($selected_cat)).'";';
 		}
