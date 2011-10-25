@@ -90,3 +90,8 @@ a.module_toggle_all{color: #268CCD;}
 .notifs_wrapper p.no_notifs {border: none;}
 .productTabs ol{padding:0;}
 .productTabs{background-color:#e0e0e0;border:1px solid #cccccc;position:absolute;top:100px;left:50px;}
+
+ul.cc_button {float:right;margin:0;padding:6px 0;}
+ul.cc_button li {float:left;text-decoration: none;list-style: none;font-size:12px;padding:5px 0;}
+.available_btn {border:2px outset black;display:block;height:50px;margin:2px;padding:3px 2px 1px 2px;width:60px;}
+.available_btn span{font-size:small;margin-top:5px;text-align:center}
