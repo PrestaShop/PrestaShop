@@ -27,6 +27,62 @@
 
 class ConfigurationTestCore
 {
+
+	/**
+	 * getDefaultTests return an array of tests to executes.
+	 * key are method name, value are parameters (false for no parameter)
+	 * all path are _PS_ROOT_DIR_ related
+	 *  
+	 * @return array
+	 */
+	public static function getDefaultTests()
+	{
+		return array(
+			'system' => array(
+				'fopen', 'fclose', 'fread', 'fwrite', 
+				'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir', 
+				'getcwd', 'chdir', 'chmod'
+				),
+
+			'phpversion' => false,
+			'upload' => false,
+			'gd' => false,
+			'mysql_support' => false,
+			'config_dir' => 'config',
+			'cache_dir' => 'cache',
+			'sitemap' => 'sitemap.xml',
+			'img_dir' => 'img',
+			'mails_dir' => 'mails',
+			'module_dir' => 'modules',
+			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
+			'translations_dir' => 'translations',
+			'customizable_products_dir' => 'upload',
+			'virtual_products_dir' => 'download'
+		);
+	}
+
+	/**
+	 * getDefaultTestsOp return an array of tests to executes.
+	 * key are method name, value are parameters (false for no parameter)
+	 * 
+	 * @return array
+	 */
+	public static function getDefaultTestsOp()
+	{
+
+		return array(
+			'fopen' => false,
+			'register_globals' => false,
+			'gz' => false
+		);
+	}
+
+	/**
+	 * run all test defined in $tests
+	 * 
+	 * @param array $tests 
+	 * @return array results of tests 
+	 */
 	public static function check($tests)
 	{
 		$res = array();
@@ -38,8 +94,8 @@ class ConfigurationTestCore
 	public static function run($ptr, $arg = 0)
 	{
 		if (call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg))
-			return ('ok');
-		return ('fail');
+			return 'ok';
+		return 'fail';
 	}
 
 	public static function test_phpversion()
@@ -97,8 +153,9 @@ class ConfigurationTestCore
 		return false;
 	}
 
-	public static function test_dir($dir, $recursive = false)
+	public static function test_dir($relative_dir, $recursive = false)
 	{
+		$dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.ltrim($relative_dir, '/');
 		if (!file_exists($dir) OR !$dh = opendir($dir))
 			return false;
 		$dummy = rtrim($dir, '/').'/'.uniqid();
@@ -113,16 +170,17 @@ class ConfigurationTestCore
 		if ($recursive)
 		{
 			while (($file = readdir($dh)) !== false)
-				if (is_dir($dir.$file) && $file != '.' && $file != '..')
-					if (!self::test_dir($dir.$file, true))
+				if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn')
+					if (!self::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, true))
 						return false;
 		}
 		closedir($dh);
 		return true;
 	}
 
-	public static function test_file($file)
+	public static function test_file($file_relative)
 	{
+		$file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
 		return (file_exists($file) AND is_writable($file));
 	}
 
@@ -163,7 +221,7 @@ class ConfigurationTestCore
 
 	public static function test_cache_dir($dir)
 	{
-		return self::test_dir($dir);
+		return self::test_dir($dir, true);
 	}
 
 	public static function test_tools_v2_dir($dir)
