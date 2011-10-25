@@ -73,6 +73,33 @@ class StockMvtReasonCore extends ObjectModel
 	}
 
 	/**
+	 * Same as StockMvtReason::getStockMvtReasons(), ignoring a specific lists of ids
+	 *
+	 * @since 1.5.0
+	 * @param int $id_lang
+	 * @param array $ids_ignore
+	 * @param int $sign optional
+	 */
+	public static function getStockMvtReasonsWithFilter($id_lang, $ids_ignore, $sign = null)
+	{
+		$query = new DbQuery();
+		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
+		$query->from('stock_mvt_reason smr');
+		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+
+		if ($sign != null)
+			$query->where('smr.sign = '.(int)$sign);
+
+		if (count($ids_ignore))
+		{
+			$ids_ignore = array_map('intval', $ids_ignore);
+			$query->where('smr.id_stock_mvt_reason NOT IN('.implode(', ', $ids_ignore).')');
+		}
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
+	/**
 	 * @since 1.5.0
 	 *
 	 * @param int $id_stock_mvt_reason

@@ -69,11 +69,11 @@ class AdminStockManagementControllerCore extends AdminController
 
 		parent::__construct();
 
-		// Override confirmation messages specifically for this controller
+		// overrides confirmation messages specifically for this controller
 		$this->_conf = array(
 			1 => $this->l('The product was successfully added to stock'),
-			2 => $this->l('The product was properly removed from the stock'),
-			3 => $this->l('The transfer was done properly'),
+			2 => $this->l('The product was successfully removed from the stock'),
+			3 => $this->l('The transfer was successfully done'),
 		);
 	}
 
@@ -88,19 +88,16 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->addRowAction('removestock');
 		$this->addRowAction('transferstock');
 
-		//no link on list rows
+		// no link on list rows
 		$this->list_no_link = true;
 
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)';
 
-		$this->displayInformation(
-			$this->l('This interface allows you to manage the stocks of each of your products and their variations.
-				The quantities of each product are global, so includes all quantities of each warehouses.
-				You can add and delete products related to a given warehouse.
-				You can transfer products from a warehouse to another.'
-			)
-		);
+		$this->displayInformation($this->l('This interface allows you to manage the stocks of each of your products and their variations.').'<br />');
+		$this->displayInformation($this->l('Total quantities in stock represent the sum for all warehouses.').'<br />');
+		$this->displayInformation($this->l('Through this interface, you can add and delete products for a given warehouse.'));
+		$this->displayInformation($this->l('Also, you can transfer products between warehouses, or within one warehouse.'));
 
 		return parent::initList();
 	}
@@ -179,7 +176,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'p' => $this->l('Physical quantity to add to the stock for this product')
+							'p' => $this->l('Physical quantity to add')
 						),
 						array(
 							'type' => 'radio',
@@ -200,7 +197,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Is this quantity is usable for sale on shops, or reserved in the warehouse for other purpose ?:')
+							'p' => $this->l('Is this quantity usable for sale on shops, or reserved in the warehouse for other purposes?')
 						),
 						array(
 							'type' => 'select',
@@ -233,7 +230,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_currency',
 								'name' => 'name'
 							),
-							'p' => $this->l('The currency associated to the product unit price.'),
+							'p' => $this->l('The currency associated to the product unit price'),
 						),
 						array(
 							'type' => 'select',
@@ -241,11 +238,13 @@ class AdminStockManagementControllerCore extends AdminController
 							'name' => 'id_stock_mvt_reason',
 							'required' => true,
 							'options' => array(
-								'query' => StockMvtReason::getStockMvtReasons($this->context->language->id, 1),
+								'query' => StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+																					    array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')),
+																					    1),
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
-							'p' => $this->l('Reason to add in stock movements'),
+							'p' => $this->l('Reason used in stock movements'),
 						),
 					),
 					'submit' => array(
@@ -313,11 +312,11 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'p' => $this->l('Physical quantity to remove from the stock for this product')
+							'p' => $this->l('Physical quantity to remove')
 						),
 						array(
 							'type' => 'radio',
-							'label' => $this->l('Usable for sale?:'),
+							'label' => $this->l('Usable for sale:'),
 							'name' => 'usable',
 							'required' => true,
 							'class' => 't',
@@ -334,7 +333,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Do you want to remove this quantity from usable quantity for sale on shops ?:')
+							'p' => $this->l('Do you want to remove this quantity from the usable quantity(yes) or the physical quantity(no)?')
 						),
 						array(
 							'type' => 'select',
@@ -354,11 +353,13 @@ class AdminStockManagementControllerCore extends AdminController
 							'name' => 'id_stock_mvt_reason',
 							'required' => true,
 							'options' => array(
-								'query' => StockMvtReason::getStockMvtReasons($this->context->language->id, -1),
+								'query' => StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+																					    array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')),
+																					    -1),
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
-							'p' => $this->l('Reason to add in stock movements'),
+							'p' => $this->l('Reason used in stock movements'),
 						),
 					),
 					'submit' => array(

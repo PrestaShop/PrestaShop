@@ -69,22 +69,24 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 		);
 
-		$reasons_inc = StockMvtReason::getStockMvtReasons($this->context->language->id, 1);
-		$reasons_dec = StockMvtReason::getStockMvtReasons($this->context->language->id, -1);
+		$reasons_inc = StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+																	array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')), 1);
+		$reasons_dec = StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+																	array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')), -1);
 
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Options'),
 				'fields' =>	array(
 					'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default Stock Movement reason for increment stock:'),
+						'title' => $this->l('Default reason when incrementing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
 						'identifier' => 'id_stock_mvt_reason'
 					),
 					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default Stock Movement reason for decrement stock:'),
+						'title' => $this->l('Default reason when decrementing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -108,8 +110,8 @@ class AdminStockMvtControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Add product to stock'),
-				'image' => '../img/admin/arrow_up.png'
+				'title' => $this->l('Stock Movement Reason'),
+				'image' => '../img/admin/edit.gif'
 			),
 			'input' => array(
 				array(
@@ -140,7 +142,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'p' => $this->l('Select the warehouse where you want to add the product into')
+					'p' => $this->l('Select the corresponding action : increments or decrements stock.')
 				),
 			),
 			'submit' => array(
@@ -158,6 +160,9 @@ class AdminStockMvtControllerCore extends AdminController
 	 */
 	public function initList()
 	{
+		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
+		$this->displayInformation($this->l('Also, it allows you to add and edit your own stock movement reasons.'));
+
 		//no link on list rows
 		$this->list_no_link = true;
 
@@ -166,7 +171,8 @@ class AdminStockMvtControllerCore extends AdminController
 		 */
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('delete', array(1,2,3,4));
+		$this->addRowActionSkipList('edit', array(6, 7));
+		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 6, 7));
 
 		if (!isset($_GET['addstock_mvt_reason']) || (Tools::isSubmit('submitAddstock_mvt_reason') && Tools::getValue('id_stock_mvt_reason')))
 		{
