@@ -115,7 +115,7 @@ class HelperOptionsCore extends Helper
 
 				// Is at least one required field present?
 				if (isset($field['required']) && $field['required'])
-					$this->required = true;
+					$required_fields = true;
 			}
 			// Assign the modifications back to parent array
 			$option_list[$category] = $category_data;
