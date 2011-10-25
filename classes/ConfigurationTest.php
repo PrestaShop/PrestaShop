@@ -32,15 +32,15 @@ class ConfigurationTestCore
 	 * getDefaultTests return an array of tests to executes.
 	 * key are method name, value are parameters (false for no parameter)
 	 * all path are _PS_ROOT_DIR_ related
-	 *  
+	 *
 	 * @return array
 	 */
 	public static function getDefaultTests()
 	{
 		return array(
 			'system' => array(
-				'fopen', 'fclose', 'fread', 'fwrite', 
-				'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir', 
+				'fopen', 'fclose', 'fread', 'fwrite',
+				'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
 				'getcwd', 'chdir', 'chmod'
 				),
 
@@ -51,10 +51,12 @@ class ConfigurationTestCore
 			'config_dir' => 'config',
 			'cache_dir' => 'cache',
 			'sitemap' => 'sitemap.xml',
+			'log_dir' => 'log',
 			'img_dir' => 'img',
 			'mails_dir' => 'mails',
 			'module_dir' => 'modules',
-			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
+			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang',
+			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache',
 			'translations_dir' => 'translations',
 			'customizable_products_dir' => 'upload',
 			'virtual_products_dir' => 'download'
@@ -64,7 +66,7 @@ class ConfigurationTestCore
 	/**
 	 * getDefaultTestsOp return an array of tests to executes.
 	 * key are method name, value are parameters (false for no parameter)
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getDefaultTestsOp()
@@ -73,15 +75,19 @@ class ConfigurationTestCore
 		return array(
 			'fopen' => false,
 			'register_globals' => false,
-			'gz' => false
+			'gz' => false,
+			'mcrypt' => false,
+			'magicquotes' => false,
+			'dom' => false,
+			'pdo_mysql' => false,
 		);
 	}
 
 	/**
 	 * run all test defined in $tests
-	 * 
-	 * @param array $tests 
-	 * @return array results of tests 
+	 *
+	 * @param array $tests
+	 * @return array results of tests
 	 */
 	public static function check($tests)
 	{
