@@ -245,6 +245,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 				LIMIT '.(int)$start.','.(int)$limit;
 
 		$this->_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		$this->_listTotal = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
+		
 		$manager = StockManagerFactory::getManager();
 
 		foreach ($this->_list as &$row)
@@ -260,8 +262,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 				true
 			);
 		}
-
-		$this->_listTotal = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
 	}
 }
 
