@@ -74,6 +74,7 @@ define('INSTALLER__PS_BASE_URI_ABSOLUTE', 'http://'.ToolsInstall::getHttpHost(fa
 // XML Header
 header('Content-Type: text/xml');
 
+define('_PS_ROOT_DIR_', realpath(INSTALL_PATH.'/../'));
 // Switching method
 if (isset($_GET['method']))
 {
