@@ -2741,76 +2741,43 @@ switch ($this->action)
 						<td>
 							<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You can define many discounts and specific price rules in the Prices tab').'</div>
 						</td>
-					</tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>';
+					</tr>';
 
 
 				if ((int)Configuration::get('PS_STOCK_MANAGEMENT'))
 				{
-
 					if (!$has_attribute)
 					{
-						if ($obj->id)
-						{
-							$content .= '
-							<tr><td class="col-left">'.$this->l('Stock Movement:').'</td>
-								<td style="padding-bottom:5px;">
-									<select id="id_mvt_reason" name="id_mvt_reason">
-										<option value="-1">--</option>';
-							$reasons = StockMvtReason::getStockMvtReasons($this->context->language->id);
-							$smarty->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
-							foreach ($reasons as $reason)
-								$content .= '<option rel="'.$reason['sign'].'" value="'.$reason['id_stock_mvt_reason'].'" '.($ps_stock_mvt_reason_default == $reason['id_stock_mvt_reason'] ? 'selected="selected"' : '').'>'.$reason['name'].'</option>';
-							$content .= '</select>
-									<input id="mvt_quantity" type="text" name="mvt_quantity" size="3" maxlength="6" value="0"/>&nbsp;&nbsp;
-									<span style="display:none;" id="mvt_sign"></span>
-								</td>
-							</tr>
+						$content .= '
+							<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 							<tr>
-								<td class="col-left">&nbsp;</td>
-								<td>
-									<div class="hint clear" style="display: block;width: 70%;">'.$this->l('Choose the reason and enter the quantity that you want to increase or decrease in your stock').'</div>
+							<td class="col-left">'.$this->l('Minimum quantity:').'</td>
+								<td style="padding-bottom:5px;">
+									<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
+									<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
 								</td>
 							</tr>';
-						}
-						$content .=  '<tr>
-								<td class="col-left">'.$this->l('Minimum quantity:').'</td>
-									<td style="padding-bottom:5px;">
-										<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
-										<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
-									</td>
-								</tr>';
 					}
-
-				if ($obj->id)
-					$content .= '
-						<tr><td class="col-left">'.$this->l('Quantity in stock:').'</td>
-							<td style="padding-bottom:5px;"><b>'.$qty.'</b><input type="hidden" name="quantity" value="'.$qty.'" /></td>
-						</tr>
-					';
-				if ($has_attribute)
-					$content .= '<tr>
-							<td class="col-left">&nbsp;</td>
-							<td>
-								<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You used combinations, for this reason you can\'t edit your stock quantity here, but in the Combinations tab').'</div>
-							</td>
-						</tr>';
 				}
 				else
 				{
-					$content .= '<tr>
+					$content .= '
+						<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
+						<tr>
 							<td colspan="2">'.$this->l('The stock management is disabled').'</td>
 						</tr>';
-
-				$content .= '
-						<tr>
-							<td class="col-left">'.$this->l('Minimum quantity:').'</td>
-							<td style="padding-bottom:5px;">
-								<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
-								<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
-							</td>
-						</tr>
-					';
+					if (!$has_attribute)
+					{
+						$content .= '
+							<tr>
+								<td class="col-left">'.$this->l('Minimum quantity:').'</td>
+								<td style="padding-bottom:5px;">
+									<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
+									<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
+								</td>
+							</tr>
+						';
+					}
 				}
 
 				$content .= '
