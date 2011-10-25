@@ -70,5 +70,20 @@ class PaymentCCCore extends ObjectModel
 		}
 		return false;
 	}
+	
+	/**
+	* Get the detailed payment of an order
+	* @param int $id_order
+	* @return array
+	*/
+	public static function getByOrderId($id_order)
+	{
+		$query = '
+			SELECT *
+			FROM `'._DB_PREFIX_.'payment_cc`
+			WHERE `id_order` = '.$id_order;
+			
+		return Db::getInstance()->getRow($query);
+	}
 }
 
