@@ -43,7 +43,7 @@ interface StockManagerInterface
 	 * For a given product, adds a given quantity
 	 *
 	 * @param int $id_product
-	 * @param int id_product_attribute
+	 * @param int $id_product_attribute
 	 * @param Warehouse $warehouse
 	 * @param int $quantity
 	 * @param int $id_stock_movement_reason
