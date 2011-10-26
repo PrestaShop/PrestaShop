@@ -91,6 +91,9 @@ class AdminControllerCore extends Controller
 	/** @var array Cache for query results */
 	protected $_list = array();
 
+	/** @var array Cache for query results */
+	protected $toolbar_btn = array();
+
 	/** @var integer Number of results in list */
 	protected $_listTotal = 0;
 
@@ -687,6 +690,7 @@ class AdminControllerCore extends Controller
 		// Only if it is the first call to displayForm, otherwise it has already been defined
 		if ($first_call)
 		{
+			// language related
 			$content .= '
 			<script type="text/javascript">
 				$(document).ready(function() {
@@ -705,6 +709,15 @@ class AdminControllerCore extends Controller
 			</script>';
 		}
 		return $content;
+	}
+
+	/**
+	 * assign $this->toolbar_btn in smarty
+	 *
+	 */
+	public function initToolbar()
+	{
+		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
 	}
 
 	/**
@@ -1041,6 +1054,9 @@ class AdminControllerCore extends Controller
 			$this->content .= $this->initList();
 			$this->content .= $this->initOptions();
 		}
+
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
 
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
