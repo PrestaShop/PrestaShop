@@ -1710,6 +1710,7 @@ if (false)
 	 */
 	public function initForm()
 	{
+		$this->display = 'edit';
 		$this->addJqueryUI('ui.datepicker');
 		$this->context->smarty->assign('pos_select', (($tab = Tools::getValue('tabs')) ? $tab : '0'));
 		$this->context->smarty->assign('token',$this->token);
@@ -3419,7 +3420,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		return $this->initFormAttributes($obj, $languages, $defaultLanguage);
 	}
 
-	public function initFormAttributes($obj, $languages, $defaultLanguage)
+	public function initFormAttributes($product, $languages, $defaultLanguage)
 	{
 		if (!Combination::isFeatureActive())
 		{
@@ -3440,26 +3441,26 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		$product->productDownload = new ProductDownload();
-		$id_product_download = (int) $product->productDownload->getIdFromIdProduct($this->getFieldValue($obj, 'id'));
+		$id_product_download = (int) $product->productDownload->getIdFromIdProduct($this->getFieldValue($product, 'id'));
 		if (!empty($id_product_download))
 			$product->productDownload = new ProductDownload($id_product_download);
 
 	//	$smarty->assign('productDownload', $productDownload);
 		$smarty->assign('currency', $currency);
 
-		$images = Image::getImages($this->context->language->id, $obj->id);
-		if ($obj->id)
+		$images = Image::getImages($this->context->language->id, $product->id);
+		if ($product->id)
 		{
 			$smarty->assign('tax_exclude_option', Tax::excludeTaxeOption());
 			$smarty->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
 
 			$smarty->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-			$smarty->assign('field_value_unity', $this->getFieldValue($obj, 'unity'));
+			$smarty->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
 
 			$smarty->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
 			$smarty->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
-			$smarty->assign('minimal_quantity', $this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1);
-			$smarty->assign('available_date', ($this->getFieldValue($obj, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($obj, 'available_date'), $language['id_lang']))) : '0000-00-00');
+			$smarty->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
+			$smarty->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00');
 		  // date picker include
 
 
@@ -3501,14 +3502,14 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 
 							$content .= '<th class="center">'.$this->l('Actions').'</th>
 						</tr>';
-			if ($obj->id)
+			if ($product->id)
 			{
 				/* Build attributes combinaisons */
-				$combinaisons = $obj->getAttributeCombinaisons($this->context->language->id);
+				$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
 				$groups = array();
 				if (is_array($combinaisons))
 				{
-					$combinationImages = $obj->getCombinationImages($this->context->language->id);
+					$combinationImages = $product->getCombinationImages($this->context->language->id);
 					foreach ($combinaisons as $k => $combinaison)
 					{
 						$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
@@ -3552,7 +3553,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
 						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
 
-						$id_product_download = $productDownload->getIdFromIdAttribute((int) $obj->id, (int) $id_product_attribute);
+						$id_product_download = $productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
 						if ($id_product_download)
 							$productDownload = new ProductDownload($id_product_download);
 
@@ -3597,13 +3598,13 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
 							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
 							\''.$productDownload->display_filename.'\', \''.$filename.'\', \''.$productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$productDownload->nb_days_accessible.'\',  \''.$productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
-							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
+							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
-							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$obj->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /></a></td>
 						</tr>';
 					}
-					$content .= '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$obj->id.'&token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
+					$content .= '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$product->id.'&token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
 				}
 				else
 					$content .= '<tr><td colspan="7" align="center"><i>'.$this->l('No combination yet').'.</i></td></tr>';
