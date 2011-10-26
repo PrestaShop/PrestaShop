@@ -564,7 +564,7 @@ abstract class ObjectModelCore
 			// Hack for postcode required for country which does not have postcodes
 			if ($value = Tools::getValue($field, $this->{$field}) OR ($field == 'postcode' AND $value == '0'))
 			{
-				if (!Validate::$function($value))
+				if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
 					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 				{

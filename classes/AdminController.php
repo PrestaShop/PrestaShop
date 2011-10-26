@@ -1684,7 +1684,7 @@ class AdminControllerCore extends Controller
 		/* Checking for fields validity */
 		foreach ($rules['validate'] as $field => $function)
 			if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
-				if (!Validate::$function($value))
+				if (!Validate::$function($value) && !empty($value))
 					$this->_errors[] = $this->l('the field').
 						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
 						$this->l('is invalid');
