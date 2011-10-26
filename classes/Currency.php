@@ -73,8 +73,27 @@ class CurrencyCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'currencies',
 	);
+	
+	/**
+	 * contains the sign to display before price, according to its format
+	 * @var string 
+	 */
+	public $prefix = null;
+	/**
+	 * contains the sign to display after price, according to its format
+	 * @var string 
+	 */
+	public $suffix = null;
 
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
+	{
+		parent::__construct($id, $id_lang, $id_shop);
+		// prefix and suffix are convenient shortcut for displaying
+		// price sign before or after the price number
+		$this->prefix =	$this->format % 2 != 0 ? $this->sign.' ' : '';
+		$this->suffix =	$this->format % 2 == 0 ? ' '.$this->sign : '';
 
+	}
 	/**
 	 * Overriding check if currency with the same iso code already exists.
 	 * If it's true, currency is doesn't added.
