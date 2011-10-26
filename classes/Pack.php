@@ -96,7 +96,7 @@ class PackCore extends Product
 		foreach ($items as $item)
 		{
 			// Updated for 1.5.0
-			if ($item->getQuantity() < $item->pack_quantity || !$item->isAvailableWhenOutOfStock((int)$item->getOutOfStock()))
+			if (Product::getQuantity($item->id) < $item->pack_quantity || !$item->isAvailableWhenOutOfStock((int)$item->getOutOfStock()))
 				return false;
 		}
 		return true;
