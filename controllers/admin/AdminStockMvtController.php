@@ -163,6 +163,10 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
 		$this->displayInformation($this->l('Also, it allows you to add and edit your own stock movement reasons.'));
 
+		// access
+		if (!($this->tabAccess['add'] === '1'))
+			$this->no_add = true;
+
 		//no link on list rows
 		$this->list_no_link = true;
 

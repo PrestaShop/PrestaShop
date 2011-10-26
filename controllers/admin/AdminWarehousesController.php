@@ -78,6 +78,10 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function initList()
 	{
+		// Checks access
+		if (!($this->tabAccess['add'] === '1'))
+			$this->no_add = true;
+
 		$this->list_no_link = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('details');
@@ -328,6 +332,13 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
+		// Checks access
+		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
+		{
+			$this->_errors[] = Tools::displayError('You do not have the required permission to add warehouses.');
+			return parent::postProcess();
+		}
+
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
 			if (!($obj = $this->loadObject(true)))
