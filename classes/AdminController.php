@@ -888,8 +888,6 @@ class AdminControllerCore extends Controller
 				'<b>'.Context::getContext()->shop->name.'</b>'
 			);
 		}
-		else
-			$shop_name = Configuration::get('PS_SHOP_NAME');
 
 			// Multishop
 		$is_multishop = Shop::isFeatureActive();// && Context::shop() != Shop::CONTEXT_ALL;
@@ -985,7 +983,7 @@ class AdminControllerCore extends Controller
 			'lang_iso' => $this->context->language->iso_code,
 			'link' => $this->context->link,
 			'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
-			'shop_name' => $shop_name,
+			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
 			'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
 			'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
