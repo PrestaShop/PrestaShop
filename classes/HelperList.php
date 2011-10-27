@@ -286,6 +286,7 @@ class HelperListCore extends Helper
 			'fields_display' => $this->fieldsDisplay,
 			'list' => $this->_list,
 			'actions' => $this->actions,
+			'toolbar_btn' => $this->toolbar_btn,
 			'no_link' => $this->no_link,
 			'current_index' => $this->currentIndex,
 			'view' => in_array('view', $this->actions),

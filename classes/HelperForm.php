@@ -77,6 +77,7 @@ class HelperFormCore extends Helper
 
 		$this->context->smarty->assign(array(
 			'submit_action' => $this->submit_action,
+			'toolbar_btn' => $this->toolbar_btn,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,
 			'token' => $this->token,

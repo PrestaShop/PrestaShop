@@ -36,6 +36,7 @@ class HelperCore
 	public $table;
 	public $identifier;
 	public $token;
+	public $toolbar_btn;
 	public $context;
 
 	public function __construct()
