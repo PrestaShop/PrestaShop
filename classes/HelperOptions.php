@@ -107,6 +107,27 @@ class HelperOptionsCore extends Helper
 					}
 				}
 
+				// pre-assign vars to the tpl
+				if ($field['type'] == 'maintenance_ip')
+				{
+					$field['script_ip'] = '
+						<script type="text/javascript">
+							function addRemoteAddr()
+							{
+								var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
+								if (length > 0)
+									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
+								else
+									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
+							}
+						</script>';
+					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP').'</a>';
+				} else if ($field['type'] == 'price')
+				{
+					$field['currency_left'] = $this->context->currency->getSign('left');
+					$field['currency_right'] = $this->context->currency->getSign('right').' '.$this->l('(tax excl.)');
+				}
+
 				// Multishop default value
 				$field['multishop_default'] = (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
 
@@ -116,6 +137,7 @@ class HelperOptionsCore extends Helper
 				// Is at least one required field present?
 				if (isset($field['required']) && $field['required'])
 					$required_fields = true;
+
 			}
 			// Assign the modifications back to parent array
 			$option_list[$category] = $category_data;

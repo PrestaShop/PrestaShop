@@ -186,6 +186,18 @@ class AdminAttributes extends AdminTab
 	}
 
 
+	/**
+	 * Modifying initial getList method to display position feature (drag and drop)
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
+			$order_by = $this->context->cookie->__get($this->table.'Orderby');
+		else
+			$order_by = 'position';
+
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+	}
 }
 
 

@@ -72,7 +72,7 @@ class AdminAttributesGroups extends AdminTab
 			return;
 
 		$this->adminAttributes->tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, $this->id);
-		if (Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitDelattribute'))
+		if (Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitDelattribute') || (Tools::getValue('position') && Tools::getValue('id_attribute')))
 			$this->adminAttributes->postProcess($this->token);
 
 		Module::hookExec('postProcessAttributeGroup',
@@ -279,6 +279,10 @@ class AdminAttributesGroups extends AdminTab
 	 * displayListAttributes
 	 *
 	 * Display a list of attributes from a group
+	 * @param integer $id
+	 * @param integer $irow
+	 * @param array $tr
+	 * @return void
 	 */
 	public function displayListAttributes($id, $irow, $tr)
 	{
@@ -296,8 +300,9 @@ class AdminAttributesGroups extends AdminTab
 						<tbody>';
 			$attributes = AttributeGroup::getAttributes(Context::getContext()->language->id, $id);
 			$nbrow = 0;
-			foreach ($attributes AS $attribute)
+			foreach ($attributes as $attribute)
 			{
+				$id_category = 1;
 				$class = ($irow % 2) ? '': 'not_';
 				echo '
 						<tr'.($nbrow++ % 2 ? ' class="'.$class.'alt_row"' : '').' id="tr_'.$attribute['id_attribute_group'].'_'.$attribute['id_attribute'].'_'.$attribute['position'].'">
@@ -306,7 +311,7 @@ class AdminAttributesGroups extends AdminTab
 								'.($tr['is_color_group'] ? '<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: '.$attribute['color'].'; margin-right: 4px;"></div>' : '')
 								.$attribute['name'].'
 							</td>
-							<td class="dragHandle">';
+							<td class="dragHandle" '.(isset($attribute['position']) ? ' id="td_'.(isset($id_category) && $id_category ? $id_category : 0).'_'.$attribute['id_attribute'].'"' : '').'">';
 
 				echo '<a'.(!($attribute['position'] != $attributes[sizeof($attributes) - 1]['position']) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
 						'&id_attribute_group='.(int)($attribute['id_attribute_group']).'&id_attribute='.$attribute['id_attribute'].'
@@ -336,6 +341,19 @@ class AdminAttributesGroups extends AdminTab
 					<p><input type="Submit" class="button" name="submitDelattribute" value="'.$this->l('Delete selection').'"
 					onclick="changeFormParam(this.form, \''.self::$currentIndex.'\', '.$id.'); return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>
 					</div>';
+	}
+
+	/**
+	 * Modifying initial getList method to display position feature (drag and drop)
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
+			$order_by = $this->context->cookie->__get($this->table.'Orderby');
+		else
+			$order_by = 'position';
+
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 }
 
