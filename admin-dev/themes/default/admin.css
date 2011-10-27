@@ -145,5 +145,4 @@ form.defaultForm{   background-color:#ebedf4; border:1px solid #ccced7; min-heig
 
 ul.cc_button {float:right;margin:0;padding:6px 0;}
 ul.cc_button li {float:left;text-decoration: none;list-style: none;font-size:12px;padding:5px 0;}
-.toolbar_btn {border:2px outset black;display:block;height:50px;margin:2px;padding:3px 2px 1px 2px;width:60px;}
-.toolbar_btn span{font-size:small;margin-top:5px;text-align:center}
+.table_grid{width:100%}

@@ -718,6 +718,19 @@ class AdminControllerCore extends Controller
 	 */
 	public function initToolbar()
 	{
+		switch ($this->display)
+		{
+			// @todo defining default buttons
+			case 'add':
+			case 'edit':
+			case 'options':
+			break;
+			default: // list
+				$this->toolbar_btn['new'] = array(
+					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token, 
+					'desc' => $this->l('Add new')
+				);
+		}
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
 	}
 
@@ -1119,6 +1132,7 @@ class AdminControllerCore extends Controller
 		}
 
 		$helper->actions = $this->actions;
+		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->bulk_actions = $this->bulk_actions;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->className = $this->className;

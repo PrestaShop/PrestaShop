@@ -54,8 +54,22 @@
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
+<div class="toolbarBox">
+	<ul class="cc_button">
+		{foreach from=$toolbar_btn item=btn key=k}
+			<li>
+				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
+					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>{$btn.desc}
+				</a>
+			</li> 
+			{/foreach}
+		</ul>
+		<div class="pageTitle">{* todo : what to display as title for each items (table_lang.name ? *}
+			<h3><span id="current_obj" style="font-weight: normal;">{$current_obj_name|default:'&nbsp;'}</span></h3>
+		</div>
+</div>
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
-<form action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
+<form class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" value="{$form_id}" />
 	{/if}
