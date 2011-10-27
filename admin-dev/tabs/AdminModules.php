@@ -454,8 +454,8 @@ class AdminModules extends AdminTab
 
 	public function displayJavascript()
 	{
-		echo '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.autocomplete.js"></script>
-			<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.fancybox-1.3.4.js"></script>
+		echo '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js"></script>
+			<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.js"></script>
 
 		<script type="text/javascript">
 			function getPrestaStore(){if (getE("prestastore").style.display!=\'block\')return;$.post("'.dirname(self::$currentIndex).'/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
@@ -872,7 +872,7 @@ class AdminModules extends AdminTab
 			$goto = false;
 
 		echo '
-  		<script src="'.__PS_BASE_URI__.'js/jquery/jquery.scrollTo-1.4.2-min.js"></script>
+  		<script src="'.__PS_BASE_URI__.'js/jquery/plugins/jquery.scrollTo.js"></script>
 		<script>
 		 $(document).ready(function() {
 
