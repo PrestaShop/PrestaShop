@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9548 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -179,8 +179,8 @@
 				{/if}
 				{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
 				{if $field['is_invisible']}<p class="multishop_warning">{l s='You can\'t change the value of this configuration field in this shop context'}</p>{/if}
-				</div></div>
-				{block name="end_field_block"}{/block}
+				</div>
+				{block name="end_field_block"}</div>{/block}
 			{/if}
 		{/foreach}
 		{if isset($categoryData['submit'])}

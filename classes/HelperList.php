@@ -76,9 +76,9 @@ class HelperListCore extends Helper
 	/** @var boolean Content line is clickable if true */
 	public $no_link = false;
 
-	public $header_tpl = 'list_header.tpl';
-	public $content_tpl = 'list_content.tpl';
-	public $footer_tpl = 'list_footer.tpl';
+	public $header_tpl = 'helper/list/list_header.tpl';
+	public $content_tpl = 'helper/list/list_content.tpl';
+	public $footer_tpl = 'helper/list/list_footer.tpl';
 
 	/** @var array list of required actions for each list row */
 	public $actions = array();
@@ -120,7 +120,6 @@ class HelperListCore extends Helper
 			$this->displayWarning($this->l('Bad SQL query'));
 			return false;
 		}
-
 		$this->_list = $list;
 		$this->fieldsDisplay = $fields_display;
 
@@ -294,7 +293,7 @@ class HelperListCore extends Helper
 			'has_actions' => (bool)count($this->actions),
 			'list_skip_actions' => $this->list_skip_actions,
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_content.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->content_tpl);
 	}
 
 	/**
@@ -318,7 +317,7 @@ class HelperListCore extends Helper
 			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\\',
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_duplicate.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_duplicate.tpl');
 	}
 
 
@@ -351,7 +350,7 @@ class HelperListCore extends Helper
 			'token' => $this->token,
 			'action' => self::$cache_lang['Details'],
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_details.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_details.tpl');
 	}
 
 	/**
@@ -367,7 +366,7 @@ class HelperListCore extends Helper
 			'action' => self::$cache_lang['View'],
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_view.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_view.tpl');
 
 	}
 
@@ -384,7 +383,7 @@ class HelperListCore extends Helper
 			'action' => self::$cache_lang['Edit'],
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_edit.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_edit.tpl');
 
 	}
 
@@ -405,7 +404,7 @@ class HelperListCore extends Helper
 			'action' => self::$cache_lang['Delete'],
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_action_delete.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_delete.tpl');
 
 	}
 
@@ -535,7 +534,7 @@ class HelperListCore extends Helper
 			'name_id' => isset($name_id) ? $name_id : null,
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_header.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->header_tpl);
 	}
 
 	/**
@@ -548,7 +547,7 @@ class HelperListCore extends Helper
 			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/list_footer.tpl');
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->footer_tpl);
 	}
 
 }

@@ -61,7 +61,7 @@ class HelperFormCore extends Helper
 	public $default_form_language = null;
 	public $allow_employee_form_lang = null;
 
-	public $tpl = 'form.tpl';
+	public $tpl = 'helper/form/form.tpl';
 
 	public function generateForm($fields_form)
 	{

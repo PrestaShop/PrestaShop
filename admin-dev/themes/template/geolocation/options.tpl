@@ -57,4 +57,5 @@
 		<div class="clear"></div>
 		<br />
 	{/if}
+	</div>
 {/block}
