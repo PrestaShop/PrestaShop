@@ -81,7 +81,6 @@ class AdminCustomersControllerCore extends AdminController
 			'email' => array(
 				'title' => $this->l('E-mail address'),
 				'width' => 120,
-				'maxlength' => 19
  			),
 			'age' => array(
 				'title' => $this->l('Age'),
@@ -634,7 +633,7 @@ class AdminCustomersControllerCore extends AdminController
 							}
 						}
 						else
-							$this->_errors[] = Tools::displayError('An error occurred while loading object.').' 
+							$this->_errors[] = Tools::displayError('An error occurred while loading object.').'
 								<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 					}
 				}
@@ -649,7 +648,7 @@ class AdminCustomersControllerCore extends AdminController
 						$shop = new Shop((int)$object->id_shop);
 						$object->id_group_shop = (int)$shop->id_group_shop;
 						if (!$object->add())
-							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' 
+							$this->_errors[] = Tools::displayError('An error occurred while creating object.').'
 								<b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 						else if (($_POST[$this->identifier] = $object->id /* voluntary */) &&
 									$this->postImage($object->id) && !count($this->_errors) &&
