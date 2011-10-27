@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,18 +25,32 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminSearchConf extends AdminPreferences
+class AdminSearchConfControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		
+
 		parent::__construct();
-		
-		$this->optionsList = array(
+
+		$currentFileName = array_reverse(explode("/", $_SERVER['SCRIPT_NAME']));
+		$cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])).'searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8);
+		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(indexed) as "1" FROM '._DB_PREFIX_.'product');
+
+		$this->options = array(
+			'indexation' => array(
+				'title' => $this->l('Indexation'),
+				'icon' => 'search',
+				'info' =>
+						$this->l('The "indexed" products have been analysed by PrestaShop and will appear in the results of the front office search.').'<br />
+						'.$this->l('Indexed products:').' <b>'.(int)($indexed).' / '.(int)($total).'</b>.
+						</p>
+						<p>'.$this->l('Building the product index can take a few minutes or more. If your server stop the process before it ends, you can resume the indexation by clicking "Add missing products".').'</p>
+						-&gt; <a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.$this->l('Add missing products to index.').'</a><br />
+						-&gt; <a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.$this->l('Re-build entire index.').'</a><br /><br />
+						'.$this->l('You can set a cron job that will re-build your index using the following URL:').' <a href="'.$cron_url.'">'.$cron_url.'</a>'
+			),
 			'search' => array(
 				'title' =>	$this->l('Search'),
 				'icon' =>	'search',
@@ -49,6 +63,15 @@ class AdminSearchConf extends AdminPreferences
 					'PS_SEARCH_MINWORDLEN' => array('title' => $this->l('Minimum word length'), 'desc' => $this->l('Only words from this size will be indexed.'), 'size' => 4, 'validation' => 'isUnsignedInt', 'type' => 'text', 'cast' => 'intval'),
 					'PS_SEARCH_BLACKLIST' => array('title' => $this->l('Blacklisted words'), 'size' => 35, 'validation' => 'isGenericName', 'desc' => $this->l('Please enter the words separated by a "|".'), 'type' => 'textLang')
 				),
+				'submit' => array()
+			),
+			'relevance' => array(
+				'title' => $this->l('Relevance'),
+				'icon' => 'search',
+				'info' =>
+						$this->l('The "weight" represents its importance and relevance for the ranking of the products when try a new search.').'<br />
+						'.$this->l('A word with a weight of 8 will have 4 times more value than a word with a weight of 2.').'<br /><br />
+						'.$this->l('That\'s why we advize to set a greater weight for words which appear in the name or reference of a products than the ones of the description of category name. Thus, the search results will be as precised and releant as possible.')
 			),
 			'weight' => array(
 				'title' =>	$this->l('Weight'),
@@ -65,42 +88,8 @@ class AdminSearchConf extends AdminPreferences
 					'PS_SEARCH_WEIGHT_ATTRIBUTE' => array('title' => $this->l('Attributes weight'), 'size' => 4, 'validation' => 'isUnsignedInt', 'type' => 'text', 'cast' => 'intval'),
 					'PS_SEARCH_WEIGHT_FEATURE' => array('title' => $this->l('Features weight'), 'size' => 4, 'validation' => 'isUnsignedInt', 'type' => 'text', 'cast' => 'intval')
 				),
+				'submit' => array()
 			),
 		);
-	}
-
-	public function displayTopOptionCategory($category, $categoryData)
-	{
-		switch ($category)
-		{
-			case 'search' :
-				$currentFileName = array_reverse(explode("/", $_SERVER['SCRIPT_NAME']));
-				$cronUrl = Tools::getHttpHost(true, true).__PS_BASE_URI__.substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($currentFileName['0'])).'searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8);
-				list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(indexed) as "1" FROM '._DB_PREFIX_.'product');
-				echo '<fieldset>
-						<legend><img src="../img/admin/search.gif" alt="" /> '.$this->l('Indexation').'</legend>
-						<p>
-							'.$this->l('The "indexed" products have been analysed by PrestaShop and will appear in the results of the front office search.').'<br />
-							'.$this->l('Indexed products:').' <b>'.(int)($indexed).' / '.(int)($total).'</b>.
-						</p>
-						<p>'.$this->l('Building the product index can take a few minutes or more. If your server stop the process before it ends, you can resume the indexation by clicking "Add missing products".').'</p>
-			-&gt; <a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.$this->l('Add missing products to index.').'</a><br />
-			-&gt; <a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.$this->l('Re-build entire index.').'</a><br /><br />
-						'.$this->l('You can set a cron job that will re-build your index using the following URL:').' <a href="'.$cronUrl.'">'.$cronUrl.'</a>.
-					</fieldset>
-					<div class="clear">&nbsp;</div>';
-			break;
-			
-			case 'weight' :
-				echo '<div class="clear">&nbsp;</div>
-					<fieldset>
-						<legend><img src="../img/admin/search.gif" alt="" /> '.$this->l('Relevance').'</legend>
-						'.$this->l('The "weight" represents its importance and relevance for the ranking of the products when try a new search.').'<br />
-						'.$this->l('A word with a weight of 8 will have 4 times more value than a word with a weight of 2.').'<br /><br />
-						'.$this->l('That\'s why we advize to set a greater weight for words which appear in the name or reference of a products than the ones of the description of category name. Thus, the search results will be as precised and releant as possible.').'
-					</fieldset>
-					<div class="clear">&nbsp;</div>';
-			break;
-		}
 	}
 }
