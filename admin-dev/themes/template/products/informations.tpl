@@ -82,7 +82,7 @@
 				$('#mvt_sign').show();
 			}
 		</script>
-			<hr class="clear"/>
+			<div class="separation clear"></div>
 			<br />
 <table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 {* global information *}
@@ -228,7 +228,7 @@
 	</tr>
 </table>
 <div class="clear"></div>
-<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><hr style="width:100%;" /></td></tr></table>
+<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 {* [begin] pack product *}
 <table>
 	<tr>
@@ -390,7 +390,7 @@ $(document).ready(function(){
 	});
 });
 </script>
-<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><hr style="width:100%;" /></td></tr></table>
+<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
 <tr>
 	<td colspan="2">
@@ -400,7 +400,7 @@ $(document).ready(function(){
 		{* [begin] physical product infos *}
 		<div id="physical_good" class="toggleVirtualPhysicalProduct" {if $product->productDownload->id && $product->productDownload->active}style="display:none"{/if} >
 		<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
-		<tr><td><hr style="width:100%;" /></td></tr>
+		<tr><td><div class="separation"></div></td></tr>
 		</table>
 		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 			<tr>
@@ -571,7 +571,7 @@ $(document).ready(function(){
 	</td>
 </tr>
 <tr>
-	<td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td>
+	<td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td>
  </tr>
 
 {$content}

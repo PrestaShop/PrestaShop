@@ -5,7 +5,7 @@
 			<td><b>{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}</b></td>
 		</tr>
 		</table>
-		<hr style="width: 100%;" /><br />
+		<div class="separation"></div><br />
 		<table cellpadding="5" style="width:100%">
 			<tr>
 				<td class="col-left"><label>{l s='File:'}</label></td>
