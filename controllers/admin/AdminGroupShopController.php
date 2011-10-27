@@ -150,7 +150,7 @@ class AdminGroupShopControllerCore extends AdminController
 			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID()
 		));
 
-		$this->content .= parent::initForm()
+		$this->content .= parent::initForm();
 
 		$import_data = array(
 			'attribute_group' => $this->l('Attribute groups'),
