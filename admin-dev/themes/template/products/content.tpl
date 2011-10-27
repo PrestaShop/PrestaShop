@@ -5,12 +5,14 @@
 <script src="../js/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="../js/admin.js"></script>
 
+<div id="productBox">
+{if isset($product_tabs)}
 <div class="toolbarBox">
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
 			<li>
 				<a class="toolbar_btn action-{$k}" href="{$btn.href}" title="{$btn.desc}">
-					<span class="process-icon-{$k} {$btn.class|default:'' }" ></span>{$btn.short}
+					<span class="process-icon-{$k} {$btn.class|default:'' }" ></span>{$btn.desc}
 				</a>
 			</li> 
 			{/foreach}
@@ -28,9 +30,6 @@
 		</div>
 		{/if}
 </div>
-
-<div id="productBox">
-{if isset($product_tabs)}
  	<div class="productTabs">
 		<ul class="tab">
 		{foreach $product_tabs key=numStep item=tab}
