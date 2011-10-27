@@ -200,38 +200,29 @@ class authorizeAIM extends PaymentModule
 	}
 	
   /**
-  * Set the detail of a payment - Call after un validateOrder
+  * Set the detail of a payment - Call before the validate order init
+  * correctly the pcc object
   * See Authorize documentation to know the associated key => value
   * @param array fields
-  * @return bool success state
   */
   public function setTransactionDetail($response)
   {
-  	$pcc = new PaymentCC();
-		
-		$order = Db::getInstance()->getRow('
-			SELECT * 
-			FROM '._DB_PREFIX_.'orders 
-			WHERE id_cart = '.(int)$response[7]);
-		
-		$pcc->id_order = (int)$order['id_order'];
-		$pcc->id_currency = (int)$order['id_currency'];
-		$pcc->amount = (float)$response[9];
-		$pcc->transaction_id = (string)$response[6];
-		
-		// 50 => Card number (XXXX0000)
-		$pcc->card_number = (string)substr($response[50], -4);
-		
-		// 51 => Card Mark (Visa, Master card)
-		$pcc->card_brand = (string)$response[51];
-		
-		$pcc->card_expiration = (string)Tools::getValue('x_exp_date');
-		
-		// 68 => Owner name
-		$pcc->card_holder = (string)$response[68];
-		$pcc->add();
-		
-		unset($pcc);
+  	// If Exist we can store the details
+  	if (isset($this->pcc))
+  	{
+  		$this->pcc->transaction_id = (string)$response[6];
+			
+			// 50 => Card number (XXXX0000)
+			$this->pcc->card_number = (string)substr($response[50], -4);
+			
+			// 51 => Card Mark (Visa, Master card)
+			$this->pcc->card_brand = (string)$response[51];
+			
+			$this->pcc->card_expiration = (string)Tools::getValue('x_exp_date');
+			
+			// 68 => Owner name
+			$this->pcc->card_holder = (string)$response[68];
+  	}
   }
 }
 ?>

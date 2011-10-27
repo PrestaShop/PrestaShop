@@ -32,6 +32,9 @@ abstract class PaymentModuleCore extends Module
 	public	$currencies = true;
 	public	$currencies_mode = 'checkbox';
 
+	/* @var object PaymentCC */
+	public $pcc = null;
+	
 	public function install()
 	{
 		if (!parent::install())
@@ -75,6 +78,18 @@ abstract class PaymentModuleCore extends Module
 			return false;
 		return parent::uninstall();
 	}
+	
+	public function __construct()
+	{
+		$this->pcc = new PaymentCC();
+		
+		parent::__construct();
+	}
+	
+	public function __destruct()
+	{
+		unset($this->pcc);
+	}
 
 	/**
 	* Validate an order in database
@@ -86,9 +101,12 @@ abstract class PaymentModuleCore extends Module
 	* @param string $paymentMethod Payment method (eg. 'Credit card')
 	* @param string $message Message to attach to order
 	*/
-	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
+	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', 
+		$message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, 
+		$secure_key = false, Shop $shop = null)
 	{
 		$cart = new Cart((int)($id_cart));
+		
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 		// Does order already exists ?
@@ -153,7 +171,7 @@ abstract class PaymentModuleCore extends Module
 				Logger::addLog($errorMessage, 4, '0000001', 'Cart', intval($order->id_cart));
 				die($errorMessage);
 			}
-
+			
 			// Next !
 			if ($result AND isset($order->id))
 			{
@@ -176,13 +194,14 @@ abstract class PaymentModuleCore extends Module
 				// Insert new Order detail list using cart for the current order
 				$orderDetail = new OrderDetail($this->context);
 				$orderDetail->createList($order, $cart, $id_order_state);
-
+				
+				$this->addPCC($order->id, $order->id_currency, $amountPaid);
+				
 				// Insert products from cart into order_detail table
 				$productsList = '';
 				$products = $cart->getProducts();
 				foreach ($products AS $key => $product)
 				{
-
 					$price = Product::getPriceStatic((int)($product['id_product']), false, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 6, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
           $price_wt = Product::getPriceStatic((int)($product['id_product']), true, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 2, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
@@ -303,8 +322,6 @@ abstract class PaymentModuleCore extends Module
 					$history->addWithemail();
 				}
 
-				unset($orderDetail);
-
 				// Set order state in order history ONLY even if the "out of stock" status has not been yet reached
 				// So you migth have two order states
 				$new_history = new OrderHistory();
@@ -312,6 +329,8 @@ abstract class PaymentModuleCore extends Module
 				$new_history->changeIdOrderState((int)$id_order_state, (int)$order->id);
 				$new_history->addWithemail(true, $extraVars);
 
+				unset($orderDetail, $pcc);
+				
 				// Order is reloaded because the status just changed
 				$order = new Order($order->id);
 
@@ -404,6 +423,22 @@ abstract class PaymentModuleCore extends Module
 			Logger::addLog($errorMessage, 4, '0000001', 'Cart', intval($cart->id));
 			die($errorMessage);
 		}
+	}
+	
+	/**
+	* Add new PaymentCC to the order
+	* @var int id_order
+	* @var int id_currency
+	* @var float amount
+	*/
+	private function addPCC($id_order, $id_currency, $amount)
+	{
+		// Other information are set by the module
+
+		$this->pcc->id_order = (int)$id_order;
+		$this->pcc->id_currency = (int)$id_currency;
+		$this->pcc->amount = (float)$amount;
+		$this->pcc->add();
 	}
 
 	/**
