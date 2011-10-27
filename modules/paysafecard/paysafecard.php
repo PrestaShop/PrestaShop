@@ -58,7 +58,7 @@ class PaysafeCard extends PSCPrepaidServices
 	{
 		$this->name = 'paysafecard';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->module_dir = dirname(__FILE__);
         $this->certificat_dir = dirname(__FILE__).'/keyring/';
 		$this->need_instance = 0;
