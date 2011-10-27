@@ -38,13 +38,13 @@ class AdminAddressesControllerCore extends AdminController
 	 	$this->table = 'address';
 	 	$this->className = 'Address';
 	 	$this->lang = false;
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->requiredDatabase = true;
 		$this->addressType = 'customer';
 		$this->context = Context::getContext();
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;
@@ -84,11 +84,11 @@ class AdminAddressesControllerCore extends AdminController
 			),
 			'input' => array(
 				array(
-					'type' => 'text',
+					'type' => 'text_customer',
 					'label' => $this->l('Customer'),
 					'name' => 'id_customer',
 					'size' => 33,
-					'required' => true,
+					'required' => false,
 				),
 				array(
 					'type' => 'text',
@@ -104,7 +104,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'alias',
 					'size' => 33,
 					'required' => true,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
@@ -261,6 +261,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'id_state',
 					'required' => false,
 					'options' => array(
+						'query' => array(),
 						'id' => 'id_state',
 						'name' => 'name'
 					)

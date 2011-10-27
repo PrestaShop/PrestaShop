@@ -71,13 +71,17 @@
 					{if $input.name == 'id_state'}
 						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 					{/if}
+					{block name="label"}
 					{if isset($input.label)}
-					<label>{$input.label} </label>
+						<label>{$input.label} </label>
 					{/if}
+					{/block}
 					{if $input.type == 'hidden'}
 						<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
 					{else}
-					<div class="margin-form">
+					{block name="start_field_block"}
+						<div class="margin-form">
+					{/block}
 						{if $input.type == 'text'}
 							{if isset($input.lang) && isset($input.attributeLang)}
 								{foreach $languages as $language}
@@ -256,7 +260,7 @@
 							</p>
 						{/if}
 						{if isset($languages)}<div class="clear"></div>{/if}
-					</div>
+					{block name="end_field_block"}</div>{/block}
 					{/if}
 					{if $input.name == 'id_state'}
 						</div>
