@@ -992,6 +992,9 @@ class AdminControllerCore extends Controller
 			'token_admin_messages' => Tools::getAdminTokenLite('AdminMessages'),
 			'token_admin_employees' => Tools::getAdminTokenLite('AdminEmployees'),
 			'token_admin_search' => Tools::getAdminTokenLite('AdminSearch'),
+			'table' => $this->table,
+			'current' => self::$currentIndex,
+			'token' => $this->token,
 			'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
 			'last_name' => htmlentities($this->context->employee->lastname, ENT_COMPAT, 'UTF-8'),
 			'base_url' => $this->context->shop->getBaseURL(),
@@ -1008,7 +1011,7 @@ class AdminControllerCore extends Controller
 			'home_token' => $home_token,
 			'tabs_breadcrumb' => $tabs_breadcrumb,
 			'is_multishop' => $is_multishop,
-
+			'pic_dir' => _THEME_PROD_PIC_DIR_
 		));
 		$this->context->smarty->assign(array(
 			'HOOK_HEADER' => Module::hookExec('backOfficeHeader'),
@@ -1144,6 +1147,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function initForm()
 	{
+		if (Tools::getValue('submitFormAjax'))
+			$this->content .= $this->context->smarty->fetch($this->context->smarty->template_dir[0].'form_submit_ajax.tpl');
 		if ($this->fields_form && is_array($this->fields_form))
 		{
 			$this->getlanguages();
@@ -1290,7 +1295,11 @@ class AdminControllerCore extends Controller
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
-
+		if ((int)Tools::getValue('liteDisplaying'))
+		{
+			$this->display_header = false;
+			$this->display_footer = false;
+		}
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		// Change shop context ?
@@ -1303,6 +1312,8 @@ class AdminControllerCore extends Controller
 			unset($parse_query['setShopContext']);
 			Tools::redirectAdmin($url['path'].'?'.http_build_query($parse_query));
 		}
+		elseif (!Shop::isFeatureActive())
+			$this->context->cookie->shopContext = 's-1';
 
 		$shop_id = '';
 		if ($this->context->cookie->shopContext)
