@@ -1,5 +1,5 @@
 <?php
-
+ 
 include(dirname(__FILE__). '/../../config/config.inc.php');
 include(dirname(__FILE__).'/dibs.php');
 
@@ -41,7 +41,12 @@ if (count($_POST))
 		$message .= $error."\n";
 	$message = nl2br(strip_tags($message));
 	if ($valid_order === true)
-		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_PAYMENT'), (float)((int)$posted_values['amount'] / 100), $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
-	if ($valid_order === false)
-		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_ERROR'), 0, $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
+	{
+		$obj_dibs->setTransactionDetail($posted_values);
+		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_PAYMENT'), 
+			(float)((int)$posted_values['amount'] / 100), $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
+	}
+	else if ($valid_order === false)
+		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_ERROR'), 0, $obj_dibs->displayName, 
+			$message, array(), NULL, false, $secure_cart[2]);
 }
