@@ -8,7 +8,7 @@
 		<hr style="width: 100%;" /><br />
 		<table cellpadding="5" style="width:100%">
 			<tr>
-				<td class="col-left">{l s='File:'}</td>
+				<td class="col-left"><label>{l s='File:'}</label></td>
 				<td style="padding-bottom:5px;">
 					<div id="file-uploader">
 						<noscript>
