@@ -25,14 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function debugLog($content)
-{
-	ob_start();
-  var_dump($content);
-  $result = ob_get_clean();
-  file_put_contents(dirname(__FILE__).'/logTest.log', $result, FILE_APPEND);
-}
-
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -98,7 +90,7 @@ class dibs extends PaymentModule
 	{
 		$this->name = 'dibs';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
