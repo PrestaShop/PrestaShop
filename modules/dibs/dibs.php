@@ -25,6 +25,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+function debugLog($content)
+{
+	ob_start();
+  var_dump($content);
+  $result = ob_get_clean();
+  file_put_contents(dirname(__FILE__).'/logTest.log', $result, FILE_APPEND);
+}
+
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -73,7 +81,7 @@ class dibs extends PaymentModule
 	 * @var array
 	 */
 	private static $accepted_lang = array('da','en','es','fi','fo','fr','it','nl','no','pl','sv');
-	
+		
 	/**
 	 * Formular link to DIBS subscription
 	 * @var array
@@ -404,4 +412,31 @@ class dibs extends PaymentModule
 		$this->context->smarty->assign('logo_color', self::$MORE_SETTINGS['logo_color']);
 		return $this->display(__FILE__, 'dibs.tpl');
 	}
+	
+	/**
+  * Set the detail of a payment to prepare the validate order
+  * See Authorize documentation to know the associated key => value
+  * @param array fields
+  * @return bool success state
+  */
+  public function setTransactionDetail($response)
+  {
+		// If Exist we can store the details
+  	if (isset($this->pcc))
+  	{
+  		$this->pcc->transaction_id = (string)$response['transact'];
+			
+			// 50 => Card number (XXXX0000)
+			$this->pcc->card_number = (string)substr($response['cardnomask'], -4);
+			
+			// 51 => Card Mark (Visa, Master card)
+			$this->pcc->card_brand = (string)$response['paytype'];
+			
+			$this->pcc->card_expiration = '0000';
+			
+			// 68 => Owner name
+			$this->pcc->card_holder = '';
+  	}
+
+  }
 }

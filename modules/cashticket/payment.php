@@ -88,8 +88,10 @@ if ($state != Configuration::get('PS_OS_ERROR'))
 	} 
 }
 
-
-$module->validateOrder((int)($cart->id), $state, (float)($cart->getOrderTotal(true, Cart::BOTH)), $module->displayName, $message, NULL, (int)($currency->id), false, $cart->secure_key);
+$module->setTransactionDetail(array(
+	'transaction_id', $disposition['mtid']));
+$module->validateOrder((int)($cart->id), $state, (float)($cart->getOrderTotal(true, Cart::BOTH)), 
+	$module->displayName, $message, NULL, (int)($currency->id), false, $cart->secure_key);
 
 if ($state == Configuration::get('PS_OS_ERROR')) 
 {

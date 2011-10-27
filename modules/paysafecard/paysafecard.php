@@ -123,5 +123,21 @@ class PaysafeCard extends PSCPrepaidServices
 
 		return $error_msg[$error_code];
 	}
+	
+	/**
+  * Set the detail of a payment - Call before the validate order init
+  * correctly the pcc object
+  * See Authorize documentation to know the associated key => value
+  * @param array fields
+  */
+  public function setTransactionDetail($response)
+  {
+  	// If Exist we can store the details
+  	if (isset($this->pcc))
+  	{
+  		$this->pcc->transaction_id = (string)$response['transaction_id'];	
+	  }
+  }
+
 }
 
