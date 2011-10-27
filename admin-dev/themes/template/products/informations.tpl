@@ -87,7 +87,7 @@
 <table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 {* global information *}
 	<tr>
-		<td class="col-left">{l s='Name:' }</td>
+		<td class="col-left"><label>{l s='Name:' }</label></td>
 		<td style="padding-bottom:5px;" class="translatable">
 		{foreach from=$languages item=language}
 			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
@@ -102,33 +102,33 @@
 			</td>
 					</tr>
 					<tr>
-						<td class="col-left">{l s='Reference:' }</td>
+						<td class="col-left"><label>{l s='Reference:' }</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
 							<span class="hint" name="help_box">{l s='Special characters allowed:' }.-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">{l s='Supplier Reference:' }</td>
+						<td class="col-left"><label>{l s='Supplier Reference:' }</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" type="text" name="supplier_reference" value="{$product->supplier_reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
 							<span class="hint" name="help_box">{l s='Special characters allowed:' } .-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">{l s='EAN13 or JAN:' }</td>
+						<td class="col-left"><label>{l s='EAN13 or JAN:' }</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(Europe, Japan)'}</span>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">{l s='UPC:' }</td>
+						<td class="col-left"><label>{l s='UPC:' }</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">{l s='Location (warehouse):' }</td>
+						<td class="col-left"><label>{l s='Location (warehouse):' }</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" type="text" name="location" value="{$product->location|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
 						</td>
@@ -404,13 +404,13 @@ $(document).ready(function(){
 		</table>
 		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 			<tr>
-				<td class="col-left">{l s='Width ( package ) :' }</td>
+				<td class="col-left"><label>{l s='Width ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
 					<input size="6" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 				</td>
 			</tr>
 			<tr>
-				<td class="col-left">{l s='Height ( package ) :' }</td>
+				<td class="col-left"><label>{l s='Height ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
 					<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 				</td>
@@ -418,13 +418,13 @@ $(document).ready(function(){
 		</table>
 		<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 			<tr>
-				<td class="col-left">{l s='Deep ( package ) :' }</td>
+				<td class="col-left"><label>{l s='Deep ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
 					<input size="6" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 				</td>
 			</tr>
 			<tr>
-				<td class="col-left">{l s='Weight ( package ) :' }</td>
+				<td class="col-left"><label>{l s='Weight ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
 					<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_weight_unit}
 				</td>

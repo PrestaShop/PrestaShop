@@ -229,7 +229,7 @@
 	</tr>
 {/if}
 			<tr>
-			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">{l s='Minimum quantity:' }
+			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left"><label>{l s='Minimum quantity:' }</label>
 			</td>
 			<td style="padding-bottom:5px;">
 				<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$minimal_quantity}" />
@@ -237,7 +237,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">{l s='Available date:'}</td>
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px"><label>{l s='Available date:'}</label></td>
 				<td style="padding-bottom:5px;"><input class="datepicker" id="available_date" name="available_date" value="{$available_date}" style="text-align: center;" type="text" />
 					<p>{l s='The available date when this product is out of stock'}</p>
 	<script type="text/javascript">

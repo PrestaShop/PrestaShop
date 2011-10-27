@@ -1779,41 +1779,41 @@ if (false)
 		if($this->tabAccess['delete'])
 			$available_btn['delete'] = array(
 				'short' => 'Delete',
-				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct', 
+				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct',
 				'desc' => $this->l('Delete this product'),
 				'confirm' => 1);
 
 		if($this->tabAccess['add'])
 			$available_btn['duplicate'] = array(
 				'short' => 'Duplicate',
-				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate this product'), 
+				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate this product'),
 				'confirm' => 1
 			);
 // @TODO navigation
 		$available_btn['preview'] = array(
-		'short' => 'Preview', 
-		'href' => $preview_url, 'desc' => 'prevdesc', 
+		'short' => 'Preview',
+		'href' => $preview_url, 'desc' => 'prevdesc',
 		);
 		if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
 			$available_btn['stats'] = array(
 			'short' => 'Statistics',
-			'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id, 
-			'desc' => $this->l('View product sales'), 
+			'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id,
+			'desc' => $this->l('View product sales'),
 			);
-		
+
 		$available_btn['cancel'] = array(
 		'short' => 'Close',
-		'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel modification'), 
+		'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel modification'),
 		 'confirm' => 1);
 		if($this->tabAccess['add'])
 			$available_btn['new'] = array(
 			'short' => 'Create',
-			'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create new product'), 
+			'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create new product'),
 		);
 		if($this->tabAccess['edit'])
 			$available_btn['save'] = array(
 			'short' => 'Save',
-			'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save your modifications'), 
+			'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save your modifications'),
 		);
 
 		$smarty->assign('available_btn', $available_btn);
@@ -2308,17 +2308,17 @@ switch ($this->action)
 		$smarty->assign('languages', $languages);
 		$smarty->assign('feature_shop_active', Shop::isFeatureActive());
 		$smarty->assign('displayAssoShop', $this->displayAssoShop());
-		
+
 		$product_props = array();
 		// global informations
 		array_push($product_props, 'reference', 'supplier_reference', 'ean13', 'upc', 'location',
 		'available_for_order', 'show_price', 'online_only',
 		'id_manufacturer', 'id_supplier'
 		);
-		
-		// specific / detailled information 
-		array_push($product_props, 
-		// physical product 
+
+		// specific / detailled information
+		array_push($product_props,
+		// physical product
 		'width', 'height', 'weight', 'active',
 		// virtual product
 		'is_virtual', 'cache_default_attribute',
@@ -2332,7 +2332,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 
 		$smarty->assign('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT'));
 		$smarty->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
-		//$product->{'pack_info'} =	
+		//$product->{'pack_info'} =
 		$this->initPack($product);
 
 /*
@@ -2343,18 +2343,18 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		$product->{'product_download'} = new ProductDownload($id_product_download);
 
 	$this->displayInitInformationAndAttachment();
-	// price.js is used in information 
+	// price.js is used in information
 	$this->addJs(_PS_JS_DIR_.'price.js');
 
 				// todo handle is_virtual with the value of the product
 				$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-				$smarty->assign('product_downloaded', 
-				$product->productDownload->id 
+				$smarty->assign('product_downloaded',
+				$product->productDownload->id
 				// it seems the following is not used
-				// && !empty($product->cache_default_attribute) 
+				// && !empty($product->cache_default_attribute)
 				&& !empty($product->productDownload->display_filename));
-			if (!file_exists($exists_file) 
-				&& !empty($product->productDownload->display_filename) 
+			if (!file_exists($exists_file)
+				&& !empty($product->productDownload->display_filename)
 				&& !empty($product->cache_default_attribute))
 			{
 
@@ -2405,7 +2405,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 	$currency = $this->context->currency;
 					$content .= '
 					<tr>
-						<td class="col-left">'.$this->l('Pre-tax wholesale price:').'</td>
+						<td class="col-left"><label>'.$this->l('Pre-tax wholesale price:').'</label></td>
 						<td style="padding-bottom:5px;">
 							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" name="wholesale_price" type="text" value="'.htmlentities($this->getFieldValue($product, 'wholesale_price'), ENT_COMPAT, 'UTF-8').'" onchange="this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							<span style="margin-left:10px">'.$this->l('The wholesale price at which you bought this product').'</span>
@@ -2413,7 +2413,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</tr>';
 					$content .= '
 					<tr>
-						<td class="col-left">'.$this->l('Pre-tax retail price:').'</td>
+						<td class="col-left"><label>'.$this->l('Pre-tax retail price:').'</label></td>
 						<td style="padding-bottom:5px;">
 							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="'.$this->getFieldValue($product, 'price').'" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<sup> *</sup>
 							<span style="margin-left:2px">'.$this->l('The pre-tax retail price to sell this product').'</span>
@@ -2437,7 +2437,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</script>';
 					$content .= '
 					<tr>
-						<td class="col-left">'.$this->l('Tax rule:').'</td>
+						<td class="col-left"><label>'.$this->l('Tax rule:').'</label></td>
 						<td style="padding-bottom:5px;">
 					<span '.(Tax::excludeTaxeOption() ? 'style="display:none;"' : '' ).'>
 					 <select onChange="javascript:calcPriceTI(); unitPriceWithTax(\'unit\');" name="id_tax_rules_group" id="id_tax_rules_group" '.(Tax::excludeTaxeOption() ? 'disabled="disabled"' : '' ).'>
@@ -2462,7 +2462,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				if (Configuration::get('PS_USE_ECOTAX'))
 					$content .= '
 					<tr>
-						<td class="col-left">'.$this->l('Eco-tax (tax incl.):').'</td>
+						<td class="col-left"><label>'.$this->l('Eco-tax (tax incl.):').'</label></td>
 						<td style="padding-bottom:5px;">
 							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="'.$this->getFieldValue($product, 'ecotax').'" onkeyup="if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, \'.\'); if (parseInt(this.value) > getE(\'priceTE\').value) this.value = getE(\'priceTE\').value; if (isNaN(this.value)) this.value = 0;" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							<span style="margin-left:10px">('.$this->l('already included in price').')</span>
@@ -2473,7 +2473,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				{
 					$content .= '
 						<tr '.(Tax::excludeTaxeOption() ? 'style="display:none"' : '' ).'>
-							<td class="col-left">'.$this->l('Retail price with tax:').'</td>
+							<td class="col-left"><label>'.$this->l('Retail price with tax:').'</label></td>
 							<td style="padding-bottom:5px;">
 								'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
 							</td>
@@ -2484,7 +2484,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 
 				$content .= '
 					<tr id="tr_unit_price">
-						<td class="col-left">'.$this->l('Unit price without tax:').'</td>
+						<td class="col-left"><label>'.$this->l('Unit price without tax:').'</label></td>
 						<td style="padding-bottom:5px;">
 							'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="'.($this->getFieldValue($product, 'unit_price_ratio') != 0 ? Tools::ps_round($this->getFieldValue($product, 'price') / $this->getFieldValue($product, 'unit_price_ratio'), 2) : 0).'" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); unitPriceWithTax(\'unit\');"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <input size="6" maxlength="10" id="unity" name="unity" type="text" value="'.htmlentities($this->getFieldValue($product, 'unity'), ENT_QUOTES, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>'.
 							(Configuration::get('PS_TAX') && $this->context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($product, 'unity').'</span> '.$this->l('with tax') : '').'</span>
@@ -2492,13 +2492,13 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">&nbsp;</td>
+						<td class="col-left"><label>&nbsp;</label></td>
 						<td style="padding-bottom:5px;">
 							<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" '.($this->getFieldValue($product, 'on_sale') ? 'checked="checked"' : '').'value="1" />&nbsp;<label for="on_sale" class="t">'.$this->l('Display "on sale" icon on product page and text on product listing').'</label>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left"><b>'.$this->l('Final retail price:').'</b></td>
+						<td class="col-left"><label><b>'.$this->l('Final retail price:').'</b></label></td>
 						<td style="padding-bottom:5px;">
 							<span style="'.($this->context->country->display_tax_label ? '' : 'display:none').'">
 							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPrice" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'> ('.$this->l('tax incl.').')</span>
@@ -2512,7 +2512,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">&nbsp;</td>
+						<td class="col-left"><label>&nbsp;</label></td>
 						<td>
 							<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You can define many discounts and specific price rules in the Prices tab').'</div>
 						</td>
@@ -2526,7 +2526,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						$content .= '
 							<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 							<tr>
-							<td class="col-left">'.$this->l('Minimum quantity:').'</td>
+							<td class="col-left"><label>'.$this->l('Minimum quantity:').'</label></td>
 								<td style="padding-bottom:5px;">
 									<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1).'" />
 									<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
@@ -2545,7 +2545,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					{
 						$content .= '
 							<tr>
-								<td class="col-left">'.$this->l('Minimum quantity:').'</td>
+								<td class="col-left"><label>'.$this->l('Minimum quantity:').'</label></td>
 								<td style="padding-bottom:5px;">
 									<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="'.($this->getFieldValue($obj, 'minimal_quantity') ? $this->getFieldValue($obj, 'minimal_quantity') : 1).'" />
 									<p>'.$this->l('The minimum quantity to buy this product (set to 1 to disable this feature)').'</p>
@@ -2558,7 +2558,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				$content .= '
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr>
-						<td class="col-left">'.$this->l('Additional shipping cost:').'</td>
+						<td class="col-left"><label>'.$this->l('Additional shipping cost:').'</label></td>
 						<td style="padding-bottom:5px;">
 							<input type="text" name="additional_shipping_cost" value="'.($this->getFieldValue($product, 'additional_shipping_cost')).'" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '');
 							if ($this->context->country->display_tax_label)
@@ -2568,7 +2568,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left">'.$this->l('Displayed text when in-stock:').'</td>
+						<td class="col-left"><label>'.$this->l('Displayed text when in-stock:').'</label></td>
 						<td style="padding-bottom:5px;" class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
@@ -2579,7 +2579,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		$content .= '			</td>
 					</tr>
 					<tr>
-						<td class="col-left">'.$this->l('Displayed text when allowed to be back-ordered:').'</td>
+						<td class="col-left"><label>'.$this->l('Displayed text when allowed to be back-ordered:').'</label></td>
 						<td style="padding-bottom:5px;" class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '		<div  class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
@@ -2598,7 +2598,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 			{
 				$content .= '
 						<tr>
-							<td class="col-left">'.$this->l('Available date:').'</td>
+							<td class="col-left"><label>'.$this->l('Available date:').'</label></td>
 							<td style="padding-bottom:5px;">
 							<input id="available_date" name="available_date" value="'.(($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00').'" style="text-align: center;" type="text" />
 								<p>'.$this->l('The available date when this product is out of stock').'</p>
@@ -2613,7 +2613,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</script>
 
 					<tr>
-						<td class="col-left">'.$this->l('When out of stock:').'</td>
+						<td class="col-left"><label>'.$this->l('When out of stock:').'</label></td>
 						<td style="padding-bottom:5px;">
 							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0" '.((int)($this->getFieldValue($product, 'out_of_stock')) == 0 ? 'checked="checked"' : '').'/> <label for="out_of_stock_1" class="t" id="label_out_of_stock_1">'.$this->l('Deny orders').'</label>
 							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" '.($this->getFieldValue($product, 'out_of_stock') == 1 ? 'checked="checked"' : '').'/> <label for="out_of_stock_2" class="t" id="label_out_of_stock_2">'.$this->l('Allow orders').'</label>
@@ -2677,7 +2677,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						<div id="seo" style="display: none; padding-top: 15px;">
 							<table>
 								<tr>
-									<td class="col-left">'.$this->l('Meta title:').'</td>
+									<td class="col-left"><label>'.$this->l('Meta title:').'</label></td>
 									<td class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
@@ -2689,7 +2689,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 									</td>
 								</tr>
 								<tr>
-									<td class="col-left">'.$this->l('Meta description:').'</td>
+									<td class="col-left"><label>'.$this->l('Meta description:').'</label></td>
 									<td class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
@@ -2701,7 +2701,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 									</td>
 								</tr>
 								<tr>
-									<td class="col-left">'.$this->l('Meta keywords:').'</td>
+									<td class="col-left"><label>'.$this->l('Meta keywords:').'</label></td>
 									<td class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '					<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').'; float: left;">
@@ -2713,7 +2713,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 									</td>
 								</tr>
 								<tr>
-									<td class="col-left">'.$this->l('Friendly URL:').'</td>
+									<td class="col-left"><label>'.$this->l('Friendly URL:').'</label></td>
 									<td class="translatable">';
 		foreach ($this->_languages as $language)
 		{
@@ -2732,7 +2732,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</td></tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
 					<tr>
-						<td class="col-left">'.$this->l('Short description:').'<br /><br /><i>('.$this->l('appears in the product lists and on the top of the product page').')</i></td>
+						<td class="col-left"><label>'.$this->l('Short description:').'<br /><br /><i>('.$this->l('appears in the product lists and on the top of the product page').')</i></label></td>
 						<td style="padding-bottom:5px;" class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
@@ -2742,7 +2742,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 			</td>
 					</tr>
 					<tr>
-						<td class="col-left">'.$this->l('Description:').'<br /><br /><i>('.$this->l('appears in the body of the product page').')</i></td>
+						<td class="col-left"><label>'.$this->l('Description:').'<br /><br /><i>('.$this->l('appears in the body of the product page').')</i></label></td>
 						<td style="padding-bottom:5px;" class="translatable">';
 		foreach ($this->_languages as $language)
 			$content .= '		<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->_defaultFormLanguage ? 'block' : 'none').';float: left;">
@@ -2766,7 +2766,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 										<td colspan="2" height="10"></td>
 									</tr>
 									<tr>
-										<td class="col-left">'.$this->l('Select your image:').'</td>
+										<td class="col-left"><label>'.$this->l('Select your image:').'</label></td>
 										<td style="padding-bottom:5px;">
 											<ul>';
 											foreach ($images as $key => $image)
@@ -2787,7 +2787,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 									</tr>';
 								$content .= '
 									<tr>
-										<td class="col-left">'.$this->l('Where to place it?').'</td>
+										<td class="col-left"><label>'.$this->l('Where to place it?').'</label></td>
 										<td style="padding-bottom:5px;">
 											<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
 											<label for="leftRight_1" class="t">'.$this->l('left').'</label>
@@ -2799,7 +2799,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 									</tr>';
 								$content .= '
 									<tr>
-										<td class="col-left">'.$this->l('Select the type of picture:').'</td>
+										<td class="col-left"><label>'.$this->l('Select the type of picture:').'</label></td>
 										<td style="padding-bottom:5px;">';
 											$imageTypes = ImageType::getImagesTypes('products');
 											foreach ($imageTypes as $key => $type)
@@ -2816,7 +2816,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 									</tr>';
 								$content .= '
 									<tr>
-										<td class="col-left">'.$this->l('Image tag to insert:').'</td>
+										<td class="col-left"><label>'.$this->l('Image tag to insert:').'</label></td>
 										<td style="padding-bottom:5px;">
 											<input type="text" id="resultImage" name="resultImage" />
 											<p>'.$this->l('The tag is to copy / paste in the description.').'</p>
@@ -2857,7 +2857,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				}
 				$content .= '
 					<tr>
-						<td class="col-left">'.$this->l('Tags:').'</td>
+						<td class="col-left"><label>'.$this->l('Tags:').'</label></td>
 						<td style="padding-bottom:5px;" class="translatable">';
 				if ($product->id)
 					$product->tags = Tag::getProductTags((int)$product->id);
@@ -2884,7 +2884,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 
 					$content .= '
 					<tr>
-						<td class="col-left">'.$this->l('Accessories:').'<br /><br /><i>'.$this->l('(Do not forget to Save the product afterward)').'</i></td>
+						<td class="col-left"><label>'.$this->l('Accessories:').'<br /><br /><i>'.$this->l('(Do not forget to Save the product afterward)').'</i></label></td>
 						<td style="padding-bottom:5px;">
 							<div id="divAccessories">';
 					foreach ($accessories as $accessory)
@@ -3193,7 +3193,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							<table style="margin-top: 15px;">
 								<tbody>
 									<tr>
-										<td class="col-left">'.$this->l('When out of stock:').'</td>
+										<td class="col-left"><label>'.$this->l('When out of stock:').'</label></td>
 										<td style="padding-bottom:5px;">
 											<input '.(($obj->out_of_stock == 0) ? 'checked="checked"' : '' ).' id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
 											<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">'.$this->l('Deny orders').'</label>
@@ -3764,7 +3764,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		$smarty = $this->context->smarty;
 		$smarty->assign('is_pack', ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack'));
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
-		
+
 		$input_pack_items = '';
 		if(Tools::getValue('inputPackItems'))
 			$input_pack_items = Tools::getValue('inputPackItems');
