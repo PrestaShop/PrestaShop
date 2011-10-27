@@ -54,7 +54,8 @@ class DbQueryCore
 	 */
 	public function select($fields)
 	{
-		$this->query['select'][] = $fields;
+		if (!empty($fields))
+			$this->query['select'][] = $fields;
 		return $this;
 	}
 
@@ -66,7 +67,8 @@ class DbQueryCore
 	 */
 	public function from($table)
 	{
-		$this->query['from'] = _DB_PREFIX_.$table;
+		if (!empty($table))
+			$this->query['from'] = _DB_PREFIX_.$table;
 		return $this;
 	}
 
@@ -79,7 +81,9 @@ class DbQueryCore
 	 */
 	public function join($join)
 	{
-		$this->query['join'][] = $join;
+		if (!empty($join))
+			$this->query['join'][] = $join;
+
 		return $this;
 	}
 
@@ -91,7 +95,10 @@ class DbQueryCore
 	 */
 	public function leftJoin($join)
 	{
-		return $this->join('LEFT JOIN '._DB_PREFIX_.$join);
+		if (!empty($join))
+			return $this->join('LEFT JOIN '._DB_PREFIX_.$join);
+
+		return $this;
 	}
 
 	/**
@@ -102,7 +109,10 @@ class DbQueryCore
 	 */
 	public function innerJoin($join)
 	{
-		return $this->join('INNER JOIN '._DB_PREFIX_.$join);
+		if (!empty($join))
+			return $this->join('INNER JOIN '._DB_PREFIX_.$join);
+
+		return $this;
 	}
 
 	/**
@@ -112,7 +122,10 @@ class DbQueryCore
 	 */
 	public function leftOuterJoin($join)
 	{
-		return $this->join('LEFT OUTER JOIN '._DB_PREFIX_.$join);
+		if (!empty($join))
+			return $this->join('LEFT OUTER JOIN '._DB_PREFIX_.$join);
+
+		return $this;
 	}
 
 	/**
@@ -122,7 +135,10 @@ class DbQueryCore
 	 */
 	public function naturalJoin($join)
 	{
-		return $this->join('NATURAL JOIN '._DB_PREFIX_.$join);
+		if (!empty($join))
+			return $this->join('NATURAL JOIN '._DB_PREFIX_.$join);
+
+		return $this;
 	}
 
 	/**
@@ -133,7 +149,9 @@ class DbQueryCore
 	 */
 	public function where($restriction)
 	{
-		$this->query['where'][] = $restriction;
+		if (!empty($restriction))
+			$this->query['where'][] = $restriction;
+
 		return $this;
 	}
 
@@ -145,7 +163,9 @@ class DbQueryCore
 	 */
 	public function having($restriction)
 	{
-		$this->query['having'][] = $restriction;
+		if (!empty($restriction))
+			$this->query['having'][] = $restriction;
+
 		return $this;
 	}
 
@@ -157,7 +177,9 @@ class DbQueryCore
 	 */
 	public function orderBy($fields)
 	{
-		$this->query['order'][] = $fields;
+		if (!empty($fields))
+			$this->query['order'][] = $fields;
+
 		return $this;
 	}
 
@@ -169,7 +191,9 @@ class DbQueryCore
 	 */
 	public function groupBy($fields)
 	{
-		$this->query['group'][] = $fields;
+		if (!empty($fields))
+			$this->query['group'][] = $fields;
+
 		return $this;
 	}
 
@@ -234,3 +258,4 @@ class DbQueryCore
 		return $this->build();
 	}
 }
+
