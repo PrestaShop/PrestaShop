@@ -205,8 +205,8 @@ if (isFormValid())
 	}
 	Language::loadLanguages();
 	Configuration::loadConfiguration();
-	require_once(dirname(__FILE__).'/../../config/defines.inc.php');
-	require_once(dirname(__FILE__).'/../../classes/LocalizationPack.php');
+	require_once(DEFINES_FILE);
+	require_once(INSTALL_PATH.'/../classes/LocalizationPack.php');
 
 
 	$stream_context = @stream_context_create(array('http' => array('timeout' => 5)));
