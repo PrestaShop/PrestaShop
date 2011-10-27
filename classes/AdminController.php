@@ -888,6 +888,8 @@ class AdminControllerCore extends Controller
 				'<b>'.Context::getContext()->shop->name.'</b>'
 			);
 		}
+		else
+			$shop_name = Configuration::get('PS_SHOP_NAME');
 
 			// Multishop
 		$is_multishop = Shop::isFeatureActive();// && Context::shop() != Shop::CONTEXT_ALL;
