@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,7 +28,7 @@
 	<script type="text/javascript">
 		var vat_number = {$vat_number};
 		var module_dir = '{$module_dir}';
-	
+
 		$(document).ready(function() {ldelim}
 			var id_language = {$defaultFormLanguage};
 			var languages = new Array();
@@ -40,11 +40,11 @@
 				{rdelim};
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
-				
+
 			$('input[name=share_order]').attr('disabled', true);
-			$('input[name=share_customer], input[name=share_stock]').click(function()
+			$('input[name=share_customer]').click(function()
 			{
-				var disabled = ($('input[name=share_customer]').attr('checked') && $('input[name=share_stock]').attr('checked')) ? false : true;
+				var disabled = ($('input[name=share_customer]').attr('checked')) ? false : true;
 				$('input[name=share_order]').attr('disabled', disabled);
 				if (disabled)
 					$('#share_order_off').attr('checked', true);
@@ -78,13 +78,13 @@
 					<label>{$input.label} </label>
 					<div class="margin-form">
 						{if $input.type == 'text'}
-							<input type="text" 
-									name="{$input.name}" 
-									id="{$input.name}" 
-									value="{$fields_value[$input.name]}" 
+							<input type="text"
+									name="{$input.name}"
+									id="{$input.name}"
+									value="{$fields_value[$input.name]}"
 									{if isset($input.size)}size="{$input.size}"{/if}
 									{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-									{if isset($input.class)}class="{$input.class}"{/if} 
+									{if isset($input.class)}class="{$input.class}"{/if}
 									{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
 						{elseif $input.type == 'select'}
 							<select name="{$input.name}" id="{$input.name}" {if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
@@ -92,24 +92,24 @@
 									{foreach $input.options.optiongroup.query AS $optiongroup}
 										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
 											{foreach $optiongroup[$input.options.options.query] as $option}
-												<option value="{$option[$input.options.options.id]}" 
+												<option value="{$option[$input.options.options.id]}"
 														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]}</option>
 											{/foreach}
 										</optgroup>
 									{/foreach}
 								{else}
 									{foreach $input.options.query AS $option}
-										<option value="{$option[$input.options.id]}" 
+										<option value="{$option[$input.options.id]}"
 												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
 									{/foreach}
 								{/if}
 							</select>
 						{elseif $input.type == 'radio'}
 							{foreach $input.values as $value}
-								<input type="radio" 
-										name="{$input.name}" 
-										id="{$value.id}" 
-										value="{$value.value}" 
+								<input type="radio"
+										name="{$input.name}"
+										id="{$value.id}"
+										value="{$value.value}"
 										{if $disabled[$input.name]}disabled="disabled"{/if}
 										{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
 								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
@@ -127,7 +127,7 @@
 						{elseif $input.type == 'textarea'}
 							<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
 						{elseif $input.type == 'checkbox'}
-							
+
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
