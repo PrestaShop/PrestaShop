@@ -1997,7 +1997,7 @@ switch ($this->action)
 		';
 
 		$content .= '
-		<hr />
+		<div class="separation"></div>
 		<h4>'.$this->l('Priorities management').'</h4>
 		<div class="hint clear" style="display:block;">
 				'.$this->l('Sometimes one customer could fit in multiple rules, priorities allows you to define which rule to apply.').'
@@ -2076,7 +2076,7 @@ switch ($this->action)
 				<input type="submit" name="submitPriceAddition" value="'.$this->l('Add').'" class="button" />
 			</div>
 		</div>
-		<hr />
+		<div class="separation"></div>
 		';
 		return $content;
 	}
@@ -2146,7 +2146,7 @@ switch ($this->action)
 					<td colspan="2"><b>'.$this->l('Add or modify customizable properties').'</b></td>
 				</tr>
 			</table>
-			<hr style="width:100%;" /><br />
+			<div class="separation"></div><br />
 			<table cellpadding="5" style="width:100%">
 				<tr>
 					<td style="width:150px;text-align:right;padding-right:10px;font-weight:bold;vertical-align:top;" valign="top">'.$this->l('File fields:').'</td>
@@ -2171,7 +2171,7 @@ switch ($this->action)
 				if ($hasFileLabels)
 				{
 					$this->content .= '
-				<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+				<tr><td colspan="2"><div class="separation"></div></td></tr>
 				<tr>
 					<td style="width:150px" valign="top">'.$this->l('Files fields:').'</td>
 					<td>';
@@ -2184,7 +2184,7 @@ switch ($this->action)
 				if ($hasTextLabels)
 				{
 					$this->content .= '
-				<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+				<tr><td colspan="2"><div class="separation"></div></td></tr>
 				<tr>
 					<td style="width:150px" valign="top">'.$this->l('Text fields:').'</td>
 					<td>';
@@ -2524,7 +2524,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					if (!$has_attribute)
 					{
 						$content .= '
-							<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
+							<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 							<tr>
 							<td class="col-left"><label>'.$this->l('Minimum quantity:').'</label></td>
 								<td style="padding-bottom:5px;">
@@ -2537,7 +2537,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				else
 				{
 					$content .= '
-						<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
+						<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 						<tr>
 							<td colspan="2">'.$this->l('The stock management is disabled').'</td>
 						</tr>';
@@ -2556,7 +2556,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				}
 
 				$content .= '
-					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
+					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 					<tr>
 						<td class="col-left"><label>'.$this->l('Additional shipping cost:').'</label></td>
 						<td style="padding-bottom:5px;">
@@ -2622,7 +2622,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</tr>
 					<tr>
 						<td colspan="2" style="padding-bottom:5px;">
-							<hr style="width:100%;" />
+							<div class="separation"></div>
 						</td>
 					</tr>
 					<tr>
@@ -2671,7 +2671,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					$content .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox', false, true).'
 						</td>
 					</tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
+					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 					<tr><td colspan="2">
 						<span onclick="$(\'#seo\').slideToggle();" style="cursor: pointer"><img src="../img/admin/arrow.gif" alt="'.$this->l('SEO').'" title="'.$this->l('SEO').'" style="float:left; margin-right:5px;"/>'.$this->l('Click here to improve product\'s rank in search engines (SEO)').'</span><br />
 						<div id="seo" style="display: none; padding-top: 15px;">
@@ -2730,7 +2730,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		$content .= '</td></tr></table>
 						</div>
 					</td></tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><hr style="width:100%;" /></td></tr>
+					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 					<tr>
 						<td class="col-left"><label>'.$this->l('Short description:').'<br /><br /><i>('.$this->l('appears in the product lists and on the top of the product page').')</i></label></td>
 						<td style="padding-bottom:5px;" class="translatable">';
@@ -2945,7 +2945,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							</script>
 						</td>
 					</tr>
-					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>
+					<tr><td colspan="2" style="padding-bottom:10px;"><div class="separation"></div></td></tr>
 					<tr>
 						<td colspan="2" style="text-align:center;">
 							<input type="submit" value="'.$this->l('Save').'" name="submitAdd'.$this->table.'" class="button" />
@@ -3008,7 +3008,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							'.(Tools::getValue('id_image') ? '<input type="hidden" name="id_image" value="'.(int)(Tools::getValue('id_image')).'" />' : '').'
 						</td>
 					</tr>
-					<tr><td colspan="2" style="padding-bottom:10px;"><hr style="width:100%;" /></td></tr>
+					<tr><td colspan="2" style="padding-bottom:10px;"><div class="separation"></div></td></tr>
 					<tr>
 						<td colspan="2">
 							<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery.tablednd_0_5.js"></script>
@@ -3105,7 +3105,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</tr>
 				</tbody>
 			</table>
-			<hr style="width:100%;" />
+			<div class="separation"></div>
 			<p>'.sprintf($this->l('There is %s quantities available in stock for this product'), '<b>'.$totalQuantity.'</b>').'</p>
 			<table cellpadding="5" style="width:100%">
 				<tbody>
@@ -3142,7 +3142,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</tr>
 				</tbody>
 			</table>
-			<hr style="width:100%;" />
+			<div class="separation"></div>
 			<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
 			<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 			<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
@@ -3476,7 +3476,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 			$content .= '
 		<div>
 		<table>
-		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+		  <tr><td colspan="2"><div class="separation"></div></td></tr>
 		  <tr>
 			  <td colspan="2">
 					<br />
@@ -3668,7 +3668,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					</td>
 				</tr>
 			</table>
-			<hr style="width:100%;" /><br />';
+			<div class="separation"></div><br />';
 			// Header
 			$nb_feature = Feature::nbFeatures($this->context->language->id);
 			$this->content .= '
@@ -3742,7 +3742,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				</tr>';
 			}
 			$this->content .= '</table>
-			<hr style="width:100%;" />
+			<div class="separation"></div>
 			<div style="text-align:center;">
 				<a href="index.php?tab=AdminFeatures&addfeature&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('You will lose all modifications not saved, you may want to save modifications first?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="new_features" title="'.$this->l('Add a new feature').'" />&nbsp;'.$this->l('Add a new feature').'</a>
 			</div>';

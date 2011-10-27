@@ -51,7 +51,7 @@
 		</td>
 	</tr>
 </table>
-<hr style="width:100%;" /><br />
+<div class="separation"></div><br />
 
 <div id="add_new_combination" style="display: none;">
 <table cellpadding="5" style="width:100%">
@@ -90,7 +90,7 @@
 	</td>
 </tr>
 
-<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+<tr><td colspan="2"><div class="separation"></div></td></tr>
 <tr>
 	<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Reference:'}</td>
 	<td style="padding-bottom:5px;">
@@ -108,7 +108,7 @@
 	<span class="hint" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
 	</td>
 </tr>
-<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+<tr><td colspan="2"><div class="separation"></div></td></tr>
 <table cellpadding="5" id="virtual_good_attributes" style="width:100%;display:none;">
 <tr>
 <td colspan="2">	
@@ -159,7 +159,7 @@
 	</div>
 	</td>
 </tr>
-<tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+<tr><td colspan="2"><div class="separation"></div></td></tr>
 </table>
 <table>
 	<tr>
@@ -250,7 +250,7 @@
 	</script>
 			  </td>
 		  </tr>
-		  <tr><td colspan="2"><hr style="width:100%;" /></td></tr>
+		  <tr><td colspan="2"><div class="separation"></div></td></tr>
 		  <tr>
 			  <td style="width:150px">{l s='Image:' }</td>
 			  <td style="padding-bottom:5px;">
