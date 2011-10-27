@@ -120,11 +120,15 @@ abstract class ControllerCore
 		// postProcess handles ajaxProcess
 		$this->postProcess();
 
-		$this->setMedia();
-		$this->initHeader();
+		if ($this->display_header)
+		{
+			$this->setMedia();
+			$this->initHeader();
+		}
 	
 		$this->initContent();
-		$this->initFooter();
+		if ($this->display_footer)
+			$this->initFooter();
 
 		if ($this->ajax)
 		{
