@@ -36,7 +36,7 @@ class Ogone extends PaymentModule
 	{
 		$this->name = 'ogone';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.2';
+		$this->version = '2.3';
 
         parent::__construct();
 
@@ -208,20 +208,12 @@ class Ogone extends PaymentModule
 	
 	public function validate($id_cart, $id_order_state, $amount, $message = '', $secure_key)
 	{
-		$this->validateOrder((int)$id_cart, $id_order_state, $amount, $this->displayName, $message, NULL, NULL, true, pSQL($secure_key));
-		if ($amount > 0 AND file_exists('../../classes/PaymentCC.php'))
-		{
-			$pcc = new PaymentCC();
-			$order = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'orders WHERE id_cart = '.(int)$id_cart);
-			$pcc->id_order = (int)$order['id_order'];
-			$pcc->id_currency = (int)$order['id_currency'];
-			$pcc->amount = $amount;
-			$pcc->transaction_id = Tools::getValue('PAYID');
-			$pcc->card_number = Tools::getValue('CARDNO');
-			$pcc->card_brand = Tools::getValue('BRAND');
-			$pcc->card_expiration = Tools::getValue('ED');
-			$pcc->card_holder = Tools::getValue('CN');
-			$pcc->add();
-		}		
+		$this->pcc->transaction_id = Tools::getValue('PAYID');
+		$this->pcc->card_number = Tools::getValue('CARDNO');
+		$this->pcc->card_brand = Tools::getValue('BRAND');
+		$this->pcc->card_expiration = Tools::getValue('ED');
+		$this->pcc->card_holder = Tools::getValue('CN');
+		
+		$this->validateOrder((int)$id_cart, $id_order_state, $amount, $this->displayName, $message, NULL, NULL, true, pSQL($secure_key));		
 	}
 }
