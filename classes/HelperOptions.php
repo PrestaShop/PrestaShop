@@ -42,7 +42,7 @@ class HelperOptionsCore extends Helper
 
 	public $fields_value = array();
 
-	public $tpl = 'options.tpl';
+	public $tpl = 'helper/options/options.tpl';
 
 	/**
 	 * Generate a form for options

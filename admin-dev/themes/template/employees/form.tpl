@@ -237,7 +237,7 @@
 									value="" />
 						{elseif $input.type == 'group'}
 							{assign var=groups value=$input.values}
-							{include file='form_group.tpl'}
+							{include file='helper/form/form_group.tpl'}
 						{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
 							<script type="text/javascript">
 								$(document).ready(function(){
@@ -260,7 +260,7 @@
 										$('.assoShop input[type=checkbox]').attr('disabled', '');
 								}
 							</script>
-							{include file='form_shop.tpl'}
+							{include file='helper/form/form_shop.tpl'}
 						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 							<label>{l s='Shop association:'}</label>
 							<div class="margin-form">
