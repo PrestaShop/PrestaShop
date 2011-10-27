@@ -112,11 +112,17 @@ class OrderDetailControllerCore extends FrontController
 
 					if (Tools::getValue('ajax') != 'true')
 						Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
+
 				}
 				else
 					$this->errors[] = Tools::displayError('Order not found');
 			}
 		}
+	}
+
+	public function displayAjax()
+	{
+		$this->display();
 	}
 
 	/**
@@ -209,3 +215,4 @@ class OrderDetailControllerCore extends FrontController
 		}
 	}
 }
+
