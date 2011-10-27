@@ -145,9 +145,11 @@ $(document).ready(function()
 {if $display_header}
 	<div id="top_container">
 		<div id="container">
-			<div id="header_infos"><span>
-				<a id="header_shopname" href="index.php"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
-				{if {$show_new_orders} == 1}
+			{* begin  HEADER *}
+			<div id="header">
+				<div id="header_infos"><span>
+					<a id="header_shopname" href="index.php"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
+					{if {$show_new_orders} == 1}
 					<div id="orders_notif" class="notifs">
 						<span id="orders_notif_number_wrapper" class="number_wrapper">
 							<span id="orders_notif_value">0</span>
@@ -159,8 +161,8 @@ $(document).ready(function()
 							<p><a href="index.php?controller=AdminOrders&token={$token_admin_orders}">{l s='Show all orders'}</a></p>
 						</div>
 					</div>
-				{/if}
-				{if ($show_new_customers == 1)}
+					{/if}
+					{if ($show_new_customers == 1)}
 					<div id="customers_notif" class="notifs notifs_alternate">
 						<span id="customers_notif_number_wrapper" class="number_wrapper">
 							<span id="customers_notif_value">0</span>
@@ -172,8 +174,8 @@ $(document).ready(function()
 							<p><a href="index.php?controller=AdminCustomers&token={$token_admin_customers}">{l s='Show all customers'}</a></p>
 						</div>
 					</div>
-				{/if}
-				{if {$show_new_messages} == 1}
+					{/if}
+					{if {$show_new_messages} == 1}
 					<div id="messages_notif" class="notifs">
 						<span id="messages_notif_number_wrapper" class="number_wrapper">
 							<span id="messages_notif_value">0</span>
@@ -185,7 +187,7 @@ $(document).ready(function()
 							<p><a href="index.php?controller=AdminMessages&token={$token_admin_messages}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
-				{/if}
+					{/if}
 				</div>
 				<span id="employee_links">
 					{$first_name}&nbsp;{$last_name}
@@ -244,23 +246,23 @@ $(document).ready(function()
 					<span class="title">
 						<img src="{$t.img}" alt="" />{$t.name}
 					</span>
-<ul class="submenu">
-{foreach from=$t.sub_tabs item=t2}
-<li><a href="{$t2.href}">{$t2.name}</a></li>
-{/foreach}
-</ul>
+					<ul class="submenu">
+					{foreach from=$t.sub_tabs item=t2}
+						<li><a href="{$t2.href}">{$t2.name}</a></li>
+					{/foreach}
+					</ul>
 				</li>
 				{/foreach}
 			</ul>
-				{foreach $tabs AS $t}
-					<div id="tab{$t.id_tab}_subtabs" style="display:none">
-						{foreach $t.sub_tabs AS $t2}
-							<li class="subitem" ><a href="{$t2.href}">{$t2.name}</a></li>
-						{/foreach}
-						<div class="flatclear">&nbsp;</div>
-					</div>
+			{foreach $tabs AS $t}
+				<div id="tab{$t.id_tab}_subtabs" style="display:none">
+				{foreach $t.sub_tabs AS $t2}
+					<li class="subitem" ><a href="{$t2.href}">{$t2.name}</a></li>
 				{/foreach}
-{* @todo : handle bo_uimode == hover  / not hover ?
+					<div class="flatclear">&nbsp;</div>
+			</div>
+				{/foreach}
+				{* @todo : handle bo_uimode == hover  / not hover ?
 				{if $employee->bo_uimode == 'hover'}
 					<script type="text/javascript">
 						$("#menu li").hoverIntent( { over:hoverTabs,timeout:100,out:outTabs } );
@@ -285,35 +287,36 @@ $(document).ready(function()
 						{/foreach}
 					{/if}
 				</ul>
-*}
-{/if}
-					<div id="main">
-						<div id="content">
-							{if $install_dir_exists}
-								<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
-									{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
-								</div>
+			*}
+			</div> {* end header *}
+			{/if}
+			<div id="main">
+				<div id="content">
+					{if $install_dir_exists}
+						<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
+							{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
+						</div>
+					{/if}
+					
+					{* We should display breadcrumb only if needed *}
+					{if count($tabs_breadcrumb)>1}
+					<div class="path_bar">
+						<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;"></div>
+						<a href="?token={$home_token}">{l s='Back Office'}</a>
+						{foreach $tabs_breadcrumb AS $item}
+							<img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
+							{if isset($item.token)}<a href="?controller={$item.class_name}&token={$item.token}">{/if}
+							{$item.name}
+							{if isset($item.token)}</a>{/if}
+						{/foreach}
+					</div>
+					{/if}
+					{if $is_multishop && $shop_context != 'all'}
+						<div class="multishop_info">
+							{if $shop_context == 'group'}
+								{l s='You are configuring your store for group shop '}<b>{$shop_name}</b>
+							{elseif $shop_context == 'shop'}
+								{l s='You are configuring your store for shop '}<b>{$shop_name}</b>
 							{/if}
-							
-							{* We should display breadcrumb only if needed *}
-							{if count($tabs_breadcrumb)>1}
-							<div class="path_bar">
-								<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;"></div>
-								<a href="?token={$home_token}">{l s='Back Office'}</a>
-								{foreach $tabs_breadcrumb AS $item}
-									<img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
-									{if isset($item.token)}<a href="?controller={$item.class_name}&token={$item.token}">{/if}
-									{$item.name}
-									{if isset($item.token)}</a>{/if}
-								{/foreach}
-							</div>
-							{/if}
-							{if $is_multishop && $shop_context != 'all'}
-								<div class="multishop_info">
-									{if $shop_context == 'group'}
-										{l s='You are configuring your store for group shop '}<b>{$shop_name}</b>
-									{elseif $shop_context == 'shop'}
-										{l s='You are configuring your store for shop '}<b>{$shop_name}</b>
-									{/if}
-								</div>
-							{/if}
+						</div>
+					{/if}
