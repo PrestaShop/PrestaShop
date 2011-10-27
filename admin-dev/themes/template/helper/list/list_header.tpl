@@ -56,15 +56,26 @@
 		});
 	</script>
 
-	{if $add_button}
-		<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
-	{/if}
+<div class="toolbarBox">
+	<ul class="cc_button">
+		{foreach from=$toolbar_btn item=btn key=k}
+			<li>
+				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
+					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>{$btn.desc}
+				</a>
+			</li> 
+			{/foreach}
+		</ul>
+		<div class="pageTitle">{* todo : what to display as title for each items (table_lang.name ? *}
+			<h3><span id="current_obj" style="font-weight: normal;">{$current_obj_name|default:'&nbsp;'}</span></h3>
+		</div>
+</div>
 	<a name="{$table}">&nbsp;</a>
 
 	<form method="post" action="{$action}" class="form">
 {/if}{* End if simple_header *}
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
-	<table>
+	<table class="table_grid">
 		{if !$simple_header}
 			<tr>
 				<td style="vertical-align: bottom;">

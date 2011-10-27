@@ -62,6 +62,7 @@ $(document).ready(function() {
 	});
 });
 </script>
+<div class="clear"></div>
 {/if}
 	<div id="column_left">
 		<ul class="F_list clearfix">

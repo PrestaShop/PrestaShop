@@ -63,10 +63,10 @@
 			<a href="{$currentIndex}&id_category=1&viewcategory&token={$token}">
 				&nbsp;<img src="../img/admin/home.gif" alt="" /> {l s='Home'}&nbsp;>&nbsp;
 			</a>
-			{foreach $categories_tree as $key => $category}
+			{foreach $categories_tree key=key item=category}
+				<a href="{$currentIndex}&id_category={$category.id_category}&{if $category.id_category == 1}viewcategory{else}addcategory{/if}&token={$token}">
 				{if $key != 0}
-				<a href="{$currentIndex}&id_category={$category.id_category}&viewcategory&token={$token}">
-					<img src="../img/admin/edit.gif" alt="" /> {$category.name}&nbsp;>&nbsp;
+					<img src="../img/admin/edit.gif" alt="{l s='edit'}" /> {$category.name}&nbsp;&gt;&nbsp;
 				</a>
 				{else}
 					<img src="../img/admin/edit.gif" alt="" /> {$category.name}
@@ -75,24 +75,32 @@
 		{/if}
 	</div>
 	
-	<h2>{l s='Categories'}</h2>
 
-	<h3>
-		{if $list_total == 0}
-			{l s='There are no subcategories in '} "{$categories_name}"
-		{else}
-			{$list_total}&nbsp;
-			{if $list_total < 1}
-				{l s='subcategories'}
+
+<div class="toolbarBox">
+	<ul class="cc_button">
+		{foreach from=$toolbar_btn item=btn key=k}
+			<li>
+				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
+					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>{$btn.desc}
+				</a>
+			</li> 
+			{/foreach}
+		</ul>
+		<div class="pageTitle">
+			<h3>{l s='Categories'}<span id="current_obj" style="font-weight:normal">&nbsp;{$categories_name}</span></h3>
+			{if $list_total == 0}
+				{l s='There are no subcategories in '} "{$categories_name}"
 			{else}
-				{l s='subcategory'} {l s='in category'} "{$categories_name}"
+				{$list_total}&nbsp;
+				{if $list_total < 1}
+					{l s='subcategories'}
+				{else}
+					{l s='subcategory'} {l s='in category'} "{$categories_name}"
+				{/if}
 			{/if}
-		{/if}
-	</h3>
-
-	{if $add_button}
-		<br /><a href="{$currentIndex}&add{$table}&token={$token}"><img src="../img/admin/add.gif" border="0" /> {l s='Add new'}</a><br /><br />
-	{/if}
+		</div>
+</div>
 	<a name="{$table}">&nbsp;</a>
 
 	<form method="post" action="{$action}" class="form">

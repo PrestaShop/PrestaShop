@@ -123,11 +123,28 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function initView()
 	{
+		$this->initToolbar();
 		$this->content .= $this->initList();
+	}
+
+	public function initToolbar()
+	{
+		if (empty($this->display))
+			$this->toolbar_btn['new'] = array(
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token, 
+				'desc' => $this->l('Add new')
+			);
+		if ($this->display == 'view')
+			$this->toolbar_btn['new'] = array(
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.Tools::getValue('id_category').'&amp;token='.$this->token, 
+				'desc' => $this->l('Add new')
+			);
+
 	}
 
 	public function initForm()
 	{
+		$obj = $this->loadObject(true);
 		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
 		if (sizeof($selected_cat) > 0)
 		{
