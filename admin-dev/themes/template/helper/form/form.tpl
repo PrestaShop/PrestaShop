@@ -125,6 +125,7 @@
 										{if isset($input.class)}class="{$input.class}"{/if}
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
 										{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+								{if isset($input.suffix)}{$input.suffix}{/if}
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'select'}
