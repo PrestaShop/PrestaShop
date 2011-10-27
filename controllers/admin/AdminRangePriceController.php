@@ -25,23 +25,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminRangeWeightControllerCore extends AdminController
+class AdminRangePriceControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'range_weight';
-	 	$this->className = 'RangeWeight';
+	 	$this->table = 'range_price';
+	 	$this->className = 'RangePrice';
 	 	$this->lang = false;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
-			'id_range_weight' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+	 	$this->fieldsDisplay = array(
+			'id_range_price' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'carrier_name' => array('title' => $this->l('Carrier'), 'align' => 'center', 'width' => 25, 'filter_key' => 'ca!name'),
-			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'float' => true, 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'align' => 'right'),
-			'delimiter2' => array('title' => $this->l('To'), 'width' => 86, 'float' => true, 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'align' => 'right'));
+			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'price' => true, 'align' => 'right'),
+			'delimiter2' => array('title' => $this->l('To'), 'width' => 86, 'price' => true, 'align' => 'right'));
 
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.`id_carrier` = a.`id_carrier`)';
 		$this->_select = 'ca.`name` AS carrier_name';
@@ -52,15 +52,17 @@ class AdminRangeWeightControllerCore extends AdminController
 
 	public function initForm()
 	{
-		$carriers = Carrier::getCarriers($this->context->language->id, true , false, false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-		foreach ($carriers AS $key => $carrier)
+		$currency = $this->context->currency;
+		$carriers = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+
+		foreach ($carriers AS $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Weight ranges'),
-				'image' => '../img/t/AdminRangeWeight.gif'
+				'title' => $this->l('Price ranges'),
+				'image' => '../img/t/AdminRangePrice.gif'
 			),
 			'input' => array(
 				array(
@@ -74,7 +76,7 @@ class AdminRangeWeightControllerCore extends AdminController
 						'id' => 'id_carrier',
 						'name' => 'name'
 					),
-					'empty_message' => '<div style="margin:5px 0 10px 0">'.$this->l('There isn\'t any carrier available for a weight range.').'</div>'
+					'empty_message' => '<div style="margin:5px 0 10px 0">'.$this->l('There isn\'t any carrier available for a price range.').'</div>'
 				),
 				array(
 					'type' => 'text',
@@ -82,7 +84,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'name' => 'delimiter1',
 					'size' => 5,
 					'required' => true,
-					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
+					'suffix' => $currency->getSign('right'),
 					'p' => $this->l('Range start (included)'),
 				),
 				array(
@@ -91,7 +93,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'name' => 'delimiter2',
 					'size' => 5,
 					'required' => true,
-					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
+					'suffix' => $currency->getSign('right'),
 					'p' => $this->l('Range end (excluded)'),
 				),
 			),
@@ -115,7 +117,7 @@ class AdminRangeWeightControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if ($this->action == 'save' && Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
+		if (isset($_POST['submitAdd'.$this->table]) AND Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
 			$this->_errors[] = Tools::displayError('Invalid range');
 		else
 			parent::postProcess();
