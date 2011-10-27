@@ -68,11 +68,11 @@ hr {
 }
 
 legend, th {
-	font-family : Trebuchet,Arial,Helvetica,sans-serif;
+	font-family : Arial,Helvetica,sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family : "Trebuchet MS",Trebuchet,Arial,Helvetica,sans-serif;
+	font-family : Arial,Helvetica,sans-serif;
 }
 
 h1 {
@@ -327,7 +327,6 @@ select optgroup option {
 /* STRUCTURE */
 
 #container {
-	width: 1024px;
 	margin: 0 auto 2em auto;
 	text-align: left;
 }

@@ -1,7 +1,20 @@
-body{background:#EFEFEF}
+body {font-family: Arial, Helvetica, sans-serif;}
+
+h1, h2, h3, h4, h5, h6 {font-family: Arial, Helvetica, sans-serif;}
+
+
+
+ul li {list-style-type:none;}
+
+
+
 #top_container{margin:0;padding:0}
-#header_infos{float:left;font-size:10px;margin:10px 20px 4px 0;width:380px;height:40px}
-#header_infos #header_shopname span{display:block;font-size:24px;height:28px;overflow:hidden;margin-bottom:-8px}
+
+
+/*HEADER*/
+#header { background-color: #3d3d3d; height:94px;}
+#header_infos{float:left;font-size:10px;margin:10px 20px 4px 0;width:380px;}
+#header_infos #header_shopname span{display:block;font-size:24px;height:28px;overflow:hidden;margin-bottom:-8px; color:#fff;}
 #header_infos #header_logout{text-decoration:underline}
 #header_infos #header_foaccess{text-decoration:none}
 #header_search{float:right;height:39px;width:356px}
@@ -10,8 +23,9 @@ body{background:#EFEFEF}
 #header_search #bo_search_submit{cursor:pointer;float:left;font-weight:700;margin:7px 0 0 2px;width:79px}
 #header_quick{float:right;height:39px;margin-right:1px;width:175px}
 #header_quick #quick_select{margin:8px 0 0 20px;vertical-align:middle;width:140px}
-#header_shoplist{float: right;}
+#header_shoplist{float: right;clear:right}
 #header_myaccount{background:url(bg-lang.png) no-repeat;display:block;float:right;height:16px;margin:8px 1px 0 0;width:16px}
+.path_bar {display:none;}
 .button{background-color:#FFF6D3;border:1px solid #DFD5AF;border-left:1px solid #FFF6D3;border-top:1px solid #FFF6D3;color:#268CCD;padding:3px}
 .button[disabled=disabled]{color:#8C8C8C}
 input.button[disabled=disabled]:hover{background-color:#FFF6D3}
@@ -35,9 +49,11 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .cat_bar a{font-weight:700}
 fieldset{background:#FFFFF0;border:1px solid #DFD5C3;font-size:1.1em;margin:0;padding:1em}
 legend{background:#FFF6D3;border:1px solid #DFD5C3;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
-#menu{float:left;height:30px;line-height:normal;margin:10px 0 0;*margin:7px 0 0;padding:0;width:100%;padding:0 1px}
-#menu li.maintab{background:url(bg-tab.png) repeat-x 0 -2px;float:left;height:29px;list-style:none;margin:0 1px 0 0;list-style:none;display:block;border:1px solid #999999;-moz-border-radius-topright:6px;-moz-border-radius-topleft:6px;-webkit-border-top-right-radius:6px;-webkit-border-top-left-radius:6px}
-#menu li.submenu_size .title{color:#000;display:block;height:20px;padding:8px 6px 4px 0;font-weight:bold;font-size:0.95em;}
+
+/*MENU*/
+#menu{ background-color: #f8f8f8; border-bottom:1px solid #e5e5e5; float:left;height:36px;line-height:normal;margin:10px 0;*margin:0;padding:0;width:100%;}
+#menu li.maintab{float:left;height:29px;list-style:none;margin:0 1px 0 0;list-style:none;display:block; border-left:1px solid #fff; border-right:1px solid #ccc;}
+#menu li.submenu_size .title{color:#000;display:block;height:20px;padding:8px 6px 4px 0;font-weight:normal;font-size:0.95em;}
 #menu li.submenu_size .title{_display:inline;_padding:6px 5px 4px 0}
 #menu li{_height:32px;_padding-top:3px}
 #menu img{display:inline;padding:0 3px 0 6px;vertical-align:top;width:16px;height:16px}
@@ -47,15 +63,10 @@ legend{background:#FFF6D3;border:1px solid #DFD5C3;font-weight:700;margin:0;padd
 .withLeftBorder{background:transparent url(separator_subnav.png) no-repeat 0 5px}
 .submenu li{list-style:none;margin:0;padding-left:7px;padding-right:7px;margin-top:8px;float:left;height:16px;}
 .submenu li a{text-decoration:underline}
-.tab-row {height:24px;width:100px;margin-left:25px;border:1px solid #cccccc}
-.tab-row .tab .selected {background:#FFF6D3;margin:1px -3px -3px 25px;top:-2px;background-color:#eeeeee}
-.tab-row .tab {background:#EFEFEF;width:100px;}
-.tab-row .tab-page.selected {background:#FFF6D3;font-weight:bold;margin:1px -3px -3px 0px;top:-2px;background-color:#eeeeee}
-.tab-row .tab-page {background:#EFEFEF;width:100px;}
 hr {height: 1px;color:#E0D0B1;background-color:#E0D0B1}
 #footer {height:40px;background:#ECEADE url(footer-bg.png) repeat-x scroll left bottom;border:1px solid #999999;font-size:12px;clear:both;font-size:0.9em;color:#666666}
-#content {background-color:#FFF;border-left:1px solid #999999;border-right:1px solid #999999; border-top:1px solid #999999}
-input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #E0D0B1}
+#content {}
+input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #ccc;}
 select {border: 1px solid #E0D0B1}
 select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
 .header_module{background:url(header_module.png);padding-left: 0.5em;padding-top: 0.8em;height:20px;color: #812143;border:solid 1px #CCC;}
@@ -88,10 +99,51 @@ a.module_toggle_all{color: #268CCD;}
 #header_infos .notifs_wrapper a {font-weight: bold;color: black;}
 .notifs_wrapper p {font-size: 12px;padding-top:8px;margin:0;border-top: 2px solid #E0E0E0;}
 .notifs_wrapper p.no_notifs {border: none;}
-.productTabs ol{padding:0;}
-.productTabs{background-color:#e0e0e0;border:1px solid #cccccc;position:absolute;top:100px;left:50px;}
+/*toolbarBox*/
+.toolbarBox { margin-bottom:10px;}
+.toolbarBox .pageTitle { line-height:48px}
+.toolbarBox .pageTitle h3 {font-size: 2em; font-weight: bold; line-height: 48px; margin: 0; padding: 0;}
+
+.toolbarBox ul.cc_button {float:right;margin:0;padding:0;}
+.toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center;}
+.toolbarBox a.toolbar_btn { border-color: #cccccc #bbbbbb #a0a0a0; border-left: 1px solid #bbbbbb; border-radius: 3px 3px 3px 3px; border-right: 1px solid #bbbbbb; border-style: solid; border-width: 1px;font-size:11px;cursor: pointer; display: block; float: left; padding: 1px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;
+	background: -moz-linear-gradient(center top , #ffffff, #eeeeee) repeat scroll 0 0 transparent;
+	background: -webkit-linear-gradient(center top , #ffffff, #eeeeee) repeat scroll 0 0 transparent;}
+.toolbarBox a.toolbar_btn:hover {border-color:#939393;}
+.toolbarBox .toolbar_btn span{ display: block;float: none;height: 32px;margin: 0 auto;width: 32px;}
+.toolbarBox .process-icon-delete { background-image: url(process-icon-delete.png);}
+.toolbarBox .process-icon-duplicate { background-image: url(process-icon-duplicate.png);}
+.toolbarBox .process-icon-preview { background-image: url(process-icon-preview.png);}
+.toolbarBox .process-icon-stats { background-image: url(process-icon-stats.png);}
+.toolbarBox .process-icon-cancel { background-image: url(process-icon-cancel.png);}
+.toolbarBox .process-icon-new{ background-image: url(process-icon-new.png);}
+.toolbarBox .process-icon-save { background-image: url(process-icon-save.png);}
+.toolbarBox .process-icon-save-and-stay { background-image: url(process-icon-save-and-stay.png);}
+
+
+/*productBox*/
+#productBox { position:relative; width:100%; float:left;}
+
+
+/*tab-pane*/
+form#product{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px; margin-left:140px;}
+form.defaultForm{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px;}
+.tab-row {}
+.tab-row .tab {background:#EFEFEF;width:100px;}
+.tab-row .tab-page.selected {}
+.tab-row .tab-page {}
+.productTabs{ background-color:#fafafa; border:1px solid #ccced7; border-right:none; float:left; width:140px;}
+.productTabs ul{padding:0;}
+.productTabs ul li.tab-row { border:none; }
+.productTabs ul li.tab-row:first-child  a {border-top:none;}
+.productTabs ul li.tab-row a { display:block; font-weight:normal; color:#666;padding: 7px 10px; border-top:1px solid #CCCED7; border-right:1px solid #CCCED7;}
+.productTabs ul li.tab-row a.selected { background-color:#EBEDF4;font-weight:bold;color:#000; border-right:none;}
+.product-tab-content h4.tab { display:none;}
+
+
+
 
 ul.cc_button {float:right;margin:0;padding:6px 0;}
 ul.cc_button li {float:left;text-decoration: none;list-style: none;font-size:12px;padding:5px 0;}
-.available_btn {border:2px outset black;display:block;height:50px;margin:2px;padding:3px 2px 1px 2px;width:60px;}
-.available_btn span{font-size:small;margin-top:5px;text-align:center}
+.toolbar_btn {border:2px outset black;display:block;height:50px;margin:2px;padding:3px 2px 1px 2px;width:60px;}
+.toolbar_btn span{font-size:small;margin-top:5px;text-align:center}
