@@ -1703,6 +1703,55 @@ if (false)
 			$this->context->smarty->assign('draft_warning',$content);
 	}
 
+	public function initToolbar()
+	{
+		if ($this->display == 'edit')
+			if ($product = $this->loadObject(true))
+			{
+				if($this->tabAccess['delete'])
+					$this->toolbar_btn['delete'] = array(
+						'short' => 'Delete',
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct', 
+						'desc' => $this->l('Delete this product'),
+						'confirm' => 1);
+
+				if($this->tabAccess['add'])
+					$this->toolbar_btn['duplicate'] = array(
+						'short' => 'Duplicate',
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate'), 
+						'confirm' => 1
+					);
+		// @TODO navigation
+				$this->toolbar_btn['preview'] = array(
+				'short' => 'Preview', 
+				'href' => '', 'desc' => 'prevdesc', 
+				'class' => 'previewUrl',
+				);
+				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
+					$this->toolbar_btn['stats'] = array(
+					'short' => 'Statistics',
+					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id, 
+					'desc' => $this->l('View product sales'), 
+					);
+				
+				$this->toolbar_btn['cancel'] = array(
+				'short' => 'Close',
+				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel'), 
+				 'confirm' => 1);
+				if($this->tabAccess['add'])
+					$this->toolbar_btn['new'] = array(
+					'short' => 'Create',
+					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create'), 
+				);
+				if($this->tabAccess['edit'])
+					$this->toolbar_btn['save'] = array(
+					'short' => 'Save',
+					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save'), 
+				);
+			}
+		return parent::initToolbar();
+	}
+
 	/**
 	 * initForm contains all necessary initialization needed for all tabs
 	 *
@@ -1722,8 +1771,9 @@ if (false)
 		$this->context->smarty->assign('upload_max_filesize', ini_get('upload_max_filesize'));
 		$this->context->smarty->assign('country_display_tax_label', $this->context->country->display_tax_label);
 
+		// let's calculate this once for all
 		if (!($obj = $this->loadObject(true)))
-			throw new Exception('object not loaded');
+			throw new PrestashopException('object not loaded');
 		$this->_displayDraftWarning($obj->active);
 		return parent::initForm();
 	}
@@ -1734,7 +1784,7 @@ if (false)
 		parent::displayForm();
 		$this->addJs(_PS_JS_DIR_.'attributesBack.js');
 		if (!($product = $this->loadObject(true)))
-			throw new Exception('object not loaded');
+			throw new PrestashopException('object not loaded');
 		$smarty = $this->context->smarty;
 		$product_tabs = array();
 		// action defines which tab to display first
@@ -1860,7 +1910,7 @@ switch ($this->action)
 		}
 	}
 
-	function initFormPrices($obj, $languages, $defaultLanguage)
+	public function initFormPrices($obj, $languages, $defaultLanguage)
 	{
 		$content = '';
 		if ($obj->id)
@@ -2325,6 +2375,15 @@ switch ($this->action)
 		// customization
 		'uploadable_files', 'text_fields'
 		);
+		// prices
+		array_push($product_props, 
+			'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
+			'unity'
+		);
+
+		if(Configuration::get('PS_USE_ECOTAX'))
+			array_push($product_props, 'ecotax');
+
 		foreach($product_props as $prop)
 			$product->$prop = $this->getFieldValue($product, $prop);
 $product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
@@ -2402,121 +2461,20 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				$smarty->assign('error_product_download', $error);
 			}
 
-	$currency = $this->context->currency;
-					$content .= '
-					<tr>
-						<td class="col-left"><label>'.$this->l('Pre-tax wholesale price:').'</label></td>
-						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" name="wholesale_price" type="text" value="'.htmlentities($this->getFieldValue($product, 'wholesale_price'), ENT_COMPAT, 'UTF-8').'" onchange="this.value = this.value.replace(/,/g, \'.\');" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
-							<span style="margin-left:10px">'.$this->l('The wholesale price at which you bought this product').'</span>
-						</td>
-					</tr>';
-					$content .= '
-					<tr>
-						<td class="col-left"><label>'.$this->l('Pre-tax retail price:').'</label></td>
-						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="'.$this->getFieldValue($product, 'price').'" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<sup> *</sup>
-							<span style="margin-left:2px">'.$this->l('The pre-tax retail price to sell this product').'</span>
-						</td>
-					</tr>';
-					$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
-					$taxesRatesByGroup = TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id);
-					$ecotaxTaxRate = Tax::getProductEcotaxRate();
-					$content .= '<script type="text/javascript">';
-					$content .= 'noTax = '.(Tax::excludeTaxeOption() ? 'true' : 'false'). ";\n";
-					$content .= 'taxesArray = new Array ();'."\n";
-					$content .= 'taxesArray[0] = 0' . ";\n";
+			// prices part
+			$smarty->assign('currency', $currency = $this->context->currency);
+			$smarty->assign('tax_rules_groups', TaxRulesGroup::getTaxRulesGroups(true));
+			$smarty->assign('taxesRatesByGroup', TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id));
+			$smarty->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
+			$smarty->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
 
-					foreach ($tax_rules_groups as $tax_rules_group)
-					{
-    					$tax_rate = (array_key_exists($tax_rules_group['id_tax_rules_group'], $taxesRatesByGroup) ?  $taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']] : 0);
-						$content .= 'taxesArray['.$tax_rules_group['id_tax_rules_group'].']='.$tax_rate."\n";
-					}
-					$content .= '
-						ecotaxTaxRate = '.($ecotaxTaxRate / 100).';
-					</script>';
-					$content .= '
-					<tr>
-						<td class="col-left"><label>'.$this->l('Tax rule:').'</label></td>
-						<td style="padding-bottom:5px;">
-					<span '.(Tax::excludeTaxeOption() ? 'style="display:none;"' : '' ).'>
-					 <select onChange="javascript:calcPriceTI(); unitPriceWithTax(\'unit\');" name="id_tax_rules_group" id="id_tax_rules_group" '.(Tax::excludeTaxeOption() ? 'disabled="disabled"' : '' ).'>
-					     <option value="0">'.$this->l('No Tax').'</option>';
+			$smarty->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+			if ($product->unit_price_ratio != 0)
+				$smarty->assign('unit_price', Tools::ps_round($product->price)/$product->unit_price_ratio);
+			else
+				$smarty->assign('unit_price', 0);
 
-						foreach ($tax_rules_groups as $tax_rules_group)
-							$content .= '<option value="'.$tax_rules_group['id_tax_rules_group'].'" '.(($this->getFieldValue($product, 'id_tax_rules_group') == $tax_rules_group['id_tax_rules_group']) ? ' selected="selected"' : '').'>'.Tools::htmlentitiesUTF8($tax_rules_group['name']).'</option>';
-
-				$content .= '</select>
-
-				<a href="?tab=AdminTaxRulesGroup&addtax_rules_group&token='.Tools::getAdminToken('AdminTaxRulesGroup'.(int)(Tab::getIdFromClassName('AdminTaxRulesGroup')).(int)$this->context->employee->id).'&id_product='.(int)$product->id.'" onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="'.$this->l('Create').'" title="'.$this->l('Create').'" /> <b>'.$this->l('Create').'</b></a></span>
-				';
-				if (Tax::excludeTaxeOption())
-				{
-					$content .= '<span style="margin-left:10px; color:red;">'.$this->l('Taxes are currently disabled').'</span> (<b><a href="index.php?tab=AdminTaxes&token='.Tools::getAdminToken('AdminTaxes'.(int)(Tab::getIdFromClassName('AdminTaxes')).(int)$this->context->employee->id).'">'.$this->l('Tax options').'</a></b>)';
-					$content .= '<input type="hidden" value="'.(int)($this->getFieldValue($product, 'id_tax_rules_group')).'" name="id_tax_rules_group" />';
-				}
-
-				$content .= '</td>
-					</tr>
-				';
-				if (Configuration::get('PS_USE_ECOTAX'))
-					$content .= '
-					<tr>
-						<td class="col-left"><label>'.$this->l('Eco-tax (tax incl.):').'</label></td>
-						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="'.$this->getFieldValue($product, 'ecotax').'" onkeyup="if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, \'.\'); if (parseInt(this.value) > getE(\'priceTE\').value) this.value = getE(\'priceTE\').value; if (isNaN(this.value)) this.value = 0;" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
-							<span style="margin-left:10px">('.$this->l('already included in price').')</span>
-						</td>
-					</tr>';
-
-				if ($this->context->country->display_tax_label)
-				{
-					$content .= '
-						<tr '.(Tax::excludeTaxeOption() ? 'style="display:none"' : '' ).'>
-							<td class="col-left"><label>'.$this->l('Retail price with tax:').'</label></td>
-							<td style="padding-bottom:5px;">
-								'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'
-							</td>
-						</tr>';
-				}
-				else
-					$content .= '<input size="11" maxlength="14" id="priceTI" type="hidden" value="" onchange="noComma(\'priceTI\');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />';
-
-				$content .= '
-					<tr id="tr_unit_price">
-						<td class="col-left"><label>'.$this->l('Unit price without tax:').'</label></td>
-						<td style="padding-bottom:5px;">
-							'.($currency->format % 2 != 0 ? ' '.$currency->sign : '').' <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="'.($this->getFieldValue($product, 'unit_price_ratio') != 0 ? Tools::ps_round($this->getFieldValue($product, 'price') / $this->getFieldValue($product, 'unit_price_ratio'), 2) : 0).'" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, \'.\'); unitPriceWithTax(\'unit\');"/>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <input size="6" maxlength="10" id="unity" name="unity" type="text" value="'.htmlentities($this->getFieldValue($product, 'unity'), ENT_QUOTES, 'UTF-8').'" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>'.
-							(Configuration::get('PS_TAX') && $this->context->country->display_tax_label ? '<span style="margin-left:15px">'.$this->l('or').' '.($currency->format % 2 != 0 ? ' '.$currency->sign : '').'<span id="unit_price_with_tax">0.00</span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.$this->l('per').' <span id="unity_second">'.$this->getFieldValue($product, 'unity').'</span> '.$this->l('with tax') : '').'</span>
-							<p>'.$this->l('Eg. $15 per Lb').'</p>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>&nbsp;</label></td>
-						<td style="padding-bottom:5px;">
-							<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" '.($this->getFieldValue($product, 'on_sale') ? 'checked="checked"' : '').'value="1" />&nbsp;<label for="on_sale" class="t">'.$this->l('Display "on sale" icon on product page and text on product listing').'</label>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label><b>'.$this->l('Final retail price:').'</b></label></td>
-						<td style="padding-bottom:5px;">
-							<span style="'.($this->context->country->display_tax_label ? '' : 'display:none').'">
-							'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPrice" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').'<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'> ('.$this->l('tax incl.').')</span>
-							</span>
-							<span'.(!Configuration::get('PS_TAX') ? ' style="display:none;"' : '').'>';
-
-							if ($this->context->country->display_tax_label)
-								$content .= ' / ';
-
-							 $content .= ($currency->format % 2 != 0 ? $currency->sign.' ' : '').'<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>'.($currency->format % 2 == 0 ? ' '.$currency->sign : '').' '.($this->context->country->display_tax_label ? '('.$this->l('tax excl.').')' : '').'</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>&nbsp;</label></td>
-						<td>
-							<div class="hint clear" style="display: block;width: 70%;">'.$this->l('You can define many discounts and specific price rules in the Prices tab').'</div>
-						</td>
-					</tr>';
+			$smarty->assign('ps_tax', Configuration::get('PS_TAX'));
 
 
 				if ((int)Configuration::get('PS_STOCK_MANAGEMENT'))
@@ -2756,7 +2714,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				{
 					$content .= '
 					<tr>
-						<td class="col-left"></td>
+						<td class="col-left"><label></label></td>
 						<td style="padding-bottom:5px;">
 							<div style="display:block;width:620px;" class="hint clear">
 								'.$this->l('Do you want an image associated with the product in your description?').'

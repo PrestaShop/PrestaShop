@@ -4,15 +4,41 @@
 <script src="../js/jquery/ui/jquery.ui.widget.min.js" type="text/javascript"></script>
 <script src="../js/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="../js/admin.js"></script>
+
+<div class="toolbarBox">
+	<ul class="cc_button">
+		{foreach from=$toolbar_btn item=btn key=k}
+			<li>
+				<a class="toolbar_btn action-{$k}" href="{$btn.href}" title="{$btn.desc}">
+					<span class="process-icon-{$k} {$btn.class|default:'' }" ></span>{$btn.short}
+				</a>
+			</li> 
+			{/foreach}
+		</ul>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("a.toolbar_btn").click(function(e){
+					e.preventDefault();
+				});
+			});
+		</script>
+		{if isset($product)}
+		<div class="pageTitle">
+			<h3>{l s='Current product:'}<span id="current_product" style="font-weight: normal;">&nbsp;</span></h3>
+		</div>
+		{/if}
+</div>
+
+<div id="productBox">
 {if isset($product_tabs)}
  	<div class="productTabs">
-		<ol class="tab">
+		<ul class="tab">
 		{foreach $product_tabs key=numStep item=tab}
 			<li class="tab-row">
 				<a class="tab-page {if $tab.selected}selected{/if}" id="link-{$tab.id}" href="{$tab.href}">{$tab.name}</a>{*todo href when nojs*}
 			</li>
 		{/foreach}
-		</ol>
+		</ul>
 	</div>
 <script type="text/javascript">
 var toload = new Array();
@@ -182,18 +208,8 @@ $(document).ready(function(){
 	}
 	//]]>
 </script>
-
 <form action="{$form_action}" method="post" enctype="multipart/form-data" name="product" id="product">
 {$draft_warning}
-<ul class="cc_button">
-{foreach from=$available_btn item=btn key=k}
-	<li>
-		<a class="available_btn" href="{$btn.href}" title="{$btn.desc}">
-			<span class="process-icon-{$k}">{$btn.short}</span>
-		</a>
-	</li> 
-{/foreach}
-</ul>
 <input type="hidden" name="id_product" value="{$id_product}" />
 <input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
@@ -210,6 +226,7 @@ $(document).ready(function(){
 </div>
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 </form>
+</div>
 <br/>
 <a href="{$link->getAdminLink('AdminCatalog')}"><img src="../img/admin/arrow2.gif" />{l s='Back to list'}</a><br/>
 {else}

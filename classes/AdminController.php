@@ -92,7 +92,7 @@ class AdminControllerCore extends Controller
 	protected $_list = array();
 
 	/** @var array Cache for query results */
-	protected $toolbar_btn = array();
+	protected $toolbar_btn = null;
 
 	/** @var integer Number of results in list */
 	protected $_listTotal = 0;
@@ -712,7 +712,8 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * assign $this->toolbar_btn in smarty
+	 * assign default action in toolbar_btn smarty var, if they are not set.
+	 * uses override to specifically add, modify or remove items
 	 *
 	 */
 	public function initToolbar()
@@ -982,7 +983,7 @@ class AdminControllerCore extends Controller
 			'lang_iso' => $this->context->language->iso_code,
 			'link' => $this->context->link,
 			'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
-			'shop_name' => Configuration::get('PS_SHOP_NAME'),
+			'shop_name' => $shop_name,
 			'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
 			'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
 			'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
@@ -1043,6 +1044,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!($this->object = $this->loadObject(true)))
@@ -1054,9 +1057,6 @@ class AdminControllerCore extends Controller
 			$this->content .= $this->initList();
 			$this->content .= $this->initOptions();
 		}
-
-		// toolbar (save, cancel, new, ..)
-		$this->initToolbar();
 
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
@@ -1160,6 +1160,7 @@ class AdminControllerCore extends Controller
 			$helper->default_form_language = $this->default_form_language;
 			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 			$helper->fields_value = $this->getFieldsValue($this->object);
+			$helper->toolbar_btn = $this->toolbar_btn;
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))

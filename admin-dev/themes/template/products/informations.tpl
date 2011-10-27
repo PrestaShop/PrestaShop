@@ -61,8 +61,7 @@
 					}
 				});
 			</script>
-			<b>{l s='Product global information'}</b>&nbsp;-&nbsp;
-		<h3>{l s='Current product:'}<span id="current_product" style="font-weight: normal;">{l s='no name'}</span></h3>
+			<h4>{l s='Product global information'}</h4>
 		<script type="text/javascript">
 			{$combinationImagesJs}
 			$(document).ready(function(){
@@ -82,7 +81,7 @@
 				$('#mvt_sign').show();
 			}
 		</script>
-			<div class="separation clear"></div>
+			<div class="separation"></div>
 			<br />
 <table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 {* global information *}
@@ -139,7 +138,7 @@
 {* status informations *}
 <table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 <tr>
-	<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Status:' }</td>
+	<td class="col-left"><label>{l s='Status:' }</label></td>
 	<td style="padding-bottom:5px;">
 		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
 		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" 
@@ -153,12 +152,12 @@
 	{if $feature_shop_active}
 	{* @todo use asso_shop from Helper *}
 	<tr id="shop_association">
-		<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Shop association:'}</td>
+		<td class="col-left"><label>{l s='Shop association:' }</label></td>
 		<td style="padding-bottom:5px;">{$displayAssoShop}</td>
 	</tr>
 	{/if}
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
-		<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Options:' }</td>
+		<td class="col-left"><label>{l s='Options:' }</label></td>
 		<td style="padding-bottom:5px;">
 			<input style="float: left;" type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
 			<script type="text/javascript">
@@ -187,7 +186,7 @@
 		</td>
 	</tr>
 	<tr>
-	<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Condition:' }</td>
+	<td class="col-left"><label>{l s='Condition:' }</label></td>
 	<td style="padding-bottom:5px;">
 	<select name="condition" id="condition">
 	<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
@@ -197,7 +196,7 @@
 	</td>
 	</tr>
 	<tr>
-	<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Manufacturer:' }</td>
+	<td class="col-left"><label>{l s='Manufacturer:' }</label></td>
 	<td style="padding-bottom:5px;">
 	<select name="id_manufacturer" id="id_manufacturer">
 	<option value="0">-- {l s='Choose (optional)'} --</option>
@@ -212,7 +211,7 @@
 	</td>
 	</tr>
 	<tr>
-	<td style="vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Supplier:' }</td>
+	<td class="col-left"><label>{l s='Supplier:' }</label></td>
 	<td style="padding-bottom:5px;">
 	<select name="id_supplier" id="id_supplier">
 	<option value="0">-- {l s='Choose (optional)'} --</option>
@@ -573,6 +572,117 @@ $(document).ready(function(){
 <tr>
 	<td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td>
  </tr>
+					
+	{* @todo : prices related has to be moved in price subtab *}
+	<tr>
+		<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
+		<td style="padding-bottom:5px;">
+			{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{$product->wholesale_price}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
+			<span style="margin-left:10px">{l s='The wholesale price at which you bought this product'}</span>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
+		<td style="padding-bottom:5px;">
+			{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
+			<span style="margin-left:2px">{l s='The pre-tax retail price to sell this product'}</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="col-left"><label>{l s='Tax rule:' }</label></td>
+		<td style="padding-bottom:5px;">
+			<script type="text/javascript">
+			noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
+			taxesArray = new Array ();
+			taxesArray[0] = 0;
+			{foreach from=$tax_rules_groups item=tax_rules_group}
+				{if isset($tax_rules_group['id_tax_rules_group'][$taxesRatesByGroup])}
+					taxesArray[{$tax_rules_group.id_tax_rules_group}] = {$tax_rules_group.id_tax_rules_group[$taxesRatesByGroup]};
+				{else}
+					taxesArray[{$tax_rules_group.id_tax_rules_group}] = 0;
+				{/if}
+			{/foreach}
+			ecotaxTaxRate = {$ecotaxTaxRate / 100};
+			</script>
+					
+					<span {if $tax_exclude_taxe_option}style="display:none;"{/if} >
+					 <select onChange="javascript:calcPriceTI(); unitPriceWithTax('unit');" name="id_tax_rules_group" id="id_tax_rules_group" {if $tax_exclude_taxe_option}disabled="disabled"{/if} >
+					     <option value="0">{l s='No Tax'}</option>
+						{foreach from=$tax_rules_groups item=tax_rules_group}
+							<option value="{$tax_rules_group.id_tax_rules_group}" {if $product->id_tax_rules_group == $tax_rules_group.id_tax_rules_group}selected="selected"{/if} >
+								{$tax_rules_group['name']|htmlentitiesUTF8}
+							</option>
+						{/foreach}
+						</select>
+						<a href="{$link->getAdminLink('AdminTaxRulesGroup')}&addtax_rules_group&id_product={$product->id}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}'" >
+						<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
+						</a>
+					</span>
+					{if $tax_exclude_taxe_option}
+						<span style="margin-left:10px; color:red;">{l s='Taxes are currently disabled'}</span> (<b><a href="{$link->getAdminLink('AdminTaxes')}">{l s='Tax options'}</a></b>)
+						<input type="hidden" value="{$product->id_tax_rules_group}" name="id_tax_rules_group" />
+					{/if}
+				</td>
+			</tr>
+			{if $ps_use_ecotax}
+			<tr>
+				<td class="col-left"><label>{l s='Eco-tax (tax incl.):' }</label></td>
+				<td style="padding-bottom:5px;">
+					{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax}" onkeyup="if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
+					<span style="margin-left:10px">({l s='already included in price'})</span>
+				</td>
+			</tr>
+			{/if}
+			<tr {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none"{/if} >
+				<td class="col-left"><label>{l s='Retail price with tax:' }</label></td>
+				<td style="padding-bottom:5px;">
+					{$currency->prefix}<input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma('priceTI');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />{$currency->suffix}
+				</td>
+			</tr>
+			<tr id="tr_unit_price">
+				<td class="col-left"><label>{l s='Unit price without tax:' }</label></td>
+				<td style="padding-bottom:5px;">
+					{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$product->unit_price}"
+						onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix} 
+						{l s='per'} <input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+							{if $ps_tax && $country_display_tax_label}
+								<span style="margin-left:15px">{l s='or'} 
+									{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
+									{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
+								</span>
+							{/if}
+							<p>{l s='Eg. $15 per Lb'}</p>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>&nbsp;</label></td>
+						<td style="padding-bottom:5px;">
+							<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display "on sale" icon on product page and text on product listing'}</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label><b>{l s='Final retail price:'}</b></label></td>
+						<td style="padding-bottom:5px;">
+							<span {if !$country_display_tax_label}style="display:none"{/if} >
+							{$currency->prefix}<span id="finalPrice" style="font-weight: bold;"></span>{$currency->suffix}<span {if $ps_tax}style="display:none;"{/if}> ({l s='tax incl.'})</span>
+							</span>
+							<span {if $ps_tax}style="display:none;"{/if} >
+
+							{if $country_display_tax_label}
+								 /
+							{/if}
+							{$currency->prefix}<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>{$currency->suffix} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>&nbsp;</label></td>
+						<td>
+							<div class="hint clear" style="display: block;width: 70%;">{l s='You can define many discounts and specific price rules in the Prices tab'}</div>
+						</td>
+					</tr>
+					{* [end] prices *}
+
 
 {$content}
 
