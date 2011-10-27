@@ -120,18 +120,20 @@ abstract class ControllerCore
 		// postProcess handles ajaxProcess
 		$this->postProcess();
 
-		if ($this->display_header)
-		{
-			$this->setMedia();
-			$this->initHeader();
-		}
-
+		$this->setMedia();
+		$this->initHeader();
+	
 		$this->initContent();
-		if ($this->display_footer)
-			$this->initFooter();
+		$this->initFooter();
 
-		if ($this->ajax && method_exists($this, 'displayAjax'))
-			$this->displayAjax();
+		if ($this->ajax)
+		{
+			$action = Tools::getValue('action');
+			if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
+				$this->{'displayAjax'.$action}();
+			elseif (method_exists($this, 'displayAjax'))
+				$this->displayAjax();
+		}
 		else
 			$this->display();
 	}
