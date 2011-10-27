@@ -86,6 +86,7 @@ if (isset($_GET['method']))
 	switch ($_GET['method'])
 	{
 		case 'checkConfig' :
+			define('_PS_ROOT_DIR_', realpath(INSTALL_PATH.'/../'));
 			require_once('xml/checkConfig.php');
 		break;
 
