@@ -159,6 +159,8 @@ class AdminCatalogController extends AdminController
 					
 			$this->context->smarty->assign('cat_bar',getPath($catBarIndex, $id_category, '', '', 'catalog', $home));
 		}
+		$this->content = ''; 
+		parent::initContent();
 	}
 }
 
