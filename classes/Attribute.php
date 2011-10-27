@@ -54,11 +54,11 @@ class AttributeCore extends ObjectModel
 		),
 	);
 
-	public function __construct()
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
 		$this->image_dir = _PS_COL_IMG_DIR_;
 
-		parent::__construct();
+		parent::__construct($id, $id_lang, $id_shop);
 	}
 
 	public function getFields()
