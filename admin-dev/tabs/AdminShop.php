@@ -34,7 +34,7 @@ class AdminShop extends AdminTab
 	 	$this->table = 'shop';
 		$this->className = 'Shop';
 	 	$this->edit = true;
-		$this->delete = false;
+		$this->delete = true;
 		$this->deleted = false;
 
 		$this->_select = 'gs.name group_shop_name, cl.name category_name';
@@ -71,6 +71,20 @@ class AdminShop extends AdminTab
 	{
 		if (Tools::getValue('useImportData') && ($importData = Tools::getValue('importData')) && is_array($importData))
 			$newShop->copyShopData((int)Tools::getValue('importFromShop'), $importData);
+	}
+
+	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
+		$shop_delete_list = array();
+
+		// test store authorized to remove
+		foreach($this->_list as $shop)
+		{
+			if(Shop::has_dependency($shop['id_shop']))
+				$shop_delete_list[] = $shop['id_shop'];
+		}
+		$this->_listSkipDelete = $shop_delete_list;
 	}
 
 	public function postProcess()
