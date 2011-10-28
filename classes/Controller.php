@@ -59,6 +59,11 @@ abstract class ControllerCore
 	 * @var string check if footer will be displayed
 	 */
 	protected $display_footer;
+	
+	/**
+	 * @var string check if only content will be displayed
+	 */
+	protected $content_only = false;
 
 	/**
 	 * @var bool If ajax parameter is detected in request, set this flag to true
