@@ -194,7 +194,7 @@ class AdminShippingControllerCore extends AdminController
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else
-			parent::postProcess();
+			return parent::postProcess();
 	}
 }
 

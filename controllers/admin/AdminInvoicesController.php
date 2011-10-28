@@ -67,7 +67,6 @@ class AdminInvoicesControllerCore extends AdminController
 			$statusStats[$row['id_order_state']] = $row['nbOrders'];
 
 		$this->context->smarty->assign(array(
-			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'date' => date('Y-m-d'),
 			'statuses' => $statuses,
 			'statusStats' => $statusStats
