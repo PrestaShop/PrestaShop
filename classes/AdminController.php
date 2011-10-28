@@ -816,7 +816,7 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign('display_header', $this->display_header);
 		$this->context->smarty->assign('display_footer', $this->display_footer);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
-		
+
 		// Template override
 		$tpl = $this->tpl_folder.'content.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
@@ -1074,6 +1074,7 @@ class AdminControllerCore extends Controller
 			$this->content .= $this->initList();
 			$this->content .= $this->initOptions();
 		}
+
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
 			'current' => self::$currentIndex,

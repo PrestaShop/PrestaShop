@@ -391,12 +391,9 @@ class AdminHomeControllerCore extends AdminController
 
 	}
 
-	public function displayAjax()
-	{
-		echo $this->content;
-	}
 	public function ajaxProcessGetAdminHomeElement()
 	{
+		$this->content_only = true;
 		$result = array();
 		$content = '';
 
@@ -512,6 +509,7 @@ class AdminHomeControllerCore extends AdminController
 			$upgrade = new Upgrader();
 			$upgrade->checkPSVersion();
 		}
+
 		$smarty->assign('upgrade', $upgrade);
 
 		$smarty->assign('show_screencast', $this->context->employee->show_screencast);

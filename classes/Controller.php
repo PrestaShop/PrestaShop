@@ -147,11 +147,14 @@ abstract class ControllerCore
 				elseif (method_exists($this, 'displayAjax'))
 					$this->displayAjax();
 			}
+			else
+				$this->display();
 		}
 		else
+		{
 			$this->initCursedPage();
-
-		$this->display();
+			$this->display();
+		}
 	}
 
 	public function displayHeader($display = true)
