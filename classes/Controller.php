@@ -124,18 +124,17 @@ abstract class ControllerCore
 
 		if ($this->checkAccess())
 		{
-		// postProcess handles ajaxProcess
+			// postProcess handles ajaxProcess
 			$this->postProcess();
-		
-			if ($this->display_header || (isset($this->className) && $this->className))
+			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 			{
 				$this->setMedia();
 				$this->initHeader();
 			}
 	
 			$this->initContent();
-			
-			if ($this->display_footer || (isset($this->className) && $this->className))
+
+			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
 				$this->initFooter();
 
 			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
