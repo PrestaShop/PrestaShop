@@ -63,6 +63,16 @@ class FrontControllerCore extends Controller
 		$useSSL = $this->ssl;
 	}
 
+	/**
+	 * checkAccess 
+	 * 
+	 * @return void
+	 */
+	public function checkAccess()
+	{
+		return true;
+	}
+
 	public function init()
 	{
 		/*
@@ -356,6 +366,11 @@ class FrontControllerCore extends Controller
 	public function initContent()
 	{
 		$this->process();
+	}
+
+	public function initCursedPage()
+	{
+		return $this->displayMaintenancePage();
 	}
 
 	public function process()
