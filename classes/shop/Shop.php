@@ -155,7 +155,7 @@ class ShopCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!$res = parent::delete())
+		if (self::has_dependency($this->id) || !$res = parent::delete())
 			return false;
 
 		foreach (Shop::getAssoTables() as $table_name => $row)
@@ -171,6 +171,27 @@ class ShopCore extends ObjectModel
 		Shop::cacheShops(true);
 
 		return $res;
+	}
+
+	/**
+	 * Detect dependency with customer or orders
+	 *
+	 * @return bool
+	 */
+	public static function has_dependency($id_shop)
+	{
+		$has_dependency = false;
+		$nbr_customer = (int)Db::getInstance()->getValue('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `id_shop`='.(int)$id_shop);
+		if($nbr_customer)
+			$has_dependency = true;
+		else
+		{
+			$nbr_order= (int)Db::getInstance()->getValue('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE `id_shop`='.(int)$id_shop);
+			if($nbr_order)
+				$has_dependency = true;
+		}
+
+		return $has_dependency;
 	}
 
 	/**
