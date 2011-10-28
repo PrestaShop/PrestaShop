@@ -816,7 +816,7 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign('display_header', $this->display_header);
 		$this->context->smarty->assign('display_footer', $this->display_footer);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
-
+		
 		// Template override
 		$tpl = $this->tpl_folder.'content.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
@@ -832,7 +832,6 @@ class AdminControllerCore extends Controller
 			$page = $this->context->smarty->fetch($tpl);
 		else
 			$page = $this->context->smarty->fetch($this->template);
-
 		if ($this->content_only)
 			echo $page;
 		else
@@ -1070,12 +1069,11 @@ class AdminControllerCore extends Controller
 				return;
 			$this->content .= $this->initForm();
 		}
-		else if ($this->display != 'view')
+		elseif ($this->display != 'view' && !$this->ajax)
 		{
 			$this->content .= $this->initList();
 			$this->content .= $this->initOptions();
 		}
-
 		$this->context->smarty->assign(array(
 			'table' => $this->table,
 			'current' => self::$currentIndex,
