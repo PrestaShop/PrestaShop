@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="../options.tpl"} 
+{extends file="helper/options/options.tpl"} 
 {block name="start_field_block"}
 	{if $field['type'] == 'price'}
 		<div class="margin-form">
