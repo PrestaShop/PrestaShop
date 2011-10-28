@@ -58,53 +58,53 @@ class SupplierOrderDetailCore extends ObjectModel
 	/**
 	 * @var float Unit price without discount, without tax
 	 */
-	public $unit_price_te;
+	public $unit_price_te = 0;
 
 	/**
 	 * @var int Quantity ordered
 	 */
-	public $quantity;
+	public $quantity = 0;
 
 	/**
 	 * @var float This defines the price of the product, considering the number of units to buy.
 	 * ($unit_price_te * $quantity), without discount, without tax
 	 */
-	public $price_te;
+	public $price_te = 0;
 
 	/**
 	 * @var float Supplier discount rate for a given product
 	 */
-	public $discount_rate;
+	public $discount_rate = 0;
 
 	/**
 	 * @var float Supplier discount value (($discount_rate / 100) * $price_te), without tax
 	 */
-	public $discount_value_te;
+	public $discount_value_te = 0;
 
 	/**
 	 * @var float ($price_te - $discount_value_te), with discount, without tax
 	 */
-	public $price_with_discount_te;
+	public $price_with_discount_te = 0;
 
 	/**
 	 * @var int Tax rate for the given product
 	 */
-	public $tax_rate;
+	public $tax_rate = 0;
 
 	/**
 	 * @var float Tax value for the given product
 	 */
-	public $tax_value;
+	public $tax_value = 0;
 
 	/**
 	 * @var float ($price_with_discount_te + $tax_value)
 	 */
-	public $price_ti;
+	public $price_ti = 0;
 
 	/**
 	 * @var float Tax value of the given product after applying the global order discount (i.e. if SupplierOrder::discount_rate is set)
 	 */
-	public $tax_value_with_order_discount;
+	public $tax_value_with_order_discount = 0;
 
 	/**
 	 * @var float This is like $price_with_discount_te, considering the global order discount.
@@ -117,7 +117,7 @@ class SupplierOrderDetailCore extends ObjectModel
 		'id_product',
 		'id_product_attribute',
 		'id_currency',
-		'excange_rate',
+		'exchange_rate',
 		'unit_price_te',
 		'quantity',
 		'price_te',
@@ -160,6 +160,9 @@ class SupplierOrderDetailCore extends ObjectModel
 	 */
 	protected $identifier = 'id_supplier_order_detail';
 
+	/**
+	 * @see ObjectModel::getFields()
+	 */
 	public function getFields()
 	{
 		$this->validateFields();
@@ -182,5 +185,70 @@ class SupplierOrderDetailCore extends ObjectModel
 		$fields['price_with_order_discount_te'] = (float)$this->price_with_order_discount_te;
 
 		return $fields;
+	}
+
+	/**
+	 * @see ObjectModel::update()
+	 */
+	public function update($null_values = false)
+	{
+		$this->calculatePrices();
+
+		parent::update($null_values);
+	}
+
+	/**
+	 * @see ObjectModel::add()
+	 */
+	public function add($autodate = true, $null_values = false)
+	{
+		$this->calculatePrices();
+
+		parent::add($autodate, $null_values);
+	}
+
+	/**
+	 * Determine all price for this product based on its quantity and unit price
+	 * Apply discount if necessary
+	 * Calculate tax value in function of tax rate
+	 *
+	 * @return array
+	 */
+	protected function calculatePrices()
+	{
+		// calcul entry price
+		$htis->price_te = (float)$this->unit_price_te * (int)$this->quantity;
+
+		// calcul entry discount value
+		if ($this->discount_rate != null && is_numeric($this->discount_rate) && $this->discount_rate > 0)
+			$htis->discount_value_te = (float)$htis->price_te * ((float)$this->discount_rate / 100);
+
+		// calcul entry price with discount
+		$this->price_with_discount_te = $htis->price_te - $htis->discount_value_te;
+
+		// calcul tax value
+		$this->tax_value = $this->price_with_discount_te * ((float)$this->tax_rate / 100);
+		$this->price_ti = $this->price_with_discount_te - $this->tax_value;
+
+		// define default values for order discount fields
+		$this->tax_value_with_order_discount = $this->tax_value;
+		$this->price_with_order_dscount_te = $this->price_with_discount_te;
+	}
+
+	/**
+	 * Apply a global order discount rate on the current product entity
+	 *
+	 * @param $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
+	 */
+	public function applyGlobalDiscount($discount_rate)
+	{
+		if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0)
+		{
+			// calculate new price, with global order discount, tax ecluded
+			$this->price_with_order_dscount_te = $this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100));
+
+			// calculate new tax value, with global order discount
+			$this->tax_value_with_order_discount = $this->price_with_order_dscount_te * ((float)$this->tax_rate / 100);
+		}
 	}
 }

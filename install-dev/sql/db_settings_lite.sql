@@ -866,7 +866,8 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (96, 'AdminWarehouses', 95, 1),
 (97, 'AdminStockManagement', 95, 2),
 (98, 'AdminStockInstantState', 95, 4),
-(99, 'AdminStockCover', 95, 5);
+(99, 'AdminStockCover', 95, 5),
+(100, 'AdminSupplierOrders', 95, 6);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -890,7 +891,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 96, 'Warehouses'),
 (1, 97, 'Stock Management'),
 (1, 98, 'Stock instant state'),
-(1, 99, 'Stock cover');
+(1, 99, 'Stock cover'),
+(1, 100, 'Supplier orders');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -912,7 +914,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 96, 'Entrepôts'),
 (2, 97, 'Gestion du stock'),
 (2, 98, 'Etat instantané du stock'),
-(2, 99, 'Couverture de stock');
+(2, 99, 'Couverture de stock'),
+(2, 100, 'Commandes fournisseurs');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -933,7 +936,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 96, 'Warehouses'),
 (3, 97, 'Stock Management'),
 (3, 98, 'Stock instant state'),
-(3, 99, 'Stock cover');
+(3, 99, 'Stock cover'),
+(3, 100, 'Supplier orders');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -955,7 +959,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 96, 'Warehouses'),
 (4, 97, 'Stock Management'),
 (4, 98, 'Stock instant state'),
-(4, 99, 'Stock cover');
+(4, 99, 'Stock cover'),
+(4, 100, 'Supplier orders');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -977,7 +982,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 96, 'Warehouses'),
 (5, 97, 'Stock Management'),
 (5, 98, 'Stock instant state'),
-(5, 99, 'Stock cover');
+(5, 99, 'Stock cover'),
+(5, 100, 'Supplier orders');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`
@@ -1412,3 +1418,43 @@ address2
 city State:name postcode
 Country:name
 phone' WHERE `PREFIX_address_format`.`id_country` = 4;
+
+INSERT INTO `ps_supplier_order_state` (`id_supplier_order_state`, `delivery_note`, `editable`, `receipt_state`, `pending_receipt`, `color`) VALUES
+(1, 0, 1, 0, 0, '#ffe1af'),
+(2, 1, 0, 0, 0, '#e7fbff'),
+(3, 0, 0, 0, 1, '#ffdbfd'),
+(4, 0, 0, 1, 1, '#ffd3d3'),
+(5, 0, 0, 1, 0, '#d8ffd7'),
+(6, 0, 0, 0, 0, '#cccccc');
+
+INSERT INTO `ps_supplier_order_state_lang` (`id_supplier_order_state`, `id_lang`, `name`) VALUES
+(1, 1, 'creation in progress'),
+(1, 2, 'Création en cours'),
+(1, 3, 'Création in progress'),
+(1, 4, 'Création in progress'),
+(1, 5, 'Création in progress'),
+(2, 1, 'Order validated'),
+(2, 2, 'Commande validée'),
+(2, 3, 'Order validated'),
+(2, 4, 'Order validated'),
+(2, 5, 'Order validated'),
+(3, 1, 'Pending receipt'),
+(3, 2, 'Attente de réception'),
+(3, 3, 'Pending receipt'),
+(3, 4, 'Pending receipt'),
+(3, 5, 'Pending receipt'),
+(4, 1, 'Order received in part'),
+(4, 2, 'Commande réceptionnée partiellement'),
+(4, 3, 'Order received in part'),
+(4, 4, 'Order received in part'),
+(4, 5, 'Order received in part'),
+(5, 1, 'Order received completely'),
+(5, 2, 'Commande réceptionnée totalement'),
+(5, 3, 'Order received completely'),
+(5, 4, 'Order received completely'),
+(5, 5, 'Order received completely'),
+(6, 1, 'order fenced'),
+(6, 2, 'Commande cloturée'),
+(6, 3, 'order fenced'),
+(6, 4, 'order fenced'),
+(6, 5, 'order fenced');
