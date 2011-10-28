@@ -122,6 +122,8 @@ class HelperOptionsCore extends Helper
 							}
 						</script>';
 					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP').'</a>';
+					if (!isset($category_data['bottom']))
+						$category_data['bottom'] = '<script type="text/javascript">changeCMSActivationAuthorization();</script>';
 				} else if ($field['type'] == 'price')
 				{
 					$field['currency_left'] = $this->context->currency->getSign('left');
