@@ -244,6 +244,8 @@ class AdminControllerCore extends Controller
 		// Get the name of the folder containing the custom tpl files
 		$this->tpl_folder = strtolower($controller[5]).substr($controller, 6);
 		$this->tpl_folder = Tools::toUnderscoreCase($this->tpl_folder).'/';
+
+		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 	}
 
 	/**
@@ -726,7 +728,7 @@ class AdminControllerCore extends Controller
 			break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token, 
+					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 					'desc' => $this->l('Add new')
 				);
 		}
@@ -1329,7 +1331,6 @@ class AdminControllerCore extends Controller
 			$this->display_footer = false;
 			$this->content_only = true;
 		}
-		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		// Change shop context ?
 		if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false)

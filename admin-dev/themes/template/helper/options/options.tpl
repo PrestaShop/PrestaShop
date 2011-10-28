@@ -26,7 +26,11 @@
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
 </script>
-<form action="{$current}&submitOptions{$table}=1&token={$token}" method="post" enctype="multipart/form-data">
+<form action="{$current}&submitOptions{$table}=1&token={$token}" 
+	{if isset($categoryData['name'])} name={$categoryData['name']}{/if} 
+	{if isset($categoryData['id'])} id={$categoryData['id']} {/if}
+	method="post" 
+	enctype="multipart/form-data">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
 		<fieldset {if isset($categoryData['class'])}class="{$categoryData['class']}"{/if}>
@@ -38,7 +42,7 @@
 	
 		{* Category description *}
 		{if (isset($categoryData['description']) && $categoryData['description'])}
-			<p class="optionsDescription">{$categoryData['description']}</p>
+			<div class="optionsDescription">{$categoryData['description']}</div>
 		{/if}
 		{* Category info *}
 		{if (isset($categoryData['info']) && $categoryData['info'])}
@@ -62,11 +66,15 @@
 					<div class="margin-form">
 				{/block}
 				{if $field['type'] == 'select'}
-					<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}">
-						{foreach $field['list'] AS $k => $option}
-							<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
-						{/foreach}
-					</select>
+					{if $field['list']}
+						<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}">
+							{foreach $field['list'] AS $k => $option}
+								<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
+							{/foreach}
+						</select>
+					{else if isset($input.empty_message)}
+						{$input.empty_message}
+					{/if}	
 				{elseif $field['type'] == 'bool'}
 					<label class="t" for="{$key}_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" /></label>
 					<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
@@ -89,10 +97,10 @@
 				*}
 				{elseif $field['type'] == 'text'}
 					<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
-					{if isset($field['next'])}&nbsp;{$field['next']|strval}{/if}
+					{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
 				{elseif $field['type'] == 'password'}
 					<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" />
-					{if isset($field['next'])}&nbsp;{$field['next']|strval}{/if}
+					{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
 				{elseif $field['type'] == 'textarea'}
 					<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
 				{elseif $field['type'] == 'file'}

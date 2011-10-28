@@ -37,7 +37,7 @@
 
 	{* Category description *}
 	{if (isset($categoryData['description']) && $categoryData['description'])}
-		<p class="optionsDescription">{$categoryData['description']}</p>
+		<div class="optionsDescription">{$categoryData['description']}</div>
 	{/if}
 
 	{foreach $categoryData['fields'] AS $key => $field}
@@ -79,10 +79,10 @@
 		*}
 		{elseif $field['type'] == 'text'}
 			<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
-			{if isset($field['next'])}&nbsp;{$field['next']|strval}{/if}
+			{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
 		{elseif $field['type'] == 'password'}
 			<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" />
-			{if isset($field['next'])}&nbsp;{$field['next']|strval}{/if}
+			{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
 		{elseif $field['type'] == 'textarea'}
 			<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
 		{elseif $field['type'] == 'file'}
