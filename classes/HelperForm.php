@@ -75,6 +75,7 @@ class HelperFormCore extends Helper
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
+		$iso = $this->context->language->iso_code;
 		$this->context->smarty->assign(array(
 			'submit_action' => $this->submit_action,
 			'toolbar_btn' => $this->toolbar_btn,
@@ -95,6 +96,9 @@ class HelperFormCore extends Helper
 			'module_dir' => _MODULE_DIR_,
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
 			'asso_shop' => (isset($this->fields_form['asso_shop']) && $this->fields_form['asso_shop']) ? $this->displayAssoShop() : null,
+			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
+			'path_css' => _THEME_CSS_DIR_,
+			'ad' => dirname($_SERVER["PHP_SELF"])
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);

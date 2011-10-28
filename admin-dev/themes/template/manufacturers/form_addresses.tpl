@@ -31,20 +31,26 @@
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
 
-		$(document).ready(function() { 
+		$(document).ready(function() {ldelim}
 			{foreach $languages as $k => $language}
-				languages[{$k}] = { 
+				languages[{$k}] = {ldelim}
 					id_lang: {$language.id_lang},
 					iso_code: '{$language.iso_code}',
 					name: '{$language.name}'
-				};
+				{rdelim};
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
 
-			$('input[name=name_'+id_language+']').keyup(function() { 
-				$('input[name=link_rewrite_'+id_language+']').val(str2url($(this).val()));
-			});
-		});
+			{if isset($fields_value.id_state)}
+				if ($('#id_country') && $('#id_state'))
+				{ldelim}
+					ajaxStates({$fields_value.id_state});
+					$('#id_country').change(function() {ldelim}
+						ajaxStates();
+					{rdelim});
+				{rdelim}
+			{/if}
+		{rdelim});
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
@@ -65,13 +71,17 @@
 					{if $input.name == 'id_state'}
 						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 					{/if}
+					{block name="label"}
 					{if isset($input.label)}
-					<label>{$input.label} </label>
+						<label>{$input.label} </label>
 					{/if}
+					{/block}
 					{if $input.type == 'hidden'}
 						<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
 					{else}
-					<div class="margin-form">
+					{block name="start_field_block"}
+						<div class="margin-form">
+					{/block}
 						{if $input.type == 'text'}
 							{if isset($input.lang) && isset($input.attributeLang)}
 								{foreach $languages as $language}
@@ -115,6 +125,7 @@
 										{if isset($input.class)}class="{$input.class}"{/if}
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
 										{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+								{if isset($input.suffix)}{$input.suffix}{/if}
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'select'}
@@ -215,18 +226,8 @@
 								<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 							{/foreach}
 						{elseif $input.type == 'file'}
-							{if $input.display_image}
-								{if isset($fields_value.image) && $fields_value.image}
-									<div id="image">
-										{$fields_value.image}
-										<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-										<a href="{$current}&id_category={$form_id}&token={$token}&deleteImage=1">
-											<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
-										</a>
-									</div><br />
-								{/if}
-							{/if}
 							<input type="file" name="{$input.name}" />
+							<img src="{$fields_value[$input.name]}" />
 						{elseif $input.type == 'password'}
 							<input type="password"
 									name="{$input.name}"
@@ -234,12 +235,9 @@
 									value="" />
 						{elseif $input.type == 'group'}
 							{assign var=groups value=$input.values}
-							{include file='helper/form/form_group.tpl'}
+							{include file='form_group.tpl'}
 						{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
-							{include file='helper/form/form_shop.tpl'}
-						{elseif $input.type == 'categories'}
-							{assign var=categories value=$input.values}
-							{include file='helper/form/form_category.tpl'}
+							{include file='form_shop.tpl'}
 						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 							<label>{l s='Shop association:'}</label>
 							<div class="margin-form">
@@ -263,7 +261,7 @@
 							</p>
 						{/if}
 						{if isset($languages)}<div class="clear"></div>{/if}
-					</div>
+					{block name="end_field_block"}</div>{/block}
 					{/if}
 					{if $input.name == 'id_state'}
 						</div>
@@ -280,14 +278,6 @@
 		{/if}
 	</fieldset>
 </form>
-
-<script type="text/javascript">
-	var iso = '{$iso}';
-	var pathCSS = '{$theme_path_css}';
-	var ad = '{$ad}';
-</script>
-<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="../js/tinymce.inc.js"></script>
 
 <br /><br />
 {if $firstCall && !$no_back}
