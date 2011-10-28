@@ -101,7 +101,7 @@ function check_all_shop() {ldelim}
 				</td>
 			</tr>
 	
-			{if $input.type = 'shop'}
+			{if $input.type == 'shop'}
 				{assign var=j value=0}
 				{foreach $groupData['shops'] as $shopID => $shopData}
 					{if ((isset($fields_value.shop[$shopID]) && in_array($form_id, $fields_value.shop[$shopID])) || !$form_id)}
