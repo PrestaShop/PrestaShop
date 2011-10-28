@@ -2013,7 +2013,7 @@ CREATE TABLE `PREFIX_warehouse_carrier` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_stock_available` (
-`id_stock_available` INT(11) UNSIGNED NOT NULL,
+`id_stock_available` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_product` INT(11) UNSIGNED NOT NULL,
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL,
@@ -2027,19 +2027,20 @@ CREATE TABLE `PREFIX_stock_available` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_order` (
-`id_supplier_order` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_supplier` INT(11) UNSIGNED NOT NULL,
 `id_employee` INT(11) UNSIGNED NOT NULL,
 `id_warehouse` INT(11) UNSIGNED NOT NULL,
-`id_state` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_state` INT(11) UNSIGNED NOT NULL,
 `id_currency` INT(11) UNSIGNED NOT NULL,
 `id_ref_currency` INT(11) UNSIGNED NOT NULL,
 `reference` VARCHAR(32) DEFAULT NULL,
 `date_add` DATETIME NOT NULL,
 `date_upd` DATETIME NOT NULL,
-`date_delivery_expected` DATETIME NOT NULL,
+`date_delivery_expected` DATETIME DEFAULT NULL,
 `total_te` DECIMAL(20,6) DEFAULT '0.000000',
 `total_with_discount_te` DECIMAL(20,6) DEFAULT '0.000000',
+`total_tax` DECIMAL(20,6) DEFAULT '0.000000',
 `total_ti` DECIMAL(20,6) DEFAULT '0.000000',
 `discount_rate` DECIMAL(20,6) DEFAULT '0.000000',
 `discount_value_te` DECIMAL(20,6) DEFAULT '0.000000',
@@ -2050,7 +2051,7 @@ CREATE TABLE `PREFIX_supplier_order` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_order_detail` (
-`id_supplier_order_detail` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_detail` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_supplier_order` INT(11) UNSIGNED NOT NULL,
 `id_product` INT(11) UNSIGNED NOT NULL,
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
@@ -2075,7 +2076,7 @@ CREATE TABLE `PREFIX_supplier_order_detail` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_order_history` (
-`id_supplier_order_history` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_history` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_supplier_order` INT(11) UNSIGNED NOT NULL,
 `id_employee` INT(11) UNSIGNED NOT NULL,
 `id_state` INT(11) UNSIGNED NOT NULL,
@@ -2087,30 +2088,32 @@ CREATE TABLE `PREFIX_supplier_order_history` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_order_state` (
-`id_state` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_state` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `delivery_note` tinyint(1) NOT NULL DEFAULT 0,
 `editable` tinyint(1) NOT NULL DEFAULT 0,
 `receipt_state` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id_state`)
+`pending_receipt` tinyint(1) NOT NULL DEFAULT 0,
+`color` VARCHAR(32) DEFAULT NULL,
+  PRIMARY KEY (`id_supplier_order_state`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_order_state_lang` (
-`id_state` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_state` INT(11) UNSIGNED NOT NULL,
 `id_lang` INT(11) UNSIGNED NOT NULL,
 `name` VARCHAR(128) DEFAULT NULL,
-  PRIMARY KEY (`id_state`, `id_lang`)
+  PRIMARY KEY (`id_supplier_order_state`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_order_receipt_history` (
-`id_supplier_order_receipt_history` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_receipt_history` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_supplier_order_detail` INT(11) UNSIGNED NOT NULL,
 `id_employee` INT(11) UNSIGNED NOT NULL,
-`id_state` INT(11) UNSIGNED NOT NULL,
+`id_supplier_order_state` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(11) UNSIGNED NOT NULL,
 `date_add` DATETIME NOT NULL,
   PRIMARY KEY (`id_supplier_order_receipt_history`),
   KEY `id_supplier_order_detail` (`id_supplier_order_detail`),
-  KEY `id_state` (`id_state`)
+  KEY `id_supplier_order_state` (`id_supplier_order_state`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier_rates` (

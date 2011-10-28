@@ -48,7 +48,7 @@ class SupplierOrderCore extends ObjectModel
 	/**
 	 * @var int State of the order
 	 */
-	public $id_state;
+	public $id_supplier_order_state;
 
 	/**
 	 * @var int Currency used for the order
@@ -83,51 +83,50 @@ class SupplierOrderCore extends ObjectModel
 	/**
 	 * @var float Total price without tax
 	 */
-	public $total_te;
+	public $total_te = 0;
 
 	/**
 	 * @var float Total price after discount, without tax
 	 */
-	public $total_with_discount_te;
+	public $total_with_discount_te = 0;
 
 	/**
 	 * @var float Total price with tax
 	 */
-	public $total_ti;
+	public $total_ti = 0;
+
+	/**
+	 * @var float Total tax value
+	 */
+	public $total_tax = 0;
 
 	/**
 	 * @var float Supplier discount rate (for the whole order)
 	 */
-	public $discount_rate;
+	public $discount_rate = 0;
 
 	/**
 	 * @var float Supplier discount value without tax (for the whole order)
 	 */
-	public $discount_value_te;
+	public $discount_value_te = 0;
 
 	protected $fieldsRequired = array(
 		'id_supplier',
 		'id_employee',
 		'id_warehouse',
-		'id_state',
+		'id_supplier_order_state',
 		'id_currency',
 		'id_ref_currency',
 		'reference',
-		'date_add',
-		'date_upd',
-		'date_delivery_expected',
-		'total_te',
-		'total_with_discount_te',
-		'total_ti',
 		'discount_rate',
-		'discount_value_te'
+		'date_delivery_expected'
 	);
 
 	protected $fieldsValidate = array(
 		'id_supplier' => 'isUnsignedId',
 		'id_employee' => 'isUnsignedId',
 		'id_warehouse' => 'isUnsignedId',
-		'id_state' => 'isUnsignedId',
+		'id_supplier_order_state' => 'isUnsignedId',
 		'id_currency' => 'isUnsignedId',
 		'id_ref_currency' => 'isUnsignedId',
 		'reference' => 'isGenericName',
@@ -137,6 +136,7 @@ class SupplierOrderCore extends ObjectModel
 		'total_te' => 'isPrice',
 		'total_with_discount_te' => 'isPrice',
 		'total_ti' => 'isPrice',
+		'total_tax' => 'isPrice',
 		'discount_rate' => 'isFloat',
 		'discount_value_te' => 'isPrice'
 	);
@@ -158,19 +158,147 @@ class SupplierOrderCore extends ObjectModel
 		$fields['id_supplier'] = (int)$this->id_supplier;
 		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['id_warehouse'] = (int)$this->id_warehouse;
-		$fields['id_state'] = (int)$this->id_state;
+		$fields['id_supplier_order_state'] = (int)$this->id_supplier_order_state;
 		$fields['id_currency'] = (int)$this->id_currency;
 		$fields['id_ref_currency'] = (int)$this->id_ref_currency;
 		$fields['reference'] = pSQL($this->reference);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['date_delivery_expected'] = pSQL($this->delivery_date_expected);
+		$fields['date_delivery_expected'] = pSQL($this->date_delivery_expected);
 		$fields['total_te'] = (float)$this->total_te;
 		$fields['total_with_discount_te'] = (float)$this->total_with_discount_te;
 		$fields['total_ti'] = (float)$this->total_ti;
-		$fields['discount_rate'] = (float)$this->order_discount_rate;
-		$fields['discount_value'] = (float)$this->order_discount_value;
+		$fields['total_tax'] = (float)$this->total_tax;
+		$fields['discount_rate'] = (float)$this->discount_rate;
+		$fields['discount_value_te'] = (float)$this->discount_value_te;
 
 		return $fields;
+	}
+
+	/**
+	 * @see ObjectModel::update()
+	 */
+	public function update($null_values = false)
+	{
+		$this->calculatePrices();
+
+		return parent::update($null_values);
+	}
+
+	/**
+	 * @see ObjectModel::update()
+	 */
+	public function add($autodate = true, $null_values = false)
+	{
+		$this->calculatePrices();
+
+		return parent::add($autodate, $null_values);
+	}
+
+	/**
+	 * Check all products in this order and calculate prices
+	 * Apply global discount if necessary
+	 *
+	 * @return array
+	 */
+	protected function calculatePrices()
+	{
+		$this->total_te = 0;
+		$this->total_with_discount_te = 0;
+		$this->total_tax = 0;
+		$this->total_ti = 0;
+
+		$is_discount = false;
+		if (is_numeric($this->discount_rate) && (float)$this->discount_rate > 0)
+			$is_discount = true;
+
+		// get all product entries in this order
+		$entries = $this->getEntriesCollection();
+
+		foreach ($entries as $entry)
+		{
+			// apply global discount rate on each product if possible
+			if ($is_discount)
+			{
+				$entry->applyGlobalDiscount((float)$this->discount_rate);
+				$entry->save();
+			}
+
+			// add new prices to the total
+			$this->total_te += $entry->price_with_discount_te;
+			$this->total_with_discount_te += $entry->price_with_order_discount_te;
+			$this->total_tax += $entry->tax_value_with_order_discount;
+			$this->total_ti = $this->total_tax + $this->total_with_discount_te;
+		}
+
+		// apply global discount rate if possible
+		if ($is_discount)
+			$this->discount_value_te = $this->total_te - $this->total_with_discount_te;
+	}
+
+	/**
+	 * Retrieves the product entries collection for the current order
+	 *
+	 * @return array
+	 */
+	protected function getEntriesCollection()
+	{
+		// build query
+		$query = new DbQuery();
+		$query->select('s.*');
+		$query->from('supplier_order_detail s');
+		$query->where('s.id_supplier_order = '.(int)$this->id);
+
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		return ObjectModel::hydrateCollection('SupplierOrderDetail', $results);
+	}
+
+	/**
+	 * Check if the current state allow to edit the current order
+	 *
+	 * @return bool
+	 */
+	protected function isEditable()
+	{
+		// build query
+		$query = new DbQuery();
+		$query->select('s.editable');
+		$query->from('supplier_order_state s');
+		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
+
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
+	}
+
+	/**
+	 * Check if the current state allow to generate delivery_note for this order
+	 *
+	 * @return bool
+	 */
+	protected function isDeliveryNoteAvailable()
+	{
+		// build query
+		$query = new DbQuery();
+		$query->select('s.delivery_note');
+		$query->from('supplier_order_state s');
+		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
+
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
+	}
+
+	/**
+	 * Check if the current state allow add products in stock
+	 *
+	 * @return bool
+	 */
+	protected function isInReceiptState()
+	{
+		// build query
+		$query = new DbQuery();
+		$query->select('s.receipt_state');
+		$query->from('supplier_order_state s');
+		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
+
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
 	}
 }
