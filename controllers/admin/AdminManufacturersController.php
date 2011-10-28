@@ -303,6 +303,9 @@ class AdminManufacturersControllerCore extends AdminController
 			)
 		);
 
+		if (!($manufacturer = $this->loadObject(true)))
+			return;
+
 		/*
 		 * Where it used? You can not insert into a table or in the fields of a table
 		 */
@@ -320,9 +323,6 @@ class AdminManufacturersControllerCore extends AdminController
 			'title' => $this->l('   Save   '),
 			'class' => 'button'
 		);
-
-		if (!($manufacturer = $this->loadObject(true)))
-			return;
 
 		$image = cacheImage(_PS_MANU_IMG_DIR_.'/'.$manufacturer->id.'.jpg', $this->table.'_'.(int)$manufacturer->id.'.'.$this->imageType, 350, $this->imageType, true);
 
@@ -344,6 +344,17 @@ class AdminManufacturersControllerCore extends AdminController
 				'description',
 				$language['id_lang']
 			)), ENT_COMPAT, 'UTF-8');
+		}
+
+		//Added values of object Shop
+		if ($manufacturer->id)
+		{
+			$assos = array();
+			$sql = 'SELECT `id_group_shop`, `'.pSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.pSQL($this->table).'_group_shop`
+					WHERE `'.pSQL($this->identifier).'` = '.(int)$manufacturer->id;
+			foreach (Db::getInstance()->executeS($sql) as $row)
+				$this->fields_value['shop'][$row['id_group_shop']][] = $row[$this->identifier];
 		}
 
 		return parent::initForm();
