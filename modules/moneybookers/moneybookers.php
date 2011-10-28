@@ -718,7 +718,7 @@ class MoneyBookers extends PaymentModule
       $this->pcc->card_expiration = '';
 
       $this->pcc->card_holder = (string)(isset($response['pay_to_email']) ? 
-      	$response['pay_to_email'] : '';
+      	$response['pay_to_email'] : '');
     }
   }
 }
