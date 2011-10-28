@@ -192,8 +192,9 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->context->smarty->assign('list_warehouses', $warehouses);
 		$this->context->smarty->assign('current_warehouse', $this->getCurrentWarehouseId());
 
-		// reset actions and query vars
+		// reset actions, toolbar and query vars
 		$this->actions = array();
+		$this->toolbar_btn = array();
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		// override table, land, className and identifier for the current controller
