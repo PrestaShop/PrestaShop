@@ -38,7 +38,6 @@ class AdminControllerCore extends Controller
 	public $default_form_language;
 	public $allow_employee_form_lang;
 
-	public $content_only = false;
 	public $layout = 'layout.tpl';
 
 	public $meta_title = 'Administration panel';
@@ -825,7 +824,11 @@ class AdminControllerCore extends Controller
 		// new smarty : template_dir is an array.
 		// @todo : add override path to the smarty config, and checking all array item
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action))
+		{
+			if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
+				$this->{$this->display.Tools::toCamelCase($this->className)}();
 			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
+		}
 
 		// Check if content template has been override
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
@@ -1324,6 +1327,7 @@ class AdminControllerCore extends Controller
 		{
 			$this->display_header = false;
 			$this->display_footer = false;
+			$this->content_only = true;
 		}
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
