@@ -299,8 +299,6 @@ CREATE TABLE `PREFIX_referrer_shop` (
 INSERT INTO `PREFIX_referrer_shop` (`id_referrer`, `id_shop`) SELECT `id_referrer`, 1 FROM `PREFIX_referrer`;
 ALTER TABLE `PREFIX_referrer` DROP `cache_visitors`, DROP `cache_visits`, DROP `cache_pages`, DROP `cache_registrations`, DROP `cache_orders`, DROP `cache_sales`, DROP `cache_reg_rate`, DROP `cache_order_rate`;
 
-ALTER TABLE `PREFIX_employee` ADD `show_screencast` TINYINT(1) UNSIGNED NOT NULL default '1';
-
 ALTER TABLE `PREFIX_cart_product` ADD `id_shop` INT NOT NULL DEFAULT '1' AFTER `id_product`;
 
 ALTER TABLE `PREFIX_customization` ADD `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';

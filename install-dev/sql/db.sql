@@ -632,7 +632,6 @@ CREATE TABLE `PREFIX_employee` (
   `bo_uimode` ENUM('hover','click') default 'click',
   `bo_show_screencast` tinyint(1) NOT NULL default '1',
   `active` tinyint(1) unsigned NOT NULL default '0',
-  `show_screencast` tinyint(1) unsigned NOT NULL default '1',
   `id_last_order` tinyint(1) unsigned NOT NULL default '0',
   `id_last_message` tinyint(1) unsigned NOT NULL default '0',
   `id_last_customer` tinyint(1) unsigned NOT NULL default '0',
