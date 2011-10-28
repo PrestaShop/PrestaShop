@@ -714,7 +714,7 @@ abstract class ModuleCore
 			if (is_dir(_PS_MODULE_DIR_.$name) && Tools::file_exists_cache(_PS_MODULE_DIR_.$name.'/'.$name.'.php'))
 			{
 				if (!Validate::isModuleName($name))
-					die(Tools::displayError().' (Module '.$name.')');
+					throw new PrestashopException(sprintf('Module %s is not a valid module name', $name));
 				$moduleList[] = $name;
 			}
 		}
