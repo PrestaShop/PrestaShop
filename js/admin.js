@@ -930,7 +930,7 @@ function showErrorMessage(msg)
 }
 
 $(document).ready(function(){
-	$(".copy2friendlyURL").live('keyup',function(e){
+	$(".copy2friendlyUrl").live('keyup',function(e){
 		if(!isArrowKey(e))
 			return copy2friendlyURL()
 	});

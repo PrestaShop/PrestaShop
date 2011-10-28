@@ -347,8 +347,9 @@ class AdminProductsController extends AdminController
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					// @todo : redirect to the previous page instead of always product list
 					if ($object->toggleStatus())
-						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.($token ? $token : $this->token));
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
 				}
@@ -1091,7 +1092,7 @@ if (false)
 	{
 		$className = 'Product';
 		$rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
-		$defaultLanguage = $this->context->language;
+		$defaultLanguage = new Language((int)(Configuration::get('PS_LANG_DEFAULT')));
 		$languages = Language::getLanguages(false);
 
 		/* Check required fields */
@@ -1271,7 +1272,7 @@ if (false)
 							}
 
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
-								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
+								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.($token ? $token : $this->token));
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token));
