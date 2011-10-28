@@ -482,10 +482,18 @@ class PayPal extends PaymentModule
 		
 	}
 	
-	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
+	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = NULL, 
+		$extraVars = array(), $currency_special = NULL, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
 	{
 		if (!$this->active)
 			return;
+
+		// Set transaction details if pcc is defiend in PaymentModule class_exists
+		if ($this->pcc)
+		{
+			$this->pcc->transaction_id = (isset($extraVars['transaction_id']) ?
+				$extraVars['transaction_id'] : '');
+		}	
 
 		parent::validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod, $message, $extraVars, $currency_special, $dont_touch_amount, $secure_key);
 		
