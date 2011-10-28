@@ -66,6 +66,11 @@ abstract class ControllerCore
 	protected $ajax = false;
 
 	/**
+	 * check that the controller is available for the current user/visitor
+	 */
+	abstract public function checkAccess();
+
+	/**
 	 * Initialize the page
 	 */
 	abstract public function init();
@@ -117,29 +122,39 @@ abstract class ControllerCore
 	{
 		$this->init();
 
-		// postProcess handles ajaxProcess
-		$this->postProcess();
-
-		if ($this->display_header)
+		if ($this->checkAccess())
 		{
-			$this->setMedia();
-			$this->initHeader();
-		}
-	
-		$this->initContent();
-		if ($this->display_footer)
-			$this->initFooter();
+			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
+				$this->ajaxPreProcess();
 
-		if ($this->ajax)
-		{
-			$action = Tools::getValue('action');
-			if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
-				$this->{'displayAjax'.$action}();
-			elseif (method_exists($this, 'displayAjax'))
-				$this->displayAjax();
+			// postProcess handles ajaxProcess
+			$this->postProcess();
+
+			if ($this->display_header)
+			{
+				$this->setMedia();
+				$this->initHeader();
+			}
+		
+			$this->initContent();
+			if ($this->display_footer)
+				$this->initFooter();
+			
+			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
+			// then using displayAjax[action]
+			if ($this->ajax)
+			{
+				$action = Tools::getValue('action');
+				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
+					$this->{'displayAjax'.$action}();
+				elseif (method_exists($this, 'displayAjax'))
+					$this->displayAjax();
+			}
 		}
 		else
-			$this->display();
+			$this->initCursedPage();
+
+		$this->display();
 	}
 
 	public function displayHeader($display = true)
@@ -166,6 +181,11 @@ abstract class ControllerCore
 	 * Assign smarty variables for the page main content
 	 */
 	abstract public function initContent();
+
+	/**
+	 * Assign smarty variables when access is forbidden 
+	 */
+	abstract public function initCursedPage();
 
 	/**
 	 * Assign smarty variables for the page footer

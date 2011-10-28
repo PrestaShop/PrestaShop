@@ -771,7 +771,8 @@ class AdminControllerCore extends Controller
 		if (!$this->checkToken())
 		{
 			// If this is an XSS attempt, then we should only display a simple, secure page
-			// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
+			// ${1} in the replacement string of the regexp is required, 
+			// because the token may begin with a number and mix up with it (e.g. $17)
 			$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$this->token.'$2', $_SERVER['REQUEST_URI']);
 			if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
 				$url .= '&token='.$this->token;
@@ -779,8 +780,9 @@ class AdminControllerCore extends Controller
 				$url = str_replace('&token', '?controller=AdminHome&token', $url);
 
 			$this->context->smarty->assign('url', htmlentities($url));
-			$this->context->smarty->display('invalid_token.tpl');
+			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -1083,6 +1085,16 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * initialize the invalid doom page of death
+	 * 
+	 * @return void
+	 */
+	public function initCursedPage()
+	{
+		$this->layout = 'invalid_token.tpl';
+	}
+
+	/**
 	 * Assign smarty variables for the footer
 	 */
 	public function initFooter()
@@ -1279,7 +1291,7 @@ class AdminControllerCore extends Controller
 		// ob_start();
 		if (Tools::getValue('ajax'))
 			$this->ajax = '1';
-		$this->checkAccess();
+
 		$this->timerStart = microtime(true);
 
 		if (isset($_GET['logout']))
@@ -1498,7 +1510,7 @@ class AdminControllerCore extends Controller
 		}
 
 		if (!Validate::isTableOrIdentifier($this->table))
-			die (Tools::displayError('Table name is invalid:').' "'.$this->table.'"');
+			throw new PrestashopException(sprintf('Table name %s is invalid:', $this->table));
 
 		if (empty($order_by))
 			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
@@ -1513,7 +1525,7 @@ class AdminControllerCore extends Controller
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)
 			|| !is_numeric($start) || !is_numeric($limit)
 			|| !Validate::isUnsignedId($id_lang))
-			die(Tools::displayError('get list params is not valid'));
+			throw new PrestashopException('get list params is not valid');
 
 		/* Determine offset from current page */
 		if ((isset($_POST['submitFilter'.$this->table]) ||
