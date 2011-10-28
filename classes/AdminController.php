@@ -96,6 +96,9 @@ class AdminControllerCore extends Controller
 	/** @var integer Number of results in list */
 	protected $_listTotal = 0;
 
+	/** @var boolean Automatically join language table if true */
+	public $lang = false;
+
 	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
 
@@ -772,7 +775,7 @@ class AdminControllerCore extends Controller
 		if (!$this->checkToken())
 		{
 			// If this is an XSS attempt, then we should only display a simple, secure page
-			// ${1} in the replacement string of the regexp is required, 
+			// ${1} in the replacement string of the regexp is required,
 			// because the token may begin with a number and mix up with it (e.g. $17)
 			$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$this->token.'$2', $_SERVER['REQUEST_URI']);
 			if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
@@ -1084,13 +1087,14 @@ class AdminControllerCore extends Controller
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
-			'content' => $this->content
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
 	}
 
 	/**
 	 * initialize the invalid doom page of death
-	 * 
+	 *
 	 * @return void
 	 */
 	public function initCursedPage()

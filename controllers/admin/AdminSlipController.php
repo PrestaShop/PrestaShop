@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,26 +25,27 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminSlip extends AdminTab
+class AdminSlipControllerCore extends AdminController
 {
 	public function __construct()
 	{
 	 	$this->table = 'order_slip';
 	 	$this->className = 'OrderSlip';
-		$this->edit = true;
-	 	$this->delete = true;
-		$this->noAdd = true;
-		
+		$this->addRowAction('edit');
+	 	$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->no_add = true;
+
  		$this->fieldsDisplay = array(
 		'id_order_slip' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 		'id_order' => array('title' => $this->l('ID Order'), 'width' => 75, 'align' => 'center'),
 		'date_add' => array('title' => $this->l('Date issued'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
-		
+
 		$this->optionTitle = $this->l('Slip');
-		
+
 		parent::__construct();
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitPrint'))
@@ -64,13 +65,22 @@ class AdminSlip extends AdminTab
 		return parent::postProcess();
 	}
 
-	public function display()
+	public function initContent()
+	{
+		$this->context->smarty->assign(array(
+			'date' => date('Y-m-d'),
+		));
+
+		parent::initContent();
+	}
+
+/*	public function display()
 	{
 		echo '<div style="float:left;width:600px">';
 		$this->getList($this->context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
 		$this->displayList();
 		echo '</div>';
-		
+
 		echo '
 		<fieldset style="float:left;width:280px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('Print PDF').'</legend>
 			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
@@ -90,8 +100,8 @@ class AdminSlip extends AdminTab
 			</form>
 		</fieldset><div class="clear">&nbsp;</div>';
 	}
-	
-	public function displayListContent($token = NULL)
+*/
+/*	public function displayListContent($token = NULL)
 	{
 		$irow = 0;
 		if ($this->_list)
@@ -112,6 +122,6 @@ class AdminSlip extends AdminTab
 				echo '</td>';
 				echo '</tr>';
 			}
-	}
+	}*/
 }
 
