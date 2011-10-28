@@ -122,10 +122,18 @@ abstract class ControllerCore
 	{
 		$this->init();
 
-		if ($this->checkAccess())
+		// postProcess handles ajaxProcess
+		$this->postProcess();
+		
+		if ($this->display_header || (isset($this->className) && $this->className))
 		{
-			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
-				$this->ajaxPreProcess();
+			$this->setMedia();
+			$this->initHeader();
+		}
+	
+		$this->initContent();
+		if ($this->display_footer || (isset($this->className) && $this->className))
+			$this->initFooter();
 
 			// postProcess handles ajaxProcess
 			$this->postProcess();
