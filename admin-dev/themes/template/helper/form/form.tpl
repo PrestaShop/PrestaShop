@@ -240,8 +240,18 @@
 								<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 							{/foreach}
 						{elseif $input.type == 'file'}
+							{if $input.display_image}
+								{if isset($fields_value.image) && $fields_value.image}
+									<div id="image">
+										{$fields_value.image}
+										<p align="center">{l s='File size'} {$fields_value.size}kb</p>
+										<a href="{$current}&id_category={$form_id}&token={$token}&deleteImage=1">
+											<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
+										</a>
+									</div><br />
+								{/if}
+							{/if}
 							<input type="file" name="{$input.name}" />
-							<img src="{$fields_value[$input.name]}" />
 						{elseif $input.type == 'password'}
 							<input type="password"
 									name="{$input.name}"
@@ -252,6 +262,9 @@
 							{include file='helper/form/form_group.tpl'}
 						{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
 							{include file='helper/form/form_shop.tpl'}
+						{elseif $input.type == 'categories'}
+							{assign var=categories value=$input.values}
+							{include file='helper/form/form_category.tpl'}
 						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 							<label>{l s='Shop association:'}</label>
 							<div class="margin-form">
@@ -289,6 +302,15 @@
 		{/foreach}
 		{if $required_fields}
 			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
+		{/if}
+		{if isset($fields.tinymce) && $fields.tinymce}
+			<script type="text/javascript">
+				var iso = '{$iso}';
+				var pathCSS = '{$path_css}';
+				var ad = '{$ad}';
+			</script>
+			<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript" src="'../js/tinymce.inc.js"></script>
 		{/if}
 	</fieldset>
 </form>

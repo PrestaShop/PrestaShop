@@ -157,6 +157,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$selected_cat = '';
 
 		$this->fields_form = array(
+			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Category'),
 				'image' => '../img/admin/tab-categories.gif'
