@@ -134,32 +134,20 @@ abstract class ControllerCore
 			}
 	
 			$this->initContent();
+			
 			if ($this->display_footer || (isset($this->className) && $this->className))
 				$this->initFooter();
 
-				// postProcess handles ajaxProcess
-				$this->postProcess();
-
-				if ($this->display_header)
-				{
-					$this->setMedia();
-					$this->initHeader();
-				}
-		
-				$this->initContent();
-				if ($this->display_footer)
-					$this->initFooter();
-			
-				// default behavior for ajax process is to use $_POST[action] or $_GET[action]
-				// then using displayAjax[action]
-				if ($this->ajax)
-				{
-					$action = Tools::getValue('action');
-					if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
-						$this->{'displayAjax'.$action}();
-					elseif (method_exists($this, 'displayAjax'))
-						$this->displayAjax();
-				}
+			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
+			// then using displayAjax[action]
+			if ($this->ajax)
+			{
+				$action = Tools::getValue('action');
+				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
+					$this->{'displayAjax'.$action}();
+				elseif (method_exists($this, 'displayAjax'))
+					$this->displayAjax();
+			}
 		}
 		else
 			$this->initCursedPage();
