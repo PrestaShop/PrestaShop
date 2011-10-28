@@ -50,6 +50,14 @@
 					{rdelim});
 				{rdelim}
 			{/if}
+
+			if ($(".datepicker").length > 0)
+				$(".datepicker").datepicker({
+					prevText: '',
+					nextText: '',
+					dateFormat: 'yy-mm-dd'
+				});
+
 		{rdelim});
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
@@ -61,7 +69,7 @@
 				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
 					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>{$btn.desc}
 				</a>
-			</li> 
+			</li>
 			{/foreach}
 		</ul>
 		<div class="pageTitle">{* todo : what to display as title for each items (table_lang.name ? *}
@@ -270,6 +278,24 @@
 							<div class="margin-form">
 								{$asso_shop}
 							</div>
+						{elseif $input.type == 'color'}
+							<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
+							<input type="color"
+								size="{$input.size}"
+								data-hex="true"
+								{if isset($input.class)}class="{$input.class}"
+								{else}class="color mColorPickerInput"{/if}
+								name="{$input.name}"
+								value="{$fields_value[$input.name]}" />
+						{elseif $input.type == 'date'}
+							<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
+							<input type="text"
+								size="{$input.size}"
+								data-hex="true"
+								{if isset($input.class)}class="{$input.class}"
+								{else}class="datepicker"{/if}
+								name="{$input.name}"
+								value="{$fields_value[$input.name]}" />
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
