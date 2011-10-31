@@ -953,8 +953,12 @@ class AdminControllerCore extends Controller
 		{
 			if (Tab::checkTabRights($tab['id_tab']) === true)
 			{
-				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png');
-				$img = ($img_exists_cache ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$tab['class_name'].'.png';
+				$img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
+				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
+				// retrocompatibility : change png to gif if icon not exists
+				if (!$img_exists_cache)
+					$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
+				$img = $img_exists_cache ? $img_cache_url : _PS_IMG_.'t/'.$tab['class_name'].'.png';
 
 				if (trim($tab['module']) != '')
 					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
