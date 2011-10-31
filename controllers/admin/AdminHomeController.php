@@ -374,7 +374,20 @@ class AdminHomeControllerCore extends AdminController
 		return $content;
 	}
 
-
+	public function ajaxProcessRefreshCheckVersion()
+	{
+		$upgrade = new Upgrader(true);
+		if ($upgrade)
+		{
+			$json['status'] = 'ok';
+			$json['upgrade']['need_upgrade'] = $upgrade->need_upgrade;
+			$json['upgrade']['link'] = $upgrade->link;
+			$json['upgrade']['version_name'] = $upgrade->version_name;
+			$this->content = Tools::jsonEncode($json);
+		}
+		else
+			$this->content = '{"status":"error"}';
+	}
 	public function ajaxProcessHideOptimizationTips()
 	{
 		if (Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1))
@@ -436,6 +449,20 @@ class AdminHomeControllerCore extends AdminController
 				$result['discover_prestashop'] .= $content[1];
 
 		$this->content = Tools::jsonEncode($result);
+	}
+
+	public function ajaxProcessHideScreencast()
+	{
+		if ($employee = new Employee((int)Tools::getValue('id_employee')))
+		{
+			$employee->bo_show_screencast = 0;
+			if ($employee->save())
+				$this->content = '{"status":"ok"}';
+			else
+				$this->content = '{"status":"error","msg":"not saved"}';
+		}
+		else
+			$this->content = '{"status":"error", "msg":"employee does not exists"}';
 	}
 
 	public function getBlockPartners()
@@ -504,24 +531,32 @@ class AdminHomeControllerCore extends AdminController
 		$smarty->assign('isoUser',$isoUser);
 		$currency = $this->context->currency;
 		$upgrade = null;
+		$tpl_vars['refresh_check_version'] = 0;
 		if (@ini_get('allow_url_fopen'))
 		{
-			$upgrade = new Upgrader();
-			$upgrade->checkPSVersion();
+			$upgrade = new Upgrader(true);
+			// if this information is outdated, the version will be checked after page loading
+			if (Configuration::get('PS_LAST_VERSION_CHECK') 
+				< time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)) 
+				$tpl_vars['refresh_check_version'] = 1;
 		}
 
-		$smarty->assign('upgrade', $upgrade);
+		$tpl_vars['upgrade'] = $upgrade;
 
-		$smarty->assign('show_screencast', $this->context->employee->show_screencast);
-		$smarty->assign('quick_links', $this->getQuickLinks());
-		$smarty->assign('monthly_statistics', $this->getMonthlyStatistics());
-		$smarty->assign('customers_service', $this->getCustomersService());
-		$smarty->assign('stats_sales', $this->getStatsSales());
-		$smarty->assign('last_orders',$this->getLastOrders());
-		$smarty->assign('tips_optimization',  $this->_displayOptimizationTips());
+		if ($this->context->employee->bo_show_screencast)
+			$tpl_vars['employee_token'] = Tools::getAdminTokenLite('AdminEmployees');
+
+		$tpl_vars['employee'] = $this->context->employee;
+		$tpl_vars['quick_links'] = $this->getQuickLinks();
+		$tpl_vars['monthly_statistics'] = $this->getMonthlyStatistics();
+		$tpl_vars['customers_service'] = $this->getCustomersService();
+		$tpl_vars['stats_sales'] = $this->getStatsSales();
+		$tpl_vars['last_orders'] =$this->getLastOrders();
+		$tpl_vars['tips_optimization'] =  $this->_displayOptimizationTips();
 
 		$HOOK_BACKOFFICEHOME = Module::hookExec('backOfficeHome');
-		$smarty->assign('HOOK_BACKOFFICEHOME', $HOOK_BACKOFFICEHOME);
+		$tpl_vars['HOOK_BACKOFFICEHOME'] = $HOOK_BACKOFFICEHOME;
+		$smarty->assign($tpl_vars);
 
 	}
 }

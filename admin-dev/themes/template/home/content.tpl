@@ -27,9 +27,11 @@
 	<h1>{l s='Dashboard'}</h1>
 	<hr style="background-color: #812143;color: #812143;" />
 	{if $upgrade}
+		<div id="blockNewVersionCheck">
 		{if $upgrade->need_upgrade}
 			<div class="warning warn" style="margin-bottom:10px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
 		{/if}
+		</div>
 	{else}
 		<p>{l s ='Update notification unavailable'}</p>
 		<p>&nbsp;</p>
@@ -51,11 +53,28 @@ $(document).ready(function() {
 		if ($(this).is(':checked'))
 		{
 			$.ajax({
-				type: 'POST',
-				async: true,
-				url: 'ajax.php?toggleScreencast',
+				type : 'POST',
+				data : {
+					ajax : '1',
+					controller : 'AdminHome',
+					token : '{$token}',
+					id_employee : '{$employee->id}',
+					action : 'hideScreencast',
+				},
+				url: 'ajax-tab.php',
+				dataType : 'json',
 				success: function(data) {
+					if(!data)
+						alert("TECHNICAL ERROR - no return status found");
+					else if(data.status != "ok")
+						alert("TECHNICAL ERROR: "+data.msg);
+
 					$('#adminpresentation').slideUp('slow');
+					
+				},
+				error: function(data, textStatus, errorThrown)
+				{
+					alert("TECHNICAL ERROR: "+data);
 				}
 			});
 		}
@@ -88,6 +107,41 @@ $(document).ready(function() {
 	<div class="clear">&nbsp;</div>
 <script type="text/javascript">
 $(document).ready(function() {
+
+	if({$refresh_check_version})
+	{
+		$('#blockNewVersionCheck').hide();
+		$.ajax({
+			type : 'POST',
+			data : {
+				ajax : '1',
+				controller : 'AdminHome',
+				token : '{$token}',
+				id_employee : '{$employee->id}',
+				action : 'refreshCheckVersion',
+			},
+			url: 'ajax-tab.php',
+			dataType : 'json',
+			success: function(data) {
+				if(!data)
+					alert("TECHNICAL ERROR - no return status found");
+				else if(data.status != "ok")
+					alert("TECHNICAL ERROR: "+data.msg);
+				if(data.upgrade.need_upgrade)
+				{
+					$('#blockNewVersionCheck').children("a").attr('href',data.upgrade.link);
+					$('#blockNewVersionCheck').children("a").html(data.upgrade.link+"pouet");
+					$('#blockNewVersionCheck').fadeIn('slow');
+				}
+
+				
+			},
+			error: function(data, textStatus, errorThrown)
+			{
+				alert("TECHNICAL ERROR: "+data);
+			}
+		});
+	}
 	$.ajax({
 		url: "ajax-tab.php",
 		type: "POST",
@@ -99,12 +153,12 @@ $(document).ready(function() {
 		},
 		dataType: "json",
 		success: function(json) {
-
+		{if $employee->bo_show_screencast}
 			if (json.screencast != 'NOK')
 				$('#adminpresentation').fadeIn('slow');
 			else
 				$('#adminpresentation').fadeOut('slow');
-
+		{/if}
 			$('#partner_preactivation').fadeOut('slow', function() {
 				if (json.partner_preactivation != 'NOK')
 					$('#partner_preactivation').html(json.partner_preactivation);
@@ -123,7 +177,10 @@ $(document).ready(function() {
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{
-			$('#adminpresentation').fadeOut('slow');
+			// don't show/hide screencast if it's deactivated
+			{if $employee->bo_show_screencast}
+				$('#adminpresentation').fadeOut('slow');
+			{/if}
 			$('#partner_preactivation').fadeOut('slow');
 			$('#discover_prestashop').fadeOut('slow');
 		}

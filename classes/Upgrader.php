@@ -48,6 +48,15 @@ class UpgraderCore
 	public $changelog;
 	public $md5;
 
+	public function __construct($autoload = false)
+	{
+		if ($autoload)
+		{
+			$this->loadFromConfig();
+			// checkPSVersion to get need_upgrade
+			$this->checkPSVersion();
+		}
+	}
 	public function __get($var)
 	{
 		if ($var == 'need_upgrade')
@@ -130,25 +139,7 @@ class UpgraderCore
 			}
 			}
 			else
-			{
-				$last_version_check = @unserialize(Configuration::get('PS_LAST_VERSION'));
-				if (isset($last_version_check['name']))
-				$this->version_name = $last_version_check['name'];
-				if (isset($last_version_check['num']))
-				$this->version_num = $last_version_check['num'];
-				if (isset($last_version_check['link']))
-				$this->link = $last_version_check['link'];
-				if (isset($last_version_check['autoupgrade']))
-				$this->autoupgrade = $last_version_check['autoupgrade'];
-				if (isset($last_version_check['autoupgrade_module']))
-				$this->autoupgrade_module = $last_version_check['autoupgrade_module'];
-				if (isset($last_version_check['md5']))
-				$this->md5 = $last_version_check['md5'];
-				if (isset($last_version_check['desc']))
-				$this->desc = $last_version_check['desc'];
-				if (isset($last_version_check['changelog']))
-				$this->changelog = $last_version_check['changelog'];
-			}
+				$this->loadFromConfig();
 		}
 		// retro-compatibility :
 		// return array(name,link) if you don't use the last version
@@ -162,6 +153,41 @@ class UpgraderCore
 			return false;
 	}
 
+	/**
+	 * load the last version informations stocked in base
+	 * 
+	 * @return $this
+	 */
+	public function loadFromConfig()
+	{
+		$last_version_check = @unserialize(Configuration::get('PS_LAST_VERSION'));
+		if($last_version_check)
+		{
+			if (isset($last_version_check['name']))
+				$this->version_name = $last_version_check['name'];
+			if (isset($last_version_check['num']))
+				$this->version_num = $last_version_check['num'];
+			if (isset($last_version_check['link']))
+				$this->link = $last_version_check['link'];
+			if (isset($last_version_check['autoupgrade']))
+				$this->autoupgrade = $last_version_check['autoupgrade'];
+			if (isset($last_version_check['autoupgrade_module']))
+				$this->autoupgrade_module = $last_version_check['autoupgrade_module'];
+			if (isset($last_version_check['md5']))
+				$this->md5 = $last_version_check['md5'];
+			if (isset($last_version_check['desc']))
+				$this->desc = $last_version_check['desc'];
+			if (isset($last_version_check['changelog']))
+				$this->changelog = $last_version_check['changelog'];
+		}
+		return $this;
+	}
+
+	/**
+	 * return an array of files 
+	 * that the md5file does not match to the original md5file (provided by $rss_md5file_link_dir )
+	 * @return void
+	 */
 	public function getChangedFilesList()
 	{
 		if (count($this->changed_files) == 0)
