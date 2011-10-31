@@ -145,7 +145,7 @@ else
 // Set transaction details if pcc is defiend in PaymentModule class
 if (isset($paypal->pcc))
 {
-	$this->pcc->transaction_id = (isset(.$_POST['txn_id']) ? $_POST['txn_id'] : '');
+	$this->pcc->transaction_id = (isset($_POST['txn_id']) ? $_POST['txn_id'] : '');
 }
 
 if (!empty($errors) AND isset($_POST['custom']))
