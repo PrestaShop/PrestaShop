@@ -879,7 +879,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'filter' => false,
 				'search' => false,
 			),
-			'discount_value' => array(
+			'discount_value_te' => array(
 				'title' => $this->l('Discount value (te)'),
 				'align' => 'center',
 				'width' => 75,
