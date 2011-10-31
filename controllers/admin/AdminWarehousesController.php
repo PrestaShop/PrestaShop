@@ -420,9 +420,8 @@ class AdminWarehousesControllerCore extends AdminController
 			$query->where('s.`id_warehouse` = '.$id_warehouse);
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-			$content = '<div class="path_bar">';
-			$content .= sprintf($this->l('This warehouse stores %s reference(s) (%d quantity/ies), worth %d %s'), $refs, $res[0]['quantity'], $res[0]['total'], $res[0]['sign']);
-			$content .= '</div>';
+			$content = sprintf($this->l('This warehouse stores %s reference(s) (%d quantit/ies), worth %d %s'),
+							   $refs, $res[0]['quantity'], $res[0]['total'], $res[0]['sign']);
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
 		die;
