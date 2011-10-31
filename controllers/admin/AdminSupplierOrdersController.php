@@ -414,6 +414,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 	$this->lang = false;
 
 		$this->addRowAction('edit');
+		$this->addRowAction('details');
 
 	 	// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
@@ -552,5 +553,82 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		}
 
 		parent::postProcess();
+	}
+
+	public function ajaxProcess()
+	{
+		// tests if an id is submit
+		if (Tools::isSubmit('id'))
+		{
+			// overrides attributes
+			$this->identifier = 'id_supplier_order_history';
+			$this->table = 'supplier_order_history';
+
+			$this->display = 'list';
+			$this->lang = false;
+			// gets current lang id
+			$lang_id = (int)$this->context->language->id;
+			// gets supplier order id
+			$id_supplier_order = (int)Tools::getValue('id');
+
+			// creates new fieldsDisplay
+			unset($this->fieldsDisplay);
+			$this->fieldsDisplay = array(
+				'history_date' => array(
+					'title' => $this->l('History date'),
+					'width' => 50,
+					'align' => 'left',
+					'type' => 'datetime',
+					'havingFilter' => true
+				),
+				'history_employee' => array(
+					'title' => $this->l('Employee'),
+					'width' => 100,
+					'align' => 'left',
+					'havingFilter' => true
+				),
+				'history_state_name' => array(
+					'title' => $this->l('State'),
+					'width' => 100,
+					'align' => 'left',
+					'havingFilter' => true
+				),
+			);
+			// loads history of the given order
+			unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
+			$this->_select = '
+			a.`date_add` as history_date,
+			CONCAT(e.`lastname`, \' \', e.`firstname`) as history_employee,
+			sosl.`name` as history_state_name,
+			sos.`color` as color';
+
+			$this->_join = '
+			LEFT JOIN `'._DB_PREFIX_.'supplier_order_state` sos ON (a.`id_state` = sos.`id_supplier_order_state`)
+			LEFT JOIN `'._DB_PREFIX_.'supplier_order_state_lang` sosl ON
+			(
+				a.`id_state` = sosl.`id_supplier_order_state`
+				AND sosl.`id_lang` = '.(int)$lang_id.'
+			)
+			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.`id_employee` = a.`id_employee`)';
+
+			$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
+			$this->_orderBy = 'a.`date_add`';
+			$this->_orderWay = 'DESC';
+
+			// gets list and forces no limit clause in the request
+			$this->getList($lang_id, 'date_add', 'DESC', 0, false, false);
+
+			// renders list
+			$helper = new HelperList();
+			$helper->no_link = true;
+			$helper->shopLinkType = '';
+			$helper->identifier = $this->identifier;
+			$helper->colorOnBackground = true;
+			$helper->simple_header = true;
+			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+
+			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+		}
+		die;
 	}
 }

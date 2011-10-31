@@ -1420,7 +1420,7 @@ Country:name
 phone' WHERE `PREFIX_address_format`.`id_country` = 4;
 
 INSERT INTO `ps_supplier_order_state` (`id_supplier_order_state`, `delivery_note`, `editable`, `receipt_state`, `pending_receipt`, `color`) VALUES
-(1, 0, 1, 0, 0, '#ffe1af'),
+(1, 0, 1, 0, 0, 'lightblue'),
 (2, 1, 0, 0, 0, '#e7fbff'),
 (3, 0, 0, 0, 1, '#ffdbfd'),
 (4, 0, 0, 1, 1, '#ffd3d3'),
