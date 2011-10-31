@@ -228,7 +228,7 @@ class SupplierOrderDetailCore extends ObjectModel
 
 		// calcul tax value
 		$this->tax_value = $this->price_with_discount_te * ((float)$this->tax_rate / 100);
-		$this->price_ti = $this->price_with_discount_te - $this->tax_value;
+		$this->price_ti = $this->price_with_discount_te + $this->tax_value;
 
 		// define default values for order discount fields
 		$this->tax_value_with_order_discount = $this->tax_value;
