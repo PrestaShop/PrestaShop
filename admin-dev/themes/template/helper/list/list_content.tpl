@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+<tbody>
 {foreach $list AS $index => $tr}
 	<tr
 	{if $is_dnd_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position}"{/if}
@@ -111,3 +111,4 @@
 	{/if}
 	</tr>
 {/foreach}
+</tbody>

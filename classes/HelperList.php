@@ -445,8 +445,8 @@ class HelperListCore extends Helper
 			isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : null
 		);
 
-		/*$is_dnd_identifier = array_key_exists($this->identifier,$this->identifiersDnd);
-
+		$this->is_dnd_identifier = array_key_exists($this->identifier,$this->identifiersDnd);
+/*
 		if ($is_dnd_identifier)
 		{
 			' id="'.
@@ -465,7 +465,7 @@ class HelperListCore extends Helper
 		if (array_key_exists($this->identifier, $this->identifiersDnd) && (int)Tools::getValue($this->identifiersDnd[$this->identifier], 1))
 			$table_id = substr($this->identifier, 3, strlen($this->identifier));
 
-		if (array_key_exists($this->identifier, $this->identifiersDnd) && ($this->orderBy != 'position' && $this->orderWay != 'DESC'))
+		if (array_key_exists($this->identifier, $this->identifiersDnd) && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
 
 		foreach ($this->fieldsDisplay as $key => $params)
