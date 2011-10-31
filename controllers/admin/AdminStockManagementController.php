@@ -858,7 +858,7 @@ class AdminStockManagementControllerCore extends AdminController
 				{
 					// try to load product attribute
 					$combination = new Combination($id_product_attribute);
-					if (is_int($combination->id))
+					if (Validate::isLoadedObject($combination))
 					{
 						$product_is_valid = true;
 						$id_product = $combination->id_product;

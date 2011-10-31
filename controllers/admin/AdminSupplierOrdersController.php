@@ -251,6 +251,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'class' => 'button'
 				)
 			);
+
+			return parent::initForm();
 		}
 
 		if (Tools::isSubmit('addsupplier_order')
@@ -344,9 +346,10 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'class' => 'button'
 				)
 			);
+
+			return parent::initForm();
 		}
 
-		return parent::initForm();
 	}
 
 	/**
@@ -414,6 +417,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 	$this->lang = false;
 
 		$this->addRowAction('edit');
+		$this->addRowAction('changestate');
 		$this->addRowAction('details');
 
 	 	// test if a filter is applied for this list
@@ -453,25 +457,29 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'width' => 50,
 				'align' => 'right',
 				'type' => 'datetime',
-				'havingFilter' => true
+				'havingFilter' => true,
+				'filter_key' => 'a!date_add'
 			),
 			'date_upd' => array(
 				'title' => $this->l('Last modification date'),
 				'width' => 50,
 				'align' => 'right',
 				'type' => 'datetime',
-				'havingFilter' => true
+				'havingFilter' => true,
+				'filter_key' => 'a!date_upd'
 			),
 			'date_delivery_expected' => array(
 				'title' => $this->l('Delivery date'),
 				'width' => 50,
 				'align' => 'right',
 				'type' => 'datetime',
+				'havingFilter' => true,
+				'filter_key' => 'a!date_delivery_expected'
 			),
 			'state' => array(
 				'title' => $this->l('State'),
 				'width' => 100,
-				'filter_key' => 'st!name'
+				'filter_key' => 'stl!name'
 			),
 		);
 
@@ -510,6 +518,93 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 		// return the two lists
 		return $second_list.$first_list;
+	}
+
+
+	/**
+	 * AdminController::initContent() override
+	 * @see AdminController::initContent()
+	 */
+	public function initContent()
+	{
+		// Manage the add stock form
+		if (Tools::isSubmit('changestate'))
+		{
+			$id_supplier_order = (int)Tools::getValue('id_supplier_order', 0);
+
+			// try to load supplier order
+			if ($id_supplier_order > 0)
+			{
+				$supplier_order = new SupplierOrder($id_supplier_order);
+				if (Validate::isLoadedObject($supplier_order))
+				{
+					// load states chooseables in fucntion of current order state
+					$states = SupplierOrderState::getSupplierOrderStates($supplier_order->id_supplier_order_state);
+
+					$this->fields_form = array(
+						'legend' => array(
+							'title' => $this->l('Supplier Order State'),
+							'image' => '../img/admin/edit.gif'
+						),
+						'input' => array(
+							array(
+								'type' => 'hidden',
+								'name' => 'id_supplier_order',
+							),
+							array(
+								'type' => 'select',
+								'label' => $this->l('New state for the order:'),
+								'name' => 'id_supplier_order_state',
+								'required' => true,
+								'options' => array(
+									'query' => $states,
+									'id' => 'id_supplier_order_state',
+									'name' => 'name'
+								),
+								'p' => $this->l('You can change the state of this order')
+							),
+						),
+						'submit' => array(
+							'title' => $this->l('   Save   '),
+							'class' => 'button'
+						)
+					);
+
+					$this->getlanguages();
+
+					$helper = new HelperForm();
+
+					// Check if form template has been overriden
+					if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
+						$helper->tpl = $this->tpl_folder.'form.tpl';
+
+					$helper->submit_action = 'submitChangestate';
+					$helper->currentIndex = self::$currentIndex;
+					$helper->token = $this->token;
+					$helper->id = null; // no display standard hidden field in the form
+					$helper->languages = $this->_languages;
+					$helper->default_form_language = $this->default_form_language;
+					$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+
+					$helper->fields_value = array(
+						'id_supplier_order_state' => Tools::getValue('id_supplier', ''),
+						'id_supplier_order' => $id_supplier_order,
+					);
+
+					$this->content .= $helper->generateForm($this->fields_form);
+
+					$this->context->smarty->assign(array(
+						'content' => $this->content
+					));
+				}
+				else
+					$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
+			}
+			else
+				$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
+		}
+		else
+			parent::initContent();
 	}
 
 	/**
@@ -552,8 +647,72 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			$_POST['id_ref_currency'] = $this->context->currency->id;
 		}
 
+		// Manage state change
+		if (Tools::isSubmit('submitChangestate')
+			&& Tools::isSubmit('id_supplier_order')
+			&& Tools::isSubmit('id_supplier_order_state'))
+		{
+			if ($this->tabAccess['edit'] != '1')
+				$this->_errors[] = Tools::displayError('You do not have permissions to change order state.');
+
+			// get state ID
+			$id_state = (int)Tools::getValue('id_supplier_order_state', 0);
+			if ($id_state <= 0)
+				$this->_errors[] = Tools::displayError('The selected supplier order state is not valid.');
+
+			// get supplier order ID
+			$id_supplier_order = (int)Tools::getValue('id_supplier_order', 0);
+			if ($id_supplier_order <= 0)
+				$this->_errors[] = Tools::displayError('The supplier order id is not valid.');
+
+			if (!count($this->_errors))
+			{
+				// try to load supplier order
+				$supplier_order = new SupplierOrder($id_supplier_order);
+				if (Validate::isLoadedObject($supplier_order))
+				{
+					// get valid available possible states for this order
+					$states = SupplierOrderState::getSupplierOrderStates($supplier_order->id_supplier_order_state);
+
+					foreach ($states as $state)
+					{
+						// if state is valid, change it in the order
+						if ($id_state == $state['id_supplier_order_state'])
+						{
+							$supplier_order->id_supplier_order_state = $state['id_supplier_order_state'];
+							$supplier_order->save();
+						}
+					}
+
+				}
+				else
+					$this->_errors[] = Tools::displayError('The selected supplier is not valid.');
+			}
+		}
+
 		parent::postProcess();
 	}
+
+    /**
+	 * Display state action link
+	 * @param string $token the token to add to the link
+	 * @param int $id the identifier to add to the link
+	 * @return string
+	 */
+    public function displayChangestateLink($token = null, $id)
+    {
+        if (!array_key_exists('State', self::$cache_lang))
+            self::$cache_lang['State'] = $this->l('Change state');
+
+        $this->context->smarty->assign(array(
+            'href' => self::$currentIndex.
+            	'&'.$this->identifier.'='.$id.
+            	'&changestate&token='.($token != null ? $token : $this->token),
+            'action' => self::$cache_lang['State'],
+        ));
+
+        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supplier_order_change_state.tpl');
+    }
 
 	public function ajaxProcess()
 	{
