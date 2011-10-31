@@ -39,6 +39,6 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
 
 // Prepare and trigger admin dispatcher
 Dispatcher::getInstance()->setDefaultController('adminhome');
-Dispatcher::getInstance()->setControllerNotFound('adminhome');
+Dispatcher::getInstance()->setControllerNotFound('adminnotfound');
 Dispatcher::getInstance()->setControllerDirectories(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
 Dispatcher::getInstance()->dispatch();
