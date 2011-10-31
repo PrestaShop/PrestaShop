@@ -989,6 +989,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 		// renders list
 		$helper = new HelperList();
+		$helper->simple_header = true;
 		$helper->no_link = true;
 		$helper->shopLinkType = '';
 		$helper->identifier = $this->identifier;

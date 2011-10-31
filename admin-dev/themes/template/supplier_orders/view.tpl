@@ -24,3 +24,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {$supplier_order_detail_content}
+
+<a href="{$current}&token={$token}"><img src="../img/admin/arrow2.gif" />{l s='Back to supplier orders'}</a>
