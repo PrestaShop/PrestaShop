@@ -109,18 +109,52 @@ class SupplierOrderStateCore extends ObjectModel
 	/**
 	 * Gets the list of supplier order states
 	 *
+	 * @param int $id_state_referrer The state refferer id used to know what state is available after the current state refferer
 	 * @param int $id_lang The language id
 	 * @return array
 	 */
-	public static function getSupplierOrderStates($id_lang = 0)
+	public static function getSupplierOrderStates($id_state_referrer = null, $id_lang = null)
 	{
-		if ($id_lang == 0)
+		if ($id_lang == null)
 			$id_lang = Context::getContext()->language->id;
 
 		$query = new DbQuery();
 		$query->select('sl.name, s.id_supplier_order_state');
 		$query->from('supplier_order_state s');
 		$query->leftjoin('supplier_order_state_lang sl ON (s.id_supplier_order_state = sl.id_supplier_order_state AND sl.id_lang='.(int)$id_lang.')');
+
+		if (!is_null($id_state_referrer))
+		{
+			$is_receipt_state = false;
+			$is_editable = false;
+			$is_delivery_note = false;
+			$is_pending_receipt = false;
+
+			//check current state to see what state is available
+			$state = new SupplierOrderState((int)$id_state_referrer);
+			if (Validate::isLoadedObject($state))
+			{
+				$is_receipt_state = $state->receipt_state;
+				$is_editable = $state->editable;
+				$is_delivery_note = $state->delivery_note;
+				$is_pending_receipt = $state->pending_receipt;
+			}
+
+			$query->where('s.id_supplier_order_state <> '.$id_state_referrer);
+
+			//check first if the order is editable
+			if ($is_editable)
+				$query->where(' s.editable = 0');
+			//check if the delivery note is available
+			else if ($is_delivery_note)
+				$query->where(' s.delivery_note = 0 AND s.editable = 0');
+			//check if the state correspond to a pending receipt state
+			else if ($is_pending_receipt)
+				$query->where(' s.receipt_state = 1 OR (s.receipt_state = 0 AND s.pending_receipt = 0)) AND s.delivery_note = 0 AND s.editable = 0');
+			//check if the state correspond to a receipt state
+			else if ($is_receipt_state)
+				$query->where(' s.receipt_state = 1 OR (s.receipt_state = 0 AND s.pending_receipt = 0 AND s.delivery_note = 0 AND s.editable = 0)');
+		}
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}

@@ -182,7 +182,12 @@ class SupplierOrderCore extends ObjectModel
 	{
 		$this->calculatePrices();
 
-		return parent::update($null_values);
+		$return = parent::update($null_values);
+
+		if ($return)
+			$this->addHistory();
+
+		return $return;
 	}
 
 	/**
@@ -192,7 +197,12 @@ class SupplierOrderCore extends ObjectModel
 	{
 		$this->calculatePrices();
 
-		return parent::add($autodate, $null_values);
+		$return = parent::add($autodate, $null_values);
+
+		if ($return)
+			$this->addHistory();
+
+		return $return;
 	}
 
 	/**
@@ -300,5 +310,20 @@ class SupplierOrderCore extends ObjectModel
 		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
+	}
+
+	/**
+	 * Add order history
+	 *
+	 * @return bool
+	 */
+	protected function addHistory()
+	{
+		$history = new SupplierOrderHistory();
+		$history->id_supplier_order = $this->id;
+		$history->id_state = $this->id_supplier_order_state;
+		$history->id_employee = $this->id_employee;
+
+		$history->save();
 	}
 }
