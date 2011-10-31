@@ -76,6 +76,12 @@ class AdminControllerCore extends Controller
 	/** @var array Errors displayed after post processing */
 	public $_errors = array();
 
+	/** @var define if the header of the list contains filter and sorting links or not */
+	protected $list_simple_header;
+
+	/** @var define if the header of the list contains filter and sorting links or not */
+	protected $list_title;
+
 	/** @var array list to be generated */
 	protected $fieldsDisplay;
 
@@ -947,11 +953,15 @@ class AdminControllerCore extends Controller
 		{
 			if (Tab::checkTabRights($tab['id_tab']) === true)
 			{
-				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.gif');
-				$img = ($img_exists_cache ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$tab['class_name'].'.gif';
+				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png');
+				$img = ($img_exists_cache ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$tab['class_name'].'.png';
 
 				if (trim($tab['module']) != '')
-					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif';
+					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+				
+				// retrocompatibility			
+				if(!file_exists($img))
+					$img = str_replace('png', 'gif', $img);
 
 				// tab[class_name] does not contains the "Controller" suffix
 				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || (Tab::getCurrentParentId() == $tab['id_tab']);
@@ -1151,7 +1161,21 @@ class AdminControllerCore extends Controller
 				$this->actions[] = $action;
 		}
 
+		$this->setHelperListDisplay($helper);
+		return $helper->generateList($this->_list, $this->fieldsDisplay);
+	}
+
+	/**
+	 * this function set various display option for helper list
+	 * 
+	 * @param Helper $helper 
+	 * @return void
+	 */
+	public function setHelperListDisplay(Helper $helper)
+	{
 		$helper->actions = $this->actions;
+		$helper->simple_header = $this->list_simple_header;
+		$helper->title = $this->list_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->bulk_actions = $this->bulk_actions;
 		$helper->currentIndex = self::$currentIndex;
@@ -1173,7 +1197,6 @@ class AdminControllerCore extends Controller
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
 
-		return $helper->generateList($this->_list, $this->fieldsDisplay);
 	}
 
 	/**

@@ -99,6 +99,9 @@ class HelperListCore extends Helper
 		'id_carrier' => 'id_carrier'
 	);
 
+	/** @var if not null, a title will be added on that list */
+	public $title = null;
+
 	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
 
@@ -513,6 +516,7 @@ class HelperListCore extends Helper
 			'action' => $action,
 			'page' => $page,
 			'simple_header' => $this->simple_header,
+			'title' => $this->title,
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
