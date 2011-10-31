@@ -110,7 +110,7 @@
 			<td{if $simple_header} style="border:none;"{/if}>
 				<table
 				{if $table_id} id={$table_id}{/if}
-				class="table {if $table_dnd}tableDnd{/if} {$table}"
+				class="table {if $table_dnd}tableDnD{/if} {$table}"
 				cellpadding="0" cellspacing="0"
 				style="width: 100%; margin-bottom:10px;"
 				>
