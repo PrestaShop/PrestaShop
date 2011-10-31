@@ -103,12 +103,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	{
 		parent::init();
 
-		if (Tools::isSubmit('addsupplier_order')
-			|| Tools::isSubmit('submitAddsupplier_order')
-			|| (
-				Tools::isSubmit('updatesupplier_order')
-				&& Tools::isSubmit('id_supplier_order')
-		))
+		if (Tools::isSubmit('addsupplier_order') ||
+			Tools::isSubmit('submitAddsupplier_order') ||
+			(Tools::isSubmit('updatesupplier_order') && Tools::isSubmit('id_supplier_order')))
 		{
 			// override table, land, className and identifier for the current controller
 		 	$this->table = 'supplier_order';
@@ -125,7 +122,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				else
 					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-
 	}
 
 	/**
@@ -255,12 +251,11 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			return parent::initForm();
 		}
 
-		if (Tools::isSubmit('addsupplier_order')
-			|| Tools::isSubmit('updatesupplier_order')
-			|| Tools::isSubmit('submitAddsupplier_order')
-			|| Tools::isSubmit('submitUpdatesupplier_order'))
+		if (Tools::isSubmit('addsupplier_order') ||
+			Tools::isSubmit('updatesupplier_order') ||
+			Tools::isSubmit('submitAddsupplier_order') ||
+			Tools::isSubmit('submitUpdatesupplier_order'))
 		{
-			//$this->context->controller->addJqueryUI('ui.datepicker');
 			$this->addJqueryUI('ui.datepicker');
 
 			//get warehouses list
@@ -419,6 +414,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('changestate');
 		$this->addRowAction('details');
+		$this->addRowAction('view');
 
 	 	// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
@@ -603,6 +599,12 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
 		}
+		else if (Tools::isSubmit('viewsupplier_order') && Tools::isSubmit('id_supplier_order'))
+		{
+			$this->display = 'view';
+			$this->viewSupplierOrder();
+			parent::initContent();
+		}
 		else
 			parent::initContent();
 	}
@@ -714,6 +716,10 @@ class AdminSupplierOrdersControllerCore extends AdminController
         return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supplier_order_change_state.tpl');
     }
 
+	/**
+	 * method call when ajax request is made with the details row action
+	 * @see AdminController::postProcess()
+	 */
 	public function ajaxProcess()
 	{
 		// tests if an id is submit
@@ -734,7 +740,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			unset($this->fieldsDisplay);
 			$this->fieldsDisplay = array(
 				'history_date' => array(
-					'title' => $this->l('History date'),
+					'title' => $this->l('Last update'),
 					'width' => 50,
 					'align' => 'left',
 					'type' => 'datetime',
@@ -789,5 +795,205 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
 		die;
+	}
+
+	/**
+	 * Used to display details of an order
+	 * @see AdminSupplierOrdersController::initContent()
+	 */
+	protected function viewSupplierOrder()
+	{
+		$this->displayInformation($this->l('This interface allows you to display detailed informations on your order.').'<br />');
+		$this->displayInformation($this->l('If you wish to edit your order, please go back and choose the proper action (edit).'));
+
+		$this->table = 'supplier_order_detail';
+		$this->identifier = 'id_supplier_order_detail';
+	 	$this->className = 'SupplierOrderDetail';
+	 	$this->colorOnBackground = false;
+		$this->lang = false;
+		$lang_id = (int)$this->context->language->id;
+
+		// gets the id supplier to view
+		$id_supplier_order = (int)Tools::getValue('id_supplier_order');
+
+		$this->fieldsDisplay = array(
+			'p_reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center',
+				'width' => 100,
+				'widthColumn' => 150,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'p_ean13' => array(
+				'title' => $this->l('EAN13'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'p_name' => array(
+				'title' => $this->l('Name'),
+				'width' => 350,
+				'widthColumn' => 'auto',
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'unit_price_te' => array(
+				'title' => $this->l('Unit price (te)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'quantity' => array(
+				'title' => $this->l('Quantity'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'price_te' => array(
+				'title' => $this->l('Price (te)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'discount_rate' => array(
+				'title' => $this->l('Discount rate'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'discount_value' => array(
+				'title' => $this->l('Discount value (te)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'price_with_discount_te' => array(
+				'title' => $this->l('Price with product discount (te)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'tax_rate' => array(
+				'title' => $this->l('Tax rate'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'tax_value' => array(
+				'title' => $this->l('Tax value'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'price_ti' => array(
+				'title' => $this->l('Price (ti)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'tax_value_with_order_discount' => array(
+				'title' => $this->l('Tax value with global order discount)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'price_with_order_discount_te' => array(
+				'title' => $this->l('Price with global order discount (te)'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'currency_symbol' => array(
+				'title' => $this->l('Currency'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'exchange_rate' => array(
+				'title' => $this->l('Exchange rate'),
+				'align' => 'center',
+				'width' => 75,
+				'widthColumn' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+		);
+
+		// just in case..
+		unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
+
+		// gets all information on the products ordered
+		$this->_select = '
+		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
+		p.reference as p_reference,
+		p.ean13 as p_ean13,
+		c.sign as currency_symbol';
+
+		$this->_join = '
+		INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
+		LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
+		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
+		LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
+		LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
+		LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
+		LEFT JOIN '._DB_PREFIX_.'currency c ON (a.id_currency = c.id_currency)';
+
+		$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
+
+		$this->_group = 'GROUP BY a.id_product';
+
+		$this->getList($lang_id, 'price_te', 'DESC', 0, false, false);
+
+		// renders list
+		$helper = new HelperList();
+		$helper->no_link = true;
+		$helper->shopLinkType = '';
+		$helper->identifier = $this->identifier;
+
+		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+		$this->context->smarty->assign(array('supplier_order_detail_content' => $content));
 	}
 }
