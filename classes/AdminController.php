@@ -1154,9 +1154,9 @@ class AdminControllerCore extends Controller
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_header.tpl'))
 			$helper->header_tpl = $this->tpl_folder.'list_header.tpl';
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_content.tpl'))
-			$helper->header_tpl = $this->tpl_folder.'list_content.tpl';
+			$helper->content_tpl = $this->tpl_folder.'list_content.tpl';
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_footer.tpl'))
-			$helper->header_tpl = $this->tpl_folder.'list_footer.tpl';
+			$helper->footer_tpl = $this->tpl_folder.'list_footer.tpl';
 
 		// For compatibility reasons, we have to check standard actions in class attributes
 		foreach ($this->actions_available as $action)
@@ -1538,10 +1538,10 @@ class AdminControllerCore extends Controller
 			$use_limit = false;
 		else if (empty($limit))
 		{
-			if (!isset($this->context->cookie->{$this->table.'_pagination'}))
-				$limit = $this->_pagination[1];
-			else
+			if (isset($this->context->cookie->{$this->table.'_pagination'}) && $this->context->cookie->{$this->table.'_pagination'})
 				$limit = $this->context->cookie->{$this->table.'_pagination'};
+			else
+				$limit = $this->_pagination[1];
 		}
 
 		if (!Validate::isTableOrIdentifier($this->table))

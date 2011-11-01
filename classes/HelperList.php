@@ -96,7 +96,9 @@ class HelperListCore extends Helper
 		'id_cms_category' => 'id_cms_category_to_move',
 		'id_cms' => 'id_cms',
 		'id_attribute' => 'id_attribute',
-		'id_carrier' => 'id_carrier'
+		'id_attribute_group' => 'id_attribute_group',
+		'id_carrier' => 'id_carrier',
+		'id_tab' => 'id_tab'
 	);
 
 	/** @var if not null, a title will be added on that list */
@@ -422,7 +424,7 @@ class HelperListCore extends Helper
 			$token = $this->token;
 
 		/* Determine total page number */
-		if (isset($this->context->cookie->{$this->table.'_pagination'}))
+		if (isset($this->context->cookie->{$this->table.'_pagination'}) && $this->context->cookie->{$this->table.'_pagination'})
 			$default_pagination = $this->context->cookie->{$this->table.'_pagination'};
 		else
 			$default_pagination = $this->_pagination[0];

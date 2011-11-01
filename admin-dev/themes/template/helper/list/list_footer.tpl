@@ -35,10 +35,8 @@
 		</td>
 	</tr>
 </table>
-{if !$simple_header}
 <input type="hidden" name="token" value="{$token}" />
 </form>
-{/if}
 {*
 if (isset($this->_includeTab) AND sizeof($this->_includeTab))
 	echo '<br /><br />';
