@@ -187,11 +187,88 @@ CREATE TABLE `PREFIX_cart` (
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_cart_discount` (
+CREATE TABLE `PREFIX_cart_rule` (
+	`id_cart_rule` int(10) unsigned NOT NULL auto_increment,
+	`id_customer` int unsigned NOT NULL default 0,
+	`date_from` datetime NOT NULL,
+	`date_to` datetime NOT NULL,
+	`description` text,
+	`quantity` int(10) unsigned NOT NULL default 0,
+	`quantity_per_user` int(10) unsigned NOT NULL default 0,
+	`priority` int(10) unsigned NOT NULL default 1,
+	`code` varchar(254) NOT NULL,
+	`minimum_amount` decimal(17,2) NOT NULL default 0,
+	`minimum_amount_tax` tinyint(1) NOT NULL default 0,
+	`minimum_amount_currency` int unsigned NOT NULL default 0,
+	`minimum_amount_shipping` tinyint(1) NOT NULL default 0,
+	`country_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`carrier_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`group_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`cart_rule_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`product_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`free_shipping` tinyint(1) NOT NULL default 0,
+	`reduction_percent` decimal(4,2) NOT NULL default 0,
+	`reduction_amount` decimal(17,2) NOT NULL default 0,
+	`reduction_tax` tinyint(1) unsigned NOT NULL default 0,
+	`reduction_currency` int(10) unsigned NOT NULL default 0,
+	`reduction_product` int(10) NOT NULL default 0,
+	`gift_product` int(10) unsigned NOT NULL default 0,
+	`active` tinyint(1) unsigned NOT NULL default 0,
+	`date_add` datetime NOT NULL,
+	`date_upd` datetime NOT NULL,
+	PRIMARY KEY (`id_cart_rule`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_lang` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_lang` int(10) unsigned NOT NULL,
+	`name` varchar(254) NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_lang`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_country` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_country` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_country`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_group` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_group` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_group`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_carrier` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_carrier` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_carrier`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_combination` (
+	`id_cart_rule_1` int(10) unsigned NOT NULL,
+	`id_cart_rule_2` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule_1`, `id_cart_rule_2`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_product_rule` (
+	`id_product_rule` int(10) unsigned NOT NULL auto_increment,
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`quantity` int(10) unsigned NOT NULL default 1,
+	`type` ENUM('products', 'categories', 'attributes') NOT NULL,
+	PRIMARY KEY  (`id_product_rule`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_product_rule_value` (
+	`id_product_rule` int(10) unsigned NOT NULL,
+	`id_item` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_product_rule`, `id_item`)
+);
+
+CREATE TABLE `PREFIX_cart_cart_rule` (
   `id_cart` int(10) unsigned NOT NULL,
-  `id_discount` int(10) unsigned NOT NULL,
-  KEY `cart_discount_index` (`id_cart`,`id_discount`),
-  KEY `id_discount` (`id_discount`)
+  `id_cart_rule` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_cart`,`id_cart_rule`),
+  KEY (`id_cart_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_product` (
@@ -1027,15 +1104,15 @@ CREATE TABLE `PREFIX_order_detail` (
   KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_order_discount` (
-  `id_order_discount` int(10) unsigned NOT NULL auto_increment,
+CREATE TABLE `PREFIX_order_cart_rule` (
+  `id_order_cart_rule` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
-  `id_discount` int(10) unsigned NOT NULL,
+  `id_cart_rule` int(10) unsigned NOT NULL,
   `name` varchar(32) NOT NULL,
   `value` decimal(17,2) NOT NULL default '0.00',
-  PRIMARY KEY  (`id_order_discount`),
-  KEY `order_discount_order` (`id_order`),
-  KEY `id_discount` (`id_discount`)
+  PRIMARY KEY (`id_order_cart_rule`),
+  KEY `id_order` (`id_order`),
+  KEY `id_cart_rule` (`id_cart_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_history` (

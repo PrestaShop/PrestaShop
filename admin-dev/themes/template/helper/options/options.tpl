@@ -136,13 +136,13 @@
 								<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}_{$id_lang}" value="{$value}" />
 							</div>
 						{/foreach}
-					{elseif $field['type'] == 'textareaLang' }
+					{elseif $field['type'] == 'textareaLang'}
 						{foreach $field['languages'] AS $id_lang => $value}
 							<div id="{$key}_{$id_lang}" style="display: {if $id_lang == $current_id_lang}block{else}none{/if}; float: left;">
 								<textarea rows="{$field['rows']}" cols="{$field['cols']|intval}"  name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 							</div>
 						{/foreach}
-					{elseif $field['type'] == 'selectLang' }
+					{elseif $field['type'] == 'selectLang'}
 						{foreach $languages as $language}
 						<div id="{$key}_{$language.id_lang}" style="margin-bottom:8px; display: {if $language.id_lang == $current_id_lang}block{else}none{/if}; float: left; vertical-align: top;">
 							<select name="{$key}_{$language.iso_code|upper}">

@@ -222,3 +222,97 @@ ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT 
 
 ALTER TABLE `PREFIX_order_state` ADD COLUMN `shipped` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `delivery`;
 UPDATE `PREFIX_order_state` SET `shipped` = 1 WHERE id_order_states IN (4, 5);
+
+
+CREATE TABLE `PREFIX_cart_rule` (
+	`id_cart_rule` int(10) unsigned NOT NULL auto_increment,
+	`id_customer` int unsigned NOT NULL default 0,
+	`date_from` datetime NOT NULL,
+	`date_to` datetime NOT NULL,
+	`description` text,
+	`quantity` int(10) unsigned NOT NULL default 0,
+	`quantity_per_user` int(10) unsigned NOT NULL default 0,
+	`priority` int(10) unsigned NOT NULL default 1,
+	`code` varchar(254) NOT NULL,
+	`minimum_amount` decimal(17,2) NOT NULL default 0,
+	`minimum_amount_tax` tinyint(1) NOT NULL default 0,
+	`minimum_amount_currency` int unsigned NOT NULL default 0,
+	`minimum_amount_shipping` tinyint(1) NOT NULL default 0,
+	`country_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`carrier_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`group_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`cart_rule_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`product_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`free_shipping` tinyint(1) NOT NULL default 0,
+	`reduction_percent` decimal(4,2) NOT NULL default 0,
+	`reduction_amount` decimal(17,2) NOT NULL default 0,
+	`reduction_tax` tinyint(1) unsigned NOT NULL default 0,
+	`reduction_currency` int(10) unsigned NOT NULL default 0,
+	`reduction_product` int(10) NOT NULL default 0,
+	`gift_product` int(10) unsigned NOT NULL default 0,
+	`active` tinyint(1) unsigned NOT NULL default 0,
+	`date_add` datetime NOT NULL,
+	`date_upd` datetime NOT NULL,
+	PRIMARY KEY (`id_cart_rule`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_lang` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_lang` int(10) unsigned NOT NULL,
+	`name` varchar(254) NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_lang`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_country` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_country` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_country`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_group` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_group` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_group`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_carrier` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_carrier` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_carrier`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_combination` (
+	`id_cart_rule_1` int(10) unsigned NOT NULL,
+	`id_cart_rule_2` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule_1`, `id_cart_rule_2`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_product_rule` (
+	`id_product_rule` int(10) unsigned NOT NULL auto_increment,
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`quantity` int(10) unsigned NOT NULL default 1,
+	`type` ENUM('products', 'categories', 'attributes') NOT NULL,
+	PRIMARY KEY  (`id_product_rule`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_product_rule_value` (
+	`id_product_rule` int(10) unsigned NOT NULL,
+	`id_item` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_product_rule`, `id_item`)
+);
+
+ALTER TABLE `PREFIX_cart_discount` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_order_discount` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_order_discount` CHANGE `id_order_discount` `id_order_cart_rule` int(10) unsigned NOT NULL;
+
+RENAME TABLE `PREFIX_order_discount` TO `PREFIX_order_cart_rule`;
+RENAME TABLE `PREFIX_cart_discount` TO `PREFIX_cart_cart_rule`;
+
+CREATE VIEW `PREFIX_order_discount` AS SELECT *, id_cart_rule as id_discount FROM `PREFIX_order_cart_rule`;
+CREATE VIEW `PREFIX_cart_discount` AS SELECT *, id_cart_rule as id_discount FROM `PREFIX_cart_cart_rule`;
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) (
+	SELECT 'PS_CART_RULE_FEATURE_ACTIVE', `value`, NOW(), NOW() FROM `PREFIX_configuration` WHERE `name` = 'PS_DISCOUNT_FEATURE_ACTIVE' LIMIT 1
+);
+
+UPDATE `PREFIX_tab` SET class_name = 'AdminCartRules' WHERE class_name = 'AdminDiscounts';

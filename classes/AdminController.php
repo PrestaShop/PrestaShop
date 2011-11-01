@@ -296,7 +296,7 @@ class AdminControllerCore extends Controller
 			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
 				$this->{'ajaxProcess'.Tools::toCamelCase($action)}();
 			else if (method_exists($this, 'ajaxProcess'))
-					$this->ajaxProcess();
+				$this->ajaxProcess();
 
 			// @TODO We should use a displayAjaxError
 			/*$this->displayErrors();
@@ -1104,7 +1104,7 @@ class AdminControllerCore extends Controller
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
-	}
+		}
 
 	/**
 	 * initialize the invalid doom page of death
@@ -1703,7 +1703,7 @@ class AdminControllerCore extends Controller
 	 * @param integer $id_lang Language id (optional)
 	 * @return string
 	 */
-	protected function getFieldValue($obj, $key, $id_lang = null)
+	public function getFieldValue($obj, $key, $id_lang = null)
 	{
 		if ($id_lang)
 			$default_value = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
@@ -2334,5 +2334,5 @@ EOF;
 			return $output;
 
 		return $output;
-	}
+}
 }

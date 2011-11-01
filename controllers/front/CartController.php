@@ -58,9 +58,6 @@ class CartControllerCore extends FrontController
 
 	public function postProcess()
 	{
-		// Check cart discounts
-		$this->processRemoveDiscounts();
-
 		if ($this->isTokenValid())
 			$this->errors[] = Tools::displayError('Invalid token');
 
@@ -71,8 +68,6 @@ class CartControllerCore extends FrontController
 				$this->processChangeProductInCart();
 			else if (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
-
-			$this->processRemoveDiscounts();
 
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
@@ -107,6 +102,7 @@ class CartControllerCore extends FrontController
 				$this->context->cart->gift_message = '';
 				$this->context->cart->update();
 			}
+		CartRule::autoRemoveFromCart();
 	}
 
 	/**
@@ -147,29 +143,6 @@ class CartControllerCore extends FrontController
 		else if (!$product->checkQty($this->qty))
 			$this->errors[] = Tools::displayError('There is not enough product in stock.');
 
-		// Check vouchers compatibility
-		if ($mode == 'add' && (($product->specificPrice && (float)$product->specificPrice['reduction']) || $product->on_sale))
-		{
-			$discounts = $this->context->cart->getDiscounts();
-			$hasUndiscountedProduct = null;
-			foreach ($discounts as $discount)
-			{
-				if (is_null($hasUndiscountedProduct))
-				{
-					$hasUndiscountedProduct = false;
-					foreach ($this->context->cart->getProducts() as $product)
-						if ($product['reduction_applies'] === false)
-						{
-							$hasUndiscountedProduct = true;
-							break;
-						}
-				}
-				if (!$discount['cumulable_reduction'] && ($discount['id_discount_type'] != Discount::PERCENT || !$hasUndiscountedProduct))
-					$this->errors[] = Tools::displayError('Cannot add this product because current voucher does not allow additional discounts.');
-
-			}
-		}
-
 		// If no errors, process product addition
 		if (!$this->errors && $mode == 'add')
 		{
@@ -198,6 +171,7 @@ class CartControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
 			}
 		}
+		CartRule::autoRemoveFromCart();
 	}
 
 	/**
@@ -205,18 +179,8 @@ class CartControllerCore extends FrontController
 	 */
 	protected function processRemoveDiscounts()
 	{
-		$orderTotal = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-		$cartProducts = $this->context->cart->getProducts();
-		foreach ($this->context->cart->getDiscounts() as $discount)
-		{
-			$discountObj = new Discount($discount['id_discount'], $this->context->language->id);
-			if ($error = $this->context->cart->checkDiscountValidity($discountObj, $discounts, $orderTotal, $cartProducts, false))
-			{
-				$this->context->cart->deleteDiscount($discount['id_discount']);
-				$this->context->cart->update();
-				$this->errors[] = $error;
-			}
-		}
+		Tools::displayAsDeprecated();
+		$this->errors = array_merge($this->errors, CartRule::autoRemoveFromCart());
 	}
 
 	/**

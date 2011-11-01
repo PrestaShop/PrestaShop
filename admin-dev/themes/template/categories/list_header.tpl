@@ -82,7 +82,7 @@
 		{foreach from=$toolbar_btn item=btn key=k}
 			<li>
 				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
-					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>{$btn.desc}
+					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:''}" ></span>{$btn.desc}
 				</a>
 			</li> 
 			{/foreach}

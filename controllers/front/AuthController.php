@@ -276,6 +276,10 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->update();
 				Module::hookExec('authentication');
+				
+				// Login information have changed, so we check if the cart rules still apply
+				CartRule::autoRemoveFromCart();
+			
 				if (!$this->ajax)
 				{
 					if ($back = Tools::getValue('back'))
@@ -565,15 +569,15 @@ class AuthControllerCore extends FrontController
 	protected function sendConfirmationMail(Customer $customer)
 	{
 		return Mail::Send(
-			$this->context->language->id,
-			'account',
+			$this->context->language->id, 
+			'account', 
 			Mail::l('Welcome!'),
 			array(
-				'{firstname}' => $customer->firstname,
-				'{lastname}' => $customer->lastname,
-				'{email}' => $customer->email,
-				'{passwd}' => Tools::getValue('passwd')),
-			$customer->email,
+				'{firstname}' => $customer->firstname, 
+				'{lastname}' => $customer->lastname, 
+				'{email}' => $customer->email, 
+				'{passwd}' => Tools::getValue('passwd')), 
+			$customer->email, 
 			$customer->firstname.' '.$customer->lastname
 		);
 	}
