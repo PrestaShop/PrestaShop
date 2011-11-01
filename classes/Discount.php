@@ -187,7 +187,7 @@ class DiscountCore extends CartRule
 		// Refresh cache of feature detachable
 		Configuration::updateGlobalValue('PS_DISCOUNT_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
 
-		return (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_discount WHERE id_discount = '.(int)($this->id)) &&
+		return (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_discount = '.(int)($this->id)) &&
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'discount_category WHERE id_discount = '.(int)($this->id)));
 	}
 
@@ -303,7 +303,7 @@ class DiscountCore extends CartRule
 	{
 		return (bool)Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'order_discount` od
+			FROM `'._DB_PREFIX_.'order_cart_rule` od
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (od.`id_order` = o.`id_order`)
 			WHERE od.`id_discount` = '.(int)$this->id.'
 			AND o.`id_customer` = '.(int)$id_customer);

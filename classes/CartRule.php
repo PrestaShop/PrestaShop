@@ -206,7 +206,7 @@ class CartRuleCore extends ObjectModel
 			$quantityUsed = Db::getInstance()->getValue('
 			SELECT count(*)
 			FROM '._DB_PREFIX_.'orders o
-			LEFT JOIN '._DB_PREFIX_.'order_discount od ON o.id_order = od.id_order
+			LEFT JOIN '._DB_PREFIX_.'order_cart_rule od ON o.id_order = od.id_order
 			WHERE o.id_customer = '.$context->cart->id_customer.'
 			AND od.id_cart_rule = '.(int)$this->id.'
 			AND '.(int)Configuration::get('PS_OS_ERROR').' != (
