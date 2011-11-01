@@ -89,7 +89,7 @@ class OrderHistoryCore extends ObjectModel
 					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
 						ProductSale::addProductSale($product['id_product'], $product['cart_quantity']);
 					/* If becoming unlogable => removing sale */
-					else if (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
+					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
 					
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))

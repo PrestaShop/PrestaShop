@@ -120,7 +120,6 @@ class AdminCustomerThreads extends AdminTab
 			}
 			if (isset($_POST['id_employee_forward']))
 			{
-				// Todo: need to avoid doubles 
 				$messages = Db::getInstance()->executeS('
 				SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name, CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
 				FROM '._DB_PREFIX_.'customer_thread ct

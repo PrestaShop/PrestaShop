@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class DiscountCore extends ObjectModel
+class DiscountCore extends CartRule
 {
 	public		$id;
 
@@ -310,14 +310,14 @@ class DiscountCore extends ObjectModel
 	}
 
 	/**
-	  * Return discount value
-	  *
-	  * @param integer $nb_discounts Number of discount currently in cart
-	  * @param boolean $order_total_products Total cart products amount
-	  * @return mixed Return a float value or '!' if reduction is 'Shipping free'
+	  * @deprecated 1.5.0.1
 	  */
-	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $idCart = false, $useTax = true, Currency $currency = null, Shop $shop = null)
+	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $id_cart = false, $useTax = true, Currency $currency = null, Shop $shop = null)
 	{
+		Tools::displayAsDeprecated();
+		$context = Context::getContext();
+		$context->cart = new Cart($id_cart);
+		return parent::getValue($useTax, $context);
 		if (!self::isFeatureActive())
 			return 0;
 
@@ -509,7 +509,7 @@ class DiscountCore extends ObjectModel
 	 */
 	public static function getVouchersToCartDisplay($id_lang, $id_customer = 0)
 	{
-		if (!self::isFeatureActive())
+		if (!CartRule::isFeatureActive())
 			return array();
 
 		$sql = '
@@ -584,6 +584,7 @@ class DiscountCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		return Configuration::get('PS_DISCOUNT_FEATURE_ACTIVE');
+		Tools::displayAsDeprecated();
+		return CartRule::isFeatureActive();
 	}
 }

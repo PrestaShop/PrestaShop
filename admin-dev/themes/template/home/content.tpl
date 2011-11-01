@@ -111,7 +111,7 @@ $(document).ready(function() {
 	if({$refresh_check_version})
 	{
 		$('#blockNewVersionCheck').hide();
-		$.ajax({
+	$.ajax({
 			type : 'POST',
 			data : {
 				ajax : '1',
@@ -179,7 +179,7 @@ $(document).ready(function() {
 		{
 			// don't show/hide screencast if it's deactivated
 			{if $employee->bo_show_screencast}
-				$('#adminpresentation').fadeOut('slow');
+			$('#adminpresentation').fadeOut('slow');
 			{/if}
 			$('#partner_preactivation').fadeOut('slow');
 			$('#discover_prestashop').fadeOut('slow');

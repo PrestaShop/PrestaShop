@@ -212,7 +212,7 @@ class CartCore extends ObjectModel
 		DELETE FROM `'._DB_PREFIX_.'customization`
 		WHERE `id_cart` = '.(int)$this->id);
 
-		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_discount` WHERE `id_cart` = '.(int)($this->id))
+		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)($this->id))
 		 OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)($this->id)))
 			return false;
 
@@ -248,84 +248,64 @@ class CartCore extends ObjectModel
 	}
 
 	/**
+	 * @deprecated 1.5.0.1
+	 */
+	public function getDiscounts($lite = false, $refresh = false)
+	{
+		Tools::displayAsDeprecated();
+		return $this->getCartRules();
+	}
+	
+	/**
 	 * Return cart discounts
 	 *
 	 * @param bool true will return discounts with basic informations
 	 * @param bool true will erase the cache
 	 * @result array Discounts
 	 */
-	public function getDiscounts($lite = false, $refresh = false)
+	public function getCartRules()
 	{
-		// if discounts are never used
-		if (!Discount::isFeatureActive())
+		// TODO : add cache
+
+		// If the cart has not been saved, then there can't be any cart rule applied
+		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
 
-		if (!$this->id)
-			return array();
-
-		if (!$refresh)
-		{
-			if (!$lite AND isset(self::$_discounts[$this->id]))
-			return self::$_discounts[$this->id];
-
-		if ($lite AND isset(self::$_discountsLite[$this->id]))
-			return self::$_discountsLite[$this->id];
-		}
-
+		$total_products_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+		$shipping_ti = $this->getOrderShippingCost();
+		$shipping_te = $this->getOrderShippingCost(NULL, false);
+		
 		$result = Db::getInstance()->executeS('
-		SELECT d.*, `id_cart`
-		FROM `'._DB_PREFIX_.'cart_discount` c
-		LEFT JOIN `'._DB_PREFIX_.'discount` d ON c.`id_discount` = d.`id_discount`
-		WHERE `id_cart` = '.(int)($this->id));
+		SELECT *
+		FROM `'._DB_PREFIX_.'cart_cart_rule` cd
+		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
+		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cd.`id_cart_rule` = cr.`id_cart_rule` AND crl.id_lang = '.(int)$this->id_lang.')
+		WHERE `id_cart` = '.(int)$this->id);
 
-		$products = $this->getProducts();
-		foreach ($result AS $k => $discount)
+		foreach ($result as &$row)
 		{
-			$categories = Discount::getCategories((int)($discount['id_discount']));
-			$in_category = false;
-			foreach ($products AS $product)
-				if (Product::idIsOnCategoryId((int)($product['id_product']), $categories))
-				{
-					$in_category = true;
-					break;
-				}
-			if (!$in_category)
-				unset($result[$k]);
+			$cartRule = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
+			$row['value_real'] = $cartRule->getValue(true);
+			$row['value_tax_exc'] = $cartRule->getValue(false);
+			
+			// Retro compatibility < 1.5.0.2
+			$row['id_discount'] = $row['id_cart_rule'];
+			$row['description'] = $row['name'];
 		}
 
-		if ($lite)
-		{
-			self::$_discountsLite[$this->id] = $result;
-			return $result;
-		}
-
-		$total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-		$shipping_wt = $this->getOrderShippingCost();
-		$shipping = $this->getOrderShippingCost(NULL, false);
-		self::$_discounts[$this->id] = array();
-		foreach ($result as $row)
-		{
-			$discount = new Discount($row['id_discount'], (int)($this->id_lang));
-			$row['description'] = $discount->description ? $discount->description : $discount->name;
-			$row['value_real'] = $discount->getValue(sizeof($result), $total_products_wt, $shipping_wt, $this->id);
-			$row['value_tax_exc'] = $discount->getValue(sizeof($result), $total_products, $shipping, $this->id, false);
-			if ($row['value_real'] !== 0)
-			self::$_discounts[$this->id][] = $row;
-			else
-				$this->deleteDiscount($row['id_discount']);
-		}
-		return isset(self::$_discounts[$this->id]) ? self::$_discounts[$this->id] : NULL;
+		return $result;
 	}
 
+	// Todo: see uses and change name
 	public function getDiscountsCustomer($id_discount)
 	{
-		if (!Discount::isFeatureActive())
+		if (!CartRule::isFeatureActive())
 			return 0;
 
 		return Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'cart_discount`
+			FROM `'._DB_PREFIX_.'cart_cart_rule`
 			WHERE `id_discount` = '.(int)($id_discount).' AND `id_cart` = '.(int)($this->id));
 	}
 
@@ -570,14 +550,17 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * Add a discount to the cart (NO controls except doubles)
-	 *
-	 * @param integer $id_discount The discount to add to the cart
-	 * @result boolean Update result
+	 * @deprecated 1.5.0.1
 	 */
-	public	function addDiscount($id_discount)
+	public function addDiscount($id_discount)
 	{
-		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_discount', array('id_discount' => (int)($id_discount), 'id_cart' => (int)($this->id)), 'INSERT');
+		Tools::displayAsDeprecated();
+		return $this->addCartRule($id_discount);
+	}
+
+	public function addCartRule($id_cart_rule)
+	{
+		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_cart_rule', array('id_cart_rule' => (int)$id_cart_rule, 'id_cart' => (int)$this->id), 'INSERT');
 	}
 
 	public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = false)
@@ -701,6 +684,9 @@ class CartCore extends ObjectModel
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
 		$this->update(true);
+		$context = Context::getContext()->cloneContext();
+		$context->cart = $this;
+		CartRule::autoAddToCart($context);
 
 		if ($product->customizable)
 			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, $operator);
@@ -820,19 +806,18 @@ class CartCore extends ObjectModel
 		return (bool)Db::getInstance()->getValue('SELECT `id_cart` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int)$this->id);
 	}
 
-	/*
-	** Deletion
-	*/
-
 	/**
-	 * Delete a discount from the cart
-	 *
-	 * @param integer $id_discount Discount ID
-	 * @return boolean result
+	 * @deprecated 1.5.0.1
 	 */
-	public	function deleteDiscount($id_discount)
+	public function deleteDiscount($id_discount)
 	{
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_discount` WHERE `id_discount` = '.(int)$id_discount.' AND `id_cart` = '.(int)$this->id.' LIMIT 1');
+		Tools::displayAsDeprecated();
+		return $this->removeCartRule($id_discount);
+	}
+
+	public function removeCartRule($id_cart_rule)
+	{
+		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id.' LIMIT 1');
 	}
 
 	/**
@@ -982,7 +967,8 @@ class CartCore extends ObjectModel
 			die(Tools::displayError());
 
 		// if discounts are never used
-		if ($type == Cart::ONLY_DISCOUNTS && !Discount::isFeatureActive())
+		// Todo: remove and replace by cart rules
+		if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive())
 			return 0;
 		// no shipping cost if is a cart with only virtuals products
 		$virtual = $this->isVirtualCart();
@@ -1025,6 +1011,7 @@ class CartCore extends ObjectModel
 			$order_total += $total_price;
 		}
 		$order_total_products = $order_total;
+		// Todo: consider optimizations
 		if ($type == Cart::ONLY_DISCOUNTS)
 			$order_total = 0;
 		// Wrapping Fees
@@ -1039,61 +1026,28 @@ class CartCore extends ObjectModel
 			}
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)($this->id_currency)));
 		}
-		if ($type != Cart::ONLY_PRODUCTS)
+		
+		$order_total_discount = 0;
+		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
 		{
-			$discounts = array();
-			if (Discount::isFeatureActive())
-			{
-				/* Firstly get all discounts, looking for a free shipping one (in order to substract shipping fees to the total amount) */
-				if ($discountIds = $this->getDiscounts(true))
-				{
-					foreach ($discountIds AS $id_discount)
-					{
-						$discount = new Discount((int)($id_discount['id_discount']));
-						if (Validate::isLoadedObject($discount))
-						{
-							$discounts[] = $discount;
-							if ($discount->id_discount_type == Discount::FREE_SHIPPING)
-								foreach($products AS $product)
-								{
-									$categories = Discount::getCategories($discount->id);
-									if (count($categories) AND Product::idIsOnCategoryId($product['id_product'], $categories))
-									{
-										if($type == Cart::ONLY_DISCOUNTS)
-											$order_total -= $shipping_fees;
-										$shipping_fees = 0;
-										break;
-									}
-								}
-						}
-					}
-					/* Secondly applying all vouchers to the correct amount */
-					$shrunk = false;
-					foreach ($discounts AS $discount)
-						if ($discount->id_discount_type != Discount::FREE_SHIPPING)
-						{
-							$order_total -= Tools::ps_round((float)($discount->getValue(sizeof($discounts), $order_total_products, $shipping_fees, $this->id, (int)($withTaxes))), 2);
-							if ($discount->id_discount_type == Discount::AMOUNT)
-								if (in_array($discount->behavior_not_exhausted, array(1,2)))
-									$shrunk = true;
-						}
-
-						$order_total_discount = 0;
-						if ($shrunk AND $order_total < (-$wrapping_fees - $order_total_products - $shipping_fees))
-							$order_total_discount = -$wrapping_fees - $order_total_products - $shipping_fees;
-						else
-							$order_total_discount = $order_total;
-				}
-			}
+			$result = $this->getCartRules();
+			foreach (ObjectModel::hydrateCollection('CartRule', $result, Configuration::get('PS_LANG_DEFAULT')) AS $cartRule)
+				$order_total_discount += Tools::ps_round($cartRule->getValue($withTaxes));
+			$order_total_discount = min(Tools::ps_round($order_total_discount), $wrapping_fees + $order_total_products + $shipping_fees);
+			$order_total -= $order_total_discount;
 		}
 
-		if ($type == Cart::ONLY_SHIPPING) return $shipping_fees;
-		if ($type == Cart::ONLY_WRAPPING) return $wrapping_fees;
-		if ($type == Cart::BOTH) $order_total += $shipping_fees + $wrapping_fees;
-		if ($order_total < 0 AND $type != Cart::ONLY_DISCOUNTS) return 0;
-		if ($type == Cart::ONLY_DISCOUNTS AND isset($order_total_discount))
-			return Tools::ps_round((float)($order_total_discount), 2);
-		return Tools::ps_round((float)($order_total), 2);
+		if ($type == Cart::ONLY_SHIPPING)
+			return $shipping_fees;
+		if ($type == Cart::ONLY_WRAPPING)
+			return $wrapping_fees;
+		if ($type == Cart::BOTH)
+			$order_total += $shipping_fees + $wrapping_fees;
+		if ($order_total < 0 AND $type != Cart::ONLY_DISCOUNTS)
+			return 0;
+		if ($type == Cart::ONLY_DISCOUNTS)
+			return $order_total_discount;
+		return Tools::ps_round((float)$order_total, 2);
 	}
 
 	/**
@@ -1109,33 +1063,6 @@ class CartCore extends ObjectModel
 
 		if (!$default_country)
 			$default_country = Context::getContext()->country;
-
-		// Checking discounts in cart
-		$products = $this->getProducts();
-		if (Discount::isFeatureActive())
-			$discounts = $this->getDiscounts(true);
-		else
-			$discounts = null;
-		if ($discounts)
-			foreach ($discounts AS $id_discount)
-				if ($id_discount['id_discount_type'] == Discount::FREE_SHIPPING)
-				{
-					if ($id_discount['minimal'] > 0)
-					{
-						$total_cart = 0;
-
-						$categories = Discount::getCategories((int)($id_discount['id_discount']));
-						if (sizeof($categories))
-							foreach($products AS $product)
-								if (Product::idIsOnCategoryId((int)($product['id_product']), $categories))
-									$total_cart += $product['total_wt'];
-
-						if ($total_cart >= $id_discount['minimal'])
-							return 0;
-					}
-					else
-						return 0;
-				}
 
 		// Order total in default currency without fees
 		$order_total = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING);
@@ -1250,9 +1177,9 @@ class CartCore extends ObjectModel
 		$free_fees_price = 0;
 		if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
 			$free_fees_price = Tools::convertPrice((float)($configuration['PS_SHIPPING_FREE_PRICE']), Currency::getCurrencyInstance((int)($this->id_currency)));
-		$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
-		if ($orderTotalwithDiscounts >= (float)($free_fees_price) AND (float)($free_fees_price) > 0)
-			return $shipping_cost;
+		// $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
+		// if ($orderTotalwithDiscounts >= (float)($free_fees_price) AND (float)($free_fees_price) > 0)
+			// return $shipping_cost;
 		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT']) AND $this->getTotalWeight() >= (float)($configuration['PS_SHIPPING_FREE_WEIGHT']) AND (float)($configuration['PS_SHIPPING_FREE_WEIGHT']) > 0)
 			return $shipping_cost;
 
@@ -1290,9 +1217,10 @@ class CartCore extends ObjectModel
 		if (isset($configuration['PS_SHIPPING_HANDLING']) AND $carrier->shipping_handling)
 			$shipping_cost += (float)($configuration['PS_SHIPPING_HANDLING']);
 
+		// TODO : $products does not exists
 		// Additional Shipping Cost per product
-		foreach($products AS $product)
-			$shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
+		// foreach($products AS $product)
+			// $shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
 
 		$shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)($this->id_currency)));
 
@@ -1357,90 +1285,16 @@ class CartCore extends ObjectModel
 		}
 		return self::$_totalWeight[$this->id];
 	}
-
+	
 	/**
-	* Check discount validity
-	*
-	* @return mixed Return a string if an error occurred and false otherwise
-	*/
-	function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false,
-		Customer $customer = null, Shop $shop = null)
+	 * @deprecated 1.5.0.1
+	 */
+	public function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false)
 	{
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-		if (!$customer)
-			$customer = Context::getContext()->customer;
-		if (!$order_total)
-			 return Tools::displayError('Cannot add voucher if order is free.');
-		if (!$discountObj->active)
-			return Tools::displayError('This voucher has already been used or is disabled.');
-		if (!$discountObj->quantity)
-			return Tools::displayError('This voucher has expired (usage limit attained).');
-		if ($discountObj->id_discount_type == Discount::AMOUNT AND $this->id_currency != $discountObj->id_currency)
-			return Tools::displayError('This voucher can only be used in the following currency:').'
-				'.Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `name` FROM `'._DB_PREFIX_.'currency` WHERE id_currency = '.(int)$discountObj->id_currency);
-		if ($checkCartDiscount
-			AND (
-				$this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user
-				OR (Order::getDiscountsCustomer($customer->id, $discountObj->id) + $this->getDiscountsCustomer($discountObj->id) >= $discountObj->quantity_per_user) >= $discountObj->quantity_per_user
-				)
-			)
-			return Tools::displayError('You cannot use this voucher anymore (usage limit attained).');
-		if (strtotime($discountObj->date_from) > time())
-			return Tools::displayError('This voucher is not yet valid');
-		if (strtotime($discountObj->date_to) < time())
-			return Tools::displayError('This voucher has expired.');
-		if (!$discountObj->isAssociatedToShop((int)$shop->id))
-			return Tools::displayError('This voucher is not available with this shop.');
-		if (sizeof($discounts) >= 1 AND $checkCartDiscount)
-		{
-			if (!$discountObj->cumulable)
-				return Tools::displayError('This voucher is not valid with other current discounts.');
-			foreach ($discounts as $discount)
-				if (!$discount['cumulable'])
-					return Tools::displayError('Voucher is not valid with other discounts.');
-
-			foreach($discounts as $discount)
-				if($discount['id_discount'] == $discountObj->id)
-					return Tools::displayError('This voucher is already in your cart');
-		}
-
-		$groups = Customer::getGroupsStatic($this->id_customer);
-
-	    if (($discountObj->id_customer OR $discountObj->id_group) AND ((($this->id_customer != $discountObj->id_customer) OR ($this->id_customer == 0)) AND !in_array($discountObj->id_group, $groups)))
-		{
-			if (!$customer->isLogged())
-				return Tools::displayError('You cannot use this voucher.').' - '.Tools::displayError('Please log in.');
-			return Tools::displayError('You cannot use this voucher.');
-		}
-
-		$onlyProductWithDiscount = true;
-		if (!$discountObj->cumulable_reduction)
-		{
-			foreach ($products as $product)
-				if (!$product['reduction_applies'] AND !$product['on_sale'])
-					$onlyProductWithDiscount = false;
-		}
-		if (!$discountObj->cumulable_reduction AND $onlyProductWithDiscount)
-			return Tools::displayError('This voucher is not valid for marked or reduced products.');
-		$total_cart = 0;
-		$categories = Discount::getCategories($discountObj->id);
-		$returnErrorNoProductCategory = true;
-		foreach($products AS $product)
-		{
-			if(count($categories))
-				if (Product::idIsOnCategoryId($product['id_product'], $categories))
-				{
-					if ((!$discountObj->cumulable_reduction AND !$product['reduction_applies'] AND !$product['on_sale']) OR $discountObj->cumulable_reduction)
-						$total_cart += $discountObj->include_tax ? $product['total_wt'] : $product['total'];
-					$returnErrorNoProductCategory = false;
-				}
-		}
-		if ($returnErrorNoProductCategory)
-			return Tools::displayError('This discount does not apply to that product category.');
-		if ($total_cart < $discountObj->minimal)
-			return Tools::displayError('The order total is not high enough or this voucher cannot be used with those products.');
-		return false;
+		Tools::displayAsDeprecated();
+		$context = Context::getContext()->cloneContext();
+		$context->cart = $this;
+		return $discountObj->checkValidity($context);
 	}
 
 	/**
@@ -1468,7 +1322,7 @@ class CartCore extends ObjectModel
 		$total_free_ship = 0;
 		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency((int)($this->id_currency))))
 		{
-		    $discounts = $this->getDiscounts();
+		    $discounts = $this->getCartRules();
 		    $total_free_ship =  $free_ship - ($this->getOrderTotal(true, Cart::ONLY_PRODUCTS) + $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 		    foreach ($discounts as $discount)
 		    	if ($discount['id_discount_type'] == Discount::FREE_SHIPPING)
@@ -1485,7 +1339,7 @@ class CartCore extends ObjectModel
 			'formattedAddresses' => $formattedAddresses,
 			'carrier' => new Carrier($this->id_carrier, $id_lang),
 			'products' => $this->getProducts(false),
-			'discounts' => $this->getDiscounts(false, true),
+			'discounts' => $this->getCartRules(),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
 			'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
 			'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),

@@ -167,7 +167,7 @@
 			  <td style="padding-bottom:5px;">
 				{if $currency->format % 2 != 0}{$currency->sign}{/if}
 				<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-				{if $currency->format % 2 == 0 } {$currency->sign} {/if}({l s='overrides Wholesale price on Information tab'})</td>
+				{if $currency->format % 2 == 0} {$currency->sign} {/if}({l s='overrides Wholesale price on Information tab'})</td>
 		  </tr>
 		  <tr>
 			  <td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Impact on price:'}</td>
@@ -178,7 +178,7 @@
 				  <option value="-1">{l s='Reduction'}</option>
 				</select>
 				<span id="span_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;{if $currency->format % 2 != 0}{$currency->sign} {/if}
-					<input type="text" size="6" name="attribute_price" id="attribute_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0 } {$currency->sign}{/if}
+					<input type="text" size="6" name="attribute_price" id="attribute_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
 				{if $country_display_tax_label}
 						 {l s='(tax excl.)'}
 						 <span {if $tax_exclude_option}style="display:none"{/if}> {l s='or'} {if $currency->format % 2 != 0}{$currency->sign} {/if}
@@ -218,9 +218,9 @@
 		{if $ps_use_ecotax}
 <tr>
 	<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-		{l s='Eco-tax:' }
+		{l s='Eco-tax:'}
 	</td>
-	<td style="padding-bottom:5px;">{if $currency->format % 2 != 0 }{$currency->sign}{/if}
+	<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
 		<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" 
 		onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		{if $currency->format % 2 == 0} {$currency->sign}{/if}
@@ -229,7 +229,7 @@
 	</tr>
 {/if}
 			<tr>
-			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left"><label>{l s='Minimum quantity:' }</label>
+			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left"><label>{l s='Minimum quantity:'}</label>
 			</td>
 			<td style="padding-bottom:5px;">
 				<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$minimal_quantity}" />
@@ -252,7 +252,7 @@
 		  </tr>
 		  <tr><td colspan="2"><div class="separation"></div></td></tr>
 		  <tr>
-			  <td style="width:150px">{l s='Image:' }</td>
+			  <td style="width:150px">{l s='Image:'}</td>
 			  <td style="padding-bottom:5px;">
 				<ul id="id_image_attr">
 					{foreach from=$images key=k item=image}

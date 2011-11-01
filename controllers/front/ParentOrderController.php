@@ -88,38 +88,40 @@ class ParentOrderControllerCore extends FrontController
 
 		if ($this->nbProducts)
 		{
-			if (Tools::isSubmit('submitAddDiscount') && Tools::getValue('discount_name') && Discount::isFeatureActive())
+			if (CartRule::isFeatureActive())
 			{
-				$discountName = Tools::getValue('discount_name');
-				if (!Validate::isDiscountName($discountName))
-					$this->errors[] = Tools::displayError('Voucher name invalid.');
-				else
+				if (Tools::isSubmit('submitAddDiscount'))
 				{
-					$discount = new Discount((int)(Discount::getIdByName($discountName)));
-					if (Validate::isLoadedObject($discount))
-					{
-						if ($tmpError = $this->context->cart->checkDiscountValidity($discount, $this->context->cart->getDiscounts(), $this->context->cart->getOrderTotal(), $this->context->cart->getProducts(), true))
-							$this->errors[] = $tmpError;
-					}
+					if (!($code = Tools::getValue('discount_name')))
+						$this->errors[] = Tools::displayError('You must enter a voucher code');
+					elseif (!Validate::isDiscountName($code))
+						$this->errors[] = Tools::displayError('Voucher code invalid');
 					else
-						$this->errors[] = Tools::displayError('Voucher name invalid.');
-					if (!count($this->errors))
 					{
-						$this->context->cart->addDiscount((int)($discount->id));
-						Tools::redirect('index.php?controller=order-opc');
+						if ($cartRule = new CartRule(CartRule::getIdByCode($code)) AND Validate::isLoadedObject($cartRule))
+						{
+							if ($error = $cartRule->checkValidity($this->context))
+								$this->errors[] = $error;
+							else
+							{
+								$this->context->cart->addCartRule($cartRule->id);
+								Tools::redirect('index.php?controller=order-opc');
+							}
+						}
+						else
+							$this->errors[] = Tools::displayError('Voucher name invalid.');
 					}
+					$this->context->smarty->assign(array(
+						'errors' => $this->errors,
+						'discount_name' => Tools::safeOutput($code)
+					));
 				}
-				$this->context->smarty->assign(array(
-					'errors' => $this->errors,
-					'discount_name' => Tools::safeOutput($discountName)
-				));
+				elseif ($id_cart_rule = (int)Tools::getValue('deleteDiscount') AND Validate::isUnsignedId($id_cart_rule))
+				{
+					$this->context->cart->removeCartRule($id_cart_rule);
+					Tools::redirect('index.php?controller=order-opc');
+				}
 			}
-			else if (isset($_GET['deleteDiscount']) && Validate::isUnsignedId($_GET['deleteDiscount']) && Discount::isFeatureActive())
-			{
-				$this->context->cart->deleteDiscount((int)($_GET['deleteDiscount']));
-				Tools::redirect('index.php?controller=order-opc');
-			}
-
 			/* Is there only virtual product in cart */
 			if ($isVirtualCart = $this->context->cart->isVirtualCart())
 				$this->setNoCarrier();
@@ -222,7 +224,11 @@ class ParentOrderControllerCore extends FrontController
 
 		Module::hookExec('processCarrier', array('cart' => $this->context->cart));
 
-		return $this->context->cart->update();
+		if (!$this->context->cart->update())
+			return false;
+
+		// Carrier has changed, so we check if the cart rules still apply
+		CartRule::autoRemoveFromCart();
 	}
 
 	protected function _assignSummaryInformations()
@@ -249,7 +255,7 @@ class ParentOrderControllerCore extends FrontController
 
 		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency($this->context->cart->id_currency)))
 		{
-			$discounts = $this->context->cart->getDiscounts();
+			$discounts = $this->context->cart->getCartRules();
 			$total_free_ship = $free_ship - ($summary['total_products_wt'] + $summary['total_discounts']);
 			foreach ($discounts as $discount)
 				if ($discount['id_discount_type'] == Discount::FREE_SHIPPING)
@@ -338,7 +344,12 @@ class ParentOrderControllerCore extends FrontController
 			}
 			/* Update cart addresses only if needed */
 			if (isset($update) && $update)
+			{
 				$this->context->cart->update();
+				
+				// Address has changed, so we check if the cart rules still apply
+				CartRule::autoRemoveFromCart();
+			}
 
 			/* If delivery address is valid in cart, assign it to Smarty */
 			if (isset($this->context->cart->id_address_delivery))

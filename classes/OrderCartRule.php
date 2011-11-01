@@ -25,23 +25,47 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class OrderDiscountCore extends OrderCartRule
+class OrderDiscountCore extends ObjectModel
 {
-	public function __get($key)
-	{
-		if ($key == 'id_order_discount')
-			return $this->id_order_cart_rule;
-		if ($key == 'id_discount')
-			return $this->id_cart_rule;
-		return $this->{$key};
-	}
+	/** @var integer */
+	public $id_order_cart_rule;
 	
-	public function __set($key, $value)
+	/** @var integer */
+	public $id_order;
+
+	/** @var integer */
+	public $id_cart_rule;
+	
+	/** @var string */	
+	public $name;
+
+	/** @var integer */	
+	public $value;
+
+	protected $tables = array ('order_cart_rule');
+
+	protected	$fieldsRequired = array ('id_order', 'name', 'value');	
+	protected	$fieldsValidate = array ('id_order' => 'isUnsignedId', 'name' => 'isGenericName', 'value' => 'isInt');
+
+	/* MySQL does not allow 'order detail' for a table name */
+	protected 	$table = 'order_cart_rule';
+	protected 	$identifier = 'id_order_cart_rule';
+
+	protected	$webserviceParameters = array(
+		'fields' => array(
+			'id_order' => array('xlink_resource' => 'orders'),
+		),
+	);
+	
+	public function getFields()
 	{
-		if ($key == 'id_order_discount')
-			$this->id_order_cart_rule = $value;
-		if ($key == 'id_discount')
-			$this->id_cart_rule = $value;
-		$this->{$key} = $value;
-	}
+		$this->validateFields();
+
+		$fields['id_order'] = (int)($this->id_order);
+		$fields['name'] = pSQL($this->name);
+		$fields['value'] = (int)($this->value);
+		
+		return $fields;
+	}	
 }
+

@@ -229,7 +229,7 @@ class AdminPerformance extends AdminTab
 		if (!extension_loaded('xcache'))
 			$warnings[] = $this->l('To use Xcache, you must install the Xcache extension on your server.').' <a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 
-		if (!is_writable(_PS_CACHEFS_DIRECTORY_))
+		if(!is_writable(_PS_CACHEFS_DIRECTORY_))
 			$warnings[] = $this->l('To use CacheFS the directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
 
 		if ($warnings)

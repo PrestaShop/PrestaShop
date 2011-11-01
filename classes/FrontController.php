@@ -134,6 +134,10 @@ class FrontControllerCore extends Controller
 		if (isset($_GET['logout']) OR ($this->context->customer->logged AND Customer::isBanned($this->context->customer->id)))
 		{
 			$this->context->customer->logout();
+
+			// Login information have changed, so we check if the cart rules still apply
+			CartRule::autoRemoveFromCart();
+			
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 		elseif (isset($_GET['mylogout']))
@@ -285,7 +289,6 @@ class FrontControllerCore extends Controller
 			'customerName' => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
 		));
 
-		// TODO for better performances (cache usage), remove these assign and use a smarty function to get the right media server in relation to the full ressource name
 		$assignArray = array(
 			'img_ps_dir' => _PS_IMG_,
 			'img_cat_dir' => _THEME_CAT_DIR_,

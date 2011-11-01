@@ -230,7 +230,7 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (142, 'PS_SCENE_FEATURE_ACTIVE', '1', NOW(), NOW()),
 (143, 'PS_VIRTUAL_PROD_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (144, 'PS_CUSTOMIZATION_FEATURE_ACTIVE', '0', NOW(), NOW()),
-(145, 'PS_DISCOUNT_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(145, 'PS_CART_RULE_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (146, 'PS_GROUP_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (147, 'PS_PACK_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW()),
@@ -848,7 +848,7 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (9, 'AdminTools', 0, 10),(82, 'AdminStores', 9, 11),(60, 'AdminTracking', 1, 3),(10, 'AdminManufacturers', 1, 4),(34, 'AdminSuppliers', 1, 5),(11, 'AdminAttributesGroups', 1, 6),
 (36, 'AdminFeatures', 1, 7),(58, 'AdminScenes', 1, 8),(66, 'AdminTags', 1, 9),(68, 'AdminAttachments', 1, 10),(12, 'AdminAddresses', 2, 1),(63, 'AdminGroups', 2, 2),
 (65, 'AdminCarts', 2, 3),(42, 'AdminInvoices', 3, 1),(55, 'AdminDeliverySlip', 3, 2),(47, 'AdminReturn', 3, 3),(49, 'AdminSlip', 3, 4),(59, 'AdminMessages', 3, 5),
-(13, 'AdminStatuses', 3, 6),(54, 'AdminOrderMessage', 3, 7),(14, 'AdminDiscounts', 4, 4),(15, 'AdminCurrencies', 4, 1),(16, 'AdminTaxes', 4, 2),
+(13, 'AdminStatuses', 3, 6),(54, 'AdminOrderMessage', 3, 7),(14, 'AdminCartRules', 4, 4),(15, 'AdminCurrencies', 4, 1),(16, 'AdminTaxes', 4, 2),
 (17, 'AdminCarriers', 5, 1),(46, 'AdminStates', 5, 2),(18, 'AdminCountries', 5, 3),(19, 'AdminZones', 5, 5),(20, 'AdminRangePrice', 5, 6),
 (21, 'AdminRangeWeight', 5, 7),(51, 'AdminStatsConf', 6, 1),(61, 'AdminSearchEngines', 6, 2),(62, 'AdminReferrers', 6, 3),
 (22, 'AdminModulesPositions', 7, 4),(30, 'AdminProfiles', 29, 1),(31, 'AdminAccess', 29, 2),(28, 'AdminContacts', 29, 3),(39, 'AdminContact', 8, 1),
@@ -874,7 +874,7 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 1, 'Catalog'),(1, 2, 'Customers'),(1, 3, 'Orders'),(1, 4, 'Payment'),
 (1, 5, 'Shipping'),(1, 6, 'Stats'),(1, 7, 'Modules'),(1, 8, 'Preferences'),(1, 9, 'Tools'),(1, 10, 'Manufacturers'),(1, 11, 'Attributes and Groups'),
-(1, 12, 'Addresses'),(1, 13, 'Statuses'),(1, 14, 'Vouchers'),(1, 15, 'Currencies'),(1, 16, 'Taxes'),(1, 17, 'Carriers'),(1, 18, 'Countries'),
+(1, 12, 'Addresses'),(1, 13, 'Statuses'),(1, 14, 'Cart Rules'),(1, 15, 'Currencies'),(1, 16, 'Taxes'),(1, 17, 'Carriers'),(1, 18, 'Countries'),
 (1, 19, 'Zones'),(1, 20, 'Price Ranges'),(1, 21, 'Weight Ranges'),(1, 22, 'Positions'),(1, 23, 'Database'),(1, 24, 'E-mail'),(1, 26, 'Images'),
 (1, 27, 'Products'),(1, 28, 'Contacts'),(1, 29, 'Employees'),(1, 30, 'Profiles'),(1, 31, 'Permissions'),(1, 32, 'Languages'),(1, 33, 'Translations'),
 (1, 34, 'Suppliers'),(1, 35, 'Tabs'),(1, 36, 'Features'),(1, 37, 'Quick Access'),(1, 38, 'Themes'),(1, 39, 'Contact Information'),(1, 40, 'Keyword Typos'),
@@ -897,7 +897,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
 (2, 6, 'Stats'),(2, 7, 'Modules'),(2, 8, 'Préférences'),(2, 9, 'Outils'),(2, 10, 'Marques'),(2, 11, 'Attributs et groupes'),(2, 12, 'Adresses'),(2, 13, 'Statuts'),
-(2, 14, 'Bons de réduction'),(2, 15, 'Devises'),(2, 16, 'Taxes'),(2, 17, 'Transporteurs'),(2, 18, 'Pays'),(2, 19, 'Zones'),(2, 20, 'Tranches de prix'),
+(2, 14, 'Règles paniers'),(2, 15, 'Devises'),(2, 16, 'Taxes'),(2, 17, 'Transporteurs'),(2, 18, 'Pays'),(2, 19, 'Zones'),(2, 20, 'Tranches de prix'),
 (2, 21, 'Tranches de poids'),(2, 22, 'Positions'),(2, 23, 'Base de données'),(2, 24, 'Emails'),(2, 26, 'Images'),(2, 27, 'Produits'),(2, 28, 'Contacts'),
 (2, 29, 'Employés'),(2, 30, 'Profils'),(2, 31, 'Permissions'),(2, 32, 'Langues'),(2, 33, 'Traductions'),(2, 34, 'Fournisseurs'),(2, 35, 'Onglets'),
 (2, 36, 'Caractéristiques'),(2, 37, 'Accès rapide'),(2, 38, 'Thèmes'),(2, 39, 'Coordonnées'),(2, 40, 'Alias'),(2, 41, 'Import'),(2, 42, 'Factures'),
@@ -994,7 +994,7 @@ INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	FROM `PREFIX_lang` CROSS JOIN `PREFIX_tab`);
 
 INSERT INTO `PREFIX_quick_access` (`id_quick_access`, `link`, `new_window`) VALUES
-(1, 'index.php', 0),(2, '../', 1),(3, 'index.php?controller=AdminCatalog&addcategory', 0),(4, 'index.php?controller=AdminCatalog&addproduct', 0),(5, 'index.php?controller=AdminDiscounts&adddiscount', 0);
+(1, 'index.php', 0),(2, '../', 1),(3, 'index.php?controller=AdminCatalog&addcategory', 0),(4, 'index.php?controller=AdminCatalog&addproduct', 0),(5, 'index.php?controller=AdminCartRules&addcart_rule', 0);
 
 INSERT INTO `PREFIX_quick_access_lang` (`id_quick_access`, `id_lang`, `name`) VALUES
 (1, 1, 'Home'),(1, 2, 'Accueil'),(1, 3, 'Inicio'),(1, 4, 'Start'),(1, 5, 'Home page'),

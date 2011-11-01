@@ -897,7 +897,13 @@ class OrderCore extends ObjectModel
 	 */
 	public function	addDiscount($id_discount, $name, $value)
 	{
-		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_discount', array('id_order' => (int)($this->id), 'id_discount' => (int)($id_discount), 'name' => pSQL($name), 'value' => (float)($value)), 'INSERT');
+		Tools::displayAsDeprecated();
+		return Order::addCartRule($id_discount, $name, $value);
+	}
+	
+	public function	addCartRule($id_cart_rule, $name, $value)
+	{
+		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_cart_rule', array('id_order' => (int)$this->id, 'id_cart_rule' => (int)$id_cart_rule, 'name' => pSQL($name), 'value' => (float)$value), 'INSERT');
 	}
 
 	public function getNumberOfDays()

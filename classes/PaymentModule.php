@@ -245,53 +245,42 @@ abstract class PaymentModuleCore extends Module
 						</tr>';
 				} // end foreach ($products)
 
-				// Insert discounts from cart into order_discount table
-				$discounts = $cart->getDiscounts();
-				$discountsList = '';
-				$total_discount_value = 0;
-				$shrunk = false;
-				foreach ($discounts AS $discount)
+				$cartRulesList = '';
+				$result = $cart->getCartRules();
+				$cartRules = ObjectModel::hydrateCollection('CartRule', $result, (int)$order->id_lang);
+				foreach ($cartRules AS $cartRule)
 				{
-					$objDiscount = new Discount((int)$discount['id_discount']);
-					$value = $objDiscount->getValue(sizeof($discounts), $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), $order->total_shipping, $cart->id);
-					if ($objDiscount->id_discount_type == Discount::AMOUNT AND in_array($objDiscount->behavior_not_exhausted, array(1,2)))
-						$shrunk = true;
+					$value = $cartRule->getValue(true);
+					// Todo: repair shrunk
+					// if ($shrunk AND ($total_discount_value + $value) > ($order->total_products_wt + $order->total_shipping + $order->total_wrapping))
+					// {
+						// $amount_to_add = ($order->total_products_wt + $order->total_shipping + $order->total_wrapping) - $total_discount_value;
+						// if ($cartRule->id_discount_type == Discount::AMOUNT AND $cartRule->behavior_not_exhausted == 2)
+						// {
+							// $voucher = new Discount();
+							// foreach ($cartRule AS $key => $discountValue)
+								// $voucher->$key = $discountValue;
+							// $voucher->name = 'VSRK'.(int)$order->id_customer.'O'.(int)$order->id;
+							// $voucher->value = (float)$value - $amount_to_add;
+							// $voucher->add();
+							// $params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
+							// $params['{voucher_num}'] = $voucher->name;
+							// $params['{firstname}'] = $customer->firstname;
+							// $params['{lastname}'] = $customer->lastname;
+							// $params['{id_order}'] = $order->id;
+							// @Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order #').$order->id, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
+						// }
+					// }
 
-					if ($shrunk AND ($total_discount_value + $value) > ($order->total_products_wt + $order->total_shipping + $order->total_wrapping))
-					{
-						$amount_to_add = ($order->total_products_wt + $order->total_shipping + $order->total_wrapping) - $total_discount_value;
-						if ($objDiscount->id_discount_type == Discount::AMOUNT AND $objDiscount->behavior_not_exhausted == 2)
-						{
-							$voucher = new Discount();
-							foreach ($objDiscount AS $key => $discountValue)
-								$voucher->$key = $discountValue;
-							$voucher->name = 'VSRK'.(int)$order->id_customer.'O'.(int)$order->id;
-							$voucher->value = (float)$value - $amount_to_add;
-							$voucher->add();
-							$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
-							$params['{voucher_num}'] = $voucher->name;
-							$params['{firstname}'] = $customer->firstname;
-							$params['{lastname}'] = $customer->lastname;
-							$params['{id_order}'] = $order->id;
-							@Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order #').$order->id, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
-						}
-					}
-					else
-						$amount_to_add = $value;
-					$order->addDiscount($objDiscount->id, $objDiscount->name, $amount_to_add);
-					$total_discount_value += $amount_to_add;
+					$order->addCartRule($cartRule->id, $cartRule->name, $value);
 					if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED'))
-						$objDiscount->quantity = $objDiscount->quantity - 1;
-					$objDiscount->update();
+						$cartRule->quantity = $cartRule->quantity - 1;
+					$cartRule->update();
 
-					$discountsList .=
-						'<tr style="background-color:#EBECEE;">
-							<td colspan="4" style="padding: 0.6em 0.4em; text-align: right;">'.
-								$this->l('Voucher code:').' '.$objDiscount->name.
-							'</td>
-							<td style="padding: 0.6em 0.4em; text-align: right;">'.
-								($value != 0.00 ? '-' : '').Tools::displayPrice($value, $currency, false).
-							'</td>
+					$cartRulesList .= '
+					<tr style="background-color:#EBECEE;">
+						<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.$this->l('Voucher name:').' '.$cartRule->name.'</td>
+						<td style="padding:0.6em 0.4em;text-align:right">'.($value != 0.00 ? '-' : '').Tools::displayPrice($value, $currency, false).'</td>
 					</tr>';
 				}
 
@@ -384,7 +373,7 @@ abstract class PaymentModuleCore extends Module
 					'{carrier}' => $carrier->name,
 					'{payment}' => Tools::substr($order->payment, 0, 32),
 					'{products}' => $productsList,
-					'{discounts}' => $discountsList,
+					'{discounts}' => $cartRulesList,
 					'{total_paid}' => Tools::displayPrice($order->total_paid, $currency, false),
 					'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $currency, false),
 					'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency, false),
