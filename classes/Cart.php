@@ -298,7 +298,7 @@ class CartCore extends ObjectModel
 	}
 
 	// Todo: see uses and change name
-	public function getDiscountsCustomer($id_discount)
+	public function getDiscountsCustomer($id_cart_rule)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
@@ -306,7 +306,7 @@ class CartCore extends ObjectModel
 		return Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'cart_cart_rule`
-			WHERE `id_discount` = '.(int)($id_discount).' AND `id_cart` = '.(int)($this->id));
+			WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id);
 	}
 
 	public function getLastProduct()

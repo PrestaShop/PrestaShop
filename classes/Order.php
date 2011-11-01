@@ -625,7 +625,7 @@ class OrderCore extends ObjectModel
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'order_discount` od '.
+		FROM `'._DB_PREFIX_.'order_cart_rule` od '.
 		($details ? 'LEFT JOIN `'._DB_PREFIX_.'discount` d ON (d.`id_discount` = od.`id_discount`)' : '').'
 		WHERE od.`id_order` = '.(int)($this->id));
 	}
@@ -634,7 +634,7 @@ class OrderCore extends ObjectModel
 	{
 		return Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
-			LEFT JOIN '._DB_PREFIX_.'order_discount od ON (od.id_order = o.id_order)
+			LEFT JOIN '._DB_PREFIX_.'order_cart_rule od ON (od.id_order = o.id_order)
 			WHERE o.id_customer = '.(int)($id_customer).'
 			AND od.id_discount = '.(int)($id_discount));
 	}

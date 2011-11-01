@@ -57,7 +57,7 @@ abstract class CacheCore
 	 */
 	protected $blacklist = array(
 		'cart',
-		'cart_discount',
+		'cart_cart_rule',
 		'cart_product',
 		'connections',
 		'connections_source',
