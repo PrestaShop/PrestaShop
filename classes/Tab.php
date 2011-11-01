@@ -43,7 +43,11 @@ class TabCore extends ObjectModel
 
 	protected $fieldsRequired = array('class_name', 'position');
 	protected $fieldsSize = array('class_name' => 64, 'module' => 64);
-	protected $fieldsValidate = array('id_parent' => 'isInt', 'position' => 'isUnsignedInt', 'module' => 'isTabName');
+	protected $fieldsValidate = array(
+		'id_parent' => 'isInt',
+		'position' => 'isUnsignedInt',
+		'module' => 'isTabName'
+	);
 
 	protected $fieldsRequiredLang = array('name');
 	protected $fieldsSizeLang = array('name' => 32);
@@ -104,7 +108,11 @@ class TabCore extends ObjectModel
 	 	if (!$context->employee->id_profile)
 	 		return false;
 	 	/* Profile selection */
-	 	$profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile where `id_profile` != 1');
+	 	$profiles = Db::getInstance()->executeS('
+	 		SELECT `id_profile`
+	 		FROM '._DB_PREFIX_.'profile
+	 		WHERE `id_profile` != 1
+	 	');
 	 	if (!$profiles || empty($profiles))
 	 		return false;
 	 	/* Query definition */
@@ -147,7 +155,10 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentParentId()
 	{
-	 	if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT `id_parent` FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\''))
+	 	if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+	 		SELECT `id_parent`
+	 		FROM `'._DB_PREFIX_.'tab`
+	 		WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\''))
 		 	return $result['id_parent'];
  		return -1;
 	}
@@ -161,10 +172,12 @@ class TabCore extends ObjectModel
 	{
 		/* Tabs selection */
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT *
-		FROM `'._DB_PREFIX_.'tab` t
-		LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-		WHERE t.`id_tab` = '.(int)$id_tab);
+			SELECT *
+			FROM `'._DB_PREFIX_.'tab` t
+			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
+				ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+			WHERE t.`id_tab` = '.(int)$id_tab
+		);
 	}
 
 	/**
@@ -179,10 +192,12 @@ class TabCore extends ObjectModel
 		{
 			self::$_cache_tabs[$id_lang] = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'tab` t
-			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-			ORDER BY t.`position` ASC');
+				SELECT *
+				FROM `'._DB_PREFIX_.'tab` t
+				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
+					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+				ORDER BY t.`position` ASC
+			');
 			foreach ($result as $row)
 			{
 				if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
@@ -221,9 +236,10 @@ class TabCore extends ObjectModel
 	public static function getNbTabs($id_parent = null)
 	{
 		return (int)Db::getInstance()->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'tab` t
-		'.(!is_null($id_parent) ? 'WHERE t.`id_parent` = '.(int)$id_parent : ''));
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'tab` t
+			'.(!is_null($id_parent) ? 'WHERE t.`id_parent` = '.(int)$id_parent : '')
+		);
 	}
 
 	/**
@@ -234,7 +250,11 @@ class TabCore extends ObjectModel
 	 */
 	public static function getNewLastPosition($id_parent)
 	{
-		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)($id_parent)));
+		return (Db::getInstance()->getValue('
+			SELECT MAX(position)+1
+			FROM `'._DB_PREFIX_.'tab`
+			WHERE `id_parent` = '.(int)$id_parent
+		));
 	}
 
 	public function move($direction)
@@ -250,9 +270,12 @@ class TabCore extends ObjectModel
 			return false;
 
 		$new_position = ($direction == 'l') ? $this->position - 1 : $this->position + 1;
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'tab` t
-				SET position = '.(int)$this->position.'
-				WHERE id_parent = '.(int)$this->id_parent.' AND position = '.(int)$new_position);
+		Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'tab` t
+			SET position = '.(int)$this->position.'
+			WHERE id_parent = '.(int)$this->id_parent.'
+				AND position = '.(int)$new_position
+		);
 		$this->position = $new_position;
 		return $this->update();
 	}
@@ -260,28 +283,64 @@ class TabCore extends ObjectModel
 	public function cleanPositions($id_parent)
 	{
 		$result = Db::getInstance()->executeS('
-		SELECT `id_tab`
-		FROM `'._DB_PREFIX_.'tab`
-		WHERE `id_parent` = '.(int)$id_parent.'
-		ORDER BY `position`');
+			SELECT `id_tab`
+			FROM `'._DB_PREFIX_.'tab`
+			WHERE `id_parent` = '.(int)$id_parent.'
+			ORDER BY `position`
+		');
 		$sizeof = count($result);
 		for ($i = 0; $i < $sizeof; ++$i)
 			Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'tab`
-			SET `position` = '.($i + 1).'
-			WHERE `id_tab` = '.(int)$result[$i]['id_tab']);
+				UPDATE `'._DB_PREFIX_.'tab`
+				SET `position` = '.($i + 1).'
+				WHERE `id_tab` = '.(int)$result[$i]['id_tab']
+			);
 		return true;
+	}
+
+	public function updatePosition($way, $position)
+	{
+		if (!$res = Db::getInstance()->executeS('
+			SELECT t.`id_tab`, t.`position`, t.`id_parent`
+			FROM `'._DB_PREFIX_.'tab` t
+			WHERE t.`id_parent` = '.(int)$this->id_parent.'
+			ORDER BY t.`position` ASC'
+		))
+			return false;
+
+		foreach ($res as $tab)
+			if ((int)$tab['id_tab'] == (int)$this->id)
+				$moved_tab = $tab;
+
+		if (!isset($moved_tab) || !isset($position))
+			return false;
+		// < and > statements rather than BETWEEN operator
+		// since BETWEEN is treated differently according to databases
+		$result = (Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'tab`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+			WHERE `position`
+			'.($way
+				? '> '.(int)$moved_tab['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$moved_tab['position'].' AND `position` >= '.(int)$position).'
+			AND `id_parent`='.(int)$moved_tab['id_parent'])
+		&& Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'tab`
+			SET `position` = '.(int)$position.'
+			WHERE `id_parent` = '.(int)$moved_tab['id_parent'].'
+			AND `id_tab`='.(int)$moved_tab['id_tab']));
+		return $result;
 	}
 
 	public static function checkTabRights($id_tab)
 	{
-		static $tabAccesses = NULL;
+		static $tabAccesses = null;
 
-		if ($tabAccesses === NULL)
+		if ($tabAccesses === null)
 			$tabAccesses =  Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
 
-		if (isset($tabAccesses[(int)($id_tab)]['view']))
-			return ($tabAccesses[(int)($id_tab)]['view'] === '1');
+		if (isset($tabAccesses[(int)$id_tab]['view']))
+			return ($tabAccesses[(int)$id_tab]['view'] === '1');
 		return false;
 }
 

@@ -72,8 +72,8 @@
 </div>
 	<a name="{$table}">&nbsp;</a>
 
-	<form method="post" action="{$action}" class="form">
 {/if}{* End if simple_header *}
+	<form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 	<table class="table_grid">
 		{if !$simple_header}

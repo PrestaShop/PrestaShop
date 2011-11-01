@@ -248,7 +248,7 @@
 								<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 							{/foreach}
 						{elseif $input.type == 'file'}
-							{if $input.display_image}
+							{if isset($input.display_image) && $input.display_image}
 								{if isset($fields_value.image) && $fields_value.image}
 									<div id="image">
 										{$fields_value.image}
