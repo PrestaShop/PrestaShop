@@ -306,9 +306,6 @@ class AdminManufacturersControllerCore extends AdminController
 		if (!($manufacturer = $this->loadObject(true)))
 			return;
 
-		/*
-		 * Where it used? You can not insert into a table or in the fields of a table
-		 */
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(

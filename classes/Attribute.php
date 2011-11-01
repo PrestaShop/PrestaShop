@@ -51,7 +51,7 @@ class AttributeCore extends ObjectModel
 		'objectNodeName' => 'product_option_value',
 		'fields' => array(
 			'id_attribute_group' => array('xlink_resource'=> 'product_options'),
-		),
+		)
 	);
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
@@ -145,13 +145,17 @@ class AttributeCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		return Db::getInstance()->executeS('
-		SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
-		FROM `'._DB_PREFIX_.'attribute_group` ag
-		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute_group` = ag.`id_attribute_group`
-		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
-		'.($not_null ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
-		ORDER BY agl.`name` ASC, a.`position` ASC');
+			SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
+				ON a.`id_attribute_group` = ag.`id_attribute_group`
+			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+			'.($not_null ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
+			ORDER BY agl.`name` ASC, a.`position` ASC
+		');
 	}
 
 	/**
@@ -188,9 +192,10 @@ class AttributeCore extends ObjectModel
 		Tools::displayAsDeprecated();
 
 		$row = Db::getInstance()->getRow('
-		SELECT SUM(quantity) as quantity
-		FROM `'._DB_PREFIX_.'product_attribute`
-		WHERE `id_product` = '.(int)$id_product);
+			SELECT SUM(quantity) as quantity
+			FROM `'._DB_PREFIX_.'product_attribute`
+			WHERE `id_product` = '.(int)$id_product
+		);
 
 		if ($row['quantity'] !== null)
 			return (int)$row['quantity'];
@@ -228,9 +233,13 @@ class AttributeCore extends ObjectModel
 	public function isColorAttribute()
 	{
 		if (!Db::getInstance()->getRow('
-			SELECT `group_type` FROM `'._DB_PREFIX_.'attribute_group` WHERE `id_attribute_group` = (
-				SELECT `id_attribute_group` FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute` = '.(int)$this->id.')
-				AND group_type = \'color\''))
+			SELECT `group_type`
+			FROM `'._DB_PREFIX_.'attribute_group`
+			WHERE `id_attribute_group` = (
+				SELECT `id_attribute_group`
+				FROM `'._DB_PREFIX_.'attribute`
+				WHERE `id_attribute` = '.(int)$this->id.')
+			AND group_type = \'color\''))
 			return false;
 		return Db::getInstance()->numRows();
 	}
@@ -245,9 +254,10 @@ class AttributeCore extends ObjectModel
 	public static function getAttributeMinimalQty($id_product_attribute)
 	{
 		$minimal_quantity = Db::getInstance()->getValue('
-		SELECT `minimal_quantity`
-		FROM `'._DB_PREFIX_.'product_attribute`
-		WHERE `id_product_attribute` = '.(int)$id_product_attribute);
+			SELECT `minimal_quantity`
+			FROM `'._DB_PREFIX_.'product_attribute`
+			WHERE `id_product_attribute` = '.(int)$id_product_attribute
+		);
 
 		if ($minimal_quantity > 1)
 			return (int)$minimal_quantity;
