@@ -306,9 +306,9 @@ class AdminCartsController extends AdminController
 		
 	}
 	
-	public function ajaxProcessDeleteDiscount()
+	public function ajaxProcessDeleteVoucher()
 	{
-		if ($this->context->cart->deleteDiscount((int)Tools::getValue('id_voucher')))
+		if ($this->context->cart->removeCartRule((int)Tools::getValue('id_cart_rule')))
 			echo Tools::jsonEncode($this->ajaxReturnVars());
 	}
 	
@@ -317,9 +317,9 @@ class AdminCartsController extends AdminController
 		$errors = array();
 		$customer = new Customer((int)$this->context->cart->id_customer);
 		
-		if (!$id_cart_rule = Tools::getValue('id_voucher') OR !$cartRule = new CartRule((int)$id_cart_rule))
+		if (!$id_cart_rule = Tools::getValue('id_cart_rule') OR !$cartRule = new CartRule((int)$id_cart_rule))
 			$errors[] = Tools::displayError('Invalid voucher');
-		elseif ($err = $this->context->cart->checkDiscountValidity($cartRule, $this->context->cart->getDiscounts(), $this->context->cart->getOrderTotal(), $this->context->cart->getProducts(), true, $customer))
+		elseif ($err = $cartRule->checkValidity($this->context))
 			$errors[] = $err;
 		if (!sizeof($errors))
 			if (!$this->context->cart->addCartRule((int)$cartRule->id))
@@ -417,6 +417,11 @@ class AdminCartsController extends AdminController
 	public function displayAjaxGetSummary()
 	{
 		echo Tools::jsonEncode($this->ajaxReturnVars());
+	}
+	
+	public function ajaxProcessUpdateProductPrice()
+	{
+		
 	}
 	
 	public static function getOrderTotalUsingTaxCalculationMethod($id_cart)

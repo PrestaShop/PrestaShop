@@ -252,12 +252,4 @@ class DiscountCore extends CartRule
 
 		return $voucher;
 	}
-	
-	public static function getVoucherByName($name, $id_lang)
-	{
-		return Db::getInstance()->ExecuteS('SELECT d.*, dl.*
-													FROM '._DB_PREFIX_.'discount d
-													LEFT JOIN '._DB_PREFIX_.'discount_lang dl ON (d.id_discount = dl.id_discount AND dl.id_lang='.(int)$id_lang.')
-													WHERE name LIKE \'%'.pSQL($name).'%\'');
-	}
 }

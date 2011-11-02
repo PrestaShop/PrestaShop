@@ -685,4 +685,12 @@ class CartRuleCore extends ObjectModel
 	{
 		return (bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
 	}
+
+	public static function getCartsRuleByCode($name, $id_lang)
+	{
+		return Db::getInstance()->ExecuteS('SELECT cr.*, crl.*
+													FROM '._DB_PREFIX_.'cart_rule cr
+													LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang='.(int)$id_lang.')
+													WHERE name LIKE \'%'.pSQL($name).'%\'');
+	}
 }

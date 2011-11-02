@@ -26,7 +26,8 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#formAdd{$table}').submit(function() {
+		$('#formAdd{$table}').submit(function(e) {
+			e.preventDefault();
 			var form_datas = new Object;
 			form_datas['liteDisplaying'] = 1;
 			var form_inputs = $('#formAdd{$table} input, #formAdd{$table} textarea, #formAdd{$table} button');
@@ -38,7 +39,7 @@
 				form_datas[this.name] = this.value;
 			});
 			$.each(form_selects, function() {
-				form_datas[this.name] = $(this+' option:selected').val();
+				form_datas[this.name] = this.options.selectedIndex;
 			});
 			$.ajax({
 				type: this.method,
@@ -48,10 +49,9 @@
 				data : form_datas,
 				success : function(res)
 				{
-					$('#content').html(res);
+					$('#fancybox-content').html(res);
 				}
 			});
-			return false;
 		});
 	});
 </script>
