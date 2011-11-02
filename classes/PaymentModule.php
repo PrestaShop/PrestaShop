@@ -538,12 +538,16 @@ abstract class PaymentModuleCore extends Module
 	 */
 	public static function getInstalledPaymentModules()
 	{
+		$hookPayment = 'Payment';
+		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
+			$hookPayment = 'displayPayment';
+
 		return Db::getInstance()->executeS('
 		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-		WHERE h.`name` = \'payment\'
+		WHERE h.`name` = \''.pSQL($hookPayment).'\'
 		AND m.`active` = 1
 		');
 	}

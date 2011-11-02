@@ -840,7 +840,7 @@ abstract class ModuleCore
 			$sql .= '
 				LEFT JOIN `'._DB_PREFIX_.'group_module_restriction` gmr ON gmr.`id_module` = m.`id_module`';
 		$sql .= '
-				WHERE h.`name` = \''.$hookPayment.'\'
+				WHERE h.`name` = \''.pSQL($hookPayment).'\'
 					AND mc.id_country = '.(int)($billing->id_country).'
 					AND mc.id_shop = '.(int)$context->shop->getID(true).'
 					AND mg.id_shop = '.(int)$context->shop->getID(true).'
