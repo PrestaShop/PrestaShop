@@ -449,6 +449,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitAddOrder') == 1 && ($id_cart = Tools::getValue('id_cart')) && ($module_name = pSQL(Tools::getValue('payment_module_name'))) && ($id_order_state = Tools::getValue('id_order_state')))
 		{
+			
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$payment_module = Module::getInstanceByName($module_name);
