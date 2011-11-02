@@ -804,7 +804,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	protected function viewSupplierOrder()
 	{
 		$this->displayInformation($this->l('This interface allows you to display detailed informations on your order.').'<br />');
-		$this->displayInformation($this->l('If you wish to edit your order, please go back and choose the proper action (edit).'));
 
 		$this->table = 'supplier_order_detail';
 		$this->identifier = 'id_supplier_order_detail';
@@ -925,7 +924,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'search' => false,
 			),
 			'tax_value_with_order_discount' => array(
-				'title' => $this->l('Tax value with global order discount)'),
+				'title' => $this->l('Tax value with global order discount'),
 				'align' => 'center',
 				'width' => 75,
 				'widthColumn' => 100,
@@ -935,15 +934,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			),
 			'price_with_order_discount_te' => array(
 				'title' => $this->l('Price with global order discount (te)'),
-				'align' => 'center',
-				'width' => 75,
-				'widthColumn' => 100,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'currency_symbol' => array(
-				'title' => $this->l('Currency'),
 				'align' => 'center',
 				'width' => 75,
 				'widthColumn' => 100,
@@ -967,10 +957,17 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 		// gets all information on the products ordered
 		$this->_select = '
+		CONCAT(a.unit_price_te, \' \', c.sign) as unit_price_te,
+		CONCAT(a.price_te, \' \', c.sign) as price_te,
+		CONCAT(a.discount_value_te, \' \', c.sign) as discount_value_te,
+		CONCAT(a.price_with_discount_te, \' \', c.sign) as price_with_discount_te,
+		CONCAT(a.tax_value, \' \', c.sign) as tax_value,
+		CONCAT(a.price_ti, \' \', c.sign) as price_ti,
+		CONCAT(a.tax_value_with_order_discount, \' \', c.sign) as tax_value_with_order_discount,
+		CONCAT(a.price_with_order_discount_te, \' \', c.sign) as price_with_order_discount_te,
 		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
 		p.reference as p_reference,
-		p.ean13 as p_ean13,
-		c.sign as currency_symbol';
+		p.ean13 as p_ean13';
 
 		$this->_join = '
 		INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
