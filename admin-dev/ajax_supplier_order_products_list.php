@@ -38,6 +38,9 @@ $pattern = pSQL(Tools::getValue('pattern', false));
 if (!$pattern || $pattern == '' || strlen($pattern) < 1)
 	die();
 
+/* @var int Supplier id */
+$id_supplier = (int)Tools::getValue('id_supplier', false);
+
 /* @var int Lang used */
 $id_lang = (int)Context::getContext()->language->id;
 
@@ -58,6 +61,8 @@ $query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND a
 $query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
 $query->where('pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\'');
 $query->where('p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
+if ($id_supplier)
+	$query->where('p.id_supplier = '.$id_supplier);
 $query->groupBy('pa.id_product_attribute');
 
 $items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
