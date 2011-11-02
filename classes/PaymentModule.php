@@ -250,7 +250,7 @@ abstract class PaymentModuleCore extends Module
 				$cartRules = ObjectModel::hydrateCollection('CartRule', $result, (int)$order->id_lang);
 				foreach ($cartRules AS $cartRule)
 				{
-					$value = $cartRule->getValue(true);
+					$value = $cartRule->getContextualValue(true);
 					// Todo: repair shrunk
 					// if ($shrunk AND ($total_discount_value + $value) > ($order->total_products_wt + $order->total_shipping + $order->total_wrapping))
 					// {
