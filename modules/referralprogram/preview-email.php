@@ -46,7 +46,7 @@ $file = str_replace('{email}', $customer->email, $file);
 $file = str_replace('{firstname_friend}', 'XXXXX', $file);
 $file = str_replace('{lastname_friend}', 'xxxxxx', $file);
 $file = str_replace('{link}', 'authentication.php?create_account=1', $file);
-$file = str_replace('{discount}', Discount::display((float)(Configuration::get('REFERRAL_DISCOUNT_VALUE_' . Context::getContext()->currency->id)), (int)(Configuration::get('REFERRAL_DISCOUNT_TYPE')), Context::getContext()->currency), $file);
+$file = str_replace('{discount}', ReferralProgram::displayDiscount((float)Configuration::get('REFERRAL_DISCOUNT_VALUE_' . Context::getContext()->currency->id), (int)Configuration::get('REFERRAL_DISCOUNT_TYPE'), Context::getContext()->currency), $file);
 
 echo $file;
 

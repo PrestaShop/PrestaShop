@@ -253,18 +253,6 @@ class ParentOrderControllerCore extends FrontController
 			Product::addCustomizationPrice($summary['products'], $customizedDatas);
 		}
 
-		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency($this->context->cart->id_currency)))
-		{
-			$discounts = $this->context->cart->getCartRules();
-			$total_free_ship = $free_ship - ($summary['total_products_wt'] + $summary['total_discounts']);
-			foreach ($discounts as $discount)
-				if ($discount['id_discount_type'] == Discount::FREE_SHIPPING)
-				{
-					$total_free_ship = 0;
-					break;
-				}
-			$this->context->smarty->assign('free_ship', $total_free_ship);
-		}
 		foreach ($summary['products'] as $key => &$product)
 		{
 			$product['quantity'] = $product['cart_quantity'];// for compatibility with 1.2 themes

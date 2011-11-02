@@ -111,13 +111,13 @@ class StatsBestVouchers extends ModuleGrid
 
 	public function getData()
 	{	
-		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS od.name, COUNT(od.id_discount) as total, SUM(o.total_paid_real) / o.conversion_rate as ca
-				FROM '._DB_PREFIX_.'order_discount od
-				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = od.id_order
+		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS ocr.code, COUNT(ocr.id_cart_rule) as total, SUM(o.total_paid_real) / o.conversion_rate as ca
+				FROM '._DB_PREFIX_.'order_cart_rule ocr
+				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = ocr.id_order
 				WHERE o.valid = 1
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.invoice_date BETWEEN '.$this->getDate().'
-				GROUP BY od.id_discount';
+				GROUP BY ocr.id_cart_rule';
 		if (Validate::IsName($this->_sort))
 		{
 			$this->_query .= ' ORDER BY `'.$this->_sort.'`';

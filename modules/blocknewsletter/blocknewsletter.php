@@ -239,8 +239,8 @@ class Blocknewsletter extends Module
 	 				else
 	 					return $this->error = $this->l('Error during subscription');
 
- 	 				if ($discount = Configuration::get('NW_VOUCHER_CODE'))
-		 	 			$this->sendVoucher($email, $discount);
+ 	 				if ($code = Configuration::get('NW_VOUCHER_CODE'))
+		 	 			$this->sendVoucher($email, $code);
 
 	 	 			if (Configuration::get('NW_CONFIRMATION_EMAIL'))
 						$this->sendConfirmationEmail($email);
@@ -427,9 +427,9 @@ class Blocknewsletter extends Module
  	 * @param string $discount
 	 * @return bool
  	 */
-	protected function sendVoucher($email, $discount)
+	protected function sendVoucher($email, $code)
 	{
-		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $discount), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 
 	/**

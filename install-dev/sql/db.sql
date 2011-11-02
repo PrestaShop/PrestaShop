@@ -640,59 +640,6 @@ CREATE TABLE `PREFIX_delivery` (
   KEY `id_range_weight` (`id_range_weight`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_discount` (
-  `id_discount` int(10) unsigned NOT NULL auto_increment,
-  `id_discount_type` int(10) unsigned NOT NULL,
-  `behavior_not_exhausted` TINYINT(3) DEFAULT '1',
-  `id_customer` int(10) unsigned NOT NULL,
-  `id_group` int(10) unsigned NOT NULL default 0,
-  `id_currency` int unsigned NOT NULL default 0,
-  `name` varchar(32) NOT NULL,
-  `value` decimal(17,2) NOT NULL default '0.00',
-  `quantity` int(10) unsigned NOT NULL default '0',
-  `quantity_per_user` int(10) unsigned NOT NULL default '1',
-  `cumulable` tinyint(1) unsigned NOT NULL default '0',
-  `cumulable_reduction` tinyint(1) unsigned NOT NULL default '0',
-  `date_from` datetime NOT NULL,
-  `date_to` datetime NOT NULL,
-  `minimal` decimal(17,2) default NULL,
-  `include_tax` tinyint(1) NOT NULL default '0',
-  `active` tinyint(1) unsigned NOT NULL default '0',
-  `cart_display` tinyint(1) unsigned NOT NULL default '0',
-	`date_add` datetime NOT NULL,
-	`date_upd` datetime NOT NULL,
-  PRIMARY KEY  (`id_discount`),
-  KEY `discount_name` (`name`),
-  KEY `discount_customer` (`id_customer`),
-  KEY `id_discount_type` (`id_discount_type`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_discount_category` (
-  `id_category` int(11) unsigned NOT NULL,
-  `id_discount` int(11) unsigned NOT NULL,
-  PRIMARY KEY  (`id_category`, `id_discount`),
-  KEY `discount` (`id_discount`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_discount_lang` (
-  `id_discount` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `description` text,
-  PRIMARY KEY  (`id_discount`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_discount_type` (
-  `id_discount_type` int(10) unsigned NOT NULL auto_increment,
-  PRIMARY KEY  (`id_discount_type`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_discount_type_lang` (
-  `id_discount_type` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(64) NOT NULL,
-  PRIMARY KEY  (`id_discount_type`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
 CREATE TABLE `PREFIX_employee` (
   `id_employee` int(10) unsigned NOT NULL auto_increment,
   `id_profile` int(10) unsigned NOT NULL,
@@ -1994,13 +1941,6 @@ CREATE TABLE `PREFIX_scene_shop` (
 `id_scene` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_scene`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_discount_shop` (
-`id_discount` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-PRIMARY KEY (`id_discount`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 

@@ -92,8 +92,8 @@ class ReferralProgram extends Module
 			`lastname` VARCHAR(128) NOT NULL,
 			`firstname` VARCHAR(128) NOT NULL,
 			`id_customer` INT UNSIGNED DEFAULT NULL,
-			`id_discount` INT UNSIGNED DEFAULT NULL,
-			`id_discount_sponsor` INT UNSIGNED DEFAULT NULL,
+			`id_cart_rule` INT UNSIGNED DEFAULT NULL,
+			`id_cart_rule_sponsor` INT UNSIGNED DEFAULT NULL,
 			`date_add` DATETIME NOT NULL,
 			`date_upd` DATETIME NOT NULL,
 			PRIMARY KEY (`id_referralprogram`),
@@ -133,6 +133,18 @@ class ReferralProgram extends Module
 		return true;
 	}
 
+	public static function displayDiscount($discountValue, $discountType, $currency = false)
+	{
+		if ((float)$discountValue AND (int)$discountType)
+		{
+			if ($discountType == 1)
+				return $discountValue.chr(37); // ASCII #37 --> % (percent)
+			elseif ($discountType == 2)
+				return Tools::displayPrice($discountValue, $currency);
+		}
+		return ''; // return a string because it's a display method
+	}
+	
 	private function _postProcess()
 	{
 		Configuration::updateValue('REFERRAL_ORDER_QUANTITY', (int)(Tools::getValue('order_quantity')));
@@ -354,13 +366,13 @@ class ReferralProgram extends Module
 		$referralprogram = new ReferralProgramModule($id_referralprogram);
 		if (!Validate::isLoadedObject($referralprogram))
 			return false;
-		$discount = new Discount($referralprogram->id_discount);
-		if (!Validate::isLoadedObject($discount))
+		$cartRule = new CartRule($referralprogram->id_cart_rule);
+		if (!Validate::isLoadedObject($cartRule))
 			return false;
 
-		if ($params['cart']->checkDiscountValidity($discount, $params['cart']->getDiscounts(), $params['cart']->getOrderTotal(true, Cart::ONLY_PRODUCTS), $params['cart']->getProducts(), false, $this->context) === false)
+		if ($cartRule->checkValidity($this->context) === false)
 		{
-			$this->context->smarty->assign(array('discount_display' => Discount::display($discount->value, $discount->id_discount_type, new Currency($params['cookie']->id_currency)), 'discount' => $discount));
+			$this->context->smarty->assign(array('discount_display' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency($params['cookie']->id_currency)), 'discount' => $cartRule));
 			return $this->display(__FILE__, 'shopping-cart.tpl');
 		}
 		return false;
@@ -455,13 +467,13 @@ class ReferralProgram extends Module
 				$referralprogram->save();
 				if ($referralprogram->registerDiscountForSponsored((int)$params['cookie']->id_currency))
 				{
-					$discount = new Discount((int)$referralprogram->id_discount);
-					if (Validate::isLoadedObject($discount))
+					$cartRule = new CartRule((int)$referralprogram->id_cart_rule);
+					if (Validate::isLoadedObject($cartRule))
 					{
 						$data = array(
 							'{firstname}' => $newCustomer->firstname,
 							'{lastname}' => $newCustomer->lastname,
-							'{voucher_num}' => $discount->name,
+							'{voucher_num}' => $cartRule->code,
 							'{voucher_amount}' => (Configuration::get('REFERRAL_DISCOUNT_TYPE') == 2 ? Tools::displayPrice((float)Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)$this->context->currency->id), (int)Configuration::get('PS_CURRENCY_DEFAULT')) : (float)Configuration::get('REFERRAL_PERCENTAGE').'%'));
 
 						Mail::Send(
@@ -565,10 +577,10 @@ class ReferralProgram extends Module
 		$sponsor = new Customer((int)$referralprogram->id_sponsor);
 		if ((int)$nbOrdersCustomer == (int)$this->_configuration['REFERRAL_ORDER_QUANTITY'])
 		{
-			$discount = new Discount((int)$referralprogram->id_discount_sponsor);
-			if (!Validate::isLoadedObject($discount))
+			$cartRule = new CartRule((int)$referralprogram->id_cart_rule_sponsor);
+			if (!Validate::isLoadedObject($cartRule))
 				return false;
-			$this->context->smarty->assign(array('discount' => $discount->display($discount->value, (int)$discount->id_discount_type, new Currency((int)$params['objOrder']->id_currency)), 'sponsor_firstname' => $sponsor->firstname, 'sponsor_lastname' => $sponsor->lastname));
+			$this->context->smarty->assign(array('discount' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency((int)$params['objOrder']->id_currency)), 'sponsor_firstname' => $sponsor->firstname, 'sponsor_lastname' => $sponsor->lastname));
 			return $this->display(__FILE__, 'order-confirmation.tpl');
 		}
 		return false;
@@ -598,10 +610,10 @@ class ReferralProgram extends Module
 		$sponsor = new Customer((int)$referralprogram->id_sponsor);
 		if ((int)$orderState->logable AND $nbOrdersCustomer >= (int)$this->_configuration['REFERRAL_ORDER_QUANTITY'] AND $referralprogram->registerDiscountForSponsor((int)$order->id_currency))
 		{
-			$discount = new Discount((int)$referralprogram->id_discount_sponsor);
+			$cartRule = new CartRule((int)$referralprogram->id_cart_rule_sponsor);
 			$currency = new Currency((int)$order->id_currency);
-			$discount_display = $discount->display($discount->value, (int)$discount->id_discount_type, $currency);
-			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $discount->name);
+			$discount_display = ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, $currency);
+			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
 			Mail::Send((int)$order->id_lang, 'referralprogram-congratulations', Mail::l('Congratulations!'), $data, $sponsor->email, $sponsor->firstname.' '.$sponsor->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			return true;
 		}

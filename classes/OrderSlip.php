@@ -99,7 +99,7 @@ class OrderSlipCore extends ObjectModel
 
 	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
-		$discounts = $order->getDiscounts(true);
+		$cart_rules = $order->getCartRules(true);
 		$productsRet = self::getOrdersSlipDetail($orderSlipId);
 		$products = $order->getProductsDetail();
 
@@ -112,16 +112,17 @@ class OrderSlipCore extends ObjectModel
 			{
 				$resTab[$key] = $product;
 				$resTab[$key]['product_quantity'] = $tmp[$product['id_order_detail']];
-				if (sizeof($discounts))
+				if (sizeof($cart_rules))
 				{
 					$order->setProductPrices($product);
 					$realProductPrice = $resTab[$key]['product_price'];
-					foreach ($discounts as $discount)
+					// Todo : must be updated to use the cart rules
+					foreach ($cart_rules as $cart_rule)
 					{
-						if ($discount['id_discount_type'] == Discount::PERCENT)
-							$resTab[$key]['product_price'] -= $realProductPrice * ($discount['value'] / 100);
-						elseif ($discount['id_discount_type'] == Discount::AMOUNT)
-							$resTab[$key]['product_price'] -= (($discount['value'] * ($product['product_price_wt'] / $order->total_products_wt)) / (1.00 + ($product['tax_rate'] / 100)));
+						if ($cart_rule['reduction_percent'])
+							$resTab[$key]['product_price'] -= $realProductPrice * ($cart_rule['reduction_percent'] / 100);
+						elseif ($cart_rule['reduction_amount'])
+							$resTab[$key]['product_price'] -= (($cart_rule['reduction_amount'] * ($product['product_price_wt'] / $order->total_products_wt)) / (1.00 + ($product['tax_rate'] / 100)));
 					}
 
 				}

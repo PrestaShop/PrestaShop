@@ -170,11 +170,11 @@ class MailAlerts extends Module
 					<td style="padding:0.6em 0.4em; text-align:right;">'.Tools::displayPrice(($unit_price * $product['product_quantity']), $currency, false).'</td>
 				</tr>';
 		}
-		foreach ($params['order']->getDiscounts() AS $discount)
+		foreach ($params['order']->getCartRules() AS $discount)
 		{
 			$itemsTable .=
 			'<tr style="background-color:#EBECEE;">
-					<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">'.$this->l('Voucher code:').' '.$discount['name'].'</td>
+					<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">'.$this->l('Voucher code:').' '.$discount['code'].'</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">-'.Tools::displayPrice($discount['value'], $currency, false).'</td>
 			</tr>';
 		}

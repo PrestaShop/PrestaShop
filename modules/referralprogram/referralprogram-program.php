@@ -41,7 +41,7 @@ $context->controller->addJqueryPlugin(array('thickbox', 'idTabs'));
 include(dirname(__FILE__).'/../../header.php');
 
 // get discount value (ready to display)
-$discount = Discount::display((float)(Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)($cookie->id_currency))), (int)(Configuration::get('REFERRAL_DISCOUNT_TYPE')), new Currency($cookie->id_currency));
+$discount = ReferralProgram::displayDiscount((float)Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)($cookie->id_currency)), (int)Configuration::get('REFERRAL_DISCOUNT_TYPE'), new Currency($cookie->id_currency));
 
 $activeTab = 'sponsor';
 $error = false;

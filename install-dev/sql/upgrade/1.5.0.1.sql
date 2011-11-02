@@ -256,13 +256,6 @@ CREATE TABLE `PREFIX_cart_rule` (
 	PRIMARY KEY (`id_cart_rule`)
 );
 
-CREATE TABLE `PREFIX_cart_rule_lang` (
-	`id_cart_rule` int(10) unsigned NOT NULL,
-	`id_lang` int(10) unsigned NOT NULL,
-	`name` varchar(254) NOT NULL,
-	PRIMARY KEY  (`id_cart_rule`, `id_lang`)
-);
-
 CREATE TABLE `PREFIX_cart_rule_country` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_country` int(10) unsigned NOT NULL,
@@ -295,11 +288,79 @@ CREATE TABLE `PREFIX_cart_rule_product_rule` (
 	PRIMARY KEY  (`id_product_rule`)
 );
 
-CREATE TABLE `PREFIX_cart_rule_product_rule_value` (
-	`id_product_rule` int(10) unsigned NOT NULL,
-	`id_item` int(10) unsigned NOT NULL,
-	PRIMARY KEY  (`id_product_rule`, `id_item`)
+SET @id_currency_default = (SELECT value FROM `PREFIX_configuration` WHERE name = 'PS_CURRENCY_DEFAULT' LIMIT 1);
+INSERT INTO `PREFIX_cart_rule` (
+	`id_cart_rule`,
+	`id_customer`,
+	`date_from`,
+	`date_to`,
+	`description`,
+	`quantity`,
+	`quantity_per_user`,
+	`priority`,
+	`code`,
+	`minimum_amount`,
+	`minimum_amount_tax`,
+	`minimum_amount_currency`,
+	`minimum_amount_shipping`,
+	`country_restriction`,
+	`carrier_restriction`,
+	`group_restriction`,
+	`cart_rule_restriction`,
+	`product_restriction`,
+	`free_shipping`,
+	`reduction_percent`,
+	`reduction_amount`,
+	`reduction_tax`,
+	`reduction_currency`,
+	`reduction_product`,
+	`gift_product`,
+	`active`,
+	`date_add`,
+	`date_upd` 
+) (
+	SELECT
+		`id_discount`,
+		`id_customer`,
+		`date_from`,
+		`date_to`,
+		`name`,
+		`quantity`,
+		`quantity_per_user`,
+		1,
+		`name`,
+		`minimal`,
+		1,
+		@id_currency_default,
+		1,
+		0,
+		0,
+		IF(id_group = 0, 0, 1),
+		IF(cumulable = 1, 0, 1),
+		0,
+		IF(id_discount_type = 3, 1, 0),
+		IF(id_discount_type = 1, value, 0),
+		IF(id_discount_type = 2, value, 0),
+		1,
+		`id_currency`,
+		0,
+		0,
+		`active`,
+		`date_add`,
+		`date_upd` 
+	FROM `PREFIX_discount`
 );
+
+RENAME TABLE `PREFIX_discount_lang` TO `PREFIX_cart_rule_lang`;
+ALTER TABLE `PREFIX_discount_lang` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_discount_lang` CHANGE `description` `name` varchar(254) NOT NULL;
+RENAME TABLE `PREFIX_discount_category` TO `PREFIX_cart_rule_product_rule_value`;
+ALTER TABLE `PREFIX_cart_rule_product_rule_value` CHANGE `id_category` `id_item` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_cart_rule_product_rule_value` CHANGE `id_discount` `id_product_rule` int(10) unsigned NOT NULL;
+INSERT INTO `PREFIX_cart_rule_product_rule` (`id_product_rule`, `id_cart_rule`, `quantity`, `type`) (
+	SELECT DISTINCT `id_product_rule`, `id_product_rule`, 1, 'categories' FROM `PREFIX_cart_rule_product_rule_value`
+);
+UPDATE `PREFIX_cart_rule` SET product_restriction = 1 WHERE `id_cart_rule` IN (SELECT `id_cart_rule` FROM `PREFIX_cart_rule_product_rule`);
 
 ALTER TABLE `PREFIX_cart_discount` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
 ALTER TABLE `PREFIX_order_discount` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;

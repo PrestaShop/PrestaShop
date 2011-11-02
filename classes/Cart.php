@@ -87,8 +87,6 @@ class CartCore extends ObjectModel
 	protected	$_products = NULL;
 	protected 	static $_totalWeight = array();
 	protected	$_taxCalculationMethod = PS_TAX_EXC;
-	protected	static $_discounts = NULL;
-	protected	static $_discountsLite = NULL;
 	protected	static $_carriers = NULL;
 	protected	static $_taxes_rate = NULL;
 	protected 	static $_attributesLists = array();
@@ -256,13 +254,6 @@ class CartCore extends ObjectModel
 		return $this->getCartRules();
 	}
 	
-	/**
-	 * Return cart discounts
-	 *
-	 * @param bool true will return discounts with basic informations
-	 * @param bool true will erase the cache
-	 * @result array Discounts
-	 */
 	public function getCartRules()
 	{
 		// TODO : add cache
@@ -552,10 +543,10 @@ class CartCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.1
 	 */
-	public function addDiscount($id_discount)
+	public function addDiscount($id_cart_rule)
 	{
 		Tools::displayAsDeprecated();
-		return $this->addCartRule($id_discount);
+		return $this->addCartRule($id_cart_rule);
 	}
 
 	public function addCartRule($id_cart_rule)
@@ -809,10 +800,10 @@ class CartCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.1
 	 */
-	public function deleteDiscount($id_discount)
+	public function deleteDiscount($id_cart_rule)
 	{
 		Tools::displayAsDeprecated();
-		return $this->removeCartRule($id_discount);
+		return $this->removeCartRule($id_cart_rule);
 	}
 
 	public function removeCartRule($id_cart_rule)
@@ -966,8 +957,7 @@ class CartCore extends ObjectModel
 		if (!in_array($type, array(Cart::ONLY_PRODUCTS, Cart::ONLY_DISCOUNTS, Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_SHIPPING, Cart::ONLY_WRAPPING, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)))
 			die(Tools::displayError());
 
-		// if discounts are never used
-		// Todo: remove and replace by cart rules
+		// if cart rules are not used
 		if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive())
 			return 0;
 		// no shipping cost if is a cart with only virtuals products
@@ -1289,12 +1279,12 @@ class CartCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.1
 	 */
-	public function checkDiscountValidity($discountObj, $discounts, $order_total, $products, $checkCartDiscount = false)
+	public function checkDiscountValidity($obj, $discounts, $order_total, $products, $checkCartDiscount = false)
 	{
 		Tools::displayAsDeprecated();
 		$context = Context::getContext()->cloneContext();
 		$context->cart = $this;
-		return $discountObj->checkValidity($context);
+		return $obj->checkValidity($context);
 	}
 
 	/**
@@ -1319,18 +1309,6 @@ class CartCore extends ObjectModel
 		if ($total_tax < 0)
 			$total_tax = 0;
 
-		$total_free_ship = 0;
-		if ($free_ship = Tools::convertPrice((float)(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency((int)($this->id_currency))))
-		{
-		    $discounts = $this->getCartRules();
-		    $total_free_ship =  $free_ship - ($this->getOrderTotal(true, Cart::ONLY_PRODUCTS) + $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
-		    foreach ($discounts as $discount)
-		    	if ($discount['id_discount_type'] == Discount::FREE_SHIPPING)
-		    	{
-		    		$total_free_ship = 0;
-		    		break;
-		    	}
-		}
 		return array(
 			'delivery' => $delivery,
 			'delivery_state' => State::getNameById($delivery->id_state),
@@ -1351,8 +1329,7 @@ class CartCore extends ObjectModel
 			'total_products' => $this->getOrderTotal(false, Cart::ONLY_PRODUCTS),
 			'total_price' => $this->getOrderTotal(),
 			'total_tax' => $total_tax,
-			'total_price_without_tax' => $this->getOrderTotal(false),
-			'free_ship' => $total_free_ship);
+			'total_price_without_tax' => $this->getOrderTotal(false));
 	}
 
 	public function checkQuantities()

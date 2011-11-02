@@ -84,36 +84,29 @@ class ReferralProgramModule extends ObjectModel
 	{
 		$configurations = Configuration::getMultiple(array('REFERRAL_DISCOUNT_TYPE', 'REFERRAL_PERCENTAGE', 'REFERRAL_DISCOUNT_VALUE_'.(int)$id_currency));
 
-		$discount = new Discount();
-		$discount->id_discount_type = (int)$configurations['REFERRAL_DISCOUNT_TYPE'];
-		
-		/* % */
+		$cartRule = new CartRule();		
 		if ($configurations['REFERRAL_DISCOUNT_TYPE'] == Discount::PERCENT)
-			$discount->value = (float)$configurations['REFERRAL_PERCENTAGE'];
-		/* Fixed amount */
-		elseif ($configurations['REFERRAL_DISCOUNT_TYPE'] == Discount::AMOUNT AND isset($configurations['REFERRAL_DISCOUNT_VALUE_'.(int)($id_currency)]))
-			$discount->value = (float)$configurations['REFERRAL_DISCOUNT_VALUE_'.(int)($id_currency)];
-		/* Unknown or value undefined for this currency (configure your module correctly) */
-		else
-			$discount->value = 0;
+			$cartRule->reduction_percent = (float)$configurations['REFERRAL_PERCENTAGE'];
+		elseif ($configurations['REFERRAL_DISCOUNT_TYPE'] == Discount::AMOUNT AND isset($configurations['REFERRAL_DISCOUNT_VALUE_'.(int)$id_currency]))
+			$cartRule->reduction_amount = (float)$configurations['REFERRAL_DISCOUNT_VALUE_'.(int)$id_currency];
 		
-		$discount->quantity = 1;
-		$discount->quantity_per_user = 1;
-		$discount->date_from = date('Y-m-d H:i:s', time());
-		$discount->date_to = date('Y-m-d H:i:s', time() + 31536000); // + 1 year
-		$discount->name = $this->getDiscountPrefix().Tools::passwdGen(6);
-		$discount->description = Configuration::getInt('REFERRAL_DISCOUNT_DESCRIPTION');
-		$discount->id_customer = (int)$id_customer;
-		$discount->id_currency = (int)$id_currency;
+		$cartRule->quantity = 1;
+		$cartRule->quantity_per_user = 1;
+		$cartRule->date_from = date('Y-m-d H:i:s', time());
+		$cartRule->date_to = date('Y-m-d H:i:s', time() + 31536000); // + 1 year
+		$cartRule->code = $this->getDiscountPrefix().Tools::passwdGen(6);
+		$cartRule->name = Configuration::getInt('REFERRAL_DISCOUNT_DESCRIPTION');
+		$cartRule->id_customer = (int)$id_customer;
+		$cartRule->id_currency = (int)$id_currency;
 
-		if ($discount->add())
+		if ($cartRule->add())
 		{
 			if ($register != false)
 			{
 				if ($register == 'sponsor')
-					$this->id_discount_sponsor = (int)$discount->id;
+					$this->id_cart_rule_sponsor = (int)$cartRule->id;
 				elseif ($register == 'sponsored')
-					$this->id_discount = (int)$discount->id;
+					$this->id_cart_rule = (int)$cartRule->id;
 				return $this->save();
 			}
 			return true;

@@ -260,14 +260,14 @@ class ValidateCore
 	}
 
 	/**
-	* Check for discount coupon name validity
+	* Check for voucher name validity
 	*
-	* @param string $discountName Discount coupon name to validate
+	* @param string $voucher voucher to validate
 	* @return boolean Validity is ok or not
 	*/
-	public static function isDiscountName($discountName)
+	public static function isDiscountName($voucher)
 	{
-		return preg_match('/^[^!<>,;?=+()@"°{}_$%:]{3,32}$/u', $discountName);
+		return preg_match('/^[^!<>,;?=+()@"°{}_$%:]{3,32}$/u', $voucher);
 	}
 
 	/**
