@@ -391,14 +391,14 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $nullValues))
 			return false;
-		Module::hookExec('afterSaveProduct', array('id_product' => $this->id));
+		Hook::exec('afterSaveProduct', array('id_product' => $this->id));
 		return true;
 	}
 
 	public function update($nullValues = false)
 	{
 		$return = parent::update($nullValues);
-		Module::hookExec('afterSaveProduct', array('id_product' => $this->id));
+		Hook::exec('afterSaveProduct', array('id_product' => $this->id));
 		return $return;
 	}
 
@@ -590,7 +590,7 @@ class ProductCore extends ObjectModel
 		if (!GroupReduction::deleteProductReduction($this->id))
 			return false;
 
-		Hook::deleteProduct($this);
+		Hook::exec('deleteProduct', array('product' => $this));
 		if (!parent::delete() OR
 			!$this->deleteCategories(true) OR
 			!$this->deleteImages() OR
@@ -1061,7 +1061,7 @@ class ProductCore extends ObjectModel
 		if (!Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute', $data, 'UPDATE', '`id_product_attribute` = '.(int)($id_product_attribute)) OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute_image` WHERE `id_product_attribute` = '.(int)($id_product_attribute)))
 			return false;
 		if ($quantity)
-			Hook::updateProductAttribute($id_product_attribute);
+			Hook::exec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
 		Product::updateDefaultAttribute($this->id);
 		if (empty($id_images))
 			return true;
@@ -1094,7 +1094,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteProductAttributes()
 	{
-		Module::hookExec('deleteProductAttribute', array('id_product_attribute' => 0, 'id_product' => $this->id, 'deleteAllAttributes' => true));
+		Hook::exec('deleteProductAttribute', array('id_product_attribute' => 0, 'id_product' => $this->id, 'deleteAllAttributes' => true));
 
 		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
@@ -1239,7 +1239,7 @@ class ProductCore extends ObjectModel
 		if (!$this->id || !$id_product_attribute OR !is_numeric($id_product_attribute))
 			return false;
 
-		Module::hookExec('deleteProductAttribute', array('id_product_attribute' => $id_product_attribute, 'id_product' => $this->id, 'deleteAllAttributes' => false));
+		Hook::exec('deleteProductAttribute', array('id_product_attribute' => $id_product_attribute, 'id_product' => $this->id, 'deleteAllAttributes' => false));
 
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'product_attribute`
 				WHERE `id_product_attribute` = '.$id_product_attribute.'
@@ -3257,7 +3257,7 @@ class ProductCore extends ObjectModel
 		if ($stockMvt->add())
 		{
 			$this->quantity = $this->getStock();
-			Hook::updateQuantity($this, null);
+			Hook::exec('updateQuantity', array('product' => $this, 'order' => null));
 			return true;
 		}
 		return false;

@@ -328,7 +328,7 @@ class AdminProductsController extends AdminController
 							$this->_errors[] = Tools::displayError('An error occurred while copying images.');
 						else
 						{
-							Hook::addProduct($product);
+							Hook::exec('addProduct', array('product' => $product));
 							Search::indexation(false, $product->id);
 							Tools::redirectAdmin(self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token));
 						}
@@ -561,7 +561,7 @@ class AdminProductsController extends AdminController
 										if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, null, $this->context->employee->id))
 											$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 									}
-									Hook::updateProductAttribute((int)$id_product_attribute);
+									Hook::exec('updateProductAttribute', array('id_product_attribute' => (int)$id_product_attribute));
 									$this->updateDownloadProduct($product, 1, $id_product_attribute);
 								}
 								else
@@ -1081,7 +1081,7 @@ if (false)
 			}
 
 			@unlink($tmpName);
-			Module::hookExec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
+			Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
 		}
 	}
 
@@ -1195,7 +1195,7 @@ if (false)
 						else if ($id_image = $this->addProductImage($object, Tools::getValue('resizer')))
 						{
 							self::$currentIndex .= '&image_updated='.(int)Tools::getValue('id_image');
-							Hook::updateProduct($object);
+							Hook::exec('updateProduct', array('product' => $object));
 							Search::indexation(false, $object->id);
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
 								Tools::redirectAdmin(self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') || Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token)));
@@ -1253,7 +1253,7 @@ if (false)
 							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
 						else if ($id_image = $this->addProductImage($object))
 						{
-							Hook::addProduct($object);
+							Hook::exec('addProduct', array('product' => $object));
 							Search::indexation(false, $object->id);
 
 							// Save and preview

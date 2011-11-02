@@ -91,7 +91,7 @@ class qqUploadedFileXhr
 					return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
 		}
 		unlink($tmpName);
-		Module::hookExec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
+		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
 		$lang = Context::getContext()->employee->id_lang;
 		
 		foreach (Language::getLanguages(false) as $l)

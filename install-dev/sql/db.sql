@@ -840,6 +840,14 @@ CREATE TABLE `PREFIX_hook` (
   UNIQUE KEY `hook_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_hook_alias` (
+  `id_hook_alias` int(10) unsigned NOT NULL auto_increment,
+  `alias` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY  (`id_hook_alias`),
+  UNIQUE KEY `alias` (`alias`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_hook_module` (
   `id_module` int(10) unsigned NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',

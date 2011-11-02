@@ -78,7 +78,6 @@ abstract class ModuleCore
 	public $limited_countries = array();
 
 	protected static $modulesCache;
-	protected static $_hookModulesCache;
 
 	protected static $_INSTANCE = array();
 
@@ -343,13 +342,26 @@ abstract class ModuleCore
 		if (!isset($this->id) OR !is_numeric($this->id))
 			return false;
 
+		// Retrocompatibility
+		Hook::preloadHookAlias();
+		if (isset(Hook::$preloadHookAlias[$hook_name]))
+			$hook_name = Hook::$preloadHookAlias[$hook_name];
+
 		// Get hook id
 		$sql = 'SELECT `id_hook`
 				FROM `'._DB_PREFIX_.'hook`
 				WHERE `name` = \''.pSQL($hook_name).'\'';
 		$hookID = Db::getInstance()->getValue($sql);
 		if (!$hookID)
-			return false;
+		{
+			$newHook = new Hook();
+			$newHook->name = pSQL($hook_name);
+			$newHook->title = pSQL($hook_name);
+			$newHook->add();
+			$hookID = $newHook->id;
+			if (!$hookID)
+				return false;
+		}
 
 		if (is_null($shopList))
 			$shopList = Shop::getShops(true, null, true);
@@ -402,6 +414,11 @@ abstract class ModuleCore
 		// Get hook id if a name is given as argument
 		if (!is_numeric($hook_id))
 		{
+			// Retrocompatibility
+			Hook::preloadHookAlias();
+			if (isset(Hook::$preloadHookAlias[$hook_id]))
+				$hook_id = Hook::$preloadHookAlias[$hook_id];
+
 			$sql = 'SELECT `id_hook`
 					FROM `'._DB_PREFIX_.'hook`
 					WHERE `name` = \''.pSQL($hook_id).'\'';
@@ -775,116 +792,22 @@ abstract class ModuleCore
 	 */
 	public static function hookExec($hook_name, $hookArgs = array(), $id_module = NULL)
 	{
-		$context = Context::getContext();
-		if ((!empty($id_module) && !Validate::isUnsignedId($id_module)) || !Validate::isHookName($hook_name))
-			die(Tools::displayError());
-
-		$live_edit = false;
-		if (!isset($hookArgs['cookie']) || !$hookArgs['cookie'])
-			$hookArgs['cookie'] = $context->cookie;
-		if (!isset($hookArgs['cart']) || !$hookArgs['cart'])
-			$hookArgs['cart'] = $context->cart;
-		$hook_name = strtolower($hook_name);
-
-		if (!isset(self::$_hookModulesCache))
-		{
-			$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
-			$list = $context->shop->getListOfID();
-			if (isset($context->customer) && $context->customer->isLogged())
-				$groups = $context->customer->getGroups();
-
-			$sql = 'SELECT h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`
-					FROM `'._DB_PREFIX_.'module` m
-					LEFT JOIN `'._DB_PREFIX_.'hook_module` hm
-						ON hm.`id_module` = m.`id_module`';
-			if (isset($context->customer) && $context->customer->isLogged())
-				$sql .= '
-					LEFT JOIN `'._DB_PREFIX_.'group_module_restriction` gmr
-						ON gmr.`id_module` = m.`id_module`';
-			$sql .= '
-					LEFT JOIN `'._DB_PREFIX_.'hook` h
-						ON hm.`id_hook` = h.`id_hook`
-					WHERE (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
-						AND hm.id_shop IN('.implode(', ', $list).')';
-			if (isset($context->customer) && $context->customer->isLogged())
-				$sql .= '
-						AND (gmr.`authorized` = 1 AND gmr.`id_group` IN('.implode(', ', $groups).'))';
-			$sql .= '
-					GROUP BY hm.id_hook, hm.id_module
-					ORDER BY hm.`position`';
-			$result = $db->executeS($sql, false);
-			self::$_hookModulesCache = array();
-
-			if ($result)
-				while ($row = $db->nextRow())
-				{
-					$row['hook'] = strtolower($row['hook']);
-					if (!isset(self::$_hookModulesCache[$row['hook']]))
-						self::$_hookModulesCache[$row['hook']] = array();
-					self::$_hookModulesCache[$row['hook']][] = array('id_hook' => $row['id_hook'], 'module' => $row['module'], 'id_module' => $row['id_module'], 'live_edit' => $row['live_edit']);
-				}
-		}
-
-		if (!isset(self::$_hookModulesCache[$hook_name]))
-			return;
-
-		$altern = 0;
-		$output = '';
-		foreach (self::$_hookModulesCache[$hook_name] as $array)
-		{
-			if ($id_module && $id_module != $array['id_module'])
-				continue;
-			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
-				continue;
-
-			$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-			if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
-				continue;
-			if (isset($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
-				continue;
-
-			if (is_callable(array($moduleInstance, 'hook'.$hook_name)))
-			{
-				$hookArgs['altern'] = ++$altern;
-
-				$display = call_user_func(array($moduleInstance, 'hook'.$hook_name), $hookArgs);
-				if ($array['live_edit'] && ((Tools::isSubmit('live_edit') && Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))))
-				{
-					$live_edit = true;
-					$output .= '<script type="text/javascript"> modules_list.push(\''.$moduleInstance->name.'\');</script>
-								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'"
-								class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-								<span><img src="'.$moduleInstance->_path.'/logo.gif">'
-							 	.$moduleInstance->displayName.'<span style="float:right">
-							 	<a href="#" id="'.$array['id_hook'].'_'.$moduleInstance->id.'" class="moveModule">
-							 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-							 	<a href="#" id="'.$array['id_hook'].'_'.$moduleInstance->id.'" class="unregisterHook">
-							 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></span></a>
-							 	</span>'.$display.'</div>';
-				}
-				else
-					$output .= $display;
-			}
-		}
-		return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script><!--<div id="add_'.$hook_name.'" class="add_module_live_edit">
-				<a class="exclusive" href="#">Add a module</a></div>--><div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
+		Tools::displayAsDeprecated();
+		return Hook::exec($hook_name, $hookArgs, $id_module);
 	}
 
 	public static function hookExecPayment()
 	{
-		$context = Context::getContext();
-		$hookArgs = array('cookie' => $context->cookie, 'cart' => $context->cart);
-		$output = '';
-
-		$result = self::getPaymentModules();
-
-		if ($result)
-			foreach ($result AS $module)
-				if (($moduleInstance = Module::getInstanceByName($module['name'])) AND is_callable(array($moduleInstance, 'hookpayment')))
-					if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
-						$output .= call_user_func(array($moduleInstance, 'hookpayment'), $hookArgs);
-		return $output;
+		Tools::displayAsDeprecated();
+		return Hook::exec('payment');
 	}
+
+
+	public static function preCall($moduleName)
+	{
+		return true;
+	}
+
 
 
 	/**
@@ -901,6 +824,10 @@ abstract class ModuleCore
 		if (isset($context->customer))
 			$groups = $context->customer->getGroups();
 
+		$hookPayment = 'Payment';
+		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
+			$hookPayment = 'displayPayment';
+
 		$list = Context::getContext()->shop->getListOfID();
 		$sql = 'SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 				FROM `'._DB_PREFIX_.'module_country` mc
@@ -913,7 +840,7 @@ abstract class ModuleCore
 			$sql .= '
 				LEFT JOIN `'._DB_PREFIX_.'group_module_restriction` gmr ON gmr.`id_module` = m.`id_module`';
 		$sql .= '
-				WHERE h.`name` = \'payment\'
+				WHERE h.`name` = \''.$hookPayment.'\'
 					AND mc.id_country = '.(int)($billing->id_country).'
 					AND mc.id_shop = '.(int)$context->shop->getID(true).'
 					AND mg.id_shop = '.(int)$context->shop->getID(true).'

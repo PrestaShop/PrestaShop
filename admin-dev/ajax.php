@@ -244,7 +244,7 @@ if (Tools::isSubmit('ajaxCategoriesPositions'))
 	{
 		if (isset($position) && $category->updatePosition($way, $position))
 		{
-			Module::hookExec('categoryUpdate');
+			Hook::exec('categoryUpdate');
 			die(true);
 		}
 		else
@@ -605,7 +605,7 @@ if (Tools::isSubmit('getHookableModuleList'))
 			include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
 			$mod = new $module['name']();
 			if ($mod->isHookableOn($hook_name))
-				$hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Module::hookExec($hook_name, array(), (int)$mod->id));
+				$hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, array(), (int)$mod->id));
 		}
 	}
 	die(Tools::jsonEncode($hookableModulesList));

@@ -225,7 +225,7 @@ abstract class AdminStatsTab extends AdminPreferences
 			if (!isset($moduleInstance))
 				$moduleInstance = Module::getInstanceByName($moduleName);
 			if ($moduleInstance AND $moduleInstance->active)
-				echo Module::hookExec('AdminStatsModules', NULL, $moduleInstance->id);
+				echo Hook::exec('AdminStatsModules', NULL, $moduleInstance->id);
 			else
 				echo $this->l('Module not found', 'AdminStatsTab');
 		}

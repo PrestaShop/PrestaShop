@@ -213,8 +213,8 @@ class CartControllerCore extends FrontController
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
-			$result['HOOK_SHOPPING_CART'] = Module::hookExec('shoppingCart', $result['summary']);
-			$result['HOOK_SHOPPING_CART_EXTRA'] = Module::hookExec('shoppingCartExtra', $result['summary']);
+			$result['HOOK_SHOPPING_CART'] = Hook::exec('shoppingCart', $result['summary']);
+			$result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('shoppingCartExtra', $result['summary']);
 
 			// Display reduced price (or not) without quantity discount
 			if (Tools::getIsset('getproductprice'))

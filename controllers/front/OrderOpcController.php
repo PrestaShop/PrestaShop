@@ -67,7 +67,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								{
 									$return = array(
 										'summary' => $this->context->cart->getSummaryDetails(),
-										'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
+										'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
 										'HOOK_PAYMENT' => $this->_getPaymentMethods()
 									);
 									die(Tools::jsonEncode($return));
@@ -84,7 +84,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							{
 								$this->context->cookie->checkedTOS = (int)(Tools::getValue('checked'));
 								die(Tools::jsonEncode(array(
-									'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
+									'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods()
 								)));
 							}
@@ -137,7 +137,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookTop(array()) : ''),
 									'carrier_list' => $this->_getCarrierList(),
-									'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
+									'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 									'no_address' => 0,
 									'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency))))
@@ -190,7 +190,7 @@ class OrderOpcControllerCore extends ParentOrderController
 										$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
 										$result = array_merge($result, array(
 											'summary' => $this->context->cart->getSummaryDetails(),
-											'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
+											'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency))))
 										));
@@ -256,8 +256,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		));
 		/* Call a hook to display more information on form */
 		self::$smarty->assign(array(
-			'HOOK_CREATE_ACCOUNT_FORM' => Module::hookExec('createAccountForm'),
-			'HOOK_CREATE_ACCOUNT_TOP' => Module::hookExec('createAccountTop')
+			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('createAccountForm'),
+			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('createAccountTop')
 		));
 		$years = Tools::dateYears();
 		$months = Tools::dateMonths();
@@ -333,7 +333,7 @@ class OrderOpcControllerCore extends ParentOrderController
 				'carriers' => $carriers,
 				'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
 				'HOOK_EXTRACARRIER' => NULL,
-				'HOOK_BEFORECARRIER' => Module::hookExec('beforeCarrier', array('carriers' => $carriers))
+				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array('carriers' => $carriers))
 			));
 		}
 		else
@@ -343,7 +343,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	protected function _assignPayment()
 	{
 		$this->context->smarty->assign(array(
-		    'HOOK_TOP_PAYMENT' => ($this->isLogged ? Module::hookExec('paymentTop') : ''),
+		    'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('paymentTop') : ''),
 			'HOOK_PAYMENT' => $this->_getPaymentMethods()
 		));
 	}
@@ -389,7 +389,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		if ($this->context->cart->getOrderTotal() <= 0)
 			return '<p class="center"><input type="button" class="exclusive_large" name="confirmOrder" id="confirmOrder" value="'.Tools::displayError('I confirm my order').'" onclick="confirmFreeOrder();" /></p>';
 
-		$return = Module::hookExecPayment();
+		$return = Hook::exec('payment');
 		if (!$return)
 			return '<p class="warning">'.Tools::displayError('No payment method is available').'</p>';
 		return $return;
@@ -412,8 +412,8 @@ class OrderOpcControllerCore extends ParentOrderController
 			$result = array(
 				'checked' => $this->_setDefaultCarrierSelection($carriers),
 				'carriers' => $carriers,
-				'HOOK_BEFORECARRIER' => Module::hookExec('beforeCarrier', array('carriers' => $carriers)),
-				'HOOK_EXTRACARRIER' => Module::hookExec('extraCarrier', array('address' => $address_delivery))
+				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array('carriers' => $carriers)),
+				'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address_delivery))
 			);
 			return $result;
 		}

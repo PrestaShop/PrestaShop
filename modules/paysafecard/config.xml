@@ -2,7 +2,7 @@
 <module>
 	<name>paysafecard</name>
 	<displayName><![CDATA[PaysafeCard]]></displayName>
-	<version><![CDATA[1.3]]></version>
+	<version><![CDATA[1.4]]></version>
 	<description><![CDATA[Accepts payments by PaysafeCard.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

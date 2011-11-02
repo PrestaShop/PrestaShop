@@ -293,11 +293,11 @@ abstract class PaymentModuleCore extends Module
 					$message->update();
 				}
 
-				// Hook new order
+				// Hook validate order
 				$orderStatus = new OrderState((int)$id_order_state, (int)$order->id_lang);
 				if (Validate::isLoadedObject($orderStatus))
 				{
-					Hook::newOrder($cart, $order, $customer, $currency, $orderStatus);
+					Hook::exec('newOrder', array('cart' => $cart, 'order' => $order, 'customer' => $customer, 'currency' => $currency, 'orderStatus' => $orderStatus));
 					foreach ($cart->getProducts() AS $product)
 						if ($orderStatus->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
@@ -513,7 +513,7 @@ abstract class PaymentModuleCore extends Module
 			$modules = PaymentModuleCore::getInstalledPaymentModules();
 			foreach ($modules as $module)
 				$id_module_list[] = $module['id_module'];
-}
+		}
 
 		foreach ($id_module_list as $id_module)
 			$values .= '('.(int)$id_module.','.(int)$id_currency.'),';
@@ -547,5 +547,19 @@ abstract class PaymentModuleCore extends Module
 		AND m.`active` = 1
 		');
 	}
+
+
+	public static function preCall($moduleName)
+	{
+		if (!parent::preCall($moduleName))
+			return false;
+
+		if (($moduleInstance = Module::getInstanceByName($moduleName)))
+			if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
+				return true;
+
+		return false;
+	}
+
 }
 

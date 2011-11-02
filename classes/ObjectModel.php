@@ -205,6 +205,9 @@ abstract class ObjectModelCore
 	 	if (!Validate::isTableOrIdentifier($this->table))
 			die(Tools::displayError('not table or identifier : ').$this->table);
 
+		/* Hook */
+		Hook::exec('actionObject'.get_class($this).'AddBefore');
+
 		/* Automatically fill dates */
 		if ($autodate AND key_exists('date_add', $this))
 			$this->date_add = date('Y-m-d H:i:s');
@@ -258,6 +261,10 @@ abstract class ObjectModelCore
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
 		}
+
+		/* Hook */
+		Hook::exec('actionObject'.get_class($this).'AddAfter');
+
 		return $result;
 	}
 
@@ -270,6 +277,9 @@ abstract class ObjectModelCore
 	{
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
 			die(Tools::displayError());
+
+		/* Hook */
+		Hook::exec('actionObject'.get_class($this).'UpdateBefore');
 
 		$this->clearCache();
 		/* Automatically fill dates */
@@ -326,6 +336,10 @@ abstract class ObjectModelCore
 				}
 			}
 		}
+
+		/* Hook */
+		Hook::exec('actionObject'.get_class($this).'UpdateAfter');
+
 		return $result;
 	}
 
@@ -339,6 +353,9 @@ abstract class ObjectModelCore
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
 	 		die(Tools::displayError());
 
+		/* Hook */
+		Hook::exec('actionObject'.get_class($this).'DeleteBefore');
+
 		$this->clearCache();
 
 		/* Database deletion */
@@ -349,6 +366,10 @@ abstract class ObjectModelCore
 		/* Database deletion for multilingual fields related to the object */
 		if (method_exists($this, 'getTranslationsFieldsChild'))
 			Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+
+		/* Hook */
+		Hook::exec('actionObject'.get_class($this).'DeleteAfter');
+
 		return $result;
 	}
 

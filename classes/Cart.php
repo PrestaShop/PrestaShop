@@ -167,7 +167,7 @@ class CartCore extends ObjectModel
 	public function add($autodate = true, $nullValues = false)
 	{
 		$return = parent::add($autodate);
-		Module::hookExec('cart');
+		Hook::exec('cart');
 		return $return;
 	}
 
@@ -179,7 +179,7 @@ class CartCore extends ObjectModel
 			unset(self::$_totalWeight[$this->id]);
 		$this->_products = NULL;
 		$return = parent::update();
-		Module::hookExec('cart');
+		Hook::exec('cart');
 		return $return;
 	}
 

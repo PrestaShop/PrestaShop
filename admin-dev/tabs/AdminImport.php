@@ -485,7 +485,7 @@ class AdminImport extends AdminTab
 			foreach ($imagesTypes AS $k => $imageType)
 				imageResize($tmpfile, $path.'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
 			if (in_array($imageType['id_image_type'], $watermark_types))
-				Module::hookExec('watermark', array('id_image' => $id_image, 'id_product' => $id_entity));
+				Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 		}
 		else
 		{
