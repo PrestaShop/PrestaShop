@@ -78,7 +78,7 @@ class ThemeInstallator extends Module
 		if (count($natives > 0))
 			return $natives;
 		// use this list if we can't contact the prestashop.com server
-		$natives = array('bankwire', 'birthdaypresent',	'blockadvertising', 'blockbestsellers', 'blockcart', 'blockcategories', 'blockcms',
+		$natives = array('bankwire', 'blockadvertising', 'blockbestsellers', 'blockcart', 'blockcategories', 'blockcms',
 		'blockcurrencies', 'blockinfos', 'blocklanguages', 'blocklink', 'blockmanufacturer', 'blockmyaccount', 'blocknewproducts',
 		'blocknewsletter', 'blockpaymentlogo', 'blockpermanentlinks', 'blockrss', 'blocksearch', 'blockspecials', 'blocksupplier',
 		'blocktags', 'blockuserinfo', 'blockvariouslinks', 'blockviewed', 'blockwishlist', 'canonicalurl', 'cashondelivery', 'cheque',
