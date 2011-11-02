@@ -352,7 +352,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 
 		$str_attributes_groups = '';
-		foreach ($attributes_groups AS $attribute_group)
+		foreach ($attributes_groups as $attribute_group)
 			$str_attributes_groups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ) .', ';
 
 		$image = _PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg';
@@ -387,7 +387,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').
+				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').
+				'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
 
@@ -435,9 +437,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		Module::hookExec('postProcessAttributeGroup',
 		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessAttributeGroup to stop saving process
 
-		/**
-		 * If it's an attribute, load object Attribute()
-		 */
+		// If it's an attribute, load object Attribute()
 		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
 		{
 			// Override var of Controller
@@ -458,7 +458,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminAttributesGroups'));
 			}
-			else if(Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
+			else if (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
 			{
 				if (!$object->delete())
 					$this->_errors[] = Tools::displayError('Failed to delete attribute.');
@@ -485,11 +485,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		else
 		{
-			if(Tools::getValue('submitDel'.$this->table))
+			if (Tools::getValue('submitDel'.$this->table))
 			{
 			 	if ($this->tabAccess['delete'] === '1')
 				{
-				 	if (isset($_POST[$this->table.'Box']))
+					if (isset($_POST[$this->table.'Box']))
 				 	{
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))

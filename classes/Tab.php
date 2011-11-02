@@ -337,7 +337,7 @@ class TabCore extends ObjectModel
 		static $tabAccesses = null;
 
 		if ($tabAccesses === null)
-			$tabAccesses =  Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
+			$tabAccesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
 
 		if (isset($tabAccesses[(int)$id_tab]['view']))
 			return ($tabAccesses[(int)$id_tab]['view'] === '1');
@@ -346,12 +346,10 @@ class TabCore extends ObjectModel
 
 	public static function recursiveTab($id_tab, $tabs)
 	{
-		$adminTab = Tab::getTab((int)Context::getContext()->language->id, $id_tab);
-		$tabs[]= $adminTab;
-		if ($adminTab['id_parent'] > 0)
-		{
-			$tabs = Tab::recursiveTab($adminTab['id_parent'], $tabs);
-		}
+		$admin_tab = Tab::getTab((int)Context::getContext()->language->id, $id_tab);
+		$tabs[] = $admin_tab;
+		if ($admin_tab['id_parent'] > 0)
+			$tabs = Tab::recursiveTab($admin_tab['id_parent'], $tabs);
 		return $tabs;
 	}
 }
