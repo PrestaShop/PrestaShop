@@ -26,7 +26,7 @@
 <tbody>
 {foreach $list AS $index => $tr}
 	<tr
-	{if $is_dnd_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position['position']}"{/if}
+	{if $is_dnd_identifier}id="tr_{$tr.$identifier}_{$tr.position['position']}"{/if}
 	{if $index is odd}class="alt_row"{/if}
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
@@ -88,6 +88,8 @@
 				{$tr.$key}
 			{elseif isset($params.callback)}
 				{$tr.$key}
+			{elseif isset($tr.$key) && $key == 'color'}
+				<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
 			{elseif isset($tr.$key)}
 				{$tr.$key|escape:'htmlall':'UTF-8'}
 			{else}
