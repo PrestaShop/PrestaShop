@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop
+* 2007-2011 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,53 +19,17 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 9646 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<h2>{$manufacturer->name}</h2>
-
-<h3>{l s='Total addresses:'} {count($addresses)}</h3>
-<hr />
-
-{if !count($addresses)}
-	{l s='No address for this manufacturer'}
-{else}
-	{foreach $addresses AS $addresse}
-		<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
-			<tr>
-				<th><strong>{$addresse.firstname} {$addresse.lastname}</strong></th>
-			</tr>
-			<tr>
-				<td>
-					<div style="padding:5px; float:left; width:350px;">
-						{$addresse.address1}<br />
-						{if $addresse.address2}{$addresse.address2}<br />{/if}
-						{$addresse.postcode} {$addresse.city}<br />
-						{if $addresse.state}{$addresse.state}<br />{/if}
-						<b>{$addresse.country}</b><br />
-					</div>
-					<div style="padding:5px; float:left;">
-						{if $addresse.phone}{$addresse.phone}<br />{/if}
-						{if $addresse.phone_mobile}{$addresse.phone_mobile}<br />{/if}
-					</div>
-					{if $addresse.other}<div style="padding:5px; clear:both;"><br /><i>{$addresse.other}</i></div>{/if}
-				</td>
-			</tr>
-		</table><br />
-	{/foreach}
-{/if}
-<br /><br />
+<h2>{$supplier->name}</h2>
 
 <h3>{l s='Total products:'} {count($products)}</h3>
 {foreach $products AS $product}
 	<hr />
 	{if !$product->hasAttributes()}
-		<div style="float:right;">
-			<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
-			<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
-		</div>
 		<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:990px;">
 			<tr>
 				<th>{$product->name}</th>
@@ -76,10 +40,6 @@
 			</tr>
 		</table>
 	{else}
-		<div style="float:right;">
-			<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
-			<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
-		</div>
 		<h3><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></h3>
 		<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:990px;">
 			<tr>

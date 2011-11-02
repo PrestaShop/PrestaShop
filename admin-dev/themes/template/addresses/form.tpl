@@ -27,15 +27,6 @@
 {extends file="../helper/form/form.tpl"}
 
 {block name="label"}
-{*	{if $input.type == 'text_customer'}
-		{if isset($customer)}
-			<label>{$input.label}</label>
-		{else}
-			<label>{l s='Customer e-mail'}</label>
-		{/if}
-	{else if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}	*}
 {/block}
 
 {block name="start_field_block"}

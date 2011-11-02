@@ -962,8 +962,8 @@ class AdminControllerCore extends Controller
 
 				if (trim($tab['module']) != '')
 					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-				
-				// retrocompatibility			
+
+				// retrocompatibility
 				if(!file_exists($img))
 					$img = str_replace('png', 'gif', $img);
 
@@ -1091,7 +1091,13 @@ class AdminControllerCore extends Controller
 				return;
 			$this->content .= $this->initForm();
 		}
-		elseif ($this->display != 'view' && !$this->ajax)
+		elseif ($this->display == 'view')
+		{
+			if (!($this->object = $this->loadObject(true)))
+				return;
+			$this->content .= $this->initView();
+		}
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->initList();
 			$this->content .= $this->initOptions();
@@ -1170,9 +1176,16 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * Override to init display of the view page
+	 */
+	public function initView()
+	{
+	}
+
+	/**
 	 * this function set various display option for helper list
-	 * 
-	 * @param Helper $helper 
+	 *
+	 * @param Helper $helper
 	 * @return void
 	 */
 	public function setHelperListDisplay(Helper $helper)

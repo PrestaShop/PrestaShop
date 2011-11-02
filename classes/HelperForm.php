@@ -31,6 +31,7 @@ class HelperFormCore extends Helper
 	public $id;
 
 	public $first_call = true;
+	public $toolbar = true;
 
 	/**
 	 * @var array of forms fields
@@ -98,7 +99,8 @@ class HelperFormCore extends Helper
 			'asso_shop' => (isset($this->fields_form['asso_shop']) && $this->fields_form['asso_shop']) ? $this->displayAssoShop() : null,
 			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
 			'path_css' => _THEME_CSS_DIR_,
-			'ad' => dirname($_SERVER["PHP_SELF"])
+			'ad' => dirname($_SERVER["PHP_SELF"]),
+			'toolbar' => $this->toolbar
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);

@@ -62,6 +62,8 @@ class HelperListCore extends Helper
 
 	protected $is_dnd_identifier = false;
 
+	public $toolbar = true;
+
 	/* Customize list display
 	 *
 	 * align  : determine value alignment
@@ -538,6 +540,7 @@ class HelperListCore extends Helper
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
+			'toolbar' => $this->toolbar
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->header_tpl);
