@@ -815,6 +815,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		// gets the id supplier to view
 		$id_supplier_order = (int)Tools::getValue('id_supplier_order');
 
+		// re-defines fieldsDisplay
 		$this->fieldsDisplay = array(
 			'p_reference' => array(
 				'title' => $this->l('Reference'),
@@ -968,7 +969,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
 		p.reference as p_reference,
 		p.ean13 as p_ean13';
-
 		$this->_join = '
 		INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
 		LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
@@ -977,11 +977,10 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
 		LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
 		LEFT JOIN '._DB_PREFIX_.'currency c ON (a.id_currency = c.id_currency)';
-
 		$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
-
 		$this->_group = 'GROUP BY a.id_product';
 
+		// gets the list ordered by price desc, without limit
 		$this->getList($lang_id, 'price_te', 'DESC', 0, false, false);
 
 		// renders list
@@ -991,7 +990,36 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$helper->shopLinkType = '';
 		$helper->identifier = $this->identifier;
 
+		// generates content
 		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
-		$this->context->smarty->assign(array('supplier_order_detail_content' => $content));
+		// displays content
+		$this->context->smarty->assign('supplier_order_detail_content', $content);
+
+		// gets global order information
+		$supplier_order = new SupplierOrder((int)$id_supplier_order);
+		if (Validate::isLoadedObject($supplier_order))
+		{
+			// gets the currency used in this order
+			$currency = Currency::getCurrency($supplier_order->id_currency);
+			$this->context->smarty->assign('supplier_order_currency_sign', $currency ? $currency['sign'] : '');
+
+			// gets the employee in charge of the order
+			$employee = new Employee($supplier_order->id_employee);
+			$this->context->smarty->assign('supplier_order_employee', (Validate::isLoadedObject($employee) ? $employee->firstname.' '.$employee->lastname : ''));
+
+			// display these global order informations
+			$this->context->smarty->assign(
+				array(
+					'supplier_order_reference' => $supplier_order->reference,
+					'supplier_order_last_update' => $supplier_order->date_upd,
+					'supplier_order_expected' => $supplier_order->date_delivery_expected,
+					'supplier_order_total_te' => $supplier_order->total_te,
+					'supplier_order_discount_value_te' => $supplier_order->discount_value_te,
+					'supplier_order_total_with_discount_te' => $supplier_order->total_with_discount_te,
+					'supplier_order_total_tax' => $supplier_order->total_tax,
+					'supplier_order_total_ti' => $supplier_order->total_ti,
+				)
+			);
+		}
 	}
 }
