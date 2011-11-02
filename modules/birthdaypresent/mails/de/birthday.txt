@@ -1,5 +1,0 @@
-Hallo {firstname} {lastname},
-
-{shop_name} wünscht Ihnen alles Gute zum Geburtstag und möchte Ihnen ein Geschenk machen. Es wartet eine Überraschung auf Sie... melden Sie sich jetzt bei Ihrem Konto an, um Ihren Ermäßigungsgutschein zu sehen!
-
-{shop_url} Powered by PrestaShop™

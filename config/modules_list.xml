@@ -3,7 +3,6 @@
 	<modules type="native">
 		<module name="autoupgrade"/>
 		<module name="bankwire"/>
-		<module name="birthdaypresent"/>
 		<module name="blockadvertising"/>
 		<module name="blockbestsellers"/>
 		<module name="blockcart"/>
