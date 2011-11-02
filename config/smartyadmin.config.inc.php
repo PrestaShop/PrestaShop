@@ -33,12 +33,11 @@ function smartyTranslate($params, &$smarty)
 	$htmlentities = !isset($params['js']);
 	$addslashes = !isset($params['slashes']);
 
-	$string = str_replace('\'', '\\\'', $params['s']);
 	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
-	$class = Tools::substr(basename($filename), 0, -4);//.'_'.md5($string);
+	$class = Tools::substr(basename($filename), 0, -4);
 
 	if(in_array($class, array('header','footer','password','login')))
 		$class = 'index';
 
-	return AdminController::translate($string, $class, $addslashes, $htmlentities);
+	return AdminController::translate($params['s'], $class, $addslashes, $htmlentities);
 }
