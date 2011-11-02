@@ -138,6 +138,7 @@ $(document).ready(function()
 	
 	$("#main").click(function(){
 		$(".notifs_wrapper").hide();
+		$('.notifs').removeClass('open_notifs');
 	});
 
 	// call it once immediately, then use setTimeout if refresh is activated
