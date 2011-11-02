@@ -920,14 +920,6 @@ INSERT INTO `PREFIX_contact_lang` (`id_contact`, `id_lang`, `name`, `description
 (2, 4, 'Kundenservice', 'Bei Fragen oder Reklamationen zu einer Bestellung'),
 (2, 5, 'Servizio clienti', 'Per qualsiasi domanda o reclamo riguardo ad un ordine');
 
-INSERT INTO `PREFIX_discount_type` (`id_discount_type`) VALUES (1),(2),(3);
-INSERT INTO `PREFIX_discount_type_lang` (`id_discount_type`, `id_lang`, `name`) VALUES
-(1, 1, 'Discount on order (%)'),(2, 1, 'Discount on order (amount)'),(3, 1, 'Free shipping'),
-(1, 2, 'Réduction sur la commande (%)'),(2, 2, 'Réduction sur la commande (montant)'),(3, 2, 'Frais de port gratuits'),
-(1, 3, 'Descuento orden (%)'),(2, 3, 'Descuento (el orden de cantidad)'),(3, 3, 'Gastos de envío gratis'),
-(1, 4, 'Preisnachlass auf die Bestellung (%)'),(2, 4, 'Preisnachlass auf die Bestellung (Betrag)'),(3, 4, 'Versandkosten gratis'),
-(1, 5, 'Sconto sull’ordine (%)'),(2, 5, 'Sconto sull’ordine (importo)'),(3, 5, 'Spese di porto gratuite');
-
 INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (1);
 INSERT INTO `PREFIX_profile_lang` (`id_profile`, `id_lang`, `name`) VALUES (1, 1, 'SuperAdmin'),(1, 2, 'SuperAdmin'),(1, 3, 'SuperAdmin'),(1, 4, 'SuperAdmin'),(1, 5, 'SuperAdmin');
 
