@@ -32,7 +32,7 @@ class AdminOrdersControllerCore extends AdminController
 		$this->table = 'order';
 	 	$this->className = 'Order';
 	 	$this->lang = false;
-
+		$this->edit = true;
 	 	$this->addRowAction('view');
 
 	 	$this->deleted = false;
@@ -74,18 +74,20 @@ class AdminOrdersControllerCore extends AdminController
 
 		parent::__construct();
 	}
-
-	public function initContent()
+	
+	public function initForm()
 	{
-		$this->display = 'list';
-
-		if (Tools::isSubmit('view'.$this->table))
-		{
-			$this->display = 'view';
-			$this->viewOrder();
-		}
-
-		parent::initContent();
+		parent::initForm();
+		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+		$cart = new Cart((int)Tools::getValue('id_cart'));
+		$this->context->smarty->assign(array('recyclable_pack' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
+														'gift_wrapping' => (int)Configuration::get('PS_GIFT_WRAPPING'),
+														'cart' => $cart,
+														'currencies' => Currency::getCurrencies(),
+														'langs' => Language::getLanguages(true, Context::getContext()->shop->id),
+														'payment_modules' => PaymentModule::getInstalledPaymentModules(),
+														'order_states' => OrderState::getOrderStates((int)Context::getContext()->cookie->id_lang)));
+		$this->content .= $this->context->smarty->fetch('orders/form.tpl');
 	}
 
 	public function printPDFIcons($id_order, $tr)
@@ -445,6 +447,19 @@ class AdminOrdersControllerCore extends AdminController
 			
 			unset($order, $pcc);
 		}
+		elseif (Tools::isSubmit('submitAddOrder') == 1 && ($id_cart = Tools::getValue('id_cart')) && ($module_name = pSQL(Tools::getValue('payment_module_name'))) && ($id_order_state = Tools::getValue('id_order_state')))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				$payment_module = Module::getInstanceByName($module_name);
+				$cart = new Cart((int)$id_cart);
+				$payment_module->validateOrder((int)$cart->id, (int)$id_order_state, $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l(sprintf('Manual order - ID Employee :%1', (int)Context::getContext()->cookie->id_employee)));
+				if($payment_module->currentOrder)
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+		}
 		parent::postProcess();
 	}
 
@@ -535,5 +550,72 @@ class AdminOrdersControllerCore extends AdminController
 			'HOOK_INVOICE' => Module::hookExec('invoice', array('id_order' => $order->id)),
 			'HOOK_ADMIN_ORDER' => Module::hookExec('adminOrder', array('id_order' => $order->id))
 		));
+	}
+	public function ajaxProcessSearchCustomers()
+	{
+		if ($customers = Customer::searchByName(pSQL(Tools::getValue('customer_search'))))
+			$to_return = array('customers' => $customers,
+									'found' => true);
+		else
+			$to_return = array('found' => false);
+
+		$this->content = Tools::jsonEncode($to_return);
+	}
+		
+	public function ajaxProcessSearchProducts()
+	{
+		$currency = new Currency((int)Tools::getValue('id_currency'));
+		if ($products = Product::searchByName((int)$this->context->language->id, pSQL(Tools::getValue('product_search'))))
+		{
+			foreach ($products AS &$product)
+			{
+				$product['price'] = Tools::displayPrice(Tools::convertPrice($product['price'], $currency), $currency);
+				$productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
+				$combinations = array();
+				$attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
+				$product['qty_in_stock'] = StockAvailable::getStockAvailableForProduct((int)$product['id_product'], 0, (int)$this->context->shop->getID());
+				foreach($attributes AS $attribute)
+				{
+					if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
+						$combinations[$attribute['id_product_attribute']]['attributes'] = '';
+					$combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
+					$combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
+					$combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
+					if (!isset($combinations[$attribute['id_product_attribute']]['price']))
+						$combinations[$attribute['id_product_attribute']]['price'] =  Tools::displayPrice(Tools::convertPrice(Product::getPriceStatic((int)$product['id_product'], true, $attribute['id_product_attribute']), $currency), $currency);
+					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))  
+						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getStockAvailableForProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
+				}
+				
+				foreach ($combinations AS &$combination)
+					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
+				$product['combinations'] = $combinations;
+			}
+			$to_return = array('products' => $products,
+								'found' => true);
+		}
+		else
+			$to_return = array('found' => false);
+			
+		$this->content = Tools::jsonEncode($to_return);
+	}
+		
+	public function ajaxProcessSendMailValidateOrder()
+	{
+		$errors = array();		
+		$cart = new Cart((int)Tools::getValue('id_cart'));
+		if (Validate::isLoadedObject($cart))
+		{
+			$customer = new Customer((int)$cart->id_customer);
+			if (Validate::isLoadedObject($customer))
+			{
+				$mailVars = array('{order_link}' => Context::getContext()->link->getPageLink('order', false, (int)$cart->id_lang, 'step=3&recover_cart='.(int)$cart->id.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.(int)$cart->id)),
+ 																'{firstname}' => $customer->firstname,
+																'{lastname}' => $customer->lastname,);
+				if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order'), $mailVars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,_PS_MAIL_DIR_, true))
+					die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
+			}
+		}
+		$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
 	}
 }

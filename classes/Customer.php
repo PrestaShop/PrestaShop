@@ -677,4 +677,14 @@ class CustomerCore extends ObjectModel
 			Context::getContext()->cookie->mylogout();
 		$this->logged = 0;
 	}
+
+	public function getLastCart()
+	{
+		$carts = Cart::getCustomerCarts((int)$this->id);
+		if (!count($carts))
+			return false;
+		$cart = array_shift($carts);
+		$cart = new Cart((int)$cart['id_cart']);
+		return ($cart->nbProducts() === 0 ? (int)$cart->id : false);
+	}
 }

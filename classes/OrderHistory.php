@@ -74,12 +74,12 @@ class OrderHistoryCore extends ObjectModel
 	{
 		if ($new_order_state != NULL)
 		{
-			Hook::updateOrderStatus((int)($new_order_state), (int)($id_order));
+			Hook::updateOrderStatus((int)($new_order_state), (int)$id_order);
 			$order = new Order((int)($id_order));
 			
 			/* Best sellers */
 			$newOS = new OrderState((int)($new_order_state), $order->id_lang);
-			$oldOrderStatus = OrderHistory::getLastOrderState((int)($id_order));
+			$oldOrderStatus = OrderHistory::getLastOrderState((int)$id_order);
 			$cart = Cart::getCartByOrderId($id_order);
 			$isValidated = $this->isValidated();
 			if (Validate::isLoadedObject($cart))
