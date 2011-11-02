@@ -119,6 +119,9 @@ class FrontControllerCore extends Controller
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
 
+		if ($id_cart = (int)$this->recoverCart())
+			$this->context->cookie->id_cart = (int)$id_cart;
+			
 		if ($this->auth AND !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
@@ -728,6 +731,31 @@ class FrontControllerCore extends Controller
 		}
 
 		return parent::addJS($js_uri);
+	}
+	
+	protected function recoverCart()
+	{
+		if (($id_cart = (int)Tools::getValue('recover_cart')) && Tools::getValue('token_cart') == md5(_COOKIE_KEY_.'recover_cart_'.$id_cart))
+		{
+			$cart = new Cart((int)$id_cart);
+			if (Validate::isLoadedObject($cart))
+			{
+				$customer = new Customer((int)$cart->id_customer);
+				if(Validate::isLoadedObject($customer))
+				{
+					$this->context->cookie->id_customer = (int)$customer->id;
+					$this->context->cookie->customer_lastname = $customer->lastname;
+					$this->context->cookie->customer_firstname = $customer->firstname;
+					$this->context->cookie->logged = 1;
+					$this->context->cookie->is_guest = $customer->isGuest();
+					$this->context->cookie->passwd = $customer->passwd;
+					$this->context->cookie->email = $customer->email;
+					return $id_cart;
+				}
+			}
+		}
+		else
+			return false;
 	}
 }
 

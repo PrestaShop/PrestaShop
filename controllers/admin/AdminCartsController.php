@@ -105,8 +105,8 @@ class AdminCartsController extends AdminController
 			return;
 		$customer = new Customer($cart->id_customer);
 		$products = $cart->getProducts();
-		$customizedDatas = Product::getAllCustomizedDatas((int)($cart->id));
-		Product::addCustomizationPrice($products, $customizedDatas);
+		$customized_datas = Product::getAllCustomizedDatas((int)($cart->id));
+		Product::addCustomizationPrice($products, $customized_datas);
 		$summary = $cart->getSummaryDetails();
 		$currency = new Currency($cart->id_currency);
 
@@ -153,8 +153,7 @@ class AdminCartsController extends AdminController
 
 			$productObj = new Product($product['id_product']);
 			$product['qty_in_stock'] = StockAvailable::getStockAvailableForProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$order->id_shop);
-			/* Customization display */
-			//$this->displayCustomizedDatas($customizedDatas, $product, $currency, $image, $tokenCatalog, $stock);
+			
 			$imageProduct = new Image($image['id_image']);
 			$product['image'] = (isset($image['id_image']) ? cacheImage(_PS_IMG_DIR_.'p/'.$imageProduct->getExistingImgPath().'.jpg', 'product_mini_'.(int)($product['id_product']).(isset($product['id_product_attribute']) ? '_'.(int)($product['id_product_attribute']) : '').'.jpg', 45, 'jpg') : '--');
 		}
@@ -169,7 +168,8 @@ class AdminCartsController extends AdminController
 												'total_discounts' => $total_discounts,
 												'total_wrapping' => $total_wrapping,
 												'total_price' => $total_price,
-												'total_shipping' => $total_shipping
+												'total_shipping' => $total_shipping,
+												'customized_datas' => $customized_datas
 												));
 	}
 	
@@ -186,6 +186,8 @@ class AdminCartsController extends AdminController
 			$this->context->cart->id_customer = $id_customer;
 		if ($this->context->cart->OrderExists())
 			return;
+		if (!$this->context->cart->id_shop)
+			$this->context->cart->id_shop = (int)$this->context->shop->id;
 		if (!$this->context->cart->id_lang)
 			$this->context->cart->id_lang = (($id_lang = (int)Tools::getValue('id_lang')) ? $id_lang : Configuration::get('PS_LANG_DEFAULT'));
 		if (!$this->context->cart->id_currency)
@@ -203,7 +205,6 @@ class AdminCartsController extends AdminController
 			$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
 		elseif ($id_address_delivery)
 			$this->context->cart->id_address_delivery = (int)$id_address_delivery;
-					
 		$this->context->cart->save();
 		$currency = new Currency((int)$this->context->cart->id_currency);
 		$this->context->currency = $currency;
@@ -233,11 +234,15 @@ class AdminCartsController extends AdminController
 			$errors[] = Tools::displayError('Invalid product');
 		elseif (!$qty = Tools::getValue('qty') OR $qty == 0)
 			$errors[] = Tools::displayError('Invalid quantity');
-		elseif (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0 && !Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
-			$errors[] = Tools::displayError('There is not enough product in stock');
-		elseif (!$product->checkQty((int)$qty))
-			$errors[] = Tools::displayError('There is not enough product in stock');
-		elseif (!$id_customization = (int)Tools::getValue('id_customization', 0) AND !$product->hasAllRequiredCustomizableFields())
+		if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
+		{ 
+			if(!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
+				$errors[] = Tools::displayError('There is not enough product in stock');
+		}
+		else 
+			if(!$product->checkQty((int)$qty))
+				$errors[] = Tools::displayError('There is not enough product in stock');
+		if (!$id_customization = (int)Tools::getValue('id_customization', 0) AND !$product->hasAllRequiredCustomizableFields())
 			$errors[] = Tools::displayError('Please fill in all required fields');
 		$this->context->cart->save();
 		if (!count($errors))
@@ -320,6 +325,18 @@ class AdminCartsController extends AdminController
 			if (!$this->context->cart->addDiscount((int)$discount->id))
 				$errors[] = Tools::displayError('Can\'t add the voucher');
 		echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
+	}
+	
+	public function ajaxProcessUpdateAddresses()
+	{
+		if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) && $address_delivery = new Address((int)$id_address_delivery) && $address_delivery->id_customer = $this->context->cart->id_customer)
+			$this->context->cart->id_address_delivery =  (int)$address_delivery->id;
+		
+		if (($id_address_invoice = (int)Tools::getValue('id_address_invoice')) && $address_invoice = new Address((int)$id_address_invoice) && $address_invoice->id_customer = $this->context->cart->id_customer)
+			$this->context->cart->id_address_invoice =  (int)$address_invoice->id;
+		$this->context->cart->save();
+		
+		echo Tools::jsonEncode($this->ajaxReturnVars());
 	}
 
 	protected function getCartSummary()
