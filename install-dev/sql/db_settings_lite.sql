@@ -1499,7 +1499,7 @@ city State:name postcode
 Country:name
 phone' WHERE `PREFIX_address_format`.`id_country` = 4;
 
-INSERT INTO `ps_supplier_order_state` (`id_supplier_order_state`, `delivery_note`, `editable`, `receipt_state`, `pending_receipt`, `enclosed`, `color`) VALUES
+INSERT INTO `PREFIX_supplier_order_state` (`id_supplier_order_state`, `delivery_note`, `editable`, `receipt_state`, `pending_receipt`, `enclosed`, `color`) VALUES
 (1, 0, 1, 0, 0, 0, 'lightblue'),
 (2, 1, 0, 0, 0, 0, '#e7fbff'),
 (3, 0, 0, 0, 1, 0, '#ffdbfd'),
@@ -1507,7 +1507,7 @@ INSERT INTO `ps_supplier_order_state` (`id_supplier_order_state`, `delivery_note
 (5, 0, 0, 1, 0, 1, '#d8ffd7'),
 (6, 0, 0, 0, 0, 1, '#cccccc');
 
-INSERT INTO `ps_supplier_order_state_lang` (`id_supplier_order_state`, `id_lang`, `name`) VALUES
+INSERT INTO `PREFIX_supplier_order_state_lang` (`id_supplier_order_state`, `id_lang`, `name`) VALUES
 (1, 1, 'creation in progress'),
 (1, 2, 'Création en cours'),
 (1, 3, 'Création in progress'),
