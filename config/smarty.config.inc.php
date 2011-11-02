@@ -31,7 +31,6 @@ require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 
 global $smarty;
 $smarty = new Smarty();
-$smarty->template_dir = _PS_THEME_DIR_.'tpl';
 $smarty->compile_dir = _PS_CACHE_DIR_.'smarty/compile';
 $smarty->cache_dir = _PS_CACHE_DIR_.'smarty/cache';
 $smarty->config_dir = _PS_SMARTY_DIR_.'configs';
@@ -40,6 +39,11 @@ $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_S
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'URL'; // 'NONE' on production
+
+if (defined('_PS_ADMIN_DIR_'))
+	require_once (dirname(__FILE__).'/smartyadmin.config.inc.php');
+else
+	require_once (dirname(__FILE__).'/smartyfront.config.inc.php');
 
 if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
 	$smarty->registerFilter('output', 'smartyMinifyHTML');
@@ -62,51 +66,6 @@ smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', '
 smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
 smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
 smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
-
-function smartyTranslate($params, &$smarty)
-{
-	global $_LANG, $_MODULES, $cookie, $_MODULE;
-	if (!isset($params['js'])) $params['js'] = 0;
-	if (!isset($params['mod'])) $params['mod'] = false;
-
-	$string = str_replace('\'', '\\\'', $params['s']);
-	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
-	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
-	$lang_array = $_LANG;
-	if ($params['mod'])
-	{
-		$iso = Language::getIsoById($cookie->id_lang);
-
-		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$params['mod'].'/'.$iso.'.php'))
-		{
-			$translationsFile = _PS_THEME_DIR_.'modules/'.$params['mod'].'/'.$iso.'.php';
-			$key = '<{'.$params['mod'].'}'._THEME_NAME_.'>'.$key;
-		}
-		else
-		{
-			$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/'.$iso.'.php';
-			$key = '<{'.$params['mod'].'}prestashop>'.$key;
-		}
-
-		if(!is_array($_MODULES))
-			$_MODULES = array();
-		if (@include_once($translationsFile))
-			if(is_array($_MODULE))
-				$_MODULES = array_merge($_MODULES, $_MODULE);
-		$lang_array = $_MODULES;
-	}
-
-	if (is_array($lang_array) AND key_exists($key, $lang_array))
-		$msg = $lang_array[$key];
-	elseif (is_array($lang_array) AND key_exists(Tools::strtolower($key), $lang_array))
-		$msg = $lang_array[Tools::strtolower($key)];
-	else
-		$msg = $params['s'];
-
-	if ($msg != $params['s'])
-		$msg = $params['js'] ? addslashes($msg) : stripslashes($msg);
-	return $params['js'] ? $msg : Tools::htmlentitiesUTF8($msg);
-}
 
 function smartyDieObject($params, &$smarty)
 {
@@ -160,6 +119,10 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
 		return $string;
 }
 
+function smarty_modifier_htmlentitiesUTF8($string)
+{
+		return Tools::htmlentitiesUTF8($string);
+}
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
     $tpl_output = Media::minifyHTML($tpl_output);
