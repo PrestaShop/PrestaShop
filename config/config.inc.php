@@ -162,14 +162,10 @@ define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 
 /* Smarty */
-if (!defined('_PS_ADMIN_DIR_'))
-	require_once(dirname(__FILE__).'/smarty.config.inc.php');
-else
-	require_once(dirname(__FILE__).'/smartyadmin.config.inc.php');
+require_once(dirname(__FILE__).'/smarty.config.inc.php');
 
 Context::getContext()->smarty = $smarty;
 /* Possible value are true, false, 'URL'
  (for 'URL' append SMARTY_DEBUG as a parameter to the url)
  default is false for production environment */
 define('SMARTY_DEBUG_CONSOLE', false);
-
