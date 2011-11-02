@@ -55,23 +55,12 @@
 				});
 		});
 	</script>
+	
+	{if isset($toolbar) && $toolbar}
+		{include file="toolbar.tpl"}
+	{/if}
 
-<div class="toolbarBox">
-	<ul class="cc_button">
-		{foreach from=$toolbar_btn item=btn key=k}
-			<li>
-				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
-					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:''}" ></span>{$btn.desc}
-				</a>
-			</li> 
-			{/foreach}
-		</ul>
-		<div class="pageTitle">{* todo : what to display as title for each items (table_lang.name ? *}
-			<h3><span id="current_obj" style="font-weight: normal;">{$current_obj_name|default:'&nbsp;'}</span></h3>
-		</div>
-</div>
 	<a name="{$table}">&nbsp;</a>
-
 {/if}{* End if simple_header *}
 	<form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>

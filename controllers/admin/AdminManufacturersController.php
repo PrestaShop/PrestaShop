@@ -85,11 +85,17 @@ class AdminManufacturersControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function setHelperListDisplay(Helper $helper)
+	{
+		$helper->toolbar = false;
+		parent::setHelperListDisplay($helper);
+	}
+
 	public function initList()
 	{
+		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('view');
 
 		$this->_select = '
 			COUNT(`id_product`) AS `products`, (
@@ -104,7 +110,7 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
 
 		$this->initToolbar();
-		$this->content .= parent::initList();
+		$list_manufacturers = parent::initList();
 
 		// reset actions and query vars
 		$this->actions = array();
@@ -185,7 +191,12 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->postProcess();
 
 		$this->initToolbar();
-		$this->content .= parent::initList();
+		$list_addresses = parent::initList();
+
+		$this->context->smarty->assign(array(
+			'list_manufacturers' => $list_manufacturers,
+			'list_addresses' => $list_addresses
+		));
 	}
 
 	 /**
@@ -563,7 +574,8 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'manufacturer' => $manufacturer,
 			'addresses' => $addresses,
-			'products' => $products
+			'products' => $products,
+			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 		));
 	}
 
