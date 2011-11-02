@@ -149,7 +149,7 @@
 							{/if}
 						</tr>
  						{if !$simple_header}
-						<tr class="nodrag nodrop" style="height: 35px;">
+						<tr class="nodrag nodrop filter" style="height: 35px;">
 							<td class="center">
 								{if $delete}
 									--
