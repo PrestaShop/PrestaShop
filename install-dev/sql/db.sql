@@ -2170,6 +2170,7 @@ CREATE TABLE `PREFIX_supplier_order_state` (
 `editable` tinyint(1) NOT NULL DEFAULT 0,
 `receipt_state` tinyint(1) NOT NULL DEFAULT 0,
 `pending_receipt` tinyint(1) NOT NULL DEFAULT 0,
+`enclosed` tinyint(1) NOT NULL DEFAULT 0,
 `color` VARCHAR(32) DEFAULT NULL,
   PRIMARY KEY (`id_supplier_order_state`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
