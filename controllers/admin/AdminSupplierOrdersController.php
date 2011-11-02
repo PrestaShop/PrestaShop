@@ -477,6 +477,12 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'width' => 100,
 				'filter_key' => 'stl!name'
 			),
+			'id_pdf' => array(
+				'title' => $this->l('PDF'),
+				'callback' => 'printPDFIcons',
+				'orderby' => false,
+				'search' => false
+			),
 		);
 
 		// make new query
@@ -488,7 +494,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			st.delivery_note,
 			st.editable,
 			st.receipt_state,
-			st.color AS color';
+			st.color AS color,
+			a.id_supplier_order as id_pdf';
 
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'supplier_order_state_lang` stl ON
 						(
@@ -1021,5 +1028,25 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				)
 			);
 		}
+	}
+
+	public function printPDFIcons($id_supplier_order, $tr)
+	{
+		$supplier_order = new SupplierOrder((int)$id_supplier_order);
+		if (!Validate::isLoadedObject($supplier_order))
+			return;
+
+		$supplier_order_state = new SupplierOrderState($supplier_order->id_supplier_order_state);
+		if (!Validate::isLoadedObject($supplier_order_state))
+			return;
+
+		$content = '<span style="width:20px; margin-right:5px;">';
+		if ($supplier_order_state->editable == false && $supplier_order_state->delivery_note == true)
+			$content .= '<a href="#"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
+		else
+			$content .= '-';
+		$content .= '</span>';
+
+		return $content;
 	}
 }
