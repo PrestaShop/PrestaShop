@@ -111,6 +111,10 @@ $(document).ready(function()
 	var type = new Array();
 	
 	$(".notifs").live("click", function(){
+		// Add class "open_notifs" to the clicked notification, remove the class from other notificationqs
+		$('.notifs').removeClass('open_notifs');
+		$(this).addClass('open_notifs');
+		
 		wrapper_id = $(this).attr("id");
 		type = wrapper_id.split("s_notif")
 		$.post("ajax.php",
