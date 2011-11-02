@@ -434,12 +434,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (!Combination::isFeatureActive())
 			return;
 
-		Module::hookExec('postProcessAttributeGroup',
-		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessAttributeGroup to stop saving process
-
 		// If it's an attribute, load object Attribute()
 		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
 		{
+			/* Hook */
+			Hook::exec('actionObjectAttributeAddBefore');
+
 			// Override var of Controller
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
@@ -485,6 +485,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		else
 		{
+			/* Hook */
+			Hook::exec('actionObjectAttributeGroupAddBefore');
+			
 			if (Tools::getValue('submitDel'.$this->table))
 			{
 			 	if ($this->tabAccess['delete'] === '1')
