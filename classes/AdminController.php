@@ -1028,9 +1028,6 @@ class AdminControllerCore extends Controller
 			'token_admin_messages' => Tools::getAdminTokenLite('AdminMessages'),
 			'token_admin_employees' => Tools::getAdminTokenLite('AdminEmployees'),
 			'token_admin_search' => Tools::getAdminTokenLite('AdminSearch'),
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
 			'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
 			'last_name' => htmlentities($this->context->employee->lastname, ENT_COMPAT, 'UTF-8'),
 			'base_url' => $this->context->shop->getBaseURL(),
@@ -1104,9 +1101,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->context->smarty->assign(array(
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
@@ -1522,6 +1516,11 @@ class AdminControllerCore extends Controller
 			}
 			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
 				$this->ajaxPreProcess();
+			$this->context->smarty->assign(array(
+				'table' => $this->table,
+				'current' => self::$currentIndex,
+				'token' => $this->token,
+			));
 	}
 
 	/**

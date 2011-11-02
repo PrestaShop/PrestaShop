@@ -323,4 +323,14 @@ class AdminCartRulesControllerCore extends AdminController
 		
 		return parent::initForm();
 	}
+
+	public function displayAjaxSearchCartRuleVouchers()
+	{	
+		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)Context::getContext()->cookie->id_lang))
+			$found = true;
+		else
+			$found = false;
+		echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
+	}
+
 }

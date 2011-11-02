@@ -84,7 +84,7 @@
 		});
 		$('#show_old_carts').click();
 		$.ajaxSetup({ type:"post" });
-		$("#voucher").autocomplete('{$link->getAdminLink('AdminDiscounts')}', {
+		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')}', {
 					minChars: 3,
 					max: 15,
 					width: 250,
@@ -106,9 +106,9 @@
 					},
 					extraParams: {
 						ajax: "1",
-						token: "{getAdminToken tab='AdminDiscounts'}",
-						tab: "AdminDiscounts",
-						action: "searchVouchers"
+						token: "{getAdminToken tab='AdminCartRules'}",
+						tab: "AdminCartRules",
+						action: "searchCartRuleVouchers"
 					}
 				}
 			)
@@ -124,7 +124,7 @@
 						token: "{getAdminToken tab='AdminCarts'}",
 						tab: "AdminCarts",
 						action: "addVoucher",
-						id_voucher: data.id_discount,
+						id_cart_rule: data.id_cart_rule,
 						id_cart: id_cart
 						},
 					success : function(res)
@@ -148,53 +148,86 @@
 			setupCustomer('{$cart->id_customer}');
 			useCart('{$cart->id}');
 		{/if}
-		$('#loader, #loader_container').ajaxStart(function() {
-			$(this).fadeIn();
-		});
-		resetBind();
-	});
-	
-	function resetBind()
-	{
-		$(".fancybox").fancybox();
-		/*$("#new_address").fancybox({
-			onClosed: useCart(id_cart)
-		});*/
-		$(".delete_product").unbind('click').click(function() {
+		
+		$('.delete_product').live('click', function(e) {
+			e.preventDefault();
 			var to_delete = $(this).attr('rel').split('_');
 			deleteProduct(to_delete[1], to_delete[2]);
 		});
-		$('.delete_discount').unbind('click').click(function() {
-			deleteDiscount($(this).attr('rel'));
+		$('.delete_discount').live('click', function(e) {
+			e.preventDefault();
+			deleteVoucher($(this).attr('rel'));
 		});
-		$(".use_cart").unbind('click').click(function() {
+		$('.use_cart').live('click', function(e) {
+			e.preventDefault();
 			useCart($(this).attr('rel'));
 		});
-		$('#loader, #loader_container').ajaxStart(function() {
-			$(this).fadeIn();
-		});
-		$('#loader, #loader_container').ajaxComplete(function() {
-			$(this).fadeOut();
-		});
-		$(".duplicate_order").unbind('click').click(function() {
+
+		$('.duplicate_order').live('click', function(e) {
+			e.preventDefault();
 			duplicateOrder($(this).attr('rel'));
 		});
-		$('.cart_quantity').change(function() {
+		$('.cart_quantity').live('change', function(e) {
+			e.preventDefault();
 			if ($(this).val() != cart_quantity[$(this).attr('rel')])
 			{
 				var product = $(this).attr('rel').split('_');
 				updateQty(product[0], product[1], $(this).val() - cart_quantity[$(this).attr('rel')]);
 			}
 		});
-		$('.increaseqty_product,.decreaseqty_product').unbind('click').click(function() {
+		$('.increaseqty_product,.decreaseqty_product').live('click', function(e) {
+			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			var sign = '';
 			if ($(this).hasClass('decreaseqty_product'))
 				sign = '-';
 			updateQty(product[0], product[1], sign+1);
 		});
-		$('#id_product, .id_product_attribute').unbind('change').change(function() {
+		$('#id_product, .id_product_attribute').live('change', function(e) {
+			e.preventDefault();
 			displayQtyInStock(this.id);
+		});
+		$('.product_unit_price').live('change', function(e) {
+			e.preventDefault();
+			var product = $(this).attr('rel').split('_');
+			updateProductPrice(product[0], product[1], $(this).val());
+		});
+		/*$('.fancybox').live('click', function(e) {
+			$(this).fancybox().trigger('click');
+			return false;
+		});*/
+		resetBind();
+	});
+	
+	function resetBind()
+	{
+		$('.fancybox').fancybox();
+		/*$("#new_address").fancybox({
+			onClosed: useCart(id_cart)
+		});*/
+	}
+	
+	function updateProductPrice(id_product, id_product_attribute, new_price)
+	{
+		$.ajax({
+			type:"POST",
+			url: "{$link->getAdminLink('AdminCarts')}",
+			async: true,
+			dataType: "json",
+			data : {
+				ajax: "1",
+				token: "{getAdminToken tab='AdminCarts'}",
+				tab: "AdminCarts",
+				action: "updateProductPrice",
+				id_cart: id_cart,
+				id_product: id_product,
+				id_product_attribute: id_product_attribute,
+				price: new_price
+				},
+			success : function(res)
+			{
+				displaySummary(res);
+			}
 		});
 	}
 	
@@ -233,6 +266,7 @@
 	{
 		id_cart = id_new_cart;
 		$('#id_cart').val(id_cart);
+		$('#id_cart').val(id_cart);
 		$.ajax({
 			type:"POST",
 			url: "{$link->getAdminLink('AdminCarts')}",
@@ -252,7 +286,7 @@
 		});
 	}
 	
-	function deleteDiscount(id_voucher)
+	function deleteVoucher(id_cart_rule)
 	{
 		$.ajax({
 			type:"POST",
@@ -263,8 +297,8 @@
 				ajax: "1",
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
-				action: "deleteDiscount",
-				id_voucher: id_voucher,
+				action: "deleteVoucher",
+				id_voucher: id_cart_rule,
 				id_cart: id_cart,
 				},
 			success : function(res)
@@ -387,6 +421,7 @@
 				if (res.id_cart)
 				{
 					id_cart = res.id_cart;
+					$('#id_cart').val(id_cart);
 				}
 				displaySummary(res);
 				resetBind();
