@@ -364,14 +364,14 @@ class AdminOrdersControllerCore extends AdminController
 										$updProduct['stock_quantity'] = (int)($newProductQty);
 										$product['stock_quantity'] = $updProduct['stock_quantity'];
 									}
-									Hook::updateQuantity($product, $order);
+									Hook::exec('updateQuantity', array('product' => $product, 'order' => $order));
 								}
 							}
 
 							// Delete product
 							if (!$order->deleteProduct($order, $orderDetail, $qtyCancelProduct))
 								$this->_errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
-							Module::hookExec('cancelProduct', array('order' => $order, 'id_order_detail' => $id_order_detail));
+							Hook::exec('cancelProduct', array('order' => $order, 'id_order_detail' => $id_order_detail));
 						}
 					if (!sizeof($this->_errors) AND $customizationList)
 						foreach ($customizationList AS $id_customization => $id_order_detail)
@@ -397,7 +397,7 @@ class AdminOrdersControllerCore extends AdminController
 							$this->_errors[] = Tools::displayError('Cannot generate credit slip');
 						else
 						{
-							Module::hookExec('orderSlip', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
+							Hook::exec('orderSlip', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
 							@Mail::Send((int)$order->id_lang, 'credit_slip', Mail::l('New credit slip regarding your order', $order->id_lang),
 							$params, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,
 							_PS_MAIL_DIR_, true);
@@ -547,8 +547,8 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Assign Hook
 		$this->context->smarty->assign(array(
-			'HOOK_INVOICE' => Module::hookExec('invoice', array('id_order' => $order->id)),
-			'HOOK_ADMIN_ORDER' => Module::hookExec('adminOrder', array('id_order' => $order->id))
+			'HOOK_INVOICE' => Hook::exec('invoice', array('id_order' => $order->id)),
+			'HOOK_ADMIN_ORDER' => Hook::exec('adminOrder', array('id_order' => $order->id))
 		));
 	}
 	public function ajaxProcessSearchCustomers()

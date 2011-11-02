@@ -1050,8 +1050,8 @@ class AdminControllerCore extends Controller
 			'pic_dir' => _THEME_PROD_PIC_DIR_
 		));
 		$this->context->smarty->assign(array(
-			'HOOK_HEADER' => Module::hookExec('backOfficeHeader'),
-			'HOOK_TOP' => Module::hookExec('backOfficeTop'),
+			'HOOK_HEADER' => Hook::exec('backOfficeHeader'),
+			'HOOK_TOP' => Hook::exec('backOfficeTop'),
 		));
 	}
 
@@ -1132,7 +1132,7 @@ class AdminControllerCore extends Controller
 		));
 
 		$this->context->smarty->assign(array(
-			'HOOK_FOOTER' => Module::hookExec('backOfficeFooter'),
+			'HOOK_FOOTER' => Hook::exec('backOfficeFooter'),
 		));
 	}
 

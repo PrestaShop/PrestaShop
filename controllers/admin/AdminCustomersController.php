@@ -517,7 +517,7 @@ class AdminCustomersControllerCore extends AdminController
 			'messages' => $messages,
 
 			// Display hook specified to this page : AdminCustomers
-			'hook' => Module::hookExec('adminCustomers', array('id_customer' => $customer->id)),
+			'hook' => Hook::exec('adminCustomers', array('id_customer' => $customer->id)),
 
 			// Groups
 			'groups' => $groups,

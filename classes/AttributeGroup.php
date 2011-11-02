@@ -76,14 +76,14 @@ class AttributeGroupCore extends ObjectModel
 			$this->position = AttributeGroup::getHigherPosition() + 1;
 
 		$return = parent::add($autodate, true);
-		Module::hookExec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
+		Hook::exec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
 
 	public function update($nullValues = false)
 	{
 		$return = parent::update($nullValues);
-		Module::hookExec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
+		Hook::exec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
 
@@ -149,7 +149,7 @@ class AttributeGroupCore extends ObjectModel
 			return false;
 		$return = parent::delete();
 		if ($return)
-			Module::hookExec('afterDeleteAttributeGroup', array('id_attribute_group' => $this->id));
+			Hook::exec('afterDeleteAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
 

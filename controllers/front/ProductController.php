@@ -178,12 +178,12 @@ class ProductControllerCore extends FrontController
 				'attachments' => (($this->product->cache_has_attachments) ? $this->product->getAttachments($this->context->language->id) : array()),
 				'allow_oosp' => $this->product->isAvailableWhenOutOfStock((int)$this->product->out_of_stock),
 				'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
-				'HOOK_EXTRA_LEFT' => Module::hookExec('extraLeft'),
-				'HOOK_EXTRA_RIGHT' => Module::hookExec('extraRight'),
-				'HOOK_PRODUCT_OOS' => Hook::productOutOfStock($this->product),
-				'HOOK_PRODUCT_ACTIONS' => Module::hookExec('productActions'),
-				'HOOK_PRODUCT_TAB' =>  Module::hookExec('productTab'),
-				'HOOK_PRODUCT_TAB_CONTENT' =>  Module::hookExec('productTabContent'),
+				'HOOK_EXTRA_LEFT' => Hook::exec('extraLeft'),
+				'HOOK_EXTRA_RIGHT' => Hook::exec('extraRight'),
+				'HOOK_PRODUCT_OOS' => Hook::exec('productOutOfStock', array('product' => $this->product)),
+				'HOOK_PRODUCT_ACTIONS' => Hook::exec('productActions'),
+				'HOOK_PRODUCT_TAB' =>  Hook::exec('productTab'),
+				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('productTabContent'),
 				'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
 				'display_ht' => !Tax::excludeTaxeOption(),
 				'currencySign' => $this->context->currency->sign,
@@ -499,7 +499,7 @@ class ProductControllerCore extends FrontController
 			$this->context->smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
 
 		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
-		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::productFooter($this->product, $category)));
+		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('productFooter', array('product' => $this->product, 'category' => $category))));
 	}
 
 	public function transformDescriptionWithImg($desc)

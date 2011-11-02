@@ -192,8 +192,8 @@ class OrderDetailControllerCore extends FrontController
 				));
 				if ($carrier->url && $order->shipping_number)
 					$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Module::hookExec('orderDetailDisplayed', array('order' => $order)));
-				Module::hookExec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
+				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Hook::exec('orderDetailDisplayed', array('order' => $order)));
+				Hook::exec('OrderDetail', array('carrier' => $carrier, 'order' => $order));
 
 				unset($carrier, $addressInvoice, $addressDelivery);
 			}

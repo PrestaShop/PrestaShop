@@ -222,7 +222,7 @@ class ParentOrderControllerCore extends FrontController
 		else if (!$this->context->cart->isVirtualCart() && (int)(Tools::getValue('id_carrier')) == 0)
 			$this->errors[] = Tools::displayError('Invalid carrier or no carrier selected');
 
-		Module::hookExec('processCarrier', array('cart' => $this->context->cart));
+		Hook::exec('processCarrier', array('cart' => $this->context->cart));
 
 		if (!$this->context->cart->update())
 			return false;
@@ -293,8 +293,8 @@ class ParentOrderControllerCore extends FrontController
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank));
 		$this->context->smarty->assign(array(
-			'HOOK_SHOPPING_CART' => Module::hookExec('shoppingCart', $summary),
-			'HOOK_SHOPPING_CART_EXTRA' => Module::hookExec('shoppingCartExtra', $summary)
+			'HOOK_SHOPPING_CART' => Hook::exec('shoppingCart', $summary),
+			'HOOK_SHOPPING_CART_EXTRA' => Hook::exec('shoppingCartExtra', $summary)
 		));
 	}
 
@@ -383,8 +383,8 @@ class ParentOrderControllerCore extends FrontController
 			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT'))
 		));
 		$this->context->smarty->assign(array(
-			'HOOK_EXTRACARRIER' => Module::hookExec('extraCarrier', array('address' => $address)),
-			'HOOK_BEFORECARRIER' => Module::hookExec('beforeCarrier', array('carriers' => $carriers))
+			'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address)),
+			'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array('carriers' => $carriers))
 		));
 	}
 
@@ -419,8 +419,8 @@ class ParentOrderControllerCore extends FrontController
 	protected function _assignPayment()
 	{
 		$this->context->smarty->assign(array(
-			'HOOK_TOP_PAYMENT' => Module::hookExec('paymentTop'),
-			'HOOK_PAYMENT' => Module::hookExecPayment()
+			'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
+			'HOOK_PAYMENT' => Hook::exec('payment'),
 		));
 	}
 

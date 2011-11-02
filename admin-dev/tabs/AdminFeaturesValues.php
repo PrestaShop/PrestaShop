@@ -84,7 +84,7 @@ class AdminFeaturesValues extends AdminTab
 		echo '
 					</select><sup> *</sup>
 				</div>
-				'.Module::hookExec('featureValueForm', array('id_feature_value' => $obj->id)).'
+				'.Hook::exec('featureValueForm', array('id_feature_value' => $obj->id)).'
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
 				</div>
@@ -98,7 +98,7 @@ class AdminFeaturesValues extends AdminTab
 	 */
 	public function postProcess($token = NULL)
 	{
-		Module::hookExec('postProcessFeatureValue',
+		Hook::exec('postProcessFeatureValue',
 		array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessFeatureValue to stop saving process
 
 		if(Tools::getValue('submitDel'.$this->table))

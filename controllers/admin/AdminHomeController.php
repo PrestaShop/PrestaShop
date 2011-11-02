@@ -554,7 +554,7 @@ class AdminHomeControllerCore extends AdminController
 		$tpl_vars['last_orders'] =$this->getLastOrders();
 		$tpl_vars['tips_optimization'] =  $this->_displayOptimizationTips();
 
-		$HOOK_BACKOFFICEHOME = Module::hookExec('backOfficeHome');
+		$HOOK_BACKOFFICEHOME = Hook::exec('backOfficeHome');
 		$tpl_vars['HOOK_BACKOFFICEHOME'] = $HOOK_BACKOFFICEHOME;
 		$smarty->assign($tpl_vars);
 

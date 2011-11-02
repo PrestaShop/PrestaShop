@@ -118,8 +118,8 @@ class AuthControllerCore extends FrontController
 
 		// Call a hook to display more information on form
 		$this->context->smarty->assign(array(
-			'HOOK_CREATE_ACCOUNT_FORM' => Module::hookExec('createAccountForm'),
-			'HOOK_CREATE_ACCOUNT_TOP' => Module::hookExec('createAccountTop')
+			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('createAccountForm'),
+			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('createAccountTop')
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
 	}
@@ -235,7 +235,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitLogin()
 	{
-		Module::hookExec('beforeAuthentication');
+		Hook::exec('beforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
 		if (empty($email))
@@ -275,7 +275,7 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->update();
-				Module::hookExec('authentication');
+				Hook::exec('authentication');
 				
 				// Login information have changed, so we check if the cart rules still apply
 				CartRule::autoRemoveFromCart();
@@ -352,7 +352,7 @@ class AuthControllerCore extends FrontController
 						$this->updateContext($customer);
 
 						$this->context->cart->update();
-						Module::hookExec('createAccount', array(
+						Hook::exec('createAccount', array(
 							'_POST' => $_POST,
 							'newCustomer' => $customer
 						));
@@ -472,7 +472,7 @@ class AuthControllerCore extends FrontController
 
 							// If a logged guest logs in as a customer, the cart secure key was already set and needs to be updated
 							$this->context->cart->update();
-							Module::hookExec('createAccount', array(
+							Hook::exec('createAccount', array(
 								'_POST' => $_POST,
 								'newCustomer' => $customer
 							));

@@ -189,7 +189,7 @@ function submitAccount()
 					$context->cookie->logged = 1;
 					$customer->logged = 1;
 					$context->cookie->email = $customer->email;
-					Module::hookExec('createAccount', array(
+					Hook::exec('createAccount', array(
 						'_POST' => $_POST,
 						'newCustomer' => $customer
 					));
@@ -238,7 +238,7 @@ function submitLogin()
 			$context->cookie->email = $customer->email;
 			if (Configuration::get('PS_CART_FOLLOWING') AND (empty($context->cookie->id_cart) OR Cart::getNbProducts($context->cookie->id_cart) == 0))
 				$context->cookie->id_cart = Cart::lastNoneOrderedCart($customer->id);
-			Module::hookExec('authentication');
+			Hook::exec('authentication');
 
 			// Next !
 			$payerID = strval(Tools::getValue('payerID'));

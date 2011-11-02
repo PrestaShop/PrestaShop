@@ -543,9 +543,9 @@ class FrontControllerCore extends Controller
 			'content_only' => (int)Tools::getValue('content_only')
 		));
 		$this->context->smarty->assign(array(
-			'HOOK_HEADER' => Module::hookExec('header'),
-			'HOOK_TOP' => Module::hookExec('top'),
-			'HOOK_LEFT_COLUMN' => Module::hookExec('leftColumn')
+			'HOOK_HEADER' => Hook::exec('header'),
+			'HOOK_TOP' => Hook::exec('top'),
+			'HOOK_LEFT_COLUMN' => Hook::exec('leftColumn')
 		));
 
 		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
@@ -564,8 +564,8 @@ class FrontControllerCore extends Controller
 	public function initFooter()
 	{
 		$this->context->smarty->assign(array(
-			'HOOK_RIGHT_COLUMN' => Module::hookExec('rightColumn', array('cart' => $this->context->cart)),
-			'HOOK_FOOTER' => Module::hookExec('footer'),
+			'HOOK_RIGHT_COLUMN' => Hook::exec('rightColumn', array('cart' => $this->context->cart)),
+			'HOOK_FOOTER' => Hook::exec('footer'),
 		));
 	}
 
