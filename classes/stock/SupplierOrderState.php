@@ -56,6 +56,11 @@ class SupplierOrderStateCore extends ObjectModel
 	public $pending_receipt;
 
 	/**
+	 * @var bool Tells if the the order is in an enclosed state
+	 */
+	public $enclosed;
+
+	/**
 	 * @var string Display state in the specified color (Ex. #FFFF00)
 	 */
 	public $color;
@@ -65,6 +70,7 @@ class SupplierOrderStateCore extends ObjectModel
 		'editable' => 'isBool',
 		'receipt_state' => 'isBool',
 		'pending_receipt' => 'isBool',
+		'enclosed' => 'isBool',
 		'color' => 'isColor'
 	);
 
@@ -92,6 +98,7 @@ class SupplierOrderStateCore extends ObjectModel
 		$fields['editable'] = (bool)$this->editable;
 		$fields['receipt_state'] = (bool)$this->receipt_state;
 		$fields['pending_receipt'] = (bool)$this->pending_receipt;
+		$fields['enclosed'] = (bool)$this->enclosed;
 		$fields['color'] = pSQL($this->color);
 
 		return $fields;
