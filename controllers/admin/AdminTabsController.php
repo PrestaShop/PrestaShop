@@ -33,7 +33,7 @@ class AdminTabsControllerCore extends AdminController
 		$this->table = 'tab';
 		$this->className = 'Tab';
 		$this->lang = true;
-		
+
 		$this->fieldImageSettings = array(
 			'name' => 'icon',
 			'dir' => 't'
@@ -219,8 +219,8 @@ class AdminTabsControllerCore extends AdminController
 			return;
 		}
 		/* PrestaShop demo mode*/
-		
-		if (($id_tab = (int)(Tools::getValue('id_tab'))) AND ($direction = Tools::getValue('move')) AND Validate::isLoadedObject($tab = new Tab($id_tab)))
+
+		if (($id_tab = (int)Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab)))
 		{
 			if ($tab->move($direction))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
@@ -230,7 +230,8 @@ class AdminTabsControllerCore extends AdminController
 			if ($this->tabAccess['edit'] !== '1')
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 			else if (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier))))
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+					' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else

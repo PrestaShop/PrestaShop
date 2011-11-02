@@ -100,20 +100,20 @@ class AttributeGroupCore extends ObjectModel
 
 	public static function cleanDeadCombinations()
 	{
-		$attributeCombinations = Db::getInstance()->executeS('
+		$attribute_combinations = Db::getInstance()->executeS('
 			SELECT pac.`id_attribute`, pa.`id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
 				ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
 		');
-		$toRemove = array();
-		foreach ($attributeCombinations as $attributeCombination)
-			if ((int)$attributeCombination['id_attribute'] == 0)
-				$toRemove[] = (int)$attributeCombination['id_product_attribute'];
-		if (!empty($toRemove) AND Db::getInstance()->execute('
+		$to_remove = array();
+		foreach ($attribute_combinations as $attribute_combination)
+			if ((int)$attribute_combination['id_attribute'] == 0)
+				$to_remove[] = (int)$attribute_combination['id_product_attribute'];
+		if (!empty($to_remove) && Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product_attribute`
-				IN ('.implode(', ', $toRemove).')') === false)
+				IN ('.implode(', ', $to_remove).')') === false)
 			return false;
 		return true;
 	}
@@ -121,21 +121,21 @@ class AttributeGroupCore extends ObjectModel
 	public function delete()
 	{
 		/* Select children in order to find linked combinations */
-		$attributeIds = Db::getInstance()->executeS('
+		$attribute_ids = Db::getInstance()->executeS('
 			SELECT `id_attribute`
 			FROM `'._DB_PREFIX_.'attribute`
 			WHERE `id_attribute_group` = '.(int)$this->id
 		);
-		if ($attributeIds === false)
+		if ($attribute_ids === false)
 			return false;
 		/* Removing attributes to the found combinations */
-		$toRemove = array();
-		foreach ($attributeIds as $attribute)
-			$toRemove[] = (int)$attribute['id_attribute'];
-		if (!empty($toRemove) && Db::getInstance()->execute('
+		$to_remove = array();
+		foreach ($attribute_ids as $attribute)
+			$to_remove[] = (int)$attribute['id_attribute'];
+		if (!empty($to_remove) && Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
 			WHERE `id_attribute`
-				IN ('.implode(', ', $toRemove).')') === false)
+				IN ('.implode(', ', $to_remove).')') === false)
 			return false;
 		/* Remove combinations if they do not possess attributes anymore */
 		if (!self::cleanDeadCombinations())
@@ -148,7 +148,7 @@ class AttributeGroupCore extends ObjectModel
 				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id) === false)
 			return false;
 		$return = parent::delete();
-		if($return)
+		if ($return)
 			Module::hookExec('afterDeleteAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
 	}
@@ -262,9 +262,9 @@ class AttributeGroupCore extends ObjectModel
 
 		foreach ($res as $group_attribute)
 			if ((int)$group_attribute['id_attribute_group'] == (int)$this->id)
-				$movedGroupAttribute = $group_attribute;
+				$moved_group_attribute = $group_attribute;
 
-		if (!isset($movedGroupAttribute) || !isset($position))
+		if (!isset($moved_group_attribute) || !isset($position))
 			return false;
 
 		// < and > statements rather than BETWEEN operator
@@ -274,12 +274,12 @@ class AttributeGroupCore extends ObjectModel
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
-				? '> '.(int)$movedGroupAttribute['position'].' AND `position` <= '.(int)$position
-				: '< '.(int)$movedGroupAttribute['position'].' AND `position` >= '.(int)$position)
+				? '> '.(int)$moved_group_attribute['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$moved_group_attribute['position'].' AND `position` >= '.(int)$position)
 		) && Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute_group`
 			SET `position` = '.(int)$position.'
-			WHERE `id_attribute_group`='.(int)$movedGroupAttribute['id_attribute_group'])
+			WHERE `id_attribute_group`='.(int)$moved_group_attribute['id_attribute_group'])
 		);
 	}
 
