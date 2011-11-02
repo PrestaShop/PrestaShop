@@ -61,7 +61,6 @@ class AdminContactsControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'attributeLang' => 'name',
 					'p' => $this->l('Contact name, e.g., Technical Support'),
 				),
 				array(
@@ -99,7 +98,6 @@ class AdminContactsControllerCore extends AdminController
 					'name' => 'description',
 					'required' => false,
 					'lang' => true,
-					'attributeLang' => 'description',
 					'cols' => 36,
 					'rows' => 5,
 					'p' => $this->l('Additional information about this contact'),
