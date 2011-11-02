@@ -172,7 +172,6 @@ class GroupCore extends ObjectModel
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
 			$this->truncateRestrictionsModules($this->id);
-			Discount::deleteByIdGroup((int)$this->id);
 
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
@@ -193,8 +192,6 @@ class GroupCore extends ObjectModel
 						WHERE id_customer = cg.id_customer),
 						1)
 				WHERE `id_default_group` = '.(int)$this->id);
-
-			Discount::deleteByIdGroup($this->id);
 
 			return true;
 		}

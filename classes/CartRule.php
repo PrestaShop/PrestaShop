@@ -166,6 +166,70 @@ class CartRuleCore extends ObjectModel
 	 	return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_cart_rule` FROM `'._DB_PREFIX_.'cart_rule` WHERE `code` = \''.pSQL($code).'\'');
 	}
 	
+	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null)
+    {
+		if (!CartRule::isFeatureActive())
+			return array();
+
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT *
+		FROM `'._DB_PREFIX_.'cart_rule` cr
+		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
+		WHERE (
+			cr.`id_customer` = '.(int)$id_customer.'
+			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
+		)
+		'.($active ? 'AND cr.`active` = 1' : '').'
+		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
+
+		// Remove cart rule that does not match the customer groups
+		if ($includeGeneric)
+		{
+			$customerGroups = Customer::getGroupsStatic($id_customer);
+			foreach ($result as $key => $cart_rule)
+				if ($cart_rule['group_restriction'])
+				{
+					$cartRuleGroups = Db::getInstance()->getValue('SELECT id_group FROM '._DB_PREFIX_.'cart_rule_group WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
+					foreach ($cartRuleGroups as $cartRuleGroup)
+						if (in_array($cartRuleGroups['id_group'], $customerGroups))
+							continue 2;
+					unset($result[$key]);
+				}
+		}
+		return $result;
+	}
+	
+	public function usedByCustomer($id_customer)
+	{
+		return (bool)Db::getInstance()->getValue('
+		SELECT id_cart_rule
+		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
+		LEFT JOIN `'._DB_PREFIX_.'orders` o ON ocr.`id_order` = o.`id_order`
+		WHERE ocr.`id_cart_rule` = '.(int)$this->id.'
+		AND o.`id_customer` = '.(int)$id_customer);
+	}
+	
+	public static function cartRuleExists($name)
+	{
+		if (!CartRule::isFeatureActive())
+			return false;
+
+		return (bool)Db::getInstance()->getValue('
+		SELECT `id_cart_rule`
+		FROM `'._DB_PREFIX_.'cart_rule`
+		WHERE `code` = \''.pSQL($name).'\'');
+	}
+	
+	public static function deleteByIdCustomer($id_customer)
+	{
+		$return = true;
+		$result = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_rule` WHERE `id_customer` = '.(int)$id_customer);
+		$cartRules = ObjectModel::hydrateCollection('CartRule', $result);
+		foreach ($cartRules as $cartRule)
+			$return &= $cartRule->delete();
+		return $return;
+	}
+
 	public function getProductRules()
 	{
 		if (!Validate::isLoadedObject($this) OR $this->product_restriction == 0)
@@ -353,7 +417,7 @@ class CartRuleCore extends ObjectModel
 	}
 	
 	// The reduction value is POSITIVE
-	public function getValue($useTax, Context $context = NULL)
+	public function getContextualValue($useTax, Context $context = NULL)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
