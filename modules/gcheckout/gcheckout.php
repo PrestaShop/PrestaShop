@@ -223,9 +223,9 @@ class GCheckout extends PaymentModule
 
 		if ($wrapping = $this->context->cart->getOrderTotal(true, Cart::ONLY_WRAPPING))
 			$googleCart->AddItem(new GoogleItem(utf8_decode($this->l('Wrapping')), '', 1, $wrapping));
-		foreach ($this->context->cart->getDiscounts() AS $voucher)
-				$googleCart->AddItem(new GoogleItem(utf8_decode($voucher['name']),
-				utf8_decode($voucher['description']), 1, '-'.$voucher['value_real']));
+		foreach ($this->context->cart->getCartRules() AS $cart_tule)
+				$googleCart->AddItem(new GoogleItem(utf8_decode($cart_tule['code']),
+				utf8_decode($cart_tule['name']), 1, '-'.$cart_tule['value_real']));
 
 		if (!Configuration::get('GCHECKOUT_NO_SHIPPING'))
 		{

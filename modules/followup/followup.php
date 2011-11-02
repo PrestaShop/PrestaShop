@@ -59,7 +59,7 @@ class Followup extends Module
 		CREATE TABLE '._DB_PREFIX_.'log_email (
 		`id_log_email` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 		`id_email_type` INT UNSIGNED NOT NULL ,
-		`id_discount` INT UNSIGNED NOT NULL ,
+		`id_cart_rule` INT UNSIGNED NOT NULL ,
 		`id_customer` INT UNSIGNED NULL ,
 		`id_cart` INT UNSIGNED NULL ,
 		`date_add` DATETIME NOT NULL,
@@ -195,11 +195,11 @@ class Followup extends Module
 					
 			$stats = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DATE_FORMAT(l.date_add, \'%Y-%m-%d\') date_stat, l.id_email_type, COUNT(l.id_log_email) nb, 
-			(SELECT COUNT(l2.id_discount) 
+			(SELECT COUNT(l2.id_cart_rule) 
 			FROM '._DB_PREFIX_.'log_email l2
-			LEFT JOIN '._DB_PREFIX_.'order_discount od ON (od.id_discount = l2.id_discount)
-			LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_order = od.id_order)
-			WHERE l2.id_email_type = l.id_email_type AND l2.date_add = l.date_add AND od.id_order IS NOT NULL AND o.valid = 1) nb_used
+			LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_cart_rule = l2.id_cart_rule)
+			LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_order = ocr.id_order)
+			WHERE l2.id_email_type = l.id_email_type AND l2.date_add = l.date_add AND ocr.id_order IS NOT NULL AND o.valid = 1) nb_used
 			FROM '._DB_PREFIX_.'log_email l
 			WHERE l.date_add >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
 			GROUP BY DATE_FORMAT(l.date_add, \'%Y-%m-%d\'), l.id_email_type');
@@ -260,9 +260,9 @@ class Followup extends Module
 	}
 	
 	/* Log each sent e-mail */
-	private function logEmail($id_email_type, $id_discount, $id_customer = NULL, $id_cart = NULL)
+	private function logEmail($id_email_type, $id_cart_rule, $id_customer = NULL, $id_cart = NULL)
 	{
-		$values = array('id_email_type' => (int)($id_email_type), 'id_discount' => (int)($id_discount), 'date_add' => date('Y-m-d H:i:s'));
+		$values = array('id_email_type' => (int)($id_email_type), 'id_cart_rule' => (int)$id_cart_rule, 'date_add' => date('Y-m-d H:i:s'));
 		if (!empty($id_cart))
 			$values['id_cart'] = (int)($id_cart);
 		if (!empty($id_customer))
@@ -455,30 +455,26 @@ class Followup extends Module
 	
 	private function createDiscount($id_email_type, $amount, $id_customer, $dateValidity, $description)
 	{
-		$discount = new Discount();
-		$discount->id_discount_type = Discount::PERCENT;
-		$discount->value = (float)($amount);
-		$discount->id_customer = (int)($id_customer);
-		$discount->date_to = $dateValidity;
-		$discount->date_from = date('Y-m-d H:i:s');
-		$discount->quantity = 1;
-		$discount->quantity_per_user = 1;
-		$discount->cumulable = 0;
-		$discount->cumulable_reduction = 1;
-		$discount->minimal = 0;
+		$cartRule = new CartRule();
+		$cartRule->reduction_percent = (float)$amount;
+		$cartRule->id_customer = (int)$id_customer;
+		$cartRule->date_to = $dateValidity;
+		$cartRule->date_from = date('Y-m-d H:i:s');
+		$cartRule->quantity = 1;
+		$cartRule->quantity_per_user = 1;
+		$cartRule->cart_rule_restriction = 1;
+		$cartRule->minimum_amount = 0;
 		
 		$languages = Language::getLanguages(true);
 		foreach ($languages AS $language)
-			$discount->description[(int)($language['id_lang'])] = $description;
+			$cartRule->name[(int)$language['id_lang']] = $description;
 			
-		$name = 'FLW-'.(int)($id_email_type).'-'.strtoupper(Tools::passwdGen(10));
-		$discount->name = $name;
-		$discount->active = 1;
-		$result = $discount->add();
-		
-		if (!$result)
+		$code = 'FLW-'.(int)($id_email_type).'-'.strtoupper(Tools::passwdGen(10));
+		$cartRule->name = $code;
+		$cartRule->active = 1;
+		if (!$cartRule->add())
 			return false;
-		return $discount;
+		return $cartRule;
 	}
 	
 	public function cronTask()
@@ -497,12 +493,12 @@ class Followup extends Module
 		/* Clean-up database by deleting all outdated discounts */
 		if ($conf['PS_FOLLOW_UP_CLEAN_DB'] == 1)
 		{
-			$outdatedDiscounts = Db::getInstance()->executeS('SELECT id_discount FROM '._DB_PREFIX_.'discount WHERE date_to < NOW()');
+			$outdatedDiscounts = Db::getInstance()->executeS('SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_rule WHERE date_to < NOW() AND code LIKE "FLW-%"');
 			foreach ($outdatedDiscounts AS $outdatedDiscount)
 			{
-				$discount = new Discount((int)($outdatedDiscount['id_discount']));
-				if (Validate::isLoadedObject($discount))
-					$discount->delete();
+				$cartRule = new CartRule((int)$outdatedDiscount['id_cart_rule']);
+				if (Validate::isLoadedObject($cartRule))
+					$cartRule->delete();
 			}
 		}
 	}

@@ -614,29 +614,32 @@ class OrderCore extends ObjectModel
 		}
 		return $virtual;
 	}
-
-
+	
 	/**
-	 * Get order discounts
-	 *
-	 * @return array Discounts with price and quantity
+	 * @deprecated 1.5.0.1
 	 */
 	public function getDiscounts($details = false)
 	{
+		Tools::displayAsDeprecated();
+		return Order::getCartRules();
+	}
+	
+	public function getCartRules()
+	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'order_cart_rule` od '.
-		($details ? 'LEFT JOIN `'._DB_PREFIX_.'discount` d ON (d.`id_discount` = od.`id_discount`)' : '').'
-		WHERE od.`id_order` = '.(int)($this->id));
+		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
+		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cr.`id_cart_rule` = ocr.`id_cart_rule`
+		WHERE ocr.`id_order` = '.(int)$this->id);
 	}
 
-	public static function getDiscountsCustomer($id_customer, $id_discount)
+	public static function getDiscountsCustomer($id_customer, $id_cart_rule)
 	{
 		return Db::getInstance()->getValue('
-			SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
-			LEFT JOIN '._DB_PREFIX_.'order_cart_rule od ON (od.id_order = o.id_order)
-			WHERE o.id_customer = '.(int)($id_customer).'
-			AND od.id_discount = '.(int)($id_discount));
+		SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
+		LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
+		WHERE o.id_customer = '.(int)$id_customer.'
+		AND ocr.id_cart_rule = '.(int)$id_cart_rule);
 	}
 
 	/**
@@ -888,17 +891,12 @@ class OrderCore extends ObjectModel
     }
 
     /**
-	 * Add a discount to order
-	 *
-	 * @param integer $id_discount Discount id
-	 * @param string $name Discount name
-	 * @param float $value Discount value
-	 * @return boolean Query sucess or not
+	 * @deprecated 1.5.0.1
 	 */
-	public function	addDiscount($id_discount, $name, $value)
+	public function	addDiscount($id_cart_rule, $name, $value)
 	{
 		Tools::displayAsDeprecated();
-		return Order::addCartRule($id_discount, $name, $value);
+		return Order::addCartRule($id_cart_rule, $name, $value);
 	}
 	
 	public function	addCartRule($id_cart_rule, $name, $value)

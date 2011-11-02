@@ -104,14 +104,14 @@ class Loyalty extends Module
 			`id_loyalty_state` INT UNSIGNED NOT NULL DEFAULT 1,
 			`id_customer` INT UNSIGNED NOT NULL,
 			`id_order` INT UNSIGNED DEFAULT NULL,
-			`id_discount` INT UNSIGNED DEFAULT NULL,
+			`id_cart_rule` INT UNSIGNED DEFAULT NULL,
 			`points` INT NOT NULL DEFAULT 0,
 			`date_add` DATETIME NOT NULL,
 			`date_upd` DATETIME NOT NULL,
 			PRIMARY KEY (`id_loyalty`),
 			INDEX index_loyalty_loyalty_state (`id_loyalty_state`),
 			INDEX index_loyalty_order (`id_order`),
-			INDEX index_loyalty_discount (`id_discount`),
+			INDEX index_loyalty_discount (`id_cart_rule`),
 			INDEX index_loyalty_customer (`id_customer`)
 		) DEFAULT CHARSET=utf8 ;');
 

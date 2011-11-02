@@ -317,12 +317,12 @@ class AdminCartsController extends AdminController
 		$errors = array();
 		$customer = new Customer((int)$this->context->cart->id_customer);
 		
-		if (!$id_discount = Tools::getValue('id_voucher') OR !$discount = new Discount((int)$id_discount))
+		if (!$id_cart_rule = Tools::getValue('id_voucher') OR !$cartRule = new CartRule((int)$id_cart_rule))
 			$errors[] = Tools::displayError('Invalid voucher');
-		elseif ($err = $this->context->cart->checkDiscountValidity($discount, $this->context->cart->getDiscounts(), $this->context->cart->getOrderTotal(), $this->context->cart->getProducts(), true, $customer))
+		elseif ($err = $this->context->cart->checkDiscountValidity($cartRule, $this->context->cart->getDiscounts(), $this->context->cart->getOrderTotal(), $this->context->cart->getProducts(), true, $customer))
 			$errors[] = $err;
 		if (!sizeof($errors))
-			if (!$this->context->cart->addDiscount((int)$discount->id))
+			if (!$this->context->cart->addCartRule((int)$cartRule->id))
 				$errors[] = Tools::displayError('Can\'t add the voucher');
 		echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
 	}
