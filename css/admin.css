@@ -80,24 +80,18 @@ h1 {
 	margin: 0 0 .67em 0;
 }
 h2 {
-	font-size: 1.4em;
-	margin: 0 0 .83em 0;
-	color: #268CCD;
+	font-size: 1.4em;;
 }
 h3 {
 	font-size: 1.1em;
-	margin: 0 0 .83em 0;
 }
 h4 {
-	margin: 1.33em 0;
 }
 h5 {
 	font-size: 0.83em;
-	margin: 1.67em 0;
 }
 h6 {
 	font-size: 0.67em;
-	margin: 2.33em 0;
 }
 
 h3.blue {
@@ -231,8 +225,9 @@ label.t {
 	clear: none;
 	padding: 0px;
 	margin: 0px;
-	font-weight: bold;
+	font-weight: normal;
 	font-size: 12px;
+	text-shadow:none;
 }
 label.child {
 	float: none;
@@ -327,6 +322,7 @@ select optgroup option {
 /* STRUCTURE */
 
 #container {
+
 	margin: 0 auto 2em auto;
 	text-align: left;
 }
@@ -1715,43 +1711,3 @@ div.progressBarImage
 #menu .submenu_size .submenu { display: none; position:absolute}
 #menu .submenu_size:hover > .submenu { display: block; }
 .submenu li{float:none;clear:left;}
-#customer_part #customers ul {
-	float:left;
-}
-#customer_part #customers ul li {
-	display:inline;
-	list-style-type: none;
-	float:left;
-	margin:10px;
-}
-#customer_part #customers ul li .id_customer {
-	font-weight:bold;
-	color:green;
-}
-#products_part #products_found {	
-	display:none;
-}
-#vouchers_part #voucher_list {
-	display:none;
-}
-#vouchers_part #vouchers_err {
-	display:none;
-}
-#loader_container {
-	display:none;
-	z-index: 100;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	background:transparent url('../img/bg_loader.png') repeat 0 0;
-}
-#loader {
-	display:none;
-	margin: 0 auto;
-	height:24px;
-	width:24px;
-	color:#fff;
-	background:url(../img/loader.gif);
-}
