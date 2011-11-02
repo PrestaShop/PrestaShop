@@ -147,9 +147,9 @@ $(document).ready(function()
 		<div id="container">
 			{* begin  HEADER *}
 			<div id="header">
-				<div id="header_infos"><span>
-					<a id="header_shopname" href="index.php"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
-					{if {$show_new_orders} == 1}
+				<div id="header_infos">
+				<a id="header_shopname" href="index.php"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
+				{if {$show_new_orders} == 1}
 					<div id="orders_notif" class="notifs">
 						<span id="orders_notif_number_wrapper" class="number_wrapper">
 							<span id="orders_notif_value">0</span>
@@ -161,8 +161,8 @@ $(document).ready(function()
 							<p><a href="index.php?controller=AdminOrders&token={$token_admin_orders}">{l s='Show all orders'}</a></p>
 						</div>
 					</div>
-					{/if}
-					{if ($show_new_customers == 1)}
+				{/if}
+				{if ($show_new_customers == 1)}
 					<div id="customers_notif" class="notifs notifs_alternate">
 						<span id="customers_notif_number_wrapper" class="number_wrapper">
 							<span id="customers_notif_value">0</span>
@@ -174,8 +174,8 @@ $(document).ready(function()
 							<p><a href="index.php?controller=AdminCustomers&token={$token_admin_customers}">{l s='Show all customers'}</a></p>
 						</div>
 					</div>
-					{/if}
-					{if {$show_new_messages} == 1}
+				{/if}
+				{if {$show_new_messages} == 1}
 					<div id="messages_notif" class="notifs">
 						<span id="messages_notif_number_wrapper" class="number_wrapper">
 							<span id="messages_notif_value">0</span>
@@ -187,82 +187,83 @@ $(document).ready(function()
 							<p><a href="index.php?controller=AdminMessages&token={$token_admin_messages}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
-					{/if}
+				{/if}
 				</div>
 				<span id="employee_links">
-					{$first_name}&nbsp;{$last_name}
-					[ <a href="index.php?logout" id="header_logout">
+						<a class="employee" href="index.php?controller=AdminEmployees&id_employee={$employee->id}&updateemployee&token={$token_admin_employees}"  alt="" /> {l s='My preferences'}</a>
+					<span class="separator"></span><span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
+						<span class="separator"></span><a href="index.php?logout" id="header_logout">
 						<span>{l s='logout'}</span>
-					</a> ]
+					</a>
 				{if {$base_url}}
-					- <a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><span>{l s='View my shop'}</span></a>
+					<span class="separator"></span> <a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}"><span>{l s='View my shop'}</span></a>
 				{/if}
-				- <a href="index.php?controller=AdminEmployees&id_employee={$employee->id}&updateemployee&token={$token_admin_employees}" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> {l s='My preferences'}</a>
-			</span></div>
+			</span>
 			<div id="header_search">
-				<form method="post" action="index.php?controller=AdminSearch&token={$token_admin_search}">
-					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
-					<select name="bo_search_type" id="bo_search_type">
-						<option value="0">{l s='everywhere'}</option>
-						<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
-						<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='customers'}</option>
-						<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='ip address'}</option>
-						<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
-						<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
-						<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
-					</select>
-					<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
-				</form>
-			</div>
-			<div id="header_quick">
-				<script type="text/javascript">
-				function quickSelect(elt)
-				{
-					var eltVal = $(elt).val();
-					if (eltVal == "0") return false;
-					else if (eltVal.substr(eltVal.length - 6) == "_blank") window.open(eltVal.substr(0, eltVal.length - 6), "_blank");
-					else location.href = eltVal;
-				}
-				</script>
-				<select onchange="quickSelect(this);" id="quick_select">
-					<option value="0">{l s='Quick Access'}</option>
-					{foreach $quick_access as $quick}
-						<option value="{$quick.link}{if $quick.new_window}_blank{/if}">&gt; {$quick.name}</option>
-					{/foreach}
+			<form method="post" action="index.php?controller=AdminSearch&token={$token_admin_search}">
+				<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
+				<select name="bo_search_type" id="bo_search_type">
+					<option value="0">{l s='everywhere'}</option>
+					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
+					<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='customers'}</option>
+					<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='ip address'}</option>
+					<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
+					<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
+					<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
 				</select>
-			</div>
+				<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
+			</form>
+		</div>
+		<div id="header_quick">
+		<script type="text/javascript">
+		function quickSelect(elt)
+		{
+			var eltVal = $(elt).val();
+			if (eltVal == "0") return false;
+			else if (eltVal.substr(eltVal.length - 6) == "_blank") window.open(eltVal.substr(0, eltVal.length - 6), "_blank");
+			else location.href = eltVal;
+		}
+		</script>
+		<select onchange="quickSelect(this);" id="quick_select">
+			<option value="0">{l s='Quick Access'}</option>
+			{foreach $quick_access as $quick}
+				<option value="{$quick.link}{if $quick.new_window}_blank{/if}">&gt; {$quick.name}</option>
+			{/foreach}
+		</select>
+	</div>
 
-			{if $multi_shop}
-				<div id="header_shoplist">{l s='Select your shop:'}{$shop_list}</div>
-			{/if}
-			{$HOOK_TOP}
-			<ul id="menu">
-				{if !$tab}
-					<div class="mainsubtablist" style="display:none">
-					</div>
-				{/if}
+					{if $multi_shop}
+						<div id="header_shoplist"><span>{l s='Select your shop:'}</span>{$shop_list}</div>
+					{/if}
+					{$HOOK_TOP}
+								</div>
+					<ul id="menu">
+						{if !$tab}
+							<div class="mainsubtablist" style="display:none">
+							</div>
+						{/if}
+						{foreach $tabs AS $t}
+						<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+							<span class="title">
+								<img src="{$t.img}" alt="" />{$t.name}
+							</span>
+		<ul class="submenu">
+		{foreach from=$t.sub_tabs item=t2}
+		<li><a href="{$t2.href}">{$t2.name}</a></li>
+		{/foreach}
+		</ul>
+						</li>
+						{/foreach}
+	</ul>
 				{foreach $tabs AS $t}
-				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-					<span class="title">
-						<img src="{$t.img}" alt="" />{$t.name}
-					</span>
-					<ul class="submenu">
-					{foreach from=$t.sub_tabs item=t2}
-						<li><a href="{$t2.href}">{$t2.name}</a></li>
-					{/foreach}
-					</ul>
-				</li>
+					<div id="tab{$t.id_tab}_subtabs" style="display:none">
+						{foreach $t.sub_tabs AS $t2}
+							<li class="subitem" ><a href="{$t2.href}">{$t2.name}</a></li>
+						{/foreach}
+						<div class="flatclear">&nbsp;</div>
+					</div>
 				{/foreach}
-			</ul>
-			{foreach $tabs AS $t}
-				<div id="tab{$t.id_tab}_subtabs" style="display:none">
-				{foreach $t.sub_tabs AS $t2}
-					<li class="subitem" ><a href="{$t2.href}">{$t2.name}</a></li>
-				{/foreach}
-					<div class="flatclear">&nbsp;</div>
-			</div>
-				{/foreach}
-				{* @todo : handle bo_uimode == hover  / not hover ?
+{* @todo : handle bo_uimode == hover  / not hover ?
 				{if $employee->bo_uimode == 'hover'}
 					<script type="text/javascript">
 						$("#menu li").hoverIntent( { over:hoverTabs,timeout:100,out:outTabs } );
@@ -287,36 +288,36 @@ $(document).ready(function()
 						{/foreach}
 					{/if}
 				</ul>
-			*}
+*}
 			</div> {* end header *}
-			{/if}
-			<div id="main">
-				<div id="content">
-					{if $install_dir_exists}
-						<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
-							{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
-						</div>
-					{/if}
-					
-					{* We should display breadcrumb only if needed *}
-					{if count($tabs_breadcrumb)>1}
-					<div class="path_bar">
-						<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;"></div>
-						<a href="?token={$home_token}">{l s='Back Office'}</a>
-						{foreach $tabs_breadcrumb AS $item}
-							<img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
-							{if isset($item.token)}<a href="?controller={$item.class_name}&token={$item.token}">{/if}
-							{$item.name}
-							{if isset($item.token)}</a>{/if}
-						{/foreach}
-					</div>
-					{/if}
-					{if $is_multishop && $shop_context != 'all'}
-						<div class="multishop_info">
-							{if $shop_context == 'group'}
-								{l s='You are configuring your store for group shop '}<b>{$shop_name}</b>
-							{elseif $shop_context == 'shop'}
-								{l s='You are configuring your store for shop '}<b>{$shop_name}</b>
+{/if}
+					<div id="main">
+						<div id="content">
+							{if $install_dir_exists}
+								<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
+									{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
+								</div>
 							{/if}
-						</div>
-					{/if}
+							
+							{* We should display breadcrumb only if needed *}
+							{if count($tabs_breadcrumb)>1}
+							<div class="path_bar">
+								<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;"></div>
+								<a href="?token={$home_token}">{l s='Back Office'}</a>
+								{foreach $tabs_breadcrumb AS $item}
+									<img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
+									{if isset($item.token)}<a href="?controller={$item.class_name}&token={$item.token}">{/if}
+									{$item.name}
+									{if isset($item.token)}</a>{/if}
+								{/foreach}
+							</div>
+							{/if}
+							{if $is_multishop && $shop_context != 'all'}
+								<div class="multishop_info">
+									{if $shop_context == 'group'}
+										{l s='You are configuring your store for group shop '}<b>{$shop_name}</b>
+									{elseif $shop_context == 'shop'}
+										{l s='You are configuring your store for shop '}<b>{$shop_name}</b>
+									{/if}
+								</div>
+							{/if}
