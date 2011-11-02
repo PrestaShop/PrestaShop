@@ -1,5 +1,4 @@
 /*
-* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -120,8 +119,12 @@ function updateFriendlyURLByName()
 }
 function updateFriendlyURL()
 {
-	$('#link_rewrite_' + id_language).val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
-	$('#seo #friendly-url').text($('#link_rewrite_' + id_language).val());
+	var link = $('#link_rewrite_' + id_language);
+	if (link[0])
+	{
+		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+		$('#seo #friendly-url').text(link.val());
+	}
 }
 
 function toggleLanguageFlags(elt)
