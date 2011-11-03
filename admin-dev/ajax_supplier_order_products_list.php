@@ -34,7 +34,7 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(dirname(__FILE__).'/init.php');
 
 /* @var string Given this pattern, it will return a list of products */
-$pattern = pSQL(Tools::getValue('pattern', false));
+$pattern = pSQL(Tools::getValue('q', false));
 if (!$pattern || $pattern == '' || strlen($pattern) < 1)
 	die();
 
