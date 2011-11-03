@@ -369,7 +369,12 @@ class AuthControllerCore extends FrontController
 							);
 							die(Tools::jsonEncode($return));
 						}
-						Tools::redirect('index.php?controller=address');
+						// redirection: if cart is not empty : redirection to the cart
+						if (count($this->context->cart->getProducts(true)) > 0)
+							Tools::redirect('index.php?controller=order');
+						// else : redirection to the account
+						else
+							Tools::redirect('index.php?controller=my-account');
 					}
 			}
 
