@@ -31,14 +31,14 @@ class TaxRulesGroupCore extends ObjectModel
     public $name;
 
     /** @var bool active state */
-    public 		$active;
+    public $active;
 
- 	protected 	$fieldsRequired = array('name');
- 	protected 	$fieldsSize = array('name' => 64);
- 	protected 	$fieldsValidate = array('name' => 'isGenericName');
+ 	protected $fieldsRequired = array('name');
+ 	protected $fieldsSize = array('name' => 64);
+ 	protected $fieldsValidate = array('name' => 'isGenericName');
 
-	protected 	$table = 'tax_rules_group';
-	protected 	$identifier = 'id_tax_rules_group';
+	protected $table = 'tax_rules_group';
+	protected $identifier = 'id_tax_rules_group';
 
     protected static $_taxes = array();
 
@@ -46,7 +46,7 @@ class TaxRulesGroupCore extends ObjectModel
 	{
 		$this->validateFields();
 		$fields['name'] = ($this->name);
-		$fields['active'] = (int)($this->active);
+		$fields['active'] = (int)$this->active;
 		return $fields;
 	}
 
@@ -85,7 +85,7 @@ class TaxRulesGroupCore extends ObjectModel
 	    );
 
 	    $res = array();
-	    foreach ($rows AS $row)
+	    foreach ($rows as $row)
 	        $res[$row['id_tax_rules_group']] = $row['rate'];
 
 	    return $res;
@@ -113,7 +113,7 @@ class TaxRulesGroupCore extends ObjectModel
 	{
 		Tools::displayAsDeprecated();
 	    $rate = 0;
-	    foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) AS $tax)
+	    foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax)
 	        $rate += (float)$tax->rate;
 
 	    return $rate;

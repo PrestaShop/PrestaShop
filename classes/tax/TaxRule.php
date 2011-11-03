@@ -51,17 +51,17 @@ class TaxRuleCore extends ObjectModel
 
 	public function getFields()
 	{
-	  $this->validateFields();
-      $fields['id_tax_rules_group'] = (int)$this->id_tax_rules_group;
-      $fields['id_country'] = (int)$this->id_country;
-      $fields['id_state'] = (int)$this->id_state;
-      $fields['zipcode_from'] = (int)$this->zipcode_from;
-      $fields['zipcode_to'] = (int)$this->zipcode_to;
-      $fields['behavior'] = (int)$this->behavior;
-	   $fields['id_tax'] = (int)$this->id_tax;
-	   $fields['description'] = $this->description;
+		$this->validateFields();
+		$fields['id_tax_rules_group'] = (int)$this->id_tax_rules_group;
+		$fields['id_country'] = (int)$this->id_country;
+		$fields['id_state'] = (int)$this->id_state;
+		$fields['zipcode_from'] = (int)$this->zipcode_from;
+		$fields['zipcode_to'] = (int)$this->zipcode_to;
+		$fields['behavior'] = (int)$this->behavior;
+		$fields['id_tax'] = (int)$this->id_tax;
+		$fields['description'] = $this->description;
 
-	  return $fields;
+		return $fields;
 	}
 
     public static function deleteByGroupId($id_group)

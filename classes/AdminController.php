@@ -1198,16 +1198,19 @@ class AdminControllerCore extends Controller
 		$helper->shopLink = $this->shopLink;
 		$helper->shopLinkType = $this->shopLinkType;
 		$helper->identifier = $this->identifier;
+		$helper->tpl_folder = $this->tpl_folder;
 		$helper->token = $this->token;
 		$helper->specificConfirmDelete = $this->specificConfirmDelete;
 		$helper->imageType = $this->imageType;
 		$helper->no_add = isset($this->no_add) ? $this->no_add : false;
+		$helper->simple_header = isset($this->simple_header) ? $this->simple_header : false;
 		$helper->no_link = $this->list_no_link;
 		$helper->colorOnBackground = $this->colorOnBackground;
+		$helper->no_back = isset($this->no_back) ? $this->no_back : true;
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
-
+		
 	}
 
 	/**
@@ -1234,6 +1237,7 @@ class AdminControllerCore extends Controller
 			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 			$helper->fields_value = $this->getFieldsValue($this->object);
 			$helper->toolbar_btn = $this->toolbar_btn;
+			$helper->no_back = isset($this->no_back) ? $this->no_back : false;
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))

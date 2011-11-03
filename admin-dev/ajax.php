@@ -970,3 +970,15 @@ if (Tools::isSubmit('getParentCategoriesId') AND $id_category = Tools::getValue(
 	die(Tools::jsonEncode($output));
 }
 
+/* Update attribute */
+if (Tools::isSubmit('ajaxUpdateTaxRule'))
+{
+	$id_tax_rule = Tools::getValue('id_tax_rule');
+	$tax_rules = new TaxRule((int)$id_tax_rule);
+	$output = array();
+	foreach($tax_rules as $key => $result)
+		$output[$key] = $result;
+	die(Tools::jsonEncode($output));
+	
+}
+
