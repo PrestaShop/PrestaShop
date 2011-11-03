@@ -195,6 +195,8 @@ class CategoryCore extends ObjectModel
 	 */
 	public function update($nullValues = false)
 	{
+		if ($this->id_parent == $this->id)
+			throw new PrestashopException('a category cannot be it\'s own parent');
 		// Update group selection
 		$this->updateGroup($this->groupBox);
 		$this->level_depth = $this->calcLevelDepth();
@@ -425,6 +427,8 @@ class CategoryCore extends ObjectModel
 	  */
 	public function recalculateLevelDepth($id_category)
 	{
+		if (!is_numeric($id_category))
+			throw new PrestashopException('id category is not numeric');
 		/* Gets all children */
 		$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT id_category, id_parent, level_depth
