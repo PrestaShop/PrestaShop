@@ -416,6 +416,21 @@ class CustomerCore extends ObjectModel
 					)'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
+	
+	/**
+	  * Search for customers by ip address
+	  *
+	  * @param string $ip Searched string
+	  */
+	public static function searchByIp($ip)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT DISTINCT c.*
+		FROM `'._DB_PREFIX_.'customer` c
+		LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.id_customer = c.id_customer
+		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.id_guest = co.id_guest
+		WHERE co.`ip_address` = \''.ip2long(trim($ip)).'\'');
+	}
 
 	/**
 	  * Return several useful statistics about customer
