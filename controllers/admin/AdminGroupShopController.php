@@ -175,7 +175,7 @@ class AdminGroupShopControllerCore extends AdminController
 				'name' => 'useImportData',
 				'value' => 1
 			),
-			'select' => array(
+			'list' => array(
 				'type' => 'select',
 				'name' => 'importFromShop',
 				'options' => array(

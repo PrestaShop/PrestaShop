@@ -66,7 +66,7 @@ class AdminOrdersControllerCore extends AdminController
 		'customer' => array('title' => $this->l('Customer'), 'widthColumn' => 160, 'width' => 140, 'filter_key' => 'customer', 'tmpTableFilter' => true),
 		'total_paid' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'prefix' => '<b>', 'suffix' => '</b>', 'price' => true, 'currency' => true),
 		'payment' => array('title' => $this->l('Payment'), 'width' => 100),
-		'osname' => array('title' => $this->l('Status'), 'widthColumn' => 230, 'type' => 'select', 'select' => $statesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int', 'width' => 200),
+		'osname' => array('title' => $this->l('Status'), 'widthColumn' => 230, 'type' => 'select', 'list' => $statesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int', 'width' => 200),
 		'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false));
  		$this->shopLinkType = 'shop';
@@ -74,7 +74,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	
+
 	public function initForm()
 	{
 		parent::initForm();
@@ -438,18 +438,18 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$order = new Order((int)(Tools::getValue('id_order')));
 			$pcc = new PaymentCC((int)Tools::getValue('id_payment_cc'));
-			
+
 			$pcc->id_order = $order->id;
 			$pcc->transaction_id = (string)Tools::getValue('transaction_id');
 			$pcc->id_currency = $order->id_currency;
 			$pcc->amount = $order->total_paid;
 			$pcc->save();
-			
+
 			unset($order, $pcc);
 		}
 		elseif (Tools::isSubmit('submitAddOrder') == 1 && ($id_cart = Tools::getValue('id_cart')) && ($module_name = pSQL(Tools::getValue('payment_module_name'))) && ($id_order_state = Tools::getValue('id_order_state')))
 		{
-			
+
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$payment_module = Module::getInstanceByName($module_name);
@@ -511,7 +511,7 @@ class AdminOrdersControllerCore extends AdminController
 			if (Validate::isLoadedObject($addressDelivery) AND $addressDelivery->id_state)
 				$deliveryState = new State((int)($addressDelivery->id_state));
 		}
-	
+
 		// Smarty assign
 		$this->context->smarty->assign(array(
 			'order' => $order,
@@ -562,7 +562,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		$this->content = Tools::jsonEncode($to_return);
 	}
-		
+
 	public function ajaxProcessSearchProducts()
 	{
 		$currency = new Currency((int)Tools::getValue('id_currency'));
@@ -584,10 +584,10 @@ class AdminOrdersControllerCore extends AdminController
 					$combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
 					if (!isset($combinations[$attribute['id_product_attribute']]['price']))
 						$combinations[$attribute['id_product_attribute']]['price'] =  Tools::displayPrice(Tools::convertPrice(Product::getPriceStatic((int)$product['id_product'], true, $attribute['id_product_attribute']), $currency), $currency);
-					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))  
+					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
 						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getStockAvailableForProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
 				}
-				
+
 				foreach ($combinations AS &$combination)
 					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
 				$product['combinations'] = $combinations;
@@ -597,13 +597,13 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		else
 			$to_return = array('found' => false);
-			
+
 		$this->content = Tools::jsonEncode($to_return);
 	}
-		
+
 	public function ajaxProcessSendMailValidateOrder()
 	{
-		$errors = array();		
+		$errors = array();
 		$cart = new Cart((int)Tools::getValue('id_cart'));
 		if (Validate::isLoadedObject($cart))
 		{

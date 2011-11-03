@@ -65,8 +65,6 @@ class AdminControllerCore extends Controller
 	/** @var string Security token */
 	public $token;
 
-	protected $_object;
-
 	/** @var string shop | group_shop */
 	public $shopLinkType;
 
@@ -756,21 +754,22 @@ class AdminControllerCore extends Controller
 		$id = (int)Tools::getValue($this->identifier);
 		if ($id && Validate::isUnsignedId($id))
 		{
-			if (!$this->_object)
-				$this->_object = new $this->className($id);
-			if (Validate::isLoadedObject($this->_object))
-				return $this->_object;
+			if (!$this->object)
+				$this->object = new $this->className($id);
+			if (Validate::isLoadedObject($this->object))
+				return $this->object;
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
 		}
 		else if ($opt)
 		{
-			$this->_object = new $this->className();
-			return $this->_object;
+			$this->object = new $this->className();
+			return $this->object;
 		}
 		else
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
 
 		$this->content = $this->displayErrors();
+		return $this->object;
 	}
 
 	/**
@@ -1084,14 +1083,15 @@ class AdminControllerCore extends Controller
 		$this->initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			if (!($this->object = $this->loadObject(true)))
+			if (!$this->loadObject(true))
 				return;
 			$this->content .= $this->initForm();
 		}
 		elseif ($this->display == 'view')
 		{
-			if (!($this->object = $this->loadObject(true)))
-				return;
+			// Some controllers use the view action without an object
+			if ($this->className)
+				$this->loadObject(true);
 			$this->content .= $this->initView();
 		}
 		elseif (!$this->ajax)
@@ -1104,7 +1104,7 @@ class AdminControllerCore extends Controller
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
-		}
+	}
 
 	/**
 	 * initialize the invalid doom page of death
@@ -1210,7 +1210,7 @@ class AdminControllerCore extends Controller
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
-		
+
 	}
 
 	/**
@@ -2025,7 +2025,7 @@ class AdminControllerCore extends Controller
 	 */
 	protected function displayAssoShop($type = 'shop')
 	{
-		if (!Shop::isFeatureActive() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Shop::isFeatureActive() || (!$this->object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
 
 		if ($type != 'shop' && $type != 'group_shop')
@@ -2101,9 +2101,9 @@ EOF;
 		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
 		foreach (Shop::getTree() as $groupID => $groupData)
 		{
-			$groupChecked = ($type == 'group_shop' && ((isset($assos[$groupID]) && in_array($this->_object->id, $assos[$groupID])) || !$this->_object->id));
+			$groupChecked = ($type == 'group_shop' && ((isset($assos[$groupID]) && in_array($this->object->id, $assos[$groupID])) || !$this->object->id));
 			$html .= '<tr'.(($type == 'shop') ? ' class="alt_row"' : '').'>';
-			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_group_shop" type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
+			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_group_shop" type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
 			$html .= '</tr>';
 
 			if ($type == 'shop')
@@ -2112,10 +2112,10 @@ EOF;
 				$j = 0;
 				foreach ($groupData['shops'] as $shopID => $shopData)
 				{
-					$checked = ((isset($assos[$shopID]) && in_array($this->_object->id, $assos[$shopID])) || !$this->_object->id);
+					$checked = ((isset($assos[$shopID]) && in_array($this->object->id, $assos[$shopID])) || !$this->object->id);
 					$html .= '<tr>';
 					$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" /><label class="child">';
-					$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
+					$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
 					$html .= $shopData['name'].'</label></td>';
 					$html .= '</tr>';
 					$j++;

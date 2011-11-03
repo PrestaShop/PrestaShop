@@ -52,7 +52,7 @@ class AdminStockMvtControllerCore extends AdminController
 				'align' => 'center',
 				'type' => 'select',
 				'filter_key' => 'a!sign',
-				'select' => array(
+				'list' => array(
 					'1' => $this->l('Increment'),
 					'-1' => $this->l('Decrement'),
 				),

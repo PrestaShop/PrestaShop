@@ -154,21 +154,23 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * @TODO refactor
+	 * Fetch the template for action enable
 	 *
-	 * @param unknown_type $token
-	 * @param unknown_type $id
-	 * @param unknown_type $value
+	 * @param string $token
+	 * @param int $id
+	 * @param int $value state enabled or not
 	 * @param unknown_type $active
 	 * @param unknown_type $id_category
 	 * @param unknown_type $id_product
 	 */
 	protected function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
-		return '<a href="'.$this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
-			((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
-			<img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
-			alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
+		$this->context->smarty->assign(array(
+			'enabled' => (bool)$value,
+			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
+				((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token)
+		));
+		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_enable.tpl');
 	}
 
 	public function displayListContent($token = null)
@@ -406,7 +408,7 @@ class HelperListCore extends Helper
 			$tpl = $this->context->smarty->template_dir[0].'/helper/list/list_action_edit.tpl';
 
 		return $this->context->smarty->fetch($tpl);
-		
+
 	}
 
 	/**
@@ -426,8 +428,7 @@ class HelperListCore extends Helper
 			'action' => self::$cache_lang['Delete'],
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_delete.tpl');
-
+		return $this->context->smarty->fetch('helper/list/list_action_delete.tpl');
 	}
 
 	/**
@@ -512,7 +513,7 @@ class HelperListCore extends Helper
 					$this->context->controller->addJqueryUI('ui.datepicker');
 					break;
 				case 'select':
-					foreach ($params['select'] as $option_value => $option_display)
+					foreach ($params['list'] as $option_value => $option_display)
 					{
 						if (isset($_POST[$this->table.'Filter_'.$params['filter_key']])
 							&& Tools::getValue($this->table.'Filter_'.$params['filter_key']) == $option_value

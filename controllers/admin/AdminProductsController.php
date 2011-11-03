@@ -1712,42 +1712,42 @@ if (false)
 				if($this->tabAccess['delete'])
 					$this->toolbar_btn['delete'] = array(
 						'short' => 'Delete',
-						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct', 
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct',
 						'desc' => $this->l('Delete this product'),
 						'confirm' => 1);
 
 				if($this->tabAccess['add'])
 					$this->toolbar_btn['duplicate'] = array(
 						'short' => 'Duplicate',
-						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate'), 
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate'),
 						'confirm' => 1
 					);
 		// @TODO navigation
 				$this->toolbar_btn['preview'] = array(
-				'short' => 'Preview', 
-				'href' => '', 'desc' => 'prevdesc', 
+				'short' => 'Preview',
+				'href' => '', 'desc' => 'prevdesc',
 				'class' => 'previewUrl',
 				);
 				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
 					$this->toolbar_btn['stats'] = array(
 					'short' => 'Statistics',
-					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id, 
-					'desc' => $this->l('View product sales'), 
+					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id,
+					'desc' => $this->l('View product sales'),
 					);
-				
+
 				$this->toolbar_btn['cancel'] = array(
 				'short' => 'Close',
-				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel'), 
+				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel'),
 				 'confirm' => 1);
 				if($this->tabAccess['add'])
 					$this->toolbar_btn['new'] = array(
 					'short' => 'Create',
-					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create'), 
+					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create'),
 				);
 				if($this->tabAccess['edit'])
 					$this->toolbar_btn['save'] = array(
 					'short' => 'Save',
-					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save'), 
+					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save'),
 				);
 			}
 		parent::initToolbar();
@@ -2378,7 +2378,7 @@ switch ($this->action)
 		'uploadable_files', 'text_fields'
 		);
 		// prices
-		array_push($product_props, 
+		array_push($product_props,
 			'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
 			'unity'
 		);
@@ -3795,21 +3795,22 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 	{
 		if ($id = (int)(Tools::getValue($this->identifier)) AND Validate::isUnsignedId($id))
 		{
-			if (!$this->_object)
-				$this->_object = new $this->className($id);
-			if (Validate::isLoadedObject($this->_object))
-				return $this->_object;
+			if (!$this->object)
+				$this->object = new $this->className($id);
+			if (Validate::isLoadedObject($this->object))
+				return $this->object;
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
 		}
 		else if ($opt)
 		{
-			$this->_object = new $this->className();
-			return $this->_object;
+			$this->object = new $this->className();
+			return $this->object;
 		}
 		else
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
 
 		$this->displayErrors();
+		return $this->object;
 	}
 
 	public function displayInitInformationAndAttachment()
