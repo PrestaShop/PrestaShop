@@ -98,7 +98,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->_filter .= 'AND `id_parent` = '.(int)$this->_category->id;
+		$this->_filter .= 'AND `id_parent` = '.(int)$this->_category->id.' ';
 		$this->_select = 'position ';
 
 		$categories_tree = $this->_category->getParentsCategories($this->context->language->id);
@@ -124,7 +124,7 @@ class AdminCategoriesControllerCore extends AdminController
 	public function initView()
 	{
 		$this->initToolbar();
-		$this->content .= $this->initList();
+		return $this->initList();
 	}
 
 	public function initToolbar()
