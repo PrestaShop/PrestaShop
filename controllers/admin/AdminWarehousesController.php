@@ -39,30 +39,29 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
-				'width' => 40,
+				'width' => 150,
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 300,
 			),
 			'management_type' => array(
 				'title' => $this->l('Managment type'),
-				 'width' => 40,
+				 'width' => 80,
 			),
 			'employee' => array(
 				'title' => $this->l('Manager'),
-				'width' => 150,
+				'width' => 200,
 			),
 			'location' => array(
 				'title' => $this->l('Location'),
-				'width' => 150,
+				'width' => 200,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'contact' => array(
 				'title' => $this->l('Phone Number'),
-				'width' => 50,
+				'width' => 200,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -80,7 +79,7 @@ class AdminWarehousesControllerCore extends AdminController
 	{
 		// Checks access
 		if (!($this->tabAccess['add'] === '1'))
-			$this->no_add = true;
+			unset($this->toolbar_btn['new']);
 
 		$this->list_no_link = true;
 		$this->addRowAction('edit');

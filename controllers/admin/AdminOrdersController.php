@@ -69,6 +69,7 @@ class AdminOrdersControllerCore extends AdminController
 		'osname' => array('title' => $this->l('Status'), 'width' => 230, 'type' => 'select', 'list' => $statesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int', 'width' => 200),
 		'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'width' => 35, 'align' => 'center', 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false));
+
  		$this->shopLinkType = 'shop';
  		$this->shopShareDatas = Shop::SHARE_ORDER;
 

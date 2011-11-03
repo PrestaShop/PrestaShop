@@ -44,34 +44,28 @@ class AdminStockCoverControllerCore extends AdminController
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'center',
-				'width' => 100,
-				'widthColumn' => 150,
+				'width' => 200,
 				'filter_key' => 'a!reference'
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
 				'align' => 'center',
-				'width' => 75,
-				'widthColumn' => 100,
+				'width' => 100,
 				'filter_key' => 'a!ean13'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 350,
-				'widthColumn' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'coverage' => array(
 				'title' => $this->l('Average time left'),
-				'width' => 50,
-				'widthColumn' => 60,
+				'width' => 150,
 				'orderby' => false,
 				'search' => false
 			),
 			'stock' => array(
 				'title' => $this->l('Qty in stock'),
-				'width' => 50,
-				'widthColumn' => 60,
+				'width' => 80,
 				'orderby' => false,
 				'search' => false
 			),
@@ -140,6 +134,8 @@ class AdminStockCoverControllerCore extends AdminController
 	public function initList()
 	{
 		$this->addRowAction('details');
+
+		$this->toolbar_btn = array();
 
 		//no link on list rows
 		$this->list_no_link = true;

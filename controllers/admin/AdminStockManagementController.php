@@ -42,25 +42,20 @@ class AdminStockManagementControllerCore extends AdminController
 				'title' => $this->l('Reference'),
 				'align' => 'center',
 				'filter_key' => 'a!reference',
-				'width' => 100,
-				'widthColumn' => 150
+				'width' => 200
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
 				'align' => 'center',
 				'filter_key' => 'a!ean13',
-				'width' => 75,
-				'widthColumn' => 100
+				'width' => 100
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 350,
-				'widthColumn' => 'auto',
 			),
 			'stock' => array(
 				'title' => $this->l('Total quantities in stock'),
-				'width' => 50,
-				'widthColumn' => 60,
+				'width' => 100,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
