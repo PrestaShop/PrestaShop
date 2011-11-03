@@ -171,7 +171,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'title' => $this->l('Country'),
 				'width' => 100,
 				'type' => 'select',
-				'select' => $this->countries_array,
+				'list' => $this->countries_array,
 				'filter_key' => 'cl!id_country'
 			)
 		);

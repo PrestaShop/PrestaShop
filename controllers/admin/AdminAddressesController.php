@@ -56,7 +56,7 @@ class AdminAddressesControllerCore extends AdminController
 			'address1' => array('title' => $this->l('Address'), 'width' => 200),
 			'postcode' => array('title' => $this->l('Postcode/ Zip Code'), 'align' => 'right', 'width' => 50),
 			'city' => array('title' => $this->l('City'), 'width' => 150),
-			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'select' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
+			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countriesArray, 'filter_key' => 'cl!id_country'));
 
 		parent::__construct();
 	}

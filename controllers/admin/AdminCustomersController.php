@@ -67,7 +67,7 @@ class AdminCustomersControllerCore extends AdminController
 				'icon' => $genders_icon,
 				'orderby' => false,
 				'type' => 'select',
-				'select' => $genders,
+				'list' => $genders,
 				'filter_key' => 'a!id_gender',
  			),
 			'lastname' => array(

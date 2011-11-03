@@ -68,7 +68,7 @@ class AdminGendersController extends AdminController
 				'width' => 100,
 				'orderby' => false,
 				'type' => 'select',
-				'select' => array(
+				'list' => array(
 					0 => $this->l('Male'),
 					1 => $this->l('Female'),
 					2 => $this->l('Neutral')
