@@ -34,7 +34,7 @@ class AdminSlipControllerCore extends AdminController
 		$this->addRowAction('edit');
 	 	$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-		$this->no_add = true;
+		unset($this->toolbar_btn['new']);
 
  		$this->fieldsDisplay = array(
 		'id_order_slip' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),

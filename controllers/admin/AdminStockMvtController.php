@@ -42,13 +42,11 @@ class AdminStockMvtControllerCore extends AdminController
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'width' => 40,
-				'widthColumn' => 40,
 				'search' => false,
 			),
 			'sign' => array(
 				'title' => $this->l('Sign'),
-				'width' => 80,
-				'widthColumn' => 100,
+				'width' => 100,
 				'align' => 'center',
 				'type' => 'select',
 				'filter_key' => 'a!sign',
@@ -165,7 +163,7 @@ class AdminStockMvtControllerCore extends AdminController
 
 		// access
 		if (!($this->tabAccess['add'] === '1'))
-			$this->no_add = true;
+			unset($this->toolbar_btn['new']);
 
 		//no link on list rows
 		$this->list_no_link = true;

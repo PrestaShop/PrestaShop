@@ -38,47 +38,40 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
-				'width' => 110,
-				'widthColumn' => 110
+				'width' => 100
 			),
 			'reference' => array(
 				'title' => $this->l('Reference'),
-				'width' => 110,
-				'widthColumn' => 110,
+				'width' => 250,
 				'filter_key' => 'p!reference'
 			),
 			'designation' => array(
 				'title' => $this->l('Product name'),
 				'filter_key' => 'designation',
-				'havingFilter' => true,
-				'width' => 300
+				'havingFilter' => true
 			),
 			'price_te' => array(
 				'title' => $this->l('Price'),
 				'align' => 'center',
-				'width' => 45,
-				'widthColumn' => 45,
+				'width' => 100,
 				'havingFilter' => true
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Physical quantity'),
 				'align' => 'center',
-				'width' => 25,
-				'widthColumn' => 25,
+				'width' => 80,
 				'havingFilter' => true
 			),
 			'usable_quantity' => array(
 				'title' => $this->l('Usable quantity'),
 				'align' => 'center',
-				'width' => 25,
-				'widthColumn' => 25,
+				'width' => 80,
 				'havingFilter' => true
 			),
 			'real_quantity' => array(
 				'title' => $this->l('Real quantity'),
 				'align' => 'center',
-				'width' => 25,
-				'widthColumn' => 25,
+				'width' => 80,
 				'filter' => false,
 				'search' => false,
 				'orderby' => false
@@ -95,6 +88,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 	public function initList()
 	{
 		$this->displayInformation($this->l('This interface allows you to display detailed informations on your stock, per warehouse.').'<br />');
+
+		$this->toolbar_btn = array();
 
 		$this->addRowAction('details');
 
