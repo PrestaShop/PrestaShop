@@ -614,8 +614,10 @@ class HelperListCore extends Helper
 		$this->footer_tpl->assign(array(
 			'token' => $this->token,
 			'table' => $this->table,
+			'current' => $this->currentIndex,
 			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
+			'back' => Tools::getValue('back'),
 			'no_back' => $this->no_back
 		));
 		return $this->footer_tpl->fetch();
