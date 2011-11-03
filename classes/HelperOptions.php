@@ -145,7 +145,7 @@ class HelperOptionsCore extends Helper
 			$option_list[$category] = $category_data;
 		}
 
-		$this->context->smarty->assign(array(
+		$this->tpl->assign(array(
 			'current' => $this->currentIndex,
 			'table' => $this->table,
 			'token' => $this->token,
@@ -154,7 +154,7 @@ class HelperOptionsCore extends Helper
 			'required_fields' => isset($required_fields) ? $required_fields : false,
 			'languages' => isset($languages) ? $languages : null,
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
+		return $this->tpl->fetch();
 	}
 
 	/**

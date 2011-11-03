@@ -31,24 +31,24 @@
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
 
-		$(document).ready(function() {ldelim}
+		$(document).ready(function() {
 			{foreach $languages as $k => $language}
-				languages[{$k}] = {ldelim}
+				languages[{$k}] = {
 					id_lang: {$language.id_lang},
 					iso_code: '{$language.iso_code}',
 					name: '{$language.name}'
-				{rdelim};
+				};
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
 
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))
-				{ldelim}
+				{
 					ajaxStates({$fields_value.id_state});
-					$('#id_country').change(function() {ldelim}
+					$('#id_country').change(function() {
 						ajaxStates();
-					{rdelim});
-				{rdelim}
+					});
+				}
 			{/if}
 
 			if ($(".datepicker").length > 0)
@@ -58,17 +58,16 @@
 					dateFormat: 'yy-mm-dd'
 				});
 
-		{rdelim});
-	</script>
-	<script type="text/javascript" src="../js/form.js"></script>
+		});
 	{block name="script"}
 	{/block}
+	</script>
+	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
 
-{if isset($toolbar) && $toolbar}
-	{include file="toolbar.tpl"}
+{if $show_toolbar}
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
 {/if}
-	
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 <form class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
@@ -233,14 +232,28 @@
 									name="{$input.name}"
 									size="{$input.size}"
 									value="" />
+						{elseif $input.type == 'birthday'}
+							{foreach $input.options as $key => $select}
+								<select name="{$key}">
+									<option value="">-</option>
+									{if $key == 'months'}
+										{foreach $select as $k => $v}
+											<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
+										{/foreach}
+									{else}
+										{foreach $select as $v}
+											<option value="{$v}" {if $v == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
+										{/foreach}
+									{/if}
+								</select>
+							{/foreach}
 						{elseif $input.type == 'group'}
 							{assign var=groups value=$input.values}
 							{include file='helper/form/form_group.tpl'}
 						{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
 							{include file='helper/form/form_shop.tpl'}
 						{elseif $input.type == 'categories'}
-							{assign var=categories value=$input.values}
-							{include file='helper/form/form_category.tpl'}
+							{include file='helper/form/form_category.tpl' categories=$input.values}
 						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 							<label>{l s='Shop association:'}</label>
 							<div class="margin-form">

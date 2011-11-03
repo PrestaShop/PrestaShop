@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="../helper/form/form.tpl"}
-
 {block name="label"}
 	{if $input.type == 'select' && $input.name == 'country[]'}
 		<div id="add_new_tax_rule" style="display:none">
@@ -60,8 +59,6 @@
 {/block}
 
 {block name="script"}
-	<script type="text/javascript">
-
 		$(document).ready(function() {
 			$('#country').click(function() {
 				populateStates($(this).val(), '');
@@ -154,6 +151,4 @@
 	
 			populateStates(0,0);
 		}
-	
-	</script>
 {/block}

@@ -587,7 +587,6 @@ class AdminProductsController extends AdminController
 									Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
 									Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
 									Tools::getValue('attribute_ecotax'),
-									Tools::getValue('attribute_quantity'),
 									Tools::getValue('id_image_attr'),
 									Tools::getValue('attribute_reference'),
 									Tools::getValue('attribute_supplier_reference'),
@@ -3315,7 +3314,14 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if (Tools::getValue('id_product_attribute') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
+				// @todo : Product class should handle that
 				$stock_available = new StockAvailable(StockAvailable::getIdStockAvailable($product->id, (int)Tools::getValue('id_product_attribute')));
+				if (!$stock_available->id)
+				{
+					$stock_available->id_product = $product->id;
+					$stock_available->id_shop = Context::getContext()->shop->getID(true);
+					$stock_available->id_product_attribute = Tools::getValue('id_product_attribute');
+				}
 				$stock_available->quantity = (int)Tools::getValue('value');
 				$stock_available->save();
 				break;

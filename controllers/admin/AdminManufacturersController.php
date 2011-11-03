@@ -85,14 +85,10 @@ class AdminManufacturersControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function setHelperListDisplay(Helper $helper)
-	{
-		$helper->toolbar = false;
-		parent::setHelperListDisplay($helper);
-	}
 
-	public function initList()
+	public function initListManufacturer()
 	{
+		$this->toolbar_title = $this->l('List of manufacturers:');
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -110,8 +106,14 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
 
 		$this->initToolbar();
-		$list_manufacturers = parent::initList();
+		$this->content .= parent::initList();
+	}
 
+	public function initListManufacturerAddresses()
+	{
+
+		
+		$this->toolbar_title = $this->l('Manufacturers addresses:');
 		// reset actions and query vars
 		$this->actions = array();
 		unset($this->fieldsDisplay, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
@@ -191,13 +193,16 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->postProcess();
 
 		$this->initToolbar();
-		$list_addresses = parent::initList();
+		$this->content .= parent::initList();
 
-		$this->context->smarty->assign(array(
-			'list_manufacturers' => $list_manufacturers,
-			'list_addresses' => $list_addresses
-		));
 	}
+
+	public function initList()
+	{
+		$this->initListManufacturer();
+		$this->initListManufacturerAddresses();
+	}
+
 
 	 /**
 	 * Display editaddresses action link
@@ -217,7 +222,7 @@ class AdminManufacturersControllerCore extends AdminController
             'action' => self::$cache_lang['editaddresses'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/manufacturers/list_action_edit_adresses.tpl');
+        return $this->context->smarty->fetch('manufacturers/list_action_edit_adresses.tpl');
 	}
 
 	public function initForm()
@@ -526,7 +531,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->fields_value = $this->getFieldsValue($address);
 		$helper->toolbar_btn = $this->toolbar_btn;
-		$helper->tpl = 'manufacturers/form_addresses.tpl';
+		// $helper->tpl = 'manufacturers/form_addresses.tpl';
 		$this->content .= $helper->generateForm($this->fields_form);
 	}
 

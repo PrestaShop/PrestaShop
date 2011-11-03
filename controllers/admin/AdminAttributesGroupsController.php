@@ -140,15 +140,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$helper->token = $this->token;
 			$helper->table = $this->table;
 			$helper->simple_header = true;
+			$helper->show_toolbar = false;
 			$helper->bulk_actions = $this->bulk_actions;
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_content.tpl'))
-				$helper->content_tpl = $this->tpl_folder.'list_content.tpl';
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+			$this->content = Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
 
-		die;
 	}
 
 	/**
@@ -356,13 +354,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$str_attributes_groups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ) .', ';
 
 		$image = _PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg';
-		$this->context->smarty->assign(array(
+		$this->tpl_form_vars = array(
 			'strAttributesGroups' => $str_attributes_groups,
 			'colorAttributeProperties' => Validate::isLoadedObject($obj) && $obj->isColorAttribute(),
 			'imageTextureExists' => file_exists($image),
 			'imageTexture' => $image,
 			'imageTextureUrl' => Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage=1'
-		));
+		);
 
 		return parent::initForm();
 	}

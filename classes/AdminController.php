@@ -78,7 +78,7 @@ class AdminControllerCore extends Controller
 	protected $list_simple_header;
 
 	/** @var define if the header of the list contains filter and sorting links or not */
-	protected $list_title;
+	protected $toolbar_title;
 
 	/** @var array list to be generated */
 	protected $fieldsDisplay;
@@ -192,7 +192,8 @@ class AdminControllerCore extends Controller
 	protected $action;
 	protected $display;
 	protected $_includeContainer = true;
-	protected $tpl_folder;
+
+	public $tpl_folder;
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -739,7 +740,6 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Add new')
 				);
 		}
-		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
 	}
 
 	/**
@@ -1151,12 +1151,6 @@ class AdminControllerCore extends Controller
 
 		$helper = new HelperList();
 		// Check if list templates have been overriden
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_header.tpl'))
-			$helper->header_tpl = $this->tpl_folder.'list_header.tpl';
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_content.tpl'))
-			$helper->content_tpl = $this->tpl_folder.'list_content.tpl';
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_footer.tpl'))
-			$helper->footer_tpl = $this->tpl_folder.'list_footer.tpl';
 
 		// For compatibility reasons, we have to check standard actions in class attributes
 		foreach ($this->actions_available as $action)
@@ -1183,10 +1177,11 @@ class AdminControllerCore extends Controller
 	 * @return void
 	 */
 	public function setHelperListDisplay(Helper $helper)
-	{
+	{ 
+		// @todo : move that in Helper 
 		$helper->actions = $this->actions;
 		$helper->simple_header = $this->list_simple_header;
-		$helper->title = $this->list_title;
+		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->bulk_actions = $this->bulk_actions;
 		$helper->currentIndex = self::$currentIndex;
@@ -1223,10 +1218,10 @@ class AdminControllerCore extends Controller
 		if ($this->fields_form && is_array($this->fields_form))
 		{
 			$this->getlanguages();
-			$helper = new HelperForm();
+			$helper = new HelperForm($this);
 			// Check if form template has been overriden
 			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
-				$helper->tpl = $this->tpl_folder.'form.tpl';
+				$helper->setTpl($this->tpl_folder.'form.tpl');
 			$helper->currentIndex = self::$currentIndex;
 			$helper->token = $this->token;
 			$helper->table = $this->table;
@@ -1238,14 +1233,14 @@ class AdminControllerCore extends Controller
 			$helper->fields_value = $this->getFieldsValue($this->object);
 			$helper->toolbar_btn = $this->toolbar_btn;
 			$helper->no_back = isset($this->no_back) ? $this->no_back : false;
+			$helper->tpl_vars = $this->tpl_form_vars;
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))
-					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
+					$this->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
 				else
-					$this->context->smarty->assign('back', Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token)));
+					$this->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token));
 			}
-
 			return $helper->generateForm($this->fields_form);
 		}
 	}
@@ -1260,9 +1255,10 @@ class AdminControllerCore extends Controller
 			$helper = new HelperOptions();
 			// Check if form template has been overriden
 			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'options.tpl'))
-				$helper->tpl = $this->tpl_folder.'options.tpl';
+				$helper->setTpl($this->tpl_folder.'options.tpl');
 			$helper->id = $this->id;
 			$helper->token = $this->token;
+			$helper->shopLinkType = $this->shopLinkType;
 			$helper->table = $this->table;
 			$helper->currentIndex = self::$currentIndex;
 			return $helper->generateOptions($this->options);

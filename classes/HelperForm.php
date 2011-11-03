@@ -62,22 +62,21 @@ class HelperFormCore extends Helper
 	public $default_form_language = null;
 	public $allow_employee_form_lang = null;
 
-	public $tpl = 'helper/form/form.tpl';
+	protected $tpl = 'helper/form/form.tpl';
 
 	public function generateForm($fields_form)
 	{
 		$this->fields_form = $fields_form;
-
-		return $this->displayForm();
+		return $this->generate();
 	}
 
-	public function displayForm()
+	public function generate()
 	{
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
 		$iso = $this->context->language->iso_code;
-		$this->context->smarty->assign(array(
+		$this->tpl->assign(array(
 			'submit_action' => $this->submit_action,
 			'toolbar_btn' => $this->toolbar_btn,
 			'firstCall' => $this->first_call,
@@ -100,10 +99,9 @@ class HelperFormCore extends Helper
 			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
 			'path_css' => _THEME_CSS_DIR_,
 			'ad' => dirname($_SERVER["PHP_SELF"]),
-			'toolbar' => $this->toolbar
+			'show_toolbar' => $this->show_toolbar
 		));
-
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->tpl);
+		return parent::generate();
 	}
 
 	public function getFieldsRequired()

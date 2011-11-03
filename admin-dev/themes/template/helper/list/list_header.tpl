@@ -36,7 +36,7 @@
 	</script>
 	{* Display column names and arrows for ordering (ASC, DESC) *}
 	{if $is_order_position}
-		<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+		<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
 		<script type="text/javascript">
 			var token = '{$token}';
 			var come_from = '{$table}';
@@ -55,14 +55,20 @@
 				});
 		});
 	</script>
-	
-	{if isset($toolbar) && $toolbar}
-		{include file="toolbar.tpl"}
-	{/if}
-
-	<a name="{$table}">&nbsp;</a>
 {/if}{* End if simple_header *}
-	<form method="post" action="{$action}" class="form">
+	
+{if $show_toolbar}
+	<div class="pageTitle">
+	<h3>{block name=pageTitle}
+		<span id="current_obj" style="font-weight: normal;">{$page_title|default:'&nbsp;'}</span>
+		{/block}</h3>
+	</div>
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+{/if}
+
+<a name="{$table}">&nbsp;</a>
+
+<form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 	<table class="table_grid">
 		{if !$simple_header}

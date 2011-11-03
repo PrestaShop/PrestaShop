@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -23,17 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if isset($list_manufacturers)}
-	{include file="toolbar.tpl"}
-	<h2>{l s='List of manufacturers:'}</h2>
-	{$list_manufacturers}
-{/if}
-
-{if isset($list_addresses)}
-	{include file="toolbar.tpl"}
-	<h2>{l s='Manufacturers addresses:'}</h2>
-	{$list_addresses}
-{/if}
-
+{$header}
 {$content}
+{$footer}
