@@ -1909,7 +1909,7 @@ class ProductCore extends ObjectModel
 
 				if (!$specific_price['id_currency'])
 					$reduction_amount = Tools::convertPrice($reduction_amount, $id_currency);
-				$reduc = Tools::ps_round(!$use_tax ? $product_tax_calculator->removeTax($reduction_amount) : $reduction_amount, $decimals);
+				$reduc = Tools::ps_round(!$use_tax ? $product_tax_calculator->removeTaxes($reduction_amount) : $reduction_amount, $decimals);
 			}
 			else
 				$reduc = Tools::ps_round($price * $specific_price['reduction'], $decimals);
