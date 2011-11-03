@@ -74,11 +74,9 @@
 {/block}
 
 {block name="script"}
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#send_email_on').click(function() {
-				$('#tpl').slideToggle();
-			});
+	$(document).ready(function() {
+		$('#send_email_on').click(function() {
+			$('#tpl').slideToggle();
 		});
-	</script>
+	});
 {/block}

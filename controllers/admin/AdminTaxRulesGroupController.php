@@ -332,11 +332,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->getlanguages();
 		$helper = new HelperForm();
-
 		// Check if form template has been overriden
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form_new.tpl'))
-			$helper->tpl = $this->tpl_folder.'form_new.tpl';
-
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
+			$helper->setTpl($this->tpl_folder.'form.tpl');
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		$helper->table = 'tax_rule';
