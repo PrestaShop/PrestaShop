@@ -106,7 +106,7 @@ class VatNumber extends TaxManagerModule
 	public static function isApplicable($id_country)
 	{
 		return (((int)$id_country AND in_array(Country::getIsoById($id_country), self::getPrefixIntracomVAT())) ? 1 : 0);
-		}
+	}
 
 	public static function WebServiceCheck($vatNumber)
 	{

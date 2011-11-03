@@ -24,9 +24,6 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-//include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
-if (Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
-	include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 
 class AdminAddressesControllerCore extends AdminController
 {
@@ -142,17 +139,21 @@ class AdminAddressesControllerCore extends AdminController
 			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
 		}
 
+		// @todo in 1.4, this include was done before the class declaration
+		// We should use a hook now
+		if (Configuration::get('VATNUMBER_MANAGEMENT') AND file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php'))
+			include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
 		if (Configuration::get('VATNUMBER_MANAGEMENT'))
 			if (file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php') && VatNumber::isApplicable(Configuration::get('PS_COUNTRY_DEFAULT')))
 				$vat = 'is_applicable';
 			else
 				$vat = 'management';
 
-		$this->context->smarty->assign(array(
+		$this->tpl_form_vars = array(
 			'vat' => isset($vat) ? $vat : null,
 			'customer' => isset($customer) ? $customer : null,
 			'tokenCustomer' => isset ($tokenCustomer) ? $tokenCustomer : null
-		));
+		);
 
 		// Order address fields depending on country format
 		$addresses_fields = $this->processAddressFormat();
