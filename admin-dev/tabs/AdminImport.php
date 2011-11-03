@@ -984,7 +984,7 @@ class AdminImport extends AdminTab
 					$this->_warnings[] = sprintf(Tools::displayError('No image found for combination with id_product = %s and image position = %s.'), $product->id, (int)$info['image_position']);
 			}
 
-			$id_product_attribute = $product->addProductAttribute((float)($info['price']), (float)($info['weight']), 0, (float)($info['ecotax']), $id_image, strval($info['reference']), strval($info['supplier_reference']), strval($info['ean13']), (int)($info['default_on']), strval($info['upc']));
+			$id_product_attribute = $product->addProductAttribute((float)($info['price']), (float)($info['weight']), 0, (float)($info['ecotax']), (int)$info['quantity'], $id_image, strval($info['reference']), strval($info['supplier_reference']), strval($info['ean13']), (int)($info['default_on']), strval($info['upc']));
 			$id_attribute_group = 0;
 			$group = '';
 			foreach (explode($fsep, $info['group']) as $group)
