@@ -210,8 +210,10 @@ $(document).ready(function()
 				<select name="bo_search_type" id="bo_search_type">
 					<option value="0">{l s='everywhere'}</option>
 					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
-					<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='customers'}</option>
-					<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='ip address'}</option>
+					<optgroup label="{l s='customers'}:">
+						<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='by name'}</option>
+						<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='by ip address'}</option>
+					</optgroup>
 					<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
 					<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
 					<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
