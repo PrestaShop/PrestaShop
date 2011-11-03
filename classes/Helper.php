@@ -279,6 +279,7 @@ class HelperCore
 		$assos = array();
 		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
 				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
+
 		foreach (Db::getInstance()->executeS($sql) as $row)
 			$assos[$row['id_'.$type]][] = $row[$this->identifier];
 

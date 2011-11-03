@@ -218,6 +218,7 @@ class AdminCurrenciesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'asso_shop',
+					'label' => 'Shop:',
 					'name' => ''
 				)
 			),
@@ -225,7 +226,7 @@ class AdminCurrenciesControllerCore extends AdminController
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			),
-			'asso_shop' => Shop::isFeatureActive()
+			'asso_shop' => 'shop'
 		);
 		parent::__construct();
 	}

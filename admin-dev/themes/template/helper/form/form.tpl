@@ -255,10 +255,7 @@
 						{elseif $input.type == 'categories'}
 							{include file='helper/form/form_category.tpl' categories=$input.values}
 						{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
-							<label>{l s='Shop association:'}</label>
-							<div class="margin-form">
 								{$asso_shop}
-							</div>
 						{elseif $input.type == 'color'}
 							<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
 							<input type="color"

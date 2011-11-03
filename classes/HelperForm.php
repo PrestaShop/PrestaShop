@@ -75,6 +75,12 @@ class HelperFormCore extends Helper
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
+		if (isset($this->fields_form['asso_shop']) && Shop::isFeatureActive())
+			if ($this->fields_form['asso_shop'] == 'group')
+				$asso_shop = $this->displayAssoShop('group_shop');
+			elseif ($this->fields_form['asso_shop'] == 'shop')
+				$asso_shop = $this->displayAssoShop();
+
 		$iso = $this->context->language->iso_code;
 		$this->tpl->assign(array(
 			'submit_action' => $this->submit_action,
@@ -95,7 +101,7 @@ class HelperFormCore extends Helper
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
-			'asso_shop' => (isset($this->fields_form['asso_shop']) && $this->fields_form['asso_shop']) ? $this->displayAssoShop() : null,
+			'asso_shop' => isset($asso_shop) ? $asso_shop : null,
 			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
 			'path_css' => _THEME_CSS_DIR_,
 			'ad' => dirname($_SERVER["PHP_SELF"]),
