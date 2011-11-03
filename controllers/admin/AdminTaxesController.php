@@ -38,7 +38,7 @@ class AdminTaxesControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 		'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Name'), 'width' => 140),
+		'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
 		'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%', 'width' => 50),
 		'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false));
 

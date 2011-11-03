@@ -103,16 +103,25 @@
 				cellpadding="0" cellspacing="0"
 				style="width: 100%; margin-bottom:10px;"
 				>
+					<col width="10px" />
+					{foreach $fields_display AS $key => $params}
+						<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
+					{/foreach}			
+					{if $shop_link_type}
+						<col width="80px" />
+					{/if}
+					{if $has_actions}
+						<col width="52px" />
+					{/if}
 					<thead>
 						<tr class="nodrag nodrop">
-							<th style="width:10px;">
+							<th>
 								{if $has_bulk_actions}
 									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
 								{/if}
 							</th>
 							{foreach $fields_display AS $key => $params}
-								<th {if isset($params.widthColumn)} style="width: {if $params.widthColumn == 'auto'}auto{else}{$params.widthColumn}px{/if}"{/if}
-									{if isset($params.align)} class="{$params.align}"{/if}>
+								<th {if isset($params.align)} class="{$params.align}"{/if}>
 									{$params.title}
 									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
@@ -125,9 +134,8 @@
 									{/if}
 								</th>
 							{/foreach}
-
 							{if $shop_link_type}
-								<th style="width: 80px">
+								<th>
 									{if $shop_link_type == 'shop'}
 										{l s='shop'}
 									{else}
@@ -136,7 +144,7 @@
 								</th>
 							{/if}
 							{if $has_actions}
-								<th style="width: 52px">{l s='Actions'}</th>
+								<th>{l s='Actions'}</th>
 							{/if}
 						</tr>
  						{if !$simple_header}
