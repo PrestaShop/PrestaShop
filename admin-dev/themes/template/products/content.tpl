@@ -50,12 +50,22 @@ $(document).ready(function(){
 		currentId = $(".productTabs a.selected").attr('id').substr(5);
 		// id is the wanted producttab id
 		id = $(this).attr('id').substr(5);
-		$(".tab-page").removeClass('selected');
-		$("#product-tab-content-"+currentId).hide();
-		$("#product-tab-content-wait").show();;
-		
+		if ($(this).attr("id") != $(".productTabs a.selected").attr('id'))
+		{
+			$(".tab-page").removeClass('selected');
+			$("#product-tab-content-"+currentId).hide();
+		}
+		else
+		{
+			if (confirm(' {l s='Do you really want to reload the current tab (all modifications will be lost)'}'))
+				$("#product-tab-content-"+currentId).html();
+			else
+				return false;
+		}
 
-		if($("#product-tab-content-"+id).hasClass('not-loaded'))
+		$("#product-tab-content-wait").show();
+		
+		if ($("#product-tab-content-"+id).hasClass('not-loaded') || $(this).hasClass('selected'))
 		{
 			myurl = $(this).attr("href")+"&ajax=1";
 			$.ajax({
@@ -63,6 +73,7 @@ $(document).ready(function(){
 				async : true,
 				success :function(data)
 				{
+					$("#product-tab-content-wait").hide();
 					$("#product-tab-content-"+id).html(data);
 					$("#product-tab-content-"+id).removeClass('not-loaded');
 					$("#product-tab-content-"+id).show();
@@ -212,7 +223,7 @@ $(document).ready(function(){
 <input type="hidden" name="id_product" value="{$id_product}" />
 <input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
-	<div id="product-tab-content-wait" style="display:none" ></div>
+	<div id="product-tab-content-wait" style="display:none" >{l s='loading ...'}</div>
 	{if !$newproduct}
 	{foreach $product_tabs key=numStep item=tab}
 		<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>

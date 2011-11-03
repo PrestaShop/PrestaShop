@@ -1,4 +1,6 @@
-<a href="#" onclick="$('#add_new_combination').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" />{l s='Add a new combination'}</a>
+<a href="#" onclick="$('#add_new_combination').slideToggle();return false;">
+	<img src="../img/admin/add.gif" alt="" />{l s='Add a new combination'}
+</a>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(\'#id_mvt_reason\').change(function(){
@@ -118,8 +120,8 @@
 		<p><input id="virtual_product_file_attribute" name="virtual_product_file_attribute" onchange="uploadFile2();" maxlength="'.$this->maxFileSize.'" type="file"></p>
 		<div id="upload-confirmation2">
 
-<p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$productDownload->getHtmlLink(false, true)}
-		<a id="make_downloadable_product_attribute" onclick="return confirm('.addslashes("{l s='Delete this file' slashes=1}")).')" href="index.php?tab=AdminProducts&id_product={$id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a></p>
+<p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$product->productDownload->getHtmlLink(false, true)}
+		<a id="make_downloadable_product_attribute" onclick="return confirm('.addslashes("{l s='Delete this file' slashes=1}")).')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a></p>
 			
 <a 
 
@@ -286,9 +288,5 @@
 		  </tr>
 		</table>
 		</div>
-
-
-
-
-
+	</div>
 {$content}
