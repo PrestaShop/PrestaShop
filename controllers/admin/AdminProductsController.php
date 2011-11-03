@@ -51,14 +51,14 @@ class AdminProductsController extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_product' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 20),
-			'image' => array('title' => $this->l('Photo'), 'align' => 'center', 'image' => 'p', 'width' => 45, 'orderby' => false, 'filter' => false, 'search' => false),
-			'name' => array('title' => $this->l('Name'), 'width' => 200, 'filter_key' => 'b!name'),
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 20),
+			'image' => array('title' => $this->l('Photo'), 'align' => 'center', 'image' => 'p', 'width' => 70, 'orderby' => false, 'filter' => false, 'search' => false),
+			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 80),
 			'name_category' => array('title' => $this->l('Category'), 'width' => 100, 'filter_key' => 'cl!name'),
 			'price' => array('title' => $this->l('Base price'), 'width' => 70, 'price' => true, 'align' => 'right', 'filter_key' => 'a!price'),
 			'price_final' => array('title' => $this->l('Final price'), 'width' => 70, 'price' => true, 'align' => 'right', 'havingFilter' => true, 'orderby' => false),
-			'active' => array('title' => $this->l('Displayed'), 'active' => 'status', 'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false),
-			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position'),
+			'active' => array('title' => $this->l('Displayed'), 'width' => 70, 'active' => 'status', 'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false),
+			'position' => array('title' => $this->l('Position'), 'width' => 70,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position'),
 		);
 
 		/* Join categories table */
