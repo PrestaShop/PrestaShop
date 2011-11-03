@@ -58,7 +58,7 @@ class HelperCore
 	public function setTpl($tpl)
 	{
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
-		$this->tpl = $this->context->smarty->createTemplate($tpl);
+			$this->tpl = $this->context->smarty->createTemplate($tpl);
 	}
 
 	/**
