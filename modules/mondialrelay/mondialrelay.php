@@ -901,14 +901,15 @@ class MondialRelay extends Module
 				<ul>';
 		if (!sizeof($query))
 			$output .= '<li>'.$this->l('No shipping methods created').'</li>';
-		foreach ($query AS $Options)
-		{
-			$output .= '
+		else
+			foreach ($query AS $Options)
+			{
+				$output .= '
 					<li>
 						<a href="' . 'index.php?tab=AdminModules&configure=mondialrelay&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id).'&delete_mr=' . $Options['id_mr_method'] . '"><img src="../img/admin/disabled.gif" alt="Delete" title="Delete" /></a>' . str_replace('_', ' ', $Options['mr_Name']) . ' (' . $Options['mr_ModeCol'] . '-' . $Options['mr_ModeLiv'] . ' - ' . $Options['mr_ModeAss'] . ' : '.$Options['mr_Pays_list'].')
 						<div style="float:right;"><a href="index.php?tab=AdminCarriers&id_carrier=' . (int)($Options['id_carrier']) . '&updatecarrier&token='.Tools::getAdminToken('AdminCarriers'.(int)(Tab::getIdFromClassName('AdminCarriers')).(int)$this->context->employee->id).'"><b><u>'.$this->l('Config Shipping.').'</u></b></a></div>
 					</li>';
-		}
+			}
 		$output .= '
 				</ul>
 			</fieldset>
