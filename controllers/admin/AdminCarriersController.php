@@ -132,6 +132,31 @@ class AdminCarriersControllerCore extends AdminController
 
 	public function initList()
 	{
+		$this->displayInformation(
+			'&nbsp;<b>'.$this->l('How to create a new carrier?').'</b>
+			<br />
+			<ul>
+			<li>'.$this->l('Click "Add new".').'<br /></li>
+				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
+				<li>'.
+					$this->l('You need to decide a price range or a weight range for which the new carrier will be available.
+					Under the "Shipping" tab, click either "Price Ranges" or "Weight Ranges".').'
+				</li>
+				<li>'.$this->l('Click "Add new".').'</li>
+				<li>'.
+					$this->l('Select the name of the carrier and define the price range or the weight range.
+					For example the carrier can be made available for a weight range between 0 and 5kgs. Another carrier will have a range between 5 and 10kgs.').'
+				</li>
+				<li>'.$this->l('When you are done, click "Save".').'</li>
+				<li>'.$this->l('Click on the "Shipping" tab.').'</li>
+				<li>'.
+					$this->l('You need to choose the fees that will be applied for this carrier.
+					At the bottom on the page, in the "Fees" section, select the name of the carrier.').'
+				</li>
+				<li>'.$this->l('For each zone, enter a price. Click "Save".').'</li>
+				<li>'.$this->l('You\'re set! The new carrier will be displayed to your customers.').'</li>
+			</ul>'
+		);
 		$this->_select = 'b.*';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier';
 		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
@@ -324,7 +349,6 @@ class AdminCarriersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'hidden',
-					'label' => $this->l('Module:'),
 					'name' => 'is_module'
 				),
 				array(
@@ -356,6 +380,11 @@ class AdminCarriersControllerCore extends AdminController
 			'title' => $this->l('   Save   '),
 			'class' => 'button'
 		);
+
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$this->getFieldsValues($obj);
 
 		return parent::initForm();
 	}
@@ -500,48 +529,6 @@ class AdminCarriersControllerCore extends AdminController
 					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
-		}
-	}
-
-	public function initContent()
-	{
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		if ($this->display != 'edit' && $this->display != 'add')
-			$this->display = 'list';
-
-		$this->getFieldsValues($obj);
-
-		parent::initContent();
-
-		if ($this->display == 'list')
-		{
-			$this->displayInformation(
-				'&nbsp;<b>'.$this->l('How to create a new carrier?').'</b>
-				<br />
-				<ul>
-				<li>'.$this->l('Click "Add new".').'<br /></li>
-					<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-					<li>'.
-						$this->l('You need to decide a price range or a weight range for which the new carrier will be available.
-						Under the "Shipping" tab, click either "Price Ranges" or "Weight Ranges".').'
-					</li>
-					<li>'.$this->l('Click "Add new".').'</li>
-					<li>'.
-						$this->l('Select the name of the carrier and define the price range or the weight range.
-						For example the carrier can be made available for a weight range between 0 and 5kgs. Another carrier will have a range between 5 and 10kgs.').'
-					</li>
-					<li>'.$this->l('When you are done, click "Save".').'</li>
-					<li>'.$this->l('Click on the "Shipping" tab.').'</li>
-					<li>'.
-						$this->l('You need to choose the fees that will be applied for this carrier.
-						At the bottom on the page, in the "Fees" section, select the name of the carrier.').'
-					</li>
-					<li>'.$this->l('For each zone, enter a price. Click "Save".').'</li>
-					<li>'.$this->l('You\'re set! The new carrier will be displayed to your customers.').'</li>
-				</ul>'
-			);
 		}
 	}
 

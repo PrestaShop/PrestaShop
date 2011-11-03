@@ -24,13 +24,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helper/form/form.tpl"}
+
 {block name=script}
-		var attributesGroups = {ldelim}{$strAttributesGroups}{rdelim};
-		$('#id_attribute_group').change(function() {
-				var val = $(this).val();
-				if (attributesGroups[val])
-					$('#colorAttributeProperties').show();
-				else
-					$('#colorAttributeProperties').hide();
-			});
+	var attributesGroups = {ldelim}{$strAttributesGroups}{rdelim};
+	$('#id_attribute_group').change(function() {
+		var val = $(this).val();
+		if (attributesGroups[val])
+			$('#colorAttributeProperties').show();
+		else
+			$('#colorAttributeProperties').hide();
+	});
 {/block}
