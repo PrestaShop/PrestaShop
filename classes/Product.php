@@ -892,12 +892,35 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
+	 * addProductAttribute is deprecated
+	 * @deprecated 
+	 */
+	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL)
+	{
+		Tools::displayAsDeprecated();
+		$id_product_attribute = $this->addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
+		if (!$id_product_attribute)
+			return false;
+		// @todo handle $quantity
+		/*
+		$stock_available = new StockAvailable(StockAvailable::getIdStockAvailable($this->id, $id_product_attribute));
+		if (!$stock_available->id)
+		{
+			$stock_available->id_product = $product->id;
+			$stock_available->id_product_attribute = Tools::getValue('id_product_attribute');
+			$stock_available->id_shop = Context::getContext()->shop->getID(true);
+		}
+		*/
+		return $id_product_attribute;
+	}
+
+	/**
 	* Add a product attribute
+	* @since 1.5.0.1
 	*
 	* @param float $price Additional price
 	* @param float $weight Additional weight
 	* @param float $ecotax Additional ecotax
-	* @param integer $quantity Quantity available
 	* @param integer $id_images Image ids
 	* @param string $reference Reference
 	* @param string $supplier_reference Supplier Reference
@@ -906,7 +929,7 @@ class ProductCore extends ObjectModel
 	* @param boolean $default Is default attribute for product
 	* @return mixed $id_product_attribute or false
 	*/
-	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
+	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
 	{
 		if (!$this->id)
 			return;
@@ -946,9 +969,9 @@ class ProductCore extends ObjectModel
 		return (int)($id_product_attribute);
 	}
 
-	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
+	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL)
 	{
-		$id_product_attribute = $this->addProductAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
+		$id_product_attribute = $this->addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
 		$result = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_attribute` SET `wholesale_price` = '.(float)$wholesale_price.' WHERE `id_product_attribute` = '.(int)$id_product_attribute);
 		if (!$id_product_attribute OR !$result)
 			return false;
