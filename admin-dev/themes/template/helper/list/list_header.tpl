@@ -111,7 +111,9 @@
 								{/if}
 							</th>
 							{foreach $fields_display AS $key => $params}
-								<th {if isset($params.widthColumn)} style="width: {if $params.widthColumn == 'auto'}auto{else}{$params.widthColumn}px{/if}"{/if}>{$params.title}
+								<th {if isset($params.widthColumn)} style="width: {if $params.widthColumn == 'auto'}auto{else}{$params.widthColumn}px{/if}"{/if}
+									{if isset($params.align)} class="{$params.align}"{/if}>
+									{$params.title}
 									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}">
