@@ -206,7 +206,7 @@ class AdminSearchControllerCore extends AdminController
 			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center'),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'center'),
 			'name' => array('title' => $this->l('Name')),
-			'price' => array('title' => $this->l('Price'), 'align' => 'right', 'price' => true),
+			'price' => array('title' => $this->l('Price'), 'align' => 'right', 'type' => 'price'),
 			'status' => array('title' => $this->l('Status'), 'align' => 'center'),
 		));
 	}

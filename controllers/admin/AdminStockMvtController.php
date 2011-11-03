@@ -229,7 +229,7 @@ class AdminStockMvtControllerCore extends AdminController
 				'title' => $this->l('Price (TE)'),
 				'width' => 70,
 				'align' => 'right',
-				'price' => true,
+				'type' => 'price',
 				'currency' => true,
 				'filter_key' => 'a!price_te'
 			),
