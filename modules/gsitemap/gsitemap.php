@@ -104,7 +104,7 @@ xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 XML;
     	$xml = new SimpleXMLElement($xmlString);
 
-    	$sql = 'SELECT s.id_shop, su.domain, su.domain_ssl, su.uri
+    	$sql = 'SELECT s.id_shop, su.domain, su.domain_ssl, CONCAT(su.physical_uri, su.virtual_uri) as uri
     			FROM '._DB_PREFIX_.'shop s
     			INNER JOIN '._DB_PREFIX_.'shop_url su ON s.id_shop = su.id_shop AND su.main = 1
     			WHERE s.active = 1
