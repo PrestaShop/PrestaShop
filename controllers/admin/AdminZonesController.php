@@ -80,9 +80,11 @@ class AdminZonesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'asso_shop',
+					'label' => 'Shop groups:',
 					'name' => ''
 				)
 			),
+			'asso_shop' => 'group',
 			'submit' => array(
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
