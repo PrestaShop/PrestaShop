@@ -71,12 +71,17 @@
      * @param string $headers the headers from the request
      */
     function HttpAuthentication($headers=null, $die=true) {
-      if(!is_null($headers)) {
+      if (!is_null($headers))
         $_SERVER = $headers;
-      }
-      if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+			
+			list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode(substr($_GET['HTTP_AUTHORIZATIOIZATION'], 6)));
+      
+			if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
         $compare_mer_id = $_SERVER['PHP_AUTH_USER']; 
         $compare_mer_key = $_SERVER['PHP_AUTH_PW'];
+
+				unset($_SERVER['PHP_AUTH_USER']); 
+				unset($_SERVER['PHP_AUTH_PW']);
       }
   //  IIS Note::  For HTTP Authentication to work with IIS, 
   // the PHP directive cgi.rfc2616_headers must be set to 0 (the default value). 

@@ -2,4 +2,8 @@
 	RewriteEngine on
 	RewriteCond %{HTTP:Authorization} ^(.*)
 	RewriteRule ^(.*) - [E=HTTP_AUTHORIZATION:%1]
+
+	RewriteBase /modules/gcheckout/library
+	RewriteCond %{HTTP:Authorization} !^$
+	RewriteRule validation.php validation.php?HTTP_AUTHORIZATION=%{HTTP:Authorization} [QSA,L]
 </IfModule>
