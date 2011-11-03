@@ -30,11 +30,11 @@
 	{if $index is odd}class="alt_row"{/if}
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
-		{if isset($tr.has_bulk_actions) && $tr.has_bulk_actions}
-			<td class="center">
+		<td class="center">
+			{if {$has_bulk_actions}}
 				<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
-			</td>
-		{/if}
+			{/if}
+		</td>
 		{foreach $fields_display AS $key => $params}
 			<td
 				{if isset($params.position)}

@@ -215,11 +215,11 @@ class HelperListCore extends Helper
 					else if (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($token, $id);
 
-					// At least one bulk action is possible for this row
-					$this->_list[$index]['has_bulk_actions'] = true;
 				}
 			}
 
+			// @todo skip action for bulk actions
+			// $this->_list[$index]['has_bulk_actions'] = true;
 
 			foreach ($this->fieldsDisplay as $key => $params)
 			{
