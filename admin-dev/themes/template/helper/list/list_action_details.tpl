@@ -99,6 +99,7 @@ $(document).ready(function() {
 					}
 					this.dataMaped = true;
 					this.opened = false;
+					initTableDnD('.details_{$id} table.tableDnD');
 				}
 			});
 		}
