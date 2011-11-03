@@ -251,7 +251,7 @@
 								function ifSuperAdmin(el)
 								{
 									var val = $(el).val();
-									if(val == {$_PS_ADMIN_PROFILE_})
+									if(val == {$smarty.const._PS_ADMIN_PROFILE_})
 									{
 										$('.assoShop input[type=checkbox]').attr('disabled', 'disabled');
 										$('.assoShop input[type=checkbox]').attr('checked', 'checked');
