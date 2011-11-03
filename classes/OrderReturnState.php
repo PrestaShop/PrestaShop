@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,27 +28,26 @@
 class OrderReturnStateCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
-	
+	public $name;
+
 	/** @var string Display state in the specified color */
-	public		$color;
-	
-	
- 	protected 	$fieldsValidate = array('color' => 'isColor');
-	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 64);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
-	
-	protected 	$table = 'order_return_state';
-	protected 	$identifier = 'id_order_return_state';
-	
+	public $color;
+
+ 	protected $fieldsValidate = array('color' => 'isColor');
+	protected $fieldsRequiredLang = array('name');
+ 	protected $fieldsSizeLang = array('name' => 64);
+ 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+
+	protected $table = 'order_return_state';
+	protected $identifier = 'id_order_return_state';
+
 	public function getFields()
 	{
 		$this->validateFields();
 		$fields['color'] = pSQL($this->color);
 		return $fields;
 	}
-	
+
 	/**
 	* Check then return multilingual fields for database interaction
 	*
@@ -59,7 +58,7 @@ class OrderReturnStateCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name'));
 	}
-	
+
 	/**
 	* Get all available order states
 	*
@@ -74,7 +73,5 @@ class OrderReturnStateCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl ON (ors.`id_order_return_state` = orsl.`id_order_return_state` AND orsl.`id_lang` = '.(int)($id_lang).')
 		ORDER BY ors.`id_order_return_state` ASC');
 	}
-	
-	
 }
 

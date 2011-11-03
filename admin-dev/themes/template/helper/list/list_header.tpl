@@ -115,7 +115,7 @@
 					{/if}
 					<thead>
 						<tr class="nodrag nodrop">
-							<th>
+							<th class="center">
 								{if $has_bulk_actions}
 									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
 								{/if}
@@ -144,7 +144,7 @@
 								</th>
 							{/if}
 							{if $has_actions}
-								<th>{l s='Actions'}</th>
+								<th class="center">{l s='Actions'}</th>
 							{/if}
 						</tr>
  						{if !$simple_header}

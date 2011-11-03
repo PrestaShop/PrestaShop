@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,41 +29,48 @@ class OrderStateCore extends ObjectModel
 {
  	/** @var string Name */
 	public $name;
-	
-	/** @var string Template name if there is any e-mail to send */	
+
+	/** @var string Template name if there is any e-mail to send */
 	public $template;
-	
+
 	/** @var boolean Send an e-mail to customer ? */
 	public $send_email;
-	
+
 	/** @var boolean Allow customer to view and download invoice when order is at this state */
 	public $invoice;
-	
+
 	/** @var string Display state in the specified color */
 	public $color;
-	
+
 	public $unremovable;
 
 	/** @var boolean Log authorization */
 	public $logable;
-	
+
 	/** @var boolean Delivery */
 	public $delivery;
 
 	/** @var boolean Hidden */
 	public $hidden;
-	
+
 	/** @var boolean Shipped */
 	public $shipped;
 
- 	protected $fieldsValidate = array('send_email' => 'isBool', 'invoice' => 'isBool', 'color' => 'isColor', 'logable' => 'isBool', 'shipped' => 'isBool');
+ 	protected $fieldsValidate = array(
+ 		'send_email' => 'isBool',
+ 		'invoice' => 'isBool',
+ 		'color' => 'isColor',
+ 		'logable' => 'isBool',
+ 		'shipped' => 'isBool'
+ 	);
+
 	protected $fieldsRequiredLang = array('name');
  	protected $fieldsSizeLang = array('name' => 64, 'template' => 64);
  	protected $fieldsValidateLang = array('name' => 'isGenericName', 'template' => 'isTplName');
-	
+
 	protected $table = 'order_state';
 	protected $identifier = 'id_order_state';
-	
+
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'unremovable' => array(),
@@ -71,21 +78,21 @@ class OrderStateCore extends ObjectModel
 			'hidden' => array(),
 		),
 	);
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
-		$fields['send_email'] = (int)($this->send_email);
-		$fields['invoice'] = (int)($this->invoice);
+		$fields['send_email'] = (int)$this->send_email;
+		$fields['invoice'] = (int)$this->invoice;
 		$fields['color'] = pSQL($this->color);
-		$fields['unremovable'] = (int)($this->unremovable);
-		$fields['logable'] = (int)($this->logable);
-		$fields['delivery'] = (int)($this->delivery);
-		$fields['hidden'] = (int)($this->hidden);
-		$fields['shipped'] = (int)($this->shipped);
+		$fields['unremovable'] = (int)$this->unremovable;
+		$fields['logable'] = (int)$this->logable;
+		$fields['delivery'] = (int)$this->delivery;
+		$fields['hidden'] = (int)$this->hidden;
+		$fields['shipped'] = (int)$this->shipped;
 		return $fields;
 	}
-	
+
 	/**
 	* Check then return multilingual fields for database interaction
 	*
@@ -96,7 +103,7 @@ class OrderStateCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name', 'template'));
 	}
-	
+
 	/**
 	* Get all available order states
 	*
@@ -108,7 +115,7 @@ class OrderStateCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_state` os
-		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$id_lang.')
 		ORDER BY `name` ASC');
 	}
 
@@ -123,10 +130,10 @@ class OrderStateCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `invoice` AS ok
 		FROM `'._DB_PREFIX_.'order_state`
-		WHERE `id_order_state` = '.(int)($id_order_state));
+		WHERE `id_order_state` = '.(int)$id_order_state);
 		return $result['ok'];
 	}
-	
+
 	public function isRemovable()
 	{
 	 	return !($this->unremovable);

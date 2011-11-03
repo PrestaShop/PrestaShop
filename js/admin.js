@@ -492,10 +492,9 @@ function openWin(url, title, width, height, top, left)
 	newWin.focus();
 }
 
-function	viewTemplates(id_select, id_lang, prefix, ext)
+function viewTemplates(id_select, prefix, ext)
 {
-	var id_list = document.getElementById(id_select);
-	var loc = id_list.options[id_list.selectedIndex].value;
+	var loc = $(id_select).val();
 	if (loc != 0)
 		openWin (prefix+loc+ext, 'tpl_viewing', '520', '400', '50', '300');
 	return ;
