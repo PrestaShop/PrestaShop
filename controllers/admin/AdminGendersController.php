@@ -172,7 +172,7 @@ class AdminGendersController extends AdminController
 
 	public function displayGenderType($value, $tr)
 	{
-		return $this->fieldsDisplay['type']['select'][$value];
+		return $this->fieldsDisplay['type']['list'][$value];
 	}
 
 	protected function postImage($id)
