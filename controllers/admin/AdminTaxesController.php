@@ -1,0 +1,237 @@
+<?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 7060 $
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+class AdminTaxesControllerCore extends AdminController
+{
+	public function __construct()
+	{
+	 	$this->table = 'tax';
+	 	$this->className = 'Tax';
+	 	$this->lang = true;
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
+		$this->fieldsDisplay = array(
+		'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+		'name' => array('title' => $this->l('Name'), 'width' => 140),
+		'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%', 'width' => 50),
+		'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false));
+
+		$ecotax_desc = '';
+		if (Configuration::get('PS_USE_ECOTAX'))
+			$ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0');
+
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Tax options'),
+				'fields' =>	array(
+					'PS_TAX' => array('title' => $this->l('Enable tax:'), 'desc' => $this->l('Select whether or not to include tax on purchases'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_TAX_DISPLAY' => array('title' => $this->l('Display tax in cart:'), 'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_TAX_ADDRESS_TYPE' => array('title' => $this->l('Base on:'), 'cast' => 'pSQL', 'type' => 'select', 'list' => array(array('name' => $this->l('Invoice Address'), 'id' => 'id_address_invoice'), array('name' => $this->l('Delivery Address'), 'id' => 'id_address_delivery')), 'identifier' => 'id'),
+					'PS_USE_ECOTAX' => array('title' => $this->l('Use ecotax'), 'desc' => $ecotax_desc, 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+				),
+				'submit' => array()
+			),
+		);
+
+		if (Configuration::get('PS_USE_ECOTAX'))
+			$this->optionsList['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g., French ecotax: 19.6%).'),
+				'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_tax', 'identifier' => 'id_tax_rules_group', 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions());
+
+		parent::__construct();
+	}
+
+	/**
+	 * Display delete action link
+	 */
+	public function displayDeleteLink($token = null, $id)
+	{
+		if (!array_key_exists('Delete', self::$cache_lang))
+			self::$cache_lang['Delete'] = $this->l('Delete');
+
+		if (!array_key_exists('DeleteItem', self::$cache_lang))
+			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
+
+		if (TaxRule::isTaxInUse($id))
+			$confirm = $this->l('This tax is currently in use in a tax rule. Are you sure?');
+
+		$this->context->smarty->assign(array(
+			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'confirm' => (isset($confirm) ? '\r'.$confirm : self::$cache_lang['DeleteItem'].$id.' ? '),
+			'action' => self::$cache_lang['Delete'],
+		));
+
+		return $this->context->smarty->fetch('helper/list/list_action_delete.tpl');
+	}
+
+	/**
+	 * Fetch the template for action enable
+	 *
+	 * @param string $token
+	 * @param int $id
+	 * @param int $value state enabled or not
+	 * @param string $active status
+	 * @param int $id_category
+	 * @param int $id_product
+	 */
+	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
+	{
+		if ($value AND TaxRule::isTaxInUse($id))
+			$confirm = $this->l('This tax is currently in use in a tax rule. If you continue this tax will be removed from the tax rule, are you sure?');
+
+		$tpl_enable = $this->context->smarty->createTemplate('helper/list/list_action_enable.tpl');
+		$tpl_enable->assign(array(
+			'enabled' => (bool)$value,
+			'url_enable' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
+				((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token),
+			'confirm' => isset($confirm) ? $confirm : null,
+		));
+
+		return $tpl_enable->fetch();
+	}
+
+	public function initForm()
+	{
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Taxes'),
+				'image' => '../img/admin/dollar.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'size' => 33,
+					'required' => true,
+					'lang' => true,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('Tax name to display in cart and on invoice, e.g., VAT')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Rate:'),
+					'name' => 'rate',
+					'size' => 4,
+					'maxlength' => 6,
+					'required' => true,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('Format: XX.XX or XX.XXX (e.g., 19.60 or 13.925)')
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Enable:'),
+					'name' => 'active',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'active_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'active_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					)
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
+		return parent::initForm();
+	}
+
+	public function postProcess()
+	{
+		if ($this->action == 'save')
+		{
+		 	/* Checking fields validity */
+			$this->validateRules();
+			if (!sizeof($this->_errors))
+			{
+				$id = (int)(Tools::getValue('id_'.$this->table));
+
+				/* Object update */
+				if (isset($id) AND !empty($id))
+				{
+					$object = new $this->className($id);
+					if (Validate::isLoadedObject($object))
+					{
+						$this->copyFromPost($object, $this->table);
+						$result = $object->update(false, false);
+
+						if (!$result)
+							$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
+						elseif ($this->postImage($object->id))
+							{
+								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
+							}
+					}
+					else
+						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				}
+
+				/* Object creation */
+				else
+				{
+					$object = new $this->className();
+					$this->copyFromPost($object, $this->table);
+					if (!$object->add())
+						$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+					elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
+					{
+						Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
+					}
+				}
+			}
+		}
+		else
+			parent::postProcess();
+	}
+
+	public function updateOptionPsUseEcotax($value)
+	{
+		$old_value = (int)Configuration::get('PS_USE_ECOTAX');
+
+		if ($old_value != $value)
+		{
+			// Reset ecotax
+			if ($value == 0)
+				Product::resetEcoTax();
+
+			Configuration::updateValue('PS_USE_ECOTAX', (int)$value);
+		}
+	}
+}

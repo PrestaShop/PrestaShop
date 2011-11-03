@@ -106,7 +106,7 @@
 					<thead>
 						<tr class="nodrag nodrop">
 							<th style="width:10px;">
-								{if $delete}
+								{if $has_bulk_actions}
 									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
 								{/if}
 							</th>

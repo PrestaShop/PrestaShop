@@ -30,19 +30,11 @@
 	{if $index is odd}class="alt_row"{/if}
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
-		<td class="center">
-			{if $bulk_actions}
-				{assign var=bulkActionPossible value=true}
-				{foreach $list_skip_actions as $key => $value}
-					{if in_array($tr.$identifier, $value) == true}
-						{assign var=bulkActionPossible value=false}
-					{/if}
-				{/foreach}
-				{if $bulkActionPossible == true}
-					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
-				{/if}
-			{/if}
-		</td>
+		{if isset($tr.has_bulk_actions) && $tr.has_bulk_actions}
+			<td class="center">
+				<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+			</td>
+		{/if}
 		{foreach $fields_display AS $key => $params}
 			<td
 				{if isset($params.position)}

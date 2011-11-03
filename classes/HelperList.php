@@ -159,18 +159,19 @@ class HelperListCore extends Helper
 	 * @param string $token
 	 * @param int $id
 	 * @param int $value state enabled or not
-	 * @param unknown_type $active
-	 * @param unknown_type $id_category
-	 * @param unknown_type $id_product
+	 * @param string $active status
+	 * @param int $id_category
+	 * @param int $id_product
 	 */
 	protected function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
-		$this->context->smarty->assign(array(
+		$tpl_enable = $this->context->smarty->createTemplate('helper/list/list_action_enable.tpl');
+		$tpl_enable->assign(array(
 			'enabled' => (bool)$value,
 			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
 				((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token)
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_enable.tpl');
+		return $tpl_enable->fetch();
 	}
 
 	public function displayListContent($token = null)
@@ -213,8 +214,12 @@ class HelperListCore extends Helper
 						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id);
 					else if (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($token, $id);
+
+					// At least one bulk action is possible for this row
+					$this->_list[$index]['has_bulk_actions'] = true;
 				}
 			}
+
 
 			foreach ($this->fieldsDisplay as $key => $params)
 			{
@@ -222,7 +227,13 @@ class HelperListCore extends Helper
 				$key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
 
 				if (isset($params['active']))
-					$this->_list[$index][$key] = $this->displayEnableLink(
+				{
+					// If method is defined in calling controller, use it instead of the Helper method
+					if (method_exists($this->context->controller, 'displayEnableLink'))
+						$calling_obj = $this->context->controller;
+					else
+						$calling_obj = $this;
+					$this->_list[$index][$key] = $calling_obj->displayEnableLink(
 						$this->token,
 						$id,
 						$tr[$key],
@@ -230,6 +241,7 @@ class HelperListCore extends Helper
 						Tools::getValue('id_category'),
 						Tools::getValue('id_product')
 					);
+				}
 				else if (isset($params['activeVisu']))
 					$this->_list[$index][$key] = (bool)$tr[$key];
 				else if (isset($params['position']))
@@ -309,6 +321,7 @@ class HelperListCore extends Helper
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
 			'has_actions' => (bool)count($this->actions),
+			'has_bulk_actions' => (bool)count($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
 		));
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->content_tpl);
@@ -550,7 +563,8 @@ class HelperListCore extends Helper
 			'identifier' => $this->identifier,
 			'id_cat' => $id_cat,
 			'shop_link_type' => $this->shopLinkType,
-			'has_actions' => (boolean)count($this->actions),
+			'has_actions' => (bool)count($this->actions),
+			'has_bulk_actions' => (bool)count($this->bulk_actions),
 			'toolbar_btn' => $this->toolbar_btn,
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
