@@ -203,7 +203,7 @@ abstract class ObjectModelCore
 	public function add($autodate = true, $nullValues = false)
 	{
 	 	if (!Validate::isTableOrIdentifier($this->table))
-			die(Tools::displayError('not table or identifier : ').$this->table);
+			throw new PrestashopException('not table or identifier : '.$this->table);
 
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'AddBefore');
@@ -235,7 +235,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) AS $key)
 					 	if (!Validate::isTableOrIdentifier($key))
-			 				die(Tools::displayError('key is not table or identifier, ').$key);
+			 				throw new PrestashopException('key '.$key.' is not table or identifier, ');
 					$field[$this->identifier] = (int)$this->id;
 
 					if (isset($assos[$this->table.'_lang']) && $assos[$this->table.'_lang']['type'] == 'fk_shop')
@@ -276,7 +276,7 @@ abstract class ObjectModelCore
 	public function update($nullValues = false)
 	{
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			die(Tools::displayError());
+			throw new PrestashopException('wrong identifier or table:'.$this->identifier.', table: '.$this->table);
 
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'UpdateBefore');
@@ -304,7 +304,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) as $key)
 						if (!Validate::isTableOrIdentifier($key))
-							die(Tools::displayError());
+							throw new PrestashopException('key '.$key.' is not a valid table or identifier');
 
 					// If this table is linked to multishop system, update / insert for all shops from context
 					if ($this->langMultiShop)
@@ -351,7 +351,7 @@ abstract class ObjectModelCore
 	public function delete()
 	{
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-	 		die(Tools::displayError());
+			throw new PrestashopException('wrong identifier or table:'.$this->identifier.', table: '.$this->table);
 
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'DeleteBefore');
@@ -381,7 +381,7 @@ abstract class ObjectModelCore
 	public function deleteSelection($selection)
 	{
 		if (!is_array($selection) OR !Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			die(Tools::displayError());
+			throw new PrestashopException('selection is not an array, or identifier or table:'.$this->identifier.', table: '.$this->table);
 		$result = true;
 		foreach ($selection AS $id)
 		{
@@ -399,11 +399,11 @@ abstract class ObjectModelCore
 	public function toggleStatus()
 	{
 	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-	 		die(Tools::displayError());
+			throw new PrestashopException('identifier or table:'.$this->identifier.', table: '.$this->table);
 
 	 	/* Object must have a variable called 'active' */
 	 	elseif (!key_exists('active', $this))
-	 		die(Tools::displayError());
+			throw new PrestashopException('property "active is missing in object '.get_class($this));
 
 	 	/* Update active status on object */
 	 	$this->active = (int)(!$this->active);
@@ -425,7 +425,7 @@ abstract class ObjectModelCore
 	{
 		/* WARNING : Product do not use this function, so do not forget to report any modification if necessary */
 	 	if (!Validate::isTableOrIdentifier($this->identifier))
-	 		die(Tools::displayError('identifier is not table or identifier : ').$this->identifier);
+	 		throw new PrestashopException('identifier is not table or identifier : '.$this->identifier);
 
 		$fields = array();
 
@@ -456,7 +456,7 @@ abstract class ObjectModelCore
 
 			/* Check fields validity */
 			if (!Validate::isTableOrIdentifier($fieldName))
-				die(Tools::displayError());
+				throw new PrestashopException('identifier is not table or identifier : '.$fieldName);
 
 			/* Copy the field, or the default language field if it's both required and empty */
 			if ((!$this->id_lang AND isset($this->{$fieldName}[$id_language]) AND !empty($this->{$fieldName}[$id_language]))
@@ -478,22 +478,25 @@ abstract class ObjectModelCore
 		foreach ($fieldsRequired as $field)
 			if (Tools::isEmpty($this->{$field}) AND (!is_numeric($this->{$field})))
 			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).' -> '.$field.' is empty)');
+				if ($die) 
+					throw new PrestashopException('property empty : '.get_class($this).'->'.$field);
 				return $errorReturn ? get_class($this).' -> '.$field.' is empty' : false;
 			}
 		foreach ($this->fieldsSize as $field => $size)
 			if (isset($this->{$field}) AND Tools::strlen($this->{$field}) > $size)
 			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).' -> '.$field.' Length '.$size.')');
+				if ($die)
+					throw new PrestashopException('fieldsize error : '.get_class($this).'->'.$field.' > '.$size);
 				return $errorReturn ? get_class($this).' -> '.$field.' Length '.$size : false;
 			}
 		$validate = new Validate();
 		foreach ($this->fieldsValidate as $field => $method)
 			if (!method_exists($validate, $method))
-				die (Tools::displayError('Validation function not found.').' '.$method);
+				throw new PrestashopException('Validation function not found. '.$method);
 			elseif (!empty($this->{$field}) AND !call_user_func(array('Validate', $method), $this->{$field}))
 			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).' -> '.$field.' = '.$this->{$field}.')');
+				if ($die) 
+					throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field});
 				return $errorReturn ? get_class($this).' -> '.$field.' = '.$this->{$field} : false;
 			}
 		return true;
@@ -511,7 +514,8 @@ abstract class ObjectModelCore
 				continue ;
 			if (!$this->{$fieldArray} OR !sizeof($this->{$fieldArray}) OR ($this->{$fieldArray}[$defaultLanguage] !== '0' AND empty($this->{$fieldArray}[$defaultLanguage])))
 			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).'->'.$fieldArray.' '.Tools::displayError('is empty for default language.').')');
+				if ($die) 
+					throw new PrestashopException('empty for default language : '.get_class($this).'->'.$fieldArray);
 				return $errorReturn ? get_class($this).'->'.$fieldArray.' '.Tools::displayError('is empty for default language.') : false;
 			}
 		}
@@ -522,7 +526,8 @@ abstract class ObjectModelCore
 			foreach ($this->{$fieldArray} as $k => $value)
 				if (Tools::strlen($value) > $size)
 				{
-					if ($die) die (Tools::displayError().' ('.get_class($this).'->'.$fieldArray.' '.Tools::displayError('Length').' '.$size.' '.Tools::displayError('for language').')');
+					if ($die) 
+						throw new PrestashopException('fieldsize error '.get_class($this).'->'.$fieldArray.' length of '.$size.' for language');
 					return $errorReturn ? get_class($this).'->'.$fieldArray.' '.Tools::displayError('Length').' '.$size.' '.Tools::displayError('for language') : false;
 				}
 		}
@@ -533,10 +538,11 @@ abstract class ObjectModelCore
 				continue ;
 			foreach ($this->{$fieldArray} as $k => $value)
 				if (!method_exists($validate, $method))
-					die (Tools::displayError('Validation function not found.').' '.$method);
+					throw new PrestashopException('Validation function not found for lang: '.$method);
 				elseif (!empty($value) AND !call_user_func(array('Validate', $method), $value))
 				{
-					if ($die) die (Tools::displayError('The following field is invalid according to the validate method ').'<b>'.$method.'</b>:<br/> ('.get_class($this).'->'.$fieldArray.' = '.$value.' '.Tools::displayError('for language').' '.$k.')');
+					if ($die) 
+						throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field}. 'for language '.$k);
 					return $errorReturn ? Tools::displayError('The following field is invalid according to the validate method ').'<b>'.$method.'</b>:<br/> ('. get_class($this).'->'.$fieldArray.' = '.$value.' '.Tools::displayError('for language').' '.$k : false;
 				}
 		}
