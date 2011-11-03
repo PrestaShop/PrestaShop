@@ -36,13 +36,13 @@ class StockAvailableCore extends ObjectModel
 	public $id_product;
 	public $id_product_attribute;
 	public $id_shop;
-	public $quantity;
-	public $depends_on_stock;
+	public $quantity = 0;
+	public $depends_on_stock = 0;
 
 	/*
 	 * @var bool it was previously in Product class
 	 */
-	public $out_of_stock;
+	public $out_of_stock = 0;
 
 	protected $fieldsRequired = array(
 		'id_product',
