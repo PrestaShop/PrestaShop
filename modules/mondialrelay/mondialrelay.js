@@ -38,8 +38,7 @@ function getTickets(detailedExpeditionList)
 	{
 		type : 'POST',
 		url : _PS_MR_MODULE_DIR_ + 'ajax.php',
-		data :	{'detailedExpeditionList':detailedExpeditionList, 
-				'method' : 'MRGetTickets'},
+		data :	{'detailedExpeditionList':detailedExpeditionList, 'method':'MRGetTickets', 'mrtoken':mrtoken},
 		dataType: 'json',
 		success: function(json) 
 		{
@@ -175,7 +174,8 @@ function generateTicketsAjax()
 		data :	{'order_id_list' : order_id_list, 
 				'numSelected' : numSelected,
 				'weight_list' : weight_list,
-				'method' : 'MRCreateTickets'},
+				'method' : 'MRCreateTickets',
+				'mrtoken' : mrtoken},
 		dataType: 'json',
 		success: function(json) 
 		{
@@ -257,7 +257,8 @@ function deleteSelectedHistories()
 		url : _PS_MR_MODULE_DIR_ + 'ajax.php',
 		data :	{'history_id_list' : history_id_list, 
 				'numSelected' : numSelected,
-				'method' : 'DeleteHistory'},
+				'method' : 'DeleteHistory',
+				'mrtoken' : mrtoken},
 		dataType: 'json',
 		success: function(json)
 		{
@@ -267,7 +268,7 @@ function deleteSelectedHistories()
 		error: function(xhr, ajaxOptions, thrownError)
 		{
 			display_generate_button = true;
-            displayBackHistoriesSubmitButton();
+			displayBackHistoriesSubmitButton();
 		}
 	});
 }
@@ -387,7 +388,8 @@ function PS_MRAddSelectedRelayPointInDB(relayPointNumber, id_carrier)
     	'mrtoken' : mrtoken},
     success: function(json)
     {
-			
+			if (PS_MROPC)
+				updateCarrierSelectionAndGift();
     },
     error: function(xhr, ajaxOptions, thrownError)
     {
@@ -519,13 +521,20 @@ function PS_MRDisplayRelayPoint(json, blockContent, carrier_id)
 				contentBlockid =  'relayPoint_' + json.success[relayPoint].Num + '_' + carrier_id;
 				if (!$('#' + contentBlockid).size())
 				{
+					// Set translation if a preselection exist
+					var BtTranslation = (PS_MRPreSelectedRelay == json.success[relayPoint].Num) ?
+						PS_MRTranslationList['Selected'] : PS_MRTranslationList['Select'];
+					
+					var classSelection = (PS_MRPreSelectedRelay == json.success[relayPoint].Num) ?
+						'PS_MRFloatRelayPointSelected' : 'PS_MRFloatRelayPointSelecteIt';
+					
 					$('<div class="PS_MRRelayPointInfo clearfix" id="' + contentBlockid + '"> \
 						<img src="' + _PS_MR_MODULE_DIR_ + 'logo_hd.png" /> \
 						<p><b>' + json.success[relayPoint].LgAdr1 + '</b><br /> ' +  json.success[relayPoint].LgAdr3
 						+ ' - ' + json.success[relayPoint].CP + ' - ' + json.success[relayPoint].Ville
 						+ ' ' + json.success[relayPoint].Pays + '</p> \
-						<div class="PS_MRFloatRelayPointSelecteIt"> \
-							<a class="PS_MRSelectRelayPointButton">' + PS_MRTranslationList['Select'] + '</a> \
+						<div class="' + classSelection + '"> \
+							<a class="PS_MRSelectRelayPointButton">' + BtTranslation  + '</a> \
 						</div> \
 					</div>').appendTo($(this).children('td'));
 					
@@ -816,35 +825,41 @@ function PS_MRAddGMapMarker(id_carrier, relayPointNumber, contentBlockid)
        		PS_MRDisplayClickedGmapWindow(marker, relayInfo.Num, $(this));
         }
       },
-		callback: function(marker)
-		{
-			if (marker)
+     	callback: function(marker)
 			{
-				// Check if the a marker list exist for the carrier,
-				if (markerList[id_carrier] == undefined)
-					markerList[id_carrier] = new Object();
-
-				// Store the marker in the markerList of the carrier
-				markerList[id_carrier][relayPointNumber] = marker;
-				
-				// Link all relay point line info to an action
-				$('#' + contentBlockid).children('p').click(function()
+				if (marker)
 				{
-					PS_MRDisplayGmap($(this).parent().attr('id'), GmapList[id_carrier]);
-				});
-				return true;
+					// Check if the a marker list exist for the carrier,
+					if (markerList[id_carrier] == undefined)
+						markerList[id_carrier] = new Object();
+	
+					// Store the marker in the markerList of the carrier
+					markerList[id_carrier][relayPointNumber] = marker;
+					
+					// Link all relay point line info to an action
+					$('#' + contentBlockid).children('p').click(function()
+					{
+						PS_MRDisplayGmap($(this).parent().attr('id'), GmapList[id_carrier]);
+					});
+					return true;
+				}
+				else
+					$('#' + contentBlockid).children('p').click(function()
+					{
+						PS_MROpenPopupDetail(relayInfo.permaLinkDetail);
+					});
 			}
-		}
 		},
 		infowindow:
 		{
 			options: {content:detailContentHtml},
 			tag:relayInfo.Num,
-			callback: function() {
-				// To avoid any bug, foreach anytime the elements and try to close them
+			callback: function(infowindow) {
+			
 				var windowList = $(this).gmap3({action:'get', name:'infowindow', all:true});
-				for (var x in windowList)
-					windowList[x].close();
+        $.each(windowList, function(i, elem) {
+          elem.close();
+				});
 			}
 		}	
 	});
