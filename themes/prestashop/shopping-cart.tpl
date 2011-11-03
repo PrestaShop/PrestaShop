@@ -203,10 +203,10 @@
 				<td class="price" id="total_price">{displayPrice price=$total_price_without_tax}</td>
 			</tr>
 			{/if}
-			<tr class="cart_free_shipping" {if $free_ship <= 0 || $isVirtualCart} style="display: none;" {/if}>
-					<td colspan="6" style="white-space: normal;">{l s='Remaining amount to be added to your cart in order to obtain free shipping:'}</td>
-					<td id="free_shipping" class="price">{displayPrice price=$free_ship}</td>
-				</tr>
+			{*<tr class="cart_free_shipping" {if $free_ship <= 0 || $isVirtualCart} style="display: none;" {/if}>
+				<td colspan="6" style="white-space: normal;">{l s='Remaining amount to be added to your cart in order to obtain free shipping:'}</td>
+				<td id="free_shipping" class="price">{displayPrice price=$free_ship}</td>
+			</tr>*}
 		</tfoot>
 		<tbody>
 		{foreach from=$products item=product name=productLoop}
