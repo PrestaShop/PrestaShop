@@ -58,11 +58,11 @@ class AdminCustomersControllerCore extends AdminController
 			'id_customer' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'width' => 20
  			),
 			'id_gender' => array(
 				'title' => $this->l('Gender'),
-				'width' => 50,
+				'width' => 70,
 				'align' => 'center',
 				'icon' => $genders_icon,
 				'orderby' => false,
@@ -84,7 +84,7 @@ class AdminCustomersControllerCore extends AdminController
  			),
 			'age' => array(
 				'title' => $this->l('Age'),
-				'width' => 50,
+				'width' => 20,
 				'search' => false,
  				'align' => 'center'
  			),
@@ -114,13 +114,13 @@ class AdminCustomersControllerCore extends AdminController
  			),
 			'date_add' => array(
 				'title' => $this->l('Registration'),
-				'width' => 70,
+				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
  			),
 			'connect' => array(
 				'title' => $this->l('Connection'),
-				'width' => 60,
+				'width' => 100,
 				'type' => 'datetime',
 				'search' => false
  			)

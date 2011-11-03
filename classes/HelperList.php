@@ -229,7 +229,7 @@ class HelperListCore extends Helper
 
 					if (method_exists($this->context->controller, $method_name))
 						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id);
-					else if (method_exists($this, $method_name))
+					elseif (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($token, $id);
 
 				}
@@ -259,9 +259,9 @@ class HelperListCore extends Helper
 						Tools::getValue('id_product')
 					);
 				}
-				else if (isset($params['activeVisu']))
+				elseif (isset($params['activeVisu']))
 					$this->_list[$index][$key] = (bool)$tr[$key];
-				else if (isset($params['position']))
+				elseif (isset($params['position']))
 				{
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
@@ -273,7 +273,7 @@ class HelperListCore extends Helper
 							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
 				}
-				else if (isset($params['image']))
+				elseif (isset($params['image']))
 				{
 					// item_id is the product id in a product image context, else it is the image id.
 					$item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
@@ -287,24 +287,27 @@ class HelperListCore extends Helper
 
 					$this->_list[$index][$key] = cacheImage($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
 				}
-				else if (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
+				elseif (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
 					$this->_list[$index][$key] = isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'];
-				else if (isset($params['price']))
-				{
-					$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
-					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], ($currency), false);
-				}
-				else if (isset($params['float']))
+				elseif (isset($params['float']))
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
-				else if (isset($params['type']) && $params['type'] == 'date')
-					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id);
-				else if (isset($params['type']) && $params['type'] == 'datetime')
-					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
-				else if (isset($tr[$key]))
+				elseif (isset($params['type']))
+				{
+					if ($params['type'] == 'price')
+					{
+						$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
+						$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
+					}
+					elseif ($params['type'] == 'date')
+						$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id);
+					elseif ($params['type'] == 'datetime')
+						$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
+				}
+				elseif (isset($tr[$key]))
 				{
 					if ($key == 'price')
 						$echo = round($tr[$key], 2);
-					else if (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
+					elseif (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
 						$echo = '<span title="'.$tr[$key].'">'.Tools::substr($tr[$key], 0, $params['maxlength']).'...</span>';
 					else
 						$echo = $tr[$key];

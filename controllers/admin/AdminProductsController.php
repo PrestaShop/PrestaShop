@@ -55,8 +55,8 @@ class AdminProductsController extends AdminController
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 80),
 			'name_category' => array('title' => $this->l('Category'), 'width' => 100, 'filter_key' => 'cl!name'),
-			'price' => array('title' => $this->l('Base price'), 'width' => 70, 'price' => true, 'align' => 'right', 'filter_key' => 'a!price'),
-			'price_final' => array('title' => $this->l('Final price'), 'width' => 70, 'price' => true, 'align' => 'right', 'havingFilter' => true, 'orderby' => false),
+			'price' => array('title' => $this->l('Base price'), 'width' => 70, 'type' => 'price', 'align' => 'right', 'filter_key' => 'a!price'),
+			'price_final' => array('title' => $this->l('Final price'), 'width' => 70, 'type' => 'price', 'align' => 'right', 'havingFilter' => true, 'orderby' => false),
 			'active' => array('title' => $this->l('Displayed'), 'width' => 70, 'active' => 'status', 'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false),
 			'position' => array('title' => $this->l('Position'), 'width' => 70,'filter_key' => 'cp!position', 'align' => 'center', 'position' => 'position'),
 		);

@@ -174,8 +174,8 @@
 												<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
 											</select>
 										{elseif $params.type == 'date' || $params.type == 'datetime'}
-											{l s='From'} <input type="text" class="filter datepicker" id="{$name_id}_0" name="{$name}[0]" value="{if isset($value.0)}$value.0{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/><br />
-											{l s='To'} <input type="text" class="filter datepicker" id="{$name_id}_1" name="{$name}[1]" value="{if isset($value.1)}$value.1{/if}"{if isset($params.width)} style="width:{$params.width}px"{/if}/>
+											{l s='From'} <input type="text" class="filter datepicker" id="{$name_id}_0" name="{$name}[0]" value="{if isset($value.0)}$value.0{/if}"{if isset($params.width)} style="width:70px"{/if}/><br />
+											{l s='To'} <input type="text" class="filter datepicker" id="{$name_id}_1" name="{$name}[1]" value="{if isset($value.1)}$value.1{/if}"{if isset($params.width)} style="width:70px"{/if}/>
 										{elseif $params.type == 'select'}
 											{if isset($params.filter_key)}
 												<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
@@ -188,7 +188,7 @@
 												</select>
 											{/if}
 										{else}
-											<input type="text" class="filter" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width)} style="width:{$params.width}px"{/if} />
+											<input type="text" class="filter" name="{$table}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{else}style="width:95%"{/if} />
 										{/if}
 									{/if}
 								</td>
