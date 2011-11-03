@@ -251,7 +251,7 @@ class SupplierOrderCore extends ObjectModel
 	 *
 	 * @return array
 	 */
-	protected function getEntriesCollection()
+	public function getEntriesCollection()
 	{
 		// build query
 		$query = new DbQuery();
