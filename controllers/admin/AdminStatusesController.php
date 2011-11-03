@@ -356,7 +356,6 @@ class AdminStatusesControllerCore extends AdminController
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->fields_value = $this->getFieldsValue($order_return_state);
-		info($helper->fields_value);
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$this->content .= $helper->generateForm($this->fields_form);
 	}
