@@ -87,9 +87,9 @@
 						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 					{/if}
 					{block name="label"}
-					{if isset($input.label)}
-						<label>{$input.label} </label>
-					{/if}
+						{if isset($input.label)}
+							<label>{$input.label} </label>
+						{/if}
 					{/block}
 					{if $input.type == 'hidden'}
 						<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
@@ -171,7 +171,7 @@
 										{/foreach}
 									{/if}
 								</select>
-							{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'radio'}
 							{foreach $input.values as $value}
@@ -208,7 +208,11 @@
 						{elseif $input.type == 'checkbox'}
 							{foreach $input.values.query as $value}
 								{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-								<input type="checkbox" name="{$id_checkbox}" id="{$id_checkbox}" {if $fields_value[$id_checkbox]}checked="checked"{/if} />
+								<input type="checkbox"
+									name="{$id_checkbox}"
+									id="{$id_checkbox}"
+									{if isset($value.val)}value="{$value.val}"{/if}
+									{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 								<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 							{/foreach}
 						{elseif $input.type == 'file'}
