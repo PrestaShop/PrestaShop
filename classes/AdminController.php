@@ -97,8 +97,11 @@ class AdminControllerCore extends Controller
 	/** @var array Cache for query results */
 	protected $_list = array();
 
-	/** @var array Cache for query results */
+	/** @var array list of toolbar buttons */
 	protected $toolbar_btn = null;
+
+	/** @var boolean set to false to hide toolbar and page title */
+	protected $show_toolbar = true;
 
 	/** @var integer Number of results in list */
 	protected $_listTotal = 0;
@@ -1191,6 +1194,7 @@ class AdminControllerCore extends Controller
 		$helper->simple_header = $this->list_simple_header;
 		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
+		$helper->show_toolbar = $this->show_toolbar;
 		$helper->bulk_actions = $this->bulk_actions;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->className = $this->className;
@@ -1205,7 +1209,6 @@ class AdminControllerCore extends Controller
 		$helper->token = $this->token;
 		$helper->specificConfirmDelete = $this->specificConfirmDelete;
 		$helper->imageType = $this->imageType;
-		$helper->simple_header = isset($this->simple_header) ? $this->simple_header : false;
 		$helper->no_link = $this->list_no_link;
 		$helper->colorOnBackground = $this->colorOnBackground;
 		$helper->no_back = isset($this->no_back) ? $this->no_back : true;
