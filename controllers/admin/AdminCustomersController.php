@@ -54,7 +54,7 @@ class AdminCustomersControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 
- 		$this->fieldsDisplay = array(
+		$this->fieldsDisplay = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -62,7 +62,7 @@ class AdminCustomersControllerCore extends AdminController
  			),
 			'id_gender' => array(
 				'title' => $this->l('Gender'),
-				'width' => 30,
+				'width' => 50,
 				'align' => 'center',
 				'icon' => $genders_icon,
 				'orderby' => false,
@@ -72,31 +72,33 @@ class AdminCustomersControllerCore extends AdminController
  			),
 			'lastname' => array(
 				'title' => $this->l('Last Name'),
-				'width' => 80
+				'width' => 'auto'
  			),
 			'firstname' => array(
 				'title' => $this->l('First name'),
-				'width' => 60
+				'width' => 'auto'
  			),
 			'email' => array(
 				'title' => $this->l('E-mail address'),
-				'width' => 120,
+				'width' => 140,
  			),
 			'age' => array(
 				'title' => $this->l('Age'),
-				'width' => 30,
-				'search' => false
+				'width' => 50,
+				'search' => false,
+ 				'align' => 'center'
  			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 25,
+				'width' => 70,
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false),
+				'orderby' => false
+ 			),
 			'newsletter' => array(
 				'title' => $this->l('News.'),
-				'width' => 25,
+				'width' => 70,
 				'align' => 'center',
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
@@ -104,7 +106,7 @@ class AdminCustomersControllerCore extends AdminController
  			),
 			'optin' => array(
 				'title' => $this->l('Opt.'),
-				'width' => 25,
+				'width' => 70,
 				'align' => 'center',
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
@@ -112,7 +114,7 @@ class AdminCustomersControllerCore extends AdminController
  			),
 			'date_add' => array(
 				'title' => $this->l('Registration'),
-				'width' => 30,
+				'width' => 70,
 				'type' => 'date',
 				'align' => 'right'
  			),
