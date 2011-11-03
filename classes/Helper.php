@@ -37,11 +37,39 @@ class HelperCore
 	public $identifier;
 	public $token;
 	public $toolbar_btn;
+	public $title;
+	public $show_toolbar = true;
 	public $context;
+
+	/**
+	 * @var string filename, then smartyTemplate object
+	 */
+	protected $tpl = 'content.tpl';
+	
+	public $tpl_vars = array();
 
 	public function __construct()
 	{
 		$this->context = Context::getContext();
+		$this->tpl = $this->context->smarty->createTemplate($this->tpl);
+	}
+	
+
+	public function setTpl($tpl)
+	{
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
+		$this->tpl = $this->context->smarty->createTemplate($tpl);
+	}
+
+	/**
+	 * default behaviour for helper is to return a tpl fetched
+	 * 
+	 * @return void
+	 */
+	public function generate()
+	{
+		$this->tpl->assign($this->tpl_vars);
+		return $this->tpl->fetch();
 	}
 
 
@@ -69,7 +97,7 @@ class HelperCore
 	 * @param type $input_name name of input
 	 * @return string
 	 */
-	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false, $use_search = false)
+	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false, $use_search = false, $disabled_categories = array())
 	{
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
@@ -117,15 +145,17 @@ class HelperCore
 		{
 			if (is_array($cat))
 			{
+				$disabled = in_array($cat['id_category'], $disabled_categories);
 				if  ($cat['id_category'] != 1)
-					$html .= '<input type="hidden" name="'.$input_name.'" value="'.$cat['id_category'].'" >';
+					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat['id_category'].'" >';
 				else
 					$home_is_selected = true;
 			}
 			else
 			{
+				$disabled = in_array($cat, $disabled_categories);
 				if  ($cat != 1)
-					$html .= '<input type="hidden" name="'.$input_name.'" value="'.$cat.'" >';
+					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat.'" >';
 				else
 					$home_is_selected = true;
 			}

@@ -98,7 +98,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->_filter .= 'AND `id_parent` = '.(int)$this->_category->id.' ';
+		$this->_filter .= ' AND `id_parent` = '.(int)$this->_category->id.' ';
 		$this->_select = 'position ';
 
 		$categories_tree = $this->_category->getParentsCategories($this->context->language->id);
@@ -129,21 +129,28 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		$this->toolbar_title = stripslashes($this->_category->getName());
 		if (empty($this->display))
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token, 
 				'desc' => $this->l('Add new')
+			);
+		if (Tools::getValue('id_category'))
+			$this->toolbar_btn['edit'] = array(
+				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.Tools::getValue('id_category').'&amp;token='.$this->token, 
+				'desc' => $this->l('Edit')
 			);
 		if ($this->display == 'view')
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.Tools::getValue('id_category').'&amp;token='.$this->token, 
 				'desc' => $this->l('Add new')
 			);
-
+			parent::initToolbar();
 	}
 
 	public function initForm()
 	{
+		$this->initToolbar();
 		$obj = $this->loadObject(true);
 		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
 		if (sizeof($selected_cat) > 0)
@@ -207,7 +214,8 @@ class AdminCategoriesControllerCore extends AdminController
 						'selected_cat' => $selected_cat,
 						'input_name' => 'id_parent',
 						'use_radio' => true,
-						'use_search' => false
+						'use_search' => false,
+						'disabled_categories' => array(4),
 					)
 				),
 				array(

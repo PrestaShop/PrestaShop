@@ -58,16 +58,17 @@
 
 	{assign var=home_is_selected value=false}
 	
+	
 	{foreach $categories.selected_cat AS $cat}
 		{if is_array($cat)}
-			{if $cat['id_category'] != 1}
-				<input type="hidden" name="{$categories.input_name}" value="{$cat.id_category}" >
+			{if $cat.id_category != 1}
+				<input {if in_array($cat.id_category, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat.id_category}" >
 			{else}
 				{assign var=home_is_selected value=true}
 			{/if}
 		{else}
 			{if $cat != 1}
-				<input type="hidden" name="{$categories.input_name}" value="{$cat}" >
+				<input {if in_array($cat, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat}" >
 			{else}
 				{assign var=home_is_selected value=true}
 			{/if}

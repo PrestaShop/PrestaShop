@@ -31,47 +31,47 @@
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
 
-		$(document).ready(function() {ldelim}
+		$(document).ready(function() {
 			{foreach $languages as $k => $language}
-				languages[{$k}] = {ldelim}
+				languages[{$k}] = {
 					id_lang: {$language.id_lang},
 					iso_code: '{$language.iso_code}',
 					name: '{$language.name}'
-				{rdelim};
+				};
 			{/foreach}
 			displayFlags(languages, id_language, {$allowEmployeeFormLang});
 
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))
-				{ldelim}
+				{
 					ajaxStates({$fields_value.id_state});
-					$('#id_country').change(function() {ldelim}
+					$('#id_country').change(function() {
 						ajaxStates();
-					{rdelim});
-				{rdelim}
+					});
+				}
 			{/if}
-		{rdelim});
+
+			if ($(".datepicker").length > 0)
+				$(".datepicker").datepicker({
+					prevText: '',
+					nextText: '',
+					dateFormat: 'yy-mm-dd'
+				});
+
+		});
+	{block name="script"}
+	{/block}
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
-<div class="toolbarBox">
-	<ul class="cc_button">
-		{foreach from=$toolbar_btn item=btn key=k}
-			<li>
-				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
-					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:''}" ></span>{$btn.desc}
-				</a>
-			</li> 
-			{/foreach}
-		</ul>
-		<div class="pageTitle">{* todo : what to display as title for each items (table_lang.name ? *}
-			<h3><span id="current_obj" style="font-weight: normal;">{$current_obj_name|default:'&nbsp;'}</span></h3>
-		</div>
-</div>
+
+{if $show_toolbar}
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+{/if}
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 <form class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
-		<input type="hidden" name="id_{$table}" value="{$form_id}" />
+		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
 	{/if}
 	<fieldset>
 		{foreach $fields as $key => $field}
@@ -85,46 +85,34 @@
 					{if $input.name == 'id_state'}
 						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 					{/if}
+					{block name="label"}
 					{if isset($input.label)}
-					<label>{$input.label} </label>
+						<label>{$input.label} </label>
 					{/if}
+					{/block}
 					{if $input.type == 'hidden'}
 						<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
 					{else}
-					<div class="margin-form">
+					{block name="start_field_block"}
+						<div class="margin-form">
+					{/block}
 						{if $input.type == 'text'}
-							{if isset($input.lang) && isset($input.attributeLang)}
-								{foreach $languages as $language}
-									<div id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-										<input type="text"
-												name="{$input.name}_{$language.id_lang}"
-												value="{$fields_value[$input.name][$language.id_lang]}"
-												{if isset($input.size)}size="{$input.size}"{/if}
-												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-												{if isset($input.class)}class="{$input.class}"{/if}
-												{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
-										{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-									</div>
-								{/foreach}
-								{if count($languages) > 1}
-									<div class="displayed_flag">
-										<img src="../img/l/{$defaultFormLanguage}.jpg"
-											class="pointer"
-											id="language_current_{$input.name}"
-											onclick="toggleLanguageFlags(this);" />
-									</div>
-									<div id="languages_{$input.name}" class="language_flags">
-										{l s='Choose language:'}<br /><br />
-										{foreach $languages as $language}
-												<img src="../img/l/{$language.id_lang}.jpg"
-													class="pointer"
-													alt="{$language.name}"
-													title="{$language.name}"
-													onclick="changeLanguage('{$input.name}', '{$input.attributeLang}', {$language.id_lang}, '{$language.iso_code}');" />
-										{/foreach}
-									</div>
-								{/if}
+							{if isset($input.lang)}
+								<div class="translatable">
+									{foreach $languages as $language}
+										<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+											<input type="text"
+													name="{$input.name}_{$language.id_lang}"
+													value="{$fields_value[$input.name][$language.id_lang]}"
+													{if isset($input.size)}size="{$input.size}"{/if}
+													{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+													{if isset($input.class)}class="{$input.class}"{/if}
+													{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
+													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+											{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+										</div>
+									{/foreach}
+								</div>
 							{else}
 								<input type="text"
 										name="{$input.name}"
@@ -135,6 +123,7 @@
 										{if isset($input.class)}class="{$input.class}"{/if}
 										{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
 										{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+								{if isset($input.suffix)}{$input.suffix}{/if}
 								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{/if}
 						{elseif $input.type == 'select'}
@@ -143,7 +132,11 @@
 								{$input.required = false}
 								{$input.p = null}
 							{else}
-								<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+								<select name="{$input.name}"
+										id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+										{if isset($input.multiple)}multiple="multiple" {/if}
+										{if isset($input.size)}size="{$input.size}"{/if}
+										{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 									{if isset($input.options.default)}
 										<option value="{$input.options.default.value}">{$input.options.default.label}</option>
 									{/if}
@@ -168,7 +161,6 @@
 											<option value="{$option[$input.options.id]}"
 												{if isset($input.multiple)}
 													{foreach $fields_value[$input.name] as $field_value}
-														{$field_value}
 														{if $field_value == $option[$input.options.id]}selected="selected"{/if}
 													{/foreach}
 												{else}
@@ -201,30 +193,14 @@
 								{if isset($input.br) && $input.br}<br />{/if}
 							{/foreach}
 						{elseif $input.type == 'textarea'}
-							{if isset($input.lang) && isset($input.attributeLang)}
-								{foreach $languages as $language}
-									<div id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-										<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}">{$fields_value[$input.name][$language.id_lang]}</textarea>
-									</div>
-								{/foreach}
-								{if count($languages) > 1}
-									<div class="displayed_flag">
-										<img src="../img/l/{$defaultFormLanguage}.jpg"
-											class="pointer"
-											id="language_current_{$input.name}"
-											onclick="toggleLanguageFlags(this);" />
-									</div>
-									<div id="languages_{$input.name}" class="language_flags">
-										{l s='Choose language:'}<br /><br />
-										{foreach $languages as $language}
-												<img src="../img/l/{$language.id_lang}.jpg"
-													class="pointer"
-													alt="{$language.name}"
-													title="{$language.name}"
-													onclick="changeLanguage('{$input.name}', '{$input.attributeLang}', {$language.id_lang}, '{$language.iso_code}');" />
-										{/foreach}
-									</div>
-								{/if}
+							{if isset($input.lang)}
+								<div class="translatable">
+									{foreach $languages as $language}
+										<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+											<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}">{$fields_value[$input.name][$language.id_lang]}</textarea>
+										</div>
+									{/foreach}
+								</div>
 							{else}
 								<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
 							{/if}
@@ -235,8 +211,18 @@
 								<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 							{/foreach}
 						{elseif $input.type == 'file'}
+							{if isset($input.display_image) && $input.display_image}
+								{if isset($fields_value.image) && $fields_value.image}
+									<div id="image">
+										{$fields_value.image}
+										<p align="center">{l s='File size'} {$fields_value.size}kb</p>
+										<a href="{$current}&id_category={$form_id}&token={$token}&deleteImage=1">
+											<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
+										</a>
+									</div><br />
+								{/if}
+							{/if}
 							<input type="file" name="{$input.name}" />
-							<img src="{$fields_value[$input.name]}" />
 						{elseif $input.type == 'password'}
 							<input type="password"
 									name="{$input.name}"
@@ -267,6 +253,24 @@
 							<div class="margin-form">
 								{$asso_shop}
 							</div>
+						{elseif $input.type == 'color'}
+							<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
+							<input type="color"
+								size="{$input.size}"
+								data-hex="true"
+								{if isset($input.class)}class="{$input.class}"
+								{else}class="color mColorPickerInput"{/if}
+								name="{$input.name}"
+								value="{$fields_value[$input.name]}" />
+						{elseif $input.type == 'date'}
+							<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
+							<input type="text"
+								size="{$input.size}"
+								data-hex="true"
+								{if isset($input.class)}class="{$input.class}"
+								{else}class="datepicker"{/if}
+								name="{$input.name}"
+								value="{$fields_value[$input.name]}" />
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
@@ -285,7 +289,7 @@
 							</p>
 						{/if}
 						{if isset($languages)}<div class="clear"></div>{/if}
-					</div>
+					{block name="end_field_block"}</div>{/block}
 					{/if}
 					{if $input.name == 'id_state'}
 						</div>
@@ -293,12 +297,24 @@
 				{/foreach}
 			{elseif $key == 'submit'}
 				<div class="margin-form">
-					<input type="submit" value="{$field.title}" name="{$submit_action}" {if isset($field.class)}class="{$field.class}"{/if} />
+					<input type="submit"
+						value="{$field.title}"
+						name="{$submit_action}{if isset($field.stay) && $field.stay}AndStay{/if}"
+						{if isset($field.class)}class="{$field.class}"{/if} />
 				</div>
 			{/if}
 		{/foreach}
 		{if $required_fields}
 			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
+		{/if}
+		{if isset($fields.tinymce) && $fields.tinymce}
+			<script type="text/javascript">
+				var iso = '{$iso}';
+				var pathCSS = '{$path_css}';
+				var ad = '{$ad}';
+			</script>
+			<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript" src="'../js/tinymce.inc.js"></script>
 		{/if}
 	</fieldset>
 </form>

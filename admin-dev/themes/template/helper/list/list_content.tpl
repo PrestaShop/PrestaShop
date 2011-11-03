@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <tbody>
+{if count($list)}
 {foreach $list AS $index => $tr}
 	<tr
 	{if $is_dnd_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position['position']}"{/if}
@@ -41,8 +42,8 @@
 					id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
 				{/if}
 				class="{if !$no_link}pointer{/if}
-					   {if isset($params.position) && $order_by == 'position'} dragHandle{/if}
-					   {if isset($params.align)} {$params.align}{/if}"
+				{if isset($params.position) && $order_by == 'position'} dragHandle{/if}
+				{if isset($params.align)} {$params.align}{/if}"
 
 			{if (!isset($params.position) && !$no_link)}
 				onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">{if isset($params.prefix)}{$params.prefix}{/if}
@@ -50,7 +51,7 @@
 				>
 			{/if}
 			{if isset($params.active)}
-			    {$tr.$key}
+				{$tr.$key}
 			{elseif isset($params.activeVisu)}
 				<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
 				alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
@@ -70,7 +71,7 @@
 				{$tr.$key}
 			{elseif (isset($params.icon))}
 				<img src="../img/admin/{$tr[$key]}" alt="{$tr[$key]}" title="{$tr[$key]}" />
-            {elseif isset($params.price)}
+			{elseif isset($params.price)}
 				{$tr.$key}
 			{elseif isset($params.float)}
 				{$tr.$key}
@@ -80,6 +81,8 @@
 				{$tr.$key}
 			{elseif isset($params.callback)}
 				{$tr.$key}
+			{elseif isset($tr.$key) && $key == 'color'}
+				<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
 			{elseif isset($tr.$key)}
 				{$tr.$key|escape:'htmlall':'UTF-8'}
 			{else}
@@ -90,17 +93,25 @@
 		{/foreach}
 
 	{if $shop_link_type}
-		<td class="center" {if $name != $tr.shop_name}title="{$tr.shop_name}"{/if}>{if isset($tr.shop_short_name)}{$tr.shop_short_name}{else}{$tr.shop_name}{/if}</td>
+		<td class="center" title="{$tr.shop_name}">
+			{if isset($tr.shop_short_name)}
+				{$tr.shop_short_name}
+			{else}
+				{$tr.shop_name}
+			{/if}</td>
 	{/if}
 	{if $has_actions}
 		<td class="center" style="white-space: nowrap;">
 			{foreach $actions AS $action}
 				{if isset($tr.$action)}
-	            	{$tr.$action}
-	            {/if}
+					{$tr.$action}
+				{/if}
 			{/foreach}
 		</td>
 	{/if}
 	</tr>
 {/foreach}
+{else}
+	<tr><td class="center" colspan="{count($fields_display) + 2}">{l s='No items found'}</td></tr>
+{/if}
 </tbody>

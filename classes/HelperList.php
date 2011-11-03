@@ -81,9 +81,10 @@ class HelperListCore extends Helper
 	/** @var boolean Content line is clickable if true */
 	public $no_link = false;
 
-	public $header_tpl = 'helper/list/list_header.tpl';
-	public $content_tpl = 'helper/list/list_content.tpl';
-	public $footer_tpl = 'helper/list/list_footer.tpl';
+	protected $tpl = 'helper/list/list.tpl';
+	protected $header_tpl = 'helper/list/list_header.tpl';
+	protected $content_tpl = 'helper/list/list_content.tpl';
+	protected $footer_tpl = 'helper/list/list_footer.tpl';
 
 	/** @var array list of required actions for each list row */
 	public $actions = array();
@@ -111,6 +112,27 @@ class HelperListCore extends Helper
 
 	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
+
+	public function __construct()
+	{
+		parent::__construct();
+		$smarty = $this->context->smarty;
+		$controller = $this->context->controller;
+
+		// handle template overriding (smarty 3 template inheritance)
+		if (file_exists($smarty->template_dir[0].'/'.$controller->tpl_folder.'list_header.tpl'))
+			$this->header_tpl = $controller->tpl_folder.'list_header.tpl';
+
+		if (file_exists($smarty->template_dir[0].'/'.$controller->tpl_folder.'list_content.tpl'))
+			$this->content_tpl = $controller->tpl_folder.'list_content.tpl';
+
+		if (file_exists($smarty->template_dir[0].'/'.$controller->tpl_folder.'list_footer.tpl'))
+			$this->footer_tpl = $controller->tpl_folder.'list_footer.tpl';
+
+		$this->header_tpl = $this->context->smarty->createTemplate($this->header_tpl);
+		$this->content_tpl = $this->context->smarty->createTemplate($this->content_tpl);
+		$this->footer_tpl = $this->context->smarty->createTemplate($this->footer_tpl);
+	}
 
 	/**
 	 * @var bool
@@ -140,17 +162,14 @@ class HelperListCore extends Helper
 		$this->fieldsDisplay = $fields_display;
 
 		/* Display list header (filtering, pagination and column names) */
-		$list_display = $this->displayListHeader();
-		if (!count($this->_list))
-			$list_display .= '<tr><td class="center" colspan="'.(count($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
-
+		$tpl_vars['header'] = $this->displayListHeader();
 		/* Show the content of the table */
-		$list_display .= $this->displayListContent();
-
+		$tpl_vars['content'] = $this->displayListContent();
 		/* Close list table and submit button */
-		$list_display .= $this->displayListFooter();
+		$tpl_vars['footer'] = $this->displayListFooter();
 
-		return $list_display;
+		$this->tpl->assign($tpl_vars);
+		return parent::generate();
 	}
 
 	/**
@@ -176,8 +195,6 @@ class HelperListCore extends Helper
 
 	public function displayListContent($token = null)
 	{
-		if (!$this->_list)
-			return;
 
 		if ($this->is_dnd_identifier)
 			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', '1');
@@ -305,13 +322,20 @@ class HelperListCore extends Helper
 			}
 		}
 
-		$this->context->smarty->assign(array(
+		$this->content_tpl->assign(array(
+			'shop_link_type' => $this->shopLinkType,
+			'name' => isset($name) ? $name : null,
 			'is_dnd_identifier' => $this->is_dnd_identifier,
+			'identifier' => $this->identifier,
+			'table' => $this->table,
+			'token' => $this->token,
 			'color_on_bg' => $this->colorOnBackground,
 			'id_category' => $id_category,
 			'bulk_actions' => $this->bulk_actions,
 			'key_to_get' => $key_to_get,
 			'positions' => isset($positions) ? $positions : null,
+			'order_by' => $this->orderBy,
+			'order_way' => $this->orderWay,
 			'is_cms' => $this->is_cms,
 			'fields_display' => $this->fieldsDisplay,
 			'list' => $this->_list,
@@ -324,7 +348,7 @@ class HelperListCore extends Helper
 			'has_bulk_actions' => (bool)count($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->content_tpl);
+		return $this->content_tpl->fetch();
 	}
 
 	/**
@@ -332,6 +356,7 @@ class HelperListCore extends Helper
 	 */
 	protected function displayDuplicateLink($token = null, $id)
 	{
+		$tpl = $this->context->smarty->createTemplate('helper/list/list_action_duplicate.tpl');
 		if (!array_key_exists('Duplicate', self::$cache_lang))
 			self::$cache_lang['Duplicate'] = $this->l('Duplicate');
 
@@ -340,7 +365,7 @@ class HelperListCore extends Helper
 
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
-		$this->context->smarty->assign(array(
+		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Duplicate'],
 			'confirm' => self::$cache_lang['Copy images too?'],
@@ -348,7 +373,7 @@ class HelperListCore extends Helper
 			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\\',
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_duplicate.tpl');
+		return $tpl->fetch();
 	}
 
 
@@ -373,15 +398,16 @@ class HelperListCore extends Helper
 	 */
 	protected function displayDetailsLink($token = null, $id)
 	{
+		$tpl = $this->context->smarty->createTemplate('helper/list/list_action_details.tpl');
 		if (!array_key_exists('Details', self::$cache_lang))
 			self::$cache_lang['Details'] = $this->l('Details');
-		$this->context->smarty->assign(array(
+		$tpl->assign(array(
 			'id' => $id,
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
 			'token' => $this->token,
 			'action' => self::$cache_lang['Details'],
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_details.tpl');
+		return $tpl->fetch();
 	}
 
 	/**
@@ -389,15 +415,16 @@ class HelperListCore extends Helper
 	 */
 	protected function displayViewLink($token = null, $id)
 	{
+		$tpl = $this->context->smarty->createTemplate('helper/list/list_action_view.tpl');
 		if (!array_key_exists('View', self::$cache_lang))
 			self::$cache_lang['View'] = $this->l('View');
 
-		$this->context->smarty->assign(array(
+		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['View'],
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_view.tpl');
+		return $tpl->fetch();
 
 	}
 
@@ -406,21 +433,17 @@ class HelperListCore extends Helper
 	 */
 	protected function displayEditLink($token = null, $id)
 	{
+		$tpl = $this->context->smarty->createTemplate('helper/list/list_action_edit.tpl');
 		if (!array_key_exists('Edit', self::$cache_lang))
 			self::$cache_lang['Edit'] = $this->l('Edit');
 
-		$this->context->smarty->assign(array(
+		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Edit'],
 			'id' => (int)$id
 		));
 
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_action_edit.tpl'))
-			$tpl = $this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_action_edit.tpl';
-		else
-			$tpl = $this->context->smarty->template_dir[0].'/helper/list/list_action_edit.tpl';
-
-		return $this->context->smarty->fetch($tpl);
+		return $tpl->fetch();
 
 	}
 
@@ -429,19 +452,21 @@ class HelperListCore extends Helper
 	 */
 	protected function displayDeleteLink($token = null, $id)
 	{
+		$tpl = $this->context->smarty->createTemplate('helper/list/list_action_delete.tpl');
 		if (!array_key_exists('Delete', self::$cache_lang))
 			self::$cache_lang['Delete'] = $this->l('Delete');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
-		$this->context->smarty->assign(array(
+		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$id.' ? '),
 			'action' => self::$cache_lang['Delete'],
 		));
 
-		return $this->context->smarty->fetch('helper/list/list_action_delete.tpl');
+		return $tpl->fetch();
+
 	}
 
 	/**
@@ -543,7 +568,7 @@ class HelperListCore extends Helper
 			$this->fieldsDisplay[$key] = $params;
 		}
 
-		$this->context->smarty->assign(array(
+		$this->header_tpl->assign(array(
 			'table' => $this->table,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
@@ -570,12 +595,12 @@ class HelperListCore extends Helper
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
-			'toolbar' => $this->toolbar,
+			'show_toolbar' => $this->show_toolbar,
 			'back' => Tools::getValue('back'),
 			'no_back' => $this->no_back
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->header_tpl);
+		return $this->header_tpl->fetch();
 	}
 
 	/**
@@ -583,12 +608,14 @@ class HelperListCore extends Helper
 	 */
 	public function displayListFooter($token = null)
 	{
-		$this->context->smarty->assign(array(
+		$this->footer_tpl->assign(array(
 			'token' => $this->token,
+			'table' => $this->table,
 			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
+			'no_back' => $this->no_back
 		));
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->footer_tpl);
+		return $this->footer_tpl->fetch();
 	}
 
 }

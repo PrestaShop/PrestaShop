@@ -45,6 +45,13 @@
 			</div>
 		</div>
 		<div id="ajax_confirmation" style="display:none"></div>
+		{* ajaxBox allows*}
+		<div id="ajaxBox" style="display:none"></div>
+		<script>
+		function doAjaxAction(action, fromSelector)
+		{
+		}
+		</script>
 {/if}
 	</body>
 </html>
