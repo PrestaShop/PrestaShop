@@ -1527,7 +1527,7 @@ if (false)
 					$product = new Product((int)(Tools::getValue('id_product')));
 					$this->initForm();
 					$this->{'initForm'.$this->action}($product, $languages, $defaultLanguage);
-					$this->context->smarty->assign('product',$product);
+					$this->context->smarty->assign('product', $product);
 				}
 			}
 			else
@@ -1750,7 +1750,8 @@ if (false)
 					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Save'), 
 				);
 			}
-		return parent::initToolbar();
+		parent::initToolbar();
+		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
 	}
 
 	/**
@@ -3476,8 +3477,8 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						$combArray[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
 						$combArray[$combinaison['id_product_attribute']]['unit_impact'] = $combinaison['unit_price_impact'];
 						$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
-                        $combArray[$combinaison['id_product_attribute']]['supplier_reference'] = $combinaison['supplier_reference'];
-                        $combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
+						$combArray[$combinaison['id_product_attribute']]['supplier_reference'] = $combinaison['supplier_reference'];
+						$combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 						$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
 						$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
@@ -3512,16 +3513,16 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
 						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
 
-						$id_product_download = $productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
+						$id_product_download = $product->productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
 						if ($id_product_download)
-							$productDownload = new ProductDownload($id_product_download);
+							$product->productDownload = new ProductDownload($id_product_download);
 
-						$available_date_attribute = substr($productDownload->date_expiration, 0, -9);
+						$available_date_attribute = substr($product->productDownload->date_expiration, 0, -9);
 
 						if ($available_date_attribute == '0000-00-00')
 							$available_date_attribute = '';
 
-						if ($productDownload->is_shareable == 1)
+						if ($product->productDownload->is_shareable == 1)
 							$is_shareable = $this->l('Yes');
 						else
 							$is_shareable = $this->l('No');
@@ -3536,18 +3537,18 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							<td class="right">'.$product_attribute['upc'].'</td>
 							<td class="center">'.$product_attribute['quantity'].'</td>';
 
-							if ($id_product_download && !empty($productDownload->display_filename))
+							if ($id_product_download && !empty($product->productDownload->display_filename))
 							{
-								$content .= '<td class="right">'.$productDownload->getHtmlLink(false, true).'</td>
-								<td class="center">'.$productDownload->nb_downloadable.'</td>
-								<td class="center">'.$productDownload->nb_downloadable.'</td>
+								$content .= '<td class="right">'.$product->productDownload->getHtmlLink(false, true).'</td>
+								<td class="center">'.$product->productDownload->nb_downloadable.'</td>
+								<td class="center">'.$product->productDownload->nb_downloadable.'</td>
 								<td class="right">'.$is_shareable.'</td>';
 							}
 
-							$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$productDownload->filename;
+							$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
 
-							if ($productDownload->id && file_exists($exists_file))
-								$filename = $productDownload->filename;
+							if ($product->productDownload->id && file_exists($exists_file))
+								$filename = $product->productDownload->filename;
 							else
 								$filename = '';
 							// @todo : a better way to "fillCombinaison" maybe ?
@@ -3556,7 +3557,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
 							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
-							\''.$productDownload->display_filename.'\', \''.$filename.'\', \''.$productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$productDownload->nb_days_accessible.'\',  \''.$productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
+							\''.$product->productDownload->display_filename.'\', \''.$filename.'\', \''.$product->productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$product->productDownload->nb_days_accessible.'\',  \''.$product->productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
 							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
@@ -3590,10 +3591,12 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 				}
 				else
 					$content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
-		$this->context->smarty->assign('content', $content);
+		$this->content .= $content;
 		// @todo
 		$smarty->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
-
+		$this->context->smarty->assign('content', $content);
+		$this->context->smarty->assign('product', $product);
+		$this->context->smarty->assign('id_category', $product->id_category_default);
 		$this->content = $this->context->smarty->fetch('products/combinations.tpl');
 	}
 

@@ -123,9 +123,7 @@ virtual_product_nb_days, is_shareable)
 	$("#make_downloadable_product_attribute").attr('href', link+"&id_product_attribute="+id_product_attribute);
 
 	$("#virtual_product_filename_attribute").val(virtual_product_filename_attribute);
-	console.log(virtual_product_filename_attribute);
-	console.log("ok");
-	console.log($("#virtual_product_filename_attribute").val());
+	$("#add_new_combination").show();
 	
 	
 	/* Reset all combination images */
