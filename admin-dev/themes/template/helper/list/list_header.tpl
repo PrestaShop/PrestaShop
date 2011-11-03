@@ -150,7 +150,7 @@
  						{if !$simple_header}
 						<tr class="nodrag nodrop filter" style="height: 35px;">
 							<td class="center">
-								{if $delete}
+								{if $has_bulk_actions}
 									--
 								{/if}
 							</td>
