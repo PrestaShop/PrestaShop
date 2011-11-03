@@ -61,6 +61,8 @@
 		{rdelim});
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
+	{block name="script"}
+	{/block}
 {/if}
 
 {if isset($toolbar) && $toolbar}
@@ -70,7 +72,7 @@
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 <form class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
-		<input type="hidden" name="id_{$table}" value="{$form_id}" />
+		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
 	{/if}
 	<fieldset>
 		{foreach $fields as $key => $field}
@@ -131,7 +133,11 @@
 								{$input.required = false}
 								{$input.p = null}
 							{else}
-								<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+								<select name="{$input.name}"
+										id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+										{if isset($input.multiple)}multiple="multiple" {/if}
+										{if isset($input.size)}size="{$input.size}"{/if}
+										{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 									{if isset($input.options.default)}
 										<option value="{$input.options.default.value}">{$input.options.default.label}</option>
 									{/if}
@@ -156,7 +162,6 @@
 											<option value="{$option[$input.options.id]}"
 												{if isset($input.multiple)}
 													{foreach $fields_value[$input.name] as $field_value}
-														{$field_value}
 														{if $field_value == $option[$input.options.id]}selected="selected"{/if}
 													{/foreach}
 												{else}
@@ -281,7 +286,10 @@
 				{/foreach}
 			{elseif $key == 'submit'}
 				<div class="margin-form">
-					<input type="submit" value="{$field.title}" name="{$submit_action}" {if isset($field.class)}class="{$field.class}"{/if} />
+					<input type="submit"
+						value="{$field.title}"
+						name="{$submit_action}{if isset($field.stay) && $field.stay}AndStay{/if}"
+						{if isset($field.class)}class="{$field.class}"{/if} />
 				</div>
 			{/if}
 		{/foreach}

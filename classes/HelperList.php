@@ -55,6 +55,9 @@ class HelperListCore extends Helper
 
 	protected $deleted = 0;
 
+	/** @var string Folder of controller */
+	public $tpl_folder;
+
 	/** @var array $cache_lang use to cache texts in current language */
 	public static $cache_lang = array();
 
@@ -108,6 +111,12 @@ class HelperListCore extends Helper
 
 	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
+
+	/**
+	 * @var bool
+	 * Usage : Set the value to false if you want to simply display the back button
+	 */
+	public $no_back = true;
 
 	/**
 	 * Return an html list given the data to fill it up
@@ -388,10 +397,16 @@ class HelperListCore extends Helper
 		$this->context->smarty->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Edit'],
+			'id' => (int)$id
 		));
 
-		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_edit.tpl');
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_action_edit.tpl'))
+			$tpl = $this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'list_action_edit.tpl';
+		else
+			$tpl = $this->context->smarty->template_dir[0].'/helper/list/list_action_edit.tpl';
 
+		return $this->context->smarty->fetch($tpl);
+		
 	}
 
 	/**
@@ -540,7 +555,9 @@ class HelperListCore extends Helper
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
-			'toolbar' => $this->toolbar
+			'toolbar' => $this->toolbar,
+			'back' => Tools::getValue('back'),
+			'no_back' => $this->no_back
 		));
 
 		return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/'.$this->header_tpl);

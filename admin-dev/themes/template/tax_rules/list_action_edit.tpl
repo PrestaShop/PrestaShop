@@ -19,36 +19,8 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 9432 $
+*  @version  Release: $Revision: 9197 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-			</table>
-			{if $bulk_actions}
-				<p>
-					{foreach $bulk_actions as $key => $params}
-						<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text|escape:'htmlall':'UTF-8'}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm|escape:'htmlall':'UTF-8'}');"{/if} />
-					{/foreach}
-				</p>
-			{/if}
-		</td>
-	</tr>
-</table>
-<input type="hidden" name="token" value="{$token}" />
-</form>
-
-{*
-if (isset($this->_includeTab) AND sizeof($this->_includeTab))
-	echo '<br /><br />';
-*}
-
-{if !$no_back}
-	<br />
-	{if $back}
-		<a href="{$back}"><img src="../img/admin/arrow2.gif" />{l s='Back'}</a>
-	{else}
-		<a href="{$current}&token={$token}"><img src="../img/admin/arrow2.gif" />{l s='Back to list'}</a>
-	{/if}
-	<br />
-{/if}
+<a onclick="loadTaxRule('{$id}'); return false;" href="#"><img src="../img/admin/edit.gif" alt="{$action}" title="{$action}" /></a>
