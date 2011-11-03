@@ -735,6 +735,11 @@ class AdminControllerCore extends Controller
 			// @todo defining default buttons
 			case 'add':
 			case 'edit':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+			break;
 			case 'options':
 			break;
 			default: // list
@@ -1200,7 +1205,6 @@ class AdminControllerCore extends Controller
 		$helper->token = $this->token;
 		$helper->specificConfirmDelete = $this->specificConfirmDelete;
 		$helper->imageType = $this->imageType;
-		$helper->no_add = isset($this->no_add) ? $this->no_add : false;
 		$helper->simple_header = isset($this->simple_header) ? $this->simple_header : false;
 		$helper->no_link = $this->list_no_link;
 		$helper->colorOnBackground = $this->colorOnBackground;
@@ -1240,9 +1244,9 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))
-					$this->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
+					$helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
 				else
-					$this->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token));
+					$helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token));
 			}
 			return $helper->generateForm($this->fields_form);
 		}

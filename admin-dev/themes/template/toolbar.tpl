@@ -29,8 +29,9 @@
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
 			<li>
-				<a class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
-					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>{$btn.desc}
+				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
+					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>
+					<div>{$btn.desc}</div>
 				</a>
 			</li>
 		{/foreach}
@@ -40,5 +41,33 @@
 		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
 		{/block}</h3>
 	</div>
+	<script language="javascript">
+		$(function() {
+			//get reference on save link
+			btn_save = $('span[class~="process-icon-save"]').parent();
+
+			//get reference on form submit button
+			btn_submit = $('#{$table}_form_submit_btn');
+
+			//get reference on current save link label
+			lbl_save = $('#desc-{$table}-save div');
+
+			//override save link label with submit button value
+			lbl_save.html(btn_submit.attr("value"));
+
+			//add hidden input to emulate submit button click when posting the form -> field name posted
+			btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
+
+			//hide standard submit button
+			btn_submit.hide();
+
+			//submit the form
+			{block name=formSubmit}
+				btn_save.click(function() {
+					$('#{$table}_form').submit();
+				});
+			{/block}
+		});
+	</script>
 {/block}
 </div>

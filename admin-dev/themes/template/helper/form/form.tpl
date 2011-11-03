@@ -69,7 +69,7 @@
 	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
 {/if}
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
-<form class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
+<form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
 	{/if}
@@ -301,6 +301,7 @@
 			{elseif $key == 'submit'}
 				<div class="margin-form">
 					<input type="submit"
+						id="{$table}_form_submit_btn"
 						value="{$field.title}"
 						name="{$submit_action}{if isset($field.stay) && $field.stay}AndStay{/if}"
 						{if isset($field.class)}class="{$field.class}"{/if} />
@@ -320,6 +321,7 @@
 			<script type="text/javascript" src="'../js/tinymce.inc.js"></script>
 		{/if}
 	</fieldset>
+	{block name="other_fieldsets"}{/block}
 </form>
 
 <br /><br />
