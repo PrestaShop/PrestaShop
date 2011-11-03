@@ -63,8 +63,8 @@
     function GoogleItem($name, $desc, $qty, $price, $item_weight='', $numeric_weight='') {
       $this->item_name = $name; 
       $this->item_description= $desc;
-      $this->unit_price = $price;
-      $this->quantity = $qty;
+      $this->unit_price = (float)$price;
+      $this->quantity = (int)$qty;
 
       if($item_weight != '' && $numeric_weight !== '') {
         switch(strtoupper($item_weight)){
