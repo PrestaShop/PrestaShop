@@ -25,11 +25,17 @@
 */
 
 $(document).ready(function() {
-	$('table.tableDnD').tableDnD({
-	
+initTableDnD();
+})
+
+function initTableDnD(table)
+{
+	if (typeof(table) == 'undefined')
+		table = 'table.tableDnD';
+	$(table).tableDnD({
 		onDragStart: function(table, row) {
 			originalOrder = $.tableDnD.serialize();
-			reOrder = ':even';
+			reOrder = ':even';console.log(table.tBodies[0].rows[1]);
 			if (table.tBodies[0].rows[1] && $('#' + table.tBodies[0].rows[1].id).hasClass('alt_row'))
 				reOrder = ':odd';
 			$('#'+table.id+ '#' + row.id).parent('tr').addClass('myDragClass');
@@ -203,4 +209,4 @@ $(document).ready(function() {
 			}
 		}
 	});
-})
+}
