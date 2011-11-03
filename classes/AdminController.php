@@ -1476,14 +1476,38 @@ class AdminControllerCore extends Controller
 		}
 		else if (Tools::getValue('submitAdd'.$this->table))
 		{
-			$this->action = 'save';
-			$this->display = 'edit';
-			//$this->id_entity = (int)$_GET['id_'.$this->table];
+			// case 1: updating existing entry
+			if ((int)(Tools::getValue('id_'.$this->table)))
+			{
+				if ($this->tabAccess['edit'] === '1')
+				{
+					$this->action = 'save';
+					$this->display = 'edit';
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			// case 2: creating new entry
+			else
+			{
+				if ($this->tabAccess['add'] === '1')
+				{
+					$this->action = 'save';
+					$this->display = 'edit';
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+			}
 		}
 		else if (isset($_GET['add'.$this->table]))
 		{
-			$this->action = 'new';
-			$this->display = 'add';
+			if ($this->tabAccess['add'] === '1')
+			{
+				$this->action = 'new';
+				$this->display = 'add';
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
