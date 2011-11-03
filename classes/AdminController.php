@@ -71,8 +71,8 @@ class AdminControllerCore extends Controller
 	/** @var string Default ORDER BY clause when $_orderBy is not defined */
 	protected $_defaultOrderBy = false;
 
-	public $tpl_form_vars;
-	public $tpl_list_vars;
+	public $tpl_form_vars = array();
+	public $tpl_list_vars = array();
 
 	/** @var array Errors displayed after post processing */
 	public $_errors = array();
