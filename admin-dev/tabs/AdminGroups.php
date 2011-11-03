@@ -508,7 +508,9 @@ class AdminGroups extends AdminTab
 							}
 					}
 					if (!count($this->_errors))
+					{
 						parent::postProcess();
+					}
 				}
 			}
 			else

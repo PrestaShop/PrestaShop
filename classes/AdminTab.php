@@ -775,7 +775,17 @@ abstract class AdminTabCore
 							$this->afterAdd($object);
 							$this->updateAssoShop($object->id);
 							if ($this->table == 'group')
+							{
 								$this->updateRestrictions($object->id);
+								// assign group access to every categories
+								$categories = Category::getCategories($this->context->language->id, true);
+								$rowList = array();$a=0;
+								foreach ($categories as $category)
+									foreach ($category as $categ_id => $categ)
+										if ($categ_id != 1)
+											$rowList[] = array('id_category' => $categ_id, 'id_group' => $object->id);
+								Db::getInstance()->autoExecute(_DB_PREFIX_.'category_group', $rowList, 'INSERT');
+							}
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);

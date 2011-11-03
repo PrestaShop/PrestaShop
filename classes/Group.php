@@ -171,7 +171,7 @@ class GroupCore extends ObjectModel
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
-			$this->truncateRestrictionsModules($this->id);
+			$this->truncateModulesRestrictions($this->id);
 
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
