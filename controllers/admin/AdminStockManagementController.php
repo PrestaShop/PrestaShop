@@ -498,6 +498,8 @@ class AdminStockManagementControllerCore extends AdminController
 				);
 			break;
 		}
+
+		$this->initToolbar();
 	}
 
 	/**
@@ -672,6 +674,29 @@ class AdminStockManagementControllerCore extends AdminController
 	}
 
 	/**
+	 * assign default action in toolbar_btn smarty var, if they are not set.
+	 * uses override to specifically add, modify or remove items
+	 *
+	 */
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			case 'addstock':
+			case 'removestock':
+			case 'transferstock':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+			break;
+
+			default:
+				parent::initToolbar();
+		}
+	}
+
+	/**
 	 * AdminController::init() override
 	 * @see AdminController::init()
 	 */
@@ -734,6 +759,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 			// Render list
 			$helper = new HelperList();
+			$helper->bulk_actions = array();
 			$helper->actions = $this->actions;
 			$helper->list_skip_actions = $this->list_skip_actions;
 			$helper->no_link = true;
@@ -903,6 +929,7 @@ class AdminStockManagementControllerCore extends AdminController
 						$helper->tpl = $this->tpl_folder.'form.tpl';
 
 					$helper->submit_action = $this->display;
+					$helper->toolbar_btn = $this->toolbar_btn;
 					$helper->currentIndex = self::$currentIndex;
 					$helper->token = $this->token;
 					$helper->id = null; // no display standard hidden field in the form
