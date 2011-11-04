@@ -340,296 +340,12 @@ class AdminControllerCore extends Controller
 
 			// Sub included tab postProcessing
 			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
-
-			switch ($this->action)
-			{
-				/* Delete object image */
-				case 'delete_image':
-					if (Validate::isLoadedObject($object = $this->loadObject()))
-						if (($object->deleteImage()))
-						{
-							$redirect = self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token;
-							if (!$this->ajax)
-								Tools::redirectAdmin($redirect);
-							else
-								$this->content = 'ok';
-						}
-					$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
-					break;
-				/* Delete object */
-				case 'delete':
-					if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
-					{
-						// check if request at least one object with noZeroObject
-						if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-						{
-							$this->_errors[] = Tools::displayError('You need at least one object.').
-								' <b>'.$this->table.'</b><br />'.
-								Tools::displayError('You cannot delete all of the items.');
-						}
-						else
-						{
-							if ($this->deleted)
-							{
-								$object->deleteImage();
-								$object->deleted = 1;
-								if ($object->update())
-									Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
-							}
-							else if ($object->delete())
-							{
-								if (method_exists($object, 'cleanPositions'))
-									$object->cleanPositions();
-								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
-							}
-							$this->_errors[] = Tools::displayError('An error occurred during deletion.');
-						}
-					}
-					else
-					{
-						$this->_errors[] = Tools::displayError('An error occurred while deleting object.').
-							' <b>'.$this->table.'</b> '.
-							Tools::displayError('(cannot load object)');
-					}
-					break;
-
-				/* Change object statuts (active, inactive) */
-				case 'status':
-					if (Validate::isLoadedObject($object = $this->loadObject()))
-					{
-						if ($object->toggleStatus())
-						{
-							$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
-							Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$id_category.'&token='.$token);
-						}
-						else
-							$this->_errors[] = Tools::displayError('An error occurred while updating status.');
-					}
-					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
-							' <b>'.$this->table.'</b> '.
-							Tools::displayError('(cannot load object)');
-					break;
-
-				/* Move an object */
-				case 'position':
-					if (!Validate::isLoadedObject($object = $this->loadObject()))
-					{
-						$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
-							' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-					}
-					else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
-						$this->_errors[] = Tools::displayError('Failed to update the position.');
-					else
-					{
-						$id_identifier_str = ($id_identifier = (int)Tools::getValue($this->identifier)) ? '&'.$this->identifier.'='.$id_identifier : '';
-						$redirect = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$id_identifier_str.'&token='.$token;
-						Tools::redirectAdmin($redirect);
-					}
-					break;
-
-				/* Delete multiple objects */
-				case 'multiple_delete':
-					if (isset($_POST[$this->table.'Box']))
-					{
-						$object = new $this->className();
-
-						// Check if all object will be deleted
-						$count = count(call_user_func(array($this->className, $object->noZeroObject)));
-
-						if (isset($object->noZeroObject) && $count <= 1 || count($_POST[$this->table.'Box']) == $count)
-							$this->_errors[] = Tools::displayError('You need at least one object.').
-								' <b>'.$this->table.'</b><br />'.
-								Tools::displayError('You cannot delete all of the items.');
-						else
-						{
-							$result = true;
-							if ($this->deleted)
-							{
-								foreach (Tools::getValue($this->table.'Box') as $id)
-								{
-									$to_delete = new $this->className($id);
-									$to_delete->deleted = 1;
-									$result = $result && $to_delete->update();
-								}
-							}
-							else
-								$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
-
-							if ($result)
-								Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token);
-							$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
-						}
-					}
-					else
-						$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
-					break;
-
-				/* Create or update an object */
-				case 'save':
-					/* Checking fields validity */
-					$this->validateRules();
-					if (!count($this->_errors))
-					{
-						$id = (int)Tools::getValue($this->identifier);
-
-						/* Object update */
-						if (isset($id) && !empty($id))
-						{
-							if ($this->tabAccess['edit'] === '1' || (
-								$this->table == 'employee' &&
-								$this->context->employee->id == Tools::getValue('id_employee') &&
-								Tools::isSubmit('updateemployee')
-							))
-							{
-								$object = new $this->className($id);
-								if (Validate::isLoadedObject($object))
-								{
-									/* Specific to objects which must not be deleted */
-									if ($this->deleted && $this->beforeDelete($object))
-									{
-										// Create new one with old objet values
-										$object_new = new $this->className($object->id);
-										$object_new->id = null;
-										$object_new->date_add = '';
-										$object_new->date_upd = '';
-
-										// Update old object to deleted
-										$object->deleted = 1;
-										$object->update();
-
-										// Update new object with post values
-										$this->copyFromPost($object_new, $this->table);
-										$result = $object_new->add();
-										if (Validate::isLoadedObject($object_new))
-											$this->afterDelete($object_new, $object->id);
-									}
-									else
-									{
-										$this->copyFromPost($object, $this->table);
-										$result = $object->update();
-										$this->afterUpdate($object);
-									}
-
-									if ($object->id)
-										$this->updateAssoShop($object->id);
-
-									if (!$result)
-									{
-										$this->_errors[] = Tools::displayError('An error occurred while updating object.').
-											' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
-									}
-									else if ($this->postImage($object->id) && !count($this->_errors))
-									{
-										$parent_id = (int)Tools::getValue('id_parent', 1);
-										// Specific back redirect
-										if ($back = Tools::getValue('back'))
-											Tools::redirectAdmin(urldecode($back).'&conf=4');
-										// Specific scene feature
-										if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
-											Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
-										// Save and stay on same form
-										if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-											Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
-										// Save and back to parent
-										if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-											Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token);
-										// Default behavior (save and back)
-										Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token);
-									}
-								}
-								else
-									$this->_errors[] = Tools::displayError('An error occurred while updating object.').
-										' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-							}
-							else
-								$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-						}
-
-						/* Object creation */
-						else
-						{
-							if ($this->tabAccess['add'] === '1')
-							{
-								$object = new $this->className();
-								$this->copyFromPost($object, $this->table);
-								if (!$object->add())
-								{
-									$this->_errors[] = Tools::displayError('An error occurred while creating object.').
-										' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-								}
-								 /* voluntary do affectation here */
-								else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
-								{
-									$parent_id = (int)Tools::getValue('id_parent', 1);
-									$this->afterAdd($object);
-									$this->updateAssoShop($object->id);
-									// Save and stay on same form
-									if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-										Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
-									// Save and back to parent
-									if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-										Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token);
-									// Default behavior (save and back)
-									Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
-								}
-							}
-							else
-								$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-						}
-					}
-					$this->_errors = array_unique($this->_errors);
-					break;
-
-				/* Cancel all filters for this tab */
-				case 'reset_filters':
-					$filters = $this->context->cookie->getFamily($this->table.'Filter_');
-
-					foreach ($filters as $cookie_key => $filter)
-						if (strncmp($cookie_key, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
-						{
-							$key = substr($cookie_key, 7 + Tools::strlen($this->table));
-							/* Table alias could be specified using a ! eg. alias!field */
-							$tmp_tab = explode('!', $key);
-							$key = (count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0]);
-
-							if (array_key_exists($key, $this->fieldsDisplay))
-								unset($this->context->cookie->$cookie_key);
-						}
-
-					if (isset($this->context->cookie->{'submitFilter'.$this->table}))
-						unset($this->context->cookie->{'submitFilter'.$this->table});
-
-					if (isset($this->context->cookie->{$this->table.'Orderby'}))
-						unset($this->context->cookie->{$this->table.'Orderby'});
-
-					if (isset($this->context->cookie->{$this->table.'Orderway'}))
-						unset($this->context->cookie->{$this->table.'Orderway'});
-
-					unset($_POST);
-					$this->filter = false;
-					break;
-
-				/* Submit options list */
-				case 'update_options':
-					$this->updateOptions($token);
-					break;
-
-				case 'update_fields':
-					if (!is_array($fields = Tools::getValue('fieldsBox')))
-						$fields = array();
-
-					$object = new $this->className();
-					if (!$object->addFieldsRequiredDatabase($fields))
-						$this->_errors[] = Tools::displayError('Error in updating required fields');
-					else
-						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
-					break;
-
-				default:
-					if (method_exists($this, $this->action))
-						call_user_func(array($this, $this->action), $this->boxes);
-			}
+						
+			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+				$this->{'process'.Tools::toCamelCase($this->action)}($token);
+			else if (method_exists($this, $this->action))
+				call_user_func(array($this, $this->action), $this->boxes);
+			
 			/* Manage list filtering */
 			if ($this->filter)
 			{
@@ -696,6 +412,402 @@ class AdminControllerCore extends Controller
 				}
 			}
 		}
+	}
+		
+	/**
+	 * Object Delete images
+	 *
+	 * @param string $token
+	 */
+	public function processDeleteImage($token)
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if (($object->deleteImage()))
+			{
+				$redirect = self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token;
+				if (!$this->ajax)
+					Tools::redirectAdmin($redirect);
+				else
+					$this->content = 'ok';
+			}
+		}
+		$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
+	}
+	
+	/**
+	 * Object Delete 
+	 *
+	 * @param string $token
+	 */
+	public function processDelete($token)
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
+		{
+			// check if request at least one object with noZeroObject
+			if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
+			{
+				$this->_errors[] = Tools::displayError('You need at least one object.').
+					' <b>'.$this->table.'</b><br />'.
+					Tools::displayError('You cannot delete all of the items.');
+			}
+			else
+			{
+				if ($this->deleted)
+				{
+					$object->deleteImage();
+					$object->deleted = 1;
+					if ($object->update())
+						Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
+				}
+				else if ($object->delete())
+				{
+					if (method_exists($object, 'cleanPositions'))
+						$object->cleanPositions();
+					Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
+				}
+				$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+			}
+		}
+		else
+		{
+			$this->_errors[] = Tools::displayError('An error occurred while deleting object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+		}
+	}
+		
+	/**
+	 * Object update and creation
+	 * TODO: split processAdd and processUpdate
+	 *
+	 * @param string $token
+	 */
+	public function processSave($token)
+	{
+		/* Checking fields validity */
+		$this->validateRules();
+		if (!count($this->_errors))
+		{
+			$id = (int)Tools::getValue($this->identifier);
+
+			/* Object update */
+			if (isset($id) && !empty($id))
+			{
+				if ($this->tabAccess['edit'] === '1' || (
+					$this->table == 'employee' &&
+					$this->context->employee->id == Tools::getValue('id_employee') &&
+					Tools::isSubmit('updateemployee')
+				))
+				{
+					$object = new $this->className($id);
+					if (Validate::isLoadedObject($object))
+					{
+						/* Specific to objects which must not be deleted */
+						if ($this->deleted && $this->beforeDelete($object))
+						{
+							// Create new one with old objet values
+							$object_new = new $this->className($object->id);
+							$object_new->id = null;
+							$object_new->date_add = '';
+							$object_new->date_upd = '';
+
+							// Update old object to deleted
+							$object->deleted = 1;
+							$object->update();
+
+							// Update new object with post values
+							$this->copyFromPost($object_new, $this->table);
+							$result = $object_new->add();
+							if (Validate::isLoadedObject($object_new))
+								$this->afterDelete($object_new, $object->id);
+						}
+						else
+						{
+							$this->copyFromPost($object, $this->table);
+							$result = $object->update();
+							$this->afterUpdate($object);
+						}
+
+						if ($object->id)
+							$this->updateAssoShop($object->id);
+
+						if (!$result)
+						{
+							$this->_errors[] = Tools::displayError('An error occurred while updating object.').
+								' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
+						}
+						else if ($this->postImage($object->id) && !count($this->_errors))
+						{
+							$parent_id = (int)Tools::getValue('id_parent', 1);
+							// Specific back redirect
+							if ($back = Tools::getValue('back'))
+								Tools::redirectAdmin(urldecode($back).'&conf=4');
+							// Specific scene feature
+							if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
+							// Save and stay on same form
+							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
+							// Save and back to parent
+							if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token);
+							// Default behavior (save and back)
+							Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token);
+						}
+					}
+					else
+						$this->_errors[] = Tools::displayError('An error occurred while updating object.').
+							' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+
+			/* Object creation */
+			else
+			{
+				if ($this->tabAccess['add'] === '1')
+				{
+					$object = new $this->className();
+					$this->copyFromPost($object, $this->table);
+					if (!$object->add())
+					{
+						$this->_errors[] = Tools::displayError('An error occurred while creating object.').
+							' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+					}
+					 /* voluntary do affectation here */
+					else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
+					{
+						$parent_id = (int)Tools::getValue('id_parent', 1);
+						$this->afterAdd($object);
+						$this->updateAssoShop($object->id);
+						// Save and stay on same form
+						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+							Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
+						// Save and back to parent
+						if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+							Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token);
+						// Default behavior (save and back)
+						Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
+					}
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+		}
+		$this->_errors = array_unique($this->_errors);
+	}
+	
+	/**
+	 * Change object required fields
+	 *
+	 * @param string $token
+	 */
+	public function processUpdateFields($token)
+	{
+		if (!is_array($fields = Tools::getValue('fieldsBox')))
+			$fields = array();
+
+		$object = new $this->className();
+		if (!$object->addFieldsRequiredDatabase($fields))
+			$this->_errors[] = Tools::displayError('Error in updating required fields');
+		else
+			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
+	}
+	
+	/**
+	 * Change object statuts (active, inactive)
+	 *
+	 * @param string $token
+	 */
+	public function processStatus($token)
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->toggleStatus())
+			{
+				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
+				Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$id_category.'&token='.$token);
+			}
+			else
+				$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+		}
+		else
+			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+	}
+	
+	/**
+	 * Change object position
+	 *
+	 * @param string $token
+	 */
+	public function processPosition($token)
+	{
+		if (!Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+				' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		}
+		else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+			$this->_errors[] = Tools::displayError('Failed to update the position.');
+		else
+		{
+			$id_identifier_str = ($id_identifier = (int)Tools::getValue($this->identifier)) ? '&'.$this->identifier.'='.$id_identifier : '';
+			$redirect = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$id_identifier_str.'&token='.$token;
+			Tools::redirectAdmin($redirect);
+		}
+	}
+	
+	/**
+	 * Cancel all filters for this tab
+	 *
+	 * @param string $token
+	 */
+	public function processResetFilters()
+	{
+		$filters = $this->context->cookie->getFamily($this->table.'Filter_');
+
+		foreach ($filters as $cookie_key => $filter)
+			if (strncmp($cookie_key, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
+			{
+				$key = substr($cookie_key, 7 + Tools::strlen($this->table));
+				/* Table alias could be specified using a ! eg. alias!field */
+				$tmp_tab = explode('!', $key);
+				$key = (count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0]);
+
+				if (array_key_exists($key, $this->fieldsDisplay))
+					unset($this->context->cookie->$cookie_key);
+			}
+
+		if (isset($this->context->cookie->{'submitFilter'.$this->table}))
+			unset($this->context->cookie->{'submitFilter'.$this->table});
+
+		if (isset($this->context->cookie->{$this->table.'Orderby'}))
+			unset($this->context->cookie->{$this->table.'Orderby'});
+
+		if (isset($this->context->cookie->{$this->table.'Orderway'}))
+			unset($this->context->cookie->{$this->table.'Orderway'});
+
+		unset($_POST);
+		$this->filter = false;
+	}
+	
+	/**
+	 * Update options and preferences
+	 *
+	 * @param string $token
+	 */
+	protected function processUpdateOptions($token)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$this->beforeUpdateOptions();
+
+			$languages = Language::getLanguages(false);
+
+			foreach ($this->options as $category => $category_data)
+			{
+				$fields = $category_data['fields'];
+
+				foreach ($fields as $field => $values)
+					if (isset($values['type']) && $values['type'] == 'selectLang')
+					{
+						foreach ($languages as $lang)
+							if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
+								$fields[$field.'_'.strtoupper($lang['iso_code'])] = array(
+									'type' => 'select',
+									'cast' => 'strval',
+									'identifier' => 'mode',
+									'list' => $values['list']
+								);
+					}
+
+				/* Check required fields */
+				foreach ($fields as $field => $values)
+					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
+						if (isset($values['type']) && $values['type'] == 'textLang')
+						{
+							foreach ($languages as $language)
+								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
+									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+						}
+						else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
+							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+
+				/* Check fields validity */
+				foreach ($fields as $field => $values)
+					if (isset($values['type']) && $values['type'] == 'textLang')
+					{
+						foreach ($languages as $language)
+							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
+								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
+									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+					}
+					else if (Tools::getValue($field) && isset($values['validation']))
+						if (!Validate::$values['validation'](Tools::getValue($field)))
+							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+
+				/* Default value if null */
+				foreach ($fields as $field => $values)
+					if (!Tools::getValue($field) && isset($values['default']))
+						$_POST[$field] = $values['default'];
+
+				if (1 || !count($this->_errors))
+				{
+					foreach ($fields as $key => $options)
+					{
+						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
+							continue;
+
+						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
+						{
+							Configuration::deleteFromContext($key);
+							continue;
+						}
+
+						// check if a method updateOptionFieldName is available
+						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+						if (method_exists($this, $method_name))
+							$this->$method_name(Tools::getValue($key));
+						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+						{
+							$list = array();
+							foreach ($languages as $language)
+							{
+								$key_lang = Tools::getValue($key.'_'.$language['id_lang']);
+								$val = (isset($options['cast']) ? $options['cast']($key_lang) : $key_lang);
+								if ($this->validateField($val, $options))
+								{
+									if (Validate::isCleanHtml($val))
+										$list[$language['id_lang']] = $val;
+									else
+										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+								}
+							}
+							Configuration::updateValue($key, $list);
+						}
+						else
+						{
+							$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+							if ($this->validateField($val, $options))
+							{
+								if (Validate::isCleanHtml($val))
+									Configuration::updateValue($key, $val);
+								else
+									$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+							}
+						}
+					}
+				}
+			}
+			if (count($this->_errors) <= 0)
+				Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$token);
+		}
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 	}
 
 	/**
@@ -1492,15 +1604,7 @@ class AdminControllerCore extends Controller
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if ($submitted_action = Tools::getValue('submitAction'.$this->table))
-		{
-			if ($submitted_action == 'delete')
-				if ($this->tabAccess['delete'] === '1')
-					$this->action = 'multiple_delete';
-				else
-					$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-			else
 				$this->action = $submitted_action;
-		}
 		else if (Tools::getValue('submitAdd'.$this->table))
 		{
 			// case 1: updating existing entry
@@ -2154,121 +2258,7 @@ EOF;
 		return $html;
 	}
 
-	/**
-	 * Update options and preferences
-	 *
-	 * @param string $token
-	 */
-	protected function updateOptions($token)
-	{
-		if ($this->tabAccess['edit'] === '1')
-		{
-			$this->beforeUpdateOptions();
-
-			$languages = Language::getLanguages(false);
-
-			foreach ($this->options as $category => $category_data)
-			{
-				$fields = $category_data['fields'];
-
-				foreach ($fields as $field => $values)
-					if (isset($values['type']) && $values['type'] == 'selectLang')
-					{
-						foreach ($languages as $lang)
-							if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
-								$fields[$field.'_'.strtoupper($lang['iso_code'])] = array(
-									'type' => 'select',
-									'cast' => 'strval',
-									'identifier' => 'mode',
-									'list' => $values['list']
-								);
-					}
-
-				/* Check required fields */
-				foreach ($fields as $field => $values)
-					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
-						if (isset($values['type']) && $values['type'] == 'textLang')
-						{
-							foreach ($languages as $language)
-								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
-									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-						}
-						else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-
-				/* Check fields validity */
-				foreach ($fields as $field => $values)
-					if (isset($values['type']) && $values['type'] == 'textLang')
-					{
-						foreach ($languages as $language)
-							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
-								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
-									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
-					}
-					else if (Tools::getValue($field) && isset($values['validation']))
-						if (!Validate::$values['validation'](Tools::getValue($field)))
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
-
-				/* Default value if null */
-				foreach ($fields as $field => $values)
-					if (!Tools::getValue($field) && isset($values['default']))
-						$_POST[$field] = $values['default'];
-
-				if (1 || !count($this->_errors))
-				{
-					foreach ($fields as $key => $options)
-					{
-						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
-							continue;
-
-						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
-						{
-							Configuration::deleteFromContext($key);
-							continue;
-						}
-
-						// check if a method updateOptionFieldName is available
-						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
-						if (method_exists($this, $method_name))
-							$this->$method_name(Tools::getValue($key));
-						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
-						{
-							$list = array();
-							foreach ($languages as $language)
-							{
-								$key_lang = Tools::getValue($key.'_'.$language['id_lang']);
-								$val = (isset($options['cast']) ? $options['cast']($key_lang) : $key_lang);
-								if ($this->validateField($val, $options))
-								{
-									if (Validate::isCleanHtml($val))
-										$list[$language['id_lang']] = $val;
-									else
-										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
-								}
-							}
-							Configuration::updateValue($key, $list);
-						}
-						else
-						{
-							$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
-							if ($this->validateField($val, $options))
-							{
-								if (Validate::isCleanHtml($val))
-									Configuration::updateValue($key, $val);
-								else
-									$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
-							}
-						}
-					}
-				}
-			}
-
-			if (count($this->_errors) <= 0)
-				Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$token);
-		}
-		else
-			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-	}
+	
 
 	/**
 	 * Overload this method for custom checking
@@ -2327,9 +2317,9 @@ EOF;
 	 *
 	 * @param array $boxes ids of the item to be processed
 	 */
-	protected function bulkDelete($boxes)
+	protected function processBulkDelete($token)
 	{
-		if (is_array($boxes) && !empty($boxes))
+		if (is_array($this->boxes) && !empty($this->boxes))
 		{
 			$object = new $this->className();
 			if (isset($object->noZeroObject))
@@ -2337,7 +2327,7 @@ EOF;
 				$objects_count = count(call_user_func(array($this->className, $object->noZeroObject)));
 
 				// Check if all object will be deleted
-				if ($objects_count <= 1 || count($boxes) == $objects_count)
+				if ($objects_count <= 1 || count($this->boxes) == $objects_count)
 					$this->_errors[] = Tools::displayError('You need at least one object.').
 						' <b>'.$this->table.'</b><br />'.
 						Tools::displayError('You cannot delete all of the items.');
@@ -2347,7 +2337,7 @@ EOF;
 				$result = true;
 				if ($this->deleted)
 				{
-					foreach ($boxes as $id)
+					foreach ($this->boxes as $id)
 					{
 						$to_delete = new $this->className($id);
 						$to_delete->deleted = 1;
@@ -2358,7 +2348,7 @@ EOF;
 					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
 
 				if ($result)
-					Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token);
 				$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 			}
 		}
