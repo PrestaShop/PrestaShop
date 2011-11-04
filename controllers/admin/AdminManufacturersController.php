@@ -53,31 +53,36 @@ class AdminManufacturersControllerCore extends AdminController
 				'title' => $this->l('ID'),
 				'width' => 25
 			),
-			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 200
-			),
 			'logo' => array(
 				'title' => $this->l('Logo'),
 				'image' => 'm',
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'width' => 150,
+				'align' => 'center',
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 'auto'
 			),
 			'addresses' => array(
 				'title' => $this->l('Addresses'),
 				'tmpTableFilter' => true,
-				'width' => 20
+				'width' => 20,
+				'align' => 'center',
 			),
 			'products' => array(
 				'title' => $this->l('Products'),
 				'tmpTableFilter' => true,
-				'width' => 20
+				'width' => 20,
+				'align' => 'center',
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'width' => 25,
+				'width' => 70,
 				'active' => 'status',
 				'type' => 'bool',
+				'align' => 'center',
 				'orderby' => false
 			)
 		);
@@ -111,7 +116,7 @@ class AdminManufacturersControllerCore extends AdminController
 	public function initListManufacturerAddresses()
 	{
 
-		
+
 		$this->toolbar_title = $this->l('Addresses');
 		// reset actions and query vars
 		$this->actions = array();
@@ -148,7 +153,7 @@ class AdminManufacturersControllerCore extends AdminController
 			),
 			'manufacturer_name' => array(
 				'title' => $this->l('Manufacturer'),
-				'width' => 100
+				'width' => 'auto'
 			),
 			'firstname' => array(
 				'title' => $this->l('First name'),
