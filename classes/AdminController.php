@@ -74,6 +74,8 @@ class AdminControllerCore extends Controller
 	public $tpl_form_vars = array();
 	public $tpl_list_vars = array();
 
+	public $fields_value = false;
+
 	/** @var array Errors displayed after post processing */
 	public $_errors = array();
 
@@ -1364,6 +1366,8 @@ class AdminControllerCore extends Controller
 			$this->content .= $this->context->smarty->fetch($this->context->smarty->template_dir[0].'form_submit_ajax.tpl');
 		if ($this->fields_form && is_array($this->fields_form))
 		{
+			if (empty($this->toolbar_title))
+				$this->initToolbarTitle();
 			$this->getlanguages();
 			$helper = new HelperForm($this);
 			$helper->override_folder = $this->tpl_folder;
@@ -1377,6 +1381,8 @@ class AdminControllerCore extends Controller
 			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 			$helper->fields_value = $this->getFieldsValue($this->object);
 			$helper->toolbar_btn = $this->toolbar_btn;
+			$helper->title = $this->toolbar_title;
+			$helper->show_toolbar = $this->show_toolbar;
 			$helper->no_back = isset($this->no_back) ? $this->no_back : false;
 			$helper->tpl_vars = $this->tpl_form_vars;
 			if ($this->tabAccess['view'])
@@ -1852,13 +1858,14 @@ class AdminControllerCore extends Controller
 
 	public function getFieldsValue($obj)
 	{
-		foreach ($this->fields_form['input'] as $input)
-			if (empty($this->fields_value[$input['name']]))
-				if (isset($input['lang']) && $input['lang'])
-					foreach ($this->_languages as $language)
-						$this->fields_value[$input['name']][$language['id_lang']] = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
-				else
-					$this->fields_value[$input['name']] = $this->getFieldValue($obj, $input['name']);
+		if (isset($this->fields_form['input']))
+			foreach ($this->fields_form['input'] as $input)
+				if (empty($this->fields_value[$input['name']]))
+					if (isset($input['lang']) && $input['lang'])
+						foreach ($this->_languages as $language)
+							$this->fields_value[$input['name']][$language['id_lang']] = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
+					else
+						$this->fields_value[$input['name']] = $this->getFieldValue($obj, $input['name']);
 
 		return $this->fields_value;
 	}

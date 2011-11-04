@@ -87,23 +87,23 @@ function check_for_all_accesses(tabsize, tabnumber)
 	}
 }
 
-function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber)
+function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, table)
 {
  	if (id_tab == '-1' && action == 'all')
  	{
- 		$('.add').attr('checked', src.checked);
- 		$('.edit').attr('checked', src.checked);
- 		$('.delete').attr('checked', src.checked);
-		$('.view').attr('checked', src.checked);
-		$('.all').attr('checked', src.checked);
-		$('.31').attr('checked', "checked");
+ 		$(table+' .add').attr('checked', src.checked);
+ 		$(table+' .edit').attr('checked', src.checked);
+ 		$(table+' .delete').attr('checked', src.checked);
+		$(table+' .view').attr('checked', src.checked);
+		$(table+' .all').attr('checked', src.checked);
+		$(table+' .31').attr('checked', "checked");
  	}
 	else if (action == 'all')
-		$('.'+id_tab).attr('checked', src.checked);
+		$(table+' .'+id_tab).attr('checked', src.checked);
  	else if (id_tab == '-1')
  	{
- 		$('.'+action).attr('checked', src.checked);
- 		$('#'+action+'31').attr('checked', "checked");
+ 		$(table+' .'+action).attr('checked', src.checked);
+ 		$(table+' #'+action+'31').attr('checked', "checked");
  	}
 	check_for_all_accesses(tabsize, tabnumber);
 }
