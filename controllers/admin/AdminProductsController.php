@@ -1542,28 +1542,20 @@ if (false)
 			$id_category = Tools::getValue('id_category', 1);
 			if (!$id_category)
 				$id_category = 1;
-			$this->content .= '<h3>'.(!$this->_listTotal ? ($this->l('No products found')) : ($this->_listTotal.' '.($this->_listTotal > 1 ? $this->l('products') : $this->l('product')))).'</h3>';
-			////////////////////////
 			// @todo lot of ergonomy works around here
-			$this->content .= '<p>'.$this->l('Go to category');
-			$select_child = ' <select id="go_to_categ"><option value="1">Home<option>';
 			// @todo : move blockcategories select queries in class Category
 			$root_categ = Category::getRootCategory();
 			$children = $root_categ->getAllChildren();
-			$all_cats = array();
-			foreach ($children as $categ)
+			$category_tree = array();
+			foreach ($children as $k => $categ)
 			{
-//				$all_cats[$categ['id_parent']]
-				$categ  = new Category($categ['id_category'],$this->context->language->id);
-				$select_child .= '<option value="'.$categ->id.'" '.($this->_category->id_category == $categ->id
-					? 'selected="selected" class="selected level-depth-'.$categ->level_depth.'"'
-					:'class="level-depth-'.$categ->level_depth.'"')
-				 .'>' . str_repeat('&nbsp;-&nbsp;',$categ->level_depth). $categ->name .' ('.$categ->id.')</option>';
+				$categ = new Category($categ['id_category'],$this->context->language->id);
+				$categ->selected = $this->_category->id_category == $categ->id;
+				$categ->dashes = str_repeat('&nbsp;-&nbsp;',$categ->level_depth);
+				$category_tree[] = $categ;
 			}
-
-			$select_child .= '</select>';
-			$this->content .= $select_child;
-			$this->content .= '</p>
+			$this->tpl_list_vars['category_tree'] = $category_tree;
+			$this->content .= '
 			<script type="text/javascript">
 			$("#go_to_categ").change(function(e){
 				document.location.href = "'.$this->context->link->getAdminLink('AdminProducts').'&id_category="+$(this).val();
