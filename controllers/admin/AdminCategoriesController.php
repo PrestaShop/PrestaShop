@@ -52,11 +52,11 @@ class AdminCategoriesControllerCore extends AdminController
 			'id_category' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 30
+				'width' => 20
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 100
+				'width' => 'auto'
 			),
 			'description' => array(
 				'title' => $this->l('Description'),
@@ -77,6 +77,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'active' => 'status',
 				'align' => 'center',
 				'type' => 'bool',
+				'width' => 70,
 				'orderby' => false
 			)
 		);
@@ -133,17 +134,17 @@ class AdminCategoriesControllerCore extends AdminController
 	//	$this->toolbar_title = stripslashes($this->_category->getName());
 		if (empty($this->display))
 			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token, 
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 				'desc' => $this->l('Add new')
 			);
 		if (Tools::getValue('id_category'))
 			$this->toolbar_btn['edit'] = array(
-				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.Tools::getValue('id_category').'&amp;token='.$this->token, 
+				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.Tools::getValue('id_category').'&amp;token='.$this->token,
 				'desc' => $this->l('Edit')
 			);
 		if ($this->display == 'view')
 			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.Tools::getValue('id_category').'&amp;token='.$this->token, 
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.Tools::getValue('id_category').'&amp;token='.$this->token,
 				'desc' => $this->l('Add new')
 			);
 			parent::initToolbar();

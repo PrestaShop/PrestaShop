@@ -45,10 +45,10 @@ class AdminSuppliersControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 120),
-			'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
-			'products' => array('title' => $this->l('Number of products'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'logo' => array('title' => $this->l('Logo'), 'width' => 150, 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
+			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
+			'products' => array('title' => $this->l('Number of products'), 'width' => 70, 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
+			'active' => array('title' => $this->l('Enabled'), 'width' => 70, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
 		parent::__construct();
