@@ -69,7 +69,7 @@
 	</div>
 </div>
 {/if}
-{block name="leadin"}{/block}
+<div class="leadin">{block name="leadin"}{/block}</div>
 <a name="{$table}">&nbsp;</a>
 
 <form method="post" action="{$action}" class="form">
