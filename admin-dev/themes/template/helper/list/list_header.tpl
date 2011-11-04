@@ -56,17 +56,20 @@
 		});
 	</script>
 
-	{if $show_toolbar}
-		<div class="pageTitle">
-		<h3>{block name=pageTitle}
-			<span id="current_obj" style="font-weight: normal;">{$page_title|default:'&nbsp;'}</span>
-			{/block}</h3>
-		</div>
-		{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-	{/if}
 
 {/if}{* End if simple_header *}
 
+{if $show_toolbar}
+<div class="toolbarBox">
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+	<div class="pageTitle">
+	<h3>{block name=pageTitle}
+		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+		{/block}</h3>
+	</div>
+</div>
+{/if}
+{block name="leadin"}{/block}
 <a name="{$table}">&nbsp;</a>
 
 <form method="post" action="{$action}" class="form">

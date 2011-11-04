@@ -201,6 +201,7 @@ class AdminSearchControllerCore extends AdminController
 	
 	protected function initProductList()
 	{
+		$this->show_toolbar = false;
 		$this->fieldsDisplay['products'] = (array(
 			'id_product' => array('title' => $this->l('ID')),
 			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center'),
@@ -245,6 +246,7 @@ class AdminSearchControllerCore extends AdminController
 				$this->initProductList();
 				$helper->identifier = 'id_product';
 				$helper->actions = array('edit', 'view');
+				$helper->show_toolbar = false;
 				if ($this->_list['products'])
 					$view = $helper->generateList($this->_list['products'], $this->fieldsDisplay['products']);
 				$this->context->smarty->assign('products', $view);

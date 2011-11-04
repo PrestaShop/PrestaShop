@@ -103,8 +103,9 @@ class AdminCategoriesControllerCore extends AdminController
 
 		$categories_tree = $this->_category->getParentsCategories($this->context->language->id);
 		asort($categories_tree);
-		$this->context->smarty->assign('categories_name', stripslashes($this->_category->getName()));
-		$this->context->smarty->assign('categories_tree', $categories_tree);
+		$categories_name = stripslashes($this->_category->getName());
+		$this->tpl_list_vars['categories_tree'] = $categories_tree;
+		$this->tpl_list_vars['categories_name'] = $categories_name;
 
 		return parent::initList();
 	}
@@ -129,7 +130,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function initToolbar()
 	{
-		$this->toolbar_title = stripslashes($this->_category->getName());
+	//	$this->toolbar_title = stripslashes($this->_category->getName());
 		if (empty($this->display))
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token, 

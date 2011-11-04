@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbarBox">
 {block name=toolbarBox}
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
@@ -36,11 +35,6 @@
 			</li>
 		{/foreach}
 	</ul>
-	<div class="pageTitle">
-	<h3>{block name=pageTitle}
-		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-		{/block}</h3>
-	</div>
 	<script language="javascript">
 		$(function() {
 			//get reference on save link
@@ -70,4 +64,3 @@
 		});
 	</script>
 {/block}
-</div>

@@ -306,19 +306,6 @@ $(document).ready(function()
 								</div>
 							{/if}
 							
-							{* We should display breadcrumb only if needed *}
-							{if count($tabs_breadcrumb)>1}
-							<div class="path_bar">
-								<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;"></div>
-								<a href="?token={$home_token}">{l s='Back Office'}</a>
-								{foreach $tabs_breadcrumb AS $item}
-									<img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />
-									{if isset($item.token)}<a href="?controller={$item.class_name}&token={$item.token}">{/if}
-									{$item.name}
-									{if isset($item.token)}</a>{/if}
-								{/foreach}
-							</div>
-							{/if}
 							{if $is_multishop && $shop_context != 'all'}
 								<div class="multishop_info">
 									{if $shop_context == 'group'}
