@@ -149,6 +149,7 @@ class AdminStatusesControllerCore extends AdminController
 		// call postProcess() for take care about actions and filters
 		$this->postProcess();
 
+		$this->toolbar_title = $this->l('Return statuses');
 		$list_orders_returns_status = parent::initList();
 
 		return $list_orders_status.$list_orders_returns_status;
