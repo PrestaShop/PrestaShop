@@ -42,7 +42,12 @@ class HelperOptionsCore extends Helper
 
 	public $fields_value = array();
 
-	public $tpl = 'helper/options/options.tpl';
+	public function __construct()
+	{
+		$this->base_folder = 'helper/options/';
+		$this->base_tpl = 'options.tpl';
+		parent::__construct();
+	}
 
 	/**
 	 * Generate a form for options
@@ -51,6 +56,7 @@ class HelperOptionsCore extends Helper
 	 */
 	public function generateOptions($option_list)
 	{
+		$this->tpl = $this->createTemplate($this->base_tpl);
 		$tab = Tab::getTab($this->context->language->id, $this->id);
 		if (!isset($languages))
 			$languages = Language::getLanguages(false);

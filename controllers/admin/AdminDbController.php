@@ -58,14 +58,10 @@ class AdminDbControllerCore extends AdminController
 
 	public function initContent()
 	{
-		parent::initContent();
-
 		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.');
 
-		$helper = new HelperOptions();
-		$helper->id = $this->id;
-		$helper->currentIndex = self::$currentIndex;
-		$this->content .= $helper->generateOptions($this->options);
+		$this->content .= $this->initToolbar();
+		$this->content .= $this->initOptions();
 
 		$table_status = $this->getTablesStatus();
 		foreach ($table_status as $key => $table)
@@ -76,6 +72,7 @@ class AdminDbControllerCore extends AdminController
 			'update_url' => self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token,
 			'table_status' => $table_status,
 			'engines' => $this->getEngines(),
+			'content' => $this->content,
 		));
 
 	}
@@ -91,7 +88,7 @@ class AdminDbControllerCore extends AdminController
 
 		if ($this->action == 'update_options')
 		{
-			foreach ($this->optionsList['database']['fields'] AS $field => $values)
+			foreach ($this->options['database']['fields'] AS $field => $values)
 				if (isset($values['required']) AND $values['required'])
 					if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
 						$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
@@ -100,7 +97,7 @@ class AdminDbControllerCore extends AdminController
 			{
 				/* Datas are not saved in database but in config/settings.inc.php */
 				$settings = array();
-			 	foreach ($this->optionsList['database']['fields'] as $k => $data)
+			 	foreach ($this->options['database']['fields'] as $k => $data)
 					if ($value = Tools::getValue($k))
 						$settings['_'.Tools::strtoupper($k).'_'] = $value;
 
