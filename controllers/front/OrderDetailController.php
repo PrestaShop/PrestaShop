@@ -169,7 +169,7 @@ class OrderDetailControllerCore extends FrontController
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && $order->invoice_number),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
-					'discounts' => $order->getDiscounts(),
+					'discounts' => $order->getCartRules(),
 					'carrier' => $carrier,
 					'address_invoice' => $addressInvoice,
 					'invoiceState' => (Validate::isLoadedObject($addressInvoice) && $addressInvoice->id_state) ? new State($addressInvoice->id_state) : false,

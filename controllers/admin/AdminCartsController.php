@@ -158,7 +158,7 @@ class AdminCartsController extends AdminController
 			$product['image'] = (isset($image['id_image']) ? cacheImage(_PS_IMG_DIR_.'p/'.$imageProduct->getExistingImgPath().'.jpg', 'product_mini_'.(int)($product['id_product']).(isset($product['id_product_attribute']) ? '_'.(int)($product['id_product_attribute']) : '').'.jpg', 45, 'jpg') : '--');
 		}
 		$this->context->smarty->assign(array('products' => $products,
-												'discounts' => $cart->getDiscounts(),
+												'discounts' => $cart->getCartRules(),
 												'order' => $order,
 												'cart' => $cart,
 												'currency' => $currency,
