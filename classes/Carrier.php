@@ -44,6 +44,9 @@ class CarrierCore extends ObjectModel
 	const SORT_BY_PRICE = 0;
 	const SORT_BY_POSITION = 1;
 
+	const SORT_BY_ASC = 0;
+	const SORT_BY_DESC = 1;
+
 	/** @var int Tax id (none = 0) */
 	public $id_tax_rules_group;
 
@@ -554,7 +557,10 @@ class CarrierCore extends ObjectModel
 		{
 			foreach ($results_array as $r)
 				$prices[] = $r['price'];
-			array_multisort($prices, SORT_NUMERIC, $results_array);
+			if (Configuration::get('PS_CARRIER_DEFAULT_ORDER') == Carrier::SORT_BY_ASC)
+				array_multisort($prices, SORT_ASC, SORT_NUMERIC, $results_array);
+			else
+				array_multisort($prices, SORT_DESC, SORT_NUMERIC, $results_array);
 		}
 
 		return $results_array;

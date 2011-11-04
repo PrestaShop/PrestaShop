@@ -102,6 +102,11 @@ class AdminCarriersControllerCore extends AdminController
 			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
 		);
 
+		$carrier_default_order = array(
+			array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
+			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
+		);
+
 		$this->options = array(
 			'general' => array(
 				'title' => $this->l('Carrier options'),
@@ -121,6 +126,14 @@ class AdminCarriersControllerCore extends AdminController
 						'type' => 'select',
 						'identifier' => 'value',
 						'list' => $carrier_default_sort
+					),
+					'PS_CARRIER_DEFAULT_ORDER' => array(
+						'title' => $this->l('Carrier default order:'),
+						'desc' => $this->l('This default order will be available only on front-office'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => $carrier_default_order
 					),
 				),
 				'submit' => array()
