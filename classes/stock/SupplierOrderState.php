@@ -151,16 +151,16 @@ class SupplierOrderStateCore extends ObjectModel
 
 			//check first if the order is editable
 			if ($is_editable)
-				$query->where(' s.editable = 0');
+				$query->where('s.editable = 0');
 			//check if the delivery note is available
 			else if ($is_delivery_note)
-				$query->where(' s.delivery_note = 0 AND s.editable = 0');
+				$query->where('s.delivery_note = 0 AND s.editable = 0');
 			//check if the state correspond to a pending receipt state
 			else if ($is_pending_receipt)
-				$query->where(' s.receipt_state = 1 OR (s.receipt_state = 0 AND s.pending_receipt = 0)) AND s.delivery_note = 0 AND s.editable = 0');
+				$query->where('s.receipt_state = 1 OR (s.receipt_state = 0 AND s.pending_receipt = 0) AND s.delivery_note = 0 AND s.editable = 0');
 			//check if the state correspond to a receipt state
 			else if ($is_receipt_state)
-				$query->where(' s.receipt_state = 1 OR (s.receipt_state = 0 AND s.pending_receipt = 0 AND s.delivery_note = 0 AND s.editable = 0)');
+				$query->where('s.receipt_state = 1 OR (s.receipt_state = 0 AND s.pending_receipt = 0 AND s.delivery_note = 0 AND s.editable = 0)');
 		}
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

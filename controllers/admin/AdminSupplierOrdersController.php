@@ -373,9 +373,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				// if the current state doesn't allow order edit, skip the edit action
 				if ($this->_list[$i]['editable'] == 0)
 					$this->addRowActionSkipList('edit', $this->_list[$i]['id_supplier_order']);
-
-				// if the current state correspond to an enclosed state, skip the state action
-				if ($this->_list[$i]['enclosed'] == 0)
+				if ($this->_list[$i]['enclosed'] == 1)
 					$this->addRowActionSkipList('changestate', $this->_list[$i]['id_supplier_order']);
 			}
 		}
@@ -543,74 +541,85 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	{
 		$id_supplier_order = (int)Tools::getValue('id_supplier_order', 0);
 
-		// try to load supplier order
-		if ($id_supplier_order > 0)
+		if ($id_supplier_order <= 0)
 		{
-			$supplier_order = new SupplierOrder($id_supplier_order);
-			if (Validate::isLoadedObject($supplier_order))
-			{
-				// load states chooseables in fucntion of current order state
-				$states = SupplierOrderState::getSupplierOrderStates($supplier_order->id_supplier_order_state);
-
-				$this->fields_form = array(
-					'legend' => array(
-						'title' => $this->l('Supplier Order State'),
-						'image' => '../img/admin/edit.gif'
-					),
-					'input' => array(
-						array(
-							'type' => 'hidden',
-							'name' => 'id_supplier_order',
-						),
-						array(
-							'type' => 'select',
-							'label' => $this->l('New state for the order:'),
-							'name' => 'id_supplier_order_state',
-							'required' => true,
-							'options' => array(
-								'query' => $states,
-								'id' => 'id_supplier_order_state',
-								'name' => 'name'
-							),
-							'p' => $this->l('You can change the state of this order')
-						),
-					),
-					'submit' => array(
-						'title' => $this->l('   Save   '),
-						'class' => 'button'
-					)
-				);
-
-				$this->getlanguages();
-
-				$helper = new HelperForm();
-
-				//force use of standard form tpl
-				$helper->tpl = $this->context->smarty->template_dir.'/helper/form/form.tpl';
-				$helper->submit_action = 'submitChangestate';
-				$helper->currentIndex = self::$currentIndex;
-				$helper->token = $this->token;
-				$helper->id = null; // no display standard hidden field in the form
-				$helper->languages = $this->_languages;
-				$helper->default_form_language = $this->default_form_language;
-				$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-
-				$helper->fields_value = array(
-					'id_supplier_order_state' => Tools::getValue('id_supplier', ''),
-					'id_supplier_order' => $id_supplier_order,
-				);
-
-				$this->content .= $helper->generateForm($this->fields_form);
-
-				$this->context->smarty->assign(array(
-					'content' => $this->content
-				));
-			}
-			else
-				$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
-		}
-		else
 			$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
+			return parent::initContent();
+		}
+
+		$supplier_order = new SupplierOrder($id_supplier_order);
+		if (!Validate::isLoadedObject($supplier_order))
+		{
+			$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
+			return parent::initContent();
+		}
+
+		// change the display type in order to add specific actions to
+		$this->display = 'update_order_state';
+		// overrides parent::initContent();
+		$this->initToolbar();
+
+		// given the current state, loads available states
+		$states = SupplierOrderState::getSupplierOrderStates($supplier_order->id_supplier_order_state);
+		// loads languages
+		$this->getlanguages();
+
+		// defines the fields of the form to display
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Supplier Order State'),
+				'image' => '../img/admin/edit.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'hidden',
+					'name' => 'id_supplier_order',
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('New state of the order:'),
+					'name' => 'id_supplier_order_state',
+					'required' => true,
+					'options' => array(
+						'query' => $states,
+						'id' => 'id_supplier_order_state',
+						'name' => 'name'
+					),
+					'p' => $this->l('Choose the new state of your order')
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
+		// sets up the helper
+		$helper = new HelperForm();
+		$helper->submit_action = 'submitChangestate';
+		$helper->currentIndex = self::$currentIndex;
+		$helper->toolbar_btn = $this->toolbar_btn;
+		$helper->token = $this->token;
+		$helper->id = null; // no display standard hidden field in the form
+		$helper->languages = $this->_languages;
+		$helper->default_form_language = $this->default_form_language;
+		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+		$helper->fields_value = array(
+			'id_supplier_order_state' => Tools::getValue('id_supplier', ''),
+			'id_supplier_order' => $id_supplier_order,
+		);
+
+		// generates the form to display
+		$this->content = $helper->generateForm($this->fields_form);
+
+		// assigns our content
+		$this->tpl_form_vars['show_change_state_form'] = true;
+		$this->tpl_form_vars['state_content'] = $this->content;
+
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
+		));
 	}
 
 	/**
@@ -636,13 +645,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				$this->tpl_form_vars['supplier_id'] = $supplier_order->id_supplier;
 			}
 		}
-
-		// add Save button to the toolbar
-		$this->toolbar_btn['save'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save modifications on this order')
-		);
-
 		$this->tpl_form_vars['content'] = $this->content;
 		$this->tpl_form_vars['show_product_management_form'] = true;
 
@@ -674,9 +676,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	/**
 	 * Ths method manage associated products to the order when updating it
 	 */
-	public function manageOrderProducts() {
-
-		// load supplier order
+	public function manageOrderProducts()
+	{
+		// loads supplier order
 		$id_supplier_order = (int)Tools::getValue('id_supplier_order', null);
 
 		if ($id_supplier_order != null)
@@ -685,23 +687,24 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 			if (Validate::isLoadedObject($supplier_order))
 			{
-				// test if the supplier or currency have changed in the supplier order
+				// tests if the supplier or currency have changed in the supplier order
 				$new_supplier_id = (int)Tools::getValue('id_supplier');
 				$new_currency_id = (int)Tools::getValue('id_currency');
 
-				if ( ($new_supplier_id != $supplier_order->id_supplier) || ($new_currency_id != $supplier_order->id_currency) )
+				if (($new_supplier_id != $supplier_order->id_supplier) ||
+					($new_currency_id != $supplier_order->id_currency))
 				{
-					// reset all products in this order
+					// resets all products in this order
 					$supplier_order->resetProducts();
 				}
 				else
 				{
-					// get all product ids to manage
+					// gets all product ids to manage
 					$product_ids_str = Tools::getValue('product_ids', null);
 
-					$product_ids = split("\|", $product_ids_str);
+					$product_ids = preg_split('/|/', $product_ids_str);
 
-					// update existing products ids
+					// updates existing products ids
 					foreach ($product_ids as $id)
 					{
 						$pos = strpos($id, '_');
@@ -709,11 +712,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						if ($pos === false)
 							continue;
 
-						// get id_product and id_product attribute
+						// gets id_product and id_product attribute
 						$id_product = substr($id, 0, $pos);
 						$id_product_attribute = substr($id, $pos);
-
-						d($id_product);
 					}
 				}
 			}
@@ -796,7 +797,12 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						if ($id_state == $state['id_supplier_order_state'])
 						{
 							$supplier_order->id_supplier_order_state = $state['id_supplier_order_state'];
-							$supplier_order->save();
+							if ($supplier_order->save())
+							{
+								$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+								$redirect = self::$currentIndex.'&token='.$token;
+								Tools::redirectAdmin($redirect.'&conf=5');
+							}
 						}
 					}
 				}
@@ -1131,7 +1137,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($supplier_order_state))
 			return;
 
-		$content = '<span style="width:20px; margin-right:5px;">';
+
 		if ($supplier_order_state->editable == false && $supplier_order_state->delivery_note == true)
 			$content .= '<a href="#"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
 		else
@@ -1139,5 +1145,26 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$content .= '</span>';
 
 		return $content;
+	}
+
+	/**
+	 * Assigns default actions in toolbar_btn smarty var, if they are not set.
+	 * uses override to specifically add, modify or remove items
+	 * @see AdminSupplier::initToolbar()
+	 *
+	 */
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			case 'update_order_state':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+			break;
+			default:
+				parent::initToolbar();
+		}
 	}
 }
