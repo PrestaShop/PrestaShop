@@ -55,16 +55,17 @@
 				});
 		});
 	</script>
+
+	{if $show_toolbar}
+		<div class="pageTitle">
+		<h3>{block name=pageTitle}
+			<span id="current_obj" style="font-weight: normal;">{$page_title|default:'&nbsp;'}</span>
+			{/block}</h3>
+		</div>
+		{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+	{/if}
+
 {/if}{* End if simple_header *}
-	
-{if $show_toolbar}
-	<div class="pageTitle">
-	<h3>{block name=pageTitle}
-		<span id="current_obj" style="font-weight: normal;">{$page_title|default:'&nbsp;'}</span>
-		{/block}</h3>
-	</div>
-	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-{/if}
 
 <a name="{$table}">&nbsp;</a>
 
@@ -112,7 +113,7 @@
 					<col width="10px" />
 					{foreach $fields_display AS $key => $params}
 						<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
-					{/foreach}			
+					{/foreach}
 					{if $shop_link_type}
 						<col width="80px" />
 					{/if}

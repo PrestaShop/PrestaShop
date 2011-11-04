@@ -347,8 +347,8 @@ class HelperListCore extends Helper
 			'current_index' => $this->currentIndex,
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
-			'has_actions' => (bool)count($this->actions),
-			'has_bulk_actions' => (bool)count($this->bulk_actions),
+			'has_actions' => !empty($this->actions),
+			'has_bulk_actions' => !empty($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
 		));
 		return $this->content_tpl->fetch();
@@ -591,8 +591,8 @@ class HelperListCore extends Helper
 			'identifier' => $this->identifier,
 			'id_cat' => $id_cat,
 			'shop_link_type' => $this->shopLinkType,
-			'has_actions' => (bool)count($this->actions),
-			'has_bulk_actions' => (bool)count($this->bulk_actions),
+			'has_actions' => !empty($this->actions),
+			'has_bulk_actions' => !empty($this->bulk_actions),
 			'toolbar_btn' => $this->toolbar_btn,
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
