@@ -29,7 +29,8 @@
 	{if isset($show_product_management_form)}
 	<p>&nbsp;</p>
 
-	<input type="hidden" id="product_ids" name="product_ids" value=""/>
+	<input type="hidden" id="product_ids" name="product_ids" value="{$product_ids}" />
+	<input type="hidden" name="updatesupplier_order" value="1" />
 
 	<fieldset>
 		<legend>
@@ -48,7 +49,7 @@
 				<td>
 					<table
 					id="products_in_supplier_order"
-					class="table {if $table_dnd}tableDnD{/if}"
+					class="table"
 					cellpadding="0" cellspacing="0"
 					style="width: 100%; margin-bottom:10px;"
 					>
@@ -69,27 +70,32 @@
 								<tr style="height:50px;">
 									<td>
 										{$product.reference}
+										<input type="hidden" name="input_check_{$product.id_product}_{$product.id_product_attribute}" value="{$product.checksum}" />
+										<input type="hidden" name="input_reference_{$product.id_product}_{$product.id_product_attribute}" value="{$product.reference}" />
+										<input type="hidden" name="input_id_{$product.id_product}_{$product.id_product_attribute}" value="{$product.id_supplier_order_detail}" />
 									</td>
 									<td>
 										{$product.ean13}
+										<input type="hidden" name="input_ean13_{$product.id_product}_{$product.id_product_attribute}" value="{$product.ean13}" />
 									</td>
 									<td>
 										{$product.name}
+										<input type="hidden" name="input_name_{$product.id_product}_{$product.id_product_attribute}" value="{$product.name}" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_unit_price_te|{$product.$id_product}_{$product.$id_product_attribute}" value="{$product.unit_price_te|escape:'htmlall':'UTF-8'}" />
+										<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te|escape:'htmlall':'UTF-8'}" size="8" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_quantity|{$product.$id_product}_{$product.$id_product_attribute}" value="{$product.quantity|escape:'htmlall':'UTF-8'}" />
+										<input type="text" name="input_quantity_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity|escape:'htmlall':'UTF-8'}" size="5" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_discount_rate|{$product.$id_product}_{$product.$id_product_attribute}" value="{$product.discount_rate|escape:'htmlall':'UTF-8'}" />
+										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{$product.discount_rate|escape:'htmlall':'UTF-8'}" size="5" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_tax_rate|{$product.$id_product}_{$product.$id_product_attribute}" value="{$product.tax_rate|escape:'htmlall':'UTF-8'}" />
+										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{$product.tax_rate|escape:'htmlall':'UTF-8'}" size="5" />
 									</td>
 									<td class="center">
-										<a href="#" id="deletelink|{$product.$id_product}_{$product.$id_product_attribute}" class="removeProductFromSupplierOrderLink">
+										<a href="#" id="deletelink_{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplierOrderLink">
 											<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order'}" title="{l s='Remove this product from the order'}" />
 										</a>
 									</td>
@@ -123,14 +129,14 @@
 			// add a new line in the products table
 			$('#products_in_supplier_order > tbody:last').append(
 				'<tr style="height:50px;">'+
-				'<td>'+product_infos.reference+'</td>'+
-				'<td>'+product_infos.ean13+'</td>'+
-				'<td>'+product_infos.name+'</td>'+
-				'<td class="center"><input type="text" name="input_unit_price_te|'+product_infos.id+'" value="" size="8" /></td>'+
-				'<td class="center"><input type="text" name="input_quantity|'+product_infos.id+'" value="" size="5" /></td>'+
-				'<td class="center"><input type="text" name="input_discount_rate|'+product_infos.id+'" value="" size="5" /></td>'+
-				'<td class="center"><input type="text" name="input_tax_rate|'+product_infos.id+'" value="" size="5" /></td>'+
-				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink|'+product_infos.id+'">'+
+				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
+				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
+				'<td>'+product_infos.name+'<input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
+				'<td class="center"><input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" /></td>'+
+				'<td class="center"><input type="text" name="input_quantity_'+product_infos.id+'" value="0" size="5" /></td>'+
+				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
+				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
+				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink_'+product_infos.id+'">'+
 				'<img src="../img/admin/delete.gif" alt="{l s="Remove this product from the order"}" title="{l s="Remove this product from the order"}" />'+
 				'</a></td></tr>'
 			);
@@ -151,7 +157,7 @@
 		/* function autocomplete */
 		$(function() {
 			// add click event on just created delete item link
-			$('.removeProductFromSupplierOrderLink').live('click', function() {
+			$('a.removeProductFromSupplierOrderLink').live('click', function() {
 				var id = $(this).attr('id');
 				var product_id = id.split('|')[1];
 

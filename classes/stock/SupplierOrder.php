@@ -247,12 +247,51 @@ class SupplierOrderCore extends ObjectModel
 	}
 
 	/**
+	 * Retrieves the product entries for the current order
+	 *
+	 * @return array
+	 */
+	public function getEntries($id_lang = null)
+	{
+		if ($id_lang == null)
+			$id_lang = Context::getContext()->language->id;
+
+		// build query
+		$query = new DbQuery();
+
+		$query->select('
+			s.*,
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name,
+			p.reference as reference,
+			p.ean13 as ean13');
+
+		$query->from('supplier_order_detail s');
+
+		$query->innerjoin('product_lang pl ON (pl.id_product = s.id_product AND pl.id_lang = '.$id_lang.')');
+
+		$query->leftjoin('product p ON p.id_product = s.id_product');
+		$query->leftjoin('product_attribute_combination pac ON (pac.id_product_attribute = s.id_product_attribute)');
+		$query->leftjoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
+		$query->leftjoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang.')');
+		$query->leftjoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
+
+		$query->where('s.id_supplier_order = '.(int)$this->id);
+
+		$query->groupBy('s.id_supplier_order_detail');
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
+	/**
 	 * Retrieves the product entries collection for the current order
 	 *
 	 * @return array
 	 */
-	public function getEntriesCollection()
+	public function getEntriesCollection($id_lang = null)
 	{
+		if ($id_lang == null)
+			$id_lang = Context::getContext()->language->id;
+
 		// build query
 		$query = new DbQuery();
 		$query->select('s.*');

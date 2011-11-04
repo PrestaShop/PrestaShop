@@ -110,7 +110,7 @@ class SupplierOrderDetailCore extends ObjectModel
 	 * @var float This is like $price_with_discount_te, considering the global order discount.
 	 * (i.e. if SupplierOrder::discount_rate is set)
 	 */
-	public $price_with_order_discount_te;
+	public $price_with_order_discount_te = 0;
 
 	protected $fieldsRequired = array(
 		'id_supplier_order',
@@ -167,13 +167,13 @@ class SupplierOrderDetailCore extends ObjectModel
 	{
 		$this->validateFields();
 
-		$fields['id_supplier_order'] = (int)$this->id_supplier;
-		$fields['id_product'] = (int)$this->id_employee;
-		$fields['id_product_attribute'] = (int)$this->id_warehouse;
+		$fields['id_supplier_order'] = (int)$this->id_supplier_order;
+		$fields['id_product'] = (int)$this->id_product;
+		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_currency'] = (int)$this->id_currency;
 		$fields['exchange_rate'] = (float)$this->exchange_rate;
 		$fields['unit_price_te'] = (float)$this->unit_price_te;
-		$fields['quantity'] = (int)$this->id_state;
+		$fields['quantity'] = (int)$this->quantity;
 		$fields['price_te'] = (float)$this->price_te;
 		$fields['discount_rate'] = (float)$this->discount_rate;
 		$fields['discount_value_te'] = (float)$this->discount_value_te;
@@ -221,10 +221,10 @@ class SupplierOrderDetailCore extends ObjectModel
 
 		// calcul entry discount value
 		if ($this->discount_rate != null && is_numeric($this->discount_rate) && $this->discount_rate > 0)
-			$htis->discount_value_te = (float)$htis->price_te * ((float)$this->discount_rate / 100);
+			$htis->discount_value_te = (float)$this->price_te * ((float)$this->discount_rate / 100);
 
 		// calcul entry price with discount
-		$this->price_with_discount_te = $htis->price_te - $htis->discount_value_te;
+		$this->price_with_discount_te = $this->price_te - $this->discount_value_te;
 
 		// calcul tax value
 		$this->tax_value = $this->price_with_discount_te * ((float)$this->tax_rate / 100);

@@ -114,7 +114,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			Tools::isSubmit('submitAddsupplier_order') ||
 			(Tools::isSubmit('updatesupplier_order') && Tools::isSubmit('id_supplier_order')))
 		{
-			// override table, land, className and identifier for the current controller
+			// override table, lang, className and identifier for the current controller
 		 	$this->table = 'supplier_order';
 		 	$this->className = 'SupplierOrder';
 		 	$this->identifier = 'id_supplier_order';
@@ -643,16 +643,40 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			if (Validate::isLoadedObject($supplier_order))
 			{
 				// load products of this order
-				$products = $supplier_order->getEntriesCollection();
+				$products = $supplier_order->getEntries();
+				$product_ids = array();
+
+				if (isset($this->order_products_errors) && is_array($this->order_products_errors))
+				{
+					//for each product in error array, check if it is in products array, and remove it to conserve last user values
+					foreach ($this->order_products_errors as $pe)
+						foreach ($products as $index_p => $p)
+							if(($p['id_product'] == $pe['id_product']) && ($p['id_product_attribute'] == $pe['id_product_attribute']))
+								unset($products[$index_p]);
+
+					// then merge arrays
+					$products = array_merge($this->order_products_errors, $products);
+				}
+
+				foreach ($products as &$item)
+				{
+					// calculate md5 checksum on each product for use in tpl
+					$item['checksum'] = md5(_COOKIE_KEY_.$item['id_product'].'_'.$item['id_product_attribute']);
+
+					// add id to ids list
+					$product_ids[] = $item['id_product'].'_'.$item['id_product_attribute'];
+				}
 
 				$this->tpl_form_vars['products_list'] = $products;
+				$this->tpl_form_vars['product_ids'] = implode($product_ids, '|');
 				$this->tpl_form_vars['supplier_id'] = $supplier_order->id_supplier;
 			}
 		}
+
 		$this->tpl_form_vars['content'] = $this->content;
 		$this->tpl_form_vars['show_product_management_form'] = true;
 
-		// first call parent initcontent to render standard form content
+		// call parent initcontent to render standard form content
 		parent::initContent();
 	}
 
@@ -809,12 +833,13 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 */
 	public function manageOrderProducts()
 	{
-		// loads supplier order
+		// load supplier order
 		$id_supplier_order = (int)Tools::getValue('id_supplier_order', null);
 
 		if ($id_supplier_order != null)
 		{
 			$supplier_order = new SupplierOrder($id_supplier_order);
+			$currency = new Currency($supplier_order->id_ref_currency);
 
 			if (Validate::isLoadedObject($supplier_order))
 			{
@@ -832,20 +857,77 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				{
 					// gets all product ids to manage
 					$product_ids_str = Tools::getValue('product_ids', null);
-
-					$product_ids = preg_split('/|/', $product_ids_str);
+					$product_ids = explode('|', $product_ids_str);
 
 					// updates existing products ids
 					foreach ($product_ids as $id)
 					{
-						$pos = strpos($id, '_');
+						$errors = array();
 
+						// check if a checksum is available for this product and test it
+						$check = Tools::getValue('input_check_'.$id, '');
+						$check_valid = md5(_COOKIE_KEY_.$id);
+
+						if ($check_valid != $check)
+							continue;
+
+						$pos = strpos($id, '_');
 						if ($pos === false)
 							continue;
 
-						// gets id_product and id_product attribute
-						$id_product = substr($id, 0, $pos);
-						$id_product_attribute = substr($id, $pos);
+						// Load / Create supplier order detail
+						$entry = new SupplierOrderDetail();
+						$id_supplier_order_detail = (int)Tools::getValue('input_id_'.$id, 0);
+						if ($id_supplier_order_detail > 0)
+						{
+							$existing_entry = new SupplierOrderDetail($id_supplier_order_detail);
+							if (Validate::isLoadedObject($supplier_order))
+								$entry = &$existing_entry;
+						}
+
+						// get product informations
+						$entry->id_product = substr($id, 0, $pos);
+						$entry->id_product_attribute = substr($id, $pos+1);
+						$entry->unit_price_te = (float)Tools::getValue('input_unit_price_te_'.$id, 0);
+						$entry->quantity = (int)Tools::getValue('input_quantity_'.$id, 0);
+						$entry->discount_rate = (float)Tools::getValue('input_discount_rate_'.$id, 0);
+						$entry->tax_rate = (float)Tools::getValue('input_tax_rate_'.$id, 0);
+						$entry->reference = Tools::getValue('input_reference_'.$id, '');
+						$entry->ean13 = Tools::getValue('input_ean13_'.$id, '');
+						$entry->name = Tools::getValue('input_name_'.$id, '');
+						$entry->exchange_rate = $currency->conversion_rate;
+						$entry->id_currency = $currency->id;
+						$entry->id_supplier_order = $supplier_order->id;
+
+						$errors = $entry->validateController();
+
+						// if there is a problem, handle error for the current product
+						if (count($errors) > 0)
+						{
+							// add the product to error array => display again product line
+							$this->order_products_errors[] = array(
+								'id_product' =>	$entry->id_product,
+								'id_product_attribute' => $entry->id_product_attribute,
+								'unit_price_te' =>	$entry->unit_price_te,
+								'quantity' => $entry->quantity,
+								'discount_rate' =>	$entry->discount_rate,
+								'tax_rate' => $entry->tax_rate,
+								'name' => $entry->name,
+								'reference' => $entry->reference,
+								'ean13' => $entry->ean13,
+							);
+
+							$error_str = '<ul>';
+							foreach ($errors as $e)
+								$error_str .= '<li>'.$this->l('field ').$e.'</li>';
+							$error_str .= '</ul>';
+
+							$this->_errors[] = Tools::displayError($this->l('Please verify informations of the product: ').$entry->name.' '.$error_str);
+						}
+						else
+						{
+							$entry->save();
+						}
 					}
 				}
 			}
@@ -889,7 +971,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			$_POST['id_supplier_order_state'] = 1; //defaut creation state
 
 			// specify global reference currency
-			$_POST['id_ref_currency'] = $this->context->currency->id;
+			$_POST['id_ref_currency'] = Currency::getDefaultCurrency()->id;
 
 			// manage each associated product
 			$this->manageOrderProducts();
