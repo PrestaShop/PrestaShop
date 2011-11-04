@@ -83,7 +83,7 @@ class TabCore extends ObjectModel
 	 * @param boolean $nullValues
 	 * @return int id_tab
 	 */
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
 		$this->position = self::getNewLastPosition($this->id_parent);
 		if (parent::add($autodate, $null_values))
