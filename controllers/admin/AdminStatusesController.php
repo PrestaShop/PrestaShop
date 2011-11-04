@@ -33,7 +33,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->className = 'OrderState';
 	 	$this->lang = true;
 	 	$this->deleted = false;
-		$this->colorOnBackground = true;
+		$this->colorOnBackground = false;
 		$this->imageType = 'gif';
 
 		$this->fieldImageSettings = array(
@@ -57,12 +57,14 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 130
+				'width' => 'auto',
+				'color' => 'color'
 			),
 			'logo' => array(
 				'title' => $this->l('Icon'),
 				'align' => 'center',
 				'image' => 'os',
+				'width' => 25,
 				'orderby' => false,
 				'search' => false
 			),
@@ -73,12 +75,14 @@ class AdminStatusesControllerCore extends AdminController
 					'1' => 'enabled.gif',
 					'0' => 'disabled.gif'
 				),
+				'width' => 25,
 				'type' => 'bool',
 				'orderby' => false
 			),
 			'invoice' => array(
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
+				'width' => 25,
 				'icon' => array(
 					'1' => 'enabled.gif',
 					'0' => 'disabled.gif'
@@ -136,8 +140,9 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'align' => 'center',
-				'width' => 200
+				'align' => 'left',
+				'width' => 'auto',
+				'color' => 'color'
 			)
 		);
 
