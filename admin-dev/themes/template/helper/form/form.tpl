@@ -64,10 +64,17 @@
 	</script>
 	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
-
+<div class="toolbarBox">
 {if $show_toolbar}
 	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+	<div class="pageTitle">
+	<h3>{block name=pageTitle}
+		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+		{/block}</h3>
+	</div>
 {/if}
+	<div class="leadin">{block name="leadin"}{/block}</div>
+</div>
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 <form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}

@@ -39,6 +39,7 @@ class HelperCore
 	public $toolbar_btn;
 	public $title;
 	public $show_toolbar = true;
+	public $no_back = false;
 	public $context;
 
 	/**
