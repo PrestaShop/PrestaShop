@@ -892,7 +892,7 @@ class PDFCore extends PDF_PageGroupCore
 				}
 			}
 
-		if (!sizeof(self::$order->getDiscounts()) AND !$delivery)
+		if (!sizeof(self::$order->getCartRules()) AND !$delivery)
 			$this->Cell(array_sum($w), 0, '');
 	}
 
@@ -903,7 +903,7 @@ class PDFCore extends PDF_PageGroupCore
 	{
 		$w = array(90, 25, 15, 10, 25, 25);
 		$this->SetFont(self::fontname(), 'B', 7);
-		$discounts = self::$order->getDiscounts();
+		$discounts = self::$order->getCartRules();
 
 		foreach($discounts AS $discount)
 		{

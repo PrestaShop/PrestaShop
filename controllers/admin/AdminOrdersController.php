@@ -526,7 +526,7 @@ class AdminOrdersControllerCore extends AdminController
 			),
 			'customerStats' => $customer->getStats(),
 			'products' => $products,
-			'discounts' => $order->getDiscounts(),
+			'discounts' => $order->getCartRules(),
 			'returns' => OrderReturn::getOrdersReturn($order->id_customer, $order->id),
 			'slips' => OrderSlip::getOrdersSlip($order->id_customer, $order->id),
 			'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
