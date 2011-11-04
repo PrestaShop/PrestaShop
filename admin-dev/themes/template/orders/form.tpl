@@ -71,9 +71,9 @@
 			if ($('#old_carts_orders:visible').length == 0)
 			{
 				$(this).html(txt_hide_carts);
-				$('#old_carts_orders').slideDown('slow'); 
+				$('#old_carts_orders').slideDown('slow');
 			}
-			else 
+			else
 			{
 				$(this).html(txt_show_carts);
 				$('#old_carts_orders').slideUp('slow');
@@ -144,11 +144,11 @@
 					}
 				});
 			});
-		{if $cart->id} 
+		{if $cart->id}
 			setupCustomer('{$cart->id_customer}');
 			useCart('{$cart->id}');
 		{/if}
-		
+
 		$('.delete_product').live('click', function(e) {
 			e.preventDefault();
 			var to_delete = $(this).attr('rel').split('_');
@@ -198,7 +198,7 @@
 		});*/
 		resetBind();
 	});
-	
+
 	function resetBind()
 	{
 		$('.fancybox').fancybox();
@@ -206,7 +206,7 @@
 			onClosed: useCart(id_cart)
 		});*/
 	}
-	
+
 	function updateProductPrice(id_product, id_product_attribute, new_price)
 	{
 		$.ajax({
@@ -230,7 +230,7 @@
 			}
 		});
 	}
-	
+
 	function displayQtyInStock(id)
 	{
 		if (id == 'id_product')
@@ -238,7 +238,7 @@
 		else
 			$('#qty_in_stock').html($('#ipa_'+$('#id_product option:selected').val()+' option:selected').attr('rel'));
 	}
-	
+
 	function duplicateOrder(id_order)
 	{
 		$.ajax({
@@ -261,7 +261,7 @@
 			}
 		});
 	}
-	
+
 	function useCart(id_new_cart)
 	{
 		id_cart = id_new_cart;
@@ -285,7 +285,7 @@
 			}
 		});
 	}
-	
+
 	function deleteVoucher(id_cart_rule)
 	{
 		$.ajax({
@@ -307,7 +307,7 @@
 			}
 		});
 	}
-	
+
 	function deleteProduct(id_product, id_product_attribute)
 	{
 		$.ajax({
@@ -330,7 +330,7 @@
 			}
 		});
 	}
-	
+
 	function searchCustomers()
 	{
 		$.ajax({
@@ -363,7 +363,7 @@
 			}
 		});
 	}
-	
+
 	function setupCustomer(idCustomer)
 	{
 		$('#products_part').show();
@@ -429,7 +429,7 @@
 			}
 		});
 	}
-	
+
 	function updateCarrierList(carriers)
 	{
 		var html = '';
@@ -438,7 +438,7 @@
 		});
 		$('#id_carrier').html(html);
 	}
-	
+
 	function searchProducts()
 	{
 		$('#products_part').show();
@@ -467,7 +467,7 @@
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="displayProductAttributes();">';
 					attributes_html += '<label>{l s='Combination:'}</label>';
 					$.each(res.products, function() {
-						products_found += '<option '+(this.combinations.lenght > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.lenght > 0 ? ' - '+this.price : '')+'</option>';
+						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						$.each(this.combinations, function() {
 							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.price+'</option>';
@@ -490,7 +490,7 @@
 			}
 		});
 	}
-	
+
 	function displayProductAttributes()
 	{
 		if ($('#ipa_'+$('#id_product option:selected').val()+' option').length === 0)
@@ -502,7 +502,7 @@
 			$('#ipa_'+$('#id_product option:selected').val()).show();
 		}
 	}
-	
+
 	function updateCartProducts(products)
 	{
 		var cart_content = '';
@@ -516,7 +516,7 @@
 		});
 		$('#customer_cart tbody').html(cart_content);
 	}
-	
+
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
@@ -529,25 +529,25 @@
 		}
 		else
 			$('#voucher_list').hide();
-		
+
 		$('#voucher_list tbody').html(vouchers_html);
 	}
-	
+
 	function updateCartPaymentList(payment_list)
 	{
 		$('#payment_list').html(payment_list);
 	}
-	
+
 	function displaySummary(jsonSummary)
 	{
 		updateCartProducts(jsonSummary.summary.products);
 		updateCartVouchers(jsonSummary.summary.discounts);
-		
-		if (jsonSummary.summary.products.length == 0 || !jsonSummary.addresses.lenght == 0)
+
+		if (jsonSummary.summary.products.length == 0 || !jsonSummary.addresses.length == 0)
 			$('#carriers_part,#summary_part').hide();
 		else
 			$('#carriers_part,#summary_part').show();
-			
+
 		updateCarrierList(jsonSummary.carriers);
 
 		if (jsonSummary.cart.gift == 1)
@@ -580,7 +580,7 @@
 		$('#go_order_process').attr('href', jsonSummary.link_order);
 		resetBind();
 	}
-						
+
 	function updateQty(id_product, id_product_attribute, qty)
 	{
 		$.ajax({
@@ -672,7 +672,7 @@
 			{
 					displaySummary(res);
 			}
-		});	
+		});
 	}
 
 	function updateCarrier()
@@ -729,9 +729,9 @@
 					$('#send_email_feedback').removeClass('error').addClass('conf');
 				$('#send_email_feedback').html(res.result);
 			}
-		});	
+		});
 	}
-	
+
 	function updateAddresses()
 	{
 		$.ajax({
@@ -756,7 +756,7 @@
 					$('#send_email_feedback').removeClass('error').addClass('conf');
 				$('#send_email_feedback').html(res.result);
 			}
-		});	
+		});
 	}
 </script>
 <fieldset id="customer_part"><legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
@@ -900,7 +900,7 @@
 		</select>
 		<div id="address_invoice_detail">
 		</div>
-	</div>	
+	</div>
 	<div>
 		<p><a class="fancybox" id="new_address" href="{$link->getAdminLink('AdminAddresses')}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new address'}</a></p>
 	</div>
