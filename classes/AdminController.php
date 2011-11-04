@@ -1188,8 +1188,8 @@ class AdminControllerCore extends Controller
 	 * @return void
 	 */
 	public function setHelperListDisplay(Helper $helper)
-	{ 
-		// @todo : move that in Helper 
+	{
+		// @todo : move that in Helper
 		$helper->actions = $this->actions;
 		$helper->simple_header = $this->list_simple_header;
 		$helper->title = $this->toolbar_title;

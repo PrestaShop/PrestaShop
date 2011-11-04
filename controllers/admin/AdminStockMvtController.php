@@ -199,6 +199,7 @@ class AdminStockMvtControllerCore extends AdminController
 	 	$this->table = 'stock_mvt';
 	 	$this->className = 'StockMvt';
 	 	$this->identifier = 'id_stock_mvt';
+	 	$this->show_toolbar = false;
 	 	$this->lang = false;
 
 	 	// test if a filter is applied for this list
