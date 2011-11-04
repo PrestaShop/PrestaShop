@@ -214,4 +214,7 @@
 	</script>
 
 	{/if}
+	{if isset($show_change_state_form)}
+		{$state_content}
+	{/if}
 {/block}
