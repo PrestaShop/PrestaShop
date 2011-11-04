@@ -50,7 +50,7 @@ function oosHookJsCode()
 }
 
 //add a combination of attributes in the global JS sytem
-function addCombination(idCombination, arrayOfIdAttributes, quantity, price, ecotax, id_image, reference, unit_price, minimal_quantity, available_date)
+function addCombination(idCombination, arrayOfIdAttributes, quantity, price, ecotax, id_image, reference, unit_price, minimal_quantity, available_date, combination_specific_price)
 {
 	globalQuantity += quantity;
 
@@ -65,8 +65,9 @@ function addCombination(idCombination, arrayOfIdAttributes, quantity, price, eco
 	combination['unit_price'] = unit_price;
 	combination['minimal_quantity'] = minimal_quantity;
 	combination['available_date'] = available_date;
+	combination['specific_price'] = new Array();
+	combination['specific_price'] = combination_specific_price;
 	combinations.push(combination);
-
 }
 
 // search the combinations' case of attributes and update displaying of availability, prices, ecotax, and image
@@ -111,6 +112,7 @@ function findCombination(firstTime)
 			quantityAvailable = combinations[combination]['quantity'];
 			selectedCombination['price'] = combinations[combination]['price'];
 			selectedCombination['unit_price'] = combinations[combination]['unit_price'];
+			selectedCombination['specific_price'] = combinations[combination]['specific_price'];
 			if (combinations[combination]['ecotax'])
 				selectedCombination['ecotax'] = combinations[combination]['ecotax'];
 			else
@@ -296,21 +298,56 @@ function updateDisplay()
 		var combination_add_price = selectedCombination['price'] * group_reduction;
 
 		var tax = (taxRate / 100) + 1;
-		var taxExclPrice = (specific_price ? (specific_currency ? specific_price : specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
 
-		if (specific_price)
+		var display_specific_price;
+		if (selectedCombination['specific_price'])
+		{
+			display_specific_price = selectedCombination['specific_price'].price;
+			if (selectedCombination['specific_price'].reduction_type == 'percentage')
+			{
+				$('#reduction_percent_display').html(selectedCombination['specific_price'].reduction*100);
+				$('#reduction_percent').show();
+			}
+			else
+				$('#reduction_percent').hide();
+		}
+		else
+		{
+			display_specific_price = specific_price;
+			if (display_specific_price)
+			{
+				if (product_specific_price.reduction_type == 'percentage')
+				{
+					$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction*100);			
+					$('#reduction_percent').show();
+				}
+				else
+					$('#reduction_percent').hide();
+				if (productPriceWithoutRedution < productPrice)
+					$('#old_price_display,#old_price_display_taxes').show();
+			}
+		}
+		
+		if (display_specific_price)
+			$('#discount_reduced_price,#old_price,#not_impacted_by_discount, #old_price_display, #old_price_display_taxes').show();
+		else
+			$('#discount_reduced_price,#old_price,#not_impacted_by_discount,#old_price_display,#old_price_display_taxes').hide();
+					
+		var taxExclPrice = (display_specific_price ? (specific_currency ? display_specific_price : display_specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
+
+		if (display_specific_price)
 			var productPriceWithoutReduction = priceTaxExclWithoutGroupReduction + selectedCombination['price'] * currencyRate;
 
 		if (!displayPrice && !noTaxForThisProduct)
 		{
 			var productPrice = taxExclPrice * tax;
-			if (specific_price)
+			if (display_specific_price)
 				productPriceWithoutReduction = ps_round(productPriceWithoutReduction * tax, 2);
 		}
 		else
 		{
 			var productPrice = ps_round(taxExclPrice, 2);
-			if (specific_price)
+			if (display_specific_price)
 				productPriceWithoutReduction = ps_round(productPriceWithoutReduction, 2);
 		}
 
@@ -322,7 +359,7 @@ function updateDisplay()
 				reduction = ps_round(reduction / tax, 6);
 		}
 
-		if (!specific_price)
+		if (!display_specific_price)
 			productPriceWithoutReduction = productPrice * group_reduction;
 
 

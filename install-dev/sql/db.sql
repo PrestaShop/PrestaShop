@@ -1505,6 +1505,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`id_currency` INT UNSIGNED NOT NULL,
 	`id_country` INT UNSIGNED NOT NULL,
 	`id_group` INT UNSIGNED NOT NULL,
+	`id_product_attribute` INT UNSIGNED NOT NULL,
 	`price` DECIMAL(20, 6) NOT NULL,
 	`from_quantity` SMALLINT UNSIGNED NOT NULL,
 	`reduction` DECIMAL(20, 6) NOT NULL,

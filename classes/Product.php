@@ -1846,8 +1846,7 @@ class ProductCore extends ObjectModel
 		$cacheId = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.$with_ecotax;
 
 		// reference parameter is filled before any returns
-		$specific_price = SpecificPrice::getSpecificPrice((int)($id_product), $id_shop, $id_currency, $id_country, $id_group, $quantity);
-
+		$specific_price = SpecificPrice::getSpecificPrice((int)($id_product), $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute);
 		if (isset(self::$_prices[$cacheId]))
 			return self::$_prices[$cacheId];
 

@@ -467,3 +467,7 @@ UPDATE `PREFIX_hook` SET `name` = 'actionAttributePostProcess' WHERE `name` = 'p
 UPDATE `PREFIX_hook` SET `name` = 'actionAttributeDelete' WHERE `name` = 'afterDeleteAttribute';
 UPDATE `PREFIX_hook` SET `name` = 'actionAttributeSave' WHERE `name` = 'afterSaveAttribute';
 UPDATE `PREFIX_hook` SET `name` = 'actionTaxManager' WHERE `name` = 'taxManager';
+
+ALTER TABLE `PREFIX_specific_price` ADD `id_product_attribute` INT UNSIGNED NOT NULL AFTER `id_product`;
+ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;
+ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_product` (`id_product`, `id_product_attribute`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`);
