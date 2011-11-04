@@ -88,7 +88,6 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initListManufacturer()
 	{
-		$this->toolbar_title = $this->l('List of manufacturers:');
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -113,7 +112,7 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 
 		
-		$this->toolbar_title = $this->l('Manufacturers addresses:');
+		$this->toolbar_title = $this->l('Addresses');
 		// reset actions and query vars
 		$this->actions = array();
 		unset($this->fieldsDisplay, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);

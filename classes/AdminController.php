@@ -263,6 +263,27 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * set default toolbar_title to admin breadcrumb
+	 * 
+	 * @return void
+	 */
+	public function initToolbarTitle()
+	{
+		// Breadcrumbs
+		$tabs= array();
+		$tabs= Tab::recursiveTab($this->id, $tabs);
+		$tabs= array_reverse($tabs);
+		$bread = '';
+		// note : this should use a tpl file
+		foreach ($tabs AS $key => $item)
+			$bread .= '<span class="breadcrumb item-'.$key.' ">'.$item['name'].'</span> : ';
+
+		$bread = rtrim($bread,  ': ');
+
+		$this->toolbar_title = $bread;
+	}
+
+	/**
 	 * Check rights to view the current tab
 	 *
 	 * @return boolean
@@ -1014,18 +1035,6 @@ class AdminControllerCore extends Controller
 			else
 				unset($tabs[$index]);
 		}
-		// Breadcrumbs
-		$home_token = Tools::getAdminToken('AdminHome'.intval(Tab::getIdFromClassName('AdminHome')).(int)$this->context->employee->id);
-		$tabs_breadcrumb = array();
-		$tabs_breadcrumb = Tab::recursiveTab($this->id, $tabs_breadcrumb);
-		$tabs_breadcrumb = array_reverse($tabs_breadcrumb);
-
-		foreach ($tabs_breadcrumb as $key => $item)
-		{
-			$tabs_count = count($tabs_breadcrumb) - 1;
-			for ($i = 0; $i < $tabs_count; $i++)
-				$tabs_breadcrumb[$key]['token'] = Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)$this->context->employee->id);
-		}
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
@@ -1066,8 +1075,6 @@ class AdminControllerCore extends Controller
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
-			'home_token' => $home_token,
-			'tabs_breadcrumb' => $tabs_breadcrumb,
 			'is_multishop' => $is_multishop,
 			'pic_dir' => _THEME_PROD_PIC_DIR_
 		));
@@ -1185,6 +1192,7 @@ class AdminControllerCore extends Controller
 				$this->actions[] = $action;
 		}
 
+		$helper->tpl_vars = $this->tpl_list_vars;
 		$this->setHelperListDisplay($helper);
 		return $helper->generateList($this->_list, $this->fieldsDisplay);
 	}
@@ -1204,6 +1212,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function setHelperListDisplay(Helper $helper)
 	{
+		if (empty($this->toolbar_title))
+			$this->initToolbarTitle();
 		// @todo : move that in Helper
 		$helper->actions = $this->actions;
 		$helper->simple_header = $this->list_simple_header;
