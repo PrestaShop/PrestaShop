@@ -37,9 +37,9 @@
 						{if $iso_is_fr}
 							<span style="color: #812143; font-weight: bold;">Questions / Renseignements / Formations :</span> <strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
 						{/if}
-						| <a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
-						| <a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
-						| <a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>	
+						|&nbsp;<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
+						|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
+						|&nbsp;<a href="http://www.prestashop.com/forums/" target="_blank" class="footer_link">{l s='Forum'}</a>	
 					</div>
 				</div>
 			</div>
@@ -53,5 +53,35 @@
 		}
 		</script>
 {/if}
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var placeholder = $(".toolbar-placeholder");
+			var message = $('.toolbarHead');
+			var view = $(window);
+
+			// bind only if placeholder exists
+			if (placeholder.length)
+				view.bind("scroll resize", function(e)
+				{
+					if(e.type == 'resize')
+						message.css('width', message.width());
+
+					var placeholderTop = placeholder.offset().top;
+					var viewTop = view.scrollTop() + 15;
+
+					if ((viewTop > placeholderTop) && !message.hasClass("fix-toolbar"))
+					{
+						message.css('width', message.width());
+						message.addClass("fix-toolbar");
+					}
+					else if ( (viewTop <= placeholderTop) && message.hasClass("fix-toolbar"))
+					{
+						message.css('width', 'auto');
+						message.removeClass("fix-toolbar");
+					}
+				});
+		});
+		</script>
 	</body>
 </html>

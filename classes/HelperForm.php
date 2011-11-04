@@ -103,7 +103,9 @@ class HelperFormCore extends Helper
 			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
 			'path_css' => _THEME_CSS_DIR_,
 			'ad' => dirname($_SERVER["PHP_SELF"]),
-			'show_toolbar' => $this->show_toolbar
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_fix' => $this->toolbar_fix,
+
 		));
 		return parent::generate();
 	}

@@ -329,7 +329,7 @@ class AdminTrackingController extends AdminController
 					  )
 					  AND quantity <= 0)';
 		$this->list_title = $this->l('Product out of stock');
-		$this->list_simple_header = 1;
+		$this->list_simple_header = true;
 
 		$list = $this->initList();
 		$this->_filter = '';
@@ -347,6 +347,7 @@ class AdminTrackingController extends AdminController
 		$this->_filter = 'AND active = 0';
 		$this->list_no_filter = true;
 		$this->list_title = $this->l('Product disabled');
+		$this->list_simple_header = true;
 		$list = $this->initList();
 		$this->_filter = '';
 		return $list;

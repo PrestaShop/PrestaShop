@@ -170,3 +170,4 @@ form.defaultForm{   background-color:#ebedf4; border:1px solid #ccced7; min-heig
 
 /*FOOTER*/
 #footer {height:40px;background:#ECEADE url(footer-bg.png) repeat-x scroll left bottom;border:1px solid #999999;font-size:12px;clear:both;font-size:0.9em;color:#666666}
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;}
