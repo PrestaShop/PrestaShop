@@ -80,6 +80,7 @@ class HelperFormCore extends Helper
 		$this->tpl->assign(array(
 			'submit_action' => $this->submit_action,
 			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->title,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,
 			'token' => $this->token,
