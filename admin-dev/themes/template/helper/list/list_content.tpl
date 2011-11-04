@@ -82,6 +82,8 @@
 				{$tr.$key}
 			{elseif isset($params.type) && $params.type == 'datetime'}
 				{$tr.$key}
+			{elseif isset($params.type) && $params.type == 'editable'}
+				<input type="text" name="{$key}" value="{$tr.$key}">
 			{elseif isset($params.callback)}
 				{$tr.$key}
 			{elseif isset($tr.$key) && $key == 'color'}
