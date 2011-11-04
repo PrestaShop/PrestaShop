@@ -331,7 +331,8 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (155, 'PS_ADVANCED_STOCK_MANAGEMENT', '1', NOW(), NOW()),
 (156, 'PS_ADMINREFRESH_NOTIFICATION', '1', NOW(), NOW()),
 (157, 'PS_STOCK_MVT_TRANSFER_TO', '6', NOW(), NOW()),
-(158, 'PS_STOCK_MVT_TRANSFER_FROM', '7', NOW(), NOW());
+(158, 'PS_STOCK_MVT_TRANSFER_FROM', '7', NOW(), NOW()),
+(159, 'PS_CARRIER_DEFAULT_ORDER', '0', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
