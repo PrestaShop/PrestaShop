@@ -375,6 +375,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					$this->addRowActionSkipList('edit', $this->_list[$i]['id_supplier_order']);
 				if ($this->_list[$i]['enclosed'] == 1)
 					$this->addRowActionSkipList('changestate', $this->_list[$i]['id_supplier_order']);
+				if (1 != $this->_list[$i]['pending_receipt'])
+					$this->addRowActionSkipList('updatereceipt', $this->_list[$i]['id_supplier_order']);
 			}
 		}
 	}
@@ -425,6 +427,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->addRowAction('changestate');
 		$this->addRowAction('details');
 		$this->addRowAction('view');
+		$this->addRowAction('updatereceipt');
 
 	 	// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
@@ -505,6 +508,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			st.editable,
 			st.enclosed,
 			st.receipt_state,
+			st.pending_receipt,
 			st.color AS color,
 			a.id_supplier_order as id_pdf';
 
@@ -653,6 +657,131 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	}
 
 	/**
+	 * Inits the content of 'update_receipt' action
+	 * Called in initContent()
+	 * @see AdminSuppliersOrders::initContent()
+	 */
+	public function initUpdateReceiptContent()
+	{
+		// change the display type in order to add specific actions to
+		$this->display = 'update_receipt';
+		// overrides parent::initContent();
+		$this->initToolbar();
+
+		$id_supplier_order = (int)Tools::getValue('id_supplier_order', null);
+
+		// if there is no order to fetch
+		if (null == $id_supplier_order)
+			return parent::initContent();
+
+		$supplier_order = new SupplierOrder($id_supplier_order);
+		// if it's not a valid order
+		if (!Validate::isLoadedObject($supplier_order))
+			return parent::initContent();
+
+		// re-defines fieldsDisplay
+		$this->fieldsDisplay = array(
+			'p_reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center',
+				'width' => 100,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'p_ean13' => array(
+				'title' => $this->l('EAN13'),
+				'align' => 'center',
+				'width' => 75,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'p_name' => array(
+				'title' => $this->l('Name'),
+				'width' => 350,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'quantity_received' => array(
+				'title' => $this->l('Quantity received'),
+				'align' => 'center',
+				'width' => 30,
+				'type' => 'editable',
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'quantity_expected' => array(
+				'title' => $this->l('Quantity expected'),
+				'align' => 'center',
+				'width' => 75,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			)
+		);
+
+		// defines which table we are using
+		unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
+		$this->table = 'supplier_order_detail';
+		$this->identifier = 'id_supplier_order_detail';
+	 	$this->className = 'SupplierOrderDetail';
+	 	// theme pruposes
+	 	$this->colorOnBackground = false;
+	 	// gets lang info
+		$this->lang = false;
+		$lang_id = (int)$this->context->language->id;
+
+		// gets values corresponding to fieldsDisplay
+		$this->_select = '
+		a.id_supplier_order_detail as id,
+		SUM(sorh.quantity) as quantity_received,
+		a.quantity as quantity_expected,
+		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
+		p.reference as p_reference,
+		p.ean13 as p_ean13';
+		$this->_join = '
+		LEFT JOIN '._DB_PREFIX_.'supplier_order_receipt_history sorh ON (sorh.id_supplier_order_detail = a.id_supplier_order_detail)
+		INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
+		LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
+		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
+		LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
+		LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
+		LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
+		$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
+		$this->_group = 'GROUP BY a.id_supplier_order_detail';
+
+		// gets the list ordered by price desc, without limit
+		$this->getList($lang_id, 'quantity', 'DESC', 0, false, false);
+
+		// defines action for POST
+		$action = '&id_supplier_order='.$id_supplier_order.'&submitUpdateReceipt';
+		// renders list
+		$helper = new HelperList();
+		$helper->simple_header = true;
+		$helper->table = $this->table;
+		$helper->no_link = true;
+		$helper->shopLinkType = '';
+		$helper->currentIndex = self::$currentIndex.$action;
+		$helper->token = $this->token;
+		$helper->identifier = $this->identifier;
+
+		// display these global order informations
+		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
+
+		// generates content
+		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+
+		// assigns var
+		$this->context->smarty->assign(array(
+			'content' => $content,
+			'supplier_order_reference' => $supplier_order->reference
+		));
+	}
+
+	/**
 	 * AdminController::initContent() override
 	 * @see AdminController::initContent()
 	 */
@@ -661,6 +790,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		// Manage the add stock form
 		if (Tools::isSubmit('changestate'))
 			$this->initChangeStateContent();
+		else if (Tools::isSubmit('update_receipt') && Tools::isSubmit('id_supplier_order'))
+			$this->initUpdateReceiptContent();
 		else if (Tools::isSubmit('viewsupplier_order') && Tools::isSubmit('id_supplier_order'))
 		{
 			$this->display = 'view';
@@ -816,6 +947,27 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
     /**
 	 * Display state action link
+	 * @param string $token the token to add to the link
+	 * @param int $id the identifier to add to the link
+	 * @return string
+	 */
+    public function displayUpdateReceiptLink($token = null, $id)
+    {
+        if (!array_key_exists('Receipt', self::$cache_lang))
+            self::$cache_lang['Receipt'] = $this->l('Update on-going receptions');
+
+        $this->context->smarty->assign(array(
+            'href' => self::$currentIndex.
+            	'&'.$this->identifier.'='.$id.
+            	'&update_receipt&token='.($token != null ? $token : $this->token),
+            'action' => self::$cache_lang['Receipt'],
+        ));
+
+        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supplier_order_receipt.tpl');
+    }
+
+    /**
+	 * Display receipt action link
 	 * @param string $token the token to add to the link
 	 * @param int $id the identifier to add to the link
 	 * @return string
@@ -1142,7 +1294,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$supplier_order_state = new SupplierOrderState($supplier_order->id_supplier_order_state);
 		if (!Validate::isLoadedObject($supplier_order_state))
 			return;
-
 
 		if ($supplier_order_state->editable == false && $supplier_order_state->delivery_note == true)
 			$content .= '<a href="#"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
