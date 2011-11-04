@@ -42,29 +42,53 @@ class HelperCore
 	public $no_back = false;
 	public $context;
 
+	/** @var string Helper tpl folder */
+	public $base_folder;
+
+	/** @var string Controller tpl folder */
+	public $override_folder;
+
 	/**
-	 * @var string filename, then smartyTemplate object
+	 * @var smartyTemplate base template object
 	 */
-	protected $tpl = 'content.tpl';
-	
+	protected $tpl;
+
+	/**
+	 * @var string base template name
+	 */
+	protected $base_tpl = 'content.tpl';
+
 	public $tpl_vars = array();
 
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-		$this->tpl = $this->context->smarty->createTemplate($this->tpl);
-	}
-	
 
-	public function setTpl($tpl)
+	}
+
+	/*public function setTpl($tpl)
 	{
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
-			$this->tpl = $this->context->smarty->createTemplate($tpl);
+		$this->tpl = $this->createTemplate($tpl);
+	}*/
+
+	/**
+	 * Create a template from the override file, else from the base file.
+	 *
+	 * @param string $tpl_name filename
+	 * @return Template
+	 */
+	public function createTemplate($tpl_name)
+	{
+		// Overrides exists?
+		if ($this->override_folder && file_exists($this->context->smarty->template_dir[0].$this->override_folder.$tpl_name))
+			return $this->context->smarty->createTemplate($this->override_folder.$tpl_name);
+
+		return $this->context->smarty->createTemplate($this->base_folder.$tpl_name);
 	}
 
 	/**
 	 * default behaviour for helper is to return a tpl fetched
-	 * 
+	 *
 	 * @return void
 	 */
 	public function generate()
@@ -72,7 +96,6 @@ class HelperCore
 		$this->tpl->assign($this->tpl_vars);
 		return $this->tpl->fetch();
 	}
-
 
 	/**
 	 *

@@ -124,7 +124,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			t.rate';
 
 		$this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` c 
+			LEFT JOIN `'._DB_PREFIX_.'country_lang` c
 				ON (a.`id_country` = c.`id_country` AND id_lang = '.(int)$this->context->language->id.')
 			LEFT JOIN `'._DB_PREFIX_.'state` s
 				ON (a.`id_state` = s.`id_state`)
@@ -332,9 +332,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->getlanguages();
 		$helper = new HelperForm();
-		// Check if form template has been overriden
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
-			$helper->setTpl($this->tpl_folder.'form.tpl');
+		$helper->override_tpl = $this->tpl_folder;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		$helper->table = 'tax_rule';

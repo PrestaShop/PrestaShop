@@ -1230,7 +1230,7 @@ class AdminControllerCore extends Controller
 		$helper->shopLink = $this->shopLink;
 		$helper->shopLinkType = $this->shopLinkType;
 		$helper->identifier = $this->identifier;
-		$helper->tpl_folder = $this->tpl_folder;
+		$helper->override_folder = $this->tpl_folder;
 		$helper->token = $this->token;
 		$helper->specificConfirmDelete = $this->specificConfirmDelete;
 		$helper->imageType = $this->imageType;
@@ -1254,9 +1254,7 @@ class AdminControllerCore extends Controller
 		{
 			$this->getlanguages();
 			$helper = new HelperForm($this);
-			// Check if form template has been overriden
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form.tpl'))
-				$helper->setTpl($this->tpl_folder.'form.tpl');
+			$helper->override_folder = $this->tpl_folder;
 			$helper->currentIndex = self::$currentIndex;
 			$helper->token = $this->token;
 			$helper->table = $this->table;
@@ -1288,9 +1286,7 @@ class AdminControllerCore extends Controller
 		if ($this->options && is_array($this->options))
 		{
 			$helper = new HelperOptions();
-			// Check if form template has been overriden
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'options.tpl'))
-				$helper->setTpl($this->tpl_folder.'options.tpl');
+			$helper->override_folder = $this->tpl_folder;
 			$helper->id = $this->id;
 			$helper->token = $this->token;
 			$helper->shopLinkType = $this->shopLinkType;

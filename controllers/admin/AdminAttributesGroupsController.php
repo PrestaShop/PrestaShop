@@ -485,7 +485,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			/* Hook */
 			Hook::exec('actionObjectAttributeGroupAddBefore');
-			
+
 			if (Tools::getValue('submitDel'.$this->table))
 			{
 			 	if ($this->tabAccess['delete'] === '1')

@@ -27,9 +27,7 @@
 
 class HelperFormCore extends Helper
 {
-
 	public $id;
-
 	public $first_call = true;
 	public $toolbar = true;
 
@@ -39,9 +37,7 @@ class HelperFormCore extends Helper
 	 *
 	 */
 	protected $fields_form = array();
-
 	public $fields_value = array();
-
 	public $table;
 
 	/**
@@ -51,12 +47,16 @@ class HelperFormCore extends Helper
 	public $submit_action = '';
 
 	public $token;
-
 	public $languages = null;
 	public $default_form_language = null;
 	public $allow_employee_form_lang = null;
 
-	protected $tpl = 'helper/form/form.tpl';
+	public function __construct()
+	{
+		$this->base_folder = 'helper/form/';
+		$this->base_tpl = 'form.tpl';
+		parent::__construct();
+	}
 
 	public function generateForm($fields_form)
 	{
@@ -66,6 +66,7 @@ class HelperFormCore extends Helper
 
 	public function generate()
 	{
+		$this->tpl = $this->createTemplate($this->base_tpl);
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
