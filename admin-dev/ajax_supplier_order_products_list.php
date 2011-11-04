@@ -50,6 +50,7 @@ $query->select('
 	CONCAT(p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\')) as id,
 	p.reference,
 	p.ean13,
+	md5(CONCAT(\''._COOKIE_KEY_.'\', p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\'))) as checksum,
 	IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name
 ');
 $query->from('product p');

@@ -269,7 +269,7 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * set default toolbar_title to admin breadcrumb
-	 * 
+	 *
 	 * @return void
 	 */
 	public function initToolbarTitle()
@@ -356,12 +356,12 @@ class AdminControllerCore extends Controller
 
 			// Sub included tab postProcessing
 			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
-						
+
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 				$this->{'process'.Tools::toCamelCase($this->action)}($token);
 			else if (method_exists($this, $this->action))
 				call_user_func(array($this, $this->action), $this->boxes);
-			
+
 			/* Manage list filtering */
 			if ($this->filter)
 			{
@@ -429,7 +429,7 @@ class AdminControllerCore extends Controller
 			}
 		}
 	}
-		
+
 	/**
 	 * Object Delete images
 	 *
@@ -450,9 +450,9 @@ class AdminControllerCore extends Controller
 		}
 		$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
 	}
-	
+
 	/**
-	 * Object Delete 
+	 * Object Delete
 	 *
 	 * @param string $token
 	 */
@@ -492,7 +492,7 @@ class AdminControllerCore extends Controller
 				Tools::displayError('(cannot load object)');
 		}
 	}
-		
+
 	/**
 	 * Object update and creation
 	 * TODO: split processAdd and processUpdate
@@ -614,7 +614,7 @@ class AdminControllerCore extends Controller
 		}
 		$this->_errors = array_unique($this->_errors);
 	}
-	
+
 	/**
 	 * Change object required fields
 	 *
@@ -631,7 +631,7 @@ class AdminControllerCore extends Controller
 		else
 			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
 	}
-	
+
 	/**
 	 * Change object statuts (active, inactive)
 	 *
@@ -654,7 +654,7 @@ class AdminControllerCore extends Controller
 				' <b>'.$this->table.'</b> '.
 				Tools::displayError('(cannot load object)');
 	}
-	
+
 	/**
 	 * Change object position
 	 *
@@ -676,7 +676,7 @@ class AdminControllerCore extends Controller
 			Tools::redirectAdmin($redirect);
 		}
 	}
-	
+
 	/**
 	 * Cancel all filters for this tab
 	 *
@@ -710,7 +710,7 @@ class AdminControllerCore extends Controller
 		unset($_POST);
 		$this->filter = false;
 	}
-	
+
 	/**
 	 * Update options and preferences
 	 *
@@ -2280,7 +2280,7 @@ EOF;
 		return $html;
 	}
 
-	
+
 
 	/**
 	 * Overload this method for custom checking
