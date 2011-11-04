@@ -50,6 +50,9 @@
 			{else}
 				>
 			{/if}
+			{if isset($params.color) && isset($tr[$params.color])}
+				<span class="color_field" style="background-color: {$tr.color}">
+			{/if}
 			{if isset($params.active)}
 				{$tr.$key}
 			{elseif isset($params.activeVisu)}
@@ -89,6 +92,9 @@
 				--
 			{/if}
 			{if isset($params.suffix)}{$params.suffix}{/if}
+			{if isset($params.color) && isset($tr.color)}
+				</span>
+			{/if}
 			</td>
 		{/foreach}
 
