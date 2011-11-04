@@ -794,6 +794,7 @@ class AdminProductsController extends AdminController
 				{
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = $id_product;
+					$specificPrice->id_product_attribute = (int)Tools::getValue('id_product_attribute');
 					$specificPrice->id_shop = (int)$id_shop;
 					$specificPrice->id_currency = (int)($id_currency);
 					$specificPrice->id_country = (int)($id_country);
@@ -1908,15 +1909,37 @@ switch ($this->action)
 		$content = '';
 		if ($obj->id)
 		{
-			$this->context->smarty->assign('shops', $shops = Shop::getShops());
-			$this->context->smarty->assign('currencies', $currencies = Currency::getCurrencies());
-			$this->context->smarty->assign('countries', $countries = Country::getCountries($this->context->language->id));
-			$this->context->smarty->assign('groups', $groups = Group::getGroups($this->context->language->id));
-//			$currencies = Currency::getCurrencies();
-//			$countries = Country::getCountries($this->context->language->id);
-			//$groups = Group::getGroups($this->context->language->id);
-			$content .= $this->_displaySpecificPriceAdditionForm( $this->context->currency, $shops, $currencies, $countries, $groups);
-			$content .= $this->_displaySpecificPriceModificationForm( $this->context->currency, $shops, $currencies, $countries, $groups);
+			$shops = Shop::getShops();
+			$countries = Country::getCountries($this->context->language->id);
+			$groups = Group::getGroups($this->context->language->id);
+			$currencies = Currency::getCurrencies();
+			$currency = 
+			$attributes = $obj->getAttributesGroups((int)$this->context->language->id);
+			$combinations = array();
+			foreach($attributes as $attribute)
+			{
+				$combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
+				if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
+					$combinations[$attribute['id_product_attribute']]['attributes'] = '';
+				$combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
+				
+				$combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(Tools::convertPrice(Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']), $this->context->currency), $this->context->currency);
+			}
+			foreach ($combinations as &$combination)
+				$combination['attributes'] = rtrim($combination['attributes'], ' - ');
+
+			$this->context->smarty->assign(array(
+															'shops' => $shops,
+															'currencies' => $currencies,
+															'countries' => $countries,
+															'groups' => $groups,
+															'combinations' => $combinations,
+															'product' => $obj
+															)
+														);
+
+			$content .= $this->_displaySpecificPriceAdditionForm($this->context->currency, $shops, $currencies, $countries, $groups);
+			$content .= $this->_displaySpecificPriceModificationForm($this->context->currency, $shops, $currencies, $countries, $groups);
 		}
 		else
 			$content .= '<b>'.$this->l('You must save this product before adding specific prices').'.</b>';
@@ -1967,6 +1990,7 @@ switch ($this->action)
 		<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
+					<th class="cell border" style="width: 12%;">'.$this->l('Combination').'</th>
 					<th class="cell border" style="width: 12%;">'.$this->l('Shop').'</th>
 					<th class="cell border" style="width: 12%;">'.$this->l('Currency').'</th>
 					<th class="cell border" style="width: 11%;">'.$this->l('Country').'</th>
@@ -2000,8 +2024,20 @@ switch ($this->action)
 					$period = $this->l('Unlimited');
 				else
 					$period = $this->l('From').' '.($specificPrice['from'] != '0000-00-00 00:00:00' ? $specificPrice['from'] : '0000-00-00 00:00:00').'<br />'.$this->l('To').' '.($specificPrice['to'] != '0000-00-00 00:00:00' ? $specificPrice['to'] : '0000-00-00 00:00:00');
+				if ($specificPrice['id_product_attribute'])
+				{
+					$combination = new Combination((int)$specificPrice['id_product_attribute']);
+					$attributes = $combination->getAttributesName((int)$this->context->language->id);
+					$attributes_name = '';
+					foreach ($attributes as $attribute)
+						$attributes_name .= $attribute['name'].' - ';
+					$attributes_name = rtrim($attributes_name, ' - ');
+				}
+				else
+					$attributes_name = $this->l('All combinations');
 				$content .= '
 				<tr '.($i%2 ? 'class="alt_row"' : '').'>
+					<td class="cell border">'.$attributes_name.'</td>
 					<td class="cell border">'.($specificPrice['id_shop'] ? $shops[$specificPrice['id_shop']]['name'] : $this->l('All shops')).'</td>
 					<td class="cell border">'.($specificPrice['id_currency'] ? $currencies[$specificPrice['id_currency']]['name'] : $this->l('All currencies')).'</td>
 					<td class="cell border">'.($specificPrice['id_country'] ? $countries[$specificPrice['id_country']]['name'] : $this->l('All countries')).'</td>
@@ -2098,7 +2134,7 @@ switch ($this->action)
 				<span id="spm_currency_sign_pre_0" style="font-weight:bold; color:#000000; font-size:12px">'.($defaultCurrency->format == 1 ? ' '.$defaultCurrency->sign : '').'</span>
 				<input type="text" name="sp_price" value="0" size="11" />
 				<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">'.($defaultCurrency->format == 2 ? ' '.$defaultCurrency->sign : '').'</span>
-				<span id="sp_current_ht_price" > ('.$this->l('Current:').' '.Tools::displayPrice((float)($product->price), $defaultCurrency).')</span>
+				<span>('.$this->l('Current:').' </span><span id="sp_current_ht_price">'.Tools::displayPrice((float)($product->price), $defaultCurrency).'</span> )</span>
 				<div class="hint clear" style="display:block;">
 					'.$this->l('You can set this value at 0 in order to apply the default price').'
 				</div>

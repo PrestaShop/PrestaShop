@@ -28,6 +28,7 @@
 class SpecificPriceCore extends ObjectModel
 {
 	public	$id_product;
+	public	$id_product_attribute;
 	public	$id_shop;
 	public	$id_currency;
 	public	$id_country;
@@ -40,7 +41,7 @@ class SpecificPriceCore extends ObjectModel
 	public	$to;
 
  	protected 	$fieldsRequired = array('id_product', 'id_shop', 'id_currency', 'id_country', 'id_group', 'price', 'from_quantity', 'reduction', 'reduction_type', 'from', 'to');
- 	protected 	$fieldsValidate = array('id_group_shop' => 'isUnsignedId', 'id_product' => 'isUnsignedId', 'id_shop' => 'isUnsignedId', 'id_country' => 'isUnsignedId', 'id_group' => 'isUnsignedId', 'price' => 'isPrice', 'from_quantity' => 'isUnsignedInt', 'reduction' => 'isPrice', 'reduction_type' => 'isReductionType', 'from' => 'isDateFormat', 'to' => 'isDateFormat');
+ 	protected 	$fieldsValidate = array('id_group_shop' => 'isUnsignedId', 'id_product' => 'isUnsignedId', 'id_product_attribute' => 'isUnsignedId', 'id_shop' => 'isUnsignedId', 'id_country' => 'isUnsignedId', 'id_group' => 'isUnsignedId', 'price' => 'isPrice', 'from_quantity' => 'isUnsignedInt', 'reduction' => 'isPrice', 'reduction_type' => 'isReductionType', 'from' => 'isDateFormat', 'to' => 'isDateFormat');
 
 	protected 	$table = 'specific_price';
 	protected 	$identifier = 'id_specific_price';
@@ -52,6 +53,7 @@ class SpecificPriceCore extends ObjectModel
 	{
 		$this->validateFields();
 		$fields['id_product'] = (int)$this->id_product;
+		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_shop'] = (int)$this->id_shop;
 		$fields['id_currency'] = (int)$this->id_currency;
 		$fields['id_country'] = (int)$this->id_country;
@@ -138,17 +140,16 @@ class SpecificPriceCore extends ObjectModel
 	    return preg_split('/;/', $priority);
     }
 
-	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity)
+	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null)
 	{
 		if (!self::isFeatureActive())
 			return array();
-
 		/*
 		** The date is not taken into account for the cache, but this is for the better because it keeps the consistency for the whole script.
 		** The price must not change between the top and the bottom of the page
 		*/
 
-		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity);
+		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute);
 		if (!array_key_exists($key, self::$_specificPriceCache))
 		{
 			$now = date('Y-m-d H:i:s');
@@ -156,6 +157,7 @@ class SpecificPriceCore extends ObjectModel
 				SELECT *, '.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 				FROM `'._DB_PREFIX_.'specific_price`
 				WHERE `id_product` IN (0, '.(int)$id_product.')
+				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
 				AND `id_shop` IN (0, '.(int)$id_shop.')
 				AND `id_currency` IN (0, '.(int)$id_currency.')
 				AND `id_country` IN (0, '.(int)$id_country.')
@@ -203,7 +205,7 @@ class SpecificPriceCore extends ObjectModel
 		');
 	}
 
-	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group)
+	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -213,7 +215,9 @@ class SpecificPriceCore extends ObjectModel
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 			FROM `'._DB_PREFIX_.'specific_price`
-			WHERE   `id_product` IN(0, '.(int)$id_product.') AND
+			WHERE   
+					`id_product` IN(0, '.(int)$id_product.') AND
+					`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND
 					`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
 					`id_country` IN(0, '.(int)$id_country.') AND
@@ -245,7 +249,7 @@ class SpecificPriceCore extends ObjectModel
 		return $targeted_prices;
 	}
 
-	public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity)
+	public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -255,7 +259,9 @@ class SpecificPriceCore extends ObjectModel
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
 			FROM `'._DB_PREFIX_.'specific_price`
-			WHERE	`id_product` IN(0, '.(int)$id_product.') AND
+			WHERE	
+					`id_product` IN(0, '.(int)$id_product.') AND
+					`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND
 					`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
 					`id_country` IN(0, '.(int)$id_country.') AND

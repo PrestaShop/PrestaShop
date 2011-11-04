@@ -52,6 +52,10 @@ var productPriceTaxExcluded = {$product->getPriceWithoutReduct(true)|default:'nu
 var reduction_percent = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
 var reduction_price = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction}{else}0{/if};
 var specific_price = {if $product->specificPrice AND $product->specificPrice.price}{$product->specificPrice.price}{else}0{/if};
+var product_specific_price = new Array();
+{foreach from=$product->specificPrice key='key_specific_price' item='specific_price_value'}
+	product_specific_price['{$key_specific_price}'] = '{$specific_price_value}';
+{/foreach}
 var specific_currency = {if $product->specificPrice AND $product->specificPrice.id_currency}true{else}false{/if};
 var group_reduction = '{$group_reduction}';
 var default_eco_tax = {$product->ecotax};
@@ -65,6 +69,17 @@ var productAvailableForOrder = {if (isset($restricted_country_mode) AND $restric
 var productShowPrice = '{if !$PS_CATALOG_MODE}{$product->show_price}{else}0{/if}';
 var productUnitPriceRatio = '{$product->unit_price_ratio}';
 var idDefaultImage = {if isset($cover.id_image_only)}{$cover.id_image_only}{else}0{/if};
+
+{if !$priceDisplay || $priceDisplay == 2}
+	{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 2)}
+	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+{elseif $priceDisplay == 1}
+	{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 2)}
+	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+{/if}
+
+var productPriceWithoutRedution = '{$productPriceWithoutRedution}';
+var product_price = '{$productPrice}';
 
 // Customizable field
 var img_ps_dir = '{$img_ps_dir}';
@@ -104,11 +119,16 @@ var doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
 var doesntExistNoMoreBut = '{l s='with those attributes but is available with others' js=1}';
 var uploading_in_progress = '{l s='Uploading in progress, please wait...' js=1}';
 var fieldRequired = '{l s='Please fill in all required fields, then save the customization.' js=1}';
-
 {if isset($groups)}
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
-		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date}');
+		var specific_price_combination = new Array();
+		{if $combination.specific_price}
+			{foreach from=$combination.specific_price key='specific_price_key' item='combination_specific_price'}
+				specific_price_combination['{$specific_price_key}'] = '{$combination_specific_price}';
+			{/foreach}
+		{/if}
+		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date}', specific_price_combination);
 	{/foreach}
 {/if}
 
@@ -231,19 +251,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<!-- prices -->
 			{if $product->show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
 				<p class="price">
-					{if !$priceDisplay || $priceDisplay == 2}
-						{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 2)}
-						{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
-					{elseif $priceDisplay == 1}
-						{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 2)}
-						{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
-					{/if}
 					{if $product->on_sale}
 						<img src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
 						<span class="on_sale">{l s='On sale!'}</span>
-					{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutRedution > $productPrice}
-						<span class="discount">{l s='Reduced price!'}</span>
 					{/if}
+					<span style="{if !$product->specificPrice AND !$product->specificPrice.reduction AND $productPriceWithoutRedution < $productPrice}display:none;{/if}" id="discount_reduced_price" class="discount">{l s='Reduced price!'}</span>
 					<br />
 					<span class="our_price_display">
 					{if $priceDisplay >= 0 && $priceDisplay <= 2}
@@ -259,31 +271,27 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 					{/if}
 					<br />
 				</p>
-				{if $product->specificPrice AND $product->specificPrice.reduction}
-					<p id="old_price"><span class="bold">
-					{if $priceDisplay >= 0 && $priceDisplay <= 2}
-						{if $productPriceWithoutRedution > $productPrice}
-							<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
-								{if $tax_enabled && $display_tax_label == 1}
-									{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-								{/if}
+				
+				<p style="{if !$product->specificPrice AND !$product->specificPrice.reduction}display:none;{/if}" id="old_price">
+					<span class="bold">
+						{if $priceDisplay >= 0 && $priceDisplay <= 2}
+							<span style="{if $productPriceWithoutRedution < $productPrice}display:none;{/if}" id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
+							{if $tax_enabled && $display_tax_label == 1}
+								<span style="{if $productPriceWithoutRedution < $productPrice}display:none;{/if}" id="old_price_display_taxes">{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}</span>
+							{/if}
 						{/if}
-					{/if}
 					</span>
-					</p>
-
-				{/if}
-				{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}
-					<p id="reduction_percent">{l s='(price reduced by'} <span id="reduction_percent_display">{$product->specificPrice.reduction*100}</span> %{l s=')'}</p>
-				{/if}
+				</p>
+				<p style="{if !$product->specificPrice AND !$product->specificPrice.reduction_type == 'percentage'}display:none;{/if}" id="reduction_percent">{l s='(price reduced by'} <span id="reduction_percent_display">{$product->specificPrice.reduction*100}</span> %{l s=')'}</p>
 				{if $packItems|@count}
 					<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
 					<br class="clear" />
 				{/if}
 				{if $product->ecotax != 0}
 					<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
-						{if $product->specificPrice AND $product->specificPrice.reduction}
-						<br />{l s='(not impacted by the discount)'}
+						
+						<br />
+						<span style="{if !$product->specificPrice AND !$product->specificPrice.reduction}display:none;{/if}" id="not_impacted_by_discount">{l s='(not impacted by the discount)'}</span>
 						{/if}
 					</p>
 				{/if}
@@ -576,6 +584,3 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		{include file="$tpl_dir./product-list.tpl" products=$packItems}
 	</div>
 {/if}
-
-{/if}
-

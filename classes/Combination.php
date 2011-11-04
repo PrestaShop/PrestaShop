@@ -179,6 +179,14 @@ class CombinationCore extends ObjectModel
 		);
 		return true;
 	}
+	
+	public function getAttributesName($id_lang)
+	{
+		return Db::getInstance()->executeS('SELECT al.*
+														FROM '._DB_PREFIX_.'product_attribute_combination pac
+														JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
+														WHERE pac.id_product_attribute='.(int)$this->id);
+	}
 
 	/**
 	 * This method is allow to know if a feature is active

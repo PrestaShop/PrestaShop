@@ -1,3 +1,9 @@
+<script type="text/javascript">
+var product_prices = new Array();
+{foreach from=$combinations item='combination'}
+	product_prices['{$combination.id_product_attribute}'] = '{$combination.price}';
+{/foreach}
+</script>
 <a href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" />{l s='Add a new specific price'}</a>
 <div id="add_specific_price" style="display: none;">
 	<input type="hidden" name="sp_id_shop" value="0" />
@@ -31,7 +37,17 @@
 		{/foreach}
 		</select>
 	</div>
-
+	{if $combinations|@count != 0}
+		<label>{l s='Combination:'}</label>
+		<div class="margin-form">
+			<select id="id_product_attribute" name="id_product_attribute">
+				<option value="0">{l s='Apply to all combinations'}</option>
+				{foreach from=$combinations item='combination'}
+					<option value="{$combination.id_product_attribute}">{$combination.attributes}</option>
+				{/foreach}
+			</select>
+		</div>
+	{/if}
 	<label>{l s='Available from:'}</label>
 	<div class="margin-form">
 		<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" /><span style="font-weight:bold; color:#000000; font-size:12px"> {l s='to'}</span>
@@ -44,7 +60,11 @@
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function(){
-				$(".datepicker").datepicker({
+				product_prices['0'] = $('#sp_current_ht_price').html();
+				$('#id_product_attribute').change(function() {
+					$('#sp_current_ht_price').html(product_prices[$('#id_product_attribute option:selected').val()]);
+				});
+				$('.datepicker').datepicker({
 					prevText: '',
 					nextText: ''
 				});
