@@ -67,7 +67,7 @@ class AdminCatalogController extends AdminController
 		}
 		self::$_category = new Category($id_category);
 		if (!Validate::isLoadedObject(self::$_category))
-			die('Category cannot be loaded');
+			throw new PrestashopException('Category cannot be loaded');
 
 		$this->table = array('category', 'product');
 		// $this->adminCategories = new AdminCategories();

@@ -37,8 +37,3 @@
 </table>
 <input type="hidden" name="token" value="{$token}" />
 </form>
-
-{*
-if (isset($this->_includeTab) AND sizeof($this->_includeTab))
-	echo '<br /><br />';
-*}

@@ -102,6 +102,9 @@ class AdminControllerCore extends Controller
 	/** @var array list of toolbar buttons */
 	protected $toolbar_btn = null;
 
+	/** @var array list of toolbar buttons */
+	protected $toolbar_fix = true;
+
 	/** @var boolean set to false to hide toolbar and page title */
 	protected $show_toolbar = true;
 
@@ -272,10 +275,21 @@ class AdminControllerCore extends Controller
 	public function initToolbarTitle()
 	{
 		// Breadcrumbs
-		$tabs= array();
-		$tabs= Tab::recursiveTab($this->id, $tabs);
-		$tabs= array_reverse($tabs);
+		$tabs = array();
+		$tabs = Tab::recursiveTab($this->id, $tabs);
+		$tabs = array_reverse($tabs);
 		$bread = '';
+		switch ($this->display)
+		{
+			case 'edit':
+				array_pop($tabs);
+				$tabs[] = array('name' => sprintf($this->l('Edit %s'), $this->table));
+				break;
+			case 'add':
+				array_pop($tabs);
+				$tabs[] = array('name' => sprintf($this->l('Add %s'), $this->table));
+					break;
+		}
 		// note : this should use a tpl file
 		foreach ($tabs AS $key => $item)
 			$bread .= '<span class="breadcrumb item-'.$key.' ">'.$item['name'].'</span> : ';
@@ -1307,8 +1321,10 @@ class AdminControllerCore extends Controller
 		}
 
 		$helper->tpl_vars = $this->tpl_list_vars;
-		$this->setHelperListDisplay($helper);
-		return $helper->generateList($this->_list, $this->fieldsDisplay);
+		$this->setHelperDisplay($helper);
+		$list = $helper->generateList($this->_list, $this->fieldsDisplay);
+		$this->toolbar_fix = false;
+		return $list;
 	}
 
 	/**
@@ -1324,16 +1340,21 @@ class AdminControllerCore extends Controller
 	 * @param Helper $helper
 	 * @return void
 	 */
-	public function setHelperListDisplay(Helper $helper)
+	public function setHelperDisplay(Helper $helper)
 	{
 		if (empty($this->toolbar_title))
 			$this->initToolbarTitle();
+		// tocheck
+		if ($this->object && $this->object->id)
+			$helper->id = $this->object->id;
+
 		// @todo : move that in Helper
 		$helper->actions = $this->actions;
 		$helper->simple_header = $this->list_simple_header;
 		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->show_toolbar = $this->show_toolbar;
+		$helper->toolbar_fix = $this->toolbar_fix;
 		$helper->bulk_actions = $this->bulk_actions;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->className = $this->className;
@@ -1371,19 +1392,11 @@ class AdminControllerCore extends Controller
 			$this->getlanguages();
 			$helper = new HelperForm($this);
 			$helper->override_folder = $this->tpl_folder;
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->table = $this->table;
-			$helper->identifier = $this->identifier;
-			$helper->id = $this->object->id;
+			$this->setHelperDisplay($helper);
 			$helper->languages = $this->_languages;
 			$helper->default_form_language = $this->default_form_language;
 			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 			$helper->fields_value = $this->getFieldsValue($this->object);
-			$helper->toolbar_btn = $this->toolbar_btn;
-			$helper->title = $this->toolbar_title;
-			$helper->show_toolbar = $this->show_toolbar;
-			$helper->no_back = isset($this->no_back) ? $this->no_back : false;
 			$helper->tpl_vars = $this->tpl_form_vars;
 			if ($this->tabAccess['view'])
 			{
@@ -1392,7 +1405,9 @@ class AdminControllerCore extends Controller
 				else
 					$helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token));
 			}
-			return $helper->generateForm($this->fields_form);
+			$form = $helper->generateForm($this->fields_form);
+			$this->toolbar_fix = false;
+			return $form;
 		}
 	}
 

@@ -589,6 +589,7 @@ class HelperListCore extends Helper
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
 			'show_toolbar' => $this->show_toolbar,
+			'toolbar_fix' => $this->toolbar_fix,
 
 			'back' => Tools::getValue('back'),
 			'no_back' => $this->no_back,
