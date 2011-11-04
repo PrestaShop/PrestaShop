@@ -1127,6 +1127,12 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * Callback used to display custom content for a given field
+	 * @param int $id_supplier_order
+	 * @param string $tr
+	 * @return string $content
+	 */
 	public function printPDFIcons($id_supplier_order, $tr)
 	{
 		$supplier_order = new SupplierOrder((int)$id_supplier_order);
@@ -1151,7 +1157,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 * Assigns default actions in toolbar_btn smarty var, if they are not set.
 	 * uses override to specifically add, modify or remove items
 	 * @see AdminSupplier::initToolbar()
-	 *
 	 */
 	public function initToolbar()
 	{
