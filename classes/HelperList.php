@@ -319,7 +319,7 @@ class HelperListCore extends Helper
 			}
 		}
 
-		$this->content_tpl->assign(array(
+		$this->content_tpl->assign(array_merge($this->tpl_vars, array(
 			'shop_link_type' => $this->shopLinkType,
 			'name' => isset($name) ? $name : null,
 			'is_dnd_identifier' => $this->is_dnd_identifier,
@@ -344,8 +344,7 @@ class HelperListCore extends Helper
 			'has_actions' => !empty($this->actions),
 			'has_bulk_actions' => !empty($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
-			'tpl_vars' => $this->tpl_vars
-		));
+		)));
 		return $this->content_tpl->fetch();
 	}
 
@@ -565,8 +564,8 @@ class HelperListCore extends Helper
 			$params['value'] = $value;
 			$this->fieldsDisplay[$key] = $params;
 		}
-
-		$this->header_tpl->assign(array(
+		
+		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
 			'table' => $this->table,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
@@ -597,8 +596,7 @@ class HelperListCore extends Helper
 
 			'back' => Tools::getValue('back'),
 			'no_back' => $this->no_back,
-			'tpl_vars' => $this->tpl_vars,
-		));
+		)));
 
 		return $this->header_tpl->fetch();
 	}
@@ -608,7 +606,7 @@ class HelperListCore extends Helper
 	 */
 	public function displayListFooter($token = null)
 	{
-		$this->footer_tpl->assign(array(
+		$this->footer_tpl->assign(array_merge($this->tpl_vars, array(
 			'token' => $this->token,
 			'table' => $this->table,
 			'current' => $this->currentIndex,
@@ -617,8 +615,7 @@ class HelperListCore extends Helper
 
 			'back' => Tools::getValue('back'),
 			'no_back' => $this->no_back,
-			'tpl_vars' =>$this->tpl_vars
-		));
+		)));
 		return $this->footer_tpl->fetch();
 	}
 
