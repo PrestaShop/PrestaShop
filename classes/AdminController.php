@@ -738,10 +738,25 @@ class AdminControllerCore extends Controller
 			// @todo defining default buttons
 			case 'add':
 			case 'edit':
+				// Default save button - action dynamically handled in javascript
 				$this->toolbar_btn['save'] = array(
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
+
+			case 'view':
+				// Default cancel button - like old back link
+				if (!isset($this->no_back) || $this->no_back == false)
+				{
+					$back = Tools::safeOutput(Tools::getValue('back', ''));
+					if (empty($back))
+						$back = self::$currentIndex.'&token='.$this->token;
+
+					$this->toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				}
 			break;
 			case 'options':
 			break;

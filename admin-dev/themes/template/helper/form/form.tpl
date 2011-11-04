@@ -323,13 +323,3 @@
 	</fieldset>
 	{block name="other_fieldsets"}{/block}
 </form>
-
-<br /><br />
-{if $firstCall && !$no_back}
-	{if $back}
-		<a href="{$back}"><img src="../img/admin/arrow2.gif" />{l s='Back'}</a>
-	{else}
-		<a href="{$current}&token={$token}"><img src="../img/admin/arrow2.gif" />{l s='Back to list'}</a>
-	{/if}
-	<br />
-{/if}

@@ -50,12 +50,6 @@ class HelperFormCore extends Helper
 	 */
 	public $submit_action = '';
 
-	/**
-	 * @var bool
-	 * Usage : Set the value to true if you want to simply remove the back button
-	 */
-	public $no_back = false;
-
 	public $token;
 
 	public $languages = null;
@@ -93,8 +87,6 @@ class HelperFormCore extends Helper
 			'defaultFormLanguage' => $this->default_form_language,
 			'allowEmployeeFormLang' => $this->allow_employee_form_lang,
 			'form_id' => $this->id,
-			'back' => Tools::getValue('back'),
-			'no_back' => $this->no_back,
 			'fields' => $this->fields_form,
 			'fields_value' => $this->fields_value,
 			'required_fields' => $this->getFieldsRequired(),
