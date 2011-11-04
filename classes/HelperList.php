@@ -135,12 +135,6 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * @var bool
-	 * Usage : Set the value to false if you want to simply display the back button
-	 */
-	public $no_back = true;
-
-	/**
 	 * Return an html list given the data to fill it up
 	 *
 	 * @param array $list entries to display (rows)
@@ -599,8 +593,6 @@ class HelperListCore extends Helper
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
 			'show_toolbar' => $this->show_toolbar,
-			'back' => Tools::getValue('back'),
-			'no_back' => $this->no_back
 		));
 
 		return $this->header_tpl->fetch();
@@ -617,8 +609,6 @@ class HelperListCore extends Helper
 			'current' => $this->currentIndex,
 			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
-			'back' => Tools::getValue('back'),
-			'no_back' => $this->no_back
 		));
 		return $this->footer_tpl->fetch();
 	}
