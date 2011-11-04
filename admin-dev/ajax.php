@@ -949,22 +949,22 @@ if (Tools::isSubmit('searchCategory'))
 		'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.$context->shop->addSqlRestrictionOnLang('cl').')
-		WHERE cl.`id_lang` = '.(int)($context->language->id).' AND c.`level_depth` <> 0
+		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
 		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
 		GROUP BY c.id_category
 		ORDER BY c.`position`
 		LIMIT '.(int)$limit);
 	if ($results)
-	foreach ($results AS $result)
-		echo trim($result['name']).'|'.(int)($result['id_category'])."\n";
+	foreach ($results as $result)
+		echo trim($result['name']).'|'.(int)$result['id_category']."\n";
 }
 
-if (Tools::isSubmit('getParentCategoriesId') AND $id_category = Tools::getValue('id_category'))
+if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category'))
 {
 	$category = new Category((int)$id_category);
 	$results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
 	$output = array();
-	foreach($results as $result)
+	foreach ($results as $result)
 		$output[] = $result;
 
 	die(Tools::jsonEncode($output));
@@ -976,9 +976,90 @@ if (Tools::isSubmit('ajaxUpdateTaxRule'))
 	$id_tax_rule = Tools::getValue('id_tax_rule');
 	$tax_rules = new TaxRule((int)$id_tax_rule);
 	$output = array();
-	foreach($tax_rules as $key => $result)
+	foreach ($tax_rules as $key => $result)
 		$output[$key] = $result;
 	die(Tools::jsonEncode($output));
-	
+}
+
+/* Update Access Tabs */
+if (Tools::isSubmit('submitAddAccess'))
+{
+	$perm = Tools::getValue('perm');
+	if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all')))
+		throw new PrestashopException('permission not exists');
+
+	$enabled = (int)Tools::getValue('enabled');
+	$id_tab = (int)Tools::getValue('id_tab');
+	$id_profile = (int)Tools::getValue('id_profile');
+	$res = true;
+
+	if ($id_tab == -1 && $perm == 'all' && $enabled == 0)
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'access`
+			SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.'
+			WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != 31
+		');
+	else if ($id_tab == -1 && $perm == 'all')
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'access`
+			SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.'
+			WHERE `id_profile` = '.(int)$id_profile
+		);
+	else if ($id_tab == -1)
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'access`
+			SET `'.pSQL($perm).'` = '.$enabled.'
+			WHERE `id_profile` = '.(int)$id_profile
+		);
+	else if ($perm == 'all')
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'access`
+			SET `view` = '.$enabled.', `add` = '.$enabled.', `edit` = '.$enabled.', `delete` = '.$enabled.'
+			WHERE `id_tab` = '.(int)$id_tab.'
+				AND `id_profile` = '.(int)$id_profile
+		);
+	else
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'access`
+			SET `'.pSQL($perm).'` = '.$enabled.'
+			WHERE `id_tab` = '.(int)$id_tab.'
+				AND `id_profile` = '.(int)$id_profile
+		);
+	$res = $res?'ok':'error';
+	die(Tools::jsonEncode($res));
+}
+
+/* Update Access Modules */
+if (Tools::isSubmit('changeModuleAccess'))
+{
+	$perm = Tools::getValue('perm');
+	$enabled = (int)Tools::getValue('enabled');
+	$id_module = (int)Tools::getValue('id_module');
+	$id_profile = (int)Tools::getValue('id_profile');
+	$res = true;
+
+	if (!in_array($perm, array('view', 'configure')))
+		throw new PrestashopException('permission not exists');
+
+	if ($id_module == -1)
+	{
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'module_access`
+			SET `'.pSQL($perm).'` = '.(int)$enabled.'
+			WHERE `id_profile` = '.(int)$id_profile
+		);
+	}
+	else
+	{
+		$res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'module_access`
+			SET `'.pSQL($perm).'` = '.(int)$enabled.'
+			WHERE `id_module` = '.(int)$id_module.'
+				AND `id_profile` = '.(int)$id_profile
+		);
+	}
+
+	$res = $res?'ok':'error';
+	die(Tools::jsonEncode($res));
 }
 

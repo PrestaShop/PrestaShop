@@ -40,6 +40,9 @@ class HelperFormCore extends Helper
 	public $fields_value = array();
 	public $table;
 
+	/** @var if not null, a title will be added on that list */
+	public $title = null;
+
 	/**
 	 * Used to override default 'submitAdd' parameter in form action attribute
 	 * @var string
@@ -83,6 +86,7 @@ class HelperFormCore extends Helper
 			'title' => $this->title,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,
+			'title' => $this->title,
 			'token' => $this->token,
 			'table' => $this->table,
 			'languages' => $this->languages,

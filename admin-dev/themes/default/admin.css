@@ -154,14 +154,14 @@ a.module_toggle_all{color: #268CCD;}
 #productBox { position:relative; width:100%; float:left;}
 
 /*tab-pane*/
-form#product{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px; margin-left:140px;}
+form#product, form#access_form{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px; margin-left:140px;}
 form.defaultForm{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px;}
 .tab-row {}
 .tab-row .tab {background:#EFEFEF;width:100px;}
 .tab-row .tab-page.selected {}
 .tab-row .tab-page {}
 .productTabs{ background-color:#fafafa; border:1px solid #ccced7; border-right:none; float:left; width:140px;}
-.productTabs ul{padding:0;}
+.productTabs ul{padding:0;margin:0;}
 .productTabs ul li.tab-row { border:none; }
 .productTabs ul li.tab-row:first-child  a {border-top:none;}
 .productTabs ul li.tab-row a { display:block; font-weight:normal; color:#666;padding: 7px 10px; border-top:1px solid #CCCED7; border-right:1px solid #CCCED7;}
