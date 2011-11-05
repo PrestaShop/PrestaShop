@@ -63,7 +63,6 @@ class HelperCore
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-
 	}
 
 	/*public function setTpl($tpl)
